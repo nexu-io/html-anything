@@ -19,7 +19,7 @@ example_source_label: "heygen-com/hyperframes"
 ---
 
 【模板: Hyperframes 视频帧】
-- 输出 6-10 个连续 `<section class="frame">`, 每个 `w-[1920px] h-[1080px]`。
+- 输出 N 个连续 `<section class="frame">`, 每个 `w-[1920px] h-[1080px]`; N 由【用户内容】信息密度决定 (短脚本 6-10 帧起步, 长脚本应更多, 每帧只承载一个镜头/概念)。
 - 每帧表达一个镜头/概念: 文字 + 视觉构图 (中央构图 / 黄金分割 / 三分法)。
 - 每帧底部隐藏标记 `<!-- frame:N duration:3000 transition:fade -->` 供后续 Remotion / Hyperframes 渲染脚本读取。
 - 顶部加一段 JavaScript 自动播放: 每 3 秒切换到下一帧, 也支持点击 / 方向键控制; 角落显示进度条。
