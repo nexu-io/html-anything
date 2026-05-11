@@ -1,9 +1,9 @@
 # HTML Anything
 
-> **任何文档 / 数据 → 可交付的 HTML，由你本地的 AI agent 一键完成。** 可交付 = 生成完就是你贴出去、发出去、交出去的样子 —— 不用回 Figma 二修、不用每个平台手动重排、不用 "我先这样、待会再调"。本地优先、零 API Key、复用你已经登录好的 CLI session —— **8 个 coding-agent CLI** 在 `PATH` 上自动识别（Claude Code · Cursor Agent · Codex · Gemini CLI · GitHub Copilot CLI · OpenCode · Qwen Coder · Aider），驱动 **75 套 skill 模板** 和 **9 类可交付场景**（杂志文章 · Keynote PPT · 简历 · 海报 · 小红书 · 推特卡 · Web 原型 · 数据报告 · Hyperframes 视频）。一键复制到公众号 / 推特 / 知乎，或者下载 `.html` / `.png`。
+> **Markdown 是草稿, HTML 才是给人读的成品 —— 让本地 agent 直接写 HTML。** Agent 时代的 HTML 编辑器 —— 既然你已经不亲手改文档、全都让 Claude 改了, 那 agent 的输出就该是读者真正想看的 HTML, 而不是中间态的 markdown。本地优先、零 API Key、复用你已经登录好的 CLI session —— **8 个 coding-agent CLI** 在 `PATH` 上自动识别（Claude Code · Cursor Agent · Codex · Gemini CLI · GitHub Copilot CLI · OpenCode · Qwen Coder · Aider），驱动 **75 套 skill 模板** 和 **9 类可交付场景**（杂志文章 · Keynote PPT · 简历 · 海报 · 小红书 · 推特卡 · Web 原型 · 数据报告 · Hyperframes 视频）。一键复制到公众号 / 推特 / 知乎，或者下载 `.html` / `.png`。
 
 <p align="center">
-  <img src="docs/assets/banner.png" alt="HTML Anything — 任何输入 → 可交付 HTML，在你的笔记本上" width="100%" />
+  <img src="docs/assets/banner.png" alt="HTML Anything — agent 时代的 HTML 编辑器，在你的笔记本上" width="100%" />
 </p>
 
 <p align="center">

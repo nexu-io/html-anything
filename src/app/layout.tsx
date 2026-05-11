@@ -28,13 +28,13 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HTML Anything — turn anything into beautiful HTML, by your local agent",
+  title: "HTML Anything — the agentic HTML editor",
   description:
-    "Turn any document or dataset into beautiful HTML via your local AI agent: decks, resumes, posters, knowledge cards, Hyperframes videos — one click to WeChat / Twitter / Zhihu.",
+    "Markdown is the draft; HTML is what humans read. Your local AI agent writes HTML directly — decks, resumes, posters, knowledge cards, data reports, Hyperframes videos — one click to WeChat / X / Zhihu.",
   metadataBase: new URL("https://html-anything.app"),
   openGraph: {
-    title: "HTML Anything",
-    description: "Anything → beautiful HTML, powered by your local code agent.",
+    title: "HTML Anything — the agentic HTML editor",
+    description: "Markdown is the draft. HTML is what humans read. Your local agent writes it.",
     type: "website",
   },
 };

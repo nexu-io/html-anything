@@ -47,12 +47,19 @@ export function PreviewPane({
   const status = useStore((s) => selectActiveTask(s)?.status ?? "idle");
   const log = useStore((s) => selectActiveTask(s)?.log ?? EMPTY_LOG);
   const stats = useStore((s) => selectActiveTask(s)?.stats ?? EMPTY_STATS);
+  const activeTaskId = useStore((s) => s.activeTaskId);
+  const setHtmlFor = useStore((s) => s.setHtmlFor);
   const [tab, setTab] = useState<PreviewTab>("preview");
   const localRef = useRef<HTMLIFrameElement | null>(null);
-  const codeRef = useRef<HTMLPreElement | null>(null);
+  const codeRef = useRef<HTMLTextAreaElement | null>(null);
   const logRef = useRef<HTMLDivElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  // Bumping this remounts the iframe, forcing a clean re-render with the current
+  // HTML — useful when the streaming preview committed a partial render and the
+  // final state didn't repaint, or when injected scripts/styles need to re-init.
+  const [refreshKey, setRefreshKey] = useState(0);
+  const refresh = useCallback(() => setRefreshKey((n) => n + 1), []);
   const t = useT();
 
   // Browser-level fullscreen for the whole preview pane. The Deck tab has its
@@ -126,11 +133,12 @@ export function PreviewPane({
     if (iframeRef) iframeRef.current = localRef.current;
   });
 
-  // Auto-scroll code to bottom while streaming
+  // Auto-scroll code to bottom while streaming. Skip while the user is editing
+  // (textarea is focused) so we don't yank the caret around.
   useEffect(() => {
-    if (status === "running" && codeRef.current) {
-      codeRef.current.scrollTop = codeRef.current.scrollHeight;
-    }
+    if (status !== "running" || !codeRef.current) return;
+    if (document.activeElement === codeRef.current) return;
+    codeRef.current.scrollTop = codeRef.current.scrollHeight;
   }, [html, status]);
 
   // Auto-scroll log to bottom
@@ -191,6 +199,33 @@ export function PreviewPane({
             ))}
           </div>
           <div className="flex items-center gap-1.5">
+            {tab === "preview" && html && (
+              <button
+                onClick={refresh}
+                className="grid h-[22px] w-[22px] place-items-center rounded-full"
+                style={{
+                  background: "transparent",
+                  color: "var(--ink-soft)",
+                  border: "1px solid var(--line)",
+                }}
+                title={t("preview.refreshTooltip")}
+                aria-label={t("preview.refresh")}
+              >
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 12a9 9 0 1 1-3.46-7.1" />
+                  <polyline points="21 3 21 9 15 9" />
+                </svg>
+              </button>
+            )}
             {canPresent && (
               <button
                 onClick={toggleFullscreen}
@@ -218,6 +253,7 @@ export function PreviewPane({
             {!html && <PreviewPlaceholder status={status} />}
             {html && (
               <iframe
+                key={refreshKey}
                 ref={localRef}
                 title="preview"
                 srcDoc={display}
@@ -242,22 +278,13 @@ export function PreviewPane({
           />
         )}
         {tab === "code" && (
-          <pre
-            ref={codeRef}
-            className="h-full overflow-auto p-4 text-[11.5px] leading-relaxed font-[family-name:var(--font-mono)]"
-            style={{ background: "#15140f", color: "#e8e4dc" }}
-          >
-            {html ? (
-              <>
-                {html}
-                {status === "running" && <span className="shimmer">▍</span>}
-              </>
-            ) : status === "running" ? (
-              <span className="text-[#8b8676]">{t("preview.code.waiting")}</span>
-            ) : (
-              <span className="text-[#8b8676]">{t("preview.code.empty")}</span>
-            )}
-          </pre>
+          <CodeEditor
+            html={html}
+            status={status}
+            taskId={activeTaskId}
+            setHtmlFor={setHtmlFor}
+            textareaRef={codeRef}
+          />
         )}
         {tab === "log" && (
           <LogPanel logRef={logRef} log={log} />
@@ -357,6 +384,56 @@ function Metric({ label, value, hint, live }: { label: string; value: string; hi
       >
         {value}
       </span>
+    </div>
+  );
+}
+
+function CodeEditor({
+  html,
+  status,
+  taskId,
+  setHtmlFor,
+  textareaRef,
+}: {
+  html: string;
+  status: string;
+  taskId: string;
+  setHtmlFor: (taskId: string, html: string) => void;
+  textareaRef: React.MutableRefObject<HTMLTextAreaElement | null>;
+}) {
+  const t = useT();
+  const isRunning = status === "running";
+  const editable = !isRunning;
+  const placeholder = isRunning ? t("preview.code.waiting") : t("preview.code.empty");
+
+  return (
+    <div className="flex h-full flex-col" style={{ background: "#15140f" }}>
+      <div
+        className="flex items-center justify-between gap-3 px-4 py-1.5 text-[10.5px]"
+        style={{
+          color: editable ? "#9ca28a" : "#8b8676",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          background: "rgba(255,255,255,0.02)",
+        }}
+      >
+        <span>{editable ? t("preview.code.editHint") : t("preview.code.lockedHint")}</span>
+      </div>
+      <textarea
+        ref={textareaRef}
+        value={html}
+        onChange={(e) => setHtmlFor(taskId, e.target.value)}
+        readOnly={!editable}
+        spellCheck={false}
+        placeholder={placeholder}
+        className="flex-1 w-full resize-none overflow-auto p-4 text-[11.5px] leading-relaxed font-[family-name:var(--font-mono)] focus:outline-none"
+        style={{
+          background: "#15140f",
+          color: "#e8e4dc",
+          caretColor: "#ffb55a",
+          border: "none",
+          tabSize: 2,
+        }}
+      />
     </div>
   );
 }

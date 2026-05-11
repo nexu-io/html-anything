@@ -127,6 +127,8 @@ export interface Dict {
   "preview.status.error": string;
   "preview.code.waiting": string;
   "preview.code.empty": string;
+  "preview.code.editHint": string;
+  "preview.code.lockedHint": string;
   "preview.placeholder.runningTitle.part1": string;
   "preview.placeholder.runningTitle.accent": string;
   "preview.placeholder.idleTitle.part1": string;
@@ -147,6 +149,8 @@ export interface Dict {
   "preview.present": string;
   "preview.exitPresent": string;
   "preview.presentTooltip": string;
+  "preview.refresh": string;
+  "preview.refreshTooltip": string;
 
   // Tasks sidebar
   "tasks.heading": string;
@@ -276,7 +280,7 @@ export interface Dict {
 }
 
 const en: Dict = {
-  "brand.subtitle": "anything → beautiful html",
+  "brand.subtitle": "the agentic HTML editor",
 
   "toolbar.selectAgent": "Select agent",
   "toolbar.switchAgent": "Switch agent",
@@ -376,6 +380,8 @@ const en: Dict = {
   "preview.status.error": "error",
   "preview.code.waiting": "// waiting for the agent's first byte…",
   "preview.code.empty": "// no content yet",
+  "preview.code.editHint": "Editable — changes save instantly. Switch to Preview (or hit Refresh) to see them.",
+  "preview.code.lockedHint": "Read-only while the agent is streaming.",
   "preview.placeholder.runningTitle.part1": "agent is",
   "preview.placeholder.runningTitle.accent": "thinking",
   "preview.placeholder.idleTitle.part1": "Paste content on the left, then",
@@ -399,6 +405,8 @@ const en: Dict = {
   "preview.present": "⛶ Present",
   "preview.exitPresent": "Exit",
   "preview.presentTooltip": "Fullscreen preview — F to toggle, ESC to exit",
+  "preview.refresh": "Refresh",
+  "preview.refreshTooltip": "Re-render the preview iframe with the current HTML",
 
   "deck.empty": "No slides found in this output.",
   "deck.prev": "Previous slide",
@@ -534,7 +542,7 @@ const en: Dict = {
 };
 
 const zhCN: Dict = {
-  "brand.subtitle": "anything → beautiful html",
+  "brand.subtitle": "the agentic HTML editor",
 
   "toolbar.selectAgent": "选择 agent",
   "toolbar.switchAgent": "切换 agent",
@@ -634,6 +642,8 @@ const zhCN: Dict = {
   "preview.status.error": "错误",
   "preview.code.waiting": "// 等待 agent 第一个字节…",
   "preview.code.empty": "// 还没有内容",
+  "preview.code.editHint": "可编辑 — 改动会即时保存,切到预览 (或点刷新) 即可看到效果。",
+  "preview.code.lockedHint": "Agent 正在流式输出, 暂时只读。",
   "preview.placeholder.runningTitle.part1": "agent 正在",
   "preview.placeholder.runningTitle.accent": "思考",
   "preview.placeholder.idleTitle.part1": "把内容粘到左侧, 然后",
@@ -655,6 +665,8 @@ const zhCN: Dict = {
   "preview.present": "⛶ 全屏",
   "preview.exitPresent": "退出全屏",
   "preview.presentTooltip": "全屏预览 — F 切换 / ESC 退出",
+  "preview.refresh": "刷新",
+  "preview.refreshTooltip": "用当前 HTML 重新渲染预览 iframe",
 
   "deck.empty": "本次结果里没有检测到幻灯片。",
   "deck.prev": "上一页",
