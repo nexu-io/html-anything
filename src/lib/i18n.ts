@@ -25,6 +25,8 @@ export interface Dict {
   "toolbar.unsupportedProtocol": string;
   "toolbar.enterContent": string;
   "toolbar.shortcutHint": string;
+  "convertChip.label": string;
+  "convertChip.tooltip": string;
 
   // Layout mode toggle
   "layout.aria.group": string;
@@ -291,6 +293,8 @@ const en: Dict = {
   "toolbar.unsupportedProtocol": "ACP / pi-rpc not wired yet — pick another agent",
   "toolbar.enterContent": "Type or upload content",
   "toolbar.shortcutHint": "⌘+Enter to convert",
+  "convertChip.label": "Generate HTML",
+  "convertChip.tooltip": "Generate HTML from the markdown on the left",
 
   "layout.aria.group": "Workspace layout",
   "layout.label.editor": "Editor only",
@@ -549,6 +553,8 @@ const zhCN: Dict = {
   "toolbar.settings": "设置",
   "toolbar.stop": "◼ 停止",
   "toolbar.convert": "⚡ 转换为 HTML",
+  "convertChip.label": "生成 HTML",
+  "convertChip.tooltip": "把左侧 markdown 内容转成 HTML",
   "toolbar.firstSelectAgent": "先选择 agent",
   "toolbar.unsupportedProtocol": "ACP / pi-rpc 协议暂未接入, 请换其他 agent",
   "toolbar.enterContent": "输入或上传内容",

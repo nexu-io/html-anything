@@ -7,6 +7,7 @@ import { PreviewPane } from "@/components/preview-pane";
 import { TasksSidebar } from "@/components/tasks-sidebar";
 import { WelcomeModal } from "@/components/welcome-modal";
 import { SettingsModal } from "@/components/settings-modal";
+import { ConvertChip } from "@/components/convert-chip";
 import { useStore } from "@/lib/store";
 
 export default function Home() {
@@ -48,23 +49,26 @@ export default function Home() {
         style={{ borderTop: "1px solid var(--line-faint)" }}
       >
         <TasksSidebar />
-        {layoutMode !== "preview" && (
-          <section
-            className="flex min-w-0 flex-1 basis-0 flex-col"
-            style={
-              layoutMode === "split"
-                ? { borderRight: "1px solid var(--line-faint)" }
-                : undefined
-            }
-          >
-            <EditorPane />
-          </section>
-        )}
-        {layoutMode !== "editor" && (
-          <section className="flex min-w-0 flex-1 basis-0 flex-col">
-            <PreviewPane iframeRef={iframeRef} />
-          </section>
-        )}
+        <div className="relative flex flex-1 min-w-0">
+          {layoutMode !== "preview" && (
+            <section
+              className="flex min-w-0 flex-1 basis-0 flex-col"
+              style={
+                layoutMode === "split"
+                  ? { borderRight: "1px solid var(--line-faint)" }
+                  : undefined
+              }
+            >
+              <EditorPane />
+            </section>
+          )}
+          {layoutMode !== "editor" && (
+            <section className="flex min-w-0 flex-1 basis-0 flex-col">
+              <PreviewPane iframeRef={iframeRef} />
+            </section>
+          )}
+          <ConvertChip />
+        </div>
       </div>
       {welcomeOpen && <WelcomeModal onClose={() => setWelcomeOpen(false)} />}
       {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
