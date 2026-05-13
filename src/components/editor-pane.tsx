@@ -10,6 +10,7 @@ import { UploadDropzone } from "./upload-dropzone";
 import { DraftsMenu } from "./drafts-menu";
 import { SamplesGallery } from "./samples-gallery";
 import { FormatsGallery } from "./formats-gallery";
+import { AiPromptBar } from "./ai-prompt-bar";
 
 const TAB_KEY: Record<"text" | "upload" | "formats" | "samples", DictKey> = {
   text: "editor.tab.text",
@@ -91,27 +92,30 @@ export function EditorPane() {
 
       <div className="relative flex-1 overflow-hidden">
         {tab === "text" && (
-          <>
-            {!hydrated && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                <div className="text-[11px] text-[var(--ink-faint)]">{t("editor.restoring")}</div>
-              </div>
-            )}
-            <textarea
-              value={hydrated ? content : ""}
-              onChange={(e) => {
-                if (!hydrated) return;
-                setContent(e.target.value);
-                setFilename(undefined);
-                const fmt = detectFormat(e.target.value);
-                if (fmt !== format) setFormat(fmt);
-              }}
-              placeholder={t("editor.placeholder")}
-              className="block h-full w-full resize-none border-0 bg-transparent p-5 font-[family-name:var(--font-mono)] text-[13px] leading-relaxed text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
-              spellCheck={false}
-              disabled={!hydrated}
-            />
-          </>
+          <div className="flex h-full flex-col">
+            <div className="relative flex-1 overflow-hidden">
+              {!hydrated && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                  <div className="text-[11px] text-[var(--ink-faint)]">{t("editor.restoring")}</div>
+                </div>
+              )}
+              <textarea
+                value={hydrated ? content : ""}
+                onChange={(e) => {
+                  if (!hydrated) return;
+                  setContent(e.target.value);
+                  setFilename(undefined);
+                  const fmt = detectFormat(e.target.value);
+                  if (fmt !== format) setFormat(fmt);
+                }}
+                placeholder={t("editor.placeholder")}
+                className="block h-full w-full resize-none border-0 bg-transparent p-5 font-[family-name:var(--font-mono)] text-[13px] leading-relaxed text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
+                spellCheck={false}
+                disabled={!hydrated}
+              />
+            </div>
+            <AiPromptBar />
+          </div>
         )}
         {tab === "upload" && (
           <div className="h-full p-4">

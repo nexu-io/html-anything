@@ -27,6 +27,11 @@ export interface Dict {
   "toolbar.shortcutHint": string;
   "convertChip.label": string;
   "convertChip.tooltip": string;
+  "aiPrompt.placeholder": string;
+  "aiPrompt.submit": string;
+  "aiPrompt.stop": string;
+  "aiPrompt.needAgent": string;
+  "aiPrompt.hint": string;
 
   // Layout mode toggle
   "layout.aria.group": string;
@@ -295,6 +300,11 @@ const en: Dict = {
   "toolbar.shortcutHint": "⌘+Enter to convert",
   "convertChip.label": "Generate HTML",
   "convertChip.tooltip": "Generate HTML from the markdown on the left",
+  "aiPrompt.placeholder": "Ask AI to write markdown — \"draft a tweet about X\", \"summarize the above\"…",
+  "aiPrompt.submit": "✨ Draft",
+  "aiPrompt.stop": "◼ Stop",
+  "aiPrompt.needAgent": "Pick an agent first",
+  "aiPrompt.hint": "Streams below your existing content. ⌘+Enter to send.",
 
   "layout.aria.group": "Workspace layout",
   "layout.label.editor": "Editor only",
@@ -555,6 +565,11 @@ const zhCN: Dict = {
   "toolbar.convert": "⚡ 转换为 HTML",
   "convertChip.label": "生成 HTML",
   "convertChip.tooltip": "把左侧 markdown 内容转成 HTML",
+  "aiPrompt.placeholder": "让 AI 帮你写 markdown — 「写一条关于 X 的推文」「总结上面这段」…",
+  "aiPrompt.submit": "✨ 生成",
+  "aiPrompt.stop": "◼ 停止",
+  "aiPrompt.needAgent": "先在右上角选个 agent",
+  "aiPrompt.hint": "结果会追加到上方现有内容下方。⌘+Enter 发送。",
   "toolbar.firstSelectAgent": "先选择 agent",
   "toolbar.unsupportedProtocol": "ACP / pi-rpc 协议暂未接入, 请换其他 agent",
   "toolbar.enterContent": "输入或上传内容",
