@@ -77,6 +77,13 @@ export type Task = {
   baseHtml?: string;
   /** id of the source sample (if any), so the gallery can mark it loaded */
   sampleId?: string;
+  /**
+   * Pasted/uploaded image data URLs, keyed by the short `asset:<id>` token
+   * shown in the editor textarea. Keeps the textarea readable while
+   * preserving the real bytes for Convert. Resolved back to inline data URLs
+   * in `use-convert.ts` before the prompt is shipped to the agent.
+   */
+  assets?: Record<string, string>;
   // meta
   createdAt: number;
   updatedAt: number;
@@ -181,6 +188,12 @@ type State = {
   setFormat: (f: string) => void;
   setFilename: (f?: string) => void;
   setSelectedTemplate: (id: string) => void;
+  /**
+   * Add an image (or other binary) asset to the active task and return the
+   * `asset:<id>` placeholder token to insert into the textarea. The data URL
+   * is kept off-textarea so editing stays readable.
+   */
+  addAsset: (dataUrl: string) => string;
 
   // active-task convert-state setters (used by ad-hoc callers, e.g. drafts-menu)
   pushLog: (entry: Omit<LogEntry, "ts">) => void;
@@ -306,6 +319,16 @@ export const useStore = create<State>()(
         set((st) => ({ tasks: patchTask(st.tasks, st.activeTaskId, { filename: f }) })),
       setSelectedTemplate: (id) =>
         set((st) => ({ tasks: patchTask(st.tasks, st.activeTaskId, { templateId: id }) })),
+
+      addAsset: (dataUrl: string) => {
+        const id = `a_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+        set((st) => ({
+          tasks: patchTask(st.tasks, st.activeTaskId, (t) => ({
+            assets: { ...(t.assets ?? {}), [id]: dataUrl },
+          })),
+        }));
+        return id;
+      },
 
       pushLog: (entry) =>
         set((st) => ({

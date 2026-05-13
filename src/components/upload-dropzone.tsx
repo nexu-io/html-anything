@@ -11,6 +11,7 @@ export function UploadDropzone() {
   const setContent = useStore((s) => s.setContent);
   const setFormat = useStore((s) => s.setFormat);
   const setFilename = useStore((s) => s.setFilename);
+  const addAsset = useStore((s) => s.addAsset);
   const pushLog = useStore((s) => s.pushLog);
   const t = useT();
 
@@ -20,7 +21,16 @@ export function UploadDropzone() {
       const file = files[0];
       try {
         const parsed = await parseFile(file);
-        setContent(parsed.text);
+        // For images, replace the inline base64 data URL in `text` with a
+        // short `asset:<id>` placeholder so the textarea stays readable.
+        // The real bytes live in task.assets and are inlined back at
+        // Convert time.
+        let bodyText = parsed.text;
+        if (parsed.format === "image" && parsed.dataUrl) {
+          const id = addAsset(parsed.dataUrl);
+          bodyText = `![${parsed.filename}](asset:${id})`;
+        }
+        setContent(bodyText);
         setFormat(parsed.format);
         setFilename(parsed.filename);
         pushLog({
@@ -34,7 +44,7 @@ export function UploadDropzone() {
         });
       }
     },
-    [setContent, setFormat, setFilename, pushLog, t],
+    [setContent, setFormat, setFilename, addAsset, pushLog, t],
   );
 
   return (

@@ -44,7 +44,16 @@ export function useConvert() {
       const startedAt = Date.now();
       store.patchStatsFor(taskId, { startedAt });
 
-      const summary = summarizeForAgent(req.content);
+      // Inline `asset:<id>` placeholders (created by upload-dropzone for
+      // images) back into real `data:image/...` URLs before the agent
+      // sees the prompt. Editor stays readable; agent gets the bytes.
+      const taskWithAssets = store.tasks.find((t) => t.id === taskId);
+      const assets = taskWithAssets?.assets ?? {};
+      const inlinedContent = Object.keys(assets).length
+        ? req.content.replace(/asset:([a-z0-9_]+)/gi, (m, id) => assets[id] ?? m)
+        : req.content;
+
+      const summary = summarizeForAgent(inlinedContent);
       const enrichedContent =
         summary.preview && summary.format !== "markdown" && summary.format !== "html" && summary.format !== "text"
           ? `${summary.preview}\n\n--- 原始内容 ---\n${summary.raw}`

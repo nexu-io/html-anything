@@ -49,7 +49,10 @@ export async function parseFile(file: File): Promise<FileParseResult> {
       r.onerror = reject;
       r.readAsDataURL(file);
     });
-    // For images we describe and embed; ai will be told to render the image inline
+    // Caller (upload-dropzone) is expected to register the dataUrl as an
+    // asset and substitute an `asset:<id>` token into `text` before writing
+    // it to the editor — keeping the textarea readable. We still return the
+    // raw inline form here as a fallback for legacy callers.
     return {
       filename: file.name,
       format: "image",
