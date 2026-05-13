@@ -48,7 +48,36 @@ export function PreviewPane({
   const log = useStore((s) => selectActiveTask(s)?.log ?? EMPTY_LOG);
   const stats = useStore((s) => selectActiveTask(s)?.stats ?? EMPTY_STATS);
   const activeTaskId = useStore((s) => s.activeTaskId);
+  const templateId = useStore((s) => selectActiveTask(s)?.templateId);
   const setHtmlFor = useStore((s) => s.setHtmlFor);
+
+  // Template example HTML — fetched lazily when no task.html exists yet, so
+  // switching templates in the picker shows that template's pre-shipped
+  // `example.html` immediately, without burning agent tokens. Cleared as soon
+  // as Convert produces real html, never written to task state.
+  const [templateExample, setTemplateExample] = useState<string>("");
+  useEffect(() => {
+    // only fetch when there's no real output yet AND the run is idle
+    if (html || status === "running") {
+      setTemplateExample("");
+      return;
+    }
+    if (!templateId) return;
+    let cancelled = false;
+    fetch(`/api/templates/${encodeURIComponent(templateId)}/example`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const exampleHtml = (data?.html ?? "") as string;
+        setTemplateExample(exampleHtml);
+      })
+      .catch(() => {
+        if (!cancelled) setTemplateExample("");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [templateId, html, status]);
   const [tab, setTab] = useState<PreviewTab>("preview");
   const localRef = useRef<HTMLIFrameElement | null>(null);
   const codeRef = useRef<HTMLTextAreaElement | null>(null);
@@ -97,8 +126,14 @@ export function PreviewPane({
     return () => window.removeEventListener("keydown", onKey);
   }, [tab, toggleFullscreen]);
 
+  // Effective html for this render = real task output if any, else the
+  // template example fetched above. Downstream (deck detection, debounce,
+  // iframe srcDoc) treats both identically — the only difference is provenance.
+  const effectiveHtml = html || templateExample;
+  const isPreviewingTemplate = !html && !!templateExample;
+
   // Detect deck off the cleaned (un-fenced) html — extract once for reuse.
-  const cleaned = useMemo(() => extractHtml(html), [html]);
+  const cleaned = useMemo(() => extractHtml(effectiveHtml), [effectiveHtml]);
   const deckMode = useMemo(() => isDeck(cleaned), [cleaned]);
 
   // First time we see a deck, auto-promote the user to the Deck tab so the
@@ -118,15 +153,15 @@ export function PreviewPane({
 
   // Debounce srcDoc updates to ~3 fps during streaming so the iframe
   // doesn't reload on every delta. Last value always commits when status changes.
-  const [debouncedHtml, setDebouncedHtml] = useState(html);
+  const [debouncedHtml, setDebouncedHtml] = useState(effectiveHtml);
   useEffect(() => {
     if (status !== "running") {
-      setDebouncedHtml(html);
+      setDebouncedHtml(effectiveHtml);
       return;
     }
-    const id = setTimeout(() => setDebouncedHtml(html), 320);
+    const id = setTimeout(() => setDebouncedHtml(effectiveHtml), 320);
     return () => clearTimeout(id);
-  }, [html, status]);
+  }, [effectiveHtml, status]);
   const display = useMemo(() => previewHtml(debouncedHtml), [debouncedHtml]);
 
   useEffect(() => {
@@ -161,8 +196,9 @@ export function PreviewPane({
 
   // Present button is meaningful for Preview / Source / Log. The Deck tab has
   // its own Present button inside DeckViewer; suppress ours there to avoid
-  // two competing fullscreens.
-  const canPresent = tab !== "deck" && (tab !== "preview" || !!html);
+  // two competing fullscreens. Template-only previews count as "has html" for
+  // the Present button so users can preview at full size without converting.
+  const canPresent = tab !== "deck" && (tab !== "preview" || !!effectiveHtml);
 
   return (
     <div
@@ -250,17 +286,32 @@ export function PreviewPane({
       <div className="relative flex-1 overflow-hidden">
         {tab === "preview" && (
           <>
-            {!html && <PreviewPlaceholder status={status} />}
-            {html && (
-              <iframe
-                key={refreshKey}
-                ref={localRef}
-                title="preview"
-                srcDoc={display}
-                sandbox="allow-scripts allow-same-origin"
-                className="h-full w-full"
-                style={{ background: "#fff" }}
-              />
+            {!effectiveHtml && <PreviewPlaceholder status={status} />}
+            {effectiveHtml && (
+              <>
+                <iframe
+                  key={refreshKey}
+                  ref={localRef}
+                  title="preview"
+                  srcDoc={display}
+                  sandbox="allow-scripts allow-same-origin"
+                  className="h-full w-full"
+                  style={{ background: "#fff" }}
+                />
+                {isPreviewingTemplate && (
+                  <div
+                    className="pointer-events-none absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10.5px] font-medium tracking-wide"
+                    style={{
+                      background: "rgba(15, 14, 12, 0.78)",
+                      color: "#f3efe6",
+                      backdropFilter: "blur(6px)",
+                      letterSpacing: "0.08em",
+                    }}
+                  >
+                    模板预览 · TEMPLATE EXAMPLE
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
