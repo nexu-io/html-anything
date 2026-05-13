@@ -1,6 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { resolveOnPath, AGENTS } from "./detect";
-import { buildArgv, envFor, parseLine, UnsupportedAgentProtocolError } from "./argv";
+import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
 
 export type InvokeOpts = {
   agent: string;
@@ -103,6 +103,10 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         child.stdin.end();
       } catch {}
 
+      // One parser per spawn so cross-line dedupe state (sawStreamEventText)
+      // is scoped to this single invocation and doesn't leak across runs.
+      const parse = makeParser(opts.agent);
+
       let stdoutBuf = "";
       child.stdout.setEncoding("utf8");
       child.stdout.on("data", (chunk: string) => {
@@ -113,7 +117,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           const line = stdoutBuf.slice(0, nl);
           stdoutBuf = stdoutBuf.slice(nl + 1);
           if (!line) continue;
-          for (const part of parseLine(opts.agent, line)) {
+          for (const part of parse(line)) {
             if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
             else safeEnqueue({ type: "raw", text: line.slice(0, 240) });
@@ -133,7 +137,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
 
       child.on("close", (code) => {
         if (stdoutBuf) {
-          for (const part of parseLine(opts.agent, stdoutBuf)) {
+          for (const part of parse(stdoutBuf)) {
             if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
           }

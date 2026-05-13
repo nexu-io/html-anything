@@ -125,10 +125,35 @@ export type AgentParse =
   | { kind: "noise" };
 
 /**
- * Parse a single line of agent stdout. Returns either a text delta, a metadata
- * event (model/usage/cost/etc), or noise.
+ * Cross-line state that the parser carries between calls. Currently used to
+ * dedupe text deltas: when an agent emits both fine-grained `stream_event`
+ * `text_delta` blocks AND a final `assistant` message containing the same
+ * text concatenated, we keep the streamed tokens and skip the assistant
+ * message body. Without this dedupe, every Claude/Cursor/Gemini/Qoder run
+ * with `--include-partial-messages` (or the equivalent) writes its output
+ * twice.
+ */
+export type ParseState = { sawStreamEventText?: boolean };
+
+/**
+ * Build a stateful per-invocation parser. Feed every stdout line through the
+ * returned function — it carries the cross-line state needed for dedupe.
+ */
+export function makeParser(agent: string): (line: string) => AgentParse[] {
+  const state: ParseState = {};
+  return (line: string) => parseLineWithState(agent, line, state);
+}
+
+/**
+ * Parse a single line of agent stdout. Stateless wrapper kept for callers
+ * that only need one-shot parsing (e.g. `extractTextFromLine`). Streaming
+ * callers should use `makeParser` so dedupe state survives across lines.
  */
 export function parseLine(agent: string, line: string): AgentParse[] {
+  return parseLineWithState(agent, line, {});
+}
+
+function parseLineWithState(agent: string, line: string, state: ParseState): AgentParse[] {
   const trimmed = line.trim();
   if (!trimmed) return [];
 
@@ -159,24 +184,27 @@ export function parseLine(agent: string, line: string): AgentParse[] {
     if (obj.type === "stream_event" && obj.event && typeof obj.event === "object") {
       const ev = obj.event as { type?: string; delta?: { type?: string; text?: string; thinking?: string } };
       if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta" && typeof ev.delta.text === "string") {
+        state.sawStreamEventText = true;
         out.push({ kind: "delta", text: ev.delta.text });
       } else if (ev.type === "content_block_delta" && ev.delta?.type === "thinking_delta") {
         out.push({ kind: "meta", key: "thinking", value: ev.delta.thinking });
       }
     }
-    // Full assistant messages — only used as fallback when stream events absent (i.e. no --include-partial-messages on old claude)
+    // Full assistant messages — fallback only when stream_event text deltas
+    // were absent (e.g. older claude without --include-partial-messages).
     if (obj.type === "assistant" && obj.message && typeof obj.message === "object") {
       const msg = obj.message as {
         content?: Array<{ type?: string; text?: string }>;
         usage?: Record<string, number>;
         model?: string;
       };
-      // Only emit text if no stream_event blocks observed (the caller dedupes)
-      const text = (msg.content ?? [])
-        .filter((c) => c?.type === "text" && typeof c.text === "string")
-        .map((c) => c.text!)
-        .join("");
-      if (text) out.push({ kind: "delta", text });
+      if (!state.sawStreamEventText) {
+        const text = (msg.content ?? [])
+          .filter((c) => c?.type === "text" && typeof c.text === "string")
+          .map((c) => c.text!)
+          .join("");
+        if (text) out.push({ kind: "delta", text });
+      }
       if (msg.usage) out.push({ kind: "meta", key: "usage_partial", value: msg.usage });
     }
     if (obj.type === "result") {
@@ -215,10 +243,11 @@ export function parseLine(agent: string, line: string): AgentParse[] {
     if (obj.type === "stream_event" && obj.event && typeof obj.event === "object") {
       const ev = obj.event as { type?: string; delta?: { type?: string; text?: string } };
       if (ev.delta?.type === "text_delta" && typeof ev.delta.text === "string") {
+        state.sawStreamEventText = true;
         out.push({ kind: "delta", text: ev.delta.text });
       }
     }
-    if (obj.type === "assistant" && obj.message && typeof obj.message === "object") {
+    if (obj.type === "assistant" && obj.message && typeof obj.message === "object" && !state.sawStreamEventText) {
       const msg = obj.message as { content?: Array<{ type?: string; text?: string }> };
       const text = (msg.content ?? [])
         .filter((c) => c?.type === "text" && typeof c.text === "string")
@@ -226,7 +255,13 @@ export function parseLine(agent: string, line: string): AgentParse[] {
         .join("");
       if (text) out.push({ kind: "delta", text });
     }
-    if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text as string });
+    // Bare `text` field — only honor it when we haven't already emitted a
+    // streamed delta or an assistant body, otherwise it duplicates the same
+    // payload (cursor-agent / gemini both ship this redundancy on some
+    // versions).
+    if (typeof obj.text === "string" && !state.sawStreamEventText && obj.type !== "assistant") {
+      out.push({ kind: "delta", text: obj.text as string });
+    }
   }
 
   if (agent === "copilot") {
@@ -253,10 +288,11 @@ export function parseLine(agent: string, line: string): AgentParse[] {
     if (obj.type === "stream_event" && obj.event && typeof obj.event === "object") {
       const ev = obj.event as { type?: string; delta?: { type?: string; text?: string } };
       if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta" && typeof ev.delta.text === "string") {
+        state.sawStreamEventText = true;
         out.push({ kind: "delta", text: ev.delta.text });
       }
     }
-    if (obj.type === "assistant" && obj.message && typeof obj.message === "object") {
+    if (obj.type === "assistant" && obj.message && typeof obj.message === "object" && !state.sawStreamEventText) {
       const msg = obj.message as { content?: Array<{ type?: string; text?: string }> };
       const text = (msg.content ?? [])
         .filter((c) => c?.type === "text" && typeof c.text === "string")
@@ -268,7 +304,9 @@ export function parseLine(agent: string, line: string): AgentParse[] {
       if (obj.usage) out.push({ kind: "meta", key: "usage", value: obj.usage });
       if (typeof obj.duration_ms === "number") out.push({ kind: "meta", key: "duration_ms", value: obj.duration_ms });
     }
-    if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
+    if (typeof obj.text === "string" && !state.sawStreamEventText && obj.type !== "assistant") {
+      out.push({ kind: "delta", text: obj.text });
+    }
   }
 
   return out;
