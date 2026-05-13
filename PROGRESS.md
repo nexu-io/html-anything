@@ -1,6 +1,10 @@
 # HTML Anything — 构建进度追踪
 
 > 持久化任务列表，防止 context 丢失。每完成一项就更新此文件。
+>
+> **当前状态（v5 / 2026-05）**: 75 个 skill 模板（13 类 / 9 大交付场景）· 17 种 coding agent 自动检测（其中 8 种 stdin 协议立即可用，9 种 ACP/pi-rpc 协议适配中）· dev server 默认端口 `:3000`（README / CONTRIBUTING 口径），开发可 `PORT=3021 pnpm dev` 自定义。
+>
+> *以下早期 v1 状态记录保留作为历史，反映项目从 9 个内置模板演进到 75 个 skill 注册表的轨迹。*
 > 最近更新: **全部 11 项任务完成 ✅** — 端到端跑通, dev server 在 :3456
 
 ## 项目目标

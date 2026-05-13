@@ -11,7 +11,7 @@
   <a href="#-自动识别本地-agent"><img alt="Agents" src="https://img.shields.io/badge/agents-8%20CLIs-black?style=flat-square" /></a>
   <a href="#-skills"><img alt="Skills" src="https://img.shields.io/badge/skills-75-orange?style=flat-square" /></a>
   <a href="#一键发布到平台"><img alt="Export" src="https://img.shields.io/badge/export-WeChat%20%C2%B7%20X%20%C2%B7%20Zhihu%20%C2%B7%20PNG-9b59b6?style=flat-square" /></a>
-  <a href="#-30-秒上手"><img alt="Quickstart" src="https://img.shields.io/badge/quickstart-2%20commands-green?style=flat-square" /></a>
+  <a href="#-30-秒上手"><img alt="Quickstart" src="https://img.shields.io/badge/quickstart-30%20seconds-green?style=flat-square" /></a>
   <a href="#架构"><img alt="No API key" src="https://img.shields.io/badge/no-API%20key%20required-ff6b35?style=flat-square" /></a>
 </p>
 
@@ -153,7 +153,7 @@ picker 顶部 **推荐 / Featured** 分组里默认置顶的 8 个 skill —— 
 ## ⚡ 30 秒上手
 
 ```bash
-git clone https://github.com/your-org/html-anything
+git clone https://github.com/nexu-io/html-anything
 cd html-anything
 pnpm install
 pnpm dev
@@ -354,19 +354,19 @@ X 上关注 [**@nexudotio**](https://x.com/nexudotio),看版本发布、新 skil
 
 感谢每一个提 issue、开 PR、加 skill / agent 适配 / 导出适配的人。下面这面墙是我们能想到最直观的感谢方式。
 
-<a href="https://github.com/pftom/html-everthing/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=pftom/html-everthing" alt="HTML Anything 贡献者" />
+<a href="https://github.com/nexu-io/html-anything/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=nexu-io/html-anything" alt="HTML Anything 贡献者" />
 </a>
 
-如果你刚刚开第一个 PR —— 欢迎。[`good-first-issue` / `help-wanted`](https://github.com/pftom/html-everthing/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%2C%22help+wanted%22) 标签是最好的切入口。
+如果你刚刚开第一个 PR —— 欢迎。[`good-first-issue` / `help-wanted`](https://github.com/nexu-io/html-anything/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%2C%22help+wanted%22) 标签是最好的切入口。
 
 ## ⭐ Star History
 
-<a href="https://star-history.com/#pftom/html-everthing&Date">
+<a href="https://star-history.com/#nexu-io/html-anything&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pftom/html-everthing&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pftom/html-everthing&type=Date" />
-    <img alt="HTML Anything star history" src="https://api.star-history.com/svg?repos=pftom/html-everthing&type=Date" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date" />
+    <img alt="HTML Anything star history" src="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date" />
   </picture>
 </a>
 

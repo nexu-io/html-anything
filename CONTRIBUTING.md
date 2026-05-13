@@ -18,14 +18,14 @@ This guide tells you exactly where to look for each type of contribution and wha
 | Add a feature, fix a bug, refactor the streaming parser | code | `src/app/`, `src/lib/`, `src/components/` | normal PR |
 | Improve docs, port a section into another language, fix typos | docs | `README.md`, `README.zh-CN.md`, this file | one PR |
 
-If you're not sure which bucket your idea is in, [open an issue first](https://github.com/your-org/html-anything/issues/new) and we'll point you at the right surface.
+If you're not sure which bucket your idea is in, [open an issue first](https://github.com/nexu-io/html-anything/issues/new) and we'll point you at the right surface.
 
 ---
 
 ## Local setup
 
 ```bash
-git clone https://github.com/your-org/html-anything.git
+git clone https://github.com/nexu-io/html-anything.git
 cd html-anything
 pnpm install
 pnpm dev                  # next dev — http://localhost:3000
@@ -201,7 +201,7 @@ For prompt-stack bugs ("the agent emitted a purple gradient hero, the constraint
 
 ## Asking questions
 
-- Architecture question, design question, "is this a bug or a misuse" → [GitHub Discussions](https://github.com/your-org/html-anything/discussions) (preferred — searchable for the next person).
+- Architecture question, design question, "is this a bug or a misuse" → [GitHub Discussions](https://github.com/nexu-io/html-anything/discussions) (preferred — searchable for the next person).
 - "How do I write a skill that does X" → open a discussion. We'll answer it and turn the answer into an entry in this guide if the pattern is missing.
 
 ---
