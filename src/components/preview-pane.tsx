@@ -1,19 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useStore, selectActiveTask, type LogEntry, type RunStats } from "@/lib/store";
+import { useStore, selectActiveTask, type LogEntry, type RunStats, type ResultSnapshot } from "@/lib/store";
 import { useT, type DictKey } from "@/lib/i18n";
 import { previewHtml, extractHtml } from "@/lib/extract-html";
 import { isDeck } from "@/lib/deck";
 import { DeckViewer } from "./deck-viewer";
 
-type PreviewTab = "preview" | "deck" | "code" | "log";
+type PreviewTab = "preview" | "deck" | "code" | "log" | "history";
 
 const PREVIEW_TAB_KEY: Record<PreviewTab, DictKey> = {
   preview: "preview.tab.preview",
   deck: "preview.tab.deck",
   code: "preview.tab.code",
   log: "preview.tab.log",
+  history: "preview.tab.history",
 };
 
 const STATUS_KEY: Record<string, DictKey> = {
@@ -37,6 +38,7 @@ const CHIP_KEYS: DictKey[] = [
 // stable references so the selector doesn't force re-render when active task is missing
 const EMPTY_LOG: LogEntry[] = [];
 const EMPTY_STATS: RunStats = { outputBytes: 0, deltaCount: 0 };
+const EMPTY_RESULTS: ResultSnapshot[] = [];
 
 export function PreviewPane({
   iframeRef,
@@ -47,9 +49,12 @@ export function PreviewPane({
   const status = useStore((s) => selectActiveTask(s)?.status ?? "idle");
   const log = useStore((s) => selectActiveTask(s)?.log ?? EMPTY_LOG);
   const stats = useStore((s) => selectActiveTask(s)?.stats ?? EMPTY_STATS);
+  const results = useStore((s) => selectActiveTask(s)?.results ?? EMPTY_RESULTS);
   const activeTaskId = useStore((s) => s.activeTaskId);
   const templateId = useStore((s) => selectActiveTask(s)?.templateId);
   const setHtmlFor = useStore((s) => s.setHtmlFor);
+  const restoreResultFor = useStore((s) => s.restoreResultFor);
+  const deleteResultFor = useStore((s) => s.deleteResultFor);
 
   // Template example HTML — fetched lazily when no task.html exists yet, so
   // switching templates in the picker shows that template's pre-shipped
@@ -212,7 +217,7 @@ export function PreviewPane({
           style={{ borderBottom: "1px solid var(--line-faint)", background: "var(--surface)" }}
         >
           <div className="flex gap-1">
-            {(["preview", ...(deckMode ? (["deck"] as const) : []), "code", "log"] as const).map((id) => (
+            {(["preview", ...(deckMode ? (["deck"] as const) : []), "code", "log", "history"] as const).map((id) => (
               <button
                 key={id}
                 onClick={() => setTab(id)}
@@ -229,6 +234,17 @@ export function PreviewPane({
                     }}
                   >
                     {log.length}
+                  </span>
+                )}
+                {id === "history" && results.length > 0 && (
+                  <span
+                    className="ml-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold"
+                    style={{
+                      background: tab === "history" ? "rgba(255,255,255,0.18)" : "rgba(31,122,58,0.12)",
+                      color: tab === "history" ? "#fff" : "var(--green)",
+                    }}
+                  >
+                    {results.length}
                   </span>
                 )}
               </button>
@@ -339,6 +355,17 @@ export function PreviewPane({
         )}
         {tab === "log" && (
           <LogPanel logRef={logRef} log={log} />
+        )}
+        {tab === "history" && (
+          <HistoryPanel
+            results={results}
+            currentHtml={html}
+            onRestore={(resultId) => {
+              restoreResultFor(activeTaskId, resultId);
+              setTab("preview");
+            }}
+            onDelete={(resultId) => deleteResultFor(activeTaskId, resultId)}
+          />
         )}
 
         {/* Fullscreen exit chip — only shown when this pane owns the fullscreen.
@@ -505,6 +532,97 @@ function LogPanel({
       {log.map((l, i) => (
         <LogLine key={i} entry={l} />
       ))}
+    </div>
+  );
+}
+
+function HistoryPanel({
+  results,
+  currentHtml,
+  onRestore,
+  onDelete,
+}: {
+  results: ResultSnapshot[];
+  currentHtml: string;
+  onRestore: (resultId: string) => void;
+  onDelete: (resultId: string) => void;
+}) {
+  const t = useT();
+  if (results.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center p-6 text-center text-[12px] leading-relaxed text-[var(--ink-faint)]" style={{ background: "var(--paper)" }}>
+        <div className="max-w-sm">{t("preview.history.empty")}</div>
+      </div>
+    );
+  }
+  return (
+    <div className="h-full overflow-auto p-3" style={{ background: "var(--paper)" }}>
+      <div className="space-y-2">
+        {results.map((result) => {
+          const isCurrent = currentHtml.trim() === result.html.trim();
+          const size = `${(result.html.length / 1024).toFixed(1)} KB`;
+          const date = new Date(result.createdAt).toLocaleString();
+          return (
+            <div
+              key={result.id}
+              className="rounded-xl p-3"
+              style={{
+                background: "var(--surface)",
+                border: isCurrent ? "1px solid rgba(31,122,58,0.40)" : "1px solid var(--line-faint)",
+              }}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <div className="truncate text-[12.5px] font-semibold text-[var(--ink)]">{result.name}</div>
+                    {isCurrent && (
+                      <span className="rounded-full px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.12em]" style={{ background: "rgba(31,122,58,0.12)", color: "var(--green)" }}>
+                        {t("preview.history.current")}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-1 text-[10.5px] text-[var(--ink-faint)]">
+                    {t("preview.history.meta", {
+                      agent: result.model ? `${result.agent} / ${result.model}` : result.agent,
+                      size,
+                      date,
+                    })}
+                  </div>
+                </div>
+                <div className="flex shrink-0 items-center gap-1">
+                  <button
+                    onClick={() => onRestore(result.id)}
+                    className="rounded-full px-2 py-1 text-[10.5px] font-medium"
+                    style={{
+                      background: "var(--coral-soft)",
+                      color: "var(--coral)",
+                      border: "1px solid rgba(207,96,60,0.18)",
+                    }}
+                  >
+                    {t("preview.history.restore")}
+                  </button>
+                  <button
+                    onClick={() => onDelete(result.id)}
+                    className="grid h-6 w-6 place-items-center rounded-full text-[12px]"
+                    title={t("preview.history.delete")}
+                    aria-label={t("preview.history.delete")}
+                    style={{
+                      background: "transparent",
+                      color: "var(--ink-faint)",
+                      border: "1px solid var(--line)",
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+              <pre className="mt-2 line-clamp-3 whitespace-pre-wrap break-words rounded-lg p-2 text-[10px] leading-snug text-[var(--ink-mute)]" style={{ background: "rgba(21,20,15,0.035)" }}>
+                {result.content.replace(/\s+/g, " ").trim() || result.html.slice(0, 180)}
+              </pre>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

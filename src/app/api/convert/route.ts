@@ -93,7 +93,14 @@ export async function POST(req: NextRequest) {
       format,
     });
   } else {
-    prompt = assemblePrompt({ body: skill.body, content, format });
+    prompt = assemblePrompt({
+      body: skill.body,
+      content,
+      format,
+      exampleHtml: skill.exampleHtml,
+      exampleName: skill.example?.name,
+      templateName: skill.zhName,
+    });
   }
   const abortCtl = new AbortController();
   req.signal?.addEventListener("abort", () => abortCtl.abort(), { once: true });

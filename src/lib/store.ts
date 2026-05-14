@@ -57,6 +57,19 @@ export type RunStats = {
   bin?: string;
 };
 
+export type ResultSnapshot = {
+  id: string;
+  name: string;
+  html: string;
+  content: string;
+  format: string;
+  templateId: string;
+  agent: string;
+  model?: string;
+  stats: RunStats;
+  createdAt: number;
+};
+
 export type Task = {
   id: string;
   name: string;
@@ -70,6 +83,8 @@ export type Task = {
   status: ConvertStatus;
   log: LogEntry[];
   stats: RunStats;
+  /** Completed conversion snapshots. Kept locally so users can revisit prior outputs. */
+  results: ResultSnapshot[];
   // sample-derived fields — when populated, the next convert switches to
   // diff-edit mode and asks the agent to make minimal changes to baseHtml
   // instead of regenerating from scratch.
@@ -104,6 +119,7 @@ function makeTask(init?: Partial<Task>): Task {
     status: init?.status ?? "idle",
     log: init?.log ?? [],
     stats: init?.stats ?? emptyStats,
+    results: init?.results ?? [],
     baseContent: init?.baseContent,
     baseHtml: init?.baseHtml,
     sampleId: init?.sampleId,
@@ -208,6 +224,9 @@ type State = {
   clearLogFor: (taskId: string) => void;
   resetStatsFor: (taskId: string) => void;
   patchStatsFor: (taskId: string, patch: Partial<RunStats>) => void;
+  saveResultFor: (taskId: string, meta: { agent: string; model?: string }) => void;
+  restoreResultFor: (taskId: string, resultId: string) => void;
+  deleteResultFor: (taskId: string, resultId: string) => void;
   /** snapshot the current (content, html) as the new diff-edit baseline */
   commitBaseFor: (taskId: string) => void;
 
@@ -369,6 +388,48 @@ export const useStore = create<State>()(
         set((st) => ({
           tasks: patchTask(st.tasks, taskId, (t) => ({ stats: { ...t.stats, ...patch } })),
         })),
+      saveResultFor: (taskId, meta) =>
+        set((st) => ({
+          tasks: patchTask(st.tasks, taskId, (t) => {
+            if (!t.html.trim()) return {};
+            const snapshot: ResultSnapshot = {
+              id: `r_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
+              name: `${t.name} · ${new Date().toLocaleString()}`,
+              html: t.html,
+              content: t.content,
+              format: t.format,
+              templateId: t.templateId,
+              agent: meta.agent,
+              model: meta.model || t.stats.model,
+              stats: { ...t.stats },
+              createdAt: Date.now(),
+            };
+            return { results: [snapshot, ...(t.results ?? [])].slice(0, 12) };
+          }),
+        })),
+      restoreResultFor: (taskId, resultId) =>
+        set((st) => ({
+          tasks: patchTask(st.tasks, taskId, (t) => {
+            const result = (t.results ?? []).find((r) => r.id === resultId);
+            if (!result) return {};
+            return {
+              html: result.html,
+              content: result.content,
+              format: result.format,
+              templateId: result.templateId,
+              stats: result.stats,
+              status: "done",
+              baseHtml: result.html,
+              baseContent: result.content,
+            };
+          }),
+        })),
+      deleteResultFor: (taskId, resultId) =>
+        set((st) => ({
+          tasks: patchTask(st.tasks, taskId, (t) => ({
+            results: (t.results ?? []).filter((r) => r.id !== resultId),
+          })),
+        })),
       commitBaseFor: (taskId) =>
         set((st) => ({
           tasks: patchTask(st.tasks, taskId, (t) => ({
@@ -390,7 +451,7 @@ export const useStore = create<State>()(
       // Legacy key from the old "HTML Everything" brand; do NOT rename — every
       // existing user's saved tasks live under this localStorage key.
       name: "html-everything-store",
-      version: 5,
+      version: 6,
       partialize: (s): Persisted => ({
         tasks: s.tasks.map((t) => ({
           ...t,
@@ -447,6 +508,18 @@ export const useStore = create<State>()(
             !(LAYOUT_MODES as string[]).includes(p.layoutMode as string)
           ) {
             p.layoutMode = "split";
+          }
+        }
+        // v5 → v6: introduce per-task conversion result snapshots.
+        if (fromVersion < 6 && persisted && typeof persisted === "object") {
+          const p = persisted as Record<string, unknown>;
+          if (Array.isArray(p.tasks)) {
+            p.tasks = p.tasks.map((task) => ({
+              ...(task as Record<string, unknown>),
+              results: Array.isArray((task as Record<string, unknown>).results)
+                ? (task as Record<string, unknown>).results
+                : [],
+            }));
           }
         }
         return persisted as Persisted;

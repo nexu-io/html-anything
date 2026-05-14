@@ -150,6 +150,7 @@ export function useConvert() {
           return;
         }
         useStore.getState().setStatusFor(taskId, "done");
+        useStore.getState().saveResultFor(taskId, { agent: req.agent, model: useModel });
         // record the just-finished (content, html) as the new diff-edit baseline
         // so the user's next edit goes through diff mode instead of full regen
         useStore.getState().commitBaseFor(taskId);

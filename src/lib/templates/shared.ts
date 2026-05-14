@@ -43,13 +43,47 @@ export const SHARED_DESIGN_DIRECTIVES = `
  * `buildPrompt` functions in `index.ts` and the skill-folder loader assemble
  * prompts via this helper so behaviour stays identical.
  */
+const MAX_TEMPLATE_EXAMPLE_CHARS = 60_000;
+
+function formatTemplateExample(opts: {
+  exampleHtml?: string;
+  exampleName?: string;
+  templateName?: string;
+}): string {
+  const raw = opts.exampleHtml?.trim();
+  if (!raw) return "";
+  const truncated = raw.length > MAX_TEMPLATE_EXAMPLE_CHARS;
+  const html = truncated ? raw.slice(0, MAX_TEMPLATE_EXAMPLE_CHARS) : raw;
+  return `
+【模板示例 HTML — 视觉还原基准, 不复制内容】
+下面是当前模板随仓库提供的 ${opts.exampleName ?? opts.templateName ?? "example.html"}。这是你必须贴近的视觉与交互基准:
+- 复用它的版面节奏、标题层级、空间密度、组件质感、边框/阴影/动效语言。
+- 用户内容必须完整替换示例内容; 禁止照抄示例里的业务文字、数字、公司名或占位文案。
+- 用户内容比示例长时, 沿用示例组件继续扩展 section / card / slide; 不要为了贴合示例页数而压缩信息。
+- 用户内容比示例短时, 保持同一视觉系统, 但删除空壳和无内容模块。
+- 如果示例使用复杂 CSS / JS / 响应式规则, 生成结果应保留同等级的完整度, 不要降级成普通 Markdown 样式。
+${truncated ? `- 注意: 示例 HTML 因长度只截取前 ${MAX_TEMPLATE_EXAMPLE_CHARS.toLocaleString()} 字符; 仍需保持其可见视觉系统。\n` : ""}
+<template_example_html>
+${html}
+</template_example_html>
+`;
+}
+
 export function assemblePrompt(opts: {
   body: string;
   content: string;
   format: string;
+  exampleHtml?: string;
+  exampleName?: string;
+  templateName?: string;
 }): string {
   return `${SHARED_DESIGN_DIRECTIVES}
 ${opts.body.trim()}
+${formatTemplateExample({
+  exampleHtml: opts.exampleHtml,
+  exampleName: opts.exampleName,
+  templateName: opts.templateName,
+})}
 
 【输入格式】: ${opts.format}
 【用户内容】:
