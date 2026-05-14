@@ -49,7 +49,7 @@ export async function parseFile(file: File): Promise<FileParseResult> {
       r.onerror = reject;
       r.readAsDataURL(file);
     });
-    // Caller (upload-dropzone) is expected to register the dataUrl as an
+    // Caller (useUploadFile) is expected to register the dataUrl as an
     // asset and substitute an `asset:<id>` token into `text` before writing
     // it to the editor — keeping the textarea readable. We still return the
     // raw inline form here as a fallback for legacy callers.

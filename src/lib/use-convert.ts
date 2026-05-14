@@ -44,7 +44,7 @@ export function useConvert() {
       const startedAt = Date.now();
       store.patchStatsFor(taskId, { startedAt });
 
-      // Inline `asset:<id>` placeholders (created by upload-dropzone for
+      // Inline `asset:<id>` placeholders (created by useUploadFile for
       // images) back into real `data:image/...` URLs before the agent
       // sees the prompt. Editor stays readable; agent gets the bytes.
       const taskWithAssets = store.tasks.find((t) => t.id === taskId);
