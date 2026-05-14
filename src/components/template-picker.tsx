@@ -249,7 +249,7 @@ export function TemplatePicker() {
 
       {open && (
         <div
-          className="absolute left-0 z-30 mt-2 w-[560px] od-fade-in rounded-2xl overflow-hidden flex flex-col"
+          className="absolute left-0 z-40 mt-2 w-[560px] od-fade-in rounded-2xl overflow-hidden flex flex-col"
           style={{
             background: "var(--surface)",
             border: "1px solid var(--line-soft)",
@@ -467,7 +467,7 @@ export function TemplatePicker() {
       {/* hover preview popover — appears next to dropdown when a row with example.html is hovered */}
       {open && hoveredTpl && hoveredTpl.example?.hasHtml && (
         <aside
-          className="absolute z-30 mt-2 od-fade-in flex flex-col rounded-2xl overflow-hidden"
+          className="absolute z-40 mt-2 od-fade-in flex flex-col rounded-2xl overflow-hidden"
           style={{
             left: "calc(560px + 12px)",
             top: 0,

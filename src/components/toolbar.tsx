@@ -47,7 +47,7 @@ export function Toolbar({
 
   return (
     <header
-      className="relative z-20 flex flex-wrap items-center justify-between gap-3 px-5 py-3"
+      className="relative z-40 flex flex-wrap items-center justify-between gap-3 px-5 py-3"
       style={{
         background: "rgba(250, 249, 247, 0.92)",
         borderBottom: "1px solid var(--line-faint)",
