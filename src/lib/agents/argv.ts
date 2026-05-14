@@ -3,6 +3,12 @@ export type AgentArgvOpts = {
   cwd?: string;
   /** When the adapter takes the prompt as a positional argv (deepseek). */
   prompt?: string;
+  /**
+   * For openclaw only — pre-resolved agent id (e.g. "main" or "ops") that
+   * gets injected into the argv as `--agent <id>`. invoke.ts is responsible
+   * for resolving this via `resolveOpenclawAgentId` before calling buildArgv.
+   */
+  openclawAgentId?: string;
 };
 
 export class UnsupportedAgentProtocolError extends Error {
@@ -26,6 +32,20 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         "--include-partial-messages",
         "--permission-mode",
         "bypassPermissions",
+        ...(model ? ["--model", model] : []),
+      ];
+    case "openclaw":
+      // OpenClaw is a multi-channel agent gateway — invocation is
+      //   openclaw agent --local --json --agent <id> [--model <id>]
+      // and the prompt is appended later via `--message <text>` by invoke.ts
+      // (see protocol === "argv-message"). The agent id is resolved at
+      // invocation time by `resolveOpenclawAgentId`.
+      return [
+        "agent",
+        "--local",
+        "--json",
+        "--agent",
+        _opts.openclawAgentId ?? "main",
         ...(model ? ["--model", model] : []),
       ];
     case "codex":

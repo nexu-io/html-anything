@@ -1,5 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { resolveOnPath, AGENTS } from "./detect";
+import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
 import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
 
 export type InvokeOpts = {
@@ -36,26 +36,15 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
     );
   }
 
-  let argv: string[];
-  try {
-    argv = buildArgv(opts.agent, { model: opts.model, prompt: opts.prompt });
-  } catch (err) {
-    return errorStream(
-      err instanceof UnsupportedAgentProtocolError
-        ? err.message
-        : err instanceof Error
-          ? err.message
-          : String(err),
-    );
-  }
-  // `protocol: "argv"` adapters (deepseek today) take the prompt as a
-  // trailing positional arg rather than reading from stdin.
-  const promptViaArgv = def.protocol === "argv";
-  if (promptViaArgv) argv = [...argv, opts.prompt];
+  // For openclaw we need an async detection step (resolveOpenclawAgentId)
+  // before buildArgv. Do all of the argv assembly inside the stream's async
+  // start so we can `await` and surface failures as `error` events.
   const env = envFor(opts.agent);
+  const promptViaArgv = def.protocol === "argv";
+  const promptViaMessageFlag = def.protocol === "argv-message";
 
   return new ReadableStream<InvokeEvent>({
-    start(controller) {
+    async start(controller) {
       let closed = false;
       let child: ChildProcessWithoutNullStreams | null = null;
 
@@ -74,6 +63,39 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           controller.close();
         } catch {}
       };
+
+      // Resolve agent-specific argv. For openclaw we first probe `agents
+      // list` to learn the actual agent id (commonly "main") so the CLI's
+      // required `--agent <id>` is satisfied.
+      let argv: string[];
+      try {
+        const argvOpts: Parameters<typeof buildArgv>[1] = {
+          model: opts.model,
+          prompt: opts.prompt,
+        };
+        if (opts.agent === "openclaw") {
+          argvOpts.openclawAgentId = await resolveOpenclawAgentId(bin!);
+        }
+        argv = buildArgv(opts.agent, argvOpts);
+      } catch (err) {
+        safeEnqueue({
+          type: "error",
+          message:
+            err instanceof UnsupportedAgentProtocolError
+              ? err.message
+              : err instanceof Error
+                ? err.message
+                : String(err),
+        });
+        safeClose();
+        return;
+      }
+      // `protocol: "argv"` adapters (deepseek today) take the prompt as a
+      // trailing positional arg rather than reading from stdin.
+      if (promptViaArgv) argv = [...argv, opts.prompt];
+      // `protocol: "argv-message"` (openclaw today) wants the prompt under
+      // an explicit `--message <text>` flag.
+      if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
 
       try {
         child = spawn(bin!, argv, {
@@ -99,7 +121,9 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
 
       child.stdin.on("error", () => {});
       try {
-        if (!promptViaArgv) child.stdin.write(opts.prompt);
+        // stdin-protocol agents read the prompt from stdin; argv / argv-message
+        // agents already have it on the command line.
+        if (!promptViaArgv && !promptViaMessageFlag) child.stdin.write(opts.prompt);
         child.stdin.end();
       } catch {}
 
@@ -112,6 +136,9 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       child.stdout.on("data", (chunk: string) => {
         if (closed) return;
         stdoutBuf += chunk;
+        // OpenClaw emits one big multi-line JSON document — accumulate and
+        // parse it once on close instead of trying to parse each line.
+        if (opts.agent === "openclaw") return;
         let nl: number;
         while ((nl = stdoutBuf.indexOf("\n")) !== -1) {
           const line = stdoutBuf.slice(0, nl);
@@ -136,7 +163,58 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       });
 
       child.on("close", (code) => {
-        if (stdoutBuf) {
+        if (opts.agent === "openclaw") {
+          // OpenClaw's `agent --local --json` emits one pretty-printed JSON
+          // document on stdout. The visible reply is at
+          // `data.finalAssistantVisibleText`; usage / model show up in
+          // `data.executionTrace`. Emit the visible text as a single delta.
+          if (stdoutBuf.trim()) {
+            try {
+              const obj = JSON.parse(stdoutBuf) as {
+                payloads?: Array<{ text?: string }>;
+                meta?: {
+                  finalAssistantVisibleText?: string;
+                  finalAssistantRawText?: string;
+                  executionTrace?: { winnerProvider?: string; winnerModel?: string };
+                  completion?: { stopReason?: string };
+                  agentMeta?: { sessionId?: string };
+                };
+              };
+              const text = obj?.meta?.finalAssistantVisibleText
+                ?? obj?.meta?.finalAssistantRawText
+                ?? obj?.payloads?.[0]?.text
+                ?? "";
+              if (text) safeEnqueue({ type: "delta", text });
+              const trace = obj?.meta?.executionTrace;
+              if (trace?.winnerModel) {
+                safeEnqueue({
+                  type: "meta",
+                  key: "model",
+                  value: trace.winnerProvider
+                    ? `${trace.winnerProvider}/${trace.winnerModel}`
+                    : trace.winnerModel,
+                });
+              }
+              if (obj?.meta?.agentMeta?.sessionId) {
+                safeEnqueue({ type: "meta", key: "session", value: obj.meta.agentMeta.sessionId });
+              }
+              if (obj?.meta?.completion?.stopReason) {
+                safeEnqueue({ type: "meta", key: "result", value: obj.meta.completion.stopReason });
+              }
+              if (!text) {
+                safeEnqueue({
+                  type: "error",
+                  message: "OpenClaw returned an empty assistant message",
+                });
+              }
+            } catch (err) {
+              safeEnqueue({
+                type: "error",
+                message: `OpenClaw JSON parse failed: ${err instanceof Error ? err.message : String(err)}`,
+              });
+            }
+          }
+        } else if (stdoutBuf) {
           for (const part of parse(stdoutBuf)) {
             if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
