@@ -188,6 +188,27 @@ function handleEvent(taskId: string, event: string, data: unknown, startedAt: nu
       if (typeof d.text === "string") store.appendHtmlFor(taskId, d.text);
       break;
     }
+    case "html": {
+      // Agent decided to write the HTML to a file via the Write tool instead
+      // of streaming it. The parser rescued the file's content from the
+      // tool_use input — REPLACE the accumulated text (preamble + "已输出至 …"
+      // confirmation) so the preview shows the real document.
+      if (typeof d.text === "string") {
+        store.setHtmlFor(taskId, d.text);
+        const len = d.text.length;
+        const prev = useStore.getState().tasks.find((t) => t.id === taskId)?.stats;
+        store.patchStatsFor(taskId, {
+          outputBytes: len,
+          firstByteAt: prev?.firstByteAt ?? Date.now(),
+        });
+        store.pushLogFor(taskId, {
+          kind: "info",
+          elapsed,
+          text: `📄 从 Write 工具输入恢复 HTML (${len.toLocaleString()} 字节)`,
+        });
+      }
+      break;
+    }
     case "meta": {
       const key = String(d.key);
       const value = d.value;

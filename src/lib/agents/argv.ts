@@ -142,6 +142,13 @@ export function envFor(agent: string): NodeJS.ProcessEnv {
 export type AgentParse =
   | { kind: "delta"; text: string }
   | { kind: "meta"; key: string; value: unknown }
+  /**
+   * Canonical HTML rescued from a file-write tool call (e.g. Claude's `Write`
+   * tool). Replaces any previously streamed text — the preamble like
+   * "I'll save it as output.html\n已输出至 …" is junk; the tool's input is the
+   * real HTML. Downstream calls `setHtmlFor`, not `appendHtmlFor`.
+   */
+  | { kind: "html"; text: string }
   | { kind: "noise" };
 
 /**
@@ -171,6 +178,51 @@ export function makeParser(agent: string): (line: string) => AgentParse[] {
  */
 export function parseLine(agent: string, line: string): AgentParse[] {
   return parseLineWithState(agent, line, {});
+}
+
+/**
+ * Some agents (Claude + bypassPermissions, qoder, …) ignore the "stream HTML
+ * inline" prompt and decide to dump the document into a file via the `Write`
+ * tool, leaving the assistant text as just a confirmation ("已输出至 …").
+ * Rescue the HTML from the tool_use input so the preview still gets the real
+ * content. Returns an empty string if no Write/create_file tool_use was found
+ * or its input has no usable content field.
+ */
+function rescueHtmlFromToolUse(
+  content: Array<{ type?: string; name?: string; input?: unknown }> | undefined,
+): string {
+  if (!Array.isArray(content)) return "";
+  const parts: string[] = [];
+  for (const block of content) {
+    if (!block || block.type !== "tool_use") continue;
+    const name = (block.name ?? "").toLowerCase();
+    // Match the common file-write tool names across agents.
+    if (
+      name !== "write" &&
+      name !== "create_file" &&
+      name !== "createfile" &&
+      name !== "writefile" &&
+      name !== "write_file" &&
+      name !== "filewrite"
+    )
+      continue;
+    const input = block.input as Record<string, unknown> | undefined;
+    if (!input || typeof input !== "object") continue;
+    const path = String(input.file_path ?? input.path ?? input.filename ?? "").toLowerCase();
+    // Only rescue HTML-ish targets — never grab content for a .md / .txt
+    // sidecar the agent might also be writing.
+    if (path && !/\.(html?|htm)$/.test(path)) continue;
+    const text =
+      typeof input.content === "string"
+        ? input.content
+        : typeof input.text === "string"
+          ? input.text
+          : typeof input.file_content === "string"
+            ? input.file_content
+            : "";
+    if (text) parts.push(text);
+  }
+  return parts.join("");
 }
 
 function parseLineWithState(agent: string, line: string, state: ParseState): AgentParse[] {
@@ -214,10 +266,17 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
     // were absent (e.g. older claude without --include-partial-messages).
     if (obj.type === "assistant" && obj.message && typeof obj.message === "object") {
       const msg = obj.message as {
-        content?: Array<{ type?: string; text?: string }>;
+        content?: Array<{ type?: string; text?: string; name?: string; input?: unknown }>;
         usage?: Record<string, number>;
         model?: string;
       };
+      const toolHtml = rescueHtmlFromToolUse(msg.content);
+      if (toolHtml) {
+        out.push({ kind: "html", text: toolHtml });
+        // suppress the chatty assistant text fallback below; the Write input
+        // is authoritative for this turn.
+        state.sawStreamEventText = true;
+      }
       if (!state.sawStreamEventText) {
         const text = (msg.content ?? [])
           .filter((c) => c?.type === "text" && typeof c.text === "string")
@@ -267,13 +326,20 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
         out.push({ kind: "delta", text: ev.delta.text });
       }
     }
-    if (obj.type === "assistant" && obj.message && typeof obj.message === "object" && !state.sawStreamEventText) {
-      const msg = obj.message as { content?: Array<{ type?: string; text?: string }> };
-      const text = (msg.content ?? [])
-        .filter((c) => c?.type === "text" && typeof c.text === "string")
-        .map((c) => c.text!)
-        .join("");
-      if (text) out.push({ kind: "delta", text });
+    if (obj.type === "assistant" && obj.message && typeof obj.message === "object") {
+      const msg = obj.message as { content?: Array<{ type?: string; text?: string; name?: string; input?: unknown }> };
+      const toolHtml = rescueHtmlFromToolUse(msg.content);
+      if (toolHtml) {
+        out.push({ kind: "html", text: toolHtml });
+        state.sawStreamEventText = true;
+      }
+      if (!state.sawStreamEventText) {
+        const text = (msg.content ?? [])
+          .filter((c) => c?.type === "text" && typeof c.text === "string")
+          .map((c) => c.text!)
+          .join("");
+        if (text) out.push({ kind: "delta", text });
+      }
     }
     // Bare `text` field — only honor it when we haven't already emitted a
     // streamed delta or an assistant body, otherwise it duplicates the same
@@ -312,13 +378,20 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
         out.push({ kind: "delta", text: ev.delta.text });
       }
     }
-    if (obj.type === "assistant" && obj.message && typeof obj.message === "object" && !state.sawStreamEventText) {
-      const msg = obj.message as { content?: Array<{ type?: string; text?: string }> };
-      const text = (msg.content ?? [])
-        .filter((c) => c?.type === "text" && typeof c.text === "string")
-        .map((c) => c.text!)
-        .join("");
-      if (text) out.push({ kind: "delta", text });
+    if (obj.type === "assistant" && obj.message && typeof obj.message === "object") {
+      const msg = obj.message as { content?: Array<{ type?: string; text?: string; name?: string; input?: unknown }> };
+      const toolHtml = rescueHtmlFromToolUse(msg.content);
+      if (toolHtml) {
+        out.push({ kind: "html", text: toolHtml });
+        state.sawStreamEventText = true;
+      }
+      if (!state.sawStreamEventText) {
+        const text = (msg.content ?? [])
+          .filter((c) => c?.type === "text" && typeof c.text === "string")
+          .map((c) => c.text!)
+          .join("");
+        if (text) out.push({ kind: "delta", text });
+      }
     }
     if (obj.type === "result") {
       if (obj.usage) out.push({ kind: "meta", key: "usage", value: obj.usage });

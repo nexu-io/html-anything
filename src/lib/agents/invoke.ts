@@ -13,6 +13,12 @@ export type InvokeOpts = {
 export type InvokeEvent =
   | { type: "start"; bin: string; argv: string[]; promptBytes: number }
   | { type: "delta"; text: string }
+  /**
+   * Canonical HTML rescued from a file-write tool call. The client REPLACES
+   * the task's accumulated html with this payload (not appends) — see
+   * [[rescueHtmlFromToolUse]] in argv.ts for why this exists.
+   */
+  | { type: "html"; text: string }
   | { type: "meta"; key: string; value: unknown }
   | { type: "stderr"; text: string }
   | { type: "raw"; text: string }
@@ -146,6 +152,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           if (!line) continue;
           for (const part of parse(line)) {
             if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
+            else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
             else safeEnqueue({ type: "raw", text: line.slice(0, 240) });
           }
@@ -217,6 +224,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         } else if (stdoutBuf) {
           for (const part of parse(stdoutBuf)) {
             if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
+            else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
           }
           if (opts.agent === "aider" || opts.agent === "deepseek") {
