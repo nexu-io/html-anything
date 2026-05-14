@@ -45,6 +45,8 @@ export function TasksSidebar() {
     ? tasks.filter((task) => {
         if (task.name.toLowerCase().includes(trimmed)) return true;
         if (task.content.toLowerCase().includes(trimmed)) return true;
+        if (task.html.toLowerCase().includes(trimmed)) return true;
+        if ((task.results ?? []).some((result) => result.html.toLowerCase().includes(trimmed))) return true;
         const tpl = templates?.find((x) => x.id === task.templateId);
         if (tpl) {
           if (tpl.zhName.toLowerCase().includes(trimmed)) return true;
@@ -283,6 +285,7 @@ function TaskCard({
 
   const preview = task.content.replace(/\s+/g, " ").trim().slice(0, 64);
   const sizeKB = task.html ? `${(task.html.length / 1024).toFixed(1)} KB` : null;
+  const resultCount = task.results?.length ?? 0;
 
   return (
     <div
@@ -341,6 +344,14 @@ function TaskCard({
               <>
                 <span className="text-[var(--ink-faint)]">·</span>
                 <span className="font-mono tabular-nums text-[var(--ink-faint)]">{sizeKB}</span>
+              </>
+            )}
+            {resultCount > 0 && (
+              <>
+                <span className="text-[var(--ink-faint)]">·</span>
+                <span className="rounded-full px-1.5 py-px text-[9.5px] font-medium text-[var(--green)]" style={{ background: "rgba(31,122,58,0.10)" }}>
+                  {t("tasks.resultCount", { n: resultCount })}
+                </span>
               </>
             )}
           </div>

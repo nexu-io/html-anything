@@ -173,17 +173,58 @@ On startup we scan `PATH` (including `~/.local/bin`, `~/.bun/bin`, `/opt/homebre
 | Agent | Detection binary | Invocation |
 |---|---|---|
 | **Claude Code** | `claude` | `claude -p --output-format stream-json` |
+| **OpenClaw** | `openclaw` | `openclaw agent --local --json --agent <id> --message <prompt>` |
 | **OpenAI Codex** | `codex` | `codex exec --json --sandbox workspace-write` |
 | **Cursor Agent** | `cursor-agent` | `cursor-agent --print --output-format stream-json --force --trust` |
 | **Gemini CLI** | `gemini` | `gemini --output-format stream-json --yolo` |
 | **GitHub Copilot CLI** | `copilot` | `copilot --allow-all-tools --output-format json` |
 | **OpenCode** | `opencode-cli` / `opencode` | `opencode run --format json --dangerously-skip-permissions -` |
 | **Qwen Coder** | `qwen` | `qwen --yolo -` |
+| **Qoder CLI** | `qodercli` | `qodercli -p --output-format stream-json --yolo` |
+| **DeepSeek TUI** | `deepseek` | `deepseek exec --auto <prompt>` |
 | **Aider** | `aider` | `aider --no-pretty --no-stream --yes-always --message-file -` |
 
 > The detection strategy and per-CLI adapter shape are borrowed directly from [`nexu-io/open-design`](https://github.com/nexu-io/open-design) and [`multica-ai/multica`](https://github.com/multica-ai/multica): one privileged process spawns CLIs, JSON-line is the wire protocol, every CLI gets a thin adapter in [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts).
 
 If you've already done `claude login` / `cursor login` / `gemini auth` in your terminal, HTML Anything reuses that session. **No second copy of the API key required.**
+
+### Advanced agent / model configuration
+
+HTML Anything keeps a curated model picker per agent, but you can extend it without editing source:
+
+```bash
+# Add models globally, or only for one agent. Use "id=Label" for prettier names.
+HTML_ANYTHING_MODELS="my-fast-model=My Fast Model,provider/custom-model"
+HTML_ANYTHING_MODELS_CODEX="gpt-5.2,gpt-5.3-codex=Codex 5.3"
+
+# Add fallback binary names for an existing adapter.
+HTML_ANYTHING_BINS_CODEX="codex-nightly,openai-codex"
+
+# Override a binary. Values can be absolute paths or names resolvable on PATH.
+HTML_ANYTHING_BIN_CODEX="/opt/homebrew/bin/codex"
+CODEX_BIN="codex-next"
+
+# Optional proxy for agent subprocesses. It is never enabled by default.
+HTML_ANYTHING_AGENT_PROXY="http://127.0.0.1:7890"
+HTML_ANYTHING_AGENT_PROXY_CODEX="none" # explicitly strip proxy env for Codex
+```
+
+You can also register a custom agent that reuses an existing adapter's invocation/parser:
+
+```bash
+HTML_ANYTHING_EXTRA_AGENTS='[
+  {
+    "id": "codex-nightly",
+    "label": "Codex Nightly",
+    "vendor": "OpenAI",
+    "bin": "codex-nightly",
+    "adapter": "codex",
+    "models": ["default", "gpt-5.3-codex=GPT-5.3 Codex"]
+  }
+]'
+```
+
+`adapter` must point at one of the implemented adapters (`claude`, `openclaw`, `codex`, `cursor-agent`, `gemini`, `copilot`, `opencode`, `qwen`, `qoder`, `deepseek`, `aider`). ACP / pi-rpc agents are detected for visibility, but are not invokable until their protocol adapters land.
 
 ## Skills
 

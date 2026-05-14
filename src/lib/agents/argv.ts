@@ -52,6 +52,9 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
       return [
         "exec",
         "--json",
+        "--ephemeral",
+        "--ignore-user-config",
+        "--ignore-rules",
         "--skip-git-repo-check",
         "--sandbox",
         "workspace-write",
@@ -133,15 +136,40 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
   }
 }
 
-export function envFor(agent: string): NodeJS.ProcessEnv {
+function envKey(id: string): string {
+  return id.replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "").toUpperCase();
+}
+
+export function envFor(agent: string, agentId = agent): NodeJS.ProcessEnv {
   const base = { ...process.env };
   if (agent === "gemini") base.GEMINI_CLI_TRUST_WORKSPACE = "true";
+  if (agent === "codex") {
+    const proxy =
+      process.env[`HTML_ANYTHING_AGENT_PROXY_${envKey(agentId)}`] ??
+      process.env.HTML_ANYTHING_AGENT_PROXY;
+    if (proxy && /^(none|off|false|0)$/i.test(proxy)) {
+      delete base.HTTP_PROXY;
+      delete base.HTTPS_PROXY;
+      delete base.http_proxy;
+      delete base.https_proxy;
+      delete base.ALL_PROXY;
+      delete base.all_proxy;
+    } else if (proxy) {
+      base.HTTP_PROXY ??= proxy;
+      base.HTTPS_PROXY ??= proxy;
+      base.http_proxy ??= proxy;
+      base.https_proxy ??= proxy;
+      delete base.ALL_PROXY;
+      delete base.all_proxy;
+    }
+  }
   return base;
 }
 
 export type AgentParse =
   | { kind: "delta"; text: string }
   | { kind: "meta"; key: string; value: unknown }
+  | { kind: "error"; message: string }
   /**
    * Canonical HTML rescued from a file-write tool call (e.g. Claude's `Write`
    * tool). Replaces any previously streamed text — the preamble like
@@ -245,6 +273,10 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const obj = parsed as Record<string, unknown>;
   const out: AgentParse[] = [];
 
+  if (obj.type === "error" && typeof obj.message === "string") {
+    out.push({ kind: "error", message: obj.message });
+  }
+
   if (agent === "claude") {
     // Init / system metadata
     if (obj.type === "system" && obj.subtype === "init") {
@@ -299,9 +331,13 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
 
   if (agent === "codex") {
     if (obj.type === "item.completed" && obj.item && typeof obj.item === "object") {
-      const item = obj.item as { item_type?: string; text?: string };
-      if (item.item_type === "assistant_message" && typeof item.text === "string") {
-        out.push({ kind: "delta", text: item.text });
+      const item = obj.item as { item_type?: string; type?: string };
+      const itemType = item.item_type ?? item.type;
+      const text = extractCodexText(item);
+      if (text) {
+        out.push({ kind: "delta", text });
+      } else if (itemType === "assistant_message" || itemType === "agent_message" || itemType === "message") {
+        out.push({ kind: "noise" });
       }
     }
     if (obj.type === "item.delta" && typeof obj.text === "string") {
@@ -313,7 +349,7 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
         out.push({ kind: "delta", text: msg.message });
       }
     }
-    if (obj.type === "task_complete" && obj.usage) {
+    if ((obj.type === "task_complete" || obj.type === "turn.completed") && obj.usage) {
       out.push({ kind: "meta", key: "usage", value: obj.usage });
     }
   }
@@ -403,6 +439,48 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   }
 
   return out;
+}
+
+function extractCodexText(value: unknown): string {
+  const hits: string[] = [];
+  const htmlHits: string[] = [];
+  const visit = (node: unknown, key = "") => {
+    if (!node) return;
+    if (typeof node === "string") {
+      if (/<\/html>\s*$/i.test(node.trim()) || /<!DOCTYPE\s+html/i.test(node) || /<html[\s>]/i.test(node)) {
+        htmlHits.push(node);
+      } else if (
+        key === "text" ||
+        key === "message" ||
+        key === "content" ||
+        key === "output_text" ||
+        key === "final_answer"
+      ) {
+        hits.push(node);
+      }
+      return;
+    }
+    if (Array.isArray(node)) {
+      node.forEach((item) => visit(item, key));
+      return;
+    }
+    if (typeof node !== "object") return;
+    const record = node as Record<string, unknown>;
+    for (const [childKey, childValue] of Object.entries(record)) {
+      if (
+        childKey === "reasoning" ||
+        childKey === "summary" ||
+        childKey === "usage" ||
+        childKey === "metadata"
+      ) {
+        continue;
+      }
+      visit(childValue, childKey);
+    }
+  };
+  visit(value);
+  const html = htmlHits.find((text) => /<\/html>\s*$/i.test(text.trim())) ?? htmlHits[0];
+  return html ?? hits.join("");
 }
 
 /** Back-compat shim for callers that just want plain text. */

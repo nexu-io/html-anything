@@ -121,6 +121,7 @@ export interface Dict {
   "preview.tab.deck": string;
   "preview.tab.code": string;
   "preview.tab.log": string;
+  "preview.tab.history": string;
 
   // Deck viewer
   "deck.empty": string;
@@ -162,6 +163,11 @@ export interface Dict {
   "preview.presentTooltip": string;
   "preview.refresh": string;
   "preview.refreshTooltip": string;
+  "preview.history.empty": string;
+  "preview.history.restore": string;
+  "preview.history.delete": string;
+  "preview.history.current": string;
+  "preview.history.meta": string;
 
   // Tasks sidebar
   "tasks.heading": string;
@@ -185,6 +191,7 @@ export interface Dict {
   "tasks.emptyContent": string;
   "tasks.defaultName": string;
   "tasks.matchTooltip": string;
+  "tasks.resultCount": string;
 
   // Export menu
   "export.button": string;
@@ -437,15 +444,22 @@ const en: Dict = {
   "deck.notesTooltip": "Toggle speaker notes (N)",
   "deck.slideN": "{n} / {m}",
 
-  "tasks.heading": "tasks",
+  "preview.tab.history": "history",
+  "preview.history.empty": "Successful conversions will appear here. Each saved result keeps its HTML, source, template, agent, and metrics.",
+  "preview.history.restore": "Restore",
+  "preview.history.delete": "Delete result",
+  "preview.history.current": "current",
+  "preview.history.meta": "{agent} · {size} · {date}",
+
+  "tasks.heading": "history",
   "tasks.expand": "Expand task list",
   "tasks.collapse": "Collapse task list",
-  "tasks.newTask": "＋ New task",
-  "tasks.search.placeholder": "Search task name / content / template…",
+  "tasks.newTask": "＋ New conversion",
+  "tasks.search.placeholder": "Search title / source / result / template…",
   "tasks.search.clear": "Clear search",
   "tasks.empty.intro": "No tasks match “{query}”",
   "tasks.empty.clear": "Clear search",
-  "tasks.footer": "Input and output of every task autosave to your browser and survive a reload.",
+  "tasks.footer": "Every conversion keeps its source, HTML result, logs, metrics, and recent result snapshots in this browser.",
   "tasks.status.idle": "idle",
   "tasks.status.running": "generating",
   "tasks.status.done": "done",
@@ -458,6 +472,7 @@ const en: Dict = {
   "tasks.emptyContent": "empty",
   "tasks.defaultName": "Task {n}",
   "tasks.matchTooltip": "{a} / {b} match",
+  "tasks.resultCount": "{n} results",
 
   "export.button": "⤓ Export / Copy ▾",
   "export.section.platform": "Copy to platform",
@@ -705,15 +720,22 @@ const zhCN: Dict = {
   "deck.notesTooltip": "切换演讲者备注 (N)",
   "deck.slideN": "{n} / {m}",
 
-  "tasks.heading": "任务",
+  "preview.tab.history": "历史",
+  "preview.history.empty": "成功转换后的结果会出现在这里。每条结果都会保留 HTML、源内容、模板、agent 和指标。",
+  "preview.history.restore": "恢复",
+  "preview.history.delete": "删除结果",
+  "preview.history.current": "当前",
+  "preview.history.meta": "{agent} · {size} · {date}",
+
+  "tasks.heading": "历史",
   "tasks.expand": "展开任务列表",
   "tasks.collapse": "折叠任务列表",
-  "tasks.newTask": "＋ 新建任务",
-  "tasks.search.placeholder": "搜索任务名 / 内容 / 模板…",
+  "tasks.newTask": "＋ 新建转换",
+  "tasks.search.placeholder": "搜索标题 / 源内容 / 结果 / 模板…",
   "tasks.search.clear": "清除搜索",
   "tasks.empty.intro": "没有匹配「{query}」的任务",
   "tasks.empty.clear": "清除搜索",
-  "tasks.footer": "所有任务的输入 / 输出都会自动保存到浏览器, 刷新后保留。",
+  "tasks.footer": "每次转换都会在浏览器里保留源内容、HTML 成果、日志、指标和最近结果快照。",
   "tasks.status.idle": "待机",
   "tasks.status.running": "生成中",
   "tasks.status.done": "完成",
@@ -726,6 +748,7 @@ const zhCN: Dict = {
   "tasks.emptyContent": "空白",
   "tasks.defaultName": "任务 {n}",
   "tasks.matchTooltip": "{a} / {b} 匹配",
+  "tasks.resultCount": "{n} 个成果",
 
   "export.button": "⤓ 导出 / 复制 ▾",
   "export.section.platform": "复制到平台",
