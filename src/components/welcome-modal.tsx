@@ -7,6 +7,7 @@ import { useT, type DictKey } from "@/lib/i18n";
 const PROTOCOL_KEY: Record<AgentInfo["protocol"], { key: DictKey; tone: "ok" | "warn" }> = {
   stdin: { key: "protocol.stdin", tone: "ok" },
   argv: { key: "protocol.argv", tone: "ok" },
+  "argv-message": { key: "protocol.argvMessage", tone: "ok" },
   acp: { key: "protocol.acp", tone: "warn" },
   "pi-rpc": { key: "protocol.piRpc", tone: "warn" },
 };

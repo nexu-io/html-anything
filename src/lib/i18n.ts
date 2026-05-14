@@ -76,6 +76,7 @@ export interface Dict {
   "agent.notInstalled": string;
   "protocol.stdin": string;
   "protocol.argv": string;
+  "protocol.argvMessage": string;
   "protocol.acp": string;
   "protocol.piRpc": string;
 
@@ -346,6 +347,7 @@ const en: Dict = {
   "agent.notInstalled": "Not installed",
   "protocol.stdin": "stdin · stream",
   "protocol.argv": "positional argv",
+  "protocol.argvMessage": "argv · batch JSON",
   "protocol.acp": "ACP JSON-RPC · not wired",
   "protocol.piRpc": "pi-rpc · not wired",
 
@@ -615,6 +617,7 @@ const zhCN: Dict = {
   "agent.notInstalled": "未安装",
   "protocol.stdin": "stdin · stream",
   "protocol.argv": "positional argv",
+  "protocol.argvMessage": "argv · 整段 JSON",
   "protocol.acp": "ACP JSON-RPC · 暂未接入",
   "protocol.piRpc": "pi-rpc · 暂未接入",
 
