@@ -25,6 +25,12 @@ export const DEFAULT_MODEL: ModelOption = { id: "default", label: "Default (CLI 
 
 export type AgentDef = {
   id: string;
+  /**
+   * Reuse another adapter's argv/parser implementation. This lets downstream
+   * users register wrapper binaries without changing invoke.ts, for example:
+   * `{ "id": "codex-nightly", "bin": "codex-next", "adapter": "codex" }`.
+   */
+  adapter?: string;
   label: string;
   bin: string;
   fallbackBins?: string[];
@@ -294,7 +300,139 @@ export const AGENTS: AgentDef[] = [
       { id: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro" },
     ],
   },
+  ...parseExtraAgents(),
 ];
+
+function envKey(id: string): string {
+  return id.replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "").toUpperCase();
+}
+
+function parseList(value: string | undefined): string[] {
+  if (!value) return [];
+  return value
+    .split(/[,\n]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function normalizeModelOption(value: unknown): ModelOption | null {
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    const sep = trimmed.indexOf("=");
+    const [id, label] = sep >= 0
+      ? [trimmed.slice(0, sep).trim(), trimmed.slice(sep + 1).trim()]
+      : [trimmed, trimmed];
+    return id ? { id, label: label || id } : null;
+  }
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    if (typeof record.id !== "string" || !record.id.trim()) return null;
+    return {
+      id: record.id.trim(),
+      label: typeof record.label === "string" && record.label.trim()
+        ? record.label.trim()
+        : record.id.trim(),
+    };
+  }
+  return null;
+}
+
+function mergeModels(...groups: Array<unknown[] | undefined>): ModelOption[] {
+  const out: ModelOption[] = [DEFAULT_MODEL];
+  const seen = new Set([DEFAULT_MODEL.id]);
+  for (const group of groups) {
+    for (const item of group ?? []) {
+      const model = normalizeModelOption(item);
+      if (!model || model.id === DEFAULT_MODEL.id || seen.has(model.id)) continue;
+      seen.add(model.id);
+      out.push(model);
+    }
+  }
+  return out;
+}
+
+function envModelsFor(agentId: string): ModelOption[] {
+  const global = parseList(process.env.HTML_ANYTHING_MODELS);
+  const specific = parseList(process.env[`HTML_ANYTHING_MODELS_${envKey(agentId)}`]);
+  return mergeModels(global, specific).filter((model) => model.id !== DEFAULT_MODEL.id);
+}
+
+export function modelsForAgent(agent: AgentDef): ModelOption[] {
+  return mergeModels(agent.fallbackModels, envModelsFor(agent.id));
+}
+
+function normalizeProtocol(value: unknown): AgentProtocol | undefined {
+  if (
+    value === "stdin" ||
+    value === "argv" ||
+    value === "argv-message" ||
+    value === "acp" ||
+    value === "pi-rpc"
+  ) {
+    return value;
+  }
+  return undefined;
+}
+
+function parseExtraAgents(): AgentDef[] {
+  const raw = process.env.HTML_ANYTHING_EXTRA_AGENTS;
+  if (!raw?.trim()) return [];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(parsed)) return [];
+  const builtInIds = new Set([
+    "claude",
+    "openclaw",
+    "codex",
+    "cursor-agent",
+    "gemini",
+    "copilot",
+    "opencode",
+    "qwen",
+    "qoder",
+    "deepseek",
+    "aider",
+    "hermes",
+    "kimi",
+    "devin",
+    "kiro",
+    "kilo",
+    "vibe",
+    "pi",
+  ]);
+  const out: AgentDef[] = [];
+  for (const item of parsed) {
+    if (!item || typeof item !== "object") continue;
+    const record = item as Record<string, unknown>;
+    const id = typeof record.id === "string" ? record.id.trim() : "";
+    const bin = typeof record.bin === "string" ? record.bin.trim() : "";
+    if (!id || !bin || builtInIds.has(id) || out.some((agent) => agent.id === id)) continue;
+    const modelItems = Array.isArray(record.models) ? record.models : [];
+    out.push({
+      id,
+      adapter: typeof record.adapter === "string" && record.adapter.trim()
+        ? record.adapter.trim()
+        : id,
+      label: typeof record.label === "string" && record.label.trim() ? record.label.trim() : id,
+      bin,
+      fallbackBins: Array.isArray(record.fallbackBins)
+        ? record.fallbackBins.filter((value): value is string => typeof value === "string" && !!value.trim())
+        : [],
+      envOverride: typeof record.envOverride === "string" && record.envOverride.trim()
+        ? record.envOverride.trim()
+        : undefined,
+      vendor: typeof record.vendor === "string" && record.vendor.trim() ? record.vendor.trim() : "Custom",
+      protocol: normalizeProtocol(record.protocol),
+      fallbackModels: mergeModels(modelItems),
+    });
+  }
+  return out;
+}
 
 function userToolchainDirs(): string[] {
   const home = homedir();
@@ -386,6 +524,37 @@ export function resolveOnPath(bin: string): string | null {
   return null;
 }
 
+function resolveCandidate(candidate: string | undefined): string | null {
+  const trimmed = candidate?.trim();
+  if (!trimmed) return null;
+  if (existsSync(trimmed)) return trimmed;
+  return resolveOnPath(trimmed);
+}
+
+export function resolveAgentBin(agent: AgentDef): { path: string; resolvedBin: string } | null {
+  const overrideKeys = [
+    agent.envOverride,
+    `HTML_ANYTHING_BIN_${envKey(agent.id)}`,
+  ].filter((key): key is string => !!key);
+  for (const overrideKey of overrideKeys) {
+    const override = process.env[overrideKey];
+    const overridePath = resolveCandidate(override);
+    if (overridePath && override) {
+      return { path: overridePath, resolvedBin: override };
+    }
+  }
+  const candidates = [
+    agent.bin,
+    ...(agent.fallbackBins ?? []),
+    ...parseList(process.env[`HTML_ANYTHING_BINS_${envKey(agent.id)}`]),
+  ];
+  for (const candidate of candidates) {
+    const path = resolveCandidate(candidate);
+    if (path) return { path, resolvedBin: candidate };
+  }
+  return null;
+}
+
 export type DetectedAgent = {
   id: string;
   label: string;
@@ -412,20 +581,11 @@ export function detectAgents(): DetectedAgent[] {
       label: a.label,
       vendor: a.vendor,
       protocol,
-      models: a.fallbackModels,
+      models: modelsForAgent(a),
       unsupported: unsupported || undefined,
     };
-    const override = a.envOverride ? process.env[a.envOverride] : undefined;
-    if (override && existsSync(override)) {
-      return { ...base, available: true, path: override, resolvedBin: a.bin };
-    }
-    const candidates = [a.bin, ...(a.fallbackBins ?? [])];
-    for (const c of candidates) {
-      const p = resolveOnPath(c);
-      if (p) {
-        return { ...base, available: true, path: p, resolvedBin: c };
-      }
-    }
+    const resolved = resolveAgentBin(a);
+    if (resolved) return { ...base, available: true, path: resolved.path, resolvedBin: resolved.resolvedBin };
     return { ...base, available: false };
   });
 }

@@ -111,6 +111,7 @@ export function useConvert() {
         const dec = new TextDecoder();
         let buf = "";
         let lastEvent = "";
+        let sawError = false;
 
         while (true) {
           const { value, done } = await reader.read();
@@ -137,11 +138,17 @@ export function useConvert() {
             } catch {
               continue;
             }
+            if (event === "error") sawError = true;
             handleEvent(taskId, event, data, startedAt);
           }
         }
         const endedAt = Date.now();
         useStore.getState().patchStatsFor(taskId, { endedAt, durationMs: endedAt - startedAt });
+        const html = useStore.getState().tasks.find((t) => t.id === taskId)?.html ?? "";
+        if (sawError && !html.trim()) {
+          useStore.getState().setStatusFor(taskId, "error");
+          return;
+        }
         useStore.getState().setStatusFor(taskId, "done");
         // record the just-finished (content, html) as the new diff-edit baseline
         // so the user's next edit goes through diff mode instead of full regen
@@ -260,6 +267,8 @@ function handleEvent(taskId: string, event: string, data: unknown, startedAt: nu
         elapsed,
         text: String(d.message ?? "agent error"),
       });
+      const html = store.tasks.find((t) => t.id === taskId)?.html ?? "";
+      if (!html.trim()) store.setStatusFor(taskId, "error");
       break;
     }
   }

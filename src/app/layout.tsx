@@ -1,30 +1,43 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, Playfair_Display, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const inter = Inter({
+const inter = localFont({
+  src: "./fonts/inter-latin.woff2",
   variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: "300 600",
+  display: "swap",
 });
 
-const interTight = Inter_Tight({
+const interTight = localFont({
+  src: "./fonts/inter-tight-latin.woff2",
   variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: "400 900",
+  display: "swap",
 });
 
-const playfair = Playfair_Display({
+const playfair = localFont({
+  src: [
+    {
+      path: "./fonts/playfair-display-latin.woff2",
+      weight: "400 700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/playfair-display-italic-latin.woff2",
+      weight: "400 700",
+      style: "italic",
+    },
+  ],
   variable: "--font-serif",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["italic", "normal"],
+  display: "swap",
 });
 
-const mono = JetBrains_Mono({
+const mono = localFont({
+  src: "./fonts/jetbrains-mono-latin.woff2",
   variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: "400 500",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
