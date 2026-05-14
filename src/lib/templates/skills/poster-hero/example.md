@@ -10,4 +10,4 @@
 - 一键复制到公众号 / 推特 / 知乎
 
 ## CTA
-github.com/your-org/html-anything · 一行命令跑起来
+github.com/nexu-io/html-anything · 一行命令跑起来

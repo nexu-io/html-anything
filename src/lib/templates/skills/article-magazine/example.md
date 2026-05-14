@@ -25,7 +25,7 @@
 
 ## 我们顺手做了一个工具
 
-灵感来自原推, 加上 Claude Code 团队的实践, 我们做了 [HTML Anything](https://github.com/your-org/html-anything)。
+灵感来自原推, 加上 Claude Code 团队的实践, 我们做了 [HTML Anything](https://github.com/nexu-io/html-anything)。
 左侧贴 markdown / CSV / JSON, 选一个模板 (杂志、PPT、海报、小红书、数据报告 …), 按 ⌘+Enter ——
 本地的 Claude / Cursor / Codex 在你**已经登录**的 session 里跑, 几秒后右侧就是一份可以直接复制到公众号 / 推特 / 知乎的 HTML。
 

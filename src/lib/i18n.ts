@@ -25,6 +25,13 @@ export interface Dict {
   "toolbar.unsupportedProtocol": string;
   "toolbar.enterContent": string;
   "toolbar.shortcutHint": string;
+  "convertChip.label": string;
+  "convertChip.tooltip": string;
+  "aiPrompt.placeholder": string;
+  "aiPrompt.submit": string;
+  "aiPrompt.stop": string;
+  "aiPrompt.needAgent": string;
+  "aiPrompt.hint": string;
 
   // Layout mode toggle
   "layout.aria.group": string;
@@ -69,6 +76,7 @@ export interface Dict {
   "agent.notInstalled": string;
   "protocol.stdin": string;
   "protocol.argv": string;
+  "protocol.argvMessage": string;
   "protocol.acp": string;
   "protocol.piRpc": string;
 
@@ -92,9 +100,12 @@ export interface Dict {
 
   // Editor pane
   "editor.tab.text": string;
-  "editor.tab.upload": string;
   "editor.tab.samples": string;
   "editor.tab.formats": string;
+  "editor.attach": string;
+  "editor.attachTooltip": string;
+  "editor.dropTitle": string;
+  "editor.dropHint": string;
   "editor.backup": string;
   "editor.backupTooltip": string;
   "editor.restoring": string;
@@ -218,9 +229,6 @@ export interface Dict {
   "drafts.emptyPreview": string;
 
   // Upload dropzone
-  "upload.title": string;
-  "upload.types": string;
-  "upload.button": string;
   "upload.loadedLog": string;
   "upload.failedLog": string;
 
@@ -291,6 +299,13 @@ const en: Dict = {
   "toolbar.unsupportedProtocol": "ACP / pi-rpc not wired yet — pick another agent",
   "toolbar.enterContent": "Type or upload content",
   "toolbar.shortcutHint": "⌘+Enter to convert",
+  "convertChip.label": "Generate HTML",
+  "convertChip.tooltip": "Generate HTML from the markdown on the left",
+  "aiPrompt.placeholder": "Ask AI to write markdown — \"draft a tweet about X\", \"summarize the above\"…",
+  "aiPrompt.submit": "✨ Draft",
+  "aiPrompt.stop": "◼ Stop",
+  "aiPrompt.needAgent": "Pick an agent first",
+  "aiPrompt.hint": "Streams below your existing content. ⌘+Enter to send.",
 
   "layout.aria.group": "Workspace layout",
   "layout.label.editor": "Editor only",
@@ -332,6 +347,7 @@ const en: Dict = {
   "agent.notInstalled": "Not installed",
   "protocol.stdin": "stdin · stream",
   "protocol.argv": "positional argv",
+  "protocol.argvMessage": "argv · batch JSON",
   "protocol.acp": "ACP JSON-RPC · not wired",
   "protocol.piRpc": "pi-rpc · not wired",
 
@@ -356,9 +372,12 @@ const en: Dict = {
     "We ship English and Simplified Chinese today. Adding a locale means dropping a dictionary into src/lib/i18n.ts — contributors welcome.",
 
   "editor.tab.text": "✏️ Text",
-  "editor.tab.upload": "⬆️ Upload",
   "editor.tab.samples": "✨ Samples",
   "editor.tab.formats": "📋 Formats",
+  "editor.attach": "Attach",
+  "editor.attachTooltip": "Drop a file or click to attach — appended to the editor below",
+  "editor.dropTitle": "Drop to attach",
+  "editor.dropHint": ".md .txt .csv .tsv .xlsx .json .sql .yaml .png .jpg — appended to your editor",
   "editor.backup": "⤓ Backup",
   "editor.backupTooltip": "Download the current content as a .md / .txt backup",
   "editor.restoring": "Restoring last content…",
@@ -481,9 +500,6 @@ const en: Dict = {
   "drafts.chars": "{n} chars",
   "drafts.emptyPreview": "(empty)",
 
-  "upload.title": "Drop a file here",
-  "upload.types": "Supports .md .txt .csv .tsv .xlsx .json .sql .yaml .png .jpg",
-  "upload.button": "Choose a file",
   "upload.loadedLog": "Loaded {name} ({fmt})",
   "upload.failedLog": "Parse failed: {err}",
 
@@ -549,6 +565,13 @@ const zhCN: Dict = {
   "toolbar.settings": "设置",
   "toolbar.stop": "◼ 停止",
   "toolbar.convert": "⚡ 转换为 HTML",
+  "convertChip.label": "生成 HTML",
+  "convertChip.tooltip": "把左侧 markdown 内容转成 HTML",
+  "aiPrompt.placeholder": "让 AI 帮你写 markdown — 「写一条关于 X 的推文」「总结上面这段」…",
+  "aiPrompt.submit": "✨ 生成",
+  "aiPrompt.stop": "◼ 停止",
+  "aiPrompt.needAgent": "先在右上角选个 agent",
+  "aiPrompt.hint": "结果会追加到上方现有内容下方。⌘+Enter 发送。",
   "toolbar.firstSelectAgent": "先选择 agent",
   "toolbar.unsupportedProtocol": "ACP / pi-rpc 协议暂未接入, 请换其他 agent",
   "toolbar.enterContent": "输入或上传内容",
@@ -594,6 +617,7 @@ const zhCN: Dict = {
   "agent.notInstalled": "未安装",
   "protocol.stdin": "stdin · stream",
   "protocol.argv": "positional argv",
+  "protocol.argvMessage": "argv · 整段 JSON",
   "protocol.acp": "ACP JSON-RPC · 暂未接入",
   "protocol.piRpc": "pi-rpc · 暂未接入",
 
@@ -618,9 +642,12 @@ const zhCN: Dict = {
     "目前发布的是 English 和简体中文。增加一种语言只需要在 src/lib/i18n.ts 里加一份字典 — 欢迎贡献。",
 
   "editor.tab.text": "✏️ 输入",
-  "editor.tab.upload": "⬆️ 上传",
   "editor.tab.samples": "✨ 示例",
   "editor.tab.formats": "📋 格式",
+  "editor.attach": "附加文件",
+  "editor.attachTooltip": "拖文件进来或点这里上传 — 自动接到编辑器内容末尾",
+  "editor.dropTitle": "松手附加",
+  "editor.dropHint": ".md .txt .csv .tsv .xlsx .json .sql .yaml .png .jpg — 内容会接到编辑器末尾",
   "editor.backup": "⤓ 备份",
   "editor.backupTooltip": "把当前内容下载为 .md / .txt 备份文件",
   "editor.restoring": "恢复上次内容…",
@@ -740,9 +767,6 @@ const zhCN: Dict = {
   "drafts.chars": "{n} 字",
   "drafts.emptyPreview": "(空)",
 
-  "upload.title": "把文件拖到这里",
-  "upload.types": "支持 .md .txt .csv .tsv .xlsx .json .sql .yaml .png .jpg",
-  "upload.button": "选择文件",
   "upload.loadedLog": "已加载 {name} ({fmt})",
   "upload.failedLog": "解析失败: {err}",
 

@@ -22,4 +22,4 @@ HTML Anything 把这三件事打包好了。
 9 套模板, 一个动作: ⌘+Enter
 
 ## 帧 8 (CTA, 3s)
-github.com/your-org/html-anything
+github.com/nexu-io/html-anything

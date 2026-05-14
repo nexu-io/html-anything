@@ -5,15 +5,18 @@ import path, { delimiter, join } from "node:path";
 /**
  * Per-agent invocation protocol. Determines what `invokeAgent` does with the
  * prompt and how it parses output:
- *   - "stdin"     : pipe prompt → child stdin, parse stdout via parseLine
- *   - "argv"      : pass prompt as positional argv (deepseek), parse stdout as plain
- *   - "acp"       : ACP JSON-RPC over stdio (hermes/kimi/devin/kiro/kilo/vibe).
- *                   Not implemented in this build — surfaced in detection so the
- *                   user sees install instructions, but invoke emits a clear
- *                   error pointing them to a supported agent.
- *   - "pi-rpc"    : pi's custom JSON-RPC mode. Same status as "acp".
+ *   - "stdin"        : pipe prompt → child stdin, parse stdout via parseLine
+ *   - "argv"         : pass prompt as positional argv (deepseek), parse stdout as plain
+ *   - "argv-message" : prompt goes via `--message <text>` (openclaw); stdout is
+ *                      a single multi-line JSON document (not ndjson), parsed
+ *                      after the child closes.
+ *   - "acp"          : ACP JSON-RPC over stdio (hermes/kimi/devin/kiro/kilo/vibe).
+ *                      Not implemented in this build — surfaced in detection so
+ *                      the user sees install instructions, but invoke emits a
+ *                      clear error pointing them to a supported agent.
+ *   - "pi-rpc"       : pi's custom JSON-RPC mode. Same status as "acp".
  */
-export type AgentProtocol = "stdin" | "argv" | "acp" | "pi-rpc";
+export type AgentProtocol = "stdin" | "argv" | "argv-message" | "acp" | "pi-rpc";
 
 export type ModelOption = { id: string; label: string };
 
@@ -39,13 +42,14 @@ export type AgentDef = {
 
 export const AGENTS: AgentDef[] = [
   // Drop-in fork list (`fallbackBins`) covers CLIs that ship under a different
-  // binary name but speak the exact same argv protocol. Today: openclaude /
-  // openclaw — both are community Claude Code forks (issue #235 in open-design).
+  // binary name but speak the exact same argv protocol. Today: openclaude is
+  // listed as a fallback for Claude Code; OpenClaw is exposed as its own
+  // first-class entry below so users on machines that have both can pick.
   {
     id: "claude",
     label: "Claude Code",
     bin: "claude",
-    fallbackBins: ["openclaude", "openclaw"],
+    fallbackBins: ["openclaude"],
     envOverride: "CLAUDE_BIN",
     vendor: "Anthropic",
     fallbackModels: [
@@ -56,6 +60,27 @@ export const AGENTS: AgentDef[] = [
       { id: "claude-opus-4-7", label: "claude-opus-4-7" },
       { id: "claude-sonnet-4-6", label: "claude-sonnet-4-6" },
       { id: "claude-haiku-4-5", label: "claude-haiku-4-5" },
+    ],
+  },
+  {
+    // OpenClaw is a multi-channel agent gateway, not a Claude-CLI fork —
+    // its CLI surface is `openclaw agent --message <text>` and it returns a
+    // single multi-line JSON blob (no streaming). The "argv-message"
+    // protocol covers the prompt-via-flag and post-close JSON parse.
+    id: "openclaw",
+    label: "OpenClaw",
+    bin: "openclaw",
+    envOverride: "OPENCLAW_BIN",
+    vendor: "OpenClaw multi-channel agent gateway",
+    protocol: "argv-message",
+    fallbackModels: [
+      DEFAULT_MODEL,
+      // Models surface as overrides for OpenClaw's routing; the CLI accepts
+      // `--model <provider/model or model id>`. The list mirrors what
+      // OpenClaw's main agent typically routes to (OpenRouter Claude family).
+      { id: "openrouter/anthropic/claude-opus-4.7", label: "Opus 4.7 (OpenRouter)" },
+      { id: "openrouter/anthropic/claude-sonnet-4.6", label: "Sonnet 4.6 (OpenRouter)" },
+      { id: "openrouter/anthropic/claude-haiku-4.5", label: "Haiku 4.5 (OpenRouter)" },
     ],
   },
   {
@@ -296,6 +321,46 @@ function userToolchainDirs(): string[] {
     dirs.push("/opt/homebrew/bin", "/usr/local/bin");
   }
   return dirs;
+}
+
+/**
+ * Probe `<openclaw> agents list` and return the first agent id (typically
+ * "main"). OpenClaw refuses `agent --message` invocations without one of
+ * `--agent`, `--to`, or `--session-id`, so we resolve this once per-process
+ * with a 5-minute TTL cache.
+ *
+ * Falls back to "main" on any error — that is the OpenClaw default agent
+ * name on a fresh install, so it works for most users out of the box.
+ */
+let openclawAgentIdCache: { value: string; expiresAt: number } | null = null;
+export async function resolveOpenclawAgentId(bin: string): Promise<string> {
+  const now = Date.now();
+  if (openclawAgentIdCache && openclawAgentIdCache.expiresAt > now) {
+    return openclawAgentIdCache.value;
+  }
+  let resolved = "main";
+  try {
+    const { spawn } = await import("node:child_process");
+    const out = await new Promise<string>((res, rej) => {
+      const child = spawn(bin, ["agents", "list"], { stdio: ["ignore", "pipe", "pipe"] });
+      let buf = "";
+      child.stdout.setEncoding("utf8");
+      child.stdout.on("data", (c) => (buf += c));
+      child.on("close", () => res(buf));
+      child.on("error", rej);
+      setTimeout(() => {
+        try { child.kill("SIGTERM"); } catch {}
+        rej(new Error("openclaw agents list timed out"));
+      }, 5_000);
+    });
+    // First agent line looks like:  "- main (default)"  or  "- ops"
+    const m = out.match(/^- (\S+)/m);
+    if (m && m[1]) resolved = m[1];
+  } catch {
+    // keep fallback
+  }
+  openclawAgentIdCache = { value: resolved, expiresAt: now + 5 * 60_000 };
+  return resolved;
 }
 
 export function resolveOnPath(bin: string): string | null {

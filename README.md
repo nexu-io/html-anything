@@ -11,7 +11,7 @@
   <a href="#supported-coding-agents"><img alt="Agents" src="https://img.shields.io/badge/agents-8%20CLIs-black?style=flat-square" /></a>
   <a href="#skills"><img alt="Skills" src="https://img.shields.io/badge/skills-75-orange?style=flat-square" /></a>
   <a href="#export-targets"><img alt="Export" src="https://img.shields.io/badge/export-WeChat%20%C2%B7%20X%20%C2%B7%20Zhihu%20%C2%B7%20PNG-9b59b6?style=flat-square" /></a>
-  <a href="#quickstart"><img alt="Quickstart" src="https://img.shields.io/badge/quickstart-2%20commands-green?style=flat-square" /></a>
+  <a href="#quickstart"><img alt="Quickstart" src="https://img.shields.io/badge/quickstart-30%20seconds-green?style=flat-square" /></a>
   <a href="#architecture"><img alt="No API key" src="https://img.shields.io/badge/no-API%20key%20required-ff6b35?style=flat-square" /></a>
 </p>
 
@@ -153,7 +153,7 @@ We stand on four open-source shoulders:
 ## Quickstart
 
 ```bash
-git clone https://github.com/your-org/html-anything
+git clone https://github.com/nexu-io/html-anything
 cd html-anything
 pnpm install
 pnpm dev
@@ -458,19 +458,19 @@ Follow [**@nexudotio**](https://x.com/nexudotio) on X for release notes, new ski
 
 Thanks to everyone who has filed an issue, opened a PR, or added a skill / agent adapter / export target. Every real contribution counts, and the wall below is the easiest way to say so out loud.
 
-<a href="https://github.com/pftom/html-everthing/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=pftom/html-everthing" alt="HTML Anything contributors" />
+<a href="https://github.com/nexu-io/html-anything/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=nexu-io/html-anything" alt="HTML Anything contributors" />
 </a>
 
-If you've shipped your first PR — welcome. The [`good-first-issue` / `help-wanted`](https://github.com/pftom/html-everthing/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%2C%22help+wanted%22) labels are the entry point.
+If you've shipped your first PR — welcome. The [`good-first-issue` / `help-wanted`](https://github.com/nexu-io/html-anything/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%2C%22help+wanted%22) labels are the entry point.
 
 ## Star History
 
-<a href="https://star-history.com/#pftom/html-everthing&Date">
+<a href="https://star-history.com/#nexu-io/html-anything&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pftom/html-everthing&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pftom/html-everthing&type=Date" />
-    <img alt="HTML Anything star history" src="https://api.star-history.com/svg?repos=pftom/html-everthing&type=Date" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date" />
+    <img alt="HTML Anything star history" src="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date" />
   </picture>
 </a>
 
