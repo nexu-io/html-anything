@@ -100,9 +100,12 @@ export interface Dict {
 
   // Editor pane
   "editor.tab.text": string;
-  "editor.tab.upload": string;
   "editor.tab.samples": string;
   "editor.tab.formats": string;
+  "editor.attach": string;
+  "editor.attachTooltip": string;
+  "editor.dropTitle": string;
+  "editor.dropHint": string;
   "editor.backup": string;
   "editor.backupTooltip": string;
   "editor.restoring": string;
@@ -226,9 +229,6 @@ export interface Dict {
   "drafts.emptyPreview": string;
 
   // Upload dropzone
-  "upload.title": string;
-  "upload.types": string;
-  "upload.button": string;
   "upload.loadedLog": string;
   "upload.failedLog": string;
 
@@ -372,9 +372,12 @@ const en: Dict = {
     "We ship English and Simplified Chinese today. Adding a locale means dropping a dictionary into src/lib/i18n.ts — contributors welcome.",
 
   "editor.tab.text": "✏️ Text",
-  "editor.tab.upload": "⬆️ Upload",
   "editor.tab.samples": "✨ Samples",
   "editor.tab.formats": "📋 Formats",
+  "editor.attach": "Attach",
+  "editor.attachTooltip": "Drop a file or click to attach — appended to the editor below",
+  "editor.dropTitle": "Drop to attach",
+  "editor.dropHint": ".md .txt .csv .tsv .xlsx .json .sql .yaml .png .jpg — appended to your editor",
   "editor.backup": "⤓ Backup",
   "editor.backupTooltip": "Download the current content as a .md / .txt backup",
   "editor.restoring": "Restoring last content…",
@@ -497,9 +500,6 @@ const en: Dict = {
   "drafts.chars": "{n} chars",
   "drafts.emptyPreview": "(empty)",
 
-  "upload.title": "Drop a file here",
-  "upload.types": "Supports .md .txt .csv .tsv .xlsx .json .sql .yaml .png .jpg",
-  "upload.button": "Choose a file",
   "upload.loadedLog": "Loaded {name} ({fmt})",
   "upload.failedLog": "Parse failed: {err}",
 
@@ -642,9 +642,12 @@ const zhCN: Dict = {
     "目前发布的是 English 和简体中文。增加一种语言只需要在 src/lib/i18n.ts 里加一份字典 — 欢迎贡献。",
 
   "editor.tab.text": "✏️ 输入",
-  "editor.tab.upload": "⬆️ 上传",
   "editor.tab.samples": "✨ 示例",
   "editor.tab.formats": "📋 格式",
+  "editor.attach": "附加文件",
+  "editor.attachTooltip": "拖文件进来或点这里上传 — 自动接到编辑器内容末尾",
+  "editor.dropTitle": "松手附加",
+  "editor.dropHint": ".md .txt .csv .tsv .xlsx .json .sql .yaml .png .jpg — 内容会接到编辑器末尾",
   "editor.backup": "⤓ 备份",
   "editor.backupTooltip": "把当前内容下载为 .md / .txt 备份文件",
   "editor.restoring": "恢复上次内容…",
@@ -764,9 +767,6 @@ const zhCN: Dict = {
   "drafts.chars": "{n} 字",
   "drafts.emptyPreview": "(空)",
 
-  "upload.title": "把文件拖到这里",
-  "upload.types": "支持 .md .txt .csv .tsv .xlsx .json .sql .yaml .png .jpg",
-  "upload.button": "选择文件",
   "upload.loadedLog": "已加载 {name} ({fmt})",
   "upload.failedLog": "解析失败: {err}",
 
