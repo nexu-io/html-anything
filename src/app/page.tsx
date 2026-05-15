@@ -8,12 +8,13 @@ import { TasksSidebar } from "@/components/tasks-sidebar";
 import { WelcomeModal } from "@/components/welcome-modal";
 import { SettingsModal } from "@/components/settings-modal";
 import { ConvertChip } from "@/components/convert-chip";
-import { useStore } from "@/lib/store";
+import { useStore, type AgentInfo } from "@/lib/store";
 
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const welcomeAck = useStore((s) => s.welcomeAck);
   const selectedAgent = useStore((s) => s.selectedAgent);
+  const setAgents = useStore((s) => s.setAgents);
   const locale = useStore((s) => s.locale);
   const layoutMode = useStore((s) => s.layoutMode);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
@@ -23,6 +24,29 @@ export default function Home() {
   useEffect(() => {
     setHydrated(true);
   }, []);
+
+  // Detect agents on mount so the toolbar's agent chip can resolve the
+  // persisted `selectedAgent` to a label without waiting for the user to
+  // open Settings or Welcome. Without this, after a hard reload the chip
+  // briefly (or permanently) shows "Select agent" even though selection
+  // is intact in localStorage.
+  useEffect(() => {
+    if (!hydrated) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/agents", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = (await res.json()) as { agents: AgentInfo[] };
+        if (!cancelled) setAgents(data.agents);
+      } catch {
+        // Settings / Welcome modals will retry on open.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [hydrated, setAgents]);
 
   // Keep <html lang="…"> in sync with the user's locale so screen readers
   // and browser features (autotranslate, hyphenation) pick the right language.
