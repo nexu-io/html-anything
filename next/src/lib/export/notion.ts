@@ -70,11 +70,18 @@ function stripNoiseAttrs(root: HTMLElement): void {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
   let el = walker.nextNode() as Element | null;
   while (el) {
-    // Keep code language class — Notion uses it to pick the syntax mode.
-    const keepClass =
-      el.tagName === "CODE" && /\blanguage-[\w-]+/.test(el.getAttribute("class") ?? "");
+    // For <code>, keep only language-* tokens — Notion uses them to pick
+    // the syntax mode and strips any other classes on paste anyway.
+    if (el.tagName === "CODE" && el.hasAttribute("class")) {
+      const langOnly = (el.getAttribute("class") ?? "")
+        .split(/\s+/)
+        .filter((c) => /^language-[\w-]+$/.test(c))
+        .join(" ");
+      if (langOnly) el.setAttribute("class", langOnly);
+      else el.removeAttribute("class");
+    }
     for (const attr of Array.from(el.attributes)) {
-      if (attr.name === "class" && keepClass) continue;
+      if (el.tagName === "CODE" && attr.name === "class") continue;
       if (attr.name.startsWith("data-") || attr.name === "class") {
         el.removeAttribute(attr.name);
       }

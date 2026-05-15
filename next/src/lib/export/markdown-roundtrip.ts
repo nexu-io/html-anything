@@ -183,6 +183,19 @@ function renderList(el: Element, ctx: Ctx): string {
       inlineFrag.appendChild(c.cloneNode(true));
     }
 
+    // If the marker line would be empty (li had no inline children), promote
+    // the first <p>'s inline content onto the marker line. Otherwise marked
+    // sees "1. \n\n   text" and starts a new list from the next marker.
+    if (!inlineFrag.childNodes.length && blockChildren.length) {
+      const first = blockChildren[0];
+      if (first.kind === "block" && first.el.tagName.toLowerCase() === "p") {
+        for (const c of Array.from(first.el.childNodes)) {
+          inlineFrag.appendChild(c.cloneNode(true));
+        }
+        blockChildren.shift();
+      }
+    }
+
     const inlineText = escapeBlockStarts(renderInline(inlineFrag)).trim();
     let block = `${indent}${marker} ${inlineText}`;
     for (const bc of blockChildren) {
