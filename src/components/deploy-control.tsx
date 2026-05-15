@@ -9,6 +9,8 @@ import {
   type DeploymentRecord,
 } from "@/lib/store";
 
+const EMPTY_DEPLOYMENTS: readonly DeploymentRecord[] = [];
+
 /**
  * Publish-to-Vercel control rendered next to the preview-pane toolbar
  * actions. Renders three things in one rounded popover-anchor block:
@@ -31,7 +33,7 @@ export function DeployControl() {
   const html = useStore((s) => selectActiveTask(s)?.html ?? "");
   const taskId = useStore((s) => s.activeTaskId);
   const deployments = useStore(
-    (s) => selectActiveTask(s)?.deployments ?? [],
+    (s) => selectActiveTask(s)?.deployments ?? EMPTY_DEPLOYMENTS,
   );
   const removeDeploymentFor = useStore((s) => s.removeDeploymentFor);
   const t = useT();
