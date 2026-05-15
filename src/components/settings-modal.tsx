@@ -144,9 +144,11 @@ function AgentSection() {
   const setSelectedAgent = useStore((s) => s.setSelectedAgent);
   const setAgents = useStore((s) => s.setAgents);
   const setAgentModel = useStore((s) => s.setAgentModel);
+  const setAgentBinOverride = useStore((s) => s.setAgentBinOverride);
   const agents = useStore((s) => s.agents);
   const selected = useStore((s) => s.selectedAgent);
   const agentModels = useStore((s) => s.agentModels);
+  const agentBinOverrides = useStore((s) => s.agentBinOverrides);
   const t = useT();
 
   const [loading, setLoading] = useState(false);
@@ -231,6 +233,14 @@ function AgentSection() {
           agent={selectedAgent}
           modelId={selectedModelId}
           onPick={(id) => setAgentModel(selectedAgent.id, id)}
+        />
+      )}
+
+      {selectedAgent && (
+        <CustomBinPath
+          agent={selectedAgent}
+          value={agentBinOverrides[selectedAgent.id] ?? ""}
+          onChange={(p) => setAgentBinOverride(selectedAgent.id, p)}
         />
       )}
 
@@ -424,6 +434,97 @@ function ModelPicker({
             </button>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+function CustomBinPath({
+  agent,
+  value,
+  onChange,
+}: {
+  agent: AgentInfo;
+  value: string;
+  onChange: (path: string) => void;
+}) {
+  const t = useT();
+  const [draft, setDraft] = useState(value);
+  // Keep the local input in sync if the persisted value changes from elsewhere
+  // (e.g. agent switch). Avoid clobbering an in-progress edit.
+  useEffect(() => {
+    setDraft(value);
+  }, [value, agent.id]);
+  // Best-effort platform sniff for the placeholder hint. The actual path
+  // resolution happens server-side in `resolveBinForAgent`.
+  const isWindows = typeof navigator !== "undefined" && /Win/i.test(navigator.platform);
+  const placeholder = isWindows
+    ? "C:\\Users\\you\\scoop\\apps\\nodejs\\current\\claude.cmd"
+    : "/usr/local/bin/claude";
+  const detected = agent.path;
+  const dirty = draft.trim() !== value.trim();
+  return (
+    <div
+      className="mt-3 rounded-2xl p-4"
+      style={{ background: "var(--paper)", border: "1px solid var(--line-faint)" }}
+    >
+      <div className="flex items-baseline justify-between gap-3">
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+            {t("agent.customBin.eyebrow")}
+          </div>
+          <div className="text-[12.5px] text-[var(--ink-soft)] mt-0.5">
+            {t("agent.customBin.subtitle", { agent: agent.label })}
+          </div>
+        </div>
+        {detected && (
+          <div className="text-[10.5px] text-[var(--ink-mute)] max-w-[260px] text-right leading-snug">
+            {t("agent.customBin.detected")}
+            <code className="ml-1 break-all font-mono text-[10px] text-[var(--ink-soft)]">{detected}</code>
+          </div>
+        )}
+      </div>
+      <div className="mt-2 flex items-center gap-2">
+        <input
+          type="text"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={() => onChange(draft)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onChange(draft);
+            if (e.key === "Escape") setDraft(value);
+          }}
+          placeholder={placeholder}
+          className="min-w-0 flex-1 rounded-lg px-3 py-1.5 font-mono text-[12px] outline-none"
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--line)",
+            color: "var(--ink)",
+          }}
+        />
+        {value && (
+          <button
+            onClick={() => {
+              setDraft("");
+              onChange("");
+            }}
+            className="shrink-0 rounded-lg px-2.5 py-1.5 text-[11px] text-[var(--ink-mute)] transition-colors hover:bg-[var(--surface)] hover:text-[var(--coral)]"
+          >
+            {t("agent.customBin.clear")}
+          </button>
+        )}
+        {dirty && (
+          <button
+            onClick={() => onChange(draft)}
+            className="shrink-0 rounded-lg px-3 py-1.5 text-[11px] font-medium"
+            style={{ background: "var(--ink)", color: "var(--paper)" }}
+          >
+            {t("agent.customBin.save")}
+          </button>
+        )}
+      </div>
+      <div className="mt-2 text-[10.5px] text-[var(--ink-mute)] leading-snug">
+        {t("agent.customBin.hint")}
       </div>
     </div>
   );

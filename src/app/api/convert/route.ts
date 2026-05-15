@@ -13,6 +13,12 @@ type Body = {
   format?: string;
   model?: string;
   cwd?: string;
+  /**
+   * Optional absolute path to the agent binary. The Settings UI lets the
+   * user override auto-detection when their CLI lives somewhere our PATH
+   * scan doesn't cover (Scoop on Windows, custom installs, etc.).
+   */
+  binOverride?: string;
   /** When the task already has a generated HTML, the client sends both the
    *  prior HTML and the prior content. The agent is then asked for a
    *  minimal-diff edit (preserve design, only change what the content diff
@@ -69,6 +75,7 @@ export async function POST(req: NextRequest) {
     format = "text",
     model,
     cwd,
+    binOverride,
     editFromHtml,
     editFromContent,
   } = body;
@@ -103,6 +110,7 @@ export async function POST(req: NextRequest) {
     prompt,
     model,
     cwd,
+    binOverride,
     signal: abortCtl.signal,
   });
 

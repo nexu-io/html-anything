@@ -46,6 +46,7 @@ export function useDraft() {
       agentModels[agent] && agentModels[agent] !== "default"
         ? agentModels[agent]
         : undefined;
+    const binOverride = store.agentBinOverrides[agent]?.trim() || undefined;
 
     const ctl = new AbortController();
     ctlRef.current = ctl;
@@ -69,6 +70,7 @@ export function useDraft() {
           instruction: req.instruction,
           context: req.context ?? before,
           ...(model ? { model } : {}),
+          ...(binOverride ? { binOverride } : {}),
         }),
         signal: ctl.signal,
       });
