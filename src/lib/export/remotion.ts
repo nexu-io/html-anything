@@ -168,7 +168,7 @@ export const Root: React.FC = () => {
 
 const FRAME_TSX = `import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { AbsoluteFill, delayRender, continueRender } from "remotion";
+import { AbsoluteFill, delayRender, continueRender, staticFile } from "remotion";
 
 type Props = {
   /** Path under public/, e.g. "frames/frame-01.html". */
@@ -217,7 +217,7 @@ export const Frame: React.FC<Props> = ({ src, scene }) => {
     <AbsoluteFill style={{ background: "#000" }}>
       <iframe
         ref={ref}
-        src={src}
+        src={staticFile(src)}
         title={scene || src}
         style={{ width: "100%", height: "100%", border: 0, display: "block" }}
         // sandbox left permissive — frames are author-controlled HTML.

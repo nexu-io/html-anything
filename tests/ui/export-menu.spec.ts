@@ -136,10 +136,12 @@ test.describe("Export menu", () => {
 
     const rootTsx = await zip.file("src/Root.tsx")!.async("string");
     const videoTsx = await zip.file("src/Video.tsx")!.async("string");
+    const frameTsx = await zip.file("src/Frame.tsx")!.async("string");
     const frameOne = await zip.file("public/frames/frame-01.html")!.async("string");
     const readme = await zip.file("README.md")!.async("string");
 
     expect(rootTsx).toContain("durationInFrames={138}");
+    expect(frameTsx).toContain('staticFile(src)');
     expect(videoTsx).toContain("TransitionSeries.Transition");
     expect(videoTsx).toContain("presentation={fade()}");
     expect(videoTsx).toContain('durationInFrames: 60, transition: "fade", scene: "Opening"');
