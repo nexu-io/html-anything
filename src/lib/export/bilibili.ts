@@ -122,5 +122,10 @@ function sanitizeNode(node: Node): Node | null {
 }
 
 function isBilibiliCdn(src: string): boolean {
-  return /^https?:\/\/[^/]*(?:hdslb\.com|bilibili\.com)\//i.test(src);
+  // Require an exact host match or a subdomain dot — `[^/]*` would otherwise
+  // admit `evilhdslb.com` / `notbilibili.com`, skipping the placeholder swap
+  // and silently losing the image after bilibili's publish-time scrub.
+  return /^https?:\/\/(?:[^/]+\.)?(?:hdslb\.com|bilibili\.com)(?:[/?#]|$)/i.test(
+    src,
+  );
 }

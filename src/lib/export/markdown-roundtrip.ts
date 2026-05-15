@@ -115,14 +115,16 @@ function renderInline(node: Node): string {
       const rawHref = el.getAttribute("href") ?? "";
       const href = escapeHref(rawHref);
       const title = el.getAttribute("title");
-      // inner() is already escapeMd-processed — only the bracket pair needs
-      // additional escaping so [text](url) parses unambiguously.
-      const text = escapeBrackets(inner() || escapeMd(rawHref));
+      // `escapeMd` already backslash-escapes brackets in text nodes, so
+      // `inner()` is safe to drop into the [text](url) form without further
+      // wrapping. Nested rendered structure (![alt](src), `code`) survives
+      // intact this way.
+      const text = inner() || escapeMd(rawHref);
       return title ? `[${text}](${href} "${escapeTitle(title)}")` : `[${text}](${href})`;
     }
     case "img": {
       const src = escapeHref(el.getAttribute("src") ?? "");
-      const alt = escapeBrackets(escapeMd(el.getAttribute("alt") ?? ""));
+      const alt = escapeMd(el.getAttribute("alt") ?? "");
       const title = el.getAttribute("title");
       return title ? `![${alt}](${src} "${escapeTitle(title)}")` : `![${alt}](${src})`;
     }
@@ -218,7 +220,16 @@ function renderTable(el: Element): string {
   el.querySelectorAll("tr").forEach((tr) => {
     const cells: string[] = [];
     tr.querySelectorAll("th,td").forEach((cell) => {
-      cells.push(renderInline(cell).replace(/\|/g, "\\|").trim());
+      // GFM tables are strictly one row per source line: a literal \n inside
+      // a cell (e.g. from <br> or a stray <p>) terminates the row early and
+      // breaks every downstream row. Collapse intra-cell newlines to <br>
+      // (inline HTML is permitted inside GFM cells) before pipe escaping.
+      cells.push(
+        renderInline(cell)
+          .replace(/\r?\n+/g, "<br>")
+          .replace(/\|/g, "\\|")
+          .trim(),
+      );
     });
     if (cells.length) rows.push(cells);
   });
@@ -236,12 +247,14 @@ function renderTable(el: Element): string {
 }
 
 function escapeMd(s: string): string {
-  // Escape inline-marker characters in plain text. Brackets / parens are
-  // left alone — escaping them in prose looks worse than the rare false
-  // link match. Line-starting block markers (#, >, -, +, digits.) are
+  // Escape inline-marker characters in plain text. Brackets are escaped at
+  // the text-node level (not at link composition) so nested `<img>` / `<code>`
+  // inside `<a>` survives without their delimiters getting backslashed.
+  // Parens are left alone — escaping them in prose looks worse than the rare
+  // false link match. Line-starting block markers (#, >, -, +, digits.) are
   // handled separately in `escapeBlockStarts` so they only escape at the
   // position where they would actually trigger a block construct.
-  return s.replace(/([\\`*_~])/g, "\\$1");
+  return s.replace(/([\\`*_~[\]])/g, "\\$1");
 }
 
 /**
@@ -302,8 +315,3 @@ function escapeTitle(title: string): string {
   return title.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function escapeBrackets(text: string): string {
-  // Backslash-escape brackets so they don't break the [text](url) form.
-  // Caller is responsible for any other inline escaping needed.
-  return text.replace(/([[\]])/g, "\\$1");
-}
