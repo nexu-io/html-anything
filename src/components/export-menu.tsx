@@ -164,6 +164,7 @@ export function ExportMenu({ iframeRef }: ExportMenuProps) {
       </button>
       {open && (
         <div
+          data-testid="export-menu"
           className="absolute right-0 z-30 mt-2 w-72 od-fade-in overflow-hidden rounded-2xl"
           style={{
             background: "var(--surface)",
