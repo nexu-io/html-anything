@@ -165,6 +165,35 @@ describe("htmlToMarkdown — links and images", () => {
     expect(img?.getAttribute("alt")).toBe("hello");
     expect(img?.getAttribute("title")).toBe("t");
   });
+
+  it("preserves <img> nested inside <a> (badge-style link)", () => {
+    const md = htmlToMarkdown(
+      '<p><a href="https://repo.example/owner/proj"><img src="https://shields.io/badge.svg" alt="badge"></a></p>',
+    );
+    const doc = mdToDoc(md);
+    const a = doc.body.querySelector("a");
+    expect(a?.getAttribute("href")).toBe(
+      "https://repo.example/owner/proj",
+    );
+    // The image must still be a child of the <a>, not flattened to text.
+    const img = a?.querySelector("img");
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute("src")).toBe("https://shields.io/badge.svg");
+    expect(img?.getAttribute("alt")).toBe("badge");
+  });
+
+  it("preserves <code> nested inside <a>", () => {
+    const md = htmlToMarkdown(
+      '<p><a href="https://example.com"><code>foo</code></a></p>',
+    );
+    const doc = mdToDoc(md);
+    const a = doc.body.querySelector("a");
+    const code = a?.querySelector("code");
+    expect(code).not.toBeNull();
+    expect(code?.textContent).toBe("foo");
+    // No stray backslashes inside the code span.
+    expect(code?.textContent).not.toContain("\\");
+  });
 });
 
 describe("htmlToMarkdown — line-start block-marker escaping", () => {
@@ -274,6 +303,21 @@ describe("htmlToMarkdown — blockquotes, hr, tables, br", () => {
     );
     expect(md).toMatch(/a\\\|b/);
     expect(md).toMatch(/c\\\|d/);
+  });
+
+  it("keeps a cell containing <br> on a single row (no smashed table)", () => {
+    const md = htmlToMarkdown(
+      "<table><tr><th>H</th></tr><tr><td>line1<br>line2</td></tr><tr><td>next</td></tr></table>",
+    );
+    const doc = mdToDoc(md);
+    const trs = doc.body.querySelectorAll("table tr");
+    // Header + 2 body rows = 3 total; if the <br> had injected a literal \n,
+    // marked would see only the header and the table would collapse.
+    expect(trs.length).toBe(3);
+    const firstBodyCell = doc.body.querySelector("tbody tr:first-child td");
+    expect(firstBodyCell?.textContent).toContain("line1");
+    expect(firstBodyCell?.textContent).toContain("line2");
+    expect(firstBodyCell?.querySelector("br")).not.toBeNull();
   });
 });
 

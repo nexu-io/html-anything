@@ -117,4 +117,32 @@ describe("toBilibiliHtml — image rewriting", () => {
     expect(img?.getAttribute("src")).toMatch(/^data:image\/svg\+xml/);
     expect(img?.getAttribute("alt")).toBe("ext");
   });
+
+  it("rejects lookalike hostnames (no subdomain dot before the literal)", () => {
+    // `evilhdslb.com` and `notbilibili.com` would slip past a `[^/]*` regex
+    // and skip the placeholder swap — both must be treated as non-CDN.
+    for (const src of [
+      "https://evilhdslb.com/foo.png",
+      "https://notbilibili.com/foo.png",
+    ]) {
+      const html = toBilibiliHtml(`<p><img src="${src}" alt="x"></p>`);
+      const img = parseFragment(html).querySelector("img");
+      expect(img?.getAttribute("data-bili-placeholder")).toBe("true");
+      expect(img?.getAttribute("data-original-src")).toBe(src);
+    }
+  });
+
+  it("accepts subdomains of the bilibili CDN", () => {
+    for (const src of [
+      "https://i0.hdslb.com/bfs/x.png",
+      "https://album.bilibili.com/x.png",
+      "https://hdslb.com/x.png", // bare apex
+      "https://bilibili.com/foo.png", // bare apex
+    ]) {
+      const html = toBilibiliHtml(`<p><img src="${src}" alt="x"></p>`);
+      const img = parseFragment(html).querySelector("img");
+      expect(img?.hasAttribute("data-bili-placeholder")).toBe(false);
+      expect(img?.getAttribute("src")).toBe(src);
+    }
+  });
 });
