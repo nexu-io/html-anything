@@ -27,11 +27,13 @@ import {
  * "coming soon" placeholder for it.
  */
 
+const EMPTY_DEPLOYMENTS: DeploymentRecord[] = [];
+
 export function DeployControl() {
   const html = useStore((s) => selectActiveTask(s)?.html ?? "");
   const taskId = useStore((s) => s.activeTaskId);
   const deployments = useStore(
-    (s) => selectActiveTask(s)?.deployments ?? [],
+    (s) => selectActiveTask(s)?.deployments ?? EMPTY_DEPLOYMENTS,
   );
   const removeDeploymentFor = useStore((s) => s.removeDeploymentFor);
   const t = useT();
