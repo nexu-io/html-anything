@@ -18,6 +18,8 @@ import {
   exportDeckPptx,
   exportDeckPrint,
 } from "@/lib/export/deck";
+import { parseHyperframes } from "@/lib/hyperframes";
+import { exportRemotionZip } from "@/lib/export/remotion";
 
 type ExportMenuProps = {
   iframeRef: React.MutableRefObject<HTMLIFrameElement | null>;
@@ -65,6 +67,7 @@ export function ExportMenu({ iframeRef }: ExportMenuProps) {
   // Re-parse for the deck section. Cheap because parseDeck is regex-only and
   // the menu only opens on user click.
   const deck = useMemo(() => parseDeck(extractHtml(html)), [html]);
+  const hyperframes = useMemo(() => parseHyperframes(extractHtml(html)), [html]);
 
   const sections: Array<{
     title: string;
@@ -125,6 +128,25 @@ export function ExportMenu({ iframeRef }: ExportMenuProps) {
                 emoji: "🎬",
                 fn: wrap(t("export.toast.deckPptx"), async () => {
                   await exportDeckPptx(deck.slides, deck.title);
+                }),
+              },
+            ],
+          },
+        ]
+      : []),
+    ...(hyperframes.isHyperframes
+      ? [
+          {
+            title: t("export.section.hyperframes", { n: hyperframes.frames.length }),
+            actions: [
+              {
+                id: "hyperframes-remotion-zip",
+                label: t("export.action.remotionZip"),
+                emoji: "🎞️",
+                fn: wrap(t("export.toast.remotionZip"), async () => {
+                  await exportRemotionZip(hyperframes, hyperframes.title, {
+                    sourceHtml: cleanHtml(),
+                  });
                 }),
               },
             ],

@@ -192,6 +192,7 @@ export interface Dict {
   "export.section.raw": string;
   "export.section.download": string;
   "export.section.deck": string;
+  "export.section.hyperframes": string;
   "export.action.wechat": string;
   "export.action.zhihu": string;
   "export.action.twitterImg": string;
@@ -202,6 +203,7 @@ export interface Dict {
   "export.action.deckPdf": string;
   "export.action.deckPngZip": string;
   "export.action.deckPptx": string;
+  "export.action.remotionZip": string;
   "export.toast.wechat": string;
   "export.toast.zhihu": string;
   "export.toast.image": string;
@@ -212,6 +214,7 @@ export interface Dict {
   "export.toast.deckPdf": string;
   "export.toast.deckPngZip": string;
   "export.toast.deckPptx": string;
+  "export.toast.remotionZip": string;
   "export.error.previewNotReady": string;
   "export.error.generic": string;
 
@@ -464,6 +467,7 @@ const en: Dict = {
   "export.section.raw": "Copy raw",
   "export.section.download": "Download",
   "export.section.deck": "Deck · {n} slides",
+  "export.section.hyperframes": "Hyperframes · {n} frames",
   "export.action.wechat": "WeChat (公众号)",
   "export.action.zhihu": "Zhihu",
   "export.action.twitterImg": "Twitter / Weibo (PNG)",
@@ -474,6 +478,7 @@ const en: Dict = {
   "export.action.deckPdf": "PDF · all slides (print)",
   "export.action.deckPngZip": "PNG · per-slide (.zip)",
   "export.action.deckPptx": ".pptx · PowerPoint",
+  "export.action.remotionZip": "Remotion project (.zip)",
   "export.toast.wechat": "WeChat format copied",
   "export.toast.zhihu": "Zhihu format copied",
   "export.toast.image": "Image copied",
@@ -484,6 +489,7 @@ const en: Dict = {
   "export.toast.deckPdf": "Print dialog opened — pick “Save as PDF”",
   "export.toast.deckPngZip": "Slide PNGs zipped",
   "export.toast.deckPptx": "PPTX downloaded",
+  "export.toast.remotionZip": "Remotion project zipped — unzip & run `npx remotion render`",
   "export.error.previewNotReady": "Preview not ready",
   "export.error.generic": "failed",
 
@@ -732,6 +738,7 @@ const zhCN: Dict = {
   "export.section.raw": "复制原始内容",
   "export.section.download": "下载",
   "export.section.deck": "Deck · 共 {n} 页",
+  "export.section.hyperframes": "Hyperframes · 共 {n} 帧",
   "export.action.wechat": "微信公众号",
   "export.action.zhihu": "知乎",
   "export.action.twitterImg": "推特 / 微博 (PNG)",
@@ -742,6 +749,7 @@ const zhCN: Dict = {
   "export.action.deckPdf": "PDF · 全部幻灯片 (打印)",
   "export.action.deckPngZip": "PNG · 每页一张 (.zip)",
   "export.action.deckPptx": ".pptx · PowerPoint",
+  "export.action.remotionZip": "Remotion 项目 (.zip)",
   "export.toast.wechat": "已复制公众号格式",
   "export.toast.zhihu": "已复制知乎格式",
   "export.toast.image": "已复制图片",
@@ -752,6 +760,7 @@ const zhCN: Dict = {
   "export.toast.deckPdf": "已打开打印窗口 — 选「另存为 PDF」",
   "export.toast.deckPngZip": "已打包 PNG ZIP",
   "export.toast.deckPptx": "已下载 PPTX",
+  "export.toast.remotionZip": "已打包 Remotion 项目 — 解压后跑 `npx remotion render`",
   "export.error.previewNotReady": "预览未就绪",
   "export.error.generic": "失败",
 
