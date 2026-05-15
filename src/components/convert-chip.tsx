@@ -1,14 +1,14 @@
 "use client";
 
+import { useCallback, useEffect } from "react";
 import { useStore, selectActiveTask } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { useConvert } from "@/lib/use-convert";
 
 /**
- * Floating chip pinned to the editor / preview divider that runs the same
- * Convert action as the toolbar button. Mirrors `Toolbar`'s logic but stays
- * close to the editor so users notice it after editing without traveling
- * back up to the top bar. Toolbar's own button (and ⌘+Enter shortcut) stay.
+ * Floating chip pinned to the editor / preview divider — the single Convert
+ * entry point. The toolbar no longer has its own Convert button (removed to
+ * avoid duplication), so this chip also owns the ⌘/Ctrl+Enter shortcut.
  */
 export function ConvertChip() {
   const agent = useStore((s) => s.selectedAgent);
@@ -42,14 +42,29 @@ export function ConvertChip() {
         ? t("toolbar.enterContent")
         : t("convertChip.tooltip");
 
-  const onClick = () => {
+  const onClick = useCallback(() => {
     if (isRunning) {
       cancel(activeTaskId);
       return;
     }
     if (!canConvert) return;
     run({ taskId: activeTaskId, agent: agent!, templateId: template, content, format, model });
-  };
+  }, [isRunning, canConvert, cancel, run, activeTaskId, agent, template, content, format, model]);
+
+  // ⌘/Ctrl + Enter — global shortcut, fires Convert from anywhere on the page.
+  // Lives here (not in Toolbar) because the chip is the single source of
+  // Convert truth after the toolbar button was removed.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        if (isRunning || !canConvert) return;
+        e.preventDefault();
+        onClick();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClick, isRunning, canConvert]);
 
   return (
     <div
@@ -63,14 +78,10 @@ export function ConvertChip() {
         aria-label={t("convertChip.label")}
         className="pointer-events-auto group relative flex items-center gap-2 rounded-full px-4 py-2.5 text-[12.5px] font-medium shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
         style={{
-          background: isRunning
-            ? "var(--coral)"
-            : canConvert
-              ? "var(--ink)"
-              : "var(--ink-mute)",
+          background: isRunning ? "var(--coral-hover)" : "var(--coral)",
           color: "#fff",
           border: "1px solid rgba(255,255,255,0.18)",
-          boxShadow: "0 4px 18px rgba(15, 14, 12, 0.18)",
+          boxShadow: "0 4px 18px rgba(201, 100, 66, 0.32)",
         }}
       >
         {isRunning ? (
@@ -82,6 +93,7 @@ export function ConvertChip() {
           <>
             <span aria-hidden>⚡</span>
             {t("convertChip.label")}
+            <span className="hidden text-[10.5px] opacity-70 sm:inline">⌘↵</span>
           </>
         )}
       </button>

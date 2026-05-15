@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useStore, selectActiveTask } from "@/lib/store";
+import { useStore } from "@/lib/store";
 import { useT } from "@/lib/i18n";
-import { useConvert } from "@/lib/use-convert";
 import { TemplatePicker } from "./template-picker";
 import { ExportMenu } from "./export-menu";
 import { LayoutModeToggle } from "./layout-mode-toggle";
@@ -20,30 +18,10 @@ export function Toolbar({
   const agent = useStore((s) => s.selectedAgent);
   const agents = useStore((s) => s.agents);
   const agentModels = useStore((s) => s.agentModels);
-  const activeTaskId = useStore((s) => s.activeTaskId);
-  const template = useStore((s) => selectActiveTask(s)?.templateId ?? "article-magazine");
-  const content = useStore((s) => selectActiveTask(s)?.content ?? "");
-  const format = useStore((s) => selectActiveTask(s)?.format ?? "text");
-  const status = useStore((s) => selectActiveTask(s)?.status ?? "idle");
-  const { run, cancel } = useConvert();
   const t = useT();
 
   const agentInfo = agents.find((a) => a.id === agent);
   const model = agent ? agentModels[agent] ?? "default" : "default";
-  const canConvert =
-    !!agent && !!content.trim() && status !== "running" && !agentInfo?.unsupported;
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-        e.preventDefault();
-        if (canConvert)
-          run({ taskId: activeTaskId, agent: agent!, templateId: template, content, format, model });
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [canConvert, agent, template, content, format, model, run, activeTaskId]);
 
   return (
     <header
@@ -103,35 +81,6 @@ export function Toolbar({
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
           </svg>
         </button>
-        {status === "running" ? (
-          <button
-            onClick={() => cancel(activeTaskId)}
-            className="btn-ghost"
-            style={{ borderColor: "var(--coral)", color: "var(--coral)" }}
-          >
-            {t("toolbar.stop")}
-          </button>
-        ) : (
-          <button
-            onClick={() =>
-              agent && run({ taskId: activeTaskId, agent, templateId: template, content, format, model })
-            }
-            disabled={!canConvert}
-            className="btn-primary"
-            title={
-              !agent
-                ? t("toolbar.firstSelectAgent")
-                : agentInfo?.unsupported
-                  ? t("toolbar.unsupportedProtocol")
-                  : !content.trim()
-                    ? t("toolbar.enterContent")
-                    : t("toolbar.shortcutHint")
-            }
-          >
-            {t("toolbar.convert")}
-            <span className="hidden text-[11px] opacity-70 sm:inline">⌘↵</span>
-          </button>
-        )}
         <ExportMenu iframeRef={iframeRef} />
       </div>
     </header>
