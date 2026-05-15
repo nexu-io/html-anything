@@ -84,9 +84,35 @@ export type Task = {
    * in `use-convert.ts` before the prompt is shipped to the agent.
    */
   assets?: Record<string, string>;
+  /**
+   * Past one-click deployments of this task's html. Bounded ring (latest
+   * 5 per task to keep localStorage from ballooning). Each entry pairs
+   * a (provider, hash-of-html-at-deploy-time, url) so the user can tell
+   * which historical version of the HTML each public URL points to.
+   */
+  deployments?: DeploymentRecord[];
   // meta
   createdAt: number;
   updatedAt: number;
+};
+
+export type DeploymentStatus = "ready" | "protected" | "link-delayed";
+
+export type DeploymentRecord = {
+  id: string;
+  /** "vercel" | "cloudflare-pages" — keep open-ended for future providers. */
+  provider: string;
+  url: string;
+  /** Provider-side deployment id, surfaced in error messages / dashboards. */
+  deploymentId?: string;
+  /** SHA-256 (first 12 hex chars) of the HTML that was deployed. Lets the
+   *  user tell which version of the page each URL points to. */
+  htmlHash?: string;
+  htmlBytes?: number;
+  status: DeploymentStatus;
+  statusMessage?: string;
+  deployedAt: number;
+  reachableAt?: number;
 };
 
 const emptyStats: RunStats = { outputBytes: 0, deltaCount: 0 };
@@ -218,6 +244,10 @@ type State = {
   patchStatsFor: (taskId: string, patch: Partial<RunStats>) => void;
   /** snapshot the current (content, html) as the new diff-edit baseline */
   commitBaseFor: (taskId: string) => void;
+  /** record a successful one-click deployment of the task's html. */
+  pushDeploymentFor: (taskId: string, deployment: DeploymentRecord) => void;
+  /** delete a past deployment record (UI only; the public URL remains). */
+  removeDeploymentFor: (taskId: string, deploymentRecordId: string) => void;
 
   // global setters
   setAgents: (a: AgentInfo[]) => void;
@@ -387,6 +417,24 @@ export const useStore = create<State>()(
             baseHtml: t.html,
           })),
         })),
+      pushDeploymentFor: (taskId, deployment) =>
+        set((st) => ({
+          tasks: patchTask(st.tasks, taskId, (t) => {
+            const prev = t.deployments ?? [];
+            // Bounded ring: latest 5 per task. Older entries roll off so
+            // localStorage doesn't bloat with stale public URLs over time.
+            const next = [deployment, ...prev].slice(0, 5);
+            return { deployments: next };
+          }),
+        })),
+      removeDeploymentFor: (taskId, deploymentRecordId) =>
+        set((st) => ({
+          tasks: patchTask(st.tasks, taskId, (t) => ({
+            deployments: (t.deployments ?? []).filter(
+              (d) => d.id !== deploymentRecordId,
+            ),
+          })),
+        })),
 
       setAgents: (a) => set({ agents: a }),
       setSelectedAgent: (id) => set({ selectedAgent: id }),
@@ -408,7 +456,7 @@ export const useStore = create<State>()(
       // Legacy key from the old "HTML Everything" brand; do NOT rename — every
       // existing user's saved tasks live under this localStorage key.
       name: "html-everything-store",
-      version: 6,
+      version: 7,
       partialize: (s): Persisted => ({
         tasks: s.tasks.map((t) => ({
           ...t,
@@ -473,6 +521,19 @@ export const useStore = create<State>()(
           const p = persisted as Record<string, unknown>;
           if (!p.agentBinOverrides || typeof p.agentBinOverrides !== "object") {
             p.agentBinOverrides = {};
+          }
+        }
+        // v6 → v7: per-task deployments[] ring buffer for one-click
+        // publishing. Initialize to undefined on existing tasks; the new
+        // deploy code reads `t.deployments ?? []`, so explicit init is
+        // unnecessary, but we leave the migration entry here so the
+        // version bump is auditable.
+        if (fromVersion < 7 && persisted && typeof persisted === "object") {
+          const p = persisted as Record<string, unknown>;
+          if (Array.isArray(p.tasks)) {
+            for (const t of p.tasks as Array<Record<string, unknown>>) {
+              if (!Array.isArray(t.deployments)) t.deployments = [];
+            }
           }
         }
         return persisted as Persisted;

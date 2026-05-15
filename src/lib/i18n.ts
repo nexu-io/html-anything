@@ -103,6 +103,38 @@ export interface Dict {
   "settings.language.active": string;
   "settings.language.default": string;
   "settings.language.note": string;
+  "settings.section.deploy.label": string;
+  "settings.section.deploy.hint": string;
+  "settings.deploy.title": string;
+  "settings.deploy.subtitle": string;
+  "settings.deploy.vercel.title": string;
+  "settings.deploy.vercel.tokenLabel": string;
+  "settings.deploy.vercel.tokenPlaceholder": string;
+  "settings.deploy.vercel.tokenHint": string;
+  "settings.deploy.vercel.teamSlugLabel": string;
+  "settings.deploy.vercel.teamSlugPlaceholder": string;
+  "settings.deploy.save": string;
+  "settings.deploy.clear": string;
+  "settings.deploy.configured": string;
+  "deploy.button": string;
+  "deploy.button.disabled": string;
+  "deploy.deploying": string;
+  "deploy.success.label": string;
+  "deploy.success.copy": string;
+  "deploy.success.copied": string;
+  "deploy.success.open": string;
+  "deploy.protected.label": string;
+  "deploy.protected.hint": string;
+  "deploy.delayed.label": string;
+  "deploy.delayed.hint": string;
+  "deploy.error.label": string;
+  "deploy.error.tokenMissing": string;
+  "deploy.history.title": string;
+  "deploy.history.delete": string;
+  "deploy.provider.vercel": string;
+  "deploy.provider.cloudflarePages": string;
+  "deploy.provider.cloudflarePages.comingSoon": string;
+  "deploy.menu.deployTo": string;
 
   // Editor pane
   "editor.tab.text": string;
@@ -383,6 +415,42 @@ const en: Dict = {
   "settings.language.default": "Default",
   "settings.language.note":
     "We ship English and Simplified Chinese today. Adding a locale means dropping a dictionary into src/lib/i18n.ts — contributors welcome.",
+  "settings.section.deploy.label": "Deploy",
+  "settings.section.deploy.hint": "One-click publishing",
+  "settings.deploy.title": "One-click deploy",
+  "settings.deploy.subtitle":
+    "Publish the generated HTML to a public URL with one click. Tokens stay on your machine in ~/.html-anything (chmod 600).",
+  "settings.deploy.vercel.title": "Vercel",
+  "settings.deploy.vercel.tokenLabel": "API token",
+  "settings.deploy.vercel.tokenPlaceholder": "vercel_xxx…",
+  "settings.deploy.vercel.tokenHint":
+    "Create a token at vercel.com/account/tokens. \"Full Account\" scope is enough.",
+  "settings.deploy.vercel.teamSlugLabel": "Team slug (optional)",
+  "settings.deploy.vercel.teamSlugPlaceholder": "my-team",
+  "settings.deploy.save": "Save",
+  "settings.deploy.clear": "Clear",
+  "settings.deploy.configured": "Configured",
+  "deploy.button": "Publish",
+  "deploy.button.disabled": "Run Convert first",
+  "deploy.deploying": "Deploying…",
+  "deploy.success.label": "Live at",
+  "deploy.success.copy": "Copy",
+  "deploy.success.copied": "Copied",
+  "deploy.success.open": "Open",
+  "deploy.protected.label": "Deployed (SSO-protected)",
+  "deploy.protected.hint":
+    "Vercel is protecting this preview behind SSO. Open it once to authenticate, or disable Deployment Protection in Vercel project settings.",
+  "deploy.delayed.label": "Deployed (waiting for CDN)",
+  "deploy.delayed.hint":
+    "URL is live but CDN hasn't finished propagating yet. Try again in 30–60 s.",
+  "deploy.error.label": "Deploy failed",
+  "deploy.error.tokenMissing": "No deploy token. Open Settings → Deploy to add one.",
+  "deploy.history.title": "Past deployments",
+  "deploy.history.delete": "Forget",
+  "deploy.provider.vercel": "Vercel",
+  "deploy.provider.cloudflarePages": "Cloudflare Pages",
+  "deploy.provider.cloudflarePages.comingSoon": "Coming soon",
+  "deploy.menu.deployTo": "Deploy to…",
 
   "editor.tab.text": "✏️ Text",
   "editor.tab.samples": "✨ Samples",
@@ -659,6 +727,42 @@ const zhCN: Dict = {
   "settings.language.default": "默认",
   "settings.language.note":
     "目前发布的是 English 和简体中文。增加一种语言只需要在 src/lib/i18n.ts 里加一份字典 — 欢迎贡献。",
+  "settings.section.deploy.label": "部署",
+  "settings.section.deploy.hint": "一键发布",
+  "settings.deploy.title": "一键部署",
+  "settings.deploy.subtitle":
+    "把生成好的 HTML 一键发布成公网链接。Token 仅本地保存于 ~/.html-anything（chmod 600）。",
+  "settings.deploy.vercel.title": "Vercel",
+  "settings.deploy.vercel.tokenLabel": "API Token",
+  "settings.deploy.vercel.tokenPlaceholder": "vercel_xxx…",
+  "settings.deploy.vercel.tokenHint":
+    "去 vercel.com/account/tokens 创建一个 token，'Full Account' 范围即可。",
+  "settings.deploy.vercel.teamSlugLabel": "Team slug（可选）",
+  "settings.deploy.vercel.teamSlugPlaceholder": "my-team",
+  "settings.deploy.save": "保存",
+  "settings.deploy.clear": "清除",
+  "settings.deploy.configured": "已配置",
+  "deploy.button": "发布",
+  "deploy.button.disabled": "请先生成 HTML",
+  "deploy.deploying": "部署中…",
+  "deploy.success.label": "已发布到",
+  "deploy.success.copy": "复制",
+  "deploy.success.copied": "已复制",
+  "deploy.success.open": "打开",
+  "deploy.protected.label": "已部署（SSO 保护中）",
+  "deploy.protected.hint":
+    "Vercel 默认对预览部署启用 SSO 保护。先打开链接登录一次，或在 Vercel 项目设置 → Deployment Protection 关掉。",
+  "deploy.delayed.label": "已部署（CDN 同步中）",
+  "deploy.delayed.hint":
+    "链接已生成但 CDN 还没完全同步，30–60 秒后再试。",
+  "deploy.error.label": "部署失败",
+  "deploy.error.tokenMissing": "未配置 Token。打开 Settings → Deploy 添加。",
+  "deploy.history.title": "历史部署",
+  "deploy.history.delete": "删除记录",
+  "deploy.provider.vercel": "Vercel",
+  "deploy.provider.cloudflarePages": "Cloudflare Pages",
+  "deploy.provider.cloudflarePages.comingSoon": "敬请期待",
+  "deploy.menu.deployTo": "部署到…",
 
   "editor.tab.text": "✏️ 输入",
   "editor.tab.samples": "✨ 示例",
