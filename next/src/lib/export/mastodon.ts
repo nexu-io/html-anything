@@ -39,12 +39,20 @@ export async function copyMastodonText(share: MastodonShare): Promise<void> {
   await copyText(share.text);
 }
 
-/** Trim to a hard character ceiling without slicing a multi-byte glyph. */
+/**
+ * Trim to a hard character ceiling without slicing a multi-byte glyph.
+ *
+ * Note: Mastodon and Bluesky both count *graphemes*, not code points, when
+ * enforcing their limits. A ZWJ-joined emoji like 👨‍👩‍👧 is 1 grapheme but
+ * 5 code points — counting by `Array.from` will count it as 5. This is
+ * conservative (we'll never overshoot the platform's limit), but a caption
+ * with many compound emoji may be truncated more aggressively than needed.
+ */
 export function truncateForPost(text: string, limit: number): string {
   const collapsed = text.replace(/\s+/g, " ").trim();
   if (collapsed.length <= limit) return collapsed;
   // Use Array.from to count by code point, not UTF-16 unit, so we don't
-  // split emoji or surrogate pairs in half.
+  // split a surrogate pair in half.
   const points = Array.from(collapsed);
   if (points.length <= limit) return collapsed;
   const ellipsis = "…";

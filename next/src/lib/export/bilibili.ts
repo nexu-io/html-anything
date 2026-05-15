@@ -76,7 +76,6 @@ function sanitizeNode(node: Node): Node | null {
       const c = sanitizeNode(child);
       if (c) frag.appendChild(c);
     }
-    // Wrap loose inline children in <p> if at block level — caller decides.
     return frag.childNodes.length ? frag : null;
   }
 
@@ -92,6 +91,18 @@ function sanitizeNode(node: Node): Node | null {
     const href = fresh.getAttribute("href") ?? "";
     // Bilibili scrubs javascript: schemes anyway, but strip defensively.
     if (/^javascript:/i.test(href)) fresh.removeAttribute("href");
+  }
+
+  if (tag === "code") {
+    // Keep only `language-*` classes; bilibili strips arbitrary classes
+    // server-side but the language hint can influence syntax styling.
+    const cls = fresh.getAttribute("class") ?? "";
+    const langOnly = cls
+      .split(/\s+/)
+      .filter((c) => /^language-[\w-]+$/.test(c))
+      .join(" ");
+    if (langOnly) fresh.setAttribute("class", langOnly);
+    else fresh.removeAttribute("class");
   }
 
   if (tag === "img") {

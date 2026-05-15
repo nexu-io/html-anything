@@ -53,7 +53,7 @@ function renderBlock(node: Node, ctx: Ctx): string {
       return `\n\n${"#".repeat(level)} ${renderInline(el)}\n\n`;
     }
     case "p":
-      return `\n\n${renderInline(el)}\n\n`;
+      return `\n\n${escapeBlockStarts(renderInline(el))}\n\n`;
     case "blockquote": {
       const inner = childrenToBlocks(el, ctx).trim();
       return "\n\n" + inner.split("\n").map((l) => `> ${l}`).join("\n") + "\n\n";
@@ -75,7 +75,7 @@ function renderBlock(node: Node, ctx: Ctx): string {
       return childrenToBlocks(el, ctx);
     default:
       // Inline element at block position — wrap as paragraph if non-empty.
-      return renderInline(el);
+      return escapeBlockStarts(renderInline(el));
   }
 }
 
@@ -104,22 +104,27 @@ function renderInline(node: Node): string {
       return `*${inner()}*`;
     case "code":
       // Inline code only — fenced blocks come through renderPre.
-      return `\`${(el.textContent ?? "").replace(/`/g, "\\`")}\``;
+      // CommonMark forbids backslash-escaping backticks inside inline code;
+      // use a fence longer than the longest backtick run in the body.
+      return wrapInlineCode(el.textContent ?? "");
     case "s": case "del": case "strike":
       return `~~${inner()}~~`;
     case "br":
       return "  \n";
     case "a": {
-      const href = el.getAttribute("href") ?? "";
+      const rawHref = el.getAttribute("href") ?? "";
+      const href = escapeHref(rawHref);
       const title = el.getAttribute("title");
-      const text = inner() || href;
-      return title ? `[${text}](${href} "${title}")` : `[${text}](${href})`;
+      // inner() is already escapeMd-processed — only the bracket pair needs
+      // additional escaping so [text](url) parses unambiguously.
+      const text = escapeBrackets(inner() || escapeMd(rawHref));
+      return title ? `[${text}](${href} "${escapeTitle(title)}")` : `[${text}](${href})`;
     }
     case "img": {
-      const src = el.getAttribute("src") ?? "";
-      const alt = el.getAttribute("alt") ?? "";
+      const src = escapeHref(el.getAttribute("src") ?? "");
+      const alt = escapeBrackets(escapeMd(el.getAttribute("alt") ?? ""));
       const title = el.getAttribute("title");
-      return title ? `![${alt}](${src} "${title}")` : `![${alt}](${src})`;
+      return title ? `![${alt}](${src} "${escapeTitle(title)}")` : `![${alt}](${src})`;
     }
     case "span": case "u":
       return inner();
@@ -134,9 +139,17 @@ function renderPre(el: Element): string {
   const langCls = code?.getAttribute("class") ?? "";
   const langMatch = langCls.match(/language-([\w-]+)/);
   const lang = langMatch ? langMatch[1] : "";
-  const raw = (code ?? el).textContent ?? "";
-  return `\n\n\`\`\`${lang}\n${raw.replace(/\n$/, "")}\n\`\`\`\n\n`;
+  const raw = ((code ?? el).textContent ?? "").replace(/\n$/, "");
+  // Fence must be longer than any backtick run in the body so the block
+  // doesn't terminate early on embedded ```.
+  const fence = backtickFence(raw, 3);
+  return `\n\n${fence}${lang}\n${raw}\n${fence}\n\n`;
 }
+
+const LIST_BLOCK_TAGS = new Set([
+  "p", "pre", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6",
+  "table", "figure", "div", "section", "article", "hr",
+]);
 
 function renderList(el: Element, ctx: Ctx): string {
   const ordered = el.tagName.toLowerCase() === "ol";
@@ -148,25 +161,39 @@ function renderList(el: Element, ctx: Ctx): string {
     const marker = ordered ? `${n}.` : "-";
     n++;
     const childCtx = { listDepth: ctx.listDepth + 1 };
+    const contIndent = indent + " ".repeat(marker.length + 1);
 
-    // Split inline content from nested lists so the markdown nests cleanly.
+    // Partition children: inline (rendered into the marker line),
+    // nested lists, and other block elements (paragraphs, code blocks, etc.).
     const inlineFrag = document.createElement("div");
-    const nested: Element[] = [];
+    type ChildBlock = { kind: "list" | "block"; el: Element };
+    const blockChildren: ChildBlock[] = [];
     for (const c of Array.from(li.childNodes)) {
-      if (
-        c.nodeType === Node.ELEMENT_NODE &&
-        /^(ul|ol)$/i.test((c as Element).tagName)
-      ) {
-        nested.push(c as Element);
-      } else {
-        inlineFrag.appendChild(c.cloneNode(true));
+      if (c.nodeType === Node.ELEMENT_NODE) {
+        const t = (c as Element).tagName.toLowerCase();
+        if (t === "ul" || t === "ol") {
+          blockChildren.push({ kind: "list", el: c as Element });
+          continue;
+        }
+        if (LIST_BLOCK_TAGS.has(t)) {
+          blockChildren.push({ kind: "block", el: c as Element });
+          continue;
+        }
       }
+      inlineFrag.appendChild(c.cloneNode(true));
     }
 
-    const inlineText = renderInline(inlineFrag).trim();
+    const inlineText = escapeBlockStarts(renderInline(inlineFrag)).trim();
     let block = `${indent}${marker} ${inlineText}`;
-    for (const nest of nested) {
-      block += "\n" + renderList(nest, childCtx).replace(/\n+$/, "");
+    for (const bc of blockChildren) {
+      if (bc.kind === "list") {
+        block += "\n" + renderList(bc.el, childCtx).replace(/\n+$/, "");
+      } else {
+        const rendered = renderBlock(bc.el, childCtx).replace(/^\n+/, "").replace(/\n+$/, "");
+        if (!rendered) continue;
+        const indented = rendered.split("\n").map((l) => (l ? contIndent + l : l)).join("\n");
+        block += "\n\n" + indented;
+      }
     }
     items.push(block);
   }
@@ -196,13 +223,74 @@ function renderTable(el: Element): string {
 }
 
 function escapeMd(s: string): string {
-  // Escape only the characters that would otherwise produce stray markdown:
-  // backslash, the inline markers, and unbalanced fences. Leave brackets /
-  // parens alone — escaping them in prose looks worse than the rare false
-  // link match.
-  return s.replace(/([\\`*_])/g, "\\$1");
+  // Escape inline-marker characters in plain text. Brackets / parens are
+  // left alone — escaping them in prose looks worse than the rare false
+  // link match. Line-starting block markers (#, >, -, +, digits.) are
+  // handled separately in `escapeBlockStarts` so they only escape at the
+  // position where they would actually trigger a block construct.
+  return s.replace(/([\\`*_~])/g, "\\$1");
+}
+
+/**
+ * Escape characters at the start of a line that would otherwise be parsed
+ * as the opening of a block-level Markdown construct (heading, blockquote,
+ * unordered/ordered list, hr). Only matches when the marker is followed by
+ * whitespace or end-of-line — `#bar` mid-text isn't a heading.
+ */
+function escapeBlockStarts(s: string): string {
+  return s.replace(
+    /(^|\n)([ \t]*)(#{1,6}|>|[-+*]|\d+\.)(?=\s|$)/g,
+    (_m, lead: string, ws: string, marker: string) =>
+      `${lead}${ws}\\${marker}`,
+  );
 }
 
 function collapseBlankLines(s: string): string {
   return s.replace(/\n{3,}/g, "\n\n");
+}
+
+function backtickFence(body: string, min: number): string {
+  let max = 0;
+  const re = /`+/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(body)) !== null) {
+    if (m[0].length > max) max = m[0].length;
+  }
+  return "`".repeat(Math.max(min, max + 1));
+}
+
+function wrapInlineCode(text: string): string {
+  if (!text) return "``";
+  const fence = backtickFence(text, 1);
+  // CommonMark strips a single leading/trailing space if the content also
+  // contains a non-space char — use that to allow the body to start or end
+  // with a backtick (or only-spaces content) without parser ambiguity.
+  const needsPad = text.startsWith("`") || text.endsWith("`");
+  const pad = needsPad ? " " : "";
+  return `${fence}${pad}${text}${pad}${fence}`;
+}
+
+/**
+ * Render a URL safe for use inside the `(...)` of a Markdown link/image.
+ * URLs containing spaces or parens are wrapped with angle brackets; any
+ * embedded `<` / `>` are percent-encoded since they would close the bracket
+ * form prematurely.
+ */
+function escapeHref(href: string): string {
+  if (!href) return "";
+  if (/[\s()<>]/.test(href)) {
+    const encoded = href.replace(/[<>]/g, (c) => (c === "<" ? "%3C" : "%3E"));
+    return `<${encoded}>`;
+  }
+  return href;
+}
+
+function escapeTitle(title: string): string {
+  return title.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+function escapeBrackets(text: string): string {
+  // Backslash-escape brackets so they don't break the [text](url) form.
+  // Caller is responsible for any other inline escaping needed.
+  return text.replace(/([[\]])/g, "\\$1");
 }
