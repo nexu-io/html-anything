@@ -1,4 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { existsSync } from "node:fs";
 import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
 import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
 
@@ -8,7 +9,59 @@ export type InvokeOpts = {
   cwd?: string;
   model?: string;
   signal?: AbortSignal;
+  /**
+   * Absolute path to the agent binary. Wins over `process.env[envOverride]`
+   * and the PATH scan when set. Surfaced from the Settings UI for users
+   * whose CLI lives outside the heuristic toolchain dirs.
+   */
+  binOverride?: string;
 };
+
+type BinResolution =
+  | { kind: "ok"; bin: string }
+  | { kind: "override-missing"; tried: string }
+  | { kind: "not-found" };
+
+/**
+ * Resolve the binary to spawn, in priority order:
+ *   1. `opts.binOverride` (user-set absolute path from Settings UI)
+ *   2. `process.env[def.envOverride]` (e.g. CLAUDE_BIN, OPENCLAW_BIN)
+ *   3. PATH scan over `def.bin` then `def.fallbackBins`
+ *
+ * If a `binOverride` is set but doesn't resolve, return `override-missing`
+ * (do not silently fall through) — the user picked an explicit path and
+ * deserves to see the typo / wrong path instead of mysteriously running a
+ * different binary.
+ */
+function resolveBinForAgent(
+  def: (typeof AGENTS)[number],
+  binOverride: string | undefined,
+): BinResolution {
+  const tryPath = (p: string | undefined): string | null => {
+    if (!p) return null;
+    const trimmed = p.trim();
+    if (!trimmed) return null;
+    // Absolute path → must exist; relative names → fall back to PATH scan.
+    if (/^([a-zA-Z]:[\\/]|[\\/])/.test(trimmed)) {
+      return existsSync(trimmed) ? trimmed : null;
+    }
+    return resolveOnPath(trimmed);
+  };
+  if (binOverride && binOverride.trim()) {
+    const fromOverride = tryPath(binOverride);
+    if (fromOverride) return { kind: "ok", bin: fromOverride };
+    return { kind: "override-missing", tried: binOverride.trim() };
+  }
+  if (def.envOverride) {
+    const fromEnv = tryPath(process.env[def.envOverride]);
+    if (fromEnv) return { kind: "ok", bin: fromEnv };
+  }
+  for (const c of [def.bin, ...(def.fallbackBins ?? [])]) {
+    const found = resolveOnPath(c);
+    if (found) return { kind: "ok", bin: found };
+  }
+  return { kind: "not-found" };
+}
 
 export type InvokeEvent =
   | { type: "start"; bin: string; argv: string[]; promptBytes: number }
@@ -30,17 +83,18 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
   if (!def) {
     return errorStream(`unknown agent: ${opts.agent}`);
   }
-  const candidates = [def.bin, ...(def.fallbackBins ?? [])];
-  let bin: string | null = null;
-  for (const c of candidates) {
-    bin = resolveOnPath(c);
-    if (bin) break;
+  const resolved = resolveBinForAgent(def, opts.binOverride);
+  if (resolved.kind === "override-missing") {
+    return errorStream(
+      `${def.label}: custom path \`${resolved.tried}\` does not exist. Update or clear it in Settings → Custom path.`,
+    );
   }
-  if (!bin) {
+  if (resolved.kind === "not-found") {
     return errorStream(
       `${def.label} (\`${def.bin}\`) is not installed or not on PATH.`,
     );
   }
+  const bin: string = resolved.bin;
 
   // For openclaw we need an async detection step (resolveOpenclawAgentId)
   // before buildArgv. Do all of the argv assembly inside the stream's async
@@ -108,6 +162,14 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           cwd: opts.cwd ?? process.cwd(),
           env,
           stdio: ["pipe", "pipe", "pipe"],
+          // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
+          // what npm installs for most CLI agents) without going through the
+          // shell. Without this, every agent invocation fails with
+          // EINVAL / "spawn 无效的参数". macOS/Linux use direct exec.
+          // Safety: prompt content is delivered via stdin or `--message
+          // <text>` (argv-message), not interpolated into a shell command,
+          // so this does not introduce a shell-injection vector.
+          shell: process.platform === "win32",
         });
       } catch (err) {
         safeEnqueue({
