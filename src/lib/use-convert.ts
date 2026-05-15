@@ -60,6 +60,7 @@ export function useConvert() {
           : summary.raw;
 
       const useModel = req.model && req.model !== "default" ? req.model : undefined;
+      const binOverride = store.agentBinOverrides[req.agent]?.trim() || undefined;
 
       // diff-edit mode: if the task was loaded from a sample (or the user has
       // already converted once) AND the content has actually changed, we ship
@@ -84,6 +85,7 @@ export function useConvert() {
         content: enrichedContent,
         format: req.format ?? summary.format,
         ...(useModel ? { model: useModel } : {}),
+        ...(binOverride ? { binOverride } : {}),
         ...(editPayload ?? {}),
       };
 

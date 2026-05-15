@@ -303,7 +303,10 @@ function userToolchainDirs(): string[] {
   const vp = env.VP_HOME?.trim();
   if (vp) dirs.push(join(vp, "bin"));
   const npmPrefix = env.NPM_CONFIG_PREFIX?.trim();
-  if (npmPrefix) dirs.push(join(npmPrefix, "bin"));
+  if (npmPrefix) {
+    // npm on Windows installs CLI shims directly in <prefix>, not <prefix>/bin.
+    dirs.push(join(npmPrefix, "bin"), npmPrefix);
+  }
   dirs.push(
     join(home, ".local/bin"),
     join(home, ".vite-plus/bin"),
@@ -317,7 +320,22 @@ function userToolchainDirs(): string[] {
     join(home, ".npm-packages/bin"),
     join(home, ".claude/local"),
   );
-  if (process.platform !== "win32") {
+  if (process.platform === "win32") {
+    // Scoop-managed Node.js drops global npm shims into the app dir directly,
+    // not under a /bin/ subdirectory. Cover the common Scoop layouts plus the
+    // default %AppData%/npm location used by the standalone Node installer.
+    const scoopRoot = env.SCOOP?.trim() || join(home, "scoop");
+    const globalScoopRoot = env.SCOOP_GLOBAL?.trim() || "C:\\ProgramData\\scoop";
+    const appData = env.APPDATA?.trim();
+    dirs.push(
+      join(scoopRoot, "shims"),
+      join(scoopRoot, "apps", "nodejs", "current"),
+      join(scoopRoot, "apps", "nodejs-lts", "current"),
+      join(globalScoopRoot, "shims"),
+      join(globalScoopRoot, "apps", "nodejs", "current"),
+    );
+    if (appData) dirs.push(join(appData, "npm"));
+  } else {
     dirs.push("/opt/homebrew/bin", "/usr/local/bin");
   }
   return dirs;

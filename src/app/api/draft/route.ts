@@ -12,6 +12,8 @@ type Body = {
    *  continue the user's voice instead of writing in isolation. */
   context?: string;
   model?: string;
+  /** Optional absolute path to the agent binary; see /api/convert. */
+  binOverride?: string;
 };
 
 function buildDraftPrompt(args: { instruction: string; context: string }): string {
@@ -41,7 +43,7 @@ export async function POST(req: NextRequest) {
   } catch {
     return new Response("invalid JSON body", { status: 400 });
   }
-  const { agent, instruction, context = "", model } = body;
+  const { agent, instruction, context = "", model, binOverride } = body;
   if (!agent || !instruction?.trim()) {
     return new Response("missing required fields: agent, instruction", {
       status: 400,
@@ -57,6 +59,7 @@ export async function POST(req: NextRequest) {
     agent,
     prompt,
     model,
+    binOverride,
     signal: abortCtl.signal,
   });
 

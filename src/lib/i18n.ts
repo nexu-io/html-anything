@@ -74,6 +74,12 @@ export interface Dict {
   // Agent card
   "agent.selected": string;
   "agent.notInstalled": string;
+  "agent.customBin.eyebrow": string;
+  "agent.customBin.subtitle": string;
+  "agent.customBin.detected": string;
+  "agent.customBin.hint": string;
+  "agent.customBin.save": string;
+  "agent.customBin.clear": string;
   "protocol.stdin": string;
   "protocol.argv": string;
   "protocol.argvMessage": string;
@@ -345,6 +351,13 @@ const en: Dict = {
 
   "agent.selected": "Selected",
   "agent.notInstalled": "Not installed",
+  "agent.customBin.eyebrow": "custom path",
+  "agent.customBin.subtitle": "Override the auto-detected binary for {agent}",
+  "agent.customBin.detected": "Auto-detected:",
+  "agent.customBin.hint":
+    "Set this if auto-detection picked the wrong binary (e.g. Scoop on Windows, custom installs). Leave blank to use the detected path.",
+  "agent.customBin.save": "Save",
+  "agent.customBin.clear": "Clear",
   "protocol.stdin": "stdin · stream",
   "protocol.argv": "positional argv",
   "protocol.argvMessage": "argv · batch JSON",
@@ -615,6 +628,12 @@ const zhCN: Dict = {
 
   "agent.selected": "SELECTED",
   "agent.notInstalled": "未安装",
+  "agent.customBin.eyebrow": "自定义路径",
+  "agent.customBin.subtitle": "手动指定 {agent} 的二进制路径",
+  "agent.customBin.detected": "自动检测到:",
+  "agent.customBin.hint": "如果自动检测找错了 binary（比如 Windows Scoop / 自定义安装），在这里填绝对路径。留空走自动检测。",
+  "agent.customBin.save": "保存",
+  "agent.customBin.clear": "清除",
   "protocol.stdin": "stdin · stream",
   "protocol.argv": "positional argv",
   "protocol.argvMessage": "argv · 整段 JSON",

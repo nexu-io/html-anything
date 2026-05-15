@@ -141,6 +141,12 @@ type Persisted = {
   selectedAgent: string | undefined;
   /** Per-agent last-picked model id. Empty / "default" means no `--model` flag. */
   agentModels: Record<string, string>;
+  /**
+   * Per-agent absolute path override. Wins over PATH scan and `envOverride`
+   * when set. Used by users whose CLI lives somewhere our `userToolchainDirs`
+   * heuristic doesn't cover (Scoop on Windows, custom installs, etc.).
+   */
+  agentBinOverrides: Record<string, string>;
   welcomeAck: boolean;
   sidebarCollapsed: boolean;
   locale: Locale;
@@ -157,6 +163,8 @@ type State = {
   selectedAgent?: string;
   /** Per-agent model id. "default" or absent = no --model flag. */
   agentModels: Record<string, string>;
+  /** Per-agent absolute binary path override. See Persisted comment. */
+  agentBinOverrides: Record<string, string>;
   welcomeAck: boolean;
   sidebarCollapsed: boolean;
   locale: Locale;
@@ -215,6 +223,8 @@ type State = {
   setAgents: (a: AgentInfo[]) => void;
   setSelectedAgent: (id?: string) => void;
   setAgentModel: (agentId: string, modelId: string) => void;
+  /** Set / clear an absolute path override for one agent. Empty string clears. */
+  setAgentBinOverride: (agentId: string, path: string) => void;
   setWelcomeAck: (v: boolean) => void;
   setSidebarCollapsed: (v: boolean) => void;
   setLocale: (l: Locale) => void;
@@ -242,6 +252,7 @@ export const useStore = create<State>()(
       agents: [],
       selectedAgent: undefined,
       agentModels: {},
+      agentBinOverrides: {},
       welcomeAck: false,
       sidebarCollapsed: false,
       locale: "en",
@@ -381,6 +392,13 @@ export const useStore = create<State>()(
       setSelectedAgent: (id) => set({ selectedAgent: id }),
       setAgentModel: (agentId, modelId) =>
         set((s) => ({ agentModels: { ...s.agentModels, [agentId]: modelId } })),
+      setAgentBinOverride: (agentId, path) =>
+        set((s) => {
+          const next = { ...s.agentBinOverrides };
+          if (path.trim()) next[agentId] = path.trim();
+          else delete next[agentId];
+          return { agentBinOverrides: next };
+        }),
       setWelcomeAck: (v) => set({ welcomeAck: v }),
       setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
       setLocale: (l) => set({ locale: l }),
@@ -390,7 +408,7 @@ export const useStore = create<State>()(
       // Legacy key from the old "HTML Everything" brand; do NOT rename — every
       // existing user's saved tasks live under this localStorage key.
       name: "html-everything-store",
-      version: 5,
+      version: 6,
       partialize: (s): Persisted => ({
         tasks: s.tasks.map((t) => ({
           ...t,
@@ -400,6 +418,7 @@ export const useStore = create<State>()(
         activeTaskId: s.activeTaskId,
         selectedAgent: s.selectedAgent,
         agentModels: s.agentModels,
+        agentBinOverrides: s.agentBinOverrides,
         welcomeAck: s.welcomeAck,
         sidebarCollapsed: s.sidebarCollapsed,
         locale: s.locale,
@@ -447,6 +466,13 @@ export const useStore = create<State>()(
             !(LAYOUT_MODES as string[]).includes(p.layoutMode as string)
           ) {
             p.layoutMode = "split";
+          }
+        }
+        // v5 → v6: introduce agentBinOverrides map.
+        if (fromVersion < 6 && persisted && typeof persisted === "object") {
+          const p = persisted as Record<string, unknown>;
+          if (!p.agentBinOverrides || typeof p.agentBinOverrides !== "object") {
+            p.agentBinOverrides = {};
           }
         }
         return persisted as Persisted;
