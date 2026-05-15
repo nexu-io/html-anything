@@ -6,6 +6,7 @@ import { useT, type DictKey } from "@/lib/i18n";
 import { previewHtml, extractHtml } from "@/lib/extract-html";
 import { isDeck } from "@/lib/deck";
 import { DeckViewer } from "./deck-viewer";
+import { DeployControl } from "./deploy-control";
 
 type PreviewTab = "preview" | "deck" | "code" | "log";
 
@@ -275,6 +276,11 @@ export function PreviewPane({
               >
                 {t("preview.present")} <span className="opacity-50">F</span>
               </button>
+            )}
+            {/* Publish-to-Vercel button — only meaningful once a Convert has
+                produced html, and only on tabs that show the user that html. */}
+            {(tab === "preview" || tab === "code") && status === "done" && html && (
+              <DeployControl />
             )}
             <StatusPill status={status} />
           </div>
