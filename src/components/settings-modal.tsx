@@ -12,7 +12,7 @@ import { useT, type DictKey } from "@/lib/i18n";
 
 type Props = { onClose: () => void; initialSection?: SectionId };
 
-type SectionId = "agent" | "deploy" | "language";
+export type SectionId = "agent" | "deploy" | "language";
 
 const SECTIONS: Array<{ id: SectionId; labelKey: DictKey; hintKey: DictKey }> = [
   { id: "agent", labelKey: "settings.section.agent.label", hintKey: "settings.section.agent.hint" },

@@ -29,7 +29,13 @@ const EMPTY_DEPLOYMENTS: readonly DeploymentRecord[] = [];
  * "coming soon" placeholder for it.
  */
 
-export function DeployControl() {
+export function DeployControl({
+  onRequestConfigureDeploy,
+  configRev = 0,
+}: {
+  onRequestConfigureDeploy: () => void;
+  configRev?: number;
+}) {
   const html = useStore((s) => selectActiveTask(s)?.html ?? "");
   const taskId = useStore((s) => s.activeTaskId);
   const deployments = useStore(
@@ -40,7 +46,27 @@ export function DeployControl() {
   const { status, error, latest, deploy } = useDeploy();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  // null = unknown (still loading), true/false = checked state. Probed via
+  // the same /api/deploy/config endpoint Settings → Deploy reads, so the
+  // toolbar Publish button knows whether to deploy or steer the user to
+  // configure a token first.
+  const [configured, setConfigured] = useState<boolean | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/deploy/config?provider=vercel")
+      .then((r) => r.json())
+      .then((d: { configured?: boolean }) => {
+        if (!cancelled) setConfigured(!!d?.configured);
+      })
+      .catch(() => {
+        if (!cancelled) setConfigured(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [configRev]);
 
   // Close the history dropdown on outside click.
   useEffect(() => {
@@ -62,10 +88,19 @@ export function DeployControl() {
   }, [copiedUrl]);
 
   const isDeploying = status === "deploying";
-  const canDeploy = html.length > 0 && !isDeploying;
+  const isUnconfigured = configured === false;
+  // The button is clickable in two cases: a normal deploy (configured + has html),
+  // or an unconfigured-state click that steers the user to Settings. Anything else
+  // (deploying, or configured-but-no-html) disables the button.
+  const disabled = isDeploying || (!isUnconfigured && html.length === 0);
 
   const onClickPublish = () => {
-    if (!canDeploy) return;
+    if (isDeploying) return;
+    if (isUnconfigured) {
+      onRequestConfigureDeploy();
+      return;
+    }
+    if (html.length === 0) return;
     void deploy({ taskId, provider: "vercel", html });
   };
 
@@ -86,18 +121,14 @@ export function DeployControl() {
     <div ref={popoverRef} className="relative inline-flex items-center gap-1.5">
       <button
         onClick={onClickPublish}
-        disabled={!canDeploy}
-        title={canDeploy ? undefined : t("deploy.button.disabled")}
-        className="rounded-full px-3 py-0.5 text-[11px] font-medium transition-all disabled:cursor-not-allowed disabled:opacity-40"
-        style={{
-          background: isDeploying ? "var(--coral)" : "var(--ink)",
-          color: "#fff",
-          border: "1px solid transparent",
-        }}
+        disabled={disabled}
+        title={disabled ? t("deploy.button.disabled") : undefined}
+        className="btn-ink"
+        style={isDeploying ? { background: "var(--coral)" } : undefined}
       >
         {isDeploying ? (
           <>
-            <span className="mr-1 inline-block h-2 w-2 animate-pulse rounded-full bg-white align-middle" />
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-white align-middle" />
             {t("deploy.deploying")}
           </>
         ) : (
