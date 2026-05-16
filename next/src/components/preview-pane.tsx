@@ -5,6 +5,7 @@ import { useStore, selectActiveTask, type LogEntry, type RunStats } from "@/lib/
 import { useT, type DictKey } from "@/lib/i18n";
 import { previewHtml, extractHtml } from "@/lib/extract-html";
 import { isDeck } from "@/lib/deck";
+import { isEditableTarget } from "@/lib/iframe-key";
 import { DeckViewer } from "./deck-viewer";
 
 type PreviewTab = "preview" | "deck" | "code" | "log";
@@ -107,6 +108,15 @@ export function PreviewPane({
     } else {
       el.requestFullscreen?.().catch(() => {});
     }
+  }, []);
+
+  const handleIframeLoad = useCallback((e: React.SyntheticEvent<HTMLIFrameElement>) => {
+    const iframeWin = e.currentTarget.contentWindow;
+    if (!iframeWin) return;
+    iframeWin.addEventListener("keydown", (ev) => {
+      if (isEditableTarget(ev.target)) return;
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: ev.key, bubbles: true, cancelable: true }));
+    });
   }, []);
 
   // F to toggle fullscreen (only when not on Deck tab — DeckViewer handles its own).
@@ -297,6 +307,7 @@ export function PreviewPane({
                   sandbox="allow-scripts allow-same-origin"
                   className="h-full w-full"
                   style={{ background: "#fff" }}
+                  onLoad={handleIframeLoad}
                 />
                 {isPreviewingTemplate && (
                   <div
