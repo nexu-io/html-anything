@@ -51,6 +51,9 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
     case "codex":
       return [
         "exec",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "--ephemeral",
         "--json",
         "--skip-git-repo-check",
         "--sandbox",
@@ -298,10 +301,23 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   }
 
   if (agent === "codex") {
+    if (obj.type === "thread.started" && typeof obj.thread_id === "string") {
+      out.push({ kind: "meta", key: "session", value: obj.thread_id });
+    }
+    if (obj.type === "turn.started") {
+      out.push({ kind: "meta", key: "status", value: "turn.started" });
+    }
     if (obj.type === "item.completed" && obj.item && typeof obj.item === "object") {
-      const item = obj.item as { item_type?: string; text?: string };
-      if (item.item_type === "assistant_message" && typeof item.text === "string") {
-        out.push({ kind: "delta", text: item.text });
+      const item = obj.item as { item_type?: string; type?: string; text?: string; message?: string };
+      const itemType = item.item_type ?? item.type;
+      const text =
+        typeof item.text === "string"
+          ? item.text
+          : typeof item.message === "string"
+            ? item.message
+            : "";
+      if ((itemType === "assistant_message" || itemType === "agent_message") && text) {
+        out.push({ kind: "delta", text });
       }
     }
     if (obj.type === "item.delta" && typeof obj.text === "string") {
@@ -314,6 +330,9 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
       }
     }
     if (obj.type === "task_complete" && obj.usage) {
+      out.push({ kind: "meta", key: "usage", value: obj.usage });
+    }
+    if (obj.type === "turn.completed" && obj.usage) {
       out.push({ kind: "meta", key: "usage", value: obj.usage });
     }
   }

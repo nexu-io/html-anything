@@ -2,12 +2,14 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
 import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
+import { HtmlStreamExtractor } from "./html-stream";
 
 export type InvokeOpts = {
   agent: string;
   prompt: string;
   cwd?: string;
   model?: string;
+  output?: "text" | "html";
   signal?: AbortSignal;
   /**
    * Absolute path to the agent binary. Wins over `process.env[envOverride]`
@@ -107,6 +109,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
     async start(controller) {
       let closed = false;
       let child: ChildProcessWithoutNullStreams | null = null;
+      const htmlStream = opts.output === "html" ? new HtmlStreamExtractor() : null;
 
       const safeEnqueue = (ev: InvokeEvent) => {
         if (closed) return;
@@ -122,6 +125,14 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         try {
           controller.close();
         } catch {}
+      };
+      const safeEnqueueDelta = (text: string) => {
+        if (!htmlStream) {
+          safeEnqueue({ type: "delta", text });
+          return;
+        }
+        const html = htmlStream.push(text);
+        if (html) safeEnqueue({ type: "delta", text: html });
       };
 
       // Resolve agent-specific argv. For openclaw we first probe `agents
@@ -213,7 +224,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           stdoutBuf = stdoutBuf.slice(nl + 1);
           if (!line) continue;
           for (const part of parse(line)) {
-            if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
+            if (part.kind === "delta") safeEnqueueDelta(part.text);
             else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
             else safeEnqueue({ type: "raw", text: line.slice(0, 240) });
@@ -253,7 +264,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
                 ?? obj?.meta?.finalAssistantRawText
                 ?? obj?.payloads?.[0]?.text
                 ?? "";
-              if (text) safeEnqueue({ type: "delta", text });
+              if (text) safeEnqueueDelta(text);
               const trace = obj?.meta?.executionTrace;
               if (trace?.winnerModel) {
                 safeEnqueue({
@@ -285,12 +296,12 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           }
         } else if (stdoutBuf) {
           for (const part of parse(stdoutBuf)) {
-            if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
+            if (part.kind === "delta") safeEnqueueDelta(part.text);
             else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
           }
           if (opts.agent === "aider" || opts.agent === "deepseek") {
-            safeEnqueue({ type: "delta", text: stdoutBuf });
+            safeEnqueueDelta(stdoutBuf);
           }
         }
         safeEnqueue({ type: "done", code });
