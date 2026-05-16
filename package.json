@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test": "vitest run",
     "start": "next start"
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "diff": "^9.0.0",
     "dompurify": "^3.4.2",
     "highlight.js": "^11.11.1",
+    "idb": "^8.0.3",
     "jszip": "^3.10.1",
     "juice": "^11.1.1",
     "lucide-react": "^1.14.0",
@@ -32,7 +35,9 @@
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "fake-indexeddb": "^6.2.5",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.6"
   }
 }

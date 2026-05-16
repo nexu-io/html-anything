@@ -69,6 +69,7 @@ export function Toolbar({
       <div className="flex items-center gap-2">
         <LayoutModeToggle />
         <div className="hidden h-6 w-px sm:block" style={{ background: "var(--line)" }} />
+        <HistoryToggle />
         <button
           onClick={onOpenSettings}
           className="grid h-9 w-9 place-items-center rounded-full border text-[var(--ink-soft)] transition-all hover:border-[var(--ink)]/30 hover:text-[var(--ink)]"
@@ -84,6 +85,32 @@ export function Toolbar({
         <ExportMenu iframeRef={iframeRef} />
       </div>
     </header>
+  );
+}
+
+function HistoryToggle() {
+  const open = useStore((s) => s.historyPaneOpen);
+  const setOpen = useStore((s) => s.setHistoryPaneOpen);
+  const t = useT();
+  return (
+    <button
+      onClick={() => setOpen(!open)}
+      className="grid h-9 w-9 place-items-center rounded-full border text-[var(--ink-soft)] transition-all hover:border-[var(--ink)]/30 hover:text-[var(--ink)]"
+      style={{
+        background: open ? "var(--coral-soft)" : "var(--surface)",
+        borderColor: open ? "var(--coral)" : "var(--line)",
+        color: open ? "var(--coral)" : undefined,
+      }}
+      title={t("history.toggle")}
+      aria-label={t("history.toggle")}
+      aria-pressed={open}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 12a9 9 0 1 0 3-6.7" />
+        <polyline points="3 4 3 9 8 9" />
+        <polyline points="12 7 12 12 15 14" />
+      </svg>
+    </button>
   );
 }
 

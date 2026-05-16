@@ -5,6 +5,7 @@ import { Toolbar } from "@/components/toolbar";
 import { EditorPane } from "@/components/editor-pane";
 import { PreviewPane } from "@/components/preview-pane";
 import { TasksSidebar } from "@/components/tasks-sidebar";
+import { HistoryPane } from "@/components/history-pane";
 import { WelcomeModal } from "@/components/welcome-modal";
 import { SettingsModal } from "@/components/settings-modal";
 import { ConvertChip } from "@/components/convert-chip";
@@ -73,6 +74,7 @@ export default function Home() {
         style={{ borderTop: "1px solid var(--line-faint)" }}
       >
         <TasksSidebar />
+        <HistoryPane />
         <div className="relative flex flex-1 min-w-0">
           {layoutMode !== "preview" && (
             <section
