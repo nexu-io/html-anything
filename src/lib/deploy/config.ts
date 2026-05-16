@@ -218,6 +218,21 @@ export async function writeDeployConfig(
     : writeVercelConfig(input);
 }
 
+// `writeDeployConfig` requires a non-empty token, so it can't be used to clear
+// a previously saved configuration — Settings → Clear has to delete the file
+// outright. ENOENT means it was already gone, which we treat as success so the
+// UI ends up in the same "unconfigured" state either way.
+export async function clearDeployConfig(
+  providerId: DeployProviderId,
+): Promise<PublicDeployConfig> {
+  try {
+    await fsp.unlink(deployConfigPath(providerId));
+  } catch (err) {
+    if (!isEnoent(err)) throw err;
+  }
+  return publicDeployConfigForProvider(providerId, {});
+}
+
 export function publicVercelConfig(
   config: Partial<DeployConfig>,
 ): PublicDeployConfig {

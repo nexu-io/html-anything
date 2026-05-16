@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  clearDeployConfig,
   DeployError,
   isDeployProviderId,
   publicDeployConfigForProvider,
@@ -13,11 +14,13 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * GET  /api/deploy/config?provider=vercel
+ * GET    /api/deploy/config?provider=vercel
  *   → public-shape config (token masked)
- * PUT  /api/deploy/config?provider=vercel
+ * PUT    /api/deploy/config?provider=vercel
  *   body: { token?, teamId?, teamSlug?, accountId? }
  *   → updated public-shape config
+ * DELETE /api/deploy/config?provider=vercel
+ *   → unconfigured public-shape config (deletes the on-disk credential file)
  *
  * Tokens never leave the server in plaintext. Once configured, GET returns
  * `tokenMask: "saved-vercel-token"` (or the cloudflare equivalent); the
@@ -68,6 +71,16 @@ export async function PUT(req: NextRequest) {
     }
     const updated = await writeDeployConfig(providerId, body);
     return NextResponse.json(updated);
+  } catch (err) {
+    return deployErrorResponse(err);
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const providerId = readProvider(req);
+    const cleared = await clearDeployConfig(providerId);
+    return NextResponse.json(cleared);
   } catch (err) {
     return deployErrorResponse(err);
   }
