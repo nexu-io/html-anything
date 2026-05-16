@@ -233,10 +233,36 @@ export function TasksSidebar() {
       </div>
 
       <div
-        className="px-4 py-2.5 text-[10.5px] text-[var(--ink-faint)]"
+        className="flex flex-col gap-2 px-4 py-3"
         style={{ borderTop: "1px solid var(--line-faint)" }}
       >
-        {t("tasks.footer")}
+        <span className="text-[10.5px] text-[var(--ink-faint)]">{t("tasks.footer")}</span>
+        <a
+          href="https://github.com/nexu-io/open-design"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="group inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11.5px] font-medium transition-colors hover:border-[var(--ink)]/40"
+          style={{
+            background: "var(--surface)",
+            borderColor: "var(--line)",
+            color: "var(--ink-soft)",
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width="12"
+            height="12"
+            className="opacity-70 transition-opacity group-hover:opacity-100"
+          >
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.79 8.21 11.39.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.13-.3-.54-1.52.11-3.18 0 0 1-.32 3.3 1.23a11.45 11.45 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.11 3.18.77.84 1.24 1.92 1.24 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+          </svg>
+          <span>
+            Built by{" "}
+            <span style={{ color: "var(--ink)" }}>Open Design</span>{" "}
+            <span className="text-[var(--ink-faint)]">↗</span>
+          </span>
+        </a>
       </div>
     </aside>
   );

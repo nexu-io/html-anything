@@ -228,6 +228,41 @@ export function WelcomeModal({ onClose }: Props) {
           )}
         </div>
 
+        {/* Community links — brand names only, no translation needed. */}
+        <div
+          className="px-8 py-3 flex items-center justify-center gap-2 text-[11.5px] text-[var(--ink-mute)]"
+          style={{ borderTop: "1px solid var(--line-faint)" }}
+        >
+          <a
+            href="https://github.com/nexu-io/html-anything"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="rounded-full px-3 py-1 border transition-colors hover:text-[var(--ink)] hover:border-[var(--ink)]/30"
+            style={{ borderColor: "var(--line)" }}
+          >
+            ★ GitHub
+          </a>
+          <a
+            href="https://discord.com/invite/qhbcCH8Am4"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="rounded-full px-3 py-1 border transition-colors hover:text-[var(--ink)] hover:border-[var(--ink)]/30"
+            style={{ borderColor: "var(--line)" }}
+          >
+            Discord
+          </a>
+          <a
+            href="https://github.com/nexu-io/open-design"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="rounded-full px-3 py-1 border transition-colors hover:text-[var(--ink)] hover:border-[var(--ink)]/30"
+            style={{ borderColor: "var(--line)" }}
+            title="The upstream design system this is built on"
+          >
+            open-design ↗
+          </a>
+        </div>
+
         {/* Footer */}
         <div
           className="px-8 py-5 flex items-center justify-between gap-4"
