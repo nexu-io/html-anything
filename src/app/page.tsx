@@ -6,7 +6,7 @@ import { EditorPane } from "@/components/editor-pane";
 import { PreviewPane } from "@/components/preview-pane";
 import { TasksSidebar } from "@/components/tasks-sidebar";
 import { WelcomeModal } from "@/components/welcome-modal";
-import { SettingsModal } from "@/components/settings-modal";
+import { SettingsModal, type SectionId } from "@/components/settings-modal";
 import { ConvertChip } from "@/components/convert-chip";
 import { useStore, type AgentInfo } from "@/lib/store";
 
@@ -19,6 +19,10 @@ export default function Home() {
   const layoutMode = useStore((s) => s.layoutMode);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsInitialSection, setSettingsInitialSection] = useState<
+    SectionId | undefined
+  >(undefined);
+  const [deployConfigRev, setDeployConfigRev] = useState(0);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -67,6 +71,11 @@ export default function Home() {
         iframeRef={iframeRef}
         onOpenAgentPicker={() => setSettingsOpen(true)}
         onOpenSettings={() => setSettingsOpen(true)}
+        onRequestConfigureDeploy={() => {
+          setSettingsInitialSection("deploy");
+          setSettingsOpen(true);
+        }}
+        deployConfigRev={deployConfigRev}
       />
       <div
         className="flex flex-1 min-h-0"
@@ -95,7 +104,16 @@ export default function Home() {
         </div>
       </div>
       {welcomeOpen && <WelcomeModal onClose={() => setWelcomeOpen(false)} />}
-      {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && (
+        <SettingsModal
+          initialSection={settingsInitialSection}
+          onClose={() => {
+            setSettingsOpen(false);
+            setSettingsInitialSection(undefined);
+            setDeployConfigRev((r) => r + 1);
+          }}
+        />
+      )}
     </main>
   );
 }

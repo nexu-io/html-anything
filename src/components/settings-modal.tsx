@@ -12,7 +12,7 @@ import { useT, type DictKey } from "@/lib/i18n";
 
 type Props = { onClose: () => void; initialSection?: SectionId };
 
-type SectionId = "agent" | "deploy" | "language";
+export type SectionId = "agent" | "deploy" | "language";
 
 const SECTIONS: Array<{ id: SectionId; labelKey: DictKey; hintKey: DictKey }> = [
   { id: "agent", labelKey: "settings.section.agent.label", hintKey: "settings.section.agent.hint" },
@@ -633,23 +633,18 @@ function VercelDeployConfig() {
     setLoading(true);
     setErr(null);
     try {
-      // Empty token would re-throw on the server (token required); use a
-      // workaround by writing an empty token directly to disk via PUT —
-      // the server validates non-empty, so for now Clear == manual edit.
-      // We surface this by hitting PUT with an empty token and accepting
-      // the error, then resetting UI. See follow-up TODO in deploy/config.ts.
       const res = await fetch("/api/deploy/config?provider=vercel", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: "", teamSlug: "" }),
+        method: "DELETE",
       });
-      // Even on 400 we want UI to reset locally; the file persists until the
-      // user provides a non-empty token to overwrite.
-      void res;
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       setToken("");
       setTeamSlug("");
       setConfigured(false);
       setTokenMask("");
+      setSavedAt(null);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setLoading(false);
     }
