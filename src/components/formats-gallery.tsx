@@ -478,14 +478,14 @@ function FormatCard({ ex, onLoad }: { ex: FormatExample; onLoad: () => void }) {
         </pre>
         <div className="flex items-center justify-between gap-2 pt-1 mt-auto">
           <span
-            className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-faint)] truncate"
+            className="min-w-0 truncate text-[10px] uppercase tracking-[0.14em] text-[var(--ink-faint)]"
             title={ex.filename}
           >
             {ex.filename}
           </span>
           <button
             onClick={onLoad}
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-all"
+            className="shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-all"
             style={{
               background: "var(--coral)",
               color: "#fff",

@@ -281,13 +281,13 @@ function SampleCard({
         )}
 
         <div className="flex items-center justify-between gap-2 pt-1.5 mt-auto">
-          <span className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-faint)]">
+          <span className="min-w-0 truncate text-[10px] uppercase tracking-[0.14em] text-[var(--ink-faint)]">
             {tpl.scenario} · {example?.format ?? "html"}
           </span>
           <button
             onClick={onLoad}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-all disabled:opacity-50"
+            className="shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-all disabled:opacity-50"
             style={{
               background: "var(--coral)",
               color: "#fff",
