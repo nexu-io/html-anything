@@ -299,8 +299,12 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
 
   if (agent === "codex") {
     if (obj.type === "item.completed" && obj.item && typeof obj.item === "object") {
-      const item = obj.item as { item_type?: string; text?: string };
-      if (item.item_type === "assistant_message" && typeof item.text === "string") {
+      const item = obj.item as { item_type?: string; type?: string; text?: string };
+      const itemType = item.item_type ?? item.type;
+      if (
+        (itemType === "assistant_message" || itemType === "agent_message") &&
+        typeof item.text === "string"
+      ) {
         out.push({ kind: "delta", text: item.text });
       }
     }
@@ -314,6 +318,9 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
       }
     }
     if (obj.type === "task_complete" && obj.usage) {
+      out.push({ kind: "meta", key: "usage", value: obj.usage });
+    }
+    if (obj.type === "turn.completed" && obj.usage) {
       out.push({ kind: "meta", key: "usage", value: obj.usage });
     }
   }
