@@ -9,6 +9,9 @@ import {
   type DeploymentRecord,
 } from "@/lib/store";
 
+// Stable empty array reference to prevent infinite loops when no deployments exist.
+const EMPTY_DEPLOYMENTS: DeploymentRecord[] = [];
+
 /**
  * Publish-to-Vercel control rendered next to the preview-pane toolbar
  * actions. Renders three things in one rounded popover-anchor block:
@@ -30,9 +33,12 @@ import {
 export function DeployControl() {
   const html = useStore((s) => selectActiveTask(s)?.html ?? "");
   const taskId = useStore((s) => s.activeTaskId);
-  const deployments = useStore(
-    (s) => selectActiveTask(s)?.deployments ?? [],
-  );
+  // Pull deployments directly from tasks to avoid selector re-creation on every render.
+  // Using a stable empty array reference prevents infinite loops when no deployments exist.
+  const deployments = useStore((s) => {
+    const task = s.tasks.find((t) => t.id === s.activeTaskId);
+    return task?.deployments ?? EMPTY_DEPLOYMENTS;
+  });
   const removeDeploymentFor = useStore((s) => s.removeDeploymentFor);
   const t = useT();
   const { status, error, latest, deploy } = useDeploy();
