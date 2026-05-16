@@ -257,7 +257,7 @@ export function WelcomeModal({ onClose }: Props) {
             rel="noreferrer noopener"
             className="rounded-full px-3 py-1 border transition-colors hover:text-[var(--ink)] hover:border-[var(--ink)]/30"
             style={{ borderColor: "var(--line)" }}
-            title="The upstream design system this is built on"
+            title={t("community.upstreamHint")}
           >
             open-design ↗
           </a>

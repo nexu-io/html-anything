@@ -98,9 +98,12 @@ export function Toolbar({
 }
 
 function CommunityLinks() {
+  const t = useT();
   const linkCls =
     "grid h-9 w-9 place-items-center rounded-full border text-[var(--ink-soft)] transition-all hover:border-[var(--ink)]/30 hover:text-[var(--ink)]";
   const linkStyle = { background: "var(--surface)", borderColor: "var(--line)" };
+  const githubLabel = t("community.starOnGitHub");
+  const discordLabel = t("community.joinDiscord");
   return (
     <div className="hidden md:flex items-center gap-1.5">
       <a
@@ -109,8 +112,8 @@ function CommunityLinks() {
         rel="noreferrer noopener"
         className={linkCls}
         style={linkStyle}
-        title="Star on GitHub"
-        aria-label="Star on GitHub"
+        title={githubLabel}
+        aria-label={githubLabel}
       >
         <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.79 8.21 11.39.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.13-.3-.54-1.52.11-3.18 0 0 1-.32 3.3 1.23a11.45 11.45 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.11 3.18.77.84 1.24 1.92 1.24 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
@@ -122,8 +125,8 @@ function CommunityLinks() {
         rel="noreferrer noopener"
         className={linkCls}
         style={linkStyle}
-        title="Join Discord"
-        aria-label="Join Discord"
+        title={discordLabel}
+        aria-label={discordLabel}
       >
         <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
           <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.07.07 0 0 0-.073.035c-.211.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.07.07 0 0 0-.073-.035A19.74 19.74 0 0 0 3.677 4.37a.06.06 0 0 0-.029.025C.533 9.046-.32 13.58.099 18.057a.08.08 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.08.08 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.07.07 0 0 0-.041-.099 13.1 13.1 0 0 1-1.872-.892.07.07 0 0 1-.007-.118c.126-.094.252-.192.372-.291a.07.07 0 0 1 .074-.01c3.927 1.793 8.18 1.793 12.061 0a.07.07 0 0 1 .075.009c.121.099.247.198.373.292a.07.07 0 0 1-.006.118 12.3 12.3 0 0 1-1.873.891.07.07 0 0 0-.04.1 15.83 15.83 0 0 0 1.226 1.993.07.07 0 0 0 .083.028 19.84 19.84 0 0 0 6.002-3.03.08.08 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.025zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.974 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />

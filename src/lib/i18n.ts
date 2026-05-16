@@ -224,6 +224,12 @@ export interface Dict {
   "tasks.defaultName": string;
   "tasks.matchTooltip": string;
 
+  // Community / upstream link entry points
+  "community.starOnGitHub": string;
+  "community.joinDiscord": string;
+  "community.upstreamHint": string;
+  "community.builtBy": string;
+
   // Export menu
   "export.button": string;
   "export.section.platform": string;
@@ -540,6 +546,11 @@ const en: Dict = {
   "tasks.defaultName": "Task {n}",
   "tasks.matchTooltip": "{a} / {b} match",
 
+  "community.starOnGitHub": "Star on GitHub",
+  "community.joinDiscord": "Join Discord",
+  "community.upstreamHint": "The upstream design system this is built on",
+  "community.builtBy": "Built by",
+
   "export.button": "⤓ Export / Copy ▾",
   "export.section.platform": "Copy to platform",
   "export.section.raw": "Copy raw",
@@ -849,6 +860,11 @@ const zhCN: Dict = {
   "tasks.emptyContent": "空白",
   "tasks.defaultName": "任务 {n}",
   "tasks.matchTooltip": "{a} / {b} 匹配",
+
+  "community.starOnGitHub": "在 GitHub 上 Star",
+  "community.joinDiscord": "加入 Discord",
+  "community.upstreamHint": "本项目所基于的上游设计系统",
+  "community.builtBy": "基于",
 
   "export.button": "⤓ 导出 / 复制 ▾",
   "export.section.platform": "复制到平台",
