@@ -97,6 +97,19 @@ export function useConvert() {
           : `准备调用 ${req.agent}${useModel ? ` · 模型 ${useModel}` : ""} · 模板 ${req.templateId} · ${sizeNote}`,
       });
 
+      const stillWaitingTimers = [30_000, 75_000].map((ms) =>
+        window.setTimeout(() => {
+          const current = useStore.getState().tasks.find((t) => t.id === taskId);
+          if (current?.status !== "running" || current.stats.deltaCount > 0) return;
+          const waited = Math.round((Date.now() - startedAt) / 1000);
+          useStore.getState().pushLogFor(taskId, {
+            kind: "info",
+            elapsed: Date.now() - startedAt,
+            text: `仍在等待 ${req.agent} 的首段输出 (${waited}s)。Codex / Copilot 这类 CLI 有时会先完整生成，再一次性吐出 HTML；请先不要刷新页面或再次点击 Convert。`,
+          });
+        }, ms),
+      );
+
       try {
         const res = await fetch("/api/convert", {
           method: "POST",
@@ -160,6 +173,7 @@ export function useConvert() {
         });
         useStore.getState().setStatusFor(taskId, "error");
       } finally {
+        stillWaitingTimers.forEach((id) => window.clearTimeout(id));
         if (controllers.get(taskId) === ctl) controllers.delete(taskId);
       }
     },
