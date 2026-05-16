@@ -38,6 +38,7 @@ type VercelJson = Record<string, unknown> & {
   alias?: string[] | unknown[];
   aliases?: string[] | unknown[];
   readyState?: string;
+  projectId?: string;
   error?: { code?: string; message?: string };
   message?: string;
 };
@@ -103,6 +104,39 @@ function deploymentUrlCandidates(...responses: Array<VercelJson | null>): string
     }
   }
   return [...new Set(urls.map(normalizeDeploymentUrl).filter(Boolean))];
+}
+
+// Hobby projects default to Vercel Authentication on every preview, so the
+// *.vercel.app URL 401s for anyone not signed into the deploying account.
+// html-anything's whole UX is "share this link" — opt the freshly created
+// project out of protection. Failure here is non-fatal: url-check will still
+// surface a `protected` status with instructions if the link really is locked.
+async function disableVercelDeploymentProtection(
+  config: DeployConfig,
+  projectId: string,
+): Promise<void> {
+  const resp = await fetch(
+    `${VERCEL_API}/v9/projects/${encodeURIComponent(projectId)}${vercelTeamQuery(config)}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${config.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ssoProtection: null }),
+    },
+  );
+  if (resp.ok) return;
+  let detail = `HTTP ${resp.status}`;
+  try {
+    const json = (await resp.json()) as VercelJson;
+    detail = json?.error?.message || json?.message || detail;
+  } catch {
+    /* ignore */
+  }
+  console.warn(
+    `[deployToVercel] failed to disable Vercel SSO protection: ${detail}`,
+  );
 }
 
 async function pollVercelDeployment(
@@ -182,6 +216,19 @@ export async function deployToVercel({
 
   const deploymentId = String(created.id || created.uid || "");
   const initialUrl = deploymentUrl(created);
+
+  const projectId =
+    typeof created.projectId === "string" ? created.projectId : "";
+  if (projectId) {
+    await disableVercelDeploymentProtection(config, projectId).catch((err) => {
+      console.warn(
+        `[deployToVercel] disableVercelDeploymentProtection threw: ${
+          err instanceof Error ? err.message : String(err)
+        }`,
+      );
+    });
+  }
+
   const ready = deploymentId
     ? await pollVercelDeployment(config, deploymentId)
     : created;
