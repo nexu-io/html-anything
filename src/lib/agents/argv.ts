@@ -299,8 +299,11 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
 
   if (agent === "codex") {
     if (obj.type === "item.completed" && obj.item && typeof obj.item === "object") {
-      const item = obj.item as { item_type?: string; text?: string };
-      if (item.item_type === "assistant_message" && typeof item.text === "string") {
+      const item = obj.item as { item_type?: string; type?: string; text?: string };
+      if (
+        (item.item_type === "assistant_message" || item.type === "agent_message") &&
+        typeof item.text === "string"
+      ) {
         out.push({ kind: "delta", text: item.text });
       }
     }
@@ -313,12 +316,16 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
         out.push({ kind: "delta", text: msg.message });
       }
     }
-    if (obj.type === "task_complete" && obj.usage) {
+    if ((obj.type === "task_complete" || obj.type === "turn.completed") && obj.usage) {
       out.push({ kind: "meta", key: "usage", value: obj.usage });
     }
   }
 
   if (agent === "cursor-agent" || agent === "gemini") {
+    if (obj.type === "init") {
+      if (obj.model) out.push({ kind: "meta", key: "model", value: obj.model });
+      if (obj.session_id) out.push({ kind: "meta", key: "session", value: obj.session_id });
+    }
     if (obj.type === "stream_event" && obj.event && typeof obj.event === "object") {
       const ev = obj.event as { type?: string; delta?: { type?: string; text?: string } };
       if (ev.delta?.type === "text_delta" && typeof ev.delta.text === "string") {
@@ -341,6 +348,15 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
         if (text) out.push({ kind: "delta", text });
       }
     }
+    if (obj.type === "message" && obj.role === "assistant" && typeof obj.content === "string") {
+      if (obj.delta === true || !state.sawStreamEventText) {
+        out.push({ kind: "delta", text: obj.content });
+      }
+      if (obj.delta === true) state.sawStreamEventText = true;
+    }
+    if (obj.type === "result" && obj.stats) {
+      out.push({ kind: "meta", key: "usage", value: obj.stats });
+    }
     // Bare `text` field — only honor it when we haven't already emitted a
     // streamed delta or an assistant body, otherwise it duplicates the same
     // payload (cursor-agent / gemini both ship this redundancy on some
@@ -351,6 +367,28 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   }
 
   if (agent === "copilot") {
+    if (obj.type === "session.tools_updated" && obj.data && typeof obj.data === "object") {
+      const data = obj.data as { model?: string };
+      if (data.model) out.push({ kind: "meta", key: "model", value: data.model });
+    }
+    if (obj.type === "assistant.message_delta" && obj.data && typeof obj.data === "object") {
+      const data = obj.data as { deltaContent?: string };
+      if (typeof data.deltaContent === "string") {
+        state.sawStreamEventText = true;
+        out.push({ kind: "delta", text: data.deltaContent });
+      }
+    }
+    if (obj.type === "assistant.message" && obj.data && typeof obj.data === "object") {
+      const data = obj.data as { content?: string; model?: string };
+      if (data.model) out.push({ kind: "meta", key: "model", value: data.model });
+      if (typeof data.content === "string" && !state.sawStreamEventText) {
+        out.push({ kind: "delta", text: data.content });
+      }
+    }
+    if (obj.type === "result" && obj.data && typeof obj.data === "object") {
+      const data = obj.data as { usage?: unknown };
+      if (data.usage) out.push({ kind: "meta", key: "usage", value: data.usage });
+    }
     if (typeof obj.response === "string") out.push({ kind: "delta", text: obj.response });
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
   }
