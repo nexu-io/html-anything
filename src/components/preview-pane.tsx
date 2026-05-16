@@ -384,17 +384,21 @@ function StatusPill({ status }: { status: string }) {
   );
 }
 
+function useLiveNow(active: boolean, intervalMs = 250): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    setNow(Date.now());
+    if (!active) return;
+    const id = window.setInterval(() => setNow(Date.now()), intervalMs);
+    return () => window.clearInterval(id);
+  }, [active, intervalMs]);
+  return now;
+}
+
 function MetricsBar({ stats, status, html }: { stats: RunStats; status: string; html: string }) {
   const t = useT();
-  // tick to keep elapsed/ttfb live while running
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    if (status !== "running") return;
-    const id = setInterval(() => setTick((n) => n + 1), 250);
-    return () => clearInterval(id);
-  }, [status]);
-
-  const elapsed = stats.startedAt ? ((stats.endedAt ?? Date.now()) - stats.startedAt) / 1000 : 0;
+  const now = useLiveNow(status === "running");
+  const elapsed = stats.startedAt ? ((stats.endedAt ?? now) - stats.startedAt) / 1000 : 0;
   const ttfb = stats.firstByteAt && stats.startedAt ? (stats.firstByteAt - stats.startedAt) / 1000 : null;
   const sizeKB = html.length / 1024;
   const live = status === "running";
@@ -543,7 +547,8 @@ function PreviewPlaceholder({ status }: { status: string }) {
   const t = useT();
   const isRunning = status === "running";
   const stats = useStore((s) => selectActiveTask(s)?.stats ?? EMPTY_STATS);
-  const secWaited = stats.startedAt ? ((Date.now() - stats.startedAt) / 1000).toFixed(1) : "0";
+  const now = useLiveNow(isRunning);
+  const secWaited = stats.startedAt ? ((now - stats.startedAt) / 1000).toFixed(1) : "0";
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 text-center p-8" style={{ background: "var(--paper)" }}>
       <div className={`text-6xl ${isRunning ? "shimmer" : ""}`}>{isRunning ? "✨" : "🪄"}</div>

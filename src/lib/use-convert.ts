@@ -282,6 +282,7 @@ function formatMeta(key: string, value: unknown): string {
   if (key === "model") return `model = ${value}`;
   if (key === "session") return `session = ${value}`;
   if (key === "cwd") return `cwd = ${value}`;
+  if (key === "status") return `status = ${value}`;
   if (key === "duration_ms") return `duration = ${value} ms`;
   if (key === "cost_usd") return `cost ≈ $${(value as number).toFixed(4)}`;
   if (key === "result") return `result = ${value}`;
