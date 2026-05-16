@@ -281,7 +281,10 @@ function SampleCard({
         )}
 
         <div className="flex items-center justify-between gap-2 pt-1.5 mt-auto">
-          <span className="min-w-0 truncate text-[10px] uppercase tracking-[0.14em] text-[var(--ink-faint)]">
+          <span
+            className="min-w-0 truncate text-[10px] uppercase tracking-[0.14em] text-[var(--ink-faint)]"
+            title={`${tpl.scenario} · ${example?.format ?? "html"}`}
+          >
             {tpl.scenario} · {example?.format ?? "html"}
           </span>
           <button
