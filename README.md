@@ -19,7 +19,7 @@
 
 <!-- This project is built on top of nexu-io/open-design — the badges below link to its community channels on purpose. -->
 <p align="center">
-  <a href="https://github.com/nexu-io/open-design#community"><img alt="Discord (open-design)" src="https://img.shields.io/badge/discord-join-5865f2?style=flat-square&logo=discord&logoColor=white" /></a>
+  <a href="https://discord.com/invite/qhbcCH8Am4"><img alt="Discord (open-design)" src="https://img.shields.io/badge/discord-join-5865f2?style=flat-square&logo=discord&logoColor=white" /></a>
   <a href="https://x.com/nexudotio"><img alt="Follow @nexudotio on X" src="https://img.shields.io/badge/follow-%40nexudotio-000000?style=flat-square&logo=x&logoColor=white" /></a>
   <a href="https://github.com/nexu-io/open-design/releases/latest"><img alt="open-design release" src="https://img.shields.io/github/v/release/nexu-io/open-design?style=flat-square&label=release&color=8e44ad" /></a>
   <a href="https://github.com/nexu-io/open-design/graphs/commit-activity"><img alt="open-design commits / month" src="https://img.shields.io/github/commit-activity/m/nexu-io/open-design?style=flat-square&label=commits%2Fmonth&color=f39c12" /></a>
@@ -454,7 +454,7 @@ Each bundled upstream skill retains its original LICENSE and authorship inside i
 
 ## Stay in the loop
 
-Follow [**@nexudotio**](https://x.com/nexudotio) on X for release notes, new skills, and the occasional behind-the-scenes thread on what's shipping next. The [Discord](https://github.com/nexu-io/open-design#community) is where the bigger conversations happen — both are run by the upstream `open-design` team, and HTML Anything piggybacks on the same channels.
+Follow [**@nexudotio**](https://x.com/nexudotio) on X for release notes, new skills, and the occasional behind-the-scenes thread on what's shipping next. The [Discord](https://discord.com/invite/qhbcCH8Am4) is where the bigger conversations happen — both are run by the upstream `open-design` team, and HTML Anything piggybacks on the same channels.
 
 ## Contributors
 

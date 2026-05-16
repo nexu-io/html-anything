@@ -19,7 +19,7 @@
 
 <!-- 本项目站在 nexu-io/open-design 的肩膀上 — 下面这一行的社群标签都指向它,顺道带流量。 -->
 <p align="center">
-  <a href="https://github.com/nexu-io/open-design#community"><img alt="Discord（open-design）" src="https://img.shields.io/badge/discord-join-5865f2?style=flat-square&logo=discord&logoColor=white" /></a>
+  <a href="https://discord.com/invite/qhbcCH8Am4"><img alt="Discord（open-design）" src="https://img.shields.io/badge/discord-join-5865f2?style=flat-square&logo=discord&logoColor=white" /></a>
   <a href="https://x.com/nexudotio"><img alt="X 关注 @nexudotio" src="https://img.shields.io/badge/follow-%40nexudotio-000000?style=flat-square&logo=x&logoColor=white" /></a>
   <a href="https://github.com/nexu-io/open-design/releases/latest"><img alt="open-design 最新版本" src="https://img.shields.io/github/v/release/nexu-io/open-design?style=flat-square&label=release&color=8e44ad" /></a>
   <a href="https://github.com/nexu-io/open-design/graphs/commit-activity"><img alt="open-design 月提交数" src="https://img.shields.io/github/commit-activity/m/nexu-io/open-design?style=flat-square&label=commits%2Fmonth&color=f39c12" /></a>
@@ -350,7 +350,7 @@ picker 用两个维度组织：
 
 ## 📣 关注我们
 
-X 上关注 [**@nexudotio**](https://x.com/nexudotio),看版本发布、新 skill、新 design system,以及偶尔的 behind-the-scenes 线程。[Discord](https://github.com/nexu-io/open-design#community) 是更长篇讨论的场子 —— 两者都由上游 `open-design` 团队维护,HTML Anything 共用同一个社群入口。
+X 上关注 [**@nexudotio**](https://x.com/nexudotio),看版本发布、新 skill、新 design system,以及偶尔的 behind-the-scenes 线程。[Discord](https://discord.com/invite/qhbcCH8Am4) 是更长篇讨论的场子 —— 两者都由上游 `open-design` 团队维护,HTML Anything 共用同一个社群入口。
 
 ## 👥 贡献者
 
