@@ -67,6 +67,11 @@ export function ConvertChip() {
   // divider to hang off, and the toolbar button is already obvious.
   if (layoutMode !== "split") return null;
 
+  // Only show in split mode — when only one pane is visible there's no
+  // divider to hang off, and the toolbar button is already obvious. Must be
+  // after all hooks to keep hook order stable across layout-mode changes.
+  if (layoutMode !== "split") return null;
+
   return (
     <div
       className="pointer-events-none absolute inset-y-0 left-1/2 z-30 flex items-center"
