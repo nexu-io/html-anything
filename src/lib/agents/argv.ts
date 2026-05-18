@@ -362,10 +362,59 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
   }
 
-  if (agent === "opencode" || agent === "qwen") {
+  if (agent === "opencode") {
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
     if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
     if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });
+  }
+
+  if (agent === "qwen") {
+    // Qwen Coder's default output is a stream-json envelope that mirrors
+    // claude's shape (stream_event with content_block_delta/text_delta,
+    // assistant message with tool_use, result with usage).  The old parser
+    // only matched bare `text`/`content`/`message` strings, which caused
+    // every structured JSON line to be classified as noise — the response
+    // appeared in the log pane but never filled into the source panel.
+    // Fixes #58 (Qwen Coder 响应不能自动渲染).
+    if (obj.type === "stream_event" && obj.event && typeof obj.event === "object") {
+      const ev = obj.event as { type?: string; delta?: { type?: string; text?: string; thinking?: string } };
+      if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta" && typeof ev.delta.text === "string") {
+        state.sawStreamEventText = true;
+        out.push({ kind: "delta", text: ev.delta.text });
+      } else if (ev.type === "content_block_delta" && ev.delta?.type === "thinking_delta") {
+        out.push({ kind: "meta", key: "thinking", value: ev.delta.thinking });
+      }
+    }
+    if (obj.type === "assistant" && obj.message && typeof obj.message === "object") {
+      const msg = obj.message as { content?: Array<{ type?: string; text?: string; name?: string; input?: unknown }> };
+      const toolHtml = rescueHtmlFromToolUse(msg.content);
+      if (toolHtml) {
+        out.push({ kind: "html", text: toolHtml });
+        state.sawStreamEventText = true;
+      }
+      if (!state.sawStreamEventText) {
+        const text = (msg.content ?? [])
+          .filter((c) => c?.type === "text" && typeof c.text === "string")
+          .map((c) => c.text!)
+          .join("");
+        if (text) out.push({ kind: "delta", text });
+      }
+    }
+    if (obj.type === "result") {
+      if (obj.usage) out.push({ kind: "meta", key: "usage", value: obj.usage });
+      if (typeof obj.duration_ms === "number") out.push({ kind: "meta", key: "duration_ms", value: obj.duration_ms });
+      if (typeof obj.total_cost_usd === "number") out.push({ kind: "meta", key: "cost_usd", value: obj.total_cost_usd });
+    }
+    // Fallback bare fields — only when no structured content was emitted
+    if (typeof obj.text === "string" && !state.sawStreamEventText && obj.type !== "assistant") {
+      out.push({ kind: "delta", text: obj.text });
+    }
+    if (typeof obj.content === "string" && !state.sawStreamEventText) {
+      out.push({ kind: "delta", text: obj.content });
+    }
+    if (typeof obj.message === "string" && !state.sawStreamEventText) {
+      out.push({ kind: "delta", text: obj.message });
+    }
   }
 
   if (agent === "qoder") {
