@@ -38,42 +38,42 @@ The eight skills that surface at the top of the picker's **Featured / 推荐** g
 <table>
 <tr>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/deck-guizang-editorial/"><img src="docs/screenshots/skills/deck-guizang-editorial.png" alt="deck-guizang-editorial" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/deck-guizang-editorial/"><code>deck-guizang-editorial</code></a></b> · <i>deck</i> · <code>recommended: 1</code><br/>Magazine × e-ink editorial deck, inspired by <a href="https://github.com/op7418/guizang-ppt-skill"><code>op7418/guizang-ppt-skill</code></a> — 10 locked layouts × 5 palettes (Ink / Indigo Porcelain / Forest Ink / Kraft / Dune). Reads like a printed art-zine, not a slide deck.</sub>
+<a href="next/src/lib/templates/skills/deck-guizang-editorial/"><img src="docs/screenshots/skills/deck-guizang-editorial.png" alt="deck-guizang-editorial" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/deck-guizang-editorial/"><code>deck-guizang-editorial</code></a></b> · <i>deck</i> · <code>recommended: 1</code><br/>Magazine × e-ink editorial deck, inspired by <a href="https://github.com/op7418/guizang-ppt-skill"><code>op7418/guizang-ppt-skill</code></a> — 10 locked layouts × 5 palettes (Ink / Indigo Porcelain / Forest Ink / Kraft / Dune). Reads like a printed art-zine, not a slide deck.</sub>
 </td>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/deck-swiss-international/"><img src="docs/screenshots/skills/deck-swiss-international.png" alt="deck-swiss-international" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/deck-swiss-international/"><code>deck-swiss-international</code></a></b> · <i>deck</i> · <code>recommended: 2</code><br/>Swiss International deck — 16-column grid + one saturated accent (Klein Blue / Lemon / Mint / Safety Orange) across 22 locked layouts. Cold, rational, institutional. The deck that reads "a designer made this" the moment it opens.</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="src/lib/templates/skills/doc-kami-parchment/"><img src="docs/screenshots/skills/doc-kami-parchment.png" alt="doc-kami-parchment" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/doc-kami-parchment/"><code>doc-kami-parchment</code></a></b> · <i>doc</i> · <code>recommended: 3</code><br/>Warm-parchment editorial document, inspired by <a href="https://github.com/tw93/kami"><code>tw93/kami</code></a>. <code>#f5f4ed</code> ground + ink-blue accent + single serif voice — a noticeably calmer reading surface than plain-white markdown for long essays, reports, and one-pagers.</sub>
-</td>
-<td width="50%" valign="top">
-<a href="src/lib/templates/skills/magazine-poster/"><img src="docs/screenshots/skills/magazine-poster.png" alt="magazine-poster" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/magazine-poster/"><code>magazine-poster</code></a></b> · <i>poster</i> · <code>recommended: 4</code><br/>Newsprint Sunday-paper poster — oversized serif headline, two-column body, six numbered sections, dot-pattern cream ground. Reads like a printed broadsheet, not a webpage.</sub>
+<a href="next/src/lib/templates/skills/deck-swiss-international/"><img src="docs/screenshots/skills/deck-swiss-international.png" alt="deck-swiss-international" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/deck-swiss-international/"><code>deck-swiss-international</code></a></b> · <i>deck</i> · <code>recommended: 2</code><br/>Swiss International deck — 16-column grid + one saturated accent (Klein Blue / Lemon / Mint / Safety Orange) across 22 locked layouts. Cold, rational, institutional. The deck that reads "a designer made this" the moment it opens.</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/video-hyperframes/"><img src="docs/screenshots/skills/video-hyperframes.png" alt="video-hyperframes" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/video-hyperframes/"><code>video-hyperframes</code></a></b> · <i>frame / video</i> · <code>recommended: 5</code><br/>Hyperframes / Remotion-compatible storyboard — 6–10 sequential <code>1920×1080</code> frames with hidden duration + transition markers and an auto-play script. Hand straight to <a href="https://github.com/heygen-com/hyperframes"><code>heygen-com/hyperframes</code></a> or Remotion to render <code>.mp4</code>.</sub>
+<a href="next/src/lib/templates/skills/doc-kami-parchment/"><img src="docs/screenshots/skills/doc-kami-parchment.png" alt="doc-kami-parchment" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/doc-kami-parchment/"><code>doc-kami-parchment</code></a></b> · <i>doc</i> · <code>recommended: 3</code><br/>Warm-parchment editorial document, inspired by <a href="https://github.com/tw93/kami"><code>tw93/kami</code></a>. <code>#f5f4ed</code> ground + ink-blue accent + single serif voice — a noticeably calmer reading surface than plain-white markdown for long essays, reports, and one-pagers.</sub>
 </td>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/frame-glitch-title/"><img src="docs/screenshots/skills/frame-glitch-title.png" alt="frame-glitch-title" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/frame-glitch-title/"><code>frame-glitch-title</code></a></b> · <i>frame</i> · <code>recommended: 6</code><br/>Glitch title frame — cyan/magenta chromatic offset, CRT scanlines, corrupted-data subtitle, ASCII noise in the corners. Cyberpunk hero card or video transition.</sub>
+<a href="next/src/lib/templates/skills/magazine-poster/"><img src="docs/screenshots/skills/magazine-poster.png" alt="magazine-poster" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/magazine-poster/"><code>magazine-poster</code></a></b> · <i>poster</i> · <code>recommended: 4</code><br/>Newsprint Sunday-paper poster — oversized serif headline, two-column body, six numbered sections, dot-pattern cream ground. Reads like a printed broadsheet, not a webpage.</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/vfx-text-cursor/"><img src="docs/screenshots/skills/vfx-text-cursor.png" alt="vfx-text-cursor" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/vfx-text-cursor/"><code>vfx-text-cursor</code></a></b> · <i>vfx</i> · <code>recommended: 7</code><br/>VFX text-cursor opener — a cursor "types" across the canvas, each character revealed with a hot-pink × cyan chromatic trail and directional light leaks. Drop in a quote, get a film-grade opening frame.</sub>
+<a href="next/src/lib/templates/skills/video-hyperframes/"><img src="docs/screenshots/skills/video-hyperframes.png" alt="video-hyperframes" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/video-hyperframes/"><code>video-hyperframes</code></a></b> · <i>frame / video</i> · <code>recommended: 5</code><br/>Hyperframes / Remotion-compatible storyboard — 6–10 sequential <code>1920×1080</code> frames with hidden duration + transition markers and an auto-play script. Hand straight to <a href="https://github.com/heygen-com/hyperframes"><code>heygen-com/hyperframes</code></a> or Remotion to render <code>.mp4</code>.</sub>
 </td>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/frame-logo-outro/"><img src="docs/screenshots/skills/frame-logo-outro.png" alt="frame-logo-outro" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/frame-logo-outro/"><code>frame-logo-outro</code></a></b> · <i>frame</i> · <code>recommended: 8</code><br/>Logo outro frame — logo assembles piece-by-piece with glow bloom, tagline rises, CTA appears. The closing card for a product reveal or brand film.</sub>
+<a href="next/src/lib/templates/skills/frame-glitch-title/"><img src="docs/screenshots/skills/frame-glitch-title.png" alt="frame-glitch-title" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/frame-glitch-title/"><code>frame-glitch-title</code></a></b> · <i>frame</i> · <code>recommended: 6</code><br/>Glitch title frame — cyan/magenta chromatic offset, CRT scanlines, corrupted-data subtitle, ASCII noise in the corners. Cyberpunk hero card or video transition.</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="next/src/lib/templates/skills/vfx-text-cursor/"><img src="docs/screenshots/skills/vfx-text-cursor.png" alt="vfx-text-cursor" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/vfx-text-cursor/"><code>vfx-text-cursor</code></a></b> · <i>vfx</i> · <code>recommended: 7</code><br/>VFX text-cursor opener — a cursor "types" across the canvas, each character revealed with a hot-pink × cyan chromatic trail and directional light leaks. Drop in a quote, get a film-grade opening frame.</sub>
+</td>
+<td width="50%" valign="top">
+<a href="next/src/lib/templates/skills/frame-logo-outro/"><img src="docs/screenshots/skills/frame-logo-outro.png" alt="frame-logo-outro" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/frame-logo-outro/"><code>frame-logo-outro</code></a></b> · <i>frame</i> · <code>recommended: 8</code><br/>Logo outro frame — logo assembles piece-by-piece with glow bloom, tagline rises, CTA appears. The closing card for a product reveal or brand film.</sub>
 </td>
 </tr>
 </table>
@@ -97,7 +97,7 @@ But "writing HTML" used to mean writing CSS, picking type scales, snapping to a 
 
 We stand on four open-source shoulders:
 
-- [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) — the agent-detection layer, the design-system model, and the `SKILL.md` protocol. `src/lib/agents/` and `src/lib/templates/skills/*` mirror this architecture directly.
+- [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) — the agent-detection layer, the design-system model, and the `SKILL.md` protocol. `next/src/lib/agents/` and `next/src/lib/templates/skills/*` mirror this architecture directly.
 - [**`mdnice/markdown-nice`**](https://github.com/mdnice/markdown-nice) — proof that `juice`-inlined CSS pastes cleanly into WeChat and Zhihu without per-platform manual fix-up.
 - [**`gcui-art/markdown-to-image`**](https://github.com/gcui-art/markdown-to-image) — the iframe → high-DPI PNG export path.
 - [**`alchaincyf/huashu-md-html`**](https://github.com/alchaincyf/huashu-md-html) — the anti-AI-slop discipline that maps into the hard constraints inside every `SKILL.md` (CJK-first font stack, 8 px baseline grid, contrast ≥ 4.5, must-use-real-data rule).
@@ -114,7 +114,7 @@ We stand on four open-source shoulders:
 | **Streaming render** | `POST /api/convert` over SSE. The agent's stdout JSON-line stream is parsed for text deltas → server-sent events → client appends → iframe `srcdoc` updates live. Waiting for an AI generation looks like watching it type in real time. |
 | **Sandboxed preview** | `<iframe sandbox="allow-scripts allow-same-origin">`. User-emitted HTML runs in an isolated origin — Tailwind CDN / Google Fonts / inline scripts work, but cookies and localStorage are quarantined from the host. |
 | **Format auto-detect** | The editor accepts Markdown / CSV / TSV / JSON / SQL / plain text. `papaparse` + `xlsx` parse tabular data in the browser — nothing is uploaded. |
-| **Deployable to** | Local (`pnpm dev`) · Vercel for the web layer (the agent always stays on your laptop). |
+| **Deployable to** | Local (`pnpm -F @html-anything/next dev`) · Vercel for the web layer (the agent always stays on your laptop). |
 | **License** | Apache-2.0 |
 
 ## Demo
@@ -158,13 +158,33 @@ We stand on four open-source shoulders:
 git clone https://github.com/nexu-io/html-anything
 cd html-anything
 pnpm install
-pnpm dev
+pnpm -F @html-anything/next dev
 # → http://localhost:3000
 ```
 
 Open the browser → the top bar auto-detects whichever coding-agent CLI you already have signed in → pick a template → paste content → ⌘+Enter.
 
 **No API key required.** We reuse the session you already have logged in (Claude / Cursor / Codex / Gemini / Copilot subscriptions all work).
+
+## Workspace
+
+This repo is a small pnpm workspace:
+
+- `next/` is the complete Next app (`@html-anything/next`).
+- `e2e/` is the browser-test package (`@html-anything/e2e`) and the only source of truth for Playwright cases.
+- root owns CI, docs, and `scripts/guard.ts`; root `package.json` intentionally does not proxy app or e2e commands.
+
+Run package commands from the repo root:
+
+```bash
+pnpm exec tsx scripts/guard.ts
+pnpm -F @html-anything/next dev
+pnpm -F @html-anything/next typecheck
+pnpm -F @html-anything/next test
+pnpm -F @html-anything/next build
+pnpm -F @html-anything/e2e typecheck
+pnpm -F @html-anything/e2e test
+```
 
 ## Supported coding agents
 
@@ -181,13 +201,13 @@ On startup we scan `PATH` (including `~/.local/bin`, `~/.bun/bin`, `/opt/homebre
 | **Qwen Coder** | `qwen` | `qwen --yolo -` |
 | **Aider** | `aider` | `aider --no-pretty --no-stream --yes-always --message-file -` |
 
-> The detection strategy and per-CLI adapter shape are borrowed directly from [`nexu-io/open-design`](https://github.com/nexu-io/open-design) and [`multica-ai/multica`](https://github.com/multica-ai/multica): one privileged process spawns CLIs, JSON-line is the wire protocol, every CLI gets a thin adapter in [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts).
+> The detection strategy and per-CLI adapter shape are borrowed directly from [`nexu-io/open-design`](https://github.com/nexu-io/open-design) and [`multica-ai/multica`](https://github.com/multica-ai/multica): one privileged process spawns CLIs, JSON-line is the wire protocol, every CLI gets a thin adapter in [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts).
 
 If you've already done `claude login` / `cursor login` / `gemini auth` in your terminal, HTML Anything reuses that session. **No second copy of the API key required.**
 
 ## Skills
 
-**75 skills under [`src/lib/templates/skills/`](src/lib/templates/skills/)**, each a folder following the Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) convention plus an extended frontmatter (`mode` · `scenario` · `surface` · `preview` · `design_system`).
+**75 skills under [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/)**, each a folder following the Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) convention plus an extended frontmatter (`mode` · `scenario` · `surface` · `preview` · `design_system`).
 
 The two axes the picker uses:
 
@@ -198,69 +218,69 @@ The two axes the picker uses:
 
 | Skill | Best for | Output |
 |---|---|---|
-| [`prototype-web`](src/lib/templates/skills/prototype-web/) | Generic web prototype (default) | Single-page HTML, 1440×900 desktop |
-| [`saas-landing`](src/lib/templates/skills/saas-landing/) | SaaS landing page | Hero / features / pricing / CTA |
-| [`waitlist-page`](src/lib/templates/skills/waitlist-page/) | Waitlist / early-access page | Minimal form + social proof |
-| [`pricing-page`](src/lib/templates/skills/pricing-page/) | Pricing page | Multi-tier comparison tables |
-| [`dashboard`](src/lib/templates/skills/dashboard/) | Admin / analytics console | Sidebar + dense data layout |
-| [`docs-page`](src/lib/templates/skills/docs-page/) | Technical documentation | 3-column docs layout |
-| [`blog-post`](src/lib/templates/skills/blog-post/) | Long-form blog post | Editorial layout |
-| [`mobile-app`](src/lib/templates/skills/mobile-app/) | iOS / Android prototype | iPhone 15 Pro chrome |
-| [`mobile-onboarding`](src/lib/templates/skills/mobile-onboarding/) | App onboarding flow | Splash · value · sign-in trio |
-| [`gamified-app`](src/lib/templates/skills/gamified-app/) | Gamified app | Quest · XP · level trio |
-| [`dating-web`](src/lib/templates/skills/dating-web/) | Dating / matchmaking dashboard | Left rail · KPIs · 30-day chart |
-| [`magazine-poster`](src/lib/templates/skills/magazine-poster/) | Single-page magazine poster | 1080×1920 |
-| [`poster-hero`](src/lib/templates/skills/poster-hero/) | Marketing poster | Single-page display poster |
-| [`web-proto-editorial`](src/lib/templates/skills/web-proto-editorial/) | Editorial-style web | Serif display + grid |
-| [`web-proto-brutalist`](src/lib/templates/skills/web-proto-brutalist/) | Brutalist web | Hard edges, black & white, anti-grid |
-| [`web-proto-soft`](src/lib/templates/skills/web-proto-soft/) | Soft / warm web | Soft shadows, rounded, warm palette |
-| [`article-magazine`](src/lib/templates/skills/article-magazine/) | Long-form magazine article | A4 / long-page |
-| [`digital-eguide`](src/lib/templates/skills/digital-eguide/) | Digital e-guide | Cover + lesson spread |
-| [`resume-modern`](src/lib/templates/skills/resume-modern/) | Minimal résumé | A4 210×297mm |
-| [`email-marketing`](src/lib/templates/skills/email-marketing/) | Brand product-launch email | Center single-column, table fallback |
-| [`wireframe-sketch`](src/lib/templates/skills/wireframe-sketch/) | Hand-drawn wireframe | Early-pass ideation |
+| [`prototype-web`](next/src/lib/templates/skills/prototype-web/) | Generic web prototype (default) | Single-page HTML, 1440×900 desktop |
+| [`saas-landing`](next/src/lib/templates/skills/saas-landing/) | SaaS landing page | Hero / features / pricing / CTA |
+| [`waitlist-page`](next/src/lib/templates/skills/waitlist-page/) | Waitlist / early-access page | Minimal form + social proof |
+| [`pricing-page`](next/src/lib/templates/skills/pricing-page/) | Pricing page | Multi-tier comparison tables |
+| [`dashboard`](next/src/lib/templates/skills/dashboard/) | Admin / analytics console | Sidebar + dense data layout |
+| [`docs-page`](next/src/lib/templates/skills/docs-page/) | Technical documentation | 3-column docs layout |
+| [`blog-post`](next/src/lib/templates/skills/blog-post/) | Long-form blog post | Editorial layout |
+| [`mobile-app`](next/src/lib/templates/skills/mobile-app/) | iOS / Android prototype | iPhone 15 Pro chrome |
+| [`mobile-onboarding`](next/src/lib/templates/skills/mobile-onboarding/) | App onboarding flow | Splash · value · sign-in trio |
+| [`gamified-app`](next/src/lib/templates/skills/gamified-app/) | Gamified app | Quest · XP · level trio |
+| [`dating-web`](next/src/lib/templates/skills/dating-web/) | Dating / matchmaking dashboard | Left rail · KPIs · 30-day chart |
+| [`magazine-poster`](next/src/lib/templates/skills/magazine-poster/) | Single-page magazine poster | 1080×1920 |
+| [`poster-hero`](next/src/lib/templates/skills/poster-hero/) | Marketing poster | Single-page display poster |
+| [`web-proto-editorial`](next/src/lib/templates/skills/web-proto-editorial/) | Editorial-style web | Serif display + grid |
+| [`web-proto-brutalist`](next/src/lib/templates/skills/web-proto-brutalist/) | Brutalist web | Hard edges, black & white, anti-grid |
+| [`web-proto-soft`](next/src/lib/templates/skills/web-proto-soft/) | Soft / warm web | Soft shadows, rounded, warm palette |
+| [`article-magazine`](next/src/lib/templates/skills/article-magazine/) | Long-form magazine article | A4 / long-page |
+| [`digital-eguide`](next/src/lib/templates/skills/digital-eguide/) | Digital e-guide | Cover + lesson spread |
+| [`resume-modern`](next/src/lib/templates/skills/resume-modern/) | Minimal résumé | A4 210×297mm |
+| [`email-marketing`](next/src/lib/templates/skills/email-marketing/) | Brand product-launch email | Center single-column, table fallback |
+| [`wireframe-sketch`](next/src/lib/templates/skills/wireframe-sketch/) | Hand-drawn wireframe | Early-pass ideation |
 
 ### Decks (deck mode, 20 skills)
 
 | Skill | Best for |
 |---|---|
-| [`deck-swiss-international`](src/lib/templates/skills/deck-swiss-international/) | Swiss International deck |
-| [`deck-guizang-editorial`](src/lib/templates/skills/deck-guizang-editorial/) | Editorial-ink deck (from [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)) |
-| [`deck-open-slide-canvas`](src/lib/templates/skills/deck-open-slide-canvas/) | 1920×1080 agent-native canvas (from [1weiho/open-slide](https://github.com/1weiho/open-slide)) |
-| [`deck-magazine-web`](src/lib/templates/skills/deck-magazine-web/) | Magazine-style web deck |
-| [`deck-hermes-cyber`](src/lib/templates/skills/deck-hermes-cyber/) | Hermes Cyber neon-luxe |
-| [`deck-replit`](src/lib/templates/skills/deck-replit/) | Replit-style product walkthrough |
-| [`deck-xhs-pastel`](src/lib/templates/skills/deck-xhs-pastel/) | Xiaohongshu pastel deck |
-| [`deck-xhs-white`](src/lib/templates/skills/deck-xhs-white/) | Xiaohongshu pure-white deck |
-| [`deck-xhs-post`](src/lib/templates/skills/deck-xhs-post/) | Xiaohongshu single-post deck |
-| [`deck-tech-sharing`](src/lib/templates/skills/deck-tech-sharing/) | Tech-sharing deck |
-| [`deck-product-launch`](src/lib/templates/skills/deck-product-launch/) | Product-launch event deck |
-| [`deck-pitch`](src/lib/templates/skills/deck-pitch/) | Investor pitch |
-| [`deck-blueprint`](src/lib/templates/skills/deck-blueprint/) | Blueprint / roadmap |
-| [`deck-presenter-mode`](src/lib/templates/skills/deck-presenter-mode/) | Speaker-notes-aware |
-| [`deck-course-module`](src/lib/templates/skills/deck-course-module/) | Course module deck |
-| [`deck-dir-key-nav`](src/lib/templates/skills/deck-dir-key-nav/) | Directional key-nav deep browse |
-| [`deck-graphify-dark`](src/lib/templates/skills/deck-graphify-dark/) | Dark, data-graphic-heavy deck |
-| [`deck-obsidian-claude`](src/lib/templates/skills/deck-obsidian-claude/) | Obsidian / Claude-flavored notes |
-| [`deck-safety-alert`](src/lib/templates/skills/deck-safety-alert/) | Incident / safety briefing |
-| [`deck-simple`](src/lib/templates/skills/deck-simple/) | Minimal horizontal-swipe deck |
+| [`deck-swiss-international`](next/src/lib/templates/skills/deck-swiss-international/) | Swiss International deck |
+| [`deck-guizang-editorial`](next/src/lib/templates/skills/deck-guizang-editorial/) | Editorial-ink deck (from [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)) |
+| [`deck-open-slide-canvas`](next/src/lib/templates/skills/deck-open-slide-canvas/) | 1920×1080 agent-native canvas (from [1weiho/open-slide](https://github.com/1weiho/open-slide)) |
+| [`deck-magazine-web`](next/src/lib/templates/skills/deck-magazine-web/) | Magazine-style web deck |
+| [`deck-hermes-cyber`](next/src/lib/templates/skills/deck-hermes-cyber/) | Hermes Cyber neon-luxe |
+| [`deck-replit`](next/src/lib/templates/skills/deck-replit/) | Replit-style product walkthrough |
+| [`deck-xhs-pastel`](next/src/lib/templates/skills/deck-xhs-pastel/) | Xiaohongshu pastel deck |
+| [`deck-xhs-white`](next/src/lib/templates/skills/deck-xhs-white/) | Xiaohongshu pure-white deck |
+| [`deck-xhs-post`](next/src/lib/templates/skills/deck-xhs-post/) | Xiaohongshu single-post deck |
+| [`deck-tech-sharing`](next/src/lib/templates/skills/deck-tech-sharing/) | Tech-sharing deck |
+| [`deck-product-launch`](next/src/lib/templates/skills/deck-product-launch/) | Product-launch event deck |
+| [`deck-pitch`](next/src/lib/templates/skills/deck-pitch/) | Investor pitch |
+| [`deck-blueprint`](next/src/lib/templates/skills/deck-blueprint/) | Blueprint / roadmap |
+| [`deck-presenter-mode`](next/src/lib/templates/skills/deck-presenter-mode/) | Speaker-notes-aware |
+| [`deck-course-module`](next/src/lib/templates/skills/deck-course-module/) | Course module deck |
+| [`deck-dir-key-nav`](next/src/lib/templates/skills/deck-dir-key-nav/) | Directional key-nav deep browse |
+| [`deck-graphify-dark`](next/src/lib/templates/skills/deck-graphify-dark/) | Dark, data-graphic-heavy deck |
+| [`deck-obsidian-claude`](next/src/lib/templates/skills/deck-obsidian-claude/) | Obsidian / Claude-flavored notes |
+| [`deck-safety-alert`](next/src/lib/templates/skills/deck-safety-alert/) | Incident / safety briefing |
+| [`deck-simple`](next/src/lib/templates/skills/deck-simple/) | Minimal horizontal-swipe deck |
 
 ### Hyperframes video frames & VFX & device mockups (frame / vfx / mockup, 12 skills)
 
 | Skill | Best for |
 |---|---|
-| [`frame-liquid-bg-hero`](src/lib/templates/skills/frame-liquid-bg-hero/) | Liquid background hero |
-| [`frame-data-chart-nyt`](src/lib/templates/skills/frame-data-chart-nyt/) | NYT-style data chart |
-| [`frame-flowchart-sticky`](src/lib/templates/skills/frame-flowchart-sticky/) | Sticky-note flowchart |
-| [`frame-glitch-title`](src/lib/templates/skills/frame-glitch-title/) | Glitch title card |
-| [`frame-light-leak-cinema`](src/lib/templates/skills/frame-light-leak-cinema/) | Cinema light-leak |
-| [`frame-macos-notification`](src/lib/templates/skills/frame-macos-notification/) | macOS notification toast |
-| [`frame-logo-outro`](src/lib/templates/skills/frame-logo-outro/) | Brand logo outro |
-| [`motion-frames`](src/lib/templates/skills/motion-frames/) | Generic motion-design frame |
-| [`video-hyperframes`](src/lib/templates/skills/video-hyperframes/) | Hyperframes frame-script schema |
-| [`sprite-animation`](src/lib/templates/skills/sprite-animation/) | Pixel / 8-bit animation |
-| [`vfx-text-cursor`](src/lib/templates/skills/vfx-text-cursor/) | Text-cursor VFX |
-| [`mockup-device-3d`](src/lib/templates/skills/mockup-device-3d/) | 3D device-frame mockup |
+| [`frame-liquid-bg-hero`](next/src/lib/templates/skills/frame-liquid-bg-hero/) | Liquid background hero |
+| [`frame-data-chart-nyt`](next/src/lib/templates/skills/frame-data-chart-nyt/) | NYT-style data chart |
+| [`frame-flowchart-sticky`](next/src/lib/templates/skills/frame-flowchart-sticky/) | Sticky-note flowchart |
+| [`frame-glitch-title`](next/src/lib/templates/skills/frame-glitch-title/) | Glitch title card |
+| [`frame-light-leak-cinema`](next/src/lib/templates/skills/frame-light-leak-cinema/) | Cinema light-leak |
+| [`frame-macos-notification`](next/src/lib/templates/skills/frame-macos-notification/) | macOS notification toast |
+| [`frame-logo-outro`](next/src/lib/templates/skills/frame-logo-outro/) | Brand logo outro |
+| [`motion-frames`](next/src/lib/templates/skills/motion-frames/) | Generic motion-design frame |
+| [`video-hyperframes`](next/src/lib/templates/skills/video-hyperframes/) | Hyperframes frame-script schema |
+| [`sprite-animation`](next/src/lib/templates/skills/sprite-animation/) | Pixel / 8-bit animation |
+| [`vfx-text-cursor`](next/src/lib/templates/skills/vfx-text-cursor/) | Text-cursor VFX |
+| [`mockup-device-3d`](next/src/lib/templates/skills/mockup-device-3d/) | 3D device-frame mockup |
 
 > Frame scripts conform to the [`heygen-com/hyperframes`](https://github.com/heygen-com/hyperframes) spec and hand off straight to [`remotion-dev/remotion`](https://github.com/remotion-dev/remotion) to render `.mp4`.
 
@@ -268,45 +288,45 @@ The two axes the picker uses:
 
 | Skill | Best for |
 |---|---|
-| [`social-x-post-card`](src/lib/templates/skills/social-x-post-card/) | X / Twitter quote card (1600×900) |
-| [`social-spotify-card`](src/lib/templates/skills/social-spotify-card/) | Spotify-Wrapped style card |
-| [`social-reddit-card`](src/lib/templates/skills/social-reddit-card/) | Reddit thread card |
-| [`social-carousel`](src/lib/templates/skills/social-carousel/) | 3-card 1080×1080 carousel |
-| [`card-xiaohongshu`](src/lib/templates/skills/card-xiaohongshu/) | Xiaohongshu image-with-text card |
-| [`card-twitter`](src/lib/templates/skills/card-twitter/) | Twitter pull-quote card |
-| [`social-media-dashboard`](src/lib/templates/skills/social-media-dashboard/) | Social-ops dashboard |
-| [`social-media-matrix`](src/lib/templates/skills/social-media-matrix/) | Multi-platform content matrix |
+| [`social-x-post-card`](next/src/lib/templates/skills/social-x-post-card/) | X / Twitter quote card (1600×900) |
+| [`social-spotify-card`](next/src/lib/templates/skills/social-spotify-card/) | Spotify-Wrapped style card |
+| [`social-reddit-card`](next/src/lib/templates/skills/social-reddit-card/) | Reddit thread card |
+| [`social-carousel`](next/src/lib/templates/skills/social-carousel/) | 3-card 1080×1080 carousel |
+| [`card-xiaohongshu`](next/src/lib/templates/skills/card-xiaohongshu/) | Xiaohongshu image-with-text card |
+| [`card-twitter`](next/src/lib/templates/skills/card-twitter/) | Twitter pull-quote card |
+| [`social-media-dashboard`](next/src/lib/templates/skills/social-media-dashboard/) | Social-ops dashboard |
+| [`social-media-matrix`](next/src/lib/templates/skills/social-media-matrix/) | Multi-platform content matrix |
 
 ### Office & operations (office / doc mode)
 
 | Skill | Scenario | Best for |
 |---|---|---|
-| [`doc-kami-parchment`](src/lib/templates/skills/doc-kami-parchment/) | personal | Warm-parchment editorial doc (from [tw93/kami](https://github.com/tw93/kami)) |
-| [`pm-spec`](src/lib/templates/skills/pm-spec/) | product | PM spec doc + decision log |
-| [`team-okrs`](src/lib/templates/skills/team-okrs/) | product | OKR scoresheet |
-| [`meeting-notes`](src/lib/templates/skills/meeting-notes/) | operation | Meeting decision log |
-| [`weekly-update`](src/lib/templates/skills/weekly-update/) | operation | Team weekly cadence |
-| [`kanban-board`](src/lib/templates/skills/kanban-board/) | operation | Board snapshot |
-| [`eng-runbook`](src/lib/templates/skills/eng-runbook/) | engineering | Incident runbook |
-| [`finance-report`](src/lib/templates/skills/finance-report/) | finance | Exec finance summary |
-| [`invoice`](src/lib/templates/skills/invoice/) | finance | Single-page invoice |
-| [`hr-onboarding`](src/lib/templates/skills/hr-onboarding/) | hr | Role onboarding plan |
-| [`data-report`](src/lib/templates/skills/data-report/) | finance / product | CSV/Excel → visual data report |
-| [`live-dashboard`](src/lib/templates/skills/live-dashboard/) | operation | Live data dashboard |
-| [`flowai-team-dashboard`](src/lib/templates/skills/flowai-team-dashboard/) | operation | Team workflow dashboard |
-| [`ppt-keynote`](src/lib/templates/skills/ppt-keynote/) | personal | Generic Keynote-style deck |
+| [`doc-kami-parchment`](next/src/lib/templates/skills/doc-kami-parchment/) | personal | Warm-parchment editorial doc (from [tw93/kami](https://github.com/tw93/kami)) |
+| [`pm-spec`](next/src/lib/templates/skills/pm-spec/) | product | PM spec doc + decision log |
+| [`team-okrs`](next/src/lib/templates/skills/team-okrs/) | product | OKR scoresheet |
+| [`meeting-notes`](next/src/lib/templates/skills/meeting-notes/) | operation | Meeting decision log |
+| [`weekly-update`](next/src/lib/templates/skills/weekly-update/) | operation | Team weekly cadence |
+| [`kanban-board`](next/src/lib/templates/skills/kanban-board/) | operation | Board snapshot |
+| [`eng-runbook`](next/src/lib/templates/skills/eng-runbook/) | engineering | Incident runbook |
+| [`finance-report`](next/src/lib/templates/skills/finance-report/) | finance | Exec finance summary |
+| [`invoice`](next/src/lib/templates/skills/invoice/) | finance | Single-page invoice |
+| [`hr-onboarding`](next/src/lib/templates/skills/hr-onboarding/) | hr | Role onboarding plan |
+| [`data-report`](next/src/lib/templates/skills/data-report/) | finance / product | CSV/Excel → visual data report |
+| [`live-dashboard`](next/src/lib/templates/skills/live-dashboard/) | operation | Live data dashboard |
+| [`flowai-team-dashboard`](next/src/lib/templates/skills/flowai-team-dashboard/) | operation | Team workflow dashboard |
+| [`ppt-keynote`](next/src/lib/templates/skills/ppt-keynote/) | personal | Generic Keynote-style deck |
 
-**Adding a skill takes one folder.** Copy a similar skill, edit its `SKILL.md` frontmatter, restart `pnpm dev`, the picker shows it. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the bar a skill PR has to clear before we merge.
+**Adding a skill takes one folder.** Copy a similar skill, edit its `SKILL.md` frontmatter, restart `pnpm -F @html-anything/next dev`, the picker shows it. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the bar a skill PR has to clear before we merge.
 
 ## Six load-bearing ideas
 
 ### 1 · We don't ship an agent. Yours is good enough.
 
-On boot the browser calls `/api/agents`. The server scans `PATH` — including the dirs a GUI-launched Node usually misses (`~/.local/bin`, `~/.bun/bin`, `/opt/homebrew/bin`, `~/.npm-global/bin`) — and surfaces whichever CLIs it finds. Each CLI has one adapter (argv + stdin protocol + stream parser) in [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts). The whole detection model is borrowed directly from [`nexu-io/open-design`](https://github.com/nexu-io/open-design) and [`multica-ai/multica`](https://github.com/multica-ai/multica): one privileged process spawns CLIs, JSON-line is the wire protocol.
+On boot the browser calls `/api/agents`. The server scans `PATH` — including the dirs a GUI-launched Node usually misses (`~/.local/bin`, `~/.bun/bin`, `/opt/homebrew/bin`, `~/.npm-global/bin`) — and surfaces whichever CLIs it finds. Each CLI has one adapter (argv + stdin protocol + stream parser) in [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts). The whole detection model is borrowed directly from [`nexu-io/open-design`](https://github.com/nexu-io/open-design) and [`multica-ai/multica`](https://github.com/multica-ai/multica): one privileged process spawns CLIs, JSON-line is the wire protocol.
 
 ### 2 · Skills are folders, not plugins.
 
-Following Claude Code's [`SKILL.md` convention](https://docs.anthropic.com/en/docs/claude-code/skills) — `SKILL.md` + `assets/` + `references/` + `example.html`. Drop a folder into [`src/lib/templates/skills/`](src/lib/templates/skills/), restart `pnpm dev`, the picker shows it. `deck-guizang-editorial` is vendored directly from [`op7418/guizang-ppt-skill`](https://github.com/op7418/guizang-ppt-skill) with original LICENSE and authorship preserved.
+Following Claude Code's [`SKILL.md` convention](https://docs.anthropic.com/en/docs/claude-code/skills) — `SKILL.md` + `assets/` + `references/` + `example.html`. Drop a folder into [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/), restart `pnpm -F @html-anything/next dev`, the picker shows it. `deck-guizang-editorial` is vendored directly from [`op7418/guizang-ppt-skill`](https://github.com/op7418/guizang-ppt-skill) with original LICENSE and authorship preserved.
 
 ### 3 · Hard constraints stop the model from freestyling.
 
@@ -374,11 +394,11 @@ User-emitted HTML always renders inside `<iframe sandbox="allow-scripts allow-sa
 |---|---|
 | Frontend | Next.js 16 App Router + Turbopack · React 19 · Tailwind v4 · zustand state |
 | Server routes | `GET /api/agents` (detection) · `POST /api/convert` (SSE streaming spawn) |
-| Agent transport | `child_process.spawn` · one stdin/stdout adapter per CLI ([`src/lib/agents/argv.ts`](src/lib/agents/argv.ts)) |
+| Agent transport | `child_process.spawn` · one stdin/stdout adapter per CLI ([`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts)) |
 | Browser-side processing | `juice` (CSS inlining) · `modern-screenshot` (PNG export) · `xlsx` / `papaparse` (spreadsheet parsing) · `marked` + `highlight.js` (Markdown-compatible input) · `dompurify` (XSS defense) |
 | Preview sandbox | `iframe[sandbox="allow-scripts allow-same-origin"]` + `srcdoc` |
 | Export targets | `.html` standalone · `.png` high-DPI · `ClipboardItem` (text/html + image/png) · WeChat-compatible inlined CSS |
-| Deploy | Local `pnpm dev` · Vercel one-click for the web layer (agent stays local) |
+| Deploy | Local `pnpm -F @html-anything/next dev` · Vercel one-click for the web layer (agent stays local) |
 
 ## Export targets
 
@@ -422,9 +442,9 @@ Early but real. The closed loop — **detect agent → pick skill → SSE stream
 
 Issues, PRs, new skills, new agent adapters, new export targets, and translations are all welcome. The highest-leverage contributions are usually **one folder, one Markdown file, or one PR-sized adapter** — small surface area, big leverage. Pick the slot that matches what you want to add:
 
-- **Add a skill** — drop a folder into [`src/lib/templates/skills/`](src/lib/templates/skills/) with `SKILL.md` + `example.html` (+ optional `assets/` and `references/`). The picker auto-discovers it after `pnpm dev` restart. The `SKILL.md` frontmatter has to set `mode` · `scenario` · `surface` · `preview` · `design_system` — copy a neighbour and edit.
-- **Wire up a new coding-agent CLI** — one entry in [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts) covering: detection binary, argv builder, stdin/stdout protocol, stream parser. Detection is exercised by [`src/app/api/agents/`](src/app/api/agents/) and the spawn loop by [`src/app/api/convert/`](src/app/api/convert/).
-- **Add an export target** — drop a module under [`src/lib/export/`](src/lib/export/) (next to `wechat.ts` / `image.ts` / `clipboard.ts`) and add the button to the export menu. WeChat Channels · Douyin captions · Notion · Linear · Telegraph · RSS are all open.
+- **Add a skill** — drop a folder into [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) with `SKILL.md` + `example.html` (+ optional `assets/` and `references/`). The picker auto-discovers it after `pnpm -F @html-anything/next dev` restart. The `SKILL.md` frontmatter has to set `mode` · `scenario` · `surface` · `preview` · `design_system` — copy a neighbour and edit.
+- **Wire up a new coding-agent CLI** — one entry in [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) covering: detection binary, argv builder, stdin/stdout protocol, stream parser. Detection is exercised by [`next/src/app/api/agents/`](next/src/app/api/agents/) and the spawn loop by [`next/src/app/api/convert/`](next/src/app/api/convert/).
+- **Add an export target** — drop a module under [`next/src/lib/export/`](next/src/lib/export/) (next to `wechat.ts` / `image.ts` / `clipboard.ts`) and add the button to the export menu. WeChat Channels · Douyin captions · Notion · Linear · Telegraph · RSS are all open.
 - **Sharpen a `SKILL.md`** — strengthen the hard-constraints (CJK font stack, 8 px baseline, contrast ≥ 4.5, must-use-real-data), add a 5-dimensional self-critique, swap in a better palette. Anti-AI-slop discipline is the most underrated PR shape we accept.
 - **Translations & docs** — [`README.zh-CN.md`](README.zh-CN.md) and [`CONTRIBUTING.zh-CN.md`](CONTRIBUTING.zh-CN.md) are kept in parallel with the English files; please update both.
 
@@ -436,21 +456,21 @@ Every external project this repo borrows from — what we take from each, and wh
 
 | Project | Role here |
 |---|---|
-| [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) | The agent-detection layer, the `DESIGN.md` design-system schema, and the `SKILL.md` skill protocol. [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts) and [`src/lib/templates/skills/`](src/lib/templates/skills/) mirror this architecture verbatim. |
+| [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) | The agent-detection layer, the `DESIGN.md` design-system schema, and the `SKILL.md` skill protocol. [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) and [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) mirror this architecture verbatim. |
 | [**`multica-ai/multica`**](https://github.com/multica-ai/multica) | Daemon-and-runtime architecture: one privileged process spawns CLIs, JSON-line is the wire protocol, every CLI gets a thin per-adapter shape. |
-| [**`alchaincyf/huashu-design`**](https://github.com/alchaincyf/huashu-design) | Anti-AI-slop discipline — Junior-Designer mode, 5-step brand-asset protocol, contrast-≥-4.5 / 8 px baseline-grid / must-use-real-data rules. Hard-coded into every [`SKILL.md`](src/lib/templates/skills/) frontmatter. |
-| [`alchaincyf/huashu-md-html`](https://github.com/alchaincyf/huashu-md-html) | Proof that end-to-end WeChat / Zhihu paste-compatibility is solvable. Reference for [`src/lib/export/wechat.ts`](src/lib/export/wechat.ts). |
-| [`mdnice/markdown-nice`](https://github.com/mdnice/markdown-nice) | `juice`-inlined-CSS pipeline → WeChat / Zhihu paste with zero re-formatting. Drives [`src/lib/export/wechat.ts`](src/lib/export/wechat.ts). |
-| [`mdnice/markdown-resume`](https://github.com/mdnice/markdown-resume) | A4-formatted résumé inspiration → [`resume-modern`](src/lib/templates/skills/resume-modern/). |
-| [`gcui-art/markdown-to-image`](https://github.com/gcui-art/markdown-to-image) | iframe → high-DPI PNG export, replicated with `modern-screenshot` in [`src/lib/export/image.ts`](src/lib/export/image.ts). |
-| [**`op7418/guizang-ppt-skill`**](https://github.com/op7418/guizang-ppt-skill) | Magazine-ink editorial deck integrated verbatim as [`deck-guizang-editorial`](src/lib/templates/skills/deck-guizang-editorial/) and the Swiss variant [`deck-swiss-international`](src/lib/templates/skills/deck-swiss-international/). Original LICENSE + authorship preserved. |
-| [**`tw93/kami`**](https://github.com/tw93/kami) | Warm-parchment monochrome editorial document system → [`doc-kami-parchment`](src/lib/templates/skills/doc-kami-parchment/). |
-| [**`1weiho/open-slide`**](https://github.com/1weiho/open-slide) | 1920×1080 agent-native canvas convention → [`deck-open-slide-canvas`](src/lib/templates/skills/deck-open-slide-canvas/). |
+| [**`alchaincyf/huashu-design`**](https://github.com/alchaincyf/huashu-design) | Anti-AI-slop discipline — Junior-Designer mode, 5-step brand-asset protocol, contrast-≥-4.5 / 8 px baseline-grid / must-use-real-data rules. Hard-coded into every [`SKILL.md`](next/src/lib/templates/skills/) frontmatter. |
+| [`alchaincyf/huashu-md-html`](https://github.com/alchaincyf/huashu-md-html) | Proof that end-to-end WeChat / Zhihu paste-compatibility is solvable. Reference for [`next/src/lib/export/wechat.ts`](next/src/lib/export/wechat.ts). |
+| [`mdnice/markdown-nice`](https://github.com/mdnice/markdown-nice) | `juice`-inlined-CSS pipeline → WeChat / Zhihu paste with zero re-formatting. Drives [`next/src/lib/export/wechat.ts`](next/src/lib/export/wechat.ts). |
+| [`mdnice/markdown-resume`](https://github.com/mdnice/markdown-resume) | A4-formatted résumé inspiration → [`resume-modern`](next/src/lib/templates/skills/resume-modern/). |
+| [`gcui-art/markdown-to-image`](https://github.com/gcui-art/markdown-to-image) | iframe → high-DPI PNG export, replicated with `modern-screenshot` in [`next/src/lib/export/image.ts`](next/src/lib/export/image.ts). |
+| [**`op7418/guizang-ppt-skill`**](https://github.com/op7418/guizang-ppt-skill) | Magazine-ink editorial deck integrated verbatim as [`deck-guizang-editorial`](next/src/lib/templates/skills/deck-guizang-editorial/) and the Swiss variant [`deck-swiss-international`](next/src/lib/templates/skills/deck-swiss-international/). Original LICENSE + authorship preserved. |
+| [**`tw93/kami`**](https://github.com/tw93/kami) | Warm-parchment monochrome editorial document system → [`doc-kami-parchment`](next/src/lib/templates/skills/doc-kami-parchment/). |
+| [**`1weiho/open-slide`**](https://github.com/1weiho/open-slide) | 1920×1080 agent-native canvas convention → [`deck-open-slide-canvas`](next/src/lib/templates/skills/deck-open-slide-canvas/). |
 | [`heygen-com/hyperframes`](https://github.com/heygen-com/hyperframes) | Frame-script schema for the entire `frame-*` / `vfx-*` / `mockup-*` / `social-*` family. Output hands straight off to Remotion to render `.mp4`. |
 | [`remotion-dev/remotion`](https://github.com/remotion-dev/remotion) | Target renderer for Hyperframes frame scripts. |
 | [`jimliu/baoyu-skills`](https://github.com/jimliu/baoyu-skills) | Practical skills collection — reference catalog for picker categorization. |
 
-Each bundled upstream skill retains its original LICENSE and authorship inside its own `src/lib/templates/skills/<skill>/` folder.
+Each bundled upstream skill retains its original LICENSE and authorship inside its own `next/src/lib/templates/skills/<skill>/` folder.
 
 ## Stay in the loop
 
@@ -482,4 +502,4 @@ If the curve bends up, that's the signal we look for. ★ this repo to push it.
 
 Apache-2.0 © 2026 HTML Anything contributors. See [`LICENSE`](LICENSE).
 
-Bundled work retains its original license and authorship attribution — see the per-skill `LICENSE` / `README.md` inside each `src/lib/templates/skills/<skill>/` folder for what it inherits from upstream.
+Bundled work retains its original license and authorship attribution — see the per-skill `LICENSE` / `README.md` inside each `next/src/lib/templates/skills/<skill>/` folder for what it inherits from upstream.

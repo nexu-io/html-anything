@@ -38,42 +38,42 @@ picker 顶部 **推荐 / Featured** 分组里默认置顶的 8 个 skill —— 
 <table>
 <tr>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/deck-guizang-editorial/"><img src="docs/screenshots/skills/deck-guizang-editorial.png" alt="deck-guizang-editorial" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/deck-guizang-editorial/"><code>deck-guizang-editorial</code></a></b> · <i>deck</i> · <code>recommended: 1</code><br/>编辑墨水 PPT,灵感来自 <a href="https://github.com/op7418/guizang-ppt-skill"><code>op7418/guizang-ppt-skill</code></a> —— 10 套锁死版面 × 5 套调色板(墨水 / 靛蓝瓷 / 森林墨 / 牛皮纸 / 沙丘),纸感印刷质感,开起来像一本电子杂志而不是 PPT。</sub>
+<a href="next/src/lib/templates/skills/deck-guizang-editorial/"><img src="docs/screenshots/skills/deck-guizang-editorial.png" alt="deck-guizang-editorial" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/deck-guizang-editorial/"><code>deck-guizang-editorial</code></a></b> · <i>deck</i> · <code>recommended: 1</code><br/>编辑墨水 PPT,灵感来自 <a href="https://github.com/op7418/guizang-ppt-skill"><code>op7418/guizang-ppt-skill</code></a> —— 10 套锁死版面 × 5 套调色板(墨水 / 靛蓝瓷 / 森林墨 / 牛皮纸 / 沙丘),纸感印刷质感,开起来像一本电子杂志而不是 PPT。</sub>
 </td>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/deck-swiss-international/"><img src="docs/screenshots/skills/deck-swiss-international.png" alt="deck-swiss-international" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/deck-swiss-international/"><code>deck-swiss-international</code></a></b> · <i>deck</i> · <code>recommended: 2</code><br/>瑞士国际主义 PPT —— 16 列网格 + 单一饱和 accent(Klein Blue / Lemon / Mint / Safety Orange),22 套锁死版面。冷静、理性、学院派,开会时让人觉得 "这一定是 designer 做的"。</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="src/lib/templates/skills/doc-kami-parchment/"><img src="docs/screenshots/skills/doc-kami-parchment.png" alt="doc-kami-parchment" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/doc-kami-parchment/"><code>doc-kami-parchment</code></a></b> · <i>doc</i> · <code>recommended: 3</code><br/>暖羊皮纸 + 墨蓝单色 editorial 文档系统,灵感来自 <a href="https://github.com/tw93/kami"><code>tw93/kami</code></a>。<code>#f5f4ed</code> 底色 + 单一衬线字体,长报告、读书笔记、one-pager、简历都能套,比纯白 markdown 高一个量级。</sub>
-</td>
-<td width="50%" valign="top">
-<a href="src/lib/templates/skills/magazine-poster/"><img src="docs/screenshots/skills/magazine-poster.png" alt="magazine-poster" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/magazine-poster/"><code>magazine-poster</code></a></b> · <i>poster</i> · <code>recommended: 4</code><br/>报纸风长图海报 —— 巨字 serif headline + 双栏正文 + 6 个编号小节 + cream 纸感底色,开起来像一份印好的 Sunday paper,不是网页。</sub>
+<a href="next/src/lib/templates/skills/deck-swiss-international/"><img src="docs/screenshots/skills/deck-swiss-international.png" alt="deck-swiss-international" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/deck-swiss-international/"><code>deck-swiss-international</code></a></b> · <i>deck</i> · <code>recommended: 2</code><br/>瑞士国际主义 PPT —— 16 列网格 + 单一饱和 accent(Klein Blue / Lemon / Mint / Safety Orange),22 套锁死版面。冷静、理性、学院派,开会时让人觉得 "这一定是 designer 做的"。</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/video-hyperframes/"><img src="docs/screenshots/skills/video-hyperframes.png" alt="video-hyperframes" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/video-hyperframes/"><code>video-hyperframes</code></a></b> · <i>frame / video</i> · <code>recommended: 5</code><br/>Hyperframes / Remotion 兼容的视频脚本 —— 6–10 个连续 <code>1920×1080</code> 帧,自带 duration / transition 注释和自动播放脚本。直接交给 <a href="https://github.com/heygen-com/hyperframes"><code>heygen-com/hyperframes</code></a> 或 Remotion 渲 <code>.mp4</code>。</sub>
+<a href="next/src/lib/templates/skills/doc-kami-parchment/"><img src="docs/screenshots/skills/doc-kami-parchment.png" alt="doc-kami-parchment" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/doc-kami-parchment/"><code>doc-kami-parchment</code></a></b> · <i>doc</i> · <code>recommended: 3</code><br/>暖羊皮纸 + 墨蓝单色 editorial 文档系统,灵感来自 <a href="https://github.com/tw93/kami"><code>tw93/kami</code></a>。<code>#f5f4ed</code> 底色 + 单一衬线字体,长报告、读书笔记、one-pager、简历都能套,比纯白 markdown 高一个量级。</sub>
 </td>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/frame-glitch-title/"><img src="docs/screenshots/skills/frame-glitch-title.png" alt="frame-glitch-title" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/frame-glitch-title/"><code>frame-glitch-title</code></a></b> · <i>frame</i> · <code>recommended: 6</code><br/>故障艺术标题帧 —— cyan / magenta 像散偏移 + CRT 扫描线 + 数据腐败副标 + 角落 ASCII 噪点。Cyberpunk hero 或视频转场用。</sub>
+<a href="next/src/lib/templates/skills/magazine-poster/"><img src="docs/screenshots/skills/magazine-poster.png" alt="magazine-poster" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/magazine-poster/"><code>magazine-poster</code></a></b> · <i>poster</i> · <code>recommended: 4</code><br/>报纸风长图海报 —— 巨字 serif headline + 双栏正文 + 6 个编号小节 + cream 纸感底色,开起来像一份印好的 Sunday paper,不是网页。</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/vfx-text-cursor/"><img src="docs/screenshots/skills/vfx-text-cursor.png" alt="vfx-text-cursor" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/vfx-text-cursor/"><code>vfx-text-cursor</code></a></b> · <i>vfx</i> · <code>recommended: 7</code><br/>VFX 文字光标开场 —— 光标在画布上"打字",每个字带 hot pink × cyan 像散拖尾 + 定向光斑。丢一句金句进去,就是电影级的视频片头。</sub>
+<a href="next/src/lib/templates/skills/video-hyperframes/"><img src="docs/screenshots/skills/video-hyperframes.png" alt="video-hyperframes" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/video-hyperframes/"><code>video-hyperframes</code></a></b> · <i>frame / video</i> · <code>recommended: 5</code><br/>Hyperframes / Remotion 兼容的视频脚本 —— 6–10 个连续 <code>1920×1080</code> 帧,自带 duration / transition 注释和自动播放脚本。直接交给 <a href="https://github.com/heygen-com/hyperframes"><code>heygen-com/hyperframes</code></a> 或 Remotion 渲 <code>.mp4</code>。</sub>
 </td>
 <td width="50%" valign="top">
-<a href="src/lib/templates/skills/frame-logo-outro/"><img src="docs/screenshots/skills/frame-logo-outro.png" alt="frame-logo-outro" /></a><br/>
-<sub><b><a href="src/lib/templates/skills/frame-logo-outro/"><code>frame-logo-outro</code></a></b> · <i>frame</i> · <code>recommended: 8</code><br/>品牌 Logo 收尾帧 —— Logo 分块装配 + glow bloom + tagline 上浮 + CTA。产品发布或品牌片的片尾闭幕镜头。</sub>
+<a href="next/src/lib/templates/skills/frame-glitch-title/"><img src="docs/screenshots/skills/frame-glitch-title.png" alt="frame-glitch-title" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/frame-glitch-title/"><code>frame-glitch-title</code></a></b> · <i>frame</i> · <code>recommended: 6</code><br/>故障艺术标题帧 —— cyan / magenta 像散偏移 + CRT 扫描线 + 数据腐败副标 + 角落 ASCII 噪点。Cyberpunk hero 或视频转场用。</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="next/src/lib/templates/skills/vfx-text-cursor/"><img src="docs/screenshots/skills/vfx-text-cursor.png" alt="vfx-text-cursor" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/vfx-text-cursor/"><code>vfx-text-cursor</code></a></b> · <i>vfx</i> · <code>recommended: 7</code><br/>VFX 文字光标开场 —— 光标在画布上"打字",每个字带 hot pink × cyan 像散拖尾 + 定向光斑。丢一句金句进去,就是电影级的视频片头。</sub>
+</td>
+<td width="50%" valign="top">
+<a href="next/src/lib/templates/skills/frame-logo-outro/"><img src="docs/screenshots/skills/frame-logo-outro.png" alt="frame-logo-outro" /></a><br/>
+<sub><b><a href="next/src/lib/templates/skills/frame-logo-outro/"><code>frame-logo-outro</code></a></b> · <i>frame</i> · <code>recommended: 8</code><br/>品牌 Logo 收尾帧 —— Logo 分块装配 + glow bloom + tagline 上浮 + CTA。产品发布或品牌片的片尾闭幕镜头。</sub>
 </td>
 </tr>
 </table>
@@ -97,7 +97,7 @@ picker 顶部 **推荐 / Featured** 分组里默认置顶的 8 个 skill —— 
 
 我们站在四个开源项目的肩膀上：
 
-- [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) —— Agent 检测层 + 设计 system 思路 + Skills protocol；本仓库的 `src/lib/agents/` 和 `src/lib/templates/skills/*` 直接借鉴这套模型。
+- [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) —— Agent 检测层 + 设计 system 思路 + Skills protocol；本仓库的 `next/src/lib/agents/` 和 `next/src/lib/templates/skills/*` 直接借鉴这套模型。
 - [**`mdnice/markdown-nice`**](https://github.com/mdnice/markdown-nice) —— `juice` 内联 CSS、公众号 / 知乎兼容粘贴的可行性证明。
 - [**`gcui-art/markdown-to-image`**](https://github.com/gcui-art/markdown-to-image) —— iframe → 高 DPI PNG 的截图导出路径。
 - [**`alchaincyf/huashu-md-html`**](https://github.com/alchaincyf/huashu-md-html) —— 反 AI-slop 的话术 / 设计哲学，对应我们模板里的硬约束（中文优先字体、8px 基线网格、对比 ≥ 4.5、必须用真实数据）。
@@ -114,7 +114,7 @@ picker 顶部 **推荐 / Featured** 分组里默认置顶的 8 个 skill —— 
 | **流式渲染** | `POST /api/convert` 走 SSE，agent stdout 的 JSON-line 流式抽出 text → 客户端 append → iframe `srcdoc` 实时刷新。等待时间 = 看 AI 现场写代码的体验。 |
 | **沙箱预览** | `iframe[sandbox="allow-scripts allow-same-origin"]`，用户 HTML 隔离运行，宿主页面不受污染。 |
 | **格式自动识别** | 编辑器一栏，粘 Markdown / CSV / TSV / JSON / SQL / 纯文本都识别，`papaparse` + `xlsx` 在浏览器端解析，不上传服务器。 |
-| **部署** | 本地 `pnpm dev` / Vercel 一键部署 web 层（agent 永远跑在本地）。 |
+| **部署** | 本地 `pnpm -F @html-anything/next dev` / Vercel 一键部署 web 层（agent 永远跑在本地）。 |
 | **License** | Apache-2.0 |
 
 ## Demo
@@ -158,13 +158,33 @@ picker 顶部 **推荐 / Featured** 分组里默认置顶的 8 个 skill —— 
 git clone https://github.com/nexu-io/html-anything
 cd html-anything
 pnpm install
-pnpm dev
+pnpm -F @html-anything/next dev
 # → http://localhost:3000
 ```
 
 打开浏览器 → 顶栏会自动列出你电脑上**已经登录好**的本地 code agent → 选一个模板 → 粘贴内容 → ⌘+Enter
 
 **无需 API Key**。我们直接复用你已经在用的 Claude / Cursor / Codex 订阅，**0 边际成本**。
+
+## Workspace
+
+这个仓库是一个很小的 pnpm workspace：
+
+- `next/` 是完整 Next 应用（`@html-anything/next`）。
+- `e2e/` 是浏览器测试包（`@html-anything/e2e`），也是 Playwright 用例的唯一真相源。
+- 根目录只负责 CI、文档和 `scripts/guard.ts`；根 `package.json` 有意不代理 app 或 e2e 命令。
+
+从仓库根目录运行 package 命令：
+
+```bash
+pnpm exec tsx scripts/guard.ts
+pnpm -F @html-anything/next dev
+pnpm -F @html-anything/next typecheck
+pnpm -F @html-anything/next test
+pnpm -F @html-anything/next build
+pnpm -F @html-anything/e2e typecheck
+pnpm -F @html-anything/e2e test
+```
 
 ## 🧠 自动识别本地 agent
 
@@ -181,13 +201,13 @@ pnpm dev
 | **Qwen Coder** | `qwen` | `qwen --yolo -` |
 | **Aider** | `aider` | `aider --no-pretty --no-stream --yes-always --message-file -` |
 
-> 这一层的设计直接借鉴了 [`nexu-io/open-design`](https://github.com/nexu-io/open-design) 和 [`multica-ai/multica`](https://github.com/multica-ai/multica) 的 agent 检测策略：唯一被 spawn 子进程的进程是 server route，业务进程不直接 spawn；CLI 的 stdin / stdout 用 JSON-line 协议复用，每个 CLI 一个轻 adapter，统一在 [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts)。
+> 这一层的设计直接借鉴了 [`nexu-io/open-design`](https://github.com/nexu-io/open-design) 和 [`multica-ai/multica`](https://github.com/multica-ai/multica) 的 agent 检测策略：唯一被 spawn 子进程的进程是 server route，业务进程不直接 spawn；CLI 的 stdin / stdout 用 JSON-line 协议复用，每个 CLI 一个轻 adapter，统一在 [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts)。
 
 只要你已经在终端里登录过对应的 CLI（例如 `claude login`、`cursor login`），HTML Anything 直接复用同一个 session，**不要求你再贴一遍 API Key**。
 
 ## 🎨 Skills
 
-**75 套 skill 在 [`src/lib/templates/skills/`](src/lib/templates/skills/) 下开箱即用。** 每个 skill 是一个文件夹，遵循 Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) 约定 + 扩展 frontmatter（`mode` · `scenario` · `surface` · `preview` · `design_system`）。
+**75 套 skill 在 [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) 下开箱即用。** 每个 skill 是一个文件夹，遵循 Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) 约定 + 扩展 frontmatter（`mode` · `scenario` · `surface` · `preview` · `design_system`）。
 
 picker 用两个维度组织：
 
@@ -200,11 +220,11 @@ picker 用两个维度组织：
 
 ### 1 · 我们不发 agent，你装的就够好
 
-主界面进来时，浏览器调 `/api/agents`，server 端扫一遍 `PATH`（含 GUI 启动会丢的 `~/.local/bin` · `~/.bun/bin` · `/opt/homebrew/bin` · `~/.npm-global/bin`），识别到哪些 CLI 在场，就把哪些放进顶栏。每个 CLI 对应一个 adapter（参数 + stdin 协议 + 输出解析器），在 [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts) 里集中维护。整套思路直接借鉴 [`nexu-io/open-design`](https://github.com/nexu-io/open-design) 和 [`multica-ai/multica`](https://github.com/multica-ai/multica) 的 agent-detection 模型。
+主界面进来时，浏览器调 `/api/agents`，server 端扫一遍 `PATH`（含 GUI 启动会丢的 `~/.local/bin` · `~/.bun/bin` · `/opt/homebrew/bin` · `~/.npm-global/bin`），识别到哪些 CLI 在场，就把哪些放进顶栏。每个 CLI 对应一个 adapter（参数 + stdin 协议 + 输出解析器），在 [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) 里集中维护。整套思路直接借鉴 [`nexu-io/open-design`](https://github.com/nexu-io/open-design) 和 [`multica-ai/multica`](https://github.com/multica-ai/multica) 的 agent-detection 模型。
 
 ### 2 · Skills 是文件夹，不是插件
 
-遵循 Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) 约定 —— `SKILL.md` + `assets/` + `references/` + `example.html`。drop 一个文件夹到 [`src/lib/templates/skills/`](src/lib/templates/skills/)，重启 dev server，picker 里就出现。`deck-guizang-editorial` 直接 vendor 自 [`op7418/guizang-ppt-skill`](https://github.com/op7418/guizang-ppt-skill)（保留原始 LICENSE 与署名）。
+遵循 Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) 约定 —— `SKILL.md` + `assets/` + `references/` + `example.html`。drop 一个文件夹到 [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/)，重启 dev server，picker 里就出现。`deck-guizang-editorial` 直接 vendor 自 [`op7418/guizang-ppt-skill`](https://github.com/op7418/guizang-ppt-skill)（保留原始 LICENSE 与署名）。
 
 ### 3 · 强制约束让 AI 不再 freestyle
 
@@ -270,11 +290,11 @@ picker 用两个维度组织：
 |---|---|
 | Frontend | Next.js 16 App Router + Turbopack · React 19 · Tailwind v4 · zustand 全局状态 |
 | Server routes | `GET /api/agents`（检测） · `POST /api/convert`（SSE 流式 spawn） |
-| Agent transport | `child_process.spawn` · 每个 CLI 一个 stdin/stdout adapter（[`src/lib/agents/argv.ts`](src/lib/agents/argv.ts)） |
+| Agent transport | `child_process.spawn` · 每个 CLI 一个 stdin/stdout adapter（[`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts)） |
 | 浏览器端处理 | `juice`（CSS 内联） · `modern-screenshot`（PNG 截图） · `xlsx` / `papaparse`（CSV/Excel 解析） · `marked` + `highlight.js`（markdown 兼容输入） · `dompurify`（XSS 防御） |
 | 预览沙箱 | `iframe[sandbox="allow-scripts allow-same-origin"]` + `srcdoc` |
 | 导出 | `.html` 单文件 · `.png` 高 DPI · ClipboardItem 富文本 / image/png · 微信兼容 inline CSS |
-| 部署 | 本地 `pnpm dev` · Vercel 一键 web 层（agent 永远跑本地） |
+| 部署 | 本地 `pnpm -F @html-anything/next dev` · Vercel 一键 web 层（agent 永远跑本地） |
 
 ## 一键发布到平台
 
@@ -318,9 +338,9 @@ picker 用两个维度组织：
 
 欢迎 issue、PR、新 skill、新 agent 适配、新平台导出、翻译。**最高杠杆的贡献往往就是一个文件夹、一份 Markdown、或者一段 PR-sized adapter** —— 面积小、影响大。按你想加的东西对号入座:
 
-- **新 skill** —— 在 [`src/lib/templates/skills/`](src/lib/templates/skills/) 加一个文件夹,带 `SKILL.md` + `example.html`(可选 `assets/` 和 `references/`)。`pnpm dev` 重启后 picker 自动发现。`SKILL.md` frontmatter 必须设 `mode` · `scenario` · `surface` · `preview` · `design_system` —— 抄一个邻居改就行。
-- **新 coding-agent CLI 适配** —— 在 [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts) 加一行,覆盖:识别用的 binary 名字、argv 拼装、stdin/stdout 协议、流式 parser。检测路径走 [`src/app/api/agents/`](src/app/api/agents/),spawn 走 [`src/app/api/convert/`](src/app/api/convert/)。
-- **新平台导出** —— 在 [`src/lib/export/`](src/lib/export/) 加一个模块(放在 `wechat.ts` / `image.ts` / `clipboard.ts` 隔壁),并在导出菜单里加按钮。微信视频号 · 抖音字幕 · Notion · Linear · Telegraph · RSS 都是空位。
+- **新 skill** —— 在 [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) 加一个文件夹,带 `SKILL.md` + `example.html`(可选 `assets/` 和 `references/`)。`pnpm -F @html-anything/next dev` 重启后 picker 自动发现。`SKILL.md` frontmatter 必须设 `mode` · `scenario` · `surface` · `preview` · `design_system` —— 抄一个邻居改就行。
+- **新 coding-agent CLI 适配** —— 在 [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) 加一行,覆盖:识别用的 binary 名字、argv 拼装、stdin/stdout 协议、流式 parser。检测路径走 [`next/src/app/api/agents/`](next/src/app/api/agents/),spawn 走 [`next/src/app/api/convert/`](next/src/app/api/convert/)。
+- **新平台导出** —— 在 [`next/src/lib/export/`](next/src/lib/export/) 加一个模块(放在 `wechat.ts` / `image.ts` / `clipboard.ts` 隔壁),并在导出菜单里加按钮。微信视频号 · 抖音字幕 · Notion · Linear · Telegraph · RSS 都是空位。
 - **打磨某个 `SKILL.md`** —— 加强硬约束(CJK 字体栈、8 px 基线、对比度 ≥ 4.5、必须用真实数据),加一段五维自检,换一套更合适的调色板。反 AI-slop 这类 PR 是我们最看重的形态。
 - **翻译与文档** —— [`README.md`](README.md) 和 [`CONTRIBUTING.md`](CONTRIBUTING.md) 都和中文版并行维护,改一边请同步另一边。
 
@@ -332,21 +352,21 @@ picker 用两个维度组织：
 
 | 项目 | 在这里的角色 |
 |---|---|
-| [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) | Agent 识别层、`DESIGN.md` 设计 system schema、`SKILL.md` 协议都来自这里。[`src/lib/agents/argv.ts`](src/lib/agents/argv.ts) 和 [`src/lib/templates/skills/`](src/lib/templates/skills/) 直接镜像了它的架构。 |
+| [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) | Agent 识别层、`DESIGN.md` 设计 system schema、`SKILL.md` 协议都来自这里。[`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) 和 [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) 直接镜像了它的架构。 |
 | [**`multica-ai/multica`**](https://github.com/multica-ai/multica) | Daemon-and-runtime 架构:一个特权进程 spawn 各家 CLI、JSON-line 做线协议、每个 CLI 一个薄 adapter。 |
-| [**`alchaincyf/huashu-design`**](https://github.com/alchaincyf/huashu-design) | 反 AI-slop 设计哲学 —— Junior-Designer 工作流、五步品牌资产协议、对比度 ≥ 4.5 / 8 px 基线 / 必须用真实数据。这些硬约束直接写进了每一个 [`SKILL.md`](src/lib/templates/skills/) frontmatter。 |
-| [`alchaincyf/huashu-md-html`](https://github.com/alchaincyf/huashu-md-html) | 公众号 / 知乎复制端到端兼容性的可行性证明。[`src/lib/export/wechat.ts`](src/lib/export/wechat.ts) 的参考实现。 |
-| [`mdnice/markdown-nice`](https://github.com/mdnice/markdown-nice) | `juice` 内联 CSS 链路 → 公众号 / 知乎粘贴零调整。驱动 [`src/lib/export/wechat.ts`](src/lib/export/wechat.ts)。 |
-| [`mdnice/markdown-resume`](https://github.com/mdnice/markdown-resume) | A4 简历版式的灵感来源 → [`resume-modern`](src/lib/templates/skills/resume-modern/)。 |
-| [`gcui-art/markdown-to-image`](https://github.com/gcui-art/markdown-to-image) | iframe → 高 DPI PNG 截图路径,用 `modern-screenshot` 复刻在 [`src/lib/export/image.ts`](src/lib/export/image.ts)。 |
-| [**`op7418/guizang-ppt-skill`**](https://github.com/op7418/guizang-ppt-skill) | 编辑墨水 PPT 原封不动接入 [`deck-guizang-editorial`](src/lib/templates/skills/deck-guizang-editorial/) 和瑞士国际主义变体 [`deck-swiss-international`](src/lib/templates/skills/deck-swiss-international/)。原 LICENSE + 作者署名保留。 |
-| [**`tw93/kami`**](https://github.com/tw93/kami) | 暖羊皮纸 + 墨蓝单色 editorial 文档系统 → [`doc-kami-parchment`](src/lib/templates/skills/doc-kami-parchment/)。 |
-| [**`1weiho/open-slide`**](https://github.com/1weiho/open-slide) | 1920×1080 agent-native canvas 规范 → [`deck-open-slide-canvas`](src/lib/templates/skills/deck-open-slide-canvas/)。 |
+| [**`alchaincyf/huashu-design`**](https://github.com/alchaincyf/huashu-design) | 反 AI-slop 设计哲学 —— Junior-Designer 工作流、五步品牌资产协议、对比度 ≥ 4.5 / 8 px 基线 / 必须用真实数据。这些硬约束直接写进了每一个 [`SKILL.md`](next/src/lib/templates/skills/) frontmatter。 |
+| [`alchaincyf/huashu-md-html`](https://github.com/alchaincyf/huashu-md-html) | 公众号 / 知乎复制端到端兼容性的可行性证明。[`next/src/lib/export/wechat.ts`](next/src/lib/export/wechat.ts) 的参考实现。 |
+| [`mdnice/markdown-nice`](https://github.com/mdnice/markdown-nice) | `juice` 内联 CSS 链路 → 公众号 / 知乎粘贴零调整。驱动 [`next/src/lib/export/wechat.ts`](next/src/lib/export/wechat.ts)。 |
+| [`mdnice/markdown-resume`](https://github.com/mdnice/markdown-resume) | A4 简历版式的灵感来源 → [`resume-modern`](next/src/lib/templates/skills/resume-modern/)。 |
+| [`gcui-art/markdown-to-image`](https://github.com/gcui-art/markdown-to-image) | iframe → 高 DPI PNG 截图路径,用 `modern-screenshot` 复刻在 [`next/src/lib/export/image.ts`](next/src/lib/export/image.ts)。 |
+| [**`op7418/guizang-ppt-skill`**](https://github.com/op7418/guizang-ppt-skill) | 编辑墨水 PPT 原封不动接入 [`deck-guizang-editorial`](next/src/lib/templates/skills/deck-guizang-editorial/) 和瑞士国际主义变体 [`deck-swiss-international`](next/src/lib/templates/skills/deck-swiss-international/)。原 LICENSE + 作者署名保留。 |
+| [**`tw93/kami`**](https://github.com/tw93/kami) | 暖羊皮纸 + 墨蓝单色 editorial 文档系统 → [`doc-kami-parchment`](next/src/lib/templates/skills/doc-kami-parchment/)。 |
+| [**`1weiho/open-slide`**](https://github.com/1weiho/open-slide) | 1920×1080 agent-native canvas 规范 → [`deck-open-slide-canvas`](next/src/lib/templates/skills/deck-open-slide-canvas/)。 |
 | [`heygen-com/hyperframes`](https://github.com/heygen-com/hyperframes) | 整个 `frame-*` / `vfx-*` / `mockup-*` / `social-*` 家族遵循的帧脚本 schema。输出可以直接交给 Remotion 渲 `.mp4`。 |
 | [`remotion-dev/remotion`](https://github.com/remotion-dev/remotion) | Hyperframes 帧脚本的目标渲染器。 |
 | [`jimliu/baoyu-skills`](https://github.com/jimliu/baoyu-skills) | 实用 skills 集合 —— picker 分类参考目录。 |
 
-每一个 vendor 进来的 upstream skill 都在 `src/lib/templates/skills/<skill>/` 里保留了原始 LICENSE 和作者署名。
+每一个 vendor 进来的 upstream skill 都在 `next/src/lib/templates/skills/<skill>/` 里保留了原始 LICENSE 和作者署名。
 
 ## 📣 关注我们
 
@@ -378,4 +398,4 @@ X 上关注 [**@nexudotio**](https://x.com/nexudotio),看版本发布、新 skil
 
 Apache-2.0 © 2026 HTML Anything 贡献者。详见 [`LICENSE`](LICENSE)。
 
-vendor 进来的第三方作品保留原始 LICENSE 与署名 —— 每个 `src/lib/templates/skills/<skill>/` 文件夹里若存在 `LICENSE` / `README.md`，以它为准。
+vendor 进来的第三方作品保留原始 LICENSE 与署名 —— 每个 `next/src/lib/templates/skills/<skill>/` 文件夹里若存在 `LICENSE` / `README.md`，以它为准。
