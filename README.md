@@ -438,6 +438,18 @@ Early but real. The closed loop — **detect agent → pick skill → SSE stream
 | History / version diff / IndexedDB archive | ⏳ planned |
 | Skill marketplace (`install <github-repo>`) | ⏳ planned |
 
+## Security
+
+The Next API surface is the local-only side of the app — `/api/convert` spawns the user's coding-agent CLI with maximally permissive flags, `/api/deploy` writes credentialed config to disk. Both are intended for a single operator on a single machine. To prevent a malicious page from DNS-rebinding `attacker.example` to `127.0.0.1` and POSTing into those routes through the user's browser, every `/api/*` request is gated on a Host-header allowlist in [`next/src/middleware.ts`](next/src/middleware.ts).
+
+| Setting | When to use |
+|---|---|
+| **Default (no env vars set)** | The common case — `next dev` / `next start` on your own machine. `127.0.0.1`, `localhost`, and `::1` Host headers (any port) are accepted. Everything else gets a 403 `{ "error": "Host not allowed" }`. |
+| **`HTML_ANYTHING_ALLOWED_HOSTS=daemon.mirage.local,html-anything.lan`** | LAN / mDNS setup — you're reaching the app from another device on the same network and the browser dials a non-loopback hostname. Comma-separated; port-insensitive; case-insensitive. The default loopback set is still accepted on top of this. |
+| **`HTML_ANYTHING_ALLOW_ANY_HOST=1`** | Reverse-proxy mode — Caddy / nginx / Cloudflare Tunnel is terminating the public hostname and forwarding to the app. The proxy is now responsible for Host policy. Loudly insecure if you set this without a trusted proxy in front, so it is not the default. |
+
+Set the env var in whatever environment file your launcher reads (e.g. `next/.env.local`). The validation is unit-tested in [`next/src/lib/security/host-validation.test.ts`](next/src/lib/security/host-validation.test.ts) and the loopback-still-works dev path is exercised in the Playwright spec at [`e2e/ui/host-validation.spec.ts`](e2e/ui/host-validation.spec.ts).
+
 ## Contributing
 
 Issues, PRs, new skills, new agent adapters, new export targets, and translations are all welcome. The highest-leverage contributions are usually **one folder, one Markdown file, or one PR-sized adapter** — small surface area, big leverage. Pick the slot that matches what you want to add:
