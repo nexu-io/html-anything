@@ -46,6 +46,9 @@ export function DeployControl({
   const { status, error, latest, deploy } = useDeploy();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [dismissedLatestId, setDismissedLatestId] = useState<string | null>(
+    null,
+  );
   // null = unknown (still loading), true/false = checked state. Probed via
   // the same /api/deploy/config endpoint Settings → Deploy reads, so the
   // toolbar Publish button knows whether to deploy or steer the user to
@@ -115,7 +118,9 @@ export function DeployControl({
 
   // Newest record first; `latest` may be the same as `deployments[0]` so we
   // dedupe by id to avoid rendering it twice in the result line + history.
-  const visibleHistory = deployments.filter((d) => d.id !== latest?.id);
+  const visibleLatest =
+    latest && latest.id !== dismissedLatestId ? latest : null;
+  const visibleHistory = deployments.filter((d) => d.id !== visibleLatest?.id);
 
   return (
     <div ref={popoverRef} className="relative inline-flex items-center gap-1.5">
@@ -152,7 +157,7 @@ export function DeployControl({
       )}
 
       {/* Inline result row — shown right after a successful deploy. */}
-      {latest && (
+      {visibleLatest && (
         <div
           className="absolute right-0 top-[calc(100%+6px)] z-30 flex max-w-[420px] flex-col gap-1 rounded-xl px-3 py-2 text-[11px] shadow-lg"
           style={{
@@ -166,38 +171,47 @@ export function DeployControl({
               className="h-1.5 w-1.5 rounded-full"
               style={{
                 background:
-                  latest.status === "ready"
+                  visibleLatest.status === "ready"
                     ? "var(--green)"
-                    : latest.status === "protected"
+                    : visibleLatest.status === "protected"
                       ? "var(--coral)"
                       : "var(--amber, #d97706)",
               }}
             />
             <span className="font-medium">
-              {latest.status === "ready"
+              {visibleLatest.status === "ready"
                 ? t("deploy.success.label")
-                : latest.status === "protected"
+                : visibleLatest.status === "protected"
                   ? t("deploy.protected.label")
                   : t("deploy.delayed.label")}
             </span>
+            <button
+              onClick={() => setDismissedLatestId(visibleLatest.id)}
+              aria-label={t("deploy.success.dismiss")}
+              title={t("deploy.success.dismiss")}
+              className="ml-auto inline-flex h-5 w-5 items-center justify-center rounded-full text-[12px] hover:bg-[var(--surface)]"
+              style={{ color: "var(--ink-mute)" }}
+            >
+              x
+            </button>
           </div>
           <a
-            href={latest.url}
+            href={visibleLatest.url}
             target="_blank"
             rel="noreferrer noopener"
             className="block max-w-full truncate font-mono text-[11px] text-[var(--coral)] hover:underline"
-            title={latest.url}
+            title={visibleLatest.url}
           >
-            {latest.url}
+            {visibleLatest.url}
           </a>
-          {latest.status !== "ready" && latest.statusMessage && (
+          {visibleLatest.status !== "ready" && visibleLatest.statusMessage && (
             <div className="text-[10.5px] text-[var(--ink-mute)] leading-snug">
-              {latest.statusMessage}
+              {visibleLatest.statusMessage}
             </div>
           )}
           <div className="mt-0.5 flex items-center gap-1.5">
             <button
-              onClick={() => onCopy(latest.url)}
+              onClick={() => onCopy(visibleLatest.url)}
               className="rounded-full px-2 py-0.5 text-[10.5px] hover:bg-[var(--surface)]"
               style={{
                 background: "transparent",
@@ -205,12 +219,12 @@ export function DeployControl({
                 border: "1px solid var(--line)",
               }}
             >
-              {copiedUrl === latest.url
+              {copiedUrl === visibleLatest.url
                 ? t("deploy.success.copied")
                 : `📋 ${t("deploy.success.copy")}`}
             </button>
             <a
-              href={latest.url}
+              href={visibleLatest.url}
               target="_blank"
               rel="noreferrer noopener"
               className="rounded-full px-2 py-0.5 text-[10.5px] no-underline hover:bg-[var(--surface)]"

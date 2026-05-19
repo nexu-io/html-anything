@@ -122,6 +122,7 @@ export interface Dict {
   "deploy.success.label": string;
   "deploy.success.copy": string;
   "deploy.success.copied": string;
+  "deploy.success.dismiss": string;
   "deploy.success.open": string;
   "deploy.protected.label": string;
   "deploy.protected.hint": string;
@@ -445,6 +446,7 @@ const en: Dict = {
   "deploy.success.label": "Live at",
   "deploy.success.copy": "Copy",
   "deploy.success.copied": "Copied",
+  "deploy.success.dismiss": "Dismiss",
   "deploy.success.open": "Open",
   "deploy.protected.label": "Deployed (SSO-protected)",
   "deploy.protected.hint":
@@ -765,6 +767,7 @@ const zhCN: Dict = {
   "deploy.success.label": "已发布到",
   "deploy.success.copy": "复制",
   "deploy.success.copied": "已复制",
+  "deploy.success.dismiss": "关闭",
   "deploy.success.open": "打开",
   "deploy.protected.label": "已部署（SSO 保护中）",
   "deploy.protected.hint":
