@@ -111,6 +111,7 @@ export async function POST(req: NextRequest) {
     model,
     cwd,
     binOverride,
+    output: "html",
     signal: abortCtl.signal,
   });
 

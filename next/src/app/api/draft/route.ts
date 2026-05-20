@@ -60,6 +60,7 @@ export async function POST(req: NextRequest) {
     prompt,
     model,
     binOverride,
+    output: "text",
     signal: abortCtl.signal,
   });
 
