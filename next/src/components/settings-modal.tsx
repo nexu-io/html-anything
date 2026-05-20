@@ -9,6 +9,7 @@ import {
   type Locale,
 } from "@/lib/store";
 import { useT, type DictKey } from "@/lib/i18n";
+import { refreshTemplates } from "@/lib/templates";
 
 type Props = { onClose: () => void; initialSection?: SectionId };
 
@@ -828,12 +829,11 @@ function MarketplaceSection() {
           repo: `${pkg.source.owner}/${pkg.source.repo}`,
         }),
       );
-      // Reload the global templates cache so the picker picks up new skills.
-      try {
-        await fetch("/api/templates", { cache: "no-store" });
-      } catch {
-        // best effort — picker will refetch on next mount anyway
-      }
+      // Drop the in-memory template registry cache AND push the fresh list
+      // to every mounted `useTemplates` consumer — the picker switches over
+      // immediately, no page reload. Failing here just means the picker
+      // keeps the previous list; the install itself already succeeded.
+      await refreshTemplates().catch(() => undefined);
       await load();
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
@@ -854,11 +854,9 @@ function MarketplaceSection() {
         throw new Error(data.message ?? data.error ?? `HTTP ${res.status}`);
       }
       setInfo(t("marketplace.uninstalled"));
-      try {
-        await fetch("/api/templates", { cache: "no-store" });
-      } catch {
-        /* noop */
-      }
+      // Push the post-uninstall list to mounted picker consumers so the
+      // removed skill disappears without waiting for a page reload.
+      await refreshTemplates().catch(() => undefined);
       await load();
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));

@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -400,7 +401,23 @@ export async function installFromGitHub(spec: string, opts: InstallOptions = {})
   const ref = parsed.ref ?? (await fetchDefaultBranch(owner, repo, fetchImpl));
 
   const pkgId = packageId(owner, repo);
+  // Download / extract scratch space goes in `os.tmpdir()` — those files are
+  // transient and the temp filesystem is the right place for them. The
+  // *staged final layout*, on the other hand, must live on the destination
+  // filesystem so the atomic-swap `rename(2)` below stays intra-FS. On many
+  // Linux hosts `/tmp` is a separate tmpfs mount, and a cross-device rename
+  // throws `EXDEV`, which would break every install in production.
   const workDir = await fs.mkdtemp(path.join(os.tmpdir(), "ha-skill-install-"));
+  const targetDir = path.join(userSkillsDir(), pkgId);
+  await fs.mkdir(path.dirname(targetDir), { recursive: true });
+  // Hidden temp dir alongside the target — same filesystem by construction.
+  // The `.stage-` prefix keeps it from being picked up by `listPackages`
+  // (which requires a leading alphanumeric segment), and the random suffix
+  // makes concurrent installs of different packages collision-free.
+  const stageDir = path.join(
+    path.dirname(targetDir),
+    `.stage-${pkgId}-${randomBytes(8).toString("hex")}`,
+  );
   try {
     const tarPath = path.join(workDir, "archive.tar.gz");
     const tarballUrl = `${GITHUB_CODELOAD_BASE}/${owner}/${repo}/tar.gz/${encodeURIComponent(ref)}`;
@@ -414,8 +431,7 @@ export async function installFromGitHub(spec: string, opts: InstallOptions = {})
 
     const discovered = await discoverSkills(extractDir, repo);
 
-    // Stage the final layout in tmp before swapping into place.
-    const stageDir = path.join(workDir, "stage");
+    // Build the final layout in `stageDir` (which lives next to `targetDir`).
     await fs.mkdir(path.join(stageDir, "skills"), { recursive: true });
     for (const skill of discovered) {
       await copyValidatedSkill(skill, path.join(stageDir, "skills", skill.originalId));
@@ -433,11 +449,10 @@ export async function installFromGitHub(spec: string, opts: InstallOptions = {})
       "utf8",
     );
 
-    // Atomic swap. `fs.rename` on the same filesystem is atomic; the
-    // pre-existing dir (if any) is removed first under a backup name so we
-    // can restore on failure.
-    const targetDir = path.join(userSkillsDir(), pkgId);
-    await fs.mkdir(path.dirname(targetDir), { recursive: true });
+    // Atomic swap. `stageDir` and `targetDir` share a parent dir, so the
+    // rename is always intra-filesystem and atomic. The pre-existing dir
+    // (if any) is moved aside under a backup name so we can restore on
+    // failure.
     let backupDir: string | null = null;
     if (await exists(targetDir)) {
       backupDir = `${targetDir}.bak-${Date.now()}`;
@@ -458,7 +473,10 @@ export async function installFromGitHub(spec: string, opts: InstallOptions = {})
 
     return { package: manifest };
   } finally {
+    // Best-effort cleanup of both scratch areas. `stageDir` is normally
+    // consumed by the rename above; this only matters on the error paths.
     await fs.rm(workDir, { recursive: true, force: true }).catch(() => undefined);
+    await fs.rm(stageDir, { recursive: true, force: true }).catch(() => undefined);
   }
 }
 

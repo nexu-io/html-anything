@@ -47,21 +47,41 @@ async function fetchTemplates(): Promise<TemplateDef[]> {
 export function useTemplates(): TemplateDef[] | undefined {
   const [data, setData] = useState<TemplateDef[] | undefined>(cache ?? undefined);
   useEffect(() => {
-    if (cache) {
-      setData(cache);
-      return;
-    }
+    // Subscribe unconditionally so that {@link refreshTemplates} can notify
+    // even consumers that mounted while the cache was already warm. (The
+    // previous early-return-on-warm-cache code path left those consumers
+    // unsubscribed, so install/uninstall could not push them a new list.)
     const listener = (v: TemplateDef[]) => setData(v);
     listeners.add(listener);
-    fetchTemplates().catch(() => {
-      // surface as empty — picker shows "no matches", caller can decide
-      setData([]);
-    });
+    if (cache) {
+      setData(cache);
+    } else {
+      fetchTemplates().catch(() => {
+        // surface as empty — picker shows "no matches", caller can decide
+        setData([]);
+      });
+    }
     return () => {
       listeners.delete(listener);
     };
   }, []);
   return data;
+}
+
+/**
+ * Drop the in-memory registry cache, re-fetch from `/api/templates`, and push
+ * the new list to every mounted {@link useTemplates} consumer. Call this
+ * after install/uninstall so the picker switches to the fresh list
+ * immediately instead of waiting for a full page reload.
+ *
+ * Resolves with the new list; on failure, the cache is left null so the
+ * next mount will refetch, and subscribed consumers keep their last-known
+ * data (no flash to empty).
+ */
+export async function refreshTemplates(): Promise<TemplateDef[]> {
+  cache = null;
+  inflight = null;
+  return fetchTemplates();
 }
 
 /** Fetch one skill's bundled example (content + html). */
