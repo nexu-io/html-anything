@@ -1,0 +1,19 @@
+{
+  "name": "@html-anything/e2e",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test -c playwright.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "playwright:clean": "tsx scripts/playwright.ts clean"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^20",
+    "jszip": "^3.10.1",
+    "tsx": "^4.22.1",
+    "typescript": "^5"
+  }
+}

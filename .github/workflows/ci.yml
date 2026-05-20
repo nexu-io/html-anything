@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  public-checks:
+    name: Public checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Guard project shape
+        run: pnpm exec tsx scripts/guard.ts
+
+      - name: Typecheck app
+        run: pnpm -F @html-anything/next typecheck
+
+      - name: Typecheck e2e
+        run: pnpm -F @html-anything/e2e typecheck
+
+      - name: App unit tests
+        run: pnpm -F @html-anything/next test
+
+      - name: Build
+        run: pnpm -F @html-anything/next build
+
+      - name: Install Playwright browser
+        run: pnpm -F @html-anything/e2e exec playwright install --with-deps chromium
+
+      - name: E2E smoke
+        run: pnpm -F @html-anything/e2e test

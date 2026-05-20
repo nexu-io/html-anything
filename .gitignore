@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/e2e/node_modules
+/next/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -12,10 +14,16 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
+/e2e/ui/reports/
+/e2e/ui/test-results/
 
 # next.js
 /.next/
+/next/.next/
 /out/
+/next/out/
 
 # production
 /build
@@ -39,6 +47,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/next/next-env.d.ts
 
 # claude code
 .claude-sessions/

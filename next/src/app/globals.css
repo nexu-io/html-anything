@@ -1,0 +1,237 @@
+@import "tailwindcss";
+
+/* ── open-design palette (editor + landing hybrid) ──────────────── */
+:root {
+  --app-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --app-font-display: "Inter Tight", var(--app-font-sans);
+  --app-font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --app-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --font-sans: var(--app-font-sans);
+  --font-display: var(--app-font-display);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+
+  --paper: #faf9f7;
+  --bone: #f7f1de;
+  --surface: #ffffff;
+  --ink: #15140f;
+  --ink-soft: #2a2620;
+  --ink-mute: #5a5448;
+  --ink-faint: #8b8676;
+  --line: rgba(21, 20, 15, 0.16);
+  --line-soft: rgba(21, 20, 15, 0.08);
+  --line-faint: rgba(21, 20, 15, 0.05);
+
+  --coral: #c96442;        /* editor rust */
+  --coral-warm: #ed6f5c;   /* landing coral */
+  --coral-hover: #b25737;
+  --coral-soft: rgba(201, 100, 66, 0.12);
+
+  --mustard: #e9b94a;
+  --olive: #6e7448;
+  --green: #1f7a3a;
+  --blue: #2348b8;
+  --purple: #6c3aa6;
+  --amber: #b26200;
+  --red: #9c2a25;
+
+  color-scheme: light;
+}
+
+@theme inline {
+  --font-sans: var(--app-font-sans);
+  --font-display: var(--app-font-display);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --color-paper: var(--paper);
+  --color-bone: var(--bone);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-ink-faint: var(--ink-faint);
+  --color-coral: var(--coral);
+  --color-line: var(--line);
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* paper grain — open-design's signature */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(106, 92, 56, 0.07), transparent 45%),
+    radial-gradient(circle at 88% 72%, rgba(106, 92, 56, 0.05), transparent 50%);
+}
+
+/* serif italic for accent — open-design hero pattern */
+.serif-em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--coral);
+}
+
+/* eyebrow label */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral);
+  position: relative;
+  padding-bottom: 4px;
+}
+.eyebrow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 18px;
+  height: 1.5px;
+  background: var(--coral);
+}
+
+/* pulse dot */
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--coral);
+  display: inline-block;
+  animation: od-pulse 2.4s ease-in-out infinite;
+}
+@keyframes od-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* od scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-soft); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--line); }
+
+/* drop-zone hover */
+.dropzone-active {
+  outline: 2px dashed var(--coral);
+  outline-offset: -8px;
+  background: var(--coral-soft);
+}
+
+/* shimmer */
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.shimmer { animation: shimmer 1.6s ease-in-out infinite; }
+
+/* fade-in for modal */
+@keyframes od-fade-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+.od-fade-in { animation: od-fade-in 0.25s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+@keyframes od-backdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.od-backdrop { animation: od-backdrop 0.2s ease-out both; }
+
+/* ── reusable component primitives ─────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--coral);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 14px 26px -16px rgba(201, 100, 66, 0.85);
+  transition: all 0.18s ease;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--coral-hover);
+  transform: translateY(-1px);
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--ink);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--line-faint);
+  border-color: var(--ink);
+}
+.btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.btn-ink:hover:not(:disabled) { background: var(--ink-soft); transform: translateY(-1px); }
+.btn-ink:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.pill-active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.od-card {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  box-shadow: 0 1px 0 var(--line-faint), 0 18px 40px -28px rgba(21, 20, 15, 0.16);
+}
