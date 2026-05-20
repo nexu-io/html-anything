@@ -125,15 +125,16 @@ describe("install rejections", () => {
 
   it("rejects a tarball containing a SKILL.md symlink", async () => {
     const tar = await buildTarballWith("syml-deadbeef", async (w) => {
-      // Drop a real target and a SKILL.md symlinked to it. The validator
-      // rejects symlinks because they could point outside the package after
-      // extraction on hosts that follow them.
+      // Drop a real target and a SKILL.md symlinked to it. The preflight
+      // rejects every non-file/non-directory entry up front so the symlink
+      // never reaches the extractor — `forbidden_entry_type` fires before
+      // the post-extract `symlink_rejected` defense ever has to.
       await fs.writeFile(path.join(w, "target.md"), VALID_SKILL_MD, "utf8");
       await fs.symlink("target.md", path.join(w, "SKILL.md"));
     });
     await expect(
       installFromGitHub("owner/syml", { fetchImpl: fakeFetch(tar) }),
-    ).rejects.toMatchObject({ code: "symlink_rejected" });
+    ).rejects.toMatchObject({ code: "forbidden_entry_type" });
     expect(listPackages()).toHaveLength(0);
   });
 

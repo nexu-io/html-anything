@@ -90,9 +90,25 @@ describe("GET /api/marketplace", () => {
 });
 
 describe("POST /api/marketplace/install", () => {
+  it("returns 403 when the Host header is not loopback (DNS-rebinding defense)", async () => {
+    const { POST } = await import("../../../app/api/marketplace/install/route");
+    // undici forbids setting the `host` request header, so encode the
+    // attacker-controlled host into the URL — that's what the guard reads
+    // (via `new URL(req.url).host`) when no Host header is present.
+    const req = new Request("http://evil.example.com/api/marketplace/install", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ source: "owner/repo" }),
+    });
+    const res = await POST(req);
+    expect(res.status).toBe(403);
+    const data = (await res.json()) as { error: string };
+    expect(data.error).toBe("host_not_allowed");
+  });
+
   it("returns 400 on invalid JSON", async () => {
     const { POST } = await import("../../../app/api/marketplace/install/route");
-    const req = new Request("http://x/api/marketplace/install", {
+    const req = new Request("http://127.0.0.1/api/marketplace/install", {
       method: "POST",
       body: "not json",
     });
@@ -104,7 +120,7 @@ describe("POST /api/marketplace/install", () => {
 
   it("returns 400 when source is missing", async () => {
     const { POST } = await import("../../../app/api/marketplace/install/route");
-    const req = new Request("http://x/api/marketplace/install", {
+    const req = new Request("http://127.0.0.1/api/marketplace/install", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({}),
@@ -115,7 +131,7 @@ describe("POST /api/marketplace/install", () => {
 
   it("returns 400 with the InstallError code on invalid spec", async () => {
     const { POST } = await import("../../../app/api/marketplace/install/route");
-    const req = new Request("http://x/api/marketplace/install", {
+    const req = new Request("http://127.0.0.1/api/marketplace/install", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ source: "not a spec" }),
@@ -130,7 +146,7 @@ describe("POST /api/marketplace/install", () => {
     const tarball = await buildOkTarball();
     stubFetch(tarball);
     const { POST } = await import("../../../app/api/marketplace/install/route");
-    const req = new Request("http://x/api/marketplace/install", {
+    const req = new Request("http://127.0.0.1/api/marketplace/install", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ source: "owner/repo" }),
@@ -145,13 +161,17 @@ describe("POST /api/marketplace/install", () => {
 describe("DELETE /api/marketplace/packages/[id]", () => {
   it("returns 400 on a malformed id", async () => {
     const { DELETE } = await import("../../../app/api/marketplace/packages/[id]/route");
-    const res = await DELETE(new Request("http://x"), { params: Promise.resolve({ id: "../../etc/passwd" }) });
+    const res = await DELETE(new Request("http://127.0.0.1/api/marketplace/packages/x"), {
+      params: Promise.resolve({ id: "../../etc/passwd" }),
+    });
     expect(res.status).toBe(400);
   });
 
   it("returns 404 for an id with the right shape but no on-disk package", async () => {
     const { DELETE } = await import("../../../app/api/marketplace/packages/[id]/route");
-    const res = await DELETE(new Request("http://x"), { params: Promise.resolve({ id: "ghost__pack" }) });
+    const res = await DELETE(new Request("http://127.0.0.1/api/marketplace/packages/x"), {
+      params: Promise.resolve({ id: "ghost__pack" }),
+    });
     expect(res.status).toBe(404);
   });
 
@@ -160,7 +180,7 @@ describe("DELETE /api/marketplace/packages/[id]", () => {
     stubFetch(await buildOkTarball());
     const { POST } = await import("../../../app/api/marketplace/install/route");
     await POST(
-      new Request("http://x/install", {
+      new Request("http://127.0.0.1/api/marketplace/install", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ source: "owner/repo" }),
@@ -168,7 +188,9 @@ describe("DELETE /api/marketplace/packages/[id]", () => {
     );
 
     const { DELETE } = await import("../../../app/api/marketplace/packages/[id]/route");
-    const res = await DELETE(new Request("http://x"), { params: Promise.resolve({ id: "owner__repo" }) });
+    const res = await DELETE(new Request("http://127.0.0.1/api/marketplace/packages/x"), {
+      params: Promise.resolve({ id: "owner__repo" }),
+    });
     expect(res.status).toBe(200);
 
     const { GET } = await import("../../../app/api/marketplace/route");

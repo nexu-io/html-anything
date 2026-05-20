@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { installFromGitHub, InstallError } from "@/lib/skills/install";
 import { invalidateSkillsCache } from "@/lib/templates/loader";
+import { hostRejectedResponse, isHostAllowed } from "../_lib/host-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  if (!isHostAllowed(req)) return hostRejectedResponse();
   let body: unknown;
   try {
     body = await req.json();

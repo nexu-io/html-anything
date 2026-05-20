@@ -18,6 +18,12 @@ import { userSkillsDir, makeSkillId } from "./paths";
  */
 
 export type InstalledPackage = {
+  /**
+   * Manifest schema version. Older installs that predate the field read back
+   * as `undefined` and are treated as v0 by callers that care; new installs
+   * always write the current version.
+   */
+  schemaVersion?: number;
   id: string;
   source: {
     type: "github";
@@ -83,6 +89,7 @@ export function readPackageManifest(pkgId: string): InstalledPackage | null {
     return null;
   }
   return {
+    schemaVersion: typeof obj.schemaVersion === "number" ? obj.schemaVersion : undefined,
     id: obj.id,
     source: {
       type: "github",

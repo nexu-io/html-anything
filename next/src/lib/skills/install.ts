@@ -2,8 +2,12 @@ import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import zlib from "node:zlib";
 import { packageId, userSkillsDir } from "./paths";
 import { readPackageManifest, type InstalledPackage } from "./registry";
+
+/** Bump when the on-disk manifest schema changes incompatibly. */
+const MANIFEST_SCHEMA_VERSION = 1;
 
 /**
  * Marketplace install from a public GitHub repo. The repo must lay out its
@@ -22,6 +26,13 @@ const SKILL_MD_MAX_BYTES = 256 * 1024;
 const EXAMPLE_HTML_MAX_BYTES = 2 * 1024 * 1024;
 const EXAMPLE_MD_MAX_BYTES = 512 * 1024;
 const TARBALL_MAX_BYTES = 32 * 1024 * 1024;
+/**
+ * Cap on the *decompressed* size of the tarball. Defends against gzip bombs
+ * where the 32 MB compressed cap above could still expand to many GB and
+ * exhaust /tmp during extraction. 96 MB is roomy enough for any plausible
+ * skill pack while keeping the bomb amplification ratio bounded.
+ */
+const TARBALL_MAX_UNCOMPRESSED_BYTES = 96 * 1024 * 1024;
 // GitHub's default branch is queryable via this API; we fall back to `main` if
 // the request fails (handles offline-with-cache scenarios and public unauth
 // rate limits).
@@ -132,6 +143,98 @@ async function downloadTarball(
     );
   }
   await fs.writeFile(destPath, buf);
+}
+
+/**
+ * Walk every header in a tar archive and reject anything dangerous BEFORE
+ * we hand the file to `tar -xzf`. The system `tar` binary alone is not a
+ * reliable security boundary — BSD tar on macOS happily extracts symlinks
+ * that point outside the destination, and a `symlink → ../../etc` entry
+ * followed by a `link/passwd` regular-file entry is a classic write-through-
+ * symlink primitive. So we:
+ *
+ *   1. Decompress with a hard `maxOutputLength` cap to defuse gzip bombs.
+ *   2. Parse every 512-byte header, enforcing:
+ *      - only regular files ('0', '\0') and directories ('5') allowed; any
+ *        symlink ('2'), hardlink ('1'), char/block/fifo/socket entry is rejected;
+ *      - no absolute paths, `..` segments, or NUL chars in the name;
+ *      - cumulative declared sizes within {@link TARBALL_MAX_UNCOMPRESSED_BYTES}.
+ *
+ * Returns silently on success; throws {@link InstallError} on any violation.
+ */
+async function preflightTarball(tarPath: string): Promise<void> {
+  const gz = await fs.readFile(tarPath);
+  let plain: Buffer;
+  try {
+    plain = zlib.gunzipSync(gz, { maxOutputLength: TARBALL_MAX_UNCOMPRESSED_BYTES });
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException)?.code;
+    if (code === "ERR_BUFFER_TOO_LARGE") {
+      throw new InstallError(
+        "tarball_uncompressed_too_large",
+        `tarball would decompress to more than ${TARBALL_MAX_UNCOMPRESSED_BYTES} bytes`,
+      );
+    }
+    throw new InstallError(
+      "tarball_corrupt",
+      `failed to decompress tarball: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
+
+  const BLOCK = 512;
+  let off = 0;
+  let totalDeclared = 0;
+  while (off + BLOCK <= plain.length) {
+    const header = plain.subarray(off, off + BLOCK);
+    // End-of-archive marker: two consecutive all-zero blocks.
+    if (header.every((b) => b === 0)) break;
+
+    const name = readCString(header, 0, 100);
+    const prefix = readCString(header, 345, 155);
+    const fullName = prefix ? `${prefix}/${name}` : name;
+    const sizeStr = readCString(header, 124, 12);
+    const size = sizeStr ? Number.parseInt(sizeStr, 8) : 0;
+    const typeFlag = String.fromCharCode(header[156] || 0x30); // '0' default
+
+    if (!Number.isFinite(size) || size < 0) {
+      throw new InstallError("tarball_corrupt", `tar entry "${fullName}" has invalid size header`);
+    }
+    if (fullName.includes("\0") || fullName.startsWith("/")) {
+      throw new InstallError("unsafe_path", `tar entry has unsafe path: ${JSON.stringify(fullName)}`);
+    }
+    const segments = fullName.split("/");
+    if (segments.some((seg) => seg === "..")) {
+      throw new InstallError("unsafe_path", `tar entry contains '..' segment: ${JSON.stringify(fullName)}`);
+    }
+    // Allow regular files ('0' or '\0' for legacy), directories ('5'), and
+    // PAX extended-header pseudo-entries ('x', 'g'). Reject everything else
+    // — symlinks ('2'), hardlinks ('1'), char ('3'), block ('4'), fifo ('6'),
+    // and the GNU long-name extensions ('K', 'L') which can smuggle paths
+    // past the 100-byte name check we already did.
+    const allowed = new Set(["0", "\0", "5", "x", "g"]);
+    if (!allowed.has(typeFlag)) {
+      throw new InstallError(
+        "forbidden_entry_type",
+        `tar entry "${fullName}" has forbidden type ${JSON.stringify(typeFlag)}`,
+      );
+    }
+
+    totalDeclared += size;
+    if (totalDeclared > TARBALL_MAX_UNCOMPRESSED_BYTES) {
+      throw new InstallError(
+        "tarball_uncompressed_too_large",
+        `cumulative declared size exceeds ${TARBALL_MAX_UNCOMPRESSED_BYTES} bytes`,
+      );
+    }
+
+    off += BLOCK + Math.ceil(size / BLOCK) * BLOCK;
+  }
+}
+
+function readCString(buf: Buffer, offset: number, length: number): string {
+  const slice = buf.subarray(offset, offset + length);
+  const end = slice.indexOf(0);
+  return slice.subarray(0, end === -1 ? slice.length : end).toString("utf8");
 }
 
 async function extractTarball(tarPath: string, destDir: string): Promise<void> {
@@ -302,6 +405,9 @@ export async function installFromGitHub(spec: string, opts: InstallOptions = {})
     const tarPath = path.join(workDir, "archive.tar.gz");
     const tarballUrl = `${GITHUB_CODELOAD_BASE}/${owner}/${repo}/tar.gz/${encodeURIComponent(ref)}`;
     await downloadTarball(tarballUrl, tarPath, fetchImpl);
+    // Validate every tar header before invoking the system `tar` binary —
+    // see {@link preflightTarball} for the threat model.
+    await preflightTarball(tarPath);
 
     const extractDir = path.join(workDir, "extracted");
     await extractTarball(tarPath, extractDir);
@@ -315,6 +421,7 @@ export async function installFromGitHub(spec: string, opts: InstallOptions = {})
       await copyValidatedSkill(skill, path.join(stageDir, "skills", skill.originalId));
     }
     const manifest: InstalledPackage = {
+      schemaVersion: MANIFEST_SCHEMA_VERSION,
       id: pkgId,
       source: { type: "github", owner, repo, ref },
       installedAt: new Date().toISOString(),
