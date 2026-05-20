@@ -137,6 +137,24 @@ export interface Dict {
   "deploy.provider.cloudflarePages.comingSoon": string;
   "deploy.menu.deployTo": string;
 
+  // Marketplace
+  "settings.section.marketplace.label": string;
+  "settings.section.marketplace.hint": string;
+  "settings.marketplace.title": string;
+  "settings.marketplace.subtitle": string;
+  "marketplace.installFromGithub": string;
+  "marketplace.placeholder": string;
+  "marketplace.install": string;
+  "marketplace.installing": string;
+  "marketplace.uninstall": string;
+  "marketplace.hint": string;
+  "marketplace.installed": string;
+  "marketplace.installSucceeded": string;
+  "marketplace.uninstalled": string;
+  "marketplace.skillCount": string;
+  "marketplace.empty.title": string;
+  "marketplace.empty.body": string;
+
   // Editor pane
   "editor.tab.text": string;
   "editor.tab.samples": string;
@@ -463,6 +481,25 @@ const en: Dict = {
   "deploy.provider.cloudflarePages.comingSoon": "Coming soon",
   "deploy.menu.deployTo": "Deploy to…",
 
+  "settings.section.marketplace.label": "Marketplace",
+  "settings.section.marketplace.hint": "Install skills from GitHub",
+  "settings.marketplace.title": "Skill marketplace",
+  "settings.marketplace.subtitle":
+    "Install community skill packs from public GitHub repos. Each pack ships one or more SKILL.md prompts that show up in the template picker.",
+  "marketplace.installFromGithub": "Install from GitHub",
+  "marketplace.placeholder": "owner/repo  or  owner/repo#branch",
+  "marketplace.install": "Install",
+  "marketplace.installing": "Installing…",
+  "marketplace.uninstall": "Uninstall",
+  "marketplace.hint":
+    "Public GitHub repos only. Needs a SKILL.md at the repo root, or skills/<id>/SKILL.md for multi-skill packs.",
+  "marketplace.installed": "Installed ({n})",
+  "marketplace.installSucceeded": "Installed {n} skill(s) from {repo}.",
+  "marketplace.uninstalled": "Package uninstalled.",
+  "marketplace.skillCount": "{n} skill(s)",
+  "marketplace.empty.title": "No packages installed yet",
+  "marketplace.empty.body": "Paste a GitHub repo above to install a community skill pack.",
+
   "editor.tab.text": "✏️ Text",
   "editor.tab.samples": "✨ Samples",
   "editor.tab.formats": "📋 Formats",
@@ -783,6 +820,25 @@ const zhCN: Dict = {
   "deploy.provider.cloudflarePages": "Cloudflare Pages",
   "deploy.provider.cloudflarePages.comingSoon": "敬请期待",
   "deploy.menu.deployTo": "部署到…",
+
+  "settings.section.marketplace.label": "市场",
+  "settings.section.marketplace.hint": "从 GitHub 安装 skill",
+  "settings.marketplace.title": "Skill 市场",
+  "settings.marketplace.subtitle":
+    "从公开 GitHub 仓库安装社区 skill 包。每个包带一个或多个 SKILL.md 提示词, 安装后会出现在模板选择器里。",
+  "marketplace.installFromGithub": "从 GitHub 安装",
+  "marketplace.placeholder": "owner/repo  或  owner/repo#branch",
+  "marketplace.install": "安装",
+  "marketplace.installing": "安装中…",
+  "marketplace.uninstall": "卸载",
+  "marketplace.hint":
+    "仅支持公开 GitHub 仓库。仓库根目录需有 SKILL.md, 或在 skills/<id>/SKILL.md 下放多个 skill。",
+  "marketplace.installed": "已安装 ({n})",
+  "marketplace.installSucceeded": "从 {repo} 安装了 {n} 个 skill。",
+  "marketplace.uninstalled": "已卸载。",
+  "marketplace.skillCount": "{n} 个 skill",
+  "marketplace.empty.title": "尚未安装任何包",
+  "marketplace.empty.body": "在上方粘贴一个 GitHub 仓库地址即可安装社区 skill 包。",
 
   "editor.tab.text": "✏️ 输入",
   "editor.tab.samples": "✨ 示例",
