@@ -542,7 +542,13 @@ function LogLine({ entry }: { entry: LogEntry }) {
 function PreviewPlaceholder({ status }: { status: string }) {
   const t = useT();
   const isRunning = status === "running";
+  const [, setTick] = useState(0);
   const stats = useStore((s) => selectActiveTask(s)?.stats ?? EMPTY_STATS);
+  useEffect(() => {
+    if (!isRunning) return;
+    const id = setInterval(() => setTick((n) => n + 1), 500);
+    return () => clearInterval(id);
+  }, [isRunning]);
   const secWaited = stats.startedAt ? ((Date.now() - stats.startedAt) / 1000).toFixed(1) : "0";
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 text-center p-8" style={{ background: "var(--paper)" }}>

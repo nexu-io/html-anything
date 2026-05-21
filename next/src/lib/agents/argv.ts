@@ -362,7 +362,41 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
   }
 
-  if (agent === "opencode" || agent === "qwen") {
+  if (agent === "opencode") {
+    const part =
+      obj.part && typeof obj.part === "object"
+        ? (obj.part as Record<string, unknown>)
+        : null;
+    if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
+    if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
+    if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });
+    if (typeof part?.text === "string") out.push({ kind: "delta", text: part.text });
+    if (typeof part?.content === "string") out.push({ kind: "delta", text: part.content });
+    if (typeof part?.message === "string") out.push({ kind: "delta", text: part.message });
+    if (obj.type === "step_start" && typeof obj.sessionID === "string") {
+      out.push({ kind: "meta", key: "session", value: obj.sessionID });
+    }
+    if (part?.tokens && typeof part.tokens === "object") {
+      const tokens = part.tokens as {
+        input?: number;
+        output?: number;
+        cache?: { read?: number; write?: number };
+      };
+      out.push({
+        kind: "meta",
+        key: "usage",
+        value: {
+          input_tokens: tokens.input,
+          output_tokens: tokens.output,
+          cache_read_input_tokens: tokens.cache?.read,
+          cache_creation_input_tokens: tokens.cache?.write,
+        },
+      });
+    }
+    if (typeof part?.cost === "number") out.push({ kind: "meta", key: "cost_usd", value: part.cost });
+  }
+
+  if (agent === "qwen") {
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
     if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
     if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });

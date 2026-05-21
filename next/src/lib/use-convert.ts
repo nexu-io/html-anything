@@ -187,7 +187,18 @@ function handleEvent(taskId: string, event: string, data: unknown, startedAt: nu
       break;
     }
     case "delta": {
-      if (typeof d.text === "string") store.appendHtmlFor(taskId, d.text);
+      if (typeof d.text === "string" && d.text) {
+        const task = store.tasks.find((t) => t.id === taskId);
+        const isFirstChunk = !task?.stats.firstByteAt;
+        store.appendHtmlFor(taskId, d.text);
+        if (isFirstChunk) {
+          store.pushLogFor(taskId, {
+            kind: "delta",
+            elapsed,
+            text: `收到首个 HTML 片段 (${formatBytes(d.text.length)})`,
+          });
+        }
+      }
       break;
     }
     case "html": {

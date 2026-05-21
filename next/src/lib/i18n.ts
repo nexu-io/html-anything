@@ -558,7 +558,7 @@ const en: Dict = {
   "preview.placeholder.idleTitle.accent": "⚡",
   "preview.placeholder.idleTitle.part2": "convert",
   "preview.placeholder.runningDescr":
-    "First bytes land in a few seconds, then it streams. Waited {sec}s so far.",
+    "The agent is generating. Some CLIs, including OpenCode, return larger chunks instead of token streams. Waited {sec}s.",
   "preview.placeholder.idleDescr":
     "Preview · view source · one-click copy for WeChat / Twitter / Zhihu · PNG export.",
   "preview.placeholder.chip.article": "📖 Article",
@@ -918,7 +918,7 @@ const zhCN: Dict = {
   "preview.placeholder.idleTitle.part1": "把内容粘到左侧, 然后",
   "preview.placeholder.idleTitle.accent": "⚡",
   "preview.placeholder.idleTitle.part2": "转换",
-  "preview.placeholder.runningDescr": "首字会在几秒内到达, 之后流式更新。当前已等 {sec}s。",
+  "preview.placeholder.runningDescr": "Agent 正在生成。有些 CLI（包括 OpenCode）会成块返回, 而不是逐字流式输出。当前已等 {sec}s。",
   "preview.placeholder.idleDescr": "支持预览 / 查看源码 / 一键复制公众号·推特·知乎 / 截图导出 PNG。",
   "preview.placeholder.chip.article": "📖 文章",
   "preview.placeholder.chip.deck": "🎬 PPT",
