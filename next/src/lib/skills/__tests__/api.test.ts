@@ -83,9 +83,19 @@ function stubFetch(tarball: Buffer): void {
 describe("GET /api/marketplace", () => {
   it("returns an empty list when nothing is installed", async () => {
     const { GET } = await import("../../../app/api/marketplace/route");
-    const res = await GET();
+    const res = await GET(new Request("http://127.0.0.1/api/marketplace"));
     const data = (await res.json()) as { packages: unknown[] };
     expect(data.packages).toEqual([]);
+  });
+
+  it("returns 403 when the Host header is not loopback — even for the read endpoint", async () => {
+    // Privacy regression test: enumerating installed packages (repo
+    // owners / names / refs) must not be reachable via DNS rebinding.
+    const { GET } = await import("../../../app/api/marketplace/route");
+    const res = await GET(new Request("http://evil.example.com/api/marketplace"));
+    expect(res.status).toBe(403);
+    const data = (await res.json()) as { error: string };
+    expect(data.error).toBe("host_not_allowed");
   });
 });
 
@@ -194,7 +204,9 @@ describe("DELETE /api/marketplace/packages/[id]", () => {
     expect(res.status).toBe(200);
 
     const { GET } = await import("../../../app/api/marketplace/route");
-    const after = (await (await GET()).json()) as { packages: unknown[] };
+    const after = (await (await GET(new Request("http://127.0.0.1/api/marketplace"))).json()) as {
+      packages: unknown[];
+    };
     expect(after.packages).toEqual([]);
   });
 });
