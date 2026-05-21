@@ -259,21 +259,26 @@ async function handleConvert(args: string[]): Promise<void> {
         }
       }
 
+      const collisionPaths = collisions.flatMap(([, paths]) => paths);
+      const commonRoot = findCommonPath(collisionPaths);
+
       const outputPlan = inputPaths.map((p) => ({
         inputPath: p,
         outputPath: collisions.length > 0
-          ? resolveCollisionOutput(p, outputDir)
+          ? resolveCollisionOutput(p, outputDir, commonRoot)
           : path.resolve(outputDir, `${path.basename(p, path.extname(p))}.html`),
       }));
 
       const existingFiles = outputPlan.filter((p) => fs.existsSync(p.outputPath));
       if (existingFiles.length > 0) {
-        console.error(`\x1b[33m⚠\x1b[0m The following output files already exist:`);
-        for (const p of existingFiles) console.error(`  ${p.outputPath}`);
-        const ok = await promptYesNo("\x1b[33m⚠\x1b[0m Overwrite? (y/N): ");
-        if (!ok) {
-          console.error("Aborted.");
-          process.exit(1);
+        if (process.stdin.isTTY && process.stderr.isTTY) {
+          console.error(`\x1b[33m⚠\x1b[0m The following output files already exist:`);
+          for (const p of existingFiles) console.error(`  ${p.outputPath}`);
+          const ok = await promptYesNo("\x1b[33m⚠\x1b[0m Overwrite? (y/N): ");
+          if (!ok) {
+            console.error("Aborted.");
+            process.exit(1);
+          }
         }
       }
 
@@ -449,11 +454,29 @@ async function convertOne(opts: {
   }
 }
 
-function resolveCollisionOutput(inputPath: string, outputDir: string): string {
+function findCommonPath(dirs: string[]): string {
+  if (dirs.length === 0) return "";
+  const resolved = dirs.map((d) => path.resolve(d));
+  const segments = resolved.map((d) => d.split(path.sep).filter(Boolean));
+  const minLen = Math.min(...segments.map((s) => s.length));
+  let common = 0;
+  for (let i = 0; i < minLen; i++) {
+    const seg = segments[0][i];
+    if (segments.every((s) => s[i] === seg)) common++;
+    else break;
+  }
+  return segments[0].slice(0, common).join(path.sep) || path.sep;
+}
+
+function resolveCollisionOutput(inputPath: string, outputDir: string, commonRoot: string): string {
   const basename = path.basename(inputPath, path.extname(inputPath));
-  const inputDir = path.dirname(inputPath);
-  const relativeDir = path.relative(process.cwd(), inputDir);
-  if (relativeDir && relativeDir !== ".") {
+  const inputDir = path.resolve(path.dirname(inputPath));
+  let relativeDir = path.relative(commonRoot, inputDir);
+  relativeDir = relativeDir
+    .split(path.sep)
+    .filter((s) => s !== ".." && s !== ".")
+    .join(path.sep);
+  if (relativeDir) {
     return path.resolve(outputDir, relativeDir, `${basename}.html`);
   }
   return path.resolve(outputDir, `${basename}.html`);
