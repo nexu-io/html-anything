@@ -101,7 +101,9 @@ function createSpinner(msg: string) {
     return {
       tick: () => { chunkCount++; },
       start,
-      stop: (_final?: string) => {},
+      stop: (final?: string) => {
+        if (final !== undefined) process.stderr.write(`${final}\n`);
+      },
     };
   }
 
