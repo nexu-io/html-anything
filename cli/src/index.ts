@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import readline from "node:readline";
 import { fileURLToPath } from "node:url";
 import { loadSkill, listSkills, type SkillMeta, type LoadedSkill } from "./skills-loader.js";
 import { detectAgents, type DetectedAgent } from "./agents-detect.js";
@@ -87,6 +88,7 @@ EXAMPLES:
   html-anything convert article.md -t doc-kami-parchment -o output.html
   html-anything convert article.md -t doc-kami-parchment -d ./dist
   html-anything convert article.md -a claude --model sonnet
+  html-anything convert file1.md file2.md file3.md -d ./dist
   cat article.md | html-anything convert
   html-anything config set-default-template resume-modern
   html-anything templates
@@ -162,6 +164,23 @@ async function handleConvert(args: string[]): Promise<void> {
     }
   }
 
+  if (flags.output && flags.outputDir) {
+    console.error("Error: --output (-o) and --output-dir (-d) cannot be used together.");
+    process.exit(1);
+  }
+
+  if (flags.output && positional.length > 1) {
+    console.error("Error: --output (-o) cannot be used with multiple input files. Use --output-dir (-d) instead.");
+    process.exit(1);
+  }
+
+  const VALID_FORMATS = ["markdown", "text", "csv", "json"];
+  const format = flags.format ?? "markdown";
+  if (!VALID_FORMATS.includes(format)) {
+    console.error(`Error: Unknown format "${format}". Supported: ${VALID_FORMATS.join(", ")}`);
+    process.exit(1);
+  }
+
   const config = loadConfig();
 
   const templateId = flags.template ?? config.defaultTemplate;
@@ -195,45 +214,75 @@ async function handleConvert(args: string[]): Promise<void> {
     process.exit(1);
   }
 
-  const format = flags.format ?? "markdown";
-  let content: string;
-  let inputPath: string | null = null;
+  const model = flags.model ?? config.model;
 
-  if (positional.length > 0) {
-    inputPath = positional[0];
-    try {
-      content = fs.readFileSync(inputPath, "utf-8");
-    } catch (err) {
-      console.error(`Error: Cannot read input file "${inputPath}": ${err instanceof Error ? err.message : err}`);
-      process.exit(1);
-    }
-  } else {
-    content = await readStdin();
+  const inputPaths = positional.length > 0 ? positional : [];
+
+  if (inputPaths.length === 0) {
+    const content = await readStdin();
     if (!content.trim()) {
       console.error("Error: No input provided. Pipe content via stdin or specify an input file.");
       process.exit(1);
     }
+    process.stdout.on("error", (err) => {
+      if ((err as NodeJS.ErrnoException).code === "EPIPE") process.exit(0);
+    });
+    const ok = await convertOne({ inputPath: null, content, skill, agent, model, format, flags });
+    if (!ok) process.exit(1);
+  } else {
+    let failed = 0;
+    for (const inputPath of inputPaths) {
+      let content: string;
+      try {
+        content = fs.readFileSync(inputPath, "utf-8");
+      } catch (err) {
+        console.error(`Error: Cannot read "${inputPath}": ${err instanceof Error ? err.message : err}`);
+        failed++;
+        continue;
+      }
+      const ok = await convertOne({ inputPath, content, skill, agent, model, format, flags });
+      if (!ok) failed++;
+    }
+    if (failed > 0) {
+      if (inputPaths.length > 1) {
+        console.error(`\n${failed}/${inputPaths.length} file(s) failed.`);
+      }
+      process.exit(1);
+    }
   }
+}
+
+async function convertOne(opts: {
+  inputPath: string | null;
+  content: string;
+  skill: LoadedSkill;
+  agent: DetectedAgent;
+  model: string | undefined;
+  format: string;
+  flags: Record<string, string>;
+}): Promise<boolean> {
+  const { inputPath, content, skill, agent: selectedAgent, model, format, flags } = opts;
 
   const prompt = assemblePrompt({ body: skill.body, content, format });
 
-  const model = flags.model ?? config.model;
-
+  const label = inputPath ? path.basename(inputPath) : "stdin";
   console.error(`Template: ${skill.zhName} (${skill.id})`);
-  console.error(`Agent: ${agent.label} (${agent.id})`);
+  console.error(`Agent: ${selectedAgent.label} (${selectedAgent.id})`);
   if (model) console.error(`Model: ${model}`);
+  if (inputPath) console.error(`Input: ${label}`);
   console.error("");
 
   const stream = invokeAgent({
-    agent: agent.id,
+    agent: selectedAgent.id,
     prompt,
     model,
   });
 
   const reader = stream.getReader();
   let htmlAccum = "";
-  let hasHtmlFromTool = false;
-  const spinner = createSpinner("Generating HTML...");
+  const spinner = createSpinner(`Generating HTML for ${label}...`);
+  let stderrBuf = "";
+  let exitCode: number | null = null;
 
   try {
     while (true) {
@@ -248,23 +297,35 @@ async function handleConvert(args: string[]): Promise<void> {
           break;
         case "html":
           htmlAccum = value.text;
-          hasHtmlFromTool = true;
           spinner.tick();
           break;
         case "error":
           spinner.stop(`\x1b[31m✗\x1b[0m Error: ${value.message}`);
-          process.exit(1);
-        case "meta":
-          break;
+          return false;
         case "stderr":
+          stderrBuf += value.text;
           break;
         case "done":
+          exitCode = value.code;
+          break;
+        case "meta":
+        case "raw":
+        case "start":
           break;
       }
     }
   } catch (err) {
     spinner.stop(`\x1b[31m✗\x1b[0m Error: ${err instanceof Error ? err.message : String(err)}`);
-    process.exit(1);
+    return false;
+  }
+
+  if (exitCode !== null && exitCode !== 0) {
+    const elapsed = ((Date.now() - spinner.start) / 1000).toFixed(1);
+    spinner.stop(`\x1b[31m✗\x1b[0m Agent exited with code ${exitCode} after ${elapsed}s`);
+    if (stderrBuf.trim()) {
+      console.error("Agent stderr:", stderrBuf.trim());
+    }
+    return false;
   }
 
   const elapsed = ((Date.now() - spinner.start) / 1000).toFixed(1);
@@ -274,34 +335,56 @@ async function handleConvert(args: string[]): Promise<void> {
 
   if (!html) {
     console.error("Error: Agent did not produce valid HTML output.");
-    console.error("Raw output:\n", htmlAccum.slice(0, 500));
-    process.exit(1);
+    if (htmlAccum) console.error("Raw output:\n", htmlAccum.slice(0, 500));
+    return false;
   }
 
+  let outputPath: string | undefined;
+
   if (flags.output) {
-    try {
-      fs.mkdirSync(path.dirname(path.resolve(flags.output)), { recursive: true });
-      fs.writeFileSync(flags.output, html, "utf-8");
-      console.error(`Saved to: ${flags.output}`);
-    } catch (err) {
-      console.error(`Error: Cannot write to "${flags.output}": ${err instanceof Error ? err.message : err}`);
-      process.exit(1);
-    }
+    outputPath = path.resolve(flags.output);
   } else if (inputPath) {
     const basename = path.basename(inputPath, path.extname(inputPath));
     const outputDir = flags.outputDir || process.cwd();
-    const outputPath = path.resolve(outputDir, `${basename}.html`);
+    outputPath = path.resolve(outputDir, `${basename}.html`);
+  }
+
+  if (outputPath) {
+    if (fs.existsSync(outputPath)) {
+      const overwrite = await promptOverwrite(outputPath);
+      if (!overwrite) {
+        console.error(`Skipped: ${outputPath}`);
+        return true;
+      }
+    }
+
     try {
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
       fs.writeFileSync(outputPath, html, "utf-8");
       console.error(`Saved to: ${outputPath}`);
+      return true;
     } catch (err) {
       console.error(`Error: Cannot write to "${outputPath}": ${err instanceof Error ? err.message : err}`);
-      process.exit(1);
+      return false;
     }
   } else {
     process.stdout.write(html);
+    return true;
   }
+}
+
+function promptOverwrite(filepath: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (!process.stdin.isTTY || !process.stderr.isTTY) {
+      resolve(true);
+      return;
+    }
+    const rl = readline.createInterface({ input: process.stdin, output: process.stderr });
+    rl.question(`\x1b[33m⚠\x1b[0m ${filepath} already exists. Overwrite? (y/N): `, (answer) => {
+      rl.close();
+      resolve(answer.trim().toLowerCase() === "y");
+    });
+  });
 }
 
 function readStdin(): Promise<string> {
@@ -399,8 +482,13 @@ function handleConfig(args: string[]): void {
         console.error(`Error: Unknown template "${val}"`);
         process.exit(1);
       }
-      saveConfig({ defaultTemplate: val });
-      console.log(`Default template set to: ${val} (${skill.zhName})`);
+      try {
+        saveConfig({ defaultTemplate: val });
+        console.log(`Default template set to: ${val} (${skill.zhName})`);
+      } catch (err) {
+        console.error(`Error: ${err instanceof Error ? err.message : String(err)}`);
+        process.exit(1);
+      }
       break;
     }
     case "set-default-agent": {
@@ -414,8 +502,13 @@ function handleConfig(args: string[]): void {
         console.error(`Error: Unknown agent "${val}"`);
         process.exit(1);
       }
-      saveConfig({ defaultAgent: val });
-      console.log(`Default agent set to: ${val} (${agent.label})`);
+      try {
+        saveConfig({ defaultAgent: val });
+        console.log(`Default agent set to: ${val} (${agent.label})`);
+      } catch (err) {
+        console.error(`Error: ${err instanceof Error ? err.message : String(err)}`);
+        process.exit(1);
+      }
       break;
     }
     case "set-model": {
@@ -423,13 +516,23 @@ function handleConfig(args: string[]): void {
         console.error("Error: Specify a model ID.");
         process.exit(1);
       }
-      saveConfig({ model: val });
-      console.log(`Default model set to: ${val}`);
+      try {
+        saveConfig({ model: val });
+        console.log(`Default model set to: ${val}`);
+      } catch (err) {
+        console.error(`Error: ${err instanceof Error ? err.message : String(err)}`);
+        process.exit(1);
+      }
       break;
     }
     case "reset": {
-      saveConfig({ defaultTemplate: undefined, defaultAgent: undefined, model: undefined });
-      console.log("Configuration reset.");
+      try {
+        saveConfig({ defaultTemplate: undefined, defaultAgent: undefined, model: undefined });
+        console.log("Configuration reset.");
+      } catch (err) {
+        console.error(`Error: ${err instanceof Error ? err.message : String(err)}`);
+        process.exit(1);
+      }
       break;
     }
     default:
