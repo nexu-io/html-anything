@@ -50,6 +50,9 @@ html-anything config set-default-template doc-kami-parchment
 # 使用默认模板转换（自动保存为 article.html）
 html-anything convert article.md
 
+# 批量转换多个文件
+html-anything convert file1.md file2.md file3.md -d ./dist
+
 # 保存到指定文件
 html-anything convert article.md -o output.html
 

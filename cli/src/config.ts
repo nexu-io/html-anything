@@ -31,7 +31,13 @@ export function loadConfig(): CliConfig {
 export function saveConfig(config: CliConfig): void {
   ensureConfigDir();
   const merged = { ...loadConfig(), ...config };
-  fs.writeFileSync(CONFIG_PATH, JSON.stringify(merged, null, 2), "utf-8");
+  try {
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify(merged, null, 2), "utf-8");
+  } catch (err) {
+    throw new Error(
+      `Cannot write config to ${CONFIG_PATH}: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
 }
 
 export function getConfigPath(): string {
