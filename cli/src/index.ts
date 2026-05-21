@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import readline from "node:readline";
 import { fileURLToPath } from "node:url";
 import { loadSkill, listSkills, type SkillMeta, type LoadedSkill } from "./skills-loader.js";
 import { detectAgents, type DetectedAgent } from "./agents-detect.js";
@@ -7,8 +8,7 @@ import { assemblePrompt } from "./prompt-assemble.js";
 import { invokeAgent, type InvokeEvent } from "./agents-invoke.js";
 import { extractHtml } from "./extract-html.js";
 import { loadConfig, saveConfig, getConfigPath, type CliConfig } from "./config.js";
-import { findCommonPath, resolveCollisionOutput } from "./collision-resolve.js";
-import { promptYesNo, promptOverwrite } from "./prompt.js";
+import { matchTemplate, type MatchResult } from "./skills-matcher.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,6 +74,16 @@ COMMANDS:
     --model <id>         Model to use (optional)
     --format <type>      Input format: markdown, text, csv, json (default: markdown)
 
+  auto [input]        Auto-detect best template and convert
+    input               Input file, or use stdin if omitted
+    --agent, -a <id>     Agent ID (default: auto-detect)
+    --output, -o <path>  Output file path
+    --output-dir, -d <dir>  Output directory for auto-saved files
+    --model <id>         Model to use (optional)
+    --format <type>      Input format: markdown, text, csv, json (default: markdown)
+    --force-ai                Force AI summary for matching
+    --show-match-only          Show match result, skip conversion
+
   templates           List all available templates
 
   agents              List detected AI agents
@@ -85,6 +95,11 @@ COMMANDS:
   config reset                       Reset all configuration
 
 EXAMPLES:
+  html-anything auto article.md
+  html-anything auto article.md -o output.html
+  html-anything auto article.md --show-match-only
+  html-anything auto article.md --force-ai
+  cat article.md | html-anything auto
   html-anything convert article.md
   html-anything convert article.md -t doc-kami-parchment -o output.html
   html-anything convert article.md -t doc-kami-parchment -d ./dist
@@ -243,25 +258,20 @@ async function handleConvert(args: string[]): Promise<void> {
       }
       const collisions = [...basenameCounts].filter(([, paths]) => paths.length > 1);
 
-      let useRelative = collisions.length > 0;
       if (collisions.length > 0) {
         console.error(`\x1b[33m⚠\x1b[0m Multiple inputs would produce the same output basename:`);
         for (const [basename, paths] of collisions) {
           console.error(`  ${basename}:`);
           for (const p of paths) console.error(`    → ${p}`);
         }
-        if (process.stdin.isTTY && process.stderr.isTTY) {
-          useRelative = await promptYesNo(
-            "\x1b[33m⚠\x1b[0m Save with relative directory paths (e.g. dir1/readme.html)? (y/N): ",
+        const useRelative = await promptYesNo(
+          "\x1b[33m⚠\x1b[0m Save with relative directory paths (e.g. dir1/readme.html)? (y/N): ",
+        );
+        if (!useRelative) {
+          console.error(
+            "Aborted. Rename your input files to use different basenames, or use --output (-o) for each file.",
           );
-          if (!useRelative) {
-            console.error(
-              "Aborted. Rename your input files to use different basenames, or use --output (-o) for each file.",
-            );
-            process.exit(1);
-          }
-        } else {
-          console.error(`\x1b[33m⚠\x1b[0m Auto-enabling relative directory paths (non-interactive mode).`);
+          process.exit(1);
         }
       }
 
@@ -270,7 +280,7 @@ async function handleConvert(args: string[]): Promise<void> {
 
       const outputPlan = inputPaths.map((p) => ({
         inputPath: p,
-        outputPath: useRelative
+        outputPath: collisions.length > 0
           ? resolveCollisionOutput(p, outputDir, commonRoot)
           : path.resolve(outputDir, `${path.basename(p, path.extname(p))}.html`),
       }));
@@ -460,6 +470,62 @@ async function convertOne(opts: {
   }
 }
 
+function findCommonPath(dirs: string[]): string {
+  if (dirs.length === 0) return "";
+  const resolved = dirs.map((d) => path.resolve(d));
+  const segments = resolved.map((d) => d.split(path.sep).filter(Boolean));
+  const minLen = Math.min(...segments.map((s) => s.length));
+  let common = 0;
+  for (let i = 0; i < minLen; i++) {
+    const seg = segments[0][i];
+    if (segments.every((s) => s[i] === seg)) common++;
+    else break;
+  }
+  return segments[0].slice(0, common).join(path.sep) || path.sep;
+}
+
+function resolveCollisionOutput(inputPath: string, outputDir: string, commonRoot: string): string {
+  const basename = path.basename(inputPath, path.extname(inputPath));
+  const inputDir = path.resolve(path.dirname(inputPath));
+  let relativeDir = path.relative(commonRoot, inputDir);
+  relativeDir = relativeDir
+    .split(path.sep)
+    .filter((s) => s !== ".." && s !== ".")
+    .join(path.sep);
+  if (relativeDir) {
+    return path.resolve(outputDir, relativeDir, `${basename}.html`);
+  }
+  return path.resolve(outputDir, `${basename}.html`);
+}
+
+function promptYesNo(question: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (!process.stdin.isTTY || !process.stderr.isTTY) {
+      resolve(false);
+      return;
+    }
+    const rl = readline.createInterface({ input: process.stdin, output: process.stderr });
+    rl.question(question, (answer) => {
+      rl.close();
+      resolve(answer.trim().toLowerCase() === "y");
+    });
+  });
+}
+
+function promptOverwrite(filepath: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (!process.stdin.isTTY || !process.stderr.isTTY) {
+      resolve(true);
+      return;
+    }
+    const rl = readline.createInterface({ input: process.stdin, output: process.stderr });
+    rl.question(`\x1b[33m⚠\x1b[0m ${filepath} already exists. Overwrite? (y/N): `, (answer) => {
+      rl.close();
+      resolve(answer.trim().toLowerCase() === "y");
+    });
+  });
+}
+
 function readStdin(): Promise<string> {
   return new Promise((resolve) => {
     if (process.stdin.isTTY) {
@@ -471,6 +537,128 @@ function readStdin(): Promise<string> {
     process.stdin.on("end", () => resolve(Buffer.concat(chunks).toString("utf-8")));
     process.stdin.on("error", () => resolve(""));
   });
+}
+
+async function handleAuto(args: string[]): Promise<void> {
+  const flags: Record<string, string> = {};
+  let forceAi = false;
+  let showMatchOnly = false;
+  const positional: string[] = [];
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--force-ai") {
+      forceAi = true;
+    } else if (arg === "--show-match-only") {
+      showMatchOnly = true;
+    } else if (arg === "--agent" || arg === "-a") {
+      flags.agent = args[++i] ?? "";
+    } else if (arg === "--output" || arg === "-o") {
+      flags.output = args[++i] ?? "";
+    } else if (arg === "--output-dir" || arg === "-d") {
+      flags.outputDir = args[++i] ?? "";
+    } else if (arg === "--model") {
+      flags.model = args[++i] ?? "";
+    } else if (arg === "--format") {
+      flags.format = args[++i] ?? "";
+    } else if (arg === "--help" || arg === "-h") {
+      printHelp();
+      return;
+    } else if (!arg.startsWith("-")) {
+      positional.push(arg);
+    } else {
+      console.error(`Unknown option: ${arg}`);
+      process.exit(1);
+    }
+  }
+
+  if (flags.output && flags.outputDir) {
+    console.error("Error: --output (-o) and --output-dir (-d) cannot be used together.");
+    process.exit(1);
+  }
+
+  if (showMatchOnly && flags.output) {
+    console.error("Error: --show-match-only cannot be used with --output (-o).");
+    process.exit(1);
+  }
+
+  const VALID_FORMATS = ["markdown", "text", "csv", "json"];
+  const format = flags.format ?? "markdown";
+  if (!VALID_FORMATS.includes(format)) {
+    console.error(`Error: Unknown format "${format}". Supported: ${VALID_FORMATS.join(", ")}`);
+    process.exit(1);
+  }
+
+  const config = loadConfig();
+
+  const agent = findAgent(flags.agent);
+  if (!agent) {
+    const wantId = flags.agent ?? config.defaultAgent ?? "(auto-detect)";
+    console.error(`Error: No available AI agent found${flags.agent ? ` for "${wantId}"` : ""}.`);
+    console.error("\nDetected agents:");
+    for (const a of getAvailableAgents()) {
+      const status = a.available ? (a.unsupported ? "(unsupported)" : "✓") : "✗";
+      console.error(`  ${status} ${a.id} — ${a.label}`);
+    }
+    console.error("\nInstall one of the supported agents (e.g. 'claude', 'codex', 'gemini') and try again.");
+    process.exit(1);
+  }
+
+  const model = flags.model ?? config.model;
+
+  const inputPath = positional.length > 0 ? positional[0] : null;
+  let content: string;
+  if (inputPath) {
+    try {
+      content = fs.readFileSync(inputPath, "utf-8");
+    } catch (err) {
+      console.error(`Error: Cannot read "${inputPath}": ${err instanceof Error ? err.message : err}`);
+      process.exit(1);
+    }
+  } else {
+    content = await readStdin();
+    if (!content.trim()) {
+      console.error("Error: No input provided. Pipe content via stdin or specify an input file.");
+      process.exit(1);
+    }
+  }
+
+  const templates = getAvailableTemplates();
+  if (templates.length === 0) {
+    console.error("Error: No templates found.");
+    process.exit(1);
+  }
+
+  const label = inputPath ? path.basename(inputPath) : "stdin";
+  console.error(`Matching template for: ${label}`);
+  console.error(`Agent: ${agent.label} (${agent.id})`);
+  if (model) console.error(`Model: ${model}`);
+  console.error("");
+
+  const result = await matchTemplate(
+    content,
+    templates,
+    SKILLS_DIR,
+    agent.id,
+    forceAi,
+  );
+
+  console.error(`Matched: ${result.zhName} (${result.templateId})`);
+  console.error(`Confidence: ${result.confidence}/10`);
+  console.error(`Reason: ${result.reason}`);
+
+  if (showMatchOnly) return;
+
+  console.error("");
+
+  const skill = getTemplate(result.templateId);
+  if (!skill) {
+    console.error(`Error: Unknown template "${result.templateId}"`);
+    process.exit(1);
+  }
+
+  const ok = await convertOne({ inputPath, content, skill, agent, model, format, flags });
+  if (!ok) process.exit(1);
 }
 
 function handleTemplates(): void {
@@ -641,6 +829,9 @@ export async function main(args: string[]): Promise<void> {
   switch (command) {
     case "convert":
       await handleConvert(rest);
+      break;
+    case "auto":
+      await handleAuto(rest);
       break;
     case "templates":
       handleTemplates();

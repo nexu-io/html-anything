@@ -47,6 +47,12 @@ html-anything config set-default-template doc-kami-parchment
 ### 2. 转换 Markdown 文件
 
 ```bash
+# 自动匹配模板（推荐：无需手动选模板）
+html-anything auto article.md
+
+# 仅查看匹配结果，不执行转换
+html-anything auto article.md --show-match-only
+
 # 使用默认模板转换（自动保存为 article.html）
 html-anything convert article.md
 
@@ -78,21 +84,43 @@ open output.html
 
 ## 命令详解
 
-### `convert` — 转换内容
+### `convert` / `auto` — 转换内容
 
-```bash
-html-anything convert [input] [options]
-```
+两个命令共享以下通用参数：
 
 | 参数 | 简写 | 说明 | 默认值 |
 |------|------|------|--------|
 | `input` | — | 输入文件路径，省略则从 stdin 读取 | stdin |
-| `--template <id>` | `-t` | 模板 ID | 配置中的 default-template |
 | `--agent <id>` | `-a` | AI agent ID | 自动检测第一个可用 agent |
 | `--output <path>` | `-o` | 输出文件路径 | 自动保存为 `<输入文件名>.html`，stdin 输入时输出到 stdout |
 | `--output-dir <dir>` | `-d` | 自动保存目录 | 当前目录 |
 | `--model <id>` | — | 使用的模型 | agent 默认模型 |
 | `--format <type>` | — | 输入格式：markdown, text, csv, json | markdown |
+
+#### `convert` — 指定模板转换
+
+```bash
+html-anything convert [input] [options]
+```
+
+用户明确指定模板 ID 来转换内容。
+
+| 参数 | 简写 | 说明 | 默认值 |
+|------|------|------|--------|
+| `--template <id>` | `-t` | 模板 ID | 配置中的 default-template |
+
+#### `auto` — 自动匹配模板并转换
+
+```bash
+html-anything auto [input] [options]
+```
+
+无需手动选择模板，CLI 自动分析内容主题，从 75 个模板中匹配最合适的模板，然后执行转换。
+
+| 参数 | 简写 | 说明 | 默认值 |
+|------|------|------|--------|
+| `--force-ai` | — | 跳过关键词匹配，强制使用 AI summary | — |
+| `--show-match-only` | — | 仅显示匹配结果，不执行转换 | — |
 
 ### `templates` — 列出模板
 
@@ -178,16 +206,19 @@ cat > my-article.md << 'EOF'
 我们计划在 Q3 完成...
 EOF
 
-# 4. 一键转换（自动保存为 my-article.html）
-html-anything convert my-article.md
+# 4. 一键自动匹配模板并转换（推荐）
+html-anything auto my-article.md
 
 # 5. 在浏览器中查看结果
 open my-article.html
 
-# 6. 如果想换个风格
+# 6. 如果只想看匹配结果
+html-anything auto my-article.md --show-match-only
+
+# 7. 如果想换个风格
 html-anything convert my-article.md -t blog-post -o my-article-v2.html
 
-# 7. 保存到指定目录
+# 8. 保存到指定目录
 html-anything convert my-article.md -d ./output
 ```
 
@@ -206,10 +237,51 @@ pnpm -F @html-anything/cli build
 
 ## 工作原理
 
+### `convert` 命令流程
+
 1. **模板加载**：从 `next/src/lib/templates/skills/` 加载 75 个 SKILL 模板，每个模板包含视觉风格定义和排版规则
 2. **Prompt 拼接**：将全局设计指令 + 模板专属规则 + 用户内容拼接成一个完整的 AI prompt
 3. **Agent 调用**：调用本地安装的 AI agent CLI（如 Claude Code），让 AI 根据 prompt 生成 HTML
 4. **HTML 提取**：从 agent 的流式输出中提取完整的 HTML 文档
 5. **输出**：将 HTML 写入文件或打印到 stdout
+
+### `auto` 命令流程
+
+```
+用户内容
+    │
+    ▼
+┌─────────────────────────┐
+│ 第一层：强信号关键词匹配   │  ← 零 token，毫秒级
+│ 命中 → 直接使用匹配模板    │
+│ (简历→resume-modern 等)  │
+└──────────┬──────────────┘
+           │ 未命中
+           ▼
+┌─────────────────────────┐
+│ 第二层：规则打分匹配       │  ← 零 token，毫秒级
+│ 内容 × 全部模板 metadata  │
+│ (tags + name + desc +    │
+│  scenario keywords)      │
+│ 置信度 ≥ 阈值 → 使用      │
+└──────────┬──────────────┘
+           │ 置信度不足
+           ▼
+┌─────────────────────────┐
+│ 第三层：AI Summary 兜底   │  ← 仅在规则失配时
+│ 提取内容前 800 字         │
+│ → AI 判断主题类型         │
+│ → 再次规则匹配            │
+└──────────┬──────────────┘
+           │
+           ▼
+       执行转换
+```
+
+**匹配策略说明**：
+- **强信号**（~80 条规则）：覆盖简历、定价、OKR、PRD、周报等高频场景，命中即定
+- **规则打分**：遍历所有模板的 tags、名称、描述、场景关键词，累加得分
+- **AI 兜底**：内容 ≥ 60 字且前两层均低置信度时，调用 AI 做一句话主题摘要，仅消耗极少量 token
+- **最终兜底**：若所有层均失败，回退到 `deck-swiss-international` 通用模板
 
 整个过程完全本地运行，不依赖任何外部 API key，使用你已有的 agent 订阅。转换过程中会显示动画进度指示器，展示已接收的文本块数和耗时。
