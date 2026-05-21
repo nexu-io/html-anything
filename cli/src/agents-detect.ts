@@ -353,8 +353,14 @@ export function detectAgents(): DetectedAgent[] {
       unsupported: unsupported || undefined,
     };
     const override = a.envOverride ? process.env[a.envOverride] : undefined;
-    if (override && existsSync(override)) {
-      return { ...base, available: true, path: override, resolvedBin: a.bin };
+    if (override) {
+      if (existsSync(override)) {
+        return { ...base, available: true, path: override, resolvedBin: a.bin };
+      }
+      const p = resolveOnPath(override);
+      if (p) {
+        return { ...base, available: true, path: p, resolvedBin: override };
+      }
     }
     const candidates = [a.bin, ...(a.fallbackBins ?? [])];
     for (const c of candidates) {
