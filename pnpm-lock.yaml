@@ -12,6 +12,18 @@ importers:
         specifier: ^4.22.1
         version: 4.22.1
 
+  cli:
+    devDependencies:
+      '@types/node':
+        specifier: ^20
+        version: 20.19.40
+      tsx:
+        specifier: ^4.22.1
+        version: 4.22.1
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
   e2e:
     devDependencies:
       '@playwright/test':
