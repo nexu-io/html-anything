@@ -242,20 +242,25 @@ async function handleConvert(args: string[]): Promise<void> {
       }
       const collisions = [...basenameCounts].filter(([, paths]) => paths.length > 1);
 
+      let useRelative = collisions.length > 0;
       if (collisions.length > 0) {
         console.error(`\x1b[33m⚠\x1b[0m Multiple inputs would produce the same output basename:`);
         for (const [basename, paths] of collisions) {
           console.error(`  ${basename}:`);
           for (const p of paths) console.error(`    → ${p}`);
         }
-        const useRelative = await promptYesNo(
-          "\x1b[33m⚠\x1b[0m Save with relative directory paths (e.g. dir1/readme.html)? (y/N): ",
-        );
-        if (!useRelative) {
-          console.error(
-            "Aborted. Rename your input files to use different basenames, or use --output (-o) for each file.",
+        if (process.stdin.isTTY && process.stderr.isTTY) {
+          useRelative = await promptYesNo(
+            "\x1b[33m⚠\x1b[0m Save with relative directory paths (e.g. dir1/readme.html)? (y/N): ",
           );
-          process.exit(1);
+          if (!useRelative) {
+            console.error(
+              "Aborted. Rename your input files to use different basenames, or use --output (-o) for each file.",
+            );
+            process.exit(1);
+          }
+        } else {
+          console.error(`\x1b[33m⚠\x1b[0m Auto-enabling relative directory paths (non-interactive mode).`);
         }
       }
 
@@ -264,7 +269,7 @@ async function handleConvert(args: string[]): Promise<void> {
 
       const outputPlan = inputPaths.map((p) => ({
         inputPath: p,
-        outputPath: collisions.length > 0
+        outputPath: useRelative
           ? resolveCollisionOutput(p, outputDir, commonRoot)
           : path.resolve(outputDir, `${path.basename(p, path.extname(p))}.html`),
       }));
