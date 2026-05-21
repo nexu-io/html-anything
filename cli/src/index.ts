@@ -8,6 +8,7 @@ import { assemblePrompt } from "./prompt-assemble.js";
 import { invokeAgent, type InvokeEvent } from "./agents-invoke.js";
 import { extractHtml } from "./extract-html.js";
 import { loadConfig, saveConfig, getConfigPath, type CliConfig } from "./config.js";
+import { matchTemplate, type MatchResult } from "./skills-matcher.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,7 +52,7 @@ function findAgent(agentId?: string): DetectedAgent | null {
   }
   const config = loadConfig();
   if (config.defaultAgent) {
-    const found = agents.find((a) => a.id === config.defaultAgent && a.available);
+    const found = agents.find((a) => a.id === config.defaultAgent && a.available && !a.unsupported);
     if (found) return found;
   }
   return agents.find((a) => a.available && !a.unsupported) ?? null;
@@ -73,6 +74,16 @@ COMMANDS:
     --model <id>         Model to use (optional)
     --format <type>      Input format: markdown, text, csv, json (default: markdown)
 
+  auto [input]        Auto-detect best template and convert
+    input               Input file, or use stdin if omitted
+    --agent, -a <id>     Agent ID (default: auto-detect)
+    --output, -o <path>  Output file path
+    --output-dir, -d <dir>  Output directory for auto-saved files
+    --model <id>         Model to use (optional)
+    --format <type>      Input format: markdown, text, csv, json (default: markdown)
+    --force-ai                Force AI summary for matching
+    --show-match-only          Show match result, skip conversion
+
   templates           List all available templates
 
   agents              List detected AI agents
@@ -84,6 +95,11 @@ COMMANDS:
   config reset                       Reset all configuration
 
 EXAMPLES:
+  html-anything auto article.md
+  html-anything auto article.md -o output.html
+  html-anything auto article.md --show-match-only
+  html-anything auto article.md --force-ai
+  cat article.md | html-anything auto
   html-anything convert article.md
   html-anything convert article.md -t doc-kami-parchment -o output.html
   html-anything convert article.md -t doc-kami-parchment -d ./dist
@@ -523,6 +539,128 @@ function readStdin(): Promise<string> {
   });
 }
 
+async function handleAuto(args: string[]): Promise<void> {
+  const flags: Record<string, string> = {};
+  let forceAi = false;
+  let showMatchOnly = false;
+  const positional: string[] = [];
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--force-ai") {
+      forceAi = true;
+    } else if (arg === "--show-match-only") {
+      showMatchOnly = true;
+    } else if (arg === "--agent" || arg === "-a") {
+      flags.agent = args[++i] ?? "";
+    } else if (arg === "--output" || arg === "-o") {
+      flags.output = args[++i] ?? "";
+    } else if (arg === "--output-dir" || arg === "-d") {
+      flags.outputDir = args[++i] ?? "";
+    } else if (arg === "--model") {
+      flags.model = args[++i] ?? "";
+    } else if (arg === "--format") {
+      flags.format = args[++i] ?? "";
+    } else if (arg === "--help" || arg === "-h") {
+      printHelp();
+      return;
+    } else if (!arg.startsWith("-")) {
+      positional.push(arg);
+    } else {
+      console.error(`Unknown option: ${arg}`);
+      process.exit(1);
+    }
+  }
+
+  if (flags.output && flags.outputDir) {
+    console.error("Error: --output (-o) and --output-dir (-d) cannot be used together.");
+    process.exit(1);
+  }
+
+  if (showMatchOnly && flags.output) {
+    console.error("Error: --show-match-only cannot be used with --output (-o).");
+    process.exit(1);
+  }
+
+  const VALID_FORMATS = ["markdown", "text", "csv", "json"];
+  const format = flags.format ?? "markdown";
+  if (!VALID_FORMATS.includes(format)) {
+    console.error(`Error: Unknown format "${format}". Supported: ${VALID_FORMATS.join(", ")}`);
+    process.exit(1);
+  }
+
+  const config = loadConfig();
+
+  const agent = findAgent(flags.agent);
+  if (!agent) {
+    const wantId = flags.agent ?? config.defaultAgent ?? "(auto-detect)";
+    console.error(`Error: No available AI agent found${flags.agent ? ` for "${wantId}"` : ""}.`);
+    console.error("\nDetected agents:");
+    for (const a of getAvailableAgents()) {
+      const status = a.available ? (a.unsupported ? "(unsupported)" : "✓") : "✗";
+      console.error(`  ${status} ${a.id} — ${a.label}`);
+    }
+    console.error("\nInstall one of the supported agents (e.g. 'claude', 'codex', 'gemini') and try again.");
+    process.exit(1);
+  }
+
+  const model = flags.model ?? config.model;
+
+  const inputPath = positional.length > 0 ? positional[0] : null;
+  let content: string;
+  if (inputPath) {
+    try {
+      content = fs.readFileSync(inputPath, "utf-8");
+    } catch (err) {
+      console.error(`Error: Cannot read "${inputPath}": ${err instanceof Error ? err.message : err}`);
+      process.exit(1);
+    }
+  } else {
+    content = await readStdin();
+    if (!content.trim()) {
+      console.error("Error: No input provided. Pipe content via stdin or specify an input file.");
+      process.exit(1);
+    }
+  }
+
+  const templates = getAvailableTemplates();
+  if (templates.length === 0) {
+    console.error("Error: No templates found.");
+    process.exit(1);
+  }
+
+  const label = inputPath ? path.basename(inputPath) : "stdin";
+  console.error(`Matching template for: ${label}`);
+  console.error(`Agent: ${agent.label} (${agent.id})`);
+  if (model) console.error(`Model: ${model}`);
+  console.error("");
+
+  const result = await matchTemplate(
+    content,
+    templates,
+    SKILLS_DIR,
+    agent.id,
+    forceAi,
+  );
+
+  console.error(`Matched: ${result.zhName} (${result.templateId})`);
+  console.error(`Confidence: ${result.confidence}/10`);
+  console.error(`Reason: ${result.reason}`);
+
+  if (showMatchOnly) return;
+
+  console.error("");
+
+  const skill = getTemplate(result.templateId);
+  if (!skill) {
+    console.error(`Error: Unknown template "${result.templateId}"`);
+    process.exit(1);
+  }
+
+  const ok = await convertOne({ inputPath, content, skill, agent, model, format, flags });
+  if (!ok) process.exit(1);
+}
+
 function handleTemplates(): void {
   const templates = getAvailableTemplates();
 
@@ -625,6 +763,20 @@ function handleConfig(args: string[]): void {
         console.error(`Error: Unknown agent "${val}"`);
         process.exit(1);
       }
+      if (!agent.available) {
+        console.error(`Error: Agent "${val}" (${agent.label}) is not installed.`);
+        process.exit(1);
+      }
+      if (agent.unsupported) {
+        console.error(
+          `Error: Agent "${val}" (${agent.label}) uses an unsupported protocol.`,
+        );
+        console.error("Available supported agents:");
+        for (const a of agents.filter((a) => a.available && !a.unsupported)) {
+          console.error(`  ${a.id} — ${a.label}`);
+        }
+        process.exit(1);
+      }
       try {
         saveConfig({ defaultAgent: val });
         console.log(`Default agent set to: ${val} (${agent.label})`);
@@ -677,6 +829,9 @@ export async function main(args: string[]): Promise<void> {
   switch (command) {
     case "convert":
       await handleConvert(rest);
+      break;
+    case "auto":
+      await handleAuto(rest);
       break;
     case "templates":
       handleTemplates();
