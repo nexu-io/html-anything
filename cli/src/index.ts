@@ -51,7 +51,7 @@ function findAgent(agentId?: string): DetectedAgent | null {
   }
   const config = loadConfig();
   if (config.defaultAgent) {
-    const found = agents.find((a) => a.id === config.defaultAgent && a.available);
+    const found = agents.find((a) => a.id === config.defaultAgent && a.available && !a.unsupported);
     if (found) return found;
   }
   return agents.find((a) => a.available && !a.unsupported) ?? null;
@@ -623,6 +623,20 @@ function handleConfig(args: string[]): void {
       const agent = agents.find((a) => a.id === val);
       if (!agent) {
         console.error(`Error: Unknown agent "${val}"`);
+        process.exit(1);
+      }
+      if (!agent.available) {
+        console.error(`Error: Agent "${val}" (${agent.label}) is not installed.`);
+        process.exit(1);
+      }
+      if (agent.unsupported) {
+        console.error(
+          `Error: Agent "${val}" (${agent.label}) uses an unsupported protocol.`,
+        );
+        console.error("Available supported agents:");
+        for (const a of agents.filter((a) => a.available && !a.unsupported)) {
+          console.error(`  ${a.id} — ${a.label}`);
+        }
         process.exit(1);
       }
       try {
