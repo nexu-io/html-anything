@@ -448,7 +448,7 @@ The Next API surface is the local-only side of the app — `/api/convert` spawns
 | **`HTML_ANYTHING_ALLOWED_HOSTS=daemon.mirage.local,html-anything.lan`** | LAN / mDNS setup — you're reaching the app from another device on the same network and the browser dials a non-loopback hostname. Comma-separated; port-insensitive; case-insensitive. The default loopback set is still accepted on top of this. |
 | **`HTML_ANYTHING_ALLOW_ANY_HOST=1`** | Reverse-proxy mode — Caddy / nginx / Cloudflare Tunnel is terminating the public hostname and forwarding to the app. The proxy is now responsible for Host policy. Loudly insecure if you set this without a trusted proxy in front, so it is not the default. |
 
-Set the env var in whatever environment file your launcher reads (e.g. `next/.env.local`). The validation is unit-tested in [`next/src/lib/security/host-validation.test.ts`](next/src/lib/security/host-validation.test.ts) and the loopback-still-works dev path is exercised in the Playwright spec at [`e2e/ui/host-validation.spec.ts`](e2e/ui/host-validation.spec.ts).
+Set the env var in whatever environment file your launcher reads (e.g. `next/.env.local`). The middleware is pinned to the Node runtime (`export const runtime = "nodejs"` in [`next/src/middleware.ts`](next/src/middleware.ts)) so `process.env` is read per-request — Edge middleware can inline `process.env.*` at build time, which would silently break operator overrides set after `next build`. The validation is unit-tested in [`next/src/lib/security/host-validation.test.ts`](next/src/lib/security/host-validation.test.ts) and the loopback-still-works dev path is exercised in the Playwright spec at [`e2e/ui/host-validation.spec.ts`](e2e/ui/host-validation.spec.ts).
 
 ## Contributing
 

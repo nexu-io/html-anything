@@ -29,12 +29,21 @@
  *      not the default.
  */
 
+// `0.0.0.0` is intentionally NOT on the allowlist: on macOS/Linux it routes
+// to the local machine, and pre-fix Chrome (< 128) lets a public page fetch
+// `http://0.0.0.0:<port>` directly — that path bypasses DNS rebinding entirely
+// and would still reach the API if we accepted `Host: 0.0.0.0`. The Playwright
+// suite dials `127.0.0.1` (see `e2e/playwright.config.ts`), so removing it
+// breaks no test.
+//
+// `::1` (bare) is also omitted: `stripPort("::1")` produces `":"` (the
+// last-colon-trailing-digit branch), so a bare unbracketed `::1` can never
+// match anyway. Browsers and HTTP/2 `:authority` always bracket IPv6 literals,
+// so a bare `::1` doesn't appear in real Host headers either.
 const LOOPBACK_HOSTS = new Set([
   "127.0.0.1",
   "localhost",
-  "::1",
   "[::1]",
-  "0.0.0.0", // some test runners send 0.0.0.0 as Host
 ]);
 
 /**

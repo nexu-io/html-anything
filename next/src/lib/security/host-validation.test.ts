@@ -27,6 +27,14 @@ describe("stripPort", () => {
   it("does not strip when the trailing chunk is not a port", () => {
     expect(stripPort("not-a-port:abc")).toBe("not-a-port:abc");
   });
+  // Documents the fact that bare unbracketed `::1` is mangled by the
+  // `last-colon-trailing-digit` branch — the last colon is index 1 and the
+  // trailing "1" is all digits, so the slice returns ":". A bare `::1` can
+  // therefore never match anything in `LOOPBACK_HOSTS`, which is why only
+  // the bracketed `[::1]` form is on the allowlist.
+  it("mangles bare ::1 to ':' (only [::1] is a real Host header anyway)", () => {
+    expect(stripPort("::1")).toBe(":");
+  });
 });
 
 describe("parseAllowedHosts", () => {
@@ -57,6 +65,18 @@ describe("isAllowedHost (defaults — loopback only)", () => {
     // Adjacent loopback aliases that aren't on the allowlist — keep strict
     expect(isAllowedHost("127.0.0.2")).toBe(false);
     expect(isAllowedHost("localhost.attacker.example")).toBe(false);
+  });
+  // `0.0.0.0` is reachable from a public page on pre-fix Chrome (< 128) — it
+  // routes to the local machine on macOS/Linux without needing DNS rebinding.
+  // Must be rejected so the gate covers that sibling vector.
+  it("rejects 0.0.0.0 (sidesteps DNS rebinding via 0.0.0.0-day vector)", () => {
+    expect(isAllowedHost("0.0.0.0")).toBe(false);
+    expect(isAllowedHost("0.0.0.0:3317")).toBe(false);
+  });
+  // Bare unbracketed `::1` is mangled by stripPort (see stripPort tests) and
+  // browsers / HTTP/2 always bracket IPv6 in the Host / :authority field.
+  it("rejects bare unbracketed ::1 (only [::1] is a real Host header)", () => {
+    expect(isAllowedHost("::1")).toBe(false);
   });
   it("rejects empty / missing host", () => {
     expect(isAllowedHost(null)).toBe(false);

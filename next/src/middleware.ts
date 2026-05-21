@@ -28,6 +28,16 @@ export function middleware(req: NextRequest) {
   );
 }
 
+// Pin to the Node runtime so `process.env.HTML_ANYTHING_ALLOWED_HOSTS` and
+// `process.env.HTML_ANYTHING_ALLOW_ANY_HOST` are read per-request, not
+// inlined at build time. On Edge middleware, Next can fold `process.env.*`
+// references into the build output — operator-set env in `next/.env.local`
+// would then silently fail to take effect after `next start`, locking out
+// legitimate LAN hosts (`HTML_ANYTHING_ALLOWED_HOSTS`) or failing to disable
+// the gate (`HTML_ANYTHING_ALLOW_ANY_HOST=1`). Node runtime middleware
+// (Next 15.2+) sidesteps that by reading env at request time.
+export const runtime = "nodejs";
+
 export const config = {
   // Run on every API route. Excludes static assets, RSC payloads, and the
   // page tree — those are not the rebinding-attack surface.
