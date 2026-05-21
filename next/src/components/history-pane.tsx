@@ -9,6 +9,7 @@ import {
   MAX_VERSIONS_PER_TASK,
   type RunRecord,
 } from "@/lib/history/db";
+import { isCurrentRun } from "@/lib/history/is-current";
 import { previewHtml } from "@/lib/extract-html";
 import { relativeTime, useMounted } from "@/lib/use-autosave";
 import { useT } from "@/lib/i18n";
@@ -214,7 +215,7 @@ function HistoryList({
         <HistoryCard
           key={r.id}
           run={r}
-          isCurrent={r.html === activeHtml}
+          isCurrent={isCurrentRun(r, runs, activeHtml)}
           mounted={mounted}
           onCompare={() => onCompare(r)}
           onRestore={() => onRestore(r)}
