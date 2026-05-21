@@ -230,24 +230,97 @@ async function handleConvert(args: string[]): Promise<void> {
     const ok = await convertOne({ inputPath: null, content, skill, agent, model, format, flags });
     if (!ok) process.exit(1);
   } else {
-    let failed = 0;
-    for (const inputPath of inputPaths) {
-      let content: string;
-      try {
-        content = fs.readFileSync(inputPath, "utf-8");
-      } catch (err) {
-        console.error(`Error: Cannot read "${inputPath}": ${err instanceof Error ? err.message : err}`);
-        failed++;
-        continue;
+    const outputDir = flags.outputDir || process.cwd();
+
+    if (inputPaths.length > 1) {
+      const flatBasenames = inputPaths.map((p) => path.basename(p, path.extname(p)));
+      const basenameCounts = new Map<string, string[]>();
+      for (let i = 0; i < flatBasenames.length; i++) {
+        const key = flatBasenames[i];
+        if (!basenameCounts.has(key)) basenameCounts.set(key, []);
+        basenameCounts.get(key)!.push(inputPaths[i]);
       }
-      const ok = await convertOne({ inputPath, content, skill, agent, model, format, flags });
-      if (!ok) failed++;
-    }
-    if (failed > 0) {
-      if (inputPaths.length > 1) {
+      const collisions = [...basenameCounts].filter(([, paths]) => paths.length > 1);
+
+      if (collisions.length > 0) {
+        console.error(`\x1b[33m⚠\x1b[0m Multiple inputs would produce the same output basename:`);
+        for (const [basename, paths] of collisions) {
+          console.error(`  ${basename}:`);
+          for (const p of paths) console.error(`    → ${p}`);
+        }
+        const useRelative = await promptYesNo(
+          "\x1b[33m⚠\x1b[0m Save with relative directory paths (e.g. dir1/readme.html)? (y/N): ",
+        );
+        if (!useRelative) {
+          console.error(
+            "Aborted. Rename your input files to use different basenames, or use --output (-o) for each file.",
+          );
+          process.exit(1);
+        }
+      }
+
+      const outputPlan = inputPaths.map((p) => ({
+        inputPath: p,
+        outputPath: collisions.length > 0
+          ? resolveCollisionOutput(p, outputDir)
+          : path.resolve(outputDir, `${path.basename(p, path.extname(p))}.html`),
+      }));
+
+      const existingFiles = outputPlan.filter((p) => fs.existsSync(p.outputPath));
+      if (existingFiles.length > 0) {
+        console.error(`\x1b[33m⚠\x1b[0m The following output files already exist:`);
+        for (const p of existingFiles) console.error(`  ${p.outputPath}`);
+        const ok = await promptYesNo("\x1b[33m⚠\x1b[0m Overwrite? (y/N): ");
+        if (!ok) {
+          console.error("Aborted.");
+          process.exit(1);
+        }
+      }
+
+      let failed = 0;
+      for (const plan of outputPlan) {
+        let content: string;
+        try {
+          content = fs.readFileSync(plan.inputPath, "utf-8");
+        } catch (err) {
+          console.error(`Error: Cannot read "${plan.inputPath}": ${err instanceof Error ? err.message : err}`);
+          failed++;
+          continue;
+        }
+        const ok = await convertOne({
+          inputPath: plan.inputPath,
+          content,
+          skill,
+          agent,
+          model,
+          format,
+          flags,
+          resolvedOutputPath: plan.outputPath,
+        });
+        if (!ok) failed++;
+      }
+      if (failed > 0) {
         console.error(`\n${failed}/${inputPaths.length} file(s) failed.`);
+        process.exit(1);
       }
-      process.exit(1);
+    } else {
+      let failed = 0;
+      for (const inputPath of inputPaths) {
+        let content: string;
+        try {
+          content = fs.readFileSync(inputPath, "utf-8");
+        } catch (err) {
+          console.error(`Error: Cannot read "${inputPath}": ${err instanceof Error ? err.message : err}`);
+          failed++;
+          continue;
+        }
+        const ok = await convertOne({ inputPath, content, skill, agent, model, format, flags });
+        if (!ok) failed++;
+      }
+      if (failed > 0) {
+        console.error(`\n${failed}/${inputPaths.length} file(s) failed.`);
+        process.exit(1);
+      }
     }
   }
 }
@@ -260,6 +333,7 @@ async function convertOne(opts: {
   model: string | undefined;
   format: string;
   flags: Record<string, string>;
+  resolvedOutputPath?: string;
 }): Promise<boolean> {
   const { inputPath, content, skill, agent: selectedAgent, model, format, flags } = opts;
 
@@ -341,7 +415,9 @@ async function convertOne(opts: {
 
   let outputPath: string | undefined;
 
-  if (flags.output) {
+  if (opts.resolvedOutputPath) {
+    outputPath = opts.resolvedOutputPath;
+  } else if (flags.output) {
     outputPath = path.resolve(flags.output);
   } else if (inputPath) {
     const basename = path.basename(inputPath, path.extname(inputPath));
@@ -350,7 +426,7 @@ async function convertOne(opts: {
   }
 
   if (outputPath) {
-    if (fs.existsSync(outputPath)) {
+    if (!opts.resolvedOutputPath && fs.existsSync(outputPath)) {
       const overwrite = await promptOverwrite(outputPath);
       if (!overwrite) {
         console.error(`Skipped: ${outputPath}`);
@@ -371,6 +447,30 @@ async function convertOne(opts: {
     process.stdout.write(html);
     return true;
   }
+}
+
+function resolveCollisionOutput(inputPath: string, outputDir: string): string {
+  const basename = path.basename(inputPath, path.extname(inputPath));
+  const inputDir = path.dirname(inputPath);
+  const relativeDir = path.relative(process.cwd(), inputDir);
+  if (relativeDir && relativeDir !== ".") {
+    return path.resolve(outputDir, relativeDir, `${basename}.html`);
+  }
+  return path.resolve(outputDir, `${basename}.html`);
+}
+
+function promptYesNo(question: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (!process.stdin.isTTY || !process.stderr.isTTY) {
+      resolve(false);
+      return;
+    }
+    const rl = readline.createInterface({ input: process.stdin, output: process.stderr });
+    rl.question(question, (answer) => {
+      rl.close();
+      resolve(answer.trim().toLowerCase() === "y");
+    });
+  });
 }
 
 function promptOverwrite(filepath: string): Promise<boolean> {
