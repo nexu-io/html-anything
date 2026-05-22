@@ -205,6 +205,21 @@ export const AGENTS: AgentDef[] = [
       { id: "deepseek/deepseek-chat", label: "deepseek/deepseek-chat" },
     ],
   },
+  {
+    id: "antigravity",
+    label: "Google Antigravity",
+    bin: "agy",
+    envOverride: "ANTIGRAVITY_BIN",
+    vendor: "Google",
+    fallbackModels: [
+      DEFAULT_MODEL,
+      { id: "gemini-2.5-pro",              label: "gemini-2.5-pro" },
+      { id: "gemini-2.5-flash",            label: "gemini-2.5-flash" },
+      { id: "gemini-2.5-flash-lite",       label: "gemini-2.5-flash-lite" },
+      { id: "openai/gpt-5",                label: "openai/gpt-5" },
+      { id: "anthropic/claude-sonnet-4-6", label: "anthropic/claude-sonnet-4-6" },
+    ],
+  },
 
   // ACP family — detection-only. Models still surfaced for UI completeness.
   {
