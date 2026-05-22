@@ -70,10 +70,15 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         ...(model ? ["--model", model] : []),
       ];
     case "antigravity":
+      // agy uses the same CLI shape as Claude Code: -p for print mode,
+      // --dangerously-skip-permissions instead of --permission-mode bypassPermissions.
       return [
+        "-p",
         "--output-format",
         "stream-json",
-        "--yolo",
+        "--verbose",
+        "--include-partial-messages",
+        "--dangerously-skip-permissions",
         ...(model ? ["--model", model] : []),
       ];
     case "gemini":
@@ -252,7 +257,7 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const obj = parsed as Record<string, unknown>;
   const out: AgentParse[] = [];
 
-  if (agent === "claude") {
+  if (agent === "claude" || agent === "antigravity") {
     // Init / system metadata
     if (obj.type === "system" && obj.subtype === "init") {
       out.push({ kind: "meta", key: "model", value: obj.model });
@@ -332,7 +337,7 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
     }
   }
 
-  if (agent === "cursor-agent" || agent === "gemini" || agent === "antigravity") {
+  if (agent === "cursor-agent" || agent === "gemini") {
     if (obj.type === "stream_event" && obj.event && typeof obj.event === "object") {
       const ev = obj.event as { type?: string; delta?: { type?: string; text?: string } };
       if (ev.delta?.type === "text_delta" && typeof ev.delta.text === "string") {
