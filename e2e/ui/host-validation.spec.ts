@@ -110,11 +110,16 @@ test.describe("API host-header validation", () => {
   });
 
   test("rejects empty Host", async ({ baseURL }) => {
-    // Playwright requires a header value, so use a whitespace-only string —
-    // the validator strips and treats as empty.
+    // A single space is deterministically transmitted; per RFC 7230 the
+    // receiving parser strips the surrounding OWS and the server sees an
+    // empty `host`. The validator's `stripPort.trim()` reduces it to "" and
+    // `isAllowedHost("")` returns false → 403. An empty-string value would
+    // be at the mercy of Playwright's header-serialization behavior (it may
+    // drop the entry, in which case the request goes out with the default
+    // loopback Host and the test passes for the wrong reason).
     const ctx = await playwrightRequest.newContext({
       baseURL: baseURL ?? DEFAULT_BASE_URL,
-      extraHTTPHeaders: { Host: "" },
+      extraHTTPHeaders: { Host: " " },
     });
     const r = await ctx.get("/api/agents");
     // Some HTTP stacks reject empty Host headers themselves with 400 before
