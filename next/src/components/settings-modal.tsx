@@ -9,14 +9,20 @@ import {
   type Locale,
 } from "@/lib/store";
 import { useT, type DictKey } from "@/lib/i18n";
+import { refreshTemplates } from "@/lib/templates";
 
 type Props = { onClose: () => void; initialSection?: SectionId };
 
-export type SectionId = "agent" | "deploy" | "language";
+export type SectionId = "agent" | "deploy" | "marketplace" | "language";
 
 const SECTIONS: Array<{ id: SectionId; labelKey: DictKey; hintKey: DictKey }> = [
   { id: "agent", labelKey: "settings.section.agent.label", hintKey: "settings.section.agent.hint" },
   { id: "deploy", labelKey: "settings.section.deploy.label", hintKey: "settings.section.deploy.hint" },
+  {
+    id: "marketplace",
+    labelKey: "settings.section.marketplace.label",
+    hintKey: "settings.section.marketplace.hint",
+  },
   { id: "language", labelKey: "settings.section.language.label", hintKey: "settings.section.language.hint" },
 ];
 
@@ -125,6 +131,7 @@ export function SettingsModal({ onClose, initialSection = "agent" }: Props) {
           <div className="flex-1 min-w-0 overflow-y-auto px-7 py-6">
             {section === "agent" && <AgentSection />}
             {section === "deploy" && <DeploySection />}
+            {section === "marketplace" && <MarketplaceSection />}
             {section === "language" && <LanguageSection />}
           </div>
         </div>
@@ -755,6 +762,254 @@ function ComingSoonProvider() {
         <span className="text-[10px] uppercase tracking-wider text-[var(--ink-faint)]">
           {t("deploy.provider.cloudflarePages.comingSoon")}
         </span>
+      </div>
+    </div>
+  );
+}
+
+type InstalledPackage = {
+  id: string;
+  source: { type: "github"; owner: string; repo: string; ref: string };
+  installedAt: string;
+  skills: string[];
+};
+
+function MarketplaceSection() {
+  const t = useT();
+  const [packages, setPackages] = useState<InstalledPackage[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [source, setSource] = useState("");
+  const [installing, setInstalling] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    setErr(null);
+    try {
+      const res = await fetch("/api/marketplace", { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as { packages: InstalledPackage[] };
+      setPackages(data.packages);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const onInstall = async () => {
+    const spec = source.trim();
+    if (!spec) return;
+    setInstalling(true);
+    setErr(null);
+    setInfo(null);
+    try {
+      const res = await fetch("/api/marketplace/install", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ source: spec }),
+      });
+      const data = (await res.json()) as
+        | { package: InstalledPackage }
+        | { error: string; message?: string };
+      if (!res.ok || !("package" in data)) {
+        const errMsg = "error" in data ? data.message ?? data.error : "install failed";
+        throw new Error(errMsg);
+      }
+      const pkg = data.package;
+      setSource("");
+      setInfo(
+        t("marketplace.installSucceeded", {
+          n: pkg.skills.length,
+          repo: `${pkg.source.owner}/${pkg.source.repo}`,
+        }),
+      );
+      // Drop the in-memory template registry cache AND push the fresh list
+      // to every mounted `useTemplates` consumer — the picker switches over
+      // immediately, no page reload. Failing here just means the picker
+      // keeps the previous list; the install itself already succeeded.
+      await refreshTemplates().catch(() => undefined);
+      await load();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setInstalling(false);
+    }
+  };
+
+  const onUninstall = async (id: string) => {
+    setErr(null);
+    setInfo(null);
+    try {
+      const res = await fetch(`/api/marketplace/packages/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { message?: string; error?: string };
+        throw new Error(data.message ?? data.error ?? `HTTP ${res.status}`);
+      }
+      setInfo(t("marketplace.uninstalled"));
+      // Push the post-uninstall list to mounted picker consumers so the
+      // removed skill disappears without waiting for a page reload.
+      await refreshTemplates().catch(() => undefined);
+      await load();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-[17px] font-semibold text-[var(--ink)]">
+            {t("settings.marketplace.title")}
+          </h3>
+          <p className="mt-1 text-[12.5px] text-[var(--ink-mute)] leading-relaxed">
+            {t("settings.marketplace.subtitle")}
+          </p>
+        </div>
+        <button
+          onClick={load}
+          disabled={loading}
+          className="text-xs text-[var(--ink-faint)] hover:text-[var(--ink)] disabled:opacity-50 transition-colors shrink-0"
+        >
+          {loading ? t("welcome.scanning") : t("welcome.rescan")}
+        </button>
+      </div>
+
+      <div
+        className="mb-5 rounded-2xl p-4"
+        style={{ background: "var(--paper)", border: "1px solid var(--line-faint)" }}
+      >
+        <div className="mb-2 text-[11px] uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+          {t("marketplace.installFromGithub")}
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !installing) onInstall();
+            }}
+            placeholder={t("marketplace.placeholder")}
+            disabled={installing}
+            className="min-w-0 flex-1 rounded-lg px-3 py-2 font-mono text-[12px] outline-none"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--line)",
+              color: "var(--ink)",
+            }}
+          />
+          <button
+            onClick={onInstall}
+            disabled={installing || !source.trim()}
+            className="btn-primary disabled:opacity-50"
+          >
+            {installing ? t("marketplace.installing") : t("marketplace.install")}
+          </button>
+        </div>
+        <div className="mt-2 text-[11px] text-[var(--ink-faint)]">{t("marketplace.hint")}</div>
+      </div>
+
+      {err && (
+        <div
+          className="mb-3 rounded-xl px-4 py-3 text-sm"
+          style={{ background: "var(--coral-soft)", color: "var(--coral)" }}
+        >
+          {err}
+        </div>
+      )}
+      {info && (
+        <div
+          className="mb-3 rounded-xl px-4 py-3 text-sm"
+          style={{ background: "var(--paper)", color: "var(--ink-soft)", border: "1px solid var(--line-faint)" }}
+        >
+          {info}
+        </div>
+      )}
+
+      <div className="mb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+        {t("marketplace.installed", { n: packages.length })}
+      </div>
+      {packages.length === 0 && !loading && (
+        <div
+          className="rounded-2xl border-2 border-dashed py-8 px-6 text-center"
+          style={{ borderColor: "var(--line)" }}
+        >
+          <div className="text-3xl mb-2">📦</div>
+          <p className="text-sm font-medium text-[var(--ink-soft)]">
+            {t("marketplace.empty.title")}
+          </p>
+          <p className="mt-2 text-xs text-[var(--ink-mute)]">{t("marketplace.empty.body")}</p>
+        </div>
+      )}
+      <div className="grid grid-cols-1 gap-2">
+        {packages.map((pkg) => (
+          <PackageCard key={pkg.id} pkg={pkg} onUninstall={() => onUninstall(pkg.id)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PackageCard({ pkg, onUninstall }: { pkg: InstalledPackage; onUninstall: () => void }) {
+  const t = useT();
+  const repoUrl = `https://github.com/${pkg.source.owner}/${pkg.source.repo}`;
+  return (
+    <div
+      className="rounded-2xl p-4"
+      style={{ background: "var(--surface)", border: "1px solid var(--line-soft)" }}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 text-[14px] font-semibold text-[var(--ink)]">
+            <span className="truncate">
+              {pkg.source.owner}/{pkg.source.repo}
+            </span>
+            <span className="rounded-full px-2 py-0.5 font-mono text-[10px] text-[var(--ink-faint)]" style={{ background: "var(--paper)" }}>
+              {pkg.source.ref}
+            </span>
+          </div>
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[var(--ink-faint)]">
+            <a
+              href={repoUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="hover:text-[var(--ink-soft)] underline-offset-2 hover:underline"
+            >
+              {repoUrl.replace(/^https?:\/\//, "")}
+            </a>
+            <span>·</span>
+            <span>{t("marketplace.skillCount", { n: pkg.skills.length })}</span>
+            <span>·</span>
+            <span>{new Date(pkg.installedAt).toLocaleDateString()}</span>
+          </div>
+          {pkg.skills.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {pkg.skills.map((s) => (
+                <span
+                  key={s}
+                  className="rounded-md px-2 py-0.5 font-mono text-[10.5px] text-[var(--ink-soft)]"
+                  style={{ background: "var(--paper)", border: "1px solid var(--line-faint)" }}
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        <button
+          onClick={onUninstall}
+          className="shrink-0 rounded-lg px-3 py-1.5 text-[12px] text-[var(--ink-mute)] hover:bg-[var(--paper)] hover:text-[var(--coral)] transition-colors"
+        >
+          {t("marketplace.uninstall")}
+        </button>
       </div>
     </div>
   );

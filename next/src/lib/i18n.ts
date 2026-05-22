@@ -137,6 +137,24 @@ export interface Dict {
   "deploy.provider.cloudflarePages.comingSoon": string;
   "deploy.menu.deployTo": string;
 
+  // Marketplace
+  "settings.section.marketplace.label": string;
+  "settings.section.marketplace.hint": string;
+  "settings.marketplace.title": string;
+  "settings.marketplace.subtitle": string;
+  "marketplace.installFromGithub": string;
+  "marketplace.placeholder": string;
+  "marketplace.install": string;
+  "marketplace.installing": string;
+  "marketplace.uninstall": string;
+  "marketplace.hint": string;
+  "marketplace.installed": string;
+  "marketplace.installSucceeded": string;
+  "marketplace.uninstalled": string;
+  "marketplace.skillCount": string;
+  "marketplace.empty.title": string;
+  "marketplace.empty.body": string;
+
   // Editor pane
   "editor.tab.text": string;
   "editor.tab.samples": string;
@@ -224,6 +242,28 @@ export interface Dict {
   "tasks.emptyContent": string;
   "tasks.defaultName": string;
   "tasks.matchTooltip": string;
+
+  // History pane
+  "history.toggle": string;
+  "history.heading": string;
+  "history.close": string;
+  "history.versionCap": string;
+  "history.current": string;
+  "history.compare": string;
+  "history.restore": string;
+  "history.delete": string;
+  "history.loading": string;
+  "history.empty.noTask": string;
+  "history.empty.noVersions": string;
+  "history.restoreConfirm": string;
+  "history.deleteConfirm": string;
+  "history.backToList": string;
+  "history.diff.leftLabel": string;
+  "history.diff.rightLabel": string;
+  "history.diff.showSource": string;
+  "history.diff.pickPair": string;
+  "history.diff.before": string;
+  "history.diff.after": string;
 
   // Community / upstream link entry points
   "community.starOnGitHub": string;
@@ -463,6 +503,25 @@ const en: Dict = {
   "deploy.provider.cloudflarePages.comingSoon": "Coming soon",
   "deploy.menu.deployTo": "Deploy to…",
 
+  "settings.section.marketplace.label": "Marketplace",
+  "settings.section.marketplace.hint": "Install skills from GitHub",
+  "settings.marketplace.title": "Skill marketplace",
+  "settings.marketplace.subtitle":
+    "Install community skill packs from public GitHub repos. Each pack ships one or more SKILL.md prompts that show up in the template picker.",
+  "marketplace.installFromGithub": "Install from GitHub",
+  "marketplace.placeholder": "owner/repo  or  owner/repo#branch",
+  "marketplace.install": "Install",
+  "marketplace.installing": "Installing…",
+  "marketplace.uninstall": "Uninstall",
+  "marketplace.hint":
+    "Public GitHub repos only. Needs a SKILL.md at the repo root, or skills/<id>/SKILL.md for multi-skill packs.",
+  "marketplace.installed": "Installed ({n})",
+  "marketplace.installSucceeded": "Installed {n} skill(s) from {repo}.",
+  "marketplace.uninstalled": "Package uninstalled.",
+  "marketplace.skillCount": "{n} skill(s)",
+  "marketplace.empty.title": "No packages installed yet",
+  "marketplace.empty.body": "Paste a GitHub repo above to install a community skill pack.",
+
   "editor.tab.text": "✏️ Text",
   "editor.tab.samples": "✨ Samples",
   "editor.tab.formats": "📋 Formats",
@@ -550,6 +609,27 @@ const en: Dict = {
   "tasks.emptyContent": "empty",
   "tasks.defaultName": "Task {n}",
   "tasks.matchTooltip": "{a} / {b} match",
+
+  "history.toggle": "Version history",
+  "history.heading": "history",
+  "history.close": "Close history",
+  "history.versionCap": "Up to {n} versions per task",
+  "history.current": "current",
+  "history.compare": "Compare",
+  "history.restore": "Restore",
+  "history.delete": "Delete version",
+  "history.loading": "Loading versions…",
+  "history.empty.noTask": "No active task.",
+  "history.empty.noVersions": "No versions yet. Run Convert to start the history.",
+  "history.restoreConfirm": "Restore version v{v}? The current preview will be replaced.",
+  "history.deleteConfirm": "Delete version v{v}? This cannot be undone.",
+  "history.backToList": "Back",
+  "history.diff.leftLabel": "Before",
+  "history.diff.rightLabel": "After",
+  "history.diff.showSource": "Show DOM diff",
+  "history.diff.pickPair": "Pick two versions to compare.",
+  "history.diff.before": "Before",
+  "history.diff.after": "After",
 
   "community.starOnGitHub": "Star on GitHub",
   "community.joinDiscord": "Join Discord",
@@ -784,6 +864,25 @@ const zhCN: Dict = {
   "deploy.provider.cloudflarePages.comingSoon": "敬请期待",
   "deploy.menu.deployTo": "部署到…",
 
+  "settings.section.marketplace.label": "市场",
+  "settings.section.marketplace.hint": "从 GitHub 安装 skill",
+  "settings.marketplace.title": "Skill 市场",
+  "settings.marketplace.subtitle":
+    "从公开 GitHub 仓库安装社区 skill 包。每个包带一个或多个 SKILL.md 提示词, 安装后会出现在模板选择器里。",
+  "marketplace.installFromGithub": "从 GitHub 安装",
+  "marketplace.placeholder": "owner/repo  或  owner/repo#branch",
+  "marketplace.install": "安装",
+  "marketplace.installing": "安装中…",
+  "marketplace.uninstall": "卸载",
+  "marketplace.hint":
+    "仅支持公开 GitHub 仓库。仓库根目录需有 SKILL.md, 或在 skills/<id>/SKILL.md 下放多个 skill。",
+  "marketplace.installed": "已安装 ({n})",
+  "marketplace.installSucceeded": "从 {repo} 安装了 {n} 个 skill。",
+  "marketplace.uninstalled": "已卸载。",
+  "marketplace.skillCount": "{n} 个 skill",
+  "marketplace.empty.title": "尚未安装任何包",
+  "marketplace.empty.body": "在上方粘贴一个 GitHub 仓库地址即可安装社区 skill 包。",
+
   "editor.tab.text": "✏️ 输入",
   "editor.tab.samples": "✨ 示例",
   "editor.tab.formats": "📋 格式",
@@ -869,6 +968,27 @@ const zhCN: Dict = {
   "tasks.emptyContent": "空白",
   "tasks.defaultName": "任务 {n}",
   "tasks.matchTooltip": "{a} / {b} 匹配",
+
+  "history.toggle": "版本历史",
+  "history.heading": "历史",
+  "history.close": "关闭历史",
+  "history.versionCap": "每个任务最多保留 {n} 个版本",
+  "history.current": "当前",
+  "history.compare": "对比",
+  "history.restore": "恢复",
+  "history.delete": "删除版本",
+  "history.loading": "正在加载版本…",
+  "history.empty.noTask": "暂无活动任务。",
+  "history.empty.noVersions": "还没有版本。运行一次 Convert 即可生成历史。",
+  "history.restoreConfirm": "恢复到版本 v{v}? 当前预览将被替换。",
+  "history.deleteConfirm": "删除版本 v{v}? 该操作不可撤销。",
+  "history.backToList": "返回",
+  "history.diff.leftLabel": "旧",
+  "history.diff.rightLabel": "新",
+  "history.diff.showSource": "显示 DOM 差异",
+  "history.diff.pickPair": "请选择两个要对比的版本。",
+  "history.diff.before": "旧版本",
+  "history.diff.after": "新版本",
 
   "community.starOnGitHub": "在 GitHub 上 Star",
   "community.joinDiscord": "加入 Discord",

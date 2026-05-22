@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { findUserSkill, listUserSkills, type UserSkillEntry } from "@/lib/skills/registry";
 
 /**
  * File-based skill registry, modelled on nexu-io/open-design's daemon layout
@@ -12,6 +13,10 @@ import path from "node:path";
  *
  * Adding a template = adding a folder. No TS code change required; the API
  * routes rescan disk and the client refetches `/api/templates`.
+ *
+ * Skills installed via the marketplace ({@link listUserSkills}) live under
+ * `~/.html-anything/skills/` and are merged into the same registry with
+ * namespaced ids (`pkg-<owner>-<repo>--<originalId>`).
  */
 
 const SKILLS_DIR = path.join(process.cwd(), "src/lib/templates/skills");
@@ -195,40 +200,26 @@ function fmToMeta(id: string, fm: SkillFrontmatter, hasHtml: boolean, hasMd: boo
 let metaCache: SkillMeta[] | null = null;
 const isDev = process.env.NODE_ENV !== "production";
 
-function isValidId(id: string): boolean {
+/** Drop the cached metadata listing. Call after install / uninstall. */
+export function invalidateSkillsCache(): void {
+  metaCache = null;
+}
+
+function isValidBundledId(id: string): boolean {
   return /^[a-z0-9][a-z0-9-]*$/i.test(id);
 }
 
-/** Return picker-ready metadata for every skill folder on disk. */
-export function listSkills(): SkillMeta[] {
-  if (!isDev && metaCache) return metaCache;
-  const out: SkillMeta[] = [];
-  let dirents: fs.Dirent[] = [];
-  try {
-    dirents = fs.readdirSync(SKILLS_DIR, { withFileTypes: true });
-  } catch {
-    return out;
-  }
-  for (const ent of dirents) {
-    if (!ent.isDirectory()) continue;
-    const id = ent.name;
-    if (!isValidId(id)) continue;
-    const dir = path.join(SKILLS_DIR, id);
-    const raw = safeRead(path.join(dir, "SKILL.md"));
-    if (!raw) continue;
-    const { fm } = parseFrontmatter(raw);
-    const hasHtml = fs.existsSync(path.join(dir, "example.html"));
-    const hasMd = fs.existsSync(path.join(dir, "example.md"));
-    out.push(fmToMeta(id, fm, hasHtml, hasMd));
-  }
-  metaCache = out;
-  return out;
+function isValidSkillId(id: string): boolean {
+  // Bundled ids stay strictly kebab-case. Marketplace ids are namespaced as
+  // `pkg-<owner>__<repo>--<originalId>` — `__` shows up inside the package id
+  // segment, so we allow it (plus `.` for tag-like refs) before the `--`.
+  return (
+    isValidBundledId(id) ||
+    /^pkg-[a-z0-9][a-z0-9._-]*__[a-z0-9][a-z0-9._-]*--[a-z0-9][a-z0-9._-]*$/i.test(id)
+  );
 }
 
-/** Load one skill including its prompt body and example contents. */
-export function loadSkill(id: string): LoadedSkill | null {
-  if (!isValidId(id)) return null;
-  const dir = path.join(SKILLS_DIR, id);
+function loadSkillFromDir(id: string, dir: string): LoadedSkill | null {
   const raw = safeRead(path.join(dir, "SKILL.md"));
   if (!raw) return null;
   const { fm, body } = parseFrontmatter(raw);
@@ -238,8 +229,64 @@ export function loadSkill(id: string): LoadedSkill | null {
   return { ...meta, body, exampleMd, exampleHtml };
 }
 
+function metaFromDir(id: string, dir: string): SkillMeta | null {
+  const raw = safeRead(path.join(dir, "SKILL.md"));
+  if (!raw) return null;
+  const { fm } = parseFrontmatter(raw);
+  const hasHtml = fs.existsSync(path.join(dir, "example.html"));
+  const hasMd = fs.existsSync(path.join(dir, "example.md"));
+  return fmToMeta(id, fm, hasHtml, hasMd);
+}
+
+/** Return picker-ready metadata for every bundled + user-installed skill. */
+export function listSkills(): SkillMeta[] {
+  if (!isDev && metaCache) return metaCache;
+  const out: SkillMeta[] = [];
+  let dirents: fs.Dirent[] = [];
+  try {
+    dirents = fs.readdirSync(SKILLS_DIR, { withFileTypes: true });
+  } catch {
+    dirents = [];
+  }
+  for (const ent of dirents) {
+    if (!ent.isDirectory()) continue;
+    const id = ent.name;
+    if (!isValidBundledId(id)) continue;
+    const meta = metaFromDir(id, path.join(SKILLS_DIR, id));
+    if (meta) out.push(meta);
+  }
+  let userSkills: UserSkillEntry[] = [];
+  try {
+    userSkills = listUserSkills();
+  } catch {
+    userSkills = [];
+  }
+  for (const entry of userSkills) {
+    const meta = metaFromDir(entry.id, entry.dir);
+    if (meta) out.push(meta);
+  }
+  metaCache = out;
+  return out;
+}
+
+/** Load one skill including its prompt body and example contents. */
+export function loadSkill(id: string): LoadedSkill | null {
+  if (!isValidSkillId(id)) return null;
+  if (id.includes("--")) {
+    const entry = findUserSkill(id);
+    if (!entry) return null;
+    return loadSkillFromDir(id, entry.dir);
+  }
+  return loadSkillFromDir(id, path.join(SKILLS_DIR, id));
+}
+
 /** Lightweight check for the picker — true iff `example.html` exists. */
 export function skillHasPreview(id: string): boolean {
-  if (!isValidId(id)) return false;
+  if (!isValidSkillId(id)) return false;
+  if (id.includes("--")) {
+    const entry = findUserSkill(id);
+    if (!entry) return false;
+    return fs.existsSync(path.join(entry.dir, "example.html"));
+  }
   return fs.existsSync(path.join(SKILLS_DIR, id, "example.html"));
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { deleteTaskRuns, putRun } from "@/lib/history/db";
 
 export type ModelOption = { id: string; label: string };
 
@@ -175,6 +176,8 @@ type Persisted = {
   agentBinOverrides: Record<string, string>;
   welcomeAck: boolean;
   sidebarCollapsed: boolean;
+  /** Whether the per-task version history pane is open next to the tasks sidebar. */
+  historyPaneOpen: boolean;
   locale: Locale;
   layoutMode: LayoutMode;
 };
@@ -193,6 +196,7 @@ type State = {
   agentBinOverrides: Record<string, string>;
   welcomeAck: boolean;
   sidebarCollapsed: boolean;
+  historyPaneOpen: boolean;
   locale: Locale;
   layoutMode: LayoutMode;
 
@@ -257,6 +261,7 @@ type State = {
   setAgentBinOverride: (agentId: string, path: string) => void;
   setWelcomeAck: (v: boolean) => void;
   setSidebarCollapsed: (v: boolean) => void;
+  setHistoryPaneOpen: (v: boolean) => void;
   setLocale: (l: Locale) => void;
   setLayoutMode: (m: LayoutMode) => void;
 };
@@ -285,6 +290,7 @@ export const useStore = create<State>()(
       agentBinOverrides: {},
       welcomeAck: false,
       sidebarCollapsed: false,
+      historyPaneOpen: false,
       locale: "en",
       layoutMode: "split",
 
@@ -301,12 +307,14 @@ export const useStore = create<State>()(
           // never leave 0 tasks — replace with a fresh empty one
           const fresh = makeTask({ name: "任务 1" });
           set({ tasks: [fresh], activeTaskId: fresh.id });
+          void deleteTaskRuns(id).catch(() => {});
           return;
         }
         const next = tasks.filter((t) => t.id !== id);
         const nextActive =
           activeTaskId === id ? next[Math.max(0, tasks.findIndex((t) => t.id === id) - 1)]?.id ?? next[0].id : activeTaskId;
         set({ tasks: next, activeTaskId: nextActive });
+        void deleteTaskRuns(id).catch(() => {});
       },
       setActiveTask: (id) => {
         if (get().tasks.some((t) => t.id === id)) set({ activeTaskId: id });
@@ -410,13 +418,38 @@ export const useStore = create<State>()(
         set((st) => ({
           tasks: patchTask(st.tasks, taskId, (t) => ({ stats: { ...t.stats, ...patch } })),
         })),
-      commitBaseFor: (taskId) =>
+      commitBaseFor: (taskId) => {
+        // Snapshot the freshly converted (content, html) as the next diff-edit
+        // baseline, then archive it to IndexedDB so the history pane has a
+        // version to render. IDB write is fire-and-forget — history is a
+        // nice-to-have and must not block the convert pipeline.
+        type Snap = { content: string; html: string; stats: RunStats; templateId: string };
+        let snapshot: Snap | null = null;
         set((st) => ({
-          tasks: patchTask(st.tasks, taskId, (t) => ({
-            baseContent: t.content,
-            baseHtml: t.html,
-          })),
-        })),
+          tasks: patchTask(st.tasks, taskId, (t) => {
+            snapshot = {
+              content: t.content,
+              html: t.html,
+              stats: t.stats,
+              templateId: t.templateId,
+            };
+            return { baseContent: t.content, baseHtml: t.html };
+          }),
+        }));
+        const snap = snapshot as Snap | null;
+        if (snap && snap.html) {
+          void putRun({
+            taskId,
+            html: snap.html,
+            content: snap.content,
+            stats: snap.stats,
+            templateId: snap.templateId,
+            ts: Date.now(),
+          }).catch(() => {
+            // history is best-effort; ignore quota / private-mode failures
+          });
+        }
+      },
       pushDeploymentFor: (taskId, deployment) =>
         set((st) => ({
           tasks: patchTask(st.tasks, taskId, (t) => {
@@ -449,6 +482,7 @@ export const useStore = create<State>()(
         }),
       setWelcomeAck: (v) => set({ welcomeAck: v }),
       setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
+      setHistoryPaneOpen: (v) => set({ historyPaneOpen: v }),
       setLocale: (l) => set({ locale: l }),
       setLayoutMode: (m) => set({ layoutMode: m }),
     }),
@@ -469,6 +503,7 @@ export const useStore = create<State>()(
         agentBinOverrides: s.agentBinOverrides,
         welcomeAck: s.welcomeAck,
         sidebarCollapsed: s.sidebarCollapsed,
+        historyPaneOpen: s.historyPaneOpen,
         locale: s.locale,
         layoutMode: s.layoutMode,
       }),
