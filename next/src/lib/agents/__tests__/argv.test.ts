@@ -18,6 +18,24 @@ describe("parseLine opencode", () => {
     });
   });
 
+  it("emits one delta when top-level and nested text are both present", () => {
+    const line = JSON.stringify({
+      type: "text",
+      text: "<html><body>ok</body></html>",
+      part: {
+        type: "text",
+        text: "<html><body>ok</body></html>",
+      },
+    });
+
+    expect(parseLine("opencode", line)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>ok</body></html>",
+      },
+    ]);
+  });
+
   it("extracts session only from step start payload", () => {
     expect(
       parseLine(
