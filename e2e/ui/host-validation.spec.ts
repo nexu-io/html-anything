@@ -23,10 +23,15 @@ const API_PATHS = [
   "/api/deploy/config?provider=vercel",
 ] as const;
 
+// Matches the `webServer.url` in e2e/playwright.config.ts (port 3317). Used as
+// a fallback when the `baseURL` fixture is undefined — exactOptionalPropertyTypes
+// rejects passing `string | undefined` to newContext's `baseURL?: string`.
+const DEFAULT_BASE_URL = "http://127.0.0.1:3317";
+
 test.describe("API host-header validation", () => {
   test("accepts loopback Host (127.0.0.1) — default dev path", async ({ baseURL }) => {
     const ctx = await playwrightRequest.newContext({
-      baseURL,
+      baseURL: baseURL ?? DEFAULT_BASE_URL,
       extraHTTPHeaders: { Host: "127.0.0.1:3317" },
     });
     for (const p of API_PATHS) {
@@ -46,7 +51,7 @@ test.describe("API host-header validation", () => {
 
   test("accepts localhost Host — default dev path", async ({ baseURL }) => {
     const ctx = await playwrightRequest.newContext({
-      baseURL,
+      baseURL: baseURL ?? DEFAULT_BASE_URL,
       extraHTTPHeaders: { Host: "localhost:3317" },
     });
     const r = await ctx.get("/api/agents");
@@ -56,7 +61,7 @@ test.describe("API host-header validation", () => {
 
   test("rejects attacker.example Host on every API path", async ({ baseURL }) => {
     const ctx = await playwrightRequest.newContext({
-      baseURL,
+      baseURL: baseURL ?? DEFAULT_BASE_URL,
       extraHTTPHeaders: { Host: "attacker.example" },
     });
     for (const p of API_PATHS) {
@@ -70,7 +75,7 @@ test.describe("API host-header validation", () => {
 
   test("rejects POST /api/convert with attacker Host (RCE vector)", async ({ baseURL }) => {
     const ctx = await playwrightRequest.newContext({
-      baseURL,
+      baseURL: baseURL ?? DEFAULT_BASE_URL,
       extraHTTPHeaders: { Host: "attacker.example" },
     });
     const r = await ctx.post("/api/convert", {
@@ -84,7 +89,7 @@ test.describe("API host-header validation", () => {
     baseURL,
   }) => {
     const ctx = await playwrightRequest.newContext({
-      baseURL,
+      baseURL: baseURL ?? DEFAULT_BASE_URL,
       extraHTTPHeaders: { Host: "attacker.example" },
     });
     const r = await ctx.put("/api/deploy/config?provider=vercel", {
@@ -96,7 +101,7 @@ test.describe("API host-header validation", () => {
 
   test("rejects subdomain-tricks (localhost.attacker.example)", async ({ baseURL }) => {
     const ctx = await playwrightRequest.newContext({
-      baseURL,
+      baseURL: baseURL ?? DEFAULT_BASE_URL,
       extraHTTPHeaders: { Host: "localhost.attacker.example" },
     });
     const r = await ctx.get("/api/agents");
@@ -108,7 +113,7 @@ test.describe("API host-header validation", () => {
     // Playwright requires a header value, so use a whitespace-only string —
     // the validator strips and treats as empty.
     const ctx = await playwrightRequest.newContext({
-      baseURL,
+      baseURL: baseURL ?? DEFAULT_BASE_URL,
       extraHTTPHeaders: { Host: "" },
     });
     const r = await ctx.get("/api/agents");
