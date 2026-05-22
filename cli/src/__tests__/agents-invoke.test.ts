@@ -2,11 +2,19 @@ import { vi, describe, it, expect, afterEach } from "vitest";
 import { EventEmitter } from "node:events";
 import { PassThrough, Writable } from "node:stream";
 
-const mockSpawn = vi.hoisted(() => vi.fn());
+const { mockSpawn, existsSyncDelegate } = vi.hoisted(() => ({
+  mockSpawn: vi.fn(),
+  existsSyncDelegate: vi.fn((p: string) => p === "/bin/sh"),
+}));
 
 vi.mock("node:child_process", () => ({
   spawn: mockSpawn,
 }));
+
+vi.mock("node:fs", async () => {
+  const actual = await vi.importActual<typeof import("node:fs")>("node:fs");
+  return { ...actual, existsSync: existsSyncDelegate };
+});
 
 import { invokeAgent, type InvokeEvent } from "../agents-invoke.js";
 
@@ -71,7 +79,7 @@ const BIN_OVERRIDE = "/bin/sh";
 
 describe("invokeAgent", () => {
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe("error cases", () => {
@@ -120,6 +128,50 @@ describe("invokeAgent", () => {
       expect(events[0]).toMatchObject({
         type: "error",
         message: expect.stringContaining("not yet wired up"),
+      });
+    });
+  });
+
+  describe("relative binOverride resolution", () => {
+    it("resolves ./mock-agent via path.resolve + existsSync", async () => {
+      existsSyncDelegate.mockImplementation((p: string) => {
+        if (p.endsWith("/mock-agent")) return true;
+        return p === "/bin/sh";
+      });
+
+      const html = "<html><body>ok</body></html>";
+      const events = await driveInvoke(
+        { agent: "deepseek", prompt: "test", binOverride: "./mock-agent" },
+        html,
+        0,
+      );
+
+      const start = events.find((e) => e.type === "start");
+      expect(start).toBeDefined();
+      expect(start).toMatchObject({
+        type: "start",
+        bin: expect.stringContaining("/mock-agent"),
+      });
+    });
+
+    it("resolves ../bin/claude wrapper relative path", async () => {
+      existsSyncDelegate.mockImplementation((p: string) => {
+        if (p.endsWith("/bin/claude")) return true;
+        return p === "/bin/sh";
+      });
+
+      const html = "<html><body>ok</body></html>";
+      const events = await driveInvoke(
+        { agent: "claude", prompt: "test", binOverride: "../bin/claude" },
+        html,
+        0,
+      );
+
+      const start = events.find((e) => e.type === "start");
+      expect(start).toBeDefined();
+      expect(start).toMatchObject({
+        type: "start",
+        bin: expect.stringContaining("/bin/claude"),
       });
     });
   });
