@@ -113,6 +113,7 @@ export function useConvert() {
         const dec = new TextDecoder();
         let buf = "";
         let lastEvent = "";
+        let hadError = false;
 
         while (true) {
           const { value, done } = await reader.read();
@@ -140,14 +141,14 @@ export function useConvert() {
               continue;
             }
             handleEvent(taskId, event, data, startedAt);
+            if (event === "error") hadError = true;
           }
         }
         const endedAt = Date.now();
         useStore.getState().patchStatsFor(taskId, { endedAt, durationMs: endedAt - startedAt });
-        useStore.getState().setStatusFor(taskId, "done");
-        // record the just-finished (content, html) as the new diff-edit baseline
-        // so the user's next edit goes through diff mode instead of full regen
-        useStore.getState().commitBaseFor(taskId);
+        useStore.getState().setStatusFor(taskId, hadError ? "error" : "done");
+        // only record the diff-edit baseline when the convert actually succeeded
+        if (!hadError) useStore.getState().commitBaseFor(taskId);
       } catch (err) {
         if ((err as Error)?.name === "AbortError") {
           useStore.getState().pushLogFor(taskId, { kind: "info", text: "已取消" });
