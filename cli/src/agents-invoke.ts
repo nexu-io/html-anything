@@ -1,5 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { existsSync } from "node:fs";
+import path from "node:path";
 import { resolveOnPath, AGENTS, type AgentDef, type AgentProtocol } from "./agents-detect.js";
 
 export type InvokeOpts = {
@@ -26,6 +27,10 @@ function resolveBinForAgent(
     if (!trimmed) return null;
     if (/^([a-zA-Z]:[\\/]|[\\/])/.test(trimmed)) {
       return existsSync(trimmed) ? trimmed : null;
+    }
+    if (trimmed.includes("/") || trimmed.includes("\\") || trimmed.startsWith(".")) {
+      const resolved = path.resolve(trimmed);
+      return existsSync(resolved) ? resolved : null;
     }
     return resolveOnPath(trimmed);
   };
