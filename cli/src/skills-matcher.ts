@@ -9,21 +9,21 @@ const STRONG_SIGNALS: [keywords: string[], templateId: string][] = [
   [["定价", "pricing", "价格方案", "套餐", "plans", "免费版", "专业版"], "pricing-page"],
   [["OKR", "KR", "关键结果", "objectives", "季度目标", "key results"], "team-okrs"],
   [["PRD", "产品需求", "spec", "user stories", "用户故事", "需求文档", "功能规格"], "pm-spec"],
-  [["周报", "weekly", "本周", "下周计划", "本周完成", "TODO"], "weekly-update"],
+  [["周报", "weekly", "本周", "下周计划", "本周完成"], "weekly-update"],
   [["Runbook", "runbook", "oncall", "on-call", "SRE", "告警", "运维", "事故", "incident"], "eng-runbook"],
   [["发票", "invoice", "账单", "税率", "tax", "收款", "付款方"], "invoice"],
   [["入职", "onboarding", "新人", "onboard", "欢迎", "新员工"], "hr-onboarding"],
   [["SaaS", "landing", "落地页", "产品落地", "hero", "social proof"], "saas-landing"],
   [["等候", "waitlist", "预发布", "coming soon", "即将上线", "预约"], "waitlist-page"],
   [["会议纪要", "meeting", "notes", "会议记录", "参会人", "action items"], "meeting-notes"],
-  [["看板", "kanban", "board", "todo", "doing", "done"], "kanban-board"],
+  [["看板", "kanban", "board"], "kanban-board"],
   [["Dashboard", "dashboard", "仪表板", "仪表盘", "KPI", "指标", "监控"], "dashboard"],
   [["日报", "社媒", "社交媒体", "social media", "粉丝", "follower"], "social-media-dashboard"],
   [["博客", "blog", "文章", "长文", "杂志", "magazine", "公众号", "newsletter", "essay", "写作"], "article-magazine"],
   [["blog", "post", "技术博客", "blog post", "写作"], "blog-post"],
   [["文档", "docs", "API文档", "技术文档", "documentation", "doc"], "docs-page"],
-  [["小红书", "xiaohongshu", "红书", "RED"], "card-xiaohongshu"],
-  [["推特", "twitter", "X", "tweet", "推文", "𝕏"], "social-x-post-card"],
+  [["小红书", "xiaohongshu", "红书"], "card-xiaohongshu"],
+  [["推特", "twitter", "tweet", "推文", "𝕏"], "social-x-post-card"],
   [["Spotify", "spotify", "正在播放", "now playing", "音乐", "专辑"], "social-spotify-card"],
   [["Reddit", "reddit", "投票", "upvote"], "social-reddit-card"],
   [["Instagram", "linkedin", "carousel", "轮播", "三联", "thread"], "social-carousel"],
@@ -105,12 +105,28 @@ function normalize(text: string): string {
   return text.toLowerCase().replace(/[，,。；;！!？?、\s]+/g, " ").trim();
 }
 
+function isAscii(s: string): boolean {
+  return /^[\x00-\x7F]+$/.test(s);
+}
+
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function kwMatches(haystack: string, needle: string): boolean {
+  const kw = needle.toLowerCase();
+  if (isAscii(kw)) {
+    return new RegExp("\\b" + escapeRegExp(kw) + "\\b", "i").test(haystack);
+  }
+  return haystack.includes(kw);
+}
+
 function ruleMatch(content: string, meta: SkillMeta): number {
   const lower = normalize(content);
   let score = 0;
 
   for (const tag of meta.tags) {
-    if (lower.includes(tag.toLowerCase())) score += 3;
+    if (kwMatches(lower, tag)) score += 3;
   }
 
   const nameWords = normalize(meta.zhName).split(" ").filter((w) => w.length >= 2);
@@ -125,7 +141,7 @@ function ruleMatch(content: string, meta: SkillMeta): number {
 
   const scenarioKeywords = SCENARIO_SIGNALS[meta.scenario] ?? [];
   for (const kw of scenarioKeywords) {
-    if (lower.includes(kw.toLowerCase())) score += 1;
+    if (kwMatches(lower, kw)) score += 1;
   }
 
   return score;
@@ -139,7 +155,7 @@ function strongSignalMatch(
   const lower = normalize(content);
 
   for (const [keywords, templateId] of STRONG_SIGNALS) {
-    const matched = keywords.filter((kw) => lower.includes(kw.toLowerCase()));
+    const matched = keywords.filter((kw) => kwMatches(lower, kw));
     if (matched.length > 0) {
       const confidence = matched.length * 2 + 3;
       if (!best || confidence > best.confidence) {
@@ -232,7 +248,7 @@ export async function matchTemplate(
   }
 
   const rule = fallbackMatch(content, templates);
-  if (rule && rule.confidence >= CONFIDENCE_THRESHOLD) {
+  if (!forceAi && rule && rule.confidence >= CONFIDENCE_THRESHOLD) {
     rule.confidence = Math.min(rule.confidence, 10);
     return rule;
   }

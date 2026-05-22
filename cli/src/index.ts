@@ -621,6 +621,9 @@ async function handleAuto(args: string[]): Promise<void> {
       console.error("Error: No input provided. Pipe content via stdin or specify an input file.");
       process.exit(1);
     }
+    process.stdout.on("error", (err) => {
+      if ((err as NodeJS.ErrnoException).code === "EPIPE") process.exit(0);
+    });
   }
 
   const templates = getAvailableTemplates();
