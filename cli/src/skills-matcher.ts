@@ -113,7 +113,7 @@ function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function kwMatches(haystack: string, needle: string): boolean {
+export function kwMatches(haystack: string, needle: string): boolean {
   const kw = needle.toLowerCase();
   if (isAscii(kw)) {
     return new RegExp("\\b" + escapeRegExp(kw) + "\\b", "i").test(haystack);
@@ -239,7 +239,7 @@ export async function matchTemplate(
   agentId: string,
   forceAi: boolean = false,
 ): Promise<MatchResult> {
-  if (!forceAi && content.length >= MIN_CONTENT_LENGTH_FOR_AI) {
+  if (!forceAi) {
     const strong = strongSignalMatch(content, skillsDir);
     if (strong) {
       strong.confidence = Math.min(strong.confidence, 10);
