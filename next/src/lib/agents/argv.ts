@@ -367,21 +367,10 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
       obj.part && typeof obj.part === "object"
         ? (obj.part as Record<string, unknown>)
         : null;
-    const text =
-      typeof part?.text === "string"
-        ? part.text
-        : typeof part?.content === "string"
-          ? part.content
-          : typeof part?.message === "string"
-            ? part.message
-            : typeof obj.text === "string"
-              ? obj.text
-              : typeof obj.content === "string"
-                ? obj.content
-                : typeof obj.message === "string"
-                  ? obj.message
-                  : null;
-    if (text !== null) out.push({ kind: "delta", text });
+    const text = [part?.text, part?.content, part?.message, obj.text, obj.content, obj.message].find(
+      (value): value is string => typeof value === "string" && value.length > 0,
+    );
+    if (text) out.push({ kind: "delta", text });
     if (obj.type === "step_start" && typeof obj.sessionID === "string") {
       out.push({ kind: "meta", key: "session", value: obj.sessionID });
     }
