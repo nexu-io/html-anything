@@ -69,6 +69,13 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         "--trust",
         ...(model ? ["--model", model] : []),
       ];
+    case "antigravity":
+      return [
+        "--output-format",
+        "stream-json",
+        "--yolo",
+        ...(model ? ["--model", model] : []),
+      ];
     case "gemini":
       return [
         "--output-format",
@@ -325,7 +332,7 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
     }
   }
 
-  if (agent === "cursor-agent" || agent === "gemini") {
+  if (agent === "cursor-agent" || agent === "gemini" || agent === "antigravity") {
     if (obj.type === "stream_event" && obj.event && typeof obj.event === "object") {
       const ev = obj.event as { type?: string; delta?: { type?: string; text?: string } };
       if (ev.delta?.type === "text_delta" && typeof ev.delta.text === "string") {
