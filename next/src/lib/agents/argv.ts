@@ -160,7 +160,14 @@ export type AgentParse =
  * with `--include-partial-messages` (or the equivalent) writes its output
  * twice.
  */
-export type ParseState = { sawStreamEventText?: boolean };
+export type ParseState = {
+  sawStreamEventText?: boolean;
+  opencodeAccumulatedInputTokens?: number;
+  opencodeAccumulatedOutputTokens?: number;
+  opencodeAccumulatedCacheReadTokens?: number;
+  opencodeAccumulatedCacheWriteTokens?: number;
+  opencodeAccumulatedCost?: number;
+};
 
 /**
  * Build a stateful per-invocation parser. Feed every stdout line through the
@@ -380,18 +387,26 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
         output?: number;
         cache?: { read?: number; write?: number };
       };
+      state.opencodeAccumulatedInputTokens = (state.opencodeAccumulatedInputTokens ?? 0) + (tokens.input ?? 0);
+      state.opencodeAccumulatedOutputTokens = (state.opencodeAccumulatedOutputTokens ?? 0) + (tokens.output ?? 0);
+      state.opencodeAccumulatedCacheReadTokens = (state.opencodeAccumulatedCacheReadTokens ?? 0) + (tokens.cache?.read ?? 0);
+      state.opencodeAccumulatedCacheWriteTokens = (state.opencodeAccumulatedCacheWriteTokens ?? 0) + (tokens.cache?.write ?? 0);
+
       out.push({
         kind: "meta",
         key: "usage",
         value: {
-          input_tokens: tokens.input,
-          output_tokens: tokens.output,
-          cache_read_input_tokens: tokens.cache?.read,
-          cache_creation_input_tokens: tokens.cache?.write,
+          input_tokens: state.opencodeAccumulatedInputTokens,
+          output_tokens: state.opencodeAccumulatedOutputTokens,
+          cache_read_input_tokens: state.opencodeAccumulatedCacheReadTokens,
+          cache_creation_input_tokens: state.opencodeAccumulatedCacheWriteTokens,
         },
       });
     }
-    if (typeof part?.cost === "number") out.push({ kind: "meta", key: "cost_usd", value: part.cost });
+    if (typeof part?.cost === "number") {
+      state.opencodeAccumulatedCost = (state.opencodeAccumulatedCost ?? 0) + part.cost;
+      out.push({ kind: "meta", key: "cost_usd", value: state.opencodeAccumulatedCost });
+    }
   }
 
   if (agent === "qwen") {

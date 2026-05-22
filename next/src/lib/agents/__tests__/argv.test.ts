@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseLine } from "../argv";
+import { parseLine, makeParser } from "../argv";
 
 describe("parseLine opencode", () => {
   it("extracts text from nested part payload", () => {
@@ -91,8 +91,8 @@ describe("parseLine opencode", () => {
     });
   });
 
-  it("extracts usage from step finish payload", () => {
-    const line = JSON.stringify({
+  it("extracts usage from step finish payload and accumulates successive steps", () => {
+    const line1 = JSON.stringify({
       type: "step_finish",
       part: {
         type: "step-finish",
@@ -108,7 +108,24 @@ describe("parseLine opencode", () => {
       },
     });
 
-    expect(parseLine("opencode", line)).toEqual([
+    const line2 = JSON.stringify({
+      type: "step_finish",
+      part: {
+        type: "step-finish",
+        tokens: {
+          input: 5,
+          output: 1,
+          cache: {
+            read: 1,
+            write: 1,
+          },
+        },
+        cost: 0.005,
+      },
+    });
+
+    const parser = makeParser("opencode");
+    expect(parser(line1)).toEqual([
       {
         kind: "meta",
         key: "usage",
@@ -123,6 +140,24 @@ describe("parseLine opencode", () => {
         kind: "meta",
         key: "cost_usd",
         value: 0.01,
+      },
+    ]);
+
+    expect(parser(line2)).toEqual([
+      {
+        kind: "meta",
+        key: "usage",
+        value: {
+          input_tokens: 15,
+          output_tokens: 3,
+          cache_read_input_tokens: 4,
+          cache_creation_input_tokens: 5,
+        },
+      },
+      {
+        kind: "meta",
+        key: "cost_usd",
+        value: 0.015,
       },
     ]);
   });
