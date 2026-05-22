@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import readline from "node:readline";
 import { fileURLToPath } from "node:url";
 import { loadSkill, listSkills, type SkillMeta, type LoadedSkill } from "./skills-loader.js";
 import { detectAgents, type DetectedAgent } from "./agents-detect.js";
@@ -8,6 +7,8 @@ import { assemblePrompt } from "./prompt-assemble.js";
 import { invokeAgent, type InvokeEvent } from "./agents-invoke.js";
 import { extractHtml } from "./extract-html.js";
 import { loadConfig, saveConfig, getConfigPath, type CliConfig } from "./config.js";
+import { findCommonPath, resolveCollisionOutput } from "./collision-resolve.js";
+import { promptYesNo, promptOverwrite } from "./prompt.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -457,62 +458,6 @@ async function convertOne(opts: {
     process.stdout.write(html);
     return true;
   }
-}
-
-function findCommonPath(dirs: string[]): string {
-  if (dirs.length === 0) return "";
-  const resolved = dirs.map((d) => path.resolve(d));
-  const segments = resolved.map((d) => d.split(path.sep).filter(Boolean));
-  const minLen = Math.min(...segments.map((s) => s.length));
-  let common = 0;
-  for (let i = 0; i < minLen; i++) {
-    const seg = segments[0][i];
-    if (segments.every((s) => s[i] === seg)) common++;
-    else break;
-  }
-  return segments[0].slice(0, common).join(path.sep) || path.sep;
-}
-
-function resolveCollisionOutput(inputPath: string, outputDir: string, commonRoot: string): string {
-  const basename = path.basename(inputPath, path.extname(inputPath));
-  const inputDir = path.resolve(path.dirname(inputPath));
-  let relativeDir = path.relative(commonRoot, inputDir);
-  relativeDir = relativeDir
-    .split(path.sep)
-    .filter((s) => s !== ".." && s !== ".")
-    .join(path.sep);
-  if (relativeDir) {
-    return path.resolve(outputDir, relativeDir, `${basename}.html`);
-  }
-  return path.resolve(outputDir, `${basename}.html`);
-}
-
-function promptYesNo(question: string): Promise<boolean> {
-  return new Promise((resolve) => {
-    if (!process.stdin.isTTY || !process.stderr.isTTY) {
-      resolve(false);
-      return;
-    }
-    const rl = readline.createInterface({ input: process.stdin, output: process.stderr });
-    rl.question(question, (answer) => {
-      rl.close();
-      resolve(answer.trim().toLowerCase() === "y");
-    });
-  });
-}
-
-function promptOverwrite(filepath: string): Promise<boolean> {
-  return new Promise((resolve) => {
-    if (!process.stdin.isTTY || !process.stderr.isTTY) {
-      resolve(true);
-      return;
-    }
-    const rl = readline.createInterface({ input: process.stdin, output: process.stderr });
-    rl.question(`\x1b[33m⚠\x1b[0m ${filepath} already exists. Overwrite? (y/N): `, (answer) => {
-      rl.close();
-      resolve(answer.trim().toLowerCase() === "y");
-    });
-  });
 }
 
 function readStdin(): Promise<string> {
