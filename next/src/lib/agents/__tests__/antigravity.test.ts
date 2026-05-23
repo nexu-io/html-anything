@@ -1,65 +1,53 @@
 // next/src/lib/agents/__tests__/antigravity.test.ts
 import { describe, it, expect } from "vitest";
-import { makeParser } from "../argv";
+import { makeParser, buildArgv } from "../argv";
 import { AGENTS, DEFAULT_MODEL } from "../detect";
 
 // ── Parser tests ─────────────────────────────────────────────────────────────
 
-describe("antigravity parser — stream_event text_delta", () => {
-  it("emits a delta for a text_delta stream event", () => {
+describe("antigravity parser — plain text output", () => {
+  it("emits a delta for each plain-text line", () => {
     const parse = makeParser("antigravity");
-    const line = JSON.stringify({
-      type: "stream_event",
-      event: {
-        type: "content_block_delta",
-        delta: { type: "text_delta", text: "hello" },
-      },
-    });
-    expect(parse(line)).toEqual([{ kind: "delta", text: "hello" }]);
+    expect(parse("hello world")).toEqual([{ kind: "delta", text: "hello world\n" }]);
+  });
+
+  it("does not throw or return noise for plain text", () => {
+    const parse = makeParser("antigravity");
+    const result = parse("some plain text output from agy");
+    expect(result).toEqual([{ kind: "delta", text: "some plain text output from agy\n" }]);
+  });
+
+  it("handles HTML output lines as deltas", () => {
+    const parse = makeParser("antigravity");
+    const result = parse("<html><body>test</body></html>");
+    expect(result).toEqual([{ kind: "delta", text: "<html><body>test</body></html>\n" }]);
+  });
+
+  it("returns empty array for blank lines", () => {
+    const parse = makeParser("antigravity");
+    expect(parse("   ")).toEqual([]);
+    expect(parse("")).toEqual([]);
   });
 });
 
-describe("antigravity parser — assistant body fallback", () => {
-  it("emits delta from assistant body when no stream_event preceded it", () => {
-    const parse = makeParser("antigravity");
-    const line = JSON.stringify({
-      type: "assistant",
-      message: {
-        content: [{ type: "text", text: "hello" }],
-      },
-    });
-    expect(parse(line)).toEqual([{ kind: "delta", text: "hello" }]);
+// ── buildArgv tests ───────────────────────────────────────────────────────────
+
+describe("antigravity buildArgv", () => {
+  it("returns --dangerously-skip-permissions --print (no stream-json flags)", () => {
+    const argv = buildArgv("antigravity");
+    expect(argv).toEqual(["--dangerously-skip-permissions", "--print"]);
   });
 
-  it("suppresses assistant body when stream_event already emitted text", () => {
-    const parse = makeParser("antigravity");
-    parse(
-      JSON.stringify({
-        type: "stream_event",
-        event: {
-          type: "content_block_delta",
-          delta: { type: "text_delta", text: "hello" },
-        },
-      }),
-    );
-    const result = parse(
-      JSON.stringify({
-        type: "assistant",
-        message: {
-          content: [{ type: "text", text: "hello" }],
-        },
-      }),
-    );
-    expect(result.filter((p) => p.kind === "delta")).toHaveLength(0);
+  it("does not include --output-format or --verbose", () => {
+    const argv = buildArgv("antigravity");
+    expect(argv).not.toContain("--output-format");
+    expect(argv).not.toContain("--verbose");
+    expect(argv).not.toContain("--include-partial-messages");
   });
-});
 
-describe("antigravity parser — non-JSON input", () => {
-  it("returns noise and does not throw for a plain-text line", () => {
-    const parse = makeParser("antigravity");
-    let result: ReturnType<typeof parse> | undefined;
-    expect(() => { result = parse("some plain text"); }).not.toThrow();
-    expect(result).toEqual([{ kind: "noise" }]);
+  it("does not append --model when no model provided", () => {
+    const argv = buildArgv("antigravity");
+    expect(argv).not.toContain("--model");
   });
 });
 
@@ -74,6 +62,10 @@ describe("antigravity AgentDef", () => {
 
   it("has bin === 'agy'", () => {
     expect(def?.bin).toBe("agy");
+  });
+
+  it("has protocol === 'argv'", () => {
+    expect(def?.protocol).toBe("argv");
   });
 
   it("has DEFAULT_MODEL as first fallbackModel", () => {
