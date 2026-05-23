@@ -70,16 +70,14 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         ...(model ? ["--model", model] : []),
       ];
     case "antigravity":
-      // agy uses the same CLI shape as Claude Code: -p for print mode,
-      // --dangerously-skip-permissions instead of --permission-mode bypassPermissions.
+      // agy --print <prompt> requires the prompt as a positional argument
+      // (not via stdin). invoke.ts appends opts.prompt after this argv since
+      // the protocol is "argv". agy does not support --output-format or
+      // --verbose; it emits plain text on stdout.
       return [
-        "-p",
-        "--output-format",
-        "stream-json",
-        "--verbose",
-        "--include-partial-messages",
         "--dangerously-skip-permissions",
-        ...(model ? ["--model", model] : []),
+        "--print",
+        // prompt is appended by invoke.ts as the next argv element
       ];
     case "gemini":
       return [
@@ -255,9 +253,9 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const trimmed = line.trim();
   if (!trimmed) return [];
 
-  // Aider / DeepSeek — plain text streaming on stdout (DeepSeek tool calls
-  // go to stderr, which is forwarded as `stderr` events, not parsed here).
-  if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui") {
+  // These adapters emit plain text on stdout rather than JSON envelopes.
+  // DeepSeek tool calls go to stderr, which is forwarded as `stderr` events.
+  if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui" || agent === "antigravity") {
     return [{ kind: "delta", text: trimmed.endsWith("\n") ? trimmed : trimmed + "\n" }];
   }
 
@@ -271,7 +269,7 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const obj = parsed as Record<string, unknown>;
   const out: AgentParse[] = [];
 
-  if (agent === "claude" || agent === "antigravity") {
+  if (agent === "claude") {
     // Init / system metadata
     if (obj.type === "system" && obj.subtype === "init") {
       out.push({ kind: "meta", key: "model", value: obj.model });

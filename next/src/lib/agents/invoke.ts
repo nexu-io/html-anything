@@ -150,8 +150,8 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         safeClose();
         return;
       }
-      // `protocol: "argv"` adapters (deepseek-tui today) take the prompt as a
-      // trailing positional arg rather than reading from stdin.
+      // `protocol: "argv"` adapters take the prompt as a trailing positional
+      // argument rather than reading from stdin.
       if (promptViaArgv) argv = [...argv, opts.prompt];
       // `protocol: "argv-message"` (openclaw today) wants the prompt under
       // an explicit `--message <text>` flag.
@@ -292,7 +292,12 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
             }
           }
         } else if (stdoutBuf) {
-          if (opts.agent === "aider" || opts.agent === "codewhale" || opts.agent === "deepseek-tui") {
+          if (
+            opts.agent === "aider" ||
+            opts.agent === "codewhale" ||
+            opts.agent === "deepseek-tui" ||
+            opts.agent === "antigravity"
+          ) {
             safeEnqueue({ type: "delta", text: stdoutBuf });
           } else {
             for (const part of parse(stdoutBuf)) {
