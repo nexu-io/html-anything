@@ -142,6 +142,7 @@ export function useConvert() {
             }
             handleEvent(taskId, event, data, startedAt);
             if (event === "error") hadError = true;
+            if (event === "done" && (data as Record<string, unknown>).code !== 0) hadError = true;
           }
         }
         const endedAt = Date.now();
