@@ -289,7 +289,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
             else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
           }
-          if (opts.agent === "aider" || opts.agent === "deepseek" || opts.agent === "antigravity") {
+          if (opts.agent === "aider" || opts.agent === "deepseek") {
             safeEnqueue({ type: "delta", text: stdoutBuf });
           }
         }
