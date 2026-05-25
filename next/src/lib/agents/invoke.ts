@@ -284,13 +284,14 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
             }
           }
         } else if (stdoutBuf) {
-          for (const part of parse(stdoutBuf)) {
-            if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
-            else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
-            else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
-          }
           if (opts.agent === "aider" || opts.agent === "codewhale" || opts.agent === "deepseek-tui") {
             safeEnqueue({ type: "delta", text: stdoutBuf });
+          } else {
+            for (const part of parse(stdoutBuf)) {
+              if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
+              else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
+              else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
+            }
           }
         }
         safeEnqueue({ type: "done", code });
