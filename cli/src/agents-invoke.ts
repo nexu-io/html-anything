@@ -71,7 +71,7 @@ class UnsupportedAgentProtocolError extends Error {
   constructor(public readonly agent: string, public readonly protocol: string) {
     super(
       `${agent} uses the ${protocol} protocol, which is not yet wired up in this build. ` +
-        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / deepseek / aider.`,
+        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / codewhale / deepseek-tui / aider.`,
     );
   }
 }
@@ -162,7 +162,8 @@ function buildArgv(agent: string, opts: AgentArgvOpts = {}): string[] {
         "--yolo",
         ...(model ? ["--model", model] : []),
       ];
-    case "deepseek":
+    case "codewhale":
+    case "deepseek-tui":
       return ["exec", "--auto", ...(model ? ["--model", model] : [])];
     case "hermes":
     case "kimi":
@@ -232,7 +233,7 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const trimmed = line.trim();
   if (!trimmed) return [];
 
-  if (agent === "aider" || agent === "deepseek") {
+  if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui") {
     return [{ kind: "delta", text: trimmed.endsWith("\n") ? trimmed : trimmed + "\n" }];
   }
 
@@ -592,7 +593,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
             }
           }
         } else if (stdoutBuf) {
-          if (opts.agent === "aider" || opts.agent === "deepseek") {
+          if (opts.agent === "aider" || opts.agent === "codewhale" || opts.agent === "deepseek-tui") {
             safeEnqueue({ type: "delta", text: stdoutBuf });
           } else {
             for (const part of parse(stdoutBuf)) {

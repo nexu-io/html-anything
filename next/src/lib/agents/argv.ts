@@ -1,7 +1,7 @@
 export type AgentArgvOpts = {
   model?: string;
   cwd?: string;
-  /** When the adapter takes the prompt as a positional argv (deepseek). */
+  /** When the adapter takes the prompt as a positional argv (deepseek-tui). */
   prompt?: string;
   /**
    * For openclaw only — pre-resolved agent id (e.g. "main" or "ops") that
@@ -15,7 +15,7 @@ export class UnsupportedAgentProtocolError extends Error {
   constructor(public readonly agent: string, public readonly protocol: string) {
     super(
       `${agent} uses the ${protocol} protocol, which is not yet wired up in this build. ` +
-        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / deepseek / aider.`,
+        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / codewhale / deepseek-tui / aider.`,
     );
   }
 }
@@ -114,7 +114,8 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         "--yolo",
         ...(model ? ["--model", model] : []),
       ];
-    case "deepseek":
+    case "codewhale":
+    case "deepseek-tui":
       // DeepSeek's `exec --auto` requires the prompt as a positional arg;
       // there's no `-` stdin sentinel. invoke.ts appends opts.prompt at
       // spawn time, so we leave the trailing slot empty here.
@@ -231,7 +232,7 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
 
   // Aider / DeepSeek — plain text streaming on stdout (DeepSeek tool calls
   // go to stderr, which is forwarded as `stderr` events, not parsed here).
-  if (agent === "aider" || agent === "deepseek") {
+  if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui") {
     return [{ kind: "delta", text: trimmed.endsWith("\n") ? trimmed : trimmed + "\n" }];
   }
 

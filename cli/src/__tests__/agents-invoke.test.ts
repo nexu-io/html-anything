@@ -141,7 +141,7 @@ describe("invokeAgent", () => {
 
       const html = "<html><body>ok</body></html>";
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "test", binOverride: "./mock-agent" },
+        { agent: "deepseek-tui", prompt: "test", binOverride: "./mock-agent" },
         html,
         0,
       );
@@ -176,12 +176,12 @@ describe("invokeAgent", () => {
     });
   });
 
-  describe("close-path: deepseek and aider agents", () => {
-    it("deepseek: enqueues remaining stdoutBuf as single delta on close (HTML, no trailing newline)", async () => {
+  describe("close-path: codewhale, deepseek-tui and aider agents", () => {
+    it("deepseek-tui: enqueues remaining stdoutBuf as single delta on close (HTML, no trailing newline)", async () => {
       const html = "<html><body>hello</body></html>";
 
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "make a page", binOverride: BIN_OVERRIDE },
+        { agent: "deepseek-tui", prompt: "make a page", binOverride: BIN_OVERRIDE },
         html,
         0,
       );
@@ -199,11 +199,11 @@ describe("invokeAgent", () => {
       expect(events).toHaveLength(3);
     });
 
-    it("deepseek: produces only ONE delta for partial line after complete lines", async () => {
+    it("deepseek-tui: produces only ONE delta for partial line after complete lines", async () => {
       const content = "line1\nline2";
 
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "make a page", binOverride: BIN_OVERRIDE },
+        { agent: "deepseek-tui", prompt: "make a page", binOverride: BIN_OVERRIDE },
         content,
         0,
       );
@@ -218,11 +218,11 @@ describe("invokeAgent", () => {
       expect(done[0]).toMatchObject({ type: "done", code: 0 });
     });
 
-    it("deepseek: no residual on close when line ends with newline (no double-enqueue)", async () => {
+    it("deepseek-tui: no residual on close when line ends with newline (no double-enqueue)", async () => {
       const content = "hello\n";
 
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "make a page", binOverride: BIN_OVERRIDE },
+        { agent: "deepseek-tui", prompt: "make a page", binOverride: BIN_OVERRIDE },
         content,
         0,
       );
@@ -232,6 +232,24 @@ describe("invokeAgent", () => {
 
       expect(deltas).toHaveLength(1);
       expect(deltas[0]).toMatchObject({ type: "delta", text: "hello\n" });
+      expect(done).toHaveLength(1);
+      expect(done[0]).toMatchObject({ type: "done", code: 0 });
+    });
+
+    it("codewhale: enqueues remaining stdoutBuf as single delta on close (HTML, no trailing newline)", async () => {
+      const html = "<html><body>hello from codewhale</body></html>";
+
+      const events = await driveInvoke(
+        { agent: "codewhale", prompt: "make a page", binOverride: BIN_OVERRIDE },
+        html,
+        0,
+      );
+
+      const deltas = events.filter((e) => e.type === "delta");
+      const done = events.filter((e) => e.type === "done");
+
+      expect(deltas).toHaveLength(1);
+      expect(deltas[0]).toMatchObject({ type: "delta", text: html });
       expect(done).toHaveLength(1);
       expect(done[0]).toMatchObject({ type: "done", code: 0 });
     });
@@ -273,7 +291,7 @@ describe("invokeAgent", () => {
     });
   });
 
-  describe("close-path: non-deepseek/aider agents", () => {
+  describe("close-path: non-deepseek-tui/aider agents", () => {
     it("codex: parses remaining stdoutBuf on close (valid JSON delta)", async () => {
       const json = '{"type":"item.delta","text":"parsed on close"}';
 
@@ -332,7 +350,7 @@ describe("invokeAgent", () => {
   describe("exit code propagation", () => {
     it("done event reflects exit code 0", async () => {
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "test", binOverride: BIN_OVERRIDE },
+        { agent: "deepseek-tui", prompt: "test", binOverride: BIN_OVERRIDE },
         "ok",
         0,
       );
@@ -343,7 +361,7 @@ describe("invokeAgent", () => {
 
     it("done event reflects exit code 1", async () => {
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "test", binOverride: BIN_OVERRIDE },
+        { agent: "deepseek-tui", prompt: "test", binOverride: BIN_OVERRIDE },
         "fail",
         1,
       );
@@ -354,7 +372,7 @@ describe("invokeAgent", () => {
 
     it("done event with null code (signal exit)", async () => {
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "test", binOverride: BIN_OVERRIDE },
+        { agent: "deepseek-tui", prompt: "test", binOverride: BIN_OVERRIDE },
         "killed",
         null,
       );
@@ -370,7 +388,7 @@ describe("invokeAgent", () => {
       mockSpawn.mockReturnValue(child);
 
       const stream = invokeAgent({
-        agent: "deepseek",
+        agent: "deepseek-tui",
         prompt: "test",
         binOverride: BIN_OVERRIDE,
       });
@@ -400,7 +418,7 @@ describe("invokeAgent", () => {
       mockSpawn.mockReturnValue(child);
 
       const stream = invokeAgent({
-        agent: "deepseek",
+        agent: "deepseek-tui",
         prompt: "test",
         binOverride: BIN_OVERRIDE,
       });
@@ -428,7 +446,7 @@ describe("invokeAgent", () => {
   describe("start event", () => {
     it("includes bin, argv, and promptBytes", async () => {
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "hello world", binOverride: BIN_OVERRIDE },
+        { agent: "deepseek-tui", prompt: "hello world", binOverride: BIN_OVERRIDE },
         null,
         0,
       );
@@ -447,12 +465,32 @@ describe("invokeAgent", () => {
     });
   });
 
-  describe("deepseek vs non-deepseek close-path distinction", () => {
-    it("deepseek close-path bypasses parse() entirely — HTML not double-parsed", async () => {
+  describe("deepseek-tui vs non-deepseek-tui close-path distinction", () => {
+    it("deepseek-tui close-path bypasses parse() entirely — HTML not double-parsed", async () => {
       const html = "<html><body>distinct</body></html>";
 
       const events = await driveInvoke(
-        { agent: "deepseek", prompt: "test", binOverride: BIN_OVERRIDE },
+        { agent: "deepseek-tui", prompt: "test", binOverride: BIN_OVERRIDE },
+        html,
+        0,
+      );
+
+      const deltas = events.filter((e) => e.type === "delta");
+      expect(deltas).toHaveLength(1);
+      expect(deltas[0]).toMatchObject({ type: "delta", text: html });
+
+      const raws = events.filter((e) => e.type === "raw");
+      expect(raws).toHaveLength(0);
+
+      const htmls = events.filter((e) => e.type === "html");
+      expect(htmls).toHaveLength(0);
+    });
+
+    it("codewhale close-path bypasses parse() entirely — HTML not double-parsed", async () => {
+      const html = "<html><body>codewhale-distinct</body></html>";
+
+      const events = await driveInvoke(
+        { agent: "codewhale", prompt: "test", binOverride: BIN_OVERRIDE },
         html,
         0,
       );
@@ -487,5 +525,6 @@ describe("invokeAgent", () => {
       const htmls = events.filter((e) => e.type === "html");
       expect(htmls).toHaveLength(0);
     });
+
   });
 });

@@ -153,10 +153,25 @@ export const AGENTS: AgentDef[] = [
     ],
   },
   {
-    id: "deepseek",
+    id: "codewhale",
+    label: "CodeWhale",
+    bin: "codewhale",
+    fallbackBins: ["deepseek-tui"],
+    envOverride: "CODEWHALE_BIN",
+    vendor: "CodeWhale",
+    protocol: "argv",
+    fallbackModels: [
+      DEFAULT_MODEL,
+      { id: "deepseek-v4-pro", label: "deepseek-v4-pro" },
+      { id: "deepseek-v4-flash", label: "deepseek-v4-flash" },
+    ],
+  },
+  {
+    id: "deepseek-tui",
     label: "DeepSeek TUI",
-    bin: "deepseek",
-    envOverride: "DEEPSEEK_BIN",
+    bin: "deepseek-tui",
+    fallbackBins: ["codewhale"],
+    envOverride: "DEEPSEEK_TUI_BIN",
     vendor: "DeepSeek",
     protocol: "argv",
     fallbackModels: [

@@ -6,7 +6,7 @@ import path, { delimiter, join } from "node:path";
  * Per-agent invocation protocol. Determines what `invokeAgent` does with the
  * prompt and how it parses output:
  *   - "stdin"        : pipe prompt → child stdin, parse stdout via parseLine
- *   - "argv"         : pass prompt as positional argv (deepseek), parse stdout as plain
+ *   - "argv"         : pass prompt as positional argv (deepseek-tui), parse stdout as plain
  *   - "argv-message" : prompt goes via `--message <text>` (openclaw); stdout is
  *                      a single multi-line JSON document (not ndjson), parsed
  *                      after the child closes.
@@ -181,10 +181,25 @@ export const AGENTS: AgentDef[] = [
     ],
   },
   {
-    id: "deepseek",
+    id: "codewhale",
+    label: "CodeWhale",
+    bin: "codewhale",
+    fallbackBins: ["deepseek-tui"],
+    envOverride: "CODEWHALE_BIN",
+    vendor: "CodeWhale",
+    protocol: "argv",
+    fallbackModels: [
+      DEFAULT_MODEL,
+      { id: "deepseek-v4-pro", label: "deepseek-v4-pro" },
+      { id: "deepseek-v4-flash", label: "deepseek-v4-flash" },
+    ],
+  },
+  {
+    id: "deepseek-tui",
     label: "DeepSeek TUI",
-    bin: "deepseek",
-    envOverride: "DEEPSEEK_BIN",
+    bin: "deepseek-tui",
+    fallbackBins: ["codewhale"],
+    envOverride: "DEEPSEEK_TUI_BIN",
     vendor: "DeepSeek",
     protocol: "argv",
     fallbackModels: [

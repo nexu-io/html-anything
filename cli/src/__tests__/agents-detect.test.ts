@@ -201,12 +201,24 @@ describe("detectAgents", () => {
 
     it("preserves explicit protocol from agent definition (argv)", () => {
       existsSyncMock.mockImplementation((p) => {
-        if (p === "/usr/local/bin/deepseek") return true;
+        if (p === "/usr/local/bin/codewhale") return true;
         return false;
       });
 
       const agents = detectAgents();
-      const deepseek = findAgent(agents, "deepseek");
+      const codewhale = findAgent(agents, "codewhale");
+
+      expect(codewhale.protocol).toBe("argv");
+    });
+
+    it("preserves explicit protocol from agent definition (argv) for deepseek-tui", () => {
+      existsSyncMock.mockImplementation((p) => {
+        if (p === "/usr/local/bin/deepseek-tui") return true;
+        return false;
+      });
+
+      const agents = detectAgents();
+      const deepseek = findAgent(agents, "deepseek-tui");
 
       expect(deepseek.protocol).toBe("argv");
     });
