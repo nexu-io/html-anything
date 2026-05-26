@@ -302,6 +302,12 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   }
 
   if (agent === "codex") {
+    if (obj.type === "thread.started" && typeof obj.thread_id === "string") {
+      out.push({ kind: "meta", key: "session", value: obj.thread_id });
+    }
+    if (obj.type === "turn.started") {
+      out.push({ kind: "meta", key: "turn", value: "started" });
+    }
     if (obj.type === "item.completed" && obj.item && typeof obj.item === "object") {
       const item = obj.item as { item_type?: string; type?: string; text?: string };
       const itemType = item.item_type ?? item.type;

@@ -20,6 +20,13 @@ const DIFF_LOG_PREFIX = "🔁 diff-edit 模式";
 // per-task abort controllers — multiple tasks can stream concurrently
 const controllers = new Map<string, AbortController>();
 
+export function isDiffEditRun(
+  task: { baseHtml?: string; baseContent?: string } | undefined,
+  nextContent: string,
+): task is { baseHtml: string; baseContent: string } {
+  return !!task?.baseHtml && !!task?.baseContent && task.baseContent.trim() !== nextContent.trim();
+}
+
 export function useConvert() {
   const cancel = useCallback((taskId: string) => {
     const ctl = controllers.get(taskId);
@@ -37,8 +44,10 @@ export function useConvert() {
       const ctl = new AbortController();
       controllers.set(taskId, ctl);
       const store = useStore.getState();
+      const task = store.tasks.find((t) => t.id === taskId);
+      const isEdit = isDiffEditRun(task, req.content);
       store.setStatusFor(taskId, "running");
-      store.resetHtmlFor(taskId);
+      if (!isEdit) store.resetHtmlFor(taskId);
       store.clearLogFor(taskId);
       store.resetStatsFor(taskId);
       const startedAt = Date.now();
@@ -47,8 +56,7 @@ export function useConvert() {
       // Inline `asset:<id>` placeholders (created by useUploadFile for
       // images) back into real `data:image/...` URLs before the agent
       // sees the prompt. Editor stays readable; agent gets the bytes.
-      const taskWithAssets = store.tasks.find((t) => t.id === taskId);
-      const assets = taskWithAssets?.assets ?? {};
+      const assets = task?.assets ?? {};
       const inlinedContent = Object.keys(assets).length
         ? req.content.replace(/asset:([a-z0-9_]+)/gi, (m, id) => assets[id] ?? m)
         : req.content;
@@ -67,15 +75,10 @@ export function useConvert() {
       // the previous (baseContent, baseHtml) so the API can ask the agent for
       // minimal edits instead of a fresh regeneration. This preserves the
       // design system AND saves output tokens.
-      const task = store.tasks.find((t) => t.id === taskId);
-      const isEdit =
-        !!task?.baseHtml &&
-        !!task?.baseContent &&
-        task.baseContent.trim() !== req.content.trim();
       const editPayload = isEdit
         ? {
-            editFromHtml: task!.baseHtml!,
-            editFromContent: task!.baseContent!,
+            editFromHtml: task.baseHtml,
+            editFromContent: task.baseContent,
           }
         : null;
 
@@ -93,7 +96,7 @@ export function useConvert() {
       store.pushLogFor(taskId, {
         kind: "info",
         text: isEdit
-          ? `${DIFF_LOG_PREFIX} · ${req.agent}${useModel ? ` · 模型 ${useModel}` : ""} · 模板 ${req.templateId} · ${sizeNote} · 原 HTML ${(task!.baseHtml!.length / 1024).toFixed(1)} KB`
+          ? `${DIFF_LOG_PREFIX} · ${req.agent}${useModel ? ` · 模型 ${useModel}` : ""} · 模板 ${req.templateId} · ${sizeNote} · 原 HTML ${(task.baseHtml.length / 1024).toFixed(1)} KB`
           : `准备调用 ${req.agent}${useModel ? ` · 模型 ${useModel}` : ""} · 模板 ${req.templateId} · ${sizeNote}`,
       });
 
