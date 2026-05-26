@@ -51,6 +51,10 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
     case "codex":
       return [
         "exec",
+        // HTML Anything only needs Codex auth/model access here. Loading the
+        // user's full config can start unrelated MCP servers; stale OAuth on
+        // one of those servers shows up as scary stderr even when Codex exits 0.
+        "--ignore-user-config",
         "--json",
         "--skip-git-repo-check",
         "--sandbox",
