@@ -16,6 +16,11 @@ type ConvertReq = {
 
 /** prefix logged when the run is sent in diff-edit mode (vs full regeneration) */
 const DIFF_LOG_PREFIX = "🔁 diff-edit 模式";
+const FIRST_OUTPUT_WAIT_LOGS = [
+  { afterMs: 15_000, text: "仍在等待 agent 输出首个 HTML 片段；Codex 大文档通常会在最后一次性返回。" },
+  { afterMs: 60_000, text: "agent 仍在运行，但还没有首个 HTML 输出。可以继续等待，或点 Stop 取消后换更小的输入 / 更快的模型。" },
+  { afterMs: 120_000, text: "已经等待超过 2 分钟且还没有 HTML 输出；这通常是 Codex 仍在生成最终完整文档。" },
+];
 
 // per-task abort controllers — multiple tasks can stream concurrently
 const controllers = new Map<string, AbortController>();
@@ -25,6 +30,16 @@ export function isDiffEditRun(
   nextContent: string,
 ): task is { baseHtml: string; baseContent: string } {
   return !!task?.baseHtml && !!task?.baseContent && task.baseContent.trim() !== nextContent.trim();
+}
+
+export function nextFirstOutputWaitLog(
+  elapsedMs: number,
+  emittedCount: number,
+  hasFirstByte: boolean,
+): string | null {
+  if (hasFirstByte) return null;
+  const next = FIRST_OUTPUT_WAIT_LOGS[emittedCount];
+  return next && elapsedMs >= next.afterMs ? next.text : null;
 }
 
 export function useConvert() {
@@ -100,7 +115,26 @@ export function useConvert() {
           : `准备调用 ${req.agent}${useModel ? ` · 模型 ${useModel}` : ""} · 模板 ${req.templateId} · ${sizeNote}`,
       });
 
+      let waitLogTimer: number | undefined;
       try {
+        let waitLogCount = 0;
+        waitLogTimer = window.setInterval(() => {
+          const current = useStore.getState().tasks.find((t) => t.id === taskId);
+          if (!current || current.status !== "running") return;
+          const text = nextFirstOutputWaitLog(
+            Date.now() - startedAt,
+            waitLogCount,
+            !!current.stats.firstByteAt,
+          );
+          if (!text) return;
+          waitLogCount += 1;
+          store.pushLogFor(taskId, {
+            kind: "info",
+            elapsed: Date.now() - startedAt,
+            text,
+          });
+        }, 1_000);
+
         const res = await fetch("/api/convert", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -163,6 +197,7 @@ export function useConvert() {
         });
         useStore.getState().setStatusFor(taskId, "error");
       } finally {
+        if (waitLogTimer !== undefined) window.clearInterval(waitLogTimer);
         if (controllers.get(taskId) === ctl) controllers.delete(taskId);
       }
     },
