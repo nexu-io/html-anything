@@ -366,6 +366,14 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
     if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
     if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });
+    if (Array.isArray(obj.parts)) {
+      for (const part of obj.parts) {
+        if (typeof part?.text === "string") out.push({ kind: "delta", text: part.text });
+      }
+    }
+    if (obj.type === "text" && typeof obj.part?.text === "string") {
+      out.push({ kind: "delta", text: obj.part.text });
+    }
   }
 
   if (agent === "qoder") {
