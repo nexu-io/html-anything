@@ -285,4 +285,4 @@ SLIDES 数组每项形态：
 - 不擅自加 emphasis（只有一级标题 / 首末页 / 分隔符）
 
 【致谢】
-本 skill 改编自 [lijigang/ljg-skills · ljg-present](https://github.com/lijigang/coderepo/tree/main/skills/ljg-present)（v3.0.0）。原版输出多主题包含 cyber-hacker 模式与 PNG 投影; html-anything 版只保留 3 主题 + 单文件 HTML 输出。审美灵感继续指向 Felipe Franco / BIG STUDIOS 的 manifesto 字体海报。
+本 skill 改编自 [lijigang/ljg-skills · ljg-present](https://github.com/lijigang/ljg-skills/tree/md/skills/ljg-present)（v3.0.0）。原版输出多主题包含 cyber-hacker 模式与 PNG 投影; html-anything 版只保留 3 主题 + 单文件 HTML 输出。审美灵感继续指向 Felipe Franco / BIG STUDIOS 的 manifesto 字体海报。

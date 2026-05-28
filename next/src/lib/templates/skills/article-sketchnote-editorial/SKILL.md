@@ -13,8 +13,8 @@ example_name: "视觉笔记 · 涌现的命名"
 example_format: markdown
 example_tagline: "还原论失败 → Anderson 1972"
 example_desc: "一段以「涌现」为终点的概念史专题, 6 个 layout 节奏 = 开阔→紧→紧→爆→开阔→静"
-example_source_url: "https://github.com/lijigang/coderepo/tree/main/skills/ljg-card"
-example_source_label: "lijigang/coderepo · ljg-card mode-sketchnote"
+example_source_url: "https://github.com/lijigang/ljg-skills/tree/master/skills/ljg-card"
+example_source_label: "lijigang/ljg-skills · ljg-card"
 ---
 
 【模板: 编辑式视觉笔记（Editorial Sketchnote）】
@@ -217,4 +217,4 @@ example_source_label: "lijigang/coderepo · ljg-card mode-sketchnote"
 - sidekick 不能空
 
 【致谢】
-本 skill 改编自 [lijigang/ljg-skills · ljg-card -v sketchnote](https://github.com/lijigang/coderepo/tree/main/skills/ljg-card)（v2.3.0）。原版输出 PNG（playwright 截图）, html-anything 版直接输出单文件 HTML, 6 公理 + 6 layout + 4 字族 + 节奏与原版一致。
+本 skill 改编自 [lijigang/ljg-skills · ljg-card -v sketchnote](https://github.com/lijigang/ljg-skills/tree/master/skills/ljg-card)（v2.3.0）。原版输出 PNG（playwright 截图）, html-anything 版直接输出单文件 HTML, 6 公理 + 6 layout + 4 字族 + 节奏与原版一致。
