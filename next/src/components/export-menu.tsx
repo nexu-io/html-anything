@@ -76,7 +76,7 @@ export function ExportMenu({ iframeRef }: ExportMenuProps) {
     {
       title: t("export.section.platform"),
       actions: [
-        { id: "wechat", label: t("export.action.wechat"), emoji: "💬", fn: wrap(t("export.toast.wechat"), async () => { await copyToWechat(cleanHtml()); }) },
+        { id: "wechat", label: t("export.action.wechat"), emoji: "💬", fn: wrap(t("export.toast.wechat"), async () => { await copyToWechat(cleanHtml(), iframeRef.current?.contentDocument); }) },
         { id: "zhihu",  label: t("export.action.zhihu"),  emoji: "🦓", fn: wrap(t("export.toast.zhihu"), async () => { await copyToZhihu(cleanHtml()); }) },
         { id: "twitter-img", label: t("export.action.twitterImg"), emoji: "🐦", fn: wrap(t("export.toast.image"), async () => {
           if (!iframeRef.current) throw new Error(t("export.error.previewNotReady")); await copyIframeToClipboard(iframeRef.current);
