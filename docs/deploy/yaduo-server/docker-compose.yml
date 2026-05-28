@@ -1,0 +1,22 @@
+services:
+  html-anything:
+    build:
+      context: /opt/apps/html-anything
+      dockerfile: next/Dockerfile
+    image: html-anything:local
+    container_name: html-anything
+    restart: unless-stopped
+    ports:
+      - "3100:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      CODEX_HOME: /root/.codex
+      CODEX_BIN: /usr/local/bin/codex
+      HTML_ANYTHING_ALLOW_ANY_HOST: "1"
+      MY_PROXY_API_KEY: ${MY_PROXY_API_KEY}
+    volumes:
+      - /opt/apps/html-anything-data/codex:/root/.codex
+      - /opt/apps/html-anything-data/state:/root/.html-anything
