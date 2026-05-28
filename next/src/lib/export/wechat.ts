@@ -113,6 +113,7 @@ export async function copyToWechat(fullHtml: string, renderedDoc?: Document | nu
 function inlineComputedTree(source: Element, clone: Element, view: Window): void {
   const styleText = computedStyleText(source, view);
   if (styleText) clone.setAttribute("style", styleText);
+  materializePseudos(source, clone, view);
 
   const sourceEls = Array.from(source.querySelectorAll("*"));
   const cloneEls = Array.from(clone.querySelectorAll("*"));
@@ -121,16 +122,68 @@ function inlineComputedTree(source: Element, clone: Element, view: Window): void
     if (!cloneEl) continue;
     const childStyle = computedStyleText(sourceEls[i], view);
     if (childStyle) cloneEl.setAttribute("style", childStyle);
+    materializePseudos(sourceEls[i], cloneEl, view);
   }
 }
 
-function computedStyleText(el: Element, view: Window, opts?: { skipMargin?: boolean }): string {
+/**
+ * WeChat strips pseudo-elements entirely, and our computed-style walk only sees
+ * real DOM nodes. Read ::before/::after from getComputedStyle and turn each into
+ * a real <span> child so the rendered content (✓, Recommended badge, etc.) survives.
+ */
+function materializePseudos(source: Element, clone: Element, view: Window): void {
+  const before = buildPseudoNode(source, view, "::before");
+  if (before) clone.insertBefore(before, clone.firstChild);
+  const after = buildPseudoNode(source, view, "::after");
+  if (after) clone.appendChild(after);
+}
+
+function buildPseudoNode(source: Element, view: Window, pseudo: "::before" | "::after"): HTMLElement | null {
   let computed: CSSStyleDeclaration;
   try {
-    computed = view.getComputedStyle(el);
+    computed = view.getComputedStyle(source, pseudo);
   } catch {
-    // Cross-origin frames or detached nodes throw here. Skip silently rather than abort the export.
-    return "";
+    return null;
+  }
+  const text = unquoteContent(computed.getPropertyValue("content").trim());
+  if (text === null) return null;
+
+  const span = document.createElement("span");
+  span.setAttribute("data-pseudo", pseudo);
+  if (text) span.textContent = text;
+  const style = computedStyleText(source, view, { pseudoComputed: computed });
+  if (style) span.setAttribute("style", style);
+  return span;
+}
+
+/**
+ * getComputedStyle returns `content` as a CSS token: a string literal (with quotes),
+ * `none`, `normal`, or a function like `attr()` / `counter()` / `url()`. We only
+ * materialize string-literal contents — anything else (including the no-content
+ * sentinels) returns null so the pseudo is skipped.
+ */
+function unquoteContent(value: string): string | null {
+  if (!value || value === "none" || value === "normal") return null;
+  const match = value.match(/^"((?:[^"\\]|\\.)*)"$/) ?? value.match(/^'((?:[^'\\]|\\.)*)'$/);
+  if (!match) return null;
+  return match[1].replace(/\\(.)/g, "$1");
+}
+
+function computedStyleText(
+  el: Element,
+  view: Window,
+  opts?: { skipMargin?: boolean; pseudoComputed?: CSSStyleDeclaration },
+): string {
+  let computed: CSSStyleDeclaration;
+  if (opts?.pseudoComputed) {
+    computed = opts.pseudoComputed;
+  } else {
+    try {
+      computed = view.getComputedStyle(el);
+    } catch {
+      // Cross-origin frames or detached nodes throw here. Skip silently rather than abort the export.
+      return "";
+    }
   }
   const styles: string[] = [];
 

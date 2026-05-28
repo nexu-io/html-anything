@@ -91,6 +91,62 @@ describe("toWechatHtmlFromDocument", () => {
     );
   });
 
+  it("materializes ::before and ::after content into real DOM nodes", () => {
+    document.body.innerHTML = `
+      <ul>
+        <li class="check">Item one</li>
+      </ul>
+      <p class="tier">Pro plan</p>
+    `;
+
+    const original = window.getComputedStyle.bind(window);
+    const stub = ((el: Element, pseudo?: string | null) => {
+      const base = original(el);
+      if (!pseudo) return base;
+      const overrides: Record<string, string> = {};
+      if (pseudo === "::before" && (el as HTMLElement).matches?.(".check")) {
+        overrides.content = '"✓"';
+        overrides.color = "rgb(255, 0, 0)";
+      } else if (pseudo === "::before" && (el as HTMLElement).matches?.(".tier")) {
+        overrides.content = '"Recommended"';
+        overrides.color = "rgb(255, 255, 255)";
+      } else if (pseudo === "::after" && (el as HTMLElement).matches?.(".tier")) {
+        overrides.content = '"★"';
+      }
+      return new Proxy(base, {
+        get(target, prop) {
+          if (prop === "getPropertyValue") {
+            return (name: string) => overrides[name] ?? target.getPropertyValue(name);
+          }
+          const value = (target as unknown as Record<string | symbol, unknown>)[prop];
+          return typeof value === "function" ? (value as () => unknown).bind(target) : value;
+        },
+      });
+    }) as typeof window.getComputedStyle;
+    window.getComputedStyle = stub;
+
+    try {
+      const body = parseFragment(toWechatHtmlFromDocument(document));
+      const check = body.querySelector("li.check");
+      const tier = body.querySelector("p.tier");
+
+      const checkBefore = check?.firstElementChild;
+      expect(checkBefore?.getAttribute("data-pseudo")).toBe("::before");
+      expect(checkBefore?.textContent).toBe("✓");
+      expect(checkBefore?.getAttribute("style") ?? "").toContain("color: rgb(255, 0, 0)");
+
+      const tierBefore = tier?.firstElementChild;
+      expect(tierBefore?.getAttribute("data-pseudo")).toBe("::before");
+      expect(tierBefore?.textContent).toBe("Recommended");
+
+      const tierAfter = tier?.lastElementChild;
+      expect(tierAfter?.getAttribute("data-pseudo")).toBe("::after");
+      expect(tierAfter?.textContent).toBe("★");
+    } finally {
+      window.getComputedStyle = original as typeof window.getComputedStyle;
+    }
+  });
+
   it("clamps oversized spacing and drops negative margins", () => {
     document.head.innerHTML = `
       <style>
