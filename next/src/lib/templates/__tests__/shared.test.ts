@@ -28,7 +28,6 @@ describe("SHARED_DESIGN_DIRECTIVES — entry-animation safety", () => {
     // The three accepted strategies all need to be discoverable in the
     // prompt body, otherwise the model has no concrete target to copy.
     expect(SHARED_DESIGN_DIRECTIVES).toMatch(/animation-fill-mode:\s*forwards/);
-    expect(SHARED_DESIGN_DIRECTIVES).toMatch(/forwards/);
     expect(SHARED_DESIGN_DIRECTIVES).toMatch(/both/);
   });
 
