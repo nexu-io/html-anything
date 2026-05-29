@@ -37,7 +37,16 @@ export const SHARED_DESIGN_DIRECTIVES = `
   3. 用 CSS \`transition\` 替代 \`@keyframes\`: 初始 \`opacity: 0; transform: translateY(8px); transition: opacity 0.6s, transform 0.6s;\`, 加 class 后改成 \`opacity: 1; transform: translateY(0);\` — transition 的最终态自动保留。
 - **绝对禁止**: 把元素 inline / 在 CSS 里写死 \`opacity: 0\`, 然后只用一个不带 \`forwards\` 的 \`animation: fadeIn 0.6s ease-out;\` 当揭示动画。这会导致动画播完后元素回到 \`opacity: 0\`, 内容**消失看不见** (典型 bug: 标题外的所有正文动画结束后被隐藏)。
 - **必须支持** \`@media (prefers-reduced-motion: reduce)\`: 在该条件下取消所有入场隐藏 (\`opacity: 1; transform: none; animation: none;\`), 让内容**直接可见, 不依赖任何动画完成**。
-- **必须支持 JS 失败 fallback**: 如果用 IntersectionObserver / scroll 监听控制可见性, 必须在 \`<noscript>\` 里或者用 CSS \`@supports not (selector(:has(*)))\` 之类的兜底, 确保 JS 不执行 / 报错 / 慢加载时, 内容仍然可见 — 不要让用户因为浏览器扩展拦截脚本就看不到文字。
+- **必须支持 JS 失败 fallback** (使用 progressive-enhancement 模式): 如果用 IntersectionObserver / scroll 监听控制可见性, 默认状态必须是**可见**, 然后由 JS 加上一个 \`.js-ready\` 类才打开"先隐藏 → 入场" 的路径。具体:
+\`\`\`css
+/* 默认 (JS 关闭 / 被扩展拦截 / 加载失败 → 直接可见) */
+.reveal { opacity: 1; }
+
+/* JS 跑起来后才启用入场动画 */
+.js-ready .reveal { opacity: 0; transition: opacity 0.6s ease-out; }
+.js-ready .reveal.in-view { opacity: 1; }
+\`\`\`
+配合一行 JS: \`document.addEventListener('DOMContentLoaded', () => document.body.classList.add('js-ready'));\`。这样 JS 任何环节失败 (扩展拦截 / CSP / 解析错误), 内容都直接可见, **不会被一段没跑起来的 IntersectionObserver 永久隐藏**。\`<noscript>\` 标签覆盖 JS 完全禁用的情形, \`.js-ready\` 类覆盖 JS 加载失败 / 被拦截的情形 — 两者都不要省略。
 
 【内容真实性】
 - **必须使用用户提供的真实数据**, 不要编造、不要 lorem ipsum、不要 "Your text here"。
