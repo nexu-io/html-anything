@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experiment Readout · Growth Console</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#07130f;--panel:#0e2119;--line:#1e3a30;--ink:#eefcf5;--muted:#93b5a7;--green:#2ff29a;--red:#ff6d6d;--blue:#64a7ff}
+    body{margin:0;background:radial-gradient(circle at 80% 0,#164632,#07130f 50%);color:var(--ink);font-family:Inter,system-ui,sans-serif}.page{max-width:1180px;margin:auto;padding:38px 26px 56px}
+    .panel{border:1px solid var(--line);background:rgba(14,33,25,.82);border-radius:8px}.chip{border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--muted)}
+    .bar{height:10px;border-radius:999px;background:#17352a;overflow:hidden}.bar span{display:block;height:100%;background:var(--green);border-radius:999px}table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:13px;text-align:left;font-size:13px}th{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="panel p-7">
+      <div class="flex flex-wrap justify-between gap-3"><div class="flex gap-2 flex-wrap"><span class="chip">Growth console</span><span class="chip">Onboarding checklist</span></div><span class="chip text-[var(--green)]">Decision: iterate + 50%</span></div>
+      <div class="grid lg:grid-cols-[1fr_380px] gap-8 mt-8">
+        <div><div class="text-xs uppercase tracking-widest font-extrabold text-[var(--muted)] mb-3">Primary readout</div><h1 class="text-6xl font-extrabold leading-[.94]">Activation is up. Friction is up too.</h1><p class="mt-5 text-lg leading-8 text-[var(--muted)]">The variant increases activation and teammate invites, while slightly raising support load around data-source setup.</p></div>
+        <div class="panel p-5"><div class="text-xs uppercase tracking-widest font-extrabold text-[var(--green)]">Primary metric</div><div class="mt-2 text-7xl font-extrabold">+5.5pp</div><p class="text-sm text-[var(--muted)] mt-2">21.4% control → 26.9% variant</p></div>
+      </div>
+    </section>
+    <section class="grid lg:grid-cols-[.9fr_1.1fr] gap-5 mt-5">
+      <div class="panel p-5 space-y-5">
+        <div><div class="flex justify-between text-sm mb-2"><b>Control activation</b><span>21.4%</span></div><div class="bar"><span style="width:21.4%"></span></div></div>
+        <div><div class="flex justify-between text-sm mb-2"><b>Variant activation</b><span>26.9%</span></div><div class="bar"><span style="width:26.9%"></span></div></div>
+        <div><div class="flex justify-between text-sm mb-2"><b>Control invite</b><span>38.1%</span></div><div class="bar"><span style="width:38.1%;background:var(--blue)"></span></div></div>
+        <div><div class="flex justify-between text-sm mb-2"><b>Variant invite</b><span>47.4%</span></div><div class="bar"><span style="width:47.4%;background:var(--blue)"></span></div></div>
+      </div>
+      <div class="panel overflow-hidden">
+        <table><thead><tr><th>Signal</th><th>Read</th><th>Action</th></tr></thead><tbody>
+          <tr><td><b>Activation lift</b></td><td class="text-[var(--green)]">Positive</td><td>Expand to 50%</td></tr>
+          <tr><td><b>Support tickets</b></td><td class="text-[var(--red)]">Watch</td><td>Add skip/connect-later option</td></tr>
+          <tr><td><b>Deletion</b></td><td>Flat</td><td>No rollback needed</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

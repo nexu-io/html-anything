@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Competitive Teardown · Analyst Dossier</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--paper:#f4efe3;--ink:#1d1b16;--muted:#6d6558;--line:#cfc4b0;--red:#9b2f23;--blue:#284b7a}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif}.page{max-width:1120px;margin:auto;padding:42px 28px 58px}
+    .serif{font-family:"IBM Plex Serif",Georgia,serif}.rule{border-top:3px double var(--ink);border-bottom:1px solid var(--ink)}.box{border:1px solid var(--line);background:#fbf7ee}
+    .stamp{border:2px solid var(--red);color:var(--red);transform:rotate(-2deg);display:inline-block;padding:5px 10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-size:11px}
+    table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:13px;text-align:left;vertical-align:top;font-size:13px}th{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="rule py-5 flex flex-wrap items-end justify-between gap-4">
+      <div><div class="stamp">Competitive dossier</div><h1 class="serif mt-4 text-6xl leading-[.96] font-bold">AI meeting assistants: the open flank.</h1></div>
+      <div class="text-right text-sm text-[var(--muted)]"><b>Prepared for:</b> Product Strategy<br><b>Question:</b> Where should LoopNote compete?</div>
+    </header>
+    <section class="grid lg:grid-cols-[.7fr_1.3fr] gap-5 mt-6">
+      <aside class="box p-5">
+        <h2 class="serif text-2xl font-bold">Thesis</h2>
+        <p class="mt-3 leading-7 text-[var(--muted)]">The visible market is crowded around note capture. The under-defended space is durable product insight across repeated customer conversations.</p>
+        <div class="mt-6 text-sm leading-7"><b>Do:</b> product discovery memory<br><b>Avoid:</b> generic transcription parity<br><b>Proof point:</b> source notes show no competitor owning cross-interview insight cards.</div>
+      </aside>
+      <section class="box overflow-hidden">
+        <table><thead><tr><th>Competitor</th><th>Promise</th><th>Strength</th><th>Weakness</th></tr></thead><tbody>
+          <tr><td><b>Granola</b></td><td>AI notes for people in meetings.</td><td>Personal, invisible, low-friction.</td><td>Team analytics not obvious.</td></tr>
+          <tr><td><b>Fireflies</b></td><td>Automate meeting notes.</td><td>Integrations and searchable library.</td><td>Heavy workflow; visible bot.</td></tr>
+          <tr><td><b>Fathom</b></td><td>Never take notes on Zoom.</td><td>Free individual capture, CRM utility.</td><td>Less focused on product insight synthesis.</td></tr>
+        </tbody></table>
+      </section>
+    </section>
+    <section class="grid md:grid-cols-3 gap-5 mt-5">
+      <div class="box p-5"><h3 class="serif text-xl font-bold">30-day move</h3><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Reframe objects around interviews, pain, quotes, objections, and feature requests.</p></div>
+      <div class="box p-5"><h3 class="serif text-xl font-bold">90-day move</h3><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Ship cross-call synthesis and export to PRD / roadmap workflows.</p></div>
+      <div class="box p-5"><h3 class="serif text-xl font-bold">Evidence gaps</h3><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Need 8-12 product-team interviews and willingness-to-pay signal for research memory.</p></div>
+    </section>
+  </main>
+</body>
+</html>

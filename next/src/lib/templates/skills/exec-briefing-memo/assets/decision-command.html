@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Executive Briefing Memo · Decision Command</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#101418;--panel:#171d22;--ink:#f1f5f9;--muted:#9aa8b8;--line:#2a343f;--green:#3ddc97;--red:#ff6b5f;--amber:#f0b45b}
+    body{margin:0;background:linear-gradient(135deg,#101418,#17202b);color:var(--ink);font-family:Inter,system-ui,sans-serif}.page{max-width:1180px;margin:auto;padding:38px 26px 56px}
+    .panel{background:rgba(23,29,34,.86);border:1px solid var(--line);border-radius:8px}.chip{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:14px;text-align:left;font-size:13px;vertical-align:top}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.09em}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="panel p-7">
+      <div class="flex flex-wrap justify-between gap-3"><div class="flex gap-2 flex-wrap"><span class="chip">Decision command</span><span class="chip">Enterprise Plan</span><span class="chip">Deadline 2026-06-14</span></div><span class="chip text-[var(--amber)]">Medium-high confidence</span></div>
+      <div class="grid lg:grid-cols-[1fr_360px] gap-8 mt-8">
+        <div><div class="text-[var(--muted)] text-xs uppercase font-extrabold tracking-widest mb-3">Decision needed</div><h1 class="text-6xl font-extrabold leading-[.95]">Approve Enterprise Preview, not full Enterprise.</h1><p class="mt-5 text-lg text-[var(--muted)] leading-8">The signal is real enough to test annual contracts, but not strong enough to absorb full enterprise scope.</p></div>
+        <div class="panel p-5 bg-[#12251d]"><div class="text-[var(--green)] text-xs uppercase font-extrabold tracking-widest">Recommended path</div><ol class="mt-4 space-y-3 text-sm leading-6"><li><b>1.</b> Ship SSO + audit log MVP.</li><li><b>2.</b> Sell to 3 design partners.</li><li><b>3.</b> Defer custom retention until ACV proof.</li></ol></div>
+      </div>
+    </section>
+    <section class="grid md:grid-cols-4 gap-4 mt-5">
+      <div class="panel p-5"><div class="text-xs text-[var(--muted)] uppercase font-bold">Inbound asks</div><div class="text-5xl font-extrabold mt-3">18</div></div>
+      <div class="panel p-5"><div class="text-xs text-[var(--muted)] uppercase font-bold">Large accounts</div><div class="text-5xl font-extrabold mt-3">7</div></div>
+      <div class="panel p-5"><div class="text-xs text-[var(--muted)] uppercase font-bold">Est. ACV</div><div class="text-5xl font-extrabold mt-3">$18k+</div></div>
+      <div class="panel p-5"><div class="text-xs text-[var(--muted)] uppercase font-bold">Roadmap risk</div><div class="text-5xl font-extrabold mt-3 text-[var(--red)]">4-6w</div></div>
+    </section>
+    <section class="panel mt-5 overflow-hidden">
+      <table><thead><tr><th>Path</th><th>Upside</th><th>Cost</th><th>Kill criteria</th></tr></thead><tbody>
+        <tr><td><b>Preview</b></td><td>Tests willingness to pay.</td><td>5 weeks of scoped work.</td><td>No annual contracts from first 3 prospects.</td></tr>
+        <tr><td><b>Full enterprise</b></td><td>Bigger story.</td><td>Retention, SCIM, SLA, CSM.</td><td>Premature sales motion.</td></tr>
+        <tr><td><b>Wait</b></td><td>Protects roadmap.</td><td>Missed market pull.</td><td>Competitor captures segment.</td></tr>
+      </tbody></table>
+    </section>
+  </main>
+</body>
+</html>

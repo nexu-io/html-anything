@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experiment Readout · Lab Notebook</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--paper:#fffdf5;--ink:#17211b;--muted:#65746b;--line:#d8dece;--green:#16865a;--amber:#b7791f}
+    body{margin:0;background:#edf3ea;color:var(--ink);font-family:Inter,system-ui,sans-serif}.page{max-width:1080px;margin:34px auto;padding:0 24px 54px}.sheet{background:var(--paper);border:1px solid var(--line);box-shadow:0 18px 50px rgba(47,64,45,.14)}
+    .mono{font-family:"IBM Plex Mono",monospace}.label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:var(--muted)}.line{background-image:linear-gradient(var(--line) 1px,transparent 1px);background-size:100% 34px}
+    table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:12px;text-align:left;font-size:13px}th{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="sheet line p-8">
+      <div class="flex flex-wrap justify-between gap-3"><div class="mono text-sm">EXP-042 · onboarding-checklist</div><div class="label">Growth lab notebook</div></div>
+      <h1 class="mt-8 text-5xl font-extrabold leading-[.98]">Result: iterate before full rollout.</h1>
+      <p class="mt-5 max-w-3xl text-lg leading-8 text-[var(--muted)]">The checklist appears to improve activation, but the data-source step adds support friction and the test lacks formal significance calculation.</p>
+      <div class="grid md:grid-cols-3 gap-4 mt-8">
+        <div class="bg-white/70 border border-[var(--line)] p-4"><div class="label">Primary lift</div><div class="text-4xl font-extrabold mt-2 text-[var(--green)]">+5.5pp</div></div>
+        <div class="bg-white/70 border border-[var(--line)] p-4"><div class="label">Samples</div><div class="text-4xl font-extrabold mt-2">3641</div></div>
+        <div class="bg-white/70 border border-[var(--line)] p-4"><div class="label">Caveat</div><div class="text-2xl font-extrabold mt-3 text-[var(--amber)]">Directional</div></div>
+      </div>
+    </section>
+    <section class="sheet mt-5 overflow-hidden">
+      <table><thead><tr><th>Metric</th><th>Control</th><th>Variant</th><th>Interpretation</th></tr></thead><tbody>
+        <tr><td><b>Activation</b></td><td>21.4%</td><td>26.9%</td><td>Positive signal</td></tr>
+        <tr><td><b>Invite teammate</b></td><td>38.1%</td><td>47.4%</td><td>Main driver</td></tr>
+        <tr><td><b>Support tickets</b></td><td>6.2</td><td>7.1</td><td>Friction introduced</td></tr>
+      </tbody></table>
+    </section>
+    <section class="grid md:grid-cols-3 gap-4 mt-5">
+      <div class="sheet p-5"><div class="label">Next experiment</div><p class="mt-3 text-sm leading-6">Split "connect data source" into "skip now" and "connect later."</p></div>
+      <div class="sheet p-5"><div class="label">Instrumentation</div><p class="mt-3 text-sm leading-6">Calculate p-value or Bayesian posterior before 100% rollout.</p></div>
+      <div class="sheet p-5"><div class="label">Decision</div><p class="mt-3 text-sm leading-6">Ship to 50% with friction fix and support monitoring.</p></div>
+    </section>
+  </main>
+</body>
+</html>

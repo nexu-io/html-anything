@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Competitive Teardown · Radar Map</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#08111f;--panel:#0d1b2d;--line:#223651;--ink:#e7eefc;--muted:#91a4c3;--cyan:#38d5ff;--lime:#9ef36a;--pink:#ff6aa2}
+    body{margin:0;background:radial-gradient(circle at 70% 10%,#173761 0,#08111f 46%,#050914 100%);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+    .page{max-width:1200px;margin:auto;padding:38px 26px 56px}.panel{border:1px solid var(--line);background:rgba(13,27,45,.76);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+    .chip{border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+    .radar{background:repeating-radial-gradient(circle at center,transparent 0 44px,rgba(56,213,255,.25) 45px 46px),linear-gradient(90deg,transparent 49.8%,rgba(56,213,255,.28) 50%,transparent 50.2%),linear-gradient(0deg,transparent 49.8%,rgba(56,213,255,.28) 50%,transparent 50.2%)}
+    table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:14px;text-align:left;font-size:13px;vertical-align:top}th{color:var(--muted);text-transform:uppercase;letter-spacing:.09em;font-size:11px}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="panel p-7">
+      <div class="flex flex-wrap gap-2 mb-6"><span class="chip">Radar map</span><span class="chip">AI meeting assistants</span><span class="chip">Product strategy</span></div>
+      <div class="grid lg:grid-cols-[.9fr_1.1fr] gap-8">
+        <div>
+          <p class="text-[var(--cyan)] text-sm font-bold mb-3">Strategic read</p>
+          <h1 class="text-6xl font-extrabold leading-[.94]">Own the insight layer.</h1>
+          <p class="mt-5 text-lg leading-8 text-[var(--muted)]">Granola wins personal capture. Fireflies and Fathom win workflow breadth. LoopNote should map raw conversations into product decisions.</p>
+        </div>
+        <div class="panel radar relative h-[420px] overflow-hidden">
+          <div class="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--cyan)] shadow-[0_0_28px_var(--cyan)]"></div>
+          <div class="absolute left-[18%] top-[62%] rounded-full bg-[#10294f] px-4 py-2 text-sm font-extrabold text-[var(--cyan)]">Granola</div>
+          <div class="absolute right-[14%] top-[45%] rounded-full bg-[#203117] px-4 py-2 text-sm font-extrabold text-[var(--lime)]">Fireflies</div>
+          <div class="absolute right-[24%] bottom-[18%] rounded-full bg-[#3b1730] px-4 py-2 text-sm font-extrabold text-[var(--pink)]">Fathom</div>
+          <div class="absolute left-[42%] top-[26%] rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-extrabold text-[#08111f]">LoopNote wedge</div>
+          <div class="absolute left-5 top-5 text-xs uppercase tracking-widest text-[var(--muted)]">Synthesis intensity</div>
+          <div class="absolute right-5 bottom-5 text-xs uppercase tracking-widest text-[var(--muted)]">Workflow gravity</div>
+        </div>
+      </div>
+    </section>
+    <section class="grid md:grid-cols-3 gap-4 mt-5">
+      <article class="panel p-5"><div class="text-[var(--cyan)] text-xs font-bold uppercase">Granola</div><h2 class="mt-3 text-2xl font-extrabold">Invisible personal notes</h2><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Best signal: meeting-heavy individuals who want AI without bot ceremony.</p></article>
+      <article class="panel p-5"><div class="text-[var(--lime)] text-xs font-bold uppercase">Fireflies</div><h2 class="mt-3 text-2xl font-extrabold">Searchable conversation ops</h2><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Best signal: integrations, transcript memory, sales and CS workflow.</p></article>
+      <article class="panel p-5"><div class="text-[var(--pink)] text-xs font-bold uppercase">Fathom</div><h2 class="mt-3 text-2xl font-extrabold">Free sales capture</h2><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Best signal: fast highlight capture and very clear CRM-adjacent value.</p></article>
+    </section>
+    <section class="panel mt-5 overflow-hidden">
+      <table><thead><tr><th>Vector</th><th>Market evidence</th><th>Our move</th><th>Risk</th></tr></thead><tbody>
+        <tr><td><b>Capture</b></td><td>Competitors already anchor here.</td><td>Meet parity only where product research needs it.</td><td>Feature treadmill.</td></tr>
+        <tr><td><b>Synthesis</b></td><td>Source notes show no clear owner.</td><td>Turn calls into pain clusters, quotes, and roadmap inputs.</td><td>Requires opinionated taxonomy.</td></tr>
+        <tr><td><b>Team workflow</b></td><td>Fireflies is broad, Fathom is sales-specific.</td><td>Package for product discovery teams.</td><td>Narrower TAM story.</td></tr>
+      </tbody></table>
+    </section>
+  </main>
+</body>
+</html>

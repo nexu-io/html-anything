@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Executive Briefing Memo · Board Paper</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;700;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--paper:#fbfaf6;--ink:#171717;--muted:#68635b;--line:#d8d0c3;--blue:#183b6b;--green:#216e4e}
+    body{margin:0;background:#ece7dc;color:var(--ink);font-family:Inter,system-ui,sans-serif}.sheet{max-width:980px;margin:34px auto;padding:48px 58px;background:var(--paper);box-shadow:0 24px 70px rgba(58,48,32,.18)}
+    .serif{font-family:"Source Serif 4",Georgia,serif}.kicker{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}.rule{border-top:1px solid var(--ink);border-bottom:3px double var(--ink)}
+    table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:12px;text-align:left;vertical-align:top;font-size:13px}th{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="rule py-5">
+      <div class="kicker">Board decision paper · confidential</div>
+      <h1 class="serif mt-3 text-5xl leading-[.98] font-extrabold">Enterprise Plan: approve a narrow preview.</h1>
+      <p class="mt-4 text-sm text-[var(--muted)]">Owner: Maya Chen · Audience: CEO / CRO / CFO · Decision deadline: 2026-06-14</p>
+    </header>
+    <section class="grid md:grid-cols-[.75fr_1.25fr] gap-8 mt-7">
+      <aside>
+        <div class="kicker">Recommendation</div>
+        <p class="serif mt-3 text-2xl leading-8 font-bold text-[var(--green)]">Proceed with Enterprise Preview. Do not fund full enterprise scope yet.</p>
+      </aside>
+      <div class="space-y-4 text-sm leading-7">
+        <p><b>Why now:</b> 18 inbound requests in 45 days indicate real pull, including 7 accounts over 500 employees.</p>
+        <p><b>Constraint:</b> Current roadmap cost is meaningful; bank reconciliation may slip by 4-6 weeks.</p>
+        <p><b>Decision frame:</b> Treat enterprise as a pricing and packaging test, not a company-wide motion.</p>
+      </div>
+    </section>
+    <section class="mt-8">
+      <div class="kicker mb-3">Options analysis</div>
+      <table><thead><tr><th>Option</th><th>Rationale</th><th>Board question</th></tr></thead><tbody>
+        <tr><td><b>Enterprise Preview</b></td><td>SSO, audit logs, invoicing, security questionnaire.</td><td>Do we accept a 5-week investment to test $18k-35k ACV?</td></tr>
+        <tr><td><b>Full Enterprise</b></td><td>Custom retention, SCIM, SLA, CSM.</td><td>Do we have enough evidence for irreversible motion buildout?</td></tr>
+        <tr><td><b>Wait</b></td><td>Protect product roadmap.</td><td>What signal would change our mind?</td></tr>
+      </tbody></table>
+    </section>
+    <section class="mt-8 grid md:grid-cols-3 gap-5">
+      <div><div class="kicker">Approve</div><p class="mt-2 text-sm leading-6">Spec this week; find 3 design partners; report signed ACV by next review.</p></div>
+      <div><div class="kicker">Reject</div><p class="mt-2 text-sm leading-6">Continue self-serve; log requests; no procurement commitments.</p></div>
+      <div><div class="kicker">Need evidence</div><p class="mt-2 text-sm leading-6">Run 10 prospect calls and validate annual contract readiness.</p></div>
+    </section>
+  </main>
+</body>
+</html>

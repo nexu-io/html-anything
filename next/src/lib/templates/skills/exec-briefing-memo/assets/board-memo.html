@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Executive Briefing Memo · Enterprise Plan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#111827;--muted:#667085;--paper:#faf9f5;--line:#e4dfd4;--red:#a84332;--green:#1f7a58;--blue:#254f9c}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Noto Sans SC",system-ui,sans-serif}
+    .page{max-width:1120px;margin:0 auto;padding:40px 26px 54px}.box{border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:6px}
+    .label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--muted)}.pill{border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800}
+    table{width:100%;border-collapse:collapse} th,td{border-bottom:1px solid var(--line);padding:13px;text-align:left;vertical-align:top;font-size:13px} th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="box p-7">
+      <div class="flex flex-wrap justify-between gap-3 mb-8">
+        <div class="flex flex-wrap gap-2"><span class="pill bg-[#eef2ff] text-[var(--blue)]">Executive memo</span><span class="pill bg-white border border-[var(--line)]">Owner: Maya Chen</span><span class="pill bg-white border border-[var(--line)]">Deadline: 2026-06-14</span></div>
+        <div class="label">Audience: CEO / CRO / CFO</div>
+      </div>
+      <div class="grid lg:grid-cols-[1.15fr_.85fr] gap-8">
+        <div>
+          <div class="label mb-2">Decision needed</div>
+          <h1 class="text-5xl md:text-6xl font-extrabold leading-[.95] tracking-tight">Should FlowLedger launch an Enterprise Plan in Q3?</h1>
+        </div>
+        <div class="box p-5 bg-[#f0f8f4]">
+          <div class="label mb-3 text-[var(--green)]">Recommendation</div>
+          <h2 class="text-2xl font-extrabold">Approve a narrow Enterprise Preview.</h2>
+          <p class="mt-3 text-sm leading-6 text-[var(--muted)]">Build SSO, audit logs, annual invoicing, and a security questionnaire motion. Defer custom retention and full enterprise operations.</p>
+          <div class="mt-5 flex gap-2"><span class="pill bg-white text-[var(--green)] border border-[#badbcc]">Confidence: medium-high</span><span class="pill bg-white text-[var(--ink)] border border-[var(--line)]">Reversible</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-4 gap-4 mt-5">
+      <div class="box p-5"><div class="label">Enterprise asks</div><div class="mt-2 text-4xl font-extrabold">18</div><p class="text-sm text-[var(--muted)] mt-2">inbound requests in 45 days</p></div>
+      <div class="box p-5"><div class="label">Large accounts</div><div class="mt-2 text-4xl font-extrabold">7</div><p class="text-sm text-[var(--muted)] mt-2">over 500 employees</p></div>
+      <div class="box p-5"><div class="label">Potential ACV</div><div class="mt-2 text-4xl font-extrabold">$18k-35k</div><p class="text-sm text-[var(--muted)] mt-2">sales estimate, not proven</p></div>
+      <div class="box p-5"><div class="label">Roadmap cost</div><div class="mt-2 text-4xl font-extrabold">4-6w</div><p class="text-sm text-[var(--muted)] mt-2">delay risk to bank reconciliation</p></div>
+    </section>
+
+    <section class="grid lg:grid-cols-[1.1fr_.9fr] gap-5 mt-5">
+      <div class="box overflow-hidden">
+        <div class="p-5 border-b border-[var(--line)]"><div class="label">Tradeoff table</div></div>
+        <table>
+          <thead><tr><th>Option</th><th>Upside</th><th>Cost</th><th>Risk</th><th>Reversibility</th></tr></thead>
+          <tbody>
+            <tr><td><b>No enterprise in 2026</b></td><td>Protects roadmap focus</td><td>Leaves 18 asks unanswered</td><td>Missed market signal</td><td>Medium</td></tr>
+            <tr><td><b>Enterprise Preview</b></td><td>Tests willingness to pay</td><td>5 weeks for SSO + audit logs</td><td>Support load</td><td>High</td></tr>
+            <tr><td><b>Full Enterprise Plan</b></td><td>Stronger enterprise story</td><td>Retention, SCIM, SLA, CSM</td><td>Premature motion</td><td>Low</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="box p-5">
+        <div class="label mb-4">Risks & mitigations</div>
+        <div class="space-y-4 text-sm leading-6">
+          <p><b>Enterprise distraction:</b> cap scope to SSO, audit logs, annual invoicing, and security questionnaire.</p>
+          <p><b>Pricing uncertainty:</b> sell as preview to first 3 annual prospects before expanding scope.</p>
+          <p><b>Support readiness:</b> create one security questionnaire owner and canned response library.</p>
+          <p><b>Roadmap delay:</b> explicitly defer custom retention until ACV evidence exists.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="box p-6 mt-5">
+      <div class="label mb-4">Decision path</div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="border-l-4 border-[var(--green)] pl-4"><h3 class="font-extrabold">Approve</h3><p class="text-sm text-[var(--muted)] mt-2">Start Enterprise Preview spec this week; sales identifies 3 design partners.</p></div>
+        <div class="border-l-4 border-[var(--red)] pl-4"><h3 class="font-extrabold">Reject</h3><p class="text-sm text-[var(--muted)] mt-2">Keep self-serve roadmap; log enterprise asks but avoid custom commitments.</p></div>
+        <div class="border-l-4 border-[var(--blue)] pl-4"><h3 class="font-extrabold">Need evidence</h3><p class="text-sm text-[var(--muted)] mt-2">Run 10 prospect calls and validate annual contract willingness by June 14.</p></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

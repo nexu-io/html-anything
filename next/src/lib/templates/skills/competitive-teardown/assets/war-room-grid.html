@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Competitive Teardown · AI Meeting Assistants</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#162033;--muted:#667085;--paper:#f7f4ec;--line:#ded7ca;--blue:#1d4ed8;--amber:#c47b25;--green:#28715f}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Noto Sans SC",system-ui,sans-serif}
+    .page{max-width:1180px;margin:0 auto;padding:42px 28px 56px}.hair{border:1px solid var(--line);background:rgba(255,255,255,.54)}
+    .pill{border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .grid-bg{background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:32px 32px}
+    .matrix th,.matrix td{border-bottom:1px solid var(--line);padding:14px;text-align:left;vertical-align:top}.matrix th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.matrix td{font-size:13px}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hair grid-bg rounded-[6px] p-7">
+      <div class="flex flex-wrap items-center gap-2 mb-8">
+        <span class="pill">Competitive teardown</span><span class="pill">AI meeting assistants</span><span class="pill">2026-05-28</span>
+      </div>
+      <div class="grid md:grid-cols-[1.25fr_.75fr] gap-8 items-end">
+        <div>
+          <p class="text-sm font-bold text-[var(--blue)] mb-3">LoopNote should avoid generic transcription and own product-discovery memory.</p>
+          <h1 class="text-5xl md:text-7xl font-extrabold leading-[.92] tracking-tight">Competing on synthesis, not capture.</h1>
+        </div>
+        <div class="hair rounded-[6px] p-5 bg-[#fffaf0]">
+          <div class="text-xs font-bold text-[var(--muted)] uppercase tracking-wider mb-3">Executive takeaway</div>
+          <ol class="space-y-3 text-sm leading-6">
+            <li><b>1.</b> Granola owns low-friction personal notes; Fireflies and Fathom own capture workflows.</li>
+            <li><b>2.</b> LoopNote's wedge is cross-interview product insight synthesis.</li>
+            <li><b>3.</b> The next 90 days should prove a product-team workflow, not chase every meeting use case.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-3 gap-4 mt-5">
+      <article class="hair rounded-[6px] p-5 bg-white/70"><div class="text-xs text-[var(--muted)] mb-2">Granola</div><h2 class="text-2xl font-extrabold">Personal AI notepad</h2><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Best at feeling invisible and personal for people in back-to-back meetings.</p></article>
+      <article class="hair rounded-[6px] p-5 bg-white/70"><div class="text-xs text-[var(--muted)] mb-2">Fireflies</div><h2 class="text-2xl font-extrabold">Conversation library</h2><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Broad integrations and searchable transcripts for sales, recruiting, and CS teams.</p></article>
+      <article class="hair rounded-[6px] p-5 bg-white/70"><div class="text-xs text-[var(--muted)] mb-2">Fathom</div><h2 class="text-2xl font-extrabold">Free sales notetaker</h2><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Clear highlight capture and CRM utility; strongest around individual call follow-up.</p></article>
+    </section>
+
+    <section class="grid lg:grid-cols-[.9fr_1.1fr] gap-5 mt-5">
+      <div class="hair rounded-[6px] p-6 bg-[#fbfaf6]">
+        <div class="flex justify-between text-xs font-bold text-[var(--muted)] uppercase tracking-wider mb-4"><span>Positioning map</span><span>derived from source notes</span></div>
+        <div class="relative h-[360px] border border-[var(--line)] bg-white">
+          <div class="absolute left-1/2 top-0 bottom-0 border-l border-dashed border-[var(--line)]"></div>
+          <div class="absolute top-1/2 left-0 right-0 border-t border-dashed border-[var(--line)]"></div>
+          <div class="absolute left-3 top-3 text-xs text-[var(--muted)]">High synthesis</div>
+          <div class="absolute right-3 bottom-3 text-xs text-[var(--muted)]">Team workflow</div>
+          <div class="absolute left-[18%] bottom-[26%] rounded-full bg-[#e8eefc] px-3 py-2 text-sm font-bold text-[var(--blue)]">Granola</div>
+          <div class="absolute right-[13%] top-[42%] rounded-full bg-[#fff1dc] px-3 py-2 text-sm font-bold text-[var(--amber)]">Fireflies</div>
+          <div class="absolute right-[22%] bottom-[24%] rounded-full bg-[#ecfdf5] px-3 py-2 text-sm font-bold text-[var(--green)]">Fathom</div>
+          <div class="absolute left-[42%] top-[18%] rounded-full bg-[var(--ink)] px-4 py-2 text-sm font-bold text-white shadow-lg">LoopNote wedge</div>
+        </div>
+      </div>
+      <div class="hair rounded-[6px] bg-white/70 overflow-hidden">
+        <table class="matrix w-full">
+          <thead><tr><th>Capability</th><th>Granola</th><th>Fireflies</th><th>Fathom</th><th>LoopNote opportunity</th></tr></thead>
+          <tbody>
+            <tr><td><b>Invisible note capture</b></td><td>✓ strong</td><td>△ bot-like</td><td>△ call tool</td><td>Do not compete head-on</td></tr>
+            <tr><td><b>Transcript library</b></td><td>unknown</td><td>✓ strong</td><td>△ useful</td><td>Only store what supports research synthesis</td></tr>
+            <tr><td><b>CRM / sales workflow</b></td><td>not found</td><td>✓ broad</td><td>✓ clear</td><td>Avoid sales-first packaging</td></tr>
+            <tr><td><b>Cross-interview insight cards</b></td><td>not found</td><td>△ searchable</td><td>not found</td><td><b>Primary wedge</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-3 gap-4 mt-5">
+      <article class="hair rounded-[6px] p-5 bg-white/70"><span class="pill">30 days</span><h3 class="mt-4 text-xl font-extrabold">Package for product discovery</h3><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Rename core objects around interviews, pain, quotes, requests, and insight clusters.</p></article>
+      <article class="hair rounded-[6px] p-5 bg-white/70"><span class="pill">90 days</span><h3 class="mt-4 text-xl font-extrabold">Build research memory</h3><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Ship cross-call synthesis, tagging, and export to PRD / roadmap workflows.</p></article>
+      <article class="hair rounded-[6px] p-5 bg-white/70"><span class="pill">180 days</span><h3 class="mt-4 text-xl font-extrabold">Integrate selectively</h3><p class="mt-3 text-sm leading-6 text-[var(--muted)]">Add calendar bot only when it strengthens product research capture, not as generic parity.</p></article>
+    </section>
+  </main>
+</body>
+</html>
