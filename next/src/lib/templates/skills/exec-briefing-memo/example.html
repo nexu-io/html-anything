@@ -3,46 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Executive Briefing Memo · Board Paper</title>
+  <title>Executive Briefing Memo · Enterprise Plan</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;700;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{--paper:#fbfaf6;--ink:#171717;--muted:#68635b;--line:#d8d0c3;--blue:#183b6b;--green:#216e4e}
-    body{margin:0;background:#ece7dc;color:var(--ink);font-family:Inter,system-ui,sans-serif}.sheet{max-width:980px;margin:34px auto;padding:48px 58px;background:var(--paper);box-shadow:0 24px 70px rgba(58,48,32,.18)}
-    .serif{font-family:"Source Serif 4",Georgia,serif}.kicker{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}.rule{border-top:1px solid var(--ink);border-bottom:3px double var(--ink)}
-    table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:12px;text-align:left;vertical-align:top;font-size:13px}th{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+    :root{--ink:#111827;--muted:#667085;--paper:#faf9f5;--line:#e4dfd4;--red:#a84332;--green:#1f7a58;--blue:#254f9c}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Noto Sans SC",system-ui,sans-serif}
+    .page{max-width:1120px;margin:0 auto;padding:40px 26px 54px}.box{border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:6px}
+    .label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--muted)}.pill{border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800}
+    table{width:100%;border-collapse:collapse} th,td{border-bottom:1px solid var(--line);padding:13px;text-align:left;vertical-align:top;font-size:13px} th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
   </style>
 </head>
 <body>
-  <main class="sheet">
-    <header class="rule py-5">
-      <div class="kicker">Board decision paper · confidential</div>
-      <h1 class="serif mt-3 text-5xl leading-[.98] font-extrabold">Enterprise Plan: approve a narrow preview.</h1>
-      <p class="mt-4 text-sm text-[var(--muted)]">Owner: Maya Chen · Audience: CEO / CRO / CFO · Decision deadline: 2026-06-14</p>
-    </header>
-    <section class="grid md:grid-cols-[.75fr_1.25fr] gap-8 mt-7">
-      <aside>
-        <div class="kicker">Recommendation</div>
-        <p class="serif mt-3 text-2xl leading-8 font-bold text-[var(--green)]">Proceed with Enterprise Preview. Do not fund full enterprise scope yet.</p>
-      </aside>
-      <div class="space-y-4 text-sm leading-7">
-        <p><b>Why now:</b> 18 inbound requests in 45 days indicate real pull, including 7 accounts over 500 employees.</p>
-        <p><b>Constraint:</b> Current roadmap cost is meaningful; bank reconciliation may slip by 4-6 weeks.</p>
-        <p><b>Decision frame:</b> Treat enterprise as a pricing and packaging test, not a company-wide motion.</p>
+  <main class="page">
+    <section class="box p-7">
+      <div class="flex flex-wrap justify-between gap-3 mb-8">
+        <div class="flex flex-wrap gap-2"><span class="pill bg-[#eef2ff] text-[var(--blue)]">Executive memo</span><span class="pill bg-white border border-[var(--line)]">Owner: Maya Chen</span><span class="pill bg-white border border-[var(--line)]">Deadline: 2026-06-14</span></div>
+        <div class="label">Audience: CEO / CRO / CFO</div>
+      </div>
+      <div class="grid lg:grid-cols-[1.15fr_.85fr] gap-8">
+        <div>
+          <div class="label mb-2">Decision needed</div>
+          <h1 class="text-5xl md:text-6xl font-extrabold leading-[.95] tracking-tight">Should FlowLedger launch an Enterprise Plan in Q3?</h1>
+        </div>
+        <div class="box p-5 bg-[#f0f8f4]">
+          <div class="label mb-3 text-[var(--green)]">Recommendation</div>
+          <h2 class="text-2xl font-extrabold">Approve a narrow Enterprise Preview.</h2>
+          <p class="mt-3 text-sm leading-6 text-[var(--muted)]">Build SSO, audit logs, annual invoicing, and a security questionnaire motion. Defer custom retention and full enterprise operations.</p>
+          <div class="mt-5 flex gap-2"><span class="pill bg-white text-[var(--green)] border border-[#badbcc]">Confidence: medium-high</span><span class="pill bg-white text-[var(--ink)] border border-[var(--line)]">Reversible</span></div>
+        </div>
       </div>
     </section>
-    <section class="mt-8">
-      <div class="kicker mb-3">Options analysis</div>
-      <table><thead><tr><th>Option</th><th>Rationale</th><th>Board question</th></tr></thead><tbody>
-        <tr><td><b>Enterprise Preview</b></td><td>SSO, audit logs, invoicing, security questionnaire.</td><td>Do we accept a 5-week investment to test $18k-35k ACV?</td></tr>
-        <tr><td><b>Full Enterprise</b></td><td>Custom retention, SCIM, SLA, CSM.</td><td>Do we have enough evidence for irreversible motion buildout?</td></tr>
-        <tr><td><b>Wait</b></td><td>Protect product roadmap.</td><td>What signal would change our mind?</td></tr>
-      </tbody></table>
+
+    <section class="grid md:grid-cols-4 gap-4 mt-5">
+      <div class="box p-5"><div class="label">Enterprise asks</div><div class="mt-2 text-4xl font-extrabold">18</div><p class="text-sm text-[var(--muted)] mt-2">inbound requests in 45 days</p></div>
+      <div class="box p-5"><div class="label">Large accounts</div><div class="mt-2 text-4xl font-extrabold">7</div><p class="text-sm text-[var(--muted)] mt-2">over 500 employees</p></div>
+      <div class="box p-5"><div class="label">Potential ACV</div><div class="mt-2 text-4xl font-extrabold">$18k-35k</div><p class="text-sm text-[var(--muted)] mt-2">sales estimate, not proven</p></div>
+      <div class="box p-5"><div class="label">Roadmap cost</div><div class="mt-2 text-4xl font-extrabold">4-6w</div><p class="text-sm text-[var(--muted)] mt-2">delay risk to bank reconciliation</p></div>
     </section>
-    <section class="mt-8 grid md:grid-cols-3 gap-5">
-      <div><div class="kicker">Approve</div><p class="mt-2 text-sm leading-6">Spec this week; find 3 design partners; report signed ACV by next review.</p></div>
-      <div><div class="kicker">Reject</div><p class="mt-2 text-sm leading-6">Continue self-serve; log requests; no procurement commitments.</p></div>
-      <div><div class="kicker">Need evidence</div><p class="mt-2 text-sm leading-6">Run 10 prospect calls and validate annual contract readiness.</p></div>
+
+    <section class="grid lg:grid-cols-[1.1fr_.9fr] gap-5 mt-5">
+      <div class="box overflow-hidden">
+        <div class="p-5 border-b border-[var(--line)]"><div class="label">Tradeoff table</div></div>
+        <table>
+          <thead><tr><th>Option</th><th>Upside</th><th>Cost</th><th>Risk</th><th>Reversibility</th></tr></thead>
+          <tbody>
+            <tr><td><b>No enterprise in 2026</b></td><td>Protects roadmap focus</td><td>Leaves 18 asks unanswered</td><td>Missed market signal</td><td>Medium</td></tr>
+            <tr><td><b>Enterprise Preview</b></td><td>Tests willingness to pay</td><td>5 weeks for SSO + audit logs</td><td>Support load</td><td>High</td></tr>
+            <tr><td><b>Full Enterprise Plan</b></td><td>Stronger enterprise story</td><td>Retention, SCIM, SLA, CSM</td><td>Premature motion</td><td>Low</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="box p-5">
+        <div class="label mb-4">Risks & mitigations</div>
+        <div class="space-y-4 text-sm leading-6">
+          <p><b>Enterprise distraction:</b> cap scope to SSO, audit logs, annual invoicing, and security questionnaire.</p>
+          <p><b>Pricing uncertainty:</b> sell as preview to first 3 annual prospects before expanding scope.</p>
+          <p><b>Support readiness:</b> create one security questionnaire owner and canned response library.</p>
+          <p><b>Roadmap delay:</b> explicitly defer custom retention until ACV evidence exists.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="box p-6 mt-5">
+      <div class="label mb-4">Decision path</div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="border-l-4 border-[var(--green)] pl-4"><h3 class="font-extrabold">Approve</h3><p class="text-sm text-[var(--muted)] mt-2">Start Enterprise Preview spec this week; sales identifies 3 design partners.</p></div>
+        <div class="border-l-4 border-[var(--red)] pl-4"><h3 class="font-extrabold">Reject</h3><p class="text-sm text-[var(--muted)] mt-2">Keep self-serve roadmap; log enterprise asks but avoid custom commitments.</p></div>
+        <div class="border-l-4 border-[var(--blue)] pl-4"><h3 class="font-extrabold">Need evidence</h3><p class="text-sm text-[var(--muted)] mt-2">Run 10 prospect calls and validate annual contract willingness by June 14.</p></div>
+      </div>
     </section>
   </main>
 </body>
