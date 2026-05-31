@@ -70,4 +70,24 @@ describe("parseFile", () => {
     expect(parsed.text).toContain("Pages: 3");
     expect(parsed.text).toContain("## Page 3\nAppendix");
   });
+
+  it("does not mark concise text-layer PDFs as limited extraction", async () => {
+    const proxy = { destroy: vi.fn() };
+    unpdf.getDocumentProxy.mockResolvedValue(proxy);
+    unpdf.extractText.mockResolvedValue({
+      totalPages: 1,
+      text: ["Paid. Total: $42."],
+    });
+
+    const file = new File([new Uint8Array([37, 80, 68, 70])], "receipt.pdf", {
+      type: "application/pdf",
+    });
+
+    const parsed = await parseFile(file);
+
+    expect(parsed.format).toBe("pdf");
+    expect(parsed.text).toContain("Extraction: embedded text");
+    expect(parsed.text).not.toContain("Text extraction is limited");
+    expect(parsed.text).toContain("## Page 1\nPaid. Total: $42.");
+  });
 });

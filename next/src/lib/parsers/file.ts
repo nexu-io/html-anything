@@ -1,6 +1,5 @@
 "use client";
 
-import { extractText, getDocumentProxy } from "unpdf";
 import * as XLSX from "xlsx";
 
 export type FileParseResult = {
@@ -21,7 +20,6 @@ const SHEET_EXTS = new Set(["xlsx", "xls", "ods", "xlsm"]);
 const PDF_EXTS = new Set(["pdf"]);
 const LIMITED_PDF_TEXT_WARNING =
   "> Note: This PDF appears to be scanned or image-heavy. Text extraction is limited.";
-const MIN_EXTRACTED_PDF_CHARS = 80;
 
 function ext(name: string): string {
   const i = name.lastIndexOf(".");
@@ -37,6 +35,12 @@ function normalizePdfPageText(text: string): string {
     .trim();
 }
 
+function hasLimitedPdfText(pages: string[]): boolean {
+  if (pages.length === 0) return true;
+  const emptyPages = pages.filter((page) => page.replace(/\s/g, "").length === 0).length;
+  return emptyPages === pages.length || emptyPages / pages.length > 0.5;
+}
+
 export function formatPdfText(
   filename: string,
   totalPages: number,
@@ -46,8 +50,7 @@ export function formatPdfText(
   const normalizedPages = Array.from({ length: pageCount }, (_, i) =>
     normalizePdfPageText(pages[i] ?? ""),
   );
-  const extractedChars = normalizedPages.join("\n").replace(/\s/g, "").length;
-  const isLimitedExtraction = pageCount > 0 && extractedChars < MIN_EXTRACTED_PDF_CHARS;
+  const isLimitedExtraction = hasLimitedPdfText(normalizedPages);
 
   const out = [
     `# PDF: ${filename}`,
@@ -73,6 +76,7 @@ export async function parseFile(file: File): Promise<FileParseResult> {
 
   if (PDF_EXTS.has(e) || file.type === "application/pdf") {
     const buf = await file.arrayBuffer();
+    const { extractText, getDocumentProxy } = await import("unpdf");
     const pdf = await getDocumentProxy(new Uint8Array(buf));
     try {
       const { totalPages, text } = await extractText(pdf, { mergePages: false });
