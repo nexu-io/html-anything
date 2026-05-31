@@ -1,5 +1,6 @@
 "use client";
 
+import { extractText, getDocumentProxy } from "unpdf";
 import * as XLSX from "xlsx";
 
 export type FileParseResult = {
@@ -17,14 +18,73 @@ const TEXT_EXTS = new Set([
 ]);
 const IMAGE_EXTS = new Set(["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp"]);
 const SHEET_EXTS = new Set(["xlsx", "xls", "ods", "xlsm"]);
+const PDF_EXTS = new Set(["pdf"]);
+const LIMITED_PDF_TEXT_WARNING =
+  "> Note: This PDF appears to be scanned or image-heavy. Text extraction is limited.";
+const MIN_EXTRACTED_PDF_CHARS = 80;
 
 function ext(name: string): string {
   const i = name.lastIndexOf(".");
   return i > -1 ? name.slice(i + 1).toLowerCase() : "";
 }
 
+function normalizePdfPageText(text: string): string {
+  return text
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map((line) => line.trimEnd())
+    .join("\n")
+    .trim();
+}
+
+export function formatPdfText(
+  filename: string,
+  totalPages: number,
+  pages: string[],
+): string {
+  const pageCount = Math.max(totalPages, pages.length);
+  const normalizedPages = Array.from({ length: pageCount }, (_, i) =>
+    normalizePdfPageText(pages[i] ?? ""),
+  );
+  const extractedChars = normalizedPages.join("\n").replace(/\s/g, "").length;
+  const isLimitedExtraction = pageCount > 0 && extractedChars < MIN_EXTRACTED_PDF_CHARS;
+
+  const out = [
+    `# PDF: ${filename}`,
+    "",
+    "Source: PDF",
+    `Pages: ${pageCount}`,
+    `Extraction: ${isLimitedExtraction ? "limited embedded text" : "embedded text"}`,
+  ];
+
+  if (isLimitedExtraction) {
+    out.push("", LIMITED_PDF_TEXT_WARNING);
+  }
+
+  for (const [i, pageText] of normalizedPages.entries()) {
+    out.push("", `## Page ${i + 1}`, pageText || "_No extractable text on this page._");
+  }
+
+  return out.join("\n");
+}
+
 export async function parseFile(file: File): Promise<FileParseResult> {
   const e = ext(file.name);
+
+  if (PDF_EXTS.has(e) || file.type === "application/pdf") {
+    const buf = await file.arrayBuffer();
+    const pdf = await getDocumentProxy(new Uint8Array(buf));
+    try {
+      const { totalPages, text } = await extractText(pdf, { mergePages: false });
+      return {
+        filename: file.name,
+        format: "pdf",
+        text: formatPdfText(file.name, totalPages, text),
+      };
+    } finally {
+      await pdf.destroy?.();
+    }
+  }
 
   if (SHEET_EXTS.has(e)) {
     const buf = await file.arrayBuffer();
