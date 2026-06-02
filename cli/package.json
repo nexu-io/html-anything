@@ -1,0 +1,24 @@
+{
+  "name": "@html-anything/cli",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "html-anything": "./dist/run.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsx": "^4.22.1",
+    "typescript": "^5",
+    "vitest": "^4.1.6"
+  }
+}
