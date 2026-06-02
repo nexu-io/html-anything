@@ -205,6 +205,21 @@ export const AGENTS: AgentDef[] = [
       { id: "deepseek/deepseek-chat", label: "deepseek/deepseek-chat" },
     ],
   },
+  {
+    id: "antigravity",
+    label: "Google Antigravity",
+    bin: "agy",
+    envOverride: "ANTIGRAVITY_BIN",
+    vendor: "Google",
+    // agy --print <prompt> takes the prompt as a required argument, not via
+    // stdin. Use "argv" protocol so invoke.ts appends opts.prompt after argv.
+    protocol: "argv",
+    // agy --help does not expose a --model flag; the TUI shows "Gemini 3.5 Flash
+    // (High)" as the current model. Exact --model IDs are unconfirmed — only
+    // DEFAULT_MODEL (no flag) is safe to ship. Add entries once Antigravity
+    // docs confirm the accepted model ID strings.
+    fallbackModels: [DEFAULT_MODEL],
+  },
 
   // ACP family — detection-only. Models still surfaced for UI completeness.
   {

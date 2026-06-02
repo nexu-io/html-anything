@@ -15,7 +15,7 @@ export class UnsupportedAgentProtocolError extends Error {
   constructor(public readonly agent: string, public readonly protocol: string) {
     super(
       `${agent} uses the ${protocol} protocol, which is not yet wired up in this build. ` +
-        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / deepseek / aider.`,
+        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / deepseek / aider / antigravity.`,
     );
   }
 }
@@ -68,6 +68,16 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         "--force",
         "--trust",
         ...(model ? ["--model", model] : []),
+      ];
+    case "antigravity":
+      // agy --print <prompt> requires the prompt as a positional argument
+      // (not via stdin). invoke.ts appends opts.prompt after this argv since
+      // the protocol is "argv". agy does not support --output-format or
+      // --verbose; it emits plain text on stdout.
+      return [
+        "--dangerously-skip-permissions",
+        "--print",
+        // prompt is appended by invoke.ts as the next argv element
       ];
     case "gemini":
       return [
@@ -236,9 +246,10 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const trimmed = line.trim();
   if (!trimmed) return [];
 
-  // Aider / DeepSeek — plain text streaming on stdout (DeepSeek tool calls
-  // go to stderr, which is forwarded as `stderr` events, not parsed here).
-  if (agent === "aider" || agent === "deepseek") {
+  // Aider / DeepSeek / Antigravity — plain text on stdout (no JSON envelope).
+  // agy --print outputs the response directly as UTF-8 text; DeepSeek tool
+  // calls go to stderr.
+  if (agent === "aider" || agent === "deepseek" || agent === "antigravity") {
     return [{ kind: "delta", text: trimmed.endsWith("\n") ? trimmed : trimmed + "\n" }];
   }
 
