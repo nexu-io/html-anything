@@ -30,6 +30,24 @@ export const SHARED_DESIGN_DIRECTIVES = `
 - 动效: 仅在必要处使用 \`transition-all\` 或入场 fade-in; 不要喧宾夺主。
 - 无障碍: 颜色对比度 ≥ 4.5; 重要交互有 focus 态。
 
+【入场动画安全规则 — 防止内容动效结束后被永久隐藏】
+- **任何把元素初始设为不可见 (\`opacity: 0\` / \`visibility: hidden\` / \`transform: translateY(...)\` 等隐藏态) 的入场动画, 必须在动画结束后回到可见的最终状态**。具体三选一:
+  1. 给 \`@keyframes\` 动画加 \`animation-fill-mode: forwards\` (或简写 \`animation: name 0.6s ease-out forwards;\`), 这样最后一帧会被保留, 不会回退到 \`opacity: 0\`。等价地用 \`both\` 也可以。
+  2. 用 IntersectionObserver / scroll 触发时, 在 callback 里**直接设置 \`element.style.opacity = '1'\` 等可见态**, 而不是只加一个 \`@keyframes\` 短暂播完就消失的 class。
+  3. 用 CSS \`transition\` 替代 \`@keyframes\`: 初始 \`opacity: 0; transform: translateY(8px); transition: opacity 0.6s, transform 0.6s;\`, 加 class 后改成 \`opacity: 1; transform: translateY(0);\` — transition 的最终态自动保留。
+- **绝对禁止**: 把元素 inline / 在 CSS 里写死 \`opacity: 0\`, 然后只用一个不带 \`forwards\` 的 \`animation: fadeIn 0.6s ease-out;\` 当揭示动画。这会导致动画播完后元素回到 \`opacity: 0\`, 内容**消失看不见** (典型 bug: 标题外的所有正文动画结束后被隐藏)。
+- **必须支持** \`@media (prefers-reduced-motion: reduce)\`: 在该条件下取消所有入场隐藏 (\`opacity: 1; transform: none; animation: none;\`), 让内容**直接可见, 不依赖任何动画完成**。
+- **必须支持 JS 失败 fallback** (使用 progressive-enhancement 模式): 如果用 IntersectionObserver / scroll 监听控制可见性, 默认状态必须是**可见**, 然后由 JS 加上一个 \`.js-ready\` 类才打开"先隐藏 → 入场" 的路径。具体:
+\`\`\`css
+/* 默认 (JS 关闭 / 被扩展拦截 / 加载失败 → 直接可见) */
+.reveal { opacity: 1; }
+
+/* JS 跑起来后才启用入场动画 */
+.js-ready .reveal { opacity: 0; transition: opacity 0.6s ease-out; }
+.js-ready .reveal.in-view { opacity: 1; }
+\`\`\`
+配合一行 JS: \`document.addEventListener('DOMContentLoaded', () => document.body.classList.add('js-ready'));\`。这样 JS 任何环节失败 (扩展拦截 / CSP / 解析错误), 内容都直接可见, **不会被一段没跑起来的 IntersectionObserver 永久隐藏**。\`<noscript>\` 标签覆盖 JS 完全禁用的情形, \`.js-ready\` 类覆盖 JS 加载失败 / 被拦截的情形 — 两者都不要省略。
+
 【内容真实性】
 - **必须使用用户提供的真实数据**, 不要编造、不要 lorem ipsum、不要 "Your text here"。
 - 如果用户数据是结构化数据 (CSV/JSON), 请提取关键洞察并以图表/表格呈现。
