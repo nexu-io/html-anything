@@ -517,3 +517,56 @@ If the curve bends up, that's the signal we look for. ★ this repo to push it.
 Apache-2.0 © 2026 HTML Anything contributors. See [`LICENSE`](LICENSE).
 
 Bundled work retains its original license and authorship attribution — see the per-skill `LICENSE` / `README.md` inside each `next/src/lib/templates/skills/<skill>/` folder for what it inherits from upstream.
+
+
+## FAQ
+
+### What is HTML Anything?
+
+HTML Anything is the agentic HTML editor — your local AI agent writes HTML for you. It combines the power of AI agents with HTML editing to create websites, components, and layouts automatically.
+
+| Feature | Description |
+|---------|-------------|
+| **AI Agent Editor** | AI writes HTML based on your descriptions |
+| **Local Execution** | Runs on your machine, no cloud needed |
+| **Real-time Preview** | See changes instantly |
+| **Component Library** | Pre-built HTML templates |
+| **Custom Styling** | Tailwind CSS, custom CSS support |
+| **Export Options** | Download HTML, deploy to hosting |
+
+### Getting Started
+
+```sh
+# Clone and run
+git clone https://github.com/nexu-io/html-anything
+cd html-anything
+npm install
+npm start
+```
+
+### Key Concepts
+
+| Concept | Description |
+|---------|-------------|
+| **Agent Loop** | AI iteratively improves HTML based on feedback |
+| **Component System** | Modular HTML blocks for reuse |
+| **Preview Engine** | Live rendering of generated HTML |
+| **Export Pipeline** | One-click download or deployment |
+
+### Supported Use Cases
+
+- **Quick Prototyping** — Generate HTML layouts in seconds
+- **Component Creation** — AI builds reusable HTML components
+- **Website Drafting** — Start from description, refine with AI
+- **Learning HTML** — See how AI structures HTML code
+- **Template Generation** — Create starter templates for projects
+
+### License
+
+MIT License.
+
+### Help & Resources
+
+- [Documentation](https://github.com/nexu-io/html-anything#readme)
+- [Issues](https://github.com/nexu-io/html-anything/issues)
+- [Examples](https://github.com/nexu-io/html-anything/tree/main/examples)
