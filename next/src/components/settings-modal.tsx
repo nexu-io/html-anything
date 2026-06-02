@@ -44,6 +44,7 @@ const VENDOR_GRADIENT: Record<string, string> = {
   Alibaba: "from-[#ff7a00] to-[#ed6f5c]",
   Aider: "from-[#6c3aa6] to-[#9c2a25]",
   DeepSeek: "from-[#2563eb] to-[#7c3aed]",
+  CodeWhale: "from-[#2563eb] to-[#7c3aed]",
   Cognition: "from-[#0f172a] to-[#475569]",
   Mature: "from-[#7c2d12] to-[#b45309]",
   Moonshot: "from-[#0ea5e9] to-[#1e3a8a]",

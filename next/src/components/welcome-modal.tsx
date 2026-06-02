@@ -47,7 +47,11 @@ const VENDOR_HINT: Record<string, { gradient: string; install: string }> = {
   },
   DeepSeek: {
     gradient: "from-[#2563eb] to-[#7c3aed]",
-    install: "cargo install deepseek  ·  deepseek auth",
+    install: "npm install -g deepseek-tui  ·  deepseek-tui auth",
+  },
+  CodeWhale: {
+    gradient: "from-[#2563eb] to-[#7c3aed]",
+    install: "cargo install codewhale  ·  codewhale auth",
   },
   Cognition: {
     gradient: "from-[#0f172a] to-[#475569]",

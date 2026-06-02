@@ -1,17 +1,73 @@
-export type AgentArgvOpts = {
-  model?: string;
+import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { resolveOnPath, AGENTS, type AgentDef, type AgentProtocol } from "./agents-detect.js";
+
+export type InvokeOpts = {
+  agent: string;
+  prompt: string;
   cwd?: string;
-  /** When the adapter takes the prompt as a positional argv (deepseek-tui). */
-  prompt?: string;
-  /**
-   * For openclaw only — pre-resolved agent id (e.g. "main" or "ops") that
-   * gets injected into the argv as `--agent <id>`. invoke.ts is responsible
-   * for resolving this via `resolveOpenclawAgentId` before calling buildArgv.
-   */
+  model?: string;
+  signal?: AbortSignal;
+  binOverride?: string;
+};
+
+type BinResolution =
+  | { kind: "ok"; bin: string }
+  | { kind: "override-missing"; tried: string }
+  | { kind: "not-found" };
+
+function resolveBinForAgent(
+  def: (typeof AGENTS)[number],
+  binOverride: string | undefined,
+): BinResolution {
+  const tryPath = (p: string | undefined): string | null => {
+    if (!p) return null;
+    const trimmed = p.trim();
+    if (!trimmed) return null;
+    if (/^([a-zA-Z]:[\\/]|[\\/])/.test(trimmed)) {
+      return existsSync(trimmed) ? trimmed : null;
+    }
+    if (trimmed.includes("/") || trimmed.includes("\\") || trimmed.startsWith(".")) {
+      const resolved = path.resolve(trimmed);
+      return existsSync(resolved) ? resolved : null;
+    }
+    return resolveOnPath(trimmed);
+  };
+  if (binOverride && binOverride.trim()) {
+    const fromOverride = tryPath(binOverride);
+    if (fromOverride) return { kind: "ok", bin: fromOverride };
+    return { kind: "override-missing", tried: binOverride.trim() };
+  }
+  if (def.envOverride) {
+    const fromEnv = tryPath(process.env[def.envOverride]);
+    if (fromEnv) return { kind: "ok", bin: fromEnv };
+  }
+  for (const c of [def.bin, ...(def.fallbackBins ?? [])]) {
+    const found = resolveOnPath(c);
+    if (found) return { kind: "ok", bin: found };
+  }
+  return { kind: "not-found" };
+}
+
+export type InvokeEvent =
+  | { type: "start"; bin: string; argv: string[]; promptBytes: number }
+  | { type: "delta"; text: string }
+  | { type: "html"; text: string }
+  | { type: "meta"; key: string; value: unknown }
+  | { type: "stderr"; text: string }
+  | { type: "raw"; text: string }
+  | { type: "done"; code: number | null }
+  | { type: "error"; message: string };
+
+// ─── argv builder ────────────────────────────────────────────────────
+
+type AgentArgvOpts = {
+  model?: string;
   openclawAgentId?: string;
 };
 
-export class UnsupportedAgentProtocolError extends Error {
+class UnsupportedAgentProtocolError extends Error {
   constructor(public readonly agent: string, public readonly protocol: string) {
     super(
       `${agent} uses the ${protocol} protocol, which is not yet wired up in this build. ` +
@@ -20,8 +76,8 @@ export class UnsupportedAgentProtocolError extends Error {
   }
 }
 
-export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
-  const { model } = _opts;
+function buildArgv(agent: string, opts: AgentArgvOpts = {}): string[] {
+  const { model } = opts;
   switch (agent) {
     case "claude":
       return [
@@ -35,17 +91,12 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         ...(model ? ["--model", model] : []),
       ];
     case "openclaw":
-      // OpenClaw is a multi-channel agent gateway — invocation is
-      //   openclaw agent --local --json --agent <id> [--model <id>]
-      // and the prompt is appended later via `--message <text>` by invoke.ts
-      // (see protocol === "argv-message"). The agent id is resolved at
-      // invocation time by `resolveOpenclawAgentId`.
       return [
         "agent",
         "--local",
         "--json",
         "--agent",
-        _opts.openclawAgentId ?? "main",
+        opts.openclawAgentId ?? "main",
         ...(model ? ["--model", model] : []),
       ];
     case "codex":
@@ -104,9 +155,6 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         ...(model ? ["--model", model] : []),
       ];
     case "qoder":
-      // Qoder CLI mirrors `claude -p`'s shape: print mode + stream-json + yolo
-      // for non-interactive approval. Prompt arrives via stdin (handled in
-      // invoke.ts). See open-design's apps/daemon/src/agents.ts.
       return [
         "-p",
         "--output-format",
@@ -116,9 +164,6 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
       ];
     case "codewhale":
     case "deepseek-tui":
-      // DeepSeek's `exec --auto` requires the prompt as a positional arg;
-      // there's no `-` stdin sentinel. invoke.ts appends opts.prompt at
-      // spawn time, so we leave the trailing slot empty here.
       return ["exec", "--auto", ...(model ? ["--model", model] : [])];
     case "hermes":
     case "kimi":
@@ -134,68 +179,22 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
   }
 }
 
-export function envFor(agent: string): NodeJS.ProcessEnv {
+function envFor(agent: string): NodeJS.ProcessEnv {
   const base = { ...process.env };
   if (agent === "gemini") base.GEMINI_CLI_TRUST_WORKSPACE = "true";
   return base;
 }
 
-export type AgentParse =
+// ─── stdout parser ────────────────────────────────────────────────────
+
+type AgentParse =
   | { kind: "delta"; text: string }
   | { kind: "meta"; key: string; value: unknown }
-  /**
-   * Canonical HTML rescued from a file-write tool call (e.g. Claude's `Write`
-   * tool). Replaces any previously streamed text — the preamble like
-   * "I'll save it as output.html\n已输出至 …" is junk; the tool's input is the
-   * real HTML. Downstream calls `setHtmlFor`, not `appendHtmlFor`.
-   */
   | { kind: "html"; text: string }
   | { kind: "noise" };
 
-/**
- * Cross-line state that the parser carries between calls. Currently used to
- * dedupe text deltas: when an agent emits both fine-grained `stream_event`
- * `text_delta` blocks AND a final `assistant` message containing the same
- * text concatenated, we keep the streamed tokens and skip the assistant
- * message body. Without this dedupe, every Claude/Cursor/Gemini/Qoder run
- * with `--include-partial-messages` (or the equivalent) writes its output
- * twice.
- */
-export type ParseState = {
-  sawStreamEventText?: boolean;
-  opencodeAccumulatedInputTokens?: number;
-  opencodeAccumulatedOutputTokens?: number;
-  opencodeAccumulatedCacheReadTokens?: number;
-  opencodeAccumulatedCacheWriteTokens?: number;
-  opencodeAccumulatedCost?: number;
-};
+type ParseState = { sawStreamEventText?: boolean };
 
-/**
- * Build a stateful per-invocation parser. Feed every stdout line through the
- * returned function — it carries the cross-line state needed for dedupe.
- */
-export function makeParser(agent: string): (line: string) => AgentParse[] {
-  const state: ParseState = {};
-  return (line: string) => parseLineWithState(agent, line, state);
-}
-
-/**
- * Parse a single line of agent stdout. Stateless wrapper kept for callers
- * that only need one-shot parsing (e.g. `extractTextFromLine`). Streaming
- * callers should use `makeParser` so dedupe state survives across lines.
- */
-export function parseLine(agent: string, line: string): AgentParse[] {
-  return parseLineWithState(agent, line, {});
-}
-
-/**
- * Some agents (Claude + bypassPermissions, qoder, …) ignore the "stream HTML
- * inline" prompt and decide to dump the document into a file via the `Write`
- * tool, leaving the assistant text as just a confirmation ("已输出至 …").
- * Rescue the HTML from the tool_use input so the preview still gets the real
- * content. Returns an empty string if no Write/create_file tool_use was found
- * or its input has no usable content field.
- */
 function rescueHtmlFromToolUse(
   content: Array<{ type?: string; name?: string; input?: unknown }> | undefined,
 ): string {
@@ -204,7 +203,6 @@ function rescueHtmlFromToolUse(
   for (const block of content) {
     if (!block || block.type !== "tool_use") continue;
     const name = (block.name ?? "").toLowerCase();
-    // Match the common file-write tool names across agents.
     if (
       name !== "write" &&
       name !== "create_file" &&
@@ -217,8 +215,6 @@ function rescueHtmlFromToolUse(
     const input = block.input as Record<string, unknown> | undefined;
     if (!input || typeof input !== "object") continue;
     const path = String(input.file_path ?? input.path ?? input.filename ?? "").toLowerCase();
-    // Only rescue HTML-ish targets — never grab content for a .md / .txt
-    // sidecar the agent might also be writing.
     if (path && !/\.(html?|htm)$/.test(path)) continue;
     const text =
       typeof input.content === "string"
@@ -237,8 +233,6 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const trimmed = line.trim();
   if (!trimmed) return [];
 
-  // Aider / DeepSeek — plain text streaming on stdout (DeepSeek tool calls
-  // go to stderr, which is forwarded as `stderr` events, not parsed here).
   if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui") {
     return [{ kind: "delta", text: trimmed.endsWith("\n") ? trimmed : trimmed + "\n" }];
   }
@@ -254,13 +248,11 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const out: AgentParse[] = [];
 
   if (agent === "claude") {
-    // Init / system metadata
     if (obj.type === "system" && obj.subtype === "init") {
       out.push({ kind: "meta", key: "model", value: obj.model });
       out.push({ kind: "meta", key: "session", value: obj.session_id });
       if (obj.cwd) out.push({ kind: "meta", key: "cwd", value: obj.cwd });
     }
-    // Stream events (--include-partial-messages → fine-grained text_delta)
     if (obj.type === "stream_event" && obj.event && typeof obj.event === "object") {
       const ev = obj.event as { type?: string; delta?: { type?: string; text?: string; thinking?: string } };
       if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta" && typeof ev.delta.text === "string") {
@@ -270,8 +262,6 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
         out.push({ kind: "meta", key: "thinking", value: ev.delta.thinking });
       }
     }
-    // Full assistant messages — fallback only when stream_event text deltas
-    // were absent (e.g. older claude without --include-partial-messages).
     if (obj.type === "assistant" && obj.message && typeof obj.message === "object") {
       const msg = obj.message as {
         content?: Array<{ type?: string; text?: string; name?: string; input?: unknown }>;
@@ -281,8 +271,6 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
       const toolHtml = rescueHtmlFromToolUse(msg.content);
       if (toolHtml) {
         out.push({ kind: "html", text: toolHtml });
-        // suppress the chatty assistant text fallback below; the Write input
-        // is authoritative for this turn.
         state.sawStreamEventText = true;
       }
       if (!state.sawStreamEventText) {
@@ -299,9 +287,6 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
       if (typeof obj.duration_ms === "number") out.push({ kind: "meta", key: "duration_ms", value: obj.duration_ms });
       if (typeof obj.total_cost_usd === "number") out.push({ kind: "meta", key: "cost_usd", value: obj.total_cost_usd });
       if (typeof obj.subtype === "string") out.push({ kind: "meta", key: "result", value: obj.subtype });
-    }
-    if (obj.type === "rate_limit_event" && obj.rate_limit_info) {
-      out.push({ kind: "meta", key: "rate_limit", value: obj.rate_limit_info });
     }
   }
 
@@ -356,10 +341,6 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
         if (text) out.push({ kind: "delta", text });
       }
     }
-    // Bare `text` field — only honor it when we haven't already emitted a
-    // streamed delta or an assistant body, otherwise it duplicates the same
-    // payload (cursor-agent / gemini both ship this redundancy on some
-    // versions).
     if (typeof obj.text === "string" && !state.sawStreamEventText && obj.type !== "assistant") {
       out.push({ kind: "delta", text: obj.text as string });
     }
@@ -370,58 +351,13 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
   }
 
-  if (agent === "opencode") {
-    const part =
-      obj.part && typeof obj.part === "object"
-        ? (obj.part as Record<string, unknown>)
-        : null;
-    const text = [part?.text, part?.content, part?.message, obj.text, obj.content, obj.message].find(
-      (value): value is string => typeof value === "string" && value.length > 0,
-    );
-    if (text) out.push({ kind: "delta", text });
-    if (obj.type === "step_start" && typeof obj.sessionID === "string") {
-      out.push({ kind: "meta", key: "session", value: obj.sessionID });
-    }
-    if (part?.tokens && typeof part.tokens === "object") {
-      const tokens = part.tokens as {
-        input?: number;
-        output?: number;
-        cache?: { read?: number; write?: number };
-      };
-      state.opencodeAccumulatedInputTokens = (state.opencodeAccumulatedInputTokens ?? 0) + (tokens.input ?? 0);
-      state.opencodeAccumulatedOutputTokens = (state.opencodeAccumulatedOutputTokens ?? 0) + (tokens.output ?? 0);
-      state.opencodeAccumulatedCacheReadTokens = (state.opencodeAccumulatedCacheReadTokens ?? 0) + (tokens.cache?.read ?? 0);
-      state.opencodeAccumulatedCacheWriteTokens = (state.opencodeAccumulatedCacheWriteTokens ?? 0) + (tokens.cache?.write ?? 0);
-
-      out.push({
-        kind: "meta",
-        key: "usage",
-        value: {
-          input_tokens: state.opencodeAccumulatedInputTokens,
-          output_tokens: state.opencodeAccumulatedOutputTokens,
-          cache_read_input_tokens: state.opencodeAccumulatedCacheReadTokens,
-          cache_creation_input_tokens: state.opencodeAccumulatedCacheWriteTokens,
-        },
-      });
-    }
-    if (typeof part?.cost === "number") {
-      state.opencodeAccumulatedCost = (state.opencodeAccumulatedCost ?? 0) + part.cost;
-      out.push({ kind: "meta", key: "cost_usd", value: state.opencodeAccumulatedCost });
-    }
-  }
-
-  if (agent === "qwen") {
+  if (agent === "opencode" || agent === "qwen") {
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
     if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
     if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });
   }
 
   if (agent === "qoder") {
-    // Qoder's stream-json output mirrors claude's envelope shape (init/system,
-    // stream_event with content_block_delta/text_delta, assistant message,
-    // result with usage). Parse generously across both fine-grained deltas and
-    // full assistant turns. Falls back to a bare `text` field for
-    // forward-compatibility with future Qoder JSON variants.
     if (obj.type === "system" && obj.subtype === "init") {
       if (obj.model) out.push({ kind: "meta", key: "model", value: obj.model });
       if (obj.session_id) out.push({ kind: "meta", key: "session", value: obj.session_id });
@@ -460,10 +396,234 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   return out;
 }
 
-/** Back-compat shim for callers that just want plain text. */
-export function extractTextFromLine(agent: string, line: string): string {
-  return parseLine(agent, line)
-    .filter((p): p is Extract<AgentParse, { kind: "delta" }> => p.kind === "delta")
-    .map((p) => p.text)
-    .join("");
+function makeParser(agent: string): (line: string) => AgentParse[] {
+  const state: ParseState = {};
+  return (line: string) => parseLineWithState(agent, line, state);
+}
+
+// ─── resolve OpenClaw agent id ────────────────────────────────────────
+
+let openclawAgentIdCache: { value: string; expiresAt: number } | null = null;
+
+async function resolveOpenclawAgentId(bin: string): Promise<string> {
+  const now = Date.now();
+  if (openclawAgentIdCache && openclawAgentIdCache.expiresAt > now) {
+    return openclawAgentIdCache.value;
+  }
+  let resolved = "main";
+  try {
+    const { spawn: spawnAsync } = await import("node:child_process");
+    const out = await new Promise<string>((res, rej) => {
+      const child = spawnAsync(bin, ["agents", "list"], {
+        stdio: ["ignore", "pipe", "pipe"],
+        shell: process.platform === "win32",
+      });
+      let buf = "";
+      child.stdout.setEncoding("utf8");
+      child.stdout.on("data", (c: string) => (buf += c));
+      child.on("close", () => res(buf));
+      child.on("error", rej);
+      setTimeout(() => {
+        try { child.kill("SIGTERM"); } catch {}
+        rej(new Error("openclaw agents list timed out"));
+      }, 5_000);
+    });
+    const m = out.match(/^- (\S+)/m);
+    if (m && m[1]) resolved = m[1];
+  } catch {}
+  openclawAgentIdCache = { value: resolved, expiresAt: now + 5 * 60_000 };
+  return resolved;
+}
+
+// ─── main invoke function ─────────────────────────────────────────────
+
+export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
+  const def = AGENTS.find((a) => a.id === opts.agent);
+  if (!def) {
+    return errorStream(`unknown agent: ${opts.agent}`);
+  }
+  const resolved = resolveBinForAgent(def, opts.binOverride);
+  if (resolved.kind === "override-missing") {
+    return errorStream(
+      `${def.label}: custom path \`${resolved.tried}\` does not exist.`,
+    );
+  }
+  if (resolved.kind === "not-found") {
+    return errorStream(
+      `${def.label} (\`${def.bin}\`) is not installed or not on PATH.`,
+    );
+  }
+  const bin: string = resolved.bin;
+
+  const env = envFor(opts.agent);
+  const promptViaArgv = def.protocol === "argv";
+  const promptViaMessageFlag = def.protocol === "argv-message";
+
+  return new ReadableStream<InvokeEvent>({
+    async start(controller) {
+      let closed = false;
+      let child: ChildProcessWithoutNullStreams | null = null;
+
+      const safeEnqueue = (ev: InvokeEvent) => {
+        if (closed) return;
+        try {
+          controller.enqueue(ev);
+        } catch {
+          closed = true;
+        }
+      };
+      const safeClose = () => {
+        if (closed) return;
+        closed = true;
+        try {
+          controller.close();
+        } catch {}
+      };
+
+      let argv: string[];
+      try {
+        const argvOpts: AgentArgvOpts = {
+          model: opts.model,
+        };
+        if (opts.agent === "openclaw") {
+          argvOpts.openclawAgentId = await resolveOpenclawAgentId(bin);
+        }
+        argv = buildArgv(opts.agent, argvOpts);
+      } catch (err) {
+        safeEnqueue({
+          type: "error",
+          message:
+            err instanceof UnsupportedAgentProtocolError
+              ? err.message
+              : err instanceof Error
+                ? err.message
+                : String(err),
+        });
+        safeClose();
+        return;
+      }
+      if (promptViaArgv) argv = [...argv, opts.prompt];
+      if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
+
+      try {
+        child = spawn(bin, argv, {
+          cwd: opts.cwd ?? process.cwd(),
+          env,
+          stdio: ["pipe", "pipe", "pipe"],
+          shell: process.platform === "win32",
+        });
+      } catch (err) {
+        safeEnqueue({
+          type: "error",
+          message: err instanceof Error ? err.message : String(err),
+        });
+        safeClose();
+        return;
+      }
+
+      safeEnqueue({
+        type: "start",
+        bin,
+        argv,
+        promptBytes: Buffer.byteLength(opts.prompt, "utf8"),
+      });
+
+      child.stdin.on("error", () => {});
+      try {
+        if (!promptViaArgv && !promptViaMessageFlag) child.stdin.write(opts.prompt);
+        child.stdin.end();
+      } catch {}
+
+      const parse = makeParser(opts.agent);
+
+      let stdoutBuf = "";
+      child.stdout.setEncoding("utf8");
+      child.stdout.on("data", (chunk: string) => {
+        if (closed) return;
+        stdoutBuf += chunk;
+        if (opts.agent === "openclaw") return;
+        let nl: number;
+        while ((nl = stdoutBuf.indexOf("\n")) !== -1) {
+          const line = stdoutBuf.slice(0, nl);
+          stdoutBuf = stdoutBuf.slice(nl + 1);
+          if (!line) continue;
+          for (const part of parse(line)) {
+            if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
+            else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
+            else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
+            else safeEnqueue({ type: "raw", text: line.slice(0, 240) });
+          }
+        }
+      });
+
+      child.stderr.setEncoding("utf8");
+      child.stderr.on("data", (chunk: string) => {
+        safeEnqueue({ type: "stderr", text: chunk });
+      });
+
+      child.on("error", (err) => {
+        safeEnqueue({ type: "error", message: err.message });
+        safeClose();
+      });
+
+      child.on("close", (code) => {
+        if (opts.agent === "openclaw") {
+          if (stdoutBuf.trim()) {
+            try {
+              const obj = JSON.parse(stdoutBuf) as {
+                payloads?: Array<{ text?: string }>;
+                meta?: {
+                  finalAssistantVisibleText?: string;
+                  finalAssistantRawText?: string;
+                  executionTrace?: { winnerProvider?: string; winnerModel?: string };
+                  completion?: { stopReason?: string };
+                  agentMeta?: { sessionId?: string };
+                };
+              };
+              const text = obj?.meta?.finalAssistantVisibleText
+                ?? obj?.meta?.finalAssistantRawText
+                ?? obj?.payloads?.[0]?.text
+                ?? "";
+              if (text) safeEnqueue({ type: "delta", text });
+            } catch (err) {
+              safeEnqueue({
+                type: "error",
+                message: `OpenClaw JSON parse failed: ${err instanceof Error ? err.message : String(err)}`,
+              });
+            }
+          }
+        } else if (stdoutBuf) {
+          if (opts.agent === "aider" || opts.agent === "codewhale" || opts.agent === "deepseek-tui") {
+            safeEnqueue({ type: "delta", text: stdoutBuf });
+          } else {
+            for (const part of parse(stdoutBuf)) {
+              if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
+              else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
+              else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
+            }
+          }
+        }
+        safeEnqueue({ type: "done", code });
+        safeClose();
+      });
+
+      const onAbort = () => {
+        try {
+          child?.kill("SIGTERM");
+        } catch {}
+        safeClose();
+      };
+      opts.signal?.addEventListener("abort", onAbort, { once: true });
+    },
+    cancel() {},
+  });
+}
+
+function errorStream(message: string): ReadableStream<InvokeEvent> {
+  return new ReadableStream<InvokeEvent>({
+    start(controller) {
+      controller.enqueue({ type: "error", message });
+      controller.close();
+    },
+  });
 }

@@ -150,7 +150,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         safeClose();
         return;
       }
-      // `protocol: "argv"` adapters (deepseek today) take the prompt as a
+      // `protocol: "argv"` adapters (deepseek-tui today) take the prompt as a
       // trailing positional arg rather than reading from stdin.
       if (promptViaArgv) argv = [...argv, opts.prompt];
       // `protocol: "argv-message"` (openclaw today) wants the prompt under
@@ -284,13 +284,14 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
             }
           }
         } else if (stdoutBuf) {
-          for (const part of parse(stdoutBuf)) {
-            if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
-            else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
-            else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
-          }
-          if (opts.agent === "aider" || opts.agent === "deepseek") {
+          if (opts.agent === "aider" || opts.agent === "codewhale" || opts.agent === "deepseek-tui") {
             safeEnqueue({ type: "delta", text: stdoutBuf });
+          } else {
+            for (const part of parse(stdoutBuf)) {
+              if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
+              else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
+              else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });
+            }
           }
         }
         safeEnqueue({ type: "done", code });
