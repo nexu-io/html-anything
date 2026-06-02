@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 革命</title>
+<style>
+  :root {
+    --c-black: #1A1A1A; --c-red: #E63956; --c-yellow: #FFD400;
+    --c-white: #FFFFFF; --c-gold: #FFE082;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    font-family: "Helvetica Neue", "Arial Black", "Inter", "PingFang SC", "Heiti SC", "STHeiti", -apple-system, sans-serif;
+    font-weight: 900; overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.05em;
+  }
+  body[data-theme="black"]  { --bg: var(--c-black);  --fg: var(--c-white); --acc-bg: var(--c-red);   --acc-fg: var(--c-white); --hl: var(--c-red); }
+  body[data-theme="red"]    { --bg: var(--c-red);    --fg: var(--c-white); --acc-bg: var(--c-black); --acc-fg: var(--c-white); --hl: var(--c-gold); }
+  body[data-theme="yellow"] { --bg: var(--c-yellow); --fg: var(--c-black); --acc-bg: var(--c-black); --acc-fg: var(--c-white); --hl: var(--c-red); }
+  body { background: var(--bg); }
+  .stage { position: fixed; inset: 0; }
+  .slide {
+    position: absolute; inset: 0; display: none;
+    flex-direction: column; justify-content: center; align-items: center;
+    padding: 6vmin 7vmin;
+    background: var(--bg); color: var(--fg);
+  }
+  .slide.active { display: flex; }
+  .slide[data-emphasis="true"] { background: var(--acc-bg); color: var(--acc-fg); }
+  .slide .hl { color: var(--hl); }
+  .slide[data-emphasis="true"] .hl { color: inherit; }
+  .lines { display: flex; flex-direction: column; gap: 0.15em; line-height: 1.05; max-width: 100%; align-items: flex-start; }
+  .line { white-space: nowrap; text-align: left; }
+  .line[data-indent="0"] { padding-left: 0; }
+  .line[data-indent="1"] { padding-left: 7vmin; }
+  .line[data-indent="2"] { padding-left: 16vmin; }
+  .slide[data-len="single"] .lines { font-size: clamp(320px, 80vmin, 1100px); }
+  .slide[data-len="short"]  .lines { font-size: clamp(240px, 55vmin, 780px); }
+  .slide[data-len="medium"] .lines { font-size: clamp(150px, 35vmin, 480px); }
+  .slide[data-len="long"]   .lines { font-size: clamp(100px, 22vmin, 320px); }
+  .slide[data-len="xlong"]  .lines { font-size: clamp(64px,  14vmin, 200px); }
+  .pager, .subtitle {
+    position: fixed; bottom: 2.5vmin;
+    font-family: "Menlo", "Monaco", monospace;
+    font-size: 13px; font-weight: 400; letter-spacing: 0.12em;
+    user-select: none; z-index: 10; text-transform: uppercase;
+    opacity: 0.5; color: var(--fg);
+  }
+  .pager { left: 3vmin; }
+  .subtitle { right: 3vmin; }
+  body[data-current="emphasis"] .pager,
+  body[data-current="emphasis"] .subtitle { color: var(--acc-fg); }
+</style>
+</head>
+<body data-theme="red">
+<div class="stage" id="stage"></div>
+<div class="pager" id="pager">01 / 01</div>
+<div class="subtitle" id="subtitle">HTML ANYTHING · SAMPLE</div>
+<script>
+  const SLIDES = [
+    { emphasis: true, lines: [ { indent: 0, chunks: [ { t: "AI" } ] } ] },
+    { lines: [ { indent: 0, chunks: [ { t: "为什么说 AI 是一次" }, { t: "革命", hl: true }, { t: "？" } ] } ] },
+    { lines: [ { indent: 0, chunks: [ { t: "人类革命：" }, { t: "能力让渡", hl: true }, { t: "的层级跃迁" } ] } ] },
+    { lines: [
+      { indent: 1, chunks: [ { t: "「" }, { t: "人之为人", hl: true }, { t: "」重新定义" } ] },
+      { indent: 1, chunks: [ { t: "社会组织重排" } ] },
+      { indent: 1, chunks: [ { t: "知识工人的角色被换骨" } ] }
+    ] },
+    { lines: [ { indent: 0, chunks: [ { t: "三件该" }, { t: "重做", hl: true }, { t: "的事" } ] } ] },
+    { lines: [
+      { indent: 1, chunks: [ { t: "写作的形式" } ] },
+      { indent: 1, chunks: [ { t: "阅读的载体" } ] },
+      { indent: 1, chunks: [ { t: "表达的速度" } ] }
+    ] },
+    { emphasis: true, lines: [] },
+    { emphasis: true, lines: [ { indent: 0, chunks: [ { t: "你只是一个" }, { t: "观众", hl: true }, { t: "吗？" } ] } ] }
+  ];
+  const stage = document.getElementById('stage');
+  const pager = document.getElementById('pager');
+  const body = document.body;
+  function lineCharLen(chunks) {
+    const CJK = /[　-〿㐀-䶿一-鿿豈-﫿＀-￯]/;
+    return chunks.reduce((acc, c) => {
+      let len = 0;
+      for (const ch of (c.t || '')) len += CJK.test(ch) ? 1.8 : 1;
+      return acc + len;
+    }, 0);
+  }
+  function maxLineLen(lines) { return lines && lines.length ? Math.max(...lines.map(l => lineCharLen(l.chunks || []))) : 0; }
+  function lengthTier(maxLen, lineCount) {
+    const adj = maxLen + Math.max(0, lineCount - 1) * 4;
+    if (adj <= 2)  return 'single';
+    if (adj <= 6)  return 'short';
+    if (adj <= 14) return 'medium';
+    if (adj <= 26) return 'long';
+    return 'xlong';
+  }
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  SLIDES.forEach((s) => {
+    const el = document.createElement('div');
+    el.className = 'slide';
+    if (s.emphasis) el.setAttribute('data-emphasis', 'true');
+    if (s.lines && s.lines.length) {
+      el.setAttribute('data-len', lengthTier(maxLineLen(s.lines), s.lines.length));
+      const linesEl = document.createElement('div');
+      linesEl.className = 'lines';
+      s.lines.forEach(line => {
+        const lineEl = document.createElement('div');
+        lineEl.className = 'line';
+        lineEl.setAttribute('data-indent', String(line.indent || 0));
+        lineEl.innerHTML = (line.chunks || []).map(c => {
+          const t = escapeHtml(c.t);
+          return c.hl ? '<span class="hl">' + t + '</span>' : t;
+        }).join('');
+        linesEl.appendChild(lineEl);
+      });
+      el.appendChild(linesEl);
+    }
+    stage.appendChild(el);
+  });
+  const slides = stage.querySelectorAll('.slide');
+  let idx = 0;
+  function show(i) {
+    if (i < 0) i = 0; if (i >= slides.length) i = slides.length - 1;
+    slides[idx].classList.remove('active');
+    idx = i;
+    slides[idx].classList.add('active');
+    pager.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+    body.setAttribute('data-current', slides[idx].getAttribute('data-emphasis') === 'true' ? 'emphasis' : 'theme');
+  }
+  function next() { show(idx + 1); }
+  function prev() { show(idx - 1); }
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight': case ' ': case 'Enter': case 'j': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'k': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); show(0); break;
+      case 'End': e.preventDefault(); show(slides.length - 1); break;
+      case 'f': case 'F': e.preventDefault(); document.fullscreenElement ? document.exitFullscreen?.() : document.documentElement.requestFullscreen?.(); break;
+    }
+  });
+  let touchX = null;
+  document.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    if (touchX == null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (dx < -40) next(); else if (dx > 40) prev();
+    touchX = null;
+  });
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.pager,.subtitle')) return;
+    const mid = window.innerWidth / 2;
+    if (e.clientX > mid) next(); else prev();
+  });
+  show(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SaaS 注册转化漏斗 · 2026 Q1</title>
+<style>
+  :root {
+    --paper: #FAFAF8;
+    --ink: #0A0A0A;
+    --ink-soft: rgba(10, 10, 10, 0.55);
+    --kb-1: #6A8FE0;
+    --kb-2: #4F7BD8;
+    --kb-3: #3B62C4;
+    --kb-4: #284EB1;
+    --kb-5: #163B9E;
+    --kb-6: #002FA7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    background: #1a1a1a;
+    font-family: "PingFang SC", "Heiti SC", "Helvetica Neue", "Arial", -apple-system, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  .canvas {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+  }
+  .frame {
+    width: 100%; height: 100%;
+    max-width: calc(100vh * 9 / 16);
+    max-height: calc(100vw * 16 / 9);
+    aspect-ratio: 9 / 16;
+    background: var(--paper);
+    display: flex; flex-direction: column;
+    padding: 6vmin 7vmin;
+    position: relative;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+  }
+  .meta {
+    position: absolute;
+    top: 3.5vmin; right: 4vmin;
+    font-family: "SF Mono", "JetBrains Mono", "Menlo", monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* Hero — top 15% */
+  .hero {
+    flex: 0 0 auto;
+    padding-bottom: 3vmin;
+    border-bottom: 1px solid rgba(10,10,10,0.08);
+  }
+  .hero h1 {
+    font-size: clamp(28px, 4.4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+  }
+  .hero .sub {
+    margin-top: 1.6vmin;
+    font-size: clamp(13px, 1.8vw, 16px);
+    font-weight: 500;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+
+  /* Funnel body */
+  .funnel {
+    flex: 1 1 auto;
+    display: flex; flex-direction: column;
+    gap: 6px;
+    padding: 4vmin 0;
+    justify-content: center;
+  }
+  .stage {
+    position: relative;
+    color: #fff;
+    display: flex; align-items: center;
+    padding: 0 8vmin 0 6vmin;
+    min-height: 0;
+    flex: 1 1 0;
+  }
+  .stage[data-i="1"] { background: var(--kb-2); clip-path: polygon(0% 0%, 100% 0%, 93% 100%, 7% 100%); }
+  .stage[data-i="2"] { background: var(--kb-3); clip-path: polygon(7% 0%, 93% 0%, 86% 100%, 14% 100%); }
+  .stage[data-i="3"] { background: var(--kb-4); clip-path: polygon(14% 0%, 86% 0%, 79% 100%, 21% 100%); }
+  .stage[data-i="4"] { background: var(--kb-5); clip-path: polygon(21% 0%, 79% 0%, 72% 100%, 28% 100%); }
+  .stage[data-i="5"] { background: var(--kb-6); clip-path: polygon(28% 0%, 72% 0%, 65% 100%, 35% 100%); }
+
+  .num {
+    font-family: "SF Mono", "JetBrains Mono", "Menlo", monospace;
+    font-size: clamp(36px, 5.6vw, 60px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+  .num .unit {
+    font-size: 0.34em;
+    font-weight: 500;
+    margin-left: 0.3em;
+    opacity: 0.7;
+    letter-spacing: 0;
+  }
+  .meta-col {
+    margin-left: 5vmin;
+    display: flex; flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .meta-col .label {
+    font-size: clamp(15px, 2.0vw, 19px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .meta-col .desc {
+    font-size: clamp(11px, 1.4vw, 13px);
+    font-weight: 400;
+    opacity: 0.88;
+    line-height: 1.35;
+  }
+
+  /* Strip — bottom 20% */
+  .strip {
+    flex: 0 0 auto;
+    padding-top: 3vmin;
+    border-top: 1px solid rgba(10,10,10,0.08);
+    display: flex; flex-direction: column;
+    gap: 1.6vmin;
+  }
+  .strip .row {
+    display: flex; align-items: baseline; gap: 2.4vmin;
+  }
+  .strip .pct {
+    font-family: "SF Mono", "JetBrains Mono", "Menlo", monospace;
+    font-size: clamp(56px, 11vw, 96px);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .strip .pct-label {
+    font-size: clamp(11px, 1.4vw, 13px);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    align-self: flex-end;
+    padding-bottom: 4px;
+  }
+  .strip .insight {
+    font-size: clamp(13px, 1.8vw, 16px);
+    font-weight: 500;
+    line-height: 1.45;
+    color: rgba(10,10,10,0.78);
+    max-width: 90%;
+  }
+  .strip .insight strong {
+    font-weight: 800;
+    color: var(--ink);
+    background: linear-gradient(transparent 60%, rgba(0,47,167,0.22) 60%);
+    padding: 0 2px;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="frame">
+    <div class="meta">FUNNEL · 2026 Q1 · 90D</div>
+
+    <header class="hero">
+      <h1>SaaS 注册转化漏斗</h1>
+      <div class="sub">B2B 协作工具 · 付费投放 + 自然搜索 · 90 天观测</div>
+    </header>
+
+    <section class="funnel">
+      <div class="stage" data-i="1">
+        <div class="num">100,000<span class="unit">人</span></div>
+        <div class="meta-col">
+          <div class="label">访客</div>
+          <div class="desc">付费投放 + 自然搜索登陆页</div>
+        </div>
+      </div>
+      <div class="stage" data-i="2">
+        <div class="num">18,500<span class="unit">人</span></div>
+        <div class="meta-col">
+          <div class="label">注册 · 18.5%</div>
+          <div class="desc">留邮箱即算</div>
+        </div>
+      </div>
+      <div class="stage" data-i="3">
+        <div class="num">6,200<span class="unit">人</span></div>
+        <div class="meta-col">
+          <div class="label">启动试用 · 33.5%</div>
+          <div class="desc">完成产品首跑</div>
+        </div>
+      </div>
+      <div class="stage" data-i="4">
+        <div class="num">1,450<span class="unit">人</span></div>
+        <div class="meta-col">
+          <div class="label">转付费 · 23.4%</div>
+          <div class="desc">月付 $19 起</div>
+        </div>
+      </div>
+      <div class="stage" data-i="5">
+        <div class="num">920<span class="unit">人</span></div>
+        <div class="meta-col">
+          <div class="label">30 天留存 · 63.4%</div>
+          <div class="desc">连续 30 天有效登录</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="strip">
+      <div class="row">
+        <div class="pct">0.92<span style="font-size:0.5em;letter-spacing:-0.02em;">%</span></div>
+        <div class="pct-label">累计转化</div>
+      </div>
+      <p class="insight">100,000 个访客里, 只剩 <strong>920 个</strong> 真正留下。最大流失在「访客 → 注册」, <strong>81.5%</strong> 的人在第一步就走了。</p>
+    </footer>
+  </div>
+</div>
+</body>
+</html>
