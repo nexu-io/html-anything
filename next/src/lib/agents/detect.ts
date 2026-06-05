@@ -140,6 +140,14 @@ export const AGENTS: AgentDef[] = [
     ],
   },
   {
+    id: "bob",
+    label: "IBM Bob Shell",
+    bin: "bob",
+    envOverride: "BOB_BIN",
+    vendor: "IBM",
+    fallbackModels: [DEFAULT_MODEL],
+  },
+  {
     id: "opencode",
     label: "OpenCode",
     bin: "opencode-cli",
