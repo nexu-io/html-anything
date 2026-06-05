@@ -162,3 +162,60 @@ describe("parseLine opencode", () => {
     ]);
   });
 });
+
+describe("parseLine bob", () => {
+  it("extracts text from stream-json output", () => {
+    const line = JSON.stringify({
+      text: "<html><body>Hello</body></html>",
+    });
+
+    expect(parseLine("bob", line)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>Hello</body></html>",
+      },
+    ]);
+  });
+
+  it("extracts content field when present", () => {
+    const line = JSON.stringify({
+      content: "<html><body>World</body></html>",
+    });
+
+    expect(parseLine("bob", line)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>World</body></html>",
+      },
+    ]);
+  });
+
+  it("extracts message field when present", () => {
+    const line = JSON.stringify({
+      message: "<html><body>Test</body></html>",
+    });
+
+    expect(parseLine("bob", line)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>Test</body></html>",
+      },
+    ]);
+  });
+
+  it("handles final answer after thinking when --hide-intermediary-output is used", () => {
+    // When --hide-intermediary-output is enabled, Bob only emits the final answer.
+    // This test verifies that the parser correctly handles the final completion.
+    const finalAnswer = JSON.stringify({
+      text: "<html><body>Final result</body></html>",
+    });
+
+    expect(parseLine("bob", finalAnswer)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>Final result</body></html>",
+      },
+    ]);
+  });
+});
+
