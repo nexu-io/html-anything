@@ -86,7 +86,9 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
     case "bob":
       // Bob's `-p`/`--prompt` flag expects an argument; we stream the prompt via
       // stdin, so omit `-p` and just request stream-json output.
-      return ["--output-format", "stream-json"];
+      // --hide-intermediary-output suppresses thinking/reasoning, leaving only
+      // the final completion in stdout.
+      return ["--output-format", "stream-json", "--hide-intermediary-output"];
     case "opencode":
       return [
         "run",
