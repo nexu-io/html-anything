@@ -174,7 +174,7 @@ function fmToMeta(id: string, fm: SkillFrontmatter, hasHtml: boolean, hasMd: boo
   if (fm.example_id || hasMd || hasHtml) {
     meta.example = {
       id: fm.example_id ?? `example-${id}`,
-      name: fm.example_name ?? `${meta.zhName} 示例`,
+      name: fm.example_name ?? `${meta.enName} Example`,
       format: fm.example_format ?? "markdown",
       tagline: fm.example_tagline ?? "",
       desc: fm.example_desc ?? "",

@@ -122,7 +122,7 @@ function makeTask(init?: Partial<Task>): Task {
   const now = Date.now();
   return {
     id: init?.id ?? `t_${now.toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
-    name: init?.name ?? "新任务",
+    name: init?.name ?? "New Task",
     content: init?.content ?? "",
     format: init?.format ?? "text",
     filename: init?.filename,
@@ -141,7 +141,7 @@ function makeTask(init?: Partial<Task>): Task {
 
 // Shipped locales. Adding a new one means dropping a dictionary into
 // `src/lib/i18n/locales/` and registering it in `src/lib/i18n.ts`.
-// We ship only en + zh-CN today and leave the rest to contributors.
+// We ship en + zh-CN today and leave the rest to contributors.
 export type Locale = "en" | "zh-CN";
 
 export const LOCALES: Locale[] = ["en", "zh-CN"];
@@ -277,7 +277,7 @@ function patchTask(tasks: Task[], id: string, patch: Partial<Task> | ((t: Task) 
   return changed ? next : tasks;
 }
 
-const initialTask = makeTask({ name: "任务 1" });
+const initialTask = makeTask({ name: "Task 1" });
 
 export const useStore = create<State>()(
   persist(
@@ -297,7 +297,7 @@ export const useStore = create<State>()(
       newTask: (init) => {
         const tasks = get().tasks;
         const n = tasks.length + 1;
-        const t = makeTask({ name: init?.name ?? `任务 ${n}`, ...init });
+        const t = makeTask({ name: init?.name ?? `Task ${n}`, ...init });
         set({ tasks: [...tasks, t], activeTaskId: t.id });
         return t.id;
       },
@@ -305,7 +305,7 @@ export const useStore = create<State>()(
         const { tasks, activeTaskId } = get();
         if (tasks.length <= 1) {
           // never leave 0 tasks — replace with a fresh empty one
-          const fresh = makeTask({ name: "任务 1" });
+          const fresh = makeTask({ name: "Task 1" });
           set({ tasks: [fresh], activeTaskId: fresh.id });
           void deleteTaskRuns(id).catch(() => {});
           return;
@@ -512,7 +512,7 @@ export const useStore = create<State>()(
         if (fromVersion < 2 && persisted && typeof persisted === "object") {
           const old = persisted as Record<string, unknown>;
           const t = makeTask({
-            name: "任务 1",
+            name: "Task 1",
             content: typeof old.content === "string" ? old.content : "",
             format: typeof old.format === "string" ? old.format : "text",
             filename: typeof old.filename === "string" ? old.filename : undefined,

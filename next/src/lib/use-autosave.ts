@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useStore, selectActiveTask } from "./store";
 import { snapshotDraft } from "./drafts";
+import { t } from "./i18n";
 
 /**
  * Watches editor content and reports save status.
@@ -57,13 +58,14 @@ export function useAutosave() {
   return { status, savedAt };
 }
 
-export function relativeTime(ts: number | null): string {
+export function relativeTime(ts: number | null, locale?: Parameters<typeof t>[0]): string {
   if (!ts) return "";
+  const l = locale ?? useStore.getState().locale;
   const diff = Math.max(0, Date.now() - ts) / 1000;
-  if (diff < 5) return "刚刚";
-  if (diff < 60) return `${Math.round(diff)} 秒前`;
-  if (diff < 3600) return `${Math.round(diff / 60)} 分钟前`;
-  if (diff < 86400) return `${Math.round(diff / 3600)} 小时前`;
+  if (diff < 5) return t(l, "time.justNow");
+  if (diff < 60) return t(l, "time.secsAgo", { n: Math.round(diff) });
+  if (diff < 3600) return t(l, "time.minsAgo", { n: Math.round(diff / 60) });
+  if (diff < 86400) return t(l, "time.hoursAgo", { n: Math.round(diff / 3600) });
   return new Date(ts).toLocaleString();
 }
 

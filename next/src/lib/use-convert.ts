@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useStore } from "./store";
 import { summarizeForAgent } from "./parsers/auto";
+import { t } from "./i18n";
 
 type ConvertReq = {
   taskId: string;
@@ -15,7 +16,7 @@ type ConvertReq = {
 };
 
 /** prefix logged when the run is sent in diff-edit mode (vs full regeneration) */
-const DIFF_LOG_PREFIX = "🔁 diff-edit 模式";
+// Uses i18n key "log.diffEditPrefix"
 
 // per-task abort controllers — multiple tasks can stream concurrently
 const controllers = new Map<string, AbortController>();
@@ -56,7 +57,7 @@ export function useConvert() {
       const summary = summarizeForAgent(inlinedContent);
       const enrichedContent =
         summary.preview && summary.format !== "markdown" && summary.format !== "html" && summary.format !== "text"
-          ? `${summary.preview}\n\n--- 原始内容 ---\n${summary.raw}`
+          ? `${summary.preview}\n\n${t(store.locale, "log.rawContentSeparator")}\n${summary.raw}`
           : summary.raw;
 
       const useModel = req.model && req.model !== "default" ? req.model : undefined;
@@ -89,12 +90,13 @@ export function useConvert() {
         ...(editPayload ?? {}),
       };
 
-      const sizeNote = `输入 ${enrichedContent.length.toLocaleString()} 字符 (${summary.format})`;
+      const locale = store.locale;
+      const sizeNote = t(locale, "log.inputSize", { n: enrichedContent.length.toLocaleString(), fmt: summary.format });
       store.pushLogFor(taskId, {
         kind: "info",
         text: isEdit
-          ? `${DIFF_LOG_PREFIX} · ${req.agent}${useModel ? ` · 模型 ${useModel}` : ""} · 模板 ${req.templateId} · ${sizeNote} · 原 HTML ${(task!.baseHtml!.length / 1024).toFixed(1)} KB`
-          : `准备调用 ${req.agent}${useModel ? ` · 模型 ${useModel}` : ""} · 模板 ${req.templateId} · ${sizeNote}`,
+          ? `${t(locale, "log.diffEditPrefix")} · ${req.agent}${useModel ? ` · ${t(locale, "log.model", { model: useModel })}` : ""} · ${t(locale, "log.template", { template: req.templateId })} · ${sizeNote} · ${t(locale, "log.originalHtml", { size: (task!.baseHtml!.length / 1024).toFixed(1) })}`
+          : `${t(locale, "log.preparing", { agent: req.agent, template: req.templateId, size: sizeNote })}${useModel ? ` · ${t(locale, "log.model", { model: useModel })}` : ""}`,
       });
 
       try {

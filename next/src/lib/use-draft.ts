@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useStore } from "./store";
+import { t } from "./i18n";
 
 type DraftReq = {
   instruction: string;
@@ -37,7 +38,7 @@ export function useDraft() {
     const agent = store.selectedAgent;
     if (!agent) {
       setStatus("error");
-      setError("先在右上角选择一个 agent");
+      setError(t(store.locale, "draft.needAgent"));
       return;
     }
     const taskId = store.activeTaskId;

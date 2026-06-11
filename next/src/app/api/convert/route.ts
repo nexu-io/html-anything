@@ -35,28 +35,28 @@ function buildEditPrompt(args: {
   oldHtml: string;
   format: string;
 }): string {
-  return `你正在执行一次**最小化差异编辑** (diff-edit), 不是从 0 重新生成。
+  return `You are performing a **minimal diff-edit**, not regenerating from scratch.
 
-模板风格: ${args.templateName} (${args.templateAspect})
-输入格式: ${args.format}
+Template style: ${args.templateName} (${args.templateAspect})
+Input format: ${args.format}
 
-【硬性规则】
-1. 仅输出完整的、修改后的 HTML。第一个字符必须是 \`<\`, 最后必须是 \`</html>\`。
-2. **不要**用 markdown 围栏包裹, 不要任何解释性文字。
-3. **禁止使用 Write / Edit / MultiEdit / Bash 等文件工具** — HTML 必须直接在助手回复正文里流式输出, 不要存到 \`.html\` 文件再回复"已输出至 …"。
-4. 保留原 HTML 的 \`<head>\` (CDN / 字体 / 样式 / meta), 保留所有不需要变化的 DOM 结构 — 字体、配色、布局、栅格、组件结构、动画都不许改。
-5. 仅根据 "旧内容 vs 新内容" 的差异, 替换或调整对应的文字 / 数据节点。
-6. 如果新内容增加了条目, 沿用原有的卡片 / 行 / slide / 章节结构添加; 如果删除了条目, 移除对应的元素。
-7. 如果新旧内容只差几个字, 也只改那几个字 — 不要顺手 "优化" 或 "重排"。
-8. 不要捏造数据。新内容里没有的就不要写。
+[Hard Rules]
+1. Output only the complete, modified HTML. The first character must be \`<\`, the last must be \`</html>\`.
+2. **Do NOT** wrap in markdown fences, no explanatory text.
+3. **Do NOT use Write / Edit / MultiEdit / Bash or any file tools** — the HTML must be streamed directly in the assistant reply body; do not save to an \`.html\` file.
+4. Preserve the original HTML's \`<head>\` (CDN / fonts / styles / meta), preserve all DOM structure that does not need changes — fonts, palette, layout, grid, component structure, and animations must not be altered.
+5. Only replace or adjust the text / data nodes that differ between "old content vs new content".
+6. If new content adds items, follow the existing card / row / slide / section structure to add them; if items are removed, remove the corresponding elements.
+7. If old and new content differ by only a few characters, change only those characters — do not "optimize" or "rearrange" anything else.
+8. Do not fabricate data. If it is not in the new content, do not write it.
 
-【旧内容】
+[Old Content]
 ${args.oldContent}
 
-【新内容】
+[New Content]
 ${args.newContent}
 
-【已有 HTML — 请基于此修改, 输出完整的修改后版本】
+[Existing HTML — modify this and output the complete modified version]
 ${args.oldHtml}
 `;
 }

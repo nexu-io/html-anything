@@ -96,13 +96,13 @@ export function summarizeForAgent(input: string): ParsedSummary {
         structured = { fields, rows };
         const sampleRows = rows.slice(0, 20);
         preview = [
-          `[${format.toUpperCase()}] ${rows.length} 行 × ${fields.length} 列`,
-          `字段: ${fields.join(", ")}`,
-          `前 ${sampleRows.length} 行 (JSON):`,
+          `[${format.toUpperCase()}] ${rows.length} rows × ${fields.length} columns`,
+          `Fields: ${fields.join(", ")}`,
+          `First ${sampleRows.length} rows (JSON):`,
           JSON.stringify(sampleRows, null, 2),
         ].join("\n");
       } catch (err) {
-        preview = `[${format}] (解析失败: ${err instanceof Error ? err.message : err})`;
+        preview = `[${format}] (parse failed: ${err instanceof Error ? err.message : err})`;
       }
       break;
     }
@@ -113,27 +113,27 @@ export function summarizeForAgent(input: string): ParsedSummary {
         const pretty = JSON.stringify(parsed, null, 2);
         preview =
           pretty.length > 4000
-            ? `[JSON] 截断预览 (完整 ${pretty.length} 字节):\n${pretty.slice(0, 4000)}\n…`
+            ? `[JSON] truncated preview (full ${pretty.length} bytes):\n${pretty.slice(0, 4000)}\n…`
             : `[JSON]\n${pretty}`;
       } catch (err) {
-        preview = `[JSON 但解析失败]\n${input.slice(0, 1000)}`;
+        preview = `[JSON parse failed]\n${input.slice(0, 1000)}`;
       }
       break;
     }
     case "markdown":
-      preview = `[Markdown 文档, ${input.length} 字符]`;
+      preview = `[Markdown document, ${input.length} chars]`;
       break;
     case "html":
-      preview = `[HTML 文档, ${input.length} 字符]`;
+      preview = `[HTML document, ${input.length} chars]`;
       break;
     case "sql":
-      preview = `[SQL 查询/脚本]`;
+      preview = `[SQL query/script]`;
       break;
     case "yaml":
-      preview = `[YAML 配置]`;
+      preview = `[YAML config]`;
       break;
     default:
-      preview = `[纯文本, ${input.length} 字符]`;
+      preview = `[Plain text, ${input.length} chars]`;
   }
 
   // Truncate raw for agent if huge
@@ -141,7 +141,7 @@ export function summarizeForAgent(input: string): ParsedSummary {
   if (raw.length > MAX_RAW_FOR_AGENT) {
     agentRaw =
       raw.slice(0, MAX_RAW_FOR_AGENT) +
-      `\n\n[...内容过长, 已截断 (${raw.length - MAX_RAW_FOR_AGENT} 字符省略)]`;
+      `\n\n[...content too long, truncated (${raw.length - MAX_RAW_FOR_AGENT} chars omitted)]`;
   }
 
   return { format, raw: agentRaw, preview, structured };

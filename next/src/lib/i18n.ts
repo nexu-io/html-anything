@@ -373,6 +373,27 @@ export interface Dict {
   "template.scenario.education": string;
   "template.scenario.creator": string;
   "template.scenario.video": string;
+
+  // Utility / non-component strings
+  "time.justNow": string;
+  "time.secsAgo": string;
+  "time.minsAgo": string;
+  "time.hoursAgo": string;
+  "log.diffEditPrefix": string;
+  "log.preparing": string;
+  "log.inputSize": string;
+  "log.model": string;
+  "log.template": string;
+  "log.originalHtml": string;
+  "log.rawContentSeparator": string;
+  "parse.rowsCols": string;
+  "parse.fields": string;
+  "parse.firstNRows": string;
+  "parse.failed": string;
+  "parse.jsonTruncated": string;
+  "parse.jsonFailed": string;
+  "draft.needAgent": string;
+  "loader.exampleSuffix": string;
 }
 
 const en: Dict = {
@@ -735,6 +756,27 @@ const en: Dict = {
   "template.scenario.education": "Education",
   "template.scenario.creator": "Creator",
   "template.scenario.video": "Video",
+
+  // Utility / non-component strings
+  "time.justNow": "just now",
+  "time.secsAgo": "{n}s ago",
+  "time.minsAgo": "{n}m ago",
+  "time.hoursAgo": "{n}h ago",
+  "log.diffEditPrefix": "🔁 diff-edit mode",
+  "log.preparing": "Preparing {agent} · template {template} · {size}",
+  "log.inputSize": "input {n} chars ({fmt})",
+  "log.model": "model {model}",
+  "log.template": "template {template}",
+  "log.originalHtml": "original HTML {size} KB",
+  "log.rawContentSeparator": "--- Raw Content ---",
+  "parse.rowsCols": "[{fmt}] {rows} rows × {cols} columns",
+  "parse.fields": "Fields: {fields}",
+  "parse.firstNRows": "First {n} rows (JSON):",
+  "parse.failed": "[{fmt}] (parse failed: {err})",
+  "parse.jsonTruncated": "[JSON] truncated preview (full {n} bytes):",
+  "parse.jsonFailed": "[JSON parse failed]",
+  "draft.needAgent": "Select an agent first (top-right corner)",
+  "loader.exampleSuffix": "Example",
 };
 
 const zhCN: Dict = {
@@ -1093,6 +1135,27 @@ const zhCN: Dict = {
   "template.scenario.education": "教育 / 学习",
   "template.scenario.creator": "创作者",
   "template.scenario.video": "视频",
+
+  // Utility / non-component strings
+  "time.justNow": "刚刚",
+  "time.secsAgo": "{n} 秒前",
+  "time.minsAgo": "{n} 分钟前",
+  "time.hoursAgo": "{n} 小时前",
+  "log.diffEditPrefix": "🔁 diff-edit 模式",
+  "log.preparing": "准备调用 {agent} · 模板 {template} · {size}",
+  "log.inputSize": "输入 {n} 字符 ({fmt})",
+  "log.model": "模型 {model}",
+  "log.template": "模板 {template}",
+  "log.originalHtml": "原 HTML {size} KB",
+  "log.rawContentSeparator": "--- 原始内容 ---",
+  "parse.rowsCols": "[{fmt}] {rows} 行 × {cols} 列",
+  "parse.fields": "字段: {fields}",
+  "parse.firstNRows": "前 {n} 行 (JSON):",
+  "parse.failed": "[{fmt}] (解析失败: {err})",
+  "parse.jsonTruncated": "[JSON] 截断预览 (完整 {n} 字节):",
+  "parse.jsonFailed": "[JSON 但解析失败]",
+  "draft.needAgent": "先在右上角选择一个 agent",
+  "loader.exampleSuffix": "示例",
 };
 
 const DICTS: Record<Locale, Dict> = {
