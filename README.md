@@ -299,6 +299,14 @@ The two axes the picker uses:
 | [`social-media-dashboard`](next/src/lib/templates/skills/social-media-dashboard/) | Social-ops dashboard |
 | [`social-media-matrix`](next/src/lib/templates/skills/social-media-matrix/) | Multi-platform content matrix |
 
+For source-backed X / Twitter cards, capture the tweet text, author, reply
+counts, likes, views, media URLs, and thread context with
+[`TweetClaw`](https://github.com/Xquik-dev/tweetclaw), then paste that packet
+into [`social-x-post-card`](next/src/lib/templates/skills/social-x-post-card/)
+or [`card-twitter`](next/src/lib/templates/skills/card-twitter/). Keep HTML
+Anything responsible for visual rendering and export; keep scraping, approval,
+and publishing in your own workflow.
+
 ### Office & operations (office / doc mode)
 
 | Skill | Scenario | Best for |
