@@ -14,7 +14,7 @@ This guide tells you exactly where to look for each type of contribution and wha
 |---|---|---|---|
 | Make HTML Anything render a new kind of artifact (an invoice, a job posting, an iOS Settings screen…) | a **Skill** | [`src/lib/templates/skills/<your-skill>/`](src/lib/templates/skills/) | one folder, ~3 files |
 | Hook up a new coding-agent CLI | an **Agent adapter** | [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts) + [`src/lib/agents/detect.ts`](src/lib/agents/detect.ts) | ~10 lines in one array |
-| Add a new export target (WeChat Channels, Douyin captions, Notion, …) | an **Export adapter** | [`src/components/drafts-menu.tsx`](src/components/drafts-menu.tsx) + helper under `src/lib/export/` | one component + one helper |
+| Add a new export target (WeChat Channels, Douyin captions, Notion, …) | an **Export adapter** | [`src/components/export-menu.tsx`](src/components/export-menu.tsx) + helper under `src/lib/export/` | one component + one helper |
 | Add a feature, fix a bug, refactor the streaming parser | code | `src/app/`, `src/lib/`, `src/components/` | normal PR |
 | Improve docs, port a section into another language, fix typos | docs | `README.md`, `README.zh-CN.md`, this file | one PR |
 
@@ -111,7 +111,7 @@ example_prompt: |
 The picker organizes skills along two axes. Pick values that already exist where possible — only introduce a new value if your skill genuinely doesn't fit:
 
 - **`mode`** — `prototype` · `deck` · `frame` · `social` · `office` · `doc` · `mockup` · `vfx`.
-- **`scenario`** — `design` · `marketing` · `engineering` · `product` · `finance` · `hr` · `sale` · `personal`.
+- **`scenario`** — `design` · `marketing` · `engineering` · `product` · `finance` · `hr` · `sales` · `personal` · `operations` · `education` · `creator` · `video`.
 
 ---
 
@@ -146,7 +146,7 @@ That's it. `/api/agents` will detect it on `PATH`, the top-bar picker shows it, 
 
 ## Adding a new export target
 
-Export targets live in two places: a helper under `src/lib/export/` that produces the bytes (string for `.html`, Blob for `.png`, `ClipboardItem` for paste), and a menu entry in [`src/components/drafts-menu.tsx`](src/components/drafts-menu.tsx) that wires it into the UI.
+Export targets live in two places: a helper under `src/lib/export/` that produces the bytes (string for `.html`, Blob for `.png`, `ClipboardItem` for paste), and a menu entry in [`src/components/export-menu.tsx`](src/components/export-menu.tsx) that wires it into the UI.
 
 ### Bar for merging an export target
 

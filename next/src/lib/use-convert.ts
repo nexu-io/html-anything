@@ -294,7 +294,7 @@ function formatMeta(key: string, value: unknown): string {
   if (key === "session") return `session = ${value}`;
   if (key === "cwd") return `cwd = ${value}`;
   if (key === "duration_ms") return `duration = ${value} ms`;
-  if (key === "cost_usd") return `cost ≈ $${(value as number).toFixed(4)}`;
+  if (key === "cost_usd" && typeof value === "number") return `cost ≈ $${value.toFixed(4)}`;
   if (key === "result") return `result = ${value}`;
   if (key === "rate_limit" && value && typeof value === "object") {
     const r = value as { status?: string; rateLimitType?: string };
