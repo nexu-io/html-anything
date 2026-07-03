@@ -375,9 +375,10 @@ export async function resolveOpenclawAgentId(bin: string): Promise<string> {
   try {
     const { spawn } = await import("node:child_process");
     const out = await new Promise<string>((res, rej) => {
-      const child = spawn(bin, ["agents", "list"], {
+      const useShell = process.platform === "win32";
+      const child = spawn(useShell ? `"${bin}"` : bin, ["agents", "list"], {
         stdio: ["ignore", "pipe", "pipe"],
-        shell: process.platform === "win32",
+        shell: useShell,
       });
       let buf = "";
       child.stdout.setEncoding("utf8");

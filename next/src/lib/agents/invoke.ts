@@ -158,18 +158,20 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
 
       try {
-        child = spawn(bin!, argv, {
+        // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
+        // what npm installs for most CLI agents) without going through the
+        // shell. Without this, every agent invocation fails with
+        // EINVAL / "spawn 无效的参数". macOS/Linux use direct exec.
+        // Safety: prompt content is delivered via stdin or `--message
+        // <text>` (argv-message), not interpolated into a shell command,
+        // so this does not introduce a shell-injection vector.
+        const useShell = process.platform === "win32";
+        child = spawn(useShell ? `"${bin}"` : bin!, argv, {
           cwd: opts.cwd ?? process.cwd(),
           env,
           stdio: ["pipe", "pipe", "pipe"],
-          // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
-          // what npm installs for most CLI agents) without going through the
-          // shell. Without this, every agent invocation fails with
-          // EINVAL / "spawn 无效的参数". macOS/Linux use direct exec.
-          // Safety: prompt content is delivered via stdin or `--message
-          // <text>` (argv-message), not interpolated into a shell command,
-          // so this does not introduce a shell-injection vector.
-          shell: process.platform === "win32",
+          shell: useShell,
+          windowsVerbatimArguments: false,
         });
       } catch (err) {
         safeEnqueue({
