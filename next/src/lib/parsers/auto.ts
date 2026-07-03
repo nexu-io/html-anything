@@ -6,6 +6,7 @@ export type DetectedFormat =
   | "json"
   | "csv"
   | "tsv"
+  | "pdf"
   | "sql"
   | "yaml"
   | "text";
@@ -13,6 +14,15 @@ export type DetectedFormat =
 export function detectFormat(input: string): DetectedFormat {
   const t = input.trim();
   if (!t) return "text";
+
+  // PDF text extracted by parseFile().
+  if (
+    /^# PDF:\s+\S/m.test(t) &&
+    /^Source:\s+PDF$/m.test(t) &&
+    /^Pages:\s+\d+$/m.test(t)
+  ) {
+    return "pdf";
+  }
 
   // HTML
   if (/^<!DOCTYPE\s+html/i.test(t) || /^<html[\s>]/i.test(t)) return "html";
@@ -126,6 +136,12 @@ export function summarizeForAgent(input: string): ParsedSummary {
     case "html":
       preview = `[HTML 文档, ${input.length} 字符]`;
       break;
+    case "pdf": {
+      const pages = input.match(/^Pages:\s+(\d+)$/m)?.[1] ?? "?";
+      const extraction = input.match(/^Extraction:\s+(.+)$/m)?.[1] ?? "embedded text";
+      preview = `[PDF 文档, ${pages} 页, ${input.length} 字符, extraction: ${extraction}]`;
+      break;
+    }
     case "sql":
       preview = `[SQL 查询/脚本]`;
       break;

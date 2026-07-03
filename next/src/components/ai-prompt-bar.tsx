@@ -7,7 +7,7 @@ import { useDraft } from "@/lib/use-draft";
 import { useUploadFile } from "@/lib/use-upload";
 
 const ACCEPT_TYPES =
-  ".md,.txt,.csv,.tsv,.xlsx,.xls,.json,.sql,.yaml,.yml,.png,.jpg,.jpeg,.gif,.webp,.svg,.html,.htm,.xml,.log";
+  ".md,.txt,.pdf,.csv,.tsv,.xlsx,.xls,.json,.sql,.yaml,.yml,.png,.jpg,.jpeg,.gif,.webp,.svg,.html,.htm,.xml,.log";
 
 /**
  * Sticky one-line input pinned to the bottom of the editor's Text tab. The

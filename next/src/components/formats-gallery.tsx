@@ -8,7 +8,7 @@ import { useT } from "@/lib/i18n";
  * Format gallery — content-format snippets the user can one-click load into
  * the editor. Different from `samples-gallery.tsx` (which ships fully
  * pre-rendered HTML samples tied to specific skills): here every card is a
- * tiny example of an *input* shape (.md / .csv / .json / .sql / .yaml /
+ * tiny example of an *input* shape (.md / .pdf / .csv / .json / .sql / .yaml /
  * image, …). After loading, the template picker in the top toolbar decides
  * the *output* shape.
  */
@@ -106,6 +106,31 @@ Third, every release notes file ends with one customer-visible sentence.
 If anything blocks you on this, ping me directly.
 
 — Sam
+`,
+  },
+  {
+    id: "pdf-paper",
+    ext: ".pdf",
+    label: "PDF",
+    icon: "📄",
+    kind: "text",
+    description: "Text-layer PDFs — extracted locally into page sections.",
+    format: "pdf",
+    filename: "agentic-rl-paper.pdf",
+    content: `# PDF: agentic-rl-paper.pdf
+
+Source: PDF
+Pages: 3
+Extraction: embedded text
+
+## Page 1
+Agentic reinforcement learning focuses on agents that can plan, act, observe feedback, and improve policy behavior across multi-step environments.
+
+## Page 2
+LLM reinforcement learning often optimizes model outputs using preference data, reward models, or task-specific feedback over generated responses.
+
+## Page 3
+The practical distinction is workflow scope: agentic RL evaluates behavior across trajectories, while LLM RL usually evaluates individual or batched language outputs.
 `,
   },
   {
