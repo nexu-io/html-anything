@@ -215,6 +215,12 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           stdoutBuf = stdoutBuf.slice(nl + 1);
           if (!line) continue;
           for (const part of parse(line)) {
+            // Some agents (bob) may echo the entire prompt back as the first
+            // streamed delta. Suppress that to avoid polluting the user-facing
+            // output with the system prompt.
+            if (opts.agent === "bob" && part.kind === "delta") {
+              if (part.text.trim() === opts.prompt.trim()) continue;
+            }
             if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
             else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });
             else if (part.kind === "meta") safeEnqueue({ type: "meta", key: part.key, value: part.value });

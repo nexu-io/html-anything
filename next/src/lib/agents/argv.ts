@@ -83,6 +83,12 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         "json",
         ...(model ? ["--model", model] : []),
       ];
+    case "bob":
+      // Bob's `-p`/`--prompt` flag expects an argument; we stream the prompt via
+      // stdin, so omit `-p` and just request stream-json output.
+      // --hide-intermediary-output suppresses thinking/reasoning, leaving only
+      // the final completion in stdout.
+      return ["--output-format", "stream-json", "--hide-intermediary-output"];
     case "opencode":
       return [
         "run",
@@ -411,6 +417,12 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   }
 
   if (agent === "qwen") {
+    if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
+    if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
+    if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });
+  }
+
+  if (agent === "bob") {
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
     if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
     if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });
