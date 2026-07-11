@@ -39,6 +39,24 @@ describe("parseHyperframes", () => {
     expect(result.frames[0].duration).toBe(0);
   });
 
+  it("preserves zero duration from inline comment marker fallback (issue #110)", () => {
+    const html = `
+      <html>
+        <head><title>Marker Zero</title></head>
+        <body>
+          <section class="frame">
+            <p>Instant frame via marker</p>
+            <!-- frame:1 duration:0 -->
+          </section>
+        </body>
+      </html>
+    `;
+    const result = parseHyperframes(html);
+    expect(result.isHyperframes).toBe(true);
+    expect(result.frames).toHaveLength(1);
+    expect(result.frames[0].duration).toBe(0);
+  });
+
   it("falls back to default when data-duration is absent", () => {
     const html = `
       <html>
