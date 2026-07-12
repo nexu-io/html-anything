@@ -236,38 +236,38 @@ pnpm dev    # 默认 :3000
 
 ## 所有参考的项目地址+原始 query
 
-我要做一个任意数据文档可以转 HTML 的一个产品，一个编辑器产品。它核心可以完成这么几个事情：                 
-  首先一进来可以去识别用户的本地的 code agent.                                                               
-  然后可以选择某个 code agent, 这是第一个。第二个的话就是说它左侧是一个编辑器或者是 upload                   
-  的一个入口，然后右侧是一个 HTML 的预览。然后呢左侧的话可以去直接贴一些文本，无论是 markdown                
-  的纯文本还是一些 CSV、excel 等数据，对或者是一些 CQ 等 database，然后可以直接贴进去，或者是有一个上传入口  
-  可以上传进去。然后上点完之后呢，又点完一个转换之后呢，就可以调 AI，然后去转成右侧的 HTML。这第二个然后第 3 
-   个的话就是右边那个 HTML，它可以去选择不同的 design system 或者是好看的模板。然后可以结合一套完整的提示词  
-  加流程，把这个左侧的这些数据或者是文档转成右侧，按照这个模板好看的 HTML，然后这个 HTML 可以是 PPT          
-  或者是原型/或者通过 html 可以表达的内容,比如简历/hyperframes 视频等的形态对。然后呢，这些转换之后的 HTML   
-  可以一键复制成公众号、推特或者是知乎等格式的发布的数据的形态，然后可以复制到剪贴板。                       
-                                                                                                             
-  参考如下这几个项目完成工作:                                                                                
-  - 编辑器/html 预览/复制到推特/公众号知乎等格式参考:https://github.com/mdnice/markdown-nice                 
-  - 各种 design                                                                                              
-  system/examples/模板等/形态（ppt/网页/简历等,或者你可以拓展很多有价值的场景,比如海报/各种社媒配图等）,     
-  这个参考 https://github.com/nexu-io/open-design https://github.com/mdnice/markdown-resume                  
-  https://github.com/jimliu/baoyu-skills https://github.com/gcui-art/markdown-to-image                       
-  - 识别本地 code agent 参考 https://github.com/nexu-io/open-design                                          
-  - 转成 hyperframes 视频/remotion 视频:参见https://github.com/remotion-dev/remotion                         
-  https://github.com/heygen-com/hyperframes https://github.com/nexu-io/open-design                           
-                                                                                                             
-  需要仔细检查最后有没有跑完并完成整个工作,整体的目标就是 everthing 都可以表达为 html,然后被表达为 html      
-  可以表达的任何内容,核心是一定要好看/世界级设计水准/让用户易于传播                                          
-                                                                                                             
-  使用 nextjs 实现项目,用户要做就是识别 agent,填入内容或者上传内容,然后转化（调用                            
-  agent）,然后下载/分享等过程一定要易用,快捷,有价值                                                          
-                                                                                                             
-  搞定之后,可以 写个 readme, 参考 https://github.com/nexu-io/open-design ,                                   
-  有很多技术/例子/图片等,让用户觉得非常有价值能宣传和传播                                                    
-  这个项目的缘由是 claude code 创始人发了一篇文章,说他们现在不用 markdown,全部用 html 表达了,我们希望呈现    
-  everhting 到 html ,以及能做的事情,传播和吃热度 https://x.com/AlchainHust/status/2053138568818684101        
-  https://github.com/alchaincyf/huashu-md-html  https://x.com/trq212/status/2052809885763747935              
-                                                                                                             
-   可以先写个 plan+todo 列表,然后围绕 todo 列表一遍遍检查,直到所有 todo                                      
+我要做一个任意数据文档可以转 HTML 的一个产品，一个编辑器产品。它核心可以完成这么几个事情：
+  首先一进来可以去识别用户的本地的 code agent.
+  然后可以选择某个 code agent, 这是第一个。第二个的话就是说它左侧是一个编辑器或者是 upload
+  的一个入口，然后右侧是一个 HTML 的预览。然后呢左侧的话可以去直接贴一些文本，无论是 markdown
+  的纯文本还是一些 CSV、excel 等数据，对或者是一些 CQ 等 database，然后可以直接贴进去，或者是有一个上传入口
+  可以上传进去。然后上点完之后呢，又点完一个转换之后呢，就可以调 AI，然后去转成右侧的 HTML。这第二个然后第 3
+   个的话就是右边那个 HTML，它可以去选择不同的 design system 或者是好看的模板。然后可以结合一套完整的提示词
+  加流程，把这个左侧的这些数据或者是文档转成右侧，按照这个模板好看的 HTML，然后这个 HTML 可以是 PPT
+  或者是原型/或者通过 html 可以表达的内容,比如简历/hyperframes 视频等的形态对。然后呢，这些转换之后的 HTML
+  可以一键复制成公众号、推特或者是知乎等格式的发布的数据的形态，然后可以复制到剪贴板。
+
+  参考如下这几个项目完成工作:
+  - 编辑器/html 预览/复制到推特/公众号知乎等格式参考:https://github.com/mdnice/markdown-nice
+  - 各种 design
+  system/examples/模板等/形态（ppt/网页/简历等,或者你可以拓展很多有价值的场景,比如海报/各种社媒配图等）,
+  这个参考 https://github.com/nexu-io/open-design https://github.com/mdnice/markdown-resume
+  https://github.com/jimliu/baoyu-skills https://github.com/gcui-art/markdown-to-image
+  - 识别本地 code agent 参考 https://github.com/nexu-io/open-design
+  - 转成 hyperframes 视频/remotion 视频:参见https://github.com/remotion-dev/remotion
+  https://github.com/heygen-com/hyperframes https://github.com/nexu-io/open-design
+
+  需要仔细检查最后有没有跑完并完成整个工作,整体的目标就是 everthing 都可以表达为 html,然后被表达为 html
+  可以表达的任何内容,核心是一定要好看/世界级设计水准/让用户易于传播
+
+  使用 nextjs 实现项目,用户要做就是识别 agent,填入内容或者上传内容,然后转化（调用
+  agent）,然后下载/分享等过程一定要易用,快捷,有价值
+
+  搞定之后,可以 写个 readme, 参考 https://github.com/nexu-io/open-design ,
+  有很多技术/例子/图片等,让用户觉得非常有价值能宣传和传播
+  这个项目的缘由是 claude code 创始人发了一篇文章,说他们现在不用 markdown,全部用 html 表达了,我们希望呈现
+  everhting 到 html ,以及能做的事情,传播和吃热度 https://x.com/AlchainHust/status/2053138568818684101
+  https://github.com/alchaincyf/huashu-md-html  https://x.com/trq212/status/2052809885763747935
+
+   可以先写个 plan+todo 列表,然后围绕 todo 列表一遍遍检查,直到所有 todo
   都勾掉确保能够完成跑通直接可以使用,我明天早上过来检查你的任务
