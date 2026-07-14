@@ -136,8 +136,9 @@ export function parseHyperframes(fullHtml: string): HyperframesParsed {
   let idx = 0;
   while ((m = FRAME_RE.exec(fullHtml))) {
     idx += 1;
-    const openTag = pick(/<section\b[^>]*>/i, m[0]);
-    const dataDur = Number(extractAttr(openTag, "data-duration")) || undefined;
+    const openTag = pick(/(<section\b[^>]*>)/i, m[0]);
+    const dataDurStr = extractAttr(openTag, "data-duration");
+    const dataDur = dataDurStr ? Number(dataDurStr) : undefined;
     const dataTransition = extractAttr(openTag, "data-transition") || undefined;
     const inlineStyle = extractAttr(openTag, "style");
     const bg = pick(/background(?:-color)?\s*:\s*([^;"']+)/i, inlineStyle).trim() || undefined;
