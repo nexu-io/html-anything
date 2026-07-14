@@ -78,6 +78,16 @@ function extractAttr(tag: string, name: string): string {
   return pick(re, tag);
 }
 
+function extractOpeningTag(html: string): string {
+  return /<section\b[^>]*>/i.exec(html)?.[0] ?? "";
+}
+
+function parseOptionalDuration(raw: string): number | undefined {
+  if (raw === "") return undefined;
+  const duration = Number(raw);
+  return Number.isFinite(duration) ? duration : undefined;
+}
+
 function parseMeta(html: string): { json: string; entries: HyperframeMetaEntry[] } {
   const raw = pick(META_RE, html).trim();
   if (!raw) return { json: "", entries: [] };
@@ -101,7 +111,7 @@ function parseInlineMarker(innerHtml: string): { duration?: number; transition?:
     innerHtml,
   );
   if (!m) return {};
-  return { duration: Number(m[1]) || undefined, transition: m[2] };
+  return { duration: parseOptionalDuration(m[1]), transition: m[2] };
 }
 
 /**
@@ -136,8 +146,8 @@ export function parseHyperframes(fullHtml: string): HyperframesParsed {
   let idx = 0;
   while ((m = FRAME_RE.exec(fullHtml))) {
     idx += 1;
-    const openTag = pick(/<section\b[^>]*>/i, m[0]);
-    const dataDur = Number(extractAttr(openTag, "data-duration")) || undefined;
+    const openTag = extractOpeningTag(m[0]);
+    const dataDur = parseOptionalDuration(extractAttr(openTag, "data-duration"));
     const dataTransition = extractAttr(openTag, "data-transition") || undefined;
     const inlineStyle = extractAttr(openTag, "style");
     const bg = pick(/background(?:-color)?\s*:\s*([^;"']+)/i, inlineStyle).trim() || undefined;
