@@ -48,9 +48,31 @@ async function renderSlideToBlob(slide: DeckSlide, scale = 2): Promise<Blob> {
       const done = () => res();
       if (iframe.contentDocument?.readyState === "complete") return done();
       iframe.addEventListener("load", done, { once: true });
-      setTimeout(done, 4000);
+      setTimeout(done, 8000);
     });
-    return await iframeToBlob(iframe, { scale });
+
+    // Give the browser an extra frame to finish layout — without this,
+    // Tailwind CDN / fonts / images injected via srcdoc can report a 0px
+    // scrollHeight on the first paint, causing iframeToBlob to throw
+    // "preview has no content yet" even though the live preview is fine.
+    await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+
+    // Retry once if the first capture returns an empty document.
+    const maxAttempts = 2;
+    let lastError: unknown;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        return await iframeToBlob(iframe, { scale });
+      } catch (err) {
+        lastError = err;
+        if (attempt < maxAttempts) {
+          // Wait longer before retry — fonts / Tailwind CDN may still be
+          // inflight even after the load event fired.
+          await new Promise<void>((r) => setTimeout(r, 1200));
+        }
+      }
+    }
+    throw lastError;
   } finally {
     wrap.remove();
   }
