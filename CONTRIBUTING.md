@@ -12,10 +12,10 @@ This guide tells you exactly where to look for each type of contribution and wha
 
 | If you want to… | You're really adding | Where it lives | Ship size |
 |---|---|---|---|
-| Make HTML Anything render a new kind of artifact (an invoice, a job posting, an iOS Settings screen…) | a **Skill** | [`src/lib/templates/skills/<your-skill>/`](src/lib/templates/skills/) | one folder, ~3 files |
-| Hook up a new coding-agent CLI | an **Agent adapter** | [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts) + [`src/lib/agents/detect.ts`](src/lib/agents/detect.ts) | ~10 lines in one array |
-| Add a new export target (WeChat Channels, Douyin captions, Notion, …) | an **Export adapter** | [`src/components/export-menu.tsx`](src/components/export-menu.tsx) + helper under `src/lib/export/` | one component + one helper |
-| Add a feature, fix a bug, refactor the streaming parser | code | `src/app/`, `src/lib/`, `src/components/` | normal PR |
+| Make HTML Anything render a new kind of artifact (an invoice, a job posting, an iOS Settings screen…) | a **Skill** | [`next/src/lib/templates/skills/<your-skill>/`](next/src/lib/templates/skills/) | one folder, ~3 files |
+| Hook up a new coding-agent CLI | an **Agent adapter** | [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) + [`next/src/lib/agents/detect.ts`](next/src/lib/agents/detect.ts) | ~10 lines in one array |
+| Add a new export target (WeChat Channels, Douyin captions, Notion, …) | an **Export adapter** | [`next/src/components/export-menu.tsx`](next/src/components/export-menu.tsx) + helper under `next/src/lib/export/` | one component + one helper |
+| Add a feature, fix a bug, refactor the streaming parser | code | `next/src/app/`, `next/src/lib/`, `next/src/components/` | normal PR |
 | Improve docs, port a section into another language, fix typos | docs | `README.md`, `README.zh-CN.md`, this file | one PR |
 
 If you're not sure which bucket your idea is in, [open an issue first](https://github.com/nexu-io/html-anything/issues/new) and we'll point you at the right surface.
@@ -42,12 +42,12 @@ Before you push, make sure you have **at least one coding-agent CLI logged in** 
 
 ## Adding a new Skill
 
-A skill is a folder under [`src/lib/templates/skills/`](src/lib/templates/skills/) with a `SKILL.md` at the root, following Claude Code's [`SKILL.md` convention][skill] plus a small extended frontmatter that the picker reads. **No registration step.** Drop the folder in, restart `pnpm dev`, the picker shows it.
+A skill is a folder under [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) with a `SKILL.md` at the root, following Claude Code's [`SKILL.md` convention][skill] plus a small extended frontmatter that the picker reads. **No registration step.** Drop the folder in, restart `pnpm dev`, the picker shows it.
 
 ### Skill folder layout
 
 ```text
-src/lib/templates/skills/your-skill/
+next/src/lib/templates/skills/your-skill/
 ├── SKILL.md            # required — prompt body + frontmatter
 ├── example.html        # required — what the agent should produce, hand-authored
 ├── assets/             # optional — fonts, images, reusable CSS, layout fragments
@@ -104,7 +104,7 @@ example_prompt: |
 3. **Hard constraints exist and are specific.** Vague directives ("use modern typography") are not constraints. Real ones look like "Inter 96 / 64 / 40 / 24 / 16 px, 8 px grid, max two weights per slide".
 4. **No `lorem ipsum`** anywhere in the example. If the example uses placeholder data, it must be plausibly-real placeholder data.
 5. **Slug uses ASCII lowercase with dashes** — `deck-swiss-international`, `social-x-post-card`. Mirror the 75 existing folders.
-6. **If you vendored work from another repo**, the original `LICENSE` and authorship attribution have to ship inside your skill folder. Example: `src/lib/templates/skills/deck-guizang-editorial/LICENSE` preserves the original op7418 license verbatim.
+6. **If you vendored work from another repo**, the original `LICENSE` and authorship attribution have to ship inside your skill folder. Example: `next/src/lib/templates/skills/deck-guizang-editorial/LICENSE` preserves the original op7418 license verbatim.
 
 ### Picker grouping
 
@@ -117,7 +117,7 @@ The picker organizes skills along two axes. Pick values that already exist where
 
 ## Adding a new coding-agent CLI
 
-Hooking up a new agent (e.g. some new shop's `foo-coder` CLI) is one entry in [`src/lib/agents/argv.ts`](src/lib/agents/argv.ts):
+Hooking up a new agent (e.g. some new shop's `foo-coder` CLI) is one entry in [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts):
 
 ```ts
 {
@@ -133,7 +133,7 @@ Hooking up a new agent (e.g. some new shop's `foo-coder` CLI) is one entry in [`
 }
 ```
 
-That's it. `/api/agents` will detect it on `PATH`, the top-bar picker shows it, the chat path works through the same SSE pipeline. If the CLI emits **typed events** (like Claude Code's `--output-format stream-json`), add a parser in [`src/lib/agents/invoke.ts`](src/lib/agents/invoke.ts) and set `stream: 'claude-stream-json'`.
+That's it. `/api/agents` will detect it on `PATH`, the top-bar picker shows it, the chat path works through the same SSE pipeline. If the CLI emits **typed events** (like Claude Code's `--output-format stream-json`), add a parser in [`next/src/lib/agents/invoke.ts`](next/src/lib/agents/invoke.ts) and set `stream: 'claude-stream-json'`.
 
 ### Bar for merging an agent adapter
 
@@ -146,7 +146,7 @@ That's it. `/api/agents` will detect it on `PATH`, the top-bar picker shows it, 
 
 ## Adding a new export target
 
-Export targets live in two places: a helper under `src/lib/export/` that produces the bytes (string for `.html`, Blob for `.png`, `ClipboardItem` for paste), and a menu entry in [`src/components/export-menu.tsx`](src/components/export-menu.tsx) that wires it into the UI.
+Export targets live in two places: a helper under `next/src/lib/export/` that produces the bytes (string for `.html`, Blob for `.png`, `ClipboardItem` for paste), and a menu entry in [`next/src/components/export-menu.tsx`](next/src/components/export-menu.tsx) that wires it into the UI.
 
 ### Bar for merging an export target
 
@@ -166,8 +166,8 @@ We're not pedantic about formatting (Prettier on save is fine), but two rules ar
 Beyond that:
 
 - **Don't narrate.** No `// import the module`, no `// loop through items`. If the code reads obviously, the comment is noise. Save comments for non-obvious intent or constraints the code can't express.
-- **TypeScript for `src/`.** No new top-level `.js` files unless there's a compelling reason.
-- **No new top-level dependencies** without a paragraph in the PR description on what we get vs. what bytes we ship. The dep list in [`package.json`](package.json) is small on purpose.
+- **TypeScript for `next/src/`.** No new top-level `.js` files unless there's a compelling reason.
+- **No new top-level dependencies** without a paragraph in the PR description on what we get vs. what bytes we ship. The dep list in [`next/package.json`](next/package.json) is small on purpose.
 - **Run `pnpm build`** before pushing structural changes. Type errors block merge.
 
 ---
@@ -236,6 +236,6 @@ The repo ships two languages at parity: English (`README.md`, `CONTRIBUTING.md`)
 
 By contributing, you agree your contribution is licensed under the [Apache-2.0 License](LICENSE) of this repository.
 
-Vendored work retains its original license and authorship attribution — see each `src/lib/templates/skills/<skill>/` folder's own `LICENSE` / `README.md` for what it inherits from upstream. The most prominent example is [`src/lib/templates/skills/deck-guizang-editorial/`](src/lib/templates/skills/deck-guizang-editorial/), which retains the original license and authorship attribution to [op7418](https://github.com/op7418).
+Vendored work retains its original license and authorship attribution — see each `next/src/lib/templates/skills/<skill>/` folder's own `LICENSE` / `README.md` for what it inherits from upstream. The most prominent example is [`next/src/lib/templates/skills/deck-guizang-editorial/`](next/src/lib/templates/skills/deck-guizang-editorial/), which retains the original license and authorship attribution to [op7418](https://github.com/op7418).
 
 [skill]: https://docs.anthropic.com/en/docs/claude-code/skills
