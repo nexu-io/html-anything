@@ -1,27 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useT } from "@/lib/i18n";
 
 type Theme = "light" | "dark";
 
+// The boot script in layout.tsx applies data-theme before hydration, so the
+// <html> attribute — not React state — is the source of truth for the theme.
+function readTheme(): Theme {
+  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+}
+
+function subscribe(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributeFilter: ["data-theme"] });
+  return () => observer.disconnect();
+}
+
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("light");
+  // Server snapshot matches the SSR markup; useSyncExternalStore re-reads the
+  // live attribute before first paint, so a dark reload never shows the light
+  // icon, a stale aria-pressed, or a no-op first click.
+  const theme = useSyncExternalStore(subscribe, readTheme, () => "light");
   const t = useT();
 
-  useEffect(() => {
-    setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
-  }, []);
-
   const toggle = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
+    const next: Theme = readTheme() === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next; // observer re-renders us
     try {
       localStorage.setItem("html-anything-theme", next);
     } catch {
       /* private mode — theme still applies for this session */
     }
-    setTheme(next);
   };
 
   const label = t("toolbar.toggleTheme");
