@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { deleteTaskRuns, putRun } from "@/lib/history/db";
+import type { ProjectSnapshot } from "@/lib/projects/contracts";
 
 export type ModelOption = { id: string; label: string };
 
@@ -60,6 +61,8 @@ export type RunStats = {
 
 export type Task = {
   id: string;
+  /** Opaque project capability for server-backed tasks. Never persisted. */
+  serverProjectId?: string;
   name: string;
   // input
   content: string;
@@ -122,6 +125,7 @@ function makeTask(init?: Partial<Task>): Task {
   const now = Date.now();
   return {
     id: init?.id ?? `t_${now.toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
+    serverProjectId: init?.serverProjectId,
     name: init?.name ?? "新任务",
     content: init?.content ?? "",
     format: init?.format ?? "text",
@@ -220,6 +224,8 @@ type State = {
     templateId: string;
     html: string;
   }) => string;
+  loadServerProject: (snapshot: ProjectSnapshot) => string;
+  removeServerProject: (projectId: string) => void;
 
   // active-task field setters (operate on the currently active task)
   setContent: (s: string) => void;
@@ -359,6 +365,50 @@ export const useStore = create<State>()(
         set((s) => ({ tasks: [...s.tasks, t], activeTaskId: t.id }));
         return t.id;
       },
+      loadServerProject: (snapshot) => {
+        const { tasks } = get();
+        const existing = tasks.find(
+          (task) => task.serverProjectId === snapshot.project.projectId,
+        );
+        const task = makeTask({
+          id: existing?.id,
+          serverProjectId: snapshot.project.projectId,
+          name: snapshot.project.name,
+          content: snapshot.content,
+          format: snapshot.project.format,
+          templateId: snapshot.project.templateId,
+          html: snapshot.html,
+          status: "done",
+          baseContent: snapshot.content,
+          baseHtml: snapshot.html,
+          createdAt: existing?.createdAt,
+        });
+        const next = existing
+          ? tasks.map((candidate) =>
+              candidate.serverProjectId === snapshot.project.projectId
+                ? task
+                : candidate,
+            )
+          : [...tasks, task];
+        set({ tasks: next, activeTaskId: task.id });
+        return task.id;
+      },
+      removeServerProject: (projectId) => {
+        const { tasks } = get();
+        if (!tasks.some((task) => task.serverProjectId === projectId)) return;
+
+        const remaining = tasks.filter(
+          (task) => task.serverProjectId !== projectId,
+        );
+        const localTask = remaining.find((task) => !task.serverProjectId);
+        if (localTask) {
+          set({ tasks: remaining, activeTaskId: localTask.id });
+          return;
+        }
+
+        const fresh = makeTask({ name: "任务 1" });
+        set({ tasks: [...remaining, fresh], activeTaskId: fresh.id });
+      },
 
       setContent: (s) =>
         set((st) => ({ tasks: patchTask(st.tasks, st.activeTaskId, { content: s }) })),
@@ -491,22 +541,28 @@ export const useStore = create<State>()(
       // existing user's saved tasks live under this localStorage key.
       name: "html-everything-store",
       version: 7,
-      partialize: (s): Persisted => ({
-        tasks: s.tasks.map((t) => ({
+      partialize: (s): Persisted => {
+        const tasks = s.tasks.filter((t) => !t.serverProjectId).map((t) => ({
           ...t,
           // never persist running status — a dropped tab can't keep the stream
           status: (t.status === "running" ? "idle" : t.status) as ConvertStatus,
-        })),
-        activeTaskId: s.activeTaskId,
-        selectedAgent: s.selectedAgent,
-        agentModels: s.agentModels,
-        agentBinOverrides: s.agentBinOverrides,
-        welcomeAck: s.welcomeAck,
-        sidebarCollapsed: s.sidebarCollapsed,
-        historyPaneOpen: s.historyPaneOpen,
-        locale: s.locale,
-        layoutMode: s.layoutMode,
-      }),
+        }));
+        const activeTaskId = tasks.some((t) => t.id === s.activeTaskId)
+          ? s.activeTaskId
+          : tasks[0]?.id ?? s.activeTaskId;
+        return {
+          tasks,
+          activeTaskId,
+          selectedAgent: s.selectedAgent,
+          agentModels: s.agentModels,
+          agentBinOverrides: s.agentBinOverrides,
+          welcomeAck: s.welcomeAck,
+          sidebarCollapsed: s.sidebarCollapsed,
+          historyPaneOpen: s.historyPaneOpen,
+          locale: s.locale,
+          layoutMode: s.layoutMode,
+        };
+      },
       migrate: (persisted, fromVersion): Persisted => {
         // v1 → v2: wrap top-level content/format/filename/selectedTemplate into a single task.
         if (fromVersion < 2 && persisted && typeof persisted === "object") {
