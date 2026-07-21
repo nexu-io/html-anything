@@ -104,7 +104,7 @@ export function EditorWorkspace({ projectMode }: { projectMode?: ProjectMode }) 
                   : undefined
               }
             >
-              <EditorPane />
+              <EditorPane localAutosaveEnabled={!projectMode} />
             </section>
           )}
           {layoutMode !== "editor" && (

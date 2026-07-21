@@ -211,10 +211,10 @@ type State = {
   renameTask: (id: string, name: string) => void;
   duplicateTask: (id: string) => string;
   /**
-   * Load a sample into a brand-new task. Sets content / format / templateId /
-   * html / baseContent / baseHtml so the user can immediately preview the
-   * world-class HTML, edit the content, and the next Convert switches to
-   * diff-edit mode (minimal token use).
+   * Load a sample into the active server project or a reusable/new local task.
+   * Sets content / format / templateId / html / baseContent / baseHtml so the
+   * user can immediately preview the world-class HTML, edit the content, and
+   * the next Convert switches to diff-edit mode (minimal token use).
    */
   loadSample: (sample: {
     id: string;
@@ -351,6 +351,22 @@ export const useStore = create<State>()(
       loadSample: (sample) => {
         const { tasks, activeTaskId } = get();
         const active = tasks.find((t) => t.id === activeTaskId);
+        if (active?.serverProjectId) {
+          set((s) => ({
+            tasks: patchTask(s.tasks, active.id, {
+              content: sample.content,
+              format: sample.format,
+              templateId: sample.templateId,
+              html: sample.html,
+              baseContent: sample.content,
+              baseHtml: sample.html,
+              sampleId: sample.id,
+              status: sample.html ? "done" : "idle",
+            }),
+            activeTaskId: active.id,
+          }));
+          return active.id;
+        }
         // if the active task is empty (no content, no html), reuse it; otherwise create a new task
         const reuseActive = active && !active.content.trim() && !active.html;
         const t = makeTask({

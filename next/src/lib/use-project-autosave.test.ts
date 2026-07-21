@@ -163,6 +163,61 @@ describe("transient server project tasks", () => {
     });
   });
 
+  it("loads a sample into the active server project without changing its identity", () => {
+    const taskId = useStore.getState().loadServerProject(readySnapshot());
+    const taskCount = useStore.getState().tasks.length;
+
+    const returnedId = useStore.getState().loadSample({
+      id: "sample-dashboard",
+      name: "Sample name must not replace the project name",
+      content: "sample content",
+      format: "markdown",
+      templateId: "dashboard",
+      html: "<!doctype html><html><body>sample</body></html>",
+    });
+
+    const state = useStore.getState();
+    expect(returnedId).toBe(taskId);
+    expect(state.activeTaskId).toBe(taskId);
+    expect(state.tasks).toHaveLength(taskCount);
+    expect(state.tasks.find((task) => task.id === taskId)).toMatchObject({
+      id: taskId,
+      serverProjectId: PROJECT_ID,
+      name: "Demo",
+      content: "sample content",
+      format: "markdown",
+      templateId: "dashboard",
+      html: "<!doctype html><html><body>sample</body></html>",
+      baseContent: "sample content",
+      baseHtml: "<!doctype html><html><body>sample</body></html>",
+      sampleId: "sample-dashboard",
+      status: "done",
+    });
+  });
+
+  it("keeps creating a new task when a local active task has content", () => {
+    const returnedId = useStore.getState().loadSample({
+      id: "sample-dashboard",
+      name: "Dashboard sample",
+      content: "sample content",
+      format: "markdown",
+      templateId: "dashboard",
+      html: "<!doctype html><html><body>sample</body></html>",
+    });
+
+    const state = useStore.getState();
+    expect(returnedId).not.toBe("local-task");
+    expect(state.activeTaskId).toBe(returnedId);
+    expect(state.tasks).toHaveLength(2);
+    expect(state.tasks[0]).toEqual(localTask());
+    expect(state.tasks[1]).toMatchObject({
+      id: returnedId,
+      serverProjectId: undefined,
+      name: "Dashboard sample",
+      sampleId: "sample-dashboard",
+    });
+  });
+
   it("removes only the requested server task and keeps a local task selected", () => {
     const firstId = useStore.getState().loadServerProject(readySnapshot());
     const otherId = "ZbCdEfGhIjKlMnOpQrStUg";

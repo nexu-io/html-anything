@@ -18,7 +18,11 @@ const TAB_KEY: Record<"text" | "formats" | "samples", DictKey> = {
   samples: "editor.tab.samples",
 };
 
-export function EditorPane() {
+export function EditorPane({
+  localAutosaveEnabled = true,
+}: {
+  localAutosaveEnabled?: boolean;
+}) {
   const [tab, setTab] = useState<"text" | "formats" | "samples">("text");
   const [dragActive, setDragActive] = useState(false);
   const hydrated = usePersistHydrated();
@@ -27,7 +31,7 @@ export function EditorPane() {
   const format = useStore((s) => selectActiveTask(s)?.format ?? "text");
   const setFormat = useStore((s) => s.setFormat);
   const setFilename = useStore((s) => s.setFilename);
-  const { status: saveStatus, savedAt } = useAutosave();
+  const { status: saveStatus, savedAt } = useAutosave(localAutosaveEnabled);
   const { ingest } = useUploadFile();
   const t = useT();
 
@@ -56,7 +60,7 @@ export function EditorPane() {
               </button>
             ))}
           </div>
-          {hasContent && (
+          {localAutosaveEnabled && hasContent && (
             <SaveIndicator status={saveStatus} savedAt={savedAt} hasContent={hasContent} />
           )}
         </div>

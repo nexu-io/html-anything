@@ -24,4 +24,18 @@ describe("project editor routes", () => {
     expect(source).toContain("<EditorWorkspace />");
     expect(source).not.toContain("projectMode=");
   });
+
+  it("disables only the local autosave UI in project mode", async () => {
+    const [workspaceSource, editorSource] = await Promise.all([
+      readFile(path.join(srcRoot, "components/editor-workspace.tsx"), "utf8"),
+      readFile(path.join(srcRoot, "components/editor-pane.tsx"), "utf8"),
+    ]);
+
+    expect(workspaceSource).toContain(
+      "<EditorPane localAutosaveEnabled={!projectMode} />",
+    );
+    expect(editorSource).toContain("localAutosaveEnabled = true");
+    expect(editorSource).toContain("useAutosave(localAutosaveEnabled)");
+    expect(editorSource).toContain("localAutosaveEnabled && hasContent");
+  });
 });

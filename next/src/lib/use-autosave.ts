@@ -5,7 +5,8 @@ import { useStore, selectActiveTask } from "./store";
 import { snapshotDraft } from "./drafts";
 
 /**
- * Watches editor content and reports save status.
+ * Watches editor content and reports save status when enabled. Project mode
+ * disables this local draft path in favor of its remote autosave state.
  *
  * The zustand store's `persist` middleware already writes content to
  * localStorage on every change (debounced by React reconciliation), so the
@@ -16,7 +17,7 @@ import { snapshotDraft } from "./drafts";
  */
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
-export function useAutosave() {
+export function useAutosave(enabled = true) {
   const content = useStore((s) => selectActiveTask(s)?.content ?? "");
   const format = useStore((s) => selectActiveTask(s)?.format ?? "text");
   const filename = useStore((s) => selectActiveTask(s)?.filename);
@@ -27,7 +28,7 @@ export function useAutosave() {
 
   // initial: if content already exists (rehydrated from persist), mark saved
   useEffect(() => {
-    if (content && status === "idle") {
+    if (enabled && content && status === "idle") {
       setStatus("saved");
       setSavedAt(Date.now());
     }
@@ -35,6 +36,16 @@ export function useAutosave() {
   }, []);
 
   useEffect(() => {
+    if (!enabled) {
+      lastContentRef.current = content;
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      setStatus("idle");
+      setSavedAt(null);
+      return;
+    }
     if (content === lastContentRef.current) return;
     lastContentRef.current = content;
     setStatus("saving");
@@ -50,9 +61,12 @@ export function useAutosave() {
       }
     }, 600);
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
     };
-  }, [content, format, filename]);
+  }, [content, enabled, format, filename]);
 
   return { status, savedAt };
 }
