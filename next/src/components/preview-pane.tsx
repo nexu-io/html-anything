@@ -475,6 +475,7 @@ function CodeEditor({
         onChange={(e) => setHtmlFor(taskId, e.target.value)}
         readOnly={!editable}
         spellCheck={false}
+        aria-label={t("preview.tab.code")}
         placeholder={placeholder}
         className="flex-1 w-full resize-none overflow-auto p-4 text-[11.5px] leading-relaxed font-[family-name:var(--font-mono)] focus:outline-none"
         style={{

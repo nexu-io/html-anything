@@ -183,6 +183,11 @@ test.describe("Server project editor", () => {
         name: "Generated project",
       }),
     ).toBeVisible();
+    await expectOnlyLocalState(page, [
+      PROJECT_ID,
+      snapshot.content,
+      snapshot.html,
+    ]);
 
     await expect(page.getByRole("button", { name: "New task" })).toHaveCount(0);
     await expect(page.getByRole("radiogroup", { name: "Workspace layout" })).toBeVisible();
@@ -239,7 +244,8 @@ test.describe("Server project editor", () => {
     await page.goto(PROJECT_PATH);
     await page.getByRole("button", { name: /source/i }).click();
 
-    const sourceEditor = page.locator("textarea").nth(1);
+    const sourceEditor = page.getByRole("textbox", { name: /source/i });
+    await expect(sourceEditor).toBeVisible();
     await expect(sourceEditor).toHaveValue(initialProjectHtml);
     await sourceEditor.fill(updatedHtml);
     await expect(page.getByRole("status")).toHaveText("Saving…");
@@ -256,7 +262,9 @@ test.describe("Server project editor", () => {
 
     await page.reload();
     await page.getByRole("button", { name: /source/i }).click();
-    await expect(page.locator("textarea").nth(1)).toHaveValue(updatedHtml);
+    await expect(
+      page.getByRole("textbox", { name: /source/i }),
+    ).toHaveValue(updatedHtml);
     await expectOnlyLocalState(page, [PROJECT_ID, updatedHtml]);
   });
 
