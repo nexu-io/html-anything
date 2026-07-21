@@ -24,6 +24,12 @@ export default function RootLayout({
         className="min-h-full bg-[var(--paper)] text-[var(--ink)] selection:bg-[var(--coral)]/30"
         suppressHydrationWarning
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              '(function(){var t=null;try{t=localStorage.getItem("html-anything-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;})();',
+          }}
+        />
         {children}
       </body>
     </html>
