@@ -151,13 +151,19 @@ function ProjectBar({ projectMode }: { projectMode: ProjectMode }) {
     <div
       className="flex min-h-10 items-center justify-between gap-4 px-5 py-2 text-xs"
       style={{ background: "var(--bone)" }}
-      title={t("project.oneBrowserGuidance")}
     >
-      <span className="min-w-0 truncate font-medium text-[var(--ink)]">
-        {projectName ?? projectMode.projectId}
-      </span>
+      <div className="flex min-w-0 items-center gap-3">
+        <span className="min-w-0 truncate font-medium text-[var(--ink)]">
+          {projectName ?? projectMode.projectId}
+        </span>
+        <span className="text-[var(--ink-mute)]">
+          {t("project.oneBrowserGuidance")}
+        </span>
+      </div>
       <div className="flex shrink-0 items-center gap-3">
         <span
+          role="status"
+          aria-live="polite"
           className={
             failed
               ? "text-[var(--red)]"
