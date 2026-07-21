@@ -868,16 +868,63 @@ async function prepareRegistryPath(
 }
 
 async function createRegistryDirectory(registryRoot: string): Promise<void> {
-  await inspectAbsoluteSegments(path.dirname(registryRoot), false);
-  let created = false;
-  try {
-    await mkdir(registryRoot, { mode: DIRECTORY_MODE });
-    created = true;
-  } catch (error) {
-    if (!isAlreadyExists(error)) throw error;
+  const managedParent = path.dirname(registryRoot);
+  const missingDirectories: string[] = [];
+  let nearestExistingAncestor = registryRoot;
+
+  while (true) {
+    try {
+      const metadata = await lstat(nearestExistingAncestor);
+      if (metadata.isSymbolicLink() || !metadata.isDirectory()) {
+        throw storageError();
+      }
+      break;
+    } catch (error) {
+      if (!isMissing(error)) throw error;
+      missingDirectories.unshift(nearestExistingAncestor);
+      const parent = path.dirname(nearestExistingAncestor);
+      if (parent === nearestExistingAncestor) throw storageError();
+      nearestExistingAncestor = parent;
+    }
   }
+
+  await inspectAbsoluteSegments(nearestExistingAncestor, false);
+  await assertRealDirectory(
+    nearestExistingAncestor,
+    nearestExistingAncestor,
+  );
+  if (!missingDirectories.includes(managedParent)) {
+    await inspectAbsoluteSegments(managedParent, false);
+    await assertRealDirectory(managedParent, managedParent, DIRECTORY_MODE);
+  }
+
+  for (const directory of missingDirectories) {
+    const parent = path.dirname(directory);
+    await inspectAbsoluteSegments(parent, false);
+    await assertRealDirectory(
+      parent,
+      nearestExistingAncestor,
+      parent === managedParent || missingDirectories.includes(parent)
+        ? DIRECTORY_MODE
+        : undefined,
+    );
+    let created = false;
+    try {
+      await mkdir(directory, { mode: DIRECTORY_MODE });
+      created = true;
+    } catch (error) {
+      if (!isAlreadyExists(error)) throw error;
+    }
+    await inspectAbsoluteSegments(directory, false);
+    await assertRealDirectory(
+      directory,
+      nearestExistingAncestor,
+      DIRECTORY_MODE,
+    );
+    if (created) await syncDirectory(parent);
+  }
+
   await assertRegistryDirectory(registryRoot);
-  if (created) await syncDirectory(path.dirname(registryRoot));
 }
 
 async function assertRegistryDirectory(registryRoot: string): Promise<void> {

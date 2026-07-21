@@ -111,6 +111,47 @@ describe("project storage", () => {
     expect(await operationTemporaryFiles()).toEqual([]);
   });
 
+  it("bootstraps a missing managed registry parent chain on first run", async () => {
+    const managedStateRoot = path.join(temporaryDirectory, "managed-state");
+    const applicationStateRoot = path.join(managedStateRoot, "html-anything");
+    registryRoot = path.join(applicationStateRoot, "project-registry");
+    const store = makeStore();
+    const input = validInput(workspaceRoot);
+
+    const prepared = await store.prepare(input, "exact prompt");
+
+    expect((await readdir(temporaryDirectory)).sort()).toEqual([
+      "managed-state",
+      "workspace",
+    ]);
+    expect(await readdir(managedStateRoot)).toEqual(["html-anything"]);
+    expect(await readdir(applicationStateRoot)).toEqual(["project-registry"]);
+    expect(await readdir(registryRoot)).toEqual([]);
+    for (const directory of [
+      managedStateRoot,
+      applicationStateRoot,
+      registryRoot,
+    ]) {
+      expect((await stat(directory)).mode & 0o777).toBe(0o700);
+    }
+    expect((await readdir(artifactPath())).sort()).toEqual([
+      "PROMPT.md",
+      "content.md",
+      "project.json",
+    ]);
+    expect(
+      JSON.parse(await readFile(artifactPath("project.json"), "utf8")),
+    ).toMatchObject({ projectId: PROJECT_ID, status: "generating" });
+    await expect(store.get(input.projectId)).rejects.toMatchObject({
+      code: "project_not_found",
+    });
+    await expect(lstat(registryPath())).rejects.toMatchObject({ code: "ENOENT" });
+
+    await store.markReady(prepared, HTML);
+
+    expect((await lstat(registryPath())).isFile()).toBe(true);
+  });
+
   it("rejects an existing artifact directory without changing it", async () => {
     const existing = artifactPath();
     await mkdir(existing, { recursive: true, mode: 0o700 });
@@ -145,6 +186,44 @@ describe("project storage", () => {
     await expect(lstat(artifactPath())).rejects.toMatchObject({ code: "ENOENT" });
   });
 
+  it("rejects a symlink in a would-be registry parent chain", async () => {
+    const managedStateRoot = path.join(temporaryDirectory, "managed-state");
+    const outside = path.join(temporaryDirectory, "outside");
+    const applicationStateRoot = path.join(managedStateRoot, "html-anything");
+    await mkdir(managedStateRoot, { mode: 0o700 });
+    await mkdir(outside, { mode: 0o700 });
+    await symlink(outside, applicationStateRoot, "dir");
+    registryRoot = path.join(applicationStateRoot, "project-registry");
+
+    await expect(
+      makeStore().prepare(validInput(workspaceRoot), "exact prompt"),
+    ).rejects.toMatchObject({ code: "storage_failed" });
+
+    expect(await readdir(outside)).toEqual([]);
+    await expect(
+      lstat(path.join(workspaceRoot, "artifacts")),
+    ).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
+  it("rejects a permissive existing managed registry parent", async () => {
+    const applicationStateRoot = path.join(
+      temporaryDirectory,
+      "html-anything",
+    );
+    await mkdir(applicationStateRoot, { mode: 0o755 });
+    await chmod(applicationStateRoot, 0o755);
+    registryRoot = path.join(applicationStateRoot, "project-registry");
+
+    await expect(
+      makeStore().prepare(validInput(workspaceRoot), "exact prompt"),
+    ).rejects.toMatchObject({ code: "storage_failed" });
+
+    await expect(lstat(registryRoot)).rejects.toMatchObject({ code: "ENOENT" });
+    await expect(
+      lstat(path.join(workspaceRoot, "artifacts")),
+    ).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
   it("rejects permissive existing canonical artifact parents", async () => {
     const artifactParent = path.join(
       workspaceRoot,
@@ -163,6 +242,9 @@ describe("project storage", () => {
   });
 
   it("durably links each newly created directory before child publication", async () => {
+    const managedStateRoot = path.join(temporaryDirectory, "managed-state");
+    const applicationStateRoot = path.join(managedStateRoot, "html-anything");
+    registryRoot = path.join(applicationStateRoot, "project-registry");
     const probePath = path.join(temporaryDirectory, "sync-probe");
     await writeFile(probePath, "probe");
     const prototype = await fileHandlePrototype(probePath);
@@ -182,6 +264,8 @@ describe("project storage", () => {
     const expectedOrder = await Promise.all(
       [
         temporaryDirectory,
+        managedStateRoot,
+        applicationStateRoot,
         workspaceRoot,
         path.join(workspaceRoot, "artifacts"),
         path.join(workspaceRoot, "artifacts", "html-anything"),
