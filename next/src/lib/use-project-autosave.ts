@@ -43,6 +43,7 @@ export function useProjectAutosave({
   const deadlinesRef = useRef(new Map<string, number>());
   const requestsRef = useRef(new Set<string>());
   const queuedRef = useRef(new Set<string>());
+  const projectedRef = useRef(new Map<string, ProjectValues>());
   latestRef.current = { content, html, templateId };
   eligibleRef.current = enabled && isProjectTask && status !== "running";
 
@@ -64,6 +65,7 @@ export function useProjectAutosave({
     if (Object.keys(patch).length === 0) return;
 
     requestsRef.current.add(identity);
+    projectedRef.current.set(identity, latest);
     let saved = false;
     setState("saving");
     try {
@@ -71,11 +73,12 @@ export function useProjectAutosave({
       if (identityRef.current !== identity) return;
       savedRef.current = latest;
       saved = true;
-      setState("saved");
+      if (sameValues(latestRef.current, latest)) setState("saved");
     } catch {
       if (identityRef.current === identity) setState("failed");
     } finally {
       requestsRef.current.delete(identity);
+      projectedRef.current.delete(identity);
       if (
         saved &&
         queuedRef.current.has(identity) &&
@@ -112,7 +115,8 @@ export function useProjectAutosave({
       return;
     }
     if (!enabled || !isProjectTask || status === "running") return;
-    if (Object.keys(changedFields(savedRef.current, latest)).length === 0) {
+    const projected = projectedRef.current.get(identity) ?? savedRef.current;
+    if (Object.keys(changedFields(projected, latest)).length === 0) {
       deadlinesRef.current.delete(identity);
       return;
     }
@@ -160,4 +164,12 @@ function changedFields(
     patch.templateId = latest.templateId;
   }
   return patch;
+}
+
+function sameValues(left: ProjectValues, right: ProjectValues): boolean {
+  return (
+    left.content === right.content &&
+    left.html === right.html &&
+    left.templateId === right.templateId
+  );
 }

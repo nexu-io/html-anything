@@ -346,6 +346,43 @@ describe("useProjectAutosave", () => {
     await act(async () => harness.root.unmount());
   });
 
+  it("saves a debounced reversion after the edited value is in flight", async () => {
+    let resolveFirst: ((snapshot: ProjectSnapshot) => void) | undefined;
+    vi.mocked(patchServerProject)
+      .mockImplementationOnce(
+        () =>
+          new Promise<ProjectSnapshot>((resolve) => {
+            resolveFirst = resolve;
+          }),
+      )
+      .mockResolvedValueOnce(readySnapshot());
+    const { harness } = await loadAndRender();
+    const baseline = readySnapshot().content;
+
+    act(() => useStore.getState().setContent("edit in flight"));
+    await act(async () => vi.advanceTimersByTimeAsync(750));
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+
+    act(() => useStore.getState().setContent(baseline));
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    await act(async () => resolveFirst?.(readySnapshot()));
+
+    expect(harness.getState()).toBe("saving");
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+    await act(async () => vi.advanceTimersByTimeAsync(649));
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+
+    expect(patchServerProject).toHaveBeenCalledTimes(2);
+    expect(patchServerProject).toHaveBeenLastCalledWith(PROJECT_ID, {
+      content: baseline,
+    });
+    expect(harness.getState()).toBe("saved");
+    await act(async () => vi.advanceTimersByTimeAsync(1_000));
+    expect(patchServerProject).toHaveBeenCalledTimes(2);
+    await act(async () => harness.root.unmount());
+  });
+
   it("saves a new project edit once after the previous project request finishes", async () => {
     const otherProjectId = "ZbCdEfGhIjKlMnOpQrStUg";
     let resolveFirst: ((snapshot: ProjectSnapshot) => void) | undefined;
