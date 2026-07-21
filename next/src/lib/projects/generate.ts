@@ -48,7 +48,10 @@ export async function collectCompleteHtml(
         if (error instanceof ProjectError) throw error;
         throw generationFailed();
       }
-      if (item.done) break;
+      if (item.done) {
+        if (signal.aborted) throw generationTimeout();
+        break;
+      }
 
       const event = item.value;
       if (event.type === "delta") {
@@ -78,6 +81,7 @@ export async function collectCompleteHtml(
     }
   }
 
+  if (signal.aborted) throw generationTimeout();
   if (!sawDone) throw generationFailed();
   if (!/(?:<!doctype html|<html(?:\s|>))/iu.test(output)) {
     throw generationFailed();
@@ -137,6 +141,7 @@ export async function generateAndStoreProject(
     const stream = deps.invokeAgent(invokeOptions);
     html = await collectCompleteHtml(stream, abortController.signal);
   } catch (error) {
+    abortController.abort();
     const failure = normalizeGenerationError(error);
     await deps.store.markFailed(prepared, diagnosticFor(failure));
     throw failure;

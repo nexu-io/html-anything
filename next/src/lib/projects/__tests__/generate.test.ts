@@ -98,6 +98,25 @@ describe("collectCompleteHtml", () => {
 
     await expect(result).rejects.toMatchObject({ code: "generation_timeout" });
   });
+
+  it("reports a timeout when an earlier abort listener closes the stream", async () => {
+    const controller = new AbortController();
+    let producerClosed = false;
+    const stream = new ReadableStream<InvokeEvent>({
+      start(streamController) {
+        controller.signal.addEventListener("abort", () => {
+          producerClosed = true;
+          streamController.close();
+        }, { once: true });
+      },
+    });
+    const result = collectCompleteHtml(stream, controller.signal);
+
+    controller.abort();
+
+    await expect(result).rejects.toMatchObject({ code: "generation_timeout" });
+    expect(producerClosed).toBe(true);
+  });
 });
 
 describe("generateAndStoreProject", () => {
@@ -199,6 +218,40 @@ describe("generateAndStoreProject", () => {
       PROJECT_DIAGNOSTIC_MAX_BYTES,
     );
     expect(store.readyHtml).toBeUndefined();
+    expect(store.registryPublished).toBe(false);
+  });
+
+  it("aborts the invocation and runs producer cleanup before persisting an oversize failure", async () => {
+    const store = fakeStore();
+    const markFailed = store.markFailed;
+    let invocationSignal: AbortSignal | undefined;
+    let producerCleaned = false;
+    let markFailedObservedCleanup = false;
+    store.markFailed = async (prepared, diagnostic) => {
+      markFailedObservedCleanup =
+        invocationSignal?.aborted === true && producerCleaned;
+      await markFailed(prepared, diagnostic);
+    };
+
+    await expect(generateAndStoreProject(
+      validInput("/workspace"),
+      dependencies(store, (opts) => {
+        if (opts.signal === undefined) throw new Error("missing invocation signal");
+        invocationSignal = opts.signal;
+        opts.signal.addEventListener("abort", () => {
+          producerCleaned = true;
+        }, { once: true });
+        return events({
+          type: "delta",
+          text: "x".repeat(PROJECT_HTML_MAX_BYTES + 1),
+        });
+      }),
+    )).rejects.toMatchObject({ code: "limit_exceeded" });
+
+    expect(invocationSignal?.aborted).toBe(true);
+    expect(producerCleaned).toBe(true);
+    expect(markFailedObservedCleanup).toBe(true);
+    expect(store.failedDiagnostic).toBeDefined();
     expect(store.registryPublished).toBe(false);
   });
 
