@@ -196,6 +196,24 @@ describe("transient server project tasks", () => {
       useStore.getState().tasks[0].id,
     );
   });
+
+  it("keeps a persisted local task when deleting the last local task", () => {
+    useStore.getState().loadServerProject(readySnapshot());
+    useStore.getState().setActiveTask("local-task");
+
+    useStore.getState().deleteTask("local-task");
+
+    const state = useStore.getState();
+    const localTasks = state.tasks.filter((task) => !task.serverProjectId);
+    const persisted = JSON.parse(
+      localStorage.getItem("html-everything-store")!,
+    );
+    expect(localTasks).toHaveLength(1);
+    expect(state.activeTaskId).toBe(localTasks[0].id);
+    expect(persisted.state.tasks).toHaveLength(1);
+    expect(persisted.state.tasks[0].serverProjectId).toBeUndefined();
+    expect(persisted.state.activeTaskId).toBe(persisted.state.tasks[0].id);
+  });
 });
 
 describe("useProjectAutosave", () => {
@@ -293,6 +311,100 @@ describe("useProjectAutosave", () => {
     });
     expect(harness.getState()).toBe("saved");
     await act(async () => harness.root.unmount());
+  });
+
+  it("debounces from the latest edit while an earlier save is running", async () => {
+    let resolveFirst: ((snapshot: ProjectSnapshot) => void) | undefined;
+    vi.mocked(patchServerProject)
+      .mockImplementationOnce(
+        () =>
+          new Promise<ProjectSnapshot>((resolve) => {
+            resolveFirst = resolve;
+          }),
+      )
+      .mockResolvedValueOnce(readySnapshot());
+    const { harness } = await loadAndRender();
+
+    act(() => useStore.getState().setContent("first edit"));
+    await act(async () => vi.advanceTimersByTimeAsync(750));
+    act(() => useStore.getState().setContent("aged queued edit"));
+    await act(async () => vi.advanceTimersByTimeAsync(750));
+    act(() => useStore.getState().setContent("brand new edit"));
+    await act(async () => vi.advanceTimersByTimeAsync(10));
+
+    await act(async () => resolveFirst?.(readySnapshot()));
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+
+    await act(async () => vi.advanceTimersByTimeAsync(739));
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+
+    expect(patchServerProject).toHaveBeenCalledTimes(2);
+    expect(patchServerProject).toHaveBeenLastCalledWith(PROJECT_ID, {
+      content: "brand new edit",
+    });
+    await act(async () => harness.root.unmount());
+  });
+
+  it("saves a new project edit once after the previous project request finishes", async () => {
+    const otherProjectId = "ZbCdEfGhIjKlMnOpQrStUg";
+    let resolveFirst: ((snapshot: ProjectSnapshot) => void) | undefined;
+    vi.mocked(patchServerProject)
+      .mockImplementationOnce(
+        () =>
+          new Promise<ProjectSnapshot>((resolve) => {
+            resolveFirst = resolve;
+          }),
+      )
+      .mockResolvedValueOnce(readySnapshot());
+    const firstTaskId = useStore
+      .getState()
+      .loadServerProject(readySnapshot());
+    const otherSnapshot = {
+      ...readySnapshot(),
+      project: {
+        ...readySnapshot().project,
+        projectId: otherProjectId,
+        slug: "other",
+        name: "Other",
+      },
+    };
+    const otherTaskId = useStore
+      .getState()
+      .loadServerProject(otherSnapshot);
+    let current = { projectId: PROJECT_ID, taskId: firstTaskId };
+    function Harness() {
+      useProjectAutosave({ ...current, enabled: true });
+      return null;
+    }
+    const root = createRoot(document.createElement("div"));
+    await act(async () => root.render(createElement(Harness)));
+
+    act(() => {
+      useStore.getState().setActiveTask(firstTaskId);
+      useStore.getState().setContent("first project edit");
+    });
+    await act(async () => vi.advanceTimersByTimeAsync(750));
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+
+    current = { projectId: otherProjectId, taskId: otherTaskId };
+    await act(async () => root.render(createElement(Harness)));
+    act(() => {
+      useStore.getState().setActiveTask(otherTaskId);
+      useStore.getState().setContent("other project edit");
+    });
+    await act(async () => vi.advanceTimersByTimeAsync(750));
+    expect(patchServerProject).toHaveBeenCalledTimes(2);
+    expect(patchServerProject).toHaveBeenLastCalledWith(otherProjectId, {
+      content: "other project edit",
+    });
+
+    await act(async () => resolveFirst?.(readySnapshot()));
+
+    expect(patchServerProject).toHaveBeenCalledTimes(2);
+    await act(async () => vi.advanceTimersByTimeAsync(1_000));
+    expect(patchServerProject).toHaveBeenCalledTimes(2);
+    await act(async () => root.unmount());
   });
 
   it("retains failed edits and retries with the latest browser values", async () => {

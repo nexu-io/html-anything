@@ -316,7 +316,14 @@ export const useStore = create<State>()(
           void deleteTaskRuns(id).catch(() => {});
           return;
         }
-        const next = tasks.filter((t) => t.id !== id);
+        let next = tasks.filter((t) => t.id !== id);
+        if (!next.some((task) => !task.serverProjectId)) {
+          const fresh = makeTask({ name: "任务 1" });
+          next = [...next, fresh];
+          set({ tasks: next, activeTaskId: fresh.id });
+          void deleteTaskRuns(id).catch(() => {});
+          return;
+        }
         const nextActive =
           activeTaskId === id ? next[Math.max(0, tasks.findIndex((t) => t.id === id) - 1)]?.id ?? next[0].id : activeTaskId;
         set({ tasks: next, activeTaskId: nextActive });

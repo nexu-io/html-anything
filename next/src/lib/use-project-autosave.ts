@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PROJECT_AUTOSAVE_DELAY_MS, type PatchProjectInput } from "./projects/contracts";
+import {
+  PROJECT_AUTOSAVE_DELAY_MS,
+  type PatchProjectInput,
+} from "./projects/contracts";
 import { patchServerProject } from "./projects/client";
 import { useStore } from "./store";
 
@@ -37,8 +40,9 @@ export function useProjectAutosave({
   const identityRef = useRef<string | null>(null);
   const eligibleRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const requestRef = useRef(false);
-  const queuedRef = useRef(false);
+  const deadlinesRef = useRef(new Map<string, number>());
+  const requestsRef = useRef(new Set<string>());
+  const queuedRef = useRef(new Set<string>());
   latestRef.current = { content, html, templateId };
   eligibleRef.current = enabled && isProjectTask && status !== "running";
 
@@ -51,15 +55,15 @@ export function useProjectAutosave({
 
   const saveLatest = useCallback(async () => {
     if (!eligibleRef.current) return;
-    if (requestRef.current) {
-      queuedRef.current = true;
+    if (requestsRef.current.has(identity)) {
+      queuedRef.current.add(identity);
       return;
     }
     const latest = latestRef.current;
     const patch = changedFields(savedRef.current, latest);
     if (Object.keys(patch).length === 0) return;
 
-    requestRef.current = true;
+    requestsRef.current.add(identity);
     let saved = false;
     setState("saving");
     try {
@@ -71,15 +75,32 @@ export function useProjectAutosave({
     } catch {
       if (identityRef.current === identity) setState("failed");
     } finally {
-      requestRef.current = false;
-      if (saved && queuedRef.current && identityRef.current === identity) {
-        queuedRef.current = false;
-        void saveLatest();
-      } else if (!saved) {
-        queuedRef.current = false;
+      requestsRef.current.delete(identity);
+      if (
+        saved &&
+        queuedRef.current.has(identity) &&
+        identityRef.current === identity
+      ) {
+        queuedRef.current.delete(identity);
+        clearTimer();
+        const remaining = Math.max(
+          0,
+          (deadlinesRef.current.get(identity) ?? Date.now()) - Date.now(),
+        );
+        if (remaining === 0) {
+          void saveLatest();
+        } else {
+          timerRef.current = setTimeout(() => {
+            timerRef.current = null;
+            void saveLatest();
+          }, remaining);
+        }
+      } else {
+        queuedRef.current.delete(identity);
+        deadlinesRef.current.delete(identity);
       }
     }
-  }, [identity, projectId]);
+  }, [clearTimer, identity, projectId]);
 
   useEffect(() => {
     clearTimer();
@@ -91,8 +112,15 @@ export function useProjectAutosave({
       return;
     }
     if (!enabled || !isProjectTask || status === "running") return;
-    if (Object.keys(changedFields(savedRef.current, latest)).length === 0) return;
+    if (Object.keys(changedFields(savedRef.current, latest)).length === 0) {
+      deadlinesRef.current.delete(identity);
+      return;
+    }
 
+    deadlinesRef.current.set(
+      identity,
+      Date.now() + PROJECT_AUTOSAVE_DELAY_MS,
+    );
     timerRef.current = setTimeout(() => {
       timerRef.current = null;
       void saveLatest();
