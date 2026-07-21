@@ -173,6 +173,29 @@ describe("project storage", () => {
     });
   });
 
+  it("accepts an existing registry root beneath a permissive trusted parent", async () => {
+    const trustedParent = path.join(temporaryDirectory, "trusted-state");
+    await mkdir(trustedParent, { mode: 0o755 });
+    await chmod(trustedParent, 0o755);
+    registryRoot = path.join(trustedParent, "configured-registry");
+    await mkdir(registryRoot, { mode: 0o700 });
+    await chmod(registryRoot, 0o700);
+
+    const prepared = await makeStore().prepare(
+      validInput(workspaceRoot),
+      "exact prompt",
+    );
+
+    expect(prepared.project.status).toBe("generating");
+    expect((await stat(trustedParent)).mode & 0o777).toBe(0o755);
+    expect((await stat(registryRoot)).mode & 0o777).toBe(0o700);
+    expect((await readdir(artifactPath())).sort()).toEqual([
+      "PROMPT.md",
+      "content.md",
+      "project.json",
+    ]);
+  });
+
   it("preflights registry configuration before creating artifact directories", async () => {
     await mkdir(registryRoot, { mode: 0o755 });
     await chmod(registryRoot, 0o755);

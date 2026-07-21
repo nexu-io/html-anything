@@ -868,6 +868,13 @@ async function prepareRegistryPath(
 }
 
 async function createRegistryDirectory(registryRoot: string): Promise<void> {
+  try {
+    await assertRegistryDirectory(registryRoot);
+    return;
+  } catch (error) {
+    if (!isMissing(error)) throw error;
+  }
+
   const managedParent = path.dirname(registryRoot);
   const missingDirectories: string[] = [];
   let nearestExistingAncestor = registryRoot;
