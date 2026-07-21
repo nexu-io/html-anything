@@ -42,6 +42,19 @@ export interface Dict {
   "layout.tip.split": string;
   "layout.tip.preview": string;
 
+  // Server-backed projects
+  "project.loading": string;
+  "project.notFound": string;
+  "project.loadFailed": string;
+  "project.save.saved": string;
+  "project.save.saving": string;
+  "project.save.failed": string;
+  "project.retry": string;
+  "project.unregister": string;
+  "project.unregisterConfirm": string;
+  "project.unregisterFailed": string;
+  "project.oneBrowserGuidance": string;
+
   // Welcome modal
   "welcome.eyebrow": string;
   "welcome.titlePart1": string;
@@ -402,6 +415,20 @@ const en: Dict = {
   "layout.tip.editor": "Editor only — hide preview",
   "layout.tip.split": "Split — editor + preview side by side",
   "layout.tip.preview": "Preview only — hide editor",
+
+  "project.loading": "Loading project…",
+  "project.notFound": "Project not found.",
+  "project.loadFailed": "Couldn’t load this project.",
+  "project.save.saved": "Saved",
+  "project.save.saving": "Saving…",
+  "project.save.failed": "Save failed",
+  "project.retry": "Retry",
+  "project.unregister": "Unregister",
+  "project.unregisterConfirm":
+    "Unregister “{name}”? Workspace files will be kept, but this link will stop working.",
+  "project.unregisterFailed": "Couldn’t unregister this project.",
+  "project.oneBrowserGuidance":
+    "Edit in one browser at a time. The last successful save wins.",
 
   "welcome.eyebrow": "Choose your agent",
   "welcome.titlePart1": "Pick a local",
@@ -764,6 +791,20 @@ const zhCN: Dict = {
   "layout.tip.editor": "仅编辑器 — 隐藏预览",
   "layout.tip.split": "并排 — 编辑器与预览同时显示",
   "layout.tip.preview": "仅预览 — 隐藏编辑器",
+
+  "project.loading": "正在加载项目…",
+  "project.notFound": "未找到项目。",
+  "project.loadFailed": "无法加载此项目。",
+  "project.save.saved": "已保存",
+  "project.save.saving": "正在保存…",
+  "project.save.failed": "保存失败",
+  "project.retry": "重试",
+  "project.unregister": "取消注册",
+  "project.unregisterConfirm":
+    "取消注册“{name}”？工作区文件会保留，但此链接将失效。",
+  "project.unregisterFailed": "无法取消注册此项目。",
+  "project.oneBrowserGuidance":
+    "请一次只在一个浏览器中编辑；最后一次成功保存的内容为准。",
 
   "welcome.eyebrow": "Choose your agent",
   "welcome.titlePart1": "选一个本地",
