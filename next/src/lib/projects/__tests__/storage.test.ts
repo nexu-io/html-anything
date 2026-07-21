@@ -1,4 +1,5 @@
 import { constants as fsConstants } from "node:fs";
+import { createRequire, syncBuiltinESMExports } from "node:module";
 import {
   chmod,
   lstat,
@@ -279,6 +280,71 @@ describe("project storage", () => {
       expect(index).toBeGreaterThan(previousIndex);
       previousIndex = index;
     }
+  });
+
+  it("syncs an accepted raced registry parent before creating its child", async () => {
+    const managedStateRoot = path.join(temporaryDirectory, "managed-state");
+    const applicationStateRoot = path.join(managedStateRoot, "html-anything");
+    registryRoot = path.join(applicationStateRoot, "project-registry");
+    const probePath = path.join(temporaryDirectory, "sync-probe");
+    await writeFile(probePath, "probe");
+    const prototype = await fileHandlePrototype(probePath);
+    const originalSync = prototype.sync;
+    const mutableFsPromises = createRequire(import.meta.url)(
+      "node:fs/promises",
+    ) as {
+      mkdir: (
+        ...arguments_: Parameters<typeof mkdir>
+      ) => Promise<string | undefined>;
+    };
+    const originalMkdir = mutableFsPromises.mkdir;
+    const ancestorIdentity = await directoryIdentity(temporaryDirectory);
+    let ancestorSynced = false;
+    let raceInjected = false;
+    let childObservedSyncedParent: boolean | undefined;
+    vi.spyOn(prototype, "sync").mockImplementation(async function (
+      this: OpenedFile,
+    ) {
+      const metadata = await this.stat({ bigint: true });
+      if (fileIdentity(metadata) === ancestorIdentity) ancestorSynced = true;
+      return Reflect.apply(originalSync, this, []);
+    });
+    mutableFsPromises.mkdir = async (
+      ...arguments_: Parameters<typeof mkdir>
+    ): Promise<string | undefined> => {
+      const directory = String(arguments_[0]);
+      if (directory === applicationStateRoot) {
+        childObservedSyncedParent = ancestorSynced;
+      }
+      if (directory === managedStateRoot && !raceInjected) {
+        raceInjected = true;
+        await Reflect.apply(originalMkdir, mutableFsPromises, arguments_);
+        throw Object.assign(new Error("Simulated mkdir race."), {
+          code: "EEXIST",
+        });
+      }
+      return Reflect.apply(originalMkdir, mutableFsPromises, arguments_);
+    };
+    syncBuiltinESMExports();
+
+    try {
+      vi.resetModules();
+      const { createProjectStore: createRacedProjectStore } = await import(
+        "../storage"
+      );
+      const racedStore = createRacedProjectStore({
+        registryRoot,
+        publicBaseUrl: "https://host.ts.net:43233",
+        now: () => clock,
+      });
+      await racedStore.prepare(validInput(workspaceRoot), "exact prompt");
+    } finally {
+      mutableFsPromises.mkdir = originalMkdir;
+      syncBuiltinESMExports();
+    }
+
+    expect(raceInjected).toBe(true);
+    expect(childObservedSyncedParent).toBe(true);
   });
 
   it("rejects an artifact-directory symlink swap before a write", async () => {

@@ -908,10 +908,8 @@ async function createRegistryDirectory(registryRoot: string): Promise<void> {
         ? DIRECTORY_MODE
         : undefined,
     );
-    let created = false;
     try {
       await mkdir(directory, { mode: DIRECTORY_MODE });
-      created = true;
     } catch (error) {
       if (!isAlreadyExists(error)) throw error;
     }
@@ -921,7 +919,7 @@ async function createRegistryDirectory(registryRoot: string): Promise<void> {
       nearestExistingAncestor,
       DIRECTORY_MODE,
     );
-    if (created) await syncDirectory(parent);
+    await syncDirectory(parent);
   }
 
   await assertRegistryDirectory(registryRoot);
