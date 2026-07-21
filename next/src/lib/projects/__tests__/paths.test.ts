@@ -4,15 +4,17 @@ import {
   lstat,
   mkdir,
   mkdtemp,
+  open,
   readFile,
   realpath,
+  rename,
   rm,
   symlink,
   writeFile,
 } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SourceRecord } from "../contracts";
 import { ProjectError } from "../contracts";
 import {
@@ -20,6 +22,8 @@ import {
   resolveWorkspaceRoot,
   validateSourceRecords,
 } from "../paths";
+
+type OpenedFile = Awaited<ReturnType<typeof import("node:fs/promises").open>>;
 
 const digest = (value: Uint8Array | string) =>
   createHash("sha256").update(value).digest("hex");
@@ -35,6 +39,7 @@ describe("project paths", () => {
   });
 
   afterEach(async () => {
+    vi.restoreAllMocks();
     await chmod(temporaryDirectory, 0o700).catch(() => undefined);
     await rm(temporaryDirectory, { recursive: true, force: true });
   });
@@ -291,8 +296,80 @@ describe("project paths", () => {
 
     await expect(readFile(filePath)).resolves.toEqual(before);
   });
+
+  it("rejects an oversized actual file before an unbounded read", async () => {
+    const sourcePath = path.join(workspaceRoot, "oversized.md");
+    await writeFile(sourcePath, Buffer.alloc(262_145, "x"));
+    const prototype = await fileHandlePrototype(sourcePath);
+    const unboundedRead = vi
+      .spyOn(prototype, "readFile")
+      .mockRejectedValue(new Error("unbounded read attempted"));
+
+    await expect(
+      validateSourceRecords(workspaceRoot, [
+        { path: "oversized.md", bytes: 1, sha256: digest("x") },
+      ]),
+    ).rejects.toMatchObject({ code: "limit_exceeded" });
+    expect(unboundedRead).not.toHaveBeenCalled();
+  });
+
+  it("rejects a source when an ancestor is swapped after open", async () => {
+    const sourceDirectory = path.join(workspaceRoot, "docs");
+    const parkedDirectory = path.join(workspaceRoot, "docs-parked");
+    const outsideDirectory = path.join(temporaryDirectory, "outside-swap");
+    await mkdir(sourceDirectory);
+    await mkdir(outsideDirectory);
+    await writeFile(path.join(sourceDirectory, "source.md"), "same bytes");
+    await writeFile(path.join(outsideDirectory, "source.md"), "same bytes");
+    const bytes = Buffer.from("same bytes");
+    const prototype = await fileHandlePrototype(
+      path.join(sourceDirectory, "source.md"),
+    );
+    const originalStat = prototype.stat;
+    let swapped = false;
+    vi.spyOn(prototype, "stat").mockImplementation(async function (
+      this: OpenedFile,
+      ...arguments_: unknown[]
+    ) {
+      if (!swapped) {
+        swapped = true;
+        await rename(sourceDirectory, parkedDirectory);
+        await symlink(outsideDirectory, sourceDirectory, "dir");
+      }
+      return Reflect.apply(originalStat, this, arguments_);
+    });
+
+    await expect(
+      validateSourceRecords(workspaceRoot, [
+        { path: "docs/source.md", bytes: bytes.byteLength, sha256: digest(bytes) },
+      ]),
+    ).rejects.toMatchObject({ code: "invalid_request" });
+    expect(swapped).toBe(true);
+  });
+
+  it("supports root workspace containment for a test-owned source", async () => {
+    const filePath = path.join(workspaceRoot, "root-contained.md");
+    const bytes = Buffer.from("root-contained");
+    await writeFile(filePath, bytes);
+    const sourcePath = path.relative(path.parse(filePath).root, filePath).split(path.sep).join("/");
+
+    await expect(
+      validateSourceRecords(path.parse(filePath).root, [
+        { path: sourcePath, bytes: bytes.byteLength, sha256: digest(bytes) },
+      ]),
+    ).resolves.toEqual([
+      { path: sourcePath, bytes: bytes.byteLength, sha256: digest(bytes) },
+    ]);
+  });
 });
 
 function recordFor(sourcePath: string): SourceRecord {
   return { path: sourcePath, bytes: 0, sha256: "a".repeat(64) };
+}
+
+async function fileHandlePrototype(filePath: string) {
+  const handle = await open(filePath, "r");
+  const prototype = Object.getPrototypeOf(handle) as OpenedFile;
+  await handle.close();
+  return prototype;
 }

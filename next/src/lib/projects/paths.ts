@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { constants as fsConstants } from "node:fs";
-import { lstat, open, realpath } from "node:fs/promises";
+import { constants as fsConstants, type BigIntStats } from "node:fs";
+import { lstat, open, realpath, stat } from "node:fs/promises";
 import path from "node:path";
 import {
   PROJECT_SOURCE_MAX_FILES,
@@ -116,25 +116,19 @@ export async function validateSourceRecords(
   }
 
   const canonical: SourceRecord[] = [];
-  let actualTotal = 0;
+  let validatedTotal = 0;
   for (const record of candidates) {
     const sourcePath = path.join(resolvedWorkspace, ...record.path.split("/"));
     await inspectSourceSegments(resolvedWorkspace, record.path);
-    const bytes = await readRegularFile(sourcePath);
-    actualTotal += bytes.byteLength;
-    if (actualTotal > PROJECT_SOURCE_MAX_TOTAL_BYTES) {
-      throw limitExceeded("Source files exceed the total limit.");
-    }
-    try {
-      new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-    } catch {
-      throw invalidPath("Source files must contain valid UTF-8.");
-    }
-    const sha256 = createHash("sha256").update(bytes).digest("hex");
-    if (record.bytes !== bytes.byteLength || record.sha256 !== sha256) {
-      throw sourceChanged("A source file changed during validation.");
-    }
-    canonical.push({ path: record.path, bytes: bytes.byteLength, sha256 });
+    canonical.push(
+      await readValidatedSource(
+        resolvedWorkspace,
+        sourcePath,
+        record,
+        PROJECT_SOURCE_MAX_TOTAL_BYTES - validatedTotal,
+      ),
+    );
+    validatedTotal += record.bytes;
   }
   return canonical;
 }
@@ -206,8 +200,9 @@ function validateSourcePath(sourcePath: string): void {
 async function inspectSourceSegments(
   workspaceRoot: string,
   sourcePath: string,
-): Promise<void> {
+): Promise<string> {
   let current = workspaceRoot;
+  let resolved = workspaceRoot;
   const segments = sourcePath.split("/");
   for (let index = 0; index < segments.length; index += 1) {
     current = path.join(current, segments[index]);
@@ -226,7 +221,6 @@ async function inspectSourceSegments(
     if (index === segments.length - 1 && !metadata.isFile()) {
       throw sourceChanged("A source must be a regular file.");
     }
-    let resolved;
     try {
       resolved = await realpath(current);
     } catch {
@@ -236,23 +230,118 @@ async function inspectSourceSegments(
       throw invalidPath("Source path escapes the workspace.");
     }
   }
+  return resolved;
 }
 
-async function readRegularFile(filePath: string): Promise<Buffer> {
+async function readValidatedSource(
+  workspaceRoot: string,
+  filePath: string,
+  record: SourceRecord,
+  remainingBytes: number,
+): Promise<SourceRecord> {
   let handle;
   try {
     handle = await open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
-    const metadata = await handle.stat();
-    if (!metadata.isFile()) {
+    const before = await handle.stat({ bigint: true });
+    if (!before.isFile()) {
       throw sourceChanged("A source must be a regular file.");
     }
-    return await handle.readFile();
+    enforceOpenedSize(before.size, record.bytes, remainingBytes);
+    await assertOpenedPathIdentity(workspaceRoot, filePath, before);
+
+    const bytes = await readBounded(handle, record.bytes, remainingBytes);
+    const after = await handle.stat({ bigint: true });
+    enforceOpenedSize(after.size, record.bytes, remainingBytes);
+    if (!isStableFile(before, after)) {
+      throw sourceChanged("A source file changed during validation.");
+    }
+    try {
+      new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    } catch {
+      throw invalidPath("Source files must contain valid UTF-8.");
+    }
+    const sha256 = createHash("sha256").update(bytes).digest("hex");
+    if (record.sha256 !== sha256) {
+      throw sourceChanged("A source file changed during validation.");
+    }
+    await assertOpenedPathIdentity(workspaceRoot, filePath, after);
+    return { path: record.path, bytes: bytes.byteLength, sha256 };
   } catch (error) {
     if (error instanceof ProjectError) throw error;
     throw sourceChanged("A source file could not be read.");
   } finally {
     await handle?.close().catch(() => undefined);
   }
+}
+
+function enforceOpenedSize(
+  actualBytes: bigint,
+  declaredBytes: number,
+  remainingBytes: number,
+): void {
+  if (actualBytes > BigInt(remainingBytes)) {
+    throw limitExceeded("Source files exceed the total limit.");
+  }
+  if (actualBytes !== BigInt(declaredBytes)) {
+    throw sourceChanged("A source file changed during validation.");
+  }
+}
+
+async function readBounded(
+  handle: Awaited<ReturnType<typeof open>>,
+  expectedBytes: number,
+  remainingBytes: number,
+): Promise<Buffer> {
+  const bytes = Buffer.allocUnsafe(expectedBytes);
+  let offset = 0;
+  while (offset < expectedBytes) {
+    const result = await handle.read(bytes, offset, expectedBytes - offset, null);
+    if (result.bytesRead === 0) {
+      throw sourceChanged("A source file changed during validation.");
+    }
+    offset += result.bytesRead;
+  }
+
+  const growthProbe = Buffer.allocUnsafe(1);
+  const extra = await handle.read(growthProbe, 0, 1, null);
+  if (extra.bytesRead > 0) {
+    if (expectedBytes >= remainingBytes) {
+      throw limitExceeded("Source files exceed the total limit.");
+    }
+    throw sourceChanged("A source file changed during validation.");
+  }
+  return bytes;
+}
+
+async function assertOpenedPathIdentity(
+  workspaceRoot: string,
+  filePath: string,
+  opened: BigIntStats,
+): Promise<void> {
+  const relativePath = path.relative(workspaceRoot, filePath).split(path.sep).join("/");
+  const canonicalPath = await inspectSourceSegments(workspaceRoot, relativePath);
+  let canonical;
+  try {
+    canonical = await stat(canonicalPath, { bigint: true });
+  } catch {
+    throw sourceChanged("A source file is unavailable.");
+  }
+  if (!canonical.isFile() || !isStableFile(opened, canonical)) {
+    throw sourceChanged("A source path changed during validation.");
+  }
+}
+
+function isSameFile(left: BigIntStats, right: BigIntStats): boolean {
+  return left.dev === right.dev && left.ino === right.ino;
+}
+
+function isStableFile(before: BigIntStats, after: BigIntStats): boolean {
+  return (
+    isSameFile(before, after) &&
+    before.size === after.size &&
+    before.mtimeNs === after.mtimeNs &&
+    before.ctimeNs === after.ctimeNs
+  );
 }
 
 async function inspectAbsoluteSegments(
@@ -315,9 +404,12 @@ async function inspectContainedPath(
 }
 
 function isContained(workspaceRoot: string, candidate: string): boolean {
+  const relative = path.relative(workspaceRoot, candidate);
   return (
-    candidate === workspaceRoot ||
-    candidate.startsWith(`${workspaceRoot}${path.sep}`)
+    relative === "" ||
+    (relative !== ".." &&
+      !relative.startsWith(`..${path.sep}`) &&
+      !path.isAbsolute(relative))
   );
 }
 
