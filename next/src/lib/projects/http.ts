@@ -56,17 +56,8 @@ export function createProjectHttpHandlers(service: ProjectService) {
         const input = parseCreateProjectInput(
           await readBoundedJson(req, PROJECT_CREATE_BODY_MAX_BYTES),
         );
-        let existed = false;
-        try {
-          await service.get(input.projectId);
-          existed = true;
-        } catch (error) {
-          if (!(error instanceof ProjectError) || error.code !== "project_not_found") {
-            throw error;
-          }
-        }
-        const project = await service.create(input);
-        return jsonResponse(project, existed ? 200 : 201);
+        const result = await service.create(input);
+        return jsonResponse(result.response, result.created ? 201 : 200);
       } catch (error) {
         return errorResponse(error);
       }

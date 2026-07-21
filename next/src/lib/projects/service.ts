@@ -6,9 +6,9 @@ import {
   PROJECT_GENERATION_DEADLINE_MS,
   ProjectError,
   type CreateProjectInput,
+  type CreateProjectResult,
   type PatchProjectInput,
   type ProjectSnapshot,
-  type ReadyProjectResponse,
 } from "./contracts";
 import {
   generateAndStoreProject,
@@ -17,7 +17,7 @@ import {
 import { createProjectStore } from "./storage";
 
 export type ProjectService = {
-  create(input: CreateProjectInput): Promise<ReadyProjectResponse>;
+  create(input: CreateProjectInput): Promise<CreateProjectResult>;
   get(id: string): Promise<ProjectSnapshot>;
   patch(id: string, patch: PatchProjectInput): Promise<ProjectSnapshot>;
   unregister(id: string): Promise<void>;

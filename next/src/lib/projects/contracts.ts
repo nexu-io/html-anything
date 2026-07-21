@@ -81,6 +81,11 @@ export type ReadyProjectResponse = {
   sourcePaths: string[];
 };
 
+export type CreateProjectResult = {
+  response: ReadyProjectResponse;
+  created: boolean;
+};
+
 export type ProjectErrorCode =
   | "invalid_request"
   | "loopback_required"

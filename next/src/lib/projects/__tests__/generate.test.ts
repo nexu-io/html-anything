@@ -148,7 +148,7 @@ describe("generateAndStoreProject", () => {
       model: "gpt-explicit",
       signal: expect.any(AbortSignal),
     });
-    expect(result).toEqual(readyResponse());
+    expect(result).toEqual({ response: readyResponse(), created: true });
   });
 
   it("returns an idempotent ready result without loading a template, preparing, or invoking", async () => {
@@ -163,7 +163,7 @@ describe("generateAndStoreProject", () => {
       loadSkill,
       invokeAgent,
       deadlineMs: 900_000,
-    })).resolves.toEqual(readyResponse());
+    })).resolves.toEqual({ response: readyResponse(), created: false });
 
     expect(store.prepareCalls).toBe(0);
     expect(loadSkill).not.toHaveBeenCalled();
@@ -274,13 +274,42 @@ describe("generateAndStoreProject", () => {
 });
 
 describe("createProjectService", () => {
+  it("preserves fresh and idempotent creation outcomes", async () => {
+    const freshService = createProjectService(
+      dependencies(
+        fakeStore(),
+        () => events(
+          { type: "delta", text: COMPLETE_HTML },
+          { type: "done", code: 0 },
+        ),
+      ),
+    );
+    const existingStore = fakeStore();
+    existingStore.findReadyResult = readyResponse();
+    const existingService = createProjectService(
+      dependencies(existingStore, vi.fn()),
+    );
+
+    await expect(freshService.create(validInput("/workspace"))).resolves.toEqual({
+      response: readyResponse(),
+      created: true,
+    });
+    await expect(existingService.create(validInput("/workspace"))).resolves.toEqual({
+      response: readyResponse(),
+      created: false,
+    });
+  });
+
   it("exposes the exact domain operations and delegates storage operations", async () => {
     const store = fakeStore();
     store.findReadyResult = readyResponse();
     const service = createProjectService(dependencies(store, vi.fn()));
     const patch: PatchProjectInput = { content: "changed" };
 
-    await expect(service.create(validInput("/workspace"))).resolves.toEqual(readyResponse());
+    await expect(service.create(validInput("/workspace"))).resolves.toEqual({
+      response: readyResponse(),
+      created: false,
+    });
     await service.get(PROJECT_ID);
     await service.patch(PROJECT_ID, patch);
     await service.unregister(PROJECT_ID);

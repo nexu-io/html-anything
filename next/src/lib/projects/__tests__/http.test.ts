@@ -71,11 +71,17 @@ function readyResponse(): ReadyProjectResponse {
   };
 }
 
-function fakeService(options: { existing?: ProjectSnapshot } = {}): ProjectService {
+function fakeService(options: {
+  snapshot?: ProjectSnapshot;
+  created?: boolean;
+} = {}): ProjectService {
   return {
-    create: vi.fn(async () => readyResponse()),
+    create: vi.fn(async () => ({
+      response: readyResponse(),
+      created: options.created ?? true,
+    })),
     get: vi.fn(async () => {
-      if (options.existing !== undefined) return options.existing;
+      if (options.snapshot !== undefined) return options.snapshot;
       throw new ProjectError("project_not_found", "Project was not found.");
     }),
     patch: vi.fn(async () => readySnapshot()),
@@ -207,29 +213,29 @@ describe("createProjectHttpHandlers", () => {
     await expectNoStore(res);
   });
 
-  it("returns 201 for a fresh creation", async () => {
-    const service = fakeService();
-    const handlers = createProjectHttpHandlers(service);
+  it.each([
+    [true, 201],
+    [false, 200],
+  ])(
+    "maps atomic created=%s to HTTP %i without a preflight GET",
+    async (created, status) => {
+      const service = fakeService({ created });
+      service.get = vi.fn(async () => {
+        throw new Error("HTTP must not probe before create");
+      });
+      const handlers = createProjectHttpHandlers(service);
 
-    const res = await handlers.POST(request("POST", "/api/projects", JSON.stringify(validCreateInput())));
+      const res = await handlers.POST(
+        request("POST", "/api/projects", JSON.stringify(validCreateInput())),
+      );
 
-    expect(res.status).toBe(201);
-    expect(await res.json()).toEqual(readyResponse());
-    expect(service.create).toHaveBeenCalledWith(validCreateInput());
-    await expectNoStore(res);
-  });
-
-  it("returns 200 when create confirms an already registered project is identical", async () => {
-    const service = fakeService({ existing: readySnapshot() });
-    const handlers = createProjectHttpHandlers(service);
-
-    const res = await handlers.POST(request("POST", "/api/projects", JSON.stringify(validCreateInput())));
-
-    expect(res.status).toBe(200);
-    expect(await res.json()).toEqual(readyResponse());
-    expect(service.create).toHaveBeenCalledOnce();
-    await expectNoStore(res);
-  });
+      expect(res.status).toBe(status);
+      expect(await res.json()).toEqual(readyResponse());
+      expect(service.create).toHaveBeenCalledWith(validCreateInput());
+      expect(service.get).not.toHaveBeenCalled();
+      await expectNoStore(res);
+    },
+  );
 
   it("enforces the POST body ceiling", async () => {
     const service = fakeService();
@@ -244,7 +250,7 @@ describe("createProjectHttpHandlers", () => {
   });
 
   it("returns a project snapshot through promised route params", async () => {
-    const handlers = createProjectHttpHandlers(fakeService({ existing: readySnapshot() }));
+    const handlers = createProjectHttpHandlers(fakeService({ snapshot: readySnapshot() }));
     const res = await handlers.GET(
       new Request(`https://host/api/projects/${PROJECT_ID}`),
       { params: Promise.resolve({ id: PROJECT_ID }) },
@@ -268,7 +274,7 @@ describe("createProjectHttpHandlers", () => {
     ["storage_failed", 500],
     ["configuration_missing", 500],
   ])("maps %s to HTTP %i", async (code, status) => {
-    const service = fakeService({ existing: readySnapshot() });
+    const service = fakeService({ snapshot: readySnapshot() });
     service.get = vi.fn(async () => {
       throw new ProjectError(code, "Safe message.");
     });
@@ -285,7 +291,7 @@ describe("createProjectHttpHandlers", () => {
   });
 
   it("sanitizes unexpected errors", async () => {
-    const service = fakeService({ existing: readySnapshot() });
+    const service = fakeService({ snapshot: readySnapshot() });
     service.get = vi.fn(async () => {
       throw new Error("/private/workspace contains private submitted text");
     });
@@ -306,7 +312,7 @@ describe("createProjectHttpHandlers", () => {
   it.each(["short", "!!!!!!!!!!!!!!!!!!!!!!", "AbCdEfGhIjKlMnOpQrStU="])(
     "rejects invalid ID %s before GET service access",
     async (id) => {
-      const service = fakeService({ existing: readySnapshot() });
+      const service = fakeService({ snapshot: readySnapshot() });
       const handlers = createProjectHttpHandlers(service);
 
       const res = await handlers.GET(

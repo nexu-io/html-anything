@@ -3,7 +3,7 @@ import {
   PROJECT_HTML_MAX_BYTES,
   ProjectError,
   type CreateProjectInput,
-  type ReadyProjectResponse,
+  type CreateProjectResult,
 } from "./contracts";
 import type { InvokeEvent, InvokeOpts } from "../agents/invoke";
 import { extractHtml } from "../extract-html";
@@ -106,12 +106,12 @@ export async function collectCompleteHtml(
 export async function generateAndStoreProject(
   input: CreateProjectInput,
   deps: GenerateProjectDependencies,
-): Promise<ReadyProjectResponse> {
+): Promise<CreateProjectResult> {
   validatePublicBaseUrl(deps.publicBaseUrl);
   const deadlineMs = validateDeadline(deps.deadlineMs);
 
   const existing = await deps.store.findReadyCreation(input);
-  if (existing !== null) return existing;
+  if (existing !== null) return { response: existing, created: false };
 
   const skill = deps.loadSkill(input.templateId);
   if (skill === null) {
@@ -149,7 +149,7 @@ export async function generateAndStoreProject(
     clearTimeout(timeout);
   }
 
-  return deps.store.markReady(prepared, html);
+  return { response: await deps.store.markReady(prepared, html), created: true };
 }
 
 function validatePublicBaseUrl(value: string | undefined): string {
