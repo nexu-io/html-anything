@@ -113,7 +113,10 @@ describe("project storage", () => {
 
   it("rejects an existing artifact directory without changing it", async () => {
     const existing = artifactPath();
-    await mkdir(existing, { recursive: true });
+    await mkdir(existing, { recursive: true, mode: 0o700 });
+    await chmod(path.join(workspaceRoot, "artifacts"), 0o700);
+    await chmod(path.join(workspaceRoot, "artifacts", "html-anything"), 0o700);
+    await chmod(existing, 0o700);
     await writeFile(path.join(existing, "sentinel"), "preserve");
 
     await expect(
@@ -126,6 +129,72 @@ describe("project storage", () => {
     await expect(lstat(artifactPath("PROMPT.md"))).rejects.toMatchObject({
       code: "ENOENT",
     });
+  });
+
+  it("preflights registry configuration before creating artifact directories", async () => {
+    await mkdir(registryRoot, { mode: 0o755 });
+    await chmod(registryRoot, 0o755);
+
+    await expect(
+      makeStore().prepare(validInput(workspaceRoot), "exact prompt"),
+    ).rejects.toMatchObject({ code: "storage_failed" });
+
+    await expect(
+      lstat(path.join(workspaceRoot, "artifacts")),
+    ).rejects.toMatchObject({ code: "ENOENT" });
+    await expect(lstat(artifactPath())).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
+  it("rejects permissive existing canonical artifact parents", async () => {
+    const artifactParent = path.join(
+      workspaceRoot,
+      "artifacts",
+      "html-anything",
+    );
+    await mkdir(artifactParent, { recursive: true, mode: 0o755 });
+    await chmod(path.join(workspaceRoot, "artifacts"), 0o755);
+    await chmod(artifactParent, 0o755);
+
+    await expect(
+      makeStore().prepare(validInput(workspaceRoot), "exact prompt"),
+    ).rejects.toMatchObject({ code: "storage_failed" });
+
+    await expect(lstat(artifactPath())).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
+  it("durably links each newly created directory before child publication", async () => {
+    const probePath = path.join(temporaryDirectory, "sync-probe");
+    await writeFile(probePath, "probe");
+    const prototype = await fileHandlePrototype(probePath);
+    const originalSync = prototype.sync;
+    const syncedDirectories: string[] = [];
+    vi.spyOn(prototype, "sync").mockImplementation(async function (
+      this: OpenedFile,
+    ) {
+      const metadata = await this.stat({ bigint: true });
+      if (metadata.isDirectory()) syncedDirectories.push(fileIdentity(metadata));
+      return Reflect.apply(originalSync, this, []);
+    });
+    const store = makeStore();
+    const prepared = await store.prepare(validInput(workspaceRoot), "exact prompt");
+    await store.markReady(prepared, HTML);
+
+    const expectedOrder = await Promise.all(
+      [
+        temporaryDirectory,
+        workspaceRoot,
+        path.join(workspaceRoot, "artifacts"),
+        path.join(workspaceRoot, "artifacts", "html-anything"),
+        artifactPath(),
+        registryRoot,
+      ].map(directoryIdentity),
+    );
+    let previousIndex = -1;
+    for (const identity of expectedOrder) {
+      const index = syncedDirectories.indexOf(identity);
+      expect(index).toBeGreaterThan(previousIndex);
+      previousIndex = index;
+    }
   });
 
   it("rejects an artifact-directory symlink swap before a write", async () => {
@@ -167,6 +236,52 @@ describe("project storage", () => {
     });
     await expect(lstat(registryPath())).rejects.toMatchObject({ code: "ENOENT" });
     expect(await operationTemporaryFiles()).toEqual([]);
+  });
+
+  it("publishes a project ID with atomic no-clobber semantics", async () => {
+    const secondWorkspace = path.join(temporaryDirectory, "workspaze");
+    await mkdir(secondWorkspace);
+    const firstInput = validInput(workspaceRoot);
+    const secondInput = validInput(secondWorkspace);
+    const firstStore = makeStore();
+    const secondStore = makeStore();
+    const firstPrepared = await firstStore.prepare(firstInput, "first prompt");
+    const secondPrepared = await secondStore.prepare(secondInput, "second prompt");
+    const registryByteLength = serializedRegistryByteLength(firstInput);
+    expect(serializedRegistryByteLength(secondInput)).toBe(registryByteLength);
+
+    const prototype = await fileHandlePrototype(artifactPath("project.json"));
+    const originalSync = prototype.sync;
+    let registrySyncCount = 0;
+    let releaseRegistrySyncs: (() => void) | undefined;
+    const bothRegistryTempsSynced = new Promise<void>((resolve) => {
+      releaseRegistrySyncs = resolve;
+    });
+    vi.spyOn(prototype, "sync").mockImplementation(async function (
+      this: OpenedFile,
+    ) {
+      const metadata = await this.stat();
+      if (metadata.isFile() && metadata.size === registryByteLength) {
+        registrySyncCount += 1;
+        if (registrySyncCount === 2) releaseRegistrySyncs?.();
+        await bothRegistryTempsSynced;
+      }
+      return Reflect.apply(originalSync, this, []);
+    });
+
+    const results = await Promise.allSettled([
+      firstStore.markReady(firstPrepared, HTML),
+      secondStore.markReady(secondPrepared, HTML),
+    ]);
+
+    expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
+    const rejected = results.find((result) => result.status === "rejected");
+    expect(rejected).toMatchObject({
+      status: "rejected",
+      reason: expect.objectContaining({ code: "project_exists" }),
+    });
+    const registry = JSON.parse(await readFile(registryPath(), "utf8"));
+    expect([workspaceRoot, secondWorkspace]).toContain(registry.workspaceRoot);
   });
 
   it("records failed generation with a bounded diagnostic and no registry", async () => {
@@ -232,6 +347,20 @@ describe("project storage", () => {
     expect(await readFile(registryPath(), "utf8")).toBe(beforeRegistry);
   });
 
+  it("does not patch stale artifacts after the registry capability is replaced", async () => {
+    const store = makeStore();
+    const prepared = await store.prepare(validInput(workspaceRoot), "exact prompt");
+    await store.markReady(prepared, HTML);
+    const replacement = await replaceRegistryDuringArtifactRead();
+
+    await expect(
+      store.patch(PROJECT_ID, { content: "must not be written" }),
+    ).rejects.toMatchObject({ code: "storage_failed" });
+
+    expect(await readFile(artifactPath("content.md"), "utf8")).toBe("# Q2");
+    expect(await readFile(registryPath(), "utf8")).toBe(replacement);
+  });
+
   it("returns not found when a registered project directory is missing or moved", async () => {
     const store = makeStore();
     const prepared = await store.prepare(validInput(workspaceRoot), "exact prompt");
@@ -282,6 +411,20 @@ describe("project storage", () => {
     await expect(store.unregister(PROJECT_ID)).rejects.toMatchObject({
       code: "project_not_found",
     });
+  });
+
+  it("does not unregister a replacement capability record", async () => {
+    const store = makeStore();
+    const prepared = await store.prepare(validInput(workspaceRoot), "exact prompt");
+    await store.markReady(prepared, HTML);
+    const replacement = await replaceRegistryDuringArtifactRead();
+
+    await expect(store.unregister(PROJECT_ID)).rejects.toMatchObject({
+      code: "storage_failed",
+    });
+
+    expect(await readFile(registryPath(), "utf8")).toBe(replacement);
+    expect(await readFile(artifactPath("index.html"), "utf8")).toBe(HTML);
   });
 
   it("reconciles only matching immutable creation fields across restarts", async () => {
@@ -359,6 +502,46 @@ describe("project storage", () => {
     }
     return entries;
   }
+
+  function serializedRegistryByteLength(input: CreateProjectInput): number {
+    return Buffer.byteLength(
+      `${JSON.stringify({
+        schemaVersion: 1,
+        projectId: input.projectId,
+        workspaceRoot: input.workspaceRoot,
+        artifactDirectory: path.join(
+          input.workspaceRoot,
+          "artifacts",
+          "html-anything",
+          input.slug,
+        ),
+        registeredAt: clock.toISOString(),
+      })}\n`,
+    );
+  }
+
+  async function replaceRegistryDuringArtifactRead(): Promise<string> {
+    const current = JSON.parse(await readFile(registryPath(), "utf8"));
+    current.registeredAt = "2026-07-21T00:00:01.000Z";
+    const replacement = `${JSON.stringify(current)}\n`;
+    const parked = `${registryPath()}.parked`;
+    const prototype = await fileHandlePrototype(artifactPath("project.json"));
+    const originalReadFile = prototype.readFile;
+    let replaced = false;
+    vi.spyOn(prototype, "readFile").mockImplementation(async function (
+      this: OpenedFile,
+      ...arguments_: Parameters<OpenedFile["readFile"]>
+    ) {
+      const result = await Reflect.apply(originalReadFile, this, arguments_);
+      if (!replaced && Buffer.isBuffer(result) && result.equals(Buffer.from(HTML))) {
+        replaced = true;
+        await rename(registryPath(), parked);
+        await writeFile(registryPath(), replacement, { flag: "wx", mode: 0o600 });
+      }
+      return result;
+    });
+    return replacement;
+  }
 });
 
 function validInput(workspaceRoot: string): CreateProjectInput {
@@ -381,4 +564,12 @@ async function fileHandlePrototype(filePath: string) {
   const prototype = Object.getPrototypeOf(handle) as OpenedFile;
   await handle.close();
   return prototype;
+}
+
+function fileIdentity(metadata: { dev: bigint; ino: bigint }): string {
+  return `${metadata.dev}:${metadata.ino}`;
+}
+
+async function directoryIdentity(directory: string): Promise<string> {
+  return fileIdentity(await stat(directory, { bigint: true }));
 }

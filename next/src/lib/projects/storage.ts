@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import { constants as fsConstants, type BigIntStats } from "node:fs";
 import {
   lstat,
+  link,
   mkdir,
   open,
   realpath,
@@ -73,11 +74,18 @@ export type ProjectStoreOptions = {
 
 type RegisteredProject = {
   registryPath: string;
+  registryBytes: Buffer;
+  registryIdentity: BigIntStats;
   registry: RegistryRecord;
   paths: ArtifactPaths;
   project: ProjectDocument;
   content: string;
   html: string;
+};
+
+type SafeFileState = {
+  bytes: Buffer;
+  identity: BigIntStats;
 };
 
 export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
@@ -87,122 +95,158 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
     throw configurationError("Project storage clock is not configured.");
   }
   const preparedProjects = new WeakSet<object>();
+  const mutationTails = new Map<string, Promise<void>>();
+
+  function serializeProjectMutation<T>(
+    projectId: string,
+    operation: () => Promise<T>,
+  ): Promise<T> {
+    const previous = mutationTails.get(projectId) ?? Promise.resolve();
+    const result = previous.then(operation);
+    const tail = result.then(
+      () => undefined,
+      () => undefined,
+    );
+    mutationTails.set(projectId, tail);
+    void tail.then(() => {
+      if (mutationTails.get(projectId) === tail) mutationTails.delete(projectId);
+    });
+    return result;
+  }
 
   return {
     async prepare(input, prompt) {
       const parsed = parseCreateProjectInput(input);
       validateBoundedString(prompt, PROJECT_PROMPT_MAX_BYTES, "prompt");
 
-      let paths = await resolveArtifactPaths(parsed.workspaceRoot, parsed.slug);
-      const sources = await validateSourceRecords(
-        paths.workspaceRoot,
-        parsed.sourceFiles,
-      );
-      paths = await resolveArtifactPaths(paths.workspaceRoot, parsed.slug);
-      const canonicalInput: CreateProjectInput = {
-        ...parsed,
-        workspaceRoot: paths.workspaceRoot,
-        sourceFiles: sources,
-      };
-      const timestamp = timestampNow(options.now);
-      const project: ProjectDocument = {
-        schemaVersion: 1,
-        projectId: canonicalInput.projectId,
-        slug: canonicalInput.slug,
-        name: canonicalInput.name,
-        instruction: canonicalInput.instruction,
-        templateId: canonicalInput.templateId,
-        format: canonicalInput.format,
-        agent: canonicalInput.agent,
-        sources,
-        status: "generating",
-        createdAt: timestamp,
-        updatedAt: timestamp,
-        ...(canonicalInput.model === undefined
-          ? {}
-          : { model: canonicalInput.model }),
-      };
+      return serializeProjectMutation(parsed.projectId, async () => {
+        let paths = await resolveArtifactPaths(parsed.workspaceRoot, parsed.slug);
+        const sources = await validateSourceRecords(
+          paths.workspaceRoot,
+          parsed.sourceFiles,
+        );
+        paths = await resolveArtifactPaths(paths.workspaceRoot, parsed.slug);
+        const canonicalInput: CreateProjectInput = {
+          ...parsed,
+          workspaceRoot: paths.workspaceRoot,
+          sourceFiles: sources,
+        };
+        const timestamp = timestampNow(options.now);
+        const project: ProjectDocument = {
+          schemaVersion: 1,
+          projectId: canonicalInput.projectId,
+          slug: canonicalInput.slug,
+          name: canonicalInput.name,
+          instruction: canonicalInput.instruction,
+          templateId: canonicalInput.templateId,
+          format: canonicalInput.format,
+          agent: canonicalInput.agent,
+          sources,
+          status: "generating",
+          createdAt: timestamp,
+          updatedAt: timestamp,
+          ...(canonicalInput.model === undefined
+            ? {}
+            : { model: canonicalInput.model }),
+        };
 
-      try {
-        await createArtifactParents(paths);
-        paths = await resolveArtifactPaths(paths.workspaceRoot, pathsToSlug(paths));
-        await createProjectDirectory(paths.artifactDirectory);
-        await atomicReplace(paths.promptPath, encode(prompt), paths);
-        await atomicReplace(paths.contentPath, encode(canonicalInput.content), paths);
-        await atomicReplace(paths.projectPath, serializeJson(project), paths);
-      } catch (error) {
-        if (isAlreadyExists(error)) {
-          throw new ProjectError("project_exists", "Project artifacts already exist.");
+        try {
+          await createRegistryDirectory(registryRoot);
+          await createArtifactParents(paths);
+          paths = await resolveArtifactPaths(
+            paths.workspaceRoot,
+            pathsToSlug(paths),
+          );
+          await createProjectDirectory(paths.artifactDirectory);
+          await atomicReplace(paths.promptPath, encode(prompt), paths);
+          await atomicReplace(
+            paths.contentPath,
+            encode(canonicalInput.content),
+            paths,
+          );
+          await atomicReplace(paths.projectPath, serializeJson(project), paths);
+        } catch (error) {
+          if (isAlreadyExists(error)) {
+            throw new ProjectError(
+              "project_exists",
+              "Project artifacts already exist.",
+            );
+          }
+          if (error instanceof ProjectError) throw error;
+          throw storageError();
         }
-        if (error instanceof ProjectError) throw error;
-        throw storageError();
-      }
 
-      const prepared: PreparedProject = Object.freeze({
-        input: Object.freeze({
-          ...canonicalInput,
-          sourceFiles: Object.freeze([...sources]),
-        }),
-        paths: Object.freeze({ ...paths }),
-        project: Object.freeze({
-          ...project,
-          sources: Object.freeze([...sources]),
-        }),
+        const prepared: PreparedProject = Object.freeze({
+          input: Object.freeze({
+            ...canonicalInput,
+            sourceFiles: Object.freeze([...sources]),
+          }),
+          paths: Object.freeze({ ...paths }),
+          project: Object.freeze({
+            ...project,
+            sources: Object.freeze([...sources]),
+          }),
+        });
+        preparedProjects.add(prepared);
+        return prepared;
       });
-      preparedProjects.add(prepared);
-      return prepared;
     },
 
     async markReady(prepared, html) {
       parsePatchProjectInput({ html });
       assertOwnedPrepared(preparedProjects, prepared);
-      try {
-        const current = await readPreparedProject(prepared);
-        assertGeneratingProject(current, prepared);
-        await atomicReplace(prepared.paths.htmlPath, encode(html), prepared.paths);
+      return serializeProjectMutation(prepared.input.projectId, async () => {
+        try {
+          const current = await readPreparedProject(prepared);
+          assertGeneratingProject(current, prepared);
+          await atomicReplace(
+            prepared.paths.htmlPath,
+            encode(html),
+            prepared.paths,
+          );
 
-        const readyProject: ProjectDocument = {
-          ...current,
-          status: "ready",
-          updatedAt: timestampNow(options.now),
-        };
-        delete readyProject.diagnostic;
-        await atomicReplace(
-          prepared.paths.projectPath,
-          serializeJson(readyProject),
-          prepared.paths,
-        );
+          const readyProject: ProjectDocument = {
+            ...current,
+            status: "ready",
+            updatedAt: timestampNow(options.now),
+          };
+          delete readyProject.diagnostic;
+          await atomicReplace(
+            prepared.paths.projectPath,
+            serializeJson(readyProject),
+            prepared.paths,
+          );
 
-        const registryPath = await prepareRegistryPath(
-          registryRoot,
-          prepared.input.projectId,
-          true,
-        );
-        if (await pathExists(registryPath)) {
-          throw new ProjectError("project_exists", "Project is already registered.");
+          const registryPath = await prepareRegistryPath(
+            registryRoot,
+            prepared.input.projectId,
+            true,
+          );
+          const registry: RegistryRecord = {
+            schemaVersion: 1,
+            projectId: prepared.input.projectId,
+            workspaceRoot: prepared.paths.workspaceRoot,
+            artifactDirectory: prepared.paths.artifactDirectory,
+            registeredAt: timestampNow(options.now),
+          };
+          await publishRegistry(
+            registryPath,
+            serializeJson(registry),
+            registryRoot,
+          );
+
+          const registered = await loadRegisteredProject(
+            registryRoot,
+            prepared.input.projectId,
+          );
+          return readyResponse(registered, publicBaseUrl);
+        } catch (error) {
+          if (error instanceof ProjectError && error.code === "project_exists") {
+            throw error;
+          }
+          throw asStorageError(error);
         }
-        const registry: RegistryRecord = {
-          schemaVersion: 1,
-          projectId: prepared.input.projectId,
-          workspaceRoot: prepared.paths.workspaceRoot,
-          artifactDirectory: prepared.paths.artifactDirectory,
-          registeredAt: timestampNow(options.now),
-        };
-        await atomicReplace(registryPath, serializeJson(registry), undefined, {
-          directory: registryRoot,
-        });
-
-        const registered = await loadRegisteredProject(
-          registryRoot,
-          prepared.input.projectId,
-        );
-        return readyResponse(registered, publicBaseUrl);
-      } catch (error) {
-        if (error instanceof ProjectError && error.code === "project_exists") {
-          throw error;
-        }
-        throw asStorageError(error);
-      }
+      });
     },
 
     async markFailed(prepared, diagnostic) {
@@ -210,26 +254,28 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
         throw new ProjectError("invalid_request", "Project diagnostic is invalid.");
       }
       assertOwnedPrepared(preparedProjects, prepared);
-      try {
-        const current = await readPreparedProject(prepared);
-        assertGeneratingProject(current, prepared);
-        if (await pathExists(prepared.paths.htmlPath)) {
-          throw storageError();
+      return serializeProjectMutation(prepared.input.projectId, async () => {
+        try {
+          const current = await readPreparedProject(prepared);
+          assertGeneratingProject(current, prepared);
+          if (await pathExists(prepared.paths.htmlPath)) {
+            throw storageError();
+          }
+          const failedProject: ProjectDocument = {
+            ...current,
+            status: "failed",
+            updatedAt: timestampNow(options.now),
+            diagnostic: truncateUtf8(diagnostic, PROJECT_DIAGNOSTIC_MAX_BYTES),
+          };
+          await atomicReplace(
+            prepared.paths.projectPath,
+            serializeJson(failedProject),
+            prepared.paths,
+          );
+        } catch (error) {
+          throw asStorageError(error);
         }
-        const failedProject: ProjectDocument = {
-          ...current,
-          status: "failed",
-          updatedAt: timestampNow(options.now),
-          diagnostic: truncateUtf8(diagnostic, PROJECT_DIAGNOSTIC_MAX_BYTES),
-        };
-        await atomicReplace(
-          prepared.paths.projectPath,
-          serializeJson(failedProject),
-          prepared.paths,
-        );
-      } catch (error) {
-        throw asStorageError(error);
-      }
+      });
     },
 
     async get(id) {
@@ -239,57 +285,70 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
 
     async patch(id, patch) {
       const parsedPatch = parsePatchProjectInput(patch);
-      const registered = await loadRegisteredProject(registryRoot, id);
-      try {
-        if (parsedPatch.content !== undefined) {
-          await assertRegisteredPathsCurrent(registryRoot, registered);
-          await atomicReplace(
-            registered.paths.contentPath,
-            encode(parsedPatch.content),
-            registered.paths,
-          );
-        }
-        if (parsedPatch.html !== undefined) {
-          await assertRegisteredPathsCurrent(registryRoot, registered);
-          await atomicReplace(
-            registered.paths.htmlPath,
-            encode(parsedPatch.html),
-            registered.paths,
-          );
-        }
+      const projectId = validateProjectId(id);
+      return serializeProjectMutation(projectId, async () => {
+        const registered = await loadRegisteredProject(registryRoot, projectId);
+        try {
+          if (parsedPatch.content !== undefined) {
+            await assertRegisteredPathsCurrent(registryRoot, registered);
+            await atomicReplace(
+              registered.paths.contentPath,
+              encode(parsedPatch.content),
+              registered.paths,
+              () => assertRegistryCapabilityCurrent(registryRoot, registered),
+            );
+          }
+          if (parsedPatch.html !== undefined) {
+            await assertRegisteredPathsCurrent(registryRoot, registered);
+            await atomicReplace(
+              registered.paths.htmlPath,
+              encode(parsedPatch.html),
+              registered.paths,
+              () => assertRegistryCapabilityCurrent(registryRoot, registered),
+            );
+          }
 
-        const project: ProjectDocument = {
-          ...registered.project,
-          ...(parsedPatch.templateId === undefined
-            ? {}
-            : { templateId: parsedPatch.templateId }),
-          updatedAt: timestampNow(options.now),
-        };
-        await assertRegisteredPathsCurrent(registryRoot, registered);
-        await atomicReplace(
-          registered.paths.projectPath,
-          serializeJson(project),
-          registered.paths,
-        );
-        return snapshot(
-          await loadRegisteredProject(registryRoot, registered.project.projectId),
-          publicBaseUrl,
-        );
-      } catch (error) {
-        throw asStorageError(error);
-      }
+          const project: ProjectDocument = {
+            ...registered.project,
+            ...(parsedPatch.templateId === undefined
+              ? {}
+              : { templateId: parsedPatch.templateId }),
+            updatedAt: timestampNow(options.now),
+          };
+          await assertRegisteredPathsCurrent(registryRoot, registered);
+          await atomicReplace(
+            registered.paths.projectPath,
+            serializeJson(project),
+            registered.paths,
+            () => assertRegistryCapabilityCurrent(registryRoot, registered),
+          );
+          return snapshot(
+            await loadRegisteredProject(
+              registryRoot,
+              registered.project.projectId,
+            ),
+            publicBaseUrl,
+          );
+        } catch (error) {
+          throw asStorageError(error);
+        }
+      });
     },
 
     async unregister(id) {
-      const registered = await loadRegisteredProject(registryRoot, id);
-      try {
-        await assertRegistryFile(registryRoot, registered.registryPath);
-        await unlink(registered.registryPath);
-        await syncDirectory(registryRoot);
-      } catch (error) {
-        if (isMissing(error)) throw projectNotFound();
-        throw asStorageError(error);
-      }
+      const projectId = validateProjectId(id);
+      return serializeProjectMutation(projectId, async () => {
+        const registered = await loadRegisteredProject(registryRoot, projectId);
+        try {
+          await assertRegisteredPathsCurrent(registryRoot, registered);
+          await assertRegistryCapabilityCurrent(registryRoot, registered);
+          await unlink(registered.registryPath);
+          await syncDirectory(registryRoot);
+        } catch (error) {
+          if (isMissing(error)) throw projectNotFound();
+          throw asStorageError(error);
+        }
+      });
     },
 
     async findReadyCreation(input) {
@@ -338,7 +397,7 @@ async function assertRegisteredPathsCurrent(
   registryRoot: string,
   registered: RegisteredProject,
 ): Promise<void> {
-  await assertRegistryFile(registryRoot, registered.registryPath);
+  await assertRegistryCapabilityCurrent(registryRoot, registered);
   await revalidateArtifactPaths(registered.paths, true);
   for (const filePath of [
     registered.paths.promptPath,
@@ -350,16 +409,35 @@ async function assertRegisteredPathsCurrent(
   }
 }
 
+async function assertRegistryCapabilityCurrent(
+  registryRoot: string,
+  registered: RegisteredProject,
+): Promise<void> {
+  await assertRegistryFile(registryRoot, registered.registryPath);
+  const current = await readSafeFileState(
+    registered.registryPath,
+    REGISTRY_RECORD_MAX_BYTES,
+    FILE_MODE,
+  );
+  parseRegistryRecord(current.bytes, registered.registry.projectId);
+  if (
+    !isSameFile(current.identity, registered.registryIdentity) ||
+    !current.bytes.equals(registered.registryBytes)
+  ) {
+    throw storageError();
+  }
+}
+
 async function loadRegisteredProject(
   registryRoot: string,
   id: string,
 ): Promise<RegisteredProject> {
   const projectId = validateProjectId(id);
   let registryPath: string;
-  let registryBytes: Buffer;
+  let registryState: SafeFileState;
   try {
     registryPath = await prepareRegistryPath(registryRoot, projectId, false);
-    registryBytes = await readSafeFile(
+    registryState = await readSafeFileState(
       registryPath,
       REGISTRY_RECORD_MAX_BYTES,
       FILE_MODE,
@@ -368,7 +446,7 @@ async function loadRegisteredProject(
     if (isMissing(error)) throw projectNotFound();
     throw asStorageError(error);
   }
-  const registry = parseRegistryRecord(registryBytes, projectId);
+  const registry = parseRegistryRecord(registryState.bytes, projectId);
 
   let paths: ArtifactPaths;
   try {
@@ -408,6 +486,8 @@ async function loadRegisteredProject(
     }
     return {
       registryPath,
+      registryBytes: registryState.bytes,
+      registryIdentity: registryState.identity,
       registry,
       paths,
       project,
@@ -501,12 +581,15 @@ async function createContainedDirectory(
   directory: string,
   workspaceRoot: string,
 ): Promise<void> {
+  let created = false;
   try {
     await mkdir(directory, { mode: DIRECTORY_MODE });
+    created = true;
   } catch (error) {
     if (!isAlreadyExists(error)) throw error;
   }
-  await assertRealDirectory(directory, workspaceRoot);
+  await assertRealDirectory(directory, workspaceRoot, DIRECTORY_MODE);
+  if (created) await syncDirectory(path.dirname(directory));
 }
 
 async function createProjectDirectory(directory: string): Promise<void> {
@@ -516,6 +599,7 @@ async function createProjectDirectory(directory: string): Promise<void> {
     path.dirname(path.dirname(path.dirname(directory))),
     DIRECTORY_MODE,
   );
+  await syncDirectory(path.dirname(directory));
 }
 
 async function revalidateArtifactPaths(
@@ -524,6 +608,16 @@ async function revalidateArtifactPaths(
 ): Promise<void> {
   const actual = await resolveArtifactPaths(expected.workspaceRoot, pathsToSlug(expected));
   if (!sameArtifactPaths(actual, expected)) throw storageError();
+  await assertRealDirectory(
+    path.join(expected.workspaceRoot, "artifacts"),
+    expected.workspaceRoot,
+    DIRECTORY_MODE,
+  );
+  await assertRealDirectory(
+    expected.artifactParent,
+    expected.workspaceRoot,
+    DIRECTORY_MODE,
+  );
   if (requireDirectory) {
     await assertRealDirectory(
       expected.artifactDirectory,
@@ -551,23 +645,77 @@ async function assertArtifactFile(
   await assertRealFile(filePath, paths.workspaceRoot, FILE_MODE);
 }
 
+async function publishRegistry(
+  registryPath: string,
+  bytes: Uint8Array,
+  registryRoot: string,
+): Promise<void> {
+  if (path.dirname(registryPath) !== registryRoot) throw storageError();
+  await assertRegistryDirectory(registryRoot);
+  const temporaryPath = path.join(
+    registryRoot,
+    `.${path.basename(registryPath)}.tmp-${randomBytes(16).toString("hex")}`,
+  );
+  let handle: Awaited<ReturnType<typeof open>> | undefined;
+  let temporaryIdentity: BigIntStats | undefined;
+  let temporaryRemoved = false;
+  try {
+    handle = await open(
+      temporaryPath,
+      fsConstants.O_WRONLY |
+        fsConstants.O_CREAT |
+        fsConstants.O_EXCL |
+        fsConstants.O_NOFOLLOW,
+      FILE_MODE,
+    );
+    temporaryIdentity = await handle.stat({ bigint: true });
+    await handle.writeFile(bytes);
+    await handle.sync();
+    await handle.close();
+    handle = undefined;
+
+    await assertRegistryDirectory(registryRoot);
+    try {
+      await link(temporaryPath, registryPath);
+    } catch (error) {
+      if (isAlreadyExists(error)) {
+        throw new ProjectError("project_exists", "Project is already registered.");
+      }
+      throw error;
+    }
+    await syncDirectory(registryRoot);
+
+    const readback = await readSafeFileState(
+      registryPath,
+      bytes.byteLength,
+      FILE_MODE,
+    );
+    if (
+      !isSameFile(readback.identity, temporaryIdentity) ||
+      !readback.bytes.equals(Buffer.from(bytes))
+    ) {
+      throw storageError();
+    }
+    await unlink(temporaryPath);
+    temporaryRemoved = true;
+    await syncDirectory(registryRoot);
+  } finally {
+    await handle?.close().catch(() => undefined);
+    if (!temporaryRemoved && temporaryIdentity !== undefined) {
+      await removeOwnedTemporary(temporaryPath, temporaryIdentity);
+    }
+  }
+}
+
 async function atomicReplace(
   targetPath: string,
   bytes: Uint8Array,
-  artifactPaths?: ArtifactPaths,
-  standalone?: { directory: string },
+  artifactPaths: ArtifactPaths,
+  beforeRename?: () => Promise<void>,
 ): Promise<void> {
   const directory = path.dirname(targetPath);
-  if (artifactPaths !== undefined) {
-    await revalidateArtifactPaths(artifactPaths, true);
-    await assertOptionalTarget(targetPath, artifactPaths.workspaceRoot);
-  } else if (standalone !== undefined) {
-    if (directory !== standalone.directory) throw storageError();
-    await assertRegistryDirectory(standalone.directory);
-    await assertOptionalTarget(targetPath, standalone.directory);
-  } else {
-    throw storageError();
-  }
+  await revalidateArtifactPaths(artifactPaths, true);
+  await assertOptionalTarget(targetPath, artifactPaths.workspaceRoot);
 
   const temporaryPath = path.join(
     directory,
@@ -591,13 +739,9 @@ async function atomicReplace(
     await handle.close();
     handle = undefined;
 
-    if (artifactPaths !== undefined) {
-      await revalidateArtifactPaths(artifactPaths, true);
-      await assertOptionalTarget(targetPath, artifactPaths.workspaceRoot);
-    } else {
-      await assertRegistryDirectory(directory);
-      await assertOptionalTarget(targetPath, directory);
-    }
+    await revalidateArtifactPaths(artifactPaths, true);
+    await assertOptionalTarget(targetPath, artifactPaths.workspaceRoot);
+    await beforeRename?.();
     await rename(temporaryPath, targetPath);
     renamed = true;
     await syncDirectory(directory);
@@ -620,6 +764,7 @@ async function removeOwnedTemporary(
     const current = await lstat(temporaryPath, { bigint: true });
     if (isSameFile(current, identity) && current.isFile()) {
       await unlink(temporaryPath);
+      await syncDirectory(path.dirname(temporaryPath));
     }
   } catch {
     // Never remove anything that cannot be proven to be this operation's file.
@@ -631,6 +776,14 @@ async function readSafeFile(
   maxBytes: number,
   requiredMode: number,
 ): Promise<Buffer> {
+  return (await readSafeFileState(filePath, maxBytes, requiredMode)).bytes;
+}
+
+async function readSafeFileState(
+  filePath: string,
+  maxBytes: number,
+  requiredMode: number,
+): Promise<SafeFileState> {
   let handle: Awaited<ReturnType<typeof open>> | undefined;
   try {
     handle = await open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
@@ -651,7 +804,7 @@ async function readSafeFile(
     if (named.isSymbolicLink() || !isStableFile(after, named)) {
       throw storageError();
     }
-    return bytes;
+    return { bytes, identity: after };
   } finally {
     await handle?.close().catch(() => undefined);
   }
@@ -716,12 +869,15 @@ async function prepareRegistryPath(
 
 async function createRegistryDirectory(registryRoot: string): Promise<void> {
   await inspectAbsoluteSegments(path.dirname(registryRoot), false);
+  let created = false;
   try {
     await mkdir(registryRoot, { mode: DIRECTORY_MODE });
+    created = true;
   } catch (error) {
     if (!isAlreadyExists(error)) throw error;
   }
   await assertRegistryDirectory(registryRoot);
+  if (created) await syncDirectory(path.dirname(registryRoot));
 }
 
 async function assertRegistryDirectory(registryRoot: string): Promise<void> {
