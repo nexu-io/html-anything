@@ -332,6 +332,8 @@ export interface Dict {
   // Upload dropzone
   "upload.loadedLog": string;
   "upload.failedLog": string;
+  "upload.uploading": string;
+  "upload.projectFailed": string;
 
   // Formats gallery
   "formats.eyebrow": string;
@@ -709,6 +711,8 @@ const en: Dict = {
 
   "upload.loadedLog": "Loaded {name} ({fmt})",
   "upload.failedLog": "Parse failed: {err}",
+  "upload.uploading": "Uploading image…",
+  "upload.projectFailed": "Image upload failed. Try again.",
 
   "formats.eyebrow": "Format examples",
   "formats.subtitle":
@@ -1081,6 +1085,8 @@ const zhCN: Dict = {
 
   "upload.loadedLog": "已加载 {name} ({fmt})",
   "upload.failedLog": "解析失败: {err}",
+  "upload.uploading": "正在上传图片…",
+  "upload.projectFailed": "图片上传失败，请重试。",
 
   "formats.eyebrow": "格式示例",
   "formats.subtitle":

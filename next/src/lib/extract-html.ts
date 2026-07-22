@@ -51,6 +51,30 @@ function escape(s: string): string {
     .replace(/>/g, "&gt;");
 }
 
+export function injectPreviewBase(html: string, baseHref?: string): string {
+  if (baseHref === undefined) return html;
+
+  const base = `<base href="${escapeAttribute(baseHref)}">`;
+  const head = /<head\b[^>]*>/iu.exec(html);
+  if (head !== null) {
+    const offset = head.index + head[0].length;
+    return html.slice(0, offset) + base + html.slice(offset);
+  }
+
+  const htmlElement = /<html\b[^>]*>/iu.exec(html);
+  if (htmlElement === null) return html;
+  const offset = htmlElement.index + htmlElement[0].length;
+  return html.slice(0, offset) + `<head>${base}</head>` + html.slice(offset);
+}
+
+function escapeAttribute(value: string): string {
+  return value
+    .replace(/&/gu, "&amp;")
+    .replace(/"/gu, "&quot;")
+    .replace(/</gu, "&lt;")
+    .replace(/>/gu, "&gt;");
+}
+
 /**
  * For previews while the stream is still arriving — make sure we always
  * produce a closing </body></html> so the iframe can render incrementally.

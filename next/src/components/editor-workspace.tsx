@@ -105,12 +105,22 @@ export function EditorWorkspace({ projectMode }: { projectMode?: ProjectMode }) 
                   : undefined
               }
             >
-              <EditorPane localAutosaveEnabled={!projectMode} />
+              <EditorPane
+                projectId={projectMode?.projectId}
+                localAutosaveEnabled={!projectMode}
+              />
             </section>
           )}
           {layoutMode !== "editor" && (
             <section className="flex min-w-0 flex-1 basis-0 flex-col">
-              <PreviewPane iframeRef={iframeRef} />
+              <PreviewPane
+                iframeRef={iframeRef}
+                assetBaseHref={
+                  projectMode
+                    ? `/api/projects/${encodeURIComponent(projectMode.projectId)}/`
+                    : undefined
+                }
+              />
             </section>
           )}
           <ConvertChip />

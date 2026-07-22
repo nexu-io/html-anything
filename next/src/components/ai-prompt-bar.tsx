@@ -4,10 +4,11 @@ import { useRef, useState } from "react";
 import { useStore } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { useDraft } from "@/lib/use-draft";
-import { useUploadFile } from "@/lib/use-upload";
 
 const ACCEPT_TYPES =
   ".md,.txt,.pdf,.csv,.tsv,.xlsx,.xls,.json,.sql,.yaml,.yml,.png,.jpg,.jpeg,.gif,.webp,.svg,.html,.htm,.xml,.log";
+const PROJECT_ACCEPT_TYPES =
+  ".md,.txt,.pdf,.csv,.tsv,.xlsx,.xls,.json,.sql,.yaml,.yml,.png,.jpg,.jpeg,.gif,.webp,.html,.htm,.xml,.log";
 
 /**
  * Sticky one-line input pinned to the bottom of the editor's Text tab. The
@@ -18,12 +19,21 @@ const ACCEPT_TYPES =
  * without leaving this row. Convert (HTML output) is unaffected — Draft is
  * a separate /api/draft endpoint that prompts the agent for plain markdown.
  */
-export function AiPromptBar() {
+export function AiPromptBar({
+  ingest,
+  uploading,
+  error: uploadError,
+  projectMode,
+}: {
+  ingest(files: FileList | File[] | null): Promise<void>;
+  uploading: boolean;
+  error: string | null;
+  projectMode: boolean;
+}) {
   const [value, setValue] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const agent = useStore((s) => s.selectedAgent);
-  const { run, cancel, status, error } = useDraft();
-  const { ingest } = useUploadFile();
+  const { run, cancel, status, error: draftError } = useDraft();
   const t = useT();
 
   const isRunning = status === "running";
@@ -71,18 +81,22 @@ export function AiPromptBar() {
         />
         <button
           onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
           className="shrink-0 inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[12px] text-[var(--ink-mute)] transition-colors hover:bg-[var(--surface)] hover:text-[var(--ink)]"
           title={t("editor.attachTooltip")}
         >
           <span aria-hidden>📎</span>
-          <span className="hidden text-[11.5px] sm:inline">{t("editor.attach")}</span>
+          <span className="hidden text-[11.5px] sm:inline">
+            {uploading ? t("upload.uploading") : t("editor.attach")}
+          </span>
         </button>
         <input
           ref={fileInputRef}
           type="file"
           multiple
+          disabled={uploading}
           className="hidden"
-          accept={ACCEPT_TYPES}
+          accept={projectMode ? PROJECT_ACCEPT_TYPES : ACCEPT_TYPES}
           onChange={(e) => {
             ingest(e.target.files);
             e.target.value = "";
@@ -103,9 +117,9 @@ export function AiPromptBar() {
           <span className="ml-1.5 hidden text-[10px] opacity-60 sm:inline">⌘↵</span>
         </button>
       </div>
-      {error && (
+      {(uploadError ?? draftError) && (
         <div className="mt-1 text-[11px]" style={{ color: "var(--red)" }}>
-          {error}
+          {uploadError ?? draftError}
         </div>
       )}
     </div>

@@ -3,7 +3,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStore, selectActiveTask, type LogEntry, type RunStats } from "@/lib/store";
 import { useT, type DictKey } from "@/lib/i18n";
-import { previewHtml, extractHtml } from "@/lib/extract-html";
+import {
+  previewHtml,
+  extractHtml,
+  injectPreviewBase,
+} from "@/lib/extract-html";
 import { isDeck } from "@/lib/deck";
 import { DeckViewer } from "./deck-viewer";
 
@@ -40,8 +44,10 @@ const EMPTY_STATS: RunStats = { outputBytes: 0, deltaCount: 0 };
 
 export function PreviewPane({
   iframeRef,
+  assetBaseHref,
 }: {
   iframeRef?: React.MutableRefObject<HTMLIFrameElement | null>;
+  assetBaseHref?: string;
 }) {
   const html = useStore((s) => selectActiveTask(s)?.html ?? "");
   const status = useStore((s) => selectActiveTask(s)?.status ?? "idle");
@@ -134,7 +140,11 @@ export function PreviewPane({
 
   // Detect deck off the cleaned (un-fenced) html — extract once for reuse.
   const cleaned = useMemo(() => extractHtml(effectiveHtml), [effectiveHtml]);
-  const deckMode = useMemo(() => isDeck(cleaned), [cleaned]);
+  const previewCleaned = useMemo(
+    () => injectPreviewBase(cleaned, assetBaseHref),
+    [assetBaseHref, cleaned],
+  );
+  const deckMode = useMemo(() => isDeck(previewCleaned), [previewCleaned]);
 
   // First time we see a deck, auto-promote the user to the Deck tab so the
   // feature is discoverable. We only do this once per task run (track the
@@ -162,7 +172,10 @@ export function PreviewPane({
     const id = setTimeout(() => setDebouncedHtml(effectiveHtml), 320);
     return () => clearTimeout(id);
   }, [effectiveHtml, status]);
-  const display = useMemo(() => previewHtml(debouncedHtml), [debouncedHtml]);
+  const display = useMemo(
+    () => injectPreviewBase(previewHtml(debouncedHtml), assetBaseHref),
+    [assetBaseHref, debouncedHtml],
+  );
 
   useEffect(() => {
     if (iframeRef) iframeRef.current = localRef.current;
@@ -317,7 +330,7 @@ export function PreviewPane({
         )}
         {tab === "deck" && (
           <DeckViewer
-            html={cleaned}
+            html={previewCleaned}
             active={tab === "deck"}
             // Hand the active slide iframe to the parent ref so the existing
             // ExportMenu's "PNG" / "Image" actions snapshot the *current

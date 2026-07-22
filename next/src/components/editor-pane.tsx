@@ -19,8 +19,10 @@ const TAB_KEY: Record<"text" | "formats" | "samples", DictKey> = {
 };
 
 export function EditorPane({
+  projectId,
   localAutosaveEnabled = true,
 }: {
+  projectId?: string;
   localAutosaveEnabled?: boolean;
 }) {
   const [tab, setTab] = useState<"text" | "formats" | "samples">("text");
@@ -32,7 +34,7 @@ export function EditorPane({
   const setFormat = useStore((s) => s.setFormat);
   const setFilename = useStore((s) => s.setFilename);
   const { status: saveStatus, savedAt } = useAutosave(localAutosaveEnabled);
-  const { ingest } = useUploadFile();
+  const { ingest, uploading, error } = useUploadFile({ projectId });
   const t = useT();
 
   const detected = useMemo(() => detectFormat(content), [content]);
@@ -148,7 +150,12 @@ export function EditorPane({
                 </div>
               )}
             </div>
-            <AiPromptBar />
+            <AiPromptBar
+              ingest={ingest}
+              uploading={uploading}
+              error={error}
+              projectMode={projectId !== undefined}
+            />
           </div>
         )}
         {tab === "formats" && (
