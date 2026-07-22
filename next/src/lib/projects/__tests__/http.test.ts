@@ -1,4 +1,9 @@
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
+import type { InvokeEvent } from "../../agents/invoke";
+import type { LoadedSkill } from "../../templates/loader";
 import {
   PROJECT_ASSET_MAX_BYTES,
   PROJECT_CREATE_BODY_MAX_BYTES,
@@ -18,7 +23,9 @@ import {
   readBoundedBytes,
   readBoundedJson,
 } from "../http";
-import type { ProjectService } from "../service";
+import type { GenerateProjectDependencies } from "../generate";
+import { createProjectService, type ProjectService } from "../service";
+import { createProjectStore } from "../storage";
 
 const PROJECT_ID = "AbCdEfGhIjKlMnOpQrStUg";
 const COMPLETE_HTML = "<!doctype html><html><body>ready</body></html>";
@@ -611,6 +618,134 @@ describe("createProjectHttpHandlers", () => {
     },
   );
 
+  it("shares one generation across overlapping identical POSTs", async () => {
+    await withHeldCreateHandlers(async ({ handlers, input, invocation }) => {
+      const leaderResponse = handlers.POST(createRequest(input));
+      await invocation.started;
+      const waiterResponse = handlers.POST(createRequest(input));
+
+      invocation.succeed();
+      const [leader, waiter] = await Promise.all([
+        leaderResponse,
+        waiterResponse,
+      ]);
+      const [leaderBody, waiterBody] = await Promise.all([
+        leader.json(),
+        waiter.json(),
+      ]);
+
+      expect(leader.status).toBe(201);
+      expect(waiter.status).toBe(200);
+      expect(waiterBody).toEqual(leaderBody);
+      expect(invocation.invokeAgent).toHaveBeenCalledTimes(1);
+
+      const replay = await handlers.POST(createRequest(input));
+      expect(replay.status).toBe(200);
+      expect(await replay.json()).toEqual(leaderBody);
+      expect(invocation.invokeAgent).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("ignores mutable creation fields while an identical immutable create is in flight", async () => {
+    await withHeldCreateHandlers(async ({ handlers, input, invocation }) => {
+      const leaderResponse = handlers.POST(createRequest(input));
+      await invocation.started;
+      const waiterResponse = handlers.POST(createRequest({
+        ...input,
+        content: "# Replacement mutable content",
+        templateId: "document",
+      }));
+
+      invocation.succeed();
+      const [leader, waiter] = await Promise.all([
+        leaderResponse,
+        waiterResponse,
+      ]);
+
+      expect(leader.status).toBe(201);
+      expect(waiter.status).toBe(200);
+      expect(await waiter.json()).toEqual(await leader.json());
+      expect(invocation.invokeAgent).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it.each<[string, (input: CreateProjectInput) => CreateProjectInput]>([
+    ["workspaceRoot", (input) => ({
+      ...input,
+      workspaceRoot: path.join(input.workspaceRoot, "other"),
+    })],
+    ["slug", (input) => ({ ...input, slug: "other-demo" })],
+    ["name", (input) => ({
+      ...input,
+      name: "A conflicting immutable name",
+    })],
+    ["instruction", (input) => ({
+      ...input,
+      instruction: "Build a conflicting demo.",
+    })],
+    ["sourceFiles", (input) => ({
+      ...input,
+      sourceFiles: [{
+        path: "conflict.md",
+        bytes: 0,
+        sha256: "0".repeat(64),
+      }],
+    })],
+    ["format", (input) => ({ ...input, format: "html" })],
+    ["agent", (input) => ({ ...input, agent: "claude" })],
+    ["model", (input) => ({ ...input, model: "gpt-conflict" })],
+  ])("rejects a conflicting immutable %s without a second generation", async (_field, mutate) => {
+    await withHeldCreateHandlers(async ({ handlers, input, invocation }) => {
+      const leaderResponse = handlers.POST(createRequest(input));
+      await invocation.started;
+
+      const conflict = await handlers.POST(createRequest(mutate(input)));
+
+      expect(conflict.status).toBe(409);
+      expect(await conflict.json()).toEqual({
+        error: "project_exists",
+        message: "Project ID is already in use.",
+      });
+      expect(invocation.invokeAgent).toHaveBeenCalledTimes(1);
+
+      invocation.succeed();
+      expect((await leaderResponse).status).toBe(201);
+    });
+  });
+
+  it("shares a bounded generation failure with identical waiters and clears coordination", async () => {
+    await withHeldCreateHandlers(async ({ handlers, input, invocation }) => {
+      const leaderResponse = handlers.POST(createRequest(input));
+      await invocation.started;
+      const waiterResponse = handlers.POST(createRequest(input));
+
+      invocation.fail("secret agent failure");
+      const [leader, waiter] = await Promise.all([
+        leaderResponse,
+        waiterResponse,
+      ]);
+      const [leaderBody, waiterBody] = await Promise.all([
+        leader.json(),
+        waiter.json(),
+      ]);
+
+      expect(leader.status).toBe(422);
+      expect(waiter.status).toBe(422);
+      expect(leaderBody).toEqual({
+        error: "generation_failed",
+        message: "Project generation failed.",
+      });
+      expect(waiterBody).toEqual(leaderBody);
+      expect(JSON.stringify(leaderBody)).not.toContain("secret agent failure");
+      expect(invocation.invokeAgent).toHaveBeenCalledTimes(1);
+
+      const retry = await handlers.POST(createRequest(input));
+      expect(retry.status).toBe(409);
+      expect(await retry.json()).toMatchObject({ error: "project_exists" });
+      expect(invocation.invokeAgent).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it("enforces the POST body ceiling", async () => {
     const service = fakeService();
     const handlers = createProjectHttpHandlers(service);
@@ -783,3 +918,87 @@ describe("createProjectHttpHandlers", () => {
     await expectNoStore(second);
   });
 });
+
+type HeldInvocation = {
+  invokeAgent: GenerateProjectDependencies["invokeAgent"];
+  started: Promise<void>;
+  succeed(): void;
+  fail(message: string): void;
+};
+
+function createHeldInvocation(): HeldInvocation {
+  let controller: ReadableStreamDefaultController<InvokeEvent> | undefined;
+  let resolveStarted: (() => void) | undefined;
+  const started = new Promise<void>((resolve) => {
+    resolveStarted = resolve;
+  });
+  const invokeAgent = vi.fn<GenerateProjectDependencies["invokeAgent"]>(
+    () => new ReadableStream<InvokeEvent>({
+      start(streamController) {
+        controller = streamController;
+        resolveStarted?.();
+      },
+    }),
+  );
+
+  return {
+    invokeAgent,
+    started,
+    succeed() {
+      if (controller === undefined) throw new Error("Invocation has not started.");
+      controller.enqueue({ type: "html", text: COMPLETE_HTML });
+      controller.enqueue({ type: "done", code: 0 });
+      controller.close();
+    },
+    fail(message) {
+      if (controller === undefined) throw new Error("Invocation has not started.");
+      controller.enqueue({ type: "error", message });
+      controller.close();
+    },
+  };
+}
+
+function createRequest(input: CreateProjectInput): Request {
+  return request("POST", "/api/projects", JSON.stringify(input));
+}
+
+async function withHeldCreateHandlers(
+  run: (context: {
+    handlers: ReturnType<typeof createProjectHttpHandlers>;
+    input: CreateProjectInput;
+    invocation: HeldInvocation;
+  }) => Promise<void>,
+): Promise<void> {
+  const temporaryDirectory = await mkdtemp(
+    path.join(tmpdir(), "ha-project-concurrency-"),
+  );
+  const workspaceRoot = path.join(temporaryDirectory, "workspace");
+  const registryRoot = path.join(temporaryDirectory, "registry");
+  await mkdir(workspaceRoot, { mode: 0o700 });
+  const invocation = createHeldInvocation();
+  const service = createProjectService({
+    store: createProjectStore({
+      registryRoot,
+      publicBaseUrl: "https://host.ts.net",
+      now: () => new Date("2026-07-21T00:00:00.000Z"),
+    }),
+    publicBaseUrl: "https://host.ts.net",
+    loadSkill: () => ({
+      id: "landing-page",
+      body: "template body",
+    }) as LoadedSkill,
+    invokeAgent: invocation.invokeAgent,
+    deadlineMs: 900_000,
+  });
+  const input = { ...validCreateInput(), workspaceRoot };
+
+  try {
+    await run({
+      handlers: createProjectHttpHandlers(service),
+      input,
+      invocation,
+    });
+  } finally {
+    await rm(temporaryDirectory, { recursive: true, force: true });
+  }
+}

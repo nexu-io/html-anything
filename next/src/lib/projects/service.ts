@@ -36,8 +36,46 @@ export type ProjectService = {
 export function createProjectService(
   deps: GenerateProjectDependencies,
 ): ProjectService {
+  const inFlightCreations = new Map<string, InFlightCreation>();
+
+  function create(input: CreateProjectInput): Promise<CreateProjectResult> {
+    const existing = inFlightCreations.get(input.projectId);
+    if (existing !== undefined) {
+      if (!sameImmutableCreation(existing.input, input)) {
+        return Promise.reject(
+          new ProjectError("project_exists", "Project ID is already in use."),
+        );
+      }
+      return existing.result.then(({ response }) => ({
+        response,
+        created: false,
+      }));
+    }
+
+    const result = generateAndStoreProject(input, deps);
+    const inFlight: InFlightCreation = {
+      input: immutableCreation(input),
+      result,
+    };
+    inFlightCreations.set(input.projectId, inFlight);
+    void result.then(
+      () => clearInFlightCreation(input.projectId, inFlight),
+      () => clearInFlightCreation(input.projectId, inFlight),
+    );
+    return result;
+  }
+
+  function clearInFlightCreation(
+    projectId: string,
+    completed: InFlightCreation,
+  ): void {
+    if (inFlightCreations.get(projectId) === completed) {
+      inFlightCreations.delete(projectId);
+    }
+  }
+
   return {
-    create: (input) => generateAndStoreProject(input, deps),
+    create,
     get: (id) => deps.store.get(id),
     patch: (id, patch) => deps.store.patch(id, patch),
     putAsset: (id, originalName, bytes) =>
@@ -45,6 +83,43 @@ export function createProjectService(
     getAsset: (id, filename) => deps.store.getAsset(id, filename),
     unregister: (id) => deps.store.unregister(id),
   };
+}
+
+type ImmutableCreation = Omit<CreateProjectInput, "content" | "templateId">;
+
+type InFlightCreation = {
+  input: ImmutableCreation;
+  result: Promise<CreateProjectResult>;
+};
+
+function immutableCreation(input: CreateProjectInput): ImmutableCreation {
+  const {
+    content: _content,
+    templateId: _templateId,
+    sourceFiles,
+    ...immutable
+  } = input;
+  return {
+    ...immutable,
+    sourceFiles: sourceFiles.map((source) => ({ ...source })),
+  };
+}
+
+function sameImmutableCreation(
+  left: ImmutableCreation,
+  right: CreateProjectInput,
+): boolean {
+  return (
+    left.projectId === right.projectId &&
+    left.workspaceRoot === right.workspaceRoot &&
+    left.slug === right.slug &&
+    left.name === right.name &&
+    left.instruction === right.instruction &&
+    left.format === right.format &&
+    left.agent === right.agent &&
+    left.model === right.model &&
+    JSON.stringify(left.sourceFiles) === JSON.stringify(right.sourceFiles)
+  );
 }
 
 let configuredService: ProjectService | undefined;
