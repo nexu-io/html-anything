@@ -170,6 +170,29 @@ describe("transient server project tasks", () => {
     });
   });
 
+  it("keeps the loaded format for server regeneration while local auto-detection still changes format", () => {
+    const taskId = useStore.getState().loadServerProject(readySnapshot());
+
+    useStore.getState().setContent('{"kind":"server edit"}');
+    useStore.getState().setFormat("json");
+
+    expect(
+      useStore.getState().tasks.find((task) => task.id === taskId),
+    ).toMatchObject({
+      content: '{"kind":"server edit"}',
+      format: "markdown",
+    });
+
+    useStore.getState().setActiveTask("local-task");
+    useStore.getState().setContent('{"kind":"local edit"}');
+    useStore.getState().setFormat("json");
+
+    expect(useStore.getState().tasks[0]).toMatchObject({
+      content: '{"kind":"local edit"}',
+      format: "json",
+    });
+  });
+
   it("loads a sample into the active server project without changing its identity", () => {
     const taskId = useStore.getState().loadServerProject(readySnapshot());
     const taskCount = useStore.getState().tasks.length;
@@ -178,7 +201,7 @@ describe("transient server project tasks", () => {
       id: "sample-dashboard",
       name: "Sample name must not replace the project name",
       content: "sample content",
-      format: "markdown",
+      format: "json",
       templateId: "dashboard",
       html: "<!doctype html><html><body>sample</body></html>",
     });
@@ -221,6 +244,7 @@ describe("transient server project tasks", () => {
       id: returnedId,
       serverProjectId: undefined,
       name: "Dashboard sample",
+      format: "markdown",
       sampleId: "sample-dashboard",
     });
   });

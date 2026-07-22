@@ -355,7 +355,7 @@ export const useStore = create<State>()(
           set((s) => ({
             tasks: patchTask(s.tasks, active.id, {
               content: sample.content,
-              format: sample.format,
+              format: active.format,
               templateId: sample.templateId,
               html: sample.html,
               baseContent: sample.content,
@@ -441,7 +441,11 @@ export const useStore = create<State>()(
       setContent: (s) =>
         set((st) => ({ tasks: patchTask(st.tasks, st.activeTaskId, { content: s }) })),
       setFormat: (f) =>
-        set((st) => ({ tasks: patchTask(st.tasks, st.activeTaskId, { format: f }) })),
+        set((st) => {
+          const active = st.tasks.find((task) => task.id === st.activeTaskId);
+          if (active?.serverProjectId) return st;
+          return { tasks: patchTask(st.tasks, st.activeTaskId, { format: f }) };
+        }),
       setFilename: (f) =>
         set((st) => ({ tasks: patchTask(st.tasks, st.activeTaskId, { filename: f }) })),
       setSelectedTemplate: (id) =>
