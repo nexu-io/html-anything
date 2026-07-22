@@ -1,4 +1,5 @@
 import { constants as fsConstants } from "node:fs";
+import { execFile } from "node:child_process";
 import { createRequire, syncBuiltinESMExports } from "node:module";
 import {
   chmod,
@@ -16,6 +17,7 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { promisify } from "node:util";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   PROJECT_ASSET_MAX_BYTES,
@@ -30,6 +32,7 @@ type OpenedFile = Awaited<ReturnType<typeof open>>;
 const PROJECT_ID = "AbCdEfGhIjKlMnOpQrStUg";
 const MISSING_PROJECT_ID = "ZbCdEfGhIjKlMnOpQrStUg";
 const HTML = "<!doctype html><html><body>ok</body></html>";
+const execFileAsync = promisify(execFile);
 const PNG_SIGNATURE = Uint8Array.from([
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
 ]);
@@ -899,6 +902,62 @@ describe("project storage", () => {
       ).rejects.toMatchObject({ code: "storage_failed" });
     });
 
+    it("rejects an assets-parent symlink swap during stable readback", async () => {
+      const initialStore = await readyStore();
+      const original = pngBytes(0x01);
+      const outsideBytes = pngBytes(0x08, 0x08);
+      await initialStore.putAsset(PROJECT_ID, "hero.png", original);
+      const parked = path.join(temporaryDirectory, "parked-assets-read");
+      const outside = path.join(temporaryDirectory, "outside-assets-read");
+      await mkdir(outside, { mode: 0o700 });
+      await writeFile(path.join(outside, "hero.png"), outsideBytes, {
+        mode: 0o600,
+      });
+      const mutableFsPromises = createRequire(import.meta.url)(
+        "node:fs/promises",
+      ) as { open: typeof open };
+      const originalOpen = mutableFsPromises.open;
+      let swapped = false;
+      mutableFsPromises.open = (async (
+        ...arguments_: Parameters<typeof open>
+      ) => {
+        if (!swapped && String(arguments_[0]) === assetPath("hero.png")) {
+          swapped = true;
+          await rename(assetPath(), parked);
+          await symlink(outside, assetPath(), "dir");
+        }
+        return Reflect.apply(originalOpen, mutableFsPromises, arguments_);
+      }) as typeof open;
+      syncBuiltinESMExports();
+
+      try {
+        vi.resetModules();
+        const { createProjectStore: createSwappedProjectStore } = await import(
+          "../storage"
+        );
+        const store = createSwappedProjectStore({
+          registryRoot,
+          publicBaseUrl: "https://host.ts.net:43233",
+          now: () => clock,
+        });
+
+        await expect(
+          store.getAsset(PROJECT_ID, "hero.png"),
+        ).rejects.toMatchObject({ code: "storage_failed" });
+      } finally {
+        mutableFsPromises.open = originalOpen;
+        syncBuiltinESMExports();
+      }
+
+      expect(swapped).toBe(true);
+      expect(await readFile(path.join(outside, "hero.png"))).toEqual(
+        Buffer.from(outsideBytes),
+      );
+      expect(await readFile(path.join(parked, "hero.png"))).toEqual(
+        Buffer.from(original),
+      );
+    });
+
     it("rejects non-owner, oversized, and malformed stored asset files", async () => {
       const store = await readyStore();
       await store.putAsset(PROJECT_ID, "hero.png", pngBytes());
@@ -921,6 +980,46 @@ describe("project storage", () => {
       await expect(
         store.getAsset(PROJECT_ID, "hero.png"),
       ).rejects.toMatchObject({ code: "storage_failed" });
+    });
+
+    it("promptly rejects a FIFO asset and releases the project queue", async () => {
+      const store = await readyStore();
+      await store.putAsset(PROJECT_ID, "other.png", pngBytes(0x02));
+      const fifoPath = assetPath("pipe.png");
+      await execFileAsync("mkfifo", [fifoPath]);
+      await chmod(fifoPath, 0o600);
+
+      const fifoResult = store.getAsset(PROJECT_ID, "pipe.png").then(
+        () => "unexpected_success",
+        (error: unknown) =>
+          typeof error === "object" && error !== null && "code" in error
+            ? String(error.code)
+            : "unexpected_error",
+      );
+      const queuedResult = store.getAsset(PROJECT_ID, "other.png").then(
+        () => "queue_released",
+        () => "queued_failure",
+      );
+      const settled = Promise.all([fifoResult, queuedResult]);
+      let timeout: ReturnType<typeof setTimeout> | undefined;
+      const promptResult = await Promise.race([
+        settled,
+        new Promise<null>((resolve) => {
+          timeout = setTimeout(() => resolve(null), 500);
+        }),
+      ]);
+      if (timeout !== undefined) clearTimeout(timeout);
+
+      if (promptResult === null) {
+        const writer = await open(
+          fifoPath,
+          fsConstants.O_WRONLY | fsConstants.O_NONBLOCK,
+        );
+        await writer.close();
+        await settled;
+      }
+
+      expect(promptResult).toEqual(["storage_failed", "queue_released"]);
     });
 
     it("rejects an asset changed during stable readback", async () => {
@@ -1019,6 +1118,64 @@ describe("project storage", () => {
       });
     });
 
+    it("rejects a real artifact-directory replacement before asset publication", async () => {
+      await readyStore();
+      let replacement: Awaited<ReturnType<typeof replaceArtifactWithRealDirectory>>;
+      const store = makeStore(undefined, async () => {
+        replacement = await replaceArtifactWithRealDirectory();
+      });
+
+      await expect(
+        store.putAsset(PROJECT_ID, "hero.png", pngBytes(0x06)),
+      ).rejects.toMatchObject({ code: "storage_failed" });
+
+      expect(replacement!).toBeDefined();
+      await expect(lstat(assetPath("hero.png"))).rejects.toMatchObject({
+        code: "ENOENT",
+      });
+      await expect(
+        lstat(path.join(replacement!.parked, "assets", "hero.png")),
+      ).rejects.toMatchObject({ code: "ENOENT" });
+    });
+
+    it("rejects a real artifact-directory replacement before asset read", async () => {
+      const initialStore = await readyStore();
+      const original = pngBytes(0x01);
+      const outside = pngBytes(0x09, 0x09);
+      await initialStore.putAsset(PROJECT_ID, "hero.png", original);
+      const prototype = await fileHandlePrototype(assetPath("hero.png"));
+      const originalReadFile = prototype.readFile;
+      let replacementAssetRead = false;
+      vi.spyOn(prototype, "readFile").mockImplementation(async function (
+        this: OpenedFile,
+        ...arguments_: Parameters<OpenedFile["readFile"]>
+      ) {
+        const result = await Reflect.apply(originalReadFile, this, arguments_);
+        if (Buffer.isBuffer(result) && result.equals(Buffer.from(outside))) {
+          replacementAssetRead = true;
+        }
+        return result;
+      });
+      let replacement: Awaited<ReturnType<typeof replaceArtifactWithRealDirectory>>;
+      const store = makeStore(undefined, async () => {
+        replacement = await replaceArtifactWithRealDirectory({
+          filename: "hero.png",
+          bytes: outside,
+        });
+      });
+
+      await expect(
+        store.getAsset(PROJECT_ID, "hero.png"),
+      ).rejects.toMatchObject({ code: "storage_failed" });
+
+      expect(replacement!).toBeDefined();
+      expect(replacementAssetRead).toBe(false);
+      expect(await readFile(assetPath("hero.png"))).toEqual(Buffer.from(outside));
+      expect(
+        await readFile(path.join(replacement!.parked, "assets", "hero.png")),
+      ).toEqual(Buffer.from(original));
+    });
+
     it("rejects a replacement registry capability before asset readback", async () => {
       const store = await readyStore();
       await store.putAsset(PROJECT_ID, "hero.png", pngBytes());
@@ -1088,7 +1245,10 @@ describe("project storage", () => {
     }
   });
 
-  function makeStore(managedRegistryBoundary?: string) {
+  function makeStore(
+    managedRegistryBoundary?: string,
+    beforeAssetCapabilityRevalidation?: () => Promise<void>,
+  ) {
     return createProjectStore({
       registryRoot,
       ...(managedRegistryBoundary === undefined
@@ -1096,6 +1256,9 @@ describe("project storage", () => {
         : { managedRegistryBoundary }),
       publicBaseUrl: "https://host.ts.net:43233",
       now: () => clock,
+      ...(beforeAssetCapabilityRevalidation === undefined
+        ? {}
+        : { beforeAssetCapabilityRevalidation }),
     });
   }
 
@@ -1134,6 +1297,40 @@ describe("project storage", () => {
     const prepared = await store.prepare(validInput(workspaceRoot), "exact prompt");
     await store.markReady(prepared, HTML);
     return store;
+  }
+
+  async function replaceArtifactWithRealDirectory(replacementAsset?: {
+    filename: string;
+    bytes: Uint8Array;
+  }) {
+    const canonicalNames = [
+      "PROMPT.md",
+      "content.md",
+      "project.json",
+      "index.html",
+    ] as const;
+    const canonicalBytes = await Promise.all(
+      canonicalNames.map((name) => readFile(artifactPath(name))),
+    );
+    const parked = path.join(temporaryDirectory, "parked-real-project");
+    await rename(artifactPath(), parked);
+    await mkdir(artifactPath(), { mode: 0o700 });
+    for (let index = 0; index < canonicalNames.length; index += 1) {
+      await writeFile(
+        artifactPath(canonicalNames[index]),
+        canonicalBytes[index],
+        { mode: 0o600 },
+      );
+    }
+    if (replacementAsset !== undefined) {
+      await mkdir(assetPath(), { mode: 0o700 });
+      await writeFile(
+        assetPath(replacementAsset.filename),
+        replacementAsset.bytes,
+        { mode: 0o600 },
+      );
+    }
+    return { parked };
   }
 
   function serializedRegistryByteLength(input: CreateProjectInput): number {

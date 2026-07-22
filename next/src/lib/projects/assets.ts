@@ -368,7 +368,7 @@ export async function readProjectAsset(
     await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
     const readback = await readSafeAssetFile(targetPath, PROJECT_ASSET_MAX_BYTES);
     const detected = detectProjectAsset(readback.bytes);
-    return {
+    const result = {
       asset: projectAssetRecord(
         validatedFilename,
         validatedFilename,
@@ -377,6 +377,9 @@ export async function readProjectAsset(
       ),
       bytes: readback.bytes,
     };
+    await revalidateAssetCapability(revalidateCapability);
+    await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
+    return result;
   } catch (error) {
     if (error instanceof ProjectError) throw error;
     if (hasErrorCode(error, "ENOENT")) {
@@ -454,7 +457,10 @@ async function readSafeAssetFile(
 ): Promise<SafeAssetFile> {
   let handle: Awaited<ReturnType<typeof open>> | undefined;
   try {
-    handle = await open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
+    handle = await open(
+      filePath,
+      fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW | fsConstants.O_NONBLOCK,
+    );
     const before = await handle.stat({ bigint: true });
     if (
       !before.isFile() ||

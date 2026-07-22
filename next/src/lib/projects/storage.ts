@@ -82,6 +82,7 @@ export type ProjectStoreOptions = {
   managedRegistryBoundary?: string;
   publicBaseUrl: string;
   now: () => Date;
+  beforeAssetCapabilityRevalidation?: () => Promise<void>;
 };
 
 type RegisteredProject = {
@@ -90,6 +91,7 @@ type RegisteredProject = {
   registryIdentity: BigIntStats;
   registry: RegistryRecord;
   paths: ArtifactPaths;
+  artifactIdentity: BigIntStats;
   project: ProjectDocument;
   content: string;
   html: string;
@@ -360,9 +362,10 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
       return serializeProjectMutation(projectId, async () => {
         const registered = await loadRegisteredProject(registryRoot, projectId);
         try {
+          await options.beforeAssetCapabilityRevalidation?.();
           return await publishProjectAsset(
             registered.paths,
-            () => assertRegisteredPathsCurrent(registryRoot, registered),
+            () => assertRegisteredAssetPathsCurrent(registryRoot, registered),
             originalName,
             bytes,
           );
@@ -377,9 +380,10 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
       return serializeProjectMutation(projectId, async () => {
         const registered = await loadRegisteredProject(registryRoot, projectId);
         try {
+          await options.beforeAssetCapabilityRevalidation?.();
           return await readProjectAsset(
             registered.paths,
-            () => assertRegisteredPathsCurrent(registryRoot, registered),
+            () => assertRegisteredAssetPathsCurrent(registryRoot, registered),
             filename,
           );
         } catch (error) {
@@ -462,6 +466,21 @@ async function assertRegisteredPathsCurrent(
   }
 }
 
+async function assertRegisteredAssetPathsCurrent(
+  registryRoot: string,
+  registered: RegisteredProject,
+): Promise<void> {
+  await assertRegisteredPathsCurrent(registryRoot, registered);
+  const currentIdentity = await assertRealDirectory(
+    registered.paths.artifactDirectory,
+    registered.paths.workspaceRoot,
+    DIRECTORY_MODE,
+  );
+  if (!isSameFile(currentIdentity, registered.artifactIdentity)) {
+    throw storageError();
+  }
+}
+
 async function assertRegistryCapabilityCurrent(
   registryRoot: string,
   registered: RegisteredProject,
@@ -502,10 +521,15 @@ async function loadRegisteredProject(
   const registry = parseRegistryRecord(registryState.bytes, projectId);
 
   let paths: ArtifactPaths;
+  let artifactIdentity: BigIntStats;
   try {
     const workspaceRoot = await resolveWorkspaceRoot(registry.workspaceRoot);
     if (workspaceRoot !== registry.workspaceRoot) throw storageError();
-    await assertRealDirectory(registry.artifactDirectory, workspaceRoot, DIRECTORY_MODE);
+    artifactIdentity = await assertRealDirectory(
+      registry.artifactDirectory,
+      workspaceRoot,
+      DIRECTORY_MODE,
+    );
     paths = await resolveArtifactPaths(
       workspaceRoot,
       path.basename(registry.artifactDirectory),
@@ -543,6 +567,7 @@ async function loadRegisteredProject(
       registryIdentity: registryState.identity,
       registry,
       paths,
+      artifactIdentity,
       project,
       content: decode(contentBytes),
       html: decode(htmlBytes),
@@ -896,17 +921,19 @@ async function assertRealDirectory(
   directory: string,
   containmentRoot: string,
   requiredMode?: number,
-): Promise<void> {
-  const metadata = await lstat(directory);
+): Promise<BigIntStats> {
+  const metadata = await lstat(directory, { bigint: true });
   if (
     metadata.isSymbolicLink() ||
     !metadata.isDirectory() ||
-    (requiredMode !== undefined && (metadata.mode & 0o777) !== requiredMode)
+    (requiredMode !== undefined &&
+      Number(metadata.mode & BigInt(0o777)) !== requiredMode)
   ) {
     throw storageError();
   }
   const resolved = await realpath(directory);
   if (!isContained(containmentRoot, resolved)) throw storageError();
+  return metadata;
 }
 
 async function prepareRegistryPath(
