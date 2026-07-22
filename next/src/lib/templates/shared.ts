@@ -39,19 +39,24 @@ export const SHARED_DESIGN_DIRECTIVES = `
 
 /**
  * Wrap a per-template instruction body with the shared design directives and
- * the user content tail. This is the canonical prompt shape; both inline
- * `buildPrompt` functions in `index.ts` and the skill-folder loader assemble
- * prompts via this helper so behaviour stays identical.
+ * the user content tail. Project creation can add its standalone instruction
+ * without changing callers that omit `projectInstruction`. This is the
+ * canonical prompt shape for both server project generation and Convert.
  */
 export function assemblePrompt(opts: {
   body: string;
   content: string;
   format: string;
+  projectInstruction?: string;
 }): string {
+  const projectInstruction =
+    opts.projectInstruction === undefined
+      ? ""
+      : `【项目初始指令】:\n${opts.projectInstruction}\n\n`;
   return `${SHARED_DESIGN_DIRECTIVES}
 ${opts.body.trim()}
 
-【输入格式】: ${opts.format}
+${projectInstruction}【输入格式】: ${opts.format}
 【用户内容】:
 ${opts.content}
 `;

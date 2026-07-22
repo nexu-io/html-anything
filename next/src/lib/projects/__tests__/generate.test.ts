@@ -1,3 +1,6 @@
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import {
   PROJECT_DIAGNOSTIC_MAX_BYTES,
@@ -17,7 +20,11 @@ import {
   type GenerateProjectDependencies,
 } from "../generate";
 import { createProjectService, projectService } from "../service";
-import type { PreparedProject, ProjectStore } from "../storage";
+import {
+  createProjectStore,
+  type PreparedProject,
+  type ProjectStore,
+} from "../storage";
 
 const PROJECT_ID = "AbCdEfGhIjKlMnOpQrStUg";
 const PUBLIC_BASE_URL = "https://host.ts.net:43233";
@@ -137,6 +144,7 @@ describe("generateAndStoreProject", () => {
       body: "template body",
       content: input.content,
       format: "markdown",
+      projectInstruction: input.instruction,
     });
 
     expect(store.preparedPrompt).toBe(expectedPrompt);
@@ -150,6 +158,108 @@ describe("generateAndStoreProject", () => {
       signal: expect.any(AbortSignal),
     });
     expect(result).toEqual({ response: readyResponse(), created: true });
+  });
+
+  it("persists and invokes the exact instruction-sensitive project prompt", async () => {
+    const temporaryDirectory = await mkdtemp(
+      path.join(tmpdir(), "ha-project-instruction-"),
+    );
+    const registryRoot = path.join(temporaryDirectory, "registry");
+    const firstWorkspace = path.join(temporaryDirectory, "first-workspace");
+    const secondWorkspace = path.join(temporaryDirectory, "second-workspace");
+
+    try {
+      await mkdir(registryRoot, { mode: 0o700 });
+      await mkdir(firstWorkspace, { mode: 0o700 });
+      await mkdir(secondWorkspace, { mode: 0o700 });
+      const store = createProjectStore({
+        registryRoot,
+        publicBaseUrl: PUBLIC_BASE_URL,
+        now: () => new Date("2026-07-21T00:00:00.000Z"),
+      });
+      const firstInput = {
+        ...validInput(firstWorkspace),
+        instruction: "INSTRUCTION-ONLY: Use an executive visual hierarchy.",
+        content: "# CONTENT-ONLY: Q2 performance",
+      };
+      const secondInput: CreateProjectInput = {
+        ...firstInput,
+        projectId: "ZbCdEfGhIjKlMnOpQrStUg",
+        workspaceRoot: secondWorkspace,
+        slug: "q2-report-second",
+        name: "Q2 report second",
+        instruction: "INSTRUCTION-ONLY: Use an editorial visual hierarchy.",
+      };
+      const invokedPrompts: string[] = [];
+
+      for (const input of [firstInput, secondInput]) {
+        await generateAndStoreProject(input, {
+          store,
+          publicBaseUrl: PUBLIC_BASE_URL,
+          loadSkill: () =>
+            ({ id: "data-report", body: "template body" }) as LoadedSkill,
+          invokeAgent: (options) => {
+            invokedPrompts.push(options.prompt);
+            return events(
+              { type: "delta", text: COMPLETE_HTML },
+              { type: "done", code: 0 },
+            );
+          },
+          deadlineMs: 900_000,
+        });
+      }
+
+      const persistedPrompts = await Promise.all(
+        [firstInput, secondInput].map((input) =>
+          readFile(
+            path.join(
+              input.workspaceRoot,
+              "artifacts",
+              "html-anything",
+              input.slug,
+              "PROMPT.md",
+            ),
+            "utf8",
+          ),
+        ),
+      );
+      const expectedPrompts = [firstInput, secondInput].map(
+        expectedProjectPrompt,
+      );
+
+      expect(persistedPrompts).toEqual(expectedPrompts);
+      expect(invokedPrompts).toEqual(persistedPrompts);
+      expect(persistedPrompts[1]).toBe(
+        persistedPrompts[0]!.replace(
+          firstInput.instruction,
+          secondInput.instruction,
+        ),
+      );
+      for (const [index, input] of [firstInput, secondInput].entries()) {
+        const prompt = persistedPrompts[index]!;
+        expect(prompt).toContain(
+          `【项目初始指令】:\n${input.instruction}\n\n【输入格式】: ${input.format}`,
+        );
+        expect(prompt).toContain(`【用户内容】:\n${input.content}\n`);
+        expect(occurrences(prompt, "【项目初始指令】:")).toBe(1);
+        expect(occurrences(prompt, input.instruction)).toBe(1);
+        expect(occurrences(prompt, input.content)).toBe(1);
+        expect(
+          await readFile(
+            path.join(
+              input.workspaceRoot,
+              "artifacts",
+              "html-anything",
+              input.slug,
+              "content.md",
+            ),
+            "utf8",
+          ),
+        ).toBe(input.content);
+      }
+    } finally {
+      await rm(temporaryDirectory, { recursive: true, force: true });
+    }
   });
 
   it("returns an idempotent ready result without loading a template, preparing, or invoking", async () => {
@@ -448,6 +558,22 @@ function validInput(workspaceRoot: string): CreateProjectInput {
     agent: "codex",
     model: "gpt-explicit",
   };
+}
+
+function expectedProjectPrompt(input: CreateProjectInput): string {
+  const promptWithoutInstruction = assemblePrompt({
+    body: "template body",
+    content: input.content,
+    format: input.format,
+  });
+  return promptWithoutInstruction.replace(
+    `【输入格式】: ${input.format}`,
+    `【项目初始指令】:\n${input.instruction}\n\n【输入格式】: ${input.format}`,
+  );
+}
+
+function occurrences(value: string, search: string): number {
+  return value.split(search).length - 1;
 }
 
 function preparedProject(input: CreateProjectInput): PreparedProject {

@@ -121,6 +121,7 @@ export async function generateAndStoreProject(
     body: skill.body,
     content: input.content,
     format: input.format,
+    projectInstruction: input.instruction,
   });
   const prepared = await deps.store.prepare(input, prompt);
   const abortController = new AbortController();
