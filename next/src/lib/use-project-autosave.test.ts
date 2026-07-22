@@ -71,6 +71,7 @@ function localTask(id = "local-task"): Task {
 type HarnessResult = {
   root: Root;
   getState: () => SaveState | undefined;
+  getCanUnregister: () => boolean | undefined;
   retry: () => void;
 };
 
@@ -84,11 +85,13 @@ async function renderAutosave({
   enabled?: boolean;
 }): Promise<HarnessResult> {
   let saveState: SaveState | undefined;
+  let canUnregister: boolean | undefined;
   let retrySave = () => {};
 
   function Harness() {
     const result = useProjectAutosave({ projectId, taskId, enabled });
     saveState = result.state;
+    canUnregister = result.canUnregister;
     retrySave = result.retry;
     return null;
   }
@@ -99,6 +102,7 @@ async function renderAutosave({
   return {
     root,
     getState: () => saveState,
+    getCanUnregister: () => canUnregister,
     retry: () => retrySave(),
   };
 }
@@ -344,10 +348,39 @@ describe("useProjectAutosave", () => {
   it("skips the hydrated project baseline", async () => {
     const { harness } = await loadAndRender();
 
+    expect(harness.getCanUnregister()).toBe(true);
     await act(async () => vi.advanceTimersByTimeAsync(1_000));
 
     expect(patchServerProject).not.toHaveBeenCalled();
     expect(harness.getState()).toBe("idle");
+    expect(harness.getCanUnregister()).toBe(true);
+    await act(async () => harness.root.unmount());
+  });
+
+  it("becomes unsafe and reports saving in the same render as an edit", async () => {
+    const { harness } = await loadAndRender();
+
+    act(() => useStore.getState().setContent("pending edit"));
+
+    expect(harness.getState()).toBe("saving");
+    expect(harness.getCanUnregister()).toBe(false);
+    expect(patchServerProject).not.toHaveBeenCalled();
+    await act(async () => harness.root.unmount());
+  });
+
+  it("becomes safe after reverting to the durable baseline without a patch", async () => {
+    const { harness } = await loadAndRender();
+    const baseline = readySnapshot().content;
+
+    act(() => useStore.getState().setContent("temporary edit"));
+    expect(harness.getCanUnregister()).toBe(false);
+
+    act(() => useStore.getState().setContent(baseline));
+
+    expect(harness.getState()).toBe("saved");
+    expect(harness.getCanUnregister()).toBe(true);
+    await act(async () => vi.advanceTimersByTimeAsync(1_000));
+    expect(patchServerProject).not.toHaveBeenCalled();
     await act(async () => harness.root.unmount());
   });
 
@@ -365,6 +398,8 @@ describe("useProjectAutosave", () => {
     });
     await act(async () => vi.advanceTimersByTimeAsync(749));
     expect(patchServerProject).not.toHaveBeenCalled();
+    expect(harness.getState()).toBe("saving");
+    expect(harness.getCanUnregister()).toBe(false);
 
     await act(async () => vi.advanceTimersByTimeAsync(1));
 
@@ -375,6 +410,7 @@ describe("useProjectAutosave", () => {
       templateId: "article-magazine",
     });
     expect(harness.getState()).toBe("saved");
+    expect(harness.getCanUnregister()).toBe(true);
     await act(async () => harness.root.unmount());
   });
 
@@ -390,6 +426,8 @@ describe("useProjectAutosave", () => {
         "<!doctype html><html><body>streaming</body></html>",
       );
     });
+    expect(harness.getState()).toBe("saving");
+    expect(harness.getCanUnregister()).toBe(false);
     await act(async () => vi.advanceTimersByTimeAsync(2_000));
     expect(patchServerProject).not.toHaveBeenCalled();
 
@@ -403,6 +441,7 @@ describe("useProjectAutosave", () => {
       content: "generated content",
       html: "<!doctype html><html><body>streaming</body></html>",
     });
+    expect(harness.getCanUnregister()).toBe(true);
     await act(async () => harness.root.unmount());
   });
 
@@ -422,8 +461,10 @@ describe("useProjectAutosave", () => {
     await act(async () => vi.advanceTimersByTimeAsync(750));
     expect(patchServerProject).toHaveBeenCalledTimes(1);
     expect(harness.getState()).toBe("saving");
+    expect(harness.getCanUnregister()).toBe(false);
 
     act(() => useStore.getState().setContent("newer edit"));
+    expect(harness.getCanUnregister()).toBe(false);
     await act(async () => vi.advanceTimersByTimeAsync(750));
     expect(patchServerProject).toHaveBeenCalledTimes(1);
 
@@ -434,6 +475,7 @@ describe("useProjectAutosave", () => {
       content: "newer edit",
     });
     expect(harness.getState()).toBe("saved");
+    expect(harness.getCanUnregister()).toBe(true);
     await act(async () => harness.root.unmount());
   });
 
@@ -578,9 +620,14 @@ describe("useProjectAutosave", () => {
     await act(async () => vi.advanceTimersByTimeAsync(750));
 
     expect(harness.getState()).toBe("failed");
+    expect(harness.getCanUnregister()).toBe(false);
     expect(
       useStore.getState().tasks.find((task) => task.id === taskId)?.content,
     ).toBe("first unsaved edit");
+    await act(async () => vi.advanceTimersByTimeAsync(1_000));
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+    expect(harness.getState()).toBe("failed");
+    expect(harness.getCanUnregister()).toBe(false);
 
     act(() => {
       useStore.getState().setContent("latest unsaved edit");
@@ -596,6 +643,7 @@ describe("useProjectAutosave", () => {
       templateId: "article-magazine",
     });
     expect(harness.getState()).toBe("saved");
+    expect(harness.getCanUnregister()).toBe(true);
     expect(
       useStore.getState().tasks.find((task) => task.id === taskId)?.content,
     ).toBe("latest unsaved edit");

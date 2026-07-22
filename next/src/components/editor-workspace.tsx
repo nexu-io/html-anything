@@ -16,6 +16,7 @@ import type { SaveState } from "@/lib/use-project-autosave";
 export type ProjectMode = {
   projectId: string;
   saveState: SaveState;
+  canUnregister: boolean;
   onRetry: () => void;
   onUnregister: () => void;
 };
@@ -186,7 +187,8 @@ function ProjectBar({ projectMode }: { projectMode: ProjectMode }) {
         <button
           type="button"
           onClick={projectMode.onUnregister}
-          className="font-medium text-[var(--ink-mute)] hover:text-[var(--red)]"
+          disabled={!projectMode.canUnregister}
+          className="font-medium text-[var(--ink-mute)] hover:text-[var(--red)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-[var(--ink-mute)]"
         >
           {t("project.unregister")}
         </button>

@@ -76,7 +76,7 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
   }, []);
 
   const unregister = useCallback(() => {
-    if (!ready || unregisteringRef.current) return;
+    if (!ready || !autosave.canUnregister || unregisteringRef.current) return;
     if (!window.confirm(t("project.unregisterConfirm", { name: projectName ?? projectId }))) {
       return;
     }
@@ -92,7 +92,15 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
         unregisteringRef.current = false;
         setUnregisterFailed(true);
       });
-  }, [projectId, projectName, ready, removeServerProject, router, t]);
+  }, [
+    autosave.canUnregister,
+    projectId,
+    projectName,
+    ready,
+    removeServerProject,
+    router,
+    t,
+  ]);
 
   if (!hydrated || !ready) {
     const status = hydrated ? loadState.status : "loading";
@@ -110,6 +118,7 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
         projectMode={{
           projectId,
           saveState: autosave.state,
+          canUnregister: autosave.canUnregister,
           onRetry: autosave.retry,
           onUnregister: unregister,
         }}

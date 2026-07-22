@@ -24,7 +24,7 @@ export function useProjectAutosave({
   projectId: string;
   taskId: string;
   enabled: boolean;
-}): { state: SaveState; retry: () => void } {
+}): { state: SaveState; retry: () => void; canUnregister: boolean } {
   const task = useStore((store) =>
     store.tasks.find((candidate) => candidate.id === taskId),
   );
@@ -34,6 +34,8 @@ export function useProjectAutosave({
   const status = task?.status ?? "idle";
   const isProjectTask = task?.serverProjectId === projectId;
   const [state, setState] = useState<SaveState>("idle");
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const identity = `${projectId}:${taskId}`;
   const latestRef = useRef<ProjectValues>({ content, html, templateId });
   const savedRef = useRef<ProjectValues | null>(null);
@@ -46,6 +48,27 @@ export function useProjectAutosave({
   const projectedRef = useRef(new Map<string, ProjectValues>());
   latestRef.current = { content, html, templateId };
   eligibleRef.current = enabled && isProjectTask && status !== "running";
+  const currentIdentity = identityRef.current === identity;
+  const durableValues = currentIdentity ? savedRef.current : latestRef.current;
+  const dirty =
+    durableValues !== null && !sameValues(durableValues, latestRef.current);
+  const requestPending = requestsRef.current.has(identity);
+  const saveFailed = currentIdentity && state === "failed" && dirty;
+  const visibleState: SaveState = saveFailed
+    ? "failed"
+    : dirty || requestPending || queuedRef.current.has(identity)
+      ? "saving"
+      : currentIdentity && state !== "idle"
+        ? "saved"
+        : state;
+  const canUnregister =
+    enabled &&
+    isProjectTask &&
+    status !== "running" &&
+    !dirty &&
+    !requestPending &&
+    !queuedRef.current.has(identity) &&
+    !saveFailed;
 
   const clearTimer = useCallback(() => {
     if (timerRef.current !== null) {
@@ -114,10 +137,18 @@ export function useProjectAutosave({
       setState("idle");
       return;
     }
+    const differsFromDurable =
+      Object.keys(changedFields(savedRef.current, latest)).length > 0;
+    if (differsFromDurable && stateRef.current !== "failed") {
+      setState("saving");
+    }
     if (!enabled || !isProjectTask || status === "running") return;
     const projected = projectedRef.current.get(identity) ?? savedRef.current;
     if (Object.keys(changedFields(projected, latest)).length === 0) {
       deadlinesRef.current.delete(identity);
+      if (!requestsRef.current.has(identity) && !differsFromDurable) {
+        setState((current) => (current === "idle" ? current : "saved"));
+      }
       return;
     }
 
@@ -149,7 +180,7 @@ export function useProjectAutosave({
     void saveLatest();
   }, [clearTimer, saveLatest]);
 
-  return { state, retry };
+  return { state: visibleState, retry, canUnregister };
 }
 
 function changedFields(

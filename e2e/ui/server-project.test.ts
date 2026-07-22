@@ -275,6 +275,7 @@ test.describe("Server project editor", () => {
     let snapshot = readySnapshot();
     let failLoad = true;
     let failSave = true;
+    let deleteCount = 0;
     const patches: ProjectPatch[] = [];
 
     await page.route(PROJECT_API_PATTERN, async (route, request) => {
@@ -306,6 +307,11 @@ test.describe("Server project editor", () => {
         await route.fulfill({ json: snapshot });
         return;
       }
+      if (request.method() === "DELETE") {
+        deleteCount += 1;
+        await route.fulfill({ status: 204 });
+        return;
+      }
       await route.abort();
     });
 
@@ -319,21 +325,82 @@ test.describe("Server project editor", () => {
     await expect(page.getByRole("status")).toHaveText("Saved");
 
     const contentEditor = page.getByRole("textbox", { name: /paste anything/i });
+    const unregisterButton = page.getByRole("button", { name: "Unregister" });
     await contentEditor.fill("unsaved browser edit");
     await expect(page.getByRole("status")).toHaveText("Saving…");
+    await expect(unregisterButton).toBeDisabled();
     await expect(page.getByRole("status")).toHaveText("Save failed");
+    await expect(unregisterButton).toBeDisabled();
     await expect(contentEditor).toHaveValue("unsaved browser edit");
+    expect(deleteCount).toBe(0);
 
     await page.getByRole("button", { name: "Retry" }).click();
     await expect(page.getByRole("status")).toHaveText("Saved");
+    await expect(unregisterButton).toBeEnabled();
     expect(patches).toEqual([
       { content: "unsaved browser edit" },
       { content: "unsaved browser edit" },
     ]);
+    expect(deleteCount).toBe(0);
     await expectOnlyLocalState(page, [PROJECT_ID, "unsaved browser edit"]);
 
     await page.reload();
     await expect(contentEditor).toHaveValue("unsaved browser edit");
+  });
+
+  test("blocks unregister until a pending edit is saved", async ({ page }) => {
+    await seedLocalStore(page);
+    let snapshot = readySnapshot();
+    let deleteCount = 0;
+    let dialogCount = 0;
+    const patches: ProjectPatch[] = [];
+
+    page.on("dialog", async (dialog) => {
+      dialogCount += 1;
+      await dialog.dismiss();
+    });
+    await page.route(PROJECT_API_PATTERN, async (route, request) => {
+      if (request.method() === "GET") {
+        await route.fulfill({ json: snapshot });
+        return;
+      }
+      if (request.method() === "PATCH") {
+        const patch = patchFrom(request);
+        patches.push(patch);
+        snapshot = applyPatch(snapshot, patch);
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        await route.fulfill({ json: snapshot });
+        return;
+      }
+      if (request.method() === "DELETE") {
+        deleteCount += 1;
+        await route.fulfill({ status: 204 });
+        return;
+      }
+      await route.abort();
+    });
+
+    await page.goto(PROJECT_PATH);
+    const contentEditor = page.getByRole("textbox", { name: /paste anything/i });
+    const unregisterButton = page.getByRole("button", { name: "Unregister" });
+    await expect(unregisterButton).toBeEnabled();
+
+    await contentEditor.fill("pending browser edit");
+    await expect(page.getByRole("status")).toHaveText("Saving…");
+    await expect(unregisterButton).toBeDisabled();
+
+    await unregisterButton.evaluate((button) => button.removeAttribute("disabled"));
+    await unregisterButton.click();
+    expect(dialogCount).toBe(0);
+    expect(deleteCount).toBe(0);
+    await expect(contentEditor).toHaveValue("pending browser edit");
+
+    await expect(page.getByRole("status")).toHaveText("Saved");
+    await expect(unregisterButton).toBeEnabled();
+    await expect.poll(() => patches).toEqual([
+      { content: "pending browser edit" },
+    ]);
+    expect(deleteCount).toBe(0);
   });
 
   test("unregisters only the server link and restores the preserved local draft", async ({
