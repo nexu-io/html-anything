@@ -1,10 +1,74 @@
-import { expect, test, type Page, type Request } from "@playwright/test";
+import {
+  expect,
+  test,
+  type Page,
+  type Request,
+  type Route,
+} from "@playwright/test";
 
 const PROJECT_ID = "AbCdEfGhIjKlMnOpQrStUg";
 const PROJECT_PATH = `/projects/${PROJECT_ID}`;
 const PROJECT_API_PATTERN = `**/api/projects/${PROJECT_ID}`;
+const PROJECT_ASSET_COLLECTION_PATTERN = `${PROJECT_API_PATTERN}/assets?*`;
+const PROJECT_ASSET_ITEM_PATTERN = `${PROJECT_API_PATTERN}/assets/*`;
+const PROJECT_API_DESCENDANT_PATTERN = `${PROJECT_API_PATTERN}/**`;
 const STORE_KEY = "html-everything-store";
 const LOCAL_TASK_ID = "task_local_project_regression";
+const PROJECT_IMAGE_UPLOAD_ERROR = "Image upload failed. Try again.";
+
+type ProjectMethod = "GET" | "POST" | "PATCH" | "DELETE";
+
+function projectMethodCounts(): Record<ProjectMethod, number> {
+  return { GET: 0, POST: 0, PATCH: 0, DELETE: 0 };
+}
+
+function recordProjectMethod(
+  counts: Record<ProjectMethod, number>,
+  request: Request,
+): boolean {
+  const method = request.method();
+  if (
+    method !== "GET" &&
+    method !== "POST" &&
+    method !== "PATCH" &&
+    method !== "DELETE"
+  ) {
+    return false;
+  }
+  counts[method] += 1;
+  return true;
+}
+
+async function rejectUnexpectedProjectRequest(
+  route: Route,
+  request: Request,
+  unexpected: string[],
+) {
+  const url = new URL(request.url());
+  unexpected.push(`${request.method()} ${url.pathname}${url.search}`);
+  await route.abort();
+}
+
+function onePixelPng(): Buffer {
+  return Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+    "base64",
+  );
+}
+
+function onePixelBmp(): Buffer {
+  const bytes = Buffer.alloc(58);
+  bytes.write("BM", 0, "ascii");
+  bytes.writeUInt32LE(bytes.length, 2);
+  bytes.writeUInt32LE(54, 10);
+  bytes.writeUInt32LE(40, 14);
+  bytes.writeInt32LE(1, 18);
+  bytes.writeInt32LE(1, 22);
+  bytes.writeUInt16LE(1, 26);
+  bytes.writeUInt16LE(24, 28);
+  bytes.writeUInt32LE(4, 34);
+  return bytes;
+}
 
 const initialProjectHtml = `<!doctype html>
 <html>
@@ -268,6 +332,353 @@ test.describe("Server project editor", () => {
     await expectOnlyLocalState(page, [PROJECT_ID, updatedHtml]);
   });
 
+  test("uploads a project image, previews it, reloads it, and suffixes a duplicate", async ({
+    page,
+  }) => {
+    await seedLocalStore(page);
+    let snapshot = readySnapshot();
+    const png = onePixelPng();
+    const firstReference = "![Product Photo.png](assets/product-photo.png)";
+    const secondReference = "![Product Photo.png](assets/product-photo-2.png)";
+    const firstContent = `${snapshot.content}\n\n${firstReference}`;
+    const secondContent = `${firstContent}\n\n${secondReference}`;
+    const assetHtml = `<!doctype html>
+<html>
+  <head><title>Generated project</title></head>
+  <body><main><img src="assets/product-photo.png" alt="Product Photo"></main></body>
+</html>`;
+    const patches: ProjectPatch[] = [];
+    const assets = new Map<string, Buffer>();
+    const counts = projectMethodCounts();
+    const unexpected: string[] = [];
+    let firstPublishedFixture: Buffer | undefined;
+    let releaseFirstUpload!: () => void;
+    const firstUploadGate = new Promise<void>((resolve) => {
+      releaseFirstUpload = resolve;
+    });
+
+    await page.route(PROJECT_API_DESCENDANT_PATTERN, async (route, request) => {
+      await rejectUnexpectedProjectRequest(route, request, unexpected);
+    });
+    await page.route(PROJECT_API_PATTERN, async (route, request) => {
+      if (!recordProjectMethod(counts, request)) {
+        await rejectUnexpectedProjectRequest(route, request, unexpected);
+        return;
+      }
+      if (request.method() === "GET") {
+        await route.fulfill({ json: snapshot });
+        return;
+      }
+      if (request.method() === "PATCH") {
+        const patch = patchFrom(request);
+        patches.push(patch);
+        snapshot = applyPatch(snapshot, patch);
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        await route.fulfill({ json: snapshot });
+        return;
+      }
+      await rejectUnexpectedProjectRequest(route, request, unexpected);
+    });
+    await page.route(
+      PROJECT_ASSET_COLLECTION_PATTERN,
+      async (route, request) => {
+        if (!recordProjectMethod(counts, request) || request.method() !== "POST") {
+          await rejectUnexpectedProjectRequest(route, request, unexpected);
+          return;
+        }
+        const url = new URL(request.url());
+        expect(url.pathname).toBe(`/api/projects/${PROJECT_ID}/assets`);
+        expect([...url.searchParams.entries()]).toEqual([
+          ["name", "Product Photo.png"],
+        ]);
+        const body = request.postDataBuffer();
+        expect(body).not.toBeNull();
+        expect(body!.equals(png)).toBe(true);
+
+        const ordinal = counts.POST;
+        if (ordinal === 1) await firstUploadGate;
+        const filename =
+          ordinal === 1 ? "product-photo.png" : "product-photo-2.png";
+        const stored = Buffer.from(body!);
+        if (ordinal === 1) firstPublishedFixture = stored;
+        assets.set(filename, stored);
+        await route.fulfill({
+          status: 201,
+          headers: { "Cache-Control": "no-store" },
+          json: {
+            path: `assets/${filename}`,
+            filename,
+            originalName: "Product Photo.png",
+            bytes: stored.length,
+            mediaType: "image/png",
+          },
+        });
+      },
+    );
+    await page.route(PROJECT_ASSET_ITEM_PATTERN, async (route, request) => {
+      if (!recordProjectMethod(counts, request) || request.method() !== "GET") {
+        await rejectUnexpectedProjectRequest(route, request, unexpected);
+        return;
+      }
+      const url = new URL(request.url());
+      const filename = url.pathname.split("/").at(-1) ?? "";
+      const body = assets.get(filename);
+      if (body === undefined) {
+        await route.fulfill({
+          status: 404,
+          json: { error: "project_not_found", message: "Project not found." },
+        });
+        return;
+      }
+      await route.fulfill({
+        status: 200,
+        body,
+        headers: {
+          "Cache-Control": "private, max-age=31536000, immutable",
+          "Content-Length": String(body.length),
+          "Content-Type": "image/png",
+          "X-Content-Type-Options": "nosniff",
+        },
+      });
+    });
+
+    await page.goto(PROJECT_PATH);
+    const contentEditor = page.getByRole("textbox", { name: /paste anything/i });
+    const fileInput = page.locator('input[type="file"]');
+    const saveStatus = page.getByRole("status");
+
+    await fileInput.setInputFiles({
+      name: "Product Photo.png",
+      mimeType: "image/png",
+      buffer: png,
+    });
+    await expect.poll(() => counts.POST).toBe(1);
+    await expect(page.getByText("Uploading image…", { exact: true })).toBeVisible();
+    releaseFirstUpload();
+
+    await expect(contentEditor).toHaveValue(firstContent);
+    await expect(saveStatus).toHaveText("Saving…");
+    await expect(saveStatus).toHaveText("Saved");
+    await expect.poll(() => patches).toEqual([{ content: firstContent }]);
+
+    await page.getByRole("button", { name: /source/i }).click();
+    await page.getByRole("textbox", { name: /source/i }).fill(assetHtml);
+    await expect(saveStatus).toHaveText("Saving…");
+    await expect(saveStatus).toHaveText("Saved");
+    await expect.poll(() => patches).toEqual([
+      { content: firstContent },
+      { html: assetHtml },
+    ]);
+    await page.getByRole("button", { name: /preview/i }).click();
+    await expect.poll(() => counts.GET).toBe(2);
+    await expectOnlyLocalState(page, [
+      PROJECT_ID,
+      firstReference,
+      "asset:",
+      "data:image/",
+    ]);
+
+    await page.reload();
+    await expect(contentEditor).toHaveValue(firstContent);
+    await expect(saveStatus).toHaveText("Saved");
+    await expect.poll(() => counts.GET).toBe(4);
+    await page.getByRole("button", { name: /source/i }).click();
+    await expect(page.getByRole("textbox", { name: /source/i })).toHaveValue(
+      assetHtml,
+    );
+
+    await fileInput.setInputFiles({
+      name: "Product Photo.png",
+      mimeType: "image/png",
+      buffer: png,
+    });
+    await expect(contentEditor).toHaveValue(secondContent);
+    await expect(saveStatus).toHaveText("Saving…");
+    await expect(saveStatus).toHaveText("Saved");
+    await expect.poll(() => patches).toEqual([
+      { content: firstContent },
+      { html: assetHtml },
+      { content: secondContent },
+    ]);
+
+    expect(assets.get("product-photo.png")).toBe(firstPublishedFixture);
+    expect(firstPublishedFixture?.equals(png)).toBe(true);
+    expect(assets.get("product-photo-2.png")?.equals(png)).toBe(true);
+    expect(counts).toEqual({ GET: 4, POST: 2, PATCH: 3, DELETE: 0 });
+    expect(unexpected).toEqual([]);
+    await expectOnlyLocalState(page, [
+      PROJECT_ID,
+      firstReference,
+      secondReference,
+      assetHtml,
+      "asset:",
+      "data:image/",
+    ]);
+  });
+
+  test("project image mode keeps text uploads on the existing parser path", async ({
+    page,
+  }) => {
+    await seedLocalStore(page);
+    let snapshot = readySnapshot();
+    const counts = projectMethodCounts();
+    const patches: ProjectPatch[] = [];
+    const unexpected: string[] = [];
+    const uploadedText = "Uploaded project notes";
+    const expectedContent = `${snapshot.content}\n\n${uploadedText}`;
+
+    await page.route(PROJECT_API_DESCENDANT_PATTERN, async (route, request) => {
+      recordProjectMethod(counts, request);
+      await rejectUnexpectedProjectRequest(route, request, unexpected);
+    });
+    await page.route(PROJECT_API_PATTERN, async (route, request) => {
+      if (!recordProjectMethod(counts, request)) {
+        await rejectUnexpectedProjectRequest(route, request, unexpected);
+        return;
+      }
+      if (request.method() === "GET") {
+        await route.fulfill({ json: snapshot });
+        return;
+      }
+      if (request.method() === "PATCH") {
+        const patch = patchFrom(request);
+        patches.push(patch);
+        snapshot = applyPatch(snapshot, patch);
+        await route.fulfill({ json: snapshot });
+        return;
+      }
+      await rejectUnexpectedProjectRequest(route, request, unexpected);
+    });
+
+    await page.goto(PROJECT_PATH);
+    const contentEditor = page.getByRole("textbox", { name: /paste anything/i });
+    await page.locator('input[type="file"]').setInputFiles({
+      name: "notes.txt",
+      mimeType: "text/plain",
+      buffer: Buffer.from(uploadedText),
+    });
+
+    await expect(contentEditor).toHaveValue(expectedContent);
+    await expect(page.getByRole("status")).toHaveText("Saved");
+    await expect.poll(() => patches).toEqual([{ content: expectedContent }]);
+    expect(counts).toEqual({ GET: 1, POST: 0, PATCH: 1, DELETE: 0 });
+    expect(unexpected).toEqual([]);
+  });
+
+  test("rejects unsupported, oversize, and failed project image uploads without saving", async ({
+    page,
+  }) => {
+    await seedLocalStore(page);
+    const snapshot = readySnapshot();
+    const counts = projectMethodCounts();
+    const unexpected: string[] = [];
+    const postedNames: string[] = [];
+
+    await page.route(PROJECT_API_DESCENDANT_PATTERN, async (route, request) => {
+      await rejectUnexpectedProjectRequest(route, request, unexpected);
+    });
+    await page.route(PROJECT_API_PATTERN, async (route, request) => {
+      if (!recordProjectMethod(counts, request) || request.method() !== "GET") {
+        await rejectUnexpectedProjectRequest(route, request, unexpected);
+        return;
+      }
+      await route.fulfill({ json: snapshot });
+    });
+    await page.route(
+      PROJECT_ASSET_COLLECTION_PATTERN,
+      async (route, request) => {
+        if (!recordProjectMethod(counts, request) || request.method() !== "POST") {
+          await rejectUnexpectedProjectRequest(route, request, unexpected);
+          return;
+        }
+        const name = new URL(request.url()).searchParams.get("name") ?? "";
+        postedNames.push(name);
+        if (name === "Unsupported.bmp") {
+          await route.fulfill({
+            status: 400,
+            json: {
+              error: "invalid_request",
+              message: "Unsupported project image",
+            },
+          });
+          return;
+        }
+        if (name === "Oversize.png") {
+          await route.fulfill({
+            status: 413,
+            json: {
+              error: "limit_exceeded",
+              message: "Project image is too large.",
+            },
+          });
+          return;
+        }
+        if (name === "Broken.png") {
+          await route.fulfill({
+            status: 500,
+            json: {
+              error: "storage_failed",
+              message: "SECRET /workspace/private/path",
+            },
+          });
+          return;
+        }
+        await rejectUnexpectedProjectRequest(route, request, unexpected);
+      },
+    );
+
+    await page.goto(PROJECT_PATH);
+    const contentEditor = page.getByRole("textbox", { name: /paste anything/i });
+    const fileInput = page.locator('input[type="file"]');
+    const bmp = onePixelBmp();
+    const dataTransfer = await page.evaluateHandle(
+      ({ bytes }) => {
+        const transfer = new DataTransfer();
+        transfer.items.add(
+          new File([new Uint8Array(bytes)], "Unsupported.bmp", {
+            type: "image/bmp",
+          }),
+        );
+        return transfer;
+      },
+      { bytes: [...bmp] },
+    );
+    await contentEditor.dispatchEvent("drop", { dataTransfer });
+    await dataTransfer.dispose();
+
+    await expect(page.getByText(PROJECT_IMAGE_UPLOAD_ERROR, { exact: true })).toBeVisible();
+    await expect(contentEditor).toHaveValue(snapshot.content);
+    await expect(page.getByRole("button", { name: "Attach" })).toBeEnabled();
+
+    const oversize = Buffer.alloc(10_485_761);
+    onePixelPng().copy(oversize);
+    await fileInput.setInputFiles({
+      name: "Oversize.png",
+      mimeType: "image/png",
+      buffer: oversize,
+    });
+    await expect(page.getByText(PROJECT_IMAGE_UPLOAD_ERROR, { exact: true })).toBeVisible();
+    await expect(contentEditor).toHaveValue(snapshot.content);
+    await expect(page.getByRole("button", { name: "Attach" })).toBeEnabled();
+
+    await fileInput.setInputFiles({
+      name: "Broken.png",
+      mimeType: "image/png",
+      buffer: onePixelPng(),
+    });
+    await expect(page.getByText(PROJECT_IMAGE_UPLOAD_ERROR, { exact: true })).toBeVisible();
+    await expect(page.getByText(/SECRET|workspace|private\/path/)).toHaveCount(0);
+    await expect(contentEditor).toHaveValue(snapshot.content);
+
+    expect(postedNames).toEqual([
+      "Unsupported.bmp",
+      "Oversize.png",
+      "Broken.png",
+    ]);
+    expect(counts).toEqual({ GET: 1, POST: 3, PATCH: 0, DELETE: 0 });
+    expect(unexpected).toEqual([]);
+  });
+
   test("recovers from load and save failures without discarding browser edits", async ({
     page,
   }) => {
@@ -409,6 +820,13 @@ test.describe("Server project editor", () => {
     await seedLocalStore(page);
     const snapshot = readySnapshot();
     let deleteCount = 0;
+    let assetDeleteCount = 0;
+    const unexpected: string[] = [];
+
+    await page.route(PROJECT_API_DESCENDANT_PATTERN, async (route, request) => {
+      if (request.method() === "DELETE") assetDeleteCount += 1;
+      await rejectUnexpectedProjectRequest(route, request, unexpected);
+    });
 
     await page.route(PROJECT_API_PATTERN, async (route, request) => {
       if (request.method() === "GET") {
@@ -461,7 +879,84 @@ test.describe("Server project editor", () => {
     ).toHaveValue("Local draft content");
     await expect(page.getByRole("button", { name: "New task" })).toBeVisible();
     expect(deleteCount).toBe(2);
+    expect(assetDeleteCount).toBe(0);
+    expect(unexpected).toEqual([]);
     await expectOnlyLocalState(page, [PROJECT_ID, snapshot.content, snapshot.html]);
+  });
+
+  test("keeps a local image in the browser asset map and inlines it for conversion", async ({
+    page,
+  }) => {
+    await seedLocalStore(page, "");
+    const png = onePixelPng();
+    const projectRequests: string[] = [];
+    const convertRequests: Array<Record<string, unknown>> = [];
+    page.on("request", (request) => {
+      if (request.url().includes("/api/projects/")) {
+        projectRequests.push(`${request.method()} ${request.url()}`);
+      }
+    });
+    await page.route("**/api/convert", async (route, request) => {
+      expect(request.method()).toBe("POST");
+      convertRequests.push(request.postDataJSON() as Record<string, unknown>);
+      await route.fulfill({
+        status: 200,
+        contentType: "text/event-stream",
+        body: [
+          "event: delta",
+          'data: {"text":"<!doctype html><html><body><h1>Local image converted</h1></body></html>"}',
+          "",
+          "event: done",
+          'data: {"code":0}',
+          "",
+          "",
+        ].join("\n"),
+      });
+    });
+
+    await page.goto("/");
+    const contentEditor = page.getByRole("textbox", { name: /paste anything/i });
+    await page.locator('input[type="file"]').setInputFiles({
+      name: "Local Photo.png",
+      mimeType: "image/png",
+      buffer: png,
+    });
+
+    await expect(contentEditor).toHaveValue(
+      /^!\[Local Photo\.png\]\(asset:a_[a-z0-9_]+\)$/u,
+    );
+    const localReference = await contentEditor.inputValue();
+    const assetId = /\(asset:([^)]+)\)$/u.exec(localReference)?.[1];
+    expect(assetId).toBeTruthy();
+    await expect
+      .poll(() =>
+        page.evaluate(
+          ({ key, id }) => {
+            const raw = window.localStorage.getItem(key);
+            if (raw === null) return undefined;
+            const value = JSON.parse(raw) as {
+              state: { tasks: Array<{ assets?: Record<string, string> }> };
+            };
+            return value.state.tasks[0]?.assets?.[id];
+          },
+          { key: STORE_KEY, id: assetId! },
+        ),
+      )
+      .toBe(`data:image/png;base64,${png.toString("base64")}`);
+
+    await page.getByRole("button", { name: "Generate HTML" }).click();
+    await expect.poll(() => convertRequests).toHaveLength(1);
+    expect(convertRequests[0]?.content).toContain(
+      `data:image/png;base64,${png.toString("base64")}`,
+    );
+    expect(convertRequests[0]?.content).not.toContain("asset:");
+    await expect(
+      page
+        .locator('iframe[title="preview"]')
+        .contentFrame()
+        .getByRole("heading", { name: "Local image converted" }),
+    ).toBeVisible();
+    expect(projectRequests).toEqual([]);
   });
 
   test("keeps the browser-local root workflow unchanged", async ({ page }) => {
