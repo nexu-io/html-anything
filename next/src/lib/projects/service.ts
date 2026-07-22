@@ -8,6 +8,7 @@ import {
   type CreateProjectInput,
   type CreateProjectResult,
   type PatchProjectInput,
+  type ProjectAsset,
   type ProjectSnapshot,
 } from "./contracts";
 import {
@@ -20,6 +21,15 @@ export type ProjectService = {
   create(input: CreateProjectInput): Promise<CreateProjectResult>;
   get(id: string): Promise<ProjectSnapshot>;
   patch(id: string, patch: PatchProjectInput): Promise<ProjectSnapshot>;
+  putAsset(
+    id: string,
+    originalName: string,
+    bytes: Uint8Array,
+  ): Promise<ProjectAsset>;
+  getAsset(
+    id: string,
+    filename: string,
+  ): Promise<{ asset: ProjectAsset; bytes: Uint8Array }>;
   unregister(id: string): Promise<void>;
 };
 
@@ -30,6 +40,9 @@ export function createProjectService(
     create: (input) => generateAndStoreProject(input, deps),
     get: (id) => deps.store.get(id),
     patch: (id, patch) => deps.store.patch(id, patch),
+    putAsset: (id, originalName, bytes) =>
+      deps.store.putAsset(id, originalName, bytes),
+    getAsset: (id, filename) => deps.store.getAsset(id, filename),
     unregister: (id) => deps.store.unregister(id),
   };
 }
@@ -84,6 +97,12 @@ export const projectService: ProjectService = {
   },
   async patch(id, patch) {
     return getConfiguredService().patch(id, patch);
+  },
+  async putAsset(id, originalName, bytes) {
+    return getConfiguredService().putAsset(id, originalName, bytes);
+  },
+  async getAsset(id, filename) {
+    return getConfiguredService().getAsset(id, filename);
   },
   async unregister(id) {
     return getConfiguredService().unregister(id);

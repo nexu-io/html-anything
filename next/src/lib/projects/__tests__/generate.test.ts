@@ -4,6 +4,7 @@ import {
   PROJECT_HTML_MAX_BYTES,
   type CreateProjectInput,
   type PatchProjectInput,
+  type ProjectAsset,
   type ProjectSnapshot,
   type ReadyProjectResponse,
 } from "../contracts";
@@ -305,6 +306,7 @@ describe("createProjectService", () => {
     store.findReadyResult = readyResponse();
     const service = createProjectService(dependencies(store, vi.fn()));
     const patch: PatchProjectInput = { content: "changed" };
+    const assetBytes = Uint8Array.of(1, 2, 3);
 
     await expect(service.create(validInput("/workspace"))).resolves.toEqual({
       response: readyResponse(),
@@ -312,11 +314,22 @@ describe("createProjectService", () => {
     });
     await service.get(PROJECT_ID);
     await service.patch(PROJECT_ID, patch);
+    await service.putAsset(PROJECT_ID, "Hero.PNG", assetBytes);
+    await service.getAsset(PROJECT_ID, "hero.png");
     await service.unregister(PROJECT_ID);
 
-    expect(Object.keys(service).sort()).toEqual(["create", "get", "patch", "unregister"]);
+    expect(Object.keys(service).sort()).toEqual([
+      "create",
+      "get",
+      "getAsset",
+      "patch",
+      "putAsset",
+      "unregister",
+    ]);
     expect(store.getArgs).toEqual([PROJECT_ID]);
     expect(store.patchArgs).toEqual([[PROJECT_ID, patch]]);
+    expect(store.putAssetArgs).toEqual([[PROJECT_ID, "Hero.PNG", assetBytes]]);
+    expect(store.getAssetArgs).toEqual([[PROJECT_ID, "hero.png"]]);
     expect(store.unregisterArgs).toEqual([PROJECT_ID]);
   });
 
@@ -342,6 +355,8 @@ type FakeProjectStore = ProjectStore & {
   findReadyResult: ReadyProjectResponse | null;
   getArgs: string[];
   patchArgs: Array<[string, PatchProjectInput]>;
+  putAssetArgs: Array<[string, string, Uint8Array]>;
+  getAssetArgs: Array<[string, string]>;
   unregisterArgs: string[];
 };
 
@@ -353,6 +368,8 @@ function fakeStore(): FakeProjectStore {
     findReadyResult: null,
     getArgs: [],
     patchArgs: [],
+    putAssetArgs: [],
+    getAssetArgs: [],
     unregisterArgs: [],
     async prepare(input, prompt) {
       store.prepareCalls += 1;
@@ -375,11 +392,13 @@ function fakeStore(): FakeProjectStore {
       store.patchArgs.push([id, patch]);
       return snapshot();
     },
-    async putAsset() {
-      throw new Error("Asset storage is not used by generation tests.");
+    async putAsset(id, originalName, bytes) {
+      store.putAssetArgs.push([id, originalName, bytes]);
+      return asset();
     },
-    async getAsset() {
-      throw new Error("Asset storage is not used by generation tests.");
+    async getAsset(id, filename) {
+      store.getAssetArgs.push([id, filename]);
+      return { asset: asset(), bytes: Uint8Array.of(1, 2, 3) };
     },
     async unregister(id) {
       store.unregisterArgs.push(id);
@@ -390,6 +409,16 @@ function fakeStore(): FakeProjectStore {
     },
   };
   return store;
+}
+
+function asset(): ProjectAsset {
+  return {
+    path: "assets/hero.png",
+    filename: "hero.png",
+    originalName: "Hero.PNG",
+    bytes: 3,
+    mediaType: "image/png",
+  };
 }
 
 function dependencies(

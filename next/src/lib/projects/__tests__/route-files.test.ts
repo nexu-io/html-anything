@@ -39,3 +39,61 @@ describe("project editor routes", () => {
     expect(editorSource).toContain("localAutosaveEnabled && hasContent");
   });
 });
+
+describe("project asset API routes", () => {
+  it("delegates the collection POST through a Node force-dynamic handler", async () => {
+    const source = await readFile(
+      path.join(srcRoot, "app/api/projects/[id]/assets/route.ts"),
+      "utf8",
+    );
+
+    expect(source).toContain(
+      'import { createProjectAssetHttpHandlers } from "@/lib/projects/http"',
+    );
+    expect(source).toContain(
+      'import { projectService } from "@/lib/projects/service"',
+    );
+    expect(source).toContain('export const runtime = "nodejs"');
+    expect(source).toContain('export const dynamic = "force-dynamic"');
+    expect(source).toContain(
+      "const handlers = createProjectAssetHttpHandlers(projectService)",
+    );
+    expect(source).toContain("export const POST = handlers.POST");
+  });
+
+  it("delegates the item GET through a Node force-dynamic handler", async () => {
+    const source = await readFile(
+      path.join(srcRoot, "app/api/projects/[id]/assets/[filename]/route.ts"),
+      "utf8",
+    );
+
+    expect(source).toContain(
+      'import { createProjectAssetHttpHandlers } from "@/lib/projects/http"',
+    );
+    expect(source).toContain(
+      'import { projectService } from "@/lib/projects/service"',
+    );
+    expect(source).toContain('export const runtime = "nodejs"');
+    expect(source).toContain('export const dynamic = "force-dynamic"');
+    expect(source).toContain(
+      "const handlers = createProjectAssetHttpHandlers(projectService)",
+    );
+    expect(source).toContain("export const GET = handlers.GET");
+  });
+
+  it("awaits collection and item route params in the shared handlers", async () => {
+    const source = await readFile(
+      path.join(srcRoot, "lib/projects/http.ts"),
+      "utf8",
+    );
+
+    expect(source).toContain('params: Promise<{ id: string }>');
+    expect(source).toContain(
+      'params: Promise<{ id: string; filename: string }>',
+    );
+    expect(source).toContain("const { id } = await context.params");
+    expect(source).toContain(
+      "const { id, filename } = await context.params",
+    );
+  });
+});
