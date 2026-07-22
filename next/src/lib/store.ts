@@ -418,7 +418,10 @@ export const useStore = create<State>()(
       },
       removeServerProject: (projectId) => {
         const { tasks } = get();
-        if (!tasks.some((task) => task.serverProjectId === projectId)) return;
+        const removedTaskIds = tasks
+          .filter((task) => task.serverProjectId === projectId)
+          .map((task) => task.id);
+        if (removedTaskIds.length === 0) return;
 
         const remaining = tasks.filter(
           (task) => task.serverProjectId !== projectId,
@@ -426,11 +429,13 @@ export const useStore = create<State>()(
         const localTask = remaining.find((task) => !task.serverProjectId);
         if (localTask) {
           set({ tasks: remaining, activeTaskId: localTask.id });
-          return;
+        } else {
+          const fresh = makeTask({ name: "任务 1" });
+          set({ tasks: [...remaining, fresh], activeTaskId: fresh.id });
         }
-
-        const fresh = makeTask({ name: "任务 1" });
-        set({ tasks: [...remaining, fresh], activeTaskId: fresh.id });
+        for (const taskId of removedTaskIds) {
+          void deleteTaskRuns(taskId).catch(() => {});
+        }
       },
 
       setContent: (s) =>
@@ -496,7 +501,13 @@ export const useStore = create<State>()(
         // baseline, then archive it to IndexedDB so the history pane has a
         // version to render. IDB write is fire-and-forget — history is a
         // nice-to-have and must not block the convert pipeline.
-        type Snap = { content: string; html: string; stats: RunStats; templateId: string };
+        type Snap = {
+          content: string;
+          html: string;
+          stats: RunStats;
+          templateId: string;
+          serverProjectId?: string;
+        };
         let snapshot: Snap | null = null;
         set((st) => ({
           tasks: patchTask(st.tasks, taskId, (t) => {
@@ -505,12 +516,13 @@ export const useStore = create<State>()(
               html: t.html,
               stats: t.stats,
               templateId: t.templateId,
+              serverProjectId: t.serverProjectId,
             };
             return { baseContent: t.content, baseHtml: t.html };
           }),
         }));
         const snap = snapshot as Snap | null;
-        if (snap && snap.html) {
+        if (snap && snap.html && !snap.serverProjectId) {
           void putRun({
             taskId,
             html: snap.html,

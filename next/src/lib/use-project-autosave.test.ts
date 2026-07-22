@@ -9,7 +9,12 @@ import { useStore, type Task } from "./store";
 vi.mock("./projects/client", () => ({
   patchServerProject: vi.fn(),
 }));
+vi.mock("./history/db", () => ({
+  deleteTaskRuns: vi.fn(async () => undefined),
+  putRun: vi.fn(async () => null),
+}));
 
+import { deleteTaskRuns, putRun } from "./history/db";
 import { patchServerProject } from "./projects/client";
 import {
   useProjectAutosave,
@@ -110,6 +115,8 @@ beforeEach(() => {
   reactTestEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
   vi.useFakeTimers();
   vi.mocked(patchServerProject).mockReset();
+  vi.mocked(deleteTaskRuns).mockClear();
+  vi.mocked(putRun).mockClear();
   localStorage.clear();
   useStore.setState({ tasks: [localTask()], activeTaskId: "local-task" });
 });
@@ -268,6 +275,44 @@ describe("transient server project tasks", () => {
     expect(persisted.state.tasks).toHaveLength(1);
     expect(persisted.state.tasks[0].serverProjectId).toBeUndefined();
     expect(persisted.state.activeTaskId).toBe(persisted.state.tasks[0].id);
+  });
+
+  it("does not archive a server project task in IndexedDB history", () => {
+    const taskId = useStore.getState().loadServerProject(readySnapshot());
+
+    useStore.getState().commitBaseFor(taskId);
+
+    expect(putRun).not.toHaveBeenCalled();
+    expect(useStore.getState().tasks.find((task) => task.id === taskId)).toMatchObject({
+      baseContent: "# Demo",
+      baseHtml: "<!doctype html><html><body>ready</body></html>",
+    });
+  });
+
+  it("best-effort deletes existing server project history when removing its task", () => {
+    const taskId = useStore.getState().loadServerProject(readySnapshot());
+
+    useStore.getState().removeServerProject(PROJECT_ID);
+
+    expect(deleteTaskRuns).toHaveBeenCalledOnce();
+    expect(deleteTaskRuns).toHaveBeenCalledWith(taskId);
+  });
+
+  it("continues to archive and delete local task history", () => {
+    useStore.getState().commitBaseFor("local-task");
+
+    expect(putRun).toHaveBeenCalledOnce();
+    expect(putRun).toHaveBeenCalledWith(
+      expect.objectContaining({
+        taskId: "local-task",
+        html: "<html>local</html>",
+        content: "local content",
+      }),
+    );
+
+    useStore.getState().deleteTask("local-task");
+    expect(deleteTaskRuns).toHaveBeenCalledOnce();
+    expect(deleteTaskRuns).toHaveBeenCalledWith("local-task");
   });
 });
 

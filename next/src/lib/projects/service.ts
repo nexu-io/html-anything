@@ -46,17 +46,22 @@ function getConfiguredService(): ProjectService {
       "Public project base URL is not configured.",
     );
   }
+  const configuredRegistryRoot =
+    process.env.HTML_ANYTHING_PROJECT_REGISTRY_DIR;
+  const managedRegistryBoundary = path.join(
+    homedir(),
+    ".local",
+    "share",
+    "html-anything",
+  );
   const registryRoot =
-    process.env.HTML_ANYTHING_PROJECT_REGISTRY_DIR ??
-    path.join(
-      homedir(),
-      ".local",
-      "share",
-      "html-anything",
-      "project-registry",
-    );
+    configuredRegistryRoot ??
+    path.join(managedRegistryBoundary, "project-registry");
   const store = createProjectStore({
     registryRoot,
+    ...(configuredRegistryRoot === undefined
+      ? { managedRegistryBoundary }
+      : {}),
     publicBaseUrl,
     now: () => new Date(),
   });

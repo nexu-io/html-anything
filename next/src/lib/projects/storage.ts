@@ -68,6 +68,7 @@ export type ProjectStore = {
 
 export type ProjectStoreOptions = {
   registryRoot: string;
+  managedRegistryBoundary?: string;
   publicBaseUrl: string;
   now: () => Date;
 };
@@ -90,6 +91,13 @@ type SafeFileState = {
 
 export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
   const registryRoot = validateRegistryRoot(options.registryRoot);
+  const managedRegistryBoundary =
+    options.managedRegistryBoundary === undefined
+      ? undefined
+      : validateManagedRegistryBoundary(
+          options.managedRegistryBoundary,
+          registryRoot,
+        );
   const publicBaseUrl = validatePublicBaseUrl(options.publicBaseUrl);
   if (typeof options.now !== "function") {
     throw configurationError("Project storage clock is not configured.");
@@ -151,7 +159,7 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
         };
 
         try {
-          await createRegistryDirectory(registryRoot);
+          await createRegistryDirectory(registryRoot, managedRegistryBoundary);
           await createArtifactParents(paths);
           paths = await resolveArtifactPaths(
             paths.workspaceRoot,
@@ -221,6 +229,7 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
             registryRoot,
             prepared.input.projectId,
             true,
+            managedRegistryBoundary,
           );
           const registry: RegistryRecord = {
             schemaVersion: 1,
@@ -860,22 +869,30 @@ async function prepareRegistryPath(
   registryRoot: string,
   id: string,
   createRoot: boolean,
+  managedRegistryBoundary?: string,
 ): Promise<string> {
   validateProjectId(id);
-  if (createRoot) await createRegistryDirectory(registryRoot);
+  if (createRoot) {
+    await createRegistryDirectory(registryRoot, managedRegistryBoundary);
+  }
   else await assertRegistryDirectory(registryRoot);
   return path.join(registryRoot, `${id}.json`);
 }
 
-async function createRegistryDirectory(registryRoot: string): Promise<void> {
+async function createRegistryDirectory(
+  registryRoot: string,
+  managedRegistryBoundary?: string,
+): Promise<void> {
   try {
     await assertRegistryDirectory(registryRoot);
+    if (managedRegistryBoundary !== undefined) {
+      await assertManagedRegistryBoundary(managedRegistryBoundary);
+    }
     return;
   } catch (error) {
     if (!isMissing(error)) throw error;
   }
 
-  const managedParent = path.dirname(registryRoot);
   const missingDirectories: string[] = [];
   let nearestExistingAncestor = registryRoot;
 
@@ -900,9 +917,11 @@ async function createRegistryDirectory(registryRoot: string): Promise<void> {
     nearestExistingAncestor,
     nearestExistingAncestor,
   );
-  if (!missingDirectories.includes(managedParent)) {
-    await inspectAbsoluteSegments(managedParent, false);
-    await assertRealDirectory(managedParent, managedParent, DIRECTORY_MODE);
+  if (
+    managedRegistryBoundary !== undefined &&
+    !missingDirectories.includes(managedRegistryBoundary)
+  ) {
+    await assertManagedRegistryBoundary(managedRegistryBoundary);
   }
 
   for (const directory of missingDirectories) {
@@ -911,7 +930,7 @@ async function createRegistryDirectory(registryRoot: string): Promise<void> {
     await assertRealDirectory(
       parent,
       nearestExistingAncestor,
-      parent === managedParent || missingDirectories.includes(parent)
+      parent === managedRegistryBoundary || missingDirectories.includes(parent)
         ? DIRECTORY_MODE
         : undefined,
     );
@@ -930,6 +949,17 @@ async function createRegistryDirectory(registryRoot: string): Promise<void> {
   }
 
   await assertRegistryDirectory(registryRoot);
+}
+
+async function assertManagedRegistryBoundary(
+  managedRegistryBoundary: string,
+): Promise<void> {
+  await inspectAbsoluteSegments(managedRegistryBoundary, false);
+  await assertRealDirectory(
+    managedRegistryBoundary,
+    managedRegistryBoundary,
+    DIRECTORY_MODE,
+  );
 }
 
 async function assertRegistryDirectory(registryRoot: string): Promise<void> {
@@ -1115,6 +1145,17 @@ function validateRegistryRoot(value: string): string {
     throw configurationError("Project registry directory is invalid.");
   }
   return normalized;
+}
+
+function validateManagedRegistryBoundary(
+  value: string,
+  registryRoot: string,
+): string {
+  const boundary = validateRegistryRoot(value);
+  if (path.dirname(registryRoot) !== boundary) {
+    throw configurationError("Managed project registry boundary is invalid.");
+  }
+  return boundary;
 }
 
 function validateBoundedString(value: unknown, maxBytes: number, label: string) {

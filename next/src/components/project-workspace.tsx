@@ -116,6 +116,7 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
       />
       {unregisterFailed && (
         <div
+          role="alert"
           className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-full border px-4 py-2 text-xs text-[var(--red)] shadow-lg"
           style={{ background: "var(--surface)", borderColor: "var(--line)" }}
         >
@@ -144,7 +145,9 @@ function ProjectLoadState({
   return (
     <main className="grid h-screen place-items-center bg-[var(--paper)] px-6">
       <div className="flex max-w-md flex-col items-center gap-4 text-center">
-        <p className="text-sm text-[var(--ink-mute)]">{message}</p>
+        <p role="alert" className="text-sm text-[var(--ink-mute)]">
+          {message}
+        </p>
         {status !== "loading" && (
           <button type="button" className="btn-ghost" onClick={onRetry}>
             {t("project.retry")}

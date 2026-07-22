@@ -175,7 +175,7 @@ describe("readBoundedJson", () => {
 });
 
 describe("createProjectHttpHandlers", () => {
-  it("rejects a tailnet POST before reading JSON or calling create", async () => {
+  it("uses forgeable loopback Host authority only as a browser and accidental-ingress guard on the trusted tailnet", async () => {
     let calls = 0;
     const handlers = createProjectHttpHandlers({
       ...fakeService(),

@@ -310,7 +310,11 @@ test.describe("Server project editor", () => {
     });
 
     await page.goto(PROJECT_PATH);
-    await expect(page.getByText("Couldn’t load this project.")).toBeVisible();
+    const loadAlert = page
+      .getByRole("alert")
+      .filter({ hasText: "Couldn’t load this project." });
+    await expect(loadAlert).toHaveText("Couldn’t load this project.");
+    await expect(loadAlert).toHaveCount(1);
     await page.getByRole("button", { name: "Retry" }).click();
     await expect(page.getByRole("status")).toHaveText("Saved");
 
@@ -346,7 +350,17 @@ test.describe("Server project editor", () => {
       }
       if (request.method() === "DELETE") {
         deleteCount += 1;
-        await route.fulfill({ status: 204 });
+        if (deleteCount === 1) {
+          await route.fulfill({
+            status: 500,
+            json: {
+              error: "storage_failed",
+              message: "Could not unregister project.",
+            },
+          });
+        } else {
+          await route.fulfill({ status: 204 });
+        }
         return;
       }
       await route.abort();
@@ -361,12 +375,25 @@ test.describe("Server project editor", () => {
     });
     await page.getByRole("button", { name: "Unregister" }).click();
 
+    const unregisterAlert = page
+      .getByRole("alert")
+      .filter({ hasText: "Couldn’t unregister this project." });
+    await expect(unregisterAlert).toHaveText(
+      "Couldn’t unregister this project.",
+    );
+    await expect(unregisterAlert).toHaveCount(1);
+
+    page.once("dialog", async (dialog) => {
+      await dialog.accept();
+    });
+    await page.getByRole("button", { name: "Unregister" }).click();
+
     await expect(page).toHaveURL(/\/$/);
     await expect(
       page.getByRole("textbox", { name: /paste anything/i }),
     ).toHaveValue("Local draft content");
     await expect(page.getByRole("button", { name: "New task" })).toBeVisible();
-    expect(deleteCount).toBe(1);
+    expect(deleteCount).toBe(2);
     await expectOnlyLocalState(page, [PROJECT_ID, snapshot.content, snapshot.html]);
   });
 

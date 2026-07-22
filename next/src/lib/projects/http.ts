@@ -17,6 +17,9 @@ const NO_STORE_HEADERS = {
 };
 
 export function isLoopbackCreationRequest(req: Request): boolean {
+  // This Host-form check protects browsers and accidental tailnet ingress. It
+  // is not peer authentication: clients on the fully trusted tailnet can
+  // forge Host.
   const host = req.headers.get("host");
   if (host === null) return false;
   return /^(?:(?:localhost|127\.0\.0\.1)(?::[0-9]+)?|\[::1\](?::[0-9]+)?)$/iu.test(

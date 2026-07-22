@@ -116,7 +116,7 @@ describe("project storage", () => {
     const managedStateRoot = path.join(temporaryDirectory, "managed-state");
     const applicationStateRoot = path.join(managedStateRoot, "html-anything");
     registryRoot = path.join(applicationStateRoot, "project-registry");
-    const store = makeStore();
+    const store = makeStore(applicationStateRoot);
     const input = validInput(workspaceRoot);
 
     const prepared = await store.prepare(input, "exact prompt");
@@ -196,6 +196,27 @@ describe("project storage", () => {
     ]);
   });
 
+  it("creates a missing custom registry root beneath a permissive trusted parent", async () => {
+    const trustedParent = path.join(temporaryDirectory, "trusted-state");
+    await mkdir(trustedParent, { mode: 0o755 });
+    await chmod(trustedParent, 0o755);
+    registryRoot = path.join(trustedParent, "configured-registry");
+
+    const prepared = await makeStore().prepare(
+      validInput(workspaceRoot),
+      "exact prompt",
+    );
+
+    expect(prepared.project.status).toBe("generating");
+    expect((await stat(trustedParent)).mode & 0o777).toBe(0o755);
+    expect((await stat(registryRoot)).mode & 0o777).toBe(0o700);
+    expect((await readdir(artifactPath())).sort()).toEqual([
+      "PROMPT.md",
+      "content.md",
+      "project.json",
+    ]);
+  });
+
   it("preflights registry configuration before creating artifact directories", async () => {
     await mkdir(registryRoot, { mode: 0o755 });
     await chmod(registryRoot, 0o755);
@@ -220,7 +241,10 @@ describe("project storage", () => {
     registryRoot = path.join(applicationStateRoot, "project-registry");
 
     await expect(
-      makeStore().prepare(validInput(workspaceRoot), "exact prompt"),
+      makeStore(applicationStateRoot).prepare(
+        validInput(workspaceRoot),
+        "exact prompt",
+      ),
     ).rejects.toMatchObject({ code: "storage_failed" });
 
     expect(await readdir(outside)).toEqual([]);
@@ -239,10 +263,36 @@ describe("project storage", () => {
     registryRoot = path.join(applicationStateRoot, "project-registry");
 
     await expect(
-      makeStore().prepare(validInput(workspaceRoot), "exact prompt"),
+      makeStore(applicationStateRoot).prepare(
+        validInput(workspaceRoot),
+        "exact prompt",
+      ),
     ).rejects.toMatchObject({ code: "storage_failed" });
 
     await expect(lstat(registryRoot)).rejects.toMatchObject({ code: "ENOENT" });
+    await expect(
+      lstat(path.join(workspaceRoot, "artifacts")),
+    ).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
+  it("rejects an existing registry root beneath a permissive managed boundary", async () => {
+    const applicationStateRoot = path.join(
+      temporaryDirectory,
+      "html-anything",
+    );
+    await mkdir(applicationStateRoot, { mode: 0o755 });
+    await chmod(applicationStateRoot, 0o755);
+    registryRoot = path.join(applicationStateRoot, "project-registry");
+    await mkdir(registryRoot, { mode: 0o700 });
+    await chmod(registryRoot, 0o700);
+
+    await expect(
+      makeStore(applicationStateRoot).prepare(
+        validInput(workspaceRoot),
+        "exact prompt",
+      ),
+    ).rejects.toMatchObject({ code: "storage_failed" });
+
     await expect(
       lstat(path.join(workspaceRoot, "artifacts")),
     ).rejects.toMatchObject({ code: "ENOENT" });
@@ -281,7 +331,7 @@ describe("project storage", () => {
       if (metadata.isDirectory()) syncedDirectories.push(fileIdentity(metadata));
       return Reflect.apply(originalSync, this, []);
     });
-    const store = makeStore();
+    const store = makeStore(applicationStateRoot);
     const prepared = await store.prepare(validInput(workspaceRoot), "exact prompt");
     await store.markReady(prepared, HTML);
 
@@ -357,6 +407,7 @@ describe("project storage", () => {
       );
       const racedStore = createRacedProjectStore({
         registryRoot,
+        managedRegistryBoundary: applicationStateRoot,
         publicBaseUrl: "https://host.ts.net:43233",
         now: () => clock,
       });
@@ -643,9 +694,12 @@ describe("project storage", () => {
     }
   });
 
-  function makeStore() {
+  function makeStore(managedRegistryBoundary?: string) {
     return createProjectStore({
       registryRoot,
+      ...(managedRegistryBoundary === undefined
+        ? {}
+        : { managedRegistryBoundary }),
       publicBaseUrl: "https://host.ts.net:43233",
       now: () => clock,
     });
