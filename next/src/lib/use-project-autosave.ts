@@ -100,7 +100,12 @@ export function useProjectAutosave({
     } catch {
       if (identityRef.current === identity) {
         clearTimer();
-        setState("failed");
+        setState(
+          savedRef.current !== null &&
+            sameValues(latestRef.current, savedRef.current)
+            ? "saved"
+            : "failed",
+        );
       }
     } finally {
       requestsRef.current.delete(identity);

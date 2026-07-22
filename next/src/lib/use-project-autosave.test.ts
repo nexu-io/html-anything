@@ -3,7 +3,10 @@
 import { act, createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ProjectSnapshot } from "./projects/contracts";
+import {
+  PROJECT_AUTOSAVE_DELAY_MS,
+  type ProjectSnapshot,
+} from "./projects/contracts";
 import { useStore, type Task } from "./store";
 
 vi.mock("./projects/client", () => ({
@@ -688,6 +691,73 @@ describe("useProjectAutosave", () => {
     expect(patchServerProject).toHaveBeenLastCalledWith(PROJECT_ID, {
       content: "edit C",
     });
+    expect(harness.getState()).toBe("saved");
+    expect(harness.getCanUnregister()).toBe(true);
+    await act(async () => harness.root.unmount());
+  });
+
+  it("resumes normal autosave after an in-flight failure follows a full revert", async () => {
+    let rejectFirst: ((error: Error) => void) | undefined;
+    let resolveSecond: ((snapshot: ProjectSnapshot) => void) | undefined;
+    vi.mocked(patchServerProject)
+      .mockImplementationOnce(
+        () =>
+          new Promise<ProjectSnapshot>((_resolve, reject) => {
+            rejectFirst = reject;
+          }),
+      )
+      .mockImplementationOnce(
+        () =>
+          new Promise<ProjectSnapshot>((resolve) => {
+            resolveSecond = resolve;
+          }),
+      );
+    const baseline = readySnapshot();
+    const { taskId, harness } = await loadAndRender();
+
+    act(() => {
+      useStore.getState().setContent("edit B");
+      useStore.getState().setHtmlFor(
+        taskId,
+        "<!doctype html><html><body>edit B</body></html>",
+      );
+      useStore.getState().setSelectedTemplate("article-magazine");
+    });
+    await act(async () =>
+      vi.advanceTimersByTimeAsync(PROJECT_AUTOSAVE_DELAY_MS),
+    );
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      useStore.getState().setContent(baseline.content);
+      useStore.getState().setHtmlFor(taskId, baseline.html);
+      useStore
+        .getState()
+        .setSelectedTemplate(baseline.project.templateId);
+    });
+    await act(async () => rejectFirst?.(new Error("save failed")));
+
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+    expect(harness.getState()).toBe("saved");
+    expect(harness.getCanUnregister()).toBe(true);
+
+    act(() => useStore.getState().setContent("edit C"));
+
+    expect(harness.getState()).toBe("saving");
+    expect(harness.getCanUnregister()).toBe(false);
+    await act(async () =>
+      vi.advanceTimersByTimeAsync(PROJECT_AUTOSAVE_DELAY_MS),
+    );
+
+    expect(patchServerProject).toHaveBeenCalledTimes(2);
+    expect(patchServerProject).toHaveBeenLastCalledWith(PROJECT_ID, {
+      content: "edit C",
+    });
+    expect(harness.getState()).toBe("saving");
+    expect(harness.getCanUnregister()).toBe(false);
+
+    await act(async () => resolveSecond?.(readySnapshot()));
+
     expect(harness.getState()).toBe("saved");
     expect(harness.getCanUnregister()).toBe(true);
     await act(async () => harness.root.unmount());
