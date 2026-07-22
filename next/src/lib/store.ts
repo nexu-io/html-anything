@@ -212,8 +212,9 @@ type State = {
   duplicateTask: (id: string) => string;
   /**
    * Load a sample into the active server project or a reusable/new local task.
-   * Sets content / format / templateId / html / baseContent / baseHtml so the
-   * user can immediately preview the world-class HTML, edit the content, and
+   * Sets content / templateId / html / baseContent / baseHtml; local tasks also
+   * adopt the sample format, while server projects preserve their loaded format.
+   * The user can immediately preview the world-class HTML, edit the content, and
    * the next Convert switches to diff-edit mode (minimal token use).
    */
   loadSample: (sample: {
