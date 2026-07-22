@@ -126,6 +126,7 @@ const HEAD_CLOSING_END_TAGS = new Set(["body", "br", "html"]);
 function scanDocumentTags(html: string): DocumentTags {
   const found: DocumentTags = {};
   let bodyStarted = false;
+  let templateDepth = 0;
   let offset = 0;
 
   while (offset < html.length) {
@@ -133,6 +134,7 @@ function scanDocumentTags(html: string): DocumentTags {
     if (tagStart === -1) break;
 
     if (
+      templateDepth === 0 &&
       found.headContentStart !== undefined &&
       found.headContentEnd === undefined
     ) {
@@ -169,6 +171,21 @@ function scanDocumentTags(html: string): DocumentTags {
       continue;
     }
 
+    if (templateDepth > 0) {
+      if (parsed.name === "template") {
+        templateDepth += parsed.closing ? -1 : 1;
+      }
+      if (!parsed.closing && parsed.name === "plaintext") break;
+      if (!parsed.closing && RAW_TEXT_ELEMENTS.has(parsed.name)) {
+        const closeStart = findRawTextClose(html, parsed.name, parsed.end);
+        if (closeStart === -1) break;
+        offset = closeStart;
+      } else {
+        offset = parsed.end;
+      }
+      continue;
+    }
+
     const headOpen =
       found.headContentStart !== undefined &&
       found.headContentEnd === undefined;
@@ -200,6 +217,8 @@ function scanDocumentTags(html: string): DocumentTags {
     } else if (parsed.name === "body") {
       bodyStarted = true;
     }
+
+    if (parsed.name === "template") templateDepth = 1;
 
     if (parsed.name === "plaintext") break;
     if (RAW_TEXT_ELEMENTS.has(parsed.name)) {

@@ -207,4 +207,44 @@ describe("injectPreviewBase", () => {
     );
     expect(deck.slides[0].html).not.toContain("https://attacker.invalid/");
   });
+
+  it("preserves an omitted-end deck head around nested template flow content", () => {
+    const source =
+      '<!doctype html><html><head><title>Deck</title><template><section>outer<template><div>nested</div></template></section></template><style>.slide{color:red}</style><script>window.ok=true</script><body><section class="slide" data-slide-id="1">Slide</section></body></html>';
+
+    const rendered = injectPreviewBase(source, "/api/projects/project-id/");
+    const deck = parseDeck(rendered);
+
+    expect(deck.slides).toHaveLength(1);
+    expect(deck.slides[0].html).toContain(
+      '<base href="/api/projects/project-id/">',
+    );
+    expect(deck.slides[0].html).toContain(
+      "<template><section>outer<template><div>nested</div></template></section></template>",
+    );
+    expect(deck.slides[0].html).toContain(".slide{color:red}");
+    expect(deck.slides[0].html).toContain("window.ok=true");
+  });
+
+  it("ignores a fake head in nested templates before a later attacker base", () => {
+    const source =
+      '<!doctype html><html><template><section><template><head></template></section></template><base href="https://attacker.invalid/"><body><section class="slide" data-slide-id="1">Slide</section></body></html>';
+    const snapshot = source;
+
+    const rendered = injectPreviewBase(source, "/api/projects/project-id/");
+    const deck = parseDeck(rendered);
+
+    expect(rendered).toContain(
+      '<html><head><base href="/api/projects/project-id/"></head><template><section><template><head></template></section></template><base href="https://attacker.invalid/">',
+    );
+    expect(rendered.indexOf('/api/projects/project-id/')).toBeLessThan(
+      rendered.indexOf("https://attacker.invalid/"),
+    );
+    expect(deck.slides).toHaveLength(1);
+    expect(deck.slides[0].html).toContain(
+      '<head><base href="/api/projects/project-id/">',
+    );
+    expect(deck.slides[0].html).not.toContain("https://attacker.invalid/");
+    expect(source).toBe(snapshot);
+  });
 });
