@@ -498,9 +498,10 @@ export const useStore = create<State>()(
         })),
       commitBaseFor: (taskId) => {
         // Snapshot the freshly converted (content, html) as the next diff-edit
-        // baseline, then archive it to IndexedDB so the history pane has a
-        // version to render. IDB write is fire-and-forget — history is a
-        // nice-to-have and must not block the convert pipeline.
+        // baseline. Local-task snapshots are also archived to IndexedDB so the
+        // history pane has a version to render; server-project baselines remain
+        // transient. IDB writes are fire-and-forget because history must not
+        // block the convert pipeline.
         type Snap = {
           content: string;
           html: string;
