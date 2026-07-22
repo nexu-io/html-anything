@@ -151,6 +151,7 @@ export function useProjectAutosave({
       }
       return;
     }
+    if (stateRef.current === "failed") return;
 
     deadlinesRef.current.set(
       identity,

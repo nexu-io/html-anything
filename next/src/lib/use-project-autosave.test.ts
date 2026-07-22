@@ -633,7 +633,12 @@ describe("useProjectAutosave", () => {
       useStore.getState().setContent("latest unsaved edit");
       useStore.getState().setSelectedTemplate("article-magazine");
     });
-    await act(async () => {});
+    await act(async () => vi.advanceTimersByTimeAsync(1_000));
+
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+    expect(harness.getState()).toBe("failed");
+    expect(harness.getCanUnregister()).toBe(false);
+
     act(() => harness.retry());
     await act(async () => {});
 
