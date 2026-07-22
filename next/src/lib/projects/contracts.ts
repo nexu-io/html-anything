@@ -7,6 +7,10 @@ export const PROJECT_HTML_MAX_BYTES = 8_388_608;
 export const PROJECT_DIAGNOSTIC_MAX_BYTES = 4_096;
 export const PROJECT_SOURCE_MAX_FILES = 10;
 export const PROJECT_SOURCE_MAX_TOTAL_BYTES = 262_144;
+export const PROJECT_ASSET_MAX_BYTES = 10_485_760;
+export const PROJECT_ASSET_NAME_MAX_CODE_POINTS = 255;
+export const PROJECT_ASSET_NAME_MAX_BYTES = 1_024;
+export const PROJECT_ASSET_STEM_MAX_LENGTH = 80;
 export const PROJECT_CREATE_BODY_MAX_BYTES = 3_500_000;
 export const PROJECT_PATCH_BODY_MAX_BYTES = 9_500_000;
 export const PROJECT_GENERATION_DEADLINE_MS = 15 * 60 * 1_000;
@@ -18,6 +22,20 @@ export type SourceRecord = {
   path: string;
   bytes: number;
   sha256: string;
+};
+
+export type ProjectAssetMediaType =
+  | "image/png"
+  | "image/jpeg"
+  | "image/webp"
+  | "image/gif";
+
+export type ProjectAsset = {
+  path: string;
+  filename: string;
+  originalName: string;
+  bytes: number;
+  mediaType: ProjectAssetMediaType;
 };
 
 export type CreateProjectInput = {
