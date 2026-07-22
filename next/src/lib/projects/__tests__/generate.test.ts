@@ -375,6 +375,12 @@ function fakeStore(): FakeProjectStore {
       store.patchArgs.push([id, patch]);
       return snapshot();
     },
+    async putAsset() {
+      throw new Error("Asset storage is not used by generation tests.");
+    },
+    async getAsset() {
+      throw new Error("Asset storage is not used by generation tests.");
+    },
     async unregister(id) {
       store.unregisterArgs.push(id);
     },

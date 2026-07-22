@@ -1,4 +1,16 @@
+import { randomBytes } from "node:crypto";
+import { constants as fsConstants, type BigIntStats } from "node:fs";
 import {
+  lstat,
+  link,
+  mkdir,
+  open,
+  realpath,
+  unlink,
+} from "node:fs/promises";
+import path from "node:path";
+import {
+  PROJECT_ASSET_MAX_BYTES,
   PROJECT_ASSET_NAME_MAX_BYTES,
   PROJECT_ASSET_NAME_MAX_CODE_POINTS,
   PROJECT_ASSET_STEM_MAX_LENGTH,
@@ -6,6 +18,7 @@ import {
   type ProjectAsset,
   type ProjectAssetMediaType,
 } from "./contracts";
+import type { ArtifactPaths } from "./paths";
 
 type ProjectAssetExtension = "png" | "jpg" | "gif" | "webp";
 
@@ -13,7 +26,13 @@ const INVALID_ORIGINAL_NAME_MESSAGE = "Invalid project asset original name";
 const INVALID_IMAGE_MESSAGE = "Unsupported project image";
 const INVALID_FILENAME_MESSAGE = "Invalid project asset filename";
 const INVALID_METADATA_MESSAGE = "Invalid project asset metadata";
+const EMPTY_ASSET_MESSAGE = "Project asset is empty";
+const OVERSIZED_ASSET_MESSAGE = "Project asset exceeds its limit";
+const STORAGE_MESSAGE = "Project storage operation failed.";
+const NOT_FOUND_MESSAGE = "Project was not found.";
 const encoder = new TextEncoder();
+const DIRECTORY_MODE = 0o700;
+const FILE_MODE = 0o600;
 
 const DEVICE_STEM_PATTERN = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/;
 const SAFE_STEM_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
@@ -219,4 +238,302 @@ export function projectAssetRecord(
     bytes,
     mediaType,
   };
+}
+
+type RevalidateCapability = () => Promise<void>;
+
+type SafeAssetFile = {
+  bytes: Buffer;
+  identity: BigIntStats;
+};
+
+export async function publishProjectAsset(
+  paths: Readonly<ArtifactPaths>,
+  revalidateCapability: RevalidateCapability,
+  originalName: string,
+  bytes: Uint8Array,
+): Promise<ProjectAsset> {
+  const validatedOriginalName = validateProjectAssetOriginalName(originalName);
+  if (!(bytes instanceof Uint8Array) || bytes.byteLength === 0) {
+    invalidRequest(EMPTY_ASSET_MESSAGE);
+  }
+  if (bytes.byteLength > PROJECT_ASSET_MAX_BYTES) {
+    throw new ProjectError("limit_exceeded", OVERSIZED_ASSET_MESSAGE);
+  }
+  const detected = detectProjectAsset(bytes);
+  const stem = projectAssetStem(validatedOriginalName);
+  const assetsDirectory = assetDirectoryPath(paths);
+
+  let handle: Awaited<ReturnType<typeof open>> | undefined;
+  let temporaryPath: string | undefined;
+  let temporaryIdentity: BigIntStats | undefined;
+  let temporaryRemoved = false;
+  try {
+    await revalidateAssetCapability(revalidateCapability);
+    const directoryIdentity = await ensureAssetDirectory(paths, assetsDirectory);
+    temporaryPath = path.join(
+      assetsDirectory,
+      `.asset.tmp-${randomBytes(16).toString("hex")}`,
+    );
+    handle = await open(
+      temporaryPath,
+      fsConstants.O_WRONLY |
+        fsConstants.O_CREAT |
+        fsConstants.O_EXCL |
+        fsConstants.O_NOFOLLOW,
+      FILE_MODE,
+    );
+    temporaryIdentity = await handle.stat({ bigint: true });
+    await handle.writeFile(bytes);
+    await handle.sync();
+    await handle.close();
+    handle = undefined;
+
+    let ordinal = 1;
+    let filename: string;
+    let targetPath: string;
+    while (true) {
+      filename = projectAssetFilename(stem, detected.extension, ordinal);
+      targetPath = assetFilePath(assetsDirectory, filename);
+      await revalidateAssetCapability(revalidateCapability);
+      await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
+      try {
+        await link(temporaryPath, targetPath);
+        break;
+      } catch (error) {
+        if (!hasErrorCode(error, "EEXIST")) throw error;
+        if (ordinal === Number.MAX_SAFE_INTEGER) throw assetStorageError();
+        ordinal += 1;
+      }
+    }
+
+    await syncAssetDirectory(assetsDirectory);
+    await revalidateAssetCapability(revalidateCapability);
+    await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
+    const readback = await readSafeAssetFile(targetPath, PROJECT_ASSET_MAX_BYTES);
+    if (
+      !sameFile(readback.identity, temporaryIdentity) ||
+      !readback.bytes.equals(Buffer.from(bytes))
+    ) {
+      throw assetStorageError();
+    }
+    const readbackType = detectProjectAsset(readback.bytes);
+    if (
+      readbackType.mediaType !== detected.mediaType ||
+      readbackType.extension !== detected.extension
+    ) {
+      throw assetStorageError();
+    }
+
+    await unlink(temporaryPath);
+    temporaryRemoved = true;
+    await syncAssetDirectory(assetsDirectory);
+    return projectAssetRecord(
+      validatedOriginalName,
+      filename,
+      readback.bytes.byteLength,
+      detected.mediaType,
+    );
+  } catch (error) {
+    if (error instanceof ProjectError) throw error;
+    throw assetStorageError();
+  } finally {
+    await handle?.close().catch(() => undefined);
+    if (
+      !temporaryRemoved &&
+      temporaryPath !== undefined &&
+      temporaryIdentity !== undefined
+    ) {
+      await removeOwnedAssetTemporary(temporaryPath, temporaryIdentity);
+    }
+  }
+}
+
+export async function readProjectAsset(
+  paths: Readonly<ArtifactPaths>,
+  revalidateCapability: RevalidateCapability,
+  filename: string,
+): Promise<{ asset: ProjectAsset; bytes: Uint8Array }> {
+  const validatedFilename = validateProjectAssetFilename(filename);
+  const assetsDirectory = assetDirectoryPath(paths);
+  const targetPath = assetFilePath(assetsDirectory, validatedFilename);
+
+  try {
+    await revalidateAssetCapability(revalidateCapability);
+    const directoryIdentity = await assertAssetDirectory(
+      paths,
+      assetsDirectory,
+    );
+    await revalidateAssetCapability(revalidateCapability);
+    await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
+    const readback = await readSafeAssetFile(targetPath, PROJECT_ASSET_MAX_BYTES);
+    const detected = detectProjectAsset(readback.bytes);
+    return {
+      asset: projectAssetRecord(
+        validatedFilename,
+        validatedFilename,
+        readback.bytes.byteLength,
+        detected.mediaType,
+      ),
+      bytes: readback.bytes,
+    };
+  } catch (error) {
+    if (error instanceof ProjectError) throw error;
+    if (hasErrorCode(error, "ENOENT")) {
+      throw new ProjectError("project_not_found", NOT_FOUND_MESSAGE);
+    }
+    throw assetStorageError();
+  }
+}
+
+function assetDirectoryPath(paths: Readonly<ArtifactPaths>): string {
+  const directory = path.join(paths.artifactDirectory, "assets");
+  if (path.dirname(directory) !== paths.artifactDirectory) {
+    throw assetStorageError();
+  }
+  return directory;
+}
+
+function assetFilePath(assetsDirectory: string, filename: string): string {
+  const filePath = path.join(assetsDirectory, filename);
+  if (path.dirname(filePath) !== assetsDirectory) throw assetStorageError();
+  return filePath;
+}
+
+async function ensureAssetDirectory(
+  paths: Readonly<ArtifactPaths>,
+  assetsDirectory: string,
+): Promise<BigIntStats> {
+  try {
+    await mkdir(assetsDirectory, { mode: DIRECTORY_MODE });
+  } catch (error) {
+    if (!hasErrorCode(error, "EEXIST")) throw error;
+  }
+  const identity = await assertAssetDirectory(paths, assetsDirectory);
+  await syncAssetDirectory(paths.artifactDirectory);
+  return identity;
+}
+
+async function revalidateAssetCapability(
+  revalidateCapability: RevalidateCapability,
+): Promise<void> {
+  try {
+    await revalidateCapability();
+  } catch {
+    throw assetStorageError();
+  }
+}
+
+async function assertAssetDirectory(
+  paths: Readonly<ArtifactPaths>,
+  assetsDirectory: string,
+  expectedIdentity?: BigIntStats,
+): Promise<BigIntStats> {
+  const metadata = await lstat(assetsDirectory, { bigint: true });
+  if (
+    metadata.isSymbolicLink() ||
+    !metadata.isDirectory() ||
+    Number(metadata.mode & BigInt(0o777)) !== DIRECTORY_MODE ||
+    (expectedIdentity !== undefined && !sameFile(metadata, expectedIdentity))
+  ) {
+    throw assetStorageError();
+  }
+  const resolved = await realpath(assetsDirectory);
+  if (
+    resolved !== assetsDirectory ||
+    !isContained(paths.artifactDirectory, resolved)
+  ) {
+    throw assetStorageError();
+  }
+  return metadata;
+}
+
+async function readSafeAssetFile(
+  filePath: string,
+  maxBytes: number,
+): Promise<SafeAssetFile> {
+  let handle: Awaited<ReturnType<typeof open>> | undefined;
+  try {
+    handle = await open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
+    const before = await handle.stat({ bigint: true });
+    if (
+      !before.isFile() ||
+      Number(before.mode & BigInt(0o777)) !== FILE_MODE ||
+      before.size > BigInt(maxBytes)
+    ) {
+      throw assetStorageError();
+    }
+    const bytes = await handle.readFile();
+    const after = await handle.stat({ bigint: true });
+    if (!stableFile(before, after) || bytes.byteLength !== Number(after.size)) {
+      throw assetStorageError();
+    }
+    const named = await lstat(filePath, { bigint: true });
+    if (named.isSymbolicLink() || !stableFile(after, named)) {
+      throw assetStorageError();
+    }
+    return { bytes, identity: after };
+  } finally {
+    await handle?.close().catch(() => undefined);
+  }
+}
+
+async function removeOwnedAssetTemporary(
+  temporaryPath: string,
+  identity: BigIntStats,
+): Promise<void> {
+  try {
+    const current = await lstat(temporaryPath, { bigint: true });
+    if (current.isFile() && sameFile(current, identity)) {
+      await unlink(temporaryPath);
+      await syncAssetDirectory(path.dirname(temporaryPath));
+    }
+  } catch {
+    // Never remove anything that cannot be proven to be this operation's file.
+  }
+}
+
+async function syncAssetDirectory(directory: string): Promise<void> {
+  const handle = await open(directory, fsConstants.O_RDONLY);
+  try {
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
+}
+
+function isContained(root: string, candidate: string): boolean {
+  const relative = path.relative(root, candidate);
+  return (
+    relative === "" ||
+    (relative !== ".." &&
+      !relative.startsWith(`..${path.sep}`) &&
+      !path.isAbsolute(relative))
+  );
+}
+
+function sameFile(left: BigIntStats, right: BigIntStats): boolean {
+  return left.dev === right.dev && left.ino === right.ino;
+}
+
+function stableFile(left: BigIntStats, right: BigIntStats): boolean {
+  return (
+    sameFile(left, right) &&
+    left.size === right.size &&
+    left.mtimeNs === right.mtimeNs &&
+    left.ctimeNs === right.ctimeNs
+  );
+}
+
+function hasErrorCode(error: unknown, code: string): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    error.code === code
+  );
+}
+
+function assetStorageError(): ProjectError {
+  return new ProjectError("storage_failed", STORAGE_MESSAGE);
 }

@@ -18,6 +18,7 @@ import {
   ProjectError,
   type CreateProjectInput,
   type PatchProjectInput,
+  type ProjectAsset,
   type ProjectDocument,
   type ProjectSnapshot,
   type ReadyProjectResponse,
@@ -27,6 +28,7 @@ import {
   parsePatchProjectInput,
   validateProjectId,
 } from "./contracts";
+import { publishProjectAsset, readProjectAsset } from "./assets";
 import {
   type ArtifactPaths,
   resolveArtifactPaths,
@@ -60,6 +62,15 @@ export type ProjectStore = {
   markFailed(prepared: PreparedProject, diagnostic: string): Promise<void>;
   get(id: string): Promise<ProjectSnapshot>;
   patch(id: string, patch: PatchProjectInput): Promise<ProjectSnapshot>;
+  putAsset(
+    id: string,
+    originalName: string,
+    bytes: Uint8Array,
+  ): Promise<ProjectAsset>;
+  getAsset(
+    id: string,
+    filename: string,
+  ): Promise<{ asset: ProjectAsset; bytes: Uint8Array }>;
   unregister(id: string): Promise<void>;
   findReadyCreation(
     input: CreateProjectInput,
@@ -340,6 +351,39 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
           );
         } catch (error) {
           throw asStorageError(error);
+        }
+      });
+    },
+
+    async putAsset(id, originalName, bytes) {
+      const projectId = validateProjectId(id);
+      return serializeProjectMutation(projectId, async () => {
+        const registered = await loadRegisteredProject(registryRoot, projectId);
+        try {
+          return await publishProjectAsset(
+            registered.paths,
+            () => assertRegisteredPathsCurrent(registryRoot, registered),
+            originalName,
+            bytes,
+          );
+        } catch (error) {
+          throw asAssetStoreError(error);
+        }
+      });
+    },
+
+    async getAsset(id, filename) {
+      const projectId = validateProjectId(id);
+      return serializeProjectMutation(projectId, async () => {
+        const registered = await loadRegisteredProject(registryRoot, projectId);
+        try {
+          return await readProjectAsset(
+            registered.paths,
+            () => assertRegisteredPathsCurrent(registryRoot, registered),
+            filename,
+          );
+        } catch (error) {
+          throw asAssetStoreError(error);
         }
       });
     },
@@ -1292,4 +1336,11 @@ function asStorageError(error: unknown): ProjectError {
     return error;
   }
   return storageError();
+}
+
+function asAssetStoreError(error: unknown): ProjectError {
+  if (error instanceof ProjectError && error.code === "invalid_request") {
+    return error;
+  }
+  return asStorageError(error);
 }
