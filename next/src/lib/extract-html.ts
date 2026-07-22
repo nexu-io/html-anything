@@ -91,19 +91,37 @@ type ParsedTag = {
   start: number;
   end: number;
   closing: boolean;
-  selfClosing: boolean;
 };
 
 const RAW_TEXT_ELEMENTS = new Set([
   "iframe",
   "noembed",
   "noframes",
+  // Both preview iframe paths enable scripts, so noscript tokenizes as raw text.
+  "noscript",
   "script",
   "style",
   "textarea",
   "title",
   "xmp",
 ]);
+
+const HEAD_CONTENT_ELEMENTS = new Set([
+  "base",
+  "basefont",
+  "bgsound",
+  "link",
+  "meta",
+  "noembed",
+  "noframes",
+  "noscript",
+  "script",
+  "style",
+  "template",
+  "title",
+]);
+
+const HEAD_CLOSING_END_TAGS = new Set(["body", "br", "html"]);
 
 function scanDocumentTags(html: string): DocumentTags {
   const found: DocumentTags = {};
@@ -113,6 +131,17 @@ function scanDocumentTags(html: string): DocumentTags {
   while (offset < html.length) {
     const tagStart = html.indexOf("<", offset);
     if (tagStart === -1) break;
+
+    if (
+      found.headContentStart !== undefined &&
+      found.headContentEnd === undefined
+    ) {
+      const bodyTextStart = firstNonWhitespace(html, offset, tagStart);
+      if (bodyTextStart !== -1) {
+        found.headContentEnd = bodyTextStart;
+        bodyStarted = true;
+      }
+    }
 
     if (html.startsWith("<!--", tagStart)) {
       const commentEnd = findCommentEnd(html, tagStart);
@@ -140,16 +169,28 @@ function scanDocumentTags(html: string): DocumentTags {
       continue;
     }
 
+    const headOpen =
+      found.headContentStart !== undefined &&
+      found.headContentEnd === undefined;
     if (parsed.closing) {
-      if (
-        parsed.name === "head" &&
-        found.headContentStart !== undefined &&
-        found.headContentEnd === undefined
-      ) {
+      if (headOpen && parsed.name === "head") {
         found.headContentEnd = parsed.start;
+      } else if (headOpen && HEAD_CLOSING_END_TAGS.has(parsed.name)) {
+        found.headContentEnd = parsed.start;
+        bodyStarted = true;
       }
       offset = parsed.end;
       continue;
+    }
+
+    if (
+      headOpen &&
+      parsed.name !== "head" &&
+      parsed.name !== "html" &&
+      !HEAD_CONTENT_ELEMENTS.has(parsed.name)
+    ) {
+      found.headContentEnd = parsed.start;
+      bodyStarted = true;
     }
 
     if (parsed.name === "html" && found.htmlContentStart === undefined) {
@@ -160,8 +201,8 @@ function scanDocumentTags(html: string): DocumentTags {
       bodyStarted = true;
     }
 
-    if (parsed.name === "plaintext" && !parsed.selfClosing) break;
-    if (RAW_TEXT_ELEMENTS.has(parsed.name) && !parsed.selfClosing) {
+    if (parsed.name === "plaintext") break;
+    if (RAW_TEXT_ELEMENTS.has(parsed.name)) {
       const closeStart = findRawTextClose(html, parsed.name, parsed.end);
       if (closeStart === -1) break;
       offset = closeStart;
@@ -173,6 +214,13 @@ function scanDocumentTags(html: string): DocumentTags {
   return found;
 }
 
+function firstNonWhitespace(html: string, start: number, end: number): number {
+  for (let offset = start; offset < end; offset += 1) {
+    if (!isHtmlWhitespace(html[offset])) return offset;
+  }
+  return -1;
+}
+
 function parseTag(html: string, start: number): ParsedTag | "incomplete" | null {
   let offset = start + 1;
   const closing = html[offset] === "/";
@@ -182,14 +230,11 @@ function parseTag(html: string, start: number): ParsedTag | "incomplete" | null 
   if (offset === nameStart) return null;
   const end = findMarkupEnd(html, offset, false);
   if (end === -1) return "incomplete";
-  let beforeEnd = end - 2;
-  while (beforeEnd >= offset && isHtmlWhitespace(html[beforeEnd])) beforeEnd -= 1;
   return {
     name: html.slice(nameStart, offset).toLowerCase(),
     start,
     end,
     closing,
-    selfClosing: html[beforeEnd] === "/",
   };
 }
 

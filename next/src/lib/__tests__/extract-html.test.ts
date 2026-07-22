@@ -158,4 +158,53 @@ describe("injectPreviewBase", () => {
       deck.slides[0].html.indexOf("https://attacker.invalid/"),
     );
   });
+
+  it("copies an implicitly closed complete head into each deck slide", () => {
+    const source =
+      '<!doctype html><html><head><title>Deck</title><style>.slide { color: red; }</style><script>window.deckReady = true;</script><body><section class="slide" data-slide-id="1">Slide</section></body></html>';
+
+    const rendered = injectPreviewBase(source, "/api/projects/project-id/");
+    const deck = parseDeck(rendered);
+
+    expect(deck.slides).toHaveLength(1);
+    expect(deck.slides[0].html).toContain(
+      '<base href="/api/projects/project-id/">',
+    );
+    expect(deck.slides[0].html).toContain(".slide { color: red; }");
+    expect(deck.slides[0].html).toContain("window.deckReady = true;");
+  });
+
+  it("copies a partial deck head implicitly closed by body content", () => {
+    const source =
+      '<html><head><style>.slide { color: blue; }</style><section class="slide" data-slide-id="1">Streaming slide</section>';
+
+    const rendered = injectPreviewBase(source, "/api/projects/project-id/");
+    const deck = parseDeck(rendered);
+
+    expect(deck.slides).toHaveLength(1);
+    expect(deck.slides[0].html).toContain(
+      '<base href="/api/projects/project-id/">',
+    );
+    expect(deck.slides[0].html).toContain(".slide { color: blue; }");
+  });
+
+  it("ignores scripting-enabled noscript data in normal and deck previews", () => {
+    const source =
+      '<!doctype html><html><noscript><head></noscript><base href="https://attacker.invalid/"><body><section class="slide" data-slide-id="1">Slide</section></body></html>';
+
+    const rendered = injectPreviewBase(source, "/api/projects/project-id/");
+    const deck = parseDeck(rendered);
+
+    expect(rendered).toContain(
+      '<html><head><base href="/api/projects/project-id/"></head><noscript><head></noscript><base href="https://attacker.invalid/">',
+    );
+    expect(rendered.indexOf('/api/projects/project-id/')).toBeLessThan(
+      rendered.indexOf("https://attacker.invalid/"),
+    );
+    expect(deck.slides).toHaveLength(1);
+    expect(deck.slides[0].html).toContain(
+      '<head><base href="/api/projects/project-id/">',
+    );
+    expect(deck.slides[0].html).not.toContain("https://attacker.invalid/");
+  });
 });

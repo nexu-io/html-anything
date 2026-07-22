@@ -26,11 +26,12 @@ describe("project editor routes", () => {
   });
 
   it("threads project upload and preview props only from project mode", async () => {
-    const [workspaceSource, editorSource, promptSource, previewSource] = await Promise.all([
+    const [workspaceSource, editorSource, promptSource, previewSource, deckSource] = await Promise.all([
       readFile(path.join(srcRoot, "components/editor-workspace.tsx"), "utf8"),
       readFile(path.join(srcRoot, "components/editor-pane.tsx"), "utf8"),
       readFile(path.join(srcRoot, "components/ai-prompt-bar.tsx"), "utf8"),
       readFile(path.join(srcRoot, "components/preview-pane.tsx"), "utf8"),
+      readFile(path.join(srcRoot, "components/deck-viewer.tsx"), "utf8"),
     ]);
 
     expect(workspaceSource).toContain("projectId={projectMode?.projectId}");
@@ -70,6 +71,8 @@ describe("project editor routes", () => {
       "injectPreviewBase(cleaned, assetBaseHref)",
     );
     expect(previewSource).toContain("html={previewCleaned}");
+    expect(previewSource).toContain('sandbox="allow-scripts allow-same-origin"');
+    expect(deckSource).toContain('sandbox="allow-scripts allow-same-origin"');
   });
 
   it("defines bounded upload state messages in both dictionaries", async () => {

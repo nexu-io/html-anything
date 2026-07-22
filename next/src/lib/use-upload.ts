@@ -35,13 +35,21 @@ export function useUploadFile(options?: { projectId?: string }): {
   const [error, setError] = useState<string | null>(null);
   const t = useT();
   const projectId = options?.projectId;
+  const activeTaskIdentity = useStore((state) => {
+    const task = state.tasks.find(
+      (candidate) => candidate.id === state.activeTaskId,
+    );
+    return task === undefined
+      ? ""
+      : JSON.stringify([task.id, task.createdAt, task.serverProjectId ?? null]);
+  });
   const lifecycleRef = useRef<UploadLifecycle>({
     mounted: false,
     generation: 0,
     projectId,
   });
-  const queueRef = useRef<Promise<void>>(Promise.resolve());
-  const pendingRef = useRef(new Map<number, number>());
+  const queuesRef = useRef(new Map<string, UploadQueue>());
+  const committedOriginKeyRef = useRef<string | null>(null);
 
   if (lifecycleRef.current.projectId !== projectId) {
     lifecycleRef.current.projectId = projectId;
@@ -57,6 +65,33 @@ export function useUploadFile(options?: { projectId?: string }): {
       lifecycleRef.current.generation += 1;
     };
   }, [projectId]);
+
+  useEffect(() => {
+    const state = useStore.getState();
+    const task = state.tasks.find(
+      (candidate) => candidate.id === state.activeTaskId,
+    );
+    const lifecycle = lifecycleRef.current;
+    if (
+      !lifecycle.mounted ||
+      lifecycle.projectId !== projectId ||
+      task === undefined ||
+      task.serverProjectId !== projectId
+    ) {
+      committedOriginKeyRef.current = null;
+      setUploading(false);
+      return;
+    }
+    const key = uploadOriginKey({
+      generation: lifecycle.generation,
+      taskId: task.id,
+      taskCreatedAt: task.createdAt,
+      projectId,
+      taskProjectId: task.serverProjectId,
+    });
+    committedOriginKeyRef.current = key;
+    setUploading((queuesRef.current.get(key)?.pending ?? 0) > 0);
+  }, [activeTaskIdentity, projectId]);
 
   const ingest = useCallback(
     (files: FileList | File[] | null): Promise<void> => {
@@ -82,8 +117,14 @@ export function useUploadFile(options?: { projectId?: string }): {
         projectId,
         taskProjectId: task.serverProjectId,
       };
-      const pending = (pendingRef.current.get(origin.generation) ?? 0) + 1;
-      pendingRef.current.set(origin.generation, pending);
+      const originKey = uploadOriginKey(origin);
+      if (committedOriginKeyRef.current !== originKey) return Promise.resolve();
+      const queue = queuesRef.current.get(originKey) ?? {
+        tail: Promise.resolve(),
+        pending: 0,
+      };
+      queue.pending += 1;
+      queuesRef.current.set(originKey, queue);
       setUploading(true);
       setError(null);
 
@@ -152,23 +193,20 @@ export function useUploadFile(options?: { projectId?: string }): {
         }
       };
 
-      const work = queueRef.current.then(run, run);
-      queueRef.current = work.then(
+      const work = queue.tail.then(run, run);
+      queue.tail = work.then(
         () => undefined,
         () => undefined,
       );
       return work.finally(() => {
-        const remaining = (pendingRef.current.get(origin.generation) ?? 1) - 1;
-        if (remaining === 0) {
-          pendingRef.current.delete(origin.generation);
-        } else {
-          pendingRef.current.set(origin.generation, remaining);
+        queue.pending -= 1;
+        if (queue.pending === 0 && queuesRef.current.get(originKey) === queue) {
+          queuesRef.current.delete(originKey);
         }
         if (
-          remaining === 0 &&
+          queue.pending === 0 &&
           lifecycleRef.current.mounted &&
-          lifecycleRef.current.generation === origin.generation &&
-          lifecycleRef.current.projectId === origin.projectId
+          committedOriginKeyRef.current === originKey
         ) {
           setUploading(false);
         }
@@ -194,7 +232,22 @@ type UploadLifecycle = {
   projectId?: string;
 };
 
+type UploadQueue = {
+  tail: Promise<void>;
+  pending: number;
+};
+
 type RefValue<T> = { current: T };
+
+function uploadOriginKey(origin: UploadOrigin): string {
+  return JSON.stringify([
+    origin.generation,
+    origin.taskId,
+    origin.taskCreatedAt,
+    origin.projectId ?? null,
+    origin.taskProjectId ?? null,
+  ]);
+}
 
 function isOriginCurrent(
   origin: UploadOrigin,

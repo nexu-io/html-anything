@@ -517,4 +517,146 @@ describe("useUploadFile", () => {
     );
     expect(hook.current().uploading).toBe(false);
   });
+
+  it("starts a replacement project's queue while the obsolete project request is unresolved", async () => {
+    const oldProject = task({
+      id: "old-project-task",
+      serverProjectId: PROJECT_ID,
+      content: "Old project",
+    });
+    const newProjectId = "BcDeFgHiJkLmNoPqRsTuVw";
+    const newProject = task({
+      id: "new-project-task",
+      serverProjectId: newProjectId,
+      content: "New project",
+    });
+    useStore.setState({ tasks: [oldProject, newProject], activeTaskId: oldProject.id });
+    const oldUpload = deferred<ProjectAsset>();
+    const newUpload = deferred<ProjectAsset>();
+    vi.mocked(uploadProjectAsset).mockImplementation((projectId) =>
+      projectId === PROJECT_ID ? oldUpload.promise : newUpload.promise,
+    );
+    const oldFile = new File([Uint8Array.of(1)], "Old.PNG", {
+      type: "image/png",
+    });
+    const newFile = new File([Uint8Array.of(2)], "New.PNG", {
+      type: "image/png",
+    });
+    const hook = await renderUpload(PROJECT_ID);
+    let oldIngestion!: Promise<void>;
+
+    act(() => {
+      oldIngestion = hook.current().ingest([oldFile]);
+    });
+    await act(async () => Promise.resolve());
+    expect(uploadProjectAsset).toHaveBeenCalledWith(PROJECT_ID, oldFile);
+
+    act(() => {
+      useStore.setState({
+        tasks: [oldProject, newProject],
+        activeTaskId: newProject.id,
+      });
+    });
+    await hook.rerender(newProjectId);
+    let newIngestion!: Promise<void>;
+    act(() => {
+      newIngestion = hook.current().ingest([newFile]);
+    });
+    await act(async () => Promise.resolve());
+
+    expect(uploadProjectAsset).toHaveBeenCalledTimes(2);
+    expect(uploadProjectAsset).toHaveBeenNthCalledWith(2, newProjectId, newFile);
+    expect(hook.current().uploading).toBe(true);
+
+    newUpload.resolve(
+      asset({
+        originalName: newFile.name,
+        filename: "new.png",
+        path: "assets/new.png",
+      }),
+    );
+    await act(async () => newIngestion);
+
+    expect(activeTask().content).toBe(
+      "New project\n\n![New.PNG](assets/new.png)",
+    );
+    expect(hook.current().uploading).toBe(false);
+
+    oldUpload.resolve(
+      asset({
+        originalName: oldFile.name,
+        filename: "old.png",
+        path: "assets/old.png",
+      }),
+    );
+    await act(async () => oldIngestion);
+    expect(useStore.getState().tasks).toEqual([
+      oldProject,
+      expect.objectContaining({
+        id: newProject.id,
+        content: "New project\n\n![New.PNG](assets/new.png)",
+      }),
+    ]);
+  });
+
+  it("starts a new local task queue while the obsolete parse is unresolved", async () => {
+    const oldTask = task({ id: "old-local-task", content: "Old local" });
+    const newTask = task({ id: "new-local-task", content: "New local" });
+    useStore.setState({ tasks: [oldTask, newTask], activeTaskId: oldTask.id });
+    const oldParse = deferred<Awaited<ReturnType<typeof parseFile>>>();
+    const newParse = deferred<Awaited<ReturnType<typeof parseFile>>>();
+    vi.mocked(parseFile).mockImplementation((file) =>
+      file.name === "old.txt" ? oldParse.promise : newParse.promise,
+    );
+    const oldFile = new File(["old"], "old.txt", { type: "text/plain" });
+    const newFile = new File(["new"], "new.txt", { type: "text/plain" });
+    const hook = await renderUpload();
+    let oldIngestion!: Promise<void>;
+
+    act(() => {
+      oldIngestion = hook.current().ingest([oldFile]);
+    });
+    await act(async () => Promise.resolve());
+    expect(parseFile).toHaveBeenCalledWith(oldFile);
+
+    act(() => {
+      useStore.setState({ tasks: [oldTask, newTask], activeTaskId: newTask.id });
+    });
+    await act(async () => Promise.resolve());
+    expect(hook.current().uploading).toBe(false);
+
+    let newIngestion!: Promise<void>;
+    act(() => {
+      newIngestion = hook.current().ingest([newFile]);
+    });
+    await act(async () => Promise.resolve());
+
+    expect(parseFile).toHaveBeenCalledTimes(2);
+    expect(parseFile).toHaveBeenNthCalledWith(2, newFile);
+    expect(hook.current().uploading).toBe(true);
+
+    newParse.resolve({
+      filename: newFile.name,
+      format: "txt",
+      text: "Parsed new local",
+    });
+    await act(async () => newIngestion);
+
+    expect(activeTask().content).toBe("New local\n\nParsed new local");
+    expect(hook.current().uploading).toBe(false);
+
+    oldParse.resolve({
+      filename: oldFile.name,
+      format: "txt",
+      text: "Parsed old local",
+    });
+    await act(async () => oldIngestion);
+    expect(useStore.getState().tasks).toEqual([
+      oldTask,
+      expect.objectContaining({
+        id: newTask.id,
+        content: "New local\n\nParsed new local",
+      }),
+    ]);
+  });
 });
