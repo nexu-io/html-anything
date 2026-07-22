@@ -654,4 +654,42 @@ describe("useProjectAutosave", () => {
     ).toBe("latest unsaved edit");
     await act(async () => harness.root.unmount());
   });
+
+  it("does not run a newer edit timer after the in-flight save fails", async () => {
+    let rejectFirst: ((error: Error) => void) | undefined;
+    vi.mocked(patchServerProject)
+      .mockImplementationOnce(
+        () =>
+          new Promise<ProjectSnapshot>((_resolve, reject) => {
+            rejectFirst = reject;
+          }),
+      )
+      .mockResolvedValueOnce(readySnapshot());
+    const { harness } = await loadAndRender();
+
+    act(() => useStore.getState().setContent("edit B"));
+    await act(async () => vi.advanceTimersByTimeAsync(750));
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+
+    act(() => useStore.getState().setContent("edit C"));
+    await act(async () => rejectFirst?.(new Error("save failed")));
+    expect(harness.getState()).toBe("failed");
+    expect(harness.getCanUnregister()).toBe(false);
+
+    await act(async () => vi.advanceTimersByTimeAsync(1_000));
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+    expect(harness.getState()).toBe("failed");
+    expect(harness.getCanUnregister()).toBe(false);
+
+    act(() => harness.retry());
+    await act(async () => {});
+
+    expect(patchServerProject).toHaveBeenCalledTimes(2);
+    expect(patchServerProject).toHaveBeenLastCalledWith(PROJECT_ID, {
+      content: "edit C",
+    });
+    expect(harness.getState()).toBe("saved");
+    expect(harness.getCanUnregister()).toBe(true);
+    await act(async () => harness.root.unmount());
+  });
 });
