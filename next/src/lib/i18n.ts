@@ -53,6 +53,7 @@ export interface Dict {
   "project.unregister": string;
   "project.unregisterConfirm": string;
   "project.unregisterFailed": string;
+  "project.unregistering": string;
   "project.oneBrowserGuidance": string;
 
   // Welcome modal
@@ -429,6 +430,7 @@ const en: Dict = {
   "project.unregisterConfirm":
     "Unregister “{name}”? Workspace files will be kept, but this link will stop working.",
   "project.unregisterFailed": "Couldn’t unregister this project.",
+  "project.unregistering": "Unregistering…",
   "project.oneBrowserGuidance":
     "Edit in one browser at a time. The last successful save wins.",
 
@@ -807,6 +809,7 @@ const zhCN: Dict = {
   "project.unregisterConfirm":
     "取消注册“{name}”？工作区文件会保留，但此链接将失效。",
   "project.unregisterFailed": "无法取消注册此项目。",
+  "project.unregistering": "正在取消注册…",
   "project.oneBrowserGuidance":
     "请一次只在一个浏览器中编辑；最后一次成功保存的内容为准。",
 

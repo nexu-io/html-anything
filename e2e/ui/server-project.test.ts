@@ -818,10 +818,18 @@ test.describe("Server project editor", () => {
     page,
   }) => {
     await seedLocalStore(page);
-    const snapshot = readySnapshot();
+    let snapshot = readySnapshot();
     let deleteCount = 0;
     let assetDeleteCount = 0;
     const unexpected: string[] = [];
+    const patches: ProjectPatch[] = [];
+    let releaseFailedDelete!: () => void;
+    const failedDeleteGate = new Promise<void>((resolve) => {
+      releaseFailedDelete = resolve;
+    });
+    const preservedContent = "Preserved server editor content";
+    const preservedHtml =
+      "<!doctype html><html><body><h1>Preserved server source</h1></body></html>";
 
     await page.route(PROJECT_API_DESCENDANT_PATTERN, async (route, request) => {
       if (request.method() === "DELETE") assetDeleteCount += 1;
@@ -833,9 +841,18 @@ test.describe("Server project editor", () => {
         await route.fulfill({ json: snapshot });
         return;
       }
+      if (request.method() === "PATCH") {
+        const patch = patchFrom(request);
+        patches.push(patch);
+        snapshot = applyPatch(snapshot, patch);
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        await route.fulfill({ json: snapshot });
+        return;
+      }
       if (request.method() === "DELETE") {
         deleteCount += 1;
         if (deleteCount === 1) {
+          await failedDeleteGate;
           await route.fulfill({
             status: 500,
             json: {
@@ -852,6 +869,22 @@ test.describe("Server project editor", () => {
     });
 
     await page.goto(PROJECT_PATH);
+    const contentEditor = page.getByRole("textbox", { name: /paste anything/i });
+    const saveStatus = page.getByRole("status");
+    await contentEditor.fill(preservedContent);
+    await expect(saveStatus).toHaveText("Saving…");
+    await expect(saveStatus).toHaveText("Saved");
+    await page.getByRole("button", { name: /source/i }).click();
+    const sourceEditor = page.getByRole("textbox", { name: /source/i });
+    await sourceEditor.fill(preservedHtml);
+    await expect(saveStatus).toHaveText("Saving…");
+    await expect(saveStatus).toHaveText("Saved");
+    await expect.poll(() => patches).toEqual([
+      { content: preservedContent },
+      { html: preservedHtml },
+    ]);
+    const snapshotBeforeUnregister = snapshot;
+
     page.once("dialog", async (dialog) => {
       expect(dialog.message()).toBe(
         "Unregister “Generated project”? Workspace files will be kept, but this link will stop working.",
@@ -860,6 +893,24 @@ test.describe("Server project editor", () => {
     });
     await page.getByRole("button", { name: "Unregister" }).click();
 
+    try {
+      await expect.poll(() => deleteCount).toBe(1);
+      await expect(page.getByText("Unregistering…", { exact: true })).toBeVisible();
+      await expect(contentEditor).toHaveCount(0);
+      await expect(sourceEditor).toHaveCount(0);
+      await expect(page.getByRole("button", { name: "Generate HTML" })).toHaveCount(0);
+      await expect(page.getByRole("button", { name: "Attach" })).toHaveCount(0);
+      await expect(page.getByRole("button", { name: "Unregister" })).toHaveCount(0);
+      await expect(page.getByRole("button", { name: "Settings" })).toHaveCount(0);
+      await expect(page.getByRole("button", { name: /Magazine Article/ })).toHaveCount(0);
+      await expect(page.getByRole("radiogroup", { name: "Workspace layout" })).toHaveCount(0);
+      await expect(page.locator('input[type="file"]')).toHaveCount(0);
+      await page.keyboard.type("MUST NOT CHANGE PROJECT VALUES");
+      await page.keyboard.press("Control+Enter");
+      expect(deleteCount).toBe(1);
+    } finally {
+      releaseFailedDelete();
+    }
     const unregisterAlert = page
       .getByRole("alert")
       .filter({ hasText: "Couldn’t unregister this project." });
@@ -867,6 +918,15 @@ test.describe("Server project editor", () => {
       "Couldn’t unregister this project.",
     );
     await expect(unregisterAlert).toHaveCount(1);
+    await expect(contentEditor).toHaveValue(preservedContent);
+    await page.getByRole("button", { name: /source/i }).click();
+    await expect(sourceEditor).toHaveValue(preservedHtml);
+    expect(patches).toEqual([
+      { content: preservedContent },
+      { html: preservedHtml },
+    ]);
+    expect(snapshot).toEqual(snapshotBeforeUnregister);
+    expect(deleteCount).toBe(1);
 
     page.once("dialog", async (dialog) => {
       await dialog.accept();
@@ -881,7 +941,11 @@ test.describe("Server project editor", () => {
     expect(deleteCount).toBe(2);
     expect(assetDeleteCount).toBe(0);
     expect(unexpected).toEqual([]);
-    await expectOnlyLocalState(page, [PROJECT_ID, snapshot.content, snapshot.html]);
+    await expectOnlyLocalState(page, [
+      PROJECT_ID,
+      preservedContent,
+      preservedHtml,
+    ]);
   });
 
   test("keeps a local image in the browser asset map and inlines it for conversion", async ({

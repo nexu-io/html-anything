@@ -28,8 +28,10 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
   );
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [loadAttempt, setLoadAttempt] = useState(0);
+  const [unregistering, setUnregistering] = useState(false);
   const [unregisterFailed, setUnregisterFailed] = useState(false);
   const unregisteringRef = useRef(false);
+  const unregisterRequestStartedRef = useRef(false);
   const router = useRouter();
   const t = useT();
   const ready =
@@ -83,6 +85,13 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
 
     unregisteringRef.current = true;
     setUnregisterFailed(false);
+    setUnregistering(true);
+  }, [autosave.canUnregister, projectId, projectName, ready, t]);
+
+  useEffect(() => {
+    if (!unregistering || unregisterRequestStartedRef.current) return;
+
+    unregisterRequestStartedRef.current = true;
     void unregisterServerProject(projectId)
       .then(() => {
         removeServerProject(projectId);
@@ -90,17 +99,11 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
       })
       .catch(() => {
         unregisteringRef.current = false;
+        unregisterRequestStartedRef.current = false;
+        setUnregistering(false);
         setUnregisterFailed(true);
       });
-  }, [
-    autosave.canUnregister,
-    projectId,
-    projectName,
-    ready,
-    removeServerProject,
-    router,
-    t,
-  ]);
+  }, [projectId, removeServerProject, router, unregistering]);
 
   if (!hydrated || !ready) {
     const status = hydrated ? loadState.status : "loading";
@@ -110,6 +113,10 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
         onRetry={retryLoad}
       />
     );
+  }
+
+  if (unregistering) {
+    return <ProjectUnregisteringState />;
   }
 
   return (
@@ -133,6 +140,18 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
         </div>
       )}
     </>
+  );
+}
+
+function ProjectUnregisteringState() {
+  const t = useT();
+
+  return (
+    <main className="grid h-screen place-items-center bg-[var(--paper)] px-6">
+      <p role="status" className="text-sm text-[var(--ink-mute)]">
+        {t("project.unregistering")}
+      </p>
+    </main>
   );
 }
 

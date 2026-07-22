@@ -87,6 +87,13 @@ describe("project editor routes", () => {
       '"upload.projectFailed": "图片上传失败，请重试。"',
     );
   });
+
+  it("defines the unregistering screen message in both dictionaries", async () => {
+    const source = await readFile(path.join(srcRoot, "lib/i18n.ts"), "utf8");
+
+    expect(source).toContain('"project.unregistering": "Unregistering…"');
+    expect(source).toContain('"project.unregistering": "正在取消注册…"');
+  });
 });
 
 describe("project asset API routes", () => {
