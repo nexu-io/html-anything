@@ -365,8 +365,29 @@ export async function readProjectAsset(
       assetsDirectory,
     );
     await revalidateAssetCapability(revalidateCapability);
-    await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
-    const readback = await readSafeAssetFile(targetPath, PROJECT_ASSET_MAX_BYTES);
+    await revalidateCapturedAssetDirectory(
+      paths,
+      assetsDirectory,
+      directoryIdentity,
+    );
+    let readback: SafeAssetFile;
+    try {
+      readback = await readSafeAssetFile(targetPath, PROJECT_ASSET_MAX_BYTES);
+    } catch (error) {
+      await revalidateAssetCapability(revalidateCapability);
+      await revalidateCapturedAssetDirectory(
+        paths,
+        assetsDirectory,
+        directoryIdentity,
+      );
+      throw error;
+    }
+    await revalidateAssetCapability(revalidateCapability);
+    await revalidateCapturedAssetDirectory(
+      paths,
+      assetsDirectory,
+      directoryIdentity,
+    );
     const detected = detectProjectAsset(readback.bytes);
     const result = {
       asset: projectAssetRecord(
@@ -378,7 +399,11 @@ export async function readProjectAsset(
       bytes: readback.bytes,
     };
     await revalidateAssetCapability(revalidateCapability);
-    await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
+    await revalidateCapturedAssetDirectory(
+      paths,
+      assetsDirectory,
+      directoryIdentity,
+    );
     return result;
   } catch (error) {
     if (error instanceof ProjectError) throw error;
@@ -422,6 +447,18 @@ async function revalidateAssetCapability(
 ): Promise<void> {
   try {
     await revalidateCapability();
+  } catch {
+    throw assetStorageError();
+  }
+}
+
+async function revalidateCapturedAssetDirectory(
+  paths: Readonly<ArtifactPaths>,
+  assetsDirectory: string,
+  expectedIdentity: BigIntStats,
+): Promise<void> {
+  try {
+    await assertAssetDirectory(paths, assetsDirectory, expectedIdentity);
   } catch {
     throw assetStorageError();
   }

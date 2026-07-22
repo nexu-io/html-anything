@@ -866,6 +866,18 @@ describe("project storage", () => {
       await expect(lstat(assetPath())).rejects.toMatchObject({ code: "ENOENT" });
     });
 
+    it("preserves not found for a missing file in the current assets directory", async () => {
+      const store = await readyStore();
+      const bytes = pngBytes(0x01);
+      await store.putAsset(PROJECT_ID, "hero.png", bytes);
+
+      await expect(
+        store.getAsset(PROJECT_ID, "missing.png"),
+      ).rejects.toMatchObject({ code: "project_not_found" });
+
+      expect(await readFile(assetPath("hero.png"))).toEqual(Buffer.from(bytes));
+    });
+
     it("rejects an asset-directory symlink without writing through it", async () => {
       const store = await readyStore();
       const outside = path.join(temporaryDirectory, "outside-assets");
@@ -913,49 +925,65 @@ describe("project storage", () => {
       await writeFile(path.join(outside, "hero.png"), outsideBytes, {
         mode: 0o600,
       });
-      const mutableFsPromises = createRequire(import.meta.url)(
-        "node:fs/promises",
-      ) as { open: typeof open };
-      const originalOpen = mutableFsPromises.open;
-      let swapped = false;
-      mutableFsPromises.open = (async (
-        ...arguments_: Parameters<typeof open>
-      ) => {
-        if (!swapped && String(arguments_[0]) === assetPath("hero.png")) {
-          swapped = true;
-          await rename(assetPath(), parked);
-          await symlink(outside, assetPath(), "dir");
-        }
-        return Reflect.apply(originalOpen, mutableFsPromises, arguments_);
-      }) as typeof open;
-      syncBuiltinESMExports();
+      const swap = readWithAssetsParentSwap(outside, parked);
 
-      try {
-        vi.resetModules();
-        const { createProjectStore: createSwappedProjectStore } = await import(
-          "../storage"
-        );
-        const store = createSwappedProjectStore({
-          registryRoot,
-          publicBaseUrl: "https://host.ts.net:43233",
-          now: () => clock,
-        });
+      await expect(swap.result).rejects.toMatchObject({
+        code: "storage_failed",
+      });
 
-        await expect(
-          store.getAsset(PROJECT_ID, "hero.png"),
-        ).rejects.toMatchObject({ code: "storage_failed" });
-      } finally {
-        mutableFsPromises.open = originalOpen;
-        syncBuiltinESMExports();
-      }
-
-      expect(swapped).toBe(true);
+      expect(swap.wasPerformed()).toBe(true);
       expect(await readFile(path.join(outside, "hero.png"))).toEqual(
         Buffer.from(outsideBytes),
       );
       expect(await readFile(path.join(parked, "hero.png"))).toEqual(
         Buffer.from(original),
       );
+    });
+
+    it("maps malformed bytes behind a swapped assets parent to storage failure", async () => {
+      const initialStore = await readyStore();
+      await initialStore.putAsset(PROJECT_ID, "hero.png", pngBytes(0x01));
+      const parked = path.join(temporaryDirectory, "parked-assets-malformed");
+      const outside = path.join(temporaryDirectory, "outside-assets-malformed");
+      await mkdir(outside, { mode: 0o700 });
+      await writeFile(path.join(outside, "hero.png"), "not an image", {
+        mode: 0o600,
+      });
+      const swap = readWithAssetsParentSwap(outside, parked);
+
+      await expect(swap.result).rejects.toMatchObject({
+        code: "storage_failed",
+      });
+
+      expect(swap.wasPerformed()).toBe(true);
+    });
+
+    it("maps a missing file behind a swapped assets parent to storage failure", async () => {
+      const initialStore = await readyStore();
+      await initialStore.putAsset(PROJECT_ID, "hero.png", pngBytes(0x01));
+      const parked = path.join(temporaryDirectory, "parked-assets-missing");
+      const outside = path.join(temporaryDirectory, "outside-assets-missing");
+      await mkdir(outside, { mode: 0o700 });
+      const swap = readWithAssetsParentSwap(outside, parked);
+
+      await expect(swap.result).rejects.toMatchObject({
+        code: "storage_failed",
+      });
+
+      expect(swap.wasPerformed()).toBe(true);
+    });
+
+    it("maps removal of the captured assets parent to storage failure", async () => {
+      const initialStore = await readyStore();
+      await initialStore.putAsset(PROJECT_ID, "hero.png", pngBytes(0x01));
+      const parked = path.join(temporaryDirectory, "parked-assets-removed");
+      const swap = readWithAssetsParentSwap(undefined, parked);
+
+      await expect(swap.result).rejects.toMatchObject({
+        code: "storage_failed",
+      });
+
+      expect(swap.wasPerformed()).toBe(true);
     });
 
     it("rejects non-owner, oversized, and malformed stored asset files", async () => {
@@ -1297,6 +1325,50 @@ describe("project storage", () => {
     const prepared = await store.prepare(validInput(workspaceRoot), "exact prompt");
     await store.markReady(prepared, HTML);
     return store;
+  }
+
+  function readWithAssetsParentSwap(
+    outside: string | undefined,
+    parked: string,
+  ) {
+    const mutableFsPromises = createRequire(import.meta.url)(
+      "node:fs/promises",
+    ) as { open: typeof open };
+    const originalOpen = mutableFsPromises.open;
+    let swapped = false;
+    mutableFsPromises.open = (async (
+      ...arguments_: Parameters<typeof open>
+    ) => {
+      if (!swapped && String(arguments_[0]) === assetPath("hero.png")) {
+        swapped = true;
+        await rename(assetPath(), parked);
+        if (outside !== undefined) {
+          await symlink(outside, assetPath(), "dir");
+        }
+      }
+      return Reflect.apply(originalOpen, mutableFsPromises, arguments_);
+    }) as typeof open;
+    syncBuiltinESMExports();
+
+    const result = (async () => {
+      try {
+        vi.resetModules();
+        const { createProjectStore: createSwappedProjectStore } = await import(
+          "../storage"
+        );
+        const store = createSwappedProjectStore({
+          registryRoot,
+          publicBaseUrl: "https://host.ts.net:43233",
+          now: () => clock,
+        });
+        return await store.getAsset(PROJECT_ID, "hero.png");
+      } finally {
+        mutableFsPromises.open = originalOpen;
+        syncBuiltinESMExports();
+      }
+    })();
+
+    return { result, wasPerformed: () => swapped };
   }
 
   async function replaceArtifactWithRealDirectory(replacementAsset?: {
