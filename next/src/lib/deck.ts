@@ -1,3 +1,5 @@
+import { extractDocumentHead } from "./extract-html";
+
 /**
  * Deck mode helpers.
  *
@@ -81,7 +83,7 @@ export function parseDeck(fullHtml: string): DeckParsed {
   };
   if (!isDeck(fullHtml)) return empty;
 
-  const head = pick(/<head\b[^>]*>([\s\S]*?)<\/head>/i, fullHtml);
+  const head = extractDocumentHead(fullHtml);
   const bodyTag = pick(/<body\b([^>]*)>/i, fullHtml);
   const bodyClass = extractAttr(bodyTag, "class");
   const bodyStyle = extractAttr(bodyTag, "style");

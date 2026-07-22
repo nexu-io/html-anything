@@ -55,16 +55,246 @@ export function injectPreviewBase(html: string, baseHref?: string): string {
   if (baseHref === undefined) return html;
 
   const base = `<base href="${escapeAttribute(baseHref)}">`;
-  const head = /<head\b[^>]*>/iu.exec(html);
-  if (head !== null) {
-    const offset = head.index + head[0].length;
+  const documentTags = scanDocumentTags(html);
+  if (documentTags.headContentStart !== undefined) {
+    const offset = documentTags.headContentStart;
     return html.slice(0, offset) + base + html.slice(offset);
   }
 
-  const htmlElement = /<html\b[^>]*>/iu.exec(html);
-  if (htmlElement === null) return html;
-  const offset = htmlElement.index + htmlElement[0].length;
+  if (documentTags.htmlContentStart === undefined) return html;
+  const offset = documentTags.htmlContentStart;
   return html.slice(0, offset) + `<head>${base}</head>` + html.slice(offset);
+}
+
+export function extractDocumentHead(html: string): string {
+  const documentTags = scanDocumentTags(html);
+  if (
+    documentTags.headContentStart === undefined ||
+    documentTags.headContentEnd === undefined
+  ) {
+    return "";
+  }
+  return html.slice(
+    documentTags.headContentStart,
+    documentTags.headContentEnd,
+  );
+}
+
+type DocumentTags = {
+  htmlContentStart?: number;
+  headContentStart?: number;
+  headContentEnd?: number;
+};
+
+type ParsedTag = {
+  name: string;
+  start: number;
+  end: number;
+  closing: boolean;
+  selfClosing: boolean;
+};
+
+const RAW_TEXT_ELEMENTS = new Set([
+  "iframe",
+  "noembed",
+  "noframes",
+  "script",
+  "style",
+  "textarea",
+  "title",
+  "xmp",
+]);
+
+function scanDocumentTags(html: string): DocumentTags {
+  const found: DocumentTags = {};
+  let bodyStarted = false;
+  let offset = 0;
+
+  while (offset < html.length) {
+    const tagStart = html.indexOf("<", offset);
+    if (tagStart === -1) break;
+
+    if (html.startsWith("<!--", tagStart)) {
+      const commentEnd = findCommentEnd(html, tagStart);
+      if (commentEnd === -1) break;
+      offset = commentEnd;
+      continue;
+    }
+    if (startsWithIgnoreCase(html, "<![CDATA[", tagStart)) {
+      const cdataEnd = html.indexOf("]]>", tagStart + 9);
+      if (cdataEnd === -1) break;
+      offset = cdataEnd + 3;
+      continue;
+    }
+    if (html.startsWith("<!", tagStart) || html.startsWith("<?", tagStart)) {
+      const declarationEnd = findMarkupEnd(html, tagStart + 2, true);
+      if (declarationEnd === -1) break;
+      offset = declarationEnd;
+      continue;
+    }
+
+    const parsed = parseTag(html, tagStart);
+    if (parsed === "incomplete") break;
+    if (parsed === null) {
+      offset = tagStart + 1;
+      continue;
+    }
+
+    if (parsed.closing) {
+      if (
+        parsed.name === "head" &&
+        found.headContentStart !== undefined &&
+        found.headContentEnd === undefined
+      ) {
+        found.headContentEnd = parsed.start;
+      }
+      offset = parsed.end;
+      continue;
+    }
+
+    if (parsed.name === "html" && found.htmlContentStart === undefined) {
+      found.htmlContentStart = parsed.end;
+    } else if (parsed.name === "head" && !bodyStarted) {
+      found.headContentStart ??= parsed.end;
+    } else if (parsed.name === "body") {
+      bodyStarted = true;
+    }
+
+    if (parsed.name === "plaintext" && !parsed.selfClosing) break;
+    if (RAW_TEXT_ELEMENTS.has(parsed.name) && !parsed.selfClosing) {
+      const closeStart = findRawTextClose(html, parsed.name, parsed.end);
+      if (closeStart === -1) break;
+      offset = closeStart;
+    } else {
+      offset = parsed.end;
+    }
+  }
+
+  return found;
+}
+
+function parseTag(html: string, start: number): ParsedTag | "incomplete" | null {
+  let offset = start + 1;
+  const closing = html[offset] === "/";
+  if (closing) offset += 1;
+  const nameStart = offset;
+  while (offset < html.length && isTagNameCharacter(html[offset])) offset += 1;
+  if (offset === nameStart) return null;
+  const end = findMarkupEnd(html, offset, false);
+  if (end === -1) return "incomplete";
+  let beforeEnd = end - 2;
+  while (beforeEnd >= offset && isHtmlWhitespace(html[beforeEnd])) beforeEnd -= 1;
+  return {
+    name: html.slice(nameStart, offset).toLowerCase(),
+    start,
+    end,
+    closing,
+    selfClosing: html[beforeEnd] === "/",
+  };
+}
+
+function findMarkupEnd(
+  html: string,
+  start: number,
+  trackDeclarationSubset: boolean,
+): number {
+  let quote: '"' | "'" | undefined;
+  let subsetDepth = 0;
+  for (let offset = start; offset < html.length; offset += 1) {
+    const character = html[offset];
+    if (quote !== undefined) {
+      if (character === quote) quote = undefined;
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      quote = character;
+    } else if (trackDeclarationSubset && character === "[") {
+      subsetDepth += 1;
+    } else if (trackDeclarationSubset && character === "]" && subsetDepth > 0) {
+      subsetDepth -= 1;
+    } else if (character === ">" && subsetDepth === 0) {
+      return offset + 1;
+    }
+  }
+  return -1;
+}
+
+function findRawTextClose(html: string, name: string, start: number): number {
+  const lower = html.toLowerCase();
+  if (name === "script") return findScriptClose(lower, start);
+  const needle = `</${name}`;
+  let offset = lower.indexOf(needle, start);
+  while (offset !== -1) {
+    const boundary = html[offset + needle.length];
+    if (boundary === ">" || boundary === "/" || isHtmlWhitespace(boundary)) {
+      return offset;
+    }
+    offset = lower.indexOf(needle, offset + needle.length);
+  }
+  return -1;
+}
+
+function findCommentEnd(html: string, start: number): number {
+  if (html[start + 4] === ">") return start + 5;
+  if (html.startsWith("->", start + 4)) return start + 6;
+  const standard = html.indexOf("-->", start + 4);
+  const alternate = html.indexOf("--!>", start + 4);
+  if (standard === -1) return alternate === -1 ? -1 : alternate + 4;
+  if (alternate === -1) return standard + 3;
+  return standard < alternate ? standard + 3 : alternate + 4;
+}
+
+function findScriptClose(lowerHtml: string, start: number): number {
+  let state: "data" | "escaped" | "double-escaped" = "data";
+  let offset = start;
+  while (offset < lowerHtml.length) {
+    if (lowerHtml.startsWith("-->", offset) && state !== "data") {
+      state = "data";
+      offset += 3;
+      continue;
+    }
+    if (state === "data" && lowerHtml.startsWith("<!--", offset)) {
+      state = "escaped";
+      offset += 4;
+      continue;
+    }
+    if (
+      state === "escaped" &&
+      lowerHtml.startsWith("<script", offset) &&
+      hasRawTextBoundary(lowerHtml[offset + "<script".length])
+    ) {
+      state = "double-escaped";
+      offset += "<script".length;
+      continue;
+    }
+    if (
+      lowerHtml.startsWith("</script", offset) &&
+      hasRawTextBoundary(lowerHtml[offset + "</script".length])
+    ) {
+      if (state !== "double-escaped") return offset;
+      state = "escaped";
+      offset += "</script".length;
+      continue;
+    }
+    offset += 1;
+  }
+  return -1;
+}
+
+function hasRawTextBoundary(character: string | undefined): boolean {
+  return character === ">" || character === "/" || isHtmlWhitespace(character);
+}
+
+function startsWithIgnoreCase(html: string, token: string, at: number): boolean {
+  return html.slice(at, at + token.length).toLowerCase() === token.toLowerCase();
+}
+
+function isTagNameCharacter(character: string | undefined): boolean {
+  return character !== undefined && /[A-Za-z0-9:-]/u.test(character);
+}
+
+function isHtmlWhitespace(character: string | undefined): boolean {
+  return character !== undefined && /[\t\n\f\r ]/u.test(character);
 }
 
 function escapeAttribute(value: string): string {

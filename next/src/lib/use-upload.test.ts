@@ -18,6 +18,20 @@ const reactTestEnvironment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT: boolean;
 };
 
+function deferred<T>(): {
+  promise: Promise<T>;
+  resolve(value: T): void;
+  reject(reason: unknown): void;
+} {
+  let resolve!: (value: T) => void;
+  let reject!: (reason: unknown) => void;
+  const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, resolve, reject };
+}
+
 function task(overrides: Partial<Task> = {}): Task {
   return {
     id: "task-1",
@@ -49,23 +63,35 @@ function asset(overrides: Partial<ProjectAsset> = {}): ProjectAsset {
 async function renderUpload(projectId?: string): Promise<{
   current: () => ReturnType<typeof useUploadFile>;
   root: Root;
+  rerender: (nextProjectId?: string) => Promise<void>;
 }> {
   let result: ReturnType<typeof useUploadFile> | undefined;
 
-  function Harness() {
-    result = useUploadFile(projectId === undefined ? undefined : { projectId });
+  function Harness({ activeProjectId }: { activeProjectId?: string }) {
+    result = useUploadFile(
+      activeProjectId === undefined ? undefined : { projectId: activeProjectId },
+    );
     return null;
   }
 
   const root = createRoot(document.createElement("div"));
   roots.push(root);
-  await act(async () => root.render(createElement(Harness)));
+  await act(async () =>
+    root.render(createElement(Harness, { activeProjectId: projectId })),
+  );
   return {
     current: () => {
       if (result === undefined) throw new Error("Upload hook did not render.");
       return result;
     },
     root,
+    rerender: async (nextProjectId?: string) => {
+      await act(async () =>
+        root.render(
+          createElement(Harness, { activeProjectId: nextProjectId }),
+        ),
+      );
+    },
   };
 }
 
@@ -74,6 +100,16 @@ function activeTask(): Task {
   const active = state.tasks.find((candidate) => candidate.id === state.activeTaskId);
   if (active === undefined) throw new Error("Active test task is missing.");
   return active;
+}
+
+function attachActiveTaskToProject(projectId: string): void {
+  useStore.setState((state) => ({
+    tasks: state.tasks.map((candidate) =>
+      candidate.id === state.activeTaskId
+        ? { ...candidate, serverProjectId: projectId }
+        : candidate,
+    ),
+  }));
 }
 
 beforeEach(() => {
@@ -120,6 +156,7 @@ describe("useUploadFile", () => {
   });
 
   it("uploads a project image once and appends an escaped portable reference", async () => {
+    attachActiveTaskToProject(PROJECT_ID);
     const originalName = String.raw`Hero \[final].PNG`;
     const file = new File([Uint8Array.of(1, 2, 3)], originalName, {
       type: "image/png",
@@ -145,6 +182,7 @@ describe("useUploadFile", () => {
   });
 
   it("uploads duplicate project images sequentially and appends each server path", async () => {
+    attachActiveTaskToProject(PROJECT_ID);
     const first = new File([Uint8Array.of(1)], "Hero.PNG", {
       type: "image/png",
     });
@@ -208,6 +246,7 @@ describe("useUploadFile", () => {
   });
 
   it("parses project text files while sending only image candidates to the server", async () => {
+    attachActiveTaskToProject(PROJECT_ID);
     const textFile = new File(["notes"], "notes.txt", { type: "text/plain" });
     const imageFile = new File([Uint8Array.of(1, 2)], "Hero.PNG", {
       type: "image/png",
@@ -231,12 +270,14 @@ describe("useUploadFile", () => {
     expect(activeTask().content).toBe(
       "Parsed notes\n\n![Hero.PNG](assets/hero.png)",
     );
+    expect(activeTask().format).toBe("text");
   });
 
   it.each([
     ["SVG", "vector.svg", "image/svg+xml"],
     ["BMP", "bitmap.bmp", "image/bmp"],
   ])("sends dragged %s image candidates to the authoritative server path", async (_label, name, type) => {
+    attachActiveTaskToProject(PROJECT_ID);
     const file = new File(["unsupported"], name, { type });
     vi.mocked(uploadProjectAsset).mockRejectedValue(
       new Error("Unsupported project image"),
@@ -252,6 +293,7 @@ describe("useUploadFile", () => {
   });
 
   it("exposes uploading state until the project image request settles", async () => {
+    attachActiveTaskToProject(PROJECT_ID);
     const file = new File([Uint8Array.of(1)], "Hero.PNG", {
       type: "image/png",
     });
@@ -277,6 +319,202 @@ describe("useUploadFile", () => {
       await ingestPromise;
     });
 
+    expect(hook.current().uploading).toBe(false);
+  });
+
+  it("discards a completed project upload after navigation without changing another project's autosave inputs", async () => {
+    const firstProject = task({
+      id: "project-a-task",
+      serverProjectId: PROJECT_ID,
+      content: "Project A",
+      html: "<html>A</html>",
+      templateId: "project-a-template",
+    });
+    const secondProjectId = "BcDeFgHiJkLmNoPqRsTuVw";
+    const secondProject = task({
+      id: "project-b-task",
+      serverProjectId: secondProjectId,
+      content: "Project B",
+      html: "<html>B</html>",
+      templateId: "project-b-template",
+      log: [{ kind: "info", text: "existing", ts: 2 }],
+    });
+    useStore.setState({
+      tasks: [firstProject, secondProject],
+      activeTaskId: firstProject.id,
+    });
+    const upload = deferred<ProjectAsset>();
+    vi.mocked(uploadProjectAsset).mockReturnValue(upload.promise);
+    const file = new File([Uint8Array.of(1)], "Hero.PNG", {
+      type: "image/png",
+    });
+    const hook = await renderUpload(PROJECT_ID);
+    let ingestion!: Promise<void>;
+
+    act(() => {
+      ingestion = hook.current().ingest([file]);
+    });
+    await act(async () => Promise.resolve());
+    act(() => {
+      useStore.setState({
+        tasks: [firstProject, secondProject],
+        activeTaskId: secondProject.id,
+      });
+    });
+    upload.resolve(asset({ originalName: file.name }));
+    await act(async () => ingestion);
+
+    const state = useStore.getState();
+    expect(state.tasks).toEqual([firstProject, secondProject]);
+    expect(state.activeTaskId).toBe(secondProject.id);
+    expect(hook.current().error).toBeNull();
+  });
+
+  it("discards parsed local image state after its originating task is removed", async () => {
+    const removed = task({ id: "removed-task", content: "Removed" });
+    const survivor = task({
+      id: "survivor-task",
+      content: "Survivor",
+      html: "<html>survivor</html>",
+      templateId: "survivor-template",
+      assets: { existing: "data:image/png;base64,AA==" },
+      log: [{ kind: "info", text: "existing", ts: 2 }],
+    });
+    useStore.setState({ tasks: [removed, survivor], activeTaskId: removed.id });
+    const parsed = deferred<Awaited<ReturnType<typeof parseFile>>>();
+    vi.mocked(parseFile).mockReturnValue(parsed.promise);
+    const file = new File([Uint8Array.of(1)], "Local.PNG", {
+      type: "image/png",
+    });
+    const hook = await renderUpload();
+    let ingestion!: Promise<void>;
+
+    act(() => {
+      ingestion = hook.current().ingest([file]);
+    });
+    await act(async () => Promise.resolve());
+    act(() => {
+      useStore.setState({ tasks: [survivor], activeTaskId: survivor.id });
+    });
+    parsed.resolve({
+      filename: file.name,
+      format: "image",
+      text: "fallback",
+      dataUrl: "data:image/png;base64,AQ==",
+    });
+    await act(async () => ingestion);
+
+    expect(useStore.getState().tasks).toEqual([survivor]);
+    expect(hook.current().error).toBeNull();
+  });
+
+  it("does not publish an old request's error after the hook project is replaced", async () => {
+    const oldProject = task({
+      id: "old-project-task",
+      serverProjectId: PROJECT_ID,
+    });
+    const newProjectId = "BcDeFgHiJkLmNoPqRsTuVw";
+    const newProject = task({
+      id: "new-project-task",
+      serverProjectId: newProjectId,
+    });
+    useStore.setState({ tasks: [oldProject, newProject], activeTaskId: oldProject.id });
+    const upload = deferred<ProjectAsset>();
+    vi.mocked(uploadProjectAsset).mockReturnValue(upload.promise);
+    const file = new File([Uint8Array.of(1)], "Hero.PNG", {
+      type: "image/png",
+    });
+    const hook = await renderUpload(PROJECT_ID);
+    const staleIngest = hook.current().ingest;
+    let ingestion!: Promise<void>;
+
+    act(() => {
+      ingestion = hook.current().ingest([file]);
+    });
+    await act(async () => Promise.resolve());
+    await hook.rerender(newProjectId);
+    let staleIngestion!: Promise<void>;
+    act(() => {
+      staleIngestion = staleIngest([file]);
+    });
+    await act(async () => Promise.resolve());
+
+    expect(uploadProjectAsset).toHaveBeenCalledTimes(1);
+    expect(hook.current().uploading).toBe(false);
+
+    act(() => {
+      useStore.setState({
+        tasks: [oldProject, newProject],
+        activeTaskId: newProject.id,
+      });
+    });
+    upload.reject(new Error("old request failed"));
+    await act(async () => Promise.all([ingestion, staleIngestion]));
+
+    expect(useStore.getState().tasks).toEqual([oldProject, newProject]);
+    expect(hook.current().error).toBeNull();
+    expect(hook.current().uploading).toBe(false);
+  });
+
+  it("serializes overlapping ingest calls and remains uploading until the queue drains", async () => {
+    useStore.setState({
+      tasks: [task({ serverProjectId: PROJECT_ID })],
+      activeTaskId: "task-1",
+    });
+    const firstUpload = deferred<ProjectAsset>();
+    const secondUpload = deferred<ProjectAsset>();
+    vi.mocked(uploadProjectAsset)
+      .mockReturnValueOnce(firstUpload.promise)
+      .mockReturnValueOnce(secondUpload.promise);
+    const first = new File([Uint8Array.of(1)], "First.PNG", {
+      type: "image/png",
+    });
+    const second = new File([Uint8Array.of(2)], "Second.PNG", {
+      type: "image/png",
+    });
+    const hook = await renderUpload(PROJECT_ID);
+    let firstIngestion!: Promise<void>;
+    let secondIngestion!: Promise<void>;
+
+    act(() => {
+      firstIngestion = hook.current().ingest([first]);
+      secondIngestion = hook.current().ingest([second]);
+    });
+    await act(async () => Promise.resolve());
+
+    expect(uploadProjectAsset).toHaveBeenCalledTimes(1);
+    expect(uploadProjectAsset).toHaveBeenNthCalledWith(1, PROJECT_ID, first);
+    expect(hook.current().uploading).toBe(true);
+
+    firstUpload.resolve(
+      asset({
+        originalName: first.name,
+        filename: "first.png",
+        path: "assets/first.png",
+      }),
+    );
+    await act(async () => {
+      await firstIngestion;
+      await Promise.resolve();
+    });
+
+    expect(uploadProjectAsset).toHaveBeenCalledTimes(2);
+    expect(uploadProjectAsset).toHaveBeenNthCalledWith(2, PROJECT_ID, second);
+    expect(activeTask().content).toBe("![First.PNG](assets/first.png)");
+    expect(hook.current().uploading).toBe(true);
+
+    secondUpload.resolve(
+      asset({
+        originalName: second.name,
+        filename: "second.png",
+        path: "assets/second.png",
+      }),
+    );
+    await act(async () => secondIngestion);
+
+    expect(activeTask().content).toBe(
+      "![First.PNG](assets/first.png)\n\n![Second.PNG](assets/second.png)",
+    );
     expect(hook.current().uploading).toBe(false);
   });
 });

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { parseDeck } from "../deck";
 import { extractHtml, injectPreviewBase, previewHtml } from "../extract-html";
 
 describe("extractHtml", () => {
@@ -89,5 +90,72 @@ describe("injectPreviewBase", () => {
     injectPreviewBase(source, "/api/projects/id/");
 
     expect(source).toBe(snapshot);
+  });
+
+  it("ignores fake head tags in comments, raw text, and quoted attributes", () => {
+    const source =
+      '<!doctype html><html data-note="> <head>"><!-- <head> --><script>const fake = "<head>";</script><style>.fake::before { content: "<head>"; }</style><head><base href="https://attacker.invalid/"><title>Demo</title></head><body>Demo</body></html>';
+
+    const result = injectPreviewBase(source, "/api/projects/project-id/");
+
+    expect(result).toContain(
+      '<head><base href="/api/projects/project-id/"><base href="https://attacker.invalid/">',
+    );
+    expect(result.indexOf('/api/projects/project-id/')).toBeLessThan(
+      result.indexOf("https://attacker.invalid/"),
+    );
+  });
+
+  it("finds the real html tag in partial streaming input after fake tags", () => {
+    const source =
+      '<!-- <html><head> --><script>const fake = "<html><head>";</script><html data-note="<head> >"><body>streaming';
+
+    expect(injectPreviewBase(source, "/api/projects/id/")).toBe(
+      '<!-- <html><head> --><script>const fake = "<html><head>";</script><html data-note="<head> >"><head><base href="/api/projects/id/"></head><body>streaming',
+    );
+  });
+
+  it("ignores fake head tags inside declarations", () => {
+    const source =
+      '<!DOCTYPE html [<!ENTITY fake "<head>">]><html><head><base href="https://attacker.invalid/"></head><body>Demo</body></html>';
+
+    expect(injectPreviewBase(source, "/api/projects/id/")).toContain(
+      '<head><base href="/api/projects/id/"><base href="https://attacker.invalid/">',
+    );
+  });
+
+  it("ignores fake head tags in double-escaped script data", () => {
+    const source =
+      '<!doctype html><html><script><!--<script></script><head>--></script><head><base href="https://attacker.invalid/"></head><body>Demo</body></html>';
+
+    expect(injectPreviewBase(source, "/api/projects/id/")).toContain(
+      '<head><base href="/api/projects/id/"><base href="https://attacker.invalid/">',
+    );
+  });
+
+  it("recognizes the HTML alternate comment closing sequence", () => {
+    const source =
+      '<!doctype html><html><!-- <head> --!><head><base href="https://attacker.invalid/"></head><body>Demo</body></html>';
+
+    expect(injectPreviewBase(source, "/api/projects/id/")).toContain(
+      '<head><base href="/api/projects/id/"><base href="https://attacker.invalid/">',
+    );
+  });
+
+  it("keeps the project base first in each standalone deck document", () => {
+    const source =
+      '<!doctype html><html><!-- <head> --><head><base href="https://attacker.invalid/"><title>Deck</title></head><body><section class="slide" data-slide-id="1">Slide</section></body></html>';
+
+    const rendered = injectPreviewBase(source, "/api/projects/project-id/");
+    const deck = parseDeck(rendered);
+
+    expect(deck.isDeck).toBe(true);
+    expect(deck.slides).toHaveLength(1);
+    expect(deck.slides[0].html).toContain(
+      '<head><base href="/api/projects/project-id/"><base href="https://attacker.invalid/">',
+    );
+    expect(deck.slides[0].html.indexOf('/api/projects/project-id/')).toBeLessThan(
+      deck.slides[0].html.indexOf("https://attacker.invalid/"),
+    );
   });
 });
