@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useT } from "@/lib/i18n";
 import {
@@ -18,6 +24,17 @@ type LoadState =
   | { status: "not-found" }
   | { status: "error" };
 
+type WorkspaceLifetime = {
+  active: boolean;
+  projectId: string;
+};
+
+type UnregisterAttempt = {
+  id: number;
+  projectId: string;
+  lifetime: WorkspaceLifetime;
+};
+
 export function ProjectWorkspace({ projectId }: { projectId: string }) {
   const hydrated = usePersistHydrated();
   const loadServerProject = useStore((state) => state.loadServerProject);
@@ -31,7 +48,10 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
   const [unregistering, setUnregistering] = useState(false);
   const [unregisterFailed, setUnregisterFailed] = useState(false);
   const unregisteringRef = useRef(false);
-  const unregisterRequestStartedRef = useRef(false);
+  const unregisterAttemptIdRef = useRef(0);
+  const unregisterAttemptRef = useRef<UnregisterAttempt | null>(null);
+  const unregisterRequestStartedRef = useRef<number | null>(null);
+  const workspaceLifetimeRef = useRef<WorkspaceLifetime | null>(null);
   const router = useRouter();
   const t = useT();
   const ready =
@@ -42,6 +62,25 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
     taskId,
     enabled: ready,
   });
+
+  useLayoutEffect(() => {
+    const lifetime: WorkspaceLifetime = { active: true, projectId };
+    workspaceLifetimeRef.current = lifetime;
+    unregisteringRef.current = false;
+    unregisterAttemptRef.current = null;
+    unregisterRequestStartedRef.current = null;
+    setUnregistering(false);
+    setUnregisterFailed(false);
+
+    return () => {
+      lifetime.active = false;
+      if (workspaceLifetimeRef.current !== lifetime) return;
+      workspaceLifetimeRef.current = null;
+      unregisteringRef.current = false;
+      unregisterAttemptRef.current = null;
+      unregisterRequestStartedRef.current = null;
+    };
+  }, [projectId]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -83,23 +122,58 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
       return;
     }
 
+    const lifetime = workspaceLifetimeRef.current;
+    if (
+      lifetime === null ||
+      !lifetime.active ||
+      lifetime.projectId !== projectId
+    ) {
+      return;
+    }
+
+    const attempt: UnregisterAttempt = {
+      id: unregisterAttemptIdRef.current + 1,
+      projectId,
+      lifetime,
+    };
+    unregisterAttemptIdRef.current = attempt.id;
+    unregisterAttemptRef.current = attempt;
     unregisteringRef.current = true;
     setUnregisterFailed(false);
     setUnregistering(true);
   }, [autosave.canUnregister, projectId, projectName, ready, t]);
 
   useEffect(() => {
-    if (!unregistering || unregisterRequestStartedRef.current) return;
+    const attempt = unregisterAttemptRef.current;
+    if (
+      !unregistering ||
+      attempt === null ||
+      unregisterRequestStartedRef.current === attempt.id
+    ) {
+      return;
+    }
 
-    unregisterRequestStartedRef.current = true;
-    void unregisterServerProject(projectId)
+    const isCurrentAttempt = () =>
+      attempt.lifetime.active &&
+      attempt.lifetime.projectId === attempt.projectId &&
+      workspaceLifetimeRef.current === attempt.lifetime &&
+      unregisterAttemptRef.current === attempt;
+    if (!isCurrentAttempt()) return;
+
+    unregisterRequestStartedRef.current = attempt.id;
+    void unregisterServerProject(attempt.projectId)
       .then(() => {
-        removeServerProject(projectId);
+        if (!isCurrentAttempt()) return;
+        unregisterAttemptRef.current = null;
+        unregisteringRef.current = false;
+        removeServerProject(attempt.projectId);
         router.replace("/");
       })
       .catch(() => {
+        if (!isCurrentAttempt()) return;
+        unregisterAttemptRef.current = null;
         unregisteringRef.current = false;
-        unregisterRequestStartedRef.current = false;
+        unregisterRequestStartedRef.current = null;
         setUnregistering(false);
         setUnregisterFailed(true);
       });
