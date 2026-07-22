@@ -109,6 +109,21 @@ async function expectNoStore(res: Response): Promise<void> {
   expect(res.headers.get("Cache-Control")).toBe("no-store");
 }
 
+function streamedRequest(
+  body: ReadableStream<Uint8Array>,
+  headers?: HeadersInit,
+): Request {
+  const req = new Request("https://example.invalid", {
+    method: "POST",
+    body,
+    duplex: "half",
+  } as RequestInit & { duplex: "half" });
+  if (headers !== undefined) {
+    Object.defineProperty(req, "headers", { value: new Headers(headers) });
+  }
+  return req;
+}
+
 describe("isLoopbackCreationRequest", () => {
   it.each([
     "localhost",
@@ -142,6 +157,66 @@ describe("isLoopbackCreationRequest", () => {
 });
 
 describe("readBoundedJson", () => {
+  it("rejects an oversized stream without pulling its remainder", async () => {
+    const encoder = new TextEncoder();
+    const chunks = [
+      encoder.encode('{"value":"'),
+      encoder.encode("too large"),
+      encoder.encode('"}'),
+    ];
+    let pulls = 0;
+    let cancellations = 0;
+    const body = new ReadableStream<Uint8Array>(
+      {
+        pull(controller) {
+          controller.enqueue(chunks[pulls]);
+          pulls += 1;
+          if (pulls === chunks.length) controller.close();
+        },
+        cancel() {
+          cancellations += 1;
+        },
+      },
+      { highWaterMark: 0 },
+    );
+    const req = streamedRequest(body);
+
+    await expect(readBoundedJson(req, chunks[0].byteLength)).rejects.toMatchObject({
+      code: "limit_exceeded",
+      httpStatus: 413,
+    });
+    expect(pulls).toBe(2);
+    expect(cancellations).toBe(1);
+    expect(req.body?.locked).toBe(false);
+  });
+
+  it("rejects an oversized Content-Length before pulling the body", async () => {
+    let pulls = 0;
+    let cancellations = 0;
+    const body = new ReadableStream<Uint8Array>(
+      {
+        pull(controller) {
+          pulls += 1;
+          controller.enqueue(new TextEncoder().encode("{}"));
+          controller.close();
+        },
+        cancel() {
+          cancellations += 1;
+        },
+      },
+      { highWaterMark: 0 },
+    );
+    const req = streamedRequest(body, { "Content-Length": "3" });
+
+    expect(req.headers.get("content-length")).toBe("3");
+    await expect(readBoundedJson(req, 2)).rejects.toMatchObject({
+      code: "limit_exceeded",
+      httpStatus: 413,
+    });
+    expect(pulls).toBe(0);
+    expect(cancellations).toBe(1);
+  });
+
   it("parses JSON whose encoded body is exactly at the limit", async () => {
     const body = JSON.stringify({ value: "🙂" });
     const req = new Request("https://example.invalid", { method: "POST", body });

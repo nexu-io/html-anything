@@ -31,10 +31,48 @@ export async function readBoundedJson(
   req: Request,
   maxBytes: number,
 ): Promise<unknown> {
-  const text = await req.text();
-  if (Buffer.byteLength(text) > maxBytes) {
+  const contentLength = req.headers.get("content-length");
+  if (
+    contentLength !== null &&
+    /^[0-9]+$/u.test(contentLength) &&
+    BigInt(contentLength) > BigInt(maxBytes)
+  ) {
+    try {
+      await req.body?.cancel();
+    } catch {
+      // The size error remains authoritative if transport cancellation fails.
+    }
     throw new ProjectError("limit_exceeded", "Request body exceeds its limit.");
   }
+
+  const chunks: Uint8Array[] = [];
+  let bytes = 0;
+  if (req.body !== null) {
+    const reader = req.body.getReader();
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (value.byteLength > maxBytes - bytes) {
+          try {
+            await reader.cancel();
+          } catch {
+            // The size error remains authoritative if transport cancellation fails.
+          }
+          throw new ProjectError(
+            "limit_exceeded",
+            "Request body exceeds its limit.",
+          );
+        }
+        chunks.push(value);
+        bytes += value.byteLength;
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
+  const text = Buffer.concat(chunks, bytes).toString("utf8");
   try {
     return JSON.parse(text) as unknown;
   } catch {
