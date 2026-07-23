@@ -9,6 +9,7 @@ import {
   type CreateProjectResult,
   type PatchProjectInput,
   type ProjectAsset,
+  type ProjectConversionContext,
   type ProjectSnapshot,
 } from "./contracts";
 import {
@@ -20,7 +21,8 @@ import { createProjectStore } from "./storage";
 export type ProjectService = {
   create(input: CreateProjectInput): Promise<CreateProjectResult>;
   get(id: string): Promise<ProjectSnapshot>;
-  patch(id: string, patch: PatchProjectInput): Promise<ProjectSnapshot>;
+  resolveConversionContext(id: string): Promise<ProjectConversionContext>;
+  patch(id: string, patch: PatchProjectInput): Promise<void>;
   putAsset(
     id: string,
     originalName: string,
@@ -77,6 +79,7 @@ export function createProjectService(
   return {
     create,
     get: (id) => deps.store.get(id),
+    resolveConversionContext: (id) => deps.store.resolveConversionContext(id),
     patch: (id, patch) => deps.store.patch(id, patch),
     putAsset: (id, originalName, bytes) =>
       deps.store.putAsset(id, originalName, bytes),
@@ -169,6 +172,9 @@ export const projectService: ProjectService = {
   },
   async get(id) {
     return getConfiguredService().get(id);
+  },
+  async resolveConversionContext(id) {
+    return getConfiguredService().resolveConversionContext(id);
   },
   async patch(id, patch) {
     return getConfiguredService().patch(id, patch);

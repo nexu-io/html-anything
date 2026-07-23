@@ -245,6 +245,7 @@ type State = {
 
   // per-task convert-state setters (used by convert pipeline so a background
   // task keeps streaming even when the user switches to a different one)
+  setContentFor: (taskId: string, content: string) => void;
   setHtmlFor: (taskId: string, html: string) => void;
   appendHtmlFor: (taskId: string, chunk: string) => void;
   resetHtmlFor: (taskId: string) => void;
@@ -469,6 +470,8 @@ export const useStore = create<State>()(
           })),
         })),
 
+      setContentFor: (taskId, content) =>
+        set((st) => ({ tasks: patchTask(st.tasks, taskId, { content }) })),
       setHtmlFor: (taskId, html) =>
         set((st) => ({ tasks: patchTask(st.tasks, taskId, { html }) })),
       appendHtmlFor: (taskId, chunk) =>

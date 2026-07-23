@@ -22,10 +22,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   PROJECT_ASSET_MAX_BYTES,
   PROJECT_DIAGNOSTIC_MAX_BYTES,
+  PROJECT_GENERATION_DEADLINE_MS,
   PROJECT_HTML_MAX_BYTES,
   type CreateProjectInput,
 } from "../contracts";
-import { createProjectStore } from "../storage";
+import {
+  createProjectStore,
+  type ProjectStoreOptions,
+} from "../storage";
 
 type OpenedFile = Awaited<ReturnType<typeof open>>;
 
@@ -88,6 +92,12 @@ describe("project storage", () => {
     await expect(lstat(registryPath())).rejects.toMatchObject({ code: "ENOENT" });
 
     const ready = await store.markReady(prepared, HTML);
+
+    await expect(store.resolveConversionContext(PROJECT_ID)).resolves.toEqual({
+      cwd: workspaceRoot,
+      instruction: input.instruction,
+      artifactDirectory: artifactPath(),
+    });
 
     expect(ready).toEqual({
       status: "ready",
@@ -179,6 +189,26 @@ describe("project storage", () => {
     await store.markReady(prepared, HTML);
 
     expect((await lstat(registryPath())).isFile()).toBe(true);
+  });
+
+  it("keeps seed files invisible until the project directory is complete", async () => {
+    let observed = false;
+    const store = makeStore(undefined, undefined, {
+      beforeProjectDirectoryPublish: async () => {
+        observed = true;
+        await expect(lstat(artifactPath())).rejects.toMatchObject({
+          code: "ENOENT",
+        });
+        throw new Error("simulated process interruption");
+      },
+    });
+
+    await expect(
+      store.prepare(validInput(workspaceRoot), "exact prompt"),
+    ).rejects.toMatchObject({ code: "storage_failed" });
+
+    expect(observed).toBe(true);
+    await expect(lstat(artifactPath())).rejects.toMatchObject({ code: "ENOENT" });
   });
 
   it("rejects an existing artifact directory without changing it", async () => {
@@ -343,7 +373,7 @@ describe("project storage", () => {
     await expect(lstat(artifactPath())).rejects.toMatchObject({ code: "ENOENT" });
   });
 
-  it("durably links each newly created directory before child publication", async () => {
+  it("durably syncs each newly created directory", async () => {
     const managedStateRoot = path.join(temporaryDirectory, "managed-state");
     const applicationStateRoot = path.join(managedStateRoot, "html-anything");
     registryRoot = path.join(applicationStateRoot, "project-registry");
@@ -375,11 +405,8 @@ describe("project storage", () => {
         registryRoot,
       ].map(directoryIdentity),
     );
-    let previousIndex = -1;
     for (const identity of expectedOrder) {
-      const index = syncedDirectories.indexOf(identity);
-      expect(index).toBeGreaterThan(previousIndex);
-      previousIndex = index;
+      expect(syncedDirectories).toContain(identity);
     }
   });
 
@@ -557,6 +584,166 @@ describe("project storage", () => {
     });
   });
 
+  it("resumes exact failed creation inputs with a fresh project ID", async () => {
+    const store = makeStore();
+    const input = validInput(workspaceRoot);
+    const prepared = await store.prepare(input, "exact prompt");
+    await store.markFailed(prepared, "bounded diagnostic");
+
+    clock = new Date("2026-07-21T00:01:00.000Z");
+    const retryInput = { ...input, projectId: MISSING_PROJECT_ID };
+    const retry = await store.prepare(retryInput, "exact prompt");
+
+    expect(retry.project).toMatchObject({
+      projectId: MISSING_PROJECT_ID,
+      status: "generating",
+      createdAt: "2026-07-21T00:00:00.000Z",
+      updatedAt: "2026-07-21T00:01:00.000Z",
+    });
+    expect(retry.project).not.toHaveProperty("diagnostic");
+    await store.markReady(retry, HTML);
+    await expect(store.get(MISSING_PROJECT_ID)).resolves.toMatchObject({
+      project: { projectId: MISSING_PROJECT_ID, status: "ready" },
+      content: input.content,
+      html: HTML,
+    });
+  });
+
+  it("resumes an exact generating project after its deadline", async () => {
+    const store = makeStore();
+    const input = validInput(workspaceRoot);
+    await store.prepare(input, "exact prompt");
+
+    clock = new Date(
+      new Date("2026-07-21T00:00:00.000Z").getTime() +
+        PROJECT_GENERATION_DEADLINE_MS +
+        1,
+    );
+    const retry = await store.prepare(
+      { ...input, projectId: MISSING_PROJECT_ID },
+      "exact prompt",
+    );
+
+    expect(retry.project).toMatchObject({
+      projectId: MISSING_PROJECT_ID,
+      status: "generating",
+      createdAt: "2026-07-21T00:00:00.000Z",
+      updatedAt: clock.toISOString(),
+    });
+  });
+
+  it("does not reclaim a generating project before its deadline", async () => {
+    const store = makeStore();
+    const input = validInput(workspaceRoot);
+    await store.prepare(input, "exact prompt");
+
+    clock = new Date(
+      new Date("2026-07-21T00:00:00.000Z").getTime() +
+        PROJECT_GENERATION_DEADLINE_MS -
+        1,
+    );
+    await expect(
+      store.prepare(
+        { ...input, projectId: MISSING_PROJECT_ID },
+        "exact prompt",
+      ),
+    ).rejects.toMatchObject({ code: "project_exists" });
+
+    expect(
+      JSON.parse(await readFile(artifactPath("project.json"), "utf8")),
+    ).toMatchObject({ projectId: PROJECT_ID, status: "generating" });
+  });
+
+  it("restarts stale generation after HTML publication was interrupted", async () => {
+    const input = validInput(workspaceRoot);
+    const interrupted = makeStore(undefined, undefined, {
+      beforeReadyProjectPublish: async () => {
+        throw new Error("simulated process interruption");
+      },
+    });
+    const prepared = await interrupted.prepare(input, "exact prompt");
+    await expect(interrupted.markReady(prepared, HTML)).rejects.toMatchObject({
+      code: "storage_failed",
+    });
+    expect(await readFile(artifactPath("index.html"), "utf8")).toBe(HTML);
+
+    clock = new Date(
+      clock.getTime() + PROJECT_GENERATION_DEADLINE_MS + 1,
+    );
+    const retryInput = { ...input, projectId: MISSING_PROJECT_ID };
+    const restarted = makeStore();
+    await expect(restarted.findReadyCreation(retryInput)).resolves.toBeNull();
+    const retry = await restarted.prepare(retryInput, "exact prompt");
+
+    expect(retry.project).toMatchObject({
+      projectId: MISSING_PROJECT_ID,
+      status: "generating",
+    });
+    await expect(lstat(artifactPath("index.html"))).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+  });
+
+  it("registers an exact ready project after registry publication was interrupted", async () => {
+    const input = validInput(workspaceRoot);
+    const interrupted = makeStore(undefined, undefined, {
+      beforeRegistryPublish: async () => {
+        throw new Error("simulated process interruption");
+      },
+    });
+    const prepared = await interrupted.prepare(input, "exact prompt");
+    await expect(interrupted.markReady(prepared, HTML)).rejects.toMatchObject({
+      code: "storage_failed",
+    });
+    await expect(lstat(registryPath())).rejects.toMatchObject({ code: "ENOENT" });
+
+    const retryInput = { ...input, projectId: MISSING_PROJECT_ID };
+    const restarted = makeStore();
+    await expect(restarted.findReadyCreation(retryInput)).resolves.toEqual({
+      status: "ready",
+      projectId: MISSING_PROJECT_ID,
+      url: `https://host.ts.net:43233/projects/${MISSING_PROJECT_ID}`,
+      artifactDirectory: "artifacts/html-anything/q2-report",
+      sourcePaths: [],
+    });
+    await expect(restarted.get(MISSING_PROJECT_ID)).resolves.toMatchObject({
+      project: { projectId: MISSING_PROJECT_ID, status: "ready" },
+      content: input.content,
+      html: HTML,
+    });
+  });
+
+  it.each([
+    ["prompt", validInput, "different prompt"],
+    [
+      "content",
+      (root: string) => ({ ...validInput(root), content: "different content" }),
+      "exact prompt",
+    ],
+    [
+      "template",
+      (root: string) => ({ ...validInput(root), templateId: "landing-page" }),
+      "exact prompt",
+    ],
+  ])("does not reclaim failed artifacts for different %s", async (_field, retryInput, retryPrompt) => {
+    const store = makeStore();
+    const input = validInput(workspaceRoot);
+    const prepared = await store.prepare(input, "exact prompt");
+    await store.markFailed(prepared, "bounded diagnostic");
+
+    await expect(
+      store.prepare(retryInput(workspaceRoot), retryPrompt),
+    ).rejects.toMatchObject({ code: "project_exists" });
+
+    expect(
+      JSON.parse(await readFile(artifactPath("project.json"), "utf8")),
+    ).toMatchObject({
+      projectId: PROJECT_ID,
+      status: "failed",
+      diagnostic: "bounded diagnostic",
+    });
+  });
+
   it("patches only supplied mutable fields and enforces their bounds", async () => {
     const store = makeStore();
     const input = validInput(workspaceRoot);
@@ -574,11 +761,12 @@ describe("project storage", () => {
     expect(await readFile(artifactPath("index.html"), "utf8")).toBe(HTML);
 
     clock = new Date("2026-07-21T00:01:00.000Z");
-    const snapshot = await store.patch(PROJECT_ID, {
+    await expect(store.patch(PROJECT_ID, {
       content: "edited content",
       html: "<html><body>edited</body></html>",
       templateId: "blog-post",
-    });
+    })).resolves.toBeUndefined();
+    const snapshot = await store.get(PROJECT_ID);
 
     expect(snapshot).toMatchObject({
       content: "edited content",
@@ -599,6 +787,58 @@ describe("project storage", () => {
     expect(await readFile(registryPath(), "utf8")).toBe(beforeRegistry);
   });
 
+  it("does not replace unchanged artifact files during a partial patch", async () => {
+    const store = makeStore();
+    const prepared = await store.prepare(
+      validInput(workspaceRoot),
+      "exact prompt",
+    );
+    await store.markReady(prepared, HTML);
+    const beforeHtml = await stat(artifactPath("index.html"));
+
+    await store.patch(PROJECT_ID, { content: "content-only edit" });
+
+    expect((await stat(artifactPath("index.html"))).ino).toBe(beforeHtml.ino);
+    expect(await readFile(artifactPath("index.html"), "utf8")).toBe(HTML);
+    expect(await readFile(artifactPath("content.md"), "utf8")).toBe(
+      "content-only edit",
+    );
+  });
+
+  it("replays an interrupted multi-file patch as one revision", async () => {
+    const input = validInput(workspaceRoot);
+    const initial = makeStore();
+    const prepared = await initial.prepare(input, "exact prompt");
+    await initial.markReady(prepared, HTML);
+
+    clock = new Date("2026-07-21T00:02:00.000Z");
+    const interrupted = makeStore(undefined, undefined, {
+      beforePatchProjectPublish: async () => {
+        throw new Error("simulated process interruption");
+      },
+    });
+    await expect(
+      interrupted.patch(PROJECT_ID, {
+        content: "new content",
+        html: "<!doctype html><html><body>new html</body></html>",
+        templateId: "blog-post",
+      }),
+    ).rejects.toMatchObject({ code: "storage_failed" });
+
+    const restarted = makeStore();
+    await expect(restarted.get(PROJECT_ID)).resolves.toMatchObject({
+      project: {
+        templateId: "blog-post",
+        updatedAt: "2026-07-21T00:02:00.000Z",
+      },
+      content: "new content",
+      html: "<!doctype html><html><body>new html</body></html>",
+    });
+    await expect(
+      lstat(path.join(artifactPath(), ".patch.json")),
+    ).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
   it("does not patch stale artifacts after the registry capability is replaced", async () => {
     const store = makeStore();
     const prepared = await store.prepare(validInput(workspaceRoot), "exact prompt");
@@ -611,6 +851,40 @@ describe("project storage", () => {
 
     expect(await readFile(artifactPath("content.md"), "utf8")).toBe("# Q2");
     expect(await readFile(registryPath(), "utf8")).toBe(replacement);
+  });
+
+  it("promptly rejects a FIFO registry file", async () => {
+    const store = await readyStore();
+    const parked = `${registryPath()}.parked`;
+    await rename(registryPath(), parked);
+    await execFileAsync("mkfifo", [registryPath()]);
+    await chmod(registryPath(), 0o600);
+    const result = store.get(PROJECT_ID).then(
+      () => "unexpected_success",
+      (error: unknown) =>
+        typeof error === "object" && error !== null && "code" in error
+          ? String(error.code)
+          : "unexpected_error",
+    );
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const promptResult = await Promise.race([
+      result,
+      new Promise<null>((resolve) => {
+        timeout = setTimeout(() => resolve(null), 500);
+      }),
+    ]);
+    if (timeout !== undefined) clearTimeout(timeout);
+
+    if (promptResult === null) {
+      const writer = await open(
+        registryPath(),
+        fsConstants.O_WRONLY | fsConstants.O_NONBLOCK,
+      );
+      await writer.close();
+      await result;
+    }
+
+    expect(promptResult).toBe("storage_failed");
   });
 
   it("returns not found when a registered project directory is missing or moved", async () => {
@@ -677,6 +951,37 @@ describe("project storage", () => {
 
     expect(await readFile(registryPath(), "utf8")).toBe(replacement);
     expect(await readFile(artifactPath("index.html"), "utf8")).toBe(HTML);
+  });
+
+  it("skips unsupported directory syncs on Windows", async () => {
+    const sentinel = path.join(temporaryDirectory, "sentinel");
+    await writeFile(sentinel, "sentinel", { mode: 0o600 });
+    const prototype = await fileHandlePrototype(sentinel);
+    const originalSync = prototype.sync;
+    vi.spyOn(process, "platform", "get").mockReturnValue("win32");
+    vi.spyOn(prototype, "sync").mockImplementation(async function (
+      this: OpenedFile,
+    ) {
+      const metadata = await this.stat();
+      if (metadata.isDirectory()) {
+        throw Object.assign(new Error("Directory sync is unsupported."), {
+          code: "EINVAL",
+        });
+      }
+      return Reflect.apply(originalSync, this, []);
+    });
+    const store = makeStore();
+    const prepared = await store.prepare(
+      validInput(workspaceRoot),
+      "exact prompt",
+    );
+
+    await expect(store.markReady(prepared, HTML)).resolves.toMatchObject({
+      status: "ready",
+    });
+    await expect(
+      store.putAsset(PROJECT_ID, "hero.png", pngBytes()),
+    ).resolves.toMatchObject({ filename: "hero.png" });
   });
 
   describe("project assets", () => {
@@ -1113,6 +1418,39 @@ describe("project storage", () => {
       expect(await operationTemporaryFiles()).toEqual([]);
     });
 
+    it("removes a linked asset when post-link publication fails", async () => {
+      const store = await readyStore();
+      await mkdir(assetPath(), { mode: 0o700 });
+      const assetsIdentity = await directoryIdentity(assetPath());
+      const prototype = await fileHandlePrototype(artifactPath("project.json"));
+      const originalSync = prototype.sync;
+      let failedAfterLink = false;
+      vi.spyOn(prototype, "sync").mockImplementation(async function (
+        this: OpenedFile,
+      ) {
+        const metadata = await this.stat({ bigint: true });
+        if (
+          !failedAfterLink &&
+          metadata.isDirectory() &&
+          fileIdentity(metadata) === assetsIdentity
+        ) {
+          failedAfterLink = true;
+          throw new Error("simulated post-link sync failure");
+        }
+        return Reflect.apply(originalSync, this, []);
+      });
+
+      await expect(
+        store.putAsset(PROJECT_ID, "hero.png", pngBytes(0x01)),
+      ).rejects.toMatchObject({ code: "storage_failed" });
+
+      expect(failedAfterLink).toBe(true);
+      await expect(lstat(assetPath("hero.png"))).rejects.toMatchObject({
+        code: "ENOENT",
+      });
+      expect(await operationTemporaryFiles()).toEqual([]);
+    });
+
     it("maps a replaced artifact capability to bounded storage failure", async () => {
       const store = await readyStore();
       const bytes = pngBytes(0x04, 0x05);
@@ -1205,15 +1543,97 @@ describe("project storage", () => {
     });
 
     it("rejects a replacement registry capability before asset readback", async () => {
-      const store = await readyStore();
-      await store.putAsset(PROJECT_ID, "hero.png", pngBytes());
-      const replacement = await replaceRegistryDuringArtifactRead();
+      const initialStore = await readyStore();
+      await initialStore.putAsset(PROJECT_ID, "hero.png", pngBytes());
+      const current = JSON.parse(await readFile(registryPath(), "utf8"));
+      current.registeredAt = "2026-07-21T00:00:01.000Z";
+      const replacement = `${JSON.stringify(current)}\n`;
+      const parked = `${registryPath()}.parked`;
+      let replaced = false;
+      const store = makeStore(undefined, async () => {
+        if (replaced) return;
+        replaced = true;
+        await rename(registryPath(), parked);
+        await writeFile(registryPath(), replacement, {
+          flag: "wx",
+          mode: 0o600,
+        });
+      });
 
       await expect(
         store.getAsset(PROJECT_ID, "hero.png"),
       ).rejects.toMatchObject({ code: "storage_failed" });
 
+      expect(replaced).toBe(true);
       expect(await readFile(registryPath(), "utf8")).toBe(replacement);
+    });
+
+    it("reads an asset without loading the project content or HTML", async () => {
+      const store = await readyStore();
+      const bytes = pngBytes(0x01, 0x02);
+      const asset = await store.putAsset(PROJECT_ID, "hero.png", bytes);
+      const prototype = await fileHandlePrototype(assetPath("hero.png"));
+      const originalReadFile = prototype.readFile;
+      const projectPayloads = [
+        Buffer.from("# Q2"),
+        Buffer.from(HTML),
+      ];
+      let projectPayloadRead = false;
+      vi.spyOn(prototype, "readFile").mockImplementation(async function (
+        this: OpenedFile,
+        ...arguments_: Parameters<OpenedFile["readFile"]>
+      ) {
+        const result = await Reflect.apply(originalReadFile, this, arguments_);
+        if (
+          Buffer.isBuffer(result) &&
+          projectPayloads.some((payload) => result.equals(payload))
+        ) {
+          projectPayloadRead = true;
+        }
+        return result;
+      });
+
+      await expect(store.getAsset(PROJECT_ID, "hero.png")).resolves.toEqual({
+        asset,
+        bytes: Buffer.from(bytes),
+      });
+
+      expect(projectPayloadRead).toBe(false);
+    });
+
+    it("captures asset metadata outside an overlapping project patch", async () => {
+      const initialStore = await readyStore();
+      const bytes = pngBytes(0x01, 0x02);
+      await initialStore.putAsset(PROJECT_ID, "hero.png", bytes);
+      let patchReachedPublish!: () => void;
+      const atPatchPublish = new Promise<void>((resolve) => {
+        patchReachedPublish = resolve;
+      });
+      let releasePatch!: () => void;
+      const patchRelease = new Promise<void>((resolve) => {
+        releasePatch = resolve;
+      });
+      const store = makeStore(undefined, undefined, {
+        beforePatchProjectPublish: async () => {
+          patchReachedPublish();
+          await patchRelease;
+        },
+      });
+      const patch = store.patch(PROJECT_ID, { content: "overlapping edit" });
+      await atPatchPublish;
+      let assetSettled = false;
+      const assetRead = store.getAsset(PROJECT_ID, "hero.png").finally(() => {
+        assetSettled = true;
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(assetSettled).toBe(false);
+
+      releasePatch();
+      await expect(patch).resolves.toBeUndefined();
+      await expect(assetRead).resolves.toMatchObject({
+        bytes: Buffer.from(bytes),
+      });
     });
 
     it("preserves published assets after unregister", async () => {
@@ -1276,6 +1696,13 @@ describe("project storage", () => {
   function makeStore(
     managedRegistryBoundary?: string,
     beforeAssetCapabilityRevalidation?: () => Promise<void>,
+    lifecycleHooks: Pick<
+      ProjectStoreOptions,
+      | "beforeProjectDirectoryPublish"
+      | "beforeReadyProjectPublish"
+      | "beforeRegistryPublish"
+      | "beforePatchProjectPublish"
+    > = {},
   ) {
     return createProjectStore({
       registryRoot,
@@ -1287,6 +1714,7 @@ describe("project storage", () => {
       ...(beforeAssetCapabilityRevalidation === undefined
         ? {}
         : { beforeAssetCapabilityRevalidation }),
+      ...lifecycleHooks,
     });
   }
 

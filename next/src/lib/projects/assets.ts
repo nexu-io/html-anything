@@ -19,6 +19,7 @@ import {
   type ProjectAssetMediaType,
 } from "./contracts";
 import type { ArtifactPaths } from "./paths";
+import { hasRequiredMode } from "./permissions";
 
 type ProjectAssetExtension = "png" | "jpg" | "gif" | "webp";
 
@@ -268,9 +269,12 @@ export async function publishProjectAsset(
   let temporaryPath: string | undefined;
   let temporaryIdentity: BigIntStats | undefined;
   let temporaryRemoved = false;
+  let directoryIdentity: BigIntStats | undefined;
+  let targetPath: string | undefined;
+  let published = false;
   try {
     await revalidateAssetCapability(revalidateCapability);
-    const directoryIdentity = await ensureAssetDirectory(paths, assetsDirectory);
+    directoryIdentity = await ensureAssetDirectory(paths, assetsDirectory);
     temporaryPath = path.join(
       assetsDirectory,
       `.asset.tmp-${randomBytes(16).toString("hex")}`,
@@ -291,14 +295,14 @@ export async function publishProjectAsset(
 
     let ordinal = 1;
     let filename: string;
-    let targetPath: string;
     while (true) {
       filename = projectAssetFilename(stem, detected.extension, ordinal);
-      targetPath = assetFilePath(assetsDirectory, filename);
+      const candidatePath = assetFilePath(assetsDirectory, filename);
       await revalidateAssetCapability(revalidateCapability);
       await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
       try {
-        await link(temporaryPath, targetPath);
+        await link(temporaryPath, candidatePath);
+        targetPath = candidatePath;
         break;
       } catch (error) {
         if (!hasErrorCode(error, "EEXIST")) throw error;
@@ -306,6 +310,7 @@ export async function publishProjectAsset(
         ordinal += 1;
       }
     }
+    if (targetPath === undefined) throw assetStorageError();
 
     await syncAssetDirectory(assetsDirectory);
     await revalidateAssetCapability(revalidateCapability);
@@ -328,6 +333,7 @@ export async function publishProjectAsset(
     await unlink(temporaryPath);
     temporaryRemoved = true;
     await syncAssetDirectory(assetsDirectory);
+    published = true;
     return projectAssetRecord(
       validatedOriginalName,
       filename,
@@ -340,12 +346,45 @@ export async function publishProjectAsset(
   } finally {
     await handle?.close().catch(() => undefined);
     if (
+      !published &&
+      targetPath !== undefined &&
+      temporaryIdentity !== undefined &&
+      directoryIdentity !== undefined
+    ) {
+      await removeOwnedPublishedAsset(
+        paths,
+        assetsDirectory,
+        directoryIdentity,
+        targetPath,
+        temporaryIdentity,
+      );
+    }
+    if (
       !temporaryRemoved &&
       temporaryPath !== undefined &&
       temporaryIdentity !== undefined
     ) {
       await removeOwnedAssetTemporary(temporaryPath, temporaryIdentity);
     }
+  }
+}
+
+async function removeOwnedPublishedAsset(
+  paths: Readonly<ArtifactPaths>,
+  assetsDirectory: string,
+  directoryIdentity: BigIntStats,
+  targetPath: string,
+  targetIdentity: BigIntStats,
+): Promise<void> {
+  try {
+    await assertAssetDirectory(paths, assetsDirectory, directoryIdentity);
+    const current = await lstat(targetPath, { bigint: true });
+    if (current.isFile() && sameFile(current, targetIdentity)) {
+      await unlink(targetPath);
+      await syncAssetDirectory(assetsDirectory);
+    }
+  } catch {
+    // Never remove anything that cannot be proven to be this operation's link.
   }
 }
 
@@ -473,7 +512,7 @@ async function assertAssetDirectory(
   if (
     metadata.isSymbolicLink() ||
     !metadata.isDirectory() ||
-    Number(metadata.mode & BigInt(0o777)) !== DIRECTORY_MODE ||
+    !hasRequiredMode(metadata.mode, DIRECTORY_MODE) ||
     (expectedIdentity !== undefined && !sameFile(metadata, expectedIdentity))
   ) {
     throw assetStorageError();
@@ -501,7 +540,7 @@ async function readSafeAssetFile(
     const before = await handle.stat({ bigint: true });
     if (
       !before.isFile() ||
-      Number(before.mode & BigInt(0o777)) !== FILE_MODE ||
+      !hasRequiredMode(before.mode, FILE_MODE) ||
       before.size > BigInt(maxBytes)
     ) {
       throw assetStorageError();
@@ -537,6 +576,7 @@ async function removeOwnedAssetTemporary(
 }
 
 async function syncAssetDirectory(directory: string): Promise<void> {
+  if (process.platform === "win32") return;
   const handle = await open(directory, fsConstants.O_RDONLY);
   try {
     await handle.sync();

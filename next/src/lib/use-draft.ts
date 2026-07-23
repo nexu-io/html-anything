@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "./store";
 
 type DraftReq = {
@@ -12,7 +12,7 @@ type DraftStatus = "idle" | "running" | "done" | "error";
 
 /**
  * Streams a markdown draft from the selected coding agent and appends it
- * to the active task's textarea content as it arrives. Mirrors the SSE
+ * to the captured task's textarea content as it arrives. Mirrors the SSE
  * conventions of `useConvert()` (start / delta / meta / done events) but
  * targets `task.content` instead of `task.html` and uses `/api/draft`,
  * which prompts the agent for plain markdown — never HTML.
@@ -30,6 +30,8 @@ export function useDraft() {
     ctlRef.current?.abort();
     ctlRef.current = null;
   }, []);
+
+  useEffect(() => cancel, [cancel]);
 
   const run = useCallback(async (req: DraftReq) => {
     cancel();
@@ -59,7 +61,7 @@ export function useDraft() {
     const sep = before.length > 0 && !before.endsWith("\n\n") ? (before.endsWith("\n") ? "\n" : "\n\n") : "";
     const baseLen = before.length + sep.length;
     insertOffsetRef.current = baseLen;
-    if (sep) store.setContent(before + sep);
+    if (sep) store.setContentFor(taskId, before + sep);
 
     try {
       const res = await fetch("/api/draft", {
@@ -118,7 +120,9 @@ export function useDraft() {
               // outside the streamed range without losing in-flight tokens.
               const head = current.slice(0, insertOffsetRef.current);
               const tail = current.slice(insertOffsetRef.current + appended.length - d.text.length);
-              useStore.getState().setContent(head + appended + tail);
+              useStore
+                .getState()
+                .setContentFor(taskId, head + appended + tail);
             }
           } else if (event === "error") {
             const d = data as { message?: string };

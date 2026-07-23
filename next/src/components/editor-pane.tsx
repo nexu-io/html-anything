@@ -21,9 +21,13 @@ const TAB_KEY: Record<"text" | "formats" | "samples", DictKey> = {
 export function EditorPane({
   projectId,
   localAutosaveEnabled = true,
+  onDraftRunningChange,
+  onUploadRunningChange,
 }: {
   projectId?: string;
   localAutosaveEnabled?: boolean;
+  onDraftRunningChange?: (running: boolean) => void;
+  onUploadRunningChange?: (projectId: string, running: boolean) => void;
 }) {
   const [tab, setTab] = useState<"text" | "formats" | "samples">("text");
   const [dragActive, setDragActive] = useState(false);
@@ -34,7 +38,10 @@ export function EditorPane({
   const setFormat = useStore((s) => s.setFormat);
   const setFilename = useStore((s) => s.setFilename);
   const { status: saveStatus, savedAt } = useAutosave(localAutosaveEnabled);
-  const { ingest, uploading, error } = useUploadFile({ projectId });
+  const { ingest, uploading, error } = useUploadFile({
+    projectId,
+    onProjectUploadRunningChange: onUploadRunningChange,
+  });
   const t = useT();
 
   const detected = useMemo(() => detectFormat(content), [content]);
@@ -155,6 +162,7 @@ export function EditorPane({
               uploading={uploading}
               error={error}
               projectMode={projectId !== undefined}
+              onDraftRunningChange={onDraftRunningChange}
             />
           </div>
         )}

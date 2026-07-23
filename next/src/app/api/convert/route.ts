@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { invokeAgent } from "@/lib/agents/invoke";
 import { loadSkill } from "@/lib/templates/loader";
 import { assemblePrompt } from "@/lib/templates/shared";
+import { ProjectError } from "@/lib/projects/contracts";
+import { projectService } from "@/lib/projects/service";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,6 +15,7 @@ type Body = {
   format?: string;
   model?: string;
   cwd?: string;
+  projectId?: string;
   /**
    * Optional absolute path to the agent binary. The Settings UI lets the
    * user override auto-detection when their CLI lives somewhere our PATH
@@ -30,17 +33,22 @@ type Body = {
 function buildEditPrompt(args: {
   templateName: string;
   templateAspect: string;
+  projectInstruction?: string;
   newContent: string;
   oldContent: string;
   oldHtml: string;
   format: string;
 }): string {
+  const projectInstruction =
+    args.projectInstruction === undefined
+      ? ""
+      : `项目初始指令（必须继续遵守）:\n${args.projectInstruction}\n\n`;
   return `你正在执行一次**最小化差异编辑** (diff-edit), 不是从 0 重新生成。
 
 模板风格: ${args.templateName} (${args.templateAspect})
 输入格式: ${args.format}
 
-【硬性规则】
+${projectInstruction}【硬性规则】
 1. 仅输出完整的、修改后的 HTML。第一个字符必须是 \`<\`, 最后必须是 \`</html>\`。
 2. **不要**用 markdown 围栏包裹, 不要任何解释性文字。
 3. **禁止使用 Write / Edit / MultiEdit / Bash 等文件工具** — HTML 必须直接在助手回复正文里流式输出, 不要存到 \`.html\` 文件再回复"已输出至 …"。
@@ -61,6 +69,15 @@ ${args.oldHtml}
 `;
 }
 
+function withProjectAssetContext(
+  instruction: string,
+  artifactDirectory: string,
+): string {
+  return `${instruction}
+
+Uploaded project assets referenced as \`assets/...\` are readable relative to ${JSON.stringify(artifactDirectory)}. Inspect them there when needed, and keep their \`assets/...\` URLs unchanged in generated HTML.`;
+}
+
 export async function POST(req: NextRequest) {
   let body: Body;
   try {
@@ -74,7 +91,8 @@ export async function POST(req: NextRequest) {
     content,
     format = "text",
     model,
-    cwd,
+    cwd: requestedCwd,
+    projectId,
     binOverride,
     editFromHtml,
     editFromContent,
@@ -83,6 +101,29 @@ export async function POST(req: NextRequest) {
     return new Response("missing required fields: agent, templateId, content", {
       status: 400,
     });
+  }
+  let cwd = requestedCwd;
+  let projectInstruction: string | undefined;
+  if (projectId !== undefined) {
+    try {
+      const context = await projectService.resolveConversionContext(projectId);
+      cwd = context.cwd;
+      projectInstruction = withProjectAssetContext(
+        context.instruction,
+        context.artifactDirectory,
+      );
+    } catch (error) {
+      if (error instanceof ProjectError) {
+        return Response.json(
+          { error: error.code, message: error.message },
+          { status: error.httpStatus },
+        );
+      }
+      return Response.json(
+        { error: "storage_failed", message: "Project operation failed." },
+        { status: 500 },
+      );
+    }
   }
   const skill = loadSkill(templateId);
   if (!skill) {
@@ -94,13 +135,19 @@ export async function POST(req: NextRequest) {
     prompt = buildEditPrompt({
       templateName: skill.zhName,
       templateAspect: skill.aspectHint,
+      projectInstruction,
       newContent: content,
       oldContent: editFromContent,
       oldHtml: editFromHtml,
       format,
     });
   } else {
-    prompt = assemblePrompt({ body: skill.body, content, format });
+    prompt = assemblePrompt({
+      body: skill.body,
+      content,
+      format,
+      projectInstruction,
+    });
   }
   const abortCtl = new AbortController();
   req.signal?.addEventListener("abort", () => abortCtl.abort(), { once: true });

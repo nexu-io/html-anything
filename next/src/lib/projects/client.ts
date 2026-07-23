@@ -66,13 +66,12 @@ export async function getServerProject(id: string): Promise<ProjectSnapshot> {
 export async function patchServerProject(
   id: string,
   patch: PatchProjectInput,
-): Promise<ProjectSnapshot> {
-  const response = await request(`/api/projects/${encodeURIComponent(id)}`, {
+): Promise<void> {
+  await request(`/api/projects/${encodeURIComponent(id)}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(patch),
   });
-  return readSnapshot(response);
 }
 
 export async function unregisterServerProject(id: string): Promise<void> {

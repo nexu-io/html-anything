@@ -168,6 +168,18 @@ export function createProjectHttpHandlers(service: ProjectService) {
             "Project creation requires loopback access.",
           );
         }
+        if (
+          req.headers
+            .get("content-type")
+            ?.split(";", 1)[0]
+            .trim()
+            .toLowerCase() !== "application/json"
+        ) {
+          throw new ProjectError(
+            "invalid_request",
+            "Project creation requires application/json.",
+          );
+        }
 
         const input = parseCreateProjectInput(
           await readBoundedJson(req, PROJECT_CREATE_BODY_MAX_BYTES),
@@ -196,8 +208,8 @@ export function createProjectHttpHandlers(service: ProjectService) {
         const patch = parsePatchProjectInput(
           await readBoundedJson(req, PROJECT_PATCH_BODY_MAX_BYTES),
         );
-        const project = await service.patch(projectId, patch);
-        return jsonResponse(project, 200);
+        await service.patch(projectId, patch);
+        return new Response(null, { status: 204, headers: NO_STORE_HEADERS });
       } catch (error) {
         return errorResponse(error);
       }

@@ -7,18 +7,22 @@ import {
   open,
   realpath,
   rename,
+  rmdir,
   unlink,
 } from "node:fs/promises";
 import path from "node:path";
 import {
   PROJECT_CONTENT_MAX_BYTES,
   PROJECT_DIAGNOSTIC_MAX_BYTES,
+  PROJECT_GENERATION_DEADLINE_MS,
   PROJECT_HTML_MAX_BYTES,
+  PROJECT_PATCH_BODY_MAX_BYTES,
   PROJECT_PROMPT_MAX_BYTES,
   ProjectError,
   type CreateProjectInput,
   type PatchProjectInput,
   type ProjectAsset,
+  type ProjectConversionContext,
   type ProjectDocument,
   type ProjectSnapshot,
   type ReadyProjectResponse,
@@ -35,10 +39,12 @@ import {
   resolveWorkspaceRoot,
   validateSourceRecords,
 } from "./paths";
+import { hasRequiredMode } from "./permissions";
 
 const DIRECTORY_MODE = 0o700;
 const FILE_MODE = 0o600;
 const PROJECT_DOCUMENT_MAX_BYTES = 256 * 1024;
+const PROJECT_PATCH_JOURNAL_MAX_BYTES = PROJECT_PATCH_BODY_MAX_BYTES + 1_024;
 const REGISTRY_RECORD_MAX_BYTES = 16 * 1024;
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8", { fatal: true });
@@ -61,7 +67,8 @@ export type ProjectStore = {
   ): Promise<ReadyProjectResponse>;
   markFailed(prepared: PreparedProject, diagnostic: string): Promise<void>;
   get(id: string): Promise<ProjectSnapshot>;
-  patch(id: string, patch: PatchProjectInput): Promise<ProjectSnapshot>;
+  resolveConversionContext(id: string): Promise<ProjectConversionContext>;
+  patch(id: string, patch: PatchProjectInput): Promise<void>;
   putAsset(
     id: string,
     originalName: string,
@@ -83,6 +90,10 @@ export type ProjectStoreOptions = {
   publicBaseUrl: string;
   now: () => Date;
   beforeAssetCapabilityRevalidation?: () => Promise<void>;
+  beforeProjectDirectoryPublish?: () => Promise<void>;
+  beforeReadyProjectPublish?: () => Promise<void>;
+  beforeRegistryPublish?: () => Promise<void>;
+  beforePatchProjectPublish?: () => Promise<void>;
 };
 
 type RegisteredProject = {
@@ -96,6 +107,8 @@ type RegisteredProject = {
   content: string;
   html: string;
 };
+
+type RegisteredProjectCapability = Omit<RegisteredProject, "content" | "html">;
 
 type SafeFileState = {
   bytes: Buffer;
@@ -139,9 +152,13 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
     async prepare(input, prompt) {
       const parsed = parseCreateProjectInput(input);
       validateBoundedString(prompt, PROJECT_PROMPT_MAX_BYTES, "prompt");
+      const initialPaths = await resolveArtifactPaths(
+        parsed.workspaceRoot,
+        parsed.slug,
+      );
 
-      return serializeProjectMutation(parsed.projectId, async () => {
-        let paths = await resolveArtifactPaths(parsed.workspaceRoot, parsed.slug);
+      return serializeProjectMutation(initialPaths.artifactDirectory, async () => {
+        let paths = initialPaths;
         const sources = await validateSourceRecords(
           paths.workspaceRoot,
           parsed.sourceFiles,
@@ -153,7 +170,7 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
           sourceFiles: sources,
         };
         const timestamp = timestampNow(options.now);
-        const project: ProjectDocument = {
+        let project: ProjectDocument = {
           schemaVersion: 1,
           projectId: canonicalInput.projectId,
           slug: canonicalInput.slug,
@@ -178,14 +195,22 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
             paths.workspaceRoot,
             pathsToSlug(paths),
           );
-          await createProjectDirectory(paths.artifactDirectory);
-          await atomicReplace(paths.promptPath, encode(prompt), paths);
-          await atomicReplace(
-            paths.contentPath,
-            encode(canonicalInput.content),
-            paths,
-          );
-          await atomicReplace(paths.projectPath, serializeJson(project), paths);
+          if (await pathExists(paths.artifactDirectory)) {
+            project = await resumeInterruptedProject(
+              paths,
+              canonicalInput,
+              prompt,
+              timestamp,
+            );
+          } else {
+            await publishProjectDirectory(
+              paths,
+              prompt,
+              canonicalInput.content,
+              project,
+              options.beforeProjectDirectoryPublish,
+            );
+          }
         } catch (error) {
           if (isAlreadyExists(error)) {
             throw new ProjectError(
@@ -225,6 +250,7 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
             encode(html),
             prepared.paths,
           );
+          await options.beforeReadyProjectPublish?.();
 
           const readyProject: ProjectDocument = {
             ...current,
@@ -251,6 +277,7 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
             artifactDirectory: prepared.paths.artifactDirectory,
             registeredAt: timestampNow(options.now),
           };
+          await options.beforeRegistryPublish?.();
           await publishRegistry(
             registryPath,
             serializeJson(registry),
@@ -301,8 +328,31 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
     },
 
     async get(id) {
-      const registered = await loadRegisteredProject(registryRoot, id);
-      return snapshot(registered, publicBaseUrl);
+      const projectId = validateProjectId(id);
+      return serializeProjectMutation(projectId, async () => {
+        const registered = await loadRegisteredProject(registryRoot, projectId);
+        return snapshot(registered, publicBaseUrl);
+      });
+    },
+
+    async resolveConversionContext(id) {
+      const projectId = validateProjectId(id);
+      return serializeProjectMutation(projectId, async () => {
+        const registered = await loadRegisteredProject(
+          registryRoot,
+          projectId,
+        );
+        try {
+          await assertRegisteredPathsCurrent(registryRoot, registered);
+          return {
+            cwd: registered.paths.workspaceRoot,
+            instruction: registered.project.instruction,
+            artifactDirectory: registered.paths.artifactDirectory,
+          };
+        } catch (error) {
+          throw asStorageError(error);
+        }
+      });
     },
 
     async patch(id, patch) {
@@ -311,46 +361,26 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
       return serializeProjectMutation(projectId, async () => {
         const registered = await loadRegisteredProject(registryRoot, projectId);
         try {
-          if (parsedPatch.content !== undefined) {
-            await assertRegisteredPathsCurrent(registryRoot, registered);
-            await atomicReplace(
-              registered.paths.contentPath,
-              encode(parsedPatch.content),
-              registered.paths,
-              () => assertRegistryCapabilityCurrent(registryRoot, registered),
-            );
-          }
-          if (parsedPatch.html !== undefined) {
-            await assertRegisteredPathsCurrent(registryRoot, registered);
-            await atomicReplace(
-              registered.paths.htmlPath,
-              encode(parsedPatch.html),
-              registered.paths,
-              () => assertRegistryCapabilityCurrent(registryRoot, registered),
-            );
-          }
-
-          const project: ProjectDocument = {
-            ...registered.project,
-            ...(parsedPatch.templateId === undefined
-              ? {}
-              : { templateId: parsedPatch.templateId }),
+          const journal: ProjectPatchJournal = {
+            schemaVersion: 1,
+            patch: parsedPatch,
             updatedAt: timestampNow(options.now),
           };
           await assertRegisteredPathsCurrent(registryRoot, registered);
           await atomicReplace(
-            registered.paths.projectPath,
-            serializeJson(project),
+            patchJournalPath(registered.paths),
+            serializeJson(journal),
             registered.paths,
             () => assertRegistryCapabilityCurrent(registryRoot, registered),
           );
-          return snapshot(
-            await loadRegisteredProject(
-              registryRoot,
-              registered.project.projectId,
-            ),
-            publicBaseUrl,
+          await applyProjectPatchJournal(
+            registryRoot,
+            registered,
+            journal,
+            options.beforePatchProjectPublish,
           );
+          await unlink(patchJournalPath(registered.paths));
+          await syncDirectory(registered.paths.artifactDirectory);
         } catch (error) {
           throw asStorageError(error);
         }
@@ -360,7 +390,10 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
     async putAsset(id, originalName, bytes) {
       const projectId = validateProjectId(id);
       return serializeProjectMutation(projectId, async () => {
-        const registered = await loadRegisteredProject(registryRoot, projectId);
+        const registered = await loadRegisteredProjectCapability(
+          registryRoot,
+          projectId,
+        );
         try {
           await options.beforeAssetCapabilityRevalidation?.();
           return await publishProjectAsset(
@@ -377,19 +410,20 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
 
     async getAsset(id, filename) {
       const projectId = validateProjectId(id);
-      return serializeProjectMutation(projectId, async () => {
-        const registered = await loadRegisteredProject(registryRoot, projectId);
-        try {
-          await options.beforeAssetCapabilityRevalidation?.();
-          return await readProjectAsset(
-            registered.paths,
-            () => assertRegisteredAssetPathsCurrent(registryRoot, registered),
-            filename,
-          );
-        } catch (error) {
-          throw asAssetStoreError(error);
-        }
-      });
+      const registered = await serializeProjectMutation(
+        projectId,
+        () => loadRegisteredProjectCapability(registryRoot, projectId),
+      );
+      try {
+        await options.beforeAssetCapabilityRevalidation?.();
+        return await readProjectAsset(
+          registered.paths,
+          () => assertRegisteredAssetPathsCurrent(registryRoot, registered),
+          filename,
+        );
+      } catch (error) {
+        throw asAssetStoreError(error);
+      }
     },
 
     async unregister(id) {
@@ -410,12 +444,24 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
 
     async findReadyCreation(input) {
       const parsed = parseCreateProjectInput(input);
+      const paths = await resolveArtifactPaths(
+        parsed.workspaceRoot,
+        parsed.slug,
+      );
+      return serializeProjectMutation(paths.artifactDirectory, async () => {
       let registered: RegisteredProject;
       try {
         registered = await loadRegisteredProject(registryRoot, parsed.projectId);
       } catch (error) {
         if (error instanceof ProjectError && error.code === "project_not_found") {
-          return null;
+          return recoverReadyCreation({
+            registryRoot,
+            managedRegistryBoundary,
+            paths,
+            input: parsed,
+            publicBaseUrl,
+            now: options.now,
+          });
         }
         throw error;
       }
@@ -430,8 +476,306 @@ export function createProjectStore(options: ProjectStoreOptions): ProjectStore {
         throw new ProjectError("project_exists", "Project ID is already in use.");
       }
       return readyResponse(registered, publicBaseUrl);
+      });
     },
   };
+}
+
+async function publishProjectDirectory(
+  paths: ArtifactPaths,
+  prompt: string,
+  content: string,
+  project: ProjectDocument,
+  beforePublish?: () => Promise<void>,
+): Promise<void> {
+  const stagingDirectory = path.join(
+    paths.artifactParent,
+    `.${pathsToSlug(paths)}.tmp-${randomBytes(16).toString("hex")}`,
+  );
+  await mkdir(stagingDirectory, { mode: DIRECTORY_MODE });
+  const stagingIdentity = await assertRealDirectory(
+    stagingDirectory,
+    paths.workspaceRoot,
+    DIRECTORY_MODE,
+  );
+  const files = [
+    ["project.json", serializeJson(project)],
+    ["PROMPT.md", encode(prompt)],
+    ["content.md", encode(content)],
+  ] as const;
+  let published = false;
+
+  try {
+    for (const [filename, bytes] of files) {
+      await writeStagedFile(
+        path.join(stagingDirectory, filename),
+        bytes,
+        paths.workspaceRoot,
+      );
+    }
+    await syncDirectory(stagingDirectory);
+    await beforePublish?.();
+    await revalidateArtifactPaths(paths, false);
+    await assertStagedProjectDirectory(
+      stagingDirectory,
+      stagingIdentity,
+      files,
+      paths.workspaceRoot,
+    );
+    try {
+      await rename(stagingDirectory, paths.artifactDirectory);
+    } catch (error) {
+      if (isAlreadyExists(error) || hasErrorCode(error, "ENOTEMPTY")) {
+        throw projectArtifactsExist();
+      }
+      throw error;
+    }
+    published = true;
+    await syncDirectory(paths.artifactParent);
+    await revalidateArtifactPaths(paths, true);
+    for (const filePath of [
+      paths.projectPath,
+      paths.promptPath,
+      paths.contentPath,
+    ]) {
+      await assertArtifactFile(paths, filePath);
+    }
+  } finally {
+    if (!published) {
+      await removeOwnedStagingDirectory(
+        stagingDirectory,
+        stagingIdentity,
+        files.map(([filename]) => filename),
+      );
+    }
+  }
+}
+
+async function assertStagedProjectDirectory(
+  directory: string,
+  expectedIdentity: BigIntStats,
+  files: ReadonlyArray<readonly [string, Uint8Array]>,
+  workspaceRoot: string,
+): Promise<void> {
+  const currentIdentity = await assertRealDirectory(
+    directory,
+    workspaceRoot,
+    DIRECTORY_MODE,
+  );
+  if (!isSameFile(currentIdentity, expectedIdentity)) throw storageError();
+  for (const [filename, expectedBytes] of files) {
+    const actual = await readSafeFile(
+      path.join(directory, filename),
+      expectedBytes.byteLength,
+      FILE_MODE,
+    );
+    if (!actual.equals(Buffer.from(expectedBytes))) throw storageError();
+  }
+}
+
+async function writeStagedFile(
+  filePath: string,
+  bytes: Uint8Array,
+  workspaceRoot: string,
+): Promise<void> {
+  let handle: Awaited<ReturnType<typeof open>> | undefined;
+  try {
+    handle = await open(
+      filePath,
+      fsConstants.O_WRONLY |
+        fsConstants.O_CREAT |
+        fsConstants.O_EXCL |
+        fsConstants.O_NOFOLLOW,
+      FILE_MODE,
+    );
+    await handle.writeFile(bytes);
+    await handle.sync();
+    await handle.close();
+    handle = undefined;
+    const readback = await readSafeFile(filePath, bytes.byteLength, FILE_MODE);
+    if (!readback.equals(Buffer.from(bytes))) throw storageError();
+    if (!isContained(workspaceRoot, filePath)) throw storageError();
+  } finally {
+    await handle?.close().catch(() => undefined);
+  }
+}
+
+async function removeOwnedStagingDirectory(
+  directory: string,
+  identity: BigIntStats,
+  filenames: readonly string[],
+): Promise<void> {
+  try {
+    const current = await lstat(directory, { bigint: true });
+    if (!isSameFile(current, identity) || !current.isDirectory()) return;
+    for (const filename of filenames) {
+      await unlink(path.join(directory, filename)).catch((error: unknown) => {
+        if (!isMissing(error)) throw error;
+      });
+    }
+    await rmdir(directory);
+    await syncDirectory(path.dirname(directory));
+  } catch {
+    // Never remove anything that cannot be proven to be this operation's
+    // private staging directory.
+  }
+}
+
+async function recoverReadyCreation({
+  registryRoot,
+  managedRegistryBoundary,
+  paths,
+  input,
+  publicBaseUrl,
+  now,
+}: {
+  registryRoot: string;
+  managedRegistryBoundary?: string;
+  paths: ArtifactPaths;
+  input: CreateProjectInput;
+  publicBaseUrl: string;
+  now: () => Date;
+}): Promise<ReadyProjectResponse | null> {
+  if (!(await pathExists(paths.artifactDirectory))) return null;
+
+  try {
+    await revalidateArtifactPaths(paths, true);
+    for (const filePath of [
+      paths.promptPath,
+      paths.contentPath,
+      paths.projectPath,
+    ]) {
+      await assertArtifactFile(paths, filePath);
+    }
+    const [contentBytes, projectBytes] = await Promise.all([
+      readSafeFile(paths.contentPath, PROJECT_CONTENT_MAX_BYTES, FILE_MODE),
+      readSafeFile(
+        paths.projectPath,
+        PROJECT_DOCUMENT_MAX_BYTES,
+        FILE_MODE,
+      ),
+    ]);
+    const project = parseProjectDocument(projectBytes);
+    if (project.status !== "ready") return null;
+    await assertArtifactFile(paths, paths.htmlPath);
+    await readSafeFile(paths.htmlPath, PROJECT_HTML_MAX_BYTES, FILE_MODE);
+    if (
+      decode(contentBytes) !== input.content ||
+      !sameInterruptedCreation(input, project)
+    ) {
+      throw projectArtifactsExist();
+    }
+
+    await createRegistryDirectory(registryRoot, managedRegistryBoundary);
+    const existingRegistryPath = await prepareRegistryPath(
+      registryRoot,
+      project.projectId,
+      false,
+    );
+    if (
+      project.projectId !== input.projectId &&
+      (await pathExists(existingRegistryPath))
+    ) {
+      throw projectArtifactsExist();
+    }
+    const registryPath = await prepareRegistryPath(
+      registryRoot,
+      input.projectId,
+      false,
+    );
+    if (await pathExists(registryPath)) throw projectArtifactsExist();
+
+    const recoveredProject: ProjectDocument = {
+      ...project,
+      projectId: input.projectId,
+      updatedAt: timestampNow(now),
+    };
+    await atomicReplace(
+      paths.projectPath,
+      serializeJson(recoveredProject),
+      paths,
+    );
+    const registry: RegistryRecord = {
+      schemaVersion: 1,
+      projectId: input.projectId,
+      workspaceRoot: paths.workspaceRoot,
+      artifactDirectory: paths.artifactDirectory,
+      registeredAt: timestampNow(now),
+    };
+    await publishRegistry(
+      registryPath,
+      serializeJson(registry),
+      registryRoot,
+    );
+    return readyResponse(
+      await loadRegisteredProject(registryRoot, input.projectId),
+      publicBaseUrl,
+    );
+  } catch (error) {
+    if (error instanceof ProjectError) throw error;
+    throw asStorageError(error);
+  }
+}
+
+async function resumeInterruptedProject(
+  paths: ArtifactPaths,
+  input: CreateProjectInput,
+  prompt: string,
+  updatedAt: string,
+): Promise<ProjectDocument> {
+  await revalidateArtifactPaths(paths, true);
+  const [hasPrompt, hasContent, hasProject, hasHtml] = await Promise.all([
+    pathExists(paths.promptPath),
+    pathExists(paths.contentPath),
+    pathExists(paths.projectPath),
+    pathExists(paths.htmlPath),
+  ]);
+  if (!hasPrompt || !hasContent || !hasProject) {
+    throw projectArtifactsExist();
+  }
+  await assertArtifactFile(paths, paths.promptPath);
+  await assertArtifactFile(paths, paths.contentPath);
+  await assertArtifactFile(paths, paths.projectPath);
+
+  const [storedPrompt, storedContent, storedProject] = await Promise.all([
+    readSafeFile(paths.promptPath, PROJECT_PROMPT_MAX_BYTES, FILE_MODE),
+    readSafeFile(paths.contentPath, PROJECT_CONTENT_MAX_BYTES, FILE_MODE),
+    readSafeFile(
+      paths.projectPath,
+      PROJECT_DOCUMENT_MAX_BYTES,
+      FILE_MODE,
+    ),
+  ]);
+  const interrupted = parseProjectDocument(storedProject);
+  if (
+    !isRecoverableInterruption(interrupted, updatedAt) ||
+    decode(storedPrompt) !== prompt ||
+    decode(storedContent) !== input.content ||
+    !sameInterruptedCreation(input, interrupted)
+  ) {
+    throw projectArtifactsExist();
+  }
+  if (hasHtml) {
+    if (
+      interrupted.status !== "generating" ||
+      !isStaleGenerating(interrupted, updatedAt)
+    ) {
+      throw projectArtifactsExist();
+    }
+    await assertArtifactFile(paths, paths.htmlPath);
+    await unlink(paths.htmlPath);
+    await syncDirectory(paths.artifactDirectory);
+  }
+
+  const resumed: ProjectDocument = {
+    ...interrupted,
+    projectId: input.projectId,
+    status: "generating",
+    updatedAt,
+  };
+  delete resumed.diagnostic;
+  await atomicReplace(paths.projectPath, serializeJson(resumed), paths);
+  return resumed;
 }
 
 async function readPreparedProject(
@@ -468,9 +812,10 @@ async function assertRegisteredPathsCurrent(
 
 async function assertRegisteredAssetPathsCurrent(
   registryRoot: string,
-  registered: RegisteredProject,
+  registered: RegisteredProjectCapability,
 ): Promise<void> {
-  await assertRegisteredPathsCurrent(registryRoot, registered);
+  await assertRegistryCapabilityCurrent(registryRoot, registered);
+  await revalidateArtifactPaths(registered.paths, true);
   const currentIdentity = await assertRealDirectory(
     registered.paths.artifactDirectory,
     registered.paths.workspaceRoot,
@@ -483,7 +828,7 @@ async function assertRegisteredAssetPathsCurrent(
 
 async function assertRegistryCapabilityCurrent(
   registryRoot: string,
-  registered: RegisteredProject,
+  registered: RegisteredProjectCapability,
 ): Promise<void> {
   await assertRegistryFile(registryRoot, registered.registryPath);
   const current = await readSafeFileState(
@@ -504,6 +849,124 @@ async function loadRegisteredProject(
   registryRoot: string,
   id: string,
 ): Promise<RegisteredProject> {
+  let registered = await loadRegisteredProjectCapability(registryRoot, id);
+  try {
+    if (await recoverProjectPatchJournal(registryRoot, registered)) {
+      registered = await loadRegisteredProjectCapability(registryRoot, id);
+    }
+    await assertArtifactFile(registered.paths, registered.paths.promptPath);
+    const [contentBytes, htmlBytes] = await Promise.all([
+      readSafeFile(
+        registered.paths.contentPath,
+        PROJECT_CONTENT_MAX_BYTES,
+        FILE_MODE,
+      ),
+      readSafeFile(
+        registered.paths.htmlPath,
+        PROJECT_HTML_MAX_BYTES,
+        FILE_MODE,
+      ),
+    ]);
+    return {
+      ...registered,
+      content: decode(contentBytes),
+      html: decode(htmlBytes),
+    };
+  } catch (error) {
+    if (isMissing(error)) throw projectNotFound();
+    throw asStorageError(error);
+  }
+}
+
+type ProjectPatchJournal = {
+  schemaVersion: 1;
+  patch: PatchProjectInput;
+  updatedAt: string;
+};
+
+function patchJournalPath(paths: ArtifactPaths): string {
+  return path.join(paths.artifactDirectory, ".patch.json");
+}
+
+async function recoverProjectPatchJournal(
+  registryRoot: string,
+  registered: RegisteredProjectCapability,
+): Promise<boolean> {
+  const journalPath = patchJournalPath(registered.paths);
+  if (!(await pathExists(journalPath))) return false;
+  await assertArtifactFile(registered.paths, journalPath);
+  const journal = parseProjectPatchJournal(
+    await readSafeFile(
+      journalPath,
+      PROJECT_PATCH_JOURNAL_MAX_BYTES,
+      FILE_MODE,
+    ),
+  );
+  await applyProjectPatchJournal(registryRoot, registered, journal);
+  await unlink(journalPath);
+  await syncDirectory(registered.paths.artifactDirectory);
+  return true;
+}
+
+async function applyProjectPatchJournal(
+  registryRoot: string,
+  registered: RegisteredProjectCapability,
+  journal: ProjectPatchJournal,
+  beforeProjectPublish?: () => Promise<void>,
+): Promise<void> {
+  if (journal.patch.content !== undefined) {
+    await atomicReplace(
+      registered.paths.contentPath,
+      encode(journal.patch.content),
+      registered.paths,
+      () => assertRegistryCapabilityCurrent(registryRoot, registered),
+    );
+  }
+  if (journal.patch.html !== undefined) {
+    await atomicReplace(
+      registered.paths.htmlPath,
+      encode(journal.patch.html),
+      registered.paths,
+      () => assertRegistryCapabilityCurrent(registryRoot, registered),
+    );
+  }
+  await beforeProjectPublish?.();
+  const project: ProjectDocument = {
+    ...registered.project,
+    ...(journal.patch.templateId === undefined
+      ? {}
+      : { templateId: journal.patch.templateId }),
+    updatedAt: journal.updatedAt,
+  };
+  await atomicReplace(
+    registered.paths.projectPath,
+    serializeJson(project),
+    registered.paths,
+    () => assertRegistryCapabilityCurrent(registryRoot, registered),
+  );
+}
+
+function parseProjectPatchJournal(bytes: Uint8Array): ProjectPatchJournal {
+  const value = parseJsonObject(bytes);
+  if (
+    !hasExactKeys(value, ["schemaVersion", "patch", "updatedAt"]) ||
+    value.schemaVersion !== 1 ||
+    !isIsoTimestamp(value.updatedAt)
+  ) {
+    throw storageError();
+  }
+  const patch = parsePatchProjectInput(value.patch);
+  return {
+    schemaVersion: 1,
+    patch,
+    updatedAt: value.updatedAt as string,
+  };
+}
+
+async function loadRegisteredProjectCapability(
+  registryRoot: string,
+  id: string,
+): Promise<RegisteredProjectCapability> {
   const projectId = validateProjectId(id);
   let registryPath: string;
   let registryState: SafeFileState;
@@ -547,12 +1010,11 @@ async function loadRegisteredProject(
 
   try {
     await revalidateArtifactPaths(paths, true);
-    await assertArtifactFile(paths, paths.promptPath);
-    const [projectBytes, contentBytes, htmlBytes] = await Promise.all([
-      readSafeFile(paths.projectPath, PROJECT_DOCUMENT_MAX_BYTES, FILE_MODE),
-      readSafeFile(paths.contentPath, PROJECT_CONTENT_MAX_BYTES, FILE_MODE),
-      readSafeFile(paths.htmlPath, PROJECT_HTML_MAX_BYTES, FILE_MODE),
-    ]);
+    const projectBytes = await readSafeFile(
+      paths.projectPath,
+      PROJECT_DOCUMENT_MAX_BYTES,
+      FILE_MODE,
+    );
     const project = parseProjectDocument(projectBytes);
     if (
       project.projectId !== projectId ||
@@ -569,8 +1031,6 @@ async function loadRegisteredProject(
       paths,
       artifactIdentity,
       project,
-      content: decode(contentBytes),
-      html: decode(htmlBytes),
     };
   } catch (error) {
     if (isMissing(error)) throw projectNotFound();
@@ -623,6 +1083,41 @@ function sameImmutableCreation(
   );
 }
 
+function sameInterruptedCreation(
+  input: CreateProjectInput,
+  project: ProjectDocument,
+): boolean {
+  return (
+    input.slug === project.slug &&
+    input.name === project.name &&
+    input.instruction === project.instruction &&
+    input.templateId === project.templateId &&
+    input.format === project.format &&
+    input.agent === project.agent &&
+    input.model === project.model &&
+    JSON.stringify(input.sourceFiles) === JSON.stringify(project.sources)
+  );
+}
+
+function isRecoverableInterruption(
+  project: ProjectDocument,
+  retryTimestamp: string,
+): boolean {
+  if (project.status === "failed") return true;
+  return isStaleGenerating(project, retryTimestamp);
+}
+
+function isStaleGenerating(
+  project: ProjectDocument,
+  retryTimestamp: string,
+): boolean {
+  if (project.status !== "generating") return false;
+  return (
+    Date.parse(retryTimestamp) - Date.parse(project.updatedAt) >=
+    PROJECT_GENERATION_DEADLINE_MS
+  );
+}
+
 function assertGeneratingProject(
   current: ProjectDocument,
   prepared: PreparedProject,
@@ -668,16 +1163,6 @@ async function createContainedDirectory(
   }
   await assertRealDirectory(directory, workspaceRoot, DIRECTORY_MODE);
   if (created) await syncDirectory(path.dirname(directory));
-}
-
-async function createProjectDirectory(directory: string): Promise<void> {
-  await mkdir(directory, { mode: DIRECTORY_MODE });
-  await assertRealDirectory(
-    directory,
-    path.dirname(path.dirname(path.dirname(directory))),
-    DIRECTORY_MODE,
-  );
-  await syncDirectory(path.dirname(directory));
 }
 
 async function revalidateArtifactPaths(
@@ -864,11 +1349,14 @@ async function readSafeFileState(
 ): Promise<SafeFileState> {
   let handle: Awaited<ReturnType<typeof open>> | undefined;
   try {
-    handle = await open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
+    handle = await open(
+      filePath,
+      fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW | fsConstants.O_NONBLOCK,
+    );
     const before = await handle.stat({ bigint: true });
     if (
       !before.isFile() ||
-      Number(before.mode & BigInt(0o777)) !== requiredMode ||
+      !hasRequiredMode(before.mode, requiredMode) ||
       before.size > BigInt(maxBytes)
     ) {
       throw storageError();
@@ -909,7 +1397,7 @@ async function assertRealFile(
   if (
     metadata.isSymbolicLink() ||
     !metadata.isFile() ||
-    (metadata.mode & 0o777) !== requiredMode
+    !hasRequiredMode(metadata.mode, requiredMode)
   ) {
     throw storageError();
   }
@@ -927,7 +1415,7 @@ async function assertRealDirectory(
     metadata.isSymbolicLink() ||
     !metadata.isDirectory() ||
     (requiredMode !== undefined &&
-      Number(metadata.mode & BigInt(0o777)) !== requiredMode)
+      !hasRequiredMode(metadata.mode, requiredMode))
   ) {
     throw storageError();
   }
@@ -1065,6 +1553,7 @@ async function inspectAbsoluteSegments(
 }
 
 async function syncDirectory(directory: string): Promise<void> {
+  if (process.platform === "win32") return;
   const handle = await open(directory, fsConstants.O_RDONLY);
   try {
     await handle.sync();
@@ -1345,6 +1834,10 @@ function hasErrorCode(error: unknown, code: string): boolean {
 
 function projectNotFound(): ProjectError {
   return new ProjectError("project_not_found", "Project was not found.");
+}
+
+function projectArtifactsExist(): ProjectError {
+  return new ProjectError("project_exists", "Project artifacts already exist.");
 }
 
 function storageError(): ProjectError {

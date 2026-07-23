@@ -76,6 +76,11 @@ type HarnessResult = {
   getState: () => SaveState | undefined;
   getCanUnregister: () => boolean | undefined;
   retry: () => void;
+  rerender: (input: {
+    projectId: string;
+    taskId: string;
+    enabled?: boolean;
+  }) => Promise<void>;
 };
 
 async function renderAutosave({
@@ -91,8 +96,12 @@ async function renderAutosave({
   let canUnregister: boolean | undefined;
   let retrySave = () => {};
 
-  function Harness() {
-    const result = useProjectAutosave({ projectId, taskId, enabled });
+  function Harness(props: {
+    projectId: string;
+    taskId: string;
+    enabled: boolean;
+  }) {
+    const result = useProjectAutosave(props);
     saveState = result.state;
     canUnregister = result.canUnregister;
     retrySave = result.retry;
@@ -101,12 +110,24 @@ async function renderAutosave({
 
   const container = document.createElement("div");
   const root = createRoot(container);
-  await act(async () => root.render(createElement(Harness)));
+  await act(async () =>
+    root.render(createElement(Harness, { projectId, taskId, enabled })),
+  );
   return {
     root,
     getState: () => saveState,
     getCanUnregister: () => canUnregister,
     retry: () => retrySave(),
+    rerender: async (input) => {
+      await act(async () =>
+        root.render(
+          createElement(Harness, {
+            enabled: true,
+            ...input,
+          }),
+        ),
+      );
+    },
   };
 }
 
@@ -361,6 +382,7 @@ describe("useProjectAutosave", () => {
   });
 
   it("becomes unsafe and reports saving in the same render as an edit", async () => {
+    vi.mocked(patchServerProject).mockResolvedValue(undefined);
     const { harness } = await loadAndRender();
 
     act(() => useStore.getState().setContent("pending edit"));
@@ -368,6 +390,37 @@ describe("useProjectAutosave", () => {
     expect(harness.getState()).toBe("saving");
     expect(harness.getCanUnregister()).toBe(false);
     expect(patchServerProject).not.toHaveBeenCalled();
+    await act(async () => harness.root.unmount());
+    expect(patchServerProject).toHaveBeenCalledWith(PROJECT_ID, {
+      content: "pending edit",
+    });
+  });
+
+  it("flushes the previous project when the route reuses the workspace", async () => {
+    vi.mocked(patchServerProject).mockResolvedValue(undefined);
+    const { harness } = await loadAndRender();
+    act(() => useStore.getState().setContent("pending first-project edit"));
+    const otherProjectId = "ZbCdEfGhIjKlMnOpQrStUg";
+    const otherTaskId = useStore.getState().loadServerProject({
+      ...readySnapshot(),
+      project: {
+        ...readySnapshot().project,
+        projectId: otherProjectId,
+        slug: "other",
+      },
+      content: "# Other",
+      html: "<!doctype html><html><body>other</body></html>",
+    });
+
+    await harness.rerender({
+      projectId: otherProjectId,
+      taskId: otherTaskId,
+    });
+
+    expect(patchServerProject).toHaveBeenCalledTimes(1);
+    expect(patchServerProject).toHaveBeenCalledWith(PROJECT_ID, {
+      content: "pending first-project edit",
+    });
     await act(async () => harness.root.unmount());
   });
 
@@ -388,7 +441,7 @@ describe("useProjectAutosave", () => {
   });
 
   it("debounces one coalesced patch and exposes saved", async () => {
-    vi.mocked(patchServerProject).mockResolvedValue(readySnapshot());
+    vi.mocked(patchServerProject).mockResolvedValue(undefined);
     const { taskId, harness } = await loadAndRender();
 
     act(() => {
@@ -418,7 +471,7 @@ describe("useProjectAutosave", () => {
   });
 
   it("does not patch while conversion is running", async () => {
-    vi.mocked(patchServerProject).mockResolvedValue(readySnapshot());
+    vi.mocked(patchServerProject).mockResolvedValue(undefined);
     const { taskId, harness } = await loadAndRender();
 
     act(() => {
@@ -449,15 +502,15 @@ describe("useProjectAutosave", () => {
   });
 
   it("saves the latest edit after a slower save finishes", async () => {
-    let resolveFirst: ((snapshot: ProjectSnapshot) => void) | undefined;
+    let resolveFirst: (() => void) | undefined;
     vi.mocked(patchServerProject)
       .mockImplementationOnce(
         () =>
-          new Promise<ProjectSnapshot>((resolve) => {
+          new Promise<void>((resolve) => {
             resolveFirst = resolve;
           }),
       )
-      .mockResolvedValueOnce(readySnapshot());
+      .mockResolvedValueOnce(undefined);
     const { harness } = await loadAndRender();
 
     act(() => useStore.getState().setContent("first edit"));
@@ -471,7 +524,7 @@ describe("useProjectAutosave", () => {
     await act(async () => vi.advanceTimersByTimeAsync(750));
     expect(patchServerProject).toHaveBeenCalledTimes(1);
 
-    await act(async () => resolveFirst?.(readySnapshot()));
+    await act(async () => resolveFirst?.());
 
     expect(patchServerProject).toHaveBeenCalledTimes(2);
     expect(patchServerProject).toHaveBeenLastCalledWith(PROJECT_ID, {
@@ -483,15 +536,15 @@ describe("useProjectAutosave", () => {
   });
 
   it("debounces from the latest edit while an earlier save is running", async () => {
-    let resolveFirst: ((snapshot: ProjectSnapshot) => void) | undefined;
+    let resolveFirst: (() => void) | undefined;
     vi.mocked(patchServerProject)
       .mockImplementationOnce(
         () =>
-          new Promise<ProjectSnapshot>((resolve) => {
+          new Promise<void>((resolve) => {
             resolveFirst = resolve;
           }),
       )
-      .mockResolvedValueOnce(readySnapshot());
+      .mockResolvedValueOnce(undefined);
     const { harness } = await loadAndRender();
 
     act(() => useStore.getState().setContent("first edit"));
@@ -501,7 +554,7 @@ describe("useProjectAutosave", () => {
     act(() => useStore.getState().setContent("brand new edit"));
     await act(async () => vi.advanceTimersByTimeAsync(10));
 
-    await act(async () => resolveFirst?.(readySnapshot()));
+    await act(async () => resolveFirst?.());
     expect(patchServerProject).toHaveBeenCalledTimes(1);
 
     await act(async () => vi.advanceTimersByTimeAsync(739));
@@ -516,15 +569,15 @@ describe("useProjectAutosave", () => {
   });
 
   it("saves a debounced reversion after the edited value is in flight", async () => {
-    let resolveFirst: ((snapshot: ProjectSnapshot) => void) | undefined;
+    let resolveFirst: (() => void) | undefined;
     vi.mocked(patchServerProject)
       .mockImplementationOnce(
         () =>
-          new Promise<ProjectSnapshot>((resolve) => {
+          new Promise<void>((resolve) => {
             resolveFirst = resolve;
           }),
       )
-      .mockResolvedValueOnce(readySnapshot());
+      .mockResolvedValueOnce(undefined);
     const { harness } = await loadAndRender();
     const baseline = readySnapshot().content;
 
@@ -534,7 +587,7 @@ describe("useProjectAutosave", () => {
 
     act(() => useStore.getState().setContent(baseline));
     await act(async () => vi.advanceTimersByTimeAsync(100));
-    await act(async () => resolveFirst?.(readySnapshot()));
+    await act(async () => resolveFirst?.());
 
     expect(harness.getState()).toBe("saving");
     expect(patchServerProject).toHaveBeenCalledTimes(1);
@@ -554,15 +607,15 @@ describe("useProjectAutosave", () => {
 
   it("saves a new project edit once after the previous project request finishes", async () => {
     const otherProjectId = "ZbCdEfGhIjKlMnOpQrStUg";
-    let resolveFirst: ((snapshot: ProjectSnapshot) => void) | undefined;
+    let resolveFirst: (() => void) | undefined;
     vi.mocked(patchServerProject)
       .mockImplementationOnce(
         () =>
-          new Promise<ProjectSnapshot>((resolve) => {
+          new Promise<void>((resolve) => {
             resolveFirst = resolve;
           }),
       )
-      .mockResolvedValueOnce(readySnapshot());
+      .mockResolvedValueOnce(undefined);
     const firstTaskId = useStore
       .getState()
       .loadServerProject(readySnapshot());
@@ -605,7 +658,7 @@ describe("useProjectAutosave", () => {
       content: "other project edit",
     });
 
-    await act(async () => resolveFirst?.(readySnapshot()));
+    await act(async () => resolveFirst?.());
 
     expect(patchServerProject).toHaveBeenCalledTimes(2);
     await act(async () => vi.advanceTimersByTimeAsync(1_000));
@@ -616,7 +669,7 @@ describe("useProjectAutosave", () => {
   it("retains failed edits and retries with the latest browser values", async () => {
     vi.mocked(patchServerProject)
       .mockRejectedValueOnce(new Error("save failed"))
-      .mockResolvedValueOnce(readySnapshot());
+      .mockResolvedValueOnce(undefined);
     const { taskId, harness } = await loadAndRender();
 
     act(() => useStore.getState().setContent("first unsaved edit"));
@@ -663,11 +716,11 @@ describe("useProjectAutosave", () => {
     vi.mocked(patchServerProject)
       .mockImplementationOnce(
         () =>
-          new Promise<ProjectSnapshot>((_resolve, reject) => {
+          new Promise<void>((_resolve, reject) => {
             rejectFirst = reject;
           }),
       )
-      .mockResolvedValueOnce(readySnapshot());
+      .mockResolvedValueOnce(undefined);
     const { harness } = await loadAndRender();
 
     act(() => useStore.getState().setContent("edit B"));
@@ -698,17 +751,17 @@ describe("useProjectAutosave", () => {
 
   it("resumes normal autosave after an in-flight failure follows a full revert", async () => {
     let rejectFirst: ((error: Error) => void) | undefined;
-    let resolveSecond: ((snapshot: ProjectSnapshot) => void) | undefined;
+    let resolveSecond: (() => void) | undefined;
     vi.mocked(patchServerProject)
       .mockImplementationOnce(
         () =>
-          new Promise<ProjectSnapshot>((_resolve, reject) => {
+          new Promise<void>((_resolve, reject) => {
             rejectFirst = reject;
           }),
       )
       .mockImplementationOnce(
         () =>
-          new Promise<ProjectSnapshot>((resolve) => {
+          new Promise<void>((resolve) => {
             resolveSecond = resolve;
           }),
       );
@@ -756,7 +809,7 @@ describe("useProjectAutosave", () => {
     expect(harness.getState()).toBe("saving");
     expect(harness.getCanUnregister()).toBe(false);
 
-    await act(async () => resolveSecond?.(readySnapshot()));
+    await act(async () => resolveSecond?.());
 
     expect(harness.getState()).toBe("saved");
     expect(harness.getCanUnregister()).toBe(true);

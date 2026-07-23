@@ -8,13 +8,21 @@ type Props = {
   html: string;
   /** When `true`, the deck viewer is the visible tab — it can grab keyboard events. */
   active: boolean;
+  /** Project previews omit same-origin access so generated scripts cannot call editor APIs. */
+  iframeSandbox: string;
   /** Bubble out the latest main-slide iframe so screenshot/export can target it. */
   onMainIframe?: (el: HTMLIFrameElement | null) => void;
   /** Bubble out the parsed slides so the export menu can iterate them. */
   onSlides?: (slides: DeckSlide[]) => void;
 };
 
-export function DeckViewer({ html, active, onMainIframe, onSlides }: Props) {
+export function DeckViewer({
+  html,
+  active,
+  iframeSandbox,
+  onMainIframe,
+  onSlides,
+}: Props) {
   const t = useT();
   const parsed = useMemo(() => parseDeck(html), [html]);
   const slides = parsed.slides;
@@ -103,7 +111,7 @@ export function DeckViewer({ html, active, onMainIframe, onSlides }: Props) {
           ref={mainIframeRef}
           title={`slide-${current.id}`}
           srcDoc={current.html}
-          sandbox="allow-scripts allow-same-origin"
+          sandbox={iframeSandbox}
           className="h-full w-full"
           style={{ background: current.bg ?? "#fff", border: "0" }}
         />

@@ -26,7 +26,13 @@ const PROJECT_IMAGE_EXTENSIONS = new Set([
  * Call `ingest` with a `FileList` or array of `File`. The returned state is
  * shared by the editor drop target and paperclip control.
  */
-export function useUploadFile(options?: { projectId?: string }): {
+export function useUploadFile(options?: {
+  projectId?: string;
+  onProjectUploadRunningChange?: (
+    projectId: string,
+    running: boolean,
+  ) => void;
+}): {
   ingest(files: FileList | File[] | null): Promise<void>;
   uploading: boolean;
   error: string | null;
@@ -35,6 +41,8 @@ export function useUploadFile(options?: { projectId?: string }): {
   const [error, setError] = useState<string | null>(null);
   const t = useT();
   const projectId = options?.projectId;
+  const onProjectUploadRunningChange =
+    options?.onProjectUploadRunningChange;
   const activeTaskIdentity = useStore((state) => {
     const task = state.tasks.find(
       (candidate) => candidate.id === state.activeTaskId,
@@ -123,9 +131,13 @@ export function useUploadFile(options?: { projectId?: string }): {
         tail: Promise.resolve(),
         pending: 0,
       };
+      const wasIdle = queue.pending === 0;
       queue.pending += 1;
       queuesRef.current.set(originKey, queue);
       setUploading(true);
+      if (wasIdle && projectId !== undefined) {
+        onProjectUploadRunningChange?.(projectId, true);
+      }
       setError(null);
 
       const run = async () => {
@@ -202,6 +214,9 @@ export function useUploadFile(options?: { projectId?: string }): {
         queue.pending -= 1;
         if (queue.pending === 0 && queuesRef.current.get(originKey) === queue) {
           queuesRef.current.delete(originKey);
+          if (projectId !== undefined) {
+            onProjectUploadRunningChange?.(projectId, false);
+          }
         }
         if (
           queue.pending === 0 &&
@@ -212,7 +227,7 @@ export function useUploadFile(options?: { projectId?: string }): {
         }
       });
     },
-    [projectId, t],
+    [onProjectUploadRunningChange, projectId, t],
   );
 
   return { ingest, uploading, error };

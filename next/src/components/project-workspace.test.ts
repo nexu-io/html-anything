@@ -43,18 +43,47 @@ vi.mock("./editor-workspace", async () => {
         projectId: string;
         canUnregister: boolean;
         onUnregister: () => void;
+        onDraftRunningChange: (running: boolean) => void;
+        onUploadRunningChange: (projectId: string, running: boolean) => void;
       };
     }) =>
-      createElement(
-        "button",
-        {
-          type: "button",
-          disabled: !projectMode?.canUnregister,
-          "data-project-id": projectMode?.projectId,
-          onClick: projectMode?.onUnregister,
-        },
-        `Unregister ${projectMode?.projectId}`,
-      ),
+      createElement("div", null, [
+        createElement(
+          "button",
+          {
+            key: "unregister",
+            type: "button",
+            disabled: !projectMode?.canUnregister,
+            "data-project-id": projectMode?.projectId,
+            onClick: projectMode?.onUnregister,
+          },
+          `Unregister ${projectMode?.projectId}`,
+        ),
+        createElement(
+          "button",
+          {
+            key: "draft",
+            type: "button",
+            "data-draft-project-id": projectMode?.projectId,
+            onClick: () => projectMode?.onDraftRunningChange(true),
+          },
+          `Start draft ${projectMode?.projectId}`,
+        ),
+        createElement(
+          "button",
+          {
+            key: "upload",
+            type: "button",
+            "data-upload-project-id": projectMode?.projectId,
+            onClick: () =>
+              projectMode?.onUploadRunningChange(
+                projectMode.projectId,
+                true,
+              ),
+          },
+          `Start upload ${projectMode?.projectId}`,
+        ),
+      ]),
   };
 });
 
@@ -188,6 +217,59 @@ afterEach(async () => {
 });
 
 describe("ProjectWorkspace unregister lifecycle", () => {
+  it("blocks unregister and page exit while an AI draft is running", async () => {
+    await renderProject(PROJECT_A);
+
+    const draftButton = container.querySelector<HTMLButtonElement>(
+      `[data-draft-project-id="${PROJECT_A}"]`,
+    );
+    await act(async () => draftButton!.click());
+
+    const unregisterButton = container.querySelector<HTMLButtonElement>(
+      `[data-project-id="${PROJECT_A}"]`,
+    );
+    expect(unregisterButton?.disabled).toBe(true);
+    unregisterButton?.click();
+    expect(unregisterServerProject).not.toHaveBeenCalled();
+
+    const pendingExit = new Event("beforeunload", { cancelable: true });
+    expect(window.dispatchEvent(pendingExit)).toBe(false);
+    expect(pendingExit.defaultPrevented).toBe(true);
+  });
+
+  it("blocks unregister while a project upload is pending", async () => {
+    await renderProject(PROJECT_A);
+    const uploadButton = container.querySelector<HTMLButtonElement>(
+      `[data-upload-project-id="${PROJECT_A}"]`,
+    );
+    await act(async () => uploadButton!.click());
+
+    expect(
+      container.querySelector<HTMLButtonElement>(
+        `[data-project-id="${PROJECT_A}"]`,
+      )?.disabled,
+    ).toBe(true);
+  });
+
+  it("blocks page exit while project changes are not durable", async () => {
+    await renderProject(PROJECT_A);
+
+    await act(async () => {
+      useStore.getState().setContent("# Project A changed");
+    });
+
+    const pendingExit = new Event("beforeunload", { cancelable: true });
+    expect(window.dispatchEvent(pendingExit)).toBe(false);
+    expect(pendingExit.defaultPrevented).toBe(true);
+
+    await act(async () => root?.unmount());
+    root = undefined;
+
+    const afterUnmount = new Event("beforeunload", { cancelable: true });
+    expect(window.dispatchEvent(afterUnmount)).toBe(true);
+    expect(afterUnmount.defaultPrevented).toBe(false);
+  });
+
   it("clears the pending screen when the mounted workspace changes projects", async () => {
     const request = deferred<void>();
     vi.mocked(unregisterServerProject).mockReturnValue(request.promise);

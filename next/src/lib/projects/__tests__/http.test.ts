@@ -7,6 +7,8 @@ import type { LoadedSkill } from "../../templates/loader";
 import {
   PROJECT_ASSET_MAX_BYTES,
   PROJECT_CREATE_BODY_MAX_BYTES,
+  PROJECT_CONTENT_MAX_BYTES,
+  PROJECT_HTML_MAX_BYTES,
   PROJECT_PATCH_BODY_MAX_BYTES,
   ProjectError,
   type CreateProjectInput,
@@ -117,7 +119,12 @@ function fakeService(options: {
       if (options.snapshot !== undefined) return options.snapshot;
       throw new ProjectError("project_not_found", "Project was not found.");
     }),
-    patch: vi.fn(async () => readySnapshot()),
+    resolveConversionContext: vi.fn(async () => ({
+      cwd: "/workspace",
+      instruction: "Build a demo.",
+      artifactDirectory: "/workspace/artifacts/html-anything/demo",
+    })),
+    patch: vi.fn(async () => undefined),
     putAsset: vi.fn(async () => projectAsset()),
     getAsset: vi.fn(async () => ({
       asset: projectAsset({ originalName: "hero.png" }),
@@ -132,13 +139,20 @@ function request(
   path = "/api/projects",
   body?: BodyInit,
   host = "localhost:3000",
+  contentType = body === undefined ? null : "application/json",
 ): Request {
   const req = new Request(`https://example.invalid${path}`, {
     method,
     ...(body === undefined ? {} : { body }),
   });
   Object.defineProperty(req, "headers", {
-    value: { get: (name: string) => name.toLowerCase() === "host" ? host : null },
+    value: {
+      get: (name: string) => {
+        if (name.toLowerCase() === "host") return host;
+        if (name.toLowerCase() === "content-type") return contentType;
+        return null;
+      },
+    },
   });
   return req;
 }
@@ -556,6 +570,28 @@ describe("createProjectAssetHttpHandlers", () => {
 });
 
 describe("createProjectHttpHandlers", () => {
+  it("rejects browser-simple content types before reading or creating", async () => {
+    const service = fakeService();
+    const handlers = createProjectHttpHandlers(service);
+    const req = request(
+      "POST",
+      "/api/projects",
+      JSON.stringify(validCreateInput()),
+      "localhost:3000",
+      "text/plain",
+    );
+
+    const res = await handlers.POST(req);
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({
+      error: "invalid_request",
+      message: "Project creation requires application/json.",
+    });
+    expect(service.create).not.toHaveBeenCalled();
+    expect(req.bodyUsed).toBe(false);
+  });
+
   it("uses forgeable loopback Host authority only as a browser and accidental-ingress guard on the trusted tailnet", async () => {
     let calls = 0;
     const handlers = createProjectHttpHandlers({
@@ -739,10 +775,14 @@ describe("createProjectHttpHandlers", () => {
       expect(JSON.stringify(leaderBody)).not.toContain("secret agent failure");
       expect(invocation.invokeAgent).toHaveBeenCalledTimes(1);
 
-      const retry = await handlers.POST(createRequest(input));
-      expect(retry.status).toBe(409);
-      expect(await retry.json()).toMatchObject({ error: "project_exists" });
-      expect(invocation.invokeAgent).toHaveBeenCalledTimes(1);
+      const retryResponse = handlers.POST(createRequest(input));
+      await vi.waitFor(() => {
+        expect(invocation.invokeAgent).toHaveBeenCalledTimes(2);
+      });
+      invocation.succeed();
+      const retry = await retryResponse;
+      expect(retry.status).toBe(201);
+      expect(await retry.json()).toEqual(readyResponse());
     });
   });
 
@@ -756,6 +796,22 @@ describe("createProjectHttpHandlers", () => {
     expect(res.status).toBe(413);
     expect(await res.json()).toMatchObject({ error: "limit_exceeded" });
     expect(service.create).not.toHaveBeenCalled();
+  });
+
+  it("accepts a maximum-size content field after JSON escaping", async () => {
+    const service = fakeService();
+    const handlers = createProjectHttpHandlers(service);
+    const input = {
+      ...validCreateInput(),
+      content: "\u0000".repeat(PROJECT_CONTENT_MAX_BYTES),
+    };
+
+    const res = await handlers.POST(
+      request("POST", "/api/projects", JSON.stringify(input)),
+    );
+
+    expect(res.status).toBe(201);
+    expect(service.create).toHaveBeenCalledWith(input);
   });
 
   it("returns a project snapshot through promised route params", async () => {
@@ -871,10 +927,24 @@ describe("createProjectHttpHandlers", () => {
       { params: Promise.resolve({ id: PROJECT_ID }) },
     );
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(204);
     expect(service.patch).toHaveBeenCalledWith(PROJECT_ID, patch);
-    expect(await res.json()).toEqual(readySnapshot());
+    expect(await res.text()).toBe("");
     await expectNoStore(res);
+  });
+
+  it("accepts a maximum-size HTML field after JSON escaping", async () => {
+    const service = fakeService();
+    const handlers = createProjectHttpHandlers(service);
+    const patch = { html: '"'.repeat(PROJECT_HTML_MAX_BYTES) };
+
+    const res = await handlers.PATCH(
+      request("PATCH", `/api/projects/${PROJECT_ID}`, JSON.stringify(patch)),
+      { params: Promise.resolve({ id: PROJECT_ID }) },
+    );
+
+    expect(res.status).toBe(204);
+    expect(service.patch).toHaveBeenCalledWith(PROJECT_ID, patch);
   });
 
   it("enforces the PATCH body ceiling", async () => {

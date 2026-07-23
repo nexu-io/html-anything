@@ -60,7 +60,7 @@ describe("project browser client", () => {
   });
 
   it("patches only the supplied editable project fields", async () => {
-    const fetchMock = vi.fn(async () => Response.json(readySnapshot()));
+    const fetchMock = vi.fn(async () => new Response(null, { status: 204 }));
     vi.stubGlobal("fetch", fetchMock);
     const patch = {
       content: "changed",
@@ -68,9 +68,7 @@ describe("project browser client", () => {
       templateId: "article-magazine",
     };
 
-    await expect(patchServerProject(PROJECT_ID, patch)).resolves.toEqual(
-      readySnapshot(),
-    );
+    await expect(patchServerProject(PROJECT_ID, patch)).resolves.toBeUndefined();
     expect(fetchMock).toHaveBeenCalledWith(`/api/projects/${PROJECT_ID}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

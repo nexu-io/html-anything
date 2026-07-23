@@ -55,15 +55,18 @@ export function injectPreviewBase(html: string, baseHref?: string): string {
   if (baseHref === undefined) return html;
 
   const base = `<base href="${escapeAttribute(baseHref)}">`;
+  const fragmentNavigation =
+    '<script data-html-anything-fragment-navigation>document.addEventListener("click",function(event){var origin=event.target&&event.target.nodeType===1?event.target:event.target&&event.target.parentElement;var link=origin&&origin.closest(\'a[href],area[href]\');if(!link)return;var hash=link.getAttribute("href").trim();if(!hash.startsWith("#"))return;event.preventDefault();window.location.hash=hash;var target=document.documentElement;if(hash!=="#"){try{var id=decodeURIComponent(hash.slice(1));target=document.getElementById(id)||document.getElementsByName(id)[0]}catch(_error){target=null}}if(target)target.scrollIntoView()},true)</script>';
+  const previewHead = base + fragmentNavigation;
   const documentTags = scanDocumentTags(html);
   if (documentTags.headContentStart !== undefined) {
     const offset = documentTags.headContentStart;
-    return html.slice(0, offset) + base + html.slice(offset);
+    return html.slice(0, offset) + previewHead + html.slice(offset);
   }
 
-  if (documentTags.htmlContentStart === undefined) return html;
+  if (documentTags.htmlContentStart === undefined) return previewHead + html;
   const offset = documentTags.htmlContentStart;
-  return html.slice(0, offset) + `<head>${base}</head>` + html.slice(offset);
+  return html.slice(0, offset) + `<head>${previewHead}</head>` + html.slice(offset);
 }
 
 export function extractDocumentHead(html: string): string {

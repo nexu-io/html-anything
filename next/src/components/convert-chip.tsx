@@ -10,7 +10,7 @@ import { useConvert } from "@/lib/use-convert";
  * entry point. The toolbar no longer has its own Convert button (removed to
  * avoid duplication), so this chip also owns the ⌘/Ctrl+Enter shortcut.
  */
-export function ConvertChip() {
+export function ConvertChip({ projectId }: { projectId?: string }) {
   const agent = useStore((s) => s.selectedAgent);
   const agents = useStore((s) => s.agents);
   const agentModels = useStore((s) => s.agentModels);
@@ -44,8 +44,8 @@ export function ConvertChip() {
       return;
     }
     if (!canConvert) return;
-    run({ taskId: activeTaskId, agent: agent!, templateId: template, content, format, model });
-  }, [isRunning, canConvert, cancel, run, activeTaskId, agent, template, content, format, model]);
+    run({ taskId: activeTaskId, agent: agent!, templateId: template, content, format, model, projectId });
+  }, [isRunning, canConvert, cancel, run, activeTaskId, agent, template, content, format, model, projectId]);
 
   // ⌘/Ctrl + Enter — global shortcut, fires Convert from anywhere on the page.
   // Lives here (not in Toolbar) because the chip is the single source of

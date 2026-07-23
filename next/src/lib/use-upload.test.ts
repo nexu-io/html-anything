@@ -60,7 +60,13 @@ function asset(overrides: Partial<ProjectAsset> = {}): ProjectAsset {
   };
 }
 
-async function renderUpload(projectId?: string): Promise<{
+async function renderUpload(
+  projectId?: string,
+  onProjectUploadRunningChange?: (
+    projectId: string,
+    running: boolean,
+  ) => void,
+): Promise<{
   current: () => ReturnType<typeof useUploadFile>;
   root: Root;
   rerender: (nextProjectId?: string) => Promise<void>;
@@ -69,7 +75,12 @@ async function renderUpload(projectId?: string): Promise<{
 
   function Harness({ activeProjectId }: { activeProjectId?: string }) {
     result = useUploadFile(
-      activeProjectId === undefined ? undefined : { projectId: activeProjectId },
+      activeProjectId === undefined
+        ? undefined
+        : {
+            projectId: activeProjectId,
+            onProjectUploadRunningChange,
+          },
     );
     return null;
   }
@@ -320,6 +331,36 @@ describe("useUploadFile", () => {
     });
 
     expect(hook.current().uploading).toBe(false);
+  });
+
+  it("keeps project upload activity guarded after the editor unmounts", async () => {
+    attachActiveTaskToProject(PROJECT_ID);
+    const upload = deferred<ProjectAsset>();
+    vi.mocked(uploadProjectAsset).mockReturnValue(upload.promise);
+    const activity: Array<[string, boolean]> = [];
+    const hook = await renderUpload(PROJECT_ID, (projectId, running) => {
+      activity.push([projectId, running]);
+    });
+    const file = new File([Uint8Array.of(1)], "Hero.PNG", {
+      type: "image/png",
+    });
+    let ingestion!: Promise<void>;
+
+    act(() => {
+      ingestion = hook.current().ingest([file]);
+    });
+    await act(async () => Promise.resolve());
+    expect(activity).toEqual([[PROJECT_ID, true]]);
+
+    await act(async () => hook.root.render(null));
+    expect(activity).toEqual([[PROJECT_ID, true]]);
+
+    upload.resolve(asset({ originalName: file.name, bytes: file.size }));
+    await act(async () => ingestion);
+    expect(activity).toEqual([
+      [PROJECT_ID, true],
+      [PROJECT_ID, false],
+    ]);
   });
 
   it("discards a completed project upload after navigation without changing another project's autosave inputs", async () => {

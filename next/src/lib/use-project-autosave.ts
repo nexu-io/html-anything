@@ -16,6 +16,14 @@ type ProjectValues = {
   templateId: string;
 };
 
+type ProjectTeardownState = {
+  identity: string;
+  projectId: string;
+  latest: ProjectValues;
+  saved: ProjectValues | null;
+  eligible: boolean;
+};
+
 export function useProjectAutosave({
   projectId,
   taskId,
@@ -46,8 +54,13 @@ export function useProjectAutosave({
   const requestsRef = useRef(new Set<string>());
   const queuedRef = useRef(new Set<string>());
   const projectedRef = useRef(new Map<string, ProjectValues>());
+  const teardownRef = useRef<ProjectTeardownState | null>(null);
   latestRef.current = { content, html, templateId };
   eligibleRef.current = enabled && isProjectTask && status !== "running";
+  if (teardownRef.current?.identity === identity) {
+    teardownRef.current.latest = latestRef.current;
+    teardownRef.current.eligible = eligibleRef.current;
+  }
   const currentIdentity = identityRef.current === identity;
   const durableValues = currentIdentity ? savedRef.current : latestRef.current;
   const dirty =
@@ -95,6 +108,9 @@ export function useProjectAutosave({
       await patchServerProject(projectId, patch);
       if (identityRef.current !== identity) return;
       savedRef.current = latest;
+      if (teardownRef.current?.identity === identity) {
+        teardownRef.current.saved = latest;
+      }
       saved = true;
       if (sameValues(latestRef.current, latest)) setState("saved");
     } catch {
@@ -183,6 +199,37 @@ export function useProjectAutosave({
   ]);
 
   useEffect(() => clearTimer, [clearTimer]);
+
+  useEffect(
+    () => {
+      const teardown: ProjectTeardownState = {
+        identity,
+        projectId,
+        latest: latestRef.current,
+        saved: savedRef.current,
+        eligible: eligibleRef.current,
+      };
+      teardownRef.current = teardown;
+      return () => {
+        clearTimer();
+        if (teardown.eligible) {
+          const projected = projectedRef.current.get(teardown.identity);
+          const patch = changedFields(teardown.saved, teardown.latest);
+          if (
+            (projected === undefined ||
+              !sameValues(projected, teardown.latest)) &&
+            Object.keys(patch).length > 0
+          ) {
+            void Promise.resolve(
+              patchServerProject(teardown.projectId, patch),
+            ).catch(() => undefined);
+          }
+        }
+        if (teardownRef.current === teardown) teardownRef.current = null;
+      };
+    },
+    [clearTimer, identity, projectId],
+  );
 
   const retry = useCallback(() => {
     clearTimer();

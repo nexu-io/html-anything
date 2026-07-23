@@ -12,20 +12,27 @@ type ConvertReq = {
   format?: string;
   /** Optional model override. "default" / undefined → no --model flag. */
   model?: string;
+  projectId?: string;
 };
 
 /** prefix logged when the run is sent in diff-edit mode (vs full regeneration) */
 const DIFF_LOG_PREFIX = "🔁 diff-edit 模式";
 
 // per-task abort controllers — multiple tasks can stream concurrently
-const controllers = new Map<string, AbortController>();
+type ActiveConversion = {
+  controller: AbortController;
+  baselineHtml: string;
+};
+
+const conversions = new Map<string, ActiveConversion>();
 
 export function useConvert() {
   const cancel = useCallback((taskId: string) => {
-    const ctl = controllers.get(taskId);
-    if (ctl) {
-      ctl.abort();
-      controllers.delete(taskId);
+    const active = conversions.get(taskId);
+    if (active) {
+      active.controller.abort();
+      useStore.getState().setHtmlFor(taskId, active.baselineHtml);
+      conversions.delete(taskId);
     }
     useStore.getState().setStatusFor(taskId, "idle");
   }, []);
@@ -35,8 +42,9 @@ export function useConvert() {
       const { taskId } = req;
       cancel(taskId);
       const ctl = new AbortController();
-      controllers.set(taskId, ctl);
       const store = useStore.getState();
+      const baselineHtml = store.tasks.find((task) => task.id === taskId)?.html ?? "";
+      conversions.set(taskId, { controller: ctl, baselineHtml });
       store.setStatusFor(taskId, "running");
       store.resetHtmlFor(taskId);
       store.clearLogFor(taskId);
@@ -86,6 +94,7 @@ export function useConvert() {
         format: req.format ?? summary.format,
         ...(useModel ? { model: useModel } : {}),
         ...(binOverride ? { binOverride } : {}),
+        ...(req.projectId ? { projectId: req.projectId } : {}),
         ...(editPayload ?? {}),
       };
 
@@ -113,6 +122,7 @@ export function useConvert() {
         const dec = new TextDecoder();
         let buf = "";
         let lastEvent = "";
+        let completedSuccessfully = false;
 
         while (true) {
           const { value, done } = await reader.read();
@@ -139,28 +149,58 @@ export function useConvert() {
             } catch {
               continue;
             }
+            if (event === "error") {
+              await reader.cancel().catch(() => undefined);
+              const message = (data as Record<string, unknown>).message;
+              throw new Error(
+                typeof message === "string" ? message : "agent error",
+              );
+            }
+            if (event === "done") {
+              const code = (data as Record<string, unknown>).code;
+              if (code !== 0) {
+                await reader.cancel().catch(() => undefined);
+                throw new Error("Agent conversion did not complete successfully.");
+              }
+              completedSuccessfully = true;
+            }
             handleEvent(taskId, event, data, startedAt);
           }
         }
+        if (!completedSuccessfully) {
+          throw new Error("Agent conversion ended without successful completion.");
+        }
+        if (conversions.get(taskId)?.controller !== ctl) return;
         const endedAt = Date.now();
         useStore.getState().patchStatsFor(taskId, { endedAt, durationMs: endedAt - startedAt });
         useStore.getState().setStatusFor(taskId, "done");
         // record the just-finished (content, html) as the new diff-edit baseline
         // so the user's next edit goes through diff mode instead of full regen
         useStore.getState().commitBaseFor(taskId);
+        if (conversions.get(taskId)?.controller === ctl) {
+          conversions.delete(taskId);
+        }
       } catch (err) {
         if ((err as Error)?.name === "AbortError") {
+          const active = conversions.get(taskId);
+          if (active !== undefined && active.controller !== ctl) return;
+          if (active?.controller === ctl) {
+            useStore.getState().setHtmlFor(taskId, active.baselineHtml);
+          }
           useStore.getState().pushLogFor(taskId, { kind: "info", text: "已取消" });
           useStore.getState().setStatusFor(taskId, "idle");
           return;
         }
+        const active = conversions.get(taskId);
+        if (active?.controller !== ctl) return;
         useStore.getState().pushLogFor(taskId, {
           kind: "error",
           text: (err as Error)?.message ?? String(err),
         });
+        useStore.getState().setHtmlFor(taskId, active.baselineHtml);
         useStore.getState().setStatusFor(taskId, "error");
       } finally {
-        if (controllers.get(taskId) === ctl) controllers.delete(taskId);
+        if (conversions.get(taskId)?.controller === ctl) conversions.delete(taskId);
       }
     },
     [cancel],

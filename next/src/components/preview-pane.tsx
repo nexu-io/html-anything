@@ -176,6 +176,9 @@ export function PreviewPane({
     () => injectPreviewBase(previewHtml(debouncedHtml), assetBaseHref),
     [assetBaseHref, debouncedHtml],
   );
+  const iframeSandbox = assetBaseHref === undefined
+    ? "allow-scripts allow-same-origin"
+    : "allow-scripts";
 
   useEffect(() => {
     if (iframeRef) iframeRef.current = localRef.current;
@@ -307,7 +310,7 @@ export function PreviewPane({
                   ref={localRef}
                   title="preview"
                   srcDoc={display}
-                  sandbox="allow-scripts allow-same-origin"
+                  sandbox={iframeSandbox}
                   className="h-full w-full"
                   style={{ background: "#fff" }}
                 />
@@ -332,6 +335,7 @@ export function PreviewPane({
           <DeckViewer
             html={previewCleaned}
             active={tab === "deck"}
+            iframeSandbox={iframeSandbox}
             // Hand the active slide iframe to the parent ref so the existing
             // ExportMenu's "PNG" / "Image" actions snapshot the *current
             // slide*, not the underlying multi-slide doc.

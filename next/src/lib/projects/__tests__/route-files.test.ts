@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { PROJECT_PATCH_BODY_MAX_BYTES } from "../contracts";
 
 const srcRoot = path.resolve(process.cwd(), "src");
 
@@ -26,15 +27,25 @@ describe("project editor routes", () => {
   });
 
   it("threads project upload and preview props only from project mode", async () => {
-    const [workspaceSource, editorSource, promptSource, previewSource, deckSource] = await Promise.all([
+    const [workspaceSource, editorSource, promptSource, previewSource, deckSource, toolbarSource] = await Promise.all([
       readFile(path.join(srcRoot, "components/editor-workspace.tsx"), "utf8"),
       readFile(path.join(srcRoot, "components/editor-pane.tsx"), "utf8"),
       readFile(path.join(srcRoot, "components/ai-prompt-bar.tsx"), "utf8"),
       readFile(path.join(srcRoot, "components/preview-pane.tsx"), "utf8"),
       readFile(path.join(srcRoot, "components/deck-viewer.tsx"), "utf8"),
+      readFile(path.join(srcRoot, "components/toolbar.tsx"), "utf8"),
     ]);
 
     expect(workspaceSource).toContain("projectId={projectMode?.projectId}");
+    expect(workspaceSource).toContain(
+      "onDraftRunningChange={projectMode?.onDraftRunningChange}",
+    );
+    expect(workspaceSource).toContain(
+      "onUploadRunningChange={projectMode?.onUploadRunningChange}",
+    );
+    expect(workspaceSource).toContain(
+      "<ConvertChip projectId={projectMode?.projectId}",
+    );
     expect(workspaceSource).toContain("localAutosaveEnabled={!projectMode}");
     expect(workspaceSource).toContain("assetBaseHref={");
     expect(workspaceSource).toContain(
@@ -45,14 +56,21 @@ describe("project editor routes", () => {
     expect(editorSource).toContain("useAutosave(localAutosaveEnabled)");
     expect(editorSource).toContain("localAutosaveEnabled && hasContent");
     expect(editorSource).toContain(
-      "const { ingest, uploading, error } = useUploadFile({ projectId })",
+      "const { ingest, uploading, error } = useUploadFile({",
     );
     expect(editorSource).toContain("<AiPromptBar");
     expect(editorSource).toContain("ingest={ingest}");
     expect(editorSource).toContain("uploading={uploading}");
     expect(editorSource).toContain("error={error}");
     expect(editorSource).toContain("projectMode={projectId !== undefined}");
+    expect(editorSource).toContain(
+      "onDraftRunningChange={onDraftRunningChange}",
+    );
+    expect(editorSource).toContain(
+      "onProjectUploadRunningChange: onUploadRunningChange",
+    );
     expect(promptSource).not.toContain("useUploadFile");
+    expect(promptSource).toContain("onDraftRunningChange?.(isRunning)");
     expect(promptSource).toContain(
       "accept={projectMode ? PROJECT_ACCEPT_TYPES : ACCEPT_TYPES}",
     );
@@ -71,8 +89,27 @@ describe("project editor routes", () => {
       "injectPreviewBase(cleaned, assetBaseHref)",
     );
     expect(previewSource).toContain("html={previewCleaned}");
-    expect(previewSource).toContain('sandbox="allow-scripts allow-same-origin"');
-    expect(deckSource).toContain('sandbox="allow-scripts allow-same-origin"');
+    expect(previewSource).toContain(
+      'const iframeSandbox = assetBaseHref === undefined\n    ? "allow-scripts allow-same-origin"\n    : "allow-scripts"',
+    );
+    expect(previewSource).toContain("sandbox={iframeSandbox}");
+    expect(previewSource).toContain("iframeSandbox={iframeSandbox}");
+    expect(deckSource).toContain("iframeSandbox: string");
+    expect(deckSource).toContain("sandbox={iframeSandbox}");
+    expect(toolbarSource).toContain("{!projectMode && (");
+    expect(toolbarSource).toContain("<DeployControl");
+  });
+
+  it("allows the proxy to carry the documented PATCH envelope", async () => {
+    const configSource = await readFile(
+      path.resolve(process.cwd(), "next.config.ts"),
+      "utf8",
+    );
+    const configuredBytes = Number(
+      configSource.match(/proxyClientMaxBodySize:\s*(\d+)/u)?.[1],
+    );
+
+    expect(configuredBytes).toBeGreaterThanOrEqual(PROJECT_PATCH_BODY_MAX_BYTES);
   });
 
   it("defines bounded upload state messages in both dictionaries", async () => {

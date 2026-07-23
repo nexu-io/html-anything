@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isRequestHostAllowed } from "@/lib/security/host-validation";
+import {
+  isRequestHostAllowed,
+  isRequestMutationOriginAllowed,
+} from "@/lib/security/host-validation";
 
 /**
  * Gate every `/api/*` request behind a Host-header allowlist. See
@@ -12,14 +15,17 @@ import { isRequestHostAllowed } from "@/lib/security/host-validation";
  * all live under `/api/`.
  */
 export function middleware(req: NextRequest) {
-  if (isRequestHostAllowed(req)) return NextResponse.next();
+  const hostAllowed = isRequestHostAllowed(req);
+  const originAllowed = isRequestMutationOriginAllowed(req);
+  if (hostAllowed && originAllowed) return NextResponse.next();
   return new NextResponse(
     JSON.stringify({
-      error: "Host not allowed",
-      hint:
-        "html-anything's API only accepts requests with a loopback Host header (127.0.0.1, localhost, ::1). " +
-        "If you're fronting it behind a different hostname, add it to HTML_ANYTHING_ALLOWED_HOSTS (comma-separated) " +
-        "or set HTML_ANYTHING_ALLOW_ANY_HOST=1 if a trusted reverse proxy is terminating Host upstream.",
+      error: hostAllowed ? "Request origin not allowed" : "Host not allowed",
+      hint: hostAllowed
+        ? "Cross-site browser writes to html-anything's API are not allowed."
+        : "html-anything's API only accepts requests with a loopback Host header (127.0.0.1, localhost, ::1). " +
+          "If you're fronting it behind a different hostname, add it to HTML_ANYTHING_ALLOWED_HOSTS (comma-separated) " +
+          "or set HTML_ANYTHING_ALLOW_ANY_HOST=1 if a trusted reverse proxy is terminating Host upstream.",
     }),
     {
       status: 403,

@@ -11,8 +11,14 @@ export const PROJECT_ASSET_MAX_BYTES = 10_485_760;
 export const PROJECT_ASSET_NAME_MAX_CODE_POINTS = 255;
 export const PROJECT_ASSET_NAME_MAX_BYTES = 1_024;
 export const PROJECT_ASSET_STEM_MAX_LENGTH = 80;
-export const PROJECT_CREATE_BODY_MAX_BYTES = 3_500_000;
-export const PROJECT_PATCH_BODY_MAX_BYTES = 9_500_000;
+// Instruction and content may contain one-byte controls serialized as six-byte
+// `\uXXXX` escapes. Reserve a bounded envelope for the remaining metadata.
+export const PROJECT_CREATE_BODY_MAX_BYTES =
+  6 * (PROJECT_INSTRUCTION_MAX_BYTES + PROJECT_CONTENT_MAX_BYTES) + 1_000_000;
+// A valid one-byte control character can occupy six bytes as a JSON `\uXXXX`
+// escape. Keep the transport envelope large enough for both bounded fields.
+export const PROJECT_PATCH_BODY_MAX_BYTES =
+  6 * (PROJECT_CONTENT_MAX_BYTES + PROJECT_HTML_MAX_BYTES) + 1_024;
 export const PROJECT_GENERATION_DEADLINE_MS = 15 * 60 * 1_000;
 export const PROJECT_AUTOSAVE_DELAY_MS = 750;
 
@@ -82,6 +88,12 @@ export type ProjectSnapshot = {
   content: string;
   html: string;
   url: string;
+  artifactDirectory: string;
+};
+
+export type ProjectConversionContext = {
+  cwd: string;
+  instruction: string;
   artifactDirectory: string;
 };
 
@@ -160,6 +172,8 @@ const PATCH_KEYS = new Set(["content", "html", "templateId"]);
 const IDENTIFIER_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
 const FORMAT_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._+-]{0,31}$/;
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
+const WINDOWS_DEVICE_SLUG_PATTERN =
+  /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/;
 const CONTROL_PATTERN = /[\u0000-\u001f\u007f]/u;
 const encoder = new TextEncoder();
 
@@ -252,7 +266,8 @@ export function validateProjectId(value: unknown): string {
 export function validateSlug(value: unknown): string {
   if (
     typeof value !== "string" ||
-    !new RegExp(`^[a-z0-9-]{1,${PROJECT_SLUG_MAX_LENGTH}}$`).test(value)
+    !new RegExp(`^[a-z0-9-]{1,${PROJECT_SLUG_MAX_LENGTH}}$`).test(value) ||
+    WINDOWS_DEVICE_SLUG_PATTERN.test(value)
   ) {
     throw invalidRequest("Project slug is invalid.");
   }

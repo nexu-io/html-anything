@@ -19,6 +19,8 @@ export type ProjectMode = {
   canUnregister: boolean;
   onRetry: () => void;
   onUnregister: () => void;
+  onDraftRunningChange: (running: boolean) => void;
+  onUploadRunningChange: (projectId: string, running: boolean) => void;
 };
 
 export function EditorWorkspace({ projectMode }: { projectMode?: ProjectMode }) {
@@ -87,6 +89,7 @@ export function EditorWorkspace({ projectMode }: { projectMode?: ProjectMode }) 
           setSettingsOpen(true);
         }}
         deployConfigRev={deployConfigRev}
+        projectMode={projectMode !== undefined}
       />
       {projectMode && <ProjectBar projectMode={projectMode} />}
       <div
@@ -108,6 +111,8 @@ export function EditorWorkspace({ projectMode }: { projectMode?: ProjectMode }) 
               <EditorPane
                 projectId={projectMode?.projectId}
                 localAutosaveEnabled={!projectMode}
+                onDraftRunningChange={projectMode?.onDraftRunningChange}
+                onUploadRunningChange={projectMode?.onUploadRunningChange}
               />
             </section>
           )}
@@ -123,7 +128,7 @@ export function EditorWorkspace({ projectMode }: { projectMode?: ProjectMode }) 
               />
             </section>
           )}
-          <ConvertChip />
+          <ConvertChip projectId={projectMode?.projectId} />
         </div>
       </div>
       {welcomeOpen && <WelcomeModal onClose={() => setWelcomeOpen(false)} />}

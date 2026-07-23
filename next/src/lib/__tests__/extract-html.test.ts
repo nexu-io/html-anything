@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { parseDeck } from "../deck";
-import { extractHtml, injectPreviewBase, previewHtml } from "../extract-html";
+import {
+  extractHtml,
+  injectPreviewBase as injectPreviewBaseWithFragmentNavigation,
+  previewHtml,
+} from "../extract-html";
+
+function injectPreviewBase(html: string, baseHref?: string): string {
+  return injectPreviewBaseWithFragmentNavigation(html, baseHref).replace(
+    /<script data-html-anything-fragment-navigation>[\s\S]*?<\/script>/u,
+    "",
+  );
+}
 
 describe("extractHtml", () => {
   it("extracts fenced HTML", () => {
@@ -28,6 +39,18 @@ describe("previewHtml", () => {
 });
 
 describe("injectPreviewBase", () => {
+  it("installs fragment navigation protection alongside the asset base", () => {
+    const result = injectPreviewBaseWithFragmentNavigation(
+      '<html><head></head><body><a href="#features">Features</a><section id="features"></section></body></html>',
+      "/api/projects/project-id/",
+    );
+
+    expect(result).toContain('data-html-anything-fragment-navigation');
+    expect(result.indexOf('<base href="/api/projects/project-id/">')).toBeLessThan(
+      result.indexOf("data-html-anything-fragment-navigation"),
+    );
+  });
+
   it("inserts the preview base as the first child of an existing head", () => {
     const source =
       '<!doctype html><html><head data-x="1"><base href="https://attacker.invalid/"><title>Demo</title></head><body /></html>';
@@ -64,6 +87,17 @@ describe("injectPreviewBase", () => {
     expect(injectPreviewBase(source, "/api/projects/id/")).toBe(
       '<html><head><base href="/api/projects/id/"></head><body>streaming',
     );
+  });
+
+  it("prepends the project base and fragment guard to root fragments", () => {
+    const result = injectPreviewBaseWithFragmentNavigation(
+      '<main><img src="assets/photo.png"></main>',
+      "/api/projects/id/",
+    );
+
+    expect(result).toContain('<base href="/api/projects/id/">');
+    expect(result).toContain("data-html-anything-fragment-navigation");
+    expect(result).toContain('<main><img src="assets/photo.png"></main>');
   });
 
   it("escapes base text for a double-quoted HTML attribute", () => {

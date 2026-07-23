@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStore } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { useDraft } from "@/lib/use-draft";
@@ -24,11 +24,13 @@ export function AiPromptBar({
   uploading,
   error: uploadError,
   projectMode,
+  onDraftRunningChange,
 }: {
   ingest(files: FileList | File[] | null): Promise<void>;
   uploading: boolean;
   error: string | null;
   projectMode: boolean;
+  onDraftRunningChange?: (running: boolean) => void;
 }) {
   const [value, setValue] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +40,13 @@ export function AiPromptBar({
 
   const isRunning = status === "running";
   const canSubmit = !!agent && !!value.trim() && !isRunning;
+
+  useEffect(() => {
+    onDraftRunningChange?.(isRunning);
+    return () => {
+      if (isRunning) onDraftRunningChange?.(false);
+    };
+  }, [isRunning, onDraftRunningChange]);
 
   const onSubmit = () => {
     if (isRunning) {

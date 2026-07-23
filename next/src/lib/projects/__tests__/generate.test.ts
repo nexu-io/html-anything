@@ -423,6 +423,12 @@ describe("createProjectService", () => {
       created: false,
     });
     await service.get(PROJECT_ID);
+    await expect(service.resolveConversionContext(PROJECT_ID)).resolves.toEqual({
+      cwd: "/resolved/workspace",
+      instruction: "Initial instruction",
+      artifactDirectory:
+        "/resolved/workspace/artifacts/html-anything/project",
+    });
     await service.patch(PROJECT_ID, patch);
     await service.putAsset(PROJECT_ID, "Hero.PNG", assetBytes);
     await service.getAsset(PROJECT_ID, "hero.png");
@@ -434,9 +440,11 @@ describe("createProjectService", () => {
       "getAsset",
       "patch",
       "putAsset",
+      "resolveConversionContext",
       "unregister",
     ]);
     expect(store.getArgs).toEqual([PROJECT_ID]);
+    expect(store.resolveConversionContextArgs).toEqual([PROJECT_ID]);
     expect(store.patchArgs).toEqual([[PROJECT_ID, patch]]);
     expect(store.putAssetArgs).toEqual([[PROJECT_ID, "Hero.PNG", assetBytes]]);
     expect(store.getAssetArgs).toEqual([[PROJECT_ID, "hero.png"]]);
@@ -464,6 +472,7 @@ type FakeProjectStore = ProjectStore & {
   findReadyCalls: number;
   findReadyResult: ReadyProjectResponse | null;
   getArgs: string[];
+  resolveConversionContextArgs: string[];
   patchArgs: Array<[string, PatchProjectInput]>;
   putAssetArgs: Array<[string, string, Uint8Array]>;
   getAssetArgs: Array<[string, string]>;
@@ -477,6 +486,7 @@ function fakeStore(): FakeProjectStore {
     findReadyCalls: 0,
     findReadyResult: null,
     getArgs: [],
+    resolveConversionContextArgs: [],
     patchArgs: [],
     putAssetArgs: [],
     getAssetArgs: [],
@@ -498,9 +508,17 @@ function fakeStore(): FakeProjectStore {
       store.getArgs.push(id);
       return snapshot();
     },
+    async resolveConversionContext(id) {
+      store.resolveConversionContextArgs.push(id);
+      return {
+        cwd: "/resolved/workspace",
+        instruction: "Initial instruction",
+        artifactDirectory:
+          "/resolved/workspace/artifacts/html-anything/project",
+      };
+    },
     async patch(id, patch) {
       store.patchArgs.push([id, patch]);
-      return snapshot();
     },
     async putAsset(id, originalName, bytes) {
       store.putAssetArgs.push([id, originalName, bytes]);

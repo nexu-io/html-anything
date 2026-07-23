@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   isAllowedHost,
   isRequestHostAllowed,
+  isRequestMutationOriginAllowed,
   parseAllowedHosts,
   stripPort,
 } from "./host-validation";
@@ -142,5 +143,88 @@ describe("isRequestHostAllowed (env-driven wrapper)", () => {
   it("envVar=0 stays strict (only '1' opts out)", () => {
     process.env.HTML_ANYTHING_ALLOW_ANY_HOST = "0";
     expect(isRequestHostAllowed(make("attacker.example"))).toBe(false);
+  });
+});
+
+describe("isRequestMutationOriginAllowed", () => {
+  const make = (
+    method: string,
+    headers: Record<string, string> = {},
+  ) => ({
+    method,
+    headers: {
+      get(name: string) {
+        return headers[name.toLowerCase()] ?? null;
+      },
+    },
+  });
+
+  it.each(["GET", "HEAD", "OPTIONS"])(
+    "allows cross-site %s requests because they are non-mutating",
+    (method) => {
+      expect(
+        isRequestMutationOriginAllowed(
+          make(method, {
+            host: "host.tailnet.ts.net",
+            origin: "https://attacker.example",
+            "sec-fetch-site": "cross-site",
+          }),
+        ),
+      ).toBe(true);
+    },
+  );
+
+  it.each(["POST", "PUT", "PATCH", "DELETE"])(
+    "rejects cross-site %s requests",
+    (method) => {
+      expect(
+        isRequestMutationOriginAllowed(
+          make(method, {
+            host: "host.tailnet.ts.net",
+            origin: "https://attacker.example",
+            "sec-fetch-site": "cross-site",
+          }),
+        ),
+      ).toBe(false);
+    },
+  );
+
+  it("rejects opaque sandbox mutations with Origin: null", () => {
+    expect(
+      isRequestMutationOriginAllowed(
+        make("POST", {
+          host: "host.tailnet.ts.net",
+          origin: "null",
+        }),
+      ),
+    ).toBe(false);
+  });
+
+  it("rejects a browser mutation whose Origin does not match Host", () => {
+    expect(
+      isRequestMutationOriginAllowed(
+        make("POST", {
+          host: "host.tailnet.ts.net",
+          origin: "https://attacker.example",
+        }),
+      ),
+    ).toBe(false);
+  });
+
+  it("allows matching browser origins and metadata-free CLI requests", () => {
+    expect(
+      isRequestMutationOriginAllowed(
+        make("POST", {
+          host: "host.tailnet.ts.net:43233",
+          origin: "https://host.tailnet.ts.net:43233",
+          "sec-fetch-site": "same-origin",
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      isRequestMutationOriginAllowed(
+        make("POST", { host: "127.0.0.1:43233" }),
+      ),
+    ).toBe(true);
   });
 });

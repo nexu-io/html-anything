@@ -47,6 +47,8 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [unregistering, setUnregistering] = useState(false);
   const [unregisterFailed, setUnregisterFailed] = useState(false);
+  const [draftRunning, setDraftRunning] = useState(false);
+  const [uploadRunning, setUploadRunning] = useState(false);
   const unregisteringRef = useRef(false);
   const unregisterAttemptIdRef = useRef(0);
   const unregisterAttemptRef = useRef<UnregisterAttempt | null>(null);
@@ -62,6 +64,30 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
     taskId,
     enabled: ready,
   });
+  const canUnregister =
+    autosave.canUnregister && !draftRunning && !uploadRunning;
+  const handleUploadRunningChange = useCallback(
+    (uploadProjectId: string, running: boolean) => {
+      const lifetime = workspaceLifetimeRef.current;
+      if (
+        lifetime?.active &&
+        lifetime.projectId === uploadProjectId
+      ) {
+        setUploadRunning(running);
+      }
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (!ready || canUnregister) return;
+    const preventUnsavedExit = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", preventUnsavedExit);
+    return () => window.removeEventListener("beforeunload", preventUnsavedExit);
+  }, [canUnregister, ready]);
 
   useLayoutEffect(() => {
     const lifetime: WorkspaceLifetime = { active: true, projectId };
@@ -71,6 +97,8 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
     unregisterRequestStartedRef.current = null;
     setUnregistering(false);
     setUnregisterFailed(false);
+    setDraftRunning(false);
+    setUploadRunning(false);
 
     return () => {
       lifetime.active = false;
@@ -117,7 +145,7 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
   }, []);
 
   const unregister = useCallback(() => {
-    if (!ready || !autosave.canUnregister || unregisteringRef.current) return;
+    if (!ready || !canUnregister || unregisteringRef.current) return;
     if (!window.confirm(t("project.unregisterConfirm", { name: projectName ?? projectId }))) {
       return;
     }
@@ -141,7 +169,7 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
     unregisteringRef.current = true;
     setUnregisterFailed(false);
     setUnregistering(true);
-  }, [autosave.canUnregister, projectId, projectName, ready, t]);
+  }, [canUnregister, projectId, projectName, ready, t]);
 
   useEffect(() => {
     const attempt = unregisterAttemptRef.current;
@@ -199,9 +227,11 @@ export function ProjectWorkspace({ projectId }: { projectId: string }) {
         projectMode={{
           projectId,
           saveState: autosave.state,
-          canUnregister: autosave.canUnregister,
+          canUnregister,
           onRetry: autosave.retry,
           onUnregister: unregister,
+          onDraftRunningChange: setDraftRunning,
+          onUploadRunningChange: handleUploadRunningChange,
         }}
       />
       {unregisterFailed && (

@@ -23,9 +23,13 @@ import { exportRemotionZip } from "@/lib/export/remotion";
 
 type ExportMenuProps = {
   iframeRef: React.MutableRefObject<HTMLIFrameElement | null>;
+  projectMode?: boolean;
 };
 
-export function ExportMenu({ iframeRef }: ExportMenuProps) {
+export function ExportMenu({
+  iframeRef,
+  projectMode = false,
+}: ExportMenuProps) {
   const html = useStore((s) => selectActiveTask(s)?.html ?? "");
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -78,9 +82,11 @@ export function ExportMenu({ iframeRef }: ExportMenuProps) {
       actions: [
         { id: "wechat", label: t("export.action.wechat"), emoji: "💬", fn: wrap(t("export.toast.wechat"), async () => { await copyToWechat(cleanHtml()); }) },
         { id: "zhihu",  label: t("export.action.zhihu"),  emoji: "🦓", fn: wrap(t("export.toast.zhihu"), async () => { await copyToZhihu(cleanHtml()); }) },
-        { id: "twitter-img", label: t("export.action.twitterImg"), emoji: "🐦", fn: wrap(t("export.toast.image"), async () => {
-          if (!iframeRef.current) throw new Error(t("export.error.previewNotReady")); await copyIframeToClipboard(iframeRef.current);
-        }) },
+        ...(!projectMode
+          ? [{ id: "twitter-img", label: t("export.action.twitterImg"), emoji: "🐦", fn: wrap(t("export.toast.image"), async () => {
+              if (!iframeRef.current) throw new Error(t("export.error.previewNotReady")); await copyIframeToClipboard(iframeRef.current);
+            }) }]
+          : []),
       ],
     },
     {
@@ -95,13 +101,17 @@ export function ExportMenu({ iframeRef }: ExportMenuProps) {
     {
       title: t("export.section.download"),
       actions: [
-        { id: "download-html", label: t("export.action.downloadHtml"), emoji: "💾", fn: wrap(t("export.toast.htmlSaved"), async () => { downloadHtml(cleanHtml()); }) },
-        { id: "download-png",  label: t("export.action.downloadPng"),  emoji: "🖼️", fn: wrap(t("export.toast.imgSaved"), async () => {
-          if (!iframeRef.current) throw new Error(t("export.error.previewNotReady")); await downloadIframeAsImage(iframeRef.current);
-        }) },
+        ...(!projectMode
+          ? [{ id: "download-html", label: t("export.action.downloadHtml"), emoji: "💾", fn: wrap(t("export.toast.htmlSaved"), async () => { downloadHtml(cleanHtml()); }) }]
+          : []),
+        ...(!projectMode
+          ? [{ id: "download-png", label: t("export.action.downloadPng"), emoji: "🖼️", fn: wrap(t("export.toast.imgSaved"), async () => {
+              if (!iframeRef.current) throw new Error(t("export.error.previewNotReady")); await downloadIframeAsImage(iframeRef.current);
+            }) }]
+          : []),
       ],
     },
-    ...(deck.isDeck
+    ...(deck.isDeck && !projectMode
       ? [
           {
             title: t("export.section.deck", { n: deck.slides.length }),

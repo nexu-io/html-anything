@@ -123,3 +123,42 @@ export function isRequestHostAllowed(req: { headers: { get(name: string): string
     allowAny: process.env.HTML_ANYTHING_ALLOW_ANY_HOST === "1",
   });
 }
+
+/**
+ * Reject browser-originated cross-site writes while preserving metadata-free
+ * CLI calls. This is the second half of the API boundary: Host validation
+ * stops DNS rebinding, while this check stops an allowed Tailnet/loopback Host
+ * from becoming a confused deputy for a public page or opaque preview frame.
+ */
+export function isRequestMutationOriginAllowed(req: {
+  method: string;
+  headers: { get(name: string): string | null };
+}): boolean {
+  if (["GET", "HEAD", "OPTIONS"].includes(req.method.toUpperCase())) return true;
+
+  const fetchSite = req.headers.get("sec-fetch-site")?.trim().toLowerCase();
+  if (
+    fetchSite !== undefined &&
+    !["same-origin", "same-site", "none"].includes(fetchSite)
+  ) {
+    return false;
+  }
+
+  const origin = req.headers.get("origin");
+  if (origin === null) return true;
+  if (origin === "null") return false;
+
+  const host = req.headers.get("host")?.trim().toLowerCase();
+  if (!host) return false;
+  try {
+    const parsed = new URL(origin);
+    return (
+      ["http:", "https:"].includes(parsed.protocol) &&
+      parsed.username === "" &&
+      parsed.password === "" &&
+      parsed.host.toLowerCase() === host
+    );
+  } catch {
+    return false;
+  }
+}
