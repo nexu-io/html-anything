@@ -270,6 +270,20 @@ describe("detectAgents", () => {
   });
 
   describe("returned agent shape", () => {
+    it("includes the configured MiniMax Claude-compatible models in the Claude picker", () => {
+      existsSyncMock.mockReturnValue(false);
+
+      const agents = detectAgents();
+      const claude = findAgent(agents, "claude");
+
+      expect(claude.models).toEqual(
+        expect.arrayContaining([
+          { id: "MiniMax/MiniMax-M3", label: "MiniMax/MiniMax-M3" },
+          { id: "MiniMax/MiniMax-M2.7", label: "MiniMax/MiniMax-M2.7" },
+        ]),
+      );
+    });
+
     it("returns all agents from AGENTS array", () => {
       existsSyncMock.mockReturnValue(false);
 
