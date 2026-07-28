@@ -137,18 +137,22 @@ export async function nodeToBlob(node: HTMLElement, opts: ImageOpts = {}): Promi
 /**
  * Render the contents of an <iframe> (built from srcdoc) to a PNG blob.
  *
- * Strategy (matters — the obvious approaches all break in subtle ways):
+ * Security shape (important): the live preview/deck iframes are sandboxed with
+ * `allow-scripts` but NOT `allow-same-origin`, so agent-generated HTML runs in
+ * an opaque origin and cannot reach parent.localStorage or call /api/* with the
+ * host's credentials. That means we cannot read the live iframe's
+ * contentDocument from here. Instead we read the `srcdoc` attribute — which the
+ * parent set and therefore still owns regardless of the iframe's origin — and
+ * render it into a throwaway offscreen iframe that IS same-origin, snapshot,
+ * then remove it. That ephemeral snapshot is the only iframe that briefly
+ * shares the host origin, and only during an explicit user-initiated export.
  *
+ * Layout-fidelity strategy (still matters):
  *   1. Wait for fonts / images / stylesheets / Tailwind CDN before measuring.
- *   2. Temporarily resize the iframe element to its content's full height so
- *      the browser lays out the entire page at the iframe's *natural* width.
- *      The iframe sits inside an `overflow:hidden` panel, so the user never
- *      sees this resize; meanwhile the layout we capture is byte-identical
- *      to the live preview (no subpixel-width drift, no off-by-one wrap).
- *   3. Use `documentElement.clientWidth` for the screenshot width — that's
- *      the exact viewport the browser used when measuring text. Using
- *      `scrollWidth` here causes a 1–2px drift that wraps Chinese titles to
- *      a new line and shoves them under the body text.
+ *   2. Size the snapshot iframe to its content's full height so the browser
+ *      lays out the entire page at the preview's natural width.
+ *   3. Use `documentElement.clientWidth` for the screenshot width — using
+ *      `scrollWidth` causes a 1-2px drift that wraps Chinese titles.
  *   4. Pass explicit width/height to modern-screenshot so the foreignObject
  *      SVG matches the laid-out size 1:1.
  */
@@ -156,35 +160,42 @@ export async function iframeToBlob(
   iframe: HTMLIFrameElement,
   opts: ImageOpts = {},
 ): Promise<Blob> {
-  const doc = iframe.contentDocument;
-  const win = iframe.contentWindow;
-  if (!doc || !win) throw new Error("iframe not ready");
+  const srcdoc = iframe.getAttribute("srcdoc");
+  if (!srcdoc) throw new Error("preview has no content yet");
 
-  await waitForDocumentReady(doc, win);
-
-  // Snapshot inline styles we'll restore after the screenshot.
-  const prevIframeHeight = iframe.style.height;
-  const prevDocOverflow = doc.documentElement.style.overflow;
-  const prevBodyOverflow = doc.body.style.overflow;
-
-  // Force iframe to its content height so layout is fully resolved with no
-  // hidden scroll regions. Parent has overflow:hidden so this is invisible.
-  const fullHeight = fullScrollHeight(doc);
-  if (!fullHeight) throw new Error("preview has no content yet");
-  iframe.style.height = `${fullHeight}px`;
-  doc.documentElement.style.overflow = "visible";
-  doc.body.style.overflow = "visible";
-
-  // Wait a couple of frames for the browser to re-flow at the new size.
-  await NEXT_FRAME();
-  await sleep(60);
-  await NEXT_FRAME();
+  const width = iframe.clientWidth || 1280;
+  const snap = document.createElement("iframe");
+  snap.setAttribute("sandbox", "allow-scripts allow-same-origin");
+  snap.style.cssText = `position:fixed;left:-99999px;top:0;width:${width}px;height:720px;border:0;`;
+  snap.setAttribute("srcdoc", srcdoc);
+  document.body.appendChild(snap);
 
   try {
-    const layoutWidth =
-      doc.documentElement.clientWidth ||
-      iframe.clientWidth ||
-      doc.body.scrollWidth;
+    // Let the srcdoc parse before reading its document.
+    await new Promise<void>((res) => {
+      const done = () => res();
+      snap.addEventListener("load", done, { once: true });
+      setTimeout(done, 8000);
+    });
+    const doc = snap.contentDocument;
+    const win = snap.contentWindow;
+    if (!doc || !win) throw new Error("snapshot iframe not ready");
+
+    await waitForDocumentReady(doc, win);
+
+    const fullHeight = fullScrollHeight(doc);
+    if (!fullHeight) throw new Error("preview has no content yet");
+    // Size the snapshot to the full content height so layout fully resolves.
+    snap.style.height = `${fullHeight}px`;
+    doc.documentElement.style.overflow = "visible";
+    doc.body.style.overflow = "visible";
+
+    // Wait a couple frames for the browser to re-flow at the new size.
+    await NEXT_FRAME();
+    await sleep(60);
+    await NEXT_FRAME();
+
+    const layoutWidth = doc.documentElement.clientWidth || width || doc.body.scrollWidth;
     const layoutHeight = fullScrollHeight(doc);
 
     const scale = opts.scale ?? 2;
@@ -206,9 +217,7 @@ export async function iframeToBlob(
     if (!blob) throw new Error("screenshot failed");
     return blob;
   } finally {
-    iframe.style.height = prevIframeHeight;
-    doc.documentElement.style.overflow = prevDocOverflow;
-    doc.body.style.overflow = prevBodyOverflow;
+    snap.remove();
   }
 }
 

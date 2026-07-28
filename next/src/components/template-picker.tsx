@@ -541,7 +541,7 @@ export function TemplatePicker() {
                 key={hoveredTpl.id}
                 title={templateName(hoveredTpl)}
                 srcDoc={hoveredHtml}
-                sandbox="allow-scripts allow-same-origin"
+                sandbox="allow-scripts"
                 style={{
                   width: 1280,
                   height: 960,

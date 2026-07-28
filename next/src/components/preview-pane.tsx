@@ -294,7 +294,12 @@ export function PreviewPane({
                   ref={localRef}
                   title="preview"
                   srcDoc={display}
-                  sandbox="allow-scripts allow-same-origin"
+                  // No allow-same-origin: agent-generated HTML runs in an opaque
+                  // origin so its scripts cannot reach parent.localStorage or
+                  // call /api/* with the host's credentials. PNG export does not
+                  // read this iframe's document — see iframeToBlob in image.ts,
+                  // which snapshots via a throwaway offscreen iframe.
+                  sandbox="allow-scripts"
                   className="h-full w-full"
                   style={{ background: "#fff" }}
                 />

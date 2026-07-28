@@ -103,7 +103,8 @@ export function DeckViewer({ html, active, onMainIframe, onSlides }: Props) {
           ref={mainIframeRef}
           title={`slide-${current.id}`}
           srcDoc={current.html}
-          sandbox="allow-scripts allow-same-origin"
+          // Opaque origin — see preview-pane.tsx; PNG export uses an offscreen snapshot iframe (image.ts).
+          sandbox="allow-scripts"
           className="h-full w-full"
           style={{ background: current.bg ?? "#fff", border: "0" }}
         />
