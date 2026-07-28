@@ -31,6 +31,21 @@ export function tryAcquireSpawnSlot(): boolean {
   return true;
 }
 
+/** Try to acquire multiple spawn slots in one call. Returns the number
+ *  actually granted (may be less than requested). Caller should releaseGranted
+ *  with the returned count for cleanup. */
+export function tryAcquireSpawnSlots(count: number): number {
+  const available = Math.max(0, MAX_INFLIGHT - inflight);
+  const granted = Math.min(count, available);
+  inflight += granted;
+  return granted;
+}
+
+/** Release N slots at once. */
+export function releaseSpawnSlots(granted: number): void {
+  inflight = Math.max(0, inflight - granted);
+}
+
 /** Release a slot acquired via tryAcquireSpawnSlot. Idempotent guard is the
  *  caller's responsibility (use a released flag) — see the routes. */
 export function releaseSpawnSlot(): void {
