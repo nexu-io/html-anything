@@ -1,5 +1,12 @@
 import { NextRequest } from "next/server";
 import { invokeAgent } from "@/lib/agents/invoke";
+import {
+  tryAcquireSpawnSlot,
+  releaseSpawnSlot,
+  MAX_BODY_BYTES,
+  MAX_PROMPT_BYTES,
+  SPAWN_TIMEOUT_MS,
+} from "@/lib/agents/spawn-guards";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,6 +44,11 @@ ${args.instruction}
 }
 
 export async function POST(req: NextRequest) {
+  const contentLength = Number(req.headers.get("content-length") ?? 0);
+  if (contentLength && contentLength > MAX_BODY_BYTES) {
+    return new Response("payload too large", { status: 413 });
+  }
+
   let body: Body;
   try {
     body = (await req.json()) as Body;
@@ -51,17 +63,26 @@ export async function POST(req: NextRequest) {
   }
 
   const prompt = buildDraftPrompt({ instruction, context });
+  if (Buffer.byteLength(prompt, "utf8") > MAX_PROMPT_BYTES) {
+    return new Response("prompt too large", { status: 413 });
+  }
 
+  if (!tryAcquireSpawnSlot()) {
+    return new Response("server busy: too many concurrent drafts", { status: 503 });
+  }
   const abortCtl = new AbortController();
   req.signal?.addEventListener("abort", () => abortCtl.abort(), { once: true });
+  const watchdog = setTimeout(() => abortCtl.abort(), SPAWN_TIMEOUT_MS);
+  let released = false;
+  const cleanup = () => {
+    clearTimeout(watchdog);
+    if (!released) {
+      releaseSpawnSlot();
+      released = true;
+    }
+  };
 
-  const stream = invokeAgent({
-    agent,
-    prompt,
-    model,
-    binOverride,
-    signal: abortCtl.signal,
-  });
+  const stream = invokeAgent({ agent, prompt, model, binOverride, signal: abortCtl.signal });
 
   const sse = new ReadableStream({
     async start(controller) {
@@ -92,6 +113,7 @@ export async function POST(req: NextRequest) {
         });
       } finally {
         outClosed = true;
+        cleanup();
         try {
           controller.close();
         } catch {}
@@ -99,6 +121,7 @@ export async function POST(req: NextRequest) {
     },
     cancel() {
       abortCtl.abort();
+      cleanup();
     },
   });
 

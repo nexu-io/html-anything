@@ -48,9 +48,23 @@ function resolveBinForAgent(
     return resolveOnPath(trimmed);
   };
   if (binOverride && binOverride.trim()) {
-    const fromOverride = tryPath(binOverride);
+    const trimmed = binOverride.trim();
+    // The override path may point anywhere on disk (custom install location),
+    // but the file it names must actually BE this agent's binary. Constrain
+    // the basename (sans .exe/.cmd/.bat) to the agent's known bin names, so a
+    // request can't spawn an arbitrary executable under elevated flags.
+    const allowed = [def.bin, ...(def.fallbackBins ?? [])].map((s) => s.toLowerCase());
+    const filename = trimmed.split(/[\\/]/).pop()!.toLowerCase();
+    const stem = filename.replace(/\.(exe|cmd|bat|com|ps1)$/i, "");
+    if (!allowed.includes(stem)) {
+      return {
+        kind: "override-missing",
+        tried: `${trimmed} (expected binary named: ${allowed.join(" / ")})`,
+      };
+    }
+    const fromOverride = tryPath(trimmed);
     if (fromOverride) return { kind: "ok", bin: fromOverride };
-    return { kind: "override-missing", tried: binOverride.trim() };
+    return { kind: "override-missing", tried: trimmed };
   }
   if (def.envOverride) {
     const fromEnv = tryPath(process.env[def.envOverride]);
@@ -102,6 +116,21 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
   const env = envFor(opts.agent);
   const promptViaArgv = def.protocol === "argv";
   const promptViaMessageFlag = def.protocol === "argv-message";
+  const promptOnArgv = promptViaArgv || promptViaMessageFlag;
+  if (promptOnArgv && process.platform === "win32") {
+    // With shell:true (required for .cmd shims on Windows), the prompt is
+    // interpolated into the command line for argv / argv-message protocols
+    // (deepseek positional, openclaw --message). cmd.exe admits no fully-safe
+    // quoting for arbitrary input, so reject prompts containing command
+    // separators / redirects / env-var sigils rather than attempting fragile
+    // escaping. Normal prose has none of these; shell-snippet content should
+    // use a stdin-capable agent instead.
+    if (/[&|<>^%\r\n]/.test(opts.prompt)) {
+      return errorStream(
+        `${def.label}: this agent reads the prompt from its command line, which is unsafe on Windows for input containing shell metacharacters (& | < > ^ % newlines). Use a stdin-capable agent instead (claude / codex / cursor-agent / gemini / copilot / opencode / qwen / aider / qoder).`,
+      );
+    }
+  }
 
   return new ReadableStream<InvokeEvent>({
     async start(controller) {
@@ -166,9 +195,12 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           // what npm installs for most CLI agents) without going through the
           // shell. Without this, every agent invocation fails with
           // EINVAL / "spawn 无效的参数". macOS/Linux use direct exec.
-          // Safety: prompt content is delivered via stdin or `--message
-          // <text>` (argv-message), not interpolated into a shell command,
-          // so this does not introduce a shell-injection vector.
+          // Safety: stdin-protocol agents (the majority) never put the prompt
+          // on the command line, so shell:true is safe for them. For argv /
+          // argv-message agents (deepseek, openclaw) the prompt IS in argv —
+          // on Windows we reject shell metacharacters above before reaching
+          // here; on macOS/Linux spawn uses direct exec (no shell) so argv
+          // values are passed verbatim to execve and cannot inject commands.
           shell: process.platform === "win32",
         });
       } catch (err) {

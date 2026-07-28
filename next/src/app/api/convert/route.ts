@@ -2,6 +2,13 @@ import { NextRequest } from "next/server";
 import { invokeAgent } from "@/lib/agents/invoke";
 import { loadSkill } from "@/lib/templates/loader";
 import { assemblePrompt } from "@/lib/templates/shared";
+import {
+  tryAcquireSpawnSlot,
+  releaseSpawnSlot,
+  MAX_BODY_BYTES,
+  MAX_PROMPT_BYTES,
+  SPAWN_TIMEOUT_MS,
+} from "@/lib/agents/spawn-guards";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,7 +19,6 @@ type Body = {
   content: string;
   format?: string;
   model?: string;
-  cwd?: string;
   /**
    * Optional absolute path to the agent binary. The Settings UI lets the
    * user override auto-detection when their CLI lives somewhere our PATH
@@ -62,6 +68,13 @@ ${args.oldHtml}
 }
 
 export async function POST(req: NextRequest) {
+  // Cap payload size before the body is buffered. Content-Length is advisory
+  // (a client can lie), so we re-check the assembled prompt size below too.
+  const contentLength = Number(req.headers.get("content-length") ?? 0);
+  if (contentLength && contentLength > MAX_BODY_BYTES) {
+    return new Response("payload too large", { status: 413 });
+  }
+
   let body: Body;
   try {
     body = (await req.json()) as Body;
@@ -74,11 +87,16 @@ export async function POST(req: NextRequest) {
     content,
     format = "text",
     model,
-    cwd,
     binOverride,
     editFromHtml,
     editFromContent,
   } = body;
+  // `cwd` is intentionally NOT read from the body. The agent CLI is spawned
+  // with maximally-permissive flags (bypassPermissions / workspace-write /
+  // --yolo), so letting a caller point cwd at an arbitrary directory would
+  // hand the agent write access to anywhere on disk. The UI never sends cwd;
+  // invokeAgent falls back to process.cwd(). If a configurable project root
+  // becomes a real feature, it must go through an explicit Settings allowlist.
   if (!agent || !templateId || !content) {
     return new Response("missing required fields: agent, templateId, content", {
       status: 400,
@@ -102,14 +120,31 @@ export async function POST(req: NextRequest) {
   } else {
     prompt = assemblePrompt({ body: skill.body, content, format });
   }
+  if (Buffer.byteLength(prompt, "utf8") > MAX_PROMPT_BYTES) {
+    return new Response("prompt too large", { status: 413 });
+  }
+
+  if (!tryAcquireSpawnSlot()) {
+    return new Response("server busy: too many concurrent conversions", { status: 503 });
+  }
   const abortCtl = new AbortController();
   req.signal?.addEventListener("abort", () => abortCtl.abort(), { once: true });
+  // Hard wall-clock cap so a hung agent CLI (interactive login prompt, stalled
+  // network) can't keep the SSE connection and the child resident forever.
+  const watchdog = setTimeout(() => abortCtl.abort(), SPAWN_TIMEOUT_MS);
+  let released = false;
+  const cleanup = () => {
+    clearTimeout(watchdog);
+    if (!released) {
+      releaseSpawnSlot();
+      released = true;
+    }
+  };
 
   const stream = invokeAgent({
     agent,
     prompt,
     model,
-    cwd,
     binOverride,
     signal: abortCtl.signal,
   });
@@ -143,6 +178,7 @@ export async function POST(req: NextRequest) {
         });
       } finally {
         outClosed = true;
+        cleanup();
         try {
           controller.close();
         } catch {}
@@ -150,6 +186,7 @@ export async function POST(req: NextRequest) {
     },
     cancel() {
       abortCtl.abort();
+      cleanup();
     },
   });
 
