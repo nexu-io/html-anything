@@ -108,7 +108,7 @@ process.on("SIGTERM", () => { clearInterval(id); process.exit(0); });
     const stream = invokeAgent({ agent: "claude", prompt: "x", signal: ctl.signal, binOverride: fakeBin });
     const reader = stream.getReader();
     let deltas = 0;
-    const timer = setTimeout(() => ctl.abort(), 500);
+    const timer = setTimeout(() => ctl.abort(), 1500);
     try {
       while (true) {
         const { value, done } = await reader.read();

@@ -2,6 +2,9 @@
  * Shared design directives prepended to every skill's prompt body. Kept in its
  * own module so the `/api/convert` route can call `assemblePrompt({ body, … })`
  * without depending on the disk loader's full surface.
+ *
+ * When a design system is selected, the adapter's {systemPrompt, tokenCSS} is
+ * injected ABOVE this block so the agent sees the DESIGN.md constraints first.
  */
 export const SHARED_DESIGN_DIRECTIVES = `
 你是世界级的视觉设计师 + 资深前端工程师。请输出一份**自包含的单文件 HTML**，要求：
@@ -37,18 +40,32 @@ export const SHARED_DESIGN_DIRECTIVES = `
 
 `;
 
+export type PromptOpts = {
+  body: string;
+  content: string;
+  format: string;
+  /**
+   * Optional pre-built design-system block (from the DESIGN.md adapter).
+   * The caller (/api/convert) loads the design system and adapts it before
+   * calling assemblePrompt so shared.ts stays a pure function with no fs deps.
+   */
+  designSystemBlock?: string;
+};
+
 /**
  * Wrap a per-template instruction body with the shared design directives and
  * the user content tail. This is the canonical prompt shape; both inline
  * `buildPrompt` functions in `index.ts` and the skill-folder loader assemble
  * prompts via this helper so behaviour stays identical.
+ *
+ * When `designSystemBlock` is provided it is injected at the top of the prompt
+ * — so the agent sees the DESIGN.md constraints *before* the shared directives
+ * and skill body (priority: DESIGN.md > shared > skill).
  */
-export function assemblePrompt(opts: {
-  body: string;
-  content: string;
-  format: string;
-}): string {
-  return `${SHARED_DESIGN_DIRECTIVES}
+export function assemblePrompt(opts: PromptOpts): string {
+  const block = opts.designSystemBlock ? `${opts.designSystemBlock}\n\n---\n\n` : "";
+
+  return `${block}${SHARED_DESIGN_DIRECTIVES}
 ${opts.body.trim()}
 
 【输入格式】: ${opts.format}

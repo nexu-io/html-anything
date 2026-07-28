@@ -20,6 +20,12 @@ type Body = {
   format?: string;
   model?: string;
   /**
+   * Optional design system id (from the open-design corpus). When set, the route
+   * loads the DESIGN.md, builds a tokenCSS :root block + design-system-specific
+   * prompt, and injects it above the shared directives and skill body.
+   */
+  designSystemId?: string;
+  /**
    * Optional absolute path to the agent binary. The Settings UI lets the
    * user override auto-detection when their CLI lives somewhere our PATH
    * scan doesn't cover (Scoop on Windows, custom installs, etc.).
@@ -87,6 +93,7 @@ export async function POST(req: NextRequest) {
     content,
     format = "text",
     model,
+    designSystemId,
     binOverride,
     editFromHtml,
     editFromContent,
@@ -118,7 +125,18 @@ export async function POST(req: NextRequest) {
       format,
     });
   } else {
-    prompt = assemblePrompt({ body: skill.body, content, format });
+    let designSystemBlock: string | undefined;
+    if (designSystemId) {
+      try {
+        const { loadDesignSystem } = await import("@/lib/design-systems/loader");
+        const { adapt } = await import("@/lib/design-systems/adapter");
+        const ds = loadDesignSystem(designSystemId);
+        if (ds) designSystemBlock = adapt(ds).systemPrompt;
+      } catch {
+        // design-systems dir may not exist (CI / deploy without open-design).
+      }
+    }
+    prompt = assemblePrompt({ body: skill.body, content, format, designSystemBlock });
   }
   if (Buffer.byteLength(prompt, "utf8") > MAX_PROMPT_BYTES) {
     return new Response("prompt too large", { status: 413 });
