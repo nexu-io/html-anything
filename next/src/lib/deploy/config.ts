@@ -1,5 +1,6 @@
 import { promises as fsp, chmodSync } from "node:fs";
-import { homedir } from "node:os";
+import { execFileSync } from "node:child_process";
+import { homedir, userInfo } from "node:os";
 import path from "node:path";
 
 /**
@@ -95,13 +96,31 @@ async function writeDeployConfigFile(
   await fsp.writeFile(file, `${JSON.stringify(config, null, 2)}\n`, {
     mode: 0o600,
   });
-  // mode flag on writeFile only sets perms when the file is created; force
-  // chmod for the overwrite case. Best-effort on filesystems that don't
-  // support it (e.g. Windows / FAT32).
+  restrictDeployConfigPerms(file);
+}
+
+/**
+ * Tighten the on-disk deploy config (a plaintext API token) to the current
+ * user. POSIX honors chmod 0o600; Windows/NTFS ignores POSIX mode, so reset
+ * the ACL via icacls (drop inherited ACEs, grant the current user full
+ * control only). A failure is logged rather than silently swallowed so an
+ * operator notices when creds are left with the default — potentially
+ * world-readable — ACL.
+ */
+function restrictDeployConfigPerms(file: string): void {
   try {
-    chmodSync(file, 0o600);
-  } catch {
-    /* ignore */
+    if (process.platform === "win32") {
+      const user = userInfo().username;
+      execFileSync("icacls", [file, "/inheritance:r", "/grant:r", `${user}:F`], {
+        stdio: "ignore",
+      });
+    } else {
+      chmodSync(file, 0o600);
+    }
+  } catch (err) {
+    console.warn(
+      `[deploy] could not restrict permissions on ${file}: ${err instanceof Error ? err.message : String(err)}`,
+    );
   }
 }
 

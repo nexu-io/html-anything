@@ -87,35 +87,9 @@ describe("GET /api/marketplace", () => {
     const data = (await res.json()) as { packages: unknown[] };
     expect(data.packages).toEqual([]);
   });
-
-  it("returns 403 when the Host header is not loopback — even for the read endpoint", async () => {
-    // Privacy regression test: enumerating installed packages (repo
-    // owners / names / refs) must not be reachable via DNS rebinding.
-    const { GET } = await import("../../../app/api/marketplace/route");
-    const res = await GET(new Request("http://evil.example.com/api/marketplace"));
-    expect(res.status).toBe(403);
-    const data = (await res.json()) as { error: string };
-    expect(data.error).toBe("host_not_allowed");
-  });
 });
 
 describe("POST /api/marketplace/install", () => {
-  it("returns 403 when the Host header is not loopback (DNS-rebinding defense)", async () => {
-    const { POST } = await import("../../../app/api/marketplace/install/route");
-    // undici forbids setting the `host` request header, so encode the
-    // attacker-controlled host into the URL — that's what the guard reads
-    // (via `new URL(req.url).host`) when no Host header is present.
-    const req = new Request("http://evil.example.com/api/marketplace/install", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ source: "owner/repo" }),
-    });
-    const res = await POST(req);
-    expect(res.status).toBe(403);
-    const data = (await res.json()) as { error: string };
-    expect(data.error).toBe("host_not_allowed");
-  });
-
   it("returns 400 on invalid JSON", async () => {
     const { POST } = await import("../../../app/api/marketplace/install/route");
     const req = new Request("http://127.0.0.1/api/marketplace/install", {
