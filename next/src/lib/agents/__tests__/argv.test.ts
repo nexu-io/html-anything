@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { parseLine, makeParser } from "../argv";
+import { describe, expect, it, beforeEach, afterEach } from "vitest";
+import { parseLine, makeParser, envFor } from "../argv";
 
 describe("parseLine opencode", () => {
   it("extracts text from nested part payload", () => {
@@ -160,5 +160,51 @@ describe("parseLine opencode", () => {
         value: 0.015,
       },
     ]);
+  });
+});
+
+describe("envFor", () => {
+  const SECRET_KEYS = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY", "DATABASE_URL", "MY_APP_TOKEN"];
+  const stash: Record<string, string | undefined> = {};
+
+  beforeEach(() => {
+    for (const k of SECRET_KEYS) stash[k] = process.env[k];
+  });
+
+  afterEach(() => {
+    for (const [k, v] of Object.entries(stash)) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+  });
+
+  it("keeps non-secret env so the agent still runs", () => {
+    const env = envFor("claude");
+    expect(env.PATH).toBe(process.env.PATH);
+    expect(typeof env.HOME === "string" || typeof env.USERNAME === "string").toBe(true);
+  });
+
+  it("keeps the agent's own auth secret", () => {
+    process.env.ANTHROPIC_API_KEY = "sk-ant";
+    expect(envFor("claude").ANTHROPIC_API_KEY).toBe("sk-ant");
+  });
+
+  it("strips another agent's auth secret", () => {
+    process.env.OPENAI_API_KEY = "sk-oai";
+    expect(envFor("claude").OPENAI_API_KEY).toBeUndefined();
+  });
+
+  it("strips generic secret-shaped env the agent does not own", () => {
+    process.env.DATABASE_URL = "postgres://host/db";
+    process.env.MY_APP_TOKEN = "tok-xyz";
+    expect(envFor("claude").DATABASE_URL).toBeUndefined();
+    expect(envFor("claude").MY_APP_TOKEN).toBeUndefined();
+  });
+
+  it("gemini keeps its own key and sets the trust flag", () => {
+    process.env.GEMINI_API_KEY = "gem-key";
+    const env = envFor("gemini");
+    expect(env.GEMINI_API_KEY).toBe("gem-key");
+    expect(env.GEMINI_CLI_TRUST_WORKSPACE).toBe("true");
   });
 });

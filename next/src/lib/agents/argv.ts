@@ -30,6 +30,13 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         "stream-json",
         "--verbose",
         "--include-partial-messages",
+        // bypassPermissions keeps the run non-interactive (the prompt forbids
+        // file/Bash tools, so normally nothing needs approval). Downgrading to
+        // acceptEdits is safer but risks hanging if an agent disobeys and asks
+        // for approval — deferred until real-agent integration tests exist
+        // (audit task 4 / P1). The remote prompt-injection -> RCE path that
+        // made this dangerous is already closed (opaque-origin iframe + spawn
+        // gates), so the residual risk is local-only.
         "--permission-mode",
         "bypassPermissions",
         ...(model ? ["--model", model] : []),
@@ -133,8 +140,34 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
   }
 }
 
+/**
+ * Env vars that look like secrets. We strip these from the child process env
+ * UNLESS the running agent owns them (so an agent can't exfiltrate, via its
+ * network access, credentials that belong to a different tool on the host —
+ * e.g. running codex shouldn't see the user's Anthropic key). Non-secret env
+ * (PATH, HOME, locale, …) is passed through unchanged so agents keep working.
+ */
+const SECRET_ENV_PATTERN =
+  /(API_KEY|AUTH_TOKEN|ACCESS_TOKEN|_TOKEN|SECRET|PASSWORD|PASSWD|CREDENTIAL|PRIVATE_KEY|CLIENT_SECRET|DATABASE_URL|_CONN|CONNECTION_STRING)/i;
+
+/** Secret-shaped env each agent NEEDS to authenticate itself. Never stripped
+ *  for that agent. Extend as new providers are wired. */
+const AGENT_OWNED_SECRETS: Record<string, string[]> = {
+  claude: ["ANTHROPIC_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN", "CLAUDE_API_KEY"],
+  openclaw: ["ANTHROPIC_API_KEY", "OPENROUTER_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN"],
+  codex: ["OPENAI_API_KEY", "CODEX_API_KEY"],
+  gemini: ["GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_APPLICATION_CREDENTIALS"],
+  copilot: ["GITHUB_TOKEN", "GH_TOKEN"],
+  opencode: ["OPENROUTER_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY"],
+};
+
 export function envFor(agent: string): NodeJS.ProcessEnv {
-  const base = { ...process.env };
+  const owned = new Set(AGENT_OWNED_SECRETS[agent] ?? []);
+  const base = {} as NodeJS.ProcessEnv;
+  for (const [k, v] of Object.entries(process.env)) {
+    if (v === undefined) continue;
+    if (!SECRET_ENV_PATTERN.test(k) || owned.has(k)) base[k] = v;
+  }
   if (agent === "gemini") base.GEMINI_CLI_TRUST_WORKSPACE = "true";
   return base;
 }
