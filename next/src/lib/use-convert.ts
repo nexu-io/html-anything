@@ -113,6 +113,7 @@ export function useConvert() {
         const dec = new TextDecoder();
         let buf = "";
         let lastEvent = "";
+        let sawError = false;
 
         while (true) {
           const { value, done } = await reader.read();
@@ -139,15 +140,16 @@ export function useConvert() {
             } catch {
               continue;
             }
+            if (event === "error") sawError = true;
             handleEvent(taskId, event, data, startedAt);
           }
         }
         const endedAt = Date.now();
         useStore.getState().patchStatsFor(taskId, { endedAt, durationMs: endedAt - startedAt });
-        useStore.getState().setStatusFor(taskId, "done");
+        useStore.getState().setStatusFor(taskId, sawError ? "error" : "done");
         // record the just-finished (content, html) as the new diff-edit baseline
         // so the user's next edit goes through diff mode instead of full regen
-        useStore.getState().commitBaseFor(taskId);
+        if (!sawError) useStore.getState().commitBaseFor(taskId);
       } catch (err) {
         if ((err as Error)?.name === "AbortError") {
           useStore.getState().pushLogFor(taskId, { kind: "info", text: "已取消" });
