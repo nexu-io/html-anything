@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Taskflow 2.0 — Dark Mode 来了</title>
+<style>
+:root {
+  --marketing-black: #010102;
+  --marketing-black: #08090a;
+  --panel-dark: #0f1011;
+  --level-3: #191a1b;
+  --secondary-surface: #28282c;
+  --primary-text: #f7f8f8;
+  --secondary-text: #d0d6e0;
+  --tertiary-text: #8a8f98;
+  --quaternary-text: #62666d;
+  --brand-indigo: #5e6ad2;
+  --accent-violet: #7170ff;
+  --accent-hover: #828fff;
+  --security-lavender: #7a7fad;
+  --green-27a644: #27a644;
+  --emerald-10b981: #10b981;
+  --border-primary: #23252a;
+  --border-secondary: #34343a;
+  --border-tertiary: #3e3e44;
+  --border-subtle: rgba(255,255,255,0.05);
+  --border-standard: rgba(255,255,255,0.08);
+  --line-tint: #141516;
+  --line-tertiary: #18191a;
+  --light-background: #f7f8f8;
+  --light-surface: #f3f4f5;
+  --light-surface: #f5f6f7;
+  --light-border: #d0d6e0;
+  --light-border: #e6e6e6;
+  --pure-white: #ffffff;
+  --overlay-primary: rgba(0,0,0,0.85);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--marketing-black);
+  background-image:
+    radial-gradient(900px 500px at 78% -8%, rgba(94,106,210,0.16), transparent 60%),
+    radial-gradient(700px 400px at 8% 4%, rgba(113,112,255,0.10), transparent 55%);
+  background-attachment: fixed;
+  color: var(--secondary-text);
+  font-family: 'Inter', 'Noto Sans SC', 'SF Pro Display', -apple-system, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  font-feature-settings: "cv01", "ss03";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.w510 { font-weight: 510; }
+.w590 { font-weight: 590; }
+.mono { font-family: 'Berkeley Mono', ui-monospace, 'SF Mono', Menlo, 'JetBrains Mono', monospace; }
+.ff { font-feature-settings: "cv01", "ss03"; }
+.hairline { box-shadow: inset 0 0 0 1px var(--border-standard); }
+.card-surface { background: rgba(255,255,255,0.022); box-shadow: inset 0 0 0 1px var(--border-standard); }
+.card-surface:hover { background: rgba(255,255,255,0.035); }
+.grad-text {
+  background: linear-gradient(180deg, #f7f8f8 0%, #b9bfc9 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.accent-text {
+  background: linear-gradient(90deg, var(--accent-violet), var(--accent-hover));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.cta-primary {
+  background: var(--brand-indigo); color: #fff; transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 8px 24px -10px rgba(94,106,210,0.6);
+}
+.cta-primary:hover { background: var(--accent-hover); }
+.cta-ghost {
+  background: rgba(255,255,255,0.02); color: var(--primary-text);
+  box-shadow: inset 0 0 0 1px var(--border-standard); transition: background .18s ease;
+}
+.cta-ghost:hover { background: rgba(255,255,255,0.05); }
+.ring-focus:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--marketing-black), 0 0 0 4px var(--accent-violet); }
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+kbd {
+  font-family: 'Berkeley Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  background: var(--level-3); color: var(--primary-text);
+  box-shadow: inset 0 0 0 1px var(--border-standard), 0 2px 0 rgba(0,0,0,0.5);
+  border-radius: 7px; padding: 4px 10px; font-size: 13px; min-width: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.dot { width: 7px; height: 7px; border-radius: 9999px; display: inline-block; }
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .chev { transform: rotate(45deg); }
+.chev { transition: transform .2s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 9999px; }
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Noto+Sans+SC:wght@300..700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen antialiased ff">
+
+<!-- progress bar -->
+<div id="progress" class="fixed top-0 left-0 h-[2px] z-50" style="width:0%;background:linear-gradient(90deg,var(--brand-indigo),var(--accent-hover));"></div>
+
+<!-- ============ NAV ============ -->
+<header class="sticky top-0 z-40 backdrop-blur-xl" style="background:rgba(8,9,10,0.72);box-shadow:inset 0 -1px 0 var(--border-subtle)">
+  <nav class="max-w-[1180px] mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2.5 ring-focus rounded-lg" aria-label="Taskflow home">
+      <svg viewBox="0 0 32 32" class="w-7 h-7"><rect width="32" height="32" rx="8" fill="var(--brand-indigo)"/><path d="M9 11h14M9 16h10M9 21h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="text-[15px] w590 tracking-tight" style="color:var(--primary-text)">Taskflow</span>
+      <span class="mono text-[11px] px-1.5 py-0.5 rounded-md" style="color:var(--tertiary-text);box-shadow:inset 0 0 0 1px var(--border-standard)">2.0</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 text-[13px] w510" style="color:var(--secondary-text)">
+      <a href="#features" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">核心特性</a>
+      <a href="#oled" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">OLED 真⿊</a>
+      <a href="#shortcuts" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">快捷键</a>
+      <a href="#audience" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">适用人群</a>
+      <a href="#pricing" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">价格</a>
+    </div>
+    <div class="flex items-center gap-2.5">
+      <a href="#" class="hidden sm:inline-flex items-center text-[13px] w510 px-3 py-2 rounded-md cta-ghost ring-focus">登录</a>
+      <a href="#pricing" class="inline-flex items-center text-[13px] w590 px-3.5 py-2 rounded-md cta-primary ring-focus">免费升级</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="max-w-[1180px] mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-16">
+  <div class="grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-10 items-center">
+    <!-- left copy -->
+    <div class="reveal">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style="background:rgba(94,106,210,0.10);box-shadow:inset 0 0 0 1px rgba(94,106,210,0.28)">
+        <span class="dot" style="background:var(--accent-violet)"></span>
+        <span class="text-[12px] w510 tracking-tight" style="color:var(--secondary-text)">Taskflow 2.0 · Dark Mode 来了</span>
+      </div>
+      <h1 class="grad-text tracking-tight leading-[1.02]" style="font-size:clamp(38px,6vw,64px);letter-spacing:-1.056px">
+        真正的 OLED 黑，<br/>为黑夜而生。
+      </h1>
+      <p class="mt-6 text-[17px] sm:text-[18px] leading-[1.6] max-w-[34rem]" style="color:var(--tertiary-text)">
+        <span style="color:var(--secondary-text)">省电 40%</span> 的 OLED 真⿊画布，<span style="color:var(--secondary-text)">跟随日升日落自动切换</span>，
+        全键位覆盖的操作流，以及 <span style="color:var(--secondary-text)">120fps</span> 的丝滑滚动。一切，只为了你在深夜里更专注。
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href="#pricing" class="inline-flex items-center gap-2 px-5 py-3 rounded-lg cta-primary text-[14px] w590 ring-focus">
+          免费升级
+          <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#shortcuts" class="inline-flex items-center gap-2 px-5 py-3 rounded-lg cta-ghost text-[14px] w510 ring-focus">
+          <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+          查看快捷键
+        </a>
+      </div>
+      <p class="mt-5 text-[12.5px]" style="color:var(--quaternary-text)">所有付费计划均可使用 · 无需额外付费 · 现在即可升级</p>
+    </div>
+
+    <!-- right: app window mockup -->
+    <div class="reveal" style="transition-delay:.08s">
+      <div class="rounded-2xl overflow-hidden" style="background:var(--panel-dark);box-shadow:0 40px 80px -30px rgba(0,0,0,0.8), inset 0 0 0 1px var(--border-standard)">
+        <!-- window chrome -->
+        <div class="h-9 flex items-center px-4 gap-2" style="box-shadow:inset 0 -1px 0 var(--border-subtle)">
+          <span class="w-2.5 h-2.5 rounded-full" style="background:#3a3a3e"></span>
+          <span class="w-2.5 h-2.5 rounded-full" style="background:#3a3a3e"></span>
+          <span class="w-2.5 h-2.5 rounded-full" style="background:#3a3a3e"></span>
+          <div class="mx-auto flex items-center gap-2 text-[11px] mono" style="color:var(--quaternary-text)">
+            <svg viewBox="0 0 24 24" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 3v1M12 20v1M3 12h1M20 12h1"/></svg>
+            Taskflow · Inbox · 12 issues
+          </div>
+          <span class="text-[10px] mono px-1.5 py-0.5 rounded" style="color:var(--accent-hover);box-shadow:inset 0 0 0 1px rgba(113,112,255,0.3)">OLED</span>
+        </div>
+        <!-- body -->
+        <div class="grid grid-cols-[44px_1fr] min-h-[320px]">
+          <!-- mini sidebar -->
+          <aside class="flex flex-col items-center gap-4 py-5" style="box-shadow:inset -1px 0 0 var(--border-subtle)">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:var(--brand-indigo)">
+              <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M5 8h14M5 12h10M5 16h6"/></svg>
+            </div>
+            <svg viewBox="0 0 24 24" class="w-[18px] h-[18px]" fill="none" stroke="var(--tertiary-text)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+            <svg viewBox="0 0 24 24" class="w-[18px] h-[18px]" fill="none" stroke="var(--tertiary-text)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+            <svg viewBox="0 0 24 24" class="w-[18px] h-[18px]" fill="none" stroke="var(--accent-violet)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          </aside>
+          <!-- task list -->
+          <div class="py-3 pr-3">
+            <div class="flex items-center justify-between px-2 mb-2">
+              <div class="flex items-center gap-2 text-[12px] w510" style="color:var(--secondary-text)">
+                <span class="dot" style="background:var(--brand-indigo)"></span> Dark Mode 发布清单
+              </div>
+              <div class="flex items-center gap-1.5">
+                <kbd class="!min-w-[24px] !px-1.5 !py-0.5 !text-[10px]">J</kbd>
+                <kbd class="!min-w-[24px] !px-1.5 !py-0.5 !text-[10px]">K</kbd>
+              </div>
+            </div>
+            <!-- rows -->
+            <div class="space-y-px">
+              <!-- row template -->
+              <div class="flex items-center gap-2.5 px-2 py-2 rounded-md" style="background:rgba(113,112,255,0.06)">
+                <span class="w-3.5 h-3.5 rounded-full flex items-center justify-center" style="box-shadow:inset 0 0 0 1.5px var(--accent-violet)"></span>
+                <span class="dot" style="background:var(--brand-indigo)"></span>
+                <span class="text-[12.5px] w510 flex-1" style="color:var(--primary-text)">落地 OLED 真黑画布 #08090a</span>
+                <span class="mono text-[10px]" style="color:var(--quaternary-text)">TF-21</span>
+                <span class="w-5 h-5 rounded-full text-[9px] w510 flex items-center justify-center" style="background:#3a3a45;color:var(--secondary-text)">L</span>
+              </div>
+              <div class="flex items-center gap-2.5 px-2 py-2 rounded-md hover:bg-white/[0.02]">
+                <span class="w-3.5 h-3.5 rounded-full flex items-center justify-center" style="box-shadow:inset 0 0 0 1.5px var(--tertiary-text)">
+                  <svg viewBox="0 0 24 24" class="w-2.5 h-2.5" fill="none" stroke="var(--tertiary-text)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                </span>
+                <span class="dot" style="background:#5a5e66"></span>
+                <span class="text-[12.5px] flex-1 line-through" style="color:var(--quaternary-text)">接入日升日落自动切换</span>
+                <span class="mono text-[10px]" style="color:var(--quaternary-text)">TF-18</span>
+                <span class="w-5 h-5 rounded-full text-[9px] w510 flex items-center justify-center" style="background:#3a3a45;color:var(--secondary-text)">R</span>
+              </div>
+              <div class="flex items-center gap-2.5 px-2 py-2 rounded-md hover:bg-white/[0.02]">
+                <span class="w-3.5 h-3.5 rounded-full" style="box-shadow:inset 0 0 0 1.5px var(--tertiary-text)"></span>
+                <span class="dot" style="background:var(--brand-indigo)"></span>
+                <span class="text-[12.5px] w510 flex-1" style="color:var(--primary-text)">键盘快捷键全覆盖（J / K / Space）</span>
+                <span class="mono text-[10px]" style="color:var(--quaternary-text)">TF-24</span>
+                <span class="w-5 h-5 rounded-full text-[9px] w510 flex items-center justify-center" style="background:#3a3a45;color:var(--secondary-text)">L</span>
+              </div>
+              <div class="flex items-center gap-2.5 px-2 py-2 rounded-md hover:bg-white/[0.02]">
+                <span class="w-3.5 h-3.5 rounded-full" style="box-shadow:inset 0 0 0 1.5px var(--tertiary-text)"></span>
+                <span class="dot" style="background:#5a5e66"></span>
+                <span class="text-[12.5px] flex-1" style="color:var(--secondary-text)">列表滚动优化到 120fps</span>
+                <span class="mono text-[10px]" style="color:var(--quaternary-text)">TF-27</span>
+                <span class="w-5 h-5 rounded-full text-[9px] w510 flex items-center justify-center" style="background:#3a3a45;color:var(--secondary-text)">M</span>
+              </div>
+              <div class="flex items-center gap-2.5 px-2 py-2 rounded-md hover:bg-white/[0.02]">
+                <span class="w-3.5 h-3.5 rounded-full" style="box-shadow:inset 0 0 0 1.5px var(--tertiary-text)"></span>
+                <span class="dot" style="background:#5a5e66"></span>
+                <span class="text-[12.5px] flex-1" style="color:var(--secondary-text)">面向夜间工作者灰阶校准</span>
+                <span class="mono text-[10px]" style="color:var(--quaternary-text)">TF-29</span>
+                <span class="w-5 h-5 rounded-full text-[9px] w510 flex items-center justify-center" style="background:#3a3a45;color:var(--secondary-text)">L</span>
+              </div>
+            </div>
+            <!-- footer hint -->
+            <div class="mt-3 px-2 flex items-center justify-between text-[10.5px]" style="color:var(--quaternary-text)">
+              <span class="flex items-center gap-1.5"><kbd class="!min-w-[22px] !px-1 !py-0 !text-[9px]">Space</kbd> 完成任务</span>
+              <span class="mono">120 fps</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ METRIC BAND (real data) ============ -->
+<section class="border-y" style="border-color:var(--border-subtle);background:rgba(255,255,255,0.012)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-10 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[var(--border-subtle)]">
+    <div class="sm:px-6 first:sm:pl-0 py-5 sm:py-2 reveal">
+      <div class="flex items-baseline gap-1.5">
+        <span class="w590 tracking-tight" style="font-size:42px;color:var(--primary-text);letter-spacing:-1.2px">40</span>
+        <span class="text-[20px] w510" style="color:var(--accent-hover)">%</span>
+      </div>
+      <p class="text-[13px] mt-1" style="color:var(--tertiary-text)">OLED 真黑画布下的屏幕省电</p>
+    </div>
+    <div class="sm:px-6 py-5 sm:py-2 reveal" style="transition-delay:.06s">
+      <div class="flex items-baseline gap-1.5">
+        <span class="w590 tracking-tight" style="font-size:42px;color:var(--primary-text);letter-spacing:-1.2px">120</span>
+        <span class="text-[16px] w510 mono" style="color:var(--accent-hover)">fps</span>
+      </div>
+      <p class="text-[13px] mt-1" style="color:var(--tertiary-text)">任务列表滚动帧率</p>
+    </div>
+    <div class="sm:px-6 py-5 sm:py-2 reveal" style="transition-delay:.12s">
+      <div class="flex items-baseline gap-1.5">
+        <span class="w590 tracking-tight" style="font-size:42px;color:var(--primary-text);letter-spacing:-1.2px">0</span>
+        <span class="text-[16px] w510" style="color:var(--accent-hover)">配置</span>
+      </div>
+      <p class="text-[13px] mt-1" style="color:var(--tertiary-text)">跟随系统日升日落自动切换</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features" class="max-w-[1180px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
+  <div class="max-w-2xl mb-12 reveal">
+    <span class="text-[12px] w510 mono uppercase tracking-[0.18em]" style="color:var(--accent-hover)">Core updates</span>
+    <h2 class="mt-3 tracking-tight leading-[1.05]" style="font-size:clamp(30px,4vw,44px);letter-spacing:-0.704px;color:var(--primary-text)">四项核心更新，重塑你的夜间工作流</h2>
+    <p class="mt-4 text-[16px] leading-[1.6]" style="color:var(--tertiary-text)">从画布到操作，Taskflow 2.0 把"深色模式"从皮肤升级为一套完整的夜间体验。</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <!-- F1 OLED -->
+    <article class="card-surface rounded-2xl p-7 transition-colors reveal">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style="background:rgba(94,106,210,0.12);box-shadow:inset 0 0 0 1px rgba(94,106,210,0.25)">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="var(--accent-violet)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </div>
+      <h3 class="text-[19px] w590 tracking-tight" style="color:var(--primary-text)">真正的 OLED 黑</h3>
+      <p class="mt-2 text-[14.5px] leading-[1.6]" style="color:var(--tertiary-text)">
+        画布采用 <span class="mono" style="color:var(--secondary-text)">#08090a</span> 真·像素关闭级深色，在 OLED 屏幕上较常规深灰省电最高 <span style="color:var(--secondary-text)">40%</span>。黑色更纯，长时间使用不泛灰。
+      </p>
+      <div class="mt-5 flex items-center gap-2 text-[12px] mono" style="color:var(--quaternary-text)">
+        <span class="px-2 py-1 rounded-md" style="background:var(--marketing-black);box-shadow:inset 0 0 0 1px var(--border-standard);color:var(--secondary-text)">#08090a</span>
+        <span>vs</span>
+        <span class="px-2 py-1 rounded-md" style="background:#1f1f22;box-shadow:inset 0 0 0 1px var(--border-standard)">#1f1f22</span>
+      </div>
+    </article>
+
+    <!-- F2 sunrise -->
+    <article class="card-surface rounded-2xl p-7 transition-colors reveal" style="transition-delay:.06s">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style="background:rgba(94,106,210,0.12);box-shadow:inset 0 0 0 1px rgba(94,106,210,0.25)">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="var(--accent-violet)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a5 5 0 0 1 5 5"/><path d="M2 18h20"/><path d="M7 18a5 5 0 0 1 10 0"/><path d="M12 2v1M5.2 7.2l.7.7M18.8 7.2l-.7.7"/></svg>
+      </div>
+      <h3 class="text-[19px] w590 tracking-tight" style="color:var(--primary-text)">智能跟随日升日落</h3>
+      <p class="mt-2 text-[14.5px] leading-[1.6]" style="color:var(--tertiary-text)">
+        自动读取系统地理位置与日出日落时间，天黑自动进入 OLED 深色，天亮回到浅色。无需手动切换，也无需定时器。
+      </p>
+      <div class="mt-5 flex items-center gap-3 text-[12px]" style="color:var(--tertiary-text)">
+        <span class="flex items-center gap-1.5"><span class="dot" style="background:var(--accent-hover)"></span>夜间 · OLED</span>
+        <span class="flex items-center gap-1.5"><span class="dot" style="background:#62666d"></span>日间 · Light</span>
+      </div>
+    </article>
+
+    <!-- F3 keyboard -->
+    <article class="card-surface rounded-2xl p-7 transition-colors reveal" style="transition-delay:.12s">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style="background:rgba(94,106,210,0.12);box-shadow:inset 0 0 0 1px rgba(94,106,210,0.25)">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="var(--accent-violet)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+      </div>
+      <h3 class="text-[19px] w590 tracking-tight" style="color:var(--primary-text)">键盘快捷键全覆盖</h3>
+      <p class="mt-2 text-[14.5px] leading-[1.6]" style="color:var(--tertiary-text)">
+        手不离键盘即可掌控全部任务：<span style="color:var(--secondary-text)">J / K</span> 翻动上下任务，<span style="color:var(--secondary-text)">空格</span> 一键完成。核心操作做到全键位覆盖。
+      </p>
+      <div class="mt-5 flex items-center gap-2">
+        <kbd>J</kbd><kbd>K</kbd><kbd class="!min-w-[64px]">Space</kbd>
+      </div>
+    </article>
+
+    <!-- F4 120fps -->
+    <article class="card-surface rounded-2xl p-7 transition-colors reveal" style="transition-delay:.18s">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style="background:rgba(94,106,210,0.12);box-shadow:inset 0 0 0 1px rgba(94,106,210,0.25)">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="var(--accent-violet)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l-7 11h5l-1 7 7-11h-5l1-7z"/></svg>
+      </div>
+      <h3 class="text-[19px] w590 tracking-tight" style="color:var(--primary-text)">120fps 丝滑滚动</h3>
+      <p class="mt-2 text-[14.5px] leading-[1.6]" style="color:var(--tertiary-text)">
+        任务列表滚动重写为高帧率管线，在高刷新率屏幕上稳定输出 <span style="color:var(--secondary-text)">120fps</span>。再长的清单，指尖滑动也跟手。
+      </p>
+      <div class="mt-5 flex items-center gap-2">
+        <div class="flex-1 h-1.5 rounded-full overflow-hidden" style="background:var(--level-3)">
+          <div class="h-full rounded-full" style="width:96%;background:linear-gradient(90deg,var(--brand-indigo),var(--accent-hover))"></div>
+        </div>
+        <span class="mono text-[12px]" style="color:var(--accent-hover)">120 fps</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ OLED DEEP DIVE ============ -->
+<section id="oled" class="border-t" style="border-color:var(--border-subtle);background:linear-gradient(180deg, rgba(94,106,210,0.04), transparent 40%)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <div class="reveal">
+      <span class="text-[12px] w510 mono uppercase tracking-[0.18em]" style="color:var(--accent-hover)">OLED 真⿊</span>
+      <h2 class="mt-3 tracking-tight leading-[1.06]" style="font-size:clamp(28px,3.6vw,40px);letter-spacing:-0.704px;color:var(--primary-text)">不是深灰，是像素真正的关闭</h2>
+      <p class="mt-5 text-[16px] leading-[1.65]" style="color:var(--tertiary-text)">
+        市面上多数"深色模式"只是把背景换成 <span class="mono">#1f1f22</span> 一类的深灰，OLED 像素仍在发光。Taskflow 2.0 把画布压到
+        <span class="mono" style="color:var(--secondary-text)">#08090a</span>，让显示纯黑区域的像素几乎完全关闭——
+        这才是 OLED 屏幕省电 <span style="color:var(--secondary-text)">40%</span> 的真正来源。
+      </p>
+      <ul class="mt-6 space-y-3 text-[14.5px]" style="color:var(--secondary-text)">
+        <li class="flex gap-3"><span class="mt-2 dot shrink-0" style="background:var(--accent-violet)"></span>纯黑背景接近像素级熄灭，长时间观看更柔和</li>
+        <li class="flex gap-3"><span class="mt-2 dot shrink-0" style="background:var(--accent-violet)"></span>文本与图标对比度重新校准，保证 ≥ 4.5:1 可读性</li>
+        <li class="flex gap-3"><span class="mt-2 dot shrink-0" style="background:var(--accent-violet)"></span>笔记本续航显著延长，出差、深夜不再焦虑电量</li>
+      </ul>
+    </div>
+
+    <!-- OLED visualization: two panels -->
+    <div class="reveal" style="transition-delay:.08s">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="rounded-2xl p-5 aspect-square flex flex-col justify-between" style="background:#1f1f22;box-shadow:inset 0 0 0 1px var(--border-standard)">
+          <span class="text-[11px] mono" style="color:#9aa0a8">常规深色 #1f1f22</span>
+          <div>
+            <div class="h-2 rounded-full mb-2" style="background:#3a3a3e"></div>
+            <div class="h-2 rounded-full w-2/3" style="background:#3a3a3e"></div>
+          </div>
+          <span class="text-[11px] mono" style="color:#9aa0a8">像素持续发光</span>
+        </div>
+        <div class="rounded-2xl p-5 aspect-square flex flex-col justify-between relative overflow-hidden" style="background:var(--marketing-black);box-shadow:inset 0 0 0 1px rgba(113,112,255,0.35), 0 0 60px -10px rgba(113,112,255,0.15)">
+          <span class="text-[11px] mono" style="color:var(--accent-hover)">OLED 真⿊ #08090a</span>
+          <div>
+            <div class="h-2 rounded-full mb-2" style="background:rgba(255,255,255,0.10)"></div>
+            <div class="h-2 rounded-full w-2/3" style="background:rgba(255,255,255,0.10)"></div>
+          </div>
+          <span class="text-[11px] mono" style="color:var(--accent-hover)">像素近乎熄灭</span>
+        </div>
+      </div>
+      <div class="mt-4 rounded-xl p-4 flex items-center gap-4" style="background:rgba(255,255,255,0.02);box-shadow:inset 0 0 0 1px var(--border-standard)">
+        <div class="flex items-baseline gap-1">
+          <span class="w590" style="font-size:30px;color:var(--primary-text);letter-spacing:-0.6px">40</span>
+          <span class="text-[14px] w510" style="color:var(--accent-hover)">%</span>
+        </div>
+        <p class="text-[13px] leading-snug" style="color:var(--tertiary-text)">OLED 屏幕下较常规深灰背景的省电幅度</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUNRISE / SUNSET DEEP DIVE ============ -->
+<section class="border-t" style="border-color:var(--border-subtle)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
+    <!-- arc visualization -->
+    <div class="order-2 lg:order-1 reveal" style="transition-delay:.08s">
+      <div class="rounded-2xl p-6 sm:p-8" style="background:var(--panel-dark);box-shadow:inset 0 0 0 1px var(--border-standard)">
+        <svg viewBox="0 0 480 220" class="w-full h-auto">
+          <defs>
+            <linearGradient id="sky" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#5e6ad2" stop-opacity="0.5"/>
+              <stop offset="0.5" stop-color="#0f1011" stop-opacity="0"/>
+              <stop offset="1" stop-color="#7170ff" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
+          <path d="M40 180 Q240 0 440 180" fill="none" stroke="url(#sky)" stroke-width="1.5" stroke-dasharray="3 5"/>
+          <!-- sun -->
+          <g transform="translate(96,92)">
+            <circle r="14" fill="none" stroke="var(--accent-hover)" stroke-width="1.6"/>
+            <path d="M0 -22 V-28 M0 22 V28 M-22 0 H-28 M22 0 H28 M-15.5 -15.5 L-20 -20 M15.5 15.5 L20 20 M15.5 -15.5 L20 -20 M-15.5 15.5 L-20 20" stroke="var(--accent-hover)" stroke-width="1.4" stroke-linecap="round"/>
+          </g>
+          <!-- moon -->
+          <g transform="translate(384,92)">
+            <path d="M10 -12 a14 14 0 1 0 6 22 a11 11 0 0 1 -6 -22 z" fill="var(--accent-violet)" opacity="0.9"/>
+          </g>
+          <line x1="40" y1="180" x2="440" y2="180" stroke="var(--border-standard)" stroke-width="1"/>
+          <circle cx="240" cy="180" r="3" fill="var(--tertiary-text)"/>
+          <text x="40" y="205" fill="var(--quaternary-text)" font-size="11" font-family="Berkeley Mono, monospace">06:00 日出</text>
+          <text x="218" y="205" fill="var(--quaternary-text)" font-size="11" font-family="Berkeley Mono, monospace">18:00</text>
+          <text x="372" y="205" fill="var(--quaternary-text)" font-size="11" font-family="Berkeley Mono, monospace">日落</text>
+        </svg>
+        <div class="grid grid-cols-3 gap-3 mt-2 text-center">
+          <div class="rounded-lg py-3" style="background:rgba(255,255,255,0.03)">
+            <div class="text-[11px] mono" style="color:var(--tertiary-text)">日间</div>
+            <div class="text-[12.5px] w510 mt-1" style="color:var(--secondary-text)">Light</div>
+          </div>
+          <div class="rounded-lg py-3" style="background:rgba(113,112,255,0.08);box-shadow:inset 0 0 0 1px rgba(113,112,255,0.25)">
+            <div class="text-[11px] mono" style="color:var(--accent-hover)">过渡</div>
+            <div class="text-[12.5px] w510 mt-1" style="color:var(--primary-text)">Auto</div>
+          </div>
+          <div class="rounded-lg py-3" style="background:var(--marketing-black);box-shadow:inset 0 0 0 1px var(--border-standard)">
+            <div class="text-[11px] mono" style="color:var(--accent-hover)">夜间</div>
+            <div class="text-[12.5px] w510 mt-1" style="color:var(--primary-text)">OLED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="order-1 lg:order-2 reveal">
+      <span class="text-[12px] w510 mono uppercase tracking-[0.18em]" style="color:var(--accent-hover)">自动切换</span>
+      <h2 class="mt-3 tracking-tight leading-[1.06]" style="font-size:clamp(28px,3.6vw,40px);letter-spacing:-0.704px;color:var(--primary-text)">随太阳而变，不需要你提醒它</h2>
+      <p class="mt-5 text-[16px] leading-[1.65]" style="color:var(--tertiary-text)">
+        Taskflow 读取系统的日出日落与"自动外观"偏好：太阳落山，画布平滑过渡到 OLED 真⿊；天亮，自动回到清爽浅色。
+        切换走原生过渡动画，没有闪屏、没有打断。
+      </p>
+      <div class="mt-7 space-y-3">
+        <div class="flex items-center justify-between rounded-lg px-4 py-3" style="background:rgba(255,255,255,0.02);box-shadow:inset 0 0 0 1px var(--border-standard)">
+          <span class="text-[13.5px] w510" style="color:var(--secondary-text)">跟随系统</span>
+          <span class="w-9 h-5 rounded-full relative" style="background:var(--brand-indigo)"><span class="absolute right-0.5 top-0.5 w-4 h-4 rounded-full bg-white"></span></span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg px-4 py-3" style="background:rgba(255,255,255,0.02);box-shadow:inset 0 0 0 1px var(--border-standard)">
+          <span class="text-[13.5px] w510" style="color:var(--secondary-text)">日升日落触发</span>
+          <span class="w-9 h-5 rounded-full relative" style="background:var(--brand-indigo)"><span class="absolute right-0.5 top-0.5 w-4 h-4 rounded-full bg-white"></span></span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg px-4 py-3" style="background:rgba(255,255,255,0.02);box-shadow:inset 0 0 0 1px var(--border-standard)">
+          <span class="text-[13.5px] w510" style="color:var(--secondary-text)">手动锁定 OLED</span>
+          <span class="w-9 h-5 rounded-full relative" style="background:var(--level-3);box-shadow:inset 0 0 0 1px var(--border-standard)"><span class="absolute left-0.5 top-0.5 w-4 h-4 rounded-full" style="background:var(--tertiary-text)"></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KEYBOARD DEEP DIVE ============ -->
+<section id="shortcuts" class="border-t" style="border-color:var(--border-subtle);background:linear-gradient(180deg, rgba(94,106,210,0.03), transparent 50%)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-2xl mb-12 reveal">
+      <span class="text-[12px] w510 mono uppercase tracking-[0.18em]" style="color:var(--accent-hover)">键盘快捷键</span>
+      <h2 class="mt-3 tracking-tight leading-[1.05]" style="font-size:clamp(30px,4vw,44px);letter-spacing:-0.704px;color:var(--primary-text)">手不离键盘，掌控全部任务</h2>
+      <p class="mt-4 text-[16px] leading-[1.6]" style="color:var(--tertiary-text)">J / K 翻动任务，空格一键完成。Dark Mode 下背光更柔，深夜盲操也不刺眼。</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="card-surface rounded-2xl p-7 reveal">
+        <kbd class="!text-[18px] !px-4 !py-2 mb-5">J</kbd>
+        <h3 class="text-[16px] w590" style="color:var(--primary-text)">下一个任务</h3>
+        <p class="mt-2 text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">在列表中向下移动聚焦，120fps 平滑跟随。</p>
+      </div>
+      <div class="card-surface rounded-2xl p-7 reveal" style="transition-delay:.06s">
+        <kbd class="!text-[18px] !px-4 !py-2 mb-5">K</kbd>
+        <h3 class="text-[16px] w590" style="color:var(--primary-text)">上一个任务</h3>
+        <p class="mt-2 text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">向上回溯，与 J 成对，构成完整的导航闭环。</p>
+      </div>
+      <div class="card-surface rounded-2xl p-7 reveal" style="transition-delay:.12s">
+        <kbd class="!text-[14px] !px-5 !py-2 mb-5 !min-w-[80px]">Space</kbd>
+        <h3 class="text-[16px] w590" style="color:var(--primary-text)">完成任务</h3>
+        <p class="mt-2 text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">一键勾选当前聚焦任务，即时反馈，无需鼠标。</p>
+      </div>
+    </div>
+
+    <p class="mt-6 text-[13px]" style="color:var(--quaternary-text)">以上为核心快捷键示例，Taskflow 2.0 做到全键位覆盖：导航、完成、优先级、筛选、命令面板皆可键盘直达。</p>
+  </div>
+</section>
+
+<!-- ============ AUDIENCE ============ -->
+<section id="audience" class="border-t" style="border-color:var(--border-subtle)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-2xl mb-12 reveal">
+      <span class="text-[12px] w510 mono uppercase tracking-[0.18em]" style="color:var(--accent-hover)">适用人群</span>
+      <h2 class="mt-3 tracking-tight leading-[1.05]" style="font-size:clamp(30px,4vw,44px);letter-spacing:-0.704px;color:var(--primary-text)">为在深夜里工作的人而做</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4">
+      <article class="card-surface rounded-2xl p-7 reveal">
+        <svg viewBox="0 0 24 24" class="w-6 h-6 mb-5" fill="none" stroke="var(--accent-violet)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <h3 class="text-[18px] w590 tracking-tight" style="color:var(--primary-text)">夜间工作者</h3>
+        <p class="mt-2 text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">OLED 真⿊ + 日升日落，让屏幕亮度随昼夜自然收敛，减少深夜用眼的疲劳。</p>
+      </article>
+      <article class="card-surface rounded-2xl p-7 reveal" style="transition-delay:.06s">
+        <svg viewBox="0 0 24 24" class="w-6 h-6 mb-5" fill="none" stroke="var(--accent-violet)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 8l-5 4 5 4M15 8l5 4-5 4"/></svg>
+        <h3 class="text-[18px] w590 tracking-tight" style="color:var(--primary-text)">程序员</h3>
+        <p class="mt-2 text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">全键位覆盖 + 120fps 滚动，长时间在 issue / 任务之间穿梭依然跟手、不打断心流。</p>
+      </article>
+      <article class="card-surface rounded-2xl p-7 reveal" style="transition-delay:.12s">
+        <svg viewBox="0 0 24 24" class="w-6 h-6 mb-5" fill="none" stroke="var(--accent-violet)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="17" cy="14" r="2.5"/><path d="M11.5 8L8 11M14.5 9l2 4M8 13.5l7 0"/></svg>
+        <h3 class="text-[18px] w590 tracking-tight" style="color:var(--primary-text)">设计师</h3>
+        <p class="mt-2 text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">精准灰阶与对比度校准，深色界面下色彩判断不被泛灰背景干扰。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="border-t" style="border-color:var(--border-subtle);background:rgba(255,255,255,0.012)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-2xl mb-12 reveal">
+      <span class="text-[12px] w510 mono uppercase tracking-[0.18em]" style="color:var(--accent-hover)">How it works</span>
+      <h2 class="mt-3 tracking-tight leading-[1.05]" style="font-size:clamp(30px,4vw,44px);letter-spacing:-0.704px;color:var(--primary-text)">三步开启你的夜间模式</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-px rounded-2xl overflow-hidden" style="box-shadow:inset 0 0 0 1px var(--border-standard)">
+      <div class="p-8 reveal" style="background:var(--panel-dark)">
+        <div class="mono text-[12px] mb-4" style="color:var(--accent-hover)">01</div>
+        <h3 class="text-[17px] w590 mb-2" style="color:var(--primary-text)">打开外观设置</h3>
+        <p class="text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">进入 Taskflow → 设置 → 外观，找到"主题"区。</p>
+      </div>
+      <div class="p-8 reveal" style="background:var(--panel-dark);transition-delay:.06s">
+        <div class="mono text-[12px] mb-4" style="color:var(--accent-hover)">02</div>
+        <h3 class="text-[17px] w590 mb-2" style="color:var(--primary-text)">选择跟随系统 / OLED</h3>
+        <p class="text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">勾选"跟随系统"启用日升日落自动切换，或锁定 OLED 真⿊。</p>
+      </div>
+      <div class="p-8 reveal" style="background:var(--panel-dark);transition-delay:.12s">
+        <div class="mono text-[12px] mb-4" style="color:var(--accent-hover)">03</div>
+        <h3 class="text-[17px] w590 mb-2" style="color:var(--primary-text)">J / K 翻任务，空格完成</h3>
+        <p class="text-[14px] leading-[1.6]" style="color:var(--tertiary-text)">手不离键盘，开始你的夜间专注流。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing" class="border-t" style="border-color:var(--border-subtle)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-2xl mb-12 reveal">
+      <span class="text-[12px] w510 mono uppercase tracking-[0.18em]" style="color:var(--accent-hover)">Pricing</span>
+      <h2 class="mt-3 tracking-tight leading-[1.05]" style="font-size:clamp(30px,4vw,44px);letter-spacing:-0.704px;color:var(--primary-text)">现在免费升级，所有付费计划均可使用</h2>
+      <p class="mt-4 text-[16px] leading-[1.6]" style="color:var(--tertiary-text)">Dark Mode 不设额外付费墙——你当前的计划已经包含它。</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4 items-stretch">
+      <!-- Free -->
+      <div class="card-surface rounded-2xl p-7 flex flex-col reveal">
+        <h3 class="text-[15px] w510" style="color:var(--secondary-text)">Free</h3>
+        <div class="mt-4 flex items-baseline gap-1">
+          <span class="w590 tracking-tight" style="font-size:38px;color:var(--primary-text);letter-spacing:-0.8px">$0</span>
+          <span class="text-[13px]" style="color:var(--tertiary-text)">/ 永久</span>
+        </div>
+        <p class="mt-3 text-[13px]" style="color:var(--tertiary-text)">个人任务的起点，同样包含 Dark Mode。</p>
+        <ul class="mt-6 space-y-3 text-[13.5px] flex-1" style="color:var(--secondary-text)">
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>OLED 真⿊画布</li>
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>日升日落自动切换</li>
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>J / K / Space 快捷键</li>
+        </ul>
+        <a href="#" class="mt-7 inline-flex justify-center px-4 py-2.5 rounded-lg cta-ghost text-[13.5px] w510 ring-focus">开始使用</a>
+      </div>
+
+      <!-- Pro (highlight) -->
+      <div class="rounded-2xl p-7 flex flex-col reveal relative" style="background:linear-gradient(180deg, rgba(94,106,210,0.10), rgba(94,106,210,0.02));box-shadow:inset 0 0 0 1px rgba(94,106,210,0.45), 0 30px 60px -30px rgba(94,106,210,0.4)">
+        <span class="absolute -top-3 left-7 text-[11px] w510 px-2.5 py-1 rounded-full" style="background:var(--brand-indigo);color:#fff">推荐</span>
+        <h3 class="text-[15px] w510" style="color:var(--primary-text)">Pro</h3>
+        <div class="mt-4 flex items-baseline gap-1">
+          <span class="w590 tracking-tight" style="font-size:38px;color:var(--primary-text);letter-spacing:-0.8px">$8</span>
+          <span class="text-[13px]" style="color:var(--tertiary-text)">/ 月</span>
+        </div>
+        <p class="mt-3 text-[13px]" style="color:var(--tertiary-text)">为高强度夜间工作者准备，Dark Mode 全功能。</p>
+        <ul class="mt-6 space-y-3 text-[13.5px] flex-1" style="color:var(--secondary-text)">
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Free 全部功能</li>
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>120fps 高帧率滚动</li>
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>全键位覆盖 + 命令面板</li>
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>无限任务与项目</li>
+        </ul>
+        <a href="#" class="mt-7 inline-flex justify-center px-4 py-2.5 rounded-lg cta-primary text-[13.5px] w590 ring-focus">免费升级</a>
+      </div>
+
+      <!-- Team -->
+      <div class="card-surface rounded-2xl p-7 flex flex-col reveal" style="transition-delay:.06s">
+        <h3 class="text-[15px] w510" style="color:var(--secondary-text)">Team</h3>
+        <div class="mt-4 flex items-baseline gap-1">
+          <span class="w590 tracking-tight" style="font-size:38px;color:var(--primary-text);letter-spacing:-0.8px">$16</span>
+          <span class="text-[13px]" style="color:var(--tertiary-text)">/ 成员 / 月</span>
+        </div>
+        <p class="mt-3 text-[13px]" style="color:var(--tertiary-text)">团队协作，所有成员共享 Dark Mode 体验。</p>
+        <ul class="mt-6 space-y-3 text-[13.5px] flex-1" style="color:var(--secondary-text)">
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Pro 全部功能</li>
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>共享项目与权限</li>
+          <li class="flex gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="var(--accent-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>团队级外观策略</li>
+        </ul>
+        <a href="#" class="mt-7 inline-flex justify-center px-4 py-2.5 rounded-lg cta-ghost text-[13.5px] w510 ring-focus">联系销售</a>
+      </div>
+    </div>
+    <p class="mt-6 text-[12.5px]" style="color:var(--quaternary-text)">价格仅为示意档位，Dark Mode 在上述所有计划中免费提供，不额外收费。</p>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="border-t" style="border-color:var(--border-subtle);background:rgba(255,255,255,0.012)">
+  <div class="max-w-[860px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <div class="mb-10 reveal">
+      <span class="text-[12px] w510 mono uppercase tracking-[0.18em]" style="color:var(--accent-hover)">FAQ</span>
+      <h2 class="mt-3 tracking-tight leading-[1.05]" style="font-size:clamp(30px,4vw,44px);letter-spacing:-0.704px;color:var(--primary-text)">关于 Dark Mode 的常见问题</h2>
+    </div>
+    <div class="rounded-2xl overflow-hidden" style="box-shadow:inset 0 0 0 1px var(--border-standard)">
+      <details class="reveal" open>
+        <summary class="flex items-center justify-between gap-4 px-6 py-5" style="box-shadow:inset 0 -1px 0 var(--border-subtle)">
+          <span class="text-[15.5px] w510" style="color:var(--primary-text)">"真正的 OLED 黑"和普通深色模式有什么区别？</span>
+          <span class="chev shrink-0 mono text-[18px]" style="color:var(--accent-hover)">+</span>
+        </summary>
+        <div class="px-6 pb-5 -mt-1 text-[14px] leading-[1.65]" style="color:var(--tertiary-text)">
+          普通深色模式背景多为 <span class="mono">#1f1f22</span> 一类的深灰，OLED 像素仍在发光；Taskflow 2.0 把画布压到 <span class="mono" style="color:var(--secondary-text)">#08090a</span>，让纯黑区域像素近乎关闭，因此能省电约 <span style="color:var(--secondary-text)">40%</span>。
+        </div>
+      </details>
+      <details class="reveal">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5" style="box-shadow:inset 0 -1px 0 var(--border-subtle)">
+          <span class="text-[15.5px] w510" style="color:var(--primary-text)">日升日落自动切换会突然闪屏吗？</span>
+          <span class="chev shrink-0 mono text-[18px]" style="color:var(--accent-hover)">+</span>
+        </summary>
+        <div class="px-6 pb-5 -mt-1 text-[14px] leading-[1.65]" style="color:var(--tertiary-text)">
+          不会。切换读取系统的"自动外观"与日出日落时间，走原生平滑过渡动画，没有闪屏，也不会打断你正在编辑的任务。
+        </div>
+      </details>
+      <details class="reveal">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5" style="box-shadow:inset 0 -1px 0 var(--border-subtle)">
+          <span class="text-[15.5px] w510" style="color:var(--primary-text)">快捷键除了 J / K / Space 还有哪些？</span>
+          <span class="chev shrink-0 mono text-[18px]" style="color:var(--accent-hover)">+</span>
+        </summary>
+        <div class="px-6 pb-5 -mt-1 text-[14px] leading-[1.65]" style="color:var(--tertiary-text)">
+          J / K 用于上下翻动任务，空格用于完成当前任务。除此之外，导航、优先级、筛选与命令面板均做到全键位覆盖，手不离键盘即可完成日常操作。
+        </div>
+      </details>
+      <details class="reveal">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5" style="box-shadow:inset 0 -1px 0 var(--border-subtle)">
+          <span class="text-[15.5px] w510" style="color:var(--primary-text)">我的设备不是 OLED，还能用吗？</span>
+          <span class="chev shrink-0 mono text-[18px]" style="color:var(--accent-hover)">+</span>
+        </summary>
+        <div class="px-6 pb-5 -mt-1 text-[14px] leading-[1.65]" style="color:var(--tertiary-text)">
+          可以。深色体验、自动切换、快捷键与 120fps 滚动在所有屏幕上均可用；省电 40% 的收益主要体现在 OLED 屏幕上。
+        </div>
+      </details>
+      <details class="reveal">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5" style="box-shadow:inset 0 -1px 0 var(--border-subtle)">
+          <span class="text-[15.5px] w510" style="color:var(--primary-text)">升级 Dark Mode 需要额外付费吗？</span>
+          <span class="chev shrink-0 mono text-[18px]" style="color:var(--accent-hover)">+</span>
+        </summary>
+        <div class="px-6 pb-5 -mt-1 text-[14px] leading-[1.65]" style="color:var(--tertiary-text)">
+          不需要。现在即可免费升级，所有付费计划（含 Free）均可使用 Dark Mode，不设额外付费墙。
+        </div>
+      </details>
+      <details class="reveal">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5">
+          <span class="text-[15.5px] w510" style="color:var(--primary-text)">120fps 滚动需要什么硬件？</span>
+          <span class="chev shrink-0 mono text-[18px]" style="color:var(--accent-hover)">+</span>
+        </summary>
+        <div class="px-6 pb-5 -mt-1 text-[14px] leading-[1.65]" style="color:var(--tertiary-text)">
+          在支持高刷新率（90Hz / 120Hz）的屏幕上，任务列表滚动可稳定输出 120fps；普通 60Hz 屏幕则按其上限流畅呈现。
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA STRIP ============ -->
+<section class="border-t" style="border-color:var(--border-subtle)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-20 sm:py-24 text-center reveal">
+    <h2 class="tracking-tight leading-[1.05] mx-auto max-w-3xl" style="font-size:clamp(30px,4.4vw,48px);letter-spacing:-1.056px;color:var(--primary-text)">把黑夜，还给专注。</h2>
+    <p class="mt-4 text-[16px] leading-[1.6] max-w-xl mx-auto" style="color:var(--tertiary-text)">Taskflow 2.0 Dark Mode 现已开放，所有付费计划免费升级。</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="#pricing" class="inline-flex items-center gap-2 px-5 py-3 rounded-lg cta-primary text-[14px] w590 ring-focus">免费升级
+        <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="#features" class="inline-flex items-center px-5 py-3 rounded-lg cta-ghost text-[14px] w510 ring-focus">了解全部更新</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t" style="border-color:var(--border-subtle);background:var(--panel-dark)">
+  <div class="max-w-[1180px] mx-auto px-5 sm:px-8 py-14">
+    <div class="grid md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
+      <div>
+        <a href="#top" class="flex items-center gap-2.5">
+          <svg viewBox="0 0 32 32" class="w-7 h-7"><rect width="32" height="32" rx="8" fill="var(--brand-indigo)"/><path d="M9 11h14M9 16h10M9 21h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+          <span class="text-[15px] w590 tracking-tight" style="color:var(--primary-text)">Taskflow</span>
+        </a>
+        <p class="mt-4 text-[13.5px] leading-[1.6] max-w-xs" style="color:var(--tertiary-text)">为夜间工作者、程序员、设计师打造的、跟手又护眼的任务流。</p>
+      </div>
+      <div>
+        <div class="text-[12px] w510 mono uppercase tracking-[0.16em] mb-4" style="color:var(--quaternary-text)">产品</div>
+        <ul class="space-y-2.5 text-[13.5px]" style="color:var(--secondary-text)">
+          <li><a href="#features" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">核心特性</a></li>
+          <li><a href="#oled" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">OLED 真⿊</a></li>
+          <li><a href="#shortcuts" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">快捷键</a></li>
+          <li><a href="#pricing" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">价格</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-[12px] w510 mono uppercase tracking-[0.16em] mb-4" style="color:var(--quaternary-text)">公司</div>
+        <ul class="space-y-2.5 text-[13.5px]" style="color:var(--secondary-text)">
+          <li><a href="#" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">关于</a></li>
+          <li><a href="#" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">更新日志</a></li>
+          <li><a href="#" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">联系销售</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-[12px] w510 mono uppercase tracking-[0.16em] mb-4" style="color:var(--quaternary-text)">资源</div>
+        <ul class="space-y-2.5 text-[13.5px]" style="color:var(--secondary-text)">
+          <li><a href="#" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">帮助中心</a></li>
+          <li><a href="#" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">键盘速查表</a></li>
+          <li><a href="#" class="hover:text-[var(--primary-text)] transition-colors ring-focus rounded">状态</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12.5px]" style="border-top:1px solid var(--border-subtle);color:var(--quaternary-text)">
+      <span>© 2026 Taskflow. All rights reserved.</span>
+      <span class="mono">v2.0 · Dark Mode</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // scroll progress
+  const bar = document.getElementById('progress');
+  const onScroll = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    bar.style.width = p + '%';
+  };
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

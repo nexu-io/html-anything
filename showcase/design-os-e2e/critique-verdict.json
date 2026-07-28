@@ -1,0 +1,41 @@
+{
+  "task": "Taskflow 2.0 dark mode launch landing page",
+  "designSystem": "linear-app",
+  "skill": "saas-landing",
+  "agent": "claude-sonnet",
+  "generatedAt": "2026-07-28",
+  "htmlBytes": 53326,
+  "sseEvents": 24213,
+  "critique": {
+    "scores": {
+      "philosophy": 8,
+      "hierarchy": 8,
+      "execution": 8,
+      "specificity": 9,
+      "restraint": 4
+    },
+    "total": 37,
+    "maxTotal": 50,
+    "pass": true,
+    "allDimensionsPass": true,
+    "slopViolations": 0,
+    "suggestions": [
+      "收敛强调色到一处决定性 flour：把 indigo/violet 从「全场环境色」降级为单一焦点——仅保留主 CTA 按钮 + OLED 对比面板的辉光用强调色。",
+      "修正「像素关闭」的事实/文案不一致：H2 写「像素真正的关闭」，但画布值是 #08090a（非纯黑），OLED 只有纯 #000000 才真正熄灭像素；正文反而诚实。",
+      "清理 CSS 冗余 + 提亮 quaternary 文本：删除 :root 中三组重复变量声明；将 --quaternary-text 从 #62666d 提亮。"
+    ]
+  },
+  "designLanguageAdherence": {
+    "darkBackground": true,
+    "linearPurpleAccent": true,
+    "interFont": true,
+    "semiTransparentBorders": true,
+    "tailwindCdn": true
+  },
+  "antiSlopCheck": {
+    "indigoAccent": "clean",
+    "emojiIcons": "clean",
+    "loremIpsum": "clean",
+    "pureBlackBackground": "clean"
+  }
+}
