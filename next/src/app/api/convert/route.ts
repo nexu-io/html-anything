@@ -37,6 +37,12 @@ type Body = {
    *  implies). Saves output tokens AND prevents creative drift between runs. */
   editFromHtml?: string;
   editFromContent?: string;
+  /**
+   * Critique feedback from a previous run — suggestions from /api/critique
+   * that the agent should address in this regeneration. Prepended at the top
+   * of the prompt so the agent sees "fix these issues" before anything else.
+   */
+  critiqueFeedback?: string;
 };
 
 function buildEditPrompt(args: {
@@ -94,6 +100,7 @@ export async function POST(req: NextRequest) {
     format = "text",
     model,
     designSystemId,
+    critiqueFeedback,
     binOverride,
     editFromHtml,
     editFromContent,
@@ -137,6 +144,14 @@ export async function POST(req: NextRequest) {
       }
     }
     prompt = assemblePrompt({ body: skill.body, content, format, designSystemBlock });
+  }
+
+  // If the caller passed critique feedback (from /api/critique), inject it at
+  // the very top of the prompt so the agent sees "fix these issues" before any
+  // other instruction. Priority: critique-feedback > DESIGN.md > shared > skill.
+  if (critiqueFeedback) {
+    const feedbackBlock = `你上一次生成的 HTML 收到了以下品质评审建议。请根据这些建议**仅修正被指出的具体问题**（不要重新设计、不要改模板风格、不要动已正确的部分）。\n\n【品质评审建议】\n${critiqueFeedback}\n\n---\n\n`;
+    prompt = feedbackBlock + prompt;
   }
   if (Buffer.byteLength(prompt, "utf8") > MAX_PROMPT_BYTES) {
     return new Response("prompt too large", { status: 413 });

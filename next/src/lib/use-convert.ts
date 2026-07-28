@@ -12,6 +12,13 @@ type ConvertReq = {
   format?: string;
   /** Optional model override. "default" / undefined → no --model flag. */
   model?: string;
+  /**
+   * When the run is a retry triggered by a failed critique, the feedback
+   * string (suggestions + scores from /api/critique) is sent to the agent
+   * so it knows exactly what to fix. The prompt level is critique-feedback
+   * > DESIGN.md > shared > skill body.
+   */
+  critiqueFeedback?: string;
 };
 
 /** prefix logged when the run is sent in diff-edit mode (vs full regeneration) */
@@ -87,6 +94,7 @@ export function useConvert() {
         ...(useModel ? { model: useModel } : {}),
         ...(binOverride ? { binOverride } : {}),
         ...(editPayload ?? {}),
+        ...(req.critiqueFeedback ? { critiqueFeedback: req.critiqueFeedback } : {}),
       };
 
       const sizeNote = `输入 ${enrichedContent.length.toLocaleString()} 字符 (${summary.format})`;

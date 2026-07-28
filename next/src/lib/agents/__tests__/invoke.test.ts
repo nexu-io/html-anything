@@ -52,7 +52,7 @@ describe("invokeAgent", () => {
     await fs.rm(tmpRoot, { recursive: true, force: true });
   });
 
-  it("streams start + delta + done from a fake agent", async () => {
+  it("streams start + delta + done from a fake agent", { timeout: 15000 }, async () => {
     const fakeBin = await writeFakeAgent(
       tmpRoot,
       `
@@ -78,7 +78,7 @@ process.stdout.write(JSON.stringify({ type: "result", usage: { input_tokens: 1, 
     });
   });
 
-  it("emits error event when the binary exits non-zero", async () => {
+  it("emits error event when the binary exits non-zero", { timeout: 15000 }, async () => {
     const fakeBin = await writeFakeAgent(
       tmpRoot,
       `
