@@ -1,4 +1,3 @@
-import { spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -239,23 +238,58 @@ function readCString(buf: Buffer, offset: number, length: number): string {
 }
 
 async function extractTarball(tarPath: string, destDir: string): Promise<void> {
+  // Pure-JS ustar extraction — no system `tar`. The system binary misreads
+  // drive-letter paths on Windows (`C:` -> "Cannot connect to C: resolve
+  // failed") and BSD tar on macOS has historically followed symlink entries
+  // that preflightTarball already rejected. preflightTarball has already
+  // validated every header and capped the decompressed size, so here we trust
+  // that vetting and just write regular files to disk.
   await fs.mkdir(destDir, { recursive: true });
-  await new Promise<void>((resolve, reject) => {
-    // `--strip-components=1` drops the `<repo>-<sha>/` wrapper directory
-    // GitHub adds. `--no-same-owner` keeps perms sane on shared boxes.
-    const proc = spawn("tar", ["-xzf", tarPath, "-C", destDir, "--strip-components=1", "--no-same-owner"], {
-      stdio: ["ignore", "ignore", "pipe"],
-    });
-    let stderr = "";
-    proc.stderr.on("data", (chunk) => {
-      stderr += chunk.toString();
-    });
-    proc.on("error", (err) => reject(new InstallError("tar_failed", `tar spawn failed: ${err.message}`)));
-    proc.on("close", (code) => {
-      if (code === 0) resolve();
-      else reject(new InstallError("tar_failed", `tar exited ${code}: ${stderr.trim()}`));
-    });
-  });
+  const gz = await fs.readFile(tarPath);
+  let plain: Buffer;
+  try {
+    plain = zlib.gunzipSync(gz, { maxOutputLength: TARBALL_MAX_UNCOMPRESSED_BYTES });
+  } catch (err) {
+    throw new InstallError(
+      "tar_failed",
+      `failed to decompress tarball: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
+  const BLOCK = 512;
+  let off = 0;
+  while (off + BLOCK <= plain.length) {
+    const header = plain.subarray(off, off + BLOCK);
+    if (header.every((b) => b === 0)) break; // end-of-archive marker
+    const name = readCString(header, 0, 100);
+    const prefix = readCString(header, 345, 155);
+    const fullName = prefix ? `${prefix}/${name}` : name;
+    const sizeStr = readCString(header, 124, 12);
+    const size = sizeStr ? Number.parseInt(sizeStr, 8) : 0;
+    const typeFlag = String.fromCharCode(header[156] || 0x30);
+    off += BLOCK;
+    const data = size > 0 ? plain.subarray(off, off + size) : Buffer.alloc(0);
+    off += Math.ceil(size / BLOCK) * BLOCK;
+
+    // Only regular files are written. Directories ('5') and PAX ('x'/'g')
+    // metadata blocks are skipped — preflight already vetted entry types.
+    if (typeFlag !== "0" && typeFlag !== "\0") continue;
+    if (!fullName) continue;
+
+    // --strip-components=1: drop the wrapper segment GitHub adds.
+    const stripped = fullName.split("/").slice(1).join("/");
+    if (!stripped) continue;
+    // Defense-in-depth (preflight already enforced): no traversal / absolute.
+    if (stripped.startsWith("/") || stripped.includes("..") || stripped.includes("\0")) {
+      throw new InstallError("unsafe_path", `unsafe tar entry after strip: ${JSON.stringify(stripped)}`);
+    }
+    const target = path.resolve(destDir, stripped);
+    const rel = path.relative(path.resolve(destDir), target);
+    if (rel.startsWith("..") || path.isAbsolute(rel)) {
+      throw new InstallError("unsafe_path", `tar entry escapes destDir: ${JSON.stringify(stripped)}`);
+    }
+    await fs.mkdir(path.dirname(target), { recursive: true });
+    await fs.writeFile(target, data);
+  }
 }
 
 type DiscoveredSkill = {

@@ -1,4 +1,3 @@
-import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -155,9 +154,9 @@ describe("tarball preflight", () => {
   });
 
   it("accepts a well-formed single-skill tarball through the preflight + extract pipeline", async () => {
-    // Build via the system `tar` so the archive shape matches what GitHub
-    // produces, then run end-to-end. This is the happy-path smoke test that
-    // confirms the new preflight isn't over-eager.
+    // Build the archive in-process (same pure-JS builder as the rejection
+    // cases above) so the happy path also runs on Windows, then run
+    // end-to-end. This is the smoke test that the preflight isn't over-eager.
     const wrapper = path.join(tmpRoot, "fixtures", "happy");
     await fs.mkdir(wrapper, { recursive: true });
     await fs.writeFile(
@@ -165,13 +164,11 @@ describe("tarball preflight", () => {
       `---\nname: x\nzh_name: X\nen_name: X\nemoji: "✅"\ndescription: x\ncategory: article\nscenario: marketing\naspect_hint: a\ntags: ["x"]\n---\nbody\n`,
       "utf8",
     );
-    const tarballPath = path.join(tmpRoot, "fixtures", "happy.tar.gz");
-    await new Promise<void>((resolve, reject) => {
-      const proc = spawn("tar", ["-czf", tarballPath, "-C", path.dirname(wrapper), path.basename(wrapper)]);
-      proc.on("error", reject);
-      proc.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`tar exit ${code}`))));
-    });
-    const tar = await fs.readFile(tarballPath);
+    const skillData = await fs.readFile(path.join(wrapper, "SKILL.md"));
+    const tar = buildTarball([
+      { name: "happy/", size: 0, typeFlag: "5" },
+      { name: "happy/SKILL.md", size: skillData.length, typeFlag: "0", data: skillData },
+    ]);
 
     const result = await installFromGitHub("owner/happy", { fetchImpl: fakeFetchWithTarball(tar) });
     expect(result.package.schemaVersion).toBe(1);

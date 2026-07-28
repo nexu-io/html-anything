@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { buildTarball, tarGzDir } from "./tarball";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -27,22 +27,6 @@ tags: ["x"]
 body
 `;
 
-async function tarGzDir(dir: string, outPath: string): Promise<void> {
-  await new Promise<void>((resolve, reject) => {
-    const parent = path.dirname(dir);
-    const base = path.basename(dir);
-    const proc = spawn("tar", ["-czf", outPath, "-C", parent, base]);
-    let stderr = "";
-    proc.stderr.on("data", (c) => {
-      stderr += c.toString();
-    });
-    proc.on("error", reject);
-    proc.on("close", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(`tar -czf failed (${code}): ${stderr}`));
-    });
-  });
-}
 
 function fakeFetch(tarball: Buffer | null, opts: { defaultBranch?: string; tarballStatus?: number } = {}): typeof fetch {
   return (async (input: RequestInfo | URL) => {
@@ -124,14 +108,17 @@ describe("install rejections", () => {
   });
 
   it("rejects a tarball containing a SKILL.md symlink", async () => {
-    const tar = await buildTarballWith("syml-deadbeef", async (w) => {
-      // Drop a real target and a SKILL.md symlinked to it. The preflight
-      // rejects every non-file/non-directory entry up front so the symlink
-      // never reaches the extractor — `forbidden_entry_type` fires before
-      // the post-extract `symlink_rejected` defense ever has to.
-      await fs.writeFile(path.join(w, "target.md"), VALID_SKILL_MD, "utf8");
-      await fs.symlink("target.md", path.join(w, "SKILL.md"));
-    });
+    // Build the symlink entry directly in the archive rather than via an
+    // on-disk symlink — creating one needs admin / Developer Mode on Windows
+    // (EPERM). The preflight rejects every non-file/non-directory entry up
+    // front, so `forbidden_entry_type` fires before the post-extract
+    // `symlink_rejected` defense ever has to.
+    const data = Buffer.from(VALID_SKILL_MD, "utf8");
+    const tar = buildTarball([
+      { name: "syml/", size: 0, typeFlag: "5" },
+      { name: "syml/target.md", size: data.length, typeFlag: "0", data },
+      { name: "syml/SKILL.md", size: 0, typeFlag: "2", linkName: "target.md" },
+    ]);
     await expect(
       installFromGitHub("owner/syml", { fetchImpl: fakeFetch(tar) }),
     ).rejects.toMatchObject({ code: "forbidden_entry_type" });

@@ -49,3 +49,37 @@ jobs:
 
       - name: E2E smoke
         run: pnpm -F @html-anything/e2e test
+
+  windows-tests:
+    name: Windows unit tests
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Guard project shape
+        run: pnpm exec tsx scripts/guard.ts
+
+      - name: Typecheck app
+        run: pnpm -F @html-anything/next typecheck
+
+      - name: Typecheck e2e
+        run: pnpm -F @html-anything/e2e typecheck
+
+      - name: App unit tests
+        run: pnpm -F @html-anything/next test
+
+      - name: Build
+        run: pnpm -F @html-anything/next build

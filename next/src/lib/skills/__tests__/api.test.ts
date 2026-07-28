@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { tarGzDir } from "./tarball";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -25,22 +25,6 @@ tags: ["x"]
 body
 `;
 
-async function tarGzDir(dir: string, outPath: string): Promise<void> {
-  await new Promise<void>((resolve, reject) => {
-    const parent = path.dirname(dir);
-    const base = path.basename(dir);
-    const proc = spawn("tar", ["-czf", outPath, "-C", parent, base]);
-    let stderr = "";
-    proc.stderr.on("data", (c) => {
-      stderr += c.toString();
-    });
-    proc.on("error", reject);
-    proc.on("close", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(`tar -czf failed (${code}): ${stderr}`));
-    });
-  });
-}
 
 let tmpRoot: string;
 let originalFetch: typeof fetch;
