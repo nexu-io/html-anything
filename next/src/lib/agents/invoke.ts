@@ -136,6 +136,8 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
     async start(controller) {
       let closed = false;
       let child: ChildProcessWithoutNullStreams | null = null;
+      const startedAt = Date.now();
+      let stderrBytes = 0;
 
       const safeEnqueue = (ev: InvokeEvent) => {
         if (closed) return;
@@ -209,6 +211,13 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           message: err instanceof Error ? err.message : String(err),
         });
         safeClose();
+        console.warn(
+          JSON.stringify({
+            _event: "invoke.spawn_error",
+            agent: opts.agent,
+            err: err instanceof Error ? err.message : String(err),
+          }),
+        );
         return;
       }
 
@@ -255,12 +264,21 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
 
       child.stderr.setEncoding("utf8");
       child.stderr.on("data", (chunk: string) => {
+        stderrBytes += Buffer.byteLength(chunk, "utf8");
         safeEnqueue({ type: "stderr", text: chunk });
       });
 
       child.on("error", (err) => {
         safeEnqueue({ type: "error", message: err.message });
         safeClose();
+        console.warn(
+          JSON.stringify({
+            _event: "invoke.child_error",
+            agent: opts.agent,
+            durationMs: Date.now() - startedAt,
+            err: err.message,
+          }),
+        );
       });
 
       child.on("close", (code) => {
@@ -327,6 +345,17 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         }
         safeEnqueue({ type: "done", code });
         safeClose();
+        console.warn(
+          JSON.stringify({
+            _event: "invoke.close",
+            agent: opts.agent,
+            exitCode: code,
+            durationMs: Date.now() - startedAt,
+            promptBytes: Buffer.byteLength(opts.prompt, "utf8"),
+            stderrBytes,
+            outputBytes: Buffer.byteLength(stdoutBuf, "utf8"),
+          }),
+        );
       });
 
       const onAbort = () => {
