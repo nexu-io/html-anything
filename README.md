@@ -1,6 +1,6 @@
 # HTML Anything
 
-<p align="center"><sub>From the team behind <a href="https://github.com/nexu-io/open-design"><b>Open Design</b></a> — <b>40k★ · 200+ contributors</b>, production-grade and iterating faster. html-anything is the focused agent-era HTML editor; if it clicks for you, <a href="https://github.com/nexu-io/open-design">Open Design</a> is where the same team ships at scale.</sub></p>
+<p align="center"><sub>From the team behind <a href="https://github.com/nexu-io/open-design"><b>Open Design</b></a> — production-grade and iterating faster. html-anything is the focused agent-era HTML editor; if it clicks for you, <a href="https://github.com/nexu-io/open-design">Open Design</a> is where the same team ships at scale.</sub></p>
 
 <p align="center"><b>Live page:</b> <a href="https://open-design.ai/html-anything/"><b>open-design.ai/html-anything/</b></a> — overview, surface modes, and showcase before you clone.</p>
 
@@ -102,7 +102,7 @@ We stand on four open-source shoulders:
 - [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) — the agent-detection layer, the design-system model, and the `SKILL.md` protocol. `next/src/lib/agents/` and `next/src/lib/templates/skills/*` mirror this architecture directly.
 - [**`mdnice/markdown-nice`**](https://github.com/mdnice/markdown-nice) — proof that `juice`-inlined CSS pastes cleanly into WeChat and Zhihu without per-platform manual fix-up.
 - [**`gcui-art/markdown-to-image`**](https://github.com/gcui-art/markdown-to-image) — the iframe → high-DPI PNG export path.
-- [**`alchaincyf/huashu-md-html`**](https://github.com/alchaincyf/huashu-md-html) — the anti-AI-slop discipline that maps into the hard constraints inside every `SKILL.md` (CJK-first font stack, 8 px baseline grid, contrast ≥ 4.5, must-use-real-data rule).
+- [**`alchaincyf/huashu-md-html`**](https://github.com/alchaincyf/huashu-md-html) — the anti-AI-slop discipline that informs the hard constraints centralized in `next/src/lib/templates/shared.ts` and applied to every skill at prompt-assembly time (CJK-first font stack, 8 px baseline grid, contrast ≥ 4.5, must-use-real-data). These live in `shared.ts`, not per-`SKILL.md` frontmatter.
 
 ## At a glance
 
@@ -114,7 +114,7 @@ We stand on four open-source shoulders:
 | **9 surface modes** | 📖 magazine article · 🎬 keynote deck · 📄 résumé · 🖼️ poster · 📱 Xiaohongshu card · 🐦 tweet card · 🛠️ web prototype · 📊 data report · 🎞️ Hyperframes video. Each has multiple skills you can pick from. |
 | **One-click export** | `juice` inlines CSS → WeChat paste with zero re-formatting · `modern-screenshot` renders the iframe to a 2× PNG → `ClipboardItem` → drop straight into the tweet composer · `<mjx-container>` → `data-eeimg` placeholder → Zhihu equations render automatically · standalone `.html` download · high-DPI `.png` download. |
 | **Streaming render** | `POST /api/convert` over SSE. The agent's stdout JSON-line stream is parsed for text deltas → server-sent events → client appends → iframe `srcdoc` updates live. Waiting for an AI generation looks like watching it type in real time. |
-| **Sandboxed preview** | `<iframe sandbox="allow-scripts allow-same-origin">`. User-emitted HTML runs in an isolated origin — Tailwind CDN / Google Fonts / inline scripts work, but cookies and localStorage are quarantined from the host. |
+| **Sandboxed preview** | `<iframe sandbox="allow-scripts">`. User-emitted HTML runs in an opaque origin — Tailwind CDN / Google Fonts / inline scripts work, but the iframe cannot reach the host page (no access to parent cookies / localStorage, no credentialed calls to `/api/*`). |
 | **Format auto-detect** | The editor accepts Markdown / CSV / TSV / JSON / SQL / plain text. `papaparse` + `xlsx` parse tabular data in the browser — nothing is uploaded. |
 | **Deployable to** | Local (`pnpm -F @html-anything/next dev`) · Vercel for the web layer (the agent always stays on your laptop). |
 | **License** | Apache-2.0 |
@@ -357,7 +357,7 @@ Mechanically inspired by [`mdnice/markdown-nice`](https://github.com/mdnice/mark
 
 ### 6 · Sandboxed iframe = secure + isolated.
 
-User-emitted HTML always renders inside `<iframe sandbox="allow-scripts allow-same-origin">`. Third-party scripts (Tailwind CDN, Google Fonts, custom animations) still execute, but cookies and localStorage stay in the iframe's own origin — the host page is never poisoned. Opening devtools only shows the iframe's DOM, so the debugging experience matches a standalone HTML file.
+User-emitted HTML always renders inside `<iframe sandbox="allow-scripts">` (no `allow-same-origin`, so the iframe gets an opaque origin). Third-party scripts (Tailwind CDN, Google Fonts, custom animations) still execute, but the iframe cannot reach the host page — it has no access to parent cookies / localStorage and cannot make credentialed calls to `/api/*`. PNG export snapshots the HTML via a throwaway offscreen iframe (see `next/src/lib/export/image.ts`).
 
 ## Architecture
 
@@ -424,21 +424,25 @@ User-emitted HTML always renders inside `<iframe sandbox="allow-scripts allow-sa
 
 ## Status
 
-Early but real. The closed loop — **detect agent → pick skill → SSE stream → sandboxed iframe preview → one-click export** — runs end-to-end against all 8 CLIs listed above. The skill library and the `SKILL.md` hard-constraints are where most of the leverage lives, and both are stable. The picker UX, design-system metadata, and the multi-template compare flow ship daily. If something looks broken on your machine, open an issue with the agent CLI you were using and the input — those are the bug reports that move things forward fastest.
+Early but real. The closed loop — **detect agent → pick skill → SSE stream → sandboxed iframe preview → one-click export** — runs end-to-end against all 8 CLIs listed above. The skill library and the `SKILL.md` hard-constraints are where most of the leverage lives, and both are stable. The picker UX and design-system metadata ship daily. (Multi-template compare is planned, not yet shipped — see the table.) If something looks broken on your machine, open an issue with the agent CLI you were using and the input — those are the bug reports that move things forward fastest.
 
 | Surface | State |
 |---|---|
-| Agent detection (8 CLIs) | ✅ stable |
+| Agent detection — 11 stdin/argv CLIs (claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / deepseek / aider / openclaw) | ✅ stable |
+| ACP / pi-rpc agents (hermes / kimi / devin / kiro / kilo / vibe / pi) | ⏳ detect-only, not wired |
 | Skill registry + picker (75 skills) | ✅ stable |
 | SSE streaming render | ✅ stable |
-| Sandboxed iframe preview | ✅ stable |
-| One-click WeChat / X / Zhihu / `.html` / `.png` export | ✅ stable |
+| Sandboxed iframe preview (opaque-origin) | ✅ stable |
+| One-click X / Zhihu / `.html` / `.png` export | ✅ stable |
+| WeChat MP paste (computed-style inlining for Tailwind-CDN templates) | 🛠 partial |
 | CSV / Excel / JSON / SQL format auto-detect | ✅ stable |
-| Multi-template compare (generate 4, pick 1) | 🛠 in progress |
-| Hyperframes → `.mp4` one-click handoff to Remotion | 🛠 in progress |
+| Skill marketplace (`install <github-repo>`) | ✅ shipped |
+| Per-task version history | ✅ shipped |
+| Hyperframes → Remotion project (`.zip`) | ✅ shipped |
+| Hyperframes → in-browser `.mp4` render | ⏳ planned |
+| Multi-template compare (generate 4, pick 1) | ⏳ planned (not started) |
 | Browser extension (select on any page → convert) | ⏳ planned |
-| History / version diff / IndexedDB archive | ⏳ planned |
-| Skill marketplace (`install <github-repo>`) | ⏳ planned |
+| History archive / version diff | ⏳ planned |
 
 ## Security
 
