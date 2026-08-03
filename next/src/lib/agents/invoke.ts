@@ -22,6 +22,49 @@ type BinResolution =
   | { kind: "override-missing"; tried: string }
   | { kind: "not-found" };
 
+export type SpawnSpec = {
+  command: string;
+  argv: string[];
+  shell: boolean;
+};
+
+/**
+ * Keep command-line prompts out of cmd.exe. Node delegates argument parsing to
+ * the shell when `shell: true`, so prompt text containing `&`, `|`, or other
+ * cmd metacharacters could otherwise execute an additional command on Windows.
+ */
+export function buildSpawnSpec({
+  bin,
+  argv,
+  promptOnCommandLine,
+  platform = process.platform,
+}: {
+  bin: string;
+  argv: string[];
+  promptOnCommandLine: boolean;
+  platform?: NodeJS.Platform;
+}): SpawnSpec {
+  if (platform === "win32" && promptOnCommandLine) {
+    if (/\.(?:cmd|bat)$/i.test(bin)) {
+      throw new Error(
+        `Cannot safely pass a prompt to the Windows command shim \`${bin}\`. Configure the agent's native executable instead.`,
+      );
+    }
+    return { command: bin, argv, shell: false };
+  }
+
+  const shell = platform === "win32";
+  return { command: shell ? `"${bin}"` : bin, argv, shell };
+}
+
+/** Only allow model values that the selected agent explicitly exposes in its picker. */
+export function isSupportedModel(
+  agent: Pick<(typeof AGENTS)[number], "fallbackModels">,
+  model: string | undefined,
+): boolean {
+  return !model || agent.fallbackModels.some((option) => option.id === model);
+}
+
 /**
  * Resolve the binary to spawn, in priority order:
  *   1. `opts.binOverride` (user-set absolute path from Settings UI)
@@ -82,6 +125,9 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
   const def = AGENTS.find((a) => a.id === opts.agent);
   if (!def) {
     return errorStream(`unknown agent: ${opts.agent}`);
+  }
+  if (!isSupportedModel(def, opts.model)) {
+    return errorStream(`${def.label}: selected model is not supported by this adapter.`);
   }
   const resolved = resolveBinForAgent(def, opts.binOverride);
   if (resolved.kind === "override-missing") {
@@ -158,20 +204,16 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
 
       try {
-        // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
-        // what npm installs for most CLI agents) without going through the
-        // shell. Without this, every agent invocation fails with
-        // EINVAL / "spawn 无效的参数". macOS/Linux use direct exec.
-        // Safety: prompt content is delivered via stdin or `--message
-        // <text>` (argv-message), not interpolated into a shell command,
-        // so this does not introduce a shell-injection vector.
-        const useShell = process.platform === "win32";
-        child = spawn(useShell ? `"${bin}"` : bin!, argv, {
+        const spawnSpec = buildSpawnSpec({
+          bin,
+          argv,
+          promptOnCommandLine: promptViaArgv || promptViaMessageFlag,
+        });
+        child = spawn(spawnSpec.command, spawnSpec.argv, {
           cwd: opts.cwd ?? process.cwd(),
           env,
           stdio: ["pipe", "pipe", "pipe"],
-          shell: useShell,
-          windowsVerbatimArguments: false,
+          shell: spawnSpec.shell,
         });
       } catch (err) {
         safeEnqueue({

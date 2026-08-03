@@ -1,169 +1,105 @@
 # Google Antigravity CLI Integration Design
 
 **Date:** 2026-05-22
-**Status:** Approved
-**Scope:** Add `agy` (Google Antigravity CLI) as a supported agent in html-anything
+**Status:** Implemented — updated 2026-08-03 to match the shipped adapter
+**Scope:** Support the Google Antigravity CLI (agy) as an html-anything agent
 
 ---
 
 ## Problem
 
-html-anything supports 8+ AI coding CLIs but does not support Google Antigravity CLI (`agy`). Users who have `agy` installed cannot use it as an agent to generate HTML.
-
----
+Users with agy installed need to select it as a local agent and generate HTML
+without manually running the command in a terminal.
 
 ## Decision
 
-Integrate Antigravity CLI using **Approach A: mirror Gemini CLI format**.
+Use the verified agy --print <prompt> contract:
 
-Antigravity is a Google product and very likely reuses the same `--output-format stream-json` NDJSON envelope as Gemini CLI. This lets us reuse the existing `cursor-agent/gemini` parser branch with a one-line change, minimising implementation risk.
+- invoke agy --dangerously-skip-permissions --print <prompt>;
+- send the generated prompt as one positional argument, not through stdin;
+- treat stdout as plain UTF-8 text, not Gemini-style stream JSON;
+- omit --model and let the user's Antigravity CLI configuration choose the
+  model, because supported model identifiers are not confirmed.
 
-If the actual output format differs from Gemini's, only `parseLineWithState` in `argv.ts` needs patching — the rest of the integration is format-agnostic.
-
----
+This supersedes the original pre-implementation assumption that Antigravity
+matched Gemini's --output-format stream-json and stdin protocol.
 
 ## Architecture
 
-Three files change. `invoke.ts` is untouched.
+    next/src/lib/agents/
+    ├── detect.ts   ← AgentDef, argv protocol, Default-only model picker
+    ├── argv.ts     ← agy command flags and plain-text parser branch
+    ├── invoke.ts   ← append positional prompt, safely launch on Windows, flush tail
+    └── __tests__/
+        ├── antigravity.test.ts ← argv/parser/AgentDef coverage
+        └── invoke.test.ts      ← Windows spawn safety coverage
 
-```
-next/src/lib/agents/
-├── detect.ts   ← add AgentDef (binary, env override, model list)
-├── argv.ts     ← add buildArgv case + extend || condition in parseLineWithState
-└── invoke.ts   ← no change (stdin protocol already fully supported)
-```
+### Agent definition
 
-### Why no changes to `invoke.ts`
+antigravity has binary agy, ANTIGRAVITY_BIN as its override, and protocol
+"argv". Its only model option is Default (CLI config), which intentionally adds
+no model flag. The shared runner rejects a requested model unless it exactly
+matches an ID declared by the selected agent.
 
-`invoke.ts` already handles the `stdin` protocol end-to-end: it writes the prompt to `child.stdin`, reads stdout line by line, and routes each parsed event to the store. Adding a new `stdin` agent requires zero changes here.
+### Command and prompt transport
 
----
+buildArgv("antigravity") returns:
 
-## Detailed Design
+    --dangerously-skip-permissions --print
 
-### 1. `detect.ts` — AgentDef
+invokeAgent() appends the fully assembled prompt as the next argument. This is
+required by agy --print; stdin is closed without receiving the prompt.
 
-Add the following entry to the `AGENTS` array, placed after `gemini` (same vendor family) and before the ACP family block:
+### Windows process safety
 
-```typescript
-{
-  id: "antigravity",
-  label: "Google Antigravity",
-  bin: "agy",
-  envOverride: "ANTIGRAVITY_BIN",
-  vendor: "Google",
-  // protocol omitted → defaults to "stdin"
-  fallbackModels: [
-    DEFAULT_MODEL,
-    { id: "gemini-2.5-pro",              label: "gemini-2.5-pro" },
-    { id: "gemini-2.5-flash",            label: "gemini-2.5-flash" },
-    { id: "gemini-2.5-flash-lite",       label: "gemini-2.5-flash-lite" },
-    { id: "openai/gpt-5",                label: "openai/gpt-5" },
-    { id: "anthropic/claude-sonnet-4-6", label: "anthropic/claude-sonnet-4-6" },
-  ],
-},
-```
+On Windows, an adapter whose prompt is on the command line ("argv" or
+"argv-message") is launched with shell: false. This keeps prompt text out of
+cmd.exe, so characters such as &, |, redirection operators, and %VAR% remain
+arguments rather than shell syntax.
 
-**Key decisions:**
-- `envOverride: "ANTIGRAVITY_BIN"` — consistent with every other agent; lets users point to a non-PATH binary via Settings
-- Third-party model ids use `provider/model` slash format, matching the opencode convention. Replace with confirmed ids once documented.
-- No `fallbackBins` — `agy` is short and no known forks exist
+A .cmd or .bat shim cannot be used for this path: it fails with a clear message
+asking for the native executable instead. stdin-protocol agents retain the
+existing Windows shim path because their prompt is sent over stdin, not through
+shell-parsed arguments.
 
-### 2. `argv.ts` — Command-line flags
+### Output parsing and close handling
 
-Add a `buildArgv` case:
-
-```typescript
-case "antigravity":
-  return [
-    "--output-format", "stream-json",
-    "--yolo",
-    ...(model ? ["--model", model] : []),
-  ];
-```
-
-Identical to the Gemini CLI case. `--output-format stream-json` enables NDJSON streaming; `--yolo` suppresses interactive confirmation prompts required for non-interactive use.
-
-### 3. `argv.ts` — Output parser
-
-Extend the existing `cursor-agent / gemini` parser branch with one token:
-
-```typescript
-// before
-if (agent === "cursor-agent" || agent === "gemini") {
-
-// after
-if (agent === "cursor-agent" || agent === "gemini" || agent === "antigravity") {
-```
-
-The branch already handles:
-- `stream_event` → `content_block_delta` → `text_delta` (streaming incremental deltas)
-- `assistant` message body fallback (when no stream events preceded it)
-- `rescueHtmlFromToolUse` (recovers HTML from Write tool calls)
-- `sawStreamEventText` deduplication (prevents double-output when both stream events and the final assistant message are present)
-
-### 4. `envFor` — No change
-
-Gemini CLI injects `GEMINI_CLI_TRUST_WORKSPACE=true`. Antigravity has no known equivalent requirement. If one is discovered, add a case to `envFor` in `argv.ts`.
-
----
-
-## Model List
-
-| Model ID | Label | Notes |
-|----------|-------|-------|
-| `default` | Default (CLI config) | Synthetic entry — no `--model` flag |
-| `gemini-2.5-pro` | gemini-2.5-pro | Google flagship |
-| `gemini-2.5-flash` | gemini-2.5-flash | Google balanced |
-| `gemini-2.5-flash-lite` | gemini-2.5-flash-lite | Google fast/cheap |
-| `openai/gpt-5` | openai/gpt-5 | Third-party placeholder |
-| `anthropic/claude-sonnet-4-6` | anthropic/claude-sonnet-4-6 | Third-party placeholder |
-
-Third-party model ids are placeholders. Replace with confirmed ids from Antigravity's documentation before shipping.
-
----
+agy --print emits plain text. Each complete stdout line is emitted as a delta;
+the final unterminated buffer is emitted once on process close. No JSON
+envelope, stream-event handling, tool-call HTML recovery, or assistant-message
+deduplication is used for Antigravity.
 
 ## Testing
 
-New file: `next/src/lib/agents/__tests__/antigravity.test.ts`
+Unit coverage verifies:
 
-### Parser unit tests
+- plain-text and HTML-like output become deltas, while blank output is ignored;
+- buildArgv("antigravity") contains only the supported print-mode flags;
+- the AgentDef has the argv protocol and Default-only picker;
+- a Windows command-line prompt containing & stays a distinct argv element
+  with shell: false;
+- a Windows .cmd shim is rejected when a prompt would be passed as argv.
 
-| Test | Input | Expected output |
-|------|-------|-----------------|
-| stream_event text_delta | `{"type":"stream_event","event":{"type":"content_block_delta","delta":{"type":"text_delta","text":"hello"}}}` | `[{kind:"delta", text:"hello"}]` |
-| assistant body fallback (no prior stream_event) | `{"type":"assistant","message":{"content":[{"type":"text","text":"hello"}]}}` | `[{kind:"delta", text:"hello"}]` |
-| assistant body dedup (with prior stream_event) | same assistant line, after a stream_event | `[]` (suppressed) |
-| non-JSON line | `some plain text` | `[{kind:"noise"}]` — no crash |
+No browser E2E test invokes agy, because that would require a locally installed
+binary and an authenticated Antigravity session.
 
-### AgentDef integrity assertions
+## Risks and constraints
 
-- `AGENTS` contains an entry with `id === "antigravity"`
-- `fallbackModels[0]` is `DEFAULT_MODEL`
-- `bin === "agy"`
+| Risk / constraint | Handling |
+| --- | --- |
+| agy requires a positional prompt | Use the argv protocol and append one argv element. |
+| Prompt text could be interpreted by cmd.exe | Use a native executable with shell: false; reject command shims for this path. |
+| Native executable unavailable on Windows | Surface a configuration error instead of falling back to an unsafe shell invocation. |
+| Model IDs are unverified | Expose only the CLI-configured default; do not emit --model. The shared runner rejects undeclared overrides. |
+| CLI output is not JSON | Parse stdout as plain text and flush the final buffer once. |
+| Positional prompts can be visible to local process inspection | This is inherent to the verified agy --print <prompt> interface; do not route through a shell. |
 
-### E2E
+## File change summary
 
-No new E2E tests. Agent invocation depends on a locally installed binary — not suitable for CI.
-
----
-
-## Risk & Unknowns
-
-| Risk | Likelihood | Mitigation |
-|------|-----------|------------|
-| Antigravity output format differs from Gemini | Medium | Only `parseLineWithState` needs patching; all other integration code is format-agnostic |
-| Third-party model ids are wrong | High | They are marked as placeholders; update before release |
-| `--yolo` flag name differs | Low | Verify against `agy --help`; fall back to `--yes` or `--dangerously-skip-permissions` |
-| `--output-format stream-json` flag differs | Low | Verify against `agy --help`; the Gemini pattern is well-established for Google CLIs |
-
----
-
-## File Change Summary
-
-| File | Change |
-|------|--------|
-| `next/src/lib/agents/detect.ts` | Add 1 `AgentDef` object to `AGENTS` array |
-| `next/src/lib/agents/argv.ts` | Add 1 `buildArgv` case + extend 1 `\|\|` condition |
-| `next/src/lib/agents/__tests__/antigravity.test.ts` | New file, 6 test cases |
-| `next/src/lib/agents/invoke.ts` | No change |
+| File | Shipped behavior |
+| --- | --- |
+| next/src/lib/agents/detect.ts | Defines the antigravity argv adapter with a Default-only model picker. |
+| next/src/lib/agents/argv.ts | Builds agy --dangerously-skip-permissions --print and parses plain text. |
+| next/src/lib/agents/invoke.ts | Appends the positional prompt, prevents Windows shell parsing, and flushes text once. |
+| next/src/lib/agents/__tests__/antigravity.test.ts | Covers the adapter contract and plain-text parser. |
+| next/src/lib/agents/__tests__/invoke.test.ts | Covers the Windows non-shell and command-shim guard. |
