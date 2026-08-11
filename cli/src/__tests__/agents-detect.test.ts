@@ -278,8 +278,8 @@ describe("detectAgents", () => {
 
       expect(claude.models).toEqual(
         expect.arrayContaining([
-          { id: "MiniMax/MiniMax-M3", label: "MiniMax/MiniMax-M3" },
-          { id: "MiniMax/MiniMax-M2.7", label: "MiniMax/MiniMax-M2.7" },
+          { id: "MiniMax-M3", label: "MiniMax-M3" },
+          { id: "MiniMax-M2.7", label: "MiniMax-M2.7" },
         ]),
       );
     });
