@@ -149,6 +149,10 @@ export async function nodeToBlob(node: HTMLElement, opts: ImageOpts = {}): Promi
  *      the exact viewport the browser used when measuring text. Using
  *      `scrollWidth` here causes a 1–2px drift that wraps Chinese titles to
  *      a new line and shoves them under the body text.
+ *      To keep clientWidth reliable across platforms, overflow is set to
+ *      "hidden" during capture — without this, Windows' always-visible
+ *      scrollbar adds ~15px of chrome that narrows clientWidth and crops
+ *      the left edge of the exported image.
  *   4. Pass explicit width/height to modern-screenshot so the foreignObject
  *      SVG matches the laid-out size 1:1.
  */
@@ -172,8 +176,13 @@ export async function iframeToBlob(
   const fullHeight = fullScrollHeight(doc);
   if (!fullHeight) throw new Error("preview has no content yet");
   iframe.style.height = `${fullHeight}px`;
-  doc.documentElement.style.overflow = "visible";
-  doc.body.style.overflow = "visible";
+  // Use overflow:hidden — not visible — to suppress platform scrollbars.
+  // On Windows where scrollbars are always visible, "visible" adds a ~15px
+  // vertical scrollbar that reduces clientWidth, causing the exported image
+  // to be cropped on the left side (the screenshot is taken at the narrowed
+  // viewport width and the rightmost pixels are lost).
+  doc.documentElement.style.overflow = "hidden";
+  doc.body.style.overflow = "hidden";
 
   // Wait a couple of frames for the browser to re-flow at the new size.
   await NEXT_FRAME();
