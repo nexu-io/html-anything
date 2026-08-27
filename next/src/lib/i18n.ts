@@ -136,6 +136,24 @@ export interface Dict {
   "deploy.provider.cloudflarePages": string;
   "deploy.provider.cloudflarePages.comingSoon": string;
   "deploy.menu.deployTo": string;
+  "share.tempmd.button": string;
+  "share.tempmd.disabled": string;
+  "share.tempmd.sharing": string;
+  "share.tempmd.updating": string;
+  "share.tempmd.revoking": string;
+  "share.tempmd.disclosureTitle": string;
+  "share.tempmd.disclosureBody": string;
+  "share.tempmd.disclosureExpiry": string;
+  "share.tempmd.cancel": string;
+  "share.tempmd.confirm": string;
+  "share.tempmd.ready": string;
+  "share.tempmd.expires": string;
+  "share.tempmd.noExpiry": string;
+  "share.tempmd.update": string;
+  "share.tempmd.revoke": string;
+  "share.tempmd.revokeConfirm": string;
+  "share.tempmd.copied": string;
+  "share.tempmd.error": string;
 
   // Marketplace
   "settings.section.marketplace.label": string;
@@ -502,6 +520,26 @@ const en: Dict = {
   "deploy.provider.cloudflarePages": "Cloudflare Pages",
   "deploy.provider.cloudflarePages.comingSoon": "Coming soon",
   "deploy.menu.deployTo": "Deploy to…",
+  "share.tempmd.button": "Temporary preview",
+  "share.tempmd.disabled": "Run Convert first",
+  "share.tempmd.sharing": "Sharing…",
+  "share.tempmd.updating": "Updating…",
+  "share.tempmd.revoking": "Revoking…",
+  "share.tempmd.disclosureTitle": "Share a temporary preview?",
+  "share.tempmd.disclosureBody":
+    "The generated HTML will be uploaded to temp.md and will be public to anyone with the link. No temp.md account is required.",
+  "share.tempmd.disclosureExpiry":
+    "Anonymous previews normally expire seven days after the latest publish. You can update the same URL or revoke it from this control.",
+  "share.tempmd.cancel": "Cancel",
+  "share.tempmd.confirm": "Share preview",
+  "share.tempmd.ready": "Temporary preview ready",
+  "share.tempmd.expires": "Expires {date}",
+  "share.tempmd.noExpiry": "No expiry reported",
+  "share.tempmd.update": "Update",
+  "share.tempmd.revoke": "Revoke",
+  "share.tempmd.revokeConfirm": "Revoke this public temporary preview now?",
+  "share.tempmd.copied": "Copied",
+  "share.tempmd.error": "Temporary preview failed",
 
   "settings.section.marketplace.label": "Marketplace",
   "settings.section.marketplace.hint": "Install skills from GitHub",
@@ -863,6 +901,26 @@ const zhCN: Dict = {
   "deploy.provider.cloudflarePages": "Cloudflare Pages",
   "deploy.provider.cloudflarePages.comingSoon": "敬请期待",
   "deploy.menu.deployTo": "部署到…",
+  "share.tempmd.button": "临时预览",
+  "share.tempmd.disabled": "请先生成 HTML",
+  "share.tempmd.sharing": "分享中…",
+  "share.tempmd.updating": "更新中…",
+  "share.tempmd.revoking": "撤销中…",
+  "share.tempmd.disclosureTitle": "分享临时预览？",
+  "share.tempmd.disclosureBody":
+    "生成的 HTML 将上传到 temp.md，任何拿到链接的人都可以访问。不需要 temp.md 账号。",
+  "share.tempmd.disclosureExpiry":
+    "匿名预览通常会在最近一次发布后的七天过期。你可以在这里更新同一个链接或立即撤销。",
+  "share.tempmd.cancel": "取消",
+  "share.tempmd.confirm": "分享预览",
+  "share.tempmd.ready": "临时预览已就绪",
+  "share.tempmd.expires": "过期时间 {date}",
+  "share.tempmd.noExpiry": "未返回过期时间",
+  "share.tempmd.update": "更新",
+  "share.tempmd.revoke": "撤销",
+  "share.tempmd.revokeConfirm": "立即撤销这个公开的临时预览？",
+  "share.tempmd.copied": "已复制",
+  "share.tempmd.error": "临时预览失败",
 
   "settings.section.marketplace.label": "市场",
   "settings.section.marketplace.hint": "从 GitHub 安装 skill",

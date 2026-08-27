@@ -409,7 +409,7 @@ User-emitted HTML always renders inside `<iframe sandbox="allow-scripts allow-sa
 | Browser-side processing | `juice` (CSS inlining) · `modern-screenshot` (PNG export) · `xlsx` / `papaparse` (spreadsheet parsing) · `marked` + `highlight.js` (Markdown-compatible input) · `dompurify` (XSS defense) |
 | Preview sandbox | `iframe[sandbox="allow-scripts allow-same-origin"]` + `srcdoc` |
 | Export targets | `.html` standalone · `.png` high-DPI · `ClipboardItem` (text/html + image/png) · WeChat-compatible inlined CSS |
-| Deploy | Local `pnpm -F @html-anything/next dev` · Vercel one-click for the web layer (agent stays local) |
+| Deploy and share | Vercel durable deploy · opt-in temp.md temporary preview (agent stays local) |
 
 ## Export targets
 
@@ -420,6 +420,20 @@ User-emitted HTML always renders inside `<iframe sandbox="allow-scripts allow-sa
 | **X / Weibo / Xiaohongshu** | `modern-screenshot` → 2× PNG → `ClipboardItem` | Drop straight into the composer |
 | **Download `.html`** | Single-file, inlined assets | Open anywhere with a browser |
 | **Download `.png`** | High-DPI screenshot | Share anywhere |
+
+### Temporary previews
+
+The toolbar's **Temporary preview** action publishes the generated standalone
+HTML to [temp.md](https://temp.md) without requiring an account. The disclosure
+shown before the first upload makes clear that the artifact leaves the machine
+and is public to anyone with the link. Anonymous previews normally expire seven
+days after the latest publish; the same URL can be updated or revoked from HTML
+Anything.
+
+Update and upload capabilities never enter browser storage or deployment
+history. They stay in per-task files under
+`~/.html-anything/tempmd-previews/` with mode `0600`, written atomically by the
+server route. Existing Vercel deployment behavior is unchanged.
 
 ## Roadmap
 
@@ -451,7 +465,7 @@ Early but real. The closed loop — **detect agent → pick skill → SSE stream
 
 ## Security
 
-The Next API surface is the local-only side of the app — `/api/convert` spawns the user's coding-agent CLI with maximally permissive flags, `/api/deploy` writes credentialed config to disk. Both are intended for a single operator on a single machine. To prevent a malicious page from DNS-rebinding `attacker.example` to `127.0.0.1` and POSTing into those routes through the user's browser, every `/api/*` request is gated on a Host-header allowlist in [`next/src/middleware.ts`](next/src/middleware.ts).
+The Next API surface is the local-only side of the app — `/api/convert` spawns the user's coding-agent CLI with maximally permissive flags, `/api/deploy` writes credentialed config to disk, and `/api/share/tempmd` makes user-confirmed outbound preview requests while keeping update capabilities server-side. These routes are intended for a single operator on a single machine. To prevent a malicious page from DNS-rebinding `attacker.example` to `127.0.0.1` and POSTing into those routes through the user's browser, every `/api/*` request is gated on a Host-header allowlist in [`next/src/middleware.ts`](next/src/middleware.ts).
 
 | Setting | When to use |
 |---|---|

@@ -38,6 +38,29 @@
   color-scheme: light;
 }
 
+@layer components {
+  .share-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 9999px;
+    background: transparent;
+    padding: 0.125rem 0.5rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .share-action:hover {
+    background: var(--surface);
+  }
+
+  .share-action:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+}
+
 @theme inline {
   --font-sans: var(--app-font-sans);
   --font-display: var(--app-font-display);

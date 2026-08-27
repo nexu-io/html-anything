@@ -304,7 +304,7 @@ picker 用两个维度组织：
 | 浏览器端处理 | `juice`（CSS 内联） · `modern-screenshot`（PNG 截图） · `xlsx` / `papaparse`（CSV/Excel 解析） · `marked` + `highlight.js`（markdown 兼容输入） · `dompurify`（XSS 防御） |
 | 预览沙箱 | `iframe[sandbox="allow-scripts allow-same-origin"]` + `srcdoc` |
 | 导出 | `.html` 单文件 · `.png` 高 DPI · ClipboardItem 富文本 / image/png · 微信兼容 inline CSS |
-| 部署 | 本地 `pnpm -F @html-anything/next dev` · Vercel 一键 web 层（agent 永远跑本地） |
+| 部署与分享 | Vercel 持久部署 · 可选的 temp.md 临时预览（agent 永远跑本地） |
 
 ## 一键发布到平台
 
@@ -315,6 +315,17 @@ picker 用两个维度组织：
 | **推特 / 微博 / 小红书** | `modern-screenshot` 把 iframe 渲染成 2× PNG → ClipboardItem | 直接粘到推文 |
 | **下载 `.html`** | 单文件，双击打开 | 任意分享 |
 | **下载 `.png`** | 高 DPI 截图 | 任意分享 |
+
+### 临时预览
+
+工具栏中的 **临时预览** 操作可以把生成的独立 HTML 发布到
+[temp.md](https://temp.md)，不需要账号。首次上传前会明确提示：文件将离开本机，
+任何拿到链接的人都可以访问。匿名预览通常会在最近一次发布后的七天过期；你可以
+在 HTML Anything 中更新同一个链接或立即撤销。
+
+更新与上传 capability 不会进入浏览器存储或部署历史。它们由服务端按任务保存在
+`~/.html-anything/tempmd-previews/` 下，文件权限为 `0600`，并采用原子写入。
+现有 Vercel 部署行为保持不变。
 
 ## 🛣️ Roadmap
 
