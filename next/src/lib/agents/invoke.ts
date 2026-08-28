@@ -1,7 +1,15 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
-import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
+import {
+  buildArgv,
+  buildMessageFlagArgv,
+  envFor,
+  makeParser,
+  UnsupportedAgentProtocolError,
+} from "./argv";
 
 export type InvokeOpts = {
   agent: string;
@@ -154,8 +162,26 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       // trailing positional arg rather than reading from stdin.
       if (promptViaArgv) argv = [...argv, opts.prompt];
       // `protocol: "argv-message"` (openclaw today) wants the prompt under
-      // an explicit `--message <text>` flag.
-      if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
+      // an explicit `--message <text>` flag — except on Windows, where that
+      // breaks on embedded newlines/spaces (see buildMessageFlagArgv's
+      // comment and #96); there it goes through a temp file instead.
+      let messageFileDir: string | null = null;
+      if (promptViaMessageFlag) {
+        let messageFilePath = "";
+        if (process.platform === "win32") {
+          messageFileDir = mkdtempSync(join(tmpdir(), "html-anything-msg-"));
+          messageFilePath = join(messageFileDir, "prompt.txt");
+          writeFileSync(messageFilePath, opts.prompt, "utf8");
+        }
+        argv = [...argv, ...buildMessageFlagArgv(process.platform, opts.prompt, messageFilePath)];
+      }
+      const cleanupMessageFile = () => {
+        if (!messageFileDir) return;
+        try {
+          rmSync(messageFileDir, { recursive: true, force: true });
+        } catch {}
+        messageFileDir = null;
+      };
 
       try {
         // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
@@ -174,6 +200,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           windowsVerbatimArguments: false,
         });
       } catch (err) {
+        cleanupMessageFile();
         safeEnqueue({
           type: "error",
           message: err instanceof Error ? err.message : String(err),
@@ -235,11 +262,13 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       });
 
       child.on("error", (err) => {
+        cleanupMessageFile();
         safeEnqueue({ type: "error", message: err.message });
         safeClose();
       });
 
       child.on("close", (code) => {
+        cleanupMessageFile();
         if (opts.agent === "openclaw") {
           // OpenClaw's `agent --local --json` emits one pretty-printed JSON
           // document on stdout. The visible reply is at

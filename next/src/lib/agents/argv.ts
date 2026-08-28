@@ -146,6 +146,43 @@ export function envFor(agent: string): NodeJS.ProcessEnv {
   return base;
 }
 
+/**
+ * Wraps an argv element in double quotes if it contains whitespace. Node's
+ * `spawn(..., { shell: true })` on Windows joins `file` and `args` into a
+ * single command string with a plain `' '.join(...)` and does no escaping of
+ * its own — an unquoted element containing a space gets split into multiple
+ * tokens once cmd.exe parses that string.
+ */
+export function quoteWindowsShellArg(arg: string): string {
+  return /\s/.test(arg) ? `"${arg}"` : arg;
+}
+
+/**
+ * Builds the argv tail that delivers the prompt to an `argv-message` adapter
+ * (openclaw today). On win32, `spawn` has to route through `cmd.exe` to
+ * launch the npm-installed `.cmd` shim (see the `useShell` comment in
+ * invoke.ts), and cmd.exe parses its command line as text — a literal
+ * newline in `prompt` terminates the statement there (cmd.exe has no way to
+ * embed one inside a single `/c "..."` invocation, unlike a real shell
+ * script), and unquoted spaces split it into extra arguments (#96). Neither
+ * is fixable by quoting `--message`'s value harder: quoting doesn't survive
+ * an embedded newline, so a temp file is the only argv element that has to
+ * cross the cmd.exe boundary. OpenClaw documents `--message-file <path>` for
+ * exactly this (docs/cli/agent.md) — invoke.ts writes `prompt` there and
+ * passes its path instead of the raw text. Off Windows, args go straight to
+ * execve with no shell involved, so the original `--message <text>` is fine.
+ */
+export function buildMessageFlagArgv(
+  platform: NodeJS.Platform,
+  prompt: string,
+  messageFilePath: string,
+): string[] {
+  if (platform === "win32") {
+    return ["--message-file", quoteWindowsShellArg(messageFilePath)];
+  }
+  return ["--message", prompt];
+}
+
 export type AgentParse =
   | { kind: "delta"; text: string }
   | { kind: "meta"; key: string; value: unknown }
