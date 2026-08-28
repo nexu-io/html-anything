@@ -1,5 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync } from "node:fs";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
@@ -8,6 +9,7 @@ import {
   buildMessageFlagArgv,
   envFor,
   makeParser,
+  redactStartEventArgv,
   UnsupportedAgentProtocolError,
 } from "./argv";
 
@@ -166,21 +168,46 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       // breaks on embedded newlines/spaces (see buildMessageFlagArgv's
       // comment and #96); there it goes through a temp file instead.
       let messageFileDir: string | null = null;
+      // On Windows only, `close` can fire for an aborted request before the
+      // real agent process has actually exited: `child` is the `cmd.exe`
+      // wrapper `shell: true` spawns, and killing it does not propagate to
+      // the grandchild `.cmd`-shim process it launched, which may still be
+      // reading the message file. Skip cleanup in that case rather than
+      // risk deleting the file out from under a still-running orphan — the
+      // small leaked temp file is a better trade-off than a corrupted read.
+      let aborted = false;
+      const usesWindowsMessageFile = promptViaMessageFlag && process.platform === "win32";
       if (promptViaMessageFlag) {
         let messageFilePath = "";
-        if (process.platform === "win32") {
-          messageFileDir = mkdtempSync(join(tmpdir(), "html-anything-msg-"));
-          messageFilePath = join(messageFileDir, "prompt.txt");
-          writeFileSync(messageFilePath, opts.prompt, "utf8");
+        if (usesWindowsMessageFile) {
+          try {
+            messageFileDir = await mkdtemp(join(tmpdir(), "html-anything-msg-"));
+            messageFilePath = join(messageFileDir, "prompt.txt");
+            await writeFile(messageFilePath, opts.prompt, "utf8");
+          } catch (err) {
+            if (messageFileDir) {
+              try {
+                await rm(messageFileDir, { recursive: true, force: true });
+              } catch {}
+              messageFileDir = null;
+            }
+            safeEnqueue({
+              type: "error",
+              message: `Failed to prepare OpenClaw message file: ${err instanceof Error ? err.message : String(err)}`,
+            });
+            safeClose();
+            return;
+          }
         }
         argv = [...argv, ...buildMessageFlagArgv(process.platform, opts.prompt, messageFilePath)];
       }
-      const cleanupMessageFile = () => {
-        if (!messageFileDir) return;
-        try {
-          rmSync(messageFileDir, { recursive: true, force: true });
-        } catch {}
+      const cleanupMessageFile = async () => {
+        if (!messageFileDir || aborted) return;
+        const dir = messageFileDir;
         messageFileDir = null;
+        try {
+          await rm(dir, { recursive: true, force: true });
+        } catch {}
       };
 
       try {
@@ -200,7 +227,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           windowsVerbatimArguments: false,
         });
       } catch (err) {
-        cleanupMessageFile();
+        await cleanupMessageFile();
         safeEnqueue({
           type: "error",
           message: err instanceof Error ? err.message : String(err),
@@ -212,7 +239,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       safeEnqueue({
         type: "start",
         bin: bin!,
-        argv,
+        argv: redactStartEventArgv(argv, usesWindowsMessageFile),
         promptBytes: Buffer.byteLength(opts.prompt, "utf8"),
       });
 
@@ -336,6 +363,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       });
 
       const onAbort = () => {
+        aborted = true;
         try {
           child?.kill("SIGTERM");
         } catch {}

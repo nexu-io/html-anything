@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildMessageFlagArgv, quoteWindowsShellArg } from "../argv";
+import { buildMessageFlagArgv, quoteWindowsShellArg, redactStartEventArgv } from "../argv";
 
 describe("quoteWindowsShellArg", () => {
   it("leaves an argument with no whitespace unchanged", () => {
@@ -40,5 +40,22 @@ describe("buildMessageFlagArgv", () => {
     const prompt = "line one\nline two with spaces";
     expect(buildMessageFlagArgv("linux", prompt, "/tmp/unused")).toEqual(["--message", prompt]);
     expect(buildMessageFlagArgv("darwin", prompt, "/tmp/unused")).toEqual(["--message", prompt]);
+  });
+});
+
+describe("redactStartEventArgv", () => {
+  it("replaces the real temp-file path with a placeholder when a Windows message file was used", () => {
+    const argv = ["agent", "--local", "--json", "--message-file", '"C:\\Users\\John Doe\\prompt.txt"'];
+    const redacted = redactStartEventArgv(argv, true);
+
+    expect(redacted).toEqual(["agent", "--local", "--json", "--message-file", "<message file>"]);
+    // Guards the actual disclosure this fixes: the real path (which embeds
+    // the OS username) must never reach the client-facing `start` event.
+    expect(redacted.join(" ")).not.toContain("John Doe");
+  });
+
+  it("leaves argv untouched when no Windows message file was used", () => {
+    const argv = ["agent", "--local", "--json", "--message", "hello world"];
+    expect(redactStartEventArgv(argv, false)).toEqual(argv);
   });
 });

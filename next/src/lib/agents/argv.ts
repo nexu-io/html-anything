@@ -183,6 +183,21 @@ export function buildMessageFlagArgv(
   return ["--message", prompt];
 }
 
+/**
+ * Redacts the real message-file path out of an argv array before it's put
+ * on the `start` InvokeEvent, which streams straight to the browser over
+ * SSE. That path lives on the server's filesystem and embeds the OS
+ * username (`os.tmpdir()/html-anything-msg-.../prompt.txt`) — unlike every
+ * other argv element (static flags, or the caller's own prompt text), it
+ * isn't safe to hand to the client. `usesWindowsMessageFile` callers always
+ * appended the path as the last element via `buildMessageFlagArgv`, so
+ * replacing just that element is precise.
+ */
+export function redactStartEventArgv(argv: string[], usesWindowsMessageFile: boolean): string[] {
+  if (!usesWindowsMessageFile) return argv;
+  return [...argv.slice(0, -1), "<message file>"];
+}
+
 export type AgentParse =
   | { kind: "delta"; text: string }
   | { kind: "meta"; key: string; value: unknown }
