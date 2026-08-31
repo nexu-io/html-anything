@@ -1,5 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync, writeFileSync, unlinkSync } from "node:fs";
+import { existsSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { resolveOnPath, AGENTS, type AgentDef, type AgentProtocol } from "./agents-detect.js";
@@ -184,6 +184,18 @@ function envFor(agent: string): NodeJS.ProcessEnv {
   const base = { ...process.env };
   if (agent === "gemini") base.GEMINI_CLI_TRUST_WORKSPACE = "true";
   return base;
+}
+
+export function createMessageFile(prompt: string): {filePath: string; cleanup: () => void;} {
+  const dir = mkdtempSync(path.join(os.tmpdir(), "html-anything-agent-message-"));
+  const filePath = path.join(dir, "message.txt");
+  writeFileSync(filePath, prompt, { encoding: "utf8", mode: 0o600 });
+  const cleanup = () => {
+    try {
+      rmSync(dir, { recursive: true, force: true });
+    } catch {}
+  };
+  return { filePath, cleanup };
 }
 
 // ─── stdout parser ────────────────────────────────────────────────────
@@ -465,7 +477,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
     async start(controller) {
       let closed = false;
       let child: ChildProcessWithoutNullStreams | null = null;
-      let messageFilePath: string | undefined;
+      let messageFile: { filePath: string; cleanup: () => void } | undefined;
 
       const safeEnqueue = (ev: InvokeEvent) => {
         if (closed) return;
@@ -483,11 +495,9 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         } catch {}
       };
       const cleanupMessageFile = () => {
-        if (messageFilePath) {
-          try {
-            unlinkSync(messageFilePath);
-          } catch {}
-          messageFilePath = undefined;
+        if (messageFile) {
+          messageFile.cleanup();
+          messageFile = undefined;
         }
       };
 
@@ -516,9 +526,8 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       if (promptViaArgv) argv = [...argv, opts.prompt];
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
       if (promptViaFileFlag) {
-        messageFilePath = path.join(os.tmpdir(), `agent-message-${Date.now()}.txt`);
-        writeFileSync(messageFilePath, opts.prompt, "utf8");
-        argv = [...argv, "--message-file", messageFilePath];
+        messageFile = createMessageFile(opts.prompt);
+        argv = [...argv, "--message-file", messageFile.filePath];
       }
       try {
         child = spawn(bin, argv, {
@@ -532,7 +541,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           type: "error",
           message: err instanceof Error ? err.message : String(err),
         });
-        cleanupMessageFile()
+        cleanupMessageFile();
         safeClose();
         return;
       }
@@ -636,7 +645,6 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
     },
     cancel() {},
   });
-  })();
 }
 
 function errorStream(message: string): ReadableStream<InvokeEvent> {

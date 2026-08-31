@@ -1,6 +1,8 @@
 import { vi, describe, it, expect, afterEach } from "vitest";
 import { EventEmitter } from "node:events";
 import { PassThrough, Writable } from "node:stream";
+import { readFileSync, statSync } from "node:fs";
+import path from "node:path";
 
 const { mockSpawn, existsSyncDelegate } = vi.hoisted(() => ({
   mockSpawn: vi.fn(),
@@ -16,7 +18,7 @@ vi.mock("node:fs", async () => {
   return { ...actual, existsSync: existsSyncDelegate };
 });
 
-import { invokeAgent, type InvokeEvent } from "../agents-invoke.js";
+import { invokeAgent, createMessageFile, type InvokeEvent } from "../agents-invoke.js";
 
 function makeFakeChild() {
   const stdout = new PassThrough();
@@ -32,6 +34,7 @@ function makeFakeChild() {
     stdout,
     stderr,
     pid: 99999,
+    kill: () => true,
   });
 
   return { child, stdout, stderr, stdin };
@@ -526,5 +529,101 @@ describe("invokeAgent", () => {
       expect(htmls).toHaveLength(0);
     });
 
+  });
+});
+
+describe("createMessageFile", () => {
+  it("returns distinct files with intact contents for invocations created in the same millisecond", () => {
+    const handles: ReturnType<typeof createMessageFile>[] = [];
+    for (let i = 0; i < 25; i++) {
+      handles.push(createMessageFile(`prompt-${i}`));
+    }
+
+    const paths = new Set(handles.map((h) => h.filePath));
+    expect(paths.size).toBe(handles.length);
+
+    handles.forEach((h, i) => {
+      expect(readFileSync(h.filePath, "utf8")).toBe(`prompt-${i}`);
+    });
+
+    for (const h of handles) {
+      h.cleanup();
+      h.cleanup();
+    }
+    const remaining = handles.filter(
+      (h) => statSync(path.dirname(h.filePath), { throwIfNoEntry: false }) !== undefined,
+    );
+    expect(remaining).toHaveLength(0);
+  });
+
+  it(
+    "creates the prompt file with restrictive permissions (not relying on umask)",
+    { skip: process.platform === "win32" },
+    () => {
+      const h = createMessageFile("secret");
+      expect(statSync(path.dirname(h.filePath)).mode & 0o777).toBe(0o700);
+      expect(statSync(h.filePath).mode & 0o777).toBe(0o600);
+      h.cleanup();
+    },
+  );
+});
+
+describe("openclaw file-protocol prompt file concurrency", () => {
+  it("passes distinct prompt files to concurrent invocations and cleanup of one does not affect the other", async () => {
+    const messagePaths: string[] = [];
+    const invokeChildren: ReturnType<typeof makeFakeChild>["child"][] = [];
+    mockSpawn.mockImplementation((_bin: string, argv: string[]) => {
+      if (argv[0] === "agents" && argv[1] === "list") {
+        const listFake = makeFakeChild();
+        queueMicrotask(() => {
+          listFake.stdout.write("- main-agent\n");
+          listFake.stdout.end();
+          listFake.child.emit("close", 0);
+        });
+        return listFake.child;
+      }
+      const idx = argv.indexOf("--message-file");
+      if (idx !== -1) messagePaths.push(argv[idx + 1]);
+      const fake = makeFakeChild();
+      invokeChildren.push(fake.child);
+      return fake.child;
+    });
+
+    const streamA = invokeAgent({
+      agent: "openclaw",
+      prompt: "PROMPT-A",
+      binOverride: BIN_OVERRIDE,
+    });
+    const streamB = invokeAgent({
+      agent: "openclaw",
+      prompt: "PROMPT-B",
+      binOverride: BIN_OVERRIDE,
+    });
+
+    for (let i = 0; i < 200 && (messagePaths.length < 2 || invokeChildren.length < 2); i++) {
+      await new Promise((r) => setTimeout(r, 5));
+    }
+    const eventsA = collectStream(streamA);
+    const eventsB = collectStream(streamB);
+
+    expect(messagePaths).toHaveLength(2);
+    expect(messagePaths[0]).not.toBe(messagePaths[1]);
+    const contents = new Set(messagePaths.map((p) => readFileSync(p, "utf8")));
+    expect(contents).toEqual(new Set(["PROMPT-A", "PROMPT-B"]));
+    const contentBefore = messagePaths.map((p) => readFileSync(p, "utf8"));
+
+    invokeChildren[0].stdout.end();
+    invokeChildren[0].emit("close", 0);
+    await eventsA;
+
+    expect(statSync(messagePaths[1], { throwIfNoEntry: false })).toBeDefined();
+    expect(readFileSync(messagePaths[1], "utf8")).toBe(contentBefore[1]);
+
+    invokeChildren[1].stdout.end();
+    invokeChildren[1].emit("close", 0);
+    await eventsB;
+
+    expect(statSync(messagePaths[0], { throwIfNoEntry: false })).toBeUndefined();
+    expect(statSync(messagePaths[1], { throwIfNoEntry: false })).toBeUndefined();
   });
 });
