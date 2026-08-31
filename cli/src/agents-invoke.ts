@@ -1,6 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, writeFileSync, unlinkSync } from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import { resolveOnPath, AGENTS, type AgentDef, type AgentProtocol } from "./agents-detect.js";
 
 export type InvokeOpts = {
@@ -458,11 +459,13 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
   const env = envFor(opts.agent);
   const promptViaArgv = def.protocol === "argv";
   const promptViaMessageFlag = def.protocol === "argv-message";
+  const promptViaFileFlag = def.protocol === "file";
 
   return new ReadableStream<InvokeEvent>({
     async start(controller) {
       let closed = false;
       let child: ChildProcessWithoutNullStreams | null = null;
+      let messageFilePath: string | undefined;
 
       const safeEnqueue = (ev: InvokeEvent) => {
         if (closed) return;
@@ -478,6 +481,14 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         try {
           controller.close();
         } catch {}
+      };
+      const cleanupMessageFile = () => {
+        if (messageFilePath) {
+          try {
+            unlinkSync(messageFilePath);
+          } catch {}
+          messageFilePath = undefined;
+        }
       };
 
       let argv: string[];
@@ -504,7 +515,11 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       }
       if (promptViaArgv) argv = [...argv, opts.prompt];
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
-
+      if (promptViaFileFlag) {
+        messageFilePath = path.join(os.tmpdir(), `agent-message-${Date.now()}.txt`);
+        writeFileSync(messageFilePath, opts.prompt, "utf8");
+        argv = [...argv, "--message-file", messageFilePath];
+      }
       try {
         child = spawn(bin, argv, {
           cwd: opts.cwd ?? process.cwd(),
@@ -517,6 +532,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           type: "error",
           message: err instanceof Error ? err.message : String(err),
         });
+        cleanupMessageFile()
         safeClose();
         return;
       }
@@ -563,6 +579,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
 
       child.on("error", (err) => {
         safeEnqueue({ type: "error", message: err.message });
+        cleanupMessageFile();
         safeClose();
       });
 
@@ -604,6 +621,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           }
         }
         safeEnqueue({ type: "done", code });
+        cleanupMessageFile();
         safeClose();
       });
 
@@ -611,12 +629,14 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         try {
           child?.kill("SIGTERM");
         } catch {}
+        cleanupMessageFile();
         safeClose();
       };
       opts.signal?.addEventListener("abort", onAbort, { once: true });
     },
     cancel() {},
   });
+  })();
 }
 
 function errorStream(message: string): ReadableStream<InvokeEvent> {
