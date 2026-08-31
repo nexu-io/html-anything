@@ -7,7 +7,7 @@ import path, { delimiter, join } from "node:path";
  * prompt and how it parses output:
  *   - "stdin"        : pipe prompt → child stdin, parse stdout via parseLine
  *   - "argv"         : pass prompt as positional argv (deepseek-tui), parse stdout as plain
- *   - "argv-message" : prompt goes via `--message <text>` (openclaw); stdout is
+ *   - "argv-message" : prompt goes via `--message <text>` (openclaw)(older); stdout is
  *                      a single multi-line JSON document (not ndjson), parsed
  *                      after the child closes.
  *   - "acp"          : ACP JSON-RPC over stdio (hermes/kimi/devin/kiro/kilo/vibe).
@@ -15,8 +15,11 @@ import path, { delimiter, join } from "node:path";
  *                      the user sees install instructions, but invoke emits a
  *                      clear error pointing them to a supported agent.
  *   - "pi-rpc"       : pi's custom JSON-RPC mode. Same status as "acp".
+ *   - "file"         : prompt goes via `--message-file <file-path>` (openclaw)(newer); stdout is
+ *                      a single multi-line JSON document (not ndjson), parsed
+ *                      after the child closes.
  */
-export type AgentProtocol = "stdin" | "argv" | "argv-message" | "acp" | "pi-rpc";
+export type AgentProtocol = "stdin" | "argv" | "argv-message" | "acp" | "pi-rpc" | "file";
 
 export type ModelOption = { id: string; label: string };
 
@@ -64,15 +67,15 @@ export const AGENTS: AgentDef[] = [
   },
   {
     // OpenClaw is a multi-channel agent gateway, not a Claude-CLI fork —
-    // its CLI surface is `openclaw agent --message <text>` and it returns a
-    // single multi-line JSON blob (no streaming). The "argv-message"
-    // protocol covers the prompt-via-flag and post-close JSON parse.
+    // its CLI surface is `openclaw agent --message <text>` or `openclaw agent --message-file <text>` and it returns a
+    // single multi-line JSON blob (no streaming). Ues the "file"
+    // protocol covers the multiline prompt-via-flag and post-close JSON parse.
     id: "openclaw",
     label: "OpenClaw",
     bin: "openclaw",
     envOverride: "OPENCLAW_BIN",
     vendor: "OpenClaw multi-channel agent gateway",
-    protocol: "argv-message",
+    protocol: "file",
     fallbackModels: [
       DEFAULT_MODEL,
       // Models surface as overrides for OpenClaw's routing; the CLI accepts
