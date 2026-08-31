@@ -6,7 +6,7 @@ import path, { delimiter, join } from "node:path";
  * Agent detection — adapted from next/src/lib/agents/detect.ts
  */
 
-export type AgentProtocol = "stdin" | "argv" | "argv-message" | "acp" | "pi-rpc";
+export type AgentProtocol = "stdin" | "argv" | "argv-message" | "acp" | "pi-rpc" | "file";
 
 export type ModelOption = { id: string; label: string };
 
@@ -47,7 +47,7 @@ export const AGENTS: AgentDef[] = [
     bin: "openclaw",
     envOverride: "OPENCLAW_BIN",
     vendor: "OpenClaw multi-channel agent gateway",
-    protocol: "argv-message",
+    protocol: "file",
     fallbackModels: [
       DEFAULT_MODEL,
       { id: "openrouter/anthropic/claude-opus-4.7", label: "Opus 4.7 (OpenRouter)" },
