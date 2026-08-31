@@ -1,5 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, writeFileSync, unlinkSync } from "node:fs";
+import path from "node:path";
+import os from "node:os";
 import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
 import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
 
@@ -102,11 +104,13 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
   const env = envFor(opts.agent);
   const promptViaArgv = def.protocol === "argv";
   const promptViaMessageFlag = def.protocol === "argv-message";
+  const promptViaFileFlag = def.protocol === "file";
 
   return new ReadableStream<InvokeEvent>({
     async start(controller) {
       let closed = false;
       let child: ChildProcessWithoutNullStreams | null = null;
+      let messageFilePath: string | undefined;
 
       const safeEnqueue = (ev: InvokeEvent) => {
         if (closed) return;
@@ -122,6 +126,14 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         try {
           controller.close();
         } catch {}
+      };
+      const cleanupMessageFile = () => {
+        if (messageFilePath) {
+          try {
+            unlinkSync(messageFilePath);
+          } catch {}
+          messageFilePath = undefined;
+        }
       };
 
       // Resolve agent-specific argv. For openclaw we first probe `agents
@@ -150,12 +162,18 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         safeClose();
         return;
       }
+      console.debug(opts)
       // `protocol: "argv"` adapters (deepseek-tui today) take the prompt as a
       // trailing positional arg rather than reading from stdin.
       if (promptViaArgv) argv = [...argv, opts.prompt];
-      // `protocol: "argv-message"` (openclaw today) wants the prompt under
       // an explicit `--message <text>` flag.
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
+      // `protocol: "file"` (openclaw today) wants the prompt under a file
+      if (promptViaFileFlag) {
+          messageFilePath = path.join(os.tmpdir(), `agent-message-${Date.now()}.txt`);
+          writeFileSync(messageFilePath, opts.prompt, "utf8");
+          argv = [...argv, "--message-file", messageFilePath];
+      }
 
       try {
         // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
@@ -178,6 +196,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           type: "error",
           message: err instanceof Error ? err.message : String(err),
         });
+        cleanupMessageFile()
         safeClose();
         return;
       }
@@ -236,6 +255,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
 
       child.on("error", (err) => {
         safeEnqueue({ type: "error", message: err.message });
+        cleanupMessageFile()
         safeClose();
       });
 
@@ -303,6 +323,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           }
         }
         safeEnqueue({ type: "done", code });
+        cleanupMessageFile()
         safeClose();
       });
 
@@ -310,6 +331,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         try {
           child?.kill("SIGTERM");
         } catch {}
+        cleanupMessageFile()
         safeClose();
       };
       opts.signal?.addEventListener("abort", onAbort, { once: true });
