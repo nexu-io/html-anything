@@ -1,5 +1,56 @@
 import { describe, expect, it } from "vitest";
-import { parseLine, makeParser } from "../argv";
+import { parseLine, makeParser, sanitizeAgentStderrLine } from '../argv';
+
+describe('parseLine codex lifecycle', () => {
+  it('reports the thread and generation start', () => {
+    expect(
+      parseLine(
+        'codex',
+        JSON.stringify({ type: 'thread.started', thread_id: 'thread_fixture' }),
+      ),
+    ).toEqual([{ kind: 'meta', key: 'session', value: 'thread_fixture' }]);
+
+    expect(parseLine('codex', JSON.stringify({ type: 'turn.started' }))).toEqual([
+      { kind: 'meta', key: 'phase', value: 'generating' },
+    ]);
+  });
+
+  it('reports diagnostic items as warnings instead of HTML', () => {
+    expect(
+      parseLine(
+        'codex',
+        JSON.stringify({
+          type: 'item.completed',
+          item: { type: 'error', message: 'Synthetic diagnostic' },
+        }),
+      ),
+    ).toEqual([
+      { kind: 'meta', key: 'warning', value: 'Synthetic diagnostic' },
+    ]);
+  });
+});
+
+describe('sanitizeAgentStderrLine', () => {
+  it('redacts the response body from Codex model refresh diagnostics', () => {
+    expect(
+      sanitizeAgentStderrLine(
+        'codex',
+        'ERROR codex_models_manager::manager: failed to refresh available models: decode failed; body: {"data":[{"id":"synthetic-model"}]}',
+      ),
+    ).toBe(
+      'ERROR codex_models_manager::manager: failed to refresh available models: decode failed; body: <redacted>',
+    );
+  });
+
+  it('preserves unrelated stderr', () => {
+    expect(sanitizeAgentStderrLine('codex', 'ordinary stderr')).toBe(
+      'ordinary stderr',
+    );
+    expect(sanitizeAgentStderrLine('claude', 'ordinary stderr')).toBe(
+      'ordinary stderr',
+    );
+  });
+});
 
 describe("parseLine opencode", () => {
   it("extracts text from nested part payload", () => {
@@ -218,4 +269,3 @@ describe("parseLine bob", () => {
     ]);
   });
 });
-

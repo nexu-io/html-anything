@@ -146,6 +146,19 @@ export function envFor(agent: string): NodeJS.ProcessEnv {
   return base;
 }
 
+const CODEX_MODEL_REFRESH_DIAGNOSTIC =
+  'codex_models_manager::manager: failed to refresh available models';
+const RESPONSE_BODY_MARKER = '; body: ';
+
+export function sanitizeAgentStderrLine(agent: string, line: string): string {
+  if (agent !== 'codex' || !line.includes(CODEX_MODEL_REFRESH_DIAGNOSTIC)) {
+    return line;
+  }
+  const bodyIndex = line.indexOf(RESPONSE_BODY_MARKER);
+  if (bodyIndex === -1) return line;
+  return `${line.slice(0, bodyIndex + RESPONSE_BODY_MARKER.length)}<redacted>`;
+}
+
 export type AgentParse =
   | { kind: "delta"; text: string }
   | { kind: "meta"; key: string; value: unknown }
@@ -312,14 +325,28 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   }
 
   if (agent === "codex") {
+    if (obj.type === 'thread.started' && typeof obj.thread_id === 'string') {
+      out.push({ kind: 'meta', key: 'session', value: obj.thread_id });
+    }
+    if (obj.type === 'turn.started') {
+      out.push({ kind: 'meta', key: 'phase', value: 'generating' });
+    }
     if (obj.type === "item.completed" && obj.item && typeof obj.item === "object") {
-      const item = obj.item as { item_type?: string; type?: string; text?: string };
+      const item = obj.item as {
+        item_type?: string;
+        type?: string;
+        text?: string;
+        message?: string;
+      };
       const itemType = item.item_type ?? item.type;
       if (
         (itemType === "assistant_message" || itemType === "agent_message") &&
         typeof item.text === "string"
       ) {
         out.push({ kind: "delta", text: item.text });
+      }
+      if (itemType === 'error' && typeof item.message === 'string') {
+        out.push({ kind: 'meta', key: 'warning', value: item.message });
       }
     }
     if (obj.type === "item.delta" && typeof obj.text === "string") {

@@ -14,6 +14,37 @@ type ConvertReq = {
   model?: string;
 };
 
+type ConversionOutcome =
+  | { status: 'done' }
+  | { status: 'error'; message: string };
+
+export function conversionOutcome(
+  exitCode: number | null | undefined,
+  html: string,
+  agentError?: string,
+): ConversionOutcome {
+  if (agentError) return { status: 'error', message: agentError };
+  if (exitCode === null || exitCode === undefined) {
+    return {
+      status: 'error',
+      message: 'Agent process ended without an exit code.',
+    };
+  }
+  if (exitCode !== 0) {
+    return {
+      status: 'error',
+      message: `Agent process exited with code ${exitCode}.`,
+    };
+  }
+  if (!html.trim()) {
+    return {
+      status: 'error',
+      message: 'Agent exited successfully but returned no HTML.',
+    };
+  }
+  return { status: 'done' };
+}
+
 /** prefix logged when the run is sent in diff-edit mode (vs full regeneration) */
 const DIFF_LOG_PREFIX = "🔁 diff-edit 模式";
 
@@ -113,6 +144,8 @@ export function useConvert() {
         const dec = new TextDecoder();
         let buf = "";
         let lastEvent = "";
+        let terminalCode: number | null | undefined;
+        let agentError: string | undefined;
 
         while (true) {
           const { value, done } = await reader.read();
@@ -139,15 +172,38 @@ export function useConvert() {
             } catch {
               continue;
             }
+            const eventData = data as Record<string, unknown>;
+            if (event === 'done') {
+              terminalCode =
+                typeof eventData.code === 'number' ? eventData.code : null;
+            } else if (
+              event === 'error' &&
+              typeof eventData.message === 'string'
+            ) {
+              agentError ??= eventData.message;
+            }
             handleEvent(taskId, event, data, startedAt);
           }
         }
         const endedAt = Date.now();
-        useStore.getState().patchStatsFor(taskId, { endedAt, durationMs: endedAt - startedAt });
-        useStore.getState().setStatusFor(taskId, "done");
-        // record the just-finished (content, html) as the new diff-edit baseline
-        // so the user's next edit goes through diff mode instead of full regen
-        useStore.getState().commitBaseFor(taskId);
+        const finalStore = useStore.getState();
+        finalStore.patchStatsFor(taskId, {
+          endedAt,
+          durationMs: endedAt - startedAt,
+        });
+        const html = finalStore.tasks.find((t) => t.id === taskId)?.html ?? '';
+        const outcome = conversionOutcome(terminalCode, html, agentError);
+        finalStore.setStatusFor(taskId, outcome.status);
+        if (outcome.status === 'done') {
+          // record the just-finished (content, html) as the new diff-edit baseline
+          // so the user's next edit goes through diff mode instead of full regen
+          finalStore.commitBaseFor(taskId);
+        } else if (!agentError) {
+          finalStore.pushLogFor(taskId, {
+            kind: 'error',
+            text: outcome.message,
+          });
+        }
       } catch (err) {
         if ((err as Error)?.name === "AbortError") {
           useStore.getState().pushLogFor(taskId, { kind: "info", text: "已取消" });
@@ -296,6 +352,8 @@ function formatMeta(key: string, value: unknown): string {
   if (key === "duration_ms") return `duration = ${value} ms`;
   if (key === "cost_usd" && typeof value === "number") return `cost ≈ $${value.toFixed(4)}`;
   if (key === "result") return `result = ${value}`;
+  if (key === 'phase' && value === 'generating') return 'Codex 已开始生成';
+  if (key === 'warning') return `warning: ${String(value)}`;
   if (key === "rate_limit" && value && typeof value === "object") {
     const r = value as { status?: string; rateLimitType?: string };
     return `rate-limit: ${r.status} (${r.rateLimitType})`;
