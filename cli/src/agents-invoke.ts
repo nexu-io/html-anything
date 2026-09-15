@@ -230,12 +230,12 @@ function rescueHtmlFromToolUse(
 }
 
 function parseLineWithState(agent: string, line: string, state: ParseState): AgentParse[] {
+  if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui") {
+    return [{ kind: "delta", text: line + "\n" }];
+  }
+
   const trimmed = line.trim();
   if (!trimmed) return [];
-
-  if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui") {
-    return [{ kind: "delta", text: trimmed.endsWith("\n") ? trimmed : trimmed + "\n" }];
-  }
 
   let parsed: unknown;
   try {
@@ -546,7 +546,6 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         while ((nl = stdoutBuf.indexOf("\n")) !== -1) {
           const line = stdoutBuf.slice(0, nl);
           stdoutBuf = stdoutBuf.slice(nl + 1);
-          if (!line) continue;
           for (const part of parse(line)) {
             if (part.kind === "delta") safeEnqueue({ type: "delta", text: part.text });
             else if (part.kind === "html") safeEnqueue({ type: "html", text: part.text });

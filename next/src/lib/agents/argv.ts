@@ -240,14 +240,14 @@ function rescueHtmlFromToolUse(
 }
 
 function parseLineWithState(agent: string, line: string, state: ParseState): AgentParse[] {
-  const trimmed = line.trim();
-  if (!trimmed) return [];
-
   // Aider / DeepSeek — plain text streaming on stdout (DeepSeek tool calls
   // go to stderr, which is forwarded as `stderr` events, not parsed here).
   if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui") {
-    return [{ kind: "delta", text: trimmed.endsWith("\n") ? trimmed : trimmed + "\n" }];
+    return [{ kind: "delta", text: line + "\n" }];
   }
+
+  const trimmed = line.trim();
+  if (!trimmed) return [];
 
   let parsed: unknown;
   try {

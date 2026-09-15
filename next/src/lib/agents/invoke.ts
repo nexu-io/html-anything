@@ -213,7 +213,6 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         while ((nl = stdoutBuf.indexOf("\n")) !== -1) {
           const line = stdoutBuf.slice(0, nl);
           stdoutBuf = stdoutBuf.slice(nl + 1);
-          if (!line) continue;
           for (const part of parse(line)) {
             // Some agents (bob) may echo the entire prompt back as the first
             // streamed delta. Suppress that to avoid polluting the user-facing
