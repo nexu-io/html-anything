@@ -11,6 +11,7 @@ import {
   downloadIframeAsImage,
 } from "@/lib/export/image";
 import { downloadHtml } from "@/lib/export/download";
+import { exportIframeAsPdf } from "@/lib/export/pdf";
 import { extractHtml } from "@/lib/extract-html";
 import { parseDeck } from "@/lib/deck";
 import {
@@ -98,6 +99,9 @@ export function ExportMenu({ iframeRef }: ExportMenuProps) {
         { id: "download-html", label: t("export.action.downloadHtml"), emoji: "💾", fn: wrap(t("export.toast.htmlSaved"), async () => { downloadHtml(cleanHtml()); }) },
         { id: "download-png",  label: t("export.action.downloadPng"),  emoji: "🖼️", fn: wrap(t("export.toast.imgSaved"), async () => {
           if (!iframeRef.current) throw new Error(t("export.error.previewNotReady")); await downloadIframeAsImage(iframeRef.current);
+        }) },
+        { id: "download-pdf",  label: t("export.action.downloadPdf"),  emoji: "📄", fn: wrap(t("export.toast.pdfSaved"), async () => {
+          if (!iframeRef.current) throw new Error(t("export.error.previewNotReady")); exportIframeAsPdf(iframeRef.current);
         }) },
       ],
     },
