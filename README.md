@@ -511,11 +511,11 @@ If you've shipped your first PR — welcome. The [`good-first-issue` / `help-wan
 
 ## Star History
 
-<a href="https://star-history.com/#nexu-io/html-anything&Date">
+<a href="https://star-history.dera.page/#nexu-io/html-anything&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date" />
-    <img alt="HTML Anything star history" src="https://api.star-history.com/svg?repos=nexu-io/html-anything&type=Date" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date" />
+    <img alt="HTML Anything star history" src="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date" />
   </picture>
 </a>
 
