@@ -208,6 +208,25 @@ On startup we scan `PATH` (including `~/.local/bin`, `~/.bun/bin`, `/opt/homebre
 
 If you've already done `claude login` / `cursor login` / `gemini auth` in your terminal, HTML Anything reuses that session. **No second copy of the API key required.**
 
+## Community integrations
+
+### [Floatboat](https://floatboat.ai/combostore/html-anything-4a58QO)
+
+Floatboat is available as an in-app community integration. Install the **html-anything** Combo Skill from the Floatboat Combo Skill Store, then use it inside Floatboat.
+
+<table>
+<tr>
+<td width="50%">
+<img src="https://github.com/user-attachments/assets/6049b725-811c-490a-93ec-4d60436e6c98" alt="HTML Anything running inside the Floatboat workspace" /><br/>
+<sub><b>In-app workflow</b> — Review the task context, HTML Anything workspace, and generated page side by side in Floatboat.</sub>
+</td>
+<td width="50%">
+<img src="https://github.com/user-attachments/assets/0f1c584a-8b5c-428a-b16c-4be3bdfc70e5" alt="HTML deliverable created with HTML Anything in Floatboat" /><br/>
+<sub><b>Deliverable preview</b> — Turn a brief into a polished HTML page and review the result in Floatboat.</sub>
+</td>
+</tr>
+</table>
+
 ## Skills
 
 **75 skills under [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/)**, each a folder following the Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) convention plus an extended frontmatter (`mode` · `scenario` · `surface` · `preview` · `design_system`).
