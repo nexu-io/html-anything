@@ -26,6 +26,33 @@ export async function copyHtml(html: string, plain?: string): Promise<void> {
   await copySafari(html, fallback);
 }
 
+/**
+ * Start the ClipboardItem write during the user gesture while allowing its
+ * Blob payloads to resolve after a fresh render has settled. Chromium keeps
+ * the activation associated with this write, unlike awaiting the render first.
+ */
+export async function copyHtmlWhenReady(htmlPromise: Promise<string>): Promise<void> {
+  if (typeof window === "undefined") throw new Error("server-side");
+  const fallbackPromise = htmlPromise.then(stripTags);
+
+  if (navigator.clipboard && typeof window.ClipboardItem !== "undefined") {
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": htmlPromise.then((html) => new Blob([html], { type: "text/html" })),
+          "text/plain": fallbackPromise.then((plain) => new Blob([plain], { type: "text/plain" })),
+        }),
+      ]);
+      return;
+    } catch {
+      // fall through after the render promise settles
+    }
+  }
+
+  const html = await htmlPromise;
+  await copySafari(html, await fallbackPromise);
+}
+
 export async function copyImage(blob: Blob): Promise<void> {
   if (!navigator.clipboard || typeof window.ClipboardItem === "undefined") {
     throw new Error("Image clipboard not supported in this browser");
