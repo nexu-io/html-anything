@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { parseDeck, type DeckSlide } from "@/lib/deck";
 import { useT } from "@/lib/i18n";
+import { isEditableTarget } from "@/lib/iframe-key";
 
 type Props = {
   html: string;
@@ -80,6 +81,15 @@ export function DeckViewer({ html, active, onMainIframe, onSlides }: Props) {
     }
   }, []);
 
+  const handleIframeLoad = useCallback((e: React.SyntheticEvent<HTMLIFrameElement>) => {
+    const iframeWin = e.currentTarget.contentWindow;
+    if (!iframeWin) return;
+    iframeWin.addEventListener("keydown", (ev) => {
+      if (isEditableTarget(ev.target)) return;
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: ev.key, bubbles: true, cancelable: true }));
+    });
+  }, []);
+
   if (slides.length === 0) {
     return (
       <div className="grid h-full place-items-center text-[13px] text-[var(--ink-mute)]">
@@ -106,6 +116,7 @@ export function DeckViewer({ html, active, onMainIframe, onSlides }: Props) {
           sandbox="allow-scripts allow-same-origin"
           className="h-full w-full"
           style={{ background: current.bg ?? "#fff", border: "0" }}
+          onLoad={handleIframeLoad}
         />
 
         {/* floating prev/next arrows */}
