@@ -1,7 +1,17 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { existsSync } from "node:fs";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
-import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
+import {
+  buildArgv,
+  buildMessageFlagArgv,
+  envFor,
+  makeParser,
+  redactStartEventArgv,
+  UnsupportedAgentProtocolError,
+} from "./argv";
 
 export type InvokeOpts = {
   agent: string;
@@ -154,8 +164,51 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       // trailing positional arg rather than reading from stdin.
       if (promptViaArgv) argv = [...argv, opts.prompt];
       // `protocol: "argv-message"` (openclaw today) wants the prompt under
-      // an explicit `--message <text>` flag.
-      if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
+      // an explicit `--message <text>` flag — except on Windows, where that
+      // breaks on embedded newlines/spaces (see buildMessageFlagArgv's
+      // comment and #96); there it goes through a temp file instead.
+      let messageFileDir: string | null = null;
+      // On Windows only, `close` can fire for an aborted request before the
+      // real agent process has actually exited: `child` is the `cmd.exe`
+      // wrapper `shell: true` spawns, and killing it does not propagate to
+      // the grandchild `.cmd`-shim process it launched, which may still be
+      // reading the message file. Skip cleanup in that case rather than
+      // risk deleting the file out from under a still-running orphan — the
+      // small leaked temp file is a better trade-off than a corrupted read.
+      let aborted = false;
+      const usesWindowsMessageFile = promptViaMessageFlag && process.platform === "win32";
+      if (promptViaMessageFlag) {
+        let messageFilePath = "";
+        if (usesWindowsMessageFile) {
+          try {
+            messageFileDir = await mkdtemp(join(tmpdir(), "html-anything-msg-"));
+            messageFilePath = join(messageFileDir, "prompt.txt");
+            await writeFile(messageFilePath, opts.prompt, "utf8");
+          } catch (err) {
+            if (messageFileDir) {
+              try {
+                await rm(messageFileDir, { recursive: true, force: true });
+              } catch {}
+              messageFileDir = null;
+            }
+            safeEnqueue({
+              type: "error",
+              message: `Failed to prepare OpenClaw message file: ${err instanceof Error ? err.message : String(err)}`,
+            });
+            safeClose();
+            return;
+          }
+        }
+        argv = [...argv, ...buildMessageFlagArgv(process.platform, opts.prompt, messageFilePath)];
+      }
+      const cleanupMessageFile = async () => {
+        if (!messageFileDir || aborted) return;
+        const dir = messageFileDir;
+        messageFileDir = null;
+        try {
+          await rm(dir, { recursive: true, force: true });
+        } catch {}
+      };
 
       try {
         // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
@@ -174,6 +227,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           windowsVerbatimArguments: false,
         });
       } catch (err) {
+        await cleanupMessageFile();
         safeEnqueue({
           type: "error",
           message: err instanceof Error ? err.message : String(err),
@@ -185,7 +239,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       safeEnqueue({
         type: "start",
         bin: bin!,
-        argv,
+        argv: redactStartEventArgv(argv, usesWindowsMessageFile),
         promptBytes: Buffer.byteLength(opts.prompt, "utf8"),
       });
 
@@ -235,11 +289,13 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       });
 
       child.on("error", (err) => {
+        cleanupMessageFile();
         safeEnqueue({ type: "error", message: err.message });
         safeClose();
       });
 
       child.on("close", (code) => {
+        cleanupMessageFile();
         if (opts.agent === "openclaw") {
           // OpenClaw's `agent --local --json` emits one pretty-printed JSON
           // document on stdout. The visible reply is at
@@ -307,6 +363,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       });
 
       const onAbort = () => {
+        aborted = true;
         try {
           child?.kill("SIGTERM");
         } catch {}
