@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Product Hunt Times · HTML Anything · #1 of the day</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper:  #f3eee2;
+    --tint:   #ece5d3;
+    --ink:    #1f1c17;
+    --muted:  #6e6a5d;
+    --rule:   #d3cdbe;
+    --accent: #c2492c;
+    --display: 'Playfair Display', 'Noto Serif SC', Georgia, serif;
+    --sans:    'Inter', 'Noto Sans SC', system-ui, sans-serif;
+    --mono:    'JetBrains Mono', ui-monospace, monospace;
+  }
+  html, body { background: #e9e2d2; }
+  body {
+    font-family: var(--sans); color: var(--ink); margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  .display { font-family: var(--display); }
+  .mono    { font-family: var(--mono); font-feature-settings: 'tnum'; font-variant-numeric: tabular-nums; }
+  .kicker  { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .paper   {
+    background: var(--paper);
+    background-image: radial-gradient(circle, rgba(31,28,23,0.06) 1px, transparent 1.4px);
+    background-size: 16px 16px;
+  }
+  .rule    { border: 0; border-top: 1px solid var(--rule); }
+  .rule-thick { background: var(--ink); height: 4px; }
+  .em-italic { font-family: var(--display); font-style: italic; font-weight: 500; }
+  .blink-dot { animation: blink 1.6s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: .35 } }
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-10">
+
+  <!-- Front-page card -->
+  <article class="paper w-[1120px]" style="outline:1px solid var(--rule); outline-offset:-1px">
+
+    <!-- ① Masthead -->
+    <header class="px-12 pt-7">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <!-- ★ ornament -->
+          <svg viewBox="0 0 24 24" class="w-[18px] h-[18px]" fill="var(--accent)"><path d="M12 1.5l3.1 7 7.4.7-5.6 5 1.7 7.3L12 17.6 5.4 21.5 7.1 14.2 1.5 9.2l7.4-.7z"/></svg>
+          <span class="display text-[20px] font-bold tracking-tight" style="letter-spacing:0.04em">PRODUCT HUNT TIMES</span>
+          <svg viewBox="0 0 24 24" class="w-[18px] h-[18px]" fill="var(--accent)"><path d="M12 1.5l3.1 7 7.4.7-5.6 5 1.7 7.3L12 17.6 5.4 21.5 7.1 14.2 1.5 9.2l7.4-.7z"/></svg>
+        </div>
+        <div class="mono text-[11px] uppercase" style="color:var(--muted); letter-spacing:0.18em">
+          Vol. XII &nbsp;·&nbsp; May 15, 2026 &nbsp;·&nbsp; #1 Edition
+        </div>
+        <div class="flex items-center gap-2.5">
+          <span class="mono text-[11px] uppercase" style="color:var(--muted); letter-spacing:0.18em">SF · Web · 30¢</span>
+          <!-- PH cat-head -->
+          <svg viewBox="0 0 40 40" class="w-[22px] h-[22px]" fill="var(--accent)">
+            <circle cx="20" cy="20" r="20"/>
+            <path d="M22.5 21H17v6h-3V13h8.5a4 4 0 010 8zm-5.5-3h5.2a1.7 1.7 0 000-3.4H17V18z" fill="var(--paper)"/>
+          </svg>
+        </div>
+      </div>
+      <hr class="rule mt-3" />
+      <div class="rule-thick mt-1.5"></div>
+    </header>
+
+    <!-- ② Hero -->
+    <section class="px-12 pt-5">
+      <!-- kicker -->
+      <div class="kicker">
+        Maker Opinion <span class="opacity-50 mx-1">··</span> Launch Day <span class="opacity-50 mx-1">··</span>
+        <span style="color:var(--accent); font-weight:600">#1 Product of the Day</span>
+      </div>
+
+      <!-- headline -->
+      <h1 class="display mt-2" style="font-size:60px; line-height:0.98; font-weight:700; letter-spacing:-0.01em">
+        Markdown is dead. Long live <span class="em-italic" style="color:var(--accent)">HTML.</span>
+      </h1>
+
+      <!-- lede -->
+      <p class="em-italic mt-3" style="font-size:19px; line-height:1.4; color:#3f3a30; font-weight:400; max-width:920px">
+        After Anthropic stopped shipping internal docs in markdown, a small SF team rebuilt the editor for the agent era — and shipped it to the front page.
+      </p>
+    </section>
+
+    <hr class="rule mx-12 mt-5" />
+
+    <!-- ③ Two-column body grid -->
+    <section class="px-12 mt-5 grid grid-cols-12 gap-8">
+
+      <!-- LEFT · statistics block -->
+      <aside class="col-span-4 flex flex-col">
+        <!-- upvote -->
+        <div class="flex items-baseline gap-3">
+          <span class="display" style="font-size:72px; line-height:0.9; font-weight:500; letter-spacing:-0.02em">847</span>
+          <svg viewBox="0 0 24 24" class="w-6 h-6" fill="var(--accent)"><path d="M12 4l9 11H3z"/></svg>
+        </div>
+        <div class="kicker mt-1">Upvotes <span class="mx-1 opacity-50">·</span> 8 hours since launch</div>
+
+        <hr class="rule my-3" />
+
+        <!-- comments -->
+        <div class="flex items-baseline gap-3">
+          <span class="display" style="font-size:36px; line-height:0.9; font-weight:500">32</span>
+          <span class="kicker">comments</span>
+        </div>
+        <div class="kicker mt-1" style="font-size:10px">Top thread: “the missing piece.”</div>
+
+        <hr class="rule my-3" />
+
+        <!-- views -->
+        <div class="flex items-baseline gap-3">
+          <span class="display" style="font-size:36px; line-height:0.9; font-weight:500">12.3K</span>
+          <span class="kicker">page views</span>
+        </div>
+        <div class="kicker mt-1" style="font-size:10px">214 saved · 12 countries · climbing</div>
+      </aside>
+
+      <!-- RIGHT · editorial column -->
+      <div class="col-span-8 flex flex-col" style="border-left:1px solid var(--rule); padding-left:32px">
+
+        <div class="kicker">Hunter's Note</div>
+
+        <blockquote class="em-italic mt-2" style="font-size:19px; line-height:1.4; color:var(--ink); font-weight:400">
+          “Just tried it — the SSE streaming into a sandboxed iframe is exactly the missing piece. This is what I wanted markdown editors to grow up into.”
+        </blockquote>
+
+        <div class="mt-2.5 flex items-center gap-2">
+          <span class="mono text-[12px]" style="color:var(--accent)">— @trq212</span>
+          <span class="mono text-[10px] uppercase" style="color:var(--muted); letter-spacing:0.16em">·· first comment, 14 min after launch</span>
+        </div>
+
+        <div class="mt-4" style="width:60px; height:1px; background:var(--ink)"></div>
+
+        <div class="kicker mt-3">Filed Under</div>
+        <div class="mt-1.5" style="font-size:13px; font-weight:500; color:var(--ink)">
+          Developer Tools
+          <span class="mx-2" style="color:var(--rule)">·</span>
+          Open Source
+          <span class="mx-2" style="color:var(--rule)">·</span>
+          Artificial Intelligence
+          <span class="mx-2" style="color:var(--rule)">·</span>
+          <span style="color:var(--muted); font-style:italic">Editorial Tools (new)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④ Byline footer -->
+    <footer class="mt-5 px-12 py-3 flex items-center justify-between" style="background:var(--tint); border-top:1px solid var(--rule)">
+      <div class="flex items-center gap-3">
+        <span class="kicker">Hunted by</span>
+        <span class="text-[13px] font-semibold" style="color:var(--ink)">@nexudotio</span>
+        <svg viewBox="0 0 24 24" class="w-3 h-3" fill="var(--accent)"><path d="M12 1.5l3.1 7 7.4.7-5.6 5 1.7 7.3L12 17.6 5.4 21.5 7.1 14.2 1.5 9.2l7.4-.7z"/></svg>
+        <span class="mono text-[10px] uppercase px-1.5 py-[3px]" style="color:var(--ink); letter-spacing:0.14em; border:1px solid var(--rule)">Maker</span>
+      </div>
+      <div class="flex items-center gap-2.5 mono text-[10px] uppercase" style="color:var(--muted); letter-spacing:0.16em">
+        <span>Joined by 32 makers</span>
+        <span style="color:var(--rule)">·</span>
+        <span>12 countries</span>
+        <span style="color:var(--rule)">·</span>
+        <span class="inline-flex items-center gap-1.5" style="color:var(--accent); font-weight:600">
+          <span class="blink-dot inline-block w-[7px] h-[7px] rounded-full" style="background:var(--accent)"></span>
+          Live now
+        </span>
+      </div>
+    </footer>
+  </article>
+</body>
+</html>
