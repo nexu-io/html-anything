@@ -163,6 +163,39 @@ describe("parseLine opencode", () => {
   });
 });
 
+describe("parseLine copilot", () => {
+  it("emits a single delta when response and text repeat one payload", () => {
+    const line = JSON.stringify({
+      response: "<html><body>Hello</body></html>",
+      text: "<html><body>Hello</body></html>",
+    });
+
+    expect(parseLine("copilot", line)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>Hello</body></html>",
+      },
+    ]);
+  });
+});
+
+describe("parseLine qwen", () => {
+  it("emits a single delta when text, content, and message repeat one payload", () => {
+    const line = JSON.stringify({
+      text: "<html><body>Hello</body></html>",
+      content: "<html><body>Hello</body></html>",
+      message: "<html><body>Hello</body></html>",
+    });
+
+    expect(parseLine("qwen", line)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>Hello</body></html>",
+      },
+    ]);
+  });
+});
+
 describe("parseLine bob", () => {
   it("extracts text from stream-json output", () => {
     const line = JSON.stringify({
@@ -199,6 +232,34 @@ describe("parseLine bob", () => {
       {
         kind: "delta",
         text: "<html><body>Test</body></html>",
+      },
+    ]);
+  });
+
+  it("emits a single delta when text, content, and message repeat one payload", () => {
+    // Some CLIs echo the turn payload under several keys at once. Emitting
+    // one delta per key appends the same HTML two or three times.
+    const line = JSON.stringify({
+      text: "<html><body>Hello</body></html>",
+      content: "<html><body>Hello</body></html>",
+      message: "<html><body>Hello</body></html>",
+    });
+
+    expect(parseLine("bob", line)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>Hello</body></html>",
+      },
+    ]);
+  });
+
+  it("falls back to the next populated field when the first is empty", () => {
+    const line = JSON.stringify({ text: "", content: "<html><body>Hi</body></html>" });
+
+    expect(parseLine("bob", line)).toEqual([
+      {
+        kind: "delta",
+        text: "<html><body>Hi</body></html>",
       },
     ]);
   });

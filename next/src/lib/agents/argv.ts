@@ -372,8 +372,13 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   }
 
   if (agent === "copilot") {
-    if (typeof obj.response === "string") out.push({ kind: "delta", text: obj.response });
-    if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
+    // Copilot can echo the turn payload under both `response` and `text`.
+    // Emit a single delta (first populated field wins), like the opencode
+    // single-pick below — otherwise the same HTML is appended twice.
+    const text = [obj.response, obj.text].find(
+      (value): value is string => typeof value === "string" && value.length > 0,
+    );
+    if (text) out.push({ kind: "delta", text });
   }
 
   if (agent === "opencode") {
@@ -417,15 +422,23 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   }
 
   if (agent === "qwen") {
-    if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
-    if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
-    if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });
+    // Qwen can echo the turn payload under `text`, `content`, and `message`
+    // at once. Emit a single delta (first populated field wins), like the
+    // opencode single-pick above — otherwise the same HTML is appended up to
+    // three times.
+    const text = [obj.text, obj.content, obj.message].find(
+      (value): value is string => typeof value === "string" && value.length > 0,
+    );
+    if (text) out.push({ kind: "delta", text });
   }
 
   if (agent === "bob") {
-    if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
-    if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
-    if (typeof obj.message === "string") out.push({ kind: "delta", text: obj.message });
+    // Same single-pick as qwen: Bob repeats the completion across `text`,
+    // `content`, and `message` on some stream-json lines.
+    const text = [obj.text, obj.content, obj.message].find(
+      (value): value is string => typeof value === "string" && value.length > 0,
+    );
+    if (text) out.push({ kind: "delta", text });
   }
 
   if (agent === "qoder") {
