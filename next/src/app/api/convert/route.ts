@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { invokeAgent } from "@/lib/agents/invoke";
+import { appendConfiguredAgentMemoryPolicy } from "@/lib/agent-memory";
 import { loadSkill } from "@/lib/templates/loader";
 import { assemblePrompt } from "@/lib/templates/shared";
 
@@ -25,6 +26,8 @@ type Body = {
    *  implies). Saves output tokens AND prevents creative drift between runs. */
   editFromHtml?: string;
   editFromContent?: string;
+  /** Add read-only guidance for memory tools already configured in the selected agent. */
+  useConfiguredAgentMemory?: boolean;
 };
 
 function buildEditPrompt(args: {
@@ -78,6 +81,7 @@ export async function POST(req: NextRequest) {
     binOverride,
     editFromHtml,
     editFromContent,
+    useConfiguredAgentMemory = false,
   } = body;
   if (!agent || !templateId || !content) {
     return new Response("missing required fields: agent, templateId, content", {
@@ -102,6 +106,9 @@ export async function POST(req: NextRequest) {
   } else {
     prompt = assemblePrompt({ body: skill.body, content, format });
   }
+  prompt = appendConfiguredAgentMemoryPolicy(prompt, {
+    enabled: useConfiguredAgentMemory,
+  });
   const abortCtl = new AbortController();
   req.signal?.addEventListener("abort", () => abortCtl.abort(), { once: true });
 

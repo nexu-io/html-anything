@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   LOCALES,
   LOCALE_LABEL,
+  isConfiguredAgentMemoryEnabled,
   useStore,
   type AgentInfo,
   type Locale,
@@ -159,6 +160,12 @@ function AgentSection() {
   const selected = useStore((s) => s.selectedAgent);
   const agentModels = useStore((s) => s.agentModels);
   const agentBinOverrides = useStore((s) => s.agentBinOverrides);
+  const configuredAgentMemoryByAgent = useStore(
+    (s) => s.configuredAgentMemoryByAgent,
+  );
+  const setUseConfiguredAgentMemory = useStore(
+    (s) => s.setUseConfiguredAgentMemory,
+  );
   const t = useT();
 
   const [loading, setLoading] = useState(false);
@@ -192,6 +199,10 @@ function AgentSection() {
   const missing = useMemo(() => agents.filter((a) => !a.available), [agents]);
   const selectedAgent = installed.find((a) => a.id === selected);
   const selectedModelId = selected ? agentModels[selected] ?? "default" : "default";
+  const useConfiguredAgentMemory = isConfiguredAgentMemoryEnabled(
+    configuredAgentMemoryByAgent,
+    selectedAgent?.id,
+  );
 
   return (
     <div>
@@ -253,6 +264,49 @@ function AgentSection() {
           onChange={(p) => setAgentBinOverride(selectedAgent.id, p)}
         />
       )}
+
+      <div
+        className="mt-5 flex items-start justify-between gap-4 rounded-2xl p-4"
+        style={{
+          background: "var(--paper)",
+          border: "1px solid var(--line-faint)",
+        }}
+      >
+        <div>
+          <div className="text-[13px] font-semibold text-[var(--ink)]">
+            {t("settings.agent.memory.title")}
+          </div>
+          <p className="mt-1 max-w-[480px] text-[11.5px] leading-relaxed text-[var(--ink-mute)]">
+            {t("settings.agent.memory.subtitle")}
+          </p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          disabled={!selectedAgent}
+          aria-checked={useConfiguredAgentMemory}
+          onClick={() => {
+            if (selectedAgent) {
+              setUseConfiguredAgentMemory(
+                selectedAgent.id,
+                !useConfiguredAgentMemory,
+              );
+            }
+          }}
+          className="shrink-0 rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            background: useConfiguredAgentMemory
+              ? "var(--ink)"
+              : "var(--surface)",
+            color: useConfiguredAgentMemory ? "var(--surface)" : "var(--ink-mute)",
+            border: "1px solid var(--line)",
+          }}
+        >
+          {useConfiguredAgentMemory
+            ? t("settings.agent.memory.enabled")
+            : t("settings.agent.memory.disabled")}
+        </button>
+      </div>
 
       {missing.length > 0 && (
         <>

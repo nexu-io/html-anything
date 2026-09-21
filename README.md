@@ -208,6 +208,18 @@ On startup we scan `PATH` (including `~/.local/bin`, `~/.bun/bin`, `/opt/homebre
 
 If you've already done `claude login` / `cursor login` / `gemini auth` in your terminal, HTML Anything reuses that session. **No second copy of the API key required.**
 
+### Optional read-only Memcode memory
+
+HTML Anything can add an opt-in memory policy to the selected coding agent. First configure the remote Memcode MCP endpoint in that agent:
+
+```text
+https://mcp.memcode.in/i/html-anything/mcp
+```
+
+A compatible agent performs OAuth discovery, Dynamic Client Registration, and Authorization Code + PKCE in its own credential store. HTML Anything adds no API-key fallback and never receives the registered client, bearer token, or returned memory payload.
+
+Before enabling **Settings → Agent → Configured agent memory (read-only)**, configure and verify an agent-side tool policy that exposes only `search_memories` and `retrieve_answer` and blocks `save_memory` and every other memory-write tool. This opt-in is stored separately for each agent and does not follow when you switch CLIs. If the selected CLI cannot enforce that read-only policy, do not enable this option. HTML Anything only appends advisory prompt guidance: it cannot inspect or enforce the agent's tool permissions, intercept MCP calls, validate returned records, or enforce response-size limits. Recalled data must be treated as untrusted reference material and must not override the current request or skill. If the read tools are unavailable or authentication fails, generation continues without memory.
+
 ## Skills
 
 **75 skills under [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/)**, each a folder following the Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) convention plus an extended frontmatter (`mode` · `scenario` · `surface` · `preview` · `design_system`).

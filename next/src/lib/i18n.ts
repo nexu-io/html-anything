@@ -98,6 +98,10 @@ export interface Dict {
   "settings.section.language.hint": string;
   "settings.agent.title": string;
   "settings.agent.subtitle": string;
+  "settings.agent.memory.title": string;
+  "settings.agent.memory.subtitle": string;
+  "settings.agent.memory.enabled": string;
+  "settings.agent.memory.disabled": string;
   "settings.language.title": string;
   "settings.language.subtitle": string;
   "settings.language.active": string;
@@ -458,6 +462,11 @@ const en: Dict = {
   "settings.agent.title": "Code agent",
   "settings.agent.subtitle":
     "HTML Anything reuses your already-logged-in CLI session — no API key required.",
+  "settings.agent.memory.title": "Configured agent memory (read-only)",
+  "settings.agent.memory.subtitle":
+    "Applies only to the selected agent. Enable after it exposes read-only Memcode tools and blocks all memory writes. HTML Anything cannot enforce tool permissions or response limits.",
+  "settings.agent.memory.enabled": "On",
+  "settings.agent.memory.disabled": "Off",
   "settings.language.title": "Interface language",
   "settings.language.subtitle":
     "Sets the language the app surface uses. Default is English; your choice is saved locally.",
@@ -819,6 +828,11 @@ const zhCN: Dict = {
   "settings.agent.title": "Code agent",
   "settings.agent.subtitle":
     "HTML Anything 复用你已经登录的 CLI session — 不需要再贴 API Key。",
+  "settings.agent.memory.title": "已配置的 agent 记忆（只读）",
+  "settings.agent.memory.subtitle":
+    "仅适用于当前所选 agent。确认它已开放只读 Memcode 工具并阻止所有记忆写入后再开启。HTML Anything 无法强制执行工具权限或响应大小限制。",
+  "settings.agent.memory.enabled": "已开启",
+  "settings.agent.memory.disabled": "已关闭",
   "settings.language.title": "界面语言",
   "settings.language.subtitle":
     "选择 app 界面使用的语言。默认 English; 选择会保存到本地。",

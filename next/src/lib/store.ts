@@ -180,6 +180,8 @@ type Persisted = {
   historyPaneOpen: boolean;
   locale: Locale;
   layoutMode: LayoutMode;
+  /** Per-agent opt-in for read-only Memcode guidance. */
+  configuredAgentMemoryByAgent: Record<string, boolean>;
 };
 
 type State = {
@@ -199,6 +201,7 @@ type State = {
   historyPaneOpen: boolean;
   locale: Locale;
   layoutMode: LayoutMode;
+  configuredAgentMemoryByAgent: Record<string, boolean>;
 
   // task lifecycle
   newTask: (init?: Partial<Pick<Task, "name" | "content" | "format" | "filename" | "templateId">>) => string;
@@ -264,7 +267,15 @@ type State = {
   setHistoryPaneOpen: (v: boolean) => void;
   setLocale: (l: Locale) => void;
   setLayoutMode: (m: LayoutMode) => void;
+  setUseConfiguredAgentMemory: (agentId: string, enabled: boolean) => void;
 };
+
+export function isConfiguredAgentMemoryEnabled(
+  configuredAgentMemoryByAgent: Record<string, boolean>,
+  agentId: string | undefined,
+): boolean {
+  return !!agentId && configuredAgentMemoryByAgent[agentId] === true;
+}
 
 function patchTask(tasks: Task[], id: string, patch: Partial<Task> | ((t: Task) => Partial<Task>)): Task[] {
   let changed = false;
@@ -293,6 +304,7 @@ export const useStore = create<State>()(
       historyPaneOpen: false,
       locale: "en",
       layoutMode: "split",
+      configuredAgentMemoryByAgent: {},
 
       newTask: (init) => {
         const tasks = get().tasks;
@@ -485,12 +497,19 @@ export const useStore = create<State>()(
       setHistoryPaneOpen: (v) => set({ historyPaneOpen: v }),
       setLocale: (l) => set({ locale: l }),
       setLayoutMode: (m) => set({ layoutMode: m }),
+      setUseConfiguredAgentMemory: (agentId, enabled) =>
+        set((s) => {
+          const next = { ...s.configuredAgentMemoryByAgent };
+          if (enabled) next[agentId] = true;
+          else delete next[agentId];
+          return { configuredAgentMemoryByAgent: next };
+        }),
     }),
     {
       // Legacy key from the old "HTML Everything" brand; do NOT rename — every
       // existing user's saved tasks live under this localStorage key.
       name: "html-everything-store",
-      version: 7,
+      version: 9,
       partialize: (s): Persisted => ({
         tasks: s.tasks.map((t) => ({
           ...t,
@@ -506,6 +525,7 @@ export const useStore = create<State>()(
         historyPaneOpen: s.historyPaneOpen,
         locale: s.locale,
         layoutMode: s.layoutMode,
+        configuredAgentMemoryByAgent: s.configuredAgentMemoryByAgent,
       }),
       migrate: (persisted, fromVersion): Persisted => {
         // v1 → v2: wrap top-level content/format/filename/selectedTemplate into a single task.
@@ -570,6 +590,18 @@ export const useStore = create<State>()(
               if (!Array.isArray(t.deployments)) t.deployments = [];
             }
           }
+        }
+        // v7 → v8: configured-agent memory is local-only and opt-in.
+        if (fromVersion < 8 && persisted && typeof persisted === "object") {
+          const p = persisted as Record<string, unknown>;
+          p.useConfiguredAgentMemory = false;
+        }
+        // v8 → v9: scope the opt-in to an individual agent. Do not carry
+        // the old scalar forward because it may have followed an agent switch.
+        if (fromVersion < 9 && persisted && typeof persisted === "object") {
+          const p = persisted as Record<string, unknown>;
+          p.configuredAgentMemoryByAgent = {};
+          delete p.useConfiguredAgentMemory;
         }
         return persisted as Persisted;
       },
