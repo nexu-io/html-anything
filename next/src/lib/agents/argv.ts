@@ -120,6 +120,15 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
         "--yolo",
         ...(model ? ["--model", model] : []),
       ];
+    case "zcode":
+      // ZCode (Z.ai's agent CLI, https://github.com/zai-org/ZCode):
+      // `zcode --json -p "<prompt>"` runs one headless turn with yolo
+      // permissions (the CLI's own default for --prompt) and prints a single
+      // JSON document ({response, usage, sessionId}) on close. No --model
+      // flag exists yet — the CLI's configured default model wins. The
+      // prompt is appended as the positional after "-p" by invoke.ts
+      // (protocol "argv").
+      return ["--json", "-p"];
     case "codewhale":
     case "deepseek-tui":
       // DeepSeek's `exec --auto` requires the prompt as a positional arg;
@@ -258,6 +267,22 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   if (!parsed || typeof parsed !== "object") return [];
   const obj = parsed as Record<string, unknown>;
   const out: AgentParse[] = [];
+
+  // ZCode — `--json -p` prints ONE pretty-printed JSON document after the
+  // turn closes. Per-line fragments during streaming fail JSON.parse above
+  // and surface as noise; the definitive parse happens when invoke.ts feeds
+  // the complete stdout buffer to this parser on close.
+  if (agent === "zcode") {
+    if (typeof obj.response === "string" && obj.response) {
+      out.push({ kind: "delta", text: obj.response });
+      if (obj.sessionId) out.push({ kind: "meta", key: "session", value: obj.sessionId });
+      const usage = obj.usage as Record<string, unknown> | undefined;
+      if (usage && typeof usage.totalTokens === "number") {
+        out.push({ kind: "meta", key: "tokens", value: usage.totalTokens });
+      }
+    }
+    return out;
+  }
 
   if (agent === "claude") {
     // Init / system metadata

@@ -104,6 +104,20 @@ export const AGENTS: AgentDef[] = [
     ],
   },
   {
+    id: "zcode",
+    label: "ZCode",
+    bin: "zcode",
+    envOverride: "ZCODE_BIN",
+    vendor: "Z.ai",
+    // Headless shape: `zcode --json -p "<prompt>"` — one JSON document with
+    // {response, usage, sessionId} printed after the turn closes (see the
+    // "argv" protocol handling in invoke.ts / argv.ts). The CLI has no
+    // --model flag yet; it runs its configured default model, so only the
+    // synthetic DEFAULT entry is offered.
+    protocol: "argv",
+    fallbackModels: [DEFAULT_MODEL],
+  },
+  {
     id: "cursor-agent",
     label: "Cursor Agent",
     bin: "cursor-agent",

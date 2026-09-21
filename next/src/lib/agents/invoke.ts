@@ -1,5 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
 import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
 
@@ -150,9 +152,37 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         safeClose();
         return;
       }
-      // `protocol: "argv"` adapters (deepseek-tui today) take the prompt as a
-      // trailing positional arg rather than reading from stdin.
-      if (promptViaArgv) argv = [...argv, opts.prompt];
+      // ZCode: multi-line prompts cannot survive Windows argv — npm's .cmd
+      // shims (and this file's shell:true spawn) re-parse the command line at
+      // newlines, so `-p "<4KB skill prompt>"` arrives truncated. The CLI
+      // natively accepts file attachments, so the prompt goes to a temp file
+      // and `-p` carries a short ASCII-only pointer instead.
+      let promptFile: string | null = null;
+      const cleanupPromptFile = () => {
+        if (!promptFile) return;
+        const f = promptFile;
+        promptFile = null;
+        try {
+          rmSync(f, { force: true });
+        } catch {}
+      };
+      if (opts.agent === "zcode") {
+        promptFile = path.join(
+          tmpdir(),
+          `html-anything-zcode-prompt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.md`,
+        );
+        writeFileSync(promptFile, opts.prompt, "utf8");
+        argv = [
+          ...argv,
+          "Your complete task instructions are in the attached file. Read it in full and follow it exactly; output the result directly.",
+          "--attach",
+          promptFile,
+        ];
+      } else if (promptViaArgv) {
+        // `protocol: "argv"` adapters (deepseek-tui today) take the prompt as a
+        // trailing positional arg rather than reading from stdin.
+        argv = [...argv, opts.prompt];
+      }
       // `protocol: "argv-message"` (openclaw today) wants the prompt under
       // an explicit `--message <text>` flag.
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
@@ -208,7 +238,10 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         stdoutBuf += chunk;
         // OpenClaw emits one big multi-line JSON document — accumulate and
         // parse it once on close instead of trying to parse each line.
-        if (opts.agent === "openclaw") return;
+        // OpenClaw and ZCode both emit ONE multi-line JSON document that is
+        // parsed on close — skip the per-line loop so stdoutBuf keeps the
+        // whole thing.
+        if (opts.agent === "openclaw" || opts.agent === "zcode") return;
         let nl: number;
         while ((nl = stdoutBuf.indexOf("\n")) !== -1) {
           const line = stdoutBuf.slice(0, nl);
@@ -303,6 +336,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           }
         }
         safeEnqueue({ type: "done", code });
+        cleanupPromptFile();
         safeClose();
       });
 
@@ -310,6 +344,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         try {
           child?.kill("SIGTERM");
         } catch {}
+        cleanupPromptFile();
         safeClose();
       };
       opts.signal?.addEventListener("abort", onAbort, { once: true });
