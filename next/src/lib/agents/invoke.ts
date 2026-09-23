@@ -1,5 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { resolveOnPath, resolveOpenclawAgentId, AGENTS } from "./detect";
 import { buildArgv, envFor, makeParser, UnsupportedAgentProtocolError } from "./argv";
 
@@ -102,11 +104,21 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
   const env = envFor(opts.agent);
   const promptViaArgv = def.protocol === "argv";
   const promptViaMessageFlag = def.protocol === "argv-message";
+  const promptViaFile = def.protocol === "prompt-file";
+  const useShell = process.platform === "win32";
 
   return new ReadableStream<InvokeEvent>({
     async start(controller) {
       let closed = false;
       let child: ChildProcessWithoutNullStreams | null = null;
+      let promptDir: string | null = null;
+      const removePromptFile = () => {
+        if (!promptDir) return;
+        try {
+          rmSync(promptDir, { recursive: true, force: true });
+          promptDir = null;
+        } catch {}
+      };
 
       const safeEnqueue = (ev: InvokeEvent) => {
         if (closed) return;
@@ -156,16 +168,32 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       // `protocol: "argv-message"` (openclaw today) wants the prompt under
       // an explicit `--message <text>` flag.
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
+      // `protocol: "prompt-file"` (grok today) reads the prompt from a private
+      // temp file, removed once the child exits or the run is aborted.
+      if (promptViaFile) {
+        try {
+          promptDir = mkdtempSync(path.join(tmpdir(), "html-anything-"));
+          const promptPath = path.join(promptDir, "prompt.md");
+          writeFileSync(promptPath, opts.prompt, { mode: 0o600 });
+          argv = [...argv, "--prompt-file", useShell ? `"${promptPath}"` : promptPath];
+        } catch (err) {
+          removePromptFile();
+          safeEnqueue({
+            type: "error",
+            message: err instanceof Error ? err.message : String(err),
+          });
+          safeClose();
+          return;
+        }
+      }
 
       try {
         // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
         // what npm installs for most CLI agents) without going through the
         // shell. Without this, every agent invocation fails with
         // EINVAL / "spawn 无效的参数". macOS/Linux use direct exec.
-        // Safety: prompt content is delivered via stdin or `--message
-        // <text>` (argv-message), not interpolated into a shell command,
-        // so this does not introduce a shell-injection vector.
-        const useShell = process.platform === "win32";
+        // Safety: stdin and prompt-file agents keep the prompt off the
+        // command line entirely.
         child = spawn(useShell ? `"${bin}"` : bin!, argv, {
           cwd: opts.cwd ?? process.cwd(),
           env,
@@ -174,6 +202,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
           windowsVerbatimArguments: false,
         });
       } catch (err) {
+        removePromptFile();
         safeEnqueue({
           type: "error",
           message: err instanceof Error ? err.message : String(err),
@@ -191,9 +220,9 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
 
       child.stdin.on("error", () => {});
       try {
-        // stdin-protocol agents read the prompt from stdin; argv / argv-message
-        // agents already have it on the command line.
-        if (!promptViaArgv && !promptViaMessageFlag) child.stdin.write(opts.prompt);
+        // stdin-protocol agents read the prompt from stdin; the others already
+        // have it on the command line or in the prompt file.
+        if (!promptViaArgv && !promptViaMessageFlag && !promptViaFile) child.stdin.write(opts.prompt);
         child.stdin.end();
       } catch {}
 
@@ -235,11 +264,13 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       });
 
       child.on("error", (err) => {
+        removePromptFile();
         safeEnqueue({ type: "error", message: err.message });
         safeClose();
       });
 
       child.on("close", (code) => {
+        removePromptFile();
         if (opts.agent === "openclaw") {
           // OpenClaw's `agent --local --json` emits one pretty-printed JSON
           // document on stdout. The visible reply is at
@@ -310,6 +341,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         try {
           child?.kill("SIGTERM");
         } catch {}
+        removePromptFile();
         safeClose();
       };
       opts.signal?.addEventListener("abort", onAbort, { once: true });

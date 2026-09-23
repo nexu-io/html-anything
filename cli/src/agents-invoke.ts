@@ -1,5 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { resolveOnPath, AGENTS, type AgentDef, type AgentProtocol } from "./agents-detect.js";
 
@@ -71,13 +72,21 @@ class UnsupportedAgentProtocolError extends Error {
   constructor(public readonly agent: string, public readonly protocol: string) {
     super(
       `${agent} uses the ${protocol} protocol, which is not yet wired up in this build. ` +
-        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / codewhale / deepseek-tui / aider.`,
+        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / codewhale / deepseek-tui / aider / grok.`,
     );
   }
 }
 
+// The model comes from the command line and lands in argv, which Windows
+// hands to cmd.exe (`shell: true`). Only accept the characters real model
+// ids use, and no leading `-`, so it can't break out or pose as a flag.
+const MODEL_ID = /^[A-Za-z0-9][A-Za-z0-9._\/:-]{0,127}$/;
+
 function buildArgv(agent: string, opts: AgentArgvOpts = {}): string[] {
   const { model } = opts;
+  if (model && !MODEL_ID.test(model)) {
+    throw new Error(`invalid model id: ${JSON.stringify(model)}`);
+  }
   switch (agent) {
     case "claude":
       return [
@@ -132,6 +141,16 @@ function buildArgv(agent: string, opts: AgentArgvOpts = {}): string[] {
         "--allow-all-tools",
         "--output-format",
         "json",
+        ...(model ? ["--model", model] : []),
+      ];
+    case "grok":
+      // The "prompt-file" protocol appends `--prompt-file <path>`, which runs
+      // grok headless the same way `-p <prompt>` does.
+      return [
+        "--no-auto-update",
+        "--output-format",
+        "streaming-json",
+        "--always-approve",
         ...(model ? ["--model", model] : []),
       ];
     case "opencode":
@@ -351,6 +370,34 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
   }
 
+  if (agent === "grok") {
+    if (obj.type === "text" && typeof obj.data === "string") {
+      out.push({ kind: "delta", text: obj.data });
+    }
+    if (obj.type === "thought" && typeof obj.data === "string") {
+      out.push({ kind: "meta", key: "thinking", value: obj.data });
+    }
+    if (obj.type === "end") {
+      if (typeof obj.sessionId === "string") {
+        out.push({ kind: "meta", key: "session", value: obj.sessionId });
+      }
+      if (obj.usage) out.push({ kind: "meta", key: "usage", value: obj.usage });
+      if (typeof obj.stopReason === "string") {
+        out.push({ kind: "meta", key: "result", value: obj.stopReason });
+      }
+      if (typeof obj.total_cost_usd === "number") {
+        out.push({ kind: "meta", key: "cost_usd", value: obj.total_cost_usd });
+      }
+    }
+    if (!obj.type && typeof obj.text === "string") {
+      out.push({ kind: "delta", text: obj.text });
+      if (typeof obj.sessionId === "string") {
+        out.push({ kind: "meta", key: "session", value: obj.sessionId });
+      }
+      if (obj.usage) out.push({ kind: "meta", key: "usage", value: obj.usage });
+    }
+  }
+
   if (agent === "opencode" || agent === "qwen") {
     if (typeof obj.text === "string") out.push({ kind: "delta", text: obj.text });
     if (typeof obj.content === "string") out.push({ kind: "delta", text: obj.content });
@@ -458,11 +505,21 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
   const env = envFor(opts.agent);
   const promptViaArgv = def.protocol === "argv";
   const promptViaMessageFlag = def.protocol === "argv-message";
+  const promptViaFile = def.protocol === "prompt-file";
+  const useShell = process.platform === "win32";
 
   return new ReadableStream<InvokeEvent>({
     async start(controller) {
       let closed = false;
       let child: ChildProcessWithoutNullStreams | null = null;
+      let promptDir: string | null = null;
+      const removePromptFile = () => {
+        if (!promptDir) return;
+        try {
+          rmSync(promptDir, { recursive: true, force: true });
+          promptDir = null;
+        } catch {}
+      };
 
       const safeEnqueue = (ev: InvokeEvent) => {
         if (closed) return;
@@ -504,15 +561,34 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       }
       if (promptViaArgv) argv = [...argv, opts.prompt];
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
+      // grok reads the prompt from a private temp file so it never reaches
+      // the Windows shell command line.
+      if (promptViaFile) {
+        try {
+          promptDir = mkdtempSync(path.join(tmpdir(), "html-anything-"));
+          const promptPath = path.join(promptDir, "prompt.md");
+          writeFileSync(promptPath, opts.prompt, { mode: 0o600 });
+          argv = [...argv, "--prompt-file", useShell ? `"${promptPath}"` : promptPath];
+        } catch (err) {
+          removePromptFile();
+          safeEnqueue({
+            type: "error",
+            message: err instanceof Error ? err.message : String(err),
+          });
+          safeClose();
+          return;
+        }
+      }
 
       try {
         child = spawn(bin, argv, {
           cwd: opts.cwd ?? process.cwd(),
           env,
           stdio: ["pipe", "pipe", "pipe"],
-          shell: process.platform === "win32",
+          shell: useShell,
         });
       } catch (err) {
+        removePromptFile();
         safeEnqueue({
           type: "error",
           message: err instanceof Error ? err.message : String(err),
@@ -530,7 +606,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
 
       child.stdin.on("error", () => {});
       try {
-        if (!promptViaArgv && !promptViaMessageFlag) child.stdin.write(opts.prompt);
+        if (!promptViaArgv && !promptViaMessageFlag && !promptViaFile) child.stdin.write(opts.prompt);
         child.stdin.end();
       } catch {}
 
@@ -562,11 +638,13 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       });
 
       child.on("error", (err) => {
+        removePromptFile();
         safeEnqueue({ type: "error", message: err.message });
         safeClose();
       });
 
       child.on("close", (code) => {
+        removePromptFile();
         if (opts.agent === "openclaw") {
           if (stdoutBuf.trim()) {
             try {
@@ -611,6 +689,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         try {
           child?.kill("SIGTERM");
         } catch {}
+        removePromptFile();
         safeClose();
       };
       opts.signal?.addEventListener("abort", onAbort, { once: true });

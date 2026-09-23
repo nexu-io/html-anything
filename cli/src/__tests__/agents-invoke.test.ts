@@ -1,5 +1,6 @@
 import { vi, describe, it, expect, afterEach } from "vitest";
 import { EventEmitter } from "node:events";
+import { readFileSync } from "node:fs";
 import { PassThrough, Writable } from "node:stream";
 
 const { mockSpawn, existsSyncDelegate } = vi.hoisted(() => ({
@@ -17,6 +18,8 @@ vi.mock("node:fs", async () => {
 });
 
 import { invokeAgent, type InvokeEvent } from "../agents-invoke.js";
+
+const realFs = await vi.importActual<typeof import("node:fs")>("node:fs");
 
 function makeFakeChild() {
   const stdout = new PassThrough();
@@ -439,6 +442,137 @@ describe("invokeAgent", () => {
       expect(stderrEvents[0]).toMatchObject({
         type: "stderr",
         text: "warning: deprecated\n",
+      });
+    });
+  });
+
+  describe("grok headless contract", () => {
+    async function runGrok(prompt: string, signal?: AbortSignal) {
+      const { child, stdout } = makeFakeChild();
+      let spawned: { args: string[]; shell: unknown; promptPath: string; promptText: string } | undefined;
+      mockSpawn.mockImplementation((_bin: string, args: string[], spawnOpts: { shell?: unknown }) => {
+        const promptPath = args[args.indexOf("--prompt-file") + 1].replace(/^"|"$/g, "");
+        spawned = { args, shell: spawnOpts.shell, promptPath, promptText: readFileSync(promptPath, "utf8") };
+        return child;
+      });
+
+      const events = collectStream(
+        invokeAgent({ agent: "grok", prompt, model: "grok-build", binOverride: BIN_OVERRIDE, signal }),
+      );
+      await new Promise((r) => setTimeout(r, 0));
+      return {
+        spawned: spawned!,
+        finish: async () => {
+          stdout.end();
+          await new Promise((r) => setImmediate(r));
+          child.emit("close", 0);
+          return events;
+        },
+      };
+    }
+
+    it("passes the prompt through --prompt-file and removes the file on close", async () => {
+      const run = await runGrok("make a card");
+      const { spawned } = run;
+
+      expect(spawned.args).toEqual([
+        "--no-auto-update",
+        "--output-format",
+        "streaming-json",
+        "--always-approve",
+        "--model",
+        "grok-build",
+        "--prompt-file",
+        spawned.promptPath,
+      ]);
+      expect(spawned.promptText).toBe("make a card");
+
+      await run.finish();
+      expect(realFs.existsSync(spawned.promptPath)).toBe(false);
+    });
+
+    it("keeps shell metacharacters out of the Windows command line", async () => {
+      const platform = process.platform;
+      Object.defineProperty(process, "platform", { value: "win32" });
+      const prompt = 'a & calc.exe | whoami > %TEMP%\\x.txt "%PATH%" ^ <b>';
+      try {
+        const run = await runGrok(prompt);
+        const { spawned } = run;
+
+        expect(spawned.shell).toBe(true);
+        // Node joins bin + args with spaces when shell is on; that string is
+        // what cmd.exe parses.
+        const commandLine = [BIN_OVERRIDE, ...spawned.args].join(" ");
+        for (const piece of ["&", "|", "%", "^", "<", ">", "calc", "whoami"]) {
+          expect(commandLine).not.toContain(piece);
+        }
+        expect(spawned.args.at(-1)).toBe(`"${spawned.promptPath}"`);
+        expect(spawned.promptText).toBe(prompt);
+        await run.finish();
+      } finally {
+        Object.defineProperty(process, "platform", { value: platform });
+      }
+    });
+
+    it.each(["grok", "claude"])(
+      "refuses a %s model carrying shell metacharacters before anything spawns",
+      async (agent) => {
+        const platform = process.platform;
+        Object.defineProperty(process, "platform", { value: "win32" });
+        try {
+          for (const model of [
+            "grok-build & calc.exe",
+            "x|whoami",
+            "%PATH%",
+            'a" "b',
+            "a^b",
+            "a>b",
+            "--config=evil",
+            "a b",
+          ]) {
+            mockSpawn.mockClear();
+            const events = await collectStream(
+              invokeAgent({ agent, prompt: "make a card", model, binOverride: BIN_OVERRIDE }),
+            );
+            expect(events).toEqual([
+              { type: "error", message: expect.stringContaining("invalid model id") },
+            ]);
+            expect(mockSpawn).not.toHaveBeenCalled();
+          }
+        } finally {
+          Object.defineProperty(process, "platform", { value: platform });
+        }
+      },
+    );
+
+    it("removes the prompt file when the run is aborted", async () => {
+      const controller = new AbortController();
+      const run = await runGrok("make a card", controller.signal);
+      expect(realFs.existsSync(run.spawned.promptPath)).toBe(true);
+
+      controller.abort();
+      expect(realFs.existsSync(run.spawned.promptPath)).toBe(false);
+    });
+
+    it("parses streaming-json text and end events", async () => {
+      const events = await driveInvoke(
+        { agent: "grok", prompt: "make a card", binOverride: BIN_OVERRIDE },
+        `${JSON.stringify({ type: "text", data: "<html>ok</html>" })}\n${JSON.stringify({
+          type: "end",
+          sessionId: "abc",
+          stopReason: "end_turn",
+          usage: { input_tokens: 3, output_tokens: 1 },
+        })}\n`,
+        0,
+      );
+
+      expect(events).toContainEqual({ type: "delta", text: "<html>ok</html>" });
+      expect(events).toContainEqual({ type: "meta", key: "session", value: "abc" });
+      expect(events).toContainEqual({ type: "meta", key: "result", value: "end_turn" });
+      expect(events).toContainEqual({
+        type: "meta",
+        key: "usage",
+        value: { input_tokens: 3, output_tokens: 1 },
       });
     });
   });

@@ -6,7 +6,7 @@ import path, { delimiter, join } from "node:path";
  * Agent detection — adapted from next/src/lib/agents/detect.ts
  */
 
-export type AgentProtocol = "stdin" | "argv" | "argv-message" | "acp" | "pi-rpc";
+export type AgentProtocol = "stdin" | "argv" | "argv-message" | "prompt-file" | "acp" | "pi-rpc";
 
 export type ModelOption = { id: string; label: string };
 
@@ -111,6 +111,18 @@ export const AGENTS: AgentDef[] = [
       DEFAULT_MODEL,
       { id: "claude-sonnet-4.6", label: "Claude Sonnet 4.6" },
       { id: "gpt-5.2", label: "GPT-5.2" },
+    ],
+  },
+  {
+    id: "grok",
+    label: "Grok Build",
+    bin: "grok",
+    envOverride: "GROK_BIN",
+    vendor: "xAI",
+    protocol: "prompt-file",
+    fallbackModels: [
+      DEFAULT_MODEL,
+      { id: "grok-build", label: "grok-build" },
     ],
   },
   {
