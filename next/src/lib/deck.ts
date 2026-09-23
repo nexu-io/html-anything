@@ -121,7 +121,17 @@ export function parseDeck(fullHtml: string): DeckParsed {
   body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
   .slide { transform-origin: center center !important; }
 </style></head>` +
-      `<body class="${bodyClass}" style="${bodyStyle}">${slideForRender}</body></html>`;
+      // Append `single` to the body class. Most deck skills (14 of 20 bundled
+      // ones at the time of writing — every skill that uses
+      // `.slide { position:absolute; opacity:0 }` for its inactive-slide
+      // hidden state) ship a `body.single .slide { position:relative;
+      // opacity:1; transform:none; ... }` override specifically for this
+      // standalone-render path. Without `single`, the slide stays in its
+      // hidden inactive state and the visible vertical position drifts
+      // depending on which child elements happen to win the flex layout
+      // (issue #74). For skills that don't use absolute-positioned slides,
+      // `single` is an inert class that no rule selects.
+      `<body class="${(bodyClass + " single").trim()}" style="${bodyStyle}">${slideForRender}</body></html>`;
 
     slides.push({
       html: standalone,
