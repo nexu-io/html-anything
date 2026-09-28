@@ -20,6 +20,55 @@ const DIFF_LOG_PREFIX = "🔁 diff-edit 模式";
 // per-task abort controllers — multiple tasks can stream concurrently
 const controllers = new Map<string, AbortController>();
 
+// SSE events are buffered and handed to handleEvent in 100ms windows.
+// Inside a flush the store updates run back-to-back with no await between
+// them, so React 19 automatic batching turns the whole window into one
+// render — the read loop's awaited reader.read() would otherwise give every
+// single event its own full-list re-render, and fast reasoning streams peak
+// around 240 events/s. The first delta, done and error bypass the window so
+// TTFB and terminal state are not delayed; each bypass drains the buffer
+// first to keep event order.
+const BATCH_WINDOW_MS = 100;
+
+export function createEventBatcher(onEvent: (event: string, data: unknown) => void) {
+  const pending: Array<{ event: string; data: unknown }> = [];
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let sawFirstDelta = false;
+
+  const drain = () => {
+    if (timer !== null) {
+      clearTimeout(timer);
+      timer = null;
+    }
+    const out = pending.splice(0, pending.length);
+    for (const item of out) onEvent(item.event, item.data);
+  };
+
+  return {
+    push(event: string, data: unknown) {
+      if (event === 'delta' && !sawFirstDelta) {
+        sawFirstDelta = true;
+        drain();
+        onEvent(event, data);
+        return;
+      }
+      if (event === 'done' || event === 'error') {
+        drain();
+        onEvent(event, data);
+        return;
+      }
+      pending.push({ event, data });
+      // arm only on the empty→non-empty transition so long streams hold
+      // exactly one timer, not one per event
+      if (timer === null) timer = setTimeout(drain, BATCH_WINDOW_MS);
+    },
+    flush: drain,
+    dispose() {
+      if (timer !== null) clearTimeout(timer);
+    },
+  };
+}
+
 export function useConvert() {
   const cancel = useCallback((taskId: string) => {
     const ctl = controllers.get(taskId);
@@ -97,6 +146,19 @@ export function useConvert() {
           : `准备调用 ${req.agent}${useModel ? ` · 模型 ${useModel}` : ""} · 模板 ${req.templateId} · ${sizeNote}`,
       });
 
+      // which terminal event the stream carried, if any — done and error need
+      // different finishing (below): a failed run must not read as success
+      let terminalEvent: "done" | "error" | null = null;
+      const batch = createEventBatcher((event, data) => {
+        if (event === "done" || event === "error") {
+          // error wins once seen: openclaw's close handler emits error for an
+          // empty response or a JSON parse failure and then an unconditional
+          // done — the trailing done must not mask the failure
+          if (event === "error" || terminalEvent === null) terminalEvent = event;
+        }
+        handleEvent(taskId, event, data, startedAt);
+      });
+
       try {
         const res = await fetch("/api/convert", {
           method: "POST",
@@ -139,16 +201,36 @@ export function useConvert() {
             } catch {
               continue;
             }
-            handleEvent(taskId, event, data, startedAt);
+            batch.push(event, data);
           }
         }
-        const endedAt = Date.now();
-        useStore.getState().patchStatsFor(taskId, { endedAt, durationMs: endedAt - startedAt });
-        useStore.getState().setStatusFor(taskId, "done");
-        // record the just-finished (content, html) as the new diff-edit baseline
-        // so the user's next edit goes through diff mode instead of full regen
-        useStore.getState().commitBaseFor(taskId);
+        batch.flush();
+        if (terminalEvent === "done") {
+          const endedAt = Date.now();
+          useStore.getState().patchStatsFor(taskId, { endedAt, durationMs: endedAt - startedAt });
+          useStore.getState().setStatusFor(taskId, "done");
+          // record the just-finished (content, html) as the new diff-edit baseline
+          // so the user's next edit goes through diff mode instead of full regen
+          useStore.getState().commitBaseFor(taskId);
+        } else if (terminalEvent === "error") {
+          // the server emits exactly one error event and closes (unknown agent,
+          // missing binary, crashed child). Keep whatever streamed for
+          // debugging and fail the run — a partial document must not become
+          // the next diff-edit baseline, so commitBaseFor is skipped.
+          useStore.getState().setStatusFor(taskId, "error");
+        } else if (ctl.signal.aborted) {
+          // user cancelled mid-stream: cancel() already set the task idle and
+          // the catch arm below wrote the log line — nothing left to finish
+        } else {
+          // stream ended without a done/error event (connection dropped):
+          // surface the truncation and keep the previous diff-edit baseline
+          useStore.getState().pushLogFor(taskId, { kind: 'error', text: '连接中断，未收到结束事件' });
+          useStore.getState().setStatusFor(taskId, 'error');
+        }
       } catch (err) {
+        // deliver whatever was already buffered before deciding how to fail —
+        // those events arrived, they must not vanish
+        batch.flush();
         if ((err as Error)?.name === "AbortError") {
           useStore.getState().pushLogFor(taskId, { kind: "info", text: "已取消" });
           useStore.getState().setStatusFor(taskId, "idle");
@@ -160,6 +242,7 @@ export function useConvert() {
         });
         useStore.getState().setStatusFor(taskId, "error");
       } finally {
+        batch.dispose();
         if (controllers.get(taskId) === ctl) controllers.delete(taskId);
       }
     },
