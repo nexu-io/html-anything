@@ -6,7 +6,8 @@ import path, { delimiter, join } from "node:path";
  * Per-agent invocation protocol. Determines what `invokeAgent` does with the
  * prompt and how it parses output:
  *   - "stdin"        : pipe prompt → child stdin, parse stdout via parseLine
- *   - "argv"         : pass prompt as positional argv (deepseek-tui), parse stdout as plain
+ *   - "argv"         : pass prompt as trailing argv (deepseek-tui: plain stdout;
+ *                      antigravity: stream-json, parsed via parseLine)
  *   - "argv-message" : prompt goes via `--message <text>` (openclaw); stdout is
  *                      a single multi-line JSON document (not ndjson), parsed
  *                      after the child closes.
@@ -116,6 +117,16 @@ export const AGENTS: AgentDef[] = [
       { id: "sonnet-4-thinking", label: "sonnet-4-thinking" },
       { id: "gpt-5", label: "gpt-5" },
     ],
+  },
+  {
+    id: "antigravity",
+    label: "Antigravity",
+    bin: "agy",
+    envOverride: "ANTIGRAVITY_BIN",
+    vendor: "Google",
+    protocol: "argv",
+    // Model ids come from the user's agy config; no curated list yet.
+    fallbackModels: [DEFAULT_MODEL],
   },
   {
     id: "gemini",
