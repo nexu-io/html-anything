@@ -150,7 +150,7 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
         safeClose();
         return;
       }
-      // `protocol: "argv"` adapters (deepseek-tui today) take the prompt as a
+      // `protocol: "argv"` adapters (deepseek-tui, antigravity) take the prompt as a
       // trailing positional arg rather than reading from stdin.
       if (promptViaArgv) argv = [...argv, opts.prompt];
       // `protocol: "argv-message"` (openclaw today) wants the prompt under

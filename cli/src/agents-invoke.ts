@@ -120,6 +120,20 @@ function buildArgv(agent: string, opts: AgentArgvOpts = {}): string[] {
         "--trust",
         ...(model ? ["--model", model] : []),
       ];
+    case "antigravity":
+      // `-p` must stay last: invoke appends the prompt right after it
+      // (`protocol: "argv"`). Effort is pinned so runs don't depend on the
+      // user's local agy default.
+      return [
+        "--output-format",
+        "stream-json",
+        "--dangerously-skip-permissions",
+        "--disable-slash-commands",
+        "--effort",
+        "medium",
+        ...(model ? ["--model", model] : []),
+        "-p",
+      ];
     case "gemini":
       return [
         "--output-format",
@@ -209,6 +223,7 @@ function rescueHtmlFromToolUse(
       name !== "createfile" &&
       name !== "writefile" &&
       name !== "write_file" &&
+      name !== "write_to_file" &&
       name !== "filewrite"
     )
       continue;
@@ -229,6 +244,20 @@ function rescueHtmlFromToolUse(
   return parts.join("");
 }
 
+/** agy reports `cache_read_tokens`; the UI reads Claude-style usage keys. */
+function agyUsage(u: Record<string, number>): AgentParse {
+  return {
+    kind: "meta",
+    key: "usage",
+    value: {
+      input_tokens: u.input_tokens,
+      output_tokens: u.output_tokens,
+      cache_read_input_tokens: u.cache_read_tokens ?? 0,
+      cache_creation_input_tokens: 0,
+    },
+  };
+}
+
 function parseLineWithState(agent: string, line: string, state: ParseState): AgentParse[] {
   const trimmed = line.trim();
   if (!trimmed) return [];
@@ -246,6 +275,73 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   if (!parsed || typeof parsed !== "object") return [];
   const obj = parsed as Record<string, unknown>;
   const out: AgentParse[] = [];
+  if (agent === "antigravity") {
+    // agy stream-json: one envelope per line, keyed by `event`
+    // (init / step_update / result).
+    if (obj.event === "init") {
+      if (typeof obj.conversation_id === "string") {
+        out.push({ kind: "meta", key: "session", value: obj.conversation_id });
+      }
+      const initObj = obj.init as Record<string, unknown> | undefined;
+      if (typeof initObj?.cwd === "string") {
+        out.push({ kind: "meta", key: "cwd", value: initObj.cwd });
+      }
+    }
+
+    const step = obj.step_update as Record<string, unknown> | undefined;
+    if (step && typeof step === "object") {
+      // agy writes files via `write_to_file { TargetFile, CodeContent }`.
+      // Map it onto the shared tool_use shape so the rescue rules live in
+      // one place.
+      const toolInfo = step.tool_info as
+        | { name?: string; parameters?: Record<string, unknown> }
+        | undefined;
+      const params = toolInfo?.parameters;
+      if (params && (toolInfo?.name ?? step.tool_name) === "write_to_file") {
+        const toolHtml = rescueHtmlFromToolUse([
+          {
+            type: "tool_use",
+            name: "write_to_file",
+            input: { file_path: params.TargetFile, content: params.CodeContent },
+          },
+        ]);
+        if (toolHtml) {
+          out.push({ kind: "html", text: toolHtml });
+          state.sawStreamEventText = true;
+        }
+      }
+      if (typeof step.text_delta === "string" && step.text_delta) {
+        state.sawStreamEventText = true;
+        out.push({ kind: "delta", text: step.text_delta });
+      }
+      if (typeof step.thinking_delta === "string" && step.thinking_delta) {
+        out.push({ kind: "meta", key: "thinking", value: step.thinking_delta });
+      }
+      if (step.usage && typeof step.usage === "object") {
+        out.push(agyUsage(step.usage as Record<string, number>));
+      }
+    }
+
+    const result = obj.result as Record<string, unknown> | undefined;
+    if (result && typeof result === "object") {
+      if (!state.sawStreamEventText && typeof result.response === "string" && result.response) {
+        out.push({ kind: "delta", text: result.response });
+      }
+      if (result.usage && typeof result.usage === "object") {
+        out.push(agyUsage(result.usage as Record<string, number>));
+      }
+      if (typeof result.duration_seconds === "number") {
+        out.push({
+          kind: "meta",
+          key: "duration_ms",
+          value: Math.round(result.duration_seconds * 1000),
+        });
+      }
+      if (typeof result.status === "string") {
+        out.push({ kind: "meta", key: "result", value: result.status });
+      }
+    }
+  }
 
   if (agent === "claude") {
     if (obj.type === "system" && obj.subtype === "init") {

@@ -527,4 +527,28 @@ describe("invokeAgent", () => {
     });
 
   });
+
+  describe("antigravity", () => {
+    it("passes the prompt right after -p and parses agy step_update/result lines", async () => {
+      const lines = [
+        JSON.stringify({ event: "init", conversation_id: "conv-1", init: { cwd: "/tmp" } }),
+        JSON.stringify({ event: "step_update", step_update: { text_delta: "<p>hi</p>" } }),
+        JSON.stringify({ event: "result", result: { status: "SUCCESS", response: "<p>hi</p>" } }),
+      ].join("\n") + "\n";
+
+      const events = await driveInvoke(
+        { agent: "antigravity", prompt: "make html", binOverride: BIN_OVERRIDE },
+        lines,
+        0,
+      );
+
+      const argv = mockSpawn.mock.calls.at(-1)![1] as string[];
+      expect(argv.slice(-2)).toEqual(["-p", "make html"]);
+      expect(argv).toContain("--disable-slash-commands");
+
+      // result.response must not duplicate the streamed delta
+      const deltas = events.filter((e) => e.type === "delta");
+      expect(deltas).toEqual([{ type: "delta", text: "<p>hi</p>" }]);
+    });
+  });
 });
