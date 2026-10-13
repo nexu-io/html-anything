@@ -1,3 +1,4 @@
+import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { findCommonPath, resolveCollisionOutput } from "../collision-resolve.js";
 
@@ -7,17 +8,17 @@ describe("findCommonPath", () => {
   });
 
   it("returns the resolved path of a single input", () => {
-    expect(findCommonPath(["/tmp/x"])).toBe("tmp/x");
+    expect(findCommonPath(["/tmp/x"])).toBe(path.resolve("/tmp/x"));
   });
 
   it("finds the common ancestor of two paths with a shared parent", () => {
     expect(
       findCommonPath(["/home/user/a/b/file.md", "/home/user/a/c/file.md"]),
-    ).toBe("home/user/a");
+    ).toBe(path.resolve("/home/user/a"));
   });
 
   it("returns path.sep when paths share only the root", () => {
-    expect(findCommonPath(["/foo/a.md", "/bar/b.md"])).toBe("/");
+    expect(findCommonPath(["/foo/a.md", "/bar/b.md"])).toBe(path.resolve("/"));
   });
 });
 
