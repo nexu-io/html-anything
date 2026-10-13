@@ -19,6 +19,7 @@ export interface Dict {
   "toolbar.selectAgent": string;
   "toolbar.switchAgent": string;
   "toolbar.settings": string;
+  "toolbar.toggleTheme": string;
   "toolbar.stop": string;
   "toolbar.convert": string;
   "toolbar.firstSelectAgent": string;
@@ -381,6 +382,7 @@ const en: Dict = {
   "toolbar.selectAgent": "Select agent",
   "toolbar.switchAgent": "Switch agent",
   "toolbar.settings": "Settings",
+  "toolbar.toggleTheme": "Toggle dark mode",
   "toolbar.stop": "◼ Stop",
   "toolbar.convert": "⚡ Convert to HTML",
   "toolbar.firstSelectAgent": "Pick an agent first",
@@ -743,6 +745,7 @@ const zhCN: Dict = {
   "toolbar.selectAgent": "选择 agent",
   "toolbar.switchAgent": "切换 agent",
   "toolbar.settings": "设置",
+  "toolbar.toggleTheme": "切换深色模式",
   "toolbar.stop": "◼ 停止",
   "toolbar.convert": "⚡ 转换为 HTML",
   "convertChip.label": "生成 HTML",

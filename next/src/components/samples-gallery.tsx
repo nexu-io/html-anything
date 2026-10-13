@@ -111,7 +111,7 @@ export function SamplesGallery({ onLoaded }: { onLoaded?: () => void }) {
                   return (
                     <span key={i}>
                       {kbdParts[0]}
-                      <kbd className="px-1 py-px rounded bg-white border border-[var(--line)] font-mono text-[10px]">
+                      <kbd className="px-1 py-px rounded bg-[var(--surface)] border border-[var(--line)] font-mono text-[10px]">
                         ⌘+Enter
                       </kbd>
                       {kbdParts[1]}
