@@ -1,3 +1,5 @@
+/** @vitest-environment node */
+
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 
 const { existsSyncMock } = vi.hoisted(() => ({
@@ -40,5 +42,35 @@ describe("detectAgents", () => {
         { id: "MiniMax-M2.7", label: "MiniMax-M2.7" },
       ]),
     );
+  });
+});
+
+describe("detectAgents grok", () => {
+  it("detects grok on PATH", () => {
+    existsSyncMock.mockImplementation((p) => p === "/usr/local/bin/grok");
+
+    const grok = findAgent(detectAgents(), "grok");
+    expect(grok.available).toBe(true);
+    expect(grok.path).toBe("/usr/local/bin/grok");
+    expect(grok.resolvedBin).toBe("grok");
+    expect(grok.protocol).toBe("prompt-file");
+    expect(grok.unsupported).toBeUndefined();
+    expect(grok.label).toBe("Grok Build");
+  });
+
+  it("honors an absolute GROK_BIN override", () => {
+    vi.stubEnv("GROK_BIN", "/opt/xai/grok");
+    existsSyncMock.mockImplementation((p) => p === "/opt/xai/grok");
+
+    const grok = findAgent(detectAgents(), "grok");
+    expect(grok.available).toBe(true);
+    expect(grok.path).toBe("/opt/xai/grok");
+    expect(grok.resolvedBin).toBe("grok");
+  });
+
+  it("stays unavailable when grok is missing", () => {
+    const grok = findAgent(detectAgents(), "grok");
+    expect(grok.available).toBe(false);
+    expect(grok.protocol).toBe("prompt-file");
   });
 });
