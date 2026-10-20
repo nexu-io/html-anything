@@ -34,11 +34,10 @@ describe("detectAgents", () => {
     const agents = detectAgents();
     const claude = findAgent(agents, "claude");
 
-    expect(claude.models).toEqual(
-      expect.arrayContaining([
-        { id: "MiniMax-M3", label: "MiniMax-M3" },
-        { id: "MiniMax-M2.7", label: "MiniMax-M2.7" },
-      ]),
-    );
+    expect(claude.models.filter((model) => model.id.startsWith('MiniMax-'))).toEqual([
+      { id: 'MiniMax-M3.1-Flash', label: 'MiniMax-M3.1-Flash' },
+      { id: 'MiniMax-M3', label: 'MiniMax-M3' },
+    ]);
+    expect(claude.models[0]).toEqual({ id: 'default', label: 'Default (CLI config)' });
   });
 });
