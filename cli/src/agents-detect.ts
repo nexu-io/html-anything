@@ -39,8 +39,8 @@ export const AGENTS: AgentDef[] = [
       { id: "claude-opus-4-7", label: "claude-opus-4-7" },
       { id: "claude-sonnet-4-6", label: "claude-sonnet-4-6" },
       { id: "claude-haiku-4-5", label: "claude-haiku-4-5" },
-      { id: "MiniMax-M3", label: "MiniMax-M3" },
-      { id: "MiniMax-M2.7", label: "MiniMax-M2.7" },
+      { id: 'MiniMax-M3.1-Flash', label: 'MiniMax-M3.1-Flash' },
+      { id: 'MiniMax-M3', label: 'MiniMax-M3' },
     ],
   },
   {
