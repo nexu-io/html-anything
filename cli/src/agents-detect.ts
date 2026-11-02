@@ -90,6 +90,16 @@ export const AGENTS: AgentDef[] = [
     ],
   },
   {
+    id: "antigravity",
+    label: "Antigravity",
+    bin: "agy",
+    envOverride: "ANTIGRAVITY_BIN",
+    vendor: "Google",
+    protocol: "argv",
+    // Model ids come from the user's agy config; no curated list yet.
+    fallbackModels: [DEFAULT_MODEL],
+  },
+  {
     id: "gemini",
     label: "Gemini CLI",
     bin: "gemini",
