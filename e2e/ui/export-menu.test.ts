@@ -35,6 +35,47 @@ const hyperframesHtml = `<!doctype html>
   </body>
 </html>`;
 
+const runtimeDeckHtml = `<!doctype html>
+<html>
+  <head>
+    <title>Runtime Deck</title>
+    <script>
+      const style = document.createElement("style");
+      style.textContent = ".runtime { color: rgb(1, 2, 3); }";
+      document.head.appendChild(style);
+    </script>
+  </head>
+  <body>
+    <section class="slide runtime" data-slide-id="1"><h1>Runtime slide one</h1></section>
+    <section class="slide runtime" data-slide-id="2"><h1>Runtime slide two</h1></section>
+  </body>
+</html>`;
+
+const runtimePlainHtml = `<!doctype html>
+<html><head><script>
+  const style = document.createElement("style");
+  style.textContent =
+    ".runtime { color: rgb(1, 2, 3); }" +
+    ".reveal { opacity: 0; }" +
+    ".reveal.visible { opacity: 1; }" +
+    ".entry { animation: fade-in 700ms linear forwards; }" +
+    "@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }";
+  document.head.appendChild(style);
+  addEventListener("DOMContentLoaded", () => {
+    const target = document.querySelector(".reveal");
+    if (target) new IntersectionObserver(() => target.classList.add("visible"), { threshold: 0 }).observe(target);
+  });
+</script></head>
+<body>
+  <p class="runtime reveal">Observer reveal</p>
+  <p class="runtime entry">Animated entry</p>
+  <p class="runtime">Runtime source-tab content</p>
+</body></html>`;
+
+const delayedHtml = `<!doctype html><html><head>
+  <script src="https://delayed.example/slow.js"></script>
+</head><body><p class="runtime">Delayed clipboard content</p></body></html>`;
+
 async function seedStore(page: Page, opts: SeedOptions) {
   const now = 1_700_000_000_000;
   const task = {
@@ -78,6 +119,31 @@ async function seedStore(page: Page, opts: SeedOptions) {
   );
 }
 
+async function captureClipboardHtml(page: Page) {
+  await page.evaluate(() => {
+    Object.defineProperty(window, "ClipboardItem", {
+      configurable: true,
+      value: class ClipboardItem {
+        readonly items: Record<string, Blob | Promise<Blob>>;
+        constructor(items: Record<string, Blob | Promise<Blob>>) {
+          this.items = items;
+        }
+      },
+    });
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        write: async (items: Array<{ items: Record<string, Blob | Promise<Blob>> }>) => {
+          (window as typeof window & { __clipboardWriteStartedAt?: number }).__clipboardWriteStartedAt = performance.now();
+          const blob = await items[0]?.items["text/html"];
+          (window as typeof window & { __wechatClipboardHtml?: string }).__wechatClipboardHtml =
+            blob ? await blob.text() : "";
+        },
+      },
+    });
+  });
+}
+
 test.describe("Export menu", () => {
   test("keeps Remotion hidden for regular HTML exports", async ({ page }) => {
     await seedStore(page, { html: plainHtml });
@@ -94,6 +160,74 @@ test.describe("Export menu", () => {
     await expect(menu.getByRole("button", { name: /\.html single file/ })).toBeVisible();
     await expect(menu.getByText(/Hyperframes/)).toHaveCount(0);
     await expect(menu.getByRole("button", { name: /Remotion project/ })).toHaveCount(0);
+  });
+
+  test("keeps computed styles when exporting from Source and Log tabs", async ({ page }) => {
+    await seedStore(page, { html: runtimePlainHtml });
+    await page.goto("/");
+    await captureClipboardHtml(page);
+
+    for (const tab of [/Source/, /Log/]) {
+      await page.getByRole("button", { name: tab }).click();
+      await page.evaluate(() => {
+        (window as typeof window & { __wechatClipboardHtml?: string }).__wechatClipboardHtml = "";
+      });
+      await page.getByRole("button", { name: /export/i }).click();
+      await page.getByTestId("export-menu").getByRole("button", { name: /WeChat/ }).click();
+
+      await expect.poll(() =>
+        page.evaluate(() => (window as typeof window & { __wechatClipboardHtml?: string }).__wechatClipboardHtml ?? ""),
+      ).toContain("Runtime source-tab content");
+      const copied = await page.evaluate(() =>
+        (window as typeof window & { __wechatClipboardHtml?: string }).__wechatClipboardHtml ?? "",
+      );
+      expect(copied).toContain("color: rgb(1, 2, 3)");
+      expect(copied).toContain("Observer reveal");
+      expect(copied).toContain("Animated entry");
+      expect(copied).not.toContain("opacity: 0");
+    }
+  });
+
+  test("exports every computed-styled slide when slide 2 is selected", async ({ page }) => {
+    await seedStore(page, { html: runtimeDeckHtml });
+    await page.goto("/");
+    await captureClipboardHtml(page);
+
+    await page.getByRole("button", { name: "2", exact: true }).click();
+    await page.getByRole("button", { name: /export/i }).click();
+    await page.getByTestId("export-menu").getByRole("button", { name: /WeChat/ }).click();
+
+    await expect.poll(() =>
+      page.evaluate(() => (window as typeof window & { __wechatClipboardHtml?: string }).__wechatClipboardHtml ?? ""),
+    ).toContain("Runtime slide one");
+    const copied = await page.evaluate(() =>
+      (window as typeof window & { __wechatClipboardHtml?: string }).__wechatClipboardHtml ?? "",
+    );
+    expect(copied).toContain("Runtime slide two");
+    expect(copied).toContain("color: rgb(1, 2, 3)");
+  });
+
+  test("starts the clipboard write before a slow full-document render settles", async ({ page }) => {
+    await page.route("https://delayed.example/slow.js", async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 6000));
+      await route.fulfill({ contentType: "application/javascript", body: "document.body.dataset.ready = '1';" });
+    });
+    await seedStore(page, { html: delayedHtml });
+    await page.goto("/");
+    await captureClipboardHtml(page);
+
+    const clickStartedAt = await page.evaluate(() => performance.now());
+    await page.getByRole("button", { name: /export/i }).click();
+    await page.getByTestId("export-menu").getByRole("button", { name: /WeChat/ }).click();
+
+    await expect.poll(() =>
+      page.evaluate(() => (window as typeof window & { __wechatClipboardHtml?: string }).__wechatClipboardHtml ?? ""),
+      { timeout: 12_000 },
+    ).toContain("Delayed clipboard content");
+    const writeStartedAt = await page.evaluate(() =>
+      (window as typeof window & { __clipboardWriteStartedAt?: number }).__clipboardWriteStartedAt ?? Infinity,
+    );
+    expect(writeStartedAt - clickStartedAt).toBeLessThan(1000);
   });
 
   test("exports a Hyperframes Remotion project zip from the UI", async ({ page }) => {
