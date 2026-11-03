@@ -15,7 +15,7 @@ export class UnsupportedAgentProtocolError extends Error {
   constructor(public readonly agent: string, public readonly protocol: string) {
     super(
       `${agent} uses the ${protocol} protocol, which is not yet wired up in this build. ` +
-        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / codewhale / deepseek-tui / aider.`,
+        `Pick one of: claude / codex / cursor-agent / gemini / copilot / opencode / qwen / qoder / codewhale / deepseek-tui / hermes / aider.`,
     );
   }
 }
@@ -127,6 +127,14 @@ export function buildArgv(agent: string, _opts: AgentArgvOpts = {}): string[] {
       // spawn time, so we leave the trailing slot empty here.
       return ["exec", "--auto", ...(model ? ["--model", model] : [])];
     case "hermes":
+      // Hermes Agent has no stream-json mode: `-z` prints only the final
+      // assistant text to stdout, which is the same plain-text shape as
+      // aider / codewhale / deepseek-tui (see the plain-text branch in
+      // `parseLineWithState` and the close-flush in invoke.ts).
+      // The streaming path is `hermes acp` (ACP JSON-RPC), which needs the
+      // ACP client and is tracked as a separate change; this adapter trades
+      // the live preview for a working invocation today.
+      return ["-z", ...(model ? ["-m", model] : [])];
     case "kimi":
     case "devin":
     case "kiro":
@@ -256,9 +264,15 @@ function parseLineWithState(agent: string, line: string, state: ParseState): Age
   const trimmed = line.trim();
   if (!trimmed) return [];
 
-  // Aider / DeepSeek — plain text streaming on stdout (DeepSeek tool calls
-  // go to stderr, which is forwarded as `stderr` events, not parsed here).
-  if (agent === "aider" || agent === "codewhale" || agent === "deepseek-tui") {
+  // Aider / DeepSeek / Hermes — plain text streaming on stdout (DeepSeek tool
+  // calls go to stderr, which is forwarded as `stderr` events, not parsed
+  // here; `hermes -z` prints only the final answer and nothing else).
+  if (
+    agent === "aider" ||
+    agent === "codewhale" ||
+    agent === "deepseek-tui" ||
+    agent === "hermes"
+  ) {
     return [{ kind: "delta", text: trimmed.endsWith("\n") ? trimmed : trimmed + "\n" }];
   }
 

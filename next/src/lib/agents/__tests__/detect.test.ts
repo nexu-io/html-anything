@@ -30,6 +30,13 @@ afterEach(() => {
 });
 
 describe("detectAgents", () => {
+  it("marks Hermes invocable through the one-shot argv protocol", () => {
+    const hermes = findAgent(detectAgents(), "hermes");
+
+    expect(hermes.protocol).toBe("argv");
+    expect(hermes.unsupported).toBeUndefined();
+  });
+
   it("includes the configured MiniMax Claude-compatible models in the Claude picker", () => {
     const agents = detectAgents();
     const claude = findAgent(agents, "claude");
