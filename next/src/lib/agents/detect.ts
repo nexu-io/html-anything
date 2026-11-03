@@ -231,20 +231,24 @@ export const AGENTS: AgentDef[] = [
     ],
   },
 
-  // ACP family — detection-only. Models still surfaced for UI completeness.
+  // Hermes runs through `-z` (plain text, one final answer), so it is
+  // invocable; the streaming `hermes acp` path needs the ACP client and is a
+  // separate, larger change.
   {
     id: "hermes",
     label: "Hermes",
     bin: "hermes",
     envOverride: "HERMES_BIN",
     vendor: "Mature",
-    protocol: "acp",
+    protocol: "argv",
     fallbackModels: [
       DEFAULT_MODEL,
       { id: "openai-codex:gpt-5.5", label: "gpt-5.5 (openai-codex)" },
       { id: "openai-codex:gpt-5.4", label: "gpt-5.4 (openai-codex)" },
     ],
   },
+
+  // ACP family — detection-only. Models still surfaced for UI completeness.
   {
     id: "kimi",
     label: "Kimi CLI",

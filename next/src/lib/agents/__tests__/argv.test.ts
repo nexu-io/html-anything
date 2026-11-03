@@ -1,5 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { parseLine, makeParser, sanitizeAgentStderrLine } from '../argv';
+import { buildArgv, parseLine, makeParser, sanitizeAgentStderrLine } from '../argv';
+
+describe('hermes adapter', () => {
+  it('invokes the one-shot mode with the prompt as the trailing arg', () => {
+    expect(buildArgv('hermes')).toEqual(['-z']);
+    expect(buildArgv('hermes', { prompt: 'placeholder' })).toEqual(['-z']);
+    expect(buildArgv('hermes', { model: 'openai-codex:gpt-5.5' })).toEqual([
+      '-z',
+      '-m',
+      'openai-codex:gpt-5.5',
+    ]);
+  });
+
+  it('treats stdout as plain text, not JSON lines', () => {
+    expect(
+      parseLine('hermes', '<!doctype html><html><body>ok</body></html>'),
+    ).toEqual([
+      { kind: 'delta', text: '<!doctype html><html><body>ok</body></html>\n' },
+    ]);
+  });
+
+  it('no longer reports the ACP protocol as unsupported', () => {
+    expect(() => buildArgv('hermes')).not.toThrow();
+  });
+});
+
 
 describe('parseLine codex lifecycle', () => {
   it('reports the thread and generation start', () => {
