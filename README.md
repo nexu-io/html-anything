@@ -443,16 +443,16 @@ User-emitted HTML always renders inside `<iframe sandbox="allow-scripts allow-sa
 ## Roadmap
 
 - [ ] **Multi-template compare preview** — generate four candidates of the same brief, pick the best one
-- [ ] **Hyperframes → mp4** — one-click hand-off of frame scripts to Remotion for real video output
+- [ ] **Hyperframes → mp4** — one-click hand-off of frame scripts to Remotion for real video output *(Remotion project-zip export is shipped and e2e-tested; real `.mp4` rendering is still pending)*
 - [ ] **Shared design systems** — interop with [`nexu-io/open-design`](https://github.com/nexu-io/open-design) `DESIGN.md` assets
-- [ ] **Template marketplace** — community-contributed prompts & examples
+- [x] **Template marketplace** — community-contributed prompts & examples *(shipped — see Status; Windows GNU-tar caveat tracked in #164)*
 - [ ] **Browser extension** — select on any page → convert to HTML template
-- [ ] **History / version diff / IndexedDB archive**
+- [x] **History / version diff / IndexedDB archive** *(per-task version history in IndexedDB with side-by-side compare, plus diff-edit regeneration)*
 - [ ] **More export targets** — WeChat Channels · Douyin captions · Notion · Linear · Telegraph
 
 ## Status
 
-Early but real. The closed loop — **detect agent → pick skill → SSE stream → sandboxed iframe preview → one-click export** — runs end-to-end against all 8 CLIs listed above. The skill library and the `SKILL.md` hard-constraints are where most of the leverage lives, and both are stable. The picker UX, design-system metadata, and the multi-template compare flow ship daily. If something looks broken on your machine, open an issue with the agent CLI you were using and the input — those are the bug reports that move things forward fastest.
+Early but real. The closed loop — **detect agent → pick skill → SSE stream → sandboxed iframe preview → one-click export** — runs end-to-end against all 8 CLIs listed above. The skill library and the `SKILL.md` hard-constraints are where most of the leverage lives, and both are stable. The picker UX and design-system metadata ship daily. If something looks broken on your machine, open an issue with the agent CLI you were using and the input — those are the bug reports that move things forward fastest.
 
 | Surface | State |
 |---|---|
@@ -462,11 +462,11 @@ Early but real. The closed loop — **detect agent → pick skill → SSE stream
 | Sandboxed iframe preview | ✅ stable |
 | One-click WeChat / X / Zhihu / `.html` / `.png` export | ✅ stable |
 | CSV / Excel / JSON / SQL format auto-detect | ✅ stable |
-| Multi-template compare (generate 4, pick 1) | 🛠 in progress |
+| Multi-template compare (generate 4, pick 1) | ⏳ planned |
 | Hyperframes → `.mp4` one-click handoff to Remotion | 🛠 in progress |
 | Browser extension (select on any page → convert) | ⏳ planned |
-| History / version diff / IndexedDB archive | ⏳ planned |
-| Skill marketplace (`install <github-repo>`) | ⏳ planned |
+| History / version diff / IndexedDB archive | ✅ stable |
+| Skill marketplace (`install <github-repo>`) | ✅ stable — Windows: install fails when GNU tar wins PATH ([#164](https://github.com/nexu-io/html-anything/issues/164)) |
 
 ## Security
 
