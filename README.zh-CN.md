@@ -338,16 +338,16 @@ picker 用两个维度组织：
 ## 🛣️ Roadmap
 
 - [ ] **多模板比较预览** —— 同一份内容生成 4 张候选，选最美的一张落地
-- [ ] **Hyperframes → mp4** —— 一键把帧脚本送进 Remotion 渲真视频
+- [ ] **Hyperframes → mp4** —— 一键把帧脚本送进 Remotion 渲真视频（Remotion 工程 zip 导出已上线并有 e2e 覆盖;真 `.mp4` 渲染待接）
 - [ ] **共享设计 system** —— 与 [`nexu-io/open-design`](https://github.com/nexu-io/open-design) 互通 `DESIGN.md` 资产
-- [ ] **模板市场** —— 社区贡献你的提示词与示例
+- [x] **模板市场** —— 社区贡献你的提示词与示例（已上线——见进度表;Windows GNU tar 注意事项见 #164）
 - [ ] **浏览器扩展** —— 选中网页内容 → 一键转 HTML 模板
-- [ ] **历史记录 / 版本对比 / IndexedDB 存档**
+- [x] **历史记录 / 版本对比 / IndexedDB 存档**（IndexedDB 逐任务版本历史 + 并排对比 + diff-edit 改稿）
 - [ ] **更多平台导出适配** —— 微信视频号 · 抖音字幕 · Notion · Linear · Telegraph
 
 ## 📍 进度
 
-早期但能用。**识别 agent → 选 skill → SSE 流式渲染 → sandboxed iframe 预览 → 一键导出** —— 这条闭环已经跑通,8 个 CLI 全都能驱动。Skill 库和 `SKILL.md` 里的硬约束是这套东西最值钱的部分,这两块都稳定了。Picker UX、design-system 元数据、多模板对比流程还在每天迭代。**如果你本机上跑出毛病了,提 issue 时附上你用的是哪个 agent CLI + 输入内容,这种 issue 推进最快。**
+早期但能用。**识别 agent → 选 skill → SSE 流式渲染 → sandboxed iframe 预览 → 一键导出** —— 这条闭环已经跑通,8 个 CLI 全都能驱动。Skill 库和 `SKILL.md` 里的硬约束是这套东西最值钱的部分,这两块都稳定了。Picker UX、design-system 元数据还在每天迭代。**如果你本机上跑出毛病了,提 issue 时附上你用的是哪个 agent CLI + 输入内容,这种 issue 推进最快。**
 
 | 模块 | 状态 |
 |---|---|
@@ -357,11 +357,11 @@ picker 用两个维度组织：
 | Sandboxed iframe 预览 | ✅ 稳定 |
 | 一键复制到公众号 / 推特 / 知乎 / `.html` / `.png` | ✅ 稳定 |
 | CSV / Excel / JSON / SQL 格式自动识别 | ✅ 稳定 |
-| 多模板对比(同一份生成 4 张,选 1 张落地) | 🛠 进行中 |
+| 多模板对比(同一份生成 4 张,选 1 张落地) | ⏳ 计划中 |
 | Hyperframes → `.mp4` 一键交给 Remotion 渲视频 | 🛠 进行中 |
 | 浏览器扩展(选中网页 → 转 HTML 模板) | ⏳ 计划中 |
-| 历史记录 / 版本对比 / IndexedDB 存档 | ⏳ 计划中 |
-| Skill 市场(`install <github-repo>`) | ⏳ 计划中 |
+| 历史记录 / 版本对比 / IndexedDB 存档 | ✅ 稳定 |
+| Skill 市场(`install <github-repo>`) | ✅ 稳定 —— Windows:PATH 上有 GNU tar 时解包会失败([#164](https://github.com/nexu-io/html-anything/issues/164)) |
 
 ## 🤝 贡献
 
