@@ -1,8 +1,8 @@
 ---
 name: motion-director
-description: 为产品宣传片、功能演示、品牌片与动态图形视频设计动态叙事、动作脚本、镜头衔接与声音叙事，并根据实际预览修正节奏、声画关系和逐页展示感。用于原创制作、创作方案、审片或大幅重编已有片。已选可编辑模板适配走 template-to-video，参考视频复刻走 motion-recreate；普通局部修改、只改声音或仅导出按 motion-production 的对应范围读取参考，不重启完整创作。
+description: 为产品宣传片、功能演示、品牌片与动态图形负责原创构思、动态叙事、动作编排、声音叙事、大幅重编及创作品质审片。已有工程中重新设计局部动作或声画关系也适用，画面锁定时仅展开声音创作；按既定决定执行文字/素材/音轨替换、技术检查或导出使用 motion-production。可编辑模板适配走 motion-template-to-video，参考视频重建本次作品走 motion-recreate，交付可复用模板走 motion-video-to-template。
 metadata:
-  version: "1.4.4"
+  version: "1.4.5"
 ---
 
 # Motion Director
@@ -19,14 +19,15 @@ metadata:
 
 - **创作方案**：读取 [动作脚本](references/action-script.md)，交付所需的创意与脚本；执行下文创作判断与编排部分，不自动制作视频。
 - **从零制作**：按下面工作流推进到用户要求的预览、工程或成片。
-- **局部修改**：先观看相关片段和相邻接点；只展开受影响的动作记录与检查。
-- **审片**：以实际视频为依据提出具体问题，不自动改工程。
+- **局部创作**：重新设计受影响的动作、节奏或声画关系；先观看相关片段和相邻接点，只展开当前范围。按既定决定执行的局部工程修改使用 motion-production。
+- **声音创作**：画面锁定时仅重新设计声音叙事、节奏与声画锚点，保留画面，不重启整片原创。
+- **创作审片**：以实际视频评价表达、动作、节奏和声画关系，不自动改工程；编码、规格与导出任务核对使用 motion-production。
 
 沿用已确认的简报、素材、风格与授权。只追问影响真实性、交付或重大创作取舍的缺口；其余合理假设并简短说明。检查点默认是 Agent 自检，不自动变成用户审批。
 
 ## 接入与共享职责
 
-首次触发本 Skill 时先读取 [共享上下文](../motion-production/references/context.md)，按其清单补齐本次所需正文，并记录已读文档。复用已有决定，不返回总入口重做路由。下文各阶段的“读取”均指补齐缺口：正文仍在上下文时直接应用，不再重复 `cat` 或请求同一工作流；阶段切换不是重读理由。已有片的修改或重编应用 [共享修改流程](../motion-production/references/edit.md)，原创以外的局部任务仅展开相关范围。进入实现前确保已读 [运行规范](../motion-production/references/production.md)、[Native authoring](../motion-production/references/native.md) 及工具返回的固定版本引擎指南；补读结果先返回模型，后续调用再执行依赖操作。导出或成片交付时补读 [验证](../motion-production/references/verification.md)。这些是工程接入要求，不替代下面的创作判断。
+首次触发本 Skill 时先读取 [共享上下文](../motion-production/references/context.md)，按其清单补齐本次所需正文，并记录已读文档。复用已有决定，不返回 production 重新选路。下文各阶段的“读取”均指补齐缺口：正文仍在上下文时直接应用，不再重复 `cat` 或请求同一工作流；阶段切换不是重读理由。已有片的修改或重编应用 [共享修改流程](../motion-production/references/edit.md)，原创以外的局部任务仅展开相关范围。进入实现前确保已读 [运行规范](../motion-production/references/production.md)、[Native authoring](../motion-production/references/native.md) 及工具返回的固定版本引擎指南；补读结果先返回模型，后续调用再执行依赖操作。导出或成片交付时补读 [验证](../motion-production/references/verification.md)。这些是工程接入要求，不替代下面的创作判断。
 
 MCP-only 使用 resources/read `motion://workflow/director/start` 读取本页，按链接读取共享及质量参考，复用仍完整可用的正文。
 

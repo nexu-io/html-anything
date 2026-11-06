@@ -58,11 +58,16 @@ export async function check() {
     assertSkillFrontmatterYaml(frontmatter, entry.name);
     assert.equal(document.match(/^name: (.+)$/m)?.[1], entry.name);
   }
+  // Agents choose routes from these texts, so a stale "placeholder" note hides a ready Skill.
+  const readySkills = Object.values(workflowRegistry).filter(definition => definition.status === 'ready')
+    .map(definition => Object.values(definition.sections)[0]?.match(/^skills\/([^/]+)\//)?.[1]).filter(Boolean) as string[];
   for (const [workflow, definition] of Object.entries(workflowRegistry)) {
     if (releaseProfile === 'phase1' && !phase1WorkflowNames.includes(workflow)) continue;
     for (const section of Object.keys(definition.sections)) {
       const document = await getWorkflow(section, workflow);
       assert.ok(document.content.trim(), `Empty workflow section: ${workflow}/${section}`);
+      for (const skill of readySkills) assert.doesNotMatch(document.content, new RegExp(`${skill} (?:remains|is still|is) (?:an? )?placeholder`, 'i'),
+        `${document.documentId} calls ready Skill ${skill} a placeholder`);
       for (const reference of document.references) {
         const linked = await getWorkflow(reference.section, reference.workflow);
         assert.equal(linked.documentId, reference.documentId, `Unreachable workflow link from ${document.documentId}`);

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1176" height="332" viewBox="0 0 1176 332" role="img" aria-labelledby="t d"><title id="t">从一支参考片，到自己的发布片</title><desc id="d">示意：从资源合集选片，用 Motion MD 写下揭示方式与节奏，在 Codex 里换成自己的品牌。</desc>
+<rect width="1176" height="332" rx="18" fill="#edf0e8"/><g font-family="Arial, Helvetica, PingFang SC, Microsoft YaHei, sans-serif">
+<text x="28" y="39" fill="#486044" font-size="15" font-weight="650" >openmotion  /  创作指南</text>
+<text x="1148" y="39" fill="#52654e" font-size="14" font-weight="500" text-anchor="end">流程示意   ·   01—03</text>
+<rect x="28" y="65" width="360" height="240" rx="12" fill="#ffffff"/>
+<text x="48" y="97" fill="#55714e" font-size="14" font-weight="650" >01   /   参考合集</text>
+<text x="48" y="135" fill="#203022" font-size="25" font-weight="700" >从合集选片</text>
+<rect x="48" y="153" width="320" height="91" rx="6" fill="#e8eee6"/>
+<path d="M242 153h126v91H191Z" fill="#a8cf98"/>
+<path d="M239 230l27-32 25 13 41-46" stroke="#2a462b" stroke-width="3" fill="none"/>
+<text x="60" y="177" fill="#2a462b" font-size="11" font-weight="600" >示例画面</text>
+<text x="60" y="219" fill="#2a462b" font-size="32" font-weight="700" >Orbit</text>
+<text x="48" y="281" fill="#52624e" font-size="16" font-weight="400" >选一个值得借鉴的开场。</text>
+<rect x="408" y="65" width="360" height="240" rx="12" fill="#213328"/>
+<text x="428" y="97" fill="#c2dfa9" font-size="14" font-weight="650" >02   /   风格规范</text>
+<text x="428" y="135" fill="#ffffff" font-size="25" font-weight="700" >用 Motion MD 写下风格</text>
+<path d="M433 163v79" stroke="#8fb880" stroke-width="2"/>
+<circle cx="433" cy="169" r="4" fill="#bdde9e"/>
+<text x="449" y="174" fill="#badaac" font-size="16" font-weight="600" >00s</text>
+<text x="505" y="174" fill="#ffffff" font-size="16" font-weight="500" >用标题开场</text>
+<circle cx="433" cy="201" r="4" fill="#bdde9e"/>
+<text x="449" y="206" fill="#badaac" font-size="16" font-weight="600" >03s</text>
+<text x="505" y="206" fill="#ffffff" font-size="16" font-weight="500" >揭示产品</text>
+<circle cx="433" cy="233" r="4" fill="#bdde9e"/>
+<text x="449" y="238" fill="#badaac" font-size="16" font-weight="600" >08s</text>
+<text x="505" y="238" fill="#ffffff" font-size="16" font-weight="500" >演示使用场景</text>
+<text x="428" y="281" fill="#d1dfca" font-size="16" font-weight="400" >写清楚哪些保留，哪些替换。</text>
+<rect x="788" y="65" width="360" height="240" rx="12" fill="#ffffff"/>
+<text x="808" y="97" fill="#55714e" font-size="14" font-weight="650" >03   /   可编辑工程</text>
+<text x="808" y="135" fill="#203022" font-size="25" font-weight="700" >在 Codex 里改成自己的</text>
+<rect x="808" y="153" width="320" height="91" rx="6" fill="#f5e7db"/>
+<path d="M1002 153h126v91H951Z" fill="#f0be9c"/>
+<path d="M999 230l27-32 25 13 41-46" stroke="#573b33" stroke-width="3" fill="none"/>
+<text x="820" y="177" fill="#573b33" font-size="11" font-weight="600" >示例画面</text>
+<text x="820" y="219" fill="#573b33" font-size="32" font-weight="700" >Nova</text>
+<text x="808" y="281" fill="#52624e" font-size="16" font-weight="400" >换上品牌素材，保留节奏，工程可编辑。</text>
+</g></svg>

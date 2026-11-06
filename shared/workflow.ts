@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFile, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+export { workflowEntryGuide } from './workflow-entry.js';
 
 export const workflowRegistry = {
   production: {
@@ -31,7 +32,7 @@ export const workflowRegistry = {
       examples: 'skills/motion-director/references/examples.md',
     },
   },
-  template: { status: 'ready', sections: { start: 'skills/template-to-video/SKILL.md' } },
+  template: { status: 'ready', sections: { start: 'skills/motion-template-to-video/SKILL.md' } },
   recreate: {
     status: 'ready',
     sections: {
@@ -43,12 +44,12 @@ export const workflowRegistry = {
   'video-to-template': {
     status: 'ready',
     sections: {
-      start: 'skills/video-to-template/SKILL.md',
-      measure: 'skills/video-to-template/references/measure.md',
-      rebuild: 'skills/video-to-template/references/rebuild.md',
+      start: 'skills/motion-video-to-template/SKILL.md',
+      measure: 'skills/motion-video-to-template/references/measure.md',
+      rebuild: 'skills/motion-video-to-template/references/rebuild.md',
       project: 'skills/motion-production/references/portable-project.md',
-      verification: 'skills/video-to-template/references/verify.md',
-      sources: 'skills/video-to-template/references/rule-sources.md',
+      verification: 'skills/motion-video-to-template/references/verify.md',
+      sources: 'skills/motion-video-to-template/references/rule-sources.md',
     },
   },
 } as const;
@@ -57,8 +58,8 @@ export const workflowRegistry = {
 export const workflowFiles = workflowRegistry.production.sections;
 export const workflowNames = Object.keys(workflowRegistry);
 export const workflowSections = [...new Set(Object.values(workflowRegistry).flatMap(workflow => Object.keys(workflow.sections)))];
-export const phase1WorkflowNames = ['production', 'director', 'template', 'recreate'];
-export const phase1Skills = ['motion-production', 'motion-director', 'template-to-video', 'motion-recreate'];
+export const phase1WorkflowNames = ['production', 'director', 'template', 'recreate', 'video-to-template'];
+export const phase1Skills = ['motion-production', 'motion-director', 'motion-template-to-video', 'motion-recreate', 'motion-video-to-template'];
 export function workflowResources() {
   return Object.entries(workflowRegistry).filter(([name]) => phase1WorkflowNames.includes(name)).flatMap(([workflow, definition]) => Object.keys(definition.sections).map(section => ({
     uri: `motion://workflow/${workflow}/${section}`, name: `${workflow}/${section}`, mimeType: 'application/json',
@@ -66,7 +67,7 @@ export function workflowResources() {
 }
 export async function readWorkflowResource(uri: unknown, dataDirectory: string) {
   if (typeof uri !== 'string') throw new Error('INVALID_RESOURCE_URI');
-  const match = /^motion:\/\/workflow\/([a-z]+)\/([a-z]+)$/.exec(uri);
+  const match = /^motion:\/\/workflow\/([a-z]+(?:-[a-z]+)*)\/([a-z]+)$/.exec(uri);
   if (match && phase1WorkflowNames.includes(match[1])) return { uri, mimeType: 'application/json', text: JSON.stringify({ ...await getWorkflow(match[2], match[1]), workflows: phase1WorkflowNames }) };
   const engine = /^motion:\/\/engine\/([a-zA-Z0-9_/-]+\.md)$/.exec(uri);
   if (!engine) throw new Error('INVALID_RESOURCE_URI');

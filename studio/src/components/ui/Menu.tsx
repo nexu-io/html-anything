@@ -60,7 +60,7 @@ export function floatingMotion(openDuration: "duration-open" | "duration-tooltip
  * Chrome shared by every floating panel (`Popover` too); callers add their own shadow token.
  */
 export const popupSurface = cn(
-  "rounded-lg border border-border-input bg-surface",
+  "hf-od-floating-surface rounded-lg border border-border-input bg-surface",
   floatingMotion("duration-open"),
   "data-[preview-state=open]:opacity-100 data-[preview-state=open]:scale-100",
 );

@@ -1,39 +1,89 @@
-# OpenMotion
+**English** · [简体中文](docs/README.zh-CN.md)
 
-Local video creation and editing with your coding agent: reusable templates, reference-video recreation, an editable Studio, nine phase-one MCP Tools and four Skills. Rendering uses the pinned [HyperFrames](https://github.com/heygen-com/hyperframes) engine.
+<h1><img src="docs/readme/opendesign-symbol.svg" width="42" height="42" alt="OpenDesign" /> openmotion</h1>
 
-[简体中文](README.zh-CN.md) · [Documentation](docs/README.md) · [Contributing](CONTRIBUTING.md) · [Migration](docs/repository-migration.md)
+**We're building the best open-source alternative to Claude Motion.** Find a product film whose rhythm fits your launch. Use **Motion MD** to describe what you want to keep, then give Codex your own screenshots and copy. You get a video for your brand and a project you can edit again.
 
-## Develop
+**[Read Motion MD](docs/motion-md.md)** · **[Browse the Motion library & collections](docs/collections/README.md)** · **[Start in Codex](#start-in-codex)**
 
-Run from this repository root with the Node version pinned in `.github/workflows/ci.yml`:
+![A three-step guide: find a film in the Motion library, describe its style in Motion MD, and adapt it in Codex.](docs/readme/hero.svg)
 
-```sh
-npm ci
-npm run check
-npm run typecheck:studio
-npm run build:studio
-npm start
+## Motion MD
+
+**Motion MD is openmotion's first proposal for a reusable motion style specification.** A still image can tell you what a launch film looks like. To make another film in that style, you also need to know when the product appears, how the camera moves and how long the viewer has to read each line. Motion MD puts those decisions in plain Markdown.
+
+For example, a team adapting a 20-second product reveal might give Codex this excerpt:
+
+```markdown
+## Timing
+0–3s: Show the problem. 3–8s: Reveal the product.
+8–16s: Demonstrate two benefits. 16–20s: Hold the closing CTA.
+
+## Keep / replace
+Keep the continuous canvas and the pause after each reveal.
+Replace the logo, screenshots, benefit copy and closing CTA with ours.
 ```
 
-Open the local address printed by the service. Supply your own supported agent login or provider key for model generation; secrets and projects are not part of the repository or distribution.
+[Read the v0.1 proposal](docs/motion-md.md) · [Open the full example](docs/examples/product-launch.MOTION.md)
 
-## Independent installation
+![How a reference, brand assets and a Motion MD brief lead to an editable project.](docs/readme/motion-md.svg)
 
-```sh
-npm run package:npm
+**Use it today:** give the file explicitly to your Agent. The draft describes creative intent; the editable project is still HTML, CSS, JavaScript and media. There is no automatic Motion MD importer or validator.
+
+## Motion library and collections
+
+**[Browse the resource index →](docs/collections/README.md)** Start with a film, see who made it, and choose a reference or an editable project. Try [a product reveal](template-library/product-promo/), [an editorial chart](template-library/nyt-graph/) or [a branching explainer](template-library/decision-tree/). All three open as independent projects in Studio. [OpenDesign's public Motion showcase](https://open-design.ai/motion/) has more examples to watch.
+
+| A collection to explore | What it helps you find |
+| --- | --- |
+| **One brand, several launches** | How a company changes its opening, typography and product reveal across releases. |
+| **Companies on a technology ranking** | How teams on the same list, such as an a16z consumer AI ranking, tell different product stories. |
+| **Recently funded companies** | A monthly selection of launch films from companies that announced funding in 2026. |
+
+These are the editorial directions for the **planned public collections site**. The index and Studio catalog are available now. The catalog has **894 entries: 3 bundled editable examples and 891 external references and registry items**. A listed video is a reference; a verified template also needs editable source, a preview and a successful edit and render.
+
+![Studio workspace showing the template library and three ready-to-edit examples.](docs/readme/workspace.jpg)
+
+## Make the reference your own
+
+| [Product Promo · 20s](template-library/product-promo/) | [NYT Graph · 15s](template-library/nyt-graph/) | [Decision Tree · 10s](template-library/decision-tree/) |
+| --- | --- | --- |
+| ![Product reveal with a collaborative canvas](template-library/product-promo/poster.jpg) | ![Editorial chart with animated bars and annotations](template-library/nyt-graph/poster.jpg) | ![A decision tree with connected branches](template-library/decision-tree/poster.jpg) |
+
+These frames come from the bundled [Hyperframes examples](template-library/NOTICE.md). Pick a template and ask Codex:
+
+> Keep the opening and the pace of the reveal. Use our logo and the product screenshots in this repo. Hold the second screen long enough to read the new headline. Give me the editable project and an MP4.
+
+The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled template opens directly; external footage needs analysis and reconstruction. In Studio you can change the text, timing, layout and assets, or ask your Agent to make the same edit. Imported footage stays a clip.
+
+![The editor showing the Product Promo preview, compositions and timeline.](docs/readme/editor.jpg)
+
+## Start in Codex
+
+Clone this public repository at `feature/motion` and open the checkout in Codex. You'll need Git, Node.js **22.18+** with npm, and a Codex CLI that supports plugins. MP4 export also requires Chrome/Chromium and FFmpeg/FFprobe. See [Windows test packages](docs/test-packages.md) for that installation path.
+
+Paste this into a Codex conversation:
+
+```text
+From this checkout, install openmotion with bash scripts/install-motion.command.
+Once installation succeeds, ask whether I'd like the 20-second Product Promo demo.
+If I accept, open an independent editable project and deliver its MP4.
 ```
 
-This builds a small npm installer, a separate application archive and a checksum manifest in `dist/npm-local/`. The application installs outside the checkout, with verified public native tools cached on first use. See [local npm setup](docs/npm-installation.md) for Codex, Claude Code, DeepSeek Harness and WorkBuddy. The installer remains unpublished (`private: true`); no public npm installation command is claimed.
+After you accept, the Agent follows the [template-to-video workflow](skills/motion-template-to-video/SKILL.md). If your host cannot open the editor beside the conversation, use the returned local project link. [Installation and first-demo guide (Chinese)](docs/usage.md#使用) · [Other Agent adapters](docs/agent-adapters.md)
 
-`npm run package:phase1` builds the plugin ZIP. Complete Mac/Windows bundles remain available through the [test packaging tools](docs/test-packages.md). Current native acceptance targets macOS 26 arm64 and Windows 11 x64; building an archive does not prove it runs on another OS.
+**Bring more media when you need it.** The Studio model gateway accepts requests for images, video or audio through configured providers; you choose which results to place in your project. Providers use your own accounts and may charge for generation. [Verified capabilities](docs/model-gateway.md) · [Nine public MCP tools](docs/mcp-phase1-tools.md)
 
-After installation, invite the user to the first-run example and wait for consent. An accepted invitation follows [template-to-video](skills/template-to-video/SKILL.md) for the existing 20-second Product Promo example; it does not select a removed Skill.
+## MCP and lightweight installation
 
-## Privacy and public scope
+The [lightweight npm installer](docs/npm-installation.md) installs nine MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy. It shares the application and prepares verified native tools on demand. Build locally with `npm run package:npm`; the npm package is not publicly published. Complete ZIPs remain available as a backup.
 
-No embedded upstream browser analytics identifier or PostHog sender is retained in Motion's editor. Engine subprocesses disable upstream CLI telemetry. Packages include only the approved runtime files, selected Skills, documentation and licenses; tests, development source, private process archives, credentials and user projects stay outside the artifacts.
+The five entries are [motion-production](skills/motion-production/SKILL.md), [motion-director](skills/motion-director/SKILL.md), [motion-template-to-video](skills/motion-template-to-video/SKILL.md), [motion-recreate](skills/motion-recreate/SKILL.md), and [motion-video-to-template](skills/motion-video-to-template/SKILL.md). Reference recreation is implemented. Product UI follows the [OpenDesign visual system](docs/design-system.md); video artwork keeps its own styles.
 
-The `feature/motion` branch replaces the previous application while preserving repository history. The repository name and main branch are unchanged; CI builds and validates without publishing.
+## What's next
 
-[Apache-2.0](LICENSE). Vendored Studio, templates and fonts retain their own licenses and notices.
+**Motion Benchmark / Arena** is a proposed way to compare recreations: give each workflow the same reference and brand assets, then inspect the outputs for timing, brand fidelity and editability. The method and public leaderboard are still under discussion.
+
+To contribute a style, include the reference and its creator, the Motion MD, a preview, editable source and asset permissions. [Contribution guide](AGENTS.md) · [Documentation](docs/README.md)
+
+**Credits & release status.** openmotion uses [Hyperframes](https://github.com/heygen-com/hyperframes) for native compositions, the Studio foundation and rendering. Its [editor](studio/LICENSE) and [bundled examples](template-library/LICENSE) retain their upstream Apache-2.0 licenses. This public repository is licensed under [Apache-2.0](LICENSE); bundled components and fonts retain their notices. Development targets [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion); the former HTML Anything application remains on `main` and is preserved on [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). Packages are not published. See the [repository workflow](docs/repository-migration.md).

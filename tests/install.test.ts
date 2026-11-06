@@ -12,6 +12,25 @@ test('installation onboarding routes only to existing Skills', async () => {
   for (const [, skill] of references) {
     await access(new URL(`../skills/${skill}/SKILL.md`, import.meta.url));
   }
+  const guide = new URL('../docs/usage.md', import.meta.url);
+  const guideText = await readFile(guide, 'utf8');
+  const onboarding = guideText.split('### 安装完成后的引导（Codex / Agent）')[1]?.split('### 首次体验默认规则')[0] ?? '';
+  const canonical = new URL('../skills/motion-template-to-video/SKILL.md', import.meta.url);
+  for (const [url, body] of [
+    [guide, onboarding],
+    ...await Promise.all(['../README.md', '../docs/README.zh-CN.md'].map(async file => {
+      const url = new URL(file, import.meta.url);
+      return [url, await readFile(url, 'utf8')] as const;
+    }))
+  ] as const) {
+    const links = [...body.matchAll(/\]\(((?:\.\.\/)?skills\/[^)]+\/SKILL\.md)\)/g)]
+      .map(([, link]) => new URL(link, url));
+    assert.ok(links.some(link => link.href === canonical.href), `Missing template onboarding in ${url.pathname}`);
+    for (const link of links) await access(link);
+  }
+  for (const [, skillPath] of guideText.matchAll(/\]\((\.\.\/skills\/[^)]+)\)/g)) {
+    await access(new URL(skillPath.split('#')[0], guide));
+  }
 });
 
 test('preview resolves versioned cache and compatible local cache without changing user configuration', async () => {

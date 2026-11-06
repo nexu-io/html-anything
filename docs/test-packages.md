@@ -2,13 +2,13 @@
 
 当前源码位于 仓库根目录；下列模块命令在该目录执行。活动工作流在仓库根目录 `.github/workflows/ci.yml`，发布保持关闭。迁移基线及历史验收范围见[迁移说明](repository-migration.md)。
 
-MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册清单](mcp-phase1-tools.md)。`build <target> <beta-version> [legacy|phase1]` 将 profile 和工具名写入 `release.json`；默认沿用源码的 phase1，公开9个 motion_ Tool 并只包含4个配套 Skill。缺注册时在创建 staging／ZIP 前失败；本次验证的插件 ZIP 不等于各平台完整原生包已重新验收。
+MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册清单](mcp-phase1-tools.md)。`build <target> <beta-version> [legacy|phase1]` 将 profile 和工具名写入 `release.json`；默认沿用源码的 phase1，公开9个 motion_ Tool 并包含5个配套 Skill。缺注册时在创建 staging／ZIP 前失败；本次验证的插件 ZIP 不等于各平台完整原生包已重新验收。
 
 本流程服务于团队试装和问题复现；当前只有测试渠道，尚未启用正式包或自动升级。编辑器和模板业务使用同一份源码。完整包同时包含模型网关 gateway/；供应商 Key 和本机 Agent 登录仍由用户配置，不随包分发。
 
 ## 手动构建
 
-合入后，在 OpenDesign 仓库 → Actions → **Motion standalone checks** → Run workflow 选择 `format`。默认 `npm`，`full` 组装两个已声明目标的完整 ZIP。两种格式共用源码、锁定依赖和唯一 beta 版本。
+合入后，在本仓库 → Actions → **Motion standalone checks** → Run workflow 选择 `format`。默认 `npm`，`full` 组装两个已声明目标的完整 ZIP。两种格式共用源码、锁定依赖和唯一 beta 版本。
 
 | 选择 | 构建产物 | 运行时 |
 | --- | --- | --- |

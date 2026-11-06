@@ -13,6 +13,11 @@ export const distributionDocuments = [
   'docs/hyperframes.md', 'docs/mcp-phase1-tools.md', 'docs/model-gateway.md', 'docs/motion-director.md',
   'docs/motion-extension-scope.md', 'docs/npm-installation.md', 'docs/project-workspace.md',
   'docs/repository-migration.md', 'docs/session-architecture.md', 'docs/shared-editor.md',
+  'docs/README.zh-CN.md', 'docs/usage.md', 'docs/motion-md.md', 'docs/motion-md.zh-CN.md',
+  'docs/collections/README.md', 'docs/collections/README.zh-CN.md',
+  'docs/examples/product-launch.MOTION.md', 'docs/examples/product-launch.MOTION.zh-CN.md',
+  'docs/readme/ASSETS.md', 'docs/readme/opendesign-symbol.svg', 'docs/readme/hero.svg', 'docs/readme/hero.zh-CN.svg',
+  'docs/readme/motion-md.svg', 'docs/readme/motion-md.zh-CN.svg', 'docs/readme/editor.jpg', 'docs/readme/workspace.jpg',
   'docs/skills.md', 'docs/template-catalog.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
 ];
 
@@ -26,7 +31,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'template-catalog.ts', 'editor-server.ts',
     'scripts/runtime-assets.mjs', 'scripts/npm-runtime.mjs', 'scripts/runtime-lock.json',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
-    'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
+    'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
   ];
   async function walk(directory: string, extensions: RegExp) {
     for (const entry of await readdir(path.join(root, directory), { withFileTypes: true })) {
@@ -40,7 +45,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
   for (const directory of ['shared', 'gateway']) await walk(directory, /\.(?:ts|mjs|json)$/);
   await walk('web', /\.(?:ts|js|json|html|css|svg|jpg|png|webp|ttf|woff2?|txt)$/);
   for (const directory of ['templates', 'template-library']) await walk(directory, /\.(?:html|js|json|css|svg|jpg|png|webp|md|txt)$/);
-  for (const skill of [...phase1Skills, ...(profile === 'legacy' ? ['video-to-template'] : [])]) await walk('skills/' + skill, /\.(?:md|mjs|ts|py|json)$/);
+  for (const skill of phase1Skills) await walk('skills/' + skill, /\.(?:md|mjs|ts|py|json)$/);
   await walk('studio/build', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
   await walk('studio/public', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
   for (const file of files) if (!(await lstat(path.join(root, file))).isFile()) throw new Error('Distribution requires a regular file: ' + file);

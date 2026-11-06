@@ -1,6 +1,6 @@
 # Review and delivery verification
 
-Unchanged template preview reuse follows template-to-video: confirm the actual preview exists and decodes, then deliver its copy without rendering, comparison or a fabricated export job. The fresh-export and job/revision checks below apply when a new render is required.
+Unchanged template preview reuse follows motion-template-to-video: confirm the actual preview exists and decodes, then deliver its copy without rendering, comparison or a fabricated export job. The fresh-export and job/revision checks below apply when a new render is required.
 
 Use separate evidence for creative quality, technical media integrity and playback. Each check is `passed`, `failed` or `not_run`; a missing tool or an unseen render cannot become `passed`. Scores are optional diagnostics, never the acceptance criterion.
 
@@ -47,7 +47,7 @@ Local source edits are supported; each Motion export renders a fresh snapshot of
 
 ## 3. Technical checks on the completed MP4
 
-Read `motion_get_project({projectId,exportJobId:jobId})` for the **completed job's** automatic technical verification report. When export is requested, the service captures dimensions, duration and fps from the immutable native snapshot into `job.expected`, before renderer normalization; subsequent active-project edits or template switches cannot change the verification target. Set `audio: "required"` for a soundtrack/voiceover brief or `audio: "silent"` for a silent brief. The default `optional` allows either and cannot prove requested sound exists.
+Read `motion_get_project({projectId,exportJobId:jobId})` for the **completed job's** automatic technical verification report. When export is requested, the service captures dimensions, duration and fps from the immutable native snapshot into `job.expected`, before renderer normalization; subsequent active-project edits or template switches cannot change the verification target. Set `audio: "required"` on `motion_export_request` for a soundtrack/voiceover brief or `audio: "silent"` for a silent brief, before rendering; the project/status read has no audio-policy argument. The default `optional` allows either and cannot prove requested sound exists.
 
 The verifier checks:
 

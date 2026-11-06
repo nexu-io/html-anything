@@ -19,6 +19,14 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
     for (const host of exported.hosts) {
       const scope = JSON.parse(await readFile(path.join(output, host, 'openmotion/scope.json'), 'utf8'));
       assert.equal(scope.mcpProfile, 'phase1');
+      const { readdir } = await import('node:fs/promises');
+      assert.deepEqual((await readdir(path.join(output, host, 'openmotion/skills'))).sort(), ['motion-director', 'motion-production', 'motion-recreate', 'motion-template-to-video', 'motion-video-to-template']);
+      for (const skill of ['motion-template-to-video', 'motion-video-to-template']) {
+        assert.equal(await readFile(path.join(output, host, 'openmotion/skills', skill, 'SKILL.md'), 'utf8'), await readFile(path.join(source, 'skills', skill, 'SKILL.md'), 'utf8'));
+      }
+      for (const name of ['SKILL.md', 'references/rebuild.md', 'references/verify.md', 'scripts/measure_frame.mjs']) {
+        assert.equal(await readFile(path.join(output, host, 'openmotion/skills/motion-recreate', name), 'utf8'), await readFile(path.join(source, 'skills/motion-recreate', name), 'utf8'));
+      }
     }
     for (const host of exported.hosts) assert.ok(existsSync(path.join(output, `openmotion-${host}-${exported.version}-local.zip`)));
     const launch = JSON.parse(await readFile(path.join(output, 'launch-spec.json'), 'utf8'));
@@ -57,7 +65,7 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
       assert.equal(child.status, 0, child.stderr);
       assert.ok(JSON.parse(child.stdout).result.tools.some(tool => tool.name === 'motion_export_request'));
       assert.equal(JSON.parse(child.stdout).result.tools.length, 9);
-      assert.deepEqual((await (await import('node:fs/promises')).readdir(path.join(plugin, 'skills'))).sort(), ['motion-director', 'motion-production', 'motion-recreate', 'template-to-video']);
+      assert.deepEqual((await (await import('node:fs/promises')).readdir(path.join(plugin, 'skills'))).sort(), ['motion-director', 'motion-production', 'motion-recreate', 'motion-template-to-video', 'motion-video-to-template']);
     }
     assert.equal(existsSync(data), false, 'Export must not initialize a video project');
     const patch = await readFile(path.join(output, 'deepseek/openmotion/cordis.patch.yml'), 'utf8');
@@ -91,7 +99,7 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
     await cp(process.execPath, node);
     await mkdir(path.join(runtime, 'docs'));
     for (const name of ['AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(runtime, name), '# Fixture');
-    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/workflow.ts', 'web/design-system/icons.svg']) {
+    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'web/design-system/icons.svg']) {
       await mkdir(path.dirname(path.join(runtime, filename)), { recursive: true });
       await cp(path.join(source, filename), path.join(runtime, filename));
     }

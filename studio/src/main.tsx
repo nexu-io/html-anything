@@ -16,6 +16,7 @@ import { bindThumbnailPageLifecycle } from "./player/lib/thumbnailPageLifecycle"
 import "./styles/studio.css";
 import "./motion/theme.css";
 import "./motion/workspace.css";
+import "../../web/design-system/material.css";
 import { MotionStudioHost } from "./motion/MotionStudioHost";
 
 const unbindThumbnailPageLifecycle = bindThumbnailPageLifecycle(window, document);

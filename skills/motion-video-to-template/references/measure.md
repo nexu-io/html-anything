@@ -1,6 +1,6 @@
 # Measure the reference
 
-Use the pinned native CLI: `node <hyperframesCli> measure …`. Use an existing runtime or obtain its path from `motion_open_preview`. These commands answer specific questions; running every measurement command is not mandatory. Images go to `.hyperframes/measure/` by default; use `--out` to write into the working directory, then read them with the host's image reading.
+Use the pinned native CLI: `node <hyperframesCli> measure …`. Use an existing pinned runtime; managed project details from `motion_get_project({projectId})` return hyperframesCli/authoringGuide paths, and resources/read `motion://engine/SKILL.md` returns the guide without opening Studio. Host shell/file capabilities are required for these CLI commands. These commands answer specific questions; running every measurement command is not mandatory. Images go to `.hyperframes/measure/` by default; use `--out` to write into the working directory, then read them with the host's image reading.
 
 Put the numbers you measure into `TEMPLATE.md` at the project root (template at the end of this file). Rebuilding, comparing and writing approximations all refer back to it.
 
@@ -89,7 +89,7 @@ Record these properties in `TEMPLATE.md` only where the reference has them: how 
 node <cli> measure extract <original> --at t --roi x,y,w,h --out <workdir>/logo.png
 ```
 
-Crop photos, screenshots, logos and avatars inside their own frame into separate files, then copy them into local `assets/` or use `motion_import_asset` for a plugin-managed project. Crop a logo from its largest, sharpest frame.
+Crop photos, screenshots, logos and avatars inside their own frame into separate files, then copy them into local `assets/` or use `motion_import_assets` with projectId, requestId and items containing itemId/sourcePath for supported image/audio/video media in a plugin-managed project. Crop a logo from its largest, sharpest frame.
 
 ## TEMPLATE.md
 

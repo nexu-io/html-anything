@@ -4,6 +4,11 @@
 
 ## 阅读入口
 
+- [中文项目介绍](README.zh-CN.md) / [English introduction](../README.md)
+- [使用与首次体验](usage.md)
+- [Motion MD](motion-md.md) / [中文](motion-md.zh-CN.md)
+- [资源索引](collections/README.md) / [中文](collections/README.zh-CN.md)
+
 - [agent-adapters.md](agent-adapters.md)
 - [browser-runtime.md](browser-runtime.md)
 - [design-system.md](design-system.md)

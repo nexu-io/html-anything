@@ -1,23 +1,23 @@
 ---
-name: video-to-template
-description: Turn a supplied Motion video file or link into a reusable editable HyperFrames template folder or ZIP, with source, assets, preview and editing notes. Use when the requested deliverable is a reusable template; ordinary video recreation belongs to motion-recreate, and using an existing template belongs to template-to-video.
+name: motion-video-to-template
+description: 将参考 Motion 视频或链接重建为可反复换内容的可编辑模板，交付源码、素材、预览、编辑说明与文件夹或 ZIP。仅在用户要求可复用模板时使用；按参考制作本次成片走 motion-recreate，使用已有模板出片或替换内容走 motion-template-to-video，原创走 motion-director。
 ---
 
 # Motion reference → editable project
 
-This is the separate video-to-template production entry, selected for a requested reusable template. Read [shared context](../motion-production/references/context.md) for the current scope and reuse available bodies without returning to the router. MCP-only clients read this same file with `motion_get_workflow({"workflow":"video-to-template","section":"start"})`; follow supporting references only when needed. Revisions to an existing template draft use the [shared edit workflow](../motion-production/references/edit.md). A request to recreate a finished video without a reusable-template deliverable stays with [motion-recreate](../motion-recreate/SKILL.md).
+This is the motion-video-to-template production entry, selected for a requested reusable template. Read [shared context](../motion-production/references/context.md) for the current scope and reuse available bodies without returning to the router. MCP-only clients use resources/read `motion://workflow/video-to-template/start` for this same file; follow supporting references only when needed. Revisions to an existing template draft use the [shared edit workflow](../motion-production/references/edit.md). A request to recreate a finished video without a reusable-template deliverable stays with [motion-recreate](../motion-recreate/SKILL.md).
 
 Deliver the requested reusable template as a native HyperFrames project with local assets and an actual preview. Phase one covers Motion graphics. Preserve supplied sound when relevant; do not introduce live-action, voice, music or multimodal generation services to complete this workflow.
 
 Closely match the reference's pictures, composition, motion and pacing while preserving editability. Reproduce texture, depth and lighting present in the reference; do not add decorative effects merely to make it look more polished.
 
-A reference plus change requests is not a phase-one workflow of this Skill. Deliver the faithful template first and report that requested changes belong to `template-to-video` applied to the delivered template; do not mix changes into the rebuild.
+A reference plus change requests is not a phase-one workflow of this Skill. Deliver the faithful template first and report that requested changes belong to `motion-template-to-video` applied to the delivered template; do not mix changes into the rebuild.
 
 ## Understand the requested result
 
 Read the reference as a whole before choosing implementation. Inspect representative frames and continuous frames around important changes. Explain what persists, enters, changes, holds and exits; keep an object's identity across cuts when it is the same object. Learn from observable behavior rather than guessing the original author's code.
 
-Preserve the reference's content, wording, brand, composition and motion as they are; do not pre-substitute them. Content replacement happens later with `template-to-video`.
+Preserve the reference's content, wording, brand, composition and motion as they are; do not pre-substitute them. Content replacement happens later with `motion-template-to-video`.
 
 For a link, obtain a local decodable reference using available host capabilities. No particular downloader is a prerequisite. Preserve the URL and checksum. Explain an actual access limitation rather than requiring a specific downloader installation.
 
@@ -37,7 +37,9 @@ Do not pass off playback of the entire reference, a full-frame image sequence, t
 
 ## Make and check the work
 
-Read the pinned native authoring guide; create a separate project directory. Do not assume a catalog ID exists. Use native source directly, or the team's existing tools when useful. `motion_open_preview` can initialize the runtime and return its CLI/guide paths; it does not require displaying the editor. Keep routine work in the background. Provide a real preview when requested; open the editor only when requested.
+Read the pinned native authoring guide and [runtime adapter](../motion-production/references/production.md). For a portable folder, create a separate working directory and use the pinned native CLI; this requires host filesystem/shell capabilities. For a managed project, reuse its projectId or create a carrier with `motion_create_project`: use projectType=reference_video with an actual HTTP(S) referenceUrl or known referenceVideoId; for a local video use projectType=natural_language and record the local reference/checksum in requirements. Include requestId, title and requirements. Creation records the source but does not analyze or recreate the video. Read sources/current versions with `motion_get_project`, import supported image/audio/video files with `motion_import_assets`, and save native text through `motion_edit_project` with projectId, requestId, expectedRevision and expectedVersionId. Read the new version after imports or GUI changes. Do not assume a catalog ID exists, write reserved metadata, or bypass managed-project version protection with direct filesystem writes.
+
+Read the guide via resources/read `motion://engine/SKILL.md`; managed project details return authoringGuide/hyperframesCli paths. Do not call `motion_open_preview` just to obtain paths: it runs lint and selects an existing project in Studio. Keep routine work in the background; only use it and the host browser when the user requests the editor/preview. The nine public Tools do not download/analyze video, compare videos or package ZIPs. Use available host capabilities for those steps, and report a concrete capability gap instead of inventing a Tool or claiming a portable package was delivered.
 
 Use [reference measurement](references/measure.md) for questions that need exact timing, dimensions or layout. Use [rebuild guidance](references/rebuild.md) for grouping, media and edit dependencies. For an unfamiliar or difficult visual system, a short representative segment can establish a useful approach before expanding the film; this is advice, not a mandatory extra stage.
 

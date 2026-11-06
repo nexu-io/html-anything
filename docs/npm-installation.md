@@ -2,7 +2,7 @@
 
 当前源码位于 仓库根目录；下列模块命令在该目录执行。活动工作流在仓库根目录 `.github/workflows/ci.yml`，发布保持关闭。迁移基线及历史验收范围见[迁移说明](repository-migration.md)。
 
-这条安装渠道服务已有 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy，以及 Node.js 22.18+ 和 npm 的用户。一次 setup 为所选宿主安装一期 9 Tool MCP 连接与 production/director/template/recreate 四个 Skills；应用、用户工程和原生工具各自保存。当前没有发布 npm 包或公开下载源，包的 `private: true` 保留，以下命令只使用本地制品。
+这条安装渠道服务已有 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy，以及 Node.js 22.18+ 和 npm 的用户。一次 setup 为所选宿主安装一期 9 Tool MCP 连接与 production/director/template/recreate/video-to-template 五个 Skills；应用、用户工程和原生工具各自保存。当前没有发布 npm 包或公开下载源，包的 `private: true` 保留，以下命令只使用本地制品。
 
 ## 构建与安装
 
@@ -23,7 +23,7 @@ npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.6.2-local.1.
 | 宿主 | MCP 注册 | Skills 加载 |
 | --- | --- | --- |
 | Codex | 官方 `codex mcp add openmotion` | `~/.agents/skills/openmotion/` 下完整技能/文档包，递归发现 |
-| Claude Code | 官方 `claude mcp add-json -s user openmotion` | `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/` 中直接子目录；保留全部 4 个 Skills |
+| Claude Code | 官方 `claude mcp add-json -s user openmotion` | `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/` 中直接子目录；保留全部 5 个 Skills |
 | DeepSeek Harness | 官方 `dsh plugin --profile web add <本地组合包> --ignore-scripts` | 独立的 Skill provider 扫描组合包 `skills/` 的直接子项，保留已有 provider 和配置 |
 | WorkBuddy | 合并 `${WORKBUDDY_CONFIG_DIR:-~/.workbuddy}/mcp.json` 中的 `mcpServers.openmotion` | 同一配置根目录的 `skills/` 直接子目录；本地自定义 MCP + Skills，不发布 Connector |
 
@@ -49,7 +49,7 @@ openmotion setup --host workbuddy --manifest /absolute/release.local.json --home
 
 CI 在 Studio 构建后执行 `node scripts/package-npm.mjs dist/<beta> <beta>`，生成 `openmotion-installer-<beta>.tgz`、`openmotion-application-<beta>.tar.gz`、`release-npm.json` 与 SHA256 文件。安装器与应用/MCP 统一使用唯一 beta 版本；源 checkout 不被 bump，已有 beta 输出目录拒绝覆盖。清单同时固定应用、安装器、npm 锁文件与原生锁文件的 SHA256 和源码/构建身份。
 
-本地生成制品后，将上文 npx 命令里的 tgz 替换为该 beta 文件，`--manifest` 指向相邻 `release-npm.json`。生产 npm 依赖在应用目录用 `npm ci` 安装；不是依赖消费者自动采用 tgz 内的 package-lock.json。一期应用按同一 phase1 注册表仅包含 9 个公开 Tool 和四个入口；平铺宿主升级会移除本安装器拥有的已退出入口，并保留其他宿主/用户技能。依赖和原生版本沿用迁移源锁文件。
+本地生成制品后，将上文 npx 命令里的 tgz 替换为该 beta 文件，`--manifest` 指向相邻 `release-npm.json`。生产 npm 依赖在应用目录用 `npm ci` 安装；不是依赖消费者自动采用 tgz 内的 package-lock.json。一期应用按同一 phase1 注册表仅包含 9 个公开 Tool 和五个入口；平铺宿主升级会移除本安装器拥有的已退出入口，并保留其他宿主/用户技能。依赖和原生版本沿用迁移源锁文件。
 
 目标系统验收继续使用 `scripts/smoke-npm-package.mjs`，支持 `--codex` 对应的 `.js` / `.mjs` CLI 入口。检查实际安装、原生 Skill 发现、MCP、延迟下载、缓存、Studio、音画导出与技术校验；独立播放器和模型回合仍需单独验证。本仓库工作流当前执行 Linux 组装与九 Tool ZIP E2E，不包含 Windows 实机验收；Windows 与 Mac 的安装验收在对应机器运行，不能从组装成功推断通过。
 
@@ -73,6 +73,6 @@ npm 可以通过带 `os/cpu` 的平台包及安装脚本自动配置原生程序
 
 隔离设置四家各自的配置根，并通过 `--home`、`--skills-dir`、`--data-dir` 指定全新目录；不把测试安装进日常配置。验收最终 npm tgz、Skills 发现、宿主实际解析的 MCP 启动配置、首次原生下载、第二次缓存复用、Studio 以及一秒有声音和运动的导出。定向自动测试覆盖清单/路径校验、校验失败、锁、配置冲突、重复安装和失败回退。
 
-安装成功、MCP 连接和技术导出不代替模型创作回合、独立播放器或其他操作系统实测。当前一期契约见 [9 Tool 说明](mcp-phase1-tools.md)。本轮按最新主干重新验证，实际结果记在 [需求记录](product/changes.md#req-20261105-013npm-轻量安装与-actions-默认产物) 及交付日志；不把旧 28 Tool/旧四入口原型的验证当作当前一期验收。
+安装成功、MCP 连接和技术导出不代替模型创作回合、独立播放器或其他操作系统实测。当前一期契约见 [9 Tool 说明](mcp-phase1-tools.md)。本轮按最新主干重新验证，实际结果记在 [需求记录](product/changes.md) 及交付日志；不把旧 28 Tool/旧四入口原型的验证当作当前一期验收。
 
 WorkBuddy 桌面对话/模型调用、Windows 实机和公网冷下载须分别验收。本渠道不改变系统支持范围，不新增发布、自动升级、账号或计费能力。

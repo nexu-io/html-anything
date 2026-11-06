@@ -6,7 +6,7 @@
   --color-bg-0: var(--motion-bg);
   --color-bg-1: var(--motion-bg);
   --color-bg-2: var(--motion-inset);
-  --color-input: var(--motion-inset);
+  --color-input: var(--motion-panel);
   --color-surface: var(--motion-panel);
   --color-surface-alt: var(--motion-panel);
   --color-raised: var(--motion-raised);
@@ -15,7 +15,7 @@
   --color-on: var(--motion-accent-soft);
   --color-on-hover: var(--motion-brand-soft);
   --color-border: var(--motion-border);
-  --color-border-strong: var(--motion-border);
+  --color-border-strong: var(--motion-border-strong);
   --color-border-input: var(--motion-border);
   --color-hairline: var(--motion-border);
   --color-text-0: var(--motion-strong);
@@ -31,14 +31,16 @@
   --color-accent-hover: var(--motion-accent-hover);
   --color-accent-ink: var(--motion-accent);
   --color-on-accent: var(--motion-raised);
-  --color-ring: var(--motion-accent);
+  --color-ring: var(--motion-selected);
   --color-selection: var(--motion-accent);
   --color-panel-accent: var(--motion-accent);
   --color-playhead: var(--motion-strong);
   --color-danger: var(--motion-danger);
   --color-danger-ink: var(--motion-danger);
   --color-warning-ink: var(--motion-warning);
+  --radius-sm: var(--motion-radius-sm);
   --radius-button: var(--motion-radius-sm);
+  --ease-standard: var(--motion-ease-standard);
   --radius-md: var(--motion-radius-sm);
   --radius-lg: var(--motion-radius-md);
   --shadow-menu: var(--motion-shadow-md);
@@ -65,7 +67,7 @@
 :root[data-motion-ui][data-motion-studio]:not([data-theme="paper"]) { color-scheme: dark; --color-on-accent: var(--motion-inset); }
 body { font-family: var(--motion-font-sans); font-size: var(--motion-text-md); }
 button, input, select, textarea { font-family: inherit; }
-:focus-visible { outline: 2px solid var(--motion-accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--motion-selected); outline-offset: 2px; }
 .hf-dock .dv-view:has(> .dv-groupview) { padding: 0; }
 .hf-dock .dv-groupview { border-radius: 0; border: 0; outline: 0; }
 .hf-dock { --dv-tabs-and-actions-container-height: 34px; --dv-tab-font-size: 12px; --dv-tabs-and-actions-container-font-size: 12px; }
@@ -232,3 +234,13 @@ button, input, select, textarea { font-family: inherit; }
 
 .motion-language-button { flex-shrink: 0; white-space: nowrap; }
 .motion-language-button span { min-width: 26px; text-align: center; }
+
+/* OD control recipes, scoped to visual hooks; existing sizes and state handling stay native. */
+:root[data-motion-ui] .hf-od-primary {
+  --color-accent: var(--motion-action);
+  --color-accent-hover: var(--motion-action-hover);
+  --color-on-accent: var(--motion-on-action);
+}
+:root[data-motion-ui] .hf-od-field {
+  --color-accent: var(--motion-selected);
+}

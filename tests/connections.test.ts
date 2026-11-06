@@ -57,6 +57,9 @@ test('MCP connection configs launch the native tools in the exact workspace and 
     const guide = await (await request('/connect/guide?host=codex')).text();
     assert.match(guide, /motion_edit_project/); assert.match(guide, /Hyperframes/);
     assert.match(guide, /resources\/read/); assert.match(guide, /motion_export_request/);
+    assert.match(guide, /motion-template-to-video/); assert.match(guide, /motion-video-to-template/);
+    assert.match(guide, /production is not a prerequisite/);
+    assert.doesNotMatch(guide, /总入口是|template and recreate are.*placeholders/);
     assert.doesNotMatch(guide, /motion_update_shot|540×960|保持预览在前台/);
     const unavailable = await request('/connect/config?host=chatgpt');
     assert.equal(unavailable.status, 400); assert.match((await unavailable.json()).error, /尚无.*远程 MCP/);

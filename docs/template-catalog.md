@@ -16,16 +16,16 @@ MCP 接入与模板库使用同一弹框中的一张滚动页面。整体接入�
 
 热度来自 [Hyperframes 公开 Moments 清单](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/manifest.json)，以 `metadata.json` 保存快照。当前匹配 387 条模板分类，382 条有原帖热度，覆盖 X、Instagram、YouTube 和 TikTok。上游字段统一称为 `x_views`；实际平台由对应的 `x_url` / `source_url` 判断。只按原始 ID、视频地址和原帖身份精确匹配，不能把某作者另一支视频的播放量挪过来。
 
-显示 `42K 次查看` 等紧凑数字；悬停可查看精确数值、平台和同步日期，点击仍打开原帖。数字是 Hyperframes 收录的快照，不代表平台实时值；没有数据时省略热度，真实的零值仍显示。同源版本共享原帖数字，不叠加计数。MCP 列表和详情同时返回 `social` 中的原始数值、平台、出处、同步时间与数据来源。
+显示 `42K 次查看` 等紧凑数字；悬停可查看精确数值、平台和同步日期，点击仍打开原帖。数字是 Hyperframes 收录的快照，不代表平台实时值；没有数据时省略热度，真实的零值仍显示。同源版本共享原帖数字，不叠加计数。内部目录列表和详情同时返回 `social` 中的原始数值、平台、出处、同步时间与数据来源。
 
-`GET /motion-api/template-catalog?category=featured&query=&offset=0&limit=6&grouped=true&covered=true` 返回卡片及分页信息。`total` 是当前过滤后的卡片组数，`entryTotal` 是这些组包含的原始条目数，`catalogTotal` 为全部 894 条（891 个外部条目 + 3 个本地模板）。`galleryTotal` 为当前有真实封面的 554 条；`covered=true` 将无封面条目过滤。`next=null` 表示已经读完。MCP 的列表默认不分组，可按原始 ID 分页读取完整目录。
+`GET /motion-api/template-catalog?category=featured&query=&offset=0&limit=6&grouped=true&covered=true` 返回卡片及分页信息。`total` 是当前过滤后的卡片组数，`entryTotal` 是这些组包含的原始条目数，`catalogTotal` 为全部 894 条（891 个外部条目 + 3 个本地模板）。`galleryTotal` 为当前有真实封面的 554 条；`covered=true` 将无封面条目过滤。`next=null` 表示已经读完。内部目录列表默认不分组，可按原始 ID 分页读取完整目录；一期九个公开 Tool 不包含目录查询，宿主通过 Studio 或指引读取。
 
 ## Agent 复刻
 
 1. 卡片只复制一句提示、一个链接和精确模板 ID，链接为 `/connect/guide?host=...&template=...`。详细步骤放在链接中，未知 ID 返回错误，不回退到其他示例。
-2. Agent 读取当前客户端、MCP 配置和工作区，使用 `motion_get_template` 取得准确 ID、kind 与 `workflowGuide`。`builtin` / 可编辑 `registry` 进入 template，视频 `reference` 进入 recreate；直接读取对应 start 和共享 context，不回总入口重新选模板。template 已接入 template-to-video 实际流程并返回 ready，recreate 接入 motion-recreate 复刻流程并返回 ready。视频转可复用模板为单独的 video-to-template 入口，仅按该交付意图进入。原 `workflow` 工具路径字符串保持兼容，新增 `workflowGuide` 是 Skill 文档入口。
-3. 外部参考由 Agent 分析视频或真实源码，导入素材，并通过 `motion_write_files` 按最新 revision 写原生 Hyperframes HTML compositions 与可 seek 的 GSAP 动画。工具不会替 Agent 分析视频或自动执行远程源码。
-4. `kind=builtin` 的三个本地模板可直接使用 `motion_apply_template` 创建独立工程。外部 ID 不会被映射成任意本地示例。
+2. Agent 读取指引 URL 中的实际来源、准确 ID、kind 和路线。`builtin` / 可编辑 `registry` 进入 motion-template-to-video；视频 `reference` 进入已实现的 motion-recreate；明确要求可复用模板时进入 motion-video-to-template。通过本地 Skill 或对应 MCP Resources 读取正文和共享 context，不回总入口重新选模板。一期没有模板详情查询 Tool。
+3. 外部参考由宿主 Agent 实际分析视频或源码，导入支持的素材，并通过 `motion_edit_project` 携带 projectId、requestId、expectedRevision 和 expectedVersionId 写原生 Hyperframes HTML compositions 与可 seek 的 GSAP 动画。Tool 不替 Agent 分析视频或自动执行远程源码。
+4. `kind=builtin` 的三个本地模板使用 `motion_create_project`，传 projectType=template、templateId、requestId、title 与 requirements 创建独立工程。外部 ID 不会被映射成任意本地示例。
 5. 检查 lint/timeline/info 与实际预览，保留可继续编辑的工程。不将原视频整段放入时间轴就宣称复刻完成；只有用户要求时才导出并验证成片。
 
 ## 从源工程更新
