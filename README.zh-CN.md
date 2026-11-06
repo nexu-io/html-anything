@@ -1,430 +1,245 @@
-# HTML Anything
+# OpenMotion
 
-<p align="center"><sub>来自 <a href="https://github.com/nexu-io/open-design"><b>Open Design</b></a> 团队 —— <b>40k★ · 200+ 贡献者</b>,更生产级、迭代更快。html-anything 是聚焦在 agent 时代 HTML 编辑器这一刀的专项; 如果你喜欢这个味道, 同一拨人做的 <a href="https://github.com/nexu-io/open-design">Open Design</a> 是它在更大规模上的形态, 顺手也看看。</sub></p>
+OpenMotion 源码位于本仓库根目录。执行 `npm ci` 和 `npm run package:npm` 可独立构建；使用时无需安装 OpenDesign 主应用。开发入口、CI 与分发边界见[迁移说明](docs/repository-migration.md)。npm 安装器尚未公开发布。
 
-<p align="center"><b>项目主页:</b> <a href="https://open-design.ai/html-anything/"><b>open-design.ai/html-anything/</b></a> —— 不用 clone 也能先看看 HTML Anything 长什么样、能干啥。</p>
+**Agent 会话、Motion 模板与可编辑产物。**
 
-> **Markdown 是草稿, HTML 才是给人读的成品 —— 让本地 agent 直接写 HTML。** Agent 时代的 HTML 编辑器 —— 既然你已经不亲手改文档、全都让 Claude 改了, 那 agent 的输出就该是读者真正想看的 HTML, 而不是中间态的 markdown。本地优先、零 API Key、复用你已经登录好的 CLI session —— **9 个 coding-agent CLI** 在 `PATH` 上自动识别（Claude Code · Cursor Agent · Codex · Gemini CLI · GitHub Copilot CLI · OpenCode · Qwen Coder · Aider · IBM Bob），驱动 **75 套 skill 模板** 和 **9 类可交付场景**（杂志文章 · Keynote PPT · 简历 · 海报 · 小红书 · 推特卡 · Web 原型 · 数据报告 · Hyperframes 视频）。一键复制到公众号 / 推特 / 知乎，或者下载 `.html` / `.png`。
+OpenDesign 0.6.2 是面向 Agent 的本地创作工作区与 Codex 插件，一期提供 Motion 模式。会话是父级，Motion 工程是可在 Artifact Viewer 中编辑的产物。完整 Studio 前端已迁入 `studio/`，保留原生面板、编辑流程与导出队列，并适配我们的设计系统；工程语法、时间轴语义、动画和视频渲染基于 [Hyperframes](https://github.com/heygen-com/hyperframes) 0.9.7。
 
-<p align="center">
-  <img src="docs/assets/banner.png" alt="HTML Anything — agent 时代的 HTML 编辑器，在你的笔记本上" width="100%" />
-</p>
+- 页面直接运行本仓库构建的 React 编辑器，顶栏、模板库、浅色/深色主题和面板布局由我们维护。时间轴、画布编辑、属性、代码、撤销与保存的源码都在 `studio/src/`。
+- 工程就是 `index.html`、`compositions/`、CSS、JS、素材和 Hyperframes 的 Studio 编辑数据。Agent 和 Studio 读写同一组文件。
+- 动画遵循 Hyperframes 的 composition 属性和可 seek 的 GSAP timeline。视频、音频、字幕、嵌套 composition 使用它的原生语法。
+- 导出执行 `hyperframes lint` 和 `hyperframes render`，由上游负责逐帧捕获、编码与混音。关闭页面或将窗口放到后台不会中止导出。
 
-<p align="center">
-  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square" /></a>
-  <a href="#-自动识别本地-agent"><img alt="Agents" src="https://img.shields.io/badge/agents-9%20CLIs-black?style=flat-square" /></a>
-  <a href="#-skills"><img alt="Skills" src="https://img.shields.io/badge/skills-75-orange?style=flat-square" /></a>
-  <a href="#一键发布到平台"><img alt="Export" src="https://img.shields.io/badge/export-WeChat%20%C2%B7%20X%20%C2%B7%20Zhihu%20%C2%B7%20PNG-9b59b6?style=flat-square" /></a>
-  <a href="#-30-秒上手"><img alt="Quickstart" src="https://img.shields.io/badge/quickstart-30%20seconds-green?style=flat-square" /></a>
-  <a href="#架构"><img alt="No API key" src="https://img.shields.io/badge/no-API%20key%20required-ff6b35?style=flat-square" /></a>
-</p>
+顶栏「预览」可以重新打开关闭的预览面板；「布局」提供各面板的显示开关、代码创作/专注预览预设及默认布局恢复。原生撤销/重做保留在顶栏和时间轴；点击「历史」或项目旁的自动保存状态，可以查看修改文件、保留当前版本、取消保留及恢复历史版本。版本数据继续由 Hyperframes 原生历史服务管理，恢复不会删除后续记录。
 
-<!-- 本项目站在 nexu-io/open-design 的肩膀上 — 下面这一行的社群标签都指向它,顺道带流量。 -->
-<p align="center">
-  <a href="https://discord.gg/keeVPMrueT"><img alt="Discord（html-anything）" src="https://img.shields.io/badge/discord-html--anything-5865f2?style=flat-square&logo=discord&logoColor=white" /></a>
-  <a href="https://x.com/nexudotio"><img alt="X 关注 @nexudotio" src="https://img.shields.io/badge/follow-%40nexudotio-000000?style=flat-square&logo=x&logoColor=white" /></a>
-  <a href="https://github.com/nexu-io/open-design/releases/latest"><img alt="open-design 最新版本" src="https://img.shields.io/github/v/release/nexu-io/open-design?style=flat-square&label=release&color=8e44ad" /></a>
-  <a href="https://github.com/nexu-io/open-design/graphs/commit-activity"><img alt="open-design 月提交数" src="https://img.shields.io/github/commit-activity/m/nexu-io/open-design?style=flat-square&label=commits%2Fmonth&color=f39c12" /></a>
-  <a href="#-看看效果"><img alt="设计系统" src="https://img.shields.io/badge/design%20systems-9-1abc9c?style=flat-square" /></a>
-  <a href="https://github.com/nexu-io/open-design"><img alt="基于 open-design" src="https://img.shields.io/badge/built%20on-nexu--io%2Fopen--design-ff7043?style=flat-square&logo=github&logoColor=white" /></a>
-</p>
+首页提供新建创作、最近会话和分类模板；输入框一期只有 Motion 模式。选择模板后提交需求，创建一个会话和对应工程，通过「模板 + motion-production skill」继续制作。所有页面共享最左侧会话列表。会话与右侧浏览器顶格并列，完整 Motion 编辑器放在浏览器 Tab 内；关闭浏览器可继续完整会话，收起会话可沉浸编辑，新 Tab 可以打开另一个所属工程或网页。会话名与工程名独立保存。旧工程、需求与书签兼容，切换前等待原生保存，失败保留当前页。会话的 Agent 推理与工具编排仍由外部 MCP 客户端负责，网页不包含聊天 Agent 运行器；外部 Agent 可通过 `design_append_message` 写回真实回复。详细行为、网页浏览能力与单活动工程边界见 [会话与 Artifact 浏览器](docs/project-workspace.md)。
 
-<p align="center"><a href="README.md">English</a> · <b>简体中文</b></p>
+全局面包屑与设置顶栏已移除。会话标题与右侧标签栏同色、顶格对齐，中间有分隔线。浏览器展开／恢复按钮固定在标签栏最右侧、关闭按钮左边。会话顶部按钮可完全收起列表；会话隐藏时由浏览器顶部恢复，首页由左上角按钮恢复。连接 Agent、模型设置、主题与语言收纳到侧栏。
 
----
+地址栏支持直接输入 `baidu.com`、前进、后退、刷新和停止；网页由独立本地 Chromium 承载，支持点击、滚动与文字输入，切回 Motion 仍保留编辑状态。需要本机 Chrome / Chromium，或设置 `MOTION_BROWSER_PATH` / `HYPERFRAMES_BROWSER_PATH`。网站音频、文件上传/下载管理等当前边界见 [浏览器运行架构](docs/browser-runtime.md)。
 
-## 🎨 看看效果
+展示品牌为 OpenDesign。产品内会话、模板、媒体生成与通用 API 继续保留；本次一期给宿主 Agent 的公开 MCP 只含下方 9 个 motion_ Tool，未公开的产品能力不因此删除。
 
-picker 顶部 **推荐 / Featured** 分组里默认置顶的 8 个 skill —— 对应 `SKILL.md` frontmatter 里的 `recommended:` 字段,数字越小排得越靠前。每个都附 `example.html`,repo 里双击就能看效果,不用登录、不用启服。
+MCP 打开预览、创建产物、应用/复刻模板时，`previewUrl` 默认包含 `embed=1`，Codex 等宿主直接打开完整地址即可只显示编辑器，隐藏侧栏、会话和产品浏览器外框。`sessionUrl` 或显式 `embedded=false` 返回完整工作区；空会话仍显示会话入口。也可分别配置 `sidebar=0`、`conversation=0`。这些视图使用同一会话与产物。完整接口、失败语义与后续模式扩展见 [会话技术架构](docs/session-architecture.md)。
 
-<table>
-<tr>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/deck-guizang-editorial/"><img src="docs/screenshots/skills/deck-guizang-editorial.png" alt="deck-guizang-editorial" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/deck-guizang-editorial/"><code>deck-guizang-editorial</code></a></b> · <i>deck</i> · <code>recommended: 1</code><br/>编辑墨水 PPT,灵感来自 <a href="https://github.com/op7418/guizang-ppt-skill"><code>op7418/guizang-ppt-skill</code></a> —— 10 套锁死版面 × 5 套调色板(墨水 / 靛蓝瓷 / 森林墨 / 牛皮纸 / 沙丘),纸感印刷质感,开起来像一本电子杂志而不是 PPT。</sub>
-</td>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/deck-swiss-international/"><img src="docs/screenshots/skills/deck-swiss-international.png" alt="deck-swiss-international" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/deck-swiss-international/"><code>deck-swiss-international</code></a></b> · <i>deck</i> · <code>recommended: 2</code><br/>瑞士国际主义 PPT —— 16 列网格 + 单一饱和 accent(Klein Blue / Lemon / Mint / Safety Orange),22 套锁死版面。冷静、理性、学院派,开会时让人觉得 "这一定是 designer 做的"。</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/doc-kami-parchment/"><img src="docs/screenshots/skills/doc-kami-parchment.png" alt="doc-kami-parchment" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/doc-kami-parchment/"><code>doc-kami-parchment</code></a></b> · <i>doc</i> · <code>recommended: 3</code><br/>暖羊皮纸 + 墨蓝单色 editorial 文档系统,灵感来自 <a href="https://github.com/tw93/kami"><code>tw93/kami</code></a>。<code>#f5f4ed</code> 底色 + 单一衬线字体,长报告、读书笔记、one-pager、简历都能套,比纯白 markdown 高一个量级。</sub>
-</td>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/magazine-poster/"><img src="docs/screenshots/skills/magazine-poster.png" alt="magazine-poster" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/magazine-poster/"><code>magazine-poster</code></a></b> · <i>poster</i> · <code>recommended: 4</code><br/>报纸风长图海报 —— 巨字 serif headline + 双栏正文 + 6 个编号小节 + cream 纸感底色,开起来像一份印好的 Sunday paper,不是网页。</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/video-hyperframes/"><img src="docs/screenshots/skills/video-hyperframes.png" alt="video-hyperframes" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/video-hyperframes/"><code>video-hyperframes</code></a></b> · <i>frame / video</i> · <code>recommended: 5</code><br/>Hyperframes / Remotion 兼容的视频脚本 —— 6–10 个连续 <code>1920×1080</code> 帧,自带 duration / transition 注释和自动播放脚本。直接交给 <a href="https://github.com/heygen-com/hyperframes"><code>heygen-com/hyperframes</code></a> 或 Remotion 渲 <code>.mp4</code>。</sub>
-</td>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/frame-glitch-title/"><img src="docs/screenshots/skills/frame-glitch-title.png" alt="frame-glitch-title" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/frame-glitch-title/"><code>frame-glitch-title</code></a></b> · <i>frame</i> · <code>recommended: 6</code><br/>故障艺术标题帧 —— cyan / magenta 像散偏移 + CRT 扫描线 + 数据腐败副标 + 角落 ASCII 噪点。Cyberpunk hero 或视频转场用。</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/vfx-text-cursor/"><img src="docs/screenshots/skills/vfx-text-cursor.png" alt="vfx-text-cursor" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/vfx-text-cursor/"><code>vfx-text-cursor</code></a></b> · <i>vfx</i> · <code>recommended: 7</code><br/>VFX 文字光标开场 —— 光标在画布上"打字",每个字带 hot pink × cyan 像散拖尾 + 定向光斑。丢一句金句进去,就是电影级的视频片头。</sub>
-</td>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/frame-logo-outro/"><img src="docs/screenshots/skills/frame-logo-outro.png" alt="frame-logo-outro" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/frame-logo-outro/"><code>frame-logo-outro</code></a></b> · <i>frame</i> · <code>recommended: 8</code><br/>品牌 Logo 收尾帧 —— Logo 分块装配 + glow bloom + tagline 上浮 + CTA。产品发布或品牌片的片尾闭幕镜头。</sub>
-</td>
-</tr>
-</table>
+侧栏底部的语言菜单支持简体中文和 English，切换时保留当前播放位置、选择与面板布局，偏好在本地持久化。工程文字、文件名与属性值保持原文。统一 MCP/模板弹框沿用主分支的接入流程与目录，内部文案目前以中文为主。
 
-完整 skill 目录(按 mode 分类)见下方 [🎨 Skills](#-skills) 章节。
+侧栏底部「模型设置」（嵌入视图保留在编辑器顶栏）提供 **Model Router / Gateway**：检测本机 Codex 的登录和内置生图能力，配置 Atlas Cloud / fal.ai Key，发现多模态模型并选择默认路由。空时间轴支持「导入文件 / 生成素材」，生成面板可以选择图片、视频、音乐、语音及参数；结果存入工程素材库，再放到选定时段。素材菜单支持预览、在播放头处添加、复制路径、下载、重命名与删除。
 
-## 🤔 为什么做这个？
+选中时间轴片段、Shift 拖选时段或在未选片段时点击标尺，会弹出素材操作栏。选中图片可直接「修改图片」，由本地 Codex 以原图为参考生成候选；确认替换后保留原片段时长、动画与样式，并可撤销。图片修改支持工程内 PNG/JPEG/WebP（20 MB 以内）；视频、音乐和语音目前支持生成。
 
-[Claude Code 团队成员发了一条推](https://x.com/trq212/status/2052809885763747935)：他们**已经不用 markdown 写文档了，全部改成 HTML**。理由很简单 ——
+Studio 与 MCP 共用这套模型和任务服务。云 Key 的填写不等于已验证权限/额度；调用使用用户自有账户，失败不会自动重试或换到另一付费供应商。Key 仅保存在本地独立配置中，不返回给前端/MCP，也不随工程导出。可使用环境变量 `ATLASCLOUD_API_KEY` / `FAL_KEY`。本地 Codex 需要已登录、支持 `--ephemeral` 且开启 `image_generation`；不会复制 Codex 登录 token。详细说明见 [模型网关](docs/model-gateway.md) 与 可复现测试。
 
-| Markdown | HTML |
-|---|---|
-| 给作者爽 | 给读者爽 |
-| 排版受模板限制 | 排版无限自由 |
-| 截图发推丑得离谱 | 直接是好看的图 |
-| 二次粘贴公众号要重排 | 一键格式转换 |
+## 一期 MCP 发布范围
 
-**HTML 是面向人的最终形态，Markdown 只是一段写作中的中间过程。**
+[一期 9 Tool 契约与实现范围](docs/mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露 9 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，四个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
 
-但 "写 HTML" 在过去意味着写 CSS、调字号、对齐网格、做响应式 —— 普通用户不会，设计师懒得，作者更没耐心。我们做的事情，是让 **AI 在你按下 ⌘+Enter 之后**，把任何输入（Markdown / CSV / Excel / JSON / SQL / 草稿…）**立刻**变成一份**可交付**的 HTML，然后一键去到公众号 / 推特 / 知乎 / 任何地方。所谓 "可交付"：生成完就是受众实际看到的样子，不再需要 "我先这样、待会再调"。
+## 产品与文档
 
-我们站在四个开源项目的肩膀上：
+OpenDesign 围绕已有 Agent 用户的产品演示、参考复刻、动态图形和后续修改场景建设。目标是从需求或参考出发，在同一个本地工作区交付可继续编辑的工程与成片。目标人群的优先级仍需通过真实任务验证；当前没有产品账号、订阅计费或云端团队服务。
 
-- [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) —— Agent 检测层 + 设计 system 思路 + Skills protocol；本仓库的 `next/src/lib/agents/` 和 `next/src/lib/templates/skills/*` 直接借鉴这套模型。
-- [**`mdnice/markdown-nice`**](https://github.com/mdnice/markdown-nice) —— `juice` 内联 CSS、公众号 / 知乎兼容粘贴的可行性证明。
-- [**`gcui-art/markdown-to-image`**](https://github.com/gcui-art/markdown-to-image) —— iframe → 高 DPI PNG 的截图导出路径。
-- [**`alchaincyf/huashu-md-html`**](https://github.com/alchaincyf/huashu-md-html) —— 反 AI-slop 的话术 / 设计哲学，对应我们模板里的硬约束（中文优先字体、8px 基线网格、对比 ≥ 4.5、必须用真实数据）。
+[docs/ 文档中心](docs/README.md) 是持续维护的产品知识库：
 
-## 一览
+| 文档 | 内容 |
+| --- | --- |
+| [产品架构](docs/product/architecture.md) | 定位、核心流程、能力边界、模块与数据关系、成功标准 |
+| [共享编辑器](docs/shared-editor.md) | 多个 MCP 连接共用后台、工程选择、目录兼容与崩溃恢复 |
+| [网页浏览器](docs/browser-runtime.md) | Chromium 隔离、实际导航与输入、资源释放、运行配置和当前限制 |
+| [会话与 Viewer 技术架构](docs/session-architecture.md) | 共用生命周期、模式/模板/skill、HTTP/MCP、Codex 嵌入、扩展点与设计取舍 |
+| [素材生成设计与架构决策](docs/product/media-generation-design.md) | 为什么共享网关、先生成再采用；选区交互、关键取舍、故障与扩展约束 |
+| [模型网关](docs/model-gateway.md) | 当前配置与 API/MCP 合约、运行限制、真实验证及未验证范围 |
+| [需求与决策记录](docs/product/changes.md) | 每次需求的选择理由、产品影响、验证证据和后续事项 |
 
-| | 你会拿到什么 |
-|---|---|
-| **本地 coding-agent CLI（8 个）** | Claude Code · Cursor Agent · OpenAI Codex · Gemini CLI · GitHub Copilot CLI · OpenCode · Qwen Coder · Aider —— 启动时扫描 `PATH`（含 `~/.local/bin` · `~/.bun/bin` · `/opt/homebrew/bin` · `~/.npm-global/bin` 这些 GUI 启动会漏掉的目录），顶栏一键切换。 |
-| **零 API Key** | 直接复用你已经在终端登录好的 `claude login` · `cursor login` · `gemini auth` session。订阅复用 = **0 边际成本**。 |
-| **Skill 模板（75 套）** | `prototype`（web / SaaS landing / dashboard / 数据报告） · `deck`（20 套 keynote PPT，含 Swiss International、Guizang Editorial、XHS Pastel、Hermes Cyber、Replit、Magazine Web 等） · `frame`（10 套 Hyperframes 视频帧：液态背景、NYT 数据图表、贴纸流程图、像素故障字幕、电影漏光、macOS 通知、品牌片尾…） · `social`（X / 小红书 / Spotify / Reddit 卡片） · `office`（PM 规格书 · 工程 runbook · 财务报告 · HR onboarding · 发票 · OKR · 周报 · 会议纪要 · 看板） · `doc`（Kami 暖羊皮纸 editorial） · `mockup`（3D 设备模型） · `vfx`（文本光标）。 |
-| **9 类输出场景** | 📖 杂志文章 · 🎬 Keynote PPT · 📄 极简简历 · 🖼️ 营销海报 · 📱 小红书图文卡 · 🐦 推特分享卡 · 🛠️ Web 产品原型 · 📊 数据可视化报告 · 🎞️ Hyperframes 视频。每一类都有可挑选的具体 skill。 |
-| **一键发布** | `juice` 内联 CSS → 公众号粘贴 0 调整 · `modern-screenshot` 2× PNG → 拖入推文 · `<mjx-container>` → `data-eeimg` 占位 → 知乎公式自动渲染 · 单文件 `.html` 下载 · 高 DPI `.png` 下载。 |
-| **流式渲染** | `POST /api/convert` 走 SSE，agent stdout 的 JSON-line 流式抽出 text → 客户端 append → iframe `srcdoc` 实时刷新。等待时间 = 看 AI 现场写代码的体验。 |
-| **沙箱预览** | `iframe[sandbox="allow-scripts allow-same-origin"]`，用户 HTML 隔离运行，宿主页面不受污染。 |
-| **格式自动识别** | 编辑器一栏，粘 Markdown / CSV / TSV / JSON / SQL / 纯文本都识别，`papaparse` + `xlsx` 在浏览器端解析，不上传服务器。 |
-| **部署** | 本地 `pnpm -F @html-anything/next dev` / Vercel 一键部署 web 层（agent 永远跑在本地）。 |
-| **License** | Apache-2.0 |
+文档区分当前能力、已确认方向、待验证假设和候选方案。画像与商业化内容会随新需求和真实证据持续修订。
 
-## Demo
+产品按职责连接创作 Agent、Model Router / Gateway、原生编辑器和后台渲染：Agent 与用户决定创作意图，网关执行多模态素材任务，编辑器把素材组织成可继续修改的作品，渲染与验收交付确定版本的成片。Studio 和 MCP 共用网关，模型 Key 与任务配置属于工作区，作品文件保持独立。生成成功先得到候选素材，用户确认放置或替换后才修改合成。
 
-<table>
-<tr>
-<td width="50%">
-<img src="docs/screenshots/01-entry-view.png" alt="01 · 主界面" /><br/>
-<sub><b>主界面</b> —— 顶栏自动识别你已装的 CLI，左侧粘内容，中间挑模板和设计 system，右侧 iframe 实时预览。同一个面板搞定杂志、PPT、海报、Web 原型、Hyperframes 帧脚本。</sub>
-</td>
-<td width="50%">
-<img src="docs/screenshots/02-template-picker.png" alt="02 · 模板筛选" /><br/>
-<sub><b>75 套模板可搜索可筛选</b> —— 按 mode（prototype / deck / frame / social / office / doc）与 scenario（design / marketing / engineering / product / personal）二维筛。每套模板都附 <code>example.html</code>，双击直接看效果。</sub>
-</td>
-</tr>
-<tr>
-<td width="50%">
-<img src="docs/screenshots/03-streaming.png" alt="03 · 流式生成" /><br/>
-<sub><b>SSE 流式</b> —— agent 的 stdout JSON-line 流式抽出文本，append 进 iframe <code>srcdoc</code>。你能看着它一行一行写出来，不满意可以中途打断重发，不浪费一整次生成。</sub>
-</td>
-<td width="50%">
-<img src="docs/screenshots/04-export.png" alt="04 · 一键发布" /><br/>
-<sub><b>一键发布到平台</b> —— 微信公众号（juice 内联 CSS）· 推特 / 微博 / 小红书（modern-screenshot 渲染成 2× PNG，写进 ClipboardItem）· 知乎（公式占位）· 下载 <code>.html</code> · 下载 <code>.png</code>。粘贴即用，0 二次排版。</sub>
-</td>
-</tr>
-<tr>
-<td width="50%">
-<img src="docs/screenshots/05-deck-mode.png" alt="05 · Keynote PPT" /><br/>
-<sub><b>Deck 模式</b> —— 20 套 PPT skill，含 Swiss International（瑞士国际主义）· Guizang Editorial（编辑墨水）· Open Slide Canvas（1920×1080 agent-native）· Magazine Web · XHS Pastel · Hermes Cyber · Replit Style 等。←/→ 切页，支持演讲者备注与打印 PDF。</sub>
-</td>
-<td width="50%">
-<img src="docs/screenshots/06-hyperframes.png" alt="06 · Hyperframes 视频帧" /><br/>
-<sub><b>Hyperframes 视频帧</b> —— 10 套帧脚本（液态背景 hero · NYT 数据图表 · 贴纸流程图 · 像素故障标题 · 电影漏光 · macOS 通知 · 品牌 logo 片尾 · 文本光标 VFX · 3D 设备模型 …）符合 <a href="https://github.com/heygen-com/hyperframes">heygen-com/hyperframes</a> 规范，可直送 Remotion 渲染 mp4。</sub>
-</td>
-</tr>
-</table>
+理解整体设计可从[职责分层与架构约束](docs/product/architecture.md#职责分层与依赖方向)开始，再读[多模态设计决策](docs/product/media-generation-design.md)。后续属性面板调用、更多本地 Agent 和完整 motion 编排均沿用这些边界；已实现接口与候选工作流执行器分别记录，不能把扩展方向当作已上线功能。
 
-## ⚡ 30 秒上手
+## 使用
 
-```bash
-git clone https://github.com/nexu-io/html-anything
-cd html-anything
-pnpm install
-pnpm -F @html-anything/next dev
-# → http://localhost:3000
+团队试装见 [内部测试包](docs/test-packages.md)：本分支的 Actions 手动构建默认生成 npm 轻量安装器、应用归档与固定校验清单，完整 Mac arm64 / Windows x64 ZIP 通过 `format=full` 保留备用。两种格式保留真实出片验收；迁移后的工作流只构建和校验，不上传制品或发布 npm / Release。原生依赖自动从固定公开源获取，无需公司仓库凭据；Mac 仍以 macOS 26.0+、Windows 以 Windows 11 为验证目标，旧系统未验收。主分支按钮在合入后生效。
+
+### 复制到 Codex 安装并体验
+
+先安装支持 `codex plugin add` 的 Codex CLI、Git、Node.js 22.18+（含 npm）和 curl，适用于 macOS / Linux。**复制下面整个文本块，粘贴到 Codex 对话框并发送：**
+
+```text
+请执行以下命令安装 OpenMotion：
+curl -fsSL https://raw.githubusercontent.com/nexu-io/open-design/main/install.sh | bash
+
+安装成功后，简要介绍它能做什么，并询问我是否体验一个无需准备素材的 20 秒视频，提供 MP4 并打开可编辑工程。
 ```
 
-打开浏览器 → 顶栏会自动列出你电脑上**已经登录好**的本地 code agent → 选一个模板 → 粘贴内容 → ⌘+Enter
+这段指令要求 Codex 在安装成功后介绍能力并邀请体验；你选择开始后再制作。完整文本应发送到 Codex 对话框，不要直接粘贴到终端。
 
-**无需 API Key**。我们直接复用你已经在用的 Claude / Cursor / Codex 订阅，**0 边际成本**。
+入口合入 OpenDesign `main` 后此命令才可用。脚本仅检出 ``，自动安装锁定依赖、构建编辑器、注册并安装插件，再验证真实 MCP 握手。首次安装需联网；不会安装系统软件或重启 Codex。安装目录会保留，供本地插件源继续使用。
 
-## Workspace
+已有同名目录时停止，不覆盖、不自动更新。需要换目录时，在 `bash` 前设置 `OPENMOTION_INSTALL_DIR=/绝对路径`；可同时用 `OPENMOTION_REF=标签或分支` 选择下载版本。已有源码也可直接运行 `bash scripts/install-motion.command`。安装插件与成功导出视频是不同阶段；导出依赖见下文。
 
-这个仓库是一个很小的 pnpm workspace：
+### 安装完成后的引导（Codex / Agent）
 
-- `next/` 是完整 Next 应用（`@html-anything/next`）。
-- `e2e/` 是浏览器测试包（`@html-anything/e2e`），也是 Playwright 用例的唯一真相源。
-- 根目录只负责 CI、文档和 `scripts/guard.ts`；根 `package.json` 有意不代理 app 或 e2e 命令。
+由 Codex 或其他 Agent 执行安装时，在插件安装与 MCP 连接预检均成功后，按以下顺序结束安装任务：
 
-从仓库根目录运行 package 命令：
+1. 在当前对话简要介绍 OpenMotion 支持产品宣传视频、动态图表与流程动画、模板和可编辑预览、MP4 导出。
+2. 主动询问用户：**“要现在体验一个无需准备素材的 20 秒视频吗？我会提供 MP4，并打开可编辑工程。”**
+3. 停下来等待用户选择；用户回复“体验”或明确同意后，执行下方首次体验默认规则。用户明确只要安装或暂不体验时，尊重该选择。
 
-```bash
-pnpm exec tsx scripts/guard.ts
-pnpm -F @html-anything/next dev
-pnpm -F @html-anything/next typecheck
-pnpm -F @html-anything/next test
-pnpm -F @html-anything/next build
-pnpm -F @html-anything/e2e typecheck
-pnpm -F @html-anything/e2e test
+先在当前对话完成介绍与邀请。若新插件工具尚未加载，在用户同意体验后再提供新会话接续方式；安装时的 MCP 预检不代表当前对话已加载新工具。安装失败时先说明失败原因，修复成功后再邀请。
+
+### 首次体验默认规则
+
+接受上述邀请即确认使用内置 **Product Promo（`product-promo`）**：
+
+- 沿用模板的示例文字、图形和动画，保持原生 20 秒规格，不再询问素材、品牌、风格或模板选择。
+- 创建独立可编辑工程，保留原有工程；同一次体验已经创建工程时直接续用，避免重复创建。
+- 在 Codex 右侧打开 OpenMotion 可编辑工程，检查正确载入并可播放；让用户可以在等待导出时继续查看工程。
+- 接受首次体验同时授权导出该示例的 MP4。读取当前 revision，导出并等待完成，检查实际文件与播放；复用本次已完成的导出，不重复排队。
+- 最终回复包含**简短说明与可直接播放/下载的 MP4**，同时保持右侧工程页面可用。工程 ZIP 和截图只作补充，不能代替 MP4。
+
+右侧页面打开依赖宿主的浏览器/面板能力。没有该能力时仍交付 MP4 和实际工程链接，明确说明页面未自动打开，不能声称完整的桌面体验已通过。导出失败时保留工程并说明具体原因，不把预览或任务排队当作最终成片。
+
+此默认规则只适用于用户接受安装后的首次体验邀请；用户提出自己的视频需求时，按其明确范围执行。
+
+### 开始创作
+
+新工程先 `motion_create_project`；已有工程先 `motion_get_project` 明确 projectId、revision、currentVersionId，再保存或打开。`motion_open_preview({projectId})` 运行 lint 并返回真实预览 URL，由宿主内置浏览器打开。它不隐式创建新工程；无浏览器时可以手动打开返回地址。
+
+macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个会话保留自己的工程选择；所有会话退出后导出仍继续。新安装默认使用 `~/Library/Application Support/OpenDesign`，已有 `.motion-data` 或显式 `MOTION_DATA_DIR` 沿用；不同目录仍是不同后台。原生 Studio 和导出继续各只有一个活动实例，Windows / Linux 保留原启动方式。停止、旧服务升级和故障恢复见 [共享编辑器](docs/shared-editor.md)。
+
+仅导出时只启动后台服务，不启动 Studio 改写当前源文件；冷启动套模板也不会先创建无关 starter。随后调用 `motion_open_preview` 可在同一服务中启动编辑器。真实外部编辑仍受 revision 校验保护。
+
+点击全局「连接 Agent」或编辑器「模板库」，在同一个弹框里连接 Agent、浏览模板、观看视频并一键复制复刻指令。模板入口会直接定位到画廊，接入指南也在弹框中展开。旧的 `?templates=1` 与 `/connect` 链接仍可使用。
+
+完整迁入 Personal video agent 的 **891 条 Hyperframes 目录**：42 个完整参考、393 个创作片段、210 个动效模板、238 个组件和 8 个影片范例。再加上三个可直接打开的官方示例，共 **894 条**。完整目录通过 MCP 搜索与分页读取。
+
+画廊优先展示成片效果，保留精选、视频复刻、产品宣传、动态设计和口播内容五类。**551 张参考封面已下载或从原视频提取并校验**，加上三个本地示例，展示 554 条有真实封面的内容；暂时没有有效封面的 340 条保留在 MCP 目录中。视频占据卡片主体，点击放大播放；下方显示作者和可跳转的 X、Instagram、GitHub 或原始视频出处。同源片段在预览中可切换，每个版本仍对应自己的 ID。
+
+卡片与预览同时展示**原帖播放数据和内容种类**，例如 `42K 次查看`、产品展示、开场、A-roll Cuts。已从 Hyperframes 公开清单同步 382 条有热度的记录，覆盖 X、Instagram、YouTube 和 TikTok；悬停数字可看精确数值与同步日期。没有数据的条目省略热度，同源片段不重复累计。运行 `npm run catalog:metadata` 更新快照。
+
+点击 **一键复刻** 只复制一段简短指令：
+
+> 请读取 http://localhost:4173/connect/guide?host=codex&template=hf-moment-M953 并在 OpenDesign 复刻模板 hf-moment-M953，完成后打开可编辑工程。
+
+链接由当前工作区生成；详细配置、工作区目录、视频/源码、制作流程和原生 MCP 步骤放在链接里。Agent 读取真实来源后，通过 `motion_create_project`、`motion_import_assets`、`motion_edit_project` 制作可编辑的 Hyperframes 工程，检查实际预览。复制按钮不会修改当前工程，也不会把其他示例冒充复刻结果。完整来源与更新方式见 [模板目录说明](docs/template-catalog.md)。
+
+三个可直接打开的官方示例是 **Product Promo**（20 秒产品宣传）、**NYT Graph**（15 秒动态图表）、**Decision Tree**（10 秒流程动画）。首页模板先选择再提交，内置模板创建可二次剪辑的独立工程；外部参考保存模板身份并由 Agent 制作。原工程始终保留在所属会话中。统一接入弹框仍提供精确参考的复制指令。源码、真实渲染封面与 Apache-2.0 许可证已内置，GSAP 使用本地依赖；首次使用模板字体仍可能需要联网。
+
+新增的 [npm 轻量安装渠道](docs/npm-installation.md) 可在本地为 Codex、Claude Code、DeepSeek Harness、WorkBuddy 同时安装 MCP 与 Skills，并共用一份应用与依赖缓存，首次工程操作需要本地服务时按需准备固定媒体工具和浏览器；当前可本地构建或由 Actions 生成测试制品，不发布 npm。运行 `npm run package:npm` 构建，具体隔离安装命令与边界见专题。
+
+需要 Node.js 22.18+ 和 npm。依赖固定为 Hyperframes **0.9.7**、GSAP **3.15.0**，并提交 lockfile。开发目录运行 `npm ci`；安装包首次启动时自动在 `MOTION_DATA_DIR/runtime/<lock-hash>/` 安装同一套依赖，不修改插件缓存或全局 npm 包。首次安装需要联网；Hyperframes 首次渲染可能下载浏览器、字体等资源。
+
+视频渲染需要 FFmpeg 和 Chrome/Chromium，成片技术校验还需要 ffprobe。可用 `HYPERFRAMES_BROWSER_PATH`、`HYPERFRAMES_FFMPEG_PATH`、`HYPERFRAMES_FFPROBE_PATH` 指定本机程序；旧的 `FFMPEG_PATH` / `FFPROBE_PATH` 也会传给 Hyperframes，原生变量优先。渲染失败返回上游错误，未生成 MP4 不会报告完成。
+
+开发调试：
+
+```sh
+npm ci
+npm run dev
 ```
 
-## 🧠 自动识别本地 agent
+默认访问 `http://localhost:4173` 首页；`/?project=<id>` 或 `/#project/<id>` 打开对应项目。插件启动会校验服务版本与工程目录，避开已占用端口。Hyperframes 原生服务使用另一个回环端口；我们的服务转发原生 API、文件事件和预览请求，直接提供自有编辑器页面。视频作品仍在独立 composition iframe 中预览，以隔离 UI 样式和作品样式。
 
-进入主页时，我们扫描你的 `PATH`（包括 `~/.local/bin`、`~/.bun/bin`、`/opt/homebrew/bin`、`~/.npm-global/bin` 等通过 GUI 启动会被过滤掉的目录），检测以下 CLI：
+## Agent 工具
 
-| Agent | 检测命令 | 调用方式 |
-|---|---|---|
-| **Claude Code** | `claude` | `claude -p --output-format stream-json` |
-| **OpenAI Codex** | `codex` | `codex exec --json --sandbox workspace-write` |
-| **Cursor Agent** | `cursor-agent` | `cursor-agent --print --output-format stream-json --force --trust` |
-| **Gemini CLI** | `gemini` | `gemini --output-format stream-json --yolo` |
-| **GitHub Copilot CLI** | `copilot` | `copilot --allow-all-tools --output-format json` |
-| **OpenCode** | `opencode-cli` / `opencode` | `opencode run --format json --dangerously-skip-permissions -` |
-| **Qwen Coder** | `qwen` | `qwen --yolo -` |
-| **Aider** | `aider` | `aider --no-pretty --no-stream --yes-always --message-file -` |
-| **IBM Bob** | `bob` | `bob --output-format stream-json --hide-intermediary-output` |
+仓库 Agent 从 [AGENTS.md](AGENTS.md) 进入，Claude Code 同时读取 [CLAUDE.md](CLAUDE.md)。[motion-production](skills/motion-production/SKILL.md) 负责范围与路线：原创/大幅重编进入 [motion-director v1.4.4](skills/motion-director/SKILL.md)，已有模板出片或适配进入 [template-to-video](skills/template-to-video/SKILL.md)，参考视频复刻进入 [motion-recreate](skills/motion-recreate/SKILL.md)（先读工作区资料、最多问一次，用一期 9 个工具在编辑器工程里重建，交付成片、原片对照和可编辑工程；重建规则与测量脚本随该 Skill 一起分发）。明确要求视频转可复用模板或 ZIP 时，单独进入 [video-to-template](skills/video-to-template/SKILL.md)。已有内容的修改统一复用 [edit 流程](skills/motion-production/references/edit.md)，核对保持项及后续延续；首次补读的结果须先返回模型，再执行依赖操作。
 
-> 这一层的设计直接借鉴了 [`nexu-io/open-design`](https://github.com/nexu-io/open-design) 和 [`multica-ai/multica`](https://github.com/multica-ai/multica) 的 agent 检测策略：唯一被 spawn 子进程的进程是 server route，业务进程不直接 spawn；CLI 的 stdin / stdout 用 JSON-line 协议复用，每个 CLI 一个轻 adapter，统一在 [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts)。
+仅有 MCP 时通过 resources/list 与 resources/read 读取 `motion://workflow/production/start`；已选专业入口直接读对应路线，无需重新选路。固定引擎指南为 `motion://engine/SKILL.md`。详见 [Skill 路由](docs/skills.md)。一期仅包含 production/director/template/recreate 四个 Skill 入口，其他兼容/独立扩展保留源码。
 
-只要你已经在终端里登录过对应的 CLI（例如 `claude login`、`cursor login`），HTML Anything 直接复用同一个 session，**不要求你再贴一遍 API Key**。
+共享上下文列出各范围的必读依赖，Agent 只补齐尚未读取的正文，并复用同一份已读记录。这个约定不等于工具强制执行；七份 Motion 质量参考保持原有内容与风格边界。
 
-## 🤝 社区集成
+| 公开 Tool | 复用来源 | 本次实现到的边界 |
+| --- | --- | --- |
+| motion_create_project | 项目目录、空白工程、模板复制、会话归属 | 新建独立载体、保存需求/来源、返回初始内容版本；宿主 Agent 制作影片 |
+| motion_open_preview | 原预览、项目选择、原生 lint | 打开指定已有工程；仅明确绑定的 OpenMotion 会话可省 projectId；返回真实 URL |
+| motion_import_assets | 素材目录、FFprobe/FFmpeg | 实际本机媒体批量持久化、逐项结果、稳定素材 ID、去重；不自动排入时间线 |
+| motion_get_project | 项目目录与原生文件读取、导出记录 | 项目分页5条、显式工程详情、分段文本读取、当前版本、具名导出任务状态 |
+| motion_edit_project | 原写文件职责、Studio 原生 history | 双重版本校验；文本批量保存及需求一起写入；失败恢复保护；通知原生文件监听 |
+| motion_export_request | 原 request/get/verify export、原生渲染器 | 冻结工程版本和本地素材、后台 MP4、自动 lint/规格/完整解码校验；同请求找回任务 |
+| motion_list_versions | Studio history/checkpoint | 内容快照、稳定 ID/vN、来源/摘要、可恢复标记；每页5条，不限制只留5条 |
+| motion_restore_version | Studio history 与保留的媒体内容 | 旧快照恢复成新版本；保留后续历史；历史资源缺失或并发冲突时拒绝覆盖 |
+| motion_export_cancel | 现有导出队列、进程生命周期 | 指定项目/任务；排队取消、运行中 cancelling、进程退出后 cancelled；完成竞态保持 completed |
 
-### [Floatboat](https://floatboat.ai/zh/combostore/html-anything-2bHaqL)
+全局「连接 Agent」保留 Codex、Claude Code、DeepSeek Harness 与通用 stdio 客户端的配置下载和接入指引；配置绑定当前工作区。ChatGPT 云端远程 MCP 尚未提供。
 
-Floatboat 可作为应用内社区集成使用。请先在 Floatboat Combo Skill Store 安装 **html-anything** Combo Skill，再在 Floatboat 应用内使用该 Skill。
+模板从 Studio 画廊或已有指引选择，当前3个 builtin 可由创建工具复制；没有单独公开目录查询 Tool。其他外部源码/视频由宿主实际检查并重建。
 
-<table>
-<tr>
-<td width="50%">
-<img src="https://github.com/user-attachments/assets/6049b725-811c-490a-93ec-4d60436e6c98" alt="Floatboat 工作区中的 HTML Anything 任务流程" /><br/>
-<sub><b>端内工作流</b> —— 在 Floatboat 中并排查看任务上下文、HTML Anything 工作区与生成页面。</sub>
-</td>
-<td width="50%">
-<img src="https://github.com/user-attachments/assets/0f1c584a-8b5c-428a-b16c-4be3bdfc70e5" alt="在 Floatboat 中通过 HTML Anything 创建的 HTML 成品" /><br/>
-<sub><b>成品预览</b> —— 将任务需求转化为可阅读的 HTML 页面，并在 Floatboat 中查看结果。</sub>
-</td>
-</tr>
-</table>
+编辑须同时传 expectedRevision 与 expectedVersionId；文本批量/需求保存和版本恢复使用原生独占历史窗口、暂存与恢复日志。旧 `motion_write_files` 的逐文件行为仅留内部兼容。8 MiB/100文件与2 MiB分段读取是传输限制；媒体小于2 GiB/项并实际探测。恢复旧版本创建新 vN，保留后续历史。
 
-## 🎨 Skills
 
-**75 套 skill 在 [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) 下开箱即用。** 每个 skill 是一个文件夹，遵循 Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) 约定 + 扩展 frontmatter（`mode` · `scenario` · `surface` · `preview` · `design_system`）。
+## 本地文件与升级
 
-picker 用两个维度组织：
+一个 `MOTION_DATA_DIR` 保存多个工程和当前选择。macOS新安装默认使用 `~/Library/Application Support/OpenDesign`，保留已有插件根目录 `.motion-data/` 的兼容路径；其他平台默认在插件根目录 `.motion-data/`，建议指定缓存目录外的稳定绝对路径，并定期备份 `project/`、`projects/`、`sessions/` 和 `projects.json`。一期 MCP 数据写入必须显式 projectId，不跟随其他会话全局选择。执行原生 CLI 前重新读取该项目目录。备份还应包含 phase1/versions、phase1/retained 和原生 history root，避免丢失历史媒体。
 
-- **mode** —— `prototype`（web / SaaS landing / dashboard / 数据报告 / 简历 / 文档） · `deck`（20 套幻灯片 skill） · `frame`（10 套 Hyperframes 视频帧脚本） · `social`（4 套社交平台分享卡） · `office`（PM / 工程 / 财务 / HR / 行政 表格化文档）。
-- **scenario** —— `design` / `marketing` / `engineering` / `product` / `finance` / `hr` / `sale` / `personal`，用于在 picker 里分组展示。
-
-完整 skill 目录（按 mode 分类）请见 [English README](README.md#skills)，结构一一对应，链接也都是同一个 repo path。新增 skill 只需要 fork 一个 skill 文件夹、改 `SKILL.md` frontmatter、重启 dev server，picker 里就会出现；merge 标准见 [`CONTRIBUTING.zh-CN.md`](CONTRIBUTING.zh-CN.md)。
-
-制作有真实来源的 X / Twitter 卡片时，先用
-[`TweetClaw`](https://github.com/Xquik-dev/tweetclaw) 收集推文正文、作者、
-回复数、点赞数、浏览量、媒体链接和对话串上下文。再把这份素材交给
-[`social-x-post-card`](next/src/lib/templates/skills/social-x-post-card/) 或
-[`card-twitter`](next/src/lib/templates/skills/card-twitter/)。HTML Anything
-只负责视觉渲染和导出。抓取、审批和发布仍由你的工作流负责。
-
-## 六个核心想法
-
-### 1 · 我们不发 agent，你装的就够好
-
-主界面进来时，浏览器调 `/api/agents`，server 端扫一遍 `PATH`（含 GUI 启动会丢的 `~/.local/bin` · `~/.bun/bin` · `/opt/homebrew/bin` · `~/.npm-global/bin`），识别到哪些 CLI 在场，就把哪些放进顶栏。每个 CLI 对应一个 adapter（参数 + stdin 协议 + 输出解析器），在 [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) 里集中维护。整套思路直接借鉴 [`nexu-io/open-design`](https://github.com/nexu-io/open-design) 和 [`multica-ai/multica`](https://github.com/multica-ai/multica) 的 agent-detection 模型。
-
-### 2 · Skills 是文件夹，不是插件
-
-遵循 Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) 约定 —— `SKILL.md` + `assets/` + `references/` + `example.html`。drop 一个文件夹到 [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/)，重启 dev server，picker 里就出现。`deck-guizang-editorial` 直接 vendor 自 [`op7418/guizang-ppt-skill`](https://github.com/op7418/guizang-ppt-skill)（保留原始 LICENSE 与署名）。
-
-### 3 · 强制约束让 AI 不再 freestyle
-
-每个模板都硬编码了：
-- **中文优先字体栈**：`Noto Sans/Serif SC` / 思源黑体；英文用 `Inter` / `Manrope`。
-- **8 px 基线网格**：所有间距、行高、字号都是 8 的倍数。
-- **圆角 / 投影 / 不用纯黑纯白** —— 视觉上去 AI-slop 化。
-- **颜色对比 ≥ 4.5**，重要交互必有 `:focus` 态。
-- **必须使用用户提供的真实数据**，禁止 lorem ipsum。
-
-灵感来自 [`alchaincyf/huashu-design`](https://github.com/alchaincyf/huashu-design) 的 "Junior-Designer mode" + 反 AI-slop checklist。约束就是 prompt 的一部分，写进每个 `SKILL.md`。
-
-### 4 · 流式渲染 = 看着 AI 现场画
-
-`POST /api/convert` 走 SSE。Agent 的 stdout 是一行行 JSON-line，server 抽出其中的 `text` 字段，作为 SSE event 推下去，客户端 append 进 `iframe[srcdoc]`。整个过程跟在终端里看 AI 写代码一模一样，只不过最终产物是好看的 HTML 而不是 markdown。**不满意可以打断**，不浪费一整次 token。
-
-### 5 · 一键发布到平台 = 0 二次排版
-
-- **微信公众号**：`juice` 内联 CSS + `data-tool` 标记 → 粘进编辑器直接显示，不丢样式。
-- **推特 / 微博 / 小红书**：`modern-screenshot` 把 iframe 渲染成 2× PNG → `ClipboardItem` → 直接粘到推文 / 图床。
-- **知乎**：同上 + `<mjx-container>` → `data-eeimg` LaTeX 图占位（知乎不支持 KaTeX 直渲，必须转成图）。
-- **下载 `.html`** / **下载 `.png`**：自包含单文件，任意分享。
-
-实现思路参考自 [`mdnice/markdown-nice`](https://github.com/mdnice/markdown-nice) 和 [`gcui-art/markdown-to-image`](https://github.com/gcui-art/markdown-to-image)。
-
-### 6 · 沙箱 iframe = 安全 + 隔离
-
-用户输出的 HTML 总是放进 `iframe[sandbox="allow-scripts allow-same-origin"]` 里。第三方脚本可以跑（Tailwind CDN / Google Fonts / 用户自定义动效），但 cookie 和 localStorage 走 iframe 自己的 origin，不污染宿主页面。打开 devtools 也只看 iframe 自己的 DOM，调试体验和写一个独立 HTML 文件一致。
-
-## 架构
-
-```
-┌─────────────────────── Browser (Next.js 16) ──────────────────────┐
-│  Editor / 上传 · 顶栏 agent picker · 模板 picker · iframe 预览       │
-└─────────────┬──────────────────────────────────┬──────────────────┘
-              │ ⌘+Enter                            │
-              ▼                                    ▼
-     ┌─────────────────────┐            ┌──────────────────────┐
-     │  GET /api/agents    │            │  POST /api/convert   │
-     │  扫 PATH 检测 CLI    │            │  SSE 流式调用 agent   │
-     └─────────────────────┘            └──────────┬───────────┘
-                                                   │ spawn + stdin pipe
-                                                   ▼
-                                ┌────────────────────────────────────┐
-                                │  你本地的 code agent                │
-                                │  claude / codex / cursor-agent /   │
-                                │  gemini / copilot / opencode /     │
-                                │  qwen / aider                      │
-                                │  → 复用你已登录的 session           │
-                                └────────────────────────────────────┘
-                                                   │
-                                                   ▼
-                                stdout JSON-line ──► SSE event
-                                                   │
-                                                   ▼
-                              iframe srcdoc append（实时刷新）
-                                                   │
-                              ⌘+C 复制 → ClipboardItem
-                              ⌘+S 下载 → .html / .png
+```text
+.motion-data/
+  project/                 初始原生工程与素材（始终保留）
+  projects/<id>/           新建或从模板复制的独立工程
+  projects.json            工程列表与当前选择
+  exports/                 后台导出的 MP4
+  jobs/<id>/render.log      上游渲染日志；完成/失败后删除临时工程快照
+  export.json              最近一次 Agent/插件导出任务状态
+  preview.json             已验证的本地端口
+  preview.log              插件服务日志
+  studio.log               原生 Studio 日志
+  runtime/                 安装包按 lockfile 安装的依赖
 ```
 
-| 层 | 技术栈 |
-|---|---|
-| Frontend | Next.js 16 App Router + Turbopack · React 19 · Tailwind v4 · zustand 全局状态 |
-| Server routes | `GET /api/agents`（检测） · `POST /api/convert`（SSE 流式 spawn） |
-| Agent transport | `child_process.spawn` · 每个 CLI 一个 stdin/stdout adapter（[`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts)） |
-| 浏览器端处理 | `juice`（CSS 内联） · `modern-screenshot`（PNG 截图） · `xlsx` / `papaparse`（CSV/Excel 解析） · `marked` + `highlight.js`（markdown 兼容输入） · `dompurify`（XSS 防御） |
-| 预览沙箱 | `iframe[sandbox="allow-scripts allow-same-origin"]` + `srcdoc` |
-| 导出 | `.html` 单文件 · `.png` 高 DPI · ClipboardItem 富文本 / image/png · 微信兼容 inline CSS |
-| 部署 | 本地 `pnpm -F @html-anything/next dev` · Vercel 一键 web 层（agent 永远跑本地） |
+首次启动发现旧 `workspace.json` 且不存在原生工程时，会转换其素材、镜头时间、文字、位置和颜色为 HTML compositions，保留原 `workspace.json` 不动。旧版无素材的 Canvas 演示图形转换成静态背景；需要逐帧保留旧演示效果时请先在旧版导出视频。已有原生工程不会被旧 JSON 覆盖。
 
-## 一键发布到平台
+旧的镜头 JSON 编辑接口、Canvas 播放/录制、IndexedDB 草稿和离线 HTML 编辑页已移除。参考视频通过 Studio 或 `motion_import_asset` 导入，在原生时间轴编排；Agent 用 `data-start`、`data-duration`、`data-media-start` 表达镜头节奏。旧 `.motion.json` 文件不是新 Studio 的工程格式。
 
-| 平台 | 实现 | 粘贴效果 |
-|---|---|---|
-| **微信公众号** | `juice` 内联 CSS + `data-tool` 标记 | 0 调整，直接显示 |
-| **知乎** | 同上 + `<mjx-container>` → `data-eeimg` LaTeX 图占位 | 公式自动渲染 |
-| **推特 / 微博 / 小红书** | `modern-screenshot` 把 iframe 渲染成 2× PNG → ClipboardItem | 直接粘到推文 |
-| **下载 `.html`** | 单文件，双击打开 | 任意分享 |
-| **下载 `.png`** | 高 DPI 截图 | 任意分享 |
+后台导出每次使用独立源文件快照，后续编辑不会改变该任务的本地输入；远程 URL 指向的媒体仍由上游获取，需稳定复现时先导入本地。当前一个工作区只运行一个插件导出任务，查询保留最近一次状态，历史 MP4 留在 `exports/`。任务最长 30 分钟，失败可读取错误和 `render.log` 后重试。Studio 自带导出面板由上游管理，任务不会出现在插件的 `motion_get_export` 中。
 
-## 🛣️ Roadmap
+请求导出时从快照读取尺寸、fps 和时长，保存在任务的 `expected` 中，随后才执行后台 lint/render。完成后将该任务的 `jobId` / `revision` 交给 `motion_verify_export`，按 brief 指定 `audio: "required"` 或 `"silent"`；默认 `optional` 只允许有声或无声，不能证明要求的配音已经存在。校验覆盖 MP4/H.264/yuv420p、尺寸/帧率/时长、AAC 音轨策略、完整视频/音频解码、首中尾 seek 和文件哈希。缺少工具返回 blocked；旧任务没有快照规格时需重新导出。
 
-- [ ] **多模板比较预览** —— 同一份内容生成 4 张候选，选最美的一张落地
-- [ ] **Hyperframes → mp4** —— 一键把帧脚本送进 Remotion 渲真视频
-- [ ] **共享设计 system** —— 与 [`nexu-io/open-design`](https://github.com/nexu-io/open-design) 互通 `DESIGN.md` 资产
-- [ ] **模板市场** —— 社区贡献你的提示词与示例
-- [ ] **浏览器扩展** —— 选中网页内容 → 一键转 HTML 模板
-- [ ] **历史记录 / 版本对比 / IndexedDB 存档**
-- [ ] **更多平台导出适配** —— 微信视频号 · 抖音字幕 · Notion · Linear · Telegraph
+保留历史文件后也可用独立脚本，参数来自存档任务和 brief，不能从待检文件反推预期值：
 
-## 📍 进度
+```sh
+node --experimental-strip-types scripts/verify-export.ts /absolute/path/final.mp4 '{"width":1920,"height":1080,"fps":30,"duration":15,"audio":"required"}'
+```
 
-早期但能用。**识别 agent → 选 skill → SSE 流式渲染 → sandboxed iframe 预览 → 一键导出** —— 这条闭环已经跑通,8 个 CLI 全都能驱动。Skill 库和 `SKILL.md` 里的硬约束是这套东西最值钱的部分,这两块都稳定了。Picker UX、design-system 元数据、多模板对比流程还在每天迭代。**如果你本机上跑出毛病了,提 issue 时附上你用的是哪个 agent CLI + 输入内容,这种 issue 推进最快。**
+也可运行 `npm run verify:export -- FILE EXPECTATION_JSON`。原来的纯数字时长参数只用于旧版 540×960 / 24 fps 静音文件；原生工程使用完整规格。
 
-| 模块 | 状态 |
-|---|---|
-| Agent 自动识别(8 个 CLI) | ✅ 稳定 |
-| Skill 注册表 + picker(75 个 skill) | ✅ 稳定 |
-| SSE 流式渲染 | ✅ 稳定 |
-| Sandboxed iframe 预览 | ✅ 稳定 |
-| 一键复制到公众号 / 推特 / 知乎 / `.html` / `.png` | ✅ 稳定 |
-| CSV / Excel / JSON / SQL 格式自动识别 | ✅ 稳定 |
-| 多模板对比(同一份生成 4 张,选 1 张落地) | 🛠 进行中 |
-| Hyperframes → `.mp4` 一键交给 Remotion 渲视频 | 🛠 进行中 |
-| 浏览器扩展(选中网页 → 转 HTML 模板) | ⏳ 计划中 |
-| 历史记录 / 版本对比 / IndexedDB 存档 | ⏳ 计划中 |
-| Skill 市场(`install <github-repo>`) | ⏳ 计划中 |
+技术通过后仍要检查最终画面、文案和声音，并在实际播放器完整播放、跳转和重播；没有执行的检查记录为 `not_run`。保存 brief、分镜、选择、review 与 verify 证据，以及包含本地素材和隐藏 Studio manifests 的原生工程，便于另一个 Agent 接续。
 
-## 🤝 贡献
+## 视频转模板与模板出片
 
-欢迎 issue、PR、新 skill、新 agent 适配、新平台导出、翻译。**最高杠杆的贡献往往就是一个文件夹、一份 Markdown、或者一段 PR-sized adapter** —— 面积小、影响大。按你想加的东西对号入座:
+视频转模板入口仅在要求可复用模板时使用，要求原样重建尽量匹配参考画面、构图、运动和节奏；素材与源码保持可编辑。原样使用模板时直接交付模板里的 `preview.mp4`，不重新渲染、不比对。制作模板时只检查 ZIP 解压到别处能独立渲染，不缺文件、字体和素材，帧率、帧数、时长和预览一致；不做逐帧像素比对，不为肉眼看不出的差异返工。具体规范见 [模板制作验证](skills/video-to-template/references/verify.md)。视频转模板时不向用户提问，由 Agent 自行选择最贴近原片的方案并记录在模板内唯一的说明文件 `TEMPLATE.md`；常用修改声明为变量，在 Studio Variables 面板修改；交付回复只给预览、模板、原片对照、能改什么和与原片的差异，技术检查写在 `TEMPLATE.md`；用模板生成视频时，缺少品牌、产品、价格、图片等只有用户能提供的内容，或要求有明显歧义时，Agent 会一次性提问。video-to-template 不承接普通视频复刻或直接混入修改要求；用参考视频（自己的或看中的）做用户自己的片由 motion-recreate 负责，已有模板的修改由 template-to-video 处理。
 
-- **新 skill** —— 在 [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) 加一个文件夹,带 `SKILL.md` + `example.html`(可选 `assets/` 和 `references/`)。`pnpm -F @html-anything/next dev` 重启后 picker 自动发现。`SKILL.md` frontmatter 必须设 `mode` · `scenario` · `surface` · `preview` · `design_system` —— 抄一个邻居改就行。
-- **新 coding-agent CLI 适配** —— 在 [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) 加一行,覆盖:识别用的 binary 名字、argv 拼装、stdin/stdout 协议、流式 parser。检测路径走 [`next/src/app/api/agents/`](next/src/app/api/agents/),spawn 走 [`next/src/app/api/convert/`](next/src/app/api/convert/)。
-- **新平台导出** —— 在 [`next/src/lib/export/`](next/src/lib/export/) 加一个模块(放在 `wechat.ts` / `image.ts` / `clipboard.ts` 隔壁),并在导出菜单里加按钮。微信视频号 · 抖音字幕 · Notion · Linear · Telegraph · RSS 都是空位。
-- **打磨某个 `SKILL.md`** —— 加强硬约束(CJK 字体栈、8 px 基线、对比度 ≥ 4.5、必须用真实数据),加一段五维自检,换一套更合适的调色板。反 AI-slop 这类 PR 是我们最看重的形态。
-- **翻译与文档** —— [`README.md`](README.md) 和 [`CONTRIBUTING.md`](CONTRIBUTING.md) 都和中文版并行维护,改一边请同步另一边。
+## 多 Agent 薄适配器
 
-完整的贡献流程、合并门槛、代码规范、以及我们**不接受**的 PR 类型 → [`CONTRIBUTING.zh-CN.md`](CONTRIBUTING.zh-CN.md)([English](CONTRIBUTING.md))。
+已有 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 的用户，可在安装机器运行 `npm run export:adapters -- <runtime绝对路径> <data绝对路径> <新output绝对路径>`，生成四家共用一份外置应用的连接包。包内包含 Skills 与文档，工程留在插件缓存外；不会自动注册客户端。WorkBuddy 使用官方 Connector 结构，桌面实测仍待完成。本机 ZIP 绑定安装路径，移动或换机器后重新生成，不能直接作为通用安装包分发。安装、升级及验收见 [多 Agent 适配器](docs/agent-adapters.md)。
 
-## 📚 References & Lineage(依赖与渊源)
+## 开发与验证
 
-这个 repo 借鉴的所有外部项目 —— 每一个我们都拿了什么、对应落到哪个目录。
+**每次需求交付都必须同时更新产品文档。** 所有贡献者提交功能、优化、修复、重构或文档需求时，在同一提交或 PR 中更新受影响专题，并新增或补充 [需求记录](docs/product/changes.md)。说明服务人群、前后行为、决策理由、架构影响、画像/商业化影响和验证证据；无直接画像或商业化影响时记录原因。用户可见入口、行为或限制变化时同步更新本 README。
 
-| 项目 | 在这里的角色 |
-|---|---|
-| [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) | Agent 识别层、`DESIGN.md` 设计 system schema、`SKILL.md` 协议都来自这里。[`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) 和 [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) 直接镜像了它的架构。 |
-| [**`multica-ai/multica`**](https://github.com/multica-ai/multica) | Daemon-and-runtime 架构:一个特权进程 spawn 各家 CLI、JSON-line 做线协议、每个 CLI 一个薄 adapter。 |
-| [**`alchaincyf/huashu-design`**](https://github.com/alchaincyf/huashu-design) | 反 AI-slop 设计哲学 —— Junior-Designer 工作流、五步品牌资产协议、对比度 ≥ 4.5 / 8 px 基线 / 必须用真实数据。这些硬约束直接写进了每一个 [`SKILL.md`](next/src/lib/templates/skills/) frontmatter。 |
-| [`alchaincyf/huashu-md-html`](https://github.com/alchaincyf/huashu-md-html) | 公众号 / 知乎复制端到端兼容性的可行性证明。[`next/src/lib/export/wechat.ts`](next/src/lib/export/wechat.ts) 的参考实现。 |
-| [`mdnice/markdown-nice`](https://github.com/mdnice/markdown-nice) | `juice` 内联 CSS 链路 → 公众号 / 知乎粘贴零调整。驱动 [`next/src/lib/export/wechat.ts`](next/src/lib/export/wechat.ts)。 |
-| [`mdnice/markdown-resume`](https://github.com/mdnice/markdown-resume) | A4 简历版式的灵感来源 → [`resume-modern`](next/src/lib/templates/skills/resume-modern/)。 |
-| [`gcui-art/markdown-to-image`](https://github.com/gcui-art/markdown-to-image) | iframe → 高 DPI PNG 截图路径,用 `modern-screenshot` 复刻在 [`next/src/lib/export/image.ts`](next/src/lib/export/image.ts)。 |
-| [**`op7418/guizang-ppt-skill`**](https://github.com/op7418/guizang-ppt-skill) | 编辑墨水 PPT 原封不动接入 [`deck-guizang-editorial`](next/src/lib/templates/skills/deck-guizang-editorial/) 和瑞士国际主义变体 [`deck-swiss-international`](next/src/lib/templates/skills/deck-swiss-international/)。原 LICENSE + 作者署名保留。 |
-| [**`tw93/kami`**](https://github.com/tw93/kami) | 暖羊皮纸 + 墨蓝单色 editorial 文档系统 → [`doc-kami-parchment`](next/src/lib/templates/skills/doc-kami-parchment/)。 |
-| [**`1weiho/open-slide`**](https://github.com/1weiho/open-slide) | 1920×1080 agent-native canvas 规范 → [`deck-open-slide-canvas`](next/src/lib/templates/skills/deck-open-slide-canvas/)。 |
-| [`heygen-com/hyperframes`](https://github.com/heygen-com/hyperframes) | 整个 `frame-*` / `vfx-*` / `mockup-*` / `social-*` 家族遵循的帧脚本 schema。输出可以直接交给 Remotion 渲 `.mp4`。 |
-| [`remotion-dev/remotion`](https://github.com/remotion-dev/remotion) | Hyperframes 帧脚本的目标渲染器。 |
-| [`jimliu/baoyu-skills`](https://github.com/jimliu/baoyu-skills) | 实用 skills 集合 —— picker 分类参考目录。 |
+执行步骤见 [文档维护流程](docs/README.md)；复杂需求可使用 [需求模板](docs/templates/requirement.md)。产品知识应进入仓库正式文档，不能只留在聊天或 PR 描述中。
 
-每一个 vendor 进来的 upstream skill 都在 `next/src/lib/templates/skills/<skill>/` 里保留了原始 LICENSE 和作者署名。
+```sh
+npm run check
+npm run typecheck:studio
+npm run test:studio
+npm test
+npm run package:plugin
+```
 
-## 📣 关注我们
+`npm run dev` 先构建编辑器再启动服务；只改前端后可运行 `npm run build:studio` 并刷新页面。`npm run test:studio` 运行上游单元/DOM 回归与宿主集成测试；`npm run typecheck:studio` 检查前端类型；`npm run design:check` 检查主题变量与对比度。`check` 校验清单、版本、锁定依赖、技能入口、服务 TypeScript 语法及设计规范。测试覆盖原生源文件共享、并发 revision、路径隔离、旧工程迁移、Studio 编辑数据快照、真实 stdio MCP、原生 Studio HTTP 接口、完整目录与同源版本、封面筛选、短指令与参数化指南、三个官方模板的打开/编辑/切换/保留和带音轨的真实 MP4 渲染。没有 FFmpeg 或 Chrome 的机器会跳过渲染集成测试；PR CI 的 phase1-package-e2e 独立任务安装 Chromium、FFmpeg/ffprobe，重新构建并隔离安装真实ZIP，自动跑全部9个Tool；依赖缺失或测试失败直接标红，日志与MP4证据保留14天。合并阻断须同时启用main的必需状态检查，配置与边界见[测试覆盖](docs/mcp-phase1-tools.md#测试代码与ci范围)。
 
-X 上关注 [**@nexudotio**](https://x.com/nexudotio),看版本发布、新 skill、新 design system,以及偶尔的 behind-the-scenes 线程。[HTML Anything Discord 频道](https://discord.gg/keeVPMrueT) 用来展示 demo、提模板需求、排查导出/agent 问题,也承接更长篇的社区讨论 —— 由上游 `open-design` 团队维护。
+打包产物为 `dist/motion-0.6.2-phase1.zip`，包含运行时源码与编辑器构建产物、设计系统与字体许可、原生模板、目录与封面、技能、lockfile 和允许分发的使用文档，排除个人媒体、草稿、node_modules 和原生程序。`bash scripts/install-motion.command` 可注册并安装本地插件，并按 Codex 实际解析的启动配置验证 MCP 握手；它不会重启 Codex。代码改动和打包不会自动替换用户已安装的插件版本。
 
-## 👥 贡献者
+主要实现：`hyperframes.ts` 管理锁定的上游 CLI 与 Studio 进程；`workspace.ts` 管理原生文件、迁移和快照；`server.ts` 提供薄壳与后台任务；`mcp.ts` 向 Agent 暴露工具；`template-library.ts` 创建官方模板的可编辑副本，`template-catalog.ts` 提供完整参考目录及热度；`editor-server.ts` 提供自有编辑器资源并流式转发原生 API；`studio/src/motion/` 是我们的界面入口，`web/design-system/` 是共享设计规范。`shared/legacy.ts` 仅用于读取旧版工程。
 
-感谢每一个提 issue、开 PR、加 skill / agent 适配 / 导出适配的人。下面这面墙是我们能想到最直观的感谢方式。
+Hyperframes 使用 Apache-2.0 许可证，依赖从 npm 官方包安装；其源码和许可证见[上游仓库](https://github.com/heygen-com/hyperframes)。Motion 运行的上游进程默认关闭匿名遥测。
 
-<a href="https://github.com/nexu-io/html-anything/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=nexu-io/html-anything" alt="HTML Anything 贡献者" />
-</a>
+后续改造入口、源码边界和适配说明见 [编辑器开发指南](docs/editor-fork.md)。
 
-如果你刚刚开第一个 PR —— 欢迎。[`good-first-issue` / `help-wanted`](https://github.com/nexu-io/html-anything/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%2C%22help+wanted%22) 标签是最好的切入口。
+## Template production and reuse
 
-## ⭐ Star History
+The source retains `video-to-template` and `template-to-video` independently to the team base. The standard workflow sections, gallery, template IDs and preview instructions keep their team behavior. The default interfaces no longer scan a custom local `template.json` library or expose `motion_save_template`. Existing project/template files are not deleted: pass the complete folder or ZIP directly to Codex for reuse. Projects remain native HyperFrames source plus local assets and preview. These extension Skills and comparison Tool are not exposed in phase-one distributions; human review decides visual acceptance.
 
-<a href="https://star-history.dera.page/#nexu-io/html-anything&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date" />
-    <img alt="HTML Anything star history" src="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date" />
-  </picture>
-</a>
+The plugin name, install script, data directory and Studio ports are the team base, unchanged by this extension. See [scope](docs/motion-extension-scope.md).
 
-曲线往上翘,就是我们要找的信号。点个 ★ 推一把。
-
-## 📄 License
-
-Apache-2.0 © 2026 HTML Anything 贡献者。详见 [`LICENSE`](LICENSE)。
-
-vendor 进来的第三方作品保留原始 LICENSE 与署名 —— 每个 `next/src/lib/templates/skills/<skill>/` 文件夹里若存在 `LICENSE` / `README.md`，以它为准。
+内部兼容诊断 `motion_compare_video`（一期不公开）接受视频绝对路径，候选还可用 `latest-export`。工程先导出再比较；执行错误与画面差异分别返回，指标不代替人工视觉验收。
