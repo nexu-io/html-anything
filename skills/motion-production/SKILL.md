@@ -1,47 +1,48 @@
 ---
 name: motion-production
-description: OpenMotion 薄路由与交付入口：为新片、已有工程修改、模板使用、参考视频复刻、视频转可复用模板、审片或导出选择路线，复用已确认上下文并完成约定交付。已进入专业路线时沿用该路线；仓库开发与文档维护不触发影片制作。
+description: 执行 OpenMotion 已有工程在既定创作决定下的局部修改、素材或音轨替换、预览、技术排错、导出与交付。重新设计叙事、动作或声画关系使用 motion-director；已有模板出片走 motion-template-to-video，参考作品复刻走 motion-recreate，视频转可复用模板走 motion-video-to-template。仓库开发与文档维护不触发影片制作。
 ---
 
 # Motion production
 
 ## 职责与目标
 
-承担薄路由与制作统筹：判断本轮范围、选择或恢复一条路线，并协调约定交付。具体创作方法由专业 Skill 承担，工程与修改方法由共享规范承担；本入口不另建一套制作流程。明确的专业任务可直接进入对应 Skill，不必先经过本页。
+在已确认的创作决定下完成工程操作与约定交付，恢复已有工程和保持项，检查受影响内容与实际产物。详细方法由共享规范提供，本入口负责通用工程任务的接入。
 
-目标是让已确认的决定、工程状态与检查证据贯穿制作和续作，交付到用户要求的阶段。同一个 Agent 按需读取文档即可，不要求多 Agent 编排。
+Agent 根据本轮意图选择入口，专业任务可直接进入对应 Skill。项目源自模板或复刻，不决定后续每轮的入口；同一个 Agent 复用工程与决定继续执行。
 
-## 1. 复用上下文，确定范围
+## 1. 恢复本轮范围
 
-先从当前请求与已有上下文区分方案、制作、局部修改、审片或导出，复用已确认的简报、素材、项目与授权，再按下表选择或恢复路线。不为选路预先读取所有专业流程；本次必读依赖在选定范围后按共享上下文补齐。续作不重新加载仍可用的入口与共享页。用户只要脚本或审片时，不启动服务、改工程或渲染。
+读取 [共享上下文](references/context.md)，复用已有简报、素材、工程、授权与仍可用的已读正文。恢复当前阶段、保持项和已完成操作，按本轮任务补齐依赖。续作状态来自会话、已有记录与实际工程；只读过入口不代表已恢复状态。
 
-## 2. 选择一条主路线
+本入口适用于在已有可编辑工程中按确定要求改文字、颜色或局部时间，替换已选素材/音乐、调音量，打开预览、技术检查、工程排错及仅导出。只有成片文件或链接、没有对应可编辑工程时，进入 motion-recreate；不能直接把 MP4 当成可编辑工程。需要新的叙事、动作或声画编排时，按下方专业导航进入对应范围；局部创作只展开受影响内容。
 
-| 当前请求 | 进入路线 |
+## 2. 工程操作与交付
+
+1. 修改已有内容时读取 [共享修改流程](references/edit.md)，确定变化、保持项及连带影响；仅查询、预览、审查或导出按本轮范围执行。
+2. 操作工程前读取 [运行规范](references/production.md)；编写原生内容前另读 [Native authoring](references/native.md) 及工具返回的固定版本引擎指南。确认 projectId、最新 revision 与 currentVersionId，复用已完成操作。
+3. 按共享上下文的依赖清单补齐受影响的质量规范。换现成音乐、调音量也需核对声画锚点与原有 SFX；画面锁定时保持视觉内容。补读结果先返回模型，后续调用再执行依赖操作。
+4. 检查受影响区间、接点和保持项。需要新渲染的导出或成片交付读取 [验证](references/verification.md)，针对已审查 revision/versionId 导出，已有适用任务先查询并复用；原样模板预览按专业入口核验，检查实际 MP4。技术通过与创作品质、正常播放及试听分别记录。
+5. 停在用户要求的方案、预览、工程或成片阶段。交付实际结果、检查与必要限制。
+
+## 专业导航与旧调用兼容
+
+以下导航供尚未选定入口或旧 `production/start` 调用使用；明确的专业任务直接进入对应入口。通用工程任务无需为补齐质量规范重新启动专业创作流程。
+
+| 本轮任务 | 进入范围 |
 | --- | --- |
-| 用户接受安装后的首次体验邀请，回复“体验”或明确同意 | [template-to-video](../template-to-video/SKILL.md)，已确认 `product-promo` 示例内容、独立工程、右侧可编辑预览与最终 MP4；不再问素材/模板，等待并验证导出后交付 |
-| 原创产品宣传、品牌片、动态图形，或大幅重编叙事 | [motion-director](../motion-director/SKILL.md) |
-| 使用已选可编辑模板、原样出片或替换适配内容 | [template-to-video](../template-to-video/SKILL.md)，已有实际流程 |
-| 明确要求把视频制作成可复用模板或模板 ZIP | video-to-template（源码扩展，一期不随包分发），单独的模板生产入口 |
-| 复刻参考视频的结构、动作或节奏；输入为链接或文件。包括用户只给了成片文件或链接、没有对应的可编辑工程，却要改其中内容（哪怕只改几处字） | [motion-recreate](../motion-recreate/SKILL.md) |
-| 参考视频只提供风格灵感，不要求复刻 | motion-director |
-| 改 OpenMotion 中已有可编辑工程的文字、颜色、局部时间 | 共享运行规范；按需读取 [制作决策](../motion-director/references/production-decisions.md) 与 [审片标准](../motion-director/references/motion-review.md)，不重启创作 |
-| 只改声音、画面锁定 | [声音叙事](../motion-director/references/sound-narrative.md)、[动作脚本的声画锚点](../motion-director/references/action-script.md) 与审片标准；保留画面，不重启原创 |
-| 仅导出、验证或技术排错 | [运行规范](references/production.md) 与 [验证](references/verification.md)；不重新选模板或编导 |
-| 仅方案或审片 | director 中相应范围，停在所请求阶段 |
+| 原创新片、动态图形、创作方案、大幅重编叙事 | [motion-director](../motion-director/SKILL.md) |
+| 重新设计局部动作、节奏、声音叙事，或评价创作品质 | motion-director 的局部创作／审片范围；即使画面锁定，也可仅设计声音 |
+| 使用已选可编辑模板或源码适配内容 | [motion-template-to-video](../motion-template-to-video/SKILL.md)，保留已有原样预览交付与内容适配实现 |
+| 明确要求把参考视频重建为可复用模板文件夹或 ZIP | [motion-video-to-template](../motion-video-to-template/SKILL.md) |
+| 根据实际视频重建本次作品；只有成片文件/链接、没有对应可编辑工程时，即使只改几处字 | [motion-recreate](../motion-recreate/SKILL.md)，沿用已有复刻方法与数字测量 |
+| 参考视频只提供风格灵感 | motion-director |
+| 接受安装后的首次体验邀请 | motion-template-to-video；沿用已确认的 `product-promo` 示例、20 秒、独立工程、右侧预览及最终 MP4 |
 
-以用户意图与交付物为先。视频转模板只在要求可复用模板时进入；只要复刻作品时继续使用 recreate，不默认先制作模板再修改。视频 URL 不等于复刻请求，项目源自模板也不代表本次局部修改要重新应用模板。画廊选中项先从其真实来源/指引读取准确 ID：`builtin` / 可编辑 `registry` 源码走模板；只有参考成片的 `reference` 走复刻。实际素材与分类不符时检查来源，纠正一次路线，不来回转交。模板选择仅在用户要用模板但尚未选择或授权代选时展开；原创创作无需先选模板。
+模糊需求结合用户目标和已有素材判断；只补充影响选路或真实性的关键缺口。链接与文件是输入形式，不自动等于复刻。模板来源与精确 ID 按 [模板能力说明](references/templates.md) 核对；原创新片需要补齐简报时使用 [需求与记录](references/intake.md)。
 
-## 3. 执行与交付
+## 本地与 MCP 同源
 
-1. 选定专业路线后读取该入口，由它应用 [共享上下文](references/context.md) 的依赖清单并继续；不再返回本页执行第二遍流程。局部修改、声音、仅导出等无须新选专业路线的任务，直接应用共享上下文及对应参考。修改已有内容时应用 [共享修改流程](references/edit.md)；新片需要补齐简报时读取 [需求与记录](references/intake.md)。已读正文复用。
-2. 需要操作工程时读取运行规范；原生编写前读取 [Native authoring](references/native.md) 及工具返回的固定版本 `authoringGuide`。确认目标项目与最新 revision，再执行对应 MCP 操作。
-3. 核对共享上下文中的本次必读依赖已齐备，应用已读质量参考。补读结果须先返回模型，再在后续工具调用中执行依赖操作；不能在同一外层调用中补读并修改。导演层负责动态叙事、跨段连续性和声音；运行层负责项目、素材、revision、检查与导出。仅补齐阅读记录中的缺口；做过的工程操作不因换文档再执行。
-4. 新制作或修改后，观看实际产物并检查受影响区间与接点；需要交付全片时检查全片。新导出必须针对已审查 revision，并验证实际 MP4；仅复用未修改模板的既有预览按专业入口核验。技术通过不能代替 Motion 与声画质量判断。
-5. 按请求交付方案、预览、工程或视频，记录实际路径、检查与剩余限制。成片可复用未修改模板的既有预览时，按 template-to-video 核验并直接交付；需要新渲染时才按导出流程执行，不把完整制作流程强加给 starter、局部修改或审片。
+相对链接按本文件位置解析。MCP-only 通过 resources/list 发现、resources/read 读取同源正文：本入口为 `motion://workflow/production/start`；共享页使用 production 的 context、edit、production、native、verification、templates、intake、portable；专业入口短 ID 为 director、template、recreate、video-to-template，各读 start。固定引擎指南为 `motion://engine/SKILL.md`。
 
-## 本地与 MCP 使用同一份文档
-
-相对链接以本文件解析。MCP-only 客户端通过 resources/list 发现、resources/read 读取 `motion://workflow/production/start`，专业入口为 `motion://workflow/director/start`、template/start、recreate/start；共享参考使用 production/context、native、production、verification、edit 等路径。导演质量参考用 director/actions、craft、phrases、decisions、sound、review、examples。固定引擎指南为 `motion://engine/SKILL.md`。
-
-resources/read 返回相同正文及 documentId/contentHash/references，用其定位相对链接并复用已读版本。只加载当前范围所需内容；正文被截断或丢失时补读。文档读取不是工程执行或验证证据。一期不再提供单独的工作流读取 Tool。
+既有 workflow 短 ID 和共享文档路径保持兼容，旧默认 production/start 仍能导航到专业入口；一期不提供独立工作流读取 Tool。返回的 references 提供准确地址；用 documentId/contentHash 识别版本，仅复用实际读过且仍在上下文的完整正文。读取指导不启动服务、不改工程，也不证明实际执行合规。

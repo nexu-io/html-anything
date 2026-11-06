@@ -15,7 +15,7 @@
 :where([data-motion-ui]) :where(a) { color: inherit; }
 :where([data-motion-ui]) :where(h1, h2, h3, p) { margin: 0; }
 :where([data-motion-ui]) :where(button, a, input, textarea, select):focus-visible,
-:where([data-motion-ui]) label:has(input[type='file']:focus-visible) { outline: 2px solid var(--motion-accent); outline-offset: 3px; }
+:where([data-motion-ui]) label:has(input[type='file']:focus-visible) { outline: 2px solid var(--motion-selected); outline-offset: 3px; }
 :where([data-motion-ui]) ::selection { background: var(--motion-highlight); color: var(--motion-strong); }
 :where([data-motion-ui]) :where(code, pre, kbd) { font-family: var(--motion-font-mono); }
 :where([data-motion-ui]) [hidden] { display: none !important; }

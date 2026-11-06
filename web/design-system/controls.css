@@ -4,7 +4,7 @@
   min-height: var(--motion-control); padding: var(--motion-space-6) var(--motion-space-12);
   border: 1px solid var(--motion-border); border-radius: var(--motion-radius-sm);
   background: var(--motion-raised); color: var(--motion-text);
-  font-size: var(--motion-text-md); font-weight: var(--motion-weight-medium); line-height: var(--motion-leading-tight);
+  font-size: var(--motion-text-md); font-weight: var(--motion-weight-semibold); line-height: var(--motion-leading-tight);
   text-decoration: none; white-space: nowrap; user-select: none;
   transition: background var(--motion-duration-fast), border-color var(--motion-duration-fast), color var(--motion-duration-fast);
 }
@@ -23,12 +23,12 @@
 :where([data-motion-ui]) .ui-input {
   width: 100%; min-width: 0; min-height: var(--motion-control);
   padding: var(--motion-space-8) var(--motion-space-10); border: 1px solid var(--motion-border);
-  border-radius: var(--motion-radius-sm); background: var(--motion-inset); color: var(--motion-text);
+  border-radius: var(--motion-radius-sm); background: var(--motion-panel); color: var(--motion-text);
   font-size: var(--motion-text-md); line-height: var(--motion-leading-body);
   transition: border-color var(--motion-duration-fast);
 }
 :where([data-motion-ui]) .ui-input:hover:not(:disabled) { border-color: var(--motion-border-strong); }
-:where([data-motion-ui]) .ui-input:focus { border-color: var(--motion-accent); }
+:where([data-motion-ui]) .ui-input:focus { border-color: var(--motion-selected); }
 :where([data-motion-ui]) .ui-input::placeholder { color: var(--motion-dim); }
 :where([data-motion-ui]) textarea.ui-input { resize: vertical; min-height: 76px; }
 :where([data-motion-ui]) select.ui-input { cursor: pointer; }

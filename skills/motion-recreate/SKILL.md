@@ -11,8 +11,9 @@ description: >-
   asks at most once, rebuilds in an OpenMotion editor project with the content the user wants, and
   delivers the film, the editable project and an original-versus-remix comparison. A reference used
   only as loose inspiration for an otherwise original brief goes to motion-director; adapting or
-  reusing an editable template goes to template-to-video; ordinary local edits to an existing editable
-  OpenMotion project do not start here.
+  reusing an editable template goes to motion-template-to-video; ordinary local edits to an existing editable
+  OpenMotion project do not start here. A requested reusable template folder or ZIP goes to
+  motion-video-to-template instead.
 ---
 
 # Motion Recreate — reference video → the user's own film

@@ -1,3 +1,5 @@
+import { workflowEntryGuide } from './workflow-entry.js';
+
 export const integrationHosts = ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'] as const;
 export type IntegrationHost = typeof integrationHosts[number];
 export const hostNames: Record<IntegrationHost, string> = { codex: 'Codex', claude: 'Claude Code', deepseek: 'DeepSeek Harness', chatgpt: 'ChatGPT', mcp: 'MCP / CLI' };
@@ -117,7 +119,9 @@ ${info.tools.map(tool => `- ${tool.name}: ${tool.description}`).join('\n')}
 \`\`\`sh
 ${apiDiscoveryCommand(info)}
 \`\`\`
-OpenMotion 一期只公开 tools/list 中的 9 个 motion_ Tool。总入口是 skills/motion-production/SKILL.md；已有专业路线直接续用。安装的 Skill 文档或 resources/list、resources/read 读取相同指引，起点为 motion://workflow/production/start，固定引擎指南为 motion://engine/SKILL.md。
+OpenMotion 一期只公开 tools/list 中的 9 个 motion_ Tool。按本轮意图选择已安装的专业/通用工程入口，已有任务直接续用。安装的 Skill 文档或 resources/list、resources/read 读取相同指引；专业短 ID 为 director/template/recreate/video-to-template，production/start 保留工程入口与兼容导航。固定引擎指南为 motion://engine/SKILL.md。
+
+${workflowEntryGuide}
 
 ## 创建与编辑
 

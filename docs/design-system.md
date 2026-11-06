@@ -1,28 +1,40 @@
 # OpenDesign UI v1
 
-界面变量与基础控件位于 `web/design-system/`，编辑器与接入弹框由本仓库的 React 前端实现。界面样式与影片作品样式相互隔离。
+产品界面视觉对齐到 **OpenDesign 主仓库 `20c49e75c`**。本次迁移只影响宿主 UI，保留现有首页、会话、浏览器、面板与时间轴的结构、尺寸、间距及行为。
 
-共享图标为本项目自绘的 24 单位线性 SVG。产品流程见 [产品架构](product/architecture.md)。
+来源与适配关系：
+
+| OpenDesign 来源文件 | Motion 落点 | 迁移范围 |
+| --- | --- | --- |
+| `apps/web/src/styles/tokens.css` | `web/design-system/tokens.json` → `tokens.css` | 双主题灰阶、品牌色、中性主操作、圆角与阴影 |
+| `apps/web/src/styles/base.css` | `base.css`、`fonts.css` 与 Studio 主题适配层 | Albert Sans 字体体系、中性键盘焦点；保留 Motion 字号、字重主体、行高和尺寸 |
+| `apps/web/src/styles/material.css` | `web/design-system/material.css` | 菜单/Popover 磨砂材质、弹窗统一遮罩、减少透明度和不支持滤镜时的降级 |
+| `packages/components/src/button.module.css` | `controls.css`、Studio `Button.tsx` 视觉钩子与 `motion/theme.css` | 中性主按钮、悬停与禁用视觉；保留原尺寸和事件 |
+| `packages/components/src/form-controls.module.css` | `controls.css`、Studio `Input.tsx` 共享视觉钩子 | 面板底色与中性焦点；保留可见键盘焦点及错误状态 |
+| `packages/components/src/dialog.module.css` | `material.css` | 实色浮层、12px 圆角、阴影和遮罩；保留定位、宽高、层级及关闭逻辑 |
+
+采用按语义映射的样式迁移，不引入 OD React 组件包。OD 的 body 字重 600 与紧凑行高不全局照搬，以免改变 Motion 的文本换行和布局。共享设计变量仍以 JSON 为唯一真源，生成 CSS；材质降级变量集中在 `material.css`。产品流程见 [产品架构](product/architecture.md)。
 
 ## 视觉规范
 
 | 用途 | 浅色 | 深色 |
 | --- | --- | --- |
-| 工作区 | `#ededed` | `#202020` |
+| 工作区 | `#ffffff` | `#202020` |
 | 面板 | `#fafafa` | `#353535` |
 | 浮层 | `#ffffff` | `#353535` |
-| 输入底色 | `#f5f5f5` | `#292929` |
+| 输入底色 | `#fafafa` | `#353535` |
 | 正文 | `#494949` | `#ededed` |
 | 辅助文字 | `#696969` | `#c0c0c0` |
-| 选中与焦点 | `#007106` | `#adf788` |
-| 主操作 | `#202020` | `#ededed` |
+| 品牌选中辅助 | `#007106` | `#adf788` |
+| 表单与键盘焦点 | `#353535` | `#fafafa` |
+| 主操作 | `#202020` | `#fafafa` |
 
-品牌绿为 `#87ea5c`。绿色用于焦点、选中态、标题高亮与创作辅助；主要操作采用中性色。工作区以 1px 分隔线划分，界面背景保持平整。
+品牌绿为 `#87ea5c`。绿色用于选中辅助、标题高亮与创作辅助；主要操作和表单焦点采用中性色。工作区以 1px 分隔线划分，界面背景保持平整。
 
-字体继承参考项目：Albert Sans / 苹方用于界面，Georgia / 宋体用于引导标题，IBM Plex Mono 用于时间码、编号与数值。本地字体及 SIL OFL 许可保存在 `web/design-system/fonts/`。
+Albert Sans / 苹方统一用于界面与引导标题。时间码、编号与数值保留 Motion 已有的 IBM Plex Mono，不复制 OD 的 JiduMono 字体资产。本地字体及 SIL OFL 许可保存在 `web/design-system/fonts/`。
 
 - 正文 14px、控件 13px、说明 12px、密集标注至少 11px；标题 16 / 20 / 24 / 32px。
-- 常用间距 4 / 8 / 12 / 16 / 24 / 32px；圆角 8px 控件、12px 卡片、16px 面板、24px 外壳。
+- 常用间距 4 / 8 / 12 / 16 / 24 / 32px；圆角沿用 OD 的 2 / 4 / 8 / 12 / 16px 梯度；常规控件 4px、卡片 8px、弹窗 12px。
 - 标准控件 36px、紧凑控件 28px、图标按钮 32px；编辑器单行顶栏 52px、面板标签栏 34px。
 - 常规反馈 150 / 200ms，点阵加载 1043ms；减少动态效果偏好停用循环动画。
 - 编辑器沿用 Studio 原生主题开关与 `hf-studio-ui-preferences`；设计系统独立目录仍可使用 `theme.js` 的系统外观模式。
@@ -45,6 +57,7 @@ web/design-system/
   fonts.css       本地字体声明
   base.css        作用域基础样式、焦点、减少动态效果
   controls.css    按钮、输入、标签、空态、进度、加载
+  material.css    浮层材质、弹窗遮罩及透明度降级
   icons.svg       共享线性图标
   theme.js        可选的整页外观控制器
   index.html     可交互组件目录 /design-system
@@ -59,7 +72,7 @@ web/template-gallery.*                 成片卡片、预览、出处、分类�
 shared/integration.ts                  客户端配置与 Agent 指引
 ```
 
-`tokens.json` 以 `motion.ui-tokens@1` 标识版本。`shared` 定义跨主题变量，`themes` 定义同名的亮暗变量，统一生成 `--motion-*`。原参考项目的 `--mc-*` 改为独立命名空间；保留编辑器与接入内容需要的变量。错误与警告底色是本次补充，正文及状态文字对比度通过 4.5:1 检查。
+`tokens.json` 以 `motion.ui-tokens@1` 标识版本。`shared` 定义跨主题变量，`themes` 定义同名的亮暗变量，统一生成 `--motion-*`。原参考项目的 `--mc-*` 改为独立命名空间；保留编辑器与接入内容需要的变量。小字号辅助文字、错误/警告与时间轴领域色保留 Motion 的可读性适配，未机械复制 OD 的较浅文字色；正文及状态文字对比度通过 4.5:1 检查。视频预览仍用独立深色遮罩，作品 iframe 不加载宿主样式。
 
 MCP 与模板入口使用同一个原生 `dialog`，保留编辑器上下文。完整指南和视频预览在弹框内展开，Escape 优先关闭当前子弹框；作者出处可跳转外部原帖，配置可直接下载。模板卡片突出真实视频，在下方显示作者、分类、有来源的热度和“一键复刻”；悬停热度可查看精确值与同步日期。切换 Agent 不改变 URL。旧 `/connect` 地址重定向到编辑器的 `?panel=connections` 深链接，`?templates=1` 直接定位画廊。详细数据规则见 [模板目录](template-catalog.md)。
 

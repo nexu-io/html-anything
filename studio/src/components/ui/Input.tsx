@@ -13,7 +13,7 @@ import type { PreviewState } from "./Button";
  * twice, real and `data-[preview-state=...]`; `valueControls.test.tsx` asserts the lists match.
  */
 export const fieldBase = cn(
-  "flex min-w-0 items-center gap-1.5 h-ctl px-2 rounded-md",
+  "hf-od-field flex min-w-0 items-center gap-1.5 h-ctl px-2 rounded-md",
   "bg-input border border-border-input text-step-11 font-medium text-text-1",
   "transition-[border-color,background-color] ease-standard duration-focus",
   "hover:border-border-strong data-[preview-state=hover]:border-border-strong",

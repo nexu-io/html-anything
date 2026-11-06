@@ -57,9 +57,9 @@ test('production stdio connections use one authority and keep project identity',
     await Promise.all(clients.map(c => c.initialize()));
     const template = await clients[0].call('motion_get_workflow', { workflow: 'template' });
     const manufacturing = await clients[1].call('motion_get_workflow', { workflow: 'video-to-template' });
-    assert.equal(template.documentId, 'skills/template-to-video/SKILL.md');
+    assert.equal(template.documentId, 'skills/motion-template-to-video/SKILL.md');
     assert.equal(template.status, 'ready');
-    assert.equal(manufacturing.documentId, 'skills/video-to-template/SKILL.md');
+    assert.equal(manufacturing.documentId, 'skills/motion-video-to-template/SKILL.md');
     assert.equal(manufacturing.status, 'ready');
     assert.equal(await stat(path.join(directory, '.editor-runtime/starts.jsonl')).then(() => true, () => false), false);
     await Promise.all(clients.map(c => c.call('motion_get_project'))); editor = await readEditor(directory);

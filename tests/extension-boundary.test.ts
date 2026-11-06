@@ -6,12 +6,13 @@ import { tmpdir } from 'node:os';
 import { callTool, rpc, tools } from '../mcp.ts';
 import { WorkspaceStore } from '../workspace.ts';
 
-test('default production preserves legacy calls while template reuse and video-to-template have separate real entries', async () => {
+test('default production preserves legacy calls while template reuse and motion-video-to-template have separate real entries', async () => {
   const sections = ['start', 'intake', 'templates', 'production', 'verification'];
   const initial = await rpc({ jsonrpc: '2.0', id: 1, method: 'initialize', params: {} });
   assert.match(initial.result.instructions, /motion:\/\/workflow\/production\/start/);
-  assert.ok(!initial.result.instructions.includes('video-to-template'));
-  assert.ok(!initial.result.instructions.includes('template-to-video'));
+  assert.ok(initial.result.instructions.includes('motion-video-to-template'));
+  assert.ok(initial.result.instructions.includes('motion-template-to-video'));
+  assert.match(initial.result.instructions, /production is not a prerequisite/);
   for (const section of sections) {
     const value = await callTool('motion_get_workflow', { section });
     assert.equal(value.workflow, 'production');
@@ -23,10 +24,10 @@ test('default production preserves legacy calls while template reuse and video-t
   assert.equal(start.section, 'start');
   assert.ok(start.path.endsWith('/motion-production/SKILL.md'));
   const template = await callTool('motion_get_workflow', { workflow: 'template' });
-  assert.equal(template.documentId, 'skills/template-to-video/SKILL.md');
+  assert.equal(template.documentId, 'skills/motion-template-to-video/SKILL.md');
   assert.equal(template.status, 'ready');
   const manufacturing = await callTool('motion_get_workflow', { workflow: 'video-to-template' });
-  assert.equal(manufacturing.documentId, 'skills/video-to-template/SKILL.md');
+  assert.equal(manufacturing.documentId, 'skills/motion-video-to-template/SKILL.md');
   assert.equal(manufacturing.status, 'ready');
   const recreate = await callTool('motion_get_workflow', { workflow: 'recreate' });
   assert.equal(recreate.documentId, 'skills/motion-recreate/SKILL.md');

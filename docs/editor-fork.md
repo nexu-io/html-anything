@@ -18,7 +18,7 @@ OpenDesign 的 `WorkspaceFrame` 放在原生 App 外，负责通用导航和会�
 
 侧栏底部语言菜单支持简体中文和 English，默认中文，偏好保存在 `motion.studio.locale`。`studio/src/i18n/I18n.tsx` 提供上下文与插值，英文源文案作为 key 和回退，中文集中在 `zh-CN.json`。新增 UI 文案通过 `useI18n().t(message, values)` 使用；数量复数在语言层处理，日期和数字使用 Intl。宿主外的原版组件默认英文，便于继续复用。只有展示标签被翻译，工程名、素材路径、属性值、视频文字和 Agent/API 标识不变。切换语言不会重新挂载编辑器；Dock 只更新标题，不重建布局或预览。播放条样式使用独立 data 属性，不依赖可翻译的 aria-label。主分支的统一 MCP/模板弹框保留原有流程与目录，内部文案目前以中文为主，尚未纳入完整双语覆盖。
 
-顶栏 Export、合成列表 Render 和 Renders 面板均使用原版渲染队列，保留格式、分辨率、帧率、质量、取消、进度、历史、预览与下载。插件 `motion_request_export` 仍提供独立的后台快照渲染，供 Agent 使用；不会替代界面的原生导出。
+顶栏 Export、合成列表 Render 和 Renders 面板均使用原版渲染队列，保留格式、分辨率、帧率、质量、取消、进度、历史、预览与下载。一期插件 `motion_export_request` 仍提供独立的后台快照渲染，供 Agent 使用；不会替代界面的原生导出。
 
 品牌宿主隐藏上游桌面下载推广与反馈邀约，相关上游组件仍保留在源码中。Studio 的原生暗色/浅色偏好由 `hf-studio-ui-preferences` 管理；`data-theme="paper"` 为浅色，无属性为暗色。设计系统变量映射到这一机制，不再使用第二套编辑器主题状态。
 
@@ -93,6 +93,6 @@ npm run package:plugin
 
 布局回归测试覆盖关闭预览后刷新重开、全部面板关闭、最大化恢复与布局预设。历史集成测试使用真实服务验证保留版本在重启后仍存在，恢复不删除后续记录，并可撤销恢复。面板测试覆盖保存失败与原生恢复拒绝，确保失败时不重新加载或替换工程。
 
-侧栏 Agent 和编辑器模板入口使用同一个弹框，提供 Codex、Claude Code、DeepSeek Harness 和通用 stdio 客户端的配置与指南。配置中的数据目录、Node 路径和端口来自当前运行服务；ChatGPT 云端接入尚无远程端点。`motion_list_templates` 搜索完整目录，`motion_get_template` 读取精确参考，`motion_apply_template` 只应用本地原生模板并创建独立工程。外部参考由 Agent 分析后写入可编辑原生源文件。数据、封面与热度的维护见 [模板目录](template-catalog.md)。
+侧栏 Agent 和编辑器模板入口使用同一个弹框，提供 Codex、Claude Code、DeepSeek Harness 和通用 stdio 客户端的配置与指南。配置中的数据目录、Node 路径和端口来自当前运行服务；ChatGPT 云端接入尚无远程端点。一期目录发现由 Studio 或指引链接提供，`motion_create_project` 的 template 类型只复制实际内置原生模板；旧目录/详情/应用 handler 仅作内部兼容，不能按一期 Tool 调用。外部参考由 Agent 分析后写入可编辑原生源文件。数据、封面与热度的维护见 [模板目录](template-catalog.md)。
 
 i18n 测试覆盖语言偏好、存储不可用、跨窗口同步、插值和复数，以及切换语言时保持 Dock 分组、面板尺寸、预览 iframe 和原生属性提交值。

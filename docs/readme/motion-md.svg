@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="650" viewBox="0 0 1440 650" role="img" aria-labelledby="title desc">
+<title id="title">Motion MD — the creative decisions travel with the style</title>
+<desc id="desc">Concept diagram: reference video and your brand feed a Motion MD draft. An Agent reads the document to produce an editable project and a rendered video. The format has no automatic importer yet.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L7 4L0 8" fill="none" stroke="#5f7452" stroke-width="1.5"/></marker></defs>
+<rect width="1440" height="650" rx="22" fill="#f0f1e9"/>
+<g font-family="Arial,Helvetica,sans-serif">
+ <text x="54" y="64" font-size="15" fill="#526449" letter-spacing="2">INTRODUCING MOTION MD</text>
+ <text x="54" y="114" font-size="39" fill="#202b1c" font-weight="700" letter-spacing="-1">The creative decisions travel with the style.</text>
+ <text x="54" y="152" font-size="20" fill="#5d6857">Readable by you. Usable as context for your Agent. Reusable across videos.</text>
+ <rect x="54" y="210" width="306" height="144" rx="14" fill="#fff" stroke="#cbd2c3"/>
+ <text x="79" y="248" font-size="14" fill="#67775b">01 / CHOOSE A REFERENCE</text>
+ <text x="79" y="290" font-size="25" fill="#293624" font-weight="700">A style worth sharing</text>
+ <text x="79" y="323" font-size="17" fill="#67775b">Source · creator · visual intent</text>
+ <rect x="54" y="374" width="306" height="144" rx="14" fill="#fff" stroke="#cbd2c3"/>
+ <text x="79" y="412" font-size="14" fill="#67775b">02 / BRING YOUR BRAND</text>
+ <text x="79" y="454" font-size="25" fill="#293624" font-weight="700">Your product context</text>
+ <text x="79" y="487" font-size="17" fill="#67775b">Logo · screens · copy · assets</text>
+ <path d="M372 282h37v77h53M372 446h37v-77h53" fill="none" stroke="#7c8a70" stroke-width="2" marker-end="url(#arrow)"/>
+ <rect x="478" y="210" width="443" height="308" rx="16" fill="#23351d"/>
+ <text x="506" y="254" font-size="29" fill="#ebf5e4" font-weight="700">MOTION.md</text>
+ <rect x="775" y="229" width="117" height="31" rx="15" fill="#3f5537"/><text x="794" y="250" font-size="13" fill="#d0e9c1">DRAFT v0.1</text>
+ <text x="506" y="288" font-size="17" fill="#b6cbaa">A written creative specification</text>
+ <g font-size="18" fill="#e0ead8">
+  <rect x="506" y="312" width="178" height="48" rx="7" fill="#354a2d"/><text x="523" y="343">Brand &amp; assets</text>
+  <rect x="698" y="312" width="194" height="48" rx="7" fill="#354a2d"/><text x="715" y="343">Story &amp; structure</text>
+  <rect x="506" y="372" width="178" height="48" rx="7" fill="#354a2d"/><text x="523" y="403">Timing &amp; rhythm</text>
+  <rect x="698" y="372" width="194" height="48" rx="7" fill="#354a2d"/><text x="715" y="403">Motion &amp; media</text>
+  <rect x="506" y="432" width="178" height="48" rx="7" fill="#354a2d"/><text x="523" y="463">Editable choices</text>
+  <rect x="698" y="432" width="194" height="48" rx="7" fill="#354a2d"/><text x="715" y="463">Review &amp; evidence</text>
+ </g>
+ <path d="M936 364h85" fill="none" stroke="#7c8a70" stroke-width="2" marker-end="url(#arrow)"/>
+ <text x="979" y="344" font-size="13" fill="#657659" text-anchor="middle">Agent reads</text>
+ <rect x="1038" y="210" width="348" height="308" rx="16" fill="#d8efc9" stroke="#b7d5a2"/>
+ <text x="1065" y="251" font-size="14" fill="#526b42">03 / MAKE IT YOURS</text>
+ <text x="1065" y="298" font-size="28" font-weight="700" fill="#23351d">An editable project.</text>
+ <text x="1065" y="334" font-size="28" font-weight="700" fill="#23351d">A video to share.</text>
+ <path d="M1065 360h294" stroke="#afca9d"/>
+ <text x="1065" y="397" font-size="18" fill="#455d37">Create and refine in Codex</text>
+ <text x="1065" y="433" font-size="18" fill="#455d37">Preview and edit visually</text>
+ <text x="1065" y="469" font-size="18" fill="#455d37">Export an MP4</text>
+ <path d="M54 559h1332" stroke="#cbd2c3"/>
+ <text x="54" y="601" font-size="17" fill="#657259">Proposed format · Supply explicitly to your Agent · Native project files remain the rendering source</text>
+</g>
+</svg>

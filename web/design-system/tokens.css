@@ -2,7 +2,7 @@
 :where([data-motion-ui]) {
   --motion-font-sans: "Albert Sans", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   --motion-font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-  --motion-font-display: Georgia, "Songti SC", STSong, SimSun, serif;
+  --motion-font-display: "Albert Sans", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   --motion-text-xs: 11px;
   --motion-text-sm: 12px;
   --motion-text-md: 13px;
@@ -31,10 +31,10 @@
   --motion-space-40: 40px;
   --motion-space-48: 48px;
   --motion-radius-xs: 2px;
-  --motion-radius-sm: 8px;
-  --motion-radius-md: 12px;
-  --motion-radius-lg: 16px;
-  --motion-radius-xl: 24px;
+  --motion-radius-sm: 4px;
+  --motion-radius-md: 8px;
+  --motion-radius-lg: 12px;
+  --motion-radius-xl: 16px;
   --motion-radius-full: 999px;
   --motion-control-sm: 28px;
   --motion-control: 36px;
@@ -59,11 +59,14 @@
   --motion-space-28: 28px;
   --motion-space-18: 18px;
   --motion-radius-pill: 999px;
+  --motion-ease-standard: cubic-bezier(0.33, 0, 0.67, 1);
+  --motion-glass-backdrop: blur(28px) saturate(1.8);
+  --motion-scrim-backdrop: blur(50px);
 }
 :where([data-motion-ui]) {
   color-scheme: light;
-  --motion-bg: #ededed;
-  --motion-inset: #f5f5f5;
+  --motion-bg: #ffffff;
+  --motion-inset: #ededed;
   --motion-panel: #fafafa;
   --motion-raised: #ffffff;
   --motion-hover: #ededed;
@@ -76,7 +79,7 @@
   --motion-accent: #007106;
   --motion-accent-hover: #0d5400;
   --motion-accent-soft: #f2fff2;
-  --motion-brand-soft: #ebffde;
+  --motion-brand-soft: #f2fff2;
   --motion-highlight: #adf788;
   --motion-action: #202020;
   --motion-action-hover: #353535;
@@ -101,18 +104,22 @@
   --motion-overlay-ink: #f5f5f5;
   --motion-video-overlay: #101010bf;
   --motion-video-ink: #171717;
+  --motion-selected: #353535;
+  --motion-glass: rgba(250, 250, 250, 0.66);
+  --motion-scrim: rgba(255, 255, 255, 0.6);
+  --motion-scrim-solid: #ffffff;
 }
 :where([data-motion-ui][data-theme="dark"], [data-motion-ui][data-motion-studio]:not([data-theme="paper"])) {
   color-scheme: dark;
   --motion-bg: #202020;
-  --motion-inset: #292929;
+  --motion-inset: #494949;
   --motion-panel: #353535;
   --motion-raised: #353535;
   --motion-hover: #494949;
   --motion-border: #5c5c5c;
   --motion-border-strong: #848484;
   --motion-text: #ededed;
-  --motion-muted: #c9c9c9;
+  --motion-muted: #bdbdbd;
   --motion-dim: #c0c0c0;
   --motion-strong: #fafafa;
   --motion-accent: #adf788;
@@ -120,8 +127,8 @@
   --motion-accent-soft: #164111;
   --motion-brand-soft: #164111;
   --motion-highlight: #2f781d;
-  --motion-action: #ededed;
-  --motion-action-hover: #fafafa;
+  --motion-action: #fafafa;
+  --motion-action-hover: #ededed;
   --motion-on-action: #202020;
   --motion-success: #69d99b;
   --motion-danger: #ff9898;
@@ -143,19 +150,23 @@
   --motion-overlay-ink: #f5f5f5;
   --motion-video-overlay: #101010bf;
   --motion-video-ink: #171717;
+  --motion-selected: #fafafa;
+  --motion-glass: rgba(53, 53, 53, 0.66);
+  --motion-scrim: rgba(255, 255, 255, 0.6);
+  --motion-scrim-solid: #202020;
 }
 @media (prefers-color-scheme: dark) {
   :where([data-motion-ui]:not([data-theme]):not([data-motion-studio])) {
     color-scheme: dark;
     --motion-bg: #202020;
-    --motion-inset: #292929;
+    --motion-inset: #494949;
     --motion-panel: #353535;
     --motion-raised: #353535;
     --motion-hover: #494949;
     --motion-border: #5c5c5c;
     --motion-border-strong: #848484;
     --motion-text: #ededed;
-    --motion-muted: #c9c9c9;
+    --motion-muted: #bdbdbd;
     --motion-dim: #c0c0c0;
     --motion-strong: #fafafa;
     --motion-accent: #adf788;
@@ -163,8 +174,8 @@
     --motion-accent-soft: #164111;
     --motion-brand-soft: #164111;
     --motion-highlight: #2f781d;
-    --motion-action: #ededed;
-    --motion-action-hover: #fafafa;
+    --motion-action: #fafafa;
+    --motion-action-hover: #ededed;
     --motion-on-action: #202020;
     --motion-success: #69d99b;
     --motion-danger: #ff9898;
@@ -186,5 +197,9 @@
     --motion-overlay-ink: #f5f5f5;
     --motion-video-overlay: #101010bf;
     --motion-video-ink: #171717;
+    --motion-selected: #fafafa;
+    --motion-glass: rgba(53, 53, 53, 0.66);
+    --motion-scrim: rgba(255, 255, 255, 0.6);
+    --motion-scrim-solid: #202020;
   }
 }

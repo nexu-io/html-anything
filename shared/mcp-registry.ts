@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { workflowEntryGuide } from './workflow-entry.js';
 import { readFileSync } from 'node:fs';
 
 const profiles: Record<string, { tools: string[] | null; instructions: string | null }> = JSON.parse(readFileSync(new URL('./mcp-profiles.json', import.meta.url), 'utf8'));
@@ -15,5 +16,5 @@ export function createToolRegistry<T extends { name: string }>(implementations: 
   assert.equal(new Set(names).size, names.length, 'Duplicate MCP public names');
   const missing = names.filter(name => !byName.has(name));
   assert.equal(missing.length, 0, `MCP_PROFILE_INCOMPLETE (${profile}): missing registrations: ${missing.join(', ')}. Existing names are not equivalent adapters; no partial phase-one package was produced.`);
-  return { profile, tools: names.map(name => byName.get(name)!), instructions: definition.instructions };
+  return { profile, tools: names.map(name => byName.get(name)!), instructions: definition.instructions === null ? null : workflowEntryGuide + ' ' + definition.instructions };
 }

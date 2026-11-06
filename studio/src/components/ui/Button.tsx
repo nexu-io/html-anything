@@ -50,7 +50,7 @@ export const buttonBase = cn(
  */
 export const buttonVariants: Record<ButtonVariant, string> = {
   primary: cn(
-    "bg-accent text-on-accent font-semibold",
+    "hf-od-primary bg-accent text-on-accent font-semibold",
     "enabled:hover:bg-accent-hover data-[preview-state=hover]:bg-accent-hover",
     "enabled:active:scale-[0.98] data-[preview-state=active]:scale-[0.98]",
   ),

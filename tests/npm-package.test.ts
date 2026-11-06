@@ -57,6 +57,7 @@ test('beta npm artifacts carry one immutable version, both lock identities and n
     assert(entries.includes('skills/motion-recreate/references/verify.md'));
     assert(entries.includes('studio/build/index.html'));
     assert(entries.includes('shared/editor-launch.pl'), 'macOS shared editor launcher must ship');
+    assert(entries.includes('shared/workflow-entry.js'), 'Workflow discovery must ship with the five Skills');
     assert(!entries.split('\n').some(file => file.split('/').some(part => part.startsWith('._'))), 'Do not distribute macOS file metadata');
     assert(entries.includes('template-library/NOTICE.md'));
     assert(!entries.includes('studio/build/index.html.map'));

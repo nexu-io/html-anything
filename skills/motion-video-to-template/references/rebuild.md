@@ -14,7 +14,7 @@ Canvas/WebGL must follow the pinned runtime's seek/readiness contract. In HyperF
 
 Photos, screenshots, textures, logos and extracted independent figures can remain local assets. Record their source and useful crop/mask relationship. A whole reference video or full-frame sequence is not an editable reconstruction merely because it sits inside HTML. Per-frame evaluations are normal; a copied contour table is inadequate when it prevents reasonable changes to the intended objects or motion.
 
-Keep requested editable wording as addressable text/string content. Bundle a stable font when the project uses it. A stylized logo or calligraphic artwork can instead be an image/vector asset; document the replacement location and limitation. Do not build a new font just to satisfy an all-text rule when an appropriate independent asset meets the task.
+Keep requested editable wording as addressable text/string content. Bundle a stable font in a portable project when the project uses it. Font/binary importing is not supported by the phase-one managed asset Tool; do not bypass its guards or claim a separate MCP font-import capability. A stylized logo or calligraphic artwork can instead be an image/vector asset; document the replacement location and limitation. Do not build a new font just to satisfy an all-text rule when an appropriate independent asset meets the task.
 
 Preserve or adapt supplied sound according to the request. Referencing the original as audio, extracting its soundtrack, trimming it or using several tracks are all valid when timing and dependencies remain correct. Audio production and new generation services are outside this phase.
 
@@ -28,6 +28,6 @@ When an image changes, inspect its crop, masks and coupled effects. When wording
 
 ## Inspect actual results
 
-Choose static frames for layout, consecutive frames for entrances or shape changes, and playback for rhythm. Native lint/timeline/info and optional diff diagnostics help locate problems. Use either the native CLI in the supplied project directory or MCP tools for a plugin-managed project; the latter are not required for direct project authoring.
+Choose static frames for layout, consecutive frames for entrances or shape changes, and playback for rhythm. Native lint/timeline/info and optional diff diagnostics help locate problems. Use the native CLI in the supplied project directory for lint/timeline/info; managed preview/export perform their own lint/technical checks, with export status read through motion_get_project. There is no standalone public inspection Tool. CLI/shell access is a host capability, not a guarantee of MCP-only access.
 
 If results lose texture, depth, blur or a hard cut, inspect how the reference produces that observable effect before choosing a correction. Do not prescribe fixed glow/blur values. Human review decides whether the overall result is acceptable; report technical problems and concrete remaining differences separately.

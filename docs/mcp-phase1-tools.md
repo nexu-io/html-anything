@@ -5,7 +5,7 @@
 
 本地候选包版本为0.6.2，避免误复用已运行的0.6.1旧服务和宿主缓存；尚未发布。源码和默认导出均使用 `phase1`，只公开以下 9 个 `motion_` Tool。发现、调用门禁、接入元数据和构建使用同一注册表；旧名不可绕过调用。原有领域服务、Studio、渲染器和内部兼容 handler 保留。适配不只是改名：补了项目身份、批量导入、请求去重、版本和保存保护、取消终态、自动导出校验。
 
-用户说的“只支持这些 skill”在本次按上下文解释为“公开这 9 个 Tool”。Skill 是指导文档：一期只装入 motion-production、motion-director、template-to-video、motion-recreate 四个入口及其参考，并迁移其中的调用指引。模板已接主干真实实现；复刻入口后续由 [变更记录](product/changes.md) 接入实际流程（只用本表 9 个工具，规则与测量脚本随 motion-recreate 分发），不新增自动创作算法或 Tool。其他扩展 Skill 保留源码，排除在一期分发之外。
+Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分发对齐后，一期装入 motion-production、motion-director、motion-template-to-video、motion-recreate、motion-video-to-template 五个入口及其参考。模板使用与视频转模板保留已有实际流程；motion-recreate 包含实际复刻流程，规则与测量脚本随 Skill 分发，不新增自动创作算法或 Tool。九个公开 Tool 的名称、Schema 与业务实现不因此改变；详见 [Skill 路由与能力边界](skills.md)。
 
 ## 一期仅公开这 9 个 Tool
 
@@ -90,7 +90,7 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 
 - shared/mcp-profiles.json 是9项唯一公开清单，shared/mcp-release.json 默认 phase1；mcpRegistry 同时控制发现与调用，禁止运行时环境变量扩大列表。新增/缺失实现由构建完整性检查拦截。
 - npm run package:phase1 构建 Studio 并生成 dist/motion-0.6.2-phase1.zip；npm run package:plugin 默认也沿用 phase1。该插件 ZIP 不带原生 Node/浏览器/FFmpeg：使用支持的本机 Node、首次安装锁定依赖，FFmpeg/ffprobe 需本机可用。
-- 四宿主薄适配器从同一运行时导出，scope.json 记录 profile，复制上述4个 Skill；不另维护 allowlist。数据目录放在 runtime/插件缓存之外。资源指导通过本地文件或 resources/list、resources/read 取得，不增加第10个 Tool。
+- 四宿主薄适配器从同一运行时导出，scope.json 记录 profile，复制上述5个 Skill；不另维护 allowlist。数据目录放在 runtime/插件缓存之外。资源指导通过本地文件或 resources/list、resources/read 取得，不增加第10个 Tool。
 - 完整原生测试包的 build <target> <beta-version> [phase1|legacy] 使用同表检查并写 release.json；本次不声称重新制作/验收各平台原生安装包。
 - 内部兼容 handler 与显式 legacy 开发构建保留，不能作为本次一期发布；旧调用在一期包中明确 MCP_TOOL_NOT_EXPOSED。宿主升级后须刷新发现和 Skill，不能继续缓存旧 schema。
 
@@ -100,7 +100,7 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 
 ## 尚需对齐的产品口径
 
-本次采用：P0 自然语言“创建”是工程载体+需求，影片仍由宿主制作；项目排序用创建时间；当前会话须显式绑定；历史5条是分页；媒体不自动清理。容量/清理、云附件传输、远程认证、成熟模板专业流程、四宿主完整模型任务体验及 Windows/macOS 安装验收后续单独推进。
+本次采用：P0 自然语言“创建”是工程载体+需求，影片仍由宿主制作；项目排序用创建时间；当前会话须显式绑定；历史5条是分页；媒体不自动清理。容量/清理、云附件传输、远程认证、四宿主完整模型任务体验及 Windows/macOS 安装验收后续单独推进。
 
 ## 证据与验证范围
 

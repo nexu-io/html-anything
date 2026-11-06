@@ -7,17 +7,16 @@ import { getWorkflow, workflowRegistry } from '../shared/workflow.ts';
 test('every distribution preserves public workflow dependencies and licenses while excluding development material', async () => {
   for (const profile of ['phase1', 'legacy']) {
     const files = new Set(await distributionFiles(profile));
-    for (const file of ['studio/build/index.html', 'studio/LICENSE', 'template-library/LICENSE', 'template-library/NOTICE.md', 'web/design-system/fonts/Albert-Sans-OFL.txt', 'scripts/distribution.ts', 'shared/editor-launch.pl', 'skills/motion-recreate/scripts/measure_frame.mjs']) assert(files.has(file), 'Missing runtime or license: ' + file);
+    for (const file of ['studio/build/index.html', 'studio/LICENSE', 'template-library/LICENSE', 'template-library/NOTICE.md', 'web/design-system/fonts/Albert-Sans-OFL.txt', 'scripts/distribution.ts', 'shared/editor-launch.pl', 'shared/workflow-entry.js', 'skills/motion-recreate/scripts/measure_frame.mjs']) assert(files.has(file), 'Missing runtime or license: ' + file);
     assert(![...files].some(file => /^(?:tests\/|studio\/(?:src|tests)\/)|\.map$|publish-test-package|acceptance\.md$/.test(file)));
     for (const [workflow, definition] of Object.entries(workflowRegistry)) {
-      if (profile === 'phase1' && workflow === 'video-to-template') continue;
       for (const section of Object.keys(definition.sections)) {
         const document = await getWorkflow(section, workflow);
         assert(files.has(document.documentId), 'Missing workflow document: ' + document.documentId);
         for (const reference of document.references) assert(files.has(reference.documentId), 'Missing workflow reference: ' + reference.documentId);
       }
     }
-    assert.equal(files.has('skills/video-to-template/SKILL.md'), profile === 'legacy');
+    assert(files.has('skills/motion-video-to-template/SKILL.md'));
   }
   await assert.rejects(distributionFiles('unknown'), /Unknown distribution/);
 });

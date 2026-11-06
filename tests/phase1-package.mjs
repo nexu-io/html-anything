@@ -13,7 +13,7 @@ const extracted=path.join(work,'extracted');await mkdir(extracted);
 assert.equal(spawnSync('unzip',['-q',archive,'-d',extracted]).status,0);
 const root=path.join(extracted,'motion'),data=path.join(work,'user-data');
 const expected=['motion_create_project','motion_open_preview','motion_import_assets','motion_get_project','motion_edit_project','motion_export_request','motion_list_versions','motion_restore_version','motion_export_cancel'];
-assert.deepEqual((await readdir(path.join(root,'skills'))).sort(),['motion-director','motion-production','motion-recreate','template-to-video']);
+assert.deepEqual((await readdir(path.join(root,'skills'))).sort(),['motion-director','motion-production','motion-recreate','motion-template-to-video','motion-video-to-template']);
 assert.equal(JSON.parse(await readFile(path.join(root,'shared/mcp-release.json'))).profile,'phase1');
 await assert.rejects(stat(path.join(root,'node_modules')),{code:'ENOENT'});
 const version=JSON.parse(await readFile(path.join(root,'package.json'))).version;

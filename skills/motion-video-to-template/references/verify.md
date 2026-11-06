@@ -4,27 +4,27 @@ Native directory workflow: run the pinned CLI lint/timeline/info and render comm
 
 ## 1. Inspect the project
 
-- `motion_inspect_project`, `view: "lint"`: fix every error. Things the original genuinely has (its colours, its small text) stay even when flagged — keep matching the original.
-- `motion_inspect_project`, `view: "timeline"`: check every element's start and end against `TEMPLATE.md`.
+Use the pinned native CLI lint/timeline/info commands for source diagnostics and timing; consult that runtime's help. Fix actual errors. Things the original genuinely has (its colours, its small text) stay when they are valid native content — keep matching the original. Check each element's timing against `TEMPLATE.md`.
+
+Phase-one MCP has no standalone inspection Tool. For managed projects, opening a requested editor runs lint, and an export automatically runs lint and technical verification. Neither result proves that each element matches the reference. Do not open Studio or render an unwanted final video merely to obtain diagnostics; use host CLI capabilities for draft-only checks, or record an unavailable check.
 
 ## 2. Export and compare with the original
 
 For a plugin-managed project:
 
-1. `motion_get_project` for the latest revision, then `motion_request_export`.
-2. Poll `motion_get_export` until `completed` (on `failed`, read the error, fix, export again).
-3. `motion_verify_export` with the jobId and revision, `audio: "required"` (use `silent` when the original has no sound).
-4. `motion_compare_video` with the original's absolute path as reference and `latest-export` as candidate.
+1. Read `motion_get_project({projectId})` for the inspected source's revision and currentVersionId. Reuse a completed export only when both match the required deliverable.
+2. Otherwise call `motion_export_request({projectId,requestId,versionId,expectedRevision,audio})`, using that currentVersionId as versionId and a stable requestId. Use audio=required when the reference has sound to retain, or silent for a silent reference. Creation or successful saving is not an export.
+3. Poll `motion_get_project({projectId,exportJobId:jobId})` for that job. Only completed with a passed automatic verification is technical success. On failed, inspect the diagnostic, fix the source if needed, read its new version and use a new requestId for the corrected export. Do not submit repeated jobs while one is pending/running.
+4. Compare the actual exported file with the local reference using available host playback, frame inspection or native CLI diagnostics. There is no public video-comparison Tool or implicit `latest-export` candidate; use the actual returned MP4 path. Produce the original-versus-template comparison video with available host media tooling, outside the template ZIP. If a capability is unavailable, record the specific missing evidence and delivery gap rather than inventing results.
 
-Read from the result:
+For an independent native folder, use the pinned CLI to inspect/render that directory, then probe/decode the output and compare it with the reference. An unrelated managed projectId or revision cannot protect or verify these files. Do not claim MCP snapshot verification for a direct CLI render.
 
-| Field | What to look at |
-|---|---|
-| `ssim.mean` / `ssim.p05` | For locating only: find the moment the score drops and compare the original there. Never a pass line |
-| `worst` | The worst moments and cells. **Open the `picture` image** and compare the same moment in the original |
-| `cuts` | Verify detected candidates against adjacent source frames; automatic detections can be false positives. Restore a missing original hard cut unless the user requested a change; accidental smoothing is a defect |
-| `duration` / `sound` | Does the length match; how many milliseconds is the audio offset |
-| `missingContent` | Is any whole stretch missing |
+When comparing:
+
+- Compare the same actual timestamps, including content, wording, composition, motion, pacing and missing stretches.
+- Open the relevant source/rendered frames; optional similarity diagnostics only locate differences, never define visual acceptance.
+- Verify detected cuts against adjacent source frames, then inspect rendered boundaries. Restore missing original hard cuts; automatic candidates can be false positives.
+- Check duration, retained sound and audio offset through actual media evidence. Technical audio presence does not prove the right content or synchronization.
 
 Fix locatable issues relevant to the request, then re-export the changed source. Use the cause and expected benefit to choose a further correction, a different approach or delivery with a clear limitation. Repeating an unproductive change is not progress; there is no fixed number of permitted rounds. A limitation note does not turn an unresolved defect into a passed check. For reference-to-rebuild comparison, similarity scores locate differences; humans decide visual acceptance. The package self-containment check is below.
 

@@ -1,5 +1,15 @@
 # 公开变更记录
 
+## 2026-11-06：五个 Skill、界面与双语介绍同步
+
+- **问题与对象：** 现有 Agent 用户、模板作者和仓库贡献者需要一致的 Skill 名称、安装包和使用说明，避免改名后引导失效或打包漏项。
+- **选择与影响：** 一期同装 motion-production、motion-director、motion-template-to-video、motion-recreate、motion-video-to-template。MCP 短 workflow ID 保持兼容，专业任务可直接进入；production 承接既定创作决定下的工程操作。公开 Tools 仍为九个。
+- **界面：** 同步 OpenDesign 双主题、字体、按钮、表单与浮层材质，不改变作品 iframe 的样式、工程格式与原有布局职责。
+- **文档：** 新增中英文介绍、Motion MD v0.1 提案、示例与资源索引。Motion MD 由用户显式提供给 Agent，尚无自动导入器；主题集合站与 Arena 仍为规划。旧中文首页保留跳转，仓库仍以 feature/motion 开发，main 与 legacy 留档流程见迁移说明。
+- **公开与分发：** 保留独立 npm、两套依赖锁、正向打包清单、Apache-2.0 和上游/字体许可，以及浏览器统计发送逻辑移除。五入口与所引用的公开文档、工作流发现模块一起进入 npm/ZIP；不导入私有历史、过程档案或发布配置。
+- **验证：** 按本次 PR 的确切提交运行静态检查、Studio 类型/构建/回归、安装及适配器测试、五入口 npm/ZIP 清单与九 Tool E2E；实际结果写在 PR。目标机/宿主加载、模型创作、正常速度审听与视觉验收另列，不从旧结果推定。
+- **画像与商业影响：** 改善现有本地创作及模板复用入口，不新增用户研究结论、账号、价格、付费能力或发布。
+
 ## 2026-11-06：安装后的模板 Skill 引导
 
 - 接受首次体验的新用户进入现有的 `template-to-video`，替换已删除的 `motion-template` 名称；沿用 Product Promo 示例与既有同意规则，不扩大安装授权。

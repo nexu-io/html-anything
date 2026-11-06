@@ -6,6 +6,7 @@ import path from 'node:path';
 import { createToolRegistry } from '../shared/mcp-registry.ts';
 import { tools, publicTools, rpc, mcpRegistry } from '../mcp.ts';
 import { fixture } from './fixtures.ts';
+import { workflowEntryGuide, phase1Skills } from '../shared/workflow.ts';
 
 const phase1 = JSON.parse(readFileSync(new URL('../shared/mcp-profiles.json', import.meta.url), 'utf8')).phase1;
 const target = ['motion_create_project', 'motion_open_preview', 'motion_import_assets', 'motion_get_project',
@@ -35,7 +36,7 @@ test('one registry governs discovery and rejects hidden calls before the existin
   assert.deepEqual(await store.get(), initial);
   assert.equal(existsSync(path.join(store.projectDirectory, 'notes.md')), false);
   const initialized: any = await rpc({ jsonrpc: '2.0', id: 3, method: 'initialize' }, store, registry);
-  assert.equal(initialized.result.instructions, phase1.instructions);
+  assert.equal(initialized.result.instructions, workflowEntryGuide + ' ' + phase1.instructions);
   assert.ok(!initialized.result.instructions.includes('motion_get_workflow'));
 }));
 
@@ -44,8 +45,9 @@ test('a missing implementation cannot produce a partial public registry', () => 
   assert.deepEqual(mcpRegistry('phase1').tools.map(tool => tool.name), target);
 });
 
-test('the four phase1 Skills reference only publicly callable Tool names', () => {
-  const selected = ['motion-production', 'motion-director', 'template-to-video', 'motion-recreate'];
+test('all five phase1 Skills reference only publicly callable Tool names', () => {
+  const selected = ['motion-production', 'motion-director', 'motion-template-to-video', 'motion-recreate', 'motion-video-to-template'];
+  assert.deepEqual(phase1Skills, selected);
   for (const skill of selected) {
     const root = new URL('../skills/' + skill + '/', import.meta.url);
     for (const filename of readdirSync(root, { recursive: true }) as string[]) {

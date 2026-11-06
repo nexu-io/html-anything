@@ -82,7 +82,9 @@ beforeAll(async () => {
     base: STYLES_DIR,
     loadStylesheet,
   });
-  compileStudioCss = (candidates) => compiled.build(candidates);
+  // The app imports the Motion adapter after Studio; semantic hooks live there.
+  const hostCss = readFileSync(path.join(STYLES_DIR, "../motion/theme.css"), "utf8");
+  compileStudioCss = (candidates) => compiled.build(candidates) + hostCss;
 });
 
 function unresolved(candidates: string[]): string[] {
