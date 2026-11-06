@@ -74,7 +74,7 @@ curl -fsSL https://raw.githubusercontent.com/nexu-io/html-anything/feature/motio
 
 这段指令要求 Codex 在安装成功后介绍能力并邀请体验；你选择开始后再制作。完整文本应发送到 Codex 对话框，不要直接粘贴到终端。
 
-入口合入 OpenDesign `main` 后此命令才可用。脚本仅检出 ``，自动安装锁定依赖、构建编辑器、注册并安装插件，再验证真实 MCP 握手。首次安装需联网；不会安装系统软件或重启 Codex。安装目录会保留，供本地插件源继续使用。
+此命令在 `feature/motion` 分支存在期间即可使用；脚本默认检出 `feature/motion`，自动安装锁定依赖、构建编辑器、注册并安装插件，再验证真实 MCP 握手。首次安装需联网；不会安装系统软件或重启 Codex。安装目录会保留，供本地插件源继续使用。
 
 已有同名目录时停止，不覆盖、不自动更新。需要换目录时，在 `bash` 前设置 `OPENMOTION_INSTALL_DIR=/绝对路径`；可同时用 `OPENMOTION_REF=标签或分支` 选择下载版本。已有源码也可直接运行 `bash scripts/install-motion.command`。安装插件与成功导出视频是不同阶段；导出依赖见下文。
 
