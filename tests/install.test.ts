@@ -1,9 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, rm, readFile, access } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { resolveInstalled } from '../scripts/resolve-installed.mjs';
+
+test('installation onboarding routes only to existing Skills', async () => {
+  const script = await readFile(new URL('../scripts/install-motion.command', import.meta.url), 'utf8');
+  const references = [...script.matchAll(/进入 ([a-z0-9-]+) 的/g)];
+  assert.ok(references.length > 0, 'Installation onboarding must reference a Skill');
+  for (const [, skill] of references) {
+    await access(new URL(`../skills/${skill}/SKILL.md`, import.meta.url));
+  }
+});
 
 test('preview resolves versioned cache and compatible local cache without changing user configuration', async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'motion-install-'));

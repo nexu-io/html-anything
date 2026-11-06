@@ -28,6 +28,8 @@ This builds a small npm installer, a separate application archive and a checksum
 
 `npm run package:phase1` builds the plugin ZIP. Complete Mac/Windows bundles remain available through the [test packaging tools](docs/test-packages.md). Current native acceptance targets macOS 26 arm64 and Windows 11 x64; building an archive does not prove it runs on another OS.
 
+After installation, invite the user to the first-run example and wait for consent. An accepted invitation follows [template-to-video](skills/template-to-video/SKILL.md) for the existing 20-second Product Promo example; it does not select a removed Skill.
+
 ## Privacy and public scope
 
 No embedded upstream browser analytics identifier or PostHog sender is retained in Motion's editor. Engine subprocesses disable upstream CLI telemetry. Packages include only the approved runtime files, selected Skills, documentation and licenses; tests, development source, private process archives, credentials and user projects stay outside the artifacts.
