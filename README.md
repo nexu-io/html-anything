@@ -1,547 +1,89 @@
-# HTML Anything
+**English** · [简体中文](docs/README.zh-CN.md)
 
-<p align="center"><sub>From the team behind <a href="https://github.com/nexu-io/open-design"><b>Open Design</b></a> — <b>40k★ · 200+ contributors</b>, production-grade and iterating faster. html-anything is the focused agent-era HTML editor; if it clicks for you, <a href="https://github.com/nexu-io/open-design">Open Design</a> is where the same team ships at scale.</sub></p>
+<h1><img src="docs/readme/opendesign-symbol.svg" width="42" height="42" alt="OpenDesign" /> openmotion</h1>
 
-<p align="center"><b>Live page:</b> <a href="https://open-design.ai/html-anything/"><b>open-design.ai/html-anything/</b></a> — overview, surface modes, and showcase before you clone.</p>
+**We're building the best open-source alternative to Claude Motion.** Find a product film whose rhythm fits your launch. Use **Motion MD** to describe what you want to keep, then give Codex your own screenshots and copy. You get a video for your brand and a project you can edit again.
 
-> **Markdown is the draft. HTML is what humans read. Your local agent writes it.** The agentic HTML editor — in the agentic era, you don't hand-edit docs anymore, so the output format should be what the reader actually wants: HTML. Local-first, zero API key, reuses the CLI session you already have logged in — **9 coding-agent CLIs** auto-detected on your `PATH` (Claude Code · Cursor Agent · Codex · Gemini CLI · GitHub Copilot CLI · OpenCode · Qwen Coder · Aider · IBM Bob), driven by **75 composable skill templates** across **9 deliverable surfaces** (magazine articles · keynote decks · résumés · posters · Xiaohongshu cards · tweet cards · web prototypes · data reports · Hyperframes videos). One-click export to WeChat / X / Zhihu, or download `.html` / `.png`.
+**[Read Motion MD](docs/motion-md.md)** · **[Browse the Motion library & collections](docs/collections/README.md)** · **[Start in Codex](#start-in-codex)**
 
-<p align="center">
-  <img src="docs/assets/banner.png" alt="HTML Anything — the agentic HTML editor, on your laptop" width="100%" />
-</p>
+![A three-step guide: find a film in the Motion library, describe its style in Motion MD, and adapt it in Codex.](docs/readme/hero.svg)
 
-<p align="center">
-  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square" /></a>
-  <a href="#supported-coding-agents"><img alt="Agents" src="https://img.shields.io/badge/agents-9%20CLIs-black?style=flat-square" /></a>
-  <a href="#skills"><img alt="Skills" src="https://img.shields.io/badge/skills-75-orange?style=flat-square" /></a>
-  <a href="#export-targets"><img alt="Export" src="https://img.shields.io/badge/export-WeChat%20%C2%B7%20X%20%C2%B7%20Zhihu%20%C2%B7%20PNG-9b59b6?style=flat-square" /></a>
-  <a href="#quickstart"><img alt="Quickstart" src="https://img.shields.io/badge/quickstart-30%20seconds-green?style=flat-square" /></a>
-  <a href="#architecture"><img alt="No API key" src="https://img.shields.io/badge/no-API%20key%20required-ff6b35?style=flat-square" /></a>
-</p>
+## Motion MD
 
-<!-- This project is built on top of nexu-io/open-design — the badges below link to its community channels on purpose. -->
-<p align="center">
-  <a href="https://discord.gg/keeVPMrueT"><img alt="Discord (html-anything)" src="https://img.shields.io/badge/discord-html--anything-5865f2?style=flat-square&logo=discord&logoColor=white" /></a>
-  <a href="https://x.com/nexudotio"><img alt="Follow @nexudotio on X" src="https://img.shields.io/badge/follow-%40nexudotio-000000?style=flat-square&logo=x&logoColor=white" /></a>
-  <a href="https://github.com/nexu-io/open-design/releases/latest"><img alt="open-design release" src="https://img.shields.io/github/v/release/nexu-io/open-design?style=flat-square&label=release&color=8e44ad" /></a>
-  <a href="https://github.com/nexu-io/open-design/graphs/commit-activity"><img alt="open-design commits / month" src="https://img.shields.io/github/commit-activity/m/nexu-io/open-design?style=flat-square&label=commits%2Fmonth&color=f39c12" /></a>
-  <a href="#showcase"><img alt="Design systems" src="https://img.shields.io/badge/design%20systems-9-1abc9c?style=flat-square" /></a>
-  <a href="https://github.com/nexu-io/open-design"><img alt="Built on open-design" src="https://img.shields.io/badge/built%20on-nexu--io%2Fopen--design-ff7043?style=flat-square&logo=github&logoColor=white" /></a>
-</p>
+**Motion MD is openmotion's first proposal for a reusable motion style specification.** A still image can tell you what a launch film looks like. To make another film in that style, you also need to know when the product appears, how the camera moves and how long the viewer has to read each line. Motion MD puts those decisions in plain Markdown.
 
-<p align="center"><b>English</b> · <a href="README.zh-CN.md">简体中文</a></p>
+For example, a team adapting a 20-second product reveal might give Codex this excerpt:
 
----
+```markdown
+## Timing
+0–3s: Show the problem. 3–8s: Reveal the product.
+8–16s: Demonstrate two benefits. 16–20s: Hold the closing CTA.
 
-## Showcase
-
-The eight skills that surface at the top of the picker's **Featured / 推荐** group — sorted by their `recommended:` rank in `SKILL.md` frontmatter (lower = higher). Each ships a real `example.html` you can open straight from the repo, no auth, no setup.
-
-<table>
-<tr>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/deck-guizang-editorial/"><img src="docs/screenshots/skills/deck-guizang-editorial.png" alt="deck-guizang-editorial" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/deck-guizang-editorial/"><code>deck-guizang-editorial</code></a></b> · <i>deck</i> · <code>recommended: 1</code><br/>Magazine × e-ink editorial deck, inspired by <a href="https://github.com/op7418/guizang-ppt-skill"><code>op7418/guizang-ppt-skill</code></a> — 10 locked layouts × 5 palettes (Ink / Indigo Porcelain / Forest Ink / Kraft / Dune). Reads like a printed art-zine, not a slide deck.</sub>
-</td>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/deck-swiss-international/"><img src="docs/screenshots/skills/deck-swiss-international.png" alt="deck-swiss-international" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/deck-swiss-international/"><code>deck-swiss-international</code></a></b> · <i>deck</i> · <code>recommended: 2</code><br/>Swiss International deck — 16-column grid + one saturated accent (Klein Blue / Lemon / Mint / Safety Orange) across 22 locked layouts. Cold, rational, institutional. The deck that reads "a designer made this" the moment it opens.</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/doc-kami-parchment/"><img src="docs/screenshots/skills/doc-kami-parchment.png" alt="doc-kami-parchment" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/doc-kami-parchment/"><code>doc-kami-parchment</code></a></b> · <i>doc</i> · <code>recommended: 3</code><br/>Warm-parchment editorial document, inspired by <a href="https://github.com/tw93/kami"><code>tw93/kami</code></a>. <code>#f5f4ed</code> ground + ink-blue accent + single serif voice — a noticeably calmer reading surface than plain-white markdown for long essays, reports, and one-pagers.</sub>
-</td>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/magazine-poster/"><img src="docs/screenshots/skills/magazine-poster.png" alt="magazine-poster" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/magazine-poster/"><code>magazine-poster</code></a></b> · <i>poster</i> · <code>recommended: 4</code><br/>Newsprint Sunday-paper poster — oversized serif headline, two-column body, six numbered sections, dot-pattern cream ground. Reads like a printed broadsheet, not a webpage.</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/video-hyperframes/"><img src="docs/screenshots/skills/video-hyperframes.png" alt="video-hyperframes" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/video-hyperframes/"><code>video-hyperframes</code></a></b> · <i>frame / video</i> · <code>recommended: 5</code><br/>Hyperframes / Remotion-compatible storyboard — 6–10 sequential <code>1920×1080</code> frames with hidden duration + transition markers and an auto-play script. Hand straight to <a href="https://github.com/heygen-com/hyperframes"><code>heygen-com/hyperframes</code></a> or Remotion to render <code>.mp4</code>.</sub>
-</td>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/frame-glitch-title/"><img src="docs/screenshots/skills/frame-glitch-title.png" alt="frame-glitch-title" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/frame-glitch-title/"><code>frame-glitch-title</code></a></b> · <i>frame</i> · <code>recommended: 6</code><br/>Glitch title frame — cyan/magenta chromatic offset, CRT scanlines, corrupted-data subtitle, ASCII noise in the corners. Cyberpunk hero card or video transition.</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/vfx-text-cursor/"><img src="docs/screenshots/skills/vfx-text-cursor.png" alt="vfx-text-cursor" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/vfx-text-cursor/"><code>vfx-text-cursor</code></a></b> · <i>vfx</i> · <code>recommended: 7</code><br/>VFX text-cursor opener — a cursor "types" across the canvas, each character revealed with a hot-pink × cyan chromatic trail and directional light leaks. Drop in a quote, get a film-grade opening frame.</sub>
-</td>
-<td width="50%" valign="top">
-<a href="next/src/lib/templates/skills/frame-logo-outro/"><img src="docs/screenshots/skills/frame-logo-outro.png" alt="frame-logo-outro" /></a><br/>
-<sub><b><a href="next/src/lib/templates/skills/frame-logo-outro/"><code>frame-logo-outro</code></a></b> · <i>frame</i> · <code>recommended: 8</code><br/>Logo outro frame — logo assembles piece-by-piece with glow bloom, tagline rises, CTA appears. The closing card for a product reveal or brand film.</sub>
-</td>
-</tr>
-</table>
-
-The full skill catalog (organized by mode) is in [Skills](#skills) below.
-
-## Why this exists
-
-Anthropic's [Claude Code team announced](https://x.com/trq212/status/2052809885763747935) they stopped writing internal docs in Markdown — they ship HTML now. The argument is simple:
-
-| Markdown | HTML |
-|---|---|
-| Good for the writer | Good for the reader |
-| Layout limited to the renderer | Layout is yours |
-| Looks ugly screenshotted into a tweet | Already looks like a designed image |
-| Has to be re-flowed for WeChat / Zhihu / newsletter | One-click format conversion |
-
-**HTML is the final form for humans. Markdown is just an intermediate state during writing.**
-
-But "writing HTML" used to mean writing CSS, picking type scales, snapping to a grid, doing responsive — most users won't, designers won't bother, writers don't have the patience. So what we built: after you press ⌘+Enter, your **local AI agent** turns any input (Markdown / CSV / Excel / JSON / SQL / raw notes) into a **ship-ready single-file HTML** in seconds, then one-click sends it to WeChat / X / Zhihu / anywhere. "Ship-ready" is the bar — when generation finishes, the artifact is what your audience actually sees. No "I'll touch it up later" pass.
-
-We stand on four open-source shoulders:
-
-- [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) — the agent-detection layer, the design-system model, and the `SKILL.md` protocol. `next/src/lib/agents/` and `next/src/lib/templates/skills/*` mirror this architecture directly.
-- [**`mdnice/markdown-nice`**](https://github.com/mdnice/markdown-nice) — proof that `juice`-inlined CSS pastes cleanly into WeChat and Zhihu without per-platform manual fix-up.
-- [**`gcui-art/markdown-to-image`**](https://github.com/gcui-art/markdown-to-image) — the iframe → high-DPI PNG export path.
-- [**`alchaincyf/huashu-md-html`**](https://github.com/alchaincyf/huashu-md-html) — the anti-AI-slop discipline that maps into the hard constraints inside every `SKILL.md` (CJK-first font stack, 8 px baseline grid, contrast ≥ 4.5, must-use-real-data rule).
-
-## At a glance
-
-| | What you get |
-|---|---|
-| **Coding-agent CLIs (8)** | Claude Code · Cursor Agent · OpenAI Codex · Gemini CLI · GitHub Copilot CLI · OpenCode · Qwen Coder · Aider — scanned on startup across `PATH` (including `~/.local/bin`, `~/.bun/bin`, `/opt/homebrew/bin`, `~/.npm-global/bin` — directories a GUI-launched Node process normally misses), swap from the top-bar picker. |
-| **Zero API key** | We reuse the session you already have logged in via `claude login` · `cursor login` · `gemini auth`. Your existing subscription does the work; marginal cost is **$0**. |
-| **75 skill templates** | `prototype` (web / SaaS landing / dashboard / data report) · `deck` (20 keynote skills incl. Swiss International, Guizang Editorial, XHS Pastel, Hermes Cyber, Replit, Magazine Web…) · `frame` (10 Hyperframes video frames — liquid hero, NYT data chart, sticky-note flowchart, glitch title, cinema light-leak, macOS notification, logo outro…) · `social` (X / Xiaohongshu / Spotify / Reddit cards) · `office` (PM spec · eng runbook · finance report · HR onboarding · invoice · OKRs · weekly update · meeting notes · kanban) · `doc` (Kami warm-parchment editorial) · `mockup` (3D device frame) · `vfx` (text-cursor effect). |
-| **9 surface modes** | 📖 magazine article · 🎬 keynote deck · 📄 résumé · 🖼️ poster · 📱 Xiaohongshu card · 🐦 tweet card · 🛠️ web prototype · 📊 data report · 🎞️ Hyperframes video. Each has multiple skills you can pick from. |
-| **One-click export** | `juice` inlines CSS → WeChat paste with zero re-formatting · `modern-screenshot` renders the iframe to a 2× PNG → `ClipboardItem` → drop straight into the tweet composer · `<mjx-container>` → `data-eeimg` placeholder → Zhihu equations render automatically · standalone `.html` download · high-DPI `.png` download. |
-| **Streaming render** | `POST /api/convert` over SSE. The agent's stdout JSON-line stream is parsed for text deltas → server-sent events → client appends → iframe `srcdoc` updates live. Waiting for an AI generation looks like watching it type in real time. |
-| **Sandboxed preview** | `<iframe sandbox="allow-scripts allow-same-origin">`. User-emitted HTML runs in an isolated origin — Tailwind CDN / Google Fonts / inline scripts work, but cookies and localStorage are quarantined from the host. |
-| **Format auto-detect** | The editor accepts Markdown / CSV / TSV / JSON / SQL / plain text. `papaparse` + `xlsx` parse tabular data in the browser — nothing is uploaded. |
-| **Deployable to** | Local (`pnpm -F @html-anything/next dev`) · Vercel for the web layer (the agent always stays on your laptop). |
-| **License** | Apache-2.0 |
-
-## Demo
-
-<table>
-<tr>
-<td width="50%">
-<img src="docs/screenshots/01-entry-view.png" alt="01 · Entry view" /><br/>
-<sub><b>Entry view</b> — the top bar shows your installed CLIs, the left pane is the editor, the middle is the template + design-system picker, the right is a live iframe preview. The same surface produces magazines, decks, posters, web prototypes, and Hyperframes frame scripts.</sub>
-</td>
-<td width="50%">
-<img src="docs/screenshots/02-template-picker.png" alt="02 · 75 skills, searchable and filterable" /><br/>
-<sub><b>75 templates, searchable and filterable</b> — pick by mode (prototype / deck / frame / social / office / doc) × scenario (design / marketing / engineering / product / personal). Every skill ships an <code>example.html</code> you can open straight from the repo to see what the agent will produce.</sub>
-</td>
-</tr>
-<tr>
-<td width="50%">
-<img src="docs/screenshots/03-streaming.png" alt="03 · Live SSE streaming" /><br/>
-<sub><b>SSE streaming</b> — agent stdout JSON-line is parsed for text deltas, appended into the iframe <code>srcdoc</code> in real time. You watch the page render line by line. Don't like where it's going? Interrupt and re-prompt — no wasted full generation.</sub>
-</td>
-<td width="50%">
-<img src="docs/screenshots/04-export.png" alt="04 · One-click export" /><br/>
-<sub><b>One-click export</b> — WeChat (juice-inlined CSS) · X / Weibo / Xiaohongshu (modern-screenshot → 2× PNG → <code>ClipboardItem</code>) · Zhihu (LaTeX image placeholders) · download <code>.html</code> · download <code>.png</code>. Paste straight in, no second pass of manual formatting.</sub>
-</td>
-</tr>
-<tr>
-<td width="50%">
-<img src="docs/screenshots/05-deck-mode.png" alt="05 · Deck mode" /><br/>
-<sub><b>Deck mode</b> — 20 keynote skills, including Swiss International (Helvetica grid maximalism), Guizang Editorial (magazine ink), Open Slide Canvas (1920×1080 agent-native), Magazine Web, XHS Pastel, Hermes Cyber, Replit Style. ←/→ to navigate slides, presenter notes, PDF export.</sub>
-</td>
-<td width="50%">
-<img src="docs/screenshots/06-hyperframes.png" alt="06 · Hyperframes video frames" /><br/>
-<sub><b>Hyperframes frames</b> — 10 motion frame scripts (liquid hero, NYT data chart, sticky-note flowchart, glitch title, cinema light-leak, macOS notification, brand logo outro, text-cursor VFX, 3D device mockup, …) conforming to <a href="https://github.com/heygen-com/hyperframes">heygen-com/hyperframes</a>; hand off straight to Remotion to render <code>.mp4</code>.</sub>
-</td>
-</tr>
-</table>
-
-## Quickstart
-
-```bash
-git clone https://github.com/nexu-io/html-anything
-cd html-anything
-pnpm install
-pnpm -F @html-anything/next dev
-# → http://localhost:3000
+## Keep / replace
+Keep the continuous canvas and the pause after each reveal.
+Replace the logo, screenshots, benefit copy and closing CTA with ours.
 ```
 
-Open the browser → the top bar auto-detects whichever coding-agent CLI you already have signed in → pick a template → paste content → ⌘+Enter.
+[Read the v0.1 proposal](docs/motion-md.md) · [Open the full example](docs/examples/product-launch.MOTION.md)
 
-**No API key required.** We reuse the session you already have logged in (Claude / Cursor / Codex / Gemini / Copilot subscriptions all work).
+![How a reference, brand assets and a Motion MD brief lead to an editable project.](docs/readme/motion-md.svg)
 
-## Workspace
+**Use it today:** give the file explicitly to your Agent. The draft describes creative intent; the editable project is still HTML, CSS, JavaScript and media. There is no automatic Motion MD importer or validator.
 
-This repo is a small pnpm workspace:
+## Motion library and collections
 
-- `next/` is the complete Next app (`@html-anything/next`).
-- `e2e/` is the browser-test package (`@html-anything/e2e`) and the only source of truth for Playwright cases.
-- root owns CI, docs, and `scripts/guard.ts`; root `package.json` intentionally does not proxy app or e2e commands.
+**[Browse the resource index →](docs/collections/README.md)** Start with a film, see who made it, and choose a reference or an editable project. Try [a product reveal](template-library/product-promo/), [an editorial chart](template-library/nyt-graph/) or [a branching explainer](template-library/decision-tree/). All three open as independent projects in Studio. [OpenDesign's public Motion showcase](https://open-design.ai/motion/) has more examples to watch.
 
-Run package commands from the repo root:
+| A collection to explore | What it helps you find |
+| --- | --- |
+| **One brand, several launches** | How a company changes its opening, typography and product reveal across releases. |
+| **Companies on a technology ranking** | How teams on the same list, such as an a16z consumer AI ranking, tell different product stories. |
+| **Recently funded companies** | A monthly selection of launch films from companies that announced funding in 2026. |
 
-```bash
-pnpm exec tsx scripts/guard.ts
-pnpm -F @html-anything/next dev
-pnpm -F @html-anything/next typecheck
-pnpm -F @html-anything/next test
-pnpm -F @html-anything/next build
-pnpm -F @html-anything/e2e typecheck
-pnpm -F @html-anything/e2e test
+These are the editorial directions for the **planned public collections site**. The index and Studio catalog are available now. The catalog has **894 entries: 3 bundled editable examples and 891 external references and registry items**. A listed video is a reference; a verified template also needs editable source, a preview and a successful edit and render.
+
+![Studio workspace showing the template library and three ready-to-edit examples.](docs/readme/workspace.jpg)
+
+## Make the reference your own
+
+| [Product Promo · 20s](template-library/product-promo/) | [NYT Graph · 15s](template-library/nyt-graph/) | [Decision Tree · 10s](template-library/decision-tree/) |
+| --- | --- | --- |
+| ![Product reveal with a collaborative canvas](template-library/product-promo/poster.jpg) | ![Editorial chart with animated bars and annotations](template-library/nyt-graph/poster.jpg) | ![A decision tree with connected branches](template-library/decision-tree/poster.jpg) |
+
+These frames come from the bundled [Hyperframes examples](template-library/NOTICE.md). Pick a template and ask Codex:
+
+> Keep the opening and the pace of the reveal. Use our logo and the product screenshots in this repo. Hold the second screen long enough to read the new headline. Give me the editable project and an MP4.
+
+The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled template opens directly; external footage needs analysis and reconstruction. In Studio you can change the text, timing, layout and assets, or ask your Agent to make the same edit. Imported footage stays a clip.
+
+![The editor showing the Product Promo preview, compositions and timeline.](docs/readme/editor.jpg)
+
+## Start in Codex
+
+Clone this public repository at `feature/motion` and open the checkout in Codex. You'll need Git, Node.js **22.18+** with npm, and a Codex CLI that supports plugins. MP4 export also requires Chrome/Chromium and FFmpeg/FFprobe. See [Windows test packages](docs/test-packages.md) for that installation path.
+
+Paste this into a Codex conversation:
+
+```text
+From this checkout, install openmotion with bash scripts/install-motion.command.
+Once installation succeeds, ask whether I'd like the 20-second Product Promo demo.
+If I accept, open an independent editable project and deliver its MP4.
 ```
 
-## Supported coding agents
+After you accept, the Agent follows the [template-to-video workflow](skills/motion-template-to-video/SKILL.md). If your host cannot open the editor beside the conversation, use the returned local project link. [Installation and first-demo guide (Chinese)](docs/usage.md#使用) · [Other Agent adapters](docs/agent-adapters.md)
 
-On startup we scan `PATH` (including `~/.local/bin`, `~/.bun/bin`, `/opt/homebrew/bin`, `~/.npm-global/bin` — directories normally missed by GUI-launched Node) and surface every CLI we recognize:
+**Bring more media when you need it.** The Studio model gateway accepts requests for images, video or audio through configured providers; you choose which results to place in your project. Providers use your own accounts and may charge for generation. [Verified capabilities](docs/model-gateway.md) · [Nine public MCP tools](docs/mcp-phase1-tools.md)
 
-| Agent | Detection binary | Invocation |
-|---|---|---|
-| **Claude Code** | `claude` | `claude -p --output-format stream-json` |
-| **OpenAI Codex** | `codex` | `codex exec --json --sandbox workspace-write` |
-| **Cursor Agent** | `cursor-agent` | `cursor-agent --print --output-format stream-json --force --trust` |
-| **Gemini CLI** | `gemini` | `gemini --output-format stream-json --yolo` |
-| **GitHub Copilot CLI** | `copilot` | `copilot --allow-all-tools --output-format json` |
-| **OpenCode** | `opencode-cli` / `opencode` | `opencode run --format json --dangerously-skip-permissions -` |
-| **Qwen Coder** | `qwen` | `qwen --yolo -` |
-| **Aider** | `aider` | `aider --no-pretty --no-stream --yes-always --message-file -` |
-| **IBM Bob** | `bob` | `bob --output-format stream-json --hide-intermediary-output` |
+## MCP and lightweight installation
 
-> The detection strategy and per-CLI adapter shape are borrowed directly from [`nexu-io/open-design`](https://github.com/nexu-io/open-design) and [`multica-ai/multica`](https://github.com/multica-ai/multica): one privileged process spawns CLIs, JSON-line is the wire protocol, every CLI gets a thin adapter in [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts).
+The [lightweight npm installer](docs/npm-installation.md) installs nine MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy. It shares the application and prepares verified native tools on demand. Build locally with `npm run package:npm`; the npm package is not publicly published. Complete ZIPs remain available as a backup.
 
-If you've already done `claude login` / `cursor login` / `gemini auth` in your terminal, HTML Anything reuses that session. **No second copy of the API key required.**
+The five entries are [motion-production](skills/motion-production/SKILL.md), [motion-director](skills/motion-director/SKILL.md), [motion-template-to-video](skills/motion-template-to-video/SKILL.md), [motion-recreate](skills/motion-recreate/SKILL.md), and [motion-video-to-template](skills/motion-video-to-template/SKILL.md). Reference recreation is implemented. Product UI follows the [OpenDesign visual system](docs/design-system.md); video artwork keeps its own styles.
 
-## Community integrations
+## What's next
 
-### [Floatboat](https://floatboat.ai/combostore/html-anything-4a58QO)
+**Motion Benchmark / Arena** is a proposed way to compare recreations: give each workflow the same reference and brand assets, then inspect the outputs for timing, brand fidelity and editability. The method and public leaderboard are still under discussion.
 
-Floatboat is available as an in-app community integration. Install the **html-anything** Combo Skill from the Floatboat Combo Skill Store, then use it inside Floatboat.
+To contribute a style, include the reference and its creator, the Motion MD, a preview, editable source and asset permissions. [Contribution guide](AGENTS.md) · [Documentation](docs/README.md)
 
-<table>
-<tr>
-<td width="50%">
-<img src="https://github.com/user-attachments/assets/6049b725-811c-490a-93ec-4d60436e6c98" alt="HTML Anything running inside the Floatboat workspace" /><br/>
-<sub><b>In-app workflow</b> — Review the task context, HTML Anything workspace, and generated page side by side in Floatboat.</sub>
-</td>
-<td width="50%">
-<img src="https://github.com/user-attachments/assets/0f1c584a-8b5c-428a-b16c-4be3bdfc70e5" alt="HTML deliverable created with HTML Anything in Floatboat" /><br/>
-<sub><b>Deliverable preview</b> — Turn a brief into a polished HTML page and review the result in Floatboat.</sub>
-</td>
-</tr>
-</table>
-
-## Skills
-
-**75 skills under [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/)**, each a folder following the Claude Code [`SKILL.md`](https://docs.anthropic.com/en/docs/claude-code/skills) convention plus an extended frontmatter (`mode` · `scenario` · `surface` · `preview` · `design_system`).
-
-The two axes the picker uses:
-
-- **mode** — `prototype` (web / SaaS landing / dashboard / data report / résumé / doc) · `deck` (20 horizontal-swipe presentations) · `frame` (10 Hyperframes motion frames) · `social` (4 social-card formats) · `office` (PM / engineering / finance / HR / operations document surfaces).
-- **scenario** — `design` · `marketing` · `engineering` · `product` · `finance` · `hr` · `sale` · `personal`. Used to group skills in the picker.
-
-### Web prototypes & marketing pages (prototype mode)
-
-| Skill | Best for | Output |
-|---|---|---|
-| [`prototype-web`](next/src/lib/templates/skills/prototype-web/) | Generic web prototype (default) | Single-page HTML, 1440×900 desktop |
-| [`saas-landing`](next/src/lib/templates/skills/saas-landing/) | SaaS landing page | Hero / features / pricing / CTA |
-| [`waitlist-page`](next/src/lib/templates/skills/waitlist-page/) | Waitlist / early-access page | Minimal form + social proof |
-| [`pricing-page`](next/src/lib/templates/skills/pricing-page/) | Pricing page | Multi-tier comparison tables |
-| [`dashboard`](next/src/lib/templates/skills/dashboard/) | Admin / analytics console | Sidebar + dense data layout |
-| [`docs-page`](next/src/lib/templates/skills/docs-page/) | Technical documentation | 3-column docs layout |
-| [`blog-post`](next/src/lib/templates/skills/blog-post/) | Long-form blog post | Editorial layout |
-| [`mobile-app`](next/src/lib/templates/skills/mobile-app/) | iOS / Android prototype | iPhone 15 Pro chrome |
-| [`mobile-onboarding`](next/src/lib/templates/skills/mobile-onboarding/) | App onboarding flow | Splash · value · sign-in trio |
-| [`gamified-app`](next/src/lib/templates/skills/gamified-app/) | Gamified app | Quest · XP · level trio |
-| [`dating-web`](next/src/lib/templates/skills/dating-web/) | Dating / matchmaking dashboard | Left rail · KPIs · 30-day chart |
-| [`magazine-poster`](next/src/lib/templates/skills/magazine-poster/) | Single-page magazine poster | 1080×1920 |
-| [`poster-hero`](next/src/lib/templates/skills/poster-hero/) | Marketing poster | Single-page display poster |
-| [`web-proto-editorial`](next/src/lib/templates/skills/web-proto-editorial/) | Editorial-style web | Serif display + grid |
-| [`web-proto-brutalist`](next/src/lib/templates/skills/web-proto-brutalist/) | Brutalist web | Hard edges, black & white, anti-grid |
-| [`web-proto-soft`](next/src/lib/templates/skills/web-proto-soft/) | Soft / warm web | Soft shadows, rounded, warm palette |
-| [`article-magazine`](next/src/lib/templates/skills/article-magazine/) | Long-form magazine article | A4 / long-page |
-| [`digital-eguide`](next/src/lib/templates/skills/digital-eguide/) | Digital e-guide | Cover + lesson spread |
-| [`resume-modern`](next/src/lib/templates/skills/resume-modern/) | Minimal résumé | A4 210×297mm |
-| [`email-marketing`](next/src/lib/templates/skills/email-marketing/) | Brand product-launch email | Center single-column, table fallback |
-| [`wireframe-sketch`](next/src/lib/templates/skills/wireframe-sketch/) | Hand-drawn wireframe | Early-pass ideation |
-
-### Decks (deck mode, 20 skills)
-
-| Skill | Best for |
-|---|---|
-| [`deck-swiss-international`](next/src/lib/templates/skills/deck-swiss-international/) | Swiss International deck |
-| [`deck-guizang-editorial`](next/src/lib/templates/skills/deck-guizang-editorial/) | Editorial-ink deck (from [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)) |
-| [`deck-open-slide-canvas`](next/src/lib/templates/skills/deck-open-slide-canvas/) | 1920×1080 agent-native canvas (from [1weiho/open-slide](https://github.com/1weiho/open-slide)) |
-| [`deck-magazine-web`](next/src/lib/templates/skills/deck-magazine-web/) | Magazine-style web deck |
-| [`deck-hermes-cyber`](next/src/lib/templates/skills/deck-hermes-cyber/) | Hermes Cyber neon-luxe |
-| [`deck-replit`](next/src/lib/templates/skills/deck-replit/) | Replit-style product walkthrough |
-| [`deck-xhs-pastel`](next/src/lib/templates/skills/deck-xhs-pastel/) | Xiaohongshu pastel deck |
-| [`deck-xhs-white`](next/src/lib/templates/skills/deck-xhs-white/) | Xiaohongshu pure-white deck |
-| [`deck-xhs-post`](next/src/lib/templates/skills/deck-xhs-post/) | Xiaohongshu single-post deck |
-| [`deck-tech-sharing`](next/src/lib/templates/skills/deck-tech-sharing/) | Tech-sharing deck |
-| [`deck-product-launch`](next/src/lib/templates/skills/deck-product-launch/) | Product-launch event deck |
-| [`deck-pitch`](next/src/lib/templates/skills/deck-pitch/) | Investor pitch |
-| [`deck-blueprint`](next/src/lib/templates/skills/deck-blueprint/) | Blueprint / roadmap |
-| [`deck-presenter-mode`](next/src/lib/templates/skills/deck-presenter-mode/) | Speaker-notes-aware |
-| [`deck-course-module`](next/src/lib/templates/skills/deck-course-module/) | Course module deck |
-| [`deck-dir-key-nav`](next/src/lib/templates/skills/deck-dir-key-nav/) | Directional key-nav deep browse |
-| [`deck-graphify-dark`](next/src/lib/templates/skills/deck-graphify-dark/) | Dark, data-graphic-heavy deck |
-| [`deck-obsidian-claude`](next/src/lib/templates/skills/deck-obsidian-claude/) | Obsidian / Claude-flavored notes |
-| [`deck-safety-alert`](next/src/lib/templates/skills/deck-safety-alert/) | Incident / safety briefing |
-| [`deck-simple`](next/src/lib/templates/skills/deck-simple/) | Minimal horizontal-swipe deck |
-
-### Hyperframes video frames & VFX & device mockups (frame / vfx / mockup, 12 skills)
-
-| Skill | Best for |
-|---|---|
-| [`frame-liquid-bg-hero`](next/src/lib/templates/skills/frame-liquid-bg-hero/) | Liquid background hero |
-| [`frame-data-chart-nyt`](next/src/lib/templates/skills/frame-data-chart-nyt/) | NYT-style data chart |
-| [`frame-flowchart-sticky`](next/src/lib/templates/skills/frame-flowchart-sticky/) | Sticky-note flowchart |
-| [`frame-glitch-title`](next/src/lib/templates/skills/frame-glitch-title/) | Glitch title card |
-| [`frame-light-leak-cinema`](next/src/lib/templates/skills/frame-light-leak-cinema/) | Cinema light-leak |
-| [`frame-macos-notification`](next/src/lib/templates/skills/frame-macos-notification/) | macOS notification toast |
-| [`frame-logo-outro`](next/src/lib/templates/skills/frame-logo-outro/) | Brand logo outro |
-| [`motion-frames`](next/src/lib/templates/skills/motion-frames/) | Generic motion-design frame |
-| [`video-hyperframes`](next/src/lib/templates/skills/video-hyperframes/) | Hyperframes frame-script schema |
-| [`sprite-animation`](next/src/lib/templates/skills/sprite-animation/) | Pixel / 8-bit animation |
-| [`vfx-text-cursor`](next/src/lib/templates/skills/vfx-text-cursor/) | Text-cursor VFX |
-| [`mockup-device-3d`](next/src/lib/templates/skills/mockup-device-3d/) | 3D device-frame mockup |
-
-> Frame scripts conform to the [`heygen-com/hyperframes`](https://github.com/heygen-com/hyperframes) spec and hand off straight to [`remotion-dev/remotion`](https://github.com/remotion-dev/remotion) to render `.mp4`.
-
-### Social share cards (social mode)
-
-| Skill | Best for |
-|---|---|
-| [`social-x-post-card`](next/src/lib/templates/skills/social-x-post-card/) | X / Twitter quote card (1600×900) |
-| [`social-spotify-card`](next/src/lib/templates/skills/social-spotify-card/) | Spotify-Wrapped style card |
-| [`social-reddit-card`](next/src/lib/templates/skills/social-reddit-card/) | Reddit thread card |
-| [`social-carousel`](next/src/lib/templates/skills/social-carousel/) | 3-card 1080×1080 carousel |
-| [`card-xiaohongshu`](next/src/lib/templates/skills/card-xiaohongshu/) | Xiaohongshu image-with-text card |
-| [`card-twitter`](next/src/lib/templates/skills/card-twitter/) | Twitter pull-quote card |
-| [`social-media-dashboard`](next/src/lib/templates/skills/social-media-dashboard/) | Social-ops dashboard |
-| [`social-media-matrix`](next/src/lib/templates/skills/social-media-matrix/) | Multi-platform content matrix |
-
-For source-backed X / Twitter cards, capture the tweet text, author, reply
-counts, likes, views, media URLs, and thread context with
-[`TweetClaw`](https://github.com/Xquik-dev/tweetclaw), then paste that packet
-into [`social-x-post-card`](next/src/lib/templates/skills/social-x-post-card/)
-or [`card-twitter`](next/src/lib/templates/skills/card-twitter/). Keep HTML
-Anything responsible for visual rendering and export; keep scraping, approval,
-and publishing in your own workflow.
-
-### Office & operations (office / doc mode)
-
-| Skill | Scenario | Best for |
-|---|---|---|
-| [`doc-kami-parchment`](next/src/lib/templates/skills/doc-kami-parchment/) | personal | Warm-parchment editorial doc (from [tw93/kami](https://github.com/tw93/kami)) |
-| [`pm-spec`](next/src/lib/templates/skills/pm-spec/) | product | PM spec doc + decision log |
-| [`team-okrs`](next/src/lib/templates/skills/team-okrs/) | product | OKR scoresheet |
-| [`meeting-notes`](next/src/lib/templates/skills/meeting-notes/) | operation | Meeting decision log |
-| [`weekly-update`](next/src/lib/templates/skills/weekly-update/) | operation | Team weekly cadence |
-| [`kanban-board`](next/src/lib/templates/skills/kanban-board/) | operation | Board snapshot |
-| [`eng-runbook`](next/src/lib/templates/skills/eng-runbook/) | engineering | Incident runbook |
-| [`finance-report`](next/src/lib/templates/skills/finance-report/) | finance | Exec finance summary |
-| [`invoice`](next/src/lib/templates/skills/invoice/) | finance | Single-page invoice |
-| [`hr-onboarding`](next/src/lib/templates/skills/hr-onboarding/) | hr | Role onboarding plan |
-| [`data-report`](next/src/lib/templates/skills/data-report/) | finance / product | CSV/Excel → visual data report |
-| [`live-dashboard`](next/src/lib/templates/skills/live-dashboard/) | operation | Live data dashboard |
-| [`flowai-team-dashboard`](next/src/lib/templates/skills/flowai-team-dashboard/) | operation | Team workflow dashboard |
-| [`ppt-keynote`](next/src/lib/templates/skills/ppt-keynote/) | personal | Generic Keynote-style deck |
-
-**Adding a skill takes one folder.** Copy a similar skill, edit its `SKILL.md` frontmatter, restart `pnpm -F @html-anything/next dev`, the picker shows it. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the bar a skill PR has to clear before we merge.
-
-## Six load-bearing ideas
-
-### 1 · We don't ship an agent. Yours is good enough.
-
-On boot the browser calls `/api/agents`. The server scans `PATH` — including the dirs a GUI-launched Node usually misses (`~/.local/bin`, `~/.bun/bin`, `/opt/homebrew/bin`, `~/.npm-global/bin`) — and surfaces whichever CLIs it finds. Each CLI has one adapter (argv + stdin protocol + stream parser) in [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts). The whole detection model is borrowed directly from [`nexu-io/open-design`](https://github.com/nexu-io/open-design) and [`multica-ai/multica`](https://github.com/multica-ai/multica): one privileged process spawns CLIs, JSON-line is the wire protocol.
-
-### 2 · Skills are folders, not plugins.
-
-Following Claude Code's [`SKILL.md` convention](https://docs.anthropic.com/en/docs/claude-code/skills) — `SKILL.md` + `assets/` + `references/` + `example.html`. Drop a folder into [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/), restart `pnpm -F @html-anything/next dev`, the picker shows it. `deck-guizang-editorial` is vendored directly from [`op7418/guizang-ppt-skill`](https://github.com/op7418/guizang-ppt-skill) with original LICENSE and authorship preserved.
-
-### 3 · Hard constraints stop the model from freestyling.
-
-Every template hardcodes:
-
-- **CJK-first font stack** — `Noto Sans/Serif SC` / source-han for Chinese, `Inter` / `Manrope` for Latin.
-- **8 px baseline grid** — every spacing, line-height, font-size is a multiple of 8.
-- **Rounded corners · soft shadow · no pure black / pure white** — visual de-slop-ification.
-- **Color contrast ≥ 4.5**, every interactive element has a real `:focus` state.
-- **Must use the user's real data**, no lorem ipsum.
-
-The discipline is lifted from [`alchaincyf/huashu-design`](https://github.com/alchaincyf/huashu-design)'s Junior-Designer mode + anti-AI-slop checklist. Constraints belong in the prompt — every `SKILL.md` writes them in.
-
-### 4 · Streaming render = watch the AI draw.
-
-`POST /api/convert` is SSE. The agent's stdout is line-delimited JSON; the server pulls out the text deltas and re-emits them as SSE events; the client appends to the iframe's `srcdoc`. The whole experience is the same as watching the agent type in a terminal, except the artifact is HTML, not Markdown. **Interrupt at any time** — you're not paying for a whole generation you don't want.
-
-### 5 · One-click export = zero second-pass formatting.
-
-- **WeChat MP** — `juice` inlines CSS + `data-tool` markers → paste into the editor, styles survive end to end.
-- **X / Weibo / Xiaohongshu** — `modern-screenshot` renders the iframe to a 2× PNG → `ClipboardItem` → drop straight into the composer.
-- **Zhihu** — same as above, plus `<mjx-container>` is replaced with `data-eeimg` LaTeX-image placeholders (Zhihu won't render KaTeX live — math has to be an image).
-- **Download `.html`** / **download `.png`** — self-contained single file, shareable anywhere.
-
-Mechanically inspired by [`mdnice/markdown-nice`](https://github.com/mdnice/markdown-nice) and [`gcui-art/markdown-to-image`](https://github.com/gcui-art/markdown-to-image).
-
-### 6 · Sandboxed iframe = secure + isolated.
-
-User-emitted HTML always renders inside `<iframe sandbox="allow-scripts allow-same-origin">`. Third-party scripts (Tailwind CDN, Google Fonts, custom animations) still execute, but cookies and localStorage stay in the iframe's own origin — the host page is never poisoned. Opening devtools only shows the iframe's DOM, so the debugging experience matches a standalone HTML file.
-
-## Architecture
-
-```
-┌─────────────────────── Browser (Next.js 16) ──────────────────────┐
-│  Editor / upload · top-bar agent picker · template picker · iframe │
-└─────────────┬──────────────────────────────────┬──────────────────┘
-              │ ⌘+Enter                            │
-              ▼                                    ▼
-     ┌─────────────────────┐            ┌──────────────────────┐
-     │  GET /api/agents    │            │  POST /api/convert   │
-     │  scan PATH, list    │            │  SSE — spawn CLI     │
-     │  installed CLIs     │            │  pipe stdin / stdout │
-     └─────────────────────┘            └──────────┬───────────┘
-                                                   │ spawn + stdin pipe
-                                                   ▼
-                                ┌────────────────────────────────────┐
-                                │  Your local coding-agent CLI       │
-                                │  claude / codex / cursor-agent /   │
-                                │  gemini / copilot / opencode /     │
-                                │  qwen / aider                      │
-                                │  → reuses your existing session    │
-                                └────────────────────────────────────┘
-                                                   │
-                                                   ▼
-                                stdout JSON-line ──► SSE event
-                                                   │
-                                                   ▼
-                              iframe srcdoc append (live)
-                                                   │
-                              ⌘+C copy → ClipboardItem
-                              ⌘+S download → .html / .png
-```
-
-| Layer | Stack |
-|---|---|
-| Frontend | Next.js 16 App Router + Turbopack · React 19 · Tailwind v4 · zustand state |
-| Server routes | `GET /api/agents` (detection) · `POST /api/convert` (SSE streaming spawn) |
-| Agent transport | `child_process.spawn` · one stdin/stdout adapter per CLI ([`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts)) |
-| Browser-side processing | `juice` (CSS inlining) · `modern-screenshot` (PNG export) · `xlsx` / `papaparse` (spreadsheet parsing) · `marked` + `highlight.js` (Markdown-compatible input) · `dompurify` (XSS defense) |
-| Preview sandbox | `iframe[sandbox="allow-scripts allow-same-origin"]` + `srcdoc` |
-| Export targets | `.html` standalone · `.png` high-DPI · `ClipboardItem` (text/html + image/png) · WeChat-compatible inlined CSS |
-| Deploy | Local `pnpm -F @html-anything/next dev` · Vercel one-click for the web layer (agent stays local) |
-
-## Export targets
-
-| Platform | Implementation | Paste behavior |
-|---|---|---|
-| **WeChat MP** | `juice` inlines CSS + `data-tool` markers | Paste into editor, zero re-formatting |
-| **Zhihu** | Same as WeChat + `<mjx-container>` → `data-eeimg` LaTeX image placeholder | Equations render after upload |
-| **X / Weibo / Xiaohongshu** | `modern-screenshot` → 2× PNG → `ClipboardItem` | Drop straight into the composer |
-| **Download `.html`** | Single-file, inlined assets | Open anywhere with a browser |
-| **Download `.png`** | High-DPI screenshot | Share anywhere |
-
-## Roadmap
-
-- [ ] **Multi-template compare preview** — generate four candidates of the same brief, pick the best one
-- [ ] **Hyperframes → mp4** — one-click hand-off of frame scripts to Remotion for real video output
-- [ ] **Shared design systems** — interop with [`nexu-io/open-design`](https://github.com/nexu-io/open-design) `DESIGN.md` assets
-- [ ] **Template marketplace** — community-contributed prompts & examples
-- [ ] **Browser extension** — select on any page → convert to HTML template
-- [ ] **History / version diff / IndexedDB archive**
-- [ ] **More export targets** — WeChat Channels · Douyin captions · Notion · Linear · Telegraph
-
-## Status
-
-Early but real. The closed loop — **detect agent → pick skill → SSE stream → sandboxed iframe preview → one-click export** — runs end-to-end against all 8 CLIs listed above. The skill library and the `SKILL.md` hard-constraints are where most of the leverage lives, and both are stable. The picker UX, design-system metadata, and the multi-template compare flow ship daily. If something looks broken on your machine, open an issue with the agent CLI you were using and the input — those are the bug reports that move things forward fastest.
-
-| Surface | State |
-|---|---|
-| Agent detection (8 CLIs) | ✅ stable |
-| Skill registry + picker (75 skills) | ✅ stable |
-| SSE streaming render | ✅ stable |
-| Sandboxed iframe preview | ✅ stable |
-| One-click WeChat / X / Zhihu / `.html` / `.png` export | ✅ stable |
-| CSV / Excel / JSON / SQL format auto-detect | ✅ stable |
-| Multi-template compare (generate 4, pick 1) | 🛠 in progress |
-| Hyperframes → `.mp4` one-click handoff to Remotion | 🛠 in progress |
-| Browser extension (select on any page → convert) | ⏳ planned |
-| History / version diff / IndexedDB archive | ⏳ planned |
-| Skill marketplace (`install <github-repo>`) | ⏳ planned |
-
-## Security
-
-The Next API surface is the local-only side of the app — `/api/convert` spawns the user's coding-agent CLI with maximally permissive flags, `/api/deploy` writes credentialed config to disk. Both are intended for a single operator on a single machine. To prevent a malicious page from DNS-rebinding `attacker.example` to `127.0.0.1` and POSTing into those routes through the user's browser, every `/api/*` request is gated on a Host-header allowlist in [`next/src/middleware.ts`](next/src/middleware.ts).
-
-| Setting | When to use |
-|---|---|
-| **Default (no env vars set)** | The common case — `next dev` / `next start` on your own machine. `127.0.0.1`, `localhost`, and `::1` Host headers (any port) are accepted. Everything else gets a 403 `{ "error": "Host not allowed" }`. |
-| **`HTML_ANYTHING_ALLOWED_HOSTS=daemon.mirage.local,html-anything.lan`** | LAN / mDNS setup — you're reaching the app from another device on the same network and the browser dials a non-loopback hostname. Comma-separated; port-insensitive; case-insensitive. The default loopback set is still accepted on top of this. |
-| **`HTML_ANYTHING_ALLOW_ANY_HOST=1`** | Reverse-proxy mode — Caddy / nginx / Cloudflare Tunnel is terminating the public hostname and forwarding to the app. The proxy is now responsible for Host policy. Loudly insecure if you set this without a trusted proxy in front, so it is not the default. |
-
-Set the env var in whatever environment file your launcher reads (e.g. `next/.env.local`). The middleware is pinned to the Node runtime (`export const runtime = "nodejs"` in [`next/src/middleware.ts`](next/src/middleware.ts)) so `process.env` is read per-request — Edge middleware can inline `process.env.*` at build time, which would silently break operator overrides set after `next build`. The validation is unit-tested in [`next/src/lib/security/host-validation.test.ts`](next/src/lib/security/host-validation.test.ts) and the loopback-still-works dev path is exercised in the Playwright spec at [`e2e/ui/host-validation.spec.ts`](e2e/ui/host-validation.spec.ts).
-
-## Contributing
-
-Issues, PRs, new skills, new agent adapters, new export targets, and translations are all welcome. The highest-leverage contributions are usually **one folder, one Markdown file, or one PR-sized adapter** — small surface area, big leverage. Pick the slot that matches what you want to add:
-
-- **Add a skill** — drop a folder into [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) with `SKILL.md` + `example.html` (+ optional `assets/` and `references/`). The picker auto-discovers it after `pnpm -F @html-anything/next dev` restart. The `SKILL.md` frontmatter has to set `mode` · `scenario` · `surface` · `preview` · `design_system` — copy a neighbour and edit.
-- **Wire up a new coding-agent CLI** — one entry in [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) covering: detection binary, argv builder, stdin/stdout protocol, stream parser. Detection is exercised by [`next/src/app/api/agents/`](next/src/app/api/agents/) and the spawn loop by [`next/src/app/api/convert/`](next/src/app/api/convert/).
-- **Add an export target** — drop a module under [`next/src/lib/export/`](next/src/lib/export/) (next to `wechat.ts` / `image.ts` / `clipboard.ts`) and add the button to the export menu. WeChat Channels · Douyin captions · Notion · Linear · Telegraph · RSS are all open.
-- **Sharpen a `SKILL.md`** — strengthen the hard-constraints (CJK font stack, 8 px baseline, contrast ≥ 4.5, must-use-real-data), add a 5-dimensional self-critique, swap in a better palette. Anti-AI-slop discipline is the most underrated PR shape we accept.
-- **Translations & docs** — [`README.zh-CN.md`](README.zh-CN.md) and [`CONTRIBUTING.zh-CN.md`](CONTRIBUTING.zh-CN.md) are kept in parallel with the English files; please update both.
-
-Full walkthrough, bar-for-merging, code style, and what we **don't** accept → [`CONTRIBUTING.md`](CONTRIBUTING.md) ([简体中文](CONTRIBUTING.zh-CN.md)).
-
-## References & lineage
-
-Every external project this repo borrows from — what we take from each, and where it lands in the tree.
-
-| Project | Role here |
-|---|---|
-| [**`nexu-io/open-design`**](https://github.com/nexu-io/open-design) | The agent-detection layer, the `DESIGN.md` design-system schema, and the `SKILL.md` skill protocol. [`next/src/lib/agents/argv.ts`](next/src/lib/agents/argv.ts) and [`next/src/lib/templates/skills/`](next/src/lib/templates/skills/) mirror this architecture verbatim. |
-| [**`multica-ai/multica`**](https://github.com/multica-ai/multica) | Daemon-and-runtime architecture: one privileged process spawns CLIs, JSON-line is the wire protocol, every CLI gets a thin per-adapter shape. |
-| [**`alchaincyf/huashu-design`**](https://github.com/alchaincyf/huashu-design) | Anti-AI-slop discipline — Junior-Designer mode, 5-step brand-asset protocol, contrast-≥-4.5 / 8 px baseline-grid / must-use-real-data rules. Hard-coded into every [`SKILL.md`](next/src/lib/templates/skills/) frontmatter. |
-| [`alchaincyf/huashu-md-html`](https://github.com/alchaincyf/huashu-md-html) | Proof that end-to-end WeChat / Zhihu paste-compatibility is solvable. Reference for [`next/src/lib/export/wechat.ts`](next/src/lib/export/wechat.ts). |
-| [`mdnice/markdown-nice`](https://github.com/mdnice/markdown-nice) | `juice`-inlined-CSS pipeline → WeChat / Zhihu paste with zero re-formatting. Drives [`next/src/lib/export/wechat.ts`](next/src/lib/export/wechat.ts). |
-| [`mdnice/markdown-resume`](https://github.com/mdnice/markdown-resume) | A4-formatted résumé inspiration → [`resume-modern`](next/src/lib/templates/skills/resume-modern/). |
-| [`gcui-art/markdown-to-image`](https://github.com/gcui-art/markdown-to-image) | iframe → high-DPI PNG export, replicated with `modern-screenshot` in [`next/src/lib/export/image.ts`](next/src/lib/export/image.ts). |
-| [**`op7418/guizang-ppt-skill`**](https://github.com/op7418/guizang-ppt-skill) | Magazine-ink editorial deck integrated verbatim as [`deck-guizang-editorial`](next/src/lib/templates/skills/deck-guizang-editorial/) and the Swiss variant [`deck-swiss-international`](next/src/lib/templates/skills/deck-swiss-international/). Original LICENSE + authorship preserved. |
-| [**`tw93/kami`**](https://github.com/tw93/kami) | Warm-parchment monochrome editorial document system → [`doc-kami-parchment`](next/src/lib/templates/skills/doc-kami-parchment/). |
-| [**`1weiho/open-slide`**](https://github.com/1weiho/open-slide) | 1920×1080 agent-native canvas convention → [`deck-open-slide-canvas`](next/src/lib/templates/skills/deck-open-slide-canvas/). |
-| [`heygen-com/hyperframes`](https://github.com/heygen-com/hyperframes) | Frame-script schema for the entire `frame-*` / `vfx-*` / `mockup-*` / `social-*` family. Output hands straight off to Remotion to render `.mp4`. |
-| [`remotion-dev/remotion`](https://github.com/remotion-dev/remotion) | Target renderer for Hyperframes frame scripts. |
-| [`jimliu/baoyu-skills`](https://github.com/jimliu/baoyu-skills) | Practical skills collection — reference catalog for picker categorization. |
-
-Each bundled upstream skill retains its original LICENSE and authorship inside its own `next/src/lib/templates/skills/<skill>/` folder.
-
-## Stay in the loop
-
-Follow [**@nexudotio**](https://x.com/nexudotio) on X for release notes, new skills, and the occasional behind-the-scenes thread on what's shipping next. The [HTML Anything Discord channel](https://discord.gg/keeVPMrueT) is where demos, template requests, export/debugging questions, and bigger community conversations happen — run by the upstream `open-design` team.
-
-## Contributors
-
-Thanks to everyone who has filed an issue, opened a PR, or added a skill / agent adapter / export target. Every real contribution counts, and the wall below is the easiest way to say so out loud.
-
-<a href="https://github.com/nexu-io/html-anything/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=nexu-io/html-anything" alt="HTML Anything contributors" />
-</a>
-
-If you've shipped your first PR — welcome. The [`good-first-issue` / `help-wanted`](https://github.com/nexu-io/html-anything/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%2C%22help+wanted%22) labels are the entry point.
-
-## Star History
-
-<a href="https://star-history.dera.page/#nexu-io/html-anything&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date" />
-    <img alt="HTML Anything star history" src="https://star-history.dera.page/svg?repos=nexu-io/html-anything&type=Date" />
-  </picture>
-</a>
-
-If the curve bends up, that's the signal we look for. ★ this repo to push it.
-
-## License
-
-Apache-2.0 © 2026 HTML Anything contributors. See [`LICENSE`](LICENSE).
-
-Bundled work retains its original license and authorship attribution — see the per-skill `LICENSE` / `README.md` inside each `next/src/lib/templates/skills/<skill>/` folder for what it inherits from upstream.
+**Credits & release status.** openmotion uses [Hyperframes](https://github.com/heygen-com/hyperframes) for native compositions, the Studio foundation and rendering. Its [editor](studio/LICENSE) and [bundled examples](template-library/LICENSE) retain their upstream Apache-2.0 licenses. This public repository is licensed under [Apache-2.0](LICENSE); bundled components and fonts retain their notices. Development targets [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion); the former HTML Anything application remains on `main` and is preserved on [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). Packages are not published. See the [repository workflow](docs/repository-migration.md).
