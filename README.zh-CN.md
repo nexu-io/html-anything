@@ -67,7 +67,7 @@ OpenDesign 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ```text
 请执行以下命令安装 OpenMotion：
-curl -fsSL https://raw.githubusercontent.com/nexu-io/open-design/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nexu-io/html-anything/feature/motion/install.sh | bash
 
 安装成功后，简要介绍它能做什么，并询问我是否体验一个无需准备素材的 20 秒视频，提供 MP4 并打开可编辑工程。
 ```
@@ -84,7 +84,7 @@ curl -fsSL https://raw.githubusercontent.com/nexu-io/open-design/main/install.sh
 
 1. 在当前对话简要介绍 OpenMotion 支持产品宣传视频、动态图表与流程动画、模板和可编辑预览、MP4 导出。
 2. 主动询问用户：**“要现在体验一个无需准备素材的 20 秒视频吗？我会提供 MP4，并打开可编辑工程。”**
-3. 停下来等待用户选择；用户回复“体验”或明确同意后，执行下方首次体验默认规则。用户明确只要安装或暂不体验时，尊重该选择。
+3. 停下来等待用户选择；用户回复“体验”或明确同意后，进入 [template-to-video](skills/template-to-video/SKILL.md) 并执行下方首次体验默认规则。用户明确只要安装或暂不体验时，尊重该选择。
 
 先在当前对话完成介绍与邀请。若新插件工具尚未加载，在用户同意体验后再提供新会话接续方式；安装时的 MCP 预检不代表当前对话已加载新工具。安装失败时先说明失败原因，修复成功后再邀请。
 
