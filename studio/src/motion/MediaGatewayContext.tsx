@@ -4,6 +4,7 @@ import { ModelSettings } from './ModelSettings';
 import { MediaGenerator } from './MediaGenerator';
 import { useArtifactViewActive } from './ArtifactViewState';
 import type { GenerateInput, GenerationJob, Modality } from './gatewayClient';
+import type { MediaPopoverAnchor } from './mediaPopoverPosition';
 import './media-gateway.css';
 
 export type MediaPlacement = { start: number; duration: number; track: number };
@@ -11,7 +12,7 @@ export type SelectedMedia = { key: string; elementId: string; path: string; src:
 export type TimelineMediaTarget = { projectId: string; compositionId: string; place: (asset: string, placement: MediaPlacement) => Promise<void>; replace?: (asset: string, selection: SelectedMedia) => Promise<void>; importFiles: (files: File[]) => Promise<void>; currentPlacement: () => MediaPlacement };
 export type MediaRequest = { id: string; modality?: Modality; prompt?: string; usage?: GenerateInput['usage'];
   placement?: MediaPlacement; target?: TimelineMediaTarget; onComplete?: (job: GenerationJob) => void;
-  selection?: SelectedMedia; intent?: 'edit'; anchorX?: number };
+  selection?: SelectedMedia; intent?: 'edit'; anchor?: MediaPopoverAnchor };
 type GatewayUI = { openSettings: () => void; openGenerator: (input?: Omit<MediaRequest, 'id' | 'target'>) => void;
   bindTimeline: (target: TimelineMediaTarget | null) => void; importFiles: () => void; generationOpen: boolean };
 const MediaGatewayContext = createContext<GatewayUI | null>(null);

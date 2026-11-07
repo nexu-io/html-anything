@@ -74,6 +74,8 @@
 
 **需要更多素材时**，可以在 Studio 里通过已配置的模型网关请求图片、视频或音频，再选择放进工程的结果。模型调用使用自己的供应商账户，可能产生费用。[已验证能力](model-gateway.md) · [一期九个公开 MCP 工具](mcp-phase1-tools.md)
 
+素材弹框贴近触发按钮或时间轴选区，并随滚动和可用空间调整。空轨道进入生成时隐藏起步引导，插入后保持隐藏；关闭且未插入、或撤销至空轨道时恢复。[编辑交互说明](product/media-generation-design.md#时间轴交互规则及原因)
+
 ## MCP 与轻量安装
 
 [npm 轻量安装器](npm-installation.md) 可为 Codex、Claude Code、DeepSeek Harness、WorkBuddy 同装九个 MCP Tool 和五个 Skill，共用应用并按需准备经过校验的原生工具。运行 `npm run package:npm` 本地构建；npm 包尚未公开发布，完整 ZIP 保留备用。

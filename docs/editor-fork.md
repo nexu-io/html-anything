@@ -28,9 +28,11 @@ OpenDesign 的 `WorkspaceFrame` 放在原生 App 外，负责通用导航和会�
 
 先用 [产品架构](product/architecture.md#职责分层与依赖方向) 判断需求归属；多模态入口、原图修改和后续属性面板接入遵循 [素材生成设计](product/media-generation-design.md)。该设计记录用户意图、候选采用、原生历史与过期目标的边界，本页维护实现位置。
 
-模型设置位于顶栏，空时间轴、时间轴工具栏和素材面板共用 `MediaGatewayProvider`。生成面板读取已选时段，提供模态/模型/参数与任务结果，显式放置才调用原生 `useTimelineAssetDropOps`，沿用撤销与保存。上下文绑定会在工程/合成切换及卸载时失效。素材菜单增加可见入口、预览和下载，其他操作继续使用原生文件服务。模型协议与限制见 [模型网关](model-gateway.md)。
+模型设置位于侧栏，嵌入视图保留顶栏入口；空时间轴、时间轴工具栏和素材面板共用 `MediaGatewayProvider`。生成面板读取已选时段，提供模态/模型/参数与任务结果，显式放置才调用原生 `useTimelineAssetDropOps`，沿用撤销与保存。上下文绑定会在工程/合成切换及卸载时失效。素材菜单增加可见入口、预览和下载，其他操作继续使用原生文件服务。模型协议与限制见 [模型网关](model-gateway.md)。
 
-`TimelineMediaBar` 订阅原生片段选择、已完成的范围选择和标尺点击，在时间轴上方就地显示描述/生成/修改入口；原有范围 Agent 弹框通过「交给 Agent」继续使用。图片修改传 `referenceAsset`，结果选择后通过 `handleDomAttributeBatchCommit` 只改 `src`，在文件队列内的 `validateContent` 检查修改前的原始引用，保留原生历史、时长与动画。`prepareContent` 用于服务端已执行 patch 后的后处理，不能用作修改前验证。不要绕过该提交链整页重写 HTML，也不要在工程切换后恢复旧选区。
+`TimelineMediaBar` 订阅原生片段选择、已完成的范围选择和标尺点击，在实际目标旁显示描述/生成/修改入口；原有范围 Agent 弹框通过「交给 Agent」继续使用。图片修改传 `referenceAsset`，结果选择后通过 `handleDomAttributeBatchCommit` 只改 `src`，在文件队列内的 `validateContent` 检查修改前的原始引用，保留原生历史、时长与动画。`prepareContent` 用于服务端已执行 patch 后的后处理，不能用作修改前验证。不要绕过该提交链整页重写 HTML，也不要在工程切换后恢复旧选区。
+
+`MediaRequest.anchor` 保存触发元素或时间轴虚拟锚点。`useMediaPopoverPosition` 共用实际浮层尺寸、滚动监听与 `ResizeObserver`：优先放在目标上方，空间不足时翻转或限制高度，保持 8px 间距与 12px 视口边距，不再轮询整个时间轴顶部。片段锚点读取可见片段的位置；范围/标尺锚点换算缩放与滚动后的坐标。空态引导在生成面板打开时隐藏且不可聚焦，保留布局以跟随按钮位置；文件拖入仍显示拖放反馈。是否切换到真实轨道继续由原生元素列表决定，不维护另一个“已插入”标记；关闭面板后仍为空或撤销至空轨道时恢复引导。
 
 | 需求 | 入口 |
 | --- | --- |
@@ -41,7 +43,7 @@ OpenDesign 的 `WorkspaceFrame` 放在原生 App 外，负责通用导航和会�
 | 首页分类模板与精确复刻 | `studio/src/motion/HomeTemplates.tsx` |
 | 宿主插槽 | `studio/src/motion/StudioHost.tsx`、`studio/src/components/StudioHeader.tsx` |
 | 模型设置、生成面板、时间轴桥接 | `studio/src/motion/ModelSettings.tsx`、`MediaGenerator.tsx`、`MediaGatewayContext.tsx`、`MotionTimelineMedia.tsx` |
-| 时间轴就地生成与图片修改 | `studio/src/motion/TimelineMediaBar.tsx`、`timelineMediaSelection.ts`；挂载于 `Timeline.tsx` 的原生 Provider 内 |
+| 时间轴就地生成与图片修改 | `studio/src/motion/TimelineMediaBar.tsx`、`timelineMediaSelection.ts`；挂载于 `Timeline.tsx` 的原生 Provider 内；定位共用 `mediaPopoverPosition.ts`、`useMediaPopoverPosition.ts` |
 | 共享生成合约与服务 | `shared/gateway.ts`、`gateway/`、`server.ts`、`mcp.ts` |
 | 原生 Capture、Inspector、Export | `studio/src/components/StudioHeader.tsx` |
 | 模板画廊、视频预览、出处与热度 | `web/template-gallery.ts`、`web/template-gallery.css`、`template-catalog.ts` |
