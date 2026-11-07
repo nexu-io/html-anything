@@ -40,7 +40,7 @@ Replace the logo, screenshots, benefit copy and closing CTA with ours.
 | **Companies on a technology ranking** | How teams on the same list, such as an a16z consumer AI ranking, tell different product stories. |
 | **Recently funded companies** | A monthly selection of launch films from companies that announced funding in 2026. |
 
-These are the editorial directions for the **planned public collections site**. The index and Studio catalog are available now. The catalog has **894 entries: 3 bundled editable examples and 891 external references and registry items**. A listed video is a reference; a verified template also needs editable source, a preview and a successful edit and render.
+These are the editorial directions for the **planned public collections site**. The index and Studio catalog are available now. Studio and Agent tools share the published Prism template catalog plus three bundled examples. The older 891-entry reference snapshot remains available to legacy tooling. A listed video is a reference; a verified template also needs editable source, a preview and a successful edit and render.
 
 ![Studio workspace showing the template library and three ready-to-edit examples.](docs/readme/workspace.jpg)
 
@@ -54,7 +54,7 @@ These frames come from the bundled [Hyperframes examples](template-library/NOTIC
 
 > Keep the opening and the pace of the reveal. Use our logo and the product screenshots in this repo. Hold the second screen long enough to read the new headline. Give me the editable project and an MP4.
 
-The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled template opens directly; external footage needs analysis and reconstruction. In Studio you can change the text, timing, layout and assets, or ask your Agent to make the same edit. Imported footage stays a clip.
+The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled or Prism template opens directly; external footage needs analysis and reconstruction. In Studio you can change the text, timing, layout and assets, or ask your Agent to make the same edit. Imported footage stays a clip.
 
 ![The editor showing the Product Promo preview, compositions and timeline.](docs/readme/editor.jpg)
 
@@ -72,11 +72,11 @@ If I accept, open an independent editable project and deliver its MP4.
 
 After you accept, the Agent follows the [template-to-video workflow](skills/motion-template-to-video/SKILL.md). If your host cannot open the editor beside the conversation, use the returned local project link. [Installation and first-demo guide (Chinese)](docs/usage.md#使用) · [Other Agent adapters](docs/agent-adapters.md)
 
-**Bring more media when you need it.** The Studio model gateway accepts requests for images, video or audio through configured providers; you choose which results to place in your project. Providers use your own accounts and may charge for generation. [Verified capabilities](docs/model-gateway.md) · [Nine public MCP tools](docs/mcp-phase1-tools.md)
+**Bring more media when you need it.** The Studio model gateway accepts requests for images, video or audio through configured providers; you choose which results to place in your project. Providers use your own accounts and may charge for generation. [Verified capabilities](docs/model-gateway.md) · [Public MCP tools](docs/mcp-phase1-tools.md)
 
 ## MCP and lightweight installation
 
-The [lightweight npm installer](docs/npm-installation.md) installs nine MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy. It shares the application and prepares verified native tools on demand. Build locally with `npm run package:npm`; the npm package is not publicly published. Complete ZIPs remain available as a backup.
+The [lightweight npm installer](docs/npm-installation.md) installs eleven MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy. It shares the application and prepares verified native tools on demand. Build locally with `npm run package:npm`; the npm package is not publicly published. Complete ZIPs remain available as a backup.
 
 The five entries are [motion-production](skills/motion-production/SKILL.md), [motion-director](skills/motion-director/SKILL.md), [motion-template-to-video](skills/motion-template-to-video/SKILL.md), [motion-recreate](skills/motion-recreate/SKILL.md), and [motion-video-to-template](skills/motion-video-to-template/SKILL.md). Reference recreation is implemented. Product UI follows the [OpenDesign visual system](docs/design-system.md); video artwork keeps its own styles.
 
@@ -87,3 +87,9 @@ The five entries are [motion-production](skills/motion-production/SKILL.md), [mo
 To contribute a style, include the reference and its creator, the Motion MD, a preview, editable source and asset permissions. [Contribution guide](AGENTS.md) · [Documentation](docs/README.md)
 
 **Credits & release status.** openmotion uses [Hyperframes](https://github.com/heygen-com/hyperframes) for native compositions, the Studio foundation and rendering. Its [editor](studio/LICENSE) and [bundled examples](template-library/LICENSE) retain their upstream Apache-2.0 licenses. This public repository is licensed under [Apache-2.0](LICENSE); bundled components and fonts retain their notices. Development targets [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion); the former HTML Anything application remains on `main` and is preserved on [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). Packages are not published. See the [repository workflow](docs/repository-migration.md).
+
+## Published template catalog
+
+Studio and MCP read the same disk-cached Prism catalog. `motion_list_templates({})` returns a local JSONL index path, total and catalog version; the Agent searches that file with its own shell tools. `motion_get_template({templateId})` reads one template and its editing guide. `motion_create_project` with `projectType=template` downloads its files into a new editable project.
+
+`npm run dev` reads DEV content. Standard packages read production; `npm run package:phase1 -- --template-env=dev` creates a separate DEV ZIP. The environment is stored in the package, so GUI and MCP agree without extra host configuration. `MOTION_TEMPLATE_ENV` can override it for debugging. DEV uses a separate default workspace and cache; environments never fall back to each other. See [catalog configuration and build commands](docs/template-catalog.md).

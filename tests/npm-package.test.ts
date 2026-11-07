@@ -34,6 +34,7 @@ test('beta npm artifacts carry one immutable version, both lock identities and n
     const version = '0.6.2-beta.999001.1', output = path.join(directory, 'build');
     const built = await packageNpm(output, version), release = await json(built.manifest);
     assert.equal(release.version, version); assert.equal(release.installer.version, version); assert.equal(release.format, 'npm');
+    assert.equal(release.templateEnvironment, 'prod');
     assert.equal(release.mcp.profile, 'phase1'); assert.deepEqual(release.mcp.tools, mcpRegistry().tools.map(tool => tool.name));
     assert.deepEqual(release.skills, [...phase1Skills].sort());
     assert.equal(release.installer.sha256, await sha256(built.installer)); assert.equal(release.application.sha256, await sha256(built.application));
@@ -41,6 +42,7 @@ test('beta npm artifacts carry one immutable version, both lock identities and n
     const application = path.join(directory, 'app'), installer = path.join(directory, 'installer');
     await extractArchive(built.application, application); await extractArchive(built.installer, installer);
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
+    assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'prod');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
     assert.equal((await json(path.join(application, 'package-lock.json'))).packages[''].version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).version, version);
@@ -68,6 +70,20 @@ test('beta npm artifacts carry one immutable version, both lock identities and n
     for (const file of unapproved) await rm(file, { force: true });
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+test('DEV npm packages carry their catalog environment without changing the checkout', { timeout: 60_000 }, async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-npm-dev-'));
+  try {
+    const before = await readFile('shared/template-config.json', 'utf8');
+    const built = await packageNpm(path.join(directory, 'build'), undefined, 'dev');
+    assert.equal((await json(built.manifest)).templateEnvironment, 'dev');
+    assert.match(built.application, /-dev\.tar\.gz$/);
+    const application = path.join(directory, 'app');
+    await extractArchive(built.application, application);
+    assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
+    assert.equal(await readFile('shared/template-config.json', 'utf8'), before);
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
 test('the actual dispatch validation permits unpublished npm and backup ZIP, and rejects npm publication', async () => {

@@ -13,6 +13,7 @@ import { pluginRoot } from '../hyperframes.ts';
 import { callTool, rpc, mcpRegistry } from '../mcp.ts';
 import { WorkspaceStore } from '../workspace.ts';
 import { transport } from './http.ts';
+import { mockPrism } from './prism-fixture.ts';
 
 test('the complete source snapshot, every original ID and matched poster survive the import', async () => {
   const raw = await readFile(new URL('../web/catalog/hyperframes.json', import.meta.url));
@@ -66,12 +67,13 @@ test('pagination and grouped variants expose every template without omitting IDs
   assert.throws(() => getTemplate('missing'), /模板不存在/);
 });
 
-test('HTTP catalog, local posters and copied guides resolve the exact selected template without changing the workspace', async () => {
+test('HTTP catalog, local posters and copied guides resolve the exact selected template without changing the workspace', async t => {
+  t.mock.method(globalThis, 'fetch', mockPrism().request);
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-catalog-'));
   try {
     const store = new WorkspaceStore(directory), request = transport(store), before = await store.get();
     const page = await (await request('/motion-api/template-catalog?grouped=true&limit=6')).json();
-    assert.deepEqual(page.items.map(item => item.id), featuredTemplateIds); assert.equal(page.catalogTotal, 894);
+    assert.equal(page.items[0].id, 'test-motion-1'); assert.equal(page.catalogTotal, 4);
     assert.equal((await request('/motion-api/template-catalog?offset=-1')).status, 400);
     assert.equal((await request('/motion-api/template-catalog?limit=999')).status, 400);
     for (const template of libraryTemplates.filter(item => item.posterUrl?.startsWith('/web/'))) {
@@ -80,7 +82,7 @@ test('HTTP catalog, local posters and copied guides resolve the exact selected t
       assert.equal(Buffer.from(await response.arrayBuffer()).readUInt16BE(), 0xffd8);
     }
     const info = await (await request('/api/integration')).json();
-    for (const id of ['hf-reference-jake-lovable', 'hf-component-agent-cursor', 'product-promo']) {
+    for (const id of ['nyt-graph', 'decision-tree', 'product-promo']) {
       const template = getTemplate(id);
       for (const host of ['codex', 'claude', 'deepseek', 'mcp'] as const) {
         const prompt = templatePrompt(info, host, template);
