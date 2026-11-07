@@ -3,7 +3,8 @@ import { constants } from 'node:fs';
 import { copyFile, lstat, mkdir, open, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { WorkspaceStore, createBlankProject, projectPath, validateProjectTitle } from './workspace.ts';
-import { copyTemplate, findTemplate } from './template-library.ts';
+import { templateCatalogFor } from './prism-templates.ts';
+import { isEditableTemplate } from './shared/catalog.ts';
 import { getTemplate } from './template-catalog.ts';
 import { execute, inspectProject } from './hyperframes.ts';
 import { verificationBinaries } from './scripts/verify-export.ts';
@@ -46,6 +47,8 @@ export class Phase1Service {
     const definition = phase1Tools.find(tool => tool.name === name);
     if (!definition) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + name);
     validateInput(definition.inputSchema, args);
+    if (name === 'motion_list_templates') return templateCatalogFor(this.store.directory).index();
+    if (name === 'motion_get_template') return templateCatalogFor(this.store.directory).detail(args.templateId);
     const run = async () => {
       if (!this.recovered) { await recoverProjectTransactions(this.store, this.runtimeRoot); this.recovered = true; }
       return this.dispatch(name, args);
@@ -193,17 +196,17 @@ export class Phase1Service {
     if (name === 'motion_create_project') return this.writeRequest(name, args, async record => {
       if (args.projectType === 'natural_language' && (args.templateId || args.referenceVideoId || args.referenceUrl) || args.projectType === 'template' && (args.referenceVideoId || args.referenceUrl) || args.projectType === 'reference_video' && (args.templateId || args.referenceVideoId && args.referenceUrl)) throw new Error('INVALID_ARGUMENT: creation source must match projectType');
       if (args.projectType === 'template' && !args.templateId || args.projectType === 'reference_video' && !args.referenceVideoId && !args.referenceUrl) throw new Error('INVALID_ARGUMENT: creation source is required');
-      const source = args.templateId || args.referenceVideoId ? getTemplate(args.templateId ?? args.referenceVideoId) : null;
-      if (args.projectType === 'template' && source?.kind !== 'builtin') throw new Error('TEMPLATE_NOT_COPYABLE: 请在 Studio 选择可编辑原生模板；参考视频需由 Agent 重建');
+      const source = args.templateId ? await templateCatalogFor(this.store.directory).get(args.templateId) : args.referenceVideoId ? getTemplate(args.referenceVideoId) : null;
+      if (args.projectType === 'template' && (!source || !isEditableTemplate(source))) throw new Error('TEMPLATE_NOT_COPYABLE: 请在 Studio 选择可编辑原生模板；参考视频需由 Agent 重建');
       if (args.referenceUrl && !['https:', 'http:'].includes(new URL(args.referenceUrl).protocol)) throw new Error('INVALID_REFERENCE_URL');
       validateInstruction(args.requirements);
       const title = validateProjectTitle(args.title), directory = this.store.projectDirectoryFor(record.projectId);
       let registered = false;
       try {
-        if (args.projectType === 'template') await copyTemplate(findTemplate(args.templateId).id, directory, this.runtimeRoot);
+        if (args.projectType === 'template') await templateCatalogFor(this.store.directory).copy(source!, directory, this.runtimeRoot);
         else await createBlankProject(directory, this.runtimeRoot, title);
         const meta = { schemaVersion: 1, projectType: args.projectType, requirements: args.requirements, creationRequestId: args.requestId,
-          source: source ? { id: source.id, kind: source.kind, previewUrl: source.previewUrl, sourceUrl: source.sourceUrl } : args.referenceUrl ? { url: args.referenceUrl, inspected: false } : null };
+          source: source ? { id: source.id, kind: source.kind, catalogVersion: 'catalogVersion' in source ? source.catalogVersion : undefined, previewUrl: source.previewUrl, sourceUrl: source.sourceUrl } : args.referenceUrl ? { url: args.referenceUrl, inspected: false } : null };
         await atomicJson(path.join(directory, metadataPath), meta);
         await atomicJson(path.join(directory, assetIndexPath), []);
         await this.store.lock(async () => {

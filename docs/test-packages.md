@@ -2,7 +2,7 @@
 
 当前源码位于 仓库根目录；下列模块命令在该目录执行。活动工作流在仓库根目录 `.github/workflows/ci.yml`，发布保持关闭。迁移基线及历史验收范围见[迁移说明](repository-migration.md)。
 
-MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册清单](mcp-phase1-tools.md)。`build <target> <beta-version> [legacy|phase1]` 将 profile 和工具名写入 `release.json`；默认沿用源码的 phase1，公开9个 motion_ Tool 并包含5个配套 Skill。缺注册时在创建 staging／ZIP 前失败；本次验证的插件 ZIP 不等于各平台完整原生包已重新验收。
+MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册清单](mcp-phase1-tools.md)。`build <target> <beta-version> [legacy|phase1]` 将 profile 和工具名写入 `release.json`；默认沿用源码的 phase1，公开11个 motion_ Tool 并包含5个配套 Skill。缺注册时在创建 staging／ZIP 前失败；本次验证的插件 ZIP 不等于各平台完整原生包已重新验收。
 
 本流程服务于团队试装和问题复现；当前只有测试渠道，尚未启用正式包或自动升级。编辑器和模板业务使用同一份源码。完整包同时包含模型网关 gateway/；供应商 Key 和本机 Agent 登录仍由用户配置，不随包分发。
 
@@ -19,7 +19,7 @@ MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册
 
 版本为 `下一补丁版本-beta.<run-number>.<attempt>`。例如源码 0.6.2 的第 42 次构建生成 0.6.3-beta.42.1。npm 安装器、应用 package.json、应用锁文件和 MCP 版本一致；清单记录源码 HEAD、构建身份和校验值，既有输出目录拒绝覆盖，源码版本不会被构建改写。
 
-PR / main 工作流执行清单、类型、Studio 构建与回归、安装/打包测试，以及九个 Tool 的真实 ZIP E2E。Linux 是组装与测试环境，不是已支持的用户运行平台。Mac / Windows 的最终安装和真实出片仍须在对应系统验收；当前 本仓库工作流没有 Windows 或 Mac 原生验收 job，不把产包成功写成通过。
+PR / main 工作流执行清单、类型、Studio 构建与回归、安装/打包测试，以及十一个 Tool 的真实 ZIP E2E。Linux 是组装与测试环境，不是已支持的用户运行平台。Mac / Windows 的最终安装和真实出片仍须在对应系统验收；当前 本仓库工作流没有 Windows 或 Mac 原生验收 job，不把产包成功写成通过。
 
 ## 固定运行时
 

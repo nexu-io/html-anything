@@ -23,8 +23,8 @@ export function checkTransport(config, expectedVersion) {
   const listed = responses.find(response => response.id === 2)?.result?.tools;
   if (initialization?.serverInfo?.version !== expectedVersion) throw new Error('实际启动的 OpenDesign 版本与待安装版本不同');
   const names = listed?.map(tool => tool.name) || [];
-  const expected = ['motion_create_project', 'motion_open_preview', 'motion_import_assets', 'motion_get_project', 'motion_edit_project', 'motion_export_request', 'motion_list_versions', 'motion_restore_version', 'motion_export_cancel'];
-  if (names.length !== expected.length || !expected.every(name => names.includes(name))) throw new Error('实际 MCP 未严格返回一期 9 个 motion_ Tool，请更新 OpenMotion 插件');
+  const expected = JSON.parse(fs.readFileSync(new URL('../shared/mcp-profiles.json', import.meta.url), 'utf8')).phase1.tools;
+  if (names.length !== expected.length || !expected.every(name => names.includes(name))) throw new Error('实际 MCP 未严格返回一期公开 motion_ Tool 清单，请更新 OpenMotion 插件');
   return { version: expectedVersion, cwd: transport.cwd, tools: names };
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -6,19 +6,24 @@ import {tmpdir} from 'node:os';
 import {createInterface} from 'node:readline';
 import {createServer} from 'node:net';
 import {createHash} from 'node:crypto';
+import {catalogUrl, publication, contents} from './prism-fixture.ts';
 const archive=process.argv[2];assert.ok(path.isAbsolute(archive));
 const work=await realpath(await mkdtemp(path.join(tmpdir(),'om-phase1-package-')));
 const evidence=process.argv[3]?path.resolve(process.argv[3]):path.join(work,'evidence');await mkdir(evidence,{recursive:true});
 const extracted=path.join(work,'extracted');await mkdir(extracted);
 assert.equal(spawnSync('unzip',['-q',archive,'-d',extracted]).status,0);
 const root=path.join(extracted,'motion'),data=path.join(work,'user-data');
-const expected=['motion_create_project','motion_open_preview','motion_import_assets','motion_get_project','motion_edit_project','motion_export_request','motion_list_versions','motion_restore_version','motion_export_cancel'];
+const expected=['motion_list_templates','motion_get_template','motion_create_project','motion_open_preview','motion_import_assets','motion_get_project','motion_edit_project','motion_export_request','motion_list_versions','motion_restore_version','motion_export_cancel'];
 assert.deepEqual((await readdir(path.join(root,'skills'))).sort(),['motion-director','motion-production','motion-recreate','motion-template-to-video','motion-video-to-template']);
 assert.equal(JSON.parse(await readFile(path.join(root,'shared/mcp-release.json'))).profile,'phase1');
 await assert.rejects(stat(path.join(root,'node_modules')),{code:'ENOENT'});
 const version=JSON.parse(await readFile(path.join(root,'package.json'))).version;
 const sock=createServer();await new Promise(resolve=>sock.listen(0,'127.0.0.1',resolve));const port=sock.address().port;await new Promise(resolve=>sock.close(resolve));
-const child=spawn(process.execPath,['--experimental-strip-types',path.join(root,'mcp.ts')],{cwd:tmpdir(),env:{...process.env,MOTION_DATA_DIR:data,PORT:String(port)},stdio:['pipe','pipe','pipe']});
+// A deterministic published catalog, injected only into this isolated package test.
+const catalogFixture=path.join(work,'prism-fixture.mjs');
+await writeFile(catalogFixture, `const original=globalThis.fetch; const publication=${JSON.stringify(publication())}; const contents=${JSON.stringify(contents)};
+globalThis.fetch=async (input,init)=>{const url=String(input);if(url===${JSON.stringify(catalogUrl)})return Response.json(publication,{headers:{etag:'"fixture"'}});const file=publication.content['zh-CN'].templates[0].files.find(f=>f.url===url);return file?new Response(contents[file.path]):original(input,init);};`);
+const child=spawn(process.execPath,['--experimental-strip-types',path.join(root,'mcp.ts')],{cwd:tmpdir(),env:{...process.env,NODE_OPTIONS:[process.env.NODE_OPTIONS,'--import='+catalogFixture].filter(Boolean).join(' '),MOTION_DATA_DIR:data,PORT:String(port)},stdio:['pipe','pipe','pipe']});
 let stderr='',counter=0;const pending=new Map(), calledTools=new Set(), calls=[];child.stderr.on('data',d=>stderr+=d);
 createInterface({input:child.stdout}).on('line',line=>{try{const item=JSON.parse(line);const slot=pending.get(item.id);if(slot){clearTimeout(slot.timer);pending.delete(item.id);item.error?slot.reject(Error(JSON.stringify(item.error))):slot.resolve(item.result);}}catch(e){stderr+='\nNON-JSON STDOUT '+line;}});
 function rpc(method,params={}){return new Promise((resolve,reject)=>{const id=++counter;const timer=setTimeout(()=>reject(Error('RPC TIMEOUT '+method)),300000);pending.set(id,{resolve,reject,timer});child.stdin.write(JSON.stringify({jsonrpc:'2.0',id,method,params})+'\n');});}
@@ -37,6 +42,8 @@ try{
  const guide=await rpc('resources/read',{uri:'motion://engine/SKILL.md'});assert.ok(guide.contents[0].text.length>100);
  const runtimeKey=createHash('sha256').update(await readFile(path.join(root,'package-lock.json'))).digest('hex').slice(0,16);
  assert.equal(await readFile(path.join(data,'runtime',runtimeKey,'ready'),'utf8'),runtimeKey);
+ const catalog=await tool('motion_list_templates',{});assert.ok(path.isAbsolute(catalog.indexPath));assert.equal('items' in catalog,false);assert.match(await readFile(catalog.indexPath,'utf8'),/test-motion-1/);
+ const template=await tool('motion_get_template',{templateId:'test-motion-1'});assert.equal(template.catalogVersion,catalog.catalogVersion);assert.equal(template.instructions,contents['TEMPLATE.md']);
  const wav=path.join(work,'tone.wav');assert.equal(spawnSync('ffmpeg',['-v','error','-f','lavfi','-i','sine=duration=1',wav]).status,0);
  const imported=await tool('motion_import_assets',{projectId:p.projectId,requestId:'import',items:[{itemId:'audio',sourcePath:wav}]});assert.equal(imported.status,'completed');
  const html=`<!doctype html><html><head><meta charset="utf-8"><script src="assets/gsap.min.js"></script><style>body{margin:0}#main{position:relative;width:320px;height:180px;overflow:hidden;background:#d3e7ae}#box{position:absolute;top:60px;left:20px;width:40px;height:40px;background:#203021}</style></head><body><div id="main" data-composition-id="main" data-start="0" data-duration="1" data-width="320" data-height="180" data-fps="10"><div id="box"></div><audio id="tone" class="clip" src="${imported.items[0].path}" data-start="0" data-duration="1" data-track-index="1" data-volume="0.3"></audio></div><script>const tl=gsap.timeline({paused:true});tl.fromTo('#box',{x:0},{x:200,duration:1,ease:'none'},0);window.__timelines={main:tl};</script></body></html>`;
@@ -56,7 +63,7 @@ try{
  assert.equal((await tool('motion_get_project',{projectId:p.projectId,exportJobId:completed.id})).exportJob.state,'completed');
  assert.deepEqual([...calledTools].sort(),[...expected].sort(),'E2E must successfully call every public Tool');
  await copyFile(completed.path,path.join(evidence,'export.mp4'));
- report={status:'passed',executionEnvironment:process.env.CI?'ci':'local',version:init.serverInfo.version,archive,archiveSHA256:createHash('sha256').update(await readFile(archive)).digest('hex'),work,root,data,tools:names,skills:(await readdir(path.join(root,'skills'))).sort(),checks:{isolatedExtraction:true,noWorktreeNodeModules:true,freshLockedRuntimeInstall:true,allNineToolsCalled:true,hiddenCallsRejected:true,pinnedGuideResource:true,creationReplay:true,realAttachment:true,restoreRetainsLaterVersions:true,studioPreview:true,verifiedAudioMP4:true,actualMotionFrames:true,cancelledExport:true,historicalCompletedResult:true},export:{id:completed.id,path:completed.path,downloadUrl:completed.downloadUrl,verification:completed.verification},notRun:['independent_player_audio_review','four_hosts_model_turn','other_platforms','publish']};
+ report={status:'passed',executionEnvironment:process.env.CI?'ci':'local',version:init.serverInfo.version,archive,archiveSHA256:createHash('sha256').update(await readFile(archive)).digest('hex'),work,root,data,tools:names,skills:(await readdir(path.join(root,'skills'))).sort(),checks:{isolatedExtraction:true,noWorktreeNodeModules:true,freshLockedRuntimeInstall:true,allPublicToolsCalled:true,hiddenCallsRejected:true,pinnedGuideResource:true,creationReplay:true,realAttachment:true,restoreRetainsLaterVersions:true,studioPreview:true,verifiedAudioMP4:true,actualMotionFrames:true,cancelledExport:true,historicalCompletedResult:true},export:{id:completed.id,path:completed.path,downloadUrl:completed.downloadUrl,verification:completed.verification},notRun:['independent_player_audio_review','four_hosts_model_turn','other_platforms','publish']};
  await writeFile(path.join(evidence,'packaged-smoke-result.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({status:report.status,version:report.version,tools:names.length,skills:report.skills.length,archiveSHA256:report.archiveSHA256,work}));
 }catch(error){await writeFile(path.join(evidence,'packaged-smoke-failure.log'),String(error.stack)+'\n'+stderr);throw error;}
 finally{

@@ -11,10 +11,12 @@ import { exportExpectation } from './shared/export-expectation.ts';
 import type { ExportExpectation } from './shared/export-spec.ts';
 import { validateInstruction, type ProjectConversation, type ProjectMessage } from './shared/conversation.ts';
 import { creationMode, type CreativeSession, type SessionDetail } from './shared/session.ts';
+import { templateConfig } from './shared/template-config.ts';
 
 const legacyDataDir = fileURLToPath(new URL('.motion-data/', import.meta.url));
-export const defaultDataDir = process.env.MOTION_DATA_DIR || (process.platform === 'darwin' && !existsSync(legacyDataDir)
-  ? path.join(os.homedir(), 'Library', 'Application Support', 'OpenDesign') : legacyDataDir);
+const productionDataDir = process.platform === 'darwin' && !existsSync(legacyDataDir)
+  ? path.join(os.homedir(), 'Library', 'Application Support', 'OpenDesign') : legacyDataDir;
+export const defaultDataDir = process.env.MOTION_DATA_DIR || (templateConfig().environment === 'dev' ? path.resolve(productionDataDir) + '-dev' : productionDataDir);
 const ignored = new Set(['node_modules', 'renders', 'dist', 'output']);
 const textExtensions = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.txt', '.md', '.vtt', '.srt', '.glsl', '.vert', '.frag']);
 // Hyperframes 0.9.7 includes these native Studio manifests in render inputs.
