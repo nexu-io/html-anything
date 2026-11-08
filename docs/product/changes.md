@@ -2,7 +2,7 @@
 
 ## 2026-11-08 · 独立插件首页与旧编辑器入口
 
-[英文首页](../../README.md)和[中文首页](../README.zh-CN.md)为初次使用者提供源码安装、20 秒示例和改稿指令。Firecrawl 的发布片段用于说明如何沿用参考片的节奏，Motion MD 示例展示哪些决定可在下一次发布中复用。两个首页的语言导航旁均可进入原 HTML Anything 编辑器。
+[英文首页](../../README.md)和[中文首页](../README.zh-CN.md)为初次使用者提供源码安装、20 秒示例和改稿指令。Firecrawl 的发布片段用于说明如何沿用参考片的节奏，Motion MD 示例展示哪些决定可在下一次发布中复用。两个首页沿用「Great motion. Made yours.」主视觉和 OpenDesign 标识。图下可直接试做示例、阅读 Motion MD、浏览动效资源，也可进入原 HTML Anything 编辑器。
 
 ## REQ-20261107-001：素材浮层就近定位与空时间轴引导
 

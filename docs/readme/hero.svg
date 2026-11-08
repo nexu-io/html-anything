@@ -1,37 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1176" height="332" viewBox="0 0 1176 332" role="img" aria-labelledby="t d"><title id="t">One reference, your launch film</title><desc id="d">Illustrated example: find a film, write its reveal and timing in Motion MD, then adapt it to your brand with Codex.</desc>
-<rect width="1176" height="332" rx="18" fill="#edf0e8"/><g font-family="Arial, Helvetica, PingFang SC, Microsoft YaHei, sans-serif">
-<text x="28" y="39" fill="#486044" font-size="15" font-weight="650" >openmotion  /  FIELD GUIDE</text>
-<text x="1148" y="39" fill="#52654e" font-size="14" font-weight="500" text-anchor="end">ILLUSTRATED WORKFLOW   •   01—03</text>
-<rect x="28" y="65" width="360" height="240" rx="12" fill="#ffffff"/>
-<text x="48" y="97" fill="#55714e" font-size="14" font-weight="650" >01   /   COLLECTIONS</text>
-<text x="48" y="135" fill="#203022" font-size="25" font-weight="700" >Find a reference</text>
-<rect x="48" y="153" width="320" height="91" rx="6" fill="#e8eee6"/>
-<path d="M242 153h126v91H191Z" fill="#a8cf98"/>
-<path d="M239 230l27-32 25 13 41-46" stroke="#2a462b" stroke-width="3" fill="none"/>
-<text x="60" y="177" fill="#2a462b" font-size="11" font-weight="600" >EXAMPLE FRAME</text>
-<text x="60" y="219" fill="#2a462b" font-size="32" font-weight="700" >Orbit</text>
-<text x="48" y="281" fill="#52624e" font-size="16" font-weight="400" >Find an opening worth borrowing.</text>
-<rect x="408" y="65" width="360" height="240" rx="12" fill="#213328"/>
-<text x="428" y="97" fill="#c2dfa9" font-size="14" font-weight="650" >02   /   STYLE SPEC</text>
-<text x="428" y="135" fill="#ffffff" font-size="25" font-weight="700" >Write the Motion MD</text>
-<path d="M433 163v79" stroke="#8fb880" stroke-width="2"/>
-<circle cx="433" cy="169" r="4" fill="#bdde9e"/>
-<text x="449" y="174" fill="#badaac" font-size="16" font-weight="600" >00s</text>
-<text x="505" y="174" fill="#ffffff" font-size="16" font-weight="500" >Open with the headline</text>
-<circle cx="433" cy="201" r="4" fill="#bdde9e"/>
-<text x="449" y="206" fill="#badaac" font-size="16" font-weight="600" >03s</text>
-<text x="505" y="206" fill="#ffffff" font-size="16" font-weight="500" >Reveal the product</text>
-<circle cx="433" cy="233" r="4" fill="#bdde9e"/>
-<text x="449" y="238" fill="#badaac" font-size="16" font-weight="600" >08s</text>
-<text x="505" y="238" fill="#ffffff" font-size="16" font-weight="500" >Show it in use</text>
-<text x="428" y="281" fill="#d1dfca" font-size="16" font-weight="400" >Describe what stays and what changes.</text>
-<rect x="788" y="65" width="360" height="240" rx="12" fill="#ffffff"/>
-<text x="808" y="97" fill="#55714e" font-size="14" font-weight="650" >03   /   EDITABLE PROJECT</text>
-<text x="808" y="135" fill="#203022" font-size="25" font-weight="700" >Make it yours in Codex</text>
-<rect x="808" y="153" width="320" height="91" rx="6" fill="#f5e7db"/>
-<path d="M1002 153h126v91H951Z" fill="#f0be9c"/>
-<path d="M999 230l27-32 25 13 41-46" stroke="#573b33" stroke-width="3" fill="none"/>
-<text x="820" y="177" fill="#573b33" font-size="11" font-weight="600" >EXAMPLE FRAME</text>
-<text x="820" y="219" fill="#573b33" font-size="32" font-weight="700" >Nova</text>
-<text x="808" y="281" fill="#52624e" font-size="16" font-weight="400" >New brand. Same reveal. Editable source.</text>
-</g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="660" viewBox="0 0 1440 660" role="img" aria-labelledby="title desc">
+<title id="title">openmotion — Great motion. Made yours.</title>
+<desc id="desc">Three overlapping cards show a reference style, a Motion MD brief, and an editable video for your brand.</desc>
+<defs>
+ <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#ffffff" opacity=".09"/></pattern>
+ <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5f4eb"/><stop offset="1" stop-color="#e6e8dd"/></linearGradient>
+</defs>
+<rect width="1440" height="660" rx="24" fill="#181b18"/>
+<rect width="1440" height="660" rx="24" fill="url(#grid)"/>
+<g font-family="Arial,Helvetica,sans-serif">
+ <g transform="translate(66 62)">
+  <rect width="44" height="44" rx="11" fill="#a6f287"/>
+  <svg x="7" y="7" width="30" height="30" viewBox="0 0 291 291" fill="none">
+   <path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="#202020"/>
+   <path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="#202020"/>
+  </svg>
+ </g>
+ <text x="126" y="94" fill="#edf0e9" font-size="28" font-weight="700">openmotion</text>
+ <text x="68" y="221" fill="#edf0e9" font-size="79" font-weight="700" letter-spacing="-4">Great motion.</text>
+ <text x="68" y="309" fill="#a6f287" font-size="79" font-weight="700" letter-spacing="-4">Made yours.</text>
+ <text x="72" y="374" fill="#c1c8bc" font-size="25">From a style you love</text>
+ <text x="72" y="411" fill="#c1c8bc" font-size="25">to a video that is unmistakably you.</text>
+ <g font-size="17" fill="#e1e7db">
+  <rect x="72" y="474" width="117" height="39" rx="19" fill="#30372e"/><text x="91" y="500">In Codex</text>
+  <rect x="201" y="474" width="137" height="39" rx="19" fill="#30372e"/><text x="220" y="500">Your assets</text>
+  <rect x="350" y="474" width="150" height="39" rx="19" fill="#30372e"/><text x="369" y="500">Editable projects</text>
+ </g>
+ <g transform="translate(746 77) rotate(-7 260 200)">
+  <rect width="544" height="310" rx="16" fill="#30372f" stroke="#515c4e"/>
+  <text x="26" y="38" fill="#c1c8bc" font-size="14" letter-spacing="2">01 / REFERENCE STYLE</text>
+  <rect x="26" y="61" width="492" height="218" rx="8" fill="#414e3d"/>
+  <circle cx="394" cy="156" r="71" fill="#87ea5c"/>
+  <rect x="64" y="109" width="194" height="20" rx="4" fill="#e4ebdc"/>
+  <rect x="64" y="142" width="138" height="20" rx="4" fill="#e4ebdc"/>
+  <rect x="64" y="204" width="88" height="7" rx="3" fill="#a7b49e"/>
+ </g>
+ <g transform="translate(696 176) rotate(4 180 185)">
+  <rect width="323" height="366" rx="14" fill="url(#paper)" stroke="#c6cec0"/>
+  <text x="27" y="41" fill="#53614b" font-size="13" letter-spacing="2">02 / THE CREATIVE SPEC</text>
+  <text x="27" y="91" fill="#202b1b" font-size="31" font-weight="700">MOTION.md</text>
+  <path d="M27 114h269" stroke="#b8c2af"/>
+  <g fill="#34442b" font-size="18" font-family="monospace">
+   <text x="27" y="156"># Your brand</text><text x="27" y="193"># Story &amp; rhythm</text>
+   <text x="27" y="230"># Movement</text><text x="27" y="267"># Editable choices</text>
+  </g>
+  <rect x="27" y="305" width="141" height="28" rx="14" fill="#d1e7bf"/><text x="41" y="324" fill="#3e562d" font-size="13">FORMAT PROPOSAL</text>
+ </g>
+ <g transform="translate(1010 315)">
+  <rect width="345" height="245" rx="14" fill="#87ea5c" stroke="#b4f492"/>
+  <text x="23" y="36" fill="#24411a" font-size="13" letter-spacing="2">03 / YOUR EDITABLE VIDEO</text>
+  <text x="23" y="100" fill="#182713" font-size="43" font-weight="700" letter-spacing="-2">Your next</text>
+  <text x="23" y="149" fill="#182713" font-size="43" font-weight="700" letter-spacing="-2">big reveal.</text>
+  <path d="M23 178h299" stroke="#4e9d2e"/>
+  <rect x="23" y="193" width="78" height="11" rx="3" fill="#214318"/>
+  <rect x="106" y="193" width="120" height="11" rx="3" fill="#437c2c"/>
+  <rect x="231" y="193" width="91" height="11" rx="3" fill="#65ad46"/>
+  <path d="M183 187v27" stroke="#fff" stroke-width="2"/>
+ </g>
+ <path d="M72 562h1296" stroke="#354130"/>
+ <text x="72" y="610" fill="#a7b29f" font-size="16" letter-spacing="1">REFERENCE → MOTION MD → EDITABLE PROJECT → MP4</text>
+ <text x="1368" y="610" fill="#83917b" font-size="13" text-anchor="end">CONCEPTUAL WORKFLOW</text>
+</g>
+</svg>

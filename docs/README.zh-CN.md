@@ -1,12 +1,17 @@
-[English](../README.md) · **简体中文** · [原 HTML Anything 编辑器与安装说明](https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md)
+<p align="center"><img src="readme/hero.zh-CN.svg" alt="Great motion. Made yours. 从参考片和 Motion MD 到可编辑的品牌视频。" width="100%" /></p>
 
-<h1><img src="readme/opendesign-symbol.svg" width="42" height="42" alt="OpenDesign" /> openmotion</h1>
+<h1 align="center">openmotion</h1>
 
-**看到喜欢的产品发布片，把它交给 Codex，做成自己品牌的版本。** openmotion 是一款可独立安装的开源插件，也是 Claude Motion 的开源替代。给它一段参考视频，让它沿用原片揭示产品的节奏，换上项目里已有的截图、Logo 和发布文案。交付物包括一支 MP4 和一份保存在本地的工程，后续可以在对话里改稿，也可以直接在 Studio 时间轴上剪。
+<p align="center"><strong>我们想把 openmotion 做成最好的 Claude Motion 开源替代。</strong><br />
+复刻你喜欢的动效，把它拍成自己的品牌片，每一版都能接着改。</p>
 
-把这支片子里产品出场的方式、镜头怎么移动、哪里该停顿写进 **Motion MD**。下次发布换了主角，团队也能沿用这套拍法。
+<p align="center"><strong><a href="#在-codex-里开始">在 Codex 里试做 20 秒示例</a></strong> · <a href="motion-md.zh-CN.md">认识 Motion MD</a> · <a href="collections/README.zh-CN.md">浏览动效资源库</a></p>
 
-**[试做第一支 20 秒视频](#在-codex-里开始)** · [看一段 5 秒发布片参考](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [阅读 Motion MD 规范草案](motion-md.zh-CN.md)
+<p align="center"><a href="../README.md">English</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
+
+openmotion 是一款可以独立安装的视频创作插件。看到一支节奏很好的产品发布片，把它连同自己的产品截图、Logo 和文案交给 Codex。它会按参考片的拍法为你的产品重做这段动画，交付 MP4 和一份本地 Studio 工程。下次文案变了，可以只改一句标题，也可以让某个镜头多停一拍。
+
+值得留下的还有这支片子的拍法。用 **Motion MD** 记下产品何时出场、镜头怎么移动、哪些素材可以换。同事做下一次发布时，就能沿用这些决定。
 
 ## 在 Codex 里开始
 
@@ -34,8 +39,6 @@ cd openmotion && bash scripts/install-motion.command
 > 保留从大数字切到整组图标的那一拍。数字用发布文案里确认的指标，图标用我们自己的集成图标，配色按品牌手册来。最后一帧多停一会儿，让人读完名字。把原片和我们的版本并排给我看。
 
 复刻流程会读取项目素材、重建这段动画，并交付可编辑的成片工程和对照结果。你可以对着原片调整画面切换的时机，保留自己产品的界面、字体和文案。[参考片复刻流程](../skills/motion-recreate/SKILL.md) · [原片作者与出处](collections/README.zh-CN.md)
-
-![用 Motion MD 记录参考片的节奏，并把产品揭示镜头改成自己的品牌版本。](readme/hero.zh-CN.svg)
 
 ## Motion MD
 

@@ -1,12 +1,17 @@
-**English** · [简体中文](docs/README.zh-CN.md) · [Looking for the original HTML Anything editor?](https://github.com/nexu-io/html-anything/tree/legacy#readme)
+<p align="center"><img src="docs/readme/hero.svg" alt="Great motion. Made yours. A reference film, a Motion MD brief and an editable video for your brand." width="100%" /></p>
 
-<h1><img src="docs/readme/opendesign-symbol.svg" width="42" height="42" alt="OpenDesign" /> openmotion</h1>
+<h1 align="center">openmotion</h1>
 
-**Turn a launch video you love into one for your own product, right in Codex.** openmotion is a standalone, open-source alternative to Claude Motion. Give the plugin a reference clip and the screenshots, logo and copy already in your project. Ask it to keep the rhythm of the reveal and tell your product’s story. You get an MP4 and a local project you can keep editing in Studio or in chat.
+<p align="center"><strong>Building the best open-source alternative to Claude Motion.</strong><br />
+Recreate the motion you love. Make it your brand. Keep it editable.</p>
 
-Write the reveal, camera moves and pauses into a **Motion MD** brief. Your team can use it again when the next release has a different story to tell.
+<p align="center"><strong><a href="#start-in-codex">Try the 20-second demo in Codex</a></strong> · <a href="docs/motion-md.md">Explore Motion MD</a> · <a href="docs/collections/README.md">Browse the motion library</a></p>
 
-**[Try the 20-second demo](#start-in-codex)** · [Watch a five-second launch reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [Explore the Motion MD format](docs/motion-md.md)
+<p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
+
+openmotion is a standalone plugin for making product videos with your coding agent. Give Codex a launch film whose pacing you love, along with your own screenshots, logo and copy. It rebuilds the sequence around your product and gives you an MP4 and a local Studio project. When the copy changes, you can adjust a single title or hold a shot for another beat.
+
+With **Motion MD**, you can keep the creative decisions too. Write down when the product appears, how the camera moves and which assets to swap. Hand the brief to a teammate for the next launch.
 
 ## Start in Codex
 
@@ -34,8 +39,6 @@ In [Firecrawl’s five-second integration reveal](https://static.heygen.ai/hyper
 > Keep the cut from the big number to the lineup. Use our approved launch metric, our integration icons and the colors from our brand guide. Hold the last frame long enough to read the names. Show me the original and our cut side by side.
 
 The reference workflow reads your project assets, rebuilds the sequence and returns a comparison with the editable film. You can change the timing of the reveal while keeping the screenshots, type and copy that identify your product. [Recreation workflow](skills/motion-recreate/SKILL.md) · [Reference credit and source](docs/collections/README.md)
-
-![A reference reveal adapted to a different brand, with timing cues from Motion MD.](docs/readme/hero.svg)
 
 ## Motion MD
 
