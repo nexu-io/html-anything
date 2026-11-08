@@ -33,14 +33,14 @@ try {
   checked('two MCP clients reuse the same real Hyperframes Studio', { previewUrl: previews[0].previewUrl, projectId: project.projectId, instanceId: identities[0].instanceId, daemonPid: identities[0].pid, engineVersion: nativeIdentity.version });
 
   const processes = () => execFileSync('ps', ['-ww', '-axo', 'pid=,command='], { encoding: 'utf8' }).split('\n').map(line => line.match(/^\s*(\d+)\s+(.*)$/)).filter(Boolean).map(m => ({ pid: Number(m[1]), command: m[2] }));
-  const oldStudio = processes().find(p => p.command.includes('hyperframes.mjs preview ' + edited.project.directory));
+  const oldStudio = processes().find(p => p.command.includes('shared/workspace-studio.ts ') && p.command.includes(root));
   const oldOwner = processes().find(p => p.command.includes('owned-studio.mjs --owner ' + root) && p.command.includes(edited.project.directory));
   assert.ok(oldStudio && oldOwner);
   process.kill(oldStudio.pid, 'SIGTERM');
   for (let attempt = 0; attempt < 60 && processes().some(p => p.pid === oldOwner.pid); attempt++) await pause(50);
   assert.ok(!processes().some(p => p.pid === oldOwner.pid), 'Owner must notice Studio exit');
   const reopened = await clients[0].call('motion_open_preview', { projectId: project.projectId });
-  const newStudio = processes().find(p => p.command.includes('hyperframes.mjs preview ' + edited.project.directory));
+  const newStudio = processes().find(p => p.command.includes('shared/workspace-studio.ts ') && p.command.includes(root));
   assert.ok(newStudio); assert.notEqual(newStudio.pid, oldStudio.pid);
   assert.equal((await clients[1].call('motion_open_preview', { projectId: project.projectId })).previewUrl, reopened.previewUrl);
   const reopenedIdentity = await (await fetch(new URL('/__hyperframes_config', reopened.previewUrl))).json();
@@ -52,7 +52,10 @@ try {
   await cp(catalogStore.projectDirectory, catalogStore.projectDirectoryFor(otherId), { recursive: true });
   await catalogStore.lock(async () => { await catalogStore.selectProject(otherId, { id: otherId, title: 'Other project' }); await catalogStore.selectProject(project.projectId); });
   await clients[1].call('motion_open_preview', { projectId: otherId });
-  assert.equal((await (await fetch(new URL('/__hyperframes_config', reopened.previewUrl))).json()).projectDir, catalogStore.projectDirectoryFor(otherId));
+  const otherIdentity = await (await fetch(new URL('/__hyperframes_config?projectId=' + otherId, reopened.previewUrl))).json();
+  assert.equal(otherIdentity.projectDir, catalogStore.projectDirectoryFor(otherId));
+  assert.equal(otherIdentity.pid, reopenedIdentity.pid, 'both projects must use the same native process');
+  assert.equal((await fetch(new URL('/api/projects/' + project.projectId + '/files/index.html', reopened.previewUrl))).status, 200);
   await clients[0].call('motion_open_preview');
   assert.equal((await (await fetch(new URL('/__hyperframes_config', reopened.previewUrl))).json()).projectDir, edited.project.directory);
   assert.equal((await clients[1].call('motion_get_project')).projectId, otherId);

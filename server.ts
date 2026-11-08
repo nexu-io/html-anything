@@ -24,7 +24,7 @@ import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
 
 const sharedStore = new WorkspaceStore();
-export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: () => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void> };
+export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void> };
 const service: Service = {};
 const working = new Set<string>();
 const runningExports = new Map<string, AbortController>();
@@ -130,7 +130,8 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
       if (!entry && !store.projectCatalog().projects.some(item => item.id === id)) throw new Error('工程不存在');
       if (sessionTarget?.sessionId && !store.projectCatalog().sessions!.some(item => item.id === sessionTarget.sessionId)) throw new Error('会话不存在');
       if (!entry && store.projectCatalog().activeId === id) {
-        if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectory, context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectory, path.join(store.directory, 'studio.log'), context.studioPort || 4174);
+        if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectoryFor(id), context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectoryFor(id), path.join(store.directory, 'studio.log'), context.studioPort || 4174);
+        await context.studio.openProject?.(id);
         await store.selectProject(id);
         return { ...(await store.status()), studioUrl: context.studio.url };
       }
@@ -144,16 +145,17 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
         const oldStudio = context.studio;
         const oldPort = oldStudio ? Number(new URL(oldStudio.url).port) : undefined;
         const candidatePort = oldPort === undefined ? context.studioPort || 4174 : oldPort === 65535 ? 4174 : oldPort + 1;
-        candidate = context.launchStudio ? await context.launchStudio(directory, candidatePort) : await startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), candidatePort);
+        candidate = oldStudio?.alive() && oldStudio.openProject ? oldStudio : context.launchStudio ? await context.launchStudio(directory, candidatePort) : await startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), candidatePort);
         // Native Studio writes are independent of our lock. Recheck before switching.
         if ((await store.get()).revision !== expectedRevision) throw new Conflict();
         await store.selectProject(id, entry, sessionTarget?.instruction ?? ('instruction' in target ? target.instruction : undefined), sessionTarget);
         context.studio = candidate; committed = true;
-        await oldStudio?.close();
+        await candidate.openProject?.(id);
+        if (oldStudio !== candidate) await oldStudio?.close();
         return { ...(await store.status()), studioUrl: candidate.url };
       } finally {
         if (!committed) {
-          await candidate?.close();
+          if (candidate !== context.studio) await candidate?.close();
           if (creating) await rm(directory, { recursive: true, force: true });
         }
       }
@@ -162,7 +164,7 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
 }
 
 async function openEditor(store: WorkspaceStore, context: Service) {
-  if (context.ensureStudio) { await context.ensureStudio(); return; }
+  if (context.ensureStudio) { await context.ensureStudio(store.projectId); return; }
   if (!context.runtimeRoot) throw new Error('Hyperframes 服务尚未就绪');
   if (context.switching) throw new Error('正在打开工程，请稍候');
   if (context.studio?.alive()) return;
@@ -217,15 +219,29 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     const originalUrl = new URL(req.url || '/', 'http://localhost');
     const motionRequest = /^\/(?:motion|design)-api\//.test(originalUrl.pathname);
     const url = new URL(originalUrl);
-    if (context.ensureStudio && (url.pathname === '/' || url.pathname.startsWith('/sessions/'))) await context.ensureStudio();
+    if (motionRequest && url.searchParams.has('projectId')) {
+      const id = url.searchParams.get('projectId')!;
+      if (projectHeader !== undefined && projectHeader !== id) return json(res, 400, { error: 'PROJECT_SCOPE_MISMATCH' });
+      store = store.forProject(id);
+    }
+    if (context.ensureStudio && (url.pathname === '/' || url.pathname.startsWith('/sessions/'))) {
+      const projectId = url.searchParams.get('project'), sessionId = url.searchParams.get('session');
+      if (projectId !== null) {
+        if (store.projectCatalog().projects.some(project => project.id === projectId)) await context.ensureStudio(projectId);
+      } else if (sessionId) {
+        const session = store.projectCatalog().sessions!.find(session => session.id === sessionId);
+        const artifact = session?.artifacts.find(artifact => artifact.id === session.activeArtifactId) ?? session?.artifacts.at(-1);
+        if (artifact) await context.ensureStudio(artifact.projectId);
+      }
+    }
     if (motionRequest) url.pathname = url.pathname.replace(/^\/(?:motion|design)-api\//, '/api/');
-    const editorUrl = `http://${host || 'localhost'}/#project/${store.projectCatalog().activeId}`;
+    const editorUrl = `http://${host || 'localhost'}/#project/${store.projectId}`;
     if (motionRequest && url.pathname === '/api/phase1/call' && req.method === 'POST') {
       if (!context.runtimeRoot) throw new Error('RUNTIME_NOT_READY');
       const authority = store.workspaceStore ?? store;
       context.phase1 ??= new Phase1Service(authority, context.runtimeRoot, {
         origin: () => new URL(editorUrl).origin,
-        nativeUrl: projectId => context.studio?.alive() && context.studio.projectDirectory === authority.projectDirectoryFor(projectId) ? context.studio.url : undefined,
+        nativeUrl: () => context.studio?.alive() ? context.studio.url : undefined,
         openProject: async projectId => { await openProject(authority, context, (await authority.get()).revision, { projectId }, authority.projectId); },
         mutation: async task => {
           let release!: () => void;
@@ -404,10 +420,8 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (!motionRequest && (url.pathname.startsWith('/api/') || url.pathname === '/__hyperframes_config')) {
       if (context.phase1Mutation) await context.phase1Mutation;
-      // A stale tab must never write its old session into the newly selected directory.
       const scopedProject = url.pathname.match(/^\/api\/projects\/([^/]+)/);
-      if (scopedProject && decodeURIComponent(scopedProject[1]) !== store.projectCatalog().activeId) return json(res, 409, { error: '当前项目已切换，请重新打开对应会话。' });
-      if (context.switching && !['GET', 'HEAD'].includes(req.method || '')) return json(res, 409, { error: '正在切换项目，请稍候。' });
+      if (scopedProject) store.forProject(decodeURIComponent(scopedProject[1]));
       if (!context.studio?.alive()) return json(res, 503, { error: '编辑服务尚未就绪' });
       return await proxyStudio(req, res, url, context.studio.url);
     }
@@ -427,7 +441,7 @@ export async function startServer(store = sharedStore, port = Number(process.env
   const ffmpeg = await execute(process.env.HYPERFRAMES_FFMPEG_PATH || process.env.FFMPEG_PATH || 'ffmpeg', ['-version'], pluginRoot, 5000).then(r => r.code === 0, () => false);
   const context: Service = { runtimeRoot, ffmpeg, studioPort: !port || port === 65535 ? 4174 : port + 1, editorToken: options.editorToken };
   context.launchStudio = async (directory, chosenPort) => {
-    if (!process.env.OPENMOTION_EDITOR_LOCK_FD) return startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), chosenPort);
+    if (!process.env.OPENMOTION_EDITOR_LOCK_FD) return startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), chosenPort, store.directory);
     const probe = createServer();
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });
     const available = (probe.address() as any).port;
@@ -435,17 +449,20 @@ export async function startServer(store = sharedStore, port = Number(process.env
     return startOwnedStudio(store.directory, runtimeRoot, directory, path.join(store.directory, 'studio.log'), available);
   };
   let opening: Promise<Studio> | undefined;
-  context.ensureStudio = async () => {
-    if (context.studio?.alive()) return context.studio;
+  context.ensureStudio = async (projectId = store.projectId) => {
+    const scoped = store.forProject(projectId);
+    if (context.studio?.alive()) { await context.studio.openProject?.(projectId); return context.studio; }
     if (!opening && context.switching) throw new Error('正在打开工程，请稍候');
     if (!opening) opening = (async () => {
       context.switching = true;
       await context.studio?.close();
-      await store.initialize(runtimeRoot);
-      context.studio = await context.launchStudio!(store.projectDirectory, !port || port === 65535 ? 4174 : port + 1);
+      await scoped.initialize(runtimeRoot);
+      context.studio = await context.launchStudio!(scoped.projectDirectory, !port || port === 65535 ? 4174 : port + 1);
       return context.studio;
     })().finally(() => { opening = undefined; context.switching = false; });
-    return opening;
+    const studio = await opening;
+    await studio.openProject?.(projectId);
+    return studio;
   };
   if (options.editor !== false) await context.ensureStudio();
   const server = createServer((req, res) => { void (async () => { if (!options.privateHandler || !await options.privateHandler(req, res)) await handler(req, res, store, context); })().catch(error => { if (!res.headersSent) json(res, 500, { error: (error as Error).message }); else res.destroy(); }); });

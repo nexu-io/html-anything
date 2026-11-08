@@ -86,7 +86,7 @@ test('Motion sessions own multiple independent artifacts and restore the last se
     assert.equal((await restarted.session(session.id)).title, '广告会话');
     assert.equal((await restarted.session(session.id)).artifacts.length, 2);
     const stale = await fetch(`${origin}/api/projects/${first.projectId}/files/index.html`);
-    assert.equal(stale.status, 409);
+    assert.equal(stale.status, 200);
     const viewer = await callTool('design_open_artifact', { sessionId: session.id, artifactId: withArtifacts.artifacts[0].id, expectedRevision: (await store.get()).revision }, store) as any;
     assert.equal(viewer.projectId, first.projectId);
     assert.equal(new URL(viewer.previewUrl).searchParams.get('embed'), '1');

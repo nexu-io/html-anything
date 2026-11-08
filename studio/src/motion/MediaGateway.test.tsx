@@ -26,7 +26,7 @@ it('hides the empty guide during generation, restores it on close, and removes i
   vi.stubGlobal('fetch', vi.fn(async (url: string) => {
     if (url.includes('models/capabilities')) return Response.json({ providers: [{ id: 'codex', available: true }], routes: {} });
     if (url.includes('/models?')) return Response.json({ models: [model], nextOffset: null });
-    if (url.endsWith('project/status')) return Response.json({ projectId: 'project' });
+    if (url.includes('project/status')) return Response.json({ projectId: 'project' });
     if (url.includes('/generations?')) return Response.json({ jobs: [job] });
     throw new Error('Unexpected request ' + url);
   }));
@@ -58,17 +58,17 @@ it('hides the empty guide during generation, restores it on close, and removes i
   expect(guide()!.style.visibility).toBe('');
 });
 
-it('generates through the shared API, shows only completed output, and places it at the selected range with failure reporting', async () => {
+it('generates for its own project while another project is globally active, then places at its selected range', async () => {
   vi.useFakeTimers(); usePlayerStore.setState({ timelineProjectId: 'native-project', rangeSelection: { t0: 2, t1: 7 } });
   const place = vi.fn().mockResolvedValue(undefined);
   const jobs: GenerationJob[] = []; let submitted: Record<string, unknown> | undefined;
   vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
     if (url.includes('models/capabilities')) return Response.json({ providers: [{ id: 'codex', available: true }], agents: [], routes: {}, capabilities: [] });
     if (url.includes('/models?')) return Response.json({ models: [model], nextOffset: null });
-    if (url.endsWith('project/status')) return Response.json({ projectId: 'workspace-project' });
+    if (url.includes('project/status')) return Response.json({ projectId: url.includes('projectId=native-project') ? 'native-project' : 'workspace-project' });
     if (url.endsWith('/generations') && init?.method === 'POST') {
       submitted = JSON.parse(init.body as string);
-      const job = { id: 'job-1', projectId: 'workspace-project', state: 'queued', prompt: 'a forest', model, modality: 'image', parameters: {}, createdAt: 1, updatedAt: 1, requestHash: 'hash', assets: [] } as GenerationJob;
+      const job = { id: 'job-1', projectId: 'native-project', state: 'queued', prompt: 'a forest', model, modality: 'image', parameters: {}, createdAt: 1, updatedAt: 1, requestHash: 'hash', assets: [] } as GenerationJob;
       jobs.push(job); return Response.json({ job });
     }
     if (url.includes('/generations?')) return Response.json({ jobs });
@@ -80,7 +80,7 @@ it('generates through the shared API, shows only completed output, and places it
   await act(async () => button('Open generator').click());
   await act(async () => type('textarea[aria-label="Describe your media"]', 'a forest'));
   await act(async () => button('Generate').click());
-  expect(submitted).toMatchObject({ projectId: 'workspace-project', model: model.id, modality: 'image', parameters: { aspect_ratio: '16:9' }, usage: { compositionId: 'main' } });
+  expect(submitted).toMatchObject({ projectId: 'native-project', model: model.id, modality: 'image', parameters: { aspect_ratio: '16:9' }, usage: { compositionId: 'main' } });
   expect(String(submitted?.idempotencyKey)).toMatch(/-0$/);
   expect(document.body.textContent).not.toContain('Place on timeline');
   jobs[0] = { ...jobs[0], state: 'completed', assets: [{ path: 'assets/generated/one.png', bytes: 1000, mimeType: 'image/png' }, { path: 'assets/generated/two.png', bytes: 1000, mimeType: 'image/png' }] };
@@ -101,10 +101,10 @@ it('edits a reference with a supported model, preserves placement and applies on
   vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
     if (url.includes('models/capabilities')) return Response.json({ providers: [{ id: 'codex', available: true }, { id: 'fal', available: true }], routes: { image: 'fal:flux' } });
     if (url.includes('/models?')) return Response.json({ models: [{ ...model, supportsImageReference: true }, { ...model, id: 'fal:flux', provider: 'fal', label: 'Flux' }], nextOffset: null });
-    if (url.endsWith('project/status')) return Response.json({ projectId: 'project' });
+    if (url.includes('project/status')) return Response.json({ projectId: 'native' });
     if (url.endsWith('/generations') && init?.method === 'POST') {
       submitted = JSON.parse(init.body as string);
-      const job = { id: 'edited-image', projectId: 'project', state: 'completed', model, prompt: 'golden sunset', reference: { path: reference.path, sha256: 'test', mimeType: 'image/png', bytes: 20 }, assets: [{ path: 'assets/generated/sunset.png', mimeType: 'image/png', bytes: 20 }] } as GenerationJob;
+      const job = { id: 'edited-image', projectId: 'native', state: 'completed', model, prompt: 'golden sunset', reference: { path: reference.path, sha256: 'test', mimeType: 'image/png', bytes: 20 }, assets: [{ path: 'assets/generated/sunset.png', mimeType: 'image/png', bytes: 20 }] } as GenerationJob;
       jobs.push(job); return Response.json({ job });
     }
     if (url.includes('/generations?')) return Response.json({ jobs });

@@ -61,9 +61,9 @@
 
 旧 `/projects` 创建、打开、conversation 及 `/templates/:id/open` 入口继续兼容；旧 conversation API 解析到工程所属会话。新建/切换使用 `expectedRevision` 和 `expectedProjectId` 防止竞争。
 
-一期公开 MCP 使用 [9 Tool 契约](mcp-phase1-tools.md)：motion_create_project 创建会话下工程，motion_get_project 读工程/所属 sessionId/当前版本，motion_open_preview 打开明确工程。以下 design_* 与旧模板 Tool 描述保留内部兼容，不是一期公开接口。通用接口命名空间为 `/design-api`，`/motion-api` 保留别名。MCP 的 `design_create_session` 先建会话再按需生成产物；`design_create_artifact` 向已有会话生成；`design_get_session` 读取会话与 skill，`design_open_artifact` 校验归属后选择已有产物。`motion_get_project` 同时返回 `session`、`projectId` 和兼容 `conversation`；`motion_apply_template` 在指定或当前会话添加工程。Agent 写入前应先确认会话与产物身份，再使用最新 revision 操作。macOS 多个 MCP 连接按数据目录共用后台，但每条连接保留自己的工程选择，网页切换不改变已有绑定；工作区原生 Studio 仍只打开一个活动工程。详见 [共享编辑器](shared-editor.md)。
+一期公开 MCP 使用 [9 Tool 契约](mcp-phase1-tools.md)：motion_create_project 创建会话下工程，motion_get_project 读工程/所属 sessionId/当前版本，motion_open_preview 打开明确工程。以下 design_* 与旧模板 Tool 描述保留内部兼容，不是一期公开接口。通用接口命名空间为 `/design-api`，`/motion-api` 保留别名。MCP 的 `design_create_session` 先建会话再按需生成产物；`design_create_artifact` 向已有会话生成；`design_get_session` 读取会话与 skill，`design_open_artifact` 校验归属后选择已有产物。`motion_get_project` 同时返回 `session`、`projectId` 和兼容 `conversation`；`motion_apply_template` 在指定或当前会话添加工程。Agent 写入前应先确认会话与产物身份，再使用最新 revision 操作。macOS 多个 MCP 连接按数据目录共用后台，但每条连接保留自己的工程选择，网页切换不改变已有绑定；一个原生 Studio 服务进程可同时服务多个工程页面。详见 [共享编辑器](shared-editor.md)。
 
-一个本地服务仍只有一个活动原生工程；多个 Artifact Tabs 是可切换的工程入口，不是同时运行多套编辑器。跨工程切换时创建候选 Studio、重查 revision、原子发布目录，再整页重建；失败保留原工程。旧工程原生 API 请求被拒绝，避免写入新目录。其他客户端切换时当前会话页跟随新的活动会话，首页保持首页。
+一个本地原生服务进程按 projectId 服务多个工程，各页面的 URL 与工程保持绑定。当前页面显式切换工程时仍先保存、再整页重建；其他客户端打开工程不触发该页面跳转。activeId 只作为最近选择和旧入口的兼容默认值，不决定已打开页面的数据目标。创建时先检查源 revision 并登记工程，原生上下文启动失败时保留已登记工程供重试，不删除源文件。
 
 ## 验收与待验证项
 

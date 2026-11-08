@@ -127,7 +127,7 @@ export async function serveEditor(directory: string) {
       if (req.url === '/editor-api/preview') {
         if (body.projectId !== undefined && typeof body.projectId !== 'string') throw new Error('工程编号无效');
         if (body.editor !== undefined && typeof body.editor !== 'boolean') throw new Error('编辑器开关无效');
-        if (body.editor !== false) await running.ensureStudio();
+        if (body.editor !== false) await running.ensureStudio(body.projectId);
         if (body.editor !== false && body.projectId !== undefined && body.projectId !== store.projectId) await running.openProject(body.projectId);
         json(200, await running.info()); return true;
       }

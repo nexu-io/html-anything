@@ -5,6 +5,7 @@ import { gatewayRequest, generateAsset, loadGateway, type GatewayStatus, type Mo
 import type { MediaRequest } from './MediaGatewayContext';
 import { useMediaPopoverPosition } from './useMediaPopoverPosition';
 import { useArtifactViewActive } from './ArtifactViewState';
+import { requestedProject } from './workspaceRouting';
 
 export function generationParameters(model: Model, ratio: string, duration: number, extra: Record<string, unknown>) {
   const [w, h] = ratio.split(':').map(Number);
@@ -41,9 +42,14 @@ export function MediaGenerator({ request, onClose, onSettings }: { request: Medi
   const activeProjectId = usePlayerStore(s => s.timelineProjectId);
   const activeSession = usePlayerStore(s => s.timelineSessionEpoch);
   const openingSession = useRef({ projectId: activeProjectId, epoch: activeSession });
+  const boundProjectId = useRef(request.target?.projectId ?? requestedProject(location.search, location.hash) ?? activeProjectId);
+  const projectStatusPath = 'project/status' + (boundProjectId.current ? '?projectId=' + encodeURIComponent(boundProjectId.current) : '');
   useEffect(() => {
     let active = true;
-    void Promise.all([loadGateway(), gatewayRequest<{ projectId: string }>('project/status')]).then(([next, status]) => { if (active) { setData(next); setProjectId(status.projectId); } }).catch(e => { if (active) setError(e.message); });
+    void Promise.all([loadGateway(), boundProjectId.current ? gatewayRequest<{ projectId: string }>(projectStatusPath) : Promise.resolve(null)]).then(([next, status]) => {
+      if (status && status.projectId !== boundProjectId.current) throw new Error(t('Switch back to the original project to place this asset'));
+      if (active) { setData(next); setProjectId(status?.projectId ?? ''); }
+    }).catch(e => { if (active) setError(e.message); });
     return () => { active = false; };
   }, []);
   useEffect(() => {
@@ -102,7 +108,7 @@ export function MediaGenerator({ request, onClose, onSettings }: { request: Medi
   async function place(job: GenerationJob, asset: string) {
     if (!request.target) return;
     setBusy(true); setError('');
-    try { const current = await gatewayRequest<{ projectId: string }>('project/status'); if (current.projectId !== job.projectId) throw new Error(t('Switch back to the original project to place this asset'));
+    try { const current = await gatewayRequest<{ projectId: string }>(projectStatusPath); if (current.projectId !== job.projectId) throw new Error(t('Switch back to the original project to place this asset'));
       await request.target.place(asset, { start, duration, track: request.placement?.track ?? 0 }); setPlaced(prev => [...prev, asset]);
     } catch (e) { setError(e instanceof Error ? e.message : String(e)); } finally { setBusy(false); }
   }
@@ -110,7 +116,7 @@ export function MediaGenerator({ request, onClose, onSettings }: { request: Medi
     if (!request.target?.replace || !request.selection) return;
     setBusy(true); setError('');
     try {
-      const current = await gatewayRequest<{ projectId: string }>('project/status');
+      const current = await gatewayRequest<{ projectId: string }>(projectStatusPath);
       if (current.projectId !== job.projectId) throw new Error(t('Switch back to the original project to place this asset'));
       await request.target.replace(asset, request.selection); setReplaced(asset);
     } catch (e) { setError(e instanceof Error ? e.message : String(e)); } finally { setBusy(false); }
