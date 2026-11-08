@@ -12,23 +12,15 @@ Keep persistent user instructions for repository work in this file, and keep `CL
 2. All repository collaboration content you create or update must be in English: issue and pull request titles and descriptions, comments, review summaries, discussions, and release notes. This applies even when the user's request is in another language.
 3. Before committing or submitting repository content, verify that it follows these English-language requirements.
 
-## 持续维护产品文档
+## Product architecture review
 
-`docs/` 是仓库内持续维护的产品知识库。所有贡献者与 Agent 都应在交付需求时同步沉淀产品理解；代码、聊天记录或 PR 描述不能代替产品文档。
+For every change, review the entire [product architecture](docs/product/architecture.md) and decide whether it still accurately describes the product. Consider positioning, core user flows, module responsibilities, dependencies, data and API boundaries, implemented capabilities, and current limitations together.
 
-开始仓库需求前，先读 [文档入口与维护流程](docs/README.md)、[产品架构](docs/product/architecture.md) 和该需求涉及的专题。公开文档仅维护使用说明、技术契约和可复现验证。
+Update the architecture only when the change makes it incomplete, inaccurate, or internally inconsistent. Keep the document coherent as a whole, and adjust related usage or technical documentation only where needed for consistency. If the architecture remains accurate, leave it unchanged; documentation edits and per-change records are not required for every commit or PR.
 
-每次需求交付（功能、体验优化、修复、重构、接入或文档建设）都必须：
+Use the [documentation index](docs/README.md) for related topics. Distinguish implemented behavior, confirmed direction, hypotheses, and candidate designs. Preserve useful rationale and verification boundaries without inventing evidence. Check links and source references when editing documentation.
 
-1. 明确用户问题、服务人群、预期结果和验收方式。复用已有需求信息；缺失内容先标记假设，不编造客户、访谈、市场规模或收入数据。
-2. 在同一提交或 PR 中更新受影响的产品架构、画像、商业化或工程专题文档。用户可见入口、行为、配置或限制变化时同步更新 README。
-3. 在 [需求与决策记录](docs/product/changes.md) 新增或补充对应需求条目，记录问题、选择、影响、验证证据和后续待验证事项。对画像或商业化没有影响时，在该条目写明原因，无需改写无关章节。
-4. 将“当前已实现”“已确认方向”“待验证假设”“候选方案”分开。商业化设想不写成已上线能力；界面截图、热度快照和技术测试不自动证明用户需求、留存或付费意愿。
-5. 检查文档链接、源码路径和口径；替换过时结论时保留决策缘由与历史入口。PR 或交付说明给出更新的文档链接与实际验证结果。
-
-每个需求 PR 或直接提交都应包含对应的文档变更。小需求可直接补充现有专题与一条需求记录；跨模块需求可使用 [需求文档模板](docs/templates/requirement.md)。按实际影响更新，不为凑文档创建空文件，也不把同一规则复制为多份互相矛盾的说明。现有授权范围内的文档维护随实现一起完成。
-
-`AGENTS.md` 是所有 Agent 的共同准则，`CLAUDE.md` 引用同一套规则。准则变化时同步两者的入口。可分发插件也应包含两份入口和 `docs/`。
+`AGENTS.md` is the shared source for all Agents; keep the `CLAUDE.md` entry aligned when these guidelines change. Distributable plugins include both entries and the approved documentation.
 
 ## Video production entry points
 
