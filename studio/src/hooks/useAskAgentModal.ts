@@ -1,4 +1,4 @@
-import { formatTimelineBlock } from "../player/lib/describeClips";
+import { useI18n } from "../i18n/I18n";
 import { buildProjectApiPath } from "../utils/projectRouting";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { copyTextToClipboard } from "../utils/clipboard";
@@ -24,6 +24,7 @@ export interface UseAskAgentModalParams {
 // ── Hook ──
 
 export function useAskAgentModal({
+  projectId,
   activeCompPath,
   projectDir,
   projectIdRef,
@@ -31,6 +32,7 @@ export function useAskAgentModal({
   domEditSelectionRef,
   domEditSelection,
 }: UseAskAgentModalParams) {
+  const { t } = useI18n();
   // ── State ──
 
   const [agentPromptTagSnippet, setAgentPromptTagSnippet] = useState<string | undefined>();
@@ -67,7 +69,7 @@ export function useAskAgentModal({
           typeof html === "string" ? readTagSnippetByTarget(html, selection) : undefined;
 
         setAgentPromptTagSnippet((current) => {
-          if (domEditSelectionRef.current !== selection) return current;
+          if (projectIdRef.current !== pid || domEditSelectionRef.current !== selection) return current;
           return tagSnippet;
         });
       } catch {
@@ -88,15 +90,19 @@ export function useAskAgentModal({
 
   const handleAgentModalSubmit = useCallback(
     async (userInstruction: string) => {
-      if (!domEditSelection) return;
+      if (!domEditSelection || !userInstruction.trim()) return;
+      if (!projectId || projectIdRef.current !== projectId) {
+        showToast(t("The project changed. Select the element again."), "error");
+        return;
+      }
 
       const targetPath = domEditSelection.sourceFile || activeCompPath || "index.html";
       const tagSnippet =
         agentPromptTagSnippet ?? liveMarkupWithoutPreviewMarks(domEditSelection.element);
       const prompt = buildElementAgentPrompt({
+        projectId,
         selection: domEditSelection,
         currentTime: usePlayerStore.getState().currentTime,
-        timeline: formatTimelineBlock(usePlayerStore.getState().elements),
         tagSnippet,
         selectionContext: agentPromptSelectionContext,
         userInstruction,
@@ -105,11 +111,12 @@ export function useAskAgentModal({
 
       const copied = await copyTextToClipboard(prompt);
       if (!copied) {
-        showToast("Could not copy prompt to clipboard.", "error");
+        showToast(t("Could not copy prompt to clipboard."), "error");
         return;
       }
 
       setAgentModalOpen(false);
+      showToast(t("Instructions copied. Paste them into Codex or your Agent, then review the changes."), "info");
       setAgentPromptSelectionContext(undefined);
       setAgentModalAnchorPoint(null);
       if (copiedAgentTimerRef.current) clearTimeout(copiedAgentTimerRef.current);
@@ -121,8 +128,11 @@ export function useAskAgentModal({
       agentPromptSelectionContext,
       agentPromptTagSnippet,
       domEditSelection,
+      projectId,
+      projectIdRef,
       projectDir,
       showToast,
+      t,
     ],
   );
 
@@ -131,11 +141,12 @@ export function useAskAgentModal({
   // Clear agent-prompt state when selection changes
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
+    setAgentModalOpen(false);
     setAgentPromptTagSnippet(undefined);
     setAgentPromptSelectionContext(undefined);
     setAgentModalAnchorPoint(null);
     setCopiedAgentPrompt(false);
-  }, [domEditSelection]);
+  }, [domEditSelection, projectId]);
 
   // Cleanup copiedAgentTimerRef
   // eslint-disable-next-line no-restricted-syntax

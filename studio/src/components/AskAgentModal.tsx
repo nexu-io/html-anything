@@ -77,7 +77,7 @@ export function AskAgentModal({
         ref={containerRef}
         role="dialog"
         aria-modal="true"
-        aria-label={t("Copy prompt to AI agent")}
+        aria-label={t("Ask agent to change only this element")}
         tabIndex={-1}
         className={`w-[480px] rounded-2xl border border-neutral-800 bg-neutral-950 shadow-2xl outline-hidden ${
           anchorPoint ? "fixed" : ""
@@ -87,7 +87,7 @@ export function AskAgentModal({
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-800/60">
           <div>
-            <h3 className="text-sm font-medium text-neutral-200">{t("Copy prompt to AI agent")}</h3>
+            <h3 className="text-sm font-medium text-neutral-200">{t("Ask agent to change only this element")}</h3>
             <p className="text-xs text-neutral-500 mt-0.5">
               {selectionLabel.length > 50 ? `${selectionLabel.slice(0, 49)}…` : selectionLabel}
             </p>
@@ -112,8 +112,12 @@ export function AskAgentModal({
           </button>
         </div>
         <div className="px-5 py-4 space-y-3">
+          <p className="text-xs leading-relaxed text-neutral-400">
+            {t("Copy instructions for this element, then paste them into Codex or your Agent to apply the edit. Review the result to confirm other elements stay unchanged.")}
+          </p>
           <textarea
             ref={inputRef}
+            aria-label={t("Describe what you want to change…")}
             className="w-full h-24 px-3 py-2 rounded-lg border border-neutral-800 bg-neutral-900/60 text-sm text-neutral-200 placeholder-neutral-600 resize-none focus:outline-hidden focus:border-studio-accent/60 focus:ring-1 focus:ring-studio-accent/30"
             placeholder={t("Describe what you want to change…")}
             value={value}

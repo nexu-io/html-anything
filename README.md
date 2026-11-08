@@ -56,6 +56,8 @@ These frames come from the bundled [Hyperframes examples](template-library/NOTIC
 
 The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled template opens directly; external footage needs analysis and reconstruction. In Studio you can change the text, timing, layout and assets, or ask your Agent to make the same edit. Imported footage stays a clip.
 
+For a local edit, select an element in Studio, click **Ask agent to change only this element** in Design, describe the change and copy the instructions back to Codex or your Agent. The prompt identifies the project and source target and asks the Agent to preserve other elements. This is a manual handoff with prompt constraints; review the Agent's diff and preview. [Scope and usage](docs/usage.md#让-agent-只改这个元素).
+
 ![The editor showing the Product Promo preview, compositions and timeline.](docs/readme/editor.jpg)
 
 ## Start in Codex

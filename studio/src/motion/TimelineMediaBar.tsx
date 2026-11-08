@@ -7,6 +7,7 @@ import { useTimelineReadOnlyPress } from '../player/components/timelineReadOnly'
 import { RULER_H } from '../player/components/timelineLayout';
 import { usePlayerStore } from '../player/store/playerStore';
 import { useStudioShellContextOptional } from '../contexts/StudioContext';
+import { useDomEditSelectionContextOptional } from '../contexts/DomEditContext';
 import { useI18n } from '../i18n/I18n';
 import { EditPopover } from '../player/components/EditModal';
 import { useArtifactViewActive } from './ArtifactViewState';
@@ -22,6 +23,7 @@ export function TimelineMediaBar() {
 function ConnectedTimelineMediaBar() {
   const gateway = useMediaGateway()!; const { t } = useI18n();
   const { state } = useTimelineContext(); const shell = useStudioShellContextOptional();
+  const domEdit = useDomEditSelectionContextOptional();
   const readOnly = useTimelineReadOnlyPress();
   const playing = usePlayerStore(s => s.isPlaying);
   const selectedIds = usePlayerStore(s => s.selectedElementIds);
@@ -75,7 +77,7 @@ function ConnectedTimelineMediaBar() {
     return () => viewport.removeEventListener('pointerup', activate);
   }, [scroll, state.timelineReady, state.canvas.pps, state.canvas.contentOrigin]);
   useEffect(() => { setCaret(null); setAsk(false); }, [state.sessionEpoch, shell?.activeCompPath]);
-  const hidden = readOnly || !state.timelineReady || gateway.generationOpen || playing || shell?.writeBlockedReason || shell?.renderQueue.isRendering
+  const hidden = readOnly || !state.timelineReady || domEdit?.agentModalOpen || gateway.generationOpen || playing || shell?.writeBlockedReason || shell?.renderQueue.isRendering
     || state.canvas.isScrubbing || state.canvas.draggedElement || state.canvas.resizingClip || state.canvas.marqueeRect
     || state.overlays.clipContextMenu || state.overlays.kfContextMenu || state.overlays.gapContextMenu
     || dismissed === identity || (!range && !clip && caret === null);

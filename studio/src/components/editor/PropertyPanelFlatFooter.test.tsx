@@ -25,7 +25,7 @@ describe("PropertyPanelFlatFooter", () => {
   it("renders the ask-agent affordance and fires onAskAgent on click", () => {
     const onAskAgent = vi.fn();
     const { host, root } = renderFooter({ onAskAgent });
-    expect(host.textContent).toContain("Ask agent about this element");
+    expect(host.textContent).toContain("Ask agent to change only this element");
     const askButton = host.querySelector<HTMLButtonElement>('[data-flat-footer-ask="true"]');
     act(() => askButton?.dispatchEvent(new MouseEvent("click", { bubbles: true })));
     expect(onAskAgent).toHaveBeenCalledTimes(1);

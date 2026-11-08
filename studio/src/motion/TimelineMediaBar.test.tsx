@@ -11,14 +11,15 @@ import { I18nProvider } from '../i18n/I18n';
 import { projectMediaPath, selectedMedia } from './timelineMediaSelection';
 import { ArtifactViewActive } from './ArtifactViewState';
 
-const hooks = vi.hoisted(() => ({ state: {} as TimelineState, open: vi.fn() }));
+const hooks = vi.hoisted(() => ({ state: {} as TimelineState, open: vi.fn(), agentModalOpen: false }));
+vi.mock('../contexts/DomEditContext', () => ({ useDomEditSelectionContextOptional: () => ({ agentModalOpen: hooks.agentModalOpen }) }));
 vi.mock('../player/components/TimelineProvider', () => ({ useTimelineContext: () => ({ state: hooks.state }) }));
 vi.mock('./MediaGatewayContext', () => ({ useMediaGateway: () => ({ openGenerator: hooks.open, generationOpen: false }) }));
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root; let viewport: HTMLDivElement;
 const clip = { id: 'image', key: 'main:image', tag: 'img', src: 'assets/original.png', label: 'Forest', start: 2, duration: 6, track: 1 } as TimelineElement;
 beforeEach(() => {
-  hooks.open.mockReset(); usePlayerStore.getState().reset();
+  hooks.open.mockReset(); hooks.agentModalOpen = false; usePlayerStore.getState().reset();
   const host = document.createElement('div'); host.dataset.motionStudio = ''; document.body.append(host); root = createRoot(host);
   const timeline = document.createElement('div'); timeline.dataset.studioTimeline = ''; document.body.append(timeline);
   viewport = document.createElement('div'); timeline.append(viewport); viewport.scrollLeft = 40;
@@ -93,5 +94,16 @@ it('removes the portalled media actions while the owning Viewer is hidden and re
   await renderActive(false);
   expect(document.querySelector('.motion-timeline-media-bar')).toBeNull();
   await renderActive(true);
+  expect(document.querySelector('.motion-timeline-media-bar')).not.toBeNull();
+});
+
+it('hides media actions while editing an element instruction and restores them after closing', async () => {
+  await render();
+  expect(document.querySelector('.motion-timeline-media-bar')).not.toBeNull();
+  hooks.agentModalOpen = true;
+  await render();
+  expect(document.querySelector('.motion-timeline-media-bar')).toBeNull();
+  hooks.agentModalOpen = false;
+  await render();
   expect(document.querySelector('.motion-timeline-media-bar')).not.toBeNull();
 });

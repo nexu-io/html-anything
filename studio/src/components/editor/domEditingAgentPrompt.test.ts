@@ -54,6 +54,26 @@ const PICKER_SELECTION: HyperframePickerElementInfo = {
 };
 
 describe("buildElementAgentPrompt", () => {
+  it("identifies the exact project and duplicate target without widening to timeline edits", () => {
+    const prompt = buildElementAgentPrompt({
+      projectId: "project-2",
+      selection: makeSelection({ id: undefined, hfId: "card-2", selector: ".card", selectorIndex: 1, sourceFile: "cards.html" }),
+      sourceFilePath: "/project-2/cards.html",
+      currentTime: 2,
+      userInstruction: "Move this card later",
+    });
+    expect(prompt).toContain('motion_get_project({"projectId":"project-2"})');
+    expect(prompt).toContain("current revision and version with motion_edit_project");
+    expect(prompt).toContain("Source file: /project-2/cards.html");
+    expect(prompt).toContain("HyperFrames id: card-2");
+    expect(prompt).toContain("Selector: .card\nSelector index: 1");
+    expect(prompt).toContain("selector index is zero-based");
+    expect(prompt).toContain("repeated composition instances");
+    expect(prompt).toContain("ask the user before proceeding");
+    expect(prompt).not.toContain("unless the request is a timeline edit");
+    expect(prompt).not.toContain("hyperframes-cli");
+  });
+
   it("produces the documented v1 schema", () => {
     const prompt = buildElementAgentPrompt({
       selection: makeSelection(),
@@ -74,15 +94,17 @@ describe("buildElementAgentPrompt", () => {
         "Selector: #headline-1",
         "Selector index: 0",
         "Tag: <div>",
+        "Label: Headline",
         "Bounds: x=10, y=20, width=300, height=40",
         "Text: Hello world",
         "",
         "Guardrails:",
-        "- Make a targeted change to this element only, unless the request is a timeline edit.",
-        "- Preserve the rest of the composition and its timing, except what a timeline edit changes.",
-        "- Do not modify other elements' data-* attributes or positioning, except where the requested timeline edit requires it (split, retime, reorder, copy a group, swap media).",
-        "- For timeline edits (trim, split, speed, volume, copy, swap), use the `hyperframes timeline` edit commands (`hyperframes-cli` skill) or the exact attribute forms in the `hyperframes` skill's `references/format.md`.",
-        "- Prefer existing inline styles or existing CSS rules for this element over adding unrelated selectors.",
+        "- Change only the selected element and its descendants, as requested. Preserve all other elements and compositions.",
+        "- Do not modify other elements' data-* attributes or positioning. Preserve their content, styles, media and animations.",
+        "- Preserve timing and layout outside the target. Change the target's timing only when explicitly requested.",
+        "- Scope CSS and GSAP changes to this target. Do not change shared rules, variables or media files in ways that affect other elements or repeated composition instances.",
+        "- Re-read the current source and verify the target before editing; selector index is zero-based within the source file. If the target is missing, ambiguous or requires changes outside this scope, ask the user before proceeding.",
+        "- Review the diff and preview after editing; report any changes outside the requested scope instead of claiming that only this element changed.",
       ].join("\n"),
     );
   });
@@ -161,11 +183,12 @@ describe("buildPickerAgentPrompt", () => {
     // Both end on the identical guardrails block, byte for byte.
     const guardrails = [
       "Guardrails:",
-      "- Make a targeted change to this element only, unless the request is a timeline edit.",
-      "- Preserve the rest of the composition and its timing, except what a timeline edit changes.",
-      "- Do not modify other elements' data-* attributes or positioning, except where the requested timeline edit requires it (split, retime, reorder, copy a group, swap media).",
-      "- For timeline edits (trim, split, speed, volume, copy, swap), use the `hyperframes timeline` edit commands (`hyperframes-cli` skill) or the exact attribute forms in the `hyperframes` skill's `references/format.md`.",
-      "- Prefer existing inline styles or existing CSS rules for this element over adding unrelated selectors.",
+      "- Change only the selected element and its descendants, as requested. Preserve all other elements and compositions.",
+      "- Do not modify other elements' data-* attributes or positioning. Preserve their content, styles, media and animations.",
+      "- Preserve timing and layout outside the target. Change the target's timing only when explicitly requested.",
+      "- Scope CSS and GSAP changes to this target. Do not change shared rules, variables or media files in ways that affect other elements or repeated composition instances.",
+      "- Re-read the current source and verify the target before editing; selector index is zero-based within the source file. If the target is missing, ambiguous or requires changes outside this scope, ask the user before proceeding.",
+      "- Review the diff and preview after editing; report any changes outside the requested scope instead of claiming that only this element changed.",
     ].join("\n");
     expect(domPrompt.endsWith(guardrails)).toBe(true);
     expect(pickerPrompt.endsWith(guardrails)).toBe(true);

@@ -28,6 +28,8 @@ OpenDesign 的 `WorkspaceFrame` 放在原生 App 外，负责通用导航和会�
 
 先用 [产品架构](product/architecture.md#职责分层与依赖方向) 判断需求归属；多模态入口、原图修改和后续属性面板接入遵循 [素材生成设计](product/media-generation-design.md)。该设计记录用户意图、候选采用、原生历史与过期目标的边界，本页维护实现位置。
 
+设计面板的 **让 Agent 只改这个元素** 复用 `PropertyPanelFlatFooter` → `useAskAgentModal` → `AskAgentModal`；`domEditingAgentPrompt.ts` 同源生成元素约束与定位信息。提交时核对当前工程，异步源码响应只作用于原工程和原选中对象；切换目标/工程关闭弹窗。复制使用已有剪贴板兼容与失败返回，不调用模型或保存 API。`buildElementAgentPrompt` 不再接收全时间轴，独立的时间轴范围入口仍使用 `buildTimelineAgentPrompt`。执行与保存复用外部 MCP Agent 和现有版本校验，尚无元素级写入权限，详见[操作边界](usage.md#让-agent-只改这个元素)。
+
 模型设置位于侧栏，嵌入视图保留顶栏入口；空时间轴、时间轴工具栏和素材面板共用 `MediaGatewayProvider`。生成面板读取已选时段，提供模态/模型/参数与任务结果，显式放置才调用原生 `useTimelineAssetDropOps`，沿用撤销与保存。上下文绑定会在工程/合成切换及卸载时失效。素材菜单增加可见入口、预览和下载，其他操作继续使用原生文件服务。模型协议与限制见 [模型网关](model-gateway.md)。
 
 `TimelineMediaBar` 订阅原生片段选择、已完成的范围选择和标尺点击，在实际目标旁显示描述/生成/修改入口；原有范围 Agent 弹框通过「交给 Agent」继续使用。图片修改传 `referenceAsset`，结果选择后通过 `handleDomAttributeBatchCommit` 只改 `src`，在文件队列内的 `validateContent` 检查修改前的原始引用，保留原生历史、时长与动画。`prepareContent` 用于服务端已执行 patch 后的后处理，不能用作修改前验证。不要绕过该提交链整页重写 HTML，也不要在工程切换后恢复旧选区。
