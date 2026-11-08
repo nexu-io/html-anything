@@ -15,6 +15,8 @@ Keep the person and their story at the center. Use motion to explain what they s
 
 These are **design recipes**, with attributed reference/remix demonstrations in the [README showcase](../../../README.md#presenter-motion). They include no presenter footage, executable template or completed OpenMotion recreation. The six executable motion-source profiles are a separate [Motion Design Remix package](../motion-design-remix/SKILL.md).
 
+If the user selects the packaged [Presenter Tech template](../../templates/presenter-tech/README.md), use its included source, input contract and runner through [TEMPLATE.md](../../templates/presenter-tech/TEMPLATE.md). Do not rebuild a lookalike from its demo. That local package is separate from Studio-native template import.
+
 ## Apply a recipe
 
 Start from the user's brief, footage, brand assets and existing captions. Preserve their topic, language, voice, approved takes and requested scope. Only ask for missing inputs needed for the selected edit. If a transcript or word timing is needed, use an available host transcription/alignment capability or provided timings; do not invent spoken words or word-level clocks from sampled frames.

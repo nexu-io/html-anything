@@ -7,7 +7,7 @@
 | 分类 | 从这里开始 | 收录内容 |
 | --- | --- | --- |
 | **🧠 Skills** | [Presenter Story](skills/presenter-story/SKILL.md) · [Motion Design Remix](skills/motion-design-remix/SKILL.md) · [Brandkit 整理](skills/brandkit/SKILL.md) | 用 `SKILL.md` 描述可重复使用的方法，按需附示例与参考。 |
-| **🎞️ 模板** | [可编辑起点](templates/README.md) | 完整工程、预览、替换与改编说明。 |
+| **🎞️ 模板** | [Studio 可编辑起点](templates/README.md) · [Presenter Tech](templates/presenter-tech/README.md) | 完整工程、预览、替换与改编说明。 |
 | **🧩 Motion 组件** | [标题揭示配方](components/title-reveal/README.md) | 标题、转场、图表或场景，说明时序、可修改项与接入方式。 |
 | **🎨 动效设计体系** | [Ink & Water](design-systems/ink-water/MOTION_DESIGN.md) | 用 `MOTION_DESIGN.md` 记录字体、构图、节奏、运动和声音规则。 |
 | **💼 Brandkits** | [OpenMotion](brandkits/openmotion/BRANDKIT.md) | 品牌事实、可用文案、配色、字体、素材入口与使用规则。 |
@@ -17,6 +17,7 @@ library/
 ├── skills/presenter-story/              → three presenter / motion recipes
 ├── skills/motion-design-remix/           → six source / remix profiles
 ├── skills/brandkit/SKILL.md
+├── templates/presenter-tech/            → local presenter / motion package
 ├── templates/README.md                  → 现有可编辑工程源码
 ├── components/title-reveal/README.md     → 动效配方
 ├── design-systems/ink-water/MOTION_DESIGN.md

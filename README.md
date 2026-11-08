@@ -514,7 +514,7 @@ Today, you explicitly supply those documents and preserve editable projects. Aut
 | Reuse a… | Directory & first entries |
 | --- | --- |
 | **🧠 Skill** | [`library/skills/`](library/skills/) · [Presenter Story](library/skills/presenter-story/SKILL.md) · [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) · [Brandkit preparation](library/skills/brandkit/SKILL.md). |
-| **🎞️ Template** | [`library/templates/`](library/templates/README.md) · Three existing editable project starting points. |
+| **🎞️ Template** | [`library/templates/`](library/templates/README.md) · Three Studio starting points + the [Presenter Tech package](library/templates/presenter-tech/README.md). |
 | **🧩 Motion component** | [`library/components/`](library/components/README.md) · A title-reveal recipe and external component references. |
 | **🎨 Motion design system** | [`library/design-systems/`](library/design-systems/) · [Ink & Water / `MOTION_DESIGN.md`](library/design-systems/ink-water/MOTION_DESIGN.md). |
 | **💼 Brandkit** | [`library/brandkits/`](library/brandkits/) · [OpenMotion facts, identity and assets](library/brandkits/openmotion/BRANDKIT.md). |
@@ -603,11 +603,13 @@ Product tutorial + live demonstration<br>
 
 These are external creators’ works and editing references, not bundled editable templates. Choose one, add the [Presenter Story Skill](library/skills/presenter-story/SKILL.md) and your own recordings, then give the brief to your agent.
 
-#### External template inspiration · MotionGit Kinetic Tech
+#### 🎙️ Presenter Tech · a template for your next explainer
 
-<a href="https://motiontemplates.github.io/385712/assets/demo.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/motiongit-kinetic.jpg"><img src="docs/readme/people/motiongit-kinetic.gif" width="640" alt="MotionGit Kinetic Tech published landscape demo with presenter window, diagrams and animated typography"></picture></a>
+<a href="library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/motiongit-kinetic.jpg"><img src="docs/readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech template demo with presenter window, diagrams and animated typography"></picture></a>
 
-**Presenter window + animated type + visual explanation.** [adunext / MotionGit’s public template](https://github.com/motiontemplates/385712) shows how presenter content can work with a motion system. This excerpt comes from its public GitHub landscape demo; source and production guidance live upstream and use that package’s runtime. It is distinct from the website’s portrait edition and has not been verified as directly importable into OpenMotion. Template code is MIT; demo people, voices and other assets retain their own rights.
+**Presenter-led stories × metallic type × animated explanations.** Bring your recording, copy, screenshots and captions. Editable source, parameters, fonts, sound recipes and a local runner are packaged in OpenMotion Library, ready for your Agent to adapt using the production guide. **1920 × 1080 · 60 fps · landscape.**
+
+[Get the template package](library/templates/presenter-tech/presenter-tech.motion) · [Production guide](library/templates/presenter-tech/TEMPLATE.md) · [MOTION_DESIGN.md](library/templates/presenter-tech/MOTION_DESIGN.md)
 
 <a id="motion-gallery"></a>
 
@@ -991,7 +993,7 @@ What informed the product, and where the connection lives in this repository.
 | --- | --- |
 | [OpenDesign](https://github.com/nexu-io/open-design) / [website](https://open-design.ai/) | UI design-system source, resource/contribution structure and painterly brand direction. See [UI provenance](docs/design-system.md), [Brandkit](library/brandkits/openmotion/BRANDKIT.md) and [Library](library/README.md). |
 | [Hypit](https://github.com/hypit-ai/hypit) | Reference for content-variant comparisons and the Stay tuned / Star invitation; see [Motion Design examples](docs/motion-design-examples.md). |
-| [MotionGit](https://motiongit.com/) / [format](https://motiongit.com/spec) / [source collaboration](https://motiongit.com/git) | Reference for separating package content, runtime and distribution, with demos and material contracts. See [Motion MD architecture](docs/motion-md.md); `.motion` compatibility is not implemented. |
+| [MotionGit](https://motiongit.com/) / [format](https://motiongit.com/spec) / [source collaboration](https://motiongit.com/git) | Thanks to MotionGit / adunext for Kinetic Tech, now packaged as [Presenter Tech](library/templates/presenter-tech/README.md) in the Library. Original demo attribution, MIT copyright and third-party terms: [NOTICE](library/templates/presenter-tech/NOTICE.md). Its package layering also informs Motion MD; general Studio `.motion` importing is not implemented. |
 | [rea-video](https://github.com/JuneYaooo/rea-video) | Reference for shot-by-shot analysis and synchronized original/remake comparisons; no runtime is imported. |
 | [HTML Anything](https://github.com/nexu-io/html-anything/tree/legacy) | Repository lineage; a reference for text architecture, contribution paths and attribution tables. Its former `next/` architecture stays on the historical branch; see the [migration guide](docs/repository-migration.md). |
 | **Claude Motion / CapCut** | Product references for agent-led video creation and approachable editing; not claims of feature parity or code provenance. |

@@ -406,8 +406,10 @@
       "gifBytes": 4549114,
       "gifSha256": "7665a1a6bfea4445c49cabbfd0009c7be7cd4491a1bc977b980b58486c7e77cb",
       "posterSha256": "314cdfbf4cd4809fbe868cc3f4322439d83b0bdc1e07434ace131445451ece0c",
-      "status": "External template demo; not executed or imported by OpenMotion. Template code MIT; demo people, voices and third-party assets retain separate rights.",
-      "posterOffsetSeconds": 1
+      "status": "Published demo for the pinned template now vendored as Presenter Tech in OpenMotion Library. Local runner checks are separate from this upstream demo and from Studio-native import. MIT code and original third-party rights are preserved.",
+      "posterOffsetSeconds": 1,
+      "displayName": "Presenter Tech",
+      "localTemplate": "../../../library/templates/presenter-tech/README.md"
     }
   ]
 }

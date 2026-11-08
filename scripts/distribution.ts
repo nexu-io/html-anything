@@ -97,6 +97,18 @@ const presenterStoryFiles = [
   'library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md',
 ];
 
+const presenterTechFiles = [
+  'library/templates/presenter-tech/LICENSE',
+  'library/templates/presenter-tech/MOTION_DESIGN.md',
+  'library/templates/presenter-tech/NOTICE.md',
+  'library/templates/presenter-tech/README.md',
+  'library/templates/presenter-tech/TEMPLATE.md',
+  'library/templates/presenter-tech/THIRD-PARTY-NOTICES.md',
+  'library/templates/presenter-tech/presenter-tech.motion',
+  'library/templates/presenter-tech/source.json',
+  'library/templates/presenter-tech/verification.json',
+];
+
 export const distributionDocuments = [
   'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md',
   'docs/product/architecture.md', 'docs/product/changes.md', 'docs/product/media-generation-design.md', 'docs/product/studio-vision.md',
@@ -135,7 +147,7 @@ export const distributionDocuments = [
   'library/skills/brandkit/SKILL.md', 'library/templates/README.md',
   'library/components/README.md', 'library/components/title-reveal/README.md',
   'library/design-systems/ink-water/MOTION_DESIGN.md', 'library/brandkits/openmotion/BRANDKIT.md',
-  'docs/motion-design-examples.md', 'docs/motion-design-examples.zh-CN.md', ...motionDesignRemixFiles, ...presenterStoryFiles,
+  'docs/motion-design-examples.md', 'docs/motion-design-examples.zh-CN.md', ...motionDesignRemixFiles, ...presenterStoryFiles, ...presenterTechFiles,
   'docs/skills.md', 'docs/template-catalog.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
 ];
 

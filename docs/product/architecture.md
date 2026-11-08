@@ -41,11 +41,17 @@ Motion Design 的资源单位进一步明确为“创作规则 + Agent 方法 + 
 
 [`motion-design-remix`](../../library/skills/motion-design-remix/SKILL.md) 是可选 Library Skill，包含六个已经收录为 registry 资源的上游动效源码 profile、各自的 Motion MD、可执行内容替换脚本与实际并排渲染示例。它固定上游源码版本、校验替换次数、拒绝覆盖已有输出，不解释 Markdown、不自动分析视频、不接入模板注册表；对托管工程的修改仍遵守现有 revision 契约。六个 profile 不改变三个内置模板和五个核心制作 Skill 的数量。
 
-[`presenter-story`](../../library/skills/presenter-story/SKILL.md) 补充知识口播、工作流演示和产品讲解三份 Motion MD 设计配方，采用“真人语音主线 + 源片段到输出时间的映射 + 字幕 / 画中画 / 动效叠层”的构造。它没有人物素材或可执行模板，展示的三组真人前后对比为目录已有的上游演示，不是新 Skill 的验证结果。另展示九条现有真人参考与一条 MotionGit 外部模板 Demo；目录与内置模板计数不变。
+[`presenter-story`](../../library/skills/presenter-story/SKILL.md) 补充知识口播、工作流演示和产品讲解三份 Motion MD 设计配方，采用“真人语音主线 + 源片段到输出时间的映射 + 字幕 / 画中画 / 动效叠层”的构造。它没有人物素材或可执行模板，展示的三组真人前后对比为目录已有的上游演示，不是新 Skill 的验证结果。另展示九条现有真人参考与 Presenter Tech 模板演示；目录与 Studio 原生模板计数不变。
 
 [实例说明](../motion-design-examples.zh-CN.md) 区分已有源码的改编与任意原片的重建；帧采样渲染证据不替代 Studio 导出、声音、目标机器或用户视觉验收。包内保留源码许可和字体声明，记录 CDN / 字体网络依赖，不声称完全离线或任意跨引擎可执行。借鉴 [MotionGit](https://motiongit.com/spec) 的内容、运行时、分发分层，并不构成 `.motion` 格式兼容。社区可以通过普通文件与 Git 分享、Fork、改进和评审；自动 marketplace 入库、数据回流学习与 RAG 仍为方向。
 
 [Motion 资源索引](../collections/README.zh-CN.md) 已可使用，区分可观看参考与可编辑模板；OpenDesign 官网展示案例，公开的品牌／榜单专题集合站仍在规划。Motion Benchmark／Arena 为待讨论规划，无已发布榜单、排名或确定日期。
+
+### Presenter Tech 本地模板包
+
+[`library/templates/presenter-tech/`](../../library/templates/presenter-tech/README.md) 收入可再分发的固定版本源码包，提供本地 `.motion` ZIP、参数 / 运行器 / 字体 / 声音配方、Motion MD、制作指南与来源记录。公开展示名为 Presenter Tech，原始 Kinetic Tech 身份、MIT 版权与第三方条款保留在包内及 NOTICE；不主张上游模板为 OpenMotion 原创。
+
+此条目使用包内 `adapter.py` 的 plan → prepare → preview → render 路线，依赖安装和输出均在 checkout 外的独立目录。它不是直接写入 Hyperframes 原生时间轴的模板，也没有新增 Studio `.motion` 解析、MCP Tool 或核心 Skill。Library 多一个本地模板包，Studio 原生模板仍为三个、目录计数仍为 894。源码完整性、本地 runner 验证与用户真人成片验收分开记录，见 [verification.json](../../library/templates/presenter-tech/verification.json)。
 
 ### 创作资源与贡献架构
 

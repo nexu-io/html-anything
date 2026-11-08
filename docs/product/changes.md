@@ -1,7 +1,20 @@
 # 公开变更记录
 
 
+## REQ-20261109-003：把科技风口播模板纳入 OpenMotion Library
+
+- **问题与对象：** README 将人物与动效案例单列为“外部模板参考”，创作者无法直接从本仓库取得模板；用户要求改为 OpenMotion 的模板展示，并把原始来源集中放在致谢。
+- **选择与改动：** 新增 `library/templates/presenter-tech/`，以 Presenter Tech / 科技风口播模板为展示入口，随仓库分发可再分发的固定版本 `.motion` ZIP、制作指南、Motion MD、源身份与验证记录。英文公开包 17,594,444 字节，与上游 revision 的公开 SHA-256 一致；保留原始 manifest、代码和许可证，不改变源码归属。
+- **来源与许可：** 原始 Kinetic Tech 由 MotionGit contributors / adunext 发布，代码与 grain 纹理为 MIT，字体和品牌有独立条款。README 正文不再用“外部模板”作为标题；文末 References、模板 NOTICE、LICENSE 和第三方声明保留来源及版权。原始 Demo 仍是上游样片，不冒充本轮测试产物；Demo 人物、声音和私人素材不在模板包中。
+- **使用与边界：** 用户把本地包交给 Agent，按包内 adapter 的 plan → prepare → preview → render 创建独立项目。包内依赖在 checkout 外安装，不改变根依赖锁或原生引擎锁。本次增加的是 Library 模板包，不是新的 Studio 原生模板、通用 `.motion` 导入器或第十个 MCP Tool；Studio 仍有三个直接可编辑模板、目录仍为 894 条。
+- **实际验证：** 校验 ZIP 的 331 条路径与 330 个内部文件哈希；隔离目录完成 runner 的 `npm ci`、参数 plan、素材 prepare、真实 Chrome 预览和渲染。B1 text-only 技术样例导出 8 秒、1920×1080、60 fps、480 帧 H.264 与 AAC 音效，运行器零浏览器错误，最终声画全量解码通过。使用既有浏览器文件锁；没有新增人物录制、语音或完整真人成片验收。验证结果保存在模板 verification.json。
+- **文档与分发：** 同步双语 README、Library 与模板索引、Presenter Story Skill、产品架构、目录专题、媒体事实包、素材记录和正向分发清单；后续包装检查确认源码包随应用归档交付。没有新的画像、需求访谈、采用率或商业化结论。
+- **后续待验证：** 用用户自己的口播、屏幕与音轨制作完整作品，以及人物绑定、所有原生场景和其他操作系统；通用 Studio 导入须另行实现和验证。
+
+
 ## REQ-20261109-002：让真人口播与动效共同成为 README 的主角
+
+> 其中 MotionGit 演示随后按 REQ-20261109-003 对应的源码包收入本地 Library，当前展示名为 Presenter Tech。
 
 - **问题与对象：** 仅展示代码生成的 Motion 容易让创作者把 OpenMotion 理解为纯动画工具；首次访问者与媒体 Agent 需要看到真人表达、口播剪辑、产品演示和动效结合的实际内容形态。
 - **选择与改动：** 在双语 README 的 Motion Design 模块前置三组目录已有的原片 / 上游人物改编演示，覆盖知识口播、工作流演示与产品讲解；模板模块前置九个已有真人参考，再补充一条 MotionGit Kinetic Tech 公开横屏 Demo。保留后续六组源码改编与十八个 Motion 精选，人物表达与动效共同构成产品叙事。

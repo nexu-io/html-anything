@@ -7,7 +7,7 @@
 | Collection | Start here | What belongs here |
 | --- | --- | --- |
 | **🧠 Skills** | [Presenter Story](skills/presenter-story/SKILL.md) · [Motion Design Remix](skills/motion-design-remix/SKILL.md) · [Brandkit preparation](skills/brandkit/SKILL.md) | A focused, reusable method in `SKILL.md`, with examples and references when needed. |
-| **🎞️ Templates** | [Editable starting points](templates/README.md) | A complete project, preview and adaptation instructions. |
+| **🎞️ Templates** | [Studio starting points](templates/README.md) · [Presenter Tech](templates/presenter-tech/README.md) | A complete project, preview and adaptation instructions. |
 | **🧩 Motion components** | [Title reveal recipe](components/title-reveal/README.md) | A reusable title, transition, chart or scene with a clear timing and editing contract. |
 | **🎨 Motion design systems** | [Ink & Water](design-systems/ink-water/MOTION_DESIGN.md) | `MOTION_DESIGN.md`: typography, composition, pacing, movement and sound decisions. |
 | **💼 Brandkits** | [OpenMotion](brandkits/openmotion/BRANDKIT.md) | Brand facts, approved copy, colors, type, asset locations and usage rules. |
@@ -17,6 +17,7 @@ library/
 ├── skills/presenter-story/              → three presenter / motion recipes
 ├── skills/motion-design-remix/           → six source / remix profiles
 ├── skills/brandkit/SKILL.md
+├── templates/presenter-tech/            → local presenter / motion package
 ├── templates/README.md                  → existing editable project sources
 ├── components/title-reveal/README.md     → motion recipe
 ├── design-systems/ink-water/MOTION_DESIGN.md

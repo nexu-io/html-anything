@@ -514,7 +514,7 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 | 你想复用什么 | 目录与首批内容 |
 | --- | --- |
 | **🧠 Skill** | [`library/skills/`](../library/skills/) · [Presenter Story](../library/skills/presenter-story/SKILL.md) · [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md) · [Brandkit 整理](../library/skills/brandkit/SKILL.md)。 |
-| **🎞️ 模板** | [`library/templates/`](../library/templates/README.md) · 三个现有可编辑工程入口。 |
+| **🎞️ 模板** | [`library/templates/`](../library/templates/README.md) · 三个 Studio 可编辑工程 + [Presenter Tech 模板包](../library/templates/presenter-tech/README.md)。 |
 | **🧩 Motion 组件** | [`library/components/`](../library/components/README.md) · 标题揭示配方、外部组件参考。 |
 | **🎨 动效设计体系** | [`library/design-systems/`](../library/design-systems/) · [Ink & Water / `MOTION_DESIGN.md`](../library/design-systems/ink-water/MOTION_DESIGN.md)。 |
 | **💼 Brandkit** | [`library/brandkits/`](../library/brandkits/) · [OpenMotion 品牌事实与素材](../library/brandkits/openmotion/BRANDKIT.md)。 |
@@ -603,11 +603,13 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 这些是外部原作者的作品，展示可学习的剪辑结构；不会因收录而成为内置可编辑模板。选择一条参考，配合 [Presenter Story Skill](../library/skills/presenter-story/SKILL.md) 和你的录制，交给 Agent 开始制作。
 
-#### 外部模板参考 · MotionGit Kinetic Tech
+#### 🎙️ Presenter Tech · 科技风口播模板
 
-<a href="https://motiontemplates.github.io/385712/assets/demo.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/motiongit-kinetic.jpg"><img src="readme/people/motiongit-kinetic.gif" width="640" alt="MotionGit Kinetic Tech published landscape demo with presenter window, diagrams and animated typography"></picture></a>
+<a href="../library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/motiongit-kinetic.jpg"><img src="readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech template demo with presenter window, diagrams and animated typography"></picture></a>
 
-**人物窗口 + 动态文字 + 图解。** [adunext / MotionGit 的公开模板](https://github.com/motiontemplates/385712)展示了真人内容与动效系统如何结合。这里展示 GitHub 公开横屏版的原始 Demo 节选；其源码与使用指南在上游仓库，按包内运行时制作。它与官网竖屏版本不同，尚未验证为 OpenMotion 可直接导入的模板。代码采用 MIT，Demo 人物、声音与其他素材保留各自权利。
+**真人讲解 × 金属字 × 动态图解。** 用你的录制、文案、截图和字幕，制作有节奏的知识讲解与产品演示。可编辑源码、参数、字体、声音配方和本地运行器已打包进 OpenMotion Library，交给 Agent 即可按制作指南开始改编。**1920 × 1080 · 60 fps · 横屏。**
+
+[获取模板包](../library/templates/presenter-tech/presenter-tech.motion) · [制作说明](../library/templates/presenter-tech/TEMPLATE.md) · [MOTION_DESIGN.md](../library/templates/presenter-tech/MOTION_DESIGN.md)
 
 <a id="motion-gallery"></a>
 
@@ -987,7 +989,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | --- | --- |
 | [OpenDesign](https://github.com/nexu-io/open-design) / [官网](https://open-design.ai/) | UI 视觉系统来源、README 的资源与贡献结构、水墨品牌方向。对应 [UI 来源记录](design-system.md)、[Brandkit](../library/brandkits/openmotion/BRANDKIT.md) 与 [Library](../library/README.zh-CN.md)。 |
 | [Hypit](https://github.com/hypit-ai/hypit) | 内容变体对照与 Stay tuned / Star 社区邀请的参考，见 [Motion Design 实例](motion-design-examples.zh-CN.md)。 |
-| [MotionGit](https://motiongit.com/) / [规范](https://motiongit.com/spec) / [源码协作](https://motiongit.com/git) | 借鉴内容、运行时、分发分层，以及 Demo 和素材约定；见 [Motion MD 架构](motion-md.zh-CN.md)。尚未实现 `.motion` 兼容。 |
+| [MotionGit](https://motiongit.com/) / [规范](https://motiongit.com/spec) / [源码协作](https://motiongit.com/git) | 感谢 MotionGit / adunext 开源 Kinetic Tech，现以 [Presenter Tech](../library/templates/presenter-tech/README.md) 收入 Library；原始演示、MIT 版权与第三方条款见 [NOTICE](../library/templates/presenter-tech/NOTICE.md)。也借鉴其模板分层与素材约定；Studio 通用 `.motion` 导入尚未实现。 |
 | [rea-video](https://github.com/JuneYaooo/rea-video) | 逐镜头分析和原作/改编同步对照的参考；没有引入其运行时。 |
 | [HTML Anything](https://github.com/nexu-io/html-anything/tree/legacy) | 仓库前身；参考其文字架构图、贡献路径与来源表格。旧 `next/` 架构留在历史分支，当前结构见[迁移说明](repository-migration.md)。 |
 | **Claude Motion / CapCut** | 分别作为 Agent 视频创作与大众剪辑体验的产品参照；不代表功能完全对等或源码来源。 |
