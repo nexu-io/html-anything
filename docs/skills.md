@@ -85,7 +85,6 @@ MCP 工具说明和领域执行位于 `mcp-tools.ts`；`mcp.ts` 保留初始化�
 | --- | --- |
 | AGENTS.md、CLAUDE.md、README.md | 保留 #26 的专业直达、五名称与分发说明；用 #28 实际复刻流程替换占位口径 |
 | docs/mcp-phase1-tools.md、docs/motion-extension-scope.md、docs/product/architecture.md、docs/skills.md、docs/template-catalog.md | 保留五入口、九 Tool 指导与宿主能力边界；补齐 recreate ready、独立参考/脚本及 27/26 注册数量，不恢复旧目录查询 Tool |
-| docs/product/changes.md | 完整保留 Skill 整合 013、E2E 012 与 RECREATE-005 三条记录，历史验证按各自版本解读 |
 | mcp-tools.ts、mcp.ts | 保留共享发现文案，更新复刻状态；不调整 Schema、分发门禁或 Tool 执行函数 |
 | shared/workflow.ts | 保留新模板目录、五路线分发与原短 ID；并入 #28 的 recreate ready/rebuild/verification 注册 |
 | skills/motion-production/SKILL.md | 保留通用工程职责和专业导航；增加“只有成片、无可编辑工程”的复刻边界 |

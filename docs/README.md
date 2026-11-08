@@ -1,6 +1,6 @@
 # OpenMotion 文档
 
-这里维护公开的使用说明、技术契约和可复现检查。开始开发前阅读 [产品架构](product/architecture.md) 与相关专题；变更时同步更新对应说明、README 和 [公开变更记录](product/changes.md)。不将个人环境、客户资料、内部讨论或商业研究写入公开文档。
+这里维护公开的使用说明、技术契约和可复现检查。每次变更时整体审视 [产品架构](product/architecture.md)，判断定位、核心流程、模块职责、依赖、数据与接口边界、当前能力和限制是否仍准确一致；仅在需要时更新，并按需调整相关说明。架构仍准确时保持文档不变，不要求每次提交或 PR 修改文档或新增需求记录。不将个人环境、客户资料、内部讨论或商业研究写入公开文档。
 
 ## 阅读入口
 
@@ -27,7 +27,6 @@
 - [motion-extension-scope.md](motion-extension-scope.md)
 - [npm-installation.md](npm-installation.md)
 - [product/architecture.md](product/architecture.md)
-- [product/changes.md](product/changes.md)
 - [product/media-generation-design.md](product/media-generation-design.md)
 - [project-workspace.md](project-workspace.md)
 - [repository-migration.md](repository-migration.md)

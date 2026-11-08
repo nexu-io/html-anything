@@ -23,7 +23,7 @@ Work from the repository root; read [AGENTS.md](AGENTS.md) and the [architecture
 
 Before opening a PR, run `npm run check`, `npm run typecheck:studio`, `npm run build:studio` and focused deterministic tests for the changed boundary. Studio unit tests use `npm run test:studio`. Use the shared browser-lock wrapper on shared machines; model creation and visual acceptance require separate evidence. Do not overwrite real user data or host configuration to test an installer.
 
-Keep PRs focused and describe the user-visible behavior and actual validation. Open an issue first for substantial changes. Update affected public docs in the same PR. Preserve existing Git history and push follow-up commits during review; do not force-push a shared branch.
+Keep PRs focused and describe the user-visible behavior and actual validation. Open an issue first for substantial changes. Review the entire product architecture for each change and update it only when needed, following the [shared guidance](AGENTS.md#product-architecture-review); documentation edits are not required in every PR. Preserve existing Git history and push follow-up commits during review; do not force-push a shared branch.
 
 For an agent contribution: read the entry and sources, make the requested change, update the affected guide and [change record](docs/product/changes.md), run the applicable checks, and report the exact result and remaining gaps. Do not treat successful installation, technical rendering and human content acceptance as interchangeable.
 
