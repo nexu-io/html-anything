@@ -38,6 +38,10 @@ The primary product is an AI-native CapCut: the timeline is where material, stor
 
 [OpenChatCut](https://github.com/0xsline/OpenChatCut) informs the explanation of a continuously editable project and an iterative editing lifecycle. It is a conceptual reference; this README revision imports no code or capability from that project.
 
+## Collaboration roadmap — is coming
+
+The planned AI-native video creation and editing space brings people and agents into the same project for editing and motion creation, timeline comments tied to moments or ranges, and collaborative review and revision. The [concept artwork](readme/collaboration-coming.png) is labeled **is coming**; it is generated roadmap artwork, not a screenshot of a shipped interface. Current local project handoffs and revision protection do not constitute shipped timeline comments, collaborative review or simultaneous multiuser editing. No release date is announced.
+
 ## Input → Process → Output: reporting boundaries
 
 - **Input:** local media is imported into the project. YouTube / X links are reference inputs for an agent with appropriate retrieval and media tools; the app does not include a universal downloader. Scripts, Markdown, SRT and VTT can be read by the agent; text files are supported by the project editing contract.
@@ -109,6 +113,7 @@ Do not invent performance, coverage, adoption or audience-growth figures.
 | [1280 × 640 social preview](readme/social-preview.jpg) | Static GitHub/social sharing cover. |
 | [Workspace](readme/workspace.jpg) / [editor](readme/editor.jpg) | Actual Studio 0.6.1 demo snapshots; retain their original UI labels. |
 | [Library banner](readme/library.png) / [community banner](readme/community.png) | Generated artwork in the same painterly family as the cover. |
+| [Collaboration concept](readme/collaboration-coming.png) | Planned human–agent editing and timeline review, labeled **is coming**; use only as a concept preview. |
 | [Brandkit](../library/brandkits/openmotion/BRANDKIT.md) / [motion design system](../library/design-systems/ink-water/MOTION_DESIGN.md) | Reusable identity and creative direction; supply explicitly to your agent. |
 
 See [ASSETS.md](readme/ASSETS.md) for the image prompt, animation recipe, catalog-image provenance and third-party notices. Referenced films and example brands belong to their respective creators; the application license does not relicense them.

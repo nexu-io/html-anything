@@ -386,6 +386,18 @@ project and MP4; include source links in the article.
 | OpenMotion Library | Five collections with first entries, selected and supplied to an agent manually. |
 | `MOTION_DESIGN.md` | A v0.1 creative convention; no automatic importer or validator. |
 
+### 🫶 People + agents, creating together — is coming
+
+**An AI-native space for video creation and editing.** People and agents will work together on the same video project, from the first cut to motion design and the final review.
+
+![OpenMotion collaboration concept: a person and an agent review a selected timeline range, exchange comments and refine the same video project. is coming.](docs/readme/collaboration-coming.png)
+
+- **Edit together.** Shape the story, cut clips and create motion in one shared project.
+- **Comment on the timeline.** Attach feedback to specific moments and ranges, discuss changes with your agent and keep review context beside the work.
+- **Review and iterate together.** Turn comments into revisions, review the result and keep refining the same creative workspace.
+
+*is coming · Generated concept preview of a planned collaboration experience; no release date announced.*
+
 Directions to build with the community, without committed release dates:
 
 - [ ] Automatic content selection, irrelevant-passage detection and destination-aware reframing.

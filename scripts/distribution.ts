@@ -19,7 +19,7 @@ export const distributionDocuments = [
   'docs/readme/ASSETS.md', 'docs/readme/opendesign-symbol.svg',
   'docs/readme/editor.jpg', 'docs/readme/workspace.jpg',
   'docs/media-kit.md', 'docs/readme/cover.png', 'docs/readme/cover-motion.gif', 'docs/readme/social-preview.jpg',
-  'docs/readme/library.png', 'docs/readme/community.png',
+  'docs/readme/library.png', 'docs/readme/community.png', 'docs/readme/collaboration-coming.png',
   'library/README.md', 'library/README.zh-CN.md', 'library/ENTRY_TEMPLATE.md',
   'library/skills/brandkit/SKILL.md', 'library/templates/README.md',
   'library/components/README.md', 'library/components/title-reveal/README.md',

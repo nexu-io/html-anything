@@ -15,6 +15,8 @@
 - **Core story:** bring material → tell the story in your voice → organize and cut on the timeline → generate/select and refine media → preview and revise → export MP4 and keep the source.
 - **Product pillars:** intelligent cuts and story organization; media generation and search; multiplatform input and output. Current generation needs configured models. Integrated resource/Avatar search, automatic content selection and platform adaptation are product directions; use the [fact sheet](../../../docs/media-kit.md) for exact status.
 
+- **Collaboration direction — is coming:** people and agents edit and create motion in the same project, comment on the timeline, and review revisions together. Collaboration artwork must be labeled as a concept preview.
+
 The audience includes individual creators, teachers and small teams. Lead with AI editing as a way to express their own ideas, and the editable work they keep. Do not assert measured “99%” parity, complete competitor-template coverage or guaranteed audience growth without published evidence.
 
 ## Visual language

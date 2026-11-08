@@ -15,6 +15,7 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 | [Social preview](social-preview.jpg) | 1280 × 640 sharing image derived from the cover. |
 | [Library](library.png) | Generated 2172 × 724 companion artwork for the five resource collections. |
 | [Community](community.png) | Generated 2172 × 724 companion invitation to create and contribute. |
+| [Collaboration roadmap](collaboration-coming.png) | Generated 1774 × 887 painterly concept of human–agent co-editing, timeline comments and review. Labeled **is coming** and **Concept preview**; not a current product screenshot. |
 | [Editor](editor.jpg) and [workspace](workspace.jpg) | Actual Studio 0.6.1 at commit `7aee372`, using an isolated demo workspace and bundled Product Promo project. Original labels and pixels are preserved, shown at full width. |
 | Template frames | Existing Product Promo, NYT Graph and Decision Tree posters; their [sources and notices](../../template-library/NOTICE.md) remain alongside the projects. |
 | Contributor wall | Dynamic [contrib.rocks image](https://contrib.rocks/image?repo=nexu-io/html-anything), linked to [GitHub contributors](https://github.com/nexu-io/html-anything/graphs/contributors). Represents the repository including HTML Anything history, not a hand-picked OpenMotion-only team. The adjacent text link works without the external image. |
@@ -73,6 +74,20 @@ The current cover reads **Cut with AI.**, **The AI-native, open-source CapCut al
 
 ```text
 Edit the supplied OpenMotion brand cover with one precise spelling correction only. Replace the line "The open-source Cloud Motion alternative." with the exact line "The open-source Claude Motion alternative." The correct comparator name is CLAUDE Motion, spelled C-l-a-u-d-e. Keep every other word, the OpenMotion wordmark, Cut with AI headline, CapCut line, creator mission footer, layout, proportions, font style, black typography, painterly blue/green/cream/apricot paper background, and 2:1 composition unchanged. Maintain crisp perfectly readable typography and brand consistency.
+```
+
+### Collaboration roadmap concept
+
+The corrected OpenMotion cover was supplied as a visual style reference. The concept illustrates a planned shared timeline, comments and review; it does not assert an implemented collaboration interface.
+
+```text
+Create a new OpenMotion roadmap concept illustration, landscape 2:1, 1792x896 or equivalent. The supplied OpenMotion cover is a STYLE REFERENCE only: maintain the same sky blue, turquoise, emerald, apricot and warm ivory painterly dry-brush and watercolor-on-paper family, but create a completely new layout. This is a future collaboration concept, not an existing product screenshot.
+
+A sophisticated editorial software concept. Top left in generous warm ivory negative space, exact bold charcoal headline "Create together." Below it, exact smaller line "People + agents. One timeline." Top right a small elegant charcoal pill with the exact white label "is coming". Below, a single large refined floating white video-editing workspace, softly rounded, presented perfectly front-on, no perspective distortion. It fills about 75% of the canvas width and 58% of canvas height. The surrounding blue-green paint feels spacious and luminous, not ornamental clutter.
+
+Inside the workspace: a wide cinematic preview at top-left showing an abstract beautiful teal / coral paper landscape with tasteful small text "Your story". At top-right a compact collaboration review panel, labeled "Review", containing two clearly separated comments: a small human avatar and the label "You" with "Hold this shot longer."; a subtle green assistant icon and label "Agent" with "I'll adjust the pacing." Show both pointing to the same selected time range. Below the preview across the full workspace is a crisp professional multitrack editing timeline, with three visible lanes, neatly aligned teal video clips, apricot motion blocks, a pale green audio waveform, fine gray time ruler, one black playhead, a highlighted range, two small comment markers and a tasteful two-person/agent presence indicator. Suggest a continuous editable creative workspace, with precise visual hierarchy and generous spacing. Minimal tiny UI chrome: do not generate paragraphs, dense navigation or gibberish microtext. Bottom right outside the workspace, tiny exact text "Concept preview".
+
+No company logos other than the optional small word "OpenMotion" in the workspace top-left. No metrics, prices, platform logos, claims of shipped functionality, 3D mascots or purple neon. The image should be beautiful, legible at 900px wide, with sharp dark type and painterly margins that match the supplied brand cover. Opaque full bleed.
 ```
 
 ## Reproduce motion and sharing exports

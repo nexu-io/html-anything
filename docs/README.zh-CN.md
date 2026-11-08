@@ -383,6 +383,18 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | OpenMotion Library | 已有五类目录与首批内容，手动选择并交给 Agent 使用。 |
 | `MOTION_DESIGN.md` | v0.1 创作规范提案；没有自动导入器或校验器。 |
 
+### 🫶 人和 Agent 协同进行 AI 剪辑与 Motion 创作 — is coming
+
+**一起构建 AI 原生的视频创作与剪辑空间。** 从第一版剪辑到动效设计和最终评审，人和 Agent 围绕同一个视频项目共同创作。
+
+![OpenMotion 人与 Agent 协作概念：在时间轴选区旁评论、讨论和评审，共同调整同一视频项目。is coming。](readme/collaboration-coming.png)
+
+- **共同编辑。** 一起组织故事、剪辑片段和制作动效，协作推进同一份项目。
+- **在时间轴上评论。** 将反馈关联到具体时刻或片段范围，与 Agent 讨论修改，让评审上下文留在作品旁边。
+- **一起评审与迭代。** 把评论落实为修改，共同检查结果，在同一个创作空间里持续打磨。
+
+*is coming · 生成式概念预览，展示规划中的协作体验，尚未公布上线日期。*
+
 接下来希望和社区一起推进，以下均未承诺上线日期：
 
 - [ ] 自动选段、无关内容识别与面向发布目标的自动画幅重构。
