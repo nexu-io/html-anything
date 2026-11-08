@@ -16,12 +16,92 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 | [Library](library.png) | Generated 2172 × 724 companion artwork for the five resource collections. |
 | [Community](community.png) | Generated 2172 × 724 companion invitation to create and contribute. |
 | [Collaboration roadmap](collaboration-coming.png) | Generated 1774 × 887 painterly concept of human–agent co-editing, timeline comments and review. Labeled **is coming** and **Concept preview**; not a current product screenshot. |
-| [Editor](editor.jpg) and [workspace](workspace.jpg) | Actual Studio 0.6.1 at commit `7aee372`, using an isolated demo workspace and bundled Product Promo project. Original labels and pixels are preserved, shown at full width. |
-| Template frames | Existing Product Promo, NYT Graph and Decision Tree posters; their [sources and notices](../../template-library/NOTICE.md) remain alongside the projects. |
+| [Stay tuned GIF](stay-tuned.gif) | Generated 960 × 480 Star → Starred invitation; 40 frames, 4 seconds, infinite loop, about 437 KB. Linked to the repository. Inspired by the community CTA pattern in [Hypit](https://github.com/hypit-ai/hypit); no Hypit image or GitHub screenshot is reproduced. |
+| [Star frame](stay-tuned.png) / [Starred frame](stay-tuned-starred.png) | Two ImageGen frames used to reproduce the animation; illustration only, no fabricated repository counts or notification guarantees. |
+| [Editor](editor.jpg) and [workspace](workspace.jpg) | Historical Studio captures at commit `7aee372`, using an isolated demo workspace and bundled Product Promo project. Retained for provenance; the README now uses the product tour below. |
+| [Codex embedded editor](product-tour/codex-embedded.png) / [standalone workspace](product-tour/standalone-studio.png) | Real Studio captures of the same Product Promo project. The Codex image is the embedded Viewer, without a Codex desktop shell. |
+| [Claude Code Skills](product-tour/claude-code-skills.png) / [CLI checks](product-tour/cli-checks.png) | Real terminal output replayed in xterm.js: the five loaded Skills and the pinned engine's info/lint/timeline results. No model conversation is fabricated. |
+| [Connect Agent](product-tour/connect-agent.png) / [template handoff](product-tour/template-to-agent.png) | Real connection dialog and Product Promo preview with its exact template ID and generated Agent instruction. |
+| [Seven creative examples](#creative-examples) | Short GIF excerpts and stills from seven existing external catalog references. Paired with creative briefs, not presented as OpenMotion-generated work. Replaces the three small template posters in the scenario section. |
+| [18 animated catalog picks](#catalog-preview-grid) | Six groups of source-video excerpts replacing the former six static resource covers. 320 × 180, 12 fps, normal-speed continuous excerpts, silent GIF loops; exact sources and encoding live in the gallery manifest. |
+| Bundled template frames | Product Promo, NYT Graph and Decision Tree remain available through the [editable-template index](../../library/templates/README.md); their original projects, posters and [notices](../../template-library/NOTICE.md) are unchanged. |
 | Contributor wall | Dynamic [contrib.rocks image](https://contrib.rocks/image?repo=nexu-io/html-anything), linked to [GitHub contributors](https://github.com/nexu-io/html-anything/graphs/contributors). Represents the repository including HTML Anything history, not a hand-picked OpenMotion-only team. The adjacent text link works without the external image. |
 | [OpenDesign symbol](opendesign-symbol.svg) | Unmodified upstream [CDN asset](https://r.open-design.ai/files/1257306170d14488e993cb1f97b86aad8840a3f866f1978e0fd24b9a3c7832d8); retained for provenance, not used as a newly designed OpenMotion mark. SHA-256: `1257306170d14488e993cb1f97b86aad8840a3f866f1978e0fd24b9a3c7832d8`. |
 
 All README images have descriptive alternative text. Artwork, product evidence and reference works are labeled separately. Preserve reference previews and authors rather than repainting their content for brand consistency.
+
+<a id="creative-examples"></a>
+
+## Creative examples — seven scenes, seven briefs
+
+The scenario gallery pairs seven external catalog references with [English](../examples.md) and [Chinese](../examples.zh-CN.md) creative briefs. Each preview is a short, continuous excerpt at its original speed, with no rearrangement, repainting, branding overlay or synthetic footage. GIF encoding reduces dimensions, frame rate and palette; GIFs have no sound. Click through to the full reference to inspect the original. The two portrait examples retain portrait composition, and the other five retain their landscape composition.
+
+These are **reference works**, not generated OpenMotion demos, validated recreations or newly bundled editable templates. Creators and source brands retain their rights; the repository's Apache-2.0 license does not relicense these works. Attribution follows the existing catalog. The two entries labeled “Hyperframes catalog” identify the collection rather than claiming that Hyperframes created the original film.
+
+The gallery uses the same spacing, typography and two-column card structure for all seven examples. Original artwork keeps its own creative identity. The README offers a static-preview link for every GIF and a `prefers-reduced-motion` picture source; readers can choose a still even where the renderer does not apply the media query.
+
+| Scenario / preview | Catalog ID | Reference attribution | Excerpt (seconds) |
+| --- | --- | --- | --- |
+| [talking-head](examples/talking-head.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4) | 10–17 |
+| [story-recut](examples/story-recut.gif) · [still](examples/story-recut.jpg) | `hf-reference-aroll-hundred-days-story` | [Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) | 1–8 |
+| [product-launch](examples/product-launch.gif) · [still](examples/product-launch.jpg) | `hf-reference-jake-figma-draw` | [@figma](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4) | 5.5–12 |
+| [viral-remix](examples/viral-remix.gif) · [still](examples/viral-remix.jpg) | `hf-reference-jake-lovable` | [@lovable_dev](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4) | 3–10 |
+| [explainer](examples/explainer.gif) · [still](examples/explainer.jpg) | `hf-reference-remix-authorize-once` | [Hyperframes catalog](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4) | 2–9 |
+| [data-story](examples/data-story.gif) · [still](examples/data-story.jpg) | `hf-moment-M1128` | [@Vintage_god](https://x.com/Vintage_god/status/2106817967967056165) | 1.4–7.6 |
+| [music-visual](examples/music-visual.gif) · [still](examples/music-visual.jpg) | `hf-moment-M1139` | [@GoogleAI](https://x.com/GoogleAI/status/2024154215182926027) | 0–3.66667 |
+
+The [manifest](examples/manifest.json) records exact video URLs, source SHA-256, excerpt start/duration, poster timestamp and GIF checksum. The original catalog and its covers are unchanged. Full downloaded videos stay outside the checkout; only the seven short excerpts, seven stills and manifest are distributed.
+
+### Reproduce the excerpts
+
+Requires Python 3 and FFmpeg. From the repository root, run the following; it reads only the seven pinned public video URLs and writes the documented preview files. Recheck the source hashes before accepting replacements if upstream content changes.
+
+```sh
+python3 - <<'PYTHON'
+import hashlib, json, pathlib, subprocess, tempfile, urllib.request
+
+out = pathlib.Path('docs/readme/examples')
+manifest = json.loads((out / 'manifest.json').read_text())
+with tempfile.TemporaryDirectory(prefix='openmotion-examples-') as work:
+    for entry in manifest['entries']:
+        source = pathlib.Path(work) / (entry['slug'] + '.mp4')
+        with urllib.request.urlopen(entry['videoUrl'], timeout=60) as response:
+            source.write_bytes(response.read())
+        assert hashlib.sha256(source.read_bytes()).hexdigest() == entry['sourceSha256']
+        portrait = entry['slug'] in ('talking-head', 'story-recut')
+        scale = 'scale=-2:400' if portrait else 'scale=480:-2'
+        filters = (
+            f'fps=10,{scale}:flags=lanczos,split[a][b];'
+            '[a]palettegen=max_colors=128:stats_mode=diff[p];'
+            '[b][p]paletteuse=dither=bayer:bayer_scale=3:diff_mode=rectangle'
+        )
+        subprocess.run([
+            'ffmpeg', '-v', 'error', '-y', '-ss', str(entry['startSeconds']),
+            '-t', str(entry['durationSeconds']), '-i', str(source),
+            '-filter_complex', filters, '-an', '-loop', '0', str(out / entry['gif'])
+        ], check=True)
+        still_scale = 'scale=-2:480' if portrait else 'scale=640:-2'
+        subprocess.run([
+            'ffmpeg', '-v', 'error', '-y', '-ss', str(entry['posterSeconds']),
+            '-i', str(source), '-vf', still_scale + ':flags=lanczos',
+            '-frames:v', '1', '-q:v', '2', str(out / entry['poster'])
+        ], check=True)
+PYTHON
+```
+
+FFmpeg versions can affect encoded bytes. Regeneration must update the manifest's GIF byte counts and checksums after validating the new files; source checksums remain tied to the fetched originals.
+
+<a id="product-tour-captures"></a>
+
+## Product tour captures
+
+Captured on 2026-11-08 from the source checkout based on `8ba3fab8abc2`, with an isolated demo workspace and the bundled, unchanged `product-promo` content. Four Studio images are 1600 × 1000 browser viewport captures. The original UI labels, including **OpenDesign**, remain visible. No brand artwork, invented assistant response or host shell is painted over the product.
+
+The two terminal images replay bytes recorded with the macOS `script` utility into xterm.js, then capture the terminal area with extra blank rows cropped. The Claude Code image is the actual local `/skills` screen with `motion:motion-template-to-video` selected; the CLI image contains separately executed `info`, `lint` and `timeline` output for the same project. The displayed model name is a CLI setting, not evidence that a model created the film. Local Skill discovery and MCP handshake succeeded; a model-driven adaptation was not completed in this capture run.
+
+The embedded Viewer is the surface returned for Codex and other hosts; it is **not a screenshot of the Codex desktop application**. The standalone capture retains the session and request alongside that project. Connect Agent prepares local client instructions; the template preview prepares a precise handoff. Neither screenshot proves the external client has completed its editing task.
+
+Reproduction steps, CLI expectations and capture boundaries are maintained in the [product tour guide](../product-tour.md). Keep demo projects, browser profiles, credentials and raw terminal recordings outside the repository. The six PNGs and guide are explicitly included in the distribution list. The older `7aee372` images remain available as historical assets.
 
 ## Generation prompts
 
@@ -90,6 +170,29 @@ Inside the workspace: a wide cinematic preview at top-left showing an abstract b
 No company logos other than the optional small word "OpenMotion" in the workspace top-left. No metrics, prices, platform logos, claims of shipped functionality, 3D mascots or purple neon. The image should be beautiful, legible at 900px wide, with sharp dark type and painterly margins that match the supplied brand cover. Opaque full bleed.
 ```
 
+### Stay tuned / Star invitation
+
+The [Hypit README](https://github.com/hypit-ai/hypit) informed the community invitation format. These two frames were independently generated in OpenMotion's painterly brand language. The first frame uses the corrected cover as a style reference; the second edits the first frame into the selected state. They illustrate clicking Star and do not record a real GitHub action. Release notifications use Watch settings, not Star.
+
+First frame:
+
+```text
+Create a new OpenMotion GitHub star invitation banner, wide landscape 2:1, about 1792x896. Use the supplied OpenMotion cover solely as a STYLE REFERENCE: luminous ivory paper, sky blue, turquoise and emerald watercolor with dry brush texture and tiny apricot accents, crisp dark typography, generous breathing space. This is a brand CTA illustration, not a screenshot of GitHub.
+
+Large exact charcoal heading near the upper left: "Stay tuned with us."
+Below it a smaller exact line: "OpenMotion"
+Below that a tasteful smaller line: "Star the project. Help the next creator."
+The right/lower half has one prominent front-facing GitHub-like but generic white rounded rectangular button with fine gray border and very subtle shadow. In the button put a perfectly drawn outlined five-point star icon followed by the exact dark text "Star". The button should be clear and roomy, approximately 30 percent of the canvas width. A simple black mouse pointer with a thin white outline sits just below and to the right of the Star label, touching the bottom-right area of the button, suggesting the next action is clicking Star. The cursor is modest and clean, not enormous.
+
+Composition: a quiet luminous ivory central field, painterly blue sweep across the top-right, green/turquoise wash sweeping through the bottom-left and apricot glints at the edges, matching the supplied cover. Beautiful balanced editorial design. No numbers, star counts, followers, fake repository chrome, browsers, mascot, additional logos, notification claims, badges or extra text. Keep all copy exact and sharp. Full bleed opaque image. This is frame one of a future star-click animation; give the button a clean unselected state and keep the surrounding design easy to preserve in a later text edit.
+```
+
+Selected-state frame:
+
+```text
+Precise animation-frame edit of the supplied OpenMotion Star invitation. Preserve the entire canvas size, every background pixel as closely as possible, all painterly brushwork, all typography, and all positions. Change only the existing white Star button to its selected state: fill the outlined five-point star with warm golden yellow (#E6B450), keeping its dark outline; replace the button label "Star" with the exact text "Starred", sized to fit within the SAME button bounds, centered with the star. Keep the button white with the same border. Keep the mouse pointer exactly in its current position. Add two very small golden click rays near the pointer tip, inside the button edge, to suggest a click. Do not change the heading "Stay tuned with us.", "OpenMotion", or "Star the project. Help the next creator." Do not change any layout, color or object outside the button area. This is the second frame of a seamless Star-to-Starred GIF, so alignment with the supplied first frame is crucial.
+```
+
 ## Reproduce motion and sharing exports
 
 From the repository root with FFmpeg available:
@@ -106,17 +209,70 @@ ffmpeg -hide_banner -loglevel error -i docs/readme/cover.png \
 
 Finite input duration lets palette generation finish. GIF timing rounds to approximately 4.01 seconds. The static cover is the default README image; the GIF is an optional download.
 
+### Reproduce the Star invitation
+
+Both source PNGs are 1774 × 887. Hold the unselected state for 1.4 seconds and the selected state for 2.6 seconds, then loop:
+
+```sh
+ffmpeg -hide_banner -loglevel error \
+  -loop 1 -framerate 10 -t 1.4 -i docs/readme/stay-tuned.png \
+  -loop 1 -framerate 10 -t 2.6 -i docs/readme/stay-tuned-starred.png \
+  -filter_complex "[0:v]scale=960:480:flags=lanczos,setsar=1,setpts=PTS-STARTPTS[a];[1:v]scale=960:480:flags=lanczos,setsar=1,setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1:a=0,split[c][d];[c]palettegen=max_colors=192:stats_mode=full[p];[d][p]paletteuse=dither=bayer:bayer_scale=4" \
+  -loop 0 -y docs/readme/stay-tuned.gif
+```
+
 ## Catalog preview grid
 
-Unmodified catalog covers link to original resources. The [cover index](../../web/catalog/covers.json) retains acquisition methods; [resource data](../../web/catalog/hyperframes.json) retains authors and sources.
+The former six static catalog thumbnails have been replaced by **18 animated previews in six groups**, following the category-led demo presentation of [OpenDesign](https://github.com/nexu-io/open-design#demo). All animations are continuous excerpts from actual catalog videos, at normal playback speed. No generated frames, fake UI motion, camera animation over stills or synthetic overlays are used. Original source content is preserved; taller source compositions are contained in the same landscape frame rather than cropped.
 
-| Resource ID | Preview | Credit |
-| --- | --- | --- |
-| `hf-block-app-showcase` | [App Showcase](../../web/catalog/covers/51a2d141e18e608cc11b9256.jpg) | Hyperframes |
-| `hf-reference-remix-firecrawl` | [Firecrawl Free Keyless](../../web/catalog/covers/02f9ae975461fe6290062d7f.jpg) | @ericciarla |
-| `hf-block-glass-shard-title` | [Glass Shard Title](../../web/catalog/covers/10cceacc02d415247d58f562.jpg) | Hyperframes |
-| `hf-block-code-3d-extrude` | [Code 3D Extrude](../../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg) | Hyperframes |
-| `hf-block-chrome-orb` | [Chrome Orb](../../web/catalog/covers/dbd79cc4d686e0f4513ff2c9.jpg) | Hyperframes |
-| `hf-reference-jake-pond` | [Pond: a new Linux OS](../../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg) | @bflycomputer |
+Default README images are GIFs. Existing [catalog covers](../../web/catalog/covers.json) are only selected for the reader's `prefers-reduced-motion` preference. Clicking a GIF opens the full source video, while the credit links to the catalog's source URL. The [resource data](../../web/catalog/hyperframes.json) and original catalog covers remain unchanged.
 
-The application license does not grant ownership of referenced films, media or brands.
+| Preview | Catalog ID | Credit / source | Excerpt (seconds) |
+| --- | --- | --- | --- |
+| [App Showcase](gallery/app-showcase.gif) | `hf-block-app-showcase` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json) | 0.5–4.5 |
+| [Firecrawl Free Keyless](gallery/firecrawl.gif) | `hf-reference-remix-firecrawl` | [@ericciarla](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4) | 1.6–5.6 |
+| [3D UI Reveal](gallery/ui-3d-reveal.gif) | `hf-block-ui-3d-reveal` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json) | 2.4–6.4 |
+| [Pond: a new Linux OS](gallery/pond.gif) | `hf-reference-jake-pond` | [@bflycomputer](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4) | 1–5 |
+| [Kimi K3 teaser](gallery/kimi-k3.gif) | `hf-reference-remix-kimi-k3` | [@Kimi_Moonshot](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-kimi-k3-reference.mp4) | 1–5 |
+| [Reception by ElevenLabs](gallery/elevenlabs-reception.gif) | `hf-reference-remix-elevenlabs-reception` | [@ElevenLabs](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-elevenlabs-reception-reference.mp4) | 5–9 |
+| [Glass Shard Title](gallery/glass-shard-title.gif) | `hf-block-glass-shard-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json) | 0.5–6 |
+| [Canopy Part Title](gallery/canopy-title.gif) | `hf-block-canopy-part-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json) | 0.3–4.3 |
+| [Wireframe Portal Title](gallery/wireframe-title.gif) | `hf-block-wireframe-portal-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json) | 0.3–4.3 |
+| [Iskra Light](gallery/iskra-light.gif) | `hf-reference-remix-iskra-light` | [@world_is_web](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-iskra-light-reference.mp4) | 2.5–6.5 |
+| [Liquid Glass Widgets](gallery/liquid-glass-widgets.gif) | `hf-block-liquid-glass-widgets` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json) | 0.3–4.3 |
+| [Cyera brand video](gallery/cyera.gif) | `hf-reference-remix-cyera` | [Cyera](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-cyera-reference.mp4) | 7.2–11.2 |
+| [Code 3D Extrude](gallery/code-3d.gif) | `hf-block-code-3d-extrude` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json) | 0.5–4.5 |
+| [Glyph: GPU typography for the web](gallery/glyph.gif) | `hf-reference-remix-glyph` | [@pmndrs](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-glyph-reference.mp4) | 0.3–4.3 |
+| [NYC Paris Flight](gallery/flight-map.gif) | `hf-block-nyc-paris-flight` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json) | 0.2–5.5 |
+| [Aurora](gallery/aurora.gif) | `hf-block-aurora` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json) | 0–2 |
+| [Linear Loops](gallery/linear-loops.gif) | `hf-reference-remix-linear-loops` | [@linear](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-linear-loops-reference.mp4) | 5–9 |
+| [Code Particle Assemble](gallery/code-particles.gif) | `hf-block-code-particle-assemble` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json) | 0.3–4.3 |
+
+The [gallery manifest](gallery/manifest.json) records the six group labels, exact catalog IDs, source and video URLs, selected time ranges, source SHA-256, existing poster paths, GIF byte counts and GIF SHA-256. The gallery contains 8 reference films and 10 registry components; it does not add editable templates or claim OpenMotion generated the displayed work. Third-party media, brands and source notices retain their original rights. The application’s Apache-2.0 license does not relicense them.
+
+### Reproduce the gallery GIFs
+
+Requires Python 3 and FFmpeg. Run from the repository root. Full source videos are temporary and are not distributed. The checked-in filter keeps a 320 × 180 canvas, 12 fps and a 128-color palette; padding preserves each original composition.
+
+```sh
+python3 - <<'PYTHON'
+import hashlib, json, pathlib, subprocess, tempfile, urllib.request
+
+out = pathlib.Path('docs/readme/gallery')
+manifest = json.loads((out / 'manifest.json').read_text())
+with tempfile.TemporaryDirectory(prefix='openmotion-gallery-') as work:
+    for entry in manifest['entries']:
+        source = pathlib.Path(work) / (entry['slug'] + '.mp4')
+        with urllib.request.urlopen(entry['videoUrl'], timeout=60) as response:
+            source.write_bytes(response.read())
+        assert hashlib.sha256(source.read_bytes()).hexdigest() == entry['sourceSha256']
+        subprocess.run([
+            'ffmpeg', '-v', 'error', '-xerror', '-y',
+            '-ss', str(entry['startSeconds']), '-t', str(entry['durationSeconds']),
+            '-i', str(source), '-filter_complex', manifest['encoding']['ffmpegFilter'],
+            '-an', '-loop', '0', str(out / entry['gif'])
+        ], check=True)
+PYTHON
+```
+
+Encoded bytes can differ between FFmpeg versions. After regeneration, decode every animation, inspect representative frames and timing, then update the GIF byte counts and checksums in the manifest. Source hashes identify the fetched originals; do not silently accept changed upstream content.

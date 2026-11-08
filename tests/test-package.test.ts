@@ -8,10 +8,10 @@ import { download, testVersion, lock, targetInfo } from '../scripts/test-package
 import { nativeComponents } from '../scripts/runtime-assets.mjs';
 
 test('test versions sort above an already distributed source version and distinguish attempts', () => {
-  assert.equal(testVersion('0.6.1', '42', '1'), '0.6.2-beta.42.1');
-  assert.equal(testVersion('0.6.1', '42', '2'), '0.6.2-beta.42.2');
-  assert.throws(() => testVersion('0.6.1', '../x'), /positive/);
-  assert.throws(() => testVersion('0.6.1-beta.1', '1'), /MAJOR/);
+  assert.equal(testVersion('0.1.0', '42', '1'), '0.1.1-beta.42.1');
+  assert.equal(testVersion('0.1.0', '42', '2'), '0.1.1-beta.42.2');
+  assert.throws(() => testVersion('0.1.0', '../x'), /positive/);
+  assert.throws(() => testVersion('0.1.0-beta.1', '1'), /MAJOR/);
   assert.equal(targetInfo('mac-arm64').platform, 'darwin');
   assert.equal(targetInfo('win-x64').platform, 'win32');
   assert.throws(() => targetInfo('unknown'), /Unsupported/);

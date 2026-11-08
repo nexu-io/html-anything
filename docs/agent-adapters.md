@@ -19,6 +19,8 @@ Codex、Claude Code、DeepSeek Harness（DSH）与 WorkBuddy 从同一份已安�
 
 公开入口：[在 OpenMotion 中连接 Agent](README.zh-CN.md#connect-your-agent) · [把 OpenMotion 接入 Agent](README.zh-CN.md#从-agent-接入)。
 
+三种展示入口和单模板交接的实际截图见[产品演示](product-tour.md)。Codex 图展示供宿主使用的嵌入 Viewer；Claude Code 图展示本地 Skill 列表与单独执行的 CLI 检查，分别标明宿主外框与模型执行的验证范围。
+
 ## 仅安装 Skills：npx skills
 
 需要在已有运行时之外发现或安装制作指引时，可用 [Skills CLI](https://github.com/vercel-labs/skills)，在源码 checkout 执行：

@@ -31,7 +31,7 @@ test('beta npm artifacts carry one immutable version, both lock identities and n
   const unapproved = ['docs/private-sentinel.md', 'scripts/private-sentinel.mjs', 'private-sentinel.ts'];
   for (const file of unapproved) await writeFile(file, 'must not ship');
   try {
-    const version = '0.6.2-beta.999001.1', output = path.join(directory, 'build');
+    const version = '0.1.1-beta.999001.1', output = path.join(directory, 'build');
     const built = await packageNpm(output, version), release = await json(built.manifest);
     assert.equal(release.version, version); assert.equal(release.installer.version, version); assert.equal(release.format, 'npm');
     assert.equal(release.mcp.profile, 'phase1'); assert.deepEqual(release.mcp.tools, mcpRegistry().tools.map(tool => tool.name));

@@ -101,21 +101,118 @@ Recreate the structure and pacing of a viral reference, edit your own talking-he
 
 ## 🎞️ What can you make?
 
-| Your next AI edit | Start with | Create and refine |
-| --- | --- | --- |
-| **AI talking-head edits** | Recorded footage, a script or timed captions | Cut confirmed passages, lead with the main point, tighten repetition and add captions, supporting footage and music. |
-| **AI recuts & revisions** | Existing clips, screen recordings and a change request | Reshape the story and pacing; make versions with different durations and compositions. |
-| **Product launches & demos** | Screenshots, a product brief and brand assets | Product reveals, feature tours and launch films. |
-| **Viral video recreation** | A reference link and your own brand or footage | Study the hook, pacing and visual structure; rebuild an editable version. |
-| **Explainers & tutorials** | A script, a workflow or a complex idea | Step-by-step stories, diagrams and annotated scenes. |
-| **Data stories & charts** | Numbers, labels and the point you want to make | Animated charts, comparisons and visual explanations. |
-| **Music & art visuals** | An audio track, artwork and a creative direction | Typography, graphic sequences and movement timed to sound. |
+**See the idea. Make it yours.** Seven scenarios, each with a creative brief you can hand to your agent. These animated excerpts are external works selected from the resource catalog; click to watch the full reference, then start with your own material and brand.
 
-| [Product Promo · 20s](template-library/product-promo/) | [NYT Graph · 15s](template-library/nyt-graph/) | [Decision Tree · 10s](template-library/decision-tree/) |
-| --- | --- | --- |
-| ![Product reveal with a collaborative canvas](template-library/product-promo/poster.jpg) | ![Editorial chart with animated bars and annotations](template-library/nyt-graph/poster.jpg) | ![An explainer built around connected branches](template-library/decision-tree/poster.jpg) |
+<table>
+<tr>
+<td width="50%" valign="top">
+<strong>01 · AI talking-head edits</strong><br>
+Three minutes of footage. One sharp story.
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/talking-head.jpg">
+<img src="docs/readme/examples/talking-head.gif" width="208" alt="External creative reference: Ali Abdaal · 5 tools I use every day">
+</picture></a>
+</p>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 5 tools I use every day</a></sub><br><br>
+<strong>Start with</strong> · Your recording + transcript / timecodes<br>
+<strong>Make it yours</strong> · A clear hook, tighter speech, captions and well-timed B-roll.<br><br>
+<a href="docs/examples.md#talking-head">Copy the creative brief →</a> · <a href="docs/readme/examples/talking-head.jpg">Still preview</a>
+</td>
+<td width="50%" valign="top">
+<strong>02 · AI recuts & revisions</strong><br>
+Scattered clips become a 100-day story.
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/story-recut.jpg">
+<img src="docs/readme/examples/story-recut.gif" width="208" alt="External creative reference: 100 days with stickers and photo cards · Hyperframes catalog">
+</picture></a>
+</p>
+<sub>Reference · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">100 days with stickers and photo cards · Hyperframes catalog</a></sub><br><br>
+<strong>Start with</strong> · Your clips, photos, voice-over and story outline<br>
+<strong>Make it yours</strong> · A personal montage with photo cutouts, chapter beats and a new pace.<br><br>
+<a href="docs/examples.md#story-recut">Copy the creative brief →</a> · <a href="docs/readme/examples/story-recut.jpg">Still preview</a>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<strong>03 · Product launches & demos</strong><br>
+Make the feature the hero.
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/product-launch.jpg">
+<img src="docs/readme/examples/product-launch.gif" width="480" alt="External creative reference: Figma Draw · @figma">
+</picture></a>
+</p>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4">Figma Draw · @figma</a></sub><br><br>
+<strong>Start with</strong> · Product screens + feature brief + Brandkit<br>
+<strong>Make it yours</strong> · A feature reveal, a focused UI demonstration and a memorable finish.<br><br>
+<a href="docs/examples.md#product-launch">Copy the creative brief →</a> · <a href="docs/readme/examples/product-launch.jpg">Still preview</a>
+</td>
+<td width="50%" valign="top">
+<strong>04 · Viral video recreation</strong><br>
+Remix the rhythm. Make it yours.
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/viral-remix.jpg">
+<img src="docs/readme/examples/viral-remix.gif" width="480" alt="External creative reference: Lovable: Aesthetics Update · @lovable_dev">
+</picture></a>
+</p>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4">Lovable: Aesthetics Update · @lovable_dev</a></sub><br><br>
+<strong>Start with</strong> · A reference + your copy, visuals and brand<br>
+<strong>Make it yours</strong> · A new editable cut built around the hook, typography and visual rhythm.<br><br>
+<a href="docs/examples.md#viral-remix">Copy the creative brief →</a> · <a href="docs/readme/examples/viral-remix.jpg">Still preview</a>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<strong>05 · Explainers & tutorials</strong><br>
+One workflow. Three clear steps.
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/explainer.jpg">
+<img src="docs/readme/examples/explainer.gif" width="480" alt="External creative reference: Authorize Once, Everyone Connected · Hyperframes catalog">
+</picture></a>
+</p>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4">Authorize Once, Everyone Connected · Hyperframes catalog</a></sub><br><br>
+<strong>Start with</strong> · Your workflow + script + accurate UI captures<br>
+<strong>Make it yours</strong> · A guided sequence with one idea per scene and purposeful callouts.<br><br>
+<a href="docs/examples.md#explainer">Copy the creative brief →</a> · <a href="docs/readme/examples/explainer.jpg">Still preview</a>
+</td>
+<td width="50%" valign="top">
+<strong>06 · Data stories & charts</strong><br>
+Give every number a point.
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/data-story.jpg">
+<img src="docs/readme/examples/data-story.gif" width="480" alt="External creative reference: Animated comparison bars · @Vintage_god">
+</picture></a>
+</p>
+<sub>Reference · <a href="https://x.com/Vintage_god/status/2106817967967056165">Animated comparison bars · @Vintage_god</a></sub><br><br>
+<strong>Start with</strong> · Your data, units, source and conclusion<br>
+<strong>Make it yours</strong> · A legible chart reveal with animated values and one clear comparison.<br><br>
+<a href="docs/examples.md#data-story">Copy the creative brief →</a> · <a href="docs/readme/examples/data-story.jpg">Still preview</a>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
+<strong>07 · Music & art visuals</strong><br>
+Give your track a visual identity.
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1139/clip.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/music-visual.jpg">
+<img src="docs/readme/examples/music-visual.gif" width="480" alt="External creative reference: Lyria 3 visual sequence · @GoogleAI">
+</picture></a>
+</p>
+<sub>Reference · <a href="https://x.com/GoogleAI/status/2024154215182926027">Lyria 3 visual sequence · @GoogleAI</a></sub><br><br>
+<strong>Start with</strong> · Your audio + mood + beat markers / cue points<br>
+<strong>Make it yours</strong> · Layered color, kinetic type and a visual sequence timed to your track.<br><br>
+<a href="docs/examples.md#music-visual">Copy the creative brief →</a> · <a href="docs/readme/examples/music-visual.jpg">Still preview</a>
+</td>
+</tr>
+</table>
 
-Three bundled, editable [examples](template-library/NOTICE.md) to start from. Replace the content, adjust the pacing and make them your own.
+These references illustrate creative directions; they are not OpenMotion-generated acceptance demos. For an editable starting project, open one of the [three bundled templates](library/templates/README.md). [Example briefs and workflow](docs/examples.md) · [Sources and excerpt records](docs/readme/ASSETS.md#creative-examples)
 
 <a id="input--process--output"></a>
 
@@ -155,17 +252,60 @@ OUTPUT    Render MP4 + keep editable source → adapt the next version
 
 ## 🖥️ Product tour
 
-**Workspace & library.** Start with a brief or template, revisit a session and connect your agent.
+**One template, three ways to work.** Follow the bundled **Product Promo** through an embedded editor, the standalone workspace and a terminal workflow. Then see how to connect an agent and hand it one specific template.
 
-![OpenMotion workspace and template library, captured in Studio 0.6.1.](docs/readme/workspace.jpg)
+| Start here | What the demo shows |
+| --- | --- |
+| [Codex](#demo-codex) | The embedded editor returned to a host: source, preview, layers and timeline. |
+| [Standalone Studio](#demo-standalone) | Sessions, the saved request and the same editable project. |
+| [Claude Code + CLI](#demo-claude-code) | Loaded production Skills and real CLI project checks. |
+| [Template → Agent](#demo-template-handoff) | Connect Agent, preview one template and copy its precise handoff. |
 
-**AI edits & the timeline.** Review your agent’s cut, refine scenes, assets and timing, then export.
+<a id="demo-codex"></a>
 
-![OpenMotion Studio: compositions, preview, inspector and timeline, captured in Studio 0.6.1.](docs/readme/editor.jpg)
+### 1. Codex · an editable preview beside your conversation
 
-**One workflow, several surfaces:** the workspace holds sessions and projects; the library helps you choose a starting point; Studio gives you compositions, assets, code, preview and a timeline. The model gateway can generate image, video and audio assets through configured providers, ready for you to select and place in the edit.
+Ask Codex to open the project's preview, then inspect and refine the source and timeline. **This capture shows the real `embed=1` editor used by hosts such as Codex; it does not include the Codex desktop shell.** Opening it inside a panel depends on the host's browser capability.
 
-Screenshots show the existing Studio 0.6.1 demo workspace and retain its original labels. [Image sources](docs/readme/ASSETS.md) · [Editor guide](studio/README.md) · [Media generation](docs/model-gateway.md)
+![OpenMotion embedded editor for Codex, showing Product Promo source, preview, layers and timeline; host shell not shown.](docs/readme/product-tour/codex-embedded.png)
+
+<a id="demo-standalone"></a>
+
+### 2. Standalone · your full creative workspace
+
+Open Studio directly. Keep the request and project in one session, work with source and media, scrub the timeline and return for another revision. **Copy for Agent** carries the request into your connected client.
+
+![Standalone OpenMotion workspace with the saved Product Promo request, session list and editable timeline.](docs/readme/product-tour/standalone-studio.png)
+
+<a id="demo-claude-code"></a>
+
+### 3. Claude Code · Skills, MCP and CLI in your terminal
+
+Load the [Claude Code adapter](docs/agent-adapters.md#codex--claude-code) and open `/skills`. Choose **motion-template-to-video** for an existing editable template; choose **motion-recreate** for reconstruction from a reference video.
+
+![Actual Claude Code skills screen, replayed from terminal output, with motion-template-to-video selected among the five Motion Skills.](docs/readme/product-tour/claude-code-skills.png)
+
+The pinned CLI can inspect the same project: **1920 × 1080, 20 seconds, three graphic scenes and a caption track; lint reports zero errors and warnings.** These are actual CLI results. The terminal captures verify local Skill loading and project checks; they do not show a completed model-driven adaptation.
+
+![Recorded CLI output for Product Promo: info, lint and timeline checks.](docs/readme/product-tour/cli-checks.png)
+
+<a id="demo-template-handoff"></a>
+
+### Connect once → give your agent one template
+
+**Connect Agent.** Select Codex, Claude Code or another local client and copy the connection instruction generated for your workspace.
+
+![Connect Agent dialog with Codex selected, alternative clients and the workspace connection instruction.](docs/readme/product-tour/connect-agent.png)
+
+**Preview → one-click copy → paste into your agent.** Search for **Product Promo**, open its preview and expand the copy instruction. It includes the exact `product-promo` ID and a guide URL for the selected client. The bundled template opens as an editable copy; an external video reference requires the agent to analyze and rebuild it.
+
+![Product Promo preview with Open and edit, one-click copy, and the expanded template-specific Agent instruction.](docs/readme/product-tour/template-to-agent.png)
+
+After pasting the generated instruction, add your changes, for example:
+
+> Use this Product Promo template for my product. Keep the 20-second structure and animation; replace the copy and assets with the material I provide. Open the editable preview so I can review it before export.
+
+Use the link generated by **your running workspace**; the loopback address in a screenshot belongs to the demonstration. [Reproduce the tour](docs/product-tour.md) · [Image sources and capture scope](docs/readme/ASSETS.md#product-tour-captures) · [Editor guide](studio/README.md)
 
 <a id="your-app-your-agent"></a>
 <a id="connect-your-agent"></a>
@@ -270,24 +410,126 @@ Choose the files and explicitly give them to your agent with your material. The 
 
 The current gallery's one-click action prepares the agent handoff; the connected agent performs the work. Automatic discovery, installation and personalized optimization across the community library are coming. [Template entry points](library/templates/README.md)
 
+<a id="motion-gallery"></a>
+
 ### See the work in the catalog
 
-**A library to learn from, adapt and contribute to.** The current catalog contains **894 resources: 3 bundled editable templates and 891 external references and registry items**. Browse product promos, motion design, talking-head references and reusable elements, with original authors and sources where available.
+**18 animated picks. Find a style, then make it yours.** Explore launch films, kinetic type, glass and light, spatial motion and generative visuals. Click an animation for the full video; find the same title in Studio’s library to hand it to your agent.
+
+**A library to learn from, adapt and contribute to.** The current catalog contains **894 resources: 3 bundled editable templates and 891 external references and registry items**, with original authors and sources where available.
 
 <table>
+<tr><th colspan="3" align="left">📱 Product & interface</th></tr>
 <tr>
-<td width="33%" valign="top"><a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json"><img src="web/catalog/covers/51a2d141e18e608cc11b9256.jpg" alt="App Showcase" width="260" /></a><br/><sub><b>App Showcase</b> · Hyperframes</sub></td>
-<td width="33%" valign="top"><a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4"><img src="web/catalog/covers/02f9ae975461fe6290062d7f.jpg" alt="Firecrawl Free Keyless" width="260" /></a><br/><sub><b>Firecrawl Free Keyless</b> · @ericciarla</sub></td>
-<td width="33%" valign="top"><a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json"><img src="web/catalog/covers/10cceacc02d415247d58f562.jpg" alt="Glass Shard Title" width="260" /></a><br/><sub><b>Glass Shard Title</b> · Hyperframes</sub></td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="docs/readme/gallery/app-showcase.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
+<strong>App Showcase</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="docs/readme/gallery/firecrawl.gif" width="300" alt="Animated catalog preview: Firecrawl Free Keyless"></picture></a><br>
+<strong>Firecrawl Free Keyless</strong><br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4">@ericciarla</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="docs/readme/gallery/ui-3d-reveal.gif" width="300" alt="Animated catalog preview: 3D UI Reveal"></picture></a><br>
+<strong>3D UI Reveal</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json">Hyperframes</a></sub>
+</td>
 </tr>
+<tr><th colspan="3" align="left">🚀 Brand & launch films</th></tr>
 <tr>
-<td width="33%" valign="top"><a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json"><img src="web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg" alt="Code 3D Extrude" width="260" /></a><br/><sub><b>Code 3D Extrude</b> · Hyperframes</sub></td>
-<td width="33%" valign="top"><a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/chrome-orb/registry-item.json"><img src="web/catalog/covers/dbd79cc4d686e0f4513ff2c9.jpg" alt="Chrome Orb" width="260" /></a><br/><sub><b>Chrome Orb</b> · Hyperframes</sub></td>
-<td width="33%" valign="top"><a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4"><img src="web/catalog/covers/66ac2f8b58e55670971ae70c.jpg" alt="Pond: a new Linux OS" width="260" /></a><br/><sub><b>Pond: a new Linux OS</b> · @bflycomputer</sub></td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
+<strong>Pond: a new Linux OS</strong><br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4">@bflycomputer</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="docs/readme/gallery/kimi-k3.gif" width="300" alt="Animated catalog preview: Kimi K3 teaser"></picture></a><br>
+<strong>Kimi K3 teaser</strong><br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-kimi-k3-reference.mp4">@Kimi_Moonshot</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="docs/readme/gallery/elevenlabs-reception.gif" width="300" alt="Animated catalog preview: Reception by ElevenLabs"></picture></a><br>
+<strong>Reception by ElevenLabs</strong><br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-elevenlabs-reception-reference.mp4">@ElevenLabs</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">✍️ Kinetic typography</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="docs/readme/gallery/glass-shard-title.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
+<strong>Glass Shard Title</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="docs/readme/gallery/canopy-title.gif" width="300" alt="Animated catalog preview: Canopy Part Title"></picture></a><br>
+<strong>Canopy Part Title</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="docs/readme/gallery/wireframe-title.gif" width="300" alt="Animated catalog preview: Wireframe Portal Title"></picture></a><br>
+<strong>Wireframe Portal Title</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json">Hyperframes</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">💎 Light, glass & 3D worlds</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="docs/readme/gallery/iskra-light.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
+<strong>Iskra Light</strong><br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="docs/readme/gallery/liquid-glass-widgets.gif" width="300" alt="Animated catalog preview: Liquid Glass Widgets"></picture></a><br>
+<strong>Liquid Glass Widgets</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="docs/readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
+<strong>Cyera brand video</strong><br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-cyera-reference.mp4">Cyera</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🧭 Depth & camera motion</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="docs/readme/gallery/code-3d.gif" width="300" alt="Animated catalog preview: Code 3D Extrude"></picture></a><br>
+<strong>Code 3D Extrude</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="docs/readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
+<strong>Glyph: GPU typography for the web</strong><br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-glyph-reference.mp4">@pmndrs</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="docs/readme/gallery/flight-map.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
+<strong>NYC Paris Flight</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json">Hyperframes</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">✨ Generative visuals</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="docs/readme/gallery/aurora.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
+<strong>Aurora</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="docs/readme/gallery/linear-loops.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
+<strong>Linear Loops</strong><br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-linear-loops-reference.mp4">@linear</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="docs/readme/gallery/code-particles.gif" width="300" alt="Animated catalog preview: Code Particle Assemble"></picture></a><br>
+<strong>Code Particle Assemble</strong><br>
+<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json">Hyperframes</a></sub>
+</td>
 </tr>
 </table>
 
-Actual reference and registry previews from the catalog. Click through to the original source; these are resource examples, not additional bundled templates.
+Animated excerpts from the catalog’s original videos, preserving their imagery and normal playback speed. These show external references and components, not additional bundled templates. [Sources and excerpt records](docs/readme/ASSETS.md#catalog-preview-grid)
 
 | Explore | What you get |
 | --- | --- |
@@ -501,6 +743,18 @@ Directions to build with the community, without committed release dates:
 - [ ] Social-format, caption and export presets.
 - [ ] Motion Benchmark / Arena with public tasks and evaluation methods.
 
+<a id="stay-tuned"></a>
+
+## ⭐ Stay tuned with us
+
+**Star OpenMotion and help more people discover AI Cut.** Keep the project close, follow its progress and bring your next idea to the community.
+
+[![Animated Star invitation for OpenMotion: click through to the repository and star the project.](docs/readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
+
+[⭐ Star on GitHub](https://github.com/nexu-io/html-anything) · [Roadmap](#status--roadmap) · [Join the community](#community)
+
+For release notifications, choose **Watch → Custom → Releases** on the repository. [GitHub notification settings](https://docs.github.com/en/subscriptions-and-notifications/get-started/configuring-notifications).
+
 <a id="community"></a>
 
 ## 🤝 Community
@@ -537,6 +791,7 @@ What informed the product, and where the connection lives in this repository.
 | Source | Role here & repository entry |
 | --- | --- |
 | [OpenDesign](https://github.com/nexu-io/open-design) / [website](https://open-design.ai/) | UI design-system source, resource/contribution structure and painterly brand direction. See [UI provenance](docs/design-system.md), [Brandkit](library/brandkits/openmotion/BRANDKIT.md) and [Library](library/README.md). |
+| [Hypit](https://github.com/hypit-ai/hypit) | Reference for the Stay tuned / Star community invitation. OpenMotion uses independently generated brand artwork; see [asset provenance](docs/readme/ASSETS.md). |
 | [HTML Anything](https://github.com/nexu-io/html-anything/tree/legacy) | Repository lineage; a reference for text architecture, contribution paths and attribution tables. Its former `next/` architecture stays on the historical branch; see the [migration guide](docs/repository-migration.md). |
 | **Claude Motion / CapCut** | Product references for agent-led video creation and approachable editing; not claims of feature parity or code provenance. |
 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) / [Super-agent prototype](https://github.com/deepseek-ai/dsh-superagent-prototype) | Reference for extensible agent capabilities and continuing task-oriented work. The Super-agent repository is research code; OpenMotion's proposed [Super Motion Video Agent](docs/product/studio-vision.md#super-motion-video-agent) imports no runtime from it. |

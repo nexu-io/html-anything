@@ -4,7 +4,7 @@
 
 **Agent 会话、Motion 模板与可编辑产物。**
 
-openmotion 0.6.2 是面向 Agent 的本地创作工作区与 Codex 插件，一期提供 Motion 模式。会话是父级，Motion 工程是可在 Artifact Viewer 中编辑的产物。完整 Studio 前端已迁入 `studio/`，保留原生面板、编辑流程与导出队列，并适配我们的设计系统；工程语法、时间轴语义、动画和视频渲染基于 [Hyperframes](https://github.com/heygen-com/hyperframes) 0.9.7。
+OpenMotion 0.1.0 是面向 Agent 的本地创作工作区与 Codex 插件，一期提供 Motion 模式。会话是父级，Motion 工程是可在 Artifact Viewer 中编辑的产物。完整 Studio 前端已迁入 `studio/`，保留原生面板、编辑流程与导出队列，并适配我们的设计系统；工程语法、时间轴语义、动画和视频渲染基于 [Hyperframes](https://github.com/heygen-com/hyperframes) 0.9.7。
 
 - 页面直接运行本仓库构建的 React 编辑器，顶栏、模板库、浅色/深色主题和面板布局由我们维护。时间轴、画布编辑、属性、代码、撤销与保存的源码都在 `studio/src/`。
 - 工程就是 `index.html`、`compositions/`、CSS、JS、素材和 Hyperframes 的 Studio 编辑数据。Agent 和 Studio 读写同一组文件。
@@ -224,7 +224,7 @@ npm run package:plugin
 
 `npm run dev` 先构建编辑器再启动服务；只改前端后可运行 `npm run build:studio` 并刷新页面。`npm run test:studio` 运行上游单元/DOM 回归与宿主集成测试；`npm run typecheck:studio` 检查前端类型；`npm run design:check` 检查主题变量与对比度。`check` 校验清单、版本、锁定依赖、技能入口、服务 TypeScript 语法及设计规范。测试覆盖原生源文件共享、并发 revision、路径隔离、旧工程迁移、Studio 编辑数据快照、真实 stdio MCP、原生 Studio HTTP 接口、完整目录与同源版本、封面筛选、短指令与参数化指南、三个官方模板的打开/编辑/切换/保留和带音轨的真实 MP4 渲染。没有 FFmpeg 或 Chrome 的机器会跳过渲染集成测试；PR CI 的 phase1-package-e2e 独立任务安装 Chromium、FFmpeg/ffprobe，重新构建并隔离安装真实ZIP，自动跑全部9个Tool；依赖缺失或测试失败直接标红，日志与MP4证据保留14天。合并阻断须同时启用main的必需状态检查，配置与边界见[测试覆盖](mcp-phase1-tools.md#测试代码与ci范围)。
 
-打包产物为 `dist/motion-0.6.2-phase1.zip`，包含编辑器构建产物、设计系统与字体许可、原生模板、完整目录与已校验封面、技能、lockfile、AGENTS.md、CLAUDE.md 和产品文档，排除个人媒体、草稿、node_modules 和原生程序。`bash scripts/install-motion.command` 可注册并安装本地插件，并按 Codex 实际解析的启动配置验证 MCP 握手；它不会重启 Codex。代码改动和打包不会自动替换用户已安装的插件版本。
+打包产物为 `dist/motion-0.1.0-phase1.zip`，包含编辑器构建产物、设计系统与字体许可、原生模板、完整目录与已校验封面、技能、lockfile、AGENTS.md、CLAUDE.md 和产品文档，排除个人媒体、草稿、node_modules 和原生程序。`bash scripts/install-motion.command` 可注册并安装本地插件，并按 Codex 实际解析的启动配置验证 MCP 握手；它不会重启 Codex。代码改动和打包不会自动替换用户已安装的插件版本。
 
 主要实现：`hyperframes.ts` 管理锁定的上游 CLI 与 Studio 进程；`workspace.ts` 管理原生文件、迁移和快照；`server.ts` 提供薄壳与后台任务；`mcp.ts` 向 Agent 暴露工具；`template-library.ts` 创建官方模板的可编辑副本，`template-catalog.ts` 提供完整参考目录及热度；`editor-server.ts` 提供自有编辑器资源并流式转发原生 API；`studio/src/motion/` 是我们的界面入口，`web/design-system/` 是共享设计规范。`shared/legacy.ts` 仅用于读取旧版工程。
 

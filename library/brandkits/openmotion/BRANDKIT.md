@@ -42,7 +42,7 @@ These are artwork guidance, not replacements for the application's [UI tokens](.
 
 - [Cover](../../../docs/readme/cover.png), [animated cover](../../../docs/readme/cover-motion.gif) and [social preview](../../../docs/readme/social-preview.jpg): generated brand artwork.
 - [Library artwork](../../../docs/readme/library.png): the same painterly family.
-- [Workspace](../../../docs/readme/workspace.jpg) and [editor](../../../docs/readme/editor.jpg): real Studio 0.6.1 snapshots; preserve original labels and capture-version context.
+- [Workspace](../../../docs/readme/workspace.jpg) and [editor](../../../docs/readme/editor.jpg): real Studio snapshots at commit `7aee372`; preserve original labels and capture-commit context.
 - [OpenDesign symbol](../../../docs/readme/opendesign-symbol.svg): upstream mark, retained unmodified and credited; do not present it as a newly designed OpenMotion logo.
 - [Sources and generation prompts](../../../docs/readme/ASSETS.md).
 

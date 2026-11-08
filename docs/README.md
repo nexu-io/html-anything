@@ -8,7 +8,9 @@
 - [使用与首次体验](usage.md)
 - [All-in-One Studio 产品蓝图与 Super Motion Video Agent](product/studio-vision.md)
 - [创作者与媒体 Agent 事实包](media-kit.md)
+- [七个 AI Cut 场景与创作简报](examples.zh-CN.md) / [English briefs](examples.md)
 - [README 图片来源与封面复现](readme/ASSETS.md)
+- [产品演示：Codex、独立 Studio、Claude Code 与模板交接](product-tour.md)
 - [Motion MD](motion-md.md) / [中文](motion-md.zh-CN.md)
 - [资源索引](collections/README.md) / [中文](collections/README.zh-CN.md)
 - [OpenMotion Library](../library/README.zh-CN.md)：Skills、模板、Motion 组件、设计体系与 Brandkits

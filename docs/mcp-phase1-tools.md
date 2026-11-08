@@ -3,7 +3,7 @@
 
 ## 结论与本次落地范围
 
-本地候选包版本为0.6.2，避免误复用已运行的0.6.1旧服务和宿主缓存；尚未发布。源码和默认导出均使用 `phase1`，只公开以下 9 个 `motion_` Tool。发现、调用门禁、接入元数据和构建使用同一注册表；旧名不可绕过调用。原有领域服务、Studio、渲染器和内部兼容 handler 保留。适配不只是改名：补了项目身份、批量导入、请求去重、版本和保存保护、取消终态、自动导出校验。
+本地候选包版本统一为 0.1.0，尚未发布；更换版本时需停止同一数据目录的旧服务并重新连接宿主，避免复用旧服务和缓存。源码和默认导出均使用 `phase1`，只公开以下 9 个 `motion_` Tool。发现、调用门禁、接入元数据和构建使用同一注册表；旧名不可绕过调用。原有领域服务、Studio、渲染器和内部兼容 handler 保留。适配不只是改名：补了项目身份、批量导入、请求去重、版本和保存保护、取消终态、自动导出校验。
 
 Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分发对齐后，一期装入 motion-production、motion-director、motion-template-to-video、motion-recreate、motion-video-to-template 五个入口及其参考。模板使用与视频转模板保留已有实际流程；motion-recreate 包含实际复刻流程，规则与测量脚本随 Skill 分发，不新增自动创作算法或 Tool。九个公开 Tool 的名称、Schema 与业务实现不因此改变；详见 [Skill 路由与能力边界](skills.md)。
 
@@ -89,7 +89,7 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 ## 注册、构建与兼容
 
 - shared/mcp-profiles.json 是9项唯一公开清单，shared/mcp-release.json 默认 phase1；mcpRegistry 同时控制发现与调用，禁止运行时环境变量扩大列表。新增/缺失实现由构建完整性检查拦截。
-- npm run package:phase1 构建 Studio 并生成 dist/motion-0.6.2-phase1.zip；npm run package:plugin 默认也沿用 phase1。该插件 ZIP 不带原生 Node/浏览器/FFmpeg：使用支持的本机 Node、首次安装锁定依赖，FFmpeg/ffprobe 需本机可用。
+- npm run package:phase1 构建 Studio 并生成 dist/motion-0.1.0-phase1.zip；npm run package:plugin 默认也沿用 phase1。该插件 ZIP 不带原生 Node/浏览器/FFmpeg：使用支持的本机 Node、首次安装锁定依赖，FFmpeg/ffprobe 需本机可用。
 - 四宿主薄适配器从同一运行时导出，scope.json 记录 profile，复制上述5个 Skill；不另维护 allowlist。数据目录放在 runtime/插件缓存之外。资源指导通过本地文件或 resources/list、resources/read 取得，不增加第10个 Tool。
 - 完整原生测试包的 build <target> <beta-version> [phase1|legacy] 使用同表检查并写 release.json；本次不声称重新制作/验收各平台原生安装包。
 - 内部兼容 handler 与显式 legacy 开发构建保留，不能作为本次一期发布；旧调用在一期包中明确 MCP_TOOL_NOT_EXPOSED。宿主升级后须刷新发现和 Skill，不能继续缓存旧 schema。
@@ -128,7 +128,7 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 | motion_restore_version | v5恢复v3产生v6并保留v4/v5；历史音视频；中断恢复及外部第三种内容保护 | tests/phase1.test.ts |
 | motion_export_cancel | 排队取消、运行中确认停止、跨项目拒绝、已完成不改状态、旧结果保留 | tests/phase1.test.ts、tests/phase1-runtime.test.ts、tests/phase1-package.mjs |
 
-复测命令：后端 `node --experimental-strip-types --test --test-concurrency=1 tests/*.test.ts`；实际包 `node tests/phase1-package.mjs /absolute/path/motion-0.6.2-phase1.zip /absolute/path/evidence`。涉及真实浏览器/渲染时按团队browser-lock包装器执行。完整测试包和四宿主真实模型任务另行验收。
+复测命令：后端 `node --experimental-strip-types --test --test-concurrency=1 tests/*.test.ts`；实际包 `node tests/phase1-package.mjs /absolute/path/motion-0.1.0-phase1.zip /absolute/path/evidence`。涉及真实浏览器/渲染时按团队browser-lock包装器执行。完整测试包和四宿主真实模型任务另行验收。
 
 
 ### 测试代码与CI范围

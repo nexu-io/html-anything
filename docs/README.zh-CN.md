@@ -101,21 +101,118 @@
 
 ## 🎞️ 可以用它做什么？
 
-| AI 剪辑与创作场景 | 从什么开始 | 制作与调整什么 |
-| --- | --- | --- |
-| **AI 口播精剪** | 录制素材、脚本或带时间码的字幕 | 按确认的段落选剪，突出结论、精简重复，添加字幕、补充画面与配乐。 |
-| **AI 素材重组与改稿** | 已有片段、屏幕录制和修改目标 | 重排故事与节奏，为同一内容制作不同长度和画幅的版本。 |
-| **产品发布与功能演示** | 产品截图、需求简报、品牌素材 | 产品揭示、功能导览与发布宣传片。 |
-| **Viral video 复刻** | 参考链接、自己的品牌与素材 | 分析开场、节奏和视觉结构，重建可编辑的个人版本。 |
-| **讲解与教程** | 脚本、操作流程或复杂概念 | 逐步讲述、流程图与带标注的场景。 |
-| **数据故事与动态图表** | 数据、标签和需要表达的结论 | 动态图表、对比与可视化讲解。 |
-| **音乐与艺术视觉** | 音轨、画面素材和创作方向 | 动态排版、图形序列与配合声音的运动。 |
+**先看效果，再开始剪辑。** 七个场景，七份可以直接交给 Agent 的创作简报。下方动图选自资源库中的外部参考作品；点击播放完整参考，用你自己的素材和品牌开始创作。
 
-| [产品宣传 · 20 秒](../template-library/product-promo/) | [数据叙事 · 15 秒](../template-library/nyt-graph/) | [流程讲解 · 10 秒](../template-library/decision-tree/) |
-| --- | --- | --- |
-| ![协作画布式产品发布片](../template-library/product-promo/poster.jpg) | ![带标注的动态柱状图](../template-library/nyt-graph/poster.jpg) | ![逐步展开的决策树](../template-library/decision-tree/poster.jpg) |
+<table>
+<tr>
+<td width="50%" valign="top">
+<strong>01 · AI 口播精剪</strong><br>
+3 分钟口播，剪出 30 秒重点。
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/talking-head.jpg">
+<img src="readme/examples/talking-head.gif" width="208" alt="外部创作参考：Ali Abdaal · 5 tools I use every day">
+</picture></a>
+</p>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 5 tools I use every day</a></sub><br><br>
+<strong>从这里开始</strong> · 你的录制素材＋字幕或时间码<br>
+<strong>可以这样剪</strong> · 结论前置，精简重复，用字幕与 B-roll 接住重点。<br><br>
+<a href="examples.zh-CN.md#talking-head">复制创作简报 →</a> · <a href="readme/examples/talking-head.jpg">静态预览</a>
+</td>
+<td width="50%" valign="top">
+<strong>02 · AI 素材重组与改稿</strong><br>
+把零散片段，剪成一段 100 天故事。
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/story-recut.jpg">
+<img src="readme/examples/story-recut.gif" width="208" alt="外部创作参考：100 days with stickers and photo cards · Hyperframes catalog">
+</picture></a>
+</p>
+<sub>参考 · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">100 days with stickers and photo cards · Hyperframes catalog</a></sub><br><br>
+<strong>从这里开始</strong> · 片段、照片、旁白与故事梗概<br>
+<strong>可以这样剪</strong> · 用照片拼贴、章节和旁白重排故事，做出自己的叙事节奏。<br><br>
+<a href="examples.zh-CN.md#story-recut">复制创作简报 →</a> · <a href="readme/examples/story-recut.jpg">静态预览</a>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<strong>03 · 产品发布与功能演示</strong><br>
+让新功能，成为发布片的主角。
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/product-launch.jpg">
+<img src="readme/examples/product-launch.gif" width="480" alt="外部创作参考：Figma Draw · @figma">
+</picture></a>
+</p>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4">Figma Draw · @figma</a></sub><br><br>
+<strong>从这里开始</strong> · 真实界面、功能简报与 Brandkit<br>
+<strong>可以这样剪</strong> · 功能揭示、界面特写、成果展示，组成一支完整发布片。<br><br>
+<a href="examples.zh-CN.md#product-launch">复制创作简报 →</a> · <a href="readme/examples/product-launch.jpg">静态预览</a>
+</td>
+<td width="50%" valign="top">
+<strong>04 · Viral video 复刻</strong><br>
+复刻节奏与结构，换成你的表达。
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/viral-remix.jpg">
+<img src="readme/examples/viral-remix.gif" width="480" alt="外部创作参考：Lovable: Aesthetics Update · @lovable_dev">
+</picture></a>
+</p>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4">Lovable: Aesthetics Update · @lovable_dev</a></sub><br><br>
+<strong>从这里开始</strong> · 参考视频＋你的文案、画面与品牌<br>
+<strong>可以这样剪</strong> · 拆解开场、动态排版与转场，再重建成可修改的个人版本。<br><br>
+<a href="examples.zh-CN.md#viral-remix">复制创作简报 →</a> · <a href="readme/examples/viral-remix.jpg">静态预览</a>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<strong>05 · 讲解与教程</strong><br>
+一个复杂流程，讲成三个清楚步骤。
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/explainer.jpg">
+<img src="readme/examples/explainer.gif" width="480" alt="外部创作参考：Authorize Once, Everyone Connected · Hyperframes catalog">
+</picture></a>
+</p>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4">Authorize Once, Everyone Connected · Hyperframes catalog</a></sub><br><br>
+<strong>从这里开始</strong> · 操作流程、脚本与准确的界面素材<br>
+<strong>可以这样剪</strong> · 每个场景只讲一步，用标注、连线与界面变化引导理解。<br><br>
+<a href="examples.zh-CN.md#explainer">复制创作简报 →</a> · <a href="readme/examples/explainer.jpg">静态预览</a>
+</td>
+<td width="50%" valign="top">
+<strong>06 · 数据故事与动态图表</strong><br>
+让数字有重点，让变化被看见。
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/data-story.jpg">
+<img src="readme/examples/data-story.gif" width="480" alt="外部创作参考：Animated comparison bars · @Vintage_god">
+</picture></a>
+</p>
+<sub>参考 · <a href="https://x.com/Vintage_god/status/2106817967967056165">Animated comparison bars · @Vintage_god</a></sub><br><br>
+<strong>从这里开始</strong> · 你的数据、单位、出处与结论<br>
+<strong>可以这样剪</strong> · 从基线到变化，再落到结论；用动态数值与图表突出对比。<br><br>
+<a href="examples.zh-CN.md#data-story">复制创作简报 →</a> · <a href="readme/examples/data-story.jpg">静态预览</a>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
+<strong>07 · 音乐与艺术视觉</strong><br>
+让一段音乐，长出自己的视觉。
+<p align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1139/clip.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/music-visual.jpg">
+<img src="readme/examples/music-visual.gif" width="480" alt="外部创作参考：Lyria 3 visual sequence · @GoogleAI">
+</picture></a>
+</p>
+<sub>参考 · <a href="https://x.com/GoogleAI/status/2024154215182926027">Lyria 3 visual sequence · @GoogleAI</a></sub><br><br>
+<strong>从这里开始</strong> · 音轨、情绪方向与节拍或提示点<br>
+<strong>可以这样剪</strong> · 用色彩、层叠图形与动态排版，回应音乐中的关键时刻。<br><br>
+<a href="examples.zh-CN.md#music-visual">复制创作简报 →</a> · <a href="readme/examples/music-visual.jpg">静态预览</a>
+</td>
+</tr>
+</table>
 
-三个随包提供的可编辑[示例](../template-library/NOTICE.md)。替换内容、调整节奏，即可开始制作自己的版本。
+这些参考用于说明创作方向，并非 OpenMotion 已生成的验收样片。需要直接打开的可编辑起点？查看 [三个内置模板](../library/templates/README.md)。[场景简报与使用方法](examples.zh-CN.md) · [参考来源与片段记录](readme/ASSETS.md#creative-examples)
 
 <a id="input--process--output"></a>
 
@@ -155,17 +252,60 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 ## 🖥️ 产品界面
 
-**工作区与模板库。** 从需求或模板开始，回到已有会话，连接你的 Agent。
+**一个模板，三种使用方式。** 用内置 **Product Promo** 串起嵌入编辑器、独立工作区和终端工作流，再展示连接 Agent、把单个模板交给它继续制作的步骤。
 
-![OpenMotion 工作区与模板库，Studio 0.6.1 实际界面。](readme/workspace.jpg)
+| 从哪里开始 | 演示内容 |
+| --- | --- |
+| [Codex](#demo-codex) | 返回给宿主的嵌入编辑器：源码、预览、图层与时间轴。 |
+| [独立 Studio](#demo-standalone) | 会话、已保存的需求与同一份可编辑工程。 |
+| [Claude Code + CLI](#demo-claude-code) | 已加载的制作 Skill 与真实 CLI 工程检查。 |
+| [模板 → Agent](#demo-template-handoff) | 连接 Agent、预览单个模板、复制精确指令。 |
 
-**AI 剪辑与时间轴。** 检查 Agent 的剪辑结果，继续调整场景、素材与时序，再导出。
+<a id="demo-codex"></a>
 
-![OpenMotion Studio：合成、预览、属性面板与时间轴，Studio 0.6.1 实际界面。](readme/editor.jpg)
+### 1. Codex · 在对话旁打开可编辑预览
 
-**完整创作流程有多个入口：** 工作区管理会话与工程，模板库提供起点，Studio 提供合成、素材、代码、预览和时间轴。模型网关可通过已配置的供应商生成图片、视频与音频，再由你选择并放入工程。
+让 Codex 打开工程预览，再检查和调整源码、图层与时间轴。**截图展示供 Codex 等宿主使用的真实 `embed=1` 编辑器，不含 Codex 桌面外框。** 能否在侧边面板内打开，取决于宿主的浏览器能力。
 
-截图来自现有 Studio 0.6.1 演示工作区，保留当时的界面文字。[图片来源](readme/ASSETS.md) · [编辑器说明](../studio/README.md) · [素材生成](model-gateway.md)
+![供 Codex 使用的 OpenMotion 嵌入编辑器：Product Promo 源码、预览、图层和时间轴；不含宿主外框。](readme/product-tour/codex-embedded.png)
+
+<a id="demo-standalone"></a>
+
+### 2. 独立使用 · 完整创作工作区
+
+直接打开 Studio，在会话里保存需求和工程，编辑源码与素材、拖动时间轴、继续下一轮改稿。通过 **Copy for Agent** 把当前需求交给已连接的客户端。
+
+![独立 OpenMotion 工作区：会话列表、已保存的 Product Promo 需求与可编辑时间轴。](readme/product-tour/standalone-studio.png)
+
+<a id="demo-claude-code"></a>
+
+### 3. Claude Code · 在终端中使用 Skill、MCP 与 CLI
+
+加载 [Claude Code 适配器](agent-adapters.md#codex--claude-code)，打开 `/skills`。已有可编辑模板使用 **motion-template-to-video**；根据参考视频重建作品使用 **motion-recreate**。
+
+![从真实终端输出回放的 Claude Code Skill 界面：五个 Motion Skill 已加载，选中 motion-template-to-video。](readme/product-tour/claude-code-skills.png)
+
+固定版本 CLI 可检查同一份工程：**1920 × 1080、20 秒、三个图形场景和字幕轨道，lint 为零错误、零警告。** 下图为实际命令输出。终端截图验证了本地 Skill 加载与工程检查，未展示模型完成改编的结果。
+
+![Product Promo 的真实 CLI 输出：info、lint 与 timeline 检查。](readme/product-tour/cli-checks.png)
+
+<a id="demo-template-handoff"></a>
+
+### 连接一次 → 把一个模板交给 Agent
+
+**连接 Agent。** 选择 Codex、Claude Code 或其他本机客户端，复制当前工作区生成的接入指令。
+
+![Connect Agent 弹框：选中 Codex，可切换其他客户端，并复制当前工作区的接入指令。](readme/product-tour/connect-agent.png)
+
+**预览 → 一键复制 → 粘贴给 Agent。** 搜索 **Product Promo**，打开预览并展开复制指令；其中带有精确的 `product-promo` ID 和所选客户端的指引链接。内置模板可以打开为可编辑副本；外部视频参考则需要 Agent 分析并重建。
+
+![Product Promo 单模板预览：打开并编辑、一键复制，以及展开的模板专属 Agent 指令。](readme/product-tour/template-to-agent.png)
+
+粘贴生成的指令后，再补充自己的修改要求，例如：
+
+> 用这个 Product Promo 模板制作我的产品介绍。保留 20 秒结构和动效，用我提供的素材替换文案与图片。先打开可编辑预览让我检查，再决定导出。
+
+实际使用时复制**自己运行中的工作区**生成的链接，截图中的本机地址仅属于演示。[复现演示](product-tour.md) · [截图来源与验证范围](readme/ASSETS.md#product-tour-captures) · [编辑器说明](../studio/README.md)
 
 <a id="独立应用也能接入你的-agent"></a>
 <a id="connect-your-agent"></a>
@@ -270,24 +410,126 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 当前画廊的一键操作准备交给 Agent 的指令，实际制作由所连接的 Agent 执行；社区资源的自动发现、安装与个性化优化仍为后续方向。[模板入口](../library/templates/README.md)
 
+<a id="motion-gallery"></a>
+
 ### 看看资源里的作品
 
-**可以学习、改编，也可以贡献的资源库。** 当前目录共有 **894 条资源：3 个内置可编辑模板、891 条外部参考与 registry 资源**。可浏览产品宣传、动态设计、口播参考与可复用元素，并查看已有的原作者和出处。
+**18 个动态精选，先看动效，再开始改编。** 从产品发布、动态排版，到玻璃光影、空间镜头和生成艺术，直接看看资源能带来什么样的视觉效果。点击动图观看完整视频；在 Studio 资源库搜索同名条目，把喜欢的风格交给 Agent。
+
+**可以学习、改编，也可以贡献的资源库。** 当前目录共有 **894 条资源：3 个内置可编辑模板、891 条外部参考与 registry 资源**，保留已有原作者与出处。
 
 <table>
+<tr><th colspan="3" align="left">📱 产品与界面</th></tr>
 <tr>
-<td width="33%" valign="top"><a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json"><img src="../web/catalog/covers/51a2d141e18e608cc11b9256.jpg" alt="App Showcase" width="260" /></a><br/><sub><b>App Showcase</b> · Hyperframes</sub></td>
-<td width="33%" valign="top"><a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4"><img src="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg" alt="Firecrawl Free Keyless" width="260" /></a><br/><sub><b>Firecrawl Free Keyless</b> · @ericciarla</sub></td>
-<td width="33%" valign="top"><a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json"><img src="../web/catalog/covers/10cceacc02d415247d58f562.jpg" alt="Glass Shard Title" width="260" /></a><br/><sub><b>Glass Shard Title</b> · Hyperframes</sub></td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="readme/gallery/app-showcase.gif" width="300" alt="组件动效：App Showcase"></picture></a><br>
+<strong>App Showcase</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="readme/gallery/firecrawl.gif" width="300" alt="动态参考：Firecrawl Free Keyless"></picture></a><br>
+<strong>Firecrawl Free Keyless</strong><br>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4">@ericciarla</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="readme/gallery/ui-3d-reveal.gif" width="300" alt="组件动效：3D UI Reveal"></picture></a><br>
+<strong>3D UI Reveal</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json">Hyperframes</a></sub>
+</td>
 </tr>
+<tr><th colspan="3" align="left">🚀 品牌与发布片</th></tr>
 <tr>
-<td width="33%" valign="top"><a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json"><img src="../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg" alt="Code 3D Extrude" width="260" /></a><br/><sub><b>Code 3D Extrude</b> · Hyperframes</sub></td>
-<td width="33%" valign="top"><a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/chrome-orb/registry-item.json"><img src="../web/catalog/covers/dbd79cc4d686e0f4513ff2c9.jpg" alt="Chrome Orb" width="260" /></a><br/><sub><b>Chrome Orb</b> · Hyperframes</sub></td>
-<td width="33%" valign="top"><a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4"><img src="../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg" alt="Pond: a new Linux OS" width="260" /></a><br/><sub><b>Pond: a new Linux OS</b> · @bflycomputer</sub></td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="readme/gallery/pond.gif" width="300" alt="动态参考：Pond: a new Linux OS"></picture></a><br>
+<strong>Pond: a new Linux OS</strong><br>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4">@bflycomputer</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="300" alt="动态参考：Kimi K3 teaser"></picture></a><br>
+<strong>Kimi K3 teaser</strong><br>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-kimi-k3-reference.mp4">@Kimi_Moonshot</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="300" alt="动态参考：Reception by ElevenLabs"></picture></a><br>
+<strong>Reception by ElevenLabs</strong><br>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-elevenlabs-reception-reference.mp4">@ElevenLabs</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">✍️ 动态文字</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="readme/gallery/glass-shard-title.gif" width="300" alt="组件动效：Glass Shard Title"></picture></a><br>
+<strong>Glass Shard Title</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="readme/gallery/canopy-title.gif" width="300" alt="组件动效：Canopy Part Title"></picture></a><br>
+<strong>Canopy Part Title</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="readme/gallery/wireframe-title.gif" width="300" alt="组件动效：Wireframe Portal Title"></picture></a><br>
+<strong>Wireframe Portal Title</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json">Hyperframes</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">💎 光影、玻璃与立体世界</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="readme/gallery/iskra-light.gif" width="300" alt="动态参考：Iskra Light"></picture></a><br>
+<strong>Iskra Light</strong><br>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="readme/gallery/liquid-glass-widgets.gif" width="300" alt="组件动效：Liquid Glass Widgets"></picture></a><br>
+<strong>Liquid Glass Widgets</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="readme/gallery/cyera.gif" width="300" alt="动态参考：Cyera brand video"></picture></a><br>
+<strong>Cyera brand video</strong><br>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-cyera-reference.mp4">Cyera</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🧭 空间与镜头</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="readme/gallery/code-3d.gif" width="300" alt="组件动效：Code 3D Extrude"></picture></a><br>
+<strong>Code 3D Extrude</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="readme/gallery/glyph.gif" width="300" alt="动态参考：Glyph: GPU typography for the web"></picture></a><br>
+<strong>Glyph: GPU typography for the web</strong><br>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-glyph-reference.mp4">@pmndrs</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="readme/gallery/flight-map.gif" width="300" alt="组件动效：NYC Paris Flight"></picture></a><br>
+<strong>NYC Paris Flight</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json">Hyperframes</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">✨ 生成艺术与图形</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="readme/gallery/aurora.gif" width="300" alt="组件动效：Aurora"></picture></a><br>
+<strong>Aurora</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json">Hyperframes</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="readme/gallery/linear-loops.gif" width="300" alt="动态参考：Linear Loops"></picture></a><br>
+<strong>Linear Loops</strong><br>
+<sub>参考 · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-linear-loops-reference.mp4">@linear</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="readme/gallery/code-particles.gif" width="300" alt="组件动效：Code Particle Assemble"></picture></a><br>
+<strong>Code Particle Assemble</strong><br>
+<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json">Hyperframes</a></sub>
+</td>
 </tr>
 </table>
 
-目录中的真实参考与 registry 预览，点击查看原始来源。这些图片展示资源内容，非新增内置模板。
+动图来自目录中的原始视频片段，保留画面与正常播放速度；它们展示外部参考与组件效果，并非新增内置模板。[全部来源与片段记录](readme/ASSETS.md#catalog-preview-grid)
 
 | 入口 | 可以找到什么 |
 | --- | --- |
@@ -497,6 +739,18 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 - [ ] 面向社交平台的画幅、字幕与导出预设。
 - [ ] 有公开样本和方法的 Motion Benchmark / Arena。
 
+<a id="stay-tuned"></a>
+
+## ⭐ Stay tuned with us
+
+**给 OpenMotion 一个 Star，让更多人发现 AI 剪辑。** 收藏项目、关注进展，也把你的下一个创作想法带到社区。
+
+[![OpenMotion Star 邀请动图：点击前往仓库，为项目加星。](readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
+
+[⭐ 在 GitHub 上 Star](https://github.com/nexu-io/html-anything) · [路线图](#当前状态与路线图) · [参与社区](#社区共建)
+
+需要版本通知时，在仓库选择 **Watch → Custom → Releases**。[GitHub 通知设置说明](https://docs.github.com/en/subscriptions-and-notifications/get-started/configuring-notifications)。
+
 <a id="社区共建"></a>
 
 ## 🤝 社区共建
@@ -533,6 +787,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | 来源 | 关系与落点 |
 | --- | --- |
 | [OpenDesign](https://github.com/nexu-io/open-design) / [官网](https://open-design.ai/) | UI 视觉系统来源、README 的资源与贡献结构、水墨品牌方向。对应 [UI 来源记录](design-system.md)、[Brandkit](../library/brandkits/openmotion/BRANDKIT.md) 与 [Library](../library/README.zh-CN.md)。 |
+| [Hypit](https://github.com/hypit-ai/hypit) | Stay tuned / Star 社区邀请方式的参考；OpenMotion 动图为独立生成的品牌素材，见[来源](readme/ASSETS.md)。 |
 | [HTML Anything](https://github.com/nexu-io/html-anything/tree/legacy) | 仓库前身；参考其文字架构图、贡献路径与来源表格。旧 `next/` 架构留在历史分支，当前结构见[迁移说明](repository-migration.md)。 |
 | **Claude Motion / CapCut** | 分别作为 Agent 视频创作与大众剪辑体验的产品参照；不代表功能完全对等或源码来源。 |
 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) / [Super-agent 原型](https://github.com/deepseek-ai/dsh-superagent-prototype) | 可扩展 Agent 能力与持续任务工作的参考。Super-agent 仓库为研究原型；我们提出 [Super Motion Video Agent](product/studio-vision.md#super-motion-video-agent) 概念，本次未引入其运行时。 |

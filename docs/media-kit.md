@@ -2,7 +2,7 @@
 
 [English README](../README.md) · [中文介绍](README.zh-CN.md) · [Asset sources](readme/ASSETS.md)
 
-This page is a source brief for creators, writers and their agents. Use it with the linked implementation documents and actual demo results. It describes the current 0.6.2 source tree; it is not a record of a public package release.
+This page is a source brief for creators, writers and their agents. Use it with the linked implementation documents and actual demo results. It describes the current 0.1.0 source tree; it is not a record of a public package release.
 
 ## Reusable introduction
 
@@ -127,9 +127,13 @@ Do not invent performance, coverage, adoption or audience-growth figures.
 | [Cover PNG](readme/cover.png) | Full-resolution generated brand artwork. |
 | [Animated cover GIF](readme/cover-motion.gif) | Short looping brand motion for a README; not a recording of product behavior. |
 | [1280 × 640 social preview](readme/social-preview.jpg) | Static GitHub/social sharing cover. |
-| [Workspace](readme/workspace.jpg) / [editor](readme/editor.jpg) | Actual Studio 0.6.1 demo snapshots; retain their original UI labels. |
+| [Three-mode product tour](product-tour.md) | Six captures: Codex's embedded Viewer, standalone Studio, Claude Code Skill discovery, native CLI checks, Connect Agent and a single-template handoff. Codex host chrome and model-completed adaptation are not captured. Terminal images replay actual recorded output. |
+| [Workspace](readme/workspace.jpg) / [editor](readme/editor.jpg) | Historical Studio snapshots at commit `7aee372`; retained for provenance. The README now uses the three-mode tour. |
+| [Seven creative examples](examples.md) / [中文简报](examples.zh-CN.md) | Seven curated external reference excerpts, each with an animated and static preview, attribution and an actionable creative brief. These are creative inputs, not OpenMotion-generated demos or new bundled templates. |
+| [18 animated catalog picks](../README.md#motion-gallery) | Six groups of actual reference/registry video excerpts: product, launch, type, light/material, spatial and generative motion. Default previews are GIFs with source credit; these do not represent additional bundled templates. [Manifest](readme/gallery/manifest.json). |
 | [Library banner](readme/library.png) / [community banner](readme/community.png) | Generated artwork in the same painterly family as the cover. |
 | [Collaboration concept](readme/collaboration-coming.png) | Planned human–agent editing and timeline review, labeled **is coming**; use only as a concept preview. |
+| [Stay tuned GIF](readme/stay-tuned.gif) | Generated Star invitation, linked to the GitHub repository; release updates require Watch configuration. |
 | [Brandkit](../library/brandkits/openmotion/BRANDKIT.md) / [motion design system](../library/design-systems/ink-water/MOTION_DESIGN.md) | Reusable identity and creative direction; supply explicitly to your agent. |
 
 See [ASSETS.md](readme/ASSETS.md) for the image prompt, animation recipe, catalog-image provenance and third-party notices. Referenced films and example brands belong to their respective creators; the application license does not relicense them.

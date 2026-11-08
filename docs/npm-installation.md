@@ -8,12 +8,12 @@
 
 在源码目录执行 `npm ci`、`npm run package:npm`。构建会生成：
 
-- `dist/npm-local/openmotion-installer-0.6.2-local.1.tgz`：无 npm 依赖的 JS 安装入口，不含应用、Node、FFmpeg、浏览器或用户数据。
-- `dist/npm-local/openmotion-application-0.6.2.tar.gz`：单独的应用资源，包含服务源码、预先构建的 Studio、Skills 和文档，不含 node_modules 或原生程序。
+- `dist/npm-local/openmotion-installer-0.1.0.tgz`：无 npm 依赖的 JS 安装入口，不含应用、Node、FFmpeg、浏览器或用户数据。
+- `dist/npm-local/openmotion-application-0.1.0.tar.gz`：单独的应用资源，包含服务源码、预先构建的 Studio、Skills 和文档，不含 node_modules 或原生程序。
 - `dist/npm-local/release.local.json`：固定应用 SHA256 与原生工具来源、版本和 SHA256。应用地址相对本清单解析，可将两个文件一起移动。
 
 ```sh
-npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.6.2-local.1.tgz openmotion setup --host codex --manifest /absolute/dist/npm-local/release.local.json
+npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.1.0.tgz openmotion setup --host codex --manifest /absolute/dist/npm-local/release.local.json
 ```
 
 默认应用根目录是 macOS/Linux 的 `~/.local/share/openmotion` 或 Windows 的 `%LOCALAPPDATA%/openmotion`；用户工程在该目录的 `data/`，应用和缓存分别在 `apps/`、`cache/`。可用 `--home`、`--data-dir` 选择位置；不允许工程放进应用、缓存或受管理的宿主组合包。setup 不需要管理员权限或修改全局 PATH。
@@ -58,7 +58,7 @@ CI 在 Studio 构建后执行 `node scripts/package-npm.mjs dist/<beta> <beta>`�
 setup 仅获取应用并按 lockfile 运行 `npm ci --omit=dev --ignore-scripts`，不运行依赖安装脚本、不下载原生工具。MCP 握手、工具发现、工作流和引擎指南资源读取也不触发原生下载。首次工程操作需要启动本地服务时（例如创建工程或打开预览），准备固定的 FFmpeg、ffprobe 和 Chromium；也可在安装后主动执行：
 
 ```sh
-npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.6.2-local.1.tgz openmotion prepare --home /absolute/install-root
+npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.1.0.tgz openmotion prepare --home /absolute/install-root
 ```
 
 npm 可以通过带 `os/cpu` 的平台包及安装脚本自动配置原生程序。本渠道保留“首次使用再下载”的时机，因此由运行时按固定清单自动准备；不要求用户手动安装 FFmpeg/ffprobe，也不执行 brew/winget。
