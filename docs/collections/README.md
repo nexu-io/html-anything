@@ -1,6 +1,8 @@
-**English** · [简体中文](README.zh-CN.md) · [openmotion](../../README.md)
+**English** · [简体中文](README.zh-CN.md) · [OpenMotion](../../README.md)
 
 # Motion resource library & collections
+
+For reusable Skills, templates, motion components, `MOTION_DESIGN.md` design systems and Brandkits, start in the [OpenMotion Library](../../library/README.md). This page curates viewing references and editable starting points.
 
 Pick a film for the decision you want to borrow: how it opens, how it reveals a product, or how it explains a complex idea. Each entry below tells you whether you can **watch a reference** or **open an editable project**.
 

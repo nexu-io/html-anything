@@ -16,8 +16,14 @@ export const distributionDocuments = [
   'docs/README.zh-CN.md', 'docs/usage.md', 'docs/motion-md.md', 'docs/motion-md.zh-CN.md',
   'docs/collections/README.md', 'docs/collections/README.zh-CN.md',
   'docs/examples/product-launch.MOTION.md', 'docs/examples/product-launch.MOTION.zh-CN.md',
-  'docs/readme/ASSETS.md', 'docs/readme/opendesign-symbol.svg', 'docs/readme/hero.svg', 'docs/readme/hero.zh-CN.svg',
-  'docs/readme/motion-md.svg', 'docs/readme/motion-md.zh-CN.svg', 'docs/readme/editor.jpg', 'docs/readme/workspace.jpg',
+  'docs/readme/ASSETS.md', 'docs/readme/opendesign-symbol.svg',
+  'docs/readme/editor.jpg', 'docs/readme/workspace.jpg',
+  'docs/media-kit.md', 'docs/readme/cover.png', 'docs/readme/cover-motion.gif', 'docs/readme/social-preview.jpg',
+  'docs/readme/library.png', 'docs/readme/community.png',
+  'library/README.md', 'library/README.zh-CN.md', 'library/ENTRY_TEMPLATE.md',
+  'library/skills/brandkit/SKILL.md', 'library/templates/README.md',
+  'library/components/README.md', 'library/components/title-reveal/README.md',
+  'library/design-systems/ink-water/MOTION_DESIGN.md', 'library/brandkits/openmotion/BRANDKIT.md',
   'docs/skills.md', 'docs/template-catalog.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
 ];
 

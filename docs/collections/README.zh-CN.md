@@ -1,6 +1,8 @@
-[English](README.md) · **简体中文** · [openmotion](../README.zh-CN.md)
+[English](README.md) · **简体中文** · [OpenMotion](../README.zh-CN.md)
 
 # Motion 资源站与主题合集
+
+需要可复用的 Skills、模板、Motion 组件、`MOTION_DESIGN.md` 设计体系与 Brandkits，请从 [OpenMotion Library](../../library/README.zh-CN.md) 开始。本页继续维护参考片与可编辑起点。
 
 先确定想借鉴什么：一支片子的开场、产品出现的方式，还是把复杂功能讲清楚的节奏。以下把**可以观看的参考片**和**能直接打开的工程**分开列出。
 

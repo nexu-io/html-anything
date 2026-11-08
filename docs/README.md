@@ -1,4 +1,4 @@
-# Motion 文档
+# OpenMotion 文档
 
 这里维护公开的使用说明、技术契约和可复现检查。开始开发前阅读 [产品架构](product/architecture.md) 与相关专题；变更时同步更新对应说明、README 和 [公开变更记录](product/changes.md)。不将个人环境、客户资料、内部讨论或商业研究写入公开文档。
 
@@ -6,8 +6,12 @@
 
 - [中文项目介绍](README.zh-CN.md) / [English introduction](../README.md)
 - [使用与首次体验](usage.md)
+- [创作者与媒体 Agent 事实包](media-kit.md)
+- [README 图片来源与封面复现](readme/ASSETS.md)
 - [Motion MD](motion-md.md) / [中文](motion-md.zh-CN.md)
 - [资源索引](collections/README.md) / [中文](collections/README.zh-CN.md)
+- [OpenMotion Library](../library/README.zh-CN.md)：Skills、模板、Motion 组件、设计体系与 Brandkits
+- [OpenMotion Brandkit](../library/brandkits/openmotion/BRANDKIT.md) / [Ink & Water 动效设计体系](../library/design-systems/ink-water/MOTION_DESIGN.md)
 
 - [agent-adapters.md](agent-adapters.md)
 - [browser-runtime.md](browser-runtime.md)

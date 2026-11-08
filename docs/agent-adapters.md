@@ -8,6 +8,19 @@ Codex、Claude Code、DeepSeek Harness（DSH）与 WorkBuddy 从同一份已安�
 
 本地也可以使用 [npm 轻量安装器](npm-installation.md) 的 `setup --host codex|claude|deepseek|workbuddy`，自动安装对应入口与 Skills，并共用一份应用和原生依赖缓存。下文的导出方式保留，生成配置与自动注册是不同操作。
 
+## 仅安装 Skills：npx skills
+
+需要在已有运行时之外发现或安装制作指引时，可用 [Skills CLI](https://github.com/vercel-labs/skills)，在源码 checkout 执行：
+
+```sh
+npx skills add ./skills --list
+npx skills add ./skills --skill motion-director motion-production motion-template-to-video motion-recreate motion-video-to-template
+```
+
+显式选择五个正式入口，保留相互引用的同级目录；源码中的 `reference-video` 仅为兼容入口，不作为第六个正式 Skill。选择目标宿主后按 CLI 提示安装，不使用 `--all` 扩大安装范围。Skills CLI 有自己的 Node 要求；README 使用 CI 固定的 Node 26.11.1。
+
+此路径仅复制制作指引及 Skill 内参考，不安装运行时、浏览器或媒体工具，也不注册 MCP。需另按下文连接已安装应用，保留源码 checkout 的共享文档，并按运行时返回的路径读取固定引擎指南。完整同装与宿主配置保护仍使用 [npm 安装器](npm-installation.md)。本机验证的发现/文件安装不代表宿主模型已完成创作。
+
 ## 生成
 
 安装机器执行一次，不修改客户端设置，不初始化工程，不安装依赖：

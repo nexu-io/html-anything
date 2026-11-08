@@ -1,0 +1,55 @@
+**English** · [简体中文](README.zh-CN.md) · [OpenMotion](../README.md)
+
+# OpenMotion Library
+
+**Share the method, the movement and the brand behind a video.** This is the repository's contribution home for reusable Skills, templates, motion components, motion design systems and Brandkits. Start with a working example or a small, well-described creative decision.
+
+| Collection | Start here | What belongs here |
+| --- | --- | --- |
+| **🧠 Skills** | [Brandkit preparation](skills/brandkit/SKILL.md) | A focused, reusable method in `SKILL.md`, with examples and references when needed. |
+| **🎞️ Templates** | [Editable starting points](templates/README.md) | A complete project, preview and adaptation instructions. |
+| **🧩 Motion components** | [Title reveal recipe](components/title-reveal/README.md) | A reusable title, transition, chart or scene with a clear timing and editing contract. |
+| **🎨 Motion design systems** | [Ink & Water](design-systems/ink-water/MOTION_DESIGN.md) | `MOTION_DESIGN.md`: typography, composition, pacing, movement and sound decisions. |
+| **💼 Brandkits** | [OpenMotion](brandkits/openmotion/BRANDKIT.md) | Brand facts, approved copy, colors, type, asset locations and usage rules. |
+
+```text
+library/
+├── skills/brandkit/SKILL.md
+├── templates/README.md                  → existing editable project sources
+├── components/title-reveal/README.md     → motion recipe
+├── design-systems/ink-water/MOTION_DESIGN.md
+├── brandkits/openmotion/BRANDKIT.md
+└── ENTRY_TEMPLATE.md                    → contribution checklist
+```
+
+<a id="use-a-resource"></a>
+
+## 🚀 Use a resource
+
+1. Choose a method, a design system or a template for your task. Read its status and source notes.
+2. Give its files explicitly to your agent, together with your material and the changes you want. A Brandkit defines identity; a motion design system defines behavior; a template supplies an editable implementation.
+3. Continue with the [appropriate production Skill](../docs/skills.md) when making a video. Preview, revise and export through the same project workflow.
+
+The optional Brandkit Skill can also be installed from this checkout:
+
+```sh
+npx skills add ./library/skills --skill brandkit
+```
+
+This library is browsable source today. It is not automatically imported into Studio or registered as MCP resources. The five core production Skills remain in [`skills/`](../skills/); the optional library Skill prepares creative context and does not add a sixth production route. The [Studio catalog](../docs/template-catalog.md) and [viewing references](../docs/collections/README.md) retain their existing sources and behavior.
+
+<a id="contribute-one-useful-thing"></a>
+
+## 🤝 Contribute one useful thing
+
+Copy the [entry checklist](ENTRY_TEMPLATE.md) into a folder under the matching collection. Include what to use it for, editable inputs, an example, attribution, license and the checks you actually performed. Link shared source instead of copying a maintained template into a second location.
+
+Use these status labels in the entry description:
+
+- **Reference:** original work to study, with a source and author.
+- **Recipe / draft:** written guidance that still needs project-level verification.
+- **Editable example:** source is supplied; state which changes and exports were checked.
+
+Only claim a verified template after recording the project version, adaptation, export and review evidence. A cover image or a successful installation is not that evidence.
+
+See [Contributing](../CONTRIBUTING.md) for the PR workflow. Text and original examples follow [Apache-2.0](../LICENSE); external media and upstream projects keep their own licenses and credits.

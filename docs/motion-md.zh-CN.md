@@ -1,12 +1,15 @@
-[English](motion-md.md) · **简体中文** · [openmotion](README.zh-CN.md)
+[English](motion-md.md) · **简体中文** · [OpenMotion](README.zh-CN.md)
 
-# Motion MD
+# Motion Design MD
 
-**Motion MD 是 openmotion 提出的视频风格描述格式。** 把参考片里的创作决定写成 Markdown：哪些属于品牌、故事在第几秒转折、运动如何引导注意力、什么可以替换、成片怎么验收。下一位创作者可以沿用这些决定，Agent 也可以据此制作。
+**Motion Design MD，简称 Motion MD，是 OpenMotion 提出的视频风格描述格式。** 把参考片里的创作决定写成 Markdown：哪些属于品牌、故事在第几秒转折、运动如何引导注意力、什么可以替换、成片怎么验收。下一位创作者可以沿用这些决定，Agent 也可以据此制作。
 
-**版本：v0.1 初始提案。** 章节、文件名和字段仍可讨论。这是一份创作规范，不是新的渲染引擎或自动导入格式。[查看完整示例](examples/product-launch.MOTION.zh-CN.md)
+文件名统一为 `MOTION_DESIGN.md`；现有 `MOTION.md` 示例继续有效。两者都由用户明确交给 Agent，作为普通 Markdown 创作上下文。
 
-![Motion MD：把参考和品牌约束交给 Agent，得到可编辑视频。](readme/motion-md.zh-CN.svg)
+**版本：v0.1 初始提案。** 章节和字段仍可讨论。这是一份创作规范，不是新的渲染引擎或自动导入格式。[查看完整示例](examples/product-launch.MOTION.zh-CN.md)
+
+
+[Ink & Water 设计体系](../library/design-systems/ink-water/MOTION_DESIGN.md) · [OpenMotion Brandkit](../library/brandkits/openmotion/BRANDKIT.md) · [贡献设计体系](../library/README.zh-CN.md)
 
 ## 一份规范应记录什么
 
@@ -27,7 +30,7 @@
 1. 从[资源索引](collections/README.zh-CN.md)选出参考或模板，准备好自己的品牌素材。
 2. 按[示例](examples/product-launch.MOTION.zh-CN.md)写出规范，填入真实来源和本次要保留的约束。
 3. 把文件、素材和需求明确交给 Agent，例如：“读取这份 Motion MD，用我们自己的产品截图改编发布片。保留每次揭示后的停顿，交付可编辑工程和 MP4。”
-4. 在 openmotion 中预览、改稿并导出。完成后记录工程版本和实际观看结果。
+4. 在 OpenMotion 中预览、改稿并导出。完成后记录工程版本和实际观看结果。
 
 当前没有自动发现、解析、校验或注册 Motion MD 的接口。文件名本身不会触发工作流。
 

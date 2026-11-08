@@ -1,16 +1,19 @@
-**English** · [简体中文](motion-md.zh-CN.md) · [openmotion](../README.md)
+**English** · [简体中文](motion-md.zh-CN.md) · [OpenMotion](../README.md)
 
-# Motion MD
+# Motion Design MD
 
 **A shared language for motion styles, built for people and Agents.**
 
 [Motion resource library](collections/README.md) · [Complete example](examples/product-launch.MOTION.md)
 
-Motion MD is openmotion's proposed Markdown format for turning the creative decisions behind a video into a reusable specification. It connects a reference and a brand's assets to a video that can be generated, edited and reviewed.
+**Motion Design MD**, shortened to **Motion MD**, is OpenMotion's proposed Markdown format for turning the creative decisions behind a video into a reusable specification. It connects a reference and a brand's assets to a video that can be generated, edited and reviewed.
 
-**Status: initial v0.1 proposal.** The format, filename and sections are open for discussion. This document defines a creative specification, not a new rendering engine, executable configuration or implemented importer.
+The filename is `MOTION_DESIGN.md`. Existing `MOTION.md` examples remain valid; both names are ordinary Markdown context supplied explicitly to an Agent.
 
-![Motion MD: reference and brand assets → readable creative specification → editable video](readme/motion-md.svg)
+**Status: initial v0.1 proposal.** The format and sections are open for discussion. This document defines a creative specification, not a new rendering engine, executable configuration or implemented importer.
+
+
+[Ink & Water design system](../library/design-systems/ink-water/MOTION_DESIGN.md) · [OpenMotion Brandkit](../library/brandkits/openmotion/BRANDKIT.md) · [Contribute a system](../library/README.md)
 
 ## What a Motion MD captures
 
@@ -34,10 +37,10 @@ Use ordinary Markdown headings, prose and tables. The sections above are a propo
 
    > Read this Motion MD and the attached brand assets. Use the specification to adapt our product-launch project. Keep the listed constraints, make the requested edits, and deliver the editable project and MP4.
 
-4. The Agent follows the existing creation/template workflow and writes the native project. Preview and revise it in openmotion.
+4. The Agent follows the existing creation/template workflow and writes the native project. Preview and revise it in OpenMotion.
 5. Review the final video and record the actual version and result. A file with a “Review” section is not automatically verified.
 
-The runtime does **not** automatically read a file just because it is called `MOTION.md`. There is no Motion MD parser, validator, template-registry endpoint or guaranteed cross-Agent execution contract in the current release. An Agent reads it as supplied context.
+The runtime does **not** automatically read a file just because it is called `MOTION_DESIGN.md` or `MOTION.md`. There is no Motion MD parser, validator, template-registry endpoint or guaranteed cross-Agent execution contract in the current release. An Agent reads it as supplied context.
 
 ## How it fits the project
 
