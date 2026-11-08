@@ -2,10 +2,10 @@
 
 <h1 align="center">OpenMotion</h1>
 
-<p align="center"><strong>The All-in-One AI-native Studio for AI Cut &amp; Motion.</strong><br/>Cut with AI. Tell your story. Everyone can be a creator.<br/>The AI-native, open-source CapCut alternative.<br/>The open-source Claude Motion alternative.</p>
+<p align="center"><strong>The AI-native, open-source CapCut alternative.</strong><br/>The All-in-One AI-native Studio for AI editing &amp; Motion.<br/>Edit with AI. Tell your story. Everyone can be a creator.<br/>The open-source Claude Motion alternative.</p>
 
 <p align="center">
-  <a href="#ai-video-editing">✂️ AI Cut</a> ·
+  <a href="#ai-video-editing">✂️ AI editing</a> ·
   <a href="#quick-start">Get started</a> ·
   <a href="#connect-your-agent">Connect your agent</a> ·
   <a href="#use-from-your-agent">Use in your agent</a><br/>
@@ -18,7 +18,7 @@
   <a href="LICENSE">Apache 2.0</a>
 </p>
 
-![OpenMotion: Cut with AI. The AI-native, open-source CapCut alternative and open-source Claude Motion alternative. Everyone can be a creator.](docs/readme/cover.png)
+![OpenMotion: Edit with AI. The AI-native, open-source CapCut alternative and open-source Claude Motion alternative. Everyone can be a creator.](docs/readme/cover.png)
 
 [Animated cover GIF](docs/readme/cover-motion.gif) · [GitHub social preview](docs/readme/social-preview.jpg)
 
@@ -26,7 +26,7 @@
 
 ## 🎬 What is OpenMotion?
 
-**OpenMotion is an All-in-One AI-native Studio for AI Cut & Motion — an open-source CapCut alternative built around an editable timeline.** Tell your AI how you want to cut: what to keep, what to remove, how to tell the story, and where captions, music and motion belong. Your agent edits the project from your material, script or confirmed timecodes; you preview, refine and export it in Studio.
+**OpenMotion is an All-in-One AI-native Studio for AI editing & Motion — an open-source CapCut alternative built around an editable timeline.** Tell your AI how you want to edit: what to keep, what to remove, how to tell the story, and where captions, music and motion belong. Your agent edits the project from your material, script or confirmed timecodes; you preview, refine and export it in Studio.
 
 **AI editing is the core. Creation and expression are the purpose.** Bring inspiration, footage, brand assets, agents and multimodal models into one creative workflow. Tell your story, generate what is missing, refine the cut and keep the editable work. Claude Motion informs the motion-creation direction.
 
@@ -71,7 +71,7 @@ Inspired by [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 
 
 <a id="ai-video-editing"></a>
 
-## ✂️ AI Cut — your story, on an AI-native timeline
+## ✂️ AI editing — your story, on an AI-native timeline
 
 **Say how the video should be cut, in your own voice.** Place and rearrange your material on the timeline; work with an agent on selection, trimming, captions, transitions and sound. Every revision becomes part of a project you can inspect and keep refining.
 
@@ -218,7 +218,7 @@ These references illustrate creative directions; they are not OpenMotion-generat
 
 ## 🔄 Input → Process → Output
 
-**Bring your material → cut with AI → share your story.** The same project carries the entire lifecycle, from the first brief to the next recut.
+**Bring your material → edit with AI → share your story.** The same project carries the entire lifecycle, from the first brief to the next recut.
 
 ```text
 INPUT     Gather footage, recordings, links, scripts and brand assets
@@ -334,29 +334,148 @@ Today, the connected agent runs in its own client. Studio stores the brief and e
 
 ## 🎨 Motion Design MD — `MOTION_DESIGN.md`
 
-**Give your videos a reusable motion language.** Motion MD describes how a film behaves: when the product appears, how the viewer's attention moves, how long a headline holds, and where sound supports the story. Keep those decisions with your brand assets so the next video can build on them.
+**Clone the motion. Tell your story.** Turn the creative structure of a reference video into a reusable **Motion Design Skill package**: keep its camera moves, transitions, rhythm and visual hierarchy; replace the topic, copy, product and brand with yours. A good remake can become a community asset that another creator can fork, adapt and improve.
 
-```markdown
-# Product launch — Motion Design
-
-## Brand
-Use our logo, type, palette and product screenshots.
-
-## Story & timing
-0–3s: Establish the problem. 3–8s: Reveal the product.
-8–16s: Demonstrate two benefits. 16–20s: Hold the CTA.
-
-## Motion & sound
-Keep the continuous canvas and a readable pause after each reveal.
-Align the main reveal with the music; leave space for the closing line.
-
-## Keep / replace
-Keep the reveal order. Replace the logo, screenshots, copy and CTA.
+```text
+Reference video  →  Motion Design Skill package  +  Your content
+                         │
+                         ├─ MOTION_DESIGN.md   creative rules + invariants
+                         ├─ SKILL.md           adaptation + review method
+                         ├─ source + assets    editable implementation
+                         └─ presets + evidence content slots + actual results
+                         │
+                         ▼
+                  Agent → editable timeline → your new video
 ```
 
-**Motion MD is a v0.1 proposal.** Save your brief as `MOTION_DESIGN.md` and explicitly give it to the agent. The filename is a convention, with no automatic importer or validator; existing `MOTION.md` examples remain valid creative context. The project itself stays editable HTML/CSS/JS and media.
+**Motion MD carries the design; the Skill carries the method; the project carries the implementation.** It describes story beats, framing, timing, easing, camera, typography, sound, replaceable inputs and what must survive a content change. [Architecture and complete authoring guide](docs/motion-md.md).
 
-[Read the proposal](docs/motion-md.md) · [Use the full example](docs/examples/product-launch.MOTION.md)
+<a id="presenter-motion"></a>
+
+### 🎙️ Real people. Real stories. Motion that helps.
+
+Talking-head videos, tutorials and product walkthroughs belong here too. **Keep the human delivery and story rhythm; reuse the captions, screenshots, picture-in-picture and motion with your own recording, topic and brand.**
+
+These three pairs are **reference / upstream-remix demonstrations from the existing Hyperframes catalog**. Each side is a silent excerpt, not a synchronized fidelity test or a new OpenMotion output. Each pair links to an Agent-ready design recipe for making and reviewing your own adaptation.
+
+#### Teach with a face, a keyword and a visual example
+
+**Career advice → video-production explainer**
+
+<table>
+<tr><th width="50%">Reference · @careerwithriya</th><th width="50%">Upstream remix · Hyperframes</th></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
+</table>
+
+**Reuse:** Numbered ideas, presenter-led delivery and proof cards. **Make it yours:** Creator, spoken topic, keywords and supporting examples.
+
+[MOTION_DESIGN.md](library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-reference.mp4) · [Full upstream remix](https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-result.mp4)
+
+#### Show the workflow while you tell the story
+
+**Everyday tools → a design-workspace story**
+
+<table>
+<tr><th width="50%">Reference · Ali Abdaal</th><th width="50%">Upstream remix · Hyperframes</th></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
+</table>
+
+**Reuse:** Presenter / screen rhythm, quiet captions and readable inserts. **Make it yours:** Your recording, your workflow and your screen captures.
+
+[MOTION_DESIGN.md](library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4) · [Full upstream remix](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-result.mp4)
+
+#### Put the presenter and the product in one story
+
+**Tool demo → video-editor walkthrough**
+
+<table>
+<tr><th width="50%">Reference · @john.tagudin</th><th width="50%">Upstream remix · Hyperframes</th></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
+</table>
+
+**Reuse:** Hook, picture-in-picture, callouts and a visible result. **Make it yours:** Product, presenter, demonstration and closing message.
+
+[MOTION_DESIGN.md](library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-reference.mp4) · [Full upstream remix](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-result.mp4)
+
+> Use my camera and screen recordings with this structure. Keep my voice, edit around the actual speech and align captions. Use screenshots, picture-in-picture and motion to explain each point. Show a preview with sound, then deliver the editable project and MP4.
+
+### 🎞️ Same motion language. A different story.
+
+Six real, synchronized **source-template adaptations** from resources already represented in our catalog. Left: the source with its original content. Right: the same implementation with a new brief applied through the example package. Both sides are rendered at matching timestamps; previews are silent excerpts. They demonstrate content reuse, not blind reconstruction of arbitrary viral videos. [Source, inputs and evidence](docs/motion-design-examples.md).
+
+### Wireframe portal · BREAKTHROUGH → OPENMOTION
+
+<table>
+<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
+<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+</table>
+
+**Keep: Portal timing, dimensional lettering and camera push.** **Replace: Title, subtitle and the 3D phrase.**
+
+[MOTION_DESIGN.md](library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
+
+### Canopy typography · Understory → OpenMotion
+
+<table>
+<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
+<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+</table>
+
+**Keep: Leaf sweeps, depth, occlusion and reading holds.** **Replace: Two brand headlines.**
+
+[MOTION_DESIGN.md](library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](library/skills/motion-design-remix/previews/canopy-part-title.mp4)
+
+### Interface reveal · Product tour → AI editing story
+
+<table>
+<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
+<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+</table>
+
+**Keep: Tilted canvas, depth hierarchy and continuous camera.** **Replace: Hero headline, document and community copy.**
+
+[MOTION_DESIGN.md](library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
+
+### Dimensional code · loadConfig() → cutVideo()
+
+<table>
+<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
+<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+</table>
+
+**Keep: Extruded slab, syntax colors and the camera move.** **Replace: Function, variables and displayed calls.**
+
+[MOTION_DESIGN.md](library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
+
+### Particle assembly · parse / optimize / emit → select / trim / render
+
+<table>
+<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
+<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+</table>
+
+**Keep: Seeded particle motion and assembly rhythm.** **Replace: Pipeline name and steps.**
+
+[MOTION_DESIGN.md](library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
+
+### Glass information cards · Device widgets → creator workspace
+
+<table>
+<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
+<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+</table>
+
+**Keep: Glass treatment, card hierarchy, stagger and meters.** **Replace: Labels, units and feature story.**
+
+[MOTION_DESIGN.md](library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
+
+### 📦 Give the package to your Agent
+
+> Read this Motion Design Skill package. Keep the selected reference's story rhythm, framing and transitions. Use my recordings, measured speech timing, copy and brand. Deliver a matching-time comparison, the editable project and MP4; record any differences that remain.
+
+[Get the example Skill](library/skills/motion-design-remix/SKILL.md) · [Six detailed walkthroughs](docs/motion-design-examples.md) · [Contribute a motion language](library/ENTRY_TEMPLATE.md)
+
+**Today:** `MOTION_DESIGN.md` is a v0.1 writing convention supplied explicitly to an Agent. The example package includes pinned source, six profiles and an executable replacement helper; no automatic Markdown importer or `.motion` compatibility is implied. With video-only references, use `motion-recreate` to rebuild and review the work first; `motion-video-to-template` keeps its existing `TEMPLATE.md` handoff. [How the layers fit](docs/motion-md.md).
 
 <a id="creative-memory"></a>
 
@@ -394,7 +513,7 @@ Today, you explicitly supply those documents and preserve editable projects. Aut
 
 | Reuse a… | Directory & first entries |
 | --- | --- |
-| **🧠 Skill** | [`library/skills/`](library/skills/) · [Brandkit preparation](library/skills/brandkit/SKILL.md). |
+| **🧠 Skill** | [`library/skills/`](library/skills/) · [Presenter Story](library/skills/presenter-story/SKILL.md) · [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) · [Brandkit preparation](library/skills/brandkit/SKILL.md). |
 | **🎞️ Template** | [`library/templates/`](library/templates/README.md) · Three existing editable project starting points. |
 | **🧩 Motion component** | [`library/components/`](library/components/README.md) · A title-reveal recipe and external component references. |
 | **🎨 Motion design system** | [`library/design-systems/`](library/design-systems/) · [Ink & Water / `MOTION_DESIGN.md`](library/design-systems/ink-water/MOTION_DESIGN.md). |
@@ -409,6 +528,86 @@ Choose the files and explicitly give them to your agent with your material. The 
 > Use the Product Promo template with my Brandkit. Tell this story in my voice, replace the assets and copy, adjust the pacing, then show a preview and refine it from my feedback.
 
 The current gallery's one-click action prepares the agent handoff; the connected agent performs the work. Automatic discovery, installation and personalized optimization across the community library are coming. [Template entry points](library/templates/README.md)
+
+<a id="creator-video-gallery"></a>
+
+### 🎥 People, speech and motion — start with real videos
+
+**Nine presenter-led references already in the catalog.** Explore lessons, screen demonstrations, founder stories and UGC product videos. Every card moves; click for the full video and search its title in Studio to find the original entry.
+
+<table>
+<tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture></a><br>
+<strong>6 essential skills to transform your career</strong><br>
+Numbered points + kinetic keywords<br>
+<sub>Reference · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/dan-martell-tools-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="docs/readme/people/dan-martell-tools.gif" width="216" alt="Presenter video reference: What's the best AI tool right now?"></picture></a><br>
+<strong>What's the best AI tool right now?</strong><br>
+Presenter + floating tool cards<br>
+<sub>Reference · <a href="https://www.youtube.com/shorts/mk1zJd9Rm4c">Dan Martell</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/harpercarrollai-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="docs/readme/people/harpercarrollai.gif" width="216" alt="Presenter video reference: 10 Days of AI Basics, Day 1"></picture></a><br>
+<strong>10 Days of AI Basics, Day 1</strong><br>
+A personal lesson + readable captions<br>
+<sub>Reference · <a href="https://www.instagram.com/reel/C4eNPF3PdpG/">@harpercarrollai</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🖥️ Show the workflow</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
+<strong>5 tools I use every day</strong><br>
+Desk-side story + workflow inserts<br>
+<sub>Reference · <a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
+<strong>Tool demo with callouts</strong><br>
+Presenter + screens + callouts<br>
+<sub>Reference · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/aiwithsachi-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="docs/readme/people/aiwithsachi.gif" width="216" alt="Presenter video reference: Top 5 plugins to install in Claude"></picture></a><br>
+<strong>Top 5 plugins to install in Claude</strong><br>
+A spoken list + supporting screenshots<br>
+<sub>Reference · <a href="https://www.instagram.com/reel/Dc7G9Pxu_1O/">@aiwithsachi</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🎬 Tell a story, show a product</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/khris-sheer-founder-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="docs/readme/people/khris-sheer-founder.gif" width="216" alt="Presenter video reference: The Founder Experiments, Ep. 1"></picture></a><br>
+<strong>The Founder Experiments, Ep. 1</strong><br>
+Founder diary + everyday B-roll<br>
+<sub>Reference · <a href="https://www.tiktok.com/@khris.sheer/video/7491715587895430402">@khris.sheer</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ugc-rachelll-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="docs/readme/people/ugc-rachelll.gif" width="216" alt="Presenter video reference: AI creator with product"></picture></a><br>
+<strong>AI creator with product</strong><br>
+Product story + proof + picture-in-picture<br>
+<sub>Reference · <a href="https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246">@ugc.rachelll</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/kevinstratvert-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="docs/readme/people/kevinstratvert.gif" width="216" alt="Presenter video reference: Stop Paying for 5 AI Tools"></picture></a><br>
+<strong>Stop Paying for 5 AI Tools</strong><br>
+Product tutorial + live demonstration<br>
+<sub>Reference · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
+</td>
+</tr>
+</table>
+
+These are external creators’ works and editing references, not bundled editable templates. Choose one, add the [Presenter Story Skill](library/skills/presenter-story/SKILL.md) and your own recordings, then give the brief to your agent.
+
+#### External template inspiration · MotionGit Kinetic Tech
+
+<a href="https://motiontemplates.github.io/385712/assets/demo.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/motiongit-kinetic.jpg"><img src="docs/readme/people/motiongit-kinetic.gif" width="640" alt="MotionGit Kinetic Tech published landscape demo with presenter window, diagrams and animated typography"></picture></a>
+
+**Presenter window + animated type + visual explanation.** [adunext / MotionGit’s public template](https://github.com/motiontemplates/385712) shows how presenter content can work with a motion system. This excerpt comes from its public GitHub landscape demo; source and production guidance live upstream and use that package’s runtime. It is distinct from the website’s portrait edition and has not been verified as directly importable into OpenMotion. Template code is MIT; demo people, voices and other assets retain their own rights.
 
 <a id="motion-gallery"></a>
 
@@ -689,7 +888,7 @@ Give this README and the [media fact sheet](docs/media-kit.md) to your agent to 
 ```text
 Read the OpenMotion README and docs/media-kit.md.
 Create a 30-second product introduction and an accompanying article.
-Lead with the All-in-One AI-native Studio and “Cut with AI. Everyone can be
+Lead with the All-in-One AI-native Studio and “Edit with AI. Everyone can be
 a creator.” Introduce our Super Motion Video Agent concept and the planned
 publishing → feedback → knowledge → Skill improvement loop. Explain the AI-native
 CapCut positioning, centered on the AI-native timeline, and the open-source
@@ -747,7 +946,7 @@ Directions to build with the community, without committed release dates:
 
 ## ⭐ Stay tuned with us
 
-**Star OpenMotion and help more people discover AI Cut.** Keep the project close, follow its progress and bring your next idea to the community.
+**Star OpenMotion and help more people discover AI editing.** Keep the project close, follow its progress and bring your next idea to the community.
 
 [![Animated Star invitation for OpenMotion: click through to the repository and star the project.](docs/readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
 
@@ -791,11 +990,13 @@ What informed the product, and where the connection lives in this repository.
 | Source | Role here & repository entry |
 | --- | --- |
 | [OpenDesign](https://github.com/nexu-io/open-design) / [website](https://open-design.ai/) | UI design-system source, resource/contribution structure and painterly brand direction. See [UI provenance](docs/design-system.md), [Brandkit](library/brandkits/openmotion/BRANDKIT.md) and [Library](library/README.md). |
-| [Hypit](https://github.com/hypit-ai/hypit) | Reference for the Stay tuned / Star community invitation. OpenMotion uses independently generated brand artwork; see [asset provenance](docs/readme/ASSETS.md). |
+| [Hypit](https://github.com/hypit-ai/hypit) | Reference for content-variant comparisons and the Stay tuned / Star invitation; see [Motion Design examples](docs/motion-design-examples.md). |
+| [MotionGit](https://motiongit.com/) / [format](https://motiongit.com/spec) / [source collaboration](https://motiongit.com/git) | Reference for separating package content, runtime and distribution, with demos and material contracts. See [Motion MD architecture](docs/motion-md.md); `.motion` compatibility is not implemented. |
+| [rea-video](https://github.com/JuneYaooo/rea-video) | Reference for shot-by-shot analysis and synchronized original/remake comparisons; no runtime is imported. |
 | [HTML Anything](https://github.com/nexu-io/html-anything/tree/legacy) | Repository lineage; a reference for text architecture, contribution paths and attribution tables. Its former `next/` architecture stays on the historical branch; see the [migration guide](docs/repository-migration.md). |
 | **Claude Motion / CapCut** | Product references for agent-led video creation and approachable editing; not claims of feature parity or code provenance. |
 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) / [Super-agent prototype](https://github.com/deepseek-ai/dsh-superagent-prototype) | Reference for extensible agent capabilities and continuing task-oriented work. The Super-agent repository is research code; OpenMotion's proposed [Super Motion Video Agent](docs/product/studio-vision.md#super-motion-video-agent) imports no runtime from it. |
-| [OpenChatCut](https://github.com/0xsline/OpenChatCut) | Conceptual reference for a continuously editable project and the AI editing lifecycle. Adapted in [AI Cut](#ai-video-editing) and [Input → Process → Output](#input--process--output); this documentation change imports no OpenChatCut code. |
+| [OpenChatCut](https://github.com/0xsline/OpenChatCut) | Conceptual reference for a continuously editable project and the AI editing lifecycle. Adapted in [AI editing](#ai-video-editing) and [Input → Process → Output](#input--process--output); this documentation change imports no OpenChatCut code. |
 | [ChatCut](https://chatcut.io/docs/what-is-chatcut) | Product inspiration for agent-to-editor work and talking-head / creator scenarios. |
 | [Hyperframes](https://github.com/heygen-com/hyperframes) | Thanks for the native composition, Studio, rendering foundations and resources. See [Studio](studio/README.md), [engine notes](docs/hyperframes.md), [template notices](template-library/NOTICE.md) and [catalog provenance](docs/template-catalog.md). |
 | [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | Animation timing and media rendering/checking dependencies; pinned in [package.json](package.json) and the [runtime lock](scripts/runtime-lock.json). |

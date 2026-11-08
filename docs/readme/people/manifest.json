@@ -1,0 +1,413 @@
+{
+  "description": "Short silent excerpts of existing catalog videos. Paired clips are original-reference and upstream-remix demonstrations published by Hyperframes, not OpenMotion outputs or validation of the new presenter-story Skill. Each side retains source speed and pixels; excerpts are not time-aligned reconstructions. Source authorship comes from catalog metadata; likeness, audio and assets retain their original rights. No original video or presenter assets are included in the Skill.",
+  "entries": [
+    {
+      "id": "careerwithriya",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-careerwithriya",
+          "catalogTitle": "6 essential skills to transform your career",
+          "catalogAuthor": "@careerwithriya",
+          "sourceUrl": "https://www.instagram.com/reel/Ddd57MBszhc/",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "1ea2daf0de95b8146c1e6dce52eb88559571c5bfe37ff99d1ceefd5ed5880f95",
+          "startSeconds": 0
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "careerwithriya.gif",
+      "poster": "careerwithriya.jpg",
+      "gifBytes": 1985416,
+      "gifSha256": "7716c7166bf9f098f67845d55872e08f5765eaeb1439eb5760db785fa6d2d41e",
+      "posterSha256": "2e1da78c50357ae83ed514e808474f4f9b2dab58c372f757aba00e6f86e2065c",
+      "posterOffsetSeconds": 3.0
+    },
+    {
+      "id": "dan-martell-tools",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-dan-martell-tools",
+          "catalogTitle": "What's the best AI tool right now?",
+          "catalogAuthor": "Dan Martell",
+          "sourceUrl": "https://www.youtube.com/shorts/mk1zJd9Rm4c",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/dan-martell-tools-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "fb5b2eea34bbf2e6fc92330b77c2743611dc4904a69eb5e9a3a5ac4b985c17e9",
+          "startSeconds": 2
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "dan-martell-tools.gif",
+      "poster": "dan-martell-tools.jpg",
+      "gifBytes": 880601,
+      "gifSha256": "0d7e7316322a28b6ce9013beaee4208c84b12bbb5565f04fcbc175c72e6aeadc",
+      "posterSha256": "e24f952b1e749f7031c8b89e698bb29ad8d7e4ce1f76c6665b9956e27bec9c58",
+      "posterOffsetSeconds": 3.0
+    },
+    {
+      "id": "harpercarrollai",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-harpercarrollai",
+          "catalogTitle": "10 Days of AI Basics, Day 1",
+          "catalogAuthor": "@harpercarrollai",
+          "sourceUrl": "https://www.instagram.com/reel/C4eNPF3PdpG/",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/harpercarrollai-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "11a126b44792403bc69e854d6d451d7b9098e0e83dcaeb2e5905882c488411fc",
+          "startSeconds": 10
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "harpercarrollai.gif",
+      "poster": "harpercarrollai.jpg",
+      "gifBytes": 2162544,
+      "gifSha256": "9b4a957dc004efc4f1ddfdfed546ca3ccc6b1a1978c15d0887d0175b84caa39f",
+      "posterSha256": "10cc664ca8601a82a2460035268c98f6c8e0a2abdc294663b0b1f487a2663114",
+      "posterOffsetSeconds": 3.0
+    },
+    {
+      "id": "ali-abdaal-workflow",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
+          "catalogTitle": "5 tools I use every day",
+          "catalogAuthor": "Ali Abdaal",
+          "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "3963db40ddc845fae9d212de25f78e19b810ec1ba7dc46e8941d54d9e32a77a4",
+          "startSeconds": 10
+        }
+      ],
+      "durationSeconds": 7,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "ali-abdaal-workflow.gif",
+      "poster": "ali-abdaal-workflow.jpg",
+      "gifBytes": 1626418,
+      "gifSha256": "03b9096a894f0572289ec31f9476854e660113852a97b4898c5b88158030b9a8",
+      "posterSha256": "2380d9c440d7115b10ebc88d7c6cc763c9ee739b4fce157679a8e6bd98acffd6",
+      "posterOffsetSeconds": 0.4
+    },
+    {
+      "id": "john-tagudin-capso",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-john-tagudin-capso",
+          "catalogTitle": "Tool demo with callouts",
+          "catalogAuthor": "@john.tagudin",
+          "sourceUrl": "https://www.tiktok.com/@john.tagudin/video/7524883942328126728",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "8ec55cb822578e896d986a98df51fd450cd9c586b1988724e93d25e7ce5a3d9a",
+          "startSeconds": 11
+        }
+      ],
+      "durationSeconds": 7,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "john-tagudin-capso.gif",
+      "poster": "john-tagudin-capso.jpg",
+      "gifBytes": 1600967,
+      "gifSha256": "a8a09b0b4837125c948bcdeff964ae7a9ff971ea0275927d045bc72f81141d72",
+      "posterSha256": "61d600fe9d8c9824883889587ca572bfa43909be9233bf02fc32adb097df2dc8",
+      "posterOffsetSeconds": 3.5
+    },
+    {
+      "id": "aiwithsachi",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-aiwithsachi",
+          "catalogTitle": "Top 5 plugins to install in Claude",
+          "catalogAuthor": "@aiwithsachi",
+          "sourceUrl": "https://www.instagram.com/reel/Dc7G9Pxu_1O/",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/aiwithsachi-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "9b44370e49d9621a4e430804464ba201a625fb2c5840e5f448429fda4bd440ec",
+          "startSeconds": 3
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "aiwithsachi.gif",
+      "poster": "aiwithsachi.jpg",
+      "gifBytes": 1561717,
+      "gifSha256": "e04f9c2fdfb1bce2a2f83bbf28bde8765af58c589bb52b904694ff8113d61a7e",
+      "posterSha256": "5e2fa07f3440236ef4c17487ea6169ac149758cd1d7520a909cb88bb4e41ba3a",
+      "posterOffsetSeconds": 3.0
+    },
+    {
+      "id": "khris-sheer-founder",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-khris-sheer-founder",
+          "catalogTitle": "The Founder Experiments, Ep. 1",
+          "catalogAuthor": "@khris.sheer",
+          "sourceUrl": "https://www.tiktok.com/@khris.sheer/video/7491715587895430402",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/khris-sheer-founder-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "a4469c76e3863e7940b101656456134d88870807cbfc96d5b7bf5f93af123d2f",
+          "startSeconds": 0
+        }
+      ],
+      "durationSeconds": 7,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "khris-sheer-founder.gif",
+      "poster": "khris-sheer-founder.jpg",
+      "gifBytes": 1710144,
+      "gifSha256": "0359b48294cb978df976f9ae2ab6ca4644854bee438dca09accc1144c30259bc",
+      "posterSha256": "08738cca1e8b4e389c027e19b776c6414b82957eb0497bb4505f5e403bbefc58",
+      "posterOffsetSeconds": 3.5
+    },
+    {
+      "id": "ugc-rachelll",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-ugc-rachelll",
+          "catalogTitle": "AI creator with product",
+          "catalogAuthor": "@ugc.rachelll",
+          "sourceUrl": "https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ugc-rachelll-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "d2a1bc75da0e6669e48319eff48b25ee467ba22c0b093604ec17c535e8ea6c38",
+          "startSeconds": 8
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "ugc-rachelll.gif",
+      "poster": "ugc-rachelll.jpg",
+      "gifBytes": 2292098,
+      "gifSha256": "0b779052281e89a3efc44e5a4b4492e245a12a14c0c5118813e59876419ad5c5",
+      "posterSha256": "89e95b4311a46bd8799bb02eeba5070183c44782e3f464c1fce8be9444dc6a8f",
+      "posterOffsetSeconds": 3.0
+    },
+    {
+      "id": "kevinstratvert",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-kevinstratvert",
+          "catalogTitle": "Stop Paying for 5 AI Tools",
+          "catalogAuthor": "Kevin Stratvert",
+          "sourceUrl": "https://www.youtube.com/shorts/1fA5j5_5TRY",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/kevinstratvert-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "00439541e4da62dbb60263f0b9c3172d4c61ad242df2ab8f68ec652642886056",
+          "startSeconds": 23
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": null,
+      "gif": "kevinstratvert.gif",
+      "poster": "kevinstratvert.jpg",
+      "gifBytes": 900863,
+      "gifSha256": "31655004df5561a835eacd093fdd7e2a247b3c5fec0a9074ce59c6d9c9c56291",
+      "posterSha256": "aae8d09e16e7b6a8d917172b4ceac642678dd642aa474977bf9c067f949cdc12",
+      "posterOffsetSeconds": 3.0
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "careerwithriya-comparison",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-careerwithriya",
+          "catalogTitle": "6 essential skills to transform your career",
+          "catalogAuthor": "@careerwithriya",
+          "sourceUrl": "https://www.instagram.com/reel/Ddd57MBszhc/",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "1ea2daf0de95b8146c1e6dce52eb88559571c5bfe37ff99d1ceefd5ed5880f95",
+          "startSeconds": 0
+        },
+        {
+          "catalogId": "hf-reference-aroll-careerwithriya",
+          "catalogTitle": "6 essential skills to transform your career",
+          "catalogAuthor": "@careerwithriya",
+          "sourceUrl": "https://www.instagram.com/reel/Ddd57MBszhc/",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-result.mp4",
+          "role": "upstream-remix",
+          "sourceSha256": "d682e864af5ee41b4fd70f711b2a938c46975bf932a6e360ec7185c8a80c073b",
+          "startSeconds": 0
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": false,
+      "gif": "careerwithriya-comparison.gif",
+      "poster": "careerwithriya-comparison.jpg",
+      "gifBytes": 6472415,
+      "gifSha256": "e37ea339df778c47b4cc7f436cd90feb6adfbbc6f66cf2b70d6ad7e6775ce687",
+      "posterSha256": "08c9cb368c56a6f3fd3375a7712215aa79630eddff8c264015158044485925cb",
+      "posterOffsetSeconds": 3.0
+    },
+    {
+      "id": "ali-abdaal-workflow-comparison",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
+          "catalogTitle": "5 tools I use every day",
+          "catalogAuthor": "Ali Abdaal",
+          "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "3963db40ddc845fae9d212de25f78e19b810ec1ba7dc46e8941d54d9e32a77a4",
+          "startSeconds": 10
+        },
+        {
+          "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
+          "catalogTitle": "5 tools I use every day",
+          "catalogAuthor": "Ali Abdaal",
+          "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-result.mp4",
+          "role": "upstream-remix",
+          "sourceSha256": "773ab14af75d92790c9c38cdb860c8bb3fd88a7ed4f597a24e7f10856fbd2019",
+          "startSeconds": 0
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": false,
+      "gif": "ali-abdaal-workflow-comparison.gif",
+      "poster": "ali-abdaal-workflow-comparison.jpg",
+      "gifBytes": 4032562,
+      "gifSha256": "e6c2078a7595d03b644129697a6c26b12b32d7f0014ea74d7d2ec58c3f4cc07f",
+      "posterSha256": "0f48b0a46bfba8ec2e6db2a4f187cfea4ab3c6fe87851ee871af8a1877998026",
+      "posterOffsetSeconds": 0.4
+    },
+    {
+      "id": "john-tagudin-capso-comparison",
+      "sources": [
+        {
+          "catalogId": "hf-reference-aroll-john-tagudin-capso",
+          "catalogTitle": "Tool demo with callouts",
+          "catalogAuthor": "@john.tagudin",
+          "sourceUrl": "https://www.tiktok.com/@john.tagudin/video/7524883942328126728",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-reference.mp4",
+          "role": "catalog-reference",
+          "sourceSha256": "8ec55cb822578e896d986a98df51fd450cd9c586b1988724e93d25e7ce5a3d9a",
+          "startSeconds": 11
+        },
+        {
+          "catalogId": "hf-reference-aroll-john-tagudin-capso",
+          "catalogTitle": "Tool demo with callouts",
+          "catalogAuthor": "@john.tagudin",
+          "sourceUrl": "https://www.tiktok.com/@john.tagudin/video/7524883942328126728",
+          "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-result.mp4",
+          "role": "upstream-remix",
+          "sourceSha256": "334703c3a0407b4f6a17c798ec7d1f85d70d13fdd552b715ac7d9a03267f266b",
+          "startSeconds": 12
+        }
+      ],
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "playbackSpeed": 1,
+      "audio": false,
+      "crop": false,
+      "sharedSourceTimestamps": false,
+      "gif": "john-tagudin-capso-comparison.gif",
+      "poster": "john-tagudin-capso-comparison.jpg",
+      "gifBytes": 5861721,
+      "gifSha256": "4857036ea4186885cc756ed983102af3edf84db74c212e9b7bd84af8285b9ae2",
+      "posterSha256": "04e53293dbfdb0bb1d42cce64fb287c0fc7a3cbed0f6857e35f6043f97c226e1",
+      "posterOffsetSeconds": 3.0
+    }
+  ],
+  "externalTemplates": [
+    {
+      "id": "motiongit-kinetic",
+      "title": "Kinetic Tech",
+      "creator": "adunext / MotionGit",
+      "sourceUrl": "https://github.com/motiontemplates/385712",
+      "website": "https://motiongit.com/@adunext/385712",
+      "videoUrl": "https://motiontemplates.github.io/385712/assets/demo.mp4",
+      "sourceEdition": "0.2.7-open-beta, 1920x1080 landscape; distinct from the website portrait edition",
+      "commit": "9dfbe7d7c6a6d4aa03f6f8e2f2285e631099faae",
+      "sourceSha256": "f0c6292cdd60a5ecef003adbc353f3a4c54f96cf93d117ce71ade552b38a3197",
+      "startSeconds": 6,
+      "durationSeconds": 6,
+      "fps": 10,
+      "paletteColors": 128,
+      "dither": "bayer:3",
+      "crop": false,
+      "audio": false,
+      "playbackSpeed": 1,
+      "gif": "motiongit-kinetic.gif",
+      "poster": "motiongit-kinetic.jpg",
+      "gifBytes": 4549114,
+      "gifSha256": "7665a1a6bfea4445c49cabbfd0009c7be7cd4491a1bc977b980b58486c7e77cb",
+      "posterSha256": "314cdfbf4cd4809fbe868cc3f4322439d83b0bdc1e07434ace131445451ece0c",
+      "status": "External template demo; not executed or imported by OpenMotion. Template code MIT; demo people, voices and third-party assets retain separate rights.",
+      "posterOffsetSeconds": 1
+    }
+  ]
+}

@@ -1,0 +1,348 @@
+{
+  "scope": "Six source-backed content adaptations. Original-content and remix HTML were sampled at matching GSAP times and encoded side by side. Not blind reconstruction, model-generated footage, native Studio export acceptance or a similarity benchmark.",
+  "upstreamCommit": "070b964d7b8cd844a893f0abbe8e0b7f1ac6d879",
+  "environment": {
+    "node": "26.11.1",
+    "chrome": "156.0.8078.80",
+    "ffmpeg": "8.1.1",
+    "puppeteerCore": "25.16.0",
+    "lintEngine": "Hyperframes 0.9.7"
+  },
+  "capture": {
+    "stage": [
+      1920,
+      1080
+    ],
+    "imagePerSide": [
+      960,
+      540
+    ],
+    "fps": 12,
+    "seed": 42,
+    "sourceSpeed": 1,
+    "sharedSourceTimestamps": true,
+    "crop": false,
+    "requestOrPageErrors": 0,
+    "lane": "Existing product-tour browser real lock; serialized isolated profile. No application browser regression or target-machine acceptance claimed."
+  },
+  "checks": {
+    "materializedProjects": 12,
+    "nativeLintErrors": 0,
+    "nativeLintWarnings": 20,
+    "videoDecoding": "All six MP4s and GIFs fully decoded with FFmpeg -xerror. MP4 geometry, frame count, duration and absence of audio were checked.",
+    "review": "Contact sheets and selected matched frames inspected. Final visual acceptance belongs to the user.",
+    "remaining": [
+      "Native Studio export has not been exercised for these six profiles.",
+      "Network/font/CDN dependencies remain; not a fully offline package.",
+      "Original brand artwork, illustrative code and demo numbers remain in selected examples."
+    ]
+  },
+  "pairs": [
+    {
+      "id": "ui-3d-reveal",
+      "startSeconds": 3,
+      "durationSeconds": 5.5,
+      "framesPerSide": 66,
+      "fps": 12,
+      "audio": false,
+      "files": [
+        {
+          "file": "ui-3d-reveal.mp4",
+          "bytes": 440852,
+          "sha256": "1855828cd42a4feddf5c0d93a520f39d64c6b19541715854a823e2d6e8ae45cf"
+        },
+        {
+          "file": "ui-3d-reveal.gif",
+          "bytes": 1871066,
+          "sha256": "d78164b0843139d33eee867dc29b1cc8a6b8975a875d20d75d459ebfde60fb04"
+        },
+        {
+          "file": "ui-3d-reveal.jpg",
+          "bytes": 40356,
+          "sha256": "f6146ac0bd2464e37e9257dd0ce7af04430272c31c6e91f7b4aa801ea1732fb0"
+        }
+      ],
+      "sourceSha256": "158ce64b3bc045238636a42fc6e866a3b2b80418fa6b626f46baafff59ffefa4",
+      "remixSha256": "a9195de81a9aca7dd386551947e141eea98489ad814aae10c8000778be0f53f3",
+      "presetSha256": "7a7f712d7a40a3143c10b409793f6d70716282cc2416e08865779d7ed65fa67d",
+      "nativeLint": [
+        {
+          "id": "ui-3d-reveal",
+          "variant": "reference",
+          "ok": true,
+          "errors": 0,
+          "warnings": 3,
+          "codes": [
+            "composition_file_too_large",
+            "overlapping_gsap_tweens"
+          ]
+        },
+        {
+          "id": "ui-3d-reveal",
+          "variant": "remix",
+          "ok": true,
+          "errors": 0,
+          "warnings": 3,
+          "codes": [
+            "composition_file_too_large",
+            "overlapping_gsap_tweens"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wireframe-portal-title",
+      "startSeconds": 0,
+      "durationSeconds": 6,
+      "framesPerSide": 72,
+      "fps": 12,
+      "audio": false,
+      "files": [
+        {
+          "file": "wireframe-portal-title.mp4",
+          "bytes": 1943815,
+          "sha256": "fdbf1bda1eb1efbee135d2bd9cbedacc1f59fe7ce9fcdda37648c0f81eb8e4e6"
+        },
+        {
+          "file": "wireframe-portal-title.gif",
+          "bytes": 7014953,
+          "sha256": "0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a"
+        },
+        {
+          "file": "wireframe-portal-title.jpg",
+          "bytes": 81490,
+          "sha256": "78ad8227e964260ba1281510608684295f5ff5371bfb1c9de154b1030fb94e9d"
+        }
+      ],
+      "sourceSha256": "030142fd44afdb474c70ff89d293ea00d70028fbc7c51141acea6f36dee73ded",
+      "remixSha256": "4e93b2391cbea383afb3d782752293f13f215960e6c11f060d33671ec0e17443",
+      "presetSha256": "647eaf6b133282bc5723cbd92a7ab0ffe4c86815b55f7df0a6c51fcd60cb7892",
+      "nativeLint": [
+        {
+          "id": "wireframe-portal-title",
+          "variant": "reference",
+          "ok": true,
+          "errors": 0,
+          "warnings": 2,
+          "codes": [
+            "composition_file_too_large",
+            "nested_structure_needs_subcomposition"
+          ]
+        },
+        {
+          "id": "wireframe-portal-title",
+          "variant": "remix",
+          "ok": true,
+          "errors": 0,
+          "warnings": 2,
+          "codes": [
+            "composition_file_too_large",
+            "nested_structure_needs_subcomposition"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canopy-part-title",
+      "startSeconds": 0.25,
+      "durationSeconds": 5.5,
+      "framesPerSide": 66,
+      "fps": 12,
+      "audio": false,
+      "files": [
+        {
+          "file": "canopy-part-title.mp4",
+          "bytes": 1068254,
+          "sha256": "080816d50bc07f681f916c07dc065710906f0397ccf072f348f66bace5de6587"
+        },
+        {
+          "file": "canopy-part-title.gif",
+          "bytes": 3298524,
+          "sha256": "600a3791258b1b9873bc5626254f6a024a6dfc5df88dded9b468400853c0ccb0"
+        },
+        {
+          "file": "canopy-part-title.jpg",
+          "bytes": 34014,
+          "sha256": "5e4b09d1bc8747e8731e62d68ab664deb3ac0d5262bae84028f0a3c6b0f938b5"
+        }
+      ],
+      "sourceSha256": "cf14c74340ec5967339d2dbb6509c3dda698ca0a915e7aae6cb883b1b6b32532",
+      "remixSha256": "f8bd968626b15778590dcfea34d58f0071f40fc8e84a3d2733df2e9d8a4c70b8",
+      "presetSha256": "e949e36cce40e052b20fded7b5d29adf040d6c18a9d3cf5621abccfbc260762e",
+      "nativeLint": [
+        {
+          "id": "canopy-part-title",
+          "variant": "reference",
+          "ok": true,
+          "errors": 0,
+          "warnings": 2,
+          "codes": [
+            "composition_file_too_large",
+            "nested_structure_needs_subcomposition"
+          ]
+        },
+        {
+          "id": "canopy-part-title",
+          "variant": "remix",
+          "ok": true,
+          "errors": 0,
+          "warnings": 2,
+          "codes": [
+            "composition_file_too_large",
+            "nested_structure_needs_subcomposition"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "code-3d-extrude",
+      "startSeconds": 0,
+      "durationSeconds": 5,
+      "framesPerSide": 60,
+      "fps": 12,
+      "audio": false,
+      "files": [
+        {
+          "file": "code-3d-extrude.mp4",
+          "bytes": 297695,
+          "sha256": "a046da7099b1fd52692252c6af433767c71504b2f2d23b704b7d3fadc3c07d64"
+        },
+        {
+          "file": "code-3d-extrude.gif",
+          "bytes": 1336002,
+          "sha256": "ad7adbd831a97e3af69ce46d332396cec0b633f04de9f8c5c2cf070d9df7b076"
+        },
+        {
+          "file": "code-3d-extrude.jpg",
+          "bytes": 39842,
+          "sha256": "9bf6b790bba43d46f51325f6e92ee3e2be5b830ff3254b496555c28aa45d4ad3"
+        }
+      ],
+      "sourceSha256": "173bbf881d571d0c434cf786f599904a2f544d0af95445c91fd7bf58c7c45eda",
+      "remixSha256": "56e7b804ab6c59bffe1acd1f7419839648147597fa719901401509a9f06a9a3c",
+      "presetSha256": "1a12dd4d8a0e9e0d199eac1b174c1943a552d3c4d9fca63fb02e1413eff68c00",
+      "nativeLint": [
+        {
+          "id": "code-3d-extrude",
+          "variant": "reference",
+          "ok": true,
+          "errors": 0,
+          "warnings": 1,
+          "codes": [
+            "composition_file_too_large"
+          ]
+        },
+        {
+          "id": "code-3d-extrude",
+          "variant": "remix",
+          "ok": true,
+          "errors": 0,
+          "warnings": 1,
+          "codes": [
+            "composition_file_too_large"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "code-particle-assemble",
+      "startSeconds": 0,
+      "durationSeconds": 5,
+      "framesPerSide": 60,
+      "fps": 12,
+      "audio": false,
+      "files": [
+        {
+          "file": "code-particle-assemble.mp4",
+          "bytes": 1674994,
+          "sha256": "c6b9badfa3e7316faaf65695ca7581c1b7ae7bf357bf32e5f45a158596fde703"
+        },
+        {
+          "file": "code-particle-assemble.gif",
+          "bytes": 3266848,
+          "sha256": "6866faabec5d5cf7d1a7b609166915e22c2e0ec44202999344491abe5e6df516"
+        },
+        {
+          "file": "code-particle-assemble.jpg",
+          "bytes": 62906,
+          "sha256": "e5f75affef5d4affd9d11f037e790cbecf9fec730a4f276b6e93b7153c0b3677"
+        }
+      ],
+      "sourceSha256": "f37d702f7c1f80e48d8a918901f030b8acfc21d2ddb65d22f5dfb5a099280a72",
+      "remixSha256": "f0f3b0327ffc279f52587b07f08065617c262d49f992d3acd8af7ebde39ded20",
+      "presetSha256": "12fab2c7e9c16e97781f639c0ca98cabeed95639783968c18a60e7a9f1c4b949",
+      "nativeLint": [
+        {
+          "id": "code-particle-assemble",
+          "variant": "reference",
+          "ok": true,
+          "errors": 0,
+          "warnings": 1,
+          "codes": [
+            "composition_file_too_large"
+          ]
+        },
+        {
+          "id": "code-particle-assemble",
+          "variant": "remix",
+          "ok": true,
+          "errors": 0,
+          "warnings": 1,
+          "codes": [
+            "composition_file_too_large"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "liquid-glass-widgets",
+      "startSeconds": 0,
+      "durationSeconds": 6,
+      "framesPerSide": 72,
+      "fps": 12,
+      "audio": false,
+      "files": [
+        {
+          "file": "liquid-glass-widgets.mp4",
+          "bytes": 615295,
+          "sha256": "2598a2785d379020bc55ca0921f3855ff2b75117d69f75fd60eecbfe6c5caae9"
+        },
+        {
+          "file": "liquid-glass-widgets.gif",
+          "bytes": 3239923,
+          "sha256": "39d97875c565d4673f5aa74df2a0f0a46244c12d3466b059b5b8de7d09b2ed9f"
+        },
+        {
+          "file": "liquid-glass-widgets.jpg",
+          "bytes": 71730,
+          "sha256": "527f7a27eba82d37d9b9f58f43c54a58935ab2bdabc7fc105997fc97e7f31f9c"
+        }
+      ],
+      "sourceSha256": "c064e0bb5ac958070302a438dba2c6afbc0c6d3894405e4562b9297990a21fda",
+      "remixSha256": "0edd6587ef9d9ebe395e9cbd387b34f4ad0d2a80f803edf946e59e074ead572f",
+      "presetSha256": "b8ab45b8ccac28e3b94f5e505dc5b950d468aa8581ec38d5978f85a6b2e4179c",
+      "nativeLint": [
+        {
+          "id": "liquid-glass-widgets",
+          "variant": "reference",
+          "ok": true,
+          "errors": 0,
+          "warnings": 1,
+          "codes": [
+            "composition_file_too_large"
+          ]
+        },
+        {
+          "id": "liquid-glass-widgets",
+          "variant": "remix",
+          "ok": true,
+          "errors": 0,
+          "warnings": 1,
+          "codes": [
+            "composition_file_too_large"
+          ]
+        }
+      ]
+    }
+  ]
+}

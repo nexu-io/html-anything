@@ -1,0 +1,66 @@
+{
+  "id": "code-3d-extrude",
+  "sourceSha256": "173bbf881d571d0c434cf786f599904a2f544d0af95445c91fd7bf58c7c45eda",
+  "replacements": [
+    {
+      "from": "content: \"loadConfig\"",
+      "to": "content: \"cutVideo\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"path\"",
+      "to": "content: \"media\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"raw\"",
+      "to": "content: \"clips\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"readFile\"",
+      "to": "content: \"readClips\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"(path,\"",
+      "to": "content: \"(media,\"",
+      "count": 1
+    },
+    {
+      "from": "content: '\"utf8\"'",
+      "to": "content: '\"mp4\"'",
+      "count": 1
+    },
+    {
+      "from": "content: \"config\"",
+      "to": "content: \"story\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"JSON\"",
+      "to": "content: \"Motion\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"parse\"",
+      "to": "content: \"cut\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"(raw)\"",
+      "to": "content: \"(clips)\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"validate\"",
+      "to": "content: \"render\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"(config)\"",
+      "to": "content: \"(story)\"",
+      "count": 1
+    }
+  ]
+}

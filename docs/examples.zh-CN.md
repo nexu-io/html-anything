@@ -1,4 +1,4 @@
-# 七个 AI Cut 创作简报
+# 七个 AI editing 创作简报
 
 [English](examples.md) · [返回中文介绍](README.zh-CN.md#可以用它做什么) · [来源与素材记录](readme/ASSETS.md#creative-examples)
 

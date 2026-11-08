@@ -5,12 +5,12 @@
 ## Name and message
 
 - **Name:** OpenMotion. Capital O and M. Command and directory names retain their actual spelling.
-- **Central topic:** AI 剪辑 / AI Cut. Use **AI Cut** in product headlines. Use **AI video editing** to describe the complete editing workflow in explanatory prose; keep natural job titles such as video editor.
-- **Product headline:** The All-in-One AI-native Studio for AI Cut & Motion.
-- **Experience:** Cut with AI. Tell your story.
-- **Brand promise:** Cut with AI. Everyone can be a creator.
+- **Central topic:** AI 剪辑 / **AI editing**. Use **AI video editing** for the full category and **AI editing** in concise headings. The core positioning is **The AI-native, open-source CapCut alternative.**
+- **Product headline:** The All-in-One AI-native Studio for AI editing & Motion.
+- **Experience:** Edit with AI. Tell your story.
+- **Brand promise:** Edit with AI. Everyone can be a creator.
 - **Mission:** Everyone can be an AI video editor. Everyone can be a creator. / 人人都是 AI 剪辑师，人人都是自媒体。
-- **Product category:** All-in-One AI-native Studio: discovery, material, storytelling, AI Cut, motion, collaboration, delivery and learning, with capability status stated explicitly.
+- **Product category:** All-in-One AI-native Studio: discovery, material, storytelling, AI editing, motion, collaboration, delivery and learning, with capability status stated explicitly.
 - **Core experience:** The AI-native, open-source CapCut alternative, centered on an AI-native editable timeline.
 - **Agent concept:** We introduce our Super Motion Video Agent concept: understand the creator, organize tasks, coordinate tools/models, review the work and carry knowledge forward. Persistent orchestration is planned; do not claim an industry first.
 - **Motion positioning:** The open-source Claude Motion alternative. Use the spelling **Claude Motion**.

@@ -16,7 +16,7 @@
 | 核心体验 | **AI-native、开源 CapCut 替代** | 人与 Agent 围绕可编辑时间轴组织故事、落实剪辑和反复调优；Claude Motion 为动效创作参照 |
 | Agent 概念 | **Super Motion Video Agent** | 理解个人/团队上下文，组织长期创作任务，协调工具和多模态模型，处理评审并复用经验的目标体验 |
 
-使命仍是 **Cut with AI. Everyone can be a creator. / 人人都是 AI 剪辑师，人人都是自媒体。** All-in-One 描述完整产品范围，不能据此把路线图能力写成现有功能。Super Motion Video Agent 是本项目提出的产品概念，不主张未经研究证明的行业首创或世界第一。
+使命仍是 **Edit with AI. Everyone can be a creator. / 人人都是 AI 剪辑师，人人都是自媒体。** All-in-One 描述完整产品范围，不能据此把路线图能力写成现有功能。Super Motion Video Agent 是本项目提出的产品概念，不主张未经研究证明的行业首创或世界第一。
 
 ## 创作与运营生命周期
 

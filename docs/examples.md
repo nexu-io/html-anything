@@ -1,4 +1,4 @@
-# Seven creative briefs for AI Cut
+# Seven creative briefs for AI editing
 
 [简体中文](examples.zh-CN.md) · [Back to the showcase](../README.md#what-can-you-make) · [Sources and assets](readme/ASSETS.md#creative-examples)
 

@@ -6,7 +6,7 @@
 
 ## Identity and message
 
-Use the [OpenMotion Brandkit](../../brandkits/openmotion/BRANDKIT.md) for product facts and approved copy. The central story is **Cut with AI. Everyone can be a creator.** Show AI editing as a way for people to express themselves: an editing request, a visible project change, then a preview and revision. The feeling is open, human and expressive; the work and its message remain the focal point.
+Use the [OpenMotion Brandkit](../../brandkits/openmotion/BRANDKIT.md) for product facts and approved copy. The central story is **Edit with AI. Everyone can be a creator.** Show AI editing as a way for people to express themselves: an editing request, a visible project change, then a preview and revision. The feeling is open, human and expressive; the work and its message remain the focal point.
 
 ## Composition and material
 

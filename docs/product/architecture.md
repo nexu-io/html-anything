@@ -2,11 +2,11 @@
 
 本文描述仓库根目录的独立 Motion 运行时；它与 OD 主应用的会话、账号和部署整合尚未包含在本次源码迁移中。参见[迁移边界](../repository-migration.md)。
 
-更新：2026-11-08（产品定位、创作生命周期与对外说明；产品版本统一为 V0.1.0）。实现基线：0.1.0；状态：下文标记为“当前”的能力已在仓库实现。公开范围为本机创作、编辑、MCP 和独立安装分发。应用、插件与本地 npm 安装器共用该版本；第三方引擎和原生工具保留各自锁定版本，版本重设不改变已实现能力或表示已经发布。
+更新：2026-11-09（AI editing 定位、Motion Design Skill 包与对比证据；产品版本 V0.1.0）。实现基线：0.1.0；状态：下文标记为“当前”的能力已在仓库实现。公开范围为本机创作、编辑、MCP 和独立安装分发。应用、插件与本地 npm 安装器共用该版本；第三方引擎和原生工具保留各自锁定版本，版本重设不改变已实现能力或表示已经发布。
 
 ## 产品定位与目标
 
-**对外产品形态是 All-in-One AI-native Studio for AI Cut & Motion。** 核心体验为 AI 原生 CapCut：人和 Agent 围绕可编辑时间轴完成叙事、剪辑与动效。长期产品范围延伸到发现、素材协作、发布运营、任务自动化、数据回收和知识复用；**Super Motion Video Agent** 是贯穿该生命周期的编排概念。当前实现与未来方向的完整映射见 [Studio 产品蓝图](studio-vision.md)。本页继续记录实际运行时，发布管理、常驻任务、RAG 和自动 Skill 学习尚未上线。
+**对外产品形态是 All-in-One AI-native Studio for AI editing & Motion。** 核心体验为 AI 原生 CapCut：人和 Agent 围绕可编辑时间轴完成叙事、剪辑与动效。长期产品范围延伸到发现、素材协作、发布运营、任务自动化、数据回收和知识复用；**Super Motion Video Agent** 是贯穿该生命周期的编排概念。当前实现与未来方向的完整映射见 [Studio 产品蓝图](studio-vision.md)。本页继续记录实际运行时，发布管理、常驻任务、RAG 和自动 Skill 学习尚未上线。
 
 OpenMotion 的底层组织是通用 Agent 会话：会话拥有模式、需求与多个 Artifact，模式选择模板目录和 skill，Artifact Viewer 负责打开可编辑产物。完整与嵌入视图使用同一产物；`embed=1` 可只显示 Viewer，供 Codex 等宿主打开。当前一期只有 Motion 模式，制作与导出仍使用原生 Hyperframes。其他模式是已确认方向，未作为可执行模式上线。通用会话组织保留既有技术决策，对外名称统一为 OpenMotion；历史取舍见 [变更记录](changes.md)。
 
@@ -25,7 +25,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 ## 对外主张与 Motion MD 方向
 
-产品对外名称统一为 **OpenMotion**（O 和 M 大写），README 使用 OpenMotion 字标，上游 OpenDesign 标志仅作为已署名素材保留；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。对外叙事以 **AI 剪辑 / AI Cut** 为中心，主张 **Cut with AI. Everyone can be a creator.** 总体定位为 **All-in-One AI-native Studio**，核心体验为以可编辑时间轴为中心的 **AI 原生 CapCut**，并保留 Motion 创作参照：**AI-native、开源 CapCut 替代**承载日常剪辑与改稿，**The open-source Claude Motion alternative** 承载 Motion 创作、动态图形与可复用模板；参照名称按用户确认写为 **Claude Motion**。使命是“人人都是 AI 剪辑师，人人都是自媒体”：让个人创作者、讲师与小团队通过表达剪辑意图、预览和反复改稿，把已有素材变成自己的内容。这里明确的是服务方向，不构成用户研究、流量保证、功能完全对等或源码相似度结论。
+产品对外名称统一为 **OpenMotion**（O 和 M 大写），README 使用 OpenMotion 字标，上游 OpenDesign 标志仅作为已署名素材保留；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。对外叙事以 **AI 剪辑 / AI editing** 为中心，主张 **Edit with AI. Everyone can be a creator.** 总体定位为 **All-in-One AI-native Studio**，核心体验为以可编辑时间轴为中心的 **AI 原生 CapCut**，并保留 Motion 创作参照：**AI-native、开源 CapCut 替代**承载日常剪辑与改稿，**The open-source Claude Motion alternative** 承载 Motion 创作、动态图形与可复用模板；参照名称按用户确认写为 **Claude Motion**。使命是“人人都是 AI 剪辑师，人人都是自媒体”：让个人创作者、讲师与小团队通过表达剪辑意图、预览和反复改稿，把已有素材变成自己的内容。这里明确的是服务方向，不构成用户研究、流量保证、功能完全对等或源码相似度结论。
 
 AI 剪辑的当前路径是：用户提供素材、脚本或确认的时间码，外部 Agent 根据选段、删改、排序、字幕、声画与节奏要求修改真实工程，用户在 Studio 预览并继续调整；自动语音理解仍取决于宿主工具与输入材料。对外介绍以 OpenMotion 本身与创作者的完整工作流为主，Hyperframes 作为技术来源在文末致谢，具体依赖继续在技术专题中准确记录。独立应用是首要产品身份，外部 Agent 通过 Skills、MCP 和固定版本 CLI 操作同一份本地工程；应用可连接多种客户端，当前不内置聊天 Agent 运行器。核心原则是人和 Agent 共用作品、经验沉淀为规范和模板、源文件可检查与可延续。仓库已采用 [Apache-2.0](../../LICENSE)，保留上游组件与字体声明；这取代此前“统一许可证待确认”的过时状态，依据见 2026-11-06 的公开记录。
 
@@ -35,13 +35,23 @@ AI 剪辑的当前路径是：用户提供素材、脚本或确认的时间码�
 
 [Motion Design MD（简称 Motion MD）](../motion-md.md) 是 **v0.1 格式提案**，约定文件名 `MOTION_DESIGN.md`，保留现有 `MOTION.md` 示例；它描述来源、品牌、叙事、节奏、运动、素材、可修改项与验收信息。当前仅供用户显式交给 Agent 作为创作上下文；没有自动发现、解析、校验或注册接口。它不改变 HTML/CSS/JS 原生工程，也不替换现有 motion-video-to-template 的单份 `TEMPLATE.md` 交付约定。
 
+### Motion Design Skill 包：从参考到可复用资产
+
+Motion Design 的资源单位进一步明确为“创作规则 + Agent 方法 + 可编辑实现 + 替换输入 + 对比证据”。`MOTION_DESIGN.md` 记录保持项和运动意图，`SKILL.md` 记录使用方法，源码执行动画，preset 记录本次内容；真实 reference/remix 对照记录结果。参考片缺少源码时仍先走 `motion-recreate`；已有源码复用走模板路径；用户明确需要可复用模板时继续使用 `motion-video-to-template` 和其 `TEMPLATE.md` 交付，不新增核心路由。
+
+[`motion-design-remix`](../../library/skills/motion-design-remix/SKILL.md) 是可选 Library Skill，包含六个已经收录为 registry 资源的上游动效源码 profile、各自的 Motion MD、可执行内容替换脚本与实际并排渲染示例。它固定上游源码版本、校验替换次数、拒绝覆盖已有输出，不解释 Markdown、不自动分析视频、不接入模板注册表；对托管工程的修改仍遵守现有 revision 契约。六个 profile 不改变三个内置模板和五个核心制作 Skill 的数量。
+
+[`presenter-story`](../../library/skills/presenter-story/SKILL.md) 补充知识口播、工作流演示和产品讲解三份 Motion MD 设计配方，采用“真人语音主线 + 源片段到输出时间的映射 + 字幕 / 画中画 / 动效叠层”的构造。它没有人物素材或可执行模板，展示的三组真人前后对比为目录已有的上游演示，不是新 Skill 的验证结果。另展示九条现有真人参考与一条 MotionGit 外部模板 Demo；目录与内置模板计数不变。
+
+[实例说明](../motion-design-examples.zh-CN.md) 区分已有源码的改编与任意原片的重建；帧采样渲染证据不替代 Studio 导出、声音、目标机器或用户视觉验收。包内保留源码许可和字体声明，记录 CDN / 字体网络依赖，不声称完全离线或任意跨引擎可执行。借鉴 [MotionGit](https://motiongit.com/spec) 的内容、运行时、分发分层，并不构成 `.motion` 格式兼容。社区可以通过普通文件与 Git 分享、Fork、改进和评审；自动 marketplace 入库、数据回流学习与 RAG 仍为方向。
+
 [Motion 资源索引](../collections/README.zh-CN.md) 已可使用，区分可观看参考与可编辑模板；OpenDesign 官网展示案例，公开的品牌／榜单专题集合站仍在规划。Motion Benchmark／Arena 为待讨论规划，无已发布榜单、排名或确定日期。
 
 ### 创作资源与贡献架构
 
-[`library/`](../../library/README.zh-CN.md) 是源码中的统一创作资源入口，按 Skills、模板、Motion 组件、动效设计体系和 Brandkits 五类组织。首批包含一个可选 Brandkit 整理 Skill、三个现有模板的索引、标题揭示配方、Ink & Water `MOTION_DESIGN.md` 与 OpenMotion `BRANDKIT.md`。模板源码继续单份维护于 `template-library/`，索引不增加内置模板数量。
+[`library/`](../../library/README.zh-CN.md) 是源码中的统一创作资源入口，按 Skills、模板、Motion 组件、动效设计体系和 Brandkits 五类组织。当前包含可选 Brandkit 整理 Skill、六种 profile 的 Motion Design Remix Skill、三份真人叙事配方的 Presenter Story Skill、三个现有模板的索引、标题揭示配方、Ink & Water `MOTION_DESIGN.md` 与 OpenMotion `BRANDKIT.md`。模板源码继续单份维护于 `template-library/`，索引不增加内置模板数量。
 
-资源库由人或 Agent 明确选择文件使用；尚无自动导入、自动注册、远端 marketplace 或新增 MCP API。核心制作 Skills、workflow registry 和九 Tool 契约保持不变。Library 内的 Brandkit Skill 仅整理创作上下文，可单独安装，不成为第六条核心制作路线。
+资源库由人或 Agent 明确选择文件使用；尚无自动导入、自动注册、远端 marketplace 或新增 MCP API。核心制作 Skills、workflow registry 和九 Tool 契约保持不变。Library 内的 Brandkit、Presenter Story 与 Motion Design Remix Skill 可分别选择使用，服务品牌整理、真人叙事设计或具体源码改编，不增加核心制作路线。
 
 Brandkit 维护身份、事实与资产；`MOTION_DESIGN.md` 维护视觉、节奏与声音意图；组件描述局部可复用行为；模板包含实现；Skill 描述方法。贡献按[条目清单](../../library/ENTRY_TEMPLATE.md)记录来源、许可、编辑项、状态与实际验证，新增分发文件仍逐项进入正向清单。参考片、配方和经过验证的可编辑作品分开标注。
 

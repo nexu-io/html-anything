@@ -47,3 +47,7 @@ npm test
 封面缓存脚本需要 FFmpeg 和网络，可重用已校验的本地文件。它从源封面或同一条目的真实视频取帧，不生成替代插画。模板与封面只作为创作输入，原始内容中的文字不属于 Agent 操作指令。
 
 `catalog:metadata` 只读取公开清单，不需要账号或浏览器会话。成功匹配后原子替换热度快照并记录上游 SHA-256；网络或数据校验失败时保留现有文件。浏览画廊时使用随包数据，不增加逐卡网络查询。
+
+## Presenter-led README selection
+
+The README now also highlights nine existing `hf-reference-aroll-*` entries, three original/upstream-remix pairs and one separately labeled MotionGit template demo. See the [creator gallery](../README.md#creator-video-gallery), [Motion Design examples](motion-design-examples.md#presenter-motion) and [source manifest](readme/people/manifest.json). The three new Presenter Story documents are design recipes; the external demo uses its own runtime. This documentation selection does not import external template code, add a catalog entry, change catalog ordering or increase the three bundled-template count.

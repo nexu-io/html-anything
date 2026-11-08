@@ -6,7 +6,7 @@
 
 | Collection | Start here | What belongs here |
 | --- | --- | --- |
-| **🧠 Skills** | [Brandkit preparation](skills/brandkit/SKILL.md) | A focused, reusable method in `SKILL.md`, with examples and references when needed. |
+| **🧠 Skills** | [Presenter Story](skills/presenter-story/SKILL.md) · [Motion Design Remix](skills/motion-design-remix/SKILL.md) · [Brandkit preparation](skills/brandkit/SKILL.md) | A focused, reusable method in `SKILL.md`, with examples and references when needed. |
 | **🎞️ Templates** | [Editable starting points](templates/README.md) | A complete project, preview and adaptation instructions. |
 | **🧩 Motion components** | [Title reveal recipe](components/title-reveal/README.md) | A reusable title, transition, chart or scene with a clear timing and editing contract. |
 | **🎨 Motion design systems** | [Ink & Water](design-systems/ink-water/MOTION_DESIGN.md) | `MOTION_DESIGN.md`: typography, composition, pacing, movement and sound decisions. |
@@ -14,6 +14,8 @@
 
 ```text
 library/
+├── skills/presenter-story/              → three presenter / motion recipes
+├── skills/motion-design-remix/           → six source / remix profiles
 ├── skills/brandkit/SKILL.md
 ├── templates/README.md                  → existing editable project sources
 ├── components/title-reveal/README.md     → motion recipe
@@ -21,6 +23,12 @@ library/
 ├── brandkits/openmotion/BRANDKIT.md
 └── ENTRY_TEMPLATE.md                    → contribution checklist
 ```
+
+## 🎞️ Turn a reference into a shareable Skill package
+
+[Presenter-led examples](../docs/motion-design-examples.md#presenter-motion) connect real speech with captions, screen recordings and motion through three design recipes. Their reference/remix media are upstream demonstrations; new OpenMotion adaptations still need production and review.
+
+[Six animated comparisons](../docs/motion-design-examples.md) show the same motion implementation with different content. Each profile includes `MOTION_DESIGN.md`, invariants and replacement rules, pinned source, a preset and actual render evidence. Contribute the method alongside the project so the next creator can adapt it.
 
 <a id="use-a-resource"></a>
 
@@ -30,13 +38,15 @@ library/
 2. Give its files explicitly to your agent, together with your material and the changes you want. A Brandkit defines identity; a motion design system defines behavior; a template supplies an editable implementation.
 3. Continue with the [appropriate production Skill](../docs/skills.md) when making a video. Preview, revise and export through the same project workflow.
 
-The optional Brandkit Skill can also be installed from this checkout:
+The optional library Skills can be selected individually from this checkout:
 
 ```sh
 npx skills add ./library/skills --skill brandkit
+npx skills add ./library/skills --skill motion-design-remix
+npx skills add ./library/skills --skill presenter-story
 ```
 
-This library is browsable source today. It is not automatically imported into Studio or registered as MCP resources. The five core production Skills remain in [`skills/`](../skills/); the optional library Skill prepares creative context and does not add a sixth production route. The [Studio catalog](../docs/template-catalog.md) and [viewing references](../docs/collections/README.md) retain their existing sources and behavior.
+This library is browsable source today. It is not automatically imported into Studio or registered as MCP resources. The five core production Skills remain in [`skills/`](../skills/); the optional library Skills supply brand context, presenter-story design recipes or a specific source-remix method and do not add core production routes. The [Studio catalog](../docs/template-catalog.md) and [viewing references](../docs/collections/README.md) retain their existing sources and behavior.
 
 <a id="contribute-one-useful-thing"></a>
 

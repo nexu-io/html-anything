@@ -10,7 +10,7 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 
 | Asset | Source and use |
 | --- | --- |
-| [Cover](cover.png) | Generated painterly brand poster, 1774 × 887. Final copy leads with AI Cut, pairs the CapCut and Claude Motion alternative positions, and closes with the creator mission. The primary README image is static for clear typography. |
+| [Cover](cover.png) | Generated painterly brand poster, 1774 × 887. Final copy leads with AI editing, pairs the CapCut and Claude Motion alternative positions, and closes with the creator mission. The primary README image is static for clear typography. |
 | [Animated cover](cover-motion.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |
 | [Social preview](social-preview.jpg) | 1280 × 640 sharing image derived from the cover. |
 | [Library](library.png) | Generated 2172 × 724 companion artwork for the five resource collections. |
@@ -150,7 +150,7 @@ Keep generous margins, polished typography and calm cream negative space behind 
 
 ### Final comparator correction: Claude Motion
 
-The current cover reads **Cut with AI.**, **The AI-native, open-source CapCut alternative.**, **The open-source Claude Motion alternative.**, and **Everyone can be a creator.** Built-in Codex ImageGen edited the existing cover with this precise correction; the GIF and social preview were regenerated from that PNG.
+At that revision, the cover read **Cut with AI.**, **The AI-native, open-source CapCut alternative.**, **The open-source Claude Motion alternative.**, and **Everyone can be a creator.** Built-in Codex ImageGen edited the existing cover with this precise correction; the GIF and social preview were regenerated from that PNG.
 
 ```text
 Edit the supplied OpenMotion brand cover with one precise spelling correction only. Replace the line "The open-source Cloud Motion alternative." with the exact line "The open-source Claude Motion alternative." The correct comparator name is CLAUDE Motion, spelled C-l-a-u-d-e. Keep every other word, the OpenMotion wordmark, Cut with AI headline, CapCut line, creator mission footer, layout, proportions, font style, black typography, painterly blue/green/cream/apricot paper background, and 2:1 composition unchanged. Maintain crisp perfectly readable typography and brand consistency.
@@ -276,3 +276,66 @@ PYTHON
 ```
 
 Encoded bytes can differ between FFmpeg versions. After regeneration, decode every animation, inspect representative frames and timing, then update the GIF byte counts and checksums in the manifest. Source hashes identify the fetched originals; do not silently accept changed upstream content.
+
+
+## AI editing terminology update — 2026-11-09
+
+The current cover says **Edit with AI.**, **The AI-native, open-source CapCut alternative.**, **The open-source Claude Motion alternative.**, and **Everyone can be a creator.** Built-in ImageGen edited the existing cover, changing only the short headline while preserving the painterly composition. Earlier prompts above are historical records, not current brand guidance. The animated cover and social preview were regenerated using the existing FFmpeg recipe.
+
+Prompt: “Replace the large centered line 'Cut with AI.' with 'Edit with AI.' Keep the other text, blue/green/ivory/apricot brushwork, 2:1 layout, typography and spacing unchanged.”
+
+## Motion Design reference / remix comparisons
+
+[Six paired examples](../motion-design-examples.md) now render actual source-backed content adaptations. They are separate from the external seven-scenario and eighteen-item viewing galleries. Each comparison uses one source composition twice, with original content on the left and an explicit replacement preset on the right. These are silent, normal-speed excerpts, sampled at matching GSAP timestamps and shown on a shared playback clock; they are not blind reconstruction or a claim of native Studio export acceptance.
+
+The [Skill package](../../library/skills/motion-design-remix/SKILL.md) includes source from Hyperframes commit `070b964d7b8cd844a893f0abbe8e0b7f1ac6d879`, six Motion Design profiles, presets, capture/encoding helpers and [evidence](../../library/skills/motion-design-remix/evidence.json). [Source identities](../../library/skills/motion-design-remix/sources.json), [file hashes and encoding](../../library/skills/motion-design-remix/previews/encoding.json), [licenses and network requirements](../../library/skills/motion-design-remix/NOTICE.md) remain with the package.
+
+- Per-side stage: 1920 × 1080; capture: 960 × 540. MP4 pair: 1280 × 360, H.264, 12 fps, no audio. GIF pair: 960 × 270, 12 fps, 128 colors, infinite loop. JPEG fallback is the middle of each excerpt.
+- Environment: Node 26.11.1, Puppeteer Core 25.16.0, Chrome 156.0.8078.80, FFmpeg 8.1.1. These are the actual documentation-capture versions, distinct from the application’s native runtime lock.
+- The existing product-tour `real` lock serialized an isolated browser profile and loopback server. This asset capture is not a claim that the team application browser-regression suite ran.
+- Each source and remix passed Hyperframes 0.9.7 lint with zero errors. Existing upstream warnings (file size, nesting, overlapping UI tweens) remain recorded per profile. Contact sheets and selected matched frames were inspected; final visual acceptance is the user's.
+- The interface and glass examples retain original brand artwork and illustrative UI; they are not current OpenMotion screenshots. Code and counters are illustrative content, not executable public product APIs or business metrics.
+
+To reproduce, materialize both variants for each profile under a new directory, using the package instructions. From a checkout with installed OpenMotion dependencies, invoke the capture script through the available browser-lock lane, with `MOTION_BROWSER_PATH` pointing to the chosen browser:
+
+```sh
+node library/skills/motion-design-remix/scripts/render-previews.mjs /absolute/projects /absolute/new-capture
+node library/skills/motion-design-remix/scripts/encode-previews.mjs /absolute/new-capture /absolute/new-previews
+```
+
+The first command requires `puppeteer-core`, a browser with WebGL and network access for retained CDN/font dependencies. The second requires FFmpeg on PATH. All temporary projects, frame sequences, profiles and logs stay outside the repository; only the selected source package and final previews ship.
+
+
+<a id="presenter-video-showcase"></a>
+
+## Presenter videos and motion — 2026-11-09
+
+The [people manifest](people/manifest.json) records **nine catalog-reference GIFs, three original/upstream-remix comparison GIFs and one external MotionGit demo GIF**, each with a reduced-motion JPEG fallback. Original MP4s remain outside the checkout; links open the full published videos. No presenter footage or voice is packaged into the new [Presenter Story Skill](../../library/skills/presenter-story/SKILL.md).
+
+The catalog already contains all nine `hf-reference-aroll-*` entries and the three `resultVideo` URLs. Paired media are **Hyperframes-published demonstrations**, not OpenMotion-generated results or evidence that the new recipes reproduce them. Both sides retain source pixels and speed, but their excerpt starts are selected separately; this is not a synchronized reconstruction benchmark. Authors are credited from catalog metadata. Original media and likenesses retain their own rights; the repository's Apache license does not relicense them.
+
+| Showcase | Reference / source | Excerpt start → duration |
+| --- | --- | --- |
+| careerwithriya | [@careerwithriya](https://www.instagram.com/reel/Ddd57MBszhc/) · `hf-reference-aroll-careerwithriya` | 0 → 6 s |
+| dan-martell-tools | [Dan Martell](https://www.youtube.com/shorts/mk1zJd9Rm4c) · `hf-reference-aroll-dan-martell-tools` | 2 → 6 s |
+| harpercarrollai | [@harpercarrollai](https://www.instagram.com/reel/C4eNPF3PdpG/) · `hf-reference-aroll-harpercarrollai` | 10 → 6 s |
+| ali-abdaal-workflow | [Ali Abdaal](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4) · `hf-reference-aroll-ali-abdaal-workflow` | 10 → 7 s |
+| john-tagudin-capso | [@john.tagudin](https://www.tiktok.com/@john.tagudin/video/7524883942328126728) · `hf-reference-aroll-john-tagudin-capso` | 11 → 7 s |
+| aiwithsachi | [@aiwithsachi](https://www.instagram.com/reel/Dc7G9Pxu_1O/) · `hf-reference-aroll-aiwithsachi` | 3 → 6 s |
+| khris-sheer-founder | [@khris.sheer](https://www.tiktok.com/@khris.sheer/video/7491715587895430402) · `hf-reference-aroll-khris-sheer-founder` | 0 → 7 s |
+| ugc-rachelll | [@ugc.rachelll](https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246) · `hf-reference-aroll-ugc-rachelll` | 8 → 6 s |
+| kevinstratvert | [Kevin Stratvert](https://www.youtube.com/shorts/1fA5j5_5TRY) · `hf-reference-aroll-kevinstratvert` | 23 → 6 s |
+
+The paired excerpts use `careerwithriya` (0 / 0 s), `ali-abdaal-workflow` (10 / 0 s), and `john-tagudin-capso` (11 / 12 s), with six seconds per side. Their full original and remix URLs, source-file SHA-256 values and final GIF/JPEG hashes are in the manifest.
+
+**MotionGit edition:** the preview uses the [public GitHub Kinetic Tech demo](https://github.com/motiontemplates/385712) (6–12 s), public source edition `0.2.7-open-beta`, repository revision `9dfbe7d7c6a6d4aa03f6f8e2f2285e631099faae`. It is the 16:9 landscape demo, distinct from the website's newer portrait edition. The preview does not imply OpenMotion imported or executed its `.motion` package. Its code is MIT; demo people/voices and third-party assets have separate rights. The source repository explicitly does not include demo people and voices as user materials.
+
+**Encoding:** FFmpeg 8.1.1, normal speed, silent continuous excerpts, 10 fps, 128-color palette, Bayer dither scale 3, infinite GIF loop. Single portrait clips retain aspect ratio at 216 px width. Comparisons scale each full frame to fit 288×512 and stack two sides into 576×512; no crop. MotionGit retains its 16:9 frame at 640×360. Posters are sampled at `startSeconds + posterOffsetSeconds`; separate comparison offsets are applied to each side.
+
+Reproduce each single clip with the manifest's source, start and duration:
+
+```sh
+ffmpeg -ss "$START" -t "$DURATION" -i "$SOURCE"   -vf 'fps=10,scale=216:-2:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=3'   -an -loop 0 preview.gif
+```
+
+For comparisons, apply `setpts=PTS-STARTPTS,fps=10,scale=288:512:force_original_aspect_ratio=decrease,pad=288:512:(ow-iw)/2:(oh-ih)/2,setsar=1` to each input, then `hstack=inputs=2` before palette generation. The MotionGit excerpt uses the single-input recipe with width 640 and the default palette statistics mode. This is documentation media encoding; it is not a native Studio export or human content-acceptance result.

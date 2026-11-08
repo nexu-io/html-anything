@@ -1,4 +1,4 @@
-# OpenMotion — All-in-One Studio, AI Cut & media fact sheet
+# OpenMotion — All-in-One Studio, AI editing & media fact sheet
 
 [English README](../README.md) · [中文介绍](README.zh-CN.md) · [Asset sources](readme/ASSETS.md)
 
@@ -6,11 +6,11 @@ This page is a source brief for creators, writers and their agents. Use it with 
 
 ## Reusable introduction
 
-> OpenMotion is an open-source, All-in-One AI-native Studio for AI Cut & Motion. Its core is an AI-native CapCut experience: bring inspiration and material, work with an agent, generate missing assets through configured models, tell your story on an editable timeline and export MP4. We introduce the Super Motion Video Agent concept for carrying creative work across tasks, tools, models and review. The roadmap extends the Studio into collaboration, publishing management, recurring tasks, performance feedback and reusable personal/team knowledge. Today, Brandkits, Motion Design MD, templates and Skills provide explicit creative context; persistent orchestration, automated publishing, analytics ingestion and RAG remain planned. Cut with AI. Everyone can be a creator. Apache 2.0.
+> OpenMotion is an open-source, All-in-One AI-native Studio for AI editing & Motion. Its core is an AI-native CapCut experience: bring inspiration and material, work with an agent, generate missing assets through configured models, tell your story on an editable timeline and export MP4. We introduce the Super Motion Video Agent concept for carrying creative work across tasks, tools, models and review. The roadmap extends the Studio into collaboration, publishing management, recurring tasks, performance feedback and reusable personal/team knowledge. Today, Brandkits, Motion Design MD, templates and Skills provide explicit creative context; persistent orchestration, automated publishing, analytics ingestion and RAG remain planned. Edit with AI. Everyone can be a creator. Apache 2.0.
 
 “AI-native CapCut alternative” is product positioning. It does not assert feature parity, access to another product's source code or measured superiority.
 
-Editorial framing: lead with **“The All-in-One AI-native Studio for AI Cut & Motion.”** Use **“Cut with AI. Tell your story.”** for the experience and **“Everyone can be a creator.”** for the mission. **AI Cut** is the main product term; **video editing** describes the full workflow in explanatory prose. The **AI-native CapCut alternative** and its **AI-native timeline** are the core experience; the **open-source Claude Motion alternative** is the supporting motion-creation position. Everyday editing and motion creation serve the same goal of personal expression and publishing. Use **AI Cut** in headlines and **AI video editing** when describing the full workflow. The comparison name is **Claude Motion**. Credit Hyperframes in acknowledgments; implementation details remain available below for technical accuracy.
+Editorial framing: lead with **“The AI-native, open-source CapCut alternative.”** Describe the product as an **All-in-One AI-native Studio for AI editing & Motion**. Use **“Edit with AI. Tell your story.”** for the experience and **“Everyone can be a creator.”** for the mission. **AI editing** is the concise term; **AI video editing** names the complete category. **The open-source Claude Motion alternative** is the supporting motion-creation position. Credit Hyperframes in acknowledgments. Do not infer an industry-first or exclusive market claim from this positioning.
 
 ## Facts you can cite
 
@@ -19,7 +19,7 @@ Editorial framing: lead with **“The All-in-One AI-native Studio for AI Cut & M
 | All-in-One Studio | Product scope spanning discovery, assets, storytelling, editing, collaboration, delivery and learning; implementation and roadmap are identified separately. | [Product blueprint](product/studio-vision.md). |
 | Super Motion Video Agent | OpenMotion’s proposed creative-agent concept, not a shipped persistent runtime or a substantiated industry-first claim. | [Concept and status](product/studio-vision.md#super-motion-video-agent). |
 | Mission | Help everyone become an AI video editor and creator, express their own ideas and build a publishing practice. | [README: mission](../README.md#everyone-can-be-a-creator); product direction, not a reach guarantee. |
-| AI editing | The external agent applies editing requests to the project; the user previews and refines clips, timing, text and media in Studio. | [AI Cut workflow](../README.md#ai-video-editing), [editing contract](../skills/motion-production/references/edit.md). |
+| AI editing | The external agent applies editing requests to the project; the user previews and refines clips, timing, text and media in Studio. | [AI editing workflow](../README.md#ai-video-editing), [editing contract](../skills/motion-production/references/edit.md). |
 | App | A standalone local application with a Studio editor, timeline and editable projects. | [Product architecture](product/architecture.md), [workspace](project-workspace.md). |
 | Agent entry directions | Connect your agent from OpenMotion, or use OpenMotion from your agent. Both work on the same local project; the agent executes in its external client. | [App-first](../README.md#connect-your-agent), [agent-first](../README.md#use-from-your-agent), [adapters](agent-adapters.md). |
 | Agent access | Five current Skills; nine public stdio MCP tools; the pinned native CLI for shell-capable hosts. | [Skills](skills.md), [MCP contract](mcp-phase1-tools.md), [native authoring](../skills/motion-production/references/native.md). |
@@ -59,7 +59,7 @@ The planned AI-native video creation and editing space brings people and agents 
 ## Input → Process → Output: reporting boundaries
 
 - **Input:** local media is imported into the project. YouTube / X links are reference inputs for an agent with appropriate retrieval and media tools; the app does not include a universal downloader. Scripts, Markdown, SRT and VTT can be read by the agent; text files are supported by the project editing contract.
-- **Process / AI Cut:** the agent turns editing intent into cuts, sequencing, text, motion and timing changes in a shared project. Tightening speech requires usable transcripts/timecodes or an agent that can analyze the media. There is no built-in speech-transcription or filler-detection service. Studio's configured Model Gateway can generate image/video/audio assets; generation is not one of the nine public phase-one MCP tools.
+- **Process / AI editing:** the agent turns editing intent into cuts, sequencing, text, motion and timing changes in a shared project. Tightening speech requires usable transcripts/timecodes or an agent that can analyze the media. There is no built-in speech-transcription or filler-detection service. Studio's configured Model Gateway can generate image/video/audio assets; generation is not one of the nine public phase-one MCP tools.
 - **Output:** the current export service produces MP4 from the project's dimensions and frame rate. An agent can author portrait, landscape or square versions for different destinations. Dedicated platform export presets, direct publishing and additional video export containers are not implemented. Editable project source remains available for handoff.
 - **Iteration:** gather material → establish the story → arrange a rough cut → refine media, motion and sound → preview and revise the same timeline → export a fixed version. Keep the source for the next recut; project revisions and the external agent conversation are distinct.
 - **Acceptance:** successful installation, MCP discovery, file rendering, technical verification, normal-speed viewing and user acceptance are separate results. Describe only what your demo actually checked.
@@ -72,7 +72,7 @@ A future comparison should publish the reference set and versions, permissions, 
 
 ## Reusable creative resources
 
-The [OpenMotion Library](../library/README.md) contains five collections: optional creative Skills, template starting points, motion component recipes, `MOTION_DESIGN.md` design systems and Brandkits. Initial entries include a Brandkit preparation Skill, the three existing template links, a title-reveal recipe, Ink & Water direction and the OpenMotion Brandkit. These are source resources, not an automatic marketplace or additional verified template inventory. The five core production Skills and nine MCP tools are unchanged.
+The [OpenMotion Library](../library/README.md) contains five collections: optional creative Skills, template starting points, motion component recipes, `MOTION_DESIGN.md` design systems and Brandkits. Entries include a six-profile [Motion Design Remix Skill](../library/skills/motion-design-remix/SKILL.md) with [actual paired previews](motion-design-examples.md), a three-recipe [Presenter Story Skill](../library/skills/presenter-story/SKILL.md), a Brandkit preparation Skill, the three existing template links, a title-reveal recipe, Ink & Water direction and the OpenMotion Brandkit. The presenter section uses three attributed upstream reference/remix pairs, nine catalog clips and one external MotionGit template demo. They illustrate real presenter-led editing; the new presenter recipes have not yet produced validated OpenMotion outputs. The six source comparisons are source-backed content adaptations, not an arbitrary-video reconstruction benchmark. These are source resources, not an automatic marketplace or additional Studio template inventory. The five core production Skills and nine MCP tools are unchanged.
 
 ## Build a real demo
 
@@ -104,7 +104,7 @@ and the speaker's intent. Preview the edit; deliver the project and MP4.
 
 ```text
 Read the README, this fact sheet and the linked product documentation.
-Lead with “The All-in-One AI-native Studio for AI Cut & Motion.” Present
+Lead with “The All-in-One AI-native Studio for AI editing & Motion.” Present
 AI-native CapCut as the core timeline experience, with Claude Motion informing
 the motion-creation direction. Introduce our Super Motion Video Agent concept
 and the planned operations and knowledge loop: publish, collect outcomes,
