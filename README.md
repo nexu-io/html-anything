@@ -74,6 +74,8 @@ After you accept, the Agent follows the [template-to-video workflow](skills/moti
 
 **Bring more media when you need it.** The Studio model gateway accepts requests for images, video or audio through configured providers; you choose which results to place in your project. Providers use your own accounts and may charge for generation. [Verified capabilities](docs/model-gateway.md) · [Public MCP tools](docs/mcp-phase1-tools.md)
 
+Media panels open beside the triggering button or timeline selection and adjust to scrolling and available space. The empty-timeline guide hides during generation and after insertion; it returns when the panel closes without an insertion or when undo leaves the timeline empty. [Editor interaction details](docs/product/media-generation-design.md#时间轴交互规则及原因)
+
 ## MCP and lightweight installation
 
 The [lightweight npm installer](docs/npm-installation.md) installs eleven MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy. It shares the application and prepares verified native tools on demand. Build locally with `npm run package:npm`; the npm package is not publicly published. Complete ZIPs remain available as a backup.

@@ -50,7 +50,7 @@
 .motion-media-reference span { min-width: 0; overflow-wrap: anywhere; }
 .motion-media-reference small { color: var(--motion-muted); margin-top: 4px; }
 .motion-generated-actions { display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
-.motion-timeline-media-bar { position: fixed; z-index: 180; width: min(680px, calc(100vw - 24px)); padding: 8px; }
+.motion-timeline-media-bar { position: fixed; z-index: 180; width: min(680px, calc(100vw - 24px)); padding: 8px; overflow: auto; }
 .motion-media-context { display: flex; align-items: center; gap: 10px; min-width: 0; padding-left: 8px; color: var(--motion-muted); font-size: 11px; }
 .motion-media-context > span:first-child { color: var(--motion-accent); font-family: var(--motion-font-mono); white-space: nowrap; }
 .motion-media-context > span:nth-child(2) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; flex: 1; }

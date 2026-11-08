@@ -22,7 +22,7 @@ beforeEach(() => {
   const host = document.createElement('div'); host.dataset.motionStudio = ''; document.body.append(host); root = createRoot(host);
   const timeline = document.createElement('div'); timeline.dataset.studioTimeline = ''; document.body.append(timeline);
   viewport = document.createElement('div'); timeline.append(viewport); viewport.scrollLeft = 40;
-  vi.spyOn(viewport, 'getBoundingClientRect').mockReturnValue({ left: 100, top: 500, width: 800, height: 300 } as DOMRect);
+  vi.spyOn(viewport, 'getBoundingClientRect').mockReturnValue(new DOMRect(100, 500, 800, 300));
   vi.spyOn(timeline, 'getBoundingClientRect').mockReturnValue({ top: 460 } as DOMRect);
   hooks.state = { timelineReady: true, elements: [clip], selectedElementId: clip.key!, sessionEpoch: 1,
     canvas: { scrollRef: { current: viewport }, pps: 100, contentOrigin: 80 }, overlays: {} } as TimelineState;
@@ -64,6 +64,26 @@ it('reference selection resolves project media and rejects remote or locked medi
   expect(projectMediaPath('https://example.com/a.png')).toBeNull();
   expect(projectMediaPath('../outside.png')).toBeNull();
   expect(selectedMedia({ ...clip, timelineLocked: true })).toBeUndefined();
+});
+
+it('anchors both surfaces to the selected track and follows scrolling instead of the timeline header', async () => {
+  const element = document.createElement('div'); element.dataset.clip = 'true'; element.dataset.elId = clip.key;
+  viewport.append(element);
+  const rect = vi.spyOn(element, 'getBoundingClientRect').mockReturnValue(new DOMRect(340, 690, 180, 36));
+  const nativeRect = HTMLElement.prototype.getBoundingClientRect;
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+    return this.matches('.motion-timeline-media-bar') ? new DOMRect(0, 0, 680, 88) : nativeRect.call(this);
+  });
+  await render();
+  const surface = document.querySelector<HTMLElement>('.motion-timeline-media-bar')!;
+  expect(Number.parseFloat(surface.style.top) + 88).toBe(682);
+  await act(async () => button('Generate media').click());
+  const request = hooks.open.mock.lastCall![0];
+  expect(request.anchor.getBoundingClientRect()).toEqual({ left: 340, right: 520, top: 690, bottom: 726 });
+  rect.mockReturnValue(new DOMRect(240, 610, 180, 36));
+  await act(async () => viewport.dispatchEvent(new Event('scroll')));
+  expect(Number.parseFloat(surface.style.top) + 88).toBe(602);
+  expect(request.anchor.getBoundingClientRect()).toEqual({ left: 240, right: 420, top: 610, bottom: 646 });
 });
 
 it('removes the portalled media actions while the owning Viewer is hidden and restores them with the Viewer', async () => {

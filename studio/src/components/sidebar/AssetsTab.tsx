@@ -1,5 +1,6 @@
 import { useI18n } from "../../i18n/I18n";
 import { useMediaGateway } from "../../motion/MediaGatewayContext";
+import { mediaPopoverAnchor } from "../../motion/mediaPopoverPosition";
 import { buildProjectApiPath } from "../../utils/projectRouting";
 // fallow-ignore-file code-duplication
 import { memo, useState, useCallback, useRef, useMemo, useEffect } from "react";
@@ -364,7 +365,7 @@ export const AssetsTab = memo(function AssetsTab({
           ))}
         </div>
         {/* Import */}
-        {onImport && mediaGateway && <button className="motion-asset-generate" onClick={() => mediaGateway.openGenerator()}>{t("Generate media")}</button>}
+        {onImport && mediaGateway && <button className="motion-asset-generate" onClick={event => mediaGateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t("Generate media")}</button>}
         {onImport && (
           <>
             <ImportButton importing={importing} onClick={() => fileInputRef.current?.click()} />

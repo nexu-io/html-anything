@@ -3,6 +3,8 @@ import { useI18n } from '../i18n/I18n';
 import { usePlayerStore } from '../player/store/playerStore';
 import { gatewayRequest, generateAsset, loadGateway, type GatewayStatus, type Model, type GenerationJob, type Modality } from './gatewayClient';
 import type { MediaRequest } from './MediaGatewayContext';
+import { useMediaPopoverPosition } from './useMediaPopoverPosition';
+import { useArtifactViewActive } from './ArtifactViewState';
 
 export function generationParameters(model: Model, ratio: string, duration: number, extra: Record<string, unknown>) {
   const [w, h] = ratio.split(':').map(Number);
@@ -31,7 +33,8 @@ export function MediaGenerator({ request, onClose, onSettings }: { request: Medi
   const [params, setParams] = useState('{}'), [jobs, setJobs] = useState<GenerationJob[]>([]);
   const [busy, setBusy] = useState(false), [error, setError] = useState(''), [placed, setPlaced] = useState<string[]>([]);
   const [replaced, setReplaced] = useState<string | null>(null);
-  const [position, setPosition] = useState({ left: 16, bottom: 200, maxHeight: 500 });
+  const active = useArtifactViewActive();
+  const popover = useMediaPopoverPosition(request.anchor, 640, active);
   const delivered = useRef(new Set<string>());
   const submission = useRef<{ hash: string; id: string } | null>(null);
   const mediaKind: Modality = kind === 'music' || kind === 'voice' ? 'audio' : kind;
@@ -49,12 +52,6 @@ export function MediaGenerator({ request, onClose, onSettings }: { request: Medi
     window.addEventListener('motion:gateway-changed', refresh);
     return () => { active = false; window.removeEventListener('motion:gateway-changed', refresh); };
   }, []);
-  useEffect(() => {
-    const update = () => { const rect = document.querySelector('[data-studio-timeline]')?.getBoundingClientRect(); if (rect) { const bottom = Math.max(16, Math.min(window.innerHeight - rect.top + 8, window.innerHeight - 280)); setPosition({ left: Math.max(12, Math.min(request.anchorX ?? rect.left + 10, window.innerWidth - 660)), bottom, maxHeight: window.innerHeight - bottom - 16 }); } };
-    update(); window.addEventListener('resize', update);
-    const timer = window.setInterval(update, 500);
-    return () => { window.removeEventListener('resize', update); clearInterval(timer); };
-  }, [request.anchorX]);
   useEffect(() => {
     if (!projectId) return;
     let active = true, pending = false;
@@ -120,7 +117,7 @@ export function MediaGenerator({ request, onClose, onSettings }: { request: Medi
   }
   const nativeProjectId = request.target?.projectId;
   const visibleJobs = editing ? jobs.filter(job => job.reference?.path === request.selection?.path) : jobs;
-  return <aside className="motion-generator motion-media-surface" style={position} role="dialog" aria-labelledby="media-generator-title" onKeyDown={event => { event.stopPropagation(); if (event.key === 'Escape') onClose(); }}>
+  return <aside ref={popover.ref} className="motion-generator motion-media-surface" style={popover.style} role="dialog" aria-labelledby="media-generator-title" onKeyDown={event => { event.stopPropagation(); if (event.key === 'Escape') onClose(); }}>
     <header><strong id="media-generator-title">{t(editing ? 'Edit image' : 'Generate media')}</strong><div className="motion-media-row"><button onClick={onSettings}>{t('Model settings')}</button><button className="motion-media-close" aria-label={t('Close media generator')} onClick={onClose}>×</button></div></header>
     {editing ? <div className="motion-media-reference">{request.target && <img alt={t('Reference image')} src={`/api/projects/${encodeURIComponent(request.target.projectId)}/preview/${request.selection!.path}`} />}<span>{request.selection!.label}<small>{t('Uses the original image as a reference. Choose a result to replace it.')}</small></span></div> : <div className="motion-media-tabs">{(['image', 'video', 'music', 'voice'] as Kind[]).map(value => <button key={value} aria-pressed={kind === value} onClick={() => { setKind(value); setSelected(''); if (value === 'video' && duration < 4) setDuration(5); }}>{t({ image: 'Image', video: 'Video', music: 'Music', voice: 'Voice' }[value])}</button>)}</div>}
     <textarea autoFocus aria-label={t('Describe your media')} placeholder={t(editing ? 'Describe how to change this image…' : 'Describe what goes here…')} maxLength={20000} value={prompt} onChange={event => setPrompt(event.target.value)} rows={3} />

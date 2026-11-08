@@ -9,6 +9,7 @@ import { readTagAttribute, readTagSnippetByTarget } from '../utils/sourcePatcher
 import { resolveTimelineAssetSrc } from '../utils/timelineAssetDrop';
 import { encodeUrlPath } from '@hyperframes/parsers';
 import { selectedMedia, projectMediaPath } from './timelineMediaSelection';
+import { mediaPopoverAnchor } from './mediaPopoverPosition';
 
 export function MotionTimelineMedia({ projectId, compositionId, disabled, onFileDrop, onAssetDrop }: {
   projectId: string; compositionId: string; disabled: boolean;
@@ -56,5 +57,5 @@ export function MotionTimelineMedia({ projectId, compositionId, disabled, onFile
     return () => { bound = false; bind(null); };
   }, [bind, projectId, compositionId, t]);
   if (!gateway) return null;
-  return <div className="motion-timeline-media-actions"><button disabled={disabled} onClick={() => gateway.openGenerator()}>{t('Generate media')}</button><button disabled={disabled || !onFileDrop} onClick={gateway.importFiles}>{t('Import files…')}</button></div>;
+  return <div className="motion-timeline-media-actions"><button disabled={disabled} onClick={event => gateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t('Generate media')}</button><button disabled={disabled || !onFileDrop} onClick={gateway.importFiles}>{t('Import files…')}</button></div>;
 }

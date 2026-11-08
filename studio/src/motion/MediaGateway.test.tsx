@@ -9,6 +9,7 @@ import { I18nProvider } from '../i18n/I18n';
 import type { GenerationJob, Model } from './gatewayClient';
 import { MediaGenerator } from './MediaGenerator';
 import { ArtifactViewActive } from './ArtifactViewState';
+import { Timeline } from '../player/components/Timeline';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root | undefined;
@@ -17,6 +18,45 @@ const model: Model = { id: 'codex:image-generation', provider: 'codex', modelId:
 function Trigger() { const gateway = useMediaGateway(); return <button onClick={() => gateway?.openGenerator()}>Open generator</button>; }
 function button(text: string) { const found = Array.from(document.querySelectorAll('button')).find(el => el.textContent === text); if (!found) throw new Error('Missing ' + text); return found; }
 function type(selector: string, value: string) { const el = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector)!; Object.getOwnPropertyDescriptor(el instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype, 'value')!.set!.call(el, value); el.dispatchEvent(new Event('input', { bubbles: true })); }
+
+it('hides the empty guide during generation, restores it on close, and removes it after placement until undo', async () => {
+  usePlayerStore.setState({ timelineProjectId: 'project', timelineReady: true, duration: 6 });
+  const job = { id: 'completed', projectId: 'project', state: 'completed', prompt: 'a forest', model,
+    assets: [{ path: 'assets/generated/one.png', bytes: 1000, mimeType: 'image/png' }] } as GenerationJob;
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+    if (url.includes('models/capabilities')) return Response.json({ providers: [{ id: 'codex', available: true }], routes: {} });
+    if (url.includes('/models?')) return Response.json({ models: [model], nextOffset: null });
+    if (url.endsWith('project/status')) return Response.json({ projectId: 'project' });
+    if (url.includes('/generations?')) return Response.json({ jobs: [job] });
+    throw new Error('Unexpected request ' + url);
+  }));
+  const place = vi.fn(async () => { usePlayerStore.setState({ elements: [{ id: 'image', tag: 'img', src: job.assets[0].path, start: 0, duration: 3, track: 0 }] }); });
+  const host = document.createElement('div'); document.body.append(host); root = createRoot(host);
+  await act(async () => root!.render(<I18nProvider initialLocale="en"><MediaGatewayProvider>
+    <MotionTimelineMedia projectId="project" compositionId="main" disabled={false} onAssetDrop={place} />
+    <Timeline onFileDrop={() => {}} />
+  </MediaGatewayProvider></I18nProvider>));
+  const guide = () => document.querySelector<HTMLElement>('[data-motion-empty-media]');
+  const open = () => guide()!.querySelector<HTMLButtonElement>('.motion-media-primary')!.click();
+  expect(guide()!.style.visibility).toBe('');
+  const opener = guide()!.querySelector<HTMLButtonElement>('.motion-media-primary')!;
+  vi.spyOn(opener, 'getBoundingClientRect').mockReturnValue(new DOMRect(800, 700, 80, 32));
+  await act(async () => open());
+  expect(guide()!.style.visibility).toBe('hidden');
+  expect(guide()!.hasAttribute('inert')).toBe(true);
+  const generator = document.querySelector<HTMLElement>('.motion-generator')!;
+  expect(Number.parseFloat(generator.style.left)).toBeGreaterThan(12);
+  await act(async () => document.querySelector<HTMLButtonElement>('[aria-label="Close media generator"]')!.click());
+  expect(guide()!.style.visibility).toBe('');
+  await act(async () => open());
+  await act(async () => button('Place on timeline').click());
+  expect(place).toHaveBeenCalledTimes(1);
+  expect(guide()).toBeNull();
+  await act(async () => document.querySelector<HTMLButtonElement>('[aria-label="Close media generator"]')!.click());
+  expect(guide()).toBeNull();
+  await act(async () => usePlayerStore.setState({ elements: [] }));
+  expect(guide()!.style.visibility).toBe('');
+});
 
 it('generates through the shared API, shows only completed output, and places it at the selected range with failure reporting', async () => {
   vi.useFakeTimers(); usePlayerStore.setState({ timelineProjectId: 'native-project', rangeSelection: { t0: 2, t1: 7 } });
