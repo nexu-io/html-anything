@@ -1,17 +1,37 @@
-<p align="center"><img src="readme/hero.zh-CN.svg" alt="Great motion. Made yours. 从参考片和 Motion MD 到可编辑的品牌视频。" width="100%" /></p>
+<h1 align="center">openmotion · 在 Codex 里制作产品视频</h1>
 
-<h1 align="center">openmotion</h1>
+<p align="center">把喜欢的参考片、自己的产品截图和发布文案交给 Codex。<br />
+按参考片的节奏做出自己的品牌视频，拿到一支能发的 MP4 和一份能接着改的工程。</p>
 
-<p align="center"><strong>我们想把 openmotion 做成最好的 Claude Motion 开源替代。</strong><br />
-复刻你喜欢的动效，把它拍成自己的品牌片，每一版都能接着改。</p>
-
-<p align="center"><strong><a href="#在-codex-里开始">在 Codex 里试做 20 秒示例</a></strong> · <a href="motion-md.zh-CN.md">认识 Motion MD</a> · <a href="collections/README.zh-CN.md">浏览动效资源库</a></p>
+<p align="center"><strong><a href="#在-codex-里开始">在 Codex 里试做 20 秒示例</a></strong> · <a href="#用-openmotion-做出的三支片子">观看三支实片</a> · <a href="motion-md.zh-CN.md">认识 Motion MD</a> · <a href="collections/README.zh-CN.md">浏览动效资源库</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
-openmotion 是一款可以独立安装的视频创作插件。看到一支节奏很好的产品发布片，把它连同自己的产品截图、Logo 和文案交给 Codex。它会按参考片的拍法为你的产品重做这段动画，交付 MP4 和一份本地 Studio 工程。下次文案变了，可以只改一句标题，也可以让某个镜头多停一拍。
+<p align="center"><img src="readme/hero.zh-CN.svg" alt="openmotion for Codex。Great motion. Made yours. 从参考片、Motion MD 到可编辑的品牌视频。" width="100%" /></p>
 
-值得留下的还有这支片子的拍法。用 **Motion MD** 记下产品何时出场、镜头怎么移动、哪些素材可以换。同事做下一次发布时，就能沿用这些决定。
+openmotion 是一款独立开源的 Codex 动效插件。我们想把它做成最好的 Claude Motion 开源替代。创作可以直接从自己的产品仓库开始。把刚上线的界面和喜欢的发布片指给 Codex，让它沿用那个揭晓镜头的拍法，换上你的标题、配色和素材。到 Studio 里看第一版，觉得界面闪得太快，就让这个镜头多停一拍。导出 MP4，再把拍法写进 **Motion MD**，下次发布时同事也能接着用。
+
+## 用 openmotion 做出的三支片子
+
+### Made in Codex · 12 秒产品发布片
+
+[![播放 Made in Codex。绿色圆环托出片名，真实 Studio 时间轴入画，最后以 OpenDesign 标志收尾。](../examples/launch-in-codex/preview.gif)](../examples/launch-in-codex/film.mp4)
+
+整支片只用了一张产品截图。前 3 秒用大字开场，接着把 Studio 的真实时间轴推到观众面前，最后由 OpenDesign 标志收尾。想做自己产品的版本，可以从仓库里挑一张截图，再从发布说明里挑一句标题。[观看 MP4](../examples/launch-in-codex/film.mp4) · [改镜头和节奏](../examples/launch-in-codex/index.html)
+
+### The Long Return · 11 秒数据故事
+
+[![播放 The Long Return。六根柱子依次升起，随后叠加另一座城市的日照折线。](../examples/longer-days/preview.gif)](../examples/longer-days/film.mp4)
+
+2026 年 6 月 1 日，雷克雅未克的白昼比里斯本长多少？先用六组数据画出两座城市的日照变化，再揭晓答案：**5 小时 25 分钟**。柱和线共用同一条纵轴。换数据、改月份或调整揭晓时间，都在同一份源文件里。[观看 MP4](../examples/longer-days/film.mp4) · [改图表](../examples/longer-days/index.html) · [查看原始数据](../examples/README.md#the-long-return)
+
+### Pick Your Cut · 9 秒竖屏讲解
+
+[![Pick Your Cut 的三个连续阶段，保留手机竖屏原始比例。三张卡片按顺序入场。](../examples/pick-your-cut/frames.jpg)](../examples/pick-your-cut/film.mp4)
+
+手头有参考片、现成模板，还是只有一句想法？三张卡片逐拍入场，结尾同时留在手机画面里，让人有时间读完。把问题和卡片换掉，就可以用同一个节奏讲清楚产品上手的三个步骤。[观看竖屏 MP4](../examples/pick-your-cut/film.mp4) · [改卡片和文案](../examples/pick-your-cut/index.html)
+
+三支片均由插件实际导出，按静音观看设计。[查看工程素材、创作说明和本地复现步骤](../examples/README.md)
 
 ## 在 Codex 里开始
 
@@ -31,6 +51,14 @@ cd openmotion && bash scripts/install-motion.command
 拿到第一版后，可以试着说：**“结尾标题多停两秒，再导出一版。”** 你也可以自己在 Studio 里拖动片段边缘。两种方式改的是同一份工程。[安装与首次体验手册](usage.md#使用) · [其他 Agent 安装方式](npm-installation.md)
 
 ![在 Studio 中打开的 Product Promo 示例，可见视频预览与可编辑时间轴。](readme/editor.jpg)
+
+## 用自己的素材开工
+
+| 你手头有什么 | 可以怎样告诉 Codex | 第一版出来后怎么改 |
+| --- | --- | --- |
+| 一支参考片和品牌素材 | “保留从标题切到界面的那一拍，用我们的截图和字体。” | 把两支片并排看，微调产品亮相的时机。[复刻参考片](../skills/motion-recreate/SKILL.md) |
+| 一份喜欢的模板 | “用 Product Promo 的节奏，换掉开场文案和片尾。” | 在模板副本里改，下一次活动还可以从原版开始。[套用模板](../skills/motion-template-to-video/SKILL.md) |
+| 发布说明和一组截图 | “先说用户遇到的问题，再演示新功能，最后停在上线日期。” | 和 Codex 一起定镜头顺序，到 Studio 调整每个镜头的长度。[从创意做原片](../skills/motion-director/SKILL.md) |
 
 ## 复用参考片的拍法
 

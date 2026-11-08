@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=720, height=1280" />
+    <title>Pick your cut · openmotion field guide</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 720px;
+        height: 1280px;
+        overflow: hidden;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #312652;
+        color: #fffaed;
+      }
+      #film {
+        width: 720px;
+        height: 1280px;
+        background: #312652;
+        position: relative;
+        overflow: hidden;
+      }
+      .eyebrow,
+      .footer,
+      .coord {
+        font:
+          20px 'Courier New',
+          monospace;
+        letter-spacing: 0.055em;
+      }
+      .eyebrow {
+        position: absolute;
+        top: 47px;
+        left: 50px;
+        right: 50px;
+        border-bottom: 1px solid #9f93c3;
+        padding-bottom: 17px;
+      }
+      h1 {
+        position: absolute;
+        left: 44px;
+        top: 104px;
+        margin: 0;
+        font-size: 104px;
+        line-height: 0.91;
+        letter-spacing: -0.085em;
+      }
+      .question {
+        position: absolute;
+        left: 52px;
+        top: 324px;
+        font-size: 26px;
+        margin: 0;
+        color: #dfd4ef;
+      }
+      .track {
+        position: absolute;
+        left: 94px;
+        top: 358px;
+        width: 3px;
+        height: 652px;
+        background: #998bb6;
+        transform-origin: 50% 0;
+      }
+      .card {
+        position: absolute;
+        left: 53px;
+        width: 614px;
+        height: 193px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        padding: 27px 30px;
+        color: #261d3b;
+      }
+      .clip {
+        top: 420px;
+        background: #e1c8ff;
+      }
+      .template {
+        top: 640px;
+        background: #ffbf91;
+      }
+      .brief {
+        top: 860px;
+        background: #d1f48c;
+      }
+      .pict {
+        width: 95px;
+        height: 95px;
+        position: relative;
+        flex: none;
+        border: 3px solid currentColor;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        transform: rotate(-5deg);
+      }
+      .clip .pict:after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-top: 17px solid transparent;
+        border-bottom: 17px solid transparent;
+        border-left: 27px solid currentColor;
+        transform: translateX(3px);
+      }
+      .template .pict:after {
+        content: 'Aa';
+        font:
+          46px/0.9 Georgia,
+          serif;
+        letter-spacing: -0.08em;
+      }
+      .brief .pict:after {
+        content: '';
+        width: 51px;
+        height: 30px;
+        background: repeating-linear-gradient(to bottom, currentColor 0 3px, transparent 3px 11px);
+      }
+      .label {
+        display: block;
+        font:
+          18px 'Courier New',
+          monospace;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
+      }
+      h2 {
+        margin: 0;
+        font-size: 45px;
+        line-height: 1;
+        letter-spacing: -0.065em;
+      }
+      .hint {
+        margin: 9px 0 0;
+        font-size: 21px;
+      }
+      .coord {
+        position: absolute;
+        right: 45px;
+        top: 128px;
+        color: #d1f48c;
+        writing-mode: vertical-rl;
+      }
+      .footer {
+        position: absolute;
+        left: 52px;
+        right: 52px;
+        bottom: 65px;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #9f93c3;
+        padding-top: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <main
+      id="film"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="9"
+      data-width="720"
+      data-height="1280"
+      data-fps="30"
+    >
+      <div class="eyebrow">OPENMOTION &nbsp; / &nbsp; FIELD GUIDE</div>
+      <h1>
+        Pick
+        <br />
+        your cut.
+      </h1>
+      <div class="coord">9:16 / CODEX</div>
+      <p class="question">What are you starting with?</p>
+      <div class="track"></div>
+      <section class="card clip">
+        <div class="pict"></div>
+        <div>
+          <span class="label">01 / REFERENCE CLIP</span>
+          <h2>Borrow the rhythm.</h2>
+          <p class="hint">Rebuild the reveal with your assets.</p>
+        </div>
+      </section>
+      <section class="card template">
+        <div class="pict"></div>
+        <div>
+          <span class="label">02 / EDITABLE TEMPLATE</span>
+          <h2>Swap the content.</h2>
+          <p class="hint">Keep the timing. Change the story.</p>
+        </div>
+      </section>
+      <section class="card brief">
+        <div class="pict"></div>
+        <div>
+          <span class="label">03 / ORIGINAL BRIEF</span>
+          <h2>Direct the film.</h2>
+          <p class="hint">Give Codex a story and a brand kit.</p>
+        </div>
+      </section>
+      <footer class="footer">
+        CREATOR NOTES
+        <span>9:16</span>
+      </footer>
+    </main>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('h1', { y: 24 }, { y: 0, duration: 0.7, ease: 'power3.out' }, 0);
+      tl.fromTo('.question', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.4);
+      tl.fromTo('.track', { scaleY: 0 }, { scaleY: 1, duration: 3.9, ease: 'none' }, 0.75);
+      [
+        ['.clip', 0.65],
+        ['.template', 2.65],
+        ['.brief', 4.65],
+      ].forEach(([card, start]) => {
+        tl.fromTo(
+          card,
+          { x: 145, y: 26, rotation: 3, opacity: 0 },
+          { x: 0, y: 0, rotation: 0, opacity: 1, duration: 0.65, ease: 'power3.out' },
+          start,
+        );
+        tl.fromTo(
+          card + ' .pict',
+          { scale: 0.65, rotation: -16 },
+          { scale: 1, rotation: -5, duration: 0.7, ease: 'back.out(1.25)' },
+          start + 0.1,
+        );
+      });
+      window.__timelines = { main: tl };
+    </script>
+  </body>
+</html>

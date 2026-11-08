@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <title>The long return of daylight</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+      }
+      body {
+        margin: 0;
+        color: #183c35;
+        background: #f6f1e4;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      #film {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #f6f1e4;
+      }
+      .folio {
+        position: absolute;
+        top: 35px;
+        left: 54px;
+        right: 54px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #254b40;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+      }
+      .kicker,
+      .foot,
+      .legend,
+      #readout small {
+        font:
+          16px 'Courier New',
+          monospace;
+        letter-spacing: 0.055em;
+      }
+      .masthead {
+        font:
+          italic 30px Georgia,
+          serif;
+        letter-spacing: -0.055em;
+      }
+      h1 {
+        position: absolute;
+        left: 50px;
+        top: 112px;
+        margin: 0;
+        font:
+          92px/0.94 Georgia,
+          'Times New Roman',
+          serif;
+        letter-spacing: -0.076em;
+      }
+      .intro {
+        position: absolute;
+        top: 308px;
+        left: 56px;
+        font-size: 23px;
+        line-height: 1.33;
+        width: 333px;
+        margin: 0;
+      }
+      #readout {
+        position: absolute;
+        left: 56px;
+        top: 437px;
+        border-top: 1px solid #9dad9e;
+        width: 316px;
+        padding-top: 15px;
+      }
+      #readout small {
+        display: block;
+        font-size: 14px;
+      }
+      #readout strong {
+        display: block;
+        margin: 6px 0;
+        font:
+          61px/1 Georgia,
+          serif;
+        letter-spacing: -0.055em;
+        color: #ac462c;
+      }
+      #readout span {
+        display: block;
+        font-size: 18px;
+        line-height: 1.3;
+      }
+      .legend {
+        position: absolute;
+        top: 131px;
+        left: 457px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+      }
+      .chip {
+        width: 19px;
+        height: 13px;
+        background: #356e60;
+      }
+      .dash {
+        margin-left: 18px;
+        width: 28px;
+        border-top: 3px solid #b75231;
+      }
+      #chart {
+        position: absolute;
+        left: 431px;
+        top: 175px;
+        width: 786px;
+        height: 397px;
+        overflow: visible;
+      }
+      .grid {
+        stroke: #b9c3b3;
+        stroke-width: 1;
+      }
+      .axis {
+        font:
+          15px 'Courier New',
+          monospace;
+        fill: #476456;
+      }
+      .month {
+        font:
+          17px Arial,
+          sans-serif;
+        fill: #183c35;
+        text-anchor: middle;
+      }
+      .bar {
+        fill: #356e60;
+      }
+      .value {
+        font:
+          bold 17px Arial,
+          sans-serif;
+        fill: #183c35;
+        text-anchor: middle;
+      }
+      .series {
+        fill: none;
+        stroke: #b75231;
+        stroke-width: 4;
+        stroke-linejoin: round;
+      }
+      .point {
+        fill: #b75231;
+        stroke: #f6f1e4;
+        stroke-width: 2;
+      }
+      .foot {
+        position: absolute;
+        bottom: 29px;
+        left: 54px;
+        right: 54px;
+        border-top: 1px solid #8ba08f;
+        padding-top: 13px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+      }
+      .caption {
+        position: absolute;
+        top: 580px;
+        left: 466px;
+        margin: 0;
+        font:
+          italic 20px Georgia,
+          serif;
+      }
+    </style>
+  </head>
+  <body>
+    <main
+      id="film"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="11"
+      data-width="1280"
+      data-height="720"
+      data-fps="30"
+    >
+      <header class="folio">
+        <span class="masthead">The Daylight Almanac</span>
+        <span class="kicker">FIELD NOTES &nbsp; / &nbsp; JAN—JUN 2026</span>
+      </header>
+      <h1>
+        The long
+        <br />
+        return.
+      </h1>
+      <p class="intro">
+        How much daylight comes back between winter and summer? It depends where you stand.
+      </p>
+      <div id="readout">
+        <small>JUNE 01 &nbsp; / &nbsp; THE GAP</small>
+        <strong></strong>
+        <span>
+          more daylight in Reykjavík
+          <br />
+          than in Lisbon
+        </span>
+      </div>
+      <div class="legend">
+        <i class="chip"></i>
+        Reykjavík
+        <i class="dash"></i>
+        Lisbon
+      </div>
+      <svg
+        id="chart"
+        viewBox="0 0 786 397"
+        role="img"
+        aria-label="Daylight hours on the first day of each month"
+      >
+        <g id="ticks"></g>
+        <g id="bars"></g>
+        <path id="line" class="series" />
+        <g id="points"></g>
+        <g id="values"></g>
+      </svg>
+      <p class="caption">Hours between sunrise and sunset on the first of each month.</p>
+      <footer class="foot">
+        <span>SOURCE &nbsp; U.S. NAVAL OBSERVATORY</span>
+        <span>OPENMOTION &nbsp; / &nbsp; DATA FILM 02</span>
+      </footer>
+    </main>
+    <script>
+      // Minutes of daylight on day 01. Both series use the same 0–24 hour scale.
+      const observations = [
+        ['Jan', 264, 571],
+        ['Feb', 427, 616],
+        ['Mar', 611, 680],
+        ['Apr', 813, 758],
+        ['May', 1012, 829],
+        ['Jun', 1207, 882],
+      ];
+      const [, reykjavik, lisbon] = observations.at(-1);
+      const gapMinutes = reykjavik - lisbon;
+      document.querySelector('#readout strong').textContent =
+        Math.floor(gapMinutes / 60) + 'h ' + (gapMinutes % 60) + 'm';
+
+      function draw(parent, tag, attributes, label) {
+        const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [key, value] of Object.entries(attributes)) el.setAttribute(key, value);
+        if (label) el.textContent = label;
+        document.getElementById(parent).appendChild(el);
+        return el;
+      }
+      const bottom = 350,
+        x = (i) => 100 + i * 124,
+        y = (m) => bottom - (320 * m) / (24 * 60);
+      for (const hour of [0, 6, 12, 18, 24]) {
+        draw('ticks', 'line', { class: 'grid', x1: 54, x2: 778, y1: y(hour * 60), y2: y(hour * 60) });
+        draw('ticks', 'text', { class: 'axis', x: 5, y: y(hour * 60) + 5 }, hour + 'h');
+      }
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('h1', { y: 17 }, { y: 0, duration: 0.85, ease: 'power2.out' }, 0);
+      tl.fromTo('.intro', { opacity: 0 }, { opacity: 1, duration: 0.65 }, 0.25);
+      tl.fromTo('#ticks,.legend', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.4);
+      const linePath = [];
+      observations.forEach(([month, north, south], i) => {
+        const cx = x(i),
+          ny = y(north),
+          sy = y(south);
+        draw('ticks', 'text', { class: 'month', x: cx, y: 382 }, month);
+        const bar = draw('bars', 'rect', {
+          class: 'bar',
+          x: cx - 33,
+          y: bottom,
+          width: 66,
+          height: 0,
+          rx: 2,
+        });
+        const labelY = Math.abs(ny - sy) < 40 ? Math.max(ny, sy) + 29 : ny - 13;
+        const val = draw(
+          'values',
+          'text',
+          { class: 'value', x: cx, y: labelY },
+          Math.floor(north / 60) + 'h' + String(north % 60).padStart(2, '0'),
+        );
+        if (labelY > ny) val.style.fill = '#fffef3';
+        const dot = draw('points', 'circle', { class: 'point', cx, cy: sy, r: 6 });
+        linePath.push([cx, sy].join(','));
+        const beat = 1 + i * 0.44;
+        tl.to(bar, { attr: { height: bottom - ny, y: ny }, duration: 0.85, ease: 'power3.out' }, beat);
+        tl.fromTo(val, { opacity: 0 }, { opacity: 1, duration: 0.35 }, beat + 0.58);
+        tl.fromTo(dot, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 4.15 + i * 0.41);
+      });
+      const path = document.getElementById('line');
+      path.setAttribute('d', 'M' + linePath.join(' L'));
+      const length = path.getTotalLength();
+      tl.fromTo(
+        path,
+        { strokeDasharray: length, strokeDashoffset: length },
+        { strokeDashoffset: 0, duration: 2.1, ease: 'none' },
+        4.15,
+      );
+      tl.fromTo('.caption', { opacity: 0 }, { opacity: 1, duration: 0.65 }, 5.6);
+      tl.fromTo(
+        '#readout',
+        { opacity: 0, y: 19 },
+        { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' },
+        6.7,
+      );
+      window.__timelines = { main: tl };
+    </script>
+  </body>
+</html>

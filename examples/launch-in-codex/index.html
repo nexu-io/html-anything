@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <title>Made in Codex · openmotion</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+      }
+      body {
+        margin: 0;
+        font:
+          24px Arial,
+          Helvetica,
+          sans-serif;
+        background: #141715;
+        color: #f4f6ee;
+      }
+      #film,
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+      }
+      .scene {
+        background: #151916;
+      }
+      .mono {
+        font:
+          17px 'Courier New',
+          monospace;
+        letter-spacing: 0.06em;
+      }
+      .mast,
+      .foot {
+        position: absolute;
+        left: 62px;
+        right: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .mast {
+        top: 37px;
+      }
+      .foot {
+        bottom: 32px;
+        border-top: 1px solid #637060;
+        padding-top: 12px;
+      }
+      .signature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 25px;
+        font-weight: 700;
+        letter-spacing: -0.06em;
+      }
+      .mark {
+        width: 38px;
+        height: 38px;
+        padding: 6px;
+        background: #adf785;
+        border-radius: 9px;
+      }
+      .ring {
+        position: absolute;
+        border: 1px solid #80a574;
+        border-radius: 50%;
+        width: 700px;
+        height: 700px;
+        left: 796px;
+        top: 42px;
+      }
+      .r2 {
+        width: 530px;
+        height: 530px;
+        left: 881px;
+        top: 127px;
+      }
+      .r3 {
+        width: 360px;
+        height: 360px;
+        left: 966px;
+        top: 212px;
+        background: #a9f38b;
+      }
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+      #opening h1 {
+        position: absolute;
+        top: 153px;
+        left: 57px;
+        font-size: 139px;
+        line-height: 0.93;
+        letter-spacing: -0.075em;
+      }
+      #word {
+        color: #adf785;
+      }
+      .detail {
+        position: absolute;
+        top: 488px;
+        left: 65px;
+        color: #d0d8cb;
+        font-size: 29px;
+      }
+      #edit {
+        background: #dce6d3;
+        color: #1d271d;
+      }
+      .cut {
+        position: absolute;
+        left: 62px;
+        top: 155px;
+        font-size: 75px;
+        line-height: 0.98;
+        letter-spacing: -0.072em;
+      }
+      .brief {
+        position: absolute;
+        left: 66px;
+        top: 355px;
+        font-size: 24px;
+        line-height: 1.36;
+        max-width: 287px;
+      }
+      .screen {
+        position: absolute;
+        left: 410px;
+        top: 111px;
+        width: 785px;
+        padding: 12px;
+        background: #263329;
+        border-radius: 18px;
+        box-shadow: 0 26px 55px #17231645;
+        transform-origin: 52% 58%;
+      }
+      .screen img {
+        display: block;
+        width: 100%;
+        border-radius: 6px;
+      }
+      .strip {
+        position: absolute;
+        top: 578px;
+        left: 65px;
+        width: 275px;
+        display: flex;
+        height: 15px;
+        gap: 4px;
+      }
+      .strip i {
+        flex: 1;
+        background: #304c37;
+        border-radius: 2px;
+        transform-origin: 0 100%;
+      }
+      .strip i:nth-child(3n) {
+        background: #83a676;
+      }
+      #end {
+        background: #abf186;
+        color: #152016;
+      }
+      #end .mark {
+        background: #e5ffd5;
+      }
+      .end-title {
+        position: absolute;
+        left: 55px;
+        top: 169px;
+        font-size: 119px;
+        line-height: 0.92;
+        letter-spacing: -0.075em;
+      }
+      .end-title em {
+        font-family: Georgia, serif;
+        font-weight: 400;
+        letter-spacing: -0.08em;
+      }
+      .final-note {
+        position: absolute;
+        left: 65px;
+        top: 454px;
+        font-size: 31px;
+      }
+      .stamp {
+        position: absolute;
+        right: 86px;
+        top: 260px;
+        width: 191px;
+        height: 191px;
+        padding: 37px;
+        border: 2px solid #334a30;
+        border-radius: 50%;
+        transform: rotate(-13deg);
+      }
+    </style>
+  </head>
+  <body>
+    <main
+      id="film"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-width="1280"
+      data-height="720"
+      data-fps="30"
+    >
+      <section id="opening" class="scene">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+        <div class="mast">
+          <span class="signature">
+            <img class="mark" src="assets/mark.svg" alt="" />
+            openmotion
+          </span>
+          <span class="mono">PRODUCT FILM / 01</span>
+        </div>
+        <h1>
+          Made in
+          <br />
+          <span id="word">Codex.</span>
+        </h1>
+        <p class="detail">Your reference. Your brand. Your cut.</p>
+        <div class="foot mono">
+          <span>01 / BRIEF</span>
+          <span>00:00 — 00:03</span>
+        </div>
+      </section>
+      <section id="edit" class="scene">
+        <div class="mast">
+          <span class="signature">
+            <img class="mark" src="assets/mark.svg" alt="" />
+            openmotion
+          </span>
+          <span class="mono">LOCAL STUDIO / 02</span>
+        </div>
+        <h2 class="cut">
+          Edit the
+          <br />
+          reveal.
+        </h2>
+        <p class="brief">
+          “Hold this shot.
+          <br />
+          Let the headline land.”
+        </p>
+        <div class="screen">
+          <img src="assets/studio.jpg" alt="openmotion Studio with the Product Promo timeline" />
+        </div>
+        <div class="strip">
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+        </div>
+        <div class="foot mono">
+          <span>02 / TIMELINE</span>
+          <span>00:03 — 00:08</span>
+        </div>
+      </section>
+      <section id="end" class="scene">
+        <div class="mast">
+          <span class="signature">
+            <img class="mark" src="assets/mark.svg" alt="" />
+            openmotion
+          </span>
+          <span class="mono">RELEASE CUT / 03</span>
+        </div>
+        <h2 class="end-title">
+          Great motion.
+          <br />
+          <em>Made yours.</em>
+        </h2>
+        <img class="stamp" src="assets/mark.svg" alt="" />
+        <p class="final-note">An editable project and an MP4.</p>
+        <div class="foot mono">
+          <span>03 / EXPORT</span>
+          <span>00:08 — 00:12</span>
+        </div>
+      </section>
+    </main>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.set(['#edit', '#end'], { visibility: 'hidden' }, 0);
+      tl.fromTo(
+        '.ring',
+        { scale: 0.73 },
+        { scale: 1.06, duration: 3.3, stagger: 0.1, ease: 'power2.out' },
+        0,
+      );
+      tl.fromTo('#opening h1', { y: 35 }, { y: 0, duration: 0.85, ease: 'power3.out' }, 0);
+      tl.fromTo('.detail', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 0.55);
+      tl.set('#edit', { visibility: 'visible' }, 3);
+      tl.fromTo(
+        '#edit',
+        { clipPath: 'inset(0 0 100% 0)' },
+        { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.inOut' },
+        3,
+      );
+      tl.fromTo(
+        '.screen',
+        { x: 125, rotation: 3, scale: 0.93 },
+        { x: 0, rotation: -1, scale: 1, duration: 1.4, ease: 'power3.out' },
+        3.1,
+      );
+      tl.fromTo(
+        '.cut,.brief',
+        { y: 25, opacity: 0 },
+        { y: 0, opacity: 1, stagger: 0.2, duration: 0.65 },
+        3.45,
+      );
+      tl.fromTo('.strip i', { scaleY: 0.2 }, { scaleY: 1, stagger: 0.09, duration: 0.45 }, 4.25);
+      tl.to('.screen', { scale: 1.035, duration: 2.8, ease: 'sine.inOut' }, 5);
+      tl.set('#end', { visibility: 'visible' }, 8);
+      tl.fromTo(
+        '#end',
+        { clipPath: 'inset(0 100% 0 0)' },
+        { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power3.inOut' },
+        8,
+      );
+      tl.fromTo(
+        '.end-title',
+        { x: 48, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+        8.28,
+      );
+      tl.fromTo(
+        '.stamp',
+        { rotation: -36, scale: 0.75, opacity: 0 },
+        { rotation: 0, scale: 1, opacity: 1, duration: 1.05, ease: 'power2.out' },
+        8.58,
+      );
+      tl.fromTo('.final-note', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 8.85);
+      window.__timelines = { main: tl };
+    </script>
+  </body>
+</html>

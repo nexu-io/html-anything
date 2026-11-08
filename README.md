@@ -1,17 +1,37 @@
-<p align="center"><img src="docs/readme/hero.svg" alt="Great motion. Made yours. A reference film, a Motion MD brief and an editable video for your brand." width="100%" /></p>
+<h1 align="center">openmotion — Make product videos in Codex</h1>
 
-<h1 align="center">openmotion</h1>
+<p align="center">Give Codex a reference film, your screenshots and your launch copy.<br />
+Get a video in your brand’s style, an MP4 to share and a project you can keep editing.</p>
 
-<p align="center"><strong>Building the best open-source alternative to Claude Motion.</strong><br />
-Recreate the motion you love. Make it your brand. Keep it editable.</p>
-
-<p align="center"><strong><a href="#start-in-codex">Try the 20-second demo in Codex</a></strong> · <a href="docs/motion-md.md">Explore Motion MD</a> · <a href="docs/collections/README.md">Browse the motion library</a></p>
+<p align="center"><strong><a href="#start-in-codex">Try the 20-second demo in Codex</a></strong> · <a href="#made-with-openmotion">Watch three films</a> · <a href="docs/motion-md.md">Explore Motion MD</a> · <a href="docs/collections/README.md">Browse the library</a></p>
 
 <p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 
-openmotion is a standalone plugin for making product videos with your coding agent. Give Codex a launch film whose pacing you love, along with your own screenshots, logo and copy. It rebuilds the sequence around your product and gives you an MP4 and a local Studio project. When the copy changes, you can adjust a single title or hold a shot for another beat.
+<p align="center"><img src="docs/readme/hero.svg" alt="openmotion for Codex. Great motion. Made yours. A reference film becomes a Motion MD brief and an editable brand video." width="100%" /></p>
 
-With **Motion MD**, you can keep the creative decisions too. Write down when the product appears, how the camera moves and which assets to swap. Hand the brief to a teammate for the next launch.
+openmotion is a standalone, open-source Codex plugin for motion design. Our goal is to build the best open-source alternative to Claude Motion. You can start in your own product repo. Point Codex to the screenshot you just shipped and a launch film whose pacing you love. Ask it to rebuild the reveal with your headline, colors and assets. Open the cut in Studio, give the screenshot another beat, then export an MP4. Save the shot decisions in **Motion MD** so your teammate can use the same pacing for the next release.
+
+## Made with openmotion
+
+### Made in Codex · 12-second product launch
+
+[![Watch Made in Codex. Green rings frame the title, the real Studio timeline slides in, and the OpenDesign symbol closes the film.](examples/launch-in-codex/preview.gif)](examples/launch-in-codex/film.mp4)
+
+The brief called for one real product shot. Three seconds of opening type give way to the Studio timeline, then the OpenDesign symbol signs off. To make your own cut, give Codex a screenshot from your repo and the headline from your release notes. [Watch the MP4](examples/launch-in-codex/film.mp4) · [Edit the shots and timing](examples/launch-in-codex/index.html)
+
+### The Long Return · 11-second data story
+
+[![Watch The Long Return. Six bars grow across a daylight chart before a second city’s line is drawn.](examples/longer-days/preview.gif)](examples/longer-days/film.mp4)
+
+How much more daylight does Reykjavík get than Lisbon on June 1, 2026? Six monthly observations build the chart, then the answer appears: **5 hours 25 minutes**. The two cities share an axis. The figures, month labels and timing are in one editable file. [Watch the MP4](examples/longer-days/film.mp4) · [Edit the chart](examples/longer-days/index.html) · [See the source data](examples/README.md#the-long-return)
+
+### Pick Your Cut · 9-second vertical explainer
+
+[![Three successive frames from Pick Your Cut in its native 9:16 format. One card appears for each starting point.](examples/pick-your-cut/frames.jpg)](examples/pick-your-cut/film.mp4)
+
+A reference clip, a template or a blank brief? Three cards enter on successive beats and stay on screen so a viewer can read the final choice on a phone. Replace the cards with the three steps of your own onboarding flow. [Watch the vertical MP4](examples/pick-your-cut/film.mp4) · [Edit the cards](examples/pick-your-cut/index.html)
+
+All three films were exported through the plugin. Each is silent by design. [Get the source, briefs and local render instructions](examples/README.md)
 
 ## Start in Codex
 
@@ -31,6 +51,14 @@ Keep the checkout on disk. Once installed, open Codex and ask:
 Then try one edit: **“Hold the closing title two seconds longer. Export another cut.”** You can also drag the clip edge in Studio. Both edit the same project. [Setup and first-demo guide](docs/usage.md#使用) · [Other agent setups](docs/npm-installation.md)
 
 ![Product Promo open in Studio, with its preview and editable timeline.](docs/readme/editor.jpg)
+
+## Bring your own project
+
+| What you have | What to ask Codex for | What you can change next |
+| --- | --- | --- |
+| A reference clip and brand assets | “Keep the cut from the headline to the UI. Use our screenshot and type.” | Compare the two cuts and adjust where the reveal lands. [Recreate a reference](skills/motion-recreate/SKILL.md) |
+| A template you already like | “Use the Product Promo timing. Replace the opening copy and the end card.” | Keep a fresh copy of the template for the next campaign. [Adapt a template](skills/motion-template-to-video/SKILL.md) |
+| Release notes and a folder of screenshots | “Show the problem, demo the new feature, then hold on the release date.” | Review the shot sequence with Codex and refine the cut in Studio. [Direct an original film](skills/motion-director/SKILL.md) |
 
 ## Make a reference your own
 

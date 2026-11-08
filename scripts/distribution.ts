@@ -18,6 +18,11 @@ export const distributionDocuments = [
   'docs/examples/product-launch.MOTION.md', 'docs/examples/product-launch.MOTION.zh-CN.md',
   'docs/readme/ASSETS.md', 'docs/readme/opendesign-symbol.svg', 'docs/readme/hero.svg', 'docs/readme/hero.zh-CN.svg',
   'docs/readme/motion-md.svg', 'docs/readme/motion-md.zh-CN.svg', 'docs/readme/editor.jpg', 'docs/readme/workspace.jpg',
+  'examples/README.md',
+  'examples/launch-in-codex/index.html', 'examples/launch-in-codex/assets/mark.svg', 'examples/launch-in-codex/assets/studio.jpg',
+  'examples/launch-in-codex/film.mp4', 'examples/launch-in-codex/preview.gif',
+  'examples/longer-days/index.html', 'examples/longer-days/film.mp4', 'examples/longer-days/preview.gif',
+  'examples/pick-your-cut/index.html', 'examples/pick-your-cut/film.mp4', 'examples/pick-your-cut/frames.jpg',
   'docs/skills.md', 'docs/template-catalog.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
 ];
 

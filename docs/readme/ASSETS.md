@@ -8,4 +8,6 @@
 | [Editor](editor.jpg) and [workspace](workspace.jpg) | Actual Studio 0.6.1, commit `7aee372`, with an isolated demo workspace and the bundled Product Promo project. The application shell's original labels are preserved. |
 | Template frames | Product Promo, NYT Graph and Decision Tree use the posters already distributed with their source projects. See the [upstream notice](../../template-library/NOTICE.md). |
 
+The [showcase](../../examples/README.md) includes two animated GIFs sampled from the product and data films and a three-frame strip taken from the portrait MP4. The full-length silent films and editable HTML are included beside their previews.
+
 Each README has localized alternative text. The instructional SVGs also include titles and descriptions. Public-facing product text uses **openmotion**; the brand symbol belongs to OpenDesign.
