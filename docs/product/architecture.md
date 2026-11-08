@@ -6,6 +6,8 @@
 
 ## 产品定位与目标
 
+**对外产品形态是 All-in-One AI-native Studio for AI Cut & Motion。** 核心体验为 AI 原生 CapCut：人和 Agent 围绕可编辑时间轴完成叙事、剪辑与动效。长期产品范围延伸到发现、素材协作、发布运营、任务自动化、数据回收和知识复用；**Super Motion Video Agent** 是贯穿该生命周期的编排概念。当前实现与未来方向的完整映射见 [Studio 产品蓝图](studio-vision.md)。本页继续记录实际运行时，发布管理、常驻任务、RAG 和自动 Skill 学习尚未上线。
+
 OpenMotion 的底层组织是通用 Agent 会话：会话拥有模式、需求与多个 Artifact，模式选择模板目录和 skill，Artifact Viewer 负责打开可编辑产物。完整与嵌入视图使用同一产物；`embed=1` 可只显示 Viewer，供 Codex 等宿主打开。当前一期只有 Motion 模式，制作与导出仍使用原生 Hyperframes。其他模式是已确认方向，未作为可执行模式上线。通用会话组织保留既有技术决策，对外名称统一为 OpenMotion；历史取舍见 [变更记录](changes.md)。
 
 会话的 Agent 推理与工具编排由用户已有的 MCP 客户端执行；本地网页保存需求、接收调用方写回的真实回复、管理产物与继续编辑，不包含内置聊天 Agent 运行器。自有 Agent、Codex 和其他 MCP 客户端共用先创建会话、后生成产物的生命周期。
@@ -23,7 +25,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 ## 对外主张与 Motion MD 方向
 
-产品对外名称统一为 **OpenMotion**（O 和 M 大写），README 使用 OpenMotion 字标，上游 OpenDesign 标志仅作为已署名素材保留；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。对外叙事以 **AI 剪辑 / AI Cut** 为中心，主张 **Cut with AI. Everyone can be a creator.** 主定位为以可编辑时间轴为核心的 **AI 原生 CapCut**，并保留 Motion 创作参照：**AI-native、开源 CapCut 替代**承载日常剪辑与改稿，**The open-source Claude Motion alternative** 承载 Motion 创作、动态图形与可复用模板；参照名称按用户确认写为 **Claude Motion**。使命是“人人都是 AI 剪辑师，人人都是自媒体”：让个人创作者、讲师与小团队通过表达剪辑意图、预览和反复改稿，把已有素材变成自己的内容。这里明确的是服务方向，不构成用户研究、流量保证、功能完全对等或源码相似度结论。
+产品对外名称统一为 **OpenMotion**（O 和 M 大写），README 使用 OpenMotion 字标，上游 OpenDesign 标志仅作为已署名素材保留；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。对外叙事以 **AI 剪辑 / AI Cut** 为中心，主张 **Cut with AI. Everyone can be a creator.** 总体定位为 **All-in-One AI-native Studio**，核心体验为以可编辑时间轴为中心的 **AI 原生 CapCut**，并保留 Motion 创作参照：**AI-native、开源 CapCut 替代**承载日常剪辑与改稿，**The open-source Claude Motion alternative** 承载 Motion 创作、动态图形与可复用模板；参照名称按用户确认写为 **Claude Motion**。使命是“人人都是 AI 剪辑师，人人都是自媒体”：让个人创作者、讲师与小团队通过表达剪辑意图、预览和反复改稿，把已有素材变成自己的内容。这里明确的是服务方向，不构成用户研究、流量保证、功能完全对等或源码相似度结论。
 
 AI 剪辑的当前路径是：用户提供素材、脚本或确认的时间码，外部 Agent 根据选段、删改、排序、字幕、声画与节奏要求修改真实工程，用户在 Studio 预览并继续调整；自动语音理解仍取决于宿主工具与输入材料。对外介绍以 OpenMotion 本身与创作者的完整工作流为主，Hyperframes 作为技术来源在文末致谢，具体依赖继续在技术专题中准确记录。独立应用是首要产品身份，外部 Agent 通过 Skills、MCP 和固定版本 CLI 操作同一份本地工程；应用可连接多种客户端，当前不内置聊天 Agent 运行器。核心原则是人和 Agent 共用作品、经验沉淀为规范和模板、源文件可检查与可延续。仓库已采用 [Apache-2.0](../../LICENSE)，保留上游组件与字体声明；这取代此前“统一许可证待确认”的过时状态，依据见 2026-11-06 的公开记录。
 

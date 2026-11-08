@@ -2,14 +2,16 @@
 
 <h1 align="center">OpenMotion</h1>
 
-<p align="center"><strong>AI 剪辑，让每个人都成为 AI 剪辑师。</strong><br/>AI 原生、开源的 CapCut 替代。<br/>The open-source Claude Motion alternative.<br/><strong>人人都能创作，人人都是自媒体。</strong></p>
+<p align="center"><strong>All-in-One AI-native Studio，一站式视频创作与剪辑空间。</strong><br/>用 AI 剪辑，讲自己的故事。人人都能创作，人人都是自媒体。<br/>AI 原生、开源的 CapCut 替代。<br/>The open-source Claude Motion alternative.</p>
 
 <p align="center">
   <a href="#ai-video-editing">✂️ AI 剪辑</a> ·
   <a href="#快速开始">开始使用</a> ·
   <a href="#connect-your-agent">连接你的 Agent</a> ·
   <a href="#从-agent-接入">在 Agent 中使用</a><br/>
-  <a href="#产品界面">产品界面</a> ·
+  <a href="#all-in-one-studio">All-in-One Studio</a> ·
+  <a href="#super-motion-video-agent">Super Motion Video Agent</a> ·
+  <a href="#产品界面">产品界面</a><br/>
   <a href="motion-md.zh-CN.md">Motion Design MD</a> ·
   <a href="../library/README.zh-CN.md">资源与模板</a> ·
   <a href="#社区共建">社区</a> ·
@@ -24,14 +26,48 @@
 
 ## 🎬 OpenMotion 是什么？
 
-**OpenMotion 是 AI 原生、开源的 CapCut 替代，以可编辑时间轴为核心。** 用自然语言告诉 AI 你想怎么剪：保留哪些内容、去掉哪些段落、怎样组织故事、在哪里添加字幕、配乐和动效。Agent 根据素材、脚本或确认的时间码修改可编辑工程，你随时在 Studio 中预览、调整并导出 MP4。
+**OpenMotion 是 All-in-One AI-native Studio：一站式视频创作与剪辑空间，也是以可编辑时间轴为核心的 AI 原生、开源 CapCut 替代。** 用自然语言告诉 AI 你想怎么剪：保留哪些内容、去掉哪些段落、怎样组织故事、在哪里添加字幕、配乐和动效。Agent 根据素材、脚本或确认的时间码修改可编辑工程，你随时在 Studio 中预览、调整并导出 MP4。
 
-**AI 剪辑是核心，创作与表达是目的。** 素材、叙事、生成式媒体与动效都在时间轴上汇合。借鉴 Claude Motion 的动效创作思路，把它与日常剪辑、素材组织和反复调优结合，让每个人按自己的口吻讲述故事。
+**AI 剪辑是核心，创作与表达是目的。** 把灵感、素材、品牌、Agent 与多模态模型带进同一个创作流程：讲清故事，生成缺少的画面和声音，反复打磨剪辑，保留可编辑作品。Claude Motion 为动效创作提供思路。
+
+现在，OpenMotion 已把工程会话、模板发现、素材管理、模型生成、时间轴编辑与 MP4 导出连在一起。完整愿景是一个懂你、懂团队、可协作的创意空间，进一步连接发布管理、周期性任务与反馈数据，让每次创作积累为下一次可用的知识。
 
 **两个接入方向，同一份可编辑工程。**
 
 - **从 OpenMotion 出发 → [连接你的 Agent](#connect-your-agent)。** 打开 Studio，带来素材，连接 Codex、Claude Code 等客户端参与 AI 剪辑。
 - **从你的 Agent 出发 → [使用 OpenMotion](#从-agent-接入)。** 通过 **Skills、MCP、CLI** 接入制作能力，让 Agent 创建、修改、预览和导出，随时回到 Studio 细调。
+
+<a id="all-in-one-studio"></a>
+
+## 🌐 All-in-One Studio：从发现灵感，到下一次创作
+
+**发现、制作、交付、学习，都围绕一个创作空间展开。** 我们把完整生命周期作为产品范围；当前可用与后续方向分别标明。
+
+| 创作环节 | Studio 承载什么 | 当前状态 |
+| --- | --- | --- |
+| **搜索灵感与发现** | 浏览模板与参考，寻找叙事方向，搜索素材并积累想法。 | 已有目录搜索与参考浏览；集成媒体服务搜索 is coming。 |
+| **上传与管理素材** | 导入视频、图片、配音和音乐，预览、管理并保留来源。 | 已有工程素材导入、预览与文件操作；团队共享素材库 is coming。 |
+| **生成所需素材** | Agent 规划创作，通过多模态模型生成图片、视频、配音和音乐。 | 已有外部 Agent 工作流与 Studio Model Gateway。 |
+| **Tell Story 与成片剪辑** | 组织叙事、排列时间轴、打磨声音与动效、替换图片并改编版本。 | 已有可编辑工程与 AI 辅助改稿；自动选段和平台适配 is coming。 |
+| **人和 Agent 共同创作** | 一起编辑，在时间轴讨论、评论、评审并继续迭代。 | 已有同一本地工程的交接；协作评论与评审 is coming。 |
+| **交付与运营** | 导出不同版本，管理发布、制作任务和周期性自动化。 | 已有 MP4 导出及生成/导出任务状态；发布管理与创作任务自动化 is coming。 |
+| **数据回收与持续进化** | 回收表现与评审反馈，检索品牌知识，积累偏好，把有效方法沉淀为 Skill。 | 已可显式提供 Brandkit、Motion MD 和 Skills；数据闭环、长期记忆与 RAG is coming。 |
+
+[完整产品愿景与能力地图](product/studio-vision.md) · [当前技术架构](product/architecture.md)
+
+<a id="super-motion-video-agent"></a>
+
+## 🧠 我们提出 Super Motion Video Agent
+
+**一个贯穿完整创作生命周期的超级视频创作 Agent。** 这是 OpenMotion 提出的 Agent 产品概念：理解创作者、组织任务、编排工具与模型，持续维护可编辑作品，并把经验带到下一次创作。
+
+- **懂你：** 结合目标受众、个人口吻、团队偏好与 Brandkit，理解这支片子为什么而做。
+- **会规划：** 把目标拆成调研、素材、脚本、剪辑、评审与交付任务。
+- **能创作：** 选择 Skill 与 Agent 模板，编排搜索和多模态模型，把结果落实到同一条时间轴。
+- **可协作：** 与人共同创作，处理评审反馈，在改稿中保留工程上下文。
+- **会积累：** 连接发布版本与效果数据，检索已有知识，提出下一轮 Skill 和创作方法的改进。
+
+参考 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 与 [Super-agent 研究原型](https://github.com/deepseek-ai/dsh-superagent-prototype) 的持续任务理念，我们将其延伸到视频与 Motion。**Super Motion Video Agent 是产品概念与路线图。** 当前由你连接的 Agent 使用 OpenMotion Skills、工程工具和 Studio 完成创作；常驻编排、发布反馈与学习闭环仍在规划。[设计与状态](product/studio-vision.md#super-motion-video-agent)
 
 <a id="ai-video-editing"></a>
 
@@ -182,6 +218,32 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 [阅读规范提案](motion-md.zh-CN.md) · [使用完整示例](examples/product-launch.MOTION.zh-CN.md)
 
+<a id="creative-memory"></a>
+
+## 📚 一个越用越懂你的创意空间 — is coming
+
+**懂个人的口吻，懂团队的知识，记得品牌的表达。** 长期愿景是把项目历史、确认过的偏好、品牌规则、评审反馈和可复用 Skills 放在一起，让 Agent 在下一次任务中检索并使用合适的上下文。
+
+```text
+当前可用
+  简报 + 品牌 → 创作 → 预览 → 改稿 → 工程版本 + MP4
+
+规划中 · is coming
+  发布版本 + 表现数据 + 评审反馈
+        ↓
+  关联项目、平台与时间窗口的证据
+        ↓
+  个人 / 团队知识 → 用 RAG 检索相关上下文
+        ↓
+  提出 Skill 或偏好更新 → 评估 → 保存版本
+        ↓
+  下一次创作从更合适的上下文开始
+```
+
+这条闭环连接**发布管理与周期性任务、关联成片版本的表现数据、个人与团队记忆，以及 RAG（按需检索知识）**。被验证的方法可以沉淀为 Skill，有用的编排可以沉淀为模板，品牌与动效选择通过 Brandkit 和 `MOTION_DESIGN.md` 持续复用。是否改进，要在下一次创作中评估。
+
+当前通过显式提供这些文档和保留可编辑工程来复用经验；自动发布、数据回收、长期偏好记忆、RAG 与自动提炼 Skill 均为后续能力。[知识与反馈闭环设计](product/studio-vision.md#knowledge-and-feedback)
+
 <a id="资源模板与社区作品"></a>
 
 ## 🧩 资源、模板与社区作品
@@ -199,6 +261,14 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 | **💼 Brandkit** | [`library/brandkits/`](../library/brandkits/) · [OpenMotion 品牌事实与素材](../library/brandkits/openmotion/BRANDKIT.md)。 |
 
 选择文件，连同素材明确交给 Agent。目录当前可直接浏览和贡献；尚无自动导入或 marketplace。五个核心制作 Skills 继续在 `skills/` 维护。[贡献一个条目](../library/ENTRY_TEMPLATE.md)
+
+### 为 Agent 打造的模板社区
+
+**模板同时提供可编辑结构与 Agent 能使用的说明。** 选定起点，带上自己的 Brandkit 和故事，让 Agent 复刻、个性化替换并继续调优。社区贡献可以把源码、可修改项、Motion MD、预览和出处一起交付。
+
+> 用 Product Promo 模板和我的 Brandkit，按我的口吻讲这个故事。替换素材与文案，调整节奏，先让我看预览，再根据反馈优化。
+
+当前画廊的一键操作准备交给 Agent 的指令，实际制作由所连接的 Agent 执行；社区资源的自动发现、安装与个性化优化仍为后续方向。[模板入口](../library/templates/README.md)
 
 ### 看看资源里的作品
 
@@ -231,6 +301,8 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 ## 产品哲学与技术架构
 
+**Studio 是创作空间，Super Motion Video Agent 是编排愿景，时间轴与工程保存作品。** 多模态模型生产素材，可复用知识指导创作，规划中的反馈闭环连接前后两次创作。[目标架构与能力状态](product/studio-vision.md)
+
 1. **人人都是 AI 剪辑师。** 从用户已有的素材和表达意图开始，由 AI 落实剪辑与改稿，让每个人都能持续创作自己的内容。
 2. **人和 Agent 操作同一份作品。** 对话、可视化编辑和代码修改共同落在可编辑工程上，后续修改有据可循。
 3. **把经验变成可以分享的规范。** Motion MD 记录风格与节奏，Skills 记录方法，模板保存可复用的实现。
@@ -238,23 +310,29 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 **两个入口，共用一个工程：** Studio → 连接 Agent → 你的客户端；或你的客户端 → Skills / MCP / CLI → OpenMotion。所连接的客户端执行 Agent，本地应用管理工程状态。
 
-```text
-独立 Studio                      外部 Agent 客户端
-React / TypeScript                     Codex · Claude Code · …
-会话 · 预览 · 时间轴          Skills + 显式提供的创作上下文
-           | HTTP                                | 本机 stdio MCP
-           +----------------+--------------------+
-                            v
-                  本地应用 (Node.js)
-                  会话 · 文件 · revision · 历史
-                            |
-                  可编辑工程 + 媒体
-                  HTML / CSS / JS / compositions
-                            |
-                  固定快照 → 渲染 → MP4
+**当前已实现的生产架构。** 工程与时间轴是作品真源，模型生成结果经显式采用后进入工程。
 
-Studio → Model Gateway → 候选素材 → 选用后写入工程
-资源库 → Skill / Brandkit / MOTION_DESIGN.md → 明确交给 Agent
+```text
+OpenMotion Studio                      你的 Agent 客户端
+素材 · 预览 · 时间轴                   Skills · Brandkit · Motion MD
+          | HTTP                                | stdio MCP
+          +------------------+------------------+
+                             v
+                  本地应用（Node.js）
+                  会话 · 文件 · revision
+                             |
+                  可编辑工程 + 媒体
+                  HTML · CSS · JS · compositions
+                             |
+                  固定 revision 快照
+                             |
+                  渲染 + 技术检查
+                             |
+                  MP4 + 可编辑源工程
+
+素材执行路径
+  Studio → Model Gateway → 多模态模型 → 候选文件
+         → 显式采用 → 同一份可编辑工程
 ```
 
 | 层 | 职责与技术 |
@@ -265,6 +343,13 @@ Studio → Model Gateway → 候选素材 → 选用后写入工程
 | **工程与版本** | Node.js 本地服务管理 HTML/CSS/JS、媒体、revision 与内容版本，保护并发修改。 |
 | **素材生成** | Model Gateway 管理供应商配置和生成任务；用户选择结果后写入作品。 |
 | **渲染与交付** | 原生合成与 GSAP 承载动效，固定快照导出 MP4，并通过 FFmpeg / FFprobe 做技术检查。 |
+
+### 工程、素材与导出为什么可以持续迭代
+
+- **版本感知的修改：** Agent 先读当前工程与 revision，再写入；冲突后重新读取，避免沿用过时内容覆盖作品。
+- **生成与采用分离：** 模型先产出候选文件；用户选中并采用后才修改时间轴。替换图片保留原有时长与动画。
+- **固定快照导出：** 导出绑定确定的工程版本，渲染和技术检查围绕该快照进行，后续改稿仍保留源工程。
+- **方法与作品分离：** Skill 记录工作方法，Motion MD / Brandkit 提供创作上下文，工程保存实际结果；规划中的 RAG 从知识中检索上下文。
 
 [完整产品架构](product/architecture.md) · [工程与版本](project-workspace.md) · [模型网关](model-gateway.md) · [MCP 契约](mcp-phase1-tools.md)
 
@@ -361,7 +446,8 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 ```text
 读取 OpenMotion README 与 docs/media-kit.md。
-以“AI 剪辑，让人人都成为 AI 剪辑师和自媒体”为中心，制作 30 秒产品介绍与中文文章。
+以“All-in-One AI-native Studio，让人人都成为创作者”为主线，制作 30 秒产品介绍与中文文章。
+介绍我们提出的 Super Motion Video Agent 概念，以及发布、反馈、知识和 Skill 持续迭代的愿景。
 主定位是以 AI 原生时间轴为核心的开源 CapCut 替代，Claude Motion 是动效创作参照。
 说明两个接入方向：在 OpenMotion 中连接 Agent，以及通过 Skills / MCP / CLI 在 Agent 中使用 OpenMotion。
 围绕智能剪辑与故事组织、素材生成与搜索、多平台输入输出讲述，标清每项能力的状态。
@@ -379,6 +465,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | 范围 | 当前状态 |
 | --- | --- |
 | 独立 Studio、本地工程、可视化修改、MP4 导出 | 已实现；安装与实际成片仍按目标环境验证。 |
+| Super Motion Video Agent、发布自动化与知识反馈 | 产品概念 / is coming；常驻编排、数据回收与 RAG 仍在规划。 |
 | Agent 接入 | 五个核心 Skills、九个公开 MCP 工具；各宿主能力见接入文档。 |
 | OpenMotion Library | 已有五类目录与首批内容，手动选择并交给 Agent 使用。 |
 | `MOTION_DESIGN.md` | v0.1 创作规范提案；没有自动导入器或校验器。 |
@@ -397,6 +484,10 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 接下来希望和社区一起推进，以下均未承诺上线日期：
 
+- [ ] Super Motion Video Agent：持续的创作任务规划、执行与评审。
+- [ ] 发布管理、周期性制作任务与事件触发的自动化。
+- [ ] 关联版本的效果数据、个人/团队记忆、RAG 与经过评估的 Skill 改进。
+- [ ] 团队共享素材库与面向 Agent 的社区模板安装。
 - [ ] 自动选段、无关内容识别与面向发布目标的自动画幅重构。
 - [ ] 视频、图片、配音、音乐与 Avatar 服务的集成搜索。
 - [ ] 更广的平台链接解析与素材导入。
@@ -444,6 +535,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | [OpenDesign](https://github.com/nexu-io/open-design) / [官网](https://open-design.ai/) | UI 视觉系统来源、README 的资源与贡献结构、水墨品牌方向。对应 [UI 来源记录](design-system.md)、[Brandkit](../library/brandkits/openmotion/BRANDKIT.md) 与 [Library](../library/README.zh-CN.md)。 |
 | [HTML Anything](https://github.com/nexu-io/html-anything/tree/legacy) | 仓库前身；参考其文字架构图、贡献路径与来源表格。旧 `next/` 架构留在历史分支，当前结构见[迁移说明](repository-migration.md)。 |
 | **Claude Motion / CapCut** | 分别作为 Agent 视频创作与大众剪辑体验的产品参照；不代表功能完全对等或源码来源。 |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) / [Super-agent 原型](https://github.com/deepseek-ai/dsh-superagent-prototype) | 可扩展 Agent 能力与持续任务工作的参考。Super-agent 仓库为研究原型；我们提出 [Super Motion Video Agent](product/studio-vision.md#super-motion-video-agent) 概念，本次未引入其运行时。 |
 | [OpenChatCut](https://github.com/0xsline/OpenChatCut) | 参考可持续编辑工程与 AI 剪辑生命周期的产品理念，体现在 [AI 剪辑](#ai-video-editing)与[完整流程](#input--process--output)；本次文档改动未引入其代码。 |
 | [ChatCut](https://chatcut.io/docs/what-is-chatcut) | Agent 与编辑器衔接、口播与创作者场景的产品参考。 |
 | [Hyperframes](https://github.com/heygen-com/hyperframes) | 感谢其原生合成、Studio、渲染基础与资源。对应 [Studio](../studio/README.md)、[引擎说明](hyperframes.md)、[模板声明](../template-library/NOTICE.md) 与 [目录来源](template-catalog.md)。 |

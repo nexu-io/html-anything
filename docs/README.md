@@ -6,6 +6,7 @@
 
 - [中文项目介绍](README.zh-CN.md) / [English introduction](../README.md)
 - [使用与首次体验](usage.md)
+- [All-in-One Studio 产品蓝图与 Super Motion Video Agent](product/studio-vision.md)
 - [创作者与媒体 Agent 事实包](media-kit.md)
 - [README 图片来源与封面复现](readme/ASSETS.md)
 - [Motion MD](motion-md.md) / [中文](motion-md.zh-CN.md)

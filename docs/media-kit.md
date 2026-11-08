@@ -1,4 +1,4 @@
-# OpenMotion — AI Cut, creators & media fact sheet
+# OpenMotion — All-in-One Studio, AI Cut & media fact sheet
 
 [English README](../README.md) · [中文介绍](README.zh-CN.md) · [Asset sources](readme/ASSETS.md)
 
@@ -6,16 +6,18 @@ This page is a source brief for creators, writers and their agents. Use it with 
 
 ## Reusable introduction
 
-> OpenMotion is an AI-native, open-source CapCut alternative centered on an editable timeline, with Claude Motion as a reference for motion creation. Cut with AI, preview and revise in Studio, and keep the editable project alongside your MP4. Describe what to keep, remove, reorder or emphasize; your agent works from your material, script or confirmed timecodes. The mission is to help everyone become an AI video editor, a creator and a publisher of their own stories. Motion Design MD, Skills, templates and Brandkits make that creative knowledge reusable. The application is licensed under Apache 2.0.
+> OpenMotion is an open-source, All-in-One AI-native Studio for AI Cut & Motion. Its core is an AI-native CapCut experience: bring inspiration and material, work with an agent, generate missing assets through configured models, tell your story on an editable timeline and export MP4. We introduce the Super Motion Video Agent concept for carrying creative work across tasks, tools, models and review. The roadmap extends the Studio into collaboration, publishing management, recurring tasks, performance feedback and reusable personal/team knowledge. Today, Brandkits, Motion Design MD, templates and Skills provide explicit creative context; persistent orchestration, automated publishing, analytics ingestion and RAG remain planned. Cut with AI. Everyone can be a creator. Apache 2.0.
 
 “AI-native CapCut alternative” is product positioning. It does not assert feature parity, access to another product's source code or measured superiority.
 
-Editorial framing: lead with **“Cut with AI. Everyone can be a creator.”** AI editing is the central topic. Lead with the **AI-native CapCut alternative** and its **AI-native timeline**; the **open-source Claude Motion alternative** is the supporting motion-creation position. Everyday editing and motion creation serve the same goal of personal expression and publishing. Use **AI Cut** in headlines and **AI video editing** when describing the full workflow. The comparison name is **Claude Motion**. Credit Hyperframes in acknowledgments; implementation details remain available below for technical accuracy.
+Editorial framing: lead with **“The All-in-One AI-native Studio for AI Cut & Motion.”** Use **“Cut with AI. Tell your story.”** for the experience and **“Everyone can be a creator.”** for the mission. **AI Cut** is the main product term; **video editing** describes the full workflow in explanatory prose. The **AI-native CapCut alternative** and its **AI-native timeline** are the core experience; the **open-source Claude Motion alternative** is the supporting motion-creation position. Everyday editing and motion creation serve the same goal of personal expression and publishing. Use **AI Cut** in headlines and **AI video editing** when describing the full workflow. The comparison name is **Claude Motion**. Credit Hyperframes in acknowledgments; implementation details remain available below for technical accuracy.
 
 ## Facts you can cite
 
 | Topic | Current fact | Evidence |
 | --- | --- | --- |
+| All-in-One Studio | Product scope spanning discovery, assets, storytelling, editing, collaboration, delivery and learning; implementation and roadmap are identified separately. | [Product blueprint](product/studio-vision.md). |
+| Super Motion Video Agent | OpenMotion’s proposed creative-agent concept, not a shipped persistent runtime or a substantiated industry-first claim. | [Concept and status](product/studio-vision.md#super-motion-video-agent). |
 | Mission | Help everyone become an AI video editor and creator, express their own ideas and build a publishing practice. | [README: mission](../README.md#everyone-can-be-a-creator); product direction, not a reach guarantee. |
 | AI editing | The external agent applies editing requests to the project; the user previews and refines clips, timing, text and media in Studio. | [AI Cut workflow](../README.md#ai-video-editing), [editing contract](../skills/motion-production/references/edit.md). |
 | App | A standalone local application with a Studio editor, timeline and editable projects. | [Product architecture](product/architecture.md), [workspace](project-workspace.md). |
@@ -28,9 +30,21 @@ Editorial framing: lead with **“Cut with AI. Everyone can be a creator.”** A
 | License | Apache License 2.0 for this repository; upstream and font notices retained. | [LICENSE](../LICENSE), [editor](../studio/LICENSE), [templates](../template-library/NOTICE.md). |
 | Release | Source checkout and local installation/build paths; npm package publication remains disabled. | [Installation](npm-installation.md), [migration](repository-migration.md). |
 
+## Complete product narrative
+
+Present the Studio as one creative home: **discover → collect → generate → tell the story and cut → review → deliver → learn → create again**. The all-in-one story connects the existing local production workflow with the planned operational and knowledge layers.
+
+- **AI-native architecture:** Super Motion Video Agent is the proposed coordinator for briefs, tasks, tools, models and review. The actual reasoning currently runs in connected external clients.
+- **One-stop production and operations:** existing media management, timeline editing and export form the base; shared libraries, creative-task management, scheduling and publishing are coming.
+- **Agent assistance and multimodal models:** Skills guide the method, project tools apply changes, and configured models create candidate media for adoption into the timeline.
+- **Agent-ready template community:** editable source, changeable parameters, Motion MD, previews and provenance support recreation and personalization. One-click gallery handoff prepares instructions; the connected agent performs the work.
+- **Knowledge and feedback:** planned analytics connects outcomes to published versions; personal/team knowledge and RAG provide relevant context; evaluated improvements can become Skills or templates. Current reuse is through explicitly supplied files, not automatic learning.
+
+The [DeepSeek Super-agent research prototype](https://github.com/deepseek-ai/dsh-superagent-prototype) is a design reference for continuing task-oriented work. No runtime is imported by this documentation change. Use “we introduce our Super Motion Video Agent concept”; there is no comparative evidence supporting “the world's first.”
+
 ## The timeline and three product pillars
 
-The primary product is an AI-native CapCut: the timeline is where material, story, generated assets, revisions and final output come together. Explain these three pillars with their current status:
+Within the All-in-One Studio, the core experience is an AI-native CapCut: the timeline is where material, story, generated assets, revisions and final output come together. Explain these three pillars with their current status:
 
 1. **Intelligent cuts and story organization.** Agents can apply the user's tone, script and confirmed timecodes to edits; users can arrange and refine material in Studio. Automatic content understanding, irrelevant-passage detection and destination-aware reframing are product directions.
 2. **Media generation and search.** Configured Studio models generate images, video, music and voice. A reference-capable image model can produce replacement candidates for a selected image; adopting a replacement preserves its timing and animation. Integrated footage, image, voice, music and Avatar service search is a product direction.
@@ -90,9 +104,11 @@ and the speaker's intent. Preview the edit; deliver the project and MP4.
 
 ```text
 Read the README, this fact sheet and the linked product documentation.
-Lead with “Cut with AI. Everyone can be a creator.” Present OpenMotion as an
-AI-native CapCut centered on an editable timeline, with Claude Motion informing
-the motion-creation direction. Explain intelligent cuts and story organization,
+Lead with “The All-in-One AI-native Studio for AI Cut & Motion.” Present
+AI-native CapCut as the core timeline experience, with Claude Motion informing
+the motion-creation direction. Introduce our Super Motion Video Agent concept
+and the planned operations and knowledge loop: publish, collect outcomes,
+retrieve personal/team context, evaluate improvements and reuse Skills. Explain intelligent cuts and story organization,
 media generation and search, and multiplatform input/output with their status.
 Show both entry directions: connect an agent from OpenMotion, or use OpenMotion
 inside an agent through Skills / MCP / CLI.
