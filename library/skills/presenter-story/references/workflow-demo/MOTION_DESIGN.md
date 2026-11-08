@@ -4,7 +4,7 @@
 
 ## Reference and creative intent
 
-[5 tools I use every day — Ali Abdaal](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4), catalog ID `hf-reference-aroll-ali-abdaal-workflow`, alternates a desk-side presenter with tool and document visuals. Its [upstream remix](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-result.mp4) uses another presenter and a different design-workspace story. These are attributed catalog demonstrations, not results produced by this recipe.
+[5 tools I use every day — Ali Abdaal](../../../../../docs/readme/media/ali-abdaal-workflow-reference.mp4), catalog ID `hf-reference-aroll-ali-abdaal-workflow`, alternates a desk-side presenter with tool and document visuals. Its [upstream remix](../../../../../docs/readme/media/ali-abdaal-workflow-result.mp4) uses another presenter and a different design-workspace story. These are attributed catalog demonstrations, not results produced by this recipe.
 
 Let the viewer understand both the person and the workflow: show the speaker for intent, the screen for evidence, and a short motion card for the takeaway. Each insert should answer the sentence immediately around it.
 

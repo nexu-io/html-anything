@@ -4,7 +4,7 @@
 
 ## Reference and creative intent
 
-[Tool demo with callouts — @john.tagudin](https://www.tiktok.com/@john.tagudin/video/7524883942328126728), catalog ID `hf-reference-aroll-john-tagudin-capso`, combines a presenter, stacked interface recordings, captions and callouts. The [upstream remix](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-result.mp4) changes the presenter and demonstrates a video editor. The paired README excerpts are external catalog media, not this recipe's output.
+[Tool demo with callouts — @john.tagudin](https://www.tiktok.com/@john.tagudin/video/7524883942328126728), catalog ID `hf-reference-aroll-john-tagudin-capso`, combines a presenter, stacked interface recordings, captions and callouts. The [upstream remix](../../../../../docs/readme/media/john-tagudin-capso-result.mp4) changes the presenter and demonstrates a video editor. The paired README excerpts are external catalog media, not this recipe's output.
 
 Start with a relatable problem, show the person using the product, demonstrate the useful result and close with the creator's own conclusion. Motion should make the product action easier to follow.
 

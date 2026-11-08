@@ -10,9 +10,9 @@ Pick a film for the decision you want to borrow: how it opens, how it reveals a 
 
 | Film or excerpt | Look at | Source |
 | --- | --- | --- |
-| [Pond: a new Linux OS · 12s](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4) | A short operating-system introduction. Where does the product first become recognizable? | @bflycomputer · Hyperframes reference `hf-reference-jake-pond` |
-| [Firecrawl Free Keyless · 32s](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4) | A developer-tool announcement. How much screen time goes to the promise versus the demonstration? | @ericciarla · Hyperframes reference `hf-reference-remix-firecrawl` |
-| [Firecrawl integration reveal · 5s](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) | A single beat from a launch: a headline number gives way to the integration ecosystem. | [Original post by @ericciarla](https://x.com/ericciarla/status/2093375835679977570) · `hf-moment-M945` |
+| [Pond: a new Linux OS · 12s](../readme/media/jake-pond-reference.mp4) | A short operating-system introduction. Where does the product first become recognizable? | @bflycomputer · Hyperframes reference `hf-reference-jake-pond` |
+| [Firecrawl Free Keyless · 32s](../readme/media/remix-firecrawl-reference.mp4) | A developer-tool announcement. How much screen time goes to the promise versus the demonstration? | @ericciarla · Hyperframes reference `hf-reference-remix-firecrawl` |
+| [Firecrawl integration reveal · 5s](../readme/media/M945-clip.mp4) | A single beat from a launch: a headline number gives way to the integration ecosystem. | [Original post by @ericciarla](https://x.com/ericciarla/status/2093375835679977570) · `hf-moment-M945` |
 
 These are viewing references from the [catalog snapshot](../../web/catalog/hyperframes.json). An entry here does not grant rights to reuse its footage. Credit the original and bring your own brand assets.
 

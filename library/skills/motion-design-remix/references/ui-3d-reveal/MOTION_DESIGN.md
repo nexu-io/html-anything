@@ -5,7 +5,7 @@ Version: 0.1.0 · Kind: source-backed remix example · Author: OpenMotion docume
 ## Reference and provenance
 
 - Source: [Hyperframes / ui-3d-reveal](https://github.com/heygen-com/hyperframes/tree/070b964d7b8cd844a893f0abbe8e0b7f1ac6d879/registry/blocks/ui-3d-reveal); Apache-2.0. Original source revision: `070b964d7b8cd844a893f0abbe8e0b7f1ac6d879`.
-- [Upstream reference video](https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ui-3d-reveal.mp4). The README pair is rendered from the bundled source with original versus changed content; it is not a blind reconstruction of the upstream MP4.
+- [Upstream reference video](../../../../../docs/readme/media/ui-3d-reveal.mp4). The README pair is rendered from the bundled source with original versus changed content; it is not a blind reconstruction of the upstream MP4.
 - [Editable source](../../assets/ui-3d-reveal/index.html) · [Exact replacement preset](../../presets/ui-3d-reveal.json).
 - [Pack instructions](../../SKILL.md) · [Licenses and asset notes](../../NOTICE.md).
 

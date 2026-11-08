@@ -18,7 +18,8 @@
       "gifSha256": "892096faf7de77bf82957b6176bb022d2d1a85359d26ddd8cc9465b7cfe9d290",
       "previewFps": 10,
       "paletteColors": 128,
-      "dither": "bayer:3"
+      "dither": "bayer:3",
+      "localVideo": "../media/ali-abdaal-workflow-reference.mp4"
     },
     {
       "slug": "story-recut",
@@ -37,7 +38,8 @@
       "gifSha256": "0b5abe1037fe28bd752d4c6c204c79d1cedf9cb34d10f949aafe05f6ba98f77a",
       "previewFps": 10,
       "paletteColors": 128,
-      "dither": "bayer:3"
+      "dither": "bayer:3",
+      "localVideo": "../media/hundred-days-story-reference.mp4"
     },
     {
       "slug": "product-launch",
@@ -56,7 +58,8 @@
       "gifSha256": "611aa3be620649397ec8091b9d4af82565a7708e3ee94b627ccd83f602685631",
       "previewFps": 10,
       "paletteColors": 128,
-      "dither": "bayer:3"
+      "dither": "bayer:3",
+      "localVideo": "../media/jake-figma-draw-reference.mp4"
     },
     {
       "slug": "viral-remix",
@@ -75,7 +78,8 @@
       "gifSha256": "f3e1244c05601809b726965da22abf555a112519d9971096cbb471f114c36115",
       "previewFps": 10,
       "paletteColors": 128,
-      "dither": "bayer:3"
+      "dither": "bayer:3",
+      "localVideo": "../media/jake-lovable-reference.mp4"
     },
     {
       "slug": "explainer",
@@ -94,7 +98,8 @@
       "gifSha256": "4205abde888a0cf47d786b00aaad553bec49ff8391ddacb760de918d0945bb3d",
       "previewFps": 10,
       "paletteColors": 128,
-      "dither": "bayer:3"
+      "dither": "bayer:3",
+      "localVideo": "../media/remix-authorize-once-reference.mp4"
     },
     {
       "slug": "data-story",
@@ -113,7 +118,8 @@
       "gifSha256": "5ac8b202d47c934688cc04659066b7c85df5f14102a3eee28bd802308f3e164f",
       "previewFps": 10,
       "paletteColors": 128,
-      "dither": "bayer:3"
+      "dither": "bayer:3",
+      "localVideo": "../media/M1128-clip.mp4"
     },
     {
       "slug": "music-visual",
@@ -132,7 +138,8 @@
       "gifSha256": "786f690fd2ce3382f27ec0abe5d7a99b3485b47680173d781f8a23cf0e0bfa0a",
       "previewFps": 10,
       "paletteColors": 128,
-      "dither": "bayer:3"
+      "dither": "bayer:3",
+      "localVideo": "../media/M1139-clip.mp4"
     }
   ]
 }

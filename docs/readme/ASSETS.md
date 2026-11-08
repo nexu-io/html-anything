@@ -42,11 +42,11 @@ The gallery uses the same spacing, typography and two-column card structure for 
 
 | Scenario / preview | Catalog ID | Reference attribution | Excerpt (seconds) |
 | --- | --- | --- | --- |
-| [talking-head](examples/talking-head.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4) | 10–17 |
+| [talking-head](examples/talking-head.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](media/ali-abdaal-workflow-reference.mp4) | 10–17 |
 | [story-recut](examples/story-recut.gif) · [still](examples/story-recut.jpg) | `hf-reference-aroll-hundred-days-story` | [Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) | 1–8 |
-| [product-launch](examples/product-launch.gif) · [still](examples/product-launch.jpg) | `hf-reference-jake-figma-draw` | [@figma](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4) | 5.5–12 |
-| [viral-remix](examples/viral-remix.gif) · [still](examples/viral-remix.jpg) | `hf-reference-jake-lovable` | [@lovable_dev](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4) | 3–10 |
-| [explainer](examples/explainer.gif) · [still](examples/explainer.jpg) | `hf-reference-remix-authorize-once` | [Hyperframes catalog](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4) | 2–9 |
+| [product-launch](examples/product-launch.gif) · [still](examples/product-launch.jpg) | `hf-reference-jake-figma-draw` | [@figma](media/jake-figma-draw-reference.mp4) | 5.5–12 |
+| [viral-remix](examples/viral-remix.gif) · [still](examples/viral-remix.jpg) | `hf-reference-jake-lovable` | [@lovable_dev](media/jake-lovable-reference.mp4) | 3–10 |
+| [explainer](examples/explainer.gif) · [still](examples/explainer.jpg) | `hf-reference-remix-authorize-once` | [Hyperframes catalog](media/remix-authorize-once-reference.mp4) | 2–9 |
 | [data-story](examples/data-story.gif) · [still](examples/data-story.jpg) | `hf-moment-M1128` | [@Vintage_god](https://x.com/Vintage_god/status/2106817967967056165) | 1.4–7.6 |
 | [music-visual](examples/music-visual.gif) · [still](examples/music-visual.jpg) | `hf-moment-M1139` | [@GoogleAI](https://x.com/GoogleAI/status/2024154215182926027) | 0–3.66667 |
 
@@ -230,22 +230,22 @@ Default README images are GIFs. Existing [catalog covers](../../web/catalog/cove
 | Preview | Catalog ID | Credit / source | Excerpt (seconds) |
 | --- | --- | --- | --- |
 | [App Showcase](gallery/app-showcase.gif) | `hf-block-app-showcase` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json) | 0.5–4.5 |
-| [Firecrawl Free Keyless](gallery/firecrawl.gif) | `hf-reference-remix-firecrawl` | [@ericciarla](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4) | 1.6–5.6 |
+| [Firecrawl Free Keyless](gallery/firecrawl.gif) | `hf-reference-remix-firecrawl` | [@ericciarla](media/remix-firecrawl-reference.mp4) | 1.6–5.6 |
 | [3D UI Reveal](gallery/ui-3d-reveal.gif) | `hf-block-ui-3d-reveal` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json) | 2.4–6.4 |
-| [Pond: a new Linux OS](gallery/pond.gif) | `hf-reference-jake-pond` | [@bflycomputer](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4) | 1–5 |
-| [Kimi K3 teaser](gallery/kimi-k3.gif) | `hf-reference-remix-kimi-k3` | [@Kimi_Moonshot](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-kimi-k3-reference.mp4) | 1–5 |
-| [Reception by ElevenLabs](gallery/elevenlabs-reception.gif) | `hf-reference-remix-elevenlabs-reception` | [@ElevenLabs](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-elevenlabs-reception-reference.mp4) | 5–9 |
+| [Pond: a new Linux OS](gallery/pond.gif) | `hf-reference-jake-pond` | [@bflycomputer](media/jake-pond-reference.mp4) | 1–5 |
+| [Kimi K3 teaser](gallery/kimi-k3.gif) | `hf-reference-remix-kimi-k3` | [@Kimi_Moonshot](media/remix-kimi-k3-reference.mp4) | 1–5 |
+| [Reception by ElevenLabs](gallery/elevenlabs-reception.gif) | `hf-reference-remix-elevenlabs-reception` | [@ElevenLabs](media/remix-elevenlabs-reception-reference.mp4) | 5–9 |
 | [Glass Shard Title](gallery/glass-shard-title.gif) | `hf-block-glass-shard-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json) | 0.5–6 |
 | [Canopy Part Title](gallery/canopy-title.gif) | `hf-block-canopy-part-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json) | 0.3–4.3 |
 | [Wireframe Portal Title](gallery/wireframe-title.gif) | `hf-block-wireframe-portal-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json) | 0.3–4.3 |
-| [Iskra Light](gallery/iskra-light.gif) | `hf-reference-remix-iskra-light` | [@world_is_web](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-iskra-light-reference.mp4) | 2.5–6.5 |
+| [Iskra Light](gallery/iskra-light.gif) | `hf-reference-remix-iskra-light` | [@world_is_web](media/remix-iskra-light-reference.mp4) | 2.5–6.5 |
 | [Liquid Glass Widgets](gallery/liquid-glass-widgets.gif) | `hf-block-liquid-glass-widgets` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json) | 0.3–4.3 |
-| [Cyera brand video](gallery/cyera.gif) | `hf-reference-remix-cyera` | [Cyera](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-cyera-reference.mp4) | 7.2–11.2 |
+| [Cyera brand video](gallery/cyera.gif) | `hf-reference-remix-cyera` | [Cyera](media/remix-cyera-reference.mp4) | 7.2–11.2 |
 | [Code 3D Extrude](gallery/code-3d.gif) | `hf-block-code-3d-extrude` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json) | 0.5–4.5 |
-| [Glyph: GPU typography for the web](gallery/glyph.gif) | `hf-reference-remix-glyph` | [@pmndrs](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-glyph-reference.mp4) | 0.3–4.3 |
+| [Glyph: GPU typography for the web](gallery/glyph.gif) | `hf-reference-remix-glyph` | [@pmndrs](media/remix-glyph-reference.mp4) | 0.3–4.3 |
 | [NYC Paris Flight](gallery/flight-map.gif) | `hf-block-nyc-paris-flight` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json) | 0.2–5.5 |
 | [Aurora](gallery/aurora.gif) | `hf-block-aurora` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json) | 0–2 |
-| [Linear Loops](gallery/linear-loops.gif) | `hf-reference-remix-linear-loops` | [@linear](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-linear-loops-reference.mp4) | 5–9 |
+| [Linear Loops](gallery/linear-loops.gif) | `hf-reference-remix-linear-loops` | [@linear](media/remix-linear-loops-reference.mp4) | 5–9 |
 | [Code Particle Assemble](gallery/code-particles.gif) | `hf-block-code-particle-assemble` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json) | 0.3–4.3 |
 
 The [gallery manifest](gallery/manifest.json) records the six group labels, exact catalog IDs, source and video URLs, selected time ranges, source SHA-256, existing poster paths, GIF byte counts and GIF SHA-256. The gallery contains 8 reference films and 10 registry components; it does not add editable templates or claim OpenMotion generated the displayed work. Third-party media, brands and source notices retain their original rights. The application’s Apache-2.0 license does not relicense them.
@@ -319,7 +319,7 @@ The catalog already contains all nine `hf-reference-aroll-*` entries and the thr
 | careerwithriya | [@careerwithriya](https://www.instagram.com/reel/Ddd57MBszhc/) · `hf-reference-aroll-careerwithriya` | 0 → 6 s |
 | dan-martell-tools | [Dan Martell](https://www.youtube.com/shorts/mk1zJd9Rm4c) · `hf-reference-aroll-dan-martell-tools` | 2 → 6 s |
 | harpercarrollai | [@harpercarrollai](https://www.instagram.com/reel/C4eNPF3PdpG/) · `hf-reference-aroll-harpercarrollai` | 10 → 6 s |
-| ali-abdaal-workflow | [Ali Abdaal](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4) · `hf-reference-aroll-ali-abdaal-workflow` | 10 → 7 s |
+| ali-abdaal-workflow | [Ali Abdaal](media/ali-abdaal-workflow-reference.mp4) · `hf-reference-aroll-ali-abdaal-workflow` | 10 → 7 s |
 | john-tagudin-capso | [@john.tagudin](https://www.tiktok.com/@john.tagudin/video/7524883942328126728) · `hf-reference-aroll-john-tagudin-capso` | 11 → 7 s |
 | aiwithsachi | [@aiwithsachi](https://www.instagram.com/reel/Dc7G9Pxu_1O/) · `hf-reference-aroll-aiwithsachi` | 3 → 6 s |
 | khris-sheer-founder | [@khris.sheer](https://www.tiktok.com/@khris.sheer/video/7491715587895430402) · `hf-reference-aroll-khris-sheer-founder` | 0 → 7 s |

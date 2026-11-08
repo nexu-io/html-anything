@@ -19,7 +19,7 @@ These are reference-led creative inputs, not new runtime tools, automatic platfo
 
 **Three minutes of footage. One sharp story.**
 
-[Ali Abdaal · 5 tools I use every day](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4) · [▶ Full reference](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4)
+[Ali Abdaal · 5 tools I use every day](readme/media/ali-abdaal-workflow-reference.mp4) · [▶ Full reference](readme/media/ali-abdaal-workflow-reference.mp4)
 
 ![AI talking-head edits](readme/examples/talking-head.jpg)
 
@@ -29,7 +29,7 @@ These are reference-led creative inputs, not new runtime tools, automatic platfo
 
 ```text
 Use OpenMotion. Creative reference: hf-reference-aroll-ali-abdaal-workflow
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4
+readme/media/ali-abdaal-workflow-reference.mp4
 
 Make a 30-second, 9:16 cut from my three-minute recording and timed
 transcript. Lead with the strongest complete statement. Remove only the
@@ -47,7 +47,7 @@ approval.
 
 **Scattered clips become a 100-day story.**
 
-[100 days with stickers and photo cards · Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) · [▶ Full reference](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-reference.mp4)
+[100 days with stickers and photo cards · Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) · [▶ Full reference](readme/media/hundred-days-story-reference.mp4)
 
 ![AI recuts & revisions](readme/examples/story-recut.jpg)
 
@@ -57,7 +57,7 @@ approval.
 
 ```text
 Use OpenMotion. Creative reference: hf-reference-aroll-hundred-days-story
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-reference.mp4
+readme/media/hundred-days-story-reference.mp4
 
 Build a 25-second, 9:16 story from my clips, photos and voice-over about [my
 100-day project]. Organize it into the decision, the obstacle and what
@@ -74,7 +74,7 @@ by changing the sequence and holds, not just speeding everything up.
 
 **Make the feature the hero.**
 
-[Figma Draw · @figma](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4) · [▶ Full reference](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4)
+[Figma Draw · @figma](readme/media/jake-figma-draw-reference.mp4) · [▶ Full reference](readme/media/jake-figma-draw-reference.mp4)
 
 ![Product launches & demos](readme/examples/product-launch.jpg)
 
@@ -84,7 +84,7 @@ by changing the sequence and holds, not just speeding everything up.
 
 ```text
 Use OpenMotion. Creative reference: hf-reference-jake-figma-draw
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4
+readme/media/jake-figma-draw-reference.mp4
 
 Create a 20-second, 16:9 launch film for [feature]. Use my real product
 screenshots, screen recording and Brandkit. Follow a reveal → one useful
@@ -101,7 +101,7 @@ Deliver editable scenes and a reviewed MP4.
 
 **Remix the rhythm. Make it yours.**
 
-[Lovable: Aesthetics Update · @lovable_dev](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4) · [▶ Full reference](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4)
+[Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4) · [▶ Full reference](readme/media/jake-lovable-reference.mp4)
 
 ![Viral video recreation](readme/examples/viral-remix.jpg)
 
@@ -111,7 +111,7 @@ Deliver editable scenes and a reviewed MP4.
 
 ```text
 Use OpenMotion. Creative reference: hf-reference-jake-lovable
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4
+readme/media/jake-lovable-reference.mp4
 
 Study this reference and build a new 12-second, 16:9 film for [my product /
 idea]. First break down its opening, type changes, visual contrasts and
@@ -128,7 +128,7 @@ with the agreed shot list before exporting.
 
 **One workflow. Three clear steps.**
 
-[Authorize Once, Everyone Connected · Hyperframes catalog](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4) · [▶ Full reference](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4)
+[Authorize Once, Everyone Connected · Hyperframes catalog](readme/media/remix-authorize-once-reference.mp4) · [▶ Full reference](readme/media/remix-authorize-once-reference.mp4)
 
 ![Explainers & tutorials](readme/examples/explainer.jpg)
 
@@ -138,7 +138,7 @@ with the agreed shot list before exporting.
 
 ```text
 Use OpenMotion. Creative reference: hf-reference-remix-authorize-once
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4
+readme/media/remix-authorize-once-reference.mp4
 
 Explain [my workflow] in a 20-second, 16:9 film with three steps. Start with
 the user’s problem, show the three actions, then show the outcome. Use the
@@ -155,7 +155,7 @@ Deliver an editable project for review before MP4 export.
 
 **Give every number a point.**
 
-[Animated comparison bars · @Vintage_god](https://x.com/Vintage_god/status/2106817967967056165) · [▶ Full reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4)
+[Animated comparison bars · @Vintage_god](https://x.com/Vintage_god/status/2106817967967056165) · [▶ Full reference](readme/media/M1128-clip.mp4)
 
 ![Data stories & charts](readme/examples/data-story.jpg)
 
@@ -165,7 +165,7 @@ Deliver an editable project for review before MP4 export.
 
 ```text
 Use OpenMotion. Creative reference: hf-moment-M1128
-https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4
+readme/media/M1128-clip.mp4
 
 Turn my supplied dataset into a 15-second, 16:9 data story. Establish the
 baseline, reveal the change and finish with one supported conclusion. Use the
@@ -183,7 +183,7 @@ after review.
 
 **Give your track a visual identity.**
 
-[Lyria 3 visual sequence · @GoogleAI](https://x.com/GoogleAI/status/2024154215182926027) · [▶ Full reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1139/clip.mp4)
+[Lyria 3 visual sequence · @GoogleAI](https://x.com/GoogleAI/status/2024154215182926027) · [▶ Full reference](readme/media/M1139-clip.mp4)
 
 ![Music & art visuals](readme/examples/music-visual.jpg)
 
@@ -193,7 +193,7 @@ after review.
 
 ```text
 Use OpenMotion. Creative reference: hf-moment-M1139
-https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1139/clip.mp4
+readme/media/M1139-clip.mp4
 
 Create a 10-second, 16:9 visual passage for my audio track. Use the supplied
 beat markers or propose cue points for confirmation first. Take the

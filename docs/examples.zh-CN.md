@@ -19,7 +19,7 @@
 
 **3 分钟口播，剪出 30 秒重点。**
 
-[Ali Abdaal · 5 tools I use every day](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4) · [▶ 完整参考](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4)
+[Ali Abdaal · 5 tools I use every day](readme/media/ali-abdaal-workflow-reference.mp4) · [▶ 完整参考](readme/media/ali-abdaal-workflow-reference.mp4)
 
 ![AI 口播精剪](readme/examples/talking-head.jpg)
 
@@ -29,7 +29,7 @@
 
 ```text
 使用 OpenMotion。创作参考: hf-reference-aroll-ali-abdaal-workflow
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4
+readme/media/ali-abdaal-workflow-reference.mp4
 
 把我提供的 3 分钟口播和带时间码字幕，剪成 30 秒、9:16 的版本。
 用最有力的完整结论开场，只删去字幕中确认的重复与停顿，保留我的意思和口吻。
@@ -45,7 +45,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow
 
 **把零散片段，剪成一段 100 天故事。**
 
-[100 days with stickers and photo cards · Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) · [▶ 完整参考](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-reference.mp4)
+[100 days with stickers and photo cards · Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) · [▶ 完整参考](readme/media/hundred-days-story-reference.mp4)
 
 ![AI 素材重组与改稿](readme/examples/story-recut.jpg)
 
@@ -55,7 +55,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow
 
 ```text
 使用 OpenMotion。创作参考: hf-reference-aroll-hundred-days-story
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-reference.mp4
+readme/media/hundred-days-story-reference.mp4
 
 用我提供的片段、照片和旁白，为「我的 100 天计划」剪一支 25 秒、9:16 的故事。
 结构是：决定开始、遇到阻碍、发生改变。
@@ -71,7 +71,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-
 
 **让新功能，成为发布片的主角。**
 
-[Figma Draw · @figma](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4) · [▶ 完整参考](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4)
+[Figma Draw · @figma](readme/media/jake-figma-draw-reference.mp4) · [▶ 完整参考](readme/media/jake-figma-draw-reference.mp4)
 
 ![产品发布与功能演示](readme/examples/product-launch.jpg)
 
@@ -81,7 +81,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-
 
 ```text
 使用 OpenMotion。创作参考: hf-reference-jake-figma-draw
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4
+readme/media/jake-figma-draw-reference.mp4
 
 为「我的新功能」制作 20 秒、16:9 的发布片，使用我的真实产品截图、录屏与 Brandkit。
 按照「揭示功能 → 一次关键操作 → 完成效果 → 结束语」组织。
@@ -97,7 +97,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-ref
 
 **复刻节奏与结构，换成你的表达。**
 
-[Lovable: Aesthetics Update · @lovable_dev](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4) · [▶ 完整参考](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4)
+[Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4) · [▶ 完整参考](readme/media/jake-lovable-reference.mp4)
 
 ![Viral video 复刻](readme/examples/viral-remix.jpg)
 
@@ -107,7 +107,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-ref
 
 ```text
 使用 OpenMotion。创作参考: hf-reference-jake-lovable
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4
+readme/media/jake-lovable-reference.mp4
 
 分析这支参考，为「我的产品或观点」制作一支 12 秒、16:9 的新视频。
 先拆解开场、字体变化、画面对比和转场时间，列出逐镜头方案，内容换成我的文案、图片与 Brandkit。
@@ -122,7 +122,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-refere
 
 **一个复杂流程，讲成三个清楚步骤。**
 
-[Authorize Once, Everyone Connected · Hyperframes catalog](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4) · [▶ 完整参考](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4)
+[Authorize Once, Everyone Connected · Hyperframes catalog](readme/media/remix-authorize-once-reference.mp4) · [▶ 完整参考](readme/media/remix-authorize-once-reference.mp4)
 
 ![讲解与教程](readme/examples/explainer.jpg)
 
@@ -132,7 +132,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-refere
 
 ```text
 使用 OpenMotion。创作参考: hf-reference-remix-authorize-once
-https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4
+readme/media/remix-authorize-once-reference.mp4
 
 把「我的操作流程」讲成 20 秒、16:9、三个步骤的视频。
 先给出用户问题，再展示三次操作，最后展示结果。
@@ -148,7 +148,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-onc
 
 **让数字有重点，让变化被看见。**
 
-[Animated comparison bars · @Vintage_god](https://x.com/Vintage_god/status/2106817967967056165) · [▶ 完整参考](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4)
+[Animated comparison bars · @Vintage_god](https://x.com/Vintage_god/status/2106817967967056165) · [▶ 完整参考](readme/media/M1128-clip.mp4)
 
 ![数据故事与动态图表](readme/examples/data-story.jpg)
 
@@ -158,7 +158,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-onc
 
 ```text
 使用 OpenMotion。创作参考: hf-moment-M1128
-https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4
+readme/media/M1128-clip.mp4
 
 把我提供的数据做成 15 秒、16:9 的数据故事：先给基线，再展示变化，最后突出一个有数据支持的结论。
 参考圆角条形、克制的运动与大号数值。
@@ -174,7 +174,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4
 
 **让一段音乐，长出自己的视觉。**
 
-[Lyria 3 visual sequence · @GoogleAI](https://x.com/GoogleAI/status/2024154215182926027) · [▶ 完整参考](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1139/clip.mp4)
+[Lyria 3 visual sequence · @GoogleAI](https://x.com/GoogleAI/status/2024154215182926027) · [▶ 完整参考](readme/media/M1139-clip.mp4)
 
 ![音乐与艺术视觉](readme/examples/music-visual.jpg)
 
@@ -184,7 +184,7 @@ https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4
 
 ```text
 使用 OpenMotion。创作参考: hf-moment-M1139
-https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1139/clip.mp4
+readme/media/M1139-clip.mp4
 
 为我的音轨制作一段 10 秒、16:9 的视觉片段。
 使用我提供的节拍标记，或先提出提示点让我确认。

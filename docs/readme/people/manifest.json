@@ -12,7 +12,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "1ea2daf0de95b8146c1e6dce52eb88559571c5bfe37ff99d1ceefd5ed5880f95",
-          "startSeconds": 0
+          "startSeconds": 0,
+          "localVideo": "../media/careerwithriya-reference.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -41,7 +42,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/dan-martell-tools-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "fb5b2eea34bbf2e6fc92330b77c2743611dc4904a69eb5e9a3a5ac4b985c17e9",
-          "startSeconds": 2
+          "startSeconds": 2,
+          "localVideo": "../media/dan-martell-tools-reference.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -70,7 +72,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/harpercarrollai-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "11a126b44792403bc69e854d6d451d7b9098e0e83dcaeb2e5905882c488411fc",
-          "startSeconds": 10
+          "startSeconds": 10,
+          "localVideo": "../media/harpercarrollai-reference.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -99,7 +102,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "3963db40ddc845fae9d212de25f78e19b810ec1ba7dc46e8941d54d9e32a77a4",
-          "startSeconds": 10
+          "startSeconds": 10,
+          "localVideo": "../media/ali-abdaal-workflow-reference.mp4"
         }
       ],
       "durationSeconds": 7,
@@ -128,7 +132,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "8ec55cb822578e896d986a98df51fd450cd9c586b1988724e93d25e7ce5a3d9a",
-          "startSeconds": 11
+          "startSeconds": 11,
+          "localVideo": "../media/john-tagudin-capso-reference.mp4"
         }
       ],
       "durationSeconds": 7,
@@ -157,7 +162,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/aiwithsachi-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "9b44370e49d9621a4e430804464ba201a625fb2c5840e5f448429fda4bd440ec",
-          "startSeconds": 3
+          "startSeconds": 3,
+          "localVideo": "../media/aiwithsachi-reference.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -186,7 +192,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/khris-sheer-founder-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "a4469c76e3863e7940b101656456134d88870807cbfc96d5b7bf5f93af123d2f",
-          "startSeconds": 0
+          "startSeconds": 0,
+          "localVideo": "../media/khris-sheer-founder-reference.mp4"
         }
       ],
       "durationSeconds": 7,
@@ -215,7 +222,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ugc-rachelll-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "d2a1bc75da0e6669e48319eff48b25ee467ba22c0b093604ec17c535e8ea6c38",
-          "startSeconds": 8
+          "startSeconds": 8,
+          "localVideo": "../media/ugc-rachelll-reference.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -244,7 +252,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/kevinstratvert-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "00439541e4da62dbb60263f0b9c3172d4c61ad242df2ab8f68ec652642886056",
-          "startSeconds": 23
+          "startSeconds": 23,
+          "localVideo": "../media/kevinstratvert-reference.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -275,7 +284,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "1ea2daf0de95b8146c1e6dce52eb88559571c5bfe37ff99d1ceefd5ed5880f95",
-          "startSeconds": 0
+          "startSeconds": 0,
+          "localVideo": "../media/careerwithriya-reference.mp4"
         },
         {
           "catalogId": "hf-reference-aroll-careerwithriya",
@@ -285,7 +295,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-result.mp4",
           "role": "upstream-remix",
           "sourceSha256": "d682e864af5ee41b4fd70f711b2a938c46975bf932a6e360ec7185c8a80c073b",
-          "startSeconds": 0
+          "startSeconds": 0,
+          "localVideo": "../media/careerwithriya-result.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -314,7 +325,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "3963db40ddc845fae9d212de25f78e19b810ec1ba7dc46e8941d54d9e32a77a4",
-          "startSeconds": 10
+          "startSeconds": 10,
+          "localVideo": "../media/ali-abdaal-workflow-reference.mp4"
         },
         {
           "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
@@ -324,7 +336,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-result.mp4",
           "role": "upstream-remix",
           "sourceSha256": "773ab14af75d92790c9c38cdb860c8bb3fd88a7ed4f597a24e7f10856fbd2019",
-          "startSeconds": 0
+          "startSeconds": 0,
+          "localVideo": "../media/ali-abdaal-workflow-result.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -353,7 +366,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-reference.mp4",
           "role": "catalog-reference",
           "sourceSha256": "8ec55cb822578e896d986a98df51fd450cd9c586b1988724e93d25e7ce5a3d9a",
-          "startSeconds": 11
+          "startSeconds": 11,
+          "localVideo": "../media/john-tagudin-capso-reference.mp4"
         },
         {
           "catalogId": "hf-reference-aroll-john-tagudin-capso",
@@ -363,7 +377,8 @@
           "videoUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-result.mp4",
           "role": "upstream-remix",
           "sourceSha256": "334703c3a0407b4f6a17c798ec7d1f85d70d13fdd552b715ac7d9a03267f266b",
-          "startSeconds": 12
+          "startSeconds": 12,
+          "localVideo": "../media/john-tagudin-capso-result.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -409,7 +424,8 @@
       "status": "Published demo for the pinned template now vendored as Presenter Tech in OpenMotion Library. Local runner checks are separate from this upstream demo and from Studio-native import. MIT code and original third-party rights are preserved.",
       "posterOffsetSeconds": 1,
       "displayName": "Presenter Tech",
-      "localTemplate": "../../../library/templates/presenter-tech/README.md"
+      "localTemplate": "../../../library/templates/presenter-tech/README.md",
+      "localVideo": "../media/demo.mp4"
     }
   ]
 }

@@ -24,7 +24,7 @@
 
 **复用：** 编号观点、真人表达与辅助证据卡片。 **换成你的：** 创作者、口播主题、关键词与佐证素材。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-reference.mp4) · [上游改编完整视频](https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-result.mp4)
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](readme/media/careerwithriya-reference.mp4) · [上游改编完整视频](readme/media/careerwithriya-result.mp4)
 
 #### 边讲边演示，把工作流变成故事
 
@@ -37,7 +37,7 @@
 
 **复用：** 真人与屏幕交替、简洁字幕和可读的插入画面。 **换成你的：** 你的录制、工作方法和屏幕素材。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4) · [上游改编完整视频](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-result.mp4)
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](readme/media/ali-abdaal-workflow-reference.mp4) · [上游改编完整视频](readme/media/ali-abdaal-workflow-result.mp4)
 
 #### 真人和产品，在同一个故事里
 
@@ -50,7 +50,7 @@
 
 **复用：** 开场、画中画、重点标注与结果展示。 **换成你的：** 产品、人物、实际操作与结尾表达。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-reference.mp4) · [上游改编完整视频](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-result.mp4)
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](readme/media/john-tagudin-capso-reference.mp4) · [上游改编完整视频](readme/media/john-tagudin-capso-result.mp4)
 
 > 用我的口播和屏幕录制复用这个结构。保留我的语气，按实际语音剪辑并对齐字幕；用截图、画中画和动效说明观点。先让我看带声音的预览，再交付可编辑工程和 MP4。
 
