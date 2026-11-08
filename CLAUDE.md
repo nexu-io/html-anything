@@ -2,6 +2,12 @@
 
 开始本仓库的工作前，读取并遵循 [AGENTS.md](AGENTS.md)。它是与 Codex 及其他 Agent 共用的仓库准则。
 
+## Repository collaboration instructions
+
+Follow the [shared repository collaboration instructions](AGENTS.md#repository-collaboration-instructions). All commit messages, including subjects and bodies, must be in English. All issue and pull request titles and descriptions, comments, review summaries, discussions, and release notes you create or update must also be in English, regardless of the user's request language. Verify this before committing or submitting. Keep persistent repository instructions in `AGENTS.md` and keep this entry aligned.
+
+## Product documentation
+
 产品需求必须同步维护 [docs/](docs/README.md)：
 
 - 开始前读取 [产品架构](docs/product/architecture.md) 和相关专题。

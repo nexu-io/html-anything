@@ -4,6 +4,14 @@ OpenMotion is a standalone npm application at the repository root. Run commands 
 
 Before publishing a branch, run `npm ci`, `npm run check`, `npm run typecheck:studio`, `npm run build:studio`, affected deterministic tests and the applicable packaging/installation checks. Browser tests on shared machines use the existing browser-lock lanes. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
 
+## Repository collaboration instructions
+
+Keep persistent user instructions for repository work in this file, and keep `CLAUDE.md` aligned with this shared source so every Agent follows the same rules.
+
+1. All commit messages must be in English, including both the subject and body, as well as merge and revert messages.
+2. All repository collaboration content you create or update must be in English: issue and pull request titles and descriptions, comments, review summaries, discussions, and release notes. This applies even when the user's request is in another language.
+3. Before committing or submitting repository content, verify that it follows these English-language requirements.
+
 ## 持续维护产品文档
 
 `docs/` 是仓库内持续维护的产品知识库。所有贡献者与 Agent 都应在交付需求时同步沉淀产品理解；代码、聊天记录或 PR 描述不能代替产品文档。

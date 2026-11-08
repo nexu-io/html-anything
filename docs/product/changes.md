@@ -1,5 +1,12 @@
 # 公开变更记录
 
+## 2026-11-08: English repository collaboration requirements
+
+- **Problem and audience:** Contributors and Agents need consistent, persistent language requirements for repository collaboration.
+- **Decision:** Record shared instructions in [AGENTS.md](../../AGENTS.md#repository-collaboration-instructions) and mirror the entry in [CLAUDE.md](../../CLAUDE.md#repository-collaboration-instructions). Require English commit subjects and bodies, issue and PR titles and descriptions, comments, review summaries, discussions, and release notes, including updates to those artifacts.
+- **Validation:** Check both instruction entries, their links, commit messages, and the current PR title and description before delivery. Report checks actually run in the PR.
+- **Impact:** This is contributor guidance only; it does not change runtime behavior, user personas, pricing, or product capabilities.
+
 ## 2026-11-08：上游 main 同步核对
 
 - **问题与对象：** 维护者需要确认最新 OpenMotion 源码是否完整进入公开 `feature/motion`，避免重复导入已同步的功能或覆盖公开分发适配。
