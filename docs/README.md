@@ -13,7 +13,7 @@
 - [OpenMotion Library](../library/README.zh-CN.md)：Skills、模板、Motion 组件、设计体系与 Brandkits
 - [OpenMotion Brandkit](../library/brandkits/openmotion/BRANDKIT.md) / [Ink & Water 动效设计体系](../library/design-systems/ink-water/MOTION_DESIGN.md)
 
-- [agent-adapters.md](agent-adapters.md)
+- [Agent 双向接入：从应用连接 Agent / 在 Agent 中使用 OpenMotion](agent-adapters.md)
 - [browser-runtime.md](browser-runtime.md)
 - [design-system.md](design-system.md)
 - [editor-fork.md](editor-fork.md)

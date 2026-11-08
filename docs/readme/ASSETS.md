@@ -10,7 +10,7 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 
 | Asset | Source and use |
 | --- | --- |
-| [Cover](cover.png) | Generated painterly brand poster, 1774 × 887. Final copy leads with AI Cut, pairs the CapCut and Cloud Motion alternative positions, and closes with the creator mission. The primary README image is static for clear typography. |
+| [Cover](cover.png) | Generated painterly brand poster, 1774 × 887. Final copy leads with AI Cut, pairs the CapCut and Claude Motion alternative positions, and closes with the creator mission. The primary README image is static for clear typography. |
 | [Animated cover](cover-motion.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |
 | [Social preview](social-preview.jpg) | 1280 × 640 sharing image derived from the cover. |
 | [Library](library.png) | Generated 2172 × 724 companion artwork for the five resource collections. |
@@ -51,9 +51,9 @@ Use case: ads-marketing. Produce a companion brand banner for OpenMotion, follow
 ```
 
 
-### Final AI Cut positioning edit
+### Earlier AI Cut positioning edit (superseded comparator spelling)
 
-The cover's final copy is **Cut with AI.**, **The AI-native, open-source CapCut alternative.**, **The open-source Cloud Motion alternative.**, and **Everyone can be a creator.** The latest user-confirmed name is Cloud Motion. The earlier cover prompt below is retained as generation history; the final PNG, GIF and social preview use the new copy. This edit used the built-in Codex ImageGen tool, with the existing painterly cover supplied as the target.
+This earlier edit introduced the AI Cut headline and CapCut position. Its comparator spelling was subsequently corrected to **Claude Motion**; the prompt below is generation history, not current brand guidance. The final PNG, GIF and social preview follow the correction recorded next.
 
 ```text
 Use case: precise text edit.
@@ -65,6 +65,14 @@ Another equally small supporting line: "The open-source Cloud Motion alternative
 CRITICAL spelling: Cloud Motion, C-l-o-u-d, NOT Claude Motion.
 Replace the small footer "Standalone app / Skills / MCP / CLI" with exact text "Everyone can be a creator."
 Keep generous margins, polished typography and calm cream negative space behind the copy. Slightly rebalance the text block vertically only as necessary to fit these three lines without crowding the paint. The footer remains at its existing bottom-center position. Do not add any other text, boxes, logos, badges, characters, UI or new objects. This is a copy refinement, keep the visual art direction intact.
+```
+
+### Final comparator correction: Claude Motion
+
+The current cover reads **Cut with AI.**, **The AI-native, open-source CapCut alternative.**, **The open-source Claude Motion alternative.**, and **Everyone can be a creator.** Built-in Codex ImageGen edited the existing cover with this precise correction; the GIF and social preview were regenerated from that PNG.
+
+```text
+Edit the supplied OpenMotion brand cover with one precise spelling correction only. Replace the line "The open-source Cloud Motion alternative." with the exact line "The open-source Claude Motion alternative." The correct comparator name is CLAUDE Motion, spelled C-l-a-u-d-e. Keep every other word, the OpenMotion wordmark, Cut with AI headline, CapCut line, creator mission footer, layout, proportions, font style, black typography, painterly blue/green/cream/apricot paper background, and 2:1 composition unchanged. Maintain crisp perfectly readable typography and brand consistency.
 ```
 
 ## Reproduce motion and sharing exports

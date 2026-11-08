@@ -8,6 +8,17 @@ Codex、Claude Code、DeepSeek Harness（DSH）与 WorkBuddy 从同一份已安�
 
 本地也可以使用 [npm 轻量安装器](npm-installation.md) 的 `setup --host codex|claude|deepseek|workbuddy`，自动安装对应入口与 Skills，并共用一份应用和原生依赖缓存。下文的导出方式保留，生成配置与自动注册是不同操作。
 
+## 两种入口，共用同一工程
+
+| 从哪里开始 | 操作路径 | 适合谁 |
+| --- | --- | --- |
+| **OpenMotion 应用** | 打开工程 → Connect Agent → 按当前工作区指引配置客户端 → 将需求与工程上下文交给 Agent → 在 Studio 预览和细调 | 先浏览素材、模板或操作时间轴的创作者 |
+| **已有 Agent 客户端** | 安装 Skills 与运行时连接 → 通过 MCP 读写工程、按需使用 CLI → 打开 Studio 预览 → 导出 | 已经在 Codex、Claude Code 等客户端中工作的用户 |
+
+两条路径使用同一套工程契约。Skills 提供方法，MCP 提供工程工具和引擎指引，CLI 提供原生编写/渲染入口。Agent 推理运行在所连接的外部客户端；Connect Agent 提供配置与指引，不是 Studio 内置聊天执行器。要共同编辑同一作品，客户端须连接同一工作区并读取明确的工程与 revision。
+
+公开入口：[在 OpenMotion 中连接 Agent](README.zh-CN.md#connect-your-agent) · [把 OpenMotion 接入 Agent](README.zh-CN.md#从-agent-接入)。
+
 ## 仅安装 Skills：npx skills
 
 需要在已有运行时之外发现或安装制作指引时，可用 [Skills CLI](https://github.com/vercel-labs/skills)，在源码 checkout 执行：
