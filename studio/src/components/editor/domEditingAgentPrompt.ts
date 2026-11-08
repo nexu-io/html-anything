@@ -11,6 +11,7 @@ import type { DomEditSelection, DomEditTextField } from "./domEditingTypes";
  */
 export interface AgentPromptElementInfo {
   id: string | null;
+  hfId?: string;
   selector?: string | null;
   /** Disambiguates duplicate selectors in `DomEditSelection`. The picker
    *  payload has no such concept (one picked node, not a candidate list), so
@@ -28,11 +29,12 @@ export interface AgentPromptElementInfo {
 
 const GUARDRAIL_LINES = [
   "Guardrails:",
-  "- Make a targeted change to this element only, unless the request is a timeline edit.",
-  "- Preserve the rest of the composition and its timing, except what a timeline edit changes.",
-  "- Do not modify other elements' data-* attributes or positioning, except where the requested timeline edit requires it (split, retime, reorder, copy a group, swap media).",
-  "- For timeline edits (trim, split, speed, volume, copy, swap), use the `hyperframes timeline` edit commands (`hyperframes-cli` skill) or the exact attribute forms in the `hyperframes` skill's `references/format.md`.",
-  "- Prefer existing inline styles or existing CSS rules for this element over adding unrelated selectors.",
+  "- Change only the selected element and its descendants, as requested. Preserve all other elements and compositions.",
+  "- Do not modify other elements' data-* attributes or positioning. Preserve their content, styles, media and animations.",
+  "- Preserve timing and layout outside the target. Change the target's timing only when explicitly requested.",
+  "- Scope CSS and GSAP changes to this target. Do not change shared rules, variables or media files in ways that affect other elements or repeated composition instances.",
+  "- Re-read the current source and verify the target before editing; selector index is zero-based within the source file. If the target is missing, ambiguous or requires changes outside this scope, ask the user before proceeding.",
+  "- Review the diff and preview after editing; report any changes outside the requested scope instead of claiming that only this element changed.",
 ];
 
 function formatBoundingBox(bounds: AgentPromptElementInfo["boundingBox"]): string {
@@ -67,6 +69,7 @@ function formatTextLine(textContent: string | null): string {
 function buildElementInfoLines(info: AgentPromptElementInfo): string[] {
   const lines = [
     `DOM id: ${info.id ?? "(none)"}`,
+    ...(info.hfId ? [`HyperFrames id: ${info.hfId}`] : []),
     `Selector: ${info.selector ?? "(none)"}`,
     `Selector index: ${info.selectorIndex ?? 0}`,
     `Tag: <${info.tagName}>`,
@@ -97,7 +100,7 @@ export function buildElementAgentPrompt({
   selectionContext,
   userInstruction,
   sourceFilePath,
-  timeline,
+  projectId,
 }: {
   selection: DomEditSelection;
   currentTime: number;
@@ -105,12 +108,13 @@ export function buildElementAgentPrompt({
   selectionContext?: string;
   userInstruction?: string;
   sourceFilePath?: string;
-  /** The `formatTimelineBlock` text; omitted or empty when the timeline has no clips. */
-  timeline?: string;
+  projectId?: string;
 }): string {
   const displayedSourceFile = sourceFilePath?.trim() || selection.sourceFile;
   const info: AgentPromptElementInfo = {
     id: selection.id ?? null,
+    hfId: selection.hfId,
+    label: selection.label,
     selector: selection.selector,
     selectorIndex: selection.selectorIndex,
     tagName: selection.tagName,
@@ -127,6 +131,10 @@ export function buildElementAgentPrompt({
     "",
     userInstruction?.trim() || "Edit this selected HyperFrames element.",
     "",
+    ...(projectId ? [
+      `Project ID: ${projectId}`,
+      `Read this project with motion_get_project({"projectId":${JSON.stringify(projectId)}}) before editing. Use its current revision and version with motion_edit_project; do not create or switch projects.`,
+    ] : []),
     `Composition: ${selection.compositionPath}`,
     `Playback time: ${formatTime(currentTime)}`,
     `Source file: ${displayedSourceFile}`,
@@ -139,8 +147,6 @@ export function buildElementAgentPrompt({
   }
 
   lines.push(...buildElementDetailLines(info));
-
-  if (timeline) lines.push("", timeline);
 
   if (tagSnippet) {
     lines.push("", "Target HTML:", tagSnippet);
