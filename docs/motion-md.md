@@ -83,7 +83,7 @@ node scripts/materialize.mjs wireframe-portal-title reference /tmp/portal-refere
 node scripts/materialize.mjs wireframe-portal-title remix /tmp/portal-remix
 ```
 
-The helper checks the source hash and replacement occurrence counts, refuses an existing destination, and writes an independent editable project plus `remix-record.json`. For your content, copy a preset, change its replacement values and supply it as the fourth argument. The sources keep their network dependencies; read the package's `NOTICE.md` before rendering. This is source reuse, not a universal parameter importer.
+The helper checks the source hash and replacement occurrence counts, refuses an existing destination, and writes an independent editable project plus `remix-record.json`. For your content, copy a preset, change its replacement values and supply it as the fourth argument. The materializer includes local browser scripts, fonts, textures and reference media, with no CDN/font requests; read the package's `NOTICE.md` for licenses and separately installed execution tools. This is source reuse, not a universal parameter importer.
 
 ## 4. What to write in MOTION_DESIGN.md
 

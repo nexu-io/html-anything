@@ -19,7 +19,7 @@
 
 **3 分钟口播，剪出 30 秒重点。**
 
-[Ali Abdaal · 5 tools I use every day](readme/media/ali-abdaal-workflow-reference.mp4) · [▶ 完整参考](readme/media/ali-abdaal-workflow-reference.mp4)
+[Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [▶ 完整参考](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
 
 ![AI 口播精剪](readme/examples/talking-head.jpg)
 
@@ -29,7 +29,7 @@
 
 ```text
 使用 OpenMotion。创作参考: hf-reference-aroll-ali-abdaal-workflow
-readme/media/ali-abdaal-workflow-reference.mp4
+../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4
 
 把我提供的 3 分钟口播和带时间码字幕，剪成 30 秒、9:16 的版本。
 用最有力的完整结论开场，只删去字幕中确认的重复与停顿，保留我的意思和口吻。

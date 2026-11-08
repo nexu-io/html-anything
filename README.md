@@ -2,7 +2,7 @@
 
 <h1 align="center">OpenMotion</h1>
 
-<p align="center"><strong>The AI-native, open-source CapCut alternative.</strong><br/>The All-in-One AI-native Studio for AI editing &amp; Motion.<br/>Edit with AI. Tell your story. Everyone can be a creator.<br/>The open-source Claude Motion alternative.</p>
+<p align="center"><strong>The AI-native, open-source CapCut alternative.</strong><br/>The All-in-One AI-native Studio for AI editing &amp; Motion.<br/>Edit videos with your agent. Tell your story. Everyone can be a creator.<br/>The open-source Claude Motion alternative.</p>
 
 <p align="center">
   <a href="#ai-video-editing">✂️ AI editing</a> ·
@@ -18,7 +18,7 @@
   <a href="LICENSE">Apache 2.0</a>
 </p>
 
-![OpenMotion: Edit with AI. The AI-native, open-source CapCut alternative and open-source Claude Motion alternative. Everyone can be a creator.](docs/readme/cover.png)
+![OpenMotion: Edit videos with your agent. The AI-native, open-source CapCut alternative and open-source Claude Motion alternative. Everyone can be a creator.](docs/readme/cover.png)
 
 [Animated cover GIF](docs/readme/cover-motion.gif) · [GitHub social preview](docs/readme/social-preview.jpg)
 
@@ -109,12 +109,12 @@ Recreate the structure and pacing of a viral reference, edit your own talking-he
 <strong>01 · AI talking-head edits</strong><br>
 Three minutes of footage. One sharp story.
 <p align="center">
-<a href="docs/readme/media/ali-abdaal-workflow-reference.mp4"><picture>
+<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/talking-head.jpg">
 <img src="docs/readme/examples/talking-head.gif" width="208" alt="External creative reference: Ali Abdaal · 5 tools I use every day">
 </picture></a>
 </p>
-<sub>Reference · <a href="docs/readme/media/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 5 tools I use every day</a></sub><br><br>
+<sub>Reference · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 5 tools I use every day</a></sub><br><br>
 <strong>Start with</strong> · Your recording + transcript / timecodes<br>
 <strong>Make it yours</strong> · A clear hook, tighter speech, captions and well-timed B-roll.<br><br>
 <a href="docs/examples.md#talking-head">Copy the creative brief →</a> · <a href="docs/readme/examples/talking-head.jpg">Still preview</a>
@@ -369,7 +369,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 **Reuse:** Numbered ideas, presenter-led delivery and proof cards. **Make it yours:** Creator, spoken topic, keywords and supporting examples.
 
-[MOTION_DESIGN.md](library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](docs/readme/media/careerwithriya-reference.mp4) · [Full upstream remix](docs/readme/media/careerwithriya-result.mp4)
+[MOTION_DESIGN.md](library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [Full upstream remix](library/skills/presenter-story/assets/careerwithriya-result.mp4)
 
 #### Show the workflow while you tell the story
 
@@ -382,7 +382,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 **Reuse:** Presenter / screen rhythm, quiet captions and readable inserts. **Make it yours:** Your recording, your workflow and your screen captures.
 
-[MOTION_DESIGN.md](library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](docs/readme/media/ali-abdaal-workflow-reference.mp4) · [Full upstream remix](docs/readme/media/ali-abdaal-workflow-result.mp4)
+[MOTION_DESIGN.md](library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [Full upstream remix](library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
 
 #### Put the presenter and the product in one story
 
@@ -395,7 +395,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 **Reuse:** Hook, picture-in-picture, callouts and a visible result. **Make it yours:** Product, presenter, demonstration and closing message.
 
-[MOTION_DESIGN.md](library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](docs/readme/media/john-tagudin-capso-reference.mp4) · [Full upstream remix](docs/readme/media/john-tagudin-capso-result.mp4)
+[MOTION_DESIGN.md](library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [Full upstream remix](library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
 
 > Use my camera and screen recordings with this structure. Keep my voice, edit around the actual speech and align captions. Use screenshots, picture-in-picture and motion to explain each point. Show a preview with sound, then deliver the editable project and MP4.
 
@@ -539,7 +539,7 @@ The current gallery's one-click action prepares the agent handoff; the connected
 <tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture></a><br>
+<a href="library/skills/presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture></a><br>
 <strong>6 essential skills to transform your career</strong><br>
 Numbered points + kinetic keywords<br>
 <sub>Reference · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
@@ -560,13 +560,13 @@ A personal lesson + readable captions<br>
 <tr><th colspan="3" align="left">🖥️ Show the workflow</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
+<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
 <strong>5 tools I use every day</strong><br>
 Desk-side story + workflow inserts<br>
-<sub>Reference · <a href="docs/readme/media/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
+<sub>Reference · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
+<a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
 <strong>Tool demo with callouts</strong><br>
 Presenter + screens + callouts<br>
 <sub>Reference · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
@@ -617,6 +617,8 @@ These are external creators’ works and editing references, not bundled editabl
 
 **18 animated picks. Find a style, then make it yours.** Explore launch films, kinetic type, glass and light, spatial motion and generative visuals. Click an animation for the full video; find the same title in Studio’s library to hand it to your agent.
 
+**The resources live here.** Full reference films, before/after videos, GIFs, template source, browser scripts and fonts used by this page and its example guides have local entries. [Resource inventory and reuse](docs/readme/RESOURCES.md).
+
 **A library to learn from, adapt and contribute to.** The current catalog contains **894 resources: 3 bundled editable templates and 891 external references and registry items**, with original authors and sources where available.
 
 <table>
@@ -625,7 +627,7 @@ These are external creators’ works and editing references, not bundled editabl
 <td width="33%" valign="top">
 <a href="docs/readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="docs/readme/gallery/app-showcase.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
 <strong>App Showcase</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/components/showcase/README.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="docs/readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="docs/readme/gallery/firecrawl.gif" width="300" alt="Animated catalog preview: Firecrawl Free Keyless"></picture></a><br>
@@ -633,9 +635,9 @@ These are external creators’ works and editing references, not bundled editabl
 <sub>Reference · <a href="docs/readme/media/remix-firecrawl-reference.mp4">@ericciarla</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="docs/readme/gallery/ui-3d-reveal.gif" width="300" alt="Animated catalog preview: 3D UI Reveal"></picture></a><br>
+<a href="library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="docs/readme/gallery/ui-3d-reveal.gif" width="300" alt="Animated catalog preview: 3D UI Reveal"></picture></a><br>
 <strong>3D UI Reveal</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">🚀 Brand & launch films</th></tr>
@@ -661,17 +663,17 @@ These are external creators’ works and editing references, not bundled editabl
 <td width="33%" valign="top">
 <a href="docs/readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="docs/readme/gallery/glass-shard-title.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
 <strong>Glass Shard Title</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/components/showcase/README.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="docs/readme/gallery/canopy-title.gif" width="300" alt="Animated catalog preview: Canopy Part Title"></picture></a><br>
+<a href="library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="docs/readme/gallery/canopy-title.gif" width="300" alt="Animated catalog preview: Canopy Part Title"></picture></a><br>
 <strong>Canopy Part Title</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="docs/readme/gallery/wireframe-title.gif" width="300" alt="Animated catalog preview: Wireframe Portal Title"></picture></a><br>
+<a href="library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="docs/readme/gallery/wireframe-title.gif" width="300" alt="Animated catalog preview: Wireframe Portal Title"></picture></a><br>
 <strong>Wireframe Portal Title</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">💎 Light, glass & 3D worlds</th></tr>
@@ -682,9 +684,9 @@ These are external creators’ works and editing references, not bundled editabl
 <sub>Reference · <a href="docs/readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="docs/readme/gallery/liquid-glass-widgets.gif" width="300" alt="Animated catalog preview: Liquid Glass Widgets"></picture></a><br>
+<a href="library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="docs/readme/gallery/liquid-glass-widgets.gif" width="300" alt="Animated catalog preview: Liquid Glass Widgets"></picture></a><br>
 <strong>Liquid Glass Widgets</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="docs/readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
@@ -695,9 +697,9 @@ These are external creators’ works and editing references, not bundled editabl
 <tr><th colspan="3" align="left">🧭 Depth & camera motion</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="docs/readme/media/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="docs/readme/gallery/code-3d.gif" width="300" alt="Animated catalog preview: Code 3D Extrude"></picture></a><br>
+<a href="library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="docs/readme/gallery/code-3d.gif" width="300" alt="Animated catalog preview: Code 3D Extrude"></picture></a><br>
 <strong>Code 3D Extrude</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="docs/readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
@@ -707,7 +709,7 @@ These are external creators’ works and editing references, not bundled editabl
 <td width="33%" valign="top">
 <a href="docs/readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="docs/readme/gallery/flight-map.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
 <strong>NYC Paris Flight</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/components/showcase/README.md">Hyperframes</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">✨ Generative visuals</th></tr>
@@ -715,7 +717,7 @@ These are external creators’ works and editing references, not bundled editabl
 <td width="33%" valign="top">
 <a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="docs/readme/gallery/aurora.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
 <strong>Aurora</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/components/showcase/README.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="docs/readme/gallery/linear-loops.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
@@ -723,9 +725,9 @@ These are external creators’ works and editing references, not bundled editabl
 <sub>Reference · <a href="docs/readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="docs/readme/gallery/code-particles.gif" width="300" alt="Animated catalog preview: Code Particle Assemble"></picture></a><br>
+<a href="library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="docs/readme/gallery/code-particles.gif" width="300" alt="Animated catalog preview: Code Particle Assemble"></picture></a><br>
 <strong>Code Particle Assemble</strong><br>
-<sub>Component · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json">Hyperframes</a></sub>
+<sub>Component · <a href="library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 </tr>
 </table>
@@ -890,7 +892,7 @@ Give this README and the [media fact sheet](docs/media-kit.md) to your agent to 
 ```text
 Read the OpenMotion README and docs/media-kit.md.
 Create a 30-second product introduction and an accompanying article.
-Lead with the All-in-One AI-native Studio and “Edit with AI. Everyone can be
+Lead with the All-in-One AI-native Studio and “Edit videos with your agent. Everyone can be
 a creator.” Introduce our Super Motion Video Agent concept and the planned
 publishing → feedback → knowledge → Skill improvement loop. Explain the AI-native
 CapCut positioning, centered on the AI-native timeline, and the open-source
@@ -977,9 +979,33 @@ Read [AGENTS.md](AGENTS.md) and [Contributing](CONTRIBUTING.md), pick one scope,
 
 ### Contributors
 
-Thank you to everyone contributing code, documentation, Skills, design systems, films and useful feedback. The wall below represents this GitHub repository, including its HTML Anything history.
+Thank you to everyone contributing code, documentation, Skills, design systems, films and useful feedback. The local avatar snapshot below represents this GitHub repository as of 2026-11-09, including its HTML Anything history.
 
-[![Repository contributors](https://contrib.rocks/image?repo=nexu-io/html-anything)](https://github.com/nexu-io/html-anything/graphs/contributors)
+<p>
+<a href="https://github.com/joeylee12629-star"><img src="docs/readme/contributors/joeylee12629-star.png" width="48" height="48" alt="joeylee12629-star"></a>
+<a href="https://github.com/pftom"><img src="docs/readme/contributors/pftom.png" width="48" height="48" alt="pftom"></a>
+<a href="https://github.com/wuwangzhang1216"><img src="docs/readme/contributors/wuwangzhang1216.png" width="48" height="48" alt="wuwangzhang1216"></a>
+<a href="https://github.com/TuYv"><img src="docs/readme/contributors/TuYv.png" width="48" height="48" alt="TuYv"></a>
+<a href="https://github.com/chasel34"><img src="docs/readme/contributors/chasel34.png" width="48" height="48" alt="chasel34"></a>
+<a href="https://github.com/C1-BA-B1-F3"><img src="docs/readme/contributors/C1-BA-B1-F3.png" width="48" height="48" alt="C1-BA-B1-F3"></a>
+<a href="https://github.com/ttoyekk1a"><img src="docs/readme/contributors/ttoyekk1a.png" width="48" height="48" alt="ttoyekk1a"></a>
+<a href="https://github.com/kokiainet"><img src="docs/readme/contributors/kokiainet.png" width="48" height="48" alt="kokiainet"></a>
+<a href="https://github.com/fredkwok-it"><img src="docs/readme/contributors/fredkwok-it.png" width="48" height="48" alt="fredkwok-it"></a>
+<a href="https://github.com/jhinzzz"><img src="docs/readme/contributors/jhinzzz.png" width="48" height="48" alt="jhinzzz"></a>
+<a href="https://github.com/cszhouwei"><img src="docs/readme/contributors/cszhouwei.png" width="48" height="48" alt="cszhouwei"></a>
+<a href="https://github.com/tackcrypto1031"><img src="docs/readme/contributors/tackcrypto1031.png" width="48" height="48" alt="tackcrypto1031"></a>
+<a href="https://github.com/fix2015"><img src="docs/readme/contributors/fix2015.png" width="48" height="48" alt="fix2015"></a>
+<a href="https://github.com/ZhongXiandou"><img src="docs/readme/contributors/ZhongXiandou.png" width="48" height="48" alt="ZhongXiandou"></a>
+<a href="https://github.com/PerishCode"><img src="docs/readme/contributors/PerishCode.png" width="48" height="48" alt="PerishCode"></a>
+<a href="https://github.com/octo-patch"><img src="docs/readme/contributors/octo-patch.png" width="48" height="48" alt="octo-patch"></a>
+<a href="https://github.com/mrcfps"><img src="docs/readme/contributors/mrcfps.png" width="48" height="48" alt="mrcfps"></a>
+<a href="https://github.com/Link-990"><img src="docs/readme/contributors/Link-990.png" width="48" height="48" alt="Link-990"></a>
+<a href="https://github.com/lxyAK"><img src="docs/readme/contributors/lxyAK.png" width="48" height="48" alt="lxyAK"></a>
+<a href="https://github.com/GHX5T-SOL"><img src="docs/readme/contributors/GHX5T-SOL.png" width="48" height="48" alt="GHX5T-SOL"></a>
+<a href="https://github.com/FaintFlower"><img src="docs/readme/contributors/FaintFlower.png" width="48" height="48" alt="FaintFlower"></a>
+<a href="https://github.com/chenmofei"><img src="docs/readme/contributors/chenmofei.png" width="48" height="48" alt="chenmofei"></a>
+<a href="https://github.com/aaronjmars"><img src="docs/readme/contributors/aaronjmars.png" width="48" height="48" alt="aaronjmars"></a>
+</p>
 
 [All contributors](https://github.com/nexu-io/html-anything/graphs/contributors) · [Start contributing](CONTRIBUTING.md)
 

@@ -19,7 +19,7 @@
       "previewFps": 10,
       "paletteColors": 128,
       "dither": "bayer:3",
-      "localVideo": "../media/ali-abdaal-workflow-reference.mp4"
+      "localVideo": "../../../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"
     },
     {
       "slug": "story-recut",

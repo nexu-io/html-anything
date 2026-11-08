@@ -23,19 +23,25 @@
     "sharedSourceTimestamps": true,
     "crop": false,
     "requestOrPageErrors": 0,
-    "lane": "Existing product-tour browser real lock; serialized isolated profile. No application browser regression or target-machine acceptance claimed."
+    "lane": "Existing product-tour browser real lock; serialized isolated profile. No application browser regression or target-machine acceptance claimed.",
+    "externalRequestsBlocked": true,
+    "externalRequestAttempts": 0,
+    "resourceMode": "Local working copies with vendored scripts/fonts"
   },
   "checks": {
     "materializedProjects": 12,
-    "nativeLintErrors": 0,
-    "nativeLintWarnings": 20,
     "videoDecoding": "All six MP4s and GIFs fully decoded with FFmpeg -xerror. MP4 geometry, frame count, duration and absence of audio were checked.",
     "review": "Contact sheets and selected matched frames inspected. Final visual acceptance belongs to the user.",
     "remaining": [
       "Native Studio export has not been exercised for these six profiles.",
-      "Network/font/CDN dependencies remain; not a fully offline package.",
-      "Original brand artwork, illustrative code and demo numbers remain in selected examples."
-    ]
+      "Original brand artwork, illustrative code and demo numbers remain in selected examples.",
+      "Execution tools must be installed separately; custom fonts/media must be supplied locally."
+    ],
+    "previousNativeLint": {
+      "errors": 0,
+      "warnings": 20,
+      "scope": "Before the resource-localization change; not current-project acceptance."
+    }
   },
   "pairs": [
     {
@@ -48,24 +54,25 @@
       "files": [
         {
           "file": "ui-3d-reveal.mp4",
-          "bytes": 440852,
-          "sha256": "1855828cd42a4feddf5c0d93a520f39d64c6b19541715854a823e2d6e8ae45cf"
+          "bytes": 444119,
+          "sha256": "d9f294a454173e0cb859174849ee7be442667c761c3794b4ae970501e340f5ee"
         },
         {
           "file": "ui-3d-reveal.gif",
-          "bytes": 1871066,
-          "sha256": "d78164b0843139d33eee867dc29b1cc8a6b8975a875d20d75d459ebfde60fb04"
+          "bytes": 1869557,
+          "sha256": "bb31f3558e38bde6ee01b3dbf23c8bed8b7d458ae7af851b3a3c198aee382d40"
         },
         {
           "file": "ui-3d-reveal.jpg",
-          "bytes": 40356,
-          "sha256": "f6146ac0bd2464e37e9257dd0ce7af04430272c31c6e91f7b4aa801ea1732fb0"
+          "bytes": 40315,
+          "sha256": "b2a0547f309ab78d7cce8b35950502f7db8bf7c34632c129874a29de39fea962"
         }
       ],
       "sourceSha256": "158ce64b3bc045238636a42fc6e866a3b2b80418fa6b626f46baafff59ffefa4",
-      "remixSha256": "a9195de81a9aca7dd386551947e141eea98489ad814aae10c8000778be0f53f3",
+      "remixSha256": "8dd1bae84d1a47f7d2f4c212fdda4dae549e749b8033e43b779646d4d905f67f",
       "presetSha256": "7a7f712d7a40a3143c10b409793f6d70716282cc2416e08865779d7ed65fa67d",
-      "nativeLint": [
+      "referenceSha256": "eafb688636b7d76d4f133c431d84794bd63a6b0dbe4cfa16a37a18de91caa5bb",
+      "previousNativeLint": [
         {
           "id": "ui-3d-reveal",
           "variant": "reference",
@@ -115,9 +122,10 @@
         }
       ],
       "sourceSha256": "030142fd44afdb474c70ff89d293ea00d70028fbc7c51141acea6f36dee73ded",
-      "remixSha256": "4e93b2391cbea383afb3d782752293f13f215960e6c11f060d33671ec0e17443",
+      "remixSha256": "043e1121c8eeb74d513377bb513e4c995d86149848698551b62114f0b7eaffef",
       "presetSha256": "647eaf6b133282bc5723cbd92a7ab0ffe4c86815b55f7df0a6c51fcd60cb7892",
-      "nativeLint": [
+      "referenceSha256": "a00a8173019b082709e26752c68252c21ed6e6b9f0ebbf94be6697039dea3d2d",
+      "previousNativeLint": [
         {
           "id": "wireframe-portal-title",
           "variant": "reference",
@@ -167,9 +175,10 @@
         }
       ],
       "sourceSha256": "cf14c74340ec5967339d2dbb6509c3dda698ca0a915e7aae6cb883b1b6b32532",
-      "remixSha256": "f8bd968626b15778590dcfea34d58f0071f40fc8e84a3d2733df2e9d8a4c70b8",
+      "remixSha256": "dffc6e09f5d3658502c75b87b80d500e44d188af76de80e3a83a8fbd25ae9a31",
       "presetSha256": "e949e36cce40e052b20fded7b5d29adf040d6c18a9d3cf5621abccfbc260762e",
-      "nativeLint": [
+      "referenceSha256": "7ee5e10f9aecdb58db71504823d44ab442fa14dc128fe3f7f1f1abdccc9ed8d8",
+      "previousNativeLint": [
         {
           "id": "canopy-part-title",
           "variant": "reference",
@@ -219,9 +228,10 @@
         }
       ],
       "sourceSha256": "173bbf881d571d0c434cf786f599904a2f544d0af95445c91fd7bf58c7c45eda",
-      "remixSha256": "56e7b804ab6c59bffe1acd1f7419839648147597fa719901401509a9f06a9a3c",
+      "remixSha256": "8e7ab39cadb5b4ac51508539eec2d88d908bfe0a3c7bab0d57a42281e5f2987f",
       "presetSha256": "1a12dd4d8a0e9e0d199eac1b174c1943a552d3c4d9fca63fb02e1413eff68c00",
-      "nativeLint": [
+      "referenceSha256": "a721b2d740dd135a533f6fe171e81b19894bd08c36b937e907b3a394ed8a85f8",
+      "previousNativeLint": [
         {
           "id": "code-3d-extrude",
           "variant": "reference",
@@ -269,9 +279,10 @@
         }
       ],
       "sourceSha256": "f37d702f7c1f80e48d8a918901f030b8acfc21d2ddb65d22f5dfb5a099280a72",
-      "remixSha256": "f0f3b0327ffc279f52587b07f08065617c262d49f992d3acd8af7ebde39ded20",
+      "remixSha256": "bb97c80117f2fbdc56aa6aef5f67254c49b0057962999f6ac7bd8204f6535d38",
       "presetSha256": "12fab2c7e9c16e97781f639c0ca98cabeed95639783968c18a60e7a9f1c4b949",
-      "nativeLint": [
+      "referenceSha256": "25f8663fcb2520066861279e60b4f2d788e38945d280b7d250169b180b4f99d0",
+      "previousNativeLint": [
         {
           "id": "code-particle-assemble",
           "variant": "reference",
@@ -319,9 +330,10 @@
         }
       ],
       "sourceSha256": "c064e0bb5ac958070302a438dba2c6afbc0c6d3894405e4562b9297990a21fda",
-      "remixSha256": "0edd6587ef9d9ebe395e9cbd387b34f4ad0d2a80f803edf946e59e074ead572f",
+      "remixSha256": "32387c5fd3d2617f292c90fc7709f50fe82f31d46ff8fe29afe8a872f05fd949",
       "presetSha256": "b8ab45b8ccac28e3b94f5e505dc5b950d468aa8581ec38d5978f85a6b2e4179c",
-      "nativeLint": [
+      "referenceSha256": "257121d90129f025026b060ec5fe7646b85d9b22b21374d0bb20e1b769da1fa5",
+      "previousNativeLint": [
         {
           "id": "liquid-glass-widgets",
           "variant": "reference",

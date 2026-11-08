@@ -9,7 +9,7 @@ const root=path.resolve(process.argv[2]);
 const out=path.resolve(process.argv[3]);
 await mkdir(path.dirname(out),{recursive:true});
 await mkdir(out);
-const mime={'.html':'text/html','.js':'text/javascript','.svg':'image/svg+xml','.ttf':'font/ttf','.webp':'image/webp'};
+const mime={'.html':'text/html','.js':'text/javascript','.svg':'image/svg+xml','.ttf':'font/ttf','.webp':'image/webp','.woff2':'font/woff2','.css':'text/css'};
 const server=http.createServer(async(req,res)=>{try{const p=path.resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));if(!p.startsWith(root+'/'))throw Error('path');res.setHeader('Content-Type',mime[path.extname(p)]||'application/octet-stream');res.end(await readFile(p));}catch{res.statusCode=404;res.end('Not found')}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const profile=await mkdtemp(path.join(tmpdir(),'motion-remix-render-'));
@@ -20,7 +20,9 @@ if(selected)assert(plan.some(x=>x[0]===selected), "Unknown profile");
 const browserVersion=await browser.version();
 try{
 for(const [id,start,duration] of plan.filter(x=>!selected||x[0]===selected))for(const variant of ['reference','remix']){
- const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('requestfailed',r=>errors.push(r.url()+': '+r.failure()?.errorText));
+ const page=await browser.newPage();const errors=[];const remoteRequests=[];
+ await page.setRequestInterception(true);page.on('request',request=>{const u=request.url();if(!u.startsWith(`http://127.0.0.1:${server.address().port}/`)&&!/^(data|blob):/.test(u)){remoteRequests.push(u);return request.abort();}return request.continue();});
+ page.on('response',response=>{if(response.status()>=400&&!response.url().endsWith('/favicon.ico'))errors.push(response.status()+': '+response.url());});page.on('pageerror',e=>errors.push(String(e)));page.on('requestfailed',r=>errors.push(r.url()+': '+r.failure()?.errorText));
  await page.evaluateOnNewDocument(()=>{let seed=42;Math.random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};window.__hyperframes={getVariables(){const a=JSON.parse(document.documentElement.getAttribute('data-composition-variables')||'[]');return Object.fromEntries(a.map(x=>[x.id,x.default]));}}});
  await page.goto(`http://127.0.0.1:${server.address().port}/${id}/${variant}/index.html`,{waitUntil:'networkidle0',timeout:90000});
  await page.waitForFunction(()=>Object.keys(window.__timelines||{}).length>0,{timeout:60000});
@@ -33,6 +35,6 @@ for(const [id,start,duration] of plan.filter(x=>!selected||x[0]===selected))for(
   await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
   await page.screenshot({path:`${output}/${String(i).padStart(4,'0')}.png`});
  }
- const row={id,variant,start,duration,fps:12,frames:ts.length,browserVersion,errors};report.push(row);console.log(JSON.stringify(row));await page.close();assert.equal(errors.length,0,'Source load or execution errors: '+errors.join('; '));
+ const row={id,variant,start,duration,fps:12,frames:ts.length,browserVersion,errors,remoteRequests};report.push(row);console.log(JSON.stringify(row));await page.close();assert.equal(remoteRequests.length,0,'Unexpected external asset requests: '+remoteRequests.join('; '));assert.equal(errors.length,0,'Source load or execution errors: '+errors.join('; '));
 }
 }finally{await writeFile(path.join(out,'render-report.json'),JSON.stringify(report,null,2));await browser.close();await new Promise(r=>server.close(r));await rm(profile,{recursive:true,force:true});}

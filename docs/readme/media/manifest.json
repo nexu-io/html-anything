@@ -7,7 +7,7 @@
       "author": "Ali Abdaal",
       "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
       "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
-      "file": "docs/readme/media/ali-abdaal-workflow-reference.mp4",
+      "file": "library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4",
       "bytes": 13880817
     },
     {
@@ -88,7 +88,7 @@
       "author": "Hyperframes",
       "catalogId": "hf-block-ui-3d-reveal",
       "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json",
-      "file": "docs/readme/media/ui-3d-reveal.mp4",
+      "file": "library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4",
       "bytes": 2113289
     },
     {
@@ -133,7 +133,7 @@
       "author": "Hyperframes",
       "catalogId": "hf-block-canopy-part-title",
       "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json",
-      "file": "docs/readme/media/canopy-part-title.mp4",
+      "file": "library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4",
       "bytes": 1117642
     },
     {
@@ -142,7 +142,7 @@
       "author": "Hyperframes",
       "catalogId": "hf-block-wireframe-portal-title",
       "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json",
-      "file": "docs/readme/media/wireframe-portal-title.mp4",
+      "file": "library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4",
       "bytes": 1330116
     },
     {
@@ -160,7 +160,7 @@
       "author": "Hyperframes",
       "catalogId": "hf-block-liquid-glass-widgets",
       "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json",
-      "file": "docs/readme/media/liquid-glass-widgets.mp4",
+      "file": "library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4",
       "bytes": 6718816
     },
     {
@@ -178,7 +178,7 @@
       "author": "Hyperframes",
       "catalogId": "hf-block-code-3d-extrude",
       "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json",
-      "file": "docs/readme/media/code-3d-extrude.mp4",
+      "file": "library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4",
       "bytes": 4980218
     },
     {
@@ -223,7 +223,7 @@
       "author": "Hyperframes",
       "catalogId": "hf-block-code-particle-assemble",
       "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json",
-      "file": "docs/readme/media/code-particle-assemble.mp4",
+      "file": "library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4",
       "bytes": 5812993
     },
     {
@@ -232,7 +232,7 @@
       "author": "@careerwithriya",
       "catalogId": "hf-reference-aroll-careerwithriya",
       "sourceUrl": "https://www.instagram.com/reel/Ddd57MBszhc/",
-      "file": "docs/readme/media/careerwithriya-reference.mp4",
+      "file": "library/skills/presenter-story/assets/careerwithriya-reference.mp4",
       "bytes": 9070818
     },
     {
@@ -259,7 +259,7 @@
       "author": "@john.tagudin",
       "catalogId": "hf-reference-aroll-john-tagudin-capso",
       "sourceUrl": "https://www.tiktok.com/@john.tagudin/video/7524883942328126728",
-      "file": "docs/readme/media/john-tagudin-capso-reference.mp4",
+      "file": "library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4",
       "bytes": 17709474
     },
     {
@@ -304,7 +304,7 @@
       "author": "@careerwithriya",
       "catalogId": "hf-reference-aroll-careerwithriya",
       "sourceUrl": "https://www.instagram.com/reel/Ddd57MBszhc/",
-      "file": "docs/readme/media/careerwithriya-result.mp4",
+      "file": "library/skills/presenter-story/assets/careerwithriya-result.mp4",
       "bytes": 16418328
     },
     {
@@ -313,7 +313,7 @@
       "author": "Ali Abdaal",
       "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
       "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
-      "file": "docs/readme/media/ali-abdaal-workflow-result.mp4",
+      "file": "library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4",
       "bytes": 21178490
     },
     {
@@ -322,7 +322,7 @@
       "author": "@john.tagudin",
       "catalogId": "hf-reference-aroll-john-tagudin-capso",
       "sourceUrl": "https://www.tiktok.com/@john.tagudin/video/7524883942328126728",
-      "file": "docs/readme/media/john-tagudin-capso-result.mp4",
+      "file": "library/skills/presenter-story/assets/john-tagudin-capso-result.mp4",
       "bytes": 26677780
     },
     {
@@ -331,7 +331,7 @@
       "author": null,
       "catalogId": null,
       "sourceUrl": "https://github.com/motiontemplates/385712",
-      "file": "docs/readme/media/demo.mp4",
+      "file": "library/templates/presenter-tech/preview.mp4",
       "bytes": 4112668
     },
     {

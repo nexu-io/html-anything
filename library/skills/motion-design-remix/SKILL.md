@@ -27,7 +27,7 @@ node scripts/materialize.mjs wireframe-portal-title remix /tmp/portal-remix
 
 For the user's content, copy the profile's JSON preset outside this package, edit its replacement values, and pass that file as the fourth argument. Keep the recorded source hash and expected occurrence counts; inspect any mismatch instead of weakening the check. The helper copies a native HTML project and applies explicit substitutions. It does not parse `MOTION_DESIGN.md` or infer motion from a video.
 
-Read `NOTICE.md` before rendering. The sources retain network dependencies and some upstream brand artwork. Copy adaptation alone does not replace that artwork. In OpenMotion, continue through the existing template workflow for preview, edits and fixed-revision MP4 export. If updating a managed project, read its current revision and use the existing project-edit contract; do not write around version protection.
+Read `NOTICE.md` before rendering. The helper includes pinned browser scripts and fonts from vendor/ and keeps some upstream brand artwork. Copy adaptation alone does not replace that artwork. In OpenMotion, continue through the existing template workflow for preview, edits and fixed-revision MP4 export. If updating a managed project, read its current revision and use the existing project-edit contract; do not write around version protection.
 
 ## Review and share
 

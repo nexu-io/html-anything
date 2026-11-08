@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 
 const root = path.resolve('library/skills/motion-design-remix');
 const script = path.join(root, 'scripts/materialize.mjs');
+const { localize } = await import('../library/skills/motion-design-remix/scripts/localize.mjs');
 const invoke = (...args: string[]) => spawnSync(process.execPath, [script, ...args], { encoding: 'utf8' });
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
 
@@ -21,11 +22,14 @@ test('all six profiles create independent content variants and retain a usable h
         const result = invoke(item.id, variant, dest);
         assert.equal(result.status, 0, result.stderr);
         const content = await readFile(path.join(dest, 'index.html'), 'utf8');
-        if (variant === 'reference') assert.equal(content, original);
+        if (variant === 'reference') assert.equal(content, localize(original));
         else {
-          assert.notEqual(content, original);
+          assert.notEqual(content, localize(original));
           for (const edit of preset.replacements) assert(content.includes(edit.to));
         }
+        assert(!/https:\/\/(?:cdn\.jsdelivr|cdnjs\.cloudflare|fonts\.googleapis)/.test(content));
+        assert((await lstat(path.join(dest, 'vendor/manifest.json'))).isFile());
+        assert((await lstat(path.join(dest, 'reference.mp4'))).isFile());
         const design = await readFile(path.join(dest, 'MOTION_DESIGN.md'), 'utf8');
         for (const match of design.matchAll(/\]\(([^)]+)\)/g)) {
           if (!/^https?:/.test(match[1])) assert((await lstat(path.join(dest, match[1]))).isFile());

@@ -4,7 +4,7 @@
 
 ## Reference and creative intent
 
-[6 essential skills to transform your career — @careerwithriya](https://www.instagram.com/reel/Ddd57MBszhc/) is an existing OpenMotion catalog reference, `hf-reference-aroll-careerwithriya`. Its [upstream remix](../../../../../docs/readme/media/careerwithriya-result.mp4) changes the presenter and subject while retaining numbered statements and supporting visual cards. The README compares excerpts of those two published videos, not an output of this recipe.
+[6 essential skills to transform your career — @careerwithriya](https://www.instagram.com/reel/Ddd57MBszhc/) is an existing OpenMotion catalog reference, `hf-reference-aroll-careerwithriya`. Its [upstream remix](../../assets/careerwithriya-result.mp4) changes the presenter and subject while retaining numbered statements and supporting visual cards. The README compares excerpts of those two published videos, not an output of this recipe.
 
 Make each idea easy to remember: presenter establishes the point, a large keyword names it, then a card or screen excerpt supports it. Return to the person between ideas so the film feels spoken rather than like a slideshow.
 

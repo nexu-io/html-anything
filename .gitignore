@@ -1,5 +1,9 @@
 .DS_Store
 dist/
+# Vendored browser distributions are source resources, not generated app builds.
+!library/**/vendor/gsap-3.14.2/dist/
+!library/**/vendor/d3-delaunay-6.0.4/dist/
+!template-library/**/vendor/gsap-3.14.2/dist/
 __pycache__/
 *.py[cod]
 .venv/

@@ -25,7 +25,7 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 | [Seven creative examples](#creative-examples) | Short GIF excerpts and stills from seven existing external catalog references. Paired with creative briefs, not presented as OpenMotion-generated work. Replaces the three small template posters in the scenario section. |
 | [18 animated catalog picks](#catalog-preview-grid) | Six groups of source-video excerpts replacing the former six static resource covers. 320 × 180, 12 fps, normal-speed continuous excerpts, silent GIF loops; exact sources and encoding live in the gallery manifest. |
 | Bundled template frames | Product Promo, NYT Graph and Decision Tree remain available through the [editable-template index](../../library/templates/README.md); their original projects, posters and [notices](../../template-library/NOTICE.md) are unchanged. |
-| Contributor wall | Dynamic [contrib.rocks image](https://contrib.rocks/image?repo=nexu-io/html-anything), linked to [GitHub contributors](https://github.com/nexu-io/html-anything/graphs/contributors). Represents the repository including HTML Anything history, not a hand-picked OpenMotion-only team. The adjacent text link works without the external image. |
+| Contributor wall | Local 23-avatar [snapshot](contributors/manifest.json), captured from the GitHub contributors API on 2026-11-09. Includes repository history; profile links remain external, image bytes are local. |
 | [OpenDesign symbol](opendesign-symbol.svg) | Unmodified upstream [CDN asset](https://r.open-design.ai/files/1257306170d14488e993cb1f97b86aad8840a3f866f1978e0fd24b9a3c7832d8); retained for provenance, not used as a newly designed OpenMotion mark. SHA-256: `1257306170d14488e993cb1f97b86aad8840a3f866f1978e0fd24b9a3c7832d8`. |
 
 All README images have descriptive alternative text. Artwork, product evidence and reference works are labeled separately. Preserve reference previews and authors rather than repainting their content for brand consistency.
@@ -42,7 +42,7 @@ The gallery uses the same spacing, typography and two-column card structure for 
 
 | Scenario / preview | Catalog ID | Reference attribution | Excerpt (seconds) |
 | --- | --- | --- | --- |
-| [talking-head](examples/talking-head.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](media/ali-abdaal-workflow-reference.mp4) | 10–17 |
+| [talking-head](examples/talking-head.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](../../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) | 10–17 |
 | [story-recut](examples/story-recut.gif) · [still](examples/story-recut.jpg) | `hf-reference-aroll-hundred-days-story` | [Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) | 1–8 |
 | [product-launch](examples/product-launch.gif) · [still](examples/product-launch.jpg) | `hf-reference-jake-figma-draw` | [@figma](media/jake-figma-draw-reference.mp4) | 5.5–12 |
 | [viral-remix](examples/viral-remix.gif) · [still](examples/viral-remix.jpg) | `hf-reference-jake-lovable` | [@lovable_dev](media/jake-lovable-reference.mp4) | 3–10 |
@@ -288,7 +288,7 @@ Prompt: “Replace the large centered line 'Cut with AI.' with 'Edit with AI.' K
 
 [Six paired examples](../motion-design-examples.md) now render actual source-backed content adaptations. They are separate from the external seven-scenario and eighteen-item viewing galleries. Each comparison uses one source composition twice, with original content on the left and an explicit replacement preset on the right. These are silent, normal-speed excerpts, sampled at matching GSAP timestamps and shown on a shared playback clock; they are not blind reconstruction or a claim of native Studio export acceptance.
 
-The [Skill package](../../library/skills/motion-design-remix/SKILL.md) includes source from Hyperframes commit `070b964d7b8cd844a893f0abbe8e0b7f1ac6d879`, six Motion Design profiles, presets, capture/encoding helpers and [evidence](../../library/skills/motion-design-remix/evidence.json). [Source identities](../../library/skills/motion-design-remix/sources.json), [file hashes and encoding](../../library/skills/motion-design-remix/previews/encoding.json), [licenses and network requirements](../../library/skills/motion-design-remix/NOTICE.md) remain with the package.
+The [Skill package](../../library/skills/motion-design-remix/SKILL.md) includes source from Hyperframes commit `070b964d7b8cd844a893f0abbe8e0b7f1ac6d879`, six Motion Design profiles, presets, capture/encoding helpers and [evidence](../../library/skills/motion-design-remix/evidence.json). [Source identities](../../library/skills/motion-design-remix/sources.json), [file hashes and encoding](../../library/skills/motion-design-remix/previews/encoding.json), [licenses and execution requirements](../../library/skills/motion-design-remix/NOTICE.md) remain with the package.
 
 - Per-side stage: 1920 × 1080; capture: 960 × 540. MP4 pair: 1280 × 360, H.264, 12 fps, no audio. GIF pair: 960 × 270, 12 fps, 128 colors, infinite loop. JPEG fallback is the middle of each excerpt.
 - Environment: Node 26.11.1, Puppeteer Core 25.16.0, Chrome 156.0.8078.80, FFmpeg 8.1.1. These are the actual documentation-capture versions, distinct from the application’s native runtime lock.
@@ -303,7 +303,7 @@ node library/skills/motion-design-remix/scripts/render-previews.mjs /absolute/pr
 node library/skills/motion-design-remix/scripts/encode-previews.mjs /absolute/new-capture /absolute/new-previews
 ```
 
-The first command requires `puppeteer-core`, a browser with WebGL and network access for retained CDN/font dependencies. The second requires FFmpeg on PATH. All temporary projects, frame sequences, profiles and logs stay outside the repository; only the selected source package and final previews ship.
+The first command requires `puppeteer-core`, a browser with WebGL. The materializer supplies local browser scripts/fonts; the capture helper blocks non-loopback requests. The second requires FFmpeg on PATH. All temporary projects, frame sequences, profiles and logs stay outside the repository; only the selected source package and final previews ship.
 
 
 <a id="presenter-video-showcase"></a>
@@ -319,7 +319,7 @@ The catalog already contains all nine `hf-reference-aroll-*` entries and the thr
 | careerwithriya | [@careerwithriya](https://www.instagram.com/reel/Ddd57MBszhc/) · `hf-reference-aroll-careerwithriya` | 0 → 6 s |
 | dan-martell-tools | [Dan Martell](https://www.youtube.com/shorts/mk1zJd9Rm4c) · `hf-reference-aroll-dan-martell-tools` | 2 → 6 s |
 | harpercarrollai | [@harpercarrollai](https://www.instagram.com/reel/C4eNPF3PdpG/) · `hf-reference-aroll-harpercarrollai` | 10 → 6 s |
-| ali-abdaal-workflow | [Ali Abdaal](media/ali-abdaal-workflow-reference.mp4) · `hf-reference-aroll-ali-abdaal-workflow` | 10 → 7 s |
+| ali-abdaal-workflow | [Ali Abdaal](../../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · `hf-reference-aroll-ali-abdaal-workflow` | 10 → 7 s |
 | john-tagudin-capso | [@john.tagudin](https://www.tiktok.com/@john.tagudin/video/7524883942328126728) · `hf-reference-aroll-john-tagudin-capso` | 11 → 7 s |
 | aiwithsachi | [@aiwithsachi](https://www.instagram.com/reel/Dc7G9Pxu_1O/) · `hf-reference-aroll-aiwithsachi` | 3 → 6 s |
 | khris-sheer-founder | [@khris.sheer](https://www.tiktok.com/@khris.sheer/video/7491715587895430402) · `hf-reference-aroll-khris-sheer-founder` | 0 → 7 s |
@@ -339,3 +339,15 @@ ffmpeg -ss "$START" -t "$DURATION" -i "$SOURCE"   -vf 'fps=10,scale=216:-2:flags
 ```
 
 For comparisons, apply `setpts=PTS-STARTPTS,fps=10,scale=288:512:force_original_aspect_ratio=decrease,pad=288:512:(ow-iw)/2:(oh-ih)/2,setsar=1` to each input, then `hstack=inputs=2` before palette generation. The MotionGit excerpt uses the single-input recipe with width 640 and the default palette statistics mode. This is documentation media encoding; it is not a native Studio export or human content-acceptance result.
+
+## Local resource closure and Agent slogan
+
+The current cover was edited with the built-in ImageGen tool to use **Edit videos with your agent.** The previous prompts above are historical. The selected image is [cover.png](cover.png); GIF and social preview were regenerated from this same file with the commands above.
+
+Final edit prompt:
+
+```text
+Change only the bold slogan "Edit with AI." into the exact text "Edit videos with your agent." Keep it on one centered line, slightly reduce that line font size if needed. Preserve the large OpenMotion wordmark, all other wording verbatim, blue/teal/ivory/apricot painterly background, composition, aspect ratio, and visual quality. No other changes.
+```
+
+All 38 full films used by the README, scenarios, comparisons and curated collections are now local; see the [media manifest](media/manifest.json) and [resource contract](RESOURCES.md). GIF source hashes continue to identify those same complete files. The six editable profiles include reference films and local dependencies; Presenter Story carries its three pairs. The original template demo is [local](../../library/templates/presenter-tech/preview.mp4). This supersedes earlier descriptions of temporary-only source videos and CDN-dependent rendering.

@@ -13,7 +13,7 @@
           "role": "catalog-reference",
           "sourceSha256": "1ea2daf0de95b8146c1e6dce52eb88559571c5bfe37ff99d1ceefd5ed5880f95",
           "startSeconds": 0,
-          "localVideo": "../media/careerwithriya-reference.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/careerwithriya-reference.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -103,7 +103,7 @@
           "role": "catalog-reference",
           "sourceSha256": "3963db40ddc845fae9d212de25f78e19b810ec1ba7dc46e8941d54d9e32a77a4",
           "startSeconds": 10,
-          "localVideo": "../media/ali-abdaal-workflow-reference.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"
         }
       ],
       "durationSeconds": 7,
@@ -133,7 +133,7 @@
           "role": "catalog-reference",
           "sourceSha256": "8ec55cb822578e896d986a98df51fd450cd9c586b1988724e93d25e7ce5a3d9a",
           "startSeconds": 11,
-          "localVideo": "../media/john-tagudin-capso-reference.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"
         }
       ],
       "durationSeconds": 7,
@@ -285,7 +285,7 @@
           "role": "catalog-reference",
           "sourceSha256": "1ea2daf0de95b8146c1e6dce52eb88559571c5bfe37ff99d1ceefd5ed5880f95",
           "startSeconds": 0,
-          "localVideo": "../media/careerwithriya-reference.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/careerwithriya-reference.mp4"
         },
         {
           "catalogId": "hf-reference-aroll-careerwithriya",
@@ -296,7 +296,7 @@
           "role": "upstream-remix",
           "sourceSha256": "d682e864af5ee41b4fd70f711b2a938c46975bf932a6e360ec7185c8a80c073b",
           "startSeconds": 0,
-          "localVideo": "../media/careerwithriya-result.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/careerwithriya-result.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -326,7 +326,7 @@
           "role": "catalog-reference",
           "sourceSha256": "3963db40ddc845fae9d212de25f78e19b810ec1ba7dc46e8941d54d9e32a77a4",
           "startSeconds": 10,
-          "localVideo": "../media/ali-abdaal-workflow-reference.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"
         },
         {
           "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
@@ -337,7 +337,7 @@
           "role": "upstream-remix",
           "sourceSha256": "773ab14af75d92790c9c38cdb860c8bb3fd88a7ed4f597a24e7f10856fbd2019",
           "startSeconds": 0,
-          "localVideo": "../media/ali-abdaal-workflow-result.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -367,7 +367,7 @@
           "role": "catalog-reference",
           "sourceSha256": "8ec55cb822578e896d986a98df51fd450cd9c586b1988724e93d25e7ce5a3d9a",
           "startSeconds": 11,
-          "localVideo": "../media/john-tagudin-capso-reference.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"
         },
         {
           "catalogId": "hf-reference-aroll-john-tagudin-capso",
@@ -378,7 +378,7 @@
           "role": "upstream-remix",
           "sourceSha256": "334703c3a0407b4f6a17c798ec7d1f85d70d13fdd552b715ac7d9a03267f266b",
           "startSeconds": 12,
-          "localVideo": "../media/john-tagudin-capso-result.mp4"
+          "localVideo": "../../../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4"
         }
       ],
       "durationSeconds": 6,
@@ -425,7 +425,7 @@
       "posterOffsetSeconds": 1,
       "displayName": "Presenter Tech",
       "localTemplate": "../../../library/templates/presenter-tech/README.md",
-      "localVideo": "../media/demo.mp4"
+      "localVideo": "../../../library/templates/presenter-tech/preview.mp4"
     }
   ]
 }

@@ -3,6 +3,7 @@ import { cp, mkdir, readFile, readdir, writeFile, lstat, rm } from 'node:fs/prom
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
+import { localize } from './localize.mjs';
 
 // A source-copy helper for this example pack, not a MOTION_DESIGN.md interpreter.
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -27,6 +28,7 @@ if (variant === 'remix') {
     html = html.split(edit.from).join(edit.to);
   }
 }
+html = localize(html);
 // Refuse existing files, directories and symlinks. Never overwrite a previous project.
 await assert.rejects(lstat(output), { code: 'ENOENT' }, 'Output already exists; choose a new directory');
 await mkdir(path.dirname(output), { recursive: true });
@@ -35,13 +37,15 @@ try {
   for (const entry of await readdir(path.join(root, 'assets', id))) {
     await cp(path.join(root, 'assets', id, entry), path.join(output, entry), { recursive: true, force: false, errorOnExist: true });
   }
+  await cp(path.join(root, 'vendor'), path.join(output, 'vendor'), { recursive: true, force: false, errorOnExist: true });
   await writeFile(path.join(output, 'index.html'), html);
   await cp(path.join(root, 'LICENSE'), path.join(output, 'LICENSE'));
   const item = catalog.items.find(item => item.id === id);
-  await writeFile(path.join(output, 'NOTICE.md'), `# Source and runtime notes\n\nSource: ${item.upstream}\n\nHeyGen Hyperframes source: Apache-2.0 (LICENSE). OpenMotion adds the remix instructions and content preset. Preserve any font licenses in assets/. Original upstream marks remain reference artwork. CDN scripts and Google Fonts need network access; WebGL is required. Displayed code and statistics are illustrative, not product APIs or metrics.\n`);
+  await writeFile(path.join(output, 'NOTICE.md'), `# Source and runtime notes\n\nSource: ${item.upstream}\n\nHeyGen Hyperframes source: Apache-2.0 (LICENSE). OpenMotion adds the remix instructions and content preset. Preserve any font licenses in assets/. Original upstream marks remain reference artwork. Browser scripts and fonts are included in vendor/ with checksums and their own licenses; WebGL is required. Node, browser and media tools are installed separately. Displayed code and statistics are illustrative, not product APIs or metrics.\n`);
   const design = (await readFile(path.join(root, 'references', id, 'MOTION_DESIGN.md'), 'utf8'))
     .replaceAll(`../../assets/${id}/index.html`, 'index.html')
     .replaceAll(`../../presets/${id}.json`, 'remix-record.json')
+    .replaceAll(`../../assets/${id}/reference.mp4`, 'reference.mp4')
     .replace('[Pack instructions](../../SKILL.md) · ', '')
     .replaceAll('../../NOTICE.md', 'NOTICE.md')
     .replace("See the pack's evidence manifest for checks actually completed.", 'Record the checks for this new project separately; previous preview evidence does not cover subsequent edits.');

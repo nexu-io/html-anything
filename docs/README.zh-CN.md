@@ -2,7 +2,7 @@
 
 <h1 align="center">OpenMotion</h1>
 
-<p align="center"><strong>AI 原生、开源的 CapCut 替代。</strong><br/>All-in-One AI-native Studio，一站式视频创作与剪辑空间。<br/>用 AI 剪辑，讲自己的故事。人人都能创作，人人都是自媒体。<br/>The open-source Claude Motion alternative.</p>
+<p align="center"><strong>AI 原生、开源的 CapCut 替代。</strong><br/>All-in-One AI-native Studio，一站式视频创作与剪辑空间。<br/>和你的 Agent 一起剪辑视频，讲自己的故事。人人都能创作，人人都是自媒体。<br/>The open-source Claude Motion alternative.</p>
 
 <p align="center">
   <a href="#ai-video-editing">✂️ AI 剪辑</a> ·
@@ -18,7 +18,7 @@
   <a href="../LICENSE">Apache 2.0</a>
 </p>
 
-![OpenMotion：Edit with AI；AI 原生开源 CapCut 与 Claude Motion 替代，让每个人都成为创作者。](readme/cover.png)
+![OpenMotion：Edit videos with your agent；AI 原生开源 CapCut 与 Claude Motion 替代，让每个人都成为创作者。](readme/cover.png)
 
 [动态封面 GIF](readme/cover-motion.gif) · [GitHub 社交分享图](readme/social-preview.jpg)
 
@@ -109,12 +109,12 @@
 <strong>01 · AI 口播精剪</strong><br>
 3 分钟口播，剪出 30 秒重点。
 <p align="center">
-<a href="readme/media/ali-abdaal-workflow-reference.mp4"><picture>
+<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/talking-head.jpg">
 <img src="readme/examples/talking-head.gif" width="208" alt="外部创作参考：Ali Abdaal · 5 tools I use every day">
 </picture></a>
 </p>
-<sub>参考 · <a href="readme/media/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 5 tools I use every day</a></sub><br><br>
+<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 5 tools I use every day</a></sub><br><br>
 <strong>从这里开始</strong> · 你的录制素材＋字幕或时间码<br>
 <strong>可以这样剪</strong> · 结论前置，精简重复，用字幕与 B-roll 接住重点。<br><br>
 <a href="examples.zh-CN.md#talking-head">复制创作简报 →</a> · <a href="readme/examples/talking-head.jpg">静态预览</a>
@@ -369,7 +369,7 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 **复用：** 编号观点、真人表达与辅助证据卡片。 **换成你的：** 创作者、口播主题、关键词与佐证素材。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](readme/media/careerwithriya-reference.mp4) · [上游改编完整视频](readme/media/careerwithriya-result.mp4)
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [上游改编完整视频](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
 
 #### 边讲边演示，把工作流变成故事
 
@@ -382,7 +382,7 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 **复用：** 真人与屏幕交替、简洁字幕和可读的插入画面。 **换成你的：** 你的录制、工作方法和屏幕素材。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](readme/media/ali-abdaal-workflow-reference.mp4) · [上游改编完整视频](readme/media/ali-abdaal-workflow-result.mp4)
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [上游改编完整视频](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
 
 #### 真人和产品，在同一个故事里
 
@@ -395,7 +395,7 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 **复用：** 开场、画中画、重点标注与结果展示。 **换成你的：** 产品、人物、实际操作与结尾表达。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](readme/media/john-tagudin-capso-reference.mp4) · [上游改编完整视频](readme/media/john-tagudin-capso-result.mp4)
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [上游改编完整视频](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
 
 > 用我的口播和屏幕录制复用这个结构。保留我的语气，按实际语音剪辑并对齐字幕；用截图、画中画和动效说明观点。先让我看带声音的预览，再交付可编辑工程和 MP4。
 
@@ -539,7 +539,7 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <tr><th colspan="3" align="left">🎓 知识讲解与观点口播</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="readme/media/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="真人创作参考：6 essential skills to transform your career"></picture></a><br>
+<a href="../library/skills/presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="真人创作参考：6 essential skills to transform your career"></picture></a><br>
 <strong>6 essential skills to transform your career</strong><br>
 编号观点 + 动态关键词<br>
 <sub>参考 · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
@@ -560,13 +560,13 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <tr><th colspan="3" align="left">🖥️ 真人讲解与屏幕演示</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="readme/media/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="真人创作参考：5 tools I use every day"></picture></a><br>
+<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="真人创作参考：5 tools I use every day"></picture></a><br>
 <strong>5 tools I use every day</strong><br>
 桌前口播 + 工作流穿插<br>
-<sub>参考 · <a href="readme/media/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
+<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="readme/media/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="真人创作参考：Tool demo with callouts"></picture></a><br>
+<a href="../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="真人创作参考：Tool demo with callouts"></picture></a><br>
 <strong>Tool demo with callouts</strong><br>
 真人 + 屏幕录制 + 重点标注<br>
 <sub>参考 · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
@@ -617,6 +617,8 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 
 **18 个动态精选，先看动效，再开始改编。** 从产品发布、动态排版，到玻璃光影、空间镜头和生成艺术，直接看看资源能带来什么样的视觉效果。点击动图观看完整视频；在 Studio 资源库搜索同名条目，把喜欢的风格交给 Agent。
 
+**资源就在仓库里。** 本页与关联示例中的完整参考片、前后对比、GIF、模板源码、浏览器脚本与字体均提供本地入口。[资源清单与复用说明](readme/RESOURCES.md)。
+
 **可以学习、改编，也可以贡献的资源库。** 当前目录共有 **894 条资源：3 个内置可编辑模板、891 条外部参考与 registry 资源**，保留已有原作者与出处。
 
 <table>
@@ -625,7 +627,7 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <td width="33%" valign="top">
 <a href="readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="readme/gallery/app-showcase.gif" width="300" alt="组件动效：App Showcase"></picture></a><br>
 <strong>App Showcase</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/components/showcase/README.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="readme/gallery/firecrawl.gif" width="300" alt="动态参考：Firecrawl Free Keyless"></picture></a><br>
@@ -633,9 +635,9 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <sub>参考 · <a href="readme/media/remix-firecrawl-reference.mp4">@ericciarla</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="readme/gallery/ui-3d-reveal.gif" width="300" alt="组件动效：3D UI Reveal"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="readme/gallery/ui-3d-reveal.gif" width="300" alt="组件动效：3D UI Reveal"></picture></a><br>
 <strong>3D UI Reveal</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">🚀 品牌与发布片</th></tr>
@@ -661,17 +663,17 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <td width="33%" valign="top">
 <a href="readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="readme/gallery/glass-shard-title.gif" width="300" alt="组件动效：Glass Shard Title"></picture></a><br>
 <strong>Glass Shard Title</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/components/showcase/README.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="readme/gallery/canopy-title.gif" width="300" alt="组件动效：Canopy Part Title"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="readme/gallery/canopy-title.gif" width="300" alt="组件动效：Canopy Part Title"></picture></a><br>
 <strong>Canopy Part Title</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="readme/gallery/wireframe-title.gif" width="300" alt="组件动效：Wireframe Portal Title"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="readme/gallery/wireframe-title.gif" width="300" alt="组件动效：Wireframe Portal Title"></picture></a><br>
 <strong>Wireframe Portal Title</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">💎 光影、玻璃与立体世界</th></tr>
@@ -682,9 +684,9 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <sub>参考 · <a href="readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="readme/gallery/liquid-glass-widgets.gif" width="300" alt="组件动效：Liquid Glass Widgets"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="readme/gallery/liquid-glass-widgets.gif" width="300" alt="组件动效：Liquid Glass Widgets"></picture></a><br>
 <strong>Liquid Glass Widgets</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="readme/gallery/cyera.gif" width="300" alt="动态参考：Cyera brand video"></picture></a><br>
@@ -695,9 +697,9 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <tr><th colspan="3" align="left">🧭 空间与镜头</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="readme/media/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="readme/gallery/code-3d.gif" width="300" alt="组件动效：Code 3D Extrude"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="readme/gallery/code-3d.gif" width="300" alt="组件动效：Code 3D Extrude"></picture></a><br>
 <strong>Code 3D Extrude</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="readme/gallery/glyph.gif" width="300" alt="动态参考：Glyph: GPU typography for the web"></picture></a><br>
@@ -707,7 +709,7 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <td width="33%" valign="top">
 <a href="readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="readme/gallery/flight-map.gif" width="300" alt="组件动效：NYC Paris Flight"></picture></a><br>
 <strong>NYC Paris Flight</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/components/showcase/README.md">Hyperframes</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">✨ 生成艺术与图形</th></tr>
@@ -715,7 +717,7 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <td width="33%" valign="top">
 <a href="readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="readme/gallery/aurora.gif" width="300" alt="组件动效：Aurora"></picture></a><br>
 <strong>Aurora</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/components/showcase/README.md">Hyperframes</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="readme/gallery/linear-loops.gif" width="300" alt="动态参考：Linear Loops"></picture></a><br>
@@ -723,9 +725,9 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <sub>参考 · <a href="readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="readme/gallery/code-particles.gif" width="300" alt="组件动效：Code Particle Assemble"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="readme/gallery/code-particles.gif" width="300" alt="组件动效：Code Particle Assemble"></picture></a><br>
 <strong>Code Particle Assemble</strong><br>
-<sub>组件 · <a href="https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Hyperframes</a></sub>
 </td>
 </tr>
 </table>
@@ -975,7 +977,31 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 感谢每一位贡献代码、文档、Skills、设计体系、作品和问题反馈的人。下方展示当前 GitHub 仓库的贡献者，包含 HTML Anything 历史贡献。
 
-[![仓库贡献者](https://contrib.rocks/image?repo=nexu-io/html-anything)](https://github.com/nexu-io/html-anything/graphs/contributors)
+<p>
+<a href="https://github.com/joeylee12629-star"><img src="readme/contributors/joeylee12629-star.png" width="48" height="48" alt="joeylee12629-star"></a>
+<a href="https://github.com/pftom"><img src="readme/contributors/pftom.png" width="48" height="48" alt="pftom"></a>
+<a href="https://github.com/wuwangzhang1216"><img src="readme/contributors/wuwangzhang1216.png" width="48" height="48" alt="wuwangzhang1216"></a>
+<a href="https://github.com/TuYv"><img src="readme/contributors/TuYv.png" width="48" height="48" alt="TuYv"></a>
+<a href="https://github.com/chasel34"><img src="readme/contributors/chasel34.png" width="48" height="48" alt="chasel34"></a>
+<a href="https://github.com/C1-BA-B1-F3"><img src="readme/contributors/C1-BA-B1-F3.png" width="48" height="48" alt="C1-BA-B1-F3"></a>
+<a href="https://github.com/ttoyekk1a"><img src="readme/contributors/ttoyekk1a.png" width="48" height="48" alt="ttoyekk1a"></a>
+<a href="https://github.com/kokiainet"><img src="readme/contributors/kokiainet.png" width="48" height="48" alt="kokiainet"></a>
+<a href="https://github.com/fredkwok-it"><img src="readme/contributors/fredkwok-it.png" width="48" height="48" alt="fredkwok-it"></a>
+<a href="https://github.com/jhinzzz"><img src="readme/contributors/jhinzzz.png" width="48" height="48" alt="jhinzzz"></a>
+<a href="https://github.com/cszhouwei"><img src="readme/contributors/cszhouwei.png" width="48" height="48" alt="cszhouwei"></a>
+<a href="https://github.com/tackcrypto1031"><img src="readme/contributors/tackcrypto1031.png" width="48" height="48" alt="tackcrypto1031"></a>
+<a href="https://github.com/fix2015"><img src="readme/contributors/fix2015.png" width="48" height="48" alt="fix2015"></a>
+<a href="https://github.com/ZhongXiandou"><img src="readme/contributors/ZhongXiandou.png" width="48" height="48" alt="ZhongXiandou"></a>
+<a href="https://github.com/PerishCode"><img src="readme/contributors/PerishCode.png" width="48" height="48" alt="PerishCode"></a>
+<a href="https://github.com/octo-patch"><img src="readme/contributors/octo-patch.png" width="48" height="48" alt="octo-patch"></a>
+<a href="https://github.com/mrcfps"><img src="readme/contributors/mrcfps.png" width="48" height="48" alt="mrcfps"></a>
+<a href="https://github.com/Link-990"><img src="readme/contributors/Link-990.png" width="48" height="48" alt="Link-990"></a>
+<a href="https://github.com/lxyAK"><img src="readme/contributors/lxyAK.png" width="48" height="48" alt="lxyAK"></a>
+<a href="https://github.com/GHX5T-SOL"><img src="readme/contributors/GHX5T-SOL.png" width="48" height="48" alt="GHX5T-SOL"></a>
+<a href="https://github.com/FaintFlower"><img src="readme/contributors/FaintFlower.png" width="48" height="48" alt="FaintFlower"></a>
+<a href="https://github.com/chenmofei"><img src="readme/contributors/chenmofei.png" width="48" height="48" alt="chenmofei"></a>
+<a href="https://github.com/aaronjmars"><img src="readme/contributors/aaronjmars.png" width="48" height="48" alt="aaronjmars"></a>
+</p>
 
 [查看全部贡献者](https://github.com/nexu-io/html-anything/graphs/contributors) · [开始贡献](../CONTRIBUTING.zh-CN.md)
 

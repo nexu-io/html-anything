@@ -41,9 +41,11 @@ Algorithms, Graphics
 
 ## Links
 
-- [Documentation](./Documentation.md)
+- [Documentation](./clipper.js)
 - [ChangeLog](./ChangeLog.txt)
 
 ## License
 
 [Boost Software License (BSL1.0)](http://www.boost.org/LICENSE_1_0.txt)
+
+OpenMotion packaging note: the upstream npm archive omits Documentation.md. Its documentation link above points to the bundled API source instead.

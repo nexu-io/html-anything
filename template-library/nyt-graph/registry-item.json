@@ -19,6 +19,76 @@
       "path": "index.html",
       "target": "index.html",
       "type": "hyperframes:composition"
+    },
+    {
+      "path": "vendor/fonts/libre-baskerville-8b008ffdae31.ttf",
+      "target": "vendor/fonts/libre-baskerville-8b008ffdae31.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre-baskerville-OFL.txt",
+      "target": "vendor/fonts/libre-baskerville-OFL.txt",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre-baskerville-f5bc4341f15d.ttf",
+      "target": "vendor/fonts/libre-baskerville-f5bc4341f15d.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre-baskerville.css",
+      "target": "vendor/fonts/libre-baskerville.css",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre-franklin-04f71a680a40.ttf",
+      "target": "vendor/fonts/libre-franklin-04f71a680a40.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre-franklin-OFL.txt",
+      "target": "vendor/fonts/libre-franklin-OFL.txt",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre-franklin-b03fb188d888.ttf",
+      "target": "vendor/fonts/libre-franklin-b03fb188d888.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre-franklin-fa16f76d2aff.ttf",
+      "target": "vendor/fonts/libre-franklin-fa16f76d2aff.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre-franklin.css",
+      "target": "vendor/fonts/libre-franklin.css",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/libre.css",
+      "target": "vendor/fonts/libre.css",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/gsap-3.14.2/LICENSE.txt",
+      "target": "vendor/gsap-3.14.2/LICENSE.txt",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/gsap-3.14.2/README.md",
+      "target": "vendor/gsap-3.14.2/README.md",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/gsap-3.14.2/dist/gsap.min.js",
+      "target": "vendor/gsap-3.14.2/dist/gsap.min.js",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/manifest.json",
+      "target": "vendor/manifest.json",
+      "type": "hyperframes:asset"
     }
   ]
 }

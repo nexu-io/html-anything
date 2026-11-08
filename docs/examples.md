@@ -19,7 +19,7 @@ These are reference-led creative inputs, not new runtime tools, automatic platfo
 
 **Three minutes of footage. One sharp story.**
 
-[Ali Abdaal · 5 tools I use every day](readme/media/ali-abdaal-workflow-reference.mp4) · [▶ Full reference](readme/media/ali-abdaal-workflow-reference.mp4)
+[Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [▶ Full reference](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
 
 ![AI talking-head edits](readme/examples/talking-head.jpg)
 
@@ -29,7 +29,7 @@ These are reference-led creative inputs, not new runtime tools, automatic platfo
 
 ```text
 Use OpenMotion. Creative reference: hf-reference-aroll-ali-abdaal-workflow
-readme/media/ali-abdaal-workflow-reference.mp4
+../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4
 
 Make a 30-second, 9:16 cut from my three-minute recording and timed
 transcript. Lead with the strongest complete statement. Remove only the

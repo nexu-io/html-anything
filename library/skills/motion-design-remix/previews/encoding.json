@@ -9,18 +9,18 @@
     "files": [
       {
         "file": "ui-3d-reveal.mp4",
-        "bytes": 440852,
-        "sha256": "1855828cd42a4feddf5c0d93a520f39d64c6b19541715854a823e2d6e8ae45cf"
+        "bytes": 444119,
+        "sha256": "d9f294a454173e0cb859174849ee7be442667c761c3794b4ae970501e340f5ee"
       },
       {
         "file": "ui-3d-reveal.gif",
-        "bytes": 1871066,
-        "sha256": "d78164b0843139d33eee867dc29b1cc8a6b8975a875d20d75d459ebfde60fb04"
+        "bytes": 1869557,
+        "sha256": "bb31f3558e38bde6ee01b3dbf23c8bed8b7d458ae7af851b3a3c198aee382d40"
       },
       {
         "file": "ui-3d-reveal.jpg",
-        "bytes": 40356,
-        "sha256": "f6146ac0bd2464e37e9257dd0ce7af04430272c31c6e91f7b4aa801ea1732fb0"
+        "bytes": 40315,
+        "sha256": "b2a0547f309ab78d7cce8b35950502f7db8bf7c34632c129874a29de39fea962"
       }
     ]
   },

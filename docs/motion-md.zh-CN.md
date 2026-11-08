@@ -83,7 +83,7 @@ node scripts/materialize.mjs wireframe-portal-title reference /tmp/portal-refere
 node scripts/materialize.mjs wireframe-portal-title remix /tmp/portal-remix
 ```
 
-脚本核对源码哈希与替换出现次数，拒绝覆盖已有目录，生成独立可编辑工程和 `remix-record.json`。使用自己的内容时，先把 preset 复制到包外，修改替换值，再将文件作为第四个参数传入。源码保留网络依赖，渲染前请读包内 `NOTICE.md`。这套脚本实现的是指定源码的替换，不是通用模板参数导入器。
+脚本核对源码哈希与替换出现次数，拒绝覆盖已有目录，生成独立可编辑工程和 `remix-record.json`。使用自己的内容时，先把 preset 复制到包外，修改替换值，再将文件作为第四个参数传入。生成的工程包含本地脚本、字体、纹理与参考视频，无需 CDN / 在线字体；执行工具另行安装，许可与要求见包内 `NOTICE.md`。这套脚本实现的是指定源码的替换，不是通用模板参数导入器。
 
 ## 4. MOTION_DESIGN.md 具体写什么
 

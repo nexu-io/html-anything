@@ -10,8 +10,10 @@
       "upstream": "https://github.com/heygen-com/hyperframes/tree/070b964d7b8cd844a893f0abbe8e0b7f1ac6d879/registry/blocks/ui-3d-reveal",
       "upstreamBlob": "ba6237c4d8485636bc1d97d6ad5c420c101919bb",
       "preview": {
-        "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ui-3d-reveal.mp4",
-        "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ui-3d-reveal.png"
+        "video": "assets/ui-3d-reveal/reference.mp4",
+        "poster": "assets/ui-3d-reveal/poster.jpg",
+        "upstreamVideo": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ui-3d-reveal.mp4",
+        "upstreamPoster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ui-3d-reveal.png"
       },
       "upstreamRegistryFiles": [
         {
@@ -25,6 +27,14 @@
         {
           "path": "assets/ui-3d-reveal/index.html",
           "sha256": "158ce64b3bc045238636a42fc6e866a3b2b80418fa6b626f46baafff59ffefa4"
+        },
+        {
+          "path": "assets/ui-3d-reveal/reference.mp4",
+          "sha256": "8e89ce026bd2ecfc6632c8ca646be33201e898dc2177ac564fc5d99864fe9a20"
+        },
+        {
+          "path": "assets/ui-3d-reveal/poster.jpg",
+          "sha256": "0dee5e66b07586cf7eb52d817401e983f2414526fa795ba06df7c08bdabf5b65"
         }
       ]
     },
@@ -37,8 +47,10 @@
       "upstream": "https://github.com/heygen-com/hyperframes/tree/070b964d7b8cd844a893f0abbe8e0b7f1ac6d879/registry/blocks/wireframe-portal-title",
       "upstreamBlob": "e7ab28c204415ece400117df9abf11ecce880551",
       "preview": {
-        "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/wireframe-portal-title.mp4",
-        "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/wireframe-portal-title.png"
+        "video": "assets/wireframe-portal-title/reference.mp4",
+        "poster": "assets/wireframe-portal-title/poster.jpg",
+        "upstreamVideo": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/wireframe-portal-title.mp4",
+        "upstreamPoster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/wireframe-portal-title.png"
       },
       "upstreamRegistryFiles": [
         {
@@ -93,6 +105,14 @@
         {
           "path": "assets/wireframe-portal-title/index.html",
           "sha256": "030142fd44afdb474c70ff89d293ea00d70028fbc7c51141acea6f36dee73ded"
+        },
+        {
+          "path": "assets/wireframe-portal-title/reference.mp4",
+          "sha256": "01471804ea0c71d67b400181910031890e9a4bbf3cfd3119b3f125aeb62fa477"
+        },
+        {
+          "path": "assets/wireframe-portal-title/poster.jpg",
+          "sha256": "04f0a3874f0436ff6e377e5a57490ce8529a60748332c466829f0e27e9f126d0"
         }
       ]
     },
@@ -105,8 +125,10 @@
       "upstream": "https://github.com/heygen-com/hyperframes/tree/070b964d7b8cd844a893f0abbe8e0b7f1ac6d879/registry/blocks/code-3d-extrude",
       "upstreamBlob": "7a91ef13305991524c38d710e63fe2ae9210e19f",
       "preview": {
-        "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-3d-extrude.mp4",
-        "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-3d-extrude.png"
+        "video": "assets/code-3d-extrude/reference.mp4",
+        "poster": "assets/code-3d-extrude/poster.jpg",
+        "upstreamVideo": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-3d-extrude.mp4",
+        "upstreamPoster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-3d-extrude.png"
       },
       "upstreamRegistryFiles": [
         {
@@ -120,6 +142,14 @@
         {
           "path": "assets/code-3d-extrude/index.html",
           "sha256": "173bbf881d571d0c434cf786f599904a2f544d0af95445c91fd7bf58c7c45eda"
+        },
+        {
+          "path": "assets/code-3d-extrude/reference.mp4",
+          "sha256": "1f5441e6fb83c3c51a0bce1362b8dd3dd18c53b630775c63f029fae5d4c8e337"
+        },
+        {
+          "path": "assets/code-3d-extrude/poster.jpg",
+          "sha256": "4b05778f99943e8f8593c9ab2f31276b5c81f03885e4d9017f6b19a932cccc72"
         }
       ]
     },
@@ -132,8 +162,10 @@
       "upstream": "https://github.com/heygen-com/hyperframes/tree/070b964d7b8cd844a893f0abbe8e0b7f1ac6d879/registry/blocks/code-particle-assemble",
       "upstreamBlob": "0b30e77daef4698e5f8066a84e8ebe16b55ea0f5",
       "preview": {
-        "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-particle-assemble.mp4",
-        "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-particle-assemble.png"
+        "video": "assets/code-particle-assemble/reference.mp4",
+        "poster": "assets/code-particle-assemble/poster.jpg",
+        "upstreamVideo": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-particle-assemble.mp4",
+        "upstreamPoster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-particle-assemble.png"
       },
       "upstreamRegistryFiles": [
         {
@@ -147,6 +179,14 @@
         {
           "path": "assets/code-particle-assemble/index.html",
           "sha256": "f37d702f7c1f80e48d8a918901f030b8acfc21d2ddb65d22f5dfb5a099280a72"
+        },
+        {
+          "path": "assets/code-particle-assemble/reference.mp4",
+          "sha256": "048f507018c870e3f556b697cef75eb7a084528f3675b5588dcc179026d117a1"
+        },
+        {
+          "path": "assets/code-particle-assemble/poster.jpg",
+          "sha256": "99edcd7846bb19aa94976465a19a9a903541ee66156f54287bb276e1a7f2c492"
         }
       ]
     },
@@ -159,8 +199,10 @@
       "upstream": "https://github.com/heygen-com/hyperframes/tree/070b964d7b8cd844a893f0abbe8e0b7f1ac6d879/registry/blocks/canopy-part-title",
       "upstreamBlob": "4aafcf8d1bdf0ff9fe793c7d64986b67765156df",
       "preview": {
-        "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/canopy-part-title.mp4",
-        "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/canopy-part-title.png"
+        "video": "assets/canopy-part-title/reference.mp4",
+        "poster": "assets/canopy-part-title/poster.jpg",
+        "upstreamVideo": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/canopy-part-title.mp4",
+        "upstreamPoster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/canopy-part-title.png"
       },
       "upstreamRegistryFiles": [
         {
@@ -197,6 +239,14 @@
         {
           "path": "assets/canopy-part-title/index.html",
           "sha256": "cf14c74340ec5967339d2dbb6509c3dda698ca0a915e7aae6cb883b1b6b32532"
+        },
+        {
+          "path": "assets/canopy-part-title/reference.mp4",
+          "sha256": "10183cd740675a0d276516457fa3f5b8544a5c77eecec51359af2298a61bd179"
+        },
+        {
+          "path": "assets/canopy-part-title/poster.jpg",
+          "sha256": "2fa94b740efc8b759c218554187fed3525a16cbb00498350a245e75e83373490"
         }
       ]
     },
@@ -209,8 +259,10 @@
       "upstream": "https://github.com/heygen-com/hyperframes/tree/070b964d7b8cd844a893f0abbe8e0b7f1ac6d879/registry/blocks/liquid-glass-widgets",
       "upstreamBlob": "f6352dc38a53ea3eabf94c099b3f96e83c2d99e6",
       "preview": {
-        "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/liquid-glass-widgets.mp4",
-        "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/liquid-glass-widgets.png"
+        "video": "assets/liquid-glass-widgets/reference.mp4",
+        "poster": "assets/liquid-glass-widgets/poster.jpg",
+        "upstreamVideo": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/liquid-glass-widgets.mp4",
+        "upstreamPoster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/liquid-glass-widgets.png"
       },
       "upstreamRegistryFiles": [
         {
@@ -242,6 +294,14 @@
         {
           "path": "assets/liquid-glass-widgets/lib/liquid-glass.iife.js",
           "sha256": "e960fc4e523aa639d37ebe80bebbd8da6dcb805488a77e45585e80aa9ab98e4c"
+        },
+        {
+          "path": "assets/liquid-glass-widgets/reference.mp4",
+          "sha256": "c283641ad4e60fc9e3bff8cdd30d03996932f8826ebd3414642545ace3ebe95c"
+        },
+        {
+          "path": "assets/liquid-glass-widgets/poster.jpg",
+          "sha256": "d551ffef91591ed70a5a5cb7bf31845df2a0e40a9edf2ce1f05b6150d410a8c0"
         }
       ]
     }
