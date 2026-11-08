@@ -3,6 +3,7 @@ import type { DragEventHandler } from "react";
 import { GUTTER, RULER_H } from "./timelineLayout";
 import { useMediaGateway } from "../../motion/MediaGatewayContext";
 import { usePlayerStore } from "../store/playerStore";
+import { mediaPopoverAnchor } from "../../motion/mediaPopoverPosition";
 
 function EmptyGenerationRange() {
   const range = usePlayerStore(s => s.rangeSelection);
@@ -27,6 +28,7 @@ export function TimelineEmptyState({
 }: TimelineEmptyStateProps) {
   const { t } = useI18n();
   const gateway = useMediaGateway();
+  const hideGuide = !!gateway?.generationOpen && !isDragOver;
   return (
     <div
       className={`h-full border-t bg-[var(--timeline-shell-bg)] flex flex-col select-none transition-colors duration-150 ${
@@ -60,6 +62,10 @@ export function TimelineEmptyState({
       <div className="relative flex-1 flex items-center justify-center overflow-hidden">
         {onFileDrop && gateway?.generationOpen && <EmptyGenerationRange />}
         <div
+          data-motion-empty-media
+          style={hideGuide ? { visibility: 'hidden' } : undefined}
+          aria-hidden={hideGuide || undefined}
+          inert={hideGuide}
           className={`flex items-center gap-3 px-6 py-3 border border-dashed rounded-lg transition-colors duration-150 ${
             isDragOver ? "border-studio-accent/60 bg-studio-accent/6" : "border-neutral-700/50"
           }`}
@@ -108,7 +114,7 @@ export function TimelineEmptyState({
               </div>
               {onFileDrop && gateway && <div className="motion-empty-media-actions">
                 <button onClick={gateway.importFiles}>{t("Import files…")}</button>
-                <button className="motion-media-primary" onClick={() => gateway.openGenerator()}>{t("Generate media")}</button>
+                <button className="motion-media-primary" onClick={event => gateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t("Generate media")}</button>
               </div>}
             </>
           )}
