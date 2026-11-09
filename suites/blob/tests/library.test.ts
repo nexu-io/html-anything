@@ -6,8 +6,9 @@ import { join } from "node:path";
 import { channel, digest, namespace } from "@odsuite/protocol";
 import { bundle } from "@odsuite/release";
 import { type Context, managerEndpoint, serve } from "@odsuite/sidecar";
-import { it } from "vitest";
+import { it, vi } from "vitest";
 import { Library, type Resource, resourceKey, source } from "@";
+import { clock } from "../src/control/clock.js";
 
 const spec = (bytes: Uint8Array, type: "file" | "directory" = "file"): Resource => ({
   artifact: { kind: "blob", slot: "probe", bytes: bytes.length, digest: digest(bytes) },
@@ -131,6 +132,8 @@ it("retains actual process occupancy until sidecar proves retirement", async () 
 });
 it("applies a grace period and cancels candidacy when references return", async () => {
   const f = await fixture(60);
+  let now = 10000;
+  const mocked = vi.spyOn(clock, "now").mockImplementation(() => now);
   try {
     const bytes = Buffer.from("retention"),
       a = spec(bytes);
@@ -138,18 +141,28 @@ it("applies a grace period and cancels candidacy when references return", async 
     await writeFile(join(f.context.roots.data, "user-state"), "persistent user data");
     await f.library.prefetch(a, source(f.origin + "/file", a));
     const initial = (await f.library.status()).entries[resourceKey(a)]!.idleSince;
-    assert.ok(initial);
+    assert.equal(initial, now);
+    now += 59;
+    assert.deepEqual(await f.library.collect(), []);
     for (const kind of ["current", "prepared", "recovery"] as const) await f.library.retain(kind, "retained", [a]);
     assert.equal((await f.library.status()).entries[resourceKey(a)]!.idleSince, undefined);
-    for (const kind of ["current", "prepared", "recovery"] as const) await f.library.unretain(kind, "retained");
+    now += 60000;
     assert.deepEqual(await f.library.collect(), []);
-    await new Promise((done) => setTimeout(done, 80));
+    for (const kind of ["current", "prepared", "recovery"] as const) await f.library.unretain(kind, "retained");
+    assert.equal((await f.library.status()).entries[resourceKey(a)]!.idleSince, now);
+    now += 59;
+    assert.deepEqual(await f.library.collect(), []);
+    now += 1;
     assert.deepEqual(await f.library.collect(), [resourceKey(a)]);
     assert.equal(await readFile(join(f.context.roots.data, "user-state"), "utf8"), "persistent user data");
     await f.library.prefetch(a, source(f.origin + "/file", a));
     assert.equal(f.requests, 2);
   } finally {
-    await f.close();
+    try {
+      await f.close();
+    } finally {
+      mocked.mockRestore();
+    }
   }
 });
 it("rejects type/platform/identity and corruption faults, then retries a failed fetch", async () => {

@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { canonical, type Digest, valid } from "@odsuite/protocol";
 import type { Directory } from "@odsuite/sidecar";
 import { locate } from "./control/access.js";
+import { clock } from "./control/clock.js";
 import { Controller } from "./control/controller.js";
 import { eraseView } from "./control/erase.js";
 import { scoped } from "./control/session.js";
@@ -50,7 +51,7 @@ function settle(state: State) {
   const pinned = new Set(state.references.flatMap((r) => r.keys));
   for (const [id, entry] of Object.entries(state.entries)) {
     if (pinned.has(id as Digest) || entry.uses.length || entry.operation) delete entry.idleSince;
-    else entry.idleSince ??= Date.now();
+    else entry.idleSince ??= clock.now();
   }
 }
 export class Library {
@@ -452,7 +453,7 @@ export class Library {
     return this.controller.run(() =>
       this.mutate(async (state) => {
         const removed: Digest[] = [],
-          now = Date.now(),
+          now = clock.now(),
           pinned = new Set(state.references.flatMap((r) => r.keys));
         for (const [key, entry] of Object.entries(state.entries)) {
           const id = key as Digest;
