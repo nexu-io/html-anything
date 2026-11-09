@@ -25,6 +25,6 @@ See [manifest.json](manifest.json) for source URLs, download hashes, dimensions 
 
 ### Other sources used in the README
 
-- [MotionGit](https://motiongit.com/) / adunext: the existing [Presenter Tech package and attribution](../../../library/templates/presenter-tech/NOTICE.md), shown near the top of the README.
+- [MotionGit](https://motiongit.com/) / adunext: the existing [Presenter Tech package and attribution](../../../library/templates/presenter-tech/NOTICE.md).
 - [Hyperframes](https://github.com/heygen-com/hyperframes): the existing creator and brand reference catalog, plus OpenMotion's native engine foundations.
 - [Hypit](https://github.com/hypit-ai/hypit): inspiration for an agent-led cloning and variation workflow. No Hypit runtime or example media was imported by this documentation change.

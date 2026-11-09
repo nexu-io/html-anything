@@ -111,15 +111,6 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。�
 <sub>参考 · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">可编辑模板</th></tr>
-<tr>
-<td colspan="3" width="100%" align="center" valign="top">
-<a href="../library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/motiongit-kinetic.jpg"><img src="readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech 模板：真人窗口、图解和动态文字"></picture></a><br>
-<strong>Presenter Tech 真人讲解</strong><br>
-把自己的录制画面与动态图解、金属质感字幕组合起来。1920 × 1080，60 fps。<br>
-<sub><a href="../library/templates/presenter-tech/presenter-tech.motion">获取模板包</a> · <a href="../library/templates/presenter-tech/TEMPLATE.md">制作指南</a> · <a href="../library/templates/presenter-tech/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/presenter-story/SKILL.md">Presenter Story Skill</a> · <a href="readme/media/manifest.json">参考署名</a></sub>
-</td>
-</tr>
 <tr><th colspan="3" align="left">原片 → 外部改编</th></tr>
 <tr>
 <td colspan="1" width="33%" align="center" valign="top">

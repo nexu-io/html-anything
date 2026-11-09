@@ -118,14 +118,6 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
 
 **この方向で自分の動画を：** 自分の話し手、物語、製品で。導入、字幕のテンポ、画面の見せ方を参考に、素材に合わせた構成をエージェントに依頼します。[Presenter Story Skill](../library/skills/presenter-story/SKILL.md) · [参考作品のクレジット](readme/media/manifest.json)
 
-### 🎙️ 次の話し手主導の解説動画
-
-<a href="../library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/motiongit-kinetic.jpg"><img src="readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech：話し手の窓、図解、動く文字"></picture></a>
-
-**話し手の物語 × 金属的な文字 × アニメーション解説。** 録画、原稿、画面、字幕を用意してください。編集可能なソース、パラメーター、フォント、音のレシピ、ローカルランナーを Library に収録。制作ガイドに沿ってエージェントが調整できます。**1920 × 1080 · 60 fps · 横向き。**
-
-[テンプレートを入手](../library/templates/presenter-tech/presenter-tech.motion) · [制作ガイド](../library/templates/presenter-tech/TEMPLATE.md) · [Motion.md](../library/templates/presenter-tech/MOTION_DESIGN.md)
-
 <a id="brand-film-gallery"></a>
 
 ## 🚀 自分も作りたかった発表動画を研究する

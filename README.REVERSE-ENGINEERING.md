@@ -109,15 +109,6 @@ Product tutorial + live demonstration<br>
 <sub>Reference · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">Editable template</th></tr>
-<tr>
-<td colspan="3" width="100%" align="center" valign="top">
-<a href="library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/motiongit-kinetic.jpg"><img src="docs/readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech template demo with presenter window, diagrams and animated typography"></picture></a><br>
-<strong>Presenter Tech</strong><br>
-Pair your recording with animated diagrams and metallic type. 1920 × 1080 at 60 fps.<br>
-<sub><a href="library/templates/presenter-tech/presenter-tech.motion">Get the template package</a> · <a href="library/templates/presenter-tech/TEMPLATE.md">Production guide</a> · <a href="library/templates/presenter-tech/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Presenter Story Skill</a> · <a href="docs/readme/media/manifest.json">Reference credits</a></sub>
-</td>
-</tr>
 <tr><th colspan="3" align="left">Original → external adaptation</th></tr>
 <tr>
 <td colspan="1" width="33%" align="center" valign="top">

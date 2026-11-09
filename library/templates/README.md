@@ -26,7 +26,7 @@ Today, select a bundled template and pass a brief to `motion-template-to-video`;
 
 ## Presenter-led video starting points
 
-For **real people + motion**, browse the [nine creator-video references and the Presenter Tech demo](../../README.md#creator-video-gallery), then select one of the [three presenter-story recipes](../skills/presenter-story/SKILL.md). Bring your own camera take, screen recording and measured captions. The recipe guides the edit; an external video reference needs reconstruction and review before becoming an editable template.
+For **real people + motion**, browse the [nine creator-video references](../../README.md#creator-video-gallery), then select one of the [three presenter-story recipes](../skills/presenter-story/SKILL.md). Bring your own camera take, screen recording and measured captions. The recipe guides the edit; an external video reference needs reconstruction and review before becoming an editable template.
 
 | Story | Reusable design recipe | Materials to bring |
 | --- | --- | --- |

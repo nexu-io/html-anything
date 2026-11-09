@@ -118,14 +118,6 @@ HTML로 영상을 작성하고 생성·편집·렌더링하세요. 무료 오픈
 
 **이 방향으로 내 영상을 만드세요:** 내 발표자, 이야기, 제품으로 시작하세요. 도입부, 자막 리듬, 화면 공개 방식을 참고해 내 소재에 맞게 조정하도록 요청하세요. [Presenter Story Skill](../library/skills/presenter-story/SKILL.md) · [참고 출처](readme/media/manifest.json)
 
-### 🎙️ 다음 발표자 중심 설명 영상
-
-<a href="../library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/motiongit-kinetic.jpg"><img src="readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech: 발표자 창, 도해, 움직이는 글자"></picture></a>
-
-**발표자의 이야기 × 금속 질감 글자 × 애니메이션 설명.** 촬영본, 문구, 스크린샷, 자막을 가져오세요. 편집 가능한 소스, 매개변수, 글꼴, 사운드 레시피, 로컬 실행기가 Library에 포함되어 있어 에이전트가 제작 가이드에 따라 수정할 수 있습니다. **1920 × 1080 · 60 fps · 가로형.**
-
-[템플릿 패키지 받기](../library/templates/presenter-tech/presenter-tech.motion) · [제작 가이드](../library/templates/presenter-tech/TEMPLATE.md) · [Motion.md](../library/templates/presenter-tech/MOTION_DESIGN.md)
-
 <a id="brand-film-gallery"></a>
 
 ## 🚀 직접 만들고 싶었던 출시 영상을 살펴보세요
