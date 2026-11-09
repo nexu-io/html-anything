@@ -1,12 +1,12 @@
 # 七个 AI editing 创作简报
 
-[English](examples.md) · [返回中文介绍](README.zh-CN.md#可以用它做什么) · [来源与素材记录](readme/ASSETS.md#creative-examples)
+[English](examples.md) · [返回中文介绍](README.zh-CN.md#showcase) · [来源与素材记录](readme/ASSETS.md#creative-examples)
 
 这些简报把 README 的七类场景变成可执行的创作请求。图片和动图是资源库中的**外部参考片段**，不是 OpenMotion 制作的成片或新增内置模板。简报中的时长、画幅和结果是本次创作目标，需要实际制作与评审。
 
 ## 使用方法
 
-1. [启动 OpenMotion 并连接 Agent](README.zh-CN.md#connect-your-agent)，提供你自己的素材、品牌与已确认的内容。
+1. [启动 OpenMotion 并连接 Agent](README.zh-CN.md#quick-start)，提供你自己的素材、品牌与已确认的内容。
 2. 选择下方简报，替换其中的主题。将简报、精确参考 ID 和来源一起交给 Agent；也可以在 Studio 资源库搜索参考名称。
 3. Agent 实际读取参考，再提出分镜与剪辑方案。网络获取、字幕和音轨分析依赖宿主工具；缺少素材或时间码时先补齐，不把描述当作已经完成的分析。
 4. 制作后在 Studio 正常速度观看，检查画面、文字与声音，再导出 MP4。保留工程继续修改。
@@ -19,7 +19,7 @@
 
 **3 分钟口播，剪出 30 秒重点。**
 
-[Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [▶ 完整参考](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
+[观看参考片：Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
 
 ![AI 口播精剪](readme/examples/talking-head.jpg)
 
@@ -96,7 +96,7 @@ readme/media/hundred-days-story-reference.mp4
 
 **复刻节奏与结构，换成你的表达。**
 
-[Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4) · [▶ 完整参考](readme/media/jake-lovable-reference.mp4)
+[观看参考片：Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4)
 
 ![Viral video 复刻](readme/examples/viral-remix.jpg)
 
@@ -121,7 +121,7 @@ readme/media/jake-lovable-reference.mp4
 
 **一个复杂流程，讲成三个清楚步骤。**
 
-[Authorize Once, Everyone Connected · Hyperframes catalog](readme/media/remix-authorize-once-reference.mp4) · [▶ 完整参考](readme/media/remix-authorize-once-reference.mp4)
+[观看参考片：Authorize Once, Everyone Connected](readme/media/remix-authorize-once-reference.mp4)
 
 ![讲解与教程](readme/examples/explainer.jpg)
 

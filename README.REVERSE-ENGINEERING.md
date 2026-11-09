@@ -3,14 +3,14 @@
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
 <p align="center">
-  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
+  <a href="https://github.com/nexu-io/html-anything"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
   <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
   <a href="LICENSE"><img src="docs/readme/badges/license.svg" alt="Apache 2.0 license"></a>
   <a href="https://github.com/nexu-io/open-design"><img src="docs/readme/badges/built-by-opendesign.svg" alt="Built by OpenDesign"></a>
 </p>
 
 <p align="center">
-  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="docs/readme/badges/website.svg" alt="OpenMotion website" /></a>
+  <a href="https://open-design.ai/motion/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="docs/readme/badges/website.svg" alt="OpenMotion website" /></a>
   <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="docs/readme/badges/opendesign-go.svg" alt="OpenDesign Go model subscriptions" /></a>
   <a href="https://discord.gg/mHAjSMV6gz"><img src="docs/readme/badges/discord.svg" alt="Join the OpenDesign Discord" /></a>
   <a href="https://x.com/OpenDesignHQ"><img src="docs/readme/badges/x-opendesignhq.svg" alt="OpenDesign on X (@OpenDesignHQ)" /></a>
@@ -20,17 +20,15 @@
 
 <p align="center"><a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a></p>
 
-<a href="examples/brand-studies/stripe/comparison.mp4">
 <picture>
   <source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg">
   <img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion — Editable HTML · Open source · Local agent · BYOK · Motion.md">
 </picture>
-</a>
 
 OpenMotion is **the first full-stack agentic video generator**. Upload a reference video or paste a social video link. OpenMotion breaks down the shots, timing and transitions, then **recreates the sequence with your own footage, logo and copy**.
 
 - **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Use it locally in Codex, Claude Code, DeepSeek Harness or WorkBuddy with your own keys at every layer.
-- OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Its first open-source collection covers promotional films from **100+ brands**.
+- OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Use it to share how a brand film works, shot by shot.
 - **Generate images, video, music and speech** for the same timeline, from a missing shot to a score or voice-over.
 
 The remake is an editable HTML project. Fine-tune the cut in Studio and export an MP4.
@@ -43,7 +41,7 @@ The remake is an editable HTML project. Fine-tune the cut in Studio and export a
 
 ### AI talking-head edits
 
-Edit around the speaker’s voice, with captions and screen inserts that follow the explanation. [Creative brief](docs/examples.md#talking-head) · [OpenAI · Codex Originals](https://openai.com/codex-originals/)
+Edit around the speaker’s voice, with captions and screen inserts that follow the explanation.
 
 <table width="100%">
 <tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
@@ -73,7 +71,7 @@ A personal lesson + readable captions<br>
 <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
 <strong>5 tools I use every day</strong><br>
 Desk-side story + workflow inserts<br>
-<sub>Reference · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
+<sub>Reference · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
@@ -134,7 +132,7 @@ Picture-in-picture and callouts turn a tool demo into an editing walkthrough.<br
 
 ### AI recuts & revisions
 
-Give a folder of clips and photos a beginning, a turning point and an ending. [Creative brief](docs/examples.md#story-recut)
+Give a folder of clips and photos a beginning, a turning point and an ending.
 
 <table width="100%">
 <tr>
@@ -154,7 +152,7 @@ Stickers and photo cards mark time in a personal video diary.<br>
 
 ### Product launches & demos
 
-Build a reveal around the moment your product comes into view. [Creative brief](docs/examples.md#product-launch)
+Build a reveal around the moment your product comes into view.
 
 In the five-second comparisons, the original is on the left and the OpenMotion remake on the right (top and bottom on mobile).
 
@@ -202,7 +200,7 @@ Combine a character-led hook with UI motion and screen footage.<br>
 
 ### Viral video recreation
 
-Keep the timing of a reference clip and change what happens on screen. [Creative brief](docs/examples.md#viral-remix) · [Lovable · Aesthetics Update](docs/readme/media/jake-lovable-reference.mp4) · [recreation workflow](skills/motion-recreate/SKILL.md)
+Keep the timing of a reference clip and change what happens on screen.
 
 <table width="100%">
 <tr>
@@ -268,7 +266,7 @@ Keep: Glass treatment, card hierarchy, stagger and meters. Replace: Labels, unit
 
 ### Explainers & tutorials
 
-Guide the viewer through a task with a close-up, a highlight and a clear next step. [Creative brief](docs/examples.md#explainer) · [Authorize Once, Everyone Connected](docs/readme/media/remix-authorize-once-reference.mp4)
+Guide the viewer through a task with a close-up, a highlight and a clear next step.
 
 <table width="100%">
 <tr>
@@ -283,7 +281,7 @@ The remake uses the same switch and drawn circle to reveal a color palette.<br>
 
 ### Data stories & charts
 
-Animate a comparison so the viewer can follow how the values change. [Creative brief](docs/examples.md#data-story)
+Animate a comparison so the viewer can follow how the values change.
 
 <table width="100%">
 <tr>
@@ -301,7 +299,7 @@ The values stay visible as the bars change height.<br>
 
 ### Music & art visuals
 
-Give a track a visual motif that returns on the beat. [Creative brief](docs/examples.md#music-visual) · [Google AI · Lyria 3](docs/readme/media/M1139-clip.mp4)
+Give a track a visual motif that returns on the beat.
 
 <table width="100%">
 <tr>
@@ -313,6 +311,8 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 </td>
 </tr>
 </table>
+
+[Get agent prompts for all seven use cases](docs/examples.md)
 
 <a id="features"></a>
 
@@ -326,7 +326,7 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 
 ![Your local agent, optional media-model accounts and creative resources feed a workflow of understanding the reference, coding scenes, generating missing media, editing and rendering MP4 with reusable source.](docs/readme/diagrams/creation-stack.svg)
 
-**Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#your-agent-your-studio) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
+**Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#agent-setup) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
 
 #### What you can change in Studio
 
@@ -342,6 +342,15 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 > “Keep the reveal we approved. Replace the middle scene with this screen recording, tighten the opening using these timecodes, and hold our final CTA for two more seconds.”
 
 [Projects and versions](docs/project-workspace.md)
+
+<a id="share-an-editable-remake"></a>
+
+#### From a reference clip to an editable remake
+
+1. **Break down the reference.** Pick a sequence. Record its shot order, transitions and sound cues in Motion.md, and mark what you want to replace.
+2. **Rebuild the shots.** Your agent writes HTML scenes with your copy, footage and brand assets, then arranges them on an editable timeline in Studio.
+3. **Compare the cuts.** Watch the same moment in the original and the remake. Adjust the timing, movement and sound, then play the sequence through.
+4. **Export and share.** Render the MP4 and keep the HTML source and media. To share a project others can adapt, include its Motion.md, a preview and assets you can redistribute. [Project contribution checklist](library/ENTRY_TEMPLATE.md)
 
 <a id="bring-your-agent-and-keys"></a>
 
@@ -367,9 +376,9 @@ Provider credentials stay in your workspace, separate from the video project. Yo
 
 <a id="make-your-motion-language-reusable"></a> <a id="motion-design-community"></a>
 
-### 3. Motion.md · Open-source motion studies from 100+ brands
+### 3. 100+ Motion.md brand film studies + 890+ creative resources
 
-OpenMotion introduces **Motion.md**, a Markdown format for a film’s shot order, timing, transitions and replaceable assets. In the [Stripe example](examples/brand-studies/stripe/MOTION.md), the flip stays on the same beat while a payment card becomes a film frame.
+OpenMotion introduces **Motion.md**. The first open-source collection breaks down brand films shot by shot, recording timing, transitions and the assets you can replace. In the [Stripe example](examples/brand-studies/stripe/MOTION.md), the flip stays on the same beat while a payment card becomes a film frame.
 
 The Brand Kit section holds the logo, palette, type, voice and approved product facts. Story, motion, sound and review notes describe what should survive a change of brand. Give the file to your agent alongside your assets when starting a new cut.
 
@@ -377,7 +386,7 @@ The Brand Kit section holds the logo, palette, type, voice and approved product 
 
 <a id="resources-to-start-from"></a>
 
-#### 891 creative resources
+#### Resources for your Motion.md
 
 Explore **42 full-length reference films and 393 motion clips** for shot timing and transitions. When you’re ready to build a scene in HTML, the Studio library also includes **210 blocks, 238 components and 8 code examples**.
 
@@ -428,17 +437,17 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <td width="33%" valign="top">
 <a href="docs/readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
 <strong>Pond: a new Linux OS</strong><br>
-<sub>Reference · <a href="docs/readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
+<sub>Reference · @bflycomputer</sub>
 </td>
 <td width="33%" valign="top">
 <a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="docs/readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
 <strong>Cyera brand video</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
+<sub>Reference · Cyera</sub>
 </td>
 <td width="33%" valign="top">
 <a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="docs/readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
 <strong>Glyph: GPU typography for the web</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
+<sub>Reference · @pmndrs</sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">Light and loops</th></tr>
@@ -446,12 +455,12 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <td width="33%" valign="top">
 <a href="docs/readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="docs/readme/gallery/iskra-light.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
 <strong>Iskra Light</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+<sub>Reference · @world_is_web</sub>
 </td>
 <td width="33%" valign="top">
 <a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="docs/readme/gallery/linear-loops.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
 <strong>Linear Loops</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
+<sub>Reference · @linear</sub>
 </td>
 <td width="33%" valign="top">
 <a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="docs/readme/gallery/aurora.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
@@ -463,14 +472,7 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 
 [Browse all 18 library picks](docs/collections/README.md#catalog-picks) · [Media sources and reuse](docs/readme/RESOURCES.md)
 
-#### Share an editable remake
-
-1. **Write the design.** Record the reference, story beats, timing, framing, camera, type, sound and the decisions that must survive a content change.
-2. **Make it runnable.** Include editable source and permitted assets, identify replacement inputs, and explain how to preview and render it.
-3. **Show what worked.** Share the original reference and your remake, matching-time comparisons where appropriate, actual checks and remaining differences.
-4. **Contribute and remix.** Open a PR with one complete folder. Let others fork the package, adapt it to their brand and contribute improvements with new examples.
-
-[Library entry checklist](library/ENTRY_TEMPLATE.md) · [Six editable studies](docs/motion-design-examples.md) · [Motion.md format](docs/motion-md.md)
+[Six editable studies](docs/motion-design-examples.md) · [Motion.md format](docs/motion-md.md)
 
 <a id="full-video-creation-stack"></a>
 
@@ -518,6 +520,8 @@ npm start
 ```
 
 Open **http://localhost:4173**. Choose **Templates → Ready to edit**, open **Product Promo**, and use **Connect Agent** for your preferred client. Keep projects and credentials outside the checkout; `MOTION_DATA_DIR` selects the workspace.
+
+<a id="agent-setup"></a>
 
 #### Bring it into your agent
 
@@ -770,7 +774,9 @@ Channel connections, scheduled publishing and performance feedback are planned.
 
 ### Community
 
-[OpenMotion website](https://open-design.ai/openmotion?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
+
+[Motion showcase](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
 | Contribution | What to include |
 | --- | --- |

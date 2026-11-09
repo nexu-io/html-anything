@@ -5,14 +5,14 @@
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
 <p align="center">
-  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>
+  <a href="https://github.com/nexu-io/html-anything"><img src="readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>
   <a href="../package.json"><img src="readme/badges/node.svg" alt="Node.js 22.18+"></a>
   <a href="../LICENSE"><img src="readme/badges/license.svg" alt="Apache 2.0 许可证"></a>
   <a href="https://github.com/nexu-io/open-design"><img src="readme/badges/built-by-opendesign.svg" alt="Built by OpenDesign"></a>
 </p>
 
 <p align="center">
-  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="readme/badges/website.zh-CN.svg" alt="OpenMotion 官网" /></a>
+  <a href="https://open-design.ai/motion/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="readme/badges/website.zh-CN.svg" alt="OpenMotion 官网" /></a>
   <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="readme/badges/opendesign-go.svg" alt="OpenDesign Go 模型订阅" /></a>
   <a href="https://discord.gg/mHAjSMV6gz"><img src="readme/badges/discord.svg" alt="加入 OpenDesign Discord" /></a>
   <a href="https://x.com/OpenDesignHQ"><img src="readme/badges/x-opendesignhq.svg" alt="OpenDesign 官方 X 账号 @OpenDesignHQ" /></a>
@@ -22,17 +22,15 @@
 
 <p align="center"><a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a></p>
 
-<a href="../examples/brand-studies/stripe/comparison.mp4">
 <picture>
   <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg">
   <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion：可编辑 HTML · 开源免费 · 本地 Agent · BYOK · Motion.md">
 </picture>
-</a>
 
 OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
 
 - **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
-- OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批开源内容覆盖 **100 多个品牌的宣传片**。
+- OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。品牌宣传片的拆解可以随工程一起分享。
 - **支持图片、视频、音乐和语音生成。** 缺少的镜头、配乐或旁白，都可以生成后放到同一条时间轴上。
 
 复刻结果是一份可编辑的 HTML 工程，可以在 Studio 里微调剪辑，再导出 MP4。
@@ -47,7 +45,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### AI 口播剪辑
 
-围绕出镜人的讲述剪辑，让字幕和屏幕演示跟上讲解节奏。 [场景简报](examples.zh-CN.md#talking-head) · [OpenAI · Codex Originals](https://openai.com/codex-originals/)
+围绕出镜人的讲述剪辑，让字幕和屏幕演示跟上讲解节奏。
 
 <table width="100%">
 <tr><th colspan="3" align="left">🎓 教学与讲解</th></tr>
@@ -77,7 +75,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="真人视频参考：我每天使用的 5 个工具"></picture></a><br>
 <strong>我每天使用的 5 个工具</strong><br>
 桌边讲述 + 工作流插画面<br>
-<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
+<sub>参考 · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="真人视频参考：带重点标注的工具演示"></picture></a><br>
@@ -138,7 +136,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### AI 重剪与改稿
 
-把零散的照片和视频剪成一个有起承转合的故事。 [场景简报](examples.zh-CN.md#story-recut)
+把零散的照片和视频剪成一个有起承转合的故事。
 
 <table width="100%">
 <tr>
@@ -158,7 +156,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### 产品发布与演示
 
-围绕产品第一次亮相的瞬间，安排镜头和转场。 [场景简报](examples.zh-CN.md#product-launch)
+围绕产品第一次亮相的瞬间，安排镜头和转场。
 
 五秒对照中，左边是原片，右边是 OpenMotion 复刻；手机上是上方原片、下方复刻。
 
@@ -206,7 +204,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### 热门视频复刻
 
-沿用参考片的剪辑节奏，用自己的画面和文案重做同一段。 [场景简报](examples.zh-CN.md#viral-remix) · [Lovable · Aesthetics Update](readme/media/jake-lovable-reference.mp4) · [复刻工作流](../skills/motion-recreate/SKILL.md)
+沿用参考片的剪辑节奏，用自己的画面和文案重做同一段。
 
 <table width="100%">
 <tr>
@@ -272,7 +270,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### 讲解与教程
 
-用局部特写和标注，让观众在每一步都知道该看哪里。 [场景简报](examples.zh-CN.md#explainer) · [授权一次，连接所有人](readme/media/remix-authorize-once-reference.mp4)
+用局部特写和标注，让观众在每一步都知道该看哪里。
 
 <table width="100%">
 <tr>
@@ -287,7 +285,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### 数据故事与图表
 
-让观众跟着图表的变化，看清不同数值之间的差距。 [场景简报](examples.zh-CN.md#data-story)
+让观众跟着图表的变化，看清不同数值之间的差距。
 
 <table width="100%">
 <tr>
@@ -305,7 +303,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### 音乐与艺术视觉
 
-为一段音乐设计一个随节拍反复出现的视觉主题。 [场景简报](examples.zh-CN.md#music-visual) · [Google AI · Lyria 3](readme/media/M1139-clip.mp4)
+为一段音乐设计一个随节拍反复出现的视觉主题。
 
 <table width="100%">
 <tr>
@@ -317,6 +315,8 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 </td>
 </tr>
 </table>
+
+[获取七个场景的 Agent 提示词](examples.zh-CN.md)
 
 <a id="features"></a>
 
@@ -330,7 +330,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ![本地 Agent、可选媒体模型账号和创作资源共同支持参考理解、场景编码、素材生成、剪辑及 MP4 渲染，并保留可复用源码。](readme/diagrams/creation-stack.svg)
 
-**编写、观看、修改、渲染。** 让 Agent 替换产品、精简开头、加入真人、修改字幕或尝试新结尾。它修改工程源码，你在可视化编辑器中审阅。本地 MCP 客户端使用工程工具，具备 shell 的 Agent 还可遵循 Skills 和固定版本 CLI 工作流。[Agent 配置](#your-agent-your-studio) · [原生合成指南](../skills/motion-production/references/native.md) · [HTML 示例工程](../template-library/product-promo/index.html)
+**编写、观看、修改、渲染。** 让 Agent 替换产品、精简开头、加入真人、修改字幕或尝试新结尾。它修改工程源码，你在可视化编辑器中审阅。本地 MCP 客户端使用工程工具，具备 shell 的 Agent 还可遵循 Skills 和固定版本 CLI 工作流。[Agent 配置](#agent-setup) · [原生合成指南](../skills/motion-production/references/native.md) · [HTML 示例工程](../template-library/product-promo/index.html)
 
 #### 在 Studio 里可以改什么
 
@@ -346,6 +346,15 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 > “保留已确认的揭示效果。中间场景换成这段屏幕录制，按这些时间码精简开头，最后的 CTA 多停留两秒。”
 
 [工程与版本](project-workspace.md)
+
+<a id="分享可编辑的复刻工程"></a>
+
+#### 从参考片到可编辑的复刻工程
+
+1. **拆解参考片。** 选一段想复刻的镜头，用 Motion.md 记下镜头顺序、转场和声音落点，标出要换成自己品牌的部分。
+2. **重建镜头。** Agent 用你的文案、产品画面和素材写出 HTML 场景，在 Studio 里排成一条可编辑的时间轴。
+3. **对照审片。** 在同一时间点比较原片与复刻结果，微调镜头时长、动作和声音，再播放整段确认节奏。
+4. **导出和分享。** 渲染 MP4，保留 HTML 源码和素材。要让其他人改编，可以把 Motion.md、预览和可分享的素材随工程一起提交。[工程提交清单](../library/ENTRY_TEMPLATE.md)
 
 <a id="bring-your-agent-and-keys"></a>
 
@@ -371,9 +380,9 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 <a id="make-your-motion-language-reusable"></a> <a id="motion-design-community"></a>
 
-### 3. Motion.md · 首次开源 100 多个品牌的宣传片动效拆解
+### 3. 100 多份品牌宣传片 Motion.md + 890 多项创作资源
 
-OpenMotion 首次定义了 **Motion.md**：用 Markdown 记录镜头顺序、时长、转场，以及哪些素材可以换成自己的。[Stripe 示例](../examples/brand-studies/stripe/MOTION.md) 记录了翻面的时机：把支付卡换成胶片画框，动作仍然落在同一拍。
+OpenMotion 首次定义了 **Motion.md**。首批开源的品牌宣传片拆解用 Markdown 记录镜头顺序、时长、转场，以及哪些素材可以换成自己的。[Stripe 示例](../examples/brand-studies/stripe/MOTION.md) 记录了翻面的时机：把支付卡换成胶片画框，动作仍然落在同一拍。
 
 Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信息。叙事、动效、声音和审阅规则说明换品牌时要保留哪些创作决定。开新片时，把这份文件和自己的素材一起交给 Agent。
 
@@ -381,7 +390,7 @@ Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信�
 
 <a id="resources-to-start-from"></a>
 
-#### 891 项创作资源
+#### 编写 Motion.md 时可用的资源
 
 选镜头、找转场时，可以从 **42 支完整参考片和 393 段动效**里找灵感。要用 HTML 搭建画面，Studio 资源库还收录了 **210 个区块、238 个组件和 8 个代码示例**。
 
@@ -432,17 +441,17 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 <td width="33%" valign="top">
 <a href="readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="readme/gallery/pond.gif" width="300" alt="目录动态预览：Pond: a new Linux OS"></picture></a><br>
 <strong>Pond: a new Linux OS</strong><br>
-<sub>参考 · <a href="readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
+<sub>参考 · @bflycomputer</sub>
 </td>
 <td width="33%" valign="top">
 <a href="readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="readme/gallery/cyera.gif" width="300" alt="目录动态预览：Cyera brand video"></picture></a><br>
 <strong>Cyera brand video</strong><br>
-<sub>参考 · <a href="readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
+<sub>参考 · Cyera</sub>
 </td>
 <td width="33%" valign="top">
 <a href="readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="readme/gallery/glyph.gif" width="300" alt="目录动态预览：Glyph: GPU typography for the web"></picture></a><br>
 <strong>Glyph: GPU typography for the web</strong><br>
-<sub>参考 · <a href="readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
+<sub>参考 · @pmndrs</sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">光影与循环动效</th></tr>
@@ -450,12 +459,12 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 <td width="33%" valign="top">
 <a href="readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="readme/gallery/iskra-light.gif" width="300" alt="目录动态预览：Iskra Light"></picture></a><br>
 <strong>Iskra Light</strong><br>
-<sub>参考 · <a href="readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+<sub>参考 · @world_is_web</sub>
 </td>
 <td width="33%" valign="top">
 <a href="readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="readme/gallery/linear-loops.gif" width="300" alt="目录动态预览：Linear Loops"></picture></a><br>
 <strong>Linear Loops</strong><br>
-<sub>参考 · <a href="readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
+<sub>参考 · @linear</sub>
 </td>
 <td width="33%" valign="top">
 <a href="readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="readme/gallery/aurora.gif" width="300" alt="目录动态预览：Aurora"></picture></a><br>
@@ -467,14 +476,7 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 
 [浏览全部 18 项精选资源](collections/README.zh-CN.md#catalog-picks) · [查看素材来源与使用说明](readme/RESOURCES.md)
 
-#### 分享可编辑的复刻工程
-
-1. **写下设计。** 记录参考、叙事节拍、时序、构图、镜头、字体、声音和换内容时仍须保留的决定。
-2. **让它可运行。** 包含源码和获准使用的素材，明确替换输入，解释预览与渲染方法。
-3. **展示实际结果。** 分享原参考、改编、适用时的对应时刻对比、实际检查和剩余差异。
-4. **贡献与改编。** 用完整文件夹发起 PR，让其他人 Fork、换品牌，并带着新示例贡献改进。
-
-[资源提交清单](../library/ENTRY_TEMPLATE.md) · [六个可编辑示例](motion-design-examples.zh-CN.md) · [Motion.md 格式说明](motion-md.zh-CN.md)
+[六个可编辑示例](motion-design-examples.zh-CN.md) · [Motion.md 格式说明](motion-md.zh-CN.md)
 
 <a id="all-in-one-studio"></a> <a id="full-video-creation-stack"></a>
 
@@ -526,6 +528,8 @@ npm start
 ```
 
 打开 **http://localhost:4173**。选择 **Templates → Ready to edit**，打开 **Product Promo**，用 **Connect Agent** 连接客户端。工程与凭据保存在 checkout 之外；用 `MOTION_DATA_DIR` 选择工作区。
+
+<a id="agent-setup"></a>
 
 #### 接入你的 Agent
 
@@ -769,7 +773,9 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 
 ### 社区
 
-[OpenMotion 官网](https://open-design.ai/openmotion?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+OpenMotion 独立官网将上线于 `open-design.ai/openmotion`。
+
+[OpenDesign 动效展示](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
 | 贡献类型 | 应包含 |
 | --- | --- |

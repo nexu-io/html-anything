@@ -1,12 +1,12 @@
 # Seven creative briefs for AI editing
 
-[简体中文](examples.zh-CN.md) · [Back to the showcase](../README.md#what-can-you-make) · [Sources and assets](readme/ASSETS.md#creative-examples)
+[简体中文](examples.zh-CN.md) · [Back to the showcase](../README.md#showcase) · [Sources and assets](readme/ASSETS.md#creative-examples)
 
 These briefs turn the seven README scenarios into concrete requests. The stills and GIFs are **external reference excerpts** from the resource catalog, not OpenMotion-made films or new bundled templates. Durations, aspect ratios and deliverables in the briefs are creative targets that require production and review.
 
 ## How to use a brief
 
-1. [Start OpenMotion and connect your agent](../README.md#connect-your-agent). Supply your own footage, brand assets and approved content.
+1. [Start OpenMotion and connect your agent](../README.md#quick-start). Supply your own footage, brand assets and approved content.
 2. Choose a brief and replace its subject. Give your agent the brief, exact catalog ID and source; you can also search the reference title in Studio’s library.
 3. Have the agent inspect the reference before proposing a shot list and cut. Retrieval, transcription and audio analysis depend on host tools; missing media or timecodes must be supplied, not inferred from a description.
 4. Review the actual project in Studio at normal speed, including text and sound, before exporting MP4. Keep the editable source for the next revision.
@@ -19,7 +19,7 @@ These are reference-led creative inputs, not new runtime tools, automatic platfo
 
 **Three minutes of footage. One sharp story.**
 
-[Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [▶ Full reference](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
+[Watch reference: Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
 
 ![AI talking-head edits](readme/examples/talking-head.jpg)
 
@@ -100,7 +100,7 @@ Deliver editable scenes and a reviewed MP4.
 
 **Remix the rhythm. Make it yours.**
 
-[Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4) · [▶ Full reference](readme/media/jake-lovable-reference.mp4)
+[Watch reference: Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4)
 
 ![Viral video recreation](readme/examples/viral-remix.jpg)
 
@@ -127,7 +127,7 @@ with the agreed shot list before exporting.
 
 **One workflow. Three clear steps.**
 
-[Authorize Once, Everyone Connected · Hyperframes catalog](readme/media/remix-authorize-once-reference.mp4) · [▶ Full reference](readme/media/remix-authorize-once-reference.mp4)
+[Watch reference: Authorize Once, Everyone Connected](readme/media/remix-authorize-once-reference.mp4)
 
 ![Explainers & tutorials](readme/examples/explainer.jpg)
 

@@ -54,17 +54,17 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <td width="33%" valign="top">
 <a href="../readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="../readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
 <strong>Pond: a new Linux OS</strong><br>
-<sub>Reference · <a href="../readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
+<sub>Reference · @bflycomputer</sub>
 </td>
 <td width="33%" valign="top">
 <a href="../readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="../readme/gallery/kimi-k3.gif" width="300" alt="Animated catalog preview: Kimi K3 teaser"></picture></a><br>
 <strong>Kimi K3 teaser</strong><br>
-<sub>Reference · <a href="../readme/media/remix-kimi-k3-reference.mp4">@Kimi_Moonshot</a></sub>
+<sub>Reference · @Kimi_Moonshot</sub>
 </td>
 <td width="33%" valign="top">
 <a href="../readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="../readme/gallery/elevenlabs-reception.gif" width="300" alt="Animated catalog preview: Reception by ElevenLabs"></picture></a><br>
 <strong>Reception by ElevenLabs</strong><br>
-<sub>Reference · <a href="../readme/media/remix-elevenlabs-reception-reference.mp4">@ElevenLabs</a></sub>
+<sub>Reference · @ElevenLabs</sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">✍️ Kinetic typography</th></tr>
@@ -90,7 +90,7 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <td width="33%" valign="top">
 <a href="../readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="../readme/gallery/iskra-light.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
 <strong>Iskra Light</strong><br>
-<sub>Reference · <a href="../readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+<sub>Reference · @world_is_web</sub>
 </td>
 <td width="33%" valign="top">
 <a href="../../library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="../readme/gallery/liquid-glass-widgets.gif" width="300" alt="Animated catalog preview: Liquid Glass Widgets"></picture></a><br>
@@ -100,7 +100,7 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <td width="33%" valign="top">
 <a href="../readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="../readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
 <strong>Cyera brand video</strong><br>
-<sub>Reference · <a href="../readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
+<sub>Reference · Cyera</sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">🧭 Depth & camera motion</th></tr>
@@ -113,7 +113,7 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <td width="33%" valign="top">
 <a href="../readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="../readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
 <strong>Glyph: GPU typography for the web</strong><br>
-<sub>Reference · <a href="../readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
+<sub>Reference · @pmndrs</sub>
 </td>
 <td width="33%" valign="top">
 <a href="../readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="../readme/gallery/flight-map.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
@@ -131,7 +131,7 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <td width="33%" valign="top">
 <a href="../readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="../readme/gallery/linear-loops.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
 <strong>Linear Loops</strong><br>
-<sub>Reference · <a href="../readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
+<sub>Reference · @linear</sub>
 </td>
 <td width="33%" valign="top">
 <a href="../../library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="../readme/gallery/code-particles.gif" width="300" alt="Animated catalog preview: Code Particle Assemble"></picture></a><br>
