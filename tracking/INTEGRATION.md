@@ -248,9 +248,9 @@ node --experimental-strip-types --test tests/tracking.test.ts
 npm run test:studio -- studio/src/motion/tracking.test.ts
 ```
 
-Before branch publication, also complete the install and affected packaging checks
-required by `AGENTS.md`; the list above is not a replacement. Browser checks use
-the existing shared browser-lock lanes. Documentation-only edits need link/content
+Before branch publication, follow the [local validation guidance](../AGENTS.md#local-validation),
+including affected install and packaging checks. The list above covers tracking
+changes, not every documentation edit. Documentation-only edits need link/content
 checks and applicable repository gates, not invented product events.
 
 ## Read back a marked live run
