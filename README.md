@@ -1,4 +1,4 @@
-<p align="center"><a href="docs/readme/studio-tour.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.jpg" /><img src="docs/readme/cover.jpg" width="100%" alt="A Figma Draw prompt in Codex and the Wing Fest butterfly poster open on the Studio timeline." /></picture></a></p>
+<p align="center"><a href="docs/readme/studio-tour.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.jpg" /><img src="docs/readme/cover.jpg" width="100%" alt="Codex shows the Figma Draw reference, and OpenMotion shows the Wing Fest butterfly poster on its timeline." /></picture></a></p>
 
 <h1 align="center">OpenMotion — Reverse-engineer and recreate brand videos in any agent</h1>
 

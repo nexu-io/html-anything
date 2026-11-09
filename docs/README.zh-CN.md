@@ -1,4 +1,4 @@
-<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="在 Codex 输入 Figma Draw 参考片链接，Studio 时间轴显示复刻的 Wing Fest 蝴蝶海报。" /></picture></a></p>
+<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="在 Codex 输入 Figma Draw 参考片链接，OpenMotion 时间轴显示复刻的 Wing Fest 蝴蝶海报。" /></picture></a></p>
 
 <h1 align="center">OpenMotion · 用任意 Agent 拆解并复刻品牌视频</h1>
 
