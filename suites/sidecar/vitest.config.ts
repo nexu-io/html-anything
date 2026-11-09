@@ -14,6 +14,8 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // Each file starts real process trees and durable managers; concurrency is exercised inside the tests.
+    fileParallelism: false,
     include: ["tests/**/*.test.ts"],
   },
 });
