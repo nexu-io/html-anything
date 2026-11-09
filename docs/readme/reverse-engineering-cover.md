@@ -2,7 +2,7 @@
 
 This is the source illustration for the [main README](../../README.md) cover. It preserves the current README's painterly visual family while introducing **Reverse engineering for any video**, the four media-generation categories, and **Publish to every platform**. The reverse-engineering draft is now the main introduction; the earlier artwork remains available as source history.
 
-The current English and Chinese covers adapt this original illustration. ImageGen removed the old lettering from the painting; the wordmark, headline and five feature labels were then typeset into the artwork. Desktop and mobile layouts use the same labels: **Editable HTML · Open source · Local agent · BYOK · Motion.md**. [English cover](brand-hero.jpg) · [Chinese cover](brand-hero.zh-CN.jpg).
+The English and Chinese covers typeset **Editable HTML video · Open source · 21 OpenDesign agents · BYOK · 100+ Motion.md** over the original unlettered watercolor. The four host badges identify OpenMotion’s dedicated adapters. [English cover](brand-hero.jpg) · [Chinese cover](brand-hero.zh-CN.jpg).
 
 | Field | Value |
 | --- | --- |

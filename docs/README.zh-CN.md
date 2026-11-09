@@ -6,6 +6,11 @@
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
+<picture>
+  <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg">
+  <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion · 可编辑 HTML 视频 · 开源免费 · 21 个 OpenDesign Agent · BYOK · 100+ 份 Motion.md。专用适配器：Codex、Claude Code、DeepSeek Harness、WorkBuddy。">
+</picture>
+
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything"><img src="readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>
   <a href="../package.json"><img src="readme/badges/node.svg" alt="Node.js 22.18+"></a>
@@ -22,20 +27,24 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
 </p>
 
-<p align="center"><a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
-
-<picture>
-  <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg">
-  <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion：可编辑 HTML · 开源免费 · 本地 Agent · BYOK · Motion.md">
-</picture>
+<p align="center"><a href="#agent-wall">Agent 阵容</a> · <a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
 
 OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
 
-- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
+- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 开源免费，每一层都能用自己的 API Key。已有 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy [专用适配器](#agent-setup)，其他支持本地 stdio MCP 的客户端可[手动连接](#manual-mcp)。
 - 🧩 OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。品牌宣传片的拆解可以随工程一起分享。
-- 🎛️ **支持图片、视频、音乐和语音生成。** 缺少的镜头、配乐或旁白，都可以生成后放到同一条时间轴上。
+- 🎛️ **图片、视频、音乐和语音。** 用 Nano Banana 2 生成图片、Seedance 2.0 补镜头、Suno v4 配乐、Kokoro 加旁白，再放进同一条时间轴。[查看 7 个内置模型](#model-wall)
 
 复刻结果是一份可编辑的 HTML 工程，可以在 Studio 里微调剪辑，再导出 MP4。
+
+<a id="agent-wall"></a>
+
+**OpenDesign 生态中的 21 个 Agent** · [全部客户端与接入方式](#bring-your-agent-and-keys)
+
+<picture>
+  <source media="(max-width: 600px)" srcset="readme/agents/opendesign-gallery.mobile.png">
+  <img src="readme/agents/opendesign-gallery.png" width="100%" alt="Claude Code, Codex CLI, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI">
+</picture>
 
 <a id="showcase"></a> <a id="用-openmotion-可以做什么"></a>
 <a id="使用场景与复刻效果示例"></a>
@@ -364,12 +373,9 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### 2. 完全开源免费，在本地 Agent 直接用，每一层都支持 BYOK
 
-直接在 **Codex、Claude Code、DeepSeek Harness 或 WorkBuddy** 里使用，沿用自己的客户端、账号和工程上下文。
+**其他 Agent 怎么接入？** 如果你的客户端支持本地 stdio MCP，在客户端添加 Studio 提供的命令，然后让 Agent 列出可用模板。能看到模板后，就可以选一个创建工程。[手动配置](#manual-mcp)
 
-<p><img src="readme/agents/codex-badge.svg" width="144" alt="Codex">
-<img src="readme/agents/claude-code-badge.svg" width="144" alt="Claude Code">
-<img src="readme/agents/deepseek-harness-badge.svg" width="144" alt="DeepSeek Harness">
-<img src="readme/agents/workbuddy-badge.svg" width="144" alt="WorkBuddy"></p>
+图中是 OpenDesign 的 21 款 Agent。OpenDesign 的 CLI 名单还列有 DeepSeek Harness、Vela、Amp、CodeBuddy、MiMo 和 AtomCode；客户端兼容表另外列有 Claude Desktop、OpenClaw、Cline、Raven 和 VS Code 中的 GitHub Copilot。OpenMotion 的专用安装入口与验证状态见[适配器指南](agent-adapters.md)。 [OpenDesign 完整名单](https://github.com/nexu-io/open-design/blob/07a86b1041531bfa0bec1006d9c0993985fee560/README.md#platform-compatibility)
 
 | 自带什么 | 如何用于视频 |
 | --- | --- |
@@ -578,6 +584,8 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | [motion-director](../skills/motion-director/SKILL.md) | 原创影片、叙事、动作、声音与创作审片 |
 | [motion-video-to-template](../skills/motion-video-to-template/SKILL.md) | 制作便携的可复用模板 |
 | [motion-production](../skills/motion-production/SKILL.md) | 范围明确的修改、预览、检查、排错和导出 |
+
+<a id="manual-mcp"></a>
 
 通过 **Connect Agent** 获取工作区专属配置。手动配置本地 stdio 客户端时使用绝对路径：
 

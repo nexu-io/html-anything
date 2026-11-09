@@ -1,6 +1,10 @@
 # README module diagrams
 
-Three companion diagrams for the [alternative README](../../../README.REVERSE-ENGINEERING.md), generated with **built-in ImageGen** using the [README cover](../cover-reverse-engineering-v2.png) as the visual reference. They share its blue, turquoise, emerald, ivory and apricot brushwork, clear central space and bold black typography.
+The main README uses three editable diagrams over the same watercolor paper as the cover. [Video workflow](creation-stack.svg) · [Motion.md](creative-context.svg) · [Local runtime](runtime-architecture.svg).
+
+## Earlier illustrations
+
+Three companion diagrams originally produced for the [alternative README](../../../README.REVERSE-ENGINEERING.md), generated with **built-in ImageGen** using the [README cover](../cover-reverse-engineering-v2.png) as the visual reference. They share its blue, turquoise, emerald, ivory and apricot brushwork, clear central space and bold black typography.
 
 | Diagram | What it explains |
 | --- | --- |
