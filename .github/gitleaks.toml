@@ -1,0 +1,8 @@
+title = "Motion release credentials policy"
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Existing public, write-only OpenMotion analytics identifier; not a management credential"
+regexTarget = "secret"
+regexes = ['''^phc_u5dHWkwdqN626opkbbjDKk7xNzxR2UsJbdQqx3DncbjU$''']

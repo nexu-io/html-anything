@@ -8,6 +8,8 @@ import { spawn } from 'node:child_process';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
+import { checkReleaseVersion } from './release-version.mjs';
+export { checkReleaseVersion } from './release-version.mjs';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
 // Git Bash tar interprets C: as a remote host; use Windows' native archive tool.
@@ -17,9 +19,6 @@ export function targetInfo(target) {
   const info = lock.targets[target];
   assert(info, `Unsupported target: ${target}`);
   return info;
-}
-export function checkReleaseVersion(version) {
-  assert.match(version, /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-test\.[1-9]\d*(?:\.[1-9]\d*)*)?$/, 'Use MAJOR.MINOR.PATCH or MAJOR.MINOR.PATCH-test.N[.N]');
 }
 export function testVersion(base, run, attempt = '1') {
   assert(/^\d+\.\d+\.\d+$/.test(base), 'Source version must be MAJOR.MINOR.PATCH');

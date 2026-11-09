@@ -7,7 +7,7 @@ import { PUPPETEER_REVISIONS } from 'puppeteer-core';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
-import { checkReleaseVersion } from './test-package.mjs';
+import { checkReleaseVersion } from './release-version.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 export function checkReleaseLocks(pkg, lockfile, runtime) {

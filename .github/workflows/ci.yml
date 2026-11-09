@@ -22,18 +22,6 @@ on:
         description: 'Publication is disabled during migration; leave unchecked'
         type: boolean
         default: false
-      install_guide_package:
-        description: 'Already-published npm package; must match packages/npm/package.json'
-        type: string
-        default: '@openmotion/app'
-      install_guide_version:
-        description: 'Exact accepted npm version; non-empty selects guide validation instead of rebuilding the application'
-        type: string
-        default: ''
-      upload_install_guide:
-        description: 'Upload the verified guide using the configured repository R2 credentials'
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -44,7 +32,6 @@ concurrency:
 
 jobs:
   standalone:
-    if: github.event_name != 'workflow_dispatch' || inputs.install_guide_version == ''
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     defaults:
@@ -70,14 +57,17 @@ jobs:
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
           PUBLISH: ${{ inputs.publish || false }}
-          UPLOAD_GUIDE: ${{ inputs.upload_install_guide || false }}
         run: |
           if [ "$PUBLISH" = true ]; then echo 'Motion publishing is disabled during migration.' >&2; exit 1; fi
-          if [ "${UPLOAD_GUIDE:-false}" = true ]; then echo 'An exact install_guide_version is required for guide upload.' >&2; exit 1; fi
           case "$PACKAGE_FORMAT" in
             npm|full) ;;
             *) echo 'Unknown package format' >&2; exit 1 ;;
           esac
+      - name: Scan tracked source and test release controls without publication credentials
+        run: |
+          node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
+          node .github/scripts/motion-scan.mjs source . "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
+          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs
       - name: Install locked Motion dependencies
         run: npm ci --no-audit --no-fund
       - name: Check and build Studio
@@ -116,6 +106,7 @@ jobs:
           version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
           candidate=$(node --input-type=module -e 'import fs from "node:fs"; const m=JSON.parse(fs.readFileSync(process.argv[1]));process.stdout.write(m.installer.url.replace(/^\.\//,""));' "dist/$version/release-npm.json")
           node --experimental-strip-types scripts/install-guide.mjs "dist/$version/$candidate" .artifacts/install-guide --candidate
+          node .github/scripts/motion-scan.mjs package "dist/$version/$candidate" "$RUNNER_TEMP/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
       - name: Retain candidate installation guide for review
         if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'prod') == 'prod'
         uses: actions/upload-artifact@v7.0.2
@@ -130,107 +121,3 @@ jobs:
       - name: Record validation scope
         run: |
           echo 'Motion artifacts were built and checked; the candidate guide is a review artifact only. No npm, R2 or Release publication occurred.' >> "$GITHUB_STEP_SUMMARY"
-
-  install-guide-validation:
-    if: github.event_name == 'workflow_dispatch' && inputs.install_guide_version != ''
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    env:
-      GUIDE_PACKAGE: ${{ inputs.install_guide_package }}
-      GUIDE_VERSION: ${{ inputs.install_guide_version }}
-      GUIDE_DIRECTORY: .artifacts/install-guide-validated
-    outputs:
-      channel: ${{ steps.identity.outputs.channel }}
-    steps:
-      - uses: actions/checkout@v6.0.2
-        with:
-          ref: ${{ github.sha }}
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '26.11.1'
-      - name: Validate exact package selection
-        id: identity
-        run: |
-          node --experimental-strip-types --input-type=module <<'JS'
-          import { appendFileSync } from 'node:fs';
-          import { validateGuideSpec } from './scripts/install-guide.mjs';
-          const channel = validateGuideSpec(process.env.GUIDE_PACKAGE, process.env.GUIDE_VERSION);
-          appendFileSync(process.env.GITHUB_OUTPUT, `channel=${channel}\n`);
-          JS
-      - name: Fetch the actual published package without running its scripts
-        run: |
-          mkdir -p "$RUNNER_TEMP/motion-guide-package"
-          npm pack "$GUIDE_PACKAGE@$GUIDE_VERSION" --ignore-scripts --json --pack-destination "$RUNNER_TEMP/motion-guide-package" > "$RUNNER_TEMP/motion-guide-package/pack.json"
-          candidate=$(node --input-type=module -e 'import fs from "node:fs";import path from "node:path";const [p]=JSON.parse(fs.readFileSync(process.argv[1]));if(path.basename(p.filename)!==p.filename)throw Error("Unsafe npm filename");process.stdout.write(p.filename);' "$RUNNER_TEMP/motion-guide-package/pack.json")
-          node --experimental-strip-types scripts/install-guide.mjs "$RUNNER_TEMP/motion-guide-package/$candidate" "$GUIDE_DIRECTORY"
-          node --input-type=module <<'JS'
-          import { readFileSync } from 'node:fs';
-          import assert from 'node:assert/strict';
-          const record=JSON.parse(readFileSync(process.env.GUIDE_DIRECTORY+'/install-record.json'));
-          assert.equal(record.packageName,process.env.GUIDE_PACKAGE);
-          assert.equal(record.version,process.env.GUIDE_VERSION);
-          JS
-      - name: Retain verified guide and immutable package identity
-        uses: actions/upload-artifact@v7.0.2
-        with:
-          name: motion-install-guide-validated-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            ${{ env.GUIDE_DIRECTORY }}/install.md
-            ${{ env.GUIDE_DIRECTORY }}/install-record.json
-          include-hidden-files: true
-          retention-days: 14
-          if-no-files-found: error
-
-  publish-install-guide:
-    needs: install-guide-validation
-    if: github.event_name == 'workflow_dispatch' && inputs.upload_install_guide == true
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    concurrency:
-      group: motion-install-guide-${{ needs.install-guide-validation.outputs.channel }}
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v6.0.2
-        with:
-          ref: ${{ github.sha }}
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '26.11.1'
-      - uses: actions/download-artifact@v8.0.2
-        with:
-          name: motion-install-guide-validated-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/motion-install-guide
-      - name: Confirm the accepted channel still selects this exact version
-        env:
-          GUIDE_PACKAGE: ${{ inputs.install_guide_package }}
-          GUIDE_VERSION: ${{ inputs.install_guide_version }}
-          GUIDE_CHANNEL: ${{ needs.install-guide-validation.outputs.channel }}
-        run: |
-          expected=$(node -p "require('./packages/npm/package.json').name")
-          if [ "$GUIDE_PACKAGE" != "$expected" ]; then echo 'The guide package must match packages/npm/package.json.' >&2; exit 1; fi
-          tag=test
-          if [ "$GUIDE_CHANNEL" = stable ]; then tag=latest; fi
-          actual=$(npm view "$GUIDE_PACKAGE@$tag" version)
-          if [ "$actual" != "$GUIDE_VERSION" ]; then echo 'The accepted npm channel does not select this exact version.' >&2; exit 1; fi
-      - name: Upload versioned guide, then conditionally update and verify the fixed URL
-        id: upload
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_RELEASES_AK }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_RELEASES_SK }}
-          AWS_EC2_METADATA_DISABLED: 'true'
-          AWS_MAX_ATTEMPTS: '3'
-          AWS_PAGER: ''
-          MOTION_R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_RELEASES_URL }}
-          MOTION_R2_BUCKET: ${{ vars.CLOUDFLARE_R2_RELEASES_BUCKET }}
-          MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN }}
-        run: |
-          aws --version
-          node .github/scripts/publish-install-guide.mjs "$RUNNER_TEMP/motion-install-guide"
-      - name: Retain publication state and prior instructions for recovery
-        if: always()
-        uses: actions/upload-artifact@v7.0.2
-        with:
-          name: motion-install-guide-publication-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/motion-install-guide/
-          retention-days: 30
-          if-no-files-found: warn

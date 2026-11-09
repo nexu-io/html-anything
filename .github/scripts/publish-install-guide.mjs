@@ -18,7 +18,7 @@ export function storagePlan(record, { endpoint, bucket, publicOrigin }) {
   return { endpoint: api.origin, bucket, publicOrigin: origin.origin, versionKey: `${prefix}/${record.version}/install.md`, legacyVersionKey: `${prefix}/versions/${record.version}/install.md`, fixedKey: `${prefix}/install.md` };
 }
 
-export async function publishGuide(directory, config, { run = runFile, fetcher = fetch } = {}) {
+export async function publishGuide(directory, config, { run = runFile, fetcher = fetch, promote = true } = {}) {
   const file = path.join(directory, 'install.md'), record = JSON.parse(await readFile(path.join(directory, 'install-record.json'), 'utf8'));
   assert.equal(record.candidate, false, 'Build previews cannot be published');
   assert.equal(await sha256(file), record.guideSHA256, 'Generated guide changed after validation');
@@ -44,6 +44,11 @@ export async function publishGuide(directory, config, { run = runFile, fetcher =
     if (existing) assert(existing.bytes.equals(expected), 'An immutable version already has different installation instructions');
     else await put(plan.versionKey, ['--if-none-match', '*'], 'public, max-age=31536000, immutable');
     await verifyPublic(plan.versionKey);
+    if (!promote) {
+      const publication = { ...record, ...plan, phase: 'version-verified', promoted: false };
+      await writeJSON(path.join(directory, 'publication.json'), publication);
+      return publication;
+    }
     const previous = await get(plan.fixedKey, path.join(work, 'previous.md'));
     if (previous) {
       assert(previous.etag, 'Existing guide requires an ETag for conditional promotion');
