@@ -12,9 +12,9 @@
 
 例子用于说明范围判断，不限定对象形式、镜头结构或实现手法。文字变长可能需要排版调整，时长变化可能影响相邻转场和声音；在已授权范围内处理必要依赖并说明实际影响，不能为形式上的“少改几行”留下坏结果。只有影响目标的重要歧义或需要扩大授权范围时才追问。
 
-## Keep the preview visible during continued edits
+## Present the latest preview without switching chats
 
-Before the first content write and after the saved batch, apply the [continuing-edit preview rules](native.md#continuing-edits). This applies across specialist and motion-production entries: reuse the same project/tab, restore a closed preview before editing, and inspect the latest content after saving. Explicit background requests take precedence.
+Before the first content write and after the saved batch, apply the [continuing-edit preview rules](native.md#continuing-edits). Reuse the same project/native tab; show it when the calling chat is active, otherwise queue it until the user returns. Confirm the latest version and live content before recording display evidence. Only an explicit show-now request permits switching back for this turn. Explicit background requests take precedence.
 
 ## 基于当前工程修改
 
