@@ -33,6 +33,15 @@ export const phase1Tools = [
     inputSchema: object({ projectId, requestId: id, jobId: id }, ['projectId', 'requestId', 'jobId']), annotations: write },
 ];
 
+// Increment for incompatible request/response semantics; optional fields and new Tools are additive.
+export const phase1McpCapabilities = { protocol: 1, tools: phase1Tools.map(tool => tool.name) };
+
+export function supportsPhase1Tool(health: { mcp?: { protocol?: unknown; tools?: unknown } }, tool?: string): boolean {
+  return typeof tool === 'string' && phase1McpCapabilities.tools.includes(tool)
+    && health.mcp?.protocol === phase1McpCapabilities.protocol
+    && Array.isArray(health.mcp.tools) && health.mcp.tools.includes(tool);
+}
+
 export function validateInput(schema: any, value: any, field = 'arguments'): void {
   if (schema.enum && !schema.enum.includes(value)) throw new Error('INVALID_ARGUMENT: ' + field);
   if (schema.type === 'object') {

@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { WorkspaceStore, Conflict } from './workspace.ts';
 import { isMain } from './shared/entry.ts';
 import { templateConfig } from './shared/template-config.ts';
+import { phase1McpCapabilities, supportsPhase1Tool } from './shared/phase1-tools.ts';
 
 export const sharedEditorEnabled = process.platform === 'darwin';
 const root = fileURLToPath(new URL('./', import.meta.url));
@@ -44,7 +45,7 @@ export async function editorRequest(registry: EditorRegistry, route: string, bod
   if (!response.ok) throw Object.assign(new Error(result.error || '编辑器请求失败'), { status: response.status, code: result.code });
   return result;
 }
-export async function ensureEditor(directory: string): Promise<EditorRegistry> {
+export async function ensureEditor(directory: string, mcpTool?: string): Promise<EditorRegistry> {
   const { data, runtime } = await editorDirectory(directory);
   let launcher: ReturnType<typeof spawn> | undefined;
   for (let attempt = 0; attempt < 600; attempt++) {
@@ -53,8 +54,15 @@ export async function ensureEditor(directory: string): Promise<EditorRegistry> {
       try {
         const health = await editorRequest(registry, '/editor-api/health', undefined, 1200);
         if (health.service !== service || health.dataDirectory !== data || health.instanceId !== registry.instanceId) throw Object.assign(new Error('编辑器实例身份不匹配'), { terminal: true });
-        if (health.protocol !== protocol || health.version !== version || health.build !== editorBuild) throw Object.assign(new Error('编辑器协议或代码版本不兼容；请先停止旧后台后重试'), { terminal: true });
-        return registry;
+        const compatible = mcpTool ? supportsPhase1Tool(health, mcpTool) : health.version === version && health.build === editorBuild;
+        if (health.protocol !== protocol || !compatible) throw Object.assign(
+          new Error('Editor runtime incompatible. Reconnect the Motion MCP connection to the installed runtime and compare the expected and actual versions/builds. Stop an older editor only after confirming it is idle; do not bypass MCP or switch workspaces to continue.'),
+          { terminal: true, code: 'EDITOR_RUNTIME_INCOMPATIBLE', details: {
+            dataDirectory: data, expected: { protocol, version, build: editorBuild },
+            actual: { protocol: health.protocol, version: health.version, build: health.build },
+          } },
+        );
+        return { ...registry, version: health.version, build: health.build };
       } catch (error) { if ((error as any).terminal || (error as any).status) throw error; }
     }
     if (!launcher || launcher.exitCode !== null || launcher.signalCode !== null) {
@@ -102,7 +110,7 @@ export async function serveEditor(directory: string) {
   const { startServer } = await import('./server.ts');
   const { callTool, tools } = await import('./mcp-tools.ts');
   const { stopCommands } = await import('./hyperframes.ts');
-  const identity = () => ({ service, protocol, version, build: editorBuild, instanceId, pid: process.pid, dataDirectory: data });
+  const identity = () => ({ service, protocol, version, build: editorBuild, instanceId, pid: process.pid, dataDirectory: data, mcp: phase1McpCapabilities });
   let active = 0, stopping = false, queue = Promise.resolve();
   const running = await startServer(store, 0, { editor: false, editorToken: token, privateHandler: async (req, res) => {
     if (!req.url?.startsWith('/editor-api/')) return false;

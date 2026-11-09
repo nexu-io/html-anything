@@ -22,6 +22,7 @@ import { creationMode, creationModes, artifactViewers, type CreativeSession, typ
 import { gatewayFor } from './gateway/service.ts';
 import { WorkspaceBrowser } from './browser.ts';
 import { Phase1Service } from './phase1.ts';
+import { phase1McpCapabilities } from './shared/phase1-tools.ts';
 import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
 import { createAppTracking, closeTracking, saveTrackingPreference, trackingPreference, trackingLocked, type OmTracking } from './shared/tracking.ts';
@@ -313,7 +314,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       res.writeHead(302, { Location: '/?panel=connections&host=' + integrationHost(url.searchParams.get('host')) }); return res.end();
     }
     if (url.pathname === '/api/health' && req.method === 'GET') return json(res, 200, {
-      service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: store.directory,
+      service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: store.directory, mcp: phase1McpCapabilities,
       engine: 'hyperframes', engineVersion: HYPERFRAMES_VERSION, editor: 'opendesign-motion', ffmpeg: Boolean(context.ffmpeg),
       ready: Boolean(context.runtimeRoot && (!context.studio || context.studio.alive())), editorReady: Boolean(context.studio?.alive()), studioUrl: context.studio?.alive() ? editorUrl : undefined, nativeStudioUrl: context.studio?.url,
       ...(context.runtimeRoot ? { hyperframesCli: cliPath(context.runtimeRoot), authoringGuide: path.join(context.runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md') } : {}),
