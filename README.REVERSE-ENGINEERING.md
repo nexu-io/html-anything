@@ -2,50 +2,26 @@
 
 <h1 align="center">OpenMotion</h1>
 
-<p align="center"><strong>Reverse engineering for any video</strong><br/>
-Your local agent, now a <strong>full-stack video creator.</strong><br/>
-<strong>BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.</strong><br/>
-Code video with HTML. Generate, edit and render. Open-source software, free to use.<br/>
-Images · Video · Music · TTS · 890+ catalog resources<br/>
-Make it your brand. <strong>Publish to every platform — Coming.</strong></p>
+<p align="center"><strong>Reverse-engineering for any video</strong><br/>Remix any viral video by your agent.</p>
 
-<p align="center">
-  <a href="#reverse-engineer-a-video">🔍 How it works</a> ·
-  <a href="#creator-video-gallery">🎙️ Real people</a> ·
-  <a href="#brand-film-gallery">🎬 Brand films</a> ·
-  <a href="#video-is-code">💻 Video as code</a> ·
-  <a href="#bring-your-agent-and-keys">🔑 BYOA / BYOK</a> ·
-  <a href="#quick-start">🚀 Get started</a> ·
-  <a href="#publish-to-every-platform">📤 Publish · Coming</a><br/>
-  <a href="#full-video-creation-stack">🎛️ Full video stack</a> ·
-  <a href="#your-agent-your-studio">Studio &amp; agents</a> ·
-  <a href="#motion-design-community">Motion MD &amp; community</a> ·
-  <a href="#what-can-you-make">Examples</a> ·
-  <a href="#resources-to-start-from">Library</a> ·
-  <a href="#developer-architecture">Architecture</a> ·
-  <a href="#community">Community</a> ·
-  <a href="LICENSE">Apache 2.0</a>
-</p>
+<p align="center"><a href="#quick-start">Quickstart</a> · <a href="#brand-before-after">Watch a 5s comparison</a> · <a href="#model-wall">Model lineup</a></p>
 
 ![OpenMotion — Reverse engineering for any video. Turn videos you love into videos for your brand with DeepSeek Harness, Codex and Claude Code. Images, video, music and TTS. Publish to every platform.](docs/readme/cover-reverse-engineering-v2.png)
 
-**A launch film catches your eye. A product reveal has exactly the right rhythm. A creator makes a complicated idea feel simple.** Give that reference to your agent with your logo, screenshots, footage and copy. OpenMotion gives the agent a workflow to study the video, rebuild its structure as an editable project, and make a version that tells your story.
+Upload a brand video or paste a social video link. Bring your logo, product footage or a new presenter. Keep the timing of the reference, then edit the result in Studio and export an MP4.
 
-**Reverse / clone any viral video. Make it your brand.** Turn your local agent into a **full-stack video creator**: study the reference, express the video in **HTML, CSS and JavaScript**, generate missing media with your own supported API keys, then edit and render in one Studio. Bring the agent and accounts you already use; keep the source, assets and finished video.
-
-**🔑 BYOA + BYOK. 🧩 890+ catalog resources. 👐 Open source and free to use.** The creation software covers the workflow from reference to rendered MP4. Agent subscriptions and external model/API usage remain with your chosen providers. [Bring your agent and keys](#bring-your-agent-and-keys) · [Explore the Library](#resources-to-start-from)
-
-**Reverse. Create. Publish.** Reverse engineering gives you the creative structure. Built-in multimodal model integrations supply new material. The editable timeline brings it together. **Publish to every platform — Coming** extends the workflow from the finished film to your audience.
-
-> “Reverse-engineer this launch video for our brand. Keep the reveal, camera movement and pacing. Use our product, screenshots and copy. Generate the missing visuals, music and voice-over with our configured models. Show the comparison, then give me the editable project and MP4.”
-
-**Any video → reverse-engineer → brand it in code → generate, edit and render → publish everywhere (Coming).**
+- **The first full-stack agentic video generator.** Code scenes in HTML. Generate assets, edit the timeline and render the same project to video.
+- **Fully open source and free in your local agent, with BYOK at every layer.** Use Codex, Claude Code, DeepSeek Harness or WorkBuddy. Bring your existing agent account and your own keys for media generation.
+- **Motion MD: our first open-source collection is planned to cover 100+ brands.** We defined the format to capture shot order, transitions and what to replace. Read the [Firecrawl MOTION.md](examples/reference-reveal/MOTION.md) and watch the [five-second result](#brand-before-after).
+- **Multimodal: images, video, music and voice.** Generate missing shots, replace a visual or add a soundtrack and narration on the same timeline. [Explore the models](#model-wall).
 
 <a id="creator-video-gallery"></a>
 
 ## 🎥 Start with people. Make something worth watching.
 
 **A face, a voice, a story — then the motion that makes it land.** Start with these nine creator references: lessons, screen demonstrations, founder stories and product videos. Bring your own recording and borrow a structure you love. Click a preview for the full video.
+
+<p align="center"><a href="#presenter-motion"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="640" alt="Left: career advice · Right: a video-production lesson (external adaptation)."></picture></a><br><strong>Left: career advice · Right: a video-production lesson (external adaptation).</strong><br>Both speakers introduce each point with a number, then a keyword or example. The presenter and the lesson change.</p>
 
 <table>
 <tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
@@ -127,7 +103,24 @@ Product tutorial + live demonstration<br>
 
 ## 🚀 Study the launches you wish you had made
 
-**Lovable. Kimi. Firecrawl. Figma. ElevenLabs. Codex.** Start with a strong reference, pick the feeling you want, and build a film around your own product. These are inspiration picks; the brief below each one is a direction for your next video.
+<a id="brand-before-after"></a>
+
+**Figma Draw → Paperwing · five seconds, side by side**
+
+<p align="center"><a href="examples/wing-construction/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="examples/wing-construction/comparison.jpg"><img src="examples/wing-construction/comparison.webp" width="860" alt="Left: Figma Draw original · Right: Paperwing, rendered in OpenMotion"></picture></a><br><strong>Left: Figma Draw original · Right: Paperwing, rendered in OpenMotion</strong><br>Compare the color controls, then watch both cuts land on a butterfly poster. Figma’s <em>Nature Fest</em> becomes <em>Wing Fest</em>, with different lettering, colors and artwork.</p>
+
+[Original on X · 00:38–00:43](https://x.com/figma/status/1920168282751185360) · [Play both cuts](examples/wing-construction/comparison.mp4) · [Editable HTML](examples/wing-construction/index.html) · [Codex → Studio demo](docs/readme/studio-tour.mp4)
+
+<details>
+<summary>Try this shot with your own brand</summary>
+
+```text
+Use OpenMotion to recreate 00:38–00:43 of https://x.com/figma/status/1920168282751185360.
+Keep the timing from the color controls to the poster. Use my artwork, title and brand colors.
+Show the original on the left and my five-second remake on the right. Open the editable project in Studio.
+```
+
+</details>
 
 <table>
 <tr>
@@ -146,10 +139,11 @@ Your next release, distilled into a short, memorable teaser.<br>
 </tr>
 <tr>
 <td width="50%" valign="top" align="center">
-<a href="docs/readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="docs/readme/gallery/firecrawl.gif" width="440" alt="Firecrawl Free Keyless reference film"></picture></a><br>
+<a href="examples/reference-reveal/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="examples/reference-reveal/comparison.jpg"><img src="examples/reference-reveal/comparison.webp" width="440" alt="Left: Firecrawl original · Right: OpenMotion export"></picture></a><br>
 <strong>Firecrawl · Free Keyless</strong><br>
-Turn a developer feature into a clear, visual product story.<br>
-<sub>Reference · @ericciarla</sub>
+Left: Firecrawl original · Right: OpenMotion export · 5s<br>
+“1,000,000 Developers” becomes “00:00:20.” Both numbers pull back into a ring of marks.<br>
+<sub><a href="https://x.com/ericciarla/status/2093375835679977570">Original on X · 00:21–00:26</a> · <a href="examples/reference-reveal/MOTION.md">Motion MD</a></sub>
 </td>
 <td width="50%" valign="top" align="center">
 <a href="https://openai.com/codex-originals/"><img src="docs/readme/brand-showcase/codex-originals.webp" width="440" alt="Codex Originals: group portrait of the builders featured in OpenAI's campaign"></a><br>
@@ -164,6 +158,7 @@ Put the people building with your product at the center.<br>
 <strong>Figma · Draw</strong><br>
 Show what your product makes possible through motion.<br>
 <sub>Reference · @figma</sub>
+<br><sub><a href="#brand-before-after">Compare with Paperwing</a></sub>
 </td>
 <td width="50%" valign="top" align="center">
 <a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="docs/readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs reference film"></picture></a><br>
@@ -176,7 +171,7 @@ Introduce a new product with a focused launch story.<br>
 
 > “Make a launch film in this direction for our brand. Use our UI, words and identity. Keep the sense of pace and the clarity of the reveal; propose a fresh sequence that fits our product.”
 
-The films above are external references credited to their creators. OpenMotion supplies the workflow for your adaptation. [Video sources](docs/readme/media/manifest.json) · [Additional showcase sources](docs/readme/brand-showcase/README.md)
+In the Figma and Firecrawl pairs, the original plays on the left and the OpenMotion export on the right. The other launch films are credited references. [Video sources](docs/readme/media/manifest.json) · [Additional showcase sources](docs/readme/brand-showcase/README.md)
 
 <a id="video-is-code"></a>
 
@@ -259,9 +254,31 @@ Reference retrieval and media analysis depend on the host's tools; supply a loca
 
 **Go from a reference and brand brief to a complete, editable film in one stack.** OpenMotion brings the creative workflows, model integrations, asset management, timeline, motion engine and rendering pipeline together. Start with the parts you have, generate what is missing, and keep refining the result with your agent.
 
+<a id="model-wall"></a>
+
 ### ✨ Images, video, music and TTS — built in
 
 **BYOK makes your multimodal accounts part of the video workflow.** Add your supported provider keys in **Model Settings**, choose your models, and generate images, video, music and speech through the Studio's **Model Gateway**. Preview candidates and adopt the results into the same project your agent and Studio edit. The supported local image path can reuse your existing agent login.
+
+**In the built-in model catalog**
+
+<p><img src="docs/readme/models/codex.svg" width="146" height="40" alt="Codex Image">
+<img src="docs/readme/models/nano-banana.svg" width="146" height="40" alt="Nano Banana 2">
+<img src="docs/readme/models/flux.svg" width="146" height="40" alt="FLUX Schnell">
+<img src="docs/readme/models/seedance.svg" width="146" height="40" alt="Seedance 2.0">
+<img src="docs/readme/models/wan.svg" width="146" height="40" alt="Wan 2.2">
+<img src="docs/readme/models/suno.svg" width="146" height="40" alt="Suno v4">
+<img src="docs/readme/models/kokoro.svg" width="146" height="40" alt="Kokoro"></p>
+
+**Candidate integrations · not built in**
+
+<p><img src="docs/readme/models/veo.svg" width="146" height="40" alt="Veo">
+<img src="docs/readme/models/elevenlabs.svg" width="146" height="40" alt="ElevenLabs TTS"></p>
+
+[Request a model](https://github.com/nexu-io/html-anything/issues) and tell us which shot or sound you want to create.
+
+<details>
+<summary>Model settings and provider routes</summary>
 
 | Make what the video needs | Built-in model catalog examples | Bring it into your film |
 | --- | --- | --- |
@@ -269,6 +286,8 @@ Reference retrieval and media analysis depend on the host's tools; supply a loca
 | **🎬 Video** | Seedance 2.0 via Atlas Cloud; Wan 2.2 via fal.ai | Generated shots and B-roll to combine with your footage and motion |
 | **🎵 Music** | Suno v4 via Atlas Cloud | A soundtrack built around your mood and creative brief |
 | **🎙️ TTS / voice-over** | Kokoro via fal.ai | Narration from your approved script, placed alongside the visuals and music |
+
+</details>
 
 These are catalog entries shipped in the [source](gateway/catalog.ts). Connect your own supported accounts or provider keys; model availability, required parameters and usage costs depend on the provider. The gateway also supports model discovery and explicit endpoint registration. [Model setup and generation](docs/model-gateway.md)
 
@@ -311,10 +330,10 @@ Reference + your brand + your agent
 
 | Agent / client | How it connects |
 | --- | --- |
-| **DeepSeek Harness** | Local MCP + Skills setup, or a generated Harness adapter |
-| **Codex** | Local plugin or MCP + Skills setup, with a Studio viewer where the host supports it |
-| **Claude Code** | Local plugin or MCP + Skills setup, with CLI access for local work |
-| **WorkBuddy** | Generated MCP + Skills configuration; desktop creation and playback validation remain pending |
+| <img src="docs/readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness"> | Local MCP + Skills setup, or a generated Harness adapter |
+| <img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex"> | Local plugin or MCP + Skills setup, with a Studio viewer where the host supports it |
+| <img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code"> | Local plugin or MCP + Skills setup, with CLI access for local work |
+| <img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy"> | Generated MCP + Skills configuration; desktop creation and playback validation remain pending |
 | **Other local MCP clients** | Manual stdio configuration; media, shell and viewer capabilities depend on the host |
 
 [Per-agent setup](docs/agent-adapters.md) · [Integrated local installer](docs/npm-installation.md) · [Quick start](#quick-start)
@@ -1158,6 +1177,8 @@ The broader Studio vision remains: discover, create, collaborate, publish and le
 
 [Open an issue](https://github.com/nexu-io/html-anything/issues) · [Join the community on Discord](https://discord.gg/mHAjSMV6gz) · [Documentation](docs/README.md)
 
+[OpenMotion website](https://open-design.ai/openmotion?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [@OpenDesignHQ](https://x.com/OpenDesignHQ) · [@OpenDesignDevs](https://x.com/OpenDesignDevs) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+
 For creators and media: show the reference, the supplied brand, the changes in Studio and the actual result. Keep rendered demos separate from product concepts and external references. [Media facts and assets](docs/media-kit.md)
 
 [![Star OpenMotion and follow the next creation.](docs/readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
@@ -1167,6 +1188,8 @@ For creators and media: show the reference, the supplied brand, the changes in S
 <a id="acknowledgements"></a>
 
 ## 🙏 Acknowledgements
+
+[Model and provider icon credits](docs/readme/models/README.md) · [MIT](docs/readme/models/LICENSE.txt)
 
 
 OpenMotion is licensed under [Apache-2.0](LICENSE). Third-party code, templates, media and fonts retain their own licenses and attribution.

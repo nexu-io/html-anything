@@ -2,44 +2,18 @@
 
 <h1 align="center">OpenMotion</h1>
 
-<p align="center"><strong>逆向拆解任何视频</strong><br/>
-让你的本地 Agent 成为 <strong>全栈视频创作者。</strong><br/>
-<strong>BYOA — 自带 Agent。BYOK — 自带 API Key。</strong><br/>
-用 HTML 编写视频。生成、剪辑、渲染。开源软件，免费使用。<br/>
-图片 · 视频 · 音乐 · TTS · 890+ 目录资源<br/>
-变成你的品牌作品。 <strong>发布到各个平台 — 规划中。</strong></p>
+<p align="center"><strong>逆向拆解任何视频</strong><br/>让你的 Agent 将热门视频复刻成自己的品牌作品。</p>
 
-<p align="center">
-  <a href="#reverse-engineer-a-video">🔍 如何运作</a> ·
-  <a href="#creator-video-gallery">🎙️ 真人视频</a> ·
-  <a href="#brand-film-gallery">🎬 品牌影片</a> ·
-  <a href="#video-is-code">💻 视频即代码</a> ·
-  <a href="#bring-your-agent-and-keys">🔑 BYOA / BYOK</a> ·
-  <a href="#quick-start">🚀 开始使用</a> ·
-  <a href="#publish-to-every-platform">📤 发布 · 规划中</a><br/>
-  <a href="#full-video-creation-stack">🎛️ 全栈视频创作</a> ·
-  <a href="#your-agent-your-studio">Studio 与 Agent</a> ·
-  <a href="#motion-design-community">Motion MD 与社区</a> ·
-  <a href="#what-can-you-make">示例</a> ·
-  <a href="#resources-to-start-from">资源库</a> ·
-  <a href="#developer-architecture">架构</a> ·
-  <a href="#community">社区</a> ·
-  <a href="../LICENSE">Apache 2.0</a>
-</p>
+<p align="center"><a href="#quick-start">快速开始</a> · <a href="#brand-before-after">看 5 秒原片对照</a> · <a href="#model-wall">多模态模型</a></p>
 
 ![OpenMotion — 逆向拆解任何视频。用 DeepSeek Harness、Codex 和 Claude Code，将喜欢的视频改编为品牌作品。图片、视频、音乐与 TTS。多平台发布。](readme/cover-reverse-engineering-v2.png)
 
-**一支发布片抓住你的目光，一次产品揭示节奏恰好，一位创作者把复杂的事讲得简单。** 把参考片、标志、截图、素材和文案交给 Agent。OpenMotion 提供一套研究参考、重建可编辑工程、讲述自己故事的工作流。
+上传品牌视频，或粘贴社媒视频链接，再放入自己的 Logo、产品画面或出镜素材。保留原片的镜头节奏，在 Studio 里继续剪辑，最后导出 MP4。
 
-**逆向拆解热门视频，变成你的品牌作品。** 让本地 Agent 成为**全栈视频创作者**：研究参考，用 **HTML、CSS 和 JavaScript** 表达视频，以自有且受支持的 API Key 生成缺少的素材，在同一个 Studio 中剪辑和渲染。沿用现有 Agent 和账号，保留源码、素材和成片。
-
-**🔑 BYOA + BYOK。🧩 890+ 目录资源。👐 开源免费。** 创作软件覆盖从参考到 MP4 的流程；Agent 订阅和外部模型/API 费用由你选择的供应商收取。[自带 Agent 与 Key](#bring-your-agent-and-keys) · [浏览资源库](#resources-to-start-from)
-
-**拆解、创作、发布。** 逆向分析提供创作结构，内置多模态模型补充素材，可编辑时间轴将它们组合起来。**多平台发布 — 规划中**，将继续连接成片与受众。
-
-> “为我们的品牌重建这支发布片。保留揭示方式、镜头运动和节奏，用我们的产品、截图和文案。通过已配置的模型生成缺少的画面、音乐和旁白。展示对比，再交付可编辑工程和 MP4。”
-
-**任何视频 → 逆向拆解 → 用代码改编品牌 → 生成、剪辑、渲染 → 多平台发布（规划中）。**
+- **首个全栈 Agentic 视频生成器。** 用 HTML 写镜头，在同一份工程里生成素材、调整时间轴、渲染成片。
+- **完全开源免费，在本地 Agent 直接使用，每一层都支持 BYOK。** 支持 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy。沿用自己的 Agent 账号，调用媒体模型时用自己的 API Key。
+- **首次定义 Motion MD，首批开源计划覆盖 100+ 个品牌的宣传片。** 每份文件写清镜头顺序、转场和可替换素材。先读 [Firecrawl 的 MOTION.md](../examples/reference-reveal/MOTION.zh-CN.md)，再看[同一段的 5 秒复刻对照](#brand-before-after)。
+- **支持多模态：图片、视频、音乐与语音。** 给镜头补画面、换素材、配乐或加旁白，都能回到同一条时间轴上调整。[查看模型阵容](#model-wall)。
 
 <a id="everyone-can-be-a-creator"></a>
 <a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a>
@@ -49,6 +23,8 @@
 ## 🎥 从真人开始，做值得看的视频
 
 **一张面孔、一段声音、一个故事，再加上恰当的动效。** 从九条创作者参考中选择课程、屏幕演示、创始人故事或产品视频，带上自己的录制素材，借鉴喜欢的结构。点击预览观看完整视频。
+
+<p align="center"><a href="#presenter-motion"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="640" alt="左：职业建议原片；右：另一位讲者的视频制作课（外部改编示例）。"></picture></a><br><strong>左：职业建议原片；右：另一位讲者的视频制作课（外部改编示例）。</strong><br>看关键词和例子卡片怎样跟着讲述出现：换了人、换了话题，仍然一眼认得出原来的讲法。</p>
 
 <table>
 <tr><th colspan="3" align="left">🎓 教学与讲解</th></tr>
@@ -130,7 +106,24 @@
 
 ## 🚀 研究那些让你心动的发布片
 
-**Lovable、Kimi、Firecrawl、Figma、ElevenLabs、Codex。** 从优秀参考中选择想要的感觉，围绕自己的产品创作。以下均为创作参考，每条下方的简报都是下一支视频的方向。
+<a id="brand-before-after"></a>
+
+**Figma Draw → Paperwing：同一段 5 秒，原片与复刻同屏**
+
+<p align="center"><a href="../examples/wing-construction/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/wing-construction/comparison.jpg"><img src="../examples/wing-construction/comparison.webp" width="860" alt="左：Figma Draw 原片 · 右：用 OpenMotion 渲染的 Paperwing 复刻版"></picture></a><br><strong>左：Figma Draw 原片 · 右：用 OpenMotion 渲染的 Paperwing 复刻版</strong><br>调色控件在同一拍让位于蝴蝶海报。左边是 Figma 的 <em>Nature Fest</em>，右边换成 <em>Wing Fest</em> 的字标、配色和插画。</p>
+
+[X 原片 · 00:38–00:43](https://x.com/figma/status/1920168282751185360) · [播放同屏对照](../examples/wing-construction/comparison.mp4) · [可编辑 HTML 工程](../examples/wing-construction/index.html) · [Codex → Studio 演示](readme/studio-tour.zh-CN.mp4)
+
+<details>
+<summary>用自己的品牌试这一段</summary>
+
+```text
+用 OpenMotion 复刻 https://x.com/figma/status/1920168282751185360 的 00:38–00:43。
+保留从调色控件切到成品海报的节奏，换成我提供的插画、标题和品牌色。
+给我左侧原片、右侧复刻的 5 秒同屏对照，再在 Studio 打开可编辑工程。
+```
+
+</details>
 
 <table>
 <tr>
@@ -149,10 +142,11 @@
 </tr>
 <tr>
 <td width="50%" valign="top" align="center">
-<a href="readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="readme/gallery/firecrawl.gif" width="440" alt="Firecrawl Free Keyless 参考片"></picture></a><br>
+<a href="../examples/reference-reveal/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/reference-reveal/comparison.jpg"><img src="../examples/reference-reveal/comparison.webp" width="440" alt="左：Firecrawl 原片 · 右：OpenMotion 复刻导出"></picture></a><br>
 <strong>Firecrawl · Free Keyless</strong><br>
-把开发者功能讲成清楚、直观的产品故事。<br>
-<sub>参考 · @ericciarla</sub>
+左：Firecrawl 原片 · 右：OpenMotion 复刻导出 · 5s<br>
+从「1,000,000 Developers」换成「00:00:20」，两边都从大数字拉远，进入 Logo 环绕。<br>
+<sub><a href="https://x.com/ericciarla/status/2093375835679977570">X 原片 · 00:21–00:26</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">Motion MD</a></sub>
 </td>
 <td width="50%" valign="top" align="center">
 <a href="https://openai.com/codex-originals/"><img src="readme/brand-showcase/codex-originals.webp" width="440" alt="Codex Originals：OpenAI 活动中创作者的合影"></a><br>
@@ -167,6 +161,7 @@
 <strong>Figma · Draw</strong><br>
 用动效展示产品带来的可能。<br>
 <sub>参考 · @figma</sub>
+<br><sub><a href="#brand-before-after">查看 Paperwing 复刻对照</a></sub>
 </td>
 <td width="50%" valign="top" align="center">
 <a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs 参考片"></picture></a><br>
@@ -179,7 +174,7 @@
 
 > “按这个方向为我们的品牌做一支发布片。使用我们的界面、文案和视觉身份，保留节奏感与清晰的产品揭示，为我们的产品设计新的镜头顺序。”
 
-以上影片为已署名的外部参考。OpenMotion 提供改编工作流。[视频来源](readme/media/manifest.json) · [其他展示素材来源](readme/brand-showcase/README.md)
+Figma 和 Firecrawl 两组对照中，左侧是原片，右侧均为 OpenMotion 导出的复刻版。其余品牌片为已署名的参考原片。[视频来源](readme/media/manifest.json) · [其他展示素材来源](readme/brand-showcase/README.md)
 
 <a id="what-is-openmotion"></a>
 <a id="openmotion-是什么"></a>
@@ -264,9 +259,31 @@
 
 **从参考和品牌简报，到完整可编辑影片，一套流程完成。** OpenMotion 汇集创作方法、模型集成、资产管理、时间轴、动效引擎和渲染。用已有材料开始，生成缺少的部分，与 Agent 持续打磨。
 
+<a id="model-wall"></a>
+
 ### ✨ 内置图片、视频、音乐和 TTS 集成
 
 **BYOK 将你的多模态账号接入视频工作流。** 在 **Model Settings** 添加受支持的 Key、选择模型，通过 Studio 的 **Model Gateway** 生成图片、视频、音乐和语音。预览候选并采用到同一工程；受支持的本地图片路径可复用已有 Agent 登录。
+
+**已内置的模型目录**
+
+<p><img src="readme/models/codex.svg" width="146" height="40" alt="Codex Image">
+<img src="readme/models/nano-banana.svg" width="146" height="40" alt="Nano Banana 2">
+<img src="readme/models/flux.svg" width="146" height="40" alt="FLUX Schnell">
+<img src="readme/models/seedance.svg" width="146" height="40" alt="Seedance 2.0">
+<img src="readme/models/wan.svg" width="146" height="40" alt="Wan 2.2">
+<img src="readme/models/suno.svg" width="146" height="40" alt="Suno v4">
+<img src="readme/models/kokoro.svg" width="146" height="40" alt="Kokoro"></p>
+
+**候选模型 · 尚未内置**
+
+<p><img src="readme/models/veo.svg" width="146" height="40" alt="Veo">
+<img src="readme/models/elevenlabs.svg" width="146" height="40" alt="ElevenLabs TTS"></p>
+
+想用其他模型？[告诉我们](https://github.com/nexu-io/html-anything/issues)你想用它生成哪类镜头或声音。
+
+<details>
+<summary>查看模型配置与供应商</summary>
 
 | 视频所需素材 | 内置模型目录示例 | 如何用于影片 |
 | --- | --- | --- |
@@ -274,6 +291,8 @@
 | **🎬 视频** | Atlas Cloud 的 Seedance 2.0；fal.ai 的 Wan 2.2 | 生成镜头和 B-roll，与实拍及动效组合 |
 | **🎵 音乐** | Atlas Cloud 的 Suno v4 | 根据情绪和创作简报生成配乐 |
 | **🎙️ TTS / 旁白** | fal.ai 的 Kokoro | 根据已确认脚本生成旁白，编排到画面和音乐中 |
+
+</details>
 
 这些条目随[源码](../gateway/catalog.ts)提供。连接自有受支持账号或 Key；可用性、参数和费用由供应商决定。Gateway 也支持模型发现和显式注册端点。[模型配置与生成](model-gateway.md)
 
@@ -321,10 +340,10 @@
 
 | Agent / 客户端 | 连接方式 |
 | --- | --- |
-| **DeepSeek Harness** | 本地 MCP + Skills 配置，或生成 Harness 适配器 |
-| **Codex** | 本地插件或 MCP + Skills；宿主支持时可使用 Studio Viewer |
-| **Claude Code** | 本地插件或 MCP + Skills，可用 CLI 进行本地操作 |
-| **WorkBuddy** | 生成 MCP + Skills 配置；桌面创作和播放验收仍待完成 |
+| <img src="readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness"> | 本地 MCP + Skills 配置，或生成 Harness 适配器 |
+| <img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex"> | 本地插件或 MCP + Skills；宿主支持时可使用 Studio Viewer |
+| <img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code"> | 本地插件或 MCP + Skills，可用 CLI 进行本地操作 |
+| <img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy"> | 生成 MCP + Skills 配置；桌面创作和播放验收仍待完成 |
 | **其他本地 MCP 客户端** | 手动 stdio 配置；媒体、shell 和 Viewer 能力取决于宿主 |
 
 [各 Agent 配置](agent-adapters.md) · [一体化本地安装器](npm-installation.md) · [快速开始](#quick-start)
@@ -1158,6 +1177,8 @@ Studio 的完整愿景依旧是发现、创作、协作、发布与学习。**Su
 
 [提出 Issue](https://github.com/nexu-io/html-anything/issues) · [加入 Discord 社区](https://discord.gg/mHAjSMV6gz) · [文档](README.md)
 
+[OpenMotion 官网](https://open-design.ai/openmotion?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [@OpenDesignHQ](https://x.com/OpenDesignHQ) · [@OpenDesignDevs](https://x.com/OpenDesignDevs) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+
 面向创作者和媒体：展示参考、输入品牌、Studio 修改过程和实际结果。区分渲染演示、产品概念和外部参考。[媒体事实与素材](media-kit.md)
 
 [![Star OpenMotion，关注下一次创作。](readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
@@ -1167,6 +1188,8 @@ Studio 的完整愿景依旧是发现、创作、协作、发布与学习。**Su
 <a id="acknowledgements"></a>
 
 ## 🙏 致谢 / Acknowledgements
+
+[模型与供应商品牌图标来源](readme/models/README.md) · [MIT](readme/models/LICENSE.txt)
 
 
 OpenMotion 采用 [Apache-2.0](../LICENSE)许可。第三方代码、模板、媒体和字体保留各自许可证和署名。
