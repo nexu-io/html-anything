@@ -46,7 +46,10 @@ export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTempl
     const timer = setInterval(() => {
       if (document.visibilityState === 'hidden') return;
       void motionApi<TemplatePage>('/template-catalog?limit=1', { signal: controller.signal }).then(next => {
+        if (controller.signal.aborted) return;
         if (next.catalogVersion !== page.catalogVersion) { setOffset(0); setPage(null); retry(value => value + 1); }
+        else setPage(previous => previous && previous.catalogVersion === next.catalogVersion && previous.warning !== next.warning
+          ? { ...previous, warning: next.warning } : previous);
       }).catch(() => {});
     }, 5_000);
     return () => { clearInterval(timer); controller.abort(); };

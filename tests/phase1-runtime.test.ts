@@ -3,11 +3,27 @@ import assert from 'node:assert/strict';
 import { readFile, writeFile, access } from 'node:fs/promises';
 import path from 'node:path';
 import { fixture } from './fixtures.ts';
-import { startServer } from '../server.ts';
+import { renderNext, startServer } from '../server.ts';
 import { rpc } from '../mcp.ts';
-import { delay } from '../hyperframes.ts';
+import { delay, pluginRoot } from '../hyperframes.ts';
 
 const film = (duration = 1) => `<!doctype html><html><head><meta charset="utf-8"><script src="assets/gsap.min.js"></script><style>body{margin:0}#main{position:relative;width:320px;height:180px;background:#d3e7ae;overflow:hidden}#box{position:absolute;top:60px;left:20px;width:40px;height:40px;background:#203021}</style></head><body><div id="main" data-composition-id="main" data-start="0" data-duration="${duration}" data-width="320" data-height="180" data-fps="10"><div id="box"></div></div><script>const tl=gsap.timeline({paused:true});tl.fromTo('#box',{x:0},{x:200,duration:${duration},ease:'none'},0);window.__timelines={main:tl};</script></body></html>`;
+
+test('phase1 renders the snapshot at its authored rational frame rate', { timeout: 120_000 }, () => fixture(async store => {
+  for (const numerator of [24_000, 30_000]) {
+    const saved = await store.writeFiles((await store.get()).revision, [{
+      path: 'index.html', content: film().replace('data-fps="10"', `data-fps="${numerator}/1001"`),
+    }]);
+    const job = await store.requestExport(saved.revision, { phase1: true, audio: 'silent' });
+    // A later edit must not alter the frame rate in the immutable export snapshot.
+    await store.writeFiles(saved.revision, [{ path: 'index.html', content: film() }]);
+    await renderNext(store, pluginRoot);
+    const completed = (await store.job(job.id))!;
+    assert.equal(completed.state, 'completed', JSON.stringify(completed));
+    assert.equal(completed.expected!.fps, numerator / 1001);
+    assert.equal((completed.verification as any).status, 'passed');
+  }
+}));
 
 test('real phase1 MCP, active Studio history, confirmed running cancellation and automatically verified MP4', { timeout: 180_000 }, () => fixture(async store => {
   const running = await startServer(store, 0, { editor: false });

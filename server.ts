@@ -74,7 +74,8 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tra
     await mkdir(path.dirname(output), { recursive: true });
     // The service owns this job; a short-lived Agent client must not cancel it.
     await stage('rendering');
-    const result = await runHyperframes(runtimeRoot, directory, ['render', '.', '--output', output, '--format', 'mp4', ...(job.phase1 ? ['--fps', String(job.expected!.fps)] : []), '--json'], 25 * 60_000, { HYPERFRAMES_RENDER_DETACHED: '1' }, control.signal);
+    // Let the engine read the snapshot's exact data-fps (including rational rates).
+    const result = await runHyperframes(runtimeRoot, directory, ['render', '.', '--output', output, '--format', 'mp4', '--json'], 25 * 60_000, { HYPERFRAMES_RENDER_DETACHED: '1' }, control.signal);
     await writeFile(path.join(store.directory, 'jobs', job.id, 'render.log'), result.stdout + '\n' + result.stderr, { mode: 0o600 });
     if (result.code) throw new Error('Hyperframes render 失败：' + (result.stderr || result.stdout).slice(-1800));
     // Never label an absent or non-MP4 output as completed, even after exit code 0.
