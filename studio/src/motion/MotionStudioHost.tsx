@@ -6,6 +6,7 @@ import { useDockLayoutStore } from '../components/dock/dockLayoutStore';
 import { TimelineHistoryButtons } from '../components/TimelineHistoryButtons';
 import { isStudioEditSaving } from '../utils/studioPendingEdits';
 import { MotionIcon } from './icons';
+import { OpenDesignMark } from './OpenDesignMark';
 import { StudioHostContext, type StudioHost } from './StudioHost';
 import { WorkspaceFrame, useWorkspaceChrome, useOptionalWorkspaceChrome } from './WorkspaceFrame';
 import { MotionLayoutMenu, MotionPreviewButton } from './MotionLayoutControls';
@@ -81,7 +82,7 @@ function WorkspaceActions() {
 }
 
 const host: StudioHost = {
-  brand: <></>,
+  brand: <span className="motion-brand"><span className="motion-brand-mark"><OpenDesignMark /></span><strong>OpenMotion</strong></span>,
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,
   historyActions: <WorkspaceHistoryActions />,

@@ -28,7 +28,7 @@ interface CompositionThumbnailProps {
   rich?: boolean;
 }
 
-const THUMBNAIL_URL_VERSION = "v3";
+const THUMBNAIL_URL_VERSION = "v4";
 export const THUMBNAIL_SEEK_TIME_SECONDS = 3;
 
 export function resolveThumbnailSeekTime(durationSeconds: number | null | undefined): number {
@@ -114,13 +114,15 @@ async function loadCompositionImage(url: string, signal: AbortSignal) {
   if (signal.aborted) throw new DOMException("Aborted", "AbortError");
   const objectUrl = URL.createObjectURL(blob);
   try {
-    const aspect = await probeImageAspect(objectUrl, signal);
+    let decodedBytes = 0;
+    const aspect = await probeImageAspect(objectUrl, signal, false, (width, height) => {
+      decodedBytes = width * height * 4;
+    });
     return {
       value: { kind: "image" as const, url: objectUrl, aspect },
-      weight:
+      weight: decodedBytes ||
         TIMELINE_VIEWPORT_BUDGETS.posterMaxPhysicalWidth *
-        TIMELINE_VIEWPORT_BUDGETS.posterMaxPhysicalHeight *
-        4,
+          TIMELINE_VIEWPORT_BUDGETS.posterMaxPhysicalHeight * 4,
       dispose: () => URL.revokeObjectURL(objectUrl),
     };
   } catch (error) {
@@ -151,6 +153,8 @@ export const CompositionThumbnail = memo(function CompositionThumbnail({
     selector,
     selectorIndex,
     origin: window.location.origin,
+    // Small element crops need source-resolution pixels before they are scaled down.
+    output: selector ? "source" : undefined,
     contentRevision,
   });
   const request = useMemo(

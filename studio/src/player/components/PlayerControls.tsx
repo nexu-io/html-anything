@@ -18,12 +18,8 @@ import { PreviewSeekBar } from "./PreviewSeekBar";
 
 gsap.registerPlugin(MorphSVGPlugin);
 
-// Play glyph: the right-hand blade from the HyperFrames favicon (points right).
-// Pause glyph: two bars centred in the same coordinate space so MorphSVG can
-// tween one `d` into the other. Both shapes live in the favicon's 0-100 space
-// and the svg viewBox frames the blade's bounding box.
-const PLAY_BLADE_D =
-  "M87.5129 57.5141L56.9696 73.5433C52.8371 75.7098 48.7046 73.2553 49.6688 69.2104L58.9483 30.1391C59.9125 26.0942 65.2097 23.6397 68.3154 25.8062L91.2447 41.8354C96.4668 45.4796 94.4631 53.8699 87.5129 57.5141Z";
+// A centered, upright play triangle, sharing a coordinate space with pause.
+const PLAY_BLADE_D = "M55 27L91 49.5L55 72Z";
 const PAUSE_BARS_D = "M56 28H67V71H56Z M73 28H84V71H73Z";
 
 // Morph the play blade <-> pause bars on toggle via GSAP MorphSVG. Both glyphs

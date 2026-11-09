@@ -106,8 +106,8 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
   element<HTMLButtonElement>('copy-guide').onclick = event => { if (info) void copy(agentGuide(info, host), '接入指引', event.currentTarget as HTMLButtonElement); };
 
   const toolDescriptions: Record<string, string> = {
-    motion_open_preview: '打开本地编辑器，自动启动或复用预览服务。', motion_get_project: '读取工程、分镜、素材信息和版本号。',
-    motion_list_templates: '搜索完整模板目录，按分类、关键词和页码浏览。', motion_get_template: '读取选定模板的参考视频、源码、制作要求与工程格式。', motion_apply_template: '创建本地模板副本，保留原工程与素材。', motion_write_files: '写入原生 HTML、CSS 与 JS，编辑器同步更新。', motion_get_workflow: '读取制作、检查与交付流程。',
+    motion_open_preview: '打开本地编辑器，自动启动或复用预览服务。', motion_get_project: '读取项目、分镜、素材信息和版本号。',
+    motion_list_templates: '搜索完整模板目录，按分类、关键词和页码浏览。', motion_get_template: '读取选定模板的参考视频、源码、制作要求与项目格式。', motion_apply_template: '创建本地模板副本，保留原项目与素材。', motion_write_files: '写入原生 HTML、CSS 与 JS，编辑器同步更新。', motion_get_workflow: '读取制作、检查与交付流程。',
     motion_request_export: '请求导出当前版本的 MP4 视频。', motion_get_export: '查询导出进度，取得已完成视频的下载地址。',
   };
   async function checkConnection() {

@@ -1,3 +1,4 @@
+import { OpenDesignMark } from './OpenDesignMark';
 import { createContext, useContext, useEffect, useState, useRef, useCallback, lazy, Suspense, type ReactNode } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { ConnectionDialog } from './ConnectionDialog';
@@ -107,7 +108,7 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
   return <aside className="motion-sidebar" aria-label={t('Workspace navigation')}>
     <div className="motion-sidebar-brand">
       <button className="motion-brand" disabled={switchingDisabled} onClick={() => void workspace.home()} aria-label={t('OpenDesign home')} title={t('OpenDesign home')}>
-        <span className="motion-brand-mark"><MotionIcon name="layers" size={18} /></span><strong>OpenDesign</strong>
+        <span className="motion-brand-mark"><OpenDesignMark /></span><strong>OpenDesign</strong>
       </button>
       <button className="motion-icon-button motion-sidebar-close" onClick={close} aria-label={t('Close conversation list')}><MotionIcon name="close" /></button>
     </div>
