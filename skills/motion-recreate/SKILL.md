@@ -1,19 +1,15 @@
 ---
 name: motion-recreate
 description: >-
-  Use whenever the user pastes a video link (x.com, YouTube, Vimeo and similar) or a video file, even
-  with no other words: in a workspace with the user's product material, a bare link means "make a film
-  like this for us". Recreates a Motion reference video as the user's own film, whether the reference
-  is their own film or one they like. Covers a bare link, "make one like this / identical / same
-  style", "do this for our new feature", "I want this feel", and explicit change lists (wording,
-  brand, images, colours, pacing, scenes), including a few small edits to the user's own finished
-  video file when no editable project for it exists yet. Reads the user's project materials first,
-  asks at most once, rebuilds in an OpenMotion editor project with the content the user wants, and
-  delivers the film, the editable project and an original-versus-remix comparison. A reference used
-  only as loose inspiration for an otherwise original brief goes to motion-director; adapting or
-  reusing an editable template goes to motion-template-to-video; ordinary local edits to an existing editable
-  OpenMotion project do not start here. A requested reusable template folder or ZIP goes to
-  motion-video-to-template instead.
+  Recreate a reference video (a link or file) as the user's own Motion film: rebuild it as an
+  editable OpenMotion project and deliver the film with an original-versus-new comparison, keeping
+  the original content or swapping in the user's copy, brand and assets. This includes small edits to
+  the user's own finished video when no editable project for it exists. "Make one like this" and "I
+  want this feel" both count as recreation. In a workspace with the user's product material, a bare
+  link alone means "make one like this for us". Not for only analysing or discussing a video. Use
+  motion-director when the reference is only inspiration for an original film,
+  motion-template-to-video for an existing template, motion-production for edits to an existing
+  editable OpenMotion project, and motion-video-to-template for a reusable template package.
 ---
 
 # Motion Recreate — reference video → the user's own film
