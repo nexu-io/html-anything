@@ -2,7 +2,7 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import page from '../../../web/connect.html?raw';
 import { mountConnection } from '../../../web/connect';
-import { translate, type Locale } from './messages';
+import { dictionaries, languages, translate, type Locale } from './messages';
 
 let controller: ReturnType<typeof mountConnection> | undefined;
 afterEach(() => { controller?.destroy(); controller = undefined; document.body.replaceChildren(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
@@ -14,7 +14,7 @@ it('updates live dialog labels while preserving the chosen client, search, previ
   vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {});
   vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
   const info = { name: 'OpenMotion', version: '0.6.2', previewUrl: 'http://localhost:4173', dataDirectory: '/test/workspace', transport: { type: 'stdio', command: 'node', args: ['mcp.ts'], env: { MOTION_DATA_DIR: '/test/workspace' } }, tools: [{ name: 'motion_import_assets', description: 'Import assets' }, { name: 'motion_list_templates', description: 'List templates' }, { name: 'motion_get_template', description: 'Template details' }] };
-  const template = { id: 'reference', title: 'Preview', author: 'Creator', description: 'Original template description', tags: [], collection: 'moment', kind: 'reference' };
+  const template = { id: 'reference', title: 'Preview', author: 'Creator', description: 'Original template description', tags: [], role: 'a-roll', collection: 'moment', kind: 'reference' };
   const warning = '模板更新失败，使用已缓存目录：HTTP 503';
   vi.stubGlobal('fetch', vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? info : { items: [template], total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null, warning }))));
   const root = document.createElement('div');
@@ -24,13 +24,19 @@ it('updates live dialog labels while preserving the chosen client, search, previ
   controller = mountConnection(root, { locale: 'zh-CN', t: t('zh-CN'), close() {}, useTemplate() {} });
   controller.resume();
   await vi.waitFor(() => expect(root.querySelectorAll('[data-template-id]')).toHaveLength(1));
+  expect(root.querySelector('.connect-template-category')?.textContent).toBe('口播剪辑');
+  root.querySelector<HTMLButtonElement>('.connect-template-cover')!.click();
   root.querySelector<HTMLButtonElement>('#host-claude')!.click();
   const search = root.querySelector<HTMLInputElement>('#template-search')!;
   search.value = 'keep this query';
   const card = root.querySelector('[data-template-id]'), video = root.querySelector('video');
   const instruction = root.querySelector('#setup-prompt')!.textContent;
-  for (const locale of ['ja', 'de', 'ru', 'pt-BR', 'en'] as const) {
+  for (const { locale } of languages) {
     controller.setLanguage(locale, t(locale));
+    const category = locale === 'en' ? 'A-roll Cuts' : dictionaries[locale]['A-roll Cuts'];
+    expect(root.querySelector('.connect-template-category')?.textContent).toBe(category);
+    expect(root.querySelector('.connect-template-category')?.getAttribute('title')).toBe(category);
+    expect(root.querySelector('#preview-detail')?.textContent).toBe(category);
     expect(root.querySelector('#host-claude')?.getAttribute('aria-selected')).toBe('true');
     expect(root.querySelector('#config-description')?.textContent).toBe(translate(locale, 'Use this configuration to connect, keeping your existing services.'));
     expect(root.querySelector('#service-status')?.textContent).toBe(translate(locale, 'Workspace reachable · v{version}', { version: '0.6.2' }));
