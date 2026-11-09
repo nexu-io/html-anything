@@ -12,6 +12,10 @@
 
 例子用于说明范围判断，不限定对象形式、镜头结构或实现手法。文字变长可能需要排版调整，时长变化可能影响相邻转场和声音；在已授权范围内处理必要依赖并说明实际影响，不能为形式上的“少改几行”留下坏结果。只有影响目标的重要歧义或需要扩大授权范围时才追问。
 
+## Keep the preview visible during continued edits
+
+Before the first content write and after the saved batch, apply the [continuing-edit preview rules](native.md#continuing-edits). This applies across specialist and motion-production entries: reuse the same project/tab, restore a closed preview before editing, and inspect the latest content after saving. Explicit background requests take precedence.
+
 ## 基于当前工程修改
 
 先按 [共享上下文](context.md) 补齐本轮所需正文并完成读后决策边界，再检查目标工程、最新 revision 与受影响源文件。STATE 用于恢复决定，不能代替当前源文件。首次修改某对象时，留存足够的修改前证据：可用源文件片段、相关文件副本/哈希、时间线事件或对应画面；按风险选择，不要求每轮复制全工程。

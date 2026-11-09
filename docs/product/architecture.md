@@ -44,7 +44,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 1. 用户在首页切到 Motion 模式，选择 Motion 模板并提交需求创建会话；也可直接新建空白创作，或打开左侧已有会话。内置模板复制为该会话的工程，外部参考由 Agent 制作。
 2. 需要 Agent 时选择 Codex、Claude Code、DeepSeek Harness 或通用 stdio 客户端。接入配置绑定当前工作区；Agent 验证工具和数据目录，读取当前工程与制作规范。 安装后先介绍能力、邀请并等待选择；接受首次体验即确认 `product-promo` 示例内容、独立 20 秒工程、MP4 导出及右侧可编辑页面。Agent 不再问素材/模板/导出确认，实际打开宿主面板，等待并验证成片，最终回复交付 MP4 与简短说明。宿主没有面板能力时明确提供链接作为降级，不能冒称已打开；实际行为按客户端验证。
-3. 用户在会话补充需求并复制给外部 Agent。一期 Agent 用 `motion_get_project` 读取明确工程及其 sessionId、需求、来源与版本，按本轮意图选择入口或直接继续已选范围；编辑前校验工程归属，仅需编辑器时用 `motion_open_preview({projectId})` 打开。旧 design_* handler 仅留内部兼容。
+3. 用户在会话补充需求并复制给外部 Agent。一期 Agent 用 `motion_get_project` 读取明确工程及其 sessionId、需求、来源与版本，按本轮意图选择入口或直接继续已选范围；编辑前校验工程归属。For original creation, reference-video recreation and editable-template production, the Agent automatically calls `motion_open_preview({projectId})` after the requested HTML is saved and visibly opens its exact `previewUrl` in the host browser, before export or delivery; no extra user request is required. The shared [editable preview handoff](../../skills/motion-production/references/native.md#editable-preview-handoff) defines readiness, host checks and capability limitations. Continued content edits, including motion-production work, confirm the same project is visible before writing, reopen a closed tab as needed, reuse an existing tab and inspect the latest visible content after saving; explicit background requests suppress opening/focusing the editor. 旧 design_* handler 仅留内部兼容。
 4. Agent 根据本轮目标直接选择 Skill：motion-director 负责原创、局部/整体叙事动作声音重新设计和创作审片；motion-template-to-video 负责已有模板出片；motion-recreate 负责参考作品重建（已接入实际流程、独立参考与测量脚本）；motion-video-to-template 负责可复用模板生产；motion-production 承接既定决定下的工程操作、预览、技术检查、排错和导出。共享规则同源引用，已有 production/start 保留导航，无需前置总路由。项目来源与画面锁定不固定入口；保持项和已完成操作继续有效。
 5. Agent 导入素材或通过 Model Gateway 生成图片/视频/音频，完成后写入原生工程。用户在右侧浏览器 Tab 的 Motion Artifact Viewer 预览与编辑，可从空时间轴、素材面板或时间轴选区生成并放入指定时段；选中图片可交给 Codex 参考修改，确认后只替换素材引用并保留原生撤销。也可新增同会话的另一个工程，关闭浏览器继续会话、收起会话沉浸浏览。发生 revision 冲突时重新读取并合并。 按共享 context 补齐缺少的正文并先返回模型再执行；修改按共享 edit 核对保持项、相邻关系与后续延续。
 6. 完成画面、文案、声音检查后，按用户要求导出固定 revision 的快照，等待真实产物并验证。
@@ -153,7 +153,7 @@ flowchart LR
 - **界面状态：** 浏览器 Tabs、左右面板与宽度按会话保存；关闭 Tab 不删除产物。原生 Dock 按工程保存，主题沿用 Studio 偏好；语言单独保存为 `motion.studio.locale`，均不写入影片源文件。
 - **参考数据：** 模板原始目录、封面和热度快照与用户工程分开。热度按模板 ID、视频地址和原帖身份匹配；同源片段不累加查看量。
 - **导出输入：** 后台任务使用不可变快照并记录期望规格；后续编辑不改变该任务的本地输入。远程媒体需要稳定复现时先导入本地。
-- **后台与编辑器启动：** 仅导出启动后台服务，不初始化或补写当前工程；冷启动套模板直接创建选中的模板工程。显式打开预览时才初始化空工程或启动 Studio，已有后台服务原地升级。健康检查区分服务 `ready` 与 `editorReady`，不靠自动替换 expectedRevision 消除冲突。
+- **后台与编辑器启动：** 仅导出启动后台服务，不初始化或补写当前工程；冷启动套模板直接创建选中的模板工程。Studio starts when the Agent calls preview for an existing project, including the automatic handoff after production HTML is ready; the existing background service is reused. 健康检查区分服务 `ready` 与 `editorReady`，不靠自动替换 expectedRevision 消除冲突。
 - **服务边界：** 当前在本机回环地址运行。Model Gateway 使用本机 Codex 登录或用户自有 Atlas/fal Key 发起媒体生成，接口共用本地任务与素材入库；不托管聊天 Agent、团队协作或计费。当前使用用户自有账户接入，详见 [模型网关](../model-gateway.md)。
 - **模型与凭据：** 配置和任务独立于工程，Key 不通过 API 返回。安装、配置、允许请求、生成成功是不同状态；任务固定发起工程，失败不静默重试。完成后的素材参与工程 revision 与导出快照。
 - **并发边界：** macOS 同目录多个 MCP 连接共用后台，各自绑定工程；工作区仍只有一个活动原生 Studio、一个等待/运行的导出。导出固定工程与快照，重启将中断任务持久化为失败且不重放。文件锁和 revision 保护工具写入；人工与 Agent 同时编辑同一文件仍需协调，不能当作跨工具数据库事务。
