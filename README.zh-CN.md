@@ -1,4 +1,4 @@
-# OpenMotion · 在 Codex 里制作品牌视频
+# OpenMotion · 在 Codex 里逆向拆解品牌视频
 
 用自己的素材复刻科技品牌视频里的文字动画、转场与节奏，在 Studio 中继续编辑，导出 MP4。
 

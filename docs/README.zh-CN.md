@@ -1,6 +1,6 @@
-<h1 align="center">OpenMotion · 在 Codex 里制作品牌视频</h1>
+<h1 align="center">OpenMotion · 在 Codex 里逆向拆解品牌视频</h1>
 
-<p align="center">拆解你喜欢的科技品牌视频，用自己的 Logo、产品截图和文案，复刻它的文字动画、转场和镜头节奏。<br />
+<p align="center">选一支你喜欢的科技品牌视频，用自己的 Logo、产品截图和文案，复刻它的文字动画、转场和镜头节奏。<br />
 拿到一份能接着改的工程，也拿到一支能直接分享的 MP4。</p>
 
 <p align="center"><strong><a href="#在-codex-里开始">在 Codex 里试做 20 秒示例</a></strong> · <a href="#复用参考片的拍法">看 5 秒复刻对照</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读这支片的 Motion MD</a> · <a href="collections/README.zh-CN.md">找参考片</a></p>

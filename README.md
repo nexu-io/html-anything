@@ -1,6 +1,6 @@
-<h1 align="center">OpenMotion — Make brand videos in Codex</h1>
+<h1 align="center">OpenMotion — Reverse-engineer brand videos in Codex</h1>
 
-<p align="center">Reverse-engineer the motion in videos from tech brands. Recreate it with your own logo, screenshots and copy.<br />
+<p align="center">Pick a video from a tech brand you love. Recreate its animated type, transitions and timing with your own logo, product screenshots and copy.<br />
 Keep the editable project and export an MP4.</p>
 
 <p align="center"><strong><a href="#start-in-codex">Try the 20-second demo in Codex</a></strong> · <a href="#make-a-reference-your-own">Watch a 5-second remix</a> · <a href="examples/reference-reveal/MOTION.md">Read its Motion MD</a> · <a href="docs/collections/README.md">Find a reference</a></p>
