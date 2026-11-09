@@ -9,6 +9,8 @@ Recreate it for your brand.</h1>
 
 <p align="center">Bring an X or YouTube link, or pick from <strong><a href="#motion-library-and-collections">100+ one-click video recreation templates</a></strong>, including brand films from Figma, Linear and Firecrawl. Recreate the shots in Codex with your logo, screenshots and copy. Export an MP4 and keep the editable project.</p>
 
+<p align="center">This release includes our <strong><a href="examples/reference-reveal/MOTION.md">open-source MOTION.md breakdown of Firecrawl’s launch film</a></strong>. It maps a five-second shot from the number reveal to the orbit and closing logo, with cues you can reuse in Codex.</p>
+
 <p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 15-second demo</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
 
 <p align="center">
@@ -25,7 +27,7 @@ Recreate it for your brand.</h1>
   <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install OpenMotion, paste the original OpenAI X post into Codex, open the Studio timeline and compare five seconds of the original and the OpenDesign remake." />
 </picture></a></p>
 
-<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">Open the original X post</a> · <a href="examples/reference-reveal/comparison.mp4">Firecrawl original vs. remake · 5s</a> · <a href="#make-a-reference-your-own">Compare the three brands</a> · <a href="examples/reference-reveal/MOTION.md">Read a Motion MD breakdown</a></p>
+<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">Open the original X post</a> · <a href="examples/reference-reveal/comparison.mp4">Firecrawl original vs. remake · 5s</a> · <a href="#make-a-reference-your-own">Compare the three brands</a></p>
 
 <p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="docs/collections/README.md">Find a reference</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 

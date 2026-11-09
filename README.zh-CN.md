@@ -8,6 +8,8 @@
 
 把 X 或 YouTube 视频链接贴进 Codex，或从 **[100+ 个可一键复刻的视频模板](docs/README.zh-CN.md#motion-资源库与主题合集)**里选一支，参考 Figma、Linear、Firecrawl 等热门品牌的拍法。换上你的 Logo、产品截图和文案，导出 MP4，工程还能接着改。
 
+首版开源了**[Firecrawl 品牌宣传片的 MOTION.md 拆解](examples/reference-reveal/MOTION.zh-CN.md)**。从大数字亮相、镜头拉远到 Logo 收尾，这 5 秒逐段标了时间，可以交给 Codex 复刻。
+
 **[看 15 秒演示](docs/readme/studio-tour.zh-CN.mp4)** · **[在 Codex 里试用](docs/README.zh-CN.md#在-codex-里开始)**
 
 <p align="center">
@@ -24,6 +26,6 @@
   <img src="docs/readme/codex-comparison.zh-CN.webp" width="100%" alt="在 Codex 安装插件并贴入 OpenAI 的 X 原帖，打开 Studio 工程，原速对照 5 秒品牌片尾。" />
 </picture></a></p>
 
-[看 OpenAI 的 X 原帖](https://x.com/OpenAI/status/2084352161404920316) · [Firecrawl 原片与复刻 · 5 秒对照](examples/reference-reveal/comparison.mp4) · [看 Figma、OpenAI 和 Firecrawl 三组同步对照](docs/README.zh-CN.md#复用参考片的拍法) · [读 Motion MD 分镜拆解](examples/reference-reveal/MOTION.zh-CN.md)
+[看 OpenAI 的 X 原帖](https://x.com/OpenAI/status/2084352161404920316) · [Firecrawl 原片与复刻 · 5 秒对照](examples/reference-reveal/comparison.mp4) · [看 Figma、OpenAI 和 Firecrawl 三组同步对照](docs/README.zh-CN.md#复用参考片的拍法)
 
 [阅读完整中文 README](docs/README.zh-CN.md) · [原 HTML Anything 编辑器与安装说明](https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md) · [English](README.md)
