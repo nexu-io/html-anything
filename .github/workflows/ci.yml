@@ -118,7 +118,10 @@ jobs:
         uses: actions/upload-artifact@v7.0.2
         with:
           name: motion-install-guide-preview-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .artifacts/install-guide/
+          path: |
+            .artifacts/install-guide/install.md
+            .artifacts/install-guide/install-record.json
+          include-hidden-files: true
           retention-days: 14
           if-no-files-found: error
       - name: Record validation scope
@@ -168,7 +171,10 @@ jobs:
         uses: actions/upload-artifact@v7.0.2
         with:
           name: motion-install-guide-validated-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ env.GUIDE_DIRECTORY }}/
+          path: |
+            ${{ env.GUIDE_DIRECTORY }}/install.md
+            ${{ env.GUIDE_DIRECTORY }}/install-record.json
+          include-hidden-files: true
           retention-days: 14
           if-no-files-found: error
 
