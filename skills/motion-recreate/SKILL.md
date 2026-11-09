@@ -50,11 +50,11 @@ Ask only when the workspace and the request together still lack something only t
 
 Ask all of it in one batch through the host's question interface, in the user's language. If nothing is missing, do not ask. Do not ask about technical choices, intermediate approval or storyboards. After the answers, work through to the finished film without stopping.
 
-## 4. Create and open the project
+## 4. Create the project
 
 Follow the [runtime adapter](../motion-production/references/production.md) and [Native authoring](../motion-production/references/native.md). A continued recreation reuses its projectId. Otherwise create one project with `motion_create_project` and a stable requestId: `projectType: "reference_video"` with `referenceUrl` for a link, or `projectType: "natural_language"` for a local file, with the file path and the agreed brief in `requirements`. Creation makes an empty carrier, not a film, and never overwrites another project.
 
-Read `motion_get_project({projectId})` for the directory, revision, current version, `hyperframesCli` and `authoringGuide`; read the pinned engine guide before writing source. Commands you run yourself (`node <hyperframesCli>`, the measurer, `ffmpeg`) use `node` and `ffmpeg` from `PATH`. The self-contained package does not put them on `PATH`: its directory is the one holding `node_modules/hyperframes` in the `hyperframesCli` path, with Node at `runtime/node/bin/node` (Windows `runtime\node\node.exe`) and FFmpeg/ffprobe in `runtime/media/bin`. For an npm installation there is no bundled `runtime/` directory: the application root is the directory containing `node_modules/hyperframes`, and `scripts/npm-runtime.mjs` exports `ensureNativeRuntime(appRoot)` and `nativeConfiguration(appRoot)`. Prepare through the former when needed; the latter returns `paths.HYPERFRAMES_FFMPEG_PATH` and `paths.HYPERFRAMES_FFPROBE_PATH` for the verified cache. Pass these as environment variables to the measurer or direct media commands. When neither is available, record the affected check as blocked with the reason; never as passed. Call `motion_open_preview({projectId})` and visibly open the returned `previewUrl` in the host's built-in browser; without browser control, continue in the background and say so at delivery.
+Read `motion_get_project({projectId})` for the directory, revision, current version, `hyperframesCli` and `authoringGuide`; read the pinned engine guide before writing source. Commands you run yourself (`node <hyperframesCli>`, the measurer, `ffmpeg`) use `node` and `ffmpeg` from `PATH`. The self-contained package does not put them on `PATH`: its directory is the one holding `node_modules/hyperframes` in the `hyperframesCli` path, with Node at `runtime/node/bin/node` (Windows `runtime\node\node.exe`) and FFmpeg/ffprobe in `runtime/media/bin`. For an npm installation there is no bundled `runtime/` directory: the application root is the directory containing `node_modules/hyperframes`, and `scripts/npm-runtime.mjs` exports `ensureNativeRuntime(appRoot)` and `nativeConfiguration(appRoot)`. Prepare through the former when needed; the latter returns `paths.HYPERFRAMES_FFMPEG_PATH` and `paths.HYPERFRAMES_FFPROBE_PATH` for the verified cache. Pass these as environment variables to the measurer or direct media commands. When neither is available, record the affected check as blocked with the reason; never as passed.
 
 ## 5. Rebuild, then change
 
@@ -69,6 +69,8 @@ New content must keep the reference's craft, not just its palette. Match its vis
 Apply the changes with care: fit longer text with related layout and reading-time changes, update every relevant appearance of a replaced brand or object, keep unrelated content and motion, never invent facts, and check audio timing when changes shift pictures.
 
 Sound: when the reference has sound, the remix has sound. Keep the reference soundtrack by default (extract it as AAC `.m4a` and import it) and re-time it to the new cut; remove a voiceover that names the reference's brand or product. Deliver a silent film only when the user asks or the reference is silent.
+
+Once this turn's requested HTML output is saved, complete the [editable preview handoff](../motion-production/references/native.md#editable-preview-handoff) automatically, before export or delivery.
 
 ## 6. Export and check
 

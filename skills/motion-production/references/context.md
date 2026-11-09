@@ -29,7 +29,7 @@ Agent 结合当前目标、保持项与工程状态选择本轮入口；工程�
 | --- | --- |
 | 原创新片／大幅重编 | [动作脚本](../../motion-director/references/action-script.md)、[动态表现](../../motion-director/references/motion-craft.md)、[动作短句](../../motion-director/references/motion-phrases.md)、[审片](../../motion-director/references/motion-review.md) |
 | 新设计声音叙事或工程音轨调整，含画面锁定 | [声音叙事](../../motion-director/references/sound-narrative.md)、[动作脚本的声画锚点](../../motion-director/references/action-script.md)、审片；只应用声音相关内容，不启动原创流程 |
-| 仅原样交付与当前源文件对应的模板 preview.mp4 | 按 motion-template-to-video 核对文件身份、存在与可解码；不因交付已有文件加载工程创作／导出依赖；已修改工程不能复用原模板旧预览 |
+| 仅原样交付与当前源文件对应的模板 preview.mp4 | Follow motion-template-to-video for file identity/existence/decode checks and the [editable preview handoff](native.md#editable-preview-handoff); load no authoring/export dependencies. An edited project cannot reuse the original template preview. |
 | 使用／适配可编辑模板，需要创建、编辑或渲染工程 | [模板能力说明](templates.md)、审片；默认内容的草稿也需读模板能力说明 |
 | 明确要求视频转可复用模板 | [motion-video-to-template](../../motion-video-to-template/SKILL.md) 的制作与打包参考按阶段读取；制作决策、审片及实际参考视频 |
 | 复刻视频 | [制作决策](../../motion-director/references/production-decisions.md)、审片，另实际检查参考视频 |
@@ -49,7 +49,7 @@ Agent 结合当前目标、保持项与工程状态选择本轮入口；工程�
 
 ## 会话与产物归属
 
-操作工程时用 `motion_get_project({projectId})` 核对项目、sessionId 和当前版本；没有 projectId 时先查分页列表。独立新任务通过 `motion_create_project` 创建项目，可传已有 OpenMotion sessionId 归属；只有要打开 GUI 时才调用 `motion_open_preview({projectId})`。宿主聊天 ID 不自动等于 OpenMotion sessionId，未绑定时不能用全局最近项目猜测归属。
+操作工程时用 `motion_get_project({projectId})` 核对项目、sessionId 和当前版本；没有 projectId 时先查分页列表。独立新任务通过 `motion_create_project` 创建项目，可传已有 OpenMotion sessionId 归属。Original creation, reference-video recreation and editable-template production complete the [editable preview handoff](native.md#editable-preview-handoff) when the requested HTML is ready. Existing-project content edits follow its [continuing-edit rules](native.md#continuing-edits) across all entries; other scopes open the GUI on request. 宿主聊天 ID 不自动等于 OpenMotion sessionId，未绑定时不能用全局最近项目猜测归属。
 
 ## 一份上下文
 
