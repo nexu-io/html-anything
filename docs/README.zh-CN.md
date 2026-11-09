@@ -78,7 +78,7 @@
 
 ## MCP 与轻量安装
 
-[npm 轻量安装器](npm-installation.md) 可为 Codex、Claude Code、DeepSeek Harness、WorkBuddy 同装11 个 MCP Tool 和五个 Skill，共用应用并按需准备经过校验的原生工具。运行 `npm run package:npm` 本地构建；npm 包尚未公开发布，完整 ZIP 保留备用。
+The [Motion application npm package](npm-installation.md) bundles the application and default manifest, installs 11 MCP Tools and five Skills, and prepares locked dependencies/native tools separately. [test/stable acceptance](release-guide.md) includes DEV isolation and upgrade/recovery checks. Build locally with `npm run package:npm`; this change does not publish a package.
 
 五个入口为 [motion-production](../skills/motion-production/SKILL.md)、[motion-director](../skills/motion-director/SKILL.md)、[motion-template-to-video](../skills/motion-template-to-video/SKILL.md)、[motion-recreate](../skills/motion-recreate/SKILL.md)、[motion-video-to-template](../skills/motion-video-to-template/SKILL.md)。参考复刻已实现；产品 UI 沿用 [OpenDesign 视觉规范](design-system.md)，视频作品保留自身样式。
 

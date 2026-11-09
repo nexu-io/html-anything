@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { access, mkdir, mkdtemp, readFile, readdir, writeFile } from 'node:fs/promises';
+import { access, cp, mkdir, mkdtemp, readFile, readdir, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,10 +21,12 @@ export async function smokeNpm(filename, codexJS) {
   const profile = path.join(out, 'codex'), project = path.join(out, 'project'), skills = path.join(project, '.agents/skills');
   await mkdir(profile); await mkdir(project);
   await writeFile(path.join(profile, 'config.toml'), 'cli_auth_credentials_store = "file"\nmcp_oauth_credentials_store = "file"\n[mcp_servers.unrelated]\ncommand = "keep-this-server"\n');
-  const env = { ...process.env, CODEX_HOME: profile, PORT: process.env.PORT || String(await testPort()) };
+  const candidate = path.join(out, 'candidate.tgz');
+  await cp(installer, candidate);
+  const env = { ...process.env, npm_config_cache: path.join(out, 'npm-cache'), CODEX_HOME: profile, PORT: process.env.PORT || String(await testPort()) };
   for (const key of ['HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'HYPERFRAMES_BROWSER_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH', 'MOTION_BROWSER_PATH']) delete env[key];
   const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
-  const setup = [npm, 'exec', '--yes', '--package', installer, '--', 'openmotion', 'setup', '--host', 'codex', '--manifest', filename, '--home', home, '--data-dir', data, '--skills-dir', skills, '--codex', codexJS];
+  const setup = [npm, 'exec', '--yes', '--package', candidate, '--', 'openmotion', 'setup', '--host', 'codex', '--home', home, '--data-dir', data, '--skills-dir', skills, '--codex', codexJS];
   console.error('Install final npm artifact into isolated profile: ' + out);
   const first = JSON.parse(await runFile(process.execPath, setup, { env, cwd: project }));
   const again = JSON.parse(await runFile(process.execPath, setup, { env, cwd: project }));
@@ -44,14 +46,16 @@ export async function smokeNpm(filename, codexJS) {
   const installed = JSON.parse(await runFile(process.execPath, [codexJS, 'mcp', 'get', 'openmotion', '--json'], { env, cwd: project }));
   assert.equal(installed.transport.command, process.execPath); assert.deepEqual(installed.transport.args, [first.launcher]);
   const native = await nativeConfiguration(first.appRoot);
+  await assert.rejects(access(path.join(home, 'cache/native')), { code: 'ENOENT' });
+  // Three sequential native downloads each have a five-minute bound; allow extraction as well.
+  await runFile(process.execPath, [npm, 'exec', '--yes', '--package', candidate, '--', 'openmotion', 'prepare', '--home', home], { env, cwd: project, timeout: 16 * 60_000 });
   const reportFile = path.join(path.dirname(filename), `smoke-npm-${target}.json`);
   const report = await acceptTransport({ transport: { ...installed.transport, cwd: first.appRoot },
     env: { ...env, PATH: process.platform === 'win32' ? path.join(process.env.SystemRoot, 'System32') : '/usr/bin:/bin' }, data,
     metadata: { ...manifest, target }, archive: installer, ffmpeg: native.paths.HYPERFRAMES_FFMPEG_PATH, reportFile,
-    deferredNativeDirectory: path.join(home, 'cache/native'),
-    installation: { format: 'npm', applicationSHA256: manifest.application.sha256, npmLockSHA256: manifest.locks.npm, nativeLockSHA256: manifest.locks.native, repeatInstall: 'passed', nativeSkills: 'passed', deferredNativeDownload: 'passed', isolatedDirectory: out } });
+    installation: { format: 'npm', applicationSHA256: manifest.application.sha256, npmLockSHA256: manifest.locks.npm, nativeLockSHA256: manifest.locks.native, repeatInstall: 'passed', nativeSkills: 'passed', setupDefersNativeDownload: 'passed', explicitNativePreparation: 'passed', bundledApplicationInstall: 'passed', isolatedDirectory: out } });
   const before = await readFile(path.join(native.cache, 'browser-' + native.info.browser.sha256, 'ready.json'), 'utf8');
-  await runFile(process.execPath, [npm, 'exec', '--yes', '--package', installer, '--', 'openmotion', 'prepare', '--home', home], { env, cwd: project });
+  await runFile(process.execPath, [npm, 'exec', '--yes', '--package', candidate, '--', 'openmotion', 'prepare', '--home', home], { env, cwd: project });
   assert.equal(await readFile(path.join(native.cache, 'browser-' + native.info.browser.sha256, 'ready.json'), 'utf8'), before);
   report.nativeCacheReuse = 'passed';
   await writeFile(reportFile, JSON.stringify(report, null, 2) + '\n');

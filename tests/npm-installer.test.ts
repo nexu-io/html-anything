@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { chmod, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
+import { chmod, cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
@@ -32,9 +32,10 @@ function clearNativeEnvironment(t: any) {
 }
 async function setupFixture(t: any) {
   const directory = await fixture(t), application = path.join(directory, 'source'), home = path.join(directory, 'install'), skillsDirectory = path.join(directory, 'skills');
-  for (const name of ['scripts', 'studio/build', 'skills/motion-production', 'docs']) await mkdir(path.join(application, name), { recursive: true });
+  for (const name of ['scripts', 'shared', 'studio/build', 'skills/motion-production', 'docs']) await mkdir(path.join(application, name), { recursive: true });
   for (const name of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'README.md', 'AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(application, name), 'fixture');
   await writeFile(path.join(application, 'skills/motion-production/SKILL.md'), '---\nname: motion-production\ndescription: fixture\n---\nFixture');
+  await writeJSON(path.join(application, 'shared/template-config.json'), { environment: 'prod' });
   await writeJSON(path.join(application, 'package.json'), { name: 'motion-fixture', version: '1.2.3', private: true });
   await writeJSON(path.join(application, 'package-lock.json'), { name: 'motion-fixture', version: '1.2.3', lockfileVersion: 3, packages: { '': { name: 'motion-fixture', version: '1.2.3' } } });
   const manifest = path.join(directory, 'release.json');
@@ -45,6 +46,40 @@ async function setupFixture(t: any) {
   await chmod(codex, 0o755);
   return { directory, application, home, skillsDirectory, manifest, codex, config };
 }
+
+test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and rejects a mixed-environment home', async t => {
+  const options = await setupFixture(t), bundle = path.join(options.directory, 'bundle');
+  await mkdir(path.join(bundle, 'scripts'), { recursive: true }); await mkdir(path.join(bundle, 'payload'));
+  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs']) {
+    await cp(new URL('../scripts/' + file, import.meta.url), path.join(bundle, 'scripts', file));
+  }
+  await writeJSON(path.join(bundle, 'package.json'), { version: '1.2.3', type: 'module' });
+  const metadata = JSON.parse(await readFile(options.manifest, 'utf8'));
+  metadata.templateEnvironment = 'dev';
+  await writeJSON(path.join(options.application, 'shared/template-config.json'), { environment: 'dev' });
+  metadata.application = await archive(options.directory, options.application, 'dev-application');
+  await cp(new URL(metadata.application.url), path.join(bundle, 'payload/application.tar.gz'));
+  metadata.application.url = './application.tar.gz';
+  await writeJSON(path.join(bundle, 'payload/release-npm.json'), metadata);
+  const env = { ...process.env, HOME: options.directory, USERPROFILE: options.directory, LOCALAPPDATA: options.directory,
+    WORKBUDDY_CONFIG_DIR: path.join(options.directory, 'buddy'), npm_config_cache: path.join(options.directory, 'npm-cache') };
+  const cli = path.join(bundle, 'scripts/npm-installer.mjs');
+  const command = [cli, 'setup', '--host', 'workbuddy', '--skills-dir', options.skillsDirectory];
+  const first = JSON.parse(await runFile(process.execPath, command, { env }));
+  assert.equal(path.basename(path.dirname(first.launcher)), 'openmotion-dev');
+  assert.equal(first.templateEnvironment, 'dev');
+  assert.equal((await runFile(process.execPath, command, { env })).includes(first.appRoot), true);
+  const stateBefore = await readFile(path.join(path.dirname(first.launcher), 'install.json'), 'utf8');
+  metadata.templateEnvironment = 'prod';
+  await writeJSON(path.join(bundle, 'payload/release-npm.json'), metadata);
+  await assert.rejects(runFile(process.execPath, [...command, '--home', path.dirname(first.launcher)], { env }), /another template environment/);
+  assert.equal(await readFile(path.join(path.dirname(first.launcher), 'install.json'), 'utf8'), stateBefore);
+  await assert.rejects(runFile(process.execPath, [cli, 'setup', '--host', 'workbuddy', '--home', path.join(options.directory, 'other-app'), '--skills-dir', path.join(options.directory, 'other-skills')], {
+    env: { ...env, WORKBUDDY_CONFIG_DIR: path.join(options.directory, 'other-buddy') },
+  }), /template environment does not match manifest/);
+  await writeJSON(path.join(bundle, 'package.json'), { version: '9.9.9', type: 'module' });
+  await assert.rejects(runFile(process.execPath, command, { env }), /match the npm package version/);
+});
 
 test('local assets require pinned checksums and preserve earlier cache after corruption', async t => {
   const dir = await fixture(t), source = path.join(dir, 'source'), destination = path.join(dir, 'cached');

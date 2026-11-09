@@ -2,24 +2,24 @@
 
 当前源码位于 仓库根目录；下列模块命令在该目录执行。活动工作流在仓库根目录 `.github/workflows/ci.yml`，发布保持关闭。迁移基线及历史验收范围见[迁移说明](repository-migration.md)。
 
-MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册清单](mcp-phase1-tools.md)。`build <target> <beta-version> [legacy|phase1]` 将 profile 和工具名写入 `release.json`；默认沿用源码的 phase1，公开11个 motion_ Tool 并包含5个配套 Skill。缺注册时在创建 staging／ZIP 前失败；本次验证的插件 ZIP 不等于各平台完整原生包已重新验收。
+MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册清单](mcp-phase1-tools.md)。`build <target> <release-version> [legacy|phase1]` 将 profile 和工具名写入 `release.json`；默认沿用源码的 phase1，公开11个 motion_ Tool 并包含5个配套 Skill。缺注册时在创建 staging／ZIP 前失败；本次验证的插件 ZIP 不等于各平台完整原生包已重新验收。
 
 本流程服务于团队试装和问题复现；当前只有测试渠道，尚未启用正式包或自动升级。编辑器和模板业务使用同一份源码。完整包同时包含模型网关 gateway/；供应商 Key 和本机 Agent 登录仍由用户配置，不随包分发。
 
 ## 手动构建
 
-合入后，在本仓库 → Actions → **Motion standalone checks** → Run workflow 选择 `format`。默认 `npm`，`full` 组装两个已声明目标的完整 ZIP。两种格式共用源码、锁定依赖和唯一 beta 版本。
+合入后，在本仓库 → Actions → **Motion standalone checks** → Run workflow 选择 `format`。默认 `npm`，`full` 组装两个已声明目标的完整 ZIP。两种格式共用源码、锁定依赖和unique test versions。
 
 `template_environment` selects the configuration platform for either format: `prod` (default, `r.open-design.ai`) or `dev` (`r.powerformer.net`). Local builders accept `--template-env=dev|prod`. The choice is embedded in `shared/template-config.json` and recorded as `templateEnvironment` in the release manifest; Studio and MCP share it. DEV application archives and full ZIP manifests have a `-dev` suffix. This selects the template source, not a publication channel; publishing remains disabled. See [template configuration](template-catalog.md#环境与构建).
 
 | 选择 | 构建产物 | 运行时 |
 | --- | --- | --- |
-| `npm`（默认） | 轻量安装器 `.tgz`、应用 `.tar.gz`、`release-npm.json`、SHA256 | 目标机按应用 lockfile 安装 npm 依赖；首次需要时下载固定原生工具 |
+| `npm`（默认） | Application npm `.tgz` with embedded app/manifest, plus external archive, release record and SHA256 | 目标机按应用 lockfile 安装 npm 依赖；首次需要时下载固定原生工具 |
 | `full`（备用） | Mac arm64 / Windows x64 完整 ZIP、SHA256、`release-<target>.json` | 内置目标平台 Node、生产依赖和原生工具 |
 
-当前 本仓库工作流只构建和校验，不上传 Actions 制品，不发布 npm、Release 或存储对象；两种格式误勾 `publish` 均会失败。本地构建的制品位于 `dist/`，按 [npm 安装说明](npm-installation.md) 使用相邻的安装器、应用归档和清单。
+Ordinary builds retain candidate installation-guide artifacts for review; they do not publish npm, Release or R2 objects. Separate manual guide publication follows the release guide; 两种格式误勾 `publish` 均会失败。本地构建的制品位于 `dist/`，The tgz alone is sufficient for setup; adjacent application/manifest files are evidence and an explicit-manifest fallback. See [installation](npm-installation.md) and [test/stable acceptance](release-guide.md).
 
-版本为 `下一补丁版本-beta.<run-number>.<attempt>`。例如源码 0.6.2 的第 42 次构建生成 0.6.3-beta.42.1。npm 安装器、应用 package.json、应用锁文件和 MCP 版本一致；清单记录源码 HEAD、构建身份和校验值，既有输出目录拒绝覆盖，源码版本不会被构建改写。
+Explicit builds accept stable `MAJOR.MINOR.PATCH` or `MAJOR.MINOR.PATCH-test.N[.N]`. The CI helper selects next-patch `test.<run>.<attempt>` (for example, 0.6.3 → 0.6.4-test.42.1). All embedded identities agree; output directories cannot be overwritten and source versions do not change. DEV and unversioned local builds remain private; explicit prod test/stable metadata selects test/stage. Publication remains disabled.
 
 PR / main 工作流执行清单、类型、Studio 构建与回归、安装/打包测试，以及十一个 Tool 的真实 ZIP E2E。Linux 是组装与测试环境，不是已支持的用户运行平台。Mac / Windows 的最终安装和真实出片仍须在对应系统验收；当前 本仓库工作流没有 Windows 或 Mac 原生验收 job，不把产包成功写成通过。
 
@@ -59,7 +59,7 @@ codex plugin list --marketplace openmotion-test
 
 ## 本地复现与验收
 
-默认轻量格式在 `npm ci`、`npm run build:studio` 后执行：
+Default application npm format在 `npm ci`、`npm run build:studio` 后执行：
 
 ```sh
 version=$(node scripts/test-package.mjs version 42 1)
@@ -75,7 +75,7 @@ node scripts/smoke-npm-package.mjs "dist/$version/release-npm.json" /absolute/pa
 npm run package:test -- prepare mac-arm64
 npm ci
 npm run build:studio
-npm run package:test -- build mac-arm64 0.6.2-beta.42.1
+npm run package:test -- build mac-arm64 0.6.4-test.42.1
 npm install --prefix .tools/codex-cli --ignore-scripts --no-audit --no-fund @openai/codex@0.166.0
 node scripts/smoke-test-package.mjs <最终ZIP路径> .tools/codex-cli/node_modules/@openai/codex/bin/codex.js
 ```

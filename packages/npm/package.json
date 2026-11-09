@@ -1,8 +1,8 @@
 {
-  "name": "@openmotion/installer",
-  "version": "0.6.2-local.1",
+  "name": "@openmotion/app",
+  "version": "0.6.3-local.1",
   "private": true,
-  "description": "Local-only OpenMotion MCP and Skills installer for Codex, Claude Code, DeepSeek Harness and WorkBuddy",
+  "description": "OpenMotion application, MCP and Skills installer for local Agent hosts",
   "type": "module",
   "engines": {
     "node": ">=22.18.0"
@@ -12,6 +12,9 @@
   },
   "files": [
     "scripts/",
-    "README.md"
-  ]
+    "payload/",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "Apache-2.0"
 }

@@ -179,13 +179,15 @@ The following product measures still require agreed observation windows and vali
 
 开始采集前需记录事件定义、观察窗口、样本来源和隐私边界。人物、商业和指标实验的证据写回对应文档，不能用开源仓库热度或模板原帖播放量替代。
 
-## npm 本地安装渠道
+## Application npm distribution
 
-当前分支增加独立于插件的 npm 轻量安装入口（本地 / Actions 测试制品，不发布 npm）：按宿主安装 Codex、Claude Code、DeepSeek Harness、WorkBuddy 的 一期 11 Tool MCP 与 production/director/template/recreate/video-to-template 五个 Skills，共用应用、工程目录和依赖缓存；固定原生依赖首次使用时下载到用户缓存。应用不从临时 npx 缓存运行，作品与应用/依赖目录分开；已有插件和完整测试包保留。下载来源、版本和校验值共用运行时清单；Mac FFmpeg/ffprobe 使用独立的公开 9.0.2 ZIP 并自动安装，原生依赖无需公司仓库凭据，尚未发布 npm。实现与验证边界见 [npm 安装](../npm-installation.md)。
+The `@openmotion/app` npm tgz contains installer scripts, the prebuilt application archive and its pinned default manifest. Setup needs only that tgz, stages the checked application into a managed writable directory, installs production npm dependencies from its lock and registers the selected host's eleven MCP Tools and five Skills. It never runs the app or writes projects in the npx cache. Node/Agent remain user-provided; FFmpeg, ffprobe and the browser are checked downloads, deferred until prepare or native use. Existing plugin and complete platform ZIP channels remain available.
+
+Explicit test/stable prod builds produce publishable artifact metadata with test/stage defaults; the source manifests and local/DEV artifacts stay private. Packaging does not publish, update users, move main or rename the repository. DEV packages embed their template source, default to a separate installation home and refuse cross-environment reuse. Application, project data, host configuration and dependency cache retain distinct ownership. See [installation](../npm-installation.md) and [test/stable acceptance](../release-guide.md).
 
 ## 演进约束
 
-本地测试包按 mac-arm64 / win-x64 准备固定公开原生依赖。npm 为默认轻量格式，完整 ZIP 为备用；平台安装和真实出片必须独立验收。工程保留在包外，当前 CI 只构建与校验，不上传或发布。见 [测试包说明](../test-packages.md)。
+本地测试包按 mac-arm64 / win-x64 准备固定公开原生依赖。The application npm format is the default; complete platform ZIPs are backups. Native installation, Agent creation and human playback need separate evidence. Projects remain outside the package; ordinary CI builds and validates, and retains candidate installation-guide previews. A separate manual guide mode can verify a published npm version and, through an explicit default-off upload option using repository R2 configuration, upload versioned/fixed instructions to R2. Package-name validation reads the source package metadata; no separate package variable or GitHub Environment is required. It does not publish npm or Release assets. The guide path, repository configuration and current default-branch dispatch limitation are documented in the release guide. See [package checks](../test-packages.md).
 
 已确认方向是继续支持多 Agent 接入、可编辑工程与一个工作区内的发现/制作闭环。
 

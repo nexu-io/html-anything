@@ -10,8 +10,10 @@ import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, rel
 import { ensureNativeRuntime } from './npm-runtime.mjs';
 import { hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
 
+// Keep ownership stable so earlier local installations remain upgradable.
 export const managedBy = '@openmotion/installer';
-const defaultHome = () => path.join(process.platform === 'win32' ? process.env.LOCALAPPDATA || os.homedir() : path.join(os.homedir(), '.local/share'), 'openmotion');
+const bundledManifest = fileURLToPath(new URL('../payload/release-npm.json', import.meta.url));
+const defaultHome = (environment = 'prod') => path.join(process.platform === 'win32' ? process.env.LOCALAPPDATA || os.homedir() : path.join(os.homedir(), '.local/share'), environment === 'dev' ? 'openmotion-dev' : 'openmotion');
 const contains = (parent, child) => { const rel = path.relative(parent, child); return rel === '' || (!rel.startsWith('..' + path.sep) && rel !== '..' && !path.isAbsolute(rel)); };
 
 export async function localManifest(filename) {
@@ -37,8 +39,11 @@ export async function localManifest(filename) {
 }
 
 export async function setup(options) {
-  let { manifest: filename, home = defaultHome(), dataDirectory } = options;
-  const manifest = await localManifest(filename);
+  const manifest = await localManifest(options.manifest || bundledManifest);
+  if (!options.manifest) assert.equal(manifest.version, (await readJSON(new URL('../package.json', import.meta.url))).version, 'Bundled application must match the npm package version');
+  const templateEnvironment = manifest.templateEnvironment ?? 'prod';
+  assert(['dev', 'prod'].includes(templateEnvironment), 'Invalid template environment');
+  let { home = defaultHome(templateEnvironment), dataDirectory } = options;
   home = await canonical(home);
   dataDirectory = await canonical(dataDirectory || path.join(home, 'data'));
   assert(!contains(dataDirectory, home) && !['apps', 'cache', 'hosts'].some(name => contains(path.join(home, name), dataDirectory)),
@@ -48,6 +53,7 @@ export async function setup(options) {
     const stateFile = path.join(home, 'install.json'), previous = await readJSON(stateFile);
     assert(previous === null || previous.managedBy === managedBy, 'Installation directory belongs to another application');
     assert(!previous || previous.dataDirectory === dataDirectory, 'This installation already uses another data directory; choose a separate --home');
+    assert(!previous || (previous.templateEnvironment ?? 'prod') === templateEnvironment, 'This installation uses another template environment; choose a separate --home');
     const launcher = path.join(home, 'run-mcp.mjs');
     if (!previous) await readFile(launcher).then(() => { throw new Error('Refusing to replace an unowned MCP launcher'); }, error => { if (error.code !== 'ENOENT') throw error; });
     const plan = await hostPlan(options, home, launcher, previous);
@@ -67,6 +73,7 @@ export async function setup(options) {
         await extractArchive(archive, temporary);
         const pkg = await readJSON(path.join(temporary, 'package.json'));
         assert.equal(pkg?.version, manifest.version, 'Application version does not match manifest');
+        if (manifest.templateEnvironment) assert.equal((await readJSON(path.join(temporary, 'shared/template-config.json')))?.environment, templateEnvironment, 'Application template environment does not match manifest');
         for (const file of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'skills/motion-production/SKILL.md']) await readFile(path.join(temporary, file));
         assert(!contains(temporary, process.execPath), 'Node must remain external to the lightweight application');
         const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
@@ -98,7 +105,7 @@ export async function setup(options) {
       await writeAtomic(launcher, `import { readFile } from 'node:fs/promises';\nimport { spawn } from 'node:child_process';\nimport { pathToFileURL } from 'node:url';\nconst state = JSON.parse(await readFile(new URL('./install.json', import.meta.url), 'utf8'));\nawait (await import(pathToFileURL(state.appRoot + '/scripts/npm-runtime.mjs'))).configureNativeEnvironment(state.appRoot);\nconst child = spawn(process.execPath, ['--experimental-strip-types', state.appRoot + '/mcp.ts'], { cwd: state.appRoot, env: { ...process.env, MOTION_DATA_DIR: state.dataDirectory }, stdio: 'inherit', windowsHide: true });\nfor (const signal of ['SIGTERM', 'SIGINT']) process.on(signal, () => child.kill(signal));\nchild.once('error', error => { console.error(error.message); process.exitCode = 1; });\nchild.once('exit', code => { process.exitCode = code ?? 1; });\n`);
       wroteLauncher = true;
       const registered = previous?.hosts || (previous?.skillsDirectory ? { codex: { skillsDirectory: previous.skillsDirectory } } : {});
-      const state = { ...previous, managedBy, version: manifest.version, appRoot, dataDirectory, launcher,
+      const state = { ...previous, managedBy, version: manifest.version, templateEnvironment, appRoot, dataDirectory, launcher,
         hosts: { ...registered, [plan.host]: plan.metadata },
         ...(plan.host === 'codex' ? { skillsDirectory: targets[0] } : {}) };
       await writeJSON(stateFile, state); wroteState = true;
@@ -123,12 +130,12 @@ async function main() {
     manifest: { type: 'string' }, home: { type: 'string' }, 'data-dir': { type: 'string' }, 'skills-dir': { type: 'string' }, host: { type: 'string' }, codex: { type: 'string' }, claude: { type: 'string' }, dsh: { type: 'string' }, profile: { type: 'string' },
   } });
   const [command] = positionals;
-  assert(positionals.length === 1, 'Usage: openmotion setup --host codex|claude|deepseek|workbuddy --manifest FILE [--home DIR] [--data-dir DIR] [--skills-dir DIR] [--codex EXECUTABLE] | prepare --home DIR');
+  assert(positionals.length === 1, 'Usage: openmotion setup --host codex|claude|deepseek|workbuddy [--manifest FILE] [--home DIR] [--data-dir DIR] [--skills-dir DIR] [--codex EXECUTABLE] | prepare --home DIR');
   if (command === 'setup') {
-    assert(values.manifest, 'Local validation requires --manifest FILE; no public release is configured');
     console.log(JSON.stringify(await setup({ manifest: values.manifest, home: values.home, dataDirectory: values['data-dir'], skillsDirectory: values['skills-dir'], host: values.host, codex: values.codex, claude: values.claude, dsh: values.dsh, profile: values.profile }), null, 2));
   } else if (command === 'prepare') {
-    const state = await readJSON(path.join(values.home || defaultHome(), 'install.json'));
+    const environment = (await readJSON(bundledManifest))?.templateEnvironment;
+    const state = await readJSON(path.join(values.home || defaultHome(environment), 'install.json'));
     assert(state?.managedBy === managedBy, 'Run setup first');
     await ensureNativeRuntime(state.appRoot);
     console.log('Pinned FFmpeg, ffprobe and browser are ready.');

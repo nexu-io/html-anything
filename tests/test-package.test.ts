@@ -4,17 +4,23 @@ import { mkdtemp, writeFile, readFile, rm, access } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { download, testVersion, lock, targetInfo } from '../scripts/test-package.mjs';
+import { download, testVersion, checkReleaseVersion, lock, targetInfo } from '../scripts/test-package.mjs';
 import { nativeComponents } from '../scripts/runtime-assets.mjs';
 
 test('test versions sort above an already distributed source version and distinguish attempts', () => {
-  assert.equal(testVersion('0.6.1', '42', '1'), '0.6.2-beta.42.1');
-  assert.equal(testVersion('0.6.1', '42', '2'), '0.6.2-beta.42.2');
+  assert.equal(testVersion('0.6.1', '42', '1'), '0.6.2-test.42.1');
+  assert.equal(testVersion('0.6.1', '42', '2'), '0.6.2-test.42.2');
   assert.throws(() => testVersion('0.6.1', '../x'), /positive/);
   assert.throws(() => testVersion('0.6.1-beta.1', '1'), /MAJOR/);
   assert.equal(targetInfo('mac-arm64').platform, 'darwin');
   assert.equal(targetInfo('win-x64').platform, 'win32');
   assert.throws(() => targetInfo('unknown'), /Unsupported/);
+});
+test('release versions accept test and stable versions and reject ambiguous or non-test candidates', () => {
+  for (const version of ['0.6.4-test.1', '0.6.4-test.42.2', '0.6.4']) checkReleaseVersion(version);
+  for (const version of ['latest', '0.6.4-beta.1', '0.6.4-rc.1', '0.6.4-test.1.0', '0.6.4-test.0', '0.6.4-test.01', '01.6.4', '0.6.4+local', '../x']) {
+    assert.throws(() => checkReleaseVersion(version), /MAJOR.MINOR.PATCH/);
+  }
 });
 test('public runtime downloads never attach repository credentials and reject HTTPS downgrades', async t => {
   const dir = await mkdtemp(path.join(tmpdir(), 'motion-redirect-')), filename = path.join(dir, 'runtime.zip');

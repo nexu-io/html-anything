@@ -80,7 +80,7 @@ Media panels open beside the triggering button or timeline selection and adjust 
 
 ## MCP and lightweight installation
 
-The [lightweight npm installer](docs/npm-installation.md) installs eleven MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy. It shares the application and prepares verified native tools on demand. Build locally with `npm run package:npm`; the npm package is not publicly published. Complete ZIPs remain available as a backup.
+The [Motion application npm package](docs/npm-installation.md) includes the application and default manifest alongside its installer. It installs eleven MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy without adjacent files; locked npm dependencies and native tools are prepared separately. Build an test with `npm run package:npm -- dist/npm-test 0.6.4-test.1`. [test/stable acceptance](docs/release-guide.md) and isolated DEV template instructions are documented; no npm version has been published by this change. Complete platform ZIPs remain a backup.
 
 The five entries are [motion-production](skills/motion-production/SKILL.md), [motion-director](skills/motion-director/SKILL.md), [motion-template-to-video](skills/motion-template-to-video/SKILL.md), [motion-recreate](skills/motion-recreate/SKILL.md), and [motion-video-to-template](skills/motion-video-to-template/SKILL.md). Reference recreation is implemented. Product UI follows the [OpenDesign visual system](docs/design-system.md); video artwork keeps its own styles.
 
