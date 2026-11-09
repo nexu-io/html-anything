@@ -133,8 +133,35 @@ it("navigates repeated instances with local clocks and commits shared native sou
     expect(await page.getByLabel("文本内容", { exact: true }).inputValue()).toBe("Shared changed");
     await driver.capture("failed-shared-source-save");
     await page.unroute("**/api/project_save");
+    let releaseClose: (() => void) | undefined,
+      closeRequested = false;
+    const closeGate = new Promise<void>((done) => {
+      releaseClose = done;
+    });
+    await page.route("**/preview/close", async (route) => {
+      closeRequested = true;
+      await closeGate;
+      await route.continue();
+    });
     await click("重试");
+    try {
+      await expect.poll(() => closeRequested).toBe(true);
+      expect(Number(await page.getByLabel("全局播放时间", { exact: true }).textContent())).toBeCloseTo(6.5, 2);
+    } finally {
+      releaseClose?.();
+    }
+    await page.unrouteAll({ behavior: "wait" });
     await shown();
+    await expect
+      .poll(async () => Number(await page.getByLabel("全局播放时间", { exact: true }).textContent()))
+      .toBeCloseTo(6.5, 2);
+    await expect
+      .poll(() =>
+        frame()
+          .locator('main[data-composition-id="main"]')
+          .evaluate(() => Reflect.get(window, "__timelines").main.time()),
+      )
+      .toBeCloseTo(6.5, 2);
     await expect.poll(() => frame().getByText("Shared changed", { exact: true }).count()).toBe(2);
     const changed = await runtime.execute("project_read", owner);
     expect(changed.files.find((file) => file.path === "index.html")).toEqual(
@@ -250,7 +277,7 @@ it("navigates repeated instances with local clocks and commits shared native sou
     report.cases = [
       "instance-navigation-stable-selector",
       "local-global-clocks-and-parent-restoration",
-      "failed-shared-source-save-retry",
+      "failed-shared-source-save-retry-and-clock-handoff",
       "shared-template-source-only-write",
       "scoped-nested-canvas-selection-and-drag",
       "nested-file-writeback",
