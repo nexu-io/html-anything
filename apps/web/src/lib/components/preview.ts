@@ -64,17 +64,22 @@ export class NativePreview {
 
   private selection = "";
   private editable = false;
-  select(id: string, editable: boolean) {
+  private scope = "";
+  select(id: string, editable: boolean, scope: string) {
     this.selection = id;
+    this.scope = scope;
     this.editable = editable;
     this.view?.overlay.selection(null);
     this.view?.frame.contentWindow?.postMessage(
-      { source: "open-motion-editor", type: "selection", id, enabled: editable },
+      { source: "open-motion-editor", type: "selection", id, enabled: editable, scope },
       "*",
     );
   }
   get ready() {
     return !!this.view;
+  }
+  get revision() {
+    return this.view?.revision;
   }
   get artifactId() {
     return this.view?.artifactId;
@@ -204,7 +209,7 @@ export class NativePreview {
         }
       }
       this.host.dataset.revision = project.revision;
-      this.select(this.selection, this.editable);
+      this.select(this.selection, this.editable, this.scope);
       this.events.message("预览就绪");
       this.events.ready();
     } catch (error) {

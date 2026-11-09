@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { Motion } from "@open-motion/motion";
+import { inspectContext } from "@open-motion/motion/project";
 import { Fault, type Input, type Operation, Workspace } from "@open-motion/workspace";
 import { expect, it, vi } from "vitest";
 import { mount, type Transport } from "@";
@@ -36,6 +37,7 @@ async function fixture(fail: boolean) {
     const input = JSON.parse(String(init?.body));
     try {
       if (String(url).endsWith("/preview/close")) return new Response("{}");
+      if (String(url).endsWith("/motion/context")) return new Response(JSON.stringify(await inspectContext(input)));
       if (String(url).includes("/motion/")) {
         const model = await Motion.open(input.html);
         try {

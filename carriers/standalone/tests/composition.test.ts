@@ -167,7 +167,7 @@ it("runs repeated native compositions, isolates local clocks/assets and retains 
     await page.locator("iframe:not([hidden])").evaluate((element) => {
       if (!(element instanceof HTMLIFrameElement)) throw Error("missing frame");
       element.contentWindow?.postMessage(
-        { source: "open-motion-editor", type: "selection", id: "hf-b/hf-title", enabled: true },
+        { source: "open-motion-editor", type: "selection", id: "hf-b/hf-title", enabled: true, scope: "" },
         "*",
       );
     });

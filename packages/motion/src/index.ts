@@ -24,7 +24,14 @@ export class Motion {
       parent:
         elements.find((parent) => parent.children.some((child) => child.scopedId === e.scopedId))?.scopedId ?? null,
       appearance: appearance(e.inlineStyles),
-      animations: parsed.filter((a) => e.animationIds.includes(a.id)).map(describeAnimation),
+      animations: parsed
+        .filter((a) => e.animationIds.includes(a.id))
+        .map((animation) => ({
+          ...describeAnimation(animation),
+          ...(animation.targetSelector !== `[data-hf-id="${e.id}"]`
+            ? { reason: "该动画使用复杂选择器，当前只读" }
+            : {}),
+        })),
       animationReason:
         e.scopedId.includes("/") || e.attributes["data-composition-id"] !== undefined
           ? "请选择当前合成中的内容图层"

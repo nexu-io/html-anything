@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { Environment } from "@odsuite/carrier";
 import { animationInput, editInput, inspectInput, Motion, patchInput } from "@open-motion/motion";
+import { inspectContext } from "@open-motion/motion/project";
 import { Fault, type Input, type Operation, schemas, Workspace } from "@open-motion/workspace";
 import { Previews } from "./preview.js";
 export interface Options {
@@ -77,6 +78,14 @@ export async function serve(options: Options): Promise<Service> {
       if (request.method === "POST" && ["/preview/open", "/preview/close"].includes(request.url ?? "")) {
         const input = await body(request);
         reply(response, 200, request.url === "/preview/open" ? previews.open(input) : previews.release(input), origin);
+        return;
+      }
+      if (request.method === "POST" && request.url === "/motion/context") {
+        try {
+          reply(response, 200, await inspectContext(await body(request)), origin);
+        } catch (error) {
+          throw new Fault("invalid", error instanceof Error ? error.message : "invalid editing context");
+        }
         return;
       }
       if (

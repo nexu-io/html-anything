@@ -50,6 +50,7 @@ export function studioTools(
   document: Document,
   options: {
     title: string;
+    file: string;
     mode: "source" | "preview";
     blocked: boolean;
     setMode(mode: "source" | "preview"): void;
@@ -64,7 +65,7 @@ export function studioTools(
     controls = slot(document, "spread"),
     tools = slot(document, "toolbar");
   title.textContent = options.title;
-  file.textContent = "主合成 / index.html";
+  file.textContent = options.file === "index.html" ? "主合成 / index.html" : `局部合成 / ${options.file}`;
   context.append(title, badge(document, "编辑器类型", "Motion"));
   for (const mode of ["preview", "source"] as const)
     tools.append(
