@@ -1,16 +1,27 @@
-<p align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.zh-CN.jpg" /><img src="docs/readme/cover.zh-CN.jpg" width="100%" alt="在 Codex 输入 Figma Draw 参考片链接，OpenMotion 时间轴显示复刻的 Wing Fest 蝴蝶海报。" /></picture></a></p>
+<h1 align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.zh-CN.jpg" /><img src="docs/readme/cover.zh-CN.jpg" width="100%" alt="OpenMotion · 用任意 Agent 拆解并复刻品牌视频" /></picture></a></h1>
 
-# OpenMotion · 用任意 Agent 拆解并复刻品牌视频
+<p align="center">上传任意品牌视频，或粘贴社媒视频链接，用自己的品牌素材复刻原片的动效。</p>
+
+<p align="center"><strong><a href="docs/README.zh-CN.md#接入你的-agent">开始使用</a></strong> · <a href="docs/README.zh-CN.md">完整中文版</a> · <a href="README.md">English</a></p>
+
+## 复刻案例
+
+<p align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.zh-CN.jpg" />
+  <img src="docs/readme/codex-comparison.zh-CN.webp" width="100%" alt="从 Codex 中的 Figma Draw 参考片到 Studio 中的蝴蝶海报，最后同步播放 5 秒原片与复刻。" />
+</picture></a></p>
+
+从[Figma Draw 原片](https://x.com/figma/status/1920168282751185360)到 Wing Fest 蝴蝶海报。点开演示，看 Codex 如何复刻这段动效。
+
+[查看七个品牌的 5 秒对照](docs/README.zh-CN.md#复用参考片的拍法) · [浏览 100+ 个一键复刻参考](docs/README.zh-CN.md#motion-资源库与主题合集)
+
+## 项目与社区
 
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub 仓库星标数" /></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-22.18%2B-417e38?style=flat-square" alt="Node.js 22.18+" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 许可证" /></a>
 </p>
-
-贴一条 X 或 YouTube 链接，或从 **[100+ 个可一键复刻的视频模板](docs/README.zh-CN.md#motion-资源库与主题合集)**里选一支。换上自己品牌的 Logo 和产品截图，在 Studio 里改镜头、导出 MP4。
-
-**[看 10 秒 Codex 演示](docs/readme/studio-tour.zh-CN.mp4)** · **[接入你的 Agent](docs/README.zh-CN.md#接入你的-agent)**
 
 <p align="center">
   <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenMotion-%E5%AE%98%E7%BD%91-bc334e?style=flat-square" alt="OpenMotion 官网" /></a>
@@ -21,20 +32,4 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="https://img.shields.io/badge/YouTube-b91c1c?style=flat-square&amp;logo=youtube&amp;logoColor=white" alt="OpenDesign 的 YouTube 频道" /></a>
 </p>
 
-<p align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><picture>
-  <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.zh-CN.jpg" />
-  <img src="docs/readme/codex-comparison.zh-CN.webp" width="100%" alt="从 Codex 中的 Figma Draw 参考片到 Studio 中的蝴蝶海报，最后同步播放 5 秒原片与复刻。" />
-</picture></a></p>
-
-<p align="center">
-  <a href="docs/README.zh-CN.md#在-codex-里开始"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex 接入说明" /></a>
-  <a href="docs/agent-adapters.md#codex--claude-code"><img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code 接入说明" /></a>
-  <a href="docs/agent-adapters.md#deepseek-harness"><img src="docs/readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness 接入说明" /></a>
-  <a href="docs/agent-adapters.md#workbuddy"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy（预览）接入说明" /></a>
-</p>
-
-首版开源了**[Firecrawl 品牌宣传片的 MOTION.md 拆解](examples/reference-reveal/MOTION.zh-CN.md)**，从数字亮相到 Logo 收尾，每一拍都能对照原片。
-
-[看 Figma Draw 的 X 原帖](https://x.com/figma/status/1920168282751185360) · [Firecrawl 原片与复刻 · 5 秒对照](examples/reference-reveal/comparison.mp4) · [看七个品牌的 5 秒同步对照](docs/README.zh-CN.md#复用参考片的拍法)
-
-[阅读完整中文 README](docs/README.zh-CN.md) · [原 HTML Anything 编辑器与安装说明](https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md) · [English](README.md)
+[原 HTML Anything 编辑器与安装说明](https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md)

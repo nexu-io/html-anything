@@ -1,47 +1,17 @@
-<p align="center"><a href="docs/readme/studio-tour.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.jpg" /><img src="docs/readme/cover.jpg" width="100%" alt="Codex shows the Figma Draw reference, and OpenMotion shows the Wing Fest butterfly poster on its timeline." /></picture></a></p>
+<h1 align="center"><a href="docs/readme/studio-tour.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.jpg" /><img src="docs/readme/cover.jpg" width="100%" alt="OpenMotion — Reverse-engineer brand videos in any agent" /></picture></a></h1>
 
-<h1 align="center">OpenMotion — Reverse-engineer and recreate brand videos in any agent</h1>
+<p align="center">Upload any brand video or paste a social video link to recreate its motion with your own assets.</p>
 
-<p align="center">
-  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub repository stars" /></a>
-  <a href="package.json"><img src="https://img.shields.io/badge/Node.js-22.18%2B-417e38?style=flat-square" alt="Node.js 22.18+" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 license" /></a>
-</p>
+<p align="center"><strong><a href="#agent-setup">Quickstart</a></strong> · <a href="docs/README.zh-CN.md">简体中文</a></p>
 
-<p align="center">Paste an X or YouTube link, or pick from <strong><a href="#motion-library-and-collections">100+ one-click video recreation templates</a></strong>. Swap in your brand’s logo and product screenshots, edit in Studio and export an MP4.</p>
-
-<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 10-second Codex demo</a></strong> · <strong><a href="#agent-setup">Set up your agent</a></strong></p>
-
-<p align="center">
-  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="https://img.shields.io/badge/OpenMotion-Website-bc334e?style=flat-square" alt="OpenMotion website" /></a>
-  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="https://img.shields.io/badge/OpenDesign_Go-526442?style=flat-square" alt="OpenDesign Go model subscriptions" /></a>
-  <a href="https://discord.gg/mHAjSMV6gz"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat-square&amp;logo=discord&amp;logoColor=white" alt="Join the OpenDesign Discord" /></a>
-  <a href="https://x.com/OpenDesignHQ"><img src="https://img.shields.io/badge/@OpenDesignHQ-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="OpenDesign on X (@OpenDesignHQ)" /></a>
-  <a href="https://x.com/OpenDesignDevs"><img src="https://img.shields.io/badge/@OpenDesignDevs-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="OpenDesign Developers on X (@OpenDesignDevs)" /></a>
-  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="https://img.shields.io/badge/YouTube-b91c1c?style=flat-square&amp;logo=youtube&amp;logoColor=white" alt="OpenDesign on YouTube" /></a>
-</p>
+## Make a reference your own
 
 <p align="center"><a href="docs/readme/studio-tour.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
   <img src="docs/readme/codex-comparison.webp" width="100%" alt="From a Figma Draw reference in Codex to the butterfly reveal in Studio, then five seconds of the original and Wing Fest playing side by side." />
 </picture></a></p>
 
-<p align="center">
-  <a href="#start-in-codex"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex setup" /></a>
-  <a href="docs/agent-adapters.md#codex--claude-code"><img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code setup" /></a>
-  <a href="docs/agent-adapters.md#deepseek-harness"><img src="docs/readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness setup" /></a>
-  <a href="docs/agent-adapters.md#workbuddy"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy setup (preview)" /></a>
-</p>
-
-<p align="center">Study the shot beat by beat with the <a href="examples/reference-reveal/MOTION.md">open-source Firecrawl MOTION.md</a>, from the number reveal to the closing logo.</p>
-
-<p align="center"><a href="https://x.com/figma/status/1920168282751185360">Watch Figma’s original</a> · <a href="examples/reference-reveal/comparison.mp4">Firecrawl original vs. remake · 5s</a> · <a href="#make-a-reference-your-own">Compare seven brand films</a></p>
-
-<p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="docs/collections/README.md">Find a reference</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
-
-OpenMotion is an open-source motion design plugin for agents that can run local MCP tools. Our goal is to build the best open-source alternative to Claude Motion. You can start with a brand film, a product walkthrough or a launch video. Pick one shot. What moves first? When does the product come into view? How long does the audience get to read the headline? **Motion MD** is our draft Markdown format for recording those decisions so another team can recreate the motion with its own assets.
-
-## Make a reference your own
+From [Figma Draw’s original film](https://x.com/figma/status/1920168282751185360) to a Wing Fest poster. Play the demo to see the butterfly reveal recreated in Codex.
 
 Watch the original X footage on the left and an editable OpenMotion remake on the right. Each pair plays five seconds at normal speed on the same clock. Open a clip and scrub the reveal frame by frame.
 
@@ -54,6 +24,8 @@ Watch the original X footage on the left and an editable OpenMotion remake on th
 | [ElevenLabs](https://x.com/ElevenLabs/status/2069111326987673761)<br />00:50–00:55 | <a href="examples/brand-studies/elevenlabs/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/elevenlabs/comparison.jpg" /><img src="examples/brand-studies/elevenlabs/comparison.webp" width="290" alt="ElevenLabs original playing beside the OpenMotion remake" /></picture></a> | Rolling wordmark suffixes<br />[MP4](examples/brand-studies/elevenlabs/film.mp4) · [Source](examples/brand-studies/elevenlabs/index.html) |
 | [Apple](https://x.com/tim_cook/status/1896589954517701057)<br />00:00.75–00:05.75 | <a href="examples/brand-studies/apple/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/apple/comparison.jpg" /><img src="examples/brand-studies/apple/comparison.webp" width="290" alt="Apple original playing beside the OpenMotion remake" /></picture></a> | A single word folds into a ribbon<br />[MP4](examples/brand-studies/apple/film.mp4) · [Source](examples/brand-studies/apple/index.html) |
 | [Slack](https://x.com/SlackHQ/status/1085609385542459393)<br />00:00–00:05 | <a href="examples/brand-studies/slack/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/slack/comparison.jpg" /><img src="examples/brand-studies/slack/comparison.webp" width="290" alt="Slack original playing beside the OpenMotion remake" /></picture></a> | Four colors scatter and regroup<br />[MP4](examples/brand-studies/slack/film.mp4) · [Source](examples/brand-studies/slack/index.html) |
+
+[Explore 100+ brand video references with one-click recreation prompts](#motion-library-and-collections)
 
 To try the Apple shot with your own wordmark, open your brand assets in your agent and paste this prompt.
 
@@ -88,14 +60,14 @@ All three films were exported through the plugin. Each is silent by design. [Get
 
 ## Agent setup
 
-OpenMotion runs on your computer. Choose an agent that can launch a local MCP server over stdio. Each connection opens the same editable Studio projects.
+OpenMotion is an open-source motion design plugin that runs on your computer. Choose an agent that can launch a local MCP server over stdio. Each connection opens the same editable Studio projects.
 
 | Agent | How to connect |
 | --- | --- |
-| **Codex** | Install the plugin, then open **Plugins → OpenDesign → Try now**. [Installation steps](#start-in-codex) |
-| **Claude Code** | Use the local installer with `--host claude` to register the MCP server and install the skills. [Local plugin option](docs/agent-adapters.md#codex--claude-code) |
-| **DeepSeek Harness** | Use `--host deepseek` with a profile that has a model configured. [Harness profile and MCP setup](docs/agent-adapters.md#deepseek-harness) |
-| **WorkBuddy** *(preview)* | Use `--host workbuddy` for custom MCP and skills. Desktop import and video export still need an end-to-end test. [Connector setup](docs/agent-adapters.md#workbuddy) |
+| <a href="#start-in-codex"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex setup" /></a> | Install the plugin, then open **Plugins → OpenDesign → Try now**. [Installation steps](#start-in-codex) |
+| <a href="docs/agent-adapters.md#codex--claude-code"><img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code setup" /></a> | Use the local installer with `--host claude` to register the MCP server and install the skills. [Local plugin option](docs/agent-adapters.md#codex--claude-code) |
+| <a href="docs/agent-adapters.md#deepseek-harness"><img src="docs/readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness setup" /></a> | Use `--host deepseek` with a profile that has a model configured. [Harness profile and MCP setup](docs/agent-adapters.md#deepseek-harness) |
+| <a href="docs/agent-adapters.md#workbuddy"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy setup (preview)" /></a> | Use `--host workbuddy` for custom MCP and skills. Desktop import and video export still need an end-to-end test. [Connector setup](docs/agent-adapters.md#workbuddy) |
 
 <details>
 <summary>Install with the local installer</summary>
@@ -154,7 +126,7 @@ A useful motion brief names both the creative decision and what a teammate may c
 | 1.5–4s | Let the central mark settle while the outer tiles keep turning. | Your symbol and the inputs or features that belong around it. |
 | 4–5s | Follow the same mark into the closing handoff. | The input your customer provides and the result they get. |
 
-The first planned collection covers 100+ brand-film MOTION.md breakdowns. The Firecrawl study below is available now.
+The first planned collection covers 100+ brand-film MOTION.md breakdowns. Watch the [five-second Firecrawl comparison](examples/reference-reveal/comparison.mp4) alongside the published brief below.
 
 Give your agent the Markdown brief along with the project. The brief guides the edit. The HTML, CSS, JavaScript and media supply the animation. [Motion MD v0.1 proposal](docs/motion-md.md) · [Working brief and both exports](examples/reference-reveal/MOTION.md)
 
@@ -177,6 +149,25 @@ To review a remix today, pause both films on the reveal, check whose brand is on
 
 ## Build and contribute
 
-OpenMotion includes five creation workflows and nine MCP tools. You can adapt a template, recreate a reference or turn a video into a reusable template folder. To contribute a style, include the original source and creator, your Motion MD, a preview, the editable project and permission to share the assets. [Workflows](docs/skills.md) · [MCP tools](docs/mcp-phase1-tools.md) · [Contributing](CONTRIBUTING.md)
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub repository stars" /></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/Node.js-22.18%2B-417e38?style=flat-square" alt="Node.js 22.18+" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 license" /></a>
+</p>
+
+Our goal is to build the best open-source alternative to Claude Motion. OpenMotion includes five creation workflows and nine MCP tools. You can adapt a template, recreate a reference or turn a video into a reusable template folder. To contribute a style, include the original source and creator, your Motion MD, a preview, the editable project and permission to share the assets. [Workflows](docs/skills.md) · [MCP tools](docs/mcp-phase1-tools.md) · [Contributing](CONTRIBUTING.md)
 
 Install from this branch or [build the npm installer locally](docs/npm-installation.md). OpenMotion is licensed under [Apache-2.0](LICENSE) and uses [Hyperframes](https://github.com/heygen-com/hyperframes) for Studio and rendering. The [bundled examples](template-library/NOTICE.md), [Studio](studio/LICENSE) and [fonts](web/design-system/fonts/NOTICES.txt) carry their upstream notices.
+
+## Community
+
+<p align="center">
+  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="https://img.shields.io/badge/OpenMotion-Website-bc334e?style=flat-square" alt="OpenMotion website" /></a>
+  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="https://img.shields.io/badge/OpenDesign_Go-526442?style=flat-square" alt="OpenDesign Go model subscriptions" /></a>
+  <a href="https://discord.gg/mHAjSMV6gz"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat-square&amp;logo=discord&amp;logoColor=white" alt="Join the OpenDesign Discord" /></a>
+  <a href="https://x.com/OpenDesignHQ"><img src="https://img.shields.io/badge/@OpenDesignHQ-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="OpenDesign on X (@OpenDesignHQ)" /></a>
+  <a href="https://x.com/OpenDesignDevs"><img src="https://img.shields.io/badge/@OpenDesignDevs-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="OpenDesign Developers on X (@OpenDesignDevs)" /></a>
+  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="https://img.shields.io/badge/YouTube-b91c1c?style=flat-square&amp;logo=youtube&amp;logoColor=white" alt="OpenDesign on YouTube" /></a>
+</p>
+
+[Original HTML Anything editor and installation guide](https://github.com/nexu-io/html-anything/tree/legacy#readme)

@@ -1,47 +1,17 @@
-<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="在 Codex 输入 Figma Draw 参考片链接，OpenMotion 时间轴显示复刻的 Wing Fest 蝴蝶海报。" /></picture></a></p>
+<h1 align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="OpenMotion · 用任意 Agent 拆解并复刻品牌视频" /></picture></a></h1>
 
-<h1 align="center">OpenMotion · 用任意 Agent 拆解并复刻品牌视频</h1>
+<p align="center">上传任意品牌视频，或粘贴社媒视频链接，用自己的品牌素材复刻原片的动效。</p>
 
-<p align="center">
-  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub 仓库星标数" /></a>
-  <a href="../package.json"><img src="https://img.shields.io/badge/Node.js-22.18%2B-417e38?style=flat-square" alt="Node.js 22.18+" /></a>
-  <a href="../LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 许可证" /></a>
-</p>
+<p align="center"><strong><a href="#接入你的-agent">开始使用</a></strong> · <a href="../README.md">English</a></p>
 
-<p align="center">贴一条 X 或 YouTube 链接，或从 <strong><a href="#motion-资源库与主题合集">100+ 个可一键复刻的视频模板</a></strong>里选一支。换上自己品牌的 Logo 和产品截图，在 Studio 里改镜头、导出 MP4。</p>
-
-<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 10 秒 Codex 演示</a></strong> · <strong><a href="#接入你的-agent">接入你的 Agent</a></strong></p>
-
-<p align="center">
-  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenMotion-%E5%AE%98%E7%BD%91-bc334e?style=flat-square" alt="OpenMotion 官网" /></a>
-  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenDesign_Go-526442?style=flat-square" alt="OpenDesign Go 模型订阅" /></a>
-  <a href="https://discord.gg/mHAjSMV6gz"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat-square&amp;logo=discord&amp;logoColor=white" alt="加入 OpenDesign Discord" /></a>
-  <a href="https://x.com/OpenDesignHQ"><img src="https://img.shields.io/badge/@OpenDesignHQ-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="OpenDesign 官方 X 账号 @OpenDesignHQ" /></a>
-  <a href="https://x.com/OpenDesignDevs"><img src="https://img.shields.io/badge/@OpenDesignDevs-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="OpenDesign 开发者 X 账号 @OpenDesignDevs" /></a>
-  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="https://img.shields.io/badge/YouTube-b91c1c?style=flat-square&amp;logo=youtube&amp;logoColor=white" alt="OpenDesign 的 YouTube 频道" /></a>
-</p>
+## 复用参考片的拍法
 
 <p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="readme/codex-comparison.zh-CN.jpg" />
   <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="从 Codex 中的 Figma Draw 参考片到 Studio 中的蝴蝶海报，最后同步播放 5 秒原片与复刻。" />
 </picture></a></p>
 
-<p align="center">
-  <a href="#在-codex-里开始"><img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex 接入说明" /></a>
-  <a href="agent-adapters.md#codex--claude-code"><img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code 接入说明" /></a>
-  <a href="agent-adapters.md#deepseek-harness"><img src="readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness 接入说明" /></a>
-  <a href="agent-adapters.md#workbuddy"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy（预览）接入说明" /></a>
-</p>
-
-<p align="center">首版开源了<strong><a href="../examples/reference-reveal/MOTION.zh-CN.md">Firecrawl 品牌宣传片的 MOTION.md 拆解</a></strong>，从数字亮相到 Logo 收尾，每一拍都能对照原片。</p>
-
-<p align="center"><a href="https://x.com/figma/status/1920168282751185360">看 Figma Draw 的 X 原帖</a> · <a href="../examples/reference-reveal/comparison.mp4">Firecrawl 原片与复刻 · 5 秒对照</a> · <a href="#复用参考片的拍法">看七个品牌的 5 秒对照</a></p>
-
-<p align="center"><a href="../README.md">English</a> · <a href="collections/README.zh-CN.md">找参考片</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
-
-OpenMotion 是一款通过本地 MCP 接入 Agent 的开源动效设计插件，我们希望把它做成最好的 Claude Motion 开源替代。你可以从品牌形象片、产品演示或新品发布片开始。拆解一个镜头时，先看哪个元素动、产品在哪一拍出现、观众有多久读完标题。用我们提出的 Markdown 动效规范 **Motion MD** 记下这些决定，另一个团队就能带上自己的品牌素材复刻这套拍法。
-
-## 复用参考片的拍法
+从[Figma Draw 原片](https://x.com/figma/status/1920168282751185360)到 Wing Fest 蝴蝶海报。点开演示，看 Codex 如何复刻这段动效。
 
 左边是品牌在 X 发布的原片，右边是用 OpenMotion 单独制作的可编辑工程。每组截取 5 秒，原速同步播放。点击画面可以暂停、拖动，检查两边的动作在哪一帧发生。
 
@@ -54,6 +24,8 @@ OpenMotion 是一款通过本地 MCP 接入 Agent 的开源动效设计插件，
 | [ElevenLabs](https://x.com/ElevenLabs/status/2069111326987673761)<br />00:50–00:55 | <a href="../examples/brand-studies/elevenlabs/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/elevenlabs/comparison.jpg" /><img src="../examples/brand-studies/elevenlabs/comparison.webp" width="290" alt="ElevenLabs 原片与 OpenMotion 复刻同步播放" /></picture></a> | 保留品牌词根，滚动替换后缀<br />[MP4](../examples/brand-studies/elevenlabs/film.mp4) · [源码](../examples/brand-studies/elevenlabs/index.html) |
 | [Apple](https://x.com/tim_cook/status/1896589954517701057)<br />00:00.75–00:05.75 | <a href="../examples/brand-studies/apple/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/apple/comparison.jpg" /><img src="../examples/brand-studies/apple/comparison.webp" width="290" alt="Apple 原片与 OpenMotion 复刻同步播放" /></picture></a> | 文字逐拍放大，字形折成丝带<br />[MP4](../examples/brand-studies/apple/film.mp4) · [源码](../examples/brand-studies/apple/index.html) |
 | [Slack](https://x.com/SlackHQ/status/1085609385542459393)<br />00:00–00:05 | <a href="../examples/brand-studies/slack/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/slack/comparison.jpg" /><img src="../examples/brand-studies/slack/comparison.webp" width="290" alt="Slack 原片与 OpenMotion 复刻同步播放" /></picture></a> | 四色线条散开，重新拼成品牌标记<br />[MP4](../examples/brand-studies/slack/film.mp4) · [源码](../examples/brand-studies/slack/index.html) |
+
+[浏览 100+ 个可一键复刻的品牌视频参考](#motion-资源库与主题合集)
 
 在 Agent 里试试 Apple 这一行。打开自己的品牌素材目录，再贴入这段指令。
 
@@ -88,14 +60,14 @@ https://x.com/tim_cook/status/1896589954517701057
 
 ## 接入你的 Agent
 
-OpenMotion 在你的电脑上运行。选择能通过 stdio 启动本地 MCP 服务的 Agent 接入，即可在同一个 Studio 里继续编辑工程。
+OpenMotion 是一款本地运行的开源动效设计插件。选择能通过 stdio 启动本地 MCP 服务的 Agent 接入，即可在同一个 Studio 里继续编辑工程。
 
 | Agent | 怎么接入 |
 | --- | --- |
-| **Codex** | 安装插件，在 **Plugins → OpenDesign → Try now** 打开。[查看安装步骤](#在-codex-里开始) |
-| **Claude Code** | 给本地安装器加上 `--host claude`，注册 MCP 服务并安装 Skills。[本地插件接入方式](agent-adapters.md#codex--claude-code) |
-| **DeepSeek Harness** | 先为要使用的 profile 配好模型，再用 `--host deepseek` 接入。[Harness 配置说明](agent-adapters.md#deepseek-harness) |
-| **WorkBuddy** *（预览）* | 用 `--host workbuddy` 接入自定义 MCP 和 Skills。桌面端从导入到出片的完整流程仍待实机验证。[Connector 接入说明](agent-adapters.md#workbuddy) |
+| <a href="#在-codex-里开始"><img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex 接入说明" /></a> | 安装插件，在 **Plugins → OpenDesign → Try now** 打开。[查看安装步骤](#在-codex-里开始) |
+| <a href="agent-adapters.md#codex--claude-code"><img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code 接入说明" /></a> | 给本地安装器加上 `--host claude`，注册 MCP 服务并安装 Skills。[本地插件接入方式](agent-adapters.md#codex--claude-code) |
+| <a href="agent-adapters.md#deepseek-harness"><img src="readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness 接入说明" /></a> | 先为要使用的 profile 配好模型，再用 `--host deepseek` 接入。[Harness 配置说明](agent-adapters.md#deepseek-harness) |
+| <a href="agent-adapters.md#workbuddy"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy（预览）接入说明" /></a> | 用 `--host workbuddy` 接入自定义 MCP 和 Skills。桌面端从导入到出片的完整流程仍待实机验证。[Connector 接入说明](agent-adapters.md#workbuddy) |
 
 <details>
 <summary>查看本地安装命令</summary>
@@ -154,7 +126,7 @@ cd OpenMotion && bash scripts/install-motion.command
 | 1.5–4 秒 | 中央标志落定，外围卡片继续旋转。 | 你的品牌标志，以及围绕它的素材、功能或产品。 |
 | 4–5 秒 | 让同一个标志进入最后的交接镜头。 | 客户提供什么输入，最后得到什么结果。 |
 
-首批品牌宣传片 MOTION.md 合集计划收录 100 多份拆解。现在可以先读 Firecrawl 的完整样例。
+首批品牌宣传片 MOTION.md 合集计划收录 100 多份拆解。现在可以先看 [Firecrawl 原片与复刻的 5 秒对照](../examples/reference-reveal/comparison.mp4)，再读下面的完整样例。
 
 把 Markdown 文件和工程一起交给 Agent。它可以按这份说明改稿，实际动画保存在 HTML、CSS、JavaScript 和素材文件里。[Motion MD v0.1 草案](motion-md.zh-CN.md) · [本片的说明与两次导出](../examples/reference-reveal/MOTION.zh-CN.md)
 
@@ -178,6 +150,25 @@ cd OpenMotion && bash scripts/install-motion.command
 
 ## 构建与贡献
 
-OpenMotion 提供五个创作工作流和九个 MCP 工具。除了直接改模板和复刻参考片，还可以把视频做成可复用的模板目录。贡献一种风格时，请附上原片出处与作者、Motion MD、预览、可编辑工程和素材授权说明。[工作流](skills.md) · [MCP 工具](mcp-phase1-tools.md) · [贡献指南](../CONTRIBUTING.zh-CN.md)
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub 仓库星标数" /></a>
+  <a href="../package.json"><img src="https://img.shields.io/badge/Node.js-22.18%2B-417e38?style=flat-square" alt="Node.js 22.18+" /></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 许可证" /></a>
+</p>
+
+我们的目标是把 OpenMotion 做成最好的 Claude Motion 开源替代。OpenMotion 提供五个创作工作流和九个 MCP 工具。除了直接改模板和复刻参考片，还可以把视频做成可复用的模板目录。贡献一种风格时，请附上原片出处与作者、Motion MD、预览、可编辑工程和素材授权说明。[工作流](skills.md) · [MCP 工具](mcp-phase1-tools.md) · [贡献指南](../CONTRIBUTING.zh-CN.md)
 
 可以从本分支安装，也可以[在本地构建 npm 安装器](npm-installation.md)。OpenMotion 采用 [Apache-2.0](../LICENSE) 许可，使用 [Hyperframes](https://github.com/heygen-com/hyperframes) 构建 Studio 和渲染视频。[内置示例](../template-library/NOTICE.md)、[编辑器](../studio/LICENSE)和[字体](../web/design-system/fonts/NOTICES.txt)附有各自的上游声明。
+
+## 社区
+
+<p align="center">
+  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenMotion-%E5%AE%98%E7%BD%91-bc334e?style=flat-square" alt="OpenMotion 官网" /></a>
+  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenDesign_Go-526442?style=flat-square" alt="OpenDesign Go 模型订阅" /></a>
+  <a href="https://discord.gg/mHAjSMV6gz"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat-square&amp;logo=discord&amp;logoColor=white" alt="加入 OpenDesign Discord" /></a>
+  <a href="https://x.com/OpenDesignHQ"><img src="https://img.shields.io/badge/@OpenDesignHQ-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="OpenDesign 官方 X 账号 @OpenDesignHQ" /></a>
+  <a href="https://x.com/OpenDesignDevs"><img src="https://img.shields.io/badge/@OpenDesignDevs-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="OpenDesign 开发者 X 账号 @OpenDesignDevs" /></a>
+  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="https://img.shields.io/badge/YouTube-b91c1c?style=flat-square&amp;logo=youtube&amp;logoColor=white" alt="OpenDesign 的 YouTube 频道" /></a>
+</p>
+
+[原 HTML Anything 编辑器与安装说明](https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md)
