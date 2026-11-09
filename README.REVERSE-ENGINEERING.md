@@ -11,75 +11,19 @@
   <img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion — Editable HTML · Open source · Local agent · BYOK · Motion.md">
 </picture>
 
-OpenMotion is an open-source video generator that runs in your local agent. Upload a reference video or paste a link to one on social media. OpenMotion breaks down the shots and recreates their timing with your own footage, logos and copy. Fine-tune the cut in Studio and export an MP4.
+OpenMotion is **OpenDesign’s first full-stack agentic video generator**. Generate, edit and render video in one editable HTML project.
+
+- **Free and open source, with BYOK at every layer.** Work directly in your local agent with adapters for Codex, Claude Code, DeepSeek Harness and WorkBuddy.
+- OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Its first open-source collection covers promotional films from **100+ brands**.
+- **Generate images, video, music and speech** for the same timeline, from a missing shot to a score or voice-over.
+
+Upload a reference video or paste a link to a video on social media. Recreate its shots and pacing with your own footage, logo and copy, then fine-tune the cut in Studio and export an MP4.
 
 <a id="showcase"></a>
 
 ## Seven video use cases
 
 <a id="what-can-you-make"></a>
-
-Each brand comparison plays the same five seconds: original on the left, OpenMotion remake on the right (top and bottom on mobile). Open a clip to watch it full size.
-
-<a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
-
-### Product launches & demos
-
-Time the reveal to the product. Stripe’s card flip lands on a click; the remake uses that beat to unveil an illustrated film frame.
-
-**Stripe · Card flip → film frame**
-
-<div id="case-stripe"><a href="examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/stripe/comparison.jpg"><img src="examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · Card flip → film frame"></picture></a></div>
-
-<sub><a href="examples/brand-studies/stripe/comparison.mp4">Full size</a> · <a href="examples/brand-studies/stripe/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">Original 00:21.50–00:26.50</a> · <a href="examples/brand-studies/stripe/index.html">HTML</a> · <a href="examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
-
-[Use this brief](docs/examples.md#product-launch)
-
-<details>
-<summary>More launch references: Kimi K3 and ElevenLabs</summary>
-
-<table>
-<tr>
-<td width="50%" valign="top">
-<a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="docs/readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
-<strong>Kimi · K3 teaser</strong><br>
-Your next release, distilled into a short, memorable teaser.<br>
-<sub>Reference · @Kimi_Moonshot</sub>
-</td>
-<td width="50%" valign="top">
-<a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="docs/readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs reference film"></picture></a><br>
-<strong>ElevenLabs · Reception</strong><br>
-Introduce a new product with a focused launch story.<br>
-<sub>Reference · @ElevenLabs</sub>
-</td>
-</tr>
-</table>
-
-</details>
-
-<details>
-<summary>Two mixed-media references: live footage, generated characters and code</summary>
-
-A strong video can mix production methods. These external case studies are useful references for deciding what to film, what to generate and what to express in code.
-
-<table>
-<tr>
-<td width="50%" valign="top" align="center">
-<a href="docs/readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-unboxing.jpg"><img src="docs/readme/brand-showcase/rea-unboxing.gif" width="250" alt="Live-action product unboxing reference"></picture></a><br>
-<strong>A real product, a tactile story</strong><br>
-Study close-ups, hand movement and the reveal; film your own product.<br>
-<sub>Live footage · product unboxing</sub>
-</td>
-<td width="50%" valign="top" align="center">
-<a href="docs/readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-dual-role.jpg"><img src="docs/readme/brand-showcase/rea-dual-role.gif" width="250" alt="Mixed-production reference with AI characters, coded interface and screen footage"></picture></a><br>
-<strong>Characters meet the interface</strong><br>
-Combine a character-led hook with UI motion and screen footage.<br>
-<sub>AI characters + code + screen recording</sub>
-</td>
-</tr>
-</table>
-
-</details>
 
 ### AI talking-head edits
 
@@ -247,6 +191,68 @@ Turn a folder of clips and photos into a story. In this 100-day diary, the photo
 
 [Use this brief](docs/examples.md#story-recut)
 
+<a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
+
+### Product launches & demos
+
+Time the reveal to the product. Stripe’s card flip lands on a click; the remake uses that beat to unveil an illustrated film frame.
+
+Each brand comparison plays the same five seconds: original on the left, OpenMotion remake on the right (top and bottom on mobile). Open a clip to watch it full size.
+
+**Stripe · Card flip → film frame**
+
+<div id="case-stripe"><a href="examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/stripe/comparison.jpg"><img src="examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · Card flip → film frame"></picture></a></div>
+
+<sub><a href="examples/brand-studies/stripe/comparison.mp4">Full size</a> · <a href="examples/brand-studies/stripe/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">Original 00:21.50–00:26.50</a> · <a href="examples/brand-studies/stripe/index.html">HTML</a> · <a href="examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
+
+[Use this brief](docs/examples.md#product-launch)
+
+<details>
+<summary>More launch references: Kimi K3 and ElevenLabs</summary>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+<a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="docs/readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
+<strong>Kimi · K3 teaser</strong><br>
+Your next release, distilled into a short, memorable teaser.<br>
+<sub>Reference · @Kimi_Moonshot</sub>
+</td>
+<td width="50%" valign="top">
+<a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="docs/readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs reference film"></picture></a><br>
+<strong>ElevenLabs · Reception</strong><br>
+Introduce a new product with a focused launch story.<br>
+<sub>Reference · @ElevenLabs</sub>
+</td>
+</tr>
+</table>
+
+</details>
+
+<details>
+<summary>Two mixed-media references: live footage, generated characters and code</summary>
+
+A strong video can mix production methods. These external case studies are useful references for deciding what to film, what to generate and what to express in code.
+
+<table>
+<tr>
+<td width="50%" valign="top" align="center">
+<a href="docs/readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-unboxing.jpg"><img src="docs/readme/brand-showcase/rea-unboxing.gif" width="250" alt="Live-action product unboxing reference"></picture></a><br>
+<strong>A real product, a tactile story</strong><br>
+Study close-ups, hand movement and the reveal; film your own product.<br>
+<sub>Live footage · product unboxing</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<a href="docs/readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-dual-role.jpg"><img src="docs/readme/brand-showcase/rea-dual-role.gif" width="250" alt="Mixed-production reference with AI characters, coded interface and screen footage"></picture></a><br>
+<strong>Characters meet the interface</strong><br>
+Combine a character-led hook with UI motion and screen footage.<br>
+<sub>AI characters + code + screen recording</sub>
+</td>
+</tr>
+</table>
+
+</details>
+
 ### Viral video recreation
 
 Borrow a short sequence, then change what it reveals. These two remakes keep the cut points but replace the graphics, type and subject.
@@ -408,7 +414,7 @@ OpenMotion has adapters for **Codex, Claude Code, DeepSeek Harness and WorkBuddy
 
 <a id="make-your-motion-language-reusable"></a> <a id="motion-design-community"></a>
 
-### 3. Motion.md: the first open-source collection is planned for 100+ brands
+### 3. Motion.md for films from 100+ brands
 
 OpenMotion introduces **Motion.md**, a Markdown format for a film’s shot order, timing, transitions and replaceable assets. In the [Stripe example](examples/brand-studies/stripe/MOTION.md), the flip stays on the same beat while a payment card becomes a film frame.
 

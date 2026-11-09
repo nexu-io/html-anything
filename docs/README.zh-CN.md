@@ -11,75 +11,19 @@
   <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion：可编辑 HTML · 开源免费 · 本地 Agent · BYOK · Motion.md">
 </picture>
 
-OpenMotion 是一款直接在本地 Agent 中运行的开源视频生成器。上传一段参考视频，或粘贴社交平台上的视频链接，就能拆解镜头，用你的画面、Logo 和文案复刻原片的节奏。你可以在 Studio 里微调剪辑，再导出 MP4。
+OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。你可以用 HTML 在同一份工程里生成、编辑和渲染视频。
+
+- **完全开源免费，在本地 Agent 直接使用，每一层都支持 BYOK。** 支持 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy，可沿用自己的账号和 API Key。
+- OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批开源内容覆盖 **100 多个品牌的宣传片**。
+- **支持图片、视频、音乐和语音生成。** 缺少的镜头、配乐或旁白，都可以生成后放到同一条时间轴上。
+
+上传参考视频，或粘贴社交平台上的视频链接，用自己的画面、Logo 和文案复刻原片的镜头与节奏，在 Studio 里微调剪辑并导出 MP4。
 
 <a id="showcase"></a>
 
 ## 七种创作场景与复刻效果
 
 <a id="可以用它做什么"></a> <a id="what-can-you-make"></a>
-
-品牌对照均为同步的 5 秒片段：左边是原片，右边是 OpenMotion 复刻；手机上则上下排列。点击画面可放大观看。
-
-<a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
-
-### 产品发布与演示
-
-让产品出现在最值得停留的一拍。Stripe 原片用一次点击带出卡片翻面，复刻版在同一拍翻出一格海岸胶片。
-
-**Stripe · 银行卡翻转 → 海岸胶片**
-
-<div id="case-stripe"><a href="../examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/stripe/comparison.jpg"><img src="../examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · 银行卡翻转 → 海岸胶片"></picture></a></div>
-
-<sub><a href="../examples/brand-studies/stripe/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/stripe/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">原片 00:21.50–00:26.50</a> · <a href="../examples/brand-studies/stripe/index.html">HTML</a> · <a href="../examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
-
-[使用这个场景的简报](examples.zh-CN.md#product-launch)
-
-<details>
-<summary>更多发布片参考：Kimi K3 与 ElevenLabs</summary>
-
-<table>
-<tr>
-<td width="50%" valign="top">
-<a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser 参考片"></picture></a><br>
-<strong>Kimi · K3 teaser</strong><br>
-把下一次发布浓缩成简短、难忘的预告。<br>
-<sub>参考 · @Kimi_Moonshot</sub>
-</td>
-<td width="50%" valign="top">
-<a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs 参考片"></picture></a><br>
-<strong>ElevenLabs · Reception</strong><br>
-用聚焦的发布故事介绍新产品。<br>
-<sub>参考 · @ElevenLabs</sub>
-</td>
-</tr>
-</table>
-
-</details>
-
-<details>
-<summary>混合素材参考：实拍、生成角色与代码</summary>
-
-优秀视频可以混合制作方式。这些外部案例可帮助你判断哪些该实拍、哪些生成、哪些用代码表达。
-
-<table>
-<tr>
-<td width="50%" valign="top" align="center">
-<a href="readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-unboxing.jpg"><img src="readme/brand-showcase/rea-unboxing.gif" width="250" alt="产品开箱实拍参考"></picture></a><br>
-<strong>真实产品，有触感的故事</strong><br>
-研究特写、手部动作和揭示方式，拍摄自己的产品。<br>
-<sub>实拍 · 产品开箱</sub>
-</td>
-<td width="50%" valign="top" align="center">
-<a href="readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-dual-role.jpg"><img src="readme/brand-showcase/rea-dual-role.gif" width="250" alt="AI 角色、代码界面与屏幕录制混合制作参考"></picture></a><br>
-<strong>角色与界面相遇</strong><br>
-把角色驱动的开头与界面动效、屏幕录制组合起来。<br>
-<sub>AI 角色 + 代码 + 屏幕录制</sub>
-</td>
-</tr>
-</table>
-
-</details>
 
 ### AI 口播剪辑
 
@@ -247,6 +191,68 @@ OpenMotion 是一款直接在本地 Agent 中运行的开源视频生成器。�
 
 [使用这个场景的简报](examples.zh-CN.md#story-recut)
 
+<a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
+
+### 产品发布与演示
+
+让产品出现在最值得停留的一拍。Stripe 原片用一次点击带出卡片翻面，复刻版在同一拍翻出一格海岸胶片。
+
+品牌对照均为同步的 5 秒片段：左边是原片，右边是 OpenMotion 复刻；手机上则上下排列。点击画面可放大观看。
+
+**Stripe · 银行卡翻转 → 海岸胶片**
+
+<div id="case-stripe"><a href="../examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/stripe/comparison.jpg"><img src="../examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · 银行卡翻转 → 海岸胶片"></picture></a></div>
+
+<sub><a href="../examples/brand-studies/stripe/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/stripe/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">原片 00:21.50–00:26.50</a> · <a href="../examples/brand-studies/stripe/index.html">HTML</a> · <a href="../examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
+
+[使用这个场景的简报](examples.zh-CN.md#product-launch)
+
+<details>
+<summary>更多发布片参考：Kimi K3 与 ElevenLabs</summary>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+<a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser 参考片"></picture></a><br>
+<strong>Kimi · K3 teaser</strong><br>
+把下一次发布浓缩成简短、难忘的预告。<br>
+<sub>参考 · @Kimi_Moonshot</sub>
+</td>
+<td width="50%" valign="top">
+<a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs 参考片"></picture></a><br>
+<strong>ElevenLabs · Reception</strong><br>
+用聚焦的发布故事介绍新产品。<br>
+<sub>参考 · @ElevenLabs</sub>
+</td>
+</tr>
+</table>
+
+</details>
+
+<details>
+<summary>混合素材参考：实拍、生成角色与代码</summary>
+
+优秀视频可以混合制作方式。这些外部案例可帮助你判断哪些该实拍、哪些生成、哪些用代码表达。
+
+<table>
+<tr>
+<td width="50%" valign="top" align="center">
+<a href="readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-unboxing.jpg"><img src="readme/brand-showcase/rea-unboxing.gif" width="250" alt="产品开箱实拍参考"></picture></a><br>
+<strong>真实产品，有触感的故事</strong><br>
+研究特写、手部动作和揭示方式，拍摄自己的产品。<br>
+<sub>实拍 · 产品开箱</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<a href="readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-dual-role.jpg"><img src="readme/brand-showcase/rea-dual-role.gif" width="250" alt="AI 角色、代码界面与屏幕录制混合制作参考"></picture></a><br>
+<strong>角色与界面相遇</strong><br>
+把角色驱动的开头与界面动效、屏幕录制组合起来。<br>
+<sub>AI 角色 + 代码 + 屏幕录制</sub>
+</td>
+</tr>
+</table>
+
+</details>
+
 ### 热门视频复刻
 
 保留几秒钟的剪辑节奏，换掉画面讲的事。下面两组复刻都沿用原片的切点，重新设计了主体和文字。
@@ -408,7 +414,7 @@ OpenMotion 是一款直接在本地 Agent 中运行的开源视频生成器。�
 
 <a id="make-your-motion-language-reusable"></a> <a id="motion-design-community"></a>
 
-### 3. Motion.md：首批计划开源 100 多个品牌的宣传片拆解
+### 3. Motion.md 与 100 多个品牌的宣传片拆解
 
 OpenMotion 首次定义了 **Motion.md**：用 Markdown 记录镜头顺序、时长、转场，以及哪些素材可以换成自己的。[Stripe 示例](../examples/brand-studies/stripe/MOTION.md) 记录了翻面的时机：把支付卡换成胶片画框，动作仍然落在同一拍。
 
