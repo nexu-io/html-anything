@@ -26,6 +26,10 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: "0"
       - run: pnpm build
       - run: pnpm -r --workspace-concurrency=1 --if-present run test
+        env:
+          GIT_CONFIG_COUNT: "1"
+          GIT_CONFIG_KEY_0: safe.directory
+          GIT_CONFIG_VALUE_0: ${{ github.workspace }}
       - run: pnpm lint
       - run: pnpm exec biome check .
       - run: pnpm exec odsuite guard
