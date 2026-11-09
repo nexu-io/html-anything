@@ -91,7 +91,8 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 - 创建独立可编辑工程，保留原有工程；同一次体验已经创建工程时直接续用，避免重复创建。
 - 在 Codex 右侧打开 openmotion 可编辑工程，检查正确载入并可播放；让用户可以在等待导出时继续查看工程。
 - 接受首次体验同时授权导出该示例的 MP4。读取当前 revision，导出并等待完成，检查实际文件与播放；复用本次已完成的导出，不重复排队。
-- 最终回复包含**简短说明与可直接播放/下载的 MP4**，同时保持右侧工程页面可用。工程 ZIP 和截图只作补充，不能代替 MP4。
+- On success, the final reply contains **one completion sentence, the playable MP4, then one contextual next-step invitation**, with the editable project kept open on the right. Use plain Markdown; screenshots and verification evidence stay in local records. Editor screenshots, ZIPs, duplicate project links, checklists and HTML wrappers are omitted unless requested.
+- The LLM writes the invitation naturally in the user's language: ask what video they want next and introduce existing templates, video-link recreation and creation from their requirements. Wording follows the conversation rather than a fixed script. Continue an already-known next request instead of asking again; otherwise wait for the user's choice. Invite only after the first successful experience delivery, not on follow-up edits, repeated exports or export failure. The [first-run defaults](../skills/motion-production/references/templates.md#first-run-experience-defaults) define delivery exceptions.
 
 右侧页面打开依赖宿主的浏览器/面板能力。没有该能力时仍交付 MP4 和实际工程链接，明确说明页面未自动打开，不能声称完整的桌面体验已通过。导出失败时保留工程并说明具体原因，不把预览或任务排队当作最终成片。
 
