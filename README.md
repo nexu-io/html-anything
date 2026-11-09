@@ -3,11 +3,11 @@ Recreate it for your brand.</h1>
 
 <p align="center">Paste a brand’s X or YouTube video link into Codex. Use your own logo, screenshots and copy to recreate the film’s cuts, camera moves and type. Export an MP4 and keep the editable project.</p>
 
-<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 46-second walkthrough</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
+<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 12-second demo</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
 
 <p align="center"><a href="docs/readme/studio-tour.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
-  <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install OpenMotion, paste the original OpenAI X post into Codex, open the editable timeline in Studio and watch the full 32-second film beside its remake." />
+  <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install OpenMotion, paste the original OpenAI X post into Codex, open the Studio timeline and compare five seconds of the original and the OpenDesign remake." />
 </picture></a></p>
 
 <p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">Open the original X post</a> · <a href="#make-a-reference-your-own">Compare the three brands</a> · <a href="examples/reference-reveal/MOTION.md">Read a Motion MD breakdown</a></p>
@@ -18,7 +18,7 @@ OpenMotion is an open-source motion design plugin for Codex. Our goal is to buil
 
 ## Make a reference your own
 
-The left pane plays footage from the credited X post. The right pane plays the independent OpenMotion export. The two run at normal speed on one clock, with audio from the remake. Open a comparison to pause or scrub both sides.
+Each comparison runs for five seconds. The left pane plays footage from the credited X post. The right pane plays the independent OpenMotion export. The two run at normal speed on one clock, with audio from the remake. Open a comparison to pause or scrub both sides.
 
 ### Figma Draw → Paperwing
 
@@ -27,9 +27,9 @@ The left pane plays footage from the credited X post. The right pane plays the i
   <img src="examples/wing-construction/comparison.webp" alt="Figma Draw → Paperwing with the original on the left and the remake at the same time on the right." width="768" />
 </picture></a></p>
 
-Figma’s 53-second *Introducing Figma Draw* goes from drawing tools to a finished print. This is **00:31–00:43** without cuts. Four dots become a butterfly, its right wing is cut, the colored fill is adjusted, and the camera pulls back to the festival poster. Pause the comparison at **11.75s** to read *Nature Fest* and *Wing Fest*. Paperwing is a demo identity.
+At **00:38–00:43** in *Introducing Figma Draw*, the camera moves from the butterfly’s fill controls to the full *Nature Fest* poster. In the remake, the same pullback reveals *Wing Fest* for Paperwing, a demo brand. Pause at **4.75s** to see both posters.
 
-[Watch in sync](examples/wing-construction/comparison.mp4) · [Remake MP4](examples/wing-construction/film.mp4) · [Editable source](examples/wing-construction/index.html) · [Original by @figma](https://x.com/figma/status/1920168282751185360)
+[Watch in sync](examples/wing-construction/comparison.mp4) · [12-second Paperwing export](examples/wing-construction/film.mp4) · [Editable source](examples/wing-construction/index.html) · [Original by @figma](https://x.com/figma/status/1920168282751185360)
 
 ### OpenAI → OpenDesign
 
@@ -38,9 +38,9 @@ Figma’s 53-second *Introducing Figma Draw* goes from drawing tools to a finish
   <img src="examples/motion-studies/comparison.webp" alt="OpenAI → OpenDesign with the original on the left and the remake at the same time on the right." width="768" />
 </picture></a></p>
 
-The **entire 32-second X film** plays from its first frame to the logo. OpenAI introduces mathematical research through diagrams. OpenDesign uses the same sequence for five motion studies. At **5.46s**, dots pack into a circle. At **15.65s**, hatching fills a triangle. At **28.54s**, both films cut to white, type the brand name and resolve to its symbol.
+The closing passage of OpenAI’s research film (**00:26.5–00:31.5**) collapses a graph into a colored dot. At **2.04s** in the comparison, both cuts switch to white. Each types its brand name and ends on its own symbol.
 
-[Watch in sync](examples/motion-studies/comparison.mp4) · [Remake MP4](examples/motion-studies/film.mp4) · [Editable source](examples/motion-studies/index.html) · [Original by @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
+[Watch in sync](examples/motion-studies/comparison.mp4) · [32-second OpenDesign export](examples/motion-studies/film.mp4) · [Editable source](examples/motion-studies/index.html) · [Original by @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
 
 ### Firecrawl → OpenMotion
 

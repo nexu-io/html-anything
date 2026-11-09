@@ -1,16 +1,16 @@
 # Remix the README films
 
-The comparisons use footage from the authors’ X posts on the left and independently rendered projects on the right. Each MP4 uses the remake’s own soundtrack. Original footage is used in the comparison only. All three project folders can be edited and rendered locally.
+The five-second comparisons use footage from the authors’ X posts on the left and independently rendered projects on the right. Each MP4 uses the remake’s own soundtrack. Original footage is used in the comparison only. All three project folders can be edited and rendered locally.
 
 ## OpenAI · a complete film
 
-OpenAI’s 32-second mathematical research film runs from its opening dots to its final logo. The OpenDesign version uses editable geometry and new text for the packing diagram, the lattice, the hatched triangle and the two graph constructions. The dark board cuts to a white brand sign-off at 28.54s. The original runs at 23.976 fps and the 24 fps export matches its duration to within one frame. The end mark is the official OpenDesign symbol. [Original on X](https://x.com/OpenAI/status/2084352161404920316) · [Full comparison](motion-studies/comparison.mp4) · [OpenDesign export](motion-studies/film.mp4) · [Editable source](motion-studies/index.html)
+The comparison isolates the brand sign-off at 00:26.5–00:31.5 of OpenAI’s mathematical research film. The OpenDesign version uses editable geometry and new text for the packing diagram, the lattice, the hatched triangle and the two graph constructions. The dark board cuts to a white brand sign-off at 28.54s. The original runs at 23.976 fps and the 24 fps export matches its duration to within one frame. The end mark is the official OpenDesign symbol. [Original on X](https://x.com/OpenAI/status/2084352161404920316) · [Five-second sign-off](motion-studies/comparison.mp4) · [32-second OpenDesign export](motion-studies/film.mp4) · [Editable source](motion-studies/index.html)
 
 The shorter, silent [wordmark study](wordmark-reveal/film.mp4) isolates the closing action for editing practice. [Editable wordmark](wordmark-reveal/index.html)
 
 ## Figma Draw · a drawing becomes a poster
 
-Figma posted *Introducing Figma Draw* during Config 2025. The continuous passage from 00:31 to 00:43 turns four dots into a butterfly, edits the wing and the antenna, adjusts its color and pulls back to the finished *Nature Fest* poster. The Paperwing version ends on *Wing Fest*. Edit the curves, pigments, controls, type and camera in the source. Compare the notch at 3.35s, the paint control at 8.5s and the poster at 11.75s. [Original on X](https://x.com/figma/status/1920168282751185360) · [Comparison](wing-construction/comparison.mp4) · [Remake](wing-construction/film.mp4) · [Source](wing-construction/index.html)
+Figma posted *Introducing Figma Draw* during Config 2025. The continuous passage from 00:31 to 00:43 turns four dots into a butterfly, edits the wing and the antenna, adjusts its color and pulls back to the finished *Nature Fest* poster. The Paperwing version ends on *Wing Fest*. Edit the curves, pigments, controls, type and camera in the source. The five-second comparison shows 00:38–00:43 of the original. Compare the paint controls at 1.5s and the posters at 4.75s. [Original on X](https://x.com/figma/status/1920168282751185360) · [Five-second pullback](wing-construction/comparison.mp4) · [12-second Paperwing export](wing-construction/film.mp4) · [Source](wing-construction/index.html)
 
 ## Firecrawl Keyless · a number becomes an orbit
 
