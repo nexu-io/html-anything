@@ -3,14 +3,14 @@
 
 <p align="center">把喜欢的科技品牌片链接贴进 Codex，用自己的 Logo、产品截图和文案，复刻它的镜头节奏、文字动画和转场。导出 MP4 后，工程还能接着改。</p>
 
-<p align="center"><strong><a href="../examples/reference-reveal/comparison.mp4">看 5 秒原片与复刻对照</a></strong> · <strong><a href="#在-codex-里开始">在 Codex 里试用</a></strong></p>
+<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 27 秒操作演示</a></strong> · <strong><a href="#在-codex-里开始">在 Codex 里试用</a></strong></p>
 
-<p align="center"><a href="../examples/reference-reveal/comparison.mp4"><picture>
+<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="readme/codex-comparison.zh-CN.jpg" />
-  <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="在 Codex 里使用 OpenMotion 的会话示意。左侧 Firecrawl 原片从开发者人数切到环绕标志，右侧 OpenMotion 复刻在同一拍从示例时长切到环绕的工程素材。" />
+  <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="Codex 插件安装、Studio 参考库与可编辑时间轴，接着是 Figma、OpenAI、Firecrawl 的原片和 OpenMotion 导出同步对照。" />
 </picture></a></p>
 
-<p align="center">Codex 会话示意 · <a href="https://x.com/ericciarla/status/2093375835679977570">Firecrawl 原片作者 @ericciarla</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读 Motion MD 分镜拆解</a></p>
+<p align="center"><a href="#复用参考片的拍法">逐个看品牌复刻</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读 Motion MD 分镜拆解</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="collections/README.zh-CN.md">找参考片</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
@@ -18,9 +18,40 @@ OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做�
 
 ## 复用参考片的拍法
 
-**一个数字，一圈图标，一次交接。** Firecrawl 的 5 秒发布片段先亮出「1,000,000 Developers」，再让一圈公司标志绕着火焰转动。我们沿用这组动作，为 OpenMotion 做了一支片。开场数字换成 Product Promo 模板的真实时长，中央换成 OpenDesign 标志，外围卡片则是做视频时实际会用到的素材和文件。[观看 @ericciarla 的参考片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [作者原帖](https://x.com/ericciarla/status/2093375835679977570)
+左边是参考片，右边是 OpenMotion 从可编辑工程导出的版本。点开任一组，同一个播放器就能暂停两边。
 
-[播放有声成片](../examples/reference-reveal/film.mp4) · [读这支片的 Motion MD](../examples/reference-reveal/MOTION.zh-CN.md) · [打开可编辑源码](../examples/reference-reveal/index.html)
+### Figma Draw → Paperwing
+
+<p><a href="../examples/wing-construction/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="../examples/wing-construction/comparison.jpg" />
+  <img src="../examples/wing-construction/comparison.webp" alt="Figma Draw → Paperwing，左边是原片，右边是同一时刻的复刻。" width="768" />
+</picture></a></p>
+
+四个圆点长成翅膀，右侧被切出一道弧口，镜头再推近触角。停在 **3.35 秒**，两边的弧口都已经打开。Paperwing 是本例设计的示例品牌，采用奶油黄和深紫配色。
+
+[同步对照](../examples/wing-construction/comparison.mp4) · [复刻成片](../examples/wing-construction/film.mp4) · [可编辑源码](../examples/wing-construction/index.html) · [原片 @figma](https://x.com/figma/status/1920168282751185360)
+
+### OpenAI → OpenDesign
+
+<p><a href="../examples/wordmark-reveal/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="../examples/wordmark-reveal/comparison.jpg" />
+  <img src="../examples/wordmark-reveal/comparison.webp" alt="OpenAI → OpenDesign，左边是原片，右边是同一时刻的复刻。" width="768" />
+</picture></a></p>
+
+彩色光点在 **1.25 秒**从深色背景切到白底打字。停在 **1.92 秒**，两边都已拼出品牌名。文字随后回删，分别收成 OpenAI 和 OpenDesign 自己的标志。
+
+[同步对照](../examples/wordmark-reveal/comparison.mp4) · [复刻成片](../examples/wordmark-reveal/film.mp4) · [可编辑源码](../examples/wordmark-reveal/index.html) · [原片 @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
+
+### Firecrawl → OpenMotion
+
+<p><a href="../examples/reference-reveal/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="../examples/reference-reveal/comparison.jpg" />
+  <img src="../examples/reference-reveal/comparison.webp" alt="Firecrawl → OpenMotion，左边是原片，右边是同一时刻的复刻。" width="768" />
+</picture></a></p>
+
+Firecrawl 用开发者人数开场，OpenMotion 换成内置示例的 20 秒时长。停在 **2.65 秒**，左侧公司标志环绕火焰，右侧工程素材环绕 OpenDesign 标志。
+
+[同步对照](../examples/reference-reveal/comparison.mp4) · [复刻成片](../examples/reference-reveal/film.mp4) · [可编辑源码](../examples/reference-reveal/index.html) · [原片 @ericciarla](https://x.com/ericciarla/status/2093375835679977570)
 
 **换个产品信息，还能保留这个节奏吗？** 我们在同一份工程里，把「00:00:20 · Product Promo」换成「00:00:15 · NYT Graph」，再导出了一版。两支片都长 5 秒。停在 0.8 秒能看到改过的数字和标题，停在 2.65 秒能看到卡片转到了相同位置。[看改稿后的第二版](../examples/reference-reveal/graph-cut.mp4)
 
@@ -57,6 +88,8 @@ https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4
 
 ## 在 Codex 里开始
 
+想复刻上面的镜头？安装后打开 Studio 的**模板库 → 视频复刻**，搜品牌或片段名称，点「一键复刻」。把复制的指令贴进 Codex，加上自己的 Logo、文案或配色。Codex 会在可编辑工程里制作，你可以在 Studio 时间轴预览、改稿，再导出 MP4。
+
 第一次可以直接用内置的 **Product Promo**，素材已经备好。[模板出片流程](../skills/motion-template-to-video/SKILL.md)
 
 macOS 或 Linux 需要 Git、Node.js 22.18+（含 npm）和支持插件的 Codex CLI。导出 MP4 还需要 Chrome 或 Chromium，以及含 FFprobe 的 FFmpeg。[Windows 安装说明](test-packages.md)
@@ -75,6 +108,8 @@ cd OpenMotion && bash scripts/install-motion.command
 ![在 Studio 中打开的 Product Promo 示例，可见视频预览与可编辑时间轴。](readme/editor.jpg)
 
 ## 用自己的素材开工
+
+项目里的 Logo 和截图可以直接用。需要另外生成图像、视频或声音素材时，可在 Studio「模型设置」中配置自己的 Atlas Cloud 或 fal.ai API Key，按媒体类型选择模型。[模型设置说明](model-gateway.md)
 
 | 你手头有什么 | 可以怎样告诉 Codex | 第一版出来后怎么改 |
 | --- | --- | --- |

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Paperwing · drawing an identity</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+    #film { --paper: #ffefab; --ink: #251930; color: var(--ink); background: var(--paper); }
+    svg { display: block; width: 1280px; height: 720px; }
+    .wing, .cap { fill: currentColor; }
+    .stem { fill: none; stroke: currentColor; stroke-width: 16; }
+    .wire { fill: none; stroke: #a39bb2; stroke-width: .9; }
+    .point { fill: white; stroke: #5283ed; stroke-width: 1.4; }
+    .lever { stroke: #f83255; stroke-width: 1.6; fill: #f83255; }
+  </style>
+</head>
+<body>
+  <main id="film" data-composition-id="main" data-start="0" data-duration="5.1666666667" data-fps="24" data-width="1280" data-height="720">
+    <svg id="paperwing-vector" class="clip" data-start="0" data-duration="5.1666666667" data-track-index="0" viewBox="0 0 640 360" aria-label="Four circles open into the Paperwing butterfly. Vector handles reshape its wing and antenna.">
+      <defs>
+        <pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x2="0" y2="4" stroke="#8494d5" stroke-width="1.4"/></pattern>
+        <g id="half"><path class="wing" id="upper"/><path class="wing" id="lower"/></g>
+      </defs>
+      <g id="camera">
+        <g id="art">
+          <use href="#half" transform="translate(640 0) scale(-1 1)"/>
+          <use href="#half"/>
+          <path id="stem-left" class="stem"/><path id="stem-right" class="stem"/>
+          <circle id="cap" class="cap" r="0"/>
+          <g id="selection"><path id="hatching" fill="url(#hatch)"/><path id="wing-outline" class="wire"/>
+            <g id="anchors"></g></g>
+          <path id="cut" fill="var(--paper)"/>
+          <g id="cut-tool"><path id="cut-guide" class="wire"/><g id="cut-points"></g></g>
+          <g id="width-tool"><path id="centerline" class="wire"/><circle id="tip" class="point" r="2.5"/>
+            <g id="handles" class="lever"><path d="M0 -14v28"/><circle cy="-14" r="1.8"/><circle cy="14" r="1.8"/></g>
+          </g>
+        </g>
+      </g>
+      <g id="detail" opacity="0">
+        <path fill="currentColor" d="M0 72 L23 72 Q123 180 155 305 Q206 211 305 177 C405 141 538 178 574 272 Q579 288 579 310 C509 250 473 278 469 360 H0 Z"/>
+        <path id="close-stem" fill="currentColor"/>
+        <path d="M165 360 Q208 171 418 93" fill="none" stroke="#bab5c3" stroke-width="1.8"/>
+        <circle cx="418" cy="93" r="8" fill="white" stroke="#4b96f5" stroke-width="3.5"/>
+        <g id="close-tip" stroke="#f32f53" fill="#f32f53" stroke-width="3">
+          <path d="M359 55l38 100"/><circle cx="359" cy="55" r="6"/><circle cx="397" cy="155" r="6"/>
+        </g>
+        <g id="close-base" stroke="#f32f53" fill="#f32f53" stroke-width="3">
+          <path d="M197 198l54 38"/><circle cx="197" cy="198" r="6"/><circle cx="251" cy="236" r="6"/>
+        </g>
+      </g>
+    </svg>
+  </main>
+  <script>
+    const el = id => document.getElementById(id);
+    const path = (id, d) => el(id).setAttribute('d', d);
+    const point = (node,x,y) => { node.setAttribute('cx',x); node.setAttribute('cy',y); };
+    function dots(id, pts) {
+      const nodes = pts.map(([x,y]) => {
+        const n = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        n.setAttribute('class','point'); n.setAttribute('r','2.1'); point(n,x,y); return n;
+      });
+      el(id).replaceChildren(...nodes);
+    }
+    function circle(x,y,r) {
+      const k = r*.5523;
+      return [x-r,y, x-r,y-k,x-k,y-r,x,y-r, x+k,y-r,x+r,y-k,x+r,y,
+        x+r,y+k,x+k,y+r,x,y+r, x-k,y+r,x-r,y+k,x-r,y];
+    }
+    const upperWing = [320,163, 337,101,383,54,439,68, 487,70,512,112,485,154,
+      468,179,446,194,425,203, 382,223,323,208,320,163];
+    const lowerWing = [320,164, 344,170,398,184,425,201, 473,218,491,270,449,306,
+      402,336,352,312,329,275, 320,259,317,208,320,164];
+    const upperSeed = circle(355,145,31), lowerSeed = circle(355,215,31);
+    function contour(seed,target,mix){
+      const a=seed.map((v,i)=>(v+(target[i]-v)*mix).toFixed(2));
+      return 'M'+a.slice(0,2).join(' ')+' C'+a.slice(2).join(' ')+' Z';
+    }
+    const scallop = 'M497 109 C451 84 452 134 444 152 C432 189 405 191 361 183 C320 176 314 218 351 219 C393 219 400 193 431 207 L476 238 L515 184 Z';
+    const cutNodes = [[497,109],[445,151],[359,183],[326,201],[350,219],[428,202]];
+    dots('anchors',[[320,151],[373,79],[487,99],[499,116],[427,201],[471,249],[468,277],[371,314],[320,247]]);
+    dots('cut-points',cutNodes);
+    const s = {spread:0, stems:0, scale:1, hatch:0, guides:0, outline:0, cut:0, zoom:0, width:0, handle:0, detail:0, upperHatch:0};
+    function draw(){
+      const up=contour(upperSeed,upperWing,s.spread), down=contour(lowerSeed,lowerWing,s.spread);
+      path('upper',up); path('lower',down); path('hatching',(s.upperHatch>.5?up:'')+' '+down); path('wing-outline',up+' '+down);
+      const tipX=328+52*s.stems, tipY=142-116*s.stems;
+      path('stem-right',`M319 160 Q323 ${137-42*s.stems} ${tipX} ${tipY}`);
+      path('stem-left',`M321 160 Q317 ${137-42*s.stems} ${640-tipX} ${tipY}`);
+      el('stem-left').style.opacity=el('stem-right').style.opacity=s.stems;
+      point(el('cap'),tipX,tipY); el('cap').setAttribute('r',s.width*14);
+      el('art').setAttribute('transform',`translate(320 180) scale(${s.scale}) translate(-320 -180)`);
+      const z=1+3.2*s.zoom;
+      el('camera').setAttribute('transform',`translate(${-1178*s.zoom} ${-16*s.zoom}) scale(${z})`);
+      el('hatching').style.opacity=s.hatch; el('selection').style.opacity=s.guides;
+      path('cut',scallop); path('cut-guide',scallop); el('cut-tool').style.opacity=s.outline;
+      el('cut').style.opacity=s.cut;
+      el('detail').style.opacity=s.detail; el('camera').style.opacity=1-s.detail;
+      path('close-stem',`M155 310 C186 200 268 ${117-37*s.width} ${398-8*s.width} ${76-34*s.width} C${444+18*s.width} ${57-45*s.width} ${459+29*s.width} ${116+27*s.width} ${414+7*s.width} ${123+25*s.width} Q226 ${183-5*s.width} 166 360 L149 360 Z`);
+      el('close-tip').style.opacity=s.width; el('close-base').style.opacity=s.handle;
+      el('width-tool').style.opacity=s.zoom; path('centerline',`M320 136 Q327 54 ${tipX} ${tipY}`);
+      point(el('tip'),tipX,tipY);
+      el('handles').setAttribute('transform',`translate(${tipX-9-19*s.handle} ${tipY+4+14*s.handle}) rotate(${-17-23*s.handle}) scale(${s.width||.01})`);
+    }
+    draw();
+    const tl=gsap.timeline({paused:true,onUpdate:draw});
+    function change(at, duration, values){tl.to(s,{...values,duration,ease:'power2.inOut'},at);}
+    change(0,.15,{scale:.95}); change(.34,.46,{spread:.36,stems:.64}); change(.81,.39,{spread:1,stems:1});
+    change(1.05,.14,{guides:1}); change(1.39,.22,{scale:1,hatch:1}); change(1.76,.09,{upperHatch:1}); change(1.99,.10,{hatch:0});
+    change(2.22,.26,{outline:1}); change(3.21,.09,{cut:1,guides:0,outline:0});
+    change(3.65,.20,{zoom:1}); change(3.76,.09,{detail:1}); change(4.14,.20,{width:1}); change(4.52,.43,{handle:1});
+    tl.set({}, {}, 5.1666666667);
+    window.__timelines={main:tl};
+  </script>
+</body>
+</html>

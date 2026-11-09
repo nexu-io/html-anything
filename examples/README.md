@@ -1,6 +1,14 @@
 # Remix the README films
 
-Each folder contains the editable HTML and the exported film. All examples run at 30 fps. The reference study has its own sound cues. The three other films are designed for silent viewing.
+Each folder contains the editable HTML and the exported film. The Figma Draw and OpenAI studies export at 24 fps. The Firecrawl study and three original showcase films export at 30 fps. The Firecrawl remake has its own sound cues; both new studies preserve the silence of their catalog excerpts.
+
+## Figma Draw · four dots to a butterfly
+
+The five-second [Figma Draw excerpt](https://x.com/figma/status/1920168282751185360) is the reference for Paperwing, a demonstration identity. The HTML constructs the wings from four editable curves. Its palette, control points, notch, camera push and width handles can be edited separately. Compare the four circles at 0.20s, the hatched wing at 1.65s and the open notch at 3.35s. [Comparison](wing-construction/comparison.mp4) · [Remake](wing-construction/film.mp4) · [Source](wing-construction/index.html)
+
+## OpenAI · dot to wordmark
+
+The [OpenAI reference](https://x.com/OpenAI/status/2084352161404920316) cuts from a colored dot to typed letters and ends on the knot. The study uses the OpenDesign name and official symbol. Compare the cut at 1.25s, the two wordmarks at 1.92s and the two symbols at 3.55s. The type, palette and symbol animation live in the HTML. The official OpenDesign symbol has fewer internal strokes than OpenAI’s knot. [Comparison](wordmark-reveal/comparison.mp4) · [Remake](wordmark-reveal/film.mp4) · [Source](wordmark-reveal/index.html)
 
 ## Twenty seconds · reference study
 
@@ -60,6 +68,8 @@ if [ -d "examples/$example/assets" ]; then
   cp -R "examples/$example/assets/." "$work/assets/"
 fi
 cp node_modules/gsap/dist/gsap.min.js "$work/assets/"
-node node_modules/hyperframes/bin/hyperframes.mjs render "$work" --fps 30 --output "$work/film.mp4"
+fps=30
+case "$example" in wing-construction|wordmark-reveal) fps=24 ;; esac
+node node_modules/hyperframes/bin/hyperframes.mjs render "$work" --fps "$fps" --output "$work/film.mp4"
 printf '%s\n' "$work/film.mp4"
 ```

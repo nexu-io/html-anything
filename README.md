@@ -3,14 +3,14 @@ Recreate it for your brand.</h1>
 
 <p align="center">Got a tech brand film in mind? Paste its link into Codex. Recreate its timing, type and transitions with your own logo, screenshots and copy. Export an MP4 and keep the editable project.</p>
 
-<p align="center"><strong><a href="examples/reference-reveal/comparison.mp4">See the 5-second remake</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
+<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 27-second walkthrough</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
 
-<p align="center"><a href="examples/reference-reveal/comparison.mp4"><picture>
+<p align="center"><a href="docs/readme/studio-tour.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
-  <img src="docs/readme/codex-comparison.webp" width="100%" alt="Illustrated Codex session running OpenMotion. On the left, Firecrawl’s developer count gives way to a ring of logos. On the right, OpenMotion reveals the demo runtime and a ring of project assets on the same beats." />
+  <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install the Codex plugin, choose a shot in the Studio library, then watch three originals beside their OpenMotion exports: Figma, OpenAI and Firecrawl." />
 </picture></a></p>
 
-<p align="center">Codex workflow illustration · <a href="https://x.com/ericciarla/status/2093375835679977570">Firecrawl original by @ericciarla</a> · <a href="examples/reference-reveal/MOTION.md">Shot breakdown in Motion MD</a></p>
+<p align="center"><a href="#make-a-reference-your-own">Compare the three brands</a> · <a href="examples/reference-reveal/MOTION.md">Read a Motion MD breakdown</a></p>
 
 <p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="docs/collections/README.md">Find a reference</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 
@@ -18,9 +18,40 @@ OpenMotion is an open-source motion design plugin for Codex. Our goal is to buil
 
 ## Make a reference your own
 
-**One number. A ring of icons. A handoff.** In a five-second Firecrawl launch excerpt, “1,000,000 Developers” gives way to a ring of company marks around the flame. We borrowed that sequence for OpenMotion. Our number is the runtime of the bundled Product Promo template, our center mark is OpenDesign’s, and the surrounding tiles name the things you bring into a motion project. [Watch @ericciarla’s reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [Creator’s original post](https://x.com/ericciarla/status/2093375835679977570)
+The reference is on the left and the export from the editable OpenMotion project is on the right. Open any pair to pause both on the same frame.
 
-[Play our cut with sound](examples/reference-reveal/film.mp4) · [Read its Motion MD](examples/reference-reveal/MOTION.md) · [Open the editable HTML](examples/reference-reveal/index.html)
+### Figma Draw → Paperwing
+
+<p><a href="examples/wing-construction/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="examples/wing-construction/comparison.jpg" />
+  <img src="examples/wing-construction/comparison.webp" alt="Figma Draw → Paperwing with the original on the left and the remake at the same time on the right." width="768" />
+</picture></a></p>
+
+Four dots grow into wings. A notch opens on the right, then the camera pushes in on the antenna. Pause at **3.35s** to see the notch in both silhouettes. Paperwing is a demo identity with a butter-yellow and plum palette.
+
+[Watch in sync](examples/wing-construction/comparison.mp4) · [Remake MP4](examples/wing-construction/film.mp4) · [Editable source](examples/wing-construction/index.html) · [Original by @figma](https://x.com/figma/status/1920168282751185360)
+
+### OpenAI → OpenDesign
+
+<p><a href="examples/wordmark-reveal/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="examples/wordmark-reveal/comparison.jpg" />
+  <img src="examples/wordmark-reveal/comparison.webp" alt="OpenAI → OpenDesign with the original on the left and the remake at the same time on the right." width="768" />
+</picture></a></p>
+
+At **1.25s**, the colored dot on black cuts to type on white. Pause at **1.92s** to see both wordmarks fully spelled out. The letters then erase and each brand’s own symbol settles in the center.
+
+[Watch in sync](examples/wordmark-reveal/comparison.mp4) · [Remake MP4](examples/wordmark-reveal/film.mp4) · [Editable source](examples/wordmark-reveal/index.html) · [Original by @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
+
+### Firecrawl → OpenMotion
+
+<p><a href="examples/reference-reveal/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="examples/reference-reveal/comparison.jpg" />
+  <img src="examples/reference-reveal/comparison.webp" alt="Firecrawl → OpenMotion with the original on the left and the remake at the same time on the right." width="768" />
+</picture></a></p>
+
+Firecrawl opens with its developer count. OpenMotion uses the 20-second runtime of its bundled demo. Pause at **2.65s** to see company marks orbit the flame on the left and project assets orbit the OpenDesign symbol on the right.
+
+[Watch in sync](examples/reference-reveal/comparison.mp4) · [Remake MP4](examples/reference-reveal/film.mp4) · [Editable source](examples/reference-reveal/index.html) · [Original by @ericciarla](https://x.com/ericciarla/status/2093375835679977570)
 
 **Does the style survive a new brief?** We kept the same project and changed the opening from “00:00:20 · Product Promo” to “00:00:15 · NYT Graph”. At 0.8s you can read the new title. At 2.65s the cards are in the same orbit. Both versions run for five seconds. [Watch the second cut](examples/reference-reveal/graph-cut.mp4)
 
@@ -57,6 +88,8 @@ All three films were exported through the plugin. Each is silent by design. [Get
 
 ## Start in Codex
 
+To try a reference after installation, open **Template library → Video recreation** in Studio. Search for the brand or shot and use the card’s copy action (一键复刻). Paste the instruction into Codex with your logo, copy or colors. Review the editable project in the Studio timeline, then export the MP4.
+
 Try the bundled **Product Promo** with its own artwork. [How the template demo works](skills/motion-template-to-video/SKILL.md)
 
 On macOS or Linux, use Git, Node.js 22.18+ with npm, and a Codex CLI with plugin support. MP4 export also needs Chrome or Chromium and FFmpeg with FFprobe. [Windows setup](docs/test-packages.md)
@@ -75,6 +108,8 @@ Then try one edit: **“Hold the closing title two seconds longer. Export anothe
 ![Product Promo open in Studio, with its preview and editable timeline.](docs/readme/editor.jpg)
 
 ## Bring your own project
+
+You can start with assets already in your project. For generated images, video or audio, Studio’s model settings let you configure your own Atlas Cloud or fal.ai key and choose a model for each media type. [Model settings](docs/model-gateway.md)
 
 | What you have | What to ask Codex for | What you can change next |
 | --- | --- | --- |

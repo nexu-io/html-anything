@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenDesign · wordmark reveal</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+    #film { width: 100%; height: 100%; background: #fff; position: relative; }
+    #night { position: absolute; inset: 0; background: #111116; }
+    #signal { position: absolute; left: 616px; top: 336px; width: 48px; height: 48px; border-radius: 50%; background: white; }
+    #word { position: absolute; width: max-content; top: 50%; left: 50%; font: 650 87px/1 "Helvetica Neue", Arial, sans-serif; letter-spacing: -4.6px; color: #141619; }
+    #word span { display: inline-block; visibility: hidden; }
+    #symbol { position: absolute; width: 144px; height: 144px; left: 568px; top: 288px; opacity: 0; }
+  </style>
+</head>
+<body>
+  <main id="film" data-composition-id="main" data-start="0" data-width="1280" data-height="720" data-duration="4.7083333333" data-fps="24">
+    <div id="night" class="clip" data-start="0" data-duration="1.25" data-track-index="0"><div id="signal"></div></div>
+    <div id="word" class="clip" data-start="0" data-duration="4.7083333333" data-track-index="1" aria-label="OpenDesign">OpenDesign</div>
+    <img class="clip" data-start="0" data-duration="4.7083333333" data-track-index="2" id="symbol" src="assets/mark.svg" alt="OpenDesign symbol">
+  </main>
+  <script>
+    const timeline = gsap.timeline({paused: true});
+    const word = document.querySelector('#word');
+    const letters = [...word.textContent].map(character => {
+      const span = document.createElement('span');
+      span.textContent = character;
+      return span;
+    });
+    word.replaceChildren(...letters);
+    const palette = ['#fff', '#fc6739', '#bc9cff', '#a6ef76', '#ffda53', '#498cff', '#ffc2d9'];
+    [0, .32, .45, .56, .72, .83, .96].forEach((time, index) =>
+      timeline.set('#signal', {backgroundColor: palette[index]}, time));
+    timeline.fromTo('#signal', {scale: .75}, {scale: 1, duration: .2}, 0);
+    timeline.to('#signal', {x: -34, duration: .09, ease: 'power2.in'}, 1.16);
+    gsap.set('#word', {xPercent: -50, yPercent: -52});
+    letters.forEach((letter, index) => {
+      timeline.set(letter, {visibility:'visible'}, 1.25 + index * .043);
+      timeline.set(letter, {visibility:'hidden'}, 2.52 + (letters.length - 1 - index) * .042);
+    });
+    timeline.to('#word', {x: 168, duration: .52, ease: 'power2.in'}, 2.31);
+    timeline.set('#symbol', {opacity:1}, 2.87);
+    timeline.fromTo('#symbol', {scale: .43, rotation: -66},
+      {scale: 1, rotation: 0, duration: .58, ease: 'power3.out'}, 2.87);
+    timeline.set({}, {}, 4.7083333333);
+    window.__timelines = {main: timeline};
+  </script>
+</body>
+</html>
