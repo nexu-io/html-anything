@@ -1,6 +1,6 @@
 import { StudioErrorBoundary } from '../components/StudioErrorBoundary';
 import { I18nProvider, useI18n } from "../i18n/I18n";
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useStudioShellContext } from '../contexts/StudioContext';
 import { Dock } from '../components/dock/Dock';
 import { useDockLayoutStore } from '../components/dock/dockLayoutStore';
@@ -14,6 +14,7 @@ import { MotionHistoryPanel } from './MotionHistoryPanel';
 import { MotionHistoryProvider, useMotionHistoryOperation } from './MotionHistoryState';
 import { MediaGatewayProvider, useMediaGateway } from './MediaGatewayContext';
 import { workspacePresentation } from '../../../shared/workspace-url';
+import { trackMotion } from './tracking';
 
 export function MotionEditorFrame({ children }: { children: ReactNode }) {
   const { t } = useI18n();
@@ -22,6 +23,13 @@ export function MotionEditorFrame({ children }: { children: ReactNode }) {
   const chrome = useOptionalWorkspaceChrome();
   const register = chrome?.registerEditor;
   const [saving, setSaving] = useState(isStudioEditSaving);
+  const load = useRef({ id: crypto.randomUUID(), sent: false });
+  useEffect(() => {
+    if (load.current.sent) return;
+    load.current.sent = true;
+    void trackMotion('studio_load_result', { load_id: load.current.id, outcome: 'success',
+      embedded: workspacePresentation(location.search).embedded, duration_ms: Math.min(86_400_000, Math.round(performance.now())) });
+  }, []);
   useEffect(() => {
     const timer = window.setInterval(() => setSaving(isStudioEditSaving()), 250);
     return () => clearInterval(timer);

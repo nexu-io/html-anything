@@ -165,7 +165,9 @@ flowchart LR
 
 当前交付标准：连接可验证、模板可定位、工程可继续编辑、预览与源文件一致、导出存在真实文件、检查结果有证据。相关实现由 `tests/`、`npm run test:studio` 的原生单元/DOM 与宿主回归、类型检查、设计检查和按需浏览器验证覆盖；没有执行的检查不能记为通过。
 
-以下是待建立的产品衡量口径，尚无仓库内用户分析系统或统计基线：
+The runtime includes a default-on, explicit-event tracking package shared by MCP and Studio. A persistent user preference and environment overrides can disable collection for the whole installation. Studio submits allowlisted events to the local service; Node adds a random installation identity before asynchronous ingestion into the existing OpenDesign PostHog project. OM events carry product=openmotion; queries must distinguish products. An OM-only transformation preserves coarse country/region/timezone and removes raw IP and precise location after the existing GeoIP transformation, without changing other OpenDesign events or global project settings. The implementation covers tool results, selected domain operations and selected Studio interactions; it does not establish a product analytics baseline or implement every proposed event. See [tracking configuration, privacy and coverage](../../tracking/README.md).
+
+The following product measures still require agreed observation windows and validated evidence:
 
 | 指标 | 建议定义 | 用途 |
 | --- | --- | --- |
