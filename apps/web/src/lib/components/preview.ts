@@ -98,16 +98,20 @@ export class NativePreview {
     return work;
   }
   private async perform(project: Project) {
-    if (this.view?.artifactId === project.artifactId && this.view.revision === project.revision) return;
     const epoch = ++this.epoch;
     this.candidate?.cancel();
-    await this.draining;
-    this.events.message("正在加载预览");
-    const opened = await this.client.preview(project);
     const current = () =>
       epoch === this.epoch &&
       this.current()?.artifactId === project.artifactId &&
       this.current()?.revision === project.revision;
+    await this.draining;
+    if (!current()) return;
+    if (this.view?.artifactId === project.artifactId && this.view.revision === project.revision) {
+      this.events.message("预览就绪");
+      return;
+    }
+    this.events.message("正在加载预览");
+    const opened = await this.client.preview(project);
     if (!current()) {
       await this.client.closePreview(opened.id);
       return;

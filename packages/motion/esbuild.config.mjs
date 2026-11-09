@@ -10,6 +10,7 @@ await build({
     contract: "src/contract.ts",
     runtime: "src/runtime.ts",
     protocol: "src/protocol.ts",
+    project: "src/project/index.ts",
   },
   format: "esm",
   packages: "external",

@@ -78,7 +78,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | apps/web, apps/daemon                             | Product workspace UI, HTTP/MCP adaptation and protected native previews                                     |
 | packages/theme, packages/components               | Primitive/semantic/light-dark tokens, licensed local fonts, atoms and anonymous layouts                     |
 | apps/web/src/lib/components                       | Web business components; no style definitions                                                               |
-| packages/motion                                   | SDK source transforms, native model, preview runtime and canvas bridge; no persistence or OS allocation     |
+| packages/motion                                   | Native editing, composition graph/assembly, preview and canvas bridge; no persistence or OS allocation      |
 | packages/workspace                                | Session/message/artifact ownership, revisions, history, transactions and idempotency shared by HTTP/MCP/Web |
 | docs/README.md                                    | Durable documentation index                                                                                 |
 | docs/architecture.md, domains.md                  | Engineering architecture and product/data responsibilities                                                  |
@@ -101,6 +101,8 @@ Use Node24 and pnpm11.13.0. Linux requires `ps` (`procps` on Debian); containers
 Run `pnpm build`, `pnpm test`, `pnpm lint`, `pnpm exec biome check .`, `pnpm exec odsuite guard`. Use a module's standard commands for focused checks. Empty test discovery is not acceptance. Check documentation links/configuration/format/guard without adding implementation-mirror tests. Format with Biome. Optionally configure `.githooks` explicitly after building; never during installation.
 
 Use `pnpm exec odsuite dev start|stop|status|restart`, selecting `--carrier`, `--channel`, `--namespace`; Codex stdio attaches with `dev connect`. No global bin, root shortcut or second PID/port/state registry. `status/stop` query sidecar without requiring valid current configuration. Explicitly recover interrupted authority. A successful watcher rebuild marks restart required; never claim the existing process loaded new code.
+
+Composition assembly must consume a confirmed snapshot through the native pure compiler. Keep reusable source definitions, scoped mount identities and derived runtime IDs distinct. Validate the complete reachable graph before publishing a preview; preserve the last confirmed frame on failure. Never persist injected engines/instance markers, create physical preview copies or relax preview CSP for child fetching. Nested source editing needs an explicit file/context transaction contract.
 
 Native appearance/animation is closed-schema film content. Motion transforms through the SDK and verifies actual source writes; workspace owns revisions/history. Submit only touched fields and preserve inherited/relative values. Explicit numeric animation conversion/separation requires fidelity evidence; dynamic or unproven source stays read-only. Preserve overall and segment easing separately. Map key progress through overall easing to real time; resizing endpoints preserves other keys' absolute times. Canvas intent is validated against frame, revision and editing context before the same save chain.
 

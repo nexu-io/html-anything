@@ -317,6 +317,9 @@ importers:
       '@hyperframes/core':
         specifier: 0.9.7
         version: 0.9.7(@types/node@24.12.2)
+      '@hyperframes/parsers':
+        specifier: 0.9.7
+        version: 0.9.7
       '@hyperframes/sdk':
         specifier: 0.9.7
         version: 0.9.7(@types/node@24.12.2)

@@ -10,9 +10,9 @@
   },
   "devDependencies": {
     "@types/node": "24.12.2",
+    "esbuild": "0.28.0",
     "typescript": "7.0.2",
-    "vitest": "4.1.6",
-    "esbuild": "0.28.0"
+    "vitest": "4.1.6"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,10 @@
     "directory": "packages/motion"
   },
   "exports": {
+    "./project": {
+      "types": "./dist/project/index.d.ts",
+      "default": "./dist/project.mjs"
+    },
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.mjs"
@@ -38,8 +42,9 @@
     }
   },
   "dependencies": {
-    "@hyperframes/sdk": "0.9.7",
     "@hyperframes/core": "0.9.7",
+    "@hyperframes/parsers": "0.9.7",
+    "@hyperframes/sdk": "0.9.7",
     "gsap": "3.15.0",
     "zod": "4.6.7"
   }
