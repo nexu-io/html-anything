@@ -102,7 +102,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 新工程先 `motion_create_project`；已有工程先 `motion_get_project` 明确 projectId、revision、currentVersionId，再保存或打开。`motion_open_preview({projectId})` 运行 lint 并返回真实预览 URL，由宿主内置浏览器打开。它不隐式创建新工程；无浏览器时可以手动打开返回地址。
 
-macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个会话保留自己的工程选择；所有会话退出后导出仍继续。新安装默认使用 `~/Library/Application Support/OpenDesign`，已有 `.motion-data` 或显式 `MOTION_DATA_DIR` 沿用；不同目录仍是不同后台。原生 Studio 和导出继续各只有一个活动实例，Windows / Linux 保留原启动方式。停止、旧服务升级和故障恢复见 [共享编辑器](shared-editor.md)。
+macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个会话保留自己的工程选择；所有会话退出后导出仍继续。新安装默认使用 `~/Library/Application Support/OpenDesign`，已有 `.motion-data` 或显式 `MOTION_DATA_DIR` 沿用；不同目录仍是不同后台。原生 Studio 使用一个服务进程支持多个工程页面；每个页面按 URL 工程读取状态和编辑，不跟随其他会话。后台导出仍只运行一个任务，Windows / Linux 保留原后台启动方式。停止、旧服务升级和故障恢复见 [共享编辑器](shared-editor.md)。
 
 仅导出时只启动后台服务，不启动 Studio 改写当前源文件；冷启动套模板也不会先创建无关 starter。随后调用 `motion_open_preview` 可在同一服务中启动编辑器。真实外部编辑仍受 revision 校验保护。
 

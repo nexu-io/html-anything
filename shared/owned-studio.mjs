@@ -33,7 +33,8 @@ export async function startOwnedStudio(root, runtimeRoot, projectDirectory, logF
         } else resolve(message);
       });
     });
-    return { url: studio.url, projectDirectory, alive: () => child.connected && child.exitCode === null && child.signalCode === null, close };
+    return { url: studio.url, projectDirectory, alive: () => child.connected && child.exitCode === null && child.signalCode === null, close,
+      openProject: async id => { const response = await fetch(new URL('/__hyperframes_config?projectId=' + encodeURIComponent(id), studio.url), { signal: AbortSignal.timeout(30_000) }); if (!response.ok) throw new Error((await response.json()).error || 'Studio project could not be opened'); } };
   } catch (error) { await close(); throw error; }
 }
 
@@ -43,7 +44,7 @@ if (path.resolve(process.argv[1] || '') === filename && process.argv[2] === '--o
   const lock = statSync(path.join(root, '.editor-runtime', 'runtime.lock'));
   if (held.dev !== lock.dev || held.ino !== lock.ino) throw new Error('Studio owner requires the editor lock');
   let closing = false, monitor;
-  const opening = startStudio(runtimeRoot, projectDirectory, logFile, Number(port));
+  const opening = startStudio(runtimeRoot, projectDirectory, logFile, Number(port), root);
   const close = async () => {
     if (closing) return;
     closing = true;

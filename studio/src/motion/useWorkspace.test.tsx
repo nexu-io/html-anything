@@ -39,7 +39,7 @@ it('waits for saves, deduplicates rapid actions and opens the new project in a n
   expect(writes()).toHaveLength(0);
   await act(async () => { saved(); await operation; });
   expect(writes()).toHaveLength(1);
-  expect(writes()[0][0]).toBe('/motion-api/projects');
+  expect(writes()[0][0]).toBe(`/motion-api/projects?projectId=${first}`);
   expect(JSON.parse(writes()[0][1]!.body as string)).toEqual({ expectedRevision: status.revision, expectedProjectId: first });
   expect(navigate).toHaveBeenCalledWith(`/?project=${second}#project/${second}`);
 });
@@ -69,6 +69,24 @@ it('home stays home when another client switches the active project', async () =
   await act(() => workspace.home());
   expect(navigate).toHaveBeenCalledWith('/');
   expect(writes()).toHaveLength(0);
+});
+it('an existing project page polls its own project without following another client', async () => {
+  const replace = vi.spyOn(window.location, 'replace').mockImplementation(() => {});
+  fetcher.mockImplementation(async (url: string) => Response.json(url.endsWith('/projects')
+    ? { activeId: second, projects: [{ id: first }, { id: second }] }
+    : new URL(url, location.origin).searchParams.get('projectId') === first ? status : { ...status, projectId: second }));
+  await mount(async () => {}, first, first);
+  expect(workspace.status?.projectId).toBe(first);
+  expect(replace).not.toHaveBeenCalled();
+  expect(fetcher.mock.calls.some(([url]) => url === `/motion-api/project/status?projectId=${first}`)).toBe(true);
+});
+it('an empty conversation opens its own first artifact even when another project is globally active', async () => {
+  const replace = vi.spyOn(window.location, 'replace').mockImplementation(() => {});
+  fetcher.mockImplementation(async (url: string) => Response.json(url.endsWith('/projects')
+    ? { projects: [], sessions: [{ id: 'conversation', artifacts: [{ id: 'artifact-a', projectId: first }], activeArtifactId: 'artifact-a' }] }
+    : { ...status, projectId: second }));
+  await mount(async () => {}, undefined, 'conversation');
+  expect(replace).toHaveBeenCalledWith(`/?session=conversation&project=${first}&openArtifact=1#project/${first}`);
 });
 it('keeps a home request after failure and clears it only once the project was created with that request', async () => {
   await mount(async () => {});

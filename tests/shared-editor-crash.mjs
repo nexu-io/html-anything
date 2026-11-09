@@ -28,7 +28,7 @@ assert.ok(processes().some(p => p.pid === process.pid && p.command.includes(path
 
 function role(p) {
   if (/owned-studio\.mjs --owner /.test(p.command)) return 'studio-owner';
-  if (/hyperframes\.mjs preview /.test(p.command)) return 'studio';
+  if (/hyperframes\.mjs preview |shared\/workspace-studio\.ts /.test(p.command)) return 'studio';
   if (/hyperframes\.mjs render /.test(p.command)) return 'renderer';
   if (/Google Chrome|chrome-headless|chromium|chrome_crashpad/.test(p.command)) return 'chrome';
   if (/(?:^|\/)ffmpeg(?:\s|$)/.test(p.command)) return 'ffmpeg';

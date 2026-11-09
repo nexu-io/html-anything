@@ -90,6 +90,8 @@ To contribute a style, include the reference and its creator, the Motion MD, a p
 
 **Credits & release status.** openmotion uses [Hyperframes](https://github.com/heygen-com/hyperframes) for native compositions, the Studio foundation and rendering. Its [editor](studio/LICENSE) and [bundled examples](template-library/LICENSE) retain their upstream Apache-2.0 licenses. This public repository is licensed under [Apache-2.0](LICENSE); bundled components and fonts retain their notices. Development targets [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion); the former HTML Anything application remains on `main` and is preserved on [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). Packages are not published. See the [repository workflow](docs/repository-migration.md).
 
+Multiple local conversations can keep different projects open through one native Studio service. Each preview stays bound to its project; same-project writes still use revision checks. See [shared editor](docs/shared-editor.md).
+
 ## Published template catalog
 
 Studio and MCP read the same disk-cached Prism catalog. `motion_list_templates({})` returns a local JSONL index path, total and catalog version; the Agent searches that file with its own shell tools. `motion_get_template({templateId})` reads one template and its editing guide. `motion_create_project` with `projectType=template` downloads its files into a new editable project.
