@@ -77,6 +77,8 @@ Preview documents are opaque sandbox frames restricted to their own snapshot res
 
 Dev owns repository configuration, managed builds/watchers and dynamic carrier adapters. CLI parses arguments; adapters are `carriers/*/src/dev.ts`. They register into the injected sidecar manager/factory and never own another authority. Build wrappers, pnpm and compiler descendants belong to a sidecar process tree. Build receipts describe results rather than serving as process inventories.
 
+Sidecar validation runs OS-resource test files serially. Each file creates real managers, process trees, sockets and durable ledgers; unrelated fixtures must not compete against the finite runtime deadlines being verified. Tests still exercise concurrent sessions/controllers and competing lifecycle operations explicitly inside each file. This scheduling policy changes no runtime deadlines, recovery rules or assertions.
+
 Sidecar derives manager roots from base domain/channel/namespace and observes actual control liveness. `stopManager` validates the exact witness/arg stamp and requests drain; timeout preserves authority. Explicit null environment values remove inherited options such as `ELECTRON_RUN_AS_NODE` at the shared launch boundary.
 
 Rebuild and activation are separate: a watcher marks restart required, then explicit restart replaces the development composition. An attached Codex client's EOF closes that transport without stopping the development manager. Production Codex owns and drains its own composition.
