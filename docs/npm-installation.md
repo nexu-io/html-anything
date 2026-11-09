@@ -10,6 +10,8 @@ Users provide Node.js 22.18+ with npm and their Agent host. Builds use the Node 
 
 The embedded application uses `scripts/distribution.ts`'s positive file list: MCP/backend, prebuilt Studio, five Skills and references, bundled examples, npm/native locks, licenses and approved documentation. Remote Prism templates are fetched separately. The embedded manifest omits the containing tgz's hash; the external delivery manifest records that hash without a circular self-reference.
 
+The npm page uses the repository's product `README.md`. Packaging resolves its relative documentation and image links against the exact source commit, while the embedded application keeps the original local links. The installation manual remains in the application docs; it is not the npm landing page. Published test.6 contains the earlier installation-manual README; the correction takes effect with the next separately authorized npm version, not by editing GitHub alone.
+
 ## Build and install a local test
 
 From a clean checkout based on `feature/motion`:

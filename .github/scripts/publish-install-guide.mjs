@@ -15,7 +15,7 @@ export function storagePlan(record, { endpoint, bucket, publicOrigin }) {
   assert(/^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-test\.[1-9]\d*(?:\.[1-9]\d*)*)?$/.test(record.version), 'Invalid guide version');
   assert.equal(record.version.includes('-test.'), record.channel === 'test', 'Channel and version differ');
   const prefix = record.channel === 'test' ? 'open-motion/dev' : 'open-motion';
-  return { endpoint: api.origin, bucket, publicOrigin: origin.origin, versionKey: `${prefix}/versions/${record.version}/install.md`, fixedKey: `${prefix}/install.md` };
+  return { endpoint: api.origin, bucket, publicOrigin: origin.origin, versionKey: `${prefix}/${record.version}/install.md`, fixedKey: `${prefix}/install.md` };
 }
 
 export async function publishGuide(directory, config, { run = runFile, fetcher = fetch } = {}) {
