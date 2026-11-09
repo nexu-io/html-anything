@@ -14,12 +14,14 @@ export type Appearance = z.infer<typeof appearanceInput>;
 export const audioInput = z
   .strictObject({
     inPoint: z.number().finite().min(0).max(3600).optional(),
+    rate: z.number().finite().min(0.1).max(10).optional(),
     volume: z.number().finite().min(0).max(1).optional(),
     muted: z.boolean().optional(),
   })
   .refine((value) => Object.keys(value).length > 0, "audio changes must not be empty");
 export type AudioValues = z.infer<typeof audioInput>;
 export interface AudioState {
+  rate: number | null;
   inPoint: number | null;
   volume: number | null;
   muted: boolean;
