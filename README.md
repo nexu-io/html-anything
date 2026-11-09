@@ -1,15 +1,25 @@
-<h1 align="center">openmotion — Make product videos in Codex</h1>
+<h1 align="center">openmotion — Remix launch videos in Codex</h1>
 
-<p align="center">Give Codex a reference film, your screenshots and your launch copy.<br />
-Get a video in your brand’s style, an MP4 to share and a project you can keep editing.</p>
+<p align="center">Take the pacing from a launch film you love. Give Codex your logo, screenshots and copy.<br />
+Export your own MP4, keep the editable project and reuse the shot directions for your next launch.</p>
 
-<p align="center"><strong><a href="#start-in-codex">Try the 20-second demo in Codex</a></strong> · <a href="#made-with-openmotion">Watch three films</a> · <a href="docs/motion-md.md">Explore Motion MD</a> · <a href="docs/collections/README.md">Browse the library</a></p>
+<p align="center"><strong><a href="#start-in-codex">Try the 20-second demo in Codex</a></strong> · <a href="#make-a-reference-your-own">Watch a 5-second remix</a> · <a href="examples/reference-reveal/MOTION.md">Read its Motion MD</a> · <a href="docs/collections/README.md">Find a reference</a></p>
 
 <p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 
 <p align="center"><img src="docs/readme/hero.svg" alt="openmotion for Codex. Great motion. Made yours. A reference film becomes a Motion MD brief and an editable brand video." width="100%" /></p>
 
-openmotion is a standalone, open-source Codex plugin for motion design. Our goal is to build the best open-source alternative to Claude Motion. You can start in your own product repo. Point Codex to the screenshot you just shipped and a launch film whose pacing you love. Ask it to rebuild the reveal with your headline, colors and assets. Open the cut in Studio, give the screenshot another beat, then export an MP4. Save the shot decisions in **Motion MD** so your teammate can use the same pacing for the next release.
+openmotion is a standalone Codex plugin. Our goal is to build the best open-source alternative to Claude Motion. A launch film can show you *how a reveal feels*. **Motion MD** is our draft Markdown format for writing down *how to make it again* — when to show the product, how long to hold a shot and what the next team can swap. Pair the file with a credited reference and an editable project, and another team can try the same direction with its own assets.
+
+## Make a reference your own
+
+**One number. A ring of icons. A handoff.** In a five-second Firecrawl launch excerpt, “1,000,000 Developers” gives way to a ring of company marks around the flame. We borrowed that sequence for openmotion. Our number is the runtime of the bundled Product Promo template, our center mark is OpenDesign’s, and the surrounding tiles name the things you bring into a motion project. [Watch @ericciarla’s reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [Creator’s original post](https://x.com/ericciarla/status/2093375835679977570)
+
+[![The five-second openmotion remix. The 20-second template duration gives way to a ring of asset labels, then a Motion MD to MP4 handoff.](examples/reference-reveal/preview.gif)](examples/reference-reveal/film.mp4)
+
+[Play our cut with sound](examples/reference-reveal/film.mp4) · [Read its Motion MD](examples/reference-reveal/MOTION.md) · [Open the editable HTML](examples/reference-reveal/index.html)
+
+**Does the style survive a new brief?** We kept the same project and changed the opening from “00:00:20 · Product Promo” to “00:00:15 · NYT Graph”. At 0.8s you can read the new title. At 2.65s the cards are in the same orbit. Both versions run for five seconds. [Watch the second cut](examples/reference-reveal/graph-cut.mp4)
 
 ## Made with openmotion
 
@@ -60,40 +70,34 @@ Then try one edit: **“Hold the closing title two seconds longer. Export anothe
 | A template you already like | “Use the Product Promo timing. Replace the opening copy and the end card.” | Keep a fresh copy of the template for the next campaign. [Adapt a template](skills/motion-template-to-video/SKILL.md) |
 | Release notes and a folder of screenshots | “Show the problem, demo the new feature, then hold on the release date.” | Review the shot sequence with Codex and refine the cut in Studio. [Direct an original film](skills/motion-director/SKILL.md) |
 
-## Make a reference your own
-
-In [Firecrawl’s five-second integration reveal](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4), a headline number gives way to a lineup of integrations. To borrow that transition for your launch, open your own product repo in Codex, paste the clip link and ask:
-
-> Keep the cut from the big number to the lineup. Use our approved launch metric, our integration icons and the colors from our brand guide. Hold the last frame long enough to read the names. Show me the original and our cut side by side.
-
-The reference workflow reads your project assets, rebuilds the sequence and returns a comparison with the editable film. You can change the timing of the reveal while keeping the screenshots, type and copy that identify your product. [Recreation workflow](skills/motion-recreate/SKILL.md) · [Reference credit and source](docs/collections/README.md)
-
 ## Motion MD
 
-A finished video shows *how this launch looked*. **Motion MD** records the choices you want the next launch to inherit. It’s our draft Markdown format for describing motion in terms a teammate or coding agent can use. Save it beside your brand assets and give it to Codex with the next brief.
+A useful motion brief names both the creative decision and what a teammate may change. Here’s the direction behind the five-second remix:
 
-```markdown
-## Reveal
-Open on one number. On the first beat, pull back to show the integrations.
-Keep the camera still while the names are on screen.
+| Time | Keep | Swap for your launch |
+| --- | --- | --- |
+| 0–1.5s | Reveal a large number from left to right. Give its label time to read. | A verified number and a short label from your release notes. |
+| 1.5–4s | Let the central mark settle while the outer tiles keep turning. | Your symbol and the inputs or features that belong around it. |
+| 4–5s | Follow the same mark into the closing handoff. | The input your customer provides and the result they get. |
 
-## For the next launch
-Keep the pullback and the reading time. Replace the metric, icons and end card.
-Review the opening and closing frames beside the reference.
-```
-
-The brief travels with the project. The animation itself lives in editable HTML, CSS, JavaScript and media files. [Motion MD v0.1 proposal](docs/motion-md.md) · [Complete example brief](docs/examples/product-launch.MOTION.md)
+Give the Markdown file explicitly to Codex with the project. The brief guides the edit. The HTML, CSS, JavaScript and media supply the animation. [Motion MD v0.1 proposal](docs/motion-md.md) · [Working brief and both exports](examples/reference-reveal/MOTION.md)
 
 ## Motion library and collections
 
-Browse **891 external references and registry items**, including launch clips from Pond and Firecrawl. Each reference in the [resource index](docs/collections/README.md) links to its source. For an editable starting point, open one of the **three bundled projects** in Studio.
+Start with a shot you want to borrow. Watch the 12-second Pond OS introduction for a product reveal, or the 32-second Firecrawl Free Keyless launch for the balance between a promise and a demo. The credited index is on GitHub. The Studio catalog also contains **891 external references and registry items**. On a gallery card, the remix action copies an instruction. Paste it into Codex alongside your brand assets. [Browse the references](docs/collections/README.md) · [How the gallery works](docs/usage.md)
+
+For an editable starting point with its own assets, open one of the **three bundled templates** in Studio.
 
 | [Product Promo · 20s](template-library/product-promo/) | [NYT Graph · 15s](template-library/nyt-graph/) | [Decision Tree · 10s](template-library/decision-tree/) |
 | --- | --- | --- |
 | ![Multi-scene product reveal](template-library/product-promo/poster.jpg) | ![Annotated bar chart](template-library/nyt-graph/poster.jpg) | ![Animated decision tree](template-library/decision-tree/poster.jpg) |
 | Swap the headline and end card. | Bring your own figures and labels. | Replace the question and branches. |
 
-The library is the starting point for planned collections organized by brand, technology rankings and recent launches. The proposed **Motion Benchmark / Arena** would give different workflows the same reference and brand assets so anyone could compare timing, brand fidelity and what remains editable. [Collections roadmap](docs/collections/README.md) · [Evaluation proposal](docs/motion-md.md)
+We plan to curate collections around brands, recent launches and companies on technology rankings. You can already share a reference with its creator and the moment worth studying, or contribute a remix with its brief, source and rendered preview. [Collections roadmap](docs/collections/README.md) · [Suggest a reference or share a cut](https://github.com/nexu-io/html-anything/issues/new)
+
+### Comparing two cuts
+
+To review a remix today, pause both films on the reveal, check whose brand is on screen, then change one line and render again. **Motion Benchmark / Arena** is a proposal to make comparisons like this repeatable across tools using the same reference and assets. Its scoring method and launch date are still open. [Read the evaluation proposal](docs/motion-md.md#from-specification-to-resource-to-benchmark)
 
 ## Build and contribute
 

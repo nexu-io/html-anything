@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Twenty seconds · openmotion</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        color: #172820;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      #film {
+        --green: #168054;
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #fafbf9;
+      }
+      .grid {
+        position: absolute;
+        inset: -160px;
+        background-image:
+          linear-gradient(#d8dfd9 1px, transparent 1px),
+          linear-gradient(90deg, #d8dfd9 1px, transparent 1px);
+        background-size: 300px 300px;
+        background-position: center;
+      }
+      .print {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(#519a70 1.5px, transparent 2px);
+        background-size: 11px 11px;
+        opacity: 0.48;
+        mask-image: linear-gradient(25deg, #000, transparent 39%, transparent 63%, #000);
+      }
+      .count {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        background: repeating-linear-gradient(to right, #f8faf7 0 22px, #dbe1d9 22px 23px);
+      }
+      .panel,
+      .legend {
+        width: 980px;
+        text-align: center;
+        background: #fff;
+        border: 1px solid #cddace;
+        position: relative;
+        border-radius: 10px;
+      }
+      .panel {
+        height: 213px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+      .panel strong {
+        font-size: 203px;
+        letter-spacing: -0.056em;
+        font-weight: 650;
+        line-height: 1;
+        color: var(--green);
+        position: relative;
+        font-variant-numeric: tabular-nums;
+      }
+      .legend {
+        height: 125px;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at center, var(--green) 3px, transparent 4px) center / 118px 100%,
+          #fff;
+      }
+      .legend span,
+      .tile,
+      .hub,
+      .brief {
+        background: #fff;
+        border: 1px solid #d7ded7;
+        box-shadow: 0 5px 8px #17362122;
+      }
+      .legend span {
+        padding: 13px 32px;
+        font-size: 23px;
+        font-weight: bold;
+        border-radius: 8px;
+      }
+      .orbit,
+      .hub,
+      .brief {
+        position: absolute;
+        left: 640px;
+        top: 360px;
+      }
+      .orbit {
+        width: 0;
+        height: 0;
+      }
+      .slot {
+        position: absolute;
+        width: 0;
+        height: 0;
+      }
+      .tile {
+        position: absolute;
+        display: grid;
+        place-items: center;
+        width: 88px;
+        height: 88px;
+        left: -44px;
+        top: -44px;
+        border-radius: 19px;
+        font:
+          bold 29px/1 Arial,
+          sans-serif;
+        letter-spacing: -0.06em;
+      }
+      .hub,
+      .brief {
+        width: 176px;
+        height: 176px;
+        margin: -88px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        outline: 1px solid #dbe2da;
+        outline-offset: 24px;
+      }
+      .hub {
+        background: #a6f287;
+      }
+      .file-mark {
+        display: grid;
+        place-items: center;
+        width: 62px;
+        height: 64px;
+        background: #203a2d;
+        border-radius: 6px;
+        color: #fff;
+        clip-path: polygon(0 0, 74% 0, 100% 24%, 100% 100%, 0 100%);
+        font: bold 23px/1 Arial, sans-serif;
+      }
+      .brief .file-mark {
+        width: 82px;
+        height: 88px;
+        background: var(--green);
+        font-size: 37px;
+      }
+      .hub img {
+        width: 82px;
+        height: 82px;
+      }
+      .brief {
+        left: 168px;
+        font:
+          bold 55px/1 Georgia,
+          serif;
+        letter-spacing: -0.07em;
+      }
+      .link {
+        position: absolute;
+        left: 333px;
+        top: 334px;
+        width: 53px;
+        height: 53px;
+        display: grid;
+        place-items: center;
+        border: 1px solid #cad6cb;
+        border-radius: 50%;
+        color: #287151;
+        background: #fff;
+        font-size: 33px;
+      }
+      .sheets {
+        position: absolute;
+        left: 718px;
+        top: 360px;
+      }
+      .sheets i {
+        display: block;
+        position: absolute;
+        width: 480px;
+        height: 160px;
+        margin-top: -80px;
+        border: 1px solid #bfcfc1;
+        background: #ffffff80;
+      }
+      .sheets i:last-child {
+        background: var(--green);
+        width: 360px;
+        height: 85px;
+        margin-top: -42px;
+        display: flex;
+        align-items: center;
+        padding-left: 38px;
+        color: #fff;
+        font:
+          bold 32px Arial,
+          sans-serif;
+        letter-spacing: 0.07em;
+      }
+    </style>
+  </head>
+  <body>
+    <main
+      id="film"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1280"
+      data-height="720"
+      data-fps="30"
+    >
+      <div class="grid"></div>
+      <div class="print"></div>
+      <div class="sheets"><i></i><i></i><i></i><i></i><i></i><i></i><i>MP4</i></div>
+      <div class="brief"><b class="file-mark">MD</b></div>
+      <div class="link">↔</div>
+      <div class="orbit" aria-label="Inputs and outputs of a motion project">
+        <div class="slot"><span class="tile"><b class="file-mark">Aa</b></span></div>
+        <div class="slot"><span class="tile"><b class="file-mark">UI</b></span></div>
+        <div class="slot"><span class="tile"><b class="file-mark">SVG</b></span></div>
+        <div class="slot"><span class="tile"><b class="file-mark">PNG</b></span></div>
+        <div class="slot"><span class="tile"><b class="file-mark">▶</b></span></div>
+        <div class="slot"><span class="tile"><b class="file-mark">JS</b></span></div>
+        <div class="slot"><span class="tile"><b class="file-mark">{ }</b></span></div>
+        <div class="slot"><span class="tile"><b class="file-mark">MP4</b></span></div>
+        <div class="slot"><span class="tile"><b class="file-mark">MD</b></span></div>
+      </div>
+      <div class="hub"><img src="assets/mark.svg" alt="OpenDesign" /></div>
+      <div class="count">
+        <div class="panel">
+          <div class="print"></div>
+          <strong>00:00:20</strong>
+        </div>
+        <div class="legend"><span>Product Promo</span></div>
+      </div>
+      <audio
+        id="score"
+        class="clip"
+        data-start="0"
+        data-duration="5"
+        data-track-index="1"
+        data-volume="1"
+        src="assets/cues.wav"
+      ></audio>
+    </main>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const slots = Array.from(document.querySelectorAll('.slot'));
+      slots.forEach((slot, index) => {
+        const angle = (index * Math.PI * 2) / slots.length - Math.PI / 2;
+        gsap.set(slot, { x: 277 * Math.cos(angle), y: 277 * Math.sin(angle) });
+      });
+      document.querySelectorAll('.sheets i').forEach((sheet, index) => {
+        const height = sheet.offsetHeight * (1 + index * 0.28);
+        gsap.set(sheet, { x: index * 47, height, marginTop: -height / 2 });
+      });
+      tl.fromTo('.count', { scale: 0.23 }, { scale: 1, duration: 0.39, ease: 'power2.out' }, 0);
+      tl.fromTo(
+        '.panel strong',
+        { clipPath: 'inset(0 90% 0 0)' },
+        { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power2.out' },
+        0,
+      );
+      tl.to('.count', { opacity: 0, duration: 0.29 }, 1.19);
+      tl.fromTo(
+        '.orbit',
+        { scale: 0.36, rotation: -34 },
+        { scale: 1, rotation: 0, duration: 0.94, ease: 'power2.out' },
+        1.46,
+      );
+      tl.fromTo('.tile', { opacity: 0 }, { opacity: 1, duration: 0.18, stagger: 0.028 }, 1.47);
+      tl.fromTo('.hub', { opacity: 0, scale: 0.53 }, { opacity: 1, scale: 1, duration: 0.48 }, 2.11);
+      tl.to('.orbit', { rotation: 52, duration: 1.56, ease: 'sine.inOut' }, 2.4);
+      tl.to('.tile', { rotation: -52, duration: 1.56, ease: 'sine.inOut' }, 2.4);
+      tl.to('.tile', { opacity: 0, duration: 0.38, stagger: 0.025 }, 3.58);
+      tl.to('.hub', { x: -112, duration: 0.58, ease: 'power2.inOut' }, 4.04);
+      tl.fromTo('.brief,.link', { opacity: 0 }, { opacity: 1, duration: 0.31, stagger: 0.08 }, 4.12);
+      tl.fromTo(
+        '.sheets i',
+        { opacity: 0, xPercent: 38 },
+        { opacity: 1, xPercent: 0, duration: 0.34, stagger: 0.055, ease: 'power2.out' },
+        4.15,
+      );
+      window.__timelines = { main: tl };
+    </script>
+  </body>
+</html>

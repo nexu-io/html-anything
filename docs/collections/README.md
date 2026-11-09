@@ -14,6 +14,10 @@ Pick a film for the decision you want to borrow: how it opens, how it reveals a 
 
 These are viewing references from the [catalog snapshot](../../web/catalog/hyperframes.json). An entry here does not grant rights to reuse its footage. Credit the original and bring your own brand assets.
 
+### From one reference to two editable cuts
+
+The [five-second Firecrawl excerpt](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) now has a worked openmotion example. Follow the number reveal and orbit in the [Motion MD](../../examples/reference-reveal/MOTION.md), watch the [first cut](../../examples/reference-reveal/film.mp4), then see what changes when a different template supplies the opening fact. [Second cut](../../examples/reference-reveal/graph-cut.mp4) · [Editable source](../../examples/reference-reveal/index.html)
+
 ## Open an editable project
 
 | Starting point | What to try first |

@@ -23,11 +23,11 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 ## 对外主张与 Motion MD 方向
 
-产品对外名称统一为小写 **openmotion**，标志沿用 OpenDesign 官网原件；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。定位目标是成为最好的 Claude Motion 开源替代，以 Codex 工作流、品牌资产复用、参考风格复刻与可编辑工程支撑这一主张。“最好”是愿景，不代表已有比较评测结论。统一开源许可证仍需维护者确认，不能用上游 Apache-2.0 许可代替自主代码的许可决定。
+产品对外名称统一为小写 **openmotion**，标志沿用 OpenDesign 官网原件；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。定位目标是成为最好的 Claude Motion 开源替代，以 Codex 工作流、品牌资产复用、参考风格复刻与可编辑工程支撑这一主张。“最好”是愿景，不代表已有比较评测结论。仓库的许可证见根目录 [LICENSE](../../LICENSE)，第三方素材保留各自的上游声明。
 
 [Motion MD](../motion-md.md) 是本轮加入的 **v0.1 格式提案**，描述来源、品牌、叙事、节奏、运动、素材、可修改项与验收信息。当前仅供用户显式交给 Agent 作为创作上下文；没有自动发现、解析、校验或注册接口。它不改变 HTML/CSS/JS 原生工程，也不替换现有 motion-video-to-template 的单份 `TEMPLATE.md` 交付约定。
 
-[Motion 资源索引](../collections/README.zh-CN.md) 已可使用，区分可观看参考与可编辑模板；OpenDesign 官网展示案例，公开的品牌／榜单专题集合站仍在规划。Motion Benchmark／Arena 为待讨论规划，无已发布榜单、排名或确定日期。
+[5 秒复刻案例](../../examples/reference-reveal/MOTION.zh-CN.md)将参考片、创作说明、可编辑源码和两版导出放在一起，供用户按相同时间点对照。[Motion 资源索引](../collections/README.zh-CN.md) 已可使用，区分可观看参考与可编辑模板；OpenDesign 官网展示案例，公开的品牌／榜单专题集合站仍在规划。Motion Benchmark／Arena 为待讨论规划，无已发布榜单、排名或确定日期。
 
 ## 目标场景与交付
 

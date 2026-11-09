@@ -14,6 +14,10 @@
 
 来源可在[目录快照](../../web/catalog/hyperframes.json)中查到。这里收录的是观看参考；改编时保留作者出处，使用自己的品牌素材。
 
+### 同一支参考片，两次改编
+
+上面的 [Firecrawl 5 秒片段](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)已有一组 openmotion 改编示例。打开 [Motion MD](../../examples/reference-reveal/MOTION.zh-CN.md)可以看到数字揭晓和环绕镜头的节奏，再看[第一版成片](../../examples/reference-reveal/film.mp4)，以及替换开场信息后的第二版。[第二版成片](../../examples/reference-reveal/graph-cut.mp4) · [可编辑源码](../../examples/reference-reveal/index.html)
+
 ## 打开可编辑工程
 
 | 模板 | 第一次可以试什么 |

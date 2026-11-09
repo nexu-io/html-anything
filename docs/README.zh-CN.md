@@ -1,15 +1,25 @@
-<h1 align="center">openmotion · 在 Codex 里制作产品视频</h1>
+<h1 align="center">openmotion · 在 Codex 里复刻品牌发布片</h1>
 
-<p align="center">把喜欢的参考片、自己的产品截图和发布文案交给 Codex。<br />
-按参考片的节奏做出自己的品牌视频，拿到一支能发的 MP4 和一份能接着改的工程。</p>
+<p align="center">看中一支发布片的节奏，把它和自己的 Logo、截图、文案一起交给 Codex。<br />
+导出自己品牌的 MP4，留下能继续改的工程，也把这套拍法留给下一次发布。</p>
 
-<p align="center"><strong><a href="#在-codex-里开始">在 Codex 里试做 20 秒示例</a></strong> · <a href="#用-openmotion-做出的三支片子">观看三支实片</a> · <a href="motion-md.zh-CN.md">认识 Motion MD</a> · <a href="collections/README.zh-CN.md">浏览动效资源库</a></p>
+<p align="center"><strong><a href="#在-codex-里开始">在 Codex 里试做 20 秒示例</a></strong> · <a href="#复用参考片的拍法">看 5 秒复刻对照</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读这支片的 Motion MD</a> · <a href="collections/README.zh-CN.md">找参考片</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
 <p align="center"><img src="readme/hero.zh-CN.svg" alt="openmotion for Codex。Great motion. Made yours. 从参考片、Motion MD 到可编辑的品牌视频。" width="100%" /></p>
 
-openmotion 是一款独立开源的 Codex 动效插件。我们想把它做成最好的 Claude Motion 开源替代。创作可以直接从自己的产品仓库开始。把刚上线的界面和喜欢的发布片指给 Codex，让它沿用那个揭晓镜头的拍法，换上你的标题、配色和素材。到 Studio 里看第一版，觉得界面闪得太快，就让这个镜头多停一拍。导出 MP4，再把拍法写进 **Motion MD**，下次发布时同事也能接着用。
+openmotion 是一款独立的 Codex 动效插件，我们想把它做成最好的 Claude Motion 开源替代。看到喜欢的发布片，你可以用 **Motion MD** 记下产品在哪一拍出现、画面要停多久、哪些素材可以换。这是我们提出的 Markdown 动效规范草案。把它和有出处的参考片、可编辑工程放在一起，另一个团队也能用自己的产品试一次同样的拍法。
+
+## 复用参考片的拍法
+
+**一个数字，一圈图标，一次交接。** Firecrawl 的 5 秒发布片段先亮出「1,000,000 Developers」，再让一圈公司标志绕着火焰转动。我们沿用这组动作，为 openmotion 做了一支片。开场数字换成 Product Promo 模板的真实时长，中央换成 OpenDesign 标志，外围卡片则是做视频时实际会用到的素材和文件。[观看 @ericciarla 的参考片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [作者原帖](https://x.com/ericciarla/status/2093375835679977570)
+
+[![openmotion 的 5 秒改编。开场显示模板时长，随后素材标签围绕 OpenDesign 标志旋转，片尾从 Motion MD 走向 MP4。](../examples/reference-reveal/preview.gif)](../examples/reference-reveal/film.mp4)
+
+[播放有声成片](../examples/reference-reveal/film.mp4) · [读这支片的 Motion MD](../examples/reference-reveal/MOTION.zh-CN.md) · [打开可编辑源码](../examples/reference-reveal/index.html)
+
+**换个产品信息，还能保留这个节奏吗？** 我们在同一份工程里，把「00:00:20 · Product Promo」换成「00:00:15 · NYT Graph」，再导出了一版。两支片都长 5 秒。停在 0.8 秒能看到改过的数字和标题，停在 2.65 秒能看到卡片转到了相同位置。[看改稿后的第二版](../examples/reference-reveal/graph-cut.mp4)
 
 ## 用 openmotion 做出的三支片子
 
@@ -60,40 +70,34 @@ cd openmotion && bash scripts/install-motion.command
 | 一份喜欢的模板 | “用 Product Promo 的节奏，换掉开场文案和片尾。” | 在模板副本里改，下一次活动还可以从原版开始。[套用模板](../skills/motion-template-to-video/SKILL.md) |
 | 发布说明和一组截图 | “先说用户遇到的问题，再演示新功能，最后停在上线日期。” | 和 Codex 一起定镜头顺序，到 Studio 调整每个镜头的长度。[从创意做原片](../skills/motion-director/SKILL.md) |
 
-## 复用参考片的拍法
-
-看这段 [Firecrawl 的 5 秒发布片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)：先让一个大数字占满画面，再切到一组集成工具。假如你的产品也要发布一批新集成，可以在 Codex 里打开自己的产品项目，贴上片段链接，然后说：
-
-> 保留从大数字切到整组图标的那一拍。数字用发布文案里确认的指标，图标用我们自己的集成图标，配色按品牌手册来。最后一帧多停一会儿，让人读完名字。把原片和我们的版本并排给我看。
-
-复刻流程会读取项目素材、重建这段动画，并交付可编辑的成片工程和对照结果。你可以对着原片调整画面切换的时机，保留自己产品的界面、字体和文案。[参考片复刻流程](../skills/motion-recreate/SKILL.md) · [原片作者与出处](collections/README.zh-CN.md)
-
 ## Motion MD
 
-一支成片能让人看到这次发布用了什么拍法。**Motion MD** 让团队写下那些值得在下次发布时沿用的决定。它是我们提出的 Markdown 动效描述规范草案。把它和品牌素材一起存进项目，下次换产品、换文案，仍然可以把同一份说明交给 Codex。
+一份可复用的动效说明，要写清楚镜头为什么这样拍，也要告诉接手的人可以改哪里。上面这支 5 秒片用到了三个决定。
 
-```markdown
-## 产品怎么出场
-先用一个数字占满画面，第一拍拉远，露出整组集成图标。
-名称出现后保持镜头稳定，给观众留出阅读时间。
+| 时段 | 保留的拍法 | 做自己品牌的视频时可以换什么 |
+| --- | --- | --- |
+| 0–1.5 秒 | 从左到右揭开大数字，在下方留出读标题的时间。 | 发布说明里确认过的数字，以及一句能解释它的短标题。 |
+| 1.5–4 秒 | 中央标志落定，外围卡片继续旋转。 | 你的品牌标志，以及围绕它的素材、功能或产品。 |
+| 4–5 秒 | 让同一个标志进入最后的交接镜头。 | 客户提供什么输入，最后得到什么结果。 |
 
-## 下次发布怎么改
-保留拉远的动作和停顿，替换指标、图标和片尾。
-把成片的第一帧、最后一帧和参考片并排检查。
-```
-
-Motion MD 跟着工程走。实际动画保存在可编辑的 HTML、CSS、JavaScript 和媒体文件里。[Motion MD v0.1 草案](motion-md.zh-CN.md) · [完整示例](examples/product-launch.MOTION.zh-CN.md)
+把 Markdown 文件和工程一起交给 Codex。它可以按这份说明改稿，实际动画保存在 HTML、CSS、JavaScript 和素材文件里。[Motion MD v0.1 草案](motion-md.zh-CN.md) · [本片的说明与两次导出](../examples/reference-reveal/MOTION.zh-CN.md)
 
 ## Motion 资源库与主题合集
 
-目录收录了 **891 条外部参考和 registry 资源**，包括 Pond、Firecrawl 等产品的发布片段。[资源索引](collections/README.zh-CN.md) 标出了所选参考片的作者和出处。想直接动手改，可以先打开 Studio 自带的 **3 个可编辑工程**。
+先挑你想借鉴的镜头。想看操作系统怎么亮相，可以看 Pond 的 12 秒短片；想看开发者工具怎么分配主张和演示的时间，可以看 Firecrawl Free Keyless 的 32 秒发布片。GitHub 资源索引里列有作者和出处。Studio 目录另收录 **891 条外部参考与 registry 资源**。在画廊卡片上点「一键复刻」会复制一条指令，把它和自己的品牌素材一起交给 Codex，就可以开始改编。[浏览参考片](collections/README.zh-CN.md) · [画廊使用说明](usage.md)
+
+如果想从已经能打开的工程开始，Studio 还自带 **3 个可编辑模板**。
 
 | [产品宣传 · 20 秒](../template-library/product-promo/) | [数据叙事 · 15 秒](../template-library/nyt-graph/) | [流程讲解 · 10 秒](../template-library/decision-tree/) |
 | --- | --- | --- |
 | ![多场景产品发布片](../template-library/product-promo/poster.jpg) | ![带标注的动态柱状图](../template-library/nyt-graph/poster.jpg) | ![逐步展开的决策树](../template-library/decision-tree/poster.jpg) |
 | 换上自己的标题和片尾。 | 换成自己的数据和标注。 | 改成自己的问题和分支。 |
 
-我们计划按品牌、科技榜单和近期发布整理专题。另一个提案 **Motion Benchmark / Arena** 想让不同工作流使用同一支参考片和同一套品牌素材，公开比较镜头节奏、品牌还原度，以及交付后哪些部分还能改。[合集规划](collections/README.zh-CN.md) · [评测提案](motion-md.zh-CN.md)
+后续计划按品牌、近期发布和科技榜单整理专题。现在就可以推荐一支片，附上作者、出处和最值得看的那一拍；做出了自己的版本，也可以把创作说明、可编辑工程和预览一起分享。[合集规划](collections/README.zh-CN.md) · [推荐参考片或提交作品](https://github.com/nexu-io/html-anything/issues/new)
+
+### 怎样比较两次复刻
+
+今天就能做的检查是把两支片停在同一个揭晓瞬间，看切换时机，再看画面里能不能认出自己的品牌，最后改一句标题重新导出。**Motion Benchmark / Arena** 提案希望用同一份参考和品牌素材，对不同工具重复这组比较。评分方法和上线时间仍待确定。[阅读评测提案](motion-md.zh-CN.md)
 
 ## 构建与贡献
 

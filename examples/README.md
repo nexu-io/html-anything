@@ -1,6 +1,10 @@
 # Remix the README films
 
-Each folder contains the HTML composition used for the film, its local artwork where needed, and the exported MP4. Timing is in seconds. All three play at 30 fps and were designed for silent viewing.
+Each folder contains the editable HTML and the exported film. All examples run at 30 fps. The reference study has its own sound cues. The three other films are designed for silent viewing.
+
+## Twenty seconds · reference study
+
+Watch a five-second Firecrawl excerpt, read the shot decisions in Markdown, and compare two openmotion exports. One uses the 20-second Product Promo template as its headline, the other the 15-second NYT Graph template. Both share the same five-second motion. [Reference, Motion MD and editing instructions](reference-reveal/MOTION.md) · [First cut](reference-reveal/film.mp4) · [Second cut](reference-reveal/graph-cut.mp4)
 
 ## Made in Codex
 
@@ -45,7 +49,7 @@ The native project supplies the local GSAP runtime at `assets/gsap.min.js`. You 
 
 ## Render a source file locally
 
-From this checkout, install the [render prerequisites](../README.md#start-in-codex) and run `npm ci` if dependencies are not installed. This example uses the pinned local renderer. Change `example` to either of the other folder names to render that film. The temporary folder keeps the original MP4 available for comparison.
+From this checkout, install the [render prerequisites](../README.md#start-in-codex) and run `npm ci` if dependencies are not installed. This example uses the pinned local renderer. Change `example` to any of the other folder names to render that film. The temporary folder keeps the original MP4 available for comparison.
 
 ```sh
 example=longer-days

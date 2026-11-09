@@ -4,7 +4,7 @@
 
 **A shared language for motion styles, built for people and Agents.**
 
-[Motion resource library](collections/README.md) · [Complete example](examples/product-launch.MOTION.md)
+[Motion resource library](collections/README.md) · [Five-second remix and second cut](../examples/reference-reveal/MOTION.md) · [Example launch brief](examples/product-launch.MOTION.md)
 
 Motion MD is openmotion's proposed Markdown format for turning the creative decisions behind a video into a reusable specification. It connects a reference and a brand's assets to a video that can be generated, edited and reviewed.
 

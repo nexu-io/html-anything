@@ -4,7 +4,7 @@
 
 **Motion MD 是 openmotion 提出的视频风格描述格式。** 把参考片里的创作决定写成 Markdown：哪些属于品牌、故事在第几秒转折、运动如何引导注意力、什么可以替换、成片怎么验收。下一位创作者可以沿用这些决定，Agent 也可以据此制作。
 
-**版本：v0.1 初始提案。** 章节、文件名和字段仍可讨论。这是一份创作规范，不是新的渲染引擎或自动导入格式。[查看完整示例](examples/product-launch.MOTION.zh-CN.md)
+**版本：v0.1 初始提案。** 章节、文件名和字段仍可讨论。这是一份创作规范，不是新的渲染引擎或自动导入格式。[看 5 秒复刻与改稿实片](../examples/reference-reveal/MOTION.zh-CN.md) · [发布片说明示例](examples/product-launch.MOTION.zh-CN.md)
 
 ![Motion MD：把参考和品牌约束交给 Agent，得到可编辑视频。](readme/motion-md.zh-CN.svg)
 
