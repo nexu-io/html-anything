@@ -27,7 +27,12 @@ HTML로 영상을 작성하고 생성·편집·렌더링하세요. 무료 오픈
   <a href="../LICENSE">Apache 2.0</a>
 </p>
 
-![OpenMotion — 어떤 영상이든 역설계하세요. DeepSeek Harness, Codex, Claude Code로 마음에 드는 영상을 내 브랜드의 작품으로. 이미지, 영상, 음악, TTS와 멀티플랫폼 게시.](readme/cover-reverse-engineering-v2.png)
+<a href="../examples/brand-studies/stripe/comparison.mp4">
+<picture>
+  <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.jpg">
+  <img src="readme/brand-hero.jpg" width="100%" alt="Stripe 원본과 Studio에서 편집할 수 있는 OpenMotion 재현 영상을 5초 동안 비교하세요.">
+</picture>
+</a>
 
 **눈길을 끄는 출시 영상, 리듬이 정확한 제품 공개, 복잡한 이야기를 쉽게 풀어내는 크리에이터.** 참고 영상과 로고, 스크린샷, 촬영본, 문구를 에이전트에 전달하세요. OpenMotion은 참고 영상을 분석하고 구조를 편집 가능한 프로젝트로 재구성해 내 이야기를 만드는 작업 흐름을 제공합니다.
 
@@ -327,30 +332,19 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 ![Codex용 OpenMotion 임베디드 Viewer. 편집 가능한 Product Promo 프로젝트, 미리보기, 레이어, 타임라인.](readme/product-tour/codex-embedded.png)
 
-*기존 데모는 Codex 호스트용 Studio Viewer를 보여줍니다. [촬영 범위](product-tour.md) 에서 실제로 시연한 내용을 확인하세요.*
-
 ### Studio에서 시작하기
 
 참고 자료를 살펴보고 템플릿을 열거나 촬영본을 가져오세요. **Connect Agent**를 선택해 작업 공간별 안내에 따라 연결하고 기획을 전달합니다. 같은 타임라인에서 수정 사항을 검토하고 언제든 직접 조정하세요.
 
 ![세션, 저장된 요청, 편집 가능한 영상 프로젝트가 있는 독립형 OpenMotion Studio.](readme/product-tour/standalone-studio.png)
 
-<details>
-<summary>Claude Code와 템플릿 전달 보기</summary>
-
-![로컬 터미널에서 로드한 Claude Code 제작 Skills.](readme/product-tour/claude-code-skills.png)
-
-터미널 캡처는 로컬 Skill 로드를 보여줍니다. [CLI 검사](readme/product-tour/cli-checks.png) 는 프로젝트 검사를 보여주며 모델 주도의 재구성 완료를 입증하지는 않습니다.
-
-![Product Promo의 실제 CLI 검사: 프로젝트 정보, lint, 타임라인.](readme/product-tour/cli-checks.png)
+#### 에이전트 연결 및 템플릿 열기
 
 ![Connect Agent 대화상자: 작업 공간별 연결 안내와 로컬 클라이언트 선택.](readme/product-tour/connect-agent.png)
 
 ![Product Promo 미리보기와 에이전트에 복사할 템플릿 전용 지침.](readme/product-tour/template-to-agent.png)
 
 **미리보기 → 지침 복사 → 브랜드 소재와 함께 에이전트에 전달.** 내장 템플릿은 편집 가능한 복사본으로 열리고 외부 참고는 재구성 작업을 시작합니다. [전체 제품 데모](product-tour.md)
-
-</details>
 
 두 진입점은 같은 로컬 앱과 프로젝트를 사용합니다. 에이전트는 자체 클라이언트에서 실행되고 Studio는 기획과 편집 가능한 작품을 저장합니다. [연결 방식](session-architecture.md)
 
@@ -382,8 +376,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 토킹헤드, 튜토리얼, 제품 설명 영상에도 적용됩니다. **사람의 전달 방식과 이야기 리듬을 유지하며 내 촬영본, 주제, 브랜드로 자막·스크린샷·PIP·모션을 재사용하세요.**
 
-<details>
-<summary><strong>발표자 중심 각색 3종과 Motion.md 레시피 보기</strong></summary>
+**발표자 중심 영상 사례 3개와 Motion.md 레시피**
 
 아래 쌍은 원본 참고 영상과 외부 각색 작품의 무음 발췌입니다. 내 촬영본에 맞는 방향을 찾고 연결된 디자인 레시피로 에이전트를 안내하세요.
 
@@ -427,9 +420,6 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 [Motion.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [원본](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [전체 각색본](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
 
 > 이 구조에 내 촬영본과 화면 녹화를 사용하세요. 내 목소리를 유지하고 실제 발화에 맞춰 편집하며 자막을 정렬하세요. 스크린샷, PIP, 모션으로 요점을 설명하세요. 소리 있는 미리보기를 보여준 뒤 편집 가능한 프로젝트와 MP4를 전달하세요.
-
-
-</details>
 
 **누구나 크리에이터가 될 수 있습니다.** 전하고 싶은 이야기에서 시작하고 참고 자료로 구조를 구체화하며 내 목소리를 중심에 두세요.
 
@@ -562,8 +552,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 ![Brandkit은 정체성·제품 사실·승인 소재를, Motion.md는 이야기·타이밍·모션·검토 규칙을 정의합니다. SKILL.md는 소스·소재·프리셋·근거와 함께 이 파일을 사용하는 방법을 안내합니다.](readme/diagrams/creative-context.svg)
 
-<details>
-<summary>창작 패키지 텍스트 보기</summary>
+### 제작 패키지 구성
 
 ```text
 참고 + 내 브랜드
@@ -579,8 +568,6 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
        ↓
 내 에이전트 → 다음 편집 가능 영상
 ```
-
-</details>
 
 **Brandkit은 정체성, Motion.md는 디자인, Skill은 방법, 프로젝트는 구현을 담습니다.** 첫 내보내기 이후에도 재사용하고 커뮤니티에서 검토·포크·개선할 수 있습니다.
 
@@ -627,8 +614,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **카메라 움직임, 제목, 제품 공개가 마음에 드나요? 아이디어는 유지하고 이야기를 바꾸세요.** 편집 가능한 소스 연구 6종에 Motion.md, Skill, 콘텐츠 프리셋이 포함됩니다. [소스, 입력, 검증 기록](motion-design-examples.md).
 
-<details>
-<summary><strong>글자, UI, 코드, 입자, 유리 소스 연구 6종 열기</strong></summary>
+**편집 가능한 모션 사례 6개**
 
 쌍으로 된 미리보기는 같은 구현에서 렌더링한 무음 발췌로 원본 내용과 각색 내용을 같은 시점에 비교합니다.
 
@@ -699,8 +685,6 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 [Motion.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
 
 영상만 있는 참고 자료는 별도의 [재구성 작업 흐름](../skills/motion-recreate/SKILL.md) 으로 재구성하고 비교합니다. 재현도는 선택한 참고 자료와 기획에 맞춰 검토합니다.
-
-</details>
 
 <a id="one-video-more-places-to-share"></a>
 <a id="publish-to-every-platform"></a>
@@ -941,7 +925,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **무료 로컬 제작 환경에서 시작하세요.** 내 에이전트를 연결하고 내장 템플릿이나 촬영본을 사용해 로컬에서 렌더링합니다. 새 소재가 필요하면 Model Settings에 지원되는 미디어 키를 추가하세요.
 
-Git, npm과 [CI](../.github/workflows/ci.yml)에 고정된 **Node.js 26.11.1**을 사용하세요. 소스 기반 미리보기와 내보내기에는 Chrome/Chromium, FFmpeg/FFprobe도 필요합니다. [실행 환경 설정](usage.md)
+Git, npm, **Node.js 26.11.1**을 준비하세요. 소스에서 미리 보고 내보내려면 Chrome/Chromium과 FFmpeg/FFprobe도 필요합니다. [실행 환경 설정](usage.md)
 
 ```sh
 git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
@@ -973,8 +957,7 @@ DeepSeek Harness, Claude Code 등은 [에이전트 어댑터 가이드](agent-ad
 
 영상에서 시작하려면 참고 자료와 [재구성 기획](#reverse-engineer-a-video)을 전달하세요. 호스트가 대화 옆에 Studio를 열 수 없으면 반환된 로컬 프로젝트 링크를 사용하세요.
 
-<details>
-<summary>Skills, MCP, CLI</summary>
+#### Skills, MCP, CLI
 
 체크아웃에서 [Skills CLI](https://github.com/vercel-labs/skills)를 사용해 핵심 작업 흐름 5종을 확인하고 설치하세요:
 
@@ -1009,11 +992,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 **공개 MCP 도구 11개**가 템플릿 검색·상세 조회·프로젝트 생성·읽기·편집·미리보기·소재 가져오기·내보내기·버전 복원·취소를 담당합니다. 공유 작업 흐름과 엔진 가이드는 MCP resources에서 제공합니다. [도구 계약](mcp-phase1-tools.md)
 
-Studio와 에이전트는 템플릿 카탈로그 캐시를 공유합니다. `motion_list_templates`는 로컬 JSONL 색인을 반환하고, `motion_get_template`은 상세 정보를 가져오며, `motion_create_project`는 편집 가능한 복사본을 만듭니다. 환경은 패키지에 저장되며 로컬 개발은 DEV, 정식 패키지는 프로덕션이 기본입니다. [템플릿 카탈로그](template-catalog.md)
+`motion_list_templates`로 템플릿을 찾고 `motion_get_template`으로 세부 내용을 확인한 뒤 `motion_create_project`로 편집 가능한 복사본을 만드세요. [템플릿 카탈로그](template-catalog.md)
 
 앱은 `npm start` 로 실행하고 stdio는 `npm run mcp` 로 실행합니다. 셸 지원 에이전트는 런타임이 반환한 고정 버전 엔진 CLI로 검사·렌더링할 수 있으며 관리되는 수정에는 revision 검사를 유지합니다. [네이티브 제작](../skills/motion-production/references/native.md)
-
-</details>
 
 <a id="open-projects-reusable-knowledge"></a>
 <a id="developer-architecture"></a>
@@ -1074,8 +1055,6 @@ MP4 + 편집 가능 소스 + 소재 + 버전 및 내보내기 근거
 
 BYOA는 기존 클라이언트를 사용하고 BYOK는 지원 모델 계정을 연결합니다. Studio와 로컬 서비스가 작품을 관리하며 인증 정보는 프로젝트 밖에 둡니다. 1단계 공개 MCP는 **프로젝트 도구 9개와 템플릿 카탈로그 도구 2개, 총 11개**입니다. 모델 생성은 Studio와 로컬 Gateway에서 사용하며 이 도식이 공개 MCP에 생성·게시 도구를 추가한다는 뜻은 아닙니다.
 
-도식은 [의존성이 없는 작은 스크립트](readme/diagrams/generate.py)로 생성한 편집 가능한 SVG입니다.
-
 ### 기술 스택과 소스 안내
 
 | 계층 | 기술 | 소스 안내 |
@@ -1104,8 +1083,6 @@ BYOA는 기존 클라이언트를 사용하고 BYOK는 지원 모델 계정을 �
 | **소셜 게시** | 계획 중인 커넥터 계층 설계: 계정 접근, 게시 검토, 예약, 버전 연결 | [게시 방향](product/studio-vision.md) · [제안 논의](https://github.com/nexu-io/html-anything/issues) |
 
 [로컬 설정](#quick-start)에서 시작하고 계층을 골라 [CONTRIBUTING.md](../CONTRIBUTING.md) 와 [AGENTS.md](../AGENTS.md)를 따르세요. 프로젝트와 인증 정보는 체크아웃 밖에 두고 의존성 버전과 업스트림 라이선스를 유지하세요.
-
-**아키텍처 원칙:** 사람과 에이전트가 같은 프로젝트를 사용하고 revision 검사로 오래된 상태의 수정을 막습니다. 생성 후보는 명시적으로 채택하며 고정 스냅샷으로 내보냅니다. 기술, 시각 품질, 소리, 실제 재생은 각각 검증합니다.
 
 [제품 아키텍처](product/architecture.md) · [Studio 개발](../studio/README.md) · [Model Gateway](model-gateway.md) · [기여 가이드](../CONTRIBUTING.md)
 
@@ -1160,7 +1137,6 @@ Studio의 큰 비전은 발견, 창작, 협업, 게시, 학습입니다. **Super
 
 ## 🙏 감사의 말 / Acknowledgements
 
-
 OpenMotion은 [Apache-2.0](../LICENSE)라이선스를 사용합니다. 타사 코드, 템플릿, 미디어, 글꼴은 각자의 라이선스와 출처를 유지합니다.
 
 | 출처 | 관련 내용 |
@@ -1176,6 +1152,6 @@ OpenMotion은 [Apache-2.0](../LICENSE)라이선스를 사용합니다. 타사 �
 | [OpusClip](https://www.opus.pro/calendar) | 배포와 [외부 예약](https://www.opus.pro/tools/instagram-reels-scheduler)의 제품 참고. 내장 커넥터 없음 |
 | [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | 애니메이션과 미디어 의존성. 버전은 [package.json](../package.json) 과 [런타임 잠금 파일](../scripts/runtime-lock.json) |
 
-[소재 출처](readme/ASSETS.md) · [추가 쇼케이스 출처](readme/brand-showcase/README.md) · [표지와 프롬프트](readme/reverse-engineering-cover.md) · [글꼴 고지](../web/design-system/fonts/NOTICES.txt) · [Studio 라이선스](../studio/LICENSE)
+[소재 출처](readme/ASSETS.md) · [추가 쇼케이스 출처](readme/brand-showcase/README.md) · [글꼴 고지](../web/design-system/fonts/NOTICES.txt) · [Studio 라이선스](../studio/LICENSE)
 
 기존 HTML Anything 앱은 [`legacy` 브랜치](https://github.com/nexu-io/html-anything/tree/legacy)에 보존되어 있습니다. 현재 브랜치와 배포 범위는 [저장소 이전 가이드](repository-migration.md) 를 참고하세요.

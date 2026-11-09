@@ -20,12 +20,14 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
 </p>
 
-<p align="center"><a href="#showcase">场景与复刻效果</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a></p>
+<p align="center"><a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a></p>
 
+<a href="../examples/brand-studies/stripe/comparison.mp4">
 <picture>
   <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg">
-  <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion：可编辑 HTML · 开源免费 · 本地 Agent · BYOK · Motion.md">
+  <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="观看五秒对照：Stripe 原片翻出支付卡，OpenMotion 在 Studio 中用相同的节奏翻出胶片插画。">
 </picture>
+</a>
 
 OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
 
@@ -35,9 +37,9 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。�
 
 复刻结果是一份可编辑的 HTML 工程，可以在 Studio 里微调剪辑，再导出 MP4。
 
-<a id="showcase"></a>
+<a id="showcase"></a> <a id="用-openmotion-可以做什么"></a>
 
-## 用 OpenMotion 可以做什么？
+## 使用场景与复刻效果示例
 
 <a id="可以用它做什么"></a> <a id="what-can-you-make"></a>
 
@@ -330,8 +332,7 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。�
 
 **编写、观看、修改、渲染。** 让 Agent 替换产品、精简开头、加入真人、修改字幕或尝试新结尾。它修改工程源码，你在可视化编辑器中审阅。本地 MCP 客户端使用工程工具，具备 shell 的 Agent 还可遵循 Skills 和固定版本 CLI 工作流。[Agent 配置](#your-agent-your-studio) · [原生合成指南](../skills/motion-production/references/native.md) · [HTML 示例工程](../template-library/product-promo/index.html)
 
-<details>
-<summary>在 Studio 里可以改什么</summary>
+#### 在 Studio 里可以改什么
 
 | Studio 中 | 当前可以做什么 |
 | --- | --- |
@@ -345,8 +346,6 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。�
 > “保留已确认的揭示效果。中间场景换成这段屏幕录制，按这些时间码精简开头，最后的 CTA 多停留两秒。”
 
 [工程与版本](project-workspace.md)
-
-</details>
 
 <a id="bring-your-agent-and-keys"></a>
 
@@ -385,8 +384,7 @@ Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信�
 | [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md) | 六种源码 profile：线框标题、树冠字体、界面揭示、立体代码、粒子组装和玻璃卡片 |
 | [Presenter Story](../library/skills/presenter-story/SKILL.md) | 三份以真人讲述为主的视频设计配方 |
 
-<details>
-<summary>把一次复刻做成别人能用的资源包</summary>
+#### 分享可编辑的复刻工程
 
 1. **写下设计。** 记录参考、叙事节拍、时序、构图、镜头、字体、声音和换内容时仍须保留的决定。
 2. **让它可运行。** 包含源码和获准使用的素材，明确替换输入，解释预览与渲染方法。
@@ -394,8 +392,6 @@ Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信�
 4. **贡献与改编。** 用完整文件夹发起 PR，让其他人 Fork、换品牌，并带着新示例贡献改进。
 
 [资源提交清单](../library/ENTRY_TEMPLATE.md) · [六个可编辑示例](motion-design-examples.zh-CN.md)
-
-</details>
 
 <a id="resources-to-start-from"></a>
 
@@ -446,7 +442,7 @@ Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信�
 
 **从免费本地创作全栈开始。** 连接自己的 Agent、打开内置模板或导入实拍，用本地应用渲染。需要生成新素材时，在 Model Settings 加入受支持的媒体 Key。
 
-准备 Git、npm 和 [CI](../.github/workflows/ci.yml)固定的 **Node.js 26.11.1**。源码预览和导出还需要 Chrome/Chromium、FFmpeg/FFprobe。[运行环境配置](usage.md)
+准备 Git、npm 和 **Node.js 26.11.1**。从源码预览和导出还需要 Chrome/Chromium 和 FFmpeg/FFprobe。[运行环境配置](usage.md)
 
 ```sh
 git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
@@ -482,8 +478,7 @@ DeepSeek Harness、Claude Code 等客户端参见 [Agent 适配器指南](agent-
 
 > 用 OpenMotion 拆解 https://x.com/stripe/status/2049621560743608481 的 00:21.50–00:26.50。保留点击、推镜和翻面的节奏，把银行卡换成展示我产品的胶片。请在 Studio 里打开成片。
 
-<details>
-<summary>Skills、MCP 与 CLI</summary>
+##### Skills、MCP 与 CLI
 
 在 checkout 中发现并安装五个核心工作流，使用 [Skills CLI](https://github.com/vercel-labs/skills):
 
@@ -518,11 +513,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 **十一个公开 MCP 工具**覆盖模板发现与详情、工程创建、读取、编辑、预览、媒体导入、导出、版本恢复与取消。共享工作流和引擎指引通过 MCP resources 提供。[工具契约](mcp-phase1-tools.md)
 
-Studio 与 Agent 共用模板目录缓存：`motion_list_templates` 返回本地 JSONL 索引，`motion_get_template` 获取详情，`motion_create_project` 创建可编辑副本。目录环境随包保存；本地开发默认使用 DEV，正式包默认使用线上环境。[模板目录](template-catalog.md)
+用 `motion_list_templates` 查找模板，`motion_get_template` 查看详情，再用 `motion_create_project` 创建可编辑副本。[模板目录](template-catalog.md)
 
 使用 `npm start` 启动应用，使用 `npm run mcp` 启动 stdio。具备 shell 的 Agent 可使用运行时返回的固定版本引擎 CLI 检查和渲染；托管修改仍遵守工程 revision 校验。[原生创作](../skills/motion-production/references/native.md)
-
-</details>
 
 <a id="product-tour"></a> <a id="产品界面"></a> <a id="connect-your-agent"></a> <a id="use-from-your-agent"></a> <a id="从-agent-接入"></a> <a id="your-agent-your-studio"></a>
 
@@ -555,16 +548,11 @@ Studio 与 Agent 共用模板目录缓存：`motion_list_templates` 返回本地
 
 <a id="ai-video-editing"></a> <a id="keep-editing-after-the-remake"></a>
 
-<details>
-<summary>在 Agent 或 Studio 里打开工程</summary>
-
 #### 从 Agent 开始
 
 把参考和品牌简报交给 DeepSeek Harness、Codex、Claude Code 或 WorkBuddy，让它重建视频、打开预览、修改并导出。继续使用原有账号和工作方式。
 
 ![面向 Codex 的 OpenMotion 嵌入式 Viewer，展示可编辑的 Product Promo 工程、预览、图层和时间轴。](readme/product-tour/codex-embedded.png)
-
-*现有产品演示展示了为 Codex 宿主准备的 Studio Viewer。查看[录制范围](product-tour.md) 了解实际演示内容。*
 
 #### 从 Studio 开始
 
@@ -572,14 +560,7 @@ Studio 与 Agent 共用模板目录缓存：`motion_list_templates` 返回本地
 
 ![独立 OpenMotion Studio，包含会话、保存的需求和可编辑视频工程。](readme/product-tour/standalone-studio.png)
 
-<details>
-<summary>查看 Claude Code 与模板交接</summary>
-
-![本地终端中加载的 Claude Code 制作 Skills。](readme/product-tour/claude-code-skills.png)
-
-终端截图证明本地 Skill 加载。[CLI 检查](readme/product-tour/cli-checks.png) 证明工程检查，不代表模型已完成一次复刻。
-
-![Product Promo 工程的实际 CLI 检查：工程信息、lint 和时间轴检查。](readme/product-tour/cli-checks.png)
+#### 连接 Agent 并打开模板
 
 ![Connect Agent 对话框：工作区专属连接说明与本地客户端选择。](readme/product-tour/connect-agent.png)
 
@@ -587,11 +568,7 @@ Studio 与 Agent 共用模板目录缓存：`motion_list_templates` 返回本地
 
 **预览 → 复制指令 → 连同品牌素材粘贴给 Agent。** 内置模板创建可编辑副本；外部参考启动重建任务。[完整产品演示](product-tour.md)
 
-</details>
-
 两种入口使用同一本地应用和工程。Agent 在外部客户端运行，Studio 保存简报与可编辑作品。[连接原理](session-architecture.md)
-
-</details>
 
 <a id="open-projects-reusable-knowledge"></a> <a id="developer-architecture"></a>
 
@@ -651,8 +628,6 @@ MP4 + 可编辑源码 + 素材 + 版本和导出证据
 
 BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Studio 与本地服务管理工程，供应商凭据独立保存。一期公开 MCP 包含**十一个工具：九个工程工具与两个模板目录工具**；模型生成经 Studio 和本地 Gateway 使用，架构图不意味着公开 MCP 新增了生成或发布工具。
 
-以上为可编辑 SVG 图，由[无依赖的小型脚本](readme/diagrams/generate.py)生成。
-
 #### 技术栈与源码索引
 
 | 层次 | 技术 | 阅读入口 |
@@ -682,8 +657,6 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 
 从[本地安装](#quick-start)开始，选择一层，遵循 [CONTRIBUTING.md](../CONTRIBUTING.md) 和 [AGENTS.md](../AGENTS.md)。工程与凭据放在 checkout 外，保留依赖锁定与上游许可。
 
-**架构承诺：** 人与 Agent 共用工程；revision 校验避免基于旧状态误改；生成候选经显式采用进入影片；导出使用固定快照。技术、视觉、声音和实际播放分别验证。
-
 [产品架构](product/architecture.md) · [Studio 开发](../studio/README.md) · [Model Gateway](model-gateway.md) · [贡献指南](../CONTRIBUTING.md)
 
 <a id="one-video-more-places-to-share"></a> <a id="publish-to-every-platform"></a>
@@ -702,8 +675,7 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 
 渠道账号连接、定时发布和成片表现回流仍在规划中。
 
-<details>
-<summary>Studio 路线图与协作概念图</summary>
+#### Studio 路线图与协作概念图
 
 | 领域 | 当前可用 | 方向 |
 | --- | --- | --- |
@@ -717,8 +689,6 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 ![人与 Agent 在共享时间轴审阅的生成式概念图；协作体验仍在规划。](readme/collaboration-concept-v2.png)
 
 *规划中协作体验的概念预览，尚未公布发布日期。* [Studio 蓝图](product/studio-vision.md) · [知识与反馈](product/studio-vision.md#knowledge-and-feedback)
-
-</details>
 
 <a id="社区共建"></a> <a id="community"></a>
 
@@ -757,6 +727,6 @@ OpenMotion 采用 [Apache-2.0](../LICENSE)许可。第三方代码、模板、�
 | [OpusClip](https://www.opus.pro/calendar) | 分发与[外部排期](https://www.opus.pro/tools/instagram-reels-scheduler)的产品参考；无内置连接器 |
 | [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | 动画与媒体依赖，版本保留在 [package.json](../package.json) 和[运行时锁文件](../scripts/runtime-lock.json) |
 
-[素材来源](readme/ASSETS.md) · [其他展示素材来源](readme/brand-showcase/README.md) · [封面与提示词](readme/reverse-engineering-cover.md) · [字体声明](../web/design-system/fonts/NOTICES.txt) · [Studio 许可证](../studio/LICENSE)
+[素材来源](readme/ASSETS.md) · [其他展示素材来源](readme/brand-showcase/README.md) · [字体声明](../web/design-system/fonts/NOTICES.txt) · [Studio 许可证](../studio/LICENSE)
 
 原 HTML Anything 应用保留在 [`legacy` 分支](https://github.com/nexu-io/html-anything/tree/legacy)。当前分支与分发边界参见[仓库迁移指南](repository-migration.md) 。

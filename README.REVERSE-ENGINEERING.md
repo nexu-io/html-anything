@@ -1,5 +1,3 @@
-<!-- Alternative README proposal: combines the current README with the positioning in PR #173. The existing README remains the published introduction. -->
-
 <h1 align="center">OpenMotion</h1>
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
@@ -20,12 +18,14 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign on YouTube" /></a>
 </p>
 
-<p align="center"><a href="#showcase">Examples</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a></p>
+<p align="center"><a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a></p>
 
+<a href="examples/brand-studies/stripe/comparison.mp4">
 <picture>
   <source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg">
-  <img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion — Editable HTML · Open source · Local agent · BYOK · Motion.md">
+  <img src="docs/readme/brand-hero.jpg" width="100%" alt="Watch the five-second comparison: Stripe’s original card flip and the OpenMotion remake on the Studio timeline.">
 </picture>
+</a>
 
 OpenMotion is **OpenDesign’s first full-stack agentic video generator**. Upload a reference video or paste a social video link. OpenMotion breaks down the shots, timing and transitions, then **recreates the sequence with your own footage, logo and copy**.
 
@@ -35,9 +35,9 @@ OpenMotion is **OpenDesign’s first full-stack agentic video generator**. Uploa
 
 The remake is an editable HTML project. Fine-tune the cut in Studio and export an MP4.
 
-<a id="showcase"></a>
+<a id="showcase"></a> <a id="what-can-you-make"></a>
 
-## What can you make?
+## Use cases and remake examples
 
 <a id="creator-video-gallery"></a> <a id="presenter-motion"></a>
 
@@ -328,8 +328,7 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 
 **Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#your-agent-your-studio) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
 
-<details>
-<summary>What you can change in Studio</summary>
+#### What you can change in Studio
 
 | In the Studio | What you can do today |
 | --- | --- |
@@ -343,8 +342,6 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 > “Keep the reveal we approved. Replace the middle scene with this screen recording, tighten the opening using these timecodes, and hold our final CTA for two more seconds.”
 
 [Projects and versions](docs/project-workspace.md)
-
-</details>
 
 <a id="bring-your-agent-and-keys"></a>
 
@@ -383,8 +380,7 @@ The Brand Kit section holds the logo, palette, type, voice and approved product 
 | [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) | Six source profiles: wireframe titles, canopy typography, UI reveals, dimensional code, particle assembly and glass cards |
 | [Presenter Story](library/skills/presenter-story/SKILL.md) | Three design recipes for speech-led videos |
 
-<details>
-<summary>Package a remake for the next creator</summary>
+#### Share an editable remake
 
 1. **Write the design.** Record the reference, story beats, timing, framing, camera, type, sound and the decisions that must survive a content change.
 2. **Make it runnable.** Include editable source and permitted assets, identify replacement inputs, and explain how to preview and render it.
@@ -392,8 +388,6 @@ The Brand Kit section holds the logo, palette, type, voice and approved product 
 4. **Contribute and remix.** Open a PR with one complete folder. Let others fork the package, adapt it to their brand and contribute improvements with new examples.
 
 [Library entry checklist](library/ENTRY_TEMPLATE.md) · [Six editable studies](docs/motion-design-examples.md)
-
-</details>
 
 <a id="resources-to-start-from"></a>
 
@@ -440,7 +434,7 @@ The Brand Kit section holds the logo, palette, type, voice and approved product 
 
 ### Quick start
 
-Use Git and **Node.js 26.11.1**, pinned in [CI](.github/workflows/ci.yml), with npm. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
+Use Git, npm and **Node.js 26.11.1**. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
 
 ```sh
 git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
@@ -472,8 +466,7 @@ Then make it yours:
 
 To start from a video instead, supply your reference and use the [recreation brief](#reverse-engineer-a-video). If your host cannot open Studio beside the conversation, use the returned local project link.
 
-<details>
-<summary>Skills, MCP and CLI</summary>
+##### Skills, MCP and CLI
 
 From the checkout, discover and install the five core workflows with the [Skills CLI](https://github.com/vercel-labs/skills):
 
@@ -508,11 +501,9 @@ Use **Connect Agent** for workspace-specific configuration. Manual local stdio c
 
 The **eleven public MCP tools** cover template discovery and details, project creation and reading, editing, preview, media import, export, version restoration and cancellation. Shared workflow and engine guides are available through MCP resources. [Tool contract](docs/mcp-phase1-tools.md)
 
-Studio and agents share a cached template catalog: `motion_list_templates` returns a local JSONL index, `motion_get_template` retrieves details, and `motion_create_project` creates an editable copy. The template environment is saved with the package; local development uses DEV and release packages use production by default. [Template catalog](docs/template-catalog.md)
+Find a template with `motion_list_templates`, inspect it with `motion_get_template`, then create an editable copy with `motion_create_project`. [Template catalog](docs/template-catalog.md)
 
 Use `npm start` for the app and `npm run mcp` for stdio. Shell-capable agents can inspect and render with the pinned engine CLI returned by the runtime; managed edits retain project revision checks. [Native authoring](skills/motion-production/references/native.md)
-
-</details>
 
 <a id="your-agent-your-studio"></a>
 
@@ -546,14 +537,9 @@ export an MP4 and retain the source for the next edit.
 
 <a id="keep-editing-after-the-remake"></a>
 
-<details>
-<summary>Open the project in your agent or in Studio</summary>
-
 #### Start in your agent
 
 ![OpenMotion embedded viewer for Codex, showing the editable Product Promo project, preview, layers and timeline.](docs/readme/product-tour/codex-embedded.png)
-
-*The existing product tour shows the Studio viewer prepared for a Codex host. See [capture scope](docs/product-tour.md) for what was demonstrated.*
 
 #### Start in Studio
 
@@ -561,14 +547,7 @@ Browse references, open a template or bring in your recordings. Choose **Connect
 
 ![Standalone OpenMotion Studio with sessions, the saved request and an editable video project.](docs/readme/product-tour/standalone-studio.png)
 
-<details>
-<summary>See Claude Code and the template handoff</summary>
-
-![Claude Code production Skills, captured from the local terminal.](docs/readme/product-tour/claude-code-skills.png)
-
-The terminal capture demonstrates local Skill loading. The [CLI checks](docs/readme/product-tour/cli-checks.png) demonstrate project inspection; they do not establish a completed model-driven recreation.
-
-![Actual CLI checks for the Product Promo project: project info, lint and timeline inspection.](docs/readme/product-tour/cli-checks.png)
+#### Connect your agent to a template
 
 ![Connect Agent dialog with workspace-specific connection instructions and a choice of local clients.](docs/readme/product-tour/connect-agent.png)
 
@@ -576,11 +555,7 @@ The terminal capture demonstrates local Skill loading. The [CLI checks](docs/rea
 
 **Preview → copy the instruction → paste into your agent with your brand assets.** A bundled template opens as an editable copy; an external reference starts a reconstruction task. [Full product tour](docs/product-tour.md)
 
-</details>
-
 Both entry paths use the same local application and project. The agent runs in its own client; Studio stores the brief and editable work. [How the connection works](docs/session-architecture.md)
-
-</details>
 
 <a id="open-projects-reusable-knowledge"></a> <a id="developer-architecture"></a>
 
@@ -683,8 +658,6 @@ Dependency pins live in [package.json](package.json), [package-lock.json](packag
 
 Start with the [local setup](#quick-start), choose one layer, and follow [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md). Keep user projects and credentials outside the checkout and preserve dependency pins and upstream licenses.
 
-**The architectural commitments:** people and agents share one project; revision checks protect changes from stale state; generated candidates enter the film through explicit adoption; exports use fixed snapshots. Technical checks, visual quality, sound and actual playback have separate evidence.
-
 [Product architecture](docs/product/architecture.md) · [Studio development](studio/README.md) · [Model Gateway](docs/model-gateway.md) · [Contribution guide](CONTRIBUTING.md)
 
 <a id="one-video-more-places-to-share"></a> <a id="publish-to-every-platform"></a>
@@ -703,8 +676,7 @@ Make a separate composition for each aspect ratio, review the cut in Studio and 
 
 Channel connections, scheduled publishing and performance feedback are planned.
 
-<details>
-<summary>Studio roadmap and collaboration concept</summary>
+#### Studio roadmap and collaboration concept
 
 | Area | Available today | Direction |
 | --- | --- | --- |
@@ -718,8 +690,6 @@ Channel connections, scheduled publishing and performance feedback are planned.
 ![Generated concept for people and agents reviewing a shared timeline; the collaboration experience is planned.](docs/readme/collaboration-concept-v2.png)
 
 *Concept preview of planned collaboration. No release date announced.* [Studio vision](docs/product/studio-vision.md) · [Knowledge and feedback](docs/product/studio-vision.md#knowledge-and-feedback)
-
-</details>
 
 <a id="community"></a>
 
@@ -758,6 +728,6 @@ OpenMotion is licensed under [Apache-2.0](LICENSE). Third-party code, templates,
 | [OpusClip](https://www.opus.pro/calendar) | Product reference for distribution and [external scheduling](https://www.opus.pro/tools/instagram-reels-scheduler); no built-in connector |
 | [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | Animation and media dependencies with versions retained in [package.json](package.json) and the [runtime lock](scripts/runtime-lock.json) |
 
-[Asset sources](docs/readme/ASSETS.md) · [Additional showcase sources](docs/readme/brand-showcase/README.md) · [Cover artwork and prompt](docs/readme/reverse-engineering-cover.md) · [Font notices](web/design-system/fonts/NOTICES.txt) · [Studio license](studio/LICENSE)
+[Asset sources](docs/readme/ASSETS.md) · [Additional showcase sources](docs/readme/brand-showcase/README.md) · [Font notices](web/design-system/fonts/NOTICES.txt) · [Studio license](studio/LICENSE)
 
 The former HTML Anything application is preserved on the [`legacy` branch](https://github.com/nexu-io/html-anything/tree/legacy). See the [repository migration guide](docs/repository-migration.md) for the active branch and distribution boundaries.

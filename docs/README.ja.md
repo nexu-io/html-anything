@@ -27,7 +27,12 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
   <a href="../LICENSE">Apache 2.0</a>
 </p>
 
-![OpenMotion — あらゆる動画をリバースエンジニアリング。DeepSeek Harness、Codex、Claude Code で好きな動画をブランドの作品に。画像、動画、音楽、TTS。マルチプラットフォーム公開。](readme/cover-reverse-engineering-v2.png)
+<a href="../examples/brand-studies/stripe/comparison.mp4">
+<picture>
+  <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.jpg">
+  <img src="readme/brand-hero.jpg" width="100%" alt="Stripe の原作と Studio で編集できる OpenMotion の再制作を 5 秒の動画で比較。">
+</picture>
+</a>
 
 **目を引く発表動画、心地よいテンポの製品紹介、複雑な話をわかりやすく伝えるクリエイター。** その参考動画を、ロゴ、画面、映像素材、原稿とともにエージェントへ。OpenMotion は参考を分析し、構成を編集可能なプロジェクトとして再構築して、あなたの物語にする手順を提供します。
 
@@ -327,30 +332,19 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 ![Codex 向け OpenMotion 埋め込み Viewer。編集可能な Product Promo、プレビュー、レイヤー、タイムライン。](readme/product-tour/codex-embedded.png)
 
-*このデモは Codex ホスト用に用意した Studio Viewer を示します。[収録範囲](product-tour.md) で実際に確認した内容を参照してください。*
-
 ### Studio から始める
 
 参考を見て、テンプレートを開くか録画を読み込みます。**Connect Agent** のワークスペース別手順に従い、企画を渡してください。同じタイムラインで変更を確認し、いつでも手動調整できます。
 
 ![会話、保存済み要件、編集可能な動画プロジェクトを表示する単体版 OpenMotion Studio。](readme/product-tour/standalone-studio.png)
 
-<details>
-<summary>Claude Code とテンプレートの引き継ぎを見る</summary>
-
-![ローカル端末で読み込まれた Claude Code の制作 Skills。](readme/product-tour/claude-code-skills.png)
-
-端末の収録はローカル Skill の読み込みを示します。[CLI 検査](readme/product-tour/cli-checks.png) はプロジェクト検査を示すもので、モデルによる再構築完了の証拠ではありません。
-
-![Product Promo の実際の CLI 検査：プロジェクト情報、lint、タイムライン。](readme/product-tour/cli-checks.png)
+#### エージェントに接続してテンプレートを開く
 
 ![Connect Agent ダイアログ：ワークスペース専用の手順とローカルクライアント選択。](readme/product-tour/connect-agent.png)
 
 ![Product Promo プレビューと、エージェントにコピーするテンプレート専用指示。](readme/product-tour/template-to-agent.png)
 
 **プレビュー → 指示をコピー → ブランド素材と一緒にエージェントへ。** 同梱テンプレートは編集可能なコピーを開き、外部参考は再構築タスクを開始します。[製品デモ全体](product-tour.md)
-
-</details>
 
 どちらの入口も同じローカルアプリとプロジェクトを使用。エージェントは自身のクライアントで動き、Studio が企画と編集可能な作品を保存します。[接続の仕組み](session-architecture.md)
 
@@ -382,8 +376,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 トーク動画、チュートリアル、製品紹介にも。**人の語りと物語のテンポを保ち、自分の録画、テーマ、ブランドで字幕、画面、ピクチャーインピクチャー、動きを再利用します。**
 
-<details>
-<summary><strong>3 つの話し手中心の作例と Motion.md レシピを見る</strong></summary>
+**話し手を中心とした 3 つの作例と Motion.md レシピ**
 
 各ペアは原作と外部の改編作品の無音抜粋です。自分の録画の方向性を探し、リンク先の設計レシピをエージェントへの指針にしてください。
 
@@ -427,9 +420,6 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 [Motion.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
 
 > この構成で自分の撮影と画面録画を使ってください。声を保ち、実際の発話に沿って編集し字幕を合わせます。画面、ピクチャーインピクチャー、動きで要点を説明。音付きプレビューの後、編集可能なプロジェクトと MP4 を渡してください。
-
-
-</details>
 
 **誰もがクリエイターに。** 伝えたいことから始め、参考で構成を具体化し、自分の声を中心に置きましょう。
 
@@ -562,8 +552,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 ![Brandkit はブランド、製品情報、承認素材を、Motion.md は物語、時間、動き、レビュー規則を定義。SKILL.md がソース、素材、プリセット、検証記録とともに利用する方法を導きます。](readme/diagrams/creative-context.svg)
 
-<details>
-<summary>制作パッケージをテキストで読む</summary>
+### 制作パッケージの構成
 
 ```text
 参考 + 自分のブランド
@@ -579,8 +568,6 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
           ↓
 エージェント → 次の編集可能な動画
 ```
-
-</details>
 
 **Brandkit はブランド、Motion.md は設計、Skill は方法、プロジェクトは実装を担います。** 最初の書き出しの後も使え、他の人が確認・フォーク・改善できる形になります。
 
@@ -627,8 +614,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **カメラ、タイトル、製品の見せ方が気に入ったら、発想を残して物語を変える。** 6 つの編集可能なソース研究に、Motion.md、Skill、内容プリセットを収録しています。[ソース、入力、検証記録](motion-design-examples.md).
 
-<details>
-<summary><strong>文字、UI、コード、粒子、ガラスの 6 つのソース研究を開く</strong></summary>
+**6 つの編集可能なモーション作例**
 
 ペアのプレビューは同じ実装からレンダリングした無音抜粋で、元の内容と改編を同じ時点で比較します。
 
@@ -699,8 +685,6 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 [Motion.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
 
 動画しかない参考には、別の[再構築ワークフロー](../skills/motion-recreate/SKILL.md) で作り直して比較します。再現度は選んだ参考と制作要件に照らして確認します。
-
-</details>
 
 <a id="one-video-more-places-to-share"></a>
 <a id="publish-to-every-platform"></a>
@@ -941,7 +925,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **無料のローカル制作環境から。** 自分のエージェントを接続し、同梱テンプレートや撮影素材を使ってローカルでレンダリング。新しい素材を生成するときは Model Settings に対応キーを追加します。
 
-Git、npm と、[CI](../.github/workflows/ci.yml)で固定された **Node.js 26.11.1** を使います。ソースからのプレビューと出力には Chrome/Chromium、FFmpeg/FFprobe も必要です。[実行環境の設定](usage.md)
+Git、npm、**Node.js 26.11.1** を用意してください。ソースからのプレビューと書き出しには Chrome/Chromium、FFmpeg/FFprobe も必要です。[実行環境の設定](usage.md)
 
 ```sh
 git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
@@ -973,8 +957,7 @@ DeepSeek Harness、Claude Code などは[エージェントアダプターガイ
 
 動画から始める場合は、参考と[再構築ブリーフ](#reverse-engineer-a-video)を渡してください。ホストが会話の横に Studio を開けない場合は、返されたローカルプロジェクトのリンクを使います。
 
-<details>
-<summary>Skills、MCP、CLI</summary>
+#### Skills、MCP、CLI
 
 チェックアウトから [Skills CLI](https://github.com/vercel-labs/skills) を使い、5 つの基本ワークフローを確認・インストールできます：
 
@@ -1009,11 +992,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 **公開 MCP ツール 11 個**で、テンプレート検索・詳細取得、作成、読み取り、編集、プレビュー、素材の読み込み、出力、版の復元、キャンセルを扱います。共通の手順とエンジンガイドは MCP resources から取得できます。[ツール契約](mcp-phase1-tools.md)
 
-Studio とエージェントはテンプレートカタログのキャッシュを共有します。`motion_list_templates` はローカル JSONL 索引を返し、`motion_get_template` は詳細を取得、`motion_create_project` は編集可能なコピーを作成します。環境はパッケージに保存され、ローカル開発は DEV、正式パッケージは本番環境が既定です。[テンプレートカタログ](template-catalog.md)
+`motion_list_templates` でテンプレートを探し、`motion_get_template` で詳細を確認し、`motion_create_project` で編集用のコピーを作成します。[テンプレートカタログ](template-catalog.md)
 
 アプリには `npm start` 、stdio には `npm run mcp` を使用します。シェル対応エージェントは実行環境が返す固定版エンジン CLI で検査・レンダリング可能。管理対象の編集には revision 検査を適用します。[ネイティブ制作](../skills/motion-production/references/native.md)
-
-</details>
 
 <a id="open-projects-reusable-knowledge"></a>
 <a id="developer-architecture"></a>
@@ -1074,8 +1055,6 @@ MP4 + 編集可能なソース + 素材 + 版と出力の検証記録
 
 BYOA は既存クライアントを使い、BYOK は対応するモデルアカウントを接続します。Studio とローカルサービスが作品を管理し、認証情報はプロジェクト外へ。第 1 段階の公開 MCP は**プロジェクト用 9 個とテンプレートカタログ用 2 個、合計 11 個のツール**です。モデル生成は Studio とローカル Gateway から利用し、この図は生成・公開ツールを公開 MCP に追加するものではありません。
 
-図は[依存ライブラリ不要の小さなスクリプト](readme/diagrams/generate.py)から生成した、編集可能な SVG です。
-
 ### 技術スタックとソース案内
 
 | 層 | 技術 | ソースの入口 |
@@ -1104,8 +1083,6 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 | **SNS 公開** | 計画中の接続層を設計：アカウント利用、公開確認、予約、版の対応付け | [公開の方向性](product/studio-vision.md) · [提案を議論する](https://github.com/nexu-io/html-anything/issues) |
 
 [ローカル設定](#quick-start)から始め、担当する層を選び、[CONTRIBUTING.md](../CONTRIBUTING.md) と [AGENTS.md](../AGENTS.md)に従ってください。プロジェクトと認証情報はチェックアウト外に置き、固定バージョンと上流ライセンスを維持します。
-
-**設計上の約束：** 人とエージェントが同じプロジェクトを使い、revision 検査で古い状態からの変更を防ぎ、生成候補は明示的に採用し、固定スナップショットから出力します。技術、見た目、音、実際の再生は別々に検証します。
 
 [製品アーキテクチャ](product/architecture.md) · [Studio 開発](../studio/README.md) · [Model Gateway](model-gateway.md) · [貢献ガイド](../CONTRIBUTING.md)
 
@@ -1160,7 +1137,6 @@ Studio の大きな構想は、発見、制作、協働、公開、学習です�
 
 ## 🙏 謝辞 / Acknowledgements
 
-
 OpenMotion のライセンスは [Apache-2.0](../LICENSE)です。第三者のコード、テンプレート、素材、フォントは元のライセンスとクレジットを保ちます。
 
 | 出典 | 関係 |
@@ -1176,6 +1152,6 @@ OpenMotion のライセンスは [Apache-2.0](../LICENSE)です。第三者の�
 | [OpusClip](https://www.opus.pro/calendar) | 配信と[外部の予約公開](https://www.opus.pro/tools/instagram-reels-scheduler)の製品参考。内蔵コネクターなし |
 | [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | 動画とメディアの依存ライブラリ。バージョンは [package.json](../package.json) と[実行環境のロック](../scripts/runtime-lock.json) |
 
-[素材の出典](readme/ASSETS.md) · [その他の展示素材の出典](readme/brand-showcase/README.md) · [表紙とプロンプト](readme/reverse-engineering-cover.md) · [フォントの告知](../web/design-system/fonts/NOTICES.txt) · [Studio ライセンス](../studio/LICENSE)
+[素材の出典](readme/ASSETS.md) · [その他の展示素材の出典](readme/brand-showcase/README.md) · [フォントの告知](../web/design-system/fonts/NOTICES.txt) · [Studio ライセンス](../studio/LICENSE)
 
 旧 HTML Anything アプリは [`legacy` ブランチ](https://github.com/nexu-io/html-anything/tree/legacy)に保存されています。現在のブランチと配布範囲は[リポジトリ移行ガイド](repository-migration.md) を参照してください。
