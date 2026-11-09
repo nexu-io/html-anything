@@ -1,8 +1,9 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
+import { createReadStream } from "node:fs";
 import { link, lstat, mkdir, open, readFile, realpath, rm } from "node:fs/promises";
 import { join, resolve } from "node:path";
-
-import { type Artifact, type Digest, digest, type Kind, kinds, valid, verify } from "@odsuite/protocol";
+import { type Artifact, type Digest, digest, type Kind, kinds, valid } from "@odsuite/protocol";
+import type { ByteSource } from "./types.js";
 
 export interface Options {
   root: string;
@@ -61,11 +62,59 @@ export class Store {
     } finally {
       await rm(temporary, { force: true });
     }
-    await this.read(artifact);
+    await this.path(artifact);
     return artifact;
   }
 
-  async read(artifact: Artifact): Promise<Uint8Array> {
+  async import(artifact: Artifact, source: ByteSource, temporaryRoot: string, signal?: AbortSignal): Promise<void> {
+    if (
+      !kinds.includes(artifact.kind) ||
+      !valid(artifact.digest) ||
+      !Number.isSafeInteger(artifact.bytes) ||
+      artifact.bytes < 0 ||
+      artifact.bytes > 512 * 1024 ** 2
+    )
+      throw Error("invalid streamed artifact");
+    slot(artifact.slot);
+    await this.#guard();
+    const temporary = join(temporaryRoot, `${randomUUID()}.tmp`),
+      hash = createHash("sha256");
+    let size = 0;
+    const handle = await open(temporary, "wx", 0o600);
+    try {
+      try {
+        const chunks =
+          source instanceof Uint8Array
+            ? (async function* () {
+                yield source;
+              })()
+            : source;
+        for await (const chunk of chunks) {
+          signal?.throwIfAborted();
+          if (!(chunk instanceof Uint8Array)) throw Error("blob loader emitted non-byte data");
+          size += chunk.byteLength;
+          if (size > artifact.bytes) throw Error("blob response exceeds declared size");
+          hash.update(chunk);
+          await handle.writeFile(chunk);
+        }
+        signal?.throwIfAborted();
+        if (size !== artifact.bytes || `sha256:${hash.digest("hex")}` !== artifact.digest)
+          throw Error("blob integrity mismatch");
+        await handle.sync();
+      } finally {
+        await handle.close();
+      }
+      try {
+        await link(temporary, this.#path(artifact.digest));
+      } catch (e) {
+        if ((e as NodeJS.ErrnoException).code !== "EEXIST") throw e;
+      }
+      await this.path(artifact);
+    } finally {
+      await rm(temporary, { force: true });
+    }
+  }
+  async path(artifact: Artifact): Promise<string> {
     if (!kinds.includes(artifact.kind) || !valid(artifact.digest)) throw new TypeError("invalid artifact");
     slot(artifact.slot);
     await this.#guard();
@@ -73,14 +122,19 @@ export class Store {
       info = await lstat(path);
     if (!info.isFile() || info.isSymbolicLink() || info.size !== artifact.bytes)
       throw Error("artifact integrity mismatch: expected regular immutable object");
-    const content = await readFile(path);
-    if (!verify(artifact, content)) throw new Error("artifact integrity mismatch");
-    return content;
+    const hash = createHash("sha256");
+    for await (const chunk of createReadStream(path)) hash.update(chunk);
+    if (`sha256:${hash.digest("hex")}` !== artifact.digest) throw Error("artifact integrity mismatch");
+    return path;
+  }
+  async read(artifact: Artifact): Promise<Uint8Array> {
+    if (artifact.bytes > 64 * 1024 ** 2) throw Error("buffered artifact exceeds 64 MiB; use a verified path");
+    return readFile(await this.path(artifact));
   }
 
   async has(artifact: Artifact): Promise<boolean> {
     try {
-      await this.read(artifact);
+      await this.path(artifact);
       return true;
     } catch (fault) {
       if ((fault as NodeJS.ErrnoException).code === "ENOENT") return false;

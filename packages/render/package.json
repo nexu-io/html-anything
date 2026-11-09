@@ -1,0 +1,43 @@
+{
+  "name": "@open-motion/render",
+  "private": true,
+  "type": "module",
+  "description": "Fixed-revision native rendering through sidecar and blob",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "esbuild": "0.28.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/html-anything.git",
+    "directory": "packages/render"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./worker": {
+      "types": "./dist/worker.d.ts",
+      "default": "./dist/worker.mjs"
+    }
+  },
+  "dependencies": {
+    "@hyperframes/core": "0.9.7",
+    "@hyperframes/engine": "0.9.7",
+    "@odsuite/blob": "workspace:*",
+    "@odsuite/protocol": "workspace:*",
+    "@odsuite/serve": "workspace:*",
+    "@odsuite/sidecar": "workspace:*",
+    "@open-motion/motion": "workspace:*",
+    "@open-motion/workspace": "workspace:*",
+    "zod": "4.6.7"
+  }
+}

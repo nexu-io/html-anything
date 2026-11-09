@@ -25,6 +25,18 @@ pnpm --filter @open-motion/standalone test
 
 Web browser fixtures use actual built Web, SQLite and Daemon HTTP hosted in the test process. Standalone tests exercise an independent sidecar-owned Daemon. Services/ports/data belong to sidecar; Chromium is test-driver infrastructure closed in finally. Check actual manager closure and zero workloads. Evidence goes to `.artifacts/browser/<uuid>` or `.artifacts/animation-browser/<uuid>`; failures preserve screenshots/diagnostics. Fixed reference tokens, pixel round-trips, actual editing, platform and full product acceptance are separate. Never upload capabilities or raw communication traces.
 
+## Seeded native render acceptance
+
+After explicit build, the render module can exercise its actual worker/Chromium/FFmpeg/FFprobe path with a trusted local seed manifest:
+
+```sh
+OPEN_MOTION_NATIVE_MANIFEST=/absolute/owned/native-manifest.json pnpm --filter @open-motion/render test
+```
+
+The manifest has exactly `browser`, `ffmpeg`, `ffprobe` entries, each containing `path` (absolute or relative to the manifest directory), `executable` (inside the materialized ZIP) and a platform/arch-bound blob `resource` descriptor. Trust both the compressed artifact digest/size and expanded tree digest/byte count from the publisher; deriving a tree digest from an untrusted download is not verification. The current local native pin is Chromium156 / FFmpeg9.0.2 on macOS arm64. Puppeteer install scripts remain disabled, and the product never discovers a system binary through PATH. These seeds are test inputs, not a published toolchain feed.
+
+Set `OPEN_MOTION_RENDER_EVIDENCE` to an owned `.artifacts` JSON path to retain result digests, decoded frame/seek facts, process occupancy, GC and final manager state. The test covers silent/AAC films, edit-after-freeze and historical source reopen, real capture cancellation/retry and tool GC without deleting exports. Without the explicit seed manifest, this native case is skipped; source CI does not thereby qualify native rendering on its platform. This execution primitive is not yet a Web export queue or an all-carrier acceptance.
+
 ## Unified local development
 
 After explicit install/build, use only the repository-local CLI:

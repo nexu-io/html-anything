@@ -20,6 +20,7 @@ guard:
       - .github/workflows
       - .githooks
       - docs
+      - suites/blob/src/materialize
       - suites/blob/src/control
       - suites/electron/src/control
       - suites/runtime/src/control

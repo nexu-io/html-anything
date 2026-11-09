@@ -9,7 +9,7 @@ import { type Context, managerEndpoint, serve } from "@odsuite/sidecar";
 import { it } from "vitest";
 import { Library, type Resource, resourceKey, source } from "@";
 
-const spec = (bytes: Uint8Array, type: Resource["type"] = "file"): Resource => ({
+const spec = (bytes: Uint8Array, type: "file" | "directory" = "file"): Resource => ({
   artifact: { kind: "blob", slot: "probe", bytes: bytes.length, digest: digest(bytes) },
   type,
 });

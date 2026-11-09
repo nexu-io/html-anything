@@ -94,7 +94,7 @@ export class Projects {
       throw new Fault("conflict", "project revision changed; read before saving");
     return this.commit(current, input.files, current.resources);
   }
-  snapshot(input: Input<"resource_read">) {
+  snapshot(input: Input<"project_snapshot">) {
     const owner = this.owner(input.sessionId, input.artifactId),
       entry = this.db.one(
         "SELECT files,resources FROM revisions WHERE project_id=? AND revision=?",
@@ -105,7 +105,14 @@ export class Projects {
     const files = sources(JSON.parse(String(entry.files)) as SourceFile[]),
       resources = manifest(JSON.parse(String(entry.resources)) as Resource[]);
     if (digest(files, resources) !== input.revision) throw new Fault("integrity", "project revision content mismatch");
-    return { files, resources };
+    return {
+      id: owner.projectId,
+      artifactId: owner.id,
+      sessionId: owner.sessionId,
+      revision: input.revision,
+      files,
+      resources,
+    };
   }
   commit(current: Project, input: SourceFile[], assets: Resource[]): Project {
     const files = sources(input),

@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { digest } from "@odsuite/protocol";
 
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -64,4 +65,44 @@ it.runIf(process.platform !== "win32")("rejects swapped CAS directories and syml
   await rm(join(other.root, "objects", artifact.digest.slice(7)));
   await symlink(external, join(other.root, "objects", artifact.digest.slice(7)));
   await expect(other.store.read(artifact)).rejects.toThrow("regular");
+});
+
+it("streams verified objects atomically and removes interrupted staging bytes", async () => {
+  const current = await store(),
+    value = Buffer.from("streamed content"),
+    artifact = { kind: "blob" as const, slot: "stream", bytes: value.length, digest: digest(value) },
+    staging = join(current.root, "staging");
+  await mkdir(staging);
+  const chunks = async function* () {
+    yield value.subarray(0, 3);
+    expect(await current.store.has(artifact)).toBe(false);
+    yield value.subarray(3);
+  };
+  await Promise.all([
+    current.store.import(artifact, chunks(), staging),
+    current.store.import(artifact, chunks(), staging),
+  ]);
+  expect(Buffer.from(await current.store.read(artifact))).toEqual(value);
+  expect(await readdir(staging)).toEqual([]);
+  await current.store.remove(artifact.digest);
+  for (const bytes of [Buffer.from("wrong bytes!!!!"), value.subarray(1), Buffer.concat([value, value])]) {
+    await expect(current.store.import(artifact, bytes, staging)).rejects.toThrow(/integrity|declared size/);
+    expect(await current.store.has(artifact)).toBe(false);
+    expect(await readdir(staging)).toEqual([]);
+  }
+  const controller = new AbortController();
+  await expect(
+    current.store.import(
+      artifact,
+      (async function* () {
+        yield value.subarray(0, 1);
+        controller.abort(Error("cancelled import"));
+        yield value.subarray(1);
+      })(),
+      staging,
+      controller.signal,
+    ),
+  ).rejects.toThrow("cancelled import");
+  expect(await current.store.has(artifact)).toBe(false);
+  expect(await readdir(staging)).toEqual([]);
 });
