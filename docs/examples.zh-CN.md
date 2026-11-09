@@ -71,23 +71,22 @@ readme/media/hundred-days-story-reference.mp4
 
 **让新功能，成为发布片的主角。**
 
-[Figma Draw · @figma](readme/media/jake-figma-draw-reference.mp4) · [▶ 完整参考](readme/media/jake-figma-draw-reference.mp4)
+[Stripe Treasury · 00:21.50–00:26.50](https://x.com/stripe/status/2049621560743608481) · [可编辑的海岸胶片](../examples/brand-studies/stripe/index.html)
 
-![产品发布与功能演示](readme/examples/product-launch.jpg)
+![产品发布与功能演示](../examples/brand-studies/stripe/coast.jpg)
 
 - **输入:** 真实界面、功能简报与 Brandkit
 - **观察重点:** 功能揭示、界面特写、成果展示，组成一支完整发布片。
-- **目录 ID:** `hf-reference-jake-figma-draw`
+- **逐镜规范：** [Stripe 翻卡](../examples/brand-studies/stripe/MOTION.md)
 
 ```text
-使用 OpenMotion。创作参考: hf-reference-jake-figma-draw
-readme/media/jake-figma-draw-reference.mp4
+使用 OpenMotion。创作参考: https://x.com/stripe/status/2049621560743608481 (00:21.50–00:26.50)
 
 为「我的新功能」制作 20 秒、16:9 的发布片，使用我的真实产品截图、录屏与 Brandkit。
 按照「揭示功能 → 一次关键操作 → 完成效果 → 结束语」组织。
 参考图形元素、界面特写与最终作品之间的过渡方式。
 界面标签保持准确，一次只安排一个镜头运动，完成效果停留到能看清。
-使用我的品牌，不套用 Figma 品牌。
+用我的品牌色、产品画面和名称。
 交付可编辑场景，评审后导出 MP4。
 ```
 

@@ -74,24 +74,23 @@ by changing the sequence and holds, not just speeding everything up.
 
 **Make the feature the hero.**
 
-[Figma Draw · @figma](readme/media/jake-figma-draw-reference.mp4) · [▶ Full reference](readme/media/jake-figma-draw-reference.mp4)
+[Stripe Treasury · 00:21.50–00:26.50](https://x.com/stripe/status/2049621560743608481) · [Editable Coast study](../examples/brand-studies/stripe/index.html)
 
-![Product launches & demos](readme/examples/product-launch.jpg)
+![Product launches & demos](../examples/brand-studies/stripe/coast.jpg)
 
 - **Input:** Product screens + feature brief + Brandkit
 - **Creative focus:** A feature reveal, a focused UI demonstration and a memorable finish.
-- **Catalog ID:** `hf-reference-jake-figma-draw`
+- **Shot recipe:** [Stripe card flip](../examples/brand-studies/stripe/MOTION.md)
 
 ```text
-Use OpenMotion. Creative reference: hf-reference-jake-figma-draw
-readme/media/jake-figma-draw-reference.mp4
+Use OpenMotion. Creative reference: https://x.com/stripe/status/2049621560743608481 (00:21.50–00:26.50)
 
 Create a 20-second, 16:9 launch film for [feature]. Use my real product
 screenshots, screen recording and Brandkit. Follow a reveal → one useful
 action → finished result → closing line structure. Take inspiration from the
 reference’s transitions between graphic shapes, a close view of the UI and the
 finished artwork. Keep interface labels accurate, use one camera move at a
-time and hold the result long enough to understand. Use my brand, not Figma’s.
+Use my own colors, artwork and product name.
 Deliver editable scenes and a reviewed MP4.
 ```
 

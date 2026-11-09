@@ -2,69 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenMotion · Magnetic field</title>
+  <title>OpenMotion · Groove to type</title>
   <script src="assets/gsap.min.js"></script>
   <style>
-    * { box-sizing: border-box; }
-    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden; }
-    #film { position: relative; width: 100%; height: 100%; overflow: hidden; background: #cbd5c9; color: #141416; font-family: "Helvetica Neue", Arial, sans-serif; }
-    .clip { position: absolute; inset: 0; }
-#field { display:grid; place-items:center; }
-#word { display:grid; place-items:center; font-size:50px; font-weight:780; letter-spacing:-2.8px; }
-#film { background:radial-gradient(ellipse at 38% 45%, #d5dcd0, #bdcabc); }
-#grain { opacity:.12; mix-blend-mode:multiply; }
+    * { box-sizing: border-box }
+    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden }
+    main { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Helvetica Neue", Arial, sans-serif }
+    .layer { position: absolute; inset: 0 }
+    .credit { position: absolute; display: flex; gap: 8px; align-items: center; font-weight: 650; font-size: 22px; letter-spacing: -1px }
+    .brand-mark { width: 23px; height: 23px; display: inline-block }
+    main { background: #f7a15c; color: #352445 }
+    .credit { left: 38px; top: 28px }
+    #record { position: absolute; inset: 58px 275px; width: 410px; height: 410px; overflow: visible }
+    #side { position: absolute; right: 45px; top: 38px; font: 16px monospace }
+    #track { position: absolute; left: 42px; right: 42px; bottom: 29px; border-top: 1px solid #623c4a; padding-top: 8px; display:flex; justify-content:space-between; font: 15px monospace }
+    #word { display: grid; place-items: center; background:#303055; color: #ffd39c }
+    #letters { font-size: 104px; font-weight: 730; letter-spacing: -6px }
+    #word .credit { color: #ffcf8a }
+    #word .footer { position: absolute; left: 42px; bottom: 34px; font: 16px monospace; color:#e3a998 }
   </style>
 </head>
 <body>
-  <main id="film" data-composition-id="main" data-start="0" data-width="960" data-height="540" data-duration="5" data-fps="24">
-    <div class="clip" id="field" data-start="0" data-duration="5" data-track-index="0"><svg viewBox="0 0 960 540" width="960" height="540"><g transform="translate(480 270)"><g id="lines" fill="none" stroke="#37473b" stroke-width="1.8"></g><defs><radialGradient id="pole"><stop stop-color="#142725"/><stop offset=".37" stop-color="#243b38"/><stop offset=".77" stop-color="#6c837c"/><stop offset="1" stop-color="#c3d0c4"/></radialGradient></defs><circle r="42" fill="#c3cfc3" stroke="#34483b" stroke-width="2"/><circle r="35" fill="url(#pole)" stroke="#65796e" stroke-width="1.5"/></g></svg></div>
-    <div class="clip" id="word" data-start="0" data-duration="5" data-track-index="1"><span id="letters">OpenMotion</span></div>
-    <div class="clip" id="grain" data-start="0" data-duration="5" data-track-index="2"><svg width="960" height="540"><filter id="paper"><feTurbulence baseFrequency=".53" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" opacity=".65" filter="url(#paper)"/></svg></div>
+  <main data-composition-id="main" data-width="960" data-height="540" data-start="0" data-duration="5" data-fps="24">
+    <div class="layer" id="sleeve" data-start="0" data-duration="5" data-track-index="0">
+      <div class="credit"><svg class="brand-mark" viewBox="0 0 291 291" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="currentColor"/>
+<path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="currentColor"/>
+</svg><span>OpenMotion</span></div><span id="side">SIDE A / STEREO</span>
+      <svg id="record" viewBox="-205 -205 410 410"><circle r="189" fill="#343150"/><g id="grooves"></g><circle r="58" fill="#ffe1a9"/><circle r="7" fill="#37314d"/><path d="M-23 -25 Q0 -37 24 -26" fill="none" stroke="#cc664a" stroke-width="3"/></svg>
+      <div id="track"><span>GROOVE STUDY</span><span>OPENMOTION RECORDS</span></div>
+    </div>
+    <div id="word" class="layer" data-start="0" data-duration="5" data-track-index="1"><div class="credit"><svg class="brand-mark" viewBox="0 0 291 291" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="currentColor"/>
+<path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="currentColor"/>
+</svg><span>OpenMotion</span></div><span id="letters">OpenMotion</span><div class="footer">GROOVE STUDY &nbsp; / &nbsp; SIDE A</div></div>
   </main>
   <script>
-    const timeline = gsap.timeline({paused: true});
-// The field has a closed lobe and an open fan in each quadrant.
-const lines = document.querySelector('#lines');
-const curves = [];
-for (const reach of [71,96,125,166,218,265]) {
-  const height = reach*.33;
-  curves.push('M 40 -12 C '+(reach*.55+18)+' '+(-height)+' '+(reach-10)+' '+(-height*1.48)+' '+reach+' -4');
-}
-const tips = [[244,-104],[248,-173],[185,-216],[99,-213],[56,-194],[0,-188]];
-tips.forEach(([x,y],i) => {
-  const theta=(i+1)/6;
-  curves.push('M '+(40-36*theta)+' '+(-18-27*theta)+' Q '+(x*.55)+' '+(y*.90)+' '+x+' '+y);
-});
-for (const side of [-1,1]) {
-  for (const vertical of [-1,1]) {
-    curves.forEach((d,index) => {
-      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.setAttribute('d',d);
-      path.setAttribute('transform','scale('+side+','+vertical+')');
-      lines.appendChild(path);
-      if(index%2===0) {
-        const point = path.getPointAtLength(path.getTotalLength()*(.37+index*.018));
-        const speck=document.createElementNS('http://www.w3.org/2000/svg','circle');
-        speck.setAttribute('cx',side*point.x);
-        speck.setAttribute('cy',vertical*point.y);
-        speck.setAttribute('r','2.2');
-        speck.setAttribute('fill','#34453a');
-        lines.appendChild(speck);
-      }
-    });
-  }
-}
-timeline.fromTo('#lines',{scaleX:.89,scaleY:.92,transformOrigin:'50% 50%'},{scaleX:1.05,scaleY:1.05,duration:1.46,ease:'sine.inOut'},0);
-timeline.to('#field',{opacity:0,duration:.35},1.4);
-timeline.set('#word',{opacity:0},0);
-timeline.to('#word',{opacity:1,duration:.21},1.75);
-const letters = document.querySelector('#letters');
-const variants = ['OpenMotion','O//M','O✳M','O/M//','O·MOTION','OPENMOTION'];
-variants.forEach((text,index) => {
-  timeline.set(letters,{textContent:text,fontFamily:index<2?'Georgia,serif':'Arial,sans-serif',fontStyle:index<2?'italic':'normal',fontWeight:index<2?400:760},1.76+index*.44);
-});
-    timeline.set({}, {}, 5);
-    window.__timelines = {main: timeline};
+    const cut = gsap.timeline({paused: true});
+    const grooves = document.querySelector('#grooves');
+    for (let r = 69; r < 187; r += 6) {
+      const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      ring.setAttribute('r',r); ring.setAttribute('fill','none');
+      ring.setAttribute('stroke', r % 4 === 1 ? '#e6bb9a' : '#a5a2cc');
+      ring.setAttribute('stroke-width','1.8');
+      ring.setAttribute('stroke-dasharray', [r*2.65, r*.46, r*2.15, r*1.04].join(' '));
+      ring.setAttribute('transform','rotate('+(r*.8)+')'); grooves.append(ring);
+    }
+    cut.set('#word',{autoAlpha:0},0);
+    cut.to('#grooves',{rotation:84,transformOrigin:'50% 50%',duration:1.67,ease:'none'},0);
+    cut.to('#record',{scale:.73,opacity:0,transformOrigin:'50% 50%',duration:.4,ease:'power2.in'},1.37);
+    cut.to('#word',{autoAlpha:1,duration:.17},1.72);
+    const words = ['Side A','O / M','OM','OpenMotion'];
+    const faces = ['Georgia,serif','monospace','Georgia,serif','Arial,sans-serif'];
+    words.forEach((word,i) => cut.set('#letters',{textContent:word,fontFamily:faces[i],fontStyle:i===0||i===2?'italic':'normal',scaleX:i===2?1.45:1},1.78+i*.64));
+    cut.set({}, {}, 5);
+    window.__timelines = { main: cut };
   </script>
 </body>
 </html>

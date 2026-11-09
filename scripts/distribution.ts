@@ -110,6 +110,14 @@ const presenterTechFiles = [
 ];
 
 const localReadmeResourceFiles = [
+  'examples/brand-studies/anthropic/comparison.mobile.mp4',
+  'examples/brand-studies/deepseek/comparison.mobile.mp4',
+  'examples/brand-studies/kimi/comparison.mobile.mp4',
+  'examples/brand-studies/stripe/coast.jpg',
+  'examples/brand-studies/stripe/comparison.mobile.mp4',
+  'examples/motion-studies/comparison.mobile.mp4',
+  'examples/motion-studies/signoff.html',
+  'examples/motion-studies/signoff.mp4',
   'docs/readme/brand-hero.jpg',
   'docs/readme/brand-hero.mobile.jpg',
   'docs/readme/brand-hero.mobile.zh-CN.jpg',

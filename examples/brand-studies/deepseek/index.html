@@ -2,45 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenMotion · Creator mode</title>
+  <title>OpenMotion · The next take</title>
   <script src="assets/gsap.min.js"></script>
   <style>
-    * { box-sizing: border-box; }
-    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden; }
-    #film { position: relative; width: 100%; height: 100%; overflow: hidden; background: #fff; color: #141416; font-family: "Helvetica Neue", Arial, sans-serif; }
-    .clip { position: absolute; inset: 0; }
-#stage, #type, #signature { display:grid; place-items:center; }
-#stage { background:#060606; }
-#type { color:white; font-size:26px; letter-spacing:-1.2px; }
-#line { position:relative; white-space:nowrap; }
-#line span { display:inline-block; }
-#caret { display:inline-block; vertical-align:middle; width:3px; height:29px; background:white; box-shadow:0 0 9px white; }
-#signature { font-weight:730; font-size:30px; letter-spacing:-1.65px; }
-#signature small { font-size:14px; background:#151515; color:white; border-radius:10px; padding:3px 8px; margin-left:5px; vertical-align:middle; }
+    * { box-sizing: border-box }
+    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden }
+    main { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Helvetica Neue", Arial, sans-serif }
+    .layer { position: absolute; inset: 0 }
+    .credit { position: absolute; display: flex; gap: 8px; align-items: center; font-weight: 650; font-size: 22px; letter-spacing: -1px }
+    .brand-mark { width: 23px; height: 23px; display: inline-block }
+    main { background: #ffe98a; color:#242629 }
+    #stage { background: #214d59; color: #ffeec9 }
+    .credit { top: 35px; left: 44px }
+    .slate { position: absolute; left: 116px; top: 125px; width: 728px; height: 291px; background:#f7c868; color:#202e34; border-radius: 7px; overflow:hidden; box-shadow: 8px 9px 0 #143c47 }
+    #stripes { height: 53px; background: repeating-linear-gradient(131deg,#213642 0 49px,#ffe7aa 50px 96px); border-bottom: 4px solid #24373c }
+    .fields { display:flex; justify-content:space-between; padding: 17px 24px 11px; border-bottom:1px solid #996f3d; font: 16px monospace }
+    #line { padding: 35px 22px; font-size: 55px; font-weight: 670; letter-spacing:-3px; white-space:nowrap }
+    #caret { display:inline-block; width: 6px; height:51px; margin-left:8px; vertical-align:-4px; background:#c05032 }
+    #flash { background:#fff0a5 }
+    #end { display: grid; place-items:center; background:#e59661; color:#183e47 }
+    #end section { display:flex; gap: 18px; align-items:center; font-size:68px; font-weight:650; letter-spacing:-4px }
+    #end section svg { width:65px; height:65px }
+    #end footer { position:absolute; left:43px; right:43px; bottom:35px; border-top:1px solid #785f48; padding-top:9px; font:16px monospace }
   </style>
 </head>
 <body>
-  <main id="film" data-composition-id="main" data-start="0" data-width="960" data-height="540" data-duration="5" data-fps="24">
-    <div class="clip" id="stage" data-start="0" data-duration="5" data-track-index="0"></div>
-    <div class="clip" id="type" data-start="0" data-duration="5" data-track-index="1"><div id="line"><span id="copy"></span><i id="caret"></i></div></div>
-    <div class="clip" id="signature" data-start="0" data-duration="5" data-track-index="2"><div>◉ OpenMotion <small>Studio</small></div></div>
+  <main data-composition-id="main" data-width="960" data-height="540" data-start="0" data-duration="5" data-fps="24">
+    <div id="stage" class="layer" data-start="0" data-duration="5" data-track-index="0"><div class="credit"><svg class="brand-mark" viewBox="0 0 291 291" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="currentColor"/>
+<path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="currentColor"/>
+</svg><span>OpenMotion</span></div><div class="slate"><div id="stripes"></div><div class="fields"><span>SCENE 05</span><span>TAKE 02</span><span>24 FPS</span></div><div id="line"><span id="typed"></span><i id="caret"></i></div></div></div>
+    <div id="flash" class="layer" data-start="0" data-duration="5" data-track-index="1"></div>
+    <div id="end" class="layer" data-start="0" data-duration="5" data-track-index="2"><section><svg class="brand-mark" viewBox="0 0 291 291" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="currentColor"/>
+<path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="currentColor"/>
+</svg><span>OpenMotion</span></section><footer>STUDIO &nbsp; / &nbsp; TAKE 02</footer></div>
   </main>
   <script>
-    const timeline = gsap.timeline({paused: true});
-timeline.set(['#stage','#type','#signature'],{opacity:0},0);
-timeline.set(['#stage','#type'],{opacity:1},.28);
-const copy = document.querySelector('#copy');
-const sentence = 'Motion Studio. Create Your Own Cut.';
-[...sentence].forEach((_, index) => {
-  timeline.set(copy,{textContent:sentence.slice(0,index+1)},.58+index*.052);
-});
-timeline.fromTo('#caret',{opacity:1},{opacity:.18,duration:.15,repeat:1,yoyo:true},2.86);
-timeline.to('#caret',{scaleX:124,scaleY:1.28,transformOrigin:"right center",boxShadow:'0 0 17px #fff',duration:.17},3.05);
-timeline.set('#type',{opacity:0},3.47);
-timeline.set('#stage',{opacity:0},4.26);
-timeline.set('#signature',{opacity:1},4.26);
-    timeline.set({}, {}, 5);
-    window.__timelines = {main: timeline};
+    const cut = gsap.timeline({paused: true});
+    cut.set('#flash, #end',{autoAlpha:0},0);
+    cut.from('#stage',{y:10,opacity:.1,duration:.22},.04);
+    const line = 'Roll the next take.';
+    [...line].forEach((_,i)=>cut.set('#typed',{textContent:line.slice(0,i+1)},.57+i*.106));
+    cut.to('#caret',{opacity:.25,yoyo:true,repeat:1,duration:.16},2.74);
+    cut.to('#caret',{scaleX:16,transformOrigin:'right center',duration:.12},3.05);
+    cut.fromTo('#flash',{autoAlpha:1,clipPath:'inset(42% 24% 42% 24%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:.26,ease:'power3.out'},3.22);
+    cut.set('#end',{autoAlpha:1},4.26);
+    cut.from('#end section',{y:10,opacity:0,duration:.21},4.26);
+    cut.set({}, {}, 5);
+    window.__timelines = { main: cut };
   </script>
 </body>
 </html>

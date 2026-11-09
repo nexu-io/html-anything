@@ -6,31 +6,33 @@
 <script src="assets/gsap.min.js"></script>
 <style>
 * { box-sizing: border-box }
-html, body { width: 960px; height: 540px; margin: 0; overflow: hidden; font-family: Arial, sans-serif; color: #252834 }
-#film { position: relative; width: 100%; height: 100%; overflow: hidden; background: radial-gradient(ellipse at 69% 105%,#d9f5f6,transparent 54%), radial-gradient(ellipse at 93% 45%,#e1e3fa,transparent 56%),#f6f6f8 }
+html, body { width: 960px; height: 540px; margin: 0; overflow: hidden; font-family: Arial, sans-serif; color: #183b42 }
+#film { position: relative; width: 100%; height: 100%; overflow: hidden; background: linear-gradient(133deg,#ffdab0 4%,#f9c18e 56%,#f2a17c) }
 .layer { position: absolute; inset: 0 }
-#launch { position: absolute; top: 234px; left: 324px; width: 312px; height: 72px; display: grid; place-items: center; background: white; border-radius: 46px; font-size: 32px; font-weight: 600; box-shadow: -7px 0 34px #a371ea70, 9px 2px 36px #e6a2b68c }
+#launch { position: absolute; top: 234px; left: 324px; width: 312px; height: 72px; display: grid; place-items: center; background: white; border-radius: 46px; font-size: 32px; font-weight: 600; box-shadow: -7px 0 34px #c06b4470, 9px 2px 36px #ffd0938c }
 #form { position: absolute; top: 31px; left: 324px; width: 312px; height: 402px; background: white; border-radius: 10px; box-shadow: 0 8px 27px #33385712; padding: 17px; transform-origin: 68% 90% }
 .topline { font-size: 10px; font-weight: bold; color: #586071; display: flex; justify-content: space-between }
-.card { position: absolute; width: 215px; height: 134px; border-radius: 9px; overflow: hidden; color: white; background: radial-gradient(ellipse at 76% 119%,#552aa2 4%,transparent 56%), linear-gradient(55deg,#24134e 0%,#391dae 28%,#9376ca 53%,#633db0 72%,#2a197e 100%); box-shadow: inset 1px 1px 1px #ffffff42, 0 6px 18px #41207a18 }
-.card::before { content: ''; position: absolute; left: 22px; top: 57px; width: 22px; height: 16px; border-radius: 3px; background: linear-gradient(120deg,#e8d9b2,#b5a086 55%,#f5ead9) }
-.card small { position: absolute; letter-spacing: 1px; right: 11px; top: 9px; font-size: 9px; font-weight: 700 }
-.card i { position: absolute; bottom: 13px; right: 16px; width: 22px; height: 22px; border-radius: 50%; background: #10101b; box-shadow: 12px 0 0 #777788 }
+.card { position: absolute; width:215px; height:134px; border-radius:4px; background:#203f49; border:2px solid #182f39; overflow:hidden; color:#ffe2a9; }
+.frame-art { position:absolute; inset:17px 9px 18px; overflow:hidden; background:linear-gradient(#d66650,#ffab68 76%,#ffc987); }
+.frame-art::before { content:''; position:absolute; left:22%; top:10%; width:48px; height:48px; background:#fff0b6; border-radius:50%; }
+.frame-art::after { content:''; position:absolute; inset:26% -8% -3%; background:linear-gradient(164deg,#377481 0 48%,#204553 48% 65%,#e7a170 65% 70%,#356c73 70%); clip-path:polygon(0 37%,23% 13%,48% 59%,75% 22%,90% 42%,100% 34%,100% 100%,0 100%); }
+.card small { position:absolute; bottom:2px; left:9px; font:8px monospace; letter-spacing:1px; }
+.perfs { position:absolute; top:5px; left:9px; right:9px; height:5px; background:repeating-linear-gradient(90deg,#ffe8b6 0 6px,transparent 6px 15px); }
 #mini { top: 55px; left: 48px }
 #fields { position: absolute; left: 17px; right: 17px; bottom: 17px; font-size: 11px; color: #525665 }
 #fields p { margin: 11px 0 4px; font-weight: bold }
 .input, .choice { border: 1px solid #e0e1e8; padding: 7px; border-radius: 4px }
 .choices { display: flex; gap: 5px }
 .choice { width: 50%; line-height: 1.36; font-size: 9px }
-.choice:first-child { border-color: #7050da }
+.choice:first-child { border-color: #27736f }
 footer { display: flex; justify-content: flex-end; gap: 9px; align-items: center; margin-top: 11px; font-size: 10px }
-footer b { color: white; background: #6950e5; padding: 8px 12px; border-radius: 4px }
+footer b { color: white; background: #266e68; padding: 8px 12px; border-radius: 4px }
 #hand { position: absolute; width: 38px; height: 41px; filter: drop-shadow(1px 2px 1px #23233346); }
 #hero { left: 372px; top: 111px; transform-origin: 50% 50% }
-#stripe-back { position: absolute; inset: 0; background: linear-gradient(135deg,#361d8b,#966cbf) }
-#stripe-back::after { content: ''; position: absolute; top: 19px; left: 0; right: 0; height: 29px; background: #272335 }
+#stripe-back { position: absolute; inset: 0; background: repeating-linear-gradient(135deg,#24505b 0 12px,#356671 12px 14px) }
+#stripe-back::after { content: ''; position: absolute; top: 19px; left: 0; right: 0; height: 29px; background: #e8cca1 }
 #stat { position: absolute; top: 140px; left: 586px; }
-#stat strong { font-size: 164px; line-height: .88; font-weight: 400; letter-spacing: -12px; }
+#stat strong { font-size: 164px; line-height: .88; font-family: Georgia,serif; font-weight: 500; letter-spacing: -9px; }
 #stat span { display: block; margin: 13px 0 0 5px; font-size: 27px; line-height: 1.03; letter-spacing: -1px }
 #rule { position: absolute; right: 69px; bottom: 74px; width: 296px; height: 1px; background: #9694a3 }
 </style>
@@ -38,16 +40,16 @@ footer b { color: white; background: #6950e5; padding: 8px 12px; border-radius: 
 <body>
 <main id="film" data-composition-id="main" data-width="960" data-height="540" data-start="0" data-duration="5" data-fps="24">
   <div class="layer" id="interface" data-start="0" data-duration="5" data-track-index="0">
-    <div id="launch">▧ &nbsp; Create scene</div>
+    <div id="launch">▧ &nbsp; Frame a shot</div>
     <div id="form">
-      <div class="topline"><span>◈ &nbsp; Create scene</span><span>×</span></div>
-      <div id="mini" class="card"><small>OM</small><i></i></div>
-      <div id="fields"><p>Scene name</p><div class="input">Studio card</div><p>Format</p><div class="choices"><div class="choice">Digital<br>Ready for your timeline.</div><div class="choice">Physical<br>Adapt for your next cut.</div></div><footer>Back <b>Create scene</b></footer></div>
+      <div class="topline"><span>◈ &nbsp; Frame a shot</span><span>×</span></div>
+      <div id="mini" class="card"><i class="perfs"></i><div class="frame-art"></div><small>OM FILM &nbsp; / &nbsp; COAST 03</small></div>
+      <div id="fields"><p>Scene name</p><div class="input">Coast study</div><p>Format</p><div class="choices"><div class="choice">Landscape<br>Wide release print.</div><div class="choice">Portrait<br>Vertical release print.</div></div><footer>Back <b>Frame a shot</b></footer></div>
     </div>
   </div>
   <div class="layer" id="result" data-start="0" data-duration="5" data-track-index="1">
-    <div id="hero" class="card"><small>OM</small><i></i><div id="stripe-back"></div></div>
-    <div id="stat"><strong>5s</strong><span>of editable<br>motion</span></div><div id="rule"></div>
+    <div id="hero" class="card"><i class="perfs"></i><div class="frame-art"></div><small>OM FILM &nbsp; / &nbsp; COAST 03</small><div id="stripe-back"></div></div>
+    <div id="stat"><strong>03</strong><span>Coast study<br>OpenMotion Films</span></div><div id="rule"></div>
   </div>
   <svg id="hand" viewBox="0 0 32 36" data-start="0" data-duration="5" data-track-index="2" aria-label="Pointer"><path fill="white" stroke="#161723" stroke-width="2" d="M12 30 3 19q-3-5 2-5l6 5L6 6q-1-5 3-4l7 13-2-8q2-4 4 0l3 7-1-6q2-3 4 1l2 6 0-3q3-3 4 1l1 9-5 10-9 2Z"/></svg>
 </main>
