@@ -21,7 +21,7 @@ export type EditableTemplate = GalleryTemplate & { files?: TemplateFile[]; catal
 const builtinTemplates = libraryTemplates.filter(template => template.kind === 'builtin');
 const hash = (value: string | Buffer) => createHash('sha256').update(value).digest('hex');
 
-async function atomicWrite(filename: string, content: string): Promise<void> {
+async function atomicWrite(filename: string, content: string | Buffer): Promise<void> {
   await mkdir(path.dirname(filename), { recursive: true });
   const temporary = filename + '.' + randomUUID();
   await writeFile(temporary, content);
@@ -155,10 +155,19 @@ export class TemplateCatalog {
   private async downloadFile(file: TemplateFile): Promise<Buffer> {
     const url = new URL(file.url);
     if (url.protocol !== 'https:' || url.hostname !== 'r.open-design.ai' || !url.pathname.startsWith('/files/')) throw new Error('模板文件地址无效');
+    const cachedPath = path.join(this.directory, 'files', hash(file.url));
+    const matches = (bytes: Buffer) => bytes.length === file.bytes && hash(bytes) === file.sha256;
+    try {
+      const cached = await readFile(cachedPath);
+      if (matches(cached)) return cached;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    }
     const response = await this.request(url, { redirect: 'error', signal: AbortSignal.timeout(30_000) });
     if (!response.ok) throw new Error(`模板文件下载失败：${file.path}（HTTP ${response.status}）`);
     const bytes = Buffer.from(await response.arrayBuffer());
-    if (bytes.length !== file.bytes || hash(bytes) !== file.sha256) throw new Error(`模板文件校验失败：${file.path}`);
+    if (!matches(bytes)) throw new Error(`模板文件校验失败：${file.path}`);
+    await atomicWrite(cachedPath, bytes);
     return bytes;
   }
 
@@ -167,11 +176,19 @@ export class TemplateCatalog {
     if (!template.files?.some(file => file.path === 'index.html')) throw new Error('模板缺少 index.html');
     for (const file of template.files) {
       if (!file.path || path.isAbsolute(file.path) || file.path.includes('\\') || file.path.split('/').some(part => !part || part === '..' || part === '.')) throw new Error('模板文件路径无效');
-      const bytes = await this.downloadFile(file);
-      const target = path.join(directory, file.path);
-      await mkdir(path.dirname(target), { recursive: true });
-      await writeFile(target, bytes, { flag: 'wx' });
     }
+    const files = template.files.values();
+    const workers = await Promise.allSettled(Array.from({ length: Math.min(4, template.files.length) }, async () => {
+      for (const file of files) {
+        const bytes = await this.downloadFile(file);
+        const target = path.join(directory, file.path);
+        await mkdir(path.dirname(target), { recursive: true });
+        await writeFile(target, bytes, { flag: 'wx' });
+      }
+    }));
+    // Settle all writes before the caller removes a failed project directory.
+    const failed = workers.find(result => result.status === 'rejected');
+    if (failed) throw failed.reason;
   }
 }
 
