@@ -377,12 +377,95 @@ OpenMotion introduces **Motion.md**, a Markdown format for a film’s shot order
 
 The Brand Kit section holds the logo, palette, type, voice and approved product facts. Story, motion, sound and review notes describe what should survive a change of brand. Give the file to your agent alongside your assets when starting a new cut.
 
-| Resource from the current Library | What it contributes |
+![Brand and motion rules guide the agent. A Skill supplies the adaptation method, and the project holds the editable source and assets.](docs/readme/diagrams/creative-context.svg)
+
+<a id="resources-to-start-from"></a>
+
+#### 891 creative resources
+
+Explore **42 full-length reference films and 393 motion clips** for shot timing and transitions. When you’re ready to build a scene in HTML, the Studio library also includes **210 blocks, 238 components and 8 code examples**.
+
+| What you want to do | Where to start |
 | --- | --- |
-| [Brand material for Motion.md](library/brandkits/openmotion/BRANDKIT.md) | An example source for the Brand Kit section: facts, identity, voice and approved assets |
-| [Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) | A reusable motion design direction |
-| [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) | Six source profiles: wireframe titles, canopy typography, UI reveals, dimensional code, particle assembly and glass cards |
-| [Presenter Story](library/skills/presenter-story/SKILL.md) | Three design recipes for speech-led videos |
+| Give your agent a production workflow | [Five core Skills](docs/skills.md) cover direction, recreation, template adaptation, template creation and editing through export. [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) includes six editable studies. [Presenter Story](library/skills/presenter-story/SKILL.md) has three recipes for speech-led videos. |
+| Reuse a title, transition or interface reveal | [Motion components](library/components/README.md) include source and timing notes. Try the [title reveal](library/components/title-reveal/README.md) with your own copy and entrance timing. |
+| Give your agent brand and motion rules | Use the [Brandkit Skill](library/skills/brandkit/SKILL.md) to collect [logos, voice and product facts](library/brandkits/openmotion/BRANDKIT.md) for the Brand Kit section of Motion.md. [Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) shows how to write a reusable visual and motion style. |
+
+##### Editable Studio templates
+
+OpenMotion also ships three editable projects. In Studio, choose one under **Templates → Ready to edit** to create your own copy.
+
+| [Product Promo · 20s](template-library/product-promo/) | [NYT Graph · 15s](template-library/nyt-graph/) | [Decision Tree · 10s](template-library/decision-tree/) |
+| --- | --- | --- |
+| [![Product Promo template preview](template-library/product-promo/poster.jpg)](template-library/product-promo/) | [![NYT Graph template preview](template-library/nyt-graph/poster.jpg)](template-library/nyt-graph/) | [![Decision Tree template preview](template-library/decision-tree/poster.jpg)](template-library/decision-tree/) |
+| Swap in your product screenshots, headline and end card. | Replace the figures, units and annotations. | Change the question, branches and reveal order. |
+
+For a presenter-led video with screen demonstrations, the [Presenter Tech template package](library/templates/presenter-tech/README.md) includes its own local runner.
+
+<a id="motion-gallery"></a>
+
+##### Reference films and motion components
+
+Select a preview to watch the clip. Entries marked “View component” also link to their HTML source.
+
+<table>
+<tr><th colspan="3" align="left">Reusable motion components</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="docs/readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="docs/readme/gallery/app-showcase.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
+<strong>App Showcase</strong><br>
+<sub>Component · <a href="library/components/showcase/app-showcase/index.html">View component</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="docs/readme/gallery/glass-shard-title.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
+<strong>Glass Shard Title</strong><br>
+<sub>Component · <a href="library/components/showcase/glass-shard-title/index.html">View component</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="docs/readme/gallery/flight-map.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
+<strong>NYC Paris Flight</strong><br>
+<sub>Component · <a href="library/components/showcase/nyc-paris-flight/index.html">View component</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">Product and brand films</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="docs/readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
+<strong>Pond: a new Linux OS</strong><br>
+<sub>Reference · <a href="docs/readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="docs/readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
+<strong>Cyera brand video</strong><br>
+<sub>Reference · <a href="docs/readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="docs/readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
+<strong>Glyph: GPU typography for the web</strong><br>
+<sub>Reference · <a href="docs/readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">Light and loops</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="docs/readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="docs/readme/gallery/iskra-light.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
+<strong>Iskra Light</strong><br>
+<sub>Reference · <a href="docs/readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="docs/readme/gallery/linear-loops.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
+<strong>Linear Loops</strong><br>
+<sub>Reference · <a href="docs/readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="docs/readme/gallery/aurora.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
+<strong>Aurora</strong><br>
+<sub>Component · <a href="library/components/showcase/aurora/index.html">View component</a></sub>
+</td>
+</tr>
+</table>
+
+[Browse all 18 library picks](docs/collections/README.md#catalog-picks) · [Media sources and reuse](docs/readme/RESOURCES.md)
 
 #### Share an editable remake
 
@@ -391,17 +474,7 @@ The Brand Kit section holds the logo, palette, type, voice and approved product 
 3. **Show what worked.** Share the original reference and your remake, matching-time comparisons where appropriate, actual checks and remaining differences.
 4. **Contribute and remix.** Open a PR with one complete folder. Let others fork the package, adapt it to their brand and contribute improvements with new examples.
 
-[Library entry checklist](library/ENTRY_TEMPLATE.md) · [Six editable studies](docs/motion-design-examples.md)
-
-<a id="resources-to-start-from"></a>
-
-**891 creative resources** in the [catalog snapshot](web/catalog/hyperframes.json): 42 reference films, 393 motion clips, 210 blocks, 238 components and 8 examples. Use them to find a starting point for your own Motion.md.
-
-<a id="motion-gallery"></a>
-
-[18 catalog previews](docs/collections/README.md#catalog-picks) · [Editable templates](library/templates/README.md)
-
-[Motion.md format](docs/motion-md.md)
+[Library entry checklist](library/ENTRY_TEMPLATE.md) · [Six editable studies](docs/motion-design-examples.md) · [Motion.md format](docs/motion-md.md)
 
 <a id="all-in-one-studio"></a> <a id="full-video-creation-stack"></a>
 
@@ -565,11 +638,13 @@ Both entry paths use the same local application and project. The agent runs in i
 
 ### System architecture
 
-**HTML is the editable video source; MP4 is the rendered delivery.** OpenMotion combines a TypeScript application, a React Studio, agent workflows, multimodal generation adapters and a browser-based composition and rendering engine. The project is the shared artifact between the human editor and the agent.
+Editing the timeline in Studio and asking your agent to change a shot both update the same HTML project. The local TypeScript service manages media and revisions. A browser-based rendering engine exports the selected version to MP4.
 
 #### How the modules work together
 
-![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and a fixed project snapshot is rendered and verified.](docs/readme/diagrams/runtime-architecture.svg)
+![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and the renderer exports and checks the selected project version.](docs/readme/diagrams/runtime-architecture-painterly.png)
+
+Edits made through the project tools include a revision check so an outdated request cannot overwrite newer work. Generated media enters the project when you select it. Each export uses the version saved when the job starts. The exporter checks the file specifications, and you can play the cut to review the picture, sound and timing.
 
 <details>
 <summary>Read the full architecture and roadmap as text</summary>
@@ -611,7 +686,7 @@ Generated candidates -> preview / select -> adopt into the project
                                                  |
                                                  v
 RENDER AND VERIFY
-Fixed project snapshot -> HTML render engine + Chromium -> FFmpeg / FFprobe
+Selected project version -> HTML render engine + Chromium -> FFmpeg / FFprobe
                                                  |
                                                  v
 DELIVERY TODAY

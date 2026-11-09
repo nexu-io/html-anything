@@ -14,7 +14,7 @@ Pick a film for the decision you want to borrow: how it opens, how it reveals a 
 | [Firecrawl Free Keyless · 32s](../readme/media/remix-firecrawl-reference.mp4) | A developer-tool announcement. How much screen time goes to the promise versus the demonstration? | @ericciarla · Hyperframes reference `hf-reference-remix-firecrawl` |
 | [Firecrawl integration reveal · 5s](../readme/media/M945-clip.mp4) | A single beat from a launch: a headline number gives way to the integration ecosystem. | [Original post by @ericciarla](https://x.com/ericciarla/status/2093375835679977570) · `hf-moment-M945` |
 
-These are viewing references from the [catalog snapshot](../../web/catalog/hyperframes.json). An entry here does not grant rights to reuse its footage. Credit the original and bring your own brand assets.
+Study the shot timing and transitions, then use your own footage and credit the original creator. The [media index](../readme/RESOURCES.md) lists sources and reuse notes.
 
 ## Open an editable project
 

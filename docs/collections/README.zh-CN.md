@@ -14,7 +14,7 @@
 | [Firecrawl Free Keyless · 32 秒](../readme/media/remix-firecrawl-reference.mp4) | 一支开发者工具发布片，如何分配产品主张与功能演示的时间？ | @ericciarla；Hyperframes 参考编号 `hf-reference-remix-firecrawl` |
 | [Firecrawl 集成展示 · 5 秒](../readme/media/M945-clip.mp4) | 单看一个转场：如何从醒目的数字过渡到集成伙伴的展示？ | [@ericciarla 原帖](https://x.com/ericciarla/status/2093375835679977570)；编号 `hf-moment-M945` |
 
-来源可在[目录快照](../../web/catalog/hyperframes.json)中查到。这里收录的是观看参考；改编时保留作者出处，使用自己的品牌素材。
+可以借鉴参考片的镜头节奏和转场，改编时请使用自己的素材并注明原作者。[素材索引](../readme/RESOURCES.md)列有来源和使用说明。
 
 ## 打开可编辑工程
 

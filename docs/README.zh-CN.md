@@ -377,12 +377,95 @@ OpenMotion 首次定义了 **Motion.md**：用 Markdown 记录镜头顺序、时
 
 Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信息。叙事、动效、声音和审阅规则说明换品牌时要保留哪些创作决定。开新片时，把这份文件和自己的素材一起交给 Agent。
 
-| 当前 Library 资源 | 提供什么 |
+![Motion.md 记录品牌、分镜、动效和声音。Skill 提供改编方法，工程包含可编辑源码与素材。](readme/diagrams/creative-context.svg)
+
+<a id="resources-to-start-from"></a>
+
+#### 891 项创作资源
+
+选镜头、找转场时，可以从 **42 支完整参考片和 393 段动效**里找灵感。要用 HTML 搭建画面，Studio 资源库还收录了 **210 个区块、238 个组件和 8 个代码示例**。
+
+| 创作时需要什么 | 可用资源 |
 | --- | --- |
-| [OpenMotion Brandkit](../library/brandkits/openmotion/BRANDKIT.md) | 品牌事实、视觉身份、表达口吻和素材的示例 |
-| [Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md) | 可复用的动效设计方向 |
-| [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md) | 六种源码 profile：线框标题、树冠字体、界面揭示、立体代码、粒子组装和玻璃卡片 |
-| [Presenter Story](../library/skills/presenter-story/SKILL.md) | 三份以真人讲述为主的视频设计配方 |
+| 让 Agent 按一套方法制作视频 | [五个核心制作 Skills](skills.md)涵盖导演、复刻、模板改编、模板制作和剪辑导出。[动效改编 Skill](../library/skills/motion-design-remix/SKILL.md) 附六个可编辑示例，[真人讲述 Skill](../library/skills/presenter-story/SKILL.md) 提供三种口播编排方式。 |
+| 复用一个标题、转场或界面揭示 | [动效组件](../library/components/README.md)包含可单独取用的源码与时序说明。[标题入场示例](../library/components/title-reveal/README.md)展示如何替换文案和调整入场时间。 |
+| 把品牌和动效规则交给 Agent | 用 [Brandkit Skill](../library/skills/brandkit/SKILL.md) 整理品牌资料，把 [Logo、语气和产品信息](../library/brandkits/openmotion/BRANDKIT.md)写进 Motion.md 的 Brand Kit 章节。[Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md) 展示了一套可复用的视觉与动效规则。 |
+
+##### 可直接编辑的 Studio 模板
+
+OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to edit** 中选择模板，就能创建自己的副本。
+
+| [Product Promo · 20 秒](../template-library/product-promo/) | [NYT Graph · 15 秒](../template-library/nyt-graph/) | [Decision Tree · 10 秒](../template-library/decision-tree/) |
+| --- | --- | --- |
+| [![产品宣传片模板预览](../template-library/product-promo/poster.jpg)](../template-library/product-promo/) | [![柱状图模板预览](../template-library/nyt-graph/poster.jpg)](../template-library/nyt-graph/) | [![决策树模板预览](../template-library/decision-tree/poster.jpg)](../template-library/decision-tree/) |
+| 换上产品截图、标题和片尾文案。 | 换成自己的数据、单位和注释。 | 换掉问题和分支，调整答案出现的顺序。 |
+
+需要把真人讲述和屏幕演示剪在一起时，可以使用带本地运行工具的 [Presenter Tech 模板包](../library/templates/presenter-tech/README.md)。
+
+<a id="motion-gallery"></a>
+
+##### 精选参考片与动效组件
+
+点击预览即可观看片段。标有「查看组件」的条目还可以打开 HTML 源码。
+
+<table>
+<tr><th colspan="3" align="left">可复用的动效组件</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="readme/gallery/app-showcase.gif" width="300" alt="目录动态预览：App Showcase"></picture></a><br>
+<strong>App Showcase</strong><br>
+<sub>组件 · <a href="../library/components/showcase/app-showcase/index.html">查看组件</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="readme/gallery/glass-shard-title.gif" width="300" alt="目录动态预览：Glass Shard Title"></picture></a><br>
+<strong>Glass Shard Title</strong><br>
+<sub>组件 · <a href="../library/components/showcase/glass-shard-title/index.html">查看组件</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="readme/gallery/flight-map.gif" width="300" alt="目录动态预览：NYC Paris Flight"></picture></a><br>
+<strong>NYC Paris Flight</strong><br>
+<sub>组件 · <a href="../library/components/showcase/nyc-paris-flight/index.html">查看组件</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">产品与品牌参考片</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="readme/gallery/pond.gif" width="300" alt="目录动态预览：Pond: a new Linux OS"></picture></a><br>
+<strong>Pond: a new Linux OS</strong><br>
+<sub>参考 · <a href="readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="readme/gallery/cyera.gif" width="300" alt="目录动态预览：Cyera brand video"></picture></a><br>
+<strong>Cyera brand video</strong><br>
+<sub>参考 · <a href="readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="readme/gallery/glyph.gif" width="300" alt="目录动态预览：Glyph: GPU typography for the web"></picture></a><br>
+<strong>Glyph: GPU typography for the web</strong><br>
+<sub>参考 · <a href="readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">光影与循环动效</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="readme/gallery/iskra-light.gif" width="300" alt="目录动态预览：Iskra Light"></picture></a><br>
+<strong>Iskra Light</strong><br>
+<sub>参考 · <a href="readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="readme/gallery/linear-loops.gif" width="300" alt="目录动态预览：Linear Loops"></picture></a><br>
+<strong>Linear Loops</strong><br>
+<sub>参考 · <a href="readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="readme/gallery/aurora.gif" width="300" alt="目录动态预览：Aurora"></picture></a><br>
+<strong>Aurora</strong><br>
+<sub>组件 · <a href="../library/components/showcase/aurora/index.html">查看组件</a></sub>
+</td>
+</tr>
+</table>
+
+[浏览全部 18 项精选资源](collections/README.zh-CN.md#catalog-picks) · [查看素材来源与使用说明](readme/RESOURCES.md)
 
 #### 分享可编辑的复刻工程
 
@@ -391,17 +474,7 @@ Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信�
 3. **展示实际结果。** 分享原参考、改编、适用时的对应时刻对比、实际检查和剩余差异。
 4. **贡献与改编。** 用完整文件夹发起 PR，让其他人 Fork、换品牌，并带着新示例贡献改进。
 
-[资源提交清单](../library/ENTRY_TEMPLATE.md) · [六个可编辑示例](motion-design-examples.zh-CN.md)
-
-<a id="resources-to-start-from"></a>
-
-[参考目录快照](../web/catalog/hyperframes.json)收录了 **891 项创作资源**：42 支参考片、393 段动效、210 个区块、238 个组件和 8 个示例。可以用它们为自己的 Motion.md 选镜头、找转场。
-
-<a id="motion-gallery"></a>
-
-[18 个资源预览](collections/README.zh-CN.md#catalog-picks) · [可编辑模板](../library/templates/README.md)
-
-[Motion.md 格式说明](motion-md.zh-CN.md)
+[资源提交清单](../library/ENTRY_TEMPLATE.md) · [六个可编辑示例](motion-design-examples.zh-CN.md) · [Motion.md 格式说明](motion-md.zh-CN.md)
 
 <a id="all-in-one-studio"></a> <a id="full-video-creation-stack"></a>
 
@@ -574,11 +647,13 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 ### 系统架构
 
-**HTML 是可编辑视频源码，MP4 是渲染交付物。** OpenMotion 组合 TypeScript 应用、React Studio、Agent 工作流、多模态生成适配器与浏览器合成渲染引擎。工程是人和 Agent 共用的作品。
+在 Studio 调整时间轴，或让 Agent 修改镜头，编辑的都是同一份 HTML 工程。TypeScript 本地服务管理素材和版本，浏览器渲染引擎把选定版本导出为 MP4。
 
 #### 各模块如何协同
 
-![本地 Agent 通过九个 MCP 工程工具连接，Studio 通过本地 HTTP 接入。应用管理版本、素材与导出任务，Model Gateway 向工程提供媒体，并对固定快照渲染和验证。](readme/diagrams/runtime-architecture.svg)
+![本地 Agent 通过九个 MCP 工程工具连接，Studio 通过本地 HTTP 接入。应用管理版本、素材与导出任务，Model Gateway 向工程提供媒体，渲染器导出并校验选定的工程版本。](readme/diagrams/runtime-architecture-painterly.png)
+
+Agent 通过工程工具写入时会核对版本，避免旧请求覆盖刚完成的修改。生成的素材由你选定后加入工程。每次导出都使用发起导出时的版本，之后的编辑留给下一版。导出器检查文件规格，画面、声音和节奏可以通过播放成片确认。
 
 <details>
 <summary>查看完整架构与路线图文字说明</summary>
@@ -612,7 +687,7 @@ Codex Image / Atlas Cloud / fal.ai          |
 生成候选 → 预览 / 选择 → 显式采用到工程 ────┘
                             ↓
 渲染与验证
-固定工程快照 → HTML 引擎 + Chromium → FFmpeg / FFprobe
+选定的工程版本 → HTML 引擎 + Chromium → FFmpeg / FFprobe
                             ↓
 当前交付
 MP4 + 可编辑源码 + 素材 + 版本和导出证据
