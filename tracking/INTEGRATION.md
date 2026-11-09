@@ -154,8 +154,11 @@ The current installation identity may retain `utm_source`; landing-to-installer
 `--source` propagation is separate work and an unknown source remains null. An event
 addition must not claim that acquisition plumbing is already implemented.
 
-GeoIP country/first-level region/geographic timezone are added by the OM PostHog
-receiver before IP discard. Do not add client IP lookups or collect IP in callers.
+Events go to the existing OpenDesign project (420348), with `product=openmotion`.
+Filter OM queries by that property and exclude OM from unrelated shared reports.
+An OM-only receiver transformation preserves coarse GeoIP and removes raw IP and
+precise location after the existing GeoIP transformation; non-OM events are unchanged.
+Do not add client IP lookups or collect IP in callers.
 Device timezone is separate from GeoIP timezone; VPN/proxy egress may differ.
 See [configuration, privacy and limits](README.md) and [coarse GeoIP](posthog-geoip.hog).
 
@@ -218,8 +221,8 @@ Keep test-run UUIDs stable for one run and start a fresh UUID for another. Do no
 override a user's saved preference or remove their force-off variables to make a
 test pass. Use a separately owned test launch; record an intentional opt-out case.
 
-Exercise the actual action, then query the exact `test_run_id` in the OpenMotion
-PostHog project. A read-authorized connector/account is needed; the distributed
+Exercise the actual action, then query the exact `test_run_id` and `product=openmotion`
+in the OpenDesign PostHog project. A read-authorized connector/account is needed; the distributed
 public capture token cannot query events. For example, replace the UUID below:
 
 ```sql

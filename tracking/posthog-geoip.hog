@@ -1,27 +1,39 @@
-// OpenMotion GeoIP: coarse region only. Project IP discard must be enabled.
-if (event.properties?.$geoip_disable or empty(event.properties?.$ip)) {
+// OpenMotion only: enrich coarse location, then remove IP and precise GeoIP.
+if (event.properties?.product != 'openmotion') {
     return event
 }
-let location := geoipLookup(event.properties.$ip)
-if (not location) {
-    return event
+let props := {}
+for (let key, value in event.properties) {
+    if (key != '$ip' and key != '$set' and key != '$set_once' and not startsWith(key, '$geoip_')) {
+        props[key] := value
+    }
 }
-let returnEvent := event
-if (location.country) {
-    returnEvent.properties.$geoip_country_code := location.country.isoCode
-    returnEvent.properties.$geoip_country_name := location.country.names?.en
-}
-if (location.location) {
-    returnEvent.properties.$geoip_time_zone := location.location.timeZone
-}
-let regionSet := false
-if (location.subdivisions) {
-    for (let index, region in location.subdivisions) {
-        if (not regionSet) {
-            returnEvent.properties.$geoip_subdivision_1_code := region.isoCode
-            returnEvent.properties.$geoip_subdivision_1_name := region.names?.en
-            regionSet := true
+props.$geoip_disable := true
+props.$process_person_profile := false
+props.location_source := 'unknown'
+if (not event.properties?.$geoip_disable and not empty(event.properties?.$ip)) {
+    let location := geoipLookup(event.properties.$ip)
+    if (location) {
+        props.location_source := 'geoip'
+        if (location.country) {
+            props.$geoip_country_code := location.country.isoCode
+            props.$geoip_country_name := location.country.names?.en
+        }
+        if (location.location) {
+            props.$geoip_time_zone := location.location.timeZone
+        }
+        let regionSet := false
+        if (location.subdivisions) {
+            for (let index, region in location.subdivisions) {
+                if (not regionSet) {
+                    props.$geoip_subdivision_1_code := region.isoCode
+                    props.$geoip_subdivision_1_name := region.names?.en
+                    regionSet := true
+                }
+            }
         }
     }
 }
+let returnEvent := event
+returnEvent.properties := props
 return returnEvent

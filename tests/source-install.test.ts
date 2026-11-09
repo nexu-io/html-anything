@@ -20,7 +20,7 @@ test('public Motion sources contain no company endpoints, workstation paths or e
     if (file === 'shared/tracking-config.json') {
       const config = JSON.parse(content);
       assert.deepEqual(Object.keys(config).sort(), ['geoip', 'host', 'projectId', 'token']);
-      assert.equal(config.projectId, 722078); assert.equal(config.host, 'https://us.i.posthog.com');
+      assert.equal(config.projectId, 420348); assert.equal(config.host, 'https://us.i.posthog.com');
       assert.equal(config.geoip, true); assert.match(config.token, /^phc_[A-Za-z0-9_]+$/);
     } else assert(!/phc_[A-Za-z0-9]{20,}/.test(content), 'Embedded upstream ingest identifier in ' + file);
     const users = [...content.matchAll(/\/Users\/([\w.-]+)\//g)].map(match => match[1]);

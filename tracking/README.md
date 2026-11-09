@@ -9,8 +9,10 @@ For new events, start with the [integration guide and agent task template](INTEG
 
 ## Reporting and user control
 
-Reporting is **on by default** using the isolated OpenMotion project. The single
-public, write-only project token and ingestion host are distributed in
+Reporting is **on by default** into the existing OpenDesign project (420348).
+OM events carry `product=openmotion`; OM reports must filter by that property,
+and shared-project reports must distinguish OM from other products. The project's
+public, write-only token and ingestion host are distributed in
 `shared/tracking-config.json`; it contains no read/admin credentials and is never
 included in the browser bundle. Users do not need to supply a key or opt-in flag.
 
@@ -30,6 +32,10 @@ For another collector, supply both `OPENMOTION_POSTHOG_HOST` and
 `OPENMOTION_POSTHOG_KEY`. Partial or invalid configuration fails closed. Custom
 collectors default to zero-IP mode; `OPENMOTION_GEOIP=1` requires that collector to
 discard IP after enrichment. Never supply a personal `phx_` API key.
+
+Keep the OM-only receiver transformation active while geo-enabled clients report
+to this shared project. Before removing it, stop OM collection or switch those
+clients to zero-IP mode. Do not revoke the shared OpenDesign token as an OM rollback.
 
 Use `OPENMOTION_TRACKING_ENV=test` and a UUID in
 `OPENMOTION_TRACKING_TEST_RUN_ID` for isolated ingestion checks; filter these records
@@ -56,17 +62,21 @@ a separate change. Unknown source remains null.
 
 Common fields include schema/product/app version, environment, entrypoint/runtime,
 platform/architecture, OS/version, runtime locale, device IANA timezone and UTC offset
-(east of UTC is positive). The default project runs [coarse GeoIP](./posthog-geoip.hog)
-before the **Discard client IP data** setting removes the IP from stored events.
-Only country code/name, first-level region code/name and geographic timezone are
-added. No city, postal code, coordinates or person-location updates are generated.
+(east of UTC is positive). After OpenDesign's existing GeoIP transformation, the
+[OM-only transformation](./posthog-geoip.hog) matches `product=openmotion`, derives
+country/first-level region/geographic timezone and removes raw IP, precise GeoIP
+and person-location updates before storage. The transformation has both an event
+filter and a source-code guard; non-OM events pass through unchanged. Existing
+OpenDesign transformations and the project's global IP setting are unchanged.
 Lookup failures leave geographic fields unknown. GeoIP describes the observable
 network egress; VPNs/proxies can change it. Device timezone is a separate setting.
 Network intermediaries still see the connection address. Operators must keep the
-project's IP-discard policy enabled; it is a receiver requirement, not a guarantee
-enforced by a public capture token. Custom zero-IP mode retains the fixed address
-`0.0.0.0`, because a null property is replaced with the request IP. Person profiles,
-autocapture, session replay and upstream engine telemetry are not enabled.
+OM transformation enabled after GeoIP; it is a receiver requirement, not a guarantee
+enforced by a public capture token. The earlier standalone OM project's test data
+is retained and is not migrated or deleted. Custom zero-IP mode retains the fixed address
+`0.0.0.0`, because a null property is replaced with the request IP. OM requests no
+person profiles and emits no autocapture or session replay; other OpenDesign
+producers retain their own settings. Upstream engine telemetry stays disabled.
 
 Runtime and TypeScript event contracts whitelist required fields, enums, UUIDs and
 bounded counts. No prompts, messages, source files, URLs, local paths, titles, raw
