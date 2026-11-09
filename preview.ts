@@ -20,12 +20,13 @@ export type PreviewRuntime = {
   attempts: number;
 };
 
-async function probe(port: number): Promise<Probe> {
+export async function probe(port: number): Promise<Probe> {
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/health`, { signal: AbortSignal.timeout(1200) });
     if (!response.ok) return { kind: 'busy' };
     const health = await response.json() as Health;
-    return health.service === 'motion-preview' && health.protocol === 2 && health.ready && typeof health.dataDirectory === 'string'
+    // Preserve authority identity so discovery can reject it before launching another backend.
+    return health.service === 'motion-preview' && typeof health.dataDirectory === 'string'
       ? { kind: 'motion', health } : { kind: 'busy' };
   } catch (error) {
     const code = (error as { cause?: { code?: string } }).cause?.code;
@@ -88,7 +89,7 @@ export async function openPreview(store = new WorkspaceStore(), environment: Pre
     const port = await registeredPort(store);
     if (port) {
       const found = await probe(port);
-      existingLegacy = found.kind === 'motion' && found.health.version === VERSION && path.resolve(found.health.dataDirectory) === store.directory;
+      existingLegacy = found.kind === 'motion' && found.health.protocol === 2 && found.health.ready && found.health.version === VERSION && path.resolve(found.health.dataDirectory) === store.directory;
     }
   }
   if (sharedEditorEnabled && environment === runtime && !existingLegacy) {
