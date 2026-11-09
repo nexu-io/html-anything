@@ -4,7 +4,7 @@
 
 **逆向拆解任何视频，让本地 Agent 将它复刻成自己的品牌作品。** 上传视频或粘贴社媒链接，换成自己的素材，在 Studio 里继续剪辑并导出 MP4。
 
-[先看 5 秒原片与复刻对照](docs/README.zh-CN.md#brand-before-after) · [看多模态模型](docs/README.zh-CN.md#model-wall) · [开始使用](docs/README.zh-CN.md#quick-start) · [完整中文 README](docs/README.zh-CN.md)
+[Claude、OpenAI、Kimi、DeepSeek Harness 和 Stripe · 五组复刻对照](docs/README.zh-CN.md#brand-before-after) · [看多模态模型](docs/README.zh-CN.md#model-wall) · [开始使用](docs/README.zh-CN.md#quick-start) · [完整中文 README](docs/README.zh-CN.md)
 
 ## 致谢 / Acknowledgements
 
