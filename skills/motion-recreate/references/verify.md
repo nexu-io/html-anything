@@ -14,7 +14,7 @@ Inspect representative frames of the exported file at the delivered size:
 
 ## 3. Measure with numbers
 
-Looking is not enough, and this step cannot be skipped or recorded as "not run". Pick at least three moments: the opening title, the densest middle frame and the end card. For each one, view both frames at the delivered size and run the measurer bundled with this Skill (the Skill directory is the one holding this Skill's `SKILL.md`):
+Looking is not enough, and this step cannot be skipped or recorded as "not run". Measure at least one moment in every segment you found while reading the reference (the parts between cuts and major changes), including the opening, the densest frame and the ending frame (or the end card when there is one). In a segment that moves, such as a zoom, camera move or transition, pick a moment in the middle of the movement, not a hold before or after it. For each moment, view both frames at the delivered size and run the measurer bundled with this Skill (the Skill directory is the one holding this Skill's `SKILL.md`):
 
 ```sh
 node <skill directory>/scripts/measure_frame.mjs reference.mp4 remix.mp4 --t <remix seconds> --ref-t <reference seconds> [--region x,y,w,h --ref-region x,y,w,h]
