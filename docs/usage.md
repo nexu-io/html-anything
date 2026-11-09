@@ -35,7 +35,7 @@ Studio 与 MCP 共用这套模型和任务服务。云 Key 的填写不等于已
 
 ## 一期 MCP 发布范围
 
-[一期 9 Tool 契约与实现范围](mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露 9 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，五个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
+[一期 11 Tool 契约与实现范围](mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露 9 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，五个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
 
 ## 产品与文档
 
@@ -221,7 +221,7 @@ npm test
 npm run package:plugin
 ```
 
-`npm run dev` 先构建编辑器再启动服务；只改前端后可运行 `npm run build:studio` 并刷新页面。`npm run test:studio` 运行上游单元/DOM 回归与宿主集成测试；`npm run typecheck:studio` 检查前端类型；`npm run design:check` 检查主题变量与对比度。`check` 校验清单、版本、锁定依赖、技能入口、服务 TypeScript 语法及设计规范。测试覆盖原生源文件共享、并发 revision、路径隔离、旧工程迁移、Studio 编辑数据快照、真实 stdio MCP、原生 Studio HTTP 接口、完整目录与同源版本、封面筛选、短指令与参数化指南、三个官方模板的打开/编辑/切换/保留和带音轨的真实 MP4 渲染。没有 FFmpeg 或 Chrome 的机器会跳过渲染集成测试；PR CI 的 phase1-package-e2e 独立任务安装 Chromium、FFmpeg/ffprobe，重新构建并隔离安装真实ZIP，自动跑全部9个Tool；依赖缺失或测试失败直接标红，日志与MP4证据保留14天。合并阻断须同时启用main的必需状态检查，配置与边界见[测试覆盖](mcp-phase1-tools.md#测试代码与ci范围)。
+`npm run dev` 先构建编辑器再启动服务；只改前端后可运行 `npm run build:studio` 并刷新页面。`npm run test:studio` 运行上游单元/DOM 回归与宿主集成测试；`npm run typecheck:studio` 检查前端类型；`npm run design:check` 检查主题变量与对比度。`check` 校验清单、版本、锁定依赖、技能入口、服务 TypeScript 语法及设计规范。测试覆盖原生源文件共享、并发 revision、路径隔离、旧工程迁移、Studio 编辑数据快照、真实 stdio MCP、原生 Studio HTTP 接口、完整目录与同源版本、封面筛选、短指令与参数化指南、三个官方模板的打开/编辑/切换/保留和带音轨的真实 MP4 渲染。没有 FFmpeg 或 Chrome 的机器会跳过渲染集成测试；PR CI 的 phase1-package-e2e 独立任务安装 Chromium、FFmpeg/ffprobe，重新构建并隔离安装真实ZIP，自动跑全部11个Tool；依赖缺失或测试失败直接标红，日志与MP4证据保留14天。合并阻断须同时启用main的必需状态检查，配置与边界见[测试覆盖](mcp-phase1-tools.md#测试代码与ci范围)。
 
 打包产物为 `dist/motion-0.6.2-phase1.zip`，包含编辑器构建产物、设计系统与字体许可、原生模板、完整目录与已校验封面、技能、lockfile、AGENTS.md、CLAUDE.md 和产品文档，排除个人媒体、草稿、node_modules 和原生程序。`bash scripts/install-motion.command` 可注册并安装本地插件，并按 Codex 实际解析的启动配置验证 MCP 握手；它不会重启 Codex。代码改动和打包不会自动替换用户已安装的插件版本。
 
@@ -233,7 +233,7 @@ Hyperframes 使用 Apache-2.0 许可证，依赖从 npm 官方包安装；其源
 
 ## Template production and reuse
 
-The phase-one plugin and all four local host adapters ship the five canonical motion-* Skills, including motion-template-to-video and motion-video-to-template. Existing workflow IDs remain stable; MCP Resources expose the same guidance and supporting references. The nine public Tools do not provide video comparison, reference downloading/analysis or ZIP packaging: these require available host capabilities. Legacy comparison handlers stay internal. Native HyperFrames source, local assets, previews and editing notes remain portable; human review decides visual acceptance.
+The phase-one plugin and all four local host adapters ship the five canonical motion-* Skills, including motion-template-to-video and motion-video-to-template. Existing workflow IDs remain stable; MCP Resources expose the same guidance and supporting references. The eleven public Tools do not provide video comparison, reference downloading/analysis or ZIP packaging: these require available host capabilities. Legacy comparison handlers stay internal. Native HyperFrames source, local assets, previews and editing notes remain portable; human review decides visual acceptance.
 
 The plugin name, install script, data directory and Studio ports are the team base, unchanged by this extension. See [scope](motion-extension-scope.md).
 

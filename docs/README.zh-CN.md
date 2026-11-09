@@ -72,13 +72,13 @@
 
 确认体验后，Agent 会按[模板出片流程](../skills/motion-template-to-video/SKILL.md)执行。宿主不支持在对话旁打开编辑器时，可以打开返回的本地工程链接。[安装与首次体验手册](usage.md#使用) · [其他 Agent 接入](agent-adapters.md)
 
-**需要更多素材时**，可以在 Studio 里通过已配置的模型网关请求图片、视频或音频，再选择放进工程的结果。模型调用使用自己的供应商账户，可能产生费用。[已验证能力](model-gateway.md) · [一期九个公开 MCP 工具](mcp-phase1-tools.md)
+**需要更多素材时**，可以在 Studio 里通过已配置的模型网关请求图片、视频或音频，再选择放进工程的结果。模型调用使用自己的供应商账户，可能产生费用。[已验证能力](model-gateway.md) · [一期11 个公开 MCP 工具](mcp-phase1-tools.md)
 
 素材弹框贴近触发按钮或时间轴选区，并随滚动和可用空间调整。空轨道进入生成时隐藏起步引导，插入后保持隐藏；关闭且未插入、或撤销至空轨道时恢复。[编辑交互说明](product/media-generation-design.md#时间轴交互规则及原因)
 
 ## MCP 与轻量安装
 
-[npm 轻量安装器](npm-installation.md) 可为 Codex、Claude Code、DeepSeek Harness、WorkBuddy 同装九个 MCP Tool 和五个 Skill，共用应用并按需准备经过校验的原生工具。运行 `npm run package:npm` 本地构建；npm 包尚未公开发布，完整 ZIP 保留备用。
+[npm 轻量安装器](npm-installation.md) 可为 Codex、Claude Code、DeepSeek Harness、WorkBuddy 同装11 个 MCP Tool 和五个 Skill，共用应用并按需准备经过校验的原生工具。运行 `npm run package:npm` 本地构建；npm 包尚未公开发布，完整 ZIP 保留备用。
 
 五个入口为 [motion-production](../skills/motion-production/SKILL.md)、[motion-director](../skills/motion-director/SKILL.md)、[motion-template-to-video](../skills/motion-template-to-video/SKILL.md)、[motion-recreate](../skills/motion-recreate/SKILL.md)、[motion-video-to-template](../skills/motion-video-to-template/SKILL.md)。参考复刻已实现；产品 UI 沿用 [OpenDesign 视觉规范](design-system.md)，视频作品保留自身样式。
 
@@ -89,3 +89,5 @@
 贡献一种风格时，请一并附上原片与作者、Motion MD、预览、可编辑源文件和素材授权说明。[贡献指南](../AGENTS.md) · [文档中心](README.md)
 
 **致谢与发布状态。** openmotion 使用 [Hyperframes](https://github.com/heygen-com/hyperframes) 的原生合成、Studio 基础与渲染能力。上游[编辑器](../studio/LICENSE)与[内置示例](../template-library/LICENSE)保留 Apache-2.0 许可。本公开仓库采用 [Apache-2.0](../LICENSE) 许可，随包组件和字体保留各自声明。开发目标为 [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion)；原 HTML Anything 应用仍在 `main`，并已留档到 [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy)。当前不发布包；详见[仓库流程](repository-migration.md)。
+
+模板界面和 Agent 共用 Prism 发布目录的本地缓存。`motion_list_templates` 返回本机 JSONL 路径，由 Agent 自行检索；`motion_get_template` 读取详情，`motion_create_project` 创建可编辑副本。`npm run dev` 默认接 DEV；正式包默认接线上，DEV 包用 `npm run package:phase1 -- --template-env=dev`。环境随包保存，界面和 MCP 共用，具体配置见[模板目录](template-catalog.md)。

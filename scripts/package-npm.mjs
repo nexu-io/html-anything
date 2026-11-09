@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { PUPPETEER_REVISIONS } from 'puppeteer-core';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
+import { packageTemplateConfig } from '../shared/template-config.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 export function checkReleaseLocks(pkg, lockfile, runtime) {
@@ -30,7 +31,8 @@ export function checkReleaseLocks(pkg, lockfile, runtime) {
   }
 }
 
-export async function packageNpm(output = path.join(root, 'dist/npm-local'), version) {
+export async function packageNpm(output = path.join(root, 'dist/npm-local'), version, templateEnvironment = 'prod') {
+  const templateConfig = packageTemplateConfig(templateEnvironment);
   output = path.resolve(output);
   if (version) assert.match(version, /^\d+\.\d+\.\d+-beta\.[1-9]\d*\.[1-9]\d*$/, 'Use a unique beta run and attempt');
   const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
@@ -49,6 +51,7 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
       await mkdir(path.dirname(path.join(application, name)), { recursive: true });
       await cp(path.join(root, name), path.join(application, name));
     }
+    await writeJSON(path.join(application, 'shared/template-config.json'), templateConfig);
     const skills = (await readdir(path.join(application, 'skills'))).sort();
     for (const name of ['runtime-assets.mjs', 'npm-runtime.mjs', 'npm-hosts.mjs', 'npm-installer.mjs']) await cp(path.join(root, 'scripts', name), path.join(installer, 'scripts', name));
     await chmod(path.join(installer, 'scripts/npm-installer.mjs'), 0o755);
@@ -65,12 +68,12 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
       plugin.version = version;
       await writeJSON(path.join(application, '.codex-plugin/plugin.json'), plugin);
     }
-    const archive = path.join(output, `openmotion-application-${pkg.version}.tar.gz`);
+    const archive = path.join(output, `openmotion-application-${pkg.version}${templateConfig.environment === 'dev' ? '-dev' : ''}.tar.gz`);
     await runFile(process.platform === 'win32' ? path.join(process.env.SystemRoot, 'System32/tar.exe') : 'tar', ['-czf', archive, '-C', application, '.'], { env: { ...process.env, COPYFILE_DISABLE: '1' } });
     const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
     const packed = JSON.parse(await runFile(process.execPath, [npm, 'pack', '--json', '--ignore-scripts', '--pack-destination', output], { cwd: installer }))[0];
     const installerFile = path.join(output, packed.filename);
-    const manifest = { schemaVersion: 1, version: pkg.version, format: 'npm',
+    const manifest = { schemaVersion: 1, version: pkg.version, format: 'npm', templateEnvironment: templateConfig.environment,
       commit: (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim(), run: process.env.GITHUB_RUN_ID || null, attempt: process.env.GITHUB_RUN_ATTEMPT || '1',
       application: { url: './' + path.basename(archive), sha256: await sha256(archive) },
       installer: { version: installerPkg.version, url: './' + packed.filename, sha256: await sha256(installerFile) },
@@ -82,4 +85,8 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
     return { installer: installerFile, installerBytes: packed.size, application: archive, manifest: manifestPath };
   } finally { await rm(temporary, { recursive: true, force: true }); }
 }
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) console.log(JSON.stringify(await packageNpm(process.argv[2], process.argv[3]), null, 2));
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const args = process.argv.slice(2), flag = args.find(arg => arg.startsWith('--template-env='));
+  const positional = args.filter(arg => arg !== flag);
+  console.log(JSON.stringify(await packageNpm(positional[0], positional[1], flag?.split('=')[1]), null, 2));
+}

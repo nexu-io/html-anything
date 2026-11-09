@@ -1,13 +1,13 @@
 {
   "name": "codex-motion-plugin",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": true,
   "type": "module",
   "engines": {
     "node": ">=22.18.0"
   },
   "scripts": {
-    "dev": "npm run build:studio && node --experimental-strip-types server.ts",
+    "dev": "npm run build:studio && node --env-file=.env.development --experimental-strip-types server.ts",
     "mcp": "node --experimental-strip-types mcp.ts",
     "start": "node --experimental-strip-types server.ts",
     "test": "node --experimental-strip-types --test tests/*.test.ts",

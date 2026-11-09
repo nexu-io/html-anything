@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
+import { packageTemplateConfig } from '../shared/template-config.ts';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
 // Git Bash tar interprets C: as a remote host; use Windows' native archive tool.
@@ -67,12 +68,14 @@ export async function prepare(target) {
   }
   return { runtime, node, env };
 }
-export async function build(target, version, profile = releaseProfile) {
+export async function build(target, version, profile = releaseProfile, templateEnvironment = 'prod') {
   const info = targetInfo(target);
+  const templateConfig = packageTemplateConfig(templateEnvironment);
   assert(/^\d+\.\d+\.\d+-beta\.\d+\.\d+$/.test(version), 'Only uniquely numbered beta packages are supported');
   const { mcpRegistry } = await import('../mcp.ts');
   const registry = mcpRegistry(profile);
-  const directory = path.join(root, 'dist', version), name = `OpenMotion-Codex-${version}-${target}`;
+  const suffix = templateConfig.environment === 'dev' ? '-dev' : '';
+  const directory = path.join(root, 'dist', version), name = `OpenMotion-Codex-${version}-${target}${suffix}`;
   const stage = path.join(directory, name), runtime = path.join(root, '.artifacts', 'test-runtime', target, 'runtime');
   await mkdir(directory, { recursive: true }); await mkdir(stage);
   for (const file of await distributionFiles(profile)) {
@@ -80,6 +83,7 @@ export async function build(target, version, profile = releaseProfile) {
     await cp(path.join(root, file), path.join(stage, file));
   }
   await writeFile(path.join(stage, 'shared/mcp-release.json'), JSON.stringify({ profile }, null, 2) + '\n');
+  await writeFile(path.join(stage, 'shared/template-config.json'), JSON.stringify(templateConfig, null, 2) + '\n');
   await cp(runtime, path.join(stage, 'runtime'), { recursive: true, verbatimSymlinks: true });
   for (const file of ['package.json', 'package-lock.json', '.codex-plugin/plugin.json']) {
     const filename = path.join(stage, file), json = JSON.parse(await readFile(filename, 'utf8'));
@@ -110,24 +114,25 @@ export async function build(target, version, profile = releaseProfile) {
     child.stdout.on('data', chunk => { value += chunk; }); child.once('error', reject);
     child.once('exit', code => code === 0 ? resolve(value.trim()) : reject(new Error('git rev-parse failed')));
   });
-  const metadata = { schemaVersion: 1, version, channel: 'prerelease', commit, run: process.env.GITHUB_RUN_ID || null,
+  const metadata = { schemaVersion: 1, version, channel: 'prerelease', templateEnvironment: templateConfig.environment, commit, run: process.env.GITHUB_RUN_ID || null,
     mcp: { profile, tools: registry.tools.map(tool => tool.name) },
     attempt: process.env.GITHUB_RUN_ATTEMPT || '1', target, minimumOS: info.minimumOS, builtOn: `${process.platform}-${process.arch}`,
     runtime: { node: lock.node, chromium: lock.chromium, ffmpeg: lock.ffmpeg, hyperframes: lock.hyperframes } };
   await writeFile(path.join(stage, 'release.json'), JSON.stringify(metadata, null, 2) + '\n');
   await cp(path.join(root, 'docs/test-packages.md'), path.join(stage, 'INSTALL.md'));
   const archive = path.join(directory, name + '.zip');
-  await run('zip', ['-q', '-r', '-y', '-UN=UTF8', archive, name], { cwd: directory, env: { ...process.env, ...(process.platform === 'linux' ? { LC_ALL: 'C.UTF-8' } : {}) } });
+  await run('zip', ['-q', '-r', '-y', ...(process.platform === 'linux' ? ['-UN=UTF8'] : []), archive, name], { cwd: directory, env: { ...process.env, ...(process.platform === 'linux' ? { LC_ALL: 'C.UTF-8' } : {}) } });
   const sum = await sha256(archive);
   await writeFile(archive + '.sha256', `${sum}  ${path.basename(archive)}\n`);
   const result = { ...metadata, files: [{ name: path.basename(archive), sha256: sum, platform: target.split('-')[0], arch: info.arch, kind: 'archive' }] };
-  await writeFile(path.join(directory, `release-${target}.json`), JSON.stringify(result, null, 2) + '\n');
+  await writeFile(path.join(directory, `release-${target}${suffix}.json`), JSON.stringify(result, null, 2) + '\n');
   return { archive, stage, ...result };
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const [command, target, version, profile] = process.argv.slice(2);
+  const args = process.argv.slice(2), flag = args.find(arg => arg.startsWith('--template-env='));
+  const [command, target, version, profile] = args.filter(arg => arg !== flag);
   if (command === 'prepare') console.log(JSON.stringify(await prepare(target)));
-  else if (command === 'build') console.log(JSON.stringify(await build(target, version, profile)));
+  else if (command === 'build') console.log(JSON.stringify(await build(target, version, profile, flag?.split('=')[1])));
   else if (command === 'version') console.log(testVersion(JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')).version, target, version));
-  else throw new Error('Usage: test-package.mjs prepare <target> | build <target> <beta-version> [legacy|phase1] | version <run> <attempt>');
+  else throw new Error('Usage: test-package.mjs prepare <target> | build <target> <beta-version> [legacy|phase1] [--template-env=dev|prod] | version <run> <attempt>');
 }

@@ -76,14 +76,13 @@ test('the shipped snapshot and grouped variants retain per-post counts and prove
   assert.ok(listTemplates({ query: 'Instagram', limit: 60 }).items.some(item => item.id === 'hf-reference-aroll-careerwithriya' && !item.social));
 });
 
-test('HTTP and MCP expose the same source statistics for the selected ID', async () => {
+test('legacy MCP preserves shipped source statistics for the selected ID', async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-template-metadata-'));
   try {
     const store = new WorkspaceStore(directory), request = transport(store);
     const snapshot = JSON.parse(await readFile(new URL('../web/catalog/metadata.json', import.meta.url), 'utf8'));
-    const page = await (await request('/motion-api/template-catalog?query=hf-moment-M953')).json();
     const detail = await callTool('motion_get_template', { templateId: 'hf-moment-M953' }, store) as ReturnType<typeof getTemplate>;
-    assert.equal(page.items[0].social.views, snapshot.entries.find(entry => entry.id === 'hf-moment-M953').views); assert.deepEqual(page.items[0].social, detail.social);
+    assert.equal(detail.social!.views, snapshot.entries.find(entry => entry.id === 'hf-moment-M953').views);
     assert.equal(detail.authorName, 'Leon Fucak'); assert.equal(detail.role, 'hook');
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

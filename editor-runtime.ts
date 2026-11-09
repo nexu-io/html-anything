@@ -6,13 +6,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WorkspaceStore, Conflict } from './workspace.ts';
 import { isMain } from './shared/entry.ts';
+import { templateConfig } from './shared/template-config.ts';
 
 export const sharedEditorEnabled = process.platform === 'darwin';
 const root = fileURLToPath(new URL('./', import.meta.url));
 const version = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')).version;
 const runtimeFiles = ['package-lock.json', 'scripts/npm-runtime.mjs', 'scripts/runtime-assets.mjs', 'scripts/runtime-lock.json', 'scripts/verify-export.ts', ...readdirSync(root).filter(file => file.endsWith('.ts')),
   ...['shared', 'gateway'].flatMap(folder => readdirSync(path.join(root, folder)).filter(file => /\.(ts|mjs|pl|json)$/.test(file)).map(file => folder + '/' + file))].sort();
-export const editorBuild = createHash('sha256').update(runtimeFiles.map(file => file + '\n' + readFileSync(path.join(root, file))).join('\n')).digest('hex');
+export const editorBuild = createHash('sha256').update(runtimeFiles.map(file => file + '\n' + readFileSync(path.join(root, file))).join('\n')).update(JSON.stringify(templateConfig())).digest('hex');
 const service = 'opendesign-editor', protocol = 1;
 export type EditorRegistry = { service: string; protocol: number; version: string; build: string; instanceId: string; pid: number; dataDirectory: string; endpoint: string; token: string };
 export type Selection = { projectId?: string | null; sessionId?: string };

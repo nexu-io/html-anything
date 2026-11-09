@@ -60,3 +60,20 @@ it('switching filters clears previous results and offers retry on a failed reque
   expect(container.querySelector('[role="alert"]')?.textContent).toContain('offline');
   expect(button('重试')).toBeTruthy();
 });
+
+it('Prism templates open as editable projects and published catalog changes refresh the list', async () => {
+  let version = 'first';
+  fetcher.mockImplementation(async () => Response.json({
+    items: [{ ...builtin, id: 'hf-moment-M1147', kind: 'prism', title: version === 'first' ? 'Figma 模板' : '更新后的模板' }],
+    total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null, catalogVersion: version,
+  }));
+  await render();
+  expect(container.textContent).toContain('Figma 模板');
+  await act(async () => button('打开并编辑').click());
+  expect(state.open).toHaveBeenCalledWith('templates', 'hf-moment-M1147');
+  version = 'second';
+  await act(async () => { await vi.advanceTimersByTimeAsync(5_000); });
+  await act(async () => { await vi.advanceTimersByTimeAsync(1); });
+  expect(container.textContent).toContain('更新后的模板');
+  expect(state.open).toHaveBeenCalledTimes(1);
+});
