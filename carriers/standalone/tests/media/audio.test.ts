@@ -1,0 +1,287 @@
+import { randomUUID } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { browser } from "@odsuite/automation";
+import { channel, namespace } from "@odsuite/protocol";
+import { observeProcesses, readDirectory } from "@odsuite/sidecar";
+import { expect, it } from "vitest";
+import { open } from "@";
+
+function wave() {
+  const rate = 8000,
+    samples = rate * 4,
+    b = Buffer.alloc(44 + samples * 2);
+  b.write("RIFF");
+  b.writeUInt32LE(b.length - 8, 4);
+  b.write("WAVEfmt ", 8);
+  b.writeUInt32LE(16, 16);
+  b.writeUInt16LE(1, 20);
+  b.writeUInt16LE(1, 22);
+  b.writeUInt32LE(rate, 24);
+  b.writeUInt32LE(rate * 2, 28);
+  b.writeUInt16LE(2, 32);
+  b.writeUInt16LE(16, 34);
+  b.write("data", 36);
+  b.writeUInt32LE(samples * 2, 40);
+  for (let i = 0; i < samples; i++)
+    b.writeInt16LE(Math.round(Math.sin((2 * Math.PI * 440 * i) / rate) * 8192), 44 + i * 2);
+  return b;
+}
+const files = () => [
+  {
+    path: "index.html",
+    content:
+      '<html><body><main data-composition-id="main" data-width="640" data-height="360" data-duration="10"><section data-hf-id="hf-a" style="position:absolute;left:0;top:0" data-composition-id="card" data-composition-src="scenes/card.html" data-start="0" data-duration="4"></section><section data-hf-id="hf-b" style="position:absolute;left:280px;top:0" data-composition-id="card" data-composition-src="scenes/card.html" data-start="5" data-duration="4"></section></main><script>window.__timelines={main:gsap.timeline({paused:true}).to({},{duration:10})};</script></body></html>',
+  },
+  {
+    path: "scenes/card.html",
+    content:
+      '<template><main data-composition-id="card" data-width="240" data-height="180" data-duration="4"><p data-hf-id="hf-title" data-start="0" data-duration="4">Audio source controls</p></main><script>window.__timelines=window.__timelines||{};window.__timelines.card=gsap.timeline({paused:true}).to({},{duration:4});</script></template>',
+  },
+];
+it("edits native audio source/gain/mute atomically through lost responses, history, shared clocks and cold restore", async () => {
+  const evidence = fileURLToPath(new URL(`../../../../.artifacts/audio-browser/${randomUUID()}/`, import.meta.url)),
+    root = join(evidence, "sidecar"),
+    scope = { channel: channel("dev"), namespace: namespace("audio-browser") },
+    report: Record<string, unknown> = {};
+  await mkdir(evidence, { recursive: true });
+  let runtime: Awaited<ReturnType<typeof open>> | undefined, driver: Awaited<ReturnType<typeof browser>> | undefined;
+  const external = new Set<string>();
+  try {
+    runtime = await open({ root, scope, version: "0.6.1-dev.1" });
+    const session = await runtime.execute("session_create", {
+        requestId: randomUUID(),
+        title: "Audio editing",
+        mode: "motion",
+      }),
+      artifact = await runtime.execute("artifact_create", {
+        requestId: randomUUID(),
+        sessionId: session.id,
+        title: "Source window and gain",
+        files: files(),
+      }),
+      owner = { sessionId: session.id, artifactId: artifact.id },
+      state = await runtime.execute("workspace_state", {});
+    await runtime.execute("artifact_open", {
+      requestId: randomUUID(),
+      ...owner,
+      expectedSelection: state.selection.revision,
+      expectedCurrent: null,
+    });
+    driver = await browser({ evidence, viewport: { width: 1600, height: 1100 } });
+    const page = driver.page;
+    page.setDefaultTimeout(10000);
+    page.on("request", (request) => {
+      const u = new URL(request.url());
+      if (["http:", "https:"].includes(u.protocol) && !["127.0.0.1", "localhost", "[::1]"].includes(u.hostname))
+        external.add(u.origin);
+    });
+    const ready = () =>
+        page
+          .locator("[aria-live]")
+          .filter({ hasText: /^就绪$/ })
+          .waitFor(),
+      shown = () => page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
+    const click = async (name: string) => {
+      await page.getByRole("button", { name, exact: true }).click();
+      await ready();
+    };
+    const read = () => {
+        if (!runtime) throw Error("missing runtime");
+        return runtime.execute("project_read", owner);
+      },
+      frame = () => page.frameLocator("iframe:not([hidden])"),
+      audio = (scope = "hf-a") => frame().locator(`[data-open-motion-instance="${scope}"] audio`);
+    const enter = async (id: string) => {
+      await page.getByLabel("合成实例", { exact: true }).selectOption(id);
+      await click("进入合成");
+      await expect.poll(() => page.getByLabel("合成上下文", { exact: true }).getAttribute("data-instance")).toBe(id);
+      await shown();
+    };
+    const seek = async (local: number, global: number, source: number, scope = "hf-a") => {
+      await page.getByLabel("定位秒", { exact: true }).fill(String(local));
+      await click("定位");
+      await expect
+        .poll(async () => Number(await page.getByLabel("全局播放时间", { exact: true }).textContent()))
+        .toBeCloseTo(global, 2);
+      await expect
+        .poll(() => audio(scope).evaluate((node) => (node as HTMLAudioElement).currentTime))
+        .toBeCloseTo(source, 1);
+    };
+    await page.goto((await runtime.status()).web);
+    await ready();
+    await shown();
+    await enter("hf-a");
+    await page.getByRole("tab", { name: "媒体", exact: true }).click();
+    await page
+      .getByLabel("导入媒体", { exact: true })
+      .setInputFiles({ name: "tone.wav", mimeType: "audio/wav", buffer: wave() });
+    await ready();
+    await click("插入 tone.wav");
+    await shown();
+    await seek(0.5, 0.5, 0.5);
+    await page.getByRole("tab", { name: "图层", exact: true }).click();
+    const track = () => page.locator("[data-clip-id]").filter({ hasText: "音频" });
+    await track().press("Enter");
+    await ready();
+    await page.getByLabel("持续秒", { exact: true }).fill("2");
+    await page.getByLabel("源入点秒", { exact: true }).fill("1");
+    await page.getByLabel("音量", { exact: true }).fill("0.25");
+    await page.getByLabel("静音", { exact: true }).check();
+    const prior = await page.locator("iframe:not([hidden])").getAttribute("src");
+    await page.route("**/api/project_save", async (route) => {
+      await route.fetch();
+      await route.abort("failed");
+    });
+    await page.getByRole("button", { name: "应用更改", exact: true }).click();
+    await expect.poll(() => page.getByRole("button", { name: "重试", exact: true }).isEnabled()).toBe(true);
+    expect(await page.locator("iframe:not([hidden])").getAttribute("src")).toBe(prior);
+    expect(await audio().evaluate((node) => (node as HTMLAudioElement).volume)).toBe(1);
+    expect((await read()).files.find((file) => file.path === "scenes/card.html")?.content).toContain(
+      'data-media-start="1"',
+    );
+    await driver.capture("committed-audio-save-lost-response");
+    await page.unrouteAll({ behavior: "wait" });
+    await click("重试");
+    await shown();
+    await seek(0.5, 0.5, 1.5);
+    await expect
+      .poll(() =>
+        audio().evaluate((node) => ({
+          volume: (node as HTMLAudioElement).volume,
+          muted: (node as HTMLAudioElement).muted,
+          duration: (node as HTMLAudioElement).duration,
+        })),
+      )
+      .toEqual({ volume: 0.25, muted: true, duration: 4 });
+    expect(
+      (await read()).files.find((file) => file.path === "scenes/card.html")?.content.match(/<audio\b/g),
+    ).toHaveLength(1);
+    await page.getByLabel("静音", { exact: true }).uncheck();
+    await click("应用更改");
+    await shown();
+    await seek(0.5, 0.5, 1.5);
+    await expect.poll(() => audio().evaluate((node) => (node as HTMLAudioElement).muted)).toBe(false);
+    await click("播放");
+    await expect.poll(() => audio().evaluate((node) => (node as HTMLAudioElement).currentTime)).toBeGreaterThan(1.6);
+    await click("暂停");
+    await expect.poll(() => audio().evaluate((node) => (node as HTMLAudioElement).paused)).toBe(true);
+    await page.getByLabel("音量", { exact: true }).fill("0");
+    await click("应用更改");
+    await shown();
+    await expect.poll(() => audio().evaluate((node) => (node as HTMLAudioElement).volume)).toBe(0);
+    expect(await page.getByLabel("音量", { exact: true }).inputValue()).toBe("0");
+    await click("撤销");
+    await shown();
+    await expect.poll(() => audio().evaluate((node) => (node as HTMLAudioElement).volume)).toBe(0.25);
+    await click("重做");
+    await shown();
+    await expect.poll(() => audio().evaluate((node) => (node as HTMLAudioElement).volume)).toBe(0);
+    await click("撤销");
+    await shown();
+    await page.getByLabel("源入点秒", { exact: true }).fill("2");
+    await click("应用更改");
+    await shown();
+    await seek(0.5, 0.5, 2.5);
+    expect(await page.getByLabel("开始秒", { exact: true }).inputValue()).toBe("0");
+    expect(await page.getByLabel("持续秒", { exact: true }).inputValue()).toBe("2");
+    const beforeInvalid = await read(),
+      confirmedFrame = await page.locator("iframe:not([hidden])").getAttribute("src");
+    await page.getByLabel("源入点秒", { exact: true }).fill("3");
+    await page.getByRole("button", { name: "应用更改", exact: true }).click();
+    await expect.poll(() => page.getByRole("button", { name: "重试", exact: true }).isEnabled()).toBe(true);
+    expect((await read()).revision).toBe(beforeInvalid.revision);
+    expect(await page.locator("iframe:not([hidden])").getAttribute("src")).toBe(confirmedFrame);
+    expect(await page.getByLabel("源入点秒", { exact: true }).inputValue()).toBe("3");
+    await page.getByLabel("持续秒", { exact: true }).fill("1");
+    await click("应用更改");
+    await shown();
+    await seek(0.5, 0.5, 3.5);
+    await track().press("Alt+Shift+ArrowRight");
+    await ready();
+    await shown();
+    expect(await page.getByLabel("持续秒", { exact: true }).inputValue()).toBe("1");
+    await click("主合成");
+    await enter("hf-b");
+    await seek(0.5, 5.5, 3.5, "hf-b");
+    await track().press("Enter");
+    await ready();
+    expect(await page.getByLabel("源入点秒", { exact: true }).inputValue()).toBe("3");
+    expect(await page.getByLabel("音量", { exact: true }).inputValue()).toBe("0.25");
+    await driver.capture("shared-audio-source-window-and-gain");
+    await page.getByRole("tab", { name: "文件", exact: true }).click();
+    await click("scenes/card.html");
+    const source = page.getByRole("textbox", { name: "scenes/card.html", exact: true });
+    await source.fill((await source.inputValue()).replace('data-source-duration="4"', 'data-source-duration="9"'));
+    await click("保存");
+    await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "verified resource" }).waitFor();
+    expect(await audio("hf-b").evaluate((node) => (node as HTMLAudioElement).currentTime)).toBeCloseTo(3.5, 1);
+    await click("撤销");
+    await shown();
+    await click("预览");
+    const saved = await read();
+    expect(saved.files.find((file) => file.path === "index.html")).toEqual(files()[0]);
+    expect(saved.resources).toHaveLength(1);
+    const asset = saved.resources[0];
+    if (!asset) throw Error("missing audio resource");
+    expect(
+      (await runtime.execute("resource_read", { ...owner, revision: saved.revision, path: asset.path })).data ===
+        wave().toString("base64"),
+    ).toBe(true);
+    await page.reload();
+    await ready();
+    await shown();
+    await runtime.close();
+    expect(await observeProcesses(root)).toHaveLength(0);
+    runtime = await open({ root, scope, version: "0.6.1-dev.1" });
+    expect((await read()).files).toEqual(saved.files);
+    expect((await read()).resources).toEqual(saved.resources);
+    await page.goto((await runtime.status()).web);
+    await ready();
+    await shown();
+    await enter("hf-b");
+    await seek(0.5, 5.5, 3.5, "hf-b");
+    await expect
+      .poll(() =>
+        audio("hf-b").evaluate((node) => ({
+          volume: (node as HTMLAudioElement).volume,
+          muted: (node as HTMLAudioElement).muted,
+        })),
+      )
+      .toEqual({ volume: 0.25, muted: false });
+    expect(driver.errors).toEqual([]);
+    expect([...external]).toEqual([]);
+    report.revision = saved.revision;
+    report.resourceDigest = asset.digest;
+    report.cases = [
+      "coupled-source-window-and-gain-mute",
+      "committed-save-lost-response-retry",
+      "native-play-pause-with-nonzero-source-clock",
+      "zero-gain-and-history",
+      "source-slip-without-window-movement",
+      "invalid-candidate-preserves-frame-and-fields",
+      "remaining-source-trim-bound",
+      "shared-instance-source-clock",
+      "verified-source-length-refusal",
+      "cold-source-and-byte-restoration",
+    ];
+  } catch (error) {
+    await driver?.capture("failure");
+    if (driver)
+      await writeFile(
+        join(evidence, "failure.txt"),
+        `${driver.errors.join("\n")}\n${await driver.page.locator("body").textContent()}`,
+      );
+    throw error;
+  } finally {
+    await driver?.close();
+    await runtime?.close();
+    expect((await readDirectory(root)).manager.phase).toBe("closed");
+    expect(await observeProcesses(root)).toHaveLength(0);
+    report.closed = true;
+    report.errors = driver?.errors ?? [];
+    report.externalOrigins = [...external];
+    await writeFile(join(evidence, "report.json"), JSON.stringify(report, null, 2));
+  }
+}, 60000);

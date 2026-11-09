@@ -45,7 +45,7 @@ const files = () => [
   },
 ];
 it("imports persistent media through retry, inserts once into shared source, decodes/plays native resources and restores history after cold restart", async () => {
-  const evidence = fileURLToPath(new URL(`../../../.artifacts/media-browser/${randomUUID()}/`, import.meta.url)),
+  const evidence = fileURLToPath(new URL(`../../../../.artifacts/media-browser/${randomUUID()}/`, import.meta.url)),
     root = join(evidence, "sidecar"),
     scope = { channel: channel("dev"), namespace: namespace("media-browser") },
     report: Record<string, unknown> = {};

@@ -6,6 +6,7 @@ guard:
       - carriers/*
       - carriers/electron/src/capsule
       - carriers/electron/tests/capsule
+      - carriers/standalone/tests/media
       - apps
       - suites
       - suites/*

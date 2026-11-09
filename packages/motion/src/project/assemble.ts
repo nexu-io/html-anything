@@ -44,9 +44,11 @@ class Identities extends Map<Element, BundledHostCompositionIdentity> {
   }
 }
 
+export type MediaFact = { path: string; type: "image/png" } | { path: string; type: "audio/wav"; duration: number };
+
 /** Pure snapshot assembly: no filesystem, network, engine process or persisted derived source. */
-export function assembleProject(sources: readonly Source[], resourcePaths: readonly string[] = []) {
-  const assets = new Set(resourcePaths);
+export function assembleProject(sources: readonly Source[], resources: readonly MediaFact[] = []) {
+  const assets = new Map(resources.map((resource) => [resource.path, resource]));
   const { graph, definitions, files } = prepareProject(sources);
   const document = parseHTMLContent(definitions.get(graph.entry)?.html ?? "");
   const result = inlineSubCompositions(document, [...document.querySelectorAll("[data-composition-src]")], {
@@ -92,6 +94,29 @@ export function assembleProject(sources: readonly Source[], resourcePaths: reado
     const path = posix.normalize(decoded);
     if (path === ".." || path.startsWith("../") || (!files.has(path) && !assets.has(path)))
       throw Error(`missing media resource: ${src}`);
+    const tag =
+        element.tagName.toLowerCase() === "source"
+          ? element.parentElement?.tagName.toLowerCase()
+          : element.tagName.toLowerCase(),
+      asset = assets.get(path);
+    if (asset) {
+      if (
+        tag === "img" || tag === "picture" ? asset.type !== "image/png" : tag !== "audio" || asset.type !== "audio/wav"
+      )
+        throw Error(`media type does not match source: ${src}`);
+      if (asset.type === "audio/wav") {
+        const declared =
+          (element.tagName.toLowerCase() === "source" ? element.parentElement : element)?.getAttribute(
+            "data-source-duration",
+          ) ?? null;
+        if (
+          declared !== null &&
+          (!declared.trim() || !Number.isFinite(Number(declared)) || Math.abs(Number(declared) - asset.duration) > 1e-8)
+        )
+          throw Error(`audio source duration does not match verified resource: ${src}`);
+      }
+    } else if ((tag !== "img" && tag !== "picture") || !path.toLowerCase().endsWith(".svg"))
+      throw Error(`unsupported text media source: ${src}`);
   }
   const html = document.toString();
   if (Buffer.byteLength(html) > 32 * 1024 * 1024) throw Error("assembled composition exceeds 32 MiB");

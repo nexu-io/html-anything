@@ -11,6 +11,21 @@ export const appearanceInput = z.strictObject({
     .optional(),
 });
 export type Appearance = z.infer<typeof appearanceInput>;
+export const audioInput = z
+  .strictObject({
+    inPoint: z.number().finite().min(0).max(3600).optional(),
+    volume: z.number().finite().min(0).max(1).optional(),
+    muted: z.boolean().optional(),
+  })
+  .refine((value) => Object.keys(value).length > 0, "audio changes must not be empty");
+export type AudioValues = z.infer<typeof audioInput>;
+export interface AudioState {
+  inPoint: number | null;
+  volume: number | null;
+  muted: boolean;
+  sourceDuration: number | null;
+  reason: string | null;
+}
 export const patchInput = inspectInput.extend({
   id: z.string().min(1).max(512),
   text: z.string().max(8000).optional(),
@@ -18,6 +33,7 @@ export const patchInput = inspectInput.extend({
   duration: z.number().finite().positive().optional(),
   fontSize: z.number().finite().positive().max(4096).optional(),
   appearance: appearanceInput.optional(),
+  audio: audioInput.optional(),
 });
 export type NativeValues = Omit<z.infer<typeof patchInput>, "html" | "id">;
 export const properties = ["x", "y", "rotation", "opacity", "scale"] as const;
@@ -115,7 +131,7 @@ export const editInput = z.discriminatedUnion("action", [
 ]);
 export type EditInput = z.infer<typeof editInput>;
 export interface Clip {
-  media?: { kind: "image" | "audio"; src: string; maximum: number | null };
+  media?: { kind: "image" | "audio"; src: string; maximum: number | null; audio?: AudioState };
   host?: { instance: string; source: string; maximum: number | null; reason: string | null };
   id: string;
   parent: string | null;
