@@ -17,6 +17,8 @@ export const distributionDocuments = [
   'docs/collections/README.md', 'docs/collections/README.zh-CN.md',
   'docs/examples/product-launch.MOTION.md', 'docs/examples/product-launch.MOTION.zh-CN.md',
   'docs/readme/ASSETS.md', 'docs/readme/opendesign-symbol.svg', 'docs/readme/hero.svg', 'docs/readme/hero.zh-CN.svg',
+  'docs/readme/agents/codex-badge.svg', 'docs/readme/agents/claude-code-badge.svg',
+  'docs/readme/agents/deepseek-harness-badge.svg', 'docs/readme/agents/workbuddy-badge.svg',
   'docs/readme/motion-md.svg', 'docs/readme/motion-md.zh-CN.svg', 'docs/readme/editor.jpg', 'docs/readme/workspace.jpg',
   'examples/README.md',
   'examples/reference-reveal/index.html', 'examples/reference-reveal/MOTION.md', 'examples/reference-reveal/MOTION.zh-CN.md',

@@ -23,7 +23,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 ## 对外主张与 Motion MD 方向
 
-README 中的产品展示名统一为 **OpenMotion**，标志沿用 OpenDesign 官网原件；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。OpenMotion 在 Codex 中帮助用户用自己的素材复刻科技品牌视频的动效，参考范围涵盖品牌形象片、产品演示与新品发布片。定位目标是成为最好的 Claude Motion 开源替代，以 Codex 工作流、品牌资产复用、参考风格复刻与可编辑工程支撑这一主张。“最好”是愿景，不代表已有比较评测结论。仓库的许可证见根目录 [LICENSE](../../LICENSE)，第三方素材保留各自的上游声明。
+README 中的产品展示名统一为 **OpenMotion**，标志沿用 OpenDesign 官网原件；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。OpenMotion 通过本地 stdio MCP 接入 Agent，帮助用户用自己的素材复刻科技品牌视频的动效，参考范围涵盖品牌形象片、产品演示与新品发布片。定位目标是成为最好的 Claude Motion 开源替代，以 Agent 工作流、品牌资产复用、参考风格复刻与可编辑工程支撑这一主张。“最好”是愿景，不代表已有比较评测结论。仓库的许可证见根目录 [LICENSE](../../LICENSE)，第三方素材保留各自的上游声明。
 
 [Motion MD](../motion-md.md) 是本轮加入的 **v0.1 格式提案**，描述来源、品牌、叙事、节奏、运动、素材、可修改项与验收信息。当前仅供用户显式交给 Agent 作为创作上下文；没有自动发现、解析、校验或注册接口。它不改变 HTML/CSS/JS 原生工程，也不替换现有 motion-video-to-template 的单份 `TEMPLATE.md` 交付约定。
 

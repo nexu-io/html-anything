@@ -1,5 +1,12 @@
-<h1 align="center">OpenMotion · 在 Codex 里逆向拆解视频<br />
+<h1 align="center">OpenMotion · 在任意 Agent 中逆向拆解视频<br />
 为自己的品牌复刻动效</h1>
+
+<p align="center">
+  <a href="#在-codex-里开始"><img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex 接入说明" /></a>
+  <a href="agent-adapters.md#codex--claude-code"><img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code 接入说明" /></a>
+  <a href="agent-adapters.md#deepseek-harness"><img src="readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness 接入说明" /></a>
+  <a href="agent-adapters.md#workbuddy"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy（预览）接入说明" /></a>
+</p>
 
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub 仓库星标数" /></a>
@@ -7,11 +14,9 @@
   <a href="../LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 许可证" /></a>
 </p>
 
-<p align="center">把 X 或 YouTube 视频链接贴进 Codex，或从 <strong><a href="#motion-资源库与主题合集">100+ 个可一键复刻的视频模板</a></strong>里选一支，参考 Figma、Linear、Firecrawl 等热门品牌的拍法。换上你的 Logo、产品截图和文案，导出 MP4，工程还能接着改。</p>
+<p align="center">给 Agent 一条 X 或 YouTube 链接，或从 <strong><a href="#motion-资源库与主题合集">100+ 个可一键复刻的视频模板</a></strong>里选一支，复刻 Figma、Linear 或 Firecrawl 的拍法。换上自己的品牌素材，在 Studio 里改镜头、导出 MP4。</p>
 
-<p align="center">首版开源了<strong><a href="../examples/reference-reveal/MOTION.zh-CN.md">Firecrawl 品牌宣传片的 MOTION.md 拆解</a></strong>。从大数字亮相、镜头拉远到 Logo 收尾，这 5 秒逐段标了时间，可以交给 Codex 复刻。</p>
-
-<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 15 秒演示</a></strong> · <strong><a href="#在-codex-里开始">在 Codex 里试用</a></strong></p>
+<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 15 秒 Codex 演示</a></strong> · <strong><a href="#接入你的-agent">接入你的 Agent</a></strong></p>
 
 <p align="center">
   <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenMotion-%E5%AE%98%E7%BD%91-bc334e?style=flat-square" alt="OpenMotion 官网" /></a>
@@ -27,15 +32,23 @@
   <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="安装插件，把 OpenAI 的 X 原帖贴进 Codex，打开 Studio 时间轴，再同步播放 5 秒原片与复刻。" />
 </picture></a></p>
 
+<p align="center">首版开源了<strong><a href="../examples/reference-reveal/MOTION.zh-CN.md">Firecrawl 品牌宣传片的 MOTION.md 拆解</a></strong>，从数字亮相到 Logo 收尾，每一拍都能对照原片。</p>
+
 <p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">看 OpenAI 的 X 原帖</a> · <a href="../examples/reference-reveal/comparison.mp4">Firecrawl 原片与复刻 · 5 秒对照</a> · <a href="#复用参考片的拍法">逐个看品牌复刻</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="collections/README.zh-CN.md">找参考片</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
-OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做成最好的 Claude Motion 开源替代。你可以从品牌形象片、产品演示或新品发布片开始。拆解一个镜头时，先看哪个元素动、产品在哪一拍出现、观众有多久读完标题。用我们提出的 Markdown 动效规范 **Motion MD** 记下这些决定，另一个团队就能带上自己的品牌素材复刻这套拍法。
+OpenMotion 是一款通过本地 MCP 接入 Agent 的开源动效设计插件，我们希望把它做成最好的 Claude Motion 开源替代。你可以从品牌形象片、产品演示或新品发布片开始。拆解一个镜头时，先看哪个元素动、产品在哪一拍出现、观众有多久读完标题。用我们提出的 Markdown 动效规范 **Motion MD** 记下这些决定，另一个团队就能带上自己的品牌素材复刻这套拍法。
 
 ## 复用参考片的拍法
 
 每组对照都是 5 秒。左边直接截自发布者上传到 X 的视频，右边是 OpenMotion 用独立工程导出的成片。两边原速同步，点开可以一起暂停、拖动。声音来自复刻工程。
+
+| 原片 · X | 5 秒同步对照 | 复刻工程 |
+| --- | --- | --- |
+| [Figma Draw](https://x.com/figma/status/1920168282751185360)<br />00:38–00:43 | <a href="../examples/wing-construction/comparison.mp4"><img src="../examples/wing-construction/comparison.jpg" width="300" alt="播放Figma Draw原片与Paperwing复刻的同步对照" /></a><br />[从蝴蝶拉远到整张海报](../examples/wing-construction/comparison.mp4) | **Paperwing**<br />[MP4](../examples/wing-construction/film.mp4) · [源码](../examples/wing-construction/index.html) |
+| [OpenAI](https://x.com/OpenAI/status/2084352161404920316)<br />00:26.5–00:31.5 | <a href="../examples/motion-studies/comparison.mp4"><img src="../examples/motion-studies/comparison.jpg" width="300" alt="播放OpenAI原片与OpenDesign复刻的同步对照" /></a><br />[点阵收拢成 Logo](../examples/motion-studies/comparison.mp4) | **OpenDesign**<br />[MP4](../examples/motion-studies/film.mp4) · [源码](../examples/motion-studies/index.html) |
+| [Firecrawl](https://x.com/ericciarla/status/2093375835679977570)<br />00:21–00:26 | <a href="../examples/reference-reveal/comparison.mp4"><img src="../examples/reference-reveal/comparison.jpg" width="300" alt="播放Firecrawl原片与OpenMotion复刻的同步对照" /></a><br />[数字揭晓后图标环绕](../examples/reference-reveal/comparison.mp4) | **OpenMotion**<br />[MP4](../examples/reference-reveal/film.mp4) · [源码](../examples/reference-reveal/index.html) |
 
 ### Figma Draw → Paperwing
 
@@ -46,8 +59,6 @@ OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做�
 
 在《Introducing Figma Draw》的 **00:38–00:43**，镜头从蝴蝶翅膀的填色面板拉远，露出整张海报。对照播到 **4.75 秒**，左边是 Figma 的 Nature Fest，右边用同样的拉远动作揭晓示例品牌 Paperwing 的 Wing Fest。
 
-[同步对照](../examples/wing-construction/comparison.mp4) · [12 秒 Paperwing 成片](../examples/wing-construction/film.mp4) · [可编辑源码](../examples/wing-construction/index.html) · [原片 @figma](https://x.com/figma/status/1920168282751185360)
-
 ### OpenAI → OpenDesign
 
 <p><a href="../examples/motion-studies/comparison.mp4"><picture>
@@ -56,8 +67,6 @@ OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做�
 </picture></a></p>
 
 取自 OpenAI 数学研究宣传片的片尾 **00:26.5–00:31.5**。图上的连线收成一个彩色光点。对照播到 **2.04 秒**，两边同时切到白底，分别打出 OpenAI 和 OpenDesign，再收成各自的 Logo。
-
-[同步对照](../examples/motion-studies/comparison.mp4) · [32 秒 OpenDesign 成片](../examples/motion-studies/film.mp4) · [可编辑源码](../examples/motion-studies/index.html) · [原片 @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
 
 ### Firecrawl → OpenMotion
 
@@ -68,11 +77,9 @@ OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做�
 
 这段取自 Firecrawl 联合创始人 Eric Ciarla 在 X 发布的《Firecrawl Free Keyless》，对应原片 **00:21–00:26**。参考片段用开发者人数开场，OpenMotion 换成内置示例的 20 秒时长。停在 **2.65 秒**，左侧公司标志环绕火焰，右侧工程素材环绕 OpenDesign 标志。
 
-[同步对照](../examples/reference-reveal/comparison.mp4) · [复刻成片](../examples/reference-reveal/film.mp4) · [可编辑源码](../examples/reference-reveal/index.html) · [原片 @ericciarla](https://x.com/ericciarla/status/2093375835679977570)
-
 **换个产品信息，还能保留这个节奏吗？** 我们在同一份工程里，把「00:00:20 · Product Promo」换成「00:00:15 · NYT Graph」，再导出了一版。两支片都长 5 秒。停在 0.8 秒能看到改过的数字和标题，停在 2.65 秒能看到卡片转到了相同位置。[看改稿后的第二版](../examples/reference-reveal/graph-cut.mp4)
 
-装好插件后，在 Codex 里打开存放品牌 Logo 和文案的文件夹，粘贴这段话就能试这个镜头。
+接入 OpenMotion 后，在 Agent 中打开存放品牌 Logo 和文案的文件夹，粘贴这段话就能试这个镜头。
 
 ```text
 用 OpenMotion 为我们的品牌复刻这条发布视频的 00:21–00:26。
@@ -103,11 +110,38 @@ https://x.com/ericciarla/status/2093375835679977570
 
 三支片均由插件实际导出，按静音观看设计。[查看工程素材、创作说明和本地复现步骤](../examples/README.md)
 
-## 在 Codex 里开始
+## 接入你的 Agent
 
-想复刻上面的镜头？安装后打开 Studio 的**模板库 → 视频复刻**，搜品牌或片段名称，点「一键复刻」。把复制的指令贴进 Codex，加上自己的 Logo、文案或配色。Codex 会在可编辑工程里制作，你可以在 Studio 时间轴预览、改稿，再导出 MP4。
+OpenMotion 在你的电脑上运行。选择能通过 stdio 启动本地 MCP 服务的 Agent 接入，即可在同一个 Studio 里继续编辑工程。
+
+| Agent | 怎么接入 |
+| --- | --- |
+| **Codex** | 安装插件，在 **Plugins → OpenDesign → Try now** 打开。[跟着演示安装](#在-codex-里开始) |
+| **Claude Code** | 给本地安装器加上 `--host claude`，注册 MCP 服务并安装 Skills。[本地插件接入方式](agent-adapters.md#codex--claude-code) |
+| **DeepSeek Harness** | 先为要使用的 profile 配好模型，再用 `--host deepseek` 接入。[Harness 配置说明](agent-adapters.md#deepseek-harness) |
+| **WorkBuddy** *（预览）* | 用 `--host workbuddy` 接入自定义 MCP 和 Skills。桌面端从导入到出片的完整流程仍待实机验证。[Connector 接入说明](agent-adapters.md#workbuddy) |
+
+<details>
+<summary>查看本地安装命令</summary>
+
+克隆 [feature/motion 分支](https://github.com/nexu-io/html-anything/tree/feature/motion)，在仓库根目录用 Node.js 22.18+ 和 npm 运行以下命令。这里以 Claude Code 为例，其他 Agent 可换成表里对应的宿主参数。
+
+```sh
+npm ci
+npm run package:npm
+npx --yes --package "$PWD/dist/npm-local/openmotion-installer-0.6.2-local.1.tgz" \
+  openmotion setup --host claude --manifest "$PWD/dist/npm-local/release.local.json"
+```
+
+[安装选项](npm-installation.md#构建与安装)
+
+</details>
+
+想复刻上面的镜头？安装后打开 Studio 的**模板库 → 视频复刻**，搜品牌或片段名称，点「一键复刻」。把复制的指令贴进 Agent，加上自己的 Logo、文案或配色。Agent 会生成可编辑工程，你可以在 Studio 时间轴预览、改稿，再导出 MP4。
 
 第一次可以直接用内置的 **Product Promo**，素材已经备好。[模板出片流程](../skills/motion-template-to-video/SKILL.md)
+
+### 在 Codex 里开始
 
 macOS 或 Linux 需要 Git、Node.js 22.18+（含 npm）和支持插件的 Codex CLI。导出 MP4 还需要 Chrome 或 Chromium，以及含 FFprobe 的 FFmpeg。[Windows 安装说明](test-packages.md)
 
@@ -120,7 +154,7 @@ cd OpenMotion && bash scripts/install-motion.command
 
 > 用 OpenMotion 在 Studio 里打开一份新的 20 秒 Product Promo 示例工程，并把它导出为 MP4。
 
-拿到第一版后，可以试着说：**“结尾标题多停两秒，再导出一版。”** 你也可以自己在 Studio 里拖动片段边缘。两种方式改的是同一份工程。[安装与首次体验手册](usage.md#使用) · [其他 Agent 安装方式](npm-installation.md)
+拿到第一版后，可以试着说：**“结尾标题多停两秒，再导出一版。”** 你也可以自己在 Studio 里拖动片段边缘。两种方式改的是同一份工程。[安装与首次体验手册](usage.md#使用)
 
 ![在 Studio 中打开的 Product Promo 示例，可见视频预览与可编辑时间轴。](readme/editor.jpg)
 
@@ -128,11 +162,11 @@ cd OpenMotion && bash scripts/install-motion.command
 
 项目里的 Logo 和截图可以直接用。需要另外生成图像、视频或声音素材时，可在 Studio「模型设置」中配置自己的 Atlas Cloud 或 fal.ai API Key，按媒体类型选择模型。[模型设置说明](model-gateway.md)
 
-| 你手头有什么 | 可以怎样告诉 Codex | 第一版出来后怎么改 |
+| 你手头有什么 | 可以怎样告诉 Agent | 第一版出来后怎么改 |
 | --- | --- | --- |
 | 一支参考片和品牌素材 | “保留从标题切到界面的那一拍，用我们的截图和字体。” | 把两支片并排看，微调产品亮相的时机。[复刻参考片](../skills/motion-recreate/SKILL.md) |
 | 一份喜欢的模板 | “用 Product Promo 的节奏，换掉开场文案和片尾。” | 在模板副本里改，下一次活动还可以从原版开始。[套用模板](../skills/motion-template-to-video/SKILL.md) |
-| 发布说明和一组截图 | “先说用户遇到的问题，再演示新功能，最后停在上线日期。” | 和 Codex 一起定镜头顺序，到 Studio 调整每个镜头的长度。[从创意做原片](../skills/motion-director/SKILL.md) |
+| 发布说明和一组截图 | “先说用户遇到的问题，再演示新功能，最后停在上线日期。” | 和 Agent 一起定镜头顺序，到 Studio 调整每个镜头的长度。[从创意做原片](../skills/motion-director/SKILL.md) |
 
 ## Motion MD
 
@@ -144,11 +178,11 @@ cd OpenMotion && bash scripts/install-motion.command
 | 1.5–4 秒 | 中央标志落定，外围卡片继续旋转。 | 你的品牌标志，以及围绕它的素材、功能或产品。 |
 | 4–5 秒 | 让同一个标志进入最后的交接镜头。 | 客户提供什么输入，最后得到什么结果。 |
 
-把 Markdown 文件和工程一起交给 Codex。它可以按这份说明改稿，实际动画保存在 HTML、CSS、JavaScript 和素材文件里。[Motion MD v0.1 草案](motion-md.zh-CN.md) · [本片的说明与两次导出](../examples/reference-reveal/MOTION.zh-CN.md)
+把 Markdown 文件和工程一起交给 Agent。它可以按这份说明改稿，实际动画保存在 HTML、CSS、JavaScript 和素材文件里。[Motion MD v0.1 草案](motion-md.zh-CN.md) · [本片的说明与两次导出](../examples/reference-reveal/MOTION.zh-CN.md)
 
 ## Motion 资源库与主题合集
 
-打开 Studio 的**模板库 → 视频复刻**。这里有 136 张参考卡片，同一原片的不同剪辑合并展示。可以先搜 **Figma Draw**、**Linear Loops** 或 **Firecrawl Free Keyless**。点卡片上的「一键复刻」，把复制的指令连同自己的品牌素材贴进 Codex。[浏览精选参考片](collections/README.zh-CN.md) · [查看模板库说明](template-catalog.md)
+打开 Studio 的**模板库 → 视频复刻**。这里有 136 张参考卡片，同一原片的不同剪辑合并展示。可以先搜 **Figma Draw**、**Linear Loops** 或 **Firecrawl Free Keyless**。点卡片上的「一键复刻」，把复制的指令连同自己的品牌素材贴进 Agent。[浏览精选参考片](collections/README.zh-CN.md) · [查看模板库说明](template-catalog.md)
 
 想学文字转场，可以搜 `hf-moment-M1147`。Figma 把一串「made in @figma」帖子变成贴纸，再吸附拼成自己的标志。目录在 2026 年 11 月 3 日记录到这条原帖约 **3,600 万次浏览**。[看 Figma 原片](https://x.com/figma/status/2001715747505233980)
 
