@@ -204,6 +204,11 @@ async function child(program: string, args: string[]) {
     stdio: ["pipe", "pipe", "pipe"],
   });
   const lines = createInterface({ input: process.stdout });
+  let stderr = "";
+  process.stderr.setEncoding("utf8");
+  process.stderr.on("data", (chunk: string) => {
+    stderr = (stderr + chunk).slice(-8192);
+  });
   const first = await new Promise<string>((done, reject) => {
     const timer = setTimeout(() => {
       process.kill("SIGKILL");
@@ -213,15 +218,19 @@ async function child(program: string, args: string[]) {
       clearTimeout(timer);
       reject(error);
     });
-    process.once("exit", () => {
+    process.once("exit", (code, signal) => {
       clearTimeout(timer);
-      reject(new Error("session fixture exited"));
+      reject(new Error(`session fixture exited (${code ?? signal}): ${stderr.trim()}`));
     });
     lines.once("line", (line) => {
       clearTimeout(timer);
       lines.close();
       done(line);
     });
+  }).catch(async (error) => {
+    await finish(process, "SIGKILL");
+    lines.close();
+    throw error;
   });
   return { process, first };
 }
@@ -232,8 +241,8 @@ async function finish(process: ChildProcess, signal: NodeJS.Signals = "SIGTERM")
   await ended;
 }
 const ownerProgram = `import {Client} from ${JSON.stringify(module)};
- const [endpoint,authority,scope,mode]=process.argv.slice(1);const c=new Client(endpoint,authority,200);
- await c.session(JSON.parse(scope),async scoped=>{console.log('entered');process.stdin.resume();
+ const [endpoint,authority,scope,mode]=process.argv.slice(1);const c=new Client(endpoint,authority);
+ await c.session(JSON.parse(scope),async scoped=>{console.log(JSON.stringify({phase:'entered',timeout:c.timeout}));process.stdin.resume();
    await new Promise(done=>process.stdin.once('data',()=>done()));});process.stdin.destroy();`;
 it("coordinates real independent controllers and retains an interrupted lane without timeout stealing", async () => {
   const root = await mkdtemp(join(tmpdir(), "session-process-"));
@@ -251,19 +260,29 @@ it("coordinates real independent controllers and retains an interrupted lane wit
     const first = await child(ownerProgram, [endpoint, authority, JSON.stringify(scope), "hold"]);
     children.push(first.process);
     const client = new Client(endpoint, authority);
+    const accepted = JSON.parse(first.first) as { phase: string; timeout: number };
+    expect(accepted).toEqual({ phase: "entered", timeout: client.timeout });
     const ready = await client.directory(scope);
     expect(ready.sessions[0]?.kind).toBe("remote");
     let entered = false;
-    const next = client.session(scope, async () => {
+    // The queued waiter's acquisition budget must outlive the owner's response deadline.
+    const waiter = new Client(endpoint, authority, client.timeout * 2);
+    const next = waiter.session(scope, async () => {
       entered = true;
     });
-    const nextRejected = expect(next).rejects.toThrow("interrupted");
+    const nextOutcome = next.then(
+      () => null,
+      (error: unknown) => error,
+    );
     await client.session(other, async () => {
-      await new Promise((done) => setTimeout(done, 300));
+      // Exceed the actual client deadline after handshake, independently of startup speed.
+      await new Promise((done) => setTimeout(done, accepted.timeout + 100));
     });
     expect(entered).toBe(false);
     await finish(first.process, "SIGKILL");
-    await nextRejected;
+    const rejected = await nextOutcome;
+    expect(rejected).toBeInstanceOf(Error);
+    expect((rejected as Error).message).toContain("interrupted");
     const view = await client.directory(scope);
     expect(view.sessions.find((entry) => entry.channel === scope.channel)).toMatchObject({
       phase: "interrupted",
