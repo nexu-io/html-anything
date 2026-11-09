@@ -1,16 +1,30 @@
 <h1 align="center">OpenMotion · 在 Codex 里逆向拆解视频<br />
 为自己的品牌复刻动效</h1>
 
-<p align="center">把品牌在 X 或 YouTube 发布的视频链接贴进 Codex，用自己的 Logo、产品截图和文案，复刻原片的镜头节奏、运镜和文字动画。导出 MP4 后，工程还能接着改。</p>
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub 仓库星标数" /></a>
+  <a href="../package.json"><img src="https://img.shields.io/badge/Node.js-22.18%2B-417e38?style=flat-square" alt="Node.js 22.18+" /></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 许可证" /></a>
+</p>
 
-<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 12 秒演示</a></strong> · <strong><a href="#在-codex-里开始">在 Codex 里试用</a></strong></p>
+<p align="center">把 X 或 YouTube 视频链接贴进 Codex，或从 <strong><a href="#motion-资源库与主题合集">100+ 个可一键复刻的视频模板</a></strong>里选一支，参考 Figma、Linear、Firecrawl 等热门品牌的拍法。换上你的 Logo、产品截图和文案，导出 MP4，工程还能接着改。</p>
+
+<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 15 秒演示</a></strong> · <strong><a href="#在-codex-里开始">在 Codex 里试用</a></strong></p>
+
+<p align="center">
+  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenMotion-%E5%AE%98%E7%BD%91-bc334e?style=flat-square" alt="OpenMotion 官网" /></a>
+  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenDesign_Go-526442?style=flat-square" alt="OpenDesign Go 模型订阅" /></a>
+  <a href="https://discord.gg/mHAjSMV6gz"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat-square&amp;logo=discord&amp;logoColor=white" alt="加入 OpenDesign Discord" /></a>
+  <a href="https://x.com/OpenDesignHQ"><img src="https://img.shields.io/badge/@OpenDesignHQ-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="在 X 关注 @OpenDesignHQ" /></a>
+  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="https://img.shields.io/badge/YouTube-b91c1c?style=flat-square&amp;logo=youtube&amp;logoColor=white" alt="OpenDesign 的 YouTube 频道" /></a>
+</p>
 
 <p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="readme/codex-comparison.zh-CN.jpg" />
   <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="安装插件，把 OpenAI 的 X 原帖贴进 Codex，打开 Studio 时间轴，再同步播放 5 秒原片与复刻。" />
 </picture></a></p>
 
-<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">看 OpenAI 的 X 原帖</a> · <a href="#复用参考片的拍法">逐个看品牌复刻</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读 Motion MD 分镜拆解</a></p>
+<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">看 OpenAI 的 X 原帖</a> · <a href="../examples/reference-reveal/comparison.mp4">Firecrawl 原片与复刻 · 5 秒对照</a> · <a href="#复用参考片的拍法">逐个看品牌复刻</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读 Motion MD 分镜拆解</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="collections/README.zh-CN.md">找参考片</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
@@ -99,7 +113,7 @@ git clone --branch feature/motion --single-branch https://github.com/nexu-io/htm
 cd OpenMotion && bash scripts/install-motion.command
 ```
 
-安装后请保留这个目录。打开 Codex，对它说：
+请保留本地仓库目录。在 Codex 桌面端打开 **Plugins → OpenDesign → Try now**。当前 `motion` 插件显示为 OpenDesign。把参考片链接贴进输入框，也可以先试试自带的示例。
 
 > 用 OpenMotion 在 Studio 里打开一份新的 20 秒 Product Promo 示例工程，并把它导出为 MP4。
 
@@ -131,7 +145,9 @@ cd OpenMotion && bash scripts/install-motion.command
 
 ## Motion 资源库与主题合集
 
-先挑你想借鉴的镜头。想看操作系统怎么亮相，可以看 Pond 的 12 秒短片；想看开发者工具怎么分配主张和演示的时间，可以看 Firecrawl Free Keyless 的 32 秒发布片。GitHub 资源索引里列有作者和出处。Studio 目录另收录 **891 条外部参考与 registry 资源**。在画廊卡片上点「一键复刻」会复制一条指令，把它和自己的品牌素材一起交给 Codex，就可以开始改编。[浏览参考片](collections/README.zh-CN.md) · [画廊使用说明](usage.md)
+打开 Studio 的**模板库 → 视频复刻**。这里有 136 张参考卡片，同一原片的不同剪辑合并展示。可以先搜 **Figma Draw**、**Linear Loops** 或 **Firecrawl Free Keyless**。点卡片上的「一键复刻」，把复制的指令连同自己的品牌素材贴进 Codex。[浏览精选参考片](collections/README.zh-CN.md) · [查看模板库说明](template-catalog.md)
+
+想学文字转场，可以搜 `hf-moment-M1147`。Figma 把一串「made in @figma」帖子变成贴纸，再吸附拼成自己的标志。目录在 2026 年 11 月 3 日记录到这条原帖约 **3,600 万次浏览**。[看 Figma 原片](https://x.com/figma/status/2001715747505233980)
 
 如果想从已经能打开的工程开始，Studio 还自带 **3 个可编辑模板**。
 

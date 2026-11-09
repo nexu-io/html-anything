@@ -1,16 +1,30 @@
 <h1 align="center">OpenMotion — Reverse-engineer a video in Codex.<br />
 Recreate it for your brand.</h1>
 
-<p align="center">Paste a brand’s X or YouTube video link into Codex. Use your own logo, screenshots and copy to recreate the film’s cuts, camera moves and type. Export an MP4 and keep the editable project.</p>
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub repository stars" /></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/Node.js-22.18%2B-417e38?style=flat-square" alt="Node.js 22.18+" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 license" /></a>
+</p>
 
-<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 12-second demo</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
+<p align="center">Bring an X or YouTube link, or pick from <strong><a href="#motion-library-and-collections">100+ one-click video recreation templates</a></strong>, including brand films from Figma, Linear and Firecrawl. Recreate the shots in Codex with your logo, screenshots and copy. Export an MP4 and keep the editable project.</p>
+
+<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 15-second demo</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
+
+<p align="center">
+  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="https://img.shields.io/badge/OpenMotion-Website-bc334e?style=flat-square" alt="OpenMotion website" /></a>
+  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="https://img.shields.io/badge/OpenDesign_Go-526442?style=flat-square" alt="OpenDesign Go model subscriptions" /></a>
+  <a href="https://discord.gg/mHAjSMV6gz"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat-square&amp;logo=discord&amp;logoColor=white" alt="Join the OpenDesign Discord" /></a>
+  <a href="https://x.com/OpenDesignHQ"><img src="https://img.shields.io/badge/@OpenDesignHQ-16181c?style=flat-square&amp;logo=x&amp;logoColor=white" alt="Follow @OpenDesignHQ on X" /></a>
+  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="https://img.shields.io/badge/YouTube-b91c1c?style=flat-square&amp;logo=youtube&amp;logoColor=white" alt="OpenDesign on YouTube" /></a>
+</p>
 
 <p align="center"><a href="docs/readme/studio-tour.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
   <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install OpenMotion, paste the original OpenAI X post into Codex, open the Studio timeline and compare five seconds of the original and the OpenDesign remake." />
 </picture></a></p>
 
-<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">Open the original X post</a> · <a href="#make-a-reference-your-own">Compare the three brands</a> · <a href="examples/reference-reveal/MOTION.md">Read a Motion MD breakdown</a></p>
+<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">Open the original X post</a> · <a href="examples/reference-reveal/comparison.mp4">Firecrawl original vs. remake · 5s</a> · <a href="#make-a-reference-your-own">Compare the three brands</a> · <a href="examples/reference-reveal/MOTION.md">Read a Motion MD breakdown</a></p>
 
 <p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="docs/collections/README.md">Find a reference</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 
@@ -99,7 +113,7 @@ git clone --branch feature/motion --single-branch https://github.com/nexu-io/htm
 cd OpenMotion && bash scripts/install-motion.command
 ```
 
-Keep the checkout on disk. Once installed, open Codex and ask:
+Keep the checkout on disk. In the Codex desktop app, go to **Plugins → OpenDesign → Try now**. OpenDesign is the display name for the `motion` plugin. Paste your reference link into the composer, or try the bundled example below.
 
 > Use OpenMotion to open a fresh copy of the 20-second Product Promo in Studio and export the MP4.
 
@@ -131,7 +145,9 @@ Give the Markdown file explicitly to Codex with the project. The brief guides th
 
 ## Motion library and collections
 
-Start with a shot you want to borrow. Watch the 12-second Pond OS introduction for a product reveal, or the 32-second Firecrawl Free Keyless launch for the balance between a promise and a demo. The credited index is on GitHub. The Studio catalog also contains **891 external references and registry items**. On a gallery card, the remix action copies an instruction. Paste it into Codex alongside your brand assets. [Browse the references](docs/collections/README.md) · [How the gallery works](docs/usage.md)
+In Studio, open **Template library → Video recreation**. Its 136 reference cards group alternate cuts of the same video together. Try **Figma Draw**, **Linear Loops** or **Firecrawl Free Keyless**. Click **一键复刻** on a card to copy its brief, then paste it into Codex with your brand assets. [Browse sample references](docs/collections/README.md) · [How the gallery works](docs/template-catalog.md)
+
+For a typography transition, search for `hf-moment-M1147`. Figma turns a stream of “made in @figma” posts into stickers that snap into its logo. The catalog recorded **36 million views** for the original post in its November 3, 2026 snapshot. [Watch Figma’s original](https://x.com/figma/status/2001715747505233980)
 
 For an editable starting point with its own assets, open one of the **three bundled templates** in Studio.
 
