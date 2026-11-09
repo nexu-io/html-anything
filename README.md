@@ -52,7 +52,7 @@ These are the editorial directions for the **planned public collections site**. 
 
 These frames come from the bundled [Hyperframes examples](template-library/NOTICE.md). Pick a template and ask Codex:
 
-> Keep the opening and the pace of the reveal. Use our logo and the product screenshots in this repo. Hold the second screen long enough to read the new headline. Give me the editable project and an MP4.
+> Keep the opening and the pace of the reveal. Use our logo and the product screenshots in this repo. Hold the second screen long enough to read the new headline.
 
 The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled or Prism template opens directly; external footage needs analysis and reconstruction. In Studio you can change the text, timing, layout and assets, or ask your Agent to make the same edit. Imported footage stays a clip.
 

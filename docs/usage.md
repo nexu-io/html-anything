@@ -202,7 +202,7 @@ node --experimental-strip-types scripts/verify-export.ts /absolute/path/final.mp
 
 ## 视频转模板与模板出片
 
-视频转模板入口仅在要求可复用模板时使用，要求原样重建尽量匹配参考画面、构图、运动和节奏；素材与源码保持可编辑。原样使用模板时直接交付模板里的 `preview.mp4`，不重新渲染、不比对。制作时对照原片；打包后另外检查 ZIP 解压到别处能独立渲染，不缺文件、字体和素材，帧率、帧数、时长和预览一致；不做逐帧像素比对，不为肉眼看不出的差异返工。具体规范见 [模板制作验证](../skills/motion-video-to-template/references/verify.md)。视频转模板时不向用户提问，由 Agent 自行选择最贴近原片的方案并记录在模板内唯一的说明文件 `TEMPLATE.md`；常用修改声明为变量，在 Studio Variables 面板修改；交付回复只给预览、模板、原片对照、能改什么和与原片的差异，技术检查写在 `TEMPLATE.md`；用模板生成视频时，缺少品牌、产品、价格、图片等只有用户能提供的内容，或要求有明显歧义时，Agent 会一次性提问。motion-video-to-template 不承接普通视频复刻或直接混入修改要求；普通复刻由 motion-recreate 实现，已有模板的修改由 motion-template-to-video 处理。
+视频转模板入口仅在要求可复用模板时使用，要求原样重建尽量匹配参考画面、构图、运动和节奏；素材与源码保持可编辑。原样使用模板时在编辑器里打开即完成，不渲染、不比对。制作时对照原片；打包后另外检查 ZIP 解压到别处能独立渲染，不缺文件、字体和素材，帧率、帧数、时长和预览一致；不做逐帧像素比对，不为肉眼看不出的差异返工。具体规范见 [模板制作验证](../skills/motion-video-to-template/references/verify.md)。视频转模板时不向用户提问，由 Agent 自行选择最贴近原片的方案并记录在模板内唯一的说明文件 `TEMPLATE.md`；常用修改声明为变量，在 Studio Variables 面板修改；交付回复只给预览、模板、原片对照、能改什么和与原片的差异，技术检查写在 `TEMPLATE.md`；用模板生成视频时，缺少品牌、产品、价格、图片等只有用户能提供的内容，或要求有明显歧义时，Agent 会一次性提问。motion-video-to-template 不承接普通视频复刻或直接混入修改要求；普通复刻由 motion-recreate 实现，已有模板的修改由 motion-template-to-video 处理。
 
 ## 多 Agent 薄适配器
 
