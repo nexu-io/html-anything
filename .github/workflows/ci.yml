@@ -23,15 +23,15 @@ on:
         type: boolean
         default: false
       install_guide_package:
-        description: 'Already-published npm package name for an installation guide; empty keeps the ordinary build'
+        description: 'Already-published npm package; must match packages/npm/package.json'
         type: string
-        default: ''
+        default: '@open-design/motion'
       install_guide_version:
         description: 'Exact accepted npm version; non-empty selects guide validation instead of rebuilding the application'
         type: string
         default: ''
       upload_install_guide:
-        description: 'Publish the verified guide to R2; requires the protected motion-install-docs environment'
+        description: 'Upload the verified guide using the configured repository R2 credentials'
         type: boolean
         default: false
 
@@ -183,7 +183,6 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.upload_install_guide == true
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    environment: motion-install-docs
     concurrency:
       group: motion-install-guide-${{ needs.install-guide-validation.outputs.channel }}
       cancel-in-progress: false
@@ -203,9 +202,9 @@ jobs:
           GUIDE_PACKAGE: ${{ inputs.install_guide_package }}
           GUIDE_VERSION: ${{ inputs.install_guide_version }}
           GUIDE_CHANNEL: ${{ needs.install-guide-validation.outputs.channel }}
-          APPROVED_PACKAGE: ${{ vars.MOTION_NPM_PACKAGE }}
         run: |
-          if [ -z "$APPROVED_PACKAGE" ] || [ "$GUIDE_PACKAGE" != "$APPROVED_PACKAGE" ]; then echo 'Set the approved MOTION_NPM_PACKAGE in the protected publication environment.' >&2; exit 1; fi
+          expected=$(node -p "require('./packages/npm/package.json').name")
+          if [ "$GUIDE_PACKAGE" != "$expected" ]; then echo 'The guide package must match packages/npm/package.json.' >&2; exit 1; fi
           tag=test
           if [ "$GUIDE_CHANNEL" = stable ]; then tag=latest; fi
           actual=$(npm view "$GUIDE_PACKAGE@$tag" version)

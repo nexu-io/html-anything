@@ -10,6 +10,7 @@ import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, rel
 import { ensureNativeRuntime } from './npm-runtime.mjs';
 import { hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
 
+// Keep ownership stable so earlier local installations remain upgradable.
 export const managedBy = '@openmotion/installer';
 const bundledManifest = fileURLToPath(new URL('../payload/release-npm.json', import.meta.url));
 const defaultHome = (environment = 'prod') => path.join(process.platform === 'win32' ? process.env.LOCALAPPDATA || os.homedir() : path.join(os.homedir(), '.local/share'), environment === 'dev' ? 'openmotion-dev' : 'openmotion');

@@ -2,7 +2,7 @@
 
 The npm tgz contains the installer, a prebuilt Motion application archive and its pinned release manifest. One `setup` installs the application, eleven public MCP Tools and five Skills for the selected host. No adjacent application archive or `--manifest` is needed. The application runs from a managed, writable directory, never from the npx cache; projects remain outside application/cache directories.
 
-This branch does not publish packages. `@openmotion/installer` is the current package metadata name, not a claim that this npm scope is owned or a registry version is available. Registry examples apply only after a separately authorized release.
+This branch does not publish packages. `@open-design/motion` is the agreed public package name; npm scope permissions and availability of a registry version still need separate verification. Registry examples apply only after a separately authorized release.
 
 ## Requirements and package contents
 
@@ -19,12 +19,12 @@ npm ci --no-audit --no-fund
 npm run package:npm -- dist/npm-test 0.6.4-test.1
 ```
 
-The version is an example. Use a new empty output directory for every candidate. Files include `openmotion-installer-<version>.tgz`, the application archive, `release-npm.json` and SHA256 sidecars. Only the tgz is required by a consumer; the remaining files are delivery evidence and the explicit-manifest fallback. Copy the tgz alone to another directory to verify this property.
+The version is an example. Use a new empty output directory for every candidate. Files include `open-design-motion-<version>.tgz`, the application archive, `release-npm.json` and SHA256 sidecars. Only the tgz is required by a consumer; the remaining files are delivery evidence and the explicit-manifest fallback. Copy the tgz alone to another directory to verify this property.
 
 An isolated macOS Codex installation:
 
 ```sh
-motion_tgz="/absolute/path/openmotion-installer-0.6.4-test.1.tgz"
+motion_tgz="/absolute/path/open-design-motion-0.6.4-test.1.tgz"
 motion_test="$HOME/Library/Application Support/OpenMotion-test/0.6.4-test.1"
 mkdir -p "$motion_test/profile" "$motion_test/workspace"
 export CODEX_HOME="$motion_test/profile"
@@ -41,7 +41,7 @@ Run `prepare` only after successful setup. Wait for it to finish before starting
 Equivalent Windows PowerShell commands:
 
 ```powershell
-$motionTgz = 'C:\path\openmotion-installer-0.6.4-test.1.tgz'
+$motionTgz = 'C:\path\open-design-motion-0.6.4-test.1.tgz'
 $motionTest = Join-Path $env:LOCALAPPDATA 'OpenMotion-test\0.6.4-test.1'
 New-Item -ItemType Directory -Force "$motionTest\profile", "$motionTest\workspace" | Out-Null
 $env:CODEX_HOME = "$motionTest\profile"
@@ -82,7 +82,7 @@ There is no automatic fallback from prod to DEV and no `switch-env` CLI. This se
 
 Select `--host codex|claude|deepseek|workbuddy`. `--skills-dir` selects the Codex/Claude/WorkBuddy root; Harness uses its own provider. Executable overrides are `--codex`, `--claude`, `--dsh`; Harness also accepts `--profile`. Isolate host configuration with `CODEX_HOME`, `CLAUDE_CONFIG_DIR`, `DSH_HOME` or `WORKBUDDY_CONFIG_DIR`; `--home` controls the application installation, not the host profile.
 
-An installation can serve multiple hosts using the same home/data. `install.json.hosts` retains each host. Skill documentation links are rewritten for flat layouts; Codex/Harness retain bundle-relative links. Re-run setup for each installed host when upgrading Skills. Unowned same-name MCP/Skills are refused. Unrelated settings/Skills and existing projects are retained. Registration failure restores the prior install state and Skills; checked application caches remain available for retry.
+The internal ownership marker remains stable across the npm package rename so earlier local installations can be upgraded in place. An installation can serve multiple hosts using the same home/data. `install.json.hosts` retains each host. Skill documentation links are rewritten for flat layouts; Codex/Harness retain bundle-relative links. Re-run setup for each installed host when upgrading Skills. Unowned same-name MCP/Skills are refused. Unrelated settings/Skills and existing projects are retained. Registration failure restores the prior install state and Skills; checked application caches remain available for retry.
 
 ## Versions, upgrades and publication boundary
 
@@ -90,7 +90,7 @@ Explicit builds accept `MAJOR.MINOR.PATCH-test.N[.N]` or `MAJOR.MINOR.PATCH`. CI
 
 Source package manifests remain `private:true`. Only an explicitly versioned **prod** build produces publishable tgz metadata. test artifacts default to the `test` npm tag; stable artifacts default to `stage` so a later authorized registry smoke can precede moving `latest`. Local/default and DEV artifacts remain private. No command here publishes or changes npm tags. See [test and stable acceptance](release-guide.md) for separate maintainer authorization and gates.
 
-After publication, the intended user entry is `npx --yes --package @openmotion/installer@<exact-version> -- openmotion setup --host codex`, followed by `prepare` and host reconnection. `@test` and `@latest` select channels; acceptance always records the exact resolved version. Installing/running npx alone, publishing a new package or moving a tag does not update an existing managed app.
+After publication, the intended user entry is `npx --yes --package @open-design/motion@<exact-version> -- openmotion setup --host codex`, followed by `prepare` and host reconnection. `@test` and `@latest` select channels; acceptance always records the exact resolved version. Installing/running npx alone, publishing a new package or moving a tag does not update an existing managed app.
 
 Before upgrading, stop your own old MCP connections and incompatible backend, back up projects/configuration, run setup with the new exact tgz and the **same** home/data/Skills paths, prepare and reconnect. Do not terminate unrelated services. Older app directories may remain, but rollback requires a compatible old package and data; back up before an irreversible format change. There is no automatic update or arbitrary-version rollback promise.
 
@@ -104,4 +104,4 @@ For defects, include exact package/app version, source SHA, OS/CPU, Node/Agent v
 
 ## Shared Agent installation entry
 
-The hosted [installation guide template](install.md) provides the short Agent entry. Ordinary CI retains a candidate preview; the controlled guide mode fetches an already published exact npm version before any R2 upload. Public URLs, environment credentials, channel acceptance and deployment restrictions must be configured separately. See [hosted instruction publication](release-guide.md#hosted-installation-instructions).
+The hosted [installation guide template](install.md) provides the short Agent entry. Ordinary CI retains a candidate preview; the controlled guide mode fetches an already published exact npm version before any R2 upload. Repository R2 configuration, channel acceptance and an executable manual workflow entry are required before upload. See [hosted instruction publication](release-guide.md#hosted-installation-instructions).

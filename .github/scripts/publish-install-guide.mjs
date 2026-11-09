@@ -62,6 +62,6 @@ export async function publishGuide(directory, config, { run = runFile, fetcher =
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   assert.equal(process.argv.length, 3, 'Usage: publish-install-guide.mjs <generated-guide-directory>');
-  for (const name of ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']) assert(process.env[name], `Missing protected environment secret: ${name}`);
+  for (const name of ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']) assert(process.env[name], `Missing publication credential: ${name}`);
   await publishGuide(path.resolve(process.argv[2]), { endpoint: process.env.MOTION_R2_ENDPOINT, bucket: process.env.MOTION_R2_BUCKET, publicOrigin: process.env.MOTION_INSTALL_PUBLIC_ORIGIN });
 }

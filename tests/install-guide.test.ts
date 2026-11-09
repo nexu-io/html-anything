@@ -7,7 +7,7 @@ import { generateInstallGuide, validateGuideSpec, validateGuideIdentity } from '
 import { publishGuide, storagePlan } from '../.github/scripts/publish-install-guide.mjs';
 import { runFile } from '../scripts/runtime-assets.mjs';
 
-const pkg = { name: '@example/motion', version: '0.6.4-test.1', private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } };
+const pkg = { name: '@open-design/motion', version: '0.6.4-test.1', private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } };
 const manifest = { schemaVersion: 1, version: pkg.version, templateEnvironment: 'prod', commit: 'a'.repeat(40),
   application: { sha256: 'b'.repeat(64) }, locks: { npm: 'c'.repeat(64), native: 'd'.repeat(64) },
   runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64', minimumOS: '26.0' } } } };
@@ -96,13 +96,39 @@ test('candidate previews, changed guide bytes and unsafe storage destinations ca
   assert.throws(() => storagePlan(record, { ...config, bucket: '../other' }));
 });
 
-test('CI publication stays manual, disabled by default and in the dedicated credential environment', async () => {
+test('CI publication stays manual and default-off, with credentials limited to its upload job', async () => {
   const workflow = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
   assert(workflow.includes('upload_install_guide:') && workflow.includes("type: boolean\n        default: false"));
   const publish = workflow.split('  publish-install-guide:\n')[1];
   assert(publish.includes("github.event_name == 'workflow_dispatch' && inputs.upload_install_guide == true"));
-  assert(publish.includes('environment: motion-install-docs') && publish.includes('needs: install-guide-validation'));
+  assert(publish.includes('needs: install-guide-validation'));
+  assert(!publish.includes('environment:'), 'The upload must not depend on an extra GitHub Environment');
   assert(publish.includes('Confirm the accepted channel still selects this exact version'));
   assert(!workflow.split('  publish-install-guide:\n')[0].includes('secrets.'), 'Build and guide-validation jobs must not consume publication secrets');
   assert(workflow.includes('candidate installation guide') && workflow.includes('--candidate'));
+});
+
+
+test('the actual upload gate reads the source package and accepted npm tag without an extra variable', async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'motion-guide-ci-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const workflow = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+  const step = workflow.split('      - name: Confirm the accepted channel still selects this exact version\n')[1].split('      - name:')[0];
+  const script = step.split('        run: |\n')[1].replace(/^ {10}/gm, '');
+  const packageName = JSON.parse(await readFile(new URL('../packages/npm/package.json', import.meta.url), 'utf8')).name;
+  assert.equal(packageName, pkg.name);
+  const calls = path.join(directory, 'calls');
+  await writeFile(path.join(directory, 'npm'), '#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOTION_GUIDE_CALLS"\nprintf "%s\\n" "$MOTION_GUIDE_ACCEPTED_VERSION"\n', { mode: 0o755 });
+  const env = { ...process.env, PATH: directory + path.delimiter + process.env.PATH,
+    GUIDE_PACKAGE: packageName, GUIDE_VERSION: pkg.version, GUIDE_CHANNEL: 'test',
+    MOTION_GUIDE_CALLS: calls, MOTION_GUIDE_ACCEPTED_VERSION: pkg.version };
+  for (const [channel, version, tag] of [['test', pkg.version, 'test'], ['stable', '0.6.4', 'latest']]) {
+    await writeFile(calls, '');
+    await runFile('bash', ['-c', script], { env: { ...env, GUIDE_CHANNEL: channel, GUIDE_VERSION: version, MOTION_GUIDE_ACCEPTED_VERSION: version } });
+    assert.equal((await readFile(calls, 'utf8')).trim(), `view ${packageName}@${tag} version`);
+  }
+  await writeFile(calls, '');
+  await assert.rejects(runFile('bash', ['-c', script], { env: { ...env, GUIDE_PACKAGE: '@other/motion' } }), /must match packages/);
+  assert.equal(await readFile(calls, 'utf8'), '', 'A wrong package must fail before any registry lookup');
+  await assert.rejects(runFile('bash', ['-c', script], { env: { ...env, MOTION_GUIDE_ACCEPTED_VERSION: '0.6.4-test.99' } }), /does not select this exact version/);
 });

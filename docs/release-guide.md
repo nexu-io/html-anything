@@ -56,14 +56,14 @@ Ordinary npm/prod CI builds generate a **candidate-only** guide and retain it as
 
 The existing `Motion standalone checks` workflow has a separate manual guide mode:
 
-1. Set `install_guide_package` and an exact `install_guide_version` already published to npm. Leave `upload_install_guide=false` to fetch the registry package with lifecycle scripts disabled, render its guide and retain the result without R2 credentials.
+1. Use `@open-design/motion` (the default `install_guide_package`) and an exact `install_guide_version` already published to npm. Leave `upload_install_guide=false` to fetch the registry package with lifecycle scripts disabled, render its guide and retain the result without R2 credentials.
 2. Before promoting an entry, complete registry/package acceptance and select that version through npm `test` or `latest`. A guide publication does not publish npm or move its tags.
-3. An explicitly authorized run with `upload_install_guide=true` enters the protected `motion-install-docs` environment. It checks the approved package name and current npm channel, creates immutable version instructions, verifies the public bytes, saves the prior fixed instructions and conditionally updates the fixed entry. The canonical public URLs must return matching bytes; a cache-busting URL does not prove the fixed entry is current.
+3. An explicitly authorized run with `upload_install_guide=true` uses the repository R2 configuration. It checks the package name against `packages/npm/package.json` and the current npm channel, creates immutable version instructions, verifies the public bytes, saves the prior fixed instructions and conditionally updates the fixed entry. The canonical public URLs must return matching bytes; a cache-busting URL does not prove the fixed entry is current.
 4. Test software uses `open-motion/dev/install.md`; stable uses `open-motion/install.md`. Each also has `versions/<exact-version>/install.md` under the same prefix. The `dev` path is the existing proposed software test-channel path, not a switch to DEV template data.
 
-After publication, the website can give the Agent a short prompt: "Read `<approved-public-origin>/open-motion/install.md`, install OpenMotion MCP and Skills for my current supported Agent host, preserve existing projects/settings, and report installation and preparation results." Use `/open-motion/dev/install.md` for the test software channel. These are path examples until the public origin and publication are verified.
+The configured destination bucket is `open-design-releases` and the public origin is `https://releases.open-design.ai`. After publication, the website can give the Agent a short prompt: "Read `https://releases.open-design.ai/open-motion/install.md`, install OpenMotion MCP and Skills for my current supported Agent host, preserve existing projects/settings, and report installation and preparation results." Use `https://releases.open-design.ai/open-motion/dev/install.md` for the test software channel. These are the configured target URLs, not verified live installation entries.
 
-Before enabling uploads, an administrator must configure `motion-install-docs` with required reviewers and deployment-branch restrictions for the reviewed publishing branch. The publication step consumes the configured repository Secrets and Variables listed below; PR builds and guide validation do not reference publication secrets. No R2 resource, credential or environment is created by this PR.
+The upload remains a manual, default-off operation using the configured repository Secrets and Variables below. Package identity comes directly from `packages/npm/package.json`; no extra package-name variable or GitHub Environment is required. PR builds and guide validation do not reference publication secrets. No R2 resource or credential is created by this PR.
 
 | GitHub setting | Purpose |
 | --- | --- |
@@ -71,7 +71,6 @@ Before enabling uploads, an administrator must configure `motion-install-docs` w
 | Variable `CLOUDFLARE_R2_RELEASES_URL` | R2 S3 HTTPS origin, mapped to `MOTION_R2_ENDPOINT` |
 | Variable `CLOUDFLARE_R2_RELEASES_BUCKET` | Approved destination bucket, mapped to `MOTION_R2_BUCKET` |
 | Variable `CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN` | Public HTTPS origin, mapped to `MOTION_INSTALL_PUBLIC_ORIGIN`; routing must already work |
-| Variable `MOTION_NPM_PACKAGE` | Approved public npm package name |
 
 The publisher uses the runner's AWS CLI with conditional writes and short fixed-entry caching. Publication records and prior public instructions are retained for 30 days. If readback fails, the run fails; inspect `publication.json` and the previous bytes before a separately authorized recovery. A network failure during `fixed-write-attempted` may mean the write completed: check storage rather than assuming nothing changed. Restore only the intended guide/channel; this does not downgrade installed clients or migrate projects.
 

@@ -53,6 +53,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal(embedded.version, version);
     assert.equal(await sha256(path.join(bundled, embedded.application.url)), release.application.sha256);
     const metadata = await json(path.join(installer, 'package/package.json'));
+    assert.equal(metadata.name, (await json('packages/npm/package.json')).name);
     assert.equal(metadata.publishConfig.tag, 'test'); assert.equal(metadata.publishConfig.access, 'public');
     assert.equal(metadata.bin.openmotion, 'scripts/npm-installer.mjs');
     await readFile(path.join(installer, 'package/LICENSE'));
