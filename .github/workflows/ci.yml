@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       format:
-        description: 'Build npm lightweight artifacts or complete ZIP backups'
+        description: 'Build self-contained npm application artifacts or complete ZIP backups'
         type: choice
         options: [npm, full]
         default: npm

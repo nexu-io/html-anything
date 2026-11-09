@@ -1,78 +1,103 @@
-# npm 轻量安装包（仅本地验证）
+# Motion application npm package
 
-当前源码位于 仓库根目录；下列模块命令在该目录执行。活动工作流在仓库根目录 `.github/workflows/ci.yml`，发布保持关闭。迁移基线及历史验收范围见[迁移说明](repository-migration.md)。
+The npm tgz contains the installer, a prebuilt Motion application archive and its pinned release manifest. One `setup` installs the application, eleven public MCP Tools and five Skills for the selected host. No adjacent application archive or `--manifest` is needed. The application runs from a managed, writable directory, never from the npx cache; projects remain outside application/cache directories.
 
-这条安装渠道服务已有 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy，以及 Node.js 22.18+ 和 npm 的用户。一次 setup 为所选宿主安装一期 11 Tool MCP 连接与 production/director/template/recreate/video-to-template 五个 Skills；应用、用户工程和原生工具各自保存。当前没有发布 npm 包或公开下载源，包的 `private: true` 保留，以下命令只使用本地制品。
+This branch does not publish packages. `@openmotion/installer` is the current package metadata name, not a claim that this npm scope is owned or a registry version is available. Registry examples apply only after a separately authorized release.
 
-## 构建与安装
+## Requirements and package contents
 
-在源码目录执行 `npm ci`、`npm run package:npm`。构建会生成：
+Users provide Node.js 22.18+ with npm and their Agent host. Builds use the Node version pinned in CI. npm installs locked production dependencies with `npm ci --omit=dev --ignore-scripts`; FFmpeg, ffprobe and the browser are downloaded and checked separately by `prepare` or the first native operation. Node, native binaries, node_modules, user projects and credentials are not bundled in this npm format. It is not an offline package. Complete platform ZIPs remain a backup.
 
-- `dist/npm-local/openmotion-installer-0.6.3-local.1.tgz`：无 npm 依赖的 JS 安装入口，不含应用、Node、FFmpeg、浏览器或用户数据。
-- `dist/npm-local/openmotion-application-0.6.3.tar.gz`：单独的应用资源，包含服务源码、预先构建的 Studio、Skills 和文档，不含 node_modules 或原生程序。
-- `dist/npm-local/release.local.json`：固定应用 SHA256 与原生工具来源、版本和 SHA256。应用地址相对本清单解析，可将两个文件一起移动。
+The embedded application uses `scripts/distribution.ts`'s positive file list: MCP/backend, prebuilt Studio, five Skills and references, bundled examples, npm/native locks, licenses and approved documentation. Remote Prism templates are fetched separately. The embedded manifest omits the containing tgz's hash; the external delivery manifest records that hash without a circular self-reference.
+
+## Build and install a local test
+
+From a clean checkout based on `feature/motion`:
 
 ```sh
-npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.6.3-local.1.tgz openmotion setup --host codex --manifest /absolute/dist/npm-local/release.local.json
+npm ci --no-audit --no-fund
+npm run package:npm -- dist/npm-test 0.6.4-test.1
 ```
 
-默认应用根目录是 macOS/Linux 的 `~/.local/share/openmotion` 或 Windows 的 `%LOCALAPPDATA%/openmotion`；用户工程在该目录的 `data/`，应用和缓存分别在 `apps/`、`cache/`。可用 `--home`、`--data-dir` 选择位置；不允许工程放进应用、缓存或受管理的宿主组合包。setup 不需要管理员权限或修改全局 PATH。
+The version is an example. Use a new empty output directory for every candidate. Files include `openmotion-installer-<version>.tgz`, the application archive, `release-npm.json` and SHA256 sidecars. Only the tgz is required by a consumer; the remaining files are delivery evidence and the explicit-manifest fallback. Copy the tgz alone to another directory to verify this property.
 
-通过 `--host codex|claude|deepseek|workbuddy` 选择宿主，省略时兼容保留 Codex。四家使用同一个 `--home` 和清单时，复用同一应用、Node 绝对路径、`run-mcp.mjs`、工程目录与原生缓存；每个客户端仍启动自己的 stdio 连接。宿主选择和配置位置记录在 `install.json.hosts`，新增宿主不会丢失先前安装记录。
+An isolated macOS Codex installation:
 
-| 宿主 | MCP 注册 | Skills 加载 |
+```sh
+motion_tgz="/absolute/path/openmotion-installer-0.6.4-test.1.tgz"
+motion_test="$HOME/Library/Application Support/OpenMotion-test/0.6.4-test.1"
+mkdir -p "$motion_test/profile" "$motion_test/workspace"
+export CODEX_HOME="$motion_test/profile"
+npx --yes --package "$motion_tgz" -- openmotion setup --host codex \
+  --home "$motion_test/app" --data-dir "$motion_test/data" \
+  --skills-dir "$motion_test/workspace/.agents/skills" &&
+npx --yes --package "$motion_tgz" -- openmotion prepare --home "$motion_test/app" &&
+cd "$motion_test/workspace" &&
+codex
+```
+
+Run `prepare` only after successful setup. Wait for it to finish before starting a native project operation: slow first downloads can exceed the backend startup timeout. The isolated Codex profile may require its own login; do not copy credentials into the package.
+
+Equivalent Windows PowerShell commands:
+
+```powershell
+$motionTgz = 'C:\path\openmotion-installer-0.6.4-test.1.tgz'
+$motionTest = Join-Path $env:LOCALAPPDATA 'OpenMotion-test\0.6.4-test.1'
+New-Item -ItemType Directory -Force "$motionTest\profile", "$motionTest\workspace" | Out-Null
+$env:CODEX_HOME = "$motionTest\profile"
+npx --yes --package "$motionTgz" -- openmotion setup --host codex --home "$motionTest\app" --data-dir "$motionTest\data" --skills-dir "$motionTest\workspace\.agents\skills"
+if ($LASTEXITCODE -ne 0) { throw 'Motion setup failed' }
+npx --yes --package "$motionTgz" -- openmotion prepare --home "$motionTest\app"
+if ($LASTEXITCODE -ne 0) { throw 'Native preparation failed' }
+Set-Location "$motionTest\workspace"
+codex
+```
+
+These are documented commands, not proof of Windows acceptance. Use a directly executable host or pass its JavaScript CLI through `--codex`. The native lock declares Mac arm64/macOS 26 and Windows x64/Windows 11; other platforms are not implied supported by npm installation.
+
+## Test template data (DEV)
+
+The software channel (`test`/`latest`) and template environment (`dev`/`prod`) are independent. Public test candidates and stable packages default to **prod**. To debug unpublished/test Prism templates, publish them to Prism **DEV**, then build a local DEV candidate:
+
+```sh
+npm run package:npm -- dist/npm-dev 0.6.4-test.1 --template-env=dev
+```
+
+Use that tgz in the installation commands above, with an **independent Codex profile, home, data and Skills directory**. DEV packages remain `private:true`, even with an explicit test version. DEV setup defaults to `openmotion-dev` instead of `openmotion`; `prepare` uses the same environment-specific default. Explicit `--home` must be identical for setup and prepare. An existing installation refuses an implicit data-directory change or a dev/prod switch: use a different home rather than altering the old projects.
+
+The environment is embedded in `shared/template-config.json`; the resulting `install.json.templateEnvironment` identifies the installation. Studio and MCP read the same source. [Template configuration](template-catalog.md#environment-and-build) explains the current Resource and catalog behavior. Saving a CMS draft does not publish it. Refresh the catalog, find the template ID and record its catalog/publication version; existing projects are independent copies and do not change when a template is republished.
+
+For **source development**, `npm run dev` already selects DEV. An independently launched MCP can use `MOTION_TEMPLATE_ENV=dev MOTION_DATA_DIR=/absolute/isolated-dev-data npm run mcp`. For an installed package, advanced overrides must be supplied to the actual MCP/Agent process and inherited by the backend. Setting a shell variable only while running setup does not persist it into a later GUI host. Stop the owned old backend and reconnect after changing configuration. Prefer the embedded DEV package over editing installed files or sharing production data.
+
+There is no automatic fallback from prod to DEV and no `switch-env` CLI. This selects the template catalog, not model keys, accounts or every remote service.
+
+## Host adapters and ownership
+
+| Host | Registration | Skills |
 | --- | --- | --- |
-| Codex | 官方 `codex mcp add openmotion` | `~/.agents/skills/openmotion/` 下完整技能/文档包，递归发现 |
-| Claude Code | 官方 `claude mcp add-json -s user openmotion` | `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/` 中直接子目录；保留全部 5 个 Skills |
-| DeepSeek Harness | 官方 `dsh plugin --profile web add <本地组合包> --ignore-scripts` | 独立的 Skill provider 扫描组合包 `skills/` 的直接子项，保留已有 provider 和配置 |
-| WorkBuddy | 合并 `${WORKBUDDY_CONFIG_DIR:-~/.workbuddy}/mcp.json` 中的 `mcpServers.openmotion` | 同一配置根目录的 `skills/` 直接子目录；本地自定义 MCP + Skills，不发布 Connector |
+| Codex | `codex mcp add openmotion` | Complete bundle under the selected Skills root |
+| Claude Code | `claude mcp add-json -s user openmotion` | Flat entries under `${CLAUDE_CONFIG_DIR:-~/.claude}/skills` |
+| DeepSeek Harness | `dsh plugin --profile web add <managed bundle> --ignore-scripts` | Its dedicated bundle/provider Skill root |
+| WorkBuddy | Merge `mcpServers.openmotion` into its `mcp.json` | Flat entries under its configuration root |
 
-Claude Code 和 WorkBuddy 的平铺技能目录内写入 `openmotion-install.json`，记录应用位置；共享文档链接在安装时改写为有效绝对路径。Codex/Harness 保留完整包的相对资料布局。新会话或重新加载后使用 Skills。
+Select `--host codex|claude|deepseek|workbuddy`. `--skills-dir` selects the Codex/Claude/WorkBuddy root; Harness uses its own provider. Executable overrides are `--codex`, `--claude`, `--dsh`; Harness also accepts `--profile`. Isolate host configuration with `CODEX_HOME`, `CLAUDE_CONFIG_DIR`, `DSH_HOME` or `WORKBUDDY_CONFIG_DIR`; `--home` controls the application installation, not the host profile.
 
-升级前关闭旧 MCP 连接，并按 [共享编辑器说明](shared-editor.md) 停止同一数据目录的旧后台；安装后重新连接 MCP、重新加载 Skills。后台身份包含 npm 原生下载器和原生锁文件，遇到版本或代码不兼容会报错要求停止旧后台，安装器不自动结束已有进程。
+An installation can serve multiple hosts using the same home/data. `install.json.hosts` retains each host. Skill documentation links are rewritten for flat layouts; Codex/Harness retain bundle-relative links. Re-run setup for each installed host when upgrading Skills. Unowned same-name MCP/Skills are refused. Unrelated settings/Skills and existing projects are retained. Registration failure restores the prior install state and Skills; checked application caches remain available for retry.
 
-`--skills-dir` 可选择 Codex、Claude Code、WorkBuddy 的技能根目录；Harness 使用其专属 provider 根目录，不改动用户的全局技能目录。`--codex`、`--claude`、`--dsh` 可指定可执行文件，Harness 的 `--profile` 默认 `web`；macOS 本机没有 dsh 命令时优先使用已安装桌面包的官方 CLI。Windows 应使用能直接启动的宿主可执行文件。注册阶段使用宿主自身配置根（`CODEX_HOME`、`CLAUDE_CONFIG_DIR`、`DSH_HOME`、`WORKBUDDY_CONFIG_DIR`）；应用根始终由 `--home` 控制，二者不混用。
+## Versions, upgrades and publication boundary
 
-例如在同一台机器依次执行（其他参数与上面的 setup 相同）：
+Explicit builds accept `MAJOR.MINOR.PATCH-test.N[.N]` or `MAJOR.MINOR.PATCH`. CI-generated candidates use next-patch `test.<run>.<attempt>`; manually assigned candidates can use `test.1`, `test.2`. Every artifact has one identity across the installer, app package/lock and plugin metadata. Build numbers never overwrite old output; source versions are not bumped by packaging.
 
-```sh
-openmotion setup --host claude --manifest /absolute/release.local.json --home /absolute/shared-openmotion
-openmotion setup --host deepseek --profile web --manifest /absolute/release.local.json --home /absolute/shared-openmotion
-openmotion setup --host workbuddy --manifest /absolute/release.local.json --home /absolute/shared-openmotion
-```
+Source package manifests remain `private:true`. Only an explicitly versioned **prod** build produces publishable tgz metadata. test artifacts default to the `test` npm tag; stable artifacts default to `stage` so a later authorized registry smoke can precede moving `latest`. Local/default and DEV artifacts remain private. No command here publishes or changes npm tags. See [test and stable acceptance](release-guide.md) for separate maintainer authorization and gates.
 
-安装器保留其他 MCP、Skills 与用户配置。已有同名入口或 Skills 若不是本安装器管理则拒绝覆盖。WorkBuddy 配置在独立锁内重新读取并合并，保留其他设置；Harness 的本地组合包由官方配置工具加入所选 profile，不手工拼接或覆盖现有 YAML。重复安装复用同一应用与数据，更新同一个安装根目录时不允许隐式切换工程目录。安装失败回退本次 Skills 和安装记录；已校验的应用缓存保留供重试。
+After publication, the intended user entry is `npx --yes --package @openmotion/installer@<exact-version> -- openmotion setup --host codex`, followed by `prepare` and host reconnection. `@test` and `@latest` select channels; acceptance always records the exact resolved version. Installing/running npx alone, publishing a new package or moving a tag does not update an existing managed app.
 
-## Actions 默认轻量产物
+Before upgrading, stop your own old MCP connections and incompatible backend, back up projects/configuration, run setup with the new exact tgz and the **same** home/data/Skills paths, prepare and reconnect. Do not terminate unrelated services. Older app directories may remain, but rollback requires a compatible old package and data; back up before an irreversible format change. There is no automatic update or arbitrary-version rollback promise.
 
-本仓库的 **Motion standalone checks** 手动工作流默认 `format=npm`，`format=full` 保留 Mac arm64 / Windows x64 完整 ZIP 组装。当前工作流只在 runner 内构建和校验，不上传 Actions 制品，不发布 npm、Release 或存储对象；两种格式误勾 `publish` 都会拒绝。公开下载服务不属于本次迁移。
+## Native tools and diagnostics
 
-CI 在 Studio 构建后执行 `node scripts/package-npm.mjs dist/<beta> <beta>`，生成 `openmotion-installer-<beta>.tgz`、`openmotion-application-<beta>.tar.gz`、`release-npm.json` 与 SHA256 文件。安装器与应用/MCP 统一使用唯一 beta 版本；源 checkout 不被 bump，已有 beta 输出目录拒绝覆盖。清单同时固定应用、安装器、npm 锁文件与原生锁文件的 SHA256 和源码/构建身份。
+The runtime lock pins HTTPS URLs, versions, target OS/CPU and SHA256 for FFmpeg, ffprobe and Chrome for Testing. Downloads require no repository credentials, never attach repository tokens, and do not run brew/winget. Separate component locks, temporary extraction and completion markers support retry/cache reuse. A failed download is not ready. Explicit native path overrides remain supported. See [runtime details](test-packages.md).
 
-本地生成制品后，将上文 npx 命令里的 tgz 替换为该 beta 文件，`--manifest` 指向相邻 `release-npm.json`。生产 npm 依赖在应用目录用 `npm ci` 安装；不是依赖消费者自动采用 tgz 内的 package-lock.json。一期应用按同一 phase1 注册表仅包含 11 个公开 Tool 和五个入口；平铺宿主升级会移除本安装器拥有的已退出入口，并保留其他宿主/用户技能。依赖和原生版本沿用迁移源锁文件。
+A local `--manifest /absolute/release-npm.json` remains available for legacy delivery and controlled fixtures. HTTP, URL credentials, unsafe extraction paths and invalid hashes are rejected. Do not remove a leftover install lock until its owning process is confirmed stopped.
 
-目标系统验收继续使用 `scripts/smoke-npm-package.mjs`，支持 `--codex` 对应的 `.js` / `.mjs` CLI 入口。检查实际安装、原生 Skill 发现、MCP、延迟下载、缓存、Studio、音画导出与技术校验；独立播放器和模型回合仍需单独验证。本仓库工作流当前执行 Linux 组装与九 Tool ZIP E2E，不包含 Windows 实机验收；Windows 与 Mac 的安装验收在对应机器运行，不能从组装成功推断通过。
-
-## 按需下载与复用
-
-setup 仅获取应用并按 lockfile 运行 `npm ci --omit=dev --ignore-scripts`，不运行依赖安装脚本、不下载原生工具。MCP 握手、工具发现、工作流和引擎指南资源读取也不触发原生下载。首次工程操作需要启动本地服务时（例如创建工程或打开预览），准备固定的 FFmpeg、ffprobe 和 Chromium；也可在安装后主动执行：
-
-```sh
-npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.6.3-local.1.tgz openmotion prepare --home /absolute/install-root
-```
-
-npm 可以通过带 `os/cpu` 的平台包及安装脚本自动配置原生程序。本渠道保留“首次使用再下载”的时机，因此由运行时按固定清单自动准备；不要求用户手动安装 FFmpeg/ffprobe，也不执行 brew/winget。
-
-原生依赖按 OS/CPU 和内容 SHA256 保存到用户缓存，采用互斥锁、校验后解包和完成标记，后续直接复用。下载失败不标记为可用；不会自动换版本或执行 brew/winget。显式指定 `HYPERFRAMES_FFMPEG_PATH` / `HYPERFRAMES_FFPROBE_PATH` / `HYPERFRAMES_BROWSER_PATH` 时使用用户的程序（旧媒体路径变量和 `MOTION_BROWSER_PATH` 也支持）；缺失的组件仍按固定版本下载。Node/npm 由宿主已有环境提供，不随轻量包下载。
-
-固定源与完整测试包共用 `scripts/runtime-lock.json`，目前只有 Mac arm64、Windows x64。Mac 使用 [Martin Riedl 公开的 9.0.2 发布构建](https://ffmpeg.martin-riedl.de/)：FFmpeg 和 ffprobe 分别固定带构建日期/版本的 ZIP 地址及上游 SHA256，分别缓存和验证，不使用 latest；Windows 继续使用固定 Gyan 公开归档。浏览器来自固定版本的 Chrome for Testing。所有原生下载均无需公司账号或仓库凭据，下载器不附带仓库 Token。安装器自动选择 OS/CPU、下载、校验和设置路径，用户不需要手动安装 FFmpeg/ffprobe。当前仍以 macOS 26、Windows 11 为已声明目标，按需下载不自动扩大系统兼容范围。
-
-本地清单也允许显式 `file:` 资源，用于离线夹具或验证已冻结的原字节；同样检查 SHA256。HTTP、凭据嵌入 URL、非法解包路径或缺少校验值会被拒绝。被强制终止的安装可能留下 PID 锁；确认对应进程已经退出后才能删除锁重试。
-
-## 本地验收
-
-隔离设置四家各自的配置根，并通过 `--home`、`--skills-dir`、`--data-dir` 指定全新目录；不把测试安装进日常配置。验收最终 npm tgz、Skills 发现、宿主实际解析的 MCP 启动配置、首次原生下载、第二次缓存复用、Studio 以及一秒有声音和运动的导出。定向自动测试覆盖清单/路径校验、校验失败、锁、配置冲突、重复安装和失败回退。
-
-Installation, MCP connectivity and technical export checks do not replace model creation, independent playback or other operating-system acceptance. See the current [11-tool contract](mcp-phase1-tools.md). Record actual validation against the relevant commit in its PR or delivery log; earlier 28-tool or four-Skill prototype checks are not current phase-one acceptance.
-
-WorkBuddy 桌面对话/模型调用、Windows 实机和公网冷下载须分别验收。本渠道不改变系统支持范围，不新增发布、自动升级、账号或计费能力。
+For defects, include exact package/app version, source SHA, OS/CPU, Node/Agent version, template environment/catalog version, project/revision, reproduction steps and redacted logs. Installation, native preparation, host discovery, model creation, technical MP4 checks and human playback are separate evidence. Follow the [acceptance manual](release-guide.md); unrun Windows/host/creation checks remain unrun.
