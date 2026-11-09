@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import type { Ease } from "./contract.js";
+import type { Ease } from "../contract.js";
 /** Closed monotone GSAP eases. Percentage is tween progress, not elapsed time. */
 export function progressAtTime(ease: Ease | undefined, time: number): number {
   const p = Math.max(0, Math.min(100, time)) / 100;

@@ -129,11 +129,26 @@ export const editInput = z.discriminatedUnion("action", [
       .regex(/^(?:\.\.\/)*assets\/[a-zA-Z0-9][a-zA-Z0-9._-]*\.wav$/i),
     duration: z.number().finite().positive().max(3600),
   }),
+  inspectInput.extend({
+    action: z.literal("link"),
+    id: z.string().min(1).max(512),
+    partner: z.string().min(1).max(512),
+  }),
+  inspectInput.extend({ action: z.literal("unlink"), id: z.string().min(1).max(512) }),
   inspectInput.extend({ action: z.literal("remove"), id: z.string().min(1).max(512) }),
 ]);
 export type EditInput = z.infer<typeof editInput>;
+type WithoutHtml<T> = T extends unknown ? Omit<T, "html"> : never;
+export type ClipEdit = WithoutHtml<Extract<EditInput, { action: "link" | "unlink" | "remove" }>>;
 export interface Clip {
-  media?: { kind: "image" | "audio"; src: string; maximum: number | null; audio?: AudioState };
+  link?: { id: string; members: string[]; reason: string | null; maximum: number | null };
+  media?: {
+    linkReason?: string | null;
+    kind: "image" | "audio";
+    src: string;
+    maximum: number | null;
+    audio?: AudioState;
+  };
   host?: { instance: string; source: string; maximum: number | null; reason: string | null };
   id: string;
   parent: string | null;

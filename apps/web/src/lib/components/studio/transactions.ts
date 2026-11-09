@@ -1,4 +1,4 @@
-import type { Clip, NativeValues } from "@open-motion/motion/contract";
+import type { Clip, ClipEdit, NativeValues } from "@open-motion/motion/contract";
 import type { Source } from "@open-motion/motion/project";
 import type { Resource } from "@open-motion/workspace/contract";
 import type { Client } from "../../../api.js";
@@ -89,4 +89,18 @@ export async function insertResource(context: CompositionContext, client: Client
   );
   context.apply(binding, changed.html);
   return changed;
+}
+
+/** Retain applied source and the workspace receipt across unknown save outcomes. */
+export function editClip(context: CompositionContext, client: Client, input: ClipEdit, save: () => Promise<void>) {
+  let applied = false;
+  return async () => {
+    if (!applied) {
+      const binding = await context.prepare();
+      const changed = await client.editMotion({ html: binding.source, ...input });
+      context.apply(binding, changed.html);
+      applied = true;
+    }
+    await save();
+  };
 }

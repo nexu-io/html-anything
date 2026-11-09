@@ -1,62 +1,10 @@
 import { type Composition, type EditOp, openComposition } from "@hyperframes/sdk";
 import type { z } from "zod";
-import { animate, animations, describeAnimation } from "./animation.js";
-import { appearance, appearanceStyles } from "./appearance.js";
-import {
-  type AnimationInput,
-  type AudioState,
-  type Clip,
-  editInput,
-  type NativeValues,
-  patchInput,
-} from "./contract.js";
-
-const numeric = (value: string | undefined) =>
-  value === undefined || !value.trim() || !Number.isFinite(Number(value)) ? null : Number(value);
-function audioState(attributes: Readonly<Record<string, string | undefined>>, animated: boolean): AudioState {
-  const sourceDuration = numeric(attributes["data-source-duration"]),
-    inPoint = numeric(attributes["data-media-start"]),
-    rate = numeric(attributes["data-playback-rate"]),
-    volume = attributes["data-volume"] === undefined ? 1 : numeric(attributes["data-volume"]),
-    duration = numeric(attributes["data-duration"]);
-  let reason: string | null = null;
-  if (
-    !attributes.src ||
-    sourceDuration === null ||
-    sourceDuration <= 0 ||
-    inPoint === null ||
-    inPoint < 0 ||
-    inPoint >= sourceDuration ||
-    duration === null ||
-    duration <= 0 ||
-    !/^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test((attributes["data-playback-rate"] ?? "").trim()) ||
-    rate === null ||
-    rate < 0.1 ||
-    rate > 10 ||
-    inPoint + duration * rate > sourceDuration + 1e-8 ||
-    volume === null ||
-    volume < 0 ||
-    volume > 1
-  )
-    reason = "只读：音频需要直接素材引用、有效源长度、入点、窗口、0.1..10 倍率和 0..1 音量";
-  else if (
-    [
-      "data-playback-start",
-      "data-link",
-      "data-automation",
-      "data-fx-chain",
-      "data-fx-carve",
-      "data-audio-group",
-      "data-fade-in",
-      "data-fade-out",
-      "loop",
-      "autoplay",
-    ].some((name) => attributes[name] !== undefined) ||
-    animated
-  )
-    reason = "渐变速、链接、自动化、效果或宿主脚本音频当前只读";
-  return { sourceDuration, inPoint, rate, volume, muted: attributes.muted !== undefined, reason };
-}
+import { type AnimationInput, type Clip, editInput, type NativeValues, patchInput } from "./contract.js";
+import { animate, animations, describeAnimation } from "./editing/animation.js";
+import { appearance, appearanceStyles } from "./editing/appearance.js";
+import { audioState, numeric } from "./editing/audio.js";
+import { describeLinks, editLinks, linkedPatches } from "./editing/links.js";
 
 export * from "./contract.js";
 /** Native SDK edits source only. Product persistence/revision stays with workspace. */
@@ -73,7 +21,7 @@ export class Motion {
     };
     const elements = this.composition.getElements(),
       parsed = animations(this.composition);
-    return elements.map((e) => ({
+    const clips: Clip[] = elements.map((e) => ({
       id: e.scopedId,
       parent:
         elements.find((parent) => parent.children.some((child) => child.scopedId === e.scopedId))?.scopedId ?? null,
@@ -139,12 +87,25 @@ export class Motion {
         ? Number.parseFloat(e.inlineStyles.fontSize ?? "")
         : null,
     }));
+    return describeLinks(
+      clips,
+      (id) => this.composition.getElement(id)?.attributes["data-link"],
+      parsed.some((a) => a.hasUnresolvedSelector || a.hasPartialSelector),
+    );
   }
   animate(input: AnimationInput): string {
+    if (this.clips.find((c) => c.id === input.id)?.link) throw Error("链接媒体的动画需先解除链接");
     if (this.composition.getElement(input.id)?.tag === "audio") throw Error("音频动画需由独立媒体契约管理");
     return animate(this.composition, input);
   }
   patch(id: string, request: NativeValues): string {
+    patchInput.parse({ html: "validation", id, ...request });
+    const operations = linkedPatches(this.clips, id, request).flatMap((patch) =>
+      this.patchOperations(patch.id, patch.values),
+    );
+    return this.applyOperations(operations);
+  }
+  private patchOperations(id: string, request: NativeValues): EditOp[] {
     const input = patchInput.parse({ html: "validation", id, ...request });
     const target = this.composition.getElement(id);
     if (!target) throw new Error("native element is missing");
@@ -234,7 +195,10 @@ export class Motion {
         ? []
         : [{ type: "setTiming" as const, target: id, start: input.start, duration: input.duration }]),
     ];
-    // Validate before applying the batch; a rejected operation never partially edits the source.
+    return operations;
+  }
+  private applyOperations(operations: EditOp[]): string {
+    // Validate the complete group before any source mutation.
     for (const op of operations) {
       const result = this.composition.can(op);
       if (!result.ok) throw new Error(result.message);
@@ -251,30 +215,37 @@ export class Motion {
     )
       throw new Error("invalid native font size");
     editInput.parse(input);
+    if (input.action === "link" || input.action === "unlink" || input.action === "remove")
+      return this.applyOperations(
+        editLinks(
+          this.clips,
+          input,
+          this.composition
+            .getElements()
+            .flatMap((e) => [
+              e.attributes.id ?? "",
+              e.attributes["data-link"] ?? "",
+              e.attributes["data-sync-origin"] ?? "",
+            ]),
+        ),
+      );
     const before = new Set(this.composition.getElements().map((e) => e.scopedId));
     let operation: EditOp;
-    if (input.action === "remove") {
-      const target = this.composition.getElement(input.id);
-      if (!target || target.attributes["data-composition-id"] !== undefined)
-        throw new Error("only a content element can be removed");
-      operation = { type: "removeElement", target: input.id };
+    const root = this.composition.getElements().find((e) => e.attributes["data-composition-id"] !== undefined);
+    if (!root) throw new Error("native composition is missing");
+    let html: string;
+    if (input.action === "addText") {
+      const text = input.text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      html = `<p data-start="0" data-duration="3">${text}</p>`;
     } else {
-      const root = this.composition.getElements().find((e) => e.attributes["data-composition-id"] !== undefined);
-      if (!root) throw new Error("native composition is missing");
-      let html: string;
-      if (input.action === "addText") {
-        const text = input.text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-        html = `<p data-start="0" data-duration="3">${text}</p>`;
-      } else {
-        const end = Number(root.attributes["data-duration"]);
-        if (!Number.isFinite(end) || end <= 0) throw new Error("媒体插入需要数值合成时长");
-        html =
-          input.action === "addImage"
-            ? `<img crossorigin="anonymous" src="${input.src}" width="${input.width}" height="${input.height}" data-start="0" data-duration="${Math.min(3, end)}">`
-            : `<audio src="${input.src}" preload="auto" crossorigin="anonymous" data-start="0" data-duration="${Math.min(input.duration, end)}" data-source-duration="${input.duration}" data-media-start="0" data-playback-rate="1"></audio>`;
-      }
-      operation = { type: "addElement", parent: root.scopedId, index: root.children.length, html };
+      const end = Number(root.attributes["data-duration"]);
+      if (!Number.isFinite(end) || end <= 0) throw new Error("媒体插入需要数值合成时长");
+      html =
+        input.action === "addImage"
+          ? `<img crossorigin="anonymous" src="${input.src}" width="${input.width}" height="${input.height}" data-start="0" data-duration="${Math.min(3, end)}">`
+          : `<audio src="${input.src}" preload="auto" crossorigin="anonymous" data-start="0" data-duration="${Math.min(input.duration, end)}" data-source-duration="${input.duration}" data-media-start="0" data-playback-rate="1"></audio>`;
     }
+    operation = { type: "addElement", parent: root.scopedId, index: root.children.length, html };
     const allowed = this.composition.can(operation);
     if (!allowed.ok) throw new Error(allowed.message);
     this.composition.dispatch(operation);
