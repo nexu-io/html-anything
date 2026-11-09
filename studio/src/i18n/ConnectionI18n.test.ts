@@ -5,7 +5,37 @@ import { mountConnection } from '../../../web/connect';
 import { dictionaries, languages, translate, type Locale } from './messages';
 
 let controller: ReturnType<typeof mountConnection> | undefined;
-afterEach(() => { controller?.destroy(); controller = undefined; document.body.replaceChildren(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => { controller?.destroy(); controller = undefined; document.body.replaceChildren(); vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers(); });
+
+it('polls cache warnings independently of publication changes and preserves gallery cards', async () => {
+  vi.useFakeTimers();
+  vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+  vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
+  let warning: string | undefined;
+  const info = { version: '0.6.3', previewUrl: 'http://localhost:4173', transport: { type: 'stdio', command: 'node', args: ['mcp.ts'] }, tools: [] };
+  const template = { id: 'prism', title: 'Published template', tags: [], collection: 'example', kind: 'prism' };
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => Response.json(url.endsWith('/integration') ? info : {
+    items: [template], total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null,
+    catalogVersion: 'same-publication', warning,
+  })));
+  const root = document.createElement('div');
+  root.innerHTML = '<input id="template-search"><button id="connection-templates"></button>' + page;
+  document.body.append(root);
+  controller = mountConnection(root, { locale: 'en', t: message => message, close() {}, useTemplate() {} });
+  controller.resume();
+  await vi.advanceTimersByTimeAsync(1);
+  const card = root.querySelector('[data-template-id]');
+  expect(card).not.toBeNull();
+  warning = 'Template refresh failed; using cached catalogue';
+  await vi.advanceTimersByTimeAsync(5_000);
+  expect(root.querySelector<HTMLElement>('#catalog-error')!.hidden).toBe(false);
+  expect(root.querySelector('#catalog-error-text')!.textContent).toBe(warning);
+  expect(root.querySelector('[data-template-id]')).toBe(card);
+  warning = undefined;
+  await vi.advanceTimersByTimeAsync(5_000);
+  expect(root.querySelector<HTMLElement>('#catalog-error')!.hidden).toBe(true);
+  expect(root.querySelector('[data-template-id]')).toBe(card);
+});
 
 it('updates live dialog labels while preserving the chosen client, search, preview and copied instructions', async () => {
   vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
