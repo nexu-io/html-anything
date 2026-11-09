@@ -15,79 +15,38 @@ OpenMotion 是一款直接在本地 Agent 中运行的开源视频生成器。�
 
 <a id="showcase"></a>
 
-## 场景与复刻效果
+## 七种创作场景与复刻效果
+
+<a id="可以用它做什么"></a> <a id="what-can-you-make"></a>
+
+品牌对照均为同步的 5 秒片段：左边是原片，右边是 OpenMotion 复刻；手机上则上下排列。点击画面可放大观看。
 
 <a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
 
-### 品牌宣传片：同一段 5 秒，原片与复刻并排看
+### 产品发布与演示
 
-每组同步播放 5 秒。左边是原片，右边用 OpenMotion 换了主体、配色和故事，可以对着同一拍看出借用了哪个动作。点击画面可放大，竖屏 MP4 则把原片和改编版上下排列。
+让产品出现在最值得停留的一拍。Stripe 原片用一次点击带出卡片翻面，复刻版在同一拍翻出一格海岸胶片。
 
-<table>
-<tr>
-<td colspan="2" valign="top" align="center">
+**Stripe · 银行卡翻转 → 海岸胶片**
+
 <div id="case-stripe"><a href="../examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/stripe/comparison.jpg"><img src="../examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · 银行卡翻转 → 海岸胶片"></picture></a></div>
-<strong>Stripe · 银行卡翻转 → 海岸胶片</strong><br>
-同一次点击、推镜和翻转，把紫色银行卡换成了带齿孔的海岸风景胶片。<br>
+
 <sub><a href="../examples/brand-studies/stripe/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/stripe/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">原片 00:21.50–00:26.50</a> · <a href="../examples/brand-studies/stripe/index.html">HTML</a> · <a href="../examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top" align="center">
-<div id="case-claude"><a href="../examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/anthropic/comparison.jpg"><img src="../examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · 设置面板 → 品牌调色板"></picture></a></div>
-<strong>Claude · 设置面板 → 品牌调色板</strong><br>
-开关和手绘圈沿用原片的节拍，设置面板换成了钴蓝调色板和柿橙海报。<br>
-<sub><a href="../examples/brand-studies/anthropic/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/anthropic/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">原片 00:00–00:05</a> · <a href="../examples/brand-studies/anthropic/index.html">HTML</a></sub>
-</td>
-<td width="50%" valign="top" align="center">
-<div id="case-openai"><a href="../examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg"><img src="../examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · 线框节点 → 剪辑轨道"></picture></a></div>
-<strong>OpenAI · 线框节点 → 剪辑轨道</strong><br>
-五段彩色剪辑轨道收成一个切点，沿用原片切底、出字、落标的三拍。<br>
-<sub><a href="../examples/motion-studies/comparison.mp4">横屏大图</a> · <a href="../examples/motion-studies/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">原片 00:26.50–00:31.50</a> · <a href="../examples/motion-studies/signoff.html">HTML</a></sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top" align="center">
-<div id="case-kimi"><a href="../examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/kimi/comparison.jpg"><img src="../examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · 磁力线 → 黑胶唱片"></picture></a></div>
-<strong>Kimi · 磁力线 → 黑胶唱片</strong><br>
-磁力线变成转动的唱片纹路，按原片的时机淡出，接上跳变的封套字标。<br>
-<sub><a href="../examples/brand-studies/kimi/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/kimi/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">原片 00:30.75–00:35.75</a> · <a href="../examples/brand-studies/kimi/index.html">HTML</a></sub>
-</td>
-<td width="50%" valign="top" align="center">
-<div id="case-deepseek"><a href="../examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/deepseek/comparison.jpg"><img src="../examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · 终端打字 → 片场打板"></picture></a></div>
-<strong>DeepSeek Harness · 终端打字 → 片场打板</strong><br>
-光标改在片场打板上逐字输入，最后一键和片尾之间保留停顿与闪切。<br>
-<sub><a href="../examples/brand-studies/deepseek/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/deepseek/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">原片 01:31.50–01:36.50</a> · <a href="../examples/brand-studies/deepseek/index.html">HTML</a></sub>
-</td>
-</tr>
-</table>
+
+[使用这个场景的简报](examples.zh-CN.md#product-launch)
 
 <details>
-<summary>更多品牌原片 · Lovable、Kimi K3、Codex Originals 与 ElevenLabs</summary>
+<summary>更多发布片参考：Kimi K3 与 ElevenLabs</summary>
 
 <table>
 <tr>
-<td width="50%" valign="top" align="center">
-<a href="readme/media/jake-lovable-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/viral-remix.jpg"><img src="readme/examples/viral-remix.gif" width="440" alt="Lovable Aesthetics Update 参考片"></picture></a><br>
-<strong>Lovable · Aesthetics Update</strong><br>
-用自信的产品揭示，展示下一次设计更新。<br>
-<sub>参考 · @lovable_dev</sub>
-</td>
-<td width="50%" valign="top" align="center">
+<td width="50%" valign="top">
 <a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser 参考片"></picture></a><br>
 <strong>Kimi · K3 teaser</strong><br>
 把下一次发布浓缩成简短、难忘的预告。<br>
 <sub>参考 · @Kimi_Moonshot</sub>
 </td>
-</tr>
-<tr>
-<td width="50%" valign="top" align="center">
-<a href="https://openai.com/codex-originals/"><img src="readme/brand-showcase/codex-originals.webp" width="440" alt="Codex Originals：OpenAI 活动中创作者的合影"></a><br>
-<strong>OpenAI · Codex Originals</strong><br>
-让使用你的产品创作的人，站在故事中心。<br>
-<sub><a href="https://openai.com/codex-originals/">观看官方活动 ↗</a> · OpenAI · 活动静帧</sub>
-</td>
-<td width="50%" valign="top" align="center">
+<td width="50%" valign="top">
 <a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs 参考片"></picture></a><br>
 <strong>ElevenLabs · Reception</strong><br>
 用聚焦的发布故事介绍新产品。<br>
@@ -98,117 +57,42 @@ OpenMotion 是一款直接在本地 Agent 中运行的开源视频生成器。�
 
 </details>
 
-<a id="可以用它做什么"></a> <a id="what-can-you-make"></a>
+<details>
+<summary>混合素材参考：实拍、生成角色与代码</summary>
 
-### 七种创作场景
-
-每个场景都有样片和可直接交给 Agent 的创作简报。卡片标明了哪些是外部参考，哪些是 OpenMotion 的成片。
+优秀视频可以混合制作方式。这些外部案例可帮助你判断哪些该实拍、哪些生成、哪些用代码表达。
 
 <table>
 <tr>
-<td width="50%" valign="top">
-<strong>01 · AI 口播剪辑</strong><br>
-三分钟素材，一个鲜明故事。
-<p align="center">
-<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/talking-head.jpg">
-<img src="readme/examples/talking-head.gif" width="208" alt="外部创作参考：Ali Abdaal · 我每天使用的 5 个工具">
-</picture></a>
-</p>
-<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 我每天使用的 5 个工具</a></sub><br><br>
-<strong>从这里开始</strong> · 你的录制素材 + 文字稿 / 时间码<br>
-<strong>做成自己的作品</strong> · 清晰开头、精简表达、字幕与适时的 B-roll。<br><br>
-<a href="examples.zh-CN.md#talking-head">复制创作简报 →</a> · <a href="readme/examples/talking-head.jpg">静态预览</a>
+<td width="50%" valign="top" align="center">
+<a href="readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-unboxing.jpg"><img src="readme/brand-showcase/rea-unboxing.gif" width="250" alt="产品开箱实拍参考"></picture></a><br>
+<strong>真实产品，有触感的故事</strong><br>
+研究特写、手部动作和揭示方式，拍摄自己的产品。<br>
+<sub>实拍 · 产品开箱</sub>
 </td>
-<td width="50%" valign="top">
-<strong>02 · AI 重剪与改稿</strong><br>
-把零散片段变成 100 天的故事。
-<p align="center">
-<a href="readme/media/hundred-days-story-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/story-recut.jpg">
-<img src="readme/examples/story-recut.gif" width="208" alt="外部创作参考：用贴纸和照片卡讲述 100 天">
-</picture></a>
-</p>
-<sub>参考 · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">用贴纸和照片卡讲述 100 天</a></sub><br><br>
-<strong>从这里开始</strong> · 你的片段、照片、旁白和故事梗概<br>
-<strong>做成自己的作品</strong> · 用照片剪贴、章节节拍和新节奏做个人蒙太奇。<br><br>
-<a href="examples.zh-CN.md#story-recut">复制创作简报 →</a> · <a href="readme/examples/story-recut.jpg">静态预览</a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<strong>03 · 产品发布与演示</strong><br>
-让功能成为主角。
-<p align="center">
-<a href="../examples/brand-studies/stripe/film.mp4"><img src="../examples/brand-studies/stripe/coast.jpg" width="480" alt="OpenMotion · Coast study"></a>
-</p>
-<sub>OpenMotion 成片 · <a href="#case-stripe">查看 Stripe 原片对照</a></sub><br><br>
-<strong>从这里开始</strong> · 产品界面 + 功能简报 + Brandkit<br>
-<strong>做成自己的作品</strong> · 功能揭示、聚焦界面演示和难忘收尾。<br><br>
-<a href="examples.zh-CN.md#product-launch">复制创作简报 →</a> · <a href="../examples/brand-studies/stripe/coast.jpg">静态预览</a>
-</td>
-<td width="50%" valign="top">
-<strong>04 · 热门视频重建</strong><br>
-重组节奏，讲自己的故事。
-<p align="center">
-<a href="readme/media/jake-lovable-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/viral-remix.jpg">
-<img src="readme/examples/viral-remix.gif" width="480" alt="外部创作参考：Lovable: Aesthetics Update · @lovable_dev">
-</picture></a>
-</p>
-<sub>参考 · <a href="readme/media/jake-lovable-reference.mp4">Lovable: Aesthetics Update · @lovable_dev</a></sub><br><br>
-<strong>从这里开始</strong> · 参考片 + 你的文案、视觉和品牌<br>
-<strong>做成自己的作品</strong> · 围绕开头、字体和视觉节奏，做新的可编辑影片。<br><br>
-<a href="examples.zh-CN.md#viral-remix">复制创作简报 →</a> · <a href="readme/examples/viral-remix.jpg">静态预览</a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<strong>05 · 讲解与教程</strong><br>
-一个工作流，三个清楚步骤。
-<p align="center">
-<a href="readme/media/remix-authorize-once-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/explainer.jpg">
-<img src="readme/examples/explainer.gif" width="480" alt="外部创作参考：授权一次，连接所有人">
-</picture></a>
-</p>
-<sub>参考 · <a href="readme/media/remix-authorize-once-reference.mp4">授权一次，连接所有人</a></sub><br><br>
-<strong>从这里开始</strong> · 你的工作流 + 脚本 + 准确界面截图<br>
-<strong>做成自己的作品</strong> · 每个场景一个重点，用有目的的标注引导。<br><br>
-<a href="examples.zh-CN.md#explainer">复制创作简报 →</a> · <a href="readme/examples/explainer.jpg">静态预览</a>
-</td>
-<td width="50%" valign="top">
-<strong>06 · 数据故事与图表</strong><br>
-让每个数字都表达重点。
-<p align="center">
-<a href="readme/media/M1128-clip.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/data-story.jpg">
-<img src="readme/examples/data-story.gif" width="480" alt="外部创作参考：动态对比柱形图 · @Vintage_god">
-</picture></a>
-</p>
-<sub>参考 · <a href="https://x.com/Vintage_god/status/2106817967967056165">动态对比柱形图 · @Vintage_god</a></sub><br><br>
-<strong>从这里开始</strong> · 你的数据、单位、来源和结论<br>
-<strong>做成自己的作品</strong> · 清晰的图表揭示、动态数值和明确对比。<br><br>
-<a href="examples.zh-CN.md#data-story">复制创作简报 →</a> · <a href="readme/examples/data-story.jpg">静态预览</a>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top">
-<strong>07 · 音乐与艺术视觉</strong><br>
-让音乐拥有自己的视觉身份。
-<p align="center">
-<a href="readme/media/M1139-clip.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/music-visual.jpg">
-<img src="readme/examples/music-visual.gif" width="480" alt="外部创作参考：Lyria 3 视觉片段 · @GoogleAI">
-</picture></a>
-</p>
-<sub>参考 · <a href="https://x.com/GoogleAI/status/2024154215182926027">Lyria 3 视觉片段 · @GoogleAI</a></sub><br><br>
-<strong>从这里开始</strong> · 你的音频 + 情绪 + 节拍标记 / 提示点<br>
-<strong>做成自己的作品</strong> · 色彩层次、动态文字与音乐同步的视觉序列。<br><br>
-<a href="examples.zh-CN.md#music-visual">复制创作简报 →</a> · <a href="readme/examples/music-visual.jpg">静态预览</a>
+<td width="50%" valign="top" align="center">
+<a href="readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-dual-role.jpg"><img src="readme/brand-showcase/rea-dual-role.gif" width="250" alt="AI 角色、代码界面与屏幕录制混合制作参考"></picture></a><br>
+<strong>角色与界面相遇</strong><br>
+把角色驱动的开头与界面动效、屏幕录制组合起来。<br>
+<sub>AI 角色 + 代码 + 屏幕录制</sub>
 </td>
 </tr>
 </table>
+
+</details>
+
+### AI 口播剪辑
+
+按出镜人的讲述剪掉停顿，用字幕标出重点，在讲到工具时切入屏幕画面。
+
+<p align="center"><a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/talking-head.jpg">
+<img src="readme/examples/talking-head.gif" width="208" alt="外部创作参考：Ali Abdaal · 我每天使用的 5 个工具">
+</picture></a></p>
+
+<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 我每天使用的 5 个工具</a></sub>
+
+[使用这个场景的简报](examples.zh-CN.md#talking-head) · 人物宣传片参考：[OpenAI · Codex Originals](https://openai.com/codex-originals/)
 
 <a id="everyone-can-be-a-creator"></a> <a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a> <a id="人人都是自媒体"></a> <a id="creator-video-gallery"></a>
 
@@ -350,6 +234,41 @@ OpenMotion 是一款直接在本地 Agent 中运行的开源视频生成器。�
 
 </details>
 
+### AI 重剪与改稿
+
+把零散照片和片段剪成一段故事。这支 100 天日记用一张张照片卡串起时间。
+
+<p align="center"><a href="readme/media/hundred-days-story-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/story-recut.jpg">
+<img src="readme/examples/story-recut.gif" width="208" alt="外部创作参考：用贴纸和照片卡讲述 100 天">
+</picture></a></p>
+
+<sub>参考 · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">用贴纸和照片卡讲述 100 天</a></sub>
+
+[使用这个场景的简报](examples.zh-CN.md#story-recut)
+
+### 热门视频复刻
+
+保留几秒钟的剪辑节奏，换掉画面讲的事。下面两组复刻都沿用原片的切点，重新设计了主体和文字。
+
+**OpenAI · 线框节点 → 剪辑轨道**
+
+<div id="case-openai"><a href="../examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg"><img src="../examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · 线框节点 → 剪辑轨道"></picture></a></div>
+
+五段彩色剪辑轨道收成一个切点，沿用原片切底、出字、落标的三拍。
+
+<sub><a href="../examples/motion-studies/comparison.mp4">横屏大图</a> · <a href="../examples/motion-studies/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">原片 00:26.50–00:31.50</a> · <a href="../examples/motion-studies/signoff.html">HTML</a></sub>
+
+**DeepSeek Harness · 终端打字 → 片场打板**
+
+<div id="case-deepseek"><a href="../examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/deepseek/comparison.jpg"><img src="../examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · 终端打字 → 片场打板"></picture></a></div>
+
+光标改在片场打板上逐字输入，最后一键和片尾之间保留停顿与闪切。
+
+<sub><a href="../examples/brand-studies/deepseek/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/deepseek/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">原片 01:31.50–01:36.50</a> · <a href="../examples/brand-studies/deepseek/index.html">HTML</a></sub>
+
+[使用这个场景的简报](examples.zh-CN.md#viral-remix) · 参考片：[Lovable · Aesthetics Update](readme/media/jake-lovable-reference.mp4)
+
 <a id="see-the-motion-survive-a-new-brand"></a>
 
 <details>
@@ -427,29 +346,42 @@ OpenMotion 是一款直接在本地 Agent 中运行的开源视频生成器。�
 
 </details>
 
-<details>
-<summary>混合素材参考：实拍、生成角色与代码</summary>
+### 讲解与教程
 
-优秀视频可以混合制作方式。这些外部案例可帮助你判断哪些该实拍、哪些生成、哪些用代码表达。
+先让人看到该看哪里，再展示下一步。Claude 的例子保留了开关和手绘圈的节拍，把设置面板换成调色板。
 
-<table>
-<tr>
-<td width="50%" valign="top" align="center">
-<a href="readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-unboxing.jpg"><img src="readme/brand-showcase/rea-unboxing.gif" width="250" alt="产品开箱实拍参考"></picture></a><br>
-<strong>真实产品，有触感的故事</strong><br>
-研究特写、手部动作和揭示方式，拍摄自己的产品。<br>
-<sub>实拍 · 产品开箱</sub>
-</td>
-<td width="50%" valign="top" align="center">
-<a href="readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-dual-role.jpg"><img src="readme/brand-showcase/rea-dual-role.gif" width="250" alt="AI 角色、代码界面与屏幕录制混合制作参考"></picture></a><br>
-<strong>角色与界面相遇</strong><br>
-把角色驱动的开头与界面动效、屏幕录制组合起来。<br>
-<sub>AI 角色 + 代码 + 屏幕录制</sub>
-</td>
-</tr>
-</table>
+**Claude · 设置面板 → 品牌调色板**
 
-</details>
+<div id="case-claude"><a href="../examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/anthropic/comparison.jpg"><img src="../examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · 设置面板 → 品牌调色板"></picture></a></div>
+
+<sub><a href="../examples/brand-studies/anthropic/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/anthropic/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">原片 00:00–00:05</a> · <a href="../examples/brand-studies/anthropic/index.html">HTML</a></sub>
+
+[使用这个场景的简报](examples.zh-CN.md#explainer) · 参考片：[授权一次，连接所有人](readme/media/remix-authorize-once-reference.mp4)
+
+### 数据故事与图表
+
+从一个需要比较的问题出发，标出数值和单位。参考片里的柱形条随数值变化，观众能直接看出差距。
+
+<p align="center"><a href="readme/media/M1128-clip.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/data-story.jpg">
+<img src="readme/examples/data-story.gif" width="480" alt="外部创作参考：动态对比柱形图 · @Vintage_god">
+</picture></a></p>
+
+<sub>参考 · <a href="https://x.com/Vintage_god/status/2106817967967056165">动态对比柱形图 · @Vintage_god</a></sub>
+
+[使用这个场景的简报](examples.zh-CN.md#data-story)
+
+### 音乐与艺术视觉
+
+给一段音乐找一个视觉主题。Kimi 复刻版把旋转的磁力线换成黑胶纹路，再切到唱片封套；这段对照展示的是画面。
+
+**Kimi · 磁力线 → 黑胶唱片**
+
+<div id="case-kimi"><a href="../examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/kimi/comparison.jpg"><img src="../examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · 磁力线 → 黑胶唱片"></picture></a></div>
+
+<sub><a href="../examples/brand-studies/kimi/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/kimi/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">原片 00:30.75–00:35.75</a> · <a href="../examples/brand-studies/kimi/index.html">HTML</a></sub>
+
+[使用这个场景的简报](examples.zh-CN.md#music-visual) · 参考片：[Google AI · Lyria 3](readme/media/M1139-clip.mp4)
 
 <a id="features"></a>
 
