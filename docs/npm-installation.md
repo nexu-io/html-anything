@@ -2,13 +2,15 @@
 
 The npm tgz contains the installer, a prebuilt Motion application archive and its pinned release manifest. One `setup` installs the application, eleven public MCP Tools and five Skills for the selected host. No adjacent application archive or `--manifest` is needed. The application runs from a managed, writable directory, never from the npx cache; projects remain outside application/cache directories.
 
-This branch does not publish packages. `@openmotion/app` is the agreed public package name. The `openmotion` npm organization has been registered by the project owner; the publishing account's access and availability of a registry version still need separate verification. Registry examples apply only after a separately authorized release.
+`@openmotion/app@0.6.4-test.6` is available from npm through the `test` channel. It was published separately after authorization; ordinary CI still does not publish packages. Its anonymous registry download, isolated macOS Codex setup, repeat setup, eleven MCP Tools and five Skills have been verified. Use the exact version for reproduction. See the [delivery record and known limitations](release-guide.md#published-test-candidate-064-test6), including the production template catalog and the registry's unexpected `latest` tag.
 
 ## Requirements and package contents
 
 Users provide Node.js 22.18+ with npm and their Agent host. Builds use the Node version pinned in CI. npm installs locked production dependencies with `npm ci --omit=dev --ignore-scripts`; FFmpeg, ffprobe and the browser are downloaded and checked separately by `prepare` or the first native operation. Node, native binaries, node_modules, user projects and credentials are not bundled in this npm format. It is not an offline package. Complete platform ZIPs remain a backup.
 
 The embedded application uses `scripts/distribution.ts`'s positive file list: MCP/backend, prebuilt Studio, five Skills and references, bundled examples, npm/native locks, licenses and approved documentation. Remote Prism templates are fetched separately. The embedded manifest omits the containing tgz's hash; the external delivery manifest records that hash without a circular self-reference.
+
+The npm page uses the repository's product `README.md`. Packaging resolves its relative documentation and image links against the exact source commit, while the embedded application keeps the original local links. The installation manual remains in the application docs; it is not the npm landing page. Published test.6 contains the earlier installation-manual README; the correction takes effect with the next separately authorized npm version, not by editing GitHub alone.
 
 ## Build and install a local test
 
@@ -19,12 +21,12 @@ npm ci --no-audit --no-fund
 npm run package:npm -- dist/npm-test 0.6.4-test.1
 ```
 
-The version is an example. Use a new empty output directory for every candidate. Files include `open-design-motion-<version>.tgz`, the application archive, `release-npm.json` and SHA256 sidecars. Only the tgz is required by a consumer; the remaining files are delivery evidence and the explicit-manifest fallback. Copy the tgz alone to another directory to verify this property.
+The version is an example. Use a new empty output directory for every candidate. Files include `openmotion-app-<version>.tgz`, the application archive, `release-npm.json` and SHA256 sidecars. Only the tgz is required by a consumer; the remaining files are delivery evidence and the explicit-manifest fallback. Copy the tgz alone to another directory to verify this property.
 
 An isolated macOS Codex installation:
 
 ```sh
-motion_tgz="/absolute/path/open-design-motion-0.6.4-test.1.tgz"
+motion_tgz="/absolute/path/openmotion-app-0.6.4-test.1.tgz"
 motion_test="$HOME/Library/Application Support/OpenMotion-test/0.6.4-test.1"
 mkdir -p "$motion_test/profile" "$motion_test/workspace"
 export CODEX_HOME="$motion_test/profile"
@@ -41,7 +43,7 @@ Run `prepare` only after successful setup. Wait for it to finish before starting
 Equivalent Windows PowerShell commands:
 
 ```powershell
-$motionTgz = 'C:\path\open-design-motion-0.6.4-test.1.tgz'
+$motionTgz = 'C:\path\openmotion-app-0.6.4-test.1.tgz'
 $motionTest = Join-Path $env:LOCALAPPDATA 'OpenMotion-test\0.6.4-test.1'
 New-Item -ItemType Directory -Force "$motionTest\profile", "$motionTest\workspace" | Out-Null
 $env:CODEX_HOME = "$motionTest\profile"
