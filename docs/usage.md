@@ -19,7 +19,7 @@ openmotion 0.6.2 是面向 Agent 的本地创作工作区与 Codex 插件，一�
 
 地址栏支持直接输入 `baidu.com`、前进、后退、刷新和停止；网页由独立本地 Chromium 承载，支持点击、滚动与文字输入，切回 Motion 仍保留编辑状态。需要本机 Chrome / Chromium，或设置 `MOTION_BROWSER_PATH` / `HYPERFRAMES_BROWSER_PATH`。网站音频、文件上传/下载管理等当前边界见 [浏览器运行架构](browser-runtime.md)。
 
-产品名为 openmotion，已有工作区界面保留 OpenDesign 标识。产品内会话、模板、媒体生成与通用 API 继续保留；当前一期给宿主 Agent 的公开 MCP 只含下方 9 个 motion_ Tool，未公开的产品能力不因此删除。
+产品名为 openmotion，已有工作区界面保留 OpenDesign 标识。产品内会话、模板、媒体生成与通用 API 继续保留；当前一期给宿主 Agent 的公开 MCP 只含下方 11 个 motion_ Tool，未公开的产品能力不因此删除。
 
 MCP 打开预览、创建产物、应用/复刻模板时，`previewUrl` 默认包含 `embed=1`，Codex 等宿主直接打开完整地址即可只显示编辑器，隐藏侧栏、会话和产品浏览器外框。`sessionUrl` 或显式 `embedded=false` 返回完整工作区；空会话仍显示会话入口。也可分别配置 `sidebar=0`、`conversation=0`。这些视图使用同一会话与产物。完整接口、失败语义与后续模式扩展见 [会话技术架构](session-architecture.md)。
 
@@ -35,7 +35,7 @@ Studio 与 MCP 共用这套模型和任务服务。云 Key 的填写不等于已
 
 ## 一期 MCP 发布范围
 
-[一期 11 Tool 契约与实现范围](mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露 9 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，五个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
+[一期 11 Tool 契约与实现范围](mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露这 11 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，五个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
 
 ## 产品与文档
 
