@@ -8,7 +8,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 // New documentation and developer scripts require an explicit distribution decision.
 export const distributionDocuments = [
   'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md',
-  'docs/product/architecture.md', 'docs/product/media-generation-design.md',
+  'docs/product/architecture.md', 'docs/product/media-generation-design.md', 'tracking/README.md',
   'docs/agent-adapters.md', 'docs/browser-runtime.md', 'docs/design-system.md', 'docs/editor-fork.md',
   'docs/hyperframes.md', 'docs/mcp-phase1-tools.md', 'docs/model-gateway.md', 'docs/motion-director.md',
   'docs/motion-extension-scope.md', 'docs/npm-installation.md', 'docs/project-workspace.md',
@@ -32,6 +32,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'scripts/runtime-assets.mjs', 'scripts/npm-runtime.mjs', 'scripts/runtime-lock.json',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
     'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
+    'tracking/core.ts', 'tracking/node.ts', 'tracking/browser.ts', 'tracking/events.ts',
   ];
   async function walk(directory: string, extensions: RegExp) {
     for (const entry of await readdir(path.join(root, directory), { withFileTypes: true })) {

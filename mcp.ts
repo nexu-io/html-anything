@@ -9,13 +9,43 @@ import { workflowResources, readWorkflowResource, workflowEntryGuide } from './s
 import { ensureEditor, editorRequest, editorHeaders, sharedEditorEnabled } from './editor-runtime.ts';
 import { isMain } from './shared/entry.ts';
 import type { Selection } from './editor-runtime.ts';
+import { createAppTracking, closeTracking, trackingError, type OmTracking } from './shared/tracking.ts';
+import { uuid } from './tracking/core.ts';
+import { toolNames } from './tracking/events.ts';
 
 export function mcpRegistry(profile = releaseProfile) { return createToolRegistry(profile === 'phase1' ? phase1Tools : tools, profile); }
 export const releaseRegistry = mcpRegistry();
 export const publicTools = releaseRegistry.tools;
 const selections = new WeakMap<WorkspaceStore, { sessionId: string; projectId: string }>();
+const trackingByStore = new WeakMap<WorkspaceStore, Promise<OmTracking>>();
+
+function trackingFor(store: WorkspaceStore) {
+  let tracking = trackingByStore.get(store);
+  if (!tracking) { tracking = createAppTracking(store.directory, 'mcp'); trackingByStore.set(store, tracking); }
+  return tracking;
+}
 
 export async function rpc(message: any, store = new WorkspaceStore(), registry = releaseRegistry, connection?: { selection: Selection }) {
+  const name = message?.params?.name;
+  if (message?.jsonrpc !== '2.0' || message.id === undefined || message.method !== 'tools/call'
+    || registry.profile !== 'phase1' || !(toolNames as readonly unknown[]).includes(name)) return invokeRpc(message, store, registry, connection);
+  const tracking = await trackingFor(store), started = performance.now(), callId = crypto.randomUUID();
+  let accepted = false;
+  try { validateInput(phase1Tools.find(tool => tool.name === name)!.inputSchema, message.params.arguments ?? {}); accepted = true; } catch {}
+  const fields = { tool_name: name as typeof toolNames[number], call_id: callId, accepted,
+    ...(uuid.test(message.params.arguments?.requestId) ? { operation_id: message.params.arguments.requestId } : {}) };
+  if (accepted) tracking.track('mcp_tool_started', fields);
+  const response = await invokeRpc(message, store, registry, connection);
+  const value = (response as any)?.result;
+  const content = value?.structuredContent;
+  const outcome = value?.isError || content?.status === 'failed' ? 'failure' : content?.status === 'partial' ? 'partial' : value ? 'success' : 'unknown';
+  tracking.track('mcp_tool_finished', { ...fields, outcome, duration_ms: Math.min(86_400_000, Math.round(performance.now() - started)),
+    ...(value?.isError ? { error_code: trackingError(new Error(String(content?.error?.code ?? 'TOOL_FAILED'))) } : {}),
+    ...(typeof content?.replayed === 'boolean' ? { replayed: content.replayed } : {}) });
+  return response;
+}
+
+async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnType<typeof mcpRegistry>, connection?: { selection: Selection }) {
   if (!message || message.jsonrpc !== '2.0' || typeof message.method !== 'string') return { jsonrpc: '2.0', id: message?.id ?? null, error: { code: -32600, message: 'Invalid request' } };
   if (message.id === undefined) return null;
   const result = (value: unknown) => ({ jsonrpc: '2.0', id: message.id, result: value });
@@ -72,4 +102,5 @@ if (isMain(import.meta.url)) {
     catch { response = { jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } }; }
     if (response) process.stdout.write(JSON.stringify(response) + '\n');
   }
+  await closeTracking(await trackingByStore.get(store));
 }

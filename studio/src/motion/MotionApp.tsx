@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { WorkspaceFrame } from './WorkspaceFrame';
 import { MotionHome } from './MotionHome';
@@ -7,6 +7,7 @@ import { requestedProject, validWorkspaceProject } from './workspaceRouting';
 import { MotionSessionFrame } from './MotionSessionFrame';
 import type { SessionDetail, SessionArtifact } from '../../../shared/session';
 import { ArtifactViewer } from './ArtifactViewer';
+import { trackMotion } from './tracking';
 
 const noPendingSaves = async () => {};
 
@@ -26,6 +27,16 @@ export function MotionApp() {
   const [ready, setReady] = useState<{ sessionId: string; artifact?: SessionArtifact } | null>(null);
   const [error, setError] = useState('');
   const [attempt, retry] = useState(0);
+  const view = useRef({ id: crypto.randomUUID(), started: performance.now(), sent: false });
+  useEffect(() => {
+    const home = projectId === null && sessionId === null;
+    if (view.current.sent || (!home && !ready && !error)) return;
+    view.current.sent = true;
+    const embedded = new URLSearchParams(location.search).get('embed') === '1';
+    if (home || ready) void trackMotion('page_view', { page_name: home ? 'home' : 'studio', view_id: view.current.id, embedded, has_project: Boolean(ready?.artifact) });
+    if (!home && error) void trackMotion('studio_load_result', { load_id: view.current.id, outcome: 'failure', embedded,
+      duration_ms: Math.min(86_400_000, Math.round(performance.now() - view.current.started)) });
+  }, [projectId, sessionId, ready, error]);
   useEffect(() => {
     if (projectId === null && sessionId === null) return;
     const controller = new AbortController();
