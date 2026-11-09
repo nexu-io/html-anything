@@ -101,3 +101,28 @@ test('the shared native acceptance client propagates a child failure instead of 
   try { await assert.rejects(client.rpc('initialize', {}), /MCP exited 1.*fixture startup failed/); }
   finally { client.child.kill('SIGTERM'); }
 });
+
+test('manual CI passes the selected template environment to both package formats', async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-dispatch-'));
+  try {
+    const workflow = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+    const step = workflow.split('      - name: Build immutable standalone artifacts\n')[1].split('      - name:')[0];
+    const script = step.split('        run: |\n')[1].replace(/^ {10}/gm, '');
+    const calls = path.join(directory, 'calls.txt');
+    await writeFile(path.join(directory, 'node'), '#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOTION_PACKAGE_CALLS"\nif [ "$2" = version ]; then echo 0.6.4-beta.42.1; fi\n', { mode: 0o755 });
+    for (const format of ['npm', 'full']) for (const environment of ['prod', 'dev']) {
+      await writeFile(calls, '');
+      await runFile('bash', ['-c', script], { env: { ...process.env,
+        PATH: directory + path.delimiter + process.env.PATH, MOTION_PACKAGE_CALLS: calls,
+        PACKAGE_FORMAT: format, TEMPLATE_ENVIRONMENT: environment, GITHUB_RUN_NUMBER: '42', GITHUB_RUN_ATTEMPT: '1',
+      } });
+      const commands = (await readFile(calls, 'utf8')).trim().split('\n');
+      assert.deepEqual(commands, ['scripts/test-package.mjs version 42 1', ...(format === 'npm'
+        ? [`scripts/package-npm.mjs dist/0.6.4-beta.42.1 0.6.4-beta.42.1 --template-env=${environment}`]
+        : ['mac-arm64', 'win-x64'].flatMap(target => [
+          `scripts/test-package.mjs prepare ${target}`,
+          `scripts/test-package.mjs build ${target} 0.6.4-beta.42.1 --template-env=${environment}`,
+        ]))]);
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});

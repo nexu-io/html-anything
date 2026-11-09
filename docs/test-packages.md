@@ -10,6 +10,8 @@ MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册
 
 合入后，在本仓库 → Actions → **Motion standalone checks** → Run workflow 选择 `format`。默认 `npm`，`full` 组装两个已声明目标的完整 ZIP。两种格式共用源码、锁定依赖和唯一 beta 版本。
 
+`template_environment` selects the configuration platform for either format: `prod` (default, `r.open-design.ai`) or `dev` (`r.powerformer.net`). Local builders accept `--template-env=dev|prod`. The choice is embedded in `shared/template-config.json` and recorded as `templateEnvironment` in the release manifest; Studio and MCP share it. DEV application archives and full ZIP manifests have a `-dev` suffix. This selects the template source, not a publication channel; publishing remains disabled. See [template configuration](template-catalog.md#环境与构建).
+
 | 选择 | 构建产物 | 运行时 |
 | --- | --- | --- |
 | `npm`（默认） | 轻量安装器 `.tgz`、应用 `.tar.gz`、`release-npm.json`、SHA256 | 目标机按应用 lockfile 安装 npm 依赖；首次需要时下载固定原生工具 |

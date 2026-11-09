@@ -13,6 +13,11 @@ on:
         type: choice
         options: [npm, full]
         default: npm
+      template_environment:
+        description: 'Template configuration platform used by the package'
+        type: choice
+        options: [prod, dev]
+        default: prod
       publish:
         description: 'Publication is disabled during migration; leave unchecked'
         type: boolean
@@ -76,14 +81,15 @@ jobs:
       - name: Build immutable standalone artifacts
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
+          TEMPLATE_ENVIRONMENT: ${{ inputs.template_environment || 'prod' }}
         run: |
           version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
           if [ "$PACKAGE_FORMAT" = npm ]; then
-            node scripts/package-npm.mjs "dist/$version" "$version"
+            node scripts/package-npm.mjs "dist/$version" "$version" --template-env="$TEMPLATE_ENVIRONMENT"
           else
             for target in mac-arm64 win-x64; do
               node scripts/test-package.mjs prepare "$target"
-              node scripts/test-package.mjs build "$target" "$version"
+              node scripts/test-package.mjs build "$target" "$version" --template-env="$TEMPLATE_ENVIRONMENT"
             done
           fi
       - name: Record validation scope
