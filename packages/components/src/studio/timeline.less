@@ -1,0 +1,20 @@
+.om-time {
+  min-width: 0;
+  max-width: var(--om-size-full);
+  overflow: auto;
+  &--disabled { opacity: var(--om-disabled-opacity); }
+  &__surface { width: var(--om-size-full); min-width: var(--om-timeline-min-width); display: block; }
+  &__key { fill: var(--om-focus); stroke: var(--om-raised); stroke-width: var(--om-focus-width); cursor: pointer; &:focus-visible { outline: var(--om-focus-ring) solid var(--om-focus); } }
+  &__ruler { fill: var(--om-canvas); cursor: pointer; }
+  &__tick { fill: var(--om-muted); font-family: var(--om-font-code); font-size: var(--om-time-font); pointer-events: none; }
+  &__tick--end { text-anchor: end; }
+  &__label { fill: var(--om-text); font-family: var(--om-font-body); font-size: var(--om-time-font); pointer-events: none; }
+  &__bar { fill: var(--om-clip-surface); }
+  &__heading { fill: var(--om-clip-heading); pointer-events: none; }
+  &__kind { fill: var(--om-clip-heading-text); font-family: var(--om-font-body); font-size: var(--om-time-font); pointer-events: none; }
+  &__caption { fill: var(--om-clip-text); font-family: var(--om-font-body); font-size: var(--om-time-font); pointer-events: none; }
+  &__grid { stroke: var(--om-border); stroke-width: var(--om-focus-width); stroke-dasharray: var(--om-ruler-dash); pointer-events: none; }
+  &__handle { fill: var(--om-action); opacity: var(--om-disabled-opacity); cursor: ew-resize; }
+  &__track { cursor: grab; touch-action: none; &--selected { .om-time__bar { stroke: var(--om-focus); stroke-width: var(--om-time-stroke); } } &:focus-visible { outline: var(--om-focus-width) solid var(--om-focus); } }
+  &__playhead { stroke: var(--om-focus); stroke-width: var(--om-time-stroke); pointer-events: none; }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@open-motion/docker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts --passWithNoTests"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vitest": "4.1.6",
+    "@types/node": "24.12.2"
+  }
+}

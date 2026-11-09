@@ -1,0 +1,30 @@
+.om-icon {
+  width: var(--om-icon-size); height: var(--om-icon-size); flex-shrink: 0;
+  fill: none; stroke: currentColor; stroke-width: var(--om-icon-stroke);
+  stroke-linecap: var(--om-stroke-cap); stroke-linejoin: var(--om-stroke-cap);
+}
+.om-button {
+  &[hidden] { display: none; }
+  display: inline-flex; box-sizing: border-box; justify-content: center;
+  min-height: var(--om-control-height); max-width: var(--om-size-full); gap: var(--om-control-padding-y);
+  align-items: center; padding: var(--om-button-padding-y) var(--om-control-padding-x);
+  border: var(--om-focus-width) solid var(--om-border); border-radius: var(--om-control-radius);
+  font-family: inherit; font-size: var(--om-control-font-size); font-weight: var(--om-button-weight);
+  line-height: var(--om-leading-tight); background: var(--om-raised); color: var(--om-text);
+  cursor: pointer; text-align: start; transition: var(--om-control-transition);
+  &__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  &__label--hidden { display: none; }
+  &__detail { display: block; margin-top: var(--om-field-gap); color: var(--om-muted); font-size: var(--om-small-size); font-weight: var(--om-weight-regular); }
+  &:hover { background: var(--om-hover); color: var(--om-strong); }
+  &--primary { background: var(--om-action); color: var(--om-action-text); border-color: var(--om-action); &:hover { background: var(--om-action-hover); color: var(--om-action-text); } }
+  &--ghost, &--tab { border-color: transparent; background: transparent; }
+  &--soft { background: var(--om-inset); border-color: transparent; }
+  &--compact { min-height: var(--om-compact-height); padding: var(--om-field-gap) var(--om-control-padding-y); }
+  &--icon { min-height: var(--om-icon-button); width: var(--om-icon-button); min-width: var(--om-icon-button); height: var(--om-icon-button); padding: 0; }
+  &--item { font-size: var(--om-label-size); width: var(--om-size-full); justify-content: start; padding: var(--om-button-padding-y) var(--om-control-padding-x); background: transparent; border-color: transparent; }
+  &--wide { width: var(--om-size-full); }
+  &--card { width: var(--om-size-full); justify-content: start; padding: var(--om-control-padding-x); border-radius: var(--om-card-radius); }
+  &--selected { background: var(--om-accent-soft); border-color: var(--om-accent-border); color: var(--om-focus); &:hover { background: var(--om-accent-soft); color: var(--om-focus); } }
+  &:focus-visible { outline: var(--om-focus-ring) solid var(--om-focus); outline-offset: var(--om-focus-offset); }
+  &:disabled { cursor: not-allowed; opacity: var(--om-disabled-opacity); }
+}

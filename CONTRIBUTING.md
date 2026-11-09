@@ -1,13 +1,11 @@
 # Contributing to OpenMotion
 
-[简体中文](CONTRIBUTING.zh-CN.md)
+[简体中文入口](CONTRIBUTING.zh-CN.md)
 
-Work from the repository root; read [AGENTS.md](AGENTS.md) and the [architecture](docs/product/architecture.md). Use the pinned CI Node version and `npm ci`. Keep `package-lock.json` and `scripts/runtime-lock.json` in sync with any intentional dependency change.
+Read [AGENTS.md](AGENTS.md) and the entire [architecture](docs/architecture.md). This isolated `refactor/odsuite` line uses Node24, pnpm11.13.0 and a pinned `pnpm-lock.yaml`; all internal modules are private workspaces. The complete product remains on `feature/motion` until the refactor is accepted.
 
-Before opening a PR, run `npm run check`, `npm run typecheck:studio`, `npm run build:studio` and focused deterministic tests for the changed boundary. Studio unit tests use `npm run test:studio`. Use the shared browser-lock wrapper on shared machines; model creation and visual acceptance require separate evidence. Do not overwrite real user data or host configuration to test an installer.
+Create a topic branch and an independent worktree from the latest fetched integration SHA. Run the standard build, full tests, lint, Biome and guard checks, plus the relevant actual runtime/browser validation. Submit an English PR to `refactor/odsuite`, state the user-visible behavior and exact validation scope, and use strict squash merging after checks pass. Never push implementation directly to an integration branch or rewrite shared history.
 
-Keep PRs focused and describe the user-visible behavior and actual validation. Open an issue first for substantial changes. Review the entire product architecture for each change and update it only when needed, following the [shared guidance](AGENTS.md#product-architecture-review); documentation edits are not required in every PR. Preserve existing Git history and push follow-up commits during review; do not force-push a shared branch.
+Architecture may evolve through explicit responsibility and lifecycle decisions. Update durable guidance when behavior changes; keep plans, migration gaps, logs and one-off evidence in PRs/issues and delivery records. No unmanaged source, asset or Skill directories, compatibility aliases or duplicate system-resource authorities.
 
-Only deliberately public documentation belongs here. Do not commit credentials, internal links, private plans, workstation paths or user projects. Distribution uses the positive list in `scripts/distribution.ts`; newly shipped files require an explicit decision. Preserve all upstream attribution and license notices. Do not add telemetry or publish a package without a separate decision.
-
-Contributions are licensed under the repository's [Apache-2.0 license](LICENSE); vendored components retain their own terms. This migration branch is for review only and must not be merged or published automatically.
+Preserve Apache-2.0, upstream/dependency attribution and font licenses. Do not commit credentials, internal-only links, workstation paths or user projects. Do not add telemetry or publish packages, releases, storage content or service changes without separate authorization. Packaging must use explicit positive resource lists. Contributing source does not authorize replacing user data or host configuration for tests.

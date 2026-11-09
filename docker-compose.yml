@@ -1,0 +1,14 @@
+name: odsuite-distribution
+services:
+  silo:
+    image: pgsty/silo:RELEASE.2026-10-26T00-00-00Z@sha256:7bb2aff6b89efe1cb1303c10fc21d579447434ed06649ac9ec05a5e2dbf30ad7
+    command: server /data --console-address :9001
+    environment:
+      MINIO_ROOT_USER: odsuitelocal
+      MINIO_ROOT_PASSWORD: odsuite-local-development-only
+    ports:
+      - "127.0.0.1:${ODSUITE_SILO_PORT:-0}:9000"
+    volumes:
+      - silo:/data
+volumes:
+  silo:

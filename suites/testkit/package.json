@@ -1,0 +1,45 @@
+{
+  "name": "@odsuite/testkit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "dependencies": {
+    "@odsuite/guard": "workspace:*",
+    "@odsuite/pack": "workspace:*",
+    "@odsuite/protocol": "workspace:*",
+    "@odsuite/publish": "workspace:*",
+    "@odsuite/release": "workspace:*",
+    "@odsuite/sidecar": "workspace:*",
+    "@odsuite/runtime": "workspace:*",
+    "@odsuite/blob": "workspace:*",
+    "@open-motion/electron": "workspace:*"
+  },
+  "devDependencies": {
+    "@open-motion/daemon": "workspace:*",
+    "@open-motion/web": "workspace:*",
+    "@types/node": "24.12.2",
+    "electron": "41.3.0",
+    "esbuild": "0.28.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/html-anything.git",
+    "directory": "suites/testkit"
+  }
+}

@@ -1,0 +1,25 @@
+.om-tabs { display: flex; align-items: center; gap: var(--om-field-gap); min-width: 0;
+  &__item { border: 0; border-bottom: var(--om-focus-ring) solid transparent; border-radius: 0; background: transparent; color: var(--om-muted); }
+  &__item--active { color: var(--om-focus); border-bottom-color: var(--om-focus); background: transparent; }
+  &--pill { .om-tabs__item { border: var(--om-focus-width) solid transparent; border-radius: var(--om-control-radius); } .om-tabs__item--active { border-color: var(--om-border); background: var(--om-raised); color: var(--om-strong); } }
+}
+.om-number {
+  width: var(--om-size-full); box-sizing: border-box; display: flex; align-items: center; min-width: 0; height: var(--om-control-height); border: var(--om-focus-width) solid var(--om-border); border-radius: var(--om-control-radius); background: var(--om-input);
+  &:focus-within { outline: var(--om-focus-ring) solid var(--om-focus); outline-offset: var(--om-focus-offset); }
+  &__input { font: inherit; font-size: var(--om-control-font-size); color: var(--om-text); width: var(--om-size-full); min-width: 0; box-sizing: border-box; padding: var(--om-control-padding-y); border: 0; outline: none; background: transparent; appearance: textfield; }
+  &__input::-webkit-outer-spin-button, &__input::-webkit-inner-spin-button { appearance: none; margin: 0; }
+  &__unit { flex-shrink: 0; padding-right: var(--om-control-padding-y); color: var(--om-muted); font-family: var(--om-font-code); font-size: var(--om-small-size); }
+}
+.om-tree {
+  &[hidden] { display: none; }
+  min-width: 0; padding: var(--om-control-padding-y); outline: none;
+  &:focus-visible { outline: var(--om-focus-ring) solid var(--om-focus); outline-offset: var(--om-focus-offset); }
+  &__row { display: flex; align-items: center; gap: var(--om-field-gap); min-height: var(--om-control-height); padding: 0 var(--om-control-padding-y); border-radius: var(--om-control-radius); cursor: pointer; color: var(--om-text); font-size: var(--om-label-size); }
+  &__row:hover { background: var(--om-hover); }
+  &__row--selected { background: var(--om-accent-soft); color: var(--om-focus); }
+  &__indent, &__toggle { display: inline-flex; width: var(--om-icon-size); flex-shrink: 0; }
+  &__toggle { transform: var(--om-closed-rotation); }
+  &__toggle--open { transform: none; }
+  &__toggle--empty { visibility: hidden; }
+  &__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}

@@ -1,0 +1,69 @@
+import { Fault, type Input, type Operation, type Output, type SourceFile, schemas } from "./contract.js";
+import { Database } from "./database.js";
+import { sources } from "./native.js";
+import { Projects } from "./projects.js";
+import { Selections } from "./selection.js";
+import { Sessions } from "./sessions.js";
+
+export * from "./contract.js";
+/** The one product transaction authority; consumers supply a sidecar-granted data root. */
+export class Workspace {
+  private db: Database;
+  private sessions: Sessions;
+  private projects: Projects;
+  private selection: Selections;
+  private closed = false;
+  constructor(root: string) {
+    this.db = new Database(root);
+    this.sessions = new Sessions(this.db);
+    this.projects = new Projects(this.db, this.sessions);
+    this.selection = new Selections(this.db, this.projects, this.sessions);
+  }
+  execute<K extends Operation>(operation: K, input: Input<K>): Output<K> {
+    if (this.closed) throw new Fault("integrity", "workspace is closed");
+    if (!Object.hasOwn(schemas, operation)) throw new Fault("invalid", "unknown workspace operation");
+    const parsed = schemas[operation].safeParse(input);
+    if (!parsed.success) throw new Fault("invalid", "workspace input does not match the operation schema");
+    const data = parsed.data as Record<string, unknown>;
+    if ("files" in data) data.files = sources(data.files as SourceFile[]);
+    const perform = () => this.dispatch(operation, data);
+    if (typeof data.requestId === "string")
+      return this.db.request(operation, { ...data, requestId: data.requestId }, perform) as Output<K>;
+    // Reads also pin one SQLite snapshot across ownership/revision queries.
+    return this.db.transaction(perform, false) as Output<K>;
+  }
+  private dispatch(operation: Operation, input: unknown): Output<Operation> {
+    switch (operation) {
+      case "workspace_state":
+        return { sessions: this.sessions.list(), selection: this.selection.get() };
+      case "session_rename":
+        return this.sessions.rename(input as Input<"session_rename">);
+      case "session_get":
+        return this.sessions.get((input as Input<"session_get">).sessionId);
+      case "session_create":
+        return this.sessions.create(input as Input<"session_create">);
+      case "message_append":
+        return this.sessions.message(input as Input<"message_append">);
+      case "artifact_create":
+        return this.projects.create(input as Input<"artifact_create">);
+      case "project_read":
+        return this.projects.read(input as Input<"project_read">);
+      case "project_undo":
+        return this.projects.move(input as Input<"project_undo">, -1);
+      case "project_redo":
+        return this.projects.move(input as Input<"project_redo">, 1);
+      case "project_save":
+        return this.projects.save(input as Input<"project_save">);
+      case "artifact_open":
+        return this.selection.open(input as Input<"artifact_open">);
+      case "session_open":
+        return this.selection.session(input as Input<"session_open">);
+    }
+  }
+  close() {
+    if (!this.closed) {
+      this.db.close();
+      this.closed = true;
+    }
+  }
+}

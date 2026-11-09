@@ -1,0 +1,46 @@
+{
+  "name": "@open-motion/motion",
+  "private": true,
+  "type": "module",
+  "description": "Native Motion source editing and preview runtime",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6",
+    "esbuild": "0.28.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/html-anything.git",
+    "directory": "packages/motion"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./runtime": {
+      "types": "./dist/runtime.d.ts",
+      "default": "./dist/runtime.mjs"
+    },
+    "./protocol": {
+      "types": "./dist/protocol.d.ts",
+      "default": "./dist/protocol.mjs"
+    },
+    "./contract": {
+      "types": "./dist/contract.d.ts",
+      "default": "./dist/contract.mjs"
+    }
+  },
+  "dependencies": {
+    "@hyperframes/sdk": "0.9.7",
+    "@hyperframes/core": "0.9.7",
+    "gsap": "3.15.0",
+    "zod": "4.6.7"
+  }
+}
