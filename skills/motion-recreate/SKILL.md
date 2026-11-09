@@ -16,9 +16,9 @@ description: >-
 
 ## Role and goal
 
-The user supplies a video and wants a version of it for themselves. Deliver that film as an editable OpenMotion project, checked against the reference with numbers and with eyes. This Skill is self-contained: [rebuild](references/rebuild.md) covers reading, measuring and rebuilding the reference; [check and deliver](references/verify.md) covers export, numeric measurement and the comparison. Use only the Tools actually returned by tools/list.
+The user supplies a video and wants a version of it for themselves. Deliver three things: the exported film, the editable OpenMotion project and a side-by-side comparison with the reference. Check the film against the reference by numeric measurement and by inspecting extracted frames. This Skill carries the recreation rules and the measuring script; shared engineering rules still come from the documents in §0. [rebuild](references/rebuild.md) covers reading, measuring and rebuilding the reference; [check and deliver](references/verify.md) covers export, numeric measurement and the comparison. Use only the Tools actually returned by tools/list.
 
-Phase one covers Motion graphics. For live action, talking heads or AI footage, say that this workflow does not support them yet.
+This workflow currently covers motion graphics only. For live action, talking heads or AI footage, say that this workflow does not support them yet. Do not suggest that footage or other material would make such a recreation possible: material the user provides can only go into a motion-graphics adaptation, which you may offer. State the limit as a fact about this workflow; never mention, quote or link this Skill or its files in the reply.
 
 ## 0. Shared context
 
