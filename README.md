@@ -8,6 +8,16 @@
   <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
   <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
   <a href="LICENSE"><img src="docs/readme/badges/license.svg" alt="Apache 2.0 license"></a>
+  <a href="https://github.com/nexu-io/open-design"><img src="docs/readme/badges/built-by-opendesign.svg" alt="Built by OpenDesign"></a>
+</p>
+
+<p align="center">
+  <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="docs/readme/badges/website.svg" alt="OpenMotion website" /></a>
+  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="docs/readme/badges/opendesign-go.svg" alt="OpenDesign Go model subscriptions" /></a>
+  <a href="https://discord.gg/mHAjSMV6gz"><img src="docs/readme/badges/discord.svg" alt="Join the OpenDesign Discord" /></a>
+  <a href="https://x.com/OpenDesignHQ"><img src="docs/readme/badges/x-opendesignhq.svg" alt="OpenDesign on X (@OpenDesignHQ)" /></a>
+  <a href="https://x.com/OpenDesignDevs"><img src="docs/readme/badges/x-opendesigndevs.svg" alt="OpenDesign Developers on X (@OpenDesignDevs)" /></a>
+  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign on YouTube" /></a>
 </p>
 
 <p align="center"><a href="#showcase">Examples</a> · <a href="#features">Features</a> · <a href="#technical-guide">Setup & architecture</a></p>
@@ -17,13 +27,13 @@
   <img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion — Editable HTML · Open source · Local agent · BYOK · Motion.md">
 </picture>
 
-OpenMotion is **OpenDesign’s first full-stack agentic video generator**. **Code video with HTML.** Generate, edit and render your video in a single project.
+OpenMotion is **OpenDesign’s first full-stack agentic video generator**. Upload a reference video or paste a social video link. OpenMotion breaks down the shots, timing and transitions, then **recreates the sequence with your own footage, logo and copy**.
 
 - **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Use it locally in Codex, Claude Code, DeepSeek Harness or WorkBuddy with your own keys at every layer.
 - OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Its first open-source collection covers promotional films from **100+ brands**.
 - **Generate images, video, music and speech** for the same timeline, from a missing shot to a score or voice-over.
 
-Upload a reference video or paste a link to a video on social media. Recreate its shots and pacing with your own footage, logo and copy, then fine-tune the cut in Studio and export an MP4.
+The remake is an editable HTML project. Fine-tune the cut in Studio and export an MP4.
 
 <a id="showcase"></a>
 
@@ -31,13 +41,13 @@ Upload a reference video or paste a link to a video on social media. Recreate it
 
 <a id="可以用它做什么"></a>
 
-<a id="ai-talking-head-edits"></a>
-<a id="everyone-can-be-a-creator"></a> <a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a> <a id="人人都是自媒体"></a> <a id="creator-video-gallery"></a>
+<a id="everyone-can-be-a-creator"></a> <a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a> <a id="人人都是自媒体"></a> <a id="creator-video-gallery"></a> <a id="presenter-motion"></a>
 
-**A face, a voice, a story — then the motion that makes it land.** Start with these nine creator references: lessons, screen demonstrations, founder stories and product videos. Bring your own recording and borrow a structure you love. Click a preview for the full video.
+### AI talking-head edits
+
+Edit around the speaker’s voice, with captions and screen inserts that follow the explanation. [Creative brief](docs/examples.md#talking-head) · [OpenAI · Codex Originals](https://openai.com/codex-originals/)
 
 <table width="100%">
-<tr><th colspan="3" align="left">AI talking-head edits</th></tr>
 <tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
@@ -101,114 +111,74 @@ Product tutorial + live demonstration<br>
 <sub>Reference · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
 </td>
 </tr>
-<tr><td colspan="3" valign="top">
-<strong>Start with</strong> · Your recording + transcript / timecodes<br>
-<strong>Make it yours</strong> · A clear hook, tighter speech, captions and well-timed B-roll.<br>
-<a href="docs/examples.md#talking-head">Use this brief</a> · Campaign reference: <a href="https://openai.com/codex-originals/">OpenAI · Codex Originals</a>
-</td></tr>
+<tr><th colspan="3" align="left">Editable template</th></tr>
+<tr>
+<td colspan="3" width="100%" align="center" valign="top">
+<a href="library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/motiongit-kinetic.jpg"><img src="docs/readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech template demo with presenter window, diagrams and animated typography"></picture></a><br>
+<strong>Presenter Tech</strong><br>
+Pair your recording with animated diagrams and metallic type. 1920 × 1080 at 60 fps.<br>
+<sub><a href="library/templates/presenter-tech/presenter-tech.motion">Get the template package</a> · <a href="library/templates/presenter-tech/TEMPLATE.md">Production guide</a> · <a href="library/templates/presenter-tech/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Presenter Story Skill</a> · <a href="docs/readme/media/manifest.json">Reference credits</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">Original → external adaptation</th></tr>
+<tr>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="library/skills/presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<strong>Career advice → video-production explainer</strong><br>
+Numbered ideas and proof cards follow the new presenter’s explanation.<br>
+<sub><a href="library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/careerwithriya-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/careerwithriya-result.mp4">Full adaptation</a></sub>
+</td>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<strong>Everyday tools → a design-workspace story</strong><br>
+Screen inserts follow the speaker through a different workflow.<br>
+<sub><a href="library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4">Full adaptation</a></sub>
+</td>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="library/skills/presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<strong>Tool demo → video-editor walkthrough</strong><br>
+Picture-in-picture and callouts turn a tool demo into an editing walkthrough.<br>
+<sub><a href="library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/john-tagudin-capso-result.mp4">Full adaptation</a></sub>
+</td>
+</tr>
 </table>
 
-**Make a video in this direction:** your presenter, your story, your product. Ask for a similar hook, caption rhythm or screen reveal, and let the agent adapt it to your material. [Presenter Story Skill](library/skills/presenter-story/SKILL.md) · [Reference credits](docs/readme/media/manifest.json)
+### AI recuts & revisions
 
-#### 🎙️ Your next presenter-led explainer
-
-<details>
-<summary>Open the editable presenter template</summary>
-
-<a href="library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/motiongit-kinetic.jpg"><img src="docs/readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech template demo with presenter window, diagrams and animated typography"></picture></a>
-
-**Presenter-led stories × metallic type × animated explanations.** Bring your recording, copy, screenshots and captions. Editable source, parameters, fonts, sound recipes and a local runner are packaged in OpenMotion Library, ready for your Agent to adapt using the production guide. **1920 × 1080 · 60 fps · landscape.**
-
-[Get the template package](library/templates/presenter-tech/presenter-tech.motion) · [Production guide](library/templates/presenter-tech/TEMPLATE.md) · [Motion.md](library/templates/presenter-tech/MOTION_DESIGN.md)
-
-</details>
-
-<a id="presenter-motion"></a>
-
-<details>
-<summary>Three presenter adaptations: reference and result</summary>
-
-These pairs show an original reference and an external adaptation as silent excerpts. Explore a direction for your own recording, then use the linked design recipe to guide your agent.
-
-#### Teach with a face, a keyword and a visual example
-
-**Career advice → video-production explainer**
-
-<table>
-<tr><th width="50%">Reference · @careerwithriya</th><th width="50%">Adaptation · external example</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
-</table>
-
-**Reuse:** Numbered ideas, presenter-led delivery and proof cards. **Make it yours:** Creator, spoken topic, keywords and supporting examples.
-
-[Motion.md](library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [Full adaptation](library/skills/presenter-story/assets/careerwithriya-result.mp4)
-
-#### Show the workflow while you tell the story
-
-**Everyday tools → a design-workspace story**
-
-<table>
-<tr><th width="50%">Reference · Ali Abdaal</th><th width="50%">Adaptation · external example</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
-</table>
-
-**Reuse:** Presenter / screen rhythm, quiet captions and readable inserts. **Make it yours:** Your recording, your workflow and your screen captures.
-
-[Motion.md](library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [Full adaptation](library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
-
-#### Put the presenter and the product in one story
-
-**Tool demo → video-editor walkthrough**
-
-<table>
-<tr><th width="50%">Reference · @john.tagudin</th><th width="50%">Adaptation · external example</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
-</table>
-
-**Reuse:** Hook, picture-in-picture, callouts and a visible result. **Make it yours:** Product, presenter, demonstration and closing message.
-
-[Motion.md](library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [Full adaptation](library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
-
-> Use my camera and screen recordings with this structure. Keep my voice, edit around the actual speech and align captions. Use screenshots, picture-in-picture and motion to explain each point. Show a preview with sound, then deliver the editable project and MP4.
-
-</details>
-
-<a id="ai-recuts--revisions"></a>
+Give a folder of clips and photos a beginning, a turning point and an ending. [Creative brief](docs/examples.md#story-recut)
 
 <table width="100%">
-<tr><th colspan="2" align="left">AI recuts &amp; revisions</th></tr>
 <tr>
-<td width="50%" align="center" valign="top">
+<td colspan="1" width="100%" align="center" valign="top">
 <a href="docs/readme/media/hundred-days-story-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/story-recut.jpg">
 <img src="docs/readme/examples/story-recut.gif" width="208" alt="External creative reference: 100 days with stickers and photo cards">
 </picture></a><br>
-<sub>Reference · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">100 days with stickers and photo cards</a></sub>
-</td>
-<td width="50%" valign="top">
-Turn a folder of clips and photos into a story. In this 100-day diary, the photo cards mark the passage of time.<br><br>
-<strong>Start with</strong> · Your clips, photos, voice-over and story outline<br>
-<strong>Make it yours</strong> · A personal montage with photo cutouts, chapter beats and a new pace.<br>
-<a href="docs/examples.md#story-recut">Use this brief</a>
+<strong>100 days in photos</strong><br>
+Stickers and photo cards mark time in a personal video diary.<br>
+<sub><a href="https://www.instagram.com/reel/Dd6vHlQgpok/">Original</a></sub>
 </td>
 </tr>
 </table>
 
 <a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
 
-<a id="product-launches--demos"></a>
+### Product launches & demos
 
-Each brand comparison plays the same five seconds: original on the left, OpenMotion remake on the right (top and bottom on mobile). Open a clip to watch it full size.
+Build a reveal around the moment your product comes into view. [Creative brief](docs/examples.md#product-launch)
+
+In the five-second comparisons, the original is on the left and the OpenMotion remake on the right (top and bottom on mobile).
 
 <table width="100%">
-<tr><th colspan="2" align="left">Product launches &amp; demos</th></tr>
-<tr><td colspan="2" valign="top">
-<div id="case-stripe"><a href="examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/stripe/comparison.jpg"><img src="examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · Card flip → film frame"></picture></a></div>
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-stripe"><a href="examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/stripe/comparison.jpg"><img src="examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · Card flip → film frame"></picture></a></div><br>
 <strong>Stripe · Card flip → film frame</strong><br>
-Time the reveal to the product. Stripe’s card flip lands on a click; the remake uses that beat to unveil an illustrated film frame.<br>
+The remake keeps Stripe’s flip and reveals an illustrated film frame.<br>
 <sub><a href="examples/brand-studies/stripe/comparison.mp4">Full size</a> · <a href="examples/brand-studies/stripe/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">Original 00:21.50–00:26.50</a> · <a href="examples/brand-studies/stripe/index.html">HTML</a> · <a href="examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
-</td></tr>
-<tr><th colspan="2" align="left">Original launch films</th></tr>
+</td>
+</tr>
+<tr><th colspan="2" align="left">Original films</th></tr>
 <tr>
 <td width="50%" valign="top">
 <a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="docs/readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
@@ -223,19 +193,6 @@ Introduce a new product with a focused launch story.<br>
 <sub>Reference · @ElevenLabs</sub>
 </td>
 </tr>
-<tr><td colspan="2" valign="top">
-<strong>Start with</strong> · Product screens + feature brief + Motion.md brand context<br>
-<strong>Make it yours</strong> · A feature reveal, a focused UI demonstration and a memorable finish.<br>
-<a href="docs/examples.md#product-launch">Use this brief</a>
-</td></tr>
-</table>
-
-<details>
-<summary>Two mixed-media references: live footage, generated characters and code</summary>
-
-A strong video can mix production methods. These external case studies are useful references for deciding what to film, what to generate and what to express in code.
-
-<table>
 <tr>
 <td width="50%" valign="top" align="center">
 <a href="docs/readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-unboxing.jpg"><img src="docs/readme/brand-showcase/rea-unboxing.gif" width="250" alt="Live-action product unboxing reference"></picture></a><br>
@@ -252,161 +209,120 @@ Combine a character-led hook with UI motion and screen footage.<br>
 </tr>
 </table>
 
-</details>
+<a id="see-the-motion-survive-a-new-brand"></a>
 
-<a id="viral-video-recreation"></a>
+### Viral video recreation
+
+Keep the timing of a reference clip and change what happens on screen. [Creative brief](docs/examples.md#viral-remix) · [Lovable · Aesthetics Update](docs/readme/media/jake-lovable-reference.mp4) · [recreation workflow](skills/motion-recreate/SKILL.md)
 
 <table width="100%">
-<tr><th colspan="2" align="left">Viral video recreation</th></tr>
-<tr><td colspan="2" valign="top">
-<div id="case-openai"><a href="examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/motion-studies/comparison.jpg"><img src="examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · Wireframe → edit timeline"></picture></a></div>
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-openai"><a href="examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/motion-studies/comparison.jpg"><img src="examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · Wireframe → edit timeline"></picture></a></div><br>
 <strong>OpenAI · Wireframe → edit timeline</strong><br>
 Five colored clips collapse into an edit point. The cut and wordmark resolve on the original beat.<br>
 <sub><a href="examples/motion-studies/comparison.mp4">Full size</a> · <a href="examples/motion-studies/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">Original 00:26.50–00:31.50</a> · <a href="examples/motion-studies/signoff.html">HTML</a></sub>
-</td></tr>
-<tr><td colspan="2" valign="top">
-<div id="case-deepseek"><a href="examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/deepseek/comparison.jpg"><img src="examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · Terminal → film slate"></picture></a></div>
+</td>
+</tr>
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-deepseek"><a href="examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/deepseek/comparison.jpg"><img src="examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · Terminal → film slate"></picture></a></div><br>
 <strong>DeepSeek Harness · Terminal → film slate</strong><br>
 The cursor types on a film slate. A warm flash carries the last keystroke into the end card.<br>
 <sub><a href="examples/brand-studies/deepseek/comparison.mp4">Full size</a> · <a href="examples/brand-studies/deepseek/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">Original 01:31.50–01:36.50</a> · <a href="examples/brand-studies/deepseek/index.html">HTML</a></sub>
-</td></tr>
-<tr><td colspan="2" valign="top">
-<strong>Start with</strong> · A reference + your copy, visuals and brand<br>
-<strong>Make it yours</strong> · A new editable cut built around the hook, typography and visual rhythm.<br>
-<a href="docs/examples.md#viral-remix">Use this brief</a> · Reference: <a href="docs/readme/media/jake-lovable-reference.mp4">Lovable · Aesthetics Update</a>
-</td></tr>
-</table>
-
-<a id="see-the-motion-survive-a-new-brand"></a>
-
-<details>
-<summary>Six editable motion studies</summary>
-
-The paired previews show the original source and a content adaptation at matching timestamps. They are silent excerpts rendered from the same implementation.
-
-#### Wireframe portal · BREAKTHROUGH → OPENMOTION
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Portal timing, dimensional lettering and camera push.** **Replace: Title, subtitle and the 3D phrase.**
-
-[Motion.md](library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
-
-#### Canopy typography · Understory → OpenMotion
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Leaf sweeps, depth, occlusion and reading holds.** **Replace: Two brand headlines.**
-
-[Motion.md](library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](library/skills/motion-design-remix/previews/canopy-part-title.mp4)
-
-#### Interface reveal · Product tour → AI editing story
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Tilted canvas, depth hierarchy and continuous camera.** **Replace: Hero headline, document and community copy.**
-
-[Motion.md](library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
-
-#### Dimensional code · loadConfig() → cutVideo()
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Extruded slab, syntax colors and the camera move.** **Replace: Function, variables and displayed calls.**
-
-[Motion.md](library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
-
-#### Particle assembly · parse / optimize / emit → select / trim / render
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Seeded particle motion and assembly rhythm.** **Replace: Pipeline name and steps.**
-
-[Motion.md](library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
-
-#### Glass information cards · Device widgets → creator workspace
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Glass treatment, card hierarchy, stagger and meters.** **Replace: Labels, units and feature story.**
-
-[Motion.md](library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
-
-For a video-only reference, use the separate [recreation workflow](skills/motion-recreate/SKILL.md) to rebuild and compare the film. Fidelity is reviewed against the selected reference and your brief.
-
-</details>
-
-<a id="explainers--tutorials"></a>
-
-<table width="100%">
-<tr><th colspan="2" align="left">Explainers &amp; tutorials</th></tr>
-<tr><td colspan="2" valign="top">
-<div id="case-claude"><a href="examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/anthropic/comparison.jpg"><img src="examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · Settings → color palette"></picture></a></div>
-<strong>Claude · Settings → color palette</strong><br>
-Show where to look before you explain the next step. In the Claude example, the switch and drawn circle guide the eye through a new interface.<br>
-<sub><a href="examples/brand-studies/anthropic/comparison.mp4">Full size</a> · <a href="examples/brand-studies/anthropic/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">Original 00:00–00:05</a> · <a href="examples/brand-studies/anthropic/index.html">HTML</a></sub>
-</td></tr>
-<tr><td colspan="2" valign="top">
-<strong>Start with</strong> · Your workflow + script + accurate UI captures<br>
-<strong>Make it yours</strong> · A guided sequence with one idea per scene and purposeful callouts.<br>
-<a href="docs/examples.md#explainer">Use this brief</a> · Reference: <a href="docs/readme/media/remix-authorize-once-reference.mp4">Authorize Once, Everyone Connected</a>
-</td></tr>
-</table>
-
-<a id="data-stories--charts"></a>
-
-<table width="100%">
-<tr><th colspan="2" align="left">Data stories &amp; charts</th></tr>
-<tr>
-<td width="50%" align="center" valign="top">
-<a href="docs/readme/media/M1128-clip.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/data-story.jpg">
-<img src="docs/readme/examples/data-story.gif" width="480" alt="External creative reference: Animated comparison bars · @Vintage_god">
-</picture></a><br>
-<sub>Reference · <a href="https://x.com/Vintage_god/status/2106817967967056165">Animated comparison bars · @Vintage_god</a></sub>
 </td>
-<td width="50%" valign="top">
-Start with your numbers, units and one comparison. In this reference, the reader can follow the values as the bars move.<br><br>
-<strong>Start with</strong> · Your data, units, source and conclusion<br>
-<strong>Make it yours</strong> · A legible chart reveal with animated values and one clear comparison.<br>
-<a href="docs/examples.md#data-story">Use this brief</a>
+</tr>
+<tr><th colspan="2" align="left">Editable studies · original and adaptation from the same project</th></tr>
+<tr>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Wireframe portal · BREAKTHROUGH → OPENMOTION</strong><br>
+Keep: Portal timing, dimensional lettering and camera push. Replace: Title, subtitle and the 3D phrase.<br>
+<sub><a href="library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/wireframe-portal-title.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
+</td>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Canopy typography · Understory → OpenMotion</strong><br>
+Keep: Leaf sweeps, depth, occlusion and reading holds. Replace: Two brand headlines.<br>
+<sub><a href="library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/canopy-part-title.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
+</td>
+</tr>
+<tr>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Interface reveal · Product tour → AI editing story</strong><br>
+Keep: Tilted canvas, depth hierarchy and continuous camera. Replace: Hero headline, document and community copy.<br>
+<sub><a href="library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/ui-3d-reveal.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
+</td>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Dimensional code · loadConfig() → cutVideo()</strong><br>
+Keep: Extruded slab, syntax colors and the camera move. Replace: Function, variables and displayed calls.<br>
+<sub><a href="library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/code-3d-extrude.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
+</td>
+</tr>
+<tr>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Particle assembly · parse / optimize / emit → select / trim / render</strong><br>
+Keep: Seeded particle motion and assembly rhythm. Replace: Pipeline name and steps.<br>
+<sub><a href="library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/code-particle-assemble.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
+</td>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Glass information cards · Device widgets → creator workspace</strong><br>
+Keep: Glass treatment, card hierarchy, stagger and meters. Replace: Labels, units and feature story.<br>
+<sub><a href="library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/liquid-glass-widgets.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
 </td>
 </tr>
 </table>
 
-<a id="music--art-visuals"></a>
+### Explainers & tutorials
+
+Guide the viewer through a task with a close-up, a highlight and a clear next step. [Creative brief](docs/examples.md#explainer) · [Authorize Once, Everyone Connected](docs/readme/media/remix-authorize-once-reference.mp4)
 
 <table width="100%">
-<tr><th colspan="2" align="left">Music &amp; art visuals</th></tr>
-<tr><td colspan="2" valign="top">
-<div id="case-kimi"><a href="examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/kimi/comparison.jpg"><img src="examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · Magnetic field → vinyl grooves"></picture></a></div>
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-claude"><a href="examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/anthropic/comparison.jpg"><img src="examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · Settings → color palette"></picture></a></div><br>
+<strong>Claude · Settings → color palette</strong><br>
+The remake uses the same switch and drawn circle to reveal a color palette.<br>
+<sub><a href="examples/brand-studies/anthropic/comparison.mp4">Full size</a> · <a href="examples/brand-studies/anthropic/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">Original 00:00–00:05</a> · <a href="examples/brand-studies/anthropic/index.html">HTML</a></sub>
+</td>
+</tr>
+</table>
+
+### Data stories & charts
+
+Animate a comparison so the viewer can follow how the values change. [Creative brief](docs/examples.md#data-story)
+
+<table width="100%">
+<tr>
+<td colspan="1" width="100%" align="center" valign="top">
+<a href="docs/readme/media/M1128-clip.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/data-story.jpg">
+<img src="docs/readme/examples/data-story.gif" width="480" alt="External creative reference: Animated comparison bars · @Vintage_god">
+</picture></a><br>
+<strong>Animated comparison bars</strong><br>
+The values stay visible as the bars change height.<br>
+<sub><a href="https://x.com/Vintage_god/status/2106817967967056165">Original</a></sub>
+</td>
+</tr>
+</table>
+
+### Music & art visuals
+
+Give a track a visual motif that returns on the beat. [Creative brief](docs/examples.md#music-visual) · [Google AI · Lyria 3](docs/readme/media/M1139-clip.mp4)
+
+<table width="100%">
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-kimi"><a href="examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/kimi/comparison.jpg"><img src="examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · Magnetic field → vinyl grooves"></picture></a></div><br>
 <strong>Kimi · Magnetic field → vinyl grooves</strong><br>
-Give a track a visual motif. The Kimi remake turns a rotating field into record grooves and a sleeve title; this clip compares the visuals.<br>
+The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 <sub><a href="examples/brand-studies/kimi/comparison.mp4">Full size</a> · <a href="examples/brand-studies/kimi/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">Original 00:30.75–00:35.75</a> · <a href="examples/brand-studies/kimi/index.html">HTML</a></sub>
-</td></tr>
-<tr><td colspan="2" valign="top">
-<strong>Start with</strong> · Your audio + mood + beat markers / cue points<br>
-<strong>Make it yours</strong> · Layered color, kinetic type and a visual sequence timed to your track.<br>
-<a href="docs/examples.md#music-visual">Use this brief</a> · Reference: <a href="docs/readme/media/M1139-clip.mp4">Google AI · Lyria 3</a>
-</td></tr>
+</td>
+</tr>
 </table>
 
 <a id="features"></a>
@@ -417,7 +333,7 @@ Give a track a visual motif. The Kimi remake turns a rotating field into record 
 
 ### 1. OpenDesign’s first full-stack agentic video generator
 
-**Your local agent already writes code. Make it your full-stack video creator.** OpenMotion uses HTML, CSS and JavaScript to describe scenes, typography, layout, transitions and timing. Recorded footage, generated clips, images, music and voice-over become media inside the composition. The same project opens in Studio and renders to MP4.
+**Code video with HTML.** OpenMotion uses HTML, CSS and JavaScript to describe scenes, typography, layout, transitions and timing. Recorded footage, generated clips, images, music and voice-over become media inside the composition. The same project opens in Studio and renders to MP4.
 
 ![Your local agent, optional media-model accounts and creative resources feed a workflow of understanding the reference, coding scenes, generating missing media, editing and rendering MP4 with reusable source.](docs/readme/diagrams/creation-stack.svg)
 
