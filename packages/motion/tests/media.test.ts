@@ -40,7 +40,7 @@ it("rejects unproven audio clocks and nonlocal insertion sources instead of auth
   );
   try {
     expect(model.clips.find((clip) => clip.id === "hf-a")?.media?.maximum).toBeNull();
-    expect(() => model.patch("hf-a", { duration: 1 })).toThrow("音频窗口");
+    expect(() => model.patch("hf-a", { duration: 1 })).toThrow("只读");
   } finally {
     model.dispose();
   }
@@ -58,7 +58,7 @@ it("assembles nested media through a finite snapshot manifest and rejects a miss
         '<template><main data-composition-id="card" data-duration="3"><img src="../assets/red.png" width="32" height="24" data-start="0" data-duration="3"></main></template>',
     },
   ];
-  const result = assembleProject(files, ["assets/red.png"]);
+  const result = assembleProject(files, [{ path: "assets/red.png", type: "image/png" }]);
   expect(result.html).toContain('src="assets/red.png"');
   expect(result.html).not.toContain('src="../assets/red.png"');
   expect(() => assembleProject(files)).toThrow("missing media resource");
@@ -68,9 +68,9 @@ it("keeps local media query/fragment semantics while rejecting encoded project e
   const source = (src: string) => [
     { path: "index.html", content: `<main data-composition-id="main" data-duration="3"><img src="${src}"></main>` },
   ];
-  expect(assembleProject(source("assets/red.png?revision=1#sample"), ["assets/red.png"]).html).toContain(
-    "assets/red.png?revision=1#sample",
-  );
+  expect(
+    assembleProject(source("assets/red.png?revision=1#sample"), [{ path: "assets/red.png", type: "image/png" }]).html,
+  ).toContain("assets/red.png?revision=1#sample");
   for (const src of ["%2e%2e/escape.png", "https://example.invalid/red.png", "%252e%252e/red.png", "/assets/red.png"])
-    expect(() => assembleProject(source(src), ["assets/red.png"])).toThrow();
+    expect(() => assembleProject(source(src), [{ path: "assets/red.png", type: "image/png" }])).toThrow();
 });

@@ -2,17 +2,56 @@ import { type Composition, type EditOp, openComposition } from "@hyperframes/sdk
 import type { z } from "zod";
 import { animate, animations, describeAnimation } from "./animation.js";
 import { appearance, appearanceStyles } from "./appearance.js";
-import { type AnimationInput, type Clip, editInput, type NativeValues, patchInput } from "./contract.js";
+import {
+  type AnimationInput,
+  type AudioState,
+  type Clip,
+  editInput,
+  type NativeValues,
+  patchInput,
+} from "./contract.js";
 
-function audioMaximum(attributes: Readonly<Record<string, string | undefined>>): number | null {
-  const duration = Number(attributes["data-source-duration"]);
-  return Number.isFinite(duration) &&
-    duration > 0 &&
-    attributes["data-media-start"] === "0" &&
-    attributes["data-playback-rate"] === "1" &&
-    attributes["data-link"] === undefined
-    ? duration
-    : null;
+const numeric = (value: string | undefined) =>
+  value === undefined || !value.trim() || !Number.isFinite(Number(value)) ? null : Number(value);
+function audioState(attributes: Readonly<Record<string, string | undefined>>, animated: boolean): AudioState {
+  const sourceDuration = numeric(attributes["data-source-duration"]),
+    inPoint = numeric(attributes["data-media-start"]),
+    volume = attributes["data-volume"] === undefined ? 1 : numeric(attributes["data-volume"]),
+    duration = numeric(attributes["data-duration"]);
+  let reason: string | null = null;
+  if (
+    !attributes.src ||
+    sourceDuration === null ||
+    sourceDuration <= 0 ||
+    inPoint === null ||
+    inPoint < 0 ||
+    inPoint >= sourceDuration ||
+    duration === null ||
+    duration <= 0 ||
+    inPoint + duration > sourceDuration + 1e-8 ||
+    volume === null ||
+    volume < 0 ||
+    volume > 1
+  )
+    reason = "只读：音频需要直接素材引用、有效源长度、入点、窗口和 0..1 音量";
+  else if (
+    attributes["data-playback-rate"] !== "1" ||
+    [
+      "data-playback-start",
+      "data-link",
+      "data-automation",
+      "data-fx-chain",
+      "data-fx-carve",
+      "data-audio-group",
+      "data-fade-in",
+      "data-fade-out",
+      "loop",
+      "autoplay",
+    ].some((name) => attributes[name] !== undefined) ||
+    animated
+  )
+    reason = "变速、链接、自动化、效果或宿主脚本音频当前只读";
+  return { sourceDuration, inPoint, volume, muted: attributes.muted !== undefined, reason };
 }
 
 export * from "./contract.js";
@@ -64,7 +103,25 @@ export class Motion {
             media: {
               kind: e.tag === "audio" ? ("audio" as const) : ("image" as const),
               src: e.attributes.src ?? "",
-              maximum: e.tag === "audio" ? audioMaximum(e.attributes) : null,
+              maximum:
+                e.tag === "audio"
+                  ? (() => {
+                      const state = audioState(
+                        e.attributes,
+                        e.animationIds.length > 0 ||
+                          parsed.some((a) => a.hasUnresolvedSelector || a.hasPartialSelector),
+                      );
+                      return state.reason ? null : (state.sourceDuration ?? 0) - (state.inPoint ?? 0);
+                    })()
+                  : null,
+              ...(e.tag === "audio"
+                ? {
+                    audio: audioState(
+                      e.attributes,
+                      e.animationIds.length > 0 || parsed.some((a) => a.hasUnresolvedSelector || a.hasPartialSelector),
+                    ),
+                  }
+                : {}),
             },
           }
         : {}),
@@ -88,6 +145,27 @@ export class Motion {
     if (["img", "audio"].includes(target.tag) && (input.text !== undefined || input.fontSize !== undefined))
       throw new Error("媒体不是文本图层");
     if (target.tag === "audio" && input.appearance !== undefined) throw new Error("音频不具备视觉外观");
+    const related = animations(this.composition),
+      audio =
+        target.tag === "audio"
+          ? audioState(
+              target.attributes,
+              target.animationIds.length > 0 || related.some((a) => a.hasUnresolvedSelector || a.hasPartialSelector),
+            )
+          : null;
+    if (input.audio && !audio) throw Error("请选择独立音频片段");
+    if (audio && (input.audio || input.start !== undefined || input.duration !== undefined)) {
+      if (audio.reason) throw Error(audio.reason);
+      const inPoint = input.audio?.inPoint ?? audio.inPoint,
+        duration = input.duration ?? numeric(target.attributes["data-duration"]);
+      if (
+        inPoint === null ||
+        duration === null ||
+        audio.sourceDuration === null ||
+        inPoint + duration > audio.sourceDuration + 1e-8
+      )
+        throw Error("音频窗口超出源素材时长");
+    }
     if (input.start !== undefined || input.duration !== undefined) {
       if (target.attributes["data-composition-id"] !== undefined) throw new Error("合成时长需由独立元数据契约管理");
       const start = input.start ?? Number(target.attributes["data-start"] ?? 0),
@@ -105,11 +183,6 @@ export class Motion {
         start + duration > end + 1e-8
       )
         throw new Error("片段超出合成时长");
-      if (target.tag === "audio") {
-        const maximum = audioMaximum(target.attributes);
-        if (maximum === null || duration > maximum + 1e-8)
-          throw new Error("音频窗口只支持已知源长度、原速与零入点的独立片段");
-      }
       const related = animations(this.composition).filter((a) => target.animationIds.includes(a.id));
       if (
         related.some(
@@ -135,6 +208,17 @@ export class Motion {
         ? []
         : [{ type: "setStyle" as const, target: id, styles: { fontSize: `${input.fontSize}px` } }]),
       ...(input.text === undefined ? [] : [{ type: "setText" as const, target: id, value: input.text }]),
+      ...(input.audio?.inPoint === undefined
+        ? []
+        : [
+            { type: "setAttribute" as const, target: id, name: "data-media-start", value: String(input.audio.inPoint) },
+          ]),
+      ...(input.audio?.volume === undefined
+        ? []
+        : [{ type: "setAttribute" as const, target: id, name: "data-volume", value: String(input.audio.volume) }]),
+      ...(input.audio?.muted === undefined
+        ? []
+        : [{ type: "setAttribute" as const, target: id, name: "muted", value: input.audio.muted ? "" : null }]),
       ...(input.start === undefined && input.duration === undefined
         ? []
         : [{ type: "setTiming" as const, target: id, start: input.start, duration: input.duration }]),

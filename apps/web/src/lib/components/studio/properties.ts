@@ -1,6 +1,16 @@
-import { badge, button, disclosure, emptyState, field, numberField, readout, slot } from "@open-motion/components";
+import {
+  badge,
+  button,
+  disclosure,
+  emptyState,
+  field,
+  note,
+  numberField,
+  readout,
+  slot,
+} from "@open-motion/components";
 import type { Clip } from "@open-motion/motion";
-import type { NativeValues } from "@open-motion/motion/contract";
+import type { AudioValues, NativeValues } from "@open-motion/motion/contract";
 import { AppearanceFields } from "./appearance.js";
 
 interface Options {
@@ -31,6 +41,12 @@ export class Properties {
   private key = "";
   private touched = new Set<keyof NativeValues>();
   private appearance: AppearanceFields;
+  private audio: HTMLElement;
+  private inPoint: ReturnType<typeof numberField>;
+  private volume: ReturnType<typeof numberField>;
+  private muted: HTMLInputElement;
+  private audioReason: HTMLElement;
+  private audioTouched = new Set<keyof AudioValues>();
   constructor(document: Document) {
     this.element = slot(document, "properties");
     this.select = document.createElement("select");
@@ -48,8 +64,47 @@ export class Properties {
       if (this.touched.has("duration")) values.duration = this.duration.input.valueAsNumber;
       if (this.touched.has("fontSize")) values.fontSize = this.font.input.valueAsNumber;
       if (this.touched.has("appearance")) values.appearance = this.appearance.read();
+      if (this.touched.has("audio")) {
+        values.audio = {};
+        if (this.audioTouched.has("inPoint")) values.audio.inPoint = this.inPoint.input.valueAsNumber;
+        if (this.audioTouched.has("volume")) values.audio.volume = this.volume.input.valueAsNumber;
+        if (this.audioTouched.has("muted")) values.audio.muted = this.muted.checked;
+      }
       o.change(values);
     };
+    const audioChanged = (key: keyof AudioValues) => {
+      this.audioTouched.add(key);
+      changed("audio");
+    };
+    this.inPoint = numberField(document, {
+      label: "源入点秒",
+      unit: "s",
+      min: 0,
+      max: 3600,
+      optional: true,
+      change: () => audioChanged("inPoint"),
+    });
+    this.volume = numberField(document, {
+      label: "音量",
+      unit: "×",
+      min: 0,
+      max: 1,
+      optional: true,
+      change: () => audioChanged("volume"),
+    });
+    this.muted = document.createElement("input");
+    this.muted.type = "checkbox";
+    this.muted.setAttribute("aria-label", "静音");
+    this.muted.onchange = () => audioChanged("muted");
+    this.audio = slot(document, "stack");
+    this.audio.setAttribute("aria-label", "音频设置");
+    this.audioReason = note(document, "");
+    this.audio.append(
+      field(document, "源入点秒", this.inPoint.element),
+      field(document, "音量", this.volume.element),
+      field(document, "静音", this.muted),
+      this.audioReason,
+    );
     this.appearance = new AppearanceFields(document, () => changed("appearance"));
     this.start = numberField(document, { label: "开始秒", unit: "s", min: 0, change: () => changed("start") });
     this.duration = numberField(document, { label: "持续秒", unit: "s", min: 0, change: () => changed("duration") });
@@ -95,6 +150,7 @@ export class Properties {
       field(document, "文本内容", this.text),
       field(document, "字号", this.font.element),
       timing,
+      this.audio,
       this.appearance.element,
       this.apply,
       this.remove,
@@ -116,6 +172,7 @@ export class Properties {
   clear() {
     this.current = undefined;
     this.touched.clear();
+    this.audioTouched.clear();
     this.key = "";
     this.select.replaceChildren();
     this.content.hidden = true;
@@ -128,6 +185,9 @@ export class Properties {
     this.text.readOnly = value;
     this.text.disabled = !clip || clip.text === null || !!clip.host;
     const audioReadonly = clip?.media?.kind === "audio" && clip.media.maximum === null;
+    this.inPoint.readonly(value || audioReadonly || !clip?.media?.audio);
+    this.volume.readonly(value || audioReadonly || !clip?.media?.audio);
+    this.muted.disabled = value || audioReadonly || !clip?.media?.audio;
     this.start.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
     this.duration.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
     this.font.readonly(value || !!clip?.host || !!clip?.media);
@@ -137,6 +197,14 @@ export class Properties {
   }
   validate() {
     this.appearance.validate();
+    if (this.audioTouched.has("inPoint")) {
+      this.inPoint.validate();
+      if (!this.inPoint.input.value) throw Error("请输入有效源入点");
+    }
+    if (this.audioTouched.has("volume")) {
+      this.volume.validate();
+      if (!this.volume.input.value) throw Error("请输入有效音量");
+    }
     if (this.touched.has("start")) this.start.validate();
     if (this.touched.has("duration")) {
       this.duration.validate();
@@ -150,6 +218,7 @@ export class Properties {
   update(options: Options) {
     const changed = this.key !== `${options.owner}:${options.selected}`;
     if (changed || !options.values) this.touched.clear();
+    if (changed || !options.values?.audio) this.audioTouched.clear();
     this.key = `${options.owner}:${options.selected}`;
     this.current = options;
     const clip = options.clips.find((c) => c.id === options.selected),
@@ -179,14 +248,28 @@ export class Properties {
     this.content.hidden = !clip;
     this.empty.hidden = !!clip;
     if (clip) {
-      const values = options.values;
+      const values = options.values,
+        audio = clip.media?.audio;
+      this.audio.hidden = !audio;
+      this.inPoint.value(values?.audio?.inPoint ?? audio?.inPoint ?? undefined, changed);
+      this.volume.value(values?.audio?.volume ?? audio?.volume ?? undefined, changed);
+      this.muted.checked = values?.audio?.muted ?? audio?.muted ?? false;
+      this.audioReason.textContent = audio?.reason ?? "源入点移动不改变片段起点与时长；音量范围 0..1。";
       if (changed || document.activeElement !== this.text) this.text.value = values?.text ?? clip.text ?? "";
       this.start.value(values?.start ?? clip.start ?? 0, changed);
       this.duration.value(values?.duration ?? clip.duration ?? 1, changed);
       this.font.value(values?.fontSize ?? clip.fontSize ?? undefined, changed);
       this.appearance.update(clip.appearance, values?.appearance, changed);
       this.identity.value = clip.host?.reason ? `${clip.id} · ${clip.host.reason}` : clip.id;
-      this.type.value = clip.host ? "合成实例" : clip.composition ? "主合成" : "元素图层";
+      this.type.value = clip.host
+        ? "合成实例"
+        : clip.composition
+          ? "主合成"
+          : clip.media?.kind === "audio"
+            ? "音频片段"
+            : clip.media
+              ? "图像图层"
+              : "元素图层";
     }
     this.block(options.blocked);
   }

@@ -41,10 +41,7 @@ export class Previews {
     if (this.views.size >= 16) throw new Fault("invalid", "close an existing preview before opening another");
     let html: string;
     try {
-      html = assembleProject(
-        project.files,
-        project.resources.map((entry) => entry.path),
-      ).html;
+      html = assembleProject(project.files, project.resources).html;
     } catch (error) {
       throw new Fault("invalid", error instanceof Error ? error.message : "invalid composition graph");
     }
