@@ -46,9 +46,11 @@ const singular: Record<string, string> = {
 };
 const pluralRules = Object.fromEntries(languages.map(({ locale }) => [locale, new Intl.PluralRules(locale)]));
 
+export const isKnownMessage = (message: string): boolean => Object.hasOwn(zhCN, message) || Object.hasOwn(mvpZhCN, message);
+
 /** Accept legacy Chinese labels and already-localized built-in labels. */
 export function sourceMessage(message: string, locale: Locale = 'zh-CN'): string {
-  if (Object.hasOwn(zhCN, message) || Object.hasOwn(mvpZhCN, message)) return message;
+  if (isKnownMessage(message)) return message;
   return reverse[locale]?.get(message) ?? reverse['zh-CN'].get(message) ?? Object.values(reverse).map(index => index.get(message)).find(Boolean) ?? message;
 }
 

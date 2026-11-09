@@ -1,8 +1,8 @@
-import messages from './zh-CN.json';
+import { isKnownMessage } from './messages';
 import type { Translate } from './I18n';
 
 export function historyFailureMessage(message: string, t: Translate): string {
-  if (Object.hasOwn(messages, message)) return t(message);
+  if (isKnownMessage(message)) return t(message);
   if (/conflict|changed|version mismatch/i.test(message)) return t('The project changed. Refresh the editor before trying again.');
   if (/network|fetch|connect/i.test(message)) return t('Cannot connect to the preview service. Check the connection and retry.');
   return t('The operation could not be completed. Check the project and retry.');
@@ -15,6 +15,6 @@ export function splitFailureMessage(error: unknown): string {
   if (message.startsWith('Cut conflict:')) return 'The project changed during splitting. Refresh the editor and retry.';
   if (message.startsWith('Failed to read ') || message.startsWith('Missing content version for ')) return 'Cannot read the latest clip source. Refresh the editor and retry.';
   if (message === 'Clip is missing a patchable target.') return 'This clip cannot be split. Select a different clip.';
-  if (Object.hasOwn(messages, message)) return message;
+  if (isKnownMessage(message)) return message;
   return 'Could not split the clip. Check the current clip and retry.';
 }
