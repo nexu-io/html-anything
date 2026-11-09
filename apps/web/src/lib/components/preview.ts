@@ -11,6 +11,7 @@ export class NativePreview {
     frame: HTMLIFrameElement;
     container: HTMLElement;
     fps: number;
+    acceptTime: boolean;
     overlay: ReturnType<typeof previewViewport>;
   };
   private candidate?: { cancel(): void };
@@ -58,23 +59,33 @@ export class NativePreview {
       )
         this.view.overlay.selection(data);
     }
-    if (event.data?.source === "hf-preview" && event.data.type === "state" && Number.isFinite(event.data.currentTime))
+    if (
+      this.view.acceptTime &&
+      event.data?.source === "hf-preview" &&
+      event.data.type === "state" &&
+      Number.isFinite(event.data.currentTime)
+    )
       this.events.time(event.data.currentTime);
   };
 
   private selection = "";
   private editable = false;
-  select(id: string, editable: boolean) {
+  private scope = "";
+  select(id: string, editable: boolean, scope: string) {
     this.selection = id;
+    this.scope = scope;
     this.editable = editable;
     this.view?.overlay.selection(null);
     this.view?.frame.contentWindow?.postMessage(
-      { source: "open-motion-editor", type: "selection", id, enabled: editable },
+      { source: "open-motion-editor", type: "selection", id, enabled: editable, scope },
       "*",
     );
   }
   get ready() {
     return !!this.view;
+  }
+  get revision() {
+    return this.view?.revision;
   }
   get artifactId() {
     return this.view?.artifactId;
@@ -183,14 +194,16 @@ export class NativePreview {
       });
       if (!current()) throw new Error("预览上下文已过期");
       const previous = this.view;
-      this.view = {
+      const present = {
         ...opened,
         artifactId: project.artifactId,
         frame,
         container: viewport.element,
         fps,
         overlay: viewport,
+        acceptTime: false,
       };
+      this.view = present;
       frame.hidden = false;
       viewport.element.hidden = false;
       previous?.container.remove();
@@ -198,13 +211,17 @@ export class NativePreview {
         try {
           await this.client.closePreview(previous.id);
         } catch (error) {
+          if (this.view !== present) return;
+          present.acceptTime = true;
           this.events.message(`新预览已就绪，旧视图撤销未确认：${(error as Error).message}`);
           this.events.ready();
           return;
         }
       }
+      if (this.view !== present) return;
+      present.acceptTime = true;
       this.host.dataset.revision = project.revision;
-      this.select(this.selection, this.editable);
+      this.select(this.selection, this.editable, this.scope);
       this.events.message("预览就绪");
       this.events.ready();
     } catch (error) {

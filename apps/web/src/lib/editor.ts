@@ -94,6 +94,9 @@ export class Editor {
     else this.fileDrafts.set(path, content);
     this.edit(this.draft);
   }
+  get sources() {
+    return this.project?.files.map((file) => ({ ...file, content: this.source(file.path) })) ?? [];
+  }
   async rename(title: string) {
     if (!this.session) throw new Error("先选择会话");
     const renamed = await this.mutate("session_rename", { sessionId: this.session.id, title });

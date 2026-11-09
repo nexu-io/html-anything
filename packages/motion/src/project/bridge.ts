@@ -8,11 +8,17 @@ export function editorBridge() {
   };
   let selected: HTMLElement | null = null,
     key = "",
-    enabled = false;
+    enabled = false,
+    scope = "";
   const send = (type: string, data: Record<string, unknown>) =>
     parent.postMessage({ source: "open-motion-editor", type, ...data }, "*");
   const movable = (node: HTMLElement) => {
-    if (node.hasAttribute("data-composition-id") || node.closest("[data-open-motion-instance]")) return null;
+    if (
+      node.hasAttribute("data-composition-id") ||
+      node.hasAttribute("data-hf-inner-root") ||
+      (node.closest("[data-open-motion-instance]")?.getAttribute("data-open-motion-instance") ?? "") !== scope
+    )
+      return null;
     const own = getComputedStyle(node),
       translate = own.translate === "none" ? ["0px", "0px"] : own.translate.split(/\s+/);
     if (translate.length > 2 || !translate.every((v) => /^-?\d+(?:\.\d+)?px$/.test(v))) return null;
@@ -60,6 +66,8 @@ export function editorBridge() {
   addEventListener("message", (event) => {
     if (event.source !== parent || event.data?.source !== "open-motion-editor" || event.data.type !== "selection")
       return;
+    if (typeof event.data.scope !== "string") return;
+    scope = event.data.scope;
     enabled = event.data.enabled === true;
     selected =
       [...document.querySelectorAll<HTMLElement>("[data-hf-id]")].find((e) => identity(e) === event.data.id) ?? null;

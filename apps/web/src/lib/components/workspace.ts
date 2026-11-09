@@ -110,7 +110,13 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
   });
   const studio = new Studio(studioRoot, editor, client, run, {
     source: sourceView,
-    sourceInput: () => (file === "index.html" ? source : null),
+    sourceInput: () => source,
+    context: (path) => {
+      if (file !== path) {
+        file = path;
+        render(message);
+      }
+    },
     changed: () => refreshHeader(),
     file: (path) =>
       run(async () => {
@@ -189,7 +195,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
   source.oninput = () => {
     editor.editFile(file, source.value);
     refreshHeader();
-    if (file === "index.html") studio.sync(editor.project, editor.draft, busy || editor.unconfirmed);
+    studio.sync(editor.project, busy || editor.unconfirmed);
   };
   const interacted = () => {
     activity++;
@@ -234,7 +240,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     again.hidden = !retry;
     again.disabled = busy;
     source.disabled = !editor.project;
-    source.readOnly = blocked || (file === "index.html" && !!editor.drafts?.dirty());
+    source.readOnly = blocked || !!editor.drafts?.dirty();
     discard.disabled = blocked;
   }
   function render(next: string) {
@@ -258,7 +264,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     if (source.value !== editor.source(file)) source.value = editor.source(file);
     revision.textContent = editor.project?.revision ?? "尚未打开工程";
     refreshHeader();
-    studio.sync(editor.project, editor.draft, blocked);
+    studio.sync(editor.project, blocked);
   }
   render("加载中");
   run(() => editor.load());

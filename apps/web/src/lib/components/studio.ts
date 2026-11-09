@@ -1,11 +1,14 @@
-import { badge, button, emptyState, note, readout, slot, tabs, type timeTracks, tree } from "@open-motion/components";
+import { badge, button, emptyState, note, readout, slot, type timeTracks } from "@open-motion/components";
 import type { Clip, NativeValues } from "@open-motion/motion/contract";
+import type { ContextModel } from "@open-motion/motion/project";
 import type { Project } from "@open-motion/workspace/contract";
 import type { Client } from "../../api.js";
 import type { Editor } from "../editor.js";
 import { studioLayout } from "./layout.js";
 import { NativePreview } from "./preview.js";
 import { AnimationEditor } from "./studio/animation.js";
+import { type Binding, CompositionContext } from "./studio/context.js";
+import { StudioLibrary } from "./studio/library.js";
 import { Properties } from "./studio/properties.js";
 import { studioTimeline } from "./studio/timeline.js";
 import { playerControls, studioTools } from "./studio/toolbar.js";
@@ -16,11 +19,13 @@ const editorLabel = (session: boolean) => (session ? "新建影片工程" : "开
 export class Studio {
   private disposed = false;
   private teardown?: () => void;
-  private model?: { html: string; clips: Clip[] };
+  private model?: ContextModel;
+  private context: CompositionContext;
+  private layers: StudioLibrary;
+  private globalTime = 0;
   private key = "";
   private pending?: {
-    artifactId: string;
-    source: string;
+    binding: Binding;
     id: string;
     values: NativeValues;
   };
@@ -37,14 +42,6 @@ export class Studio {
   private transport?: ReturnType<typeof playerControls>;
   private axis?: ReturnType<typeof timeTracks>;
   private library: HTMLElement;
-  private libraryActions: HTMLElement;
-  private layerTree: ReturnType<typeof tree>;
-  private resourceTabs: ReturnType<typeof tabs>;
-  private filesHost: HTMLElement;
-  private files = new Map<string, HTMLButtonElement>();
-  private expanded = new Set<string>();
-  private expandedReady = false;
-  private libraryMode: "layers" | "files" = "layers";
   private timelineActions: HTMLElement;
   private player: HTMLElement;
   private timelineRoot: HTMLElement;
@@ -66,6 +63,7 @@ export class Studio {
       sourceInput(): HTMLTextAreaElement | null;
       changed(): void;
       file(path: string): void;
+      context(path: string): void;
       start(): void;
     },
   ) {
@@ -79,6 +77,7 @@ export class Studio {
       },
     };
     const document = root.ownerDocument;
+    this.context = new CompositionContext(document, editor, (id) => this.navigate(id));
     const areas = studioLayout(document),
       { library, canvas, inspector, timeline } = areas;
     this.inspector = inspector.body;
@@ -94,27 +93,12 @@ export class Studio {
     });
     this.inspector.append(this.properties.element, this.animations.element);
     this.library = library.body;
-    this.libraryActions = library.actions;
-    this.layerTree = tree(document, {
-      label: "工程图层",
-      select: (id) => this.choose(id),
-      expand: (id, open) => {
-        if (open) this.expanded.add(id);
-        else this.expanded.delete(id);
-        if (this.model) this.render(this.model.clips);
-      },
-    });
-    this.resourceTabs = tabs(document, {
-      label: "资源视图",
-      select: (id) => {
-        this.libraryMode = id === "files" ? "files" : "layers";
-        if (this.model) this.render(this.model.clips);
-      },
-    });
-    this.filesHost = document.createElement("div");
-    this.filesHost.append(slot(document, "content"));
-    this.libraryActions.append(this.resourceTabs.element);
-    this.library.append(this.layerTree.element, this.filesHost);
+    this.layers = new StudioLibrary(
+      library.body,
+      library.actions,
+      (id) => this.choose(id),
+      (path) => this.options.file(path),
+    );
     this.timelineRoot = timeline.body;
     this.timelineActions = timeline.actions;
     this.preview = slot(document, "stage");
@@ -128,7 +112,7 @@ export class Studio {
     canvas.body.append(this.previewWrapper, options.source, this.player);
     canvas.actions.append(this.status);
     options.source.hidden = true;
-    root.replaceChildren(this.toolbar, areas.element);
+    root.replaceChildren(this.toolbar, this.context.element, areas.element);
     const Resize = document.defaultView?.ResizeObserver;
     const observer = Resize
       ? new Resize((entries) => this.axis?.resize(entries[0]?.contentRect.width ?? 0))
@@ -149,16 +133,19 @@ export class Studio {
         this.status.value = value;
       },
       ready: () => {
-        this.transport?.update(this.artifact, this.blocked, this.viewer.ready);
-        this.viewer.control("seek", this.currentTime);
+        this.transport?.update(this.context.owner, this.blocked || this.context.readonly, this.viewer.ready);
+        this.viewer.control("seek", this.globalTime);
       },
       time: (value) => {
-        this.currentTime = value;
-        this.time.value = value.toFixed(2);
-        this.axis?.time(value);
+        this.globalTime = value;
+        this.currentTime = this.context.localTime(value);
+        this.time.value = this.currentTime.toFixed(2);
+        this.axis?.time(this.currentTime);
       },
       begin: () => this.control("pause"),
-      move: (id, x, y) => {
+      move: (scoped, x, y) => {
+        const id = this.context.local(scoped);
+        if (id === null) return;
         if (
           this.blocked ||
           this.pending ||
@@ -169,14 +156,13 @@ export class Studio {
           return;
         this.control("pause");
         this.run(async () => {
-          await this.editor.save();
-          const result = await this.client.patchMotion(this.editor.draft, id, { appearance: { x, y } });
+          await this.context.transform((html) => this.client.patchMotion(html, id, { appearance: { x, y } }));
           this.selected = id;
-          this.editor.edit(result.html);
-          await this.editor.save();
         });
       },
-      select: (id) => {
+      select: (scoped) => {
+        const id = this.context.local(scoped);
+        if (id === null) return;
         if (
           !this.blocked &&
           !this.pending &&
@@ -191,22 +177,34 @@ export class Studio {
     });
   }
 
-  sync(project: Project | null, draft: string, blocked: boolean) {
+  sync(project: Project | null, blocked: boolean) {
     if (this.disposed) return;
     this.blocked = blocked;
     if (project && this.artifact !== project.artifactId) {
       this.enabled = true;
       this.artifact = project.artifactId;
       this.selected = "";
-      this.expanded.clear();
-      this.expandedReady = false;
+      this.layers.reset();
+      this.context.reset();
+      this.globalTime = 0;
 
       this.currentTime = 0;
     }
     this.properties.block(blocked || !this.model || this.animations.dirty);
     this.animations.block(blocked || !this.model || !!this.pending);
-    this.viewer.select(this.selected, !blocked && !this.pending && !this.animations.dirty && !this.editor.dirty);
-    const key = JSON.stringify([project?.artifactId, project?.revision, draft]);
+    this.viewer.select(
+      this.context.scoped(this.selected),
+      !blocked &&
+        !!this.model &&
+        !this.context.readonly &&
+        !this.pending &&
+        !this.animations.dirty &&
+        !this.editor.dirty,
+      this.context.scope,
+    );
+    const sources = this.editor.sources;
+    const signature = JSON.stringify(sources);
+    const key = JSON.stringify([project?.artifactId, project?.revision, this.context.instance, signature]);
     if (this.key === key) {
       if (this.model) this.render(this.model.clips);
       return;
@@ -215,7 +213,8 @@ export class Studio {
     clearTimeout(this.inspectTimer);
     const epoch = ++this.epoch;
     this.model = undefined;
-    this.layerTree.disable(true);
+    this.viewer.select("", false, this.context.scope);
+    this.layers.disable(true);
     this.axis?.disable(true);
     this.library.setAttribute("aria-busy", "true");
     for (const button of this.toolbar.querySelectorAll("button"))
@@ -229,9 +228,8 @@ export class Studio {
       this.properties.clear();
       this.animations.update("", undefined, true);
 
-      this.layerTree.update([], "", this.expanded, true);
-      this.filesHost.replaceChildren();
-      this.files.clear();
+      this.layers.update([], "", true, []);
+      this.context.element.replaceChildren();
       this.timelineRoot.replaceChildren(note(this.root.ownerDocument, "创建或打开工程，开始编辑时间轴。"));
       this.toolbar.replaceChildren(note(this.root.ownerDocument, "本地 Studio"));
       const empty = emptyState(this.root.ownerDocument, {
@@ -255,11 +253,27 @@ export class Studio {
     if (this.viewer.artifactId && this.viewer.artifactId !== project.artifactId) this.retire();
     this.inspectTimer = setTimeout(
       () =>
-        void this.client.inspectMotion(draft).then(
+        void this.client.contextMotion(sources, this.context.instance).then(
           (model) => {
-            if (epoch !== this.epoch) return;
+            if (
+              epoch !== this.epoch ||
+              project.revision !== this.editor.project?.revision ||
+              signature !== JSON.stringify(this.editor.sources)
+            )
+              return;
             this.model = model;
-            this.layerTree.disable(false);
+            this.context.update(model);
+            const seek = this.context.takeSeek();
+            if (seek !== null) {
+              this.globalTime = seek;
+              this.currentTime = this.context.localTime(seek);
+              this.time.value = this.currentTime.toFixed(2);
+              this.selected = "";
+              this.layers.reset();
+              this.options.context(this.context.file);
+              this.viewer.control("seek", seek);
+            }
+            this.layers.disable(false);
             this.library.removeAttribute("aria-busy");
             this.render(model.clips);
           },
@@ -281,18 +295,16 @@ export class Studio {
       const candidate = this.pending;
       if (candidate) {
         this.properties.validate();
-        if (candidate.artifactId !== this.editor.project?.artifactId) throw new Error("原生编辑上下文已过期");
-        const result = await this.client.patchMotion(candidate.source, candidate.id, candidate.values);
-        if (candidate.artifactId !== this.editor.project?.artifactId) throw new Error("原生编辑上下文已过期");
-        this.editor.edit(result.html);
+        this.context.capture(candidate.binding.source);
+        const result = await this.client.patchMotion(candidate.binding.source, candidate.id, candidate.values);
+        this.context.apply(candidate.binding, result.html);
         if (this.pending === candidate) this.pending = undefined;
       }
-      const request = this.animations.request(this.editor.draft, this.editor.project?.artifactId ?? "");
+      const request = this.animations.request(this.context.source, this.context.owner);
       if (request) {
-        const owner = this.editor.project?.artifactId;
+        const binding = this.context.capture();
         const result = await this.client.animateMotion(request);
-        if (owner !== this.editor.project?.artifactId) throw new Error("动画编辑上下文已过期");
-        this.editor.edit(result.html);
+        this.context.apply(binding, result.html);
         this.animations.acknowledge(result.clips.find((c) => c.id === request.id));
       }
     })();
@@ -303,69 +315,31 @@ export class Studio {
     }
   }
   private control(action: "play" | "pause" | "seek", timeSeconds?: number) {
-    this.viewer.control(action, timeSeconds);
+    try {
+      this.viewer.control(action, timeSeconds === undefined ? undefined : this.context.globalTime(timeSeconds));
+      if (this.model && this.viewer.revision === this.editor.project?.revision) this.status.value = "预览就绪";
+    } catch (error) {
+      this.status.value = (error as Error).message;
+    }
   }
   private render(clips: Clip[]) {
     const document = this.root.ownerDocument;
     if (!clips.some((c) => c.id === this.selected)) this.selected = "";
     const selected = clips.find((c) => c.id === this.selected);
-    if (!this.expandedReady) {
-      for (const clip of clips.filter((c) => c.parent === null)) this.expanded.add(clip.id);
-      this.expandedReady = true;
-    }
-    this.resourceTabs.update(
-      [
-        { id: "layers", label: "图层" },
-        { id: "files", label: "文件" },
-      ],
-      this.libraryMode,
-      this.blocked,
-    );
-    this.layerTree.update(
-      clips.map((c) => ({
-        id: c.id,
-        label: c.text?.slice(0, 60) || (c.composition ? "main" : c.tag),
-        parent: c.parent,
-        icon: c.composition ? ("film" as const) : ("text" as const),
-      })),
-      this.selected,
-      this.expanded,
-      this.blocked,
-    );
-    this.layerTree.element.hidden = this.libraryMode !== "layers";
-    this.filesHost.hidden = this.libraryMode !== "files";
-    const files = this.editor.project?.files ?? [];
-    for (const [path, button] of this.files)
-      if (!files.some((f) => f.path === path)) {
-        button.remove();
-        this.files.delete(path);
-      }
-    for (const file of files) {
-      let control = this.files.get(file.path);
-      if (!control) {
-        control = button(document, {
-          label: file.path,
-          icon: file.path.endsWith(".html") ? "code" : "file",
-          compact: true,
-          variant: "item",
-          onClick: () => this.options.file(file.path),
-        });
-        this.files.set(file.path, control);
-        this.filesHost.append(control);
-      }
-      control.disabled = this.blocked;
-    }
+    const blocked = this.blocked || this.context.readonly;
+    this.context.render(this.blocked);
+    this.layers.update(clips, this.selected, this.blocked, this.editor.project?.files ?? []);
     const clip = selected;
     this.properties.update({
-      owner: this.editor.project?.artifactId ?? "",
+      owner: this.context.owner,
       clips,
       selected: this.selected,
       values: this.pending?.id === clip?.id ? this.pending?.values : undefined,
-      blocked: this.blocked || this.animations.dirty,
+      blocked: blocked || this.animations.dirty,
       choose: (id) => this.choose(id),
       change: (values) => {
         if (!clip || !this.model || !this.editor.project) return;
-        this.pending = { artifactId: this.editor.project.artifactId, source: this.model.html, id: clip.id, values };
+        this.pending = { binding: this.context.capture(this.model.html), id: clip.id, values };
         const source = this.options.sourceInput();
         if (source) source.disabled = true;
         this.animations.block(true);
@@ -375,20 +349,22 @@ export class Studio {
       save: () => this.run(() => this.editor.save()),
       remove: () =>
         this.run(async () => {
-          await this.editor.save();
           if (!clip) return;
-          const result = await this.client.editMotion({ html: this.editor.draft, action: "remove", id: clip.id });
-          this.editor.edit(result.html);
-          await this.editor.save();
+          await this.context.transform((html) => this.client.editMotion({ html, action: "remove", id: clip.id }));
         }),
     });
-    this.animations.update(this.editor.project?.artifactId ?? "", selected, this.blocked || !!this.pending);
-    this.viewer.select(this.selected, !this.blocked && !this.pending && !this.animations.dirty && !this.editor.dirty);
+    this.animations.update(this.context.owner, selected, blocked || !!this.pending);
+    this.viewer.select(
+      this.context.scoped(this.selected),
+      !blocked && !this.pending && !this.animations.dirty && !this.editor.dirty,
+      this.context.scope,
+    );
     this.axis = studioTimeline(document, {
       clips,
       selected: this.selected,
-      blocked: this.blocked || !!this.pending || this.animations.dirty || this.editor.dirty,
+      blocked: blocked || !!this.pending || this.animations.dirty || this.editor.dirty,
       time: this.currentTime,
+      duration: this.model?.context.duration ?? null,
       root: this.timelineRoot,
       actions: this.timelineActions,
       canUndo: !!this.editor.project?.history.canUndo,
@@ -400,16 +376,13 @@ export class Studio {
       retime: (id, time) => {
         const source = this.model?.html;
         this.run(async () => {
-          this.selected = await retimeKey(this.editor, this.client, id, time, source);
+          this.selected = await retimeKey(this.context, this.client, id, time, source);
         });
       },
       commit: (id, start, duration) =>
         this.run(async () => {
-          await this.editor.save();
-          const result = await this.client.patchMotion(this.editor.draft, id, { start, duration });
+          await this.context.transform((html) => this.client.patchMotion(html, id, { start, duration }));
           this.selected = id;
-          this.editor.edit(result.html);
-          await this.editor.save();
         }),
     });
     if (!this.transport) {
@@ -419,27 +392,30 @@ export class Studio {
       });
       this.player.replaceChildren(this.transport.element);
     }
-    this.transport.update(this.artifact, this.blocked, this.viewer.ready);
+    this.transport.update(this.context.owner, blocked, this.viewer.ready);
     this.toolbar.replaceChildren(
       ...studioTools(document, {
         title:
           this.editor.session?.artifacts.find((a) => a.id === this.editor.project?.artifactId)?.title ?? "影片工程",
         mode: this.mode,
-        blocked: this.blocked,
-        setMode: (mode) => this.setMode(mode),
+        file: this.context.file,
+        blocked: blocked,
+        setMode: (mode) => {
+          if (mode === "source") this.options.context(this.context.file);
+          this.setMode(mode);
+        },
         add: () =>
           this.run(async () => {
-            await this.editor.save();
-            const result = await this.client.editMotion({
-              html: this.editor.draft,
-              action: "addText",
-              fontSize: 96,
-              text: "新文本",
-            });
+            const result = await this.context.transform((html) =>
+              this.client.editMotion({
+                html,
+                action: "addText",
+                fontSize: 96,
+                text: "新文本",
+              }),
+            );
             const previous = new Set(this.model?.clips.map((c) => c.id));
             this.selected = result.clips.find((c) => !previous.has(c.id))?.id ?? this.selected;
-            this.editor.edit(result.html);
-            await this.editor.save();
           }),
         open: () =>
           this.run(async () => {
@@ -454,6 +430,18 @@ export class Studio {
         },
       }),
     );
+  }
+  private navigate(id: string | null) {
+    this.run(async () => {
+      await this.editor.save();
+      this.viewer.control("pause");
+      this.context.change(id, this.globalTime);
+      this.selected = "";
+      this.animations.discardDraft();
+      this.layers.reset();
+      this.key = "";
+      this.setMode("preview");
+    });
   }
   private choose(id: string) {
     this.run(async () => {
@@ -474,8 +462,9 @@ export class Studio {
   }
   private retire() {
     this.viewer.close();
-    this.currentTime = 0;
-    this.time.value = "0.00";
+    this.globalTime = this.context.readonly ? 0 : this.context.globalTime(0);
+    this.currentTime = this.context.localTime(this.globalTime);
+    this.time.value = this.currentTime.toFixed(2);
   }
   async dispose() {
     this.disposed = true;

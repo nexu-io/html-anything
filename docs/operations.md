@@ -54,7 +54,7 @@ pnpm exec odsuite guard --root /path/to/repo --json
 node --input-type=module -e 'import {run} from "@odsuite/testkit"; const r=await run({root:process.cwd(),output:".artifacts/qualification.json",packaged:false}); if(r.result==="failed")process.exitCode=1;'
 ```
 
-Testkit distinguishes passed/failed/unqualified and never substitutes for product acceptance. Electron is a reference carrier, Docker a skeleton, standalone/Codex carry the actual session/source workspace. Advanced animation, nested compositions, media/audio, layout preferences, generation and export are not fully connected.
+Testkit distinguishes passed/failed/unqualified and never substitutes for product acceptance. Electron is a reference carrier, Docker a skeleton, standalone/Codex carry the actual session/source workspace. Advanced animation, unresolved/nonlinear composition clocks, media/audio, layout preferences, generation and export are not fully connected.
 
 ## Resources and recovery
 

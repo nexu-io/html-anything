@@ -8,6 +8,7 @@ export function studioTimeline(
     selected: string;
     blocked: boolean;
     time: number;
+    duration: number | null;
     root: HTMLElement;
     actions: HTMLElement;
     canUndo: boolean;
@@ -26,10 +27,9 @@ export function studioTimeline(
   const tracks = options.clips.filter(
     (c) => !c.composition && c.start !== null && c.duration !== null && Number.isFinite(c.start + c.duration),
   );
-  const length = Math.max(
-    1,
-    ...options.clips.map((c) => (c.composition ? (c.duration ?? 0) : (c.start ?? 0) + (c.duration ?? 0))),
-  );
+  const length =
+    options.duration ??
+    Math.max(1, ...options.clips.map((c) => (c.composition ? (c.duration ?? 0) : (c.start ?? 0) + (c.duration ?? 0))));
   const axis = timeTracks(document, {
     duration: length,
     disabled: options.blocked,
