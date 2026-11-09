@@ -109,7 +109,8 @@ test('an unexpected npm latest change stops promotion and consumer processes can
   const f = await candidateFixture(t), store = storage(f.candidate);
   await assert.rejects(archiveRelease(f.directory, f.inputs, config, { ...store, fetcher: registry(f.candidate, true, f.candidate.version, f.candidate.version) }), /latest changed/);
   assert.equal(store.writes.length, 0);
-  const env = consumerEnvironment('/isolated', { PATH: '/bin', NODE_AUTH_TOKEN: 'example', GITHUB_TOKEN: 'example', AWS_ACCESS_KEY_ID: 'example', ACTIONS_ID_TOKEN_REQUEST_URL: 'example', npm_config_registry: 'https://private.invalid' });
+  const env = consumerEnvironment('/isolated', { PATH: '/bin', NODE_AUTH_TOKEN: 'example', GITHUB_TOKEN: 'example', AWS_ACCESS_KEY_ID: 'example', ACTIONS_ID_TOKEN_REQUEST_URL: 'example', BROWSER_USE_ACCESS_PIPE_PATH: '/ipc', CODEX_APP_TOOLS_PIPE_PATH: '/ipc', NODE_OPTIONS: '--require=untrusted', npm_config_registry: 'https://private.invalid' });
   assert(!env.NODE_AUTH_TOKEN && !env.GITHUB_TOKEN && !env.AWS_ACCESS_KEY_ID && !env.ACTIONS_ID_TOKEN_REQUEST_URL);
+  assert(!env.BROWSER_USE_ACCESS_PIPE_PATH && !env.CODEX_APP_TOOLS_PIPE_PATH && !env.NODE_OPTIONS);
   assert.equal(env.npm_config_registry, 'https://registry.npmjs.org/');
 });

@@ -131,11 +131,12 @@ jobs:
           node .github/scripts/motion-release.mjs verify "$RUNNER_TEMP/candidate"
           node .github/scripts/motion-registry-smoke.mjs "$RUNNER_TEMP/candidate"
       - uses: actions/upload-artifact@v7.0.2
+        if: always()
         with:
           name: registry-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/candidate/registry-${{ matrix.platform }}.json
           retention-days: 30
-          if-no-files-found: error
+          if-no-files-found: warn
 
   snapshot:
     needs: registry-install

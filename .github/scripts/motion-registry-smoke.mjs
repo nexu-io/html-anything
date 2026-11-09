@@ -9,9 +9,9 @@ import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeJSON } from '../../scripts/runtime-assets.mjs';
 
 export function consumerEnvironment(work, source = process.env) {
-  const env = { ...source };
-  for (const key of Object.keys(env)) if (/TOKEN|SECRET|PASSWORD|CREDENTIAL|COOKIE|(?:^|_)KEY$|^GITHUB_|^ACTIONS_|^AWS_|^npm_config_/i.test(key)) delete env[key];
-  for (const key of ['HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'HYPERFRAMES_BROWSER_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH', 'MOTION_BROWSER_PATH', 'MOTION_TEMPLATES_CONFIG_URL', 'MOTION_TEMPLATES_ENV', 'MOTION_DATA_DIR']) delete env[key];
+  // Consumer code receives OS basics only, never CI credentials or Agent/browser IPC capabilities.
+  const allowed = /^(?:PATH|HOME|USERPROFILE|APPDATA|LOCALAPPDATA|TMPDIR|TMP|TEMP|SystemRoot|windir|ComSpec|PATHEXT|ProgramFiles(?:\(x86\))?|ProgramData|LANG|LC_ALL|TZ)$/i;
+  const env = Object.fromEntries(Object.entries(source).filter(([key]) => allowed.test(key)));
   return { ...env, CODEX_HOME: path.join(work, 'codex'), npm_config_cache: path.join(work, 'npm-cache'),
     npm_config_userconfig: path.join(work, 'user.npmrc'), npm_config_globalconfig: path.join(work, 'global.npmrc'),
     npm_config_registry: 'https://registry.npmjs.org/', npm_config_ignore_scripts: 'true',
@@ -46,6 +46,11 @@ export async function registrySmoke(directory) {
   const c = JSON.parse(await readFile(path.join(directory, 'candidate.json')));
   const platform = process.platform + '-' + process.arch;
   assert(['darwin-arm64', 'win32-x64'].includes(platform), 'Use a supported native runner');
+  const file = path.join(directory, `registry-${platform}.json`);
+  let phase = 'registry-download';
+  const checkpoint = async next => { phase = next; await writeJSON(file, { status: 'running', phase, version: c.version, platform, tgzSHA256: c.tgzSHA256 }); };
+  await checkpoint(phase);
+  try {
   const work = await mkdtemp(path.join(os.tmpdir(), 'om-registry-')), env = consumerEnvironment(work);
   for (const file of ['user.npmrc', 'global.npmrc']) await writeFile(path.join(work, file), '');
   const project = path.join(work, 'project'), host = path.join(work, 'host');
@@ -53,6 +58,7 @@ export async function registrySmoke(directory) {
   await writeFile(path.join(env.CODEX_HOME, 'config.toml'), '[mcp_servers.unrelated]\ncommand = "keep-this-server"\n');
   const npm = path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
   const cli = args => runFile(process.execPath, [npm, ...args], { cwd: project, env, timeout: 20 * 60_000 });
+  console.log('Fetching the exact version anonymously from the public registry');
   let metadata;
   for (let attempt = 0; attempt < 30; attempt++) {
     const response = await fetch('https://registry.npmjs.org/@openmotion%2fapp/' + c.version, { signal: AbortSignal.timeout(30_000) });
@@ -65,25 +71,37 @@ export async function registrySmoke(directory) {
   assert.equal(path.basename(packed.filename), packed.filename);
   const tgz = path.join(work, packed.filename), bytes = await readFile(tgz);
   assert.equal(await sha256(tgz), c.tgzSHA256); assert.equal('sha512-' + createHash('sha512').update(bytes).digest('base64'), c.integrity);
+  await checkpoint('host-install');
+  console.log('Installing the pinned test host in an isolated prefix');
   await cli(['install', '--prefix', host, '--no-save', '--ignore-scripts', '--no-audit', '--no-fund', '@openai/codex@0.166.0']);
   const codex = path.join(host, 'node_modules/@openai/codex/bin/codex.js');
   const home = path.join(work, 'app'), data = path.join(work, 'data'), skills = path.join(project, '.agents/skills');
   const command = ['exec', '--yes', '--package', tgz, '--', 'openmotion'];
   const setup = [...command, 'setup', '--host', 'codex', '--home', home, '--data-dir', data, '--skills-dir', skills, '--codex', codex];
+  console.log('Running fresh and repeated setup with isolated data, Skills and host settings');
+  await checkpoint('setup');
   const first = JSON.parse(await cli(setup)), second = JSON.parse(await cli(setup));
   assert.equal(first.appRoot, second.appRoot); assert.equal((await readdir(path.join(home, 'apps'))).length, 1);
   assert.match(await readFile(path.join(env.CODEX_HOME, 'config.toml'), 'utf8'), /keep-this-server/);
   const manifest = JSON.parse(await readFile(path.join(directory, 'release-npm.json')));
   for (const skill of manifest.skills) await access(path.join(skills, 'openmotion/skills', skill, 'SKILL.md'));
+  console.log('Preparing the checksum-pinned browser, FFmpeg and ffprobe');
+  await checkpoint('native-prepare');
   await cli([...command, 'prepare', '--home', home]);
   const installed = JSON.parse(await runFile(process.execPath, [codex, 'mcp', 'get', 'openmotion', '--json'], { cwd: project, env }));
   assert.equal(installed.transport.command, process.execPath); assert.deepEqual(installed.transport.args, [first.launcher]);
+  console.log('Checking the actual registered MCP transport and resources');
+  await checkpoint('mcp-discovery');
   await discover(installed.transport, env, c.version, manifest.mcp.tools);
   const report = { status: 'passed', platform, version: c.version, sourceCommit: c.sourceCommit, tgzSHA256: c.tgzSHA256,
     node: process.version, codex: '0.166.0', registryColdInstall: 'passed', repeatSetup: 'passed', unrelatedSettings: 'preserved',
     nativePreparation: 'passed', mcpTools: manifest.mcp.tools.length, skills: manifest.skills.length, resources: 'passed',
     realModelTurn: 'not-run', humanPlayback: 'not-run', windowsDesktopAcceptance: 'not-run' };
-  await writeJSON(path.join(directory, `registry-${platform}.json`), report); return report;
+  await writeJSON(file, report); return report;
+  } catch (error) {
+    await writeJSON(file, { status: 'failed', phase, platform, version: c.version, tgzSHA256: c.tgzSHA256, error: 'REGISTRY_ACCEPTANCE_FAILED' });
+    throw error;
+  }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await registrySmoke(path.resolve(process.argv[2]));
