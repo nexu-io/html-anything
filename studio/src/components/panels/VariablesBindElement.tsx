@@ -256,7 +256,7 @@ export function VariablesBindElement({
               }}
               className="h-6 rounded-md border border-neutral-800 px-2 text-[10px] font-medium text-neutral-400 transition-colors hover:border-neutral-700 hover:text-neutral-200"
             >
-              {action.label} →&nbsp;variable
+              {t(action.label)} → {t('variable')}
             </button>
           ))}
         </div>

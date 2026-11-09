@@ -54,10 +54,10 @@ test('project sessions create blank editable projects, isolate uploads and resto
     assert.equal(catalog.projects.length, 3);
     assert.equal(catalog.activeId, second.projectId);
     assert.ok(catalog.projects.every(item => item.id === 'project' || item.openedAt));
-    // An old tab's native endpoints may not resolve to the newly active native directory.
+    // An older page still resolves its own directory; writes still require its file version.
     for (const method of ['GET', 'PUT']) {
       const stale = await fetch(`${baseUrl()}/api/projects/${first.projectId}/files/index.html`, { method, headers: { Origin: baseUrl(), 'Content-Type': 'text/html' }, ...(method === 'PUT' ? { body: firstSource } : {}) });
-      assert.equal(stale.status, 409);
+      assert.equal(stale.status, method === 'GET' ? 200 : 428);
     }
     assert.equal((await mutate('/motion-api/projects', { expectedRevision: initial.revision })).status, 409);
     assert.equal((await mutate('/motion-api/projects', { expectedRevision: (await store.get()).revision, expectedProjectId: first.projectId })).status, 409);

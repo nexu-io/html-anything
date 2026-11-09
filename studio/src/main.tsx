@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { IconContext } from "@phosphor-icons/react";
 import { MotionApp } from "./motion/MotionApp";
 import { ShowThemeToggle } from "./components/ThemeToggle";
-import { StudioErrorBoundary } from "./components/StudioErrorBoundary";
 import { readIconTokens } from "./styles/iconTokens";
 import { trackStudioEvent } from "./utils/studioTelemetry";
 import {
@@ -119,11 +118,9 @@ createRoot(document.getElementById("root")!).render(
     {/* One icon size and weight for the whole app, taken from the theme file.
         Icons that pass their own size or weight still win. */}
     <IconContext.Provider value={readIconTokens()}>
-      <StudioErrorBoundary>
-        <ShowThemeToggle.Provider value>
-          <MotionStudioHost><MotionApp /></MotionStudioHost>
-        </ShowThemeToggle.Provider>
-      </StudioErrorBoundary>
+      <ShowThemeToggle.Provider value>
+        <MotionStudioHost><MotionApp /></MotionStudioHost>
+      </ShowThemeToggle.Provider>
     </IconContext.Provider>
   </StrictMode>,
 );

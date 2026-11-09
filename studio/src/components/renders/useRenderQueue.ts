@@ -8,7 +8,7 @@ import { generateId } from "../../utils/generateId";
 import { readServerError } from "./serverError";
 import { ffmpegInstallMessage, useFfmpegStatus } from "./useFfmpegStatus";
 import { requestStudioFeedback, type FeedbackContext } from "../feedback/feedbackTrigger";
-import { studioApiFetch } from "../../utils/studioApiFetch";
+import { studioApiFetch, studioProjectUrl } from "../../utils/studioApiFetch";
 
 export interface RenderJob {
   id: string;
@@ -325,7 +325,7 @@ export function useRenderQueue(
       activeJobRef.current = jobId;
 
       // Track progress via SSE
-      const es = new EventSource(`/api/render/${jobId}/progress`);
+      const es = new EventSource(studioProjectUrl(`/api/render/${jobId}/progress`, projectId));
       eventSourceRef.current = es;
 
       es.addEventListener("progress", (event) => {

@@ -82,6 +82,10 @@ The [lightweight npm installer](docs/npm-installation.md) installs eleven MCP To
 
 The five entries are [motion-production](skills/motion-production/SKILL.md), [motion-director](skills/motion-director/SKILL.md), [motion-template-to-video](skills/motion-template-to-video/SKILL.md), [motion-recreate](skills/motion-recreate/SKILL.md), and [motion-video-to-template](skills/motion-video-to-template/SKILL.md). Reference recreation is implemented. Product UI follows the [OpenDesign visual system](docs/design-system.md); video artwork keeps its own styles.
 
+## Usage data and privacy
+
+OpenMotion collects feature usage, safe error categories, device information and coarse country/region/timezone by default. Prompts and project contents are excluded; raw IP addresses are discarded after GeoIP enrichment. Turn collection off in **Privacy settings → Share usage data**, or set `OPENMOTION_TELEMETRY=0` / `DO_NOT_TRACK=1` when launching the MCP. The saved preference covers MCP and Studio and survives restarts. See [tracking and user controls](tracking/README.md).
+
 ## What's next
 
 **Motion Benchmark / Arena** is a proposed way to compare recreations: give each workflow the same reference and brand assets, then inspect the outputs for timing, brand fidelity and editability. The method and public leaderboard are still under discussion.
@@ -89,6 +93,8 @@ The five entries are [motion-production](skills/motion-production/SKILL.md), [mo
 To contribute a style, include the reference and its creator, the Motion MD, a preview, editable source and asset permissions. [Contribution guide](AGENTS.md) · [Documentation](docs/README.md)
 
 **Credits & release status.** openmotion uses [Hyperframes](https://github.com/heygen-com/hyperframes) for native compositions, the Studio foundation and rendering. Its [editor](studio/LICENSE) and [bundled examples](template-library/LICENSE) retain their upstream Apache-2.0 licenses. This public repository is licensed under [Apache-2.0](LICENSE); bundled components and fonts retain their notices. Development targets [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion); the former HTML Anything application remains on `main` and is preserved on [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). Packages are not published. See the [repository workflow](docs/repository-migration.md).
+
+Multiple local conversations can keep different projects open through one native Studio service. Each preview stays bound to its project; same-project writes still use revision checks. See [shared editor](docs/shared-editor.md).
 
 ## Published template catalog
 

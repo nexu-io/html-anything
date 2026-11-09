@@ -90,4 +90,6 @@
 
 **致谢与发布状态。** openmotion 使用 [Hyperframes](https://github.com/heygen-com/hyperframes) 的原生合成、Studio 基础与渲染能力。上游[编辑器](../studio/LICENSE)与[内置示例](../template-library/LICENSE)保留 Apache-2.0 许可。本公开仓库采用 [Apache-2.0](../LICENSE) 许可，随包组件和字体保留各自声明。开发目标为 [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion)；原 HTML Anything 应用仍在 `main`，并已留档到 [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy)。当前不发布包；详见[仓库流程](repository-migration.md)。
 
+多个本地会话可通过同一个原生 Studio 服务保留各自工程预览；页面固定对应工程，同工程写入仍受版本冲突保护。参见[共享编辑器](shared-editor.md)。
+
 模板界面和 Agent 共用 Prism 发布目录的本地缓存。`motion_list_templates` 返回本机 JSONL 路径，由 Agent 自行检索；`motion_get_template` 读取详情，`motion_create_project` 创建可编辑副本。`npm run dev` 默认接 DEV；正式包默认接线上，DEV 包用 `npm run package:phase1 -- --template-env=dev`。环境随包保存，界面和 MCP 共用，具体配置见[模板目录](template-catalog.md)。

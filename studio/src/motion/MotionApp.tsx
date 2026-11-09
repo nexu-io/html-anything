@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { WorkspaceFrame } from './WorkspaceFrame';
 import { MotionHome } from './MotionHome';
-import { motionApi, type ProjectCatalog, type WorkspaceStatus } from './useWorkspace';
+import { motionApi, type ProjectCatalog } from './useWorkspace';
 import { requestedProject, validWorkspaceProject } from './workspaceRouting';
 import { MotionSessionFrame } from './MotionSessionFrame';
 import type { SessionDetail, SessionArtifact } from '../../../shared/session';
 import { ArtifactViewer } from './ArtifactViewer';
+import { trackMotion } from './tracking';
 
 const noPendingSaves = async () => {};
 
@@ -14,14 +15,8 @@ export async function resolveWorkspaceProject(id: string, signal: AbortSignal) {
   if (!validWorkspaceProject(id)) throw new Error('项目链接无效');
   const catalog = await motionApi<ProjectCatalog>('/projects', { signal });
   if (!catalog.projects.some(project => project.id === id)) throw new Error('项目不存在，请从首页选择一个项目。');
-  if (catalog.activeId !== id) {
-    const current = await motionApi<WorkspaceStatus>('/project/status', { signal });
-    signal.throwIfAborted();
-    await motionApi<WorkspaceStatus>(`/projects/${encodeURIComponent(id)}/open`, {
-      method: 'POST', signal, headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ expectedRevision: current.revision, expectedProjectId: current.projectId }),
-    });
-  }
+  signal.throwIfAborted();
+  await motionApi('/preview/open', { method: 'POST', signal }, id);
 }
 
 /** Resolve the native service before mounting any editor that could read or save files. */
@@ -32,6 +27,16 @@ export function MotionApp() {
   const [ready, setReady] = useState<{ sessionId: string; artifact?: SessionArtifact } | null>(null);
   const [error, setError] = useState('');
   const [attempt, retry] = useState(0);
+  const view = useRef({ id: crypto.randomUUID(), started: performance.now(), sent: false });
+  useEffect(() => {
+    const home = projectId === null && sessionId === null;
+    if (view.current.sent || (!home && !ready && !error)) return;
+    view.current.sent = true;
+    const embedded = new URLSearchParams(location.search).get('embed') === '1';
+    if (home || ready) void trackMotion('page_view', { page_name: home ? 'home' : 'studio', view_id: view.current.id, embedded, has_project: Boolean(ready?.artifact) });
+    if (!home && error) void trackMotion('studio_load_result', { load_id: view.current.id, outcome: 'failure', embedded,
+      duration_ms: Math.min(86_400_000, Math.round(performance.now() - view.current.started)) });
+  }, [projectId, sessionId, ready, error]);
   useEffect(() => {
     if (projectId === null && sessionId === null) return;
     const controller = new AbortController();
@@ -55,7 +60,7 @@ export function MotionApp() {
     return () => controller.abort();
   }, [projectId, sessionId, attempt]);
   if (projectId === null && sessionId === null) return <WorkspaceFrame waitForSaves={noPendingSaves}><MotionHome /></WorkspaceFrame>;
-  if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{error}</p><div><a className="motion-button" href="/">{t('Back to home')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
+  if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{t(error)}</p><div><a className="motion-button" href="/">{t('Back to home')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
   const loading = <div className="motion-route-state" role="status">{t('Opening project…')}</div>;
   return ready ? <WorkspaceFrame waitForSaves={noPendingSaves} projectId={ready.artifact?.projectId} sessionId={ready.sessionId}><MotionSessionFrame sessionId={ready.sessionId} projectId={ready.artifact?.projectId}>{ready.artifact && <ArtifactViewer artifact={ready.artifact} />}</MotionSessionFrame></WorkspaceFrame> : loading;
 }

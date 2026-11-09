@@ -1,11 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, writeFile } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { readFile, realpath, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { ensureService, openPreview, previewUrl, VERSION } from '../preview.ts';
+import { ensureService, openPreview, previewUrl, probe, VERSION } from '../preview.ts';
 import type { Probe, PreviewRuntime } from '../preview.ts';
 import { WorkspaceStore } from '../workspace.ts';
 import { pluginRoot } from '../hyperframes.ts';
+import { phase1McpCapabilities } from '../shared/phase1-tools.ts';
+import { sharedEditorEnabled } from '../editor-runtime.ts';
 import { fixture } from './fixtures.ts';
 
 function runtime(store: WorkspaceStore) {
@@ -15,7 +18,7 @@ function runtime(store: WorkspaceStore) {
     launch: async (port, directory, log, background) => {
       assert.equal(directory, store.directory); assert.equal(log, path.join(directory, 'preview.log')); launches.push(port);
       if (!background) await store.initialize(pluginRoot);
-      occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: directory, ffmpeg: true, ready: true, studioUrl: background ? undefined : `http://localhost:${port + 1}/#project/project` } });
+      occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: directory, ffmpeg: true, ready: true, mcp: phase1McpCapabilities, studioUrl: background ? undefined : `http://localhost:${port + 1}/#project/project` } });
       return { pid: 1234, alive: () => true, error: () => '', stop: () => { stops.push(port); } };
     },
     openEditor: async port => {
@@ -56,6 +59,69 @@ test('unrelated services and mismatched versions or data directories are left in
   const result = await openPreview(store, mock.environment);
   assert.equal(result.previewUrl, `http://localhost:${port + 3}`); assert.deepEqual(mock.stops, []);
 }));
+test('a phase1 call reuses a compatible newer backend without restarting it or changing workspaces', () => fixture(async store => {
+  const mock = runtime(store), port = Number(process.env.PORT || 4173);
+  mock.occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: '0.6.4',
+    dataDirectory: store.directory, ffmpeg: true, ready: true, mcp: { protocol: 1, tools: ['motion_export_request'] } } });
+  const before = await store.get();
+  const result = await ensureService(store, mock.environment, 'motion_export_request');
+  assert.equal(result.previewUrl, `http://localhost:${port}`);
+  assert.equal(result.reused, true);
+  assert.deepEqual(mock.launches, []); assert.deepEqual(mock.stops, []);
+  assert.deepEqual(await store.get(), before);
+  assert.equal(JSON.parse(await readFile(path.join(store.directory, 'preview.json'), 'utf8')).version, '0.6.4');
+}, false));
+test('phase1 port discovery leaves unrelated services and other workspaces intact', () => fixture(async store => {
+  const mock = runtime(store), port = Number(process.env.PORT || 4173);
+  const health = { service: 'motion-preview', protocol: 2, version: '0.6.4', dataDirectory: store.directory, ffmpeg: true, ready: true, mcp: { protocol: 1, tools: ['motion_export_request'] } };
+  const changes = [{ dataDirectory: '/other' }, { service: 'unrelated-service' }];
+  changes.forEach((change, i) => mock.occupied.set(port + i, { kind: 'motion', health: { ...health, ...change } }));
+  const result = await ensureService(store, mock.environment, 'motion_export_request');
+  assert.equal(result.previewUrl, `http://localhost:${port + changes.length}`);
+  assert.deepEqual(mock.stops, []);
+}, false));
+test('phase1 port discovery refuses an incompatible same-workspace authority without launching another', async t => {
+  for (const change of [{ protocol: 999 }, { version: VERSION, mcp: { protocol: 2, tools: ['motion_export_request'] } }, { mcp: { protocol: 1, tools: ['motion_get_project'] } }, { mcp: undefined }]) await t.test(JSON.stringify(change), () => fixture(async store => {
+    const mock = runtime(store), port = Number(process.env.PORT || 4173);
+    mock.occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: '0.6.4', dataDirectory: store.directory, ffmpeg: true, ready: true, ...change } });
+    const before = await store.get();
+    await assert.rejects(ensureService(store, mock.environment, 'motion_export_request'), { code: 'EDITOR_RUNTIME_INCOMPATIBLE' });
+    assert.deepEqual(mock.launches, []); assert.deepEqual(mock.stops, []);
+    assert.deepEqual(await store.get(), before);
+  }, false));
+});
+test('real HTTP discovery preserves Motion identity before checking compatibility and readiness', () => fixture(async temporary => {
+  const store = new WorkspaceStore(await realpath(temporary.directory));
+  const health = { service: 'motion-preview', protocol: 999, version: '0.6.4', dataDirectory: store.directory, ffmpeg: true, ready: true, mcp: phase1McpCapabilities };
+  const server = createServer((req, res) => {
+    assert.equal(req.url, '/api/health');
+    res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(health));
+  });
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const address = server.address(); assert.ok(address && typeof address !== 'string');
+    await writeFile(path.join(store.directory, 'preview.json'), JSON.stringify({ port: address.port }));
+    const before = await store.get(), mock = runtime(store);
+    mock.environment.probe = probe;
+    mock.environment.launch = async port => { mock.launches.push(port); throw new Error('Unexpected competing backend launch'); };
+    for (const change of [{ protocol: 999, ready: true }, { protocol: 2, ready: false }]) {
+      Object.assign(health, change);
+      assert.deepEqual(await probe(address.port), { kind: 'motion', health });
+      await assert.rejects(ensureService(store, mock.environment, 'motion_export_request'), { code: 'EDITOR_RUNTIME_INCOMPATIBLE' });
+      assert.deepEqual(mock.launches, []); assert.deepEqual(mock.stops, []);
+      assert.deepEqual(await store.get(), before);
+      assert.deepEqual(JSON.parse(await readFile(path.join(store.directory, 'preview.json'), 'utf8')), { port: address.port });
+      if (sharedEditorEnabled) {
+        health.version = VERSION;
+        await assert.rejects(openPreview(store), /旧预览服务/);
+        health.version = '0.6.4';
+      }
+    }
+    health.ready = true;
+    assert.equal((await ensureService(store, mock.environment, 'motion_export_request')).reused, true);
+    assert.deepEqual(mock.launches, []);
+  } finally { server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())); }
+}, false));
 test('concurrent preview requests create one process and preserve existing source', () => fixture(async store => {
   const current = await store.get(); await store.writeFiles(current.revision, [{ path: 'notes.md', content: 'preserve me' }]);
   const before = await store.get(), mock = runtime(store);

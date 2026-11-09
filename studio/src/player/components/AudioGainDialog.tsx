@@ -205,7 +205,7 @@ export function AudioGainDialog({
             className="rounded bg-blue-500 px-3 py-1 text-white disabled:opacity-40"
             onClick={() => void apply()}
           >
-            OK
+            {t('OK')}
           </button>
         </div>
       </div>

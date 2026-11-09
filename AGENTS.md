@@ -2,7 +2,15 @@
 
 OpenMotion is a standalone npm application at the repository root. Run commands here with the Node version pinned in `.github/workflows/ci.yml`. Preserve `package-lock.json` and `scripts/runtime-lock.json`; do not introduce workspace-only dependencies. Follow the [migration guide](docs/repository-migration.md), keep user data and credentials outside the checkout, and preserve third-party licenses.
 
-Before publishing a branch, run `npm ci`, `npm run check`, `npm run typecheck:studio`, `npm run build:studio`, affected deterministic tests and the applicable packaging/installation checks. Browser tests on shared machines use the existing browser-lock lanes. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
+## Local validation
+
+Before publishing a branch, select local checks for the changed boundary. Run `npm ci` when dependencies or lockfiles change, or installed dependencies are missing or stale; otherwise reuse the existing installation.
+
+- Runtime or Studio changes: run `npm run check`, `npm run typecheck:studio`, `npm run build:studio` and affected deterministic tests.
+- Skill, contract, installer or distribution changes: run the affected deterministic and packaging/installation checks.
+- Prose-only changes that do not alter those boundaries: check links and run `git diff --check`; no dependency reinstall or Studio build is required.
+
+Local check selection does not change the full PR CI gate. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
 
 ## Repository collaboration instructions
 

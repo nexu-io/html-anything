@@ -1,6 +1,6 @@
 # 多个 Agent 共用本地编辑器
 
-**当前分支在 macOS 上让同一数据目录中的所有 MCP 连接共用一个后台。** 每个 Agent 仍有自己的轻量 stdio 进程，工程目录、任务队列、Model Gateway 和网页服务由共享后台管理。原生 Studio 按需启动，工作区仍只打开一个原生工程、同时运行一个视频导出；这次没有增加并行 Studio 或并行渲染。
+**当前分支在 macOS 上让同一数据目录中的所有 MCP 连接共用一个后台。** 每个 Agent 仍有自己的轻量 stdio 进程，工程目录、任务队列、Model Gateway 和网页服务由共享后台管理。原生 Studio 按需启动，一个服务进程与端口可以保留多个工程的原生上下文。每个页面固定自己的工程；后台仍同时运行一个视频导出。
 
 与当前主干合并后，28 个 MCP 工具全部保留（原有 27 个加视频对比）；Skill 的 workflow/section 路由与文档身份沿用主干。仅导出和冷启动套模板使用后台服务入口，不先打开 Studio 或改写调用方的源文件；随后显式打开预览才按需启动编辑器。
 
@@ -23,7 +23,7 @@ flowchart LR
   E --> G[同一 Model Gateway]
   E --> R[单个后台导出任务\n固定工程与 revision]
   E --> O[Studio 生命周期守卫]
-  O --> S[一个活动原生 Studio]
+  O --> S[一个原生服务进程 / 多工程上下文]
 ```
 
 ## 启动、复用与退出
@@ -37,10 +37,14 @@ flowchart LR
 | 显式打开预览 | 按需启动或复用原生 Studio；返回已有完整/嵌入链接契约 |
 | 全部 MCP 会话退出 | 后台继续服务网页与导出；不会因某个 Agent 退出取消其他人的工作 |
 | 用户停止后台 | 私有停止接口拒绝正在执行的 MCP、视频导出或素材任务；空闲时关闭子服务并退出 |
-| 发现协议、版本或运行时代码不兼容 | 明确报错，请用户停止旧后台；不自动杀进程或另起一个后台 |
+| Compatible plugin/backend version or build change | Existing phase-one connections continue through the same workspace authority when it advertises the same MCP API protocol and requested Tool; keep running exports and request IDs intact. |
+| Incompatible authority/API protocol, missing Tool or legacy version/build mismatch | Refuse before dispatch with expected/actual identity. Never automatically kill or launch a competing backend. |
+| A live MCP client's plugin directory was replaced or removed | Phase-one calls keep their stdio connection and reuse a compatible live backend. Internal legacy connections return `MCP_RUNTIME_RELOAD_REQUIRED`. A transport already closed by the host cannot be revived by the plugin. |
 | 同目录已有旧版预览服务 | 拒绝另外启动共享后台；退出旧服务后重试 |
 
 macOS 使用系统 `/usr/bin/perl` 取得 `flock` 后直接 exec Node；Perl 不常驻。锁描述符同时由后台和 Studio 守卫持有。后台死亡后，守卫先清理旧 Studio，再释放锁，新后台才能启动。锁文件保留不等于锁仍被占用；不通过删除锁文件来恢复。
+
+Phase-one compatibility is independent of the editor's implementation build. Authenticated private health and public preview health advertise `mcp.protocol` and `mcp.tools`; forwarding retains service, workspace, instance and authority-protocol validation. Compatible updates reuse the current authority without restarting it or replaying mutations. If an idle authority is separately replaced, the next call discovers or starts the same workspace's compatible replacement using the existing stdio connection. This does not hot-reload the UI, refresh host Tool metadata or automatically install updates. See the [API compatibility contract](mcp-phase1-tools.md#phase-one-api-compatibility).
 
 显式停止（必须指定同一个数据目录）：
 
@@ -67,7 +71,9 @@ MOTION_DATA_DIR=/path/to/workspace node --experimental-strip-types editor-runtim
 
 写入仍需要读取到的 `expectedRevision`。同工程同时修改只接受匹配版本，冲突返回工具错误及 `REVISION_CONFLICT`；Agent 必须重读，不自动重放写入。工程目录受现有路径校验保护，不接受目录穿越。
 
-MCP 调用在共享后台内串行执行，HTTP 页面继续走原有保存与工程切换门禁。原生 Studio 仍只有一个活动工程；打开另一个工程会切换网页服务的原生目标，旧标签页的过时工程请求仍被拒绝。这不是 UI 与 MCP 跨多文件的数据库事务，也不合并两位编辑者的文本。
+MCP 调用在共享后台内串行执行，HTTP 页面继续走原有保存与工程切换门禁。原生请求按路径中的 projectId 定位目录，状态与文件通知按工程绑定；打开另一个工程不会关闭原服务或导航其他页面。无工程路径的事件、渲染和媒体任务请求携带 projectId；多工程下缺少身份的请求拒绝处理，不猜测最近工程。这不是 UI 与 MCP 跨多文件的数据库事务，也不合并两位编辑者的文本。
+
+冷启动的 `/#project/<id>` 书签由前端解析、校验归属后，按明确工程启动原生上下文；没有工程参数的页面请求不预先打开最近工程，避免给其他工程写入节点标识并改变 revision。原生工程打开请求最多等待 30 秒，直接启动与 macOS 守卫保持相同超时；超时释放调用队列，服务恢复后可重试，不自动重放修改。
 
 ## 导出与后台强杀后的恢复
 
@@ -104,7 +110,15 @@ sequenceDiagram
 | Windows / Linux 共享后台 | 未实现，保留旧行为 |
 | 所有宿主、系统重启、断电、守卫与后台同时被杀、启动中途强杀 | 未验证 |
 | 原生网页浏览器 Chrome 在后台 SIGKILL 后的生命周期 | 本次故障对象为 Studio 和视频渲染 Chrome，未覆盖独立网页浏览器 |
-| UI/MCP 同时多文件写入的完整事务、多个 Studio/并行导出 | 未实现 |
+| UI/MCP 同时多文件写入的完整事务、并行后台导出 | 未实现 |
 | 长时间压力、自动升级、旧数据自动迁移、正式安装包目标机验收 | 未验证 |
 
-运行本项目检查使用 `npm test`、`npm run check`、`npm run typecheck:studio`、`npm run test:studio`。真实 Chrome 相关检查必须经过团队 browser-lock 的 lane 和 real 锁；新增故障脚本 `tests/shared-editor-crash.mjs` 和媒体脚本 `tests/shared-editor-media.mjs` 也遵守该要求。验收结论只覆盖实际执行命令，实际结果以当前提交的测试及 CI 为准。
+运行本项目检查使用 `npm test`、`npm run check`、`npm run typecheck:studio`、`npm run test:studio`。真实 Chrome 检查包括故障脚本 `tests/shared-editor-crash.mjs` 和媒体脚本 `tests/shared-editor-media.mjs`。验收结论只覆盖实际执行命令，实际结果以当前提交的测试及 CI 为准。
+
+## 多工程宿主的依赖与恢复边界
+
+`shared/workspace-studio.ts` 在一个进程内按需复用锁定 Hyperframes 0.9.7 的原生宿主，保留每个工程自己的历史、预览缓存、媒体配置、文件监听和渲染任务上下文。当前完整宿主只由 CLI 打包模块导出；启动时检查版本、模块唯一性和工厂入口，不兼容时明确失败，不静默降级或重写工程。升级依赖需重新验证该入口及独立分发包。
+
+已打开工程的上下文保留到服务退出；退出关闭所有监听、历史与子任务。不同页面编辑同一工程仍使用原生 If-Match 和工具 revision/version 冲突保护，不提供多人文本合并；工程 ID 也不代表同工程两个页面的独立选区身份。
+
+验证入口：`tests/multi-project.test.ts` 覆盖同进程双工程、文件/预览/历史/通知和重启；`tests/multi-project-browser.mjs` 使用两个真实 MCP 客户端和浏览器页面。公开 MCP Tool、冷启动导出、原生媒体和守卫强杀仍单独回归。
