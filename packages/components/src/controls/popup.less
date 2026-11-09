@@ -1,0 +1,6 @@
+.om-popup {
+  display: inline-flex; anchor-scope: --om-popup-anchor;
+  &__trigger { anchor-name: --om-popup-anchor; }
+  &__surface { box-sizing: border-box; position: fixed; inset: auto; position-anchor: --om-popup-anchor; position-area: bottom span-right; margin: var(--om-field-gap) 0; width: var(--om-popup-width); min-width: var(--om-popup-width); max-height: var(--om-popup-height); padding: var(--om-field-gap); overflow: auto; background: var(--om-raised); color: var(--om-text); border: var(--om-focus-width) solid var(--om-border); border-radius: var(--om-control-radius); box-shadow: var(--om-shadow); font-family: var(--om-font-body); font-size: var(--om-control-font-size); }
+  &__surface--tip { min-width: 0; padding: var(--om-control-padding-y) var(--om-control-padding-x); background: var(--om-action); color: var(--om-action-text); font-size: var(--om-label-size); }
+}

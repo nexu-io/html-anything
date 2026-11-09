@@ -1,0 +1,29 @@
+{
+  "name": "@odsuite/carrier",
+  "private": true,
+  "type": "module",
+  "description": "Carrier environment fact definition, explicit registration and propagation",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6",
+    "esbuild": "0.28.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/html-anything.git",
+    "directory": "suites/carrier"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "dependencies": {}
+}

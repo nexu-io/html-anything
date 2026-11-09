@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "faces": [
+    {
+      "family": "Albert Sans",
+      "file": "albert.ttf",
+      "license": "albert.txt",
+      "sha256": "7300b6a75833a138f7398caa9e89f9eca85225edce1f82a336f5f0b87a67dfd4",
+      "licenseSha256": "7dc41c3007a04ff8521f61ee264d0639018824242273500493f724a3e8ee1c45",
+      "weight": [100, 900]
+    },
+    {
+      "family": "IBM Plex Mono",
+      "file": "mono.ttf",
+      "license": "mono.txt",
+      "sha256": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46",
+      "licenseSha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f",
+      "weight": [400, 400]
+    }
+  ]
+}

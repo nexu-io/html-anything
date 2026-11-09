@@ -1,0 +1,48 @@
+{
+  "name": "@odsuite/runtime",
+  "version": "0.14.1",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./settings": {
+      "types": "./dist/settings.d.ts",
+      "default": "./dist/settings.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "dependencies": {
+    "@odsuite/blob": "workspace:*",
+    "@odsuite/protocol": "workspace:*",
+    "@odsuite/publish": "workspace:*",
+    "@odsuite/release": "workspace:*",
+    "@odsuite/sidecar": "workspace:*",
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "esbuild": "0.28.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6",
+    "@open-motion/daemon": "workspace:*",
+    "@open-motion/web": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/html-anything.git",
+    "directory": "suites/runtime"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "private": true
+}

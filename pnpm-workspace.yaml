@@ -1,0 +1,28 @@
+packages:
+  - carriers/*
+  - apps/*
+  - suites/*
+  - packages/*
+
+allowBuilds:
+  electron: true
+  electron-winstaller: false
+  esbuild: true
+
+minimumReleaseAgeExclude:
+  - "yauzl@3.4.0"
+  - "plist@5.0.0"
+  - "@types/yauzl@3.4.0"
+  - "@aws-sdk/*"
+  - "@smithy/*"
+  - "@biomejs/biome@2.6.4"
+  - "@biomejs/cli-android-arm64@2.6.4"
+  - "@biomejs/cli-android-x64@2.6.4"
+  - "@biomejs/cli-darwin-arm64@2.6.4"
+  - "@biomejs/cli-darwin-x64@2.6.4"
+  - "@biomejs/cli-linux-arm64-musl@2.6.4"
+  - "@biomejs/cli-linux-arm64@2.6.4"
+  - "@biomejs/cli-linux-x64-musl@2.6.4"
+  - "@biomejs/cli-linux-x64@2.6.4"
+  - "@biomejs/cli-win32-arm64@2.6.4"
+  - "@biomejs/cli-win32-x64@2.6.4"

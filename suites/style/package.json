@@ -1,0 +1,41 @@
+{
+  "name": "@odsuite/style",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "esbuild": "0.28.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6",
+    "@types/less": "3.0.8"
+  },
+  "description": "Read-only Less compilation and stylesheet contracts",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/html-anything.git",
+    "directory": "suites/style"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "less": "4.9.1",
+    "postcss": "8.5.32"
+  },
+  "private": true
+}

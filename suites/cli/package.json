@@ -1,0 +1,52 @@
+{
+  "name": "@odsuite/cli",
+  "version": "0.19.2",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "src/odsuite.mjs",
+    "dist"
+  ],
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "esbuild": "0.28.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6"
+  },
+  "description": "Unified odsuite command line",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/html-anything.git",
+    "directory": "suites/cli"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@odsuite/guard": "workspace:*",
+    "@odsuite/runtime": "workspace:*",
+    "@odsuite/release": "workspace:*",
+    "@odsuite/pack": "workspace:*",
+    "@odsuite/pipeline": "workspace:*",
+    "@odsuite/inspect": "workspace:*",
+    "@odsuite/serve": "workspace:*",
+    "@odsuite/protocol": "workspace:*",
+    "@odsuite/sidecar": "workspace:*",
+    "@odsuite/dev": "workspace:*"
+  },
+  "bin": {
+    "odsuite": "./src/odsuite.mjs"
+  },
+  "private": true
+}

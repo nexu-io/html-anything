@@ -1,0 +1,55 @@
+.om-layout {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: var(--om-size-full);
+  gap: var(--om-layout-gap);
+  &--page {
+    min-height: var(--om-screen-height);
+    padding: var(--om-page-padding);
+    background: var(--om-canvas);
+    color: var(--om-text);
+    font-family: var(--om-font-body);
+    font-size: var(--om-font-size);
+    line-height: var(--om-line-height);
+  }
+  &--stack, &--column { display: flex; flex-direction: column; }
+  &--column { flex: var(--om-panel-flex); }
+  &--columns, &--row { display: flex; flex-wrap: wrap; align-items: start; }
+  &--row { align-items: end; }
+}
+.om-panel {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: var(--om-size-full);
+  padding: var(--om-panel-padding);
+  border: var(--om-focus-width) solid var(--om-border);
+  border-radius: var(--om-control-radius);
+  background: var(--om-panel-surface);
+  &__heading { margin: 0; margin-bottom: var(--om-layout-gap); font-size: var(--om-heading-size); }
+}
+.om-copy { margin: 0; font-size: var(--om-label-size); line-height: var(--om-message-line-height); color: var(--om-muted); overflow-wrap: anywhere; }
+.om-readout {
+  display: block;
+  max-width: var(--om-size-full);
+  font-family: var(--om-font-code);
+  font-size: var(--om-small-size);
+  color: var(--om-muted);
+  overflow-wrap: anywhere;
+}
+.om-preview {
+  &__selection { fill: none; stroke: var(--om-focus); stroke-width: var(--om-selection-width); pointer-events: none; vector-effect: non-scaling-stroke; }
+  &__canvas { display: flex; align-items: center; justify-content: center; min-height: 0; height: var(--om-size-full); }
+  &__viewport { display: block; width: var(--om-size-full); max-height: var(--om-size-full); height: auto; box-shadow: var(--om-stage-shadow); }
+  &__frame {
+    background: var(--om-preview-surface);
+    box-sizing: border-box;
+    width: var(--om-size-full);
+    max-width: var(--om-size-full);
+    height: var(--om-size-full);
+    aspect-ratio: var(--om-preview-ratio);
+    border: 0;
+  }
+}
+
+.om-heading { margin: 0; font-size: var(--om-title-size); &--compact { font-size: var(--om-heading-size); } }
+.om-list { margin: 0; padding: 0; list-style: none; overflow-wrap: anywhere; }

@@ -1,0 +1,40 @@
+{
+  "name": "@open-motion/codexplugin",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vitest": "4.1.6",
+    "@types/node": "24.12.2",
+    "@modelcontextprotocol/client": "2.4.0",
+    "@odsuite/sidecar": "workspace:*",
+    "@open-motion/web": "workspace:*",
+    "esbuild": "0.28.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "@odsuite/carrier": "workspace:*",
+    "@odsuite/protocol": "workspace:*",
+    "@open-motion/standalone": "workspace:*",
+    "@odsuite/release": "workspace:*",
+    "@open-motion/workspace": "workspace:*",
+    "@open-motion/daemon": "workspace:*",
+    "@odsuite/dev": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./main": "./dist/main.mjs",
+    "./dev": {
+      "types": "./dist/dev.d.ts",
+      "default": "./dist/dev.mjs"
+    }
+  }
+}

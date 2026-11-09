@@ -1,0 +1,109 @@
+schemaVersion: 1
+guard:
+  directories:
+    repository:
+      - carriers
+      - carriers/*
+      - carriers/electron/src/capsule
+      - carriers/electron/tests/capsule
+      - apps
+      - suites
+      - suites/*
+      - packages
+      - packages/*
+      - apps/*
+      - node_modules
+      - .artifacts
+      - .state
+      - .github
+      - .github/workflows
+      - .githooks
+      - docs
+      - suites/blob/src/control
+      - suites/electron/src/control
+      - suites/runtime/src/control
+      - apps/web/src/lib
+      - apps/web/src/lib/components
+      - apps/web/src/lib/components/studio
+      - apps/web/src/lib/components/workspace
+      - packages/components/src/studio
+      - packages/components/src/controls
+      - apps/web/tests/browser
+      - packages/theme/src/tokens
+      - packages/theme/src/themes
+      - packages/theme/src/fonts
+      - suites/guard/src/config
+      - suites/guard/src/rules
+      - suites/guard/src/scan
+      - suites/sidecar/tests/control
+      - suites/sidecar/tests/recovery
+      - suites/sidecar/tests/process
+      - suites/sidecar/tests/binding
+      - suites/sidecar/src/state
+      - suites/sidecar/src/process
+      - suites/sidecar/src/control
+      - suites/sidecar/src/runtime
+  names:
+    - "PULL_REQUEST_TEMPLATE.md"
+    - ".gitattributes"
+    - ".gitignore"
+    - ".gitkeep"
+    - ".npmignore"
+    - ".npmrc"
+    - "AGENTS.md"
+    - "CLAUDE.md"
+    - "LICENSE"
+    - "NOTICE"
+    - "CONTRIBUTING.md"
+    - "CONTRIBUTING.zh-CN.md"
+    - "README.md"
+    - "architecture.md"
+    - "domains.md"
+    - "operations.md"
+    - "conventions.md"
+    - "channel.release.yml"
+    - "docker-compose.yml"
+    - "pnpm-lock.yaml"
+    - "pnpm-workspace.yaml"
+    - "pre-commit"
+    - "stable.release.yml"
+  styles:
+    - module: packages/theme
+      kind: theme
+      fonts: src/fonts/manifest.json
+      entry: src/index.less
+      prefix: om
+    - module: packages/components
+      kind: components
+      entry: src/index.less
+      prefix: om
+      theme: packages/theme
+  components:
+    - packages/components
+runtime:
+  appid: io.openmotion.app
+  carrier: 1
+  channel: stable
+  name: open-motion
+  namespace: primary
+  scheme: open-motion
+  version: 1.0.0
+serve:
+  data: .state/serve
+  sources:
+    web:
+      directory: apps/web/dist
+
+dev:
+  channels:
+    dev:
+      number: 1
+  carriers:
+    standalone:
+      entry: carriers/standalone/dist/dev.mjs
+    electron:
+      entry: carriers/electron/dist/dev.mjs
+    codexplugin:
+      entry: carriers/codexplugin/dist/dev.mjs
+    docker:
+      unsupported: Docker carrier is a scaffold; no development runtime adapter exists.

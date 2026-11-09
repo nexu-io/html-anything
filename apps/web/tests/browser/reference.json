@@ -1,0 +1,17 @@
+{
+  "reference": "21c3e5aaef1af34b0f126f7db90a86927e2ef325",
+  "sources": ["web/design-system/tokens.css", "web/design-system/controls.css"],
+  "qualification": "Pinned main scalar design contract. Theme round-trip PNG comparison is same-run regression, not full main pixel fidelity.",
+  "tokens": {
+    "--om-control-height": "36px",
+    "--om-control-radius": "4px",
+    "--om-control-font-size": "13px",
+    "--om-icon-size": "16px",
+    "--om-icon-stroke": "1.7px",
+    "--om-button-weight": "600",
+    "--om-border": "#dbdbdb",
+    "--om-text": "#494949",
+    "--om-panel-surface": "#fafafa",
+    "--om-focus": "#007106"
+  }
+}

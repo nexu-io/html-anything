@@ -1,0 +1,14 @@
+OpenMotion
+Copyright its contributors. Licensed under Apache-2.0; see LICENSE.
+
+The native editing integration uses pinned Hyperframes SDK/core 0.9.7 and GSAP
+packages. Hyperframes: https://github.com/heygen-com/hyperframes . Third-party
+packages retain their own licenses and attribution; this repository's license
+does not replace their terms. The former vendored Studio and template library
+remain in the feature/motion history and are not redistributed by this tree.
+
+Local fonts: Albert Sans, Copyright 2021 The Albert Sans Project Authors
+(https://github.com/usted/Albert-Sans); IBM Plex Mono, Copyright IBM Corp. 2017.
+Both use SIL Open Font License 1.1. The exact license files, fonts and digests
+are listed in packages/theme/src/fonts/manifest.json and travel with Web builds.
+No remote font service is used.
