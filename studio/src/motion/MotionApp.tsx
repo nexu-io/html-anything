@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from './StudioHost';
 import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { WorkspaceFrame } from './WorkspaceFrame';
@@ -22,7 +21,6 @@ export async function resolveWorkspaceProject(id: string, signal: AbortSignal) {
 /** Resolve the native service before mounting any editor that could read or save files. */
 export function MotionApp() {
   const { t } = useI18n();
-  const entries = useEditorEntryVisibility();
   const [projectId] = useState(() => requestedProject(location.search, location.hash));
   const [sessionId] = useState(() => new URLSearchParams(location.search).get('session'));
   const [ready, setReady] = useState<{ sessionId: string; artifact?: SessionArtifact } | null>(null);
@@ -50,8 +48,8 @@ export function MotionApp() {
     void resolve().catch(err => { if (!controller.signal.aborted) setError((err as Error).message); });
     return () => controller.abort();
   }, [projectId, sessionId, attempt]);
-  if (projectId === null && sessionId === null) return <WorkspaceFrame waitForSaves={noPendingSaves}>{entries.workspaceHome ? <MotionHome /> : <div className="motion-route-state"><h1>{t('Sessions')}</h1></div>}</WorkspaceFrame>;
-  if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{t(error)}</p><div>{entries.workspaceHome && <a className="motion-button" href="/">{t('Back to home')}</a>}<button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
+  if (projectId === null && sessionId === null) return <WorkspaceFrame waitForSaves={noPendingSaves}><MotionHome /></WorkspaceFrame>;
+  if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{t(error)}</p><div><a className="motion-button" href="/">{t('Back to home')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
   const loading = <div className="motion-route-state" role="status">{t('Opening project…')}</div>;
   return ready ? <WorkspaceFrame waitForSaves={noPendingSaves} projectId={ready.artifact?.projectId} sessionId={ready.sessionId}><MotionSessionFrame sessionId={ready.sessionId} projectId={ready.artifact?.projectId}>{ready.artifact && <ArtifactViewer artifact={ready.artifact} />}</MotionSessionFrame></WorkspaceFrame> : loading;
 }

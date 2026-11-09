@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from './StudioHost';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useI18n } from '../i18n/I18n';
 import type { SessionArtifact } from '../../../shared/session';
@@ -22,14 +21,12 @@ export function MotionSessionFrame({ children, sessionId, projectId }: { childre
 function SessionBrowser({ children, sessionId, projectId, artifacts }: { children: ReactNode; sessionId: string; projectId?: string; artifacts: SessionArtifact[] }) {
   const { t } = useI18n();
   const { workspace, switchingDisabled, beforeViewChange } = useWorkspaceChrome();
-  const entries = useEditorEntryVisibility();
-  const basePresentation = workspacePresentation(location.search);
-  const presentation = { ...basePresentation, conversation: basePresentation.conversation && entries.conversation };
+  const presentation = workspacePresentation(location.search);
   const [state, setState] = useState(() => {
     let saved: string | null = null; try { saved = localStorage.getItem(browserKey(sessionId)); } catch {}
     const url = new URL(location.href), forceOpen = url.searchParams.has('openArtifact');
-    const initial = initialBrowser(artifacts, projectId ?? '', saved, forceOpen || presentation.embedded || !entries.browserChrome);
-    return !presentation.conversation ? { ...initial, conversationOpen: false, browserOpen: true } : initial;
+    const initial = initialBrowser(artifacts, projectId ?? '', saved, forceOpen || presentation.embedded);
+    return !presentation.conversation && initial.tabs.length ? { ...initial, conversationOpen: false, browserOpen: true } : initial;
   });
   const [width, setWidth] = useState(window.innerWidth);
   const [error, setError] = useState(() => { try { return sessionStorage.getItem(`opendesign.session-error:${sessionId}`) || ''; } catch { return ''; } });
@@ -124,20 +121,20 @@ function SessionBrowser({ children, sessionId, projectId, artifacts }: { childre
   }}>
     {error && <div className="motion-workspace-notice" role="alert">{t(error)}<button className="motion-icon-button" aria-label={t('Dismiss')} onClick={() => setError('')}><MotionIcon name="close" /></button></div>}
     <div className="motion-session-body">
-      <aside className="motion-conversation" data-full={!geometry.showBrowser} aria-label={t('Conversation')} hidden={!entries.conversation || !geometry.showConversation} style={{ width: geometry.narrow || !geometry.showBrowser ? '100%' : geometry.conversationWidth }}>
+      <aside className="motion-conversation" data-full={!geometry.showBrowser} aria-label={t('Conversation')} hidden={!geometry.showConversation} style={{ width: geometry.narrow || !geometry.showBrowser ? '100%' : geometry.conversationWidth }}>
         <header className="motion-conversation-header"><WorkspaceMenuButton /><SessionTitle /><div>{(!state.browserOpen || geometry.narrow) && <button className="motion-icon-button" aria-label={t('Open browser')} title={t('Open browser')} onClick={openBrowser}><MotionIcon name="monitor" /></button>}</div></header>
         <ProjectConversation key={sessionId} sessionId={sessionId} onOpenArtifact={openArtifact} />
       </aside>
-      <div className="motion-conversation-resizer" hidden={!entries.conversation || geometry.narrow || !geometry.showConversation || !geometry.showBrowser} role="separator" tabIndex={0} aria-label={t('Conversation width')} aria-orientation="vertical" aria-valuemin={280} aria-valuemax={Math.min(480, width * .42)} aria-valuenow={geometry.conversationWidth}
+      <div className="motion-conversation-resizer" hidden={geometry.narrow || !geometry.showConversation || !geometry.showBrowser} role="separator" tabIndex={0} aria-label={t('Conversation width')} aria-orientation="vertical" aria-valuemin={280} aria-valuemax={Math.min(480, width * .42)} aria-valuenow={geometry.conversationWidth}
         onDoubleClick={() => dispatch({ type: 'width', value: 340 })} onKeyDown={event => { if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); dispatch({ type: 'width', value: geometry.conversationWidth + (event.key === 'ArrowLeft' ? -20 : 20) }); } }}
         onPointerDown={event => { if (event.button !== 0) return; event.preventDefault(); drag.current = { x: event.clientX, width: geometry.conversationWidth }; event.currentTarget.setPointerCapture(event.pointerId); }}
         onPointerMove={event => { if (drag.current) dispatch({ type: 'width', value: Math.min(width * .42, drag.current.width + event.clientX - drag.current.x) }); }}
         onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }} />
       <section className="motion-artifact-browser" aria-label={t('Artifact browser')} hidden={!geometry.showBrowser}>
-        <div className="motion-browser-tabbar" hidden={!entries.browserChrome || presentation.embedded}>{!geometry.showConversation && !presentation.embedded && <WorkspaceMenuButton />}<div className="motion-browser-tabs" role="tablist" aria-label={t('Browser tabs')}>
+        <div className="motion-browser-tabbar" hidden={presentation.embedded}>{!geometry.showConversation && !presentation.embedded && <WorkspaceMenuButton />}<div className="motion-browser-tabs" role="tablist" aria-label={t('Browser tabs')}>
           {state.tabs.map(tab => <div className="motion-browser-tab" data-active={state.activeId === tab.id} key={tab.id}><button role="tab" id={`tab-${tab.id}`} aria-controls="artifact-browser-content" aria-selected={state.activeId === tab.id} onClick={() => void activate(tab)} disabled={switchingDisabled}><MotionIcon name={tab.kind === 'artifact' ? 'film' : 'globe'} size={13} /><span>{title(tab)}</span></button><button className="motion-icon-button" aria-label={t('Close {title}', { title: title(tab) })} disabled={switchingDisabled} onClick={() => void change({ type: 'close', id: tab.id })}><MotionIcon name="close" size={12} /></button></div>)}
         </div><button className="motion-icon-button motion-browser-new-tab" aria-label={t('New tab')} title={t('New tab')} disabled={switchingDisabled || state.tabs.length >= 30} onClick={newTab}><MotionIcon name="plus" size={15} /></button><div className="motion-browser-window-actions"><button className="motion-icon-button" aria-label={t(geometry.showConversation ? 'Expand browser' : 'Show conversation')} title={t(geometry.showConversation ? 'Expand browser' : 'Show conversation')} disabled={switchingDisabled} onClick={() => void change({ type: 'conversation', open: !geometry.showConversation })}><MotionIcon name={geometry.showConversation ? 'maximize' : geometry.narrow ? 'message' : 'minimize'} /></button><button className="motion-icon-button" aria-label={t('Close browser')} title={t('Close browser')} disabled={switchingDisabled} onClick={() => void change({ type: 'browser', open: false })}><MotionIcon name="close" /></button></div></div>
-        <form className="motion-browser-address" hidden={!entries.browserChrome || presentation.embedded} onSubmit={event => { event.preventDefault(); void navigate(); }}>
+        <form className="motion-browser-address" hidden={presentation.embedded} onSubmit={event => { event.preventDefault(); void navigate(); }}>
           <div className="motion-browser-navigation">
             <button type="button" className="motion-icon-button" aria-label={t('Back')} title={t('Back')} disabled={active?.kind !== 'web' || webPage?.tabId !== active.id || !webPage.canGoBack} onClick={() => void browserCommand('back')}><MotionIcon name="arrow-left" size={15} /></button>
             <button type="button" className="motion-icon-button" aria-label={t('Forward')} title={t('Forward')} disabled={active?.kind !== 'web' || webPage?.tabId !== active.id || !webPage.canGoForward} onClick={() => void browserCommand('forward')}><MotionIcon name="arrow-right" size={15} /></button>
@@ -155,7 +152,7 @@ function SessionBrowser({ children, sessionId, projectId, artifacts }: { childre
             setWebPage({ ...page, tabId: active.id });
             if (/^https?:/.test(page.url) && (page.url !== active.url || page.title !== active.title)) dispatch({ type: 'page', id: active.id, url: page.url, title: page.title });
           }} />}
-          {entries.browserChrome && active?.kind === 'new' && <div className="motion-browser-new"><h2>{t('Artifacts')}</h2>{artifacts.map(artifact => <button className="motion-conversation-project" key={artifact.id} onClick={() => void openArtifact(artifact)}><MotionIcon name="film" /><span><strong>{artifact.title}</strong><small>{artifactViewers[artifact.kind].title}</small></span><MotionIcon name="arrow-up-right" /></button>)}<button className="motion-button" disabled={switchingDisabled} onClick={() => void workspace.createArtifact(sessionId)}><MotionIcon name="plus" />{t('New artifact')}</button></div>}
+          {active?.kind === 'new' && <div className="motion-browser-new"><h2>{t('Artifacts')}</h2>{artifacts.map(artifact => <button className="motion-conversation-project" key={artifact.id} onClick={() => void openArtifact(artifact)}><MotionIcon name="film" /><span><strong>{artifact.title}</strong><small>{artifactViewers[artifact.kind].title}</small></span><MotionIcon name="arrow-up-right" /></button>)}<button className="motion-button" disabled={switchingDisabled} onClick={() => void workspace.createArtifact(sessionId)}><MotionIcon name="plus" />{t('New artifact')}</button></div>}
         </div>
       </section>
     </div>

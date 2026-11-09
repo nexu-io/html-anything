@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useRef, useEffect, memo } from "react";
 import gsap from "gsap";
@@ -184,7 +183,6 @@ export const PlayerControls = memo(function PlayerControls({
   shortcutSections,
 }: PlayerControlsProps) {
   const { t } = useI18n();
-  const entries = useEditorEntryVisibility();
   const isPlaying = usePlayerStore((s) => s.isPlaying);
   const duration = usePlayerStore((s) => s.duration);
   const timelineReady = usePlayerStore((s) => s.timelineReady);
@@ -246,8 +244,8 @@ export const PlayerControls = memo(function PlayerControls({
         >
           <button
             type="button"
-            onClick={entries.playbackAdvancedControls ? () => setTimeDisplayMode(timeDisplayMode === "time" ? "frame" : "time") : undefined}
-            disabled={disabled || !entries.playbackAdvancedControls}
+            onClick={() => setTimeDisplayMode(timeDisplayMode === "time" ? "frame" : "time")}
+            disabled={disabled}
             className="min-w-0 justify-self-start whitespace-nowrap font-mono text-[11px] tabular-nums text-neutral-400 transition-colors hover:text-neutral-200 disabled:pointer-events-none"
           >
             <span ref={timeDisplayRef}>{formatTime(0)}</span>
@@ -297,7 +295,7 @@ export const PlayerControls = memo(function PlayerControls({
           {onToggleFullscreen && (
             <FullscreenButton isFullscreen={isFullscreen} onToggleFullscreen={onToggleFullscreen} />
           )}
-          {entries.keyboardHelp && <ShortcutsButton disabled={disabled} onSeek={onSeek} sections={shortcutSections} />}
+          <ShortcutsButton disabled={disabled} onSeek={onSeek} sections={shortcutSections} />
         </div>
       </div>
     </div>

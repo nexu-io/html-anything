@@ -94,7 +94,7 @@ function ConnectedTimelineMediaBar() {
       <form onSubmit={e => { e.preventDefault(); if (entries.generateMedia) open(); else setAsk(true); }}>
         <input aria-label={t('Timeline media prompt')} value={prompt} onChange={e => setPrompt(e.target.value)} placeholder={t(media?.modality === 'image' ? 'Describe a new image or how to change this one…' : 'Describe what goes here…')} />
         {entries.generateMedia && <button type="submit">{t('Generate media')}</button>}
-        {entries.replaceImage && media?.modality === 'image' && <button type="button" className="motion-media-primary" onClick={() => open(true)}>{t('Edit image')}</button>}
+        {media?.modality === 'image' && <button type="button" className="motion-media-primary" onClick={() => open(true)}>{t('Edit image')}</button>}
         <button type="button" onClick={() => setAsk(true)}>{t('Ask Agent')}</button>
       </form>
     </aside>, host);

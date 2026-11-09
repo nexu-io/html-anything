@@ -1,6 +1,5 @@
-import { visibleEditorPanels } from "../motion/editorEntryVisibility";
 import { useI18n } from "../i18n/I18n";
-import { memo, useCallback, useMemo, type ReactNode } from "react";
+import { memo, useCallback, type ReactNode } from "react";
 import { matchesKey } from "../player/components/studioShortcuts";
 import { PreviewPane } from "./nle/PreviewPane";
 import { TimelinePane } from "./nle/TimelinePane";
@@ -23,7 +22,7 @@ import { StudioAgentTools } from "../webmcp/StudioAgentTools";
 import type { TimelineDropPlacement } from "../player/components/timelineCallbacks";
 import type { TimelineProps } from "../player/components/TimelineTypes";
 import { Dock } from "./dock/Dock";
-import { useStudioHost, useEditorEntryVisibility } from "../motion/StudioHost";
+import { useStudioHost } from "../motion/StudioHost";
 
 type RenderClipContent = (
   element: TimelineElement,
@@ -291,8 +290,6 @@ function EditorShellBody({
   const { t } = useI18n();
   const { compositionStack, updateCompositionStack, containerRef } = useNLEContext();
   const host = useStudioHost();
-  const entries = useEditorEntryVisibility();
-  const panelsAllowed = useMemo(() => visibleEditorPanels(entries), [entries]);
   // The workspace sidebar and conversation are outside this editor's geometry.
   const dockWidth = useCallback(() => containerRef.current?.clientWidth || window.innerWidth, [containerRef]);
 
@@ -322,7 +319,7 @@ function EditorShellBody({
       {/* Renders nothing; exposes Studio's state to an agentic browser. Mounted
           here rather than in App because it needs the DomEdit contexts. */}
       <StudioAgentTools />
-      <Dock.Root projectId={projectId} dockWidth={dockWidth} panels={panelsAllowed}>
+      <Dock.Root projectId={projectId} dockWidth={dockWidth}>
         <Dock.Panel id="preview">
           <div className="relative flex h-full w-full min-w-0 flex-col">
             <PreviewPane

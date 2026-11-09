@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import type { RefObject } from "react";
 import { type DomEditSelection } from "./domEditing";
 import {
@@ -176,7 +175,6 @@ export function DomEditSelectionChrome({
   // them back, and the box is positioned to cover exactly the text being typed
   // into: left interactive, it swallows every press, so the caret can never be
   // moved and characters can never be selected by dragging.
-  const entries = useEditorEntryVisibility();
   const editing = inlineText?.editing ?? false;
   const readOnly = usePreviewReadOnly();
   const canManipulate = allowCanvasMovement && !readOnly;
@@ -191,7 +189,7 @@ export function DomEditSelectionChrome({
           transform: overlayRect.angle ? `rotate(${overlayRect.angle}deg)` : undefined,
         }}
       >
-        {entries.canvasTransformHandles && canManipulate && !editing && selection.capabilities.canApplyManualRotation && (
+        {canManipulate && !editing && selection.capabilities.canApplyManualRotation && (
           <DomEditRotateHandle
             overlayRect={overlayRect}
             cropOutlineInsetPx={cropOutlineInsetPx}

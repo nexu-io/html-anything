@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { filename } from "./assetHelpers";
@@ -34,7 +33,6 @@ export function ContextMenu({
   downloadUrl?: string;
 }) {
   const { t } = useI18n();
-  const entries = useEditorEntryVisibility();
   const menuRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x, y });
   const [mode, setMode] = useState<"menu" | "confirm-delete" | "rename">("menu");
@@ -124,7 +122,6 @@ export function ContextMenu({
       >
         {mode === "menu" && (
           <>
-{entries.assetExtraActions && <>
             {onPreview && <button role="menuitem" className={itemCls} onClick={() => { onPreview(asset); onClose(); }}>{t("Show in preview")}</button>}
             {onAddAtPlayhead && (
               <button
@@ -147,7 +144,6 @@ export function ContextMenu({
             >
               {t("Copy path")}</button>
             {downloadUrl && <a role="menuitem" className={itemCls} href={downloadUrl} download={filename(asset)} onClick={onClose}>{t("Download file")}</a>}
-            </>}
             {onRename && (
               <button role="menuitem" onClick={() => setMode("rename")} className={itemCls}>
                 {t("Rename")}</button>

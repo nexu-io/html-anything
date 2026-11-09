@@ -26,23 +26,21 @@ Localization covers editor labels, tooltips, placeholders, empty/error states an
 
 前端可以直接修改。CLI 服务、core、parsers、player、SDK 与渲染器使用锁定的 0.9.7 npm 包，并未复制整个 monorepo。桌面端的宿主功能以开源 Studio 的实际能力为准。
 
-## Phase-one entry visibility
+## Editor entry visibility
 
-Motion supplies `editorEntryVisibility` from `studio/src/motion/editorEntryVisibility.ts` through the existing `StudioHost` context. Native Studio without a Motion host retains its complete interface. This configuration governs visible entries, not editing permissions, backend services, MCP discovery, project formats or rendering. It does not promise to exclude feature code or dependencies from the delivered package.
+Motion supplies `editorEntryVisibility` from `studio/src/motion/editorEntryVisibility.ts` through the existing `StudioHost` context. Studio without a configured host retains its complete interface. The initial pilot has only two fields: `generateMedia` hides the Generate media entry in the asset panel, timeline toolbar, empty timeline and timeline selection popover; `timelineKeyframeControls` hides the Add keyframe and auto-record buttons in the timeline toolbar.
 
-The configuration hides deferred workspace navigation, browser/conversation chrome, history, layout, capture, code/variables/blur panels, media generation entries and advanced inspector/timeline controls. Project search and switching, sidebar collapse/restore, templates, import, export, basic editing and Ask Agent remain available. Existing authored animation, style and variable data is preserved. Hidden keyboard-help and keyframe controls do not disable their existing keyboard commands or reset recording state.
+Both fields control rendering only. The existing `showKeyframes` capability still owns keyboard handling and recording-state changes; the visibility field does neither. Hidden generation entries retain the gateway binding, import actions and Ask Agent. Enter in the timeline prompt opens Ask Agent when generation is hidden. The separate Edit image entry remains available. Existing animation, project data, services, MCP and export are unchanged. Feature code and dependencies remain in the package.
 
-`visibleEditorPanels` derives the Dock allowlist from the same configuration. Dock rejects excluded programmatic activations, including requests queued before mounting. Valid saved layouts are filtered before restoration; remaining tab order, group sizes and unrelated preferences are retained, empty groups are removed and an excluded active tab falls back to a retained tab. Invalid layouts use the existing default-layout recovery. The panel registry retains all identifiers so re-enabling a panel remains compatible. Fixed layout disables panel drag and close/menu actions while keeping splitter resizing.
-
-To restore an entry, change the relevant boolean, rebuild Studio and reload it. There is no user-facing toggle, query parameter, local-storage override or remote configuration service. The complete configuration remains covered by native Studio regression tests. Workspace source environments do not change the phase-one entry list.
+To restore an entry, change its boolean, rebuild Studio and reload. There is no new registry, environment-variable branch, runtime preference or remote configuration service. Other editor entries and saved layouts keep their existing behavior; extending visibility to them is a separate change.
 
 ### Agent procedure for temporarily hiding entries
 
-1. Read the current repository instructions and inspect the affected architecture and UI. Record the exact requested entries, every surface exposing them, retained operations and shortcuts, and the corresponding configuration fields.
-2. Reuse the existing host and component display parameters. Inspect each parameter for command/state side effects. Add only a display control when needed; `showKeyframeControls` is separate from the existing `showKeyframes` capability.
-3. Keep shared providers, hooks, save/history queues and rendering mounted. Never clear project attributes or disable services to hide an entry. Preserve required imports and commands; package elimination is a separate task.
-4. Cover normal, empty, selected, hover and context-menu states, complete/embedded views, old layouts, project switching and restoration. Verify retained controls as well as absent ones. Run deterministic tests and the applicable real-browser checks under the workspace browser-lock rules.
-5. Review the exact diff and architecture consistency. Deliver the head revision, entry/configuration/file mapping, raw command results and screenshots, distinguishing local validation, CI and human acceptance. Do not merge or publish without task-specific authorization.
+1. Read repository instructions and the affected architecture. Identify the exact requested entries, every surface exposing them, and the operations and shortcuts to retain.
+2. Reuse the existing host and component display conditions. Check existing parameters for command or state side effects; hide the entry without changing those parameters or unmounting shared providers and hooks.
+3. Add only fields needed by the current request. Preserve save/history queues, project attributes, services and required commands. Do not combine entry hiding with package elimination, layout migration or unrelated cleanup.
+4. Test hiding and restoration on the affected normal, empty and selected states. Assert retained imports, Agent actions, shortcuts and recording state. Check actual rendering under the shared browser-lock rules.
+5. Deliver the entry/configuration/file mapping, head revision, checks and screenshots. Distinguish local checks, CI and human acceptance. Merge and publication require separate authorization.
 
 ## 修改入口
 

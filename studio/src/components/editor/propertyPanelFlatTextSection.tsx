@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type { PropertyPanelProps } from "./propertyPanelTypes";
 import { useEffect, useState } from "react";
@@ -63,7 +62,6 @@ function FlatTextFieldEditor({
   autoFocus?: boolean;
 }) {
   const { t } = useI18n();
-  const entries = useEditorEntryVisibility();
   const track = useTrackDesignInput();
   const weight = getTextStyleValue(field, styles, "font-weight", "400");
   const weightOptions = detectAvailableWeights(
@@ -110,7 +108,7 @@ function FlatTextFieldEditor({
         onPreview={(next) => onPreviewTextFieldStyle?.(field.key, "font-size", next)}
         onCommit={(next) => onSetTextFieldStyle(field.key, "font-size", next)}
       />
-      {entries.advancedTypography && <div className="flex min-h-[30px] items-center justify-between">
+      <div className="flex min-h-[30px] items-center justify-between">
         <span
           className={
             VALUE_TIER_LABEL_CLASS[resolveValueTier(field.inlineStyles["font-weight"], "400")]
@@ -147,8 +145,8 @@ function FlatTextFieldEditor({
             <path d="M2 3l3 4 3-4z" />
           </svg>
         </label>
-      </div>}
-      {entries.advancedTypography && <FlatRow
+      </div>
+      <FlatRow
         label={t("Letter spacing")}
         value={getTextStyleValue(field, styles, "letter-spacing", "0px")}
         tier={resolveValueTier(field.inlineStyles["letter-spacing"], "0px")}
@@ -160,8 +158,8 @@ function FlatTextFieldEditor({
           )
         }
         onReset={() => onSetTextFieldStyle(field.key, "letter-spacing", "")}
-      />}
-      {entries.advancedTypography && <FlatRow
+      />
+      <FlatRow
         label={t("Line height")}
         value={getTextStyleValue(field, styles, "line-height", "normal")}
         tier={resolveValueTier(field.inlineStyles["line-height"], "normal")}
@@ -173,10 +171,10 @@ function FlatTextFieldEditor({
           )
         }
         onReset={() => onSetTextFieldStyle(field.key, "line-height", "")}
-      />}
+      />
       <FlatSegmentedRow
         label={t("Align")}
-        options={ALIGN_OPTIONS.filter(option => entries.advancedTypography || option.key !== "justify").map((option) => ({
+        options={ALIGN_OPTIONS.map((option) => ({
           key: option.key,
           node: option.node,
           label: option.label,
@@ -197,7 +195,7 @@ function FlatTextFieldEditor({
           onSetTextFieldStyle(field.key, "text-align", next);
         }}
       />
-      {entries.advancedTypography && <FlatSegmentedRow
+      <FlatSegmentedRow
         label={t("Case · Style")}
         options={[
           ...CASE_OPTIONS.map((option) => ({
@@ -217,7 +215,7 @@ function FlatTextFieldEditor({
             onSetTextFieldStyle(field.key, "text-transform", next);
           }
         }}
-      />}
+      />
       <PromotableControl
         channel={{ kind: "style", prop: "color" }}
         enabled={field.source === "self"}

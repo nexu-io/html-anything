@@ -60,8 +60,6 @@ export interface TimelineToolbarProps {
   showAddBeat?: boolean;
   /** Hides Add keyframe and auto-record, and turns off auto-record and the K shortcut with them. */
   showKeyframes?: boolean;
-  /** Hide the controls without disabling keyboard commands or resetting recording state. */
-  showKeyframeControls?: boolean;
   rightActions?: ReactNode;
 }
 
@@ -162,7 +160,6 @@ export const TimelineToolbar = memo(function TimelineToolbar({
   showSelectAroundPlayhead = true,
   showAddBeat = true,
   showKeyframes = true,
-  showKeyframeControls = true,
   rightActions,
 }: TimelineToolbarProps) {
   const { t } = useI18n();
@@ -233,11 +230,11 @@ export const TimelineToolbar = memo(function TimelineToolbar({
     <div className="border-b border-neutral-800/60">
       <div className="flex items-center justify-between px-2 py-0.5">
         <div className="flex items-center gap-0.5">
-          {showHistory && entries.timelineHistoryButtons && <TimelineHistoryButtons {...history} />}
-          <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead && entries.clipExtraActions} />
+          {showHistory && <TimelineHistoryButtons {...history} />}
+          <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} />
           {/* Divider: tool-mode | editing-actions */}
           <div aria-hidden="true" className="mx-1 h-4 w-px bg-neutral-800" />
-          {entries.linkedSelection && <LinkedSelectionToggle />}
+          <LinkedSelectionToggle />
           <Tooltip
             label={
               timelineSnapEnabled
@@ -255,7 +252,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               <Magnet size={16} weight="bold" aria-hidden="true" />
             </button>
           </Tooltip>
-          {entries.rippleEditing && (<Tooltip
+          <Tooltip
             label={
               rippleEditEnabled
                 ? t("Ripple on: keeps the main track gapless")
@@ -271,7 +268,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             >
               <RippleEditIcon size={16} />
             </button>
-          </Tooltip>)}
+          </Tooltip>
           {projectHasAudio && (
             <Tooltip label={audioMetersVisible ? t("Hide audio meters") : t("Show audio meters")}>
               <button
@@ -285,7 +282,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               </button>
             </Tooltip>
           )}
-          {showKeyframes && showKeyframeControls && entries.timelineKeyframeControls && (
+          {showKeyframes && entries.timelineKeyframeControls && (
             <>
               {/* With no keyframeable selection the button fades to disabled instead of
               unmounting, so the toolbar layout never shifts (CapCut-style). */}
@@ -441,7 +438,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               );
             })()}
           {(() => {
-            if (!showAddBeat || !entries.addBeat) return null;
+            if (!showAddBeat) return null;
             // Rendered whenever shown (CapCut-style): before beat analysis loads (or when
             // the project has no analyzed music) the button fades to a disabled
             // state instead of unmounting, so the toolbar layout never shifts.
@@ -485,7 +482,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
         </div>
         <div className="flex items-center gap-0.5">
           {rightActions}
-          {entries.thumbnailToggle && (<Tooltip
+          <Tooltip
             label={
               thumbnailsVisible
                 ? t("Hide thumbnails: labels only")
@@ -509,7 +506,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             >
               <Image size={16} aria-hidden="true" />
             </button>
-          </Tooltip>)}
+          </Tooltip>
           <Tooltip
             label={
               canZoomSelection

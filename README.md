@@ -8,7 +8,7 @@
 
 ![A three-step guide: find a film in the Motion library, describe its style in Motion MD, and adapt it in Codex.](docs/readme/hero.svg)
 
-The phase-one editor keeps project selection, basic editing, templates, import/export and Ask Agent. Deferred advanced entries are hidden by one [UI configuration](docs/editor-fork.md#phase-one-entry-visibility); existing project effects and Agent capabilities are preserved.
+The editor visibility pilot hides media-generation entries and timeline keyframe buttons through one [UI configuration](docs/editor-fork.md#editor-entry-visibility). Editing commands, generation services and existing project content remain available.
 
 ## Motion MD
 

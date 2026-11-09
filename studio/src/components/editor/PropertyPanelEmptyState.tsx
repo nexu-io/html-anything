@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { Eye, Layers } from "../../icons/SystemIcons";
 import type { DomEditSelection } from "./domEditingTypes";
@@ -6,7 +5,6 @@ import { canHideSelections } from "../../utils/timelineInspector";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 
 function FlatEmptyState() {
-  const entries = useEditorEntryVisibility();
   const { t } = useI18n();
   return (
     <div className="flex h-full flex-col items-center justify-center gap-2.5 px-8 py-10 text-center">
@@ -26,14 +24,14 @@ function FlatEmptyState() {
       <div className="max-w-[250px] text-[11px] leading-normal text-panel-text-3">
         {t("Click any element on the canvas to edit it, or drag to select several.")}</div>
       <div className="mt-2 flex w-full flex-col gap-1.5">
-        {entries.recordMotion && <span className="flex items-center justify-between rounded-lg border border-panel-border bg-panel-bg px-3 py-2">
+        <span className="flex items-center justify-between rounded-lg border border-panel-border bg-panel-bg px-3 py-2">
           <span className="flex items-center gap-2 text-[11px] text-panel-text-2">
             <span className="text-danger-ink">●</span>
             {t("Record a gesture")}</span>
           <span className="rounded-sm border border-panel-border-input px-[5px] py-px font-mono text-[9px] text-panel-text-5">
             R
           </span>
-        </span>}
+        </span>
         <span className="flex items-center justify-between rounded-lg border border-panel-border bg-panel-bg px-3 py-2">
           <span className="flex items-center gap-2 text-[11px] text-panel-text-2">
             <span className="text-accent-ink">✦</span>
@@ -71,7 +69,6 @@ function FlatMultiSelectState({
   onClearSelection?: () => void;
 }) {
   const { t } = useI18n();
-  const entries = useEditorEntryVisibility();
   // One predicate for both actions and for the handler's own refusal, so the
   // button and the refusal cannot disagree about what audio is.
   const hasAudio = !canHideSelections(multiSelectedElements);
@@ -139,7 +136,7 @@ function FlatMultiSelectState({
           they own keyboard paths no hidden button can gate. */}
       {!hasAudio && (
         <div className="flex gap-2">
-          {entries.clipExtraActions && <button
+          <button
             type="button"
             data-flat-multiselect-group="true"
             onClick={() => {
@@ -150,7 +147,7 @@ function FlatMultiSelectState({
             className="flex h-[34px] flex-1 items-center justify-center gap-2 rounded-lg bg-panel-hover text-[11px] font-semibold text-panel-text-0"
           >
             <Layers size={13} />
-            {t("Group selection")}</button>}
+            {t("Group selection")}</button>
           <button
             type="button"
             data-flat-multiselect-hide-all="true"

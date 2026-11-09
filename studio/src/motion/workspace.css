@@ -5,7 +5,6 @@
 .motion-sidebar { display: flex; flex-direction: column; flex: 0 0 224px; width: 224px; min-height: 0; padding: 20px 12px 12px; border-right: 1px solid var(--motion-border); background: var(--motion-bg); }
 .motion-sidebar-brand { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-inline: 2px; gap: 4px; }
 .motion-sidebar .motion-brand { border: 0; background: transparent; padding: 0; min-width: 0; cursor: pointer; gap: 8px; }
-.motion-sidebar span.motion-brand { cursor: default; }
 .motion-sidebar .motion-brand strong { font-size: 17px; }
 .motion-sidebar .motion-brand-mark { width: 30px; height: 30px; }
 .motion-sidebar-new { height: 38px; margin-bottom: 20px; }
@@ -33,11 +32,10 @@
 .motion-sidebar-footer strong, .motion-sidebar-footer small { display: block; font-size: 12px; font-weight: 500; }
 .motion-sidebar-footer small { font-size: 10px; margin-top: 4px; color: var(--motion-dim); }
 .motion-workspace-menu { display: inline-flex; flex-shrink: 0; }
-.motion-sidebar-close { display: inline-flex; }
-.motion-sidebar-backdrop { display: none; }
+.motion-sidebar-close, .motion-sidebar-backdrop { display: none; }
 .motion-workspace[data-collapsed="true"] .motion-sidebar { display: none; }
 .motion-workspace-notice { display: flex; gap: 16px; justify-content: space-between; align-items: center; padding: 8px 18px; color: var(--motion-danger); background: var(--motion-danger-soft); font-size: 12px; flex-shrink: 0; }
-
+.motion-workspace[data-embedded="true"] .motion-sidebar { display: none; }
 .motion-home-navigation { position: absolute; left: 8px; top: 4px; z-index: 1; }
 .motion-home { display: flex; flex: 1; flex-direction: column; position: relative; min-height: 0; }
 .motion-home-scroll { flex: 1; min-height: 0; overflow: auto; scroll-padding-bottom: 200px; }

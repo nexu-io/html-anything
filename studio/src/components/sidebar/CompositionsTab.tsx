@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { buildProjectApiPath } from "../../utils/projectRouting";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -193,7 +192,6 @@ function CompCard({
   previewBooted: boolean;
 }) {
   const { t } = useI18n();
-  const entries = useEditorEntryVisibility();
   const [hovered, setHovered] = useState(false);
   const [stageSize, setStageSize] = useState(DEFAULT_PREVIEW_STAGE);
   const [livePreviewLoaded, setLivePreviewLoaded] = useState(false);
@@ -400,7 +398,7 @@ function CompCard({
         </div>
         <span className="text-[9px] text-neutral-600 truncate block">{comp}</span>
       </div>
-      {entries.compositionInlineActions && onAddToTimeline && (
+      {onAddToTimeline && (
         <button
           type="button"
           title={t("Add {name} to timeline at playhead", { name: name })}
@@ -414,7 +412,7 @@ function CompCard({
           <span aria-hidden="true">+</span>
         </button>
       )}
-      {entries.compositionInlineActions && onRender && (
+      {onRender && (
         <Tooltip label={isRendering ? t("A render is already in progress") : t("Render {name}", { name: name })}>
           <button
             type="button"

@@ -61,12 +61,10 @@ it('shares project sessions outside the native editor while Export keeps the nat
   const project = container.querySelector<HTMLButtonElement>('.motion-session[title="Second"]')!;
   expect(header.contains(project)).toBe(false);
   expect(container.querySelector('.motion-session[aria-current="page"]')?.textContent).toContain('Demo');
-  for (const text of ['模板库', '导出']) expect(header.contains(button(text))).toBe(true);
-  for (const text of ['预览', '布局', '历史', '截图', '属性', 'Window']) expect(button(text)).toBeUndefined();
+  for (const text of ['模板库', '预览', '布局', '历史', '导出']) expect(header.contains(button(text))).toBe(true);
   expect(container.querySelector('.motion-workspace-topbar')).toBeNull();
-  expect(button('连接 Agent')).toBeUndefined();
-  expect(container.querySelector('.motion-sidebar-brand button.motion-brand')).toBeNull();
-  expect(container.querySelector('.motion-sidebar-settings [aria-label="模型设置"]')).toBeNull();
+  expect(container.querySelector('.motion-sidebar-nav')?.textContent).toContain('连接 Agent');
+  expect(container.querySelector('.motion-sidebar-settings [aria-label="模型设置"]')).not.toBeNull();
   expect(container.querySelector('.motion-sidebar-settings [aria-label="语言"]')).not.toBeNull();
   act(() => container.querySelector<HTMLButtonElement>('[aria-label="撤销"]')!.click());
   act(() => container.querySelector<HTMLButtonElement>('[aria-label="重做"]')!.click());
@@ -78,6 +76,9 @@ it('shares project sessions outside the native editor while Export keeps the nat
   expect(state.export).toHaveBeenCalledOnce();
   act(() => project.click());
   expect(state.open).toHaveBeenCalledWith('second');
+  act(() => button('连接 Agent').click());
+  expect(container.querySelector('[role="dialog"][aria-label="MCP connections"]')).not.toBeNull();
+  expect(container.querySelector('[role="dialog"]')!.getAttribute('data-section')).toBe('setup');
   act(() => button('模板库').click());
   expect(container.querySelectorAll('[role="dialog"]')).toHaveLength(1);
   expect(container.querySelector('[role="dialog"]')!.getAttribute('data-section')).toBe('templates');
@@ -85,35 +86,37 @@ it('shares project sessions outside the native editor while Export keeps the nat
   expect(state.create).toHaveBeenCalledWith(undefined, 'product-promo');
 });
 
-it('prevents project replacement during a native render while phase-one entries stay hidden', () => {
+it('prevents project replacement during a native render without disabling MCP access', () => {
   state.renderQueue.isRendering = true;
   render();
   expect(container.querySelector<HTMLButtonElement>('.motion-session')!.disabled).toBe(true);
-  expect(button('新建会话')).toBeUndefined();
-  expect(button('首页')).toBeUndefined();
+  expect(button('新建会话').disabled).toBe(true);
+  expect(button('首页').disabled).toBe(true);
   expect(button('模板库').disabled).toBe(true);
   expect(container.querySelector<HTMLButtonElement>('[data-testid="header-export"]')!.disabled).toBe(true);
-  expect(button('连接 Agent')).toBeUndefined();
+  expect(button('连接 Agent').disabled).toBe(false);
   expect(container.textContent).toContain('正在渲染…');
-
+  act(() => button('连接 Agent').click());
+  expect(button('Open Product Promo').disabled).toBe(true);
 });
 
 it('prevents switching projects or issuing competing header undo while a version operation is running', () => {
   render(true);
   expect(container.querySelector<HTMLButtonElement>('.motion-session')!.disabled).toBe(true);
-  expect(button('新建会话')).toBeUndefined();
-  expect(button('首页')).toBeUndefined();
+  expect(button('新建会话').disabled).toBe(true);
+  expect(button('首页').disabled).toBe(true);
   expect(button('模板库').disabled).toBe(true);
   expect(container.querySelector<HTMLButtonElement>('[aria-label="撤销"]')!.disabled).toBe(true);
   expect(container.querySelector<HTMLButtonElement>('[aria-label="重做"]')!.disabled).toBe(true);
   expect(container.textContent).toContain('正在处理版本…');
 });
 
-it('hides new-session and home entries while retaining project search and sidebar collapse', () => {
+it('creates a session, returns home and searches the same persistent project list', () => {
   render();
-  expect(button('新建会话')).toBeUndefined();
-  expect(button('首页')).toBeUndefined();
-  expect(state.create).not.toHaveBeenCalled();
+  act(() => button('新建会话').click());
+  expect(state.create).toHaveBeenCalledOnce();
+  act(() => button('首页').click());
+  expect(state.home).toHaveBeenCalledOnce();
   const search = container.querySelector<HTMLInputElement>('[aria-label="搜索会话"]')!;
   act(() => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(search, 'Second'); search.dispatchEvent(new Event('input', { bubbles: true })); });
   expect(container.querySelectorAll('.motion-session')).toHaveLength(1);

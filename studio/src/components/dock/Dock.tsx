@@ -1,4 +1,3 @@
-import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import {
   createContext,
@@ -22,7 +21,7 @@ import { DockStripActions } from "./DockStripActions";
 import { DockTab } from "./DockTab";
 import { installTabFill } from "./dockTabFill";
 import { addRegisteredPanel, applySideMinimums, buildEditLayout, defaultSideWidths } from "./dockLayout";
-import { DOCK_PANEL_COMPONENT, filterDockLayout, parseDockLayout } from "./dockLayoutSchema";
+import { DOCK_PANEL_COMPONENT, parseDockLayout } from "./dockLayoutSchema";
 import { useDockLayoutStore, type DockController, type DockSnapshot } from "./dockLayoutStore";
 import {
   PANEL_DEFINITIONS,
@@ -96,7 +95,6 @@ interface DockOptions {
 
 function createController(api: DockviewApi, options: DockOptions): DockController {
   const open = (id: PanelId) => {
-    if (!options.panels.includes(id)) return;
     if (api.getPanel(id)) return;
     if (id === "preview") {
       // The timeline spans the whole workspace. Anchoring above it creates a new
@@ -154,7 +152,6 @@ function createController(api: DockviewApi, options: DockOptions): DockControlle
   return {
     open,
     activate: (id) => {
-      if (!options.panels.includes(id)) return;
       open(id);
       const panel = api.getPanel(id);
       if (!panel?.group.api.isMaximized()) api.exitMaximizedGroup();
@@ -176,7 +173,7 @@ function createController(api: DockviewApi, options: DockOptions): DockControlle
 
 function restoreOrBuild(api: DockviewApi, projectId: string | null, options: DockOptions) {
   const { dockLayout } = readStudioUiPreferences(undefined, projectId, options.storageKey);
-  const stored = parseDockLayout(filterDockLayout(dockLayout, options.panels), options.panels);
+  const stored = parseDockLayout(dockLayout, options.panels);
   if (stored) {
     try {
       api.fromJSON(stored);
@@ -203,7 +200,6 @@ function Root({
   dockWidth?: () => number;
   children: ReactNode;
 }) {
-  const allowLayoutChanges = useEditorEntryVisibility().panelLayoutControls;
   const [slots, setSlots] = useState<Slots>({});
   const registerSlot = useCallback((id: PanelId, element: HTMLElement | null) => {
     setSlots((prev) => {
@@ -281,8 +277,7 @@ function Root({
         className="hf-dock flex-1 min-h-0"
         components={COMPONENTS}
         defaultTabComponent={DockTab}
-        rightHeaderActionsComponent={allowLayoutChanges ? DockStripActions : undefined}
-        disableDnd={!allowLayoutChanges}
+        rightHeaderActionsComponent={DockStripActions}
         defaultRenderer="always"
         disableFloatingGroups
         disableTabsOverflowList
