@@ -100,7 +100,7 @@
   align-items: center;
   gap: var(--motion-space-8);
 }
-.connect-eyebrow > span {
+.connect-eyebrow > span:first-child {
   width: var(--motion-space-6);
   height: var(--motion-space-6);
   border-radius: var(--motion-radius-full);

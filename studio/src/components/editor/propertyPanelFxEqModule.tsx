@@ -158,7 +158,7 @@ export function FxEqModule({
           onClick={onToggleOpen}
         >
           {t("Tone")}</button>
-        <span className="font-mono text-[9px] text-panel-text-2">{bands.length}-band</span>
+        <span className="font-mono text-[9px] text-panel-text-2">{t('{count}-band', { count: bands.length })}</span>
         <button
           type="button"
           className="hf-fx-remove px-1 text-[11px] text-panel-text-2 hover:text-danger-ink"

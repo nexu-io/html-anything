@@ -178,7 +178,7 @@ export function ColorGradingSection({
 
   return (
     <Section
-      title={t("Color grading")}
+      title="Color grading"
       icon={<Palette size={15} />}
       accessory={
         <div className="flex min-w-0 items-center gap-1.5">

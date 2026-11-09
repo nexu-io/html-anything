@@ -107,7 +107,7 @@ export function EaseBezierField({
         aria-live="polite"
         className={`mt-1 text-[9px] text-danger-ink ${error ? "" : "sr-only"}`}
       >
-        {error ?? "Valid bezier values"}
+        {error ? t(error) : t("Valid bezier values")}
       </p>
     </div>
   );

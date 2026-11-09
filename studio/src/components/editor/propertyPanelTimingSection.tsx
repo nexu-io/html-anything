@@ -72,7 +72,7 @@ export function TimingSection({
   };
 
   return (
-    <Section title={t("Timing")} icon={<Clock size={15} />}>
+    <Section title="Timing" icon={<Clock size={15} />}>
       <div className={RESPONSIVE_GRID}>
         <MetricField label={t("Start")} value={formatTimingValue(start)} onCommit={commitStart} />
         <MetricField label={t("End")} value={formatTimingValue(end)} onCommit={commitEnd} />

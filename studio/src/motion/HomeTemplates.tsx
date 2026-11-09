@@ -12,7 +12,7 @@ const categories = [
 ] as const;
 
 export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTemplate) => void }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { workspace, switchingDisabled } = useWorkspaceChrome();
   const [category, setCategory] = useState<string>('builtin');
   const [query, setQuery] = useState('');
@@ -100,15 +100,15 @@ export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTempl
           <span className="motion-template-preview-hint"><MotionIcon name="eye" />{t('Preview')}</span>
         </button>
         <div className="motion-template-info"><h3>{template.title}</h3>
-          <div className="motion-template-footer"><div><a href={template.sourceUrl} target="_blank" rel="noreferrer">{template.authorName || template.author}<MotionIcon name="arrow-up-right" size={11} /></a>{template.social && <small title={`${template.social.platform} · ${template.social.views} · ${template.social.syncedAt}`}>{formatTemplateViews(template.social.views)} {t('views')}</small>}</div>
+          <div className="motion-template-footer"><div><a href={template.sourceUrl} target="_blank" rel="noreferrer">{template.authorName || template.author}<MotionIcon name="arrow-up-right" size={11} /></a>{template.social && <small title={`${template.social.platform} · ${template.social.views} · ${template.social.syncedAt}`}>{formatTemplateViews(template.social.views, locale)} {t('views')}</small>}</div>
             <button className="motion-button" disabled={(Boolean(onSelect) || isEditableTemplate(template)) && switchingDisabled} onClick={() => action(template)}><MotionIcon name={onSelect ? 'plus' : isEditableTemplate(template) ? 'scissors' : 'copy'} size={14} />{t(onSelect ? 'Use template' : isEditableTemplate(template) ? 'Open and edit' : 'Copy to recreate')}</button>
           </div>
         </div>
       </article>)}
     </div>
-    {page?.warning && <p role="status">{page.warning}</p>}
+    {page?.warning && <p role="status">{t(page.warning)}</p>}
     {loading && <p className="motion-home-empty" role="status">{t('Loading templates…')}</p>}
-    {error && <div className="motion-home-empty" role="alert">{error} <button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div>}
+    {error && <div className="motion-home-empty" role="alert">{t(error)} <button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div>}
     {!loading && !error && page?.items.length === 0 && <p className="motion-home-empty">{t('No matching templates. Try another name or category.')}</p>}
     {page?.next != null && !error && <button className="motion-button motion-more-templates" disabled={loading} onClick={() => setOffset(page.next!)}>{t('More templates')}<MotionIcon name="arrow-right" /></button>}
     {preview && <TemplatePreview template={preview} selecting={Boolean(onSelect)} busy={switchingDisabled} onClose={() => setPreview(null)} onAction={action} feedback={feedback} manualCopy={manualCopy} />}

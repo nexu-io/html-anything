@@ -390,7 +390,7 @@ export function FlatColorGradingSection({
           <div className="space-y-1.5 pb-1">
             <div className="flex items-center justify-between gap-2">
               <span className="min-w-0 flex-1 truncate font-mono text-[10px] text-panel-text-3">
-                {selectedLutName ?? "None"}
+                {selectedLutName ?? t("None")}
               </span>
               <select
                 data-flat-grade-lut-select="true"

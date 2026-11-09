@@ -482,7 +482,7 @@ export function HotspotTool({
       <div className="flex flex-col gap-1.5">
         <p className="text-[11px] text-neutral-400">
           {t("Selected element:")}{" "}
-          <span className="text-neutral-200 font-mono">{elementKey ?? "none"}</span>
+          <span className="text-neutral-200 font-mono">{elementKey ?? t("None")}</span>
         </p>
         {!elementKey && (
           <p className="text-[10px] text-neutral-500 italic">
