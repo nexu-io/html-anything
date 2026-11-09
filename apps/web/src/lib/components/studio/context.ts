@@ -46,6 +46,9 @@ export class CompositionContext {
   get file() {
     return this.model?.context.file ?? "index.html";
   }
+  get sources() {
+    return this.editor.sources;
+  }
   get source() {
     return this.editor.source(this.file);
   }
@@ -100,10 +103,12 @@ export class CompositionContext {
       this.readonly ||
       !Number.isFinite(local) ||
       local < 0 ||
-      local > (this.model?.context.duration ?? Number.POSITIVE_INFINITY)
+      local > (this.model?.context.duration ?? Number.POSITIVE_INFINITY) + 1e-8
     )
       throw Error("局部播放时间超出合成时间窗");
-    return local + (this.model?.context.offset ?? 0);
+    return (
+      Math.min(local, this.model?.context.duration ?? Number.POSITIVE_INFINITY) + (this.model?.context.offset ?? 0)
+    );
   }
   scoped(id: string) {
     return id && this.instance ? `${this.instance}/${id}` : id;

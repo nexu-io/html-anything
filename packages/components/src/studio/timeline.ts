@@ -4,6 +4,9 @@ export interface TimeTrack {
   start: number;
   duration: number;
   selected: boolean;
+  kind?: string;
+  readonly?: boolean;
+  maximum?: number;
   lanes?: {
     id: string;
     label: string;
@@ -93,6 +96,7 @@ export function timeTracks(
     group.setAttribute("role", "button");
     group.setAttribute("aria-label", `${track.label} ${track.start.toFixed(2)}秒 / ${track.duration.toFixed(2)}秒`);
     group.setAttribute("data-clip-id", track.id);
+    group.setAttribute("aria-description", track.readonly ? "只读时间窗口" : "可编辑时间窗口");
     label.classList.add("om-time__label");
     label.setAttribute("x", "8");
     label.setAttribute("y", String(y + 26));
@@ -109,7 +113,11 @@ export function timeTracks(
     handle.setAttribute("width", "8");
     handle.setAttribute("height", "40");
     const limitStart = (value: number) => Math.max(0, Math.min(duration - track.duration, value)),
-      limitDuration = (value: number) => Math.max(0.1, Math.min(duration - track.start, value));
+      limitDuration = (value: number) =>
+        Math.max(
+          Math.min(0.1, duration - track.start, track.maximum ?? Number.POSITIVE_INFINITY),
+          Math.min(duration - track.start, track.maximum ?? Number.POSITIVE_INFINITY, value),
+        );
     let drag: { x: number; resize: boolean; value: number } | undefined;
     heading.classList.add("om-time__heading");
     kind.classList.add("om-time__kind");
@@ -118,7 +126,7 @@ export function timeTracks(
     heading.setAttribute("height", "14");
     heading.setAttribute("rx", "4");
     kind.setAttribute("y", String(y + 11));
-    kind.textContent = "T · 文本";
+    kind.textContent = track.kind ?? "T · 文本";
     caption.setAttribute("y", String(y + 30));
     const place = (start: number, span: number) => {
       const x = coordinate(start),
@@ -142,6 +150,10 @@ export function timeTracks(
     restore();
     group.addEventListener("pointerdown", (event) => {
       if (disabled || event.button !== 0) return;
+      if (track.readonly) {
+        options.select(track.id);
+        return;
+      }
       event.preventDefault();
       group.focus();
       group.setPointerCapture(event.pointerId);
@@ -193,7 +205,7 @@ export function timeTracks(
         event.preventDefault();
         options.select(track.id);
       }
-      if (["ArrowLeft", "ArrowRight"].includes(event.key)) {
+      if (!track.readonly && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
         event.preventDefault();
         const delta = (event.key === "ArrowRight" ? 1 : -1) * (event.shiftKey ? 1 : 0.1);
         options.commit(

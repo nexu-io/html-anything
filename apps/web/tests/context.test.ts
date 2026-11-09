@@ -3,6 +3,7 @@ import type { Project } from "@open-motion/workspace/contract";
 import { expect, it, vi } from "vitest";
 import { Client } from "@";
 import { CompositionContext } from "@/lib/components/studio/context.js";
+import { applyClip } from "@/lib/components/studio/transactions.js";
 import { Editor } from "@/lib/editor.js";
 
 async function fixture() {
@@ -30,7 +31,7 @@ async function fixture() {
   const update = async (instance: string | null) =>
     context.update(await inspectContext({ files: editor.sources, instance }));
   await update("hf-a");
-  return { editor, context, update };
+  return { client, editor, context, update };
 }
 it("rejects a late source transform after moving to another instance of the same file", async () => {
   const { editor, context, update } = await fixture(),
@@ -92,4 +93,23 @@ it("does not apply an async result after navigation while a transform is suspend
   finish?.({ html: "late result" });
   await expect(flight).rejects.toThrow("过期");
   expect(editor.source("card.html")).not.toContain("late result");
+});
+
+it("rejects a host transform whose returned owning file differs from the captured parent", async () => {
+  const { client, editor, context, update } = await fixture();
+  await update(null);
+  const model = await inspectContext({ files: editor.sources, instance: null }),
+    clip = model.clips.find((clip) => clip.id === "hf-a"),
+    before = editor.sources;
+  if (!clip) throw Error("missing host");
+  vi.spyOn(client, "retimeHost").mockResolvedValue({ file: "card.html", html: "wrong parent" });
+  await expect(applyClip(context, client, context.capture(), clip, { start: 2 })).rejects.toThrow("父文件身份");
+  expect(editor.sources).toEqual(before);
+});
+it("accepts an exact decimal boundary after ancestor window intersection without allowing a real overrun", async () => {
+  const { context, editor } = await fixture();
+  const model = await inspectContext({ files: editor.sources, instance: "hf-a" });
+  context.update({ ...model, context: { ...model.context, duration: 2.8 - 2, offset: 2 } });
+  expect(context.globalTime(0.8)).toBeCloseTo(2.8, 8);
+  expect(() => context.globalTime(0.81)).toThrow("时间窗");
 });

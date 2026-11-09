@@ -1,15 +1,12 @@
 import { parseNumeric } from "@hyperframes/parsers/composition";
-import { z } from "zod";
+import { contextInput } from "./input.js";
+
+export { contextInput } from "./input.js";
+
 import { type Clip, Motion } from "../index.js";
 import { type Graph, type Instance, prepareProject } from "./graph.js";
+import { describeHosts } from "./host.js";
 
-export const contextInput = z.strictObject({
-  files: z
-    .array(z.strictObject({ path: z.string().min(1).max(240), content: z.string().max(1048576) }))
-    .min(1)
-    .max(128),
-  instance: z.string().min(1).max(512).nullable(),
-});
 export interface EditingContext {
   instance: string | null;
   invalidated: boolean;
@@ -66,7 +63,8 @@ export async function inspectContext(input: unknown): Promise<ContextModel> {
   if (html === undefined) throw Error("editing source is missing");
   const model = await Motion.open(html);
   try {
-    return { html, clips: model.clips, context };
+    const hosts = describeHosts(graph, definitions, file, context.instance, html);
+    return { html, clips: model.clips.map((clip) => ({ ...clip, ...hosts.get(clip.id) })), context };
   } finally {
     model.dispose();
   }

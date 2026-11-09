@@ -24,7 +24,9 @@ it("keeps repeated-file identity distinct and composes local clocks through inst
     leaf = await inspectContext({ files: files(), instance: "hf-b/hf-inner" });
   expect(a.context).toMatchObject({ instance: "hf-a", file: "card.html", offset: 1, duration: 4 });
   expect(b.context).toMatchObject({ instance: "hf-b", file: "card.html", offset: 6, duration: 4 });
-  expect(a.clips).toEqual(b.clips);
+  expect(a.clips.map(({ host, ...local }) => local)).toEqual(b.clips.map(({ host, ...local }) => local));
+  expect(a.clips.find((clip) => clip.host)?.host?.instance).toBe("hf-a/hf-inner");
+  expect(b.clips.find((clip) => clip.host)?.host?.instance).toBe("hf-b/hf-inner");
   expect(leaf.context).toMatchObject({ file: "leaf.html", offset: 8, duration: 1 });
   expect(leaf.context.trail.map((node) => node.id)).toEqual(["hf-b", "hf-b/hf-inner"]);
   expect(leaf.clips.find((clip) => clip.id === "hf-title")?.text).toBe("Leaf");

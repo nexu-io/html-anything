@@ -25,7 +25,8 @@ export function studioTimeline(
   const focusKey = focus?.getAttribute("data-keyframe-focus"),
     focusClip = focus?.getAttribute("data-clip-id");
   const tracks = options.clips.filter(
-    (c) => !c.composition && c.start !== null && c.duration !== null && Number.isFinite(c.start + c.duration),
+    (c) =>
+      (!c.composition || !!c.host) && c.start !== null && c.duration !== null && Number.isFinite(c.start + c.duration),
   );
   const length =
     options.duration ??
@@ -35,7 +36,10 @@ export function studioTimeline(
     disabled: options.blocked,
     tracks: tracks.map((c) => ({
       id: c.id,
-      label: c.text || c.tag,
+      label: c.host ? `${c.id} · ${c.host.source}` : c.text || c.tag,
+      kind: c.host ? "合成" : "T · 文本",
+      readonly: !!c.host?.reason,
+      maximum: c.host?.maximum ?? undefined,
       start: c.start ?? 0,
       duration: c.duration ?? 1,
       selected: c.id === options.selected,
