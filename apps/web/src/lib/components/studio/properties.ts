@@ -43,6 +43,7 @@ export class Properties {
   private appearance: AppearanceFields;
   private audio: HTMLElement;
   private inPoint: ReturnType<typeof numberField>;
+  private rate: ReturnType<typeof numberField>;
   private volume: ReturnType<typeof numberField>;
   private muted: HTMLInputElement;
   private audioReason: HTMLElement;
@@ -67,6 +68,7 @@ export class Properties {
       if (this.touched.has("audio")) {
         values.audio = {};
         if (this.audioTouched.has("inPoint")) values.audio.inPoint = this.inPoint.input.valueAsNumber;
+        if (this.audioTouched.has("rate")) values.audio.rate = this.rate.input.valueAsNumber;
         if (this.audioTouched.has("volume")) values.audio.volume = this.volume.input.valueAsNumber;
         if (this.audioTouched.has("muted")) values.audio.muted = this.muted.checked;
       }
@@ -83,6 +85,14 @@ export class Properties {
       max: 3600,
       optional: true,
       change: () => audioChanged("inPoint"),
+    });
+    this.rate = numberField(document, {
+      label: "素材倍率",
+      unit: "×",
+      min: 0.1,
+      max: 10,
+      optional: true,
+      change: () => audioChanged("rate"),
     });
     this.volume = numberField(document, {
       label: "音量",
@@ -101,6 +111,7 @@ export class Properties {
     this.audioReason = note(document, "");
     this.audio.append(
       field(document, "源入点秒", this.inPoint.element),
+      field(document, "素材倍率", this.rate.element),
       field(document, "音量", this.volume.element),
       field(document, "静音", this.muted),
       this.audioReason,
@@ -186,6 +197,7 @@ export class Properties {
     this.text.disabled = !clip || clip.text === null || !!clip.host;
     const audioReadonly = clip?.media?.kind === "audio" && clip.media.maximum === null;
     this.inPoint.readonly(value || audioReadonly || !clip?.media?.audio);
+    this.rate.readonly(value || audioReadonly || !clip?.media?.audio);
     this.volume.readonly(value || audioReadonly || !clip?.media?.audio);
     this.muted.disabled = value || audioReadonly || !clip?.media?.audio;
     this.start.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
@@ -200,6 +212,10 @@ export class Properties {
     if (this.audioTouched.has("inPoint")) {
       this.inPoint.validate();
       if (!this.inPoint.input.value) throw Error("请输入有效源入点");
+    }
+    if (this.audioTouched.has("rate")) {
+      this.rate.validate();
+      if (!this.rate.input.value) throw Error("请输入有效素材倍率");
     }
     if (this.audioTouched.has("volume")) {
       this.volume.validate();
@@ -252,9 +268,11 @@ export class Properties {
         audio = clip.media?.audio;
       this.audio.hidden = !audio;
       this.inPoint.value(values?.audio?.inPoint ?? audio?.inPoint ?? undefined, changed);
+      this.rate.value(values?.audio?.rate ?? audio?.rate ?? undefined, changed);
       this.volume.value(values?.audio?.volume ?? audio?.volume ?? undefined, changed);
       this.muted.checked = values?.audio?.muted ?? audio?.muted ?? false;
-      this.audioReason.textContent = audio?.reason ?? "源入点移动不改变片段起点与时长；音量范围 0..1。";
+      this.audioReason.textContent =
+        audio?.reason ?? "源入点与素材倍率不改变片段起点和时长；素材倍率范围 0.1..10，音量范围 0..1。";
       if (changed || document.activeElement !== this.text) this.text.value = values?.text ?? clip.text ?? "";
       this.start.value(values?.start ?? clip.start ?? 0, changed);
       this.duration.value(values?.duration ?? clip.duration ?? 1, changed);

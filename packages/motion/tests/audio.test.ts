@@ -94,3 +94,86 @@ it("validates rendered audio metadata against immutable media facts instead of t
   );
   expect(() => assembleProject(files, [{ path: "assets/tone.wav", type: "image/png" }])).toThrow("media type");
 });
+it("uses authored fixed rate for source bounds without moving or resizing the timeline clip", async () => {
+  const source = html(),
+    model = await Motion.open(source);
+  try {
+    const changed = model.patch("hf-a", { audio: { rate: 2 } });
+    expect(model.clips.find((c) => c.id === "hf-a")).toMatchObject({
+      start: 1,
+      duration: 2,
+      media: { maximum: 2, audio: { rate: 2, inPoint: 0, reason: null } },
+    });
+    expect(buildDocument(changed).gsapScript).toBe(buildDocument(source).gsapScript);
+    expect(changed).not.toContain("data-volume");
+    model.patch("hf-a", { duration: 1.5, audio: { rate: 2, inPoint: 1 } });
+    expect(model.clips.find((c) => c.id === "hf-a")?.media?.maximum).toBe(1.5);
+    model.patch("hf-a", { audio: { rate: 0.5 } });
+    expect(model.clips.find((c) => c.id === "hf-a")).toMatchObject({
+      start: 1,
+      duration: 1.5,
+      media: { maximum: 6, audio: { rate: 0.5, inPoint: 1 } },
+    });
+    model.patch("hf-a", { duration: 6 });
+    expect(() => model.patch("hf-a", { duration: 6.01 })).toThrow("源素材");
+  } finally {
+    model.dispose();
+  }
+});
+it("rejects an overrun before any rate, in-point, gain or mute write and accepts a coupled shorter window", async () => {
+  const model = await Motion.open(html());
+  try {
+    const before = model.clips;
+    expect(() => model.patch("hf-a", { audio: { rate: 2, inPoint: 1, volume: 0, muted: true } })).toThrow("源素材");
+    expect(model.clips).toEqual(before);
+    model.patch("hf-a", { duration: 1.5, audio: { rate: 2, inPoint: 1, volume: 0, muted: true } });
+    expect(model.clips.find((c) => c.id === "hf-a")).toMatchObject({
+      duration: 1.5,
+      media: { maximum: 1.5, audio: { rate: 2, inPoint: 1, volume: 0, muted: true } },
+    });
+  } finally {
+    model.dispose();
+  }
+});
+it.each([0.1, 10])("accepts the native fixed-rate boundary %s without implicit clamping", async (rate) => {
+  const model = await Motion.open(html());
+  try {
+    const result = model.patch("hf-a", { duration: 0.3, audio: { rate } });
+    expect(result).toContain(`data-playback-rate="${rate}"`);
+    expect(model.clips.find((c) => c.id === "hf-a")?.media?.maximum).toBe(4 / rate);
+  } finally {
+    model.dispose();
+  }
+});
+it.each(["0", "0.099", "10.001", "2junk", "NaN", "", "0x2", "0b10"])(
+  'keeps invalid authored rate "%s" read-only',
+  async (rate) => {
+    const model = await Motion.open(html().replace('data-playback-rate="1"', `data-playback-rate="${rate}"`));
+    try {
+      expect(model.clips.find((c) => c.id === "hf-a")?.media?.maximum).toBeNull();
+      expect(() => model.patch("hf-a", { audio: { rate: 1 } })).toThrow("只读");
+    } finally {
+      model.dispose();
+    }
+  },
+);
+it("rejects invalid rate inputs instead of coercing or clamping them", () => {
+  for (const rate of [0, -1, 0.099, 10.001, Infinity, NaN, "2"])
+    expect(patchInput.safeParse({ html: html(), id: "hf-a", audio: { rate } }).success).toBe(false);
+});
+it.each([
+  ["0.5", 0.5],
+  ["2e0", 2],
+  ["+1.0", 1],
+] as const)("preserves a valid authored decimal rate %s when editing another field", async (raw, rate) => {
+  const model = await Motion.open(html().replace('data-playback-rate="1"', `data-playback-rate="${raw}"`));
+  try {
+    expect(model.clips.find((c) => c.id === "hf-a")?.media).toMatchObject({
+      maximum: 4 / rate,
+      audio: { rate, reason: null },
+    });
+    expect(model.patch("hf-a", { audio: { volume: 0 } })).toContain(`data-playback-rate="${raw}"`);
+  } finally {
+    model.dispose();
+  }
+});

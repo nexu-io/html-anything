@@ -16,6 +16,7 @@ const numeric = (value: string | undefined) =>
 function audioState(attributes: Readonly<Record<string, string | undefined>>, animated: boolean): AudioState {
   const sourceDuration = numeric(attributes["data-source-duration"]),
     inPoint = numeric(attributes["data-media-start"]),
+    rate = numeric(attributes["data-playback-rate"]),
     volume = attributes["data-volume"] === undefined ? 1 : numeric(attributes["data-volume"]),
     duration = numeric(attributes["data-duration"]);
   let reason: string | null = null;
@@ -28,14 +29,17 @@ function audioState(attributes: Readonly<Record<string, string | undefined>>, an
     inPoint >= sourceDuration ||
     duration === null ||
     duration <= 0 ||
-    inPoint + duration > sourceDuration + 1e-8 ||
+    !/^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test((attributes["data-playback-rate"] ?? "").trim()) ||
+    rate === null ||
+    rate < 0.1 ||
+    rate > 10 ||
+    inPoint + duration * rate > sourceDuration + 1e-8 ||
     volume === null ||
     volume < 0 ||
     volume > 1
   )
-    reason = "只读：音频需要直接素材引用、有效源长度、入点、窗口和 0..1 音量";
+    reason = "只读：音频需要直接素材引用、有效源长度、入点、窗口、0.1..10 倍率和 0..1 音量";
   else if (
-    attributes["data-playback-rate"] !== "1" ||
     [
       "data-playback-start",
       "data-link",
@@ -50,8 +54,8 @@ function audioState(attributes: Readonly<Record<string, string | undefined>>, an
     ].some((name) => attributes[name] !== undefined) ||
     animated
   )
-    reason = "变速、链接、自动化、效果或宿主脚本音频当前只读";
-  return { sourceDuration, inPoint, volume, muted: attributes.muted !== undefined, reason };
+    reason = "渐变速、链接、自动化、效果或宿主脚本音频当前只读";
+  return { sourceDuration, inPoint, rate, volume, muted: attributes.muted !== undefined, reason };
 }
 
 export * from "./contract.js";
@@ -111,7 +115,9 @@ export class Motion {
                         e.animationIds.length > 0 ||
                           parsed.some((a) => a.hasUnresolvedSelector || a.hasPartialSelector),
                       );
-                      return state.reason ? null : (state.sourceDuration ?? 0) - (state.inPoint ?? 0);
+                      return state.reason
+                        ? null
+                        : ((state.sourceDuration ?? 0) - (state.inPoint ?? 0)) / (state.rate ?? 1);
                     })()
                   : null,
               ...(e.tag === "audio"
@@ -157,12 +163,14 @@ export class Motion {
     if (audio && (input.audio || input.start !== undefined || input.duration !== undefined)) {
       if (audio.reason) throw Error(audio.reason);
       const inPoint = input.audio?.inPoint ?? audio.inPoint,
-        duration = input.duration ?? numeric(target.attributes["data-duration"]);
+        duration = input.duration ?? numeric(target.attributes["data-duration"]),
+        rate = input.audio?.rate ?? audio.rate;
       if (
         inPoint === null ||
         duration === null ||
         audio.sourceDuration === null ||
-        inPoint + duration > audio.sourceDuration + 1e-8
+        rate === null ||
+        inPoint + duration * rate > audio.sourceDuration + 1e-8
       )
         throw Error("音频窗口超出源素材时长");
     }
@@ -213,6 +221,9 @@ export class Motion {
         : [
             { type: "setAttribute" as const, target: id, name: "data-media-start", value: String(input.audio.inPoint) },
           ]),
+      ...(input.audio?.rate === undefined
+        ? []
+        : [{ type: "setAttribute" as const, target: id, name: "data-playback-rate", value: String(input.audio.rate) }]),
       ...(input.audio?.volume === undefined
         ? []
         : [{ type: "setAttribute" as const, target: id, name: "data-volume", value: String(input.audio.volume) }]),
