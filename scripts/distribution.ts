@@ -8,7 +8,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 // New documentation and developer scripts require an explicit distribution decision.
 export const distributionDocuments = [
   'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md',
-  'docs/product/architecture.md', 'docs/product/changes.md', 'docs/product/media-generation-design.md',
+  'docs/product/architecture.md', 'docs/product/media-generation-design.md',
   'docs/agent-adapters.md', 'docs/browser-runtime.md', 'docs/design-system.md', 'docs/editor-fork.md',
   'docs/hyperframes.md', 'docs/mcp-phase1-tools.md', 'docs/model-gateway.md', 'docs/motion-director.md',
   'docs/motion-extension-scope.md', 'docs/npm-installation.md', 'docs/project-workspace.md',
@@ -28,7 +28,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'package.json', 'package-lock.json',
     'server.ts', 'browser.ts', 'workspace.ts', 'mcp.ts', 'mcp-tools.ts', 'editor-runtime.ts',
     'phase1.ts', 'phase1-versions.ts', 'preview.ts', 'hyperframes.ts', 'template-library.ts',
-    'template-catalog.ts', 'editor-server.ts',
+    'template-catalog.ts', 'prism-templates.ts', 'editor-server.ts',
     'scripts/runtime-assets.mjs', 'scripts/npm-runtime.mjs', 'scripts/runtime-lock.json',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
     'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',

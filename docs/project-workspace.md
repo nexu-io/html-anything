@@ -61,12 +61,12 @@
 
 旧 `/projects` 创建、打开、conversation 及 `/templates/:id/open` 入口继续兼容；旧 conversation API 解析到工程所属会话。新建/切换使用 `expectedRevision` 和 `expectedProjectId` 防止竞争。
 
-一期公开 MCP 使用 [9 Tool 契约](mcp-phase1-tools.md)：motion_create_project 创建会话下工程，motion_get_project 读工程/所属 sessionId/当前版本，motion_open_preview 打开明确工程。以下 design_* 与旧模板 Tool 描述保留内部兼容，不是一期公开接口。通用接口命名空间为 `/design-api`，`/motion-api` 保留别名。MCP 的 `design_create_session` 先建会话再按需生成产物；`design_create_artifact` 向已有会话生成；`design_get_session` 读取会话与 skill，`design_open_artifact` 校验归属后选择已有产物。`motion_get_project` 同时返回 `session`、`projectId` 和兼容 `conversation`；`motion_apply_template` 在指定或当前会话添加工程。Agent 写入前应先确认会话与产物身份，再使用最新 revision 操作。macOS 多个 MCP 连接按数据目录共用后台，但每条连接保留自己的工程选择，网页切换不改变已有绑定；一个原生 Studio 服务进程可同时服务多个工程页面。详见 [共享编辑器](shared-editor.md)。
+一期公开 MCP 使用 [11 Tool 契约](mcp-phase1-tools.md)：motion_create_project 创建会话下工程，motion_get_project 读工程/所属 sessionId/当前版本，motion_open_preview 打开明确工程。以下 design_* 与旧模板 Tool 描述保留内部兼容，不是一期公开接口。通用接口命名空间为 `/design-api`，`/motion-api` 保留别名。MCP 的 `design_create_session` 先建会话再按需生成产物；`design_create_artifact` 向已有会话生成；`design_get_session` 读取会话与 skill，`design_open_artifact` 校验归属后选择已有产物。`motion_get_project` 同时返回 `session`、`projectId` 和兼容 `conversation`；`motion_apply_template` 在指定或当前会话添加工程。Agent 写入前应先确认会话与产物身份，再使用最新 revision 操作。macOS 多个 MCP 连接按数据目录共用后台，但每条连接保留自己的工程选择，网页切换不改变已有绑定；一个原生 Studio 服务进程可同时服务多个工程页面。详见 [共享编辑器](shared-editor.md)。
 
 一个本地原生服务进程按 projectId 服务多个工程，各页面的 URL 与工程保持绑定。当前页面显式切换工程时仍先保存、再整页重建；其他客户端打开工程不触发该页面跳转。activeId 只作为最近选择和旧入口的兼容默认值，不决定已打开页面的数据目标。创建时先检查源 revision 并登记工程，原生上下文启动失败时保留已登记工程供重试，不删除源文件。
 
 ## 验收与待验证项
 
-服务回归覆盖旧数据兼容、多产物归属、最后产物恢复、命名隔离、需求去重、MCP 身份与保存竞争。DOM 和状态测试覆盖保存等待与失败、相邻工程 Tab 切换、关闭/恢复两侧、最后 Tab、无效 URL、模板提交和窄屏可见性。浏览器实际检查结果记在[需求记录](product/changes.md)。
+服务回归覆盖旧数据兼容、多产物归属、最后产物恢复、命名隔离、需求去重、MCP 身份与保存竞争。DOM 和状态测试覆盖保存等待与失败、相邻工程 Tab 切换、关闭/恢复两侧、最后 Tab、无效 URL、模板提交和窄屏可见性。浏览器实际检查结果以对应提交的 PR 或交付说明为准。
 
 待验证：真实创作中的会话查找效率、多个产物之间切换与模板二次剪辑的完成体验，以及之后其他模式的 skill、工具与产物协议。没有新增用户研究或付费证据；不改变当前账号、权限和商业化能力。

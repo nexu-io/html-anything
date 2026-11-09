@@ -133,12 +133,12 @@ export function MediaGenerator({ request, onClose, onSettings }: { request: Medi
     <label>{t('How many')}<select value={count} onChange={event => setCount(Number(event.target.value))}>{[1, 2, 3, 4].map(n => <option key={n}>{n}</option>)}</select></label></div>
     <div className="motion-media-columns motion-media-placement"><label>{t('Start (seconds)')}<input type="number" disabled={editing} min={0} max={36000} step={0.1} value={start} onChange={event => setStart(Math.max(0, Number(event.target.value)))} /></label><label>{t('Duration (seconds)')}<input type="number" disabled={editing} min={0.1} max={600} step={0.1} value={duration} onChange={event => setDuration(Math.max(0.1, Number(event.target.value)))} /></label></div>
     <details><summary>{t('Advanced parameters (JSON)')}</summary><textarea aria-label={t('Advanced parameters (JSON)')} value={params} rows={2} spellCheck={false} onChange={event => setParams(event.target.value)} /></details>
-    {error && <p role="alert" className="motion-media-error">{error}</p>}
+    {error && <p role="alert" className="motion-media-error">{t(error)}</p>}
     <footer><span className="motion-media-muted">{model?.provider === 'codex' ? t('Uses your local Codex account') : t('Uses your provider account')}{request.target && ` · ${start.toFixed(1)}–${(start + duration).toFixed(1)}s`}</span><button className="motion-media-primary" disabled={busy || !prompt.trim() || !projectId || !model || !available(model)} onClick={() => void submit()}>{busy ? t('Working…') : t('Generate')}</button></footer>
     {data && (!model || !available(model)) && <button className="motion-media-connect" onClick={onSettings}>{t('Connect a provider to generate this media')}</button>}
     {visibleJobs.length > 0 && <div className="motion-generation-results" aria-live="polite">{visibleJobs.slice(0, 8).map(job => <article key={job.id}>
       <div className="motion-media-row"><span title={job.prompt}>{job.model.label} <small>{t(job.state)}</small></span>{['queued', 'running'].includes(job.state) && <button onClick={() => void gatewayRequest(`generations/${job.id}/cancel`, 'POST', {}).then(() => setJobs(prev => prev.map(j => j.id === job.id ? { ...j, state: 'cancelled' } : j))).catch(e => setError(e.message))}>{t('Cancel')}</button>}</div>
-      {job.error && <p className="motion-media-error">{job.error}</p>}
+      {job.error && <p className="motion-media-error">{t(job.error)}</p>}
       {job.assets.map(asset => <div className="motion-generated-asset" key={asset.path}>
         {asset.available !== false && nativeProjectId && asset.mimeType.startsWith('image/') && <img alt={job.prompt} src={`/api/projects/${encodeURIComponent(nativeProjectId)}/preview/${asset.path}`} />}
         <span><strong>{asset.path.split('/').pop()}</strong><small>{t(asset.available === false ? 'File moved or removed · check the media library' : 'Saved to project assets')}</small></span>

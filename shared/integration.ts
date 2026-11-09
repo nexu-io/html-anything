@@ -119,13 +119,13 @@ ${info.tools.map(tool => `- ${tool.name}: ${tool.description}`).join('\n')}
 \`\`\`sh
 ${apiDiscoveryCommand(info)}
 \`\`\`
-OpenMotion 一期只公开 tools/list 中的 9 个 motion_ Tool。按本轮意图选择已安装的专业/通用工程入口，已有任务直接续用。安装的 Skill 文档或 resources/list、resources/read 读取相同指引；专业短 ID 为 director/template/recreate/video-to-template，production/start 保留工程入口与兼容导航。固定引擎指南为 motion://engine/SKILL.md。
+OpenMotion 一期只公开 tools/list 中的 11 个 motion_ Tool。按本轮意图选择已安装的专业/通用工程入口，已有任务直接续用。安装的 Skill 文档或 resources/list、resources/read 读取相同指引；专业短 ID 为 director/template/recreate/video-to-template，production/start 保留工程入口与兼容导航。固定引擎指南为 motion://engine/SKILL.md。
 
 ${workflowEntryGuide}
 
 ## 创建与编辑
 
-新项目用 motion_create_project，提供 requestId、projectType、title、requirements。可编辑内置模板 ID 从 Studio 画廊或已有指引选择；参考视频创建的是重建载体，由宿主 Agent 看参考并编写内容，不宣称已经生成影片。现有项目先 motion_get_project 列表/详情核对 projectId、sessionId、revision 与 currentVersionId。
+新项目用 motion_create_project，提供 requestId、projectType、title、requirements。模板可从 Studio 选择，或调用 motion_list_templates 取得本地 JSONL 索引路径后用本机工具检索，再用 motion_get_template 读取详情。已知 ID 可直接读详情。内置及 Prism 模板用 projectType=template 创建；参考视频创建的是重建载体，由宿主 Agent 看参考并编写内容，不宣称已经生成影片。现有项目先 motion_get_project 列表/详情核对 projectId、sessionId、revision 与 currentVersionId。
 
 素材通过 motion_import_assets 批量持久导入实际本机附件，检查逐项结果；再用 motion_edit_project 保存原生 HTML/CSS/JS 和可选需求，传 expectedRevision、expectedVersionId 及稳定 requestId。冲突时重新读，不盲目覆盖 GUI 修改。媒体生成使用宿主或 Studio 已有能力，本期 MCP 不公开生成/供应商配置入口。
 

@@ -6,7 +6,7 @@
 
 提交 PR 前运行 `npm run check`、`npm run typecheck:studio`、`npm run build:studio` 与受影响的确定性测试。Studio 单测用 `npm run test:studio`。共享机器的浏览器验收沿用 browser-lock；模型创作与人工视觉验收单独记录，不覆盖真实工程或日常宿主配置。
 
-PR 聚焦一个问题，说明实际变化和验证结果，较大改动先建 issue。同批更新受影响的公开文档。保留历史，用后续提交响应评审，不强推共享分支。
+PR 聚焦一个问题，说明实际变化和验证结果，较大改动先建 issue。每次变更整体审视产品架构，按[共同准则](AGENTS.md#product-architecture-review)判断是否需要更新，不要求每个 PR 修改文档。保留历史，用后续提交响应评审，不强推共享分支。
 
 不提交凭据、内部链接、私有计划、机器路径或用户工程。打包只使用 `scripts/distribution.ts` 的正向清单；新增分发文件需明确批准。保留上游许可与署名，不自行增加遥测或发布包。
 

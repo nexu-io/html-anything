@@ -63,7 +63,7 @@ MOTION_DATA_DIR=/path/to/workspace node --experimental-strip-types editor-runtim
 
 每条 stdio 连接保存自己的工程/会话选择。首次读取使用当时工作区选择；读取、创建或打开产物后绑定返回的真实身份。其他 Agent 或网页切换全局工程，不改变已有连接绑定。
 
-九个工程工具可显式传 `projectId`：打开预览、读工程、读文件、写文件、导入素材、检查工程、请求导出、查询导出、验证导出。批量或恢复任务推荐保存并传入返回的 `projectId`。空会话没有产物时，写文件、导入、检查、导出和读文件会拒绝，避免落到上一个会话的工程。创建/打开产物使用现有会话和产物 ID。
+工程工具可显式传 `projectId`：打开预览、读工程、读文件、写文件、导入素材、检查工程、请求导出、查询导出、验证导出。批量或恢复任务推荐保存并传入返回的 `projectId`。空会话没有产物时，写文件、导入、检查、导出和读文件会拒绝，避免落到上一个会话的工程。创建/打开产物使用现有会话和产物 ID。
 
 写入仍需要读取到的 `expectedRevision`。同工程同时修改只接受匹配版本，冲突返回工具错误及 `REVISION_CONFLICT`；Agent 必须重读，不自动重放写入。工程目录受现有路径校验保护，不接受目录穿越。
 
@@ -117,4 +117,4 @@ sequenceDiagram
 
 已打开工程的上下文保留到服务退出；退出关闭所有监听、历史与子任务。不同页面编辑同一工程仍使用原生 If-Match 和工具 revision/version 冲突保护，不提供多人文本合并；工程 ID 也不代表同工程两个页面的独立选区身份。
 
-验证入口：`tests/multi-project.test.ts` 覆盖同进程双工程、文件/预览/历史/通知和重启；`tests/multi-project-browser.mjs` 在共享 browser-lock 的 lane 与 real 锁下使用两个真实 MCP 客户端和浏览器页面。9 Tool、冷启动导出、原生媒体和守卫强杀仍单独回归。
+验证入口：`tests/multi-project.test.ts` 覆盖同进程双工程、文件/预览/历史/通知和重启；`tests/multi-project-browser.mjs` 在共享 browser-lock 的 lane 与 real 锁下使用两个真实 MCP 客户端和浏览器页面。公开 MCP Tool、冷启动导出、原生媒体和守卫强杀仍单独回归。

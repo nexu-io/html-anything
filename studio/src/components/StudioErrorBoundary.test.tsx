@@ -1,6 +1,8 @@
 // @vitest-environment happy-dom
 
 import React, { act } from "react";
+import { I18nProvider, translate } from "../i18n/I18n";
+import { StudioHostContext, useStudioHost } from "../motion/StudioHost";
 import { createRoot } from "react-dom/client";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
@@ -94,4 +96,16 @@ describe("StudioErrorBoundary", () => {
       container.querySelector('[aria-label="Send feedback to the HyperFrames team"]'),
     ).toBeNull();
   });
+});
+
+it("localizes crash recovery inside the product host and respects its feedback setting", () => {
+  function Product() {
+    const host = useStudioHost();
+    return <I18nProvider initialLocale="ja"><StudioHostContext.Provider value={{ ...host, feedback: false }}><StudioErrorBoundary><Boom /></StudioErrorBoundary></StudioHostContext.Provider></I18nProvider>;
+  }
+  act(() => root.render(<Product />));
+  expect(container.textContent).toContain(translate('ja', 'Something went wrong'));
+  expect(container.textContent).toContain(translate('ja', 'Reload Studio'));
+  expect(container.textContent).toContain('timeline exploded');
+  expect(container.querySelector('[aria-label="Send feedback to the HyperFrames team"]')).toBeNull();
 });

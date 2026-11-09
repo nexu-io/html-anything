@@ -1,6 +1,6 @@
 # 会话、模式与 Artifact Viewer 技术架构
 
-更新：2026-11-05。需求与产品行为见 [会话与 Artifact 浏览器](project-workspace.md) 和 [变更记录](product/changes.md)。本文描述当前代码的扩展边界；一期只实现 Motion，不把网页原型等后续模式写成已上线功能。
+更新：2026-11-05。需求与产品行为见 [会话与 Artifact 浏览器](project-workspace.md)。本文描述当前代码的扩展边界；一期只实现 Motion，不把网页原型等后续模式写成已上线功能。
 
 ## 一套领域模型，多种调用入口
 
@@ -74,9 +74,9 @@ flowchart LR
 
 ## HTTP 与 MCP 契约
 
-一期公开 MCP 以 [9 Tool 契约](mcp-phase1-tools.md) 为准；下表 design_* 及旧模板相关名称是内部兼容接口，不应由一期 Skill 调用。一期 motion_get_project 需要明确 projectId 才读详情，无 ID 时列项目；motion_open_preview 不创建工程。
+一期公开 MCP 以 [11 Tool 契约](mcp-phase1-tools.md) 为准；下表 design_* 及旧模板相关名称是内部兼容接口，不应由一期 Skill 调用。一期 motion_get_project 需要明确 projectId 才读详情，无 ID 时列项目；motion_open_preview 不创建工程。
 
-macOS 的 `mcp.ts` 只负责 stdio 和连接选择，业务位于 `mcp-tools.ts` 并在共享后台执行。每条连接绑定返回的工程/会话，网页或其他连接切换全局选择不会改变它；九个工程工具也接受显式 `projectId`。空会话不能沿用上一个会话的工程写入。旧 27 个工具和会话/产物 ID 保留，initialize 与纯流程/目录读取不启动后台。目录、停止与故障语义以 [共享编辑器](shared-editor.md) 为准。
+macOS 的 `mcp.ts` 只负责 stdio 和连接选择，业务位于 `mcp-tools.ts` 并在共享后台执行。每条连接绑定返回的工程/会话，网页或其他连接切换全局选择不会改变它；工程工具也接受显式 `projectId`。空会话不能沿用上一个会话的工程写入。旧 27 个工具和会话/产物 ID 保留，initialize 与纯流程/目录读取不启动后台。目录、停止与故障语义以 [共享编辑器](shared-editor.md) 为准。
 
 通用 HTTP 命名空间为 `/design-api`；`/motion-api` 是兼容别名。模式、会话、消息和产物的业务实现共用服务函数，MCP 创建/打开操作请求相同接口。原生编辑器继续使用 `/api/projects/:id/...`，不与通用会话路由混用。
 
@@ -131,4 +131,4 @@ macOS 的 `mcp.ts` 只负责 stdio 和连接选择，业务位于 `mcp-tools.ts`
 
 ## 验收
 
-测试覆盖先有空会话、生成失败保留、MCP/HTTP 共用数据、真实回复去重与角色、旧工程兼容、跨会话归属拒绝、保存与 revision 竞争、完整/嵌入 URL 身份一致、嵌入偏好隔离、空会话生成后的 Viewer 激活。实际运行证据与剩余产品假设记在[需求记录](product/changes.md)。
+测试覆盖先有空会话、生成失败保留、MCP/HTTP 共用数据、真实回复去重与角色、旧工程兼容、跨会话归属拒绝、保存与 revision 竞争、完整/嵌入 URL 身份一致、嵌入偏好隔离、空会话生成后的 Viewer 激活。实际运行证据以对应提交的 PR 或交付说明为准；产品假设在相关架构说明中明确标注。

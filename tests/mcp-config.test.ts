@@ -13,7 +13,7 @@ test('packaged relative cwd launches exactly as the Codex host resolves it, with
   const resolved = { enabled: true, transport: { ...config, cwd: path.resolve(root, config.cwd) } };
   const checked = checkTransport(resolved, VERSION);
   for (const name of ['motion_create_project', 'motion_open_preview', 'motion_edit_project', 'motion_import_assets', 'motion_list_versions', 'motion_restore_version', 'motion_export_request', 'motion_export_cancel']) assert.ok(checked.tools.includes(name));
-  assert.equal(checked.tools.length, 9);
+  assert.equal(checked.tools.length, 11);
 });
 test('installation check catches the exact installed placeholder bug before reporting success', () => {
   assert.throws(() => checkTransport({ enabled: true, transport: { type: 'stdio', command: 'node',

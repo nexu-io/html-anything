@@ -90,6 +90,6 @@ export const WebBrowser = forwardRef<WebBrowserHandle, { sessionId: string; tabI
         }
       }} />
     {!hasFrame && !error && <div className="motion-browser-feedback" role="status">{t('Loading…')}</div>}
-    {error && <div className="motion-browser-feedback" role="alert"><span>{error}</span><button className="motion-button" onClick={() => setAttempt(value => value + 1)}>{t('Retry')}</button></div>}
+    {error && <div className="motion-browser-feedback" role="alert"><span>{t(error)}</span><button className="motion-button" onClick={() => setAttempt(value => value + 1)}>{t('Retry')}</button></div>}
   </div>;
 });

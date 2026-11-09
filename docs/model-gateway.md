@@ -1,6 +1,6 @@
 # Model Router / Gateway
 
-更新：2026-11-04。关联需求：[变更记录](product/changes.md)。
+更新：2026-11-04。
 
 本文维护当前能力、接口和运行限制。跨模块的产品目标、对象归属、D1–D11 设计取舍、时间轴交互和扩展准入条件见 [素材生成设计与架构决策](product/media-generation-design.md)，整体分层见 [产品架构](product/architecture.md#职责分层与依赖方向)。
 

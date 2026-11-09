@@ -24,7 +24,7 @@ export const GsapAnimationSection = memo(function GsapAnimationSection({
 }: GsapAnimationSectionProps) {
   const { t } = useI18n();
   return (
-    <Section title={t("Animation")} icon={<Film size={15} />}>
+    <Section title="Animation" icon={<Film size={15} />}>
       {multipleTimelines && (
         <p className="mb-2 rounded-lg bg-amber-500/10 px-3 py-2 text-[11px] leading-relaxed text-warning-ink">
           {t("This file has multiple GSAP timelines. Animation editing is disabled to prevent data loss. Consolidate into a single timeline to enable editing.")}</p>

@@ -18,9 +18,9 @@ export function ModelSettings({ onClose }: { onClose: () => void }) {
   const kindLabel = (kind: Modality) => t(kind === 'image' ? 'Image' : kind === 'video' ? 'Video' : 'Audio');
   const filtered = data?.models.filter(m => `${m.label} ${m.modelId}`.toLowerCase().includes(query.toLowerCase())) ?? [];
   return <dialog ref={dialog} className="motion-model-dialog motion-media-surface" aria-labelledby="model-settings-title" onKeyDown={event => event.stopPropagation()} onCancel={event => { event.preventDefault(); onClose(); }}>
-    <header><div><small>MODEL GATEWAY</small><h2 id="model-settings-title">{t('Model settings')}</h2></div><button className="motion-media-close" onClick={onClose} aria-label={t('Close model settings')}>×</button></header>
+    <header><div><small>{t('Model gateway')}</small><h2 id="model-settings-title">{t('Model settings')}</h2></div><button className="motion-media-close" onClick={onClose} aria-label={t('Close model settings')}>×</button></header>
     <p className="motion-media-muted">{t('Connect your local Agent or add a provider key. Studio and MCP share these capabilities.')}</p>
-    {error && <p role="alert" className="motion-media-error">{error}</p>}
+    {error && <p role="alert" className="motion-media-error">{t(error)}</p>}
     {!data && !error && <p role="status">{t('Detecting local capabilities…')}</p>}
     {data && <>
       <section className="motion-provider-grid">
@@ -44,7 +44,7 @@ export function ModelSettings({ onClose }: { onClose: () => void }) {
       </div></section>
       <section><div className="motion-media-row"><h3>{t('Model catalogue')}</h3><button disabled={busy} onClick={() => void change(async () => { const result = await gatewayRequest<{ warnings: string[] }>('models?refresh=true&query=' + encodeURIComponent(query)); setNotice(result.warnings.map(w => t(w)).join(' · ') || t('Model catalogue refreshed')); })}>{busy ? t('Working…') : t('Discover models')}</button></div>
         <input type="search" aria-label={t('Search models')} placeholder={t('Search models')} value={query} onChange={e => setQuery(e.target.value)} />
-        {notice && <p role="status" className="motion-media-muted">{notice}</p>}
+        {notice && <p role="status" className="motion-media-muted">{t(notice)}</p>}
         <div className="motion-model-list">{filtered.slice(0, 100).map(model => <div key={model.id}><span><strong>{model.label}</strong><small>{model.modelId}</small></span><span>{kindLabel(model.modality)} · {model.provider}<small>{t(model.source === 'live' ? 'Live catalogue' : model.source === 'custom' ? 'Custom model' : 'Built-in catalogue')}</small></span></div>)}</div>
         <details className="motion-custom-model"><summary>{t('Add a model by endpoint ID')}</summary><form onSubmit={event => { event.preventDefault(); const form = event.currentTarget; const values = new FormData(form); void change(async () => { const kind = String(values.get('modality')); await gatewayRequest('models/custom', 'POST', { provider: values.get('provider'), modelId: values.get('modelId'), label: values.get('label'), modality: kind, mode: values.get('mode') || `text-to-${kind}` }); form.reset(); }); }}>
           <div className="motion-media-columns"><label>{t('Provider')}<select name="provider"><option value="atlascloud">Atlas Cloud</option><option value="fal">fal.ai</option></select></label><label>{t('Type')}<select name="modality"><option value="image">{t('Image')}</option><option value="video">{t('Video')}</option><option value="audio">{t('Audio')}</option></select></label></div>

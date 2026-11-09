@@ -4,6 +4,19 @@ The `feature/motion` branch replaces the former HTML Anything application with O
 
 Daily Motion changes branch from the latest `feature/motion` and open PRs with that base. The previous application is preserved at [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). Switching `main`, renaming the repository and publishing remain separate decisions.
 
+## Upstream synchronization checkpoint
+
+On 2026-11-08, the OpenMotion source `main` snapshot `21c3e5aaef1af34b0f126f7db90a86927e2ef325` was compared with public `feature/motion` at `c5f6975cfde71b3a55c6b21921ed64260937c246`. The latest source change, media-popover positioning and empty-timeline guidance, is already included through [PR #172](https://github.com/nexu-io/html-anything/pull/172). All 13 implementation and test files changed by that source update have identical Git blobs in the public branch.
+
+The complete tree comparison found 2,626 identical entries, three files differing only by a trailing blank line, and 72 remaining path differences. Those differences preserve the public migration contract described below:
+
+- Public licenses, contribution guides, installation URLs, documentation and source attribution replace source-repository-specific instructions and internal material.
+- GitHub CI and the positive distribution list retain standalone packaging checks and disabled publication; source-repository upload/release helpers are excluded.
+- Browser telemetry and automatic experiment assignment remain disabled, with matching tests.
+- Recreation guidance retains the npm native-cache instructions alongside the complete ZIP runtime paths.
+
+No additional runtime change is needed for this source snapshot. Future synchronization should compare against this recorded snapshot and review incoming changes while retaining these public adaptations. Open pull requests are separate changes until they land in their source branch; this checkpoint does not include them or authorize merging or publishing.
+
 ## Runtime and independent npm distribution
 
 Motion retains its own `package.json`, `package-lock.json`, pinned native runtime manifest, editor, MCP and Skills. No OD monorepo package, workspace link or OD-private import is required.

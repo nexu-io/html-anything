@@ -16,7 +16,9 @@ OpenDesign 的 `WorkspaceFrame` 放在原生 App 外，负责通用导航和会�
 
 「版本历史」Tab 是本地新增的 UI，所调用的历史、撤销/重做、保留与恢复服务来自 Hyperframes；没有另建版本数据存储。
 
-侧栏底部语言菜单支持简体中文和 English，默认中文，偏好保存在 `motion.studio.locale`。`studio/src/i18n/I18n.tsx` 提供上下文与插值，英文源文案作为 key 和回退，中文集中在 `zh-CN.json`。新增 UI 文案通过 `useI18n().t(message, values)` 使用；数量复数在语言层处理，日期和数字使用 Intl。宿主外的原版组件默认英文，便于继续复用。只有展示标签被翻译，工程名、素材路径、属性值、视频文字和 Agent/API 标识不变。切换语言不会重新挂载编辑器；Dock 只更新标题，不重建布局或预览。播放条样式使用独立 data 属性，不依赖可翻译的 aria-label。主分支的统一 MCP/模板弹框保留原有流程与目录，内部文案目前以中文为主，尚未纳入完整双语覆盖。
+The sidebar language menu offers English, Simplified Chinese, Japanese, Korean, German, French, Russian, Spanish, Brazilian Portuguese, Italian and Turkish. The first launch still defaults to Simplified Chinese; `motion.studio.locale` stores the preference in browser localStorage and synchronizes it between same-origin windows. Unsupported or removed preferences fall back to Chinese. `studio/src/i18n/messages.ts` owns the supported languages, English message keys, dictionaries, interpolation and locale-aware plural forms; `I18n.tsx` provides the React context and Intl date/number formatting. Missing messages fall back to the English source.
+
+Localization covers editor labels, tooltips, placeholders, empty/error states and the embedded MCP/template dialog. The DOM fragment updates bound labels in place, preserving the selected client, searches and live media. Switching language does not remount the editor, change Dock layout, modify property values or translate authored text, project/template titles, source paths and protocol identifiers. Property sections receive English source titles and translate them only for display, so duplicate translations cannot change their internal IDs. README/Skill/installer translations, third-party template descriptions, copied Agent instructions and long connection guides are outside this interface change. New locale dictionaries include machine-translated text; automated key/placeholder checks do not replace native-speaker review.
 
 顶栏 Export、合成列表 Render 和 Renders 面板均使用原版渲染队列，保留格式、分辨率、帧率、质量、取消、进度、历史、预览与下载。一期插件 `motion_export_request` 仍提供独立的后台快照渲染，供 Agent 使用；不会替代界面的原生导出。
 
@@ -54,7 +56,7 @@ OpenDesign 的 `WorkspaceFrame` 放在原生 App 外，负责通用导航和会�
 | Dock 与面板注册 | `studio/src/components/dock/` |
 | 顶部预览恢复与布局预设 | `studio/src/motion/MotionLayoutControls.tsx` |
 | 版本历史面板与原生历史 API | `studio/src/motion/MotionHistoryPanel.tsx` |
-| 中英文文案、格式化、语言菜单 | `studio/src/i18n/` |
+| Editor language resources, formatting and language menu | `studio/src/i18n/` |
 | 时间轴、片段、关键帧 | `studio/src/player/` |
 | 画布、属性与动画编辑 | `studio/src/components/editor/` |
 | 素材、合成、Catalog | `studio/src/components/sidebar/` |
@@ -97,4 +99,4 @@ npm run package:plugin
 
 侧栏 Agent 和编辑器模板入口使用同一个弹框，提供 Codex、Claude Code、DeepSeek Harness 和通用 stdio 客户端的配置与指南。配置中的数据目录、Node 路径和端口来自当前运行服务；ChatGPT 云端接入尚无远程端点。一期目录发现由 Studio 或指引链接提供，`motion_create_project` 的 template 类型只复制实际内置原生模板；旧目录/详情/应用 handler 仅作内部兼容，不能按一期 Tool 调用。外部参考由 Agent 分析后写入可编辑原生源文件。数据、封面与热度的维护见 [模板目录](template-catalog.md)。
 
-i18n 测试覆盖语言偏好、存储不可用、跨窗口同步、插值和复数，以及切换语言时保持 Dock 分组、面板尺寸、预览 iframe 和原生属性提交值。
+Language regression tests cover all eleven preferences, unavailable storage, same-origin synchronization, interpolation, plural forms and complete dictionary keys. DOM tests check stable section IDs, native property values and label updates without recreating editor inputs, preview iframes or the connection gallery. Real-browser checks remain separate from native-speaker translation and cross-platform acceptance.

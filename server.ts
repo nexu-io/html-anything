@@ -8,8 +8,10 @@ import { WorkspaceStore, Conflict, createBlankProject, validateProjectTitle } fr
 import { cliPath, ensureRuntime, execute, HYPERFRAMES_VERSION, inspectProject, pluginRoot, runHyperframes, startStudio, stopCommands } from './hyperframes.ts';
 import type { Studio } from './hyperframes.ts';
 import { VERSION } from './preview.ts';
-import { copyTemplate, findTemplate, templates } from './template-library.ts';
-import { getTemplate, listTemplates, templateRecipe } from './template-catalog.ts';
+import { templates } from './template-library.ts';
+import { templateRecipe } from './template-catalog.ts';
+import { templateCatalogFor } from './prism-templates.ts';
+import { isEditableTemplate } from './shared/catalog.ts';
 import { proxyStudio, serveEditorFile } from './editor-server.ts';
 import { publicTools as mcpTools } from './mcp.ts';
 import { startOwnedStudio } from './shared/owned-studio.mjs';
@@ -123,7 +125,7 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
     return await store.lock(async () => {
       if (expectedProjectId && store.projectId !== expectedProjectId) throw new Conflict();
       if ((await store.get()).revision !== expectedRevision) throw new Conflict();
-      const template = 'templateId' in target ? findTemplate(target.templateId) : undefined;
+      const template = 'templateId' in target ? await templateCatalogFor(store.directory).get(target.templateId) : undefined;
       const creating = Boolean(template) || 'title' in target;
       const id = creating ? crypto.randomUUID() : (target as { projectId: string }).projectId;
       const entry = creating ? { id, title: template?.title ?? (target as { title: string }).title, templateId: template?.id, createdAt: Date.now() } : undefined;
@@ -139,7 +141,7 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
       let candidate: Studio | undefined;
       let committed = false;
       try {
-        if (template) await copyTemplate(template.id, directory, runtimeRoot);
+        if (template) await templateCatalogFor(store.directory).copy(template, directory, runtimeRoot);
         else if ('title' in target) await createBlankProject(directory, runtimeRoot, target.title);
         await store.safePath('index.html', directory);
         const oldStudio = context.studio;
@@ -178,7 +180,7 @@ async function openEditor(store: WorkspaceStore, context: Service) {
 async function createSession(store: WorkspaceStore, data: Record<string, any>) {
   const mode = creationMode(data.mode ?? 'motion');
   if (data.id !== undefined && typeof data.id !== 'string') throw new Error('会话编号无效');
-  const template = data.templateId ? getTemplate(data.templateId) : undefined;
+  const template = data.templateId ? await templateCatalogFor(store.directory).get(data.templateId) : undefined;
   const instruction = data.instruction === undefined ? template ? `使用模板 ${template.title}（${template.id}）继续创作。` : undefined : validateInstruction(data.instruction);
   const catalog = store.projectCatalog(), existing = catalog.sessions!.find(item => item.id === data.id);
   const title = validateProjectTitle(data.title ?? (data.instruction ? instruction!.replace(/\s+/g, ' ').slice(0, 40) : template?.title || existing?.title || `新会话 ${catalog.sessions!.length + 1}`));
@@ -189,9 +191,9 @@ async function createSession(store: WorkspaceStore, data: Record<string, any>) {
 const artifactFactories: Record<CreationMode, (store: WorkspaceStore, context: Service, session: CreativeSession, data: Record<string, any>) => Promise<unknown>> = {
   motion: async (store, context, session, data) => {
     const templateId = data.templateId ?? (session.artifacts.length === 0 ? session.templateId : undefined);
-    const template = templateId ? getTemplate(templateId) : undefined;
+    const template = templateId ? await templateCatalogFor(store.directory).get(templateId) : undefined;
     const title = validateProjectTitle(data.title ?? (session.artifacts.length ? `Motion ${session.artifacts.length + 1}` : session.title));
-    return openProject(store, context, data.expectedRevision, template?.kind === 'builtin' ? { templateId: template.id } : { title }, data.expectedProjectId, { sessionId: session.id, templateId: template?.id });
+    return openProject(store, context, data.expectedRevision, template && isEditableTemplate(template) ? { templateId: template.id } : { title }, data.expectedProjectId, { sessionId: session.id, templateId: template?.id });
   },
 };
 async function createArtifact(store: WorkspaceStore, context: Service, session: CreativeSession, data: Record<string, any>) {
@@ -259,14 +261,14 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const info: IntegrationInfo = {
         name: 'OpenDesign', version: VERSION, previewUrl: address.origin, dataDirectory: store.directory,
         transport: { type: 'stdio', command: process.execPath, args: ['--experimental-strip-types', path.join(pluginRoot, 'mcp.ts')], cwd: pluginRoot,
-          env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', ...Object.fromEntries(['MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
+          env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', ...Object.fromEntries(['MOTION_TEMPLATE_ENV', 'MOTION_TEMPLATE_RESOURCE_ID', 'MOTION_TEMPLATE_LOCALE', 'MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
         tools: mcpTools.map(({ name, description }) => ({ name, description })),
       };
       if (url.pathname === '/api/integration') return json(res, 200, info);
       const selected = integrationHost(url.searchParams.get('host'));
       if (url.pathname === '/connect/guide') {
         const id = url.searchParams.get('template');
-        const recipe = id ? '\n\n' + templateRecipe(getTemplate(id)) : '';
+        const recipe = id ? '\n\n' + templateRecipe(await templateCatalogFor(store.directory).get(id)) : '';
         res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end(agentGuide(info, selected) + recipe);
       }
       const config = integrationConfig(info, selected);
@@ -314,7 +316,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       return json(res, 404, { error: 'Unknown model gateway operation' });
     }
     if (url.pathname === '/api/templates' && req.method === 'GET') return json(res, 200, { templates });
-    if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, listTemplates({
+    if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, await templateCatalogFor(store.directory).page({
       category: url.searchParams.get('category') || 'featured', query: url.searchParams.get('query') || '',
       offset: Number(url.searchParams.get('offset') || 0), limit: Number(url.searchParams.get('limit') || 6), grouped: url.searchParams.get('grouped') === 'true',
       covered: url.searchParams.get('covered') === 'true',
@@ -389,7 +391,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const image = await readFile(path.join(pluginRoot, 'template-library', poster[1], 'poster.jpg'));
       res.writeHead(200, { 'Content-Type': 'image/jpeg', 'Content-Length': image.length }); res.end(image); return;
     }
-    const openTemplate = url.pathname.match(/^\/api\/templates\/([a-z-]+)\/open$/);
+    const openTemplate = url.pathname.match(/^\/api\/templates\/([A-Za-z0-9_-]+)\/open$/);
     const openSaved = motionRequest ? url.pathname.match(/^\/api\/projects\/([a-z0-9-]+)\/open$/) : null;
     if ((openTemplate || openSaved) && req.method === 'POST') {
       const data = await input(req); revision(data.expectedRevision);

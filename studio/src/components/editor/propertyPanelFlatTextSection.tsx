@@ -395,7 +395,7 @@ export function FlatTextLayerList({
                 style={{ backgroundColor: getTextFieldColor(field, styles) }}
               />
               <span className="min-w-0 flex-1 truncate text-[11px] text-panel-text-1">
-                {formatTextFieldPreview(field.value) || `Text ${index + 1}`}
+                {formatTextFieldPreview(field.value) || t("Text {index}", { index: index + 1 })}
               </span>
               <span className="shrink-0 font-mono text-[9px] text-panel-text-4">
                 {field.tagName}

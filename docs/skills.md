@@ -81,7 +81,6 @@ MCP 工具说明和领域执行位于 `mcp-tools.ts`；`mcp.ts` 保留初始化�
 | --- | --- |
 | AGENTS.md、CLAUDE.md、README.md | 保留 #26 的专业直达、五名称与分发说明；用 #28 实际复刻流程替换占位口径 |
 | docs/mcp-phase1-tools.md、docs/motion-extension-scope.md、docs/product/architecture.md、docs/skills.md、docs/template-catalog.md | 保留五入口、九 Tool 指导与宿主能力边界；补齐 recreate ready、独立参考/脚本及 27/26 注册数量，不恢复旧目录查询 Tool |
-| docs/product/changes.md | 完整保留 Skill 整合 013、E2E 012 与 RECREATE-005 三条记录，历史验证按各自版本解读 |
 | mcp-tools.ts、mcp.ts | 保留共享发现文案，更新复刻状态；不调整 Schema、分发门禁或 Tool 执行函数 |
 | shared/workflow.ts | 保留新模板目录、五路线分发与原短 ID；并入 #28 的 recreate ready/rebuild/verification 注册 |
 | skills/motion-production/SKILL.md | 保留通用工程职责和专业导航；增加“只有成片、无可编辑工程”的复刻边界 |
@@ -94,7 +93,7 @@ MCP 工具说明和领域执行位于 `mcp-tools.ts`；`mcp.ts` 保留初始化�
 
 ## 前次融合验证（010dc91，PR #28 整合前）
 
-30 项不同定向检查通过，覆盖五入口全部 Markdown 的公开 Tool 名称、完整 MCP 文档读取/哈希/引用闭包、非法 URI、跨 cwd/符号链接、目录与接入指引、四宿主分发和一期工程业务契约；仓库 check、Studio 类型检查与构建通过。独立 ZIP 真实 stdio 读取确认 5 个正式 Skill、9 个公开 Tool、25 个 workflow/section 地址及 24 份唯一正文，不创建工程。先前 Homebrew Node 的复制测试因动态库布局失败，改用同版本独立 Node 22.22.3 完整复验通过。
+30 项不同定向检查通过，覆盖五入口全部 Markdown 的公开 Tool 名称、完整 MCP 文档读取/哈希/引用闭包、非法 URI、跨 cwd/符号链接、目录与接入指引、四宿主分发和一期工程业务契约；仓库 check、Studio 类型检查与构建通过。独立 ZIP 真实 stdio 读取确认 5 个正式 Skill、11 个公开 Tool、25 个 workflow/section 地址及 24 份唯一正文，不创建工程。先前 Homebrew Node 的复制测试因动态库布局失败，改用同版本独立 Node 22.22.3 完整复验通过。
 
 九 Tool 的 Schema、工程编辑/导入/导出/版本业务及七份导演质量参考保持 main 内容。本次没有重新执行模型选路、长会话、真实视频制作或正常速度视听验收；上述检查不能证明总体质量、成本或稳定性改善。原实验记录继续按其冻结版本解读。
 

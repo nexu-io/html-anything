@@ -83,7 +83,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
       {sidebarOpen && <button className="motion-sidebar-backdrop" aria-label={t('Close conversation list')} onClick={() => setSidebarOpen(false)} />}
       <WorkspaceSidebar currentId={sessionId ?? projectId} close={() => setSidebarOpen(false)} />
       <div className="motion-workspace-content">
-        {notice && <div className="motion-workspace-notice" role="alert"><span>{notice}</span>{workspace.error && <button className="motion-icon-button" aria-label={t('Dismiss')} onClick={workspace.clearError}><MotionIcon name="close" /></button>}</div>}
+        {notice && <div className="motion-workspace-notice" role="alert"><span>{t(notice)}</span>{workspace.error && <button className="motion-icon-button" aria-label={t('Dismiss')} onClick={workspace.clearError}><MotionIcon name="close" /></button>}</div>}
         {children}
       </div>
     </div>

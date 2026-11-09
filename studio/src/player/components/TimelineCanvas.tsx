@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n/I18n";
 import { memo } from "react";
 import { TimelineRulerPart } from "./TimelineRulerPart";
 import { PlayheadIndicator } from "./PlayheadIndicator";
@@ -12,6 +13,7 @@ import { useTimelineContext } from "./TimelineProvider";
 const DROP_PREVIEW_SECONDS = 3;
 
 export const TimelineCanvas = memo(function TimelineCanvas() {
+  const { t } = useI18n();
   const { state, actions } = useTimelineContext();
   const props = state.canvas;
   const { draggedClip, scrollRef, displayTrackOrder } = props;
@@ -95,7 +97,7 @@ export const TimelineCanvas = memo(function TimelineCanvas() {
             height: TRACK_H - CLIP_Y * 2,
           }}
         >
-          {props.acceptsMediaDrop && "Drop media here"}
+          {props.acceptsMediaDrop && t("Drop media here")}
         </div>
       )}
 

@@ -93,6 +93,8 @@ MCP-only 使用 resources/read `motion://workflow/director/start` 读取本页�
 
 根据实际素材、配音与布局调整时间，更新脚本中受影响的决定。脚本是工作记录，不是禁止修改的预设。
 
+Once this turn's requested HTML output is saved, complete the [editable preview handoff](../motion-production/references/native.md#editable-preview-handoff) automatically, before export or delivery.
+
 ### 5. 观看、修正、交付
 
 读取 [审片标准](references/motion-review.md)，观看实际输出并用时间点记录问题。先修正表达和结构，再修正节奏与运动细节；技术缺陷按影响优先处理。
