@@ -37,7 +37,7 @@ Agent 根据本轮意图选择入口，专业任务可直接进入对应 Skill�
 | 明确要求把参考视频重建为可复用模板文件夹或 ZIP | [motion-video-to-template](../motion-video-to-template/SKILL.md) |
 | 根据实际视频重建本次作品；只有成片文件/链接、没有对应可编辑工程时，即使只改几处字 | [motion-recreate](../motion-recreate/SKILL.md)，沿用已有复刻方法与数字测量 |
 | 参考视频只提供风格灵感 | motion-director |
-| 接受安装后的首次体验邀请 | motion-template-to-video；沿用已确认的 `product-promo` 示例、20 秒、独立工程、右侧预览及最终 MP4 |
+| 接受安装后的首次体验邀请 | motion-template-to-video；沿用已确认的 `product-promo` 示例、20 秒、独立工程及右侧预览 |
 
 模糊需求结合用户目标和已有素材判断；只补充影响选路或真实性的关键缺口。链接与文件是输入形式，不自动等于复刻。模板来源与精确 ID 按 [模板能力说明](references/templates.md) 核对；原创新片需要补齐简报时使用 [需求与记录](references/intake.md)。
 

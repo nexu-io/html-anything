@@ -11,7 +11,7 @@ Turn the selected editable template into the requested draft, editable project o
 
 Changes to existing content use the [shared edit workflow](../motion-production/references/edit.md), including required related changes and preserved content. Missing instructions and target sources must finish returning to the model before a later call applies a template, imports, writes or exports. Entering this Skill again does not create another copy, apply the template again or repeat a completed export.
 
-The accepted installation experience follows [first-run defaults](../motion-production/references/templates.md#first-run-experience-defaults): builtin `product-promo`, unchanged sample content, one separate 20-second project, the right-side editable preview and a completed MP4 are already selected. Resume an existing experience project; otherwise create it once. This invitation explicitly includes opening the editor and delivering the MP4, with no new template/assets/export questionnaire.
+The accepted installation experience follows [first-run defaults](../motion-production/references/templates.md#first-run-experience-defaults): builtin `product-promo`, unchanged sample content, one separate 20-second project and the right-side editable preview are already selected; it exports no MP4 unless the user asks. Resume an existing experience project; otherwise create it once. This invitation explicitly includes opening the editor, with no new template/assets questionnaire.
 
 ## Open the supplied project
 

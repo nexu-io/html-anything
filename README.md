@@ -69,7 +69,7 @@ Paste this into a Codex conversation:
 ```text
 From this checkout, install openmotion with bash scripts/install-motion.command.
 Once installation succeeds, ask whether I'd like the 20-second Product Promo demo.
-If I accept, open an independent editable project and deliver its MP4.
+If I accept, open an independent editable project beside the conversation.
 ```
 
 After you accept, the Agent follows the [template-to-video workflow](skills/motion-template-to-video/SKILL.md). If your host cannot open the editor beside the conversation, use the returned local project link. [Installation and first-demo guide (Chinese)](docs/usage.md#使用) · [Other Agent adapters](docs/agent-adapters.md)

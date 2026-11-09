@@ -68,7 +68,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ```text
 请在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。
-安装成功后，询问我是否体验一个无需准备素材的 20 秒视频。我确认后，请打开独立的可编辑工程并交付 MP4。
+安装成功后，询问我是否体验一个无需准备素材的 20 秒视频。我确认后，请在右侧打开独立的可编辑工程。
 ```
 
 安装脚本使用当前检出版本，安装依赖、构建编辑器、注册本地插件并预检 MCP 连接。它不会安装系统软件或重启 Codex。请保留仓库目录供插件继续使用。导出 MP4 还需要浏览器和媒体工具，详见下文。
@@ -78,7 +78,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 由 Codex 或其他 Agent 执行安装时，在插件安装与 MCP 连接预检均成功后，按以下顺序结束安装任务：
 
 1. 在当前对话简要介绍 openmotion 支持产品宣传视频、动态图表与流程动画、模板和可编辑预览、MP4 导出。
-2. 主动询问用户：**“要现在体验一个无需准备素材的 20 秒视频吗？我会提供 MP4，并打开可编辑工程。”**
+2. 主动询问用户：**“要现在体验一个无需准备素材的 20 秒视频吗？我会在右侧打开一个可编辑工程。”**
 3. 停下来等待用户选择；用户回复“体验”或明确同意后，进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md) 并执行下方首次体验默认规则。用户明确只要安装或暂不体验时，尊重该选择。
 
 先在当前对话完成介绍与邀请。若新插件工具尚未加载，在用户同意体验后再提供新会话接续方式；安装时的 MCP 预检不代表当前对话已加载新工具。安装失败时先说明失败原因，修复成功后再邀请。
@@ -89,12 +89,12 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 - 沿用模板的示例文字、图形和动画，保持原生 20 秒规格，不再询问素材、品牌、风格或模板选择。
 - 创建独立可编辑工程，保留原有工程；同一次体验已经创建工程时直接续用，避免重复创建。
-- 在 Codex 右侧打开 openmotion 可编辑工程，检查正确载入并可播放；让用户可以在等待导出时继续查看工程。
-- 接受首次体验同时授权导出该示例的 MP4。读取当前 revision，导出并等待完成，检查实际文件与播放；复用本次已完成的导出，不重复排队。
-- On success, the final reply contains **one completion sentence, the playable MP4, then one contextual next-step invitation**, with the editable project kept open on the right. Use plain Markdown; screenshots and verification evidence stay in local records. Editor screenshots, ZIPs, duplicate project links, checklists and HTML wrappers are omitted unless requested.
-- The LLM writes the invitation naturally in the user's language: ask what video they want next and introduce existing templates, video-link recreation and creation from their requirements. Wording follows the conversation rather than a fixed script. Continue an already-known next request instead of asking again; otherwise wait for the user's choice. Invite only after the first successful experience delivery, not on follow-up edits, repeated exports or export failure. The [first-run defaults](../skills/motion-production/references/templates.md#first-run-experience-defaults) define delivery exceptions.
+- 在 Codex 右侧打开 openmotion 可编辑工程，检查正确载入并可播放。
+- 右侧打开的工程就是这次体验的结果，不导出 MP4；用户要视频文件时再导出。
+- On success, the final reply contains **one completion sentence, then one contextual next-step invitation**, with the editable project kept open on the right. Use plain Markdown; screenshots and verification evidence stay in local records. MP4s, editor screenshots, ZIPs, duplicate project links, checklists and HTML wrappers are omitted unless requested.
+- The LLM writes the invitation naturally in the user's language: ask what video they want next and introduce existing templates, video-link recreation and creation from their requirements. Wording follows the conversation rather than a fixed script. Continue an already-known next request instead of asking again; otherwise wait for the user's choice. Invite only after the first successful experience delivery, not on follow-up edits, exports or a failed experience. The [first-run defaults](../skills/motion-production/references/templates.md#first-run-experience-defaults) define delivery exceptions.
 
-右侧页面打开依赖宿主的浏览器/面板能力。没有该能力时仍交付 MP4 和实际工程链接，明确说明页面未自动打开，不能声称完整的桌面体验已通过。导出失败时保留工程并说明具体原因，不把预览或任务排队当作最终成片。
+右侧页面打开依赖宿主的浏览器/面板能力。没有该能力时提供实际工程链接，明确说明页面未自动打开，不能声称完整的桌面体验已通过。工程创建或载入失败时说明具体原因，不发出完成语和邀请。
 
 此默认规则只适用于用户接受安装后的首次体验邀请；用户提出自己的视频需求时，按其明确范围执行。
 
