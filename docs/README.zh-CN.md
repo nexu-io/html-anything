@@ -1,13 +1,18 @@
-<h1 align="center">OpenMotion · 在 Codex 里逆向拆解品牌视频</h1>
+<h1 align="center">OpenMotion · 在 Codex 里逆向拆解视频<br />
+为自己的品牌复刻动效</h1>
 
-<p align="center">选一支你喜欢的科技品牌视频，用自己的 Logo、产品截图和文案，复刻它的文字动画、转场和镜头节奏。<br />
-拿到一份能接着改的工程，也拿到一支能直接分享的 MP4。</p>
+<p align="center">把喜欢的科技品牌片链接贴进 Codex，用自己的 Logo、产品截图和文案，复刻它的镜头节奏、文字动画和转场。导出 MP4 后，工程还能接着改。</p>
 
-<p align="center"><strong><a href="#在-codex-里开始">在 Codex 里试做 20 秒示例</a></strong> · <a href="#复用参考片的拍法">看 5 秒复刻对照</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读这支片的 Motion MD</a> · <a href="collections/README.zh-CN.md">找参考片</a></p>
+<p align="center"><strong><a href="../examples/reference-reveal/comparison.mp4">看 5 秒原片与复刻对照</a></strong> · <strong><a href="#在-codex-里开始">在 Codex 里试用</a></strong></p>
 
-<p align="center"><a href="../README.md">English</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
+<p align="center"><a href="../examples/reference-reveal/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="readme/codex-comparison.zh-CN.jpg" />
+  <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="在 Codex 里使用 OpenMotion 的会话示意。左侧 Firecrawl 原片从开发者人数切到环绕标志，右侧 OpenMotion 复刻在同一拍从示例时长切到环绕的工程素材。" />
+</picture></a></p>
 
-<p align="center"><img src="readme/hero.zh-CN.svg" alt="OpenMotion for Codex。Great motion. Made yours. 从参考片、Motion MD 到可编辑的品牌视频。" width="100%" /></p>
+<p align="center">Codex 会话示意 · <a href="https://x.com/ericciarla/status/2093375835679977570">Firecrawl 原片作者 @ericciarla</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读 Motion MD 分镜拆解</a></p>
+
+<p align="center"><a href="../README.md">English</a> · <a href="collections/README.zh-CN.md">找参考片</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
 OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做成最好的 Claude Motion 开源替代。你可以从品牌形象片、产品演示或新品发布片开始。拆解一个镜头时，先看哪个元素动、产品在哪一拍出现、观众有多久读完标题。用我们提出的 Markdown 动效规范 **Motion MD** 记下这些决定，另一个团队就能带上自己的品牌素材复刻这套拍法。
 
@@ -15,11 +20,18 @@ OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做�
 
 **一个数字，一圈图标，一次交接。** Firecrawl 的 5 秒发布片段先亮出「1,000,000 Developers」，再让一圈公司标志绕着火焰转动。我们沿用这组动作，为 OpenMotion 做了一支片。开场数字换成 Product Promo 模板的真实时长，中央换成 OpenDesign 标志，外围卡片则是做视频时实际会用到的素材和文件。[观看 @ericciarla 的参考片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [作者原帖](https://x.com/ericciarla/status/2093375835679977570)
 
-[![OpenMotion 的 5 秒改编。开场显示模板时长，随后素材标签围绕 OpenDesign 标志旋转，片尾从 Motion MD 走向 MP4。](../examples/reference-reveal/preview.gif)](../examples/reference-reveal/film.mp4)
-
 [播放有声成片](../examples/reference-reveal/film.mp4) · [读这支片的 Motion MD](../examples/reference-reveal/MOTION.zh-CN.md) · [打开可编辑源码](../examples/reference-reveal/index.html)
 
 **换个产品信息，还能保留这个节奏吗？** 我们在同一份工程里，把「00:00:20 · Product Promo」换成「00:00:15 · NYT Graph」，再导出了一版。两支片都长 5 秒。停在 0.8 秒能看到改过的数字和标题，停在 2.65 秒能看到卡片转到了相同位置。[看改稿后的第二版](../examples/reference-reveal/graph-cut.mp4)
+
+装好插件后，在 Codex 里打开存放品牌 Logo 和文案的文件夹，粘贴这段话就能试这个镜头。
+
+```text
+用 OpenMotion 为我们的品牌复刻这段 5 秒揭晓镜头。
+https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4
+开场换成我们的标题，让我们的 Logo 在原片同一拍出现在画面中央。
+保留可编辑工程，并导出 MP4。
+```
 
 ## 用 OpenMotion 做出的三支片子
 

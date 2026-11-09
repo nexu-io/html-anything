@@ -1,13 +1,18 @@
-<h1 align="center">OpenMotion — Reverse-engineer brand videos in Codex</h1>
+<h1 align="center">OpenMotion — Reverse-engineer a video in Codex.<br />
+Recreate it for your brand.</h1>
 
-<p align="center">Pick a video from a tech brand you love. Recreate its animated type, transitions and timing with your own logo, product screenshots and copy.<br />
-Keep the editable project and export an MP4.</p>
+<p align="center">Got a tech brand film in mind? Paste its link into Codex. Recreate its timing, type and transitions with your own logo, screenshots and copy. Export an MP4 and keep the editable project.</p>
 
-<p align="center"><strong><a href="#start-in-codex">Try the 20-second demo in Codex</a></strong> · <a href="#make-a-reference-your-own">Watch a 5-second remix</a> · <a href="examples/reference-reveal/MOTION.md">Read its Motion MD</a> · <a href="docs/collections/README.md">Find a reference</a></p>
+<p align="center"><strong><a href="examples/reference-reveal/comparison.mp4">See the 5-second remake</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
 
-<p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
+<p align="center"><a href="examples/reference-reveal/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
+  <img src="docs/readme/codex-comparison.webp" width="100%" alt="Illustrated Codex session running OpenMotion. On the left, Firecrawl’s developer count gives way to a ring of logos. On the right, OpenMotion reveals the demo runtime and a ring of project assets on the same beats." />
+</picture></a></p>
 
-<p align="center"><img src="docs/readme/hero.svg" alt="OpenMotion for Codex. Great motion. Made yours. A reference film becomes a Motion MD brief and an editable brand video." width="100%" /></p>
+<p align="center">Codex workflow illustration · <a href="https://x.com/ericciarla/status/2093375835679977570">Firecrawl original by @ericciarla</a> · <a href="examples/reference-reveal/MOTION.md">Shot breakdown in Motion MD</a></p>
+
+<p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="docs/collections/README.md">Find a reference</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 
 OpenMotion is an open-source motion design plugin for Codex. Our goal is to build the best open-source alternative to Claude Motion. You can start with a brand film, a product walkthrough or a launch video. Pick one shot. What moves first? When does the product come into view? How long does the audience get to read the headline? **Motion MD** is our draft Markdown format for recording those decisions so another team can recreate the motion with its own assets.
 
@@ -15,11 +20,18 @@ OpenMotion is an open-source motion design plugin for Codex. Our goal is to buil
 
 **One number. A ring of icons. A handoff.** In a five-second Firecrawl launch excerpt, “1,000,000 Developers” gives way to a ring of company marks around the flame. We borrowed that sequence for OpenMotion. Our number is the runtime of the bundled Product Promo template, our center mark is OpenDesign’s, and the surrounding tiles name the things you bring into a motion project. [Watch @ericciarla’s reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [Creator’s original post](https://x.com/ericciarla/status/2093375835679977570)
 
-[![The five-second OpenMotion remix. The 20-second template duration gives way to a ring of asset labels, then a Motion MD to MP4 handoff.](examples/reference-reveal/preview.gif)](examples/reference-reveal/film.mp4)
-
 [Play our cut with sound](examples/reference-reveal/film.mp4) · [Read its Motion MD](examples/reference-reveal/MOTION.md) · [Open the editable HTML](examples/reference-reveal/index.html)
 
 **Does the style survive a new brief?** We kept the same project and changed the opening from “00:00:20 · Product Promo” to “00:00:15 · NYT Graph”. At 0.8s you can read the new title. At 2.65s the cards are in the same orbit. Both versions run for five seconds. [Watch the second cut](examples/reference-reveal/graph-cut.mp4)
+
+To try this shot after installation, open the folder with your logo and copy in Codex and paste the following prompt.
+
+```text
+Use OpenMotion to recreate this five-second reveal for our brand.
+https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4
+Open with our headline, then bring our logo into the center on the same beat.
+Keep the project editable and export an MP4.
+```
 
 ## Made with OpenMotion
 
