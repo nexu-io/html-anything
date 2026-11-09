@@ -28,6 +28,7 @@ guard:
       - apps/web/src/lib/components/workspace
       - packages/components/src/studio
       - packages/components/src/controls
+      - packages/workspace/src/resources
       - packages/motion/src/project
       - apps/web/tests/browser
       - packages/theme/src/tokens

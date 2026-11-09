@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { extname } from "node:path";
-import { Fault, type SourceFile } from "./contract.js";
+import { Fault, type Resource, type SourceFile } from "./contract.js";
+import { resource } from "./resources/contract.js";
 
 const extensions = new Set([
   ".html",
@@ -45,8 +46,20 @@ export function sources(input: SourceFile[]): SourceFile[] {
   if (!paths.has("index.html")) throw new Fault("invalid", "native project requires index.html");
   return output;
 }
-export function digest(files: SourceFile[]): string {
+export function manifest(input: Resource[]): Resource[] {
+  if (input.length > 64) throw new Fault("invalid", "resource count exceeds 64");
+  const entries = input
+    .map((entry) => resource.parse(entry))
+    .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
+  if (
+    new Set(entries.map((entry) => entry.path)).size !== entries.length ||
+    entries.reduce((n, entry) => n + entry.bytes, 0) > 64 * 1024 * 1024
+  )
+    throw new Fault("invalid", "duplicate or oversized resource manifest");
+  return entries;
+}
+export function digest(files: SourceFile[], resources: Resource[] = []): string {
   return `sha256:${createHash("sha256")
-    .update(JSON.stringify(sources(files)))
+    .update(JSON.stringify([sources(files), manifest(resources)]))
     .digest("hex")}`;
 }

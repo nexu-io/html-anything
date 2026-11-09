@@ -1,6 +1,6 @@
 import type { Environment } from "@odsuite/carrier";
 import type { Clip } from "@open-motion/motion";
-import type { AnimationInput, NativeValues } from "@open-motion/motion/contract";
+import type { AnimationInput, EditInput, NativeValues } from "@open-motion/motion/contract";
 import type { ContextModel, HostChange, Source } from "@open-motion/motion/project";
 import { Fault, type Input, type Operation, type Output, type Project } from "@open-motion/workspace/contract";
 export type Transport = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
@@ -53,11 +53,7 @@ export class Client {
   async animateMotion(input: AnimationInput): Promise<{ html: string; clips: Clip[] }> {
     return (await this.send("/motion/animate", input)) as { html: string; clips: Clip[] };
   }
-  async editMotion(
-    input:
-      | { html: string; action: "addText"; fontSize: number; text: string }
-      | { html: string; action: "remove"; id: string },
-  ): Promise<{ html: string; clips: Clip[] }> {
+  async editMotion(input: EditInput): Promise<{ html: string; clips: Clip[] }> {
     return (await this.send("/motion/edit", input)) as { html: string; clips: Clip[] };
   }
   async preview(

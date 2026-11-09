@@ -94,9 +94,28 @@ export const editInput = z.discriminatedUnion("action", [
     fontSize: z.number().finite().positive().max(4096),
     text: z.string().min(1).max(8000),
   }),
+  inspectInput.extend({
+    action: z.literal("addImage"),
+    src: z
+      .string()
+      .max(512)
+      .regex(/^(?:\.\.\/)*assets\/[a-zA-Z0-9][a-zA-Z0-9._-]*\.png$/i),
+    width: z.number().int().positive().max(4096),
+    height: z.number().int().positive().max(4096),
+  }),
+  inspectInput.extend({
+    action: z.literal("addAudio"),
+    src: z
+      .string()
+      .max(512)
+      .regex(/^(?:\.\.\/)*assets\/[a-zA-Z0-9][a-zA-Z0-9._-]*\.wav$/i),
+    duration: z.number().finite().positive().max(3600),
+  }),
   inspectInput.extend({ action: z.literal("remove"), id: z.string().min(1).max(512) }),
 ]);
+export type EditInput = z.infer<typeof editInput>;
 export interface Clip {
+  media?: { kind: "image" | "audio"; src: string; maximum: number | null };
   host?: { instance: string; source: string; maximum: number | null; reason: string | null };
   id: string;
   parent: string | null;

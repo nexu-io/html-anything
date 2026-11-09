@@ -54,7 +54,7 @@ pnpm exec odsuite guard --root /path/to/repo --json
 node --input-type=module -e 'import {run} from "@odsuite/testkit"; const r=await run({root:process.cwd(),output:".artifacts/qualification.json",packaged:false}); if(r.result==="failed")process.exitCode=1;'
 ```
 
-Testkit distinguishes passed/failed/unqualified and never substitutes for product acceptance. Electron is a reference carrier, Docker a skeleton, standalone/Codex carry the actual session/source workspace. Advanced animation, unresolved/nonlinear composition clocks, media/audio, layout preferences, generation and export are not fully connected.
+Testkit distinguishes passed/failed/unqualified and never substitutes for product acceptance. Electron is a reference carrier, Docker a skeleton, standalone/Codex carry the actual session/source workspace. Advanced animation, unresolved/nonlinear composition clocks, broader media/audio editing, additional codecs, layout preferences, generation and export are not fully connected.
 
 ## Resources and recovery
 
@@ -109,3 +109,9 @@ Pack is currently Electron-oriented; runtime still contains Electron composition
 Use explicit positive composition/manifests for actual artifacts. No registry, storage, release or service publication is configured or authorized by source CI. Signing, target-platform installation, network distribution, power loss and actual product acceptance remain independent. Update qualification covers discovery/preparation, actual owner activation, minimum-shell blocking, forced update, rollback and interruption recovery.
 
 Silo uses a separate Compose project, loopback ports and retained volumes. Select its explicit endpoint and `ODSUITE_SILO_PORT` or a random allocated port. Compose credentials are only local isolated fixtures. Stop only that project and preserve volumes/failures; never `down -v` or reclaim another project's resources.
+
+## Persistent media and isolated reviews
+
+Workspace schema 3 stores canonical source revisions, resource manifests and verified persistent PNG/PCM16 WAV bytes in the Daemon's granted database. Older experimental schemas fail without migration/reset; use an explicit new development namespace for isolated review rather than deleting an existing root. There is no implicit old-root import. Resource removal changes current membership and remains undoable; stopping a carrier, closing a preview and blob GC do not delete user media/history.
+
+Import bounds are 6 MiB per resource and 64 resources / 64 MiB per revision. Supported PNG is non-interlaced, at most 4096×4096; WAV is PCM16, mono/stereo, 8–96kHz. Web's media tab imports, inserts and removes these resources. Relative nested references are resolved from the finite snapshot manifest. Missing media retains the old confirmed preview and reports the failed candidate. Audio supports original-rate, zero-in-point independent windows and bounded right trim. Additional codecs, source slip, linked media and volume/effects require separate implementation and verification. Actual image decoding and media playback are technical checks, not listening or creative acceptance.

@@ -1,5 +1,6 @@
 import type { Clip, NativeValues } from "@open-motion/motion/contract";
 import type { Source } from "@open-motion/motion/project";
+import type { Resource } from "@open-motion/workspace/contract";
 import type { Client } from "../../../api.js";
 import type { Binding, CompositionContext } from "./context.js";
 /** A gesture belongs to the exact source projection that produced its native animation identity. */
@@ -73,4 +74,19 @@ export async function applyClip(
   context.capture(binding.source);
   const result = await patchClip(client, context.sources, context.instance, clip, values, binding.source, binding.file);
   context.apply(binding, result.html);
+}
+
+/** Prepare/apply one insertion; the caller retains its applied state across persistence retries. */
+export async function insertResource(context: CompositionContext, client: Client, asset: Resource) {
+  const binding = await context.prepare(),
+    parts = binding.file.split("/");
+  parts.pop();
+  const src = "../".repeat(parts.length) + asset.path;
+  const changed = await client.editMotion(
+    asset.type === "image/png"
+      ? { html: binding.source, action: "addImage", src, width: asset.width, height: asset.height }
+      : { html: binding.source, action: "addAudio", src, duration: asset.duration },
+  );
+  context.apply(binding, changed.html);
+  return changed;
 }

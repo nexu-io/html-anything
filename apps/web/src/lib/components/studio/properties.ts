@@ -127,10 +127,11 @@ export class Properties {
     this.select.disabled = value;
     this.text.readOnly = value;
     this.text.disabled = !clip || clip.text === null || !!clip.host;
-    this.start.readonly(value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
-    this.duration.readonly(value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
-    this.font.readonly(value || !!clip?.host);
-    this.appearance.block(value || !!clip?.host);
+    const audioReadonly = clip?.media?.kind === "audio" && clip.media.maximum === null;
+    this.start.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
+    this.duration.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
+    this.font.readonly(value || !!clip?.host || !!clip?.media);
+    this.appearance.block(value || !!clip?.host || clip?.media?.kind === "audio");
     this.apply.disabled = value || !clip;
     this.remove.disabled = value || !clip || !!clip.composition;
   }

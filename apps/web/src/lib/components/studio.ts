@@ -98,6 +98,7 @@ export class Studio {
       library.actions,
       (id) => this.choose(id),
       (path) => this.options.file(path),
+      { editor, client, context: this.context, run },
     );
     this.timelineRoot = timeline.body;
     this.timelineActions = timeline.actions;

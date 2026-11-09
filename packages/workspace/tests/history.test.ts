@@ -95,11 +95,11 @@ it("persists cursor history across cold open, fences ABA moves and truncates red
   }
 });
 
-it("rejects old experimental databases without rewriting or deleting their contents", () => {
+it.each([1, 2])("rejects old experimental database schema %s without rewriting or deleting its contents", (version) => {
   const root = mkdtempSync(join(tmpdir(), "studio-schema-")),
     file = join(root, "workspace.sqlite");
   const raw = new DatabaseSync(file);
-  raw.exec("PRAGMA user_version=1");
+  raw.exec(`PRAGMA user_version=${version}`);
   raw.close();
   const digest = () => createHash("sha256").update(readFileSync(file)).digest("hex");
   const before = digest();

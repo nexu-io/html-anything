@@ -10,10 +10,12 @@ async function fixture() {
   const client = new Client("http://127.0.0.1:4100", "fixture"),
     editor = new Editor(client);
   editor.project = {
+    id: "project",
     sessionId: "session",
     artifactId: "artifact",
     revision: "one",
     history: { version: 1, canUndo: false, canRedo: false },
+    resources: [],
     files: [
       {
         path: "index.html",

@@ -41,7 +41,10 @@ export class Previews {
     if (this.views.size >= 16) throw new Fault("invalid", "close an existing preview before opening another");
     let html: string;
     try {
-      html = assembleProject(project.files).html;
+      html = assembleProject(
+        project.files,
+        project.resources.map((entry) => entry.path),
+      ).html;
     } catch (error) {
       throw new Fault("invalid", error instanceof Error ? error.message : "invalid composition graph");
     }
@@ -54,7 +57,7 @@ export class Previews {
     this.views.delete(parsed.data);
     return { closed: true };
   }
-  serve(url: string, response: ServerResponse, host: string | undefined) {
+  serve(url: string, response: ServerResponse, host: string | undefined, range?: string, head = false) {
     const match = /^\/preview\/([a-f0-9-]+)\/(.+)$/.exec(url.split("?")[0] ?? "");
     const viewId = match?.[1],
       encoded = match?.[2];
@@ -73,13 +76,24 @@ export class Previews {
       return;
     }
     const file = view.project.files.find((f) => f.path === path);
-    let content = path === "__gsap.js" ? gsap : path === "__runtime.js" ? runtime : file?.content;
+    const asset = view.project.resources.find((entry) => entry.path === path);
+    let content: string | Buffer | undefined =
+      path === "__gsap.js" ? gsap : path === "__runtime.js" ? runtime : file?.content;
+    if (asset) {
+      const result = this.workspace.execute("resource_read", {
+        sessionId: view.project.sessionId,
+        artifactId: view.project.artifactId,
+        revision: view.project.revision,
+        path,
+      });
+      content = Buffer.from(result.data, "base64");
+    }
     if (content === undefined) {
       response.writeHead(404);
       response.end();
       return;
     }
-    const type = types[path.split(".").at(-1)?.toLowerCase() ?? ""] ?? "text/plain";
+    const type = asset?.type ?? types[path.split(".").at(-1)?.toLowerCase() ?? ""] ?? "text/plain";
     if (path === "index.html") content = preview(view.html, `/preview/${viewId}/`);
     let origin: URL;
     try {
@@ -102,8 +116,43 @@ export class Previews {
     const base = `/preview/${viewId}/`;
     // URLs remain within this view. The document has an opaque sandbox origin and no write capability.
     const resource = `${origin.origin}${base}`;
-    response.writeHead(200, {
-      "content-type": `${type}; charset=utf-8`,
+    const fullLength = Buffer.byteLength(content);
+    let status = 200,
+      contentRange: string | undefined;
+    if (asset && range && !head) {
+      const match = /^bytes=(\d*)-(\d*)$/.exec(range),
+        first = match?.[1],
+        last = match?.[2];
+      const start = first ? Number(first) : last ? Math.max(0, fullLength - Number(last)) : Number.NaN,
+        end = first ? (last ? Math.min(Number(last), fullLength - 1) : fullLength - 1) : fullLength - 1;
+      if (
+        !match ||
+        (first !== "" && !Number.isSafeInteger(Number(first))) ||
+        (last !== "" && !Number.isSafeInteger(Number(last))) ||
+        !Number.isSafeInteger(start) ||
+        !Number.isSafeInteger(end) ||
+        start < 0 ||
+        start >= fullLength ||
+        end < start ||
+        (!first && Number(last) <= 0)
+      ) {
+        response.writeHead(416, {
+          "content-range": `bytes */${fullLength}`,
+          "content-length": 0,
+          "cache-control": "no-store",
+          "access-control-allow-origin": "*",
+        });
+        response.end();
+        return;
+      }
+      content = (content as Buffer).subarray(start, end + 1);
+      status = 206;
+      contentRange = `bytes ${start}-${end}/${fullLength}`;
+    }
+    response.writeHead(status, {
+      "content-type": asset ? type : `${type}; charset=utf-8`,
+      ...(asset ? { "accept-ranges": "bytes" } : {}),
+      ...(contentRange ? { "content-range": contentRange } : {}),
       "content-length": Buffer.byteLength(content),
       "cache-control": "no-store",
       "referrer-policy": "no-referrer",
@@ -111,7 +160,7 @@ export class Previews {
       "access-control-allow-origin": "*",
       "content-security-policy": `default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' ${resource}; style-src 'unsafe-inline' ${resource}; img-src data: ${resource}; font-src data: ${resource}; media-src ${resource}; connect-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; sandbox allow-scripts`,
     });
-    response.end(content);
+    response.end(head ? undefined : content);
   }
   close() {
     this.views.clear();

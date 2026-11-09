@@ -144,7 +144,7 @@ export class CompositionContext {
     if (JSON.stringify(current) !== JSON.stringify(binding)) throw Error("合成源码事务已过期");
     this.editor.editFile(binding.file, html);
   }
-  async transform<T extends { html: string }>(action: (source: string) => Promise<T>, source?: string): Promise<T> {
+  async prepare(source?: string): Promise<Binding> {
     const before = this.capture(source);
     await this.editor.save();
     if (
@@ -154,7 +154,10 @@ export class CompositionContext {
     )
       throw Error("保存后合成投影已改变，请重试当前操作");
     this.revision = this.editor.project.revision;
-    const binding = this.capture(before.source);
+    return this.capture(before.source);
+  }
+  async transform<T extends { html: string }>(action: (source: string) => Promise<T>, source?: string): Promise<T> {
+    const binding = await this.prepare(source);
     const result = await action(binding.source);
     this.apply(binding, result.html);
     await this.editor.save();

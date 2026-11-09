@@ -18,7 +18,7 @@ export class Database {
       this.sql.exec("PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL;");
       this.transaction(() => {
         const version = Number(this.one("PRAGMA user_version")?.user_version);
-        if (version !== 0 && version !== 2) throw new Fault("integrity", "unsupported workspace database schema");
+        if (version !== 0 && version !== 3) throw new Fault("integrity", "unsupported workspace database schema");
         if (version === 0) {
           if (this.one("SELECT name FROM sqlite_master WHERE type='table'"))
             throw new Fault("integrity", "unknown workspace database");
@@ -27,12 +27,13 @@ export class Database {
           CREATE TABLE messages(id TEXT PRIMARY KEY,session_id TEXT NOT NULL REFERENCES sessions(id),role TEXT NOT NULL CHECK(role IN ('user','assistant')),content TEXT NOT NULL,created_at INTEGER NOT NULL);
           CREATE TABLE projects(id TEXT PRIMARY KEY,current_revision TEXT NOT NULL,cursor INTEGER NOT NULL,history_version INTEGER NOT NULL);
           CREATE TABLE artifacts(id TEXT PRIMARY KEY,session_id TEXT NOT NULL REFERENCES sessions(id),project_id TEXT NOT NULL UNIQUE REFERENCES projects(id),title TEXT NOT NULL,created_at INTEGER NOT NULL);
-          CREATE TABLE revisions(project_id TEXT NOT NULL REFERENCES projects(id),revision TEXT NOT NULL,files TEXT NOT NULL,PRIMARY KEY(project_id,revision));
+          CREATE TABLE revisions(project_id TEXT NOT NULL REFERENCES projects(id),revision TEXT NOT NULL,files TEXT NOT NULL,resources TEXT NOT NULL,PRIMARY KEY(project_id,revision));
+          CREATE TABLE resources(digest TEXT PRIMARY KEY,bytes BLOB NOT NULL);
           CREATE TABLE history(project_id TEXT NOT NULL REFERENCES projects(id),position INTEGER NOT NULL,revision TEXT NOT NULL,PRIMARY KEY(project_id,position),FOREIGN KEY(project_id,revision) REFERENCES revisions(project_id,revision));
           CREATE TABLE selection(id INTEGER PRIMARY KEY CHECK(id=1),revision INTEGER NOT NULL,session_id TEXT REFERENCES sessions(id),artifact_id TEXT REFERENCES artifacts(id));
           INSERT INTO selection VALUES(1,0,NULL,NULL);
           CREATE TABLE requests(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,result TEXT NOT NULL);
-          PRAGMA user_version=2;`);
+          PRAGMA user_version=3;`);
         }
       });
     } catch (error) {

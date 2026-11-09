@@ -115,6 +115,30 @@ export class Editor {
     this.fileDrafts.clear();
     this.dirty = false;
   }
+  async importResource(input: Omit<Input<"resource_import">, "requestId">) {
+    this.project = await this.resourceChange("resource_import", input);
+  }
+  async removeResource(input: Omit<Input<"resource_remove">, "requestId">) {
+    this.project = await this.resourceChange("resource_remove", input);
+  }
+  private async resourceChange<K extends "resource_import" | "resource_remove">(
+    operation: K,
+    input: Omit<Input<K>, "requestId">,
+  ): Promise<Project> {
+    const before = this.project;
+    if (
+      !before ||
+      this.dirty ||
+      this.drafts?.dirty() ||
+      before.artifactId !== input.artifactId ||
+      before.sessionId !== input.sessionId ||
+      before.revision !== input.expectedRevision
+    )
+      throw new Error("资源操作的工程版本已过期或尚未保存");
+    const result = await this.mutate(operation, input);
+    if (this.project !== before) throw new Error("资源写入已确认，但本地工程上下文已改变");
+    return result;
+  }
   async history(direction: "project_undo" | "project_redo") {
     if (direction === "project_redo" && (this.dirty || this.drafts?.dirty())) throw new Error("先保存或放弃当前修改");
     if (direction === "project_undo") await this.save();

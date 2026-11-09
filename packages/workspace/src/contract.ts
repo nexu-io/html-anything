@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { type Resource, resourceData, resourcePath } from "./resources/contract.js";
+
+export { type Resource, resourceLimit } from "./resources/contract.js";
 export const id = z.uuid();
 export const revision = z.string().regex(/^sha256:[a-f0-9]{64}$/);
 const title = z.string().trim().min(1).max(120);
@@ -20,6 +23,16 @@ export const schemas = {
   artifact_open: z.strictObject({ ...request, ...owner, ...selection }),
   session_open: z.strictObject({ ...request, sessionId: id, ...selection }),
   project_read: z.strictObject(owner),
+  resource_import: z.strictObject({
+    ...request,
+    ...owner,
+    expectedRevision: revision,
+    path: resourcePath,
+    name: title,
+    data: resourceData,
+  }),
+  resource_remove: z.strictObject({ ...request, ...owner, expectedRevision: revision, path: resourcePath }),
+  resource_read: z.strictObject({ ...owner, revision, path: resourcePath }),
   project_undo: z.strictObject({
     ...request,
     ...owner,
@@ -74,6 +87,7 @@ export interface Project {
   sessionId: string;
   revision: string;
   files: SourceFile[];
+  resources: Resource[];
   history: { version: number; canUndo: boolean; canRedo: boolean };
 }
 export interface Selection {
@@ -95,6 +109,9 @@ export interface Outputs {
   artifact_open: Selection;
   session_open: Selection;
   project_read: Project;
+  resource_import: Project;
+  resource_remove: Project;
+  resource_read: { resource: Resource; data: string };
   project_undo: Project;
   project_redo: Project;
   project_save: Project;
@@ -121,7 +138,11 @@ export const descriptions: Record<Operation, string> = {
   artifact_open: "Switch to an owned artifact only after checking the current context and revision.",
   session_open:
     "Select a session and restore its last artifact after checking current context; an empty session has none.",
-  project_read: "Read native project source files, content revision and authoritative history state.",
+  project_read: "Read native source, resource manifest, content revision and authoritative history state.",
+  resource_import: "Import a bounded, verified PNG or PCM16 WAV into the owned project revision idempotently.",
+  resource_remove:
+    "Remove one resource from the current revision while preserving historical bytes for undo and existing views.",
+  resource_read: "Read bytes only through the resource manifest of an explicitly owned immutable project revision.",
   project_undo: "Undo one persisted edit after checking the content revision and history version.",
   project_redo: "Redo one persisted edit after checking the content revision and history version.",
   project_save: "Atomically replace native source files if the expected content revision still matches.",

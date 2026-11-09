@@ -11,7 +11,9 @@ import type { Status } from "@open-motion/standalone";
 import {
   type Artifact,
   initialFiles,
+  type Output,
   type Project,
+  resourceLimit,
   type SessionDetail,
   schemas,
 } from "@open-motion/workspace/contract";
@@ -98,6 +100,50 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
       body: JSON.stringify({ sessionId: session.id, artifactId: artifact.id }),
     });
     expect(await fromHttp.json()).toEqual(saved);
+    const owner = { sessionId: session.id, artifactId: artifact.id };
+    const bytes = Buffer.alloc(resourceLimit);
+    bytes.write("RIFF");
+    bytes.writeUInt32LE(bytes.length - 8, 4);
+    bytes.write("WAVEfmt ", 8);
+    bytes.writeUInt32LE(16, 16);
+    bytes.writeUInt16LE(1, 20);
+    bytes.writeUInt16LE(1, 22);
+    bytes.writeUInt32LE(8000, 24);
+    bytes.writeUInt32LE(16000, 28);
+    bytes.writeUInt16LE(2, 32);
+    bytes.writeUInt16LE(16, 34);
+    bytes.write("data", 36);
+    bytes.writeUInt32LE(bytes.length - 44, 40);
+    const encoded = bytes.toString("base64"),
+      resourceCommand = {
+        requestId: randomUUID(),
+        ...owner,
+        expectedRevision: saved.revision,
+        path: "assets/maximum.wav",
+        name: "Maximum PCM",
+        data: encoded,
+      },
+      importedResult = await client.callTool({ name: "resource_import", arguments: resourceCommand });
+    expect(importedResult.isError).not.toBe(true);
+    const imported = importedResult.structuredContent as unknown as Project;
+    expect(imported.resources[0]).toMatchObject({ bytes: resourceLimit, type: "audio/wav" });
+    expect((await client.callTool({ name: "resource_import", arguments: resourceCommand })).structuredContent).toEqual(
+      imported,
+    );
+    const readResult = await client.callTool({
+      name: "resource_read",
+      arguments: { ...owner, revision: imported.revision, path: "assets/maximum.wav" },
+    });
+    expect(readResult.isError).not.toBe(true);
+    const resourceRead = readResult.structuredContent as unknown as Output<"resource_read">;
+    expect(resourceRead.data === encoded).toBe(true);
+    expect(JSON.stringify(readResult.content).length).toBeLessThan(1024);
+    const httpBytes = await fetch(`${bootstrap.daemon}/api/resource_read`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${bootstrap.token}`, "content-type": "application/json" },
+      body: JSON.stringify({ ...owner, revision: imported.revision, path: "assets/maximum.wav" }),
+    });
+    expect((await httpBytes.json()).data === encoded).toBe(true);
     await client.close();
     const directory = await readDirectory(data);
     expect(directory.manager.phase).toBe("closed");
@@ -108,7 +154,7 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
     if (passed) await rm(root, { recursive: true, force: true });
     else process.stderr.write(`retained stdio evidence: ${root}\n`);
   }
-}, 15000);
+}, 30000);
 
 it("drains a real runtime when stdin ends before any initialize request", async () => {
   const root = await mkdtemp(join(tmpdir(), "codex-early-eof-"));

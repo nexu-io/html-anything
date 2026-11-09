@@ -51,8 +51,8 @@ export async function serve(options: Options): Promise<Service> {
   const server = createServer((request, response) => {
     const origin = request.headers.origin === options.origin ? options.origin : undefined;
     const handle = async () => {
-      if (request.method === "GET" && request.url?.startsWith("/preview/")) {
-        previews.serve(request.url, response, request.headers.host);
+      if (["GET", "HEAD"].includes(request.method ?? "") && request.url?.startsWith("/preview/")) {
+        previews.serve(request.url, response, request.headers.host, request.headers.range, request.method === "HEAD");
         return;
       }
       if (request.method === "OPTIONS") {
