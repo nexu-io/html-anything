@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="846" viewBox="0 0 1280 846" role="img" aria-labelledby="title desc">
+<title id="title">Identity + motion, written down.</title>
+<desc id="desc">BRANDKIT.md defines identity, message and approved material. MOTION_DESIGN.md defines story, movement, timing and review rules. SKILL.md guides the agent. Source, assets, presets and evidence make the creative package reusable. These files are explicit agent context, not automatic importers.</desc>
+<defs>
+  <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FAFAF2"/><stop offset="1" stop-color="#F0F7F3"/></linearGradient>
+  <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#087C62"/><stop offset="1" stop-color="#28B8B1"/></linearGradient>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#6A8F83" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<style>text { font-family: Arial, Helvetica, sans-serif; } .mono { font-family: Menlo, Consolas, monospace; }</style>
+<rect width="1280" height="846" rx="24" fill="url(#paper)"/>
+<path d="M1080 0 H1256 Q1280 0 1280 24 V180 C1170 170 1210 60 1080 0" fill="#DDEFE9"/>
+<path d="M0 761 C120 716 150 841 280 846 H24 Q0 846 0 822 Z" fill="#DDEFE9"/>
+<rect x="48" y="36" width="30" height="5" rx="2.5" fill="url(#water)"/>
+
+<text x="92" y="45" font-size="17" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="2">OPENMOTION</text>
+<text x="1232" y="45" font-size="18" fill="#526B65" font-weight="600" text-anchor="end" class="mono">02</text>
+<text x="48" y="103" font-size="37" fill="#202F2C" font-weight="700" text-anchor="start">Identity + motion, written down.</text>
+<text x="48" y="141" font-size="22" fill="#526B65" font-weight="400" text-anchor="start">A creative system you can read, fork and give to your agent.</text>
+<rect x="48" y="184" width="568" height="276" rx="18" fill="#FCF0E5" stroke="#C9D9D1"/>
+<text x="76" y="219" font-size="15" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1.2">YOUR IDENTITY</text>
+<text x="76" y="259" font-size="29" fill="#202F2C" font-weight="700" text-anchor="start">Brandkit</text>
+<text x="76" y="290" font-size="18" fill="#526B65" font-weight="400" text-anchor="start" class="mono">BRANDKIT.md</text>
+<text x="76" y="338" font-size="18" fill="#087C62" font-weight="700" text-anchor="start">Identity</text>
+<text x="193" y="338" font-size="18" fill="#202F2C" font-weight="400" text-anchor="start">Logo · palette · typography</text>
+<text x="76" y="381" font-size="18" fill="#087C62" font-weight="700" text-anchor="start">Message</text>
+<text x="193" y="381" font-size="18" fill="#202F2C" font-weight="400" text-anchor="start">Product facts · voice · approved claims</text>
+<text x="76" y="424" font-size="18" fill="#087C62" font-weight="700" text-anchor="start">Material</text>
+<text x="193" y="424" font-size="18" fill="#202F2C" font-weight="400" text-anchor="start">Screenshots · footage · audio</text>
+<path d="M332 460 V490" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="664" y="184" width="568" height="276" rx="18" fill="#E6F2EC" stroke="#C9D9D1"/>
+<text x="692" y="219" font-size="15" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1.2">YOUR MOTION LANGUAGE</text>
+<text x="692" y="259" font-size="29" fill="#202F2C" font-weight="700" text-anchor="start">Motion Design MD</text>
+<text x="692" y="290" font-size="18" fill="#526B65" font-weight="400" text-anchor="start" class="mono">MOTION_DESIGN.md</text>
+<text x="692" y="338" font-size="18" fill="#087C62" font-weight="700" text-anchor="start">Story</text>
+<text x="809" y="338" font-size="18" fill="#202F2C" font-weight="400" text-anchor="start">Hook · shot order · reveal · closing beat</text>
+<text x="692" y="381" font-size="18" fill="#087C62" font-weight="700" text-anchor="start">Movement</text>
+<text x="809" y="381" font-size="18" fill="#202F2C" font-weight="400" text-anchor="start">Timing · easing · camera · sound cues</text>
+<text x="692" y="424" font-size="18" fill="#087C62" font-weight="700" text-anchor="start">Rules</text>
+<text x="809" y="424" font-size="18" fill="#202F2C" font-weight="400" text-anchor="start">Keep / change decisions · review</text>
+<path d="M948 460 V490" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M332 490 H948" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M640 490 V517" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="48" y="530" width="1184" height="104" rx="18" fill="#087C62" stroke="#087C62"/>
+<text x="76" y="571" font-size="24" fill="#FFFFFF" font-weight="700" text-anchor="start" class="mono">SKILL.md</text>
+<text x="76" y="605" font-size="19" fill="#DAEDE5" font-weight="400" text-anchor="start">The method your agent follows</text>
+<text x="1204" y="578" font-size="23" fill="#FFFFFF" font-weight="500" text-anchor="end">Select inputs → adapt → preview → review</text>
+<path d="M640 634 V652" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M332 652 H948" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M332 652 V669" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M948 652 V669" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="48" y="676" width="568" height="102" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<rect x="664" y="676" width="568" height="102" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<text x="76" y="715" font-size="18" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1">SOURCE + ASSETS</text>
+<text x="76" y="750" font-size="21" fill="#202F2C" font-weight="400" text-anchor="start">HTML / CSS / JS · media · editable project</text>
+<text x="692" y="715" font-size="18" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1">PRESETS + EVIDENCE</text>
+<text x="692" y="750" font-size="21" fill="#202F2C" font-weight="400" text-anchor="start">Replacement inputs · previews · actual checks</text>
+<text x="640" y="820" font-size="19" fill="#526B65" font-weight="400" text-anchor="middle">Explicit context for your agent. Reusable knowledge for the next creator.</text>
+</svg>

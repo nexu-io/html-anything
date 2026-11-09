@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="940" viewBox="0 0 1280 940" role="img" aria-labelledby="title desc">
+<title id="title">One project. Connected capabilities.</title>
+<desc id="desc">Your local agent connects through nine MCP project tools, and Studio connects through local HTTP. The local application manages projects, media, revisions and exports. The Model Gateway generates assets with your accounts; adoption adds them to source. Rendering uses a fixed snapshot. Credentials remain outside video projects.</desc>
+<defs>
+  <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FAFAF2"/><stop offset="1" stop-color="#F0F7F3"/></linearGradient>
+  <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#087C62"/><stop offset="1" stop-color="#28B8B1"/></linearGradient>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#6A8F83" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<style>text { font-family: Arial, Helvetica, sans-serif; } .mono { font-family: Menlo, Consolas, monospace; }</style>
+<rect width="1280" height="940" rx="24" fill="url(#paper)"/>
+<path d="M1080 0 H1256 Q1280 0 1280 24 V180 C1170 170 1210 60 1080 0" fill="#DDEFE9"/>
+<path d="M0 855 C120 810 150 935 280 940 H24 Q0 940 0 916 Z" fill="#DDEFE9"/>
+<rect x="48" y="36" width="30" height="5" rx="2.5" fill="url(#water)"/>
+
+<text x="92" y="45" font-size="17" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="2">OPENMOTION</text>
+<text x="1232" y="45" font-size="18" fill="#526B65" font-weight="600" text-anchor="end" class="mono">03</text>
+<text x="48" y="103" font-size="37" fill="#202F2C" font-weight="700" text-anchor="start">One project. Connected capabilities.</text>
+<text x="48" y="141" font-size="22" fill="#526B65" font-weight="400" text-anchor="start">Local editing and rendering. Your agent and model accounts stay yours.</text>
+<rect x="48" y="184" width="568" height="122" rx="18" fill="#E6F2EC" stroke="#C9D9D1"/>
+<rect x="664" y="184" width="568" height="122" rx="18" fill="#E5F1F8" stroke="#C9D9D1"/>
+<text x="76" y="224" font-size="17" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1">BYOA · YOUR LOCAL AGENT</text>
+<text x="76" y="270" font-size="24" fill="#202F2C" font-weight="600" text-anchor="start">Creative direction + code + Skills</text>
+<text x="692" y="224" font-size="17" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1">OPENMOTION STUDIO</text>
+<text x="692" y="270" font-size="24" fill="#202F2C" font-weight="600" text-anchor="start">Media + preview + editable timeline</text>
+<path d="M332 306 V370" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M948 306 V370" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="352" y="345" font-size="18" fill="#526B65" font-weight="400" text-anchor="start">MCP · 9 project tools</text>
+<text x="968" y="345" font-size="18" fill="#526B65" font-weight="400" text-anchor="start">Local HTTP</text>
+<rect x="48" y="386" width="1184" height="104" rx="18" fill="#087C62" stroke="#087C62"/>
+<text x="76" y="429" font-size="21" fill="#FFFFFF" font-weight="700" text-anchor="start" letter-spacing="1">LOCAL APPLICATION</text>
+<text x="76" y="466" font-size="22" fill="#E1F0E9" font-weight="400" text-anchor="start">Sessions · project files · assets · revisions · export jobs</text>
+<text x="1204" y="445" font-size="21" fill="#FFFFFF" font-weight="500" text-anchor="end">Node.js + TypeScript</text>
+<path d="M640 490 V522" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M232 522 H1048" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M232 522 V551" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M640 522 V551" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M1048 522 V551" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="48" y="568" width="368" height="190" rx="18" fill="#E5F1F8" stroke="#C9D9D1"/>
+<text x="72" y="602" font-size="15" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="0.7">BYOK · YOUR ACCOUNTS</text>
+<text x="72" y="644" font-size="26" fill="#202F2C" font-weight="700" text-anchor="start">Model Gateway</text>
+<text x="72" y="679" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">Image / video / music / TTS</text>
+<text x="72" y="707" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">Provider adapters + jobs</text>
+<text x="72" y="735" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">Keys outside the project</text>
+<rect x="456" y="568" width="368" height="190" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<text x="480" y="602" font-size="15" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="0.7">THE SHARED SOURCE</text>
+<text x="480" y="644" font-size="26" fill="#202F2C" font-weight="700" text-anchor="start">Editable project</text>
+<text x="480" y="679" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">HTML + CSS + JavaScript</text>
+<text x="480" y="707" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">Media + Studio project data</text>
+<text x="480" y="735" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">Preview, revise and keep</text>
+<rect x="864" y="568" width="368" height="190" rx="18" fill="#FCF0E5" stroke="#C9D9D1"/>
+<text x="888" y="602" font-size="15" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="0.7">FIXED PROJECT SNAPSHOT</text>
+<text x="888" y="644" font-size="26" fill="#202F2C" font-weight="700" text-anchor="start">Render + verify</text>
+<text x="888" y="679" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">Chromium + frame capture</text>
+<text x="888" y="707" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">FFmpeg / FFprobe</text>
+<text x="888" y="735" font-size="19" fill="#526B65" font-weight="400" text-anchor="start">Export checks + review</text>
+<path d="M420 665 H449" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M828 665 H857" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="436" y="793" font-size="16" fill="#526B65" font-weight="400" text-anchor="middle">adopt media</text>
+<text x="844" y="793" font-size="16" fill="#526B65" font-weight="400" text-anchor="middle">snapshot</text>
+<rect x="48" y="826" width="1184" height="72" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<text x="76" y="871" font-size="17" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1.2">DELIVERY</text>
+<text x="1204" y="872" font-size="24" fill="#202F2C" font-weight="600" text-anchor="end">MP4 + editable source + media + export evidence</text>
+<path d="M1048 758 V819" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+</svg>

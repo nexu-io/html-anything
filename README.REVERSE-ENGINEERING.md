@@ -184,22 +184,7 @@ The films above are external references credited to their creators. OpenMotion s
 
 **Your local agent already writes code. Make it your full-stack video creator.** OpenMotion uses HTML, CSS and JavaScript to describe scenes, typography, layout, transitions and timing. Recorded footage, generated clips, images, music and voice-over become media inside the composition. The same project opens in Studio and renders to MP4.
 
-```text
-Reference video + your brand + your brief
-                    ↓
-         BYOA: your local agent
-         + your reference and brief
-                    ↓
-         BYOK: your media models
-      Images / Video / Music / TTS
-                    ↓
-       HTML + CSS + JavaScript + media
-          scenes · motion · sound
-                    ↓
-       Preview in Studio ↔ edit the code
-                    ↓
-           Render MP4 + keep source
-```
+![Your local agent, optional media-model accounts and creative resources feed a workflow of understanding the reference, coding scenes, generating missing media, editing and rendering MP4 with reusable source.](docs/readme/diagrams/creation-stack.svg)
 
 **Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#your-agent-your-studio) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
 
@@ -571,6 +556,11 @@ These references illustrate creative directions; they are not OpenMotion-generat
 
 Bring the creative decisions out of a single conversation and into files people and agents can read, review and improve. A designer can describe the motion, a developer can implement it, and another creator can apply it to a different story. **The community shares the craft alongside the finished video.**
 
+![Brandkit defines identity, product facts and approved material; Motion Design MD defines story, timing, movement and review rules. SKILL.md guides the agent to use these explicit files with editable source, assets, presets and evidence.](docs/readme/diagrams/creative-context.svg)
+
+<details>
+<summary>Read the creative package as text</summary>
+
 ```text
 Reference + your brand
           ↓
@@ -585,6 +575,8 @@ Reusable creative package
           ↓
 Your agent → the next editable video
 ```
+
+</details>
 
 **Brandkit carries the identity. Motion MD carries the design. The Skill carries the method. The project carries the implementation.** This keeps a remake useful after its first export and gives the community something others can inspect, fork and improve.
 
@@ -1026,7 +1018,12 @@ Use `npm start` for the app and `npm run mcp` for stdio. Shell-capable agents ca
 
 **HTML is the editable video source; MP4 is the rendered delivery.** OpenMotion combines a TypeScript application, a React Studio, agent workflows, multimodal generation adapters and a browser-based composition and rendering engine. The project is the shared artifact between the human editor and the agent.
 
-### The architecture, in plain text
+### How the modules work together
+
+![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and a fixed project snapshot is rendered and verified.](docs/readme/diagrams/runtime-architecture.svg)
+
+<details>
+<summary>Read the full architecture and roadmap as text</summary>
 
 ```text
 CREATIVE INPUT
@@ -1081,7 +1078,11 @@ COMING: KNOWLEDGE FEEDBACK
 Version-linked outcomes -> team memory / RAG -> evaluated Skill improvements
 ```
 
+</details>
+
 BYOA keeps the agent in your existing client; BYOK connects your supported model accounts. Studio and the local service manage the editable work, while provider credentials remain outside project files. The public phase-one MCP surface contains **nine project tools**. Model generation is available through Studio and the local Gateway service; the diagram does not add generation or publishing tools to that public MCP contract.
+
+The diagrams are editable SVGs generated from a [small, dependency-free source script](docs/readme/diagrams/generate.py).
 
 ### Stack and source map
 

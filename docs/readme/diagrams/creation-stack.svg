@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="660" viewBox="0 0 1280 660" role="img" aria-labelledby="title desc">
+<title id="title">Your agent. The whole video stack.</title>
+<desc id="desc">Bring your local agent, optional media-provider keys and creative resources. Understand the reference, code scenes, generate missing media, edit, and render MP4 with editable source.</desc>
+<defs>
+  <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FAFAF2"/><stop offset="1" stop-color="#F0F7F3"/></linearGradient>
+  <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#087C62"/><stop offset="1" stop-color="#28B8B1"/></linearGradient>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#6A8F83" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<style>text { font-family: Arial, Helvetica, sans-serif; } .mono { font-family: Menlo, Consolas, monospace; }</style>
+<rect width="1280" height="660" rx="24" fill="url(#paper)"/>
+<path d="M1080 0 H1256 Q1280 0 1280 24 V180 C1170 170 1210 60 1080 0" fill="#DDEFE9"/>
+<path d="M0 575 C120 530 150 655 280 660 H24 Q0 660 0 636 Z" fill="#DDEFE9"/>
+<rect x="48" y="36" width="30" height="5" rx="2.5" fill="url(#water)"/>
+
+<text x="92" y="45" font-size="17" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="2">OPENMOTION</text>
+<text x="1232" y="45" font-size="18" fill="#526B65" font-weight="600" text-anchor="end" class="mono">01</text>
+<text x="48" y="103" font-size="37" fill="#202F2C" font-weight="700" text-anchor="start">Your agent. The whole video stack.</text>
+<text x="48" y="141" font-size="22" fill="#526B65" font-weight="400" text-anchor="start">Bring your brief, your brand and the tools you already use.</text>
+<rect x="48" y="184" width="368" height="168" rx="18" fill="#E6F2EC" stroke="#C9D9D1"/>
+<text x="72" y="218" font-size="16" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1.5">BYOA</text>
+<text x="72" y="258" font-size="25" fill="#202F2C" font-weight="700" text-anchor="start">Your local agent</text>
+<text x="72" y="294" font-size="18" fill="#526B65" font-weight="400" text-anchor="start">Plans the story. Writes the code.</text>
+<text x="72" y="324" font-size="18" fill="#526B65" font-weight="400" text-anchor="start">Skills + MCP + supported CLI</text>
+<path d="M232 352 V384" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="456" y="184" width="368" height="168" rx="18" fill="#E5F1F8" stroke="#C9D9D1"/>
+<text x="480" y="218" font-size="16" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1.5">BYOK</text>
+<text x="480" y="258" font-size="25" fill="#202F2C" font-weight="700" text-anchor="start">Your media accounts</text>
+<text x="480" y="294" font-size="18" fill="#526B65" font-weight="400" text-anchor="start">Images · video · music · TTS</text>
+<text x="480" y="324" font-size="18" fill="#526B65" font-weight="400" text-anchor="start">Optional generation, your access</text>
+<path d="M640 352 V384" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="864" y="184" width="368" height="168" rx="18" fill="#FCF0E5" stroke="#C9D9D1"/>
+<text x="888" y="218" font-size="16" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1.5">YOUR LIBRARY</text>
+<text x="888" y="258" font-size="25" fill="#202F2C" font-weight="700" text-anchor="start">A creative head start</text>
+<text x="888" y="294" font-size="18" fill="#526B65" font-weight="400" text-anchor="start">Brandkit · Motion MD · templates</text>
+<text x="888" y="324" font-size="18" fill="#526B65" font-weight="400" text-anchor="start">References, components and Skills</text>
+<path d="M1048 352 V384" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M152 384 H1048" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M152 384 V411" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="48" y="426" width="208" height="116" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<circle cx="74" cy="452" r="4" fill="#087C62"/>
+<text x="92" y="458" font-size="16" fill="#526B65" font-weight="600" text-anchor="start" class="mono">01</text>
+<text x="68" y="492" font-size="24" fill="#202F2C" font-weight="700" text-anchor="start">Understand</text>
+<text x="68" y="521" font-size="17" fill="#526B65" font-weight="400" text-anchor="start">Reference + intent</text>
+<path d="M262 484 H282" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="292" y="426" width="208" height="116" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<circle cx="318" cy="452" r="4" fill="#087C62"/>
+<text x="336" y="458" font-size="16" fill="#526B65" font-weight="600" text-anchor="start" class="mono">02</text>
+<text x="312" y="492" font-size="24" fill="#202F2C" font-weight="700" text-anchor="start">Code</text>
+<text x="312" y="521" font-size="17" fill="#526B65" font-weight="400" text-anchor="start">HTML / CSS / JS</text>
+<path d="M506 484 H526" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="536" y="426" width="208" height="116" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<circle cx="562" cy="452" r="4" fill="#087C62"/>
+<text x="580" y="458" font-size="16" fill="#526B65" font-weight="600" text-anchor="start" class="mono">03</text>
+<text x="556" y="492" font-size="24" fill="#202F2C" font-weight="700" text-anchor="start">Generate</text>
+<text x="556" y="521" font-size="17" fill="#526B65" font-weight="400" text-anchor="start">Missing media</text>
+<path d="M750 484 H770" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="780" y="426" width="208" height="116" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<circle cx="806" cy="452" r="4" fill="#087C62"/>
+<text x="824" y="458" font-size="16" fill="#526B65" font-weight="600" text-anchor="start" class="mono">04</text>
+<text x="800" y="492" font-size="24" fill="#202F2C" font-weight="700" text-anchor="start">Edit</text>
+<text x="800" y="521" font-size="17" fill="#526B65" font-weight="400" text-anchor="start">Preview + refine</text>
+<path d="M994 484 H1014" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="1024" y="426" width="208" height="116" rx="18" fill="#FFFFFF" stroke="#C9D9D1"/>
+<circle cx="1050" cy="452" r="4" fill="#087C62"/>
+<text x="1068" y="458" font-size="16" fill="#526B65" font-weight="600" text-anchor="start" class="mono">05</text>
+<text x="1044" y="492" font-size="24" fill="#202F2C" font-weight="700" text-anchor="start">Render</text>
+<text x="1044" y="521" font-size="17" fill="#526B65" font-weight="400" text-anchor="start">Local export</text>
+<path d="M48 580 H1232" fill="none" stroke="#C9D9D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="48" y="622" font-size="16" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1.2">OPEN-SOURCE CREATION SOFTWARE</text>
+<text x="1232" y="622" font-size="23" fill="#202F2C" font-weight="600" text-anchor="end">Your brand. Your source. Your MP4.</text>
+</svg>
