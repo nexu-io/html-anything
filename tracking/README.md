@@ -5,6 +5,8 @@ It has no runtime dependencies. The application consumes its TypeScript sources;
 `npm run build:tracking` emits JavaScript and declarations for a local `npm pack`
 from this directory. The package remains private; this change does not publish it.
 
+For new events, start with the [integration guide and agent task template](INTEGRATION.md).
+
 ## Reporting and user control
 
 Reporting is **on by default** using the isolated OpenMotion project. The single
