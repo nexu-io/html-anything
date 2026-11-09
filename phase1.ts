@@ -20,6 +20,35 @@ const textExtensions = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg',
 const digest = (value: unknown) => createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(canonical(value))).digest('hex');
 function canonical(value: any): any { return Array.isArray(value) ? value.map(canonical) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value; }
 function errorText(error: unknown) { return error instanceof Error ? error.message : String(error); }
+/** A saved file and a live host panel are separate completion conditions. */
+function previewHandoff(origin: string, target: { projectId: string; sessionId: string; revision: string; versionId: string }, presentation = 'foreground', display?: any, prepared = false, url?: string, hostTabId?: string) {
+  const previewUrl = url ?? origin + sessionPath(target.sessionId, target.projectId, { embedded: true });
+  const confirmed = display?.visibility === 'visible' && display.contentVerified === true;
+  const background = presentation === 'background';
+  const now = presentation === 'now';
+  const onReturn = { tool: 'motion_open_preview', arguments: { projectId: target.projectId } };
+  const deferred = !now && display?.visibility !== 'visible' && (display?.hostStatus === 'queued' || display?.visibility === 'queued');
+  const recovery = now ? { when: 'hidden_after_queued_ack', tool: 'navigate_to_codex_page', scope: 'calling_chat_only',
+    threadIdFrom: 'open_in_codex.response.threadId', then: 'present_same_tab_and_recheck_visibility' } :
+    { when: 'calling_chat_not_visible', operation: 'wait_for_calling_chat', onReturn };
+  return { ...target, previewUrl, placement: 'right', reuseExistingTab: true, presentation,
+    focusPolicy: background ? 'background' : now ? 'switch_to_calling_chat' : 'preserve_current_chat',
+    state: background ? 'background' : confirmed ? 'confirmed' : 'pending', openedByHost: confirmed,
+    hostActionRequired: !background && !confirmed, confirmationSource: display ? 'host_reported' : null,
+    nextAction: background || confirmed ? null : deferred ? { kind: 'host', operation: 'wait_for_calling_chat', onReturn } : prepared ? { kind: 'host', operation: 'present_preview',
+      previewUrl, placement: 'right', reuseExistingTab: true, codex: { tool: 'open_in_codex', arguments: {
+        placement: 'right', target: { type: 'browser', url: previewUrl, ...(hostTabId ? { tabId: hostTabId } : {}) } },
+        tabIdentity: 'Validate any stored Tab ID against the current host inventory; reuse the actual native host Tab ID (providerTabId), never a CUA wrapper id. After presenting, rebind the matching native panel tab before observing visibility; a hidden browser-use tab is separate.',
+        visibilitySync: { capability: 'visibility', method: 'set', value: true,
+          when: 'after_binding_native_tab', scope: 'calling_chat_only', navigation: false },
+        observation: { visibility: 'get', settleTimeoutMs: 6000, content: 'latest_live_preview', recheckVisibilityAfterContent: true },
+        recovery } } : { kind: 'motion', tool: 'motion_open_preview', arguments: {
+      projectId: target.projectId, expectedRevision: target.revision, expectedVersionId: target.versionId, presentation } },
+    instructions: background ? 'Keep this edit in the background as explicitly requested by the user.' :
+      (now ? 'The user explicitly requested immediate display for this turn; current-chat recovery may navigate to the calling chat. ' :
+        'Preserve the current chat. Queue the preview for its calling chat without navigating; if queued or hidden, wait for the user to return. On return, prepare the latest project version rather than replaying an old version-bound action. ') +
+      'Bind the native project tab and request Codex IAB visibility for the calling chat without navigation; inactive chats queue this request. Observe settled visibility and changed live content/time, recheck visibility, then record_display for the currently observed revision/version. A queued acknowledgment alone is not display confirmation. Follow motion://workflow/production/native#continuing-edits.' };
+}
 function cursor(value: any) { return Buffer.from(JSON.stringify(value)).toString('base64url'); }
 function parseCursor(value: string | undefined, kind: string, scope: string) {
   if (!value) return null;
@@ -63,7 +92,13 @@ export class Phase1Service {
     if (name === 'motion_get_template') return templateCatalogFor(this.store.directory).detail(args.templateId);
     const run = async () => {
       if (!this.recovered) { await recoverProjectTransactions(this.store, this.runtimeRoot); this.recovered = true; }
-      return this.dispatch(name, args);
+      const result = await this.dispatch(name, args);
+      if (name === 'motion_edit_project' || name === 'motion_restore_version') {
+        const owner = this.store.projectCatalog().sessions!.find(session => session.artifacts.some(artifact => artifact.projectId === args.projectId))!;
+        result.previewHandoff = previewHandoff(this.context.origin(), { projectId: args.projectId, sessionId: owner.id,
+          revision: result.revision, versionId: result.version.versionId }, args.presentation);
+      }
+      return result;
     };
     this.pending++;
     const result = this.tail.then(run, run).finally(() => { this.pending--; }); this.tail = result.catch(() => {}); return result;
@@ -154,9 +189,30 @@ export class Phase1Service {
         hyperframesCli: path.join(this.runtimeRoot, 'node_modules/hyperframes/bin/hyperframes.mjs'), authoringGuide: path.join(this.runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'),
         requirements: meta.requirements ?? (await scoped.conversation(projectId)).messages.map(message => message.content).join('\n'),
         projectType: meta.projectType ?? 'legacy', source: meta.source ?? null, assets, file, exportJob,
+        previewDisplay: await this.previewDisplay(projectId, version),
         exports: jobs.map(({ token, workerPid, ...job }) => job), reviews: await jsonFile(path.join(this.store.directory, 'phase1', 'reviews', projectId + '.json'), []),
         limits: { textBatchFiles: 100, textBatchBytes: 8388608, textReadBytes: 2097152, assetBytes: 2147483648, attachmentTransport: 'local_path' } };
     });
+  }
+  async previewDisplay(projectId: string, version: ContentVersion) {
+    const display = await jsonFile<any>(path.join(this.store.directory, 'phase1', 'preview-displays', projectId + '.json'), null);
+    return display ? { ...display, isCurrentVersion: display.revision === version.revision && display.versionId === version.versionId,
+      liveVisibilityVerified: false } : null;
+  }
+  async recordDisplay(args: any, detail: any) {
+    const display = args.display;
+    const target = new URL(this.context.origin() + sessionPath(detail.sessionId, detail.projectId, { embedded: true }));
+    let observed: URL;
+    try { observed = new URL(display.previewUrl); } catch { throw new Error('PREVIEW_TARGET_MISMATCH'); }
+    if (observed.origin !== target.origin || observed.pathname !== target.pathname || observed.searchParams.get('project') !== detail.projectId ||
+        observed.searchParams.get('session') !== detail.sessionId || observed.username || observed.password ||
+        observed.hash.split('?')[0] !== target.hash) throw new Error('PREVIEW_TARGET_MISMATCH');
+    const record = { ...display, projectId: detail.projectId, source: 'host_reported', requestId: args.requestId, recordedAt: Date.now() };
+    await atomicJson(path.join(this.store.directory, 'phase1', 'preview-displays', detail.projectId + '.json'), record);
+    const current = await this.detail(detail.projectId);
+    if (current.revision !== detail.revision || current.currentVersionId !== detail.currentVersionId) throw new Error('VERSION_CONFLICT: content changed during display confirmation');
+    return { projectId: detail.projectId, changed: false, previewHandoff: previewHandoff(this.context.origin(), {
+      projectId: detail.projectId, sessionId: detail.sessionId, revision: detail.revision, versionId: detail.currentVersionId }, args.presentation, record, true, display.previewUrl), display: record };
   }
   async review(args: any, objectId?: string) {
     if (!args.review) throw new Error('INVALID_ARGUMENT: review is required');
@@ -242,6 +298,12 @@ export class Phase1Service {
       } catch (error) { if (!registered) await rm(directory, { recursive: true, force: true }); throw error; }
     });
     if (name === 'motion_open_preview') {
+      if (args.action === 'record_display') {
+        if (!args.projectId || !args.display) throw new Error('INVALID_ARGUMENT: projectId and display are required');
+        const detail = await this.detail(args.projectId);
+        if (args.display.revision !== detail.revision || args.display.versionId !== detail.currentVersionId) throw new Error('VERSION_CONFLICT: preview display refers to a different content version');
+        return this.writeRequest(name, args, () => this.recordDisplay(args, detail));
+      }
       if (args.action === 'record_review') {
         if (!args.projectId) throw new Error('INVALID_ARGUMENT: projectId is required for review');
         return this.writeRequest(name, args, () => this.review(args));
@@ -253,12 +315,17 @@ export class Phase1Service {
       if (!projectId) throw new Error('PROJECT_NOT_BOUND: 请传入 projectId 或已绑定的 OpenMotion sessionId');
       this.store.forProject(projectId);
       if (session && !session.artifacts.some(artifact => artifact.projectId === projectId)) throw new Error('PROJECT_SESSION_MISMATCH');
+      const before = await this.detail(projectId);
+      if (args.expectedRevision && args.expectedRevision !== before.revision || args.expectedVersionId && args.expectedVersionId !== before.currentVersionId) throw new Error('VERSION_CONFLICT');
       const checked = await inspectProject(this.runtimeRoot, this.store.projectDirectoryFor(projectId), 'lint');
       if (checked.exitCode) throw new Error('PROJECT_VALIDATION_FAILED: ' + JSON.stringify(checked.result));
       await this.context.openProject(projectId);
       const detail = await this.detail(projectId);
+      if (args.expectedRevision && args.expectedRevision !== detail.revision || args.expectedVersionId && args.expectedVersionId !== detail.currentVersionId) throw new Error('VERSION_CONFLICT');
       return { ...detail, previewUrl: this.context.origin() + sessionPath(detail.sessionId, projectId, { embedded: args.embedded !== false }),
         sessionUrl: this.context.origin() + sessionPath(detail.sessionId, projectId), embeddedPreviewUrl: this.context.origin() + sessionPath(detail.sessionId, projectId, { embedded: true }),
+        previewHandoff: previewHandoff(this.context.origin(), { projectId, sessionId: detail.sessionId, revision: detail.revision, versionId: detail.currentVersionId }, args.presentation, undefined, true,
+          this.context.origin() + sessionPath(detail.sessionId, projectId, { embedded: args.embedded !== false }), detail.previewDisplay?.hostTabId),
         preflight: checked.result, openedByHost: false, selectionSource: args.projectId ? 'explicit_project' : 'bound_session' };
     }
     if (name === 'motion_edit_project') return this.writeRequest(name, args, () => this.context.mutation(() => this.store.lock(async () => {
