@@ -213,14 +213,14 @@ jobs:
       - name: Upload versioned guide, then conditionally update and verify the fixed URL
         id: upload
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.MOTION_R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.MOTION_R2_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_RELEASES_AK }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_RELEASES_SK }}
           AWS_EC2_METADATA_DISABLED: 'true'
           AWS_MAX_ATTEMPTS: '3'
           AWS_PAGER: ''
-          MOTION_R2_ENDPOINT: ${{ secrets.MOTION_R2_ENDPOINT }}
-          MOTION_R2_BUCKET: ${{ vars.MOTION_R2_BUCKET }}
-          MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.MOTION_INSTALL_PUBLIC_ORIGIN }}
+          MOTION_R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_RELEASES_URL }}
+          MOTION_R2_BUCKET: ${{ vars.CLOUDFLARE_R2_RELEASES_BUCKET }}
+          MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN }}
         run: |
           aws --version
           node .github/scripts/publish-install-guide.mjs "$RUNNER_TEMP/motion-install-guide"

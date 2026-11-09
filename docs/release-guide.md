@@ -63,14 +63,14 @@ The existing `Motion standalone checks` workflow has a separate manual guide mod
 
 After publication, the website can give the Agent a short prompt: "Read `<approved-public-origin>/open-motion/install.md`, install OpenMotion MCP and Skills for my current supported Agent host, preserve existing projects/settings, and report installation and preparation results." Use `/open-motion/dev/install.md` for the test software channel. These are path examples until the public origin and publication are verified.
 
-An administrator must configure `motion-install-docs` with required reviewers and deployment-branch restrictions for the reviewed publishing branch. Place credentials on this environment, not in the low-privilege PR job. No R2 resource, credential or environment is created by this PR.
+Before enabling uploads, an administrator must configure `motion-install-docs` with required reviewers and deployment-branch restrictions for the reviewed publishing branch. The publication step consumes the configured repository Secrets and Variables listed below; PR builds and guide validation do not reference publication secrets. No R2 resource, credential or environment is created by this PR.
 
-| Environment setting | Purpose |
+| GitHub setting | Purpose |
 | --- | --- |
-| Secret `MOTION_R2_ACCESS_KEY_ID` / `MOTION_R2_SECRET_ACCESS_KEY` | Bucket-scoped S3 credentials |
-| Secret `MOTION_R2_ENDPOINT` | R2 S3 HTTPS origin |
-| Variable `MOTION_R2_BUCKET` | Approved destination bucket |
-| Variable `MOTION_INSTALL_PUBLIC_ORIGIN` | Public HTTPS origin for that bucket; routing must already work |
+| Secrets `CLOUDFLARE_R2_RELEASES_AK` / `CLOUDFLARE_R2_RELEASES_SK` | Bucket-scoped S3 credentials, mapped to the AWS CLI credential environment |
+| Variable `CLOUDFLARE_R2_RELEASES_URL` | R2 S3 HTTPS origin, mapped to `MOTION_R2_ENDPOINT` |
+| Variable `CLOUDFLARE_R2_RELEASES_BUCKET` | Approved destination bucket, mapped to `MOTION_R2_BUCKET` |
+| Variable `CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN` | Public HTTPS origin, mapped to `MOTION_INSTALL_PUBLIC_ORIGIN`; routing must already work |
 | Variable `MOTION_NPM_PACKAGE` | Approved public npm package name |
 
 The publisher uses the runner's AWS CLI with conditional writes and short fixed-entry caching. Publication records and prior public instructions are retained for 30 days. If readback fails, the run fails; inspect `publication.json` and the previous bytes before a separately authorized recovery. A network failure during `fixed-write-attempted` may mean the write completed: check storage rather than assuming nothing changed. Restore only the intended guide/channel; this does not downgrade installed clients or migrate projects.

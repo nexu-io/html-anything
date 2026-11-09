@@ -103,6 +103,6 @@ test('CI publication stays manual, disabled by default and in the dedicated cred
   assert(publish.includes("github.event_name == 'workflow_dispatch' && inputs.upload_install_guide == true"));
   assert(publish.includes('environment: motion-install-docs') && publish.includes('needs: install-guide-validation'));
   assert(publish.includes('Confirm the accepted channel still selects this exact version'));
-  assert(!workflow.split('  publish-install-guide:\n')[0].includes('secrets.MOTION_R2_'));
+  assert(!workflow.split('  publish-install-guide:\n')[0].includes('secrets.'), 'Build and guide-validation jobs must not consume publication secrets');
   assert(workflow.includes('candidate installation guide') && workflow.includes('--candidate'));
 });
