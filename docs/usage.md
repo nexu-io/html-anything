@@ -239,3 +239,7 @@ The phase-one plugin and all four local host adapters ship the five canonical mo
 The plugin name, install script, data directory and Studio ports are the team base, unchanged by this extension. See [scope](motion-extension-scope.md).
 
 内部兼容诊断 `motion_compare_video`（一期不公开）接受视频绝对路径，候选还可用 `latest-export`。工程先导出再比较；执行错误与画面差异分别返回，指标不代替人工视觉验收。
+
+## Preview after continued edits
+
+Each saved content edit or restore requests the latest preview in the calling chat. The default preserves your current chat: show the right panel here, or queue it while you are elsewhere and open it when you return. Only an explicit show-now request permits switching back for that turn. Background requests skip presentation. A queued acknowledgment, saved source or hidden screenshot does not prove you saw the latest result; the Agent checks live content and visibility separately. See the [shared handoff](../skills/motion-production/references/native.md#continuing-edits) for host capabilities and receipt limits.

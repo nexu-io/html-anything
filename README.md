@@ -58,6 +58,8 @@ The gallery's **one-click recreate** action copies the selected reference and in
 
 ![The editor showing the Product Promo preview, compositions and timeline.](docs/readme/editor.jpg)
 
+After each editing turn, the Agent requests the latest preview in the same chat without switching chats. If you are elsewhere, it stays queued until you return; only an explicit show-now request permits switching back. Actual visibility and the latest content are checked separately; explicit background requests skip presentation. See [multi-turn editing](skills/motion-production/references/native.md#continuing-edits) for host capability limits.
+
 ## Start in Codex
 
 Clone this public repository at `feature/motion` and open the checkout in Codex. You'll need Git, Node.js **22.18+** with npm, and a Codex CLI that supports plugins. MP4 export also requires Chrome/Chromium and FFmpeg/FFprobe. See [Windows test packages](docs/test-packages.md) for that installation path.
