@@ -25,7 +25,7 @@ on:
       install_guide_package:
         description: 'Already-published npm package; must match packages/npm/package.json'
         type: string
-        default: '@open-design/motion'
+        default: '@openmotion/app'
       install_guide_version:
         description: 'Exact accepted npm version; non-empty selects guide validation instead of rebuilding the application'
         type: string

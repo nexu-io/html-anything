@@ -7,7 +7,7 @@ import { generateInstallGuide, validateGuideSpec, validateGuideIdentity } from '
 import { publishGuide, storagePlan } from '../.github/scripts/publish-install-guide.mjs';
 import { runFile } from '../scripts/runtime-assets.mjs';
 
-const pkg = { name: '@open-design/motion', version: '0.6.4-test.1', private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } };
+const pkg = { name: '@openmotion/app', version: '0.6.4-test.1', private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } };
 const manifest = { schemaVersion: 1, version: pkg.version, templateEnvironment: 'prod', commit: 'a'.repeat(40),
   application: { sha256: 'b'.repeat(64) }, locks: { npm: 'c'.repeat(64), native: 'd'.repeat(64) },
   runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64', minimumOS: '26.0' } } } };

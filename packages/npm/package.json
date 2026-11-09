@@ -1,5 +1,5 @@
 {
-  "name": "@open-design/motion",
+  "name": "@openmotion/app",
   "version": "0.6.3-local.1",
   "private": true,
   "description": "OpenMotion application, MCP and Skills installer for local Agent hosts",

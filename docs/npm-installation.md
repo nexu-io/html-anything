@@ -2,7 +2,7 @@
 
 The npm tgz contains the installer, a prebuilt Motion application archive and its pinned release manifest. One `setup` installs the application, eleven public MCP Tools and five Skills for the selected host. No adjacent application archive or `--manifest` is needed. The application runs from a managed, writable directory, never from the npx cache; projects remain outside application/cache directories.
 
-This branch does not publish packages. `@open-design/motion` is the agreed public package name; npm scope permissions and availability of a registry version still need separate verification. Registry examples apply only after a separately authorized release.
+This branch does not publish packages. `@openmotion/app` is the agreed public package name. The `openmotion` npm organization has been registered by the project owner; the publishing account's access and availability of a registry version still need separate verification. Registry examples apply only after a separately authorized release.
 
 ## Requirements and package contents
 
@@ -92,7 +92,7 @@ Explicit builds accept `MAJOR.MINOR.PATCH-test.N[.N]` or `MAJOR.MINOR.PATCH`. CI
 
 Source package manifests remain `private:true`. Only an explicitly versioned **prod** build produces publishable tgz metadata. test artifacts default to the `test` npm tag; stable artifacts default to `stage` so a later authorized registry smoke can precede moving `latest`. Local/default and DEV artifacts remain private. No command here publishes or changes npm tags. See [test and stable acceptance](release-guide.md) for separate maintainer authorization and gates.
 
-After publication, the intended user entry is `npx --yes --package @open-design/motion@<exact-version> -- openmotion setup --host codex`, followed by `prepare` and host discovery/reload for a new installation. `@test` and `@latest` select channels; acceptance always records the exact resolved version. Installing/running npx alone, publishing a new package or moving a tag does not update an existing managed app.
+After publication, the intended user entry is `npx --yes --package @openmotion/app@<exact-version> -- openmotion setup --host codex`, followed by `prepare` and host discovery/reload for a new installation. `@test` and `@latest` select channels; acceptance always records the exact resolved version. Installing/running npx alone, publishing a new package or moving a tag does not update an existing managed app.
 
 Before upgrading, back up projects/configuration, run setup with the new exact tgz and the **same** home/data/Skills paths, then prepare. Compatible phase-one connections and active exports can continue. Refresh host discovery for new Tools or Skills; reconnect a closed transport. For an incompatible protocol, finish active exports before updating only the owned connection and idle backend together. Do not terminate unrelated services. Older app directories may remain, but rollback requires a compatible old package and data; back up before an irreversible format change. There is no automatic update or arbitrary-version rollback promise.
 

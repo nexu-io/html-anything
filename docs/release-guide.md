@@ -56,7 +56,7 @@ Ordinary npm/prod CI builds generate a **candidate-only** guide and retain it as
 
 The existing `Motion standalone checks` workflow has a separate manual guide mode:
 
-1. Use `@open-design/motion` (the default `install_guide_package`) and an exact `install_guide_version` already published to npm. Leave `upload_install_guide=false` to fetch the registry package with lifecycle scripts disabled, render its guide and retain the result without R2 credentials.
+1. Use `@openmotion/app` (the default `install_guide_package`) and an exact `install_guide_version` already published to npm. Leave `upload_install_guide=false` to fetch the registry package with lifecycle scripts disabled, render its guide and retain the result without R2 credentials.
 2. Before promoting an entry, complete registry/package acceptance and select that version through npm `test` or `latest`. A guide publication does not publish npm or move its tags.
 3. An explicitly authorized run with `upload_install_guide=true` uses the repository R2 configuration. It checks the package name against `packages/npm/package.json` and the current npm channel, creates immutable version instructions, verifies the public bytes, saves the prior fixed instructions and conditionally updates the fixed entry. The canonical public URLs must return matching bytes; a cache-busting URL does not prove the fixed entry is current.
 4. Test software uses `open-motion/dev/install.md`; stable uses `open-motion/install.md`. Each also has `versions/<exact-version>/install.md` under the same prefix. The `dev` path is the existing proposed software test-channel path, not a switch to DEV template data.
