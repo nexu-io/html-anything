@@ -7,7 +7,7 @@
 ## Make a reference your own
 
 - **The first full-stack agentic video generator.** Our goal is to put generation, editing, and rendering in one open-source workflow. Code your scenes in HTML, edit the timing in Studio, then render the same project to MP4.
-- **Use OpenMotion directly in your local agent, with BYOK at every layer.** Keep your agent’s language model and connect your own provider keys for image, video, and music generation.
+- **Fully open source and free to use in your local agent, with BYOK at every layer.** Run OpenMotion directly in Codex, Claude Code, DeepSeek Harness, or WorkBuddy (preview). Use your own API keys for language, image, video, and music models.
 - **First open-source release of `MOTION.md` files for 100+ brands.** That’s the scope of our planned collection. We designed [Motion MD](docs/motion-md.md) to record shot order, timing, transitions, and the assets you can replace. Read the [Firecrawl brief](examples/reference-reveal/MOTION.md) in the public preview.
 - **Multimodal: images · video · music.** Generate or import the assets you need, line them up with the cuts and beats on one timeline, then export the finished film. [See model options](#bring-your-own-agent-and-keys-byok)
 
