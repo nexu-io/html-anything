@@ -12,7 +12,7 @@ import { StudioLibrary } from "./studio/library.js";
 import { Properties } from "./studio/properties.js";
 import { studioTimeline } from "./studio/timeline.js";
 import { playerControls, studioTools } from "./studio/toolbar.js";
-import { applyClip, commitClip, retimeKey } from "./studio/transactions.js";
+import { applyClip, commitClip, editClip, retimeKey } from "./studio/transactions.js";
 
 const editorLabel = (session: boolean) => (session ? "新建影片工程" : "开始创作");
 /** Product editor projection. The SDK owns native transforms; workspace owns committed content. */
@@ -358,11 +358,7 @@ export class Studio {
         this.options.changed();
       },
       save: () => this.run(() => this.editor.save()),
-      remove: () =>
-        this.run(async () => {
-          if (!clip) return;
-          await this.context.transform((html) => this.client.editMotion({ html, action: "remove", id: clip.id }));
-        }),
+      edit: (input) => this.run(editClip(this.context, this.client, input, () => this.editor.save())),
     });
     this.animations.update(this.context.owner, selected, blocked || !!this.pending);
     this.viewer.select(

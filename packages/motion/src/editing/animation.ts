@@ -1,6 +1,6 @@
 import { type GsapAnimation, parseGsapScript } from "@hyperframes/core/gsap-parser";
 import { buildDocument, type Composition, type EditOp, escapeHfId } from "@hyperframes/sdk";
-import { type Animation, type AnimationInput, animationInput, type Ease, eases, properties } from "./contract.js";
+import { type Animation, type AnimationInput, animationInput, type Ease, eases, properties } from "../contract.js";
 import { retimeWindow } from "./easing.js";
 export function animations(composition: Composition) {
   const document = buildDocument(composition.serialize({ stripRuntime: true }));

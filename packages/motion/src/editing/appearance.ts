@@ -1,4 +1,4 @@
-import { type Appearance, appearanceInput } from "./contract.js";
+import { type Appearance, appearanceInput } from "../contract.js";
 /** Only losslessly understood authored values are exposed. Unset/expressions remain inherited. */
 export function appearance(values: Readonly<Record<string, string>>): Appearance {
   const pixel = (value: string | undefined) =>

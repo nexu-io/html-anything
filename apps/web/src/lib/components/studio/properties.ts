@@ -10,7 +10,7 @@ import {
   slot,
 } from "@open-motion/components";
 import type { Clip } from "@open-motion/motion";
-import type { AudioValues, NativeValues } from "@open-motion/motion/contract";
+import type { AudioValues, ClipEdit, NativeValues } from "@open-motion/motion/contract";
 import { AppearanceFields } from "./appearance.js";
 
 interface Options {
@@ -22,7 +22,7 @@ interface Options {
   choose(id: string): void;
   change(values: NativeValues): void;
   save(): void;
-  remove(): void;
+  edit(input: ClipEdit): void;
 }
 export class Properties {
   readonly element: HTMLElement;
@@ -37,6 +37,11 @@ export class Properties {
   private empty: HTMLElement;
   private apply: HTMLButtonElement;
   private remove: HTMLButtonElement;
+  private links: HTMLElement;
+  private partner: HTMLSelectElement;
+  private link: HTMLButtonElement;
+  private unlink: HTMLButtonElement;
+  private linkInfo: HTMLElement;
   private current?: Options;
   private key = "";
   private touched = new Set<keyof NativeValues>();
@@ -149,12 +154,34 @@ export class Properties {
       primary: true,
       onClick: () => this.current?.save(),
     });
+    this.links = slot(document, "stack");
+    this.partner = document.createElement("select");
+    this.partner.setAttribute("aria-label", "链接伙伴");
+    this.linkInfo = note(document, "");
+    this.link = button(document, {
+      label: "链接媒体",
+      onClick: () => {
+        const o = this.current;
+        if (o && this.partner.value) o.edit({ action: "link", id: o.selected, partner: this.partner.value });
+      },
+    });
+    this.unlink = button(document, {
+      label: "解除链接",
+      onClick: () => {
+        const o = this.current;
+        if (o) o.edit({ action: "unlink", id: o.selected });
+      },
+    });
+    this.links.append(this.linkInfo, field(document, "链接伙伴", this.partner), this.link, this.unlink);
     this.remove = button(document, {
       label: "删除元素",
       icon: "close",
       compact: true,
       variant: "ghost",
-      onClick: () => this.current?.remove(),
+      onClick: () => {
+        const o = this.current;
+        if (o) o.edit({ action: "remove", id: o.selected });
+      },
     });
     values.append(
       this.type,
@@ -162,6 +189,7 @@ export class Properties {
       field(document, "字号", this.font.element),
       timing,
       this.audio,
+      this.links,
       this.appearance.element,
       this.apply,
       this.remove,
@@ -193,19 +221,24 @@ export class Properties {
   block(value: boolean) {
     const clip = this.current?.clips.find((c) => c.id === this.current?.selected);
     this.select.disabled = value;
-    this.text.readOnly = value;
+    this.text.readOnly = value || !!clip?.link?.reason;
     this.text.disabled = !clip || clip.text === null || !!clip.host;
-    const audioReadonly = clip?.media?.kind === "audio" && clip.media.maximum === null;
+    const audioReadonly = !!clip?.link?.reason || (clip?.media?.kind === "audio" && clip.media.maximum === null);
+    const linkBlocked = value || !!this.current?.values;
+    this.partner.disabled =
+      linkBlocked || !!clip?.link?.reason || !clip?.media || !!clip.media.linkReason || !this.partner.options.length;
+    this.link.disabled = this.partner.disabled;
+    this.unlink.disabled = linkBlocked || !clip?.link;
     this.inPoint.readonly(value || audioReadonly || !clip?.media?.audio);
     this.rate.readonly(value || audioReadonly || !clip?.media?.audio);
     this.volume.readonly(value || audioReadonly || !clip?.media?.audio);
     this.muted.disabled = value || audioReadonly || !clip?.media?.audio;
     this.start.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
     this.duration.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
-    this.font.readonly(value || !!clip?.host || !!clip?.media);
-    this.appearance.block(value || !!clip?.host || clip?.media?.kind === "audio");
-    this.apply.disabled = value || !clip;
-    this.remove.disabled = value || !clip || !!clip.composition;
+    this.font.readonly(value || !!clip?.link?.reason || !!clip?.host || !!clip?.media);
+    this.appearance.block(value || !!clip?.link?.reason || !!clip?.host || clip?.media?.kind === "audio");
+    this.apply.disabled = value || !clip || !!clip.link?.reason;
+    this.remove.disabled = value || !clip || !!clip.composition || !!clip.link?.reason;
   }
   validate() {
     this.appearance.validate();
@@ -264,6 +297,26 @@ export class Properties {
     this.content.hidden = !clip;
     this.empty.hidden = !!clip;
     if (clip) {
+      this.links.hidden = !clip.media && !clip.link;
+      const candidates = options.clips.filter((c) => c.id !== clip.id && c.media && !c.media.linkReason && !c.link);
+      if (
+        changed ||
+        JSON.stringify([...this.partner.options].map((o) => o.value)) !== JSON.stringify(candidates.map((c) => c.id))
+      ) {
+        const prior = this.partner.value;
+        this.partner.replaceChildren(
+          ...candidates.map((c) => {
+            const option = document.createElement("option");
+            option.value = c.id;
+            option.textContent = `${c.id} · ${c.tag}`;
+            return option;
+          }),
+        );
+        if (!changed && candidates.some((c) => c.id === prior)) this.partner.value = prior;
+      }
+      this.linkInfo.textContent = clip.link
+        ? `链接组 ${clip.link.id} · ${clip.link.members.length} 个成员；${clip.link.reason ?? "起点与时长联动，音频入点与倍率联动；音量和静音独立。"}`
+        : (clip.media?.linkReason ?? "选择已对齐的静态媒体伙伴，建立同一源码合成内的链接组。");
       const values = options.values,
         audio = clip.media?.audio;
       this.audio.hidden = !audio;

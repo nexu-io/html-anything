@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 import { Motion } from "@";
-import { progressAtTime, timeAtProgress } from "@/easing.js";
+import { progressAtTime, timeAtProgress } from "@/editing/easing.js";
 
 const template = (script: string) =>
   `<html><body><main data-composition-id="main" data-duration="5"><p data-hf-id="hf-text" data-start="0" data-duration="4">Text</p></main><script>const tl=gsap.timeline({paused:true});${script}window.__timelines={main:tl};</script></body></html>`;
