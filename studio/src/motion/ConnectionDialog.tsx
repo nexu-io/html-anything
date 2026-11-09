@@ -43,7 +43,7 @@ export function ConnectionDialog(props: Props) {
       </div>
       <button id="close-connections" className="ui-button ui-button--ghost ui-button--icon" aria-label={t("Close MCP connection")} disabled={props.busy} onClick={props.onClose}><MotionIcon name="close" /></button>
     </div>
-    {(props.error || props.busy) && <p className="connect-error" role="status">{props.error || t('Preparing editable project…')}</p>}
+    {props.error ? <p className="connect-error" role="alert">{props.error}</p> : props.busy && <p className="connect-progress" role="status"><span className="connect-progress-spinner" aria-hidden="true" />{t('Preparing editable project…')}</p>}
     <div id="connection-root" ref={root} />
   </dialog>;
 }

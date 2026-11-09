@@ -1114,6 +1114,10 @@
 .connect-workspace dt { color: var(--motion-muted); }
 .connect-workspace dd { margin: 0; overflow-wrap: anywhere; }
 .connect-error { padding: var(--motion-space-12) var(--motion-space-16); margin-top: var(--motion-space-16); background: var(--motion-danger-soft); color: var(--motion-danger); border-radius: var(--motion-radius-sm); font-size: var(--motion-text-sm); line-height: var(--motion-leading-prose); text-align: left; }
+.connect-progress { display: flex; align-items: center; gap: var(--motion-space-8); padding: var(--motion-space-12) var(--motion-space-16); margin: 0; background: var(--motion-panel); color: var(--motion-muted); font-size: var(--motion-text-sm); }
+.connect-progress-spinner { width: var(--motion-space-16); height: var(--motion-space-16); flex-shrink: 0; border: 2px solid var(--motion-border); border-top-color: currentColor; border-radius: 50%; animation: connect-progress-spin var(--motion-duration-loading) linear infinite; }
+@keyframes connect-progress-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .connect-progress-spinner { animation: none; } }
 .connect-api { margin-top: var(--motion-space-24); padding-top: var(--motion-space-20); border-top: 1px solid var(--motion-border); }
 .connect-api h3 { font-size: var(--motion-text-heading); }
 .connect-template-media { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
