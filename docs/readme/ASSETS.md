@@ -10,7 +10,7 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 
 | Asset | Source and use |
 | --- | --- |
-| [README cover](brand-hero.jpg) · [中文](brand-hero.zh-CN.jpg) | The Stripe reference frame and the editable Coast study in Studio, set on a watercolor background. The cover links to the [five-second comparison](../../examples/brand-studies/stripe/comparison.mp4). |
+| [README cover](brand-hero.jpg) · [中文](brand-hero.zh-CN.jpg) | OpenMotion wordmark, tagline and feature labels on the watercolor cover, with desktop and mobile layouts. The cover links to the [five-second comparison](../../examples/brand-studies/stripe/comparison.mp4). |
 | [Earlier cover](cover.png) | Previous AI-editing positioning, preserved as artwork history; no longer the main README cover. |
 | [Animated cover](cover-motion.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |
 | [Social preview](social-preview.jpg) | 1280 × 640 sharing image derived from the cover. |

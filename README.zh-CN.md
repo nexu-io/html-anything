@@ -20,7 +20,7 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
 </p>
 
-OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
+OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
 
 - **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
 - OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批开源内容覆盖 **100 多个品牌的宣传片**。

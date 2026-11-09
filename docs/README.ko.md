@@ -28,10 +28,7 @@ HTML로 영상을 작성하고 생성·편집·렌더링하세요. 무료 오픈
 </p>
 
 <a href="../examples/brand-studies/stripe/comparison.mp4">
-<picture>
-  <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.jpg">
-  <img src="readme/brand-hero.jpg" width="100%" alt="Stripe 원본과 Studio에서 편집할 수 있는 OpenMotion 재현 영상을 5초 동안 비교하세요.">
-</picture>
+<img src="readme/cover-reverse-engineering-v2.png" width="100%" alt="OpenMotion — 어떤 영상이든 역설계하세요. DeepSeek Harness, Codex, Claude Code로 마음에 드는 영상을 내 브랜드의 작품으로. 이미지, 영상, 음악, TTS와 멀티플랫폼 게시.">
 </a>
 
 **눈길을 끄는 출시 영상, 리듬이 정확한 제품 공개, 복잡한 이야기를 쉽게 풀어내는 크리에이터.** 참고 영상과 로고, 스크린샷, 촬영본, 문구를 에이전트에 전달하세요. OpenMotion은 참고 영상을 분석하고 구조를 편집 가능한 프로젝트로 재구성해 내 이야기를 만드는 작업 흐름을 제공합니다.

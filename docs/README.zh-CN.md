@@ -25,11 +25,11 @@
 <a href="../examples/brand-studies/stripe/comparison.mp4">
 <picture>
   <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg">
-  <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="观看五秒对照：Stripe 原片翻出支付卡，OpenMotion 在 Studio 中用相同的节奏翻出胶片插画。">
+  <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion：可编辑 HTML · 开源免费 · 本地 Agent · BYOK · Motion.md">
 </picture>
 </a>
 
-OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
+OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
 
 - **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
 - OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批开源内容覆盖 **100 多个品牌的宣传片**。
@@ -324,7 +324,7 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。�
 
 <a id="what-is-openmotion"></a> <a id="openmotion-是什么"></a> <a id="video-is-code"></a>
 
-### 1. OpenDesign 首个全栈 Agentic 视频生成器
+### 1. 首个全栈 Agentic 视频生成器
 
 **用 HTML 写视频。** OpenMotion 用 HTML、CSS、JavaScript 描述场景、字体、布局、转场和时间。实拍、生成片段、图片、音乐和旁白作为合成素材，同一工程可在 Studio 打开并渲染为 MP4。
 

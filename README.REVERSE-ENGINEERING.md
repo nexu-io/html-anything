@@ -23,11 +23,11 @@
 <a href="examples/brand-studies/stripe/comparison.mp4">
 <picture>
   <source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg">
-  <img src="docs/readme/brand-hero.jpg" width="100%" alt="Watch the five-second comparison: Stripe’s original card flip and the OpenMotion remake on the Studio timeline.">
+  <img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion — Editable HTML · Open source · Local agent · BYOK · Motion.md">
 </picture>
 </a>
 
-OpenMotion is **OpenDesign’s first full-stack agentic video generator**. Upload a reference video or paste a social video link. OpenMotion breaks down the shots, timing and transitions, then **recreates the sequence with your own footage, logo and copy**.
+OpenMotion is **the first full-stack agentic video generator**. Upload a reference video or paste a social video link. OpenMotion breaks down the shots, timing and transitions, then **recreates the sequence with your own footage, logo and copy**.
 
 - **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Use it locally in Codex, Claude Code, DeepSeek Harness or WorkBuddy with your own keys at every layer.
 - OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Its first open-source collection covers promotional films from **100+ brands**.
@@ -320,7 +320,7 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 
 <a id="video-is-code"></a>
 
-### 1. OpenDesign’s first full-stack agentic video generator
+### 1. The first full-stack agentic video generator
 
 **Code video with HTML.** OpenMotion uses HTML, CSS and JavaScript to describe scenes, typography, layout, transitions and timing. Recorded footage, generated clips, images, music and voice-over become media inside the composition. The same project opens in Studio and renders to MP4.
 

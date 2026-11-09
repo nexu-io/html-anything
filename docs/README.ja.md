@@ -28,10 +28,7 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
 </p>
 
 <a href="../examples/brand-studies/stripe/comparison.mp4">
-<picture>
-  <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.jpg">
-  <img src="readme/brand-hero.jpg" width="100%" alt="Stripe の原作と Studio で編集できる OpenMotion の再制作を 5 秒の動画で比較。">
-</picture>
+<img src="readme/cover-reverse-engineering-v2.png" width="100%" alt="OpenMotion — あらゆる動画をリバースエンジニアリング。DeepSeek Harness、Codex、Claude Code で好きな動画をブランドの作品に。画像、動画、音楽、TTS。マルチプラットフォーム公開。">
 </a>
 
 **目を引く発表動画、心地よいテンポの製品紹介、複雑な話をわかりやすく伝えるクリエイター。** その参考動画を、ロゴ、画面、映像素材、原稿とともにエージェントへ。OpenMotion は参考を分析し、構成を編集可能なプロジェクトとして再構築して、あなたの物語にする手順を提供します。
