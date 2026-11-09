@@ -114,7 +114,7 @@ Each pair plays the same five seconds. Follow the motion on the left, then see w
 <table>
 <tr>
 <td colspan="2" valign="top" align="center">
-<a id="case-stripe"></a><a href="examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/stripe/comparison.jpg"><img src="examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · Card flip → film frame"></picture></a><br>
+<div id="case-stripe"><a href="examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/stripe/comparison.jpg"><img src="examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · Card flip → film frame"></picture></a></div>
 <strong>Stripe · Card flip → film frame</strong><br>
 A click, a push-in and a flip. The payment card becomes an illustrated coastal scene in a perforated film frame.<br>
 <sub><a href="examples/brand-studies/stripe/comparison.mp4">Full size</a> · <a href="examples/brand-studies/stripe/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">Original 00:21.50–00:26.50</a> · <a href="examples/brand-studies/stripe/index.html">HTML</a> · <a href="examples/brand-studies/stripe/MOTION.md">Motion MD</a></sub>
@@ -122,13 +122,13 @@ A click, a push-in and a flip. The payment card becomes an illustrated coastal s
 </tr>
 <tr>
 <td width="50%" valign="top" align="center">
-<a id="case-claude"></a><a href="examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/anthropic/comparison.jpg"><img src="examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · Settings → color palette"></picture></a><br>
+<div id="case-claude"><a href="examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/anthropic/comparison.jpg"><img src="examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · Settings → color palette"></picture></a></div>
 <strong>Claude · Settings → color palette</strong><br>
 The switches and hand-drawn circle keep time. A cobalt palette and persimmon poster change the story.<br>
 <sub><a href="examples/brand-studies/anthropic/comparison.mp4">Full size</a> · <a href="examples/brand-studies/anthropic/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">Original 00:00–00:05</a> · <a href="examples/brand-studies/anthropic/index.html">HTML</a></sub>
 </td>
 <td width="50%" valign="top" align="center">
-<a id="case-openai"></a><a href="examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/motion-studies/comparison.jpg"><img src="examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · Wireframe → edit timeline"></picture></a><br>
+<div id="case-openai"><a href="examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/motion-studies/comparison.jpg"><img src="examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · Wireframe → edit timeline"></picture></a></div>
 <strong>OpenAI · Wireframe → edit timeline</strong><br>
 Five colored clips collapse into an edit point. The cut and wordmark resolve on the original beat.<br>
 <sub><a href="examples/motion-studies/comparison.mp4">Full size</a> · <a href="examples/motion-studies/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">Original 00:26.50–00:31.50</a> · <a href="examples/motion-studies/signoff.html">HTML</a></sub>
@@ -136,13 +136,13 @@ Five colored clips collapse into an edit point. The cut and wordmark resolve on 
 </tr>
 <tr>
 <td width="50%" valign="top" align="center">
-<a id="case-kimi"></a><a href="examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/kimi/comparison.jpg"><img src="examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · Magnetic field → vinyl grooves"></picture></a><br>
+<div id="case-kimi"><a href="examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/kimi/comparison.jpg"><img src="examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · Magnetic field → vinyl grooves"></picture></a></div>
 <strong>Kimi · Magnetic field → vinyl grooves</strong><br>
 A spinning record takes the place of the field. Its grooves dissolve into a flickering sleeve title.<br>
 <sub><a href="examples/brand-studies/kimi/comparison.mp4">Full size</a> · <a href="examples/brand-studies/kimi/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">Original 00:30.75–00:35.75</a> · <a href="examples/brand-studies/kimi/index.html">HTML</a></sub>
 </td>
 <td width="50%" valign="top" align="center">
-<a id="case-deepseek"></a><a href="examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/deepseek/comparison.jpg"><img src="examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · Terminal → film slate"></picture></a><br>
+<div id="case-deepseek"><a href="examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/deepseek/comparison.jpg"><img src="examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · Terminal → film slate"></picture></a></div>
 <strong>DeepSeek Harness · Terminal → film slate</strong><br>
 The cursor types on a film slate. A warm flash carries the last keystroke into the end card.<br>
 <sub><a href="examples/brand-studies/deepseek/comparison.mp4">Full size</a> · <a href="examples/brand-studies/deepseek/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">Original 01:31.50–01:36.50</a> · <a href="examples/brand-studies/deepseek/index.html">HTML</a></sub>

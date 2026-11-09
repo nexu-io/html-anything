@@ -114,7 +114,7 @@
 <table>
 <tr>
 <td colspan="2" valign="top" align="center">
-<a id="case-stripe"></a><a href="../examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/stripe/comparison.jpg"><img src="../examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · 银行卡翻转 → 海岸胶片"></picture></a><br>
+<div id="case-stripe"><a href="../examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/stripe/comparison.jpg"><img src="../examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · 银行卡翻转 → 海岸胶片"></picture></a></div>
 <strong>Stripe · 银行卡翻转 → 海岸胶片</strong><br>
 同一次点击、推镜和翻转，把紫色银行卡换成了带齿孔的海岸风景胶片。<br>
 <sub><a href="../examples/brand-studies/stripe/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/stripe/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">原片 00:21.50–00:26.50</a> · <a href="../examples/brand-studies/stripe/index.html">HTML</a> · <a href="../examples/brand-studies/stripe/MOTION.md">Motion MD</a></sub>
@@ -122,13 +122,13 @@
 </tr>
 <tr>
 <td width="50%" valign="top" align="center">
-<a id="case-claude"></a><a href="../examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/anthropic/comparison.jpg"><img src="../examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · 设置面板 → 品牌调色板"></picture></a><br>
+<div id="case-claude"><a href="../examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/anthropic/comparison.jpg"><img src="../examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · 设置面板 → 品牌调色板"></picture></a></div>
 <strong>Claude · 设置面板 → 品牌调色板</strong><br>
 开关和手绘圈沿用原片的节拍，设置面板换成了钴蓝调色板和柿橙海报。<br>
 <sub><a href="../examples/brand-studies/anthropic/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/anthropic/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">原片 00:00–00:05</a> · <a href="../examples/brand-studies/anthropic/index.html">HTML</a></sub>
 </td>
 <td width="50%" valign="top" align="center">
-<a id="case-openai"></a><a href="../examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg"><img src="../examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · 线框节点 → 剪辑轨道"></picture></a><br>
+<div id="case-openai"><a href="../examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg"><img src="../examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · 线框节点 → 剪辑轨道"></picture></a></div>
 <strong>OpenAI · 线框节点 → 剪辑轨道</strong><br>
 五段彩色剪辑轨道收成一个切点，沿用原片切底、出字、落标的三拍。<br>
 <sub><a href="../examples/motion-studies/comparison.mp4">横屏大图</a> · <a href="../examples/motion-studies/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">原片 00:26.50–00:31.50</a> · <a href="../examples/motion-studies/signoff.html">HTML</a></sub>
@@ -136,13 +136,13 @@
 </tr>
 <tr>
 <td width="50%" valign="top" align="center">
-<a id="case-kimi"></a><a href="../examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/kimi/comparison.jpg"><img src="../examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · 磁力线 → 黑胶唱片"></picture></a><br>
+<div id="case-kimi"><a href="../examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/kimi/comparison.jpg"><img src="../examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · 磁力线 → 黑胶唱片"></picture></a></div>
 <strong>Kimi · 磁力线 → 黑胶唱片</strong><br>
 磁力线变成转动的唱片纹路，按原片的时机淡出，接上跳变的封套字标。<br>
 <sub><a href="../examples/brand-studies/kimi/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/kimi/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">原片 00:30.75–00:35.75</a> · <a href="../examples/brand-studies/kimi/index.html">HTML</a></sub>
 </td>
 <td width="50%" valign="top" align="center">
-<a id="case-deepseek"></a><a href="../examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/deepseek/comparison.jpg"><img src="../examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · 终端打字 → 片场打板"></picture></a><br>
+<div id="case-deepseek"><a href="../examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/deepseek/comparison.jpg"><img src="../examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · 终端打字 → 片场打板"></picture></a></div>
 <strong>DeepSeek Harness · 终端打字 → 片场打板</strong><br>
 光标改在片场打板上逐字输入，最后一键和片尾之间保留停顿与闪切。<br>
 <sub><a href="../examples/brand-studies/deepseek/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/deepseek/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">原片 01:31.50–01:36.50</a> · <a href="../examples/brand-studies/deepseek/index.html">HTML</a></sub>
