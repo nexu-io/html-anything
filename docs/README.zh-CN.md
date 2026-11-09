@@ -1,143 +1,488 @@
-[English](../README.md) · **简体中文**
+[English](../README.md) · **简体中文** · [日本語](README.ja.md) · [한국어](README.ko.md)
 
 <h1 align="center">OpenMotion</h1>
 
-<p align="center"><strong>AI 原生、开源的 CapCut 替代。</strong><br/>All-in-One AI-native Studio，一站式视频创作与剪辑空间。<br/>和你的 Agent 一起剪辑视频，讲自己的故事。人人都能创作，人人都是自媒体。<br/>The open-source Claude Motion alternative.</p>
+<p align="center"><strong>逆向拆解任何视频</strong><br/>
+让你的本地 Agent 成为 <strong>全栈视频创作者。</strong><br/>
+<strong>BYOA — 自带 Agent。BYOK — 自带 API Key。</strong><br/>
+用 HTML 编写视频。生成、剪辑、渲染。开源软件，免费使用。<br/>
+图片 · 视频 · 音乐 · TTS · 890+ 目录资源<br/>
+变成你的品牌作品。 <strong>发布到各个平台 — 规划中。</strong></p>
 
 <p align="center">
-  <a href="#ai-video-editing">✂️ AI 剪辑</a> ·
-  <a href="#快速开始">开始使用</a> ·
-  <a href="#connect-your-agent">连接你的 Agent</a> ·
-  <a href="#从-agent-接入">在 Agent 中使用</a><br/>
-  <a href="#all-in-one-studio">All-in-One Studio</a> ·
-  <a href="#super-motion-video-agent">Super Motion Video Agent</a> ·
-  <a href="#产品界面">产品界面</a><br/>
-  <a href="motion-md.zh-CN.md">Motion Design MD</a> ·
-  <a href="../library/README.zh-CN.md">资源与模板</a> ·
-  <a href="#社区共建">社区</a> ·
+  <a href="#reverse-engineer-a-video">🔍 如何运作</a> ·
+  <a href="#creator-video-gallery">🎙️ 真人视频</a> ·
+  <a href="#brand-film-gallery">🎬 品牌影片</a> ·
+  <a href="#video-is-code">💻 视频即代码</a> ·
+  <a href="#bring-your-agent-and-keys">🔑 BYOA / BYOK</a> ·
+  <a href="#quick-start">🚀 开始使用</a> ·
+  <a href="#publish-to-every-platform">📤 发布 · 规划中</a><br/>
+  <a href="#full-video-creation-stack">🎛️ 全栈视频创作</a> ·
+  <a href="#your-agent-your-studio">Studio 与 Agent</a> ·
+  <a href="#motion-design-community">Motion MD 与社区</a> ·
+  <a href="#what-can-you-make">示例</a> ·
+  <a href="#resources-to-start-from">资源库</a> ·
+  <a href="#developer-architecture">架构</a> ·
+  <a href="#community">社区</a> ·
   <a href="../LICENSE">Apache 2.0</a>
 </p>
 
-![OpenMotion：Edit videos with your agent；AI 原生开源 CapCut 与 Claude Motion 替代，让每个人都成为创作者。](readme/cover.png)
+![OpenMotion — 逆向拆解任何视频。用 DeepSeek Harness、Codex 和 Claude Code，将喜欢的视频改编为品牌作品。图片、视频、音乐与 TTS。多平台发布。](readme/cover-reverse-engineering-v2.png)
 
-[动态封面 GIF](readme/cover-motion.gif) · [GitHub 社交分享图](readme/social-preview.jpg)
+**一支发布片抓住你的目光，一次产品揭示节奏恰好，一位创作者把复杂的事讲得简单。** 把参考片、标志、截图、素材和文案交给 Agent。OpenMotion 提供一套研究参考、重建可编辑工程、讲述自己故事的工作流。
 
+**逆向拆解热门视频，变成你的品牌作品。** 让本地 Agent 成为**全栈视频创作者**：研究参考，用 **HTML、CSS 和 JavaScript** 表达视频，以自有且受支持的 API Key 生成缺少的素材，在同一个 Studio 中剪辑和渲染。沿用现有 Agent 和账号，保留源码、素材和成片。
+
+**🔑 BYOA + BYOK。🧩 890+ 目录资源。👐 开源免费。** 创作软件覆盖从参考到 MP4 的流程；Agent 订阅和外部模型/API 费用由你选择的供应商收取。[自带 Agent 与 Key](#bring-your-agent-and-keys) · [浏览资源库](#resources-to-start-from)
+
+**拆解、创作、发布。** 逆向分析提供创作结构，内置多模态模型补充素材，可编辑时间轴将它们组合起来。**多平台发布 — 规划中**，将继续连接成片与受众。
+
+> “为我们的品牌重建这支发布片。保留揭示方式、镜头运动和节奏，用我们的产品、截图和文案。通过已配置的模型生成缺少的画面、音乐和旁白。展示对比，再交付可编辑工程和 MP4。”
+
+**任何视频 → 逆向拆解 → 用代码改编品牌 → 生成、剪辑、渲染 → 多平台发布（规划中）。**
+
+<a id="everyone-can-be-a-creator"></a>
+<a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a>
+<a id="人人都是自媒体"></a>
+<a id="creator-video-gallery"></a>
+
+## 🎥 从真人开始，做值得看的视频
+
+**一张面孔、一段声音、一个故事，再加上恰当的动效。** 从九条创作者参考中选择课程、屏幕演示、创始人故事或产品视频，带上自己的录制素材，借鉴喜欢的结构。点击预览观看完整视频。
+
+<table>
+<tr><th colspan="3" align="left">🎓 教学与讲解</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<a href="../library/skills/presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="真人视频参考：改变职业生涯的 6 项关键技能"></picture></a><br>
+<strong>改变职业生涯的 6 项关键技能</strong><br>
+编号要点 + 动态关键词<br>
+<sub>参考 · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="readme/media/dan-martell-tools-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/dan-martell-tools.jpg"><img src="readme/people/dan-martell-tools.gif" width="216" alt="真人视频参考：现在最好的 AI 工具是什么？"></picture></a><br>
+<strong>现在最好的 AI 工具是什么？</strong><br>
+出镜讲解 + 悬浮工具卡片<br>
+<sub>参考 · <a href="https://www.youtube.com/shorts/mk1zJd9Rm4c">Dan Martell</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="readme/media/harpercarrollai-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/harpercarrollai.jpg"><img src="readme/people/harpercarrollai.gif" width="216" alt="真人视频参考：10 天 AI 基础，第 1 天"></picture></a><br>
+<strong>10 天 AI 基础，第 1 天</strong><br>
+个人讲解 + 清晰字幕<br>
+<sub>参考 · <a href="https://www.instagram.com/reel/C4eNPF3PdpG/">@harpercarrollai</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🖥️ 展示工作流</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="真人视频参考：我每天使用的 5 个工具"></picture></a><br>
+<strong>我每天使用的 5 个工具</strong><br>
+桌边讲述 + 工作流插画面<br>
+<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="真人视频参考：带重点标注的工具演示"></picture></a><br>
+<strong>带重点标注的工具演示</strong><br>
+真人 + 屏幕 + 标注<br>
+<sub>参考 · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="readme/media/aiwithsachi-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/aiwithsachi.jpg"><img src="readme/people/aiwithsachi.gif" width="216" alt="真人视频参考：值得安装的 5 个 Claude 插件"></picture></a><br>
+<strong>值得安装的 5 个 Claude 插件</strong><br>
+口述清单 + 说明截图<br>
+<sub>参考 · <a href="https://www.instagram.com/reel/Dc7G9Pxu_1O/">@aiwithsachi</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🎬 讲故事，展示产品</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<a href="readme/media/khris-sheer-founder-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/khris-sheer-founder.jpg"><img src="readme/people/khris-sheer-founder.gif" width="216" alt="真人视频参考：创始人实验，第 1 集"></picture></a><br>
+<strong>创始人实验，第 1 集</strong><br>
+创始人日记 + 日常补充镜头<br>
+<sub>参考 · <a href="https://www.tiktok.com/@khris.sheer/video/7491715587895430402">@khris.sheer</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="readme/media/ugc-rachelll-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ugc-rachelll.jpg"><img src="readme/people/ugc-rachelll.gif" width="216" alt="真人视频参考：AI 创作者与产品"></picture></a><br>
+<strong>AI 创作者与产品</strong><br>
+产品故事 + 证据 + 画中画<br>
+<sub>参考 · <a href="https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246">@ugc.rachelll</a></sub>
+</td>
+<td width="33%" valign="top" align="center">
+<a href="readme/media/kevinstratvert-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/kevinstratvert.jpg"><img src="readme/people/kevinstratvert.gif" width="216" alt="真人视频参考：别再为 5 个 AI 工具付费"></picture></a><br>
+<strong>别再为 5 个 AI 工具付费</strong><br>
+产品教程 + 实际演示<br>
+<sub>参考 · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
+</td>
+</tr>
+</table>
+
+**按这个方向做一支片子：** 你的出镜人、故事和产品。让 Agent 参考开头、字幕节奏或屏幕揭示方式，适配你的素材。[Presenter Story Skill](../library/skills/presenter-story/SKILL.md) · [参考署名](readme/media/manifest.json)
+
+### 🎙️ 下一支真人讲解视频
+
+<a href="../library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/motiongit-kinetic.jpg"><img src="readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech 模板：真人窗口、图解和动态文字"></picture></a>
+
+**真人叙事 × 金属文字 × 动画讲解。** 带来录制素材、文案、截图和字幕。OpenMotion Library 已打包可编辑源码、参数、字体、声音配方及本地运行器，Agent 可按制作指南改编。**1920 × 1080 · 60 fps · 横屏。**
+
+[获取模板包](../library/templates/presenter-tech/presenter-tech.motion) · [制作指南](../library/templates/presenter-tech/TEMPLATE.md) · [MOTION_DESIGN.md](../library/templates/presenter-tech/MOTION_DESIGN.md)
+
+<a id="brand-film-gallery"></a>
+
+## 🚀 研究那些让你心动的发布片
+
+**Lovable、Kimi、Firecrawl、Figma、ElevenLabs、Codex。** 从优秀参考中选择想要的感觉，围绕自己的产品创作。以下均为创作参考，每条下方的简报都是下一支视频的方向。
+
+<table>
+<tr>
+<td width="50%" valign="top" align="center">
+<a href="readme/media/jake-lovable-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/viral-remix.jpg"><img src="readme/examples/viral-remix.gif" width="440" alt="Lovable Aesthetics Update 参考片"></picture></a><br>
+<strong>Lovable · Aesthetics Update</strong><br>
+用自信的产品揭示，展示下一次设计更新。<br>
+<sub>参考 · @lovable_dev</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser 参考片"></picture></a><br>
+<strong>Kimi · K3 teaser</strong><br>
+把下一次发布浓缩成简短、难忘的预告。<br>
+<sub>参考 · @Kimi_Moonshot</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<a href="readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="readme/gallery/firecrawl.gif" width="440" alt="Firecrawl Free Keyless 参考片"></picture></a><br>
+<strong>Firecrawl · Free Keyless</strong><br>
+把开发者功能讲成清楚、直观的产品故事。<br>
+<sub>参考 · @ericciarla</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<a href="https://openai.com/codex-originals/"><img src="readme/brand-showcase/codex-originals.webp" width="440" alt="Codex Originals：OpenAI 活动中创作者的合影"></a><br>
+<strong>OpenAI · Codex Originals</strong><br>
+让使用你的产品创作的人，站在故事中心。<br>
+<sub><a href="https://openai.com/codex-originals/">观看官方活动 ↗</a> · OpenAI · 活动静帧</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<a href="readme/media/jake-figma-draw-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/product-launch.jpg"><img src="readme/examples/product-launch.gif" width="440" alt="Figma Draw product launch 参考片"></picture></a><br>
+<strong>Figma · Draw</strong><br>
+用动效展示产品带来的可能。<br>
+<sub>参考 · @figma</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs 参考片"></picture></a><br>
+<strong>ElevenLabs · Reception</strong><br>
+用聚焦的发布故事介绍新产品。<br>
+<sub>参考 · @ElevenLabs</sub>
+</td>
+</tr>
+</table>
+
+> “按这个方向为我们的品牌做一支发布片。使用我们的界面、文案和视觉身份，保留节奏感与清晰的产品揭示，为我们的产品设计新的镜头顺序。”
+
+以上影片为已署名的外部参考。OpenMotion 提供改编工作流。[视频来源](readme/media/manifest.json) · [其他展示素材来源](readme/brand-showcase/README.md)
+
+<a id="what-is-openmotion"></a>
 <a id="openmotion-是什么"></a>
+<a id="video-is-code"></a>
 
-## 🎬 OpenMotion 是什么？
+## 💻 视频即代码，HTML 即画布
 
-**OpenMotion 是 All-in-One AI-native Studio：一站式视频创作与剪辑空间，也是以可编辑时间轴为核心的 AI 原生、开源 CapCut 替代。** 用自然语言告诉 AI 你想怎么剪：保留哪些内容、去掉哪些段落、怎样组织故事、在哪里添加字幕、配乐和动效。Agent 根据素材、脚本或确认的时间码修改可编辑工程，你随时在 Studio 中预览、调整并导出 MP4。
+**本地 Agent 已经会写代码，让它成为全栈视频创作者。** OpenMotion 用 HTML、CSS、JavaScript 描述场景、字体、布局、转场和时间。实拍、生成片段、图片、音乐和旁白作为合成素材，同一工程可在 Studio 打开并渲染为 MP4。
 
-**AI 剪辑是核心，创作与表达是目的。** 把灵感、素材、品牌、Agent 与多模态模型带进同一个创作流程：讲清故事，生成缺少的画面和声音，反复打磨剪辑，保留可编辑作品。Claude Motion 为动效创作提供思路。
+![本地 Agent、可选媒体模型账号和创作资源共同支持参考理解、场景编码、素材生成、剪辑及 MP4 渲染，并保留可复用源码。](readme/diagrams/creation-stack.svg)
 
-现在，OpenMotion 已把工程会话、模板发现、素材管理、模型生成、时间轴编辑与 MP4 导出连在一起。完整愿景是一个懂你、懂团队、可协作的创意空间，进一步连接发布管理、周期性任务与反馈数据，让每次创作积累为下一次可用的知识。
+**编写、观看、修改、渲染。** 让 Agent 替换产品、精简开头、加入真人、修改字幕或尝试新结尾。它修改工程源码，你在可视化编辑器中审阅。本地 MCP 客户端使用工程工具，具备 shell 的 Agent 还可遵循 Skills 和固定版本 CLI 工作流。[Agent 配置](#your-agent-your-studio) · [原生合成指南](../skills/motion-production/references/native.md) · [HTML 示例工程](../template-library/product-promo/index.html)
 
-**两个接入方向，同一份可编辑工程。**
+**🎯 向第一支百万播放视频努力。** 研究吸引人的开头，拆解结构，让它为你的品牌表达。尝试新的开场、出镜人或更鲜明的产品揭示，保留源码，持续改进下一版。
 
-- **从 OpenMotion 出发 → [连接你的 Agent](#connect-your-agent)。** 打开 Studio，带来素材，连接 Codex、Claude Code 等客户端参与 AI 剪辑。
-- **从你的 Agent 出发 → [使用 OpenMotion](#从-agent-接入)。** 通过 **Skills、MCP、CLI** 接入制作能力，让 Agent 创建、修改、预览和导出，随时回到 Studio 细调。
+<a id="bring-your-agent-and-keys"></a>
+
+## 🔑 BYOA + BYOK。你的 Agent、你的 Key、你的作品。
+
+**沿用已有智能，OpenMotion 提供视频创作全栈。** 本地编程 Agent 贯穿创作：理解简报、规划场景、编写视频代码、编排素材、修改剪辑并请求最终渲染。
+
+| 自带什么 | 如何用于视频 |
+| --- | --- |
+| **🤖 Agent — BYOA** | 通过 Skills 和 MCP 连接现有本地 Agent，受支持时也可使用 CLI。保留惯用客户端、账号和工作上下文。 |
+| **🔑 Key — BYOK** | 在 Model Settings 配置受支持的媒体 API Key，选择图片、视频、音乐和 TTS 模型；受支持的本地媒体集成可使用已有 Agent 登录。 |
+| **🎨 品牌与素材** | 加入标志、字体、截图、实拍、脚本和音乐，复用 Brandkit 与 Motion MD，保持后续版本一致。 |
+| **🧩 起步资源** | 浏览参考、动效组件、模板和社区 Skills，选择方向，把源码或参考交给 Agent，做成自己的作品。 |
+
+### 一个创作者，贯穿全栈
+
+**理解 → 导演 → 编码 → 生成 → 剪辑 → 渲染。** Agent 处理简报和代码，Model Gateway 通过已配置账号生成素材，Studio 汇集源码、媒体和时间轴。审阅同一可编辑工程，提出修改，渲染本地 MP4。
+
+**用代码做视频，持续改进。** 编辑 HTML/CSS/JS 和媒体，就能调整开头、更换出镜人、品牌或结尾。工程始终是可以检查、版本管理和继续编辑的普通源文件。
+
+### 开源创作软件，免费使用
+
+**OpenMotion 创作流程全部开源：Skills、工程工具、模型集成、Studio 和渲染。** 本地运行、检查实现、按需扩展。这条本地工作流不收软件订阅或单次渲染费，也可以只用自己的视频、图片和声音，不调用生成 API。
+
+你选择的 Agent 或模型供应商可能收取订阅或用量费用。BYOA / BYOK 使用你自己的访问权限，不含第三方额度，也不改变专有模型的许可。供应商凭据保存在工作区配置中，与视频工程分开。[许可证](../LICENSE) · [Agent 配置](agent-adapters.md) · [模型配置](model-gateway.md)
+
+> “用我的本地 Agent 和已配置媒体模型完成全栈视频创作。在 Library 找参考，用 HTML/CSS/JS 为我们的品牌重建结构，只生成缺少的素材，展示可编辑工程。审阅后渲染 MP4，并保留源码。”
+
+<a id="reverse-engineer-a-video"></a>
+
+## 🔍 逆向拆解任何视频，变成你的品牌作品
+
+从值得研究的片段开始：开头、界面揭示、动画讲解或品牌收尾。Agent 将它们拆成可以检查和修改的创作决定。
+
+| 研究参考 | 为你的故事重建 |
+| --- | --- |
+| **开头与叙事** — 先出现什么，如何铺垫，何时揭示 | 你的承诺、产品事实与行动号召 |
+| **镜头结构** — 构图、镜头运动、图层与视觉层级 | 你的界面、实拍、标志和辅助图片 |
+| **动效与节奏** — 入场、转场、缓动与阅读停留 | 按你的内容调整相同的运动意图 |
+| **字体与身份** — 字体层级、配色与构图 | 你的字体、色板、文案和 Brandkit |
+| **声音与节拍** — 语音时序、配乐提示与重音 | 你的声音、音乐素材与声音方向 |
+
+1. **带来参考和品牌。** 提供视频或可访问链接、研究片段，以及标志、文案、截图或录制素材。[Brandkit](../library/brandkits/openmotion/BRANDKIT.md) 将品牌身份和产品事实放在一起。
+2. **拆解有效的创作方法。** 让 Agent 识别镜头、时序、运动、声音和保持项，在 Motion MD 简报中记录这些决定。
+3. **用代码重建视频。** 视频参考使用 `motion-recreate`；已有可编辑源码则走模板路线。用 HTML/CSS/JS 表达场景、运动与时间，实拍和声音作为媒体素材。带上自己的内容，通过内置模型集成补齐图片、视频、音乐和 TTS。
+4. **对比并打磨。** 检查参考和重建视频的对应时刻，审阅揭示、阅读时间、构图与声音，在同一 Studio 工程继续修改。
+5. **为受众准备成片。** 导出 MP4 版本、保留工程，将确认的品牌与动效规则沿用到下一支视频。集成式多平台发布仍在**规划中**。
+
+```text
+用 OpenMotion 为我们的品牌重建附件参考视频。
+
+研究：开头、镜头顺序、字体、转场和声音提示。
+保留：选定片段的产品揭示方式与镜头节奏。
+替换：用提供的素材替换标志、界面、主张、文案和片尾。
+生成：遵循品牌与已确认脚本，通过已配置模型生成缺少的
+图片、视频、背景音乐和 TTS 旁白。
+
+创建可编辑工程，在 Studio 打开并对比参考的对应时刻。
+解释剩余差异。审阅后导出 MP4，保留源码供后续修改。
+```
+
+参考获取和媒体分析取决于宿主工具；必要时提供本地视频和时间码。使用自有或已获许可素材，保留参考署名。[复刻工作流](../skills/motion-recreate/SKILL.md) · [参考集合](collections/README.zh-CN.md)
 
 <a id="all-in-one-studio"></a>
+<a id="full-video-creation-stack"></a>
 
-## 🌐 All-in-One Studio：从发现灵感，到下一次创作
+## 🎛️ 开源的视频创作全栈
 
-**发现、制作、交付、学习，都围绕一个创作空间展开。** 我们把完整生命周期作为产品范围；当前可用与后续方向分别标明。
+**从参考和品牌简报，到完整可编辑影片，一套流程完成。** OpenMotion 汇集创作方法、模型集成、资产管理、时间轴、动效引擎和渲染。用已有材料开始，生成缺少的部分，与 Agent 持续打磨。
 
-| 创作环节 | Studio 承载什么 | 当前状态 |
+### ✨ 内置图片、视频、音乐和 TTS 集成
+
+**BYOK 将你的多模态账号接入视频工作流。** 在 **Model Settings** 添加受支持的 Key、选择模型，通过 Studio 的 **Model Gateway** 生成图片、视频、音乐和语音。预览候选并采用到同一工程；受支持的本地图片路径可复用已有 Agent 登录。
+
+| 视频所需素材 | 内置模型目录示例 | 如何用于影片 |
 | --- | --- | --- |
-| **搜索灵感与发现** | 浏览模板与参考，寻找叙事方向，搜索素材并积累想法。 | 已有目录搜索与参考浏览；集成媒体服务搜索 is coming。 |
-| **上传与管理素材** | 导入视频、图片、配音和音乐，预览、管理并保留来源。 | 已有工程素材导入、预览与文件操作；团队共享素材库 is coming。 |
-| **生成所需素材** | Agent 规划创作，通过多模态模型生成图片、视频、配音和音乐。 | 已有外部 Agent 工作流与 Studio Model Gateway。 |
-| **Tell Story 与成片剪辑** | 组织叙事、排列时间轴、打磨声音与动效、替换图片并改编版本。 | 已有可编辑工程与 AI 辅助改稿；自动选段和平台适配 is coming。 |
-| **人和 Agent 共同创作** | 一起编辑，在时间轴讨论、评论、评审并继续迭代。 | 已有同一本地工程的交接；协作评论与评审 is coming。 |
-| **交付与运营** | 导出不同版本，管理发布、制作任务和周期性自动化。 | 已有 MP4 导出及生成/导出任务状态；发布管理与创作任务自动化 is coming。 |
-| **数据回收与持续进化** | 回收表现与评审反馈，检索品牌知识，积累偏好，把有效方法沉淀为 Skill。 | 已可显式提供 Brandkit、Motion MD 和 Skills；数据闭环、长期记忆与 RAG is coming。 |
+| **🖼️ 图片** | Codex Image；Atlas Cloud 的 Nano Banana 2；fal.ai 的 FLUX Schnell | 品牌视觉、场景美术、辅助图片；受支持的 Codex 图片路径可基于参考图编辑 |
+| **🎬 视频** | Atlas Cloud 的 Seedance 2.0；fal.ai 的 Wan 2.2 | 生成镜头和 B-roll，与实拍及动效组合 |
+| **🎵 音乐** | Atlas Cloud 的 Suno v4 | 根据情绪和创作简报生成配乐 |
+| **🎙️ TTS / 旁白** | fal.ai 的 Kokoro | 根据已确认脚本生成旁白，编排到画面和音乐中 |
 
-[完整产品愿景与能力地图](product/studio-vision.md) · [当前技术架构](product/architecture.md)
+这些条目随[源码](../gateway/catalog.ts)提供。连接自有受支持账号或 Key；可用性、参数和费用由供应商决定。Gateway 也支持模型发现和显式注册端点。[模型配置与生成](model-gateway.md)
 
-<a id="super-motion-video-agent"></a>
+> “使用我们的 Brandkit 和已确认脚本，生成开场美术、插入视频、背景音乐和 TTS。把选中的结果加入重建工程，对齐声画，再展示完整剪辑。”
 
-## 🧠 我们提出 Super Motion Video Agent
+### 🛠️ 从创作意图到渲染成片
 
-**一个贯穿完整创作生命周期的超级视频创作 Agent。** 这是 OpenMotion 提出的 Agent 产品概念：理解创作者、组织任务、编排工具与模型，持续维护可编辑作品，并把经验带到下一次创作。
+| 创作环节 | OpenMotion 汇集的能力 |
+| --- | --- |
+| **理解与导演** | 参考重建、创作 Skills、Brandkit、Motion MD 和 Agent 分析工具 |
+| **生成与管理** | 多模态适配器、模型选择、生成任务、候选预览和工程媒体 |
+| **剪辑与动画** | 可视化时间轴、HTML/CSS/JS 合成、文字、转场、字幕和声音编排 |
+| **审阅与迭代** | Studio 预览、手动调整、Agent 修改和工程版本 |
+| **渲染与交付** | 固定版本渲染、技术导出检查、MP4 和可编辑源码 |
+| **发布与学习 — 规划中** | 平台连接、发布排期及关联视频版本的反馈 |
 
-- **懂你：** 结合目标受众、个人口吻、团队偏好与 Brandkit，理解这支片子为什么而做。
-- **会规划：** 把目标拆成调研、素材、脚本、剪辑、评审与交付任务。
-- **能创作：** 选择 Skill 与 Agent 模板，编排搜索和多模态模型，把结果落实到同一条时间轴。
-- **可协作：** 与人共同创作，处理评审反馈，在改稿中保留工程上下文。
-- **会积累：** 连接发布版本与效果数据，检索已有知识，提出下一轮 Skill 和创作方法的改进。
+**运行、检查、扩展。** 应用和集成代码开源，第三方模型与服务保留各自许可和访问要求。工程保留源码、媒体与创作决定，供下一次编辑使用。
 
-参考 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 与 [Super-agent 研究原型](https://github.com/deepseek-ai/dsh-superagent-prototype) 的持续任务理念，我们将其延伸到视频与 Motion。**Super Motion Video Agent 是产品概念与路线图。** 当前由你连接的 Agent 使用 OpenMotion Skills、工程工具和 Studio 完成创作；常驻编排、发布反馈与学习闭环仍在规划。[设计与状态](product/studio-vision.md#super-motion-video-agent)
+```text
+参考 + 你的品牌 + 你的 Agent
+              ↓
+         理解与重建
+              ↓
+ 图片 + 视频 + 音乐 + TTS
+              ↓
+      可编辑 Studio 工程
+              ↓
+ 审阅 → 修改 → 渲染 → MP4 + 源码
+              ↓
+      多平台发布 · 规划中
+```
+
+[查看架构](product/architecture.md) · [Model Gateway](model-gateway.md) · [扩展应用](../CONTRIBUTING.md)
+
+<a id="product-tour"></a>
+<a id="产品界面"></a>
+<a id="connect-your-agent"></a>
+<a id="use-from-your-agent"></a>
+<a id="从-agent-接入"></a>
+<a id="your-agent-your-studio"></a>
+
+## 🖥️ BYOA：让本地 Agent 成为全栈视频创作者
+
+**自带 Agent，接入完整视频流程。** Skills 提供创作方法，MCP 提供工程工具，Studio 让你观看并塑造结果。Agent 留在自己的客户端使用原有账号，OpenMotion 运行本地剪辑与渲染应用。
+
+| Agent / 客户端 | 连接方式 |
+| --- | --- |
+| **DeepSeek Harness** | 本地 MCP + Skills 配置，或生成 Harness 适配器 |
+| **Codex** | 本地插件或 MCP + Skills；宿主支持时可使用 Studio Viewer |
+| **Claude Code** | 本地插件或 MCP + Skills，可用 CLI 进行本地操作 |
+| **WorkBuddy** | 生成 MCP + Skills 配置；桌面创作和播放验收仍待完成 |
+| **其他本地 MCP 客户端** | 手动 stdio 配置；媒体、shell 和 Viewer 能力取决于宿主 |
+
+[各 Agent 配置](agent-adapters.md) · [一体化本地安装器](npm-installation.md) · [快速开始](#quick-start)
+
+### 从 Agent 开始
+
+把参考和品牌简报交给 DeepSeek Harness、Codex 或 Claude Code，让它重建视频、打开预览、修改并导出。继续使用原有账号和工作方式。
+
+![面向 Codex 的 OpenMotion 嵌入式 Viewer，展示可编辑的 Product Promo 工程、预览、图层和时间轴。](readme/product-tour/codex-embedded.png)
+
+*现有产品演示展示了为 Codex 宿主准备的 Studio Viewer。查看[录制范围](product-tour.md) 了解实际演示内容。*
+
+### 从 Studio 开始
+
+浏览参考、打开模板或导入录制素材，选择 **Connect Agent**，按工作区说明连接客户端并提交简报。在同一时间轴审阅修改，也可以随时手动调整。
+
+![独立 OpenMotion Studio，包含会话、保存的需求和可编辑视频工程。](readme/product-tour/standalone-studio.png)
+
+<details>
+<summary>查看 Claude Code 与模板交接</summary>
+
+![本地终端中加载的 Claude Code 制作 Skills。](readme/product-tour/claude-code-skills.png)
+
+终端截图证明本地 Skill 加载。[CLI 检查](readme/product-tour/cli-checks.png) 证明工程检查，不代表模型已完成一次复刻。
+
+![Product Promo 工程的实际 CLI 检查：工程信息、lint 和时间轴检查。](readme/product-tour/cli-checks.png)
+
+![Connect Agent 对话框：工作区专属连接说明与本地客户端选择。](readme/product-tour/connect-agent.png)
+
+![Product Promo 模板预览，展开了可复制给 Agent 的模板专属指令。](readme/product-tour/template-to-agent.png)
+
+**预览 → 复制指令 → 连同品牌素材粘贴给 Agent。** 内置模板创建可编辑副本；外部参考启动重建任务。[完整产品演示](product-tour.md)
+
+</details>
+
+两种入口使用同一本地应用和工程。Agent 在外部客户端运行，Studio 保存简报与可编辑作品。[连接原理](session-architecture.md)
 
 <a id="ai-video-editing"></a>
+<a id="keep-editing-after-the-remake"></a>
 
-## ✂️ AI 原生时间轴：你讲故事，AI 帮你剪
+## ✂️ 复刻之后，继续剪辑
 
-**用自己的口吻，告诉 AI 这支视频应该怎么讲。** 在时间轴上放置、拖动和重排材料，让 Agent 帮你选段、删改、组织节奏、添加字幕和声画配合。每次调优都落在可以继续编辑的工程里。
+**第一次重建，只是你的作品的开始。** 精简开头、更换截图、补充讲解、延长片尾，或为不同受众再剪一版。
 
-| 围绕时间轴的三条主线 | 当前可以怎样使用 | 已确认的产品方向 |
-| --- | --- | --- |
-| **✂️ 智能剪辑与故事组织** | 导入和排列素材，让 Agent 按脚本或确认的时间码精简指定段落、重排节奏，遵循你的口吻与叙事要求。 | 自动选段、识别无关内容、根据发布目标自动重构画幅。 |
-| **✨ 素材生成与搜索** | 在 Studio 通过已配置模型生成图片、视频、音乐和语音；用支持参考图的模型修改选中图片，比较候选并替换，保留原有时长与动画。 | 整合视频、图片、配音、音乐与 Avatar 服务搜索，与生成能力一起供创作使用。 |
-| **📤 多平台输入与输出** | 组合支持的本地媒体、脚本、字幕及 Agent 可访问的参考；改编不同构图，导出 MP4 并保留工程。 | 更广的平台链接解析与素材导入、自动格式适配和平台导出预设。 |
+**面向 AI 剪辑与 Motion 的 All-in-One AI-native Studio。** 人与 Agent 在同一可编辑时间轴上工作，从初剪到最终渲染。
 
-右侧为产品方向。当前生成能力取决于供应商配置与模型支持，参考获取和媒体分析取决于所连接 Agent 的工具。[现有素材操作](model-gateway.md) · [路线图](#当前状态与路线图)
+| Studio 中 | 当前可以做什么 |
+| --- | --- |
+| **故事与时间轴** | 导入、排列素材，让 Agent 按脚本或确认的时间码精简、重排和改稿 |
+| **动效与字幕** | 围绕内容编写动态文字、转场、标注、图表和字幕 |
+| **素材与声音** | 导入素材，通过内置模型集成生成图片、视频、音乐和 TTS 旁白 |
+| **图片修改** | 用支持参考图的模型生成候选，采用替换时保留时间和动画 |
+| **预览与版本** | 在 Studio 审阅，手动或让 Agent 修改，保留工程供后续迭代 |
+| **导出与源码** | 将固定版本渲染为 MP4，保留 HTML、CSS、JavaScript 和素材 |
 
-1. **带来素材。** 视频、口播、录音、屏幕录制，以及脚本、时间码、参考片和品牌素材。
-2. **告诉 AI 怎么剪。** 根据脚本或已确认的时间码精简内容、重排片段、补充画面，调整字幕、配乐与动效。
-3. **看结果，继续改。** 在 Studio 里预览，直接调整时间轴，或继续提出修改；最后交付 MP4 和可编辑工程。
+> “保留已确认的揭示效果。中间场景换成这段屏幕录制，按这些时间码精简开头，最后的 CTA 多停留两秒。”
 
-> 根据这段口播和带时间码的文字稿，剪成一支 30 秒短片。把核心结论放到开头，删掉我标出的重复段落，补上产品画面、字幕和我提供的配乐。先让我看预览，再根据反馈修改。
+模型可用性取决于供应商配置。自动语音理解、内容选择和平台感知重构画幅是独立能力，不能由时间轴编辑推导。[媒体操作](model-gateway.md) · [工程与版本](project-workspace.md)
 
-<a id="人人都是自媒体"></a>
+<a id="presenter-motion"></a>
 
-## 🌱 人人都是 AI 剪辑师，人人都是自媒体
+### 🎙️ 真人、真实故事，以及恰到好处的动效
 
-**有想法，就能开始剪辑；有表达，就能开始创作。** 无论是个人、讲师还是小团队，都可以借助 AI 选取内容、组织故事、反复改稿，把素材变成自己的作品。OpenMotion 希望让每个人都能成为 AI 剪辑师，用视频分享知识、表达观点、讲述故事，持续经营自己的内容。
+口播、教程和产品演示也适用。**保留真人表达与叙事节奏，用自己的录制素材、主题和品牌复用字幕、截图、画中画和动效。**
 
-复刻 viral video 的叙事与节奏，剪辑自己的口播，把产品故事讲清楚，再将作品带到小红书、X / Twitter、Instagram 或 YouTube。更好的表达与更稳定的创作，是我们帮助用户争取曝光的方式；传播结果仍取决于内容、受众与平台。
+<details>
+<summary><strong>查看三组真人改编与 Motion MD 配方</strong></summary>
+
+以下成对预览是原参考和外部改编的无声片段。选择自己录制素材的创作方向，再用设计配方指导 Agent。
+
+#### 用真人、关键词和视觉例子讲清楚
+
+**职业建议 → 视频制作讲解**
+
+<table>
+<tr><th width="50%">参考 · @careerwithriya</th><th width="50%">改编 · 外部示例</th></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></td></tr>
+</table>
+
+**复用：** 编号观点、真人讲述和证据卡片。**替换：** 创作者、口述主题、关键词与辅助例子。
+
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [完整改编](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
+
+#### 一边讲故事，一边展示工作流
+
+**日常工具 → 设计工作空间的故事**
+
+<table>
+<tr><th width="50%">参考 · Ali Abdaal</th><th width="50%">改编 · 外部示例</th></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></td></tr>
+</table>
+
+**复用：** 真人与屏幕交替节奏、克制字幕、清晰插入画面。**替换：** 你的录制素材、工作流和截屏。
+
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [完整改编](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
+
+#### 把真人和产品放进同一个故事
+
+**工具演示 → 视频编辑器导览**
+
+<table>
+<tr><th width="50%">参考 · @john.tagudin</th><th width="50%">改编 · 外部示例</th></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="readme/people/john-tagudin-capso-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></td></tr>
+</table>
+
+**复用：** 开头、画中画、标注与可见成果。**替换：** 产品、出镜人、演示和结尾信息。
+
+[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [完整改编](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
+
+> 用我的实拍和屏幕录制套用这个结构。保留我的声音，围绕实际讲话剪辑并对齐字幕，用截图、画中画和动效解释每个要点。先展示有声预览，再交付可编辑工程和 MP4。
+
+
+</details>
+
+**人人都能创作。** 从想表达的内容出发，用参考明确结构，让自己的声音始终处于中心。
 
 <a id="可以用它做什么"></a>
+<a id="what-can-you-make"></a>
 
 ## 🎞️ 可以用它做什么？
 
-**先看效果，再开始剪辑。** 七个场景，七份可以直接交给 Agent 的创作简报。下方动图选自资源库中的外部参考作品；点击播放完整参考，用你自己的素材和品牌开始创作。
+**看到方向，做成自己的作品。** 七个场景，每个都有可交给 Agent 的创作简报。动图片段选自资源目录的外部作品，点击观看完整参考，再用自己的素材和品牌开始。
 
 <table>
 <tr>
 <td width="50%" valign="top">
-<strong>01 · AI 口播精剪</strong><br>
-3 分钟口播，剪出 30 秒重点。
+<strong>01 · AI 口播剪辑</strong><br>
+三分钟素材，一个鲜明故事。
 <p align="center">
 <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/talking-head.jpg">
-<img src="readme/examples/talking-head.gif" width="208" alt="外部创作参考：Ali Abdaal · 5 tools I use every day">
+<img src="readme/examples/talking-head.gif" width="208" alt="外部创作参考：Ali Abdaal · 我每天使用的 5 个工具">
 </picture></a>
 </p>
-<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 5 tools I use every day</a></sub><br><br>
-<strong>从这里开始</strong> · 你的录制素材＋字幕或时间码<br>
-<strong>可以这样剪</strong> · 结论前置，精简重复，用字幕与 B-roll 接住重点。<br><br>
+<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 我每天使用的 5 个工具</a></sub><br><br>
+<strong>从这里开始</strong> · 你的录制素材 + 文字稿 / 时间码<br>
+<strong>做成自己的作品</strong> · 清晰开头、精简表达、字幕与适时的 B-roll。<br><br>
 <a href="examples.zh-CN.md#talking-head">复制创作简报 →</a> · <a href="readme/examples/talking-head.jpg">静态预览</a>
 </td>
 <td width="50%" valign="top">
-<strong>02 · AI 素材重组与改稿</strong><br>
-把零散片段，剪成一段 100 天故事。
+<strong>02 · AI 重剪与改稿</strong><br>
+把零散片段变成 100 天的故事。
 <p align="center">
 <a href="readme/media/hundred-days-story-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/story-recut.jpg">
-<img src="readme/examples/story-recut.gif" width="208" alt="外部创作参考：100 days with stickers and photo cards · Hyperframes catalog">
+<img src="readme/examples/story-recut.gif" width="208" alt="外部创作参考：用贴纸和照片卡讲述 100 天">
 </picture></a>
 </p>
-<sub>参考 · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">100 days with stickers and photo cards · Hyperframes catalog</a></sub><br><br>
-<strong>从这里开始</strong> · 片段、照片、旁白与故事梗概<br>
-<strong>可以这样剪</strong> · 用照片拼贴、章节和旁白重排故事，做出自己的叙事节奏。<br><br>
+<sub>参考 · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">用贴纸和照片卡讲述 100 天</a></sub><br><br>
+<strong>从这里开始</strong> · 你的片段、照片、旁白和故事梗概<br>
+<strong>做成自己的作品</strong> · 用照片剪贴、章节节拍和新节奏做个人蒙太奇。<br><br>
 <a href="examples.zh-CN.md#story-recut">复制创作简报 →</a> · <a href="readme/examples/story-recut.jpg">静态预览</a>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<strong>03 · 产品发布与功能演示</strong><br>
-让新功能，成为发布片的主角。
+<strong>03 · 产品发布与演示</strong><br>
+让功能成为主角。
 <p align="center">
 <a href="readme/media/jake-figma-draw-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/product-launch.jpg">
@@ -145,13 +490,13 @@
 </picture></a>
 </p>
 <sub>参考 · <a href="readme/media/jake-figma-draw-reference.mp4">Figma Draw · @figma</a></sub><br><br>
-<strong>从这里开始</strong> · 真实界面、功能简报与 Brandkit<br>
-<strong>可以这样剪</strong> · 功能揭示、界面特写、成果展示，组成一支完整发布片。<br><br>
+<strong>从这里开始</strong> · 产品界面 + 功能简报 + Brandkit<br>
+<strong>做成自己的作品</strong> · 功能揭示、聚焦界面演示和难忘收尾。<br><br>
 <a href="examples.zh-CN.md#product-launch">复制创作简报 →</a> · <a href="readme/examples/product-launch.jpg">静态预览</a>
 </td>
 <td width="50%" valign="top">
-<strong>04 · Viral video 复刻</strong><br>
-复刻节奏与结构，换成你的表达。
+<strong>04 · 热门视频重建</strong><br>
+重组节奏，讲自己的故事。
 <p align="center">
 <a href="readme/media/jake-lovable-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/viral-remix.jpg">
@@ -159,501 +504,353 @@
 </picture></a>
 </p>
 <sub>参考 · <a href="readme/media/jake-lovable-reference.mp4">Lovable: Aesthetics Update · @lovable_dev</a></sub><br><br>
-<strong>从这里开始</strong> · 参考视频＋你的文案、画面与品牌<br>
-<strong>可以这样剪</strong> · 拆解开场、动态排版与转场，再重建成可修改的个人版本。<br><br>
+<strong>从这里开始</strong> · 参考片 + 你的文案、视觉和品牌<br>
+<strong>做成自己的作品</strong> · 围绕开头、字体和视觉节奏，做新的可编辑影片。<br><br>
 <a href="examples.zh-CN.md#viral-remix">复制创作简报 →</a> · <a href="readme/examples/viral-remix.jpg">静态预览</a>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 <strong>05 · 讲解与教程</strong><br>
-一个复杂流程，讲成三个清楚步骤。
+一个工作流，三个清楚步骤。
 <p align="center">
 <a href="readme/media/remix-authorize-once-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/explainer.jpg">
-<img src="readme/examples/explainer.gif" width="480" alt="外部创作参考：Authorize Once, Everyone Connected · Hyperframes catalog">
+<img src="readme/examples/explainer.gif" width="480" alt="外部创作参考：授权一次，连接所有人">
 </picture></a>
 </p>
-<sub>参考 · <a href="readme/media/remix-authorize-once-reference.mp4">Authorize Once, Everyone Connected · Hyperframes catalog</a></sub><br><br>
-<strong>从这里开始</strong> · 操作流程、脚本与准确的界面素材<br>
-<strong>可以这样剪</strong> · 每个场景只讲一步，用标注、连线与界面变化引导理解。<br><br>
+<sub>参考 · <a href="readme/media/remix-authorize-once-reference.mp4">授权一次，连接所有人</a></sub><br><br>
+<strong>从这里开始</strong> · 你的工作流 + 脚本 + 准确界面截图<br>
+<strong>做成自己的作品</strong> · 每个场景一个重点，用有目的的标注引导。<br><br>
 <a href="examples.zh-CN.md#explainer">复制创作简报 →</a> · <a href="readme/examples/explainer.jpg">静态预览</a>
 </td>
 <td width="50%" valign="top">
-<strong>06 · 数据故事与动态图表</strong><br>
-让数字有重点，让变化被看见。
+<strong>06 · 数据故事与图表</strong><br>
+让每个数字都表达重点。
 <p align="center">
 <a href="readme/media/M1128-clip.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/data-story.jpg">
-<img src="readme/examples/data-story.gif" width="480" alt="外部创作参考：Animated comparison bars · @Vintage_god">
+<img src="readme/examples/data-story.gif" width="480" alt="外部创作参考：动态对比柱形图 · @Vintage_god">
 </picture></a>
 </p>
-<sub>参考 · <a href="https://x.com/Vintage_god/status/2106817967967056165">Animated comparison bars · @Vintage_god</a></sub><br><br>
-<strong>从这里开始</strong> · 你的数据、单位、出处与结论<br>
-<strong>可以这样剪</strong> · 从基线到变化，再落到结论；用动态数值与图表突出对比。<br><br>
+<sub>参考 · <a href="https://x.com/Vintage_god/status/2106817967967056165">动态对比柱形图 · @Vintage_god</a></sub><br><br>
+<strong>从这里开始</strong> · 你的数据、单位、来源和结论<br>
+<strong>做成自己的作品</strong> · 清晰的图表揭示、动态数值和明确对比。<br><br>
 <a href="examples.zh-CN.md#data-story">复制创作简报 →</a> · <a href="readme/examples/data-story.jpg">静态预览</a>
 </td>
 </tr>
 <tr>
 <td colspan="2" valign="top">
 <strong>07 · 音乐与艺术视觉</strong><br>
-让一段音乐，长出自己的视觉。
+让音乐拥有自己的视觉身份。
 <p align="center">
 <a href="readme/media/M1139-clip.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/music-visual.jpg">
-<img src="readme/examples/music-visual.gif" width="480" alt="外部创作参考：Lyria 3 visual sequence · @GoogleAI">
+<img src="readme/examples/music-visual.gif" width="480" alt="外部创作参考：Lyria 3 视觉片段 · @GoogleAI">
 </picture></a>
 </p>
-<sub>参考 · <a href="https://x.com/GoogleAI/status/2024154215182926027">Lyria 3 visual sequence · @GoogleAI</a></sub><br><br>
-<strong>从这里开始</strong> · 音轨、情绪方向与节拍或提示点<br>
-<strong>可以这样剪</strong> · 用色彩、层叠图形与动态排版，回应音乐中的关键时刻。<br><br>
+<sub>参考 · <a href="https://x.com/GoogleAI/status/2024154215182926027">Lyria 3 视觉片段 · @GoogleAI</a></sub><br><br>
+<strong>从这里开始</strong> · 你的音频 + 情绪 + 节拍标记 / 提示点<br>
+<strong>做成自己的作品</strong> · 色彩层次、动态文字与音乐同步的视觉序列。<br><br>
 <a href="examples.zh-CN.md#music-visual">复制创作简报 →</a> · <a href="readme/examples/music-visual.jpg">静态预览</a>
 </td>
 </tr>
 </table>
 
-这些参考用于说明创作方向，并非 OpenMotion 已生成的验收样片。需要直接打开的可编辑起点？查看 [三个内置模板](../library/templates/README.md)。[场景简报与使用方法](examples.zh-CN.md) · [参考来源与片段记录](readme/ASSETS.md#creative-examples)
+这些参考展示创作方向，不是 OpenMotion 生成的验收演示。要从可编辑工程开始，可打开[三个内置模板](../library/templates/README.md)之一。[示例简报与流程](examples.zh-CN.md) · [来源与片段记录](readme/ASSETS.md#creative-examples)
 
-<a id="input--process--output"></a>
+<a id="make-your-motion-language-reusable"></a>
+<a id="motion-design-community"></a>
 
-## 🔄 Input → Process → Output
+## 🎨 Motion Design MD — 围绕创作方法共建社区
 
-**带来素材 → 用 AI 剪辑 → 分享你的表达。** 从第一版简报到下一次改稿，整个生命周期围绕同一份工程展开。
+**拆解一次，分享动效语言，让下一位创作者继续创造。** `MOTION_DESIGN.md` 是社区核心的 Markdown 约定提案，以可读文本记录视频如何运动、为何有效，以及怎样适配新品牌。
+
+把创作决定从一次对话变成可阅读、评审和改进的文件。设计师描述动效，开发者实现，其他创作者用于新的故事。**社区分享成片，也分享创作方法。**
+
+![Brandkit 定义身份、产品事实和已确认素材；Motion Design MD 定义故事、时序、运动与审阅规则。SKILL.md 指导 Agent 将这些显式文件与源码、素材、预设和证据结合使用。](readme/diagrams/creative-context.svg)
+
+<details>
+<summary>查看创作包的文字说明</summary>
 
 ```text
-INPUT     收集视频、录音、链接、脚本与品牌素材
-PROCESS   确定故事 → 排列粗剪 → 完善素材、动效与声音
-          → Studio 预览 → 提出反馈 → 继续修改同一条时间轴 ↺
-OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
+参考 + 你的品牌
+      ↓
+理解 → 重建 → 对比 → 修改
+      ↓
+可复用创作包
+  BRANDKIT.md       品牌、产品事实、已确认素材
+  MOTION_DESIGN.md  叙事、动效、时序、声音、保持/修改规则
+  SKILL.md          改编与审阅方法
+  源码 + 素材       可编辑实现
+  预设 + 证据       替换输入与实际对比
+      ↓
+你的 Agent → 下一支可编辑视频
 ```
 
-**工程保存作品，Agent 落实意图，时间轴保留你的控制权。** 每次修改前，Agent 读取当前工程与 revision；修改后，你可以预览、细调并继续反馈。导出固定一个版本，源工程保留给下一次剪辑。
+</details>
 
-| 阶段 | 你带来什么 / 得到什么 | 当前使用方式 |
+**Brandkit 承载身份，Motion MD 承载设计，Skill 承载方法，工程承载实现。** 让作品在首次导出后继续有用，也让社区能检查、Fork 和改进。
+
+| 当前 Library 资源 | 提供什么 |
+| --- | --- |
+| [OpenMotion Brandkit](../library/brandkits/openmotion/BRANDKIT.md) | 品牌事实、视觉身份、表达口吻和素材的示例 |
+| [Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md) | 可复用的动效设计方向 |
+| [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md) | 六种源码 profile：线框标题、树冠字体、界面揭示、立体代码、粒子组装和玻璃卡片 |
+| [Presenter Story](../library/skills/presenter-story/SKILL.md) | 三份以真人讲述为主的视频设计配方 |
+
+`MOTION_DESIGN.md` 是需显式交给 Agent 的 **v0.1 写作约定**，没有自动导入器或校验器。源码改编包为六种 profile 提供替换助手；仅有视频参考时使用 `motion-recreate`。明确需要便携模板时，使用 `motion-video-to-template` 提供的既定 `TEMPLATE.md` 交付约定。[Motion MD 指南](motion-md.zh-CN.md) · [全部六个示例](motion-design-examples.zh-CN.md)
+
+### 🌱 你的改编，成为社区下一个起点
+
+```text
+研究参考 → 为品牌重建 → 对比实际结果
+                         ↓
+             在 GitHub 发布创作包
+       Motion MD + 源码 + 预览 + 署名
+                         ↓
+              Fork → 换品牌 → 审阅
+                         ↓
+            分享改进与新的真实示例
+```
+
+1. **写下设计。** 记录参考、叙事节拍、时序、构图、镜头、字体、声音和换内容时仍须保留的决定。
+2. **让它可运行。** 包含源码和获准使用的素材，明确替换输入，解释预览与渲染方法。
+3. **展示实际结果。** 分享原参考、改编、适用时的对应时刻对比、实际检查和剩余差异。
+4. **贡献与改编。** 用完整文件夹发起 PR，让其他人 Fork、换品牌，并带着新示例贡献改进。
+
+| 你带来什么 | 社区得到什么 |
+| --- | --- |
+| **动效设计** | 成文的视觉语言、镜头语法和声音方向 |
+| **创意编程** | 可编辑实现、组件和可复用动画行为 |
+| **品牌与叙事** | 新简报、真实改编及设计适用于不同内容的证据 |
+| **Agent 工作流** | 指导重建、改编、对比和审阅的 Skills |
+| **研究与评估** | 有署名的参考、可复现对比与基准任务提案 |
+
+从 [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md)、[Presenter Story](../library/skills/presenter-story/SKILL.md) 或 [Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md)开始。使用[资源条目清单](../library/ENTRY_TEMPLATE.md)，通过 [GitHub](https://github.com/nexu-io/html-anything/issues) 分享作品，并加入 [Discord](https://discord.gg/mHAjSMV6gz)。基于 Git 的贡献和显式复用当前可用；市场与 Motion Benchmark / Arena 仍是未来方向。
+
+<a id="see-the-motion-survive-a-new-brand"></a>
+
+## 🧪 探索视频背后的可编辑动效
+
+**喜欢某个镜头、标题或产品揭示？保留想法，换个故事。** 六组可编辑源码研究展示动效怎样承载新内容，每组含 Motion MD 配方、Skill 和内容预设。[源码、输入与证据](motion-design-examples.zh-CN.md).
+
+<details>
+<summary><strong>展开六组源码研究：文字、界面、代码、粒子和玻璃</strong></summary>
+
+成对预览展示同一时刻的原始内容与改编内容，均为同一实现渲染的无声片段。
+
+### 线框传送门 · BREAKTHROUGH → OPENMOTION
+
+<table>
+<tr><th width="50%">参考 · 原始内容</th><th width="50%">改编 · Skill 包适配</th></tr>
+<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="线框传送门：左侧原内容、右侧改编，同步播放"></picture></a></td></tr>
+</table>
+
+**保留：传送门时序、立体字和镜头推进。** **替换：标题、副标题和三维短语。**
+
+[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容预设](../library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
+
+### 树冠字体 · Understory → OpenMotion
+
+<table>
+<tr><th width="50%">参考 · 原始内容</th><th width="50%">改编 · Skill 包适配</th></tr>
+<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="树冠字体：左侧原内容、右侧改编，同步播放"></picture></a></td></tr>
+</table>
+
+**保留：叶片扫过、纵深、遮挡和阅读停留。** **替换：两条品牌标题。**
+
+[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容预设](../library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/motion-design-remix/previews/canopy-part-title.mp4)
+
+### 界面揭示 · 产品导览 → AI 剪辑故事
+
+<table>
+<tr><th width="50%">参考 · 原始内容</th><th width="50%">改编 · Skill 包适配</th></tr>
+<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="界面揭示：左侧原内容、右侧改编，同步播放"></picture></a></td></tr>
+</table>
+
+**保留：倾斜画布、纵深层级和连续镜头。** **替换：主标题、文档和社区文案。**
+
+[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容预设](../library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
+
+### 立体代码 · loadConfig() → cutVideo()
+
+<table>
+<tr><th width="50%">参考 · 原始内容</th><th width="50%">改编 · Skill 包适配</th></tr>
+<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体代码：左侧原内容、右侧改编，同步播放"></picture></a></td></tr>
+</table>
+
+**保留：挤出板层、语法配色和镜头运动。** **替换：函数、变量和展示的调用。**
+
+[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容预设](../library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
+
+### 粒子组装 · parse / optimize / emit → select / trim / render
+
+<table>
+<tr><th width="50%">参考 · 原始内容</th><th width="50%">改编 · Skill 包适配</th></tr>
+<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子组装：左侧原内容、右侧改编，同步播放"></picture></a></td></tr>
+</table>
+
+**保留：固定种子的粒子运动和组装节奏。** **替换：流程名称与步骤。**
+
+[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容预设](../library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
+
+### 玻璃信息卡 · 设备组件 → 创作者工作区
+
+<table>
+<tr><th width="50%">参考 · 原始内容</th><th width="50%">改编 · Skill 包适配</th></tr>
+<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="玻璃信息卡：左侧原内容、右侧改编，同步播放"></picture></a></td></tr>
+</table>
+
+**保留：玻璃质感、卡片层级、错峰入场与仪表。** **替换：标签、单位和功能叙事。**
+
+[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容预设](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
+
+只有视频参考时，使用独立的[复刻工作流](../skills/motion-recreate/SKILL.md) 重建和对比。还原度依据所选参考和你的简报审阅。
+
+</details>
+
+<a id="one-video-more-places-to-share"></a>
+<a id="publish-to-every-platform"></a>
+
+## 📤 多平台发布 — 规划中
+
+**拆解视频，打造品牌作品，送达你的受众。** 发布愿景连接参考、品牌创作、多模态生成、剪辑、渲染和分发，目标是把已确认影片带到各渠道协同发布。
+
+**规划中：** 连接发布账号，准备平台版本与发布文案，审阅后在同一处发布或排期。“各个平台”表达产品方向，支持的平台将在连接器实现并验证后公布。
+
+### 现在就能制作不同平台版本
+
+把已确认影片改编成各渠道版本。可编辑工程允许调整开头、时长、布局与结尾信息，同时保留品牌和动效。
+
+> “把已确认影片做成 9:16 短视频、16:9 产品发布片和方形信息流版本。为每种画幅重新编排文字和界面，保留品牌与揭示效果，让我逐版审阅。”
+
+| 请求的版本 | 需要调整什么 |
+| --- | --- |
+| **竖屏短视频** — Reels、Shorts、TikTok、小红书等 | 开头、大号易读文字、构图和字幕位置 |
+| **横屏影片** — 产品页、发布或 YouTube | 界面细节、更宽构图与解释时间 |
+| **方形信息流** — 社交活动 | 紧凑构图、标题与清楚的结尾信息 |
+
+以上是创作简报，不是内置导出预设。Agent 需要调整构图，每个输出都应按目标平台当前要求审阅。
+
+**现在可用：** 制作版本、导出 MP4，自行发布或上传至排期工具。发布目前是独立交接；OpenMotion 内的账号连接与排期仍在规划。
+
+### 集成发布 — 规划中
+
+| 规划中的发布步骤 | 目标体验 |
+| --- | --- |
+| **连接渠道** | 选择品牌的账号和发布目的地 |
+| **准备发布** | 为每个平台制作版本、封面、字幕和发布文案 |
+| **审阅并发布** | 批准最终版本后发布或排期 |
+| **从结果学习** | 将表现关联到准确发布版本，指导下一支视频 |
+
+```text
+当前
+拆解 → 品牌改编 → 生成 → 剪辑 → 渲染 → MP4
+                                       ↓
+                           手动上传 / 外部排期工具
+
+规划中 · 多平台发布
+已确认版本 → 连接平台发布 → 排期 → 表现反馈
+     ↑                              |
+     +──────── 改进下一支视频 ────────+
+```
+
+**从灵感到分发，一条创作流程。** 参考重建、多模态生成、剪辑和渲染组成当前创作全栈；原生发布、排期、自动画幅重构和数据接入仍在**规划中**。[当前能力边界](product/architecture.md) · [发布与反馈方向](product/studio-vision.md)
+
+<a id="resources-to-start-from"></a>
+
+## 🧩 890+ 资源，找到方向，做自己的作品
+
+**全栈创作者需要一座资源库。** 浏览参考影片、动效片段、代码示例、区块和组件，组合社区 Skills、可编辑模板、设计体系与 Brandkit。
+
+当前发现目录有 **891 条**：**42 支完整参考片**、**393 个动效片段**、**210 个区块**、**238 个组件**和 **8 个示例**。其中包含观看参考与代码资源，可直接打开的 Studio 工程在下方另列。[浏览资源索引](collections/README.zh-CN.md)
+
+**五类资源持续支持创作：** Skills 教方法，模板提供起点，组件表达可复用动效，设计体系保持视觉一致，Brandkit 承载品牌。从**五个核心制作 Skills**、**三个原生 Studio 模板**、**Presenter Tech 包**、**六组可编辑动效研究**和**三份真人叙事配方**开始，再分享你的经验。
+
+![OpenMotion Library：Skills、模板、动效组件、设计体系和 Brandkit。](readme/library.png)
+
+| 资源分类 | 从这里开始 |
+| --- | --- |
+| **Skills** | [Brandkit、Motion Design Remix 与 Presenter Story](../library/skills) |
+| **模板** | [三个原生起步工程](../library/templates/README.md) 和 [Presenter Tech 包](../library/templates/presenter-tech/README.md) |
+| **动效组件** | [标题、界面揭示等可复用元素](../library/components/README.md) |
+| **设计体系** | [动效规则与视觉方向](../library/design-systems) |
+| **Brandkit** | [品牌身份、事实和已确认素材](../library/brandkits) |
+
+### 打开可编辑的创作起点
+
+| [Product Promo · 20 秒](../template-library/product-promo) | [NYT Graph · 15 秒](../template-library/nyt-graph) | [Decision Tree · 10 秒](../template-library/decision-tree) |
 | --- | --- | --- |
-| **Input · 本地素材** | 已有视频、录音、口播、屏幕录制、图片和品牌资产 | 将支持的本地媒体导入工程，保留素材与来源。 |
-| **Input · 在线参考** | YouTube、X / Twitter 视频或其他参考材料 | 把链接交给 Agent；由具备相应浏览与媒体能力的宿主读取，或提供可访问的本地文件。 |
-| **Input · 文字与字幕** | 一句话、完整脚本、Markdown、SRT / VTT | Agent 阅读文本与时间码，将其转成分镜、片段和字幕；文本文件可随工程保存。 |
-| **Process · AI 剪辑与设计** | 选段、去掉无关内容、重排节奏、添加文字与动效转场 | Agent 根据脚本或已确认的时间码修改工程，用户在 Studio 中预览并继续编辑。 |
-| **Process · 声音与素材** | 配乐、配音、补充视频与图片 | 导入已有素材，或在配置了相应模型的 Studio 网关中生成，选择后放入时间轴。 |
-| **Output · 成片与源文件** | MP4，以及可继续修改的 HTML/CSS/JS 与素材 | 按工程画幅和帧率渲染固定版本，技术检查后下载，保留源工程。 |
+| ![Product Promo 预览](../template-library/product-promo/poster.jpg) | ![NYT Graph 预览](../template-library/nyt-graph/poster.jpg) | ![Decision Tree 预览](../template-library/decision-tree/poster.jpg) |
+| 你的标题、产品和片尾 | 你的数据、单位和对比 | 你的问题、分支和答案 |
 
-**为发布目标制作不同版本：** 可让 Agent 调整为竖屏、横屏或方形构图，分别准备小红书、X / Twitter、Instagram、YouTube 的 MP4。发布前核对平台当时的规格；当前没有内置各平台一键发布或独立格式预设。在线下载、转写与自动口头禅识别需要宿主工具或已有字幕，链接输入不等于应用自带下载器。
+### 🎬 实拍、生成角色与代码
 
-## 为什么选择 OpenMotion？
-
-- **把剪辑意图变成实际修改。** 用自然语言提出删改、重排、节奏和声画要求，让 Agent 修改工程，再在 Studio 中预览与细调。
-- **沿用你熟悉的 Agent。** 通过本机 MCP 与可复用 Skills 接入，继续使用已有的 Agent 账户和工作流。
-- **让动效风格可以沿用。** 用可读的 `MOTION_DESIGN.md` 记录品牌、节奏、运动与声音，供下一支视频使用。
-- **从参考与模板开始。** 浏览数百条目录资源，追溯出处，直接打开内置可编辑示例。
-- **保留作品源文件。** 工程由 HTML、CSS、JavaScript 和媒体组成；本地预览、导出 MP4，以后继续改。
-
-<a id="产品界面"></a>
-
-## 🖥️ 产品界面
-
-**一个模板，三种使用方式。** 用内置 **Product Promo** 串起嵌入编辑器、独立工作区和终端工作流，再展示连接 Agent、把单个模板交给它继续制作的步骤。
-
-| 从哪里开始 | 演示内容 |
-| --- | --- |
-| [Codex](#demo-codex) | 返回给宿主的嵌入编辑器：源码、预览、图层与时间轴。 |
-| [独立 Studio](#demo-standalone) | 会话、已保存的需求与同一份可编辑工程。 |
-| [Claude Code + CLI](#demo-claude-code) | 已加载的制作 Skill 与真实 CLI 工程检查。 |
-| [模板 → Agent](#demo-template-handoff) | 连接 Agent、预览单个模板、复制精确指令。 |
-
-<a id="demo-codex"></a>
-
-### 1. Codex · 在对话旁打开可编辑预览
-
-让 Codex 打开工程预览，再检查和调整源码、图层与时间轴。**截图展示供 Codex 等宿主使用的真实 `embed=1` 编辑器，不含 Codex 桌面外框。** 能否在侧边面板内打开，取决于宿主的浏览器能力。
-
-![供 Codex 使用的 OpenMotion 嵌入编辑器：Product Promo 源码、预览、图层和时间轴；不含宿主外框。](readme/product-tour/codex-embedded.png)
-
-<a id="demo-standalone"></a>
-
-### 2. 独立使用 · 完整创作工作区
-
-直接打开 Studio，在会话里保存需求和工程，编辑源码与素材、拖动时间轴、继续下一轮改稿。通过 **Copy for Agent** 把当前需求交给已连接的客户端。
-
-![独立 OpenMotion 工作区：会话列表、已保存的 Product Promo 需求与可编辑时间轴。](readme/product-tour/standalone-studio.png)
-
-<a id="demo-claude-code"></a>
-
-### 3. Claude Code · 在终端中使用 Skill、MCP 与 CLI
-
-加载 [Claude Code 适配器](agent-adapters.md#codex--claude-code)，打开 `/skills`。已有可编辑模板使用 **motion-template-to-video**；根据参考视频重建作品使用 **motion-recreate**。
-
-![从真实终端输出回放的 Claude Code Skill 界面：五个 Motion Skill 已加载，选中 motion-template-to-video。](readme/product-tour/claude-code-skills.png)
-
-固定版本 CLI 可检查同一份工程：**1920 × 1080、20 秒、三个图形场景和字幕轨道，lint 为零错误、零警告。** 下图为实际命令输出。终端截图验证了本地 Skill 加载与工程检查，未展示模型完成改编的结果。
-
-![Product Promo 的真实 CLI 输出：info、lint 与 timeline 检查。](readme/product-tour/cli-checks.png)
-
-<a id="demo-template-handoff"></a>
-
-### 连接一次 → 把一个模板交给 Agent
-
-**连接 Agent。** 选择 Codex、Claude Code 或其他本机客户端，复制当前工作区生成的接入指令。
-
-![Connect Agent 弹框：选中 Codex，可切换其他客户端，并复制当前工作区的接入指令。](readme/product-tour/connect-agent.png)
-
-**预览 → 一键复制 → 粘贴给 Agent。** 搜索 **Product Promo**，打开预览并展开复制指令；其中带有精确的 `product-promo` ID 和所选客户端的指引链接。内置模板可以打开为可编辑副本；外部视频参考则需要 Agent 分析并重建。
-
-![Product Promo 单模板预览：打开并编辑、一键复制，以及展开的模板专属 Agent 指令。](readme/product-tour/template-to-agent.png)
-
-粘贴生成的指令后，再补充自己的修改要求，例如：
-
-> 用这个 Product Promo 模板制作我的产品介绍。保留 20 秒结构和动效，用我提供的素材替换文案与图片。先打开可编辑预览让我检查，再决定导出。
-
-实际使用时复制**自己运行中的工作区**生成的链接，截图中的本机地址仅属于演示。[复现演示](product-tour.md) · [截图来源与验证范围](readme/ASSETS.md#product-tour-captures) · [编辑器说明](../studio/README.md)
-
-<a id="独立应用也能接入你的-agent"></a>
-<a id="connect-your-agent"></a>
-
-## 🔌 在 OpenMotion 中连接你的 Agent
-
-**先打开应用，再连接熟悉的 AI 剪辑伙伴。** Studio 是可以独立使用的工程、素材与时间轴工作区。
-
-1. [启动 OpenMotion](#快速开始)，打开模板或已有工程，点击 **Connect Agent**。
-2. 选择客户端，按当前工作区提供的说明配置连接。
-3. 把工程上下文和剪辑要求交给该 Agent；在 Studio 检查修改，直接调整时间轴，再继续下一轮改稿。
-
-目前可用的接入路径：
-
-| Agent / 客户端 | 接入方式 |
-| --- | --- |
-| **Codex** | 本机插件，或 MCP + Skills 安装。 |
-| **Claude Code** | 本机插件，或 MCP + Skills 安装。 |
-| **DeepSeek Harness** | Harness 适配器，或 MCP + Skills 安装。 |
-| **WorkBuddy** | 已有 MCP + Skills 配置生成；桌面创作与播放验收待完成。 |
-| **其他本机 MCP 客户端** | 手动配置 stdio；可用的界面与终端能力由宿主决定。 |
-
-目前 Agent 在所连接的客户端中执行。Studio 保存需求与可编辑作品，尚未内置聊天 Agent 运行器。[Agent 适配器](agent-adapters.md) · [会话架构](session-architecture.md)
-
-<a id="motion-design-md--motion_designmd"></a>
-
-## 🎨 Motion Design MD — `MOTION_DESIGN.md`
-
-**复用动效，讲你的故事。** 把 reference video 背后的创意结构沉淀为可复用的 **Motion Design Skill 包**：保留镜头、转场、节奏和视觉层级，把主题、文案、产品与品牌换成你的。一次好的复刻，可以成为社区里下一位创作者能 Fork、改编和继续完善的资产。
-
-```text
-参考视频  →  Motion Design Skill 包  +  你的内容
-                    │
-                    ├─ MOTION_DESIGN.md   创作规则与保持项
-                    ├─ SKILL.md           改编与检查方法
-                    ├─ 源码与素材         可编辑实现
-                    └─ preset 与证据      内容槽位与实际结果
-                    │
-                    ▼
-             Agent → 可编辑时间轴 → 你的新视频
-```
-
-**Motion MD 承载设计，Skill 承载方法，工程承载实现。** 文档说明叙事、构图、时间、缓动、镜头、字体、声音、可替换输入和必须保持的决定。[完整架构与写作指南](motion-md.zh-CN.md)。
-
-<a id="presenter-motion"></a>
-
-### 🎙️ 真人表达 × Motion：让你的故事成为主角
-
-口播、工具教程、产品演示，同样可以沉淀为 Motion Design。**保留人物表达与叙事节奏，把字幕、截图、画中画和动效编排一起复用；换成你的录制、主题和品牌。**
-
-下面三组为现有目录收录的 **Hyperframes 原片 / 上游改编演示**，两侧是各自的无声节选，并非同步还原评测或 OpenMotion 新生成的结果。每组附有可交给 Agent 的设计配方；你的成片需要结合自己的素材制作并验收。
-
-#### 真人讲观点，关键词和画面帮你讲清楚
-
-**职业建议 → 视频制作讲解**
+优秀视频可以混合制作方式。这些外部案例可帮助你判断哪些该实拍、哪些生成、哪些用代码表达。
 
 <table>
-<tr><th width="50%">参考原片 · @careerwithriya</th><th width="50%">上游改编 · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
-</table>
-
-**复用：** 编号观点、真人表达与辅助证据卡片。 **换成你的：** 创作者、口播主题、关键词与佐证素材。
-
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [上游改编完整视频](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
-
-#### 边讲边演示，把工作流变成故事
-
-**日常工具分享 → 设计工作区介绍**
-
-<table>
-<tr><th width="50%">参考原片 · Ali Abdaal</th><th width="50%">上游改编 · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
-</table>
-
-**复用：** 真人与屏幕交替、简洁字幕和可读的插入画面。 **换成你的：** 你的录制、工作方法和屏幕素材。
-
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [上游改编完整视频](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
-
-#### 真人和产品，在同一个故事里
-
-**工具演示 → 视频编辑器讲解**
-
-<table>
-<tr><th width="50%">参考原片 · @john.tagudin</th><th width="50%">上游改编 · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="readme/people/john-tagudin-capso-comparison.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
-</table>
-
-**复用：** 开场、画中画、重点标注与结果展示。 **换成你的：** 产品、人物、实际操作与结尾表达。
-
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原片](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [上游改编完整视频](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
-
-> 用我的口播和屏幕录制复用这个结构。保留我的语气，按实际语音剪辑并对齐字幕；用截图、画中画和动效说明观点。先让我看带声音的预览，再交付可编辑工程和 MP4。
-
-### 🎞️ 同一种动效语言，不同的故事
-
-六组实际渲染的**已有源码模板改编**，来自仓库资源目录已有的条目。左边是原始内容，右边是使用示例包替换内容后的结果。两侧按相同时间点渲染，动图为无声节选。这些案例证明内容复用，不是对任意爆款原片进行盲重建的测试。[来源、输入与验证记录](motion-design-examples.zh-CN.md)。
-
-### 线框空间标题 · BREAKTHROUGH → OPENMOTION
-
-<table>
-<tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="线框空间标题: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**保留：portal 节奏、立体字与镜头推进.** **替换：标题、副标题和立体短句.**
-
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [替换配置](../library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
-
-### 树叶遮罩标题 · Understory → OpenMotion
-
-<table>
-<tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="树叶遮罩标题: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**保留：树叶扫过、景深、遮挡和阅读停留.** **替换：两段品牌文案.**
-
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [替换配置](../library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/motion-design-remix/previews/canopy-part-title.mp4)
-
-### 界面空间揭示 · Product tour → AI editing story
-
-<table>
-<tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="界面空间揭示: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**保留：倾斜画布、空间层级和连续镜头.** **替换：主标题、文档名称与社区文案.**
-
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [替换配置](../library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
-
-### 立体代码卡片 · loadConfig() → cutVideo()
-
-<table>
-<tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体代码卡片: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**保留：挤出厚度、语法配色与镜头运动.** **替换：函数、变量与展示代码.**
-
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [替换配置](../library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
-
-### 粒子聚合文字 · parse / optimize / emit → select / trim / render
-
-<table>
-<tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子聚合文字: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**保留：固定种子的粒子运动与聚合节奏.** **替换：流程名称与步骤.**
-
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [替换配置](../library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
-
-### 玻璃信息卡片 · Device widgets → creator workspace
-
-<table>
-<tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="玻璃信息卡片: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**保留：玻璃材质、卡片层级、错峰入场与进度动效.** **替换：标签、单位与功能叙事.**
-
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [替换配置](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
-
-### 📦 把整个包交给 Agent
-
-> 读取这份 Motion Design Skill 包。保留所选参考的叙事节奏、构图与转场，使用我的录制、实际语音时间码、文案和品牌。交付相同时刻的前后对比、可编辑工程与 MP4，并记录仍有差异的部分。
-
-[获取示例 Skill](../library/skills/motion-design-remix/SKILL.md) · [六个详细示例](motion-design-examples.zh-CN.md) · [贡献一种动效语言](../library/ENTRY_TEMPLATE.md)
-
-**当前可用：** `MOTION_DESIGN.md` 是 v0.1 写作约定，需要显式交给 Agent；示例包提供固定版本源码、六种 profile 和可执行替换脚本，尚无自动 Markdown 导入器，也不表示兼容 `.motion`。只有视频参考时，先用 `motion-recreate` 重建并检查；`motion-video-to-template` 保留现有 `TEMPLATE.md` 交付契约。[了解各层关系](motion-md.zh-CN.md)。
-
-<a id="creative-memory"></a>
-
-## 📚 一个越用越懂你的创意空间 — is coming
-
-**懂个人的口吻，懂团队的知识，记得品牌的表达。** 长期愿景是把项目历史、确认过的偏好、品牌规则、评审反馈和可复用 Skills 放在一起，让 Agent 在下一次任务中检索并使用合适的上下文。
-
-```text
-当前可用
-  简报 + 品牌 → 创作 → 预览 → 改稿 → 工程版本 + MP4
-
-规划中 · is coming
-  发布版本 + 表现数据 + 评审反馈
-        ↓
-  关联项目、平台与时间窗口的证据
-        ↓
-  个人 / 团队知识 → 用 RAG 检索相关上下文
-        ↓
-  提出 Skill 或偏好更新 → 评估 → 保存版本
-        ↓
-  下一次创作从更合适的上下文开始
-```
-
-这条闭环连接**发布管理与周期性任务、关联成片版本的表现数据、个人与团队记忆，以及 RAG（按需检索知识）**。被验证的方法可以沉淀为 Skill，有用的编排可以沉淀为模板，品牌与动效选择通过 Brandkit 和 `MOTION_DESIGN.md` 持续复用。是否改进，要在下一次创作中评估。
-
-当前通过显式提供这些文档和保留可编辑工程来复用经验；自动发布、数据回收、长期偏好记忆、RAG 与自动提炼 Skill 均为后续能力。[知识与反馈闭环设计](product/studio-vision.md#knowledge-and-feedback)
-
-<a id="资源模板与社区作品"></a>
-
-## 🧩 资源、模板与社区作品
-
-![为复用而生：Skills、模板、Motion 组件、设计体系与 Brandkits。](readme/library.png)
-
-**从第一天就开放的 [OpenMotion Library](../library/README.zh-CN.md)。** 一个目录，收纳创作方法、可编辑作品与可参考的设计体系：
-
-| 你想复用什么 | 目录与首批内容 |
-| --- | --- |
-| **🧠 Skill** | [`library/skills/`](../library/skills/) · [Presenter Story](../library/skills/presenter-story/SKILL.md) · [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md) · [Brandkit 整理](../library/skills/brandkit/SKILL.md)。 |
-| **🎞️ 模板** | [`library/templates/`](../library/templates/README.md) · 三个 Studio 可编辑工程 + [Presenter Tech 模板包](../library/templates/presenter-tech/README.md)。 |
-| **🧩 Motion 组件** | [`library/components/`](../library/components/README.md) · 标题揭示配方、外部组件参考。 |
-| **🎨 动效设计体系** | [`library/design-systems/`](../library/design-systems/) · [Ink & Water / `MOTION_DESIGN.md`](../library/design-systems/ink-water/MOTION_DESIGN.md)。 |
-| **💼 Brandkit** | [`library/brandkits/`](../library/brandkits/) · [OpenMotion 品牌事实与素材](../library/brandkits/openmotion/BRANDKIT.md)。 |
-
-选择文件，连同素材明确交给 Agent。目录当前可直接浏览和贡献；尚无自动导入或 marketplace。五个核心制作 Skills 继续在 `skills/` 维护。[贡献一个条目](../library/ENTRY_TEMPLATE.md)
-
-### 为 Agent 打造的模板社区
-
-**模板同时提供可编辑结构与 Agent 能使用的说明。** 选定起点，带上自己的 Brandkit 和故事，让 Agent 复刻、个性化替换并继续调优。社区贡献可以把源码、可修改项、Motion MD、预览和出处一起交付。
-
-> 用 Product Promo 模板和我的 Brandkit，按我的口吻讲这个故事。替换素材与文案，调整节奏，先让我看预览，再根据反馈优化。
-
-当前画廊的一键操作准备交给 Agent 的指令，实际制作由所连接的 Agent 执行；社区资源的自动发现、安装与个性化优化仍为后续方向。[模板入口](../library/templates/README.md)
-
-<a id="creator-video-gallery"></a>
-
-### 🎥 真人、口播与 Motion，先看真实视频
-
-**九个来自现有目录的真人视频参考。** 从知识口播、屏幕演示，到创始人故事与 UGC 产品介绍：每张卡片都能播放，点击查看完整视频，在 Studio 搜索卡片标题即可找到原条目。
-
-<table>
-<tr><th colspan="3" align="left">🎓 知识讲解与观点口播</th></tr>
 <tr>
-<td width="33%" valign="top" align="center">
-<a href="../library/skills/presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="真人创作参考：6 essential skills to transform your career"></picture></a><br>
-<strong>6 essential skills to transform your career</strong><br>
-编号观点 + 动态关键词<br>
-<sub>参考 · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
+<td width="50%" valign="top" align="center">
+<a href="readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-unboxing.jpg"><img src="readme/brand-showcase/rea-unboxing.gif" width="250" alt="产品开箱实拍参考"></picture></a><br>
+<strong>真实产品，有触感的故事</strong><br>
+研究特写、手部动作和揭示方式，拍摄自己的产品。<br>
+<sub>实拍 · 产品开箱</sub>
 </td>
-<td width="33%" valign="top" align="center">
-<a href="readme/media/dan-martell-tools-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/dan-martell-tools.jpg"><img src="readme/people/dan-martell-tools.gif" width="216" alt="真人创作参考：What's the best AI tool right now?"></picture></a><br>
-<strong>What's the best AI tool right now?</strong><br>
-真人口播 + 悬浮工具卡片<br>
-<sub>参考 · <a href="https://www.youtube.com/shorts/mk1zJd9Rm4c">Dan Martell</a></sub>
-</td>
-<td width="33%" valign="top" align="center">
-<a href="readme/media/harpercarrollai-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/harpercarrollai.jpg"><img src="readme/people/harpercarrollai.gif" width="216" alt="真人创作参考：10 Days of AI Basics, Day 1"></picture></a><br>
-<strong>10 Days of AI Basics, Day 1</strong><br>
-真人微课 + 清晰字幕<br>
-<sub>参考 · <a href="https://www.instagram.com/reel/C4eNPF3PdpG/">@harpercarrollai</a></sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">🖥️ 真人讲解与屏幕演示</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="真人创作参考：5 tools I use every day"></picture></a><br>
-<strong>5 tools I use every day</strong><br>
-桌前口播 + 工作流穿插<br>
-<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
-</td>
-<td width="33%" valign="top" align="center">
-<a href="../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="真人创作参考：Tool demo with callouts"></picture></a><br>
-<strong>Tool demo with callouts</strong><br>
-真人 + 屏幕录制 + 重点标注<br>
-<sub>参考 · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
-</td>
-<td width="33%" valign="top" align="center">
-<a href="readme/media/aiwithsachi-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/aiwithsachi.jpg"><img src="readme/people/aiwithsachi.gif" width="216" alt="真人创作参考：Top 5 plugins to install in Claude"></picture></a><br>
-<strong>Top 5 plugins to install in Claude</strong><br>
-真人清单 + 截图说明<br>
-<sub>参考 · <a href="https://www.instagram.com/reel/Dc7G9Pxu_1O/">@aiwithsachi</a></sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">🎬 创作者故事与产品体验</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<a href="readme/media/khris-sheer-founder-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/khris-sheer-founder.jpg"><img src="readme/people/khris-sheer-founder.gif" width="216" alt="真人创作参考：The Founder Experiments, Ep. 1"></picture></a><br>
-<strong>The Founder Experiments, Ep. 1</strong><br>
-创始人日记 + 生活空镜<br>
-<sub>参考 · <a href="https://www.tiktok.com/@khris.sheer/video/7491715587895430402">@khris.sheer</a></sub>
-</td>
-<td width="33%" valign="top" align="center">
-<a href="readme/media/ugc-rachelll-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ugc-rachelll.jpg"><img src="readme/people/ugc-rachelll.gif" width="216" alt="真人创作参考：AI creator with product"></picture></a><br>
-<strong>AI creator with product</strong><br>
-产品体验 + 证据 + 画中画<br>
-<sub>参考 · <a href="https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246">@ugc.rachelll</a></sub>
-</td>
-<td width="33%" valign="top" align="center">
-<a href="readme/media/kevinstratvert-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/kevinstratvert.jpg"><img src="readme/people/kevinstratvert.gif" width="216" alt="真人创作参考：Stop Paying for 5 AI Tools"></picture></a><br>
-<strong>Stop Paying for 5 AI Tools</strong><br>
-产品教程 + 实际操作<br>
-<sub>参考 · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
+<td width="50%" valign="top" align="center">
+<a href="readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-dual-role.jpg"><img src="readme/brand-showcase/rea-dual-role.gif" width="250" alt="AI 角色、代码界面与屏幕录制混合制作参考"></picture></a><br>
+<strong>角色与界面相遇</strong><br>
+把角色驱动的开头与界面动效、屏幕录制组合起来。<br>
+<sub>AI 角色 + 代码 + 屏幕录制</sub>
 </td>
 </tr>
 </table>
 
-这些是外部原作者的作品，展示可学习的剪辑结构；不会因收录而成为内置可编辑模板。选择一条参考，配合 [Presenter Story Skill](../library/skills/presenter-story/SKILL.md) 和你的录制，交给 Agent 开始制作。
-
-#### 🎙️ Presenter Tech · 科技风口播模板
-
-<a href="../library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/motiongit-kinetic.jpg"><img src="readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech template demo with presenter window, diagrams and animated typography"></picture></a>
-
-**真人讲解 × 金属字 × 动态图解。** 用你的录制、文案、截图和字幕，制作有节奏的知识讲解与产品演示。可编辑源码、参数、字体、声音配方和本地运行器已打包进 OpenMotion Library，交给 Agent 即可按制作指南开始改编。**1920 × 1080 · 60 fps · 横屏。**
-
-[获取模板包](../library/templates/presenter-tech/presenter-tech.motion) · [制作说明](../library/templates/presenter-tech/TEMPLATE.md) · [MOTION_DESIGN.md](../library/templates/presenter-tech/MOTION_DESIGN.md)
+[查看完整创作全栈](#full-video-creation-stack)
 
 <a id="motion-gallery"></a>
 
-### 看看资源里的作品
+### 看看目录中的作品
 
-**18 个动态精选，先看动效，再开始改编。** 从产品发布、动态排版，到玻璃光影、空间镜头和生成艺术，直接看看资源能带来什么样的视觉效果。点击动图观看完整视频；在 Studio 资源库搜索同名条目，把喜欢的风格交给 Agent。
+**18 个动态精选，找到风格，再做自己的作品。** 探索发布片、动态文字、玻璃光影、空间运动与生成视觉。点击动图看完整视频，在 Studio 资源库找到同名条目即可交给 Agent。
 
-**资源就在仓库里。** 本页与关联示例中的完整参考片、前后对比、GIF、模板源码、浏览器脚本与字体均提供本地入口。[资源清单与复用说明](readme/RESOURCES.md)。
+**资源都在本地。** 本页及示例指南使用的完整参考、前后对比、GIF、模板源码、浏览器脚本和字体均有本地条目。[资源清单与复用](readme/RESOURCES.md).
 
-**可以学习、改编，也可以贡献的资源库。** 当前目录共有 **894 条资源：3 个内置可编辑模板、891 条外部参考与 registry 资源**，保留已有原作者与出处。
+**可学习、改编和贡献的资源库。** 当前目录包含 **894 项资源：3 个内置可编辑模板，以及 891 项外部参考和 registry 条目**，尽可能保留原作者与来源。
 
 <table>
 <tr><th colspan="3" align="left">📱 产品与界面</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="readme/gallery/app-showcase.gif" width="300" alt="组件动效：App Showcase"></picture></a><br>
+<a href="readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="readme/gallery/app-showcase.gif" width="300" alt="目录动态预览：App Showcase"></picture></a><br>
 <strong>App Showcase</strong><br>
-<sub>组件 · <a href="../library/components/showcase/README.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/components/showcase/README.md">查看组件</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="readme/gallery/firecrawl.gif" width="300" alt="动态参考：Firecrawl Free Keyless"></picture></a><br>
+<a href="readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="readme/gallery/firecrawl.gif" width="300" alt="目录动态预览：Firecrawl Free Keyless"></picture></a><br>
 <strong>Firecrawl Free Keyless</strong><br>
 <sub>参考 · <a href="readme/media/remix-firecrawl-reference.mp4">@ericciarla</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="readme/gallery/ui-3d-reveal.gif" width="300" alt="组件动效：3D UI Reveal"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="readme/gallery/ui-3d-reveal.gif" width="300" alt="目录动态预览：3D UI Reveal"></picture></a><br>
 <strong>3D UI Reveal</strong><br>
-<sub>组件 · <a href="../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">查看组件</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">🚀 品牌与发布片</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="readme/gallery/pond.gif" width="300" alt="动态参考：Pond: a new Linux OS"></picture></a><br>
+<a href="readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="readme/gallery/pond.gif" width="300" alt="目录动态预览：Pond: a new Linux OS"></picture></a><br>
 <strong>Pond: a new Linux OS</strong><br>
 <sub>参考 · <a href="readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="300" alt="动态参考：Kimi K3 teaser"></picture></a><br>
+<a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="300" alt="目录动态预览：Kimi K3 teaser"></picture></a><br>
 <strong>Kimi K3 teaser</strong><br>
 <sub>参考 · <a href="readme/media/remix-kimi-k3-reference.mp4">@Kimi_Moonshot</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="300" alt="动态参考：Reception by ElevenLabs"></picture></a><br>
+<a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="300" alt="目录动态预览：Reception by ElevenLabs"></picture></a><br>
 <strong>Reception by ElevenLabs</strong><br>
 <sub>参考 · <a href="readme/media/remix-elevenlabs-reception-reference.mp4">@ElevenLabs</a></sub>
 </td>
@@ -661,150 +858,98 @@ OUTPUT    导出 MP4 + 保留可编辑工程 → 改编下一版
 <tr><th colspan="3" align="left">✍️ 动态文字</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="readme/gallery/glass-shard-title.gif" width="300" alt="组件动效：Glass Shard Title"></picture></a><br>
+<a href="readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="readme/gallery/glass-shard-title.gif" width="300" alt="目录动态预览：Glass Shard Title"></picture></a><br>
 <strong>Glass Shard Title</strong><br>
-<sub>组件 · <a href="../library/components/showcase/README.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/components/showcase/README.md">查看组件</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="readme/gallery/canopy-title.gif" width="300" alt="组件动效：Canopy Part Title"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="readme/gallery/canopy-title.gif" width="300" alt="目录动态预览：Canopy Part Title"></picture></a><br>
 <strong>Canopy Part Title</strong><br>
-<sub>组件 · <a href="../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">查看组件</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="readme/gallery/wireframe-title.gif" width="300" alt="组件动效：Wireframe Portal Title"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="readme/gallery/wireframe-title.gif" width="300" alt="目录动态预览：Wireframe Portal Title"></picture></a><br>
 <strong>Wireframe Portal Title</strong><br>
-<sub>组件 · <a href="../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">查看组件</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">💎 光影、玻璃与立体世界</th></tr>
+<tr><th colspan="3" align="left">💎 光影、玻璃与三维世界</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="readme/gallery/iskra-light.gif" width="300" alt="动态参考：Iskra Light"></picture></a><br>
+<a href="readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="readme/gallery/iskra-light.gif" width="300" alt="目录动态预览：Iskra Light"></picture></a><br>
 <strong>Iskra Light</strong><br>
 <sub>参考 · <a href="readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="readme/gallery/liquid-glass-widgets.gif" width="300" alt="组件动效：Liquid Glass Widgets"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="readme/gallery/liquid-glass-widgets.gif" width="300" alt="目录动态预览：Liquid Glass Widgets"></picture></a><br>
 <strong>Liquid Glass Widgets</strong><br>
-<sub>组件 · <a href="../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">查看组件</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="readme/gallery/cyera.gif" width="300" alt="动态参考：Cyera brand video"></picture></a><br>
+<a href="readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="readme/gallery/cyera.gif" width="300" alt="目录动态预览：Cyera brand video"></picture></a><br>
 <strong>Cyera brand video</strong><br>
 <sub>参考 · <a href="readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">🧭 空间与镜头</th></tr>
+<tr><th colspan="3" align="left">🧭 纵深与镜头运动</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="readme/gallery/code-3d.gif" width="300" alt="组件动效：Code 3D Extrude"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="readme/gallery/code-3d.gif" width="300" alt="目录动态预览：Code 3D Extrude"></picture></a><br>
 <strong>Code 3D Extrude</strong><br>
-<sub>组件 · <a href="../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">查看组件</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="readme/gallery/glyph.gif" width="300" alt="动态参考：Glyph: GPU typography for the web"></picture></a><br>
+<a href="readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="readme/gallery/glyph.gif" width="300" alt="目录动态预览：Glyph: GPU typography for the web"></picture></a><br>
 <strong>Glyph: GPU typography for the web</strong><br>
 <sub>参考 · <a href="readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="readme/gallery/flight-map.gif" width="300" alt="组件动效：NYC Paris Flight"></picture></a><br>
+<a href="readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="readme/gallery/flight-map.gif" width="300" alt="目录动态预览：NYC Paris Flight"></picture></a><br>
 <strong>NYC Paris Flight</strong><br>
-<sub>组件 · <a href="../library/components/showcase/README.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/components/showcase/README.md">查看组件</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">✨ 生成艺术与图形</th></tr>
+<tr><th colspan="3" align="left">✨ 生成视觉</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="readme/gallery/aurora.gif" width="300" alt="组件动效：Aurora"></picture></a><br>
+<a href="readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="readme/gallery/aurora.gif" width="300" alt="目录动态预览：Aurora"></picture></a><br>
 <strong>Aurora</strong><br>
-<sub>组件 · <a href="../library/components/showcase/README.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/components/showcase/README.md">查看组件</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="readme/gallery/linear-loops.gif" width="300" alt="动态参考：Linear Loops"></picture></a><br>
+<a href="readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="readme/gallery/linear-loops.gif" width="300" alt="目录动态预览：Linear Loops"></picture></a><br>
 <strong>Linear Loops</strong><br>
 <sub>参考 · <a href="readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="readme/gallery/code-particles.gif" width="300" alt="组件动效：Code Particle Assemble"></picture></a><br>
+<a href="../library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="readme/gallery/code-particles.gif" width="300" alt="目录动态预览：Code Particle Assemble"></picture></a><br>
 <strong>Code Particle Assemble</strong><br>
-<sub>组件 · <a href="../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Hyperframes</a></sub>
+<sub>组件 · <a href="../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">查看组件</a></sub>
 </td>
 </tr>
 </table>
 
-动图来自目录中的原始视频片段，保留画面与正常播放速度；它们展示外部参考与组件效果，并非新增内置模板。[全部来源与片段记录](readme/ASSETS.md#catalog-preview-grid)
+以上动图来自目录原视频，保留原画面和正常播放速度，展示外部参考与组件，不增加内置模板数量。[来源与片段记录](readme/ASSETS.md#catalog-preview-grid)
 
-| 入口 | 可以找到什么 |
+| 浏览入口 | 可获得什么 |
 | --- | --- |
-| [Motion 资源索引](collections/README.zh-CN.md) | 精选参考片、出处和可编辑起点。 |
-| [内置模板](../template-library/) | Product Promo、NYT Graph、Decision Tree，均包含原生源码与预览。 |
-| Studio 模板库 | 搜索、预览，以及改编模板或复刻参考的指令。 |
-| [OpenDesign Motion 展示页](https://open-design.ai/motion/) | 更多可以观看和学习的案例。 |
-| [Motion MD](motion-md.zh-CN.md) | 记录并分享一种风格背后的创作决定。 |
+| [Motion 资源索引](collections/README.zh-CN.md) | 精选影片、来源署名和可编辑起点。 |
+| [内置模板](../template-library) | Product Promo、NYT Graph 和 Decision Tree，均含原生源码与预览。 |
+| Studio 模板库 | 搜索、预览，以及模板改编或参考重建指令。 |
+| [Motion MD](motion-md.zh-CN.md) | 分享一种风格背后的创作决定。 |
 
-参考片用于学习，可编辑模板提供能够修改的源文件。画廊里的**一键复刻**会复制参考和 Agent 指令；内置模板直接打开，外部视频则需要分析与重建。[目录覆盖范围与来源](template-catalog.md)
-
-## 产品哲学与技术架构
-
-**Studio 是创作空间，Super Motion Video Agent 是编排愿景，时间轴与工程保存作品。** 多模态模型生产素材，可复用知识指导创作，规划中的反馈闭环连接前后两次创作。[目标架构与能力状态](product/studio-vision.md)
-
-1. **人人都是 AI 剪辑师。** 从用户已有的素材和表达意图开始，由 AI 落实剪辑与改稿，让每个人都能持续创作自己的内容。
-2. **人和 Agent 操作同一份作品。** 对话、可视化编辑和代码修改共同落在可编辑工程上，后续修改有据可循。
-3. **把经验变成可以分享的规范。** Motion MD 记录风格与节奏，Skills 记录方法，模板保存可复用的实现。
-4. **开放、可检查、可延续。** 保留源码、素材来源与版本，应用采用 Apache 2.0，创作者可以继续修改和扩展。
-
-**两个入口，共用一个工程：** Studio → 连接 Agent → 你的客户端；或你的客户端 → Skills / MCP / CLI → OpenMotion。所连接的客户端执行 Agent，本地应用管理工程状态。
-
-**当前已实现的生产架构。** 工程与时间轴是作品真源，模型生成结果经显式采用后进入工程。
-
-```text
-OpenMotion Studio                      你的 Agent 客户端
-素材 · 预览 · 时间轴                   Skills · Brandkit · Motion MD
-          | HTTP                                | stdio MCP
-          +------------------+------------------+
-                             v
-                  本地应用（Node.js）
-                  会话 · 文件 · revision
-                             |
-                  可编辑工程 + 媒体
-                  HTML · CSS · JS · compositions
-                             |
-                  固定 revision 快照
-                             |
-                  渲染 + 技术检查
-                             |
-                  MP4 + 可编辑源工程
-
-素材执行路径
-  Studio → Model Gateway → 多模态模型 → 候选文件
-         → 显式采用 → 同一份可编辑工程
-```
-
-| 层 | 职责与技术 |
-| --- | --- |
-| **创作方法** | Library 提供 Brandkit、设计体系与组件配方；五个 Motion Skills 组织叙事、模板复用、复刻、审片与交付；Motion MD 承载可复用的创作意图。 |
-| **独立应用** | React / TypeScript Studio 提供会话、模板库、预览、素材面板与时间轴。 |
-| **Agent 接入** | 本机 stdio MCP 提供九个工程工具与指引资源；终端宿主可调用固定版本 CLI。 |
-| **工程与版本** | Node.js 本地服务管理 HTML/CSS/JS、媒体、revision 与内容版本，保护并发修改。 |
-| **素材生成** | Model Gateway 管理供应商配置和生成任务；用户选择结果后写入作品。 |
-| **渲染与交付** | 原生合成与 GSAP 承载动效，固定快照导出 MP4，并通过 FFmpeg / FFprobe 做技术检查。 |
-
-### 工程、素材与导出为什么可以持续迭代
-
-- **版本感知的修改：** Agent 先读当前工程与 revision，再写入；冲突后重新读取，避免沿用过时内容覆盖作品。
-- **生成与采用分离：** 模型先产出候选文件；用户选中并采用后才修改时间轴。替换图片保留原有时长与动画。
-- **固定快照导出：** 导出绑定确定的工程版本，渲染和技术检查围绕该快照进行，后续改稿仍保留源工程。
-- **方法与作品分离：** Skill 记录工作方法，Motion MD / Brandkit 提供创作上下文，工程保存实际结果；规划中的 RAG 从知识中检索上下文。
-
-[完整产品架构](product/architecture.md) · [工程与版本](project-workspace.md) · [模型网关](model-gateway.md) · [MCP 契约](mcp-phase1-tools.md)
+参考用于研究，可编辑模板则含可修改源码。画廊的**一键复刻**会复制参考和 Agent 指令。内置模板可直接打开，外部视频仍需分析与重建。[目录范围与来源](template-catalog.md)
 
 <a id="快速开始"></a>
+<a id="quick-start"></a>
 
-## 🚀 快速开始
+## 🚀 开始使用
 
-### 运行独立应用
+### 运行 OpenMotion
 
-准备 Git、[CI](../.github/workflows/ci.yml) 固定的 **Node.js 26.11.1** 与 npm。源码运行的预览和导出还需要 Chrome/Chromium、FFmpeg/FFprobe；运行时路径配置见[使用手册](usage.md)。
+**从免费本地创作全栈开始。** 连接自己的 Agent、打开内置模板或导入实拍，用本地应用渲染。需要生成新素材时，在 Model Settings 加入受支持的媒体 Key。
+
+准备 Git、npm 和 [CI](../.github/workflows/ci.yml)固定的 **Node.js 26.11.1**。源码预览和导出还需要 Chrome/Chromium、FFmpeg/FFprobe。[运行环境配置](usage.md)
 
 ```sh
 git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
@@ -814,56 +959,49 @@ npm run build:studio
 npm start
 ```
 
-打开 **http://localhost:4173**，进入**模板 → 可以二次剪辑**，选择一个内置示例，试着修改文字和时间。通过**连接 Agent**添加你熟悉的客户端。
+打开 **http://localhost:4173**。选择 **Templates → Ready to edit**，打开 **Product Promo**，用 **Connect Agent** 连接客户端。工程与凭据保存在 checkout 之外；用 `MOTION_DATA_DIR` 选择工作区。
 
-工程与凭据保存在源码目录外，可用 `MOTION_DATA_DIR` 指定工作区。[本地 npm 安装器](npm-installation.md) 可在支持的平台按需准备固定版本的原生工具。目前 npm 包尚未公开发布。[Windows 测试包](test-packages.md) · [仓库与分支说明](repository-migration.md)
+### 接入你的 Agent
 
-<a id="在-codex-里开始"></a>
-
-### 为 Codex 安装
-
-在源码目录中执行，需要支持插件的 Codex CLI：
+支持插件的 Codex 可在 checkout 中运行：
 
 ```sh
 bash scripts/install-motion.command
 ```
 
-然后告诉 Agent：
+DeepSeek Harness、Claude Code 等客户端参见 [Agent 适配器指南](agent-adapters.md) 或[本地 MCP + Skills 安装器](npm-installation.md)。npm 包尚未公开发布，指南使用本地构建产物。[Windows 测试包](test-packages.md)
 
-> 用 Product Promo 模板创建一个独立的 20 秒工程，在 Studio 中打开并交付 MP4。保留可编辑工程，之后继续修改。
+先尝试内置模板：
 
-制作自己的品牌片时，再提供 Logo、截图与文案。宿主不支持在对话旁打开 Studio 时，使用返回的本地工程链接。[安装与首次体验](usage.md#使用)
+> 使用 OpenMotion 在 Studio 打开一份新的 20 秒 Product Promo 副本，导出 MP4，并保留可编辑工程。
 
-<a id="从-agent-接入"></a>
+然后改成你的作品：
 
-## 🤖 把 OpenMotion 接入你的 Agent
+> 保留结构与动画，用我提供的品牌素材替换标志、截图、主标题和片尾。展示新剪辑，然后让最后标题多停留两秒。
 
-**先打开 Codex、Claude Code 等客户端，再把 OpenMotion 带进已有工作流。** 安装创作 Skills、连接本机 MCP，需要终端编排时使用 CLI。让 Agent 创建或打开工程、完成剪辑、提供预览并导出；你随时可以进入 Studio 细调同一份作品。
+要从视频开始，请提供参考并使用[复刻简报](#reverse-engineer-a-video)。宿主无法在对话旁打开 Studio 时，可使用返回的本地工程链接。
 
-Skills 提供**工作方法**，MCP 提供**工程工具与指引**，CLI 支持**原生编写与渲染**。两种接入方向共用本地应用。[从 OpenMotion 应用开始？](#connect-your-agent)
+<details>
+<summary>Skills、MCP 与 CLI</summary>
 
-### Skills：创作与制作流程
-
-通过 [Skills CLI](https://github.com/vercel-labs/skills) 发现本地技能。在源码目录执行：
+在 checkout 中发现并安装五个核心工作流，使用 [Skills CLI](https://github.com/vercel-labs/skills):
 
 ```sh
 npx skills add ./skills --list
 npx skills add ./skills --skill motion-director motion-production motion-template-to-video motion-recreate motion-video-to-template
 ```
 
-在安装器中选择 Agent。五个技能一起安装，以保留互相引用的共享规范。这一步安装工作流指引；工程工具和固定版本引擎指南通过应用的 MCP 接入。保留源码目录，供 Agent 读取共享文档。需要同装应用、MCP 和 Skills 时，使用[宿主安装指南](npm-installation.md)。
+这只复制指引，不安装运行时或注册 MCP。保持共享文档可用并单独连接应用，或使用上面的一体化本地安装器。
 
-| Skill | 适用场景 |
+| Skill | 用途 |
 | --- | --- |
-| [motion-director](../skills/motion-director/SKILL.md) | 原创影片、叙事、动作、声音设计与创作品质审片。 |
-| [motion-template-to-video](../skills/motion-template-to-video/SKILL.md) | 使用已有可编辑模板制作视频。 |
-| [motion-recreate](../skills/motion-recreate/SKILL.md) | 参考视频重建、可编辑工程与效果对照。 |
-| [motion-video-to-template](../skills/motion-video-to-template/SKILL.md) | 将视频制作成可复用模板。 |
-| [motion-production](../skills/motion-production/SKILL.md) | 局部修改、预览、技术检查、排错与导出。 |
+| [motion-recreate](../skills/motion-recreate/SKILL.md) | 重建参考视频并对比结果 |
+| [motion-template-to-video](../skills/motion-template-to-video/SKILL.md) | 改编已有可编辑模板 |
+| [motion-director](../skills/motion-director/SKILL.md) | 原创影片、叙事、动作、声音与创作审片 |
+| [motion-video-to-template](../skills/motion-video-to-template/SKILL.md) | 制作便携的可复用模板 |
+| [motion-production](../skills/motion-production/SKILL.md) | 范围明确的修改、预览、检查、排错和导出 |
 
-### MCP：操作同一份工程
-
-在应用中使用**连接 Agent**获取当前工作区配置，或为本机 stdio 客户端填写绝对路径：
+通过 **Connect Agent** 获取工作区专属配置。手动配置本地 stdio 客户端时使用绝对路径：
 
 ```json
 {
@@ -877,162 +1015,173 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 }
 ```
 
-**九个公开工具**覆盖工程创建与读取、编辑、预览、素材导入、导出、版本恢复和任务取消。Skill 与引擎指南也可通过 MCP Resources 读取。[工具契约](mcp-phase1-tools.md) · [各宿主接入](agent-adapters.md)
+**九个公开 MCP 工具**覆盖工程创建、读取、编辑、预览、媒体导入、导出、版本恢复与取消。共享工作流和引擎指引通过 MCP resources 提供。[工具契约](mcp-phase1-tools.md)
 
-### CLI：本地执行
+使用 `npm start` 启动应用，使用 `npm run mcp` 启动 stdio。具备 shell 的 Agent 可使用运行时返回的固定版本引擎 CLI 检查和渲染；托管修改仍遵守工程 revision 校验。[原生创作](../skills/motion-production/references/native.md)
 
-通过 `npm start` 启动应用，`npm run mcp` 启动 stdio 服务。具备终端能力的 Agent 还可以使用随包固定版本的引擎 CLI，执行 `lint`、`timeline`、`info` 等原生命令；路径以运行时返回的 `hyperframesCli` 为准。受管理工程的修改通过 MCP 版本校验。[CLI 与原生创作说明](../skills/motion-production/references/native.md)
+</details>
 
-<a id="给创作者媒体与他们的-agent"></a>
+<a id="open-projects-reusable-knowledge"></a>
+<a id="developer-architecture"></a>
 
-## 📣 给创作者、媒体与他们的 Agent
+## 🛠️ 为创作者打造，向开发者开放
 
-把这份 README 和[媒体事实包](media-kit.md)直接交给你的 Agent，用于制作演示、文章、评测或报道。事实包包含可引用简介、图片来源、功能状态和可复现演示路径。
+**HTML 是可编辑视频源码，MP4 是渲染交付物。** OpenMotion 组合 TypeScript 应用、React Studio、Agent 工作流、多模态生成适配器与浏览器合成渲染引擎。工程是人和 Agent 共用的作品。
+
+### 各模块如何协同
+
+![本地 Agent 通过九个 MCP 工程工具连接，Studio 通过本地 HTTP 接入。应用管理版本、素材与导出任务，Model Gateway 向工程提供媒体，并对固定快照渲染和验证。](readme/diagrams/runtime-architecture.svg)
+
+<details>
+<summary>查看完整架构与路线图文字说明</summary>
 
 ```text
-读取 OpenMotion README 与 docs/media-kit.md。
-以“All-in-One AI-native Studio，让人人都成为创作者”为主线，制作 30 秒产品介绍与中文文章。
-介绍我们提出的 Super Motion Video Agent 概念，以及发布、反馈、知识和 Skill 持续迭代的愿景。
-主定位是以 AI 原生时间轴为核心的开源 CapCut 替代，Claude Motion 是动效创作参照。
-说明两个接入方向：在 OpenMotion 中连接 Agent，以及通过 Skills / MCP / CLI 在 Agent 中使用 OpenMotion。
-围绕智能剪辑与故事组织、素材生成与搜索、多平台输入输出讲述，标清每项能力的状态。
-以 Input → Process → Output 组织内容，演示提出剪辑要求、Agent 修改工程、Studio 预览与改稿。
-再展示 Motion MD 和模板如何复用剪辑经验。
-使用仓库提供的封面与截图，并注明参考资源的作者。
-将当前能力与愿景分开；没有实测的功能不要演成已经完成。
-如果已连接 OpenMotion，交付可编辑工程和 MP4；文章保留资料链接。
+创作输入
+参考视频 + 实拍 + 脚本 + 品牌素材
+                 ↓
+社区知识
+MOTION_DESIGN.md + BRANDKIT.md + Skills + 模板 + 组件
+                 ↓
+BYOA：本地 Agent                       OPENMOTION STUDIO
+DeepSeek Harness / Codex / Claude Code  React 19 + TypeScript + Vite
+其他本地宿主、Skills 与宿主分析工具     Tailwind CSS + Zustand
+                 |                     CodeMirror + Dockview
+          stdio MCP                    素材 / 预览 / 时间轴
+          9 个公开工程工具             本地 HTTP
+                 └──────────┬──────────┘
+                            ↓
+本地应用：Node.js + TypeScript + node:http
+会话 / 工程文件 / 素材 / revision / 导出任务
+                 ↓                         ↓
+BYOK：MODEL GATEWAY                    视频即代码
+你的 Key / 账号 / 模型路由             HTML 场景 + 素材 + Studio 数据
+发现 / 生成任务                       HTML + CSS + JavaScript + GSAP
+                 ↓                         ↑
+模型适配器                                 |
+Codex Image / Atlas Cloud / fal.ai          |
+图片 / 视频 / 音乐 / TTS                   |
+                 ↓                         |
+生成候选 → 预览 / 选择 → 显式采用到工程 ────┘
+                            ↓
+渲染与验证
+固定工程快照 → HTML 引擎 + Chromium → FFmpeg / FFprobe
+                            ↓
+当前交付
+MP4 + 可编辑源码 + 素材 + 版本和导出证据
+                            ↓
+规划中：多平台发布
+平台连接器 → 发布审阅 → 排期 → 表现反馈
+                            ↓
+规划中：知识反馈
+版本关联结果 → 团队记忆 / RAG → 经评估的 Skill 改进
 ```
 
+</details>
+
+BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Studio 与本地服务管理工程，供应商凭据独立保存。一期公开 MCP 包含**九个工程工具**；模型生成经 Studio 和本地 Gateway 使用，架构图不意味着公开 MCP 新增了生成或发布工具。
+
+以上为可编辑 SVG 图，由[无依赖的小型脚本](readme/diagrams/generate.py)生成。
+
+### 技术栈与源码索引
+
+| 层次 | 技术 | 阅读入口 |
+| --- | --- | --- |
+| **Studio 与编辑器界面** | React 19、TypeScript 5.9、Vite 6、Tailwind CSS 4、Zustand、CodeMirror、Dockview | [Studio 源码](../studio/src) · [Motion 应用](../studio/src/motion/MotionApp.tsx) · [编辑器开发](editor-fork.md) |
+| **应用运行时** | CI 固定 Node.js 26.11.1，原生 HTTP、TypeScript 执行和本地文件/JSON | [server.ts](../server.ts) · [workspace.ts](../workspace.ts) · [会话架构](session-architecture.md) |
+| **Agent 接入** | 本地 stdio MCP、五个核心 Skills 和生成的宿主适配器 | [mcp.ts](../mcp.ts) · [phase1.ts](../phase1.ts) · [适配器生成](../scripts/export-adapters.ts) |
+| **多模态生成** | Codex 媒体适配器、Atlas Cloud predictions、fal.ai 队列集成与持久化生成任务 | [Gateway 服务](../gateway/service.ts) · [供应商适配器](../gateway/providers.ts) · [模型目录](../gateway/catalog.ts) |
+| **合成与动效** | HTML/CSS/JS、GSAP、固定版本合成引擎与原生时间轴/历史 | [引擎集成](../hyperframes.ts) · [模板源码](../template-library) · [版本适配器](../phase1-versions.ts) |
+| **渲染与媒体** | Chromium、Puppeteer Core、FFmpeg、FFprobe | [渲染服务](../server.ts) · [导出校验器](../scripts/verify-export.ts) · [原生运行时锁定](../scripts/runtime-lock.json) |
+| **创作知识** | Markdown、源码包、预设和对比证据 | [Motion MD](motion-md.zh-CN.md) · [核心 Skills](../skills) · [社区资源库](../library/README.zh-CN.md) |
+| **验证与打包** | Node 测试运行器、Vitest、Studio 检查、npm 锁文件和显式分发清单 | [测试](../tests) · [Studio 测试](../studio/tests) · [CI](../.github/workflows/ci.yml) · [分发](../scripts/distribution.ts) |
+| **发布与学习 — 规划中** | 平台适配器、排期、版本关联反馈与检索，实现仍待设计 | [Studio 蓝图](product/studio-vision.md) |
+
+依赖锁定在 [package.json](../package.json)、[package-lock.json](../package-lock.json) 和[运行时锁文件](../scripts/runtime-lock.json)中。模型和第三方库保留各自条款；应用采用 Apache-2.0。
+
+### 选择一层，一起建设
+
+| 你的方向 | 可贡献的内容 | 入口 |
+| --- | --- | --- |
+| **前端与交互** | 改进时间轴、媒体生成控件、无障碍或预览行为 | [Studio](../studio/src) · [媒体生成器](../studio/src/motion/MediaGenerator.tsx) |
+| **AI 与模型基础设施** | 沿用共享任务与媒体流程，新增供应商适配器或模型预设 | [Gateway 设计](product/media-generation-design.md) · [供应商适配器](../gateway/providers.ts) |
+| **Agent 与开发工具** | 改进宿主适配器、Skill、资源指引或工程工具流程 | [Agent 适配器](agent-adapters.md) · [MCP 契约](mcp-phase1-tools.md) |
+| **动效与创意编程** | 分享组件、原生模板或带真实改编的 Motion MD 包 | [组件](../library/components/README.md) · [条目清单](../library/ENTRY_TEMPLATE.md) |
+| **视频与渲染** | 改进导出可靠性、媒体处理或可复现验证 | [引擎说明](hyperframes.md) · [导出校验器](../scripts/verify-export.ts) |
+| **社交发布** | 设计规划中的连接器层：账号访问、发布审阅、排期和版本映射 | [发布方向](product/studio-vision.md) · [讨论提案](https://github.com/nexu-io/html-anything/issues) |
+
+从[本地安装](#quick-start)开始，选择一层，遵循 [CONTRIBUTING.md](../CONTRIBUTING.md) 和 [AGENTS.md](../AGENTS.md)。工程与凭据放在 checkout 外，保留依赖锁定与上游许可。
+
+**架构承诺：** 人与 Agent 共用工程；revision 校验避免基于旧状态误改；生成候选经显式采用进入影片；导出使用固定快照。技术、视觉、声音和实际播放分别验证。
+
+[产品架构](product/architecture.md) · [Studio 开发](../studio/README.md) · [Model Gateway](model-gateway.md) · [贡献指南](../CONTRIBUTING.md)
+
+<a id="super-motion-video-agent"></a>
+<a id="status--roadmap"></a>
 <a id="当前状态与路线图"></a>
+<a id="roadmap"></a>
 
-## 🗺️ 当前状态与路线图
+## 🗺️ 从一次改编，到持续创作
 
-| 范围 | 当前状态 |
-| --- | --- |
-| 独立 Studio、本地工程、可视化修改、MP4 导出 | 已实现；安装与实际成片仍按目标环境验证。 |
-| Super Motion Video Agent、发布自动化与知识反馈 | 产品概念 / is coming；常驻编排、数据回收与 RAG 仍在规划。 |
-| Agent 接入 | 五个核心 Skills、九个公开 MCP 工具；各宿主能力见接入文档。 |
-| OpenMotion Library | 已有五类目录与首批内容，手动选择并交给 Agent 使用。 |
-| `MOTION_DESIGN.md` | v0.1 创作规范提案；没有自动导入器或校验器。 |
+Studio 的完整愿景依旧是发现、创作、协作、发布与学习。**Super Motion Video Agent** 是在简报、工具和改稿之间持续推进工作的概念。当前由已连接 Agent 使用本地 Skills、MCP 与 Studio；常驻自主编排仍在规划。
 
-### 🫶 人和 Agent 协同进行 AI 剪辑与 Motion 创作 — is coming
+| 领域 | 当前可用 | 方向 |
+| --- | --- | --- |
+| **重建与剪辑** | Agent 引导重建、模板改编、可编辑工程和 MP4 导出 | 更多经评估的重建案例和可复现对比 |
+| **品牌与知识** | 显式使用 Brandkit、Motion MD、Skills 和源码包 | 个人/团队记忆、RAG 和经评估的 Skill 改进 |
+| **人与 Agent** | 同一本地工程交接 | 时间轴评论、共同审阅和协作编辑 |
+| **多模态创作** | 内置图片、视频、音乐和 TTS 集成；生成、选候选、采用到时间轴 | 跨视频、图片、声音、音乐和 Avatar 服务的综合搜索 |
+| **多平台发布 — 规划中** | 手动编排不同画幅，交付 MP4 | 平台连接器、发布审阅、排期、自动画幅重构与社交预设 |
+| **反馈** | 人工审阅和保存工程版本 | 版本关联表现数据与周期制作任务 |
 
-**一起构建 AI 原生的视频创作与剪辑空间。** 从第一版剪辑到动效设计和最终评审，人和 Agent 围绕同一个视频项目共同创作。
+![人与 Agent 在共享时间轴审阅的生成式概念图；协作体验仍在规划。](readme/collaboration-concept-v2.png)
 
-![OpenMotion 人与 Agent 协作概念：在时间轴选区旁评论、讨论和评审，共同调整同一视频项目。is coming。](readme/collaboration-coming.png)
-
-- **共同编辑。** 一起组织故事、剪辑片段和制作动效，协作推进同一份项目。
-- **在时间轴上评论。** 将反馈关联到具体时刻或片段范围，与 Agent 讨论修改，让评审上下文留在作品旁边。
-- **一起评审与迭代。** 把评论落实为修改，共同检查结果，在同一个创作空间里持续打磨。
-
-*is coming · 生成式概念预览，展示规划中的协作体验，尚未公布上线日期。*
-
-接下来希望和社区一起推进，以下均未承诺上线日期：
-
-- [ ] Super Motion Video Agent：持续的创作任务规划、执行与评审。
-- [ ] 发布管理、周期性制作任务与事件触发的自动化。
-- [ ] 关联版本的效果数据、个人/团队记忆、RAG 与经过评估的 Skill 改进。
-- [ ] 团队共享素材库与面向 Agent 的社区模板安装。
-- [ ] 自动选段、无关内容识别与面向发布目标的自动画幅重构。
-- [ ] 视频、图片、配音、音乐与 Avatar 服务的集成搜索。
-- [ ] 更广的平台链接解析与素材导入。
-- [ ] 更多可编辑模板、Motion 组件、Brandkits 和设计体系。
-- [ ] Library 的搜索、预览与显式导入体验。
-- [ ] 同一需求的多个版本预览和对照。
-- [ ] 面向社交平台的画幅、字幕与导出预设。
-- [ ] 有公开样本和方法的 Motion Benchmark / Arena。
-
-<a id="stay-tuned"></a>
-
-## ⭐ Stay tuned with us
-
-**给 OpenMotion 一个 Star，让更多人发现 AI 剪辑。** 收藏项目、关注进展，也把你的下一个创作想法带到社区。
-
-[![OpenMotion Star 邀请动图：点击前往仓库，为项目加星。](readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
-
-[⭐ 在 GitHub 上 Star](https://github.com/nexu-io/html-anything) · [路线图](#当前状态与路线图) · [参与社区](#社区共建)
-
-需要版本通知时，在仓库选择 **Watch → Custom → Releases**。[GitHub 通知设置说明](https://docs.github.com/en/subscriptions-and-notifications/get-started/configuring-notifications)。
+*规划中协作体验的概念预览，尚未公布发布日期。* [Studio 蓝图](product/studio-vision.md) · [知识与反馈](product/studio-vision.md#knowledge-and-feedback)
 
 <a id="社区共建"></a>
+<a id="community"></a>
 
-## 🤝 社区共建
+## 🤝 分享视频，也分享制作方法
 
-分享作品，也分享制作它的方法。在 [Issues](https://github.com/nexu-io/html-anything/issues) 提需求、报错或展示可复现案例；在 [OpenDesign Discord](https://discord.gg/mHAjSMV6gz) 交流创作。[资源库](../library/README.zh-CN.md) · [文档](README.md)
+**带来一条参考、一支改编或一种可复用动效语言。** 一起建设 [Motion Design MD 社区](#motion-design-community) ，分享创作决定和源码，让下一位创作者做出自己的作品。
 
-### 从一个文件夹开始贡献
-
-| 想贡献什么 | 放在哪里 | 一次有用的贡献 |
-| --- | --- | --- |
-| **🧠 Skill** | [`library/skills/`](../library/skills/) | `SKILL.md`、触发示例与实际使用说明。 |
-| **模板 / 组件** | [`library/templates/`](../library/templates/README.md) / [`library/components/`](../library/components/README.md) | 源码或配方、可修改项、预览、来源与验证记录。 |
-| **设计体系 / Brandkit** | [`library/design-systems/`](../library/design-systems/) / [`library/brandkits/`](../library/brandkits/) | `MOTION_DESIGN.md` 或 `BRANDKIT.md`，附参考、品牌事实与素材许可。 |
-| **Agent 接入** | [`shared/integration.ts`](../shared/integration.ts) · [适配说明](agent-adapters.md) | 一个明确的配置或宿主兼容改进，附对应检查。 |
-| **编辑体验** | [`studio/src/motion/`](../studio/src/motion/) | 一个可复现的交互问题及修复。 |
-| **翻译与文档** | [英文 README](../README.md)、本页与相关专题 | 双语口径同步，修复可实际访问的入口。 |
-
-先读 [AGENTS.md](../AGENTS.md) 和 [贡献指南](../CONTRIBUTING.zh-CN.md)，选择一个范围，提交来源、实际变化和验证结果。Agent 也沿用同一流程；不要把仅有封面的参考写成已验证模板。
-
-### Contributors
-
-感谢每一位贡献代码、文档、Skills、设计体系、作品和问题反馈的人。下方展示当前 GitHub 仓库的贡献者，包含 HTML Anything 历史贡献。
-
-<p>
-<a href="https://github.com/joeylee12629-star"><img src="readme/contributors/joeylee12629-star.png" width="48" height="48" alt="joeylee12629-star"></a>
-<a href="https://github.com/pftom"><img src="readme/contributors/pftom.png" width="48" height="48" alt="pftom"></a>
-<a href="https://github.com/wuwangzhang1216"><img src="readme/contributors/wuwangzhang1216.png" width="48" height="48" alt="wuwangzhang1216"></a>
-<a href="https://github.com/TuYv"><img src="readme/contributors/TuYv.png" width="48" height="48" alt="TuYv"></a>
-<a href="https://github.com/chasel34"><img src="readme/contributors/chasel34.png" width="48" height="48" alt="chasel34"></a>
-<a href="https://github.com/C1-BA-B1-F3"><img src="readme/contributors/C1-BA-B1-F3.png" width="48" height="48" alt="C1-BA-B1-F3"></a>
-<a href="https://github.com/ttoyekk1a"><img src="readme/contributors/ttoyekk1a.png" width="48" height="48" alt="ttoyekk1a"></a>
-<a href="https://github.com/kokiainet"><img src="readme/contributors/kokiainet.png" width="48" height="48" alt="kokiainet"></a>
-<a href="https://github.com/fredkwok-it"><img src="readme/contributors/fredkwok-it.png" width="48" height="48" alt="fredkwok-it"></a>
-<a href="https://github.com/jhinzzz"><img src="readme/contributors/jhinzzz.png" width="48" height="48" alt="jhinzzz"></a>
-<a href="https://github.com/cszhouwei"><img src="readme/contributors/cszhouwei.png" width="48" height="48" alt="cszhouwei"></a>
-<a href="https://github.com/tackcrypto1031"><img src="readme/contributors/tackcrypto1031.png" width="48" height="48" alt="tackcrypto1031"></a>
-<a href="https://github.com/fix2015"><img src="readme/contributors/fix2015.png" width="48" height="48" alt="fix2015"></a>
-<a href="https://github.com/ZhongXiandou"><img src="readme/contributors/ZhongXiandou.png" width="48" height="48" alt="ZhongXiandou"></a>
-<a href="https://github.com/PerishCode"><img src="readme/contributors/PerishCode.png" width="48" height="48" alt="PerishCode"></a>
-<a href="https://github.com/octo-patch"><img src="readme/contributors/octo-patch.png" width="48" height="48" alt="octo-patch"></a>
-<a href="https://github.com/mrcfps"><img src="readme/contributors/mrcfps.png" width="48" height="48" alt="mrcfps"></a>
-<a href="https://github.com/Link-990"><img src="readme/contributors/Link-990.png" width="48" height="48" alt="Link-990"></a>
-<a href="https://github.com/lxyAK"><img src="readme/contributors/lxyAK.png" width="48" height="48" alt="lxyAK"></a>
-<a href="https://github.com/GHX5T-SOL"><img src="readme/contributors/GHX5T-SOL.png" width="48" height="48" alt="GHX5T-SOL"></a>
-<a href="https://github.com/FaintFlower"><img src="readme/contributors/FaintFlower.png" width="48" height="48" alt="FaintFlower"></a>
-<a href="https://github.com/chenmofei"><img src="readme/contributors/chenmofei.png" width="48" height="48" alt="chenmofei"></a>
-<a href="https://github.com/aaronjmars"><img src="readme/contributors/aaronjmars.png" width="48" height="48" alt="aaronjmars"></a>
-</p>
-
-[查看全部贡献者](https://github.com/nexu-io/html-anything/graphs/contributors) · [开始贡献](../CONTRIBUTING.zh-CN.md)
-
-![做出值得分享的作品：用 OpenMotion 创作，把学到的方法贡献回来。](readme/community.png)
-
-## 参考与致谢
-
-说明借鉴了什么，以及在仓库中对应哪里。
-
-| 来源 | 关系与落点 |
+| 贡献类型 | 应包含 |
 | --- | --- |
-| [OpenDesign](https://github.com/nexu-io/open-design) / [官网](https://open-design.ai/) | UI 视觉系统来源、README 的资源与贡献结构、水墨品牌方向。对应 [UI 来源记录](design-system.md)、[Brandkit](../library/brandkits/openmotion/BRANDKIT.md) 与 [Library](../library/README.zh-CN.md)。 |
-| [Hypit](https://github.com/hypit-ai/hypit) | 内容变体对照与 Stay tuned / Star 社区邀请的参考，见 [Motion Design 实例](motion-design-examples.zh-CN.md)。 |
-| [MotionGit](https://motiongit.com/) / [规范](https://motiongit.com/spec) / [源码协作](https://motiongit.com/git) | 感谢 MotionGit / adunext 开源 Kinetic Tech，现以 [Presenter Tech](../library/templates/presenter-tech/README.md) 收入 Library；原始演示、MIT 版权与第三方条款见 [NOTICE](../library/templates/presenter-tech/NOTICE.md)。也借鉴其模板分层与素材约定；Studio 通用 `.motion` 导入尚未实现。 |
-| [rea-video](https://github.com/JuneYaooo/rea-video) | 逐镜头分析和原作/改编同步对照的参考；没有引入其运行时。 |
-| [HTML Anything](https://github.com/nexu-io/html-anything/tree/legacy) | 仓库前身；参考其文字架构图、贡献路径与来源表格。旧 `next/` 架构留在历史分支，当前结构见[迁移说明](repository-migration.md)。 |
-| **Claude Motion / CapCut** | 分别作为 Agent 视频创作与大众剪辑体验的产品参照；不代表功能完全对等或源码来源。 |
-| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) / [Super-agent 原型](https://github.com/deepseek-ai/dsh-superagent-prototype) | 可扩展 Agent 能力与持续任务工作的参考。Super-agent 仓库为研究原型；我们提出 [Super Motion Video Agent](product/studio-vision.md#super-motion-video-agent) 概念，本次未引入其运行时。 |
-| [OpenChatCut](https://github.com/0xsline/OpenChatCut) | 参考可持续编辑工程与 AI 剪辑生命周期的产品理念，体现在 [AI 剪辑](#ai-video-editing)与[完整流程](#input--process--output)；本次文档改动未引入其代码。 |
-| [ChatCut](https://chatcut.io/docs/what-is-chatcut) | Agent 与编辑器衔接、口播与创作者场景的产品参考。 |
-| [Hyperframes](https://github.com/heygen-com/hyperframes) | 感谢其原生合成、Studio、渲染基础与资源。对应 [Studio](../studio/README.md)、[引擎说明](hyperframes.md)、[模板声明](../template-library/NOTICE.md) 与 [目录来源](template-catalog.md)。 |
-| [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | 动画时序与媒体渲染/检查依赖；版本见 [package.json](../package.json) 与 [运行时锁](../scripts/runtime-lock.json)。 |
+| **复刻作品** | 参考与作者、简报、工程、预览、对比和剩余差异 |
+| **模板或组件** | 可运行源码、可编辑项、素材、预览和署名 |
+| **Skill 或设计体系** | 方法、保持/修改规则、实际执行示例 |
+| **Brandkit** | 品牌身份、准确产品事实和可分享素材 |
+| **Agent 支持或编辑器改进** | 范围聚焦且可复现验证的变更 |
 
-原始资源保留作者、出处与许可；产品灵感、实际依赖和第三方作品分别说明。
+[Library 条目清单](../library/ENTRY_TEMPLATE.md) · [贡献指南](../CONTRIBUTING.md) · [仓库规范](../AGENTS.md) · [所有贡献者](https://github.com/nexu-io/html-anything/graphs/contributors)
 
-<a id="许可与致谢"></a>
+[提出 Issue](https://github.com/nexu-io/html-anything/issues) · [加入 Discord 社区](https://discord.gg/mHAjSMV6gz) · [文档](README.md)
 
-## ⚖️ 许可与致谢
+面向创作者和媒体：展示参考、输入品牌、Studio 修改过程和实际结果。区分渲染演示、产品概念和外部参考。[媒体事实与素材](media-kit.md)
 
-OpenMotion 采用 [Apache-2.0](../LICENSE) 许可。
+[![Star OpenMotion，关注下一次创作。](readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
 
-上游编辑器、模板、字体与媒体保留各自许可和署名，详见上方来源表与[素材说明](readme/ASSETS.md)。
+**Star OpenMotion，找到值得研究的视频，把下一支做成自己的作品。**
 
-开发分支为 [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion)。原 HTML Anything 应用仍在 `main`，并已保留在 [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy)。分支与分发状态见[迁移说明](repository-migration.md)。
+<a id="acknowledgements"></a>
+
+## 🙏 致谢 / Acknowledgements
+
+
+OpenMotion 采用 [Apache-2.0](../LICENSE)许可。第三方代码、模板、媒体和字体保留各自许可证和署名。
+
+| 来源 | 关联 |
+| --- | --- |
+| [OpenDesign](https://github.com/nexu-io/open-design) | 界面来源、资源结构和品牌方向；[设计体系](design-system.md) 和 [Motion 展示](https://open-design.ai/motion/) |
+| [Hyperframes](https://github.com/heygen-com/hyperframes) | HTML 视频合成、Studio 和渲染基础，固定为 0.9.7；创作者参考、外部改编演示与组件源码；[引擎说明](hyperframes.md)、[模板声明](../template-library/NOTICE.md) 和[目录来源](template-catalog.md) |
+| [MotionGit](https://motiongit.com/) / adunext | Kinetic Tech 源码以 Presenter Tech 打包；[许可与署名](../library/templates/presenter-tech/NOTICE.md) |
+| [Hypit](https://github.com/hypit-ai/hypit) | Agent 主导热门视频复刻与可编辑版本的灵感来源；未引入运行时 |
+| [rea-video](https://github.com/JuneYaooo/rea-video) | 参考分析与案例研究：[实拍开箱](https://github.com/JuneYaooo/rea-video/blob/main/docs/cases/unboxing/report_en.md) 及[角色、代码和屏幕录制](https://github.com/JuneYaooo/rea-video/blob/main/docs/cases/dual_role/report_en.md)；[展示素材署名](readme/brand-showcase/README.md)，未引入运行时 |
+| [OpenAI · Codex Originals](https://openai.com/codex-originals/) | 外部品牌影片参考；官方活动静帧与站外观看链接 |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) / [Super-agent 原型](https://github.com/deepseek-ai/dsh-superagent-prototype) | Agent 可扩展性与持续任务的参考；该原型独立于 OpenMotion 当前运行时 |
+| Claude Motion / CapCut / [ChatCut](https://chatcut.io/docs/what-is-chatcut) / [OpenChatCut](https://github.com/0xsline/OpenChatCut) | Agent 创作、易用 AI 剪辑与持续改稿的产品参考 |
+| [OpusClip](https://www.opus.pro/calendar) | 分发与[外部排期](https://www.opus.pro/tools/instagram-reels-scheduler)的产品参考；无内置连接器 |
+| [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | 动画与媒体依赖，版本保留在 [package.json](../package.json) 和[运行时锁文件](../scripts/runtime-lock.json) |
+
+[素材来源](readme/ASSETS.md) · [其他展示素材来源](readme/brand-showcase/README.md) · [封面与提示词](readme/reverse-engineering-cover.md) · [字体声明](../web/design-system/fonts/NOTICES.txt) · [Studio 许可证](../studio/LICENSE)
+
+原 HTML Anything 应用保留在 [`legacy` 分支](https://github.com/nexu-io/html-anything/tree/legacy)。当前分支与分发边界参见[仓库迁移指南](repository-migration.md) 。

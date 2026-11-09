@@ -6,6 +6,8 @@
 
 A great reference carries more than a color palette: a hook, a sequence of reveals, a camera move, a reading rhythm, and moments where sound makes an idea land. **`MOTION_DESIGN.md` records those decisions so an Agent can keep the motion language while making a video about something else.** A reusable Skill package adds the method, editable implementation, replacement inputs and evidence that make those decisions practical.
 
+**Motion Design MD is the complete creative specification. Brand Kit is a section inside it**, alongside story, motion, sound and review rules. Record the logo, palette, typography, voice, product facts and approved assets in that section. Existing brand files can supply linked material; a separate `BRANDKIT.md` is not required as a second creative specification.
+
 [Six reference/remix comparisons](motion-design-examples.md) · [Runnable Skill package](../library/skills/motion-design-remix/SKILL.md) · [Ink & Water system](../library/design-systems/ink-water/MOTION_DESIGN.md) · [Brandkit](../library/brandkits/openmotion/BRANDKIT.md)
 
 **Status:** Motion Design MD is a v0.1 authoring proposal. Agents read the file as explicit context; there is no automatic Motion MD importer, parser, registry or cross-engine execution guarantee. The example Skill includes a source-copy helper for six specific compositions. That helper applies recorded replacements; it does not interpret Markdown or reconstruct arbitrary videos.
@@ -44,8 +46,8 @@ hook · shots · camera · rhythm · sound             copy · product · logo �
 
 | Layer | Artifact | Responsibility | Example |
 | --- | --- | --- | --- |
-| Creative intent | `MOTION_DESIGN.md` | Story beats, composition, timing, movement, sound and invariants. | A flat headline opens into a wireframe world before the camera passes through it. |
-| Brand identity | Brandkit / approved design source | Names, facts, logo, type, palette and permitted material. | Replace the product identity without inventing claims. |
+| Creative specification | `MOTION_DESIGN.md` | Brand Kit, story beats, composition, timing, movement, sound and review rules. | One design context guides the brand and the motion. |
+| Brand Kit within the specification | `MOTION_DESIGN.md` → Brand Kit section | Names, facts, logo, type, palette, voice and approved material; inline or linked. | Replace the product identity without inventing claims. |
 | Agent procedure | `SKILL.md` | Choose inputs, adapt, review, deliver; route only to needed instructions. | Read the portal profile; replace headline and phrase; inspect the main hold. |
 | Replacement contract | Preset or parameter schema | Editable fields, limits, asset roles and missing-input behavior. | Title ≤ 18 characters; preserve scene timing. |
 | Executable project | HTML/CSS/JS + assets | Geometry, animation, rendering and editable media. | The original portal implementation and native timeline. |
@@ -90,6 +92,7 @@ The helper checks the source hash and replacement occurrence counts, refuses an 
 | Section | Write down | Make it actionable |
 | --- | --- | --- |
 | Identity & provenance | Name, version, reference author/URL, source revision, rights and observed status. | Link the exact original and preserve attribution. |
+| Brand Kit | Brand identity, product facts, logo, colors, type, voice and approved assets. | Keep the brand rules inside the creative specification; link existing material when useful. |
 | Narrative grammar | Audience, hook, reveal order, proof and closing beat. | Explain which scene carries which idea. |
 | Visual hierarchy | Framing, type scale, depth, contrast, negative space and brand sources. | Identify the focal point of every major hold. |
 | Timing & motion | Shot boundaries, holds, easing, camera paths, masks, transitions and continuity. | Specify relationships and source labels, not just “make it cinematic.” |

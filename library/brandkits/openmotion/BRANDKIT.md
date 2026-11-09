@@ -2,6 +2,8 @@
 
 **Status:** public README brand kit · **Source:** [product architecture](../../../docs/product/architecture.md) and [media fact sheet](../../../docs/media-kit.md) · **License:** original text follows [Apache-2.0](../../../LICENSE); upstream assets keep their attribution.
 
+**Role in Motion Design MD:** this file is reusable material for the **Brand Kit section inside `MOTION_DESIGN.md`**. Brand identity belongs to that complete creative specification alongside story, motion, sound and review rules. Link or incorporate the relevant material there; this source file does not require a separate parallel specification.
+
 ## Name and message
 
 - **Name:** OpenMotion. Capital O and M. Command and directory names retain their actual spelling.

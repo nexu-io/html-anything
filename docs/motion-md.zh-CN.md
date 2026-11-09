@@ -6,6 +6,8 @@
 
 一支好的 reference video，包含的不只是配色，还有开场钩子、镜头顺序、运动路径、阅读节奏，以及声音推动叙事的时刻。**`MOTION_DESIGN.md` 把这些创作决定记录下来，让 Agent 保留动效语言，换成用户自己的主题、内容和品牌。** 再把方法、可编辑源码、替换输入和真实成片一起打包，就形成可以复用、传播和继续改进的 Motion Design Skill 包。
 
+**Motion Design MD 是完整的创作设计规范，Brand Kit 是它内部的品牌章节**，与叙事、动效、声音和审阅规则一起构成同一份设计上下文。Logo、配色、字体、语气、产品事实和已确认素材都归入该章节；已有品牌文件可以作为引用材料，不要求另写一份与 Motion MD 并列的 `BRANDKIT.md`。
+
 [六组 reference / remix 动态对比](motion-design-examples.zh-CN.md) · [可运行的 Skill 包](../library/skills/motion-design-remix/SKILL.md) · [Ink & Water 设计体系](../library/design-systems/ink-water/MOTION_DESIGN.md) · [Brandkit](../library/brandkits/openmotion/BRANDKIT.md)
 
 **当前状态：** Motion Design MD 是 v0.1 写作提案，由用户显式交给 Agent 阅读；尚无自动导入、解析、注册或跨引擎执行保证。示例 Skill 的脚本只复制六种指定源码并执行已记录的内容替换，不会解释 Markdown，也不会自动重建任意视频。
@@ -44,8 +46,8 @@ REFERENCE VIDEO                                 你的需求与素材
 
 | 层次 | 文件 / 产物 | 职责 | 具体例子 |
 | --- | --- | --- | --- |
-| 创作意图 | `MOTION_DESIGN.md` | 叙事、构图、节奏、运动、声音和保持项 | 平面标题打开成线框空间，镜头最后穿过文字。 |
-| 品牌身份 | Brandkit / 已确认的设计资料 | 名称、事实、Logo、字体、配色与可用素材 | 换成用户的产品，保留真实事实。 |
+| 创作设计规范 | `MOTION_DESIGN.md` | Brand Kit、叙事、构图、节奏、运动、声音与审阅规则 | 同一份设计上下文指导品牌与动效。 |
+| 规范内的 Brand Kit | `MOTION_DESIGN.md` → Brand Kit 章节 | 名称、事实、Logo、字体、配色、语气与已确认素材，可内联或引用 | 换成用户的产品，保留真实事实。 |
 | Agent 方法 | `SKILL.md` | 选择输入、改编、检查、交付 | 读取所选 profile，更换标题，在主要停留点检查。 |
 | 替换契约 | Preset / 参数 Schema | 可改字段、长度、素材角色与缺失处理 | 标题最多 18 字符；保持时间轴。 |
 | 可执行工程 | HTML/CSS/JS 与素材 | 几何、动画、渲染与编辑实现 | 原有 portal 实现和原生时间轴。 |
@@ -90,6 +92,7 @@ node scripts/materialize.mjs wireframe-portal-title remix /tmp/portal-remix
 | 章节 | 记录什么 | 如何让 Agent 能执行 |
 | --- | --- | --- |
 | 身份与来源 | 名称、版本、原作者/链接、源码版本、权限与验证状态 | 指向准确原作，保留署名。 |
+| Brand Kit | 品牌身份、产品事实、Logo、配色、字体、语气与已确认素材 | 将品牌规则写在创作设计规范内，按需引用已有资料。 |
 | 叙事语法 | 受众、钩子、揭示顺序、证据与收尾 | 说明每个场景承担的信息。 |
 | 视觉层级 | 构图、字级、景深、对比、留白与品牌来源 | 明确每个主要停留点的视觉焦点。 |
 | 时间与运动 | 镜头边界、停留、缓动、镜头路径、遮罩、转场和连续性 | 写清动作关系或源码标签，不只写“高级、电影感”。 |

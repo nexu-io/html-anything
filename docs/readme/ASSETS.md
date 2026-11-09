@@ -4,18 +4,21 @@
 
 The public README follows the painterly direction of the [OpenDesign website](https://open-design.ai/): sky blue, turquoise and emerald brushwork, warm ivory space, a little apricot, and crisp charcoal type. The supplied website screenshots were visual references; the new artwork was generated with the **built-in Codex ImageGen tool**. No website screenshots or promotional prices are reproduced as OpenMotion features.
 
-The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) records the palette, identity and asset rules. [Ink & Water / MOTION_DESIGN.md](../../library/design-systems/ink-water/MOTION_DESIGN.md) records reusable creative direction. The previous lime 3D cover and boxed explanatory SVGs were replaced after visual feedback. Architecture and lifecycle information now live as selectable Markdown text.
+The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) records the palette, identity and asset rules. [Ink & Water / MOTION_DESIGN.md](../../library/design-systems/ink-water/MOTION_DESIGN.md) records reusable creative direction. The previous lime 3D cover and boxed explanatory SVGs were replaced after visual feedback. The main README now uses the reverse-engineering cover and three architecture diagrams, with expanded architecture and roadmap text available in collapsible sections.
 
 ## Asset inventory
 
 | Asset | Source and use |
 | --- | --- |
-| [Cover](cover.png) | Generated painterly brand poster, 1774 × 887. Final copy leads with AI editing, pairs the CapCut and Claude Motion alternative positions, and closes with the creator mission. The primary README image is static for clear typography. |
+| [Current cover](cover-reverse-engineering-v2.png) | Generated painterly brand poster, 1774 × 887. Leads with reference-video reconstruction and the local agent workflow; [prompts and provenance](reverse-engineering-cover.md). Shared by the English, Chinese, Japanese and Korean introductions. |
+| [Earlier cover](cover.png) | Previous AI-editing positioning, preserved as artwork history; no longer the main README cover. |
 | [Animated cover](cover-motion.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |
 | [Social preview](social-preview.jpg) | 1280 × 640 sharing image derived from the cover. |
 | [Library](library.png) | Generated 2172 × 724 companion artwork for the five resource collections. |
 | [Community](community.png) | Generated 2172 × 724 companion invitation to create and contribute. |
-| [Collaboration roadmap](collaboration-coming.png) | Generated 1774 × 887 painterly concept of human–agent co-editing, timeline comments and review. Labeled **is coming** and **Concept preview**; not a current product screenshot. |
+| [Collaboration roadmap](collaboration-concept-v2.png) | Generated 1774 × 887 concept of human–agent editing. Retains **Concept preview**; the README states that collaboration is planned. The [earlier version](collaboration-coming.png) is preserved. |
+| [Architecture diagrams](diagrams/) | Creation workflow, explicit creative context and runtime boundaries; [editable SVG source](diagrams/generate.py). Diagrams explain the architecture, not measured creation results. |
+| [Additional brand and production references](brand-showcase/README.md) | Local campaign still and two case-study videos; external examples with [source and integrity records](brand-showcase/manifest.json). |
 | [Stay tuned GIF](stay-tuned.gif) | Generated 960 × 480 Star → Starred invitation; 40 frames, 4 seconds, infinite loop, about 437 KB. Linked to the repository. Inspired by the community CTA pattern in [Hypit](https://github.com/hypit-ai/hypit); no Hypit image or GitHub screenshot is reproduced. |
 | [Star frame](stay-tuned.png) / [Starred frame](stay-tuned-starred.png) | Two ImageGen frames used to reproduce the animation; illustration only, no fabricated repository counts or notification guarantees. |
 | [Editor](editor.jpg) and [workspace](workspace.jpg) | Historical Studio captures at commit `7aee372`, using an isolated demo workspace and bundled Product Promo project. Retained for provenance; the README now uses the product tour below. |

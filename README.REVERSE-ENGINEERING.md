@@ -184,7 +184,7 @@ The films above are external references credited to their creators. OpenMotion s
 
 **Your local agent already writes code. Make it your full-stack video creator.** OpenMotion uses HTML, CSS and JavaScript to describe scenes, typography, layout, transitions and timing. Recorded footage, generated clips, images, music and voice-over become media inside the composition. The same project opens in Studio and renders to MP4.
 
-![Your local agent, optional media-model accounts and creative resources feed a workflow of understanding the reference, coding scenes, generating missing media, editing and rendering MP4 with reusable source.](docs/readme/diagrams/creation-stack.svg)
+![Your local agent, optional media-model accounts and creative resources feed a workflow of understanding the reference, coding scenes, generating missing media, editing and rendering MP4 with reusable source.](docs/readme/diagrams/creation-stack-painterly.png)
 
 **Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#your-agent-your-studio) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
 
@@ -200,7 +200,7 @@ The films above are external references credited to their creators. OpenMotion s
 | --- | --- |
 | **🤖 Agent — BYOA** | Connect your existing local agent through Skills and MCP, with CLI access where supported. Keep your preferred client, account and working context. |
 | **🔑 Keys — BYOK** | Connect supported media-provider API keys in Model Settings. Choose models for images, video, music and TTS; supported local media integrations can use your existing agent login. |
-| **🎨 Brand and material** | Add your logo, fonts, screenshots, camera footage, script and music. Reuse a Brandkit and Motion MD to keep the next cut consistent. |
+| **🎨 Brand and material** | Add your logo, fonts, screenshots, camera footage, script and music. Keep identity and approved assets in the Brand Kit section of Motion Design MD. |
 | **🧩 Starting resources** | Browse references, motion components, templates and community Skills. Pick a direction, give the source or reference to your agent, and make it yours. |
 
 ### One creator across the full stack
@@ -228,10 +228,10 @@ Start with a moment worth studying: the opening hook, a UI reveal, an animated e
 | **Hook and narrative** — what appears first, what follows, what earns the reveal | Your promise, product facts and call to action |
 | **Shot structure** — framing, camera movement, layers and visual hierarchy | Your UI, footage, logo and supporting images |
 | **Motion and pacing** — entrances, transitions, easing and reading holds | The same motion intent, adjusted to your content |
-| **Typography and identity** — type hierarchy, color and composition | Your fonts, palette, words and Brandkit |
+| **Typography and identity** — type hierarchy, color and composition | Your fonts, palette and words, recorded in Motion MD’s Brand Kit section |
 | **Sound and rhythm** — speech timing, music cues and emphasis | Your voice, supplied music and sound direction |
 
-1. **Bring the reference and your brand.** Supply a video or an accessible link, the segment to study, and your logo, copy, screenshots or recordings. A [Brandkit](library/brandkits/openmotion/BRANDKIT.md) keeps the identity and product facts together.
+1. **Bring the reference and your brand.** Supply a video or an accessible link, the segment to study, and your logo, copy, screenshots or recordings. Record identity and product facts in the **Brand Kit section of Motion Design MD**, using your [approved brand material](library/brandkits/openmotion/BRANDKIT.md).
 2. **Break down what makes it work.** Ask the agent to identify shots, timing, motion, sound and the elements you want to preserve. Record those decisions in a Motion MD brief.
 3. **Rebuild the video as code.** With a video reference, use `motion-recreate`; with existing editable source, use the template route. Express the scenes, motion and timing in HTML/CSS/JS, with media for footage and sound. Bring your own content and use the built-in model integrations to generate missing images, video, music and TTS narration.
 4. **Compare and refine.** Review matching moments in the reference and remake. Check the reveal, reading time, composition and sound; keep revising the same project in Studio.
@@ -272,13 +272,13 @@ Reference retrieval and media analysis depend on the host's tools; supply a loca
 
 These are catalog entries shipped in the [source](gateway/catalog.ts). Connect your own supported accounts or provider keys; model availability, required parameters and usage costs depend on the provider. The gateway also supports model discovery and explicit endpoint registration. [Model setup and generation](docs/model-gateway.md)
 
-> “Use our Brandkit and approved script. Generate artwork for the opening, a video insert, background music and TTS narration. Add the selected results to the recreated project, align the sound and visuals, then show me the full cut.”
+> “Use the Brand Kit section of our Motion Design MD and our approved script. Generate artwork for the opening, a video insert, background music and TTS narration. Add the selected results to the recreated project, align the sound and visuals, then show me the full cut.”
 
 ### 🛠️ From creative intent to a rendered film
 
 | Part of the stack | What OpenMotion brings together |
 | --- | --- |
-| **Understand and direct** | Reference reconstruction, creative Skills, Brandkits, Motion MD and the connected agent's analysis tools |
+| **Understand and direct** | Reference reconstruction, creative Skills, Motion MD with its Brand Kit section, and the connected agent's analysis tools |
 | **Generate and manage** | Multimodal model adapters, model selection, generation jobs, candidate previews and project media |
 | **Edit and animate** | A visual timeline, HTML/CSS/JS compositions, typography, transitions, captions and sound placement |
 | **Review and iterate** | Studio preview, hands-on adjustments, agent revisions and project versions |
@@ -478,7 +478,7 @@ Make the feature the hero.
 </picture></a>
 </p>
 <sub>Reference · <a href="docs/readme/media/jake-figma-draw-reference.mp4">Figma Draw · @figma</a></sub><br><br>
-<strong>Start with</strong> · Product screens + feature brief + Brandkit<br>
+<strong>Start with</strong> · Product screens + feature brief + Motion MD brand context<br>
 <strong>Make it yours</strong> · A feature reveal, a focused UI demonstration and a memorable finish.<br><br>
 <a href="docs/examples.md#product-launch">Copy the creative brief →</a> · <a href="docs/readme/examples/product-launch.jpg">Still preview</a>
 </td>
@@ -552,11 +552,13 @@ These references illustrate creative directions; they are not OpenMotion-generat
 
 ## 🎨 Motion Design MD — build a community around the craft
 
-**Reverse-engineer once. Share the motion language. Let the next creator build on it.** `MOTION_DESIGN.md` is the proposed Markdown convention at the center of this community: a readable record of how a video moves, why it works and how to adapt it to a new brand.
+**One Motion Design MD. Your whole creative language.** `MOTION_DESIGN.md` brings brand identity, story, motion, sound and review rules into one readable creative specification. **Brand Kit is its brand section:** logo, colors, typography, voice, product facts and approved assets belong inside this larger design context.
+
+**Reverse-engineer once. Share the motion language. Let the next creator build on it.** Record how the video works, what should stay and how it should adapt to a new story or brand.
 
 Bring the creative decisions out of a single conversation and into files people and agents can read, review and improve. A designer can describe the motion, a developer can implement it, and another creator can apply it to a different story. **The community shares the craft alongside the finished video.**
 
-![Brandkit defines identity, product facts and approved material; Motion Design MD defines story, timing, movement and review rules. SKILL.md guides the agent to use these explicit files with editable source, assets, presets and evidence.](docs/readme/diagrams/creative-context.svg)
+![Motion Design MD is one encompassing creative specification with Brand Kit, Story, Motion and Sound, and Review inside it. The agent uses this context and Skills to create editable HTML and media, then video and reusable source.](docs/readme/diagrams/creative-context-painterly.png)
 
 <details>
 <summary>Read the creative package as text</summary>
@@ -567,8 +569,11 @@ Reference + your brand
 Understand → rebuild → compare → revise
           ↓
 Reusable creative package
-  BRANDKIT.md          identity, product facts, approved assets
-  MOTION_DESIGN.md     story beats, motion, timing, sound, keep/change rules
+  MOTION_DESIGN.md     one creative specification
+    Brand Kit          identity, product facts, approved assets
+    Story              hook, scene order, reveal, closing beat
+    Motion + sound     timing, camera, transitions, audio
+    Review             keep/change rules and checks
   SKILL.md             adaptation and review method
   Source + assets      editable implementation
   Presets + evidence   replacement inputs and actual comparisons
@@ -578,16 +583,16 @@ Your agent → the next editable video
 
 </details>
 
-**Brandkit carries the identity. Motion MD carries the design. The Skill carries the method. The project carries the implementation.** This keeps a remake useful after its first export and gives the community something others can inspect, fork and improve.
+**Motion MD carries the whole design, including its Brand Kit. The Skill carries the method. The project carries the implementation.** This keeps a remake useful after its first export and gives the community something others can inspect, fork and improve.
 
 | Resource from the current Library | What it contributes |
 | --- | --- |
-| [OpenMotion Brandkit](library/brandkits/openmotion/BRANDKIT.md) | An example of brand facts, identity, voice and assets |
+| [Brand material for Motion MD](library/brandkits/openmotion/BRANDKIT.md) | An example source for the Brand Kit section: facts, identity, voice and approved assets |
 | [Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) | A reusable motion design direction |
 | [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) | Six source profiles: wireframe titles, canopy typography, UI reveals, dimensional code, particle assembly and glass cards |
 | [Presenter Story](library/skills/presenter-story/SKILL.md) | Three design recipes for speech-led videos |
 
-`MOTION_DESIGN.md` is a **v0.1 writing convention** you explicitly give to the agent. It has no automatic importer or validator. The source-remix package has a replacement helper for its six profiles; video-only reconstruction uses `motion-recreate`. When you explicitly want a portable template, `motion-video-to-template` supplies the established `TEMPLATE.md` handoff. [Motion MD guide](docs/motion-md.md) · [All six examples](docs/motion-design-examples.md)
+`MOTION_DESIGN.md` is a **v0.1 writing convention** you explicitly give to the agent. Write the Brand Kit inside it; existing brand files can be linked as supporting material, without requiring a second creative specification. It has no automatic importer or validator. The source-remix package has a replacement helper for its six profiles; video-only reconstruction uses `motion-recreate`. When you explicitly want a portable template, `motion-video-to-template` supplies the established `TEMPLATE.md` handoff. [Motion MD guide](docs/motion-md.md) · [All six examples](docs/motion-design-examples.md)
 
 ### 🌱 From your remake to the community's next starting point
 
@@ -753,21 +758,18 @@ Approved versions → connected publishing → schedule → performance feedback
 
 ## 🧩 890+ resources. Find a direction and make it yours.
 
-**A full-stack creator needs a library to work from.** Browse reference films, motion moments, code examples, blocks and components, then combine them with community Skills, editable templates, design systems and Brandkits.
+**A full-stack creator needs a library to work from.** Browse reference films, motion moments, code examples, blocks and components, then combine them with community Skills, editable templates and Motion Design MD, including its brand context.
 
 The current discovery catalog contains **891 entries**: **42 full-video references**, **393 motion moments**, **210 blocks**, **238 components** and **8 examples**. These include viewing references and code resources; the ready-to-open Studio projects are listed separately below. [Browse the resource index](docs/collections/README.md)
 
-**Five resource collections carry the work forward:** Skills teach the method, templates provide a starting project, components express reusable motion, design systems keep the visual language coherent, and Brandkits make it yours. Start with the **five core production Skills**, **three native Studio templates**, the **Presenter Tech package**, **six editable motion studies** and **three presenter-story recipes**, then contribute what you learn.
-
-![OpenMotion Library: Skills, templates, motion components, design systems and Brandkits.](docs/readme/library.png)
+**Build on reusable creative resources:** Skills teach the method, templates provide a starting project, components express reusable motion, and Motion Design MD unifies brand identity with the visual and motion language. Start with the **five core production Skills**, **three native Studio templates**, the **Presenter Tech package**, **six editable motion studies** and **three presenter-story recipes**, then contribute what you learn.
 
 | Library collection | Start here |
 | --- | --- |
 | **Skills** | [Brandkit, Motion Design Remix and Presenter Story](library/skills/) |
 | **Templates** | [Three native starting projects](library/templates/README.md) and the [Presenter Tech package](library/templates/presenter-tech/README.md) |
 | **Motion components** | [Titles, interface reveals and other reusable elements](library/components/README.md) |
-| **Design systems** | [Motion rules and visual direction](library/design-systems/) |
-| **Brandkits** | [Identity, facts and approved assets](library/brandkits/) |
+| **Motion Design MD** | [Motion rules and visual direction](library/design-systems/), with [identity, facts and approved assets](library/brandkits/) in its Brand Kit section |
 
 ### Open an editable starting point
 
@@ -1020,7 +1022,7 @@ Use `npm start` for the app and `npm run mcp` for stdio. Shell-capable agents ca
 
 ### How the modules work together
 
-![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and a fixed project snapshot is rendered and verified.](docs/readme/diagrams/runtime-architecture.svg)
+![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and a fixed project snapshot is rendered and verified.](docs/readme/diagrams/runtime-architecture-painterly.png)
 
 <details>
 <summary>Read the full architecture and roadmap as text</summary>
@@ -1031,7 +1033,7 @@ Reference video + footage + script + brand assets
                             |
                             v
 COMMUNITY KNOWLEDGE
-MOTION_DESIGN.md + BRANDKIT.md + Skills + templates + components
+MOTION_DESIGN.md (includes Brand Kit) + Skills + templates + components
                             |
               +-------------+------------------+
               v                                v
@@ -1082,7 +1084,7 @@ Version-linked outcomes -> team memory / RAG -> evaluated Skill improvements
 
 BYOA keeps the agent in your existing client; BYOK connects your supported model accounts. Studio and the local service manage the editable work, while provider credentials remain outside project files. The public phase-one MCP surface contains **nine project tools**. Model generation is available through Studio and the local Gateway service; the diagram does not add generation or publishing tools to that public MCP contract.
 
-The diagrams are editable SVGs generated from a [small, dependency-free source script](docs/readme/diagrams/generate.py).
+The diagrams follow the cover’s painterly visual language. [Artwork, source reference and prompts](docs/readme/diagrams/ARTWORK.md)
 
 ### Stack and source map
 
@@ -1126,7 +1128,7 @@ The broader Studio vision remains: discover, create, collaborate, publish and le
 | Area | Available today | Direction |
 | --- | --- | --- |
 | **Recreate and edit** | Agent-led reference reconstruction, template adaptation, editable projects and MP4 export | More evaluated recreation cases and repeatable comparisons |
-| **Brand and knowledge** | Explicit Brandkits, Motion MD, Skills and source packages | Personal/team memory, RAG and evaluated Skill improvements |
+| **Brand and knowledge** | Motion MD with its Brand Kit section, Skills and source packages | Personal/team memory, RAG and evaluated Skill improvements |
 | **People and agents** | Handoffs on the same local project | Timeline comments, shared review and collaborative editing |
 | **Multimodal creation** | Built-in image, video, music and TTS integrations; generation, candidate selection and timeline adoption | Integrated search across footage, images, voices, music and Avatar services |
 | **Publish to every platform — Coming** | Authored aspect-ratio variants and MP4 handoff | Platform connectors, release review, scheduling, automatic reframing and social presets |
@@ -1147,7 +1149,7 @@ The broader Studio vision remains: discover, create, collaborate, publish and le
 | **A recreation** | Reference and creator, your brief, editable project, preview, comparison and remaining differences |
 | **A template or component** | Working source, editable choices, assets, preview and attribution |
 | **A Skill or design system** | The method, keep/change rules and an example of what you actually ran |
-| **A Brandkit** | Identity, accurate product facts and assets you can share |
+| **Brand Kit content for Motion MD** | Identity, accurate product facts and approved assets within the creative specification |
 | **Agent support or editor improvements** | A focused change with reproducible validation |
 
 [Library entry checklist](library/ENTRY_TEMPLATE.md) · [Contributing](CONTRIBUTING.md) · [Repository guidelines](AGENTS.md) · [All contributors](https://github.com/nexu-io/html-anything/graphs/contributors)

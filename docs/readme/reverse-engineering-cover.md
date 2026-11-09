@@ -1,6 +1,6 @@
 # Reverse engineering README artwork
 
-This artwork accompanies the [alternative README](../../README.REVERSE-ENGINEERING.md). It preserves the current README's painterly visual family while introducing **Reverse engineering for any video**, the four media-generation categories, and **Publish to every platform**. The existing README and its cover remain unchanged.
+This artwork accompanies the [main README](../../README.md) and its Chinese, Japanese and Korean translations. It preserves the current README's painterly visual family while introducing **Reverse engineering for any video**, the four media-generation categories, and **Publish to every platform**. The reverse-engineering draft is now the main introduction; the earlier artwork remains available as source history.
 
 | Field | Value |
 | --- | --- |
@@ -10,13 +10,13 @@ This artwork accompanies the [alternative README](../../README.REVERSE-ENGINEERI
 | Dimensions | 1774 × 887 pixels, 2:1 landscape |
 | SHA-256 | `70a01c68511a8459661929333ee1a8751ab1bb4a4e86dd22a92f36874a32bd92` |
 | Visual direction | Blue, turquoise, emerald, ivory and apricot brushwork; crisp dark sans-serif typography |
-| Use | Generated brand artwork for the alternative README, not a product screenshot or evidence of recreation fidelity |
+| Use | Generated brand artwork for the main README, not a product screenshot or evidence of recreation fidelity |
 
 The cover presents a creative positioning statement. Actual recreation still depends on accessible inputs, host tools and review of the resulting video, as described in the README and the [product architecture](../product/architecture.md). Model integrations require configured access. The cover uses the unqualified publishing tagline as requested; the README body retains the Coming status and actual platform-connection boundaries.
 
 ## Final edit prompt
 
-Built-in ImageGen removed the status suffix from the existing cover. The alternative README now references a byte-identical copy under a new `v2` filename so Markdown previews request the corrected image instead of reusing a cached version. The original public README cover is unchanged.
+Built-in ImageGen removed the status suffix from the existing cover. The main README now references a byte-identical copy under a new `v2` filename so Markdown previews request the corrected image instead of reusing a cached version. The earlier cover file is preserved.
 
 ```text
 Edit only the bottom-center tagline in this OpenMotion cover. Replace "Publish to every platform · Coming" with the exact text "Publish to every platform", centered in the same area. Remove the separator dot and the word Coming entirely. Preserve all other wording verbatim, all fonts and text hierarchy, the OpenMotion wordmark, the 2:1 layout, and the blue/teal/emerald/ivory/apricot painterly background. No other changes. Do not add any "coming", "soon", "planned", status badge or new text anywhere. Opaque background.
@@ -24,7 +24,7 @@ Edit only the bottom-center tagline in this OpenMotion cover. Replace "Publish t
 
 ## Collaboration concept: badge removed
 
-The alternative README uses [collaboration-concept-v2.png](collaboration-concept-v2.png), a built-in ImageGen edit of [the original collaboration concept](collaboration-coming.png). The top-right status badge is removed; the artwork retains its **Concept preview** label and the surrounding README explains that collaboration features are planned. The original image used by the existing README is unchanged.
+The main README uses [collaboration-concept-v2.png](collaboration-concept-v2.png), a built-in ImageGen edit of [the original collaboration concept](collaboration-coming.png). The top-right status badge is removed; the artwork retains its **Concept preview** label and the surrounding README explains that collaboration features are planned. The earlier collaboration image is preserved.
 
 - Dimensions: 1774 × 887 pixels.
 - SHA-256: `a5efa5be51936f33ecc7ef4241ce2602ebf4e7efcc8ce30e0dac5a8bd2b34957`.

@@ -5,7 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const resourceDocuments = [
-  'README.md', 'docs/README.zh-CN.md', 'docs/examples.md', 'docs/examples.zh-CN.md',
+  'README.md', 'README.zh-CN.md', 'docs/README.zh-CN.md', 'docs/README.ja.md', 'docs/README.ko.md',
+  'docs/examples.md', 'docs/examples.zh-CN.md',
   'docs/motion-design-examples.md', 'docs/motion-design-examples.zh-CN.md',
   'docs/collections/README.md', 'docs/collections/README.zh-CN.md',
 ];

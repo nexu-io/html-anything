@@ -1,14 +1,16 @@
 # Additional README showcase sources
 
-These assets support the alternative [reverse-engineering README](../../../README.REVERSE-ENGINEERING.md). They are viewing references and campaign imagery, with their original ownership retained. They are not OpenMotion-generated results, customer endorsements or new editable templates.
+These assets support the [main README](../../../README.md) and its Chinese, Japanese and Korean translations. They are viewing references and campaign imagery, with their original ownership retained. They are not OpenMotion-generated results, customer endorsements or new editable templates.
 
-## Brand films
+## Acknowledgements
+
+### Brand films
 
 The Lovable, Kimi, Firecrawl, Figma and ElevenLabs cards reuse the complete local reference videos and previews already in the repository. Titles and creator credits follow the existing Hyperframes catalog. Original source URLs and video hashes are recorded in the [media manifest](../media/manifest.json); the Kimi, Firecrawl and ElevenLabs excerpt settings are in the [gallery manifest](../gallery/manifest.json). The suggestions below the cards are new creative briefs, not claims about completed remakes.
 
 The **Codex Originals** card uses a group portrait from [OpenAI's official campaign](https://openai.com/codex-originals/). Its click target is the official campaign page, where readers can watch the films. The local WebP is the unmodified downloaded campaign still, not an animated preview or an OpenMotion output. The third-party Codex-dashboard moment in the Hyperframes catalog was not relabeled as an official OpenAI film.
 
-## rea-video case studies
+### Mixed-production case studies
 
 | Local video | Source and context | Preview |
 | --- | --- | --- |
@@ -19,9 +21,9 @@ The MP4s are unchanged copies of the public case-study files in [rea-video](http
 
 The local GIFs are silent, continuous excerpts at normal speed, 10 fps and 320 pixels wide, preserving aspect ratio. They use a 128-color palette and Bayer dithering. Reduced-motion JPEGs are frames at the start of each excerpt, 480 pixels wide. No generated replacement frames, altered identities or artificial before/after pairings were added.
 
-See [manifest.json](manifest.json) for source URLs, download hashes, dimensions and derived-file hashes. These assets are scoped to the alternative README and have not been added to the release distribution list.
+See [manifest.json](manifest.json) for source URLs, download hashes, dimensions and derived-file hashes. These assets support the main introduction and are included in the explicit distribution list; their inclusion does not change the original media rights.
 
-## Other sources used in the README
+### Other sources used in the README
 
 - [MotionGit](https://motiongit.com/) / adunext: the existing [Presenter Tech package and attribution](../../../library/templates/presenter-tech/NOTICE.md), shown near the top of the README.
 - [Hyperframes](https://github.com/heygen-com/hyperframes): the existing creator and brand reference catalog, plus OpenMotion's native engine foundations.
