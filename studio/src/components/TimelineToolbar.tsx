@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../motion/StudioHost";
 import { useI18n } from "../i18n/I18n";
 import { memo, useEffect, useRef, type ReactNode } from "react";
 import {
@@ -59,6 +60,8 @@ export interface TimelineToolbarProps {
   showAddBeat?: boolean;
   /** Hides Add keyframe and auto-record, and turns off auto-record and the K shortcut with them. */
   showKeyframes?: boolean;
+  /** Hide the controls without disabling keyboard commands or resetting recording state. */
+  showKeyframeControls?: boolean;
   rightActions?: ReactNode;
 }
 
@@ -159,9 +162,11 @@ export const TimelineToolbar = memo(function TimelineToolbar({
   showSelectAroundPlayhead = true,
   showAddBeat = true,
   showKeyframes = true,
+  showKeyframeControls = true,
   rightActions,
 }: TimelineToolbarProps) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const keys = useStudioKeys();
   const kf = keyHint("addKeyframe", keys);
   const timelineSnapEnabled = usePlayerStore((s) => s.timelineSnapEnabled);
@@ -228,11 +233,11 @@ export const TimelineToolbar = memo(function TimelineToolbar({
     <div className="border-b border-neutral-800/60">
       <div className="flex items-center justify-between px-2 py-0.5">
         <div className="flex items-center gap-0.5">
-          {showHistory && <TimelineHistoryButtons {...history} />}
-          <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} />
+          {showHistory && entries.timelineHistoryButtons && <TimelineHistoryButtons {...history} />}
+          <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead && entries.clipExtraActions} />
           {/* Divider: tool-mode | editing-actions */}
           <div aria-hidden="true" className="mx-1 h-4 w-px bg-neutral-800" />
-          <LinkedSelectionToggle />
+          {entries.linkedSelection && <LinkedSelectionToggle />}
           <Tooltip
             label={
               timelineSnapEnabled
@@ -250,7 +255,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               <Magnet size={16} weight="bold" aria-hidden="true" />
             </button>
           </Tooltip>
-          <Tooltip
+          {entries.rippleEditing && (<Tooltip
             label={
               rippleEditEnabled
                 ? t("Ripple on: keeps the main track gapless")
@@ -266,7 +271,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             >
               <RippleEditIcon size={16} />
             </button>
-          </Tooltip>
+          </Tooltip>)}
           {projectHasAudio && (
             <Tooltip label={audioMetersVisible ? t("Hide audio meters") : t("Show audio meters")}>
               <button
@@ -280,7 +285,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               </button>
             </Tooltip>
           )}
-          {showKeyframes && (
+          {showKeyframes && showKeyframeControls && entries.timelineKeyframeControls && (
             <>
               {/* With no keyframeable selection the button fades to disabled instead of
               unmounting, so the toolbar layout never shifts (CapCut-style). */}
@@ -436,7 +441,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               );
             })()}
           {(() => {
-            if (!showAddBeat) return null;
+            if (!showAddBeat || !entries.addBeat) return null;
             // Rendered whenever shown (CapCut-style): before beat analysis loads (or when
             // the project has no analyzed music) the button fades to a disabled
             // state instead of unmounting, so the toolbar layout never shifts.
@@ -480,7 +485,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
         </div>
         <div className="flex items-center gap-0.5">
           {rightActions}
-          <Tooltip
+          {entries.thumbnailToggle && (<Tooltip
             label={
               thumbnailsVisible
                 ? t("Hide thumbnails: labels only")
@@ -504,7 +509,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             >
               <Image size={16} aria-hidden="true" />
             </button>
-          </Tooltip>
+          </Tooltip>)}
           <Tooltip
             label={
               canZoomSelection

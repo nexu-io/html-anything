@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 import { FlatRow, FlatSegmentedRow, FlatSelectRow } from "./propertyPanelFlatPrimitives";
@@ -70,7 +71,8 @@ function KeyframeGutter({
   | "onConvertToKeyframes"
 >) {
   const track = useTrackDesignInput();
-  if (!gsapAnimId) return null;
+  const entries = useEditorEntryVisibility();
+  if (!entries.propertyKeyframes || !gsapAnimId) return null;
   const hasKeyframesOnProp = Boolean(navKeyframes?.some((kf) => property in kf.properties));
   return (
     <span data-flat-kf-gutter="true" style={{ opacity: hasKeyframesOnProp ? 1 : 0.3 }}>
@@ -122,6 +124,7 @@ export function LayoutGeometryRows({
   onConvertToKeyframes,
 }: GeometryRowsProps) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const readOnlyPreview = usePreviewReadOnly();
   const readOnlyPreviewReason = usePreviewReadOnlyReason();
   const readOnlyTooltip = readOnlyPreview ? readOnlyPreviewReason : undefined;
@@ -174,7 +177,7 @@ export function LayoutGeometryRows({
         onCommit={(next) => commitManualSize("height", next)}
         suffix={<KeyframeGutter property="height" displayValue={displayH} {...gutterProps} />}
       />
-      <FlatRow
+      {entries.advancedGeometry && <FlatRow
         label={t("Angle")}
         value={`${displayR}°`}
         tier="default"
@@ -182,7 +185,7 @@ export function LayoutGeometryRows({
         tooltip={readOnlyTooltip}
         onCommit={(next) => commitManualRotation(next.replace("°", ""))}
         suffix={<KeyframeGutter property="rotation" displayValue={displayR} {...gutterProps} />}
-      />
+      />}
     </>
   );
 }
@@ -195,6 +198,8 @@ export function LayoutZIndexRow({
   onSetStyle: (prop: string, value: string) => void | Promise<unknown>;
 }) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
+  if (!entries.advancedGeometry) return null;
   const zIndex = String(parseInt(styles["z-index"] || "auto", 10) || 0);
   return (
     <FlatRow
@@ -309,6 +314,8 @@ export function LayoutTransform3DBlock({
   onLivePreviewProps?: (element: DomEditSelection, props: Record<string, number>) => void;
 }) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
+  if (!entries.advancedGeometry) return null;
   return (
     <div className="border-t border-panel-hairline pt-2.5">
       <div className="mb-[3px] text-[9px] font-semibold uppercase tracking-[0.12em] text-panel-text-5">

@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { memo, useLayoutEffect, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
@@ -101,10 +102,11 @@ export const ClipContextMenu = memo(function ClipContextMenu({
   splitShortcut,
 }: ClipContextMenuProps) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const keys = useStudioKeys();
   const menuRef = useContextMenuDismiss(onClose);
   useMenuKeyboardNav(menuRef);
-  const tools = useTimelineEditContextOptional().clipMenuTools !== false;
+  const tools = useTimelineEditContextOptional().clipMenuTools !== false && entries.clipExtraActions;
   // The right-clicked clip's own id: a member of the live multi-selection
   // means Copy/Duplicate act on the whole group, matching onContextMenuClip's
   // selection-preserving behaviour for a right-click inside it.
@@ -178,6 +180,7 @@ export const ClipContextMenu = memo(function ClipContextMenu({
         )}
       </div>
 
+      {tools && <>
       <div role="group" aria-label={t("Sound")} className={menuClasses.group}>
         {tools && (
           <>
@@ -194,6 +197,8 @@ export const ClipContextMenu = memo(function ClipContextMenu({
         )}
       </div>
 
+      </>}
+      {tools && <>
       <div role="group" aria-label={t("Picture")} className={menuClasses.group}>
         {tools && (
           <ClipMenuToolItems
@@ -205,6 +210,7 @@ export const ClipContextMenu = memo(function ClipContextMenu({
         )}
       </div>
 
+      </>}
       <div role="group" aria-label={t("Clipboard")} className={menuClasses.group}>
         {onCopy && (
           <button

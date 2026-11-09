@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 // fallow-ignore-file code-duplication
 import { useEffect, useState } from "react";
@@ -58,6 +59,7 @@ function FlatFillFields({
   onImportAssets?: (files: FileList) => Promise<string[]>;
 }) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const styleEditingDisabled = !element.capabilities.canEditStyles;
   const backgroundImage = styles["background-image"] ?? "none";
   const hasTextControls = isTextEditableSelection(element);
@@ -87,6 +89,10 @@ function FlatFillFields({
       );
     }
   };
+
+  if (!entries.advancedStyles) return <ColorField flat label={t("Color")} value={styles["background-color"] ?? "transparent"}
+    disabled={styleEditingDisabled} onPreview={next => onPreviewStyle?.("background-color", next)}
+    onCommit={next => onSetStyle("background-color", next)} />;
 
   return (
     <>
@@ -481,6 +487,7 @@ export function FlatStyleSection({
   onImportAssets?: (files: FileList) => Promise<string[]>;
   gsapBorderRadius?: { tl: number; tr: number; br: number; bl: number } | null;
 }) {
+  const entries = useEditorEntryVisibility();
   const styleEditingDisabled = !element.capabilities.canEditStyles;
   return (
     <div className="space-y-1.5">
@@ -494,6 +501,7 @@ export function FlatStyleSection({
         onPreviewStyle={onPreviewStyle}
         onImportAssets={onImportAssets}
       />
+      {entries.advancedStyles && <>
       <FlatStrokeRow styles={styles} disabled={styleEditingDisabled} onSetStyle={onSetStyle} />
       <FlatRadiusRow
         styles={styles}
@@ -512,6 +520,7 @@ export function FlatStyleSection({
         disabled={styleEditingDisabled}
         onSetStyle={onSetStyle}
       />
+      </>}
       <FlatOpacitySlider styles={styles} disabled={styleEditingDisabled} onSetStyle={onSetStyle} />
     </div>
   );

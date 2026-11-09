@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type { DragEventHandler } from "react";
 import { GUTTER, RULER_H } from "./timelineLayout";
@@ -27,6 +28,7 @@ export function TimelineEmptyState({
   onDrop,
 }: TimelineEmptyStateProps) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const gateway = useMediaGateway();
   const hideGuide = !!gateway?.generationOpen && !isDragOver;
   return (
@@ -110,11 +112,11 @@ export function TimelineEmptyState({
               </svg>
               <div className="motion-empty-media-copy">
                 <strong>{onFileDrop ? t("Drop video, audio or images here") : t("Describe your video to start creating")}</strong>
-                {onFileDrop && <span>{t("Import files, generate media, or describe your video to your Agent.")}</span>}
+                {onFileDrop && <span>{t(entries.generateMedia ? "Import files, generate media, or describe your video to your Agent." : "Describe your video to start creating")}</span>}
               </div>
               {onFileDrop && gateway && <div className="motion-empty-media-actions">
                 <button onClick={gateway.importFiles}>{t("Import files…")}</button>
-                <button className="motion-media-primary" onClick={event => gateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t("Generate media")}</button>
+                {entries.generateMedia && <button className="motion-media-primary" onClick={event => gateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t("Generate media")}</button>}
               </div>}
             </>
           )}

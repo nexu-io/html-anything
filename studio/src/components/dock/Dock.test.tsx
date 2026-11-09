@@ -445,3 +445,15 @@ it('changes native dock titles live without recreating panels, preview or layout
   expect(api.getPanel('preview')!.title).toBe('Preview');
   expect(host.querySelector('iframe')).toBe(preview);
 });
+
+
+it("refuses excluded panels requested before and after Dock attaches", () => {
+  const allowed = PANEL_IDS.filter(id => !["code", "variables", "motionBlur", "history"].includes(id));
+  useDockLayoutStore.getState().activatePanel("code");
+  mount("p1", {}, { panels: allowed });
+  expect(dockApi?.getPanel("code")).toBeUndefined();
+  act(() => useDockLayoutStore.getState().activatePanel("variables"));
+  expect(dockApi?.getPanel("variables")).toBeUndefined();
+  act(() => useDockLayoutStore.getState().activatePanel("assets"));
+  expect(dockApi?.activePanel?.id).toBe("assets");
+});

@@ -203,6 +203,14 @@ describe("TimelineToolbar — keyframes on audio tracks", () => {
     act(() => root.unmount());
   });
 
+  it("hides only keyframe controls without changing recording state or the K command", () => {
+    const { host, root } = renderToolbar(sessionFor("div"), { showKeyframeControls: false });
+    expect(keyframeControls(host)).toEqual([null, null]);
+    expect(usePlayerStore.getState().autoKeyframeEnabled).toBe(true);
+    expect(pressK()).toBe(true);
+    act(() => root.unmount());
+  });
+
   it("hides both controls for a host without keyframes, turns auto-record off and leaves K alone", () => {
     const { host, root } = renderToolbar(sessionFor("div"), { showKeyframes: false });
     expect(keyframeControls(host)).toEqual([null, null]);

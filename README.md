@@ -8,6 +8,8 @@
 
 ![A three-step guide: find a film in the Motion library, describe its style in Motion MD, and adapt it in Codex.](docs/readme/hero.svg)
 
+The phase-one editor keeps project selection, basic editing, templates, import/export and Ask Agent. Deferred advanced entries are hidden by one [UI configuration](docs/editor-fork.md#phase-one-entry-visibility); existing project effects and Agent capabilities are preserved.
+
 ## Motion MD
 
 **Motion MD is openmotion's first proposal for a reusable motion style specification.** A still image can tell you what a launch film looks like. To make another film in that style, you also need to know when the product appears, how the camera moves and how long the viewer has to read each line. Motion MD puts those decisions in plain Markdown.

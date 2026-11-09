@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { scopedElementKey } from "../../hooks/gsapKeyframeCacheHelpers";
 import { memo, useMemo, useRef, useState } from "react";
@@ -58,6 +59,7 @@ export {
 // fallow-ignore-next-line complexity
 export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelProps) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const {
     projectId,
     assets,
@@ -318,7 +320,7 @@ export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelPro
         </div>
       </DesignPanelInputProvider>
       <div className="flex-1 overflow-y-auto">
-        {onToggleRecording && (
+        {entries.recordMotion && onToggleRecording && (
           <DesignPanelInputProvider section="footer">
             <GestureRecordPanelButton
               recordingState={recordingState}

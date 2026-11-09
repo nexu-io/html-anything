@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useMediaGateway } from "../../motion/MediaGatewayContext";
 import { mediaPopoverAnchor } from "../../motion/mediaPopoverPosition";
@@ -206,6 +207,7 @@ export const AssetsTab = memo(function AssetsTab({
   onAddAssetToTimeline,
 }: AssetsTabProps) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const mediaGateway = useMediaGateway();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -365,7 +367,7 @@ export const AssetsTab = memo(function AssetsTab({
           ))}
         </div>
         {/* Import */}
-        {onImport && mediaGateway && <button className="motion-asset-generate" onClick={event => mediaGateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t("Generate media")}</button>}
+        {entries.generateMedia && onImport && mediaGateway && <button className="motion-asset-generate" onClick={event => mediaGateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t("Generate media")}</button>}
         {onImport && (
           <>
             <ImportButton importing={importing} onClick={() => fileInputRef.current?.click()} />

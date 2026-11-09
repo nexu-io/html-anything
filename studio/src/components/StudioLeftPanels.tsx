@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../motion/StudioHost";
 import { useI18n } from "../i18n/I18n";
 import { memo, useCallback, type ReactNode } from "react";
 import { SourceEditor } from "./editor/SourceEditor";
@@ -49,6 +50,7 @@ export const StudioLeftPanels = memo(function StudioLeftPanels({
   onAddAssetToTimeline,
   onAddCompositionToTimeline,
 }: StudioLeftPanelsProps) {
+  const entries = useEditorEntryVisibility();
   const { projectId, renderQueue, waitForPendingDomEditSaves } = useStudioShellContext();
   const {
     compositions,
@@ -85,7 +87,7 @@ export const StudioLeftPanels = memo(function StudioLeftPanels({
   const importFiles = async (files: FileList, dir?: string) => {
     await handleImportFiles(files, dir);
   };
-  const lintButton = (
+  const lintButton = entries.manualLint && (
     <SidebarLintButton
       onLint={onLint}
       linting={linting}
@@ -122,7 +124,7 @@ export const StudioLeftPanels = memo(function StudioLeftPanels({
           />
         </PanelColumn>
       </Dock.Panel>
-      <Dock.Panel id="code">
+      {entries.codePanel && <Dock.Panel id="code">
         <PanelColumn footer={lintButton}>
           <div className="flex min-h-0 flex-1">
             {fileTree.length > 0 && (
@@ -152,7 +154,7 @@ export const StudioLeftPanels = memo(function StudioLeftPanels({
             </div>
           </div>
         </PanelColumn>
-      </Dock.Panel>
+      </Dock.Panel>}
       <Dock.Panel id="catalog">
         <PanelColumn footer={lintButton}>
           <BlocksTab onAddBlock={onAddBlock} onPreviewBlock={onPreviewBlock} />

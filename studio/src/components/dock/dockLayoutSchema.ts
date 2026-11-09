@@ -71,3 +71,38 @@ export function parseDockLayout(
   const everyPanelIsPlaced = Object.keys(panels).every((id) => views.includes(id));
   return everyViewIsAPanel && everyPanelIsPlaced ? (value as unknown as SerializedDockview) : null;
 }
+
+/** Remove excluded panels from a validated layout without changing authored files or unrelated preferences. */
+export function filterDockLayout(value: unknown, allowed: readonly PanelId[]): SerializedDockview | null {
+  const layout = parseDockLayout(value);
+  if (!layout) return null;
+  if (Object.keys(layout.panels).every(id => allowed.includes(id as PanelId))) return layout;
+  const keep = new Set<string>(allowed);
+  const groups = new Set<string>();
+  const filterGroup = (data: Record<string, unknown>): Record<string, unknown> | null => {
+    const views = (data.views as string[]).filter(id => keep.has(id));
+    if (!views.length) return null;
+    if (typeof data.id === 'string') groups.add(data.id);
+    return { ...data, views, ...(typeof data.activeView === 'string' && !keep.has(data.activeView) ? { activeView: views[0] } : {}) };
+  };
+  const filterNode = (node: unknown): unknown => {
+    if (!isRecord(node)) return null;
+    if (node.type === 'leaf' && isRecord(node.data)) {
+      const data = filterGroup(node.data);
+      return data ? { ...node, data } : null;
+    }
+    if (node.type === 'branch' && Array.isArray(node.data)) {
+      const data = node.data.map(filterNode).filter(Boolean);
+      return data.length ? { ...node, data } : null;
+    }
+    return null;
+  };
+  const root = filterNode(layout.grid.root);
+  if (!root) return null;
+  const panels = Object.fromEntries(Object.entries(layout.panels).filter(([id]) => keep.has(id)));
+  const floatingGroups = layout.floatingGroups?.flatMap(group => {
+    const data = filterGroup(group.data as unknown as Record<string, unknown>);
+    return data ? [{ ...group, data }] : [];
+  });
+  return parseDockLayout({ ...layout, activeGroup: layout.activeGroup && groups.has(layout.activeGroup) ? layout.activeGroup : undefined, panels, grid: { ...layout.grid, root }, ...(floatingGroups ? { floatingGroups } : {}) }, allowed);
+}

@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from './StudioHost';
 import { createContext, useContext, useEffect, useState, useRef, useCallback, lazy, Suspense, type ReactNode } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { ConnectionDialog } from './ConnectionDialog';
@@ -34,7 +35,9 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
   children: ReactNode; waitForSaves: () => Promise<void>; projectId?: string; sessionId?: string; blocked?: boolean; message?: string; saveState?: string;
 }) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const presentation = workspacePresentation(location.search);
+  const showSidebar = presentation.sidebar || (presentation.embedded && !entries.browserChrome);
   const guard = useRef<EditorGuard | null>(null);
   const [editorState, setEditorState] = useState<Pick<EditorGuard, 'blocked' | 'saveState' | 'message'> | null>(null);
   const registerEditor = useCallback((value: EditorGuard | null) => {
@@ -47,10 +50,10 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
   }, [waitForSaves, t]);
   const workspace = useWorkspace(beforeViewChange, projectId, sessionId);
   const [connectionSection, setConnectionSection] = useState<'setup' | 'templates'>(() => new URLSearchParams(location.search).get('templates') === '1' ? 'templates' : 'setup');
-  const [connectionsOpen, setConnectionsOpen] = useState(() => new URLSearchParams(location.search).get('panel') === 'connections' || new URLSearchParams(location.search).get('templates') === '1');
+  const [connectionsOpen, setConnectionsOpen] = useState(() => (entries.connectAgent && new URLSearchParams(location.search).get('panel') === 'connections') || new URLSearchParams(location.search).get('templates') === '1');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [modelsOpen, setModelsOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(() => { try { return !presentation.sidebar || localStorage.getItem('motion.workspace.sidebar.v1') === 'collapsed'; } catch { return !presentation.sidebar; } });
+  const [collapsed, setCollapsed] = useState(() => { try { return !showSidebar || localStorage.getItem('motion.workspace.sidebar.v1') === 'collapsed'; } catch { return !showSidebar; } });
   const [narrow, setNarrow] = useState(() => window.matchMedia('(max-width: 760px)').matches);
   const switchingDisabled = workspace.busy || blocked || Boolean(editorState?.blocked) || !workspace.status;
   const notice = workspace.error || message || editorState?.message;
@@ -100,22 +103,23 @@ function ModelSettingsButton() {
 
 function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () => void }) {
   const { t, formatDate } = useI18n();
-  const { workspace, switchingDisabled, openConnections } = useWorkspaceChrome();
+  const entries = useEditorEntryVisibility();
+  const { workspace, switchingDisabled, openConnections, toggleSidebar } = useWorkspaceChrome();
   const [query, setQuery] = useState('');
   const sessions = workspace.sessions ?? workspace.projects;
   const filtered = sessions.filter(project => project.title.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
   return <aside className="motion-sidebar" aria-label={t('Workspace navigation')}>
     <div className="motion-sidebar-brand">
-      <button className="motion-brand" disabled={switchingDisabled} onClick={() => void workspace.home()} aria-label={t('OpenDesign home')} title={t('OpenDesign home')}>
+      {entries.workspaceHome ? <button className="motion-brand" disabled={switchingDisabled} onClick={() => void workspace.home()} aria-label={t('OpenDesign home')} title={t('OpenDesign home')}>
         <span className="motion-brand-mark"><MotionIcon name="layers" size={18} /></span><strong>OpenDesign</strong>
-      </button>
-      <button className="motion-icon-button motion-sidebar-close" onClick={close} aria-label={t('Close conversation list')}><MotionIcon name="close" /></button>
+      </button> : <span className="motion-brand"><span className="motion-brand-mark"><MotionIcon name="layers" size={18} /></span><strong>OpenDesign</strong></span>}
+      <button className="motion-icon-button motion-sidebar-close" onClick={toggleSidebar} aria-label={t('Collapse conversation list')}><MotionIcon name="close" /></button>
     </div>
-    <button className="motion-button motion-button-primary motion-sidebar-new" title={t('New conversation')} disabled={switchingDisabled} onClick={() => void workspace.startSession()}><MotionIcon name="plus" /><span>{t('New conversation')}</span></button>
-    <nav className="motion-sidebar-nav" aria-label={t('Main navigation')}>
-      <button aria-current={!currentId ? 'page' : undefined} title={t('Home')} disabled={switchingDisabled} onClick={() => { if (currentId) void workspace.home(); else close(); }}><MotionIcon name="home" /><span>{t('Home')}</span></button>
-      <button title={t('Connect Agent')} onClick={openConnections}><MotionIcon name="plug" /><span>{t('Connect Agent')}</span></button>
-    </nav>
+    {entries.newSession && <button className="motion-button motion-button-primary motion-sidebar-new" title={t('New conversation')} disabled={switchingDisabled} onClick={() => void workspace.startSession()}><MotionIcon name="plus" /><span>{t('New conversation')}</span></button>}
+    {(entries.workspaceHome || entries.connectAgent) && <nav className="motion-sidebar-nav" aria-label={t('Main navigation')}>
+      {entries.workspaceHome && <button aria-current={!currentId ? 'page' : undefined} title={t('Home')} disabled={switchingDisabled} onClick={() => { if (currentId) void workspace.home(); else close(); }}><MotionIcon name="home" /><span>{t('Home')}</span></button>}
+      {entries.connectAgent && <button title={t('Connect Agent')} onClick={openConnections}><MotionIcon name="plug" /><span>{t('Connect Agent')}</span></button>}
+    </nav>}
     <div className="motion-session-heading"><span>{t('Sessions')}</span><span>{sessions.length}</span></div>
     <label className="motion-session-search"><MotionIcon name="search" /><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={t('Search conversations…')} aria-label={t('Search conversations')} /></label>
     <nav className="motion-session-list" aria-label={t('Conversation list')}>
@@ -128,7 +132,7 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
     </nav>
     <footer className="motion-sidebar-footer">
       <div className="motion-sidebar-identity"><MotionIcon name="folder" /><span><strong>{t('My workspace')}</strong><small>{t('Saved on this device')}</small></span></div>
-      <div className="motion-sidebar-settings"><ModelSettingsButton /><ThemeToggle /><LanguageMenu /></div>
+      <div className="motion-sidebar-settings">{entries.modelSettings && <ModelSettingsButton />}<ThemeToggle /><LanguageMenu /></div>
     </footer>
   </aside>;
 }

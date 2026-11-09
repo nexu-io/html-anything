@@ -26,6 +26,24 @@ Localization covers editor labels, tooltips, placeholders, empty/error states an
 
 前端可以直接修改。CLI 服务、core、parsers、player、SDK 与渲染器使用锁定的 0.9.7 npm 包，并未复制整个 monorepo。桌面端的宿主功能以开源 Studio 的实际能力为准。
 
+## Phase-one entry visibility
+
+Motion supplies `editorEntryVisibility` from `studio/src/motion/editorEntryVisibility.ts` through the existing `StudioHost` context. Native Studio without a Motion host retains its complete interface. This configuration governs visible entries, not editing permissions, backend services, MCP discovery, project formats or rendering. It does not promise to exclude feature code or dependencies from the delivered package.
+
+The configuration hides deferred workspace navigation, browser/conversation chrome, history, layout, capture, code/variables/blur panels, media generation entries and advanced inspector/timeline controls. Project search and switching, sidebar collapse/restore, templates, import, export, basic editing and Ask Agent remain available. Existing authored animation, style and variable data is preserved. Hidden keyboard-help and keyframe controls do not disable their existing keyboard commands or reset recording state.
+
+`visibleEditorPanels` derives the Dock allowlist from the same configuration. Dock rejects excluded programmatic activations, including requests queued before mounting. Valid saved layouts are filtered before restoration; remaining tab order, group sizes and unrelated preferences are retained, empty groups are removed and an excluded active tab falls back to a retained tab. Invalid layouts use the existing default-layout recovery. The panel registry retains all identifiers so re-enabling a panel remains compatible. Fixed layout disables panel drag and close/menu actions while keeping splitter resizing.
+
+To restore an entry, change the relevant boolean, rebuild Studio and reload it. There is no user-facing toggle, query parameter, local-storage override or remote configuration service. The complete configuration remains covered by native Studio regression tests. Workspace source environments do not change the phase-one entry list.
+
+### Agent procedure for temporarily hiding entries
+
+1. Read the current repository instructions and inspect the affected architecture and UI. Record the exact requested entries, every surface exposing them, retained operations and shortcuts, and the corresponding configuration fields.
+2. Reuse the existing host and component display parameters. Inspect each parameter for command/state side effects. Add only a display control when needed; `showKeyframeControls` is separate from the existing `showKeyframes` capability.
+3. Keep shared providers, hooks, save/history queues and rendering mounted. Never clear project attributes or disable services to hide an entry. Preserve required imports and commands; package elimination is a separate task.
+4. Cover normal, empty, selected, hover and context-menu states, complete/embedded views, old layouts, project switching and restoration. Verify retained controls as well as absent ones. Run deterministic tests and the applicable real-browser checks under the workspace browser-lock rules.
+5. Review the exact diff and architecture consistency. Deliver the head revision, entry/configuration/file mapping, raw command results and screenshots, distinguishing local validation, CI and human acceptance. Do not merge or publish without task-specific authorization.
+
 ## 修改入口
 
 先用 [产品架构](product/architecture.md#职责分层与依赖方向) 判断需求归属；多模态入口、原图修改和后续属性面板接入遵循 [素材生成设计](product/media-generation-design.md)。该设计记录用户意图、候选采用、原生历史与过期目标的边界，本页维护实现位置。

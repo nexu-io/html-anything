@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 import { keyHint, useStudioKeys } from "../../player/components/studioShortcuts";
@@ -14,6 +15,7 @@ export function PropertyPanelFlatFooter({
   onToggleRecording?: () => void;
 }) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const track = useTrackDesignInput();
   const recording = recordingState === "recording";
   const recordKey = keyHint("record", useStudioKeys());
@@ -49,7 +51,7 @@ export function PropertyPanelFlatFooter({
           <path d="M8 1l1.4 4.6L14 7l-4.6 1.4L8 13l-1.4-4.6L2 7l4.6-1.4z" />
         </svg>
         {t("Ask agent about this element")}</button>
-      {onToggleRecording && (
+      {entries.recordMotion && onToggleRecording && (
         <button
           type="button"
           data-flat-footer-record="true"

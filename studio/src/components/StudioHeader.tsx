@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../motion/StudioHost";
 import { useI18n } from "../i18n/I18n";
 import { Fragment, memo, useContext, type MouseEvent } from "react";
 import { Camera } from "../icons/SystemIcons";
@@ -50,6 +51,7 @@ export const StudioHeader = memo(function StudioHeader({
 }: StudioHeaderProps) {
   const { t } = useI18n();
   const host = useStudioHost();
+  const entries = useEditorEntryVisibility();
   const HeaderFrame = host?.HeaderFrame ?? Fragment;
   const showThemeToggle = useContext(ShowThemeToggle);
   const { projectId, renderQueue } = useStudioShellContext();
@@ -73,8 +75,8 @@ export const StudioHeader = memo(function StudioHeader({
         {host?.headerActions}
         {host?.historyActions}
         {host?.previewAction}
-        <div className="flex h-ctl items-center divide-x divide-border-strong overflow-hidden rounded-md border border-border-strong bg-bg-2">
-          <Tooltip label={capturing ? t("Capturing frame…") : t("Capture current frame")} side="bottom">
+        {(entries.capture || entries.inspectorToggle) && <div className="flex h-ctl items-center divide-x divide-border-strong overflow-hidden rounded-md border border-border-strong bg-bg-2">
+          {entries.capture && <Tooltip label={capturing ? t("Capturing frame…") : t("Capture current frame")} side="bottom">
             {/* A real download link, so it wears Button's recipe rather than being
               one: `download` on an <a> is what saves the frame, and no <button>
               can do that. `enabled:` never matches a link, so the ghost
@@ -130,8 +132,8 @@ export const StudioHeader = memo(function StudioHeader({
               )}
               <span className="max-[1000px]:hidden">{capturing ? t("Capturing…") : t("Capture")}</span>
             </a>
-          </Tooltip>
-          <Tooltip label={t("Inspector")} side="bottom">
+          </Tooltip>}
+          {entries.inspectorToggle && <Tooltip label={t("Inspector")} side="bottom">
             <Button
               variant="ghost"
               aria-label={t("Inspector")}
@@ -156,8 +158,8 @@ export const StudioHeader = memo(function StudioHeader({
               }}
             >
               {t("Inspector")}</Button>
-          </Tooltip>
-        </div>
+          </Tooltip>}
+        </div>}
         {showThemeToggle && host?.themeToggle !== false && <ThemeToggle />}
         {host?.languageMenu}
         {host?.windowMenu ?? <Dock.WindowMenu />}

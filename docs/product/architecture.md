@@ -179,6 +179,12 @@ flowchart LR
 
 当前分支增加独立于插件的 npm 轻量安装入口（本地 / Actions 测试制品，不发布 npm）：按宿主安装 Codex、Claude Code、DeepSeek Harness、WorkBuddy 的 一期 11 Tool MCP 与 production/director/template/recreate/video-to-template 五个 Skills，共用应用、工程目录和依赖缓存；固定原生依赖首次使用时下载到用户缓存。应用不从临时 npx 缓存运行，作品与应用/依赖目录分开；已有插件和完整测试包保留。下载来源、版本和校验值共用运行时清单；Mac FFmpeg/ffprobe 使用独立的公开 9.0.2 ZIP 并自动安装，原生依赖无需公司仓库凭据，尚未发布 npm。实现与验证边界见 [npm 安装](../npm-installation.md)。
 
+## Phase-one editor surface
+
+Motion's host supplies a centralized entry-visibility configuration. Its phase-one interface keeps project selection, the editable preview, basic controls, templates, import/export and Ask Agent while hiding deferred workspace chrome, advanced panels and editing entries. The native unhosted editor retains its full UI. Earlier descriptions of full native controls and in-editor media generation describe retained implementation capabilities; those deferred entries are hidden in the phase-one Motion host.
+
+Visibility does not change the project source of truth, engine/MCP contracts, generation services, persistence or export behavior. Existing content remains editable by the Agent and renderable. UI restoration requires changing the configuration, rebuilding and reloading. The implementation and Agent procedure are described in [editor development](../editor-fork.md#phase-one-entry-visibility).
+
 ## 演进约束
 
 本地测试包按 mac-arm64 / win-x64 准备固定公开原生依赖。npm 为默认轻量格式，完整 ZIP 为备用；平台安装和真实出片必须独立验收。工程保留在包外，当前 CI 只构建与校验，不上传或发布。见 [测试包说明](../test-packages.md)。

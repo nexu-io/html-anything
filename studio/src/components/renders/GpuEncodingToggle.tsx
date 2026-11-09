@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 export function GpuEncodingToggle({
   format,
@@ -11,8 +12,9 @@ export function GpuEncodingToggle({
   onToggle: () => void;
 }) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   // GPU encoders exist for H.264/H.265 only, so only MP4 can use one.
-  if (format !== "mp4") return null;
+  if (!entries.gpuEncoding || format !== "mp4") return null;
   return (
     <label
       className={`flex items-center gap-2 text-step-10 text-text-4 ${disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}

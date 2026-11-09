@@ -1,3 +1,4 @@
+import { editorEntryVisibility } from './editorEntryVisibility';
 import { StudioErrorBoundary } from '../components/StudioErrorBoundary';
 import { I18nProvider, useI18n } from "../i18n/I18n";
 import { useEffect, useState, type ReactNode } from 'react';
@@ -7,8 +8,8 @@ import { useDockLayoutStore } from '../components/dock/dockLayoutStore';
 import { TimelineHistoryButtons } from '../components/TimelineHistoryButtons';
 import { isStudioEditSaving } from '../utils/studioPendingEdits';
 import { MotionIcon } from './icons';
-import { StudioHostContext, type StudioHost } from './StudioHost';
-import { WorkspaceFrame, useWorkspaceChrome, useOptionalWorkspaceChrome } from './WorkspaceFrame';
+import { StudioHostContext, useEditorEntryVisibility, type StudioHost } from './StudioHost';
+import { WorkspaceFrame, WorkspaceMenuButton, useWorkspaceChrome, useOptionalWorkspaceChrome } from './WorkspaceFrame';
 import { MotionLayoutMenu, MotionPreviewButton } from './MotionLayoutControls';
 import { MotionHistoryPanel } from './MotionHistoryPanel';
 import { MotionHistoryProvider, useMotionHistoryOperation } from './MotionHistoryState';
@@ -43,6 +44,7 @@ function WorkspaceProject() {
   const activate = useDockLayoutStore(state => state.activatePanel);
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState('');
+  const entries = useEditorEntryVisibility();
   const project = workspace.projects.find(item => item.id === workspace.status?.projectId);
   return <span className="motion-project-control">
     <span className="motion-project-dot" aria-hidden="true" />
@@ -54,8 +56,8 @@ function WorkspaceProject() {
       <button className="motion-icon-button" aria-label={t('Save project name')} disabled={workspace.busy || !title.trim()}><MotionIcon name="check" /></button>
       <button type="button" className="motion-icon-button" aria-label={t('Cancel')} disabled={workspace.busy} onClick={() => setEditing(false)}><MotionIcon name="close" /></button>
     </form> : <button className="motion-project-title" disabled={switchingDisabled || !project} title={t('Rename project')} onClick={() => { setTitle(project?.title || ''); setEditing(true); }}>{project?.title || t('Connecting…')}<MotionIcon name="edit" size={12} /></button>}
-    <button type="button" className="motion-save-state" title={t("View version history")} aria-label={t('{status}, view version history', { status: saveState })}
-      onClick={() => activate('history')}><span role="status">{saveState}</span><MotionIcon name="chevron-down" size={12} /></button>
+    {entries.versionHistory ? <button type="button" className="motion-save-state" title={t("View version history")} aria-label={t('{status}, view version history', { status: saveState })}
+      onClick={() => activate('history')}><span role="status">{saveState}</span><MotionIcon name="chevron-down" size={12} /></button> : saveState !== t('Local autosave') && <span className="motion-save-state" role="status">{saveState}</span>}
   </span>;
 }
 
@@ -63,33 +65,37 @@ function WorkspaceHistoryActions() {
   const { t } = useI18n();
   const activate = useDockLayoutStore(state => state.activatePanel);
   const operation = useMotionHistoryOperation();
+  const entries = useEditorEntryVisibility();
   return <div className="motion-history-actions">
     <TimelineHistoryButtons canUndo={operation.busy ? false : undefined} canRedo={operation.busy ? false : undefined} />
-    <button type="button" className="motion-button motion-button-quiet" aria-label={t("Version history")} onClick={() => activate('history')}>
+    {entries.versionHistory && <button type="button" className="motion-button motion-button-quiet" aria-label={t("Version history")} onClick={() => activate('history')}>
       <MotionIcon name="history" size={14} /><span>{t("History")}</span>
-    </button>
+    </button>}
   </div>;
 }
 
 function WorkspaceActions() {
   const { t } = useI18n();
   const gateway = useMediaGateway();
-  const { switchingDisabled, openLibrary } = useWorkspaceChrome();
+  const entries = useEditorEntryVisibility();
+  const { switchingDisabled, openLibrary, sidebarOpen } = useWorkspaceChrome();
   return <div className="motion-workspace-actions">
-    {workspacePresentation(location.search).embedded && <button className="motion-button motion-button-quiet" aria-haspopup="dialog" onClick={gateway?.openSettings}><MotionIcon name="sliders" />{t("Model settings")}</button>}
+    {!entries.browserChrome && !sidebarOpen && <WorkspaceMenuButton />}
+    {entries.modelSettings && workspacePresentation(location.search).embedded && <button className="motion-button motion-button-quiet" aria-haspopup="dialog" onClick={gateway?.openSettings}><MotionIcon name="sliders" />{t("Model settings")}</button>}
     <button className="motion-button motion-button-quiet" aria-haspopup="dialog" disabled={switchingDisabled} onClick={openLibrary}><MotionIcon name="grid" />{t("Template library")}</button>
   </div>;
 }
 
 const host: StudioHost = {
+  entryVisibility: editorEntryVisibility,
   brand: <></>,
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,
   historyActions: <WorkspaceHistoryActions />,
-  previewAction: <MotionPreviewButton />,
-  windowMenu: <MotionLayoutMenu />,
+  previewAction: editorEntryVisibility.previewSwitch && <MotionPreviewButton />,
+  windowMenu: editorEntryVisibility.panelLayoutControls ? <MotionLayoutMenu /> : false,
   themeToggle: false,
-  panels: <Dock.Panel id="history"><MotionHistoryPanel /></Dock.Panel>,
+  panels: editorEntryVisibility.versionHistory && <Dock.Panel id="history"><MotionHistoryPanel /></Dock.Panel>,
   AppFrame: MotionEditorFrame,
   desktopLink: false,
   feedback: false,

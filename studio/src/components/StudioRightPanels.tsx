@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../motion/StudioHost";
 import { useI18n } from "../i18n/I18n";
 import { memo, useCallback } from "react";
 import type { StudioRightPanelsProps } from "./StudioRightPanels.types";
@@ -49,6 +50,7 @@ export const StudioRightPanels = memo(function StudioRightPanels({
   onAutoGroupCarveSources,
   onAddMediaOverlay,
 }: StudioRightPanelsProps) {
+  const entries = useEditorEntryVisibility();
   const { t } = useI18n();
   const { previewIframeRef, projectId, activeCompPath, showToast, renderQueue } =
     useStudioShellContext();
@@ -295,22 +297,22 @@ export const StudioRightPanels = memo(function StudioRightPanels({
       >
         <RenderQueuePanel />
       </Dock.Panel>
-      <Dock.Panel id="variables">
+      {entries.variablesPanel && <Dock.Panel id="variables">
         <VariablesPanel
           sdkSession={sdkSession}
           publishSdkSession={publishSdkSession}
           reloadPreview={reloadPreview}
           recordEdit={recordEdit}
         />
-      </Dock.Panel>
-      <Dock.Panel id="motionBlur">
+      </Dock.Panel>}
+      {entries.motionBlurPanel && <Dock.Panel id="motionBlur">
         <MotionBlurPanel
           sdkSession={sdkSession}
           publishSdkSession={publishSdkSession}
           reloadPreview={reloadPreview}
           recordEdit={recordEdit}
         />
-      </Dock.Panel>
+      </Dock.Panel>}
       <Dock.Panel id="slideshow">
         <SlideshowPanel
           scenes={slideshowScenes}

@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { scopedElementKey } from "../../hooks/gsapKeyframeCacheHelpers";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -133,6 +134,7 @@ export function PropertyPanelFlat({
   ...forwardedProps
 }: PropertyPanelFlatProps) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   // PropertyPanel keys this component by selection, so the default is per element.
   const [openGroupId, setOpenGroupId] = useState<string>(() =>
     isTextEditableSelection(element)
@@ -403,7 +405,7 @@ export function PropertyPanelFlat({
       ),
     });
   }
-  if (showMotionGroup) {
+  if (showMotionGroup && entries.animationControls) {
     groups.push({
       id: "motion",
       ...motionSectionLabel({
@@ -427,7 +429,7 @@ export function PropertyPanelFlat({
       ),
     });
   }
-  if (sections.colorGrading) {
+  if (sections.colorGrading && entries.advancedStyles) {
     groups.push({
       id: "grade",
       title: "Grade",
@@ -473,7 +475,7 @@ export function PropertyPanelFlat({
         />
       ),
     });
-    if (onAddMediaOverlay) {
+    if (onAddMediaOverlay && entries.advancedStyles) {
       groups.push({
         id: "overlays",
         title: "Overlays",

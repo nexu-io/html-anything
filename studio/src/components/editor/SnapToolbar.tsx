@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { trackPreviewFeatureUsed } from "../../utils/previewFeatureUsage";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
@@ -10,6 +11,7 @@ import { keyHint, matchesKey, useStudioKeys } from "../../player/components/stud
 // fallow-ignore-next-line complexity
 export const SnapToolbar = memo(function SnapToolbar() {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const keys = useStudioKeys();
   const [gridPopoverOpen, setGridPopoverOpen] = useState(false);
   const { state, actions } = usePreviewOverlayContext();
@@ -82,7 +84,7 @@ export const SnapToolbar = memo(function SnapToolbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [gridPopoverOpen, settleGridSpacing]);
 
-  return (
+  return entries.canvasTools ? (
     <div
       className="pointer-events-auto absolute top-2 right-2 z-50 flex items-center gap-1"
       onPointerDown={(e) => e.stopPropagation()}
@@ -241,5 +243,5 @@ export const SnapToolbar = memo(function SnapToolbar() {
         )}
       </div>
     </div>
-  );
+  ) : null;
 });

@@ -19,6 +19,7 @@ import {
 } from "@phosphor-icons/react";
 import type { IDockviewPanelHeaderProps } from "dockview-react";
 import { isPanelId, type PanelId } from "./panelRegistry";
+import { useEditorEntryVisibility } from '../../motion/StudioHost';
 
 const TAB_ICONS: Record<PanelId, Icon> = {
   preview: Monitor,
@@ -41,6 +42,7 @@ const TAB_ICONS: Record<PanelId, Icon> = {
  * dockview's own tab class, so they swap in the frame the tab changes rather than a render later.
  */
 export function DockTab({ api }: IDockviewPanelHeaderProps) {
+  const entries = useEditorEntryVisibility();
   const { t } = useI18n();
   const subscribe = useCallback(
     (onChange: () => void) => {
@@ -56,7 +58,7 @@ export function DockTab({ api }: IDockviewPanelHeaderProps) {
       {TypeIcon ? <TypeIcon className="hf-dock-tab-icon" size={14} aria-hidden /> : null}
       <span className="hf-dock-tab-label">{title}</span>
       {/* Same shape as dockview's own close control: a tab cannot hold a focusable button. */}
-      <div
+      {entries.panelLayoutControls && <div
         role="button"
         tabIndex={-1}
         aria-label={t('Close {title}', { title })}
@@ -68,7 +70,7 @@ export function DockTab({ api }: IDockviewPanelHeaderProps) {
         }}
       >
         <X size={12} aria-hidden />
-      </div>
+      </div>}
     </div>
   );
 }
