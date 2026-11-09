@@ -7,7 +7,7 @@
 ## 复用参考片的拍法
 
 - **首个全栈 Agentic 视频生成器。** 我们的目标是把生成、编辑和渲染放进同一套工作流：用 HTML 编写镜头，在 Studio 里改画面和节奏，从这份工程直接渲染出 MP4。
-- **完全开源免费，在本地 Agent 里直接用，每一层都支持 BYOK。** 支持 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy（预览版）。从语言模型到图片、视频和音乐生成，都可以使用自己的 API Key。
+- **完全开源免费，在本地 Agent 里直接用，每一层都支持 BYOK。** 支持 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy。从语言模型到图片、视频和音乐生成，都可以使用自己的 API Key。
 - **首次开源 100+ 个品牌的 `MOTION.md`** 是首发合集的目标。我们定义了 [Motion MD](motion-md.zh-CN.md)，用 Markdown 记录分镜、节奏、转场和可替换的品牌素材。当前公开预览可读 [Firecrawl 五秒样例](../examples/reference-reveal/MOTION.zh-CN.md)。
 - **多模态：图片 · 视频 · 音乐。** 生成或导入需要的素材，放到同一条时间轴上对齐镜头和节拍，再一起导出。[查看可选模型](#自带-agent-和模型密钥byok)
 
@@ -80,7 +80,7 @@ OpenMotion 是一款本地运行的开源动效设计插件。选择能通过 st
 | <a href="#在-codex-里开始"><img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex 接入说明" /></a> | 安装插件，在 **Plugins → OpenDesign → Try now** 打开。[查看安装步骤](#在-codex-里开始) |
 | <a href="agent-adapters.md#codex--claude-code"><img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code 接入说明" /></a> | 给本地安装器加上 `--host claude`，注册 MCP 服务并安装 Skills。[本地插件接入方式](agent-adapters.md#codex--claude-code) |
 | <a href="agent-adapters.md#deepseek-harness"><img src="readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness 接入说明" /></a> | 先为要使用的 profile 配好模型，再用 `--host deepseek` 接入。[Harness 配置说明](agent-adapters.md#deepseek-harness) |
-| <a href="agent-adapters.md#workbuddy"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy（预览）接入说明" /></a> | 用 `--host workbuddy` 接入自定义 MCP 和 Skills。桌面端从导入到出片的完整流程仍待实机验证。[Connector 接入说明](agent-adapters.md#workbuddy) |
+| <a href="agent-adapters.md#workbuddy"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy 接入说明" /></a> | 用 `--host workbuddy` 接入自定义 MCP 和 Skills。在 WorkBuddy 里导入生成的 MCP 配置。[Connector 接入说明](agent-adapters.md#workbuddy) |
 
 <details>
 <summary>查看本地安装命令</summary>

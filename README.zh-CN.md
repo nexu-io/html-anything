@@ -7,7 +7,7 @@
 ## 复刻案例
 
 - **首个全栈 Agentic 视频生成器。** 我们的目标是把生成、编辑和渲染放进同一套工作流：用 HTML 编写镜头，在 Studio 里改画面和节奏，从这份工程直接渲染出 MP4。
-- **完全开源免费，在本地 Agent 里直接用，每一层都支持 BYOK。** 支持 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy（预览版）。从语言模型到图片、视频和音乐生成，都可以使用自己的 API Key。
+- **完全开源免费，在本地 Agent 里直接用，每一层都支持 BYOK。** 支持 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy。从语言模型到图片、视频和音乐生成，都可以使用自己的 API Key。
 - **首次开源 100+ 个品牌的 `MOTION.md`** 是首发合集的目标。我们定义了 [Motion MD](docs/motion-md.zh-CN.md)，用 Markdown 记录分镜、节奏、转场和可替换的品牌素材。当前公开预览可读 [Firecrawl 五秒样例](examples/reference-reveal/MOTION.zh-CN.md)。
 - **多模态：图片 · 视频 · 音乐。** 生成或导入需要的素材，放到同一条时间轴上对齐镜头和节拍，再一起导出。[查看可选模型](docs/README.zh-CN.md#自带-agent-和模型密钥byok)
 

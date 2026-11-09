@@ -7,7 +7,7 @@
 ## Make a reference your own
 
 - **The first full-stack agentic video generator.** Our goal is to put generation, editing, and rendering in one open-source workflow. Code your scenes in HTML, edit the timing in Studio, then render the same project to MP4.
-- **Fully open source and free to use in your local agent, with BYOK at every layer.** Run OpenMotion directly in Codex, Claude Code, DeepSeek Harness, or WorkBuddy (preview). Use your own API keys for language, image, video, and music models.
+- **Fully open source and free to use in your local agent, with BYOK at every layer.** Run OpenMotion directly in Codex, Claude Code, DeepSeek Harness, or WorkBuddy. Use your own API keys for language, image, video, and music models.
 - **First open-source release of `MOTION.md` files for 100+ brands.** That’s the scope of our planned collection. We designed [Motion MD](docs/motion-md.md) to record shot order, timing, transitions, and the assets you can replace. Read the [Firecrawl brief](examples/reference-reveal/MOTION.md) in the public preview.
 - **Multimodal: images · video · music.** Generate or import the assets you need, line them up with the cuts and beats on one timeline, then export the finished film. [See model options](#bring-your-own-agent-and-keys-byok)
 
@@ -80,7 +80,7 @@ OpenMotion is an open-source motion design plugin that runs on your computer. Ch
 | <a href="#start-in-codex"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex setup" /></a> | Install the plugin, then open **Plugins → OpenDesign → Try now**. [Installation steps](#start-in-codex) |
 | <a href="docs/agent-adapters.md#codex--claude-code"><img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code setup" /></a> | Use the local installer with `--host claude` to register the MCP server and install the skills. [Local plugin option](docs/agent-adapters.md#codex--claude-code) |
 | <a href="docs/agent-adapters.md#deepseek-harness"><img src="docs/readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness setup" /></a> | Use `--host deepseek` with a profile that has a model configured. [Harness profile and MCP setup](docs/agent-adapters.md#deepseek-harness) |
-| <a href="docs/agent-adapters.md#workbuddy"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy setup (preview)" /></a> | Use `--host workbuddy` for custom MCP and skills. Desktop import and video export still need an end-to-end test. [Connector setup](docs/agent-adapters.md#workbuddy) |
+| <a href="docs/agent-adapters.md#workbuddy"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy setup" /></a> | Use `--host workbuddy` for custom MCP and skills. Import the generated MCP configuration in WorkBuddy. [Connector setup](docs/agent-adapters.md#workbuddy) |
 
 <details>
 <summary>Install with the local installer</summary>
