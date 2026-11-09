@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n/I18n";
 import { useState, useEffect } from "react";
 
 /**
@@ -13,6 +14,7 @@ export function VideoFrameThumbnail({
   /** Shown instead of an endless shimmer when the video can't be decoded. */
   fallbackLabel?: string;
 }) {
+  const { t } = useI18n();
   const [frame, setFrame] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -63,7 +65,7 @@ export function VideoFrameThumbnail({
   if (failed && !frame) {
     return (
       <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
-        <span className="text-[9px] font-medium text-neutral-600">{fallbackLabel ?? "VIDEO"}</span>
+        <span className="text-[9px] font-medium text-neutral-600">{fallbackLabel ?? t("Video")}</span>
       </div>
     );
   }

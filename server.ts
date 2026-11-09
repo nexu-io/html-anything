@@ -8,8 +8,10 @@ import { WorkspaceStore, Conflict, createBlankProject, validateProjectTitle } fr
 import { cliPath, ensureRuntime, execute, HYPERFRAMES_VERSION, inspectProject, pluginRoot, runHyperframes, startStudio, stopCommands } from './hyperframes.ts';
 import type { Studio } from './hyperframes.ts';
 import { VERSION } from './preview.ts';
-import { copyTemplate, findTemplate, templates } from './template-library.ts';
-import { getTemplate, listTemplates, templateRecipe } from './template-catalog.ts';
+import { templates } from './template-library.ts';
+import { templateRecipe } from './template-catalog.ts';
+import { templateCatalogFor } from './prism-templates.ts';
+import { isEditableTemplate } from './shared/catalog.ts';
 import { proxyStudio, serveEditorFile } from './editor-server.ts';
 import { publicTools as mcpTools } from './mcp.ts';
 import { startOwnedStudio } from './shared/owned-studio.mjs';
@@ -24,7 +26,7 @@ import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
 
 const sharedStore = new WorkspaceStore();
-export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: () => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void> };
+export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void> };
 const service: Service = {};
 const working = new Set<string>();
 const runningExports = new Map<string, AbortController>();
@@ -123,14 +125,15 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
     return await store.lock(async () => {
       if (expectedProjectId && store.projectId !== expectedProjectId) throw new Conflict();
       if ((await store.get()).revision !== expectedRevision) throw new Conflict();
-      const template = 'templateId' in target ? findTemplate(target.templateId) : undefined;
+      const template = 'templateId' in target ? await templateCatalogFor(store.directory).get(target.templateId) : undefined;
       const creating = Boolean(template) || 'title' in target;
       const id = creating ? crypto.randomUUID() : (target as { projectId: string }).projectId;
       const entry = creating ? { id, title: template?.title ?? (target as { title: string }).title, templateId: template?.id, createdAt: Date.now() } : undefined;
       if (!entry && !store.projectCatalog().projects.some(item => item.id === id)) throw new Error('工程不存在');
       if (sessionTarget?.sessionId && !store.projectCatalog().sessions!.some(item => item.id === sessionTarget.sessionId)) throw new Error('会话不存在');
       if (!entry && store.projectCatalog().activeId === id) {
-        if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectory, context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectory, path.join(store.directory, 'studio.log'), context.studioPort || 4174);
+        if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectoryFor(id), context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectoryFor(id), path.join(store.directory, 'studio.log'), context.studioPort || 4174);
+        await context.studio.openProject?.(id);
         await store.selectProject(id);
         return { ...(await store.status()), studioUrl: context.studio.url };
       }
@@ -138,22 +141,23 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
       let candidate: Studio | undefined;
       let committed = false;
       try {
-        if (template) await copyTemplate(template.id, directory, runtimeRoot);
+        if (template) await templateCatalogFor(store.directory).copy(template, directory, runtimeRoot);
         else if ('title' in target) await createBlankProject(directory, runtimeRoot, target.title);
         await store.safePath('index.html', directory);
         const oldStudio = context.studio;
         const oldPort = oldStudio ? Number(new URL(oldStudio.url).port) : undefined;
         const candidatePort = oldPort === undefined ? context.studioPort || 4174 : oldPort === 65535 ? 4174 : oldPort + 1;
-        candidate = context.launchStudio ? await context.launchStudio(directory, candidatePort) : await startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), candidatePort);
+        candidate = oldStudio?.alive() && oldStudio.openProject ? oldStudio : context.launchStudio ? await context.launchStudio(directory, candidatePort) : await startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), candidatePort);
         // Native Studio writes are independent of our lock. Recheck before switching.
         if ((await store.get()).revision !== expectedRevision) throw new Conflict();
         await store.selectProject(id, entry, sessionTarget?.instruction ?? ('instruction' in target ? target.instruction : undefined), sessionTarget);
         context.studio = candidate; committed = true;
-        await oldStudio?.close();
+        await candidate.openProject?.(id);
+        if (oldStudio !== candidate) await oldStudio?.close();
         return { ...(await store.status()), studioUrl: candidate.url };
       } finally {
         if (!committed) {
-          await candidate?.close();
+          if (candidate !== context.studio) await candidate?.close();
           if (creating) await rm(directory, { recursive: true, force: true });
         }
       }
@@ -162,7 +166,7 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
 }
 
 async function openEditor(store: WorkspaceStore, context: Service) {
-  if (context.ensureStudio) { await context.ensureStudio(); return; }
+  if (context.ensureStudio) { await context.ensureStudio(store.projectId); return; }
   if (!context.runtimeRoot) throw new Error('Hyperframes 服务尚未就绪');
   if (context.switching) throw new Error('正在打开工程，请稍候');
   if (context.studio?.alive()) return;
@@ -176,7 +180,7 @@ async function openEditor(store: WorkspaceStore, context: Service) {
 async function createSession(store: WorkspaceStore, data: Record<string, any>) {
   const mode = creationMode(data.mode ?? 'motion');
   if (data.id !== undefined && typeof data.id !== 'string') throw new Error('会话编号无效');
-  const template = data.templateId ? getTemplate(data.templateId) : undefined;
+  const template = data.templateId ? await templateCatalogFor(store.directory).get(data.templateId) : undefined;
   const instruction = data.instruction === undefined ? template ? `使用模板 ${template.title}（${template.id}）继续创作。` : undefined : validateInstruction(data.instruction);
   const catalog = store.projectCatalog(), existing = catalog.sessions!.find(item => item.id === data.id);
   const title = validateProjectTitle(data.title ?? (data.instruction ? instruction!.replace(/\s+/g, ' ').slice(0, 40) : template?.title || existing?.title || `新会话 ${catalog.sessions!.length + 1}`));
@@ -187,9 +191,9 @@ async function createSession(store: WorkspaceStore, data: Record<string, any>) {
 const artifactFactories: Record<CreationMode, (store: WorkspaceStore, context: Service, session: CreativeSession, data: Record<string, any>) => Promise<unknown>> = {
   motion: async (store, context, session, data) => {
     const templateId = data.templateId ?? (session.artifacts.length === 0 ? session.templateId : undefined);
-    const template = templateId ? getTemplate(templateId) : undefined;
+    const template = templateId ? await templateCatalogFor(store.directory).get(templateId) : undefined;
     const title = validateProjectTitle(data.title ?? (session.artifacts.length ? `Motion ${session.artifacts.length + 1}` : session.title));
-    return openProject(store, context, data.expectedRevision, template?.kind === 'builtin' ? { templateId: template.id } : { title }, data.expectedProjectId, { sessionId: session.id, templateId: template?.id });
+    return openProject(store, context, data.expectedRevision, template && isEditableTemplate(template) ? { templateId: template.id } : { title }, data.expectedProjectId, { sessionId: session.id, templateId: template?.id });
   },
 };
 async function createArtifact(store: WorkspaceStore, context: Service, session: CreativeSession, data: Record<string, any>) {
@@ -217,15 +221,29 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     const originalUrl = new URL(req.url || '/', 'http://localhost');
     const motionRequest = /^\/(?:motion|design)-api\//.test(originalUrl.pathname);
     const url = new URL(originalUrl);
-    if (context.ensureStudio && (url.pathname === '/' || url.pathname.startsWith('/sessions/'))) await context.ensureStudio();
+    if (motionRequest && url.searchParams.has('projectId')) {
+      const id = url.searchParams.get('projectId')!;
+      if (projectHeader !== undefined && projectHeader !== id) return json(res, 400, { error: 'PROJECT_SCOPE_MISMATCH' });
+      store = store.forProject(id);
+    }
+    if (context.ensureStudio && (url.pathname === '/' || url.pathname.startsWith('/sessions/'))) {
+      const projectId = url.searchParams.get('project'), sessionId = url.searchParams.get('session');
+      if (projectId !== null) {
+        if (store.projectCatalog().projects.some(project => project.id === projectId)) await context.ensureStudio(projectId);
+      } else if (sessionId) {
+        const session = store.projectCatalog().sessions!.find(session => session.id === sessionId);
+        const artifact = session?.artifacts.find(artifact => artifact.id === session.activeArtifactId) ?? session?.artifacts.at(-1);
+        if (artifact) await context.ensureStudio(artifact.projectId);
+      }
+    }
     if (motionRequest) url.pathname = url.pathname.replace(/^\/(?:motion|design)-api\//, '/api/');
-    const editorUrl = `http://${host || 'localhost'}/#project/${store.projectCatalog().activeId}`;
+    const editorUrl = `http://${host || 'localhost'}/#project/${store.projectId}`;
     if (motionRequest && url.pathname === '/api/phase1/call' && req.method === 'POST') {
       if (!context.runtimeRoot) throw new Error('RUNTIME_NOT_READY');
       const authority = store.workspaceStore ?? store;
       context.phase1 ??= new Phase1Service(authority, context.runtimeRoot, {
         origin: () => new URL(editorUrl).origin,
-        nativeUrl: projectId => context.studio?.alive() && context.studio.projectDirectory === authority.projectDirectoryFor(projectId) ? context.studio.url : undefined,
+        nativeUrl: () => context.studio?.alive() ? context.studio.url : undefined,
         openProject: async projectId => { await openProject(authority, context, (await authority.get()).revision, { projectId }, authority.projectId); },
         mutation: async task => {
           let release!: () => void;
@@ -243,14 +261,14 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const info: IntegrationInfo = {
         name: 'OpenDesign', version: VERSION, previewUrl: address.origin, dataDirectory: store.directory,
         transport: { type: 'stdio', command: process.execPath, args: ['--experimental-strip-types', path.join(pluginRoot, 'mcp.ts')], cwd: pluginRoot,
-          env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', ...Object.fromEntries(['MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
+          env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', ...Object.fromEntries(['MOTION_TEMPLATE_ENV', 'MOTION_TEMPLATE_RESOURCE_ID', 'MOTION_TEMPLATE_LOCALE', 'MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
         tools: mcpTools.map(({ name, description }) => ({ name, description })),
       };
       if (url.pathname === '/api/integration') return json(res, 200, info);
       const selected = integrationHost(url.searchParams.get('host'));
       if (url.pathname === '/connect/guide') {
         const id = url.searchParams.get('template');
-        const recipe = id ? '\n\n' + templateRecipe(getTemplate(id)) : '';
+        const recipe = id ? '\n\n' + templateRecipe(await templateCatalogFor(store.directory).get(id)) : '';
         res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end(agentGuide(info, selected) + recipe);
       }
       const config = integrationConfig(info, selected);
@@ -298,7 +316,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       return json(res, 404, { error: 'Unknown model gateway operation' });
     }
     if (url.pathname === '/api/templates' && req.method === 'GET') return json(res, 200, { templates });
-    if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, listTemplates({
+    if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, await templateCatalogFor(store.directory).page({
       category: url.searchParams.get('category') || 'featured', query: url.searchParams.get('query') || '',
       offset: Number(url.searchParams.get('offset') || 0), limit: Number(url.searchParams.get('limit') || 6), grouped: url.searchParams.get('grouped') === 'true',
       covered: url.searchParams.get('covered') === 'true',
@@ -373,7 +391,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const image = await readFile(path.join(pluginRoot, 'template-library', poster[1], 'poster.jpg'));
       res.writeHead(200, { 'Content-Type': 'image/jpeg', 'Content-Length': image.length }); res.end(image); return;
     }
-    const openTemplate = url.pathname.match(/^\/api\/templates\/([a-z-]+)\/open$/);
+    const openTemplate = url.pathname.match(/^\/api\/templates\/([A-Za-z0-9_-]+)\/open$/);
     const openSaved = motionRequest ? url.pathname.match(/^\/api\/projects\/([a-z0-9-]+)\/open$/) : null;
     if ((openTemplate || openSaved) && req.method === 'POST') {
       const data = await input(req); revision(data.expectedRevision);
@@ -404,10 +422,8 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (!motionRequest && (url.pathname.startsWith('/api/') || url.pathname === '/__hyperframes_config')) {
       if (context.phase1Mutation) await context.phase1Mutation;
-      // A stale tab must never write its old session into the newly selected directory.
       const scopedProject = url.pathname.match(/^\/api\/projects\/([^/]+)/);
-      if (scopedProject && decodeURIComponent(scopedProject[1]) !== store.projectCatalog().activeId) return json(res, 409, { error: '当前项目已切换，请重新打开对应会话。' });
-      if (context.switching && !['GET', 'HEAD'].includes(req.method || '')) return json(res, 409, { error: '正在切换项目，请稍候。' });
+      if (scopedProject) store.forProject(decodeURIComponent(scopedProject[1]));
       if (!context.studio?.alive()) return json(res, 503, { error: '编辑服务尚未就绪' });
       return await proxyStudio(req, res, url, context.studio.url);
     }
@@ -427,7 +443,7 @@ export async function startServer(store = sharedStore, port = Number(process.env
   const ffmpeg = await execute(process.env.HYPERFRAMES_FFMPEG_PATH || process.env.FFMPEG_PATH || 'ffmpeg', ['-version'], pluginRoot, 5000).then(r => r.code === 0, () => false);
   const context: Service = { runtimeRoot, ffmpeg, studioPort: !port || port === 65535 ? 4174 : port + 1, editorToken: options.editorToken };
   context.launchStudio = async (directory, chosenPort) => {
-    if (!process.env.OPENMOTION_EDITOR_LOCK_FD) return startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), chosenPort);
+    if (!process.env.OPENMOTION_EDITOR_LOCK_FD) return startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), chosenPort, store.directory);
     const probe = createServer();
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });
     const available = (probe.address() as any).port;
@@ -435,17 +451,20 @@ export async function startServer(store = sharedStore, port = Number(process.env
     return startOwnedStudio(store.directory, runtimeRoot, directory, path.join(store.directory, 'studio.log'), available);
   };
   let opening: Promise<Studio> | undefined;
-  context.ensureStudio = async () => {
-    if (context.studio?.alive()) return context.studio;
+  context.ensureStudio = async (projectId = store.projectId) => {
+    const scoped = store.forProject(projectId);
+    if (context.studio?.alive()) { await context.studio.openProject?.(projectId); return context.studio; }
     if (!opening && context.switching) throw new Error('正在打开工程，请稍候');
     if (!opening) opening = (async () => {
       context.switching = true;
       await context.studio?.close();
-      await store.initialize(runtimeRoot);
-      context.studio = await context.launchStudio!(store.projectDirectory, !port || port === 65535 ? 4174 : port + 1);
+      await scoped.initialize(runtimeRoot);
+      context.studio = await context.launchStudio!(scoped.projectDirectory, !port || port === 65535 ? 4174 : port + 1);
       return context.studio;
     })().finally(() => { opening = undefined; context.switching = false; });
-    return opening;
+    const studio = await opening;
+    await studio.openProject?.(projectId);
+    return studio;
   };
   if (options.editor !== false) await context.ensureStudio();
   const server = createServer((req, res) => { void (async () => { if (!options.privateHandler || !await options.privateHandler(req, res)) await handler(req, res, store, context); })().catch(error => { if (!res.headersSent) json(res, 500, { error: (error as Error).message }); else res.destroy(); }); });

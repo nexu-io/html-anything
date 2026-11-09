@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { WorkspaceFrame } from './WorkspaceFrame';
 import { MotionHome } from './MotionHome';
-import { motionApi, type ProjectCatalog, type WorkspaceStatus } from './useWorkspace';
+import { motionApi, type ProjectCatalog } from './useWorkspace';
 import { requestedProject, validWorkspaceProject } from './workspaceRouting';
 import { MotionSessionFrame } from './MotionSessionFrame';
 import type { SessionDetail, SessionArtifact } from '../../../shared/session';
@@ -14,14 +14,8 @@ export async function resolveWorkspaceProject(id: string, signal: AbortSignal) {
   if (!validWorkspaceProject(id)) throw new Error('项目链接无效');
   const catalog = await motionApi<ProjectCatalog>('/projects', { signal });
   if (!catalog.projects.some(project => project.id === id)) throw new Error('项目不存在，请从首页选择一个项目。');
-  if (catalog.activeId !== id) {
-    const current = await motionApi<WorkspaceStatus>('/project/status', { signal });
-    signal.throwIfAborted();
-    await motionApi<WorkspaceStatus>(`/projects/${encodeURIComponent(id)}/open`, {
-      method: 'POST', signal, headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ expectedRevision: current.revision, expectedProjectId: current.projectId }),
-    });
-  }
+  signal.throwIfAborted();
+  await motionApi('/preview/open', { method: 'POST', signal }, id);
 }
 
 /** Resolve the native service before mounting any editor that could read or save files. */
@@ -55,7 +49,7 @@ export function MotionApp() {
     return () => controller.abort();
   }, [projectId, sessionId, attempt]);
   if (projectId === null && sessionId === null) return <WorkspaceFrame waitForSaves={noPendingSaves}><MotionHome /></WorkspaceFrame>;
-  if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{error}</p><div><a className="motion-button" href="/">{t('Back to home')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
+  if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{t(error)}</p><div><a className="motion-button" href="/">{t('Back to home')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
   const loading = <div className="motion-route-state" role="status">{t('Opening project…')}</div>;
   return ready ? <WorkspaceFrame waitForSaves={noPendingSaves} projectId={ready.artifact?.projectId} sessionId={ready.sessionId}><MotionSessionFrame sessionId={ready.sessionId} projectId={ready.artifact?.projectId}>{ready.artifact && <ArtifactViewer artifact={ready.artifact} />}</MotionSessionFrame></WorkspaceFrame> : loading;
 }

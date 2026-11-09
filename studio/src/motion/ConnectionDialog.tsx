@@ -11,7 +11,7 @@ type Props = { open: boolean; section?: 'setup' | 'templates'; busy: boolean; er
 
 /** The original integration page lives inside one modal; Studio stays mounted beneath it. */
 export function ConnectionDialog(props: Props) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const dialog = useRef<HTMLDialogElement>(null), root = useRef<HTMLDivElement>(null);
   const controller = useRef<ReturnType<typeof mountConnection> | null>(null);
   const callbacks = useRef(props); callbacks.current = props;
@@ -19,6 +19,7 @@ export function ConnectionDialog(props: Props) {
     // Own this static fragment once. Workspace polling must not replace its live gallery DOM.
     root.current!.innerHTML = connectionPage;
     const mounted = mountConnection(root.current!, {
+      t, locale,
       initialHost: new URLSearchParams(location.search).get('host'),
       close: () => { if (!callbacks.current.busy) callbacks.current.onClose(); },
       useTemplate: id => { if (!callbacks.current.busy) callbacks.current.onOpen(id); },
@@ -26,6 +27,7 @@ export function ConnectionDialog(props: Props) {
     controller.current = mounted;
     return () => { mounted.destroy(); controller.current = null; };
   }, []);
+  useEffect(() => { controller.current?.setLanguage(locale, t); }, [locale, t]);
   useEffect(() => {
     if (!props.open) { controller.current?.suspend(); dialog.current?.close(); return; }
     dialog.current?.showModal(); controller.current?.resume();
@@ -43,7 +45,7 @@ export function ConnectionDialog(props: Props) {
       </div>
       <button id="close-connections" className="ui-button ui-button--ghost ui-button--icon" aria-label={t("Close MCP connection")} disabled={props.busy} onClick={props.onClose}><MotionIcon name="close" /></button>
     </div>
-    {(props.error || props.busy) && <p className="connect-error" role="status">{props.error || t('Preparing editable project…')}</p>}
+    {(props.error || props.busy) && <p className="connect-error" role="status">{props.error ? t(props.error) : t('Preparing editable project…')}</p>}
     <div id="connection-root" ref={root} />
   </dialog>;
 }

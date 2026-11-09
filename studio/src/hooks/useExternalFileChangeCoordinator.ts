@@ -129,7 +129,7 @@ export function sseFileChangeChannel(
   onDelivery: (delivery: unknown) => void,
   onReconnect: () => void,
 ): () => void {
-  const eventSource = new EventSource("/api/events");
+  const eventSource = new EventSource(studioProjectUrl('/api/events'));
   eventSource.addEventListener("file-change", onDelivery);
   // Reopening the stream does not replay changes missed during a disconnect.
   let opened = false;
@@ -591,3 +591,4 @@ export function useExternalFileChangeCoordinator({
 
   return { blocked, retry, useExternalFile, keepStudioFile };
 }
+import { studioProjectUrl } from '../utils/studioApiFetch';

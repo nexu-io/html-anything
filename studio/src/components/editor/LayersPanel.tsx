@@ -448,7 +448,7 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
           >
             <span aria-hidden="true">←</span>
             <span className="truncate">
-              {activeGroupElement.getAttribute("data-hf-group") || "Group"}
+              {activeGroupElement.getAttribute("data-hf-group") || t("Group")}
             </span>
           </button>
         )}

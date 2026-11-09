@@ -66,7 +66,7 @@ flowchart LR
 
 1. `POST /design-api/sessions` 验证模式和模板，先持久化会话及初始需求。可以只有会话、没有产物；此操作不改写当前视频。可提供稳定 UUID `id`，相同初始请求重试返回同一会话，冲突内容被拒绝。
 2. `POST /design-api/sessions/:id/artifacts` 根据会话模式调用 `artifactFactories`。首个产物默认使用会话所选模板，也可传具体模板；后续产物默认空白。
-3. Motion 工厂建立候选工程与原生服务，重查 revision 和活动工程后，才把产物登记到该会话并切换。失败清理候选文件，但保留已创建的会话、消息和其他产物。
+3. Motion 工厂建立候选工程、重查源 revision 后，把产物登记到该会话，再在同一个原生服务中按需打开该工程上下文。登记前失败清理候选文件；登记后若上下文启动失败，保留工程供重试。会话、消息和其他产物保留。
 4. 客户端按产物 kind 打开 Viewer。空会话中外部 Agent 创建产物后，网页轮询会打开同一所属产物；待提交草稿留在会话下。
 5. 后续需求和真实 Agent 回复写入同一个消息流；产物继续通过其模式工具编辑。网页不伪造模型回复或执行完成状态，也不包含聊天 Agent 运行器。
 
@@ -74,9 +74,9 @@ flowchart LR
 
 ## HTTP 与 MCP 契约
 
-一期公开 MCP 以 [9 Tool 契约](mcp-phase1-tools.md) 为准；下表 design_* 及旧模板相关名称是内部兼容接口，不应由一期 Skill 调用。一期 motion_get_project 需要明确 projectId 才读详情，无 ID 时列项目；motion_open_preview 不创建工程。
+一期公开 MCP 以 [11 Tool 契约](mcp-phase1-tools.md) 为准；下表 design_* 及旧模板相关名称是内部兼容接口，不应由一期 Skill 调用。一期 motion_get_project 需要明确 projectId 才读详情，无 ID 时列项目；motion_open_preview 不创建工程。
 
-macOS 的 `mcp.ts` 只负责 stdio 和连接选择，业务位于 `mcp-tools.ts` 并在共享后台执行。每条连接绑定返回的工程/会话，网页或其他连接切换全局选择不会改变它；九个工程工具也接受显式 `projectId`。空会话不能沿用上一个会话的工程写入。旧 27 个工具和会话/产物 ID 保留，initialize 与纯流程/目录读取不启动后台。目录、停止与故障语义以 [共享编辑器](shared-editor.md) 为准。
+macOS 的 `mcp.ts` 只负责 stdio 和连接选择，业务位于 `mcp-tools.ts` 并在共享后台执行。每条连接绑定返回的工程/会话，网页或其他连接切换全局选择不会改变它；工程工具也接受显式 `projectId`。空会话不能沿用上一个会话的工程写入。旧 27 个工具和会话/产物 ID 保留，initialize 与纯流程/目录读取不启动后台。目录、停止与故障语义以 [共享编辑器](shared-editor.md) 为准。
 
 通用 HTTP 命名空间为 `/design-api`；`/motion-api` 是兼容别名。模式、会话、消息和产物的业务实现共用服务函数，MCP 创建/打开操作请求相同接口。原生编辑器继续使用 `/api/projects/:id/...`，不与通用会话路由混用。
 
@@ -127,7 +127,7 @@ macOS 的 `mcp.ts` 只负责 stdio 和连接选择，业务位于 `mcp-tools.ts`
 | 网页运行时 | `browser.ts`、`shared/browser.ts`、`WebBrowser.tsx` | 按会话隔离 Chromium、导航/画面/输入协议；与产物和工程状态分开 |
 | 原生编辑桥 | `MotionStudioHost.tsx` | 向容器注册保存/渲染门禁，保留原生编辑状态 |
 
-后续网页原型模式需要新增模式/模板与 skill 定义、具体产物资源类型、生成/打开适配器及 Viewer 注册，再验证保存与嵌入能力；不得仅在选择器加入一个没有实现的选项。会话索引、消息、宿主接入和浏览器面板继续复用。当前仍只有一个活动 Motion 原生服务；多个 Tabs 是可切换入口，不是多工程同时运行。
+后续网页原型模式需要新增模式/模板与 skill 定义、具体产物资源类型、生成/打开适配器及 Viewer 注册，再验证保存与嵌入能力；不得仅在选择器加入一个没有实现的选项。会话索引、消息、宿主接入和浏览器面板继续复用。当前使用一个 Motion 原生服务进程承载多个工程上下文；各页面保留自己的 URL、状态、历史与文件通知目标。
 
 ## 验收
 

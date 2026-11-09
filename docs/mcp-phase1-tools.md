@@ -1,16 +1,18 @@
-# OpenMotion 一期 9 Tool 契约与实现范围
+# OpenMotion 一期 11 Tool 契约与实现范围
 
 
 ## 结论与本次落地范围
 
-本地候选包版本统一为 0.1.0，尚未发布；更换版本时需停止同一数据目录的旧服务并重新连接宿主，避免复用旧服务和缓存。源码和默认导出均使用 `phase1`，只公开以下 9 个 `motion_` Tool。发现、调用门禁、接入元数据和构建使用同一注册表；旧名不可绕过调用。原有领域服务、Studio、渲染器和内部兼容 handler 保留。适配不只是改名：补了项目身份、批量导入、请求去重、版本和保存保护、取消终态、自动导出校验。
+本地候选包版本为0.1.0，避免误复用缺少模板目录接口的旧服务和宿主缓存；尚未发布。源码和默认导出均使用 `phase1`，只公开以下 11 个 `motion_` Tool。发现、调用门禁、接入元数据和构建使用同一注册表；旧名不可绕过调用。原有领域服务、Studio、渲染器和内部兼容 handler 保留。适配不只是改名：补了项目身份、批量导入、请求去重、版本和保存保护、取消终态、自动导出校验。
 
-Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分发对齐后，一期装入 motion-production、motion-director、motion-template-to-video、motion-recreate、motion-video-to-template 五个入口及其参考。模板使用与视频转模板保留已有实际流程；motion-recreate 包含实际复刻流程，规则与测量脚本随 Skill 分发，不新增自动创作算法或 Tool。九个公开 Tool 的名称、Schema 与业务实现不因此改变；详见 [Skill 路由与能力边界](skills.md)。
+Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分发对齐后，一期装入 motion-production、motion-director、motion-template-to-video、motion-recreate、motion-video-to-template 五个入口及其参考。模板使用与视频转模板保留已有实际流程；motion-recreate 包含实际复刻流程，规则与测量脚本随 Skill 分发，不新增自动创作算法或 Tool。原九个工程 Tool 保留，本次新增目录获取和模板详情入口；详见 [Skill 路由与能力边界](skills.md)。
 
-## 一期仅公开这 9 个 Tool
+## 一期公开这 11 个 Tool
 
 | 公开 Tool | 复用来源 | 本次实现到的边界 |
 | --- | --- | --- |
+| motion_list_templates | Prism 发布目录与本地缓存 | 无查询参数；返回本地 JSONL 索引路径、总数和目录版本，宿主自行检索 |
+| motion_get_template | 同一目录缓存与文件服务 | 按 ID 读取模板元数据、文件清单和 TEMPLATE.md |
 | motion_create_project | 项目目录、空白工程、模板复制、会话归属 | 新建独立载体、保存需求/来源、返回初始内容版本；宿主 Agent 制作影片 |
 | motion_open_preview | 原预览、项目选择、原生 lint | 打开指定已有工程；仅明确绑定的 OpenMotion 会话可省 projectId；返回真实 URL |
 | motion_import_assets | 素材目录、FFprobe/FFmpeg | 实际本机媒体批量持久化、逐项结果、稳定素材 ID、去重；不自动排入时间线 |
@@ -34,9 +36,13 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 
 ## 各 Tool 的输入、返回与失败边界
 
+### motion_list_templates / motion_get_template
+
+list 无参数，返回 indexPath、total、catalogVersion 和可选 warning，不返回查询结果。Agent 在本机检索 JSONL 索引；每行是模板摘要。get 必填 templateId，返回单个模板、files 与 instructions（TEMPLATE.md）。已知 ID 无需先 list。目录和文件缓存配置、失败行为见 [模板目录](template-catalog.md)。
+
 ### motion_create_project
 
-必填 requestId、projectType、title、requirements；可选 sessionId 归入已有会话。projectType 为 natural_language/template/reference_video。template 必须给实际可复制的 builtin templateId；reference_video 必须给已知目录 referenceVideoId 或 HTTP(S) referenceUrl。
+必填 requestId、projectType、title、requirements；可选 sessionId 归入已有会话。projectType 为 natural_language/template/reference_video。template 必须给实际可复制的 builtin 或 Prism templateId；reference_video 必须给已知目录 referenceVideoId 或 HTTP(S) referenceUrl。
 
 返回 projectId、sessionId、project（directory、html、files）、revision、version、currentVersionId/currentVersionNumber、需求/来源、previewUrl，以及 creationComplete=true、filmComplete=false。参考只记录来源，不在创建时假装看片或生成成片；外部 URL 可达性/内容由宿主实际检查。输入不符、模板不可复制或 ID 不存在时明确失败，保留旧项目。
 
@@ -88,21 +94,21 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 
 ## 注册、构建与兼容
 
-- shared/mcp-profiles.json 是9项唯一公开清单，shared/mcp-release.json 默认 phase1；mcpRegistry 同时控制发现与调用，禁止运行时环境变量扩大列表。新增/缺失实现由构建完整性检查拦截。
+- shared/mcp-profiles.json 是11项唯一公开清单，shared/mcp-release.json 默认 phase1；mcpRegistry 同时控制发现与调用，禁止运行时环境变量扩大列表。新增/缺失实现由构建完整性检查拦截。
 - npm run package:phase1 构建 Studio 并生成 dist/motion-0.1.0-phase1.zip；npm run package:plugin 默认也沿用 phase1。该插件 ZIP 不带原生 Node/浏览器/FFmpeg：使用支持的本机 Node、首次安装锁定依赖，FFmpeg/ffprobe 需本机可用。
-- 四宿主薄适配器从同一运行时导出，scope.json 记录 profile，复制上述5个 Skill；不另维护 allowlist。数据目录放在 runtime/插件缓存之外。资源指导通过本地文件或 resources/list、resources/read 取得，不增加第10个 Tool。
+- 四宿主薄适配器从同一运行时导出，scope.json 记录 profile，复制上述5个 Skill；不另维护 allowlist。数据目录放在 runtime/插件缓存之外。资源指导通过本地文件或 resources/list、resources/read 取得，不另增加 workflow Tool。
 - 完整原生测试包的 build <target> <beta-version> [phase1|legacy] 使用同表检查并写 release.json；本次不声称重新制作/验收各平台原生安装包。
 - 内部兼容 handler 与显式 legacy 开发构建保留，不能作为本次一期发布；旧调用在一期包中明确 MCP_TOOL_NOT_EXPOSED。宿主升级后须刷新发现和 Skill，不能继续缓存旧 schema。
 
 ## 开发顺序与放行
 
-先明确项目/版本，再导入/保存、打开预览、按实际范围导出和审阅。不要为凑9个名字写空 handler。源码、本地运行、ZIP协议检查、完整平台/宿主和业务验收分别记录。
+先明确项目/版本，再导入/保存、打开预览、按实际范围导出和审阅。源码、本地运行、ZIP协议检查、完整平台/宿主和业务验收分别记录。
 
 ## 尚需对齐的产品口径
 
 本次采用：P0 自然语言“创建”是工程载体+需求，影片仍由宿主制作；项目排序用创建时间；当前会话须显式绑定；历史5条是分页；媒体不自动清理。容量/清理、云附件传输、远程认证、四宿主完整模型任务体验及 Windows/macOS 安装验收后续单独推进。
 
-## 证据与验证范围
+## 原九工具版本的历史验证范围
 
 已通过本地一期业务检查和真实运行闭环：创建/分页/请求去重、保存与 UTF-8 读取、v5→v3→v6、跨重启保留历史/媒体、失败与中断恢复保护、排队取消；真实 Studio 的原生历史、MCP 绑定与保存、运行中取消、320×180/10fps MP4 的自动技术验证。
 
@@ -112,12 +118,14 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 
 公开 schema 在 shared/phase1-tools.ts，注册在 shared/mcp-registry.ts；业务适配在 phase1.ts，原生历史及文件保护在 phase1-versions.ts，导出状态在 workspace.ts/server.ts。核心回归为 tests/phase1.test.ts、tests/phase1-runtime.test.ts、tests/mcp-registry.test.ts、tests/workflow.test.ts、tests/adapters.test.ts。旧逻辑通过内部兼容回归继续保护。
 
-## 9个Tool自测对照
+## 11个Tool自测对照
 
 以下是已执行的本地主流程与异常检查，不等于覆盖所有输入组合、平台或人工验收。自动检查调用真实实现及临时隔离项目；示例命名不是新增需求编号。
 
 | Tool | 已执行的检查 | 测试入口 |
 | --- | --- | --- |
+| motion_list_templates | 本地 JSONL 索引、与界面同版本、ETag/304、离线缓存、环境隔离；不接受查询参数 | tests/prism-templates.test.ts |
+| motion_get_template | 精确 ID、文件清单与编辑指南；实际模板下载、哈希失败清理、内置模板离线读取 | tests/prism-templates.test.ts |
 | motion_create_project | 自然语言载体、实际内置模板、参考ID载体；同请求找回、异输入冲突、来源类型不符拒绝 | tests/phase1.test.ts |
 | motion_open_preview | 真实Studio URL、同会话绑定、未绑定拒绝、多连接各自选项目 | tests/phase1-runtime.test.ts、tests/phase1-shared.test.ts |
 | motion_import_assets | PNG/WAV/MP4真实探测/解码、坏文件部分失败、重复去重、恢复历史媒体 | tests/phase1.test.ts |
@@ -137,9 +145,9 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 | --- | --- | --- |
 | 业务/协议自动化 | tests/phase1.test.ts、tests/mcp-registry.test.ts | PR CI执行；真实临时文件/原生历史，覆盖主流程与关键异常 |
 | 实际运行集成 | tests/phase1-runtime.test.ts、tests/phase1-shared.test.ts | 本机全量执行；真实Studio/渲染与多个MCP进程，部分场景限定macOS |
-| 独立ZIP端到端 | tests/phase1-package.mjs | 每次PR创建/更新及main推送自动执行独立phase1-package-e2e任务；重新打包、独立解包/首次锁定依赖安装、真实stdio MCP、Chromium与FFmpeg；断言成功调用的Tool集合恰好是9项 |
+| 独立ZIP端到端 | tests/phase1-package.mjs | 每次PR创建/更新及main推送自动执行独立phase1-package-e2e任务；重新打包、独立解包/首次锁定依赖安装、真实stdio MCP、Chromium与FFmpeg；断言成功调用的Tool集合与公开清单一致 |
 
-各Tool的用例按用户场景复用，不要求每项单独一个文件。上表9个Tool均进入ZIP端到端链路；预览部分检查实际服务和URL，尚未覆盖完整GUI点击操作。宿主模型对话、Windows实机、播放器人工听看和所有参数组合不在当前完成范围。独立ZIP E2E已加入普通PR CI；完整GUI点击和macOS共享后台集成仍是单独验证范围。
+各Tool的用例按用户场景复用，不要求每项单独一个文件。原九个工程工具及两个模板工具均进入ZIP端到端链路；预览部分检查实际服务和URL，尚未覆盖完整GUI点击操作。宿主模型对话、Windows实机、播放器人工听看和所有参数组合不在当前完成范围。独立ZIP E2E已加入普通PR CI；完整GUI点击和macOS共享后台集成仍是单独验证范围。
 
 CI不按路径过滤、不跳过渲染、无失败重试或continue-on-error；缺浏览器、依赖安装失败、任一Tool失败或视频校验失败均使任务失败。每次在独立临时数据目录安装，使用Linux临时容器与自带Chromium，不接入宿主共享浏览器；本地复测继续使用团队browser-lock包装器。CI保留14天的HEAD、ZIP校验和、Tool调用结果、MCP/预览日志及通过时的MP4。基础构建失败时以该任务日志为准。
 

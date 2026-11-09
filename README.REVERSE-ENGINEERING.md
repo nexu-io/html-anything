@@ -1007,7 +1007,9 @@ Use **Connect Agent** for workspace-specific configuration. Manual local stdio c
 }
 ```
 
-The **nine public MCP tools** cover project creation and reading, editing, preview, media import, export, version restoration and cancellation. Shared workflow and engine guides are available through MCP resources. [Tool contract](docs/mcp-phase1-tools.md)
+The **eleven public MCP tools** cover template discovery and details, project creation and reading, editing, preview, media import, export, version restoration and cancellation. Shared workflow and engine guides are available through MCP resources. [Tool contract](docs/mcp-phase1-tools.md)
+
+Studio and agents share a cached template catalog: `motion_list_templates` returns a local JSONL index, `motion_get_template` retrieves details, and `motion_create_project` creates an editable copy. The template environment is saved with the package; local development uses DEV and release packages use production by default. [Template catalog](docs/template-catalog.md)
 
 Use `npm start` for the app and `npm run mcp` for stdio. Shell-capable agents can inspect and render with the pinned engine CLI returned by the runtime; managed edits retain project revision checks. [Native authoring](skills/motion-production/references/native.md)
 
@@ -1082,7 +1084,7 @@ Version-linked outcomes -> team memory / RAG -> evaluated Skill improvements
 
 </details>
 
-BYOA keeps the agent in your existing client; BYOK connects your supported model accounts. Studio and the local service manage the editable work, while provider credentials remain outside project files. The public phase-one MCP surface contains **nine project tools**. Model generation is available through Studio and the local Gateway service; the diagram does not add generation or publishing tools to that public MCP contract.
+BYOA keeps the agent in your existing client; BYOK connects your supported model accounts. Studio and the local service manage the editable work, while provider credentials remain outside project files. The public phase-one MCP surface contains **eleven tools: nine project tools and two template catalog tools**. Model generation is available through Studio and the local Gateway service; the diagram does not add generation or publishing tools to that public MCP contract.
 
 The diagrams follow the cover’s painterly visual language. [Artwork, source reference and prompts](docs/readme/diagrams/ARTWORK.md)
 

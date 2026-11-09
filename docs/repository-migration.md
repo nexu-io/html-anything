@@ -43,6 +43,6 @@ Upstream Studio/template attribution and font notices remain intact. Motion remo
 
 ## CI and acceptance
 
-`.github/workflows/ci.yml` installs locked dependencies, checks/builds Studio, runs focused packaging/workflow/recreation tests and Studio regression, and exercises the phase-one ZIP through all nine public Tools. npm is the default manual artifact format; complete Mac/Windows ZIP assembly remains available. Both formats reject publication. There are no artifact uploads, npm releases, storage publication or automatic merges.
+`.github/workflows/ci.yml` installs locked dependencies, checks/builds Studio, runs focused packaging/workflow/recreation tests and Studio regression, and exercises the phase-one ZIP through all eleven public Tools. npm is the default manual artifact format; complete Mac/Windows ZIP assembly remains available. Both formats reject publication. There are no artifact uploads, npm releases, storage publication or automatic merges.
 
 Build success does not prove target-machine installation, loaded host Skills/MCP, model creation or visual acceptance. Validate exact artifacts independently, using isolated profiles and the shared browser lock where applicable. Current platform limits and instructions are in [test packages](test-packages.md).

@@ -10,19 +10,21 @@ export type CatalogEntry = {
 };
 export type GalleryTemplate = {
   id: string; title: string; subtitle: string; description: string; collection: keyof typeof collectionNames;
-  kind: 'builtin' | 'reference' | 'registry'; tags: string[]; role?: string; duration?: number; ratio?: string;
+  kind: 'builtin' | 'prism' | 'reference' | 'registry'; tags: string[]; role?: string; duration?: number; ratio?: string;
   previewUrl?: string; posterUrl?: string; sourceUrl?: string; author: string; mediaFingerprint?: string;
   authorName?: string; social?: TemplateSocial;
   variants?: GalleryTemplate[];
 };
 export type SocialPlatform = 'X' | 'Instagram' | 'YouTube' | 'TikTok';
 export type TemplateSocial = { platform: SocialPlatform; views: number; sourceUrl: string; syncedAt: string; metadataUrl: string };
-export type TemplatePage = { items: GalleryTemplate[]; total: number; entryTotal: number; catalogTotal: number; galleryTotal?: number; offset: number; next: number | null };
+export type TemplatePage = { items: GalleryTemplate[]; total: number; entryTotal: number; catalogTotal: number; galleryTotal?: number; catalogVersion?: string; warning?: string; offset: number; next: number | null };
 export const featuredTemplateIds = [
   'hf-moment-M945', 'hf-moment-M953', 'hf-reference-aroll-careerwithriya',
   'hf-moment-M1023', 'hf-moment-M1000', 'hf-moment-M990',
 ];
 const roleNames: Record<string, string> = { 'a-roll': '口播', hook: '开场', setup: '铺垫', proof: '产品展示', turn: '转场', payoff: '高潮', cta: '结尾' };
+export function isEditableTemplate(template: GalleryTemplate): boolean { return template.kind === 'builtin' || template.kind === 'prism'; }
+
 export function templateCategoryLabel(template: GalleryTemplate) {
   if (template.role === 'a-roll' || template.tags.includes('口播')) return 'A-roll Cuts';
   return roleNames[template.role || ''] || (template.collection === 'reference' ? '动态图形' : collectionNames[template.collection]);
@@ -38,9 +40,9 @@ export function socialPlatform(value?: string): SocialPlatform | undefined {
     if (host === 'tiktok.com') return 'TikTok';
   } catch {}
 }
-export function formatTemplateViews(value: number) {
+export function formatTemplateViews(value: number, locale = 'en-US') {
   if (!Number.isSafeInteger(value) || value < 0) return '';
-  return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: value >= 10_000 && value < 1_000_000 ? 0 : 1 }).format(value);
+  return new Intl.NumberFormat(locale, { notation: 'compact', maximumFractionDigits: value >= 10_000 && value < 1_000_000 ? 0 : 1 }).format(value);
 }
 function displayRatio(value?: string) {
   if (!value) return undefined;
@@ -110,17 +112,17 @@ export function templatePage(items: GalleryTemplate[], options: { category?: str
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const matches = items.filter(item => {
     const spoken = item.tags.includes('口播') || item.role === 'a-roll';
-    const categoryMatch = category === 'builtin' ? item.kind === 'builtin'
+    const categoryMatch = category === 'builtin' ? isEditableTemplate(item)
       : category === 'clone' ? item.kind === 'reference'
       : category === 'script' ? spoken
       : category === 'motion' ? !spoken
-      : category === 'ads' ? item.kind === 'reference' || item.tags.some(tag => /ad|product|social|showcase|marketing/i.test(tag))
+      : category === 'ads' ? item.kind === 'reference' || item.tags.some(tag => /ad|product|social|showcase|marketing|品牌|宣传|发布/i.test(tag))
       : true;
     return categoryMatch && terms.every(term => `${item.id} ${item.title} ${item.description} ${item.subtitle} ${item.authorName || ''} ${item.tags.join(' ')} ${collectionNames[item.collection]} ${templateCategoryLabel(item)} ${socialPlatform(item.sourceUrl) || ''}`.toLowerCase().includes(term));
   });
   if (category === 'featured' || category === 'all') {
-    const rank = (id: string) => { const index = featuredTemplateIds.indexOf(id); return index < 0 ? featuredTemplateIds.length : index; };
-    matches.sort((a, b) => rank(a.id) - rank(b.id));
+    const rank = (item: GalleryTemplate) => { const index = item.kind === 'prism' ? -1 : featuredTemplateIds.indexOf(item.id); return index < 0 ? featuredTemplateIds.length : index; };
+    matches.sort((a, b) => rank(a) - rank(b));
   }
   const visible = grouped ? groupTemplates(matches) : matches;
   return { items: visible.slice(offset, offset + limit), total: visible.length, entryTotal: matches.length, catalogTotal: items.length,

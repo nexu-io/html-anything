@@ -9,7 +9,7 @@ import { fixture } from './fixtures.ts';
 import { workflowEntryGuide, phase1Skills } from '../shared/workflow.ts';
 
 const phase1 = JSON.parse(readFileSync(new URL('../shared/mcp-profiles.json', import.meta.url), 'utf8')).phase1;
-const target = ['motion_create_project', 'motion_open_preview', 'motion_import_assets', 'motion_get_project',
+const target = ['motion_list_templates', 'motion_get_template', 'motion_create_project', 'motion_open_preview', 'motion_import_assets', 'motion_get_project',
   'motion_edit_project', 'motion_export_request', 'motion_list_versions', 'motion_restore_version', 'motion_export_cancel'];
 
 test('phase-one target is explicit, unique, and distinct from the legacy implementation list', () => {
@@ -41,7 +41,7 @@ test('one registry governs discovery and rejects hidden calls before the existin
 }));
 
 test('a missing implementation cannot produce a partial public registry', () => {
-  assert.throws(() => createToolRegistry(publicTools.slice(1), 'phase1'), /MCP_PROFILE_INCOMPLETE.*motion_create_project/);
+  assert.throws(() => createToolRegistry(publicTools.filter(tool => tool.name !== 'motion_create_project'), 'phase1'), /MCP_PROFILE_INCOMPLETE.*motion_create_project/);
   assert.deepEqual(mcpRegistry('phase1').tools.map(tool => tool.name), target);
 });
 

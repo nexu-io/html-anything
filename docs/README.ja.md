@@ -1015,7 +1015,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 }
 ```
 
-**公開 MCP ツール 9 個**で、作成、読み取り、編集、プレビュー、素材の読み込み、出力、版の復元、キャンセルを扱います。共通の手順とエンジンガイドは MCP resources から取得できます。[ツール契約](mcp-phase1-tools.md)
+**公開 MCP ツール 11 個**で、テンプレート検索・詳細取得、作成、読み取り、編集、プレビュー、素材の読み込み、出力、版の復元、キャンセルを扱います。共通の手順とエンジンガイドは MCP resources から取得できます。[ツール契約](mcp-phase1-tools.md)
+
+Studio とエージェントはテンプレートカタログのキャッシュを共有します。`motion_list_templates` はローカル JSONL 索引を返し、`motion_get_template` は詳細を取得、`motion_create_project` は編集可能なコピーを作成します。環境はパッケージに保存され、ローカル開発は DEV、正式パッケージは本番環境が既定です。[テンプレートカタログ](template-catalog.md)
 
 アプリには `npm start` 、stdio には `npm run mcp` を使用します。シェル対応エージェントは実行環境が返す固定版エンジン CLI で検査・レンダリング可能。管理対象の編集には revision 検査を適用します。[ネイティブ制作](../skills/motion-production/references/native.md)
 
@@ -1030,7 +1032,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 ### モジュールの連携
 
-![エージェントは 9 つの MCP ツール、Studio はローカル HTTP で接続。アプリが版、素材、出力ジョブを管理し、Gateway が素材を供給。固定スナップショットをレンダリング・検証します。](readme/diagrams/runtime-architecture.svg)
+![エージェントは 9 つの MCP プロジェクトツール、Studio はローカル HTTP で接続。アプリが版、素材、出力ジョブを管理し、Gateway が素材を供給。固定スナップショットをレンダリング・検証します。](readme/diagrams/runtime-architecture.svg)
 
 <details>
 <summary>全体設計とロードマップをテキストで読む</summary>
@@ -1047,7 +1049,7 @@ DeepSeek Harness / Codex / Claude Code  React 19 + TypeScript + Vite
 他のホスト、Skills、ホストの分析ツール  Tailwind CSS + Zustand
                    |                   CodeMirror + Dockview
             stdio MCP                  素材 / プレビュー / タイムライン
-            公開ツール 9 個             ローカル HTTP
+            プロジェクトツール 9 個             ローカル HTTP
                    └────────┬──────────┘
                             ↓
 ローカルアプリ：Node.js + TypeScript + node:http
@@ -1078,7 +1080,7 @@ MP4 + 編集可能なソース + 素材 + 版と出力の検証記録
 
 </details>
 
-BYOA は既存クライアントを使い、BYOK は対応するモデルアカウントを接続します。Studio とローカルサービスが作品を管理し、認証情報はプロジェクト外へ。第 1 段階の公開 MCP は**プロジェクトツール 9 個**です。モデル生成は Studio とローカル Gateway から利用し、この図は生成・公開ツールを公開 MCP に追加するものではありません。
+BYOA は既存クライアントを使い、BYOK は対応するモデルアカウントを接続します。Studio とローカルサービスが作品を管理し、認証情報はプロジェクト外へ。第 1 段階の公開 MCP は**プロジェクト用 9 個とテンプレートカタログ用 2 個、合計 11 個のツール**です。モデル生成は Studio とローカル Gateway から利用し、この図は生成・公開ツールを公開 MCP に追加するものではありません。
 
 図は[依存ライブラリ不要の小さなスクリプト](readme/diagrams/generate.py)から生成した、編集可能な SVG です。
 

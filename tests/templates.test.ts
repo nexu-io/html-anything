@@ -30,13 +30,14 @@ test('official templates open in native Studio, preserve edits and switch the pr
       const response = await post(`/api/templates/${template.id}/open`, before.revision);
       assert.equal(response.status, 200, await response.clone().text());
       const openedProject = await response.json();
-      assert.notEqual(openedProject.projectId, 'project'); assert.equal(previousStudio.alive(), false);
+      assert.notEqual(openedProject.projectId, 'project'); assert.equal(previousStudio.alive(), true);
+      assert.equal(running.studio.url, previousStudio.url);
       const agent = await callTool('motion_get_project', {}, new WorkspaceStore(store.directory));
       assert.equal(agent.project!.directory, store.projectDirectory); assert.match(agent.project!.html!, new RegExp(template.title));
       assert.equal(agent.project!.files.some(file => file.path === 'assets/gsap.min.js'), true);
       const lint = await inspectProject(pluginRoot, store.projectDirectory, 'lint'); assert.equal(lint.exitCode, 0, JSON.stringify(lint.result));
       const nativeBase = new URL(openedProject.studioUrl).origin;
-      const identity = await (await fetch(nativeBase + '/__hyperframes_config')).json(); assert.equal(identity.projectDir, store.projectDirectory);
+      const identity = await (await fetch(nativeBase + '/__hyperframes_config?projectId=' + openedProject.projectId)).json(); assert.equal(identity.projectDir, store.projectDirectory);
       const fileUrl = `${nativeBase}/api/projects/${openedProject.projectId}/files/index.html`;
       const file = await (await fetch(fileUrl)).json();
       assert.equal(typeof file.content, 'string');

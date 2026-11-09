@@ -1,6 +1,8 @@
 // @vitest-environment happy-dom
 
 import { act } from "react";
+import { I18nProvider } from "../../i18n/I18n";
+import { Timeline } from "./Timeline";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   mountThreeTrackTimeline as mountThreeTracks,
@@ -28,6 +30,14 @@ describe("Timeline ghost lane", () => {
     expect(ghost()?.getAttribute("aria-hidden")).toBe("true");
     expect(ghost()?.style.top).toBe(`${getTimelineRowTop(3) + CLIP_Y}px`);
     expect(ghost()?.dataset.active).toBeUndefined();
+    act(() => root.unmount());
+  });
+
+  it("localizes the drop hint in the product language", async () => {
+    const onAssetDrop = vi.fn();
+    const { root, ghost } = await mountThreeTracks({ onAssetDrop });
+    act(() => root.render(<I18nProvider initialLocale="de"><Timeline onAssetDrop={onAssetDrop} /></I18nProvider>));
+    expect(ghost()?.textContent).toBe("Medien hier ablegen");
     act(() => root.unmount());
   });
 

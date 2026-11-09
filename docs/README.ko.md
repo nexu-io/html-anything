@@ -1015,7 +1015,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 }
 ```
 
-**공개 MCP 도구 9개**가 프로젝트 생성·읽기·편집·미리보기·소재 가져오기·내보내기·버전 복원·취소를 담당합니다. 공유 작업 흐름과 엔진 가이드는 MCP resources에서 제공합니다. [도구 계약](mcp-phase1-tools.md)
+**공개 MCP 도구 11개**가 템플릿 검색·상세 조회·프로젝트 생성·읽기·편집·미리보기·소재 가져오기·내보내기·버전 복원·취소를 담당합니다. 공유 작업 흐름과 엔진 가이드는 MCP resources에서 제공합니다. [도구 계약](mcp-phase1-tools.md)
+
+Studio와 에이전트는 템플릿 카탈로그 캐시를 공유합니다. `motion_list_templates`는 로컬 JSONL 색인을 반환하고, `motion_get_template`은 상세 정보를 가져오며, `motion_create_project`는 편집 가능한 복사본을 만듭니다. 환경은 패키지에 저장되며 로컬 개발은 DEV, 정식 패키지는 프로덕션이 기본입니다. [템플릿 카탈로그](template-catalog.md)
 
 앱은 `npm start` 로 실행하고 stdio는 `npm run mcp` 로 실행합니다. 셸 지원 에이전트는 런타임이 반환한 고정 버전 엔진 CLI로 검사·렌더링할 수 있으며 관리되는 수정에는 revision 검사를 유지합니다. [네이티브 제작](../skills/motion-production/references/native.md)
 
@@ -1030,7 +1032,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 ### 모듈의 협업 방식
 
-![에이전트는 MCP 도구 9개, Studio는 로컬 HTTP로 연결됩니다. 앱이 버전·소재·내보내기를 관리하고 Gateway가 소재를 제공하며 고정 스냅샷을 렌더링·검증합니다.](readme/diagrams/runtime-architecture.svg)
+![에이전트는 MCP 프로젝트 도구 9개, Studio는 로컬 HTTP로 연결됩니다. 앱이 버전·소재·내보내기를 관리하고 Gateway가 소재를 제공하며 고정 스냅샷을 렌더링·검증합니다.](readme/diagrams/runtime-architecture.svg)
 
 <details>
 <summary>전체 아키텍처와 로드맵 텍스트 보기</summary>
@@ -1047,7 +1049,7 @@ DeepSeek Harness / Codex / Claude Code  React 19 + TypeScript + Vite
 다른 로컬 호스트, Skills, 분석 도구    Tailwind CSS + Zustand
                     |                  CodeMirror + Dockview
               stdio MCP                소재 / 미리보기 / 타임라인
-              공개 도구 9개             로컬 HTTP
+              프로젝트 도구 9개             로컬 HTTP
                     └───────┬──────────┘
                             ↓
 로컬 앱: Node.js + TypeScript + node:http
@@ -1078,7 +1080,7 @@ MP4 + 편집 가능 소스 + 소재 + 버전 및 내보내기 근거
 
 </details>
 
-BYOA는 기존 클라이언트를 사용하고 BYOK는 지원 모델 계정을 연결합니다. Studio와 로컬 서비스가 작품을 관리하며 인증 정보는 프로젝트 밖에 둡니다. 1단계 공개 MCP는 **프로젝트 도구 9개**입니다. 모델 생성은 Studio와 로컬 Gateway에서 사용하며 이 도식이 공개 MCP에 생성·게시 도구를 추가한다는 뜻은 아닙니다.
+BYOA는 기존 클라이언트를 사용하고 BYOK는 지원 모델 계정을 연결합니다. Studio와 로컬 서비스가 작품을 관리하며 인증 정보는 프로젝트 밖에 둡니다. 1단계 공개 MCP는 **프로젝트 도구 9개와 템플릿 카탈로그 도구 2개, 총 11개**입니다. 모델 생성은 Studio와 로컬 Gateway에서 사용하며 이 도식이 공개 MCP에 생성·게시 도구를 추가한다는 뜻은 아닙니다.
 
 도식은 [의존성이 없는 작은 스크립트](readme/diagrams/generate.py)로 생성한 편집 가능한 SVG입니다.
 

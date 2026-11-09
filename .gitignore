@@ -11,8 +11,10 @@ node_modules/
 .env
 .env.*
 !.env.example
+!.env.development
 *.log
 .tools/
 .motion-data/
+.motion-data-dev/
 .artifacts/
 studio/build/

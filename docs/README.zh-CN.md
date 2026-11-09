@@ -1015,7 +1015,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 }
 ```
 
-**九个公开 MCP 工具**覆盖工程创建、读取、编辑、预览、媒体导入、导出、版本恢复与取消。共享工作流和引擎指引通过 MCP resources 提供。[工具契约](mcp-phase1-tools.md)
+**十一个公开 MCP 工具**覆盖模板发现与详情、工程创建、读取、编辑、预览、媒体导入、导出、版本恢复与取消。共享工作流和引擎指引通过 MCP resources 提供。[工具契约](mcp-phase1-tools.md)
+
+Studio 与 Agent 共用模板目录缓存：`motion_list_templates` 返回本地 JSONL 索引，`motion_get_template` 获取详情，`motion_create_project` 创建可编辑副本。目录环境随包保存；本地开发默认使用 DEV，正式包默认使用线上环境。[模板目录](template-catalog.md)
 
 使用 `npm start` 启动应用，使用 `npm run mcp` 启动 stdio。具备 shell 的 Agent 可使用运行时返回的固定版本引擎 CLI 检查和渲染；托管修改仍遵守工程 revision 校验。[原生创作](../skills/motion-production/references/native.md)
 
@@ -1078,7 +1080,7 @@ MP4 + 可编辑源码 + 素材 + 版本和导出证据
 
 </details>
 
-BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Studio 与本地服务管理工程，供应商凭据独立保存。一期公开 MCP 包含**九个工程工具**；模型生成经 Studio 和本地 Gateway 使用，架构图不意味着公开 MCP 新增了生成或发布工具。
+BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Studio 与本地服务管理工程，供应商凭据独立保存。一期公开 MCP 包含**十一个工具：九个工程工具与两个模板目录工具**；模型生成经 Studio 和本地 Gateway 使用，架构图不意味着公开 MCP 新增了生成或发布工具。
 
 以上为可编辑 SVG 图，由[无依赖的小型脚本](readme/diagrams/generate.py)生成。
 

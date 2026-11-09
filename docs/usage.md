@@ -35,7 +35,7 @@ Studio 与 MCP 共用这套模型和任务服务。云 Key 的填写不等于已
 
 ## 一期 MCP 发布范围
 
-[一期 9 Tool 契约与实现范围](mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露 9 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，五个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
+[一期 11 Tool 契约与实现范围](mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露 9 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，五个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
 
 ## 产品与文档
 
@@ -91,7 +91,8 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 - 创建独立可编辑工程，保留原有工程；同一次体验已经创建工程时直接续用，避免重复创建。
 - 在 Codex 右侧打开 openmotion 可编辑工程，检查正确载入并可播放；让用户可以在等待导出时继续查看工程。
 - 接受首次体验同时授权导出该示例的 MP4。读取当前 revision，导出并等待完成，检查实际文件与播放；复用本次已完成的导出，不重复排队。
-- 最终回复包含**简短说明与可直接播放/下载的 MP4**，同时保持右侧工程页面可用。工程 ZIP 和截图只作补充，不能代替 MP4。
+- On success, the final reply contains **one completion sentence, the playable MP4, then one contextual next-step invitation**, with the editable project kept open on the right. Use plain Markdown; screenshots and verification evidence stay in local records. Editor screenshots, ZIPs, duplicate project links, checklists and HTML wrappers are omitted unless requested.
+- The LLM writes the invitation naturally in the user's language: ask what video they want next and introduce existing templates, video-link recreation and creation from their requirements. Wording follows the conversation rather than a fixed script. Continue an already-known next request instead of asking again; otherwise wait for the user's choice. Invite only after the first successful experience delivery, not on follow-up edits, repeated exports or export failure. The [first-run defaults](../skills/motion-production/references/templates.md#first-run-experience-defaults) define delivery exceptions.
 
 右侧页面打开依赖宿主的浏览器/面板能力。没有该能力时仍交付 MP4 和实际工程链接，明确说明页面未自动打开，不能声称完整的桌面体验已通过。导出失败时保留工程并说明具体原因，不把预览或任务排队当作最终成片。
 
@@ -101,7 +102,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 新工程先 `motion_create_project`；已有工程先 `motion_get_project` 明确 projectId、revision、currentVersionId，再保存或打开。`motion_open_preview({projectId})` 运行 lint 并返回真实预览 URL，由宿主内置浏览器打开。它不隐式创建新工程；无浏览器时可以手动打开返回地址。
 
-macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个会话保留自己的工程选择；所有会话退出后导出仍继续。新安装默认使用 `~/Library/Application Support/OpenDesign`，已有 `.motion-data` 或显式 `MOTION_DATA_DIR` 沿用；不同目录仍是不同后台。原生 Studio 和导出继续各只有一个活动实例，Windows / Linux 保留原启动方式。停止、旧服务升级和故障恢复见 [共享编辑器](shared-editor.md)。
+macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个会话保留自己的工程选择；所有会话退出后导出仍继续。新安装默认使用 `~/Library/Application Support/OpenDesign`，已有 `.motion-data` 或显式 `MOTION_DATA_DIR` 沿用；不同目录仍是不同后台。原生 Studio 使用一个服务进程支持多个工程页面；每个页面按 URL 工程读取状态和编辑，不跟随其他会话。后台导出仍只运行一个任务，Windows / Linux 保留原后台启动方式。停止、旧服务升级和故障恢复见 [共享编辑器](shared-editor.md)。
 
 仅导出时只启动后台服务，不启动 Studio 改写当前源文件；冷启动套模板也不会先创建无关 starter。随后调用 `motion_open_preview` 可在同一服务中启动编辑器。真实外部编辑仍受 revision 校验保护。
 
@@ -221,7 +222,7 @@ npm test
 npm run package:plugin
 ```
 
-`npm run dev` 先构建编辑器再启动服务；只改前端后可运行 `npm run build:studio` 并刷新页面。`npm run test:studio` 运行上游单元/DOM 回归与宿主集成测试；`npm run typecheck:studio` 检查前端类型；`npm run design:check` 检查主题变量与对比度。`check` 校验清单、版本、锁定依赖、技能入口、服务 TypeScript 语法及设计规范。测试覆盖原生源文件共享、并发 revision、路径隔离、旧工程迁移、Studio 编辑数据快照、真实 stdio MCP、原生 Studio HTTP 接口、完整目录与同源版本、封面筛选、短指令与参数化指南、三个官方模板的打开/编辑/切换/保留和带音轨的真实 MP4 渲染。没有 FFmpeg 或 Chrome 的机器会跳过渲染集成测试；PR CI 的 phase1-package-e2e 独立任务安装 Chromium、FFmpeg/ffprobe，重新构建并隔离安装真实ZIP，自动跑全部9个Tool；依赖缺失或测试失败直接标红，日志与MP4证据保留14天。合并阻断须同时启用main的必需状态检查，配置与边界见[测试覆盖](mcp-phase1-tools.md#测试代码与ci范围)。
+`npm run dev` 先构建编辑器再启动服务；只改前端后可运行 `npm run build:studio` 并刷新页面。`npm run test:studio` 运行上游单元/DOM 回归与宿主集成测试；`npm run typecheck:studio` 检查前端类型；`npm run design:check` 检查主题变量与对比度。`check` 校验清单、版本、锁定依赖、技能入口、服务 TypeScript 语法及设计规范。测试覆盖原生源文件共享、并发 revision、路径隔离、旧工程迁移、Studio 编辑数据快照、真实 stdio MCP、原生 Studio HTTP 接口、完整目录与同源版本、封面筛选、短指令与参数化指南、三个官方模板的打开/编辑/切换/保留和带音轨的真实 MP4 渲染。没有 FFmpeg 或 Chrome 的机器会跳过渲染集成测试；PR CI 的 phase1-package-e2e 独立任务安装 Chromium、FFmpeg/ffprobe，重新构建并隔离安装真实ZIP，自动跑全部11个Tool；依赖缺失或测试失败直接标红，日志与MP4证据保留14天。合并阻断须同时启用main的必需状态检查，配置与边界见[测试覆盖](mcp-phase1-tools.md#测试代码与ci范围)。
 
 打包产物为 `dist/motion-0.1.0-phase1.zip`，包含编辑器构建产物、设计系统与字体许可、原生模板、完整目录与已校验封面、技能、lockfile、AGENTS.md、CLAUDE.md 和产品文档，排除个人媒体、草稿、node_modules 和原生程序。`bash scripts/install-motion.command` 可注册并安装本地插件，并按 Codex 实际解析的启动配置验证 MCP 握手；它不会重启 Codex。代码改动和打包不会自动替换用户已安装的插件版本。
 
@@ -233,7 +234,7 @@ Hyperframes 使用 Apache-2.0 许可证，依赖从 npm 官方包安装；其源
 
 ## Template production and reuse
 
-The phase-one plugin and all four local host adapters ship the five canonical motion-* Skills, including motion-template-to-video and motion-video-to-template. Existing workflow IDs remain stable; MCP Resources expose the same guidance and supporting references. The nine public Tools do not provide video comparison, reference downloading/analysis or ZIP packaging: these require available host capabilities. Legacy comparison handlers stay internal. Native HyperFrames source, local assets, previews and editing notes remain portable; human review decides visual acceptance.
+The phase-one plugin and all four local host adapters ship the five canonical motion-* Skills, including motion-template-to-video and motion-video-to-template. Existing workflow IDs remain stable; MCP Resources expose the same guidance and supporting references. The eleven public Tools do not provide video comparison, reference downloading/analysis or ZIP packaging: these require available host capabilities. Legacy comparison handlers stay internal. Native HyperFrames source, local assets, previews and editing notes remain portable; human review decides visual acceptance.
 
 The plugin name, install script, data directory and Studio ports are the team base, unchanged by this extension. See [scope](motion-extension-scope.md).
 

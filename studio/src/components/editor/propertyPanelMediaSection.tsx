@@ -229,7 +229,7 @@ export function MediaSection({
               <div className="space-y-1">
                 <div className="flex min-w-0 items-center justify-between gap-2 text-[10px] text-panel-text-4">
                   <span className="min-w-0 flex-1 truncate">
-                    {removeProgress.error ?? removeProgress.stage ?? "Processing"}
+                    {t(removeProgress.error ?? removeProgress.stage ?? "Processing")}
                   </span>
                   <span>{Math.round(removeProgress.progress)}%</span>
                 </div>

@@ -101,7 +101,7 @@ export function PromotableControl({
           }}
           className="absolute -top-2 right-1.5 z-10 inline-flex items-center gap-1 rounded-sm bg-raised/80 px-1 py-px font-mono text-[8px] font-medium text-neutral-400 opacity-70 transition-colors hover:bg-studio-accent/20 hover:text-accent-ink hover:opacity-100"
         >
-          ◇ var
+          ◇ {t('Variable')}
         </button>
       )}
     </div>

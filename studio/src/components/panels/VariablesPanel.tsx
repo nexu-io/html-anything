@@ -234,14 +234,12 @@ function HandoffFooter({
   );
 }
 
-const EMPTY_STATE = (
-  <p className="text-[10px] leading-relaxed text-neutral-500">
-    No variables declared. Variables make parts of this composition dynamic. Declare them here (or
-    in <code className="font-mono">data-composition-variables</code>), read them with{" "}
-    <code className="font-mono">getVariables()</code>, and pass values at render time with{" "}
-    <code className="font-mono">--variables</code>.
-  </p>
-);
+function EmptyState() {
+  const { t } = useI18n();
+  return <p className="text-[10px] leading-relaxed text-neutral-500">
+    {t('No variables declared. Variables make parts of this composition dynamic. Declare them here or in {declaration}, read them with {reader}, and pass values at render time with {flag}.', { declaration: 'data-composition-variables', reader: 'getVariables()', flag: '--variables' })}
+  </p>;
+}
 
 // Panel orchestrator — JSX conditionals per section, same shape as StudioRightPanels.
 // fallow-ignore-next-line complexity
@@ -483,7 +481,7 @@ export const VariablesPanel = memo(function VariablesPanel({
           />
         )}
         <ValidationStrip issues={issues} />
-        {declarations.length === 0 && !addOpen && EMPTY_STATE}
+        {declarations.length === 0 && !addOpen && <EmptyState />}
         {/* fallow-ignore-next-line complexity */}
         {declarations.map((decl) => (
           <VariableRow

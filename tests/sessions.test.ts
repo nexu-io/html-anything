@@ -6,6 +6,7 @@ import { fixture } from './fixtures.ts';
 import { startServer } from '../server.ts';
 import { WorkspaceStore } from '../workspace.ts';
 import { callTool } from '../mcp.ts';
+import { catalogUrl, contents, mockPrism } from './prism-fixture.ts';
 
 test('legacy projects and conversation files become sessions without changing project sources', () => fixture(async store => {
   const before = (await store.get()).revision;
@@ -33,7 +34,9 @@ test('legacy projects and conversation files become sessions without changing pr
   await assert.rejects(callTool('design_open_artifact', { sessionId: 'project', artifactId: 'foreign', expectedRevision: before }, store), /不属于/);
 }));
 
-test('Motion sessions own multiple independent artifacts and restore the last selected artifact', { timeout: 180_000 }, () => fixture(async store => {
+test('Motion sessions own multiple independent artifacts and restore the last selected artifact', { timeout: 180_000 }, t => fixture(async store => {
+  const originalFetch = globalThis.fetch, prism = mockPrism();
+  t.mock.method(globalThis, 'fetch', (input, init) => String(input) === catalogUrl || String(input).startsWith('https://r.open-design.ai/files/') ? prism.request(input, init) : originalFetch(input, init));
   const running = await startServer(store, 0);
   const origin = `http://127.0.0.1:${(running.server.address() as { port: number }).port}`;
   await writeFile(path.join(store.directory, 'preview.json'), JSON.stringify({ port: (running.server.address() as { port: number }).port }));
@@ -86,7 +89,7 @@ test('Motion sessions own multiple independent artifacts and restore the last se
     assert.equal((await restarted.session(session.id)).title, '广告会话');
     assert.equal((await restarted.session(session.id)).artifacts.length, 2);
     const stale = await fetch(`${origin}/api/projects/${first.projectId}/files/index.html`);
-    assert.equal(stale.status, 409);
+    assert.equal(stale.status, 200);
     const viewer = await callTool('design_open_artifact', { sessionId: session.id, artifactId: withArtifacts.artifacts[0].id, expectedRevision: (await store.get()).revision }, store) as any;
     assert.equal(viewer.projectId, first.projectId);
     assert.equal(new URL(viewer.previewUrl).searchParams.get('embed'), '1');
@@ -123,11 +126,12 @@ test('Motion sessions own multiple independent artifacts and restore the last se
     assert.equal(retried.sessionId, generatedByMcp.session.id);
     assert.equal(retried.projectId, generatedByMcp.projectId);
     assert.equal(store.projectCatalog().projects.length, count, 'retrying creation cannot duplicate artifacts');
-    const reference = await callTool('design_create_session', { mode: 'motion', templateId: 'hf-moment-M953' }, store) as any;
-    assert.equal(reference.session.artifacts[0].templateId, 'hf-moment-M953');
-    assert.equal(reference.session.templateId, 'hf-moment-M953');
-    assert.equal(new URL(reference.previewUrl).searchParams.get('embed'), '1');
-    assert.doesNotMatch((await store.get()).project!.html!, /class="clip"/, 'external reference starts as an editable blank, not an unrelated sample');
+    const published = await callTool('design_create_session', { mode: 'motion', templateId: 'test-motion-1' }, store) as any;
+    assert.equal(published.session.artifacts[0].templateId, 'test-motion-1');
+    assert.equal(published.session.templateId, 'test-motion-1');
+    assert.equal(new URL(published.previewUrl).searchParams.get('embed'), '1');
+    assert.match((await store.get()).project!.html!, /Prism template/, 'published templates retain their source instead of starting as a blank project');
+    assert.equal(await readFile(path.join(store.projectDirectory, 'animation.js'), 'utf8'), contents['animation.js']);
     const templated = await callTool('motion_apply_template', { expectedRevision: (await store.get()).revision, templateId: 'decision-tree' }, store) as any;
     assert.equal(new URL(templated.previewUrl).searchParams.get('embed'), '1');
     assert.equal(new URL(templated.sessionUrl).searchParams.has('embed'), false);
