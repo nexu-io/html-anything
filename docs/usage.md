@@ -51,7 +51,6 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 | [会话与 Viewer 技术架构](session-architecture.md) | 共用生命周期、模式/模板/skill、HTTP/MCP、Codex 嵌入、扩展点与设计取舍 |
 | [素材生成设计与架构决策](product/media-generation-design.md) | 为什么共享网关、先生成再采用；选区交互、关键取舍、故障与扩展约束 |
 | [模型网关](model-gateway.md) | 当前配置与 API/MCP 合约、运行限制、真实验证及未验证范围 |
-| [需求与决策记录](product/changes.md) | 每次需求的选择理由、产品影响、验证证据和后续事项 |
 
 文档区分当前能力、已确认方向、待验证假设和候选方案。公开文档维护当前行为和可复现验证。
 
@@ -210,9 +209,9 @@ node --experimental-strip-types scripts/verify-export.ts /absolute/path/final.mp
 
 ## 开发与验证
 
-**每次需求交付都必须同时更新产品文档。** 所有贡献者提交功能、优化、修复、重构或文档需求时，在同一提交或 PR 中更新受影响专题，并新增或补充 [需求记录](product/changes.md)。说明服务人群、前后行为、决策理由、架构影响、画像/商业化影响和验证证据；无直接画像或商业化影响时记录原因。用户可见入口、行为或限制变化时同步更新项目首页与本手册。
+每次变更都应整体审视 [产品架构](product/architecture.md)，判断产品定位、核心流程、模块职责、依赖、数据与接口边界、当前能力和限制是否仍准确一致。仅在需要时更新架构及相关说明；无需为每次交付自动修改文档或新增需求记录。
 
-执行步骤见 [文档维护流程](README.md)；复杂需求可使用 [需求模板](templates/requirement.md)。产品知识应进入仓库正式文档，不能只留在聊天或 PR 描述中。
+审视原则见 [文档维护说明](README.md)；需要独立说明的复杂需求可使用 [需求模板](templates/requirement.md)。验证结果记录在对应 PR 或交付说明中。
 
 ```sh
 npm run check
