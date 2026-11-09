@@ -183,7 +183,7 @@ Explicit test/stable prod builds produce publishable artifact metadata with test
 
 ## 演进约束
 
-本地测试包按 mac-arm64 / win-x64 准备固定公开原生依赖。The application npm format is the default; complete platform ZIPs are backups. Native installation, Agent creation and human playback need separate evidence. Projects remain outside the package; CI only builds and validates, without upload or publication. See [package checks](../test-packages.md).
+本地测试包按 mac-arm64 / win-x64 准备固定公开原生依赖。The application npm format is the default; complete platform ZIPs are backups. Native installation, Agent creation and human playback need separate evidence. Projects remain outside the package; ordinary CI builds and validates, and retains candidate installation-guide previews. A separate manual guide mode can verify a published npm version and, only through a configured protected environment, upload versioned/fixed instructions to R2. It does not publish npm or Release assets. The guide path, environment prerequisites and current default-branch dispatch limitation are documented in the release guide. See [package checks](../test-packages.md).
 
 已确认方向是继续支持多 Agent 接入、可编辑工程与一个工作区内的发现/制作闭环。
 

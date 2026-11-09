@@ -19,6 +19,7 @@
 - [motion-director.md](motion-director.md)
 - [motion-extension-scope.md](motion-extension-scope.md)
 - [npm-installation.md](npm-installation.md)
+- [Agent installation guide source template](install.md)
 - [test and stable acceptance](release-guide.md)
 - [product/architecture.md](product/architecture.md)
 - [product/media-generation-design.md](product/media-generation-design.md)

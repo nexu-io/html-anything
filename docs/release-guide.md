@@ -1,6 +1,6 @@
 # Test and stable package acceptance
 
-This is the maintainer and tester manual for the application npm format. It defines required checks, not a claim that all platforms or a published registry version have passed. [Installation](npm-installation.md) supplies macOS/PowerShell commands, DEV template setup, host adapters and recovery boundaries. Ordinary CI still does not upload or publish packages.
+This is the maintainer and tester manual for the application npm format. It defines required checks, not a claim that all platforms or a published registry version have passed. [Installation](npm-installation.md) supplies macOS/PowerShell commands, DEV template setup, host adapters and recovery boundaries. Ordinary CI retains candidate installation instructions for review; npm, R2 and Release publication remain separate controlled actions.
 
 ## One record per candidate
 
@@ -47,3 +47,32 @@ Confirm npm ownership/authentication and target versions first. A public Release
 Stop recommending a failed candidate. Under channel-management authorization, point test/latest back to an already verified compatible version; do not overwrite/unpublish it as a recovery mechanism. Users still need an explicit compatible reinstall/reconnect or backup restoration. If there is no prior stable release, state that instead of inventing a rollback target.
 
 Each defect needs exact package/source/OS/host/environment/catalog identity, project/revision, steps, expected/actual behavior, redacted logs and artifact links. Keep installation, host discovery, technical export, real creation and human acceptance as separate statuses.
+
+## Hosted installation instructions
+
+[docs/install.md](install.md) is the public Agent-facing source template. The generator reads the actual complete npm tgz and its embedded manifest, pins the npm name/version and built source SHA, and records the guide and package hashes. It does not build or publish the application.
+
+Ordinary npm/prod CI builds generate a **candidate-only** guide and retain it as an Actions artifact for 14 days. The publisher rejects candidate previews. DEV/private packages cannot produce a public guide.
+
+The existing `Motion standalone checks` workflow has a separate manual guide mode:
+
+1. Set `install_guide_package` and an exact `install_guide_version` already published to npm. Leave `upload_install_guide=false` to fetch the registry package with lifecycle scripts disabled, render its guide and retain the result without R2 credentials.
+2. Before promoting an entry, complete registry/package acceptance and select that version through npm `test` or `latest`. A guide publication does not publish npm or move its tags.
+3. An explicitly authorized run with `upload_install_guide=true` enters the protected `motion-install-docs` environment. It checks the approved package name and current npm channel, creates immutable version instructions, verifies the public bytes, saves the prior fixed instructions and conditionally updates the fixed entry. The canonical public URLs must return matching bytes; a cache-busting URL does not prove the fixed entry is current.
+4. Test software uses `open-motion/dev/install.md`; stable uses `open-motion/install.md`. Each also has `versions/<exact-version>/install.md` under the same prefix. The `dev` path is the existing proposed software test-channel path, not a switch to DEV template data.
+
+After publication, the website can give the Agent a short prompt: "Read `<approved-public-origin>/open-motion/install.md`, install OpenMotion MCP and Skills for my current supported Agent host, preserve existing projects/settings, and report installation and preparation results." Use `/open-motion/dev/install.md` for the test software channel. These are path examples until the public origin and publication are verified.
+
+An administrator must configure `motion-install-docs` with required reviewers and deployment-branch restrictions for the reviewed publishing branch. Place credentials on this environment, not in the low-privilege PR job. No R2 resource, credential or environment is created by this PR.
+
+| Environment setting | Purpose |
+| --- | --- |
+| Secret `MOTION_R2_ACCESS_KEY_ID` / `MOTION_R2_SECRET_ACCESS_KEY` | Bucket-scoped S3 credentials |
+| Secret `MOTION_R2_ENDPOINT` | R2 S3 HTTPS origin |
+| Variable `MOTION_R2_BUCKET` | Approved destination bucket |
+| Variable `MOTION_INSTALL_PUBLIC_ORIGIN` | Public HTTPS origin for that bucket; routing must already work |
+| Variable `MOTION_NPM_PACKAGE` | Approved public npm package name |
+
+The publisher uses the runner's AWS CLI with conditional writes and short fixed-entry caching. Publication records and prior public instructions are retained for 30 days. If readback fails, the run fails; inspect `publication.json` and the previous bytes before a separately authorized recovery. A network failure during `fixed-write-attempted` may mean the write completed: check storage rather than assuming nothing changed. Restore only the intended guide/channel; this does not downgrade installed clients or migrate projects.
+
+The repository default branch currently contains the legacy project and lacks the Motion manual-dispatch trigger. Do not assume a Run workflow button is available from this feature PR. Registering a trusted dispatch entry/default-branch workflow remains a separate administrator task; this PR does not change main.

@@ -17,7 +17,7 @@ MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册
 | `npm`（默认） | Application npm `.tgz` with embedded app/manifest, plus external archive, release record and SHA256 | 目标机按应用 lockfile 安装 npm 依赖；首次需要时下载固定原生工具 |
 | `full`（备用） | Mac arm64 / Windows x64 完整 ZIP、SHA256、`release-<target>.json` | 内置目标平台 Node、生产依赖和原生工具 |
 
-当前 本仓库工作流只构建和校验，不上传 Actions 制品，不发布 npm、Release 或存储对象；两种格式误勾 `publish` 均会失败。本地构建的制品位于 `dist/`，The tgz alone is sufficient for setup; adjacent application/manifest files are evidence and an explicit-manifest fallback. See [installation](npm-installation.md) and [test/stable acceptance](release-guide.md).
+Ordinary builds retain candidate installation-guide artifacts for review; they do not publish npm, Release or R2 objects. Separate manual guide publication follows the release guide; 两种格式误勾 `publish` 均会失败。本地构建的制品位于 `dist/`，The tgz alone is sufficient for setup; adjacent application/manifest files are evidence and an explicit-manifest fallback. See [installation](npm-installation.md) and [test/stable acceptance](release-guide.md).
 
 Explicit builds accept stable `MAJOR.MINOR.PATCH` or `MAJOR.MINOR.PATCH-test.N[.N]`. The CI helper selects next-patch `test.<run>.<attempt>` (for example, 0.6.3 → 0.6.4-test.42.1). All embedded identities agree; output directories cannot be overwritten and source versions do not change. DEV and unversioned local builds remain private; explicit prod test/stable metadata selects test/stage. Publication remains disabled.
 

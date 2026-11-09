@@ -101,3 +101,7 @@ The runtime lock pins HTTPS URLs, versions, target OS/CPU and SHA256 for FFmpeg,
 A local `--manifest /absolute/release-npm.json` remains available for legacy delivery and controlled fixtures. HTTP, URL credentials, unsafe extraction paths and invalid hashes are rejected. Do not remove a leftover install lock until its owning process is confirmed stopped.
 
 For defects, include exact package/app version, source SHA, OS/CPU, Node/Agent version, template environment/catalog version, project/revision, reproduction steps and redacted logs. Installation, native preparation, host discovery, model creation, technical MP4 checks and human playback are separate evidence. Follow the [acceptance manual](release-guide.md); unrun Windows/host/creation checks remain unrun.
+
+## Shared Agent installation entry
+
+The hosted [installation guide template](install.md) provides the short Agent entry. Ordinary CI retains a candidate preview; the controlled guide mode fetches an already published exact npm version before any R2 upload. Public URLs, environment credentials, channel acceptance and deployment restrictions must be configured separately. See [hosted instruction publication](release-guide.md#hosted-installation-instructions).
