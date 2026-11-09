@@ -6,10 +6,7 @@
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
-<picture>
-  <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg">
-  <img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion · 可编辑 HTML 视频 · 开源免费 · 21 个 OpenDesign Agent · BYOK · 100+ 份 Motion.md。专用适配器：Codex、Claude Code、DeepSeek Harness、WorkBuddy。">
-</picture>
+<p align="center"><a href="#agent-wall"><picture><source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg"><img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion · 可编辑 HTML 视频 · 开源免费 · 21 个本地 Agent · BYOK · 100+ 份 Motion.md。新增 WorkBuddy，查看全部 22 个本地 Agent。"></picture></a></p>
 
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything"><img src="readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>
@@ -31,7 +28,7 @@
 
 OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
 
-- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 开源免费，每一层都能用自己的 API Key。已有 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy [专用适配器](#agent-setup)，其他支持本地 stdio MCP 的客户端可[手动连接](#manual-mcp)。
+- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 开源免费。直接在[常用的本地 Agent](#agent-wall) 里复刻视频，每一层都能用自己的 API Key。
 - 🧩 OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。品牌宣传片的拆解可以随工程一起分享。
 - 🎛️ **图片、视频、音乐和语音。** 用 Nano Banana 2 生成图片、Seedance 2.0 补镜头、Suno v4 配乐、Kokoro 加旁白，再放进同一条时间轴。[查看 7 个内置模型](#model-wall)
 
@@ -39,12 +36,9 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 <a id="agent-wall"></a>
 
-**OpenDesign 生态中的 21 个 Agent** · [全部客户端与接入方式](#bring-your-agent-and-keys)
+**22 个本地 Agent** · [新增 WorkBuddy](#workbuddy-setup) · [选择你的 Agent](#choose-agent)
 
-<picture>
-  <source media="(max-width: 600px)" srcset="readme/agents/opendesign-gallery.mobile.png">
-  <img src="readme/agents/opendesign-gallery.png" width="100%" alt="Claude Code, Codex CLI, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI">
-</picture>
+<p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="readme/agents/local-agents.mobile.png"><img src="readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 
 <a id="showcase"></a> <a id="用-openmotion-可以做什么"></a>
 <a id="使用场景与复刻效果示例"></a>
@@ -373,9 +367,34 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 ### 2. 完全开源免费，在本地 Agent 直接用，每一层都支持 BYOK
 
-**其他 Agent 怎么接入？** 如果你的客户端支持本地 stdio MCP，在客户端添加 Studio 提供的命令，然后让 Agent 列出可用模板。能看到模板后，就可以选一个创建工程。[手动配置](#manual-mcp)
+<a id="choose-agent"></a>
 
-图中是 OpenDesign 的 21 款 Agent。OpenDesign 的 CLI 名单还列有 DeepSeek Harness、Vela、Amp、CodeBuddy、MiMo 和 AtomCode；客户端兼容表另外列有 Claude Desktop、OpenClaw、Cline、Raven 和 VS Code 中的 GitHub Copilot。OpenMotion 的专用安装入口与验证状态见[适配器指南](agent-adapters.md)。 [OpenDesign 完整名单](https://github.com/nexu-io/open-design/blob/07a86b1041531bfa0bec1006d9c0993985fee560/README.md#platform-compatibility)
+**选择你的 Agent。** WorkBuddy、Codex、Claude Code 和 DeepSeek Harness 可直接查看安装步骤。其他按钮打开通用的 MCP 和 CLI 接入说明。
+
+<p>
+  <a href="#workbuddy-setup"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy" /></a>
+  <a href="#agent-setup"><img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex CLI" /></a>
+  <a href="#claude-setup"><img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/opencode-badge.svg" width="144" height="34" alt="OpenCode" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/hermes-badge.svg" width="144" height="34" alt="Hermes" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/antigravity-badge.svg" width="144" height="34" alt="Antigravity" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/gemini-badge.svg" width="144" height="34" alt="Gemini CLI" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/grok-build-badge.svg" width="144" height="34" alt="Grok Build" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/kimi-badge.svg" width="144" height="34" alt="Kimi CLI" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/cursor-badge.svg" width="144" height="34" alt="Cursor Agent" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/qwen-badge.svg" width="144" height="34" alt="Qwen Code" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/qoder-badge.svg" width="144" height="34" alt="Qoder CLI" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/copilot-badge.svg" width="144" height="34" alt="GitHub Copilot" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/pi-badge.svg" width="144" height="34" alt="Pi" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/kiro-badge.svg" width="144" height="34" alt="Kiro CLI" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/kilo-badge.svg" width="144" height="34" alt="Kilo" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/vibe-badge.svg" width="144" height="34" alt="Mistral Vibe" /></a>
+  <a href="#deepseek-setup"><img src="readme/agents/deepseek-badge.svg" width="144" height="34" alt="DeepSeek TUI / Harness" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/reasonix-badge.svg" width="144" height="34" alt="Reasonix" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/aider-badge.svg" width="144" height="34" alt="Aider" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/devin-badge.svg" width="144" height="34" alt="Devin" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/trae-badge.svg" width="144" height="34" alt="Trae CLI" /></a>
+</p>
 
 | 自带什么 | 如何用于视频 |
 | --- | --- |
@@ -550,7 +569,19 @@ npm start
 bash scripts/install-motion.command
 ```
 
-DeepSeek Harness、Claude Code 等客户端参见 [Agent 适配器指南](agent-adapters.md) 或[本地 MCP + Skills 安装器](npm-installation.md)。npm 包尚未公开发布，指南使用本地构建产物。[Windows 测试包](test-packages.md)
+<a id="workbuddy-setup"></a>
+
+**WorkBuddy** · 在 WorkBuddy 中导入 OpenMotion Connector，或将它提供的 `mcp.json` 添加为自定义 MCP，然后让 WorkBuddy 列出可用的视频模板。[WorkBuddy 接入说明](agent-adapters.md#workbuddy)
+
+<a id="claude-setup"></a>
+
+**Claude Code** · 在本机安装器中选择 `--host claude`，然后在 Claude Code 中运行 `/mcp` 检查 OpenMotion 是否已连接。[本地安装器](npm-installation.md)
+
+<a id="deepseek-setup"></a>
+
+**DeepSeek** · 在 DeepSeek TUI 中可从终端操作可编辑的 HTML 工程。使用 DeepSeek Harness 时，可通过 Cordis 配置连接 OpenMotion 的 MCP 工具。[DeepSeek Harness 配置](agent-adapters.md#deepseek-harness)
+
+本地安装器使用本地构建的包。[Windows 测试包](test-packages.md)
 
 先尝试内置模板：
 
@@ -585,9 +616,11 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | [motion-video-to-template](../skills/motion-video-to-template/SKILL.md) | 制作便携的可复用模板 |
 | [motion-production](../skills/motion-production/SKILL.md) | 范围明确的修改、预览、检查、排错和导出 |
 
-<a id="manual-mcp"></a>
+<a id="local-agent-connection"></a>
 
-通过 **Connect Agent** 获取工作区专属配置。手动配置本地 stdio 客户端时使用绝对路径：
+**连接其他本地 Agent** · 在 Studio 中打开 **Connect Agent**，复制当前工作区的启动命令。支持 stdio MCP 的客户端可以使用下方配置。对于通过终端工作的 Agent，打开工程目录，用[本机引擎 CLI](../skills/motion-production/references/native.md) 预览和渲染 HTML 场景。
+
+<a id="manual-mcp"></a>
 
 ```json
 {

@@ -21,6 +21,10 @@ Codex、Claude Code、DeepSeek Harness（DSH）与 WorkBuddy 从同一份已安�
 
 三种展示入口和单模板交接的实际截图见[产品演示](product-tour.md)。Codex 图展示供宿主使用的嵌入 Viewer；Claude Code 图展示本地 Skill 列表与单独执行的 CLI 检查，分别标明宿主外框与模型执行的验证范围。
 
+## 其他本地客户端
+
+在 Vela、Amp、CodeBuddy、MiMo、AtomCode、Claude Desktop、OpenClaw、Cline、Raven 或 VS Code 中的 GitHub Copilot 里使用 OpenMotion 时，先查看当前客户端支持的连接方式。如果能添加本地 stdio MCP 服务，复制 Studio 的 **Connect Agent** 配置，再让 Agent 列出可用模板。如果客户端能运行本机命令，也可以在工程目录内使用引擎 CLI。[工作区配置与 CLI 入口](README.zh-CN.md#local-agent-connection)
+
 ## 仅安装 Skills：npx skills
 
 需要在已有运行时之外发现或安装制作指引时，可用 [Skills CLI](https://github.com/vercel-labs/skills)，在源码 checkout 执行：

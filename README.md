@@ -6,10 +6,7 @@
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
-<picture>
-  <source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg">
-  <img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion · Editable HTML video · Open source · 21 OpenDesign agents · BYOK · 100+ Motion.md. Dedicated adapters for Codex, Claude Code, DeepSeek Harness and WorkBuddy.">
-</picture>
+<p align="center"><a href="#agent-wall"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg"><img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion · Editable HTML video · Open source · 21 local agents · BYOK · 100+ Motion.md. WorkBuddy is the newest addition. Explore all 22 agents."></picture></a></p>
 
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
@@ -31,7 +28,7 @@
 
 OpenMotion is **the first full-stack agentic video generator**. Upload a reference video or paste a social video link. OpenMotion breaks down the shots, timing and transitions, then **recreates the sequence with your own footage, logo and copy**.
 
-- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Bring your own keys at every layer. Use a [dedicated adapter](#agent-setup) for Codex, Claude Code, DeepSeek Harness or WorkBuddy, or [connect a local stdio MCP client](#manual-mcp).
+- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Recreate videos in [your local agent](#agent-wall) and use your own API keys at every layer.
 - 🧩 OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Use it to share how a brand film works, shot by shot.
 - 🎛️ **Images, video, music and voice.** Generate artwork with Nano Banana 2, add a shot with Seedance 2.0, score it with Suno v4 and narrate it with Kokoro. [Explore all seven built-in models](#model-wall).
 
@@ -39,12 +36,9 @@ The remake is an editable HTML project. Fine-tune the cut in Studio and export a
 
 <a id="agent-wall"></a>
 
-**21 agents in the OpenDesign ecosystem** · [All clients and connection options](#bring-your-agent-and-keys)
+**22 local agents** · [New in OpenMotion: WorkBuddy](#workbuddy-setup) · [Choose your agent](#choose-agent)
 
-<picture>
-  <source media="(max-width: 600px)" srcset="docs/readme/agents/opendesign-gallery.mobile.png">
-  <img src="docs/readme/agents/opendesign-gallery.png" width="100%" alt="Claude Code, Codex CLI, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI">
-</picture>
+<p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="docs/readme/agents/local-agents.mobile.png"><img src="docs/readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 
 <a id="showcase"></a> <a id="what-can-you-make"></a>
 <a id="use-cases-and-remake-examples"></a>
@@ -373,9 +367,34 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 
 ### 2. Free and open source. Use your local agent and bring your own keys.
 
-**Using another agent?** If your client supports local stdio MCP, add the command from Studio and ask the agent to list the available templates. Pick one to create your first project. [Manual configuration](#manual-mcp).
+<a id="choose-agent"></a>
 
-The gallery features 21 agents from OpenDesign. Its CLI roster also lists DeepSeek Harness, Vela, Amp, CodeBuddy, MiMo and AtomCode. The client compatibility table includes Claude Desktop, OpenClaw, Cline, Raven and GitHub Copilot in VS Code. For OpenMotion installation and host verification, see the [adapter guide](docs/agent-adapters.md). [Full OpenDesign list](https://github.com/nexu-io/open-design/blob/07a86b1041531bfa0bec1006d9c0993985fee560/README.md#platform-compatibility)
+**Choose your agent.** WorkBuddy, Codex, Claude Code and DeepSeek Harness have installation instructions. Other buttons open the shared MCP and CLI setup.
+
+<p>
+  <a href="#workbuddy-setup"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy" /></a>
+  <a href="#agent-setup"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex CLI" /></a>
+  <a href="#claude-setup"><img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/opencode-badge.svg" width="144" height="34" alt="OpenCode" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/hermes-badge.svg" width="144" height="34" alt="Hermes" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/antigravity-badge.svg" width="144" height="34" alt="Antigravity" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/gemini-badge.svg" width="144" height="34" alt="Gemini CLI" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/grok-build-badge.svg" width="144" height="34" alt="Grok Build" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/kimi-badge.svg" width="144" height="34" alt="Kimi CLI" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/cursor-badge.svg" width="144" height="34" alt="Cursor Agent" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/qwen-badge.svg" width="144" height="34" alt="Qwen Code" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/qoder-badge.svg" width="144" height="34" alt="Qoder CLI" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/copilot-badge.svg" width="144" height="34" alt="GitHub Copilot" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/pi-badge.svg" width="144" height="34" alt="Pi" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/kiro-badge.svg" width="144" height="34" alt="Kiro CLI" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/kilo-badge.svg" width="144" height="34" alt="Kilo" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/vibe-badge.svg" width="144" height="34" alt="Mistral Vibe" /></a>
+  <a href="#deepseek-setup"><img src="docs/readme/agents/deepseek-badge.svg" width="144" height="34" alt="DeepSeek TUI / Harness" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/reasonix-badge.svg" width="144" height="34" alt="Reasonix" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/aider-badge.svg" width="144" height="34" alt="Aider" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/devin-badge.svg" width="144" height="34" alt="Devin" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/trae-badge.svg" width="144" height="34" alt="Trae CLI" /></a>
+</p>
 
 | Bring your own… | Make it work for your video |
 | --- | --- |
@@ -546,7 +565,19 @@ For Codex with plugin support, run from the checkout:
 bash scripts/install-motion.command
 ```
 
-For DeepSeek Harness, Claude Code and other clients, follow the [agent adapters guide](docs/agent-adapters.md) or the [local MCP + Skills installer](docs/npm-installation.md). The npm package is not publicly published; that guide uses locally built artifacts. [Windows test packages](docs/test-packages.md)
+<a id="workbuddy-setup"></a>
+
+**WorkBuddy** · Import the OpenMotion connector in WorkBuddy or add its `mcp.json` as a custom MCP server. Ask WorkBuddy to list the available video templates. [WorkBuddy setup](docs/agent-adapters.md#workbuddy)
+
+<a id="claude-setup"></a>
+
+**Claude Code** · Select `--host claude` in the local installer, then run `/mcp` in Claude Code to check the connection. [Local installation guide](docs/npm-installation.md)
+
+<a id="deepseek-setup"></a>
+
+**DeepSeek** · Work with the editable HTML project from the terminal in DeepSeek TUI. For DeepSeek Harness, connect the OpenMotion MCP tools with the Cordis configuration. [DeepSeek Harness setup](docs/agent-adapters.md#deepseek-harness)
+
+The installer uses locally built packages. [Windows test packages](docs/test-packages.md)
 
 Try the included template first:
 
@@ -577,9 +608,11 @@ This copies instructions; it does not install the runtime or register MCP. Keep 
 | [motion-video-to-template](skills/motion-video-to-template/SKILL.md) | Producing a portable reusable template |
 | [motion-production](skills/motion-production/SKILL.md) | Scoped edits, preview, checks, troubleshooting and export |
 
-<a id="manual-mcp"></a>
+<a id="local-agent-connection"></a>
 
-Use **Connect Agent** for workspace-specific configuration. Manual local stdio clients can use absolute paths:
+**Connect a local agent** · Open **Connect Agent** in Studio to copy the launch command for your workspace. Use the configuration below in clients with local stdio MCP support. In a shell-based agent, open the project directory and use the [local engine CLI](skills/motion-production/references/native.md) to preview and render the HTML scenes.
+
+<a id="manual-mcp"></a>
 
 ```json
 {

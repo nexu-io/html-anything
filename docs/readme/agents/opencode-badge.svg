@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144" height="34" viewBox="0 0 144 34">
+  <title>OpenCode</title>
+  <rect x=".5" y=".5" width="143" height="33" rx="7" fill="#f6f8fa" stroke="#d1d9e0"/>
+  <image x="12" y="6" width="22" height="22" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9IiMxYzFiMWEiIGZpbGwtcnVsZT0iZXZlbm9kZCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTYgNkg4djEyaDh6bTQgMTZINFYyaDE2eiIvPjwvc3ZnPg=="/>
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <text x="40" y="22" font-weight="600" font-size="13" fill="#24292f">OpenCode</text>
+  </g>
+</svg>
