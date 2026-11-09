@@ -50,6 +50,14 @@ to PostHog `/batch/`. Browser Do Not Track suppresses browser collection. Networ
 reporting is asynchronous, with a bounded timeout; local business results never wait
 for PostHog. A collector receipt confirms acceptance, not queryable ingestion.
 
+Event `producers` and closed property schemas live together in `events.ts`.
+Studio's typed API and the service's browser-admission registry are derived from
+that definition; server-side validation remains mandatory. Studio configuration
+loading retries transient failures with bounded backoff, stays disabled until
+confirmed, and never treats a valid opt-out as a retryable failure. Callers can
+inspect local queue/configuration statuses and a content-free status snapshot;
+see [diagnostics and retry semantics](INTEGRATION.md#diagnose-without-logging-event-contents).
+
 ## Identity, properties and privacy
 
 One random UUID is persisted atomically in `tracking/identity.json` under the owned

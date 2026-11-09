@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { createTracker, deviceContext } from '../tracking/core.ts';
 import { createPosthogSender, loadIdentity } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
@@ -21,6 +22,13 @@ function packet(): PendingEvent {
 }
 const core = (send: Parameters<typeof createTracker>[0]['send'], maxQueue = 64) =>
   createTracker({ registry: omEvents, entrypoint: 'mcp', enabled: true, flushIntervalMs: 0, maxQueue, send });
+
+test('Studio event types reject Node-only events and invalid semantic fields', () => {
+  execFileSync(process.execPath, [path.join(pluginRoot, 'node_modules/typescript/bin/tsc'),
+    '--noEmit', '--strict', '--allowImportingTsExtensions', '--module', 'ESNext', '--moduleResolution', 'Bundler',
+    '--target', 'ES2022', '--lib', 'ES2023,DOM', '--skipLibCheck', path.join(pluginRoot, 'tests/tracking-types.ts')],
+  { cwd: pluginRoot, stdio: 'pipe' });
+});
 
 test('bounded queue rejects private properties, preserves UUID/time on retries and serializes flushes', async () => {
   const batches: PendingEvent[][] = []; let attempts = 0;
@@ -104,6 +112,8 @@ test('browser ingress rejects forged identity, worker events and oversized batch
     { events: [{ ...packet(), properties: { ...packet().properties, distinct_id: 'forged' } }] },
     { events: [{ ...packet(), utm_source: 'forged' }] },
     { events: [{ ...packet(), entrypoint: 'worker' }] },
+    { events: [{ ...packet(), event: 'mcp_tool_started', properties: { tool_name: 'motion_get_project', call_id: crypto.randomUUID(), accepted: true } }] },
+    { events: [{ ...packet(), event: 'export_result', properties: { job_id: crypto.randomUUID(), job_state: 'completed', duration_ms: 100, technical_check: 'passed' } }] },
     { events: Array.from({ length: 17 }, packet) },
     { events: [packet()], token: 'forged' },
   ]) assert.equal((await send(data)).status, 400);

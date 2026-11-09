@@ -26,9 +26,8 @@ import { phase1McpCapabilities } from './shared/phase1-tools.ts';
 import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
 import { createAppTracking, closeTracking, saveTrackingPreference, trackingPreference, trackingLocked, type OmTracking } from './shared/tracking.ts';
-import { browserEvents } from './tracking/events.ts';
+import { studioEvents } from './tracking/events.ts';
 import { validPending } from './tracking/core.ts';
-import { omEvents } from './tracking/events.ts';
 
 const sharedStore = new WorkspaceStore();
 export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
@@ -267,8 +266,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       if (!context.tracking?.enabled()) return json(res, 200, { accepted: 0, enabled: false });
       const data = await input(req, 64 * 1024);
       if (!data || Object.keys(data).length !== 1 || !Array.isArray(data.events) || data.events.length > 16
-        || !data.events.every((event: unknown) => validPending(omEvents, event) && event.entrypoint === 'studio'
-          && (browserEvents as readonly string[]).includes(event.event))) return json(res, 400, { error: 'INVALID_TRACKING_BATCH' });
+        || !data.events.every((event: unknown) => validPending(studioEvents, event) && event.entrypoint === 'studio')) return json(res, 400, { error: 'INVALID_TRACKING_BATCH' });
       const statuses = data.events.map((event: unknown) => context.tracking!.ingest(event));
       return json(res, statuses.includes('full') ? 429 : 200, { accepted: statuses.filter((status: string) => status === 'queued').length });
     }
