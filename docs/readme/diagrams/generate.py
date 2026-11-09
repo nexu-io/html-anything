@@ -68,7 +68,7 @@ def creation_stack():
     cards = [
         (48, "BYOA", "Your local agent", "Plans the story. Writes the code.", "Skills + MCP + supported CLI", "#E6F2EC"),
         (456, "BYOK", "Your media accounts", "Images · video · music · TTS", "Optional generation, your access", "#E5F1F8"),
-        (864, "YOUR LIBRARY", "A creative head start", "Brandkit · Motion MD · templates", "References, components and Skills", "#FCF0E5"),
+        (864, "YOUR LIBRARY", "A creative head start", "Brandkit · Motion.md · templates", "References, components and Skills", "#FCF0E5"),
     ]
     for x, label, title, line1, line2, fill in cards:
         d.box(x, 184, 368, 168, fill)
@@ -104,7 +104,7 @@ def creative_context():
             ("Identity", "Logo · palette · typography"),
             ("Message", "Product facts · voice · approved claims"),
             ("Material", "Screenshots · footage · audio")]),
-        (664, "#E6F2EC", "YOUR MOTION LANGUAGE", "Motion Design MD", "MOTION_DESIGN.md", [
+        (664, "#E6F2EC", "YOUR MOTION LANGUAGE", "Motion.md", "Shot order and timing", [
             ("Story", "Hook · shot order · reveal · closing beat"),
             ("Movement", "Timing · easing · camera · sound cues"),
             ("Rules", "Keep / change decisions · review")]),

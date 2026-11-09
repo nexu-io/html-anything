@@ -29,8 +29,8 @@
 <path d="M332 460 V490" fill="none" stroke="#6A8F83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <rect x="664" y="184" width="568" height="276" rx="18" fill="#E6F2EC" stroke="#C9D9D1"/>
 <text x="692" y="219" font-size="15" fill="#087C62" font-weight="700" text-anchor="start" letter-spacing="1.2">YOUR MOTION LANGUAGE</text>
-<text x="692" y="259" font-size="29" fill="#202F2C" font-weight="700" text-anchor="start">Motion Design MD</text>
-<text x="692" y="290" font-size="18" fill="#526B65" font-weight="400" text-anchor="start" class="mono">MOTION_DESIGN.md</text>
+<text x="692" y="259" font-size="29" fill="#202F2C" font-weight="700" text-anchor="start">Motion.md</text>
+<text x="692" y="290" font-size="18" fill="#526B65" font-weight="400" text-anchor="start" class="mono">Shot order and timing</text>
 <text x="692" y="338" font-size="18" fill="#087C62" font-weight="700" text-anchor="start">Story</text>
 <text x="809" y="338" font-size="18" fill="#202F2C" font-weight="400" text-anchor="start">Hook · shot order · reveal · closing beat</text>
 <text x="692" y="381" font-size="18" fill="#087C62" font-weight="700" text-anchor="start">Movement</text>

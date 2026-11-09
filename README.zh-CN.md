@@ -2,9 +2,9 @@
 
 # OpenMotion
 
-**逆向拆解任何视频，让本地 Agent 将它复刻成自己的品牌作品。** 上传视频或粘贴社媒链接，换成自己的素材，在 Studio 里继续剪辑并导出 MP4。
+OpenMotion 是一款在本地 Agent 中运行的开源视频生成器。上传参考视频或粘贴社媒视频链接，用自己的素材拆解并复刻镜头，在 Studio 里继续剪辑、导出 MP4。
 
-[Claude、OpenAI、Kimi、DeepSeek Harness 和 Stripe · 五组复刻对照](docs/README.zh-CN.md#brand-before-after) · [看多模态模型](docs/README.zh-CN.md#model-wall) · [开始使用](docs/README.zh-CN.md#quick-start) · [完整中文 README](docs/README.zh-CN.md)
+[完整中文 README](docs/README.zh-CN.md) · [场景与复刻效果](docs/README.zh-CN.md#showcase) · [核心卖点](docs/README.zh-CN.md#features) · [安装与技术文档](docs/README.zh-CN.md#technical-guide)
 
 ## 致谢 / Acknowledgements
 

@@ -19,7 +19,7 @@ HTML로 영상을 작성하고 생성·편집·렌더링하세요. 무료 오픈
   <a href="#publish-to-every-platform">📤 게시 · 계획 중</a><br/>
   <a href="#full-video-creation-stack">🎛️ 영상 제작 전체 과정</a> ·
   <a href="#your-agent-your-studio">Studio와 에이전트</a> ·
-  <a href="#motion-design-community">Motion MD와 커뮤니티</a> ·
+  <a href="#motion-design-community">Motion.md와 커뮤니티</a> ·
   <a href="#what-can-you-make">예제</a> ·
   <a href="#resources-to-start-from">라이브러리</a> ·
   <a href="#developer-architecture">아키텍처</a> ·
@@ -124,7 +124,7 @@ HTML로 영상을 작성하고 생성·편집·렌더링하세요. 무료 오픈
 
 **발표자의 이야기 × 금속 질감 글자 × 애니메이션 설명.** 촬영본, 문구, 스크린샷, 자막을 가져오세요. 편집 가능한 소스, 매개변수, 글꼴, 사운드 레시피, 로컬 실행기가 Library에 포함되어 있어 에이전트가 제작 가이드에 따라 수정할 수 있습니다. **1920 × 1080 · 60 fps · 가로형.**
 
-[템플릿 패키지 받기](../library/templates/presenter-tech/presenter-tech.motion) · [제작 가이드](../library/templates/presenter-tech/TEMPLATE.md) · [MOTION_DESIGN.md](../library/templates/presenter-tech/MOTION_DESIGN.md)
+[템플릿 패키지 받기](../library/templates/presenter-tech/presenter-tech.motion) · [제작 가이드](../library/templates/presenter-tech/TEMPLATE.md) · [Motion.md](../library/templates/presenter-tech/MOTION_DESIGN.md)
 
 <a id="brand-film-gallery"></a>
 
@@ -205,7 +205,7 @@ HTML로 영상을 작성하고 생성·편집·렌더링하세요. 무료 오픈
 | --- | --- |
 | **🤖 에이전트 — BYOA** | Skills와 MCP로 기존 로컬 에이전트를 연결하고 지원되는 경우 CLI도 사용합니다. 익숙한 클라이언트, 계정, 작업 맥락을 유지합니다. |
 | **🔑 키 — BYOK** | Model Settings에 지원되는 미디어 API 키를 추가하고 이미지·영상·음악·TTS 모델을 선택합니다. 지원되는 로컬 미디어 연동은 기존 에이전트 로그인을 사용합니다. |
-| **🎨 브랜드와 소재** | 로고, 글꼴, 스크린샷, 촬영본, 대본, 음악을 추가합니다. Brandkit과 Motion MD를 재사용해 후속 버전의 일관성을 유지합니다. |
+| **🎨 브랜드와 소재** | 로고, 글꼴, 스크린샷, 촬영본, 대본, 음악을 추가합니다. Brandkit과 Motion.md를 재사용해 후속 버전의 일관성을 유지합니다. |
 | **🧩 시작 리소스** | 참고 영상, 모션 컴포넌트, 템플릿, 커뮤니티 Skills에서 방향을 골라 소스나 참고 자료를 에이전트에 전달하세요. |
 
 ### 하나의 크리에이터가 전체 과정을
@@ -237,7 +237,7 @@ HTML로 영상을 작성하고 생성·편집·렌더링하세요. 무료 오픈
 | **소리와 박자** — 발화 타이밍, 음악 신호, 강조 | 내 목소리, 제공한 음악, 사운드 방향 |
 
 1. **참고 자료와 브랜드를 준비하세요.** 영상 또는 접근 가능한 링크, 분석 구간, 로고, 문구, 스크린샷, 촬영본을 제공합니다. [Brandkit](../library/brandkits/openmotion/BRANDKIT.md) 으로 브랜드 정체성과 제품 사실을 모읍니다.
-2. **효과적인 요소를 분석하세요.** 장면, 타이밍, 움직임, 소리, 유지할 요소를 파악하고 Motion MD에 기록합니다.
+2. **효과적인 요소를 분석하세요.** 장면, 타이밍, 움직임, 소리, 유지할 요소를 파악하고 Motion.md에 기록합니다.
 3. **코드로 영상을 재구성하세요.** 영상 참고에는 `motion-recreate`를 사용하고, 편집 가능한 소스가 있으면 템플릿 경로를 사용합니다. HTML/CSS/JS로 장면·모션·시간을 표현하고 촬영본과 소리를 소재로 배치합니다. 내 콘텐츠를 사용하고 부족한 이미지·영상·음악·TTS는 내장 모델 연동으로 생성합니다.
 4. **비교하고 다듬으세요.** 참고와 재구성 영상의 같은 시점을 비교하며 공개 방식, 읽는 시간, 구도, 소리를 확인하고 같은 Studio 프로젝트에서 수정합니다.
 5. **시청자에게 전달할 준비를 하세요.** MP4 버전을 내보내고 프로젝트를 보관하며 승인된 브랜드·모션 규칙을 다음 영상에 적용합니다. 연동형 멀티플랫폼 게시는 **계획 중**입니다.
@@ -283,7 +283,7 @@ OpenMotion으로 첨부한 참고 영상을 우리 브랜드에 맞게 재구성
 
 | 제작 단계 | OpenMotion이 연결하는 기능 |
 | --- | --- |
-| **이해와 연출** | 참고 재구성, 창작 Skills, Brandkit, Motion MD, 에이전트 분석 도구 |
+| **이해와 연출** | 참고 재구성, 창작 Skills, Brandkit, Motion.md, 에이전트 분석 도구 |
 | **생성과 관리** | 멀티모달 어댑터, 모델 선택, 생성 작업, 후보 미리보기, 프로젝트 미디어 |
 | **편집과 애니메이션** | 시각적 타임라인, HTML/CSS/JS 컴포지션, 글자, 전환, 자막, 사운드 배치 |
 | **검토와 반복** | Studio 미리보기, 직접 조정, 에이전트 수정, 프로젝트 버전 |
@@ -391,7 +391,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 토킹헤드, 튜토리얼, 제품 설명 영상에도 적용됩니다. **사람의 전달 방식과 이야기 리듬을 유지하며 내 촬영본, 주제, 브랜드로 자막·스크린샷·PIP·모션을 재사용하세요.**
 
 <details>
-<summary><strong>발표자 중심 각색 3종과 Motion MD 레시피 보기</strong></summary>
+<summary><strong>발표자 중심 각색 3종과 Motion.md 레시피 보기</strong></summary>
 
 아래 쌍은 원본 참고 영상과 외부 각색 작품의 무음 발췌입니다. 내 촬영본에 맞는 방향을 찾고 연결된 디자인 레시피로 에이전트를 안내하세요.
 
@@ -406,7 +406,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **재사용:** 번호로 정리한 생각, 발표자의 설명, 근거 카드. **교체:** 크리에이터, 말할 주제, 키워드, 보조 예시.
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [원본](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [전체 각색본](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
+[Motion.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [원본](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [전체 각색본](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
 
 #### 이야기를 하며 작업 흐름 보여주기
 
@@ -419,7 +419,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **재사용:** 발표자와 화면의 리듬, 절제된 자막, 읽기 쉬운 삽입 화면. **교체:** 내 촬영본, 작업 흐름, 화면 캡처.
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [원본](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [전체 각색본](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
+[Motion.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [원본](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [전체 각색본](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
 
 #### 발표자와 제품을 하나의 이야기로
 
@@ -432,7 +432,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **재사용:** 도입부, PIP, 강조 표시, 눈에 보이는 결과. **교체:** 제품, 발표자, 시연, 마무리 메시지.
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [원본](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [전체 각색본](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
+[Motion.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [원본](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [전체 각색본](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
 
 > 이 구조에 내 촬영본과 화면 녹화를 사용하세요. 내 목소리를 유지하고 실제 발화에 맞춰 편집하며 자막을 정렬하세요. 스크린샷, PIP, 모션으로 요점을 설명하세요. 소리 있는 미리보기를 보여준 뒤 편집 가능한 프로젝트와 MP4를 전달하세요.
 
@@ -562,13 +562,13 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 <a id="make-your-motion-language-reusable"></a>
 <a id="motion-design-community"></a>
 
-## 🎨 Motion Design MD — 제작 기법을 나누는 커뮤니티
+## 🎨 Motion.md — 제작 기법을 나누는 커뮤니티
 
-**한 번 분석하고 모션 언어를 공유해 다음 크리에이터가 이어가게 하세요.** `MOTION_DESIGN.md` 는 커뮤니티의 핵심 Markdown 규약 제안입니다. 영상의 움직임, 효과적인 이유, 새 브랜드에 적용하는 방법을 읽을 수 있는 형태로 기록합니다.
+**한 번 분석하고 모션 언어를 공유해 다음 크리에이터가 이어가게 하세요.** `Motion.md` 는 커뮤니티의 핵심 Markdown 규약 제안입니다. 영상의 움직임, 효과적인 이유, 새 브랜드에 적용하는 방법을 읽을 수 있는 형태로 기록합니다.
 
 대화 속 창작 결정을 사람과 에이전트가 읽고 검토하고 개선할 수 있는 파일로 옮기세요. 디자이너가 모션을 설명하고 개발자가 구현하며 다른 크리에이터가 새 이야기에 적용합니다. **완성 영상과 제작 방법을 함께 공유합니다.**
 
-![Brandkit은 정체성·제품 사실·승인 소재를, Motion Design MD는 이야기·타이밍·모션·검토 규칙을 정의합니다. SKILL.md는 소스·소재·프리셋·근거와 함께 이 파일을 사용하는 방법을 안내합니다.](readme/diagrams/creative-context.svg)
+![Brandkit은 정체성·제품 사실·승인 소재를, Motion.md는 이야기·타이밍·모션·검토 규칙을 정의합니다. SKILL.md는 소스·소재·프리셋·근거와 함께 이 파일을 사용하는 방법을 안내합니다.](readme/diagrams/creative-context.svg)
 
 <details>
 <summary>창작 패키지 텍스트 보기</summary>
@@ -580,7 +580,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
        ↓
 재사용 가능한 창작 패키지
   BRANDKIT.md       정체성, 제품 사실, 승인 소재
-  MOTION_DESIGN.md  서사, 모션, 타이밍, 소리, 유지/변경 규칙
+  Motion.md  서사, 모션, 타이밍, 소리, 유지/변경 규칙
   SKILL.md          각색·검토 방법
   소스 + 소재      편집 가능한 구현
   프리셋 + 근거    교체 입력과 실제 비교
@@ -590,7 +590,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 </details>
 
-**Brandkit은 정체성, Motion MD는 디자인, Skill은 방법, 프로젝트는 구현을 담습니다.** 첫 내보내기 이후에도 재사용하고 커뮤니티에서 검토·포크·개선할 수 있습니다.
+**Brandkit은 정체성, Motion.md는 디자인, Skill은 방법, 프로젝트는 구현을 담습니다.** 첫 내보내기 이후에도 재사용하고 커뮤니티에서 검토·포크·개선할 수 있습니다.
 
 | 현재 Library 리소스 | 제공 내용 |
 | --- | --- |
@@ -599,7 +599,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 | [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md) | 소스 프로필 6종: 와이어프레임 제목, 나뭇잎 타이포그래피, UI 공개, 입체 코드, 입자 조립, 유리 카드 |
 | [Presenter Story](../library/skills/presenter-story/SKILL.md) | 말하기 중심 영상 디자인 레시피 3종 |
 
-`MOTION_DESIGN.md` 는 에이전트에 명시적으로 전달하는 **v0.1 작성 규약**이며 자동 가져오기나 검증기는 없습니다. 소스 각색 패키지는 6개 프로필의 교체 도우미를 제공하며 영상만 있는 경우에는 `motion-recreate`를 사용합니다. 이동 가능한 템플릿이 필요하면 `motion-video-to-template` 가 기존 `TEMPLATE.md` 전달 형식을 제공합니다. [Motion MD 가이드](motion-md.md) · [전체 예제 6종](motion-design-examples.md)
+`Motion.md` 는 에이전트에 명시적으로 전달하는 **v0.1 작성 규약**이며 자동 가져오기나 검증기는 없습니다. 소스 각색 패키지는 6개 프로필의 교체 도우미를 제공하며 영상만 있는 경우에는 `motion-recreate`를 사용합니다. 이동 가능한 템플릿이 필요하면 `motion-video-to-template` 가 기존 `TEMPLATE.md` 전달 형식을 제공합니다. [Motion.md 가이드](motion-md.md) · [전체 예제 6종](motion-design-examples.md)
 
 ### 🌱 내 각색을 커뮤니티의 다음 출발점으로
 
@@ -607,7 +607,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 참고 분석 → 브랜드에 맞게 재구성 → 실제 결과 비교
                                     ↓
                       GitHub에 창작 패키지 게시
-                 Motion MD + 소스 + 미리보기 + 출처
+                 Motion.md + 소스 + 미리보기 + 출처
                                     ↓
                          포크 → 브랜드 교체 → 검토
                                     ↓
@@ -633,7 +633,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 ## 🧪 영상 속 편집 가능한 모션 살펴보기
 
-**카메라 움직임, 제목, 제품 공개가 마음에 드나요? 아이디어는 유지하고 이야기를 바꾸세요.** 편집 가능한 소스 연구 6종에 Motion MD, Skill, 콘텐츠 프리셋이 포함됩니다. [소스, 입력, 검증 기록](motion-design-examples.md).
+**카메라 움직임, 제목, 제품 공개가 마음에 드나요? 아이디어는 유지하고 이야기를 바꾸세요.** 편집 가능한 소스 연구 6종에 Motion.md, Skill, 콘텐츠 프리셋이 포함됩니다. [소스, 입력, 검증 기록](motion-design-examples.md).
 
 <details>
 <summary><strong>글자, UI, 코드, 입자, 유리 소스 연구 6종 열기</strong></summary>
@@ -649,7 +649,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **유지: 포털 타이밍, 입체 글자, 카메라 전진.** **교체: 제목, 부제, 3D 문구.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
 
 ### 나뭇잎 타이포그래피 · Understory → OpenMotion
 
@@ -660,7 +660,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **유지: 나뭇잎 움직임, 깊이, 가림, 읽는 시간.** **교체: 브랜드 제목 2개.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/motion-design-remix/previews/canopy-part-title.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/motion-design-remix/previews/canopy-part-title.mp4)
 
 ### UI 공개 · 제품 둘러보기 → AI 편집 이야기
 
@@ -671,7 +671,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **유지: 기울어진 캔버스, 깊이 계층, 연속 카메라.** **교체: 메인 제목, 문서, 커뮤니티 문구.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
 
 ### 입체 코드 · loadConfig() → cutVideo()
 
@@ -682,7 +682,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **유지: 돌출된 판, 구문 색상, 카메라 움직임.** **교체: 함수, 변수, 표시되는 호출.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
 
 ### 입자 조립 · parse / optimize / emit → select / trim / render
 
@@ -693,7 +693,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **유지: 시드가 고정된 입자 움직임과 조립 리듬.** **교체: 파이프라인 이름과 단계.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
 
 ### 유리 정보 카드 · 기기 위젯 → 크리에이터 작업 공간
 
@@ -704,7 +704,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 
 **유지: 유리 질감, 카드 계층, 시차 등장, 계기.** **교체: 라벨, 단위, 기능 이야기.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [콘텐츠 프리셋](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
 
 영상만 있는 참고 자료는 별도의 [재구성 작업 흐름](../skills/motion-recreate/SKILL.md) 으로 재구성하고 비교합니다. 재현도는 선택한 참고 자료와 기획에 맞춰 검토합니다.
 
@@ -936,7 +936,7 @@ DeepSeek Harness, Codex, Claude Code에 참고 영상과 브랜드 기획을 전
 | [Motion 리소스 색인](collections/README.md) | 추천 영상, 출처, 편집 가능한 출발점. |
 | [내장 템플릿](../template-library) | Product Promo, NYT Graph, Decision Tree. 각각 네이티브 소스와 미리보기 포함. |
 | Studio 템플릿 라이브러리 | 검색, 미리보기, 템플릿 각색·참고 재구성 지침. |
-| [Motion MD](motion-md.md) | 스타일을 만드는 창작 결정을 공유하는 방법. |
+| [Motion.md](motion-md.md) | 스타일을 만드는 창작 결정을 공유하는 방법. |
 
 참고는 분석 대상이고 편집 가능한 템플릿에는 수정할 소스가 포함됩니다. 갤러리의 **원클릭 재구성**은 참고 자료와 에이전트 지침을 복사합니다. 내장 템플릿은 바로 열 수 있지만 외부 영상은 분석과 재구성이 필요합니다. [카탈로그 범위와 출처](template-catalog.md)
 
@@ -1042,7 +1042,7 @@ Studio와 에이전트는 템플릿 카탈로그 캐시를 공유합니다. `mot
 참고 영상 + 촬영본 + 대본 + 브랜드 소재
                     ↓
 커뮤니티 지식
-MOTION_DESIGN.md + BRANDKIT.md + Skills + 템플릿 + 컴포넌트
+Motion.md + BRANDKIT.md + Skills + 템플릿 + 컴포넌트
                     ↓
 BYOA: 로컬 에이전트                     OPENMOTION STUDIO
 DeepSeek Harness / Codex / Claude Code  React 19 + TypeScript + Vite
@@ -1094,7 +1094,7 @@ BYOA는 기존 클라이언트를 사용하고 BYOK는 지원 모델 계정을 �
 | **멀티모달 생성** | Codex 미디어 어댑터, Atlas Cloud predictions, fal.ai 큐 연동, 영구 저장 생성 작업 | [Gateway 서비스](../gateway/service.ts) · [제공업체 어댑터](../gateway/providers.ts) · [모델 카탈로그](../gateway/catalog.ts) |
 | **합성과 모션** | HTML/CSS/JS, GSAP, 고정 버전 합성 엔진, 네이티브 타임라인/이력 | [엔진 연동](../hyperframes.ts) · [템플릿 소스](../template-library) · [버전 어댑터](../phase1-versions.ts) |
 | **렌더링과 미디어** | Chromium, Puppeteer Core, FFmpeg, FFprobe | [렌더링 서비스](../server.ts) · [내보내기 검증기](../scripts/verify-export.ts) · [네이티브 런타임 잠금](../scripts/runtime-lock.json) |
-| **창작 지식** | Markdown, 소스 패키지, 프리셋, 비교 근거 | [Motion MD](motion-md.md) · [핵심 Skills](../skills) · [커뮤니티 Library](../library/README.md) |
+| **창작 지식** | Markdown, 소스 패키지, 프리셋, 비교 근거 | [Motion.md](motion-md.md) · [핵심 Skills](../skills) · [커뮤니티 Library](../library/README.md) |
 | **검증과 패키징** | Node 테스트, Vitest, Studio 검사, npm 잠금 파일, 명시적 배포 목록 | [테스트](../tests) · [Studio 테스트](../studio/tests) · [CI](../.github/workflows/ci.yml) · [배포](../scripts/distribution.ts) |
 | **게시와 학습 — 계획 중** | 플랫폼 어댑터, 예약, 버전별 피드백과 검색. 구현 설계는 예정 | [Studio 비전](product/studio-vision.md) |
 
@@ -1107,7 +1107,7 @@ BYOA는 기존 클라이언트를 사용하고 BYOK는 지원 모델 계정을 �
 | **프런트엔드와 상호작용** | 타임라인, 미디어 생성 UI, 접근성, 미리보기 개선 | [Studio](../studio/src) · [미디어 생성기](../studio/src/motion/MediaGenerator.tsx) |
 | **AI와 모델 인프라** | 공유 작업·미디어 흐름을 사용하는 제공업체 어댑터나 모델 프리셋 추가 | [Gateway 설계](product/media-generation-design.md) · [제공업체 어댑터](../gateway/providers.ts) |
 | **에이전트와 개발 도구** | 호스트 어댑터, Skill, 리소스 가이드, 프로젝트 도구 흐름 개선 | [에이전트 어댑터](agent-adapters.md) · [MCP 계약](mcp-phase1-tools.md) |
-| **모션과 크리에이티브 코딩** | 실제 각색이 있는 컴포넌트, 네이티브 템플릿, Motion MD 패키지 공유 | [컴포넌트](../library/components/README.md) · [등록 체크리스트](../library/ENTRY_TEMPLATE.md) |
+| **모션과 크리에이티브 코딩** | 실제 각색이 있는 컴포넌트, 네이티브 템플릿, Motion.md 패키지 공유 | [컴포넌트](../library/components/README.md) · [등록 체크리스트](../library/ENTRY_TEMPLATE.md) |
 | **영상과 렌더링** | 내보내기 신뢰성, 미디어 처리, 재현 가능한 검증 개선 | [엔진 설명](hyperframes.md) · [내보내기 검증기](../scripts/verify-export.ts) |
 | **소셜 게시** | 계획 중인 커넥터 계층 설계: 계정 접근, 게시 검토, 예약, 버전 연결 | [게시 방향](product/studio-vision.md) · [제안 논의](https://github.com/nexu-io/html-anything/issues) |
 
@@ -1129,7 +1129,7 @@ Studio의 큰 비전은 발견, 창작, 협업, 게시, 학습입니다. **Super
 | 분야 | 현재 가능 | 향후 방향 |
 | --- | --- | --- |
 | **재구성과 편집** | 에이전트 주도 재구성, 템플릿 각색, 편집 가능 프로젝트, MP4 | 평가된 사례와 재현 가능한 비교 확대 |
-| **브랜드와 지식** | 명시적 Brandkit, Motion MD, Skills, 소스 패키지 | 개인/팀 메모리, RAG, 평가된 Skill 개선 |
+| **브랜드와 지식** | 명시적 Brandkit, Motion.md, Skills, 소스 패키지 | 개인/팀 메모리, RAG, 평가된 Skill 개선 |
 | **사람과 에이전트** | 같은 로컬 프로젝트 전달 | 타임라인 댓글, 공동 검토, 협업 편집 |
 | **멀티모달 제작** | 이미지·영상·음악·TTS 연동, 생성, 후보 선택, 타임라인 채택 | 영상·이미지·음성·음악·Avatar 서비스 통합 검색 |
 | **멀티플랫폼 게시 — 계획 중** | 화면비별 제작과 MP4 전달 | 커넥터, 게시 검토, 예약, 자동 리프레이밍, 소셜 프리셋 |
@@ -1144,7 +1144,7 @@ Studio의 큰 비전은 발견, 창작, 협업, 게시, 학습입니다. **Super
 
 ## 🤝 영상과 제작 방법을 함께 공유하세요
 
-**참고 하나, 각색 하나, 재사용 가능한 모션 언어 하나를 가져오세요.** [Motion Design MD 커뮤니티](#motion-design-community) 에서 다음 크리에이터가 자기 작품을 만들 수 있도록 결정과 소스를 공유하세요.
+**참고 하나, 각색 하나, 재사용 가능한 모션 언어 하나를 가져오세요.** [Motion.md 커뮤니티](#motion-design-community) 에서 다음 크리에이터가 자기 작품을 만들 수 있도록 결정과 소스를 공유하세요.
 
 | 기여 유형 | 포함할 내용 |
 | --- | --- |
