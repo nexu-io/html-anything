@@ -2,8 +2,8 @@
 name: motion-recreate
 description: >-
   Recreate a reference video (a link or file) as the user's own Motion film: rebuild it as an
-  editable OpenMotion project and deliver the film with an original-versus-new comparison, keeping
-  the original content or swapping in the user's copy, brand and assets. This includes small edits to
+  editable OpenMotion project and hand it over open in the editor, keeping the original content or
+  swapping in the user's copy, brand and assets. This includes small edits to
   the user's own finished video when no editable project for it exists. "Make one like this" and "I
   want this feel" both count as recreation. In a workspace with the user's product material, a bare
   link alone means "make one like this for us". Not for only analysing or discussing a video. Use
@@ -16,7 +16,7 @@ description: >-
 
 ## Role and goal
 
-The user supplies a video and wants a version of it for themselves. Deliver three things: the exported film, the editable OpenMotion project and a side-by-side comparison with the reference. Check the film against the reference by numeric measurement and by inspecting extracted frames. This Skill carries the recreation rules and the measuring script; shared engineering rules still come from the documents in §0. [rebuild](references/rebuild.md) covers reading, measuring and rebuilding the reference; [check and deliver](references/verify.md) covers export, numeric measurement and the comparison. Use only the Tools actually returned by tools/list.
+The user supplies a video and wants a version of it for themselves. Deliver the editable OpenMotion project, open in the editor, where the user reviews it and keeps editing. Before handing it over, export it and check the exported film against the reference by numeric measurement and by inspecting extracted frames; the export is for this check, not a file to send. This Skill carries the recreation rules and the measuring script; shared engineering rules still come from the documents in §0. [rebuild](references/rebuild.md) covers reading, measuring and rebuilding the reference; [check and deliver](references/verify.md) covers export and numeric measurement. Use only the Tools actually returned by tools/list.
 
 This workflow currently covers motion graphics only. For live action, talking heads or AI footage, say that this workflow does not support them yet. Do not suggest that footage or other material would make such a recreation possible: material the user provides can only go into a motion-graphics adaptation, which you may offer. State the limit as a fact about this workflow; never mention, quote or link this Skill or its files in the reply.
 
@@ -76,10 +76,10 @@ Then follow [check and deliver](references/verify.md): export the inspected vers
 
 ## 7. Deliver
 
-Copy the exported MP4 into the current workspace as `<name>-remix.mp4` and save the side-by-side `<name>-comparison.mp4` next to it, as [check and deliver](references/verify.md) describes. Leave the project open in the editor.
+The project open in the editor is the deliverable. Do not copy, link or attach the exported MP4 or other files unless the user asks for them.
 
-Reply briefly in the user's language with absolute local paths for the files (only the plain path in each link target, never a relative path): the remixed film and the comparison. For the editor, give the `previewUrl` returned by `motion_open_preview` and say the project is open there for further edits. Say in one or two sentences what changed, which assumptions you made from the workspace material, and any limitation the user would notice. When the reference, analysis or tools fall short, name the specific gap and its effect; never claim a faithful result that was not achieved.
+Reply briefly in the user's language. Give the `previewUrl` returned by `motion_open_preview` and say the project is open there for review and further edits. Say in one or two sentences what changed, which assumptions you made from the workspace material, and any limitation the user would notice. When the reference, analysis or tools fall short, name the specific gap and its effect; never claim a faithful result that was not achieved.
 
 ## 8. Follow-up requests
 
-Apply follow-ups to the same project with the shared edit workflow and export again; never start over. `motion_list_versions` and `motion_restore_version` bring back an earlier version as a new one. When the user is unhappy without saying why ("not satisfied", "第一版不太满意"), ask at most three multiple-choice questions in one batch, for example: follow the reference's story or tell our own; which feature is the hero; size and duration. Offer "you decide" as an option. Then revise the existing project.
+Apply follow-ups to the same project with the shared edit workflow and check them again as in §6; never start over. `motion_list_versions` and `motion_restore_version` bring back an earlier version as a new one. When the user is unhappy without saying why ("not satisfied", "第一版不太满意"), ask at most three multiple-choice questions in one batch, for example: follow the reference's story or tell our own; which feature is the hero; size and duration. Offer "you decide" as an option. Then revise the existing project.
