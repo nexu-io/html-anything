@@ -126,11 +126,11 @@ export class Properties {
     const clip = this.current?.clips.find((c) => c.id === this.current?.selected);
     this.select.disabled = value;
     this.text.readOnly = value;
-    this.text.disabled = !clip || clip.text === null;
-    this.start.readonly(value || !!clip?.composition);
-    this.duration.readonly(value || !!clip?.composition);
-    this.font.readonly(value);
-    this.appearance.block(value);
+    this.text.disabled = !clip || clip.text === null || !!clip.host;
+    this.start.readonly(value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
+    this.duration.readonly(value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
+    this.font.readonly(value || !!clip?.host);
+    this.appearance.block(value || !!clip?.host);
     this.apply.disabled = value || !clip;
     this.remove.disabled = value || !clip || !!clip.composition;
   }
@@ -153,7 +153,10 @@ export class Properties {
     this.current = options;
     const clip = options.clips.find((c) => c.id === options.selected),
       document = this.element.ownerDocument;
-    const names = options.clips.map((c) => [c.id, c.text || (c.composition ? "主合成" : c.tag)]);
+    const names = options.clips.map((c) => [
+      c.id,
+      c.host ? `${c.id} · ${c.host.source}` : c.text || (c.composition ? "主合成" : c.tag),
+    ]);
     if (
       JSON.stringify([...this.select.options].slice(1).map((o) => [o.value, o.textContent])) !== JSON.stringify(names)
     ) {
@@ -181,8 +184,8 @@ export class Properties {
       this.duration.value(values?.duration ?? clip.duration ?? 1, changed);
       this.font.value(values?.fontSize ?? clip.fontSize ?? undefined, changed);
       this.appearance.update(clip.appearance, values?.appearance, changed);
-      this.identity.value = clip.id;
-      this.type.value = clip.composition ? "主合成" : "元素图层";
+      this.identity.value = clip.host?.reason ? `${clip.id} · ${clip.host.reason}` : clip.id;
+      this.type.value = clip.host ? "合成实例" : clip.composition ? "主合成" : "元素图层";
     }
     this.block(options.blocked);
   }

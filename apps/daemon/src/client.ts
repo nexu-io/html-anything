@@ -1,7 +1,7 @@
 import type { Environment } from "@odsuite/carrier";
 import type { Clip } from "@open-motion/motion";
 import type { AnimationInput, NativeValues } from "@open-motion/motion/contract";
-import type { ContextModel, Source } from "@open-motion/motion/project";
+import type { ContextModel, HostChange, Source } from "@open-motion/motion/project";
 import { Fault, type Input, type Operation, type Output, type Project } from "@open-motion/workspace/contract";
 export type Transport = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 export interface Health {
@@ -37,6 +37,15 @@ export class Client {
   }
   async contextMotion(files: Source[], instance: string | null): Promise<ContextModel> {
     return (await this.send("/motion/context", { files, instance })) as ContextModel;
+  }
+  async retimeHost(
+    files: Source[],
+    instance: string | null,
+    id: string,
+    start: number,
+    duration: number,
+  ): Promise<HostChange> {
+    return (await this.send("/motion/host", { files, instance, id, start, duration })) as HostChange;
   }
   async patchMotion(html: string, id: string, values: NativeValues): Promise<{ html: string; clips: Clip[] }> {
     return (await this.send("/motion/patch", { html, id, ...values })) as { html: string; clips: Clip[] };

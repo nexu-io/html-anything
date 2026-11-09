@@ -97,6 +97,7 @@ export const editInput = z.discriminatedUnion("action", [
   inspectInput.extend({ action: z.literal("remove"), id: z.string().min(1).max(512) }),
 ]);
 export interface Clip {
+  host?: { instance: string; source: string; maximum: number | null; reason: string | null };
   id: string;
   parent: string | null;
   tag: string;

@@ -124,3 +124,28 @@ it("clamps fractional clip limits after keyboard snapping", () => {
   expect(commit.mock.lastCall?.[1]).toBeCloseTo(0.06, 8);
   expect(commit.mock.lastCall?.[2]).toBe(4.94);
 });
+
+it("keeps readonly hosts selectable and bounds editable windows to a sub-tenth child source", () => {
+  const commit = vi.fn(),
+    select = vi.fn();
+  const axis = timeTracks(document, {
+    duration: 5,
+    tracks: [
+      { id: "dynamic", label: "Dynamic host", start: 0, duration: 2, selected: false, readonly: true },
+      { id: "short", label: "Short host", start: 1, duration: 0.04, maximum: 0.05, selected: false },
+    ],
+    disabled: false,
+    select,
+    seek: vi.fn(),
+    commit,
+  });
+  const dynamic = axis.element.querySelector('[data-clip-id="dynamic"]'),
+    short = axis.element.querySelector('[data-clip-id="short"]');
+  if (!dynamic || !short) throw Error("missing host tracks");
+  dynamic.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+  expect(commit).not.toHaveBeenCalled();
+  dynamic.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+  expect(select).toHaveBeenCalledExactlyOnceWith("dynamic");
+  short.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", altKey: true, bubbles: true }));
+  expect(commit).toHaveBeenLastCalledWith("short", 1, 0.05);
+});

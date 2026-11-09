@@ -12,7 +12,7 @@ import { StudioLibrary } from "./studio/library.js";
 import { Properties } from "./studio/properties.js";
 import { studioTimeline } from "./studio/timeline.js";
 import { playerControls, studioTools } from "./studio/toolbar.js";
-import { retimeKey } from "./studio/transactions.js";
+import { applyClip, commitClip, retimeKey } from "./studio/transactions.js";
 
 const editorLabel = (session: boolean) => (session ? "新建影片工程" : "开始创作");
 /** Product editor projection. The SDK owns native transforms; workspace owns committed content. */
@@ -133,7 +133,11 @@ export class Studio {
         this.status.value = value;
       },
       ready: () => {
-        this.transport?.update(this.context.owner, this.blocked || this.context.readonly, this.viewer.ready);
+        this.transport?.update(
+          this.context.owner,
+          this.blocked || this.context.readonly || this.editor.dirty || !this.model,
+          this.viewer.ready,
+        );
         this.viewer.control("seek", this.globalTime);
       },
       time: (value) => {
@@ -250,6 +254,12 @@ export class Studio {
       this.transport = undefined;
       return;
     }
+    if (this.editor.dirty) {
+      this.transport?.update(this.context.owner, true, this.viewer.ready);
+      this.context.render(this.blocked);
+      this.status.value = "源码尚未保存，预览与时钟保持已确认版本";
+      return;
+    }
     if (this.viewer.artifactId && this.viewer.artifactId !== project.artifactId) this.retire();
     this.inspectTimer = setTimeout(
       () =>
@@ -295,9 +305,9 @@ export class Studio {
       const candidate = this.pending;
       if (candidate) {
         this.properties.validate();
-        this.context.capture(candidate.binding.source);
-        const result = await this.client.patchMotion(candidate.binding.source, candidate.id, candidate.values);
-        this.context.apply(candidate.binding, result.html);
+        const clip = this.model?.clips.find((clip) => clip.id === candidate.id);
+        if (!clip) throw Error("图层投影已过期");
+        await applyClip(this.context, this.client, candidate.binding, clip, candidate.values);
         if (this.pending === candidate) this.pending = undefined;
       }
       const request = this.animations.request(this.context.source, this.context.owner);
@@ -379,11 +389,14 @@ export class Studio {
           this.selected = await retimeKey(this.context, this.client, id, time, source);
         });
       },
-      commit: (id, start, duration) =>
-        this.run(async () => {
-          await this.context.transform((html) => this.client.patchMotion(html, id, { start, duration }));
-          this.selected = id;
-        }),
+      commit: (id, start, duration) => {
+        const clip = clips.find((clip) => clip.id === id),
+          source = this.model?.html;
+        if (clip)
+          this.run(async () => {
+            this.selected = await commitClip(this.context, this.client, clip, start, duration, source);
+          });
+      },
     });
     if (!this.transport) {
       this.transport = playerControls(document, {

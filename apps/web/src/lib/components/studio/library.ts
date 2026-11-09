@@ -64,7 +64,9 @@ export class StudioLibrary {
     this.layers.update(
       clips.map((clip) => ({
         id: clip.id,
-        label: clip.text?.slice(0, 60) || (clip.composition ? "main" : clip.tag),
+        label: clip.host
+          ? `${clip.id} · ${clip.host.source}`
+          : clip.text?.slice(0, 60) || (clip.composition ? "main" : clip.tag),
         parent: clip.parent,
         icon: clip.composition ? ("film" as const) : ("text" as const),
       })),
