@@ -13,7 +13,7 @@
 
 OpenMotion is **OpenDesign’s first full-stack agentic video generator**. **Code video with HTML.** Generate, edit and render your video in a single project.
 
-- **Free and open source, with BYOK at every layer.** Work directly in your local agent with adapters for Codex, Claude Code, DeepSeek Harness and WorkBuddy.
+- **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Use it locally in Codex, Claude Code, DeepSeek Harness or WorkBuddy with your own keys at every layer.
 - OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Its first open-source collection covers promotional films from **100+ brands**.
 - **Generate images, video, music and speech** for the same timeline, from a missing shot to a score or voice-over.
 
@@ -25,20 +25,13 @@ Upload a reference video or paste a link to a video on social media. Recreate it
 
 <a id="可以用它做什么"></a>
 
-### AI talking-head edits
-
-Cut a recorded explanation around the speaker’s voice. Use captions and screen inserts to show what they are describing.
-
-**Start with** · Your recording + transcript / timecodes<br>
-**Make it yours** · A clear hook, tighter speech, captions and well-timed B-roll.
-
-[Use this brief](docs/examples.md#talking-head) · Campaign reference: [OpenAI · Codex Originals](https://openai.com/codex-originals/)
-
+<a id="ai-talking-head-edits"></a>
 <a id="everyone-can-be-a-creator"></a> <a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a> <a id="人人都是自媒体"></a> <a id="creator-video-gallery"></a>
 
 **A face, a voice, a story — then the motion that makes it land.** Start with these nine creator references: lessons, screen demonstrations, founder stories and product videos. Bring your own recording and borrow a structure you love. Click a preview for the full video.
 
-<table>
+<table width="100%">
+<tr><th colspan="3" align="left">AI talking-head edits</th></tr>
 <tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
@@ -102,6 +95,11 @@ Product tutorial + live demonstration<br>
 <sub>Reference · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
 </td>
 </tr>
+<tr><td colspan="3" valign="top">
+<strong>Start with</strong> · Your recording + transcript / timecodes<br>
+<strong>Make it yours</strong> · A clear hook, tighter speech, captions and well-timed B-roll.<br>
+<a href="docs/examples.md#talking-head">Use this brief</a> · Campaign reference: <a href="https://openai.com/codex-originals/">OpenAI · Codex Originals</a>
+</td></tr>
 </table>
 
 **Make a video in this direction:** your presenter, your story, your product. Ask for a similar hook, caption rhythm or screen reveal, and let the agent adapt it to your material. [Presenter Story Skill](library/skills/presenter-story/SKILL.md) · [Reference credits](docs/readme/media/manifest.json)
@@ -169,45 +167,42 @@ These pairs show an original reference and an external adaptation as silent exce
 
 </details>
 
-### AI recuts & revisions
+<a id="ai-recuts--revisions"></a>
 
-Turn a folder of clips and photos into a story. In this 100-day diary, the photo cards mark the passage of time.
-
-<p align="center"><a href="docs/readme/media/hundred-days-story-reference.mp4"><picture>
+<table width="100%">
+<tr><th colspan="2" align="left">AI recuts &amp; revisions</th></tr>
+<tr>
+<td width="50%" align="center" valign="top">
+<a href="docs/readme/media/hundred-days-story-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/story-recut.jpg">
 <img src="docs/readme/examples/story-recut.gif" width="208" alt="External creative reference: 100 days with stickers and photo cards">
-</picture></a></p>
-
+</picture></a><br>
 <sub>Reference · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">100 days with stickers and photo cards</a></sub>
-
-**Start with** · Your clips, photos, voice-over and story outline<br>
-**Make it yours** · A personal montage with photo cutouts, chapter beats and a new pace.
-
-[Use this brief](docs/examples.md#story-recut)
+</td>
+<td width="50%" valign="top">
+Turn a folder of clips and photos into a story. In this 100-day diary, the photo cards mark the passage of time.<br><br>
+<strong>Start with</strong> · Your clips, photos, voice-over and story outline<br>
+<strong>Make it yours</strong> · A personal montage with photo cutouts, chapter beats and a new pace.<br>
+<a href="docs/examples.md#story-recut">Use this brief</a>
+</td>
+</tr>
+</table>
 
 <a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
 
-### Product launches & demos
-
-Time the reveal to the product. Stripe’s card flip lands on a click; the remake uses that beat to unveil an illustrated film frame.
+<a id="product-launches--demos"></a>
 
 Each brand comparison plays the same five seconds: original on the left, OpenMotion remake on the right (top and bottom on mobile). Open a clip to watch it full size.
 
-**Stripe · Card flip → film frame**
-
+<table width="100%">
+<tr><th colspan="2" align="left">Product launches &amp; demos</th></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-stripe"><a href="examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/stripe/comparison.jpg"><img src="examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · Card flip → film frame"></picture></a></div>
-
+<strong>Stripe · Card flip → film frame</strong><br>
+Time the reveal to the product. Stripe’s card flip lands on a click; the remake uses that beat to unveil an illustrated film frame.<br>
 <sub><a href="examples/brand-studies/stripe/comparison.mp4">Full size</a> · <a href="examples/brand-studies/stripe/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">Original 00:21.50–00:26.50</a> · <a href="examples/brand-studies/stripe/index.html">HTML</a> · <a href="examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
-
-**Start with** · Product screens + feature brief + Motion.md brand context<br>
-**Make it yours** · A feature reveal, a focused UI demonstration and a memorable finish.
-
-[Use this brief](docs/examples.md#product-launch)
-
-<details>
-<summary>More launch references: Kimi K3 and ElevenLabs</summary>
-
-<table>
+</td></tr>
+<tr><th colspan="2" align="left">Original launch films</th></tr>
 <tr>
 <td width="50%" valign="top">
 <a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="docs/readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
@@ -222,9 +217,12 @@ Introduce a new product with a focused launch story.<br>
 <sub>Reference · @ElevenLabs</sub>
 </td>
 </tr>
+<tr><td colspan="2" valign="top">
+<strong>Start with</strong> · Product screens + feature brief + Motion.md brand context<br>
+<strong>Make it yours</strong> · A feature reveal, a focused UI demonstration and a memorable finish.<br>
+<a href="docs/examples.md#product-launch">Use this brief</a>
+</td></tr>
 </table>
-
-</details>
 
 <details>
 <summary>Two mixed-media references: live footage, generated characters and code</summary>
@@ -250,30 +248,28 @@ Combine a character-led hook with UI motion and screen footage.<br>
 
 </details>
 
-### Viral video recreation
+<a id="viral-video-recreation"></a>
 
-Borrow a short sequence, then change what it reveals. These two remakes keep the cut points but replace the graphics, type and subject.
-
-**OpenAI · Wireframe → edit timeline**
-
+<table width="100%">
+<tr><th colspan="2" align="left">Viral video recreation</th></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-openai"><a href="examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/motion-studies/comparison.jpg"><img src="examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · Wireframe → edit timeline"></picture></a></div>
-
-Five colored clips collapse into an edit point. The cut and wordmark resolve on the original beat.
-
+<strong>OpenAI · Wireframe → edit timeline</strong><br>
+Five colored clips collapse into an edit point. The cut and wordmark resolve on the original beat.<br>
 <sub><a href="examples/motion-studies/comparison.mp4">Full size</a> · <a href="examples/motion-studies/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">Original 00:26.50–00:31.50</a> · <a href="examples/motion-studies/signoff.html">HTML</a></sub>
-
-**DeepSeek Harness · Terminal → film slate**
-
+</td></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-deepseek"><a href="examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/deepseek/comparison.jpg"><img src="examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · Terminal → film slate"></picture></a></div>
-
-The cursor types on a film slate. A warm flash carries the last keystroke into the end card.
-
+<strong>DeepSeek Harness · Terminal → film slate</strong><br>
+The cursor types on a film slate. A warm flash carries the last keystroke into the end card.<br>
 <sub><a href="examples/brand-studies/deepseek/comparison.mp4">Full size</a> · <a href="examples/brand-studies/deepseek/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">Original 01:31.50–01:36.50</a> · <a href="examples/brand-studies/deepseek/index.html">HTML</a></sub>
-
-**Start with** · A reference + your copy, visuals and brand<br>
-**Make it yours** · A new editable cut built around the hook, typography and visual rhythm.
-
-[Use this brief](docs/examples.md#viral-remix) · Reference: [Lovable · Aesthetics Update](docs/readme/media/jake-lovable-reference.mp4)
+</td></tr>
+<tr><td colspan="2" valign="top">
+<strong>Start with</strong> · A reference + your copy, visuals and brand<br>
+<strong>Make it yours</strong> · A new editable cut built around the hook, typography and visual rhythm.<br>
+<a href="docs/examples.md#viral-remix">Use this brief</a> · Reference: <a href="docs/readme/media/jake-lovable-reference.mp4">Lovable · Aesthetics Update</a>
+</td></tr>
+</table>
 
 <a id="see-the-motion-survive-a-new-brand"></a>
 
@@ -352,51 +348,60 @@ For a video-only reference, use the separate [recreation workflow](skills/motion
 
 </details>
 
-### Explainers & tutorials
+<a id="explainers--tutorials"></a>
 
-Show where to look before you explain the next step. In the Claude example, the switch and drawn circle guide the eye through a new interface.
-
-**Claude · Settings → color palette**
-
+<table width="100%">
+<tr><th colspan="2" align="left">Explainers &amp; tutorials</th></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-claude"><a href="examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/anthropic/comparison.jpg"><img src="examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · Settings → color palette"></picture></a></div>
-
+<strong>Claude · Settings → color palette</strong><br>
+Show where to look before you explain the next step. In the Claude example, the switch and drawn circle guide the eye through a new interface.<br>
 <sub><a href="examples/brand-studies/anthropic/comparison.mp4">Full size</a> · <a href="examples/brand-studies/anthropic/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">Original 00:00–00:05</a> · <a href="examples/brand-studies/anthropic/index.html">HTML</a></sub>
+</td></tr>
+<tr><td colspan="2" valign="top">
+<strong>Start with</strong> · Your workflow + script + accurate UI captures<br>
+<strong>Make it yours</strong> · A guided sequence with one idea per scene and purposeful callouts.<br>
+<a href="docs/examples.md#explainer">Use this brief</a> · Reference: <a href="docs/readme/media/remix-authorize-once-reference.mp4">Authorize Once, Everyone Connected</a>
+</td></tr>
+</table>
 
-**Start with** · Your workflow + script + accurate UI captures<br>
-**Make it yours** · A guided sequence with one idea per scene and purposeful callouts.
+<a id="data-stories--charts"></a>
 
-[Use this brief](docs/examples.md#explainer) · Reference: [Authorize Once, Everyone Connected](docs/readme/media/remix-authorize-once-reference.mp4)
-
-### Data stories & charts
-
-Start with your numbers, units and one comparison. In this reference, the reader can follow the values as the bars move.
-
-<p align="center"><a href="docs/readme/media/M1128-clip.mp4"><picture>
+<table width="100%">
+<tr><th colspan="2" align="left">Data stories &amp; charts</th></tr>
+<tr>
+<td width="50%" align="center" valign="top">
+<a href="docs/readme/media/M1128-clip.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/data-story.jpg">
 <img src="docs/readme/examples/data-story.gif" width="480" alt="External creative reference: Animated comparison bars · @Vintage_god">
-</picture></a></p>
-
+</picture></a><br>
 <sub>Reference · <a href="https://x.com/Vintage_god/status/2106817967967056165">Animated comparison bars · @Vintage_god</a></sub>
+</td>
+<td width="50%" valign="top">
+Start with your numbers, units and one comparison. In this reference, the reader can follow the values as the bars move.<br><br>
+<strong>Start with</strong> · Your data, units, source and conclusion<br>
+<strong>Make it yours</strong> · A legible chart reveal with animated values and one clear comparison.<br>
+<a href="docs/examples.md#data-story">Use this brief</a>
+</td>
+</tr>
+</table>
 
-**Start with** · Your data, units, source and conclusion<br>
-**Make it yours** · A legible chart reveal with animated values and one clear comparison.
+<a id="music--art-visuals"></a>
 
-[Use this brief](docs/examples.md#data-story)
-
-### Music & art visuals
-
-Give a track a visual motif. The Kimi remake turns a rotating field into record grooves and a sleeve title; this clip compares the visuals.
-
-**Kimi · Magnetic field → vinyl grooves**
-
+<table width="100%">
+<tr><th colspan="2" align="left">Music &amp; art visuals</th></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-kimi"><a href="examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/kimi/comparison.jpg"><img src="examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · Magnetic field → vinyl grooves"></picture></a></div>
-
+<strong>Kimi · Magnetic field → vinyl grooves</strong><br>
+Give a track a visual motif. The Kimi remake turns a rotating field into record grooves and a sleeve title; this clip compares the visuals.<br>
 <sub><a href="examples/brand-studies/kimi/comparison.mp4">Full size</a> · <a href="examples/brand-studies/kimi/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">Original 00:30.75–00:35.75</a> · <a href="examples/brand-studies/kimi/index.html">HTML</a></sub>
-
-**Start with** · Your audio + mood + beat markers / cue points<br>
-**Make it yours** · Layered color, kinetic type and a visual sequence timed to your track.
-
-[Use this brief](docs/examples.md#music-visual) · Reference: [Google AI · Lyria 3](docs/readme/media/M1139-clip.mp4)
+</td></tr>
+<tr><td colspan="2" valign="top">
+<strong>Start with</strong> · Your audio + mood + beat markers / cue points<br>
+<strong>Make it yours</strong> · Layered color, kinetic type and a visual sequence timed to your track.<br>
+<a href="docs/examples.md#music-visual">Use this brief</a> · Reference: <a href="docs/readme/media/M1139-clip.mp4">Google AI · Lyria 3</a>
+</td></tr>
+</table>
 
 <a id="features"></a>
 

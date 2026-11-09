@@ -13,7 +13,7 @@
 
 OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**用 HTML 写视频**，在同一份工程里完成生成、编辑和渲染。
 
-- **完全开源免费，在本地 Agent 直接使用，每一层都支持 BYOK。** 支持 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy，可沿用自己的账号和 API Key。
+- **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
 - OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批开源内容覆盖 **100 多个品牌的宣传片**。
 - **支持图片、视频、音乐和语音生成。** 缺少的镜头、配乐或旁白，都可以生成后放到同一条时间轴上。
 
@@ -25,20 +25,13 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**
 
 <a id="可以用它做什么"></a> <a id="what-can-you-make"></a>
 
-### AI 口播剪辑
-
-按出镜人的讲述剪掉停顿，用字幕标出重点，在讲到工具时切入屏幕画面。
-
-**准备素材** · 你的录制素材 + 文字稿 / 时间码<br>
-**改编方向** · 清晰开头、精简表达、字幕与适时的 B-roll。
-
-[使用这个场景的简报](examples.zh-CN.md#talking-head) · 人物宣传片参考：[OpenAI · Codex Originals](https://openai.com/codex-originals/)
-
+<a id="ai-口播剪辑"></a>
 <a id="everyone-can-be-a-creator"></a> <a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a> <a id="人人都是自媒体"></a> <a id="creator-video-gallery"></a>
 
 **一张面孔、一段声音、一个故事，再加上恰当的动效。** 从九条创作者参考中选择课程、屏幕演示、创始人故事或产品视频，带上自己的录制素材，借鉴喜欢的结构。点击预览观看完整视频。
 
-<table>
+<table width="100%">
+<tr><th colspan="3" align="left">AI 口播剪辑</th></tr>
 <tr><th colspan="3" align="left">🎓 教学与讲解</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
@@ -102,6 +95,11 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**
 <sub>参考 · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
 </td>
 </tr>
+<tr><td colspan="3" valign="top">
+<strong>准备素材</strong> · 你的录制素材 + 文字稿 / 时间码<br>
+<strong>改编方向</strong> · 清晰开头、精简表达、字幕与适时的 B-roll。<br>
+<a href="examples.zh-CN.md#talking-head">使用这个场景的简报</a> · 人物宣传片参考：<a href="https://openai.com/codex-originals/">OpenAI · Codex Originals</a>
+</td></tr>
 </table>
 
 **按这个方向做一支片子：** 你的出镜人、故事和产品。让 Agent 参考开头、字幕节奏或屏幕揭示方式，适配你的素材。[Presenter Story Skill](../library/skills/presenter-story/SKILL.md) · [参考署名](readme/media/manifest.json)
@@ -169,45 +167,42 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**
 
 </details>
 
-### AI 重剪与改稿
+<a id="ai-重剪与改稿"></a>
 
-把零散照片和片段剪成一段故事。这支 100 天日记用一张张照片卡串起时间。
-
-<p align="center"><a href="readme/media/hundred-days-story-reference.mp4"><picture>
+<table width="100%">
+<tr><th colspan="2" align="left">AI 重剪与改稿</th></tr>
+<tr>
+<td width="50%" align="center" valign="top">
+<a href="readme/media/hundred-days-story-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/story-recut.jpg">
 <img src="readme/examples/story-recut.gif" width="208" alt="外部创作参考：用贴纸和照片卡讲述 100 天">
-</picture></a></p>
-
+</picture></a><br>
 <sub>参考 · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">用贴纸和照片卡讲述 100 天</a></sub>
-
-**准备素材** · 你的片段、照片、旁白和故事梗概<br>
-**改编方向** · 用照片剪贴、章节节拍和新节奏做个人蒙太奇。
-
-[使用这个场景的简报](examples.zh-CN.md#story-recut)
+</td>
+<td width="50%" valign="top">
+把零散照片和片段剪成一段故事。这支 100 天日记用一张张照片卡串起时间。<br><br>
+<strong>准备素材</strong> · 你的片段、照片、旁白和故事梗概<br>
+<strong>改编方向</strong> · 用照片剪贴、章节节拍和新节奏做个人蒙太奇。<br>
+<a href="examples.zh-CN.md#story-recut">使用这个场景的简报</a>
+</td>
+</tr>
+</table>
 
 <a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
 
-### 产品发布与演示
-
-让产品出现在最值得停留的一拍。Stripe 原片用一次点击带出卡片翻面，复刻版在同一拍翻出一格海岸胶片。
+<a id="产品发布与演示"></a>
 
 品牌对照均为同步的 5 秒片段：左边是原片，右边是 OpenMotion 复刻；手机上则上下排列。点击画面可放大观看。
 
-**Stripe · 银行卡翻转 → 海岸胶片**
-
+<table width="100%">
+<tr><th colspan="2" align="left">产品发布与演示</th></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-stripe"><a href="../examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/stripe/comparison.jpg"><img src="../examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · 银行卡翻转 → 海岸胶片"></picture></a></div>
-
+<strong>Stripe · 银行卡翻转 → 海岸胶片</strong><br>
+让产品出现在最值得停留的一拍。Stripe 原片用一次点击带出卡片翻面，复刻版在同一拍翻出一格海岸胶片。<br>
 <sub><a href="../examples/brand-studies/stripe/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/stripe/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">原片 00:21.50–00:26.50</a> · <a href="../examples/brand-studies/stripe/index.html">HTML</a> · <a href="../examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
-
-**准备素材** · 产品界面 + 功能简报 + Brandkit<br>
-**改编方向** · 功能揭示、聚焦界面演示和难忘收尾。
-
-[使用这个场景的简报](examples.zh-CN.md#product-launch)
-
-<details>
-<summary>更多发布片参考：Kimi K3 与 ElevenLabs</summary>
-
-<table>
+</td></tr>
+<tr><th colspan="2" align="left">品牌参考原片</th></tr>
 <tr>
 <td width="50%" valign="top">
 <a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser 参考片"></picture></a><br>
@@ -222,9 +217,12 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**
 <sub>参考 · @ElevenLabs</sub>
 </td>
 </tr>
+<tr><td colspan="2" valign="top">
+<strong>准备素材</strong> · 产品界面 + 功能简报 + Brandkit<br>
+<strong>改编方向</strong> · 功能揭示、聚焦界面演示和难忘收尾。<br>
+<a href="examples.zh-CN.md#product-launch">使用这个场景的简报</a>
+</td></tr>
 </table>
-
-</details>
 
 <details>
 <summary>混合素材参考：实拍、生成角色与代码</summary>
@@ -250,30 +248,28 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**
 
 </details>
 
-### 热门视频复刻
+<a id="热门视频复刻"></a>
 
-保留几秒钟的剪辑节奏，换掉画面讲的事。下面两组复刻都沿用原片的切点，重新设计了主体和文字。
-
-**OpenAI · 线框节点 → 剪辑轨道**
-
+<table width="100%">
+<tr><th colspan="2" align="left">热门视频复刻</th></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-openai"><a href="../examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg"><img src="../examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · 线框节点 → 剪辑轨道"></picture></a></div>
-
-五段彩色剪辑轨道收成一个切点，沿用原片切底、出字、落标的三拍。
-
+<strong>OpenAI · 线框节点 → 剪辑轨道</strong><br>
+五段彩色剪辑轨道收成一个切点，沿用原片切底、出字、落标的三拍。<br>
 <sub><a href="../examples/motion-studies/comparison.mp4">横屏大图</a> · <a href="../examples/motion-studies/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">原片 00:26.50–00:31.50</a> · <a href="../examples/motion-studies/signoff.html">HTML</a></sub>
-
-**DeepSeek Harness · 终端打字 → 片场打板**
-
+</td></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-deepseek"><a href="../examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/deepseek/comparison.jpg"><img src="../examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · 终端打字 → 片场打板"></picture></a></div>
-
-光标改在片场打板上逐字输入，最后一键和片尾之间保留停顿与闪切。
-
+<strong>DeepSeek Harness · 终端打字 → 片场打板</strong><br>
+光标改在片场打板上逐字输入，最后一键和片尾之间保留停顿与闪切。<br>
 <sub><a href="../examples/brand-studies/deepseek/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/deepseek/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">原片 01:31.50–01:36.50</a> · <a href="../examples/brand-studies/deepseek/index.html">HTML</a></sub>
-
-**准备素材** · 参考片 + 你的文案、视觉和品牌<br>
-**改编方向** · 围绕开头、字体和视觉节奏，做新的可编辑影片。
-
-[使用这个场景的简报](examples.zh-CN.md#viral-remix) · 参考片：[Lovable · Aesthetics Update](readme/media/jake-lovable-reference.mp4)
+</td></tr>
+<tr><td colspan="2" valign="top">
+<strong>准备素材</strong> · 参考片 + 你的文案、视觉和品牌<br>
+<strong>改编方向</strong> · 围绕开头、字体和视觉节奏，做新的可编辑影片。<br>
+<a href="examples.zh-CN.md#viral-remix">使用这个场景的简报</a> · 参考片：<a href="readme/media/jake-lovable-reference.mp4">Lovable · Aesthetics Update</a>
+</td></tr>
+</table>
 
 <a id="see-the-motion-survive-a-new-brand"></a>
 
@@ -352,51 +348,60 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**
 
 </details>
 
-### 讲解与教程
+<a id="讲解与教程"></a>
 
-先让人看到该看哪里，再展示下一步。Claude 的例子保留了开关和手绘圈的节拍，把设置面板换成调色板。
-
-**Claude · 设置面板 → 品牌调色板**
-
+<table width="100%">
+<tr><th colspan="2" align="left">讲解与教程</th></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-claude"><a href="../examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/anthropic/comparison.jpg"><img src="../examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · 设置面板 → 品牌调色板"></picture></a></div>
-
+<strong>Claude · 设置面板 → 品牌调色板</strong><br>
+先让人看到该看哪里，再展示下一步。Claude 的例子保留了开关和手绘圈的节拍，把设置面板换成调色板。<br>
 <sub><a href="../examples/brand-studies/anthropic/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/anthropic/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">原片 00:00–00:05</a> · <a href="../examples/brand-studies/anthropic/index.html">HTML</a></sub>
+</td></tr>
+<tr><td colspan="2" valign="top">
+<strong>准备素材</strong> · 你的工作流 + 脚本 + 准确界面截图<br>
+<strong>改编方向</strong> · 每个场景一个重点，用有目的的标注引导。<br>
+<a href="examples.zh-CN.md#explainer">使用这个场景的简报</a> · 参考片：<a href="readme/media/remix-authorize-once-reference.mp4">授权一次，连接所有人</a>
+</td></tr>
+</table>
 
-**准备素材** · 你的工作流 + 脚本 + 准确界面截图<br>
-**改编方向** · 每个场景一个重点，用有目的的标注引导。
+<a id="数据故事与图表"></a>
 
-[使用这个场景的简报](examples.zh-CN.md#explainer) · 参考片：[授权一次，连接所有人](readme/media/remix-authorize-once-reference.mp4)
-
-### 数据故事与图表
-
-从一个需要比较的问题出发，标出数值和单位。参考片里的柱形条随数值变化，观众能直接看出差距。
-
-<p align="center"><a href="readme/media/M1128-clip.mp4"><picture>
+<table width="100%">
+<tr><th colspan="2" align="left">数据故事与图表</th></tr>
+<tr>
+<td width="50%" align="center" valign="top">
+<a href="readme/media/M1128-clip.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/data-story.jpg">
 <img src="readme/examples/data-story.gif" width="480" alt="外部创作参考：动态对比柱形图 · @Vintage_god">
-</picture></a></p>
-
+</picture></a><br>
 <sub>参考 · <a href="https://x.com/Vintage_god/status/2106817967967056165">动态对比柱形图 · @Vintage_god</a></sub>
+</td>
+<td width="50%" valign="top">
+从一个需要比较的问题出发，标出数值和单位。参考片里的柱形条随数值变化，观众能直接看出差距。<br><br>
+<strong>准备素材</strong> · 你的数据、单位、来源和结论<br>
+<strong>改编方向</strong> · 清晰的图表揭示、动态数值和明确对比。<br>
+<a href="examples.zh-CN.md#data-story">使用这个场景的简报</a>
+</td>
+</tr>
+</table>
 
-**准备素材** · 你的数据、单位、来源和结论<br>
-**改编方向** · 清晰的图表揭示、动态数值和明确对比。
+<a id="音乐与艺术视觉"></a>
 
-[使用这个场景的简报](examples.zh-CN.md#data-story)
-
-### 音乐与艺术视觉
-
-给一段音乐找一个视觉主题。Kimi 复刻版把旋转的磁力线换成黑胶纹路，再切到唱片封套；这段对照展示的是画面。
-
-**Kimi · 磁力线 → 黑胶唱片**
-
+<table width="100%">
+<tr><th colspan="2" align="left">音乐与艺术视觉</th></tr>
+<tr><td colspan="2" valign="top">
 <div id="case-kimi"><a href="../examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/kimi/comparison.jpg"><img src="../examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · 磁力线 → 黑胶唱片"></picture></a></div>
-
+<strong>Kimi · 磁力线 → 黑胶唱片</strong><br>
+给一段音乐找一个视觉主题。Kimi 复刻版把旋转的磁力线换成黑胶纹路，再切到唱片封套；这段对照展示的是画面。<br>
 <sub><a href="../examples/brand-studies/kimi/comparison.mp4">横屏大图</a> · <a href="../examples/brand-studies/kimi/comparison.mobile.mp4">竖屏 MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">原片 00:30.75–00:35.75</a> · <a href="../examples/brand-studies/kimi/index.html">HTML</a></sub>
-
-**准备素材** · 你的音频 + 情绪 + 节拍标记 / 提示点<br>
-**改编方向** · 色彩层次、动态文字与音乐同步的视觉序列。
-
-[使用这个场景的简报](examples.zh-CN.md#music-visual) · 参考片：[Google AI · Lyria 3](readme/media/M1139-clip.mp4)
+</td></tr>
+<tr><td colspan="2" valign="top">
+<strong>准备素材</strong> · 你的音频 + 情绪 + 节拍标记 / 提示点<br>
+<strong>改编方向</strong> · 色彩层次、动态文字与音乐同步的视觉序列。<br>
+<a href="examples.zh-CN.md#music-visual">使用这个场景的简报</a> · 参考片：<a href="readme/media/M1139-clip.mp4">Google AI · Lyria 3</a>
+</td></tr>
+</table>
 
 <a id="features"></a>
 
