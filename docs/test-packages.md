@@ -19,7 +19,7 @@ MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册
 
 当前 本仓库工作流只构建和校验，不上传 Actions 制品，不发布 npm、Release 或存储对象；两种格式误勾 `publish` 均会失败。本地构建的制品位于 `dist/`，按 [npm 安装说明](npm-installation.md) 使用相邻的安装器、应用归档和清单。
 
-版本为 `下一补丁版本-beta.<run-number>.<attempt>`。例如源码 0.6.2 的第 42 次构建生成 0.6.3-beta.42.1。npm 安装器、应用 package.json、应用锁文件和 MCP 版本一致；清单记录源码 HEAD、构建身份和校验值，既有输出目录拒绝覆盖，源码版本不会被构建改写。
+版本为 `下一补丁版本-beta.<run-number>.<attempt>`。例如源码 0.1.0 的第 42 次构建生成 0.1.1-beta.42.1。npm 安装器、应用 package.json、应用锁文件和 MCP 版本一致；清单记录源码 HEAD、构建身份和校验值，既有输出目录拒绝覆盖，源码版本不会被构建改写。
 
 PR / main 工作流执行清单、类型、Studio 构建与回归、安装/打包测试，以及十一个 Tool 的真实 ZIP E2E。Linux 是组装与测试环境，不是已支持的用户运行平台。Mac / Windows 的最终安装和真实出片仍须在对应系统验收；当前 本仓库工作流没有 Windows 或 Mac 原生验收 job，不把产包成功写成通过。
 
@@ -75,7 +75,7 @@ node scripts/smoke-npm-package.mjs "dist/$version/release-npm.json" /absolute/pa
 npm run package:test -- prepare mac-arm64
 npm ci
 npm run build:studio
-npm run package:test -- build mac-arm64 0.6.2-beta.42.1
+npm run package:test -- build mac-arm64 0.1.1-beta.42.1
 npm install --prefix .tools/codex-cli --ignore-scripts --no-audit --no-fund @openai/codex@0.166.0
 node scripts/smoke-test-package.mjs <最终ZIP路径> .tools/codex-cli/node_modules/@openai/codex/bin/codex.js
 ```

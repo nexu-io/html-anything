@@ -210,7 +210,7 @@ describe("C. Resolver-parity detection", () => {
     expect(mismatches).toHaveLength(0);
   });
 
-  it("C8: element_not_found fires when SDK resolver returns null (v0.6.110 class)", () => {
+  it("C8: element_not_found fires when SDK resolver returns null (missing-element regression)", () => {
     // Simulate the regression: SDK session cannot resolve the hfId the server
     // would address (e.g. scoped-id mismatch, resolver bug).
     const session = { getElement: () => null, getElements: () => [] } as unknown as Parameters<

@@ -8,12 +8,12 @@
 
 在源码目录执行 `npm ci`、`npm run package:npm`。构建会生成：
 
-- `dist/npm-local/openmotion-installer-0.6.3-local.1.tgz`：无 npm 依赖的 JS 安装入口，不含应用、Node、FFmpeg、浏览器或用户数据。
-- `dist/npm-local/openmotion-application-0.6.3.tar.gz`：单独的应用资源，包含服务源码、预先构建的 Studio、Skills 和文档，不含 node_modules 或原生程序。
+- `dist/npm-local/openmotion-installer-0.1.0.tgz`：无 npm 依赖的 JS 安装入口，不含应用、Node、FFmpeg、浏览器或用户数据。
+- `dist/npm-local/openmotion-application-0.1.0.tar.gz`：单独的应用资源，包含服务源码、预先构建的 Studio、Skills 和文档，不含 node_modules 或原生程序。
 - `dist/npm-local/release.local.json`：固定应用 SHA256 与原生工具来源、版本和 SHA256。应用地址相对本清单解析，可将两个文件一起移动。
 
 ```sh
-npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.6.3-local.1.tgz openmotion setup --host codex --manifest /absolute/dist/npm-local/release.local.json
+npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.1.0.tgz openmotion setup --host codex --manifest /absolute/dist/npm-local/release.local.json
 ```
 
 默认应用根目录是 macOS/Linux 的 `~/.local/share/openmotion` 或 Windows 的 `%LOCALAPPDATA%/openmotion`；用户工程在该目录的 `data/`，应用和缓存分别在 `apps/`、`cache/`。可用 `--home`、`--data-dir` 选择位置；不允许工程放进应用、缓存或受管理的宿主组合包。setup 不需要管理员权限或修改全局 PATH。
@@ -51,14 +51,14 @@ CI 在 Studio 构建后执行 `node scripts/package-npm.mjs dist/<beta> <beta>`�
 
 本地生成制品后，将上文 npx 命令里的 tgz 替换为该 beta 文件，`--manifest` 指向相邻 `release-npm.json`。生产 npm 依赖在应用目录用 `npm ci` 安装；不是依赖消费者自动采用 tgz 内的 package-lock.json。一期应用按同一 phase1 注册表仅包含 11 个公开 Tool 和五个入口；平铺宿主升级会移除本安装器拥有的已退出入口，并保留其他宿主/用户技能。依赖和原生版本沿用迁移源锁文件。
 
-目标系统验收继续使用 `scripts/smoke-npm-package.mjs`，支持 `--codex` 对应的 `.js` / `.mjs` CLI 入口。检查实际安装、原生 Skill 发现、MCP、延迟下载、缓存、Studio、音画导出与技术校验；独立播放器和模型回合仍需单独验证。本仓库工作流当前执行 Linux 组装与九 Tool ZIP E2E，不包含 Windows 实机验收；Windows 与 Mac 的安装验收在对应机器运行，不能从组装成功推断通过。
+目标系统验收继续使用 `scripts/smoke-npm-package.mjs`，支持 `--codex` 对应的 `.js` / `.mjs` CLI 入口。检查实际安装、原生 Skill 发现、MCP、延迟下载、缓存、Studio、音画导出与技术校验；独立播放器和模型回合仍需单独验证。本仓库工作流当前执行 Linux 组装与十一 Tool ZIP E2E，不包含 Windows 实机验收；Windows 与 Mac 的安装验收在对应机器运行，不能从组装成功推断通过。
 
 ## 按需下载与复用
 
 setup 仅获取应用并按 lockfile 运行 `npm ci --omit=dev --ignore-scripts`，不运行依赖安装脚本、不下载原生工具。MCP 握手、工具发现、工作流和引擎指南资源读取也不触发原生下载。首次工程操作需要启动本地服务时（例如创建工程或打开预览），准备固定的 FFmpeg、ffprobe 和 Chromium；也可在安装后主动执行：
 
 ```sh
-npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.6.3-local.1.tgz openmotion prepare --home /absolute/install-root
+npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.1.0.tgz openmotion prepare --home /absolute/install-root
 ```
 
 npm 可以通过带 `os/cpu` 的平台包及安装脚本自动配置原生程序。本渠道保留“首次使用再下载”的时机，因此由运行时按固定清单自动准备；不要求用户手动安装 FFmpeg/ffprobe，也不执行 brew/winget。
@@ -73,6 +73,6 @@ npm 可以通过带 `os/cpu` 的平台包及安装脚本自动配置原生程序
 
 隔离设置四家各自的配置根，并通过 `--home`、`--skills-dir`、`--data-dir` 指定全新目录；不把测试安装进日常配置。验收最终 npm tgz、Skills 发现、宿主实际解析的 MCP 启动配置、首次原生下载、第二次缓存复用、Studio 以及一秒有声音和运动的导出。定向自动测试覆盖清单/路径校验、校验失败、锁、配置冲突、重复安装和失败回退。
 
-Installation, MCP connectivity and technical export checks do not replace model creation, independent playback or other operating-system acceptance. See the current [11-tool contract](mcp-phase1-tools.md). Record actual validation against the relevant commit in its PR or delivery log; earlier 28-tool or four-Skill prototype checks are not current phase-one acceptance.
+安装成功、MCP 连接和技术导出不代替模型创作回合、独立播放器或其他操作系统实测。当前一期契约见 [11 Tool 说明](mcp-phase1-tools.md)。实际验证结果以对应提交的 PR 或交付日志为准；不把旧 28 Tool/旧四入口原型的验证当作当前一期验收。
 
 WorkBuddy 桌面对话/模型调用、Windows 实机和公网冷下载须分别验收。本渠道不改变系统支持范围，不新增发布、自动升级、账号或计费能力。

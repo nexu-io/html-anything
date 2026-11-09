@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-09",
+  "scope": "Pinned local template runner smoke test. Not OpenMotion Studio import, target-machine acceptance or a validated presenter-led film.",
+  "packageSha256": "533320d081c578cb824dfbc6ce9d4ae3eb1ca190d67ae7185b4a32b02e236255",
+  "archivePathsChecked": 331,
+  "internalSha256ChecksPassed": 330,
+  "environment": {
+    "node": "26.11.1",
+    "playwrightCore": "1.64.0",
+    "chrome": "156.0.8078.80",
+    "ffmpeg": "8.1.1",
+    "pythonDependencies": "Resolved by uv from the unchanged script declaration; not a portable dependency lock."
+  },
+  "commands": [
+    "npm ci --no-audit --no-fund",
+    "uv run adapter.py plan --input examples/text-only.json --out ../plan.json",
+    "uv run adapter.py prepare --input examples/text-only.json --out ../instance",
+    "uv run adapter.py preview --instance ../instance --out ../preview.png --time 3",
+    "uv run adapter.py render --instance ../instance --out ../silent.mp4"
+  ],
+  "input": {
+    "path": "examples/text-only.json",
+    "sha256": "820e5e0eb9c5f18c9e57b936859abdfc6494cff7b847336946b4030f68ff7c5c",
+    "presenter": "none",
+    "voice": "none",
+    "music": "none",
+    "soundEffects": "native",
+    "scene": "B1"
+  },
+  "result": {
+    "planPassed": true,
+    "preparePassed": true,
+    "previewPassed": true,
+    "renderPassed": true,
+    "runtimeErrors": [],
+    "fullDecodePassed": true,
+    "videoSha256": "52b0b0b1950360e788d1efdca26a3cef1fc56b34b1b4f98c4b266f20c9fbb42e",
+    "previewSha256": "bc0353d21a6ed59a1f79cef0500db3fb4f575600dc0402fec8af8476f94f1004",
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "60/1",
+          "duration": "8.000000",
+          "nb_frames": "480"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "duration": "8.000000",
+          "nb_frames": "376"
+        }
+      ],
+      "format": {
+        "duration": "8.000000"
+      }
+    }
+  },
+  "browserLane": "Existing product-tour real file lock, isolated browser instance; no application browser suite claimed.",
+  "remaining": [
+    "Presenter/video/voice binding has not been tested in this local smoke check.",
+    "All native scenes, portrait adaptation, Windows and Linux execution are not verified.",
+    "Studio-native import is not implemented.",
+    "Published README demo is upstream media, distinct from this text-only smoke output.",
+    "Human listening, complete-film playback acceptance and creative approval remain separate."
+  ]
+}

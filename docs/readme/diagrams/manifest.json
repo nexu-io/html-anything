@@ -1,0 +1,30 @@
+{
+  "method": "Built-in ImageGen",
+  "styleReference": {
+    "file": "../cover-reverse-engineering-v2.png",
+    "sha256": "70a01c68511a8459661929333ee1a8751ab1bb4a4e86dd22a92f36874a32bd92"
+  },
+  "entries": [
+    {
+      "file": "creation-stack-painterly.png",
+      "width": 1774,
+      "height": 887,
+      "bytes": 1962827,
+      "sha256": "798b8eff72c77199775c140c6dedd2b8b86ca1313ca942b124bcba299cc4711c"
+    },
+    {
+      "file": "creative-context-painterly.png",
+      "width": 1774,
+      "height": 887,
+      "bytes": 2060725,
+      "sha256": "08d516c2d42e696f805f1c4196e5ab8940668d99b0c56eb16b60f98076865347"
+    },
+    {
+      "file": "runtime-architecture-painterly.png",
+      "width": 1774,
+      "height": 887,
+      "bytes": 1973727,
+      "sha256": "3e93e9896c3dbb930ab5492c12fdca48db226eddf881601b75400ca4011e01f0"
+    }
+  ]
+}

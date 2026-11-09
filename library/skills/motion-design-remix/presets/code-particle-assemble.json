@@ -1,0 +1,31 @@
+{
+  "id": "code-particle-assemble",
+  "sourceSha256": "f37d702f7c1f80e48d8a918901f030b8acfc21d2ddb65d22f5dfb5a099280a72",
+  "replacements": [
+    {
+      "from": "content: \"app\"",
+      "to": "content: \"film\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"pipe\"",
+      "to": "content: \"cut\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"parse,\"",
+      "to": "content: \"select,\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"optimize,\"",
+      "to": "content: \"trim,\"",
+      "count": 1
+    },
+    {
+      "from": "content: \"emit,\"",
+      "to": "content: \"render,\"",
+      "count": 1
+    }
+  ]
+}

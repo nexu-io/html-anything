@@ -1,6 +1,8 @@
-[English](README.md) · **简体中文** · [openmotion](../README.zh-CN.md)
+[English](README.md) · **简体中文** · [OpenMotion](../README.zh-CN.md)
 
 # Motion 资源站与主题合集
+
+需要可复用的 Skills、模板、Motion 组件、`MOTION_DESIGN.md` 设计体系与 Brandkits，请从 [OpenMotion Library](../../library/README.zh-CN.md) 开始。本页继续维护参考片与可编辑起点。
 
 先确定想借鉴什么：一支片子的开场、产品出现的方式，还是把复杂功能讲清楚的节奏。以下把**可以观看的参考片**和**能直接打开的工程**分开列出。
 
@@ -8,9 +10,9 @@
 
 | 影片或片段 | 建议观察 | 来源 |
 | --- | --- | --- |
-| [Pond：新 Linux 系统 · 12 秒](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4) | 这么短的系统介绍里，观众在第几秒能认出产品？ | @bflycomputer；Hyperframes 参考编号 `hf-reference-jake-pond` |
-| [Firecrawl Free Keyless · 32 秒](https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4) | 一支开发者工具发布片，如何分配产品主张与功能演示的时间？ | @ericciarla；Hyperframes 参考编号 `hf-reference-remix-firecrawl` |
-| [Firecrawl 集成展示 · 5 秒](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) | 单看一个转场：如何从醒目的数字过渡到集成伙伴的展示？ | [@ericciarla 原帖](https://x.com/ericciarla/status/2093375835679977570)；编号 `hf-moment-M945` |
+| [Pond：新 Linux 系统 · 12 秒](../readme/media/jake-pond-reference.mp4) | 这么短的系统介绍里，观众在第几秒能认出产品？ | @bflycomputer；Hyperframes 参考编号 `hf-reference-jake-pond` |
+| [Firecrawl Free Keyless · 32 秒](../readme/media/remix-firecrawl-reference.mp4) | 一支开发者工具发布片，如何分配产品主张与功能演示的时间？ | @ericciarla；Hyperframes 参考编号 `hf-reference-remix-firecrawl` |
+| [Firecrawl 集成展示 · 5 秒](../readme/media/M945-clip.mp4) | 单看一个转场：如何从醒目的数字过渡到集成伙伴的展示？ | [@ericciarla 原帖](https://x.com/ericciarla/status/2093375835679977570)；编号 `hf-moment-M945` |
 
 来源可在[目录快照](../../web/catalog/hyperframes.json)中查到。这里收录的是观看参考；改编时保留作者出处，使用自己的品牌素材。
 

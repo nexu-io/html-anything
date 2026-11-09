@@ -1,0 +1,89 @@
+{
+  "scope": "Browser dependencies used by this composition, with their original licenses.",
+  "files": [
+    {
+      "file": "gsap-3.14.2/dist/gsap.min.js",
+      "url": "https://registry.npmjs.org/gsap/-/gsap-3.14.2.tgz#dist/gsap.min.js",
+      "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+      "bytes": 72779,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "gsap-3.14.2/README.md",
+      "url": "https://registry.npmjs.org/gsap/-/gsap-3.14.2.tgz#README.md",
+      "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0",
+      "bytes": 6199,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "fonts/inter-5b717029a2c4.ttf",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuBWYMZg.ttf",
+      "sha256": "5b717029a2c4cfca2167e97be1157edb24151591e5ec96eb484745c392817a7a",
+      "bytes": 327260,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/inter-eec66af7f233.ttf",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuDyYMZg.ttf",
+      "sha256": "eec66af7f2337bd34fe6e801cf92ededcb57a20c0d7bc40a61d4eefcbe3dd40c",
+      "bytes": 327324,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/inter-b37284b5701b.ttf",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZg.ttf",
+      "sha256": "b37284b5701b6b168dfc770aa1a4ac492106422fd3ba76bc7641e37434e8019c",
+      "bytes": 326468,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/inter-e7a1aaf7eda9.ttf",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf",
+      "sha256": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
+      "bytes": 326048,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/inter-8c883f63b2c4.ttf",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZg.ttf",
+      "sha256": "8c883f63b2c4157d997319f2c8bc6995ed4357ef371940d31ca159004a4aae63",
+      "bytes": 325304,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/inter-1b08e7fc267a.ttf",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf",
+      "sha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+      "bytes": 324820,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/inter-d0f4bc7faca4.ttf",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuOKfMZg.ttf",
+      "sha256": "d0f4bc7faca468376e3db9b5e57afcdc2192134c9ac82a9511f32767b56853a4",
+      "bytes": 325748,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/inter.css",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=block",
+      "sha256": "49e25a73ba83dc58df53dc0035ee9802628d2eba9dfbd91fb1cc4a264ff4199d",
+      "bytes": 1113,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/inter-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/OFL.txt",
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+      "bytes": 4377,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "gsap-3.14.2/LICENSE.txt",
+      "url": "https://gsap.com/community/standard-license/",
+      "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b",
+      "bytes": 5494,
+      "license": "GSAP Standard No Charge License"
+    }
+  ]
+}

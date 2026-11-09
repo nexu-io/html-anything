@@ -1,6 +1,6 @@
 # Hyperframes 集成
 
-当前实现基线：OpenDesign 0.6.2 候选版 / Hyperframes 0.9.7。本文维护引擎与工程关系；产品能力和演进准则见 [产品架构](product/architecture.md)。
+当前实现基线：OpenMotion 0.1.0 / Hyperframes 0.9.7。本文维护引擎与工程关系；产品能力和演进准则见 [产品架构](product/architecture.md)。
 
 目标是封装原生 Studio 与渲染能力，让 Agent 创作和手工编辑共享原生工程。
 

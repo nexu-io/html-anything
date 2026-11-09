@@ -103,7 +103,7 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
       await mkdir(path.dirname(path.join(runtime, filename)), { recursive: true });
       await cp(path.join(source, filename), path.join(runtime, filename));
     }
-    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ type: 'module', version: '0.6.0' }));
+    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ type: 'module', version: '0.1.0' }));
     await writeFile(path.join(runtime, 'bootstrap.mjs'), 'process.env.ADAPTER_PRELOAD_TEST = "loaded";');
     await writeFile(path.join(runtime, 'mcp.ts'), 'console.log(JSON.stringify({preload:process.env.ADAPTER_PRELOAD_TEST,data:process.env.MOTION_DATA_DIR}));');
     const data = path.join(directory, 'projects'), output = path.join(directory, 'adapters');
@@ -131,7 +131,7 @@ test('failed adapter writes remove only the new output and preserve runtime and 
     for (const name of ['AGENTS.md', 'CLAUDE.md', 'mcp.ts']) await writeFile(path.join(runtime, name), '');
     await mkdir(path.join(runtime, 'web/design-system'), { recursive: true });
     await cp(path.join(source, 'web/design-system/icons.svg'), path.join(runtime, 'web/design-system/icons.svg'));
-    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ version: '0.6.1-' + 'a'.repeat(260) }));
+    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ version: '0.1.0-' + 'a'.repeat(260) }));
     await assert.rejects(exportAdapters(runtime, data, output), { code: 'ENAMETOOLONG' });
     assert.equal(existsSync(output), false);
     assert.equal(await readFile(path.join(data, 'keep.txt'), 'utf8'), 'user data');

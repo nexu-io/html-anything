@@ -1,2 +1,5 @@
 * text=auto eol=lf
 *.cmd text eol=crlf
+# Integrity manifests describe exact third-party bytes, including license newlines.
+library/**/vendor/** -text
+template-library/**/vendor/** -text
