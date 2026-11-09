@@ -4,6 +4,12 @@
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
+  <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
+  <a href="LICENSE"><img src="docs/readme/badges/license.svg" alt="Apache 2.0 license"></a>
+</p>
+
 <p align="center"><a href="#showcase">Examples</a> · <a href="#features">Features</a> · <a href="#technical-guide">Setup & architecture</a></p>
 
 <picture>

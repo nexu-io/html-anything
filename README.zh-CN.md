@@ -4,6 +4,12 @@
 
 **Reverse engineering for any video**
 
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>
+  <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
+  <a href="LICENSE"><img src="docs/readme/badges/license.svg" alt="Apache 2.0 许可证"></a>
+</p>
+
 OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**用 HTML 写视频**，在同一份工程里完成生成、编辑和渲染。
 
 - **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
