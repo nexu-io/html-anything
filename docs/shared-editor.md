@@ -37,7 +37,8 @@ flowchart LR
 | 显式打开预览 | 按需启动或复用原生 Studio；返回已有完整/嵌入链接契约 |
 | 全部 MCP 会话退出 | 后台继续服务网页与导出；不会因某个 Agent 退出取消其他人的工作 |
 | 用户停止后台 | 私有停止接口拒绝正在执行的 MCP、视频导出或素材任务；空闲时关闭子服务并退出 |
-| 发现协议、版本或运行时代码不兼容 | 明确报错，请用户停止旧后台；不自动杀进程或另起一个后台 |
+| Runtime protocol/version/build mismatch | Refuse the call with expected/actual identity; reconnect a stale MCP client before considering an idle older backend shutdown. Never automatically kill or launch a competing backend. |
+| A live MCP client's plugin directory was replaced or removed | Return `MCP_RUNTIME_RELOAD_REQUIRED` with `applied: false` before dispatch; reload the host connection. |
 | 同目录已有旧版预览服务 | 拒绝另外启动共享后台；退出旧服务后重试 |
 
 macOS 使用系统 `/usr/bin/perl` 取得 `flock` 后直接 exec Node；Perl 不常驻。锁描述符同时由后台和 Studio 守卫持有。后台死亡后，守卫先清理旧 Studio，再释放锁，新后台才能启动。锁文件保留不等于锁仍被占用；不通过删除锁文件来恢复。

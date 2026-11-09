@@ -53,7 +53,13 @@ export async function ensureEditor(directory: string): Promise<EditorRegistry> {
       try {
         const health = await editorRequest(registry, '/editor-api/health', undefined, 1200);
         if (health.service !== service || health.dataDirectory !== data || health.instanceId !== registry.instanceId) throw Object.assign(new Error('编辑器实例身份不匹配'), { terminal: true });
-        if (health.protocol !== protocol || health.version !== version || health.build !== editorBuild) throw Object.assign(new Error('编辑器协议或代码版本不兼容；请先停止旧后台后重试'), { terminal: true });
+        if (health.protocol !== protocol || health.version !== version || health.build !== editorBuild) throw Object.assign(
+          new Error('Editor runtime incompatible. Reconnect the Motion MCP connection to the installed runtime and compare the expected and actual versions/builds. Stop an older editor only after confirming it is idle; do not bypass MCP or switch workspaces to continue.'),
+          { terminal: true, code: 'EDITOR_RUNTIME_INCOMPATIBLE', details: {
+            dataDirectory: data, expected: { protocol, version, build: editorBuild },
+            actual: { protocol: health.protocol, version: health.version, build: health.build },
+          } },
+        );
         return registry;
       } catch (error) { if ((error as any).terminal || (error as any).status) throw error; }
     }

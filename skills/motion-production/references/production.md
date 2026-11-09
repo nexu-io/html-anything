@@ -1,6 +1,6 @@
 # Motion runtime adapter · phase one
 
-Use the nine Tools actually returned by tools/list. Read [Native authoring](native.md) and the pinned engine guide before authoring. Keep one native project and one renderer; creative code is authored by the host Agent.
+Use only the Motion MCP Tools actually returned by tools/list. Read [Native authoring](native.md) and the pinned engine guide before authoring. Keep one native project and one renderer; creative code is authored by the host Agent.
 
 | Responsibility | Public Tool / supported scope |
 | --- | --- |
@@ -14,6 +14,14 @@ Use the nine Tools actually returned by tools/list. Read [Native authoring](nati
 | Cancel | motion_export_cancel: explicit owned job, distinguish cancelling/cancelled/completed |
 
 ## Execution
+
+### Tool transport and workspace readiness
+
+Use the host's connected Motion MCP tools for project creation, reads, saves, previews, export requests and status checks. A shell HTTP request carrying the same tool name reaches shared business code but is not a host MCP tool invocation; report that distinction and its reason explicitly when a development fallback is necessary.
+
+Before opening a project for an Agent workflow, call `motion_get_project` through that connection and verify its `dataDirectory`, project/session identity and current version. Create new work through `motion_create_project`, then save and open the returned project through MCP. A browser URL or a matching project ID alone does not bind the connection to that workspace. A repository-only UI fixture can remain isolated, but must be identified as such; exporting it through MCP requires a matching connection or an explicitly scoped project import/copy, not an implicit data-directory change.
+
+For `MCP_RUNTIME_RELOAD_REQUIRED`, `EDITOR_RUNTIME_INCOMPATIBLE` or a closed transport, repair/reload the host connection and repeat the scoped read before writing. Compare the reported expected and actual version/build; a stale connection can disagree with a healthy current backend. Do not stop a matching backend or silently substitute shell/HTTP exports for failed MCP calls. Preserve existing projects and completed jobs, and query an applicable export before creating another.
 
 1. Reuse complete guidance already read. Installed Skills and MCP resources/read provide the same documents; production start only routes a task that lacks a specialist. Changes to existing content use [edit workflow](edit.md). Missing instructions/source reads return to the model before dependent writes.
 2. Reuse the target projectId or explicitly create a new one. Read its current revision and content version. No global most-recent project fallback. Five is a list page size, not a retention policy.
