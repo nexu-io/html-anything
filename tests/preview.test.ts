@@ -6,6 +6,7 @@ import { ensureService, openPreview, previewUrl, VERSION } from '../preview.ts';
 import type { Probe, PreviewRuntime } from '../preview.ts';
 import { WorkspaceStore } from '../workspace.ts';
 import { pluginRoot } from '../hyperframes.ts';
+import { phase1McpCapabilities } from '../shared/phase1-tools.ts';
 import { fixture } from './fixtures.ts';
 
 function runtime(store: WorkspaceStore) {
@@ -15,7 +16,7 @@ function runtime(store: WorkspaceStore) {
     launch: async (port, directory, log, background) => {
       assert.equal(directory, store.directory); assert.equal(log, path.join(directory, 'preview.log')); launches.push(port);
       if (!background) await store.initialize(pluginRoot);
-      occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: directory, ffmpeg: true, ready: true, studioUrl: background ? undefined : `http://localhost:${port + 1}/#project/project` } });
+      occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: directory, ffmpeg: true, ready: true, mcp: phase1McpCapabilities, studioUrl: background ? undefined : `http://localhost:${port + 1}/#project/project` } });
       return { pid: 1234, alive: () => true, error: () => '', stop: () => { stops.push(port); } };
     },
     openEditor: async port => {
@@ -56,6 +57,37 @@ test('unrelated services and mismatched versions or data directories are left in
   const result = await openPreview(store, mock.environment);
   assert.equal(result.previewUrl, `http://localhost:${port + 3}`); assert.deepEqual(mock.stops, []);
 }));
+test('a phase1 call reuses a compatible newer backend without restarting it or changing workspaces', () => fixture(async store => {
+  const mock = runtime(store), port = Number(process.env.PORT || 4173);
+  mock.occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: '0.6.4',
+    dataDirectory: store.directory, ffmpeg: true, ready: true, mcp: { protocol: 1, tools: ['motion_export_request'] } } });
+  const before = await store.get();
+  const result = await ensureService(store, mock.environment, 'motion_export_request');
+  assert.equal(result.previewUrl, `http://localhost:${port}`);
+  assert.equal(result.reused, true);
+  assert.deepEqual(mock.launches, []); assert.deepEqual(mock.stops, []);
+  assert.deepEqual(await store.get(), before);
+  assert.equal(JSON.parse(await readFile(path.join(store.directory, 'preview.json'), 'utf8')).version, '0.6.4');
+}, false));
+test('phase1 port discovery leaves unrelated services and other workspaces intact', () => fixture(async store => {
+  const mock = runtime(store), port = Number(process.env.PORT || 4173);
+  const health = { service: 'motion-preview', protocol: 2, version: '0.6.4', dataDirectory: store.directory, ffmpeg: true, ready: true, mcp: { protocol: 1, tools: ['motion_export_request'] } };
+  const changes = [{ dataDirectory: '/other' }, { service: 'unrelated-service' }];
+  changes.forEach((change, i) => mock.occupied.set(port + i, { kind: 'motion', health: { ...health, ...change } }));
+  const result = await ensureService(store, mock.environment, 'motion_export_request');
+  assert.equal(result.previewUrl, `http://localhost:${port + changes.length}`);
+  assert.deepEqual(mock.stops, []);
+}, false));
+test('phase1 port discovery refuses an incompatible same-workspace authority without launching another', async t => {
+  for (const change of [{ protocol: 999 }, { version: VERSION, mcp: { protocol: 2, tools: ['motion_export_request'] } }, { mcp: { protocol: 1, tools: ['motion_get_project'] } }, { mcp: undefined }]) await t.test(JSON.stringify(change), () => fixture(async store => {
+    const mock = runtime(store), port = Number(process.env.PORT || 4173);
+    mock.occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: '0.6.4', dataDirectory: store.directory, ffmpeg: true, ready: true, ...change } });
+    const before = await store.get();
+    await assert.rejects(ensureService(store, mock.environment, 'motion_export_request'), { code: 'EDITOR_RUNTIME_INCOMPATIBLE' });
+    assert.deepEqual(mock.launches, []); assert.deepEqual(mock.stops, []);
+    assert.deepEqual(await store.get(), before);
+  }, false));
+});
 test('concurrent preview requests create one process and preserve existing source', () => fixture(async store => {
   const current = await store.get(); await store.writeFiles(current.revision, [{ path: 'notes.md', content: 'preserve me' }]);
   const before = await store.get(), mock = runtime(store);

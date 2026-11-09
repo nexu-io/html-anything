@@ -5,10 +5,11 @@ import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
 import { WorkspaceStore } from './workspace.ts';
 import { ensureEditor, editorRequest, readEditor, sharedEditorEnabled } from './editor-runtime.ts';
+import { supportsPhase1Tool } from './shared/phase1-tools.ts';
 
 const pluginRoot = fileURLToPath(new URL('./', import.meta.url));
 export const VERSION: string = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version;
-export type Health = { service: string; protocol: number; version: string; dataDirectory: string; ffmpeg: boolean; ready: boolean; editorReady?: boolean; studioUrl?: string; hyperframesCli?: string; authoringGuide?: string };
+export type Health = { service: string; protocol: number; version: string; dataDirectory: string; ffmpeg: boolean; ready: boolean; editorReady?: boolean; studioUrl?: string; hyperframesCli?: string; authoringGuide?: string; mcp?: { protocol: number; tools: string[] } };
 export type Probe = { kind: 'free' | 'busy'; health?: never } | { kind: 'motion'; health: Health };
 export type Started = { pid?: number; alive: () => boolean; error: () => string; stop: () => void };
 export type PreviewRuntime = {
@@ -77,11 +78,11 @@ async function requestEditor(port: number) {
 
 // Background tool calls must not initialize or stamp the active source before
 // applying the caller's revision. Opening the editor is a separate operation.
-export async function ensureService(store = new WorkspaceStore(), environment: PreviewRuntime = runtime) {
-  return openPreview(store, environment, { editor: false });
+export async function ensureService(store = new WorkspaceStore(), environment: PreviewRuntime = runtime, mcpTool?: string) {
+  return openPreview(store, environment, { editor: false, mcpTool });
 }
 
-export async function openPreview(store = new WorkspaceStore(), environment: PreviewRuntime = runtime, options = { editor: true }) {
+export async function openPreview(store = new WorkspaceStore(), environment: PreviewRuntime = runtime, options: { editor: boolean; mcpTool?: string } = { editor: true }) {
   let existingLegacy = false;
   if (sharedEditorEnabled && environment === runtime && !await readEditor(store.directory)) {
     const port = await registeredPort(store);
@@ -91,10 +92,10 @@ export async function openPreview(store = new WorkspaceStore(), environment: Pre
     }
   }
   if (sharedEditorEnabled && environment === runtime && !existingLegacy) {
-    const before = await readEditor(store.directory), editor = await ensureEditor(store.directory);
+    const before = await readEditor(store.directory), editor = await ensureEditor(store.directory, options.mcpTool);
     const opened = await editorRequest(editor, '/editor-api/preview', { projectId: store.projectId, editor: options.editor });
     const file = path.join(store.directory, 'preview.json'), temporary = file + '.' + crypto.randomUUID() + '.tmp';
-    try { await writeFile(temporary, JSON.stringify({ port: Number(new URL(editor.endpoint).port), pid: editor.pid, version: VERSION }), { mode: 0o600 }); await rename(temporary, file); }
+    try { await writeFile(temporary, JSON.stringify({ port: Number(new URL(editor.endpoint).port), pid: editor.pid, version: editor.version }), { mode: 0o600 }); await rename(temporary, file); }
     finally { await rm(temporary, { force: true }); }
     return { ...opened, revision: (await store.get()).revision, reused: before?.instanceId === editor.instanceId,
       previewTarget: 'host-built-in-browser', nextAction: 'Open the exact previewUrl in the host built-in browser when available; otherwise return the URL and mark visual/player checks as not_run. Do not start another editor or ask the user to run a terminal server.' };
@@ -115,7 +116,8 @@ export async function openPreview(store = new WorkspaceStore(), environment: Pre
     const firstPort = initialPort(), previous = await registeredPort(store);
     const candidates = [...new Set([...(previous ? [previous] : []), ...Array.from({ length: 10 }, (_, i) => firstPort + i)])];
     let available: number | null = null;
-    const matches = (result: Probe) => result.kind === 'motion' && result.health.ready && result.health.version === VERSION && path.resolve(result.health.dataDirectory) === store.directory;
+    const matches = (result: Probe) => result.kind === 'motion' && result.health.service === 'motion-preview' && result.health.protocol === 2 && result.health.ready
+      && (options.mcpTool ? supportsPhase1Tool(result.health, options.mcpTool) : result.health.version === VERSION) && path.resolve(result.health.dataDirectory) === store.directory;
     async function ready(port: number, health: Health, reused: boolean, pid?: number) {
       if (options.editor && !health.studioUrl) {
         await (environment.openEditor || requestEditor)(port);
@@ -124,17 +126,21 @@ export async function openPreview(store = new WorkspaceStore(), environment: Pre
         health = updated.health;
       }
       const file = path.join(store.directory, 'preview.json'); const temporary = file + '.' + crypto.randomUUID() + '.tmp';
-      try { await writeFile(temporary, JSON.stringify({ port, pid, version: VERSION }), { mode: 0o600 }); await rename(temporary, file); }
+      try { await writeFile(temporary, JSON.stringify({ port, pid, version: health.version }), { mode: 0o600 }); await rename(temporary, file); }
       finally { await rm(temporary, { force: true }); }
       return { previewUrl: `http://localhost:${port}`, studioUrl: health.studioUrl, hyperframesCli: health.hyperframesCli, authoringGuide: health.authoringGuide, engine: 'hyperframes', ready: true, reused, ffmpeg: health.ffmpeg, revision: (await store.get()).revision,
         dataDirectory: store.directory, editorReady: Boolean(health.studioUrl), browserOpened: false, previewTarget: 'host-built-in-browser',
         nextAction: options.editor ? 'Use the host built-in browser to open previewUrl in this conversation. Do not ask the user to run a server or launch an external browser. If the host has no built-in browser, return the URL and state that the embedded preview is unavailable.' : 'Background service ready. Opening the editor is not required for template application or export.' };
     }
-    // Prefer reusing the exact same Motion version and workspace, even when the
-    // first port is occupied. Never kill or reuse an unrelated local service.
+    // Public MCP negotiates its API; other callers retain exact-version reuse.
     for (const port of candidates) {
       const result = await environment.probe(port);
       if (matches(result)) return await ready(port, (result as { health: Health }).health, true);
+      if (options.mcpTool && result.kind === 'motion' && result.health.service === 'motion-preview' && path.resolve(result.health.dataDirectory) === store.directory) throw Object.assign(
+        new Error('Editor runtime incompatible with this MCP call; update the incompatible components together when idle. No competing backend was started.'),
+        { code: 'EDITOR_RUNTIME_INCOMPATIBLE', details: { dataDirectory: store.directory, expected: { protocol: 2, version: VERSION, mcpTool: options.mcpTool },
+          actual: { protocol: result.health.protocol, version: result.health.version, mcp: result.health.mcp } } },
+      );
       if (result.kind === 'free' && available === null) available = port;
     }
     if (available === null) throw new Error('本地预览端口均已占用；未停止或替换任何已有服务。');

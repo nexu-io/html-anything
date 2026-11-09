@@ -33,11 +33,13 @@ export async function rpc(message: any, store = new WorkspaceStore(), registry =
   if (message.method === 'tools/list') return result({ tools: registry.tools });
   if (message.method === 'tools/call') {
     try {
-      const current = statSync(runtimeRoot, { throwIfNoEntry: false });
-      if (!current || current.dev !== runtimeDirectory.dev || current.ino !== runtimeDirectory.ino) throw Object.assign(
-        new Error('The Motion plugin directory was replaced or removed. Reload the Motion MCP connection in the host before retrying; no project operation was applied.'),
-        { code: 'MCP_RUNTIME_RELOAD_REQUIRED' },
-      );
+      if (registry.profile !== 'phase1') {
+        const current = statSync(runtimeRoot, { throwIfNoEntry: false });
+        if (!current || current.dev !== runtimeDirectory.dev || current.ino !== runtimeDirectory.ino) throw Object.assign(
+          new Error('The Motion plugin directory was replaced or removed. Reload this internal legacy MCP connection before retrying; no project operation was applied.'),
+          { code: 'MCP_RUNTIME_RELOAD_REQUIRED' },
+        );
+      }
       if (!registry.tools.some(tool => tool.name === message.params?.name)) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + String(message.params?.name));
       if (registry.profile === 'phase1') {
         const name = message.params.name;
@@ -46,7 +48,7 @@ export async function rpc(message: any, store = new WorkspaceStore(), registry =
         validateInput(definition.inputSchema, args);
         if (name === 'motion_open_preview' && !args.projectId && !args.sessionId && args.action !== 'record_review') args.sessionId = selections.get(store)?.sessionId;
         if (args.sessionId === undefined) delete args.sessionId;
-        const service = await ensureService(store), origin = new URL(service.previewUrl).origin;
+        const service = await ensureService(store, undefined, name), origin = new URL(service.previewUrl).origin;
         const response = await fetch(origin + '/motion-api/phase1/call', { method: 'POST', headers: await editorHeaders(store, origin),
           body: JSON.stringify({ name, arguments: args }), signal: AbortSignal.timeout(600_000) });
         const value = await response.json();
