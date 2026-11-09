@@ -5,18 +5,35 @@ It has no runtime dependencies. The application consumes its TypeScript sources;
 `npm run build:tracking` emits JavaScript and declarations for a local `npm pack`
 from this directory. The package remains private; this change does not publish it.
 
-## Enable reporting
+## Reporting and user control
 
-Reporting is **off by default**. Configure the process launching the MCP and local
-service with `OPENMOTION_TELEMETRY=1`, `OPENMOTION_POSTHOG_HOST` (the project's HTTPS
-ingestion origin) and `OPENMOTION_POSTHOG_KEY` (a public `phc_` project token).
-`DO_NOT_TRACK=1` overrides enablement. Restart existing local services after changing
-configuration. Missing/invalid configuration fails closed and never blocks creation.
+Reporting is **on by default** using the isolated OpenMotion project. The single
+public, write-only project token and ingestion host are distributed in
+`shared/tracking-config.json`; it contains no read/admin credentials and is never
+included in the browser bundle. Users do not need to supply a key or opt-in flag.
+
+Users can turn collection off in Studio's **Privacy settings → Share usage data**.
+This preference is persisted under the installation's data directory and applies
+to both MCP and Studio, including already-running processes and future restarts.
+Disabling clears pending queues and aborts in-flight delivery; accepted events
+cannot be recalled. A filesystem watcher propagates preference changes, and each
+enqueue/flush also checks the saved preference. Corrupt preference files fail closed.
+
+`OPENMOTION_TELEMETRY=0` (also `false`/`off`) or `DO_NOT_TRACK=1` forces all collection
+off and locks the Studio switch. Restart services after changing launch environment
+variables. Browser Do Not Track suppresses browser collection. The environment
+override takes priority over the saved preference.
+
+For another collector, supply both `OPENMOTION_POSTHOG_HOST` and
+`OPENMOTION_POSTHOG_KEY`. Partial or invalid configuration fails closed. Custom
+collectors default to zero-IP mode; `OPENMOTION_GEOIP=1` requires that collector to
+discard IP after enrichment. Never supply a personal `phx_` API key.
 
 Use `OPENMOTION_TRACKING_ENV=test` and a UUID in
 `OPENMOTION_TRACKING_TEST_RUN_ID` for isolated ingestion checks; filter these records
 out of product dashboards. Normal environments are `production` and `development`.
-Do not commit deployment keys or put personal `phx_` API keys in this package.
+Node/Vitest tests suppress collection unless explicitly given a test run ID; CI
+also forces collection off. No test should silently report into production funnels.
 
 Studio retrieves only an enabled flag and submits semantic events to the same-origin
 `/motion-api/tracking` endpoint. The server validates the complete batch, rejects
@@ -37,12 +54,16 @@ a separate change. Unknown source remains null.
 
 Common fields include schema/product/app version, environment, entrypoint/runtime,
 platform/architecture, OS/version, runtime locale, device IANA timezone and UTC offset
-(east of UTC is positive). GeoIP is disabled and `$ip` is the fixed value `0.0.0.0`;
-null is insufficient because ingestion can replace it with the request's IP.
-The fixed value suppresses real IP storage in event properties; network intermediaries
-still see the connection address. Country/region and
-GeoIP timezone remain unknown until ingress geolocation and IP-discard policy are
-implemented together. Device timezone is not a country inference. Person profiles,
+(east of UTC is positive). The default project runs [coarse GeoIP](./posthog-geoip.hog)
+before the **Discard client IP data** setting removes the IP from stored events.
+Only country code/name, first-level region code/name and geographic timezone are
+added. No city, postal code, coordinates or person-location updates are generated.
+Lookup failures leave geographic fields unknown. GeoIP describes the observable
+network egress; VPNs/proxies can change it. Device timezone is a separate setting.
+Network intermediaries still see the connection address. Operators must keep the
+project's IP-discard policy enabled; it is a receiver requirement, not a guarantee
+enforced by a public capture token. Custom zero-IP mode retains the fixed address
+`0.0.0.0`, because a null property is replaced with the request IP. Person profiles,
 autocapture, session replay and upstream engine telemetry are not enabled.
 
 Runtime and TypeScript event contracts whitelist required fields, enums, UUIDs and

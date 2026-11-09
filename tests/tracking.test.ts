@@ -5,7 +5,7 @@ import path from 'node:path';
 import { createTracker, deviceContext } from '../tracking/core.ts';
 import { createPosthogSender, loadIdentity } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
-import { closeTracking, createAppTracking, trackingError } from '../shared/tracking.ts';
+import { closeTracking, createAppTracking, saveTrackingPreference, trackingError } from '../shared/tracking.ts';
 import { Phase1Service } from '../phase1.ts';
 import { renderNext } from '../server.ts';
 import { pluginRoot } from '../hyperframes.ts';
@@ -86,6 +86,11 @@ test('PostHog adapter uses public ingest only, privacy fields and real receipt s
   response = new Response('{}', { status: 400 }); assert.equal(await sender([event], new AbortController().signal), 'drop');
   response = new Response('not json'); assert.equal(await sender([event], new AbortController().signal), 'retry');
   assert.equal(trackingError(new Error('private user prompt and /local/path')), 'TOOL_FAILED');
+  const enriched: any[] = [];
+  const geoip = createPosthogSender({ ...options, geoip: true, fetch: async (_url, init) => { enriched.push(JSON.parse(String(init?.body))); return Response.json({ status: 'Ok' }); } });
+  await geoip([event], new AbortController().signal);
+  assert.equal(enriched[0].batch[0].properties.$geoip_disable, false);
+  assert.equal(Object.hasOwn(enriched[0].batch[0].properties, '$ip'), false);
 });
 
 test('browser ingress rejects forged identity, worker events and oversized batches', () => fixture(async store => {
@@ -127,7 +132,7 @@ test('domain events follow real commits, skip replay and retain safe failure wit
   assert.doesNotMatch(JSON.stringify(events), /PRIVATE_|private\.txt/); tracking.close();
 }, false));
 
-test('missing configuration and DO_NOT_TRACK create no identity and send nothing', () => fixture(async store => {
+test('DO_NOT_TRACK creates no identity and sends nothing', () => fixture(async store => {
   const before = process.env.DO_NOT_TRACK; process.env.DO_NOT_TRACK = '1';
   try {
     const tracking = await createAppTracking(store.directory, 'mcp');
@@ -135,6 +140,39 @@ test('missing configuration and DO_NOT_TRACK create no identity and send nothing
     await closeTracking(tracking);
     await assert.rejects(readFile(path.join(store.directory, 'tracking', 'identity.json')), /ENOENT/);
   } finally { if (before === undefined) delete process.env.DO_NOT_TRACK; else process.env.DO_NOT_TRACK = before; }
+}, false));
+
+test('default configuration reports without opt-in; saved opt-out covers runtimes, restart and re-enable', t => fixture(async store => {
+  const keys = ['OPENMOTION_TELEMETRY', 'DO_NOT_TRACK', 'OPENMOTION_POSTHOG_HOST', 'OPENMOTION_POSTHOG_KEY', 'OPENMOTION_TRACKING_ENV', 'OPENMOTION_TRACKING_TEST_RUN_ID'];
+  const before = Object.fromEntries(keys.map(key => [key, process.env[key]]));
+  const bodies: any[] = [];
+  t.mock.method(globalThis, 'fetch', async (_url: any, init: RequestInit) => { bodies.push(JSON.parse(String(init.body))); return Response.json({ status: 'Ok' }); });
+  const runtimes: Awaited<ReturnType<typeof createAppTracking>>[] = [];
+  try {
+    for (const key of keys) delete process.env[key];
+    process.env.OPENMOTION_TRACKING_ENV = 'test'; process.env.OPENMOTION_TRACKING_TEST_RUN_ID = crypto.randomUUID();
+    const mcp = await createAppTracking(store.directory, 'mcp'), worker = await createAppTracking(store.directory, 'worker'); runtimes.push(mcp, worker);
+    assert.equal(mcp.enabled(), true); assert.equal(worker.enabled(), true);
+    mcp.ingest(packet()); assert.equal(await mcp.flush(), 'accepted'); assert.equal(bodies.length, 1);
+    assert.equal(bodies[0].batch[0].properties.$geoip_disable, false);
+    const request = transport(store, { tracking: worker });
+    mcp.ingest(packet()); worker.ingest(packet());
+    const set = (enabled: unknown) => request('/motion-api/tracking/preferences', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ enabled }) });
+    assert.equal((await set('false')).status, 400);
+    assert.equal((await set(false)).status, 200);
+    assert.equal(await mcp.flush(), 'disabled'); assert.equal(await worker.flush(), 'disabled');
+    assert.equal(mcp.pending(), 0); assert.equal(worker.pending(), 0); assert.equal(bodies.length, 1);
+    const restarted = await createAppTracking(store.directory, 'mcp'); runtimes.push(restarted);
+    assert.equal(restarted.enabled(), false); assert.equal(restarted.ingest(packet()), 'disabled');
+    await saveTrackingPreference(store.directory, true); assert.equal(restarted.enabled(), true);
+    process.env.OPENMOTION_TELEMETRY = '0'; assert.equal(restarted.ingest(packet()), 'disabled');
+    assert.equal((await set(true)).status, 403); delete process.env.OPENMOTION_TELEMETRY;
+    await writeFile(path.join(store.directory, 'tracking/preferences.json'), 'corrupted');
+    assert.equal(restarted.ingest(packet()), 'disabled');
+  } finally {
+    for (const runtime of runtimes) runtime.close();
+    for (const key of keys) { if (before[key] === undefined) delete process.env[key]; else process.env[key] = before[key]; }
+  }
 }, false));
 
 test('worker reports a real terminal render failure once, separately from queue acceptance', () => fixture(async store => {

@@ -32,7 +32,7 @@ export async function loadIdentity(directory: string, source?: string): Promise<
 
 export function createPosthogSender(options: {
   host: string; token: string; identity: Identity; appVersion: string;
-  env: 'development' | 'test' | 'production'; testRunId?: string; timeoutMs?: number; fetch?: typeof fetch;
+  env: 'development' | 'test' | 'production'; testRunId?: string; timeoutMs?: number; fetch?: typeof fetch; geoip?: boolean;
 }) {
   const url = new URL(options.host);
   if (url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('INVALID_INGEST_HOST');
@@ -52,8 +52,9 @@ export function createPosthogSender(options: {
         platform: os.platform(), arch: os.arch(), $os: os.type(), $os_version: os.release(),
         locale: Intl.DateTimeFormat().resolvedOptions().locale,
         device_timezone: event.device_timezone, utc_offset_minutes: event.utc_offset_minutes,
-        // Null is replaced with the request IP by ingestion; a fixed zero address prevents that fallback.
-        location_source: 'unknown', $geoip_disable: true, $ip: '0.0.0.0', $process_person_profile: false } }));
+        // GeoIP requires an ingress that discards IP after enrichment; custom collectors default to zero-IP mode.
+        ...(options.geoip ? { location_source: 'geoip', $geoip_disable: false }
+          : { location_source: 'unknown', $geoip_disable: true, $ip: '0.0.0.0' }), $process_person_profile: false } }));
     const body = JSON.stringify({ api_key: options.token, batch });
     if (Buffer.byteLength(body) > 64 * 1024) return 'drop';
     try {
@@ -73,7 +74,7 @@ export function createPosthogSender(options: {
 export function createNodeTracking<const R extends Registry>(options: {
   registry: R; identity: Identity; host: string; token?: string; appVersion: string;
   env: 'development' | 'test' | 'production'; testRunId?: string; entrypoint: Entry;
-  enabled: boolean; timeoutMs?: number; flushIntervalMs?: number; maxQueue?: number;
+  enabled: boolean; timeoutMs?: number; flushIntervalMs?: number; maxQueue?: number; geoip?: boolean; isEnabled?: () => boolean;
 }) {
   const enabled = options.enabled && !!options.token;
   const send = enabled ? createPosthogSender({ ...options, token: options.token! }) : async () => 'drop' as const;

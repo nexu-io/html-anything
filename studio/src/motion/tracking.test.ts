@@ -34,3 +34,12 @@ it('honors both local disablement and browser Do Not Track', async () => {
   }
   Reflect.deleteProperty(navigator, 'doNotTrack');
 });
+
+it('does not let a stale configuration response undo a user opt-out', async () => {
+  let resolve!: (value: Response) => void;
+  const fetcher = vi.fn(() => new Promise<Response>(done => { resolve = done; })); vi.stubGlobal('fetch', fetcher);
+  const tracking = await import('./tracking'), pending = tracking.initializeTracking();
+  tracking.setMotionTrackingEnabled(false); resolve(Response.json({ enabled: true })); await pending;
+  await tracking.trackMotion('ui_click', { page_name: 'home', area: 'workspace', element: 'new_creation' });
+  await tracking.flushMotionTracking(); expect(fetcher).toHaveBeenCalledTimes(1);
+});

@@ -49,19 +49,26 @@ export function validPending(registry: Registry, value: unknown): value is Pendi
 export function createTracker<const R extends Registry>(options: {
   registry: R; entrypoint: Entry; enabled: boolean;
   send: (events: readonly PendingEvent[], signal: AbortSignal) => Promise<Receipt>;
-  maxQueue?: number; flushIntervalMs?: number;
+  maxQueue?: number; flushIntervalMs?: number; isEnabled?: () => boolean;
 }) {
   let enabled = options.enabled, queue: PendingEvent[] = [], timer: ReturnType<typeof setTimeout> | undefined;
   let inFlight: Promise<Receipt | 'disabled' | 'empty'> | undefined, controller: AbortController | undefined;
   const seen = new Set<string>(), maxQueue = options.maxQueue ?? 64;
   let failures = 0;
+  function discard() { queue = []; seen.clear(); if (timer) clearTimeout(timer); timer = undefined; controller?.abort(); }
+  function active() {
+    let allowed = enabled;
+    try { allowed = allowed && (options.isEnabled?.() ?? true); } catch { allowed = false; }
+    if (!allowed) discard();
+    return allowed;
+  }
   function schedule() {
-    if (!enabled || timer || options.flushIntervalMs === 0) return;
+    if (!active() || timer || options.flushIntervalMs === 0) return;
     timer = setTimeout(() => { timer = undefined; void flush(); }, Math.min(60_000, (options.flushIntervalMs ?? 1000) * 2 ** failures));
     (timer as unknown as { unref?: () => void }).unref?.();
   }
   function ingest(raw: unknown) {
-    if (!enabled) return 'disabled';
+    if (!active()) return 'disabled';
     if (!validPending(options.registry, raw)) return 'invalid';
     if (seen.has(raw.event_id)) return 'duplicate';
     if (queue.length >= maxQueue) return 'full';
@@ -71,17 +78,17 @@ export function createTracker<const R extends Registry>(options: {
     schedule(); return 'queued';
   }
   function track<E extends keyof R & string>(event: E, properties: EventFields<R[E]>, eventId: string = crypto.randomUUID(), entrypoint: Entry = options.entrypoint) {
-    if (!enabled) return 'disabled';
+    if (!active()) return 'disabled';
     try { return ingest({ event, properties, event_id: eventId, occurred_at: new Date().toISOString(),
       entrypoint, ...deviceContext() }); } catch { return 'invalid'; }
   }
   function setEnabled(next: boolean) {
     enabled = next;
-    if (!next) { queue = []; seen.clear(); if (timer) clearTimeout(timer); timer = undefined; controller?.abort(); }
+    if (!next) discard();
   }
   function flush(): Promise<Receipt | 'disabled' | 'empty'> {
+    if (!active()) return Promise.resolve('disabled');
     if (inFlight) return inFlight;
-    if (!enabled) return Promise.resolve('disabled');
     if (!queue.length) return Promise.resolve('empty');
     if (timer) clearTimeout(timer); timer = undefined;
     queue = queue.filter(event => Date.now() - Date.parse(event.occurred_at) <= 86_400_000);
@@ -90,13 +97,13 @@ export function createTracker<const R extends Registry>(options: {
     inFlight = (async () => {
       let receipt: Receipt;
       try { receipt = await options.send(snapshot, request.signal); } catch { receipt = 'retry'; }
-      if (!enabled) return 'disabled' as const;
+      if (!active()) return 'disabled' as const;
       failures = receipt === 'retry' ? Math.min(6, failures + 1) : 0;
       if (receipt !== 'retry') { const ids = new Set(snapshot.map(e => e.event_id)); queue = queue.filter(e => !ids.has(e.event_id)); }
       return receipt;
     })().finally(() => { inFlight = undefined; controller = undefined; if (queue.length) schedule(); });
     return inFlight;
   }
-  return { track, ingest, flush, setEnabled, enabled: () => enabled, pending: () => queue.length,
+  return { track, ingest, flush, setEnabled, enabled: active, pending: () => queue.length,
     close: () => { setEnabled(false); } };
 }

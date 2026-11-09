@@ -24,7 +24,7 @@ import { WorkspaceBrowser } from './browser.ts';
 import { Phase1Service } from './phase1.ts';
 import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
-import { createAppTracking, closeTracking, type OmTracking } from './shared/tracking.ts';
+import { createAppTracking, closeTracking, saveTrackingPreference, trackingPreference, trackingLocked, type OmTracking } from './shared/tracking.ts';
 import { browserEvents } from './tracking/events.ts';
 import { validPending } from './tracking/core.ts';
 import { omEvents } from './tracking/events.ts';
@@ -251,9 +251,19 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (motionRequest) url.pathname = url.pathname.replace(/^\/(?:motion|design)-api\//, '/api/');
     const editorUrl = `http://${host || 'localhost'}/#project/${store.projectId}`;
+    if (motionRequest && url.pathname === '/api/tracking/preferences' && ['GET', 'PUT'].includes(req.method!)) {
+      const directory = (store.workspaceStore ?? store).directory;
+      if (req.method === 'PUT') {
+        if (trackingLocked()) return json(res, 403, { error: 'TRACKING_DISABLED_BY_ENVIRONMENT' });
+        const data = await input(req, 1024);
+        if (!data || Object.keys(data).length !== 1 || typeof data.enabled !== 'boolean') return json(res, 400, { error: 'INVALID_TRACKING_PREFERENCE' });
+        await saveTrackingPreference(directory, data.enabled);
+      }
+      return json(res, 200, { enabled: context.tracking?.enabled() ?? false, preference: trackingPreference(directory), locked: trackingLocked() });
+    }
     if (motionRequest && url.pathname === '/api/tracking' && req.method === 'GET') return json(res, 200, { enabled: context.tracking?.enabled() ?? false });
     if (motionRequest && url.pathname === '/api/tracking' && req.method === 'POST') {
-      if (!context.tracking?.enabled()) return json(res, 200, { accepted: 0 });
+      if (!context.tracking?.enabled()) return json(res, 200, { accepted: 0, enabled: false });
       const data = await input(req, 64 * 1024);
       if (!data || Object.keys(data).length !== 1 || !Array.isArray(data.events) || data.events.length > 16
         || !data.events.every((event: unknown) => validPending(omEvents, event) && event.entrypoint === 'studio'

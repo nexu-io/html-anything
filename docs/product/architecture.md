@@ -163,7 +163,7 @@ flowchart LR
 
 当前交付标准：连接可验证、模板可定位、工程可继续编辑、预览与源文件一致、导出存在真实文件、检查结果有证据。相关实现由 `tests/`、`npm run test:studio` 的原生单元/DOM 与宿主回归、类型检查、设计检查和按需浏览器验证覆盖；没有执行的检查不能记为通过。
 
-The runtime now includes an opt-in, explicit-event tracking package shared by MCP and Studio. Studio submits allowlisted events to the local service; Node enriches them with a persisted random installation identity before asynchronous PostHog ingestion. The implementation covers tool results, selected domain operations and selected Studio interactions. It does not establish a product analytics baseline or implement every proposed event. See [tracking configuration, privacy and coverage](../../tracking/README.md).
+The runtime includes a default-on, explicit-event tracking package shared by MCP and Studio. A persistent user preference and environment overrides can disable collection for the whole installation. Studio submits allowlisted events to the local service; Node adds a random installation identity before asynchronous ingestion into the isolated OpenMotion PostHog project. That project enriches coarse country/region/timezone and then discards raw IP addresses. The implementation covers tool results, selected domain operations and selected Studio interactions; it does not establish a product analytics baseline or implement every proposed event. See [tracking configuration, privacy and coverage](../../tracking/README.md).
 
 The following product measures still require agreed observation windows and validated evidence:
 

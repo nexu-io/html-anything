@@ -93,6 +93,7 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
 }
 if (isMain(import.meta.url)) {
   const store = new WorkspaceStore();
+  if ((await trackingFor(store)).enabled()) process.stderr.write('OpenMotion shares usage data and coarse region. Disable in Studio Privacy settings or set OPENMOTION_TELEMETRY=0.\n');
   const connection = sharedEditorEnabled ? { selection: {} } : undefined;
   const lines = createInterface({ input: process.stdin, crlfDelay: Infinity });
   for await (const line of lines) {

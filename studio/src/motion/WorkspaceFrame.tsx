@@ -8,6 +8,7 @@ import { LanguageMenu } from '../i18n/LanguageMenu';
 import { workspacePresentation } from '../../../shared/workspace-url';
 
 const ModelSettings = lazy(() => import('./ModelSettings').then(module => ({ default: module.ModelSettings })));
+const PrivacySettings = lazy(() => import('./PrivacySettings').then(module => ({ default: module.PrivacySettings })));
 
 type WorkspaceChrome = {
   workspace: ReturnType<typeof useWorkspace>;
@@ -98,6 +99,12 @@ function ModelSettingsButton() {
   return <button className="motion-icon-button" aria-label={t('Model settings')} title={t('Model settings')} onClick={openModelSettings}><MotionIcon name="sliders" /></button>;
 }
 
+function PrivacySettingsButton() {
+  const { t } = useI18n(); const [open, setOpen] = useState(false);
+  return <><button className="motion-icon-button" aria-label={t('Privacy settings')} title={t('Privacy settings')} onClick={() => setOpen(true)}><MotionIcon name="eye" /></button>
+    {open && <Suspense fallback={null}><PrivacySettings onClose={() => setOpen(false)} /></Suspense>}</>;
+}
+
 function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () => void }) {
   const { t, formatDate } = useI18n();
   const { workspace, switchingDisabled, openConnections } = useWorkspaceChrome();
@@ -128,7 +135,7 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
     </nav>
     <footer className="motion-sidebar-footer">
       <div className="motion-sidebar-identity"><MotionIcon name="folder" /><span><strong>{t('My workspace')}</strong><small>{t('Saved on this device')}</small></span></div>
-      <div className="motion-sidebar-settings"><ModelSettingsButton /><ThemeToggle /><LanguageMenu /></div>
+      <div className="motion-sidebar-settings"><ModelSettingsButton /><PrivacySettingsButton /><ThemeToggle /><LanguageMenu /></div>
     </footer>
   </aside>;
 }

@@ -1,0 +1,27 @@
+// OpenMotion GeoIP: coarse region only. Project IP discard must be enabled.
+if (event.properties?.$geoip_disable or empty(event.properties?.$ip)) {
+    return event
+}
+let location := geoipLookup(event.properties.$ip)
+if (not location) {
+    return event
+}
+let returnEvent := event
+if (location.country) {
+    returnEvent.properties.$geoip_country_code := location.country.isoCode
+    returnEvent.properties.$geoip_country_name := location.country.names?.en
+}
+if (location.location) {
+    returnEvent.properties.$geoip_time_zone := location.location.timeZone
+}
+let regionSet := false
+if (location.subdivisions) {
+    for (let index, region in location.subdivisions) {
+        if (not regionSet) {
+            returnEvent.properties.$geoip_subdivision_1_code := region.isoCode
+            returnEvent.properties.$geoip_subdivision_1_name := region.names?.en
+            regionSet := true
+        }
+    }
+}
+return returnEvent

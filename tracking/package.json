@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "files": ["dist", "README.md"],
+  "files": ["dist", "README.md", "posthog-geoip.hog"],
   "exports": {
     "./core": { "types": "./dist/core.d.ts", "default": "./dist/core.js" },
     "./node": { "types": "./dist/node.d.ts", "default": "./dist/node.js" },

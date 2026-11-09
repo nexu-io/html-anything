@@ -17,7 +17,12 @@ test('public Motion sources contain no company endpoints, workstation paths or e
     catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue; throw error; }
     // Report the filename only: an accidentally introduced secret must not reach CI logs.
     assert(!/https?:\/\/[^\s/]*(?:powerformer\.(?:net|com)|powerformer\.feishu\.cn)(?:[/:]|$)/i.test(content), 'Company endpoint in ' + file);
-    assert(!/phc_[A-Za-z0-9]{20,}/.test(content), 'Embedded upstream ingest identifier in ' + file);
+    if (file === 'shared/tracking-config.json') {
+      const config = JSON.parse(content);
+      assert.deepEqual(Object.keys(config).sort(), ['geoip', 'host', 'projectId', 'token']);
+      assert.equal(config.projectId, 722078); assert.equal(config.host, 'https://us.i.posthog.com');
+      assert.equal(config.geoip, true); assert.match(config.token, /^phc_[A-Za-z0-9_]+$/);
+    } else assert(!/phc_[A-Za-z0-9]{20,}/.test(content), 'Embedded upstream ingest identifier in ' + file);
     const users = [...content.matchAll(/\/Users\/([\w.-]+)\//g)].map(match => match[1]);
     assert(users.every(name => ['me', 'a', 'someone'].includes(name)), 'Workstation path in ' + file);
   }

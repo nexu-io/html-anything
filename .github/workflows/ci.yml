@@ -38,6 +38,7 @@ jobs:
       run:
         shell: bash
     env:
+      OPENMOTION_TELEMETRY: '0'
       HYPERFRAMES_BROWSER_PATH: /usr/bin/chromium
       HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
       HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
