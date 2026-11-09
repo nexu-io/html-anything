@@ -1,4 +1,4 @@
-# OpenMotion · 在任意 Agent 中逆向拆解视频，为自己的品牌复刻动效
+# OpenMotion · 用任意 Agent 拆解视频
 
 <p align="center">
   <a href="docs/README.zh-CN.md#在-codex-里开始"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex 接入说明" /></a>
@@ -13,7 +13,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 许可证" /></a>
 </p>
 
-给 Agent 一条 X 或 YouTube 链接，或从 **[100+ 个可一键复刻的视频模板](docs/README.zh-CN.md#motion-资源库与主题合集)**里选一支，复刻 Figma、Linear 或 Firecrawl 的拍法。换上自己的品牌素材，在 Studio 里改镜头、导出 MP4。
+贴一条 X 或 YouTube 链接，或从 **[100+ 个可一键复刻的视频模板](docs/README.zh-CN.md#motion-资源库与主题合集)**里选一支，复刻 Figma、Linear 或 Firecrawl 的拍法。换上你的 Logo 和产品截图，在 Studio 里改镜头、导出 MP4。
 
 **[看 15 秒 Codex 演示](docs/readme/studio-tour.zh-CN.mp4)** · **[接入你的 Agent](docs/README.zh-CN.md#接入你的-agent)**
 

@@ -1,5 +1,4 @@
-<h1 align="center">OpenMotion — Reverse-engineer a video in any agent.<br />
-Recreate it for your brand.</h1>
+<h1 align="center">OpenMotion — Reverse-engineer videos in any agent</h1>
 
 <p align="center">
   <a href="#start-in-codex"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex setup" /></a>
@@ -14,7 +13,7 @@ Recreate it for your brand.</h1>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 license" /></a>
 </p>
 
-<p align="center">Give your agent an X or YouTube link, or choose from <strong><a href="#motion-library-and-collections">100+ one-click video recreation templates</a></strong> featuring shots from Figma, Linear and Firecrawl. Rebuild the shot with your brand assets, edit it in Studio and export an MP4.</p>
+<p align="center">Paste an X or YouTube link, or pick from <strong><a href="#motion-library-and-collections">100+ one-click video recreation templates</a></strong> featuring shots from Figma, Linear and Firecrawl. Swap in your logo and screenshots, edit in Studio and export an MP4.</p>
 
 <p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 15-second Codex demo</a></strong> · <strong><a href="#agent-setup">Set up your agent</a></strong></p>
 
