@@ -22,9 +22,7 @@ This workflow currently covers motion graphics only. For live action, talking he
 
 ## 0. Shared context
 
-On first entry read the [shared context](../motion-production/references/context.md) and add only the dependencies this scope still lacks; reuse bodies already read. When entered directly, do not go back to the production router. When the reference turns out to be only loose inspiration for an original film, correct once to [motion-director](../motion-director/SKILL.md) and do not bounce back. When revising an existing draft or turning an existing project into a recreation, apply the [shared edit workflow](../motion-production/references/edit.md) and keep decisions that still hold. Missing instructions and sources must return to the model before a later call performs dependent imports, writes or export.
-
-MCP-only clients read this page with resources/read `motion://workflow/recreate/start`; the two references are `motion://workflow/recreate/rebuild` and `motion://workflow/recreate/verification`.
+Read the [shared context](../motion-production/references/context.md) before working; it lists the references a recreation needs and how to reuse documents already read. When the work changes an existing draft or project, also apply the [shared edit workflow](../motion-production/references/edit.md). If the reference turns out to be only loose inspiration for an original film, switch to [motion-director](../motion-director/SKILL.md).
 
 ## 1. Read the user's context before anything else
 
