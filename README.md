@@ -1,16 +1,16 @@
 <h1 align="center">OpenMotion — Reverse-engineer a video in Codex.<br />
 Recreate it for your brand.</h1>
 
-<p align="center">Got a tech brand film in mind? Paste its link into Codex. Recreate its timing, type and transitions with your own logo, screenshots and copy. Export an MP4 and keep the editable project.</p>
+<p align="center">Paste a brand’s X or YouTube video link into Codex. Use your own logo, screenshots and copy to recreate the film’s cuts, camera moves and type. Export an MP4 and keep the editable project.</p>
 
-<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 27-second walkthrough</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
+<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 46-second walkthrough</a></strong> · <strong><a href="#start-in-codex">Try it in Codex</a></strong></p>
 
 <p align="center"><a href="docs/readme/studio-tour.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
-  <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install the Codex plugin, choose a shot in the Studio library, then watch three originals beside their OpenMotion exports: Figma, OpenAI and Firecrawl." />
+  <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install OpenMotion, paste the original OpenAI X post into Codex, open the editable timeline in Studio and watch the full 32-second film beside its remake." />
 </picture></a></p>
 
-<p align="center"><a href="#make-a-reference-your-own">Compare the three brands</a> · <a href="examples/reference-reveal/MOTION.md">Read a Motion MD breakdown</a></p>
+<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">Open the original X post</a> · <a href="#make-a-reference-your-own">Compare the three brands</a> · <a href="examples/reference-reveal/MOTION.md">Read a Motion MD breakdown</a></p>
 
 <p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="docs/collections/README.md">Find a reference</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 
@@ -18,7 +18,7 @@ OpenMotion is an open-source motion design plugin for Codex. Our goal is to buil
 
 ## Make a reference your own
 
-The reference is on the left and the export from the editable OpenMotion project is on the right. Open any pair to pause both on the same frame.
+The left pane plays footage from the credited X post. The right pane plays the independent OpenMotion export. The two run at normal speed on one clock, with audio from the remake. Open a comparison to pause or scrub both sides.
 
 ### Figma Draw → Paperwing
 
@@ -27,20 +27,20 @@ The reference is on the left and the export from the editable OpenMotion project
   <img src="examples/wing-construction/comparison.webp" alt="Figma Draw → Paperwing with the original on the left and the remake at the same time on the right." width="768" />
 </picture></a></p>
 
-Four dots grow into wings. A notch opens on the right, then the camera pushes in on the antenna. Pause at **3.35s** to see the notch in both silhouettes. Paperwing is a demo identity with a butter-yellow and plum palette.
+Figma’s 53-second *Introducing Figma Draw* goes from drawing tools to a finished print. This is **00:31–00:43** without cuts. Four dots become a butterfly, its right wing is cut, the colored fill is adjusted, and the camera pulls back to the festival poster. Pause the comparison at **11.75s** to read *Nature Fest* and *Wing Fest*. Paperwing is a demo identity.
 
 [Watch in sync](examples/wing-construction/comparison.mp4) · [Remake MP4](examples/wing-construction/film.mp4) · [Editable source](examples/wing-construction/index.html) · [Original by @figma](https://x.com/figma/status/1920168282751185360)
 
 ### OpenAI → OpenDesign
 
-<p><a href="examples/wordmark-reveal/comparison.mp4"><picture>
-  <source media="(prefers-reduced-motion: reduce)" srcset="examples/wordmark-reveal/comparison.jpg" />
-  <img src="examples/wordmark-reveal/comparison.webp" alt="OpenAI → OpenDesign with the original on the left and the remake at the same time on the right." width="768" />
+<p><a href="examples/motion-studies/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="examples/motion-studies/comparison.jpg" />
+  <img src="examples/motion-studies/comparison.webp" alt="OpenAI → OpenDesign with the original on the left and the remake at the same time on the right." width="768" />
 </picture></a></p>
 
-At **1.25s**, the colored dot on black cuts to type on white. Pause at **1.92s** to see both wordmarks fully spelled out. The letters then erase and each brand’s own symbol settles in the center.
+The **entire 32-second X film** plays from its first frame to the logo. OpenAI introduces mathematical research through diagrams. OpenDesign uses the same sequence for five motion studies. At **5.46s**, dots pack into a circle. At **15.65s**, hatching fills a triangle. At **28.54s**, both films cut to white, type the brand name and resolve to its symbol.
 
-[Watch in sync](examples/wordmark-reveal/comparison.mp4) · [Remake MP4](examples/wordmark-reveal/film.mp4) · [Editable source](examples/wordmark-reveal/index.html) · [Original by @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
+[Watch in sync](examples/motion-studies/comparison.mp4) · [Remake MP4](examples/motion-studies/film.mp4) · [Editable source](examples/motion-studies/index.html) · [Original by @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
 
 ### Firecrawl → OpenMotion
 
@@ -49,7 +49,7 @@ At **1.25s**, the colored dot on black cuts to type on white. Pause at **1.92s**
   <img src="examples/reference-reveal/comparison.webp" alt="Firecrawl → OpenMotion with the original on the left and the remake at the same time on the right." width="768" />
 </picture></a></p>
 
-Firecrawl opens with its developer count. OpenMotion uses the 20-second runtime of its bundled demo. Pause at **2.65s** to see company marks orbit the flame on the left and project assets orbit the OpenDesign symbol on the right.
+Firecrawl co-founder Eric Ciarla posted the 32-second *Firecrawl Free Keyless* launch film on X. Its **00:21–00:26** passage opens with the developer count. OpenMotion uses the 20-second runtime of its bundled demo. Pause at **2.65s** to see company marks orbit the flame on the left and project assets orbit the OpenDesign symbol on the right.
 
 [Watch in sync](examples/reference-reveal/comparison.mp4) · [Remake MP4](examples/reference-reveal/film.mp4) · [Editable source](examples/reference-reveal/index.html) · [Original by @ericciarla](https://x.com/ericciarla/status/2093375835679977570)
 
@@ -58,8 +58,8 @@ Firecrawl opens with its developer count. OpenMotion uses the 20-second runtime 
 To try this shot after installation, open the folder with your logo and copy in Codex and paste the following prompt.
 
 ```text
-Use OpenMotion to recreate this five-second reveal for our brand.
-https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4
+Use OpenMotion to recreate 00:21–00:26 of this launch film for our brand.
+https://x.com/ericciarla/status/2093375835679977570
 Open with our headline, then bring our logo into the center on the same beat.
 Keep the project editable and export an MP4.
 ```

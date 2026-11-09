@@ -4,7 +4,7 @@
 
 ## 参考片与拍法
 
-Firecrawl 的 5 秒片段先用「1,000,000 Developers」占住画面，随后让一圈标志围绕火焰旋转，最后把两个标志并排，右侧出现阶梯形图案。Hyperframes 目录把这段参考片归于 @ericciarla，编号为 `hf-moment-M945`。[作者原帖](https://x.com/ericciarla/status/2093375835679977570) · [观看参考片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)
+Firecrawl 的 5 秒片段先用「1,000,000 Developers」占住画面，随后让一圈标志围绕火焰旋转，最后把两个标志并排，右侧出现阶梯形图案。参考片段在 Firecrawl 联合创始人 Eric Ciarla 发布的 X 原帖中对应 00:21–00:26。[作者原帖](https://x.com/ericciarla/status/2093375835679977570) · [观看参考片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)
 
 沿用这三个动作，介绍 OpenMotion 的 Product Promo 模板。开场的 20 秒指模板的真实时长，这支示范短片本身长 5 秒。[Product Promo 模板源码](../../template-library/product-promo/index.html)
 

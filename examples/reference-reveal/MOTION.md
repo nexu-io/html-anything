@@ -4,7 +4,7 @@
 
 ## Reference and intent
 
-The five-second Firecrawl excerpt opens on “1,000,000 Developers”, pulls back to a ring of marks around the flame, then pairs two marks as a stepped graphic enters from the right. The reference is credited to @ericciarla in the Hyperframes catalog, item `hf-moment-M945`. [Original post](https://x.com/ericciarla/status/2093375835679977570) · [Watch the reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)
+The five-second Firecrawl excerpt opens on “1,000,000 Developers”, pulls back to a ring of marks around the flame, then pairs two marks as a stepped graphic enters from the right. The passage runs from 00:21 to 00:26 in the launch video posted by Firecrawl co-founder Eric Ciarla. [Original post](https://x.com/ericciarla/status/2093375835679977570) · [Watch the reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)
 
 Borrow that sequence for OpenMotion’s Product Promo demo. Use the demo’s 20-second runtime as the opening fact. This film itself runs for five seconds. [Product Promo source](../../template-library/product-promo/index.html)
 

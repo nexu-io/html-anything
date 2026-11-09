@@ -1,18 +1,20 @@
 # Remix the README films
 
-Each folder contains the editable HTML and the exported film. The Figma Draw and OpenAI studies export at 24 fps. The Firecrawl study and three original showcase films export at 30 fps. The Firecrawl remake has its own sound cues; both new studies preserve the silence of their catalog excerpts.
+The comparisons use footage from the authors’ X posts on the left and independently rendered projects on the right. Each MP4 uses the remake’s own soundtrack. Original footage is used in the comparison only. All three project folders can be edited and rendered locally.
 
-## Figma Draw · four dots to a butterfly
+## OpenAI · a complete film
 
-The five-second [Figma Draw excerpt](https://x.com/figma/status/1920168282751185360) is the reference for Paperwing, a demonstration identity. The HTML constructs the wings from four editable curves. Its palette, control points, notch, camera push and width handles can be edited separately. Compare the four circles at 0.20s, the hatched wing at 1.65s and the open notch at 3.35s. [Comparison](wing-construction/comparison.mp4) · [Remake](wing-construction/film.mp4) · [Source](wing-construction/index.html)
+OpenAI’s 32-second mathematical research film runs from its opening dots to its final logo. The OpenDesign version uses editable geometry and new text for the packing diagram, the lattice, the hatched triangle and the two graph constructions. The dark board cuts to a white brand sign-off at 28.54s. The original runs at 23.976 fps and the 24 fps export matches its duration to within one frame. The end mark is the official OpenDesign symbol. [Original on X](https://x.com/OpenAI/status/2084352161404920316) · [Full comparison](motion-studies/comparison.mp4) · [OpenDesign export](motion-studies/film.mp4) · [Editable source](motion-studies/index.html)
 
-## OpenAI · dot to wordmark
+The shorter, silent [wordmark study](wordmark-reveal/film.mp4) isolates the closing action for editing practice. [Editable wordmark](wordmark-reveal/index.html)
 
-The [OpenAI reference](https://x.com/OpenAI/status/2084352161404920316) cuts from a colored dot to typed letters and ends on the knot. The study uses the OpenDesign name and official symbol. Compare the cut at 1.25s, the two wordmarks at 1.92s and the two symbols at 3.55s. The type, palette and symbol animation live in the HTML. The official OpenDesign symbol has fewer internal strokes than OpenAI’s knot. [Comparison](wordmark-reveal/comparison.mp4) · [Remake](wordmark-reveal/film.mp4) · [Source](wordmark-reveal/index.html)
+## Figma Draw · a drawing becomes a poster
 
-## Twenty seconds · reference study
+Figma posted *Introducing Figma Draw* during Config 2025. The continuous passage from 00:31 to 00:43 turns four dots into a butterfly, edits the wing and the antenna, adjusts its color and pulls back to the finished *Nature Fest* poster. The Paperwing version ends on *Wing Fest*. Edit the curves, pigments, controls, type and camera in the source. Compare the notch at 3.35s, the paint control at 8.5s and the poster at 11.75s. [Original on X](https://x.com/figma/status/1920168282751185360) · [Comparison](wing-construction/comparison.mp4) · [Remake](wing-construction/film.mp4) · [Source](wing-construction/index.html)
 
-Watch a five-second Firecrawl excerpt, read the shot decisions in Markdown, and compare two OpenMotion exports. One uses the 20-second Product Promo template as its headline, the other the 15-second NYT Graph template. Both share the same five-second motion. [Reference, Motion MD and editing instructions](reference-reveal/MOTION.md) · [First cut](reference-reveal/film.mp4) · [Second cut](reference-reveal/graph-cut.mp4)
+## Firecrawl Keyless · a number becomes an orbit
+
+Firecrawl co-founder Eric Ciarla published the launch video on X. The five-second study uses 00:21–00:26 of the original. It replaces the developer count with Product Promo’s runtime and the orbiting company marks with project assets. A second export changes the opening to the 15-second NYT Graph template. [Original on X](https://x.com/ericciarla/status/2093375835679977570) · [Comparison](reference-reveal/comparison.mp4) · [Motion MD and editing instructions](reference-reveal/MOTION.md) · [First cut](reference-reveal/film.mp4) · [Second cut](reference-reveal/graph-cut.mp4)
 
 ## Made in Codex
 
@@ -69,7 +71,7 @@ if [ -d "examples/$example/assets" ]; then
 fi
 cp node_modules/gsap/dist/gsap.min.js "$work/assets/"
 fps=30
-case "$example" in wing-construction|wordmark-reveal) fps=24 ;; esac
+case "$example" in motion-studies|wing-construction|wordmark-reveal) fps=24 ;; esac
 node node_modules/hyperframes/bin/hyperframes.mjs render "$work" --fps "$fps" --output "$work/film.mp4"
 printf '%s\n' "$work/film.mp4"
 ```

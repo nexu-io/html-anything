@@ -16,7 +16,7 @@
   </style>
 </head>
 <body>
-  <main id="film" data-composition-id="main" data-start="0" data-duration="5.1666666667" data-fps="24" data-width="1280" data-height="720">
+  <main id="film" data-composition-id="main" data-start="0" data-duration="12" data-fps="24" data-width="1280" data-height="720">
     <svg id="paperwing-vector" class="clip" data-start="0" data-duration="5.1666666667" data-track-index="0" viewBox="0 0 640 360" aria-label="Four circles open into the Paperwing butterfly. Vector handles reshape its wing and antenna.">
       <defs>
         <pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x2="0" y2="4" stroke="#8494d5" stroke-width="1.4"/></pattern>
@@ -50,6 +50,78 @@
         </g>
       </g>
     </svg>
+    <svg id="poster-scene" class="clip" data-start="5.1666666667" data-duration="6.8333333333" data-track-index="1" viewBox="0 0 640 360" aria-label="Editable color fills, feathering controls and the full Wing Fest poster" style="position:absolute;inset:0;visibility:hidden">
+      <defs>
+        <linearGradient id="poster-paint" x1="80%" y1="15%" x2="40%" y2="100%">
+          <stop stop-color="#6a5877"/><stop offset=".38" stop-color="#918196"/><stop offset=".63" stop-color="#ffed96"/><stop offset="1" stop-color="#c5aedf"/>
+        </linearGradient>
+        <linearGradient id="enamel" x2="0" y2="1" gradientUnits="objectBoundingBox" gradientTransform="rotate(-8 .5 .5)">
+          <stop stop-color="#a4524b"/><stop offset=".2" stop-color="#f69c30"/><stop offset=".48" stop-color="#d54462"/><stop offset=".66" stop-color="#ea694c"/><stop offset="1" stop-color="#c6a7e2"/>
+        </linearGradient>
+        <radialGradient id="upper-inlay" cx=".25" cy=".5" r=".86"><stop stop-color="#ffec92"/><stop offset=".52" stop-color="#c6a7df"/><stop offset=".84" stop-color="#f68054"/><stop offset="1" stop-color="#d25070"/></radialGradient>
+        <radialGradient id="lower-inlay" cx=".24" cy=".18" r=".86"><stop stop-color="#ffdf7d"/><stop offset=".56" stop-color="#f08b3b"/><stop offset="1" stop-color="#b84c74"/></radialGradient>
+        <pattern id="pigment" width="28" height="28" patternUnits="userSpaceOnUse"><image id="grain-tile" width="28" height="28"/></pattern>
+        <g id="painted-half">
+          <path fill="url(#enamel)" d="M0 1 Q-9 -32 -38 -75 Q-55 -98 -74 -88 Q-91 -77 -78 -65 Q-69 -57 -53 -67 Q-25 -63 -9 -31 Q-34 -62 -77 -55 Q-101 -52 -101 -31 Q-94 -39 -83 -33 Q-77 -28 -76 -11 Q-74 2 -54 3 Q-20 5 -7 15 Q-20 25 -48 15 Q-81 5 -92 23 Q-106 45 -91 69 Q-76 94 -50 86 Q-24 79 -13 50 Q-4 27 0 24 Z"/>
+          <path fill="url(#upper-inlay)" d="M-90 -42 Q-57 -68 -20 -39 Q-11 -31 -8 -23 Q-34 -45 -48 -39 Q-62 -34 -50 -27 Q-32 -20 -19 -24 Q-5 -26 -5 -8 Q-16 -17 -32 -15 Q-61 -13 -64 -23 Q-68 -44 -90 -42 Z"/>
+          <ellipse fill="url(#upper-inlay)" cx="-42" cy="-11" rx="23" ry="9" transform="rotate(7 -42 -11)"/>
+          <ellipse fill="#ffe263" cx="-89" cy="-42" rx="4" ry="5"/>
+          <ellipse fill="url(#upper-inlay)" cx="-69" cy="-78" rx="8" ry="8"/>
+          <path fill="url(#lower-inlay)" d="M-8 20 Q-20 18 -28 22 Q-40 24 -52 20 Q-68 14 -69 25 Q-70 35 -59 36 Q-51 33 -46 46 Q-41 56 -37 40 Q-32 27 -24 35 Q-15 42 -8 20 Z"/>
+          <ellipse fill="url(#lower-inlay)" cx="-77" cy="40" rx="12" ry="22" transform="rotate(25 -77 40)"/>
+          <ellipse fill="url(#lower-inlay)" cx="-56" cy="63" rx="7" ry="14" transform="rotate(22 -56 63)"/>
+          <ellipse fill="url(#lower-inlay)" cx="-40" cy="63" rx="4" ry="8"/>
+        </g>
+        <clipPath id="wing-mask"><use href="#painted-half"/><use href="#painted-half" transform="scale(-1 1)"/></clipPath>
+      </defs>
+      <rect width="640" height="360" fill="#492e47"/>
+      <g id="poster-camera">
+        <rect x="139" y="15" width="362" height="413" rx="5" fill="#ebe2d4"/>
+        <rect x="139" y="28" width="362" height="246" fill="url(#poster-paint)"/>
+        <rect id="poster-paper" x="139" y="28" width="362" height="246" fill="#ffefab"/>
+        <rect x="139" y="15" width="362" height="13" rx="2" fill="#e67854"/>
+        <g font-family="Helvetica Neue,Arial,sans-serif" font-weight="700">
+          <text x="320" y="23" text-anchor="middle" font-size="4.7">Paperwing presents a field guide to color, form and motion</text>
+          <g id="poster-type" fill="#ffec89">
+            <text x="153" y="75" font-size="43" letter-spacing="-2.5">WING</text><text x="153" y="113" font-size="43" letter-spacing="-2.5">FEST</text>
+            <text x="151" y="151" font-size="10" fill="#4b3c51">PAPERWING</text><text x="151" y="162" font-size="10" fill="#4b3c51">STUDIO</text>
+            <text x="462" y="52" font-size="6">Program</text><text x="462" y="63" font-size="6">Artists</text><text x="462" y="74" font-size="6">About</text>
+          </g>
+          <g fill="#483e48" font-size="9"><text x="153" y="330">Studies</text><text x="220" y="344">Wings</text><text x="312" y="344">Ink</text><text x="404" y="344">Motion</text></g>
+        </g>
+        <g font-family="Arial,sans-serif" font-size="3.5" fill="#594e58">
+          <text x="220" y="350">Contour, structure and flight</text><text x="220" y="356">A field guide to illustration</text>
+          <text x="312" y="350">Color studies in motion</text><text x="312" y="356">Experiments from the studio</text>
+          <text x="404" y="350">Live drawing and workshops</text><text x="404" y="356">Open studio program</text>
+        </g>
+        <path d="M218 322h82m9 0h82m9 0h82" stroke="#877a81" stroke-width=".6"/>
+        <g id="enamel-wings" transform="translate(320 161)">
+          <use href="#painted-half"/><use href="#painted-half" transform="scale(-1 1)"/>
+          <rect x="-103" y="-92" width="206" height="182" clip-path="url(#wing-mask)" fill="url(#pigment)" opacity=".64"/>
+        </g>
+        <g id="color-nodes" fill="#fff" stroke="#5589dc" stroke-width=".6">
+          <path d="M320 171 Q343 192 367 177 Q395 161 409 187 Q432 220 402 240 Q363 269 340 226 Q330 204 320 171Z" fill="none"/>
+        </g>
+        <g id="lower-box" fill="none" stroke="#6f98ea" stroke-width=".65">
+          <rect x="320" y="169" width="100" height="82"/>
+          <g fill="#fff"><rect x="319" y="168" width="2" height="2"/><rect x="419" y="168" width="2" height="2"/><rect x="319" y="250" width="2" height="2"/><rect x="419" y="250" width="2" height="2"/></g>
+        </g>
+      </g>
+      <g id="paint-dial" font-family="Helvetica Neue,Arial" fill="#251930"><rect x="42" y="108" rx="5" width="147" height="153" fill="#fffcf5" stroke="#d8ced8"/>
+        <text x="55" y="130" font-size="12" font-weight="700">Paint</text>
+        <path d="M55 139h119m-119 38h119m-119 37h119" stroke="#d8cfce"/>
+        <text x="55" y="162" font-size="9">Fill</text><text x="108" y="162" font-size="9">Enamel</text>
+        <text x="55" y="197" font-size="9">Blur</text><path d="M104 194h65" stroke="#c5b5bd" stroke-width="3"/>
+        <g fill="#827887" font-size="8">
+          <text x="164" y="159">⌄</text><text x="165" y="235">⌄</text><text x="64" y="250" font-size="6">COLOR EFFECTS</text>
+        </g>
+        <rect x="94" y="154" width="8" height="8" rx="2" fill="url(#enamel)"/>
+        <circle id="paint-knob" cx="109" cy="194" r="4" fill="#886bc6"/>
+        <text x="55" y="235" font-size="9">Grain</text><text x="142" y="235" font-size="9">12%</text>
+      </g>
+      <rect id="press-grain" width="640" height="360" fill="url(#pigment)" opacity=".16"/>
+    </svg>
+    <audio id="score" class="clip" data-start="0" data-duration="12" data-track-index="2" src="assets/score.m4a"></audio>
   </main>
   <script>
     const el = id => document.getElementById(id);
@@ -109,7 +181,40 @@
     change(1.05,.14,{guides:1}); change(1.39,.22,{scale:1,hatch:1}); change(1.76,.09,{upperHatch:1}); change(1.99,.10,{hatch:0});
     change(2.22,.26,{outline:1}); change(3.21,.09,{cut:1,guides:0,outline:0});
     change(3.65,.20,{zoom:1}); change(3.76,.09,{detail:1}); change(4.14,.20,{width:1}); change(4.52,.43,{handle:1});
-    tl.set({}, {}, 5.1666666667);
+    const contourNodes=[[320,171],[341,181],[357,181],[367,177],[389,173],[404,182],[413,196],[416,215],[407,236],[391,245],[372,249],[353,241],[340,226],[333,210],[328,190]];
+    for(const [x,y] of contourNodes){
+      const handle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      point(handle,x,y);handle.setAttribute('r','1.15');el('color-nodes').append(handle);
+    }
+    // A repeating pigment texture is generated from a fixed seed so each export is deterministic.
+    const tile=document.createElement('canvas'); tile.width=tile.height=96;
+    const texture=tile.getContext('2d'), specks=texture.createImageData(96,96);
+    let pigmentSeed=517;
+    for(let i=0;i<specks.data.length;i+=4){
+      pigmentSeed=(Math.imul(pigmentSeed,1664525)+1013904223)>>>0;
+      const light=(pigmentSeed & 1)?255:14;
+      specks.data.set([light,light,light,((pigmentSeed>>>16)&127)],i);
+    }
+    texture.putImageData(specks,0,0);el('grain-tile').setAttribute('href',tile.toDataURL());
+    const poster = el('poster-scene'), posterCamera = el('poster-camera');
+    const paint = {scale:2.95, cx:365, cy:212, box:0, paper:1, type:0, dial:0, knob:0};
+    function repaint() {
+      posterCamera.setAttribute('transform', 'translate(320 180) scale('+paint.scale+') translate('+(-paint.cx)+' '+(-paint.cy)+')');
+      el('color-nodes').style.opacity=paint.scale>3?0:Math.max(paint.box,(paint.paper>.88?1:0));el('lower-box').style.opacity=paint.box;el('poster-paper').style.opacity=paint.paper;
+      el('poster-type').style.opacity=paint.type;el('paint-dial').style.opacity=paint.dial;
+      el('paint-knob').setAttribute('cx',109+paint.knob*48);
+    }
+    function paintTo(at,duration,values){tl.to(paint,{...values,duration,ease:'power2.inOut',onUpdate:repaint},at);}
+    repaint();
+    tl.set(poster,{visibility:'visible'},5.1666666667);
+    paintTo(5.18,.68,{scale:2.85,cx:365,cy:207,box:1});
+    paintTo(6.15,.65,{paper:0});
+    paintTo(6.91,.18,{scale:4.1,cx:371,cy:119,box:0});
+    paintTo(7.32,.20,{dial:1});paintTo(7.88,.46,{knob:.85});paintTo(8.87,.54,{knob:.38});
+    paintTo(9.48,.36,{type:1});paintTo(9.76,.36,{dial:0});
+    paintTo(10.02,1.65,{scale:1,cx:320,cy:180});
+    tl.set({}, {}, 12);
+
     window.__timelines={main:tl};
   </script>
 </body>

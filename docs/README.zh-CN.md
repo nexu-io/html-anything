@@ -1,16 +1,16 @@
 <h1 align="center">OpenMotion · 在 Codex 里逆向拆解视频<br />
 为自己的品牌复刻动效</h1>
 
-<p align="center">把喜欢的科技品牌片链接贴进 Codex，用自己的 Logo、产品截图和文案，复刻它的镜头节奏、文字动画和转场。导出 MP4 后，工程还能接着改。</p>
+<p align="center">把品牌在 X 或 YouTube 发布的视频链接贴进 Codex，用自己的 Logo、产品截图和文案，复刻原片的镜头节奏、运镜和文字动画。导出 MP4 后，工程还能接着改。</p>
 
-<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 27 秒操作演示</a></strong> · <strong><a href="#在-codex-里开始">在 Codex 里试用</a></strong></p>
+<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 46 秒完整演示</a></strong> · <strong><a href="#在-codex-里开始">在 Codex 里试用</a></strong></p>
 
 <p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="readme/codex-comparison.zh-CN.jpg" />
-  <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="Codex 插件安装、Studio 参考库与可编辑时间轴，接着是 Figma、OpenAI、Firecrawl 的原片和 OpenMotion 导出同步对照。" />
+  <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="安装插件，把 OpenAI 的 X 原帖贴进 Codex，打开 Studio 时间轴，再同步播放完整的 32 秒原片与复刻成片。" />
 </picture></a></p>
 
-<p align="center"><a href="#复用参考片的拍法">逐个看品牌复刻</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读 Motion MD 分镜拆解</a></p>
+<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">看 OpenAI 的 X 原帖</a> · <a href="#复用参考片的拍法">逐个看品牌复刻</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读 Motion MD 分镜拆解</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="collections/README.zh-CN.md">找参考片</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
@@ -18,7 +18,7 @@ OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做�
 
 ## 复用参考片的拍法
 
-左边是参考片，右边是 OpenMotion 从可编辑工程导出的版本。点开任一组，同一个播放器就能暂停两边。
+左边直接截自发布者上传到 X 的视频，右边是 OpenMotion 用独立工程导出的成片。两边原速同步，点开可以一起暂停、拖动。声音来自复刻工程。
 
 ### Figma Draw → Paperwing
 
@@ -27,20 +27,20 @@ OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做�
   <img src="../examples/wing-construction/comparison.webp" alt="Figma Draw → Paperwing，左边是原片，右边是同一时刻的复刻。" width="768" />
 </picture></a></p>
 
-四个圆点长成翅膀，右侧被切出一道弧口，镜头再推近触角。停在 **3.35 秒**，两边的弧口都已经打开。Paperwing 是本例设计的示例品牌，采用奶油黄和深紫配色。
+取自 Figma 发布的 53 秒《Introducing Figma Draw》，连续播放原片 **00:31–00:43**。四个圆点长成蝴蝶，右翅切出弧口，镜头推近调整填色，再拉远露出海报。对照播到 **11.75 秒**，左边能读到 Nature Fest，右边是为示例品牌 Paperwing 设计的 Wing Fest。
 
 [同步对照](../examples/wing-construction/comparison.mp4) · [复刻成片](../examples/wing-construction/film.mp4) · [可编辑源码](../examples/wing-construction/index.html) · [原片 @figma](https://x.com/figma/status/1920168282751185360)
 
 ### OpenAI → OpenDesign
 
-<p><a href="../examples/wordmark-reveal/comparison.mp4"><picture>
-  <source media="(prefers-reduced-motion: reduce)" srcset="../examples/wordmark-reveal/comparison.jpg" />
-  <img src="../examples/wordmark-reveal/comparison.webp" alt="OpenAI → OpenDesign，左边是原片，右边是同一时刻的复刻。" width="768" />
+<p><a href="../examples/motion-studies/comparison.mp4"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg" />
+  <img src="../examples/motion-studies/comparison.webp" alt="OpenAI → OpenDesign，左边是原片，右边是同一时刻的复刻。" width="768" />
 </picture></a></p>
 
-彩色光点在 **1.25 秒**从深色背景切到白底打字。停在 **1.92 秒**，两边都已拼出品牌名。文字随后回删，分别收成 OpenAI 和 OpenDesign 自己的标志。
+这里播放 OpenAI 数学研究宣传片的**完整 32 秒**。OpenDesign 把原片的研究主题换成五个动效练习。**5.46 秒**，圆点聚成圆盘；**15.65 秒**，排线填满三角形；**28.54 秒**，两边都从黑底切到白底，打出各自品牌名，收成 Logo。
 
-[同步对照](../examples/wordmark-reveal/comparison.mp4) · [复刻成片](../examples/wordmark-reveal/film.mp4) · [可编辑源码](../examples/wordmark-reveal/index.html) · [原片 @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
+[同步对照](../examples/motion-studies/comparison.mp4) · [复刻成片](../examples/motion-studies/film.mp4) · [可编辑源码](../examples/motion-studies/index.html) · [原片 @OpenAI](https://x.com/OpenAI/status/2084352161404920316)
 
 ### Firecrawl → OpenMotion
 
@@ -49,7 +49,7 @@ OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做�
   <img src="../examples/reference-reveal/comparison.webp" alt="Firecrawl → OpenMotion，左边是原片，右边是同一时刻的复刻。" width="768" />
 </picture></a></p>
 
-Firecrawl 用开发者人数开场，OpenMotion 换成内置示例的 20 秒时长。停在 **2.65 秒**，左侧公司标志环绕火焰，右侧工程素材环绕 OpenDesign 标志。
+这段取自 Firecrawl 联合创始人 Eric Ciarla 在 X 发布的《Firecrawl Free Keyless》，对应原片 **00:21–00:26**。参考片段用开发者人数开场，OpenMotion 换成内置示例的 20 秒时长。停在 **2.65 秒**，左侧公司标志环绕火焰，右侧工程素材环绕 OpenDesign 标志。
 
 [同步对照](../examples/reference-reveal/comparison.mp4) · [复刻成片](../examples/reference-reveal/film.mp4) · [可编辑源码](../examples/reference-reveal/index.html) · [原片 @ericciarla](https://x.com/ericciarla/status/2093375835679977570)
 
@@ -58,8 +58,8 @@ Firecrawl 用开发者人数开场，OpenMotion 换成内置示例的 20 秒时�
 装好插件后，在 Codex 里打开存放品牌 Logo 和文案的文件夹，粘贴这段话就能试这个镜头。
 
 ```text
-用 OpenMotion 为我们的品牌复刻这段 5 秒揭晓镜头。
-https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4
+用 OpenMotion 为我们的品牌复刻这条发布视频的 00:21–00:26。
+https://x.com/ericciarla/status/2093375835679977570
 开场换成我们的标题，让我们的 Logo 在原片同一拍出现在画面中央。
 保留可编辑工程，并导出 MP4。
 ```
