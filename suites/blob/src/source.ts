@@ -1,5 +1,5 @@
-import { verify } from "@odsuite/protocol";
-import { resource } from "./format.js";
+import { createHash } from "node:crypto";
+import { resource } from "./materialize/index.js";
 import type { Loader, Resource } from "./types.js";
 
 /** Fetch an already trusted descriptor. Redirects never widen transport policy. */
@@ -28,23 +28,26 @@ export function source(address: string, input: Resource, timeoutMs = 10000): Loa
       await response.body.cancel();
       throw Error("blob response exceeds declared size");
     }
-    const reader = response.body.getReader(),
-      chunks: Uint8Array[] = [];
-    let count = 0;
-    try {
-      for (;;) {
-        const next = await reader.read();
-        if (next.done) break;
-        count += next.value.length;
-        if (count > spec.artifact.bytes) throw Error("blob response exceeds declared size");
-        chunks.push(next.value);
+    const body = response.body;
+    return (async function* () {
+      const reader = body.getReader(),
+        hash = createHash("sha256");
+      let count = 0;
+      try {
+        for (;;) {
+          const next = await reader.read();
+          if (next.done) break;
+          count += next.value.length;
+          if (count > spec.artifact.bytes) throw Error("blob response exceeds declared size");
+          hash.update(next.value);
+          yield next.value;
+        }
+      } finally {
+        await reader.cancel().catch(() => {});
+        reader.releaseLock();
       }
-    } finally {
-      await reader.cancel().catch(() => {});
-      reader.releaseLock();
-    }
-    const bytes = Buffer.concat(chunks);
-    if (!verify(spec.artifact, bytes)) throw Error("blob source integrity mismatch");
-    return bytes;
+      if (count !== spec.artifact.bytes || `sha256:${hash.digest("hex")}` !== spec.artifact.digest)
+        throw Error("blob source integrity mismatch");
+    })();
   };
 }

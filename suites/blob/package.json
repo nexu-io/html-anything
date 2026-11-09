@@ -19,10 +19,12 @@
   "dependencies": {
     "@odsuite/protocol": "workspace:*",
     "@odsuite/release": "workspace:*",
-    "@odsuite/sidecar": "workspace:*"
+    "@odsuite/sidecar": "workspace:*",
+    "yauzl": "3.4.0"
   },
   "devDependencies": {
     "@types/node": "24.12.2",
+    "@types/yauzl": "3.4.0",
     "esbuild": "0.28.0",
     "typescript": "7.0.2",
     "vitest": "4.1.6"

@@ -79,6 +79,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | packages/theme, packages/components               | Primitive/semantic/light-dark tokens, licensed local fonts, atoms and anonymous layouts                     |
 | apps/web/src/lib/components                       | Web business components; no style definitions                                                               |
 | packages/motion                                   | Native editing, composition graph/assembly, preview and canvas bridge; no persistence or OS allocation      |
+| packages/render                                   | Fixed-revision native execution, verified film output; sidecar/blob retain process/resource authority       |
 | packages/workspace                                | Session/message/artifact ownership, revisions, history, transactions and idempotency shared by HTTP/MCP/Web |
 | docs/README.md                                    | Durable documentation index                                                                                 |
 | docs/architecture.md, domains.md                  | Engineering architecture and product/data responsibilities                                                  |

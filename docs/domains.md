@@ -12,7 +12,7 @@ Native source is shared by manual and Agent edits. Revision covers declared sour
 
 ## Editing, generation and delivery
 
-Web owns interaction/orchestration; components own reusable controls and Less. Film HTML/CSS/media is typed content, not a source-style whitelist bypass. Render from an immutable fixed-revision snapshot so later edits cannot change queued input. Product services own queues; sidecar owns engine/browser/FFmpeg processes and resources. Completed requires actual outputs and matching input specifications, independent of a mounted browser page.
+Web owns interaction/orchestration; components own reusable controls and Less. Film HTML/CSS/media is typed content, not a source-style whitelist bypass. Render from an immutable fixed-revision snapshot so later edits cannot change queued input. Product services own queues; `packages/render` supplies the fixed-revision execution primitive, and sidecar/blob own engine/browser/FFmpeg processes and resources. Completed requires actual outputs and matching input specifications, independent of a mounted browser page.
 
 File structure, codec, dimensions, duration, audio and decoding are technical checks. Visual review, listening and real-player acceptance have separate evidence; technical success is not creative acceptance.
 

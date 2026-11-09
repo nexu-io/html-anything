@@ -5,6 +5,7 @@ packages:
   - packages/*
 
 allowBuilds:
+  puppeteer: false
   electron: true
   electron-winstaller: false
   esbuild: true

@@ -1,14 +1,25 @@
 import { join } from "node:path";
 import { canonical, digest, kinds, valid, verify } from "@odsuite/protocol";
 import { bundleDestination, bundleEntries } from "@odsuite/release";
-import { fs } from "./files.js";
-import type { Resource } from "./types.js";
+import { fs } from "../files.js";
+import type { Resource } from "../types.js";
+import { tree } from "./tree.js";
+import { extractZip } from "./zip.js";
 
 export function resource(input: Resource): Resource {
   if (
     !input ||
-    !["file", "directory"].includes(input.type) ||
-    Object.keys(input).some((k) => !["artifact", "type", "platform", "arch"].includes(k))
+    !["file", "directory", "archive"].includes(input.type) ||
+    Object.keys(input).some(
+      (k) =>
+        ![
+          "artifact",
+          "type",
+          "platform",
+          "arch",
+          ...(input.type === "archive" ? ["tree", "expandedBytes"] : []),
+        ].includes(k),
+    )
   )
     throw Error("invalid blob resource type/fields");
   const a = input.artifact;
@@ -18,7 +29,7 @@ export function resource(input: Resource): Resource {
     !valid(a.digest) ||
     !Number.isSafeInteger(a.bytes) ||
     a.bytes < 0 ||
-    a.bytes > 64 * 1024 ** 2 ||
+    a.bytes > (input.type === "archive" ? 512 : 64) * 1024 ** 2 ||
     !/^[a-z][a-z0-9]*$/.test(a.slot) ||
     Object.keys(a).sort().join() !== "bytes,digest,kind,slot"
   )
@@ -27,6 +38,14 @@ export function resource(input: Resource): Resource {
     throw Error("invalid blob platform");
   if (input.arch !== undefined && !["arm64", "x64"].includes(input.arch)) throw Error("invalid blob architecture");
   if (a.kind !== "blob" && input.type !== "directory") throw Error("executable content requires directory type");
+  if (
+    input.type === "archive" &&
+    (!valid(input.tree) ||
+      !Number.isSafeInteger(input.expandedBytes) ||
+      input.expandedBytes < 0 ||
+      input.expandedBytes > 2 * 1024 ** 3)
+  )
+    throw Error("invalid native archive bounds/tree");
   return structuredClone(input);
 }
 export const key = (value: Resource) => digest(canonical(resource(value)));
@@ -34,7 +53,14 @@ export function compatible(value: Resource) {
   if ((value.platform && value.platform !== process.platform) || (value.arch && value.arch !== process.arch))
     throw Error("blob platform/architecture mismatch");
 }
-export async function materialize(value: Resource, bytes: Uint8Array, root: string) {
+export async function materialize(value: Resource, bytes: Uint8Array | string, root: string, signal?: AbortSignal) {
+  if (value.type === "archive") {
+    if (typeof bytes !== "string") throw Error("archive requires a verified CAS path");
+    await fs.mkdir(root, { mode: 0o700 });
+    await extractZip(bytes, join(root, "value"), value, signal);
+    return;
+  }
+  if (typeof bytes === "string") throw Error("content requires buffered bytes");
   if (!verify(value.artifact, bytes)) throw Error("blob integrity mismatch");
   await fs.mkdir(root, { mode: 0o700 });
   if (value.type === "file") await fs.writeFile(join(root, "value"), bytes, { flag: "wx", mode: 0o600, flush: true });
@@ -53,6 +79,12 @@ export async function exact(value: Resource, root: string) {
   const path = join(root, "value");
   if ((await fs.lstat(root)).isSymbolicLink() || (await fs.lstat(path)).isSymbolicLink())
     throw Error("blob materialization symlink");
+  if (value.type === "archive") {
+    const actual = await tree(path, value.expandedBytes);
+    if (actual.digest !== value.tree || actual.bytes !== value.expandedBytes)
+      throw Error("archive materialization integrity mismatch");
+    return path;
+  }
   let bytes: Uint8Array;
   if (value.type === "file") {
     const info = await fs.lstat(path);

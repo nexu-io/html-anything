@@ -23,6 +23,7 @@ export const schemas = {
   artifact_open: z.strictObject({ ...request, ...owner, ...selection }),
   session_open: z.strictObject({ ...request, sessionId: id, ...selection }),
   project_read: z.strictObject(owner),
+  project_snapshot: z.strictObject({ ...owner, revision }),
   resource_import: z.strictObject({
     ...request,
     ...owner,
@@ -90,6 +91,7 @@ export interface Project {
   resources: Resource[];
   history: { version: number; canUndo: boolean; canRedo: boolean };
 }
+export type ProjectSnapshot = Omit<Project, "history">;
 export interface Selection {
   revision: number;
   sessionId: string | null;
@@ -109,6 +111,7 @@ export interface Outputs {
   artifact_open: Selection;
   session_open: Selection;
   project_read: Project;
+  project_snapshot: ProjectSnapshot;
   resource_import: Project;
   resource_remove: Project;
   resource_read: { resource: Resource; data: string };
@@ -139,6 +142,7 @@ export const descriptions: Record<Operation, string> = {
   session_open:
     "Select a session and restore its last artifact after checking current context; an empty session has none.",
   project_read: "Read native source, resource manifest, content revision and authoritative history state.",
+  project_snapshot: "Reopen an explicitly owned immutable source revision without changing current content or history.",
   resource_import: "Import a bounded, verified PNG or PCM16 WAV into the owned project revision idempotently.",
   resource_remove:
     "Remove one resource from the current revision while preserving historical bytes for undo and existing views.",

@@ -1,12 +1,14 @@
 import type { Artifact, Digest } from "@odsuite/protocol";
 import type { Context, Factory, Identity } from "@odsuite/sidecar";
 
-export interface Resource {
+interface ResourceBase {
   artifact: Artifact;
-  type: "file" | "directory";
   platform?: "darwin" | "linux" | "win32";
   arch?: "arm64" | "x64";
 }
+export type Resource = ResourceBase &
+  ({ type: "file" | "directory" } | { type: "archive"; tree: Digest; expandedBytes: number });
+export type ByteSource = Uint8Array | AsyncIterable<Uint8Array>;
 export interface Consumer extends Pick<Identity, "service" | "generation"> {
   incarnation: string;
   /** A logical use epoch under the actual subject; never a new sidecar identity. */
@@ -21,7 +23,7 @@ export interface Use {
   owner: Owner;
   path: string;
 }
-export type Loader = (signal: AbortSignal) => Promise<Uint8Array>;
+export type Loader = (signal: AbortSignal) => Promise<ByteSource>;
 export interface Reference {
   kind: "current" | "prepared" | "recovery";
   name: string;

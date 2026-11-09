@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { join } from "node:path";
-import { canonical, type Digest, valid, verify } from "@odsuite/protocol";
+import { canonical, type Digest, valid } from "@odsuite/protocol";
 import type { Directory } from "@odsuite/sidecar";
 import { locate } from "./control/access.js";
 import { Controller } from "./control/controller.js";
 import { eraseView } from "./control/erase.js";
 import { scoped } from "./control/session.js";
 import { anchor, exists, fs, read, save, view } from "./files.js";
-import { compatible, exact, key, materialize, resource } from "./format.js";
+import { compatible, exact, key, materialize, resource } from "./materialize/index.js";
 import { Store } from "./store.js";
 import type {
   Consumer,
@@ -299,7 +299,12 @@ export class Library {
       this.controller.abort.signal.throwIfAborted();
       await this.fetch(spec, loader, operation.path);
       const stage = join(operation.path, "content");
-      await materialize(spec, await this.store.read(spec.artifact), stage);
+      await materialize(
+        spec,
+        spec.type === "archive" ? await this.store.path(spec.artifact) : await this.store.read(spec.artifact),
+        stage,
+        this.controller.abort.signal,
+      );
       await this.options.factory.session(async () => {
         const state = await this.state(),
           entry = state.entries[id]!;
@@ -333,8 +338,7 @@ export class Library {
       work = (async () => {
         const bytes = await loader(this.controller.abort.signal);
         this.controller.abort.signal.throwIfAborted();
-        if (!verify(spec.artifact, bytes)) throw Error("blob integrity mismatch");
-        await this.store.put("blob", spec.artifact.slot, bytes, staging);
+        await this.store.import(spec.artifact, bytes, staging, this.controller.abort.signal);
       })();
       this.fetching.set(spec.artifact.digest, work);
       void work.then(
@@ -407,6 +411,7 @@ export class Library {
             referencedPath: async (value) => locate(value, this.roots.cache, await this.state(), true),
             read: async (value) => {
               const spec = resource(value);
+              if (spec.type === "archive") throw Error("native archives require verified paths, not buffered reads");
               await locate(spec, this.roots.cache, await this.state());
               return this.store.read(spec.artifact);
             },
@@ -434,7 +439,7 @@ export class Library {
     const entry = state.entries[id]!;
     if (entry.uses.length || entry.operation || state.references.some((r) => r.keys.includes(id)))
       throw Error("blob deletion intent conflicts with protection");
-    await eraseView(this.roots.cache, id, entry.resource.type === "directory", this.options.onCheckpoint);
+    await eraseView(this.roots.cache, id, entry.resource.type !== "file", this.options.onCheckpoint);
     if (
       !Object.entries(state.entries).some(
         ([other, e]) => other !== id && e.resource.artifact.digest === entry.resource.artifact.digest,

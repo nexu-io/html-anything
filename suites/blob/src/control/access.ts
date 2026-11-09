@@ -1,5 +1,5 @@
 import { view } from "../files.js";
-import { compatible, exact, key, resource } from "../format.js";
+import { compatible, exact, key, resource } from "../materialize/index.js";
 import type { Resource, State } from "../types.js";
 
 /** Caller holds the factory lane; GC cannot interleave with buffered reads. */
