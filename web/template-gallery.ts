@@ -19,6 +19,7 @@ export function mountTemplates(root: HTMLElement, options: {
   const lifetime = new AbortController();
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let catalogVersion: string | undefined;
+  let catalogWarning: string | undefined;
   let active = false, enabled = false, category = 'featured', loaded = false, next: number | null = 0;
   let request: AbortController | undefined, sequence = 0, shown = 0, preview: GalleryTemplate | undefined;
   let previewCleanup = () => {}, rotation: ReturnType<typeof setInterval> | undefined, debounce: ReturnType<typeof setTimeout> | undefined;
@@ -127,6 +128,11 @@ export function mountTemplates(root: HTMLElement, options: {
     button.disabled = !canCopy(); language.attribute(button, 'aria-label', 'Copy to recreate {title}', { title: template.title }); button.onclick = () => copyTemplate(template, button);
     actions.append(sourceSummary(template), button); details.append(heading, actions); card.append(createMedia(template), details); return card;
   }
+  function updateWarning(warning?: string) {
+    catalogWarning = warning;
+    element('catalog-error').hidden = !warning;
+    language.text(element('catalog-error-text'), warning || '');
+  }
   async function load(reset: boolean) {
     if (!active) return;
     request?.abort(); const controller = new AbortController(); request = controller; const ticket = ++sequence;
@@ -141,7 +147,7 @@ export function mountTemplates(root: HTMLElement, options: {
       if (!Array.isArray(page.items) || !Number.isSafeInteger(page.total)) throw new Error("Invalid template catalogue");
       if (ticket !== sequence || !active) return;
       catalogVersion = page.catalogVersion;
-      if (page.warning) { element('catalog-error').hidden = false; language.text(element('catalog-error-text'), page.warning); }
+      updateWarning(page.warning);
       element('template-grid').append(...page.items.map(createCard)); shown += page.items.length; next = page.next; loaded = true;
       language.text(element('template-count'), page.total ? 'Groups: {shown} / {total} · Templates and clips: {entries}' : 'No matching templates. Try another name, creator or style.', { shown, total: page.total, entries: page.entryTotal });
       element('more-templates').hidden = next === null;
@@ -156,8 +162,11 @@ export function mountTemplates(root: HTMLElement, options: {
   }
   const catalogTimer = setInterval(() => {
     if (!active || request || document.visibilityState === 'hidden' || !catalogVersion) return;
+    const ticket = sequence;
     void fetch('/motion-api/template-catalog?limit=1', { signal: lifetime.signal }).then(response => response.ok ? response.json() : null).then(page => {
-      if (active && page?.catalogVersion && page.catalogVersion !== catalogVersion) void load(true);
+      if (!active || lifetime.signal.aborted || request || ticket !== sequence || !page?.catalogVersion) return;
+      if (page.catalogVersion !== catalogVersion) void load(true);
+      else if (page.warning !== catalogWarning) updateWarning(page.warning);
     }).catch(() => {});
   }, 5_000);
   lifetime.signal.addEventListener('abort', () => clearInterval(catalogTimer), { once: true });
