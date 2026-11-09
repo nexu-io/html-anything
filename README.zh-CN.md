@@ -1,4 +1,4 @@
-<p align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.zh-CN.jpg" /><img src="docs/readme/cover.zh-CN.jpg" width="100%" alt="Codex 收到 OpenAI 参考片链接，OpenMotion Studio 显示复刻工程的画面和时间轴。" /></picture></a></p>
+<p align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.zh-CN.jpg" /><img src="docs/readme/cover.zh-CN.jpg" width="100%" alt="在 Codex 输入 Figma Draw 参考片链接，Studio 时间轴显示复刻的 Wing Fest 蝴蝶海报。" /></picture></a></p>
 
 # OpenMotion · 用任意 Agent 拆解并复刻品牌视频
 
@@ -10,7 +10,7 @@
 
 贴一条 X 或 YouTube 链接，或从 **[100+ 个可一键复刻的视频模板](docs/README.zh-CN.md#motion-资源库与主题合集)**里选一支。换上自己品牌的 Logo 和产品截图，在 Studio 里改镜头、导出 MP4。
 
-**[看 15 秒 Codex 演示](docs/readme/studio-tour.zh-CN.mp4)** · **[接入你的 Agent](docs/README.zh-CN.md#接入你的-agent)**
+**[看 10 秒 Codex 演示](docs/readme/studio-tour.zh-CN.mp4)** · **[接入你的 Agent](docs/README.zh-CN.md#接入你的-agent)**
 
 <p align="center">
   <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenMotion-%E5%AE%98%E7%BD%91-bc334e?style=flat-square" alt="OpenMotion 官网" /></a>
@@ -23,7 +23,7 @@
 
 <p align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.zh-CN.jpg" />
-  <img src="docs/readme/codex-comparison.zh-CN.webp" width="100%" alt="在 Codex 安装插件并贴入 OpenAI 的 X 原帖，打开 Studio 工程，原速对照 5 秒品牌片尾。" />
+  <img src="docs/readme/codex-comparison.zh-CN.webp" width="100%" alt="从 Codex 中的 Figma Draw 参考片到 Studio 中的蝴蝶海报，最后同步播放 5 秒原片与复刻。" />
 </picture></a></p>
 
 <p align="center">
@@ -35,6 +35,6 @@
 
 首版开源了**[Firecrawl 品牌宣传片的 MOTION.md 拆解](examples/reference-reveal/MOTION.zh-CN.md)**，从数字亮相到 Logo 收尾，每一拍都能对照原片。
 
-[看 OpenAI 的 X 原帖](https://x.com/OpenAI/status/2084352161404920316) · [Firecrawl 原片与复刻 · 5 秒对照](examples/reference-reveal/comparison.mp4) · [看七个品牌的 5 秒同步对照](docs/README.zh-CN.md#复用参考片的拍法)
+[看 Figma Draw 的 X 原帖](https://x.com/figma/status/1920168282751185360) · [Firecrawl 原片与复刻 · 5 秒对照](examples/reference-reveal/comparison.mp4) · [看七个品牌的 5 秒同步对照](docs/README.zh-CN.md#复用参考片的拍法)
 
 [阅读完整中文 README](docs/README.zh-CN.md) · [原 HTML Anything 编辑器与安装说明](https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md) · [English](README.md)

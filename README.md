@@ -1,4 +1,4 @@
-<p align="center"><a href="docs/readme/studio-tour.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.jpg" /><img src="docs/readme/cover.jpg" width="100%" alt="A reference link in the Codex composer and the editable OpenMotion Studio timeline for the remake." /></picture></a></p>
+<p align="center"><a href="docs/readme/studio-tour.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.jpg" /><img src="docs/readme/cover.jpg" width="100%" alt="A Figma Draw prompt in Codex and the Wing Fest butterfly poster open on the Studio timeline." /></picture></a></p>
 
 <h1 align="center">OpenMotion — Reverse-engineer and recreate brand videos in any agent</h1>
 
@@ -10,7 +10,7 @@
 
 <p align="center">Paste an X or YouTube link, or pick from <strong><a href="#motion-library-and-collections">100+ one-click video recreation templates</a></strong>. Swap in your brand’s logo and product screenshots, edit in Studio and export an MP4.</p>
 
-<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 15-second Codex demo</a></strong> · <strong><a href="#agent-setup">Set up your agent</a></strong></p>
+<p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 10-second Codex demo</a></strong> · <strong><a href="#agent-setup">Set up your agent</a></strong></p>
 
 <p align="center">
   <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="https://img.shields.io/badge/OpenMotion-Website-bc334e?style=flat-square" alt="OpenMotion website" /></a>
@@ -23,7 +23,7 @@
 
 <p align="center"><a href="docs/readme/studio-tour.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
-  <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install OpenMotion, paste the original OpenAI X post into Codex, open the Studio timeline and compare five seconds of the original and the OpenDesign remake." />
+  <img src="docs/readme/codex-comparison.webp" width="100%" alt="From a Figma Draw reference in Codex to the butterfly reveal in Studio, then five seconds of the original and Wing Fest playing side by side." />
 </picture></a></p>
 
 <p align="center">
@@ -35,7 +35,7 @@
 
 <p align="center">Study the shot beat by beat with the <a href="examples/reference-reveal/MOTION.md">open-source Firecrawl MOTION.md</a>, from the number reveal to the closing logo.</p>
 
-<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">Open the original X post</a> · <a href="examples/reference-reveal/comparison.mp4">Firecrawl original vs. remake · 5s</a> · <a href="#make-a-reference-your-own">Compare seven brand films</a></p>
+<p align="center"><a href="https://x.com/figma/status/1920168282751185360">Watch Figma’s original</a> · <a href="examples/reference-reveal/comparison.mp4">Firecrawl original vs. remake · 5s</a> · <a href="#make-a-reference-your-own">Compare seven brand films</a></p>
 
 <p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="docs/collections/README.md">Find a reference</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 
@@ -92,7 +92,7 @@ OpenMotion runs on your computer. Choose an agent that can launch a local MCP se
 
 | Agent | How to connect |
 | --- | --- |
-| **Codex** | Install the plugin, then open **Plugins → OpenDesign → Try now**. [Follow the walkthrough](#start-in-codex) |
+| **Codex** | Install the plugin, then open **Plugins → OpenDesign → Try now**. [Installation steps](#start-in-codex) |
 | **Claude Code** | Use the local installer with `--host claude` to register the MCP server and install the skills. [Local plugin option](docs/agent-adapters.md#codex--claude-code) |
 | **DeepSeek Harness** | Use `--host deepseek` with a profile that has a model configured. [Harness profile and MCP setup](docs/agent-adapters.md#deepseek-harness) |
 | **WorkBuddy** *(preview)* | Use `--host workbuddy` for custom MCP and skills. Desktop import and video export still need an end-to-end test. [Connector setup](docs/agent-adapters.md#workbuddy) |

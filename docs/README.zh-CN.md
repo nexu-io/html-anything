@@ -1,4 +1,4 @@
-<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="Codex 收到 OpenAI 参考片链接，OpenMotion Studio 显示复刻工程的画面和时间轴。" /></picture></a></p>
+<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="在 Codex 输入 Figma Draw 参考片链接，Studio 时间轴显示复刻的 Wing Fest 蝴蝶海报。" /></picture></a></p>
 
 <h1 align="center">OpenMotion · 用任意 Agent 拆解并复刻品牌视频</h1>
 
@@ -10,7 +10,7 @@
 
 <p align="center">贴一条 X 或 YouTube 链接，或从 <strong><a href="#motion-资源库与主题合集">100+ 个可一键复刻的视频模板</a></strong>里选一支。换上自己品牌的 Logo 和产品截图，在 Studio 里改镜头、导出 MP4。</p>
 
-<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 15 秒 Codex 演示</a></strong> · <strong><a href="#接入你的-agent">接入你的 Agent</a></strong></p>
+<p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 10 秒 Codex 演示</a></strong> · <strong><a href="#接入你的-agent">接入你的 Agent</a></strong></p>
 
 <p align="center">
   <a href="https://open-design.ai/openmotion?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="https://img.shields.io/badge/OpenMotion-%E5%AE%98%E7%BD%91-bc334e?style=flat-square" alt="OpenMotion 官网" /></a>
@@ -23,7 +23,7 @@
 
 <p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="readme/codex-comparison.zh-CN.jpg" />
-  <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="安装插件，把 OpenAI 的 X 原帖贴进 Codex，打开 Studio 时间轴，再同步播放 5 秒原片与复刻。" />
+  <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="从 Codex 中的 Figma Draw 参考片到 Studio 中的蝴蝶海报，最后同步播放 5 秒原片与复刻。" />
 </picture></a></p>
 
 <p align="center">
@@ -35,7 +35,7 @@
 
 <p align="center">首版开源了<strong><a href="../examples/reference-reveal/MOTION.zh-CN.md">Firecrawl 品牌宣传片的 MOTION.md 拆解</a></strong>，从数字亮相到 Logo 收尾，每一拍都能对照原片。</p>
 
-<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">看 OpenAI 的 X 原帖</a> · <a href="../examples/reference-reveal/comparison.mp4">Firecrawl 原片与复刻 · 5 秒对照</a> · <a href="#复用参考片的拍法">看七个品牌的 5 秒对照</a></p>
+<p align="center"><a href="https://x.com/figma/status/1920168282751185360">看 Figma Draw 的 X 原帖</a> · <a href="../examples/reference-reveal/comparison.mp4">Firecrawl 原片与复刻 · 5 秒对照</a> · <a href="#复用参考片的拍法">看七个品牌的 5 秒对照</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="collections/README.zh-CN.md">找参考片</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
@@ -92,7 +92,7 @@ OpenMotion 在你的电脑上运行。选择能通过 stdio 启动本地 MCP 服
 
 | Agent | 怎么接入 |
 | --- | --- |
-| **Codex** | 安装插件，在 **Plugins → OpenDesign → Try now** 打开。[跟着演示安装](#在-codex-里开始) |
+| **Codex** | 安装插件，在 **Plugins → OpenDesign → Try now** 打开。[查看安装步骤](#在-codex-里开始) |
 | **Claude Code** | 给本地安装器加上 `--host claude`，注册 MCP 服务并安装 Skills。[本地插件接入方式](agent-adapters.md#codex--claude-code) |
 | **DeepSeek Harness** | 先为要使用的 profile 配好模型，再用 `--host deepseek` 接入。[Harness 配置说明](agent-adapters.md#deepseek-harness) |
 | **WorkBuddy** *（预览）* | 用 `--host workbuddy` 接入自定义 MCP 和 Skills。桌面端从导入到出片的完整流程仍待实机验证。[Connector 接入说明](agent-adapters.md#workbuddy) |
