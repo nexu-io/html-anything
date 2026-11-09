@@ -1,6 +1,6 @@
 # Review and delivery verification
 
-Unchanged template preview reuse follows motion-template-to-video: confirm the actual preview exists and decodes, then deliver its copy without rendering, comparison or a fabricated export job. The fresh-export and job/revision checks below apply when a new render is required.
+Unchanged template delivery follows motion-template-to-video: confirm the template loaded and plays in the editor, without rendering, comparison or a fabricated export job. The fresh-export and job/revision checks below apply when a new render is required.
 
 Use separate evidence for creative quality, technical media integrity and playback. Each check is `passed`, `failed` or `not_run`; a missing tool or an unseen render cannot become `passed`. Scores are optional diagnostics, never the acceptance criterion.
 

@@ -19,7 +19,7 @@ openmotion 0.6.2 是面向 Agent 的本地创作工作区与 Codex 插件，一�
 
 地址栏支持直接输入 `baidu.com`、前进、后退、刷新和停止；网页由独立本地 Chromium 承载，支持点击、滚动与文字输入，切回 Motion 仍保留编辑状态。需要本机 Chrome / Chromium，或设置 `MOTION_BROWSER_PATH` / `HYPERFRAMES_BROWSER_PATH`。网站音频、文件上传/下载管理等当前边界见 [浏览器运行架构](browser-runtime.md)。
 
-产品名为 openmotion，已有工作区界面保留 OpenDesign 标识。产品内会话、模板、媒体生成与通用 API 继续保留；当前一期给宿主 Agent 的公开 MCP 只含下方 9 个 motion_ Tool，未公开的产品能力不因此删除。
+产品名为 openmotion，已有工作区界面保留 OpenDesign 标识。产品内会话、模板、媒体生成与通用 API 继续保留；当前一期给宿主 Agent 的公开 MCP 只含下方 11 个 motion_ Tool，未公开的产品能力不因此删除。
 
 MCP 打开预览、创建产物、应用/复刻模板时，`previewUrl` 默认包含 `embed=1`，Codex 等宿主直接打开完整地址即可只显示编辑器，隐藏侧栏、会话和产品浏览器外框。`sessionUrl` 或显式 `embedded=false` 返回完整工作区；空会话仍显示会话入口。也可分别配置 `sidebar=0`、`conversation=0`。这些视图使用同一会话与产物。完整接口、失败语义与后续模式扩展见 [会话技术架构](session-architecture.md)。
 
@@ -35,7 +35,7 @@ Studio 与 MCP 共用这套模型和任务服务。云 Key 的填写不等于已
 
 ## 一期 MCP 发布范围
 
-[一期 11 Tool 契约与实现范围](mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露 9 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，五个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
+[一期 11 Tool 契约与实现范围](mcp-phase1-tools.md)固定公开名称、输入返回、内容版本与裁剪边界。源码和默认构建均为 phase1，仅暴露这 11 项；`npm run package:phase1` 导出一期插件 ZIP。已补齐契约适配，复用现有 Studio/渲染器，五个随包 Skill 的调用指引同步迁移。内部 legacy 实现保留供兼容回归。
 
 ## 产品与文档
 
@@ -68,7 +68,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ```text
 请在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。
-安装成功后，询问我是否体验一个无需准备素材的 20 秒视频。我确认后，请打开独立的可编辑工程并交付 MP4。
+安装成功后，询问我是否体验一个无需准备素材的 20 秒视频。我确认后，请在右侧打开独立的可编辑工程。
 ```
 
 安装脚本使用当前检出版本，安装依赖、构建编辑器、注册本地插件并预检 MCP 连接。它不会安装系统软件或重启 Codex。请保留仓库目录供插件继续使用。导出 MP4 还需要浏览器和媒体工具，详见下文。
@@ -78,7 +78,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 由 Codex 或其他 Agent 执行安装时，在插件安装与 MCP 连接预检均成功后，按以下顺序结束安装任务：
 
 1. 在当前对话简要介绍 openmotion 支持产品宣传视频、动态图表与流程动画、模板和可编辑预览、MP4 导出。
-2. 主动询问用户：**“要现在体验一个无需准备素材的 20 秒视频吗？我会提供 MP4，并打开可编辑工程。”**
+2. 主动询问用户：**“要现在体验一个无需准备素材的 20 秒视频吗？我会在右侧打开一个可编辑工程。”**
 3. 停下来等待用户选择；用户回复“体验”或明确同意后，进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md) 并执行下方首次体验默认规则。用户明确只要安装或暂不体验时，尊重该选择。
 
 先在当前对话完成介绍与邀请。若新插件工具尚未加载，在用户同意体验后再提供新会话接续方式；安装时的 MCP 预检不代表当前对话已加载新工具。安装失败时先说明失败原因，修复成功后再邀请。
@@ -89,12 +89,12 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 - 沿用模板的示例文字、图形和动画，保持原生 20 秒规格，不再询问素材、品牌、风格或模板选择。
 - 创建独立可编辑工程，保留原有工程；同一次体验已经创建工程时直接续用，避免重复创建。
-- 在 Codex 右侧打开 openmotion 可编辑工程，检查正确载入并可播放；让用户可以在等待导出时继续查看工程。
-- 接受首次体验同时授权导出该示例的 MP4。读取当前 revision，导出并等待完成，检查实际文件与播放；复用本次已完成的导出，不重复排队。
-- On success, the final reply contains **one completion sentence, the playable MP4, then one contextual next-step invitation**, with the editable project kept open on the right. Use plain Markdown; screenshots and verification evidence stay in local records. Editor screenshots, ZIPs, duplicate project links, checklists and HTML wrappers are omitted unless requested.
-- The LLM writes the invitation naturally in the user's language: ask what video they want next and introduce existing templates, video-link recreation and creation from their requirements. Wording follows the conversation rather than a fixed script. Continue an already-known next request instead of asking again; otherwise wait for the user's choice. Invite only after the first successful experience delivery, not on follow-up edits, repeated exports or export failure. The [first-run defaults](../skills/motion-production/references/templates.md#first-run-experience-defaults) define delivery exceptions.
+- 在 Codex 右侧打开 openmotion 可编辑工程，检查正确载入并可播放。
+- 右侧打开的工程就是这次体验的结果，不导出 MP4；用户要视频文件时再导出。
+- On success, the final reply contains **one completion sentence, then one contextual next-step invitation**, with the editable project kept open on the right. Use plain Markdown; screenshots and verification evidence stay in local records. MP4s, editor screenshots, ZIPs, duplicate project links, checklists and HTML wrappers are omitted unless requested.
+- The LLM writes the invitation naturally in the user's language: ask what video they want next and introduce existing templates, video-link recreation and creation from their requirements. Wording follows the conversation rather than a fixed script. Continue an already-known next request instead of asking again; otherwise wait for the user's choice. Invite only after the first successful experience delivery, not on follow-up edits, exports or a failed experience. The [first-run defaults](../skills/motion-production/references/templates.md#first-run-experience-defaults) define delivery exceptions.
 
-右侧页面打开依赖宿主的浏览器/面板能力。没有该能力时仍交付 MP4 和实际工程链接，明确说明页面未自动打开，不能声称完整的桌面体验已通过。导出失败时保留工程并说明具体原因，不把预览或任务排队当作最终成片。
+右侧页面打开依赖宿主的浏览器/面板能力。没有该能力时提供实际工程链接，明确说明页面未自动打开，不能声称完整的桌面体验已通过。工程创建或载入失败时说明具体原因，不发出完成语和邀请。
 
 此默认规则只适用于用户接受安装后的首次体验邀请；用户提出自己的视频需求时，按其明确范围执行。
 
@@ -139,7 +139,7 @@ npm run dev
 
 ## Agent 工具
 
-仓库 Agent 从 [AGENTS.md](../AGENTS.md) 进入，Claude Code 同时读取 [CLAUDE.md](../CLAUDE.md)。按本轮意图直达专业入口：原创/大幅重编进入 [motion-director v1.4.5](../skills/motion-director/SKILL.md)，已有模板出片或适配进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md)，参考视频复刻进入 [motion-recreate](../skills/motion-recreate/SKILL.md)（先读用户资料、最多问一次，用现有九个 Tool 在可编辑工程中重建，交付成片、原片对照和工程；规则与测量脚本随该 Skill 分发）。明确要求视频转可复用模板或 ZIP 时，单独进入 [motion-video-to-template](../skills/motion-video-to-template/SKILL.md)。[motion-production](../skills/motion-production/SKILL.md) 承接既定决定下的工程修改、预览、技术检查、排错与导出；重新设计局部动作或声音仍可直达 director。已有内容的修改统一复用 [edit 流程](../skills/motion-production/references/edit.md)，核对保持项及后续延续；首次补读的结果须先返回模型，再执行依赖操作。
+仓库 Agent 从 [AGENTS.md](../AGENTS.md) 进入，Claude Code 同时读取 [CLAUDE.md](../CLAUDE.md)。按本轮意图直达专业入口：原创/大幅重编进入 [motion-director v1.4.5](../skills/motion-director/SKILL.md)，已有模板出片或适配进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md)，参考视频复刻进入 [motion-recreate](../skills/motion-recreate/SKILL.md)（先读用户资料、最多问一次，用现有九个 Tool 在可编辑工程中重建，导出片对照原片测量后，交付在编辑器中打开的工程；规则与测量脚本随该 Skill 分发）。明确要求视频转可复用模板或 ZIP 时，单独进入 [motion-video-to-template](../skills/motion-video-to-template/SKILL.md)。[motion-production](../skills/motion-production/SKILL.md) 承接既定决定下的工程修改、预览、技术检查、排错与导出；重新设计局部动作或声音仍可直达 director。已有内容的修改统一复用 [edit 流程](../skills/motion-production/references/edit.md)，核对保持项及后续延续；首次补读的结果须先返回模型，再执行依赖操作。
 
 仅有 MCP 时通过 resources/list 与 resources/read 读取 `motion://workflow/production/start`；已选专业入口直接读对应路线，无需重新选路。固定引擎指南为 `motion://engine/SKILL.md`。详见 [Skill 路由](skills.md)。一期包含 motion-production、motion-director、motion-template-to-video、motion-recreate、motion-video-to-template 五个入口及参考。MCP workflow 短 ID 依次为 production/director/template/recreate/video-to-template；reference-video 仅留源码兼容入口。
 
@@ -202,7 +202,7 @@ node --experimental-strip-types scripts/verify-export.ts /absolute/path/final.mp
 
 ## 视频转模板与模板出片
 
-视频转模板入口仅在要求可复用模板时使用，要求原样重建尽量匹配参考画面、构图、运动和节奏；素材与源码保持可编辑。原样使用模板时直接交付模板里的 `preview.mp4`，不重新渲染、不比对。制作时对照原片；打包后另外检查 ZIP 解压到别处能独立渲染，不缺文件、字体和素材，帧率、帧数、时长和预览一致；不做逐帧像素比对，不为肉眼看不出的差异返工。具体规范见 [模板制作验证](../skills/motion-video-to-template/references/verify.md)。视频转模板时不向用户提问，由 Agent 自行选择最贴近原片的方案并记录在模板内唯一的说明文件 `TEMPLATE.md`；常用修改声明为变量，在 Studio Variables 面板修改；交付回复只给预览、模板、原片对照、能改什么和与原片的差异，技术检查写在 `TEMPLATE.md`；用模板生成视频时，缺少品牌、产品、价格、图片等只有用户能提供的内容，或要求有明显歧义时，Agent 会一次性提问。motion-video-to-template 不承接普通视频复刻或直接混入修改要求；普通复刻由 motion-recreate 实现，已有模板的修改由 motion-template-to-video 处理。
+视频转模板入口仅在要求可复用模板时使用，要求原样重建尽量匹配参考画面、构图、运动和节奏；素材与源码保持可编辑。原样使用模板时在编辑器里打开即完成，不渲染、不比对。制作时对照原片；打包后另外检查 ZIP 解压到别处能独立渲染，不缺文件、字体和素材，帧率、帧数、时长和预览一致；不做逐帧像素比对，不为肉眼看不出的差异返工。具体规范见 [模板制作验证](../skills/motion-video-to-template/references/verify.md)。视频转模板时不向用户提问，由 Agent 自行选择最贴近原片的方案并记录在模板内唯一的说明文件 `TEMPLATE.md`；常用修改声明为变量，在 Studio Variables 面板修改；交付回复只给预览、模板、原片对照、能改什么和与原片的差异，技术检查写在 `TEMPLATE.md`；用模板生成视频时，缺少品牌、产品、价格、图片等只有用户能提供的内容，或要求有明显歧义时，Agent 会一次性提问。motion-video-to-template 不承接普通视频复刻或直接混入修改要求；普通复刻由 motion-recreate 实现，已有模板的修改由 motion-template-to-video 处理。
 
 ## 多 Agent 薄适配器
 

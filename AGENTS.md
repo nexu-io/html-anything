@@ -32,7 +32,7 @@ Use the [documentation index](docs/README.md) for related topics. Distinguish im
 
 ## Video production entry points
 
-Choose the entry for the current intent directly. Original creation, narrative/motion/sound redesign and creative review use motion-director; existing editable-template use/adaptation uses motion-template-to-video; reference-video reconstruction of this work uses motion-recreate (read user materials, rebuild the requested film in an editable project, measure against the reference and deliver a comparison; its rules and measurer ship inside the Skill); requested reusable template production uses motion-video-to-template. [motion-production](skills/motion-production/SKILL.md) handles scoped engineering under established creative decisions, preview, technical checks, troubleshooting and export. Its existing start resource retains short navigation; it is not a mandatory router.
+Choose the entry for the current intent directly. Original creation, narrative/motion/sound redesign and creative review use motion-director; existing editable-template use/adaptation uses motion-template-to-video; reference-video reconstruction of this work uses motion-recreate (read user materials, rebuild the requested film in an editable project, measure the export against the reference and hand over the project open in the editor; its rules and measurer ship inside the Skill); requested reusable template production uses motion-video-to-template. [motion-production](skills/motion-production/SKILL.md) handles scoped engineering under established creative decisions, preview, technical checks, troubleshooting and export. Its existing start resource retains short navigation; it is not a mandatory router.
 
 A directly selected specialist reads shared context and continues; do not bounce back to the production start. Small edits, audio-only changes, review-only and export-only requests resume their affected scope. Keep existing decisions and locked content. Repository development and documentation do not trigger video production.
 
@@ -41,7 +41,7 @@ Phase one exposes eleven motion_ Tools (nine project tools plus catalog fetch an
 
 ## Template production and reuse
 
-`motion-template-to-video` implements the default template route and reuses shared context/edit and managed-project revision protection. Unchanged requests can deliver the template's existing preview; edited content or missing previews use the appropriate render/verification path. `motion-video-to-template` separately produces a portable reusable template from a video; it does not replace ordinary video recreation. Visual acceptance belongs to the user. Repository work does not invoke production Skills.
+`motion-template-to-video` implements the default template route and reuses shared context/edit and managed-project revision protection. Unchanged requests are delivered by opening the template in the editor; edited content is checked by playing it in the editor preview, with native snapshots only for layout; renders and exports, including of an unchanged template, happen only when the user asks for a video file. `motion-video-to-template` separately produces a portable reusable template from a video; it does not replace ordinary video recreation. Visual acceptance belongs to the user. Repository work does not invoke production Skills.
 
 ## Candidate and publication controls
 
