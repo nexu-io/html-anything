@@ -29,10 +29,10 @@ it("does not acknowledge disposal while an older preview acquisition is still in
       select: () => {},
     });
   const first = preview.open(current);
+  await expect.poll(() => releases.length).toBe(1);
   current = project("two");
   const second = preview.open(current);
-  await Promise.resolve();
-  expect(releases).toHaveLength(2);
+  await expect.poll(() => releases.length).toBe(2);
   let disposed = false;
   const drain = preview.dispose().then(() => {
     disposed = true;

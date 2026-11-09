@@ -1,12 +1,18 @@
 /** Runs only in the derived sandboxed native document. Reads geometry; never paints editor CSS into source. */
 export function editorBridge() {
+  const identity = (node: HTMLElement) => {
+    const instance = node.getAttribute("data-open-motion-instance");
+    if (instance) return instance;
+    const scope = node.parentElement?.closest("[data-open-motion-instance]")?.getAttribute("data-open-motion-instance");
+    return [scope, node.getAttribute("data-hf-id")].filter(Boolean).join("/");
+  };
   let selected: HTMLElement | null = null,
     key = "",
     enabled = false;
   const send = (type: string, data: Record<string, unknown>) =>
     parent.postMessage({ source: "open-motion-editor", type, ...data }, "*");
   const movable = (node: HTMLElement) => {
-    if (node.hasAttribute("data-composition-id")) return null;
+    if (node.hasAttribute("data-composition-id") || node.closest("[data-open-motion-instance]")) return null;
     const own = getComputedStyle(node),
       translate = own.translate === "none" ? ["0px", "0px"] : own.translate.split(/\s+/);
     if (translate.length > 2 || !translate.every((v) => /^-?\d+(?:\.\d+)?px$/.test(v))) return null;
@@ -38,7 +44,7 @@ export function editorBridge() {
     if (!selected?.isConnected) return;
     const rect = selected.getBoundingClientRect(),
       data = {
-        id: selected.getAttribute("data-hf-id"),
+        id: identity(selected),
         x: rect.x,
         y: rect.y,
         width: rect.width,
@@ -56,9 +62,7 @@ export function editorBridge() {
       return;
     enabled = event.data.enabled === true;
     selected =
-      [...document.querySelectorAll<HTMLElement>("[data-hf-id]")].find(
-        (e) => e.getAttribute("data-hf-id") === event.data.id,
-      ) ?? null;
+      [...document.querySelectorAll<HTMLElement>("[data-hf-id]")].find((e) => identity(e) === event.data.id) ?? null;
     key = "";
     geometry();
   });
@@ -74,7 +78,7 @@ export function editorBridge() {
     if (event.button !== 0 || !enabled) return;
     const node = event.target instanceof Element ? event.target.closest<HTMLElement>("[data-hf-id]") : null;
     if (!node) return;
-    const id = node.getAttribute("data-hf-id"),
+    const id = identity(node),
       basis = movable(node);
     if (!id) return;
     send("select", { id });

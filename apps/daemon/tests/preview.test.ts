@@ -62,6 +62,7 @@ it("serves immutable derived snapshots, canonical relative files and revokes ret
     );
     expect(response(views, url, "external.example:48000").status).toBe(400);
     expect(shown.body).toContain("__runtime.js");
+    expect(response(views, `${url}?revision=1`)).toEqual(shown);
     expect(shown.headers["content-security-policy"]).toContain("sandbox allow-scripts");
     expect(shown.headers["content-security-policy"]).toContain("connect-src 'none'");
     expect(response(views, `/preview/${view.id}/hyperframes.json`).body).toBe(
@@ -108,4 +109,53 @@ it("refuses foreign ownership, stale revisions and bounded preview exhaustion", 
     expect(views.open(input).revision).toBe(project.revision);
     views.close();
     expect(response(views, `/preview/${second.id}/index.html`).status).toBe(404);
+  }));
+it("rejects broken composition candidates atomically, retains confirmed views and never persists assembly", () =>
+  fixture((workspace, views) => {
+    const session = workspace.execute("session_create", { requestId: randomUUID(), title: "nested", mode: "motion" });
+    const files = [
+      {
+        path: "index.html",
+        content:
+          '<main data-composition-id="main"><div data-hf-id="hf-card" data-composition-id="card" data-composition-src="scenes/card.html"></div></main>',
+      },
+      { path: "scenes/card.html", content: '<div data-composition-id="card"><p>Confirmed child</p></div>' },
+    ];
+    const artifact = workspace.execute("artifact_create", {
+      requestId: randomUUID(),
+      sessionId: session.id,
+      title: "nested",
+      files,
+    });
+    const owner = { sessionId: session.id, artifactId: artifact.id },
+      project = workspace.execute("project_read", owner);
+    const confirmed = views.open({ id: randomUUID(), ...owner, expectedRevision: project.revision }),
+      url = `/preview/${confirmed.id}/index.html`;
+    const shown = response(views, url);
+    expect(shown.body).toContain("Confirmed child");
+    expect(shown.body).toContain(`src="/preview/${confirmed.id}/__gsap.js"`);
+    expect(shown.body).not.toContain("data-composition-src=");
+    expect(workspace.execute("project_read", owner).files).toEqual(files);
+    workspace.execute("project_save", {
+      requestId: randomUUID(),
+      ...owner,
+      expectedRevision: project.revision,
+      files: files.slice(0, 1),
+    });
+    const broken = workspace.execute("project_read", owner),
+      candidate = randomUUID();
+    for (let index = 0; index < 20; index++)
+      expect(() => views.open({ id: candidate, ...owner, expectedRevision: broken.revision })).toThrow(
+        "missing composition",
+      );
+    expect(response(views, `/preview/${candidate}/index.html`).status).toBe(404);
+    expect(response(views, url)).toEqual(shown);
+    workspace.execute("project_save", { requestId: randomUUID(), ...owner, expectedRevision: broken.revision, files });
+    const restored = workspace.execute("project_read", owner);
+    expect(views.open({ id: candidate, ...owner, expectedRevision: restored.revision }).revision).toBe(
+      restored.revision,
+    );
+    expect(workspace.execute("project_read", owner).files).toEqual(files);
+    views.release({ id: confirmed.id });
+    expect(response(views, url).status).toBe(404);
   }));

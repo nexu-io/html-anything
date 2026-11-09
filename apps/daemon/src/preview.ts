@@ -1,4 +1,5 @@
 import type { ServerResponse } from "node:http";
+import { assembleProject } from "@open-motion/motion/project";
 import { gsap, preview, runtime } from "@open-motion/motion/runtime";
 import { Fault, id, type Project, revision, schemas, type Workspace } from "@open-motion/workspace";
 
@@ -15,12 +16,12 @@ const types: Record<string, string> = {
 };
 /** Ephemeral read-only views of confirmed snapshots, never a project store or OS inventory. */
 export class Previews {
-  private views = new Map<string, Project>();
+  private views = new Map<string, { project: Project; html: string }>();
   constructor(private workspace: Workspace) {}
   open(input: unknown) {
     const parsed = schema.safeParse(input);
     if (!parsed.success) throw new Fault("invalid", "invalid preview request");
-    const existing = this.views.get(parsed.data.id);
+    const existing = this.views.get(parsed.data.id)?.project;
     if (existing) {
       if (
         existing.artifactId !== parsed.data.artifactId ||
@@ -38,7 +39,13 @@ export class Previews {
     if (project.files.some((f) => f.path === "__gsap.js" || f.path === "__runtime.js"))
       throw new Fault("invalid", "reserved preview engine path");
     if (this.views.size >= 16) throw new Fault("invalid", "close an existing preview before opening another");
-    this.views.set(parsed.data.id, project);
+    let html: string;
+    try {
+      html = assembleProject(project.files).html;
+    } catch (error) {
+      throw new Fault("invalid", error instanceof Error ? error.message : "invalid composition graph");
+    }
+    this.views.set(parsed.data.id, { project, html });
     return { id: parsed.data.id, revision: project.revision };
   }
   release(input: unknown) {
@@ -48,11 +55,11 @@ export class Previews {
     return { closed: true };
   }
   serve(url: string, response: ServerResponse, host: string | undefined) {
-    const match = /^\/preview\/([a-f0-9-]+)\/(.+)$/.exec(url);
+    const match = /^\/preview\/([a-f0-9-]+)\/(.+)$/.exec(url.split("?")[0] ?? "");
     const viewId = match?.[1],
       encoded = match?.[2];
-    const project = viewId && this.views.get(viewId);
-    if (!project || !viewId || !encoded) {
+    const view = viewId && this.views.get(viewId);
+    if (!view || !viewId || !encoded) {
       response.writeHead(404);
       response.end();
       return;
@@ -65,7 +72,7 @@ export class Previews {
       response.end();
       return;
     }
-    const file = project.files.find((f) => f.path === path);
+    const file = view.project.files.find((f) => f.path === path);
     let content = path === "__gsap.js" ? gsap : path === "__runtime.js" ? runtime : file?.content;
     if (content === undefined) {
       response.writeHead(404);
@@ -73,7 +80,7 @@ export class Previews {
       return;
     }
     const type = types[path.split(".").at(-1)?.toLowerCase() ?? ""] ?? "text/plain";
-    if (type === "text/html") content = preview(content);
+    if (path === "index.html") content = preview(view.html, `/preview/${viewId}/`);
     let origin: URL;
     try {
       origin = new URL(`http://${host}`);
