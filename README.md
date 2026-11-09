@@ -1,10 +1,15 @@
-<h1 align="center"><a href="docs/readme/studio-tour.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.jpg" /><img src="docs/readme/cover.jpg" width="100%" alt="OpenMotion — Reverse-engineer brand videos in any agent" /></picture></a></h1>
+<h1 align="center"><a href="docs/readme/studio-tour.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.jpg" /><img src="docs/readme/cover.jpg" width="100%" alt="OpenMotion — Reverse-engineering for any video" /></picture></a></h1>
 
-<p align="center">Upload any brand video or paste a social video link to recreate its motion with your own assets.</p>
+<p align="center">Remix any viral video by your agent. Upload a clip or paste a social video link, then bring in your own brand assets.</p>
 
 <p align="center"><strong><a href="#agent-setup">Quickstart</a></strong> · <a href="docs/README.zh-CN.md">简体中文</a></p>
 
 ## Make a reference your own
+
+- **The first full-stack agentic video generator.** Our goal is to put generation, editing, and rendering in one open-source workflow. Code your scenes in HTML, edit the timing in Studio, then render the same project to MP4.
+- **Use OpenMotion directly in your local agent, with BYOK at every layer.** Keep your agent’s language model and connect your own provider keys for image, video, and music generation.
+- **First open-source release of `MOTION.md` files for 100+ brands.** That’s the scope of our planned collection. We designed [Motion MD](docs/motion-md.md) to record shot order, timing, transitions, and the assets you can replace. Read the [Firecrawl brief](examples/reference-reveal/MOTION.md) in the public preview.
+- **Multimodal: images · video · music.** Generate or import the assets you need, line them up with the cuts and beats on one timeline, then export the finished film. [See model options](#bring-your-own-agent-and-keys-byok)
 
 <p align="center"><a href="docs/readme/studio-tour.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
@@ -35,6 +40,14 @@ https://x.com/tim_cook/status/1896589954517701057
 Keep the word reveals and fold on the same beats. Replace AIR with CUT.
 Open the editable five-second project in Studio and export an MP4.
 ```
+
+### Presenter-led explainers
+
+In [Kevin Stratvert’s tool demo](https://www.youtube.com/shorts/1fA5j5_5TRY), the presenter cuts from talking to the camera to showing the software. Give your agent your own recording and screen capture so viewers see the feature just as you name it.
+
+> Keep my voice. When I say “export,” cut to my screen recording, circle the Export button, then cut back to me. Keep the highlighted words editable as captions.
+
+The linked short is the reference. Your recording, captions, and screen inserts go into your own project.
 
 ## Made with OpenMotion
 
@@ -106,19 +119,30 @@ Then try one edit: **“Hold the closing title two seconds longer. Export anothe
 
 ![Product Promo open in Studio, with its preview and editable timeline.](docs/readme/editor.jpg)
 
-## Bring your own project
+## System architecture
 
-You can start with assets already in your project. For generated images, video or audio, Studio’s model settings let you configure your own Atlas Cloud or fal.ai key and choose a model for each media type. [Model settings](docs/model-gateway.md)
+Your local agent creates a project through MCP and writes the scenes in HTML, CSS, and JavaScript. To hold a title half a second longer, ask the agent to change the code or drag the clip edge in Studio. The renderer takes a snapshot of that same project and exports the MP4.
 
-| What you have | What to ask your agent for | What you can change next |
+[![OpenMotion architecture: the local agent calls project tools, the optional model gateway supplies media, and Studio and the renderer share the editable project.](docs/readme/system-architecture.svg)](docs/readme/system-architecture.svg)
+
+[Explore the butterfly composition](examples/wing-construction/index.html) · [Product architecture](docs/product/architecture.md) · [Rendering pipeline](docs/hyperframes.md)
+
+### Bring your own agent and keys (BYOK)
+
+Choose your language model in your local agent and use its existing login or API key. To generate media, add your Atlas Cloud or fal.ai key in **Studio → Model settings** and pick a model for each medium. You can also import your own files and edit and render locally without a model key.
+
+| Medium | Built-in model options | Try it in a cut |
 | --- | --- | --- |
-| A reference clip and brand assets | “Keep the cut from the headline to the UI. Use our screenshot and type.” | Compare the two cuts and adjust where the reveal lands. [Recreate a reference](skills/motion-recreate/SKILL.md) |
-| A template you already like | “Use the Product Promo timing. Replace the opening copy and the end card.” | Keep a fresh copy of the template for the next campaign. [Adapt a template](skills/motion-template-to-video/SKILL.md) |
-| Release notes and a folder of screenshots | “Show the problem, demo the new feature, then hold on the release date.” | Review the shot sequence with your agent and refine the cut in Studio. [Direct an original film](skills/motion-director/SKILL.md) |
+| Images | Codex Image, Nano Banana 2, FLUX Schnell | Redraw the opening artwork in your brand palette. |
+| Video | Seedance 2.0, Wan 2.2 | Generate a cutaway to lead into your screen recording. |
+| Music | Suno v4 | Score the moment your product appears. |
+| Speech (TTS) | Kokoro | Narrate a new script over the same cut. |
+
+Codex Image uses your local Codex login. Cloud model access and charges depend on your provider account. Add the result you choose to the timeline to keep editing. [Model settings](docs/model-gateway.md) · [Model catalog source](gateway/catalog.ts)
 
 ## Motion MD
 
-A useful motion brief names both the creative decision and what a teammate may change. Here’s the direction behind the five-second remix:
+The opening five seconds of the Firecrawl reference have three distinct beats. The brief pairs each movement with the brand detail you can replace.
 
 | Time | Keep | Swap for your brand |
 | --- | --- | --- |
@@ -126,7 +150,7 @@ A useful motion brief names both the creative decision and what a teammate may c
 | 1.5–4s | Let the central mark settle while the outer tiles keep turning. | Your symbol and the inputs or features that belong around it. |
 | 4–5s | Follow the same mark into the closing handoff. | The input your customer provides and the result they get. |
 
-The first planned collection covers 100+ brand-film MOTION.md breakdowns. Watch the [five-second Firecrawl comparison](examples/reference-reveal/comparison.mp4) alongside the published brief below.
+[Play the original and the remake together](examples/reference-reveal/comparison.mp4) to check the timing against the three beats above.
 
 Give your agent the Markdown brief along with the project. The brief guides the edit. The HTML, CSS, JavaScript and media supply the animation. [Motion MD v0.1 proposal](docs/motion-md.md) · [Working brief and both exports](examples/reference-reveal/MOTION.md)
 

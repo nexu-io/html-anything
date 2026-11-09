@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="598" viewBox="0 0 760 598" role="img" aria-labelledby="title description" xml:lang="en">
+  <title id="title">OpenMotion system architecture</title>
+  <desc id="description">A local agent uses MCP to manage an editable project. The optional model gateway calls media providers. Selected assets go into the project. Studio edits the source and a local renderer exports an MP4 from a snapshot.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#536e6a"/></marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; text-anchor: middle; }
+    .local { fill: #fff; stroke: #c3d4d1; } .media { fill: #f0f0fa; stroke: #d4d3e7; }
+    .local, .media { stroke-width: 1.5; } .project { fill: #184741; }
+    .name, .project-title { font-size: 23px; font-weight: 650; fill: #183430; }
+    .detail, .project-detail { font-size: 15px; fill: #4a5f5b; }
+    .project-title { fill: #fff; } .project-detail { fill: #e2f2ed; }
+    .edge { stroke: #536e6a; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    .both { marker-start: url(#arrow); }
+    .edge-label { font-size: 14px; fill: #435d56; paint-order: stroke; stroke: #f7faf9; stroke-width: 9; stroke-linejoin: round; }
+  </style>
+  <rect width="760" height="598" rx="17" fill="#f7faf9"/>
+  <path class="edge" d="M182 104 V165"/>
+  <path class="edge both" d="M578 108 V165"/>
+  <path class="edge" d="M341 211 H415"/>
+  <path class="edge" d="M182 254 V320"/>
+  <path class="edge" d="M578 254 V320"/>
+  <path class="edge both" d="M182 415 V486"/>
+  <path class="edge" d="M578 410 V486"/>
+  <text class="edge-label" x="180" y="142">stdio MCP</text>
+  <text class="edge-label" x="575" y="142">generate / return media</text>
+  <text class="edge-label" x="180" y="296">create or revise</text>
+  <text class="edge-label" x="575" y="296">add selected media</text>
+  <text class="edge-label" x="180" y="461">read / write</text>
+  <text class="edge-label" x="575" y="461">render a snapshot</text>
+  <g transform="translate(24 20)">
+    <rect class="local" width="316" height="83" rx="12"/>
+    <text class="name" x="158" y="35">Local agent</text>
+    <text class="detail" x="158" y="61">Codex · Claude Code · other MCP hosts</text>
+  </g>
+  <g transform="translate(420 20)">
+    <rect class="media" width="316" height="83" rx="12"/>
+    <text class="name" x="158" y="35">Media providers</text>
+    <text class="detail" x="158" y="61">Codex Image · Atlas Cloud · fal.ai</text>
+  </g>
+  <g transform="translate(24 170)">
+    <rect class="local" width="316" height="83" rx="12"/>
+    <text class="name" x="158" y="35">OpenMotion runtime</text>
+    <text class="detail" x="158" y="61">Sessions and project tools</text>
+  </g>
+  <g transform="translate(420 170)">
+    <rect class="media" width="316" height="83" rx="12"/>
+    <text class="name" x="158" y="35">Model gateway</text>
+    <text class="detail" x="158" y="61">Optional · your accounts and keys</text>
+  </g>
+  <g transform="translate(24 325)">
+    <rect class="project" width="712" height="84" rx="12"/>
+    <text class="project-title" x="356" y="35">Editable HTML project</text>
+    <text class="project-detail" x="356" y="62">HTML, CSS, JavaScript and the media used in the cut</text>
+  </g>
+  <g transform="translate(24 491)">
+    <rect class="local" width="316" height="83" rx="12"/>
+    <text class="name" x="158" y="35">Studio</text>
+    <text class="detail" x="158" y="61">Preview and edit the timeline</text>
+  </g>
+  <g transform="translate(420 491)">
+    <rect class="local" width="316" height="83" rx="12"/>
+    <text class="name" x="158" y="35">Local MP4 export</text>
+    <text class="detail" x="158" y="61">Hyperframes + FFmpeg</text>
+  </g>
+</svg>

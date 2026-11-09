@@ -1,10 +1,15 @@
-<h1 align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="OpenMotion · 用任意 Agent 拆解并复刻品牌视频" /></picture></a></h1>
+<h1 align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="OpenMotion · 对任意视频做逆向拆解" /></picture></a></h1>
 
-<p align="center">上传任意品牌视频，或粘贴社媒视频链接，用自己的品牌素材复刻原片的动效。</p>
+<p align="center">用你的 Agent 复刻任意热门视频。上传视频或粘贴社媒链接，换成自己的品牌素材。</p>
 
 <p align="center"><strong><a href="#接入你的-agent">开始使用</a></strong> · <a href="../README.md">English</a></p>
 
 ## 复用参考片的拍法
+
+- **首个全栈 Agentic 视频生成器。** 我们的目标是把生成、编辑和渲染放进同一套工作流：用 HTML 编写镜头，在 Studio 里改画面和节奏，从这份工程直接渲染出 MP4。
+- **在本地 Agent 里直接用，每一层都支持 BYOK。** 从 Agent 的语言模型到生成图片、视频和音乐的模型，都可以接入自己的服务，使用自己的 API Key。
+- **首次开源 100+ 个品牌的 `MOTION.md`** 是首发合集的目标。我们定义了 [Motion MD](motion-md.zh-CN.md)，用 Markdown 记录分镜、节奏、转场和可替换的品牌素材。当前公开预览可读 [Firecrawl 五秒样例](../examples/reference-reveal/MOTION.zh-CN.md)。
+- **多模态：图片 · 视频 · 音乐。** 生成或导入需要的素材，放到同一条时间轴上对齐镜头和节拍，再一起导出。[查看可选模型](#自带-agent-和模型密钥byok)
 
 <p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="readme/codex-comparison.zh-CN.jpg" />
@@ -35,6 +40,14 @@ https://x.com/tim_cook/status/1896589954517701057
 沿用文字出现和折叠的节奏，把 AIR 换成 CUT。
 在 Studio 中打开可编辑的 5 秒工程，导出 MP4。
 ```
+
+### 真人口播加动效
+
+[Kevin Stratvert 的工具演示](https://www.youtube.com/shorts/1fA5j5_5TRY)从真人出镜切到屏幕操作。做自己的版本时，可以把你的口播和录屏一起交给 Agent，让观众在听到功能名时就看到对应的操作。
+
+> 保留我的原声。我说到「导出」时切到录屏，圈出导出按钮，再切回人像。把关键词做成可编辑的字幕。
+
+这是参考片，你的录像、字幕和屏幕特写会保存在自己的工程里。
 
 ## 用 OpenMotion 做出的三支片子
 
@@ -106,19 +119,30 @@ cd OpenMotion && bash scripts/install-motion.command
 
 ![在 Studio 中打开的 Product Promo 示例，可见视频预览与可编辑时间轴。](readme/editor.jpg)
 
-## 用自己的素材开工
+## 系统架构
 
-项目里的 Logo 和截图可以直接用。需要另外生成图像、视频或声音素材时，可在 Studio「模型设置」中配置自己的 Atlas Cloud 或 fal.ai API Key，按媒体类型选择模型。[模型设置说明](model-gateway.md)
+Agent 通过本地 MCP 工具创建工程，用 HTML、CSS 和 JavaScript 编排镜头。想让标题多停半秒，可以让 Agent 改代码，也可以在 Studio 里拖长片段；渲染器读取这份工程的快照并导出 MP4。
 
-| 你手头有什么 | 可以怎样告诉 Agent | 第一版出来后怎么改 |
+[![OpenMotion 系统架构：本地 Agent 调用工程工具，可选模型网关提供素材，Studio 和渲染器共用同一份工程。](readme/system-architecture.zh-CN.svg)](readme/system-architecture.zh-CN.svg)
+
+[查看原生动画工程](../examples/wing-construction/index.html) · [产品架构](product/architecture.md) · [渲染流程](hyperframes.md)
+
+### 自带 Agent 和模型密钥（BYOK）
+
+在自己的 Agent 里选择语言模型，沿用它的登录账号或 API Key。需要生成新素材时，在 Studio 的**模型设置**里填入自己的 Atlas Cloud 或 fal.ai Key，再按素材类型选模型。已有素材可以直接导入，本地编辑和渲染无需模型密钥。
+
+| 素材 | 内置模型示例 | 可以怎样用 |
 | --- | --- | --- |
-| 一支参考片和品牌素材 | “保留从标题切到界面的那一拍，用我们的截图和字体。” | 把两支片并排看，微调产品亮相的时机。[复刻参考片](../skills/motion-recreate/SKILL.md) |
-| 一份喜欢的模板 | “用 Product Promo 的节奏，换掉开场文案和片尾。” | 在模板副本里改，下一次活动还可以从原版开始。[套用模板](../skills/motion-template-to-video/SKILL.md) |
-| 发布说明和一组截图 | “先说用户遇到的问题，再演示新功能，最后停在上线日期。” | 和 Agent 一起定镜头顺序，到 Studio 调整每个镜头的长度。[从创意做原片](../skills/motion-director/SKILL.md) |
+| 图片 | Codex Image、Nano Banana 2、FLUX Schnell | 用品牌配色重做片头主视觉。 |
+| 视频 | Seedance 2.0、Wan 2.2 | 生成一段过场，接到产品录屏前。 |
+| 音乐 | Suno v4 | 为产品亮相生成一段配乐。 |
+| 语音（TTS） | Kokoro | 为新文案配音，保留原来的剪辑节奏。 |
+
+Codex Image 使用本地 Codex 登录。云模型的使用权限和费用取决于你自己的供应商账号。选中生成结果后，把它加入时间轴即可继续编辑。[模型设置](model-gateway.md) · [模型目录源码](../gateway/catalog.ts)
 
 ## Motion MD
 
-一份可复用的动效说明，要写清楚镜头为什么这样拍，也要告诉接手的人可以改哪里。上面这支 5 秒片用到了三个决定。
+Firecrawl 这支参考片的前五秒有三次变化。下面这份说明把镜头的节奏和可以替换的品牌内容写在一起。
 
 | 时段 | 保留的拍法 | 做自己品牌的视频时可以换什么 |
 | --- | --- | --- |
@@ -126,7 +150,7 @@ cd OpenMotion && bash scripts/install-motion.command
 | 1.5–4 秒 | 中央标志落定，外围卡片继续旋转。 | 你的品牌标志，以及围绕它的素材、功能或产品。 |
 | 4–5 秒 | 让同一个标志进入最后的交接镜头。 | 客户提供什么输入，最后得到什么结果。 |
 
-首批品牌宣传片 MOTION.md 合集计划收录 100 多份拆解。现在可以先看 [Firecrawl 原片与复刻的 5 秒对照](../examples/reference-reveal/comparison.mp4)，再读下面的完整样例。
+[同步播放这五秒的原片与复刻](../examples/reference-reveal/comparison.mp4)，可以直接对照表里的三个时间点。
 
 把 Markdown 文件和工程一起交给 Agent。它可以按这份说明改稿，实际动画保存在 HTML、CSS、JavaScript 和素材文件里。[Motion MD v0.1 草案](motion-md.zh-CN.md) · [本片的说明与两次导出](../examples/reference-reveal/MOTION.zh-CN.md)
 
