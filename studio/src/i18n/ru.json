@@ -524,7 +524,7 @@
   "Rewrite the helper/loop into explicit tweens so this keyframe edits directly": "Перепишите вспомогательный цикл/помощник в явную анимацию, чтобы этот ключевой кадр редактировался напрямую.",
   "Ripple off: deleting a main-track clip leaves a gap": "Ripple off: удаление клипа основной дорожки оставляет пробел",
   "Ripple on: keeps the main track gapless": "Редактирование Ripple включено: не допускайте пробелов в основной дорожке.",
-  "Root": "Основной состав",
+  "Root": "Главная композиция",
   "Root composition: opens automatically on load": "Основной состав: автоматически открывается при загрузке.",
   "Rotate": "Вращение",
   "Rotate element to follow path tangent": "Поворот элемента по касательной к траектории",
@@ -1228,7 +1228,7 @@
   "Close project list": "Закрыть список проектов",
   "Collapse project list": "Свернуть список проектов",
   "Expand project list": "Развернуть список проектов",
-  "Connect Agent": "Подключить агента",
+  "Connect Agent": "Подключить Agent",
   "Search projects…": "Поиск предметов…",
   "Search projects": "Поиск предметов",
   "Loading projects…": "Чтение предметов...",
@@ -1767,5 +1767,11 @@
     "few": "Выбрано {count} элемента",
     "many": "Выбрано {count} элементов",
     "other": "Выбрано {count} элемента"
-  }
+  },
+  "Valid bezier values": "Корректные значения Безье",
+  "Processing": "Обработка",
+  "Text {index}": "Текст {index}",
+  "FFmpeg not found": "FFmpeg не найден",
+  "FFmpeg is required to encode video.": "Для кодирования видео требуется FFmpeg.",
+  "Drop media here": "Перетащите медиа сюда"
 }

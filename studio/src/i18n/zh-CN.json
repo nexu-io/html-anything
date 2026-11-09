@@ -1707,5 +1707,11 @@
   "deepseek": "深度搜寻",
   "chatgpt": "聊天GPT",
   "TimeoutError": "超时错误",
-  "{count} elements selected": "已选中 {count} 个元素"
+  "{count} elements selected": "已选中 {count} 个元素",
+  "Valid bezier values": "贝塞尔参数有效",
+  "Processing": "正在处理",
+  "Text {index}": "文字 {index}",
+  "FFmpeg not found": "未找到 FFmpeg",
+  "FFmpeg is required to encode video.": "编码视频需要 FFmpeg。",
+  "Drop media here": "将媒体拖到这里"
 }

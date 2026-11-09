@@ -524,7 +524,7 @@
   "Rewrite the helper/loop into explicit tweens so this keyframe edits directly": "ヘルパー/ループを明示的なトゥイーンに書き換えて、このキーフレームが直接編集されるようにします",
   "Ripple off: deleting a main-track clip leaves a gap": "リップルオフ: メイントラックのクリップを削除するとギャップが残る",
   "Ripple on: keeps the main track gapless": "リップル編集がオンになっています: メイントラックにギャップがない状態を保ちます",
-  "Root": "主な構成",
+  "Root": "メインコンポジション",
   "Root composition: opens automatically on load": "メイン構成: ロード時に自動的に開きます",
   "Rotate": "回転",
   "Rotate element to follow path tangent": "パス接線に沿って要素を回転します",
@@ -1173,7 +1173,7 @@
   "Close project list": "プロジェクトリストを閉じる",
   "Collapse project list": "プロジェクトリストを折りたたむ",
   "Expand project list": "プロジェクトリストを展開する",
-  "Connect Agent": "コネクトエージェント",
+  "Connect Agent": "エージェントに接続",
   "Search projects…": "検索項目…",
   "Search projects": "検索項目",
   "Loading projects…": "項目を読み込んでいます...",
@@ -1707,5 +1707,11 @@
   "deepseek": "深い検索",
   "chatgpt": "チャットGPT",
   "TimeoutError": "タイムアウトエラー",
-  "{count} elements selected": "{count} 個の要素を選択中"
+  "{count} elements selected": "{count} 個の要素を選択中",
+  "Valid bezier values": "ベジェ値は有効です",
+  "Processing": "処理中",
+  "Text {index}": "テキスト {index}",
+  "FFmpeg not found": "FFmpeg が見つかりません",
+  "FFmpeg is required to encode video.": "動画のエンコードには FFmpeg が必要です。",
+  "Drop media here": "ここにメディアをドロップ"
 }

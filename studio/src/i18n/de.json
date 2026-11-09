@@ -524,7 +524,7 @@
   "Rewrite the helper/loop into explicit tweens so this keyframe edits directly": "Schreiben Sie den Helfer/die Schleife in explizite Tweens um, damit dieser Keyframe direkt bearbeitet wird",
   "Ripple off: deleting a main-track clip leaves a gap": "Ripple off: Das Löschen eines Haupttrack-Clips hinterlässt eine Lücke",
   "Ripple on: keeps the main track gapless": "Ripple-Bearbeitung ist aktiviert: Halten Sie den Haupttitel lückenlos",
-  "Root": "Main composition",
+  "Root": "Hauptkomposition",
   "Root composition: opens automatically on load": "Hauptzusammensetzung: Wird beim Laden automatisch geöffnet",
   "Rotate": "Rotation",
   "Rotate element to follow path tangent": "Element entlang der Pfadtangente drehen",
@@ -1206,7 +1206,7 @@
   "Close project list": "Projektliste schließen",
   "Collapse project list": "Collapse project list",
   "Expand project list": "Projektliste erweitern",
-  "Connect Agent": "Connect-Agent",
+  "Connect Agent": "Agent verbinden",
   "Search projects…": "Suchelemente…",
   "Search projects": "Suchelemente",
   "Loading projects…": "Artikel werden gelesen...",
@@ -1743,5 +1743,11 @@
   "{count} elements selected": {
     "one": "{count} Element ausgewählt",
     "other": "{count} Elemente ausgewählt"
-  }
+  },
+  "Valid bezier values": "Gültige Bézier-Werte",
+  "Processing": "Wird verarbeitet",
+  "Text {index}": "Text {index}",
+  "FFmpeg not found": "FFmpeg nicht gefunden",
+  "FFmpeg is required to encode video.": "Zum Kodieren von Videos wird FFmpeg benötigt.",
+  "Drop media here": "Medien hier ablegen"
 }

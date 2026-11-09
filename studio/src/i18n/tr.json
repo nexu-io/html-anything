@@ -1173,7 +1173,7 @@
   "Close project list": "Proje listesini kapat",
   "Collapse project list": "Proje listesini daralt",
   "Expand project list": "Proje listesini genişlet",
-  "Connect Agent": "Aracıyı Bağla",
+  "Connect Agent": "Agent bağla",
   "Search projects…": "Öğeleri ara…",
   "Search projects": "Arama öğeleri",
   "Loading projects…": "Öğeler okunuyor...",
@@ -1707,5 +1707,11 @@
   "deepseek": "Derin arama",
   "chatgpt": "Sohbet GPT'si",
   "TimeoutError": "Zaman aşımı hatası",
-  "{count} elements selected": "{count} öğe seçildi"
+  "{count} elements selected": "{count} öğe seçildi",
+  "Valid bezier values": "Geçerli Bézier değerleri",
+  "Processing": "İşleniyor",
+  "Text {index}": "Metin {index}",
+  "FFmpeg not found": "FFmpeg bulunamadı",
+  "FFmpeg is required to encode video.": "Video kodlamak için FFmpeg gereklidir.",
+  "Drop media here": "Medyayı buraya bırakın"
 }

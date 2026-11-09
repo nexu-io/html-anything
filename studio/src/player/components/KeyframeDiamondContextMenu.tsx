@@ -127,7 +127,7 @@ export function KeyframeDiamondContextMenu({
           }}
         >
           <span>{t("Edit Ease…")}</span>
-          <span className="text-[10px] text-neutral-500">{state.currentEase ?? "default"}</span>
+          <span className="text-[10px] text-neutral-500">{state.currentEase ?? t("Default")}</span>
         </button>
       )}
 

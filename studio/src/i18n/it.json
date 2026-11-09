@@ -1206,7 +1206,7 @@
   "Close project list": "Chiude l'elenco dei progetti",
   "Collapse project list": "Comprimi l'elenco dei progetti",
   "Expand project list": "Espandi l'elenco dei progetti",
-  "Connect Agent": "Connetti agente",
+  "Connect Agent": "Collega Agent",
   "Search projects…": "Cerca elementi...",
   "Search projects": "Cerca elementi",
   "Loading projects…": "Elementi di lettura...",
@@ -1743,5 +1743,11 @@
   "{count} elements selected": {
     "one": "{count} elemento selezionato",
     "other": "{count} elementi selezionati"
-  }
+  },
+  "Valid bezier values": "Valori Bézier validi",
+  "Processing": "Elaborazione in corso",
+  "Text {index}": "Testo {index}",
+  "FFmpeg not found": "FFmpeg non trovato",
+  "FFmpeg is required to encode video.": "FFmpeg è necessario per codificare i video.",
+  "Drop media here": "Trascina qui i file multimediali"
 }

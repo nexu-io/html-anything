@@ -524,7 +524,7 @@
   "Rewrite the helper/loop into explicit tweens so this keyframe edits directly": "이 키프레임이 직접 편집되도록 도우미/루프를 명시적 트윈으로 다시 작성합니다.",
   "Ripple off: deleting a main-track clip leaves a gap": "잔물결 꺼짐: 메인 트랙 클립을 삭제하면 공백이 남습니다.",
   "Ripple on: keeps the main track gapless": "잔물결 편집이 켜져 있습니다. 메인 트랙에 간격이 없도록 유지합니다.",
-  "Root": "주요 구성",
+  "Root": "메인 컴포지션",
   "Root composition: opens automatically on load": "주요 구성 : 로드시 자동으로 열림",
   "Rotate": "회전",
   "Rotate element to follow path tangent": "경로 접선을 따라 요소 회전",
@@ -1173,7 +1173,7 @@
   "Close project list": "프로젝트 목록 닫기",
   "Collapse project list": "프로젝트 목록 접기",
   "Expand project list": "프로젝트 목록 확장",
-  "Connect Agent": "에이전트 연결",
+  "Connect Agent": "Agent 연결",
   "Search projects…": "항목 검색…",
   "Search projects": "검색항목",
   "Loading projects…": "항목을 읽는 중...",
@@ -1707,5 +1707,11 @@
   "deepseek": "심층 검색",
   "chatgpt": "채팅 GPT",
   "TimeoutError": "시간 초과 오류",
-  "{count} elements selected": "요소 {count}개 선택됨"
+  "{count} elements selected": "요소 {count}개 선택됨",
+  "Valid bezier values": "올바른 베지어 값",
+  "Processing": "처리 중",
+  "Text {index}": "텍스트 {index}",
+  "FFmpeg not found": "FFmpeg를 찾을 수 없습니다",
+  "FFmpeg is required to encode video.": "동영상을 인코딩하려면 FFmpeg가 필요합니다.",
+  "Drop media here": "여기에 미디어를 놓으세요"
 }
