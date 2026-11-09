@@ -1,27 +1,27 @@
-<h1 align="center">openmotion · 在 Codex 里复刻品牌发布片</h1>
+<h1 align="center">OpenMotion · 在 Codex 里制作品牌视频</h1>
 
-<p align="center">看中一支发布片的节奏，把它和自己的 Logo、截图、文案一起交给 Codex。<br />
-导出自己品牌的 MP4，留下能继续改的工程，也把这套拍法留给下一次发布。</p>
+<p align="center">拆解你喜欢的科技品牌视频，用自己的 Logo、产品截图和文案，复刻它的文字动画、转场和镜头节奏。<br />
+拿到一份能接着改的工程，也拿到一支能直接分享的 MP4。</p>
 
 <p align="center"><strong><a href="#在-codex-里开始">在 Codex 里试做 20 秒示例</a></strong> · <a href="#复用参考片的拍法">看 5 秒复刻对照</a> · <a href="../examples/reference-reveal/MOTION.zh-CN.md">读这支片的 Motion MD</a> · <a href="collections/README.zh-CN.md">找参考片</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
-<p align="center"><img src="readme/hero.zh-CN.svg" alt="openmotion for Codex。Great motion. Made yours. 从参考片、Motion MD 到可编辑的品牌视频。" width="100%" /></p>
+<p align="center"><img src="readme/hero.zh-CN.svg" alt="OpenMotion for Codex。Great motion. Made yours. 从参考片、Motion MD 到可编辑的品牌视频。" width="100%" /></p>
 
-openmotion 是一款独立的 Codex 动效插件，我们想把它做成最好的 Claude Motion 开源替代。看到喜欢的发布片，你可以用 **Motion MD** 记下产品在哪一拍出现、画面要停多久、哪些素材可以换。这是我们提出的 Markdown 动效规范草案。把它和有出处的参考片、可编辑工程放在一起，另一个团队也能用自己的产品试一次同样的拍法。
+OpenMotion 是一款开源的 Codex 动效设计插件，我们希望把它做成最好的 Claude Motion 开源替代。你可以从品牌形象片、产品演示或新品发布片开始。拆解一个镜头时，先看哪个元素动、产品在哪一拍出现、观众有多久读完标题。用我们提出的 Markdown 动效规范 **Motion MD** 记下这些决定，另一个团队就能带上自己的品牌素材复刻这套拍法。
 
 ## 复用参考片的拍法
 
-**一个数字，一圈图标，一次交接。** Firecrawl 的 5 秒发布片段先亮出「1,000,000 Developers」，再让一圈公司标志绕着火焰转动。我们沿用这组动作，为 openmotion 做了一支片。开场数字换成 Product Promo 模板的真实时长，中央换成 OpenDesign 标志，外围卡片则是做视频时实际会用到的素材和文件。[观看 @ericciarla 的参考片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [作者原帖](https://x.com/ericciarla/status/2093375835679977570)
+**一个数字，一圈图标，一次交接。** Firecrawl 的 5 秒发布片段先亮出「1,000,000 Developers」，再让一圈公司标志绕着火焰转动。我们沿用这组动作，为 OpenMotion 做了一支片。开场数字换成 Product Promo 模板的真实时长，中央换成 OpenDesign 标志，外围卡片则是做视频时实际会用到的素材和文件。[观看 @ericciarla 的参考片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [作者原帖](https://x.com/ericciarla/status/2093375835679977570)
 
-[![openmotion 的 5 秒改编。开场显示模板时长，随后素材标签围绕 OpenDesign 标志旋转，片尾从 Motion MD 走向 MP4。](../examples/reference-reveal/preview.gif)](../examples/reference-reveal/film.mp4)
+[![OpenMotion 的 5 秒改编。开场显示模板时长，随后素材标签围绕 OpenDesign 标志旋转，片尾从 Motion MD 走向 MP4。](../examples/reference-reveal/preview.gif)](../examples/reference-reveal/film.mp4)
 
 [播放有声成片](../examples/reference-reveal/film.mp4) · [读这支片的 Motion MD](../examples/reference-reveal/MOTION.zh-CN.md) · [打开可编辑源码](../examples/reference-reveal/index.html)
 
 **换个产品信息，还能保留这个节奏吗？** 我们在同一份工程里，把「00:00:20 · Product Promo」换成「00:00:15 · NYT Graph」，再导出了一版。两支片都长 5 秒。停在 0.8 秒能看到改过的数字和标题，停在 2.65 秒能看到卡片转到了相同位置。[看改稿后的第二版](../examples/reference-reveal/graph-cut.mp4)
 
-## 用 openmotion 做出的三支片子
+## 用 OpenMotion 做出的三支片子
 
 ### Made in Codex · 12 秒产品发布片
 
@@ -50,13 +50,13 @@ openmotion 是一款独立的 Codex 动效插件，我们想把它做成最好�
 macOS 或 Linux 需要 Git、Node.js 22.18+（含 npm）和支持插件的 Codex CLI。导出 MP4 还需要 Chrome 或 Chromium，以及含 FFprobe 的 FFmpeg。[Windows 安装说明](test-packages.md)
 
 ```sh
-git clone --branch feature/motion --single-branch https://github.com/nexu-io/html-anything.git openmotion
-cd openmotion && bash scripts/install-motion.command
+git clone --branch feature/motion --single-branch https://github.com/nexu-io/html-anything.git OpenMotion
+cd OpenMotion && bash scripts/install-motion.command
 ```
 
 安装后请保留这个目录。打开 Codex，对它说：
 
-> 用 openmotion 在 Studio 里打开一份新的 20 秒 Product Promo 示例工程，并把它导出为 MP4。
+> 用 OpenMotion 在 Studio 里打开一份新的 20 秒 Product Promo 示例工程，并把它导出为 MP4。
 
 拿到第一版后，可以试着说：**“结尾标题多停两秒，再导出一版。”** 你也可以自己在 Studio 里拖动片段边缘。两种方式改的是同一份工程。[安装与首次体验手册](usage.md#使用) · [其他 Agent 安装方式](npm-installation.md)
 
@@ -101,6 +101,6 @@ cd openmotion && bash scripts/install-motion.command
 
 ## 构建与贡献
 
-openmotion 提供五个创作工作流和九个 MCP 工具。除了直接改模板和复刻参考片，还可以把视频做成可复用的模板目录。贡献一种风格时，请附上原片出处与作者、Motion MD、预览、可编辑工程和素材授权说明。[工作流](skills.md) · [MCP 工具](mcp-phase1-tools.md) · [贡献指南](../CONTRIBUTING.zh-CN.md)
+OpenMotion 提供五个创作工作流和九个 MCP 工具。除了直接改模板和复刻参考片，还可以把视频做成可复用的模板目录。贡献一种风格时，请附上原片出处与作者、Motion MD、预览、可编辑工程和素材授权说明。[工作流](skills.md) · [MCP 工具](mcp-phase1-tools.md) · [贡献指南](../CONTRIBUTING.zh-CN.md)
 
-可以从本分支安装，也可以[在本地构建 npm 安装器](npm-installation.md)。openmotion 采用 [Apache-2.0](../LICENSE) 许可，使用 [Hyperframes](https://github.com/heygen-com/hyperframes) 构建 Studio 和渲染视频。[内置示例](../template-library/NOTICE.md)、[编辑器](../studio/LICENSE)和[字体](../web/design-system/fonts/NOTICES.txt)附有各自的上游声明。
+可以从本分支安装，也可以[在本地构建 npm 安装器](npm-installation.md)。OpenMotion 采用 [Apache-2.0](../LICENSE) 许可，使用 [Hyperframes](https://github.com/heygen-com/hyperframes) 构建 Studio 和渲染视频。[内置示例](../template-library/NOTICE.md)、[编辑器](../studio/LICENSE)和[字体](../web/design-system/fonts/NOTICES.txt)附有各自的上游声明。

@@ -6,7 +6,7 @@
 
 Firecrawl 的 5 秒片段先用「1,000,000 Developers」占住画面，随后让一圈标志围绕火焰旋转，最后把两个标志并排，右侧出现阶梯形图案。Hyperframes 目录把这段参考片归于 @ericciarla，编号为 `hf-moment-M945`。[作者原帖](https://x.com/ericciarla/status/2093375835679977570) · [观看参考片](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)
 
-沿用这三个动作，介绍 openmotion 的 Product Promo 模板。开场的 20 秒指模板的真实时长，这支示范短片本身长 5 秒。[Product Promo 模板源码](../../template-library/product-promo/index.html)
+沿用这三个动作，介绍 OpenMotion 的 Product Promo 模板。开场的 20 秒指模板的真实时长，这支示范短片本身长 5 秒。[Product Promo 模板源码](../../template-library/product-promo/index.html)
 
 ## 品牌与镜头节奏
 
@@ -16,7 +16,7 @@ Firecrawl 的 5 秒片段先用「1,000,000 Developers」占住画面，随后�
 | --- | --- | --- |
 | 0–1.5 秒 | 推近一个大数字，从左到右逐步揭开，下方的小标题停住。 | `00:00:20` 和 Product Promo |
 | 1.5–4 秒 | 拉开画面让卡片形成圆环，中央标志落定后，外围继续旋转。 | 九个可编辑标签围绕 OpenDesign 标志。 |
-| 4–5 秒 | 把中央标志带到收尾画面，左边出现输入，右边揭晓输出。 | Motion MD → openmotion → MP4 |
+| 4–5 秒 | 把中央标志带到收尾画面，左边出现输入，右边揭晓输出。 | Motion MD → OpenMotion → MP4 |
 
 ## 用同一份说明改第二版
 

@@ -4,11 +4,11 @@ Each folder contains the editable HTML and the exported film. All examples run a
 
 ## Twenty seconds · reference study
 
-Watch a five-second Firecrawl excerpt, read the shot decisions in Markdown, and compare two openmotion exports. One uses the 20-second Product Promo template as its headline, the other the 15-second NYT Graph template. Both share the same five-second motion. [Reference, Motion MD and editing instructions](reference-reveal/MOTION.md) · [First cut](reference-reveal/film.mp4) · [Second cut](reference-reveal/graph-cut.mp4)
+Watch a five-second Firecrawl excerpt, read the shot decisions in Markdown, and compare two OpenMotion exports. One uses the 20-second Product Promo template as its headline, the other the 15-second NYT Graph template. Both share the same five-second motion. [Reference, Motion MD and editing instructions](reference-reveal/MOTION.md) · [First cut](reference-reveal/film.mp4) · [Second cut](reference-reveal/graph-cut.mp4)
 
 ## Made in Codex
 
-**Brief** · Introduce openmotion in 12 seconds using the original OpenDesign symbol and one real screenshot. Let the viewer see an editable project before the brand signs off.
+**Brief** · Introduce OpenMotion in 12 seconds using the original OpenDesign symbol and one real screenshot. Let the viewer see an editable project before the brand signs off.
 
 | Time | Shot | Try changing |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ The first card starts moving at 0.65 seconds, the second at 2.65 and the third a
 
 Install the plugin using the [quickstart](../README.md#start-in-codex). Open the repository containing these files in Codex, then point it at one folder. For example:
 
-> Use openmotion to make a fresh editable project from examples/launch-in-codex/index.html and its two images. Keep the 12-second timeline. Replace “Made in Codex.” with “Meet our new editor.” Open it in Studio and export the silent MP4.
+> Use OpenMotion to make a fresh editable project from examples/launch-in-codex/index.html and its two images. Keep the 12-second timeline. Replace “Made in Codex.” with “Meet our new editor.” Open it in Studio and export the silent MP4.
 
 The native project supplies the local GSAP runtime at `assets/gsap.min.js`. You can change the timing with Codex, then play the revised cut in Studio.
 

@@ -1,10 +1,10 @@
-[English](README.md) · **简体中文** · [openmotion](../README.zh-CN.md)
+[English](README.md) · **简体中文** · [OpenMotion](../README.zh-CN.md)
 
 # Motion 资源站与主题合集
 
 先确定想借鉴什么：一支片子的开场、产品出现的方式，还是把复杂功能讲清楚的节奏。以下把**可以观看的参考片**和**能直接打开的工程**分开列出。
 
-## 看发布片参考
+## 看科技品牌的视频参考
 
 | 影片或片段 | 建议观察 | 来源 |
 | --- | --- | --- |
@@ -16,7 +16,7 @@
 
 ### 同一支参考片，两次改编
 
-上面的 [Firecrawl 5 秒片段](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)已有一组 openmotion 改编示例。打开 [Motion MD](../../examples/reference-reveal/MOTION.zh-CN.md)可以看到数字揭晓和环绕镜头的节奏，再看[第一版成片](../../examples/reference-reveal/film.mp4)，以及替换开场信息后的第二版。[第二版成片](../../examples/reference-reveal/graph-cut.mp4) · [可编辑源码](../../examples/reference-reveal/index.html)
+上面的 [Firecrawl 5 秒片段](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4)已有一组 OpenMotion 改编示例。打开 [Motion MD](../../examples/reference-reveal/MOTION.zh-CN.md)可以看到数字揭晓和环绕镜头的节奏，再看[第一版成片](../../examples/reference-reveal/film.mp4)，以及替换开场信息后的第二版。[第二版成片](../../examples/reference-reveal/graph-cut.mp4) · [可编辑源码](../../examples/reference-reveal/index.html)
 
 ## 打开可编辑工程
 

@@ -1,10 +1,10 @@
-**English** · [简体中文](README.zh-CN.md) · [openmotion](../../README.md)
+**English** · [简体中文](README.zh-CN.md) · [OpenMotion](../../README.md)
 
 # Motion resource library & collections
 
 Pick a film for the decision you want to borrow: how it opens, how it reveals a product, or how it explains a complex idea. Each entry below tells you whether you can **watch a reference** or **open an editable project**.
 
-## Watch a launch reference
+## Watch videos from tech brands
 
 | Film or excerpt | Look at | Source |
 | --- | --- | --- |
@@ -16,7 +16,7 @@ These are viewing references from the [catalog snapshot](../../web/catalog/hyper
 
 ### From one reference to two editable cuts
 
-The [five-second Firecrawl excerpt](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) now has a worked openmotion example. Follow the number reveal and orbit in the [Motion MD](../../examples/reference-reveal/MOTION.md), watch the [first cut](../../examples/reference-reveal/film.mp4), then see what changes when a different template supplies the opening fact. [Second cut](../../examples/reference-reveal/graph-cut.mp4) · [Editable source](../../examples/reference-reveal/index.html)
+The [five-second Firecrawl excerpt](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) now has a worked OpenMotion example. Follow the number reveal and orbit in the [Motion MD](../../examples/reference-reveal/MOTION.md), watch the [first cut](../../examples/reference-reveal/film.mp4), then see what changes when a different template supplies the opening fact. [Second cut](../../examples/reference-reveal/graph-cut.mp4) · [Editable source](../../examples/reference-reveal/index.html)
 
 ## Open an editable project
 

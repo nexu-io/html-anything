@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="660" viewBox="0 0 1440 660" role="img" aria-labelledby="title desc">
-<title id="title">openmotion for Codex — Great motion. Made yours.</title>
+<title id="title">OpenMotion for Codex — Great motion. Made yours.</title>
 <desc id="desc">三张叠放的卡片依次展示参考片风格、Motion MD 创作说明和可编辑的品牌视频。</desc>
 <defs>
  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#ffffff" opacity=".09"/></pattern>
@@ -15,7 +15,7 @@
    <path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="#202020"/>
   </svg>
  </g>
- <text x="126" y="94" fill="#edf0e9" font-size="28" font-weight="700">openmotion <tspan fill="#a6f287" font-size="25">for Codex</tspan></text>
+ <text x="126" y="94" fill="#edf0e9" font-size="28" font-weight="700">OpenMotion <tspan fill="#a6f287" font-size="25">for Codex</tspan></text>
  <text x="68" y="221" fill="#edf0e9" font-size="79" font-weight="700" letter-spacing="-4">Great motion.</text>
  <text x="68" y="309" fill="#a6f287" font-size="79" font-weight="700" letter-spacing="-4">Made yours.</text>
  <text x="72" y="374" fill="#c1c8bc" font-size="25">从一支喜欢的参考片出发，</text>

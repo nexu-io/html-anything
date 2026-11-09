@@ -1,4 +1,4 @@
-# openmotion README assets
+# OpenMotion README assets
 
 | Asset | Source and use |
 | --- | --- |
@@ -10,4 +10,4 @@
 
 The [showcase](../../examples/README.md) includes animated GIFs sampled from the reference remix, product film and data film and a three-frame strip taken from the portrait MP4. The exported films and editable HTML are included beside their previews. The reference remix uses original artwork and original tones. Its [Motion MD](../../examples/reference-reveal/MOTION.md) credits the external reference and links both exported versions.
 
-Each README has localized alternative text. The instructional SVGs also include titles and descriptions. Public-facing product text uses **openmotion**; the brand symbol belongs to OpenDesign.
+Each README has localized alternative text. The instructional SVGs also include titles and descriptions. Public-facing product text uses **OpenMotion**; the brand symbol belongs to OpenDesign.

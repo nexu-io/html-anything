@@ -1,27 +1,27 @@
-<h1 align="center">openmotion — Remix launch videos in Codex</h1>
+<h1 align="center">OpenMotion — Make brand videos in Codex</h1>
 
-<p align="center">Take the pacing from a launch film you love. Give Codex your logo, screenshots and copy.<br />
-Export your own MP4, keep the editable project and reuse the shot directions for your next launch.</p>
+<p align="center">Reverse-engineer the motion in videos from tech brands. Recreate it with your own logo, screenshots and copy.<br />
+Keep the editable project and export an MP4.</p>
 
 <p align="center"><strong><a href="#start-in-codex">Try the 20-second demo in Codex</a></strong> · <a href="#make-a-reference-your-own">Watch a 5-second remix</a> · <a href="examples/reference-reveal/MOTION.md">Read its Motion MD</a> · <a href="docs/collections/README.md">Find a reference</a></p>
 
 <p align="center"><a href="docs/README.zh-CN.md">简体中文</a> · <a href="https://github.com/nexu-io/html-anything/tree/legacy#readme">Original HTML Anything editor &amp; installation guide</a></p>
 
-<p align="center"><img src="docs/readme/hero.svg" alt="openmotion for Codex. Great motion. Made yours. A reference film becomes a Motion MD brief and an editable brand video." width="100%" /></p>
+<p align="center"><img src="docs/readme/hero.svg" alt="OpenMotion for Codex. Great motion. Made yours. A reference film becomes a Motion MD brief and an editable brand video." width="100%" /></p>
 
-openmotion is a standalone Codex plugin. Our goal is to build the best open-source alternative to Claude Motion. A launch film can show you *how a reveal feels*. **Motion MD** is our draft Markdown format for writing down *how to make it again* — when to show the product, how long to hold a shot and what the next team can swap. Pair the file with a credited reference and an editable project, and another team can try the same direction with its own assets.
+OpenMotion is an open-source motion design plugin for Codex. Our goal is to build the best open-source alternative to Claude Motion. You can start with a brand film, a product walkthrough or a launch video. Pick one shot. What moves first? When does the product come into view? How long does the audience get to read the headline? **Motion MD** is our draft Markdown format for recording those decisions so another team can recreate the motion with its own assets.
 
 ## Make a reference your own
 
-**One number. A ring of icons. A handoff.** In a five-second Firecrawl launch excerpt, “1,000,000 Developers” gives way to a ring of company marks around the flame. We borrowed that sequence for openmotion. Our number is the runtime of the bundled Product Promo template, our center mark is OpenDesign’s, and the surrounding tiles name the things you bring into a motion project. [Watch @ericciarla’s reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [Creator’s original post](https://x.com/ericciarla/status/2093375835679977570)
+**One number. A ring of icons. A handoff.** In a five-second Firecrawl launch excerpt, “1,000,000 Developers” gives way to a ring of company marks around the flame. We borrowed that sequence for OpenMotion. Our number is the runtime of the bundled Product Promo template, our center mark is OpenDesign’s, and the surrounding tiles name the things you bring into a motion project. [Watch @ericciarla’s reference](https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4) · [Creator’s original post](https://x.com/ericciarla/status/2093375835679977570)
 
-[![The five-second openmotion remix. The 20-second template duration gives way to a ring of asset labels, then a Motion MD to MP4 handoff.](examples/reference-reveal/preview.gif)](examples/reference-reveal/film.mp4)
+[![The five-second OpenMotion remix. The 20-second template duration gives way to a ring of asset labels, then a Motion MD to MP4 handoff.](examples/reference-reveal/preview.gif)](examples/reference-reveal/film.mp4)
 
 [Play our cut with sound](examples/reference-reveal/film.mp4) · [Read its Motion MD](examples/reference-reveal/MOTION.md) · [Open the editable HTML](examples/reference-reveal/index.html)
 
 **Does the style survive a new brief?** We kept the same project and changed the opening from “00:00:20 · Product Promo” to “00:00:15 · NYT Graph”. At 0.8s you can read the new title. At 2.65s the cards are in the same orbit. Both versions run for five seconds. [Watch the second cut](examples/reference-reveal/graph-cut.mp4)
 
-## Made with openmotion
+## Made with OpenMotion
 
 ### Made in Codex · 12-second product launch
 
@@ -50,13 +50,13 @@ Try the bundled **Product Promo** with its own artwork. [How the template demo w
 On macOS or Linux, use Git, Node.js 22.18+ with npm, and a Codex CLI with plugin support. MP4 export also needs Chrome or Chromium and FFmpeg with FFprobe. [Windows setup](docs/test-packages.md)
 
 ```sh
-git clone --branch feature/motion --single-branch https://github.com/nexu-io/html-anything.git openmotion
-cd openmotion && bash scripts/install-motion.command
+git clone --branch feature/motion --single-branch https://github.com/nexu-io/html-anything.git OpenMotion
+cd OpenMotion && bash scripts/install-motion.command
 ```
 
 Keep the checkout on disk. Once installed, open Codex and ask:
 
-> Use openmotion to open a fresh copy of the 20-second Product Promo in Studio and export the MP4.
+> Use OpenMotion to open a fresh copy of the 20-second Product Promo in Studio and export the MP4.
 
 Then try one edit: **“Hold the closing title two seconds longer. Export another cut.”** You can also drag the clip edge in Studio. Both edit the same project. [Setup and first-demo guide](docs/usage.md#使用) · [Other agent setups](docs/npm-installation.md)
 
@@ -74,7 +74,7 @@ Then try one edit: **“Hold the closing title two seconds longer. Export anothe
 
 A useful motion brief names both the creative decision and what a teammate may change. Here’s the direction behind the five-second remix:
 
-| Time | Keep | Swap for your launch |
+| Time | Keep | Swap for your brand |
 | --- | --- | --- |
 | 0–1.5s | Reveal a large number from left to right. Give its label time to read. | A verified number and a short label from your release notes. |
 | 1.5–4s | Let the central mark settle while the outer tiles keep turning. | Your symbol and the inputs or features that belong around it. |
@@ -101,6 +101,6 @@ To review a remix today, pause both films on the reveal, check whose brand is on
 
 ## Build and contribute
 
-openmotion includes five creation workflows and nine MCP tools. You can adapt a template, recreate a reference or turn a video into a reusable template folder. To contribute a style, include the original source and creator, your Motion MD, a preview, the editable project and permission to share the assets. [Workflows](docs/skills.md) · [MCP tools](docs/mcp-phase1-tools.md) · [Contributing](CONTRIBUTING.md)
+OpenMotion includes five creation workflows and nine MCP tools. You can adapt a template, recreate a reference or turn a video into a reusable template folder. To contribute a style, include the original source and creator, your Motion MD, a preview, the editable project and permission to share the assets. [Workflows](docs/skills.md) · [MCP tools](docs/mcp-phase1-tools.md) · [Contributing](CONTRIBUTING.md)
 
-Install from this branch or [build the npm installer locally](docs/npm-installation.md). openmotion is licensed under [Apache-2.0](LICENSE) and uses [Hyperframes](https://github.com/heygen-com/hyperframes) for Studio and rendering. The [bundled examples](template-library/NOTICE.md), [Studio](studio/LICENSE) and [fonts](web/design-system/fonts/NOTICES.txt) carry their upstream notices.
+Install from this branch or [build the npm installer locally](docs/npm-installation.md). OpenMotion is licensed under [Apache-2.0](LICENSE) and uses [Hyperframes](https://github.com/heygen-com/hyperframes) for Studio and rendering. The [bundled examples](template-library/NOTICE.md), [Studio](studio/LICENSE) and [fonts](web/design-system/fonts/NOTICES.txt) carry their upstream notices.

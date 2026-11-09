@@ -1,4 +1,4 @@
-# OpenDesign Motion editor
+# OpenMotion editor
 
 This directory contains the complete editable Hyperframes Studio frontend from
 0.9.7, commit `3baf81f9a92615507f76fe8de33e489034ee77ec`: `src`, `public`, and
