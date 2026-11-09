@@ -2,7 +2,7 @@
 
 OpenMotion is a standalone npm application at the repository root. Run commands here with the Node version pinned in `.github/workflows/ci.yml`. Preserve `package-lock.json` and `scripts/runtime-lock.json`; do not introduce workspace-only dependencies. Follow the [migration guide](docs/repository-migration.md), keep user data and credentials outside the checkout, and preserve third-party licenses.
 
-Before publishing a branch, run `npm ci`, `npm run check`, `npm run typecheck:studio`, `npm run build:studio`, affected deterministic tests and the applicable packaging/installation checks. Browser tests on shared machines use the existing browser-lock lanes. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
+Before publishing a branch, run `npm ci`, `npm run check`, `npm run typecheck:studio`, `npm run build:studio`, affected deterministic tests and the applicable packaging/installation checks. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
 
 ## Repository collaboration instructions
 

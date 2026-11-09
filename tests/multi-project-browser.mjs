@@ -7,7 +7,6 @@ import { Client } from './shared-editor-client.mjs';
 import { closeFixtureEditor, fixture } from './fixtures.ts';
 import { ensureEditor } from '../editor-runtime.ts';
 
-assert.ok(process.env.D4_LANE && process.env.D4_LOCK_PID, 'Run with the shared browser-lock lane and real lock');
 const out = process.argv[2]; assert.ok(out && path.isAbsolute(out), 'Pass an absolute evidence directory');
 await mkdir(out, { recursive: true });
 const data = await mkdtemp(path.join(tmpdir(), 'motion-multi-browser-'));

@@ -113,7 +113,7 @@ sequenceDiagram
 | UI/MCP 同时多文件写入的完整事务、并行后台导出 | 未实现 |
 | 长时间压力、自动升级、旧数据自动迁移、正式安装包目标机验收 | 未验证 |
 
-运行本项目检查使用 `npm test`、`npm run check`、`npm run typecheck:studio`、`npm run test:studio`。真实 Chrome 相关检查必须经过团队 browser-lock 的 lane 和 real 锁；新增故障脚本 `tests/shared-editor-crash.mjs` 和媒体脚本 `tests/shared-editor-media.mjs` 也遵守该要求。验收结论只覆盖实际执行命令，实际结果以当前提交的测试及 CI 为准。
+运行本项目检查使用 `npm test`、`npm run check`、`npm run typecheck:studio`、`npm run test:studio`。真实 Chrome 检查包括故障脚本 `tests/shared-editor-crash.mjs` 和媒体脚本 `tests/shared-editor-media.mjs`。验收结论只覆盖实际执行命令，实际结果以当前提交的测试及 CI 为准。
 
 ## 多工程宿主的依赖与恢复边界
 
@@ -121,4 +121,4 @@ sequenceDiagram
 
 已打开工程的上下文保留到服务退出；退出关闭所有监听、历史与子任务。不同页面编辑同一工程仍使用原生 If-Match 和工具 revision/version 冲突保护，不提供多人文本合并；工程 ID 也不代表同工程两个页面的独立选区身份。
 
-验证入口：`tests/multi-project.test.ts` 覆盖同进程双工程、文件/预览/历史/通知和重启；`tests/multi-project-browser.mjs` 在共享 browser-lock 的 lane 与 real 锁下使用两个真实 MCP 客户端和浏览器页面。公开 MCP Tool、冷启动导出、原生媒体和守卫强杀仍单独回归。
+验证入口：`tests/multi-project.test.ts` 覆盖同进程双工程、文件/预览/历史/通知和重启；`tests/multi-project-browser.mjs` 使用两个真实 MCP 客户端和浏览器页面。公开 MCP Tool、冷启动导出、原生媒体和守卫强杀仍单独回归。

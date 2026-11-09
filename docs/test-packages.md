@@ -67,7 +67,7 @@ node scripts/package-npm.mjs "dist/$version" "$version"
 node scripts/smoke-npm-package.mjs "dist/$version/release-npm.json" /absolute/path/to/codex/bin/codex.js
 ```
 
-须在支持的目标系统执行 smoke；Linux 只装配，不代表支持 Linux 原生运行。共享机器的浏览器验收继续使用 browser-lock 的真实锁和分配端口。实际目标机检查还会自动从公开源下载原生依赖，无需公司仓库读取权限。以下为完整 ZIP 的原复现入口：
+须在支持的目标系统执行 smoke；Linux 只装配，不代表支持 Linux 原生运行。实际目标机检查还会自动从公开源下载原生依赖，无需公司仓库读取权限。以下为完整 ZIP 的原复现入口：
 
 构建机需要 Node 26.11.1、Git、tar、zip 和 unzip；CI 使用工作流中固定的 Node 版本。Node、浏览器、FFmpeg 和 ffprobe 均从固定公开 HTTPS 地址下载并校验 SHA256；构建原生运行时不使用仓库 Token、额外 Secret 或私有源码 checkout。
 

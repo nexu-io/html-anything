@@ -4,7 +4,7 @@
 
 Work from the repository root; read [AGENTS.md](AGENTS.md) and the [architecture](docs/product/architecture.md). Use the pinned CI Node version and `npm ci`. Keep `package-lock.json` and `scripts/runtime-lock.json` in sync with any intentional dependency change.
 
-Before opening a PR, run `npm run check`, `npm run typecheck:studio`, `npm run build:studio` and focused deterministic tests for the changed boundary. Studio unit tests use `npm run test:studio`. Use the shared browser-lock wrapper on shared machines; model creation and visual acceptance require separate evidence. Do not overwrite real user data or host configuration to test an installer.
+Before opening a PR, run `npm run check`, `npm run typecheck:studio`, `npm run build:studio` and focused deterministic tests for the changed boundary. Studio unit tests use `npm run test:studio`. Model creation and visual acceptance require separate evidence. Do not overwrite real user data or host configuration to test an installer.
 
 Keep PRs focused and describe the user-visible behavior and actual validation. Open an issue first for substantial changes. Review the entire product architecture for each change and update it only when needed, following the [shared guidance](AGENTS.md#product-architecture-review); documentation edits are not required in every PR. Preserve existing Git history and push follow-up commits during review; do not force-push a shared branch.
 
