@@ -36,7 +36,7 @@ pnpm exec odsuite dev stop --channel=dev --namespace=default
 
 `start` returns the actual Web URL. It watches source by default; use `restart` to activate rebuilt code. Electron and Codex use the same entry point. Sidecar owns control state, process identity, ports, paths and lifecycle; no global bin or shortcut scripts are installed.
 
-The current product supports sessions/artifacts, native source editing, text/appearance/numeric animation, bounded key/clip timing, canvas movement, persistent history, external-file composition navigation/shared-source editing with numeric local clocks and bounded parent-host movement/right-edge trim, and isolated native previews. Unresolved composition clocks remain read-only; media/audio, broader editing, layouts/preferences, generation and rendering/export still need implementation and their own acceptance. Reference carriers and empty placeholders do not prove product or distribution support.
+The current product supports sessions/artifacts, native source editing, text/appearance/numeric animation, bounded key/clip timing, canvas movement, persistent history, external-file composition navigation/shared-source editing with numeric local clocks and bounded parent-host movement/right-edge trim, persistent PNG/PCM16 WAV import/insertion with basic native playback, and isolated native previews. Unresolved composition clocks remain read-only; broader media/audio editing, additional codecs, layouts/preferences, generation and rendering/export still need implementation and their own acceptance. Reference carriers and empty placeholders do not prove product or distribution support.
 
 ## Read and contribute
 

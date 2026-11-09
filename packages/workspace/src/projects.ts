@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { type Artifact, Fault, type Input, type Project, type SourceFile } from "./contract.js";
+import { type Artifact, Fault, type Input, type Project, type Resource, type SourceFile } from "./contract.js";
 import type { Database } from "./database.js";
-import { digest, sources } from "./native.js";
+import { digest, manifest, sources } from "./native.js";
 import type { Sessions } from "./sessions.js";
 export class Projects {
   constructor(
@@ -25,7 +25,7 @@ export class Projects {
       projectId = randomUUID(),
       id = randomUUID();
     this.db.run("INSERT INTO projects VALUES(?,?,0,0)", projectId, revision);
-    this.db.run("INSERT INTO revisions VALUES(?,?,?)", projectId, revision, JSON.stringify(files));
+    this.db.run("INSERT INTO revisions VALUES(?,?,?,?)", projectId, revision, JSON.stringify(files), "[]");
     this.db.run("INSERT INTO history VALUES(?,0,?)", projectId, revision);
     const artifact: Artifact = {
       id,
@@ -48,18 +48,20 @@ export class Projects {
   read(input: Input<"project_read">): Project {
     const owner = this.owner(input.sessionId, input.artifactId);
     const entry = this.db.one(
-      "SELECT r.revision,r.files,p.cursor,p.history_version FROM projects p JOIN revisions r ON r.project_id=p.id AND r.revision=p.current_revision WHERE p.id=?",
+      "SELECT r.revision,r.files,r.resources,p.cursor,p.history_version FROM projects p JOIN revisions r ON r.project_id=p.id AND r.revision=p.current_revision WHERE p.id=?",
       owner.projectId,
     );
     if (!entry) throw new Fault("integrity", "project revision is missing");
-    const files = JSON.parse(String(entry.files)) as SourceFile[];
-    if (digest(files) !== entry.revision) throw new Fault("integrity", "native revision content mismatch");
+    const files = JSON.parse(String(entry.files)) as SourceFile[],
+      resources = manifest(JSON.parse(String(entry.resources)) as Resource[]);
+    if (digest(files, resources) !== entry.revision) throw new Fault("integrity", "native revision content mismatch");
     return {
       id: owner.projectId,
       artifactId: owner.id,
       sessionId: owner.sessionId,
       revision: String(entry.revision),
       files,
+      resources,
       history: {
         version: Number(entry.history_version),
         canUndo: Number(entry.cursor) > 0,
@@ -90,11 +92,34 @@ export class Projects {
     const current = this.read(input);
     if (current.revision !== input.expectedRevision)
       throw new Fault("conflict", "project revision changed; read before saving");
-    const files = sources(input.files),
-      revision = digest(files);
+    return this.commit(current, input.files, current.resources);
+  }
+  snapshot(input: Input<"resource_read">) {
+    const owner = this.owner(input.sessionId, input.artifactId),
+      entry = this.db.one(
+        "SELECT files,resources FROM revisions WHERE project_id=? AND revision=?",
+        owner.projectId,
+        input.revision,
+      );
+    if (!entry) throw new Fault("missing", "owned project revision is missing");
+    const files = sources(JSON.parse(String(entry.files)) as SourceFile[]),
+      resources = manifest(JSON.parse(String(entry.resources)) as Resource[]);
+    if (digest(files, resources) !== input.revision) throw new Fault("integrity", "project revision content mismatch");
+    return { files, resources };
+  }
+  commit(current: Project, input: SourceFile[], assets: Resource[]): Project {
+    const files = sources(input),
+      resources = manifest(assets),
+      revision = digest(files, resources);
     if (revision === current.revision) return current;
     const cursor = Number(this.db.one("SELECT cursor FROM projects WHERE id=?", current.id)?.cursor);
-    this.db.run("INSERT OR IGNORE INTO revisions VALUES(?,?,?)", current.id, revision, JSON.stringify(files));
+    this.db.run(
+      "INSERT OR IGNORE INTO revisions VALUES(?,?,?,?)",
+      current.id,
+      revision,
+      JSON.stringify(files),
+      JSON.stringify(resources),
+    );
     this.db.run("DELETE FROM history WHERE project_id=? AND position>?", current.id, cursor);
     this.db.run("INSERT INTO history VALUES(?,?,?)", current.id, cursor + 1, revision);
     this.db.run(
@@ -103,6 +128,6 @@ export class Projects {
       cursor + 1,
       current.id,
     );
-    return this.read(input);
+    return this.read({ sessionId: current.sessionId, artifactId: current.artifactId });
   }
 }

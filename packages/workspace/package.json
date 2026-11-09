@@ -12,7 +12,8 @@
     "@types/node": "24.12.2",
     "typescript": "7.0.2",
     "vitest": "4.1.6",
-    "esbuild": "0.28.0"
+    "esbuild": "0.28.0",
+    "@types/pngjs": "6.0.5"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     }
   },
   "dependencies": {
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "pngjs": "7.0.0"
   }
 }

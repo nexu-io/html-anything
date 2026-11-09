@@ -37,9 +37,9 @@ export function studioTimeline(
     tracks: tracks.map((c) => ({
       id: c.id,
       label: c.host ? `${c.id} · ${c.host.source}` : c.text || c.tag,
-      kind: c.host ? "合成" : "T · 文本",
-      readonly: !!c.host?.reason,
-      maximum: c.host?.maximum ?? undefined,
+      kind: c.host ? "合成" : c.media?.kind === "audio" ? "音频" : c.media ? "图像" : "T · 文本",
+      readonly: !!c.host?.reason || (c.media?.kind === "audio" && c.media.maximum === null),
+      maximum: c.host?.maximum ?? c.media?.maximum ?? undefined,
       start: c.start ?? 0,
       duration: c.duration ?? 1,
       selected: c.id === options.selected,

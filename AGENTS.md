@@ -106,6 +106,8 @@ Composition assembly must consume a confirmed snapshot through the native pure c
 
 Native appearance/animation is closed-schema film content. Motion transforms through the SDK and verifies actual source writes; workspace owns revisions/history. Submit only touched fields and preserve inherited/relative values. Explicit numeric animation conversion/separation requires fidelity evidence; dynamic or unproven source stays read-only. Preserve overall and segment easing separately. Map key progress through overall easing to real time; resizing endpoints preserves other keys' absolute times. Canvas intent is validated against frame, revision and editing context before the same save chain.
 
+User media is workspace-owned persistent data, outside blob GC. Bind reads to owned immutable revision manifests; removal never erases historical bytes. Preserve import request identities and applied insertion state across unknown transport outcomes; reject old database formats without migration/reset.
+
 Generic controls/anonymous layouts belong to components; panel registration, positions, drafts and context switching belong to Web. Preserve input DOM/focus and incomplete numeric drafts. `WebView.dispose` drains operations, revokes previews and removes listeners before reusing a root; it does not implicitly save drafts.
 
 Real browser tests live in `apps/web/tests/browser`; carrier composition tests live in the owning carrier. Drivers and PNG comparison belong to automation. Pin Chromium, viewport, theme, fonts and native readiness. A theme round-trip is not full product parity. Install Chromium in this worktree as documented; permanent tests must cover actual behavior, rather than relying exclusively on temporary scripts.

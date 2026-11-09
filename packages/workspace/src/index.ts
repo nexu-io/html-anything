@@ -2,6 +2,7 @@ import { Fault, type Input, type Operation, type Output, type SourceFile, schema
 import { Database } from "./database.js";
 import { sources } from "./native.js";
 import { Projects } from "./projects.js";
+import { Resources } from "./resources/store.js";
 import { Selections } from "./selection.js";
 import { Sessions } from "./sessions.js";
 
@@ -12,11 +13,13 @@ export class Workspace {
   private sessions: Sessions;
   private projects: Projects;
   private selection: Selections;
+  private resources: Resources;
   private closed = false;
   constructor(root: string) {
     this.db = new Database(root);
     this.sessions = new Sessions(this.db);
     this.projects = new Projects(this.db, this.sessions);
+    this.resources = new Resources(this.db, this.projects);
     this.selection = new Selections(this.db, this.projects, this.sessions);
   }
   execute<K extends Operation>(operation: K, input: Input<K>): Output<K> {
@@ -46,6 +49,12 @@ export class Workspace {
         return this.sessions.message(input as Input<"message_append">);
       case "artifact_create":
         return this.projects.create(input as Input<"artifact_create">);
+      case "resource_import":
+        return this.resources.import(input as Input<"resource_import">);
+      case "resource_remove":
+        return this.resources.remove(input as Input<"resource_remove">);
+      case "resource_read":
+        return this.resources.read(input as Input<"resource_read">);
       case "project_read":
         return this.projects.read(input as Input<"project_read">);
       case "project_undo":

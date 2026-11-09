@@ -132,6 +132,7 @@ export class NativePreview {
       viewport = previewViewport(document),
       window = document.defaultView;
     frame.setAttribute("sandbox", "allow-scripts");
+    frame.setAttribute("allow", "autoplay");
     frame.referrerPolicy = "no-referrer";
     frame.width = "640";
     frame.height = "360";

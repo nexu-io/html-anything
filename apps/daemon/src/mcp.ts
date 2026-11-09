@@ -12,7 +12,7 @@ export function register(server: McpServer, execute: Execute): void {
         inputSchema: schema,
         annotations: {
           readOnlyHint: !("requestId" in schemas[operation].shape),
-          destructiveHint: ["project_save", "project_undo", "project_redo"].includes(operation),
+          destructiveHint: ["project_save", "project_undo", "project_redo", "resource_remove"].includes(operation),
           idempotentHint: true,
           openWorldHint: false,
         },
@@ -20,7 +20,10 @@ export function register(server: McpServer, execute: Execute): void {
       async (input: unknown) => {
         try {
           const result = await execute(operation, input as Input<typeof operation>);
-          return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: { ...result } };
+          // Binary data is present once in structured output, keeping the stock stdio envelope bounded.
+          const text =
+            operation === "resource_read" ? { resource: (result as Output<"resource_read">).resource } : result;
+          return { content: [{ type: "text", text: JSON.stringify(text) }], structuredContent: { ...result } };
         } catch (error) {
           return {
             isError: true,
