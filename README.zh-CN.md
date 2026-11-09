@@ -1,4 +1,4 @@
-<p align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><img src="docs/readme/cover.zh-CN.jpg" width="100%" alt="Codex 收到 OpenAI 参考片链接，OpenMotion Studio 显示复刻工程的画面和时间轴。" /></a></p>
+<p align="center"><a href="docs/readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="docs/readme/cover.mobile.zh-CN.jpg" /><img src="docs/readme/cover.zh-CN.jpg" width="100%" alt="Codex 收到 OpenAI 参考片链接，OpenMotion Studio 显示复刻工程的画面和时间轴。" /></picture></a></p>
 
 # OpenMotion · 用任意 Agent 拆解并复刻品牌视频
 
@@ -35,6 +35,6 @@
 
 首版开源了**[Firecrawl 品牌宣传片的 MOTION.md 拆解](examples/reference-reveal/MOTION.zh-CN.md)**，从数字亮相到 Logo 收尾，每一拍都能对照原片。
 
-[看 OpenAI 的 X 原帖](https://x.com/OpenAI/status/2084352161404920316) · [Firecrawl 原片与复刻 · 5 秒对照](examples/reference-reveal/comparison.mp4) · [看 Figma、OpenAI 和 Firecrawl 三组同步对照](docs/README.zh-CN.md#复用参考片的拍法)
+[看 OpenAI 的 X 原帖](https://x.com/OpenAI/status/2084352161404920316) · [Firecrawl 原片与复刻 · 5 秒对照](examples/reference-reveal/comparison.mp4) · [看七个品牌的 5 秒同步对照](docs/README.zh-CN.md#复用参考片的拍法)
 
 [阅读完整中文 README](docs/README.zh-CN.md) · [原 HTML Anything 编辑器与安装说明](https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md) · [English](README.md)

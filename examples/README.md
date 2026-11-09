@@ -1,6 +1,19 @@
 # Remix the README films
 
-The five-second comparisons use footage from the authors’ X posts on the left and independently rendered projects on the right. Each MP4 uses the remake’s own soundtrack. Original footage is used in the comparison only. All three project folders can be edited and rendered locally.
+The featured studies pair a five-second excerpt from a brand’s X post with an independent OpenMotion export. Six silent studies isolate the visual timing. The OpenAI study includes the remake’s own score. The original clips appear only in the side-by-side comparisons. [Watch all seven](../README.md#make-a-reference-your-own)
+
+## Recreate one shot
+
+Each folder contains the editable composition, its standalone MP4 and the synchronized comparison. To adapt one, give your agent the composition and replace its demo wordmark, colors or product copy. The native project supplies the animation runtime. [Render locally](#render-a-source-file-locally)
+
+| Official reference | Excerpt | Motion to study | Project |
+| --- | --- | --- | --- |
+| [Kimi](https://x.com/Kimi_Moonshot/status/2077521842080817296) | 00:30.75–00:35.75 | Magnetic field to wordmark | [Source](brand-studies/kimi/index.html) · [Compare](brand-studies/kimi/comparison.mp4) |
+| [DeepSeek](https://x.com/DeepSeekHarness/status/2117256196227019194) | 01:31.5–01:36.5 | Creator Mode typewriter and flash | [Source](brand-studies/deepseek/index.html) · [Compare](brand-studies/deepseek/comparison.mp4) |
+| [Anthropic](https://x.com/ClaudeDevs/status/2091953609185657251) | 00:00–00:05 | Settings toggles to a circled headline | [Source](brand-studies/anthropic/index.html) · [Compare](brand-studies/anthropic/comparison.mp4) |
+| [ElevenLabs](https://x.com/ElevenLabs/status/2069111326987673761) | 00:50–00:55 | Rolling wordmark suffixes | [Source](brand-studies/elevenlabs/index.html) · [Compare](brand-studies/elevenlabs/comparison.mp4) |
+| [Apple](https://x.com/tim_cook/status/1896589954517701057) | 00:00.75–00:05.75 | A single word folds into a ribbon | [Source](brand-studies/apple/index.html) · [Compare](brand-studies/apple/comparison.mp4) |
+| [Slack](https://x.com/SlackHQ/status/1085609385542459393) | 00:00–00:05 | Four colors scatter and regroup | [Source](brand-studies/slack/index.html) · [Compare](brand-studies/slack/comparison.mp4) |
 
 ## OpenAI · a complete film
 
@@ -59,7 +72,7 @@ The native project supplies the local GSAP runtime at `assets/gsap.min.js`. You 
 
 ## Render a source file locally
 
-From this checkout, install the [render prerequisites](../README.md#start-in-codex) and run `npm ci` if dependencies are not installed. This example uses the pinned local renderer. Change `example` to any of the other folder names to render that film. The temporary folder keeps the original MP4 available for comparison.
+From this checkout, install the [render prerequisites](../README.md#start-in-codex) and run `npm ci` if dependencies are not installed. This example uses the pinned local renderer. Change `example` to a folder such as `brand-studies/apple` to render that shot. The temporary folder keeps the original MP4 available for comparison.
 
 ```sh
 example=longer-days
@@ -71,7 +84,7 @@ if [ -d "examples/$example/assets" ]; then
 fi
 cp node_modules/gsap/dist/gsap.min.js "$work/assets/"
 fps=30
-case "$example" in motion-studies|wing-construction|wordmark-reveal) fps=24 ;; esac
+case "$example" in motion-studies|wing-construction|wordmark-reveal|brand-studies/*) fps=24 ;; esac
 node node_modules/hyperframes/bin/hyperframes.mjs render "$work" --fps "$fps" --output "$work/film.mp4"
 printf '%s\n' "$work/film.mp4"
 ```

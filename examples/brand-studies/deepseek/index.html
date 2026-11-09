@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenMotion · Creator mode</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden; }
+    #film { position: relative; width: 100%; height: 100%; overflow: hidden; background: #fff; color: #141416; font-family: "Helvetica Neue", Arial, sans-serif; }
+    .clip { position: absolute; inset: 0; }
+#stage, #type, #signature { display:grid; place-items:center; }
+#stage { background:#060606; }
+#type { color:white; font-size:26px; letter-spacing:-1.2px; }
+#line { position:relative; white-space:nowrap; }
+#line span { display:inline-block; }
+#caret { display:inline-block; vertical-align:middle; width:3px; height:29px; background:white; box-shadow:0 0 9px white; }
+#signature { font-weight:730; font-size:30px; letter-spacing:-1.65px; }
+#signature small { font-size:14px; background:#151515; color:white; border-radius:10px; padding:3px 8px; margin-left:5px; vertical-align:middle; }
+  </style>
+</head>
+<body>
+  <main id="film" data-composition-id="main" data-start="0" data-width="960" data-height="540" data-duration="5" data-fps="24">
+    <div class="clip" id="stage" data-start="0" data-duration="5" data-track-index="0"></div>
+    <div class="clip" id="type" data-start="0" data-duration="5" data-track-index="1"><div id="line"><span id="copy"></span><i id="caret"></i></div></div>
+    <div class="clip" id="signature" data-start="0" data-duration="5" data-track-index="2"><div>◉ OpenMotion <small>Studio</small></div></div>
+  </main>
+  <script>
+    const timeline = gsap.timeline({paused: true});
+timeline.set(['#stage','#type','#signature'],{opacity:0},0);
+timeline.set(['#stage','#type'],{opacity:1},.28);
+const copy = document.querySelector('#copy');
+const sentence = 'Motion Studio. Create Your Own Cut.';
+[...sentence].forEach((_, index) => {
+  timeline.set(copy,{textContent:sentence.slice(0,index+1)},.58+index*.052);
+});
+timeline.fromTo('#caret',{opacity:1},{opacity:.18,duration:.15,repeat:1,yoyo:true},2.86);
+timeline.to('#caret',{scaleX:124,scaleY:1.28,transformOrigin:"right center",boxShadow:'0 0 17px #fff',duration:.17},3.05);
+timeline.set('#type',{opacity:0},3.47);
+timeline.set('#stage',{opacity:0},4.26);
+timeline.set('#signature',{opacity:1},4.26);
+    timeline.set({}, {}, 5);
+    window.__timelines = {main: timeline};
+  </script>
+</body>
+</html>

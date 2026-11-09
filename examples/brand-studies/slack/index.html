@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenMotion · Four-color signature</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 960px; height: 504px; overflow: hidden; }
+    #film { position: relative; width: 100%; height: 100%; overflow: hidden; background: #fff; color: #141416; font-family: "Helvetica Neue", Arial, sans-serif; }
+    .clip { position: absolute; inset: 0; }
+#lockup { display:flex;align-items:center;justify-content:center; }
+#mark { position:absolute;left:367px;top:139px;width:226px;height:226px;overflow:visible; }
+#word { position:absolute;left:412px;top:183px;font-size:106px;letter-spacing:-7px;font-weight:770;color:#141414;line-height:1.05; }
+  </style>
+</head>
+<body>
+  <main id="film" data-composition-id="main" data-start="0" data-width="960" data-height="504" data-duration="5" data-fps="24">
+    <div class="clip" id="lockup" data-start="0" data-duration="5" data-track-index="0"><svg id="mark" viewBox="-113 -113 226 226"><g id="shapes"></g></svg><span id="word">motion</span></div>
+  </main>
+  <script>
+    const timeline = gsap.timeline({paused: true});
+// Build an original four-petal mark from the reference's scattered-color gesture.
+const colors=['#49b29d','#ebad2e','#ce3861','#44b8d0'];
+const ns='http://www.w3.org/2000/svg';
+const group=document.querySelector('#shapes');
+const initial=[[-32,-3,71],[28,-4,71],[0,32,-20],[0,-30,-20]];
+const spread=[[-55,-44],[55,-41],[56,48],[-55,47]];
+const petals=[[31,-63],[63,31],[-31,63],[-63,-31]];
+colors.forEach((color,i) => {
+  const petal=document.createElementNS(ns,'rect');
+  petal.setAttribute('fill',color); petal.setAttribute('rx','17'); group.appendChild(petal);
+  const [x,y,angle]=initial[i];
+  gsap.set(petal,{attr:{x:-75,y:-16,width:150,height:32},x,y,rotation:angle,svgOrigin:'0 0',opacity:.86});
+  timeline.to(petal,{x:spread[i][0],y:spread[i][1],rotation:angle+75,attr:{x:-16,width:32},opacity:1,duration:.76,ease:'power2.inOut'},.14);
+  timeline.to(petal,{x:petals[i][0],y:petals[i][1],rotation:90+i*90,attr:{x:-55,y:-24,width:110,height:48},duration:.55,ease:'power2.inOut'},1.45);
+  const dot = document.createElementNS(ns,'circle');
+  dot.setAttribute('fill','#fff');
+      dot.setAttribute('stroke',color);
+  dot.setAttribute('cx',[91,31,-91,-31][i]);
+  dot.setAttribute('cy',[-31,91,31,-91][i]);
+  group.insertBefore(dot,petal);
+  gsap.set(dot,{attr:{r:0,'stroke-width':0}});
+  timeline.to(dot,{attr:{r:17,'stroke-width':13},duration:.28,ease:'power2.out'},1.78);
+});
+timeline.set('#word',{clipPath:'inset(0 100% 0 0)',opacity:0},0);
+timeline.to('#mark',{x:-161,scale:.76,duration:.60,ease:'power3.inOut'},2.50);
+timeline.set('#word',{opacity:1},2.76);
+timeline.to('#word',{clipPath:'inset(0 0% 0 0)',duration:.46,ease:'power2.out'},2.77);
+    timeline.set({}, {}, 5);
+    window.__timelines = {main: timeline};
+  </script>
+</body>
+</html>

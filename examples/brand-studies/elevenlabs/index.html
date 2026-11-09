@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenMotion · Studio wordmark</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden; }
+    #film { position: relative; width: 100%; height: 100%; overflow: hidden; background: #f0efea; color: #141416; font-family: "Helvetica Neue", Arial, sans-serif; }
+    .clip { position: absolute; inset: 0; }
+#lockup { display:flex; align-items:center;justify-content:center; gap:2px; }
+#lockup svg { width:24px; height:47px; }
+#brand, #suffix { font-size:48px; line-height:1; letter-spacing:-2.8px; }
+#brand { font-weight:750; }
+#suffix { position:relative; overflow:hidden; height:51px; }
+#suffix span { display:block; height:51px; white-space:nowrap; }
+  </style>
+</head>
+<body>
+  <main id="film" data-composition-id="main" data-start="0" data-width="960" data-height="540" data-duration="5" data-fps="24">
+    <div class="clip" id="lockup" data-start="0" data-duration="5" data-track-index="0"><svg viewBox="0 0 24 47"><rect x="0" y="6" width="6" height="35" fill="#171718"/><rect x="12" y="6" width="6" height="35" fill="#171718"/></svg><strong id="brand">Open</strong><div id="suffix"><span>Creative</span><span>Productions</span><span>Motion</span></div></div>
+  </main>
+  <script>
+    const timeline = gsap.timeline({paused: true});
+const track = document.querySelector('#suffix');
+const labels = [...track.children];
+const widths = labels.map(label => {
+  const measure = document.createElement('canvas').getContext('2d');
+  measure.font='48px Helvetica Neue, Arial, sans-serif';
+  return Math.ceil(measure.measureText(label.textContent).width - 2.8*label.textContent.length + 3);
+});
+timeline.set(track,{width:0},0);
+timeline.fromTo('#brand',{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)',duration:.18},0);
+timeline.to(track,{width:widths[0],duration:.32,ease:'power2.out'},.1);
+function roll(index,time) {
+  timeline.to(track,{width:widths[index],duration:.27,ease:'power2.inOut'},time);
+  timeline.to(labels,{y:-51*index,duration:.27,ease:'power2.inOut'},time);
+}
+roll(1,1.93);
+roll(2,4.05);
+    timeline.set({}, {}, 5);
+    window.__timelines = {main: timeline};
+  </script>
+</body>
+</html>

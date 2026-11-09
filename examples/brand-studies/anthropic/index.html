@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenMotion · Enable brand assets</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden; }
+    #film { position: relative; width: 100%; height: 100%; overflow: hidden; background: #f1efe6; color: #141416; font-family: "Helvetica Neue", Arial, sans-serif; }
+    .clip { position: absolute; inset: 0; }
+#controls { width:960px;height:540px; }
+.label,.panel { position:absolute; top:101px; border:1px solid #dedbd0; border-radius:12px; box-shadow:0 4px 12px #372b1620; }
+.label { left:78px; top:112px; width:292px; padding:18px 20px; font-size:27px; font-weight:600; background:#e5e2d7; }
+.panel { left:359px; width:451px; padding:21px 24px 15px; background:#faf9f2; }
+header,.row { display:flex; align-items:center; }
+header { font-size:22px; font-weight:580; padding-bottom:24px; border-bottom:2px solid #dedbd4; margin-bottom:10px; }
+.row { height:54px; font-size:20px; gap:11px; }
+.glyph { width:24px; line-height:24px; border-radius:5px; color:white; font-size:12px; font-weight:700; text-align:center; }
+.toggle { margin-left:auto; width:43px; height:24px; background:#e2e1d8; border-radius:14px; position:relative; }
+.knob { position:absolute; left:3px; top:3px; background:#fff; width:18px; height:18px; border-radius:50%; box-shadow:0 1px 3px #7776; }
+#cursor { position:absolute; left:854px; top:330px; width:39px; filter:drop-shadow(1px 2px 1px #888); }
+#message { display:flex; align-items:center; justify-content:center; }
+#message section { position:relative; width:455px; padding-top:20px; color:#332f25; font:37px/1.06 Georgia,serif; letter-spacing:-1.8px; }
+#message svg { position:absolute; left:-28px; top:12px; overflow:visible; }
+#stamps { position:absolute; right:77px; top:80px; display:grid; gap:23px; }
+#stamps i { width:42px;height:42px;border-radius:50%;border:2px solid #d9d7cf;text-align:center;line-height:39px;color:#8a78b2;background:white;font-style:normal; }
+  </style>
+</head>
+<body>
+  <main id="film" data-composition-id="main" data-start="0" data-width="960" data-height="540" data-duration="5" data-fps="24">
+    <div class="clip" id="controls" data-start="0" data-duration="5" data-track-index="0"><div class="label">▧ &nbsp;Brand kit</div><div class="panel"><header>Enable for workspace <b class="toggle"><i class="knob"></i></b></header><div id="rows"></div></div><svg id="cursor" viewBox="0 0 36 36"><path d="M8 19 Q4 13 2 16 Q0 18 4 23 L13 33 Q17 36 23 33 L30 26 L34 16 Q34 12 30 12 L28 15 L29 10 Q28 7 25 9 L22 13 L22 8 Q20 5 17 8 L15 12 L14 2 Q10 -1 9 4 L11 20Z" fill="white" stroke="#34332e" stroke-width="2"/></svg></div>
+    <div class="clip" id="message" data-start="0" data-duration="5" data-track-index="1"><section>Bring your brand assets<br>into every motion project.<svg width="435" height="110"><path id="ink" d="M22 61 C85 37 400 31 415 55 C440 90 66 108 15 79 C-9 65 2 46 42 40" fill="none" stroke="#b67349" stroke-width="2.8" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg></section><div id="stamps"><i>✦</i><i>▤</i><i>◈</i><i>◉</i></div></div>
+  </main>
+  <script>
+    const timeline = gsap.timeline({paused: true});
+const assets = [['Marks','#b66c3b'],['Screens','#337bb5'],['Colors','#4856bc'],['Type','#282827'],['Sounds','#5a8549']];
+const rows = document.querySelector('#rows');
+for (const [name,color] of assets) {
+  const row = document.createElement('div');
+  row.className='row';
+  row.innerHTML='<b class="glyph" style="background:'+color+'">'+name[0]+'</b>'+name+'<b class="toggle"><i class="knob"></i></b>';
+  rows.appendChild(row);
+}
+gsap.set('.panel',{scale:1.18,transformOrigin:'38% 0%'});
+timeline.set('#message',{x:660},0);
+timeline.from('.row',{opacity:0,y:8,stagger:.07,duration:.26},0);
+timeline.to('#cursor',{x:-93,y:-195,duration:.72,ease:'power2.inOut'},.13);
+timeline.to('#cursor',{scale:.8,yoyo:true,repeat:1,duration:.10},1.23);
+timeline.to('.toggle',{backgroundColor:'#527fb0',stagger:.055,duration:.17},1.36);
+timeline.to('.knob',{x:19,duration:.17,stagger:.055},1.36);
+timeline.to('#cursor',{x:-15,y:-142,duration:.5,ease:'power2.out'},1.7);
+timeline.to('#controls',{x:-629,duration:.71,ease:'power3.inOut'},2.59);
+timeline.to('#message',{x:31,duration:.71,ease:'power3.inOut'},2.59);
+timeline.from('#message section',{opacity:0,duration:.22},3);
+timeline.to('#ink',{strokeDashoffset:0,duration:.58,ease:'power2.out'},3.48);
+timeline.from('#stamps i',{opacity:0,y:18,stagger:.12,duration:.33},4.03);
+    timeline.set({}, {}, 5);
+    window.__timelines = {main: timeline};
+  </script>
+</body>
+</html>

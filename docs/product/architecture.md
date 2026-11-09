@@ -27,7 +27,7 @@ README 中的产品展示名统一为 **OpenMotion**，标志沿用 OpenDesign �
 
 [Motion MD](../motion-md.md) 是本轮加入的 **v0.1 格式提案**，描述来源、品牌、叙事、节奏、运动、素材、可修改项与验收信息。当前仅供用户显式交给 Agent 作为创作上下文；没有自动发现、解析、校验或注册接口。它不改变 HTML/CSS/JS 原生工程，也不替换现有 motion-video-to-template 的单份 `TEMPLATE.md` 交付约定。
 
-README 的[品牌复刻案例](../../examples/README.md)把 Figma Draw、OpenAI 和 Firecrawl 参考片与独立可编辑工程的导出放在同一时间轴上，支持逐帧对照。[Motion 资源索引](../collections/README.zh-CN.md) 已可使用，区分可观看参考与可编辑模板；OpenDesign 官网展示案例，公开的品牌／榜单专题集合站仍在规划。Motion Benchmark／Arena 为待讨论规划，无已发布榜单、排名或确定日期。
+README 的[品牌复刻案例](../../examples/README.md)把 Kimi、DeepSeek、OpenAI、Anthropic、ElevenLabs、Apple 和 Slack 的五秒社媒原片与独立可编辑工程的导出放在同一时间轴上，支持逐帧对照。[Motion 资源索引](../collections/README.zh-CN.md) 已可使用，区分可观看参考与可编辑模板；OpenDesign 官网展示案例，公开的品牌／榜单专题集合站仍在规划。Motion Benchmark／Arena 为待讨论规划，无已发布榜单、排名或确定日期。
 
 ## 目标场景与交付
 

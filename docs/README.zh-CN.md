@@ -1,4 +1,4 @@
-<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><img src="readme/cover.zh-CN.jpg" width="100%" alt="Codex 收到 OpenAI 参考片链接，OpenMotion Studio 显示复刻工程的画面和时间轴。" /></a></p>
+<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><picture><source media="(max-width: 640px)" srcset="readme/cover.mobile.zh-CN.jpg" /><img src="readme/cover.zh-CN.jpg" width="100%" alt="Codex 收到 OpenAI 参考片链接，OpenMotion Studio 显示复刻工程的画面和时间轴。" /></picture></a></p>
 
 <h1 align="center">OpenMotion · 用任意 Agent 拆解并复刻品牌视频</h1>
 
@@ -35,7 +35,7 @@
 
 <p align="center">首版开源了<strong><a href="../examples/reference-reveal/MOTION.zh-CN.md">Firecrawl 品牌宣传片的 MOTION.md 拆解</a></strong>，从数字亮相到 Logo 收尾，每一拍都能对照原片。</p>
 
-<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">看 OpenAI 的 X 原帖</a> · <a href="../examples/reference-reveal/comparison.mp4">Firecrawl 原片与复刻 · 5 秒对照</a> · <a href="#复用参考片的拍法">逐个看品牌复刻</a></p>
+<p align="center"><a href="https://x.com/OpenAI/status/2084352161404920316">看 OpenAI 的 X 原帖</a> · <a href="../examples/reference-reveal/comparison.mp4">Firecrawl 原片与复刻 · 5 秒对照</a> · <a href="#复用参考片的拍法">看七个品牌的 5 秒对照</a></p>
 
 <p align="center"><a href="../README.md">English</a> · <a href="collections/README.zh-CN.md">找参考片</a> · <a href="https://github.com/nexu-io/html-anything/blob/legacy/README.zh-CN.md">原 HTML Anything 编辑器与安装说明</a></p>
 
@@ -43,50 +43,25 @@ OpenMotion 是一款通过本地 MCP 接入 Agent 的开源动效设计插件，
 
 ## 复用参考片的拍法
 
-每组对照都是 5 秒。左边直接截自发布者上传到 X 的视频，右边是 OpenMotion 用独立工程导出的成片。两边原速同步，点开可以一起暂停、拖动。声音来自复刻工程。
+左边是品牌在 X 发布的原片，右边是用 OpenMotion 单独制作的可编辑工程。每组截取 5 秒，原速同步播放。点击画面可以暂停、拖动，检查两边的动作在哪一帧发生。
 
-| 原片 · X | 5 秒同步对照 | 复刻工程 |
+| 原片与时间段 | 5 秒同步对照 | 复刻工程 |
 | --- | --- | --- |
-| [Figma Draw](https://x.com/figma/status/1920168282751185360)<br />00:38–00:43 | <a href="../examples/wing-construction/comparison.mp4"><img src="../examples/wing-construction/comparison.jpg" width="300" alt="播放Figma Draw原片与Paperwing复刻的同步对照" /></a><br />[从蝴蝶拉远到整张海报](../examples/wing-construction/comparison.mp4) | **Paperwing**<br />[MP4](../examples/wing-construction/film.mp4) · [源码](../examples/wing-construction/index.html) |
-| [OpenAI](https://x.com/OpenAI/status/2084352161404920316)<br />00:26.5–00:31.5 | <a href="../examples/motion-studies/comparison.mp4"><img src="../examples/motion-studies/comparison.jpg" width="300" alt="播放OpenAI原片与OpenDesign复刻的同步对照" /></a><br />[点阵收拢成 Logo](../examples/motion-studies/comparison.mp4) | **OpenDesign**<br />[MP4](../examples/motion-studies/film.mp4) · [源码](../examples/motion-studies/index.html) |
-| [Firecrawl](https://x.com/ericciarla/status/2093375835679977570)<br />00:21–00:26 | <a href="../examples/reference-reveal/comparison.mp4"><img src="../examples/reference-reveal/comparison.jpg" width="300" alt="播放Firecrawl原片与OpenMotion复刻的同步对照" /></a><br />[数字揭晓后图标环绕](../examples/reference-reveal/comparison.mp4) | **OpenMotion**<br />[MP4](../examples/reference-reveal/film.mp4) · [源码](../examples/reference-reveal/index.html) |
+| [Kimi](https://x.com/Kimi_Moonshot/status/2077521842080817296)<br />00:30.75–00:35.75 | <a href="../examples/brand-studies/kimi/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/kimi/comparison.jpg" /><img src="../examples/brand-studies/kimi/comparison.webp" width="290" alt="Kimi 原片与 OpenMotion 复刻同步播放" /></picture></a> | 磁力线淡出，字符重组成品牌名<br />[MP4](../examples/brand-studies/kimi/film.mp4) · [源码](../examples/brand-studies/kimi/index.html) |
+| [DeepSeek](https://x.com/DeepSeekHarness/status/2117256196227019194)<br />01:31.5–01:36.5 | <a href="../examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/deepseek/comparison.jpg" /><img src="../examples/brand-studies/deepseek/comparison.webp" width="290" alt="DeepSeek 原片与 OpenMotion 复刻同步播放" /></picture></a> | 逐字打出标题，闪白切到片尾<br />[MP4](../examples/brand-studies/deepseek/film.mp4) · [源码](../examples/brand-studies/deepseek/index.html) |
+| [OpenAI](https://x.com/OpenAI/status/2084352161404920316)<br />00:26.5–00:31.5 | <a href="../examples/motion-studies/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg" /><img src="../examples/motion-studies/comparison.webp" width="290" alt="OpenAI 原片与 OpenMotion 复刻同步播放" /></picture></a> | 点阵收成光点，切到品牌片尾<br />[MP4](../examples/motion-studies/film.mp4) · [源码](../examples/motion-studies/index.html) |
+| [Anthropic](https://x.com/ClaudeDevs/status/2091953609185657251)<br />00:00–00:05 | <a href="../examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/anthropic/comparison.jpg" /><img src="../examples/brand-studies/anthropic/comparison.webp" width="290" alt="Anthropic 原片与 OpenMotion 复刻同步播放" /></picture></a> | 点亮开关，手绘圈标出标题<br />[MP4](../examples/brand-studies/anthropic/film.mp4) · [源码](../examples/brand-studies/anthropic/index.html) |
+| [ElevenLabs](https://x.com/ElevenLabs/status/2069111326987673761)<br />00:50–00:55 | <a href="../examples/brand-studies/elevenlabs/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/elevenlabs/comparison.jpg" /><img src="../examples/brand-studies/elevenlabs/comparison.webp" width="290" alt="ElevenLabs 原片与 OpenMotion 复刻同步播放" /></picture></a> | 保留品牌词根，滚动替换后缀<br />[MP4](../examples/brand-studies/elevenlabs/film.mp4) · [源码](../examples/brand-studies/elevenlabs/index.html) |
+| [Apple](https://x.com/tim_cook/status/1896589954517701057)<br />00:00.75–00:05.75 | <a href="../examples/brand-studies/apple/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/apple/comparison.jpg" /><img src="../examples/brand-studies/apple/comparison.webp" width="290" alt="Apple 原片与 OpenMotion 复刻同步播放" /></picture></a> | 文字逐拍放大，字形折成丝带<br />[MP4](../examples/brand-studies/apple/film.mp4) · [源码](../examples/brand-studies/apple/index.html) |
+| [Slack](https://x.com/SlackHQ/status/1085609385542459393)<br />00:00–00:05 | <a href="../examples/brand-studies/slack/comparison.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/slack/comparison.jpg" /><img src="../examples/brand-studies/slack/comparison.webp" width="290" alt="Slack 原片与 OpenMotion 复刻同步播放" /></picture></a> | 四色线条散开，重新拼成品牌标记<br />[MP4](../examples/brand-studies/slack/film.mp4) · [源码](../examples/brand-studies/slack/index.html) |
 
-### Figma Draw → Paperwing
-
-<p><a href="../examples/wing-construction/comparison.mp4"><picture>
-  <source media="(prefers-reduced-motion: reduce)" srcset="../examples/wing-construction/comparison.jpg" />
-  <img src="../examples/wing-construction/comparison.webp" alt="Figma Draw → Paperwing，左边是原片，右边是同一时刻的复刻。" width="768" />
-</picture></a></p>
-
-在《Introducing Figma Draw》的 **00:38–00:43**，镜头从蝴蝶翅膀的填色面板拉远，露出整张海报。对照播到 **4.75 秒**，左边是 Figma 的 Nature Fest，右边用同样的拉远动作揭晓示例品牌 Paperwing 的 Wing Fest。
-
-### OpenAI → OpenDesign
-
-<p><a href="../examples/motion-studies/comparison.mp4"><picture>
-  <source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg" />
-  <img src="../examples/motion-studies/comparison.webp" alt="OpenAI → OpenDesign，左边是原片，右边是同一时刻的复刻。" width="768" />
-</picture></a></p>
-
-取自 OpenAI 数学研究宣传片的片尾 **00:26.5–00:31.5**。图上的连线收成一个彩色光点。对照播到 **2.04 秒**，两边同时切到白底，分别打出 OpenAI 和 OpenDesign，再收成各自的 Logo。
-
-### Firecrawl → OpenMotion
-
-<p><a href="../examples/reference-reveal/comparison.mp4"><picture>
-  <source media="(prefers-reduced-motion: reduce)" srcset="../examples/reference-reveal/comparison.jpg" />
-  <img src="../examples/reference-reveal/comparison.webp" alt="Firecrawl → OpenMotion，左边是原片，右边是同一时刻的复刻。" width="768" />
-</picture></a></p>
-
-这段取自 Firecrawl 联合创始人 Eric Ciarla 在 X 发布的《Firecrawl Free Keyless》，对应原片 **00:21–00:26**。参考片段用开发者人数开场，OpenMotion 换成内置示例的 20 秒时长。停在 **2.65 秒**，左侧公司标志环绕火焰，右侧工程素材环绕 OpenDesign 标志。
-
-**换个产品信息，还能保留这个节奏吗？** 我们在同一份工程里，把「00:00:20 · Product Promo」换成「00:00:15 · NYT Graph」，再导出了一版。两支片都长 5 秒。停在 0.8 秒能看到改过的数字和标题，停在 2.65 秒能看到卡片转到了相同位置。[看改稿后的第二版](../examples/reference-reveal/graph-cut.mp4)
-
-接入 OpenMotion 后，在 Agent 中打开存放品牌 Logo 和文案的文件夹，粘贴这段话就能试这个镜头。
+在 Agent 里试试 Apple 这一行。打开自己的品牌素材目录，再贴入这段指令。
 
 ```text
-用 OpenMotion 为我们的品牌复刻这条发布视频的 00:21–00:26。
-https://x.com/ericciarla/status/2093375835679977570
-开场换成我们的标题，让我们的 Logo 在原片同一拍出现在画面中央。
-保留可编辑工程，并导出 MP4。
+用 OpenMotion 复刻这支片子的 00:00.75–00:05.75：
+https://x.com/tim_cook/status/1896589954517701057
+沿用文字出现和折叠的节奏，把 AIR 换成 CUT。
+在 Studio 中打开可编辑的 5 秒工程，导出 MP4。
 ```
 
 ## 用 OpenMotion 做出的三支片子
@@ -179,13 +154,14 @@ cd OpenMotion && bash scripts/install-motion.command
 | 1.5–4 秒 | 中央标志落定，外围卡片继续旋转。 | 你的品牌标志，以及围绕它的素材、功能或产品。 |
 | 4–5 秒 | 让同一个标志进入最后的交接镜头。 | 客户提供什么输入，最后得到什么结果。 |
 
+首批品牌宣传片 MOTION.md 合集计划收录 100 多份拆解。现在可以先读 Firecrawl 的完整样例。
+
 把 Markdown 文件和工程一起交给 Agent。它可以按这份说明改稿，实际动画保存在 HTML、CSS、JavaScript 和素材文件里。[Motion MD v0.1 草案](motion-md.zh-CN.md) · [本片的说明与两次导出](../examples/reference-reveal/MOTION.zh-CN.md)
 
 ## Motion 资源库与主题合集
 
-打开 Studio 的**模板库 → 视频复刻**。这里有 136 张参考卡片，同一原片的不同剪辑合并展示。可以先搜 **Figma Draw**、**Linear Loops** 或 **Firecrawl Free Keyless**。点卡片上的「一键复刻」，把复制的指令连同自己的品牌素材贴进 Agent。[浏览精选参考片](collections/README.zh-CN.md) · [查看模板库说明](template-catalog.md)
+打开 Studio 的**模板库 → 视频复刻**。这里有 136 张参考卡片，同一原片的不同剪辑合并展示。可以先搜 **Kimi K3 teaser** 或 **Reception by ElevenLabs**。点卡片上的「一键复刻」，把复制的指令连同自己的品牌素材贴进 Agent。[浏览精选参考片](collections/README.zh-CN.md) · [查看模板库说明](template-catalog.md)
 
-想学文字转场，可以搜 `hf-moment-M1147`。Figma 把一串「made in @figma」帖子变成贴纸，再吸附拼成自己的标志。目录在 2026 年 11 月 3 日记录到这条原帖约 **3,600 万次浏览**。[看 Figma 原片](https://x.com/figma/status/2001715747505233980)
 
 如果想从已经能打开的工程开始，Studio 还自带 **3 个可编辑模板**。
 
