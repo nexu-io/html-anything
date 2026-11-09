@@ -26,8 +26,123 @@
 
 在 **Studio → 模板 → 可以二次剪辑**中打开以上示例。仓库内附有原生工程和[上游来源与许可](../../template-library/NOTICE.md)。更多风格可以在 Studio 目录或 [OpenDesign 官网案例](https://open-design.ai/motion/)中浏览。
 
+<a id="catalog-picks"></a>
+
+## 目录精选
+
+<table>
+<tr><th colspan="3" align="left">📱 产品与界面</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="../readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="../readme/gallery/app-showcase.gif" width="300" alt="目录动态预览：App Showcase"></picture></a><br>
+<strong>App Showcase</strong><br>
+<sub>组件 · <a href="../../library/components/showcase/README.md">查看组件</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../../template-library/product-promo/index.html"><img src="../../template-library/product-promo/poster.jpg" width="300" alt="Product Promo"></a><br>
+<strong>Product Promo</strong><br>
+<sub>可编辑模板 · <a href="../../template-library/product-promo/index.html">HTML</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../../library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="../readme/gallery/ui-3d-reveal.gif" width="300" alt="目录动态预览：3D UI Reveal"></picture></a><br>
+<strong>3D UI Reveal</strong><br>
+<sub>组件 · <a href="../../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">查看组件</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🚀 品牌与发布片</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="../readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="../readme/gallery/pond.gif" width="300" alt="目录动态预览：Pond: a new Linux OS"></picture></a><br>
+<strong>Pond: a new Linux OS</strong><br>
+<sub>参考 · <a href="../readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="../readme/gallery/kimi-k3.gif" width="300" alt="目录动态预览：Kimi K3 teaser"></picture></a><br>
+<strong>Kimi K3 teaser</strong><br>
+<sub>参考 · <a href="../readme/media/remix-kimi-k3-reference.mp4">@Kimi_Moonshot</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="../readme/gallery/elevenlabs-reception.gif" width="300" alt="目录动态预览：Reception by ElevenLabs"></picture></a><br>
+<strong>Reception by ElevenLabs</strong><br>
+<sub>参考 · <a href="../readme/media/remix-elevenlabs-reception-reference.mp4">@ElevenLabs</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">✍️ 动态文字</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="../readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="../readme/gallery/glass-shard-title.gif" width="300" alt="目录动态预览：Glass Shard Title"></picture></a><br>
+<strong>Glass Shard Title</strong><br>
+<sub>组件 · <a href="../../library/components/showcase/README.md">查看组件</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../../library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="../readme/gallery/canopy-title.gif" width="300" alt="目录动态预览：Canopy Part Title"></picture></a><br>
+<strong>Canopy Part Title</strong><br>
+<sub>组件 · <a href="../../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">查看组件</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../../library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="../readme/gallery/wireframe-title.gif" width="300" alt="目录动态预览：Wireframe Portal Title"></picture></a><br>
+<strong>Wireframe Portal Title</strong><br>
+<sub>组件 · <a href="../../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">查看组件</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">💎 光影、玻璃与三维世界</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="../readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="../readme/gallery/iskra-light.gif" width="300" alt="目录动态预览：Iskra Light"></picture></a><br>
+<strong>Iskra Light</strong><br>
+<sub>参考 · <a href="../readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../../library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="../readme/gallery/liquid-glass-widgets.gif" width="300" alt="目录动态预览：Liquid Glass Widgets"></picture></a><br>
+<strong>Liquid Glass Widgets</strong><br>
+<sub>组件 · <a href="../../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">查看组件</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="../readme/gallery/cyera.gif" width="300" alt="目录动态预览：Cyera brand video"></picture></a><br>
+<strong>Cyera brand video</strong><br>
+<sub>参考 · <a href="../readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🧭 纵深与镜头运动</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="../../library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="../readme/gallery/code-3d.gif" width="300" alt="目录动态预览：Code 3D Extrude"></picture></a><br>
+<strong>Code 3D Extrude</strong><br>
+<sub>组件 · <a href="../../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">查看组件</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="../readme/gallery/glyph.gif" width="300" alt="目录动态预览：Glyph: GPU typography for the web"></picture></a><br>
+<strong>Glyph: GPU typography for the web</strong><br>
+<sub>参考 · <a href="../readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="../readme/gallery/flight-map.gif" width="300" alt="目录动态预览：NYC Paris Flight"></picture></a><br>
+<strong>NYC Paris Flight</strong><br>
+<sub>组件 · <a href="../../library/components/showcase/README.md">查看组件</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">✨ 生成视觉</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="../readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="../readme/gallery/aurora.gif" width="300" alt="目录动态预览：Aurora"></picture></a><br>
+<strong>Aurora</strong><br>
+<sub>组件 · <a href="../../library/components/showcase/README.md">查看组件</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="../readme/gallery/linear-loops.gif" width="300" alt="目录动态预览：Linear Loops"></picture></a><br>
+<strong>Linear Loops</strong><br>
+<sub>参考 · <a href="../readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="../../library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="../readme/gallery/code-particles.gif" width="300" alt="目录动态预览：Code Particle Assemble"></picture></a><br>
+<strong>Code Particle Assemble</strong><br>
+<sub>组件 · <a href="../../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">查看组件</a></sub>
+</td>
+</tr>
+</table>
+
 ## 主题集合站怎样组织内容？
 
 计划中的公开集合站按**选题 → 品牌 → 影片**组织。选题可以是一家科技公司不同时期的发布片，也可以是一份 a16z 消费 AI 榜单，或 2026 年某个月公布融资的公司。榜单用来挑公司，不代表其宣传片本身的质量排名。
 
-每条资源先给出原片、作者和预览；完成风格描述后附上 [Motion MD](../motion-md.zh-CN.md)；工程经过打开、改稿和导出验证后，再附上可复用模板。现在即可使用这份资源索引；公开的品牌／榜单合集和 Motion Arena 仍在规划。
+每条资源先给出原片、作者和预览；完成风格描述后附上 [Motion.md](../motion-md.zh-CN.md)；工程经过打开、改稿和导出验证后，再附上可复用模板。现在即可使用这份资源索引；公开的品牌／榜单合集和 Motion Arena 仍在规划。

@@ -2,7 +2,9 @@
 
 # OpenMotion
 
-OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。你可以用 HTML 在同一份工程里生成、编辑和渲染视频。
+**Reverse engineering for any video**
+
+OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。**用 HTML 写视频**，在同一份工程里完成生成、编辑和渲染。
 
 - **完全开源免费，在本地 Agent 直接使用，每一层都支持 BYOK。** 支持 Codex、Claude Code、DeepSeek Harness 和 WorkBuddy，可沿用自己的账号和 API Key。
 - OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批开源内容覆盖 **100 多个品牌的宣传片**。
