@@ -1,11 +1,6 @@
-<h1 align="center">OpenMotion — Reverse-engineer brand videos in any agent</h1>
+<p align="center"><a href="docs/readme/studio-tour.mp4"><img src="docs/readme/cover.jpg" width="100%" alt="A reference link in the Codex composer and the editable OpenMotion Studio timeline for the remake." /></a></p>
 
-<p align="center">
-  <a href="#start-in-codex"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex setup" /></a>
-  <a href="docs/agent-adapters.md#codex--claude-code"><img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code setup" /></a>
-  <a href="docs/agent-adapters.md#deepseek-harness"><img src="docs/readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness setup" /></a>
-  <a href="docs/agent-adapters.md#workbuddy"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy setup (preview)" /></a>
-</p>
+<h1 align="center">OpenMotion — Reverse-engineer and recreate brand videos in any agent</h1>
 
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub repository stars" /></a>
@@ -13,7 +8,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 license" /></a>
 </p>
 
-<p align="center">Paste an X or YouTube link, or pick from <strong><a href="#motion-library-and-collections">100+ one-click video recreation templates</a></strong> featuring shots from Figma, Linear and Firecrawl. Swap in your brand’s logo and product screenshots, edit in Studio and export an MP4.</p>
+<p align="center">Paste an X or YouTube link, or pick from <strong><a href="#motion-library-and-collections">100+ one-click video recreation templates</a></strong>. Swap in your brand’s logo and product screenshots, edit in Studio and export an MP4.</p>
 
 <p align="center"><strong><a href="docs/readme/studio-tour.mp4">Watch the 15-second Codex demo</a></strong> · <strong><a href="#agent-setup">Set up your agent</a></strong></p>
 
@@ -30,6 +25,13 @@
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/codex-comparison.jpg" />
   <img src="docs/readme/codex-comparison.webp" width="100%" alt="Install OpenMotion, paste the original OpenAI X post into Codex, open the Studio timeline and compare five seconds of the original and the OpenDesign remake." />
 </picture></a></p>
+
+<p align="center">
+  <a href="#start-in-codex"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex setup" /></a>
+  <a href="docs/agent-adapters.md#codex--claude-code"><img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code setup" /></a>
+  <a href="docs/agent-adapters.md#deepseek-harness"><img src="docs/readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness setup" /></a>
+  <a href="docs/agent-adapters.md#workbuddy"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy setup (preview)" /></a>
+</p>
 
 <p align="center">Study the shot beat by beat with the <a href="examples/reference-reveal/MOTION.md">open-source Firecrawl MOTION.md</a>, from the number reveal to the closing logo.</p>
 

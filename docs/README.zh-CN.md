@@ -1,11 +1,6 @@
-<h1 align="center">OpenMotion · 用任意 Agent 拆解品牌视频</h1>
+<p align="center"><a href="readme/studio-tour.zh-CN.mp4"><img src="readme/cover.zh-CN.jpg" width="100%" alt="Codex 收到 OpenAI 参考片链接，OpenMotion Studio 显示复刻工程的画面和时间轴。" /></a></p>
 
-<p align="center">
-  <a href="#在-codex-里开始"><img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex 接入说明" /></a>
-  <a href="agent-adapters.md#codex--claude-code"><img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code 接入说明" /></a>
-  <a href="agent-adapters.md#deepseek-harness"><img src="readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness 接入说明" /></a>
-  <a href="agent-adapters.md#workbuddy"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy（预览）接入说明" /></a>
-</p>
+<h1 align="center">OpenMotion · 用任意 Agent 拆解并复刻品牌视频</h1>
 
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything/stargazers"><img src="https://img.shields.io/github/stars/nexu-io/html-anything?style=flat-square&amp;logo=github&amp;label=Stars&amp;color=8a6500" alt="GitHub 仓库星标数" /></a>
@@ -13,7 +8,7 @@
   <a href="../LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-395f84?style=flat-square" alt="Apache 2.0 许可证" /></a>
 </p>
 
-<p align="center">贴一条 X 或 YouTube 链接，或从 <strong><a href="#motion-资源库与主题合集">100+ 个可一键复刻的视频模板</a></strong>里选一支，复刻 Figma、Linear 或 Firecrawl 的拍法。换上自己品牌的 Logo 和产品截图，在 Studio 里改镜头、导出 MP4。</p>
+<p align="center">贴一条 X 或 YouTube 链接，或从 <strong><a href="#motion-资源库与主题合集">100+ 个可一键复刻的视频模板</a></strong>里选一支。换上自己品牌的 Logo 和产品截图，在 Studio 里改镜头、导出 MP4。</p>
 
 <p align="center"><strong><a href="readme/studio-tour.zh-CN.mp4">看 15 秒 Codex 演示</a></strong> · <strong><a href="#接入你的-agent">接入你的 Agent</a></strong></p>
 
@@ -30,6 +25,13 @@
   <source media="(prefers-reduced-motion: reduce)" srcset="readme/codex-comparison.zh-CN.jpg" />
   <img src="readme/codex-comparison.zh-CN.webp" width="100%" alt="安装插件，把 OpenAI 的 X 原帖贴进 Codex，打开 Studio 时间轴，再同步播放 5 秒原片与复刻。" />
 </picture></a></p>
+
+<p align="center">
+  <a href="#在-codex-里开始"><img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex 接入说明" /></a>
+  <a href="agent-adapters.md#codex--claude-code"><img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code 接入说明" /></a>
+  <a href="agent-adapters.md#deepseek-harness"><img src="readme/agents/deepseek-harness-badge.svg" width="144" height="34" alt="DeepSeek Harness 接入说明" /></a>
+  <a href="agent-adapters.md#workbuddy"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy（预览）接入说明" /></a>
+</p>
 
 <p align="center">首版开源了<strong><a href="../examples/reference-reveal/MOTION.zh-CN.md">Firecrawl 品牌宣传片的 MOTION.md 拆解</a></strong>，从数字亮相到 Logo 收尾，每一拍都能对照原片。</p>
 
