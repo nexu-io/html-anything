@@ -1,4 +1,4 @@
-import { useI18n, sourceMessage } from "../../i18n/I18n";
+import { useI18n } from "../../i18n/I18n";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   DesignPanelInputProvider,
@@ -317,7 +317,7 @@ export function Section({
     </svg>
   );
 
-  const section = slugifyPanelSectionTitle(sourceMessage(title));
+  const section = slugifyPanelSectionTitle(title);
   return (
     <DesignPanelInputProvider section={section}>
       <section className="min-w-0 border-t border-panel-border" data-panel-section={section}>

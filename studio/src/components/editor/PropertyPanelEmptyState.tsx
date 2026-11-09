@@ -81,7 +81,7 @@ function FlatMultiSelectState({
         </span>
         <div className="min-w-0 flex-1">
           <div className="text-[13px] font-semibold text-panel-text-0">
-            {multiSelectCount} {t("elements selected")}</div>
+            {t('{count} elements selected', { count: multiSelectCount })}</div>
           <div className="mt-px font-mono text-[10px] text-panel-text-3">
             {t("shift-click to add or remove")}</div>
         </div>
@@ -205,7 +205,7 @@ export function PropertyPanelEmptyState({
           <>
             <Layers size={18} className="mb-3 text-neutral-600" />
             <p className="text-sm font-medium text-neutral-200">
-              {multiSelectCount} {t("elements selected")}</p>
+              {t('{count} elements selected', { count: multiSelectCount })}</p>
             <p className="mt-2 max-w-[260px] text-xs leading-5 text-neutral-500">
               {t("Select a single element to edit its properties. Click an element in the preview or use the timeline layer panel.")}</p>
           </>

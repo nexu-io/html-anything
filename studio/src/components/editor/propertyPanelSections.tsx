@@ -460,7 +460,7 @@ export function TextSection({
     );
     if (hideOwnHeading) return content;
     return (
-      <Section title={t("Text")} icon={<Type size={15} />} defaultCollapsed>
+      <Section title="Text" icon={<Type size={15} />} defaultCollapsed>
         {content}
       </Section>
     );
@@ -532,7 +532,7 @@ export function TextSection({
   );
   if (hideOwnHeading) return content;
   return (
-    <Section title={t("Text")} icon={<Type size={15} />}>
+    <Section title="Text" icon={<Type size={15} />}>
       {content}
     </Section>
   );

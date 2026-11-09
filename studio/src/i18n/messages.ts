@@ -1,0 +1,54 @@
+import zhCN from './zh-CN.json';
+import ja from './ja.json';
+import ko from './ko.json';
+import de from './de.json';
+import fr from './fr.json';
+import ru from './ru.json';
+import es from './es.json';
+import ptBR from './pt-BR.json';
+import it from './it.json';
+import tr from './tr.json';
+
+export const languages = [
+  { locale: 'en', label: 'English' }, { locale: 'zh-CN', label: '简体中文' },
+  { locale: 'ja', label: '日本語' }, { locale: 'ko', label: '한국어' },
+  { locale: 'de', label: 'Deutsch' }, { locale: 'fr', label: 'Français' },
+  { locale: 'ru', label: 'Русский' }, { locale: 'es', label: 'Español' },
+  { locale: 'pt-BR', label: 'Português (BR)' }, { locale: 'it', label: 'Italiano' },
+  { locale: 'tr', label: 'Türkçe' },
+] as const;
+export type Locale = typeof languages[number]['locale'];
+export type MessageValues = Record<string, string | number>;
+export type Translate = (message: string, values?: MessageValues) => string;
+type Message = string | Partial<Record<Intl.LDMLPluralRule, string>>;
+export const dictionaries: Record<Exclude<Locale, 'en'>, Record<string, Message>> = {
+  'zh-CN': zhCN, ja, ko, de, fr, ru, es, 'pt-BR': ptBR, it, tr,
+};
+export const isLocale = (value: unknown): value is Locale => languages.some(language => language.locale === value);
+const reverse = Object.fromEntries(Object.entries(dictionaries).map(([locale, messages]) => [locale,
+  new Map(Object.entries(messages).flatMap(([source, value]) => (typeof value === 'string' ? [value] : Object.values(value)).map(text => [text, source]))),
+]));
+const singular: Record<string, string> = {
+  '{count} renders': '{count} render', '{count} layers': '{count} layer',
+  '{count} effects': '{count} effect', '{count} elements': '{count} element',
+  '{count} errors': '{count} error', '{count} warnings': '{count} warning',
+  ' and its {count} slides': ' and its {count} slide', '{count} lint findings': '{count} lint finding',
+  '{description} ({count} effects)': '{description} ({count} effect)', '{count} files': '{count} file',
+  '{count} tools': '{count} tool', '{count} elements selected': '{count} element selected',
+};
+const pluralRules = Object.fromEntries(languages.map(({ locale }) => [locale, new Intl.PluralRules(locale)]));
+
+/** Accept legacy Chinese labels and already-localized built-in labels. */
+export function sourceMessage(message: string, locale: Locale = 'zh-CN'): string {
+  if (Object.hasOwn(zhCN, message)) return message;
+  return reverse[locale]?.get(message) ?? reverse['zh-CN'].get(message) ?? Object.values(reverse).map(index => index.get(message)).find(Boolean) ?? message;
+}
+
+export function translate(locale: Locale, message: string, values: MessageValues = {}): string {
+  message = sourceMessage(message, locale);
+  const value = locale === 'en' ? undefined : dictionaries[locale][message];
+  const category = typeof values.count === 'number' ? pluralRules[locale].select(values.count) : 'other';
+  let text = typeof value === 'string' ? value : value?.[category] ?? value?.other ?? message;
+  if (locale === 'en' && category === 'one') text = singular[message] ?? text;
+  return text.replace(/\{(\w+)\}/g, (match, key: string) => values[key] === undefined ? match : String(values[key]));
+}

@@ -55,7 +55,7 @@ export function MotionApp() {
     return () => controller.abort();
   }, [projectId, sessionId, attempt]);
   if (projectId === null && sessionId === null) return <WorkspaceFrame waitForSaves={noPendingSaves}><MotionHome /></WorkspaceFrame>;
-  if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{error}</p><div><a className="motion-button" href="/">{t('Back to home')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
+  if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{t(error)}</p><div><a className="motion-button" href="/">{t('Back to home')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
   const loading = <div className="motion-route-state" role="status">{t('Opening project…')}</div>;
   return ready ? <WorkspaceFrame waitForSaves={noPendingSaves} projectId={ready.artifact?.projectId} sessionId={ready.sessionId}><MotionSessionFrame sessionId={ready.sessionId} projectId={ready.artifact?.projectId}>{ready.artifact && <ArtifactViewer artifact={ready.artifact} />}</MotionSessionFrame></WorkspaceFrame> : loading;
 }

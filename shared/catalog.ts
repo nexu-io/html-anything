@@ -38,9 +38,9 @@ export function socialPlatform(value?: string): SocialPlatform | undefined {
     if (host === 'tiktok.com') return 'TikTok';
   } catch {}
 }
-export function formatTemplateViews(value: number) {
+export function formatTemplateViews(value: number, locale = 'en-US') {
   if (!Number.isSafeInteger(value) || value < 0) return '';
-  return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: value >= 10_000 && value < 1_000_000 ? 0 : 1 }).format(value);
+  return new Intl.NumberFormat(locale, { notation: 'compact', maximumFractionDigits: value >= 10_000 && value < 1_000_000 ? 0 : 1 }).format(value);
 }
 function displayRatio(value?: string) {
   if (!value) return undefined;

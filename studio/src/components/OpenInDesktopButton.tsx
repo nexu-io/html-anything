@@ -318,7 +318,7 @@ export function OpenInDesktopButton() {
           <Swap value={label}>{label}</Swap>
           {waiting && (
             <span className="rounded-full bg-on px-1.5 text-[10px] leading-4 font-bold text-accent-ink tabular-nums">
-              2 of 3
+              {t('{current} of {total}', { current: 2, total: 3 })}
             </span>
           )}
         </Button>

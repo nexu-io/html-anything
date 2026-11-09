@@ -1,3 +1,4 @@
+import { StudioErrorBoundary } from '../components/StudioErrorBoundary';
 import { I18nProvider, useI18n } from "../i18n/I18n";
 import { useEffect, useState, type ReactNode } from 'react';
 import { useStudioShellContext } from '../contexts/StudioContext';
@@ -95,5 +96,5 @@ const host: StudioHost = {
 };
 
 export function MotionStudioHost({ children }: { children: ReactNode }) {
-  return <I18nProvider><MotionHistoryProvider><StudioHostContext.Provider value={host}>{children}</StudioHostContext.Provider></MotionHistoryProvider></I18nProvider>;
+  return <I18nProvider><MotionHistoryProvider><StudioHostContext.Provider value={host}><StudioErrorBoundary>{children}</StudioErrorBoundary></StudioHostContext.Provider></MotionHistoryProvider></I18nProvider>;
 }

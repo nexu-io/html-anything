@@ -232,8 +232,10 @@ button, input, select, textarea { font-family: inherit; }
   .motion-studio-header .motion-save-state { display: inline-flex; }
 }
 
-.motion-language-button { flex-shrink: 0; white-space: nowrap; }
-.motion-language-button span { min-width: 26px; text-align: center; }
+.motion-language-button { flex-shrink: 1; min-width: 0; white-space: nowrap; }
+.motion-language-button span { min-width: 0; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+.motion-language-menu { width: 340px; max-width: calc(100vw - 24px); }
+.motion-language-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 8px; }
 
 /* OD control recipes, scoped to visual hooks; existing sizes and state handling stay native. */
 :root[data-motion-ui] .hf-od-primary {
