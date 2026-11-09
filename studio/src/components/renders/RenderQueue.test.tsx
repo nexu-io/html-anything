@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import { StudioHostContext } from "../../motion/StudioHost";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
@@ -8,6 +9,7 @@ import { getPersistedRenderSettings } from "./renderSettings";
 import { buttonBase, buttonSizes, buttonVariants, cn } from "../ui";
 import { isTypingTarget } from "../../utils/typingTarget";
 import { shouldIgnorePlaybackShortcutTarget } from "../../player/lib/playbackShortcuts";
+import type { RenderJob } from "./useRenderQueue";
 import type { FfmpegStatus } from "./useFfmpegStatus";
 
 // Encoder availability arrives as a prop (useRenderQueue owns the probe), so
@@ -36,14 +38,16 @@ afterEach(() => {
 function mountRenderQueue(
   onStartRender: Mock<StartRenderHandler>,
   compositionDimensions = { width: 1920, height: 1080 },
+  mvpEditor = false,
+  jobs: RenderJob[] = [],
 ) {
   const host = document.createElement("div");
   document.body.append(host);
   root = createRoot(host);
   act(() => {
     root?.render(
-      <RenderQueue
-        jobs={[]}
+      <StudioHostContext.Provider value={{ mvpEditor }}><RenderQueue
+        jobs={jobs}
         projectId="demo"
         onDelete={vi.fn()}
         onClearCompleted={vi.fn()}
@@ -53,7 +57,7 @@ function mountRenderQueue(
         ffmpeg={ffmpegStatus}
         ffmpegChecking={false}
         onRecheckFfmpeg={recheck}
-      />,
+      /></StudioHostContext.Provider>,
     );
   });
   return host;
@@ -350,5 +354,35 @@ describe("GIF frame-rate controls", () => {
     expect(getPersistedRenderSettings()).toMatchObject({ format: "gif", fps: 30 });
     act(() => exportButtonIn(host).click());
     expect(onStartRender).toHaveBeenLastCalledWith("gif", "standard", "auto", 30, false, 0);
+  });
+});
+
+it("MVP exports keep quality and frame rate while ignoring hidden GIF/GPU preferences", async () => {
+  localStorage.setItem("hf-studio-render-settings", JSON.stringify({ format: "gif", gpu: true, quality: "high", fps: 60 }));
+  const start = vi.fn();
+  const host = mountRenderQueue(start, undefined, true);
+  expect(triggerFor(host, "Format").textContent).toContain("MP4");
+  expect(host.textContent).not.toContain("GPU");
+  fire(exportButtonIn(host), "click");
+  await settle();
+  expect(start).toHaveBeenCalledWith("mp4", "high", "auto", 60, false);
+});
+
+
+describe("RenderQueue history", () => {
+  it("shows newest exports first without mutating history or offering MVP hide-finished", () => {
+    const jobs: RenderJob[] = [
+      { id: "older", filename: "older.mp4", status: "complete", createdAt: 100, progress: 100 },
+      { id: "newest", filename: "newest.mp4", status: "complete", createdAt: 300, progress: 100, durationMs: 5000 },
+      { id: "middle", filename: "middle.mp4", status: "complete", createdAt: 200, progress: 100 },
+    ];
+    const host = mountRenderQueue(vi.fn(), undefined, true, jobs);
+    const text = host.textContent ?? "";
+    expect(text.indexOf("newest.mp4")).toBeGreaterThanOrEqual(0);
+    expect(text.indexOf("newest.mp4")).toBeLessThan(text.indexOf("middle.mp4"));
+    expect(text.indexOf("middle.mp4")).toBeLessThan(text.indexOf("older.mp4"));
+    expect(text).not.toContain("Hide finished");
+    expect(text).not.toContain("Last render");
+    expect(jobs.map((job) => job.id)).toEqual(["older", "newest", "middle"]);
   });
 });

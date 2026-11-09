@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { systemMessage } from "../../i18n/systemMessages";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { BlockParam } from "@hyperframes/core/registry";
 import { useFileManagerContextOptional } from "../../contexts/FileManagerContext";
@@ -194,7 +195,7 @@ export const BlockParamsPanel = memo(function BlockParamsPanel({
         )}
         {commitState.tone === "error" && (
           <div className="text-[10px] text-danger-ink" role="alert">
-            {commitState.message}
+            {commitState.message && systemMessage(commitState.message, t)}
           </div>
         )}
       </div>
@@ -216,7 +217,7 @@ function ParamControl({
   const { t } = useI18n();
   return (
     <div className="space-y-1">
-      <label className="text-[10px] font-medium text-neutral-400">{param.label}</label>
+      <label className="text-[10px] font-medium text-neutral-400">{t(param.label)}</label>
 
       {param.type === "color" && (
         <div className="flex items-center gap-2">
@@ -224,7 +225,7 @@ function ParamControl({
             type="color"
             value={value}
             disabled={disabled}
-            aria-label={t("{value0} color", { value0: param.label })}
+            aria-label={t("{value0} color", { value0: t(param.label) })}
             onChange={(e) => onChange(e.target.value)}
             className="w-7 h-7 rounded-sm border border-neutral-700 bg-transparent cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
           />
@@ -232,7 +233,7 @@ function ParamControl({
             type="text"
             value={value}
             disabled={disabled}
-            aria-label={t("{value0} value", { value0: param.label })}
+            aria-label={t("{value0} value", { value0: t(param.label) })}
             onChange={(e) => onChange(e.target.value)}
             className="flex-1 bg-neutral-900 border border-neutral-800 rounded-sm px-2 py-1 text-[10px] text-neutral-200 font-mono focus:outline-hidden focus:border-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
           />
@@ -248,7 +249,7 @@ function ParamControl({
             step={param.step ?? 1}
             value={value}
             disabled={disabled}
-            aria-label={param.label}
+            aria-label={t(param.label)}
             onChange={(e) => onChange(e.target.value)}
             className="flex-1 disabled:cursor-not-allowed disabled:opacity-50"
           />
@@ -261,7 +262,7 @@ function ParamControl({
           type="text"
           value={value}
           disabled={disabled}
-          aria-label={param.label}
+          aria-label={t(param.label)}
           onChange={(e) => onChange(e.target.value)}
           className="w-full bg-neutral-900 border border-neutral-800 rounded-sm px-2 py-1 text-[10px] text-neutral-200 focus:outline-hidden focus:border-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
         />
@@ -271,13 +272,13 @@ function ParamControl({
         <select
           value={value}
           disabled={disabled}
-          aria-label={param.label}
+          aria-label={t(param.label)}
           onChange={(e) => onChange(e.target.value)}
           className="w-full bg-neutral-900 border border-neutral-800 rounded-sm px-2 py-1 text-[10px] text-neutral-200 focus:outline-hidden focus:border-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {param.options.map((opt) => (
             <option key={opt.value} value={opt.value}>
-              {opt.label}
+              {t(opt.label)}
             </option>
           ))}
         </select>

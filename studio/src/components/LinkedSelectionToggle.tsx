@@ -1,7 +1,7 @@
 import { useI18n } from "../i18n/I18n";
 import { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
-import { LinkSimple } from "@phosphor-icons/react";
+import { LinkSimple } from "../icons/RemixIcons";
 import { useContextMenuDismiss } from "../hooks/useContextMenuDismiss";
 import { useMenuKeyboardNav } from "../player/components/menuKeyboardNav";
 import { useLinkedClipPreferences } from "../utils/linkedClipPreferences";

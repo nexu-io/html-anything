@@ -1,3 +1,4 @@
+import { splitFailureMessage } from "../i18n/editorErrors";
 import { useCallback, useRef } from "react";
 import type { TimelineElement } from "../player";
 import { usePlayerStore } from "../player";
@@ -119,7 +120,8 @@ export function useRazorSplit({
         if (result.syncFailed) return;
         showToast(`Split ${getTimelineElementLabel(element)} at ${splitTime.toFixed(2)}s`, "info");
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Failed to split timeline clip";
+        console.warn("Timeline split failed", error);
+        const message = splitFailureMessage(error);
         showToast(message, "error");
       }
     },
@@ -140,7 +142,8 @@ export function useRazorSplit({
         if (result.syncFailed) return;
         showToast(`Split ${result.splitCount} clips at ${splitTime.toFixed(2)}s`, "info");
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Failed to split clips";
+        console.warn("Timeline split failed", error);
+        const message = splitFailureMessage(error);
         showToast(message, "error");
       }
     },

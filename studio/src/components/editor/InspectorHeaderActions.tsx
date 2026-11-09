@@ -1,5 +1,5 @@
 import { useI18n } from '../../i18n/I18n';
-import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { Eye, EyeSlash } from "../../icons/RemixIcons";
 import { X } from "../../icons/SystemIcons";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 import type { DomEditSelection } from "./domEditingTypes";

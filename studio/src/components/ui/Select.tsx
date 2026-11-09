@@ -1,3 +1,4 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 /**
  * Select: Base UI select in Input's box. The trigger keeps `role="combobox"`, which both hotkey selector
  * lists match. Options are data, not children, so typeahead and the value display can read labels.
@@ -64,15 +65,7 @@ export function Select({
       >
         <BaseSelect.Value className="truncate" />
         <BaseSelect.Icon className="shrink-0 text-text-4" aria-hidden="true">
-          <svg width="8" height="5" viewBox="0 0 8 5" fill="none">
-            <path
-              d="M1 1L4 4L7 1"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <RemixIcon name="arrow-down-s-line" size={14} />
         </BaseSelect.Icon>
       </BaseSelect.Trigger>
 

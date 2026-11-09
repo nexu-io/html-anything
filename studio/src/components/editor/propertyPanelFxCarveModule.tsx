@@ -1,4 +1,4 @@
-import { useI18n } from "../../i18n/I18n";
+import { useI18n, type Translate } from "../../i18n/I18n";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 /**
  * The voiceover carve, as one module in the FX rack.
@@ -31,10 +31,10 @@ export interface AudioTrackOption {
 }
 
 /** What one effect inside the module is called: its own name, plus the band. */
-function carveMemberName(node: HfAudioFxNode): string {
+function carveMemberName(node: HfAudioFxNode, t: Translate): string {
   const def = getAudioFxDef(node.type);
   const freq = node.params?.["frequency"];
-  const label = def?.label ?? node.type;
+  const label = t(def?.label ?? node.type);
   return typeof freq === "number" ? `${label} ${formatHz(freq)}` : label;
 }
 
@@ -79,13 +79,14 @@ function FxCarveMember({
   automatedTargets?: ReadonlySet<string>;
   liveAutomationValues?: ReadonlyMap<string, number>;
 }) {
+  const { t } = useI18n();
   const def = getAudioFxDef(node.type);
   if (!def) return null;
   const params = node.params ?? defaultAudioFxParams(node.type);
   return (
     <div className="hf-fx-carve-member flex flex-col gap-0.5 py-1 pl-3 pr-1.5">
       <span className="hf-fx-carve-member-name truncate font-mono text-[9px] text-panel-text-1">
-        {carveMemberName(node)}
+        {carveMemberName(node, t)}
       </span>
       <div className="flex flex-wrap gap-x-3 gap-y-0.5">
         {def.params.map((param) => {
@@ -103,7 +104,7 @@ function FxCarveMember({
               {...(automated ? { "data-automated": "" } : {})}
               {...(driven ? { "data-automation-live": "" } : {})}
             >
-              <span className="text-panel-text-2">{param.label}</span>
+              <span className="text-panel-text-2">{t(param.label)}</span>
               <span
                 className="tabular-nums text-panel-text-1"
                 style={{ minWidth: `${paramValueWidthCh(param)}ch` }}
@@ -170,7 +171,7 @@ export function FxCarveModule({
   const on = carve.enabled;
   const trackInput = useTrackDesignInput();
   const soleVoice = soleCarveVoice(sourceOptions, carve.sources);
-  const summary = carveSummary({ nodes, carve, analysing });
+  const summary = carveSummary({ nodes, carve, analysing }, t);
   // The carve's own colour, used three ways: the module's left edge, the title,
   // and the wash behind it. A preset gets a title treatment because it is a
   // character; the carve gets one because it is the only module in the rack
@@ -313,18 +314,18 @@ function carveSummary(input: {
   nodes: HfAudioFxNode[];
   carve: HfCarveSettings;
   analysing?: boolean;
-}): string {
+}, t: Translate): string {
   const { nodes, carve, analysing } = input;
-  if (!carve.enabled) return "off";
-  if (analysing) return "analysing…";
+  if (!carve.enabled) return t("off");
+  if (analysing) return t("analysing…");
   const bands = nodes.filter((n) => n.type === "peaking").length;
-  if (bands === 0) return carve.sources.length > 0 ? "no analysis yet" : "pick a voice";
+  if (bands === 0) return carve.sources.length > 0 ? t("no analysis yet") : t("pick a voice");
   return [
-    `${bands} band${bands === 1 ? "" : "s"}`,
-    ...(nodes.some((n) => n.type === "gain") ? ["level"] : []),
+    t(bands === 1 ? "{count} band" : "{count} bands", { count: bands }),
+    ...(nodes.some((n) => n.type === "gain") ? [t("level")] : []),
     // Worth saying when it is more than one: the cuts follow whoever is
     // speaking, and that is not obvious from a band count.
-    ...(carve.sources.length > 1 ? [`${carve.sources.length} voices`] : []),
+    ...(carve.sources.length > 1 ? [t("{count} voices", { count: carve.sources.length })] : []),
   ].join(" + ");
 }
 

@@ -1,3 +1,5 @@
+import { useI18n } from "../i18n/I18n";
+import { importValidationMessage } from "../i18n/importMessages";
 import { useState, useCallback, useRef } from "react";
 import type { EditingFile } from "../utils/studioHelpers";
 import { FONT_EXT, isMediaFile } from "../utils/mediaTypes";
@@ -34,6 +36,7 @@ export function useFileManager({
   recordEdit,
   setRefreshKey,
 }: UseFileManagerOptions) {
+  const { t } = useI18n();
   // ── Shared refs ──
 
   const [editingFile, setEditingFile] = useState<EditingFile | null>(null);
@@ -216,13 +219,13 @@ export function useFileManager({
           }
           if (data.invalid?.length) {
             const why = data.invalid
-              .map((entry: { name: string; reason: string }) => `${entry.name} (${entry.reason})`)
+              .map((entry: { name: string; reason: string }) => `${entry.name} (${importValidationMessage(entry.reason, t)})`)
               .join(", ");
-            showToast(`Not added: ${why}`);
+            showToast(t("Not added: {message}", { message: why }));
           }
           if (data.unchecked?.length) {
             const names = data.unchecked.map((entry: { name: string }) => entry.name).join(", ");
-            showToast(`Added ${names}, ${data.unchecked[0].reason}`, "info");
+            showToast(t("Added {name}, {message}", { name: names, message: importValidationMessage(data.unchecked[0].reason, t) }), "info");
           }
           await refreshFileTree();
           setRefreshKey((k) => k + 1);
@@ -237,7 +240,7 @@ export function useFileManager({
       }
       return [];
     },
-    [refreshFileTree, setRefreshKey, showToast],
+    [refreshFileTree, setRefreshKey, showToast, t],
   );
 
   // ── File CRUD ──

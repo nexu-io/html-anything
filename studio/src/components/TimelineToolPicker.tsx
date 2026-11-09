@@ -1,18 +1,18 @@
+import { RemixIcon } from "../icons/RemixIcons";
 import { useI18n } from "../i18n/I18n";
+import { useMvpEditor } from "../motion/StudioHost";
 import type { ReactNode } from "react";
-import { ArrowLineLeft, ArrowLineRight, CaretDown } from "@phosphor-icons/react";
+import { ArrowLineLeft, ArrowLineRight, CaretDown } from "../icons/RemixIcons";
 import { usePlayerStore } from "../player";
 import { Scissors } from "../icons/SystemIcons";
-import { Menu, MenuItem } from "./ui";
+import { Menu, MenuItem, Tooltip } from "./ui";
 import { cn } from "./ui/cn";
-import { flatIdle } from "./timelineToolbarStyles";
+import { flatActive, flatIdle } from "./timelineToolbarStyles";
 import { keyHint, useStudioKeys } from "../player/components/studioShortcuts";
 
 function SelectIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
-      <path d="M2 0.5L10 6L6.5 6.5L8.5 11L6.5 11.5L4.5 7L2 9Z" />
-    </svg>
+    <RemixIcon name="cursor-line" size={16} />
   );
 }
 
@@ -24,9 +24,10 @@ interface ToolRow {
   run: () => void;
 }
 
-/** One button for the active timeline tool; its menu switches tools or selects clips around the playhead. */
+/** The MVP exposes its two tools directly; the full editor retains the tool menu. */
 export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const activeTool = usePlayerStore((s) => s.activeTool);
   const keys = useStudioKeys();
   const store = () => usePlayerStore.getState();
@@ -46,6 +47,31 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
       run: () => store().setActiveTool("razor"),
     },
   ];
+  if (mvp) {
+    return (
+      <div role="group" aria-label={t("Timeline tools")} className="flex items-center gap-0.5">
+        {rows.map((row) => (
+          <Tooltip
+            key={row.label}
+            label={`${t(row.label)} (${row.shortcut})`}
+            description={row.label === "Split"
+              ? t("Click a clip where you want to split it. Switch back to Select to move or select clips.")
+              : undefined}
+          >
+            <button
+              type="button"
+              aria-label={t(row.label)}
+              aria-pressed={row.active}
+              className={row.active ? flatActive : flatIdle}
+              onClick={row.run}
+            >
+              {row.icon}
+            </button>
+          </Tooltip>
+        ))}
+      </div>
+    );
+  }
   if (showSelectAroundPlayhead) {
     rows.push(
       {

@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import { StudioHostContext } from "../../motion/StudioHost";
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it } from "vitest";
@@ -15,7 +16,7 @@ afterEach(() => {
   document.body.innerHTML = "";
 });
 
-async function mountKeyframed(showKeyframes?: boolean, withLanes = true) {
+async function mountKeyframed(showKeyframes?: boolean, withLanes = true, mvpEditor = false) {
   usePlayerStore.setState({
     duration: 10,
     currentTime: 0,
@@ -60,7 +61,7 @@ async function mountKeyframed(showKeyframes?: boolean, withLanes = true) {
   const host = document.createElement("div");
   document.body.append(host);
   const root = createRoot(host);
-  await act(async () => root.render(<Timeline showKeyframes={showKeyframes} />));
+  await act(async () => root.render(<StudioHostContext.Provider value={{ mvpEditor }}><Timeline showKeyframes={showKeyframes} /></StudioHostContext.Provider>));
   const diamonds = host.querySelectorAll('button[title="50%"]').length;
   const named = Array.from(host.querySelectorAll("[role=rowheader]")).some((h) =>
     h.textContent?.includes("Hero card"),
@@ -114,4 +115,13 @@ describe("Timeline showKeyframes", () => {
     expect(corner?.style.width).toBe("264px");
     act(() => root.unmount());
   });
+});
+
+it("MVP hides keyframe lanes but keeps track names and the underlying animation data", async () => {
+  const view = await mountKeyframed(undefined, true, true);
+  expect(view.lanes).toBe(false);
+  expect(view.diamonds).toBe(0);
+  expect(view.named).toBe(true);
+  expect(usePlayerStore.getState().gsapAnimations.get("card")).toHaveLength(1);
+  expect(usePlayerStore.getState().keyframeCache.has("card")).toBe(true);
 });

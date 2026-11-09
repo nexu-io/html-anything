@@ -56,6 +56,7 @@ function FxNodeDerivedKnob({
   onUpdate(index: number, patch: Partial<HfAudioFxNode>): void;
   trackKind?: string;
 }) {
+  const { t } = useI18n();
   const trackInput = useTrackDesignInput();
   if (!derived) return null;
   return (
@@ -75,8 +76,8 @@ function FxNodeDerivedKnob({
       </div>
       {profile ? (
         <p className="hf-fx-node-ends flex justify-between gap-2 px-1.5 pb-1 text-[9px] text-panel-text-2">
-          <span className="truncate">{profile.ends.low}</span>
-          <span className="truncate text-right">{profile.ends.high}</span>
+          <span className="truncate">{t(profile.ends.low)}</span>
+          <span className="truncate text-right">{t(profile.ends.high)}</span>
         </p>
       ) : null}
     </>
@@ -113,6 +114,7 @@ function FxNodePrimaryKnob({
   disabled?: boolean;
   bypassed: boolean;
 }) {
+  const { t } = useI18n();
   if (!primary) return null;
   return (
     <>
@@ -134,8 +136,8 @@ function FxNodePrimaryKnob({
           the question they actually have. */}
       {copy?.primaryEnds ? (
         <p className="hf-fx-node-ends flex justify-between gap-2 px-1.5 pb-1 text-[9px] text-panel-text-2">
-          <span className="truncate">{copy.primaryEnds.low}</span>
-          <span className="truncate text-right">{copy.primaryEnds.high}</span>
+          <span className="truncate">{t(copy.primaryEnds.low)}</span>
+          <span className="truncate text-right">{t(copy.primaryEnds.high)}</span>
         </p>
       ) : null}
       {/* Where it is working, in the words the rack shares. Only for a module
@@ -201,7 +203,7 @@ export function FxNodeOpenBody({
       {/* What it is for, before what it is made of. */}
       {copy?.does ? (
         <p className="hf-fx-node-does border-t border-panel-border-input px-1.5 py-1 text-[10px] text-panel-text-2">
-          {copy.does}
+          {t(copy.does)}
         </p>
       ) : null}
       {!details ? (
@@ -247,11 +249,11 @@ export function FxNodeOpenBody({
           onClick={onToggleDetails}
         >
           <span aria-hidden="true">{details ? "▾" : "▸"}</span>
-          {t("Details:")}{" "}{registryDef.label}
+          {t("Details:")}{" "}{t(registryDef.label)}
         </button>
       ) : (
         <p className="hf-fx-node-mechanism border-t border-panel-border-input px-1.5 pt-1 font-mono text-[9px] uppercase tracking-wide text-panel-text-2">
-          {t("Details:")}{" "}{registryDef.label}
+          {t("Details:")}{" "}{t(registryDef.label)}
         </p>
       )}
       {details || !oneKnob ? (

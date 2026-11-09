@@ -54,7 +54,7 @@ These frames come from the bundled [Hyperframes examples](template-library/NOTIC
 
 > Keep the opening and the pace of the reveal. Use our logo and the product screenshots in this repo. Hold the second screen long enough to read the new headline. Give me the editable project and an MP4.
 
-The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled or Prism template opens directly; external footage needs analysis and reconstruction. In Studio you can change the text, timing, layout and assets, or ask your Agent to make the same edit. Imported footage stays a clip.
+The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled or Prism template opens directly; external footage needs analysis and reconstruction. The MVP Studio keeps text, color, position/size, asset import, timeline edits, preview and export, plus contextual Ask Agent. Advanced editing and generation remain available to the Agent. Imported footage stays a clip.
 
 ![The editor showing the Product Promo preview, compositions and timeline.](docs/readme/editor.jpg)
 

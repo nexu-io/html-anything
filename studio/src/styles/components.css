@@ -1,6 +1,22 @@
 /* Rules for Studio's components, for any page that renders them. Reads the tokens in
  * theme.css. The app shell (body, #root, preflight) stays in studio.css. */
 
+/* Assets and catalog tiles share column widths and spacing at every panel size. */
+.hf-media-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(120px, 100%), 1fr));
+  gap: 0.375rem;
+}
+
+.hf-media-card-grid > * {
+  min-width: 0;
+}
+
+.hf-media-card-grid .motion-asset-menu-button {
+  width: 16px;
+  height: 16px;
+}
+
 .hf-color-grading-number::-webkit-outer-spin-button,
 .hf-color-grading-number::-webkit-inner-spin-button {
   margin: 0;
@@ -172,6 +188,13 @@
   top: var(--timeline-clip-band-height);
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+/* The track header already names these clips; give the title band's space to the preview. */
+.timeline-clip[data-label-in-track="true"] .timeline-clip__content {
+  top: 0;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
 }
 
 .timeline-clip::after {

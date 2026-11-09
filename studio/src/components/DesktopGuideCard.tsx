@@ -1,5 +1,5 @@
 import { useI18n } from "../i18n/I18n";
-import { ArrowSquareOut, Check, Copy } from "@phosphor-icons/react";
+import { ArrowSquareOut, Check, Copy } from "../icons/RemixIcons";
 import { useEffect, useState, type ReactNode } from "react";
 import { copyTextToClipboard } from "../utils/clipboard";
 import { FrameyGlyph, type FrameyMood } from "./FrameyGlyph";

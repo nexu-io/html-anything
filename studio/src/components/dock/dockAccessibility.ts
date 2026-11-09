@@ -13,13 +13,13 @@ function splitAxis(sash: HTMLElement): Axis {
 }
 
 /** Dockview draws sashes as bare divs; make each one a focusable separator. */
-function decorateSashes(root: HTMLElement) {
+function decorateSashes(root: HTMLElement, t: (message: string) => string) {
   for (const sash of root.querySelectorAll<HTMLElement>(".dv-sash")) {
     const axis = splitAxis(sash);
     sash.tabIndex = 0;
     sash.setAttribute("role", "separator");
     sash.setAttribute("aria-orientation", axis === "horizontal" ? "vertical" : "horizontal");
-    sash.setAttribute("aria-label", axis === "horizontal" ? "Resize columns" : "Resize rows");
+    sash.setAttribute("aria-label", t(axis === "horizontal" ? "Resize columns" : "Resize rows"));
   }
 }
 
@@ -75,8 +75,8 @@ function onTabKeyDown(event: KeyboardEvent, tab: HTMLElement, api: DockviewApi) 
 }
 
 /** Keyboard and ARIA support dockview 8.3 lacks for sashes and tab arrows. Returns a disposer. */
-export function installDockAccessibility(api: DockviewApi, root: HTMLElement): () => void {
-  const decorate = () => decorateSashes(root);
+export function installDockAccessibility(api: DockviewApi, root: HTMLElement, t: (message: string) => string = message => message): () => void {
+  const decorate = () => decorateSashes(root, t);
   decorate();
   const subscriptions = [
     api.onDidLayoutChange(decorate),

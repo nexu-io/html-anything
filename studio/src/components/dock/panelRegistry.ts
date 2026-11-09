@@ -17,6 +17,9 @@ export const PANEL_IDS = [
 ] as const;
 
 export type PanelId = (typeof PANEL_IDS)[number];
+export const MVP_PANEL_IDS: readonly PanelId[] = [
+  "preview", "timeline", "compositions", "assets", "catalog", "design", "layers", "renders",
+];
 export type PanelZone = "left" | "center" | "right";
 
 export interface PanelDefinition {

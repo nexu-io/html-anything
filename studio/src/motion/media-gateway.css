@@ -73,6 +73,8 @@
 .motion-generated-asset strong { display: block; font-weight: 400; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .motion-timeline-toolbar { display: flex; align-items: center; border-bottom: 1px solid var(--motion-border); }
 .motion-timeline-toolbar > :first-child { flex: 1; min-width: 0; }
+/* The host row owns the divider, including the media actions on its right. */
+.motion-timeline-toolbar > .motion-timeline-toolbar { border-bottom: 0; }
 .motion-timeline-media-actions { display: flex; gap: 6px; padding: 2px 8px; }
 .motion-timeline-media-actions button { min-height: 26px; padding: 2px 8px; font-size: 11px; }
 .motion-empty-media-copy { display: flex; flex-direction: column; gap: 4px; color: var(--motion-strong); font-size: 13px; }

@@ -816,6 +816,40 @@ describe("resolveDomEditSelection", () => {
     expect(selection?.textFields[0]?.value).toBe("Headline with trailing space ");
   });
 
+  it.each([
+    "background: #123456", "background-image: linear-gradient(red, blue)",
+    "border: 1px solid black",
+  ])("does not expose text controls on an empty graphic: %s", async (style) => {
+    const document = createDocument(`<div id="graphic" class="clip" style="${style}"></div>`);
+    const selection = await resolveDomEditSelection(document.getElementById("graphic")!, {
+      activeCompositionPath: null, isMasterView: false,
+    });
+    expect(selection).not.toBeNull();
+    expect(selection!.textFields).toEqual([]);
+    expect(isTextEditableSelection(selection!)).toBe(false);
+  });
+
+  it("keeps painted text editable after clearing its content", async () => {
+    const document = createDocument('<div id="copy" class="clip" style="background: red">Copy</div>');
+    const element = document.getElementById("copy")!;
+    const options = { activeCompositionPath: null, isMasterView: false };
+    expect(isTextEditableSelection((await resolveDomEditSelection(element, options))!)).toBe(true);
+    element.textContent = "";
+    expect(isTextEditableSelection((await resolveDomEditSelection(element, options))!)).toBe(true);
+  });
+
+  it.each([
+    '<p id="copy" style="background: red"></p>',
+    '<div id="copy" data-hf-text-key="copy" style="background: red"></div>',
+    '<div id="copy" style="background: red; font-size: 24px"></div>',
+  ])("preserves empty semantic or explicitly authored text: %s", async (markup) => {
+    const document = createDocument(markup);
+    const selection = await resolveDomEditSelection(document.getElementById("copy")!, {
+      activeCompositionPath: null, isMasterView: false,
+    });
+    expect(isTextEditableSelection(selection!)).toBe(true);
+  });
+
   it("keeps an emptied text layer editable so users can type into it again", async () => {
     const document = createDocument(`
       <div id="card" class="clip" style="position: absolute;"></div>

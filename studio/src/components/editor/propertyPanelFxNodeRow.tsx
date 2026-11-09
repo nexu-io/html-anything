@@ -1,3 +1,4 @@
+import { systemMessage } from "../../i18n/systemMessages";
 import { useI18n } from "../../i18n/I18n";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 /**
@@ -249,6 +250,7 @@ export function FxNodeRow({
   onPreview,
   trackKind,
 }: FxNodeRowProps) {
+  const { t } = useI18n();
   const trackInput = useTrackDesignInput();
   const registryDef = getAudioFxDef(node.type);
   const def = useMemo(() => (registryDef ? plainDef(registryDef) : null), [registryDef]);
@@ -300,7 +302,7 @@ export function FxNodeRow({
         // most specific truth available: a chain that cuts mud and then lifts
         // clarity must not show the same name twice. Then the plain name, and
         // the registry's only if an effect somehow has no copy.
-        label={node.label ?? EFFECT_COPY[node.type]?.title ?? registryDef.label}
+        label={node.label && !node.fromPreset ? node.label : t(node.label ?? EFFECT_COPY[node.type]?.title ?? registryDef.label)}
         open={open}
         bypassed={bypassed}
         first={index === 0}
@@ -318,9 +320,9 @@ export function FxNodeRow({
       {summary ? (
         <p
           className="hf-fx-node-summary truncate px-1.5 pb-1 text-[10px] text-panel-text-2"
-          title={summary}
+          title={systemMessage(summary, t)}
         >
-          {summary}
+          {systemMessage(summary, t)}
         </p>
       ) : null}
       {open ? (

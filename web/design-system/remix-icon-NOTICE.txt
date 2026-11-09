@@ -1,0 +1,5 @@
+Remix Icon 4.9.1
+Copyright (c) 2017–2026 Remix Design
+https://github.com/Remix-Design/RemixIcon/tree/v4.9.1
+Licensed under Remix Icon License v1.0; see remix-icon-LICENSE.txt.
+Selected original SVG paths are bundled in icons.svg for Motion UI controls.

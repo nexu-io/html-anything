@@ -13,6 +13,7 @@ import {
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 
 function StatusPill({ status }: { status: RuntimeColorGradingStatus }) {
+  const { t } = useI18n();
   const dotClass =
     status.state === "active"
       ? "bg-accent"
@@ -24,10 +25,10 @@ function StatusPill({ status }: { status: RuntimeColorGradingStatus }) {
   return (
     <div
       className="flex min-w-0 items-center gap-1.5 rounded-sm bg-panel-input px-2 py-1 text-[10px] font-medium text-panel-text-3"
-      title={status.message}
+      title={t(status.message)}
     >
       <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotClass}`} />
-      <span className="truncate">{status.message}</span>
+      <span className="truncate">{t(status.message)}</span>
     </div>
   );
 }

@@ -100,6 +100,25 @@ it("opens on hover over a disabled child", async () => {
   expect(bubble()?.textContent).toBe("Rendering");
 });
 
+it("keeps the feature name and full explanation accessible on a disabled control", async () => {
+  const description = "First select clips in the timeline, then fit them into view.";
+  const host = mountHost(
+    <Tooltip label="Zoom to selected clips (Z)" description={description} delay={0}>
+      <button type="button" disabled data-testid="explained">Zoom</button>
+    </Tooltip>,
+  );
+  const trigger = host.querySelector<HTMLElement>('[data-testid="explained"]')!;
+  hover(trigger);
+  await settle();
+
+  const tip = bubble();
+  expect(tip?.textContent).toContain("Zoom to selected clips (Z)");
+  expect(tip?.textContent).toContain(description);
+  expect(trigger.getAttribute("aria-describedby")).toBe(tip?.id);
+  expect(tip?.className).toContain("whitespace-normal");
+  expect(tip?.querySelector('[style*="--tooltip-lines"]')).toBeNull();
+});
+
 it("wraps its child in a box-less span so a disabled child still gets hover", () => {
   const trigger = mount();
 

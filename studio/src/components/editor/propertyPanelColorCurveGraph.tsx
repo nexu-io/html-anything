@@ -426,7 +426,7 @@ export function CurveGraph({
     <svg
       viewBox={`0 0 ${GRAPH_SIZE} ${GRAPH_SIZE}`}
       role="application"
-      aria-label={t("{value0} curve", { value0: tab.label })}
+      aria-label={t("{value0} curve", { value0: t(tab.label) })}
       aria-keyshortcuts="Enter Space ArrowLeft ArrowRight ArrowUp ArrowDown PageUp PageDown Home End Delete"
       tabIndex={disabled ? -1 : 0}
       data-color-curve-graph={tab.key}

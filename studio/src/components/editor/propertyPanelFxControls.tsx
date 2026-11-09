@@ -1,3 +1,4 @@
+import { systemMessage } from "../../i18n/systemMessages";
 import { useI18n } from "../../i18n/I18n";
 /**
  * Controls for one effect, generated from its registry entry.
@@ -96,7 +97,7 @@ export function AutomationToggle({
             : "border-panel-border-input text-panel-text-2 hover:text-panel-text-0"
         }`}
         aria-pressed={automated}
-        aria-label={automated ? t("Remove {label} automation", { label: label }) : t("Automate {label}", { label: label })}
+        aria-label={automated ? t("Remove {label} automation", { label: t(label) }) : t("Automate {label}", { label: t(label) })}
         onClick={() => (automated ? onRemoveAutomation?.(paramKey) : onAutomate?.(paramKey))}
       >
         A
@@ -116,6 +117,7 @@ export function FxParamRow({
   onAutomate,
   onRemoveAutomation,
 }: ParamRowProps) {
+  const { t } = useI18n();
   // While dragging, the slider is driven locally. Waiting for the value to come
   // back through the element attribute makes the control feel laggy and fights
   // the pointer.
@@ -189,16 +191,16 @@ export function FxParamRow({
 
   if (param.kind === "enum") {
     return (
-      <label className="hf-fx-row flex min-h-6 items-center gap-2" title={param.hint}>
+      <label className="hf-fx-row flex min-h-6 items-center gap-2" title={param.hint ? systemMessage(param.hint, t) : undefined}>
         {/* Wraps rather than truncating. These names are whole questions — "How
             big the space is" — so 86px of truncation left "How big the sp…", and
             three rows of that read as the same word four times. A title only
             answers it on hover, one row at a time; wrapping answers it for the
             whole column at rest. `wrap-break-word` so a long single token breaks
-            instead of widening the column. The row keeps `title={param.hint}`:
+            instead of widening the column. The row keeps a localized `title` for the hint:
             the name and the explanation are different questions. */}
         <span className="hf-fx-label w-[86px] shrink-0 wrap-break-word text-[10px] leading-tight text-panel-text-2">
-          {param.label}
+          {t(param.label)}
         </span>
         <select
           className="hf-fx-select min-w-0 flex-1 rounded-[3px] bg-panel-surface px-1 py-0.5 font-mono text-[10px] text-panel-text-0"
@@ -212,7 +214,7 @@ export function FxParamRow({
         >
           {param.options.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {t(o.label)}
             </option>
           ))}
         </select>
@@ -233,7 +235,7 @@ export function FxParamRow({
   return (
     <label
       className={`hf-fx-row flex min-h-6 items-center gap-2${automated ? " hf-fx-row-automated" : ""}`}
-      title={param.hint}
+      title={param.hint ? systemMessage(param.hint, t) : undefined}
       data-automated={automated ? "" : undefined}
     >
       {/* See the enum row above for why the name wraps instead of truncating. */}
@@ -242,7 +244,7 @@ export function FxParamRow({
           automated ? "text-accent-ink" : "text-panel-text-2"
         }`}
       >
-        {param.label}
+        {t(param.label)}
       </span>
       <input
         className="hf-fx-slider h-1 min-w-0 flex-1 accent-panel-accent"
@@ -252,7 +254,7 @@ export function FxParamRow({
         step={(param.max - param.min) / 1000}
         value={toSlider(param, current)}
         disabled={locked}
-        aria-label={param.label}
+        aria-label={t(param.label)}
         onPointerDown={() => setDragging(true)}
         onChange={(e) => handleNumber(fromSlider(param, Number(e.target.value)))}
         onPointerUp={commit}

@@ -241,7 +241,7 @@ export function PropertyPanelColorScopes({
                     : "border-transparent text-panel-text-4 hover:text-panel-text-2"
                 }`}
               >
-                {candidate.label}
+                {t(candidate.label)}
               </button>
             ))}
           </div>

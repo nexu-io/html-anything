@@ -17,6 +17,8 @@ import { floatingMotion, POPUP_LAYER } from "./Menu";
 
 interface TooltipProps {
   label: string;
+  /** Optional plain-language explanation below the feature name. */
+  description?: string;
   /** A single element, wrapped in a box-less span so a disabled one still gets hover. */
   children: ReactElement<{ "aria-describedby"?: string }>;
   /** Hover delay in ms. */
@@ -33,6 +35,7 @@ const VIEWPORT_MARGIN = 8;
 
 export function Tooltip({
   label,
+  description,
   children,
   delay = 400,
   side = "top",
@@ -62,12 +65,18 @@ export function Tooltip({
             id={tooltipId}
             role="tooltip"
             className={cn(
-              "pointer-events-none rounded-md border border-border-input bg-surface px-2 py-1 text-step-10 font-medium text-text-1 shadow-menu",
-              lines ? "max-w-[300px] whitespace-normal break-words" : "whitespace-nowrap",
+              "studio-tooltip pointer-events-none rounded-md border border-border-input bg-surface px-2 py-1 text-step-10 font-medium text-text-1 shadow-menu",
+              lines || description ? "max-w-[300px] whitespace-normal break-words" : "whitespace-nowrap",
+              description && "px-3 py-2",
               floatingMotion("duration-tooltip"),
             )}
           >
-            {lines ? (
+            {description ? (
+              <>
+                <span className="block font-semibold">{label}</span>
+                <span className="mt-1 block font-normal leading-normal opacity-80">{description}</span>
+              </>
+            ) : lines ? (
               <span
                 className="line-clamp-(--tooltip-lines)"
                 style={{ "--tooltip-lines": lines } as CSSProperties}

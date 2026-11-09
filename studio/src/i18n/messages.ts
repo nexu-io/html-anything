@@ -1,4 +1,5 @@
 import zhCN from './zh-CN.json';
+import mvpZhCN from './mvp-zh-CN.json';
 import ja from './ja.json';
 import ko from './ko.json';
 import de from './de.json';
@@ -25,7 +26,14 @@ export const dictionaries: Record<Exclude<Locale, 'en'>, Record<string, Message>
   'zh-CN': zhCN, ja, ko, de, fr, ru, es, 'pt-BR': ptBR, it, tr,
 };
 export const isLocale = (value: unknown): value is Locale => languages.some(language => language.locale === value);
-const reverse = Object.fromEntries(Object.entries(dictionaries).map(([locale, messages]) => [locale,
+// The MVP interaction audit adds Chinese/English terminology independently of
+// the shared eleven-language vocabulary. Other locales retain English fallback
+// for these additions until their translations are reviewed.
+export const mvpMessages: Partial<Record<Locale, Record<string, Message>>> = { 'zh-CN': mvpZhCN };
+const effectiveDictionaries = Object.fromEntries(Object.entries(dictionaries).map(([locale, messages]) =>
+  [locale, { ...messages, ...mvpMessages[locale as Locale] }],
+));
+const reverse = Object.fromEntries(Object.entries(effectiveDictionaries).map(([locale, messages]) => [locale,
   new Map(Object.entries(messages).flatMap(([source, value]) => (typeof value === 'string' ? [value] : Object.values(value)).map(text => [text, source]))),
 ]));
 const singular: Record<string, string> = {
@@ -40,7 +48,7 @@ const pluralRules = Object.fromEntries(languages.map(({ locale }) => [locale, ne
 
 /** Accept legacy Chinese labels and already-localized built-in labels. */
 export function sourceMessage(message: string, locale: Locale = 'zh-CN'): string {
-  if (Object.hasOwn(zhCN, message)) return message;
+  if (Object.hasOwn(zhCN, message) || Object.hasOwn(mvpZhCN, message)) return message;
   return reverse[locale]?.get(message) ?? reverse['zh-CN'].get(message) ?? Object.values(reverse).map(index => index.get(message)).find(Boolean) ?? message;
 }
 
@@ -49,7 +57,7 @@ export function translate(locale: Locale, message: string, values: MessageValues
   const warningPrefix = '模板更新失败，使用已缓存目录：';
   if (message.startsWith(warningPrefix)) return translate(locale, 'Template update failed; using cached catalogue: {message}', { message: message.slice(warningPrefix.length) });
   message = sourceMessage(message, locale);
-  const value = locale === 'en' ? undefined : dictionaries[locale][message];
+  const value = locale === 'en' ? undefined : effectiveDictionaries[locale][message];
   const category = typeof values.count === 'number' ? pluralRules[locale].select(values.count) : 'other';
   let text = typeof value === 'string' ? value : value?.[category] ?? value?.other ?? message;
   if (locale === 'en' && category === 'one') text = singular[message] ?? text;
