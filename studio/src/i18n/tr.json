@@ -1713,5 +1713,9 @@
   "Text {index}": "Metin {index}",
   "FFmpeg not found": "FFmpeg bulunamadı",
   "FFmpeg is required to encode video.": "Video kodlamak için FFmpeg gereklidir.",
-  "Drop media here": "Medyayı buraya bırakın"
+  "Drop media here": "Medyayı buraya bırakın",
+  "Get the template catalogue and local index.": "Şablon kataloğunu ve yerel dizini alın.",
+  "Read the details and files for one template.": "Bir şablonun ayrıntılarını ve dosyalarını okuyun.",
+  "Template cache unavailable; downloading again": "Şablon önbelleği kullanılamıyor; yeniden indiriliyor",
+  "Template update failed; using cached catalogue: {message}": "Şablonlar güncellenemedi; önbellekteki katalog kullanılıyor: {message}"
 }

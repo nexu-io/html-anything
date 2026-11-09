@@ -1773,5 +1773,9 @@
   "Text {index}": "Текст {index}",
   "FFmpeg not found": "FFmpeg не найден",
   "FFmpeg is required to encode video.": "Для кодирования видео требуется FFmpeg.",
-  "Drop media here": "Перетащите медиа сюда"
+  "Drop media here": "Перетащите медиа сюда",
+  "Get the template catalogue and local index.": "Получить каталог шаблонов и локальный индекс.",
+  "Read the details and files for one template.": "Прочитать сведения и файлы одного шаблона.",
+  "Template cache unavailable; downloading again": "Кэш шаблонов недоступен; повторная загрузка",
+  "Template update failed; using cached catalogue: {message}": "Не удалось обновить шаблоны; используется кэшированный каталог: {message}"
 }

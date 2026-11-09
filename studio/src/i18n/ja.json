@@ -1713,5 +1713,9 @@
   "Text {index}": "テキスト {index}",
   "FFmpeg not found": "FFmpeg が見つかりません",
   "FFmpeg is required to encode video.": "動画のエンコードには FFmpeg が必要です。",
-  "Drop media here": "ここにメディアをドロップ"
+  "Drop media here": "ここにメディアをドロップ",
+  "Get the template catalogue and local index.": "テンプレートカタログとローカルインデックスを取得します。",
+  "Read the details and files for one template.": "テンプレートの詳細とファイルを読み取ります。",
+  "Template cache unavailable; downloading again": "テンプレートのキャッシュを利用できません。再ダウンロードします",
+  "Template update failed; using cached catalogue: {message}": "テンプレートの更新に失敗しました。キャッシュ済みのカタログを使用します：{message}"
 }

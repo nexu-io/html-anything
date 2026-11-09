@@ -1713,5 +1713,9 @@
   "Text {index}": "文字 {index}",
   "FFmpeg not found": "未找到 FFmpeg",
   "FFmpeg is required to encode video.": "编码视频需要 FFmpeg。",
-  "Drop media here": "将媒体拖到这里"
+  "Drop media here": "将媒体拖到这里",
+  "Get the template catalogue and local index.": "获取模板目录和本地索引。",
+  "Read the details and files for one template.": "读取单个模板的详情和文件。",
+  "Template cache unavailable; downloading again": "模板缓存不可用，重新下载",
+  "Template update failed; using cached catalogue: {message}": "模板更新失败，使用已缓存目录：{message}"
 }

@@ -13,9 +13,10 @@ it('updates live dialog labels while preserving the chosen client, search, previ
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
   vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {});
   vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
-  const info = { name: 'OpenMotion', version: '0.6.2', previewUrl: 'http://localhost:4173', dataDirectory: '/test/workspace', transport: { type: 'stdio', command: 'node', args: ['mcp.ts'], env: { MOTION_DATA_DIR: '/test/workspace' } }, tools: [{ name: 'motion_import_assets', description: 'Import assets' }] };
+  const info = { name: 'OpenMotion', version: '0.6.2', previewUrl: 'http://localhost:4173', dataDirectory: '/test/workspace', transport: { type: 'stdio', command: 'node', args: ['mcp.ts'], env: { MOTION_DATA_DIR: '/test/workspace' } }, tools: [{ name: 'motion_import_assets', description: 'Import assets' }, { name: 'motion_list_templates', description: 'List templates' }, { name: 'motion_get_template', description: 'Template details' }] };
   const template = { id: 'reference', title: 'Preview', author: 'Creator', description: 'Original template description', tags: [], collection: 'moment', kind: 'reference' };
-  vi.stubGlobal('fetch', vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? info : { items: [template], total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null }))));
+  const warning = '模板更新失败，使用已缓存目录：HTTP 503';
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? info : { items: [template], total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null, warning }))));
   const root = document.createElement('div');
   root.innerHTML = '<input id="template-search"><button id="connection-templates"></button>' + page;
   document.body.append(root);
@@ -34,6 +35,9 @@ it('updates live dialog labels while preserving the chosen client, search, previ
     expect(root.querySelector('#config-description')?.textContent).toBe(translate(locale, 'Use this configuration to connect, keeping your existing services.'));
     expect(root.querySelector('#service-status')?.textContent).toBe(translate(locale, 'Workspace reachable · v{version}', { version: '0.6.2' }));
     expect(root.querySelector('#connect-title')?.textContent).toContain('Claude Code');
+    expect(root.querySelector('#tool-list')?.textContent).toContain(translate(locale, 'Get the template catalogue and local index.'));
+    expect(root.querySelector('#tool-list')?.textContent).toContain(translate(locale, 'Read the details and files for one template.'));
+    expect(root.querySelector('#catalog-error-text')?.textContent).toBe(translate(locale, warning));
     expect(search.value).toBe('keep this query');
     expect(root.querySelector('[data-template-id]')).toBe(card);
     expect(root.querySelector('video')).toBe(video);

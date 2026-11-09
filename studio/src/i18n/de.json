@@ -1749,5 +1749,9 @@
   "Text {index}": "Text {index}",
   "FFmpeg not found": "FFmpeg nicht gefunden",
   "FFmpeg is required to encode video.": "Zum Kodieren von Videos wird FFmpeg benötigt.",
-  "Drop media here": "Medien hier ablegen"
+  "Drop media here": "Medien hier ablegen",
+  "Get the template catalogue and local index.": "Vorlagenkatalog und lokalen Index abrufen.",
+  "Read the details and files for one template.": "Details und Dateien einer Vorlage lesen.",
+  "Template cache unavailable; downloading again": "Vorlagencache nicht verfügbar; erneuter Download",
+  "Template update failed; using cached catalogue: {message}": "Vorlagenaktualisierung fehlgeschlagen; zwischengespeicherter Katalog wird verwendet: {message}"
 }

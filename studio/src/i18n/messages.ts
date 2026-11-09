@@ -45,6 +45,9 @@ export function sourceMessage(message: string, locale: Locale = 'zh-CN'): string
 }
 
 export function translate(locale: Locale, message: string, values: MessageValues = {}): string {
+  // Prism returns a legacy Chinese warning followed by an untouched diagnostic.
+  const warningPrefix = '模板更新失败，使用已缓存目录：';
+  if (message.startsWith(warningPrefix)) return translate(locale, 'Template update failed; using cached catalogue: {message}', { message: message.slice(warningPrefix.length) });
   message = sourceMessage(message, locale);
   const value = locale === 'en' ? undefined : dictionaries[locale][message];
   const category = typeof values.count === 'number' ? pluralRules[locale].select(values.count) : 'other';

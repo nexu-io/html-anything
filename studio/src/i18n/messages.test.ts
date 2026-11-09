@@ -34,4 +34,12 @@ describe('editor language resources', () => {
       expect(translate(locale, 'Unrecognized provider diagnostic: /assets/原稿.png')).toBe('Unrecognized provider diagnostic: /assets/原稿.png');
     }
   });
+
+  it('localizes Prism cache warnings while retaining the original failure diagnostic', () => {
+    for (const { locale } of languages) {
+      const diagnostic = 'HTTP 503: /templates/原稿';
+      expect(translate(locale, `模板更新失败，使用已缓存目录：${diagnostic}`)).toBe(translate(locale, 'Template update failed; using cached catalogue: {message}', { message: diagnostic }));
+      expect(translate(locale, '模板缓存不可用，重新下载')).toBe(translate(locale, 'Template cache unavailable; downloading again'));
+    }
+  });
 });

@@ -32,21 +32,24 @@ export function zip(entries: { name: string; data: Buffer }[]): Buffer {
 }
 const root = fileURLToPath(new URL('../', import.meta.url));
 async function main() {
+  const { packageTemplateConfig } = await import('../shared/template-config.ts');
   const { releaseProfile } = await import('../shared/mcp-registry.ts');
   const flags = process.argv.slice(2);
-  if (flags.length > 1 || (flags.length && !/^--mcp-profile=(legacy|phase1)$/.test(flags[0]))) throw new Error('Usage: package.ts [--mcp-profile=legacy|phase1]');
-  const profile = flags[0]?.split('=')[1] ?? releaseProfile;
+  if (flags.length > 2 || flags.some(flag => !/^--(?:mcp-profile=(?:legacy|phase1)|template-env=(?:dev|prod))$/.test(flag))) throw new Error('Usage: package.ts [--mcp-profile=legacy|phase1] [--template-env=dev|prod]');
+  const profile = flags.find(flag => flag.startsWith('--mcp-profile='))?.split('=')[1] ?? releaseProfile;
+  const templateConfig = packageTemplateConfig(flags.find(flag => flag.startsWith('--template-env='))?.split('=')[1]);
   const { mcpRegistry } = await import('../mcp.ts');
   const registry = mcpRegistry(profile);
   const { check } = await import('./check.ts');
   await check();
   const manifest = JSON.parse(await readFile(path.join(root, '.codex-plugin/plugin.json'), 'utf8'));
   const files = await distributionFiles(profile);
+  const overrides: Record<string, unknown> = { 'shared/mcp-release.json': { profile }, 'shared/template-config.json': templateConfig };
   const entries = await Promise.all(files.sort().map(async file => ({ name: manifest.name + '/' + file,
-    data: file === 'shared/mcp-release.json' ? Buffer.from(JSON.stringify({ profile }, null, 2) + '\n') : await readFile(path.join(root, file)) })));
+    data: overrides[file] ? Buffer.from(JSON.stringify(overrides[file], null, 2) + '\n') : await readFile(path.join(root, file)) })));
   await mkdir(path.join(root, 'dist'), { recursive: true });
-  const output = `dist/${manifest.name}-${manifest.version}${profile === 'legacy' ? '' : '-' + profile}.zip`;
+  const output = `dist/${manifest.name}-${manifest.version}${profile === 'legacy' ? '' : '-' + profile}${templateConfig.environment === 'dev' ? '-dev' : ''}.zip`;
   await (await import('node:fs/promises')).writeFile(path.join(root, output), zip(entries));
-  console.log(`${output}: ${entries.length} files, MCP ${profile}: ${registry.tools.length} tools (no personal media or native executables).`);
+  console.log(`${output}: ${entries.length} files, templates ${templateConfig.environment}, MCP ${profile}: ${registry.tools.length} tools (no personal media or native executables).`);
 }
 if (isMain(import.meta.url)) await main();

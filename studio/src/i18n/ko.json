@@ -1713,5 +1713,9 @@
   "Text {index}": "텍스트 {index}",
   "FFmpeg not found": "FFmpeg를 찾을 수 없습니다",
   "FFmpeg is required to encode video.": "동영상을 인코딩하려면 FFmpeg가 필요합니다.",
-  "Drop media here": "여기에 미디어를 놓으세요"
+  "Drop media here": "여기에 미디어를 놓으세요",
+  "Get the template catalogue and local index.": "템플릿 카탈로그와 로컬 인덱스를 가져옵니다.",
+  "Read the details and files for one template.": "템플릿 하나의 세부 정보와 파일을 읽습니다.",
+  "Template cache unavailable; downloading again": "템플릿 캐시를 사용할 수 없어 다시 다운로드합니다",
+  "Template update failed; using cached catalogue: {message}": "템플릿 업데이트에 실패하여 캐시된 카탈로그를 사용합니다: {message}"
 }

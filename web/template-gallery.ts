@@ -1,4 +1,4 @@
-import { collectionNames, formatTemplateViews, socialPlatform, templateCategoryLabel } from '../shared/catalog';
+import { isEditableTemplate, collectionNames, formatTemplateViews, socialPlatform, templateCategoryLabel } from '../shared/catalog';
 import type { GalleryTemplate, TemplatePage } from '../shared/catalog';
 import { hostNames, templatePrompt } from '../shared/integration';
 import type { IntegrationHost, IntegrationInfo } from '../shared/integration';
@@ -18,6 +18,7 @@ export function mountTemplates(root: HTMLElement, options: {
   const playback = new TemplatePlayback(), cleanups: (() => void)[] = [];
   const lifetime = new AbortController();
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let catalogVersion: string | undefined;
   let active = false, enabled = false, category = 'featured', loaded = false, next: number | null = 0;
   let request: AbortController | undefined, sequence = 0, shown = 0, preview: GalleryTemplate | undefined;
   let previewCleanup = () => {}, rotation: ReturnType<typeof setInterval> | undefined, debounce: ReturnType<typeof setTimeout> | undefined;
@@ -139,6 +140,8 @@ export function mountTemplates(root: HTMLElement, options: {
       const page = await response.json() as TemplatePage;
       if (!Array.isArray(page.items) || !Number.isSafeInteger(page.total)) throw new Error("Invalid template catalogue");
       if (ticket !== sequence || !active) return;
+      catalogVersion = page.catalogVersion;
+      if (page.warning) { element('catalog-error').hidden = false; language.text(element('catalog-error-text'), page.warning); }
       element('template-grid').append(...page.items.map(createCard)); shown += page.items.length; next = page.next; loaded = true;
       language.text(element('template-count'), page.total ? 'Groups: {shown} / {total} · Templates and clips: {entries}' : 'No matching templates. Try another name, creator or style.', { shown, total: page.total, entries: page.entryTotal });
       element('more-templates').hidden = next === null;
@@ -151,6 +154,13 @@ export function mountTemplates(root: HTMLElement, options: {
       if (ticket === sequence) { request = undefined; element('template-panel').setAttribute('aria-busy', 'false'); element<HTMLButtonElement>('more-templates').disabled = false; }
     }
   }
+  const catalogTimer = setInterval(() => {
+    if (!active || request || document.visibilityState === 'hidden' || !catalogVersion) return;
+    void fetch('/motion-api/template-catalog?limit=1', { signal: lifetime.signal }).then(response => response.ok ? response.json() : null).then(page => {
+      if (active && page?.catalogVersion && page.catalogVersion !== catalogVersion) void load(true);
+    }).catch(() => {});
+  }, 5_000);
+  lifetime.signal.addEventListener('abort', () => clearInterval(catalogTimer), { once: true });
   function chooseCategory(button: HTMLButtonElement) {
     clearTimeout(debounce); category = button.dataset.category!;
     root.querySelectorAll<HTMLButtonElement>('[data-category]').forEach(item => { const selected = item === button; item.setAttribute('aria-selected', String(selected)); item.tabIndex = selected ? 0 : -1; });
@@ -191,7 +201,7 @@ export function mountTemplates(root: HTMLElement, options: {
     element('preview-title').textContent = template.title; element('preview-description').textContent = template.subtitle;
     language.text(element('preview-detail'), '{details}', () => ({ details: [t(templateCategoryLabel(template)), template.duration === undefined ? '' : t('{value} seconds', { value: Number(template.duration.toFixed(1)) }), template.ratio || ''].filter(Boolean).join(' · ') }));
     element('preview-source').replaceChildren(sourceSummary(template));
-    element('preview-error').hidden = true; element('use-preview-template').hidden = template.kind !== 'builtin';
+    element('preview-error').hidden = true; element('use-preview-template').hidden = !isEditableTemplate(template);
     const stage = element('template-preview-stage'); stage.replaceChildren();
     dialog.classList.toggle('connect-preview-dialog--portrait', template.ratio === '9:16' || template.kind === 'builtin');
     if (template.previewUrl) {
@@ -220,7 +230,7 @@ export function mountTemplates(root: HTMLElement, options: {
   element('close-template-preview').onclick = () => dialog.close();
   dialog.addEventListener('close', () => { previewCleanup(); previewCleanup = () => {}; preview = undefined; configurePlayback(); }, { signal: lifetime.signal });
   element('copy-preview-template').onclick = event => { if (preview) copyTemplate(preview, event.currentTarget as HTMLButtonElement); };
-  element('use-preview-template').onclick = () => { if (preview?.kind === 'builtin') { const id = preview.id; dialog.close(); options.useTemplate(id); } };
+  element('use-preview-template').onclick = () => { if (preview && isEditableTemplate(preview)) { const id = preview.id; dialog.close(); options.useTemplate(id); } };
   document.addEventListener('visibilitychange', () => { configurePlayback(); if (document.hidden) element('template-preview-stage').querySelector('video')?.pause(); }, { signal: lifetime.signal });
   function suspend() { active = false; if (request) { request.abort(); loaded = false; } clearTimeout(debounce); clearInterval(rotation); configurePlayback(); if (dialog.open) dialog.close(); previewCleanup(); }
   return {

@@ -1749,5 +1749,9 @@
   "Text {index}": "Texto {index}",
   "FFmpeg not found": "No se encontró FFmpeg",
   "FFmpeg is required to encode video.": "Se necesita FFmpeg para codificar vídeo.",
-  "Drop media here": "Suelta los archivos multimedia aquí"
+  "Drop media here": "Suelta los archivos multimedia aquí",
+  "Get the template catalogue and local index.": "Obtener el catálogo de plantillas y el índice local.",
+  "Read the details and files for one template.": "Leer los detalles y archivos de una plantilla.",
+  "Template cache unavailable; downloading again": "Caché de plantillas no disponible; descargando de nuevo",
+  "Template update failed; using cached catalogue: {message}": "Error al actualizar las plantillas; se usa el catálogo en caché: {message}"
 }

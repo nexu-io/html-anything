@@ -1749,5 +1749,9 @@
   "Text {index}": "Texte {index}",
   "FFmpeg not found": "FFmpeg introuvable",
   "FFmpeg is required to encode video.": "FFmpeg est nécessaire pour encoder les vidéos.",
-  "Drop media here": "Déposez les médias ici"
+  "Drop media here": "Déposez les médias ici",
+  "Get the template catalogue and local index.": "Obtenir le catalogue de modèles et son index local.",
+  "Read the details and files for one template.": "Lire les détails et les fichiers d’un modèle.",
+  "Template cache unavailable; downloading again": "Cache des modèles indisponible ; nouveau téléchargement",
+  "Template update failed; using cached catalogue: {message}": "Échec de la mise à jour des modèles ; utilisation du catalogue en cache : {message}"
 }

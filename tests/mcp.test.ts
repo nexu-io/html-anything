@@ -13,7 +13,7 @@ test('actual MCP stdio exposes exactly phase-one tools and rejects hidden writes
   const child = spawnSync(process.execPath, ['--experimental-strip-types', 'mcp.ts'], { input: messages.map(m => JSON.stringify({ jsonrpc: '2.0', ...m })).join('\n') + '\n', encoding: 'utf8', env: { ...process.env, MOTION_DATA_DIR: store.directory }, timeout: 10_000 });
   assert.equal(child.status, 0, child.stderr);
   const responses = child.stdout.trim().split('\n').map(line => JSON.parse(line));
-  assert.equal(responses[1].result.tools.length, 9);
+  assert.equal(responses[1].result.tools.length, 11);
   assert.ok(responses[1].result.tools.every((tool: any) => tool.name.startsWith('motion_')));
   assert.match(responses[2].result.content[0].text, /MCP_TOOL_NOT_EXPOSED/);
   assert.match(responses[3].result.content[0].text, /INVALID_ARGUMENT/);

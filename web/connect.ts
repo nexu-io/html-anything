@@ -112,6 +112,8 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
 
   const toolDescriptions: Record<string, string> = {
     motion_create_project: 'Create an editable project from a template or from scratch.',
+    motion_list_templates: 'Get the template catalogue and local index.',
+    motion_get_template: 'Read the details and files for one template.',
     motion_open_preview: 'Open the editor and preview the project.',
     motion_import_assets: 'Import media into the project.',
     motion_get_project: 'Read project context, files, assets and revision.',
