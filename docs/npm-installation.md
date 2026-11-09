@@ -29,7 +29,7 @@ npx --yes --package /absolute/dist/npm-local/openmotion-installer-0.6.3-local.1.
 
 Claude Code 和 WorkBuddy 的平铺技能目录内写入 `openmotion-install.json`，记录应用位置；共享文档链接在安装时改写为有效绝对路径。Codex/Harness 保留完整包的相对资料布局。新会话或重新加载后使用 Skills。
 
-升级前关闭旧 MCP 连接，并按 [共享编辑器说明](shared-editor.md) 停止同一数据目录的旧后台；安装后重新连接 MCP、重新加载 Skills。后台身份包含 npm 原生下载器和原生锁文件，遇到版本或代码不兼容会报错要求停止旧后台，安装器不自动结束已有进程。
+Compatible phase-one updates do not require closing existing MCP connections or stopping the same workspace's backend. Connections negotiate the API protocol and requested Tool, retaining running exports and completed results; see [shared editor recovery](shared-editor.md). The installer does not terminate existing processes. Incompatible protocols or internal legacy ABIs still require updating the connection and idle backend together. Refresh the host to discover new Tools or reload changed Skills; an already-closed transport needs host reconnection.
 
 `--skills-dir` 可选择 Codex、Claude Code、WorkBuddy 的技能根目录；Harness 使用其专属 provider 根目录，不改动用户的全局技能目录。`--codex`、`--claude`、`--dsh` 可指定可执行文件，Harness 的 `--profile` 默认 `web`；macOS 本机没有 dsh 命令时优先使用已安装桌面包的官方 CLI。Windows 应使用能直接启动的宿主可执行文件。注册阶段使用宿主自身配置根（`CODEX_HOME`、`CLAUDE_CONFIG_DIR`、`DSH_HOME`、`WORKBUDDY_CONFIG_DIR`）；应用根始终由 `--home` 控制，二者不混用。
 

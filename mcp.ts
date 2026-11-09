@@ -1,4 +1,6 @@
 import { createInterface } from 'node:readline';
+import { statSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { WorkspaceStore } from './workspace.ts';
 import { ensureService, VERSION } from './preview.ts';
 import { tools, callTool } from './mcp-tools.ts';
@@ -14,6 +16,8 @@ export function mcpRegistry(profile = releaseProfile) { return createToolRegistr
 export const releaseRegistry = mcpRegistry();
 export const publicTools = releaseRegistry.tools;
 const selections = new WeakMap<WorkspaceStore, { sessionId: string; projectId: string }>();
+const runtimeRoot = fileURLToPath(new URL('./', import.meta.url));
+const runtimeDirectory = statSync(runtimeRoot);
 
 export async function rpc(message: any, store = new WorkspaceStore(), registry = releaseRegistry, connection?: { selection: Selection }) {
   if (!message || message.jsonrpc !== '2.0' || typeof message.method !== 'string') return { jsonrpc: '2.0', id: message?.id ?? null, error: { code: -32600, message: 'Invalid request' } };
@@ -29,6 +33,13 @@ export async function rpc(message: any, store = new WorkspaceStore(), registry =
   if (message.method === 'tools/list') return result({ tools: registry.tools });
   if (message.method === 'tools/call') {
     try {
+      if (registry.profile !== 'phase1') {
+        const current = statSync(runtimeRoot, { throwIfNoEntry: false });
+        if (!current || current.dev !== runtimeDirectory.dev || current.ino !== runtimeDirectory.ino) throw Object.assign(
+          new Error('The Motion plugin directory was replaced or removed. Reload this internal legacy MCP connection before retrying; no project operation was applied.'),
+          { code: 'MCP_RUNTIME_RELOAD_REQUIRED' },
+        );
+      }
       if (!registry.tools.some(tool => tool.name === message.params?.name)) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + String(message.params?.name));
       if (registry.profile === 'phase1') {
         const name = message.params.name;
@@ -37,7 +48,7 @@ export async function rpc(message: any, store = new WorkspaceStore(), registry =
         validateInput(definition.inputSchema, args);
         if (name === 'motion_open_preview' && !args.projectId && !args.sessionId && args.action !== 'record_review') args.sessionId = selections.get(store)?.sessionId;
         if (args.sessionId === undefined) delete args.sessionId;
-        const service = await ensureService(store), origin = new URL(service.previewUrl).origin;
+        const service = await ensureService(store, undefined, name), origin = new URL(service.previewUrl).origin;
         const response = await fetch(origin + '/motion-api/phase1/call', { method: 'POST', headers: await editorHeaders(store, origin),
           body: JSON.stringify({ name, arguments: args }), signal: AbortSignal.timeout(600_000) });
         const value = await response.json();
@@ -55,8 +66,10 @@ export async function rpc(message: any, store = new WorkspaceStore(), registry =
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Tool failed';
       const code = (error as any).code || /^([A-Z][A-Z_]+):?/.exec(message)?.[1] || 'TOOL_FAILED';
+      const runtimeFailure = ['MCP_RUNTIME_RELOAD_REQUIRED', 'EDITOR_RUNTIME_INCOMPATIBLE'].includes(code);
       return result({ isError: true, content: [{ type: 'text', text: message }], structuredContent: { error: { code, message,
-        applied: /^(INVALID_|VERSION_CONFLICT|PROJECT_NOT_|PROJECT_SESSION_|REQUEST_ID_CONFLICT|MCP_TOOL_NOT_EXPOSED|EXPORT_NOT_|TEMPLATE_NOT_)/.test(code) ? false : 'unknown' } } });
+        ...(runtimeFailure && (error as any).details ? { details: (error as any).details } : {}),
+        applied: runtimeFailure || /^(INVALID_|VERSION_CONFLICT|PROJECT_NOT_|PROJECT_SESSION_|REQUEST_ID_CONFLICT|MCP_TOOL_NOT_EXPOSED|EXPORT_NOT_|TEMPLATE_NOT_)/.test(code) ? false : 'unknown' } } });
     }
   }
   return { jsonrpc: '2.0', id: message.id, error: { code: -32601, message: 'Method not found' } };
