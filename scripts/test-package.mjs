@@ -121,7 +121,7 @@ export async function build(target, version, profile = releaseProfile, templateE
   await writeFile(path.join(stage, 'release.json'), JSON.stringify(metadata, null, 2) + '\n');
   await cp(path.join(root, 'docs/test-packages.md'), path.join(stage, 'INSTALL.md'));
   const archive = path.join(directory, name + '.zip');
-  await run('zip', ['-q', '-r', '-y', '-UN=UTF8', archive, name], { cwd: directory, env: { ...process.env, ...(process.platform === 'linux' ? { LC_ALL: 'C.UTF-8' } : {}) } });
+  await run('zip', ['-q', '-r', '-y', ...(process.platform === 'linux' ? ['-UN=UTF8'] : []), archive, name], { cwd: directory, env: { ...process.env, ...(process.platform === 'linux' ? { LC_ALL: 'C.UTF-8' } : {}) } });
   const sum = await sha256(archive);
   await writeFile(archive + '.sha256', `${sum}  ${path.basename(archive)}\n`);
   const result = { ...metadata, files: [{ name: path.basename(archive), sha256: sum, platform: target.split('-')[0], arch: info.arch, kind: 'archive' }] };
