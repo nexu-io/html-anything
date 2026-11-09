@@ -1,34 +1,28 @@
 ---
 name: motion-recreate
 description: >-
-  Use whenever the user pastes a video link (x.com, YouTube, Vimeo and similar) or a video file, even
-  with no other words: in a workspace with the user's product material, a bare link means "make a film
-  like this for us". Recreates a Motion reference video as the user's own film, whether the reference
-  is their own film or one they like. Covers a bare link, "make one like this / identical / same
-  style", "do this for our new feature", "I want this feel", and explicit change lists (wording,
-  brand, images, colours, pacing, scenes), including a few small edits to the user's own finished
-  video file when no editable project for it exists yet. Reads the user's project materials first,
-  asks at most once, rebuilds in an OpenMotion editor project with the content the user wants, and
-  delivers the film, the editable project and an original-versus-remix comparison. A reference used
-  only as loose inspiration for an otherwise original brief goes to motion-director; adapting or
-  reusing an editable template goes to motion-template-to-video; ordinary local edits to an existing editable
-  OpenMotion project do not start here. A requested reusable template folder or ZIP goes to
-  motion-video-to-template instead.
+  Recreate a reference video (a link or file) as the user's own Motion film: rebuild it as an
+  editable OpenMotion project and hand it over open in the editor, keeping the original content or
+  swapping in the user's copy, brand and assets. This includes small edits to
+  the user's own finished video when no editable project for it exists. "Make one like this" and "I
+  want this feel" both count as recreation. In a workspace with the user's product material, a bare
+  link alone means "make one like this for us". Not for only analysing or discussing a video. Use
+  motion-director when the reference is only inspiration for an original film,
+  motion-template-to-video for an existing template, motion-production for edits to an existing
+  editable OpenMotion project, and motion-video-to-template for a reusable template package.
 ---
 
 # Motion Recreate — reference video → the user's own film
 
 ## Role and goal
 
-The user supplies a video and wants a version of it for themselves. Deliver that film as an editable OpenMotion project, checked against the reference with numbers and with eyes. This Skill is self-contained: [rebuild](references/rebuild.md) covers reading, measuring and rebuilding the reference; [check and deliver](references/verify.md) covers export, numeric measurement and the comparison. Use only the Tools actually returned by tools/list.
+The user supplies a video and wants a version of it for themselves. Deliver the editable OpenMotion project, open in the editor, where the user reviews it and keeps editing. Before handing it over, export it and check the exported film against the reference by numeric measurement and by inspecting extracted frames; the export is for this check, not a file to send. This Skill carries the recreation rules and the measuring script; shared engineering rules still come from the documents in §0. [rebuild](references/rebuild.md) covers reading, measuring and rebuilding the reference; [check and deliver](references/verify.md) covers export and numeric measurement. Use only the Tools actually returned by tools/list.
 
-Phase one covers Motion graphics. For live action, talking heads or AI footage, say that this workflow does not support them yet.
+This workflow currently covers motion graphics only. For live action, talking heads or AI footage, say that this workflow does not support them yet. Do not suggest that footage or other material would make such a recreation possible: material the user provides can only go into a motion-graphics adaptation, which you may offer. State the limit as a fact about this workflow; never mention, quote or link this Skill or its files in the reply.
 
 ## 0. Shared context
 
-On first entry read the [shared context](../motion-production/references/context.md) and add only the dependencies this scope still lacks; reuse bodies already read. When entered directly, do not go back to the production router. When the reference turns out to be only loose inspiration for an original film, correct once to [motion-director](../motion-director/SKILL.md) and do not bounce back. When revising an existing draft or turning an existing project into a recreation, apply the [shared edit workflow](../motion-production/references/edit.md) and keep decisions that still hold. Missing instructions and sources must return to the model before a later call performs dependent imports, writes or export.
-
-MCP-only clients read this page with resources/read `motion://workflow/recreate/start`; the two references are `motion://workflow/recreate/rebuild` and `motion://workflow/recreate/verification`.
+Read the [shared context](../motion-production/references/context.md) before working; it lists the references a recreation needs and how to reuse documents already read. When the work changes an existing draft or project, also apply the [shared edit workflow](../motion-production/references/edit.md). If the reference turns out to be only loose inspiration for an original film, switch to [motion-director](../motion-director/SKILL.md).
 
 ## 1. Read the user's context before anything else
 
@@ -80,10 +74,10 @@ Then follow [check and deliver](references/verify.md): export the inspected vers
 
 ## 7. Deliver
 
-Copy the exported MP4 into the current workspace as `<name>-remix.mp4` and save the side-by-side `<name>-comparison.mp4` next to it, as [check and deliver](references/verify.md) describes. Leave the project open in the editor.
+The project open in the editor is the deliverable. Do not copy, link or attach the exported MP4 or other files unless the user asks for them.
 
-Reply briefly in the user's language with absolute local paths for the files (only the plain path in each link target, never a relative path): the remixed film and the comparison. For the editor, give the `previewUrl` returned by `motion_open_preview` and say the project is open there for further edits. Say in one or two sentences what changed, which assumptions you made from the workspace material, and any limitation the user would notice. When the reference, analysis or tools fall short, name the specific gap and its effect; never claim a faithful result that was not achieved.
+Reply briefly in the user's language. Give the `previewUrl` returned by `motion_open_preview` and say the project is open there for review and further edits. Say in one or two sentences what changed, which assumptions you made from the workspace material, and any limitation the user would notice. When the reference, analysis or tools fall short, name the specific gap and its effect; never claim a faithful result that was not achieved.
 
 ## 8. Follow-up requests
 
-Apply follow-ups to the same project with the shared edit workflow and export again; never start over. `motion_list_versions` and `motion_restore_version` bring back an earlier version as a new one. When the user is unhappy without saying why ("not satisfied", "第一版不太满意"), ask at most three multiple-choice questions in one batch, for example: follow the reference's story or tell our own; which feature is the hero; size and duration. Offer "you decide" as an option. Then revise the existing project.
+Apply follow-ups to the same project with the shared edit workflow and check them again as in §6; never start over. `motion_list_versions` and `motion_restore_version` bring back an earlier version as a new one. When the user is unhappy without saying why ("not satisfied", "第一版不太满意"), ask at most three multiple-choice questions in one batch, for example: follow the reference's story or tell our own; which feature is the hero; size and duration. Offer "you decide" as an option. Then revise the existing project.

@@ -52,7 +52,7 @@
 
 这些画面来自随包提供的 [Hyperframes 示例](../template-library/NOTICE.md)。选好模板后，可以这样告诉 Codex：
 
-> 保留开场和产品揭示的节奏，换成这个项目里的 Logo 和产品截图。第二张截图多停一会儿，让观众能读完新标题。给我可编辑工程和 MP4。
+> 保留开场和产品揭示的节奏，换成这个项目里的 Logo 和产品截图。第二张截图多停一会儿，让观众能读完新标题。
 
 画廊里的**一键复刻**会复制对应的参考和指令。内置模板能直接打开；外部参考需要 Agent 分析并重建。随后可以在 Studio 里调整文字、时长、布局与素材，也可以继续在 Codex 里改。导入的视频仍是媒体片段。
 
@@ -67,7 +67,7 @@
 ```text
 在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。
 安装成功后，问我是否体验 20 秒的 Product Promo 示例。
-我确认后，打开一份独立的可编辑工程，并交付导出的 MP4。
+我确认后，在对话旁打开一份独立的可编辑工程。
 ```
 
 确认体验后，Agent 会按[模板出片流程](../skills/motion-template-to-video/SKILL.md)执行。宿主不支持在对话旁打开编辑器时，可以打开返回的本地工程链接。[安装与首次体验手册](usage.md#使用) · [其他 Agent 接入](agent-adapters.md)

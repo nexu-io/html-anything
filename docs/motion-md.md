@@ -32,7 +32,7 @@ Use ordinary Markdown headings, prose and tables. The sections above are a propo
 2. Write a Motion MD using the [example](examples/product-launch.MOTION.md). Replace its illustrative content and record the real sources.
 3. Give the file explicitly to your Agent with the project and a task such as:
 
-   > Read this Motion MD and the attached brand assets. Use the specification to adapt our product-launch project. Keep the listed constraints, make the requested edits, and deliver the editable project and MP4.
+   > Read this Motion MD and the attached brand assets. Use the specification to adapt our product-launch project. Keep the listed constraints and make the requested edits in the editable project.
 
 4. The Agent follows the existing creation/template workflow and writes the native project. Preview and revise it in openmotion.
 5. Review the final video and record the actual version and result. A file with a “Review” section is not automatically verified.

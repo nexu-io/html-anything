@@ -29,7 +29,7 @@ Agent 结合当前目标、保持项与工程状态选择本轮入口；工程�
 | --- | --- |
 | 原创新片／大幅重编 | [动作脚本](../../motion-director/references/action-script.md)、[动态表现](../../motion-director/references/motion-craft.md)、[动作短句](../../motion-director/references/motion-phrases.md)、[审片](../../motion-director/references/motion-review.md) |
 | 新设计声音叙事或工程音轨调整，含画面锁定 | [声音叙事](../../motion-director/references/sound-narrative.md)、[动作脚本的声画锚点](../../motion-director/references/action-script.md)、审片；只应用声音相关内容，不启动原创流程 |
-| 仅原样交付与当前源文件对应的模板 preview.mp4 | Follow motion-template-to-video for file identity/existence/decode checks and the [editable preview handoff](native.md#editable-preview-handoff); load no authoring/export dependencies. An edited project cannot reuse the original template preview. |
+| 原样使用模板、不做修改 | Follow motion-template-to-video: the [editable preview handoff](native.md#editable-preview-handoff) is the delivery; load no authoring/export dependencies. An edited project cannot reuse the original template preview. |
 | 使用／适配可编辑模板，需要创建、编辑或渲染工程 | [模板能力说明](templates.md)、审片；默认内容的草稿也需读模板能力说明 |
 | 明确要求视频转可复用模板 | [motion-video-to-template](../../motion-video-to-template/SKILL.md) 的制作与打包参考按阶段读取；制作决策、审片及实际参考视频 |
 | 复刻视频 | [制作决策](../../motion-director/references/production-decisions.md)、审片，另实际检查参考视频 |
@@ -69,7 +69,7 @@ Motion 质量是基础职责，不以用户是否说“丝滑”作为加载条�
 
 工程操作前读 [运行规范](production.md)；编写原生内容前读 [Native authoring](native.md) 及返回的固定版本引擎指南。确认活动项目和最新 revision，复用已有工程，只有任务确实需要时创建或切换项目。冲突时检查新源文件，不盲目重放旧写入。
 
-需要新渲染的导出/成片交付读 [验证](verification.md)。已有适用的导出任务时先查询，不重复提交；验证依据须对应实际 revision 和文件。仅原样交付模板已有预览按 motion-template-to-video 的文件核验分支执行。starter 默认停在可编辑草稿，但用户本次明确要求成片或导出时，以用户范围为准。
+需要新渲染的导出/成片交付读 [验证](verification.md)。已有适用的导出任务时先查询，不重复提交；验证依据须对应实际 revision 和文件。原样使用模板按 motion-template-to-video 在编辑器中交付，不导出。starter 默认停在可编辑草稿，但用户本次明确要求成片或导出时，以用户范围为准。
 
 ## 防止漏读、重复与循环
 

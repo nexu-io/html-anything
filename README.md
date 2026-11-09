@@ -52,7 +52,7 @@ These are the editorial directions for the **planned public collections site**. 
 
 These frames come from the bundled [Hyperframes examples](template-library/NOTICE.md). Pick a template and ask Codex:
 
-> Keep the opening and the pace of the reveal. Use our logo and the product screenshots in this repo. Hold the second screen long enough to read the new headline. Give me the editable project and an MP4.
+> Keep the opening and the pace of the reveal. Use our logo and the product screenshots in this repo. Hold the second screen long enough to read the new headline.
 
 The gallery's **one-click recreate** action copies the selected reference and instructions for your Agent. A bundled or Prism template opens directly; external footage needs analysis and reconstruction. In Studio you can change the text, timing, layout and assets, or ask your Agent to make the same edit. Imported footage stays a clip.
 
@@ -69,7 +69,7 @@ Paste this into a Codex conversation:
 ```text
 From this checkout, install openmotion with bash scripts/install-motion.command.
 Once installation succeeds, ask whether I'd like the 20-second Product Promo demo.
-If I accept, open an independent editable project and deliver its MP4.
+If I accept, open an independent editable project beside the conversation.
 ```
 
 After you accept, the Agent follows the [template-to-video workflow](skills/motion-template-to-video/SKILL.md). If your host cannot open the editor beside the conversation, use the returned local project link. [Installation and first-demo guide (Chinese)](docs/usage.md#使用) · [Other Agent adapters](docs/agent-adapters.md)
