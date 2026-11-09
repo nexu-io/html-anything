@@ -98,7 +98,13 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 - npm run package:phase1 构建 Studio 并生成 dist/motion-0.6.2-phase1.zip；npm run package:plugin 默认也沿用 phase1。该插件 ZIP 不带原生 Node/浏览器/FFmpeg：使用支持的本机 Node、首次安装锁定依赖，FFmpeg/ffprobe 需本机可用。
 - 四宿主薄适配器从同一运行时导出，scope.json 记录 profile，复制上述5个 Skill；不另维护 allowlist。数据目录放在 runtime/插件缓存之外。资源指导通过本地文件或 resources/list、resources/read 取得，不另增加 workflow Tool。
 - 完整原生测试包的 build <target> <beta-version> [phase1|legacy] 使用同表检查并写 release.json；本次不声称重新制作/验收各平台原生安装包。
-- 内部兼容 handler 与显式 legacy 开发构建保留，不能作为本次一期发布；旧调用在一期包中明确 MCP_TOOL_NOT_EXPOSED。宿主升级后须刷新发现和 Skill，不能继续缓存旧 schema。
+- Internal compatibility handlers and explicit legacy development builds remain separate; hidden calls return MCP_TOOL_NOT_EXPOSED in phase-one packages. Existing supported phase-one calls continue across compatible updates. Newly added Tools, changed discovery metadata and Skills require host refresh before use.
+
+### Phase-one API compatibility
+
+`shared/phase1-tools.ts` defines API protocol 1 and the available Tool names. Both editor and preview health advertise these capabilities. A phase-one stdio adapter can forward to another version/build only when the backend explicitly supports the same API protocol and requested Tool; the backend validates the complete input again before execution. Service, workspace, instance and authority protocol checks still apply. Internal legacy calls retain exact version/build checks.
+
+Protocol 1 preserves existing request/response shapes and semantics. New Tools and optional fields are additive; incompatible required fields, removed fields or changed semantics must increment the protocol. A supported older connection keeps its project binding, stable request IDs and existing export queries through a compatible plugin or backend replacement without another MCP initialization. Running exports stay with the live authority; recovery does not terminate it or replay an uncertain mutation. An already-closed host transport and an incompatible protocol cannot be repaired by this negotiation.
 
 ## 开发顺序与放行
 

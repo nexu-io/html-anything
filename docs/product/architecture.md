@@ -68,6 +68,8 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 ### 应保持的架构约束
 
 1. **两类入口共用领域能力。** Studio 与 MCP 使用同一 Gateway 合约和持久化数据。macOS 的 stdio 适配器按数据目录连接唯一后台，共用网关、任务与工程能力；每条连接绑定自己的工程。Windows / Linux 保留原生命周期。唯一后台依赖系统文件锁与私有身份验证，不以固定端口或 PID 文件作为唯一依据，见 [共享编辑器](../shared-editor.md)。
+
+   Public phase-one MCP calls negotiate a stable API protocol and supported Tool independently of the editor version/build. Compatible plugin updates preserve existing stdio connections, workspace/project bindings and active exports; they do not restart the authority or replay mutations. Private authority identity and protocol checks remain strict, and internal legacy calls retain exact version/build checks. This boundary does not refresh host discovery metadata or revive a transport the host already closed; see [API compatibility](../mcp-phase1-tools.md#phase-one-api-compatibility).
 2. **作品与执行配置分开。** 原生工程包含作品源文件与媒体；供应商凭据、模型默认路由和生成任务属于工作区。项目包可以交给别人继续编辑，使用者无需继承原作者的 Key。
 3. **素材成功不自动成为编辑成功。** 生成任务产生候选文件，采用结果才触发原生放置/替换。撤销作品修改不删除候选文件，也不撤销已经发生的供应商调用或费用。
 4. **上下文不能随等待漂移。** 提交时固定生成工程和参考输入，采用时验证编辑目标；切换工程、合成、删除或改换原素材引用后，旧回调不得覆盖新目标。
