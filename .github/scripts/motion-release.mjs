@@ -170,7 +170,8 @@ export async function publishNpm(directory, inputs, { fetcher = fetch, run = run
     previousLatest: before.tags.latest ?? null, status: before.version ? 'already-published-identical' : 'publish-started' };
   await writeJSON(path.join(directory, 'npm-publication.json'), record);
   if (!before.version) {
-    await run('npm', ['publish', path.join(directory, candidate.tgz), '--access', 'public', '--tag', 'test', '--ignore-scripts', '--registry=https://registry.npmjs.org/']);
+    // OIDC authenticates this publisher; its main SHA is not the prebuilt application's source.
+    await run('npm', ['publish', path.join(directory, candidate.tgz), '--access', 'public', '--tag', 'test', '--ignore-scripts', '--provenance=false', '--registry=https://registry.npmjs.org/']);
     record.status = 'published-awaiting-registry'; await writeJSON(path.join(directory, 'npm-publication.json'), record);
   }
   return record;

@@ -61,12 +61,50 @@ function registry(candidate, exists = true, tag = candidate.version, latest = '0
 
 test('npm publishes only new exact bytes; identical retry and archive-only never write, mismatches fail', async t => {
   const f = await candidateFixture(t); let calls = 0;
-  const run = async (command, args) => { calls++; assert.equal(command, 'npm'); assert(args.includes('--ignore-scripts') && args.includes('test')); assert.equal(args[1], path.join(f.directory, f.candidate.tgz)); };
+  assert.notEqual(f.candidate.sourceCommit, f.candidate.workflow.sha, 'Application and workflow source identities are independent');
+  const run = async (command, args) => { calls++; assert.equal(command, 'npm'); assert(args.includes('--ignore-scripts') && args.includes('test')); assert(args.includes('--provenance=false'), 'Do not attest the publication main SHA as the prebuilt application source'); assert.equal(args[1], path.join(f.directory, f.candidate.tgz)); };
   await publishNpm(f.directory, f.inputs, { run, fetcher: registry(f.candidate, false) }); assert.equal(calls, 1);
   await publishNpm(f.directory, f.inputs, { run, fetcher: registry(f.candidate) });
   await publishNpm(f.directory, { ...f.inputs, action: 'archive-only' }, { run, fetcher: registry(f.candidate) }); assert.equal(calls, 1);
   await assert.rejects(publishNpm(f.directory, { ...f.inputs, action: 'archive-only' }, { run, fetcher: registry(f.candidate, false) }), /existing identical/);
   await assert.rejects(publishNpm(f.directory, f.inputs, { run, fetcher: registry({ ...f.candidate, integrity: 'different' }) }), /different bytes/); assert.equal(calls, 1);
+});
+
+test('partial publication retries use the retained producer artifact IDs across attempts', async () => {
+  const workflow = await readFile(new URL('../.github/workflows/motion-publish-test.yml', import.meta.url), 'utf8');
+  const jobs = Object.fromEntries(workflow.split('\njobs:\n')[1].split(/(?=^  [\w-]+:\n)/m).filter(s => s.trim()).map(s => [s.match(/^  ([\w-]+):\n/)[1], s]));
+  const producers = ['verify', 'npm', 'registry-mac', 'registry-windows'];
+  const render = (value, attempt) => value.replaceAll('${{ github.run_id }}', '800').replaceAll('${{ github.run_attempt }}', String(attempt));
+  for (const id of producers) {
+    assert(jobs[id], 'A platform needs its own retained output: ' + id);
+    assert(jobs[id].includes('artifact_id: ${{ steps.artifact.outputs.artifact-id }}'), 'Expose the actual uploaded artifact ID');
+    assert(jobs[id].includes('        id: artifact\n'));
+  }
+  const downloads = id => [...jobs[id].matchAll(/artifact-ids: \$\{\{ needs\.([\w-]+)\.outputs\.artifact_id \}\}/g)].map(m => m[1]);
+  assert.deepEqual(downloads('npm'), ['verify']);
+  assert.deepEqual(downloads('registry-mac'), ['verify']);
+  assert.deepEqual(downloads('registry-windows'), ['verify']);
+  assert.deepEqual(downloads('snapshot'), producers);
+  assert(jobs.snapshot.includes('needs: [verify, npm, registry-mac, registry-windows]'));
+  assert(jobs.npm.includes('      actions: read\n'), 'The credentialed npm job needs only read access to input artifacts');
+  for (const job of Object.values(jobs)) {
+    for (const step of job.split(/(?=^      - )/m).filter(s => s.includes('uses: actions/download-artifact@'))) {
+      assert(step.includes('github-token: ${{ github.token }}') && step.includes('run-id: ${{ github.run_id }}'), 'Resolve exact IDs through the run-scoped REST API');
+      assert(!step.includes('github.run_attempt'), 'A consumer must not guess the producing attempt');
+    }
+  }
+  for (const rerun of [[], ['registry-mac'], ['registry-windows'], ['registry-mac', 'registry-windows'], ['npm', 'registry-mac', 'registry-windows'], producers]) {
+    const stored = new Map(), outputs = {};
+    for (const [index, id] of producers.entries()) {
+      const name = jobs[id].match(/          name: ([^\n]+)/)[1];
+      const oldID = String(100 + index); stored.set(oldID, render(name, 1)); outputs[id] = oldID;
+      if (rerun.includes(id)) { const newID = String(200 + index); stored.set(newID, render(name, 2)); outputs[id] = newID; }
+    }
+    for (const id of downloads('snapshot')) {
+      assert(stored.has(outputs[id]), 'The exact producer artifact remains available');
+      assert.equal(stored.get(outputs[id]).endsWith(rerun.includes(id) ? '-2' : '-1'), true);
+    }
+  }
 });
 
 function storage(candidate) {

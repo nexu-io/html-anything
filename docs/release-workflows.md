@@ -2,6 +2,15 @@
 
 These workflows implement controlled delivery of the complete `@openmotion/app` npm application. They do not run on a push, PR merge, tag or schedule. This feature PR does not enable them on the default branch, configure npm trust, publish anything, change `main` or rename the repository.
 
+| Capability | Test version | Stable version |
+| --- | --- | --- |
+| Package builder | Supports `X.Y.Z-test.N[.N]` | Supports `X.Y.Z` |
+| Manual candidate and publication workflows | Implemented here; require administrator enablement | Not implemented |
+| npm channel | `test` | Planned: verify under `stage`, then separately authorize `latest` |
+| Hosted guide paths | Test moving/versioned paths | Stable moving/versioned paths supported by the storage helper; no stable publication job |
+
+Both public channels use prod template defaults. A test software version does not select private DEV templates. Stable acceptance rules exist in [the acceptance guide](release-guide.md); they are not an automated stable release pipeline.
+
 ## Administrator setup before first use
 
 The current default `main` contains the legacy project. GitHub requires a manual workflow to be registered on the default branch before showing its Run workflow entry. Register the reviewed release controls on `main` through a separately authorized PR; do not copy the Motion application or force-push its history. Both entries must run with **Use workflow from: main**. Feature-branch invocations fail closed.
@@ -63,11 +72,13 @@ An independent environment reviewer approves the protected jobs. A rerun or work
 The pipeline then:
 
 1. Verifies the originating repository, manual workflow/main ref, successful run/attempt, GitHub artifact digest and all candidate hashes; rechecks integrated source ancestry and rescans source plus both archives using the trusted control policy.
-2. In the protected npm job, publishes **only the accepted tgz bytes** with `--tag test --ignore-scripts`. An existing identical version resumes without another publish; a different integrity fails. `archive-only` requires an existing identical version and never changes npm tags.
+2. In the protected npm job, publishes **only the accepted tgz bytes** with `--tag test --ignore-scripts --provenance=false`. An existing identical version resumes without another publish; a different integrity fails. `archive-only` requires an existing identical version and never changes npm tags.
 3. On separate macOS 26 arm64 and Windows Server 2025 x64 runners, downloads the exact registry version anonymously using empty npm configs and a fresh cache, verifies SHA256/SHA512, installs a pinned Codex CLI into a temporary prefix, runs isolated setup/repeat setup, prepares Chromium/FFmpeg/ffprobe, and checks MCP Tools/resources and installed Skill files. This is native technical acceptance; Windows Server results do not replace Windows desktop/real model/human playback acceptance. No model credentials are provided.
 4. Requires both platform reports, confirms exact registry identity and test tag, rejects an unexpected `latest` change, then writes immutable R2 snapshots and checks the **canonical public bytes**. Only after all of these succeed does `publish-test` conditionally advance the default test guide using its prior ETag. `archive-only` never reads or writes the default guide.
 
 The workflow does not move `latest`, publish a stable version, create a GitHub Release, announce a release or update installed clients. Keep the package pinned by exact version in every guide. Node/Agent and checked native downloads remain prerequisites as documented in [installation](npm-installation.md).
+
+OIDC still authenticates the publisher. Automatic npm provenance is explicitly disabled: it would describe the publication workflow's `main` SHA, while the accepted application was built from a different selected source SHA. `candidate.json`, the embedded manifest, source/lock hashes and the immutable release record provide the actual application identity and candidate build reference. These records are not a signed build-provenance attestation. Supporting such an attestation requires a separate implementation that binds the real candidate build and its inputs; do not substitute the workflow SHA or rewrite GitHub's source context.
 
 ## Immutable snapshots and moving entries
 
@@ -86,6 +97,7 @@ Actions retains each npm publication state and R2 attempt/prior default instruct
 
 - A failed source/package scan blocks the candidate or publication before credentials are used. Gitleaks 8.30.1 is checksum-pinned; source-controlled ignore files and inline allow markers cannot bypass the trusted policy. Reports expose rule/path/line, never matched secrets. Targeted rules also reject private files, internal links and personal paths. Narrow exceptions cover the already public DEV routing hostname, synthetic redaction fixtures and the exact approved public analytics ingestion identifier. Scans cover the selected source tree and final package, **not all historical Git objects** or business classification of every binary asset; reviewers still inspect content, dependencies and licenses.
 - npm success followed by registry/platform/R2 failure leaves the default guide unchanged. Inspect `npm-publication.json`, the failed job and `release-attempt.json`/`publication.json`. The npm version may already be public; do not rebuild, overwrite or blindly republish it. Rerun with the same candidate/hash/acceptance digest after fixing infrastructure. If bytes change, start a new version.
+- GitHub's **Re-run failed jobs** and **Re-run all jobs** are supported. Verify, npm and each native platform expose their actual immutable upload ID as a job output. A downstream retry downloads those retained producer IDs within the same workflow run instead of guessing names from its own attempt number. Mac and Windows have separate outputs, so a failed Mac check can rerun while retaining the successful Windows report. Each attempt still creates new artifacts; previous attempts and the original candidate are not overwritten. Expired/deleted producer artifacts fail the download rather than falling back to another package.
 - Snapshot writes use conditional create and byte comparison. Identical existing objects resume; any different version object stops the run. A CDN readback failure stops promotion. A failure after `fixed-write-attempted` may mean the default write completed: inspect storage and canonical URL before recovery.
 - `archive-only` is for an identical existing npm version and missing immutable snapshots. It does not restore a missing npm `test` tag or roll back a moving guide. Those are separate reviewed channel/recovery actions. An unexpected `latest` change requires investigation; this workflow does not silently remove or rewrite it.
 - Reverting a guide or npm tag does not downgrade clients or restore project data. Use an accepted compatible reinstall or retained backup according to [recovery](release-guide.md#recovery-and-feedback). If no compatible prior version exists, state that.

@@ -108,6 +108,6 @@ For defects, include exact package/app version, source SHA, OS/CPU, Node/Agent v
 
 ## Shared Agent installation entry
 
-The hosted [installation guide template](install.md) provides the short Agent entry. Ordinary CI retains a candidate preview; the controlled guide mode fetches an already published exact npm version before any R2 upload. Repository R2 configuration, channel acceptance and an executable manual workflow entry are required before upload. See [hosted instruction publication](release-guide.md#hosted-installation-instructions).
+The hosted [installation guide template](install.md) provides the short Agent entry. Ordinary CI retains a candidate preview; the separate test publication workflow verifies the accepted candidate, publishes the same bytes, checks the exact registry installation and archives immutable version instructions before advancing the moving test guide. Repository R2 configuration, channel acceptance and enabled manual workflow entries are prerequisites. See [hosted instruction publication](release-guide.md#hosted-installation-instructions).
 
 Maintainers: see [manual candidate and test publication workflows](release-workflows.md) for fixed source/version selection, immutable snapshots, registry verification and recovery. A candidate artifact is not a published npm version.
