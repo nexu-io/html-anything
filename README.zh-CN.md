@@ -28,7 +28,7 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。�
 
 复刻结果是一份可编辑的 HTML 工程，可以在 Studio 里微调剪辑，再导出 MP4。
 
-[完整中文 README](docs/README.zh-CN.md) · [场景与复刻效果](docs/README.zh-CN.md#showcase) · [核心卖点](docs/README.zh-CN.md#features) · [安装与技术文档](docs/README.zh-CN.md#technical-guide)
+[完整中文 README](docs/README.zh-CN.md) · [场景与复刻效果](docs/README.zh-CN.md#showcase) · [为什么选择 OpenMotion](docs/README.zh-CN.md#features) · [安装与技术文档](docs/README.zh-CN.md#technical-guide)
 
 ## 致谢 / Acknowledgements
 

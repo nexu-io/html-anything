@@ -20,7 +20,7 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign on YouTube" /></a>
 </p>
 
-<p align="center"><a href="#showcase">Examples</a> · <a href="#features">Features</a> · <a href="#technical-guide">Setup & architecture</a></p>
+<p align="center"><a href="#showcase">Examples</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a></p>
 
 <picture>
   <source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg">
@@ -316,7 +316,7 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 
 <a id="features"></a>
 
-## Core features
+## Why OpenMotion
 
 <a id="video-is-code"></a>
 

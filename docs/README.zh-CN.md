@@ -20,7 +20,7 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
 </p>
 
-<p align="center"><a href="#showcase">场景与复刻效果</a> · <a href="#features">核心卖点</a> · <a href="#technical-guide">安装与技术文档</a></p>
+<p align="center"><a href="#showcase">场景与复刻效果</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a></p>
 
 <picture>
   <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg">
@@ -318,7 +318,7 @@ OpenMotion 是 **OpenDesign 推出的首个全栈 Agentic 视频生成器**。�
 
 <a id="features"></a>
 
-## 核心卖点
+## 为什么选择 OpenMotion
 
 <a id="what-is-openmotion"></a> <a id="openmotion-是什么"></a> <a id="video-is-code"></a>
 
