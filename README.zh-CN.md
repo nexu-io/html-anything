@@ -1,6 +1,8 @@
 [English](README.md) · **简体中文** · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-# OpenMotion
+<a id="openmotion"></a>
+
+# 🎬 OpenMotion
 
 **Reverse engineering for any video**
 
@@ -22,13 +24,13 @@
 
 OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
 
-- **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
-- OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批合集包含 **100 多份品牌宣传片 Motion.md**，另有 **890 多项创作资源**。
-- **支持图片、视频、音乐和语音生成。** 缺少的镜头、配乐或旁白，都可以生成后放到同一条时间轴上。
+- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
+- 🧩 OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批合集包含 **100 多份品牌宣传片 Motion.md**，另有 **890 多项创作资源**。
+- 🎛️ **支持图片、视频、音乐和语音生成。** 缺少的镜头、配乐或旁白，都可以生成后放到同一条时间轴上。
 
 复刻结果是一份可编辑的 HTML 工程，可以在 Studio 里微调剪辑，再导出 MP4。
 
-[完整中文 README](docs/README.zh-CN.md) · [使用场景与复刻效果示例](docs/README.zh-CN.md#showcase) · [为什么选择 OpenMotion](docs/README.zh-CN.md#features) · [安装与技术文档](docs/README.zh-CN.md#technical-guide)
+[完整中文 README](docs/README.zh-CN.md) · [使用场景与复刻效果示例](docs/README.zh-CN.md#showcase) · [为什么选择 OpenMotion](docs/README.zh-CN.md#features) · [安装与技术文档](docs/README.zh-CN.md#technical-guide) · [社区与贡献](docs/README.zh-CN.md#community)
 
 ## 致谢 / Acknowledgements
 

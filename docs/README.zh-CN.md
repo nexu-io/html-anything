@@ -1,6 +1,8 @@
 [English](../README.md) · **简体中文** · [日本語](README.ja.md) · [한국어](README.ko.md)
 
-<h1 align="center">OpenMotion</h1>
+<a id="openmotion"></a>
+
+<h1 align="center">🎬 OpenMotion</h1>
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
@@ -20,7 +22,7 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
 </p>
 
-<p align="center"><a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a></p>
+<p align="center"><a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
 
 <picture>
   <source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg">
@@ -29,15 +31,16 @@
 
 OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
 
-- **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
-- OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。品牌宣传片的拆解可以随工程一起分享。
-- **支持图片、视频、音乐和语音生成。** 缺少的镜头、配乐或旁白，都可以生成后放到同一条时间轴上。
+- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 完全开源免费，可直接在本地的 Codex、Claude Code、DeepSeek Harness 或 WorkBuddy 中使用，每一层都能用自己的 API Key。
+- 🧩 OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。品牌宣传片的拆解可以随工程一起分享。
+- 🎛️ **支持图片、视频、音乐和语音生成。** 缺少的镜头、配乐或旁白，都可以生成后放到同一条时间轴上。
 
 复刻结果是一份可编辑的 HTML 工程，可以在 Studio 里微调剪辑，再导出 MP4。
 
 <a id="showcase"></a> <a id="用-openmotion-可以做什么"></a>
+<a id="使用场景与复刻效果示例"></a>
 
-## 使用场景与复刻效果示例
+## 🎞️ 使用场景与复刻效果示例
 
 <a id="可以用它做什么"></a> <a id="what-can-you-make"></a>
 
@@ -319,8 +322,9 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 [获取七个场景的 Agent 提示词](examples.zh-CN.md)
 
 <a id="features"></a>
+<a id="为什么选择-openmotion"></a>
 
-## 为什么选择 OpenMotion
+## ✨ 为什么选择 OpenMotion
 
 <a id="what-is-openmotion"></a> <a id="openmotion-是什么"></a> <a id="video-is-code"></a>
 
@@ -506,8 +510,9 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 [内置模型目录](../gateway/catalog.ts) · [供应商配置与端点注册](model-gateway.md)
 
 <a id="technical-guide"></a>
+<a id="安装与技术文档"></a>
 
-## 安装与技术文档
+## 🛠️ 安装与技术文档
 
 <a id="快速开始"></a> <a id="quick-start"></a>
 
@@ -771,11 +776,11 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 
 <a id="社区共建"></a> <a id="community"></a>
 
-### 社区
+<a id="社区"></a>
 
-OpenMotion 独立官网将上线于 `open-design.ai/openmotion`。
+## 🤝 分享作品与制作方法
 
-[OpenDesign 动效展示](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+欢迎分享你复刻的视频、可复用的模板，或记录镜头节奏的 Motion.md。把参考片和成片放在一起，附上可编辑工程，其他人就能沿用你的剪辑节奏，换上自己的素材。
 
 | 贡献类型 | 应包含 |
 | --- | --- |
@@ -785,7 +790,15 @@ OpenMotion 独立官网将上线于 `open-design.ai/openmotion`。
 | **Brandkit** | 品牌身份、准确产品事实和可分享素材 |
 | **Agent 支持或编辑器改进** | 范围聚焦且可复现验证的变更 |
 
-[参与贡献](../CONTRIBUTING.md) · [反馈问题](https://github.com/nexu-io/html-anything/issues) · [贡献者](https://github.com/nexu-io/html-anything/graphs/contributors) · [媒体资料](media-kit.md)
+[资源提交清单](../library/ENTRY_TEMPLATE.md) · [参与贡献](../CONTRIBUTING.md) · [反馈问题](https://github.com/nexu-io/html-anything/issues) · [贡献者](https://github.com/nexu-io/html-anything/graphs/contributors) · [媒体资料](media-kit.md)
+
+OpenMotion 独立官网将上线于 `open-design.ai/openmotion`。
+
+[OpenDesign 动效展示](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+
+[**在 GitHub 上给 OpenMotion 点个 Star**](https://github.com/nexu-io/html-anything)
+
+[![Stay tuned with us · 给 OpenMotion 点个 Star](readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
 
 <a id="acknowledgements"></a>
 

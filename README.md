@@ -1,6 +1,8 @@
 **English** · [简体中文](docs/README.zh-CN.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-<h1 align="center">OpenMotion</h1>
+<a id="openmotion"></a>
+
+<h1 align="center">🎬 OpenMotion</h1>
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
@@ -20,7 +22,7 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign on YouTube" /></a>
 </p>
 
-<p align="center"><a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a></p>
+<p align="center"><a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a> · <a href="#community">Community</a></p>
 
 <picture>
   <source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg">
@@ -29,15 +31,16 @@
 
 OpenMotion is **the first full-stack agentic video generator**. Upload a reference video or paste a social video link. OpenMotion breaks down the shots, timing and transitions, then **recreates the sequence with your own footage, logo and copy**.
 
-- **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Use it locally in Codex, Claude Code, DeepSeek Harness or WorkBuddy with your own keys at every layer.
-- OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Use it to share how a brand film works, shot by shot.
-- **Generate images, video, music and speech** for the same timeline, from a missing shot to a score or voice-over.
+- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Use it locally in Codex, Claude Code, DeepSeek Harness or WorkBuddy with your own keys at every layer.
+- 🧩 OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Use it to share how a brand film works, shot by shot.
+- 🎛️ **Generate images, video, music and speech** for the same timeline, from a missing shot to a score or voice-over.
 
 The remake is an editable HTML project. Fine-tune the cut in Studio and export an MP4.
 
 <a id="showcase"></a> <a id="what-can-you-make"></a>
+<a id="use-cases-and-remake-examples"></a>
 
-## Use cases and remake examples
+## 🎞️ Use cases and remake examples
 
 <a id="可以用它做什么"></a>
 
@@ -319,8 +322,9 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 [Get agent prompts for all seven use cases](docs/examples.md)
 
 <a id="features"></a>
+<a id="why-openmotion"></a>
 
-## Why OpenMotion
+## ✨ Why OpenMotion
 
 <a id="what-is-openmotion"></a> <a id="openmotion-是什么"></a> <a id="video-is-code"></a>
 
@@ -506,8 +510,9 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 [Model catalog](gateway/catalog.ts) · [Provider setup and endpoints](docs/model-gateway.md)
 
 <a id="technical-guide"></a>
+<a id="setup-and-technical-documentation"></a>
 
-## Setup and technical documentation
+## 🛠️ Setup and technical documentation
 
 <a id="快速开始"></a> <a id="quick-start"></a>
 
@@ -774,11 +779,9 @@ Channel connections, scheduled publishing and performance feedback are planned.
 
 <a id="社区共建"></a> <a id="community"></a>
 
-### Community
+## 🤝 Share the video. Share how you made it.
 
-The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
-
-[Motion showcase](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+Share a remake, a reusable template or a Motion.md that captures the rhythm of a film. Include the reference and your editable project so another creator can try the same cut with their own footage.
 
 | Contribution | What to include |
 | --- | --- |
@@ -788,7 +791,15 @@ The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
 | **Brand Kit content for Motion.md** | Identity, accurate product facts and approved assets within the creative specification |
 | **Agent support or editor improvements** | A focused change with reproducible validation |
 
-[Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/nexu-io/html-anything/issues) · [Contributors](https://github.com/nexu-io/html-anything/graphs/contributors) · [Media kit](docs/media-kit.md)
+[Library entry checklist](library/ENTRY_TEMPLATE.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/nexu-io/html-anything/issues) · [Contributors](https://github.com/nexu-io/html-anything/graphs/contributors) · [Media kit](docs/media-kit.md)
+
+The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
+
+[Motion showcase](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+
+[**Star OpenMotion on GitHub**](https://github.com/nexu-io/html-anything)
+
+[![Stay tuned with us · Star OpenMotion](docs/readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
 
 <a id="acknowledgements"></a>
 
