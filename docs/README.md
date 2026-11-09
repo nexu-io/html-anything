@@ -31,6 +31,7 @@
 - [template-catalog.md](template-catalog.md)
 - [templates/requirement.md](templates/requirement.md)
 - [test-packages.md](test-packages.md)
+- [Tracking integration and agent task template](../tracking/INTEGRATION.md)
 
 ## 分发与验证
 

@@ -1753,5 +1753,12 @@
   "Get the template catalogue and local index.": "Obtenir le catalogue de modèles et son index local.",
   "Read the details and files for one template.": "Lire les détails et les fichiers d’un modèle.",
   "Template cache unavailable; downloading again": "Cache des modèles indisponible ; nouveau téléchargement",
-  "Template update failed; using cached catalogue: {message}": "Échec de la mise à jour des modèles ; utilisation du catalogue en cache : {message}"
+  "Template update failed; using cached catalogue: {message}": "Échec de la mise à jour des modèles ; utilisation du catalogue en cache : {message}",
+  "Privacy settings": "Paramètres de confidentialité",
+  "Share usage data": "Partager les données d’utilisation",
+  "Send feature usage, error categories and approximate region to improve OpenMotion. Prompts and project contents are excluded.": "Envoyer l’utilisation des fonctions, les catégories d’erreurs et la région approximative pour améliorer OpenMotion. Les prompts et le contenu des projets sont exclus.",
+  "This setting applies to MCP and Studio on this installation and is kept after restart.": "Ce réglage s’applique à MCP et Studio pour cette installation et reste enregistré après un redémarrage.",
+  "Disabled by your environment settings.": "Désactivé par vos paramètres d’environnement.",
+  "Could not load privacy settings.": "Impossible de charger les paramètres de confidentialité.",
+  "Could not save privacy settings.": "Impossible d’enregistrer les paramètres de confidentialité."
 }

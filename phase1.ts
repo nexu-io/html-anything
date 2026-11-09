@@ -13,6 +13,7 @@ import { sessionPath } from './shared/workspace-url.ts';
 import { phase1Tools, validateInput } from './shared/phase1-tools.ts';
 import { atomicJson, cloneFile, fileHash, jsonFile, ProjectVersions, recoverProjectTransactions } from './phase1-versions.ts';
 import type { ContentVersion } from './phase1-versions.ts';
+import { trackPhase1Result, type OmTracking } from './shared/tracking.ts';
 
 const metadataPath = 'motion-project.json', assetIndexPath = 'motion-assets.json';
 const textExtensions = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.txt', '.md', '.vtt', '.srt', '.glsl', '.vert', '.frag']);
@@ -31,6 +32,7 @@ export type Phase1Context = {
   openProject: (projectId: string) => Promise<void>;
   mutation: <T>(task: () => Promise<T>) => Promise<T>;
   cancel: (projectId: string, jobId: string) => Promise<unknown>;
+  tracking?: OmTracking;
 };
 
 /** Thin public contract over the existing workspace, Studio history, probes and export engine. */
@@ -44,6 +46,16 @@ export class Phase1Service {
   constructor(store: WorkspaceStore, runtimeRoot: string, context: Phase1Context) { this.store = store; this.runtimeRoot = runtimeRoot; this.context = context; }
   versions(projectId: string) { return new ProjectVersions(this.store.forProject(projectId), this.runtimeRoot, this.context.nativeUrl(projectId)); }
   async call(name: string, args: any) {
+    try {
+      const result = await this.invoke(name, args);
+      trackPhase1Result(this.context.tracking, name, args, result);
+      return result;
+    } catch (error) {
+      trackPhase1Result(this.context.tracking, name, args, undefined, error);
+      throw error;
+    }
+  }
+  private async invoke(name: string, args: any) {
     const definition = phase1Tools.find(tool => tool.name === name);
     if (!definition) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + name);
     validateInput(definition.inputSchema, args);

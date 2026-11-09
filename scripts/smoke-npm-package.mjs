@@ -23,7 +23,7 @@ export async function smokeNpm(filename, codexJS) {
   await writeFile(path.join(profile, 'config.toml'), 'cli_auth_credentials_store = "file"\nmcp_oauth_credentials_store = "file"\n[mcp_servers.unrelated]\ncommand = "keep-this-server"\n');
   const candidate = path.join(out, 'candidate.tgz');
   await cp(installer, candidate);
-  const env = { ...process.env, npm_config_cache: path.join(out, 'npm-cache'), CODEX_HOME: profile, PORT: process.env.D4_LANE_PORT_RANGE?.split('-')[0] || process.env.SEATS_PORT || process.env.PORT || String(await testPort()) };
+  const env = { ...process.env, npm_config_cache: path.join(out, 'npm-cache'), CODEX_HOME: profile, PORT: process.env.PORT || String(await testPort()) };
   for (const key of ['HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'HYPERFRAMES_BROWSER_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH', 'MOTION_BROWSER_PATH']) delete env[key];
   const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
   const setup = [npm, 'exec', '--yes', '--package', candidate, '--', 'openmotion', 'setup', '--host', 'codex', '--home', home, '--data-dir', data, '--skills-dir', skills, '--codex', codexJS];

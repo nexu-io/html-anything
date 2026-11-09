@@ -1717,5 +1717,12 @@
   "Get the template catalogue and local index.": "テンプレートカタログとローカルインデックスを取得します。",
   "Read the details and files for one template.": "テンプレートの詳細とファイルを読み取ります。",
   "Template cache unavailable; downloading again": "テンプレートのキャッシュを利用できません。再ダウンロードします",
-  "Template update failed; using cached catalogue: {message}": "テンプレートの更新に失敗しました。キャッシュ済みのカタログを使用します：{message}"
+  "Template update failed; using cached catalogue: {message}": "テンプレートの更新に失敗しました。キャッシュ済みのカタログを使用します：{message}",
+  "Privacy settings": "プライバシー設定",
+  "Share usage data": "利用データを共有",
+  "Send feature usage, error categories and approximate region to improve OpenMotion. Prompts and project contents are excluded.": "OpenMotion の改善のため、機能の利用状況、エラーの種類、おおよその地域を送信します。プロンプトやプロジェクト内容は送信しません。",
+  "This setting applies to MCP and Studio on this installation and is kept after restart.": "この設定は同じインストールの MCP と Studio に適用され、再起動後も保持されます。",
+  "Disabled by your environment settings.": "環境設定により無効になっています。",
+  "Could not load privacy settings.": "プライバシー設定を読み込めませんでした。",
+  "Could not save privacy settings.": "プライバシー設定を保存できませんでした。"
 }

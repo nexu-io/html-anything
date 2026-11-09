@@ -1,0 +1,14 @@
+{
+  "name": "@openmotion/tracking",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": ["dist", "README.md", "INTEGRATION.md", "posthog-geoip.hog"],
+  "exports": {
+    "./core": { "types": "./dist/core.d.ts", "default": "./dist/core.js" },
+    "./node": { "types": "./dist/node.d.ts", "default": "./dist/node.js" },
+    "./browser": { "types": "./dist/browser.d.ts", "default": "./dist/browser.js" },
+    "./events": { "types": "./dist/events.d.ts", "default": "./dist/events.js" }
+  },
+  "engines": { "node": ">=22.18.0" }
+}

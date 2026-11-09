@@ -42,7 +42,7 @@ export async function check() {
   assert.equal(mcp.mcpServers.motion.cwd, '.');
   assert.ok(!JSON.stringify(mcp).includes('${'), 'MCP launch paths cannot depend on placeholder expansion');
   assert.equal(marketplace.plugins[0].source.path, './');
-  for (const folder of ['web', 'shared', 'scripts', 'tests', 'gateway']) {
+  for (const folder of ['web', 'shared', 'scripts', 'tests', 'gateway', 'tracking']) {
     for (const file of await readdir(path.join(root, folder))) {
       if (file.endsWith('.ts')) stripTypeScriptTypes(await readFile(path.join(root, folder, file), 'utf8'), { mode: 'strip' });
     }

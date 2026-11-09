@@ -67,7 +67,7 @@ node scripts/package-npm.mjs "dist/$version" "$version"
 node scripts/smoke-npm-package.mjs "dist/$version/release-npm.json" /absolute/path/to/codex/bin/codex.js
 ```
 
-须在支持的目标系统执行 smoke；Linux 只装配，不代表支持 Linux 原生运行。共享机器的浏览器验收继续使用 browser-lock 的真实锁和分配端口。实际目标机检查还会自动从公开源下载原生依赖，无需公司仓库读取权限。以下为完整 ZIP 的原复现入口：
+须在支持的目标系统执行 smoke；Linux 只装配，不代表支持 Linux 原生运行。实际目标机检查还会自动从公开源下载原生依赖，无需公司仓库读取权限。以下为完整 ZIP 的原复现入口：
 
 构建机需要 Node 26.11.1、Git、tar、zip 和 unzip；CI 使用工作流中固定的 Node 版本。Node、浏览器、FFmpeg 和 ffprobe 均从固定公开 HTTPS 地址下载并校验 SHA256；构建原生运行时不使用仓库 Token、额外 Secret 或私有源码 checkout。
 
@@ -80,4 +80,4 @@ npm install --prefix .tools/codex-cli --ignore-scripts --no-audit --no-fund @ope
 node scripts/smoke-test-package.mjs <最终ZIP路径> .tools/codex-cli/node_modules/@openai/codex/bin/codex.js
 ```
 
-同一 Linux 构建机将 target 改为 win-x64 即可装配 Windows 包。目标机只执行 smoke，不重新打包。验证从含空格与中文的新路径展开最终 ZIP，使用系统临时目录中的独立 Codex 配置和工程目录，检查原生安装、最小 PATH 下 MCP 握手、模板、工作流、Studio HTTP，以及有声音、有运动的 1 秒 MP4 和成片技术检查；验收优先使用共享浏览器锁分配的端口，否则由系统分配临时空闲端口；不固定占用 54900，避免共享 Windows runner 的其他服务冲突。验收在首次启动时保存进程归属，避免后续预览复用覆盖登记后遗留服务；结束时按版本和工程目录校验后，只清理测试自身创建的进程。模型回合、独立播放器、旧系统及跨版本回退不由此代替。
+同一 Linux 构建机将 target 改为 win-x64 即可装配 Windows 包。目标机只执行 smoke，不重新打包。验证从含空格与中文的新路径展开最终 ZIP，使用系统临时目录中的独立 Codex 配置和工程目录，检查原生安装、最小 PATH 下 MCP 握手、模板、工作流、Studio HTTP，以及有声音、有运动的 1 秒 MP4 和成片技术检查；验收使用显式 `PORT` 配置，否则由系统分配临时空闲端口；不固定占用 54900，避免共享 Windows runner 的其他服务冲突。验收在首次启动时保存进程归属，避免后续预览复用覆盖登记后遗留服务；结束时按版本和工程目录校验后，只清理测试自身创建的进程。模型回合、独立播放器、旧系统及跨版本回退不由此代替。
