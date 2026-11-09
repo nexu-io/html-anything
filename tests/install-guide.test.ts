@@ -85,6 +85,19 @@ test('an immutable version mismatch or failed public version verification leaves
   assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), 'previous accepted instructions');
 });
 
+test('short version URLs preserve the bytes of an existing immutable legacy URL', async t => {
+  const { directory, record } = await fixture(t), store = storage(directory, record);
+  store.objects.set(store.plan.legacyVersionKey, Buffer.from('different instructions'));
+  await assert.rejects(publishGuide(directory, config, store), /immutable legacy/);
+  assert.equal(store.writes.length, 0);
+  const expected = await readFile(path.join(directory, 'install.md'));
+  store.objects.set(store.plan.legacyVersionKey, expected);
+  await publishGuide(directory, config, store);
+  assert(store.objects.get(store.plan.versionKey)!.equals(expected));
+  assert(store.objects.get(store.plan.legacyVersionKey)!.equals(expected));
+  assert(!store.writes.some(x => x.key === store.plan.legacyVersionKey));
+});
+
 test('a post-promotion public failure records the partial state and preserves recovery bytes', async t => {
   const { directory, record } = await fixture(t), store = storage(directory, record);
   await assert.rejects(publishGuide(directory, config, { ...store, fetcher: async (url: URL) => url.pathname.slice(1) === store.plan.versionKey ? store.fetcher(url) : new Response('stale edge bytes') }), /bytes differ/);
