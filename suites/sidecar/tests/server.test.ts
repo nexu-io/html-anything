@@ -1,14 +1,15 @@
 import { type ChildProcess, spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { mkdtemp, rm, stat } from "node:fs/promises";
-import { createConnection } from "node:net";
+import { createConnection, createServer, Socket } from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { channel, digest, namespace } from "@odsuite/protocol";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { Client, type Service, type Spec, serve } from "@";
+import { Client, Peer, type Service, type Spec, serve } from "@";
+import { selfWitness } from "../src/process/observe.js";
 
 const roots: string[] = [];
 const services: Service[] = [];
@@ -73,6 +74,166 @@ afterEach(async () => {
   }
 
   await Promise.all(roots.splice(0).map((root) => rm(root, { force: true, recursive: true })));
+});
+
+// Observe real receive events without replacing bytes, callbacks or dispatch. The sender
+// waits until the receiver consumed the incomplete code point before writing its suffix.
+async function fragmented(target: Socket, frame: Buffer, split: number) {
+  const prefix = frame.subarray(0, split);
+  const received = new Map<Socket, Buffer>();
+  let receiver: Socket | undefined;
+  let observed = () => {};
+  const arrival = new Promise<void>((done) => {
+    observed = done;
+  });
+  const emit = Socket.prototype.emit;
+  const tap = vi.spyOn(Socket.prototype, "emit").mockImplementation(function (
+    this: Socket,
+    event: string | symbol,
+    ...args: unknown[]
+  ) {
+    if (event === "data" && Buffer.isBuffer(args[0])) {
+      const bytes = Buffer.concat([received.get(this) ?? Buffer.alloc(0), args[0]]);
+      received.set(this, bytes);
+      if (bytes.equals(prefix)) {
+        receiver = this;
+        observed();
+      }
+    }
+    return Reflect.apply(emit, this, [event, ...args]) as boolean;
+  });
+  try {
+    target.write(prefix);
+    await arrival;
+  } finally {
+    tap.mockRestore();
+  }
+  target.write(frame.subarray(split));
+  if (!receiver) throw Error("fragment receiver was not observed");
+  return receiver;
+}
+
+function exchange(endpoint: string, frame: Buffer, split: number) {
+  return new Promise<{ ok: boolean; value?: unknown; error?: string; reader?: Socket }>((done, reject) => {
+    const connection = createConnection(endpoint),
+      chunks: Buffer[] = [];
+    let reader: Socket | undefined;
+    connection.once("error", reject);
+    connection.once("connect", () => {
+      void fragmented(connection, frame, split).then((socket) => {
+        reader = socket;
+      }, reject);
+    });
+    connection.on("data", (chunk: Buffer) => chunks.push(chunk));
+    connection.once("end", () => {
+      try {
+        done({ ...JSON.parse(Buffer.concat(chunks).toString("utf8")), reader });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  });
+}
+
+it("preserves fragmented request and response Unicode with exact raw-byte bounds", async () => {
+  const endpoint = await socket(),
+    service = await serve(endpoint);
+  services.push(service);
+  const identity = {
+    channel: channel("dev"),
+    namespace: namespace("wire"),
+    generation: digest("wire"),
+    service: "echo",
+  };
+  let seen = "",
+    output = "界🙂e\u0301";
+  const attached = await service.expose<{ echo: { input: string; output: string } }>({
+    identity,
+    handlers: {
+      echo: (input) => {
+        seen = input;
+        return output;
+      },
+    },
+    lifecycle: { initialize: async () => {}, stop: async () => {} },
+  });
+  const peer = await new Client(endpoint, service.authority).connect<{ echo: { input: string; output: string } }>(
+    identity,
+  );
+  const descriptor = peer.connection().capability,
+    actor = await selfWitness();
+  const request = (input: string) =>
+    Buffer.from(`${JSON.stringify({ type: "invoke", operation: "call", descriptor, method: "echo", input, actor })}\n`);
+  const word = "界🙂e\u0301",
+    limit = 65536;
+  let input = word.repeat(6000);
+  input += "a".repeat(limit - request(input).length);
+  const exact = request(input);
+  expect(exact.length).toBe(limit);
+  expect((await exchange(endpoint, exact, exact.indexOf(Buffer.from("界")) + 1)).ok).toBe(true);
+  expect(seen).toBe(input);
+  expect(seen).not.toContain("\ufffd");
+  const over = request(`${input}a`);
+  expect(over.length).toBe(limit + 1);
+  const rejected = await exchange(endpoint, over, 200);
+  expect(rejected).toMatchObject({ ok: false, error: "request exceeds limit" });
+  expect(rejected.reader?.isPaused()).toBe(true);
+  expect(rejected.reader?.listenerCount("data")).toBe(0);
+  const invalid = request(word);
+  invalid[invalid.indexOf(Buffer.from("界"))] = 255;
+  expect((await exchange(endpoint, invalid, 100)).ok).toBe(false);
+  expect((await exchange(endpoint, Buffer.concat([Buffer.from([239, 187, 191]), request(word)]), 100)).ok).toBe(false);
+  expect(seen).toBe(input);
+
+  let proxyEndpoint = "",
+    corrupt: "none" | "invalid" | "bom" = "none";
+  const relay = createServer((downstream) => {
+    const upstream = createConnection(endpoint),
+      chunks: Buffer[] = [];
+    downstream.pipe(upstream);
+    upstream.on("error", () => downstream.destroy());
+    downstream.on("error", () => upstream.destroy());
+    downstream.once("close", () => upstream.destroy());
+    upstream.on("data", (chunk: Buffer) => chunks.push(chunk));
+    upstream.once("end", () => {
+      let frame = Buffer.concat(chunks);
+      const position = frame.indexOf(Buffer.from("界"));
+      if (corrupt === "invalid") frame[position] = 255;
+      if (corrupt === "bom") frame = Buffer.concat([Buffer.from([239, 187, 191]), frame]);
+      void fragmented(downstream, frame, position + 2).then(
+        () => downstream.end(),
+        () => downstream.destroy(),
+      );
+    });
+  });
+  await service.expose({
+    identity: { ...identity, service: "relay" },
+    handlers: {},
+    lifecycle: {
+      initialize: async (context) => {
+        const grant = await context.allocate({ kind: "socket", name: "relay" });
+        proxyEndpoint = grant.value;
+        await new Promise<void>((done) => relay.listen(grant.value, done));
+      },
+      stop: () => new Promise<void>((done, reject) => relay.close((error) => (error ? reject(error) : done()))),
+    },
+  });
+  const relayed = new Peer<{ echo: { input: string; output: string } }>(proxyEndpoint, descriptor);
+  output = word.repeat(6500);
+  const response = () => Buffer.from(`${JSON.stringify({ ok: true, value: output })}\n`);
+  output += "a".repeat(limit - response().length);
+  expect(response().length).toBe(limit);
+  expect(await relayed.call("echo", "response exact")).toBe(output);
+  output += "a";
+  expect(response().length).toBe(limit + 1);
+  await expect(relayed.call("echo", "response over")).rejects.toThrow("response exceeds limit");
+  output = word;
+  corrupt = "invalid";
+  await expect(relayed.call("echo", "response invalid")).rejects.toThrow();
+  corrupt = "bom";
+  await expect(relayed.call("echo", "response bom")).rejects.toThrow();
+  await attached.close();
+  expect(await new Client(endpoint, service.authority).inspect()).toEqual([]);
 });
 
 describe("server", () => {

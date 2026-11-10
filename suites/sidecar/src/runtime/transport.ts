@@ -5,8 +5,10 @@ import { encode, type Request, type Response } from "./wire.js";
 
 const limit = 64 * 1024;
 
-function decode(input: string, end: number): Response {
-  const value: unknown = JSON.parse(input.slice(0, end));
+function decode(input: Buffer, end: number): Response {
+  const value: unknown = JSON.parse(
+    new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(input.subarray(0, end)),
+  );
 
   if (!value || typeof value !== "object" || !("ok" in value)) {
     throw new TypeError("invalid response");
@@ -19,7 +21,8 @@ export async function call(endpoint: string, request: Request, timeout: number):
   const payload = encode({ ...decorate(endpoint, request), actor: await selfWitness() });
   return new Promise((resolve, reject) => {
     const socket = createConnection(endpoint);
-    let input = "";
+    const chunks: Buffer[] = [];
+    let bytes = 0;
     let settled = false;
     const finish = (operation: () => void) => {
       if (settled) return;
@@ -33,17 +36,18 @@ export async function call(endpoint: string, request: Request, timeout: number):
     socket.once("end", () => finish(() => reject(new Error("response ended before completion"))));
     socket.once("error", (error) => finish(() => reject(error)));
     socket.on("data", (chunk: Buffer) => {
-      input += chunk.toString("utf8");
-      if (Buffer.byteLength(input) > limit) {
+      bytes += chunk.length;
+      if (bytes > limit) {
         finish(() => reject(new Error("response exceeds limit")));
         return;
       }
+      chunks.push(chunk);
 
-      const end = input.indexOf("\n");
+      const end = chunk.indexOf(10);
       if (end < 0) return;
 
       try {
-        const response = decode(input, end);
+        const response = decode(Buffer.concat(chunks, bytes), bytes - chunk.length + end);
         if (!response.ok) finish(() => reject(new Error(response.error)));
         else finish(() => resolve(response.value));
       } catch (error) {
