@@ -62,6 +62,7 @@ jobs:
           node control/.github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node control/.github/scripts/motion-scan.mjs source source "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
       - name: Install rendering test tools
+        timeout-minutes: 5
         run: |
           # The hosted Ubuntu image provides Chrome; avoid Ubuntu's desktop Chromium snap.
           "$HYPERFRAMES_BROWSER_PATH" --version
@@ -73,8 +74,11 @@ jobs:
           done
           if ((${#missing[@]})); then
             apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
-            sudo apt-get "${apt_options[@]}" update
-            sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
+            # Hosted runners already have package indexes. Refresh only if installation needs it.
+            if ! sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"; then
+              sudo apt-get "${apt_options[@]}" update
+              sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
+            fi
           fi
       - name: Check the selected source
         working-directory: source
