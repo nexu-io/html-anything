@@ -5,9 +5,11 @@ import { animationInput, editInput, inspectInput, Motion, patchInput } from "@op
 import { inspectContext, retimeHost } from "@open-motion/motion/project";
 import { type ExportOperation, exportSchemas } from "@open-motion/render/contract";
 import { type TemplateOperation, templateSchemas } from "@open-motion/templates/contract";
+import type { Binding as PrismBinding } from "@open-motion/templates/host";
 import { Fault, type Input, type Operation, Workspace } from "@open-motion/workspace";
 import { listGuidance, readGuidance } from "./content/guidance.js";
 import { Previews } from "./content/preview.js";
+import { PrismTemplates } from "./content/prism.js";
 import { Templates } from "./content/templates.js";
 import { schemas } from "./contract.js";
 import { type Binding, Exports } from "./exports/index.js";
@@ -18,6 +20,9 @@ export interface Options {
   token: string;
   environment?: Readonly<Environment>;
   renderer?: Binding;
+  prism?: PrismBinding;
+  /** In-process diagnostic checkpoint only; never serialized or exposed through a product API. */
+  onPrismRead?: () => Promise<void>;
   endpoint?: string;
 }
 export interface Service {
@@ -56,7 +61,9 @@ async function body(request: IncomingMessage): Promise<unknown> {
 export async function serve(options: Options): Promise<Service> {
   const workspace = new Workspace(options.data);
   const previews = new Previews(workspace);
-  const templates = new Templates(workspace);
+  const templates = options.prism
+    ? new PrismTemplates(workspace, options.prism, options.onPrismRead)
+    : new Templates(workspace);
   const exports = new Exports(workspace, options.renderer, options.endpoint);
   const server = createServer((request, response) => {
     const origin = request.headers.origin === options.origin ? options.origin : undefined;
@@ -154,7 +161,7 @@ export async function serve(options: Options): Promise<Service> {
         return reply(response, 404, { error: { code: "invalid", message: "unknown operation" } }, origin);
       const input = await body(request);
       const result = Object.hasOwn(templateSchemas, operation)
-        ? templates.execute(operation as TemplateOperation, input)
+        ? await templates.execute(operation as TemplateOperation, input)
         : Object.hasOwn(exportSchemas, operation)
           ? await exports.execute(operation as ExportOperation, input)
           : workspace.execute(operation as Operation, input as Input<Operation>);

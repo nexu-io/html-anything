@@ -1,7 +1,12 @@
 import type { CarrierContext } from "@odsuite/dev";
 import { attach } from "./index.js";
+import { prismConfiguration } from "./prism.js";
 export async function open(context: CarrierContext) {
-  const runtime = await attach(context.manager, { scope: context.scope, version: context.version });
+  const runtime = await attach(context.manager, {
+    scope: context.scope,
+    version: context.version,
+    prism: await prismConfiguration(context.repo),
+  });
   return {
     status: async () => {
       const status = await runtime.status(),

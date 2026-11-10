@@ -25,6 +25,26 @@ pnpm --filter @open-motion/standalone test
 
 Web browser fixtures use actual built Web, SQLite and Daemon HTTP hosted in the test process. Standalone tests exercise an independent sidecar-owned Daemon. Services/ports/data belong to sidecar; Chromium is test-driver infrastructure closed in finally. Check actual manager closure and zero workloads. Evidence goes to `.artifacts/browser/<uuid>` or `.artifacts/animation-browser/<uuid>`; failures preserve screenshots/diagnostics. Fixed reference tokens, pixel round-trips, actual editing, platform and full product acceptance are separate. Never upload capabilities or raw communication traces.
 
+## Explicit Prism template configuration
+
+Remote templates are opt-in. Development reads only this explicit `odsuite.yaml` section; programmatic standalone composition accepts the same object as `Options.prism`:
+
+```yaml
+templates:
+  prism:
+    origin: https://r.open-design.ai
+    environment: prod
+    resourceId: 1500c9af-186b-457f-b74d-a58113f657d8
+    channel: default
+    locale: zh-CN
+```
+
+The publication channel is independent of the product release channel. Origins require HTTPS, or an explicit loopback HTTP origin for local acceptance; redirects and cross-origin file URLs are rejected. No configuration means no remote request. `template_list` always retains bundled ready templates. Configured first-fetch failure returns observable `catalogError`; verified cached publications instead report `catalog.stale` and `warning`. Remote `catalog.entries` are discovery claims: source-required entries can be read/created by their exact id/contentHash, and unsupported entries carry a reason. Dimensions and duration appear only on verified ready descriptors.
+
+The current adapter accepts complete UTF-8 native text snapshots with index.html and supported hyperframes.json, at most 128 files / 4 MiB and 1 MiB per source file including provenance bounds. It rejects missing/remote native dependencies, unknown embedded engines and unsupported binary/media file formats. It does not transform arbitrary video/font/image files into supported resources. Publication metadata is at most 4 MiB / 1024 selected-locale entries; at most 32 ready source projections stay referenced. Original source edits remain independent workspace data.
+
+The templates host drains network work and actual read acknowledgements on manager shutdown. For explicit host closure inside an existing factory lifecycle session, drain dependent acquisition controllers by awaiting the returned host's `quiesce()` outside that session first, as required by the Context lifecycle contract. Unknown readers or invalid acknowledgements must retain their blob Uses; never clear a ledger to force GC. The in-process onPrismRead diagnostic checkpoint is not serialized or exposed through configuration, environment variables, HTTP or MCP.
+
 ## Seeded native render acceptance
 
 After explicit build, the render module can exercise its actual worker/Chromium/FFmpeg/FFprobe path with a trusted local seed manifest:
@@ -127,7 +147,7 @@ After selecting a creative session, expand New Project and From Template in Web.
 
 HTTP/MCP share `template_list`, `template_read` (id/contentHash) and `template_create` (id/contentHash/sessionId/title/requestId). The returned manifest includes exact source identity, file sizes/digests and licensing/adaptation facts. Read source before adapting it; preserve supporting files, fonts and licenses in complete project_save snapshots. Template versions are immutable content identities, not independent carrier release versions. Unknown identities reject. Current built-ins preserve 1920×1080 dimensions and 20/15/10-second authored durations. Their original Latin fonts are offline source content with OFL notices; this does not qualify international typography or other media formats.
 
-MCP resources/list exposes the finite `open-motion://guidance/production`, `/native`, `/templates` and `/verification` documents. resources/read returns a complete body with documentId/contentHash/references. Reuse bodies actually retained in context, and read missing guidance/target sources before a later dependent write. Authenticated GET /guidance and /guidance/<name> return the same catalog/body. Document reads do not start another server, edit a project or prove execution. Creative director/recreation Skills, Prism ingestion and provider generation remain separate work.
+MCP resources/list exposes the finite `open-motion://guidance/` document graph. Five creative intent routes and their complete shared/quality references return versioned full bodies with documentId/contentHash/references and source lineage. Codex local Skills derive from the same bodies with canonical/local hashes and closed relative links. Reuse bodies actually retained in context, and read missing guidance/target sources before a later dependent write. Authenticated GET /guidance and /guidance/<name> return the same catalog/body. Document reads do not start another server, edit a project or prove execution. Host acquisition/measurement/archive capabilities, binary Prism resource ingestion, provider execution and creative/user acceptance remain separate capabilities and evidence.
 
 Codex dev connect obtains a delegated Daemon endpoint/capability through sidecar and then uses HTTP for source/media. The control plane transfers connection metadata rather than bulk project bytes. Closing an attachment retains the development manager; reconnect after manager replacement. Do not log the private delegated connection or introduce a second listener/port registry.
 

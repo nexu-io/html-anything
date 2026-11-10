@@ -27,7 +27,7 @@ export type Output<K extends Operation> = Outputs[K];
 export const descriptions: Record<Operation, string> = {
   ...workspaceDescriptions,
   template_list:
-    "Discover the finite built-in native template catalog, source provenance and exact content identities.",
+    "Discover verified native templates and the explicitly configured Prism publication. Remote source-required entries carry claimed-source identities; dimensions become available only after native verification.",
   template_read:
     "Read the complete native source of the explicitly selected template version before creating or adapting it.",
   template_create:

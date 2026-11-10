@@ -128,7 +128,7 @@ function prepare(input: typeof promo) {
 }
 const catalog = [promo, graph, tree].map(prepare);
 export function list() {
-  return { templates: catalog.map((entry) => structuredClone(entry.template)) };
+  return { templates: catalog.map((entry) => structuredClone(entry.template)), catalog: null };
 }
 export function read(input: TemplateInput<"template_read">) {
   const entry = catalog.find((entry) => entry.template.id === input.id);
