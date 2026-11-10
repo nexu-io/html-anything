@@ -27,10 +27,12 @@ import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
 import { createAppTracking, closeTracking, saveTrackingPreference, trackingPreference, trackingLocked, type OmTracking } from './shared/tracking.ts';
 import { studioEvents } from './tracking/events.ts';
+import { nativeRuntimeStatus, startNativePreparation, requireNativeRuntime } from './scripts/npm-runtime.mjs';
+import { nativeRouteCapability } from './shared/native-runtime.ts';
 import { validPending } from './tracking/core.ts';
 
 const sharedStore = new WorkspaceStore();
-export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
+export type Service = { studio?: Studio; runtimeRoot?: string; nativeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
 const service: Service = {};
 const working = new Set<string>();
 const runningExports = new Map<string, AbortController>();
@@ -252,6 +254,15 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (motionRequest) url.pathname = url.pathname.replace(/^\/(?:motion|design)-api\//, '/api/');
     const editorUrl = `http://${host || 'localhost'}/#project/${store.projectId}`;
+    if (motionRequest && url.pathname === '/api/runtime' && ['GET', 'POST'].includes(req.method!)) {
+      const root = context.nativeRoot ?? pluginRoot;
+      if (req.method === 'POST') {
+        const data = await input(req, 1024);
+        if (!data || Object.keys(data).length !== 1 || data.retry !== true) return json(res, 400, { error: 'INVALID_RUNTIME_RETRY' });
+        await startNativePreparation(root, true);
+      }
+      return json(res, 200, await nativeRuntimeStatus(root));
+    }
     if (motionRequest && url.pathname === '/api/tracking/preferences' && ['GET', 'PUT'].includes(req.method!)) {
       const directory = (store.workspaceStore ?? store).directory;
       if (req.method === 'PUT') {
@@ -312,12 +323,15 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     if (req.method === 'GET' && /^\/connect\/?$/.test(url.pathname)) {
       res.writeHead(302, { Location: '/?panel=connections&host=' + integrationHost(url.searchParams.get('host')) }); return res.end();
     }
-    if (url.pathname === '/api/health' && req.method === 'GET') return json(res, 200, {
-      service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: store.directory, mcp: phase1McpCapabilities,
-      engine: 'hyperframes', engineVersion: HYPERFRAMES_VERSION, editor: 'opendesign-motion', ffmpeg: Boolean(context.ffmpeg),
-      ready: Boolean(context.runtimeRoot && (!context.studio || context.studio.alive())), editorReady: Boolean(context.studio?.alive()), studioUrl: context.studio?.alive() ? editorUrl : undefined, nativeStudioUrl: context.studio?.url,
-      ...(context.runtimeRoot ? { hyperframesCli: cliPath(context.runtimeRoot), authoringGuide: path.join(context.runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md') } : {}),
-    });
+    if (url.pathname === '/api/health' && req.method === 'GET') {
+      const nativeRuntime = await nativeRuntimeStatus(context.nativeRoot ?? pluginRoot);
+      return json(res, 200, {
+        service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: store.directory, mcp: phase1McpCapabilities,
+        engine: 'hyperframes', engineVersion: HYPERFRAMES_VERSION, editor: 'opendesign-motion', nativeRuntime, ffmpeg: nativeRuntime.managed ? nativeRuntime.capabilities.media : Boolean(context.ffmpeg),
+        ready: Boolean(context.runtimeRoot && (!context.studio || context.studio.alive())), editorReady: Boolean(context.studio?.alive()), studioUrl: context.studio?.alive() ? editorUrl : undefined, nativeStudioUrl: context.studio?.url,
+        ...(context.runtimeRoot ? { hyperframesCli: cliPath(context.runtimeRoot), authoringGuide: path.join(context.runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md') } : {}),
+      });
+    }
     if (motionRequest && url.pathname === '/api/preview/open' && req.method === 'POST') {
       await openEditor(store, context);
       return json(res, 200, { studioUrl: editorUrl, ...(await store.status()) });
@@ -439,6 +453,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (url.pathname === '/api/export' && req.method === 'POST') {
       if (!context.runtimeRoot) return json(res, 503, { error: 'Hyperframes 服务尚未就绪' });
+      await requireNativeRuntime(context.nativeRoot ?? pluginRoot, 'export');
       const data = await input(req); revision(data.expectedRevision);
       return json(res, 202, { job: await store.requestExport(data.expectedRevision) });
     }
@@ -459,6 +474,8 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const scopedProject = url.pathname.match(/^\/api\/projects\/([^/]+)/);
       if (scopedProject) store.forProject(decodeURIComponent(scopedProject[1]));
       if (!context.studio?.alive()) return json(res, 503, { error: '编辑服务尚未就绪' });
+      const capability = nativeRouteCapability(req.method!, url.pathname);
+      if (capability) await requireNativeRuntime(context.nativeRoot ?? pluginRoot, capability);
       return await proxyStudio(req, res, url, context.studio.url);
     }
     if (req.method !== 'GET') return json(res, 405, { error: '不支持此操作' });
@@ -466,16 +483,17 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     return json(res, 404, { error: 'Not found' });
   } catch (error) {
     if (res.headersSent) res.destroy();
-    else json(res, error instanceof Conflict ? 409 : 400, { error: error instanceof Error ? error.message : '操作失败' });
+    else json(res, error instanceof Conflict || (error as any).code === 'NATIVE_RUNTIME_NOT_READY' ? 409 : 400, { error: error instanceof Error ? error.message : '操作失败', ...((error as any).code === 'NATIVE_RUNTIME_NOT_READY' ? { code: (error as any).code, applied: false, runtime: (error as any).details } : {}) });
   }
 }
 
 export async function startServer(store = sharedStore, port = Number(process.env.PORT || 4173), options: { editor?: boolean; editorToken?: string; privateHandler?: (req: IncomingMessage, res: ServerResponse) => Promise<boolean> } = { editor: process.env.MOTION_HEADLESS !== '1' }) {
   await access(path.join(pluginRoot, 'studio/build/index.html')).catch(() => { throw new Error('编辑器尚未构建，请先运行 npm run build:studio。'); });
-  const runtimeRoot = await ensureRuntime(store.directory);
+  const runtimeRoot = await ensureRuntime(store.directory, false);
+  void startNativePreparation(pluginRoot).catch(error => console.error('Native preparation could not start: ' + error.message));
   await recoverProjectTransactions(store, runtimeRoot);
   const ffmpeg = await execute(process.env.HYPERFRAMES_FFMPEG_PATH || process.env.FFMPEG_PATH || 'ffmpeg', ['-version'], pluginRoot, 5000).then(r => r.code === 0, () => false);
-  const context: Service = { runtimeRoot, ffmpeg, studioPort: !port || port === 65535 ? 4174 : port + 1, editorToken: options.editorToken,
+  const context: Service = { runtimeRoot, nativeRoot: pluginRoot, ffmpeg, studioPort: !port || port === 65535 ? 4174 : port + 1, editorToken: options.editorToken,
     tracking: await createAppTracking(store.directory, 'mcp') };
   context.launchStudio = async (directory, chosenPort) => {
     if (!process.env.OPENMOTION_EDITOR_LOCK_FD) return startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), chosenPort, store.directory);
@@ -513,7 +531,7 @@ export async function startServer(store = sharedStore, port = Number(process.env
   };
   const timer = setInterval(tick, 500); tick();
   return { server, get activeToolCalls() { return context.phase1?.pending ?? 0; }, openProject: async (projectId: string) => openProject(store, context, (await store.get()).revision, { projectId }, store.projectId), get studio() { return context.studio!; }, ensureStudio: context.ensureStudio,
-    info: async () => ({ previewUrl: `http://127.0.0.1:${(server.address() as any).port}`, studioUrl: context.studio?.url, engine: 'hyperframes', ready: true, editorReady: Boolean(context.studio?.alive()), ffmpeg, revision: (await store.get()).revision, dataDirectory: store.directory, browserOpened: false, authoringGuide: path.join(runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'), hyperframesCli: cliPath(runtimeRoot) }),
+    info: async () => ({ previewUrl: `http://127.0.0.1:${(server.address() as any).port}`, studioUrl: context.studio?.url, engine: 'hyperframes', ready: true, editorReady: Boolean(context.studio?.alive()), ffmpeg, revision: (await store.get()).revision, dataDirectory: store.directory, browserOpened: false, nativeRuntime: await nativeRuntimeStatus(pluginRoot), authoringGuide: path.join(runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'), hyperframesCli: cliPath(runtimeRoot) }),
     close: async () => { clearInterval(timer); await context.browser?.close(); await gateway.close(); server.closeAllConnections(); server.close(); await context.studio?.close(); await closeTracking(context.tracking); } };
 }
 if (isMain(import.meta.url)) {

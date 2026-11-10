@@ -1,9 +1,10 @@
-import { mkdtemp, rm } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, rm, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { WorkspaceStore } from '../workspace.ts';
 import { pluginRoot } from '../hyperframes.ts';
 import type { Project } from '../shared/legacy.ts';
+import { distributionFiles } from '../scripts/distribution.ts';
 import { sharedEditorEnabled, readEditor, editorRequest } from '../editor-runtime.ts';
 
 export function legacyProject(): Project {
@@ -38,4 +39,15 @@ export async function closeFixtureEditor(directory: string) {
       }
     }
   }
+}
+
+
+export async function copyRuntimeFixture(target: string) {
+  // Packaging tests create transient unapproved files; clone only the shipped allowlist.
+  const files = (await distributionFiles('phase1')).filter(file => !file.startsWith('studio/'));
+  for (const file of [...files, 'tests/shared-editor-client.mjs']) {
+    await mkdir(path.dirname(path.join(target, file)), { recursive: true });
+    await cp(path.join(pluginRoot, file), path.join(target, file));
+  }
+  await symlink(path.join(pluginRoot, 'node_modules'), path.join(target, 'node_modules'), 'dir');
 }

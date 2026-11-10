@@ -39,6 +39,7 @@ export function useFileManager({
   const { t } = useI18n();
   // ── Shared refs ──
 
+  const [pendingImport, setPendingImport] = useState<{ projectId: string; files: File[]; dir?: string } | null>(null);
   const [editingFile, setEditingFile] = useState<EditingFile | null>(null);
   const [revealSourceOffset, setRevealSourceOffset] = useState<number | null>(null);
 
@@ -227,9 +228,13 @@ export function useFileManager({
             const names = data.unchecked.map((entry: { name: string }) => entry.name).join(", ");
             showToast(t("Added {name}, {message}", { name: names, message: importValidationMessage(data.unchecked[0].reason, t) }), "info");
           }
+          setPendingImport(previous => previous?.projectId === pid && previous.dir === dir && previous.files.length === fileList.length && previous.files.every((file, index) => file === fileList[index]) ? null : previous);
           await refreshFileTree();
           setRefreshKey((k) => k + 1);
           return Array.isArray(data.files) ? data.files : [];
+        } else if (res.status === 409 && (await res.clone().json().catch(() => null))?.code === 'NATIVE_RUNTIME_NOT_READY') {
+          if (projectIdRef.current === pid) setPendingImport({ projectId: pid, files: fileList, dir });
+          showToast(t('Media components are preparing. Selected files are kept for retry.'), 'info');
         } else if (res.status === 413) {
           showToast("Upload rejected: payload too large");
         } else {
@@ -370,6 +375,9 @@ export function useFileManager({
 
   const handleMoveFile = handleRenameFile;
 
+  const retryPendingImport = useCallback(() => pendingImport?.projectId === projectIdRef.current
+    ? uploadProjectFiles(pendingImport.files, pendingImport.dir) : Promise.resolve([]), [pendingImport, uploadProjectFiles]);
+
   const handleImportFiles = useCallback(
     async (files: FileList | File[], dir?: string) => {
       return uploadProjectFiles(Array.from(files), dir);
@@ -440,6 +448,8 @@ export function useFileManager({
     handleContentChange,
     refreshFileTree,
     uploadProjectFiles,
+    pendingImport: pendingImport?.projectId === projectId ? pendingImport : null,
+    retryPendingImport,
     handleCreateFile,
     handleCreateFolder,
     handleDeleteFile,

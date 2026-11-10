@@ -7,7 +7,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { editorRequest, readEditor, sharedEditorEnabled } from '../editor-runtime.ts';
 import { pluginRoot } from '../hyperframes.ts';
-import { closeFixtureEditor } from './fixtures.ts';
+import { closeFixtureEditor, copyRuntimeFixture } from './fixtures.ts';
 
 const pause = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -17,8 +17,7 @@ test('one stdio connection exports across a compatible plugin update and an idle
   const clients: any[] = [], observations: any[] = [];
   const evidence = process.env.OPENMOTION_UPGRADE_EVIDENCE;
   async function copyRuntime(target: string) {
-    await cp(pluginRoot, target, { recursive: true, filter: source => !['.git', 'node_modules', 'studio', 'dist', '.artifacts'].includes(path.relative(pluginRoot, source).split(path.sep)[0]) });
-    await symlink(path.join(pluginRoot, 'node_modules'), path.join(target, 'node_modules'), 'dir');
+    await copyRuntimeFixture(target);
     await mkdir(path.join(target, 'studio'));
     await symlink(path.join(pluginRoot, 'studio/build'), path.join(target, 'studio/build'), 'dir');
   }

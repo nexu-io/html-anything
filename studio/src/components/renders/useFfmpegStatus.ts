@@ -1,3 +1,4 @@
+import { parseNativeRuntimeStatus, type NativeRuntimeStatus } from '../../../../shared/native-runtime';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { studioApiFetch } from "../../utils/studioApiFetch";
 
@@ -9,6 +10,8 @@ import { studioApiFetch } from "../../utils/studioApiFetch";
  */
 export interface FfmpegStatus {
   ok: boolean;
+  runtime?: NativeRuntimeStatus;
+  runtimeUnavailable?: boolean;
   /** Short headline, e.g. "FFmpeg not found". Absent when ok. */
   title?: string;
   /** Why it cannot run, in the server's words. Absent when ok. */
@@ -60,6 +63,14 @@ function parseStatus(body: unknown): ProbeResult {
 
 async function probe(): Promise<ProbeResult> {
   try {
+    const native = await fetch('/motion-api/runtime', { cache: 'no-store' });
+    const runtime = native.ok ? parseNativeRuntimeStatus(await native.json()) : null;
+    if (runtime?.managed) return { ok: runtime.capabilities.export, runtime };
+    if (cached?.runtime) return { ...cached, ok: false, runtimeUnavailable: true };
+  } catch {
+    if (cached?.runtime) return { ...cached, ok: false, runtimeUnavailable: true };
+  }
+  try {
     const res = await studioApiFetch("/api/environment/ffmpeg");
     return res.ok ? parseStatus(await res.json()) : null;
   } catch {
@@ -70,7 +81,7 @@ async function probe(): Promise<ProbeResult> {
 export function useFfmpegStatus(): {
   status: ProbeResult;
   checking: boolean;
-  recheck: () => void;
+  recheck: (retry?: boolean) => void;
 } {
   const [status, setStatus] = useState<ProbeResult>(cached);
   const [checking, setChecking] = useState(cached === null);
@@ -83,8 +94,17 @@ export function useFfmpegStatus(): {
     };
   }, []);
 
-  const run = useCallback(async () => {
+  const run = useCallback(async (retry = false) => {
     setChecking(true);
+    if (retry && cached?.runtime) {
+      try {
+        const response = await fetch('/motion-api/runtime', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ retry: true }) });
+        if (!response.ok) throw new Error('Preparation retry was refused');
+      } catch {
+        if (mounted.current) { setStatus({ ...cached, ok: false, runtimeUnavailable: true }); setChecking(false); }
+        return;
+      }
+    }
     const next = await probe();
     cached = next;
     if (!mounted.current) return;
@@ -93,16 +113,20 @@ export function useFfmpegStatus(): {
   }, []);
 
   useEffect(() => {
-    if (cached !== null) return;
-    void run();
+    let stopped = false, timer: ReturnType<typeof setTimeout>;
+    const tick = async () => {
+      await run();
+      if (!stopped && cached?.runtime && (!cached.ok || cached.runtimeUnavailable)) timer = setTimeout(tick, 1500);
+    };
+    void tick();
+    const refresh = () => { clearTimeout(timer); void tick(); };
+    window.addEventListener('focus', refresh);
+    return () => { stopped = true; clearTimeout(timer); window.removeEventListener('focus', refresh); };
   }, [run]);
 
-  // Someone who just installed FFmpeg should not have to restart Studio to
-  // prove it. Drops the cache so the server re-probes rather than replaying
-  // the stale "not found" it already cached against.
-  const recheck = useCallback(() => {
-    cached = null;
-    void run();
+  // Retry only failed managed components; legacy installations keep their probe.
+  const recheck = useCallback((retry = true) => {
+    void run(retry);
   }, [run]);
 
   return { status, checking, recheck };

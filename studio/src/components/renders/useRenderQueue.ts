@@ -181,6 +181,7 @@ export function useRenderQueue(
       // the reason and the fix in the message, and keeps a control that
       // forgot to disable itself from producing a mystery failure.
       if (ffmpegMissing) {
+        if (ffmpeg?.runtime) return;
         addSessionJob(
           {
             id: generateId(),
@@ -294,6 +295,11 @@ export function useRenderQueue(
         return;
       }
       if (!res.ok) {
+        if (res.status === 409 && (await res.clone().json().catch(() => null))?.code === 'NATIVE_RUNTIME_NOT_READY') {
+          setActionError('Video components are not ready. Check preparation status.');
+          recheckFfmpeg(false);
+          return;
+        }
         const failedJob: RenderJob = {
           id: generateId(),
           status: "failed",
@@ -373,7 +379,7 @@ export function useRenderQueue(
 
       return jobId;
     },
-    [projectId, activeCompPathRef, closeActiveEventSource, addSessionJob, ffmpeg, ffmpegMissing],
+    [projectId, activeCompPathRef, closeActiveEventSource, addSessionJob, ffmpeg, ffmpegMissing, recheckFfmpeg],
   );
 
   // Cancel an in-flight render. The job row stays (as "cancelled") so the
