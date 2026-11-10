@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 import { canonical } from "@odsuite/protocol";
 import {
   connectRoot,
@@ -78,7 +79,8 @@ export async function stop(description: PackageManifest, selection: Selection) {
   await stopManager(owner);
   return status(description, selection);
 }
-async function prepare(factory: Factory): Promise<NativePreparation> {
+async function prepare(factory: Factory, signal?: AbortSignal): Promise<NativePreparation> {
+  signal?.throwIfAborted();
   const entry = (await factory.directory()).instances.find((i) => i.service === "renderer" && i.phase === "ready");
   if (!entry) throw Error("native preparation service is unavailable");
   const peer = await factory.connect<RenderMethods>(entry);
@@ -86,19 +88,23 @@ async function prepare(factory: Factory): Promise<NativePreparation> {
   if (!reply.ok) throw Error(reply.error.message);
   const attempt = reply.value.attempt;
   while (reply.value.state === "preparing") {
-    await new Promise((done) => setTimeout(done, 100));
+    await delay(100, undefined, { signal });
+    signal?.throwIfAborted();
     reply = await peer.call("native_prepare_read", {});
     if (!reply.ok) throw Error(reply.error.message);
     if (reply.value.attempt !== attempt) throw Error("native preparation attempt changed");
   }
+  signal?.throwIfAborted();
   return reply.value;
 }
-export async function native(description: PackageManifest, selection: Selection) {
+export async function native(description: PackageManifest, selection: Selection, signal?: AbortSignal) {
+  signal?.throwIfAborted();
   const prior = await status(description, selection);
-  if (prior.state === "running") return prepare((await connection(description, selection)).factory);
+  if (prior.state === "running") return prepare((await connection(description, selection)).factory, signal);
   if (!["stopped", "uninitialized"].includes(prior.state))
     throw Error("application authority requires explicit recovery");
   const receipt = await installed(description, selection, "standalone");
+  signal?.throwIfAborted();
   const owner: Manager = await startManager({
     root: receipt.data,
     scope: selection.scope,
@@ -118,7 +124,7 @@ export async function native(description: PackageManifest, selection: Selection)
     timeout: 30000,
   });
   const outcome = await connectRoot(receipt.data, selection.scope)
-    .then((link) => prepare(link.factory))
+    .then((link) => prepare(link.factory, signal))
     .then(
       (value) => ({ ok: true as const, value }),
       (error: unknown) => ({ ok: false as const, error }),

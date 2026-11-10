@@ -55,8 +55,8 @@ async function fixture() {
     output: join(root, "application.tgz"),
   });
   const common = ["--home", join(root, "installation"), "--data", join(root, "data"), "--namespace", "installation"];
-  const command = async (args: string[]) => {
-    const result = await run(
+  const invoke = (args: string[]) =>
+    run(
       "npm",
       [
         "exec",
@@ -73,9 +73,8 @@ async function fixture() {
       ],
       { cwd: root, timeout: 60000, maxBuffer: 1024 ** 2, env: { ...process.env, npm_config_update_notifier: "false" } },
     );
-    return JSON.parse(result.stdout.trim());
-  };
-  return { root, version, channel, command, data: join(root, "data", channel, "installation") };
+  const command = async (args: string[]) => JSON.parse((await invoke(args)).stdout.trim());
+  return { root, version, channel, command, invoke, data: join(root, "data", channel, "installation") };
 }
 
 it("installs a real local npm kit idempotently and controls its stamped standalone runtime", async () => {
@@ -182,6 +181,42 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
       await library.unretain("prepared", "native-fixture");
     } finally {
       await seedManager.close();
+    }
+    for (const signal of ["SIGINT", "SIGTERM"] as const) {
+      const operation = own.invoke(["prepare"]),
+        outcome = operation.then(
+          () => ({ success: true }),
+          (error: unknown) => ({ success: false, error: String(error) }),
+        );
+      await expect
+        .poll(
+          async () => {
+            try {
+              await connectRoot(own.data, scope);
+              return true;
+            } catch {
+              return false;
+            }
+          },
+          { timeout: 15000 },
+        )
+        .toBe(true);
+      expect(operation.child.kill(signal)).toBe(true);
+      expect((await outcome).success).toBe(false);
+      await expect
+        .poll(
+          async () => {
+            try {
+              return (await readDirectory(own.data)).manager.phase;
+            } catch {
+              return "held";
+            }
+          },
+          { timeout: 15000 },
+        )
+        .toBe("closed");
+      expect(await observeProcesses(own.data)).toEqual([]);
+      await writeFile(join(own.root, `${signal}.json`), JSON.stringify(await outcome));
     }
     const prepared = await own.command(["prepare"]);
     expect(prepared.result.state).toBe("ready");

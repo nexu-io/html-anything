@@ -89,7 +89,25 @@ async function main(args: string[]) {
     else if (command === "start") result = await start(description, selection);
     else if (command === "stop") result = await stop(description, selection);
     else if (command === "status") result = await status(description, selection);
-    else result = await native(description, selection);
+    else {
+      const cancellation = new AbortController();
+      const interrupt = () => {
+        process.exitCode = 130;
+        cancellation.abort(Error("Preparation interrupted by SIGINT"));
+      };
+      const terminate = () => {
+        process.exitCode = 143;
+        cancellation.abort(Error("Preparation interrupted by SIGTERM"));
+      };
+      process.on("SIGINT", interrupt);
+      process.on("SIGTERM", terminate);
+      try {
+        result = await native(description, selection, cancellation.signal);
+      } finally {
+        process.off("SIGINT", interrupt);
+        process.off("SIGTERM", terminate);
+      }
+    }
   }
   process.stdout.write(JSON.stringify({ ok: true, command, ...(operation ? { operation } : {}), result }) + "\n");
   if (command === "prepare" && !["ready"].includes((result as { state: string }).state)) process.exitCode = 1;
@@ -98,5 +116,5 @@ void main(process.argv.slice(2)).catch((error) => {
   process.stdout.write(
     JSON.stringify({ ok: false, error: { message: error instanceof Error ? error.message : String(error) } }) + "\n",
   );
-  process.exitCode = 2;
+  process.exitCode ??= 2;
 });
