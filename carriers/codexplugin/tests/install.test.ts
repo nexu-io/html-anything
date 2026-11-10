@@ -1,19 +1,19 @@
 import { randomUUID } from "node:crypto";
-import { cp, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { cp, lstat, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { channel, digest, namespace } from "@odsuite/protocol";
 import { type Context, managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
 import { expect, it } from "vitest";
 import { register } from "@/install/index.js";
 
-async function fixture() {
+async function fixture(fresh = false) {
   const root = resolve("../../.artifacts/codex-registration", randomUUID());
   const profile = join(root, "profile"),
     workspace = join(root, "workspace"),
     skills = join(workspace, ".agents/skills"),
     application = join(root, "application");
   await mkdir(profile, { recursive: true });
-  await mkdir(skills, { recursive: true });
+  await mkdir(fresh ? workspace : skills, { recursive: true });
   await cp(resolve("dist/runtime"), application, { recursive: true });
   const built = JSON.parse(await readFile(join(application, "runtime.json"), "utf8"));
   const manager = await serve(managerEndpoint(join(root, "authority")), { root: join(root, "authority") });
@@ -37,7 +37,7 @@ async function fixture() {
     application,
     profile,
     skills,
-    root: join(root, "data"),
+    root: fresh ? join(root, "runtime-data", built.channel, "registration") : join(root, "data"),
     scope,
     version: built.version,
     worker: resolve("dist/installworker.mjs"),
@@ -100,7 +100,7 @@ it.skipIf(!process.env.OPEN_MOTION_CODEX)(
   async () => {
     const codex = process.env.OPEN_MOTION_CODEX;
     if (!codex) throw Error("Actual Codex executable required");
-    const own = await fixture(),
+    const own = await fixture(true),
       failures: unknown[] = [];
     try {
       const config = join(own.options.profile, "config.toml");
@@ -109,6 +109,7 @@ it.skipIf(!process.env.OPEN_MOTION_CODEX)(
         'model_reasoning_effort = "low"\n[mcp_servers.unrelated]\ncommand = "node"\nargs = ["unrelated.mjs"]\n',
       );
       const receipt = await register({ ...own.options, codex });
+      await expect(lstat(join(own.root, "runtime-data"))).rejects.toMatchObject({ code: "ENOENT" });
       expect(await register({ ...own.options, codex })).toEqual(receipt);
       const actualConfig = await readFile(config, "utf8");
       expect(actualConfig).toContain("[mcp_servers.unrelated]");

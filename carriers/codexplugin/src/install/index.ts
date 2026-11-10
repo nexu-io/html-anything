@@ -61,10 +61,20 @@ async function save(path: string, value: unknown) {
   await writeFile(`${path}.next`, canonical(value), { mode: 0o600, flush: true });
   await rename(`${path}.next`, path);
 }
-async function path(value: string) {
+async function path(value: string, missingParents = false) {
   if (!isAbsolute(value) || resolve(value) !== value) throw Error("Registration paths must be absolute and normalized");
-  const parent = await realpath(dirname(value));
-  if (join(parent, basename(value)) !== value) throw Error("Registration path parent must be canonical");
+  let ancestor = dirname(value);
+  for (;;) {
+    try {
+      if ((await realpath(ancestor)) !== ancestor) throw Error("Registration path parent must be canonical");
+      break;
+    } catch (error) {
+      if (!missingParents || (error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      const parent = dirname(ancestor);
+      if (parent === ancestor) throw error;
+      ancestor = parent;
+    }
+  }
   try {
     if (!(await lstat(value)).isDirectory()) throw Error("Registration path must be a regular directory");
   } catch (error) {
@@ -97,14 +107,16 @@ export async function register(options: Options): Promise<Receipt> {
   const [application, profile, skills, root] = await Promise.all([
     path(options.application),
     path(options.profile),
-    path(options.skills),
-    path(options.root),
+    path(options.skills, true),
+    path(options.root, true),
   ] as const);
   if (basename(skills) !== "skills" || basename(dirname(skills)) !== ".agents")
     throw Error(
       "Skills must use a supported user/workspace .agents/skills root; workspace discovery requires that host cwd",
     );
   const paths = [application, profile, skills, root];
+  // Only this selected container may be created; runtime data remains sidecar's responsibility.
+  await path(dirname(skills));
   for (const a of paths)
     for (const b of paths)
       if (a !== b && b.startsWith(`${a}${sep}`))
@@ -149,7 +161,12 @@ export async function register(options: Options): Promise<Receipt> {
   if (!isAbsolute(runner.worker)) throw Error("Codex worker must be an absolute path");
   return options.factory.session(async () => {
     await options.factory.grant({ kind: "installation", name: "codexprofile", scope: "factory", target: profile });
-    await options.factory.grant({ kind: "installation", name: "codexskills", scope: "factory", target: skills });
+    await options.factory.grant({
+      kind: "installation",
+      name: "codexskills",
+      scope: "factory",
+      target: dirname(skills),
+    });
     await mkdir(profile, { recursive: true, mode: 0o700 });
     await mkdir(skills, { recursive: true, mode: 0o700 });
     try {
