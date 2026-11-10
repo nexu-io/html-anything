@@ -1,8 +1,9 @@
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { promisify } from "node:util";
+import { npm as packageNpm } from "@odsuite/pack/npm";
 import { afterEach, expect, it } from "vitest";
 import {
   build,
@@ -173,4 +174,22 @@ it("invalidates old quality evidence and refuses to label modified source as the
   await rm(join(root, (await loadBuild(root, "stable")).carriers.standalone!, "main.mjs"));
   await expect(check(root, "stable", "tests")).rejects.toThrow();
   await expect(readFile(path)).rejects.toThrow();
+}, 30000);
+
+it("rejects a different valid npm archive even when its receipt hashes are self-consistent", async () => {
+  const root = await fixture();
+  await build({ root, channel: "beta", number: 4 });
+  const packed = await pack(root, "beta");
+  const foreign = await packageNpm({
+    name: "foreign-application",
+    version: "9.9.9",
+    bin: { fixture: "main.mjs" },
+    files: { "main.mjs": Buffer.from("#!/usr/bin/env node\nconsole.log('foreign');") },
+    output: join(root, ".artifacts/foreign.tgz"),
+  });
+  await writeFile(
+    join(channelRoot(root, "beta"), "package.json"),
+    JSON.stringify({ ...packed, npm: { ...foreign, path: relative(root, foreign.path) } }),
+  );
+  await expect(loadPackage(root, "beta")).rejects.toThrow("npm application identity mismatch");
 }, 30000);

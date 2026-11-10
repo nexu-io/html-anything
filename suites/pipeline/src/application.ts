@@ -1,7 +1,7 @@
 import { lstat, mkdir, readFile, realpath, writeFile } from "node:fs/promises";
-import { dirname, join, relative } from "node:path";
-import { type NpmArtifact, npm } from "@odsuite/pack/npm";
-import type { Manifest } from "@odsuite/release";
+import { dirname, join } from "node:path";
+import { inspectNpm, type NpmArtifact, npm } from "@odsuite/pack/npm";
+import { canonical } from "@odsuite/protocol";
 import { inside, json, located, read } from "./files.js";
 import type { BuildReceipt, Configuration, PackReceipt } from "./types.js";
 export interface Application {
@@ -28,12 +28,7 @@ export async function stageApplication(config: Configuration, target: string): P
   const { directory: _, ...application } = config.application;
   await json(join(target, "recipe.json"), { ...application, product: config.product, namespace: config.namespace });
 }
-export async function packageApplication(
-  root: string,
-  built: BuildReceipt,
-  staged: string,
-  packaged: PackReceipt,
-): Promise<NpmArtifact> {
+async function composition(root: string, built: BuildReceipt, staged: string, packaged: PackReceipt) {
   const application = await located(root, built.application),
     recipe = await read<Recipe>(join(application, "recipe.json"));
   const files: Record<string, string | Uint8Array> = {};
@@ -53,6 +48,15 @@ export async function packageApplication(
       carriers,
     }),
   );
+  return { recipe, files };
+}
+export async function packageApplication(
+  root: string,
+  built: BuildReceipt,
+  staged: string,
+  packaged: PackReceipt,
+): Promise<NpmArtifact> {
+  const { recipe, files } = await composition(root, built, staged, packaged);
   return npm({
     name: recipe.name,
     version: built.version,
@@ -61,4 +65,25 @@ export async function packageApplication(
     files,
     output: join(staged, "application.tgz"),
   });
+}
+export async function verifyApplication(root: string, built: BuildReceipt, packaged: PackReceipt, bytes: Uint8Array) {
+  const archive = inspectNpm(bytes),
+    { recipe, files } = await composition(root, built, dirname(await located(root, packaged.npm.path)), packaged);
+  const expected = {
+    name: recipe.name,
+    version: built.version,
+    private: true,
+    type: "module",
+    license: recipe.license,
+    engines: { node: ">=24" },
+    bin: { [recipe.bin]: `dist/${recipe.entry}` },
+    files: Object.keys(files).sort(),
+  };
+  if (canonical(archive.metadata) !== canonical(expected)) throw Error("npm application identity mismatch");
+  if ([...archive.files.keys()].sort().join("\0") !== [...Object.keys(files), "package.json"].sort().join("\0"))
+    throw Error("npm application inventory mismatch");
+  for (const [name, source] of Object.entries(files)) {
+    const expected = typeof source === "string" ? await readFile(source) : Buffer.from(source);
+    if (!expected.equals(Buffer.from(archive.files.get(name)!))) throw Error("npm application payload mismatch");
+  }
 }

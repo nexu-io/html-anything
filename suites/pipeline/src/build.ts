@@ -3,7 +3,7 @@ import { cp, lstat, mkdir, mkdtemp, readFile, realpath, rename, rm } from "node:
 import { join, relative } from "node:path";
 import { inspect, pack as packageClosure } from "@odsuite/pack";
 import { bundle, resolve as manifest, parse, parseReleaseVersion, releaseChannel } from "@odsuite/release";
-import { packageApplication, stageApplication } from "./application.js";
+import { packageApplication, stageApplication, verifyApplication } from "./application.js";
 import { channelRoot, configuration, configuredBase, version } from "./config.js";
 import { hash, inventory, json, located, owned, read, revision, run } from "./files.js";
 import type { BuildReceipt, PackReceipt, Selection } from "./types.js";
@@ -192,5 +192,6 @@ export async function loadPackage(root: string, lane: string): Promise<PackRecei
     `sha512-${createHash("sha512").update(npm).digest("base64")}` !== receipt.npm.integrity
   )
     throw Error("npm package integrity mismatch");
+  await verifyApplication(root, build, receipt, npm);
   return receipt;
 }
