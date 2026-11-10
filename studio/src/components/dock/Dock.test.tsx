@@ -447,6 +447,27 @@ it('changes native dock titles live without recreating panels, preview or layout
   expect(host.querySelector('iframe')).toBe(preview);
 });
 
+it("adds version history to an existing MVP layout without resetting divider sizes", () => {
+  const options = { fixedLayout: true, storageKey: "motion.mvp.dock.v1" };
+  mount("p1", {}, { ...options, panels: MVP_PANEL_IDS.filter(id => id !== "history") });
+  act(() => {
+    dockApi!.getPanel("compositions")!.api.setSize({ width: 320 });
+    vi.advanceTimersByTime(1000);
+  });
+  const leftWidth = dockApi!.getPanel("compositions")!.group.width;
+  const rightWidth = dockApi!.getPanel("design")!.group.width;
+  act(() => root?.unmount());
+  root = null;
+
+  const host = mount("p1", {}, { ...options, panels: MVP_PANEL_IDS });
+  expect(dockApi!.getPanel("history")?.group.id).toBe(dockApi!.getPanel("design")!.group.id);
+  expect(dockApi!.getPanel("compositions")!.group.width).toBe(leftWidth);
+  expect(dockApi!.getPanel("design")!.group.width).toBe(rightWidth);
+  act(() => useDockLayoutStore.getState().activatePanel("history"));
+  expect(host.querySelector('[data-testid="content-history"]')).not.toBeNull();
+  expect(dockApi!.getPanel("code")).toBeUndefined();
+});
+
 it("keeps the MVP panels fixed, rejects hidden panels, and restores divider sizes", () => {
   mount("p1", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, storageKey: "motion.mvp.dock.v1" });
   const store = useDockLayoutStore.getState();
