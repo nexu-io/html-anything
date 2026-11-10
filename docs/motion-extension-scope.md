@@ -5,8 +5,8 @@
 ## 当前分发与接口
 
 - 五个正式入口均随一期插件和四宿主适配器分发。`motion-template-to-video` 使用 `motion://workflow/template/start`，`motion-video-to-template` 使用 `motion://workflow/video-to-template/start`；短 workflow ID 保持兼容，读取不会启动服务或创建工程。
-- 一期仅公开 [9 个 Tool](mcp-phase1-tools.md)。工程读取/文件读取/任务状态统一用 motion_get_project，托管源码保存用 motion_edit_project，批量导入用 motion_import_assets，导出和技术验证由 motion_export_request 负责。
-- 旧版独立比较、工作流读取、模板查询/管理等 handler 仅供内部兼容，不能在一期 Skill 中要求调用。模板目录和指引仍可通过 Studio 或宿主读取；既有私有模板文件不删除、不重写。
+- Phase one exposes [11 public Tools](mcp-phase1-tools.md): nine project Tools plus `motion_list_templates` and `motion_get_template`. Use `motion_get_project` for project/file/job reads, `motion_edit_project` for managed source changes, `motion_import_assets` for batch imports and `motion_export_request` for export and technical verification.
+- The two public catalog Tools provide the local template index and individual template details/instructions. Older standalone comparison, workflow-reading and template-management handlers remain internal compatibility only; Skills must not require those hidden calls. Existing private template files are preserved.
 - 下载/分析参考、CLI 检查、原片对照视频与 ZIP 打包由宿主可用能力完成；工具不足须记录缺口。技术检查不代表人类视觉验收。
 
 ## 不改底座
