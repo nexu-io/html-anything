@@ -2,7 +2,7 @@
 
 <a id="openmotion"></a>
 
-# 🎬 OpenMotion
+# OpenMotion
 
 **Reverse engineering for any video**
 
