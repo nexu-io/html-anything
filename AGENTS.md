@@ -10,7 +10,7 @@
 - PRs, issues and the owning delivery item hold goals, plans, decisions, progress and evidence. `docs/` contains only durable architecture, operations and conventions with an identified owner. Do not add migration plans, temporary investigations, acceptance logs, task ledgers or disguised archives there. Extract lasting conclusions into the existing topic; keep their discussion in delivery records.
 - Review the entire [architecture](docs/architecture.md) for each change: positioning, user flows, responsibilities, dependencies, data/API boundaries, implemented behavior and limits. Update it only when inaccurate or incomplete; do not create a per-change document merely to record work.
 - Sidecar is the sole authority for processes, identities, ports, granted paths and lifecycle within a `<channel, namespace>` factory. Callers negotiate business communication. Channel represents the product distribution lifecycle; all deliverable carriers share the product version and release together.
-- Capsule belongs to `carriers/electron/src/capsule`, builds independently into `dist/capsule` and runs inside Electron. It has no independent sidecar process, service or resource domain. Environment facts belong to `suites/carrier`, release identity to release, and OS resources to sidecar.
+- The only delivery carriers are standalone and Codex Plugin, sharing one product version. Codex distribution uses an npx installation entry; npx cache is not a persistent runtime or resource authority. Absorb reference lifecycle behavior through existing suite owners, never copy legacy script layouts or introduce a second resource/configuration authority. Electron, Capsule and Docker are outside this product composition.
 - The only public tool is `odsuite`; the only configuration is `odsuite.yaml`. Package scripts are limited to `lint`, `test`, `build`; the root only distributes the same command with `pnpm -r --if-present run <name>`. No aggregate shortcuts, install hooks, root scripts directory or workflow-shell reimplementation.
 - Maintain only the current contract: no old-name entry points, aliases, environment-variable fallbacks or experimental-format compatibility. Do not discover, migrate or reset discarded experimental roots. Do not delete authority/registry/ledger, guess that a process died or take over a live instance to bypass recovery. Importing user data needs an explicit contract and validation.
 - Preserve the Apache-2.0 license, upstream attribution and all redistributed font/dependency notices. No telemetry or automatic experiment assignment. Set `HYPERFRAMES_NO_TELEMETRY=1` for product engine processes; previews remain network-restricted. New distribution resources need an explicit finite manifest and lifecycle. No registry, S3, release or installation publication is authorized merely by a passing build or PR.
@@ -51,11 +51,10 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | publish      | Signed generation-publication authority, feed projection and verified retrieval; distribution owns shell negotiation.                                        |
 | distribution | Product metadata, minimum-shell compatibility, platform-shell selection and S3 IO; not installation or runtime commit authority.                             |
 | update       | Candidate discovery, verification and preparation; actual lifecycle owners activate.                                                                         |
-| runtime      | Content generations, binding selection/commit, Capsule/Web/Daemon composition, activation and recovery; still shaped around Electron.                        |
-| electron     | Host windows, preload/IPC, protocols, document lifecycle, native blocking and installer handoff; concrete carriers own product wiring.                       |
+| runtime      | Unconnected content-generation activation/recovery mechanism; its shell-oriented contract is not the current Node-carrier update lifecycle.                  |
 | installer    | Independent installation authority, host drain, physical replacement, confirmation and interruption recovery; currently macOS.                               |
-| pack         | Platform delivery-artifact assembly; currently Electron, not a completed multi-carrier adapter set.                                                          |
-| pipeline     | Version/build/package/check/publication orchestration and immutable receipts; workflows choose quality requirements.                                         |
+| pack         | Generic Node closure compilation, dependency notices and verified immutable local archives; carriers choose entries and resources.                           |
+| pipeline     | Shared-version build/package/check orchestration for both Node carriers; workflows choose quality requirements. Publication is not connected.                |
 | dev          | Repository development configuration, managed builds/watchers and carrier orchestration; sidecar owns all control paths, liveness and lifecycle.             |
 | cli          | Argument parsing, routing and output; mechanisms stay in their suites.                                                                                       |
 | style        | Closed Less/BEM/token/font-manifest validation and explicit build composition/copy; products own tokens/fonts/atoms.                                         |
@@ -71,10 +70,8 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | odsuite.yaml, biome.json                          | Finite engineering policy and runtime/development configuration                                                                      |
 | suites/*/src/index.ts                             | Public mechanism entry points                                                                                                        |
 | suites/cli/src/odsuite.mjs                        | Sole CLI bootstrap                                                                                                                   |
-| carriers/electron/src, tests                      | Electron reference carrier and independently built Capsule                                                                           |
-| carriers/standalone                               | Actual managed Web/Daemon composition and development adapter                                                                        |
-| carriers/codexplugin                              | Local descriptor, closure build, stdio attachment and drain                                                                          |
-| carriers/docker                                   | Empty carrier placeholder                                                                                                            |
+| carriers/standalone                               | Actual managed Web/Daemon composition, independent Node closure and development adapter                                              |
+| carriers/codexplugin                              | Codex host composition, closed runtime, guidance and stdio drain; npx installation remains separate from descriptor loading          |
 | apps/web, apps/daemon                             | Product workspace UI, HTTP/MCP adaptation and protected native previews                                                              |
 | packages/theme, packages/components               | Primitive/semantic/light-dark tokens, licensed local fonts, atoms and anonymous layouts                                              |
 | apps/web/src/lib/components                       | Web business components; no style definitions                                                                                        |
@@ -129,11 +126,11 @@ Real browser tests live in `apps/web/tests/browser`; carrier composition tests l
 
 Obtain resources through sidecar factories and hosted Context. Observe actual OS liveness; directory discovery is not proof. Compose writes in the same factory/session: same-factory reentry is allowed, cross-factory calls rejected, scoped handles expire after callbacks. Use Context.background only for initialization scheduling; quiesce drains background controllers before stop lanes. Do not acquire a competing background lane while already holding one.
 
-Update discovers/prepares; actual owners activate/commit. Capsule owns leaf updates, stable Electron bootstrap owns Capsule handoff, installer owns shell replacement. Blob references and actual Uses protect content until processes/documents/streams/readers drain. Unknown or failed consumers remain protected. Use Library.session when already in a lifecycle lane.
+Update discovers/prepares; actual lifecycle owners activate/commit. Node installation and activation must be modeled through their responsible suites and carriers; the retained shell-oriented runtime/installer contracts are not a current product update path. Blob references and actual Uses protect content until processes/documents/streams/readers drain. Unknown or failed consumers remain protected. Use Library.session when already in a lifecycle lane.
 
 After SIGKILL, explicitly recover the whole root before binding replay. Preserve diagnostics and failed layouts; do not erase authority or infer death by elapsed time. Persistent user data and reclaimable content have separate owners.
 
-Automated Electron uses accessory-before-ready, hidden/non-focusable windows and must not switch the user's desktop or require foreground/fullscreen setup. Actual product editing/export, visual/audio acceptance, native installation, signing, network distribution and power-loss evidence remain separate.
+Background validation must not focus the user's desktop or open a browser without instruction. Actual product editing/export, visual/audio acceptance, installation, network distribution and power-loss evidence remain separate.
 
 ### Builds and delivery
 

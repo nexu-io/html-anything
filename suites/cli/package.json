@@ -35,9 +35,6 @@
   },
   "dependencies": {
     "@odsuite/guard": "workspace:*",
-    "@odsuite/runtime": "workspace:*",
-    "@odsuite/release": "workspace:*",
-    "@odsuite/pack": "workspace:*",
     "@odsuite/pipeline": "workspace:*",
     "@odsuite/inspect": "workspace:*",
     "@odsuite/serve": "workspace:*",

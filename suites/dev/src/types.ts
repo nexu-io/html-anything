@@ -8,13 +8,11 @@ export interface Plan {
   entry: string;
   version: string;
   watch: boolean;
-  headless: boolean;
 }
 export interface CarrierContext {
   repo: string;
   scope: FactoryScope;
   version: string;
-  headless: boolean;
   manager: Service;
   factory: Factory;
 }

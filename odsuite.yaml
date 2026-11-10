@@ -4,8 +4,6 @@ guard:
     repository:
       - carriers
       - carriers/*
-      - carriers/electron/src/capsule
-      - carriers/electron/tests/capsule
       - carriers/standalone/tests/media
       - apps
       - suites
@@ -28,7 +26,6 @@ guard:
       - apps/daemon/src/exports
       - suites/blob/src/materialize
       - suites/blob/src/control
-      - suites/electron/src/control
       - suites/runtime/src/control
       - apps/web/src/lib
       - apps/web/src/lib/components
@@ -95,12 +92,11 @@ guard:
     - packages/components
 runtime:
   appid: io.openmotion.app
-  carrier: 1
   channel: stable
   name: open-motion
   namespace: primary
   scheme: open-motion
-  version: 1.0.0
+  version: 0.6.1
 serve:
   data: .state/serve
   sources:
@@ -114,9 +110,10 @@ dev:
   carriers:
     standalone:
       entry: carriers/standalone/dist/dev.mjs
-    electron:
-      entry: carriers/electron/dist/dev.mjs
     codexplugin:
       entry: carriers/codexplugin/dist/dev.mjs
-    docker:
-      unsupported: Docker carrier is a scaffold; no development runtime adapter exists.
+
+pipeline:
+  carriers:
+    standalone: carriers/standalone/dist/runtime
+    codexplugin: carriers/codexplugin/dist

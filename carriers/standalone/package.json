@@ -12,14 +12,16 @@
     "vitest": "4.1.6",
     "@types/node": "24.12.2",
     "esbuild": "0.28.0",
-    "@odsuite/automation": "workspace:*"
+    "@odsuite/automation": "workspace:*",
+    "@odsuite/pack": "workspace:*",
+    "@odsuite/release": "workspace:*"
   },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.mjs"
     },
-    "./main": "./dist/main.mjs",
+    "./main": "./dist/runtime/main.mjs",
     "./dev": {
       "types": "./dist/dev.d.ts",
       "default": "./dist/dev.mjs"

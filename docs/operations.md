@@ -77,7 +77,7 @@ pnpm exec odsuite dev stop --channel=dev --namespace=default
 
 Start reports the actual URL and watches source by default. Use `--watch=false` for finite acceptance. A rebuilt artifact does not replace an existing process; restart explicitly. The manager root is `.state/dev/<channel>/<namespace>`, derived/owned by sidecar. Status/stop query its authority even if current configuration is invalid. Do not copy this directory to another checkout or create another PID/port registry.
 
-Electron uses the same commands with `--carrier=electron`; `--headless` selects automated host behavior. Docker is a placeholder and rejects start/restart rather than inventing readiness. Codex development starts the composition, then attaches MCP stdio:
+Codex development starts the composition, then attaches MCP stdio:
 
 ```sh
 pnpm exec odsuite dev start --carrier=codexplugin --channel=dev --namespace=default
@@ -86,18 +86,25 @@ pnpm exec odsuite dev connect --carrier=codexplugin --channel=dev --namespace=de
 
 Connect stdout is JSON-RPC only. Client EOF closes the attachment, not the development manager. Reconnect after manager replacement; an old Peer cannot take over another incarnation. A host can invoke pnpm from the worktree with those arguments, without a global binary or modifying everyday host configuration.
 
-Guard checks directory/file compliance, with exit 0 clean, 1 findings and 2 operational error. It does not prove runtime behavior. Configuration errors reject without alternate-file/env fallbacks. Reference qualification is independent:
+Guard checks directory/file compliance, with exit 0 clean, 1 findings and 2 operational error. It does not prove runtime behavior. Configuration errors reject without alternate-file/env fallbacks.
+
+## Shared-version local carrier artifacts
+
+The finite `pipeline.carriers` mapping selects the standalone and Codex built closure directories. Both consume the same selected build version without rewriting source configuration. Source quality gates require the same clean Git commit and matching compiled carrier outputs before and after execution; failed or missing build evidence cannot retain an earlier passing gate:
 
 ```sh
-pnpm exec odsuite guard --root /path/to/repo --json
-node --input-type=module -e 'import {run} from "@odsuite/testkit"; const r=await run({root:process.cwd(),output:".artifacts/qualification.json",packaged:false}); if(r.result==="failed")process.exitCode=1;'
+pnpm exec odsuite build --channel stable
+pnpm exec odsuite pack --channel stable
+pnpm exec odsuite check --channel stable --gate artifacts
 ```
 
-Testkit distinguishes passed/failed/unqualified and never substitutes for product acceptance. Electron is a reference carrier, Docker a skeleton, standalone/Codex carry the actual session/source workspace. Advanced animation, unresolved/nonlinear composition clocks, broader media/audio editing, additional codecs, layout preferences, generation and other-carrier export are not fully connected.
+Use `--channel beta --number 1` for a prerelease identity. Outputs and receipts live under `.artifacts/distribution/<channel>`; builds fingerprint both closures and packaging verifies exact bytes. A `.bundle` is a local verified content archive, not a runnable npm package. No setup/prepare, host registration, npm publication or channel-tag change is performed by these commands. Quality gates remain separate invocations. Old Electron-specific release, native platform packaging, desktop gates and the development headless option have no aliases.
+
+Acceptance uses real product scenarios in testkit and carrier tests. Independent closure execution, actual Codex host loading, model/creative execution, native platform rendering, installation and publication each require their own evidence. Historical Electron qualification matrices do not apply to the current carriers.
 
 ## Resources and recovery
 
-`odsuite.yaml` defines product/channel/namespace/carrier ABI and explicit serve sources. Sidecar grants persistent data, runtime directories, sockets, ports, logs and locks; content and installation paths have separate owners. Directory/port existence is not identity or liveness proof.
+`odsuite.yaml` defines product/channel/namespace and explicit serve sources. Sidecar grants persistent data, runtime directories, sockets, ports, logs and locks; content and installation paths have separate owners. Directory/port existence is not identity or liveness proof.
 
 Stop first drains calls, background controllers, documents/streams and actual processes, then releases Uses/resources. Preserve protection on unknown consumers, failed stop or remaining references. User data is not blob-GC input.
 
@@ -108,11 +115,11 @@ pnpm exec odsuite recover inspect --data /path/to/root
 pnpm exec odsuite recover apply --data /path/to/root --expected <fingerprint>
 ```
 
-The CLI validates actual contracts. Recovery rejects live owners, changed plans, replaced endpoints and uncertainty; never delete authority/registry/ledger or take over a live manager. Preserve failed layouts and evidence. Metadata history and installation policy/transactions/backups/executors are retained independently of content GC. Normal stop/installation confirmation does not authorize deletion. Physical installer support is currently macOS.
+The CLI validates actual contracts. Recovery rejects live owners, changed plans, replaced endpoints and uncertainty; never delete authority/registry/ledger or take over a live manager. Preserve failed layouts and evidence. Metadata history and installation policy/transactions/backups/executors are retained independently of content GC. Normal stop/installation confirmation does not authorize deletion. The retained physical shell installer mechanism is macOS-only and is not the standalone/Codex installation path.
 
-Product bootstrap variables are `ODSUITE_RUNTIME_*` (DATA, ORIGIN, SOCKET, TOKEN, GENERATION, NONCE, LIFELINE and explicit environment contracts); tools use `ODSUITE_*`. Owners inject them. Do not set paths/ports manually to evade sidecar. Do not log capabilities or forward runtime tokens through installers. Product engine children disable telemetry with `HYPERFRAMES_NO_TELEMETRY=1`. Web's explicit host bridge is `openMotion`.
+Node-carrier startup explicitly selects its root, channel and namespace. Carriers inject private Daemon connections and environment facts; Web receives an in-memory bootstrap. Do not set paths/ports manually to evade sidecar, log capabilities or forward runtime tokens through installers. Product engine children disable telemetry with `HYPERFRAMES_NO_TELEMETRY=1`.
 
-GUI/package/native observer checks require the corresponding `ODSUITE_RUNTIME_GUI`, `ODSUITE_RUNTIME_PACKAGE`, `ODSUITE_RUNTIME_NATIVE` opt-ins. Ordinary source checks do not enable them. Automated Electron initializes accessory behavior before ready and stays hidden/non-focusable; never switch the user's desktop for qualification.
+The retained runtime/installer suites' shell-specific bootstrap variables and observer tests are not current product startup contracts. Background qualification must not focus the desktop or open a browser without instruction.
 
 ## Codex closure
 
@@ -163,9 +170,9 @@ Normal stop drains active work into interrupted state and retains queued work; r
 
 ## Distribution qualification
 
-Pack is currently Electron-oriented; runtime still contains Electron composition assumptions and pipeline has host-specific publication adapters. Empty carriers are not supported deliveries. Tools own shared version/build/package capabilities; workflows choose channel/quality policy. All deliverable carriers share one product version.
+Pack compiles and verifies Node closures; pipeline builds/packages both carriers at one version. The retained runtime/distribution/installer mechanisms still have shell-oriented contracts and are disconnected from product composition. Node installation and update activation remain separately modeled and qualified. Tools own shared capabilities; workflows choose channel/quality policy.
 
-Use explicit positive composition/manifests for actual artifacts. No registry, storage, release or service publication is configured or authorized by source CI. Signing, target-platform installation, network distribution, power loss and actual product acceptance remain independent. Update qualification covers discovery/preparation, actual owner activation, minimum-shell blocking, forced update, rollback and interruption recovery.
+Use explicit positive composition/manifests for actual artifacts. No registry, storage, release or service publication is configured or authorized by source CI. Signing, target-platform installation, network distribution, power loss and actual product acceptance remain independent. Node update qualification must cover version discovery/preparation, actual owner activation, compatibility rejection, data preservation and interruption recovery. Old minimum-shell/forced-update tests do not qualify a Node installation.
 
 Silo uses a separate Compose project, loopback ports and retained volumes. Select its explicit endpoint and `ODSUITE_SILO_PORT` or a random allocated port. Compose credentials are only local isolated fixtures. Stop only that project and preserve volumes/failures; never `down -v` or reclaim another project's resources.
 

@@ -1,4 +1,8 @@
+import { readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
+import { dirname } from "node:path";
 import { source } from "@odsuite/blob";
+import type { Plugin } from "esbuild";
 import type { Tools } from "./index.js";
 /** Finite vendor sources; compressed and materialized identities are pinned independently. */
 export function nativeTools(): Tools | undefined {
@@ -76,5 +80,29 @@ export function nativeTools(): Tools | undefined {
         ),
       };
     })(),
+  };
+}
+
+/** Build-only adaptation of the pinned native engine's package lookup. */
+export async function provenance(worker: string): Promise<Plugin> {
+  const require = createRequire(worker);
+  const engine = JSON.parse(await readFile(require.resolve("@hyperframes/engine/package.json"), "utf8"));
+  if (engine.name !== "@hyperframes/engine" || engine.version !== "0.9.7")
+    throw Error("unexpected native engine build input");
+  return {
+    name: "native-engine-version",
+    setup(context) {
+      context.onLoad({ filter: /renderProvenance\.js$/ }, async ({ path }) => {
+        if (!path.includes("/@hyperframes/engine/")) return;
+        const text = await readFile(path, "utf8"),
+          needle = "PROVENANCE_VERSION = readEngineVersion()";
+        if (text.split(needle).length !== 2) throw Error("native provenance contract changed");
+        return {
+          contents: text.replace(needle, `PROVENANCE_VERSION = ${JSON.stringify(engine.version)}`),
+          loader: "js",
+          resolveDir: dirname(path),
+        };
+      });
+    },
   };
 }

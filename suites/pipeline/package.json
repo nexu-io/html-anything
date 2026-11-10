@@ -21,8 +21,7 @@
     "@odsuite/release": "workspace:*",
     "@odsuite/pack": "workspace:*",
     "@odsuite/guard": "workspace:*",
-    "yaml": "2.9.1",
-    "@odsuite/automation": "workspace:*"
+    "yaml": "2.9.1"
   },
   "devDependencies": {
     "@types/node": "24.12.2",

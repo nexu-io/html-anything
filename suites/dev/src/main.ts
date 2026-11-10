@@ -46,7 +46,6 @@ try {
           repo: plan.repo,
           scope: plan.scope,
           version: plan.version,
-          headless: plan.headless,
           manager,
           factory,
         });

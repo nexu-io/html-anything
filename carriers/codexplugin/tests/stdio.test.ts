@@ -35,20 +35,20 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
       expect(bundled).toContain("Bundled dependency: @modelcontextprotocol/server@2.4.0 (Apache-2.0)");
     }
   }
+  const built = JSON.parse(await readFile(join(plugin, "runtime.json"), "utf8"));
   const data = join(root, "data");
   const transport = new StdioClientTransport({
     command: process.execPath,
     args: [join(plugin, "main.mjs")],
     cwd: plugin,
-    env: { OPEN_MOTION_ROOT: data, OPEN_MOTION_CHANNEL: "stable", OPEN_MOTION_NAMESPACE: "stdio" },
+    env: { OPEN_MOTION_ROOT: data, OPEN_MOTION_CHANNEL: built.channel, OPEN_MOTION_NAMESPACE: "stdio" },
     stderr: "pipe",
   });
   const client = new Client({ name: "open-motion-verifier", version: "1.0.0" });
   let passed = false;
   try {
     await client.connect(transport);
-    const product = JSON.parse(await readFile(new URL("../../../package.json", import.meta.url), "utf8"));
-    expect(client.getServerVersion()).toEqual({ name: "open-motion", version: product.version });
+    expect(client.getServerVersion()).toEqual({ name: "open-motion", version: built.version });
     expect((await client.listTools()).tools.map((tool) => tool.name)).toEqual([
       "runtime_status",
       ...Object.keys(schemas),
@@ -266,8 +266,9 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
 
 it("drains a real runtime when stdin ends before any initialize request", async () => {
   const root = await mkdtemp(join(tmpdir(), "codex-early-eof-"));
+  const built = JSON.parse(await readFile(resolve("dist/runtime.json"), "utf8"));
   const child = spawn(process.execPath, [resolve("dist/main.mjs")], {
-    env: { ...process.env, OPEN_MOTION_ROOT: root, OPEN_MOTION_CHANNEL: "stable", OPEN_MOTION_NAMESPACE: "early" },
+    env: { ...process.env, OPEN_MOTION_ROOT: root, OPEN_MOTION_CHANNEL: built.channel, OPEN_MOTION_NAMESPACE: "early" },
     stdio: ["pipe", "pipe", "pipe"],
   });
   let output = "";

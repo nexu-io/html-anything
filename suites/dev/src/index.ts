@@ -119,7 +119,7 @@ export async function connect(target: Target) {
   const { factory } = await connectRoot(current.root, target.scope);
   await adapter.connect({ factory, repo: current.plan.repo });
 }
-export async function configure(target: Target & { watch?: boolean; headless?: boolean }) {
+export async function configure(target: Target & { watch?: boolean }) {
   if (!target.carrier) throw new Error("--carrier is required for start/restart");
   return prepare({ ...target, carrier: target.carrier });
 }

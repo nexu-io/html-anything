@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { fileURLToPath } from "node:url";
 import { channel, namespace } from "@odsuite/protocol";
 import { managerReady } from "@odsuite/sidecar";
 import { open } from "./index.js";
@@ -23,6 +24,9 @@ if (!root || !values.has("--channel") || !values.has("--namespace"))
   throw new Error("root/channel/namespace are required");
 const runtime = await open({
   root,
+  web: fileURLToPath(new URL("./web/", import.meta.url)),
+  daemon: fileURLToPath(new URL("./daemon/main.mjs", import.meta.url)),
+  worker: fileURLToPath(new URL("./render/worker.mjs", import.meta.url)),
   scope: { channel: channel(values.get("--channel") ?? ""), namespace: namespace(values.get("--namespace") ?? "") },
   version: values.get("--version"),
 });

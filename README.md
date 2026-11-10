@@ -4,7 +4,7 @@ An isolated engineering and product workspace for OpenMotion. Engineering mechan
 
 ```text
 suites/     engineering contracts, tools and resource lifecycles
-carriers/   Electron, standalone, Docker and Codex host composition
+carriers/   standalone and Codex host composition
 apps/       Web and Daemon product applications
 packages/   shared product domains, theme and components
 ```
@@ -34,9 +34,9 @@ pnpm exec odsuite dev restart --carrier=standalone --channel=dev --namespace=def
 pnpm exec odsuite dev stop --channel=dev --namespace=default
 ```
 
-`start` returns the actual Web URL. It watches source by default; use `restart` to activate rebuilt code. Electron and Codex use the same entry point. Sidecar owns control state, process identity, ports, paths and lifecycle; no global bin or shortcut scripts are installed.
+`start` returns the actual Web URL. It watches source by default; use `restart` to activate rebuilt code. Codex uses the same entry point. Sidecar owns control state, process identity, ports, paths and lifecycle; no global bin or shortcut scripts are installed.
 
-The current product supports sessions/artifacts, native source editing, text/appearance/numeric animation, bounded key/clip timing, canvas movement, persistent history, external-file composition navigation/shared-source editing with numeric local clocks and bounded parent-host movement/right-edge trim, persistent PNG/PCM16 WAV import/insertion with native playback and independent fixed-rate audio source-in-point/rate/gain/mute controls, source-local aligned PNG/WAV link/unlink with linked timing and history, and isolated native previews. Unresolved composition clocks remain read-only; broader media/audio editing, additional codecs, layouts/preferences, generation and rendering/export still need implementation and their own acceptance. Reference carriers and empty placeholders do not prove product or distribution support.
+The current product supports sessions/artifacts, native source editing, text/appearance/numeric animation, bounded key/clip timing, canvas movement, persistent history, external-file composition navigation/shared-source editing with numeric local clocks and bounded parent-host movement/right-edge trim, persistent PNG/PCM16 WAV import/insertion with native playback and independent fixed-rate audio source-in-point/rate/gain/mute controls, source-local aligned PNG/WAV link/unlink with linked timing and history, and isolated native previews. Unresolved composition clocks remain read-only; broader media/audio editing, additional codecs, layouts/preferences, production generation providers still need implementation and their own acceptance. Fixed-revision native MP4 export is available on the qualified platform. Both carriers build independent Node closures; npx installation and publication remain separate delivery work.
 
 ## Read and contribute
 

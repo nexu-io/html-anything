@@ -19,20 +19,15 @@
   },
   "dependencies": {
     "@odsuite/guard": "workspace:*",
-    "@odsuite/pack": "workspace:*",
     "@odsuite/protocol": "workspace:*",
-    "@odsuite/publish": "workspace:*",
     "@odsuite/release": "workspace:*",
     "@odsuite/sidecar": "workspace:*",
-    "@odsuite/runtime": "workspace:*",
-    "@odsuite/blob": "workspace:*",
-    "@open-motion/electron": "workspace:*"
+    "@odsuite/blob": "workspace:*"
   },
   "devDependencies": {
     "@open-motion/daemon": "workspace:*",
     "@open-motion/web": "workspace:*",
     "@types/node": "24.12.2",
-    "electron": "41.3.0",
     "esbuild": "0.28.0",
     "typescript": "7.0.2",
     "vitest": "4.1.6",

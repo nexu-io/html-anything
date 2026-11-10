@@ -17,7 +17,7 @@ The complete product's template environment, eleven interface languages and host
 
 All packages are private and internal dependencies are `workspace:*`. Mechanism APIs must not depend on concrete product orchestration. Carriers consume contracts and compose owners; apps and domains do not copy mechanism authority. Testkit can depend on reference applications only as validation infrastructure. The complete responsibility index is in [AGENTS](../AGENTS.md#suite-responsibility-index).
 
-`suites/carrier` defines immutable environment facts and explicit per-composition registration/serialization. A concrete host collects platform/release/arch and runtime name/version; the registry is not process-global. Facts contain no release identity, ports, roots or PID inventory. Standalone propagates the same facts to the real Daemon and Web bootstrap and verifies the health PID/environment. Codex supplies its own host facts to the same composition. Electron remains a reference carrier and Docker a placeholder.
+`suites/carrier` defines immutable environment facts and explicit per-composition registration/serialization. A concrete host collects platform/release/arch and runtime name/version; the registry is not process-global. Facts contain no release identity, ports, roots or PID inventory. Standalone propagates the same facts to the real Daemon and Web bootstrap and verifies the health PID/environment. Codex supplies its own host facts to the same composition. The product delivery targets are standalone and Codex Plugin. Electron/Capsule and Docker are not product carriers.
 
 ## Identity and system resources
 
@@ -27,17 +27,21 @@ Release owns product/channel/version. Sidecar owns resource factories keyed by `
 
 Processes obtain identity, ports, paths and lifecycle through sidecar. The directory records committed facts; OS observation proves liveness. Public APIs hide arg stamps, private startup protocols, stop escalation and retirement. Independent managers and managed workloads have separate identities; launcher ancestry does not authorize cross-domain takeover. Callers negotiate business communication. Inspect neither owns another inventory nor fixes business/debug protocols.
 
-## Capsule and three update lifecycles
+## Delivery lifecycle ownership
 
-Capsule runs inside Electron, lives at `carriers/electron/src/capsule` and builds separately to `dist/capsule`. It has no independent sidecar service/process/domain. It owns loading before Web, IPC/local-protocol adaptation, Web/Daemon composition and leaf updates. Electron registers the channel-specific OS application scheme.
+The current product composes only standalone and Codex Plugin. Feature-branch implementations provide lifecycle behavior to absorb, not a script/configuration blueprint. Both carriers share a product/channel/version; carrier identity does not add a new resource factory dimension.
 
-| Update tier    | Lifecycle owner                                                                                      |
-| -------------- | ---------------------------------------------------------------------------------------------------- |
-| Web/Daemon     | Capsule composes/drains actual leaf actors, activates, waits for readiness and commits               |
-| Capsule        | Stable Electron bootstrap retires the old adapter, initializes its replacement and recovers failures |
-| Electron shell | Installer drains the host, replaces it physically, confirms the new host and recovers interruptions  |
+| Lifecycle                      | Owner and boundary                                                                                                                                     |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Version and identity           | Release validates product/channel/version; pipeline selects one version for both carriers.                                                             |
+| Closure and local artifacts    | Carriers choose finite entries/resources; pack compiles portable Node24 closures, retains dependency notices and produces verified immutable archives. |
+| Runtime start/stop/recovery    | Carriers compose services; sidecar owns process identity, grants, liveness, drain and explicit interrupted-owner recovery.                             |
+| Native preparation and GC      | Blob verifies declared resources and protects actual Uses; application/user outputs remain persistent domain data.                                     |
+| Host registration and upgrades | A future installation lifecycle will bind an exact application version to the selected host. It must not create another runtime registry.              |
 
-Update discovers, verifies and prepares candidates; actual owners activate/commit. Distribution metadata declares minimum compatible shell versions. Native blocking and forced-update handoff occur before incompatible content starts. Readiness requires actual execution evidence; diagnostic checkpoints are not product policy.
+Pipeline stages both actual built closures under one fingerprint. Channel selection changes identity, not quality policy. Independent policy/tests/artifact gates are available; archive checks do not establish installation or host loading. The old Electron-specific pack/release/desktop gates are removed rather than retained as aliases. Local archives are mechanism inputs, not an npm installation or publication claim.
+
+Standalone and Codex have independent bundled entries, Web, Daemon and render worker, with no Electron or workspace dependency. Generic runtime/installer/distribution suites still contain the previous shell-oriented activation contracts; they are not composed into these carriers, and do not qualify Node updates. Node installation, upgrade and recovery require their own lifecycle contract and evidence; an empty Capsule is not an adapter.
 
 ## Blob and persistent user data
 
@@ -126,7 +130,7 @@ Sidecar's owner-only `Context.cleanup` lets already accepted controllers finish 
 
 Daemon adapts the same create/list/read/cancel/retry/download schemas to authenticated HTTP and MCP. Web saves before submission, retains request identity across unknown receipts and polls bounded pages. Completed downloads issue at most 128 short-lived, read-only tickets with a ten-minute lifetime, verify the exact regular film file's digest/size before streaming, and return MCP `resource_link` metadata rather than embedding a movie or exposing a filesystem path. Tickets expire with the Daemon process; completed jobs and films persist. Deleting exports needs a separate product lifecycle; blob GC never authorizes it.
 
-Native Web export and a Codex closure relocated outside the repository have local macOS arm64 execution evidence. The build retains supplied dependency notices and pins the actual engine provenance version without a runtime package lookup. This is not a published toolchain feed, target-platform installation or asset redistribution/license qualification. Linux/Windows native execution, Electron product integration and all startup/power-loss windows need their own evidence; skipped seeded-native tests do not qualify them.
+Native Web export and a Codex closure relocated outside the repository have local macOS arm64 execution evidence. The build retains supplied dependency notices and pins the actual engine provenance version without a runtime package lookup. This is not a published toolchain feed, target-platform installation or asset redistribution/license qualification. Linux/Windows native execution, installed Node-carrier integration and all startup/power-loss windows need their own evidence; skipped seeded-native tests do not qualify them.
 
 ## Development control plane
 
