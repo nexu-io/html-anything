@@ -109,7 +109,9 @@ export async function runHyperframes(runtimeRoot: string, directory: string, arg
 }
 export async function inspectProject(runtimeRoot: string, directory: string, view: string, signal?: AbortSignal) {
   if (!['info', 'lint', 'timeline'].includes(view)) throw new Error('view 必须为 info、lint 或 timeline');
-  const result = await runHyperframes(runtimeRoot, directory, [view, '.', '--json'], undefined, undefined, signal);
+  const result = view === 'lint'
+    ? await execute(process.execPath, [path.join(pluginRoot, 'scripts/lint-project.mjs'), runtimeRoot, directory], directory, undefined, undefined, signal)
+    : await runHyperframes(runtimeRoot, directory, [view, '.', '--json'], undefined, undefined, signal);
   try { return { exitCode: result.code, result: JSON.parse(result.stdout) }; }
   catch { throw new Error('Hyperframes ' + view + ' 失败：' + (result.stderr || result.stdout).slice(-1500)); }
 }

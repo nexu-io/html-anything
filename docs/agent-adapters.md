@@ -85,6 +85,8 @@ Codex 声明 `requires_local_executor`；两家原生插件均引用同一外置
 
 独立验证使用临时 `CODEX_HOME` / `CLAUDE_CONFIG_DIR`，安装后读取宿主实际解析的启动配置，检查工具和 `motion_get_project.dataDirectory`。卸载仅移除薄入口，保留外置运行时和用户数据。旧自带服务源码的 `check-installed-mcp.mjs` / `resolve-installed.mjs` 不用于新适配器缓存；本轮不改变旧安装器行为。
 
+For an npm-managed installation, the installed `scripts/npm-installer.mjs diagnose --host HOST --home HOME` reuses the transport probe with that installation's launcher, host configuration and expected data directory; it does not inspect an assumed plugin cache. Missing/disabled registration, startup errors, invalid protocol output, version/tool mismatches and a different workspace are reported separately. Its independent probe cannot observe every active host session or reconnect a closed chat transport. Follow [connection diagnosis and recovery](npm-installation.md#missing-mcp-tools-or-a-failed-connection), then verify the original project through the real host MCP connection.
+
 ## DeepSeek Harness
 
 ```sh

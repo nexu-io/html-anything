@@ -117,6 +117,24 @@ Before upgrading, back up projects/configuration, run setup with the new exact t
 
 ## Native tools and diagnostics
 
+### Missing MCP tools or a failed connection
+
+Run the installed CLI with the same application home and selected host:
+
+```sh
+node /absolute/application/scripts/npm-installer.mjs diagnose --host codex --home /absolute/installation-home
+```
+
+The installed Skill's `scope.json` or `openmotion-install.json` supplies `runtimeRoot` (the application directory), `installHome` and `host`; do not guess them from the video project. The packaged npm CLI also exposes `openmotion diagnose` through the same exact package used for setup. Select `codex`, `claude`, `deepseek` or `workbuddy`; preserve any custom `--codex` executable or Harness `--profile`. The saved Harness profile is used by default.
+
+Diagnosis reads the selected host's owned configuration and starts an independent, bounded MCP probe using its command, arguments, registered environment overrides and working directory. It otherwise inherits the diagnostic process environment, which can differ from a GUI host. It verifies initialization, the installed tool list and a `motion_get_project` read of the expected data directory. It never registers/replaces configuration, creates a project, restarts another process or replays an export. A probe can start or reuse this installation's backend; it does not wait for native media/browser downloads. Credential-like environment values are redacted from reported startup output.
+
+The JSON result includes `status`, `hostSessionVerified:false` and `nextAction`; failures also include the stage, code and message. A successful probe does not establish that the current host chat loaded those tools, and Claude/WorkBuddy/Harness configuration reads cannot observe every session-specific enablement or tool-selection setting. Inspect the host's status/output and correct the reported configuration, runtime or version problem. In an interactive Claude Code session use the server's Reconnect action in `/mcp`; in other hosts use their supported MCP refresh/reconnect control. Then call `motion_get_project` through the active host connection, check the directory and original project/version, and resume the task. An empty tool search alone is not a diagnosis.
+
+For source/plugin installations without an npm `installHome`, use the host's actual registered launch command and logs. The source Codex bootstrap retains `scripts/check-installed-mcp.mjs`; do not point it at a guessed plugin cache or substitute a different workspace. A closed host transport must be reconnected by the host. Keep running exports and original request IDs while recovering.
+
+### Native media and browser preparation
+
 The runtime lock pins HTTPS URLs, versions, target OS/CPU and SHA256 for FFmpeg, ffprobe and Chrome for Testing. Downloads require no repository credentials, never attach repository tokens, and do not run brew/winget. Independent archives are prepared concurrently from the existing platform manifest: three separate components on macOS, browser and combined media on Windows. Explicit `prepare` settles every component before returning; any failure rejects the operation while completed components remain reusable. Component and archive cache locks coalesce requests across processes and app versions sharing the same platform/hash cache. Contenders wait; dead-owner locks can be recovered without deleting live locks. Atomic per-component state supports Studio reloads and failure retry. Completed components are reused, including after another component fails. Temporary extraction and completion markers retain retry/cache protection. Downloads interrupted mid-transfer restart that asset; HTTP range resume is not implemented. A failed download is not ready. Explicit native path overrides remain supported. See [runtime details](test-packages.md).
 
 A local `--manifest /absolute/release-npm.json` remains available for legacy delivery and controlled fixtures. HTTP, URL credentials, unsafe extraction paths and invalid hashes are rejected. Do not remove a leftover install lock until its owning process is confirmed stopped.
