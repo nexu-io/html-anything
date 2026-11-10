@@ -4,6 +4,11 @@ export function checkReleaseVersion(version) {
   assert.match(version, /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-test\.[1-9]\d*(?:\.[1-9]\d*)*)?$/, 'Use MAJOR.MINOR.PATCH or MAJOR.MINOR.PATCH-test.N[.N]');
 }
 
+export function releaseTemplateEnvironment(version) {
+  checkReleaseVersion(version);
+  return version.includes('-test.') ? 'dev' : 'prod';
+}
+
 export function compareReleaseVersions(left, right) {
   checkReleaseVersion(left); checkReleaseVersion(right);
   const parts = value => {

@@ -7,6 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { download, runFile, sha256, writeJSON } from '../../scripts/runtime-assets.mjs';
+import { releaseTemplateEnvironment } from '../../scripts/release-version.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 export const scannerVersion = '8.30.1';
@@ -136,13 +137,15 @@ export async function scanPackage(tgz, binary) {
     const pkg = JSON.parse(await readFile(path.join(outer, 'package.json')));
     assert.equal(pkg.name, '@openmotion/app'); assert.equal(pkg.private, false);
     const manifest = JSON.parse(await readFile(path.join(outer, 'payload/release-npm.json')));
-    assert.equal(manifest.format, 'npm'); assert.equal(manifest.templateEnvironment, 'prod'); assert.equal(manifest.version, pkg.version);
+    assert.equal(manifest.format, 'npm'); assert.equal(manifest.templateEnvironment, releaseTemplateEnvironment(pkg.version)); assert.equal(manifest.version, pkg.version);
     const appName = manifest.application.url.replace(/^\.\//, ''); assert.equal(path.basename(appName), appName);
     const appArchive = path.join(outer, 'payload', appName); assert.equal(await sha256(appArchive), manifest.application.sha256);
     await unpackChecked(appArchive, path.join(work, 'application'));
     assert.equal(await sha256(path.join(work, 'application/package-lock.json')), manifest.locks.npm);
     assert.equal(await sha256(path.join(work, 'application/scripts/runtime-lock.json')), manifest.locks.native);
     const applicationPkg = JSON.parse(await readFile(path.join(work, 'application/package.json'))); assert.equal(applicationPkg.version, pkg.version);
+    const templates = JSON.parse(await readFile(path.join(work, 'application/shared/template-config.json')));
+    assert.equal(templates.environment, manifest.templateEnvironment, 'Application template defaults differ from the manifest');
     const reports = await Promise.all([scanTree(path.join(work, 'outer'), 'package', binary), scanTree(path.join(work, 'application'), 'package', binary)]);
     return { status: 'passed', version: pkg.version, tgzSHA256: await sha256(tgz), applicationSHA256: manifest.application.sha256, reports };
   } finally { await rm(work, { recursive: true, force: true }); }

@@ -10,7 +10,7 @@ MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册
 
 合入后，在本仓库 → Actions → **Motion standalone checks** → Run workflow 选择 `format`。默认 `npm`，`full` 组装两个已声明目标的完整 ZIP。两种格式共用源码、锁定依赖和unique test versions。
 
-`template_environment` selects the configuration platform for either format: `prod` (default, `r.open-design.ai`) or `dev` (`r.powerformer.net`). Local builders accept `--template-env=dev|prod`. The choice is embedded in `shared/template-config.json` and recorded as `templateEnvironment` in the release manifest; Studio and MCP share it. DEV application archives and full ZIP manifests have a `-dev` suffix. This selects the template source, not a publication channel; publishing remains disabled. See [template configuration](template-catalog.md#环境与构建).
+`template_environment` selects the configuration platform for either format: `dev` (default in standalone CI, `r.powerformer.net`) or `prod` (`r.open-design.ai`). Local builders accept `--template-env=dev|prod`. The choice is embedded in `shared/template-config.json` and recorded as `templateEnvironment` in the release manifest; Studio and MCP share it. DEV application archives and full ZIP manifests have a `-dev` suffix. This selects the template source, not a publication channel; publishing remains disabled. See [template configuration](template-catalog.md#环境与构建).
 
 | 选择 | 构建产物 | 运行时 |
 | --- | --- | --- |
@@ -19,7 +19,7 @@ MCP 公开入口由包内 `shared/mcp-release.json` 固化，详见[一期注册
 
 Ordinary builds retain candidate installation-guide artifacts for review; they do not publish npm, Release or R2 objects. Separate manual guide publication follows the release guide; 两种格式误勾 `publish` 均会失败。本地构建的制品位于 `dist/`，The tgz alone is sufficient for setup; adjacent application/manifest files are evidence and an explicit-manifest fallback. See [installation](npm-installation.md) and [test/stable acceptance](release-guide.md).
 
-Explicit builds accept stable `MAJOR.MINOR.PATCH` or `MAJOR.MINOR.PATCH-test.N[.N]`. The CI helper selects next-patch `test.<run>.<attempt>` (for example, 0.6.3 → 0.6.4-test.42.1). All embedded identities agree; output directories cannot be overwritten and source versions do not change. DEV and unversioned local builds remain private; explicit prod test/stable metadata selects test/stage. Publication remains disabled.
+Explicit builds accept stable `MAJOR.MINOR.PATCH` or `MAJOR.MINOR.PATCH-test.N[.N]`. The CI helper selects next-patch `test.<run>.<attempt>` (for example, 0.6.3 → 0.6.4-test.42.1). All embedded identities agree; output directories cannot be overwritten and source versions do not change. Explicit test npm builds default to DEV and candidate; stable npm builds default to prod and stage. Unversioned and channel/environment-mismatched builds remain private. The backup ZIP builder still defaults to prod unless explicitly selected. Publication remains disabled.
 
 PR / main 工作流执行清单、类型、Studio 构建与回归、安装/打包测试，以及十一个 Tool 的真实 ZIP E2E。Linux 是组装与测试环境，不是已支持的用户运行平台。Mac / Windows 的最终安装和真实出片仍须在对应系统验收；当前 本仓库工作流没有 Windows 或 Mac 原生验收 job，不把产包成功写成通过。
 

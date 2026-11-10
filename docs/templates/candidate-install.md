@@ -1,6 +1,6 @@
 # Install the OpenMotion {{VERSION}} candidate
 
-This is a **local candidate installation guide**. It installs the complete `{{TGZ}}` next to this file, not an unpublished npm registry version. The application, MCP, built Studio and five Skills are embedded. Native browser/FFmpeg/ffprobe and locked npm dependencies still need network access when prepared. Public test software defaults to prod templates.
+This is a **local candidate installation guide**. It installs the complete `{{TGZ}}` next to this file, not an unpublished npm registry version. The application, MCP, built Studio and five Skills are embedded. Native browser/FFmpeg/ffprobe and locked npm dependencies still need network access when prepared. Public test software defaults to DEV templates. The source address is public configuration; access still requires the DEV service network/authentication. The package contains no private catalog snapshot or credentials.
 
 ## Frozen identity
 
@@ -21,7 +21,7 @@ This is a **local candidate installation guide**. It installs the complete `{{TG
    ```
 
    Replace `HOST` with `codex`, `claude`, `deepseek` or `workbuddy`. Carry the explicit `--home`, `--data-dir`, `--skills-dir` and host-specific options from the platform recipe; repeat the same home for prepare. Wait for setup and prepare to finish before native use. Keep using this local package; no sidecar application/manifest download or source build is required.
-4. Follow this host's discovery/reload action. Verify the actual application version, prod template environment, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
+4. Follow this host's discovery/reload action. Verify the actual application version, DEV template environment, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
 5. Follow the tester's requested acceptance cases in `acceptance.md`: use an independent test project for template creation, editing, save/reopen and MP4 export. Do not modify an existing user project or start a paid provider call without its separate authorization. Retain technical export checks separately from real Agent creation and human audio/video playback.
 6. Fill a **private copy** of `acceptance.md` with actual PASS / FAIL / NOT RUN results and evidence. Report failures and retain the generated candidate identity. Do not edit/re-upload the frozen candidate artifact. Do not publish npm, upload a guide or change a tag as part of installation/testing.
 

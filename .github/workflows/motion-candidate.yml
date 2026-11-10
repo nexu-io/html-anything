@@ -27,7 +27,7 @@ jobs:
       MOTION_SOURCE_SHA: ${{ inputs.source_sha }}
       MOTION_VERSION: ${{ inputs.version }}
       OPENMOTION_TELEMETRY: '0'
-      HYPERFRAMES_BROWSER_PATH: /usr/bin/chromium
+      HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome
       HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
       HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
     steps:
@@ -55,7 +55,11 @@ jobs:
           node control/.github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node control/.github/scripts/motion-scan.mjs source source "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
       - name: Install rendering test tools
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends zip unzip chromium ffmpeg fonts-noto-core
+        run: |
+          # The hosted Ubuntu image provides Chrome; avoid Ubuntu's desktop Chromium snap.
+          "$HYPERFRAMES_BROWSER_PATH" --version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends zip unzip ffmpeg fonts-noto-core
       - name: Check the selected source
         working-directory: source
         run: |
@@ -69,11 +73,11 @@ jobs:
           npm run package:phase1
           archive="$PWD/dist/motion-$(node -p "require('./package.json').version")-phase1.zip"
           node tests/phase1-package.mjs "$archive" "$RUNNER_TEMP/phase1-e2e"
-      - name: Build the final prod application tgz once and scan both archives
+      - name: Build the final DEV application tgz once and scan both archives
         env:
           MOTION_SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
         run: |
-          node source/scripts/package-npm.mjs "$RUNNER_TEMP/build" "$MOTION_VERSION" --template-env=prod
+          node source/scripts/package-npm.mjs "$RUNNER_TEMP/build" "$MOTION_VERSION" --template-env=dev
           cp "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/build/source-scan.json"
           node control/.github/scripts/motion-scan.mjs package "$RUNNER_TEMP/build/openmotion-app-$MOTION_VERSION.tgz" "$RUNNER_TEMP/build/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
           node control/.github/scripts/motion-release.mjs seal "$RUNNER_TEMP/build" "$RUNNER_TEMP/candidate" source
