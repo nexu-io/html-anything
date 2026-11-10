@@ -20,11 +20,11 @@ function gate() {
   });
   return { promise, release };
 }
-function tool(name: string, load?: (signal: AbortSignal) => Promise<void>) {
+function tool(name: string, load?: (signal: AbortSignal) => Promise<void>, mode = 0o755) {
   const bytes = Buffer.from(
     canonical({
       schema: 1,
-      files: [{ path: "binary", mode: 0o755, bytes: Buffer.from(`fixture ${name}`).toString("base64") }],
+      files: [{ path: "binary", mode, bytes: Buffer.from(`fixture ${name}`).toString("base64") }],
     }),
   );
   return {
@@ -182,7 +182,7 @@ it("quiesces pending materialization before retiring the renderer and keeps its 
 it("rejects a non-executable or escaping declared path independently from prepared siblings", async () => {
   const tools: Tools = {
       browser: { ...tool("browser"), executable: "../escape" },
-      ffmpeg: tool("ffmpeg"),
+      ffmpeg: tool("ffmpeg", undefined, 0o644),
       ffprobe: tool("ffprobe"),
     },
     f = await fixture(tools);
@@ -190,7 +190,11 @@ it("rejects a non-executable or escaping declared path independently from prepar
     const result = await f.renderer.prepare();
     expect(result).toMatchObject({
       state: "partial",
-      components: { browser: { state: "failed" }, ffmpeg: { state: "ready" }, ffprobe: { state: "ready" } },
+      components: {
+        browser: { state: "failed" },
+        ffmpeg: { state: process.platform === "win32" ? "ready" : "failed" },
+        ffprobe: { state: "ready" },
+      },
     });
     expect(JSON.stringify(result)).not.toContain(f.root);
     expect(Object.values((await f.ledger()).entries).flatMap((entry) => entry.uses)).toEqual([]);
