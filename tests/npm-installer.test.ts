@@ -197,6 +197,7 @@ test('npm bin symlink executes the CLI instead of silently exiting', { skip: pro
 });
 
 test('setup installs complete Skills and MCP without waiting for native downloads and preserves repeated-install data', { skip: process.platform === 'win32' }, async t => {
+  clearNativeEnvironment(t);
   const options = await setupFixture(t);
   await mkdir(path.join(options.skillsDirectory, 'unrelated'), { recursive: true });
   await writeFile(path.join(options.skillsDirectory, 'unrelated/keep.txt'), 'keep');
