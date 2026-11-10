@@ -1,8 +1,4 @@
-[English](../README.md) · [简体中文](README.zh-CN.md) · **日本語**
-
-<a id="openmotion"></a>
-
-<h1 align="center">OpenMotion</h1>
+<p align="center"><img src="readme/openmotion-logo.svg" width="420" alt="OpenMotion"></p>
 
 <p align="center"><strong>あらゆる動画を分析・再現</strong></p>
 
@@ -27,6 +23,14 @@
 </p>
 
 <p align="center"><a href="#agent-wall">対応エージェント</a> · <a href="#showcase">用途と再現例</a> · <a href="#features">OpenMotion の特長</a> · <a href="#technical-guide">セットアップと技術資料</a> · <a href="#community">コミュニティ・貢献</a></p>
+
+<div align="center">
+
+[English](../README.md) · [简体中文](README.zh-CN.md) · **日本語**
+
+</div>
+
+# OpenMotion
 
 OpenMotion は、**エージェントが動画制作の全工程を担う初のフルスタック動画生成ツール**です。参考動画をアップロードするか SNS の動画リンクを貼り付けると、**手持ちの映像、ロゴ、コピーで元の演出を再現できます**。
 

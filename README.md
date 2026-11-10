@@ -1,8 +1,4 @@
-**English** · [简体中文](docs/README.zh-CN.md) · [日本語](docs/README.ja.md)
-
-<a id="openmotion"></a>
-
-<h1 align="center">OpenMotion</h1>
+<p align="center"><img src="docs/readme/openmotion-logo.svg" width="420" alt="OpenMotion"></p>
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
@@ -27,6 +23,14 @@
 </p>
 
 <p align="center"><a href="#agent-wall">Agents</a> · <a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a> · <a href="#community">Community</a></p>
+
+<div align="center">
+
+**English** · [简体中文](docs/README.zh-CN.md) · [日本語](docs/README.ja.md)
+
+</div>
+
+# OpenMotion
 
 OpenMotion is **the first full-stack agentic video generator**. Upload a reference video or paste a social video link to **recreate it with your own footage, logo and copy**.
 

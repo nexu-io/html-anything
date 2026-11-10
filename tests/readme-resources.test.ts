@@ -22,8 +22,8 @@ test('each README language opens the full guide and ships its localized cover', 
   assert(shipped.has('docs/readme/openmotion-logo.svg'));
   for (const [file, language, suffix] of [...pages, ['README.zh-CN.md', '简体中文', '.zh-CN']]) {
     const text = await readFile(file, 'utf8');
-    const selector = text.split('\n', 1)[0];
-    assert(selector.includes(`**${language}**`), file);
+    const selector = text.split('\n').find(line => line.includes(`**${language}**`) && line.includes(' · '));
+    assert(selector, `Missing language selector in ${file}`);
     const destinations = [...selector.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)]
       .map(([, label, target]) => [path.normalize(path.join(path.dirname(file), target)), label]);
     assert.deepEqual(destinations, pages.filter(([, label]) => label !== language)

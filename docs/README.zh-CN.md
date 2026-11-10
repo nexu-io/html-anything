@@ -1,8 +1,4 @@
-[English](../README.md) · **简体中文** · [日本語](README.ja.md)
-
-<a id="openmotion"></a>
-
-<h1 align="center">OpenMotion</h1>
+<p align="center"><img src="readme/openmotion-logo.svg" width="420" alt="OpenMotion"></p>
 
 <p align="center"><strong>拆解并复刻任何视频</strong></p>
 
@@ -27,6 +23,14 @@
 </p>
 
 <p align="center"><a href="#agent-wall">支持的 Agent</a> · <a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
+
+<div align="center">
+
+[English](../README.md) · **简体中文** · [日本語](README.ja.md)
+
+</div>
+
+# OpenMotion
 
 OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或粘贴社交平台上的视频链接，就能**用自己的画面、Logo 和文案复刻原片**。
 
