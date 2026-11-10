@@ -17,6 +17,7 @@ vi.mock("node:fs", async () => {
 });
 
 import { invokeAgent, type InvokeEvent } from "../agents-invoke.js";
+import { detectAgents } from '../agents-detect.js';
 
 function makeFakeChild() {
   const stdout = new PassThrough();
@@ -80,6 +81,47 @@ const BIN_OVERRIDE = "/bin/sh";
 describe("invokeAgent", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
+
+  describe.each([
+    'https://api.minimax.io/anthropic',
+    'https://api.minimaxi.com/anthropic',
+  ])('MiniMax invocation through %s', (endpoint) => {
+    const models = detectAgents().find((agent) => agent.id === 'claude')!.models;
+    const firstMiniMax = models.find((model) => model.id.startsWith('MiniMax-'))!.id;
+
+    it.each([firstMiniMax, 'MiniMax-M3', 'MiniMax-M2.7', 'my-custom-model', 'sonnet', undefined])(
+      'preserves model %s and the configured endpoint at spawn',
+      async (model) => {
+        vi.stubEnv('ANTHROPIC_BASE_URL', endpoint);
+        const { child, stdout, stdin } = makeFakeChild();
+        const write = vi.spyOn(stdin, 'write');
+        mockSpawn.mockReturnValue(child);
+        const prompt = 'Render this image: ![sample](data:image/png;base64,aGVsbG8=)';
+        const eventsPromise = collectStream(invokeAgent({
+          agent: 'claude', prompt, model, binOverride: BIN_OVERRIDE,
+        }));
+
+        stdout.end(`${JSON.stringify({ type: 'assistant', message: { content: [{ type: 'text', text: '<html>ok</html>' }] } })}\n`);
+        await new Promise((resolve) => setImmediate(resolve));
+        child.emit('close', 0);
+        const events = await eventsPromise;
+
+        expect(firstMiniMax).toBe('MiniMax-M3.1-Flash');
+        expect(mockSpawn).toHaveBeenLastCalledWith(BIN_OVERRIDE, [
+          '-p', '--output-format', 'stream-json', '--verbose',
+          '--include-partial-messages', '--permission-mode', 'bypassPermissions',
+          ...(model ? ['--model', model] : []),
+        ], expect.objectContaining({
+          env: expect.objectContaining({ ANTHROPIC_BASE_URL: endpoint }),
+          stdio: ['pipe', 'pipe', 'pipe'],
+        }));
+        expect(write).toHaveBeenCalledWith(prompt);
+        expect(events).toContainEqual({ type: 'delta', text: '<html>ok</html>' });
+        expect(events).toContainEqual({ type: 'done', code: 0 });
+      },
+    );
   });
 
   describe("error cases", () => {
