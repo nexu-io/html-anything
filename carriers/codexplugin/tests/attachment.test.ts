@@ -32,7 +32,20 @@ it("routes large native source through actual pnpm exec development attachments 
         stderr: "pipe",
       });
       const client = new Client({ name: "template-attachment", version: "1.0.0" });
-      await client.connect(transport);
+      let errors = "";
+      transport.stderr?.on("data", (chunk) => {
+        errors = (errors + chunk.toString()).slice(-8192);
+      });
+      try {
+        await client.connect(transport);
+      } catch (error) {
+        await client.close();
+        await transport.close();
+        const diagnostic = errors
+          .replace(/Bearer\s+[^\s"']+/g, "Bearer [redacted]")
+          .replace(/("(?:token|authority|capability)"\s*:\s*)"[^"]*"/g, '$1"[redacted]"');
+        throw new Error(`Development MCP handshake failed: ${diagnostic.trim() || (error as Error).message}`);
+      }
       return {
         client,
         transport,
