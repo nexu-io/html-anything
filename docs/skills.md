@@ -2,6 +2,12 @@
 
 2026-11-06：五个入口统一为 motion- 前缀，视频转模板纳入一期插件、四宿主薄适配器与 MCP Resources。同时融合已评审的通用工程入口方案，保留原制作实现和导演质量参考；同时保留 main PR #28 的实际复刻流程、独立参考和测量脚本。历史多轮实验记录见下文，其证据不自动覆盖本次命名与分发变更。
 
+## Director v1.5.5 integration
+
+Director and its existing quality references now cover concrete visual events, joint material/motion design, recognizable action windows, representative prototypes and reuse of accepted implementations. Shared intake/runtime guidance covers scoped material acquisition; edit and verification own timing-evidence invalidation and evidence classification. No Skill, Resource section, public Tool or media service is added.
+
+The current five-route, eleven-Tool contract, editor-first handoff, requested-export behavior and distribution layout remain unchanged. This guidance does not establish cross-task creative reliability or native audiovisual model-review capability. See [the director guide](motion-director.md). Version-specific statements below describe their historical snapshots.
+
 ## 职责与入口
 
 当前采用“通用工程入口＋可直达专业 Skill＋同源共享规范”。Agent 根据本轮目标、保持项与工程状态直接选择入口，专业任务无需先读 production。production 承接既定创作决定下的工程执行，为已有 production/start 调用保留简短导航。此选择融合了“核查仓库中的 Skill 结构”中已评审并本地实施的职责收窄，取代此前“泛化请求先经薄路由”的描述；不删除兼容资源，不复制共享规则。
@@ -9,7 +15,7 @@
 | 入口 | 职责 | 当前状态 |
 | --- | --- | --- |
 | motion-production | 既定决定下的局部工程修改、预览、技术检查、排错与导出 | 通用工程入口；保留兼容导航 |
-| motion-director | 原创、局部/整体叙事动作声音重新设计、创作审片 | v1.4.5；七份质量参考不变 |
+| motion-director | 原创、局部/整体叙事动作声音重新设计、创作审片 | v1.5.5; visual events, materials, choreography and audiovisual timing guidance |
 | motion-template-to-video | 已有模板原样出片、源码适配与内容替换 | 已接入默认 template 路线，共用修改与 revision 规范 |
 | motion-video-to-template | 把视频制作成可复用模板文件夹 / ZIP | 已纳入分发与资源读取，不代替普通视频复刻 |
 | motion-recreate | 从参考重建用户本次作品 | 已接入实际流程；自带重建、测量参考与脚本 |
