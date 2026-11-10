@@ -123,22 +123,27 @@ function reply(socket: Socket, response: Response): void {
 
 function accept(server: Server, runtime: Runtime, authority: string, endpoint: string): void {
   server.on("connection", (socket) => {
-    let input = "";
+    const chunks: Buffer[] = [];
+    let bytes = 0;
 
     const read = (chunk: Buffer) => {
-      input += chunk.toString("utf8");
+      bytes += chunk.length;
 
-      if (Buffer.byteLength(input) > limit) {
+      if (bytes > limit) {
+        socket.pause();
+        socket.off("data", read);
         reply(socket, { error: "request exceeds limit", ok: false });
         return;
       }
+      chunks.push(chunk);
 
-      const end = input.indexOf("\n");
+      const end = chunk.indexOf(10);
       if (end < 0) return;
       socket.pause();
       socket.off("data", read);
 
-      Promise.resolve(input.slice(0, end))
+      Promise.resolve(Buffer.concat(chunks, bytes).subarray(0, bytes - chunk.length + end))
+        .then((frame) => new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(frame))
         .then(decode)
         .then(async (request) => {
           if (request.type === "session") {
