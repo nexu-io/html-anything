@@ -46,10 +46,10 @@ it("preserves loading/materialized/deleting interruption evidence and reconciles
     await writeFile(
       program,
       `
-import{Library}from ${JSON.stringify(library)};import{serve,managerEndpoint,managerReady}from ${JSON.stringify(sidecar)};import{join}from'node:path';import{writeFile}from'node:fs/promises';
+import{Library}from ${JSON.stringify(library)};import{serve,managerEndpoint,managerReady}from ${JSON.stringify(sidecar)};import{join}from'node:path';import{rename,writeFile}from'node:fs/promises';
 const root=${JSON.stringify(root)},scope=${JSON.stringify(scope)},resource=${JSON.stringify(resource)},bytes=Buffer.from(${JSON.stringify(payload.toString("base64"))},"base64");
 const service=await serve(managerEndpoint(root),{root});const factory=service.factory(scope);let library,context;
-await factory.expose({identity:{service:'electron',generation:${JSON.stringify(digest("original"))}},handlers:{},lifecycle:{initialize:async c=>{context=c;library=await Library.open({factory,context:c,retentionMs:0,onCheckpoint:async e=>{if(e.phase===${JSON.stringify(phase)}){await writeFile(join(c.roots.logs,'checkpoint.json'),JSON.stringify(e),{flush:true});await new Promise(()=>{});}}});await writeFile(join(c.roots.data,'user-state'),'preserved');},stop:async()=>{}}});
+await factory.expose({identity:{service:'electron',generation:${JSON.stringify(digest("original"))}},handlers:{},lifecycle:{initialize:async c=>{context=c;library=await Library.open({factory,context:c,retentionMs:0,onCheckpoint:async e=>{if(e.phase===${JSON.stringify(phase)}){await writeFile(join(c.roots.logs,'checkpoint.tmp'),JSON.stringify(e),{flush:true});await rename(join(c.roots.logs,'checkpoint.tmp'),join(c.roots.logs,'checkpoint.json'));await new Promise(()=>{});}}});await writeFile(join(c.roots.data,'user-state'),'preserved');},stop:async()=>{}}});
 await managerReady(service,root,scope);const use=await library.acquire(resource,async()=>bytes);await library.release(use);await library.collect();
 `,
     );

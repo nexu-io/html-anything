@@ -23,6 +23,7 @@ guard:
       - packages/templates/src/native
       - packages/render/src/jobs
       - apps/daemon/src/content
+      - apps/daemon/src/content/guidance
       - apps/daemon/src/exports
       - suites/blob/src/materialize
       - suites/blob/src/control
