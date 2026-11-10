@@ -31,6 +31,38 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  maintainability:
+    name: Maintainability report
+    if: github.event_name == 'pull_request' && github.base_ref == 'feature/motion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout PR merge result
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup pinned Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            .github/maintainability/package-lock.json
+      - name: Compare source against the PR base
+        shell: bash
+        env:
+          BASE_REVISION: ${{ github.event.pull_request.base.sha }}
+        run: |
+          test "$(git rev-parse HEAD^1)" = "$BASE_REVISION"
+          base_dir=$(mktemp -d "$RUNNER_TEMP/motion-base.XXXXXX")
+          git archive "$BASE_REVISION" | tar -x -C "$base_dir"
+          npm ci --prefix "$base_dir" --ignore-scripts --no-audit --no-fund
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix .github/maintainability --ignore-scripts --no-audit --no-fund
+          node .github/maintainability/report.mjs "$base_dir" "$BASE_REVISION" >> "$GITHUB_STEP_SUMMARY"
+
   standalone:
     runs-on: ubuntu-24.04
     timeout-minutes: 40
