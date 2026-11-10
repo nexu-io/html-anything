@@ -267,6 +267,7 @@ test('daily build and publication are separate manual entries without an indepen
   assert(build.includes('name: ' + candidateJobName) && build.includes('ref: ${{ steps.source.outputs.source_sha }}'));
   assert(build.includes("github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/motion'"));
   assert(build.includes('--template-env=dev') && !build.includes('--template-env=prod'));
+  assert(build.includes('tests/native-runtime.test.ts'), 'Candidate checks include the integrated native-preparation regression');
   assert(build.includes('HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome') && build.includes('\"$HYPERFRAMES_BROWSER_PATH\" --version'));
   assert(!/apt-get install[^\n]*\bchromium\b/.test(build), 'Candidate builds must not install Ubuntu desktop snaps');
   assert.match(build, /version:\n(?:[^\n]*\n)*?        required: false\n        default: ''/);
