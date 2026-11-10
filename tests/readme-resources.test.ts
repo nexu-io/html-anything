@@ -19,6 +19,7 @@ test('each README language opens the full guide and ships its localized cover', 
     ['docs/README.ja.md', '日本語', '.ja'],
   ];
   const shipped = new Set(await distributionFiles('phase1'));
+  assert(shipped.has('docs/readme/openmotion-logo.svg'));
   for (const [file, language, suffix] of [...pages, ['README.zh-CN.md', '简体中文', '.zh-CN']]) {
     const text = await readFile(file, 'utf8');
     const selector = text.split('\n', 1)[0];
@@ -30,7 +31,7 @@ test('each README language opens the full guide and ships its localized cover', 
     for (const section of ['agent-wall', 'showcase', 'features', 'technical-guide', 'community']) {
       assert(text.includes(`id="${section}"`), `${file}: missing ${section}`);
     }
-    for (const asset of ['openmotion-logo.svg', `brand-hero${suffix}.jpg`, `brand-hero.mobile${suffix}.jpg`]) {
+    for (const asset of [`brand-hero${suffix}.jpg`, `brand-hero.mobile${suffix}.jpg`]) {
       assert(text.includes(`readme/${asset}"`), `${file}: missing ${asset}`);
       assert(shipped.has(`docs/readme/${asset}`), `Missing from distribution: ${asset}`);
     }

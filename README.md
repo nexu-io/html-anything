@@ -2,7 +2,7 @@
 
 <a id="openmotion"></a>
 
-<h1 align="center"><img src="docs/readme/openmotion-logo.svg" width="230" alt="OpenMotion"></h1>
+<h1 align="center">OpenMotion</h1>
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 

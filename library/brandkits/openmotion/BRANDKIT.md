@@ -48,7 +48,7 @@ These are artwork guidance, not replacements for the application's [UI tokens](.
 - [OpenDesign symbol](../../../docs/readme/opendesign-symbol.svg): upstream mark, retained unmodified and credited; do not present it as a newly designed OpenMotion logo.
 - [Sources and generation prompts](../../../docs/readme/ASSETS.md).
 
-Use the [OpenMotion symbol and wordmark together](../../../docs/readme/openmotion-logo.svg) on README headings and covers. Keep cover text within generous margins. Do not add badges, prices, adoption figures or customer logos without factual support. Reference films, template posters and screenshots retain their original identity; consistent framing must not rewrite their content.
+Use plain text for the README title: OpenMotion. Use the [OpenMotion symbol and wordmark together](../../../docs/readme/openmotion-logo.svg) in covers and closing banners. Keep cover text within generous margins. Do not add badges, prices, adoption figures or customer logos without factual support. Reference films, template posters and screenshots retain their original identity; consistent framing must not rewrite their content.
 
 ## Motion handoff
 
