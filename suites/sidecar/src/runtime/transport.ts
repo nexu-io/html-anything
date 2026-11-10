@@ -36,12 +36,12 @@ export async function call(endpoint: string, request: Request, timeout: number):
     socket.once("end", () => finish(() => reject(new Error("response ended before completion"))));
     socket.once("error", (error) => finish(() => reject(error)));
     socket.on("data", (chunk: Buffer) => {
-      chunks.push(chunk);
       bytes += chunk.length;
       if (bytes > limit) {
         finish(() => reject(new Error("response exceeds limit")));
         return;
       }
+      chunks.push(chunk);
 
       const end = chunk.indexOf(10);
       if (end < 0) return;

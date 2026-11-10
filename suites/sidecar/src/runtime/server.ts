@@ -127,13 +127,15 @@ function accept(server: Server, runtime: Runtime, authority: string, endpoint: s
     let bytes = 0;
 
     const read = (chunk: Buffer) => {
-      chunks.push(chunk);
       bytes += chunk.length;
 
       if (bytes > limit) {
+        socket.pause();
+        socket.off("data", read);
         reply(socket, { error: "request exceeds limit", ok: false });
         return;
       }
+      chunks.push(chunk);
 
       const end = chunk.indexOf(10);
       if (end < 0) return;

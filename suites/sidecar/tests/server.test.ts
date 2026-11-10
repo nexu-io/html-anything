@@ -81,6 +81,7 @@ afterEach(async () => {
 async function fragmented(target: Socket, frame: Buffer, split: number) {
   const prefix = frame.subarray(0, split);
   const received = new Map<Socket, Buffer>();
+  let receiver: Socket | undefined;
   let observed = () => {};
   const arrival = new Promise<void>((done) => {
     observed = done;
@@ -94,7 +95,10 @@ async function fragmented(target: Socket, frame: Buffer, split: number) {
     if (event === "data" && Buffer.isBuffer(args[0])) {
       const bytes = Buffer.concat([received.get(this) ?? Buffer.alloc(0), args[0]]);
       received.set(this, bytes);
-      if (bytes.equals(prefix)) observed();
+      if (bytes.equals(prefix)) {
+        receiver = this;
+        observed();
+      }
     }
     return Reflect.apply(emit, this, [event, ...args]) as boolean;
   });
@@ -105,20 +109,25 @@ async function fragmented(target: Socket, frame: Buffer, split: number) {
     tap.mockRestore();
   }
   target.write(frame.subarray(split));
+  if (!receiver) throw Error("fragment receiver was not observed");
+  return receiver;
 }
 
 function exchange(endpoint: string, frame: Buffer, split: number) {
-  return new Promise<{ ok: boolean; value?: unknown; error?: string }>((done, reject) => {
+  return new Promise<{ ok: boolean; value?: unknown; error?: string; reader?: Socket }>((done, reject) => {
     const connection = createConnection(endpoint),
       chunks: Buffer[] = [];
+    let reader: Socket | undefined;
     connection.once("error", reject);
     connection.once("connect", () => {
-      void fragmented(connection, frame, split).catch(reject);
+      void fragmented(connection, frame, split).then((socket) => {
+        reader = socket;
+      }, reject);
     });
     connection.on("data", (chunk: Buffer) => chunks.push(chunk));
     connection.once("end", () => {
       try {
-        done(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+        done({ ...JSON.parse(Buffer.concat(chunks).toString("utf8")), reader });
       } catch (error) {
         reject(error);
       }
@@ -166,7 +175,10 @@ it("preserves fragmented request and response Unicode with exact raw-byte bounds
   expect(seen).not.toContain("\ufffd");
   const over = request(`${input}a`);
   expect(over.length).toBe(limit + 1);
-  expect(await exchange(endpoint, over, 200)).toMatchObject({ ok: false, error: "request exceeds limit" });
+  const rejected = await exchange(endpoint, over, 200);
+  expect(rejected).toMatchObject({ ok: false, error: "request exceeds limit" });
+  expect(rejected.reader?.isPaused()).toBe(true);
+  expect(rejected.reader?.listenerCount("data")).toBe(0);
   const invalid = request(word);
   invalid[invalid.indexOf(Buffer.from("界"))] = 255;
   expect((await exchange(endpoint, invalid, 100)).ok).toBe(false);
