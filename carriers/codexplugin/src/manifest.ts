@@ -17,7 +17,7 @@ export function metadata(version: string) {
           command: "node",
           args: [`\${PLUGIN_ROOT}/main.mjs`],
           cwd: `\${PLUGIN_ROOT}`,
-          env_vars: ["OPEN_MOTION_ROOT", "OPEN_MOTION_CHANNEL", "OPEN_MOTION_NAMESPACE", "OPEN_MOTION_VERSION"],
+          env_vars: ["OPEN_MOTION_ROOT", "OPEN_MOTION_CHANNEL", "OPEN_MOTION_NAMESPACE"],
         },
       },
     },
