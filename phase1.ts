@@ -1,3 +1,4 @@
+import { requireNativeRuntime } from './scripts/npm-runtime.mjs';
 import { createHash } from 'node:crypto';
 import { constants } from 'node:fs';
 import { copyFile, lstat, mkdir, open, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
@@ -6,7 +7,7 @@ import { WorkspaceStore, createBlankProject, projectPath, validateProjectTitle }
 import { templateCatalogFor } from './prism-templates.ts';
 import { isEditableTemplate } from './shared/catalog.ts';
 import { getTemplate } from './template-catalog.ts';
-import { execute, inspectProject } from './hyperframes.ts';
+import { execute, inspectProject, pluginRoot } from './hyperframes.ts';
 import { verificationBinaries } from './scripts/verify-export.ts';
 import { validateInstruction } from './shared/conversation.ts';
 import { sessionPath } from './shared/workspace-url.ts';
@@ -134,6 +135,8 @@ export class Phase1Service {
       }
       throw new Error('REQUEST_STATE_UNKNOWN: 原请求未确认终态，未重复执行；请查询项目或任务状态');
     }
+    if (name === 'motion_import_assets') await requireNativeRuntime(pluginRoot, 'media');
+    if (name === 'motion_export_request' && args.action !== 'record_review') await requireNativeRuntime(pluginRoot, 'export');
     const record = { inputHash, name, state: 'pending', projectId: name === 'motion_create_project' ? crypto.randomUUID() : args.projectId,
       sessionId: args.sessionId ?? crypto.randomUUID(), createdAt: Date.now() };
     await atomicJson(file, record);

@@ -165,7 +165,7 @@ export async function callTool(name: string, args: Record<string, unknown> = {},
   if (name === 'motion_inspect_project') {
     if (!(await store.get()).project) throw new Error('请先调用 motion_open_preview 创建工程');
     if (typeof args.view !== 'string' || !['info', 'timeline', 'lint'].includes(args.view)) throw new Error('view 必须为 info、timeline 或 lint');
-    return inspectProject(await ensureRuntime(store.directory), store.projectDirectory, args.view);
+    return inspectProject(await ensureRuntime(store.directory, false), store.projectDirectory, args.view);
   }
   if (name === 'motion_get_export') {
     if (args.jobId !== undefined && typeof args.jobId !== 'string') throw new Error('导出任务编号无效');

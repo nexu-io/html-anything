@@ -144,7 +144,7 @@ test('native preparation runs independent components together for separate and c
     await ensureNativeRuntime(root);
     assert.deepEqual(started.sort(), [...downloads.keys()].sort());
     const native = await nativeConfiguration(root);
-    assert.deepEqual((await readdir(native.cache)).sort(), Object.entries(assets).map(([name, asset]: any) => name + '-' + asset.sha256).sort());
+    assert.deepEqual((await readdir(native.cache)).filter(name => !name.endsWith('.status.json')).sort(), Object.entries(assets).map(([name, asset]: any) => name + '-' + asset.sha256).sort());
   });
 });
 
@@ -196,16 +196,17 @@ test('npm bin symlink executes the CLI instead of silently exiting', { skip: pro
   await assert.rejects(runFile(process.execPath, [link, 'prepare', '--home', directory]), /Run setup first/);
 });
 
-test('setup installs complete Skills and MCP without native downloads and preserves repeated-install data', { skip: process.platform === 'win32' }, async t => {
+test('setup installs complete Skills and MCP without waiting for native downloads and preserves repeated-install data', { skip: process.platform === 'win32' }, async t => {
+  clearNativeEnvironment(t);
   const options = await setupFixture(t);
   await mkdir(path.join(options.skillsDirectory, 'unrelated'), { recursive: true });
   await writeFile(path.join(options.skillsDirectory, 'unrelated/keep.txt'), 'keep');
   const first = await setup(options);
-  assert.equal(first.nativeDependencies, 'deferred-until-native-operation-or-prepare');
+  assert.equal(first.nativeDependencies, 'background-preparation; status and retry available in Studio');
   const scope = JSON.parse(await readFile(path.join(options.skillsDirectory, 'openmotion/scope.json'), 'utf8'));
   assert.equal(scope.runtimeRoot, first.appRoot);
   assert.match(await readFile(path.join(options.skillsDirectory, 'openmotion/skills/motion-production/SKILL.md'), 'utf8'), /motion-production/);
-  await assert.rejects(readdir(path.join(options.home, 'cache/native')), { code: 'ENOENT' });
+  assert((await readdir(path.join(options.home, 'cache/native/fixture'))).includes('preparation.log'));
   await mkdir(first.dataDirectory, { recursive: true });
   await writeFile(path.join(first.dataDirectory, 'keep.txt'), 'user work');
   assert.equal((await setup(options)).appRoot, first.appRoot);
