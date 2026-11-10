@@ -86,6 +86,8 @@ The [Motion application npm package](docs/npm-installation.md), published as [@o
 
 The five entries are [motion-production](skills/motion-production/SKILL.md), [motion-director](skills/motion-director/SKILL.md), [motion-template-to-video](skills/motion-template-to-video/SKILL.md), [motion-recreate](skills/motion-recreate/SKILL.md), and [motion-video-to-template](skills/motion-video-to-template/SKILL.md). Reference recreation is implemented. Product UI follows the [OpenDesign visual system](docs/design-system.md); video artwork keeps its own styles.
 
+[Motion Director v1.5.5](docs/motion-director.md) adds concrete visual-event, material, choreography and audiovisual-timing guidance. These are Agent instructions; cross-task quality and reliable model audiovisual review remain unverified.
+
 ## Usage data and privacy
 
 OpenMotion collects feature usage, safe error categories, device information and coarse country/region/timezone by default. Prompts and project contents are excluded; raw IP addresses are discarded after GeoIP enrichment. Turn collection off in **Privacy settings → Share usage data**, or set `OPENMOTION_TELEMETRY=0` / `DO_NOT_TRACK=1` when launching the MCP. The saved preference covers MCP and Studio and survives restarts. See [tracking and user controls](tracking/README.md).

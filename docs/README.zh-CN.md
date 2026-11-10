@@ -82,6 +82,8 @@ The [Motion application npm package](npm-installation.md) bundles the applicatio
 
 五个入口为 [motion-production](../skills/motion-production/SKILL.md)、[motion-director](../skills/motion-director/SKILL.md)、[motion-template-to-video](../skills/motion-template-to-video/SKILL.md)、[motion-recreate](../skills/motion-recreate/SKILL.md)、[motion-video-to-template](../skills/motion-video-to-template/SKILL.md)。参考复刻已实现；产品 UI 沿用 [OpenDesign 视觉规范](design-system.md)，视频作品保留自身样式。
 
+[Motion Director v1.5.5](motion-director.md) adds concrete visual-event, material, choreography and audiovisual-timing guidance. These are Agent instructions; cross-task quality and reliable model audiovisual review remain unverified.
+
 ## 下一步
 
 **Motion Benchmark / Arena** 拟用同一支参考片和同一套品牌资产比较复刻结果，观察节奏是否接近、品牌有没有走样、工程还能不能继续改。具体方法与公开榜单仍在讨论。

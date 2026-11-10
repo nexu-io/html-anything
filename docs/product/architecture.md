@@ -104,7 +104,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 | 引擎与生命周期 | `hyperframes.ts`、`preview.ts`、`editor-runtime.ts`、`shared/owned-studio.mjs` | 锁定 Hyperframes；macOS 共享后台与 Studio 守卫，校验身份/版本/目录并管理崩溃清理 |
 | 导出与质量验证 | `server.ts`、`scripts/verify-export.ts`、制作 skills | 独立快照、后台渲染、技术验证；视觉审阅另行完成 |
 | Skill 路由与文档读取 | `skills/`、`shared/workflow.ts`、`mcp.ts` | production 通用工程入口 + 可直达 director + motion-template-to-video + motion-recreate 实际流程 + motion-video-to-template（五个入口均分发）；26 份唯一文档含共享 edit（27 个 workflow/section 地址，portable 共享），具有 canonical ID/哈希/引用映射，按需读取，不自动执行或强制编排；见 [调用契约](../skills.md) |
-| 动态叙事指导 | `skills/motion-director/` | v1.4.5 明确原创与局部创作、声音重新设计和创作审片职责；沿用原创路线与七份 v1.4 质量参考，模板/复刻按需复用；效果边界见 [说明](../motion-director.md) |
+| 动态叙事指导 | `skills/motion-director/` | v1.5.5 guides concrete visual events, material/motion design, representative prototypes and actual audiovisual phases; shared edit/verification preserve locked content and evidence scope. Five routes, eleven public Tools and editor-first handoff remain unchanged. Cross-task reliability and native model audiovisual review remain unverified; see [director guidance](../motion-director.md). |
 
 源码位置的详细映射见 [编辑器开发指南](../editor-fork.md)，引擎适配见 [Hyperframes 集成](../hyperframes.md)。
 
