@@ -71,7 +71,7 @@ export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTempl
     try {
       const connection = info ?? await motionApi<IntegrationInfo>('/integration');
       setInfo(connection);
-      const prompt = templatePrompt(connection, host, template);
+      const prompt = templatePrompt(connection, host, template, locale);
       try {
         await navigator.clipboard.writeText(prompt);
         void trackMotion('template_instruction_copy_result', { host_product: host, copy_status: 'clipboard_written' });
