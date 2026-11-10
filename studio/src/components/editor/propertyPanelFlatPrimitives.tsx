@@ -1,3 +1,4 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
@@ -23,6 +24,8 @@ export function FlatRow({
   disabled,
   tooltip,
   liveCommit,
+  boxed,
+  stepper,
   suffix,
   dropdown,
   onPreview,
@@ -36,6 +39,8 @@ export function FlatRow({
   /** Shown as a title attribute, e.g. why the row is disabled. */
   tooltip?: string;
   liveCommit?: boolean;
+  boxed?: boolean;
+  stepper?: boolean;
   suffix?: ReactNode;
   /** Renders a trailing 10px caret-down, for select-backed rows. */
   dropdown?: boolean;
@@ -51,10 +56,11 @@ export function FlatRow({
       <span className="flex min-w-0 shrink-0 items-center gap-1.5">
         <span
           data-flat-row-value="true"
-          className={`min-w-0 border-b pb-px font-mono text-[11px] ${VALUE_TIER_VALUE_CLASS[tier]} ${
-            tier === "explicitCustom"
+          className={`min-w-0 font-mono text-[11px] ${VALUE_TIER_VALUE_CLASS[tier]} ${boxed
+            ? "w-24 rounded-md bg-panel-bg-inset px-2 py-1 focus-within:ring-1 focus-within:ring-panel-accent/30"
+            : `border-b pb-px ${tier === "explicitCustom"
               ? "border-panel-accent/30 group-hover:border-panel-accent/70"
-              : "border-panel-border-input/50 group-hover:border-panel-border-input"
+              : "border-panel-border-input/50 group-hover:border-panel-border-input"}`
           }`}
         >
           <CommitField
@@ -62,6 +68,7 @@ export function FlatRow({
             disabled={disabled}
             liveCommit={liveCommit}
             align="right"
+            stepper={stepper}
             onPreview={onPreview}
             onCommit={(nextValue) => {
               track("metric", label);
@@ -85,15 +92,7 @@ export function FlatRow({
           </button>
         )}
         {dropdown && (
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 10 10"
-            fill="currentColor"
-            className="shrink-0 text-panel-text-5"
-          >
-            <path d="M2 3l3 4 3-4z" />
-          </svg>
+          <RemixIcon name="arrow-down-s-line" size={14} className="shrink-0 text-panel-text-5" />
         )}
       </span>
     </div>
@@ -121,12 +120,14 @@ export function FlatSegmentedRow({
   /** Index (0-based) after which to render a 12px spacer — for combined rows
    *  like Text's "Case · Style", which pack two independent option groups. */
   spacerAfterIndex,
+  filled,
   onChange,
 }: {
   label: string;
   options: FlatSegmentOption[];
   disabled?: boolean;
   spacerAfterIndex?: number;
+  filled?: boolean;
   onChange: (nextKey: string) => void;
 }) {
   const { t } = useI18n();
@@ -148,9 +149,11 @@ export function FlatSegmentedRow({
                 onChange(option.key);
               }}
               className={`px-1.5 py-1 text-[11px] transition-colors disabled:cursor-not-allowed ${
-                option.active
-                  ? "border-b-2 border-panel-accent text-panel-text-0"
-                  : "border-b-2 border-transparent text-panel-text-4 hover:text-panel-text-2"
+                filled
+                  ? `rounded-md ${option.active ? "bg-panel-bg-inset font-semibold text-panel-text-0" : "text-panel-text-4 hover:bg-panel-bg-inset hover:text-panel-text-2"}`
+                  : option.active
+                    ? "border-b-2 border-panel-accent text-panel-text-0"
+                    : "border-b-2 border-transparent text-panel-text-4 hover:text-panel-text-2"
               }`}
             >
               {typeof option.node === "string" ? t(option.node) : option.node}
@@ -214,15 +217,7 @@ export function FlatGroupHeader({
             </span>
           )}
         </span>
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="currentColor"
-          className="shrink-0 text-panel-text-5"
-        >
-          <path d="M4 2l4 4-4 4z" />
-        </svg>
+        <RemixIcon name="arrow-right-s-line" size={14} className="shrink-0 text-panel-text-5" />
       </button>
     );
   }
@@ -235,9 +230,7 @@ export function FlatGroupHeader({
       <span className="flex items-center gap-2.5 text-panel-text-5">
         {accessory}
         <button type="button" onClick={onToggleOpen} title={t("Collapse")} className="text-panel-text-3">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-            <path d="M2 4l4 4 4-4z" />
-          </svg>
+          <RemixIcon name="arrow-down-s-line" size={14} />
         </button>
       </span>
     </div>

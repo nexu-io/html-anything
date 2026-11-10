@@ -313,6 +313,7 @@ export function useLayerRevealOverride({
   scheduleReveal: (element: HTMLElement, delayMs: number) => void;
 } {
   const stateRef = useRef<RevealState | null>(null);
+  const mountedRef = useRef(false);
   const pendingRevealRef = useRef<{ timer: number; element: HTMLElement } | null>(null);
   const currentRef = useRef({ isPlaying, selectedElement });
   currentRef.current = { isPlaying, selectedElement };
@@ -351,10 +352,15 @@ export function useLayerRevealOverride({
     (element: HTMLElement, delayMs: number) => {
       cancelScheduledReveal();
       const current = currentRef.current;
-      if (current.isPlaying) return;
+      if (!mountedRef.current || current.isPlaying) return;
       const attemptReveal = () => {
         const latest = currentRef.current;
-        if (latest.isPlaying || latest.selectedElement !== element || !element.isConnected) {
+        if (
+          !mountedRef.current ||
+          latest.isPlaying ||
+          latest.selectedElement !== element ||
+          !element.isConnected
+        ) {
           pendingRevealRef.current = null;
           return;
         }
@@ -382,14 +388,17 @@ export function useLayerRevealOverride({
     if (isPlaying || (base && selectedElement !== base)) restoreReveal();
   }, [cancelScheduledReveal, isPlaying, restoreReveal, selectedElement]);
 
-  // Unmount: never leave a timer or override behind.
-  useEffect(
-    () => () => {
+  // Selecting a layer can open Properties and unmount this panel while its
+  // async seek is pending. Reject the old handler when it resumes after cleanup;
+  // merely clearing existing timers cannot cancel work not yet scheduled.
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
       cancelScheduledReveal();
       restoreReveal();
-    },
-    [cancelScheduledReveal, restoreReveal],
-  );
+    };
+  }, [cancelScheduledReveal, restoreReveal]);
 
   return { scheduleReveal };
 }

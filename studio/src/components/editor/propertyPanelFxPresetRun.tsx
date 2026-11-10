@@ -162,14 +162,14 @@ export function FxPresetRun({
           }}
           aria-expanded={!collapsed}
           title={
-            collapsed ? t("Show what {value0} contains", { value0: preset.label }) : t("Hide {value0}'s effects", { value0: preset.label })
+            collapsed ? t("Show what {value0} contains", { value0: t(preset.label) }) : t("Hide {value0}'s effects", { value0: t(preset.label) })
           }
           onClick={onToggleCollapse}
         >
           <span className="hf-fx-preset-run-caret pr-1 font-mono opacity-60" aria-hidden="true">
             {collapsed ? "▸" : "▾"}
           </span>
-          {preset.label}
+          {t(preset.label)}
           {/* Collapsed, the count is what says the preset is still a chain
               rather than one opaque effect. */}
           {collapsed ? (
@@ -185,7 +185,7 @@ export function FxPresetRun({
           type="button"
           className="hf-fx-preset-run-toggle rounded-[3px] border border-panel-border-input px-1.5 py-0.5 font-mono text-[9px] text-panel-text-2 hover:text-panel-text-0 disabled:opacity-40"
           aria-pressed={runOn}
-          title={runOn ? t("Switch {value0} off", { value0: preset.label }) : t("Switch {value0} back on", { value0: preset.label })}
+          title={runOn ? t("Switch {value0} off", { value0: t(preset.label) }) : t("Switch {value0} back on", { value0: t(preset.label) })}
           disabled={disabled}
           onClick={() => {
             onSetAmount(runOn ? 0 : 1);
@@ -197,7 +197,7 @@ export function FxPresetRun({
         <button
           type="button"
           className="hf-fx-preset-run-remove px-1 font-mono text-[11px] text-panel-text-2 hover:text-danger-ink disabled:opacity-40"
-          title={t("Remove {value0}", { value0: preset.label })}
+          title={t("Remove {value0}", { value0: t(preset.label) })}
           disabled={disabled}
           onClick={onRemoveRun}
         >

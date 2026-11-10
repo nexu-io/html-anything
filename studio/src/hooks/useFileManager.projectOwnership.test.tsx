@@ -272,7 +272,7 @@ describe("useFileManager uploads", () => {
     });
 
     expect(added).toEqual(["clip.mp4"]);
-    expect(showToast).toHaveBeenCalledWith(`Added clip.mp4, ${reason}`, "info");
+    expect(showToast).toHaveBeenCalledWith("Added clip.mp4, Media checking is unavailable. The file was added, but playback has not been verified.", "info");
   });
 
   it("says why each upload was not added", async () => {
@@ -285,7 +285,7 @@ describe("useFileManager uploads", () => {
 
     expect(added).toEqual([]);
     expect(showToast).toHaveBeenCalledWith(
-      "Not added: clip.mp4 (no supported video stream found), song.mp3 (no supported audio stream found)",
+      "Not added: clip.mp4 (No playable video found. Export a video file and try again.), song.mp3 (No playable audio found. Export an audio file and try again.)",
     );
   });
 });

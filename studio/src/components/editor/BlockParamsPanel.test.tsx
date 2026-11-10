@@ -8,6 +8,7 @@ import { FileManagerProvider } from "../../contexts/FileManagerContext";
 import type { useFileManager } from "../../hooks/useFileManager";
 import { StudioPlaybackProvider, type StudioPlaybackValue } from "../../contexts/StudioContext";
 import { BlockParamsPanel } from "./BlockParamsPanel";
+import { I18nProvider, useI18n, type Locale } from "../../i18n/I18n";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -50,23 +51,31 @@ afterEach(() => {
   vi.clearAllTimers();
 });
 
-function renderPanel(fileManager: ReturnType<typeof makeFileManager>["value"]) {
+function LanguageSwitch() {
+  const { setLocale } = useI18n();
+  return <button onClick={() => setLocale("en")}>Switch language</button>;
+}
+
+function renderPanel(fileManager: ReturnType<typeof makeFileManager>["value"], locale: Locale = "en", params = PARAMS) {
   const host = document.createElement("div");
   document.body.append(host);
   root = createRoot(host);
   act(() => {
     root?.render(
+      <I18nProvider initialLocale={locale}>
+      <LanguageSwitch />
       <StudioPlaybackProvider value={playbackValue}>
         <FileManagerProvider value={fileManager}>
           <BlockParamsPanel
             blockName="vfx-demo"
             blockTitle="VFX Demo"
-            params={PARAMS}
+            params={params}
             compositionPath="compositions/vfx-demo.html"
             onClose={vi.fn()}
           />
         </FileManagerProvider>
-      </StudioPlaybackProvider>,
+      </StudioPlaybackProvider>
+      </I18nProvider>,
     );
   });
 }
@@ -93,6 +102,28 @@ async function flushCommit() {
 }
 
 describe("BlockParamsPanel commit safety", () => {
+  it("localizes labels and options without changing values, titles or the mounted controls", () => {
+    const fm = makeFileManager({ value: "" });
+    renderPanel(fm.value, "zh-CN", [
+      { key: "hue", label: "Nebula hue", type: "number", default: "210" },
+      { key: "movement", label: "Movement", type: "select", default: "glide", options: [
+        { label: "Glide (smooth)", value: "glide" },
+        { label: "Step (snap at corners)", value: "step" },
+      ] },
+    ]);
+    const range = document.querySelector('input[type="range"]')!;
+    const select = document.querySelector("select")!;
+    expect(range.getAttribute("aria-label")).toBe("星云色相");
+    expect(select.options[0].textContent).toBe("平滑滑动");
+    expect(select.value).toBe("glide");
+    expect(document.body.textContent).toContain("VFX Demo");
+    act(() => document.querySelector<HTMLButtonElement>("button")!.click());
+    expect(document.querySelector('input[type="range"]')).toBe(range);
+    expect(range.getAttribute("aria-label")).toBe("Nebula hue");
+    expect(select.options[0].textContent).toBe("Glide (smooth)");
+    expect(select.value).toBe("glide");
+    expect(fm.writeProjectFile).not.toHaveBeenCalled();
+  });
   it("refuses a multi-occurrence value and never mutates the unrelated sibling", async () => {
     // The param's default (#0c0c0c) also appears on an UNRELATED element. The
     // panel has no way to tell which occurrence belongs to the param, so it

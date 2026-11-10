@@ -1,3 +1,4 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { RotateCcw } from "../../icons/SystemIcons";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
@@ -78,15 +79,7 @@ export function FlatSelectRow({
               </option>
             ))}
           </select>
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 10 10"
-            fill="currentColor"
-            className="shrink-0 text-panel-text-5"
-          >
-            <path d="M2 3l3 4 3-4z" />
-          </svg>
+          <RemixIcon name="arrow-down-s-line" size={14} className="shrink-0 text-panel-text-5" />
         </label>
         {tier === "explicitCustom" && onReset && (
           <button

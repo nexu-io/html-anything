@@ -1,3 +1,4 @@
+import { useMvpEditor } from "./StudioHost";
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useMediaGateway } from './MediaGatewayContext';
@@ -21,18 +22,22 @@ export function TimelineMediaBar() {
 
 function ConnectedTimelineMediaBar() {
   const gateway = useMediaGateway()!; const { t } = useI18n();
+  const mvp = useMvpEditor();
   const { state } = useTimelineContext(); const shell = useStudioShellContextOptional();
   const readOnly = useTimelineReadOnlyPress();
   const playing = usePlayerStore(s => s.isPlaying);
   const selectedIds = usePlayerStore(s => s.selectedElementIds);
   const [interaction, setInteraction] = useState(0), [caret, setCaret] = useState<number | null>(null);
-  const [dismissed, setDismissed] = useState(''), [prompt, setPrompt] = useState(''), [ask, setAsk] = useState(false);
+  const [dismissed, setDismissed] = useState(''), [drafts, setDrafts] = useState<Record<string, string>>({}), [ask, setAsk] = useState(false);
   const range = state.overlays.showPopover ? state.overlays.rangeSelection : null;
   const clip = !range && selectedIds.size <= 1 ? state.elements.find(el => (el.key ?? el.id) === state.selectedElementId) : undefined;
   const media = selectedMedia(clip);
   const start = range ? Math.min(range.start, range.end) : clip?.start ?? caret ?? 0;
   const duration = range ? Math.abs(range.end - range.start) : clip?.duration ?? 3;
-  const identity = `${shell?.projectId}:${state.sessionEpoch}:${range ? 'range' : clip?.key ?? clip?.id ?? 'caret'}:${start}:${duration}:${interaction}`;
+  const draftKey = `${shell?.projectId}:${shell?.activeCompPath}:${state.sessionEpoch}:${range ? 'range' : clip?.key ?? clip?.id ?? 'caret'}:${start}:${duration}`;
+  const identity = `${draftKey}:${interaction}`;
+  const prompt = drafts[draftKey] ?? "";
+  const setPrompt = (value: string) => setDrafts(previous => ({ ...previous, [draftKey]: value }));
   const scroll = state.canvas.scrollRef;
   const clipKey = clip?.key ?? clip?.id;
   const pps = state.canvas.pps, contentOrigin = state.canvas.contentOrigin;
@@ -74,25 +79,53 @@ function ConnectedTimelineMediaBar() {
     viewport.addEventListener('pointerup', activate);
     return () => viewport.removeEventListener('pointerup', activate);
   }, [scroll, state.timelineReady, state.canvas.pps, state.canvas.contentOrigin]);
-  useEffect(() => { setCaret(null); setAsk(false); }, [state.sessionEpoch, shell?.activeCompPath]);
+  useEffect(() => { setCaret(null); setAsk(false); setDrafts({}); }, [state.sessionEpoch, shell?.projectId, shell?.activeCompPath]);
+  useEffect(() => { setAsk(false); }, [draftKey]);
   const hidden = readOnly || !state.timelineReady || gateway.generationOpen || playing || shell?.writeBlockedReason || shell?.renderQueue.isRendering
     || state.canvas.isScrubbing || state.canvas.draggedElement || state.canvas.resizingClip || state.canvas.marqueeRect
     || state.overlays.clipContextMenu || state.overlays.kfContextMenu || state.overlays.gapContextMenu
     || dismissed === identity || (!range && !clip && caret === null);
   const popover = useMediaPopoverPosition(anchor, 680, !hidden && !ask);
+  useEffect(() => {
+    if (hidden || ask) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const cancel = () => { clearTimeout(timer); timer = undefined; };
+    const schedule = () => {
+      if (timer !== undefined || popover.ref.current?.contains(document.activeElement)) return;
+      timer = setTimeout(() => {
+        timer = undefined;
+        if (!popover.ref.current?.contains(document.activeElement)) setDismissed(identity);
+      }, 350);
+    };
+    const move = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      const rect = anchor.getBoundingClientRect();
+      const atOpener = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+      if (popover.ref.current?.contains(event.target as Node) || atOpener) cancel();
+      else schedule();
+    };
+    const outside = (event: PointerEvent) => {
+      if (popover.ref.current?.contains(event.target as Node)) return;
+      cancel();
+      setDismissed(identity);
+    };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerdown', outside, true);
+    return () => { cancel(); document.removeEventListener('pointermove', move); document.removeEventListener('pointerdown', outside, true); };
+  }, [hidden, ask, identity, anchor, popover.ref]);
   if (hidden) return null;
   const close = () => { setDismissed(identity); setAsk(false); };
   const open = (edit = false) => gateway.openGenerator({ prompt, placement: { start, duration: Math.max(.1, duration), track: clip?.track ?? 0 },
     anchor, modality: media?.modality, selection: media, ...(edit ? { intent: 'edit' as const } : {}) });
   const host = document.querySelector('[data-motion-studio]') ?? document.body;
   const anchorRect = anchor.getBoundingClientRect();
-  return createPortal(ask ? <EditPopover initialPrompt={prompt} rangeStart={start} rangeEnd={start + duration} anchorX={(anchorRect.left + anchorRect.right) / 2} anchorY={anchorRect.top - 8} onClose={close} /> :
+  return createPortal(ask ? <EditPopover initialPrompt={prompt} selectedElementKey={clipKey} rangeStart={start} rangeEnd={start + duration} anchorX={(anchorRect.left + anchorRect.right) / 2} anchorY={anchorRect.top - 8} onClose={close} /> :
     <aside ref={popover.ref} className="motion-timeline-media-bar motion-media-surface" style={popover.style} aria-label={t('Timeline media actions')} onPointerDown={e => e.stopPropagation()} onKeyDown={e => { e.stopPropagation(); if (e.key === 'Escape') close(); }}>
       <div className="motion-media-context"><span>{start.toFixed(1)}–{(start + duration).toFixed(1)}s</span><span title={media?.label}>{media?.label ?? t(range ? 'Selected time range' : clip ? 'Selected clip' : 'At playhead')}</span><button className="motion-media-close" aria-label={t('Close timeline media actions')} onClick={close}>×</button></div>
-      <form onSubmit={e => { e.preventDefault(); open(); }}>
-        <input aria-label={t('Timeline media prompt')} value={prompt} onChange={e => setPrompt(e.target.value)} placeholder={t(media?.modality === 'image' ? 'Describe a new image or how to change this one…' : 'Describe what goes here…')} />
-        <button type="submit">{t('Generate media')}</button>
-        {media?.modality === 'image' && <button type="button" className="motion-media-primary" onClick={() => open(true)}>{t('Edit image')}</button>}
+      <form onSubmit={e => { e.preventDefault(); if (mvp) setAsk(true); else open(); }}>
+        <input aria-label={t('Timeline media prompt')} value={prompt} onChange={e => setPrompt(e.target.value)} placeholder={t(!mvp && media?.modality === 'image' ? 'Describe a new image or how to change this one…' : 'Describe what goes here…')} />
+        {!mvp && <button type="submit">{t('Generate media')}</button>}
+        {!mvp && media?.modality === 'image' && <button type="button" className="motion-media-primary" onClick={() => open(true)}>{t('Edit image')}</button>}
         <button type="button" onClick={() => setAsk(true)}>{t('Ask Agent')}</button>
       </form>
     </aside>, host);

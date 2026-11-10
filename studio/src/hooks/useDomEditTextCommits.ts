@@ -140,7 +140,7 @@ export function useDomEditTextCommits({
   );
 
   const handleDomStyleCommit = useCallback(
-    (property: string, value: string): Promise<DomEditCommitOutcome> =>
+    (property: string | Record<string, string>, value = ""): Promise<DomEditCommitOutcome> =>
       domEditSelection
         ? handleDomStyleCommitForSelection(domEditSelection, property, value)
         : Promise.resolve(domEditCommitDeclined("no-selection")),

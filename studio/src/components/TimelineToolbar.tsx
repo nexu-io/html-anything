@@ -1,3 +1,5 @@
+import { RemixIcon } from "../icons/RemixIcons";
+import { useMvpEditor } from "../motion/StudioHost";
 import { useI18n } from "../i18n/I18n";
 import { memo, useEffect, useRef, type ReactNode } from "react";
 import {
@@ -7,7 +9,7 @@ import {
   Magnet,
   MagnifyingGlassMinus,
   MagnifyingGlassPlus,
-} from "@phosphor-icons/react";
+} from "../icons/RemixIcons";
 import {
   useEnableKeyframes,
   isPlayheadWithinTween,
@@ -38,6 +40,7 @@ import type { DomEditSelection } from "./editor/domEditingTypes";
 import { canSplitElement } from "../utils/timelineElementSplit";
 import { useAudioMetersVisible } from "../utils/audioMeterVisibility";
 import { LinkedSelectionToggle } from "./LinkedSelectionToggle";
+import { useLinkedClipPreferences } from "../utils/linkedClipPreferences";
 import { useProjectHasAudio } from "../utils/audioMeterMath";
 import { canAddBeatAt, addBeatAtCompositionTime } from "../utils/beatEditActions";
 import { isTypingTarget } from "../utils/typingTarget";
@@ -162,6 +165,11 @@ export const TimelineToolbar = memo(function TimelineToolbar({
   rightActions,
 }: TimelineToolbarProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
+  showHistory = showHistory && !mvp;
+  showSelectAroundPlayhead = showSelectAroundPlayhead && !mvp;
+  showAddBeat = showAddBeat && !mvp;
+  showKeyframes = showKeyframes && !mvp;
   const keys = useStudioKeys();
   const kf = keyHint("addKeyframe", keys);
   const timelineSnapEnabled = usePlayerStore((s) => s.timelineSnapEnabled);
@@ -211,6 +219,14 @@ export const TimelineToolbar = memo(function TimelineToolbar({
     if (!showKeyframes) setAutoKeyframeEnabled(false);
   }, [showKeyframes, setAutoKeyframeEnabled]);
 
+  useEffect(() => {
+    if (!mvp) return;
+    const store = usePlayerStore.getState();
+    store.setThumbnailMode("adaptive");
+    store.setRippleEditEnabled(false);
+    useLinkedClipPreferences.getState().setLinkedSelection(false);
+  }, [mvp]);
+
   // "N" toggles timeline snapping (industry convention: Resolve/FCP).
   // Skip when typing in an input/contenteditable.
   useEffect(() => {
@@ -225,20 +241,21 @@ export const TimelineToolbar = memo(function TimelineToolbar({
   }, []);
 
   return (
-    <div className="border-b border-neutral-800/60">
+    <div className="motion-timeline-toolbar border-b border-neutral-800/60">
       <div className="flex items-center justify-between px-2 py-0.5">
         <div className="flex items-center gap-0.5">
           {showHistory && <TimelineHistoryButtons {...history} />}
           <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} />
           {/* Divider: tool-mode | editing-actions */}
           <div aria-hidden="true" className="mx-1 h-4 w-px bg-neutral-800" />
-          <LinkedSelectionToggle />
+          {!mvp && <LinkedSelectionToggle />}
           <Tooltip
             label={
               timelineSnapEnabled
                 ? t("Snapping on ({value0})", { value0: keyHint("timelineSnap", keys) })
                 : t("Snapping off ({value0})", { value0: keyHint("timelineSnap", keys) })
             }
+            description={t("When enabled, dragged clips snap to nearby clip edges and the playhead for easier alignment.")}
           >
             <button
               type="button"
@@ -250,7 +267,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               <Magnet size={16} weight="bold" aria-hidden="true" />
             </button>
           </Tooltip>
-          <Tooltip
+{!mvp && <>           <Tooltip
             label={
               rippleEditEnabled
                 ? t("Ripple on: keeps the main track gapless")
@@ -266,7 +283,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             >
               <RippleEditIcon size={16} />
             </button>
-          </Tooltip>
+          </Tooltip> </>}
           {projectHasAudio && (
             <Tooltip label={audioMetersVisible ? t("Hide audio meters") : t("Show audio meters")}>
               <button
@@ -384,7 +401,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               </Tooltip>
             </>
           )}
-          {onSplitElement &&
+          {!mvp && onSplitElement &&
             (() => {
               // Render the button unconditionally (disabled when unusable):
               // mounting/unmounting mid-task shifts the neighboring controls.
@@ -415,22 +432,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
                     className={canSplit ? flatIdle : flatDisabled}
                   >
                     {/* "][" split glyph: two outward-facing brackets with a center gap */}
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      {/* Right bracket of left half: ] */}
-                      <path d="M5 3 L7 3 L7 13 L5 13" />
-                      {/* Left bracket of right half: [ */}
-                      <path d="M11 3 L9 3 L9 13 L11 13" />
-                    </svg>
+                    <RemixIcon name="scissors-cut-line" size={16} />
                   </button>
                 </Tooltip>
               );
@@ -480,7 +482,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
         </div>
         <div className="flex items-center gap-0.5">
           {rightActions}
-          <Tooltip
+{!mvp && <>           <Tooltip
             label={
               thumbnailsVisible
                 ? t("Hide thumbnails: labels only")
@@ -504,12 +506,13 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             >
               <Image size={16} aria-hidden="true" />
             </button>
-          </Tooltip>
+          </Tooltip> </>}
           <Tooltip
-            label={
+            label={t("Zoom to selected clips ({value0})", { value0: keyHint("zoomSelection", keys) })}
+            description={
               canZoomSelection
-                ? t("Zoom to selected clips ({value0})", { value0: keyHint("zoomSelection", keys) })
-                : t("Select a clip to zoom the timeline")
+                ? t("Adjust the timeline view to fit the selected clips, making detailed edits easier.")
+                : t("First select one or more clips in the timeline, then use this to fit them into view.")
             }
           >
             <button
@@ -524,21 +527,24 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               <FrameCorners size={16} aria-hidden="true" />
             </button>
           </Tooltip>
-          <Tooltip label={t("Fit timeline to width")}>
+          <Tooltip
+            label={t("Fit timeline to width")}
+            description={t("Show the full timeline in the available width. This only changes the view, not the video duration.")}
+          >
             <button
               type="button"
               onClick={() => setZoomMode("fit")}
               aria-label={t("Fit timeline to width")}
-              aria-pressed={zoomMode === "fit"}
-              className={`h-7 px-2 rounded-md text-[11px] font-medium transition-colors ${
-                zoomMode === "fit"
-                  ? "bg-studio-accent/10 text-accent-ink"
-                  : "text-neutral-400 hover:bg-hover hover:text-neutral-200"
-              }`}
+              className={flatIdle}
             >
               <ArrowsOutLineHorizontal size={16} aria-hidden="true" />
             </button>
           </Tooltip>
+          <div
+            role="group"
+            aria-label={t("Timeline zoom")}
+            className={mvp ? "motion-timeline-zoom mx-3 flex shrink-0 items-center gap-0" : "contents"}
+          >
           <Tooltip label={t("Zoom out")}>
             <button
               type="button"
@@ -576,13 +582,14 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               <MagnifyingGlassPlus size={16} aria-hidden="true" />
             </button>
           </Tooltip>
-          {/* Numeric zoom readout (main-parity): "Fit" in fit mode, N% in manual. */}
-          <span
+          </div>
+          {/* The compact MVP keeps zoom controls without a numeric readout. */}
+          {!mvp && <span
             className="ml-1 w-[38px] text-right font-mono text-[11px] tabular-nums text-neutral-500 select-none"
             aria-label={t("Timeline zoom level")}
           >
             {showsFit ? t("Fit") : `${displayedTimelineZoomPercent}%`}
-          </span>
+          </span>}
         </div>
       </div>
     </div>

@@ -2,21 +2,29 @@
 
 本文描述仓库根目录的独立 Motion 运行时；它与 OD 主应用的会话、账号和部署整合尚未包含在本次源码迁移中。参见[迁移边界](../repository-migration.md)。
 
-更新：2026-11-05。实现基线：0.6.2；状态：下文标记为“当前”的能力已在仓库实现。公开范围为本机创作、编辑、MCP 和独立安装分发。
+Updated: 2026-11-09. 实现基线：0.6.2；状态：下文标记为“当前”的能力已在仓库实现。公开范围为本机创作、编辑、MCP 和独立安装分发。
 
 ## 产品定位与目标
 
-OpenDesign 的底层组织是通用 Agent 会话：会话拥有模式、需求与多个 Artifact，模式选择模板目录和 skill，Artifact Viewer 负责打开可编辑产物。完整与嵌入视图使用同一产物；`embed=1` 可只显示 Viewer，供 Codex 等宿主打开。当前一期只有 Motion 模式，制作与导出仍使用原生 Hyperframes。其他模式是已确认方向，未作为可执行模式上线。
+The MVP opens directly into the Motion editor with a searchable project sidebar, including `embed=1`. Home, conversation, browser tabs and integration/model settings are not exposed in this editor. Users can create a blank project from the sidebar, create through the external Agent workflow, or use the editor's template library. The underlying session, mode and Artifact model is retained, with Motion as the only executable mode and Hyperframes owning editing and export.
 
 会话的 Agent 推理与工具编排由用户已有的 MCP 客户端执行；本地网页保存需求、接收调用方写回的真实回复、管理产物与继续编辑，不包含内置聊天 Agent 运行器。自有 Agent、Codex 和其他 MCP 客户端共用先创建会话、后生成产物的生命周期。
 
-Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调用本地 Codex 与云供应商；它不接管会话编排。创作模式、媒体模态与供应商模型分别定义产物、素材类型和执行能力，详见[会话架构的分层说明](../session-architecture.md#会话编排与媒体生成的分层)。
+Model Gateway remains a shared media-generation backend for MCP, using local Codex and cloud providers. Generation entry points are hidden in the MVP editor; the Gateway does not orchestrate conversations. 创作模式、媒体模态与供应商模型分别定义产物、素材类型和执行能力，详见[会话架构的分层说明](../session-architecture.md#会话编排与媒体生成的分层)。
 
 已确认的体验原则：
 
 - Agent 与用户操作同一份工程，修改能在工作室继续编辑。
-- 全部页面共享左侧会话列表，一个会话可拥有多个工程。左侧会话和右侧浏览器顶格并列，工程工具与编辑器完整从属于浏览器 Tab；两侧可独立收起、恢复。移除全局顶栏，设置收纳在侧栏；列表可从会话顶部完全折叠，隐藏会话时由浏览器顶部恢复。
-- MCP 接入、模板发现、预览和复制指令在一个弹框里完成，保留编辑器上下文。
+- The project sidebar opens as a modal drawer over the editor at every viewport size. It starts closed, leaves the editor dimensions unchanged, and closes via its button, outside click or Escape. The header toggle remains mounted for focus restoration; privacy, theme and language settings live in the drawer footer. Error and empty-session views retain a drawer toggle so users can select an existing project or create one. Project rows show names without dates; the heading offers a New project button instead of a count. Creation uses the existing save and revision guards before opening the blank project.
+- Preview zoom percentage and Fit sit in the MVP preview header, outside the picture; fullscreen retains the in-view controls.
+- The composition list marks the live preview target, including the full video. The MVP omits the duplicate preview breadcrumb; composition switching and existing return shortcuts remain available.
+- The editor header keeps the OpenDesign logo, drawer toggle and template library on the left, centers the editable project name, and places undo/redo and export on the right. Transient save/error status remains available. The template modal preserves previews and author/source links, without integration setup sections.
+- The asset panel shows only the current project, with compact search/import controls, type filters, and a dedicated scrollable list. Usage filtering is omitted; used assets still sort first within each type. The global cache view remains in source but has no editor entry in the MVP.
+- Panel positions are fixed. Divider resizing and per-project size persistence remain; panel movement, closing and layout presets are absent. Preview alone can temporarily expand within the editor workspace, keeping the host chat visible and the player mounted. Its header button or Escape restores the previous layout and playback position; expansion is not persisted across reloads.
+- MVP controls share a locally bundled Remix Icon 4.9.1 set with the reference design system. Side-panel tabs remain text-only; brand artwork and timeline geometry are separate from control icons.
+- Timeline clips omit a title that duplicates the track header, giving its space to the preview. Distinct clip names, accessible labels, status badges and track visibility controls remain available.
+- The MVP omits the standalone timeline title strip to give its space to tracks, retaining the tool row and ruler.
+- The MVP shows Select and Split as adjacent timeline tools. Split at playhead remains available by keyboard shortcut, without a duplicate toolbar button. Tooltips add a short explanation for less familiar controls while simple actions retain a name-only hint.
 - 模板先展示真实成片效果；作者、出处、内容种类和有来源的热度帮助选择。
 - 交给 Agent 的复刻指令保持简短；详细配置、模板 ID 和流程由参数化指引链接承载。
 - 导出成功需要真实产物与验证证据；技术检查与画面、声音、播放器检查分别记录。
@@ -42,11 +50,11 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 ## 核心用户流程
 
-1. 用户在首页切到 Motion 模式，选择 Motion 模板并提交需求创建会话；也可直接新建空白创作，或打开左侧已有会话。内置模板复制为该会话的工程，外部参考由 Agent 制作。
-2. 需要 Agent 时选择 Codex、Claude Code、DeepSeek Harness 或通用 stdio 客户端。接入配置绑定当前工作区；Agent 验证工具和数据目录，读取当前工程与制作规范。 安装后先介绍能力、邀请并等待选择；接受首次体验即确认 `product-promo` 示例内容、独立 20 秒工程及右侧可编辑页面，用户没有要求时不导出 MP4。Agent 不再问素材/模板确认，实际打开宿主面板并检查工程载入与播放。Successful first-run delivery uses one completion sentence and an LLM-generated contextual invitation to the user's next video, following the [first-run defaults](../../skills/motion-production/references/templates.md#first-run-experience-defaults); the editable project stays open on the right. 宿主没有面板能力时明确提供链接作为降级，不能冒称已打开；实际行为按客户端验证。
-3. 用户在会话补充需求并复制给外部 Agent。一期 Agent 用 `motion_get_project` 读取明确工程及其 sessionId、需求、来源与版本，按本轮意图选择入口或直接继续已选范围；编辑前校验工程归属。For original creation, reference-video recreation and editable-template production, the Agent automatically calls `motion_open_preview({projectId})` after the requested HTML is saved and visibly opens its exact `previewUrl` in the host browser, before export or delivery; no extra user request is required. The project open in the editor is the deliverable: exports serve the Agent's checks, and MP4 files are handed over only when the user asks for them (motion-video-to-template still delivers its template ZIP). The shared [editable preview handoff](../../skills/motion-production/references/native.md#editable-preview-handoff) defines readiness, host checks and capability limitations. Continued content edits, including motion-production work, return a project/revision/version-bound previewHandoff after saving or restoring. Reuse the native project tab: present it when the calling chat is active, otherwise queue it without switching chats and resolve the latest version when the user returns. Only this turn's explicit presentation=now request permits switching back; explicit background requests suppress presentation. Codex IAB synchronizes visibility within the calling chat. A queued acknowledgment is separate from observed visibility and live-content freshness; record_display rejects stale content identities, and stored previewDisplay remains historical host-reported evidence rather than a live server measurement. 旧 design_* handler 仅留内部兼容。
+1. The user creates a blank project or opens an existing one from the sidebar, asks an external Agent to create a project, or chooses a template in the editor. Bundled templates create independent project copies; external references require Agent reconstruction.
+2. The Agent uses the existing MCP integration and verifies the selected project, revision and workflow. Integration setup remains available outside the MVP editor. After installation, introduce the capabilities and wait for a choice; accepting the first-run experience selects the independent 20-second `product-promo` project and its editable host panel. Do not ask for another material/template confirmation or export an MP4 unless requested. Check that the project loads and plays; a host without a panel uses an explicit link fallback. Follow the [first-run defaults](../../skills/motion-production/references/templates.md#first-run-experience-defaults) for the completion sentence and contextual invitation.
+3. `motion_open_preview({projectId})` opens the project directly. Project switching waits for pending saves and reloads the document to release the previous edit session. Opening a bookmark warms only its scoped native context without switching other editor tabs. Rendering and write conflicts continue to block unsafe switches. Original creation, reference recreation and template production automatically open the saved project before delivery; the open editor is the deliverable, and video files are handed over only when requested (video-to-template still delivers its template ZIP). Continued edits and restores return a project/revision/version-bound previewHandoff. Reuse the native project tab: present it when the calling chat is active, otherwise queue it without switching chats and resolve the latest version when the user returns. Only this turn's explicit `presentation=now` request permits switching back; explicit background requests suppress presentation. Codex IAB synchronizes visibility within the calling chat. A queued acknowledgment is separate from observed visibility and live-content freshness; `record_display` rejects stale content identities, and stored previewDisplay remains historical host-reported evidence. The shared [editable preview handoff](../../skills/motion-production/references/native.md#editable-preview-handoff) defines readiness, host checks and capability limitations.
 4. Agent 根据本轮目标直接选择 Skill：motion-director 负责原创、局部/整体叙事动作声音重新设计和创作审片；motion-template-to-video 负责已有模板出片；motion-recreate 负责参考作品重建（已接入实际流程、独立参考与测量脚本）；motion-video-to-template 负责可复用模板生产；motion-production 承接既定决定下的工程操作、预览、技术检查、排错和导出。共享规则同源引用，已有 production/start 保留导航，无需前置总路由。项目来源与画面锁定不固定入口；保持项和已完成操作继续有效。
-5. Agent 导入素材或通过 Model Gateway 生成图片/视频/音频，完成后写入原生工程。用户在右侧浏览器 Tab 的 Motion Artifact Viewer 预览与编辑，可从空时间轴、素材面板或时间轴选区生成并放入指定时段；选中图片可交给 Codex 参考修改，确认后只替换素材引用并保留原生撤销。也可新增同会话的另一个工程，关闭浏览器继续会话、收起会话沉浸浏览。发生 revision 冲突时重新读取并合并。 按共享 context 补齐缺少的正文并先返回模型再执行；修改按共享 edit 核对保持项、相邻关系与后续延续。
+5. The Agent imports or generates media through the existing backend. In the editor, the user imports assets, edits text/solid color/opacity/geometry, previews, and edits clips on the timeline. Element, clip and time-range prompts still provide Ask Agent. Generation, image replacement, advanced style/animation controls, code and version-history panels are hidden without rewriting existing source content or removing Agent capabilities.
 6. 完成画面、文案、声音检查后，按用户要求导出固定 revision 的快照，等待真实产物并验证。
 
 后续需求应注明改变了哪一步、影响哪些角色，以及用户能观察到的完成条件。
@@ -85,12 +93,12 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 | 能力 | 负责模块 | 当前边界 |
 | --- | --- | --- |
-| 首页与项目会话 | `MotionApp.tsx`、`WorkspaceFrame.tsx`、`MotionHome.tsx`、`useWorkspace.ts`（位于 `studio/src/motion/`） | 根地址显示首页，左侧会话共享工程目录；切换前保存、切换后整页重建；详见 [项目专题](../project-workspace.md) |
-| 项目创作会话 | `MotionSessionFrame.tsx`、`ProjectConversation.tsx`、`shared/session.ts` | 独立会话身份、模式、需求与多个产物；`artifactBrowser.ts` 管理 Tabs / 面板恢复；会话 Agent 执行由外部客户端负责 |
-| 会话内网页浏览 | `browser.ts`、`WebBrowser.tsx`、`shared/browser.ts` | 独立 Chromium，支持真实网址、输入、历史与刷新；按会话隔离，详见 [浏览器运行架构](../browser-runtime.md) |
+| MVP editor and project navigation | `MotionApp.tsx`、`WorkspaceFrame.tsx`、`MotionHome.tsx`、`useWorkspace.ts`（位于 `studio/src/motion/`） | Root and project URLs open the editor directly. The sidebar lists projects; switching retains native save guards. Home/session UI modules remain unmounted. |
+| 项目创作会话 | `MotionSessionFrame.tsx`、`ProjectConversation.tsx`、`shared/session.ts` | Session identities, requirements and artifacts remain backend data. Conversation and Artifact browser UI are not mounted in the MVP. |
+| 会话内网页浏览 | `browser.ts`、`WebBrowser.tsx`、`shared/browser.ts` | Retained browser runtime; no webpage/browser-tab entry in the MVP editor. See [browser runtime](../browser-runtime.md). |
 | 编辑器与工作区交互 | `studio/src/`，尤其 `studio/src/motion/` | 完整 Hyperframes 0.9.7 Studio 前端源码；宿主通过插槽适配品牌和入口，预览使用独立 iframe |
-| 面板与布局恢复 | `studio/src/components/dock/`、`MotionLayoutControls.tsx` | 原生 Dock 持久化；常驻预览入口、面板开关及布局预设 |
-| 撤销、版本保留与恢复 | `MotionHistoryPanel.tsx`、原生历史 API | 顶栏/时间轴撤销重做；新增历史 UI 复用原生存储，恢复保留后续记录 |
+| 面板与布局恢复 | `studio/src/components/dock/`、`MotionLayoutControls.tsx` | MVP allows only preview, timeline, compositions, assets, catalog, design, layers and renders. Fixed positions, resizable dividers, separate per-project `motion.mvp.dock.v1` preferences. |
+| 撤销、版本保留与恢复 | `MotionHistoryPanel.tsx`、原生历史 API | Header undo/redo remains. Timeline history buttons and version-history UI are hidden; native history and MCP restore continue to preserve later records. |
 | Editor interface language | `studio/src/i18n/`、`web/i18n.ts` | Eleven languages, Chinese by default; editor and embedded dialog labels update without remounting. Authored content, copied Agent instructions and long guides retain their source language; native-speaker review remains separate. |
 | 多 Agent 薄适配器 | `scripts/export-adapters.ts`、`shared/integration.ts` | Codex、Claude、DSH、WorkBuddy Connector 共用外置运行时；本机生成，WorkBuddy 桌面待验收，详见 [适配器](../agent-adapters.md) |
 | MCP 接入与指引 | `mcp.ts`、`mcp-tools.ts`、`shared/integration.ts`、`web/connect.*` | 本机 stdio；macOS 业务由共享后台执行，ChatGPT 云端远程 MCP 尚未提供 |
@@ -99,7 +107,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 | 空白工程与模板副本 | `workspace.ts`、`template-library.ts`、`template-library/` | 新建空白原生工程或创建模板独立副本，保留之前工程 |
 | 封面、来源与热度 | `web/catalog/`、`scripts/*template*.ts` | 本地资源/快照；热度不代表实时查询 |
 | 工程状态与素材 | `workspace.ts` | 本地目录、内容 revision、当前工程选择与插件写入锁 |
-| 模型路由与素材生成 | `gateway/`、`shared/gateway.ts`、`studio/src/motion/Media*` | 本地 Codex 生图、Atlas/fal 适配器、BYOK、目录与持久化任务；Studio 和 MCP 共用 |
+| 模型路由与素材生成 | `gateway/`、`shared/gateway.ts`、`studio/src/motion/Media*` | Local Codex, Atlas/fal, BYOK and persisted media tasks remain shared backend capabilities; the MVP hides model configuration and generation UI. |
 | 产品服务与代理 | `server.ts`、`editor-server.ts` | 通用会话 API `/design-api/`、兼容 `/motion-api/`，原生 API `/api/` |
 | 引擎与生命周期 | `hyperframes.ts`、`preview.ts`、`editor-runtime.ts`、`shared/owned-studio.mjs` | 锁定 Hyperframes；macOS 共享后台与 Studio 守卫，校验身份/版本/目录并管理崩溃清理 |
 | 导出与质量验证 | `server.ts`、`scripts/verify-export.ts`、制作 skills | 独立快照、后台渲染、技术验证；视觉审阅另行完成 |
@@ -110,13 +118,12 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 ```mermaid
 flowchart LR
-  User[用户] --> Studio[OpenDesign 会话工作区]
-  Studio --> Session[会话 / 模式 / 模板 / skill]
-  Session --> Browser[Artifact 浏览器 Tabs]
-  Browser --> Viewer[Motion 工程编辑器]
+  User[用户] --> Studio[Motion MVP editor and project sidebar]
+  Studio --> Viewer[Native project editing]
+  Studio --> Session[Internal session and artifact ownership]
   User --> Host[Codex / Claude Code / DeepSeek Harness]
   Host --> MCP[本机 stdio MCP]
-  Studio --> Hub[MCP 与模板统一弹框]
+  Studio --> Hub[Template library]
   Hub --> Catalog[模板 / 封面 / 原帖热度快照]
   Hub --> Guide[短指令与参数化指引]
   Guide --> Host
@@ -152,7 +159,7 @@ flowchart LR
 
 - **工程真源：** HTML、CSS、JS、媒体和 Studio manifest 位于各自工程目录。新会话 ID、产物 ID 和工程 ID 分离；`projects.json` 原子保存两个索引、产物归属和当前选择。旧工程按原 ID 兼容为会话，需求继续在 `sessions/<sessionId>.json`，通过会话 HTTP 接口及一期 `motion_get_project` 暴露（旧 design_get_session 为内部兼容），独立于视频内容 revision。Agent 每次写入前读取当前工程与 revision。一个原生服务进程按 projectId 分发多个工程；页面固定自己的工程，其他会话的打开操作不会替换它。工程状态请求也携带 projectId；未知工程和冲突身份拒绝处理。
 - **历史真源：** Studio 原生历史服务记录版本、checkpoint、pin 与 restore，宿主只呈现 UI，不另建版本库。恢复前等待保存并创建 checkpoint，完成后重新加载编辑会话；后续历史保留，恢复操作可以撤销。
-- **界面状态：** 浏览器 Tabs、左右面板与宽度按会话保存；关闭 Tab 不删除产物。原生 Dock 按工程保存，主题沿用 Studio 偏好；语言单独保存为 `motion.studio.locale`，均不写入影片源文件。
+- **UI state:** The MVP project drawer has transient open state; fixed Dock sizes persist per project under a separate key, so old free-layout preferences cannot reopen excluded panels. Theme and `motion.studio.locale` remain independent of project source files. Legacy browser preferences are retained but unused by the MVP route.
 - **参考数据：** 模板原始目录、封面和热度快照与用户工程分开。热度按模板 ID、视频地址和原帖身份匹配；同源片段不累加查看量。
 - **导出输入：** 后台任务使用不可变快照并记录期望规格；后续编辑不改变该任务的本地输入。远程媒体需要稳定复现时先导入本地。
 - **后台与编辑器启动：** 仅导出启动后台服务，不初始化或补写当前工程；冷启动套模板直接创建选中的模板工程。Studio starts when the Agent calls preview for an existing project, including the automatic handoff after production HTML is ready; the existing background service is reused. 健康检查区分服务 `ready` 与 `editorReady`，不靠自动替换 expectedRevision 消除冲突。

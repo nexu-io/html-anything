@@ -8,6 +8,7 @@ import { TimelineClip } from "./TimelineClip";
 import { ClipFadesContext } from "./TimelineClipFades";
 import type { TimelineEditCapabilities } from "./timelineEditing";
 import { defaultTimelineTheme, type TimelineTheme } from "./timelineTheme";
+import { StudioHostContext } from "../../motion/StudioHost";
 
 Object.defineProperty(globalThis, "IS_REACT_ACT_ENVIRONMENT", {
   configurable: true,
@@ -30,12 +31,16 @@ function renderClip({
   isSelected = false,
   hasCustomContent = true,
   theme = defaultTimelineTheme,
+  trackLabel,
+  mvp = false,
 }: {
   element: TimelineElement;
   pps?: number;
   isSelected?: boolean;
   hasCustomContent?: boolean;
   theme?: TimelineTheme;
+  trackLabel?: string;
+  mvp?: boolean;
 }) {
   const host = document.createElement("div");
   document.body.append(host);
@@ -44,8 +49,9 @@ function renderClip({
 
   act(() => {
     root.render(
-      <TimelineClip
+      <StudioHostContext.Provider value={{ mvpEditor: mvp }}><TimelineClip
         el={element}
+        trackLabel={trackLabel}
         pps={pps}
         clipY={0}
         isSelected={isSelected}
@@ -60,7 +66,7 @@ function renderClip({
         onDoubleClick={vi.fn()}
       >
         <div data-custom-content="true" />
-      </TimelineClip>,
+      </TimelineClip></StudioHostContext.Provider>,
     );
   });
 
@@ -68,6 +74,33 @@ function renderClip({
 }
 
 describe("TimelineClip", () => {
+  it("removes only duplicate MVP titles while retaining clip identity, content and badges", () => {
+    const { host, root, onClick } = renderClip({
+      element: { id: "bg", label: "First Bg", tag: "div", start: 0, duration: 3, track: 0 },
+      trackLabel: "First Bg", mvp: true,
+    });
+    expect(host.querySelector(".timeline-clip__label")).toBeNull();
+    expect(host.querySelector('[data-label-in-track="true"]')).not.toBeNull();
+    expect(host.querySelector('[data-custom-content="true"]')).not.toBeNull();
+    expect(host.querySelector('[data-testid="clip-badges"]')).not.toBeNull();
+    const clip = host.querySelector<HTMLButtonElement>("[data-clip]")!;
+    expect(clip.getAttribute("aria-label")).toContain("First Bg");
+    act(() => clip.click());
+    expect(onClick).toHaveBeenCalledOnce();
+    act(() => root.unmount());
+  });
+
+  it.each([
+    { trackLabel: "Other track", mvp: true },
+    { trackLabel: "First Bg", mvp: false },
+  ])("keeps titles when they add information or outside the MVP: %j", (options) => {
+    const { host, root } = renderClip({
+      element: { id: "bg", label: "First Bg", tag: "div", start: 0, duration: 3, track: 0 },
+      ...options,
+    });
+    expect(host.querySelector(".timeline-clip__name")?.textContent).toBe("First Bg");
+    act(() => root.unmount());
+  });
   it("hands its content the clip's fades, and none to a clip the mixer does not hear", () => {
     const seen: unknown[] = [];
     function Probe() {

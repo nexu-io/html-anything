@@ -80,17 +80,17 @@ export function FlatColorGradingAccessory({
       >
         <Compare size={12} />
       </button>
-      <span className="flex min-w-0 items-center gap-1" title={runtimeStatus.message}>
+      <span className="flex min-w-0 items-center gap-1" title={t(runtimeStatus.message)}>
         <span
           data-flat-grade-status-dot="true"
-          title={runtimeStatus.message}
+          title={t(runtimeStatus.message)}
           className={`h-[5px] w-[5px] shrink-0 rounded-full ${STATUS_DOT_CLASS[runtimeStatus.state]}`}
         />
         <span
           data-flat-grade-status-message="true"
           className="max-w-[84px] truncate text-[9px] text-panel-text-4"
         >
-          {runtimeStatus.message}
+          {t(runtimeStatus.message)}
         </span>
       </span>
       <button

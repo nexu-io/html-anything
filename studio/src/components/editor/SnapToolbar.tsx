@@ -1,7 +1,7 @@
 import { useI18n } from "../../i18n/I18n";
 import { trackPreviewFeatureUsed } from "../../utils/previewFeatureUsage";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { MagnetStraight, GridFour, Path, Ruler, FrameCorners } from "@phosphor-icons/react";
+import { MagnetStraight, GridFour, Path, Ruler, FrameCorners } from "../../icons/RemixIcons";
 import { usePlayerStore } from "../../player/store/playerStore";
 import { usePreviewOverlayContext } from "./PreviewOverlayProvider";
 import { ownsPlainKeys } from "../../utils/typingTarget";

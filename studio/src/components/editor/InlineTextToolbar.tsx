@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -47,6 +48,7 @@ export function InlineTextToolbar({
   iframe: HTMLIFrameElement | null;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const [placement, setPlacement] = useState<ToolbarPlacement | null>(null);
 
   const refresh = useCallback(() => {
@@ -133,20 +135,24 @@ export function InlineTextToolbar({
           onChange={(event) => apply({ color: event.target.value })}
         />
       </label>
-      <ToolbarToggle
-        label={t("Bold")}
-        glyph="B"
-        bold
-        on={isBold(styles["font-weight"])}
-        onToggle={(on) => apply({ "font-weight": on ? "700" : null })}
-      />
-      <ToolbarToggle
-        label={t("Italic")}
-        glyph="I"
-        italic
-        on={styles["font-style"] === "italic"}
-        onToggle={(on) => apply({ "font-style": on ? "italic" : null })}
-      />
+      {!mvp && (
+        <ToolbarToggle
+          label={t("Bold")}
+          glyph="B"
+          bold
+          on={isBold(styles["font-weight"])}
+          onToggle={(on) => apply({ "font-weight": on ? "700" : null })}
+        />
+      )}
+      {!mvp && (
+        <ToolbarToggle
+          label={t("Italic")}
+          glyph="I"
+          italic
+          on={styles["font-style"] === "italic"}
+          onToggle={(on) => apply({ "font-style": on ? "italic" : null })}
+        />
+      )}
       <ToolbarToggle
         label={t("Underline")}
         glyph="U"

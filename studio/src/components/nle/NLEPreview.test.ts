@@ -89,9 +89,11 @@ function renderPreview(
     box = { width: 800, height: 600 },
     fillBox,
     compositionSizeHint,
+    zoomControlsTarget,
   }: {
     box?: { width: number; height: number };
     fillBox?: boolean;
+    zoomControlsTarget?: HTMLElement;
     compositionSizeHint?: { width: number; height: number };
   } = {},
 ) {
@@ -115,6 +117,7 @@ function renderPreview(
           setShadowIframeNode: () => {},
           resetPreviewSlots: () => {},
           fillBox,
+          zoomControlsTarget,
           compositionSizeHint,
         }),
       );
@@ -323,7 +326,7 @@ describe("NLEPreview", () => {
         );
       });
       act(() => vi.advanceTimersByTime(300));
-      expect(chip(view)?.textContent).toBe("Panned·Fit");
+      expect(chip(view)?.textContent).toBe("PannedFit");
       view.cleanup();
     });
 
@@ -341,6 +344,30 @@ describe("NLEPreview", () => {
       document.body.removeEventListener("pointerdown", pane);
       expect(pane).not.toHaveBeenCalled();
       view.cleanup();
+    });
+
+    it("keeps zoom and Fit in the panel header without a canvas readout", () => {
+      const header = document.createElement("div");
+      document.body.append(header);
+      const view = renderPreview(undefined, { zoomControlsTarget: header });
+      const fit = () => header.querySelector<HTMLButtonElement>('[data-testid="preview-zoom-fit"]')!;
+      expect(header.textContent).toBe("100%");
+      expect(fit()).toBeNull();
+      expect(chip(view)).toBeNull();
+      expect(view.host.querySelector('[aria-live="polite"]')).toBeNull();
+
+      pinchIn(view, 10);
+      act(() => vi.advanceTimersByTime(3000));
+      expect(header.textContent).toMatch(/^2\d\d%Fit$/);
+      expect(fit().disabled).toBe(false);
+      expect(chip(view)).toBeNull();
+      act(() => fit().click());
+      act(() => vi.advanceTimersByTime(300));
+      expect(view.stage.style.transform).toContain("scale(1)");
+      expect(fit()).toBeNull();
+      view.cleanup();
+      expect(header.textContent).toBe("");
+      header.remove();
     });
 
     it("opens at Fit even when an older Studio saved a zoom", () => {
@@ -375,7 +402,7 @@ describe("NLEPreview", () => {
       expect([chip(view), navigator(view)]).toEqual([null, null]);
 
       pinchIn(view, 10);
-      expect(chip(view)?.textContent).toMatch(/^Zoomed 2\d\d%·Fit$/);
+      expect(chip(view)?.textContent).toMatch(/^Zoomed 2\d\d%Fit$/);
       const region = view.host.querySelector<HTMLElement>(
         '[data-testid="preview-zoom-navigator-region"]',
       );

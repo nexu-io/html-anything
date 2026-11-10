@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../motion/StudioHost";
 import { trackPreviewFeatureUsed } from "../utils/previewFeatureUsage";
 import { useCallback, useRef } from "react";
 import { liveTime, usePlayerStore } from "../player";
@@ -71,6 +72,7 @@ export function usePreviewInteraction({
   setActiveGroupElement,
   onClickToSource,
 }: UsePreviewInteractionParams) {
+  const mvp = useMvpEditor();
   const cycleRef = useRef<ClickCycleState | null>(null);
   const lastDownRef = useRef<{ t: number; x: number; y: number } | null>(null);
 
@@ -154,7 +156,7 @@ export function usePreviewInteraction({
         Math.sqrt(dx * dx + dy * dy) < CYCLE_RADIUS_PX &&
         now - prev.at < CYCLE_WINDOW_MS;
 
-      if (e.shiftKey) {
+      if (!mvp && e.shiftKey) {
         // Additive selection — no cycling
         cycleRef.current = null;
         const nextSelection =
@@ -212,7 +214,7 @@ export function usePreviewInteraction({
       e.stopPropagation();
       applyDomSelection(nextSelection);
 
-      if (!e.shiftKey && e.altKey && onClickToSource) {
+      if (!mvp && !e.shiftKey && e.altKey && onClickToSource) {
         onClickToSource(nextSelection);
       }
 
@@ -223,6 +225,7 @@ export function usePreviewInteraction({
         all.length > 1 ? { x: e.clientX, y: e.clientY, candidates: all, index: 0, at: now } : null;
     },
     [
+      mvp,
       applyDomSelection,
       captionEditMode,
       compositionLoading,

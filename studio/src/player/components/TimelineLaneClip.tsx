@@ -20,6 +20,7 @@ export interface TimelineLaneClipActions {
 
 interface TimelineLaneClipProps {
   el: TimelineElement;
+  trackLabel?: string;
   previewElement: TimelineElement;
   elementKey: string;
   capabilities: TimelineEditCapabilities;
@@ -60,6 +61,7 @@ function sameClip(prev: TimelineLaneClipProps, next: TimelineLaneClipProps): boo
 /** One clip bar in a lane; its handlers read the lane's current callbacks when pressed. */
 export const TimelineLaneClip = memo(function TimelineLaneClip({
   el,
+  trackLabel,
   previewElement,
   elementKey,
   capabilities,
@@ -94,6 +96,7 @@ export const TimelineLaneClip = memo(function TimelineLaneClip({
         actions.current.onContextMenuClip?.(e, el);
       }}
       el={previewElement}
+      trackLabel={trackLabel}
       pps={pps}
       passengerStyle={passengerStyle}
       clipY={CLIP_Y}

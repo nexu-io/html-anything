@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 // fallow-ignore-file code-duplication
 import { useEffect, useState } from "react";
@@ -475,13 +476,21 @@ export function FlatStyleSection({
   element: DomEditSelection;
   styles: Record<string, string>;
   assets: string[];
-  onSetStyle: (prop: string, value: string) => void | Promise<unknown>;
+  onSetStyle: (prop: string | Record<string, string>, value?: string) => void | Promise<unknown>;
   onSetHtmlAttribute: (attr: string, value: string | null) => void | Promise<void>;
   onPreviewStyle?: (prop: string, value: string) => void;
   onImportAssets?: (files: FileList) => Promise<string[]>;
   gsapBorderRadius?: { tl: number; tr: number; br: number; bl: number } | null;
 }) {
+  const { t } = useI18n();
+  const mvp = useMvpEditor();
   const styleEditingDisabled = !element.capabilities.canEditStyles;
+  if (mvp) return <div className="space-y-1.5">
+    <ColorField flat label={t("Fill color")} value={styles["background-color"] ?? "transparent"}
+      disabled={styleEditingDisabled} onPreview={next => onPreviewStyle?.("background-color", next)}
+      onCommit={next => onSetStyle({ "background-color": next, "background-image": "none" })} />
+    <FlatOpacitySlider styles={styles} disabled={styleEditingDisabled} onSetStyle={onSetStyle} />
+  </div>;
   return (
     <div className="space-y-1.5">
       <FlatFillFields

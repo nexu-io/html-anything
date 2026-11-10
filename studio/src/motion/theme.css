@@ -1,4 +1,17 @@
 /* OpenDesign Motion adapter. The shared token JSON owns all UI colors. */
+:root[data-motion-ui] .studio-tooltip {
+  background: var(--motion-strong);
+  color: var(--motion-panel);
+  border-color: var(--motion-strong);
+  font-size: 12px;
+}
+:root[data-motion-ui] .motion-timeline-zoom input[type="range"] { width: 64px; margin-inline: 0; }
+.motion-timeline-zoom { position: relative; }
+.motion-timeline-zoom::before,
+.motion-timeline-zoom::after { content: ""; position: absolute; top: 50%; width: 1px; height: 16px; transform: translateY(-50%); background: var(--motion-border); pointer-events: none; }
+.motion-timeline-zoom::before { left: -7px; }
+.motion-timeline-zoom::after { right: -7px; }
+
 :root[data-motion-ui] {
   color-scheme: light;
   --font-sans: var(--motion-font-sans);
@@ -67,17 +80,31 @@
 :root[data-motion-ui][data-motion-studio]:not([data-theme="paper"]) { color-scheme: dark; --color-on-accent: var(--motion-inset); }
 body { font-family: var(--motion-font-sans); font-size: var(--motion-text-md); }
 button, input, select, textarea { font-family: inherit; }
-:focus-visible { outline: 2px solid var(--motion-selected); outline-offset: 2px; }
+:root[data-motion-ui] :focus-visible { outline: 1px solid var(--motion-border-strong); outline-offset: 1px; }
+:root[data-motion-ui] [data-panel-search-input]:focus-visible { outline: none; }
 .hf-dock .dv-view:has(> .dv-groupview) { padding: 0; }
 .hf-dock .dv-groupview { border-radius: 0; border: 0; outline: 0; }
 .hf-dock { --dv-tabs-and-actions-container-height: 34px; --dv-tab-font-size: 12px; --dv-tabs-and-actions-container-font-size: 12px; }
 .hf-dock .dv-tabs-and-actions-container { padding: 0 6px; align-items: center; border-bottom: 1px solid var(--motion-border); }
-.hf-dock .dv-groupview .dv-tabs-container > .dv-tab.dv-active-tab { color: var(--motion-strong); font-weight: 500; box-shadow: inset 0 -1px var(--motion-accent); }
+/* Keep selected labels legible even when Dockview injects its theme rules later. */
+:root[data-motion-ui] .hf-dock {
+  --dv-activegroup-visiblepanel-tab-color: var(--motion-strong);
+  --dv-inactivegroup-visiblepanel-tab-color: var(--motion-strong);
+  --dv-activegroup-hiddenpanel-tab-color: var(--motion-text);
+  --dv-inactivegroup-hiddenpanel-tab-color: var(--motion-text);
+}
+:root[data-motion-ui] .hf-dock .dv-groupview .dv-tabs-container > .dv-tab.dv-active-tab { color: var(--motion-strong); font-weight: 600; box-shadow: none; }
+/* A single panel title has no sibling tab to switch to. */
+:root[data-motion-ui] .hf-dock .dv-groupview .dv-tabs-container:not(:has(> .dv-tab ~ .dv-tab)) > .dv-tab.dv-active-tab { box-shadow: none; cursor: default; }
+:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button:enabled { color: var(--motion-text); }
+:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button:enabled:hover { color: var(--motion-strong); }
+:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button[aria-pressed="true"]:enabled { color: var(--motion-strong); background: var(--motion-inset); }
+:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button[aria-pressed="true"]:enabled:hover { background: var(--motion-border); }
 .hf-dock .dv-tab { border-radius: 0; height: 34px; padding: 0 8px; }
 .hf-dock .dv-scrollable { height: 34px; }
 .hf-dock-tab-fill { height: 34px; border-radius: 0; background: transparent; }
 .hf-dock .dv-right-actions-container { align-self: center; }
-.motion-icon { display: block; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.motion-icon { display: block; flex-shrink: 0; fill: currentColor; stroke: none; stroke-linecap: round; stroke-linejoin: round; }
 .motion-brand { display: flex; align-items: center; gap: 10px; min-width: 196px; color: var(--motion-strong); text-decoration: none; }
 .motion-brand-mark { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 7px; color: var(--motion-on-action); background: var(--motion-action); }
 .motion-brand strong { display: block; font-size: 16px; font-weight: 600; letter-spacing: -.35px; line-height: 19px; }
@@ -127,11 +154,11 @@ button, input, select, textarea { font-family: inherit; }
 @media(prefers-reduced-motion: reduce) { .motion-button, .motion-icon-button, .motion-template-play { transition: none; } }
 
 .motion-preview-well { margin: 0; border: 0; background: var(--motion-bg); }
-.motion-preview-frame { box-shadow: var(--motion-shadow-sm); }
+.motion-preview-frame { box-shadow: none; }
+.motion-asset-name-input { box-sizing: border-box; width: 100%; min-width: 0; padding: 2px 4px; border: 1px solid var(--motion-border-strong); border-radius: var(--motion-radius-sm); background: var(--motion-inset); color: var(--motion-strong); font-size: 10px; line-height: 14px; outline: none; }
+.motion-asset-name-input[aria-invalid="true"] { border-color: var(--motion-danger); }
 
-/* Panel boundaries belong to the layout slots, so they remain aligned while resizing. */
-.hf-dock .dv-horizontal > .dv-view-container > .dv-view:not(:first-child) { border-left: 1px solid var(--motion-border); }
-.hf-dock .dv-vertical > .dv-view-container > .dv-view:not(:first-child) { border-top: 1px solid var(--motion-border); }
+/* Keep resize handles available without permanent lines between panel cards. */
 .hf-dock .dv-split-view-container > .dv-sash-container > .dv-sash,
 .hf-dock .dv-split-view-container > .dv-sash-container > .dv-sash:is(:hover, :active, :focus-visible) { background: transparent; }
 .hf-dock .dv-sash::after { content: ''; position: absolute; pointer-events: none; background: transparent; transition: background 120ms; }
@@ -150,6 +177,19 @@ button, input, select, textarea { font-family: inherit; }
 :root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"]::-moz-range-track { height: 2px; border: 0; border-radius: 2px; background: var(--motion-border-strong); }
 :root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-moz-range-thumb,
 :root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"]::-moz-range-thumb { width: 6px; height: 6px; border: 0; border-radius: 50%; background: var(--motion-text); }
+
+/* A larger seek handle and hit area make playback scrubbing easier. */
+:root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"] { height: 28px; }
+:root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-webkit-slider-thumb { width: 10px; height: 10px; margin-top: -4px; cursor: grab; }
+:root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-moz-range-thumb { width: 10px; height: 10px; cursor: grab; }
+
+/* Played time uses the shared Design System brand token. */
+:root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, var(--motion-brand) 0 var(--preview-progress, 0%), var(--motion-border-strong) var(--preview-progress, 0%) 100%);
+}
+:root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-moz-range-track {
+  background: linear-gradient(to right, var(--motion-brand) 0 var(--preview-progress, 0%), var(--motion-border-strong) var(--preview-progress, 0%) 100%);
+}
 
 /* Product chrome occupies one row; Studio owns all editor panels below it. */
 .motion-studio-header { flex-wrap: wrap; min-height: 52px; height: auto; gap: 20px; padding: 10px 16px; }
@@ -245,4 +285,56 @@ button, input, select, textarea { font-family: inherit; }
 }
 :root[data-motion-ui] .hf-od-field {
   --color-accent: var(--motion-selected);
+}
+/* Pointer focus must not leave a second frame around boxed controls. */
+:root[data-motion-ui] .hf-od-field:focus-within { outline: none; }
+:root[data-motion-ui] .hf-od-field:is(:focus-visible, :has(:focus-visible)) {
+  border-color: var(--motion-border-strong);
+  background: var(--motion-inset);
+}
+
+/* Preview identity follows the live composition, including full-video navigation. */
+:root[data-motion-ui] .motion-composition-card[aria-current="true"] { background: var(--motion-inset); }
+:root[data-motion-ui] .motion-composition-card[aria-current="true"] .motion-composition-name { color: var(--motion-strong); font-weight: 600; }
+
+:root[data-motion-ui] .hf-od-floating-surface.motion-speed-menu { background: var(--motion-raised); border: 0; outline: none; box-shadow: var(--motion-shadow-sm); }
+
+/* Equal side columns center the title; narrow hosts preserve the controls before the title. */
+.motion-studio-header.motion-studio-header-centered { padding-block: 11.5px; display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 1fr) minmax(max-content, 1fr); gap: 12px; }
+.motion-studio-header.motion-studio-header-centered > div { min-width: 0; width: auto; }
+.motion-studio-header.motion-studio-header-centered > div:last-child { justify-self: end; flex-wrap: nowrap; }
+.motion-studio-header-centered .motion-workspace-actions { padding-right: 0; margin-right: 0; border-right: 0; }
+.motion-header-brand { display: inline-flex; align-items: center; gap: 10px; }
+.motion-header-brand img { display: block; width: 104px; height: auto; }
+.motion-header-project .motion-project-control { justify-content: center; }
+/* Keep one input mounted with stable geometry before, during and after editing. */
+.motion-header-project .motion-project-name-input {
+  box-sizing: border-box;
+  width: min(320px, 100%);
+  min-width: 0;
+  height: 28px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--motion-radius-sm);
+  background: transparent;
+  color: var(--motion-strong);
+  line-height: 18px;
+  text-align: center;
+  text-overflow: ellipsis;
+}
+:root[data-motion-ui] .motion-studio-header-centered :is(button, .motion-project-name-input) {
+  font-size: var(--motion-text-md);
+  line-height: 18px;
+}
+:root[data-motion-ui] .motion-project-name-input:is(:hover, :focus) {
+  border-color: var(--motion-border);
+  background: var(--motion-bg);
+  outline: none;
+  box-shadow: none;
+}
+.motion-header-project .motion-save-state { position: absolute; top: 100%; white-space: nowrap; }
+.motion-header-project .motion-project-control { position: relative; }
+@media (max-width: 700px) {
+  .motion-studio-header.motion-studio-header-centered { grid-template-columns: auto minmax(0, 1fr); }
+  .motion-studio-header.motion-studio-header-centered > div:last-child { grid-column: 1 / -1; }
 }

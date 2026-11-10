@@ -1,6 +1,8 @@
 import { useCallback, useRef, useSyncExternalStore, type ReactNode } from "react";
 import { PlayerControls } from "../../player";
+import { useMvpEditor } from "../../motion/StudioHost";
 import type { TimelineElement } from "../../player";
+import { useDockHeaderSlot } from "../dock/DockHeaderSlots";
 import { NLEPreview } from "./NLEPreview";
 import { CompositionBreadcrumb } from "./CompositionBreadcrumb";
 import { usePreviewBlockDrop } from "./usePreviewBlockDrop";
@@ -55,6 +57,8 @@ export function PreviewPane({
   onSelectTimelineElement,
   onPreviewBlockDrop,
 }: PreviewPaneProps) {
+  const mvp = useMvpEditor();
+  const previewHeader = useDockHeaderSlot("preview");
   const {
     projectId,
     iframeRef,
@@ -115,10 +119,10 @@ export function PreviewPane({
   return (
     <div
       ref={containerRef}
-      // A recessed well inset in its dock card; dropped in fullscreen so the
-      // preview fills the screen edge-to-edge. The player stays dark in both themes.
+      // MVP keeps the inset spacing without a second frame inside the dock panel.
+      // Fullscreen removes the inset so the preview fills the screen.
       className={`scheme-dark flex-1 min-h-0 flex flex-col overflow-hidden bg-[var(--studio-preview-bg,var(--color-neutral-950))] ${
-        isFullscreen ? "" : "m-3 rounded-md border border-border"
+        isFullscreen ? "" : mvp ? "m-3" : "m-3 rounded-md border border-border"
       }`}
       data-studio-fullscreen-target=""
     >
@@ -135,6 +139,7 @@ export function PreviewPane({
       >
         <div className="absolute inset-0 overflow-hidden">
           <NLEPreview
+            zoomControlsTarget={mvp && !isFullscreen ? previewHeader : null}
             projectId={projectId}
             iframeRef={iframeRef}
             onIframeLoad={onIframeLoad}
@@ -164,7 +169,7 @@ export function PreviewPane({
       {/* Transport row: no own background or border — the controls sit flat on
           the preview panel's surface (CapCut-style). */}
       <div className="shrink-0">
-        {!isFullscreen && compositionStack.length > 1 && (
+        {!mvp && !isFullscreen && compositionStack.length > 1 && (
           <CompositionBreadcrumb stack={compositionStack} onNavigate={handleNavigateComposition} />
         )}
         <PlayerControls

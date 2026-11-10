@@ -1,3 +1,5 @@
+import { RemixIcon } from "../../icons/RemixIcons";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n, type Translate } from "../../i18n/I18n";
 import { memo, useState, useRef, useEffect, useLayoutEffect, useId } from "react";
 import { createPortal } from "react-dom";
@@ -152,7 +154,7 @@ function scaleOptionLabel(
 
 // Estimated, like COLOR_PICKER_SIZE in propertyPanelColor: only the flip
 // decision uses the height, and the clamp keeps the panel on screen either way.
-const FORMAT_PANEL_SIZE = { width: 208, height: 210 };
+const FORMAT_PANEL_SIZE = { width: 264, height: 176 };
 
 // Rich format guidance in a keyboard-reachable disclosure: the trigger is a
 // real button (focusable, labelled), the panel is tied to it via
@@ -160,7 +162,7 @@ const FORMAT_PANEL_SIZE = { width: 208, height: 210 };
 // for the one-line ui/Tooltip primitive, so this stays a local popover.
 // It renders in a portal because the right panel is overflow-hidden: an
 // in-flow absolute panel gets clipped at the panel edge.
-function FormatInfoTooltip({ format }: { format: "mp4" | "webm" | "mov" | "gif" }) {
+function FormatInfoTooltip({ mvp }: { mvp: boolean }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<FloatingPosition | null>(null);
@@ -203,8 +205,6 @@ function FormatInfoTooltip({ format }: { format: "mp4" | "webm" | "mov" | "gif" 
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  const info = FORMAT_INFO[format];
-
   return (
     <div ref={triggerRef} className="relative" onPointerEnter={show} onPointerLeave={hide}>
       <button
@@ -217,21 +217,7 @@ function FormatInfoTooltip({ format }: { format: "mp4" | "webm" | "mov" | "gif" 
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center justify-center p-0.5 -m-0.5 rounded-sm text-text-5 hover:text-text-3 transition-colors cursor-help outline-hidden focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-accent"
       >
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
-          <line x1="12" y1="17" x2="12.01" y2="17" />
-        </svg>
+        <RemixIcon name="question-line" size={14} />
       </button>
       {open &&
         createPortal(
@@ -240,22 +226,17 @@ function FormatInfoTooltip({ format }: { format: "mp4" | "webm" | "mov" | "gif" 
             role="tooltip"
             onPointerEnter={show}
             onPointerLeave={hide}
-            className="fixed w-52 p-2 rounded-sm bg-input border border-border-input shadow-menu z-200"
+            className="fixed w-[264px] max-w-[calc(100vw-16px)] p-3 rounded-md bg-surface border border-border-input shadow-menu z-200 space-y-2 text-step-12 leading-relaxed"
             style={{ left: position?.left ?? -9999, top: position?.top ?? -9999 }}
           >
-            <p className="text-step-10 font-semibold text-text-1 mb-0.5">{info.label}</p>
-            <p className="text-step-9 text-text-3 leading-tight">{t(info.desc)}</p>
-            <div className="mt-1.5 pt-1.5 border-t border-border">
-              {(["mp4", "mov", "webm", "gif"] as const)
-                .filter((f) => f !== format)
-                .map((f) => (
-                  <p key={f} className="text-step-9 text-text-4 leading-relaxed">
-                    <span className="text-text-3 font-medium">{FORMAT_INFO[f].label}</span>
-                    {": "}
-                    {t(FORMAT_INFO[f].desc)}
-                  </p>
-                ))}
-            </div>
+            {(["mp4", "mov", "webm", "gif"] as const)
+              .filter((f) => !mvp || f !== "gif")
+              .map((f) => (
+                <p key={f} className="text-text-3">
+                  <span className="text-text-1 font-semibold">{f === "webm" ? "WebM" : f.toUpperCase()}</span>
+                  {" · "}{t(FORMAT_INFO[f].desc)}
+                </p>
+              ))}
           </div>,
           document.body,
         )}
@@ -295,7 +276,8 @@ function FormatExportButton({
 }) {
   const { t } = useI18n();
   const persisted = getPersistedRenderSettings();
-  const [format, setFormat] = useState<"mp4" | "webm" | "mov" | "gif">(persisted.format);
+  const mvp = useMvpEditor();
+  const [format, setFormat] = useState<"mp4" | "webm" | "mov" | "gif">(mvp && persisted.format === "gif" ? "mp4" : persisted.format);
   const [quality, setQuality] = useState<"draft" | "standard" | "high">(persisted.quality);
   const [resolution, setResolution] = useState<RenderScale>("auto");
   const [requestedFps, setFps] = useState<24 | 30 | 60>(persisted.fps);
@@ -328,12 +310,12 @@ function FormatExportButton({
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1">
             <span className="text-step-10 text-text-4">{t("Format")}</span>
-            <FormatInfoTooltip format={format} />
+            <FormatInfoTooltip mvp={mvp} />
           </div>
           <Select
             label={t("Format")}
             value={format}
-            options={FORMAT_OPTIONS}
+            options={mvp ? FORMAT_OPTIONS.filter(option => option.value !== "gif") : FORMAT_OPTIONS}
             disabled={isRendering}
             onCommit={(next) => {
               const v = resolveRenderFormat(next);
@@ -394,15 +376,17 @@ function FormatExportButton({
         invalid={invalidGifLoop}
         onChange={setGifLoop}
       />
-      <GpuEncodingToggle
-        format={format}
-        checked={gpu}
-        disabled={isRendering}
-        onToggle={() => {
-          setGpu(!gpu);
-          persistRenderSettings(format, quality, fps, !gpu);
-        }}
-      />
+      {!mvp && (
+        <GpuEncodingToggle
+          format={format}
+          checked={gpu}
+          disabled={isRendering}
+          onToggle={() => {
+            setGpu(!gpu);
+            persistRenderSettings(format, quality, fps, !gpu);
+          }}
+        />
+      )}
       <Button
         variant="primary"
         size="md"
@@ -421,7 +405,7 @@ function FormatExportButton({
             quality,
             resolution: outputResolution,
             fps,
-            gpu,
+            gpu: mvp ? false : gpu,
             gifLoop: loopCount,
           });
         }}
@@ -432,7 +416,7 @@ function FormatExportButton({
       >
         {isRendering ? t("Rendering…") : t("Export")}
       </Button>
-      <RenderDurationNote durationMs={lastRenderDurationMs} isRendering={isRendering} />
+      {!mvp && <RenderDurationNote durationMs={lastRenderDurationMs} isRendering={isRendering} />}
     </div>
   );
 }
@@ -457,17 +441,20 @@ export const RenderQueue = memo(function RenderQueue({
   const { t } = useI18n();
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when new jobs are added.
+  const mvp = useMvpEditor();
+  const sortedJobs = [...jobs].sort((a, b) => b.createdAt - a.createdAt);
+  const newestJobId = sortedJobs[0]?.id;
+
+  // Reveal the newest job when it changes, without jumping on older history loads.
   // Runs in an effect to avoid side effects during the render phase.
   useEffect(() => {
     if (listRef.current) {
-      listRef.current.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+      listRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [jobs.length]);
+  }, [newestJobId]);
 
   const completedCount = jobs.filter((j) => j.status !== "rendering").length;
-  const lastRenderDurationMs = [...jobs]
-    .reverse()
+  const lastRenderDurationMs = sortedJobs
     .find((j) => j.status === "complete" && j.durationMs !== undefined)?.durationMs;
 
   return (
@@ -497,18 +484,7 @@ export const RenderQueue = memo(function RenderQueue({
               aria-label={t("Dismiss error")}
               className="shrink-0"
               icon={
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  aria-hidden="true"
-                >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
+                <RemixIcon name="close-line" size={14} />
               }
             />
           )}
@@ -527,49 +503,25 @@ export const RenderQueue = memo(function RenderQueue({
           </div>
         ) : jobs.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full px-4 gap-2">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="text-text-5"
-            >
-              <rect
-                x="2"
-                y="2"
-                width="20"
-                height="20"
-                rx="2.18"
-                ry="2.18"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <RemixIcon name="film-line" size={24} className="text-text-5" />
             <p className="text-step-10 text-text-5 text-center">{t("No renders yet")}</p>
           </div>
         ) : (
           <div>
             {completedCount > 0 && (
-              <div className="flex items-center justify-between px-3 py-1.5 border-b border-border">
+              <div className="flex items-center justify-between px-3 py-1.5">
                 <span className="text-step-10 text-text-4">
                   {t("{count} renders", { count: jobs.length })}
                 </span>
                 {/* "Hide", not "Clear": files stay on disk (delete is per-row
                     and confirmed); hidden rows don't resurrect on reload. */}
-                <Tooltip label={t("Hide finished renders from this list (files stay on disk)")}>
+                {!mvp && <Tooltip label={t("Hide finished renders from this list (files stay on disk)")}>
                   <Button size="sm" variant="ghost" onClick={onClearCompleted}>
                     {t("Hide finished")}</Button>
-                </Tooltip>
+                </Tooltip>}
               </div>
             )}
-            {jobs.map((job) => (
+            {sortedJobs.map((job) => (
               <RenderQueueItem
                 key={job.id}
                 job={job}
