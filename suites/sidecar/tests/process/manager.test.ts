@@ -6,7 +6,16 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { channel, digest, namespace } from "@odsuite/protocol";
 import { it } from "vitest";
-import { connectRoot, managerAlive, observeOwner, readAuthority, serve, startManager, stopManager } from "@";
+import {
+  connectRoot,
+  managerAlive,
+  managerArguments,
+  observeOwner,
+  readAuthority,
+  serve,
+  startManager,
+  stopManager,
+} from "@";
 
 it("hands a stamped independent manager to its own authority and survives launcher exit", async () => {
   const root = await realpath(await mkdtemp(join(tmpdir(), "manager-life-")));
@@ -145,4 +154,20 @@ it("refuses an unstamped manager stop and distinguishes unclaimed bootstrap from
   const incomplete = join(root, "incomplete");
   await mkdir(join(incomplete, "factories"), { recursive: true });
   await assert.rejects(readAuthority(incomplete), /incomplete/);
+});
+
+it("keeps private manager stamps out of strict carrier argument parsers", () => {
+  const stamp =
+    "--odsuite-manager=" +
+    Buffer.from(
+      JSON.stringify({
+        root: "a".repeat(64),
+        incarnation: "12345678-1234-1234-1234-123456789012",
+      }),
+    ).toString("base64url");
+  const input = ["--root", "/selected", stamp, "--mode", "prepare"];
+  assert.deepEqual(managerArguments(input), ["--root", "/selected", "--mode", "prepare"]);
+  assert.equal(input[2], stamp);
+  assert.throws(() => managerArguments([stamp, stamp]), /duplicate/);
+  assert.throws(() => managerArguments(["--odsuite-manager=invalid"]));
 });

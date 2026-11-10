@@ -34,6 +34,17 @@ function _decode(value: string): Stamp {
     throw new Error("invalid manager stamp");
   return v;
 }
+/** Separate private authority stamps from carrier-owned arguments without changing process argv. */
+export function managerArguments(args: readonly string[] = process.argv.slice(2)): string[] {
+  let seen = false;
+  return args.filter((argument) => {
+    if (!argument.startsWith(flag)) return true;
+    if (seen) throw new Error("duplicate manager stamp");
+    _decode(argument.slice(flag.length));
+    seen = true;
+    return false;
+  });
+}
 function parse(command: string): Stamp | undefined {
   return readManagerStamp(command);
 }

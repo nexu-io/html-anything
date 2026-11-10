@@ -15,6 +15,7 @@ export type {
 export {
   type Manager,
   managerAlive,
+  managerArguments,
   managerEndpoint,
   managerReady,
   observeOwner,
