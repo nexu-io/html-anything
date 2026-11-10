@@ -39,7 +39,7 @@ jobs:
         shell: bash
     env:
       OPENMOTION_TELEMETRY: '0'
-      HYPERFRAMES_BROWSER_PATH: /usr/bin/chromium
+      HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome
       HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
       HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
     steps:
@@ -52,7 +52,11 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - name: Install rendering test tools
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends zip unzip chromium ffmpeg fonts-noto-core
+        run: |
+          # The hosted Ubuntu image provides Chrome; Ubuntu's chromium package pulls a desktop snap.
+          "$HYPERFRAMES_BROWSER_PATH" --version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends zip unzip ffmpeg fonts-noto-core
       - name: Validate manual package selection
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
