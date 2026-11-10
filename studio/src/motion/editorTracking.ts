@@ -1,6 +1,7 @@
 import type { EventFields } from '../../../tracking/core.ts';
 import { slug, uuid } from '../../../tracking/core.ts';
-import type { StudioEvent, studioEvents } from '../../../tracking/events.ts';
+import { studioEvents } from '../../../tracking/events.ts';
+import type { StudioEvent } from '../../../tracking/events.ts';
 
 type Send = <E extends StudioEvent>(event: E, properties: EventFields<typeof studioEvents[E]>) => unknown;
 let send: Send | undefined;
@@ -37,9 +38,8 @@ export function trackStudioClick(area: Click['area'], element: Click['element'],
   void trackMotion('ui_click', { page_name: 'studio', area, element, ...templateFields(templateId), ...(option ? { option } : {}), ...(method ? { interaction_method: method } : {}), ...projectFields(projectId ?? activeProjectId) });
 }
 export type ClickOption = NonNullable<Click['option']>;
-const OPTIONS = new Set<string>(['featured', 'ads', 'clone', 'motion', 'script', 'on', 'off', 'light', 'dark', 'en', 'zh-CN', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr',
-  'all', 'images', 'video', 'audio', 'fonts', 'captions', 'code-animation', 'vfx', 'transitions', 'effects', 'text-effects', 'social',
-  'data', 'scenes', '0.25', '0.5', '1', '1.5', '2']);
+// Built from the registry so a newly registered option is reported, not collapsed into `other`.
+const OPTIONS: ReadonlySet<string> = new Set<string>(studioEvents.ui_click.fields.option);
 /** A control's chosen value as a registered option; anything else is reported as `other`. */
 export const clickOption = (value: unknown): ClickOption => OPTIONS.has(String(value)) ? String(value) as ClickOption : 'other';
 /** True when a search box goes from empty to holding text: one use per search, not per keystroke. */
@@ -86,7 +86,8 @@ type TemplateEvent =
   | { kind: 'copy_result'; templateId: string; host: string; status: 'clipboard_written' | 'manual_fallback_shown' | 'failed' }
   | { kind: 'category'; category: string }
   | { kind: 'search' };
-const HOSTS = ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'] as const;
+// The same closed set that validates the reported field, so neither list can drift on its own.
+const HOSTS = studioEvents.template_instruction_copy_result.fields.host_product;
 /** The template library dialog reports here; it owns no tracking code of its own. */
 export function reportTemplateEvent(event: TemplateEvent, projectId?: string | null) {
   if (event.kind === 'copy_result') {
@@ -222,15 +223,22 @@ export function reportHistoryStep(action: 'undo' | 'redo', outcome: Fields<'stud
 
 // ── Export ──
 
+// Membership comes from the registry, so a newly registered format, quality or rate is reported
+// instead of silently degrading to the field's fallback.
+const SETTINGS = studioEvents.studio_export_request_result.fields;
+function registered<T extends string>(values: readonly T[], value: string | undefined, fallback: T): T {
+  return values.includes(value as T) ? value as T : fallback;
+}
 export function exportSettings(origin: ExportOrigin | undefined, options: { format?: string; quality?: string; resolution?: string; fps?: number }): ExportSettings {
   const { format, quality, resolution, fps } = options;
   return {
     origin: origin ?? 'header',
-    format: format === 'webm' || format === 'mov' || format === 'gif' ? format : 'mp4',
-    quality: quality === 'draft' || quality === 'high' ? quality : 'standard',
+    format: registered(SETTINGS.format, format, 'mp4'),
+    quality: registered(SETTINGS.quality, quality, 'standard'),
+    // A preset is named after its orientation, so only a `-4k` suffix means 4K; everything else is 1080p.
     resolution: !resolution || resolution === 'auto' ? 'auto' : resolution.endsWith('-4k') ? '4k' : '1080p',
     // An omitted rate renders at the queue's default of 30 fps.
-    fps: fps === 24 ? '24' : fps === undefined || fps === 30 ? '30' : fps === 60 ? '60' : 'other',
+    fps: fps === undefined ? '30' : registered(SETTINGS.fps, String(fps), 'other'),
   };
 }
 export function exportRejection(status: number): NonNullable<Fields<'studio_export_request_result'>['error_code']> {

@@ -121,6 +121,19 @@ it('buckets export settings and rejections into closed values', () => {
   expect([exportRejection(503), exportRejection(400), exportRejection(500)]).toEqual(['SERVICE_UNAVAILABLE', 'REQUEST_REJECTED', 'SERVER_ERROR']);
 });
 
+it('takes the closed sets from the registry, so a newly registered value is not reported as a fallback', () => {
+  for (const option of studioEvents.ui_click.fields.option) expect(clickOption(option), option).toBe(option);
+  const settings = studioEvents.studio_export_request_result.fields;
+  for (const format of settings.format) expect(exportSettings('header', { format }).format, format).toBe(format);
+  for (const quality of settings.quality) expect(exportSettings('header', { quality }).quality, quality).toBe(quality);
+  const rates = settings.fps.filter(value => value !== 'other').map(Number);
+  expect(rates.map(fps => exportSettings('header', { fps }).fps)).toEqual(rates.map(String));
+  for (const host of studioEvents.template_instruction_copy_result.fields.host_product)
+    reportTemplateEvent({ kind: 'copy_result', templateId: 'product-promo', host, status: 'failed' });
+  expect(events('template_instruction_copy_result').map(event => event.host_product))
+    .toEqual([...studioEvents.template_instruction_copy_result.fields.host_product]);
+});
+
 it('reports asset import counts with a safe category only when something failed', () => {
   expect(importErrorCategory('no supported video stream found')).toBe('unsupported_format');
   expect(importErrorCategory('ffprobe failed to read the media file')).toBe('unreadable');
