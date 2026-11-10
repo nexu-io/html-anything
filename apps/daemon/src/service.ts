@@ -26,6 +26,8 @@ export interface Options {
   endpoint?: string;
 }
 export interface Service {
+  /** Hosted owners drain outside the factory stop lane before closing business stores. */
+  quiesce(): Promise<void>;
   close(): Promise<void>;
   socket: string;
 }
@@ -65,8 +67,18 @@ export async function serve(options: Options): Promise<Service> {
     ? new PrismTemplates(workspace, options.prism, options.onPrismRead)
     : new Templates(workspace);
   const exports = new Exports(workspace, options.renderer, options.endpoint);
+  const requests = new Set<Promise<unknown>>();
+  let draining: Promise<void> | undefined, closing: Promise<void> | undefined;
   const server = createServer((request, response) => {
     const origin = request.headers.origin === options.origin ? options.origin : undefined;
+    if (draining) {
+      response.setHeader("connection", "close");
+      return reply(response, 503, { error: { code: "invalid", message: "daemon is closing" } }, origin);
+    }
+    const finished = new Promise<void>((done) => {
+      response.once("finish", done);
+      response.once("close", done);
+    });
     const handle = async () => {
       if (["GET", "HEAD"].includes(request.method ?? "") && request.url?.startsWith("/exports/files/")) {
         await exports.downloads.serve(request.url, response, request.method === "HEAD");
@@ -167,7 +179,7 @@ export async function serve(options: Options): Promise<Service> {
           : workspace.execute(operation as Operation, input as Input<Operation>);
       reply(response, 200, result, origin);
     };
-    void handle().catch((error) => {
+    const handled = handle().catch((error) => {
       if (response.headersSent) {
         response.destroy();
         return;
@@ -178,6 +190,9 @@ export async function serve(options: Options): Promise<Service> {
       ];
       reply(response, status, { error: { code: fault.code, message: fault.message } }, origin);
     });
+    const pending = Promise.allSettled([handled, finished]);
+    requests.add(pending);
+    void pending.then(() => requests.delete(pending));
   });
   try {
     await new Promise<void>((done, reject) => {
@@ -191,21 +206,25 @@ export async function serve(options: Options): Promise<Service> {
     workspace.close();
     throw error;
   }
-  let closing: Promise<void> | undefined;
+  const quiesce = () =>
+    (draining ??= (async () => {
+      const closed = new Promise<void>((done, reject) => {
+        server.close((error) => (error ? reject(error) : done()));
+      });
+      // Accepted work and buffered/streamed responses must finish before unused connections retire.
+      await Promise.allSettled([...requests]);
+      server.closeAllConnections();
+      await closed;
+    })());
   return {
     socket: options.socket,
+    quiesce,
     close: () =>
-      (closing ??= new Promise<void>((done, reject) => {
-        server.close((error) => {
-          if (error) {
-            reject(error);
-            return;
-          }
-          exports.close();
-          previews.close();
-          workspace.close();
-          done();
-        });
-      })),
+      (closing ??= (async () => {
+        await quiesce();
+        exports.close();
+        previews.close();
+        workspace.close();
+      })()),
   };
 }
