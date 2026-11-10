@@ -47,6 +47,9 @@ importers:
       '@odsuite/sidecar':
         specifier: workspace:*
         version: link:../../suites/sidecar
+      '@open-motion/gateway':
+        specifier: workspace:*
+        version: link:../../packages/gateway
       '@open-motion/motion':
         specifier: workspace:*
         version: link:../../packages/motion
@@ -90,6 +93,9 @@ importers:
       '@open-motion/daemon':
         specifier: workspace:*
         version: link:../daemon
+      '@open-motion/gateway':
+        specifier: workspace:*
+        version: link:../../packages/gateway
       '@open-motion/motion':
         specifier: workspace:*
         version: link:../../packages/motion
@@ -285,6 +291,9 @@ importers:
       '@open-motion/daemon':
         specifier: workspace:*
         version: link:../../apps/daemon
+      '@open-motion/gateway':
+        specifier: workspace:*
+        version: link:../../packages/gateway
       '@open-motion/render':
         specifier: workspace:*
         version: link:../../packages/render
@@ -1121,15 +1130,24 @@ importers:
         specifier: workspace:*
         version: link:../../carriers/electron
     devDependencies:
+      '@modelcontextprotocol/client':
+        specifier: 2.4.0
+        version: 2.4.0
       '@odsuite/automation':
         specifier: workspace:*
         version: link:../automation
       '@odsuite/serve':
         specifier: workspace:*
         version: link:../serve
+      '@open-motion/codexplugin':
+        specifier: workspace:*
+        version: link:../../carriers/codexplugin
       '@open-motion/daemon':
         specifier: workspace:*
         version: link:../../apps/daemon
+      '@open-motion/gateway':
+        specifier: workspace:*
+        version: link:../../packages/gateway
       '@open-motion/render':
         specifier: workspace:*
         version: link:../../packages/render
@@ -1148,12 +1166,18 @@ importers:
       '@types/node':
         specifier: 24.12.2
         version: 24.12.2
+      '@types/pngjs':
+        specifier: 6.0.5
+        version: 6.0.5
       electron:
         specifier: 41.3.0
         version: 41.3.0
       esbuild:
         specifier: 0.28.0
         version: 0.28.0
+      pngjs:
+        specifier: 7.0.0
+        version: 7.0.0
       typescript:
         specifier: 7.0.2
         version: 7.0.2

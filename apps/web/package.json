@@ -40,6 +40,7 @@
     "@open-motion/daemon": "workspace:*",
     "@open-motion/motion": "workspace:*",
     "@open-motion/render": "workspace:*",
-    "@open-motion/templates": "workspace:*"
+    "@open-motion/templates": "workspace:*",
+    "@open-motion/gateway": "workspace:*"
   }
 }

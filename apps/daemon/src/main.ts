@@ -16,6 +16,7 @@ const service = await serve({
   socket,
   token,
   endpoint: process.env.ODSUITE_RUNTIME_ENDPOINT,
+  gateway: process.env.ODSUITE_RUNTIME_GATEWAY ? JSON.parse(process.env.ODSUITE_RUNTIME_GATEWAY) : undefined,
   prism: process.env.ODSUITE_RUNTIME_PRISM ? JSON.parse(process.env.ODSUITE_RUNTIME_PRISM) : undefined,
   renderer: process.env.ODSUITE_RUNTIME_RENDERER ? JSON.parse(process.env.ODSUITE_RUNTIME_RENDERER) : undefined,
   ...(environment ? { environment: decode(environment) } : {}),

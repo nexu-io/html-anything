@@ -38,7 +38,7 @@ export class Editor {
       this.pending = undefined;
       return result;
     } catch (error) {
-      if (error instanceof Fault) this.pending = undefined;
+      if (error instanceof Fault && error.code !== "integrity") this.pending = undefined;
       throw error;
     }
   }
@@ -112,6 +112,38 @@ export class Editor {
     });
     this.fileDrafts.clear();
     this.dirty = false;
+  }
+  /** Confirm an exact adoption receipt, then refresh authority without projecting its historical snapshot. */
+  async adoptGeneration(input: Omit<Input<"generation_adopt">, "requestId">) {
+    const before = this.project,
+      signature = JSON.stringify(["generation_adopt", input]);
+    const replay = this.pending?.signature === signature;
+    if (
+      !replay &&
+      (!before ||
+        this.dirty ||
+        this.drafts?.dirty() ||
+        before.sessionId !== input.sessionId ||
+        before.artifactId !== input.artifactId ||
+        before.revision !== input.expectedRevision)
+    )
+      throw Error("采用候选的工程版本已改变或尚未保存");
+    await this.mutate("generation_adopt", input);
+    this.refresh = async () => {
+      const current = this.project;
+      const next = await this.client.execute("project_read", {
+        sessionId: input.sessionId,
+        artifactId: input.artifactId,
+      });
+      if (this.project !== current) return;
+      if (!current || current.sessionId !== input.sessionId || current.artifactId !== input.artifactId) return;
+      if (this.dirty || this.drafts?.dirty()) throw Error("采用已确认，请先处理本地源码草稿后刷新");
+      if (next.history.version < current.history.version) throw Error("采用已确认，读取的工程版本已过期");
+      this.project = next;
+      this.draft = next.files.find((file) => file.path === "index.html")?.content ?? "";
+      this.fileDrafts.clear();
+    };
+    await this.retryRefresh();
   }
   async importResource(input: Omit<Input<"resource_import">, "requestId">) {
     this.project = await this.resourceChange("resource_import", input);

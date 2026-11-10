@@ -45,6 +45,7 @@
     "@odsuite/sidecar": "workspace:*",
     "@odsuite/protocol": "workspace:*",
     "zod": "4.6.7",
-    "@open-motion/templates": "workspace:*"
+    "@open-motion/templates": "workspace:*",
+    "@open-motion/gateway": "workspace:*"
   }
 }

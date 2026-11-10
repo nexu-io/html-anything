@@ -1,12 +1,15 @@
 import { timingSafeEqual } from "node:crypto";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { Environment } from "@odsuite/carrier";
+import { type GenerationOperation, generationSchemas } from "@open-motion/gateway/contract";
+import type { Binding as GatewayBinding } from "@open-motion/gateway/host";
 import { animationInput, editInput, inspectInput, Motion, patchInput } from "@open-motion/motion";
 import { inspectContext, retimeHost } from "@open-motion/motion/project";
 import { type ExportOperation, exportSchemas } from "@open-motion/render/contract";
 import { type TemplateOperation, templateSchemas } from "@open-motion/templates/contract";
 import type { Binding as PrismBinding } from "@open-motion/templates/host";
 import { Fault, type Input, type Operation, Workspace } from "@open-motion/workspace";
+import { Generations } from "./content/generation.js";
 import { listGuidance, readGuidance } from "./content/guidance.js";
 import { Previews } from "./content/preview.js";
 import { PrismTemplates } from "./content/prism.js";
@@ -21,6 +24,7 @@ export interface Options {
   environment?: Readonly<Environment>;
   renderer?: Binding;
   prism?: PrismBinding;
+  gateway?: GatewayBinding;
   /** In-process diagnostic checkpoint only; never serialized or exposed through a product API. */
   onPrismRead?: () => Promise<void>;
   endpoint?: string;
@@ -67,6 +71,7 @@ export async function serve(options: Options): Promise<Service> {
     ? new PrismTemplates(workspace, options.prism, options.onPrismRead)
     : new Templates(workspace);
   const exports = new Exports(workspace, options.renderer, options.endpoint);
+  const generations = new Generations(workspace, options.gateway);
   const requests = new Set<Promise<unknown>>();
   let draining: Promise<void> | undefined, closing: Promise<void> | undefined;
   const server = createServer((request, response) => {
@@ -172,11 +177,13 @@ export async function serve(options: Options): Promise<Service> {
       if (request.method !== "POST" || !Object.hasOwn(schemas, operation))
         return reply(response, 404, { error: { code: "invalid", message: "unknown operation" } }, origin);
       const input = await body(request);
-      const result = Object.hasOwn(templateSchemas, operation)
-        ? await templates.execute(operation as TemplateOperation, input)
-        : Object.hasOwn(exportSchemas, operation)
-          ? await exports.execute(operation as ExportOperation, input)
-          : workspace.execute(operation as Operation, input as Input<Operation>);
+      const result = Object.hasOwn(generationSchemas, operation)
+        ? await generations.execute(operation as GenerationOperation, input)
+        : Object.hasOwn(templateSchemas, operation)
+          ? await templates.execute(operation as TemplateOperation, input)
+          : Object.hasOwn(exportSchemas, operation)
+            ? await exports.execute(operation as ExportOperation, input)
+            : workspace.execute(operation as Operation, input as Input<Operation>);
       reply(response, 200, result, origin);
     };
     const handled = handle().catch((error) => {
