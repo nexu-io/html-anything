@@ -1,12 +1,12 @@
 # 七个 AI editing 创作简报
 
-[English](examples.md) · [返回中文介绍](README.zh-CN.md#可以用它做什么) · [来源与素材记录](readme/ASSETS.md#creative-examples)
+[English](examples.md) · [返回中文介绍](README.zh-CN.md#showcase) · [来源与素材记录](readme/ASSETS.md#creative-examples)
 
 这些简报把 README 的七类场景变成可执行的创作请求。图片和动图是资源库中的**外部参考片段**，不是 OpenMotion 制作的成片或新增内置模板。简报中的时长、画幅和结果是本次创作目标，需要实际制作与评审。
 
 ## 使用方法
 
-1. [启动 OpenMotion 并连接 Agent](README.zh-CN.md#connect-your-agent)，提供你自己的素材、品牌与已确认的内容。
+1. [启动 OpenMotion 并连接 Agent](README.zh-CN.md#quick-start)，提供你自己的素材、品牌与已确认的内容。
 2. 选择下方简报，替换其中的主题。将简报、精确参考 ID 和来源一起交给 Agent；也可以在 Studio 资源库搜索参考名称。
 3. Agent 实际读取参考，再提出分镜与剪辑方案。网络获取、字幕和音轨分析依赖宿主工具；缺少素材或时间码时先补齐，不把描述当作已经完成的分析。
 4. 制作后在 Studio 正常速度观看，检查画面、文字与声音，再导出 MP4。保留工程继续修改。
@@ -19,7 +19,7 @@
 
 **3 分钟口播，剪出 30 秒重点。**
 
-[Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [▶ 完整参考](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
+[观看参考片：Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
 
 ![AI 口播精剪](readme/examples/talking-head.jpg)
 
@@ -71,23 +71,22 @@ readme/media/hundred-days-story-reference.mp4
 
 **让新功能，成为发布片的主角。**
 
-[Figma Draw · @figma](readme/media/jake-figma-draw-reference.mp4) · [▶ 完整参考](readme/media/jake-figma-draw-reference.mp4)
+[Stripe Treasury · 00:21.50–00:26.50](https://x.com/stripe/status/2049621560743608481) · [可编辑的海岸胶片](../examples/brand-studies/stripe/index.html)
 
-![产品发布与功能演示](readme/examples/product-launch.jpg)
+![产品发布与功能演示](../examples/brand-studies/stripe/coast.jpg)
 
 - **输入:** 真实界面、功能简报与 Brandkit
 - **观察重点:** 功能揭示、界面特写、成果展示，组成一支完整发布片。
-- **目录 ID:** `hf-reference-jake-figma-draw`
+- **逐镜规范：** [Stripe 翻卡](../examples/brand-studies/stripe/MOTION.md)
 
 ```text
-使用 OpenMotion。创作参考: hf-reference-jake-figma-draw
-readme/media/jake-figma-draw-reference.mp4
+使用 OpenMotion。创作参考: https://x.com/stripe/status/2049621560743608481 (00:21.50–00:26.50)
 
 为「我的新功能」制作 20 秒、16:9 的发布片，使用我的真实产品截图、录屏与 Brandkit。
 按照「揭示功能 → 一次关键操作 → 完成效果 → 结束语」组织。
 参考图形元素、界面特写与最终作品之间的过渡方式。
 界面标签保持准确，一次只安排一个镜头运动，完成效果停留到能看清。
-使用我的品牌，不套用 Figma 品牌。
+用我的品牌色、产品画面和名称。
 交付可编辑场景，评审后导出 MP4。
 ```
 
@@ -97,7 +96,7 @@ readme/media/jake-figma-draw-reference.mp4
 
 **复刻节奏与结构，换成你的表达。**
 
-[Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4) · [▶ 完整参考](readme/media/jake-lovable-reference.mp4)
+[观看参考片：Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4)
 
 ![Viral video 复刻](readme/examples/viral-remix.jpg)
 
@@ -122,7 +121,7 @@ readme/media/jake-lovable-reference.mp4
 
 **一个复杂流程，讲成三个清楚步骤。**
 
-[Authorize Once, Everyone Connected · Hyperframes catalog](readme/media/remix-authorize-once-reference.mp4) · [▶ 完整参考](readme/media/remix-authorize-once-reference.mp4)
+[观看参考片：Authorize Once, Everyone Connected](readme/media/remix-authorize-once-reference.mp4)
 
 ![讲解与教程](readme/examples/explainer.jpg)
 

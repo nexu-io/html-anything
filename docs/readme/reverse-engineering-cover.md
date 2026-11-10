@@ -1,6 +1,10 @@
 # Reverse engineering README artwork
 
-This artwork accompanies the [main README](../../README.md) and its Chinese, Japanese and Korean translations. It preserves the current README's painterly visual family while introducing **Reverse engineering for any video**, the four media-generation categories, and **Publish to every platform**. The reverse-engineering draft is now the main introduction; the earlier artwork remains available as source history.
+The [English cover](brand-hero.jpg) and [Chinese cover](brand-hero.zh-CN.jpg) show a talking-head caption effect adapted to another speaker. Both link to the [2.4-second comparison](media/presenter-caption-remake.mp4). The timeline pictured below the portraits is from the OpenMotion project used to render the remake.
+
+The left panel uses 0.83–3.23 seconds from [Dan Martell’s original video](https://www.youtube.com/shorts/mk1zJd9Rm4c). The right panel uses the first 2.4 seconds of [@careerwithriya’s career-skills video](https://www.instagram.com/reel/Ddd57MBszhc/). OpenMotion rebuilt the three caption layers for Riya’s footage. The comparison plays Riya’s original audio. Both creators retain the rights to their footage.
+
+## Earlier cover artwork
 
 | Field | Value |
 | --- | --- |

@@ -1,12 +1,12 @@
 # Seven creative briefs for AI editing
 
-[简体中文](examples.zh-CN.md) · [Back to the showcase](../README.md#what-can-you-make) · [Sources and assets](readme/ASSETS.md#creative-examples)
+[简体中文](examples.zh-CN.md) · [Back to the showcase](../README.md#showcase) · [Sources and assets](readme/ASSETS.md#creative-examples)
 
 These briefs turn the seven README scenarios into concrete requests. The stills and GIFs are **external reference excerpts** from the resource catalog, not OpenMotion-made films or new bundled templates. Durations, aspect ratios and deliverables in the briefs are creative targets that require production and review.
 
 ## How to use a brief
 
-1. [Start OpenMotion and connect your agent](../README.md#connect-your-agent). Supply your own footage, brand assets and approved content.
+1. [Start OpenMotion and connect your agent](../README.md#quick-start). Supply your own footage, brand assets and approved content.
 2. Choose a brief and replace its subject. Give your agent the brief, exact catalog ID and source; you can also search the reference title in Studio’s library.
 3. Have the agent inspect the reference before proposing a shot list and cut. Retrieval, transcription and audio analysis depend on host tools; missing media or timecodes must be supplied, not inferred from a description.
 4. Review the actual project in Studio at normal speed, including text and sound, before exporting MP4. Keep the editable source for the next revision.
@@ -19,7 +19,7 @@ These are reference-led creative inputs, not new runtime tools, automatic platfo
 
 **Three minutes of footage. One sharp story.**
 
-[Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [▶ Full reference](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
+[Watch reference: Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
 
 ![AI talking-head edits](readme/examples/talking-head.jpg)
 
@@ -74,24 +74,23 @@ by changing the sequence and holds, not just speeding everything up.
 
 **Make the feature the hero.**
 
-[Figma Draw · @figma](readme/media/jake-figma-draw-reference.mp4) · [▶ Full reference](readme/media/jake-figma-draw-reference.mp4)
+[Stripe Treasury · 00:21.50–00:26.50](https://x.com/stripe/status/2049621560743608481) · [Editable Coast study](../examples/brand-studies/stripe/index.html)
 
-![Product launches & demos](readme/examples/product-launch.jpg)
+![Product launches & demos](../examples/brand-studies/stripe/coast.jpg)
 
 - **Input:** Product screens + feature brief + Brandkit
 - **Creative focus:** A feature reveal, a focused UI demonstration and a memorable finish.
-- **Catalog ID:** `hf-reference-jake-figma-draw`
+- **Shot recipe:** [Stripe card flip](../examples/brand-studies/stripe/MOTION.md)
 
 ```text
-Use OpenMotion. Creative reference: hf-reference-jake-figma-draw
-readme/media/jake-figma-draw-reference.mp4
+Use OpenMotion. Creative reference: https://x.com/stripe/status/2049621560743608481 (00:21.50–00:26.50)
 
 Create a 20-second, 16:9 launch film for [feature]. Use my real product
 screenshots, screen recording and Brandkit. Follow a reveal → one useful
 action → finished result → closing line structure. Take inspiration from the
 reference’s transitions between graphic shapes, a close view of the UI and the
 finished artwork. Keep interface labels accurate, use one camera move at a
-time and hold the result long enough to understand. Use my brand, not Figma’s.
+Use my own colors, artwork and product name.
 Deliver editable scenes and a reviewed MP4.
 ```
 
@@ -101,7 +100,7 @@ Deliver editable scenes and a reviewed MP4.
 
 **Remix the rhythm. Make it yours.**
 
-[Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4) · [▶ Full reference](readme/media/jake-lovable-reference.mp4)
+[Watch reference: Lovable: Aesthetics Update · @lovable_dev](readme/media/jake-lovable-reference.mp4)
 
 ![Viral video recreation](readme/examples/viral-remix.jpg)
 
@@ -128,7 +127,7 @@ with the agreed shot list before exporting.
 
 **One workflow. Three clear steps.**
 
-[Authorize Once, Everyone Connected · Hyperframes catalog](readme/media/remix-authorize-once-reference.mp4) · [▶ Full reference](readme/media/remix-authorize-once-reference.mp4)
+[Watch reference: Authorize Once, Everyone Connected](readme/media/remix-authorize-once-reference.mp4)
 
 ![Explainers & tutorials](readme/examples/explainer.jpg)
 

@@ -1,53 +1,56 @@
-<!-- Alternative README proposal: combines the current README with the positioning in PR #173. The existing README remains the published introduction. -->
+<a id="openmotion"></a>
 
 <h1 align="center">OpenMotion</h1>
 
-<p align="center"><strong>Reverse engineering for any video</strong><br/>
-Your local agent, now a <strong>full-stack video creator.</strong><br/>
-<strong>BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.</strong><br/>
-Code video with HTML. Generate, edit and render. Open-source software, free to use.<br/>
-Images · Video · Music · TTS · 890+ catalog resources<br/>
-Make it your brand. <strong>Publish to every platform — Coming.</strong></p>
+<p align="center"><strong>Reverse engineering for any video</strong></p>
 
 <p align="center">
-  <a href="#reverse-engineer-a-video">🔍 How it works</a> ·
-  <a href="#creator-video-gallery">🎙️ Real people</a> ·
-  <a href="#brand-film-gallery">🎬 Brand films</a> ·
-  <a href="#video-is-code">💻 Video as code</a> ·
-  <a href="#bring-your-agent-and-keys">🔑 BYOA / BYOK</a> ·
-  <a href="#quick-start">🚀 Get started</a> ·
-  <a href="#publish-to-every-platform">📤 Publish · Coming</a><br/>
-  <a href="#full-video-creation-stack">🎛️ Full video stack</a> ·
-  <a href="#your-agent-your-studio">Studio &amp; agents</a> ·
-  <a href="#motion-design-community">Motion MD &amp; community</a> ·
-  <a href="#what-can-you-make">Examples</a> ·
-  <a href="#resources-to-start-from">Library</a> ·
-  <a href="#developer-architecture">Architecture</a> ·
-  <a href="#community">Community</a> ·
-  <a href="LICENSE">Apache 2.0</a>
+  <a href="docs/readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg"><img src="docs/readme/brand-hero.jpg" width="100%" alt="Dan Martell’s original beside an OpenMotion remake with Riya. A handwritten keyword sits between two lines of bold captions, with the editable Studio timeline below."></picture></a>
 </p>
 
-![OpenMotion — Reverse engineering for any video. Turn videos you love into videos for your brand with DeepSeek Harness, Codex and Claude Code. Images, video, music and TTS. Publish to every platform.](docs/readme/cover-reverse-engineering-v2.png)
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
+  <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
+  <a href="LICENSE"><img src="docs/readme/badges/license.svg" alt="Apache 2.0 license"></a>
+  <a href="https://github.com/nexu-io/open-design"><img src="docs/readme/badges/built-by-opendesign.svg" alt="Built by OpenDesign"></a>
+</p>
 
-**A launch film catches your eye. A product reveal has exactly the right rhythm. A creator makes a complicated idea feel simple.** Give that reference to your agent with your logo, screenshots, footage and copy. OpenMotion gives the agent a workflow to study the video, rebuild its structure as an editable project, and make a version that tells your story.
+<p align="center">
+  <a href="https://open-design.ai/motion/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="docs/readme/badges/website.svg" alt="OpenMotion website" /></a>
+  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="docs/readme/badges/opendesign-go.svg" alt="OpenDesign Go model subscriptions" /></a>
+  <a href="https://discord.gg/mHAjSMV6gz"><img src="docs/readme/badges/discord.svg" alt="Join the OpenDesign Discord" /></a>
+  <a href="https://x.com/OpenDesignHQ"><img src="docs/readme/badges/x-opendesignhq.svg" alt="OpenDesign on X (@OpenDesignHQ)" /></a>
+  <a href="https://x.com/OpenDesignDevs"><img src="docs/readme/badges/x-opendesigndevs.svg" alt="OpenDesign Developers on X (@OpenDesignDevs)" /></a>
+  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign on YouTube" /></a>
+</p>
 
-**Reverse / clone any viral video. Make it your brand.** Turn your local agent into a **full-stack video creator**: study the reference, express the video in **HTML, CSS and JavaScript**, generate missing media with your own supported API keys, then edit and render in one Studio. Bring the agent and accounts you already use; keep the source, assets and finished video.
+<p align="center"><a href="#agent-wall">Agents</a> · <a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a> · <a href="#community">Community</a></p>
 
-**🔑 BYOA + BYOK. 🧩 890+ catalog resources. 👐 Open source and free to use.** The creation software covers the workflow from reference to rendered MP4. Agent subscriptions and external model/API usage remain with your chosen providers. [Bring your agent and keys](#bring-your-agent-and-keys) · [Explore the Library](#resources-to-start-from)
+OpenMotion is **the first full-stack agentic video generator**. Upload a reference video or paste a social video link to **recreate it with your own footage, logo and copy**.
 
-**Reverse. Create. Publish.** Reverse engineering gives you the creative structure. Built-in multimodal model integrations supply new material. The editable timeline brings it together. **Publish to every platform — Coming** extends the workflow from the finished film to your audience.
+- 🎬 **Full-stack video recreation.** Code video with HTML. Your agent breaks down the reference, rebuilds its shots and transitions, and generates missing assets. Edit the timing in Studio and render an MP4 from the same project.
+- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Recreate videos in [your local agent](#agent-wall) and use your own API keys at every layer.
+- 🧩 OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Use it to share how a brand film works, shot by shot.
+- 🎛️ **Images, video, music and voice.** Generate artwork with Nano Banana 2, add a shot with Seedance 2.0, score it with Suno v4 and narrate it with Kokoro. [Explore all seven built-in models](#model-wall).
 
-> “Reverse-engineer this launch video for our brand. Keep the reveal, camera movement and pacing. Use our product, screenshots and copy. Generate the missing visuals, music and voice-over with our configured models. Show the comparison, then give me the editable project and MP4.”
+<a id="agent-wall"></a>
 
-**Any video → reverse-engineer → brand it in code → generate, edit and render → publish everywhere (Coming).**
+**22 local agents** · [Choose your agent](#choose-agent)
 
-<a id="creator-video-gallery"></a>
+<p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="docs/readme/agents/local-agents.mobile.png"><img src="docs/readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 
-## 🎥 Start with people. Make something worth watching.
+<a id="showcase"></a> <a id="what-can-you-make"></a>
+<a id="use-cases-and-remake-examples"></a>
 
-**A face, a voice, a story — then the motion that makes it land.** Start with these nine creator references: lessons, screen demonstrations, founder stories and product videos. Bring your own recording and borrow a structure you love. Click a preview for the full video.
+## 🎞️ Use cases and remake examples
 
-<table>
+<a id="creator-video-gallery"></a> <a id="presenter-motion"></a>
+
+### AI talking-head edits
+
+Edit around the speaker’s voice, with captions and screen inserts that follow the explanation.
+
+<table width="100%">
 <tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
@@ -75,7 +78,7 @@ A personal lesson + readable captions<br>
 <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
 <strong>5 tools I use every day</strong><br>
 Desk-side story + workflow inserts<br>
-<sub>Reference · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
+<sub>Reference · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
@@ -111,678 +114,79 @@ Product tutorial + live demonstration<br>
 <sub>Reference · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
 </td>
 </tr>
+<tr><th colspan="3" align="left">Original → external adaptation</th></tr>
+<tr>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="library/skills/presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<strong>Career advice → video-production explainer</strong><br>
+Numbered ideas and proof cards follow the new presenter’s explanation.<br>
+<sub><a href="library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/careerwithriya-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/careerwithriya-result.mp4">Full adaptation</a></sub>
+</td>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<strong>Everyday tools → a design-workspace story</strong><br>
+Screen inserts follow the speaker through a different workflow.<br>
+<sub><a href="library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4">Full adaptation</a></sub>
+</td>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="library/skills/presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<strong>Tool demo → video-editor walkthrough</strong><br>
+Picture-in-picture and callouts turn a tool demo into an editing walkthrough.<br>
+<sub><a href="library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/john-tagudin-capso-result.mp4">Full adaptation</a></sub>
+</td>
+</tr>
 </table>
 
-**Make a video in this direction:** your presenter, your story, your product. Ask for a similar hook, caption rhythm or screen reveal, and let the agent adapt it to your material. [Presenter Story Skill](library/skills/presenter-story/SKILL.md) · [Reference credits](docs/readme/media/manifest.json)
+### AI recuts & revisions
 
-### 🎙️ Your next presenter-led explainer
+Give a folder of clips and photos a beginning, a turning point and an ending.
 
-<a href="library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/motiongit-kinetic.jpg"><img src="docs/readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech template demo with presenter window, diagrams and animated typography"></picture></a>
-
-**Presenter-led stories × metallic type × animated explanations.** Bring your recording, copy, screenshots and captions. Editable source, parameters, fonts, sound recipes and a local runner are packaged in OpenMotion Library, ready for your Agent to adapt using the production guide. **1920 × 1080 · 60 fps · landscape.**
-
-[Get the template package](library/templates/presenter-tech/presenter-tech.motion) · [Production guide](library/templates/presenter-tech/TEMPLATE.md) · [MOTION_DESIGN.md](library/templates/presenter-tech/MOTION_DESIGN.md)
-
-<a id="brand-film-gallery"></a>
-
-## 🚀 Study the launches you wish you had made
-
-**Lovable. Kimi. Firecrawl. Figma. ElevenLabs. Codex.** Start with a strong reference, pick the feeling you want, and build a film around your own product. These are inspiration picks; the brief below each one is a direction for your next video.
-
-<table>
+<table width="100%">
 <tr>
-<td width="50%" valign="top" align="center">
-<a href="docs/readme/media/jake-lovable-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/viral-remix.jpg"><img src="docs/readme/examples/viral-remix.gif" width="440" alt="Lovable Aesthetics Update reference film"></picture></a><br>
-<strong>Lovable · Aesthetics Update</strong><br>
-Your next design update, with a confident product reveal.<br>
-<sub>Reference · @lovable_dev</sub>
+<td colspan="1" width="100%" align="center" valign="top">
+<a href="docs/readme/media/hundred-days-story-reference.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/story-recut.jpg">
+<img src="docs/readme/examples/story-recut.gif" width="208" alt="External creative reference: 100 days with stickers and photo cards">
+</picture></a><br>
+<strong>100 days in photos</strong><br>
+Stickers and photo cards mark time in a personal video diary.<br>
+<sub><a href="https://www.instagram.com/reel/Dd6vHlQgpok/">Original</a></sub>
 </td>
-<td width="50%" valign="top" align="center">
+</tr>
+</table>
+
+<a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
+
+### Product launches & demos
+
+Build a reveal around the moment your product comes into view.
+
+In the five-second comparisons, the original is on the left and the OpenMotion remake on the right (top and bottom on mobile).
+
+<table width="100%">
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-stripe"><a href="examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/stripe/comparison.jpg"><img src="examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · Card flip → film frame"></picture></a></div><br>
+<strong>Stripe · Card flip → film frame</strong><br>
+The remake keeps Stripe’s flip and reveals an illustrated film frame.<br>
+<sub><a href="examples/brand-studies/stripe/comparison.mp4">Full size</a> · <a href="examples/brand-studies/stripe/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">Original 00:21.50–00:26.50</a> · <a href="examples/brand-studies/stripe/index.html">HTML</a> · <a href="examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
+</td>
+</tr>
+<tr><th colspan="2" align="left">Original films</th></tr>
+<tr>
+<td width="50%" valign="top">
 <a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="docs/readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
 <strong>Kimi · K3 teaser</strong><br>
 Your next release, distilled into a short, memorable teaser.<br>
 <sub>Reference · @Kimi_Moonshot</sub>
 </td>
-</tr>
-<tr>
-<td width="50%" valign="top" align="center">
-<a href="docs/readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="docs/readme/gallery/firecrawl.gif" width="440" alt="Firecrawl Free Keyless reference film"></picture></a><br>
-<strong>Firecrawl · Free Keyless</strong><br>
-Turn a developer feature into a clear, visual product story.<br>
-<sub>Reference · @ericciarla</sub>
-</td>
-<td width="50%" valign="top" align="center">
-<a href="https://openai.com/codex-originals/"><img src="docs/readme/brand-showcase/codex-originals.webp" width="440" alt="Codex Originals: group portrait of the builders featured in OpenAI's campaign"></a><br>
-<strong>OpenAI · Codex Originals</strong><br>
-Put the people building with your product at the center.<br>
-<sub><a href="https://openai.com/codex-originals/">Watch the official campaign ↗</a> · OpenAI · campaign still</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top" align="center">
-<a href="docs/readme/media/jake-figma-draw-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/product-launch.jpg"><img src="docs/readme/examples/product-launch.gif" width="440" alt="Figma Draw product launch reference film"></picture></a><br>
-<strong>Figma · Draw</strong><br>
-Show what your product makes possible through motion.<br>
-<sub>Reference · @figma</sub>
-</td>
-<td width="50%" valign="top" align="center">
+<td width="50%" valign="top">
 <a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="docs/readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs reference film"></picture></a><br>
 <strong>ElevenLabs · Reception</strong><br>
 Introduce a new product with a focused launch story.<br>
 <sub>Reference · @ElevenLabs</sub>
 </td>
 </tr>
-</table>
-
-> “Make a launch film in this direction for our brand. Use our UI, words and identity. Keep the sense of pace and the clarity of the reveal; propose a fresh sequence that fits our product.”
-
-The films above are external references credited to their creators. OpenMotion supplies the workflow for your adaptation. [Video sources](docs/readme/media/manifest.json) · [Additional showcase sources](docs/readme/brand-showcase/README.md)
-
-<a id="video-is-code"></a>
-
-## 💻 Video is code. HTML is the canvas.
-
-**Your local agent already writes code. Make it your full-stack video creator.** OpenMotion uses HTML, CSS and JavaScript to describe scenes, typography, layout, transitions and timing. Recorded footage, generated clips, images, music and voice-over become media inside the composition. The same project opens in Studio and renders to MP4.
-
-![Your local agent, optional media-model accounts and creative resources feed a workflow of understanding the reference, coding scenes, generating missing media, editing and rendering MP4 with reusable source.](docs/readme/diagrams/creation-stack-painterly.png)
-
-**Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#your-agent-your-studio) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
-
-**🎯 Aim for your first million-view video.** Study a hook worth watching, reverse-engineer the structure, and make it speak for your brand. Try a new opening, a different presenter or a sharper product reveal; keep the source and improve the next cut.
-
-<a id="bring-your-agent-and-keys"></a>
-
-## 🔑 BYOA + BYOK. Your agent. Your keys. Your video.
-
-**Bring the intelligence you already use. OpenMotion supplies the video creation stack.** Your local coding agent becomes the creator across the workflow: interpreting the brief, planning scenes, writing video code, arranging media, revising the cut and requesting the final render.
-
-| Bring your own… | Make it work for your video |
-| --- | --- |
-| **🤖 Agent — BYOA** | Connect your existing local agent through Skills and MCP, with CLI access where supported. Keep your preferred client, account and working context. |
-| **🔑 Keys — BYOK** | Connect supported media-provider API keys in Model Settings. Choose models for images, video, music and TTS; supported local media integrations can use your existing agent login. |
-| **🎨 Brand and material** | Add your logo, fonts, screenshots, camera footage, script and music. Keep identity and approved assets in the Brand Kit section of Motion Design MD. |
-| **🧩 Starting resources** | Browse references, motion components, templates and community Skills. Pick a direction, give the source or reference to your agent, and make it yours. |
-
-### One creator across the full stack
-
-**Understand → direct → code → generate → edit → render.** Your agent handles the creative brief and code; the Model Gateway supplies generated media through your configured accounts; Studio brings the source, assets and timeline together. Review the same editable project, ask for changes, and render a local MP4.
-
-**Code video, then keep improving it.** Change the hook, replace the presenter, switch the brand or try another ending by editing HTML/CSS/JS and media. Your project remains ordinary source files you can inspect, version and continue working on.
-
-### Open-source creation software, free to use
-
-**The OpenMotion creation pipeline is open source: Skills, project tools, model integrations, Studio and rendering.** Run it locally, inspect the implementation and extend the parts you need. OpenMotion charges no software subscription or per-render fee for this local workflow. You can also work with your own footage, images and audio without invoking media-generation APIs.
-
-Your chosen agent or model provider may charge for subscriptions or usage. BYOA / BYOK uses your own access; it does not include third-party credits or make proprietary models open source. Provider credentials stay in workspace configuration, separate from the video project. [License](LICENSE) · [Agent setup](docs/agent-adapters.md) · [Model setup](docs/model-gateway.md)
-
-> “Use my local agent and configured media models as a full-stack video creator. Find a reference in the Library, rebuild its structure for our brand in HTML/CSS/JS, generate only the missing media, and show the editable project. After review, render an MP4 and keep the source.”
-
-<a id="reverse-engineer-a-video"></a>
-
-## 🔍 Reverse-engineer any video. Make it your brand.
-
-Start with a moment worth studying: the opening hook, a UI reveal, an animated explanation or a closing brand mark. Your agent breaks it into decisions you can inspect and change.
-
-| Study the reference | Rebuild for your story |
-| --- | --- |
-| **Hook and narrative** — what appears first, what follows, what earns the reveal | Your promise, product facts and call to action |
-| **Shot structure** — framing, camera movement, layers and visual hierarchy | Your UI, footage, logo and supporting images |
-| **Motion and pacing** — entrances, transitions, easing and reading holds | The same motion intent, adjusted to your content |
-| **Typography and identity** — type hierarchy, color and composition | Your fonts, palette and words, recorded in Motion MD’s Brand Kit section |
-| **Sound and rhythm** — speech timing, music cues and emphasis | Your voice, supplied music and sound direction |
-
-1. **Bring the reference and your brand.** Supply a video or an accessible link, the segment to study, and your logo, copy, screenshots or recordings. Record identity and product facts in the **Brand Kit section of Motion Design MD**, using your [approved brand material](library/brandkits/openmotion/BRANDKIT.md).
-2. **Break down what makes it work.** Ask the agent to identify shots, timing, motion, sound and the elements you want to preserve. Record those decisions in a Motion MD brief.
-3. **Rebuild the video as code.** With a video reference, use `motion-recreate`; with existing editable source, use the template route. Express the scenes, motion and timing in HTML/CSS/JS, with media for footage and sound. Bring your own content and use the built-in model integrations to generate missing images, video, music and TTS narration.
-4. **Compare and refine.** Review matching moments in the reference and remake. Check the reveal, reading time, composition and sound; keep revising the same project in Studio.
-5. **Prepare the film for your audience.** Export MP4 versions, retain the editable project, and carry the approved brand and motion rules into the next video. Connected multiplatform publishing is **Coming**.
-
-```text
-Use OpenMotion to reverse-engineer the attached reference for our brand.
-
-Study: the opening hook, shot order, typography, transitions and sound cues.
-Keep: the product reveal and camera rhythm in the selected segment.
-Replace: the logo, UI, claims, copy and end card with our supplied materials.
-Generate: missing images, video, background music and TTS narration using
-our configured models, following our brand and approved script.
-
-Build an editable project. Open it in Studio and compare matching moments
-with the reference. Explain any remaining differences. After review,
-export an MP4 and retain the source for the next edit.
-```
-
-Reference retrieval and media analysis depend on the host's tools; supply a local video and timecodes when needed. Use your own or licensed assets and retain reference attribution. [Recreation workflow](skills/motion-recreate/SKILL.md) · [Reference collections](docs/collections/README.md)
-
-<a id="full-video-creation-stack"></a>
-
-## 🎛️ The full video creation stack, open source
-
-**Go from a reference and brand brief to a complete, editable film in one stack.** OpenMotion brings the creative workflows, model integrations, asset management, timeline, motion engine and rendering pipeline together. Start with the parts you have, generate what is missing, and keep refining the result with your agent.
-
-### ✨ Images, video, music and TTS — built in
-
-**BYOK makes your multimodal accounts part of the video workflow.** Add your supported provider keys in **Model Settings**, choose your models, and generate images, video, music and speech through the Studio's **Model Gateway**. Preview candidates and adopt the results into the same project your agent and Studio edit. The supported local image path can reuse your existing agent login.
-
-| Make what the video needs | Built-in model catalog examples | Bring it into your film |
-| --- | --- | --- |
-| **🖼️ Images** | Codex Image; Nano Banana 2 via Atlas Cloud; FLUX Schnell via fal.ai | Brand visuals, scene artwork and supporting images; reference-based editing through the supported Codex image path |
-| **🎬 Video** | Seedance 2.0 via Atlas Cloud; Wan 2.2 via fal.ai | Generated shots and B-roll to combine with your footage and motion |
-| **🎵 Music** | Suno v4 via Atlas Cloud | A soundtrack built around your mood and creative brief |
-| **🎙️ TTS / voice-over** | Kokoro via fal.ai | Narration from your approved script, placed alongside the visuals and music |
-
-These are catalog entries shipped in the [source](gateway/catalog.ts). Connect your own supported accounts or provider keys; model availability, required parameters and usage costs depend on the provider. The gateway also supports model discovery and explicit endpoint registration. [Model setup and generation](docs/model-gateway.md)
-
-> “Use the Brand Kit section of our Motion Design MD and our approved script. Generate artwork for the opening, a video insert, background music and TTS narration. Add the selected results to the recreated project, align the sound and visuals, then show me the full cut.”
-
-### 🛠️ From creative intent to a rendered film
-
-| Part of the stack | What OpenMotion brings together |
-| --- | --- |
-| **Understand and direct** | Reference reconstruction, creative Skills, Motion MD with its Brand Kit section, and the connected agent's analysis tools |
-| **Generate and manage** | Multimodal model adapters, model selection, generation jobs, candidate previews and project media |
-| **Edit and animate** | A visual timeline, HTML/CSS/JS compositions, typography, transitions, captions and sound placement |
-| **Review and iterate** | Studio preview, hands-on adjustments, agent revisions and project versions |
-| **Render and deliver** | Fixed-version rendering, technical export checks, MP4 and editable source |
-| **Publish and learn — Coming** | Platform connections, publishing schedules and feedback linked to the video version |
-
-**Run it, inspect it, extend it.** The application and integration code are open source; third-party models and services retain their own licenses and access requirements. Your project keeps the source, media and creative decisions needed for the next edit.
-
-```text
-Reference + your brand + your agent
-                 ↓
-        Understand and rebuild
-                 ↓
- Images + Video + Music + TTS
-                 ↓
-       Editable Studio project
-                 ↓
-  Review → revise → render → MP4 + source
-                 ↓
-  Publish to every platform · Coming
-```
-
-[Explore the architecture](docs/product/architecture.md) · [Model Gateway](docs/model-gateway.md) · [Extend the application](CONTRIBUTING.md)
-
-<a id="your-agent-your-studio"></a>
-
-## 🖥️ BYOA: your local agent, your full-stack video creator
-
-**Bring your own agent; give it the full video workflow.** Skills provide the creative method, MCP gives your agent project tools, and the Studio lets you watch and shape the result. Your agent stays in its own client and uses its existing account; OpenMotion runs the local editing and rendering application.
-
-| Agent / client | How it connects |
-| --- | --- |
-| **DeepSeek Harness** | Local MCP + Skills setup, or a generated Harness adapter |
-| **Codex** | Local plugin or MCP + Skills setup, with a Studio viewer where the host supports it |
-| **Claude Code** | Local plugin or MCP + Skills setup, with CLI access for local work |
-| **WorkBuddy** | Generated MCP + Skills configuration; desktop creation and playback validation remain pending |
-| **Other local MCP clients** | Manual stdio configuration; media, shell and viewer capabilities depend on the host |
-
-[Per-agent setup](docs/agent-adapters.md) · [Integrated local installer](docs/npm-installation.md) · [Quick start](#quick-start)
-
-### Start in your agent
-
-Give DeepSeek Harness, Codex or Claude Code the reference and brand brief. Ask it to rebuild the video, open the preview, make a revision and export. Your existing agent account and workflow stay with you.
-
-![OpenMotion embedded viewer for Codex, showing the editable Product Promo project, preview, layers and timeline.](docs/readme/product-tour/codex-embedded.png)
-
-*The existing product tour shows the Studio viewer prepared for a Codex host. See [capture scope](docs/product-tour.md) for what was demonstrated.*
-
-### Start in Studio
-
-Browse references, open a template or bring in your recordings. Choose **Connect Agent**, follow the workspace-specific instructions and give the agent your brief. Review its edits on the same timeline and make hands-on adjustments whenever you want.
-
-![Standalone OpenMotion Studio with sessions, the saved request and an editable video project.](docs/readme/product-tour/standalone-studio.png)
-
-<details>
-<summary>See Claude Code and the template handoff</summary>
-
-![Claude Code production Skills, captured from the local terminal.](docs/readme/product-tour/claude-code-skills.png)
-
-The terminal capture demonstrates local Skill loading. The [CLI checks](docs/readme/product-tour/cli-checks.png) demonstrate project inspection; they do not establish a completed model-driven recreation.
-
-![Actual CLI checks for the Product Promo project: project info, lint and timeline inspection.](docs/readme/product-tour/cli-checks.png)
-
-![Connect Agent dialog with workspace-specific connection instructions and a choice of local clients.](docs/readme/product-tour/connect-agent.png)
-
-![Product Promo template preview with an expanded, template-specific instruction to copy into the agent.](docs/readme/product-tour/template-to-agent.png)
-
-**Preview → copy the instruction → paste into your agent with your brand assets.** A bundled template opens as an editable copy; an external reference starts a reconstruction task. [Full product tour](docs/product-tour.md)
-
-</details>
-
-Both entry paths use the same local application and project. The agent runs in its own client; Studio stores the brief and editable work. [How the connection works](docs/session-architecture.md)
-
-<a id="keep-editing-after-the-remake"></a>
-
-## ✂️ Keep editing after the remake
-
-**The first recreation is the start of your own video.** Tighten the opening, change the screenshot, add a spoken explanation, hold the end card longer or make another cut for a different audience.
-
-**An All-in-One AI-native Studio for AI editing and Motion.** People and agents work on the same editable timeline, from the first cut to the final render.
-
-| In the Studio | What you can do today |
-| --- | --- |
-| **Story and timeline** | Import and arrange media; have the agent trim, reorder and revise against a script or confirmed timecodes |
-| **Motion and captions** | Author animated type, transitions, callouts, charts and captions around your content |
-| **Media and sound** | Import your material and generate images, video, music and TTS voice-over through the built-in model integrations |
-| **Image revision** | Generate candidates with a reference-capable image model and adopt a replacement while preserving timing and animation |
-| **Preview and versions** | Review in Studio, edit by hand or with your agent, and return to the project for the next revision |
-| **Export and source** | Render a fixed version to MP4 and retain the HTML, CSS, JavaScript and media |
-
-> “Keep the reveal we approved. Replace the middle scene with this screen recording, tighten the opening using these timecodes, and hold our final CTA for two more seconds.”
-
-Model availability depends on provider configuration. Automatic speech understanding, content selection and platform-aware reframing are separate capabilities, not implied by timeline editing. [Media controls](docs/model-gateway.md) · [Projects and versions](docs/project-workspace.md)
-
-<a id="presenter-motion"></a>
-
-### 🎙️ Real people. Real stories. Motion that helps.
-
-Talking-head videos, tutorials and product walkthroughs belong here too. **Keep the human delivery and story rhythm; reuse the captions, screenshots, picture-in-picture and motion with your own recording, topic and brand.**
-
-<details>
-<summary><strong>Explore three presenter adaptations and their Motion MD recipes</strong></summary>
-
-These pairs show an original reference and an external adaptation as silent excerpts. Explore a direction for your own recording, then use the linked design recipe to guide your agent.
-
-#### Teach with a face, a keyword and a visual example
-
-**Career advice → video-production explainer**
-
-<table>
-<tr><th width="50%">Reference · @careerwithriya</th><th width="50%">Adaptation · external example</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
-</table>
-
-**Reuse:** Numbered ideas, presenter-led delivery and proof cards. **Make it yours:** Creator, spoken topic, keywords and supporting examples.
-
-[MOTION_DESIGN.md](library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [Full adaptation](library/skills/presenter-story/assets/careerwithriya-result.mp4)
-
-#### Show the workflow while you tell the story
-
-**Everyday tools → a design-workspace story**
-
-<table>
-<tr><th width="50%">Reference · Ali Abdaal</th><th width="50%">Adaptation · external example</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
-</table>
-
-**Reuse:** Presenter / screen rhythm, quiet captions and readable inserts. **Make it yours:** Your recording, your workflow and your screen captures.
-
-[MOTION_DESIGN.md](library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [Full adaptation](library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
-
-#### Put the presenter and the product in one story
-
-**Tool demo → video-editor walkthrough**
-
-<table>
-<tr><th width="50%">Reference · @john.tagudin</th><th width="50%">Adaptation · external example</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
-</table>
-
-**Reuse:** Hook, picture-in-picture, callouts and a visible result. **Make it yours:** Product, presenter, demonstration and closing message.
-
-[MOTION_DESIGN.md](library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](library/skills/presenter-story/SKILL.md) · [Original](library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [Full adaptation](library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
-
-> Use my camera and screen recordings with this structure. Keep my voice, edit around the actual speech and align captions. Use screenshots, picture-in-picture and motion to explain each point. Show a preview with sound, then deliver the editable project and MP4.
-
-
-</details>
-
-**Everyone can be a creator.** Start with what you want to say, use a reference to make the structure concrete, and keep your voice at the center.
-
-<a id="what-can-you-make"></a>
-
-## 🎞️ What can you make?
-
-**See the idea. Make it yours.** Seven scenarios, each with a creative brief you can hand to your agent. These animated excerpts are external works selected from the resource catalog; click to watch the full reference, then start with your own material and brand.
-
-<table>
-<tr>
-<td width="50%" valign="top">
-<strong>01 · AI talking-head edits</strong><br>
-Three minutes of footage. One sharp story.
-<p align="center">
-<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/talking-head.jpg">
-<img src="docs/readme/examples/talking-head.gif" width="208" alt="External creative reference: Ali Abdaal · 5 tools I use every day">
-</picture></a>
-</p>
-<sub>Reference · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 5 tools I use every day</a></sub><br><br>
-<strong>Start with</strong> · Your recording + transcript / timecodes<br>
-<strong>Make it yours</strong> · A clear hook, tighter speech, captions and well-timed B-roll.<br><br>
-<a href="docs/examples.md#talking-head">Copy the creative brief →</a> · <a href="docs/readme/examples/talking-head.jpg">Still preview</a>
-</td>
-<td width="50%" valign="top">
-<strong>02 · AI recuts & revisions</strong><br>
-Scattered clips become a 100-day story.
-<p align="center">
-<a href="docs/readme/media/hundred-days-story-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/story-recut.jpg">
-<img src="docs/readme/examples/story-recut.gif" width="208" alt="External creative reference: 100 days with stickers and photo cards">
-</picture></a>
-</p>
-<sub>Reference · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">100 days with stickers and photo cards</a></sub><br><br>
-<strong>Start with</strong> · Your clips, photos, voice-over and story outline<br>
-<strong>Make it yours</strong> · A personal montage with photo cutouts, chapter beats and a new pace.<br><br>
-<a href="docs/examples.md#story-recut">Copy the creative brief →</a> · <a href="docs/readme/examples/story-recut.jpg">Still preview</a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<strong>03 · Product launches & demos</strong><br>
-Make the feature the hero.
-<p align="center">
-<a href="docs/readme/media/jake-figma-draw-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/product-launch.jpg">
-<img src="docs/readme/examples/product-launch.gif" width="480" alt="External creative reference: Figma Draw · @figma">
-</picture></a>
-</p>
-<sub>Reference · <a href="docs/readme/media/jake-figma-draw-reference.mp4">Figma Draw · @figma</a></sub><br><br>
-<strong>Start with</strong> · Product screens + feature brief + Motion MD brand context<br>
-<strong>Make it yours</strong> · A feature reveal, a focused UI demonstration and a memorable finish.<br><br>
-<a href="docs/examples.md#product-launch">Copy the creative brief →</a> · <a href="docs/readme/examples/product-launch.jpg">Still preview</a>
-</td>
-<td width="50%" valign="top">
-<strong>04 · Viral video recreation</strong><br>
-Remix the rhythm. Make it yours.
-<p align="center">
-<a href="docs/readme/media/jake-lovable-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/viral-remix.jpg">
-<img src="docs/readme/examples/viral-remix.gif" width="480" alt="External creative reference: Lovable: Aesthetics Update · @lovable_dev">
-</picture></a>
-</p>
-<sub>Reference · <a href="docs/readme/media/jake-lovable-reference.mp4">Lovable: Aesthetics Update · @lovable_dev</a></sub><br><br>
-<strong>Start with</strong> · A reference + your copy, visuals and brand<br>
-<strong>Make it yours</strong> · A new editable cut built around the hook, typography and visual rhythm.<br><br>
-<a href="docs/examples.md#viral-remix">Copy the creative brief →</a> · <a href="docs/readme/examples/viral-remix.jpg">Still preview</a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<strong>05 · Explainers & tutorials</strong><br>
-One workflow. Three clear steps.
-<p align="center">
-<a href="docs/readme/media/remix-authorize-once-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/explainer.jpg">
-<img src="docs/readme/examples/explainer.gif" width="480" alt="External creative reference: Authorize Once, Everyone Connected">
-</picture></a>
-</p>
-<sub>Reference · <a href="docs/readme/media/remix-authorize-once-reference.mp4">Authorize Once, Everyone Connected</a></sub><br><br>
-<strong>Start with</strong> · Your workflow + script + accurate UI captures<br>
-<strong>Make it yours</strong> · A guided sequence with one idea per scene and purposeful callouts.<br><br>
-<a href="docs/examples.md#explainer">Copy the creative brief →</a> · <a href="docs/readme/examples/explainer.jpg">Still preview</a>
-</td>
-<td width="50%" valign="top">
-<strong>06 · Data stories & charts</strong><br>
-Give every number a point.
-<p align="center">
-<a href="docs/readme/media/M1128-clip.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/data-story.jpg">
-<img src="docs/readme/examples/data-story.gif" width="480" alt="External creative reference: Animated comparison bars · @Vintage_god">
-</picture></a>
-</p>
-<sub>Reference · <a href="https://x.com/Vintage_god/status/2106817967967056165">Animated comparison bars · @Vintage_god</a></sub><br><br>
-<strong>Start with</strong> · Your data, units, source and conclusion<br>
-<strong>Make it yours</strong> · A legible chart reveal with animated values and one clear comparison.<br><br>
-<a href="docs/examples.md#data-story">Copy the creative brief →</a> · <a href="docs/readme/examples/data-story.jpg">Still preview</a>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top">
-<strong>07 · Music & art visuals</strong><br>
-Give your track a visual identity.
-<p align="center">
-<a href="docs/readme/media/M1139-clip.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/music-visual.jpg">
-<img src="docs/readme/examples/music-visual.gif" width="480" alt="External creative reference: Lyria 3 visual sequence · @GoogleAI">
-</picture></a>
-</p>
-<sub>Reference · <a href="https://x.com/GoogleAI/status/2024154215182926027">Lyria 3 visual sequence · @GoogleAI</a></sub><br><br>
-<strong>Start with</strong> · Your audio + mood + beat markers / cue points<br>
-<strong>Make it yours</strong> · Layered color, kinetic type and a visual sequence timed to your track.<br><br>
-<a href="docs/examples.md#music-visual">Copy the creative brief →</a> · <a href="docs/readme/examples/music-visual.jpg">Still preview</a>
-</td>
-</tr>
-</table>
-
-These references illustrate creative directions; they are not OpenMotion-generated acceptance demos. For an editable starting project, open one of the [three bundled templates](library/templates/README.md). [Example briefs and workflow](docs/examples.md) · [Sources and excerpt records](docs/readme/ASSETS.md#creative-examples)
-
-<a id="make-your-motion-language-reusable"></a>
-<a id="motion-design-community"></a>
-
-## 🎨 Motion Design MD — build a community around the craft
-
-**One Motion Design MD. Your whole creative language.** `MOTION_DESIGN.md` brings brand identity, story, motion, sound and review rules into one readable creative specification. **Brand Kit is its brand section:** logo, colors, typography, voice, product facts and approved assets belong inside this larger design context.
-
-**Reverse-engineer once. Share the motion language. Let the next creator build on it.** Record how the video works, what should stay and how it should adapt to a new story or brand.
-
-Bring the creative decisions out of a single conversation and into files people and agents can read, review and improve. A designer can describe the motion, a developer can implement it, and another creator can apply it to a different story. **The community shares the craft alongside the finished video.**
-
-![Motion Design MD is one encompassing creative specification with Brand Kit, Story, Motion and Sound, and Review inside it. The agent uses this context and Skills to create editable HTML and media, then video and reusable source.](docs/readme/diagrams/creative-context-painterly.png)
-
-<details>
-<summary>Read the creative package as text</summary>
-
-```text
-Reference + your brand
-          ↓
-Understand → rebuild → compare → revise
-          ↓
-Reusable creative package
-  MOTION_DESIGN.md     one creative specification
-    Brand Kit          identity, product facts, approved assets
-    Story              hook, scene order, reveal, closing beat
-    Motion + sound     timing, camera, transitions, audio
-    Review             keep/change rules and checks
-  SKILL.md             adaptation and review method
-  Source + assets      editable implementation
-  Presets + evidence   replacement inputs and actual comparisons
-          ↓
-Your agent → the next editable video
-```
-
-</details>
-
-**Motion MD carries the whole design, including its Brand Kit. The Skill carries the method. The project carries the implementation.** This keeps a remake useful after its first export and gives the community something others can inspect, fork and improve.
-
-| Resource from the current Library | What it contributes |
-| --- | --- |
-| [Brand material for Motion MD](library/brandkits/openmotion/BRANDKIT.md) | An example source for the Brand Kit section: facts, identity, voice and approved assets |
-| [Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) | A reusable motion design direction |
-| [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) | Six source profiles: wireframe titles, canopy typography, UI reveals, dimensional code, particle assembly and glass cards |
-| [Presenter Story](library/skills/presenter-story/SKILL.md) | Three design recipes for speech-led videos |
-
-`MOTION_DESIGN.md` is a **v0.1 writing convention** you explicitly give to the agent. Write the Brand Kit inside it; existing brand files can be linked as supporting material, without requiring a second creative specification. It has no automatic importer or validator. The source-remix package has a replacement helper for its six profiles; video-only reconstruction uses `motion-recreate`. When you explicitly want a portable template, `motion-video-to-template` supplies the established `TEMPLATE.md` handoff. [Motion MD guide](docs/motion-md.md) · [All six examples](docs/motion-design-examples.md)
-
-### 🌱 From your remake to the community's next starting point
-
-```text
-Study a reference -> rebuild for your brand -> compare the actual result
-                                                 |
-                                                 v
-                            Publish the creative package on GitHub
-                            Motion MD + source + preview + attribution
-                                                 |
-                                                 v
-                              Fork -> change the brand -> review
-                                                 |
-                                                 v
-                           Share improvements and another real example
-```
-
-1. **Write the design.** Record the reference, story beats, timing, framing, camera, type, sound and the decisions that must survive a content change.
-2. **Make it runnable.** Include editable source and permitted assets, identify replacement inputs, and explain how to preview and render it.
-3. **Show what worked.** Share the original reference and your remake, matching-time comparisons where appropriate, actual checks and remaining differences.
-4. **Contribute and remix.** Open a PR with one complete folder. Let others fork the package, adapt it to their brand and contribute improvements with new examples.
-
-| You bring | The community gains |
-| --- | --- |
-| **Motion design** | A documented visual language, shot grammar and sound direction |
-| **Creative coding** | Editable implementations, components and reusable animation behavior |
-| **Brand and storytelling** | New briefs, real adaptations and evidence that the design works with different content |
-| **Agent workflows** | Skills that guide reconstruction, adaptation, comparison and review |
-| **Research and evaluation** | Credited references, repeatable comparisons and proposed benchmark tasks |
-
-Start with [Motion Design Remix](library/skills/motion-design-remix/SKILL.md), [Presenter Story](library/skills/presenter-story/SKILL.md) or [Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md). Use the [resource entry checklist](library/ENTRY_TEMPLATE.md), share work through [GitHub](https://github.com/nexu-io/html-anything/issues) and join the [Discord](https://discord.gg/mHAjSMV6gz). Git-based contribution and explicit reuse work today; a marketplace and Motion Benchmark / Arena remain future directions.
-
-<a id="see-the-motion-survive-a-new-brand"></a>
-
-## 🧪 Explore the editable motion behind a video
-
-**Like a camera move, title treatment or product reveal? Keep the idea and change the story.** These six editable source studies show how motion can carry new content. Each includes a Motion MD recipe, a Skill and a content preset. [Source, inputs and evidence](docs/motion-design-examples.md).
-
-<details>
-<summary><strong>Open six source studies: typography, interfaces, code, particles and glass</strong></summary>
-
-The paired previews show the original source and a content adaptation at matching timestamps. They are silent excerpts rendered from the same implementation.
-
-### Wireframe portal · BREAKTHROUGH → OPENMOTION
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Portal timing, dimensional lettering and camera push.** **Replace: Title, subtitle and the 3D phrase.**
-
-[MOTION_DESIGN.md](library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
-
-### Canopy typography · Understory → OpenMotion
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Leaf sweeps, depth, occlusion and reading holds.** **Replace: Two brand headlines.**
-
-[MOTION_DESIGN.md](library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](library/skills/motion-design-remix/previews/canopy-part-title.mp4)
-
-### Interface reveal · Product tour → AI editing story
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Tilted canvas, depth hierarchy and continuous camera.** **Replace: Hero headline, document and community copy.**
-
-[MOTION_DESIGN.md](library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
-
-### Dimensional code · loadConfig() → cutVideo()
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Extruded slab, syntax colors and the camera move.** **Replace: Function, variables and displayed calls.**
-
-[MOTION_DESIGN.md](library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
-
-### Particle assembly · parse / optimize / emit → select / trim / render
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Seeded particle motion and assembly rhythm.** **Replace: Pipeline name and steps.**
-
-[MOTION_DESIGN.md](library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
-
-### Glass information cards · Device widgets → creator workspace
-
-<table>
-<tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a></td></tr>
-</table>
-
-**Keep: Glass treatment, card hierarchy, stagger and meters.** **Replace: Labels, units and feature story.**
-
-[MOTION_DESIGN.md](library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](library/skills/motion-design-remix/SKILL.md) · [Content preset](library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
-
-For a video-only reference, use the separate [recreation workflow](skills/motion-recreate/SKILL.md) to rebuild and compare the film. Fidelity is reviewed against the selected reference and your brief.
-
-</details>
-
-<a id="one-video-more-places-to-share"></a>
-<a id="publish-to-every-platform"></a>
-
-## 📤 Publish to every platform — Coming
-
-**Reverse any video. Make it your brand. Take it to your audience.** The publishing vision connects the whole journey: reference, branded creation, multimodal generation, editing, rendering and distribution. OpenMotion aims to carry the approved film into a coordinated release across your channels.
-
-**Coming:** connect publishing accounts, prepare platform versions and post copy, review the release, then publish or schedule from one place. “Every platform” expresses the product direction; supported destinations will be announced as connectors are implemented and verified.
-
-### Make your platform versions today
-
-Turn the approved film into a set of videos for your channels. The editable project lets you change the hook, duration, layout and closing message while retaining the brand and motion you chose.
-
-> “Use the approved film to make a 9:16 short, a 16:9 product launch and a square feed version. Recompose the type and UI for each frame, keep our brand and reveal, and let me review each cut.”
-
-| Version to request | What to adapt |
-| --- | --- |
-| **Portrait short** — for destinations such as Reels, Shorts, TikTok or Xiaohongshu | Hook, large readable type, framing and the placement of captions |
-| **Landscape film** — for a product page, launch or YouTube video | UI detail, wider compositions and time to explain |
-| **Square feed cut** — for a social campaign | A compact composition, headline and clear closing message |
-
-These are creative briefs, not built-in export presets. The agent must adapt the composition and each output needs review against the destination's current requirements.
-
-**Available today:** author the versions, export MP4s and publish them yourself or upload them to your scheduler. Publishing is a separate handoff today; account connections and scheduling inside OpenMotion are planned.
-
-### Connected publishing — Coming
-
-| Planned publishing step | Intended experience |
-| --- | --- |
-| **Connect your channels** | Choose the accounts and destinations for your brand |
-| **Prepare the release** | Create suitable versions, covers, captions and post copy for each destination |
-| **Review and publish** | Approve the finished versions, then publish or schedule the campaign |
-| **Learn from the result** | Link performance to the exact published cut and use it to inform the next video |
-
-```text
-TODAY
-Reverse → brand → generate → edit → render → MP4 exports
-                                                ↓
-                             Manual upload / external scheduler
-
-COMING · PUBLISH TO EVERY PLATFORM
-Approved versions → connected publishing → schedule → performance feedback
-          ↑                                                    |
-          +────────────── refine the next video ────────────────+
-```
-
-**One creative workflow, from inspiration to distribution.** Reference reconstruction, multimodal generation, editing and rendering form today's creation stack. Native publishing, scheduling, automatic reframing and analytics ingestion are **Coming**. [Current capability boundaries](docs/product/architecture.md) · [Publishing and feedback direction](docs/product/studio-vision.md)
-
-<a id="resources-to-start-from"></a>
-
-## 🧩 890+ resources. Find a direction and make it yours.
-
-**A full-stack creator needs a library to work from.** Browse reference films, motion moments, code examples, blocks and components, then combine them with community Skills, editable templates and Motion Design MD, including its brand context.
-
-The current discovery catalog contains **891 entries**: **42 full-video references**, **393 motion moments**, **210 blocks**, **238 components** and **8 examples**. These include viewing references and code resources; the ready-to-open Studio projects are listed separately below. [Browse the resource index](docs/collections/README.md)
-
-**Build on reusable creative resources:** Skills teach the method, templates provide a starting project, components express reusable motion, and Motion Design MD unifies brand identity with the visual and motion language. Start with the **five core production Skills**, **three native Studio templates**, the **Presenter Tech package**, **six editable motion studies** and **three presenter-story recipes**, then contribute what you learn.
-
-| Library collection | Start here |
-| --- | --- |
-| **Skills** | [Brandkit, Motion Design Remix and Presenter Story](library/skills/) |
-| **Templates** | [Three native starting projects](library/templates/README.md) and the [Presenter Tech package](library/templates/presenter-tech/README.md) |
-| **Motion components** | [Titles, interface reveals and other reusable elements](library/components/README.md) |
-| **Motion Design MD** | [Motion rules and visual direction](library/design-systems/), with [identity, facts and approved assets](library/brandkits/) in its Brand Kit section |
-
-### Open an editable starting point
-
-| [Product Promo · 20s](template-library/product-promo/) | [NYT Graph · 15s](template-library/nyt-graph/) | [Decision Tree · 10s](template-library/decision-tree/) |
-| --- | --- | --- |
-| ![Product Promo preview](template-library/product-promo/poster.jpg) | ![NYT Graph preview](template-library/nyt-graph/poster.jpg) | ![Decision Tree preview](template-library/decision-tree/poster.jpg) |
-| Your headline, product and end card | Your figures, units and comparison | Your question, branches and answer |
-
-### 🎬 Footage, generated characters and code
-
-A strong video can mix production methods. These external case studies are useful references for deciding what to film, what to generate and what to express in code.
-
-<table>
 <tr>
 <td width="50%" valign="top" align="center">
 <a href="docs/readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-unboxing.jpg"><img src="docs/readme/brand-showcase/rea-unboxing.gif" width="250" alt="Live-action product unboxing reference"></picture></a><br>
@@ -799,149 +203,344 @@ Combine a character-led hook with UI motion and screen footage.<br>
 </tr>
 </table>
 
-[Explore the full creation stack](#full-video-creation-stack)
+<a id="see-the-motion-survive-a-new-brand"></a>
 
-<a id="motion-gallery"></a>
+### Viral video recreation
 
-### See the work in the catalog
+Keep the timing of a reference clip and change what happens on screen.
 
-**18 animated picks. Find a style, then make it yours.** Explore launch films, kinetic type, glass and light, spatial motion and generative visuals. Click an animation for the full video; find the same title in Studio’s library to hand it to your agent.
-
-**The resources live here.** Full reference films, before/after videos, GIFs, template source, browser scripts and fonts used by this page and its example guides have local entries. [Resource inventory and reuse](docs/readme/RESOURCES.md).
-
-**A library to learn from, adapt and contribute to.** The current catalog contains **894 resources: 3 bundled editable templates and 891 external references and registry items**, with original authors and sources where available.
-
-<table>
-<tr><th colspan="3" align="left">📱 Product & interface</th></tr>
+<table width="100%">
 <tr>
-<td width="33%" valign="top">
-<a href="docs/readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="docs/readme/gallery/app-showcase.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
-<strong>App Showcase</strong><br>
-<sub>Component · <a href="library/components/showcase/README.md">View component</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="docs/readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="docs/readme/gallery/firecrawl.gif" width="300" alt="Animated catalog preview: Firecrawl Free Keyless"></picture></a><br>
-<strong>Firecrawl Free Keyless</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-firecrawl-reference.mp4">@ericciarla</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="docs/readme/gallery/ui-3d-reveal.gif" width="300" alt="Animated catalog preview: 3D UI Reveal"></picture></a><br>
-<strong>3D UI Reveal</strong><br>
-<sub>Component · <a href="library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">View component</a></sub>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-openai"><a href="examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/motion-studies/comparison.jpg"><img src="examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · Wireframe → edit timeline"></picture></a></div><br>
+<strong>OpenAI · Wireframe → edit timeline</strong><br>
+Five colored clips collapse into an edit point. The cut and wordmark resolve on the original beat.<br>
+<sub><a href="examples/motion-studies/comparison.mp4">Full size</a> · <a href="examples/motion-studies/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">Original 00:26.50–00:31.50</a> · <a href="examples/motion-studies/signoff.html">HTML</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">🚀 Brand & launch films</th></tr>
 <tr>
-<td width="33%" valign="top">
-<a href="docs/readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
-<strong>Pond: a new Linux OS</strong><br>
-<sub>Reference · <a href="docs/readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="docs/readme/gallery/kimi-k3.gif" width="300" alt="Animated catalog preview: Kimi K3 teaser"></picture></a><br>
-<strong>Kimi K3 teaser</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-kimi-k3-reference.mp4">@Kimi_Moonshot</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="docs/readme/gallery/elevenlabs-reception.gif" width="300" alt="Animated catalog preview: Reception by ElevenLabs"></picture></a><br>
-<strong>Reception by ElevenLabs</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4">@ElevenLabs</a></sub>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-deepseek"><a href="examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/deepseek/comparison.jpg"><img src="examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · Terminal → film slate"></picture></a></div><br>
+<strong>DeepSeek Harness · Terminal → film slate</strong><br>
+The cursor types on a film slate. A warm flash carries the last keystroke into the end card.<br>
+<sub><a href="examples/brand-studies/deepseek/comparison.mp4">Full size</a> · <a href="examples/brand-studies/deepseek/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">Original 01:31.50–01:36.50</a> · <a href="examples/brand-studies/deepseek/index.html">HTML</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">✍️ Kinetic typography</th></tr>
+<tr><th colspan="2" align="left">Editable studies · original and adaptation from the same project</th></tr>
 <tr>
-<td width="33%" valign="top">
-<a href="docs/readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="docs/readme/gallery/glass-shard-title.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
-<strong>Glass Shard Title</strong><br>
-<sub>Component · <a href="library/components/showcase/README.md">View component</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Wireframe portal · BREAKTHROUGH → OPENMOTION</strong><br>
+Keep: Portal timing, dimensional lettering and camera push. Replace: Title, subtitle and the 3D phrase.<br>
+<sub><a href="library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/wireframe-portal-title.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
 </td>
-<td width="33%" valign="top">
-<a href="library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="docs/readme/gallery/canopy-title.gif" width="300" alt="Animated catalog preview: Canopy Part Title"></picture></a><br>
-<strong>Canopy Part Title</strong><br>
-<sub>Component · <a href="library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">View component</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="docs/readme/gallery/wireframe-title.gif" width="300" alt="Animated catalog preview: Wireframe Portal Title"></picture></a><br>
-<strong>Wireframe Portal Title</strong><br>
-<sub>Component · <a href="library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">View component</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Canopy typography · Understory → OpenMotion</strong><br>
+Keep: Leaf sweeps, depth, occlusion and reading holds. Replace: Two brand headlines.<br>
+<sub><a href="library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/canopy-part-title.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">💎 Light, glass & 3D worlds</th></tr>
 <tr>
-<td width="33%" valign="top">
-<a href="docs/readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="docs/readme/gallery/iskra-light.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
-<strong>Iskra Light</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Interface reveal · Product tour → AI editing story</strong><br>
+Keep: Tilted canvas, depth hierarchy and continuous camera. Replace: Hero headline, document and community copy.<br>
+<sub><a href="library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/ui-3d-reveal.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
 </td>
-<td width="33%" valign="top">
-<a href="library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="docs/readme/gallery/liquid-glass-widgets.gif" width="300" alt="Animated catalog preview: Liquid Glass Widgets"></picture></a><br>
-<strong>Liquid Glass Widgets</strong><br>
-<sub>Component · <a href="library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">View component</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="docs/readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
-<strong>Cyera brand video</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Dimensional code · loadConfig() → cutVideo()</strong><br>
+Keep: Extruded slab, syntax colors and the camera move. Replace: Function, variables and displayed calls.<br>
+<sub><a href="library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/code-3d-extrude.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">🧭 Depth & camera motion</th></tr>
 <tr>
-<td width="33%" valign="top">
-<a href="library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="docs/readme/gallery/code-3d.gif" width="300" alt="Animated catalog preview: Code 3D Extrude"></picture></a><br>
-<strong>Code 3D Extrude</strong><br>
-<sub>Component · <a href="library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">View component</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Particle assembly · parse / optimize / emit → select / trim / render</strong><br>
+Keep: Seeded particle motion and assembly rhythm. Replace: Pipeline name and steps.<br>
+<sub><a href="library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/code-particle-assemble.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
 </td>
-<td width="33%" valign="top">
-<a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="docs/readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
-<strong>Glyph: GPU typography for the web</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="docs/readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="docs/readme/gallery/flight-map.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
-<strong>NYC Paris Flight</strong><br>
-<sub>Component · <a href="library/components/showcase/README.md">View component</a></sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">✨ Generative visuals</th></tr>
-<tr>
-<td width="33%" valign="top">
-<a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="docs/readme/gallery/aurora.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
-<strong>Aurora</strong><br>
-<sub>Component · <a href="library/components/showcase/README.md">View component</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="docs/readme/gallery/linear-loops.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
-<strong>Linear Loops</strong><br>
-<sub>Reference · <a href="docs/readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="docs/readme/gallery/code-particles.gif" width="300" alt="Animated catalog preview: Code Particle Assemble"></picture></a><br>
-<strong>Code Particle Assemble</strong><br>
-<sub>Component · <a href="library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">View component</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a><br>
+<strong>Glass information cards · Device widgets → creator workspace</strong><br>
+Keep: Glass treatment, card hierarchy, stagger and meters. Replace: Labels, units and feature story.<br>
+<sub><a href="library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/liquid-glass-widgets.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
 </td>
 </tr>
 </table>
 
-Animated excerpts from the catalog’s original videos, preserving their imagery and normal playback speed. These show external references and components, not additional bundled templates. [Sources and excerpt records](docs/readme/ASSETS.md#catalog-preview-grid)
+### Explainers & tutorials
 
-| Explore | What you get |
+Guide the viewer through a task with a close-up, a highlight and a clear next step.
+
+<table width="100%">
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-claude"><a href="examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/anthropic/comparison.jpg"><img src="examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · Settings → color palette"></picture></a></div><br>
+<strong>Claude · Settings → color palette</strong><br>
+The remake uses the same switch and drawn circle to reveal a color palette.<br>
+<sub><a href="examples/brand-studies/anthropic/comparison.mp4">Full size</a> · <a href="examples/brand-studies/anthropic/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">Original 00:00–00:05</a> · <a href="examples/brand-studies/anthropic/index.html">HTML</a></sub>
+</td>
+</tr>
+</table>
+
+### Data stories & charts
+
+Animate a comparison so the viewer can follow how the values change.
+
+<table width="100%">
+<tr>
+<td colspan="1" width="100%" align="center" valign="top">
+<a href="docs/readme/media/M1128-clip.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/data-story.jpg">
+<img src="docs/readme/examples/data-story.gif" width="480" alt="External creative reference: Animated comparison bars · @Vintage_god">
+</picture></a><br>
+<strong>Animated comparison bars</strong><br>
+The values stay visible as the bars change height.<br>
+<sub><a href="https://x.com/Vintage_god/status/2106817967967056165">Original</a></sub>
+</td>
+</tr>
+</table>
+
+### Music & art visuals
+
+Give a track a visual motif that returns on the beat.
+
+<table width="100%">
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-kimi"><a href="examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="examples/brand-studies/kimi/comparison.jpg"><img src="examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · Magnetic field → vinyl grooves"></picture></a></div><br>
+<strong>Kimi · Magnetic field → vinyl grooves</strong><br>
+The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
+<sub><a href="examples/brand-studies/kimi/comparison.mp4">Full size</a> · <a href="examples/brand-studies/kimi/comparison.mobile.mp4">Portrait MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">Original 00:30.75–00:35.75</a> · <a href="examples/brand-studies/kimi/index.html">HTML</a></sub>
+</td>
+</tr>
+</table>
+
+[Get agent prompts for all seven use cases](docs/examples.md)
+
+<a id="features"></a>
+<a id="why-openmotion"></a>
+
+## ✨ Why OpenMotion
+
+<a id="video-is-code"></a>
+
+### 1. The first full-stack agentic video generator
+
+**Code video with HTML.** OpenMotion uses HTML, CSS and JavaScript to describe scenes, typography, layout, transitions and timing. Recorded footage, generated clips, images, music and voice-over become media inside the composition. The same project opens in Studio and renders to MP4.
+
+![Your local agent, optional media-model accounts and creative resources feed a workflow of understanding the reference, coding scenes, generating missing media, editing and rendering MP4 with reusable source.](docs/readme/diagrams/creation-stack.svg)
+
+**Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#agent-setup) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
+
+#### What you can change in Studio
+
+| In the Studio | What you can do today |
 | --- | --- |
-| [Motion resource index](docs/collections/README.md) | Selected films, source attribution and editable starting points. |
-| [Bundled templates](template-library/) | Product Promo, NYT Graph and Decision Tree, each with native source and a preview. |
-| Studio's template library | Search, previews and instructions for adapting a template or recreating a reference. |
-| [Motion MD](docs/motion-md.md) | A way to share the creative decisions behind a style. |
+| **Story and timeline** | Import and arrange media; have the agent trim, reorder and revise against a script or confirmed timecodes |
+| **Motion and captions** | Author animated type, transitions, callouts, charts and captions around your content |
+| **Media and sound** | Import your material and generate images, video, music and TTS voice-over through the built-in model integrations |
+| **Image revision** | Generate candidates with a reference-capable image model and adopt a replacement while preserving timing and animation |
+| **Preview and versions** | Review in Studio, edit by hand or with your agent, and return to the project for the next revision |
+| **Export and source** | Render a fixed version to MP4 and retain the HTML, CSS, JavaScript and media |
 
-A reference is something to study; an editable template includes source you can change. The gallery's **one-click recreate** action copies a reference and instructions for your agent. Bundled templates open directly; external footage needs analysis and reconstruction. [Catalog coverage and provenance](docs/template-catalog.md)
+> “Keep the reveal we approved. Replace the middle scene with this screen recording, tighten the opening using these timecodes, and hold our final CTA for two more seconds.”
+
+[Projects and versions](docs/project-workspace.md)
+
+<a id="share-an-editable-remake"></a>
+
+#### From a reference clip to an editable remake
+
+1. **Break down the reference.** Pick a sequence. Record its shot order, transitions and sound cues in Motion.md, and mark what you want to replace.
+2. **Rebuild the shots.** Your agent writes HTML scenes with your copy, footage and brand assets, then arranges them on an editable timeline in Studio.
+3. **Compare the cuts.** Watch the same moment in the original and the remake. Adjust the timing, movement and sound, then play the sequence through.
+4. **Export and share.** Render the MP4 and keep the HTML source and media. To share a project others can adapt, include its Motion.md, a preview and assets you can redistribute. [Project contribution checklist](library/ENTRY_TEMPLATE.md)
+
+<a id="bring-your-agent-and-keys"></a>
+
+### 2. Free and open source. Use your local agent and bring your own keys.
+
+<a id="choose-agent"></a>
+
+**Choose your agent.** WorkBuddy, Codex, Claude Code and DeepSeek Harness have installation instructions. Other buttons open the shared MCP and CLI setup.
+
+<p>
+  <a href="#workbuddy-setup"><img src="docs/readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy" /></a>
+  <a href="#agent-setup"><img src="docs/readme/agents/codex-badge.svg" width="144" height="34" alt="Codex CLI" /></a>
+  <a href="#claude-setup"><img src="docs/readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/opencode-badge.svg" width="144" height="34" alt="OpenCode" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/hermes-badge.svg" width="144" height="34" alt="Hermes" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/antigravity-badge.svg" width="144" height="34" alt="Antigravity" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/gemini-badge.svg" width="144" height="34" alt="Gemini CLI" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/grok-build-badge.svg" width="144" height="34" alt="Grok Build" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/kimi-badge.svg" width="144" height="34" alt="Kimi CLI" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/cursor-badge.svg" width="144" height="34" alt="Cursor Agent" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/qwen-badge.svg" width="144" height="34" alt="Qwen Code" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/qoder-badge.svg" width="144" height="34" alt="Qoder CLI" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/copilot-badge.svg" width="144" height="34" alt="GitHub Copilot" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/pi-badge.svg" width="144" height="34" alt="Pi" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/kiro-badge.svg" width="144" height="34" alt="Kiro CLI" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/kilo-badge.svg" width="144" height="34" alt="Kilo" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/vibe-badge.svg" width="144" height="34" alt="Mistral Vibe" /></a>
+  <a href="#deepseek-setup"><img src="docs/readme/agents/deepseek-badge.svg" width="144" height="34" alt="DeepSeek TUI / Harness" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/reasonix-badge.svg" width="144" height="34" alt="Reasonix" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/aider-badge.svg" width="144" height="34" alt="Aider" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/devin-badge.svg" width="144" height="34" alt="Devin" /></a>
+  <a href="#local-agent-connection"><img src="docs/readme/agents/trae-badge.svg" width="144" height="34" alt="Trae CLI" /></a>
+</p>
+
+| Bring your own… | Make it work for your video |
+| --- | --- |
+| **🤖 Agent — BYOA** | Connect your existing local agent through Skills and MCP, with CLI access where supported. Keep your preferred client, account and working context. |
+| **🔑 Keys — BYOK** | Connect supported media-provider API keys in Model Settings. Choose models for images, video, music and TTS; supported local media integrations can use your existing agent login. |
+| **🎨 Brand and material** | Add your logo, fonts, screenshots, camera footage, script and music. Keep identity and approved assets in the Brand Kit section of Motion.md. |
+| **🧩 Starting resources** | Browse references, motion components, templates and community Skills. Pick a direction, give the source or reference to your agent, and make it yours. |
+
+**The OpenMotion creation pipeline is open source: Skills, project tools, model integrations, Studio and rendering.** Run it locally, inspect the implementation and extend the parts you need. OpenMotion charges no software subscription or per-render fee for this local workflow. You can also work with your own footage, images and audio without invoking media-generation APIs.
+
+Provider credentials stay in your workspace, separate from the video project. Your agent and media providers bill any subscriptions or usage to your own accounts. [Agent setup and compatibility](docs/agent-adapters.md)
+
+<a id="make-your-motion-language-reusable"></a> <a id="motion-design-community"></a>
+
+### 3. 100+ Motion.md brand film studies + 890+ creative resources
+
+OpenMotion introduces **Motion.md**. The first open-source collection breaks down brand films shot by shot, recording timing, transitions and the assets you can replace. In the [Stripe example](examples/brand-studies/stripe/MOTION.md), the flip stays on the same beat while a payment card becomes a film frame.
+
+The Brand Kit section holds the logo, palette, type, voice and approved product facts. Story, motion, sound and review notes describe what should survive a change of brand. Give the file to your agent alongside your assets when starting a new cut.
+
+![Brand and motion rules guide the agent. A Skill supplies the adaptation method, and the project holds the editable source and assets.](docs/readme/diagrams/creative-context.svg)
+
+<a id="resources-to-start-from"></a>
+
+#### Resources for your Motion.md
+
+Explore **42 full-length reference films and 393 motion clips** for shot timing and transitions. When you’re ready to build a scene in HTML, the Studio library also includes **210 blocks, 238 components and 8 code examples**.
+
+| What you want to do | Where to start |
+| --- | --- |
+| Give your agent a production workflow | [Five core Skills](docs/skills.md) cover direction, recreation, template adaptation, template creation and editing through export. [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) includes six editable studies. [Presenter Story](library/skills/presenter-story/SKILL.md) has three recipes for speech-led videos. |
+| Reuse a title, transition or interface reveal | [Motion components](library/components/README.md) include source and timing notes. Try the [title reveal](library/components/title-reveal/README.md) with your own copy and entrance timing. |
+| Give your agent brand and motion rules | Use the [Brandkit Skill](library/skills/brandkit/SKILL.md) to collect [logos, voice and product facts](library/brandkits/openmotion/BRANDKIT.md) for the Brand Kit section of Motion.md. [Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) shows how to write a reusable visual and motion style. |
+
+##### Editable Studio templates
+
+OpenMotion also ships three editable projects. In Studio, choose one under **Templates → Ready to edit** to create your own copy.
+
+| [Product Promo · 20s](template-library/product-promo/) | [NYT Graph · 15s](template-library/nyt-graph/) | [Decision Tree · 10s](template-library/decision-tree/) |
+| --- | --- | --- |
+| [![Product Promo template preview](template-library/product-promo/poster.jpg)](template-library/product-promo/) | [![NYT Graph template preview](template-library/nyt-graph/poster.jpg)](template-library/nyt-graph/) | [![Decision Tree template preview](template-library/decision-tree/poster.jpg)](template-library/decision-tree/) |
+| Swap in your product screenshots, headline and end card. | Replace the figures, units and annotations. | Change the question, branches and reveal order. |
+
+For a presenter-led video with screen demonstrations, the [Presenter Tech template package](library/templates/presenter-tech/README.md) includes its own local runner.
+
+<a id="motion-gallery"></a>
+
+##### Reference films and motion components
+
+Select a preview to watch the clip. Entries marked “View component” also link to their HTML source.
+
+<table>
+<tr><th colspan="3" align="left">Reusable motion components</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="docs/readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="docs/readme/gallery/app-showcase.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
+<strong>App Showcase</strong><br>
+<sub>Component · <a href="library/components/showcase/app-showcase/index.html">View component</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="docs/readme/gallery/glass-shard-title.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
+<strong>Glass Shard Title</strong><br>
+<sub>Component · <a href="library/components/showcase/glass-shard-title/index.html">View component</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="docs/readme/gallery/flight-map.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
+<strong>NYC Paris Flight</strong><br>
+<sub>Component · <a href="library/components/showcase/nyc-paris-flight/index.html">View component</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">Product and brand films</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="docs/readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
+<strong>Pond: a new Linux OS</strong><br>
+<sub>Reference · @bflycomputer</sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="docs/readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
+<strong>Cyera brand video</strong><br>
+<sub>Reference · Cyera</sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="docs/readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
+<strong>Glyph: GPU typography for the web</strong><br>
+<sub>Reference · @pmndrs</sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">Light and loops</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="docs/readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="docs/readme/gallery/iskra-light.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
+<strong>Iskra Light</strong><br>
+<sub>Reference · @world_is_web</sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="docs/readme/gallery/linear-loops.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
+<strong>Linear Loops</strong><br>
+<sub>Reference · @linear</sub>
+</td>
+<td width="33%" valign="top">
+<a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="docs/readme/gallery/aurora.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
+<strong>Aurora</strong><br>
+<sub>Component · <a href="library/components/showcase/aurora/index.html">View component</a></sub>
+</td>
+</tr>
+</table>
+
+[Browse all 18 library picks](docs/collections/README.md#catalog-picks) · [Media sources and reuse](docs/readme/RESOURCES.md)
+
+[Six editable studies](docs/motion-design-examples.md) · [Motion.md format](docs/motion-md.md)
+
+<a id="full-video-creation-stack"></a>
+
+<a id="model-wall"></a>
+
+### 4. Multimodal generation: images, video, music and speech
+
+**BYOK makes your multimodal accounts part of the video workflow.** Add your supported provider keys in **Model Settings**, choose your models, and generate images, video, music and speech through the Studio's **Model Gateway**. Preview candidates and adopt the results into the same project your agent and Studio edit. The supported local image path can reuse your existing agent login.
+
+<p><img src="docs/readme/models/codex.svg" width="133" alt="Codex Image">
+<img src="docs/readme/models/nano-banana.svg" width="133" alt="Nano Banana 2">
+<img src="docs/readme/models/flux.svg" width="133" alt="FLUX Schnell">
+<img src="docs/readme/models/seedance.svg" width="133" alt="Seedance 2.0">
+<img src="docs/readme/models/wan.svg" width="133" alt="Wan 2.2">
+<img src="docs/readme/models/suno.svg" width="133" alt="Suno v4">
+<img src="docs/readme/models/kokoro.svg" width="133" alt="Kokoro"></p>
+
+| Make what the video needs | Built-in model catalog examples | Bring it into your film |
+| --- | --- | --- |
+| **🖼️ Images** | Codex Image; Nano Banana 2 via Atlas Cloud; FLUX Schnell via fal.ai | Brand visuals, scene artwork and supporting images; reference-based editing through the supported Codex image path |
+| **🎬 Video** | Seedance 2.0 via Atlas Cloud; Wan 2.2 via fal.ai | Generated shots and B-roll to combine with your footage and motion |
+| **🎵 Music** | Suno v4 via Atlas Cloud | A soundtrack built around your mood and creative brief |
+| **🎙️ TTS / voice-over** | Kokoro via fal.ai | Narration from your approved script, placed alongside the visuals and music |
+
+> “Use the Brand Kit section of our Motion.md and our approved script. Generate artwork for the opening, a video insert, background music and TTS narration. Add the selected results to the recreated project, align the sound and visuals, then show me the full cut.”
+
+[Model catalog](gateway/catalog.ts) · [Provider setup and endpoints](docs/model-gateway.md)
+
+<a id="technical-guide"></a>
+<a id="setup-and-technical-documentation"></a>
+
+## 🛠️ Setup and technical documentation
 
 <a id="quick-start"></a>
 
-## 🚀 Get started
+### Quick start
 
-### Run OpenMotion
-
-**Start with the free local creation stack.** Connect your own agent, open a bundled template or use your footage, and render with the local application. Add supported media-provider keys in Model Settings when you want to generate new assets.
-
-Use Git and **Node.js 26.11.1**, pinned in [CI](.github/workflows/ci.yml), with npm. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
+Use Git, npm and **Node.js 26.11.1**. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
 
 ```sh
 git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
@@ -953,7 +552,9 @@ npm start
 
 Open **http://localhost:4173**. Choose **Templates → Ready to edit**, open **Product Promo**, and use **Connect Agent** for your preferred client. Keep projects and credentials outside the checkout; `MOTION_DATA_DIR` selects the workspace.
 
-### Bring it into your agent
+<a id="agent-setup"></a>
+
+#### Bring it into your agent
 
 For Codex with plugin support, run from the checkout:
 
@@ -961,7 +562,19 @@ For Codex with plugin support, run from the checkout:
 bash scripts/install-motion.command
 ```
 
-For DeepSeek Harness, Claude Code and other clients, follow the [agent adapters guide](docs/agent-adapters.md) or the [local MCP + Skills installer](docs/npm-installation.md). The npm package is not publicly published; that guide uses locally built artifacts. [Windows test packages](docs/test-packages.md)
+<a id="workbuddy-setup"></a>
+
+**WorkBuddy** · Import the OpenMotion connector in WorkBuddy or add its `mcp.json` as a custom MCP server. Ask WorkBuddy to list the available video templates. [WorkBuddy setup](docs/agent-adapters.md#workbuddy)
+
+<a id="claude-setup"></a>
+
+**Claude Code** · Select `--host claude` in the local installer, then run `/mcp` in Claude Code to check the connection. [Local installation guide](docs/npm-installation.md)
+
+<a id="deepseek-setup"></a>
+
+**DeepSeek** · Work with the editable HTML project from the terminal in DeepSeek TUI. For DeepSeek Harness, connect the OpenMotion MCP tools with the Cordis configuration. [DeepSeek Harness setup](docs/agent-adapters.md#deepseek-harness)
+
+The installer uses locally built packages. [Windows test packages](docs/test-packages.md)
 
 Try the included template first:
 
@@ -973,8 +586,7 @@ Then make it yours:
 
 To start from a video instead, supply your reference and use the [recreation brief](#reverse-engineer-a-video). If your host cannot open Studio beside the conversation, use the returned local project link.
 
-<details>
-<summary>Skills, MCP and CLI</summary>
+##### Skills, MCP and CLI
 
 From the checkout, discover and install the five core workflows with the [Skills CLI](https://github.com/vercel-labs/skills):
 
@@ -993,7 +605,11 @@ This copies instructions; it does not install the runtime or register MCP. Keep 
 | [motion-video-to-template](skills/motion-video-to-template/SKILL.md) | Producing a portable reusable template |
 | [motion-production](skills/motion-production/SKILL.md) | Scoped edits, preview, checks, troubleshooting and export |
 
-Use **Connect Agent** for workspace-specific configuration. Manual local stdio clients can use absolute paths:
+<a id="local-agent-connection"></a>
+
+**Connect a local agent** · Open **Connect Agent** in Studio to copy the launch command for your workspace. Use the configuration below in clients with local stdio MCP support. In a shell-based agent, open the project directory and use the [local engine CLI](skills/motion-production/references/native.md) to preview and render the HTML scenes.
+
+<a id="manual-mcp"></a>
 
 ```json
 {
@@ -1009,22 +625,73 @@ Use **Connect Agent** for workspace-specific configuration. Manual local stdio c
 
 The **eleven public MCP tools** cover template discovery and details, project creation and reading, editing, preview, media import, export, version restoration and cancellation. Shared workflow and engine guides are available through MCP resources. [Tool contract](docs/mcp-phase1-tools.md)
 
-Studio and agents share a cached template catalog: `motion_list_templates` returns a local JSONL index, `motion_get_template` retrieves details, and `motion_create_project` creates an editable copy. The template environment is saved with the package; local development uses DEV and release packages use production by default. [Template catalog](docs/template-catalog.md)
+Find a template with `motion_list_templates`, inspect it with `motion_get_template`, then create an editable copy with `motion_create_project`. [Template catalog](docs/template-catalog.md)
 
 Use `npm start` for the app and `npm run mcp` for stdio. Shell-capable agents can inspect and render with the pinned engine CLI returned by the runtime; managed edits retain project revision checks. [Native authoring](skills/motion-production/references/native.md)
 
-</details>
+<a id="your-agent-your-studio"></a>
 
-<a id="open-projects-reusable-knowledge"></a>
-<a id="developer-architecture"></a>
+<a id="reverse-engineer-a-video"></a>
 
-## 🛠️ Built for creators. Open for developers.
+### From a reference to an editable project
 
-**HTML is the editable video source; MP4 is the rendered delivery.** OpenMotion combines a TypeScript application, a React Studio, agent workflows, multimodal generation adapters and a browser-based composition and rendering engine. The project is the shared artifact between the human editor and the agent.
+| Study the reference | Rebuild for your story |
+| --- | --- |
+| **Hook and narrative** — what appears first, what follows, what earns the reveal | Your promise, product facts and call to action |
+| **Shot structure** — framing, camera movement, layers and visual hierarchy | Your UI, footage, logo and supporting images |
+| **Motion and pacing** — entrances, transitions, easing and reading holds | The same motion intent, adjusted to your content |
+| **Typography and identity** — type hierarchy, color and composition | Your fonts, palette and words, recorded in Motion.md’s Brand Kit section |
+| **Sound and rhythm** — speech timing, music cues and emphasis | Your voice, supplied music and sound direction |
 
-### How the modules work together
+Supply the clip and timecodes if your agent cannot open the social link. Start from the reference with the [recreation workflow](skills/motion-recreate/SKILL.md), or use the [template workflow](skills/motion-template-to-video/SKILL.md) when you already have editable source.
 
-![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and a fixed project snapshot is rendered and verified.](docs/readme/diagrams/runtime-architecture-painterly.png)
+```text
+Use OpenMotion to reverse-engineer the attached reference for our brand.
+
+Study: the opening hook, shot order, typography, transitions and sound cues.
+Keep: the product reveal and camera rhythm in the selected segment.
+Replace: the logo, UI, claims, copy and end card with our supplied materials.
+Generate: missing images, video, background music and TTS narration using
+our configured models, following our brand and approved script.
+
+Build an editable project. Open it in Studio and compare matching moments
+with the reference. Explain any remaining differences. After review,
+export an MP4 and retain the source for the next edit.
+```
+
+<a id="keep-editing-after-the-remake"></a>
+
+#### Start in your agent
+
+![OpenMotion embedded viewer for Codex, showing the editable Product Promo project, preview, layers and timeline.](docs/readme/product-tour/codex-embedded.png)
+
+#### Start in Studio
+
+Browse references, open a template or bring in your recordings. Choose **Connect Agent**, follow the workspace-specific instructions and give the agent your brief. Review its edits on the same timeline and make hands-on adjustments whenever you want.
+
+![Standalone OpenMotion Studio with sessions, the saved request and an editable video project.](docs/readme/product-tour/standalone-studio.png)
+
+#### Connect your agent to a template
+
+![Connect Agent dialog with workspace-specific connection instructions and a choice of local clients.](docs/readme/product-tour/connect-agent.png)
+
+![Product Promo template preview with an expanded, template-specific instruction to copy into the agent.](docs/readme/product-tour/template-to-agent.png)
+
+**Preview → copy the instruction → paste into your agent with your brand assets.** A bundled template opens as an editable copy; an external reference starts a reconstruction task. [Full product tour](docs/product-tour.md)
+
+Both entry paths use the same local application and project. The agent runs in its own client; Studio stores the brief and editable work. [How the connection works](docs/session-architecture.md)
+
+<a id="open-projects-reusable-knowledge"></a> <a id="developer-architecture"></a>
+
+### System architecture
+
+Editing the timeline in Studio and asking your agent to change a shot both update the same HTML project. The local TypeScript service manages media and revisions. A browser-based rendering engine exports the selected version to MP4.
+
+#### How the modules work together
+
+![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and the renderer exports and checks the selected project version.](docs/readme/diagrams/runtime-architecture-painterly.png)
+
+Edits made through the project tools include a revision check so an outdated request cannot overwrite newer work. Generated media enters the project when you select it. Each export uses the version saved when the job starts. The exporter checks the file specifications, and you can play the cut to review the picture, sound and timing.
 
 <details>
 <summary>Read the full architecture and roadmap as text</summary>
@@ -1035,7 +702,7 @@ Reference video + footage + script + brand assets
                             |
                             v
 COMMUNITY KNOWLEDGE
-MOTION_DESIGN.md (includes Brand Kit) + Skills + templates + components
+Motion.md (includes Brand Kit) + Skills + templates + components
                             |
               +-------------+------------------+
               v                                v
@@ -1066,7 +733,7 @@ Generated candidates -> preview / select -> adopt into the project
                                                  |
                                                  v
 RENDER AND VERIFY
-Fixed project snapshot -> HTML render engine + Chromium -> FFmpeg / FFprobe
+Selected project version -> HTML render engine + Chromium -> FFmpeg / FFprobe
                                                  |
                                                  v
 DELIVERY TODAY
@@ -1088,7 +755,7 @@ BYOA keeps the agent in your existing client; BYOK connects your supported model
 
 The diagrams follow the cover’s painterly visual language. [Artwork, source reference and prompts](docs/readme/diagrams/ARTWORK.md)
 
-### Stack and source map
+#### Stack and source map
 
 | Layer | Technology | Start reading |
 | --- | --- | --- |
@@ -1098,39 +765,49 @@ The diagrams follow the cover’s painterly visual language. [Artwork, source re
 | **Multimodal generation** | Codex media adapter, Atlas Cloud predictions, fal.ai queue integration and persisted generation jobs | [Gateway service](gateway/service.ts) · [Provider adapters](gateway/providers.ts) · [Model catalog](gateway/catalog.ts) |
 | **Composition and motion** | HTML/CSS/JS, GSAP, a pinned composition engine and native timeline/history | [Engine integration](hyperframes.ts) · [Template source](template-library/) · [Version adapter](phase1-versions.ts) |
 | **Rendering and media** | Chromium, Puppeteer Core, FFmpeg and FFprobe | [Render service](server.ts) · [Export verifier](scripts/verify-export.ts) · [Native runtime lock](scripts/runtime-lock.json) |
-| **Creative knowledge** | Markdown, source packages, presets and comparison evidence | [Motion MD](docs/motion-md.md) · [Core Skills](skills/) · [Community Library](library/README.md) |
+| **Creative knowledge** | Markdown, source packages, presets and comparison evidence | [Motion.md](docs/motion-md.md) · [Core Skills](skills/) · [Community Library](library/README.md) |
 | **Validation and packaging** | Node test runner, Vitest, Studio checks, npm lockfiles and explicit distribution lists | [Tests](tests/) · [Studio tests](studio/tests/) · [CI](.github/workflows/ci.yml) · [Distribution](scripts/distribution.ts) |
 | **Publishing and learning — Coming** | Platform adapters, scheduling, version-linked feedback and retrieval; implementation still to be designed | [Studio vision](docs/product/studio-vision.md) |
 
 Dependency pins live in [package.json](package.json), [package-lock.json](package-lock.json) and the [runtime lock](scripts/runtime-lock.json). Models and third-party libraries retain their own terms; the application is Apache-2.0.
 
-### Choose a layer and build with us
+#### Choose a layer and build with us
 
 | If you work on… | A useful contribution | Entry point |
 | --- | --- | --- |
 | **Frontend and interaction** | Improve timeline editing, media generation controls, accessibility or preview behavior | [Studio](studio/src/) · [Media generator](studio/src/motion/MediaGenerator.tsx) |
 | **AI and model infrastructure** | Add a provider adapter or model preset using the shared job and media flow | [Gateway design](docs/product/media-generation-design.md) · [Provider adapters](gateway/providers.ts) |
 | **Agents and developer tools** | Improve a host adapter, Skill, resource guide or project-tool workflow | [Agent adapters](docs/agent-adapters.md) · [MCP contract](docs/mcp-phase1-tools.md) |
-| **Motion and creative coding** | Share a component, native template or Motion MD package with an actual remix | [Components](library/components/README.md) · [Entry checklist](library/ENTRY_TEMPLATE.md) |
+| **Motion and creative coding** | Share a component, native template or Motion.md package with an actual remix | [Components](library/components/README.md) · [Entry checklist](library/ENTRY_TEMPLATE.md) |
 | **Video and rendering** | Improve export reliability, media handling or reproducible validation | [Engine notes](docs/hyperframes.md) · [Export verifier](scripts/verify-export.ts) |
 | **Social publishing** | Help design the Coming connector layer: account access, release review, scheduling and version mapping | [Publishing direction](docs/product/studio-vision.md) · [Discuss a proposal](https://github.com/nexu-io/html-anything/issues) |
 
 Start with the [local setup](#quick-start), choose one layer, and follow [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md). Keep user projects and credentials outside the checkout and preserve dependency pins and upstream licenses.
 
-**The architectural commitments:** people and agents share one project; revision checks protect changes from stale state; generated candidates enter the film through explicit adoption; exports use fixed snapshots. Technical checks, visual quality, sound and actual playback have separate evidence.
-
 [Product architecture](docs/product/architecture.md) · [Studio development](studio/README.md) · [Model Gateway](docs/model-gateway.md) · [Contribution guide](CONTRIBUTING.md)
+
+<a id="one-video-more-places-to-share"></a> <a id="publish-to-every-platform"></a>
 
 <a id="roadmap"></a>
 
-## 🗺️ From one remake to a continuing creative practice
+### Platform versions and publishing
 
-The broader Studio vision remains: discover, create, collaborate, publish and learn. **Super Motion Video Agent** is the concept for carrying that work between briefs, tools and revisions. Today, your connected agent uses the local Skills, MCP tools and Studio; persistent autonomous orchestration is planned.
+Make a separate composition for each aspect ratio, review the cut in Studio and export an MP4 for manual upload.
+
+| Version to request | What to adapt |
+| --- | --- |
+| **Portrait short** — for destinations such as Reels, Shorts, TikTok or Xiaohongshu | Hook, large readable type, framing and the placement of captions |
+| **Landscape film** — for a product page, launch or YouTube video | UI detail, wider compositions and time to explain |
+| **Square feed cut** — for a social campaign | A compact composition, headline and clear closing message |
+
+Channel connections, scheduled publishing and performance feedback are planned.
+
+#### Studio roadmap and collaboration concept
 
 | Area | Available today | Direction |
 | --- | --- | --- |
 | **Recreate and edit** | Agent-led reference reconstruction, template adaptation, editable projects and MP4 export | More evaluated recreation cases and repeatable comparisons |
-| **Brand and knowledge** | Motion MD with its Brand Kit section, Skills and source packages | Personal/team memory, RAG and evaluated Skill improvements |
+| **Brand and knowledge** | Motion.md with its Brand Kit section, Skills and source packages | Personal/team memory, RAG and evaluated Skill improvements |
 | **People and agents** | Handoffs on the same local project | Timeline comments, shared review and collaborative editing |
 | **Multimodal creation** | Built-in image, video, music and TTS integrations; generation, candidate selection and timeline adoption | Integrated search across footage, images, voices, music and Avatar services |
 | **Publish to every platform — Coming** | Authored aspect-ratio variants and MP4 handoff | Platform connectors, release review, scheduling, automatic reframing and social presets |
@@ -1144,30 +821,31 @@ The broader Studio vision remains: discover, create, collaborate, publish and le
 
 ## 🤝 Share the video. Share how you made it.
 
-**Bring one reference, one remake, or one reusable motion language.** Build the [Motion Design MD community](#motion-design-community) with us: share the decisions and source that help the next creator make something of their own.
+Share a remake, a reusable template or a Motion.md that captures the rhythm of a film. Include the reference and your editable project so another creator can try the same cut with their own footage.
 
-| Contribute | Include |
+| Contribution | What to include |
 | --- | --- |
 | **A recreation** | Reference and creator, your brief, editable project, preview, comparison and remaining differences |
 | **A template or component** | Working source, editable choices, assets, preview and attribution |
 | **A Skill or design system** | The method, keep/change rules and an example of what you actually ran |
-| **Brand Kit content for Motion MD** | Identity, accurate product facts and approved assets within the creative specification |
+| **Brand Kit content for Motion.md** | Identity, accurate product facts and approved assets within the creative specification |
 | **Agent support or editor improvements** | A focused change with reproducible validation |
 
-[Library entry checklist](library/ENTRY_TEMPLATE.md) · [Contributing](CONTRIBUTING.md) · [Repository guidelines](AGENTS.md) · [All contributors](https://github.com/nexu-io/html-anything/graphs/contributors)
+[Library entry checklist](library/ENTRY_TEMPLATE.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/nexu-io/html-anything/issues) · [Contributors](https://github.com/nexu-io/html-anything/graphs/contributors) · [Media kit](docs/media-kit.md)
 
-[Open an issue](https://github.com/nexu-io/html-anything/issues) · [Join the community on Discord](https://discord.gg/mHAjSMV6gz) · [Documentation](docs/README.md)
+The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
 
-For creators and media: show the reference, the supplied brand, the changes in Studio and the actual result. Keep rendered demos separate from product concepts and external references. [Media facts and assets](docs/media-kit.md)
+[Motion showcase](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
-[![Star OpenMotion and follow the next creation.](docs/readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
+[**Star OpenMotion on GitHub**](https://github.com/nexu-io/html-anything)
 
-**Star OpenMotion. Find a video worth studying. Make the next one yours.**
+[![Stay tuned with us · Star OpenMotion](docs/readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
 
 <a id="acknowledgements"></a>
 
-## 🙏 Acknowledgements
+### Acknowledgements
 
+Original brand-film excerpts are credited in the comparisons. [Agent and model marks](docs/readme/models/README.md)
 
 OpenMotion is licensed under [Apache-2.0](LICENSE). Third-party code, templates, media and fonts retain their own licenses and attribution.
 
@@ -1184,6 +862,6 @@ OpenMotion is licensed under [Apache-2.0](LICENSE). Third-party code, templates,
 | [OpusClip](https://www.opus.pro/calendar) | Product reference for distribution and [external scheduling](https://www.opus.pro/tools/instagram-reels-scheduler); no built-in connector |
 | [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | Animation and media dependencies with versions retained in [package.json](package.json) and the [runtime lock](scripts/runtime-lock.json) |
 
-[Asset sources](docs/readme/ASSETS.md) · [Additional showcase sources](docs/readme/brand-showcase/README.md) · [Cover artwork and prompt](docs/readme/reverse-engineering-cover.md) · [Font notices](web/design-system/fonts/NOTICES.txt) · [Studio license](studio/LICENSE)
+[Asset sources](docs/readme/ASSETS.md) · [Additional showcase sources](docs/readme/brand-showcase/README.md) · [Font notices](web/design-system/fonts/NOTICES.txt) · [Studio license](studio/LICENSE)
 
 The former HTML Anything application is preserved on the [`legacy` branch](https://github.com/nexu-io/html-anything/tree/legacy). See the [repository migration guide](docs/repository-migration.md) for the active branch and distribution boundaries.

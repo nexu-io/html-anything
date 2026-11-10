@@ -25,29 +25,29 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 - 交给 Agent 的复刻指令保持简短；详细配置、模板 ID 和流程由参数化指引链接承载。
 - 导出成功需要真实产物与验证证据；技术检查与画面、声音、播放器检查分别记录。
 
-## 对外主张与 Motion MD 方向
+## 对外主张与 Motion.md 方向
 
-产品对外名称统一为 **OpenMotion**（O 和 M 大写），README 使用 OpenMotion 字标；现有仓库路径、`motion` 插件标识与环境变量保留兼容。公开介绍以“参考 → 理解与重建 → 品牌改编 → 多模态生成 → 剪辑与渲染”为主线，强调 HTML 视频源码、BYOA / BYOK、真人故事、可编辑作品和 Motion MD 社区。英文、简体中文、日语、韩语 README 共用案例、媒体与稳定章节锚点；README 语言与 Studio 界面语言分别维护；Studio 当前支持十一种界面语言。
+产品对外名称统一为 **OpenMotion**（O 和 M 大写），README 使用 OpenMotion 字标；现有仓库路径、`motion` 插件标识与环境变量保留兼容。公开介绍以“参考 → 理解与重建 → 品牌改编 → 多模态生成 → 剪辑与渲染”为主线，强调 HTML 视频源码、BYOA / BYOK、真人故事、可编辑作品和 Motion.md 社区。英文、简体中文、日语、韩语 README 共用案例、媒体与稳定章节锚点；README 语言与 Studio 界面语言分别维护；Studio 当前支持十一种界面语言。
 
 “任何视频”是工作流的创作范围表述，不保证任意输入的获取、解析、还原度或传播结果。参考获取与媒体分析依赖宿主工具和用户材料，生成效果依赖模型配置，成片需按参考、简报与实际视听结果审阅。README 的发布部分明确区分当前 MP4 手动交接与规划中的平台连接、排期和反馈。外部产品来源和比较统一放在 README 最后的 Acknowledgements，技术依赖与具体出处仍保留在专题和源文件中。
 
 AI 剪辑的当前路径是：用户提供素材、脚本或确认的时间码，外部 Agent 根据选段、删改、排序、字幕、声画与节奏要求修改真实工程，用户在 Studio 预览并继续调整；自动语音理解仍取决于宿主工具与输入材料。对外介绍以 OpenMotion 本身与创作者的完整工作流为主，Hyperframes 作为技术来源在文末致谢，具体依赖继续在技术专题中准确记录。独立应用是首要产品身份，外部 Agent 通过 Skills、MCP 和固定版本 CLI 操作同一份本地工程；应用可连接多种客户端，当前不内置聊天 Agent 运行器。核心原则是人和 Agent 共用作品、经验沉淀为规范和模板、源文件可检查与可延续。仓库已采用 [Apache-2.0](../../LICENSE)，保留上游组件与字体声明；这取代此前“统一许可证待确认”的过时状态，依据见 2026-11-06 的公开记录。
 
-公开介绍以 **Input → Process → Output** 组织：本地视频/录音/图片、在线参考、文本和 SRT/VTT → Agent 按脚本或已确认时间码剪辑、设计动效、通过 Studio 采用声音与媒体 → 固定版本 MP4 与可编辑工程。在线获取和语音分析依赖宿主能力或用户提供的素材/字幕；原生文本存储不等于字幕自动导入器。通过修改工程画幅可制作竖屏、横屏、方形版本；当前没有各社交平台的专用导出预设或直接发布，公开导出容器仍为 MP4。
+README 正文先展示场景与复刻效果，再介绍核心特性，最后说明安装与技术架构。创作流程仍是 **Input → Process → Output**：本地视频/录音/图片、在线参考、文本和 SRT/VTT → Agent 按脚本或已确认时间码剪辑、设计动效、通过 Studio 采用声音与媒体 → 固定版本 MP4 与可编辑工程。在线获取和语音分析依赖宿主能力或用户提供的素材/字幕；原生文本存储不等于字幕自动导入器。通过修改工程画幅可制作竖屏、横屏、方形版本；当前没有各社交平台的专用导出预设或直接发布，公开导出容器仍为 MP4。
 
 [媒体事实包](../media-kit.md) 是面向报道、演示与内容 Agent 的可引用入口，区分可验证能力、产品方向和待验证主张。现有资料不能证明“99% 还原”或“覆盖 Claude Motion 几乎全部核心模板”；资源数量与来源仍以目录快照及逐条出处为准。
 
-[Motion Design MD（简称 Motion MD）](../motion-md.md) 是 **v0.1 格式提案**，约定文件名 `MOTION_DESIGN.md`，保留现有 `MOTION.md` 示例；它描述来源、品牌、叙事、节奏、运动、素材、可修改项与验收信息。当前仅供用户显式交给 Agent 作为创作上下文；没有自动发现、解析、校验或注册接口。它不改变 HTML/CSS/JS 原生工程，也不替换现有 motion-video-to-template 的单份 `TEMPLATE.md` 交付约定。
+[Motion.md](../motion-md.md) 是 **v0.1 格式提案**，约定文件名 `MOTION_DESIGN.md`，保留现有 `MOTION.md` 示例；它描述来源、品牌、叙事、节奏、运动、素材、可修改项与验收信息。当前仅供用户显式交给 Agent 作为创作上下文；没有自动发现、解析、校验或注册接口。它不改变 HTML/CSS/JS 原生工程，也不替换现有 motion-video-to-template 的单份 `TEMPLATE.md` 交付约定。
 
-Motion MD 是统一的创作设计规范，**Brand Kit 属于它内部的品牌章节**：身份、产品事实、Logo、配色、字体、语气和已确认素材与叙事、动效、声音、审阅规则共同组织。已有 `BRANDKIT.md` 可以作为该章节引用的材料，不要求另建并列的品牌规范。此处明确的是文档和创作上下文的层级，不新增自动解析器或迁移已有工程文件。
+Motion.md 是统一的创作设计规范，**Brand Kit 属于它内部的品牌章节**：身份、产品事实、Logo、配色、字体、语气和已确认素材与叙事、动效、声音、审阅规则共同组织。已有 `BRANDKIT.md` 可以作为该章节引用的材料，不要求另建并列的品牌规范。此处明确的是文档和创作上下文的层级，不新增自动解析器或迁移已有工程文件。
 
 ### Motion Design Skill 包：从参考到可复用资产
 
 Motion Design 的资源单位进一步明确为“创作规则 + Agent 方法 + 可编辑实现 + 替换输入 + 对比证据”。`MOTION_DESIGN.md` 记录保持项和运动意图，`SKILL.md` 记录使用方法，源码执行动画，preset 记录本次内容；真实 reference/remix 对照记录结果。参考片缺少源码时仍先走 `motion-recreate`；已有源码复用走模板路径；用户明确需要可复用模板时继续使用 `motion-video-to-template` 和其 `TEMPLATE.md` 交付，不新增核心路由。
 
-[`motion-design-remix`](../../library/skills/motion-design-remix/SKILL.md) 是可选 Library Skill，包含六个已经收录为 registry 资源的上游动效源码 profile、各自的 Motion MD、可执行内容替换脚本与实际并排渲染示例。它固定上游源码版本、校验替换次数、拒绝覆盖已有输出，不解释 Markdown、不自动分析视频、不接入模板注册表；对托管工程的修改仍遵守现有 revision 契约。六个 profile 不改变三个内置模板和五个核心制作 Skill 的数量。
+[`motion-design-remix`](../../library/skills/motion-design-remix/SKILL.md) 是可选 Library Skill，包含六个已经收录为 registry 资源的上游动效源码 profile、各自的 Motion.md、可执行内容替换脚本与实际并排渲染示例。它固定上游源码版本、校验替换次数、拒绝覆盖已有输出，不解释 Markdown、不自动分析视频、不接入模板注册表；对托管工程的修改仍遵守现有 revision 契约。六个 profile 不改变三个内置模板和五个核心制作 Skill 的数量。
 
-[`presenter-story`](../../library/skills/presenter-story/SKILL.md) 补充知识口播、工作流演示和产品讲解三份 Motion MD 设计配方，采用“真人语音主线 + 源片段到输出时间的映射 + 字幕 / 画中画 / 动效叠层”的构造。它没有人物素材或可执行模板，展示的三组真人前后对比为目录已有的上游演示，不是新 Skill 的验证结果。另展示九条现有真人参考与 Presenter Tech 模板演示；目录与 Studio 原生模板计数不变。
+[`presenter-story`](../../library/skills/presenter-story/SKILL.md) 补充知识口播、工作流演示和产品讲解三份 Motion.md 设计配方，采用“真人语音主线 + 源片段到输出时间的映射 + 字幕 / 画中画 / 动效叠层”的构造。它没有人物素材或可执行模板，展示的三组真人前后对比为目录已有的上游演示，不是新 Skill 的验证结果。README 还展示九条真人视频参考。
 
 [实例说明](../motion-design-examples.zh-CN.md) 区分已有源码的改编与任意原片的重建；帧采样渲染证据不替代 Studio 导出、声音、目标机器或用户视觉验收。包内保留源码许可和字体声明。工作副本将 CDN / 字体替换为已收录的本地资源，原始源码与哈希保留；浏览器、Node、FFmpeg 等执行工具仍另行安装，不声称任意跨引擎可执行。借鉴 [MotionGit](https://motiongit.com/spec) 的内容、运行时、分发分层，并不构成 `.motion` 格式兼容。社区可以通过普通文件与 Git 分享、Fork、改进和评审；自动 marketplace 入库、数据回流学习与 RAG 仍为方向。
 
@@ -55,13 +55,13 @@ Motion Design 的资源单位进一步明确为“创作规则 + Agent 方法 + 
 
 ### Presenter Tech 本地模板包
 
-[`library/templates/presenter-tech/`](../../library/templates/presenter-tech/README.md) 收入可再分发的固定版本源码包，提供本地 `.motion` ZIP、参数 / 运行器 / 字体 / 声音配方、Motion MD、制作指南与来源记录。公开展示名为 Presenter Tech，原始 Kinetic Tech 身份、MIT 版权与第三方条款保留在包内及 NOTICE；不主张上游模板为 OpenMotion 原创。
+[`library/templates/presenter-tech/`](../../library/templates/presenter-tech/README.md) 收入可再分发的固定版本源码包，提供本地 `.motion` ZIP、参数 / 运行器 / 字体 / 声音配方、Motion.md、制作指南与来源记录。公开展示名为 Presenter Tech，原始 Kinetic Tech 身份、MIT 版权与第三方条款保留在包内及 NOTICE；不主张上游模板为 OpenMotion 原创。
 
 此条目使用包内 `adapter.py` 的 plan → prepare → preview → render 路线，依赖安装和输出均在 checkout 外的独立目录。它不是直接写入 Hyperframes 原生时间轴的模板，也没有新增 Studio `.motion` 解析、MCP Tool 或核心 Skill。Library 多一个本地模板包，Studio 原生模板仍为三个、目录计数仍为 894。源码完整性、本地 runner 验证与用户真人成片验收分开记录，见 [verification.json](../../library/templates/presenter-tech/verification.json)。
 
 ### README 与示例资源闭环
 
-[本地资源契约](../readme/RESOURCES.md)覆盖四种语言 README 及其场景、对比、精选集合页中的完整视频、GIF、封面和贡献者头像，以及六个 Motion Design 工程、四个展示组件、三个 Studio 原生模板和 Presenter Tech 包需要的素材、浏览器脚本与字体。页面展示媒体使用仓库文件；外部官方活动可通过明确标记的链接跳转观看。品牌案例的来源与校验值另见 [展示清单](../readme/brand-showcase/manifest.json)，架构图的封面同款视觉、创作流程与 Motion MD 内部品牌层级见[图示及生成记录](../readme/diagrams/ARTWORK.md)；文字架构继续保留可检索的模块职责与边界。校验脚本检查本地引用和哈希，捕获器阻断非本机网络请求。所有分发格式继续使用正向清单。894 条发现目录仍是索引，不能把精选资源闭环写成整个目录已镜像；工具初次安装、云模型与原作者网站也不属于离线资源承诺。
+[本地资源契约](../readme/RESOURCES.md)覆盖四种语言 README 及其场景、对比、精选集合页中的完整视频、GIF、封面和贡献者头像，以及六个 Motion Design 工程、四个展示组件、三个 Studio 原生模板和 Presenter Tech 包需要的素材、浏览器脚本与字体。页面展示媒体使用仓库文件；外部官方活动可通过明确标记的链接跳转观看。品牌案例的来源与校验值另见 [展示清单](../readme/brand-showcase/manifest.json)，架构图的封面同款视觉、创作流程与 Motion.md 内部品牌层级见[图示及生成记录](../readme/diagrams/ARTWORK.md)；文字架构继续保留可检索的模块职责与边界。校验脚本检查本地引用和哈希，捕获器阻断非本机网络请求。所有分发格式继续使用正向清单。894 条发现目录仍是索引，不能把精选资源闭环写成整个目录已镜像；工具初次安装、云模型与原作者网站也不属于离线资源承诺。
 
 ### 创作资源与贡献架构
 
@@ -69,7 +69,7 @@ Motion Design 的资源单位进一步明确为“创作规则 + Agent 方法 + 
 
 资源库由人或 Agent 明确选择文件使用；尚无自动导入、自动注册、远端 marketplace 或新增 MCP API。这些 Library 资源不改变核心制作 Skills、workflow registry 和十一 Tool 契约。Library 内的 Brandkit、Presenter Story 与 Motion Design Remix Skill 可分别选择使用，服务品牌整理、真人叙事设计或具体源码改编，不增加核心制作路线。
 
-`MOTION_DESIGN.md` 统一维护创作设计，其中 Brand Kit 章节维护身份、事实与资产，其他章节维护叙事、视觉、节奏、声音与审阅规则；组件描述局部可复用行为；模板包含实现；Skill 描述方法。资源目录仍可独立存放可复用的品牌资料，供 Motion MD 引用，不代表两套并列的创作规范。贡献按[条目清单](../../library/ENTRY_TEMPLATE.md)记录来源、许可、编辑项、状态与实际验证，新增分发文件仍逐项进入正向清单。参考片、配方和经过验证的可编辑作品分开标注。
+`MOTION_DESIGN.md` 统一维护创作设计，其中 Brand Kit 章节维护身份、事实与资产，其他章节维护叙事、视觉、节奏、声音与审阅规则；组件描述局部可复用行为；模板包含实现；Skill 描述方法。资源目录仍可独立存放可复用的品牌资料，供 Motion.md 引用，不代表两套并列的创作规范。贡献按[条目清单](../../library/ENTRY_TEMPLATE.md)记录来源、许可、编辑项、状态与实际验证，新增分发文件仍逐项进入正向清单。参考片、配方和经过验证的可编辑作品分开标注。
 
 README 参考 OpenDesign 的产品导览和 HTML Anything 的贡献、来源表格与文字架构图。对外视觉采用统一蓝绿水墨肌理、奶油白留白与深色字体，详见 [Brandkit](../../library/brandkits/openmotion/BRANDKIT.md)；真实产品截图和参考作品保留原貌。该美术方向不改应用 UI tokens、工程格式、模型行为或价格。
 

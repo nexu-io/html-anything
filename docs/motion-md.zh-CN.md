@@ -1,16 +1,16 @@
 [English](motion-md.md) · **简体中文** · [OpenMotion](README.zh-CN.md)
 
-# Motion Design MD
+# Motion.md
 
 **复用动效，讲你的故事，把创作方法变成社区资产。**
 
 一支好的 reference video，包含的不只是配色，还有开场钩子、镜头顺序、运动路径、阅读节奏，以及声音推动叙事的时刻。**`MOTION_DESIGN.md` 把这些创作决定记录下来，让 Agent 保留动效语言，换成用户自己的主题、内容和品牌。** 再把方法、可编辑源码、替换输入和真实成片一起打包，就形成可以复用、传播和继续改进的 Motion Design Skill 包。
 
-**Motion Design MD 是完整的创作设计规范，Brand Kit 是它内部的品牌章节**，与叙事、动效、声音和审阅规则一起构成同一份设计上下文。Logo、配色、字体、语气、产品事实和已确认素材都归入该章节；已有品牌文件可以作为引用材料，不要求另写一份与 Motion MD 并列的 `BRANDKIT.md`。
+**Motion.md 是完整的创作设计规范，Brand Kit 是它内部的品牌章节**，与叙事、动效、声音和审阅规则一起构成同一份设计上下文。Logo、配色、字体、语气、产品事实和已确认素材都归入该章节；已有品牌文件可以作为引用材料，不要求另写一份与 Motion.md 并列的 `BRANDKIT.md`。
 
 [六组 reference / remix 动态对比](motion-design-examples.zh-CN.md) · [可运行的 Skill 包](../library/skills/motion-design-remix/SKILL.md) · [Ink & Water 设计体系](../library/design-systems/ink-water/MOTION_DESIGN.md) · [Brandkit](../library/brandkits/openmotion/BRANDKIT.md)
 
-**当前状态：** Motion Design MD 是 v0.1 写作提案，由用户显式交给 Agent 阅读；尚无自动导入、解析、注册或跨引擎执行保证。示例 Skill 的脚本只复制六种指定源码并执行已记录的内容替换，不会解释 Markdown，也不会自动重建任意视频。
+**当前状态：** Motion.md 是 v0.1 写作提案，由用户显式交给 Agent 阅读；尚无自动导入、解析、注册或跨引擎执行保证。示例 Skill 的脚本只复制六种指定源码并执行已记录的内容替换，不会解释 Markdown，也不会自动重建任意视频。
 
 ## 1. 从一支参考视频，到可复用的 Motion Design Skill 包
 
@@ -133,7 +133,7 @@ Version: 0.1.0
 保存源码/preset 哈希和真实产物，记录剩余问题。
 ```
 
-[完整 portal profile](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) 适合复用局部动效。需要整支影片的叙事简报时，可参考既有的[产品发布 Motion MD](examples/product-launch.MOTION.zh-CN.md)。
+[完整 portal profile](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) 适合复用局部动效。需要整支影片的叙事简报时，可参考既有的[产品发布 Motion.md](examples/product-launch.MOTION.zh-CN.md)。
 
 ## 5. 复刻怎样沉淀为社区资产
 
@@ -174,7 +174,7 @@ Motion Design 也要描述人物、语言与辅助画面之间的关系。[Prese
 
 **源素材时间与输出时间不同。** 例如，把源片 12–18 秒保留到输出 0–6 秒，源片第 15 秒的事件就映射到输出第 3 秒。这只是算术示例，不是测得的字幕。逐片段保存映射，按实际语音证据安排字幕和叠层，剪切后重建映射；只看抽帧无法得到逐词时间码。
 
-| 层次 | Motion MD 记录什么 |
+| 层次 | Motion.md 记录什么 |
 | --- | --- |
 | 叙事 | 想表达的意思、保留的语义、开场、证据与结尾。 |
 | 人物 | 素材身份、构图、面部与手势安全区、何时回到人物。 |
@@ -190,7 +190,7 @@ Motion Design 也要描述人物、语言与辅助画面之间的关系。[Prese
 | 参考 | 借鉴的思路 | 在 OpenMotion 中的应用 |
 | --- | --- | --- |
 | [MotionGit 规范](https://motiongit.com/spec) / [motion-spec](https://github.com/motiontemplates/motion-spec) | 区分内容、运行时和分发，明确素材、参数、依赖与许可 | 把创作规则、工程源码、内容输入、证据分别组织；不声称已支持 `.motion` 导入导出。 |
-| [MotionGit 模板合集](https://github.com/motiontemplates/all) | Demo、素材要求和真正可用的工程入口一起呈现 | 每个对比都能找到 Skill、Motion MD 和替换配置。 |
+| [MotionGit 模板合集](https://github.com/motiontemplates/all) | Demo、素材要求和真正可用的工程入口一起呈现 | 每个对比都能找到 Skill、Motion.md 和替换配置。 |
 | [MotionGit Git](https://motiongit.com/git) | 用可编辑源码和版本协作延长视频的生命周期 | Fork 风格、改 preset、比较渲染结果，再评审改进。 |
 | [Hypit](https://github.com/hypit-ai/hypit#examples) | 同一种创意结构，展示多种内容变体 | 每个案例都说明保持项与可替换内容。 |
 | [rea-video](https://github.com/JuneYaooo/rea-video#remakes) | 解释逐镜头制作方式，并同步展示原作与改编 | 明确区分参考重建证据与已有源码改编证据。 |
@@ -202,7 +202,7 @@ MotionGit 的内容层和分发层分别版本化。`MOTION_DESIGN.md` 是可读
 | 状态 | 需要什么证据 |
 | --- | --- |
 | Reference | 原片及可追溯来源。 |
-| Described style | Motion MD、观察/推断标记和替换意图。 |
+| Described style | Motion.md、观察/推断标记和替换意图。 |
 | Editable example | 真实源码、素材要求和已知限制。 |
 | Rendered remix | 实质变化的输入、实际输出及源码/preset/渲染身份。 |
 | Reviewed recreation | 与原作的对比、明确差距以及人工接受的范围。 |

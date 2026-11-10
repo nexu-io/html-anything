@@ -1,16 +1,16 @@
 **English** · [简体中文](motion-md.zh-CN.md) · [OpenMotion](../README.md)
 
-# Motion Design MD
+# Motion.md
 
 **Clone the motion. Tell your story. Share the creative system.**
 
 A great reference carries more than a color palette: a hook, a sequence of reveals, a camera move, a reading rhythm, and moments where sound makes an idea land. **`MOTION_DESIGN.md` records those decisions so an Agent can keep the motion language while making a video about something else.** A reusable Skill package adds the method, editable implementation, replacement inputs and evidence that make those decisions practical.
 
-**Motion Design MD is the complete creative specification. Brand Kit is a section inside it**, alongside story, motion, sound and review rules. Record the logo, palette, typography, voice, product facts and approved assets in that section. Existing brand files can supply linked material; a separate `BRANDKIT.md` is not required as a second creative specification.
+**Motion.md is the complete creative specification. Brand Kit is a section inside it**, alongside story, motion, sound and review rules. Record the logo, palette, typography, voice, product facts and approved assets in that section. Existing brand files can supply linked material; a separate `BRANDKIT.md` is not required as a second creative specification.
 
 [Six reference/remix comparisons](motion-design-examples.md) · [Runnable Skill package](../library/skills/motion-design-remix/SKILL.md) · [Ink & Water system](../library/design-systems/ink-water/MOTION_DESIGN.md) · [Brandkit](../library/brandkits/openmotion/BRANDKIT.md)
 
-**Status:** Motion Design MD is a v0.1 authoring proposal. Agents read the file as explicit context; there is no automatic Motion MD importer, parser, registry or cross-engine execution guarantee. The example Skill includes a source-copy helper for six specific compositions. That helper applies recorded replacements; it does not interpret Markdown or reconstruct arbitrary videos.
+**Status:** Motion.md is a v0.1 authoring proposal. Agents read the file as explicit context; there is no automatic Motion.md importer, parser, registry or cross-engine execution guarantee. The example Skill includes a source-copy helper for six specific compositions. That helper applies recorded replacements; it does not interpret Markdown or reconstruct arbitrary videos.
 
 ## 1. The reusable unit: a motion design Skill package
 
@@ -133,7 +133,7 @@ Check the whole phrase, camera continuity and text collisions.
 Save source/preset hashes and actual output; record remaining gaps.
 ```
 
-[Read the complete portal profile](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md). For a story-level brief rather than a small motion component, see the existing [product-launch Motion MD](examples/product-launch.MOTION.md).
+[Read the complete portal profile](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md). For a story-level brief rather than a small motion component, see the existing [product-launch Motion.md](examples/product-launch.MOTION.md).
 
 ## 5. From reference video to a community asset
 
@@ -174,7 +174,7 @@ Selected source ranges ── edit map ──► output timeline
 
 **Source time and output time are different.** For example, retaining source seconds 12–18 at output seconds 0–6 moves an event at source second 15 to output second 3. This arithmetic example is not a measured transcript. Keep the mapping per clip, derive caption and overlay cues from actual speech evidence, and rebuild the mapping after a cut. Frame inspection alone cannot establish word timestamps.
 
-| Layer | What Motion MD records |
+| Layer | What Motion.md records |
 | --- | --- |
 | Story | Intended message, retained meaning, hook, evidence and ending. |
 | Presenter | Footage identity, framing, face/gesture safe area and when to return to the person. |
@@ -189,8 +189,8 @@ Replace the recording and supporting evidence along with the topic. Preserve the
 
 | Reference | Useful idea | OpenMotion application |
 | --- | --- | --- |
-| [MotionGit format](https://motiongit.com/spec) / [motion-spec](https://github.com/motiontemplates/motion-spec) | Separate template content, runtime and distribution; declare materials, parameters, dependencies and licenses. | Keep Motion MD, executable source, content inputs and evidence distinct. No `.motion` import/export compatibility is claimed. |
-| [MotionGit template collection](https://github.com/motiontemplates/all) | Put a complete demo beside material requirements and usable source/package entry points. | Link each comparison to its real Skill, Motion MD and replacement preset. |
+| [MotionGit format](https://motiongit.com/spec) / [motion-spec](https://github.com/motiontemplates/motion-spec) | Separate template content, runtime and distribution; declare materials, parameters, dependencies and licenses. | Keep Motion.md, executable source, content inputs and evidence distinct. No `.motion` import/export compatibility is claimed. |
+| [MotionGit template collection](https://github.com/motiontemplates/all) | Put a complete demo beside material requirements and usable source/package entry points. | Link each comparison to its real Skill, Motion.md and replacement preset. |
 | [MotionGit Git workflow](https://motiongit.com/git) | Let editable source and revisions carry a video beyond one edit. | Fork a style, change a preset, compare the render and review the improvement. |
 | [Hypit](https://github.com/hypit-ai/hypit#examples) | Demonstrate one creative structure through multiple content variants. | Explain invariants and editable slots alongside each example. |
 | [rea-video](https://github.com/JuneYaooo/rea-video#remakes) | Explain how shots are made and show synchronized original/remake comparisons. | Separate reconstruction evidence from source-template adaptation evidence. |
@@ -202,7 +202,7 @@ MotionGit's published content and distribution profiles are versioned separately
 | Label | Evidence required |
 | --- | --- |
 | Reference | Original video and traceable source. |
-| Described style | Motion MD with observation/inference labels and replacement intent. |
+| Described style | Motion.md with observation/inference labels and replacement intent. |
 | Editable example | Actual source and material requirements, with documented limits. |
 | Rendered remix | A materially changed input, actual output and recorded source/preset/render identity. |
 | Reviewed recreation | A reference comparison, explicit differences and the scope of human acceptance. |

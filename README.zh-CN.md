@@ -1,10 +1,39 @@
 [English](README.md) · **简体中文** · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
+<a id="openmotion"></a>
+
 # OpenMotion
 
-**逆向拆解任何视频，让你的本地 Agent 成为全栈视频创作者。** 自带 Agent 与 API Key，用 HTML/CSS/JavaScript 重建、生成、剪辑和渲染，交付 MP4 与可编辑工程。
+**Reverse engineering for any video**
 
-[阅读完整中文介绍](docs/README.zh-CN.md) · [开始使用](docs/README.zh-CN.md#quick-start) · [连接 Agent](docs/README.zh-CN.md#your-agent-your-studio) · [Motion Design MD](docs/README.zh-CN.md#motion-design-community)
+<p align="center">
+  <a href="docs/readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.zh-CN.jpg"><img src="docs/readme/brand-hero.zh-CN.jpg" width="100%" alt="Dan Martell 原片与 OpenMotion 复刻并排展示：Riya 出镜，荧光黄手写关键词叠在两行白色粗体字幕之间。下方是 Studio 字幕时间轴。"></picture></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>
+  <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
+  <a href="LICENSE"><img src="docs/readme/badges/license.svg" alt="Apache 2.0 许可证"></a>
+  <a href="https://github.com/nexu-io/open-design"><img src="docs/readme/badges/built-by-opendesign.svg" alt="Built by OpenDesign"></a>
+</p>
+
+<p align="center">
+  <a href="https://open-design.ai/motion/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="docs/readme/badges/website.zh-CN.svg" alt="OpenMotion 官网" /></a>
+  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="docs/readme/badges/opendesign-go.svg" alt="OpenDesign Go 模型订阅" /></a>
+  <a href="https://discord.gg/mHAjSMV6gz"><img src="docs/readme/badges/discord.svg" alt="加入 OpenDesign Discord" /></a>
+  <a href="https://x.com/OpenDesignHQ"><img src="docs/readme/badges/x-opendesignhq.svg" alt="OpenDesign 官方 X 账号 @OpenDesignHQ" /></a>
+  <a href="https://x.com/OpenDesignDevs"><img src="docs/readme/badges/x-opendesigndevs.svg" alt="OpenDesign 开发者 X 账号 @OpenDesignDevs" /></a>
+  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
+</p>
+
+OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或粘贴社交平台上的视频链接，就能**用自己的画面、Logo 和文案复刻原片**。
+
+- 🎬 **全栈视频复刻。** Agent 拆解参考片，用 HTML 重建镜头和转场，并生成缺少的素材。你可以在同一工程里用 Studio 调整剪辑节奏，再渲染导出 MP4。
+- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 开源免费。直接在[常用的本地 Agent](docs/README.zh-CN.md#agent-wall) 里复刻视频，每一层都能用自己的 API Key。
+- 🧩 OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。首批合集包含 **100 多份品牌宣传片 Motion.md**，另有 **890 多项创作资源**。
+- 🎛️ **图片、视频、音乐和语音。** 用 Nano Banana 2 生成图片、Seedance 2.0 补镜头、Suno v4 配乐、Kokoro 加旁白，再放进同一条时间轴。[查看 7 个内置模型](docs/README.zh-CN.md#model-wall)
+
+[完整中文 README](docs/README.zh-CN.md) · [22 个本地 Agent](docs/README.zh-CN.md#agent-wall) · [使用场景与复刻效果示例](docs/README.zh-CN.md#showcase) · [为什么选择 OpenMotion](docs/README.zh-CN.md#features) · [安装与技术文档](docs/README.zh-CN.md#technical-guide) · [社区与贡献](docs/README.zh-CN.md#community)
 
 ## 致谢 / Acknowledgements
 

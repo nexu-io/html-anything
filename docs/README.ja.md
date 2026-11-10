@@ -6,7 +6,7 @@
 あなたのローカルエージェントが <strong>フルスタックの動画クリエイターに。</strong><br/>
 <strong>BYOA — 自分のエージェントを。BYOK — 自分の API キーを。</strong><br/>
 HTML で動画を記述。生成、編集、レンダリングまで。オープンソースで無料。<br/>
-画像 · 動画 · 音楽 · TTS · 890 件以上のカタログリソース<br/>
+画像 · 動画 · 音楽 · TTS<br/>
 あなたのブランドの作品に。 <strong>あらゆるプラットフォームへ公開 — 計画中。</strong></p>
 
 <p align="center">
@@ -19,7 +19,7 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
   <a href="#publish-to-every-platform">📤 公開 · 計画中</a><br/>
   <a href="#full-video-creation-stack">🎛️ 動画制作の全工程</a> ·
   <a href="#your-agent-your-studio">Studio とエージェント</a> ·
-  <a href="#motion-design-community">Motion MD とコミュニティ</a> ·
+  <a href="#motion-design-community">Motion.md とコミュニティ</a> ·
   <a href="#what-can-you-make">作例</a> ·
   <a href="#resources-to-start-from">ライブラリ</a> ·
   <a href="#developer-architecture">アーキテクチャ</a> ·
@@ -27,13 +27,15 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
   <a href="../LICENSE">Apache 2.0</a>
 </p>
 
-![OpenMotion — あらゆる動画をリバースエンジニアリング。DeepSeek Harness、Codex、Claude Code で好きな動画をブランドの作品に。画像、動画、音楽、TTS。マルチプラットフォーム公開。](readme/cover-reverse-engineering-v2.png)
+<a href="../examples/brand-studies/stripe/comparison.mp4">
+<img src="readme/cover-reverse-engineering-v2.png" width="100%" alt="OpenMotion — あらゆる動画をリバースエンジニアリング。DeepSeek Harness、Codex、Claude Code で好きな動画をブランドの作品に。画像、動画、音楽、TTS。マルチプラットフォーム公開。">
+</a>
 
 **目を引く発表動画、心地よいテンポの製品紹介、複雑な話をわかりやすく伝えるクリエイター。** その参考動画を、ロゴ、画面、映像素材、原稿とともにエージェントへ。OpenMotion は参考を分析し、構成を編集可能なプロジェクトとして再構築して、あなたの物語にする手順を提供します。
 
 **話題の動画を再構築し、あなたのブランドの作品に。** ローカルエージェントを**フルスタックの動画クリエイター**にします。参考を分析し、**HTML、CSS、JavaScript** で表現し、対応する自分の API キーで不足素材を生成。同じ Studio で編集・レンダリングし、いつものエージェントとアカウントでソース、素材、完成動画を手元に残せます。
 
-**🔑 BYOA + BYOK。🧩 890 件以上のリソース。👐 オープンソースで無料。** 参考から MP4 までを制作ソフトが支えます。エージェントの契約や外部モデル/API の料金は各提供元によります。[エージェントとキーを持ち込む](#bring-your-agent-and-keys) · [ライブラリを見る](#resources-to-start-from)
+**🔑 BYOA + BYOK。👐 オープンソースで無料。** 参考から MP4 までを制作ソフトが支えます。エージェントの契約や外部モデル/API の料金は各提供元によります。[エージェントとキーを持ち込む](#bring-your-agent-and-keys) · [ライブラリを見る](#resources-to-start-from)
 
 **分析、制作、公開。** 構造を読み解き、内蔵のマルチモーダル連携で素材を補い、編集可能なタイムラインにまとめます。**マルチプラットフォーム公開は計画中**。完成動画を視聴者へ届ける工程に広げていきます。
 
@@ -118,14 +120,6 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
 
 **この方向で自分の動画を：** 自分の話し手、物語、製品で。導入、字幕のテンポ、画面の見せ方を参考に、素材に合わせた構成をエージェントに依頼します。[Presenter Story Skill](../library/skills/presenter-story/SKILL.md) · [参考作品のクレジット](readme/media/manifest.json)
 
-### 🎙️ 次の話し手主導の解説動画
-
-<a href="../library/templates/presenter-tech/README.md"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/motiongit-kinetic.jpg"><img src="readme/people/motiongit-kinetic.gif" width="640" alt="Presenter Tech：話し手の窓、図解、動く文字"></picture></a>
-
-**話し手の物語 × 金属的な文字 × アニメーション解説。** 録画、原稿、画面、字幕を用意してください。編集可能なソース、パラメーター、フォント、音のレシピ、ローカルランナーを Library に収録。制作ガイドに沿ってエージェントが調整できます。**1920 × 1080 · 60 fps · 横向き。**
-
-[テンプレートを入手](../library/templates/presenter-tech/presenter-tech.motion) · [制作ガイド](../library/templates/presenter-tech/TEMPLATE.md) · [MOTION_DESIGN.md](../library/templates/presenter-tech/MOTION_DESIGN.md)
-
 <a id="brand-film-gallery"></a>
 
 ## 🚀 自分も作りたかった発表動画を研究する
@@ -205,7 +199,7 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
 | --- | --- |
 | **🤖 エージェント — BYOA** | Skills と MCP、対応環境では CLI で接続。いつものクライアント、アカウント、作業文脈を使えます。 |
 | **🔑 キー — BYOK** | Model Settings に対応するメディア API キーを設定し、画像、動画、音楽、TTS のモデルを選択。対応するローカル連携ではエージェントの既存ログインを利用できます。 |
-| **🎨 ブランドと素材** | ロゴ、フォント、画面、撮影素材、台本、音楽を追加。Brandkit と Motion MD を再利用し、次の編集にも一貫性を保ちます。 |
+| **🎨 ブランドと素材** | ロゴ、フォント、画面、撮影素材、台本、音楽を追加。Brandkit と Motion.md を再利用し、次の編集にも一貫性を保ちます。 |
 | **🧩 制作の出発点** | 参考、モーション部品、テンプレート、コミュニティ Skills から方向を選び、ソースや参考をエージェントへ渡します。 |
 
 ### 一人のクリエイターが全工程を担う
@@ -237,7 +231,7 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
 | **音とリズム** — 発話のタイミング、音楽の合図、強調 | 自分の声、用意した音楽、音の演出 |
 
 1. **参考とブランドを用意。** 動画またはアクセス可能なリンク、対象区間、ロゴ、原稿、画面や録画を渡します。[Brandkit](../library/brandkits/openmotion/BRANDKIT.md) でブランドと製品の事実をまとめます。
-2. **何が効いているかを分析。** ショット、時間、動き、音、維持したい要素を特定し、Motion MD に記録します。
+2. **何が効いているかを分析。** ショット、時間、動き、音、維持したい要素を特定し、Motion.md に記録します。
 3. **コードで再構築。** 動画の参考には `motion-recreate`を使用。編集可能なソースがある場合はテンプレートの手順を使います。HTML/CSS/JS でシーン、動き、時間を記述し、映像・音声を素材として配置。自分の内容を使い、不足する画像、動画、音楽、TTS を内蔵連携で生成します。
 4. **比較して磨く。** 参考と再構築動画の同じ時点を確認。見せ方、読む時間、構図、音を見直し、同じ Studio プロジェクトで修正します。
 5. **視聴者に届ける準備。** MP4 を出力し、プロジェクトを残して、承認したブランドと動きのルールを次の動画へ。連携型のマルチプラットフォーム公開は**計画中**です。
@@ -283,7 +277,7 @@ OpenMotion で添付の参考動画を自社ブランド向けに再構築して
 
 | 工程 | OpenMotion がまとめるもの |
 | --- | --- |
-| **理解・演出** | 参考の再構築、制作 Skills、Brandkit、Motion MD、エージェントの分析ツール |
+| **理解・演出** | 参考の再構築、制作 Skills、Brandkit、Motion.md、エージェントの分析ツール |
 | **生成・管理** | マルチモーダルアダプター、モデル選択、生成ジョブ、候補プレビュー、素材 |
 | **編集・アニメーション** | タイムライン、HTML/CSS/JS 合成、文字、トランジション、字幕、音の配置 |
 | **確認・改善** | Studio プレビュー、手動調整、エージェントによる修正、プロジェクトの版 |
@@ -335,30 +329,19 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 ![Codex 向け OpenMotion 埋め込み Viewer。編集可能な Product Promo、プレビュー、レイヤー、タイムライン。](readme/product-tour/codex-embedded.png)
 
-*このデモは Codex ホスト用に用意した Studio Viewer を示します。[収録範囲](product-tour.md) で実際に確認した内容を参照してください。*
-
 ### Studio から始める
 
 参考を見て、テンプレートを開くか録画を読み込みます。**Connect Agent** のワークスペース別手順に従い、企画を渡してください。同じタイムラインで変更を確認し、いつでも手動調整できます。
 
 ![会話、保存済み要件、編集可能な動画プロジェクトを表示する単体版 OpenMotion Studio。](readme/product-tour/standalone-studio.png)
 
-<details>
-<summary>Claude Code とテンプレートの引き継ぎを見る</summary>
-
-![ローカル端末で読み込まれた Claude Code の制作 Skills。](readme/product-tour/claude-code-skills.png)
-
-端末の収録はローカル Skill の読み込みを示します。[CLI 検査](readme/product-tour/cli-checks.png) はプロジェクト検査を示すもので、モデルによる再構築完了の証拠ではありません。
-
-![Product Promo の実際の CLI 検査：プロジェクト情報、lint、タイムライン。](readme/product-tour/cli-checks.png)
+#### エージェントに接続してテンプレートを開く
 
 ![Connect Agent ダイアログ：ワークスペース専用の手順とローカルクライアント選択。](readme/product-tour/connect-agent.png)
 
 ![Product Promo プレビューと、エージェントにコピーするテンプレート専用指示。](readme/product-tour/template-to-agent.png)
 
 **プレビュー → 指示をコピー → ブランド素材と一緒にエージェントへ。** 同梱テンプレートは編集可能なコピーを開き、外部参考は再構築タスクを開始します。[製品デモ全体](product-tour.md)
-
-</details>
 
 どちらの入口も同じローカルアプリとプロジェクトを使用。エージェントは自身のクライアントで動き、Studio が企画と編集可能な作品を保存します。[接続の仕組み](session-architecture.md)
 
@@ -390,8 +373,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 トーク動画、チュートリアル、製品紹介にも。**人の語りと物語のテンポを保ち、自分の録画、テーマ、ブランドで字幕、画面、ピクチャーインピクチャー、動きを再利用します。**
 
-<details>
-<summary><strong>3 つの話し手中心の作例と Motion MD レシピを見る</strong></summary>
+**話し手を中心とした 3 つの作例と Motion.md レシピ**
 
 各ペアは原作と外部の改編作品の無音抜粋です。自分の録画の方向性を探し、リンク先の設計レシピをエージェントへの指針にしてください。
 
@@ -406,7 +388,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **再利用：** 番号付きの論点、話し手の語り、根拠のカード。**変更：** 出演者、話題、キーワード、補足例。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
+[Motion.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
 
 #### 語りながらワークフローを見せる
 
@@ -419,7 +401,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **再利用：** 話し手と画面のリズム、控えめな字幕、読みやすい挿入画面。**変更：** 自分の録画、手順、画面。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
+[Motion.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
 
 #### 話し手と製品を一つの物語に
 
@@ -432,12 +414,9 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **再利用：** 導入、ピクチャーインピクチャー、注釈、見える成果。**変更：** 製品、話し手、実演、締めの言葉。
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
+[Motion.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
 
 > この構成で自分の撮影と画面録画を使ってください。声を保ち、実際の発話に沿って編集し字幕を合わせます。画面、ピクチャーインピクチャー、動きで要点を説明。音付きプレビューの後、編集可能なプロジェクトと MP4 を渡してください。
-
-
-</details>
 
 **誰もがクリエイターに。** 伝えたいことから始め、参考で構成を具体化し、自分の声を中心に置きましょう。
 
@@ -562,16 +541,15 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 <a id="make-your-motion-language-reusable"></a>
 <a id="motion-design-community"></a>
 
-## 🎨 Motion Design MD — 技法を共有するコミュニティ
+## 🎨 Motion.md — 技法を共有するコミュニティ
 
-**一度分析し、動きの言語を共有し、次の作り手へ。** `MOTION_DESIGN.md` は、このコミュニティの中心となる Markdown 規約の提案です。動画の動き、その理由、新しいブランドへの適用方法を読める形で残します。
+**一度分析し、動きの言語を共有し、次の作り手へ。** `Motion.md` は、このコミュニティの中心となる Markdown 規約の提案です。動画の動き、その理由、新しいブランドへの適用方法を読める形で残します。
 
 会話の中の制作判断を、人とエージェントが読んでレビュー・改善できるファイルへ。デザイナーが動きを記し、開発者が実装し、別の作り手が新しい物語へ応用します。**完成動画と、その作り方を共有します。**
 
-![Brandkit はブランド、製品情報、承認素材を、Motion Design MD は物語、時間、動き、レビュー規則を定義。SKILL.md がソース、素材、プリセット、検証記録とともに利用する方法を導きます。](readme/diagrams/creative-context.svg)
+![Brandkit はブランド、製品情報、承認素材を、Motion.md は物語、時間、動き、レビュー規則を定義。SKILL.md がソース、素材、プリセット、検証記録とともに利用する方法を導きます。](readme/diagrams/creative-context.svg)
 
-<details>
-<summary>制作パッケージをテキストで読む</summary>
+### 制作パッケージの構成
 
 ```text
 参考 + 自分のブランド
@@ -580,7 +558,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
           ↓
 再利用できる制作パッケージ
   BRANDKIT.md       ブランド、製品情報、承認素材
-  MOTION_DESIGN.md  物語、動き、時間、音、維持/変更の規則
+  Motion.md  物語、動き、時間、音、維持/変更の規則
   SKILL.md          改編・レビューの方法
   ソース + 素材    編集可能な実装
   プリセット + 検証記録  置換入力と実際の比較
@@ -588,9 +566,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 エージェント → 次の編集可能な動画
 ```
 
-</details>
-
-**Brandkit はブランド、Motion MD は設計、Skill は方法、プロジェクトは実装を担います。** 最初の書き出しの後も使え、他の人が確認・フォーク・改善できる形になります。
+**Brandkit はブランド、Motion.md は設計、Skill は方法、プロジェクトは実装を担います。** 最初の書き出しの後も使え、他の人が確認・フォーク・改善できる形になります。
 
 | 現在の Library のリソース | 得られるもの |
 | --- | --- |
@@ -599,7 +575,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 | [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md) | 6 つのソース例：ワイヤーフレーム、樹冠の文字、UI 登場、立体コード、粒子集合、ガラスカード |
 | [Presenter Story](../library/skills/presenter-story/SKILL.md) | 語りを軸にした動画の設計レシピ 3 種 |
 
-`MOTION_DESIGN.md` は、エージェントへ明示的に渡す **v0.1 の記述規約**です。自動インポーターや検証器はありません。ソース改編パッケージには 6 種の置換ヘルパーがあり、動画のみの再構築には `motion-recreate`を使います。持ち運べるテンプレートが必要な場合、 `motion-video-to-template` が既定の `TEMPLATE.md` 引き継ぎ形式を提供します。[Motion MD ガイド](motion-md.md) · [全 6 作例](motion-design-examples.md)
+`Motion.md` は、エージェントへ明示的に渡す **v0.1 の記述規約**です。自動インポーターや検証器はありません。ソース改編パッケージには 6 種の置換ヘルパーがあり、動画のみの再構築には `motion-recreate`を使います。持ち運べるテンプレートが必要な場合、 `motion-video-to-template` が既定の `TEMPLATE.md` 引き継ぎ形式を提供します。[Motion.md ガイド](motion-md.md) · [全 6 作例](motion-design-examples.md)
 
 ### 🌱 自分の改編を、次の作り手の出発点に
 
@@ -607,7 +583,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 参考を研究 → ブランド向けに再構築 → 実際の結果を比較
                                       ↓
                       GitHub に制作パッケージを公開
-                  Motion MD + ソース + プレビュー + 出典
+                  Motion.md + ソース + プレビュー + 出典
                                       ↓
                         フォーク → ブランド変更 → 確認
                                       ↓
@@ -633,10 +609,9 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 ## 🧪 動画の裏側にある編集可能な動きを探る
 
-**カメラ、タイトル、製品の見せ方が気に入ったら、発想を残して物語を変える。** 6 つの編集可能なソース研究に、Motion MD、Skill、内容プリセットを収録しています。[ソース、入力、検証記録](motion-design-examples.md).
+**カメラ、タイトル、製品の見せ方が気に入ったら、発想を残して物語を変える。** 6 つの編集可能なソース研究に、Motion.md、Skill、内容プリセットを収録しています。[ソース、入力、検証記録](motion-design-examples.md).
 
-<details>
-<summary><strong>文字、UI、コード、粒子、ガラスの 6 つのソース研究を開く</strong></summary>
+**6 つの編集可能なモーション作例**
 
 ペアのプレビューは同じ実装からレンダリングした無音抜粋で、元の内容と改編を同じ時点で比較します。
 
@@ -649,7 +624,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **維持：ポータルのタイミング、立体文字、カメラの前進。** **変更：タイトル、副題、3D フレーズ。**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
 
 ### 樹冠のタイポグラフィ · Understory → OpenMotion
 
@@ -660,7 +635,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **維持：葉の動き、奥行き、遮蔽、読む時間。** **変更：2 つのブランド見出し。**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/motion-design-remix/previews/canopy-part-title.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/motion-design-remix/previews/canopy-part-title.mp4)
 
 ### UI の登場 · 製品ツアー → AI 編集の物語
 
@@ -671,7 +646,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **維持：傾いたキャンバス、奥行きの階層、連続したカメラ。** **変更：大見出し、文書、コミュニティの文言。**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
 
 ### 立体コード · loadConfig() → cutVideo()
 
@@ -682,7 +657,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **維持：押し出した板、構文の色、カメラの動き。** **変更：関数、変数、表示する呼び出し。**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
 
 ### 粒子の集合 · parse / optimize / emit → select / trim / render
 
@@ -693,7 +668,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **維持：シード固定の粒子運動と集合のテンポ。** **変更：処理の名前と手順。**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
 
 ### ガラスの情報カード · 機器ウィジェット → 制作ワークスペース
 
@@ -704,11 +679,9 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **維持：ガラス表現、カード階層、時間差、メーター。** **変更：ラベル、単位、機能の物語。**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
+[Motion.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
 
 動画しかない参考には、別の[再構築ワークフロー](../skills/motion-recreate/SKILL.md) で作り直して比較します。再現度は選んだ参考と制作要件に照らして確認します。
-
-</details>
 
 <a id="one-video-more-places-to-share"></a>
 <a id="publish-to-every-platform"></a>
@@ -760,11 +733,11 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 <a id="resources-to-start-from"></a>
 
-## 🧩 890 件以上のリソースから、自分の方向を見つける
+## 🧩 ブランド映像の Motion.md 100 本以上 + 制作リソース 890 件以上
 
 **全工程を担うクリエイターに、制作のライブラリを。** 参考動画、動きの断片、コード例、ブロック、部品に、コミュニティ Skills、編集可能なテンプレート、デザインシステム、Brandkit を組み合わせます。
 
-発見用カタログは **891 件**：**全編の参考動画 42 本**、**モーションの断片 393 件**、**ブロック 210 件**、**部品 238 件**、**作例 8 件**。視聴用の参考とコードが含まれ、すぐ開ける Studio プロジェクトは別に記載します。[リソース索引](collections/README.md)
+カタログの内訳は、**全編の参考動画 42 本**、**モーションの断片 393 件**、**ブロック 210 件**、**部品 238 件**、**作例 8 件**。視聴用の参考とコードが含まれ、すぐ開ける Studio プロジェクトは別に記載します。[リソース索引](collections/README.md)
 
 **5 種のリソースが制作を支えます。** Skills は方法、テンプレートは出発点、部品は再利用できる動き、デザインシステムは一貫性、Brandkit はブランドを担います。**5 つの基本制作 Skills**、**3 つのネイティブ Studio テンプレート**、**Presenter Tech**、**6 つの動きの研究**、**3 つの話し手のレシピ**から始め、学びを共有してください。
 
@@ -816,7 +789,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **リソースはここにあります。** このページと作例ガイドの全編参考、比較動画、GIF、テンプレートソース、ブラウザースクリプト、フォントにはローカルの収録先があります。[リソース一覧と再利用](readme/RESOURCES.md).
 
-**学び、改編し、貢献できるライブラリ。** 現在は **894 件：同梱の編集可能なテンプレート 3 件と、外部参考・レジストリー項目 891 件**を収録し、判明する作者と出典を付記しています。
+**学び、改編し、貢献できるライブラリ。** 編集可能なテンプレートと外部の参考資料を収録し、判明する作者と出典を付記しています。
 
 <table>
 <tr><th colspan="3" align="left">📱 製品と UI</th></tr>
@@ -936,7 +909,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 | [Motion リソース索引](collections/README.md) | 選んだ動画、出典、編集可能な出発点。 |
 | [同梱テンプレート](../template-library) | Product Promo、NYT Graph、Decision Tree。各ネイティブソースとプレビュー付き。 |
 | Studio のテンプレート一覧 | 検索、プレビュー、テンプレート改編・参考再構築の指示。 |
-| [Motion MD](motion-md.md) | スタイルを支える制作判断を共有する方法。 |
+| [Motion.md](motion-md.md) | スタイルを支える制作判断を共有する方法。 |
 
 参考は研究の対象、編集可能なテンプレートは変更できるソース付きです。ギャラリーの**ワンクリック再構築**は参考と指示をコピーします。同梱テンプレートは直接開けますが、外部映像は分析・再構築が必要です。[カタログの範囲と出典](template-catalog.md)
 
@@ -949,7 +922,7 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 
 **無料のローカル制作環境から。** 自分のエージェントを接続し、同梱テンプレートや撮影素材を使ってローカルでレンダリング。新しい素材を生成するときは Model Settings に対応キーを追加します。
 
-Git、npm と、[CI](../.github/workflows/ci.yml)で固定された **Node.js 26.11.1** を使います。ソースからのプレビューと出力には Chrome/Chromium、FFmpeg/FFprobe も必要です。[実行環境の設定](usage.md)
+Git、npm、**Node.js 26.11.1** を用意してください。ソースからのプレビューと書き出しには Chrome/Chromium、FFmpeg/FFprobe も必要です。[実行環境の設定](usage.md)
 
 ```sh
 git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
@@ -981,8 +954,7 @@ DeepSeek Harness、Claude Code などは[エージェントアダプターガイ
 
 動画から始める場合は、参考と[再構築ブリーフ](#reverse-engineer-a-video)を渡してください。ホストが会話の横に Studio を開けない場合は、返されたローカルプロジェクトのリンクを使います。
 
-<details>
-<summary>Skills、MCP、CLI</summary>
+#### Skills、MCP、CLI
 
 チェックアウトから [Skills CLI](https://github.com/vercel-labs/skills) を使い、5 つの基本ワークフローを確認・インストールできます：
 
@@ -1017,11 +989,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 **公開 MCP ツール 11 個**で、テンプレート検索・詳細取得、作成、読み取り、編集、プレビュー、素材の読み込み、出力、版の復元、キャンセルを扱います。共通の手順とエンジンガイドは MCP resources から取得できます。[ツール契約](mcp-phase1-tools.md)
 
-Studio とエージェントはテンプレートカタログのキャッシュを共有します。`motion_list_templates` はローカル JSONL 索引を返し、`motion_get_template` は詳細を取得、`motion_create_project` は編集可能なコピーを作成します。環境はパッケージに保存され、ローカル開発は DEV、正式パッケージは本番環境が既定です。[テンプレートカタログ](template-catalog.md)
+`motion_list_templates` でテンプレートを探し、`motion_get_template` で詳細を確認し、`motion_create_project` で編集用のコピーを作成します。[テンプレートカタログ](template-catalog.md)
 
 アプリには `npm start` 、stdio には `npm run mcp` を使用します。シェル対応エージェントは実行環境が返す固定版エンジン CLI で検査・レンダリング可能。管理対象の編集には revision 検査を適用します。[ネイティブ制作](../skills/motion-production/references/native.md)
-
-</details>
 
 <a id="open-projects-reusable-knowledge"></a>
 <a id="developer-architecture"></a>
@@ -1042,7 +1012,7 @@ Studio とエージェントはテンプレートカタログのキャッシュ�
 参考動画 + 撮影素材 + 台本 + ブランド素材
                    ↓
 コミュニティの知識
-MOTION_DESIGN.md + BRANDKIT.md + Skills + テンプレート + 部品
+Motion.md + BRANDKIT.md + Skills + テンプレート + 部品
                    ↓
 BYOA：ローカルエージェント              OPENMOTION STUDIO
 DeepSeek Harness / Codex / Claude Code  React 19 + TypeScript + Vite
@@ -1082,8 +1052,6 @@ MP4 + 編集可能なソース + 素材 + 版と出力の検証記録
 
 BYOA は既存クライアントを使い、BYOK は対応するモデルアカウントを接続します。Studio とローカルサービスが作品を管理し、認証情報はプロジェクト外へ。第 1 段階の公開 MCP は**プロジェクト用 9 個とテンプレートカタログ用 2 個、合計 11 個のツール**です。モデル生成は Studio とローカル Gateway から利用し、この図は生成・公開ツールを公開 MCP に追加するものではありません。
 
-図は[依存ライブラリ不要の小さなスクリプト](readme/diagrams/generate.py)から生成した、編集可能な SVG です。
-
 ### 技術スタックとソース案内
 
 | 層 | 技術 | ソースの入口 |
@@ -1094,7 +1062,7 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 | **マルチモーダル生成** | Codex メディアアダプター、Atlas Cloud predictions、fal.ai キュー連携、永続化した生成ジョブ | [Gateway サービス](../gateway/service.ts) · [提供元アダプター](../gateway/providers.ts) · [モデルカタログ](../gateway/catalog.ts) |
 | **合成と動き** | HTML/CSS/JS、GSAP、固定版の合成エンジン、ネイティブのタイムライン/履歴 | [エンジン連携](../hyperframes.ts) · [テンプレートソース](../template-library) · [版管理アダプター](../phase1-versions.ts) |
 | **レンダリングとメディア** | Chromium、Puppeteer Core、FFmpeg、FFprobe | [レンダリングサービス](../server.ts) · [出力検証器](../scripts/verify-export.ts) · [ネイティブ実行環境のロック](../scripts/runtime-lock.json) |
-| **制作の知識** | Markdown、ソースパッケージ、プリセット、比較記録 | [Motion MD](motion-md.md) · [基本 Skills](../skills) · [コミュニティ Library](../library/README.md) |
+| **制作の知識** | Markdown、ソースパッケージ、プリセット、比較記録 | [Motion.md](motion-md.md) · [基本 Skills](../skills) · [コミュニティ Library](../library/README.md) |
 | **検証とパッケージ** | Node テスト、Vitest、Studio 検査、npm ロックファイル、明示的な配布一覧 | [テスト](../tests) · [Studio テスト](../studio/tests) · [CI](../.github/workflows/ci.yml) · [配布](../scripts/distribution.ts) |
 | **公開と学習 — 計画中** | プラットフォームアダプター、予約、版に関連するフィードバックと検索。実装設計は今後 | [Studio の構想](product/studio-vision.md) |
 
@@ -1107,13 +1075,11 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 | **フロントエンドと操作** | タイムライン、素材生成 UI、アクセシビリティ、プレビューの改善 | [Studio](../studio/src) · [メディア生成 UI](../studio/src/motion/MediaGenerator.tsx) |
 | **AI とモデル基盤** | 共通のジョブ・素材フローで提供元アダプターやモデルプリセットを追加 | [Gateway 設計](product/media-generation-design.md) · [提供元アダプター](../gateway/providers.ts) |
 | **エージェントと開発ツール** | ホストアダプター、Skill、リソースガイド、プロジェクト操作の改善 | [エージェントアダプター](agent-adapters.md) · [MCP 契約](mcp-phase1-tools.md) |
-| **動きとクリエイティブコード** | 実際の改編を添えた部品、ネイティブテンプレート、Motion MD パッケージ | [部品](../library/components/README.md) · [登録チェックリスト](../library/ENTRY_TEMPLATE.md) |
+| **動きとクリエイティブコード** | 実際の改編を添えた部品、ネイティブテンプレート、Motion.md パッケージ | [部品](../library/components/README.md) · [登録チェックリスト](../library/ENTRY_TEMPLATE.md) |
 | **動画とレンダリング** | 出力の信頼性、メディア処理、再現可能な検証の改善 | [エンジンの説明](hyperframes.md) · [出力検証器](../scripts/verify-export.ts) |
 | **SNS 公開** | 計画中の接続層を設計：アカウント利用、公開確認、予約、版の対応付け | [公開の方向性](product/studio-vision.md) · [提案を議論する](https://github.com/nexu-io/html-anything/issues) |
 
 [ローカル設定](#quick-start)から始め、担当する層を選び、[CONTRIBUTING.md](../CONTRIBUTING.md) と [AGENTS.md](../AGENTS.md)に従ってください。プロジェクトと認証情報はチェックアウト外に置き、固定バージョンと上流ライセンスを維持します。
-
-**設計上の約束：** 人とエージェントが同じプロジェクトを使い、revision 検査で古い状態からの変更を防ぎ、生成候補は明示的に採用し、固定スナップショットから出力します。技術、見た目、音、実際の再生は別々に検証します。
 
 [製品アーキテクチャ](product/architecture.md) · [Studio 開発](../studio/README.md) · [Model Gateway](model-gateway.md) · [貢献ガイド](../CONTRIBUTING.md)
 
@@ -1129,7 +1095,7 @@ Studio の大きな構想は、発見、制作、協働、公開、学習です�
 | 分野 | 今できること | 今後の方向 |
 | --- | --- | --- |
 | **再構築と編集** | エージェントによる参考再構築、テンプレート改編、編集可能なプロジェクト、MP4 出力 | 評価済み事例と再現可能な比較の拡充 |
-| **ブランドと知識** | 明示的な Brandkit、Motion MD、Skills、ソースパッケージ | 個人/チームの記憶、RAG、評価済み Skill 改善 |
+| **ブランドと知識** | 明示的な Brandkit、Motion.md、Skills、ソースパッケージ | 個人/チームの記憶、RAG、評価済み Skill 改善 |
 | **人とエージェント** | 同じローカルプロジェクトの引き継ぎ | タイムラインのコメント、共同レビュー、共同編集 |
 | **マルチモーダル制作** | 画像・動画・音楽・TTS の連携、生成、候補選択、タイムラインへの採用 | 映像、画像、声、音楽、Avatar サービスの横断検索 |
 | **各プラットフォームへの公開 — 計画中** | 画面比率別の制作と MP4 の引き渡し | 接続機能、公開確認、予約、自動リフレーム、SNS プリセット |
@@ -1144,7 +1110,7 @@ Studio の大きな構想は、発見、制作、協働、公開、学習です�
 
 ## 🤝 動画も、その作り方も共有する
 
-**参考、改編、再利用できる動きの言語を一つ持ち寄ってください。** [Motion Design MD コミュニティ](#motion-design-community) で、次の作り手が自分の作品を作れるよう、判断とソースを共有しましょう。
+**参考、改編、再利用できる動きの言語を一つ持ち寄ってください。** [Motion.md コミュニティ](#motion-design-community) で、次の作り手が自分の作品を作れるよう、判断とソースを共有しましょう。
 
 | 貢献するもの | 含めるもの |
 | --- | --- |
@@ -1168,7 +1134,6 @@ Studio の大きな構想は、発見、制作、協働、公開、学習です�
 
 ## 🙏 謝辞 / Acknowledgements
 
-
 OpenMotion のライセンスは [Apache-2.0](../LICENSE)です。第三者のコード、テンプレート、素材、フォントは元のライセンスとクレジットを保ちます。
 
 | 出典 | 関係 |
@@ -1184,6 +1149,6 @@ OpenMotion のライセンスは [Apache-2.0](../LICENSE)です。第三者の�
 | [OpusClip](https://www.opus.pro/calendar) | 配信と[外部の予約公開](https://www.opus.pro/tools/instagram-reels-scheduler)の製品参考。内蔵コネクターなし |
 | [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | 動画とメディアの依存ライブラリ。バージョンは [package.json](../package.json) と[実行環境のロック](../scripts/runtime-lock.json) |
 
-[素材の出典](readme/ASSETS.md) · [その他の展示素材の出典](readme/brand-showcase/README.md) · [表紙とプロンプト](readme/reverse-engineering-cover.md) · [フォントの告知](../web/design-system/fonts/NOTICES.txt) · [Studio ライセンス](../studio/LICENSE)
+[素材の出典](readme/ASSETS.md) · [その他の展示素材の出典](readme/brand-showcase/README.md) · [フォントの告知](../web/design-system/fonts/NOTICES.txt) · [Studio ライセンス](../studio/LICENSE)
 
 旧 HTML Anything アプリは [`legacy` ブランチ](https://github.com/nexu-io/html-anything/tree/legacy)に保存されています。現在のブランチと配布範囲は[リポジトリ移行ガイド](repository-migration.md) を参照してください。
