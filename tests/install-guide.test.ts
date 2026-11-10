@@ -54,6 +54,8 @@ test('guide rendering pins the exact npm package, built source and hash while re
   assert(text.includes(manifest.commit) && text.includes(record.tgzSHA256));
   assert(!text.includes('{{') && !text.includes('see `{{...}}`'));
   assert(text.includes('eleven public Tools') && text.includes('five Skills'));
+  assert(text.includes('new test versions embed DEV defaults') && !text.includes('does not select DEV templates'),
+    'A generated test guide must not claim test versions skip DEV templates');
   for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(text.includes(`openmotion setup --host ${host}`), host);
   assert(text.includes('--profile PROFILE') && text.includes('Do not infer the current host'));
   assert.equal(record.channel, 'test'); assert.equal(record.candidate, false);

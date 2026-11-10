@@ -219,6 +219,8 @@ test('daily build and publication are separate manual entries without an indepen
   assert(build.includes('workflow_dispatch:') && build.includes('version:') && build.includes('source_sha:'));
   assert(build.includes('name: ' + candidateJobName) && build.includes('ref: ${{ steps.source.outputs.source_sha }}'));
   assert(build.includes('--template-env=dev') && !build.includes('--template-env=prod'));
+  assert(build.includes('HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome') && build.includes('\"$HYPERFRAMES_BROWSER_PATH\" --version'));
+  assert(!/apt-get install[^\n]*\bchromium\b/.test(build), 'Candidate builds must not install Ubuntu desktop snaps');
   assert(build.includes('name: motion-candidate-${{ inputs.version }}') && build.includes('candidate-install.md'));
   assert(!build.includes('concurrency:') && !build.includes('secrets.') && !build.includes('id-token:'));
   assert(header.includes('version:') && header.includes('accepted:') && header.includes('default: false'));
