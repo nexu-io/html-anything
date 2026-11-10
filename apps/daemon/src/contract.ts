@@ -1,3 +1,4 @@
+import { type GenerationInput, type GenerationOperation, type GenerationOutput, generationSchemas } from "@open-motion/gateway/contract";
 import { type ExportInput, type ExportOperation, type ExportOutput, exportSchemas } from "@open-motion/render/contract";
 import {
   type TemplateInput,
@@ -14,18 +15,25 @@ import {
 } from "@open-motion/workspace/contract";
 
 export { Fault } from "@open-motion/workspace/contract";
-export const schemas = { ...workspace, ...exportSchemas, ...templateSchemas };
-export type Operation = W | ExportOperation | TemplateOperation;
+export const schemas = { ...workspace, ...exportSchemas, ...templateSchemas, ...generationSchemas };
+export type Operation = W | ExportOperation | TemplateOperation | GenerationOperation;
 type Inputs = { [K in W]: WI<K> } & { [K in ExportOperation]: ExportInput<K> } & {
   [K in TemplateOperation]: TemplateInput<K>;
-};
+} & { [K in GenerationOperation]: GenerationInput<K> };
 export type Input<K extends Operation> = Inputs[K];
 type Outputs = { [K in W]: WO<K> } & { [K in ExportOperation]: ExportOutput<K> } & {
   [K in TemplateOperation]: TemplateOutput<K>;
-};
+} & { [K in GenerationOperation]: GenerationOutput<K> };
 export type Output<K extends Operation> = Outputs[K];
 export const descriptions: Record<Operation, string> = {
   ...workspaceDescriptions,
+  generation_status: "Read explicitly configured PNG model identities; configuration is not model execution evidence.",
+  generation_create: "Persist a fixed-revision PNG material task; replay the same request after an unknown response, never automatically resubmit uncertain provider calls.",
+  generation_read: "Read an owned durable generation task and its explicit submission certainty.",
+  generation_list: "List bounded pages of project-owned generation tasks and persistent candidates.",
+  generation_cancel: "Request cancellation without claiming remote work stopped before confirmation and actual local drain.",
+  generation_result: "Read the verified immutable PNG candidate; completion never edits the project.",
+  generation_adopt: "Explicitly adopt an exact owned candidate into the expected project revision through an atomic workspace receipt; source insertion remains separate.",
   template_list:
     "Discover verified native templates and the explicitly configured Prism publication. Remote source-required entries carry claimed-source identities; dimensions become available only after native verification.",
   template_read:
