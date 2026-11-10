@@ -78,7 +78,7 @@ export class Exports {
       ExportOutput<K>
     >;
   }
-  private async call<K extends keyof RenderMethods>(
+  private async call<K extends Exclude<ExportOperation, "export_download">>(
     operation: K,
     input: RenderMethods[K]["input"],
   ): Promise<ExportOutput<K>> {

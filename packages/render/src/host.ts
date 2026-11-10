@@ -7,12 +7,14 @@ import { Fault } from "@open-motion/workspace/contract";
 import { z } from "zod";
 import type { Tools } from "./index.js";
 import { exportSchemas, type RenderMethods, type Reply } from "./jobs/contract.js";
+import { Preparation } from "./jobs/preparation.js";
 import { Queue } from "./jobs/queue.js";
 
 /** Durable product jobs, independent of a Web request or an Agent transport. */
 export async function host(factory: Factory, options: { generation: Digest; tools: Tools; worker?: string }) {
   let library!: Library,
     queue!: Queue,
+    preparation!: Preparation,
     root = "";
   const reply = <T>(work: () => T): Reply<T> => {
     try {
@@ -30,6 +32,16 @@ export async function host(factory: Factory, options: { generation: Digest; tool
   const attachment = await factory.expose<RenderMethods>({
     identity: { service: "renderer", generation: options.generation },
     handlers: {
+      native_prepare: (input) =>
+        reply(() => {
+          z.strictObject({}).parse(input);
+          return preparation.start();
+        }),
+      native_prepare_read: (input) =>
+        reply(() => {
+          z.strictObject({}).parse(input);
+          return preparation.read();
+        }),
       export_create: (input) =>
         reply(() => {
           const data = exportSchemas.export_create
@@ -71,9 +83,12 @@ export async function host(factory: Factory, options: { generation: Digest; tool
         queue = new Queue({ ...options, factory, context, library });
         await queue.initialize();
         queue.start();
+        preparation = new Preparation({ context, library, tools: options.tools });
       },
       quiesce: async () => {
-        await queue?.close();
+        const results = await Promise.allSettled([queue?.close(), preparation?.close()]);
+        const errors = results.flatMap((result) => (result.status === "rejected" ? [result.reason] : []));
+        if (errors.length) throw new AggregateError(errors, "renderer controllers did not drain");
       },
       stop: async () => {
         await library?.close();
@@ -81,5 +96,11 @@ export async function host(factory: Factory, options: { generation: Digest; tool
     },
   });
   const peer = await factory.connect<RenderMethods>({ service: "renderer", generation: options.generation });
-  return { root, connection: peer.connection(), close: () => attachment.close() };
+  return {
+    root,
+    connection: peer.connection(),
+    prepare: () => preparation.prepare(),
+    prepareRead: () => preparation.read(),
+    close: () => attachment.close(),
+  };
 }
