@@ -33,7 +33,7 @@ interface ProjectUnreachableBannerProps {
 export function ProjectUnreachableBanner({ projectId }: ProjectUnreachableBannerProps) {
   const { t } = useI18n();
   const [served, setServed] = useState<ServedProject[] | null>(null);
-  useNoticeShown(true, () => reportNoticeShown("project_unreachable"));
+  useNoticeShown(served !== null, () => reportNoticeShown("project_unreachable"));
 
   useEffect(() => {
     let cancelled = false;
