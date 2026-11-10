@@ -61,7 +61,11 @@ export async function setup(options) {
         if (!cachedApplication) {
           const archive = path.join(home, 'cache/downloads', manifest.application.sha256 + '.tar.gz');
           console.error('OpenMotion: preparing application ' + manifest.version);
-          await obtainAsset(manifest.application, archive, true);
+          const transfer = { cache_hit: false, transfer_kind: !options.manifest ? 'embedded' : new URL(manifest.application.url).protocol === 'file:' ? 'local' : 'network' };
+          await observer.step('application_asset', async () => {
+            const result = await obtainAsset(manifest.application, archive, true);
+            transfer.cache_hit = result.cacheHit; if (result.cacheHit) transfer.transfer_kind = 'cache';
+          }, transfer);
           await mkdir(path.dirname(appRoot), { recursive: true });
           const temporary = await mkdtemp(path.join(home, 'apps', '.install-'));
           try {

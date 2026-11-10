@@ -69,4 +69,3 @@ export async function closeTracking(tracking?: OmTracking) {
     ]);
   } finally { if (timer) clearTimeout(timer); tracking.close(); }
 }
-

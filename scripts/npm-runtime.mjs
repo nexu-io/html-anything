@@ -107,7 +107,11 @@ async function prepareComponent(native, component, observer) {
       console.error(`OpenMotion: preparing pinned ${component} in the background.`);
       const archive = path.join(config.cacheDirectory, 'downloads', asset.sha256 + (new URL(asset.url).pathname.endsWith('.zip') ? '.zip' : '.tar.gz'));
       await update({ stage: 'downloading' });
-      await observer.step('native_download', () => obtainAsset(asset, archive, config.allowLocalAssets === true, update), { component });
+      const transfer = { component, cache_hit: false, transfer_kind: new URL(asset.url).protocol === 'file:' ? 'local' : 'network' };
+      await observer.step('native_download', async () => {
+        const result = await obtainAsset(asset, archive, config.allowLocalAssets === true, update);
+        transfer.cache_hit = result.cacheHit; if (result.cacheHit) transfer.transfer_kind = 'cache';
+      }, transfer);
       await update({ stage: 'extracting' });
       await mkdir(cache, { recursive: true });
       const temporary = await mkdtemp(path.join(cache, component + '-'));

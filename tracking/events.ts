@@ -14,8 +14,8 @@ const installResult = { ...installation, outcome: ['success', 'failure'], durati
 export const omEvents = {
   installation_started: { producers: ['installer'], fields: installation, required: ['install_flow_id', 'attempt_id', 'host_product', 'operation'] },
   installation_step_result: { producers: ['installer'], fields: { ...installResult,
-    step: ['host_preflight', 'application', 'npm_runtime', 'skills', 'host_register', 'rollback', 'native_download', 'native_extract', 'native_probe'],
-    component: ['browser', 'ffmpeg', 'ffprobe', 'media'], cache_hit: 'boolean' }, required: ['install_flow_id', 'attempt_id', 'step', 'outcome', 'duration_ms'] },
+    step: ['host_preflight', 'application', 'application_asset', 'npm_runtime', 'skills', 'host_register', 'rollback', 'native_download', 'native_extract', 'native_probe'],
+    component: ['browser', 'ffmpeg', 'ffprobe', 'media'], cache_hit: 'boolean', transfer_kind: ['embedded', 'local', 'network', 'cache'] }, required: ['install_flow_id', 'attempt_id', 'step', 'outcome', 'duration_ms'] },
   installation_result: { producers: ['installer'], fields: installResult, required: ['install_flow_id', 'attempt_id', 'outcome', 'duration_ms'] },
   native_prepare_started: { producers: ['installer'], fields: { ...installation, trigger: ['setup', 'app_start', 'explicit'] }, required: ['install_flow_id', 'attempt_id', 'trigger'] },
   native_prepare_result: { producers: ['installer'], fields: { ...installResult, trigger: ['setup', 'app_start', 'explicit'] }, required: ['install_flow_id', 'attempt_id', 'trigger', 'outcome', 'duration_ms'] },

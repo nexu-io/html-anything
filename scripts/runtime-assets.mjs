@@ -16,7 +16,7 @@ export async function sha256(filename) {
 export async function download(asset, filename, progress = async () => {}) {
   const url = new URL(asset.url);
   assert(url.protocol === 'https:' && /^[a-f0-9]{64}$/.test(asset.sha256), 'Require HTTPS and a pinned SHA256');
-  try { if (await sha256(filename) === asset.sha256) return; } catch (error) { if (error.code !== 'ENOENT') throw error; }
+  try { if (await sha256(filename) === asset.sha256) return { cacheHit: true }; } catch (error) { if (error.code !== 'ENOENT') throw error; }
   await mkdir(path.dirname(filename), { recursive: true });
   const temporary = filename + '.part';
   try {
@@ -46,6 +46,7 @@ export async function download(asset, filename, progress = async () => {}) {
     await progress({ stage: 'verifying' });
     assert.equal(await sha256(temporary), asset.sha256, `SHA256 mismatch: ${url.pathname}`);
     await rename(temporary, filename);
+    return { cacheHit: false };
   } finally { await rm(temporary, { force: true }); }
 }
 
@@ -126,13 +127,14 @@ async function obtainLockedAsset(asset, filename, allowLocal, progress) {
   const url = new URL(asset.url);
   if (url.protocol !== 'file:') return download(asset, filename, progress);
   assert(allowLocal, 'Local assets require an explicitly supplied local manifest');
-  if (await sha256(filename).catch(error => { if (error.code !== 'ENOENT') throw error; }) === asset.sha256) return;
+  if (await sha256(filename).catch(error => { if (error.code !== 'ENOENT') throw error; }) === asset.sha256) return { cacheHit: true };
   await mkdir(path.dirname(filename), { recursive: true });
   const temporary = filename + '.' + randomUUID() + '.part';
   try {
     await copyFile(fileURLToPath(url), temporary);
     assert.equal(await sha256(temporary), asset.sha256, 'SHA256 mismatch: local asset');
     await rename(temporary, filename);
+    return { cacheHit: false };
   } finally { await rm(temporary, { force: true }); }
 }
 

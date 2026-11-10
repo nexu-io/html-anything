@@ -92,6 +92,9 @@ test('local assets require pinned checksums and preserve earlier cache after cor
   await assert.rejects(obtainAsset(asset, destination), /explicitly supplied/);
   await assert.rejects(obtainAsset(asset, destination, true), /SHA256 mismatch/);
   assert.equal(await readFile(destination, 'utf8'), 'keep');
+  asset.sha256 = await sha256(source);
+  assert.equal((await obtainAsset(asset, destination, true)).cacheHit, false);
+  assert.equal((await obtainAsset(asset, destination, true)).cacheHit, true);
   assert.deepEqual((await readdir(dir)).sort(), ['cached', 'source']);
 });
 
@@ -463,6 +466,7 @@ test('installer first source and identity survive reinstall and reach MCP and St
   runtime.track('ui_click', { page_name: 'home', area: 'workspace', element: 'new_creation' }, undefined, 'studio');
   await closeTracking(runtime);
   assert(events.some(e => e.event === 'installation_step_result' && e.properties.step === 'npm_runtime'));
+  assert(events.some(e => e.properties.step === 'application_asset' && e.properties.transfer_kind === 'local' && e.properties.cache_hit === false));
   assert(events.some(e => e.event === 'installation_result' && e.properties.operation === 'reinstall'));
   assert(events.some(e => e.event === 'mcp_tool_started')); assert(events.some(e => e.properties.entrypoint === 'studio'));
   assert(events.every(e => e.properties.installation_id === identity.installation_id && e.properties.utm_source === 'partner_a'));
