@@ -35,7 +35,13 @@
     "electron": "41.3.0",
     "esbuild": "0.28.0",
     "typescript": "7.0.2",
-    "vitest": "4.1.6"
+    "vitest": "4.1.6",
+    "@open-motion/standalone": "workspace:*",
+    "@open-motion/templates": "workspace:*",
+    "@open-motion/workspace": "workspace:*",
+    "@odsuite/automation": "workspace:*",
+    "@odsuite/serve": "workspace:*",
+    "@open-motion/render": "workspace:*"
   },
   "repository": {
     "type": "git",

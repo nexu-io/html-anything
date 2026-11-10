@@ -1087,12 +1087,30 @@ importers:
         specifier: workspace:*
         version: link:../../carriers/electron
     devDependencies:
+      '@odsuite/automation':
+        specifier: workspace:*
+        version: link:../automation
+      '@odsuite/serve':
+        specifier: workspace:*
+        version: link:../serve
       '@open-motion/daemon':
         specifier: workspace:*
         version: link:../../apps/daemon
+      '@open-motion/render':
+        specifier: workspace:*
+        version: link:../../packages/render
+      '@open-motion/standalone':
+        specifier: workspace:*
+        version: link:../../carriers/standalone
+      '@open-motion/templates':
+        specifier: workspace:*
+        version: link:../../packages/templates
       '@open-motion/web':
         specifier: workspace:*
         version: link:../../apps/web
+      '@open-motion/workspace':
+        specifier: workspace:*
+        version: link:../../packages/workspace
       '@types/node':
         specifier: 24.12.2
         version: 24.12.2

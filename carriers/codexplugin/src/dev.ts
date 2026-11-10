@@ -1,13 +1,14 @@
 import type { CarrierContext } from "@odsuite/dev";
 import type { Factory } from "@odsuite/sidecar";
 import { Client } from "@open-motion/daemon/client";
-import { attach, type Methods } from "@open-motion/standalone";
+import { attach, type Methods, prismConfiguration } from "@open-motion/standalone";
 import { collect } from "./environment.js";
 import { listen } from "./stdio.js";
 export async function open(context: CarrierContext) {
   const runtime = await attach(context.manager, {
     scope: context.scope,
     version: context.version,
+    prism: await prismConfiguration(context.repo),
     environment: collect(),
   });
   return {
