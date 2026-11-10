@@ -11,6 +11,7 @@ import { Phase1Service } from '../phase1.ts';
 import { renderNext } from '../server.ts';
 import { pluginRoot } from '../hyperframes.ts';
 import { fixture } from './fixtures.ts';
+import { rpc } from '../mcp.ts';
 import { phase1Tools } from '../shared/phase1-tools.ts';
 import { toolNames } from '../tracking/events.ts';
 import { transport } from './http.ts';
@@ -94,6 +95,7 @@ test('PostHog adapter uses public ingest only, privacy fields and real receipt s
   response = new Response('{}', { status: 400 }); assert.equal(await sender([event], new AbortController().signal), 'drop');
   response = new Response('not json'); assert.equal(await sender([event], new AbortController().signal), 'retry');
   assert.equal(trackingError(new Error('private user prompt and /local/path')), 'TOOL_FAILED');
+  assert.equal(trackingError(new Error('NATIVE_RUNTIME_NOT_READY: waiting for video components')), 'NATIVE_RUNTIME_NOT_READY');
   const enriched: any[] = [];
   const geoip = createPosthogSender({ ...options, geoip: true, fetch: async (_url, init) => { enriched.push(JSON.parse(String(init?.body))); return Response.json({ status: 'Ok' }); } });
   await geoip([event], new AbortController().signal);
@@ -199,3 +201,31 @@ test('worker reports a real terminal render failure once, separately from queue 
   assert.equal((await store.get()).revision, current.revision);
   assert.equal(events[0].properties.technical_check, 'unknown'); tracking.close();
 }));
+
+
+test('integration observations describe one real protocol connection without asserting Skill loading', () => fixture(async store => {
+  const keys = ['OPENMOTION_TELEMETRY', 'OPENMOTION_POSTHOG_HOST', 'OPENMOTION_POSTHOG_KEY', 'OPENMOTION_TRACKING_ENV', 'OPENMOTION_TRACKING_TEST_RUN_ID'];
+  const previous = keys.map(key => process.env[key]);
+  const events: any[] = [];
+  process.env.OPENMOTION_TELEMETRY = '1'; process.env.OPENMOTION_POSTHOG_HOST = 'http://127.0.0.1:1';
+  process.env.OPENMOTION_POSTHOG_KEY = 'phc_fixture'; process.env.OPENMOTION_TRACKING_ENV = 'test'; process.env.OPENMOTION_TRACKING_TEST_RUN_ID = crypto.randomUUID();
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (_url, init) => { events.push(...JSON.parse(String(init?.body)).batch); return Response.json({ status: 1 }); };
+  try {
+    const connection = { selection: {} };
+    for (const method of ['initialize', 'tools/list', 'tools/list']) {
+      const response: any = await rpc({ jsonrpc: '2.0', id: crypto.randomUUID(), method, params: {} }, store, undefined, connection);
+      assert(response.result);
+    }
+    // Give the bounded sender its scheduled flush, then inspect only these new events.
+    const deadline = Date.now() + 3000;
+    while (!events.length && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 20));
+    const integration = events.filter(e => e.event === 'integration_check_result');
+    assert.deepEqual(integration.map(e => e.properties.stage), ['initialize', 'tools_list']);
+    assert.equal(new Set(integration.map(e => e.properties.connection_id)).size, 1);
+    assert(integration.every(e => !('skills_loaded' in e.properties) && !('host_product' in e.properties) && !('install_flow_id' in e.properties)));
+  } finally {
+    globalThis.fetch = originalFetch;
+    keys.forEach((key, i) => previous[i] === undefined ? delete process.env[key] : process.env[key] = previous[i]);
+  }
+}, false));

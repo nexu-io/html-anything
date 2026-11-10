@@ -493,10 +493,10 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'server.ts', 'browser.ts', 'workspace.ts', 'mcp.ts', 'mcp-tools.ts', 'editor-runtime.ts',
     'phase1.ts', 'phase1-versions.ts', 'preview.ts', 'hyperframes.ts', 'template-library.ts',
     'template-catalog.ts', 'prism-templates.ts', 'editor-server.ts',
-    'scripts/runtime-assets.mjs', 'scripts/npm-runtime.mjs', 'scripts/runtime-lock.json',
+    'scripts/runtime-assets.mjs', 'scripts/npm-runtime.mjs', 'scripts/installer-tracking.mjs', 'scripts/runtime-lock.json',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
     'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
-    'tracking/core.ts', 'tracking/node.ts', 'tracking/browser.ts', 'tracking/events.ts',
+    'tracking/core.ts', 'tracking/node.ts', 'tracking/runtime.ts', 'tracking/browser.ts', 'tracking/events.ts',
   ];
   async function walk(directory: string, extensions: RegExp) {
     for (const entry of await readdir(path.join(root, directory), { withFileTypes: true })) {

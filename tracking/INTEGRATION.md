@@ -156,9 +156,7 @@ Do not place common fields inside an event's properties or copy a browser identi
 into Node. `device_id`, `installation_id` and `distinct_id` currently share one random
 installation UUID; they are not a hardware fingerprint or a unique-person count.
 
-The current installation identity may retain `utm_source`; landing-to-installer
-`--source` propagation is separate work and an unknown source remains null. An event
-addition must not claim that acquisition plumbing is already implemented.
+The installer accepts an explicit `--source` and preserves its first value as `utm_source`; unknown historical sources remain null. Website UTM capture and command generation remain outside this repository. A later setup label is `attempt_source`, not a replacement acquisition source.
 
 Events go to the existing OpenDesign project (420348), with `product=openmotion`.
 Filter OM queries by that property and exclude OM from unrelated shared reports.

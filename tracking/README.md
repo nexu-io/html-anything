@@ -65,8 +65,7 @@ data directory, outside projects and versioned application caches. `device_id`,
 `installation_id` and PostHog `distinct_id` share that UUID. Different data directories
 are separate installations. No hardware ID or fingerprint is used. The package can
 initialize an identity with a validated source label; existing identities retain
-their first source. Landing-page attribution and installer `--source` plumbing are
-a separate change. Unknown source remains null.
+their first source. The installer accepts `--source`; website UTM capture and command generation remain separate. Unknown historical source remains null. See the [installer contract](../docs/npm-installation.md#shared-preflight-status-and-acquisition-source).
 
 Common fields include schema/product/app version, environment, entrypoint/runtime,
 platform/architecture, OS/version, runtime locale, device IANA timezone and UTC offset
@@ -104,7 +103,7 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
   template-selection intent, plus actual instruction-copy/fallback results.
 
 This first integration does not implement the entire tracking specification:
-installer/integration/resource-read events, WebMCP execution, every editor save,
+resource-read events, WebMCP execution, every editor save,
 timeline/history/import gesture, review/adoption and optional media events remain
 outside this change. Worker origin is `worker`; request-to-worker operation context
 is not yet persisted. Pending export cancellation has a cancel result but no worker
@@ -117,3 +116,14 @@ or permanent collector rejection may lose events. Add durable delivery if produc
 decisions require guaranteed counts. Public ingest tokens are not read/admin keys,
 but forged events and quota abuse still require collector-side rate limiting and
 monitoring; this package is not an anti-fraud boundary.
+
+
+## Installation producers
+
+The installer uses the same runtime, identity, allowlisted registry and bounded sender as the application. Its outer npm package includes compiled JavaScript rather than requiring TypeScript stripping inside node_modules or waiting for application npm ci. `installation_started` / `installation_result` describe setup only. `installation_step_result` measures host preflight, application preparation (including a nested npm_runtime step), Skills, registration, rollback and native download/verification, extraction and executable checks. Cache reuse is explicit. Acquisition steps distinguish embedded npm payloads, explicit local assets, network transfers and checked archive-cache hits; an application payload copy is not a public download. Do not sum nested or parallel durations.
+
+`native_prepare_started` / `native_prepare_result` are separate from core installation. Detached workers carry an immutable snapshot of `install_flow_id`, data directory and host; each attempt has a fresh `attempt_id`. Successful reused components are not redownloaded. Missing terminal events are unknown, not automatic failure or abandonment. Pre-ownership failures remain local diagnostics; npx downloads and failures before the installer starts are outside coverage. Component owners emit download steps; a joining attempt can have only a total result.
+
+`integration_check_result` records initialize, tools_list and first_tool once per connection. It proves a server response, not that the host UI exposed every Tool or activated five Skills. It uses installation identity without guessing a host or linking an ordinary later connection to the latest installation attempt. `status` therefore keeps actual host discovery unverified.
+
+Source and opt-out rules apply to all producers. A later source is an optional `attempt_source`, never a replacement first source. Read-only preflight/status never create identities or send telemetry. Tests use a local collector or an injected sender; production ingestion acceptance is a separate check.

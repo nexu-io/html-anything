@@ -7,7 +7,21 @@ const outcome = ['success', 'failure', 'partial', 'cancelled', 'unknown'] as con
 const tool = { tool_name: toolNames, call_id: 'uuid', operation_id: 'uuid', accepted: 'boolean' } as const;
 const business = { outcome, project_id: 'uuid', operation_id: 'uuid', replayed: 'boolean', error_code: 'code' } as const;
 
+const installation = { install_flow_id: 'uuid', attempt_id: 'uuid', host_product: ['codex', 'claude', 'deepseek', 'workbuddy'],
+  operation: ['install', 'upgrade', 'add_host', 'reinstall'], attempt_source: 'code' } as const;
+const installResult = { ...installation, outcome: ['success', 'failure'], duration_ms: 'integer', error_code: 'code' } as const;
+
 export const omEvents = {
+  installation_started: { producers: ['installer'], fields: installation, required: ['install_flow_id', 'attempt_id', 'host_product', 'operation'] },
+  installation_step_result: { producers: ['installer'], fields: { ...installResult,
+    step: ['host_preflight', 'application', 'application_asset', 'npm_runtime', 'skills', 'host_register', 'rollback', 'native_download', 'native_extract', 'native_probe'],
+    component: ['browser', 'ffmpeg', 'ffprobe', 'media'], cache_hit: 'boolean', reused: 'boolean', transfer_kind: ['embedded', 'local', 'network', 'cache'] }, required: ['install_flow_id', 'attempt_id', 'step', 'outcome', 'duration_ms'] },
+  installation_result: { producers: ['installer'], fields: installResult, required: ['install_flow_id', 'attempt_id', 'outcome', 'duration_ms'] },
+  native_prepare_started: { producers: ['installer'], fields: { ...installation, trigger: ['setup', 'app_start', 'explicit'] }, required: ['install_flow_id', 'attempt_id', 'trigger'] },
+  native_prepare_result: { producers: ['installer'], fields: { ...installResult, trigger: ['setup', 'app_start', 'explicit'] }, required: ['install_flow_id', 'attempt_id', 'trigger', 'outcome', 'duration_ms'] },
+  integration_check_result: { producers: ['mcp'], fields: { connection_id: 'uuid',
+    stage: ['initialize', 'tools_list', 'first_tool'], outcome: ['success'] }, required: ['connection_id', 'stage', 'outcome'] },
+
   mcp_tool_started: { producers: ['mcp'], fields: tool, required: ['tool_name', 'call_id', 'accepted'] },
   mcp_tool_finished: { producers: ['mcp'], fields: { ...tool, outcome, duration_ms: 'integer', error_code: 'code', replayed: 'boolean' },
     required: ['tool_name', 'call_id', 'accepted', 'outcome', 'duration_ms'] },

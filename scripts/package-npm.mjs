@@ -95,7 +95,14 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
     }
     await writeJSON(path.join(application, 'shared/template-config.json'), templateConfig);
     const skills = (await readdir(path.join(application, 'skills'))).sort();
-    for (const name of ['runtime-assets.mjs', 'npm-runtime.mjs', 'npm-hosts.mjs', 'npm-installer.mjs']) await cp(path.join(root, 'scripts', name), path.join(installer, 'scripts', name));
+    for (const name of ['runtime-assets.mjs', 'npm-runtime.mjs', 'npm-hosts.mjs', 'npm-installer.mjs', 'install-state.mjs', 'installer-tracking.mjs']) await cp(path.join(root, 'scripts', name), path.join(installer, 'scripts', name));
+    // The outer npx package must report failures before the inner application's npm ci.
+    const trackingBuild = path.join(temporary, 'tracking-build');
+    await runFile(process.execPath, [path.join(root, 'node_modules/typescript/bin/tsc'), '-p', path.join(root, 'tracking/tsconfig.json'), '--outDir', trackingBuild, '--declaration', 'false']);
+    await mkdir(path.join(installer, 'tracking'));
+    for (const file of ['core.js', 'node.js', 'events.js', 'runtime.js']) await cp(path.join(trackingBuild, file), path.join(installer, 'tracking', file));
+    await mkdir(path.join(installer, 'shared'));
+    await cp(path.join(root, 'shared/tracking-config.json'), path.join(installer, 'shared/tracking-config.json'));
     await chmod(path.join(installer, 'scripts/npm-installer.mjs'), 0o755);
     const installerPkg = JSON.parse(await readFile(path.join(root, 'packages/npm/package.json'), 'utf8'));
     assert.equal(installerPkg.private, true, 'Keep the source package protected; publish only an explicitly versioned artifact');

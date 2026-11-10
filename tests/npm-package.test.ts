@@ -1,6 +1,7 @@
 import test from 'node:test';
+import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { checkReleaseLocks, packageNpm } from '../scripts/package-npm.mjs';
@@ -85,6 +86,19 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal((await runFile(process.execPath, [cli, '--version'])).trim(), version);
     const help = await runFile(process.execPath, [cli, 'setup', '--help']);
     for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(help.includes(host), host);
+    for (const file of ['runtime.js', 'core.js', 'node.js', 'events.js']) await readFile(path.join(installer, 'package/tracking', file));
+    const npxLayout = path.join(directory, 'node_modules/@openmotion/app');
+    await mkdir(path.dirname(npxLayout), { recursive: true }); await cp(path.join(installer, 'package'), npxLayout, { recursive: true });
+    const npxCli = path.join(npxLayout, metadata.bin.openmotion);
+    const invalidSource = spawnSync(process.execPath, [npxCli, 'preflight', '--source', 'https://private.invalid', '--json'], { encoding: 'utf8' });
+    assert.equal(invalidSource.status, 1);
+    assert.equal(JSON.parse(invalidSource.stdout).error.code, 'INVALID_SOURCE');
+    assert.doesNotMatch(invalidSource.stderr, /UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING/);
+    const absent = path.join(directory, 'not-installed');
+    const status = JSON.parse(await runFile(process.execPath, [npxCli, 'status', '--home', absent, '--json']));
+    assert.equal(status.installation.state, 'not_installed');
+    await assert.rejects(readdir(absent), { code: 'ENOENT' });
+
     await readFile(path.join(installer, 'package/LICENSE'));
     assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...phase1Skills].sort());
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);
