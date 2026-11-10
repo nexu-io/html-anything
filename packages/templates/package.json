@@ -1,0 +1,33 @@
+{
+  "name": "@open-motion/templates",
+  "private": true,
+  "type": "module",
+  "description": "Finite native template sources, provenance and reproducible editable-project material",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "dependencies": {
+    "@open-motion/workspace": "workspace:*",
+    "@open-motion/motion": "workspace:*",
+    "zod": "4.6.7",
+    "@hyperframes/core": "0.9.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "esbuild": "0.28.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./contract": {
+      "types": "./dist/contract.d.ts",
+      "default": "./dist/contract.mjs"
+    }
+  }
+}

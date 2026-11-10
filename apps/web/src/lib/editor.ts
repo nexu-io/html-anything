@@ -1,10 +1,8 @@
+import type { Input, Operation, Output } from "@open-motion/daemon/contract";
 import {
   type Artifact,
   Fault,
-  type Input,
   initialFiles,
-  type Operation,
-  type Output,
   type Project,
   type Selection,
   type SessionDetail,
@@ -173,6 +171,16 @@ export class Editor {
     if (!this.session) throw new Error("先选择会话");
     await this.save();
     const artifact = await this.mutate("artifact_create", { sessionId: this.session.id, title, files: initialFiles() });
+    this.session = {
+      ...this.session,
+      artifacts: [...this.session.artifacts.filter((item) => item.id !== artifact.id), artifact],
+    };
+    return artifact;
+  }
+  async createTemplate(title: string, id: string, contentHash: string) {
+    if (!this.session) throw new Error("先选择会话");
+    await this.save();
+    const artifact = await this.mutate("template_create", { sessionId: this.session.id, title, id, contentHash });
     this.session = {
       ...this.session,
       artifacts: [...this.session.artifacts.filter((item) => item.id !== artifact.id), artifact],

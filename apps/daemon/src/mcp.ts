@@ -1,8 +1,20 @@
 import type { McpServer, StandardSchemaWithJSON } from "@modelcontextprotocol/server";
+import { listGuidance, readGuidance } from "./content/guidance.js";
 import { descriptions, Fault, type Input, type Operation, type Output, schemas } from "./contract.js";
+
+export { instructions } from "./content/guidance.js";
 export type Execute = <K extends Operation>(operation: K, input: Input<K>) => Promise<Output<K>>;
 /** Business tool descriptors and routing belong to the application; hosts only attach transports. */
 export function register(server: McpServer, execute: Execute): void {
+  for (const entry of listGuidance())
+    server.registerResource(
+      entry.name,
+      entry.uri,
+      { mimeType: entry.mimeType, description: `Complete production guidance, ${entry.contentHash}` },
+      async (uri) => ({
+        contents: [{ uri: uri.href, mimeType: "application/json", text: JSON.stringify(readGuidance(uri.href)) }],
+      }),
+    );
   for (const operation of Object.keys(schemas) as Operation[]) {
     const schema: StandardSchemaWithJSON = schemas[operation];
     server.registerTool(

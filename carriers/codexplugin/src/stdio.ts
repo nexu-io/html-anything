@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { serveStdio } from "@modelcontextprotocol/server/stdio";
-import { register } from "@open-motion/daemon/mcp";
+import { instructions, register } from "@open-motion/daemon/mcp";
 import type { Standalone } from "@open-motion/standalone";
 export async function listen(runtime: Pick<Standalone, "status" | "execute">, onClose: () => Promise<void>) {
   let handle: ReturnType<typeof serveStdio> | undefined, closing: Promise<void> | undefined;
@@ -38,7 +38,10 @@ export async function listen(runtime: Pick<Standalone, "status" | "execute">, on
   const status = await runtime.status();
   handle = serveStdio(
     () => {
-      const server = new McpServer({ name: "open-motion", version: status.manifest.identity.version });
+      const server = new McpServer(
+        { name: "open-motion", version: status.manifest.identity.version },
+        { instructions },
+      );
       server.registerTool(
         "runtime_status",
         {

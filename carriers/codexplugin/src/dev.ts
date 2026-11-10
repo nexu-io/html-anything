@@ -1,6 +1,6 @@
 import type { CarrierContext } from "@odsuite/dev";
 import type { Factory } from "@odsuite/sidecar";
-import type { Input, Operation, Output } from "@open-motion/daemon/contract";
+import { Client } from "@open-motion/daemon/client";
 import { attach, type Methods } from "@open-motion/standalone";
 import { collect } from "./environment.js";
 import { listen } from "./stdio.js";
@@ -29,10 +29,11 @@ export async function connect({ factory }: { factory: Factory }) {
   );
   if (!target) throw new Error("Codex development composition is not ready");
   const peer = await factory.connect<Methods>(target);
+  const connection = await peer.call("connection", null);
+  const client = new Client(connection.daemon, connection.token);
   const runtime = {
     status: () => peer.call("status", null),
-    execute: async <K extends Operation>(operation: K, input: Input<K>) =>
-      (await peer.call("execute", { operation, input })) as Output<K>,
+    execute: client.execute.bind(client),
   };
   const transport = await listen(runtime, async () => {});
   await transport.closed;

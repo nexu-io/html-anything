@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { initialFiles, Workspace } from "@open-motion/workspace";
 import { expect, it } from "vitest";
-import { Previews } from "@/preview.js";
+import { Previews } from "@/content/preview.js";
 
 function fixture(run: (workspace: Workspace, views: Previews) => void) {
   const root = mkdtempSync(join(tmpdir(), "native-view-")),

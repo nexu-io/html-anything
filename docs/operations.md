@@ -109,7 +109,7 @@ Stdout is MCP JSON-RPC and stderr is diagnostics. Runtime status reports real he
 
 ## Workspace editing and preview
 
-Daemon exposes granted sockets/forwarded ports only. GET /health and POST /api/<operation> require the runtime Bearer capability; fixed composition origin controls browser CORS/OPTIONS. Daemon combines workspace and export schemas in `apps/daemon/src/contract.ts`; browser client and MCP use the same rules. No default-project aliases or parallel state endpoint exist.
+Daemon exposes granted sockets/forwarded ports only. GET /health and POST /api/<operation> require the runtime Bearer capability; fixed composition origin controls browser CORS/OPTIONS. Daemon combines workspace, export and template schemas in `apps/daemon/src/contract.ts`; browser client and MCP use the same rules. No default-project aliases or parallel state endpoint exist.
 
 `workspace.sqlite` is persistent hosted data, containing immutable source snapshots and command receipts. It is neither a working-copy directory nor GC content. Read current state explicitly; replaying requestId returns its original receipt. Save conflicts/unknown outcomes preserve drafts/context; retry confirms the same command. Explicit discard is a user action.
 
@@ -120,6 +120,18 @@ Canvas selection reads actual preview geometry. 2D movement commits on release t
 Preview open/close require capability and caller view ID; open verifies session/artifact/expectedRevision. Read-only snapshot URLs do not carry write authority, but reveal that view's content and should not enter shared logs. Page teardown/close revokes URLs; carrier close clears all ephemeral views. Unknown closure retains bounded state and can retry by ID, never by deleting user data. Full view capacity rejects explicitly.
 
 Differentiate failed save from failed preview. A confirmed old preview may remain beside a draft; it must not cross artifact ownership. Validate actual iframe text/paint/timing, play/seek, edit/reopen/reload, failure retention, old URL revocation and restart persistence. Build-injected pinned engines need no CDN. History requires content revision plus monotonic history version; schema 3 rejects old experiments without migrating or deleting them. Use fresh namespaces for verification; user-data import is separate work.
+
+## Built-in templates and Agent guidance
+
+After selecting a creative session, expand New Project and From Template in Web. Choose Product Promo, NYT Graph or Decision Tree and optionally a project title. Creation saves the current source first, creates an independent artifact and then enters it through a separately checked selection operation. A lost response uses Retry to confirm the same request; it must not generate another project. The previous project and its history remain intact. Web Refresh observes Agent changes while refusing to discard unsaved drafts implicitly.
+
+HTTP/MCP share `template_list`, `template_read` (id/contentHash) and `template_create` (id/contentHash/sessionId/title/requestId). The returned manifest includes exact source identity, file sizes/digests and licensing/adaptation facts. Read source before adapting it; preserve supporting files, fonts and licenses in complete project_save snapshots. Template versions are immutable content identities, not independent carrier release versions. Unknown identities reject. Current built-ins preserve 1920×1080 dimensions and 20/15/10-second authored durations. Their original Latin fonts are offline source content with OFL notices; this does not qualify international typography or other media formats.
+
+MCP resources/list exposes the finite `open-motion://guidance/production`, `/native`, `/templates` and `/verification` documents. resources/read returns a complete body with documentId/contentHash/references. Reuse bodies actually retained in context, and read missing guidance/target sources before a later dependent write. Authenticated GET /guidance and /guidance/<name> return the same catalog/body. Document reads do not start another server, edit a project or prove execution. Creative director/recreation Skills, Prism ingestion and provider generation remain separate work.
+
+Codex dev connect obtains a delegated Daemon endpoint/capability through sidecar and then uses HTTP for source/media. The control plane transfers connection metadata rather than bulk project bytes. Closing an attachment retains the development manager; reconnect after manager replacement. Do not log the private delegated connection or introduce a second listener/port registry.
+
+The standalone template browser test exercises real templates, offline fonts, native seek/paint, unknown accepted create responses, shared Agent/manual edits and restart. With OPEN_MOTION_NATIVE_MANIFEST set, it also renders/downloads an edited 1080p template film through the actual managed native worker. Without it, native codec execution remains unqualified. The Codex attachment test uses actual pnpm exec start/connect/status/stop and confirms source larger than the sidecar frame bound across disconnect/reconnect; the relocated stdio case reads guidance and creates all built-ins outside repository ancestry.
 
 ## Background film export
 

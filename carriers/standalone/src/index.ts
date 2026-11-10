@@ -31,7 +31,7 @@ export interface Status {
 }
 export interface Methods {
   status: { input: unknown; output: Status };
-  execute: { input: { operation: Operation; input: Input<Operation> }; output: Output<Operation> };
+  connection: { input: null; output: { daemon: string; token: string } };
 }
 export interface Standalone {
   execute<K extends Operation>(operation: K, input: Input<K>): Promise<Output<K>>;
@@ -75,7 +75,7 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
       service: "standalone",
       generation: digest(canonical({ manifest, environment, web, daemon: digest(await readFile(entry)) })),
     },
-    handlers: { status: () => status(), execute: (input) => daemon.execute(input.operation, input.input) },
+    handlers: { status: () => status(), connection: () => daemon.bootstrap() },
     lifecycle: {
       initialize: (context) =>
         daemon.start(context, {

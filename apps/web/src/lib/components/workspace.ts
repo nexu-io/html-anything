@@ -6,6 +6,7 @@ import type { Editor } from "../editor.js";
 import { Exports } from "./exports.js";
 import { workspaceLayout } from "./layout.js";
 import { Studio } from "./studio.js";
+import { Templates } from "./templates.js";
 import { Conversation } from "./workspace/conversation.js";
 import { Navigation } from "./workspace/navigation.js";
 export function workspace(root: HTMLElement, editor: Editor, client: Client) {
@@ -109,6 +110,17 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       }),
     open: (artifact) => run(() => editor.openArtifact(artifact)),
   });
+  const templates = new Templates(document, client, (template, title) => {
+    let artifact: Artifact;
+    run(
+      async () => {
+        artifact = await editor.createTemplate(title, template.id, template.contentHash);
+        templates.created();
+      },
+      () => editor.openArtifact(artifact),
+    );
+  });
+  conversation.addCreator(templates.element);
   const studio = new Studio(studioRoot, editor, client, run, {
     source: sourceView,
     sourceInput: () => source,
@@ -255,6 +267,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     root.setAttribute("data-artifact-id", editor.state.selection.artifactId ?? "");
     navigation.update(editor, blocked, theme === "dark");
     conversation.update(editor, blocked);
+    templates.update(editor.session?.id, blocked);
     addProject.disabled = blocked || !editor.session;
     projectTabs.update(
       (editor.session?.artifacts ?? []).map((a) => ({ id: a.id, label: a.title, icon: "film" as const })),
@@ -280,6 +293,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       disposal = (async () => {
         await flight;
         await exports.dispose();
+        await templates.dispose();
         await studio.dispose();
         conversation.dispose();
         for (const hint of hints) hint.dispose();
