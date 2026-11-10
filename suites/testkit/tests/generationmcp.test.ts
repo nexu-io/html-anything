@@ -123,7 +123,7 @@ it("keeps a verified generated PNG durable across stock SDK adoption, receipt re
         stop: () => new Promise<void>((done, reject) => remote.close((error) => (error ? reject(error) : done()))),
       },
     });
-    await cp(fileURLToPath(new URL("../../../carriers/codexplugin/dist/", import.meta.url)), plugin, {
+    await cp(fileURLToPath(new URL("../../../carriers/codexplugin/dist/runtime/", import.meta.url)), plugin, {
       recursive: true,
     });
     await connect(true);

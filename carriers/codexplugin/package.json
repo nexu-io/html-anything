@@ -12,7 +12,6 @@
     "vitest": "4.1.6",
     "@types/node": "24.12.2",
     "@modelcontextprotocol/client": "2.4.0",
-    "@odsuite/sidecar": "workspace:*",
     "@open-motion/web": "workspace:*",
     "esbuild": "0.28.0",
     "@open-motion/render": "workspace:*",
@@ -22,6 +21,7 @@
     "@odsuite/release": "workspace:*"
   },
   "dependencies": {
+    "@odsuite/sidecar": "workspace:*",
     "@modelcontextprotocol/server": "2.4.0",
     "@odsuite/carrier": "workspace:*",
     "@odsuite/protocol": "workspace:*",
@@ -34,9 +34,14 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
+      "default": "./dist/runtime/index.mjs"
     },
-    "./main": "./dist/main.mjs",
+    "./main": "./dist/runtime/main.mjs",
+    "./install": {
+      "types": "./dist/install/index.d.ts",
+      "default": "./dist/install.mjs"
+    },
+    "./installworker": "./dist/installworker.mjs",
     "./dev": {
       "types": "./dist/dev.d.ts",
       "default": "./dist/dev.mjs"

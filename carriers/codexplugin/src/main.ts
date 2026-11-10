@@ -11,5 +11,4 @@ if (!root || !isAbsolute(root) || !lane || !scope)
 await connect({
   root,
   scope: { channel: channel(lane), namespace: namespace(scope) },
-  version: process.env.OPEN_MOTION_VERSION,
 });
