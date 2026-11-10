@@ -8,7 +8,7 @@ import { studioLayout } from "./layout.js";
 import { NativePreview } from "./preview.js";
 import { AnimationEditor } from "./studio/animation.js";
 import { type Binding, CompositionContext } from "./studio/context.js";
-import { StudioLibrary } from "./studio/library.js";
+import { StudioLibrary } from "./studio/library/index.js";
 import { Properties } from "./studio/properties.js";
 import { studioTimeline } from "./studio/timeline.js";
 import { playerControls, studioTools, syncMode } from "./studio/toolbar.js";
@@ -185,6 +185,7 @@ export class Studio {
   sync(project: Project | null, blocked: boolean) {
     if (this.disposed) return;
     this.blocked = blocked;
+    this.layers.sync(blocked);
     if (project && this.artifact !== project.artifactId) {
       this.enabled = true;
       this.artifact = project.artifactId;
@@ -482,6 +483,7 @@ export class Studio {
     ++this.epoch;
     clearTimeout(this.inspectTimer);
     this.teardown?.();
+    await this.layers.dispose();
     await this.viewer.dispose();
   }
 }

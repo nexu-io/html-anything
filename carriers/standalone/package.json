@@ -37,6 +37,7 @@
     "@odsuite/dev": "workspace:*",
     "@open-motion/render": "workspace:*",
     "@open-motion/templates": "workspace:*",
-    "yaml": "2.9.1"
+    "yaml": "2.9.1",
+    "@open-motion/gateway": "workspace:*"
   }
 }
