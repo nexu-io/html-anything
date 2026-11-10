@@ -125,6 +125,8 @@ export function useRenderQueue(
   const cancelling = useRef(new Set<string>());
   // What the cancel route said the render had already become, when it was not "cancelled".
   const settledBeforeCancel = useRef(new Map<string, "completed" | "failed">());
+  // Cancels the server never confirmed: the render may still be running, so no outcome is reported.
+  const unconfirmedCancels = useRef(new Set<string>());
   const [cancelSettled, setCancelSettled] = useState(0);
   const trackedExports = useRef(
     new Map<
@@ -457,6 +459,7 @@ export function useRenderQueue(
       try {
         const res = await studioApiFetch(`/api/render/${jobId}/cancel`, { method: "POST" });
         if (!res.ok && res.status !== 404) {
+          unconfirmedCancels.current.add(jobId);
           setActionError("Couldn't cancel on the server. The render may still be running.");
           return;
         }
@@ -473,6 +476,7 @@ export function useRenderQueue(
           }
         }
       } catch {
+        unconfirmedCancels.current.add(jobId);
         setActionError("Couldn't reach the server to cancel. The render may still be running.");
       } finally {
         cancelling.current.delete(jobId);
@@ -530,6 +534,7 @@ export function useRenderQueue(
       if (!started) continue;
       if (job.status === "cancelled" && cancelling.current.has(job.id)) continue;
       trackedExports.current.delete(job.id);
+      if (unconfirmedCancels.current.delete(job.id)) continue;
       const reconciled = settledBeforeCancel.current.get(job.id);
       settledBeforeCancel.current.delete(job.id);
       reportExportResult({

@@ -158,6 +158,25 @@ describe("Studio export tracking", () => {
     expect(events("studio_export_result")[0]).not.toHaveProperty("error_code");
   });
 
+  it("reports no outcome when the server never confirmed the cancel", async () => {
+    stubServer(() => Response.json({ jobId: "job-5", status: "rendering" }));
+    const mounted = await mount();
+    await act(async () => {
+      await mounted.api().startRender({ origin: "header" });
+    });
+    const fetchMock = globalThis.fetch as unknown as ReturnType<typeof vi.fn>;
+    const original = fetchMock.getMockImplementation()!;
+    fetchMock.mockImplementation(async (url: string, init?: RequestInit) =>
+      init?.method === "POST" && String(url).includes("/cancel") ? new Response("boom", { status: 500 }) : original(url, init),
+    );
+    await act(async () => {
+      await mounted.api().cancelRender("job-5");
+    });
+    await act(async () => mounted.api().dismissActionError());
+    expect(events("studio_export_request_result")).toHaveLength(1);
+    expect(events("studio_export_result")).toEqual([]);
+  });
+
   it("classifies an omitted frame rate as the 30 fps the render actually uses", async () => {
     stubServer(() => Response.json({ jobId: "job-4", status: "rendering" }));
     const mounted = await mount();

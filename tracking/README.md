@@ -139,8 +139,9 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
 This first integration does not implement the entire tracking specification:
 installer/integration/resource-read events, WebMCP execution, review/adoption and
 optional media events remain outside this change. Editor coverage has known gaps:
-a render whose tab reloads before it finishes has a request result but no terminal
-result; caption and beat undo stacks, keyboard playback and frame stepping, and
+a render whose tab reloads before it finishes, or whose cancel the server never
+confirmed, has a request result but no terminal result; a cancel that lands after
+the render finished reports the outcome the cancel route returned; caption and beat undo stacks, keyboard playback and frame stepping, and
 source-editor saves are not reported; `edit_kind` is derived from Studio's fixed
 history labels, so an unmapped label reports `other`; clip trim does not say which
 edge moved. The Studio page does not know which host product opened it, so
