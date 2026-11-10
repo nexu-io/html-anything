@@ -40,6 +40,8 @@ function mount(
   claims: () => number = () => 7,
 ) {
   const editHistory = {
+    canUndo: true,
+    canRedo: true,
     undo: vi.fn<EditHistoryHandle["undo"]>(async () => result),
     redo: vi.fn<EditHistoryHandle["redo"]>(async () => result),
     predict: () => predicted ?? null,
@@ -74,6 +76,28 @@ const PREDICTED = { id: "e1", files: { "index.html": { previous: "B", restored: 
 const SERVER_FILES = { "index.html": { previous: "B", restored: "A2" } };
 
 describe("useEditHistoryActions", () => {
+  it("ignores unavailable undo and redo before calling history or reading files", async () => {
+    const { deps, actions } = mount({ ok: false, reason: "empty" });
+    deps.editHistory.canUndo = false;
+    deps.editHistory.canRedo = false;
+    await act(() => actions.undo());
+    await act(() => actions.redo());
+    expect(deps.editHistory.undo).not.toHaveBeenCalled();
+    expect(deps.editHistory.redo).not.toHaveBeenCalled();
+    expect(deps.waitForPendingDomEditSaves).not.toHaveBeenCalled();
+    expect(deps.readProjectFile).not.toHaveBeenCalled();
+    expect(deps.showToast).not.toHaveBeenCalled();
+  });
+  it("can still take back an edit saving before its history step is available", async () => {
+    const { deps, actions } = mount({ ok: false, reason: "empty" });
+    deps.editHistory.canUndo = false;
+    const revert = vi.fn(() => () => {});
+    const saving = beginStudioPendingEdit(revert);
+    try {
+      await act(() => actions.undo());
+      expect(revert).toHaveBeenCalledTimes(1);
+    } finally { saving.settle(); }
+  });
   it("counts an undo as a preview change from its key until its preview update is applied", async () => {
     const files = { "index.html": { previous: "B", restored: "A" } };
     const stepped = { ok: true, label: "Undid: Move", paths: ["index.html"], files };

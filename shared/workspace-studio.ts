@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { WorkspaceStore } from '../workspace.ts';
 import { HYPERFRAMES_VERSION, repairGeneratedRegistry } from '../hyperframes.ts';
 import { isMain } from './entry.ts';
+import { withAvailableHistorySteps } from './studio-history-availability.ts';
 
 export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: string, initialDirectory: string, port: number) {
   const require = createRequire(path.join(runtimeRoot, 'package.json'));
@@ -30,8 +31,14 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
         await scoped.safePath('index.html');
         await repairGeneratedRegistry(scoped.projectDirectory);
         if (closing) throw new Error('Studio is stopping');
-        return createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
+        const host = createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
           origin: () => origin, historyRoot: process.env.HYPERFRAMES_HISTORY_ROOT });
+        const openHistory = host.adapter.history;
+        host.adapter.history = async () => {
+          const history = await openHistory();
+          return history && withAvailableHistorySteps(history, process.env.HYPERFRAMES_HISTORY_ROOT);
+        };
+        return host;
       })().catch(error => { hosts.delete(id); throw error; });
       hosts.set(id, opening);
     }
