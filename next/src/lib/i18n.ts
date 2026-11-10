@@ -83,6 +83,7 @@ export interface Dict {
   "protocol.stdin": string;
   "protocol.argv": string;
   "protocol.argvMessage": string;
+  "protocol.promptFile": string;
   "protocol.acp": string;
   "protocol.piRpc": string;
 
@@ -443,6 +444,7 @@ const en: Dict = {
   "protocol.stdin": "stdin · stream",
   "protocol.argv": "positional argv",
   "protocol.argvMessage": "argv · batch JSON",
+  "protocol.promptFile": "prompt file · stream",
   "protocol.acp": "ACP JSON-RPC · not wired",
   "protocol.piRpc": "pi-rpc · not wired",
 
@@ -804,6 +806,7 @@ const zhCN: Dict = {
   "protocol.stdin": "stdin · stream",
   "protocol.argv": "positional argv",
   "protocol.argvMessage": "argv · 整段 JSON",
+  "protocol.promptFile": "prompt 文件 · stream",
   "protocol.acp": "ACP JSON-RPC · 暂未接入",
   "protocol.piRpc": "pi-rpc · 暂未接入",
 

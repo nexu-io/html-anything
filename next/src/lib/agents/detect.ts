@@ -10,13 +10,16 @@ import path, { delimiter, join } from "node:path";
  *   - "argv-message" : prompt goes via `--message <text>` (openclaw); stdout is
  *                      a single multi-line JSON document (not ndjson), parsed
  *                      after the child closes.
+ *   - "prompt-file"  : prompt is written to a temp file passed as
+ *                      `--prompt-file <path>` (grok), so it never reaches the
+ *                      Windows shell command line.
  *   - "acp"          : ACP JSON-RPC over stdio (hermes/kimi/devin/kiro/kilo/vibe).
  *                      Not implemented in this build — surfaced in detection so
  *                      the user sees install instructions, but invoke emits a
  *                      clear error pointing them to a supported agent.
  *   - "pi-rpc"       : pi's custom JSON-RPC mode. Same status as "acp".
  */
-export type AgentProtocol = "stdin" | "argv" | "argv-message" | "acp" | "pi-rpc";
+export type AgentProtocol = "stdin" | "argv" | "argv-message" | "prompt-file" | "acp" | "pi-rpc";
 
 export type ModelOption = { id: string; label: string };
 
@@ -148,6 +151,21 @@ export const AGENTS: AgentDef[] = [
     envOverride: "BOB_BIN",
     vendor: "IBM",
     fallbackModels: [DEFAULT_MODEL],
+  },
+  {
+    // Grok Build has no stdin mode. Its headless path takes the prompt via
+    // `-p <prompt>` or `--prompt-file <path>`; we use the file so user input
+    // never goes through `cmd.exe` on Windows.
+    id: "grok",
+    label: "Grok Build",
+    bin: "grok",
+    envOverride: "GROK_BIN",
+    vendor: "xAI",
+    protocol: "prompt-file",
+    fallbackModels: [
+      DEFAULT_MODEL,
+      { id: "grok-build", label: "grok-build" },
+    ],
   },
   {
     id: "opencode",

@@ -30,6 +30,7 @@ const PROTOCOL_KEY: Record<AgentInfo["protocol"], { key: DictKey; tone: "ok" | "
   stdin: { key: "protocol.stdin", tone: "ok" },
   argv: { key: "protocol.argv", tone: "ok" },
   "argv-message": { key: "protocol.argvMessage", tone: "ok" },
+  "prompt-file": { key: "protocol.promptFile", tone: "ok" },
   acp: { key: "protocol.acp", tone: "warn" },
   "pi-rpc": { key: "protocol.piRpc", tone: "warn" },
 };

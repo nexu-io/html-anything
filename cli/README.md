@@ -167,6 +167,7 @@ html-anything 本身不做 AI 生成，它会自动检测并调用你系统里�
 | DeepSeek TUI | `npm install -g deepseek-tui` |
 | Aider | `pip install aider-chat` |
 | OpenClaw | 参考官方文档安装 |
+| Grok Build | `npm install -g @xai-official/grok` |
 
 ## 常用模板推荐
 

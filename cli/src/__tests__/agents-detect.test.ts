@@ -31,6 +31,21 @@ afterEach(() => {
 
 describe("detectAgents", () => {
   describe("*_BIN env override with absolute path that exists", () => {
+    it("finds grok via absolute GROK_BIN path", () => {
+      vi.stubEnv("GROK_BIN", "/usr/local/bin/grok");
+      existsSyncMock.mockImplementation(
+        (p) => p === "/usr/local/bin/grok",
+      );
+
+      const agents = detectAgents();
+      const grok = findAgent(agents, "grok");
+
+      expect(grok.available).toBe(true);
+      expect(grok.path).toBe("/usr/local/bin/grok");
+      expect(grok.resolvedBin).toBe("grok");
+      expect(grok.protocol).toBe("prompt-file");
+    });
+
     it("finds claude via absolute CLAUDE_BIN path", () => {
       vi.stubEnv("CLAUDE_BIN", "/usr/local/bin/claude");
       existsSyncMock.mockImplementation(
@@ -92,6 +107,23 @@ describe("detectAgents", () => {
       expect(claude.available).toBe(true);
       expect(claude.path).toBe("/usr/local/bin/claude");
       expect(claude.resolvedBin).toBe("claude");
+    });
+
+    it("detects grok on PATH as a prompt-file protocol agent", () => {
+      existsSyncMock.mockImplementation((p) => {
+        if (p === "/usr/local/bin/grok") return true;
+        return false;
+      });
+
+      const agents = detectAgents();
+      const grok = findAgent(agents, "grok");
+
+      expect(grok.available).toBe(true);
+      expect(grok.path).toBe("/usr/local/bin/grok");
+      expect(grok.resolvedBin).toBe("grok");
+      expect(grok.protocol).toBe("prompt-file");
+      expect(grok.unsupported).toBeUndefined();
+      expect(grok.label).toBe("Grok Build");
     });
 
     it("detects aider which has no envOverride via bin on PATH", () => {
