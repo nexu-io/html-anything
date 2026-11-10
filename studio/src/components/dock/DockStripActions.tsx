@@ -7,6 +7,7 @@ import type { IDockviewHeaderActionsProps } from "dockview-react";
 import { IconButton, Menu, MenuCheckboxItem, MenuItem, MenuSeparator, Tooltip } from "../ui";
 import { useDockLayoutStore } from "./dockLayoutStore";
 import { PANEL_DEFINITIONS, isPanelId, panelsInZone } from "./panelRegistry";
+import { clickMethod, trackStudioClick } from "../../motion/editorTracking";
 
 /** Panel menu, maximise and close group, drawn on the active group's strip only. */
 export function DockStripActions({
@@ -56,7 +57,11 @@ export function DockStripActions({
           aria-label={t(maximized ? "Restore preview" : "Expand preview")}
           aria-expanded={maximized}
           icon={maximized ? <CornersIn size={16} /> : <CornersOut size={16} />}
-          onClick={() => (maximized ? api.exitMaximized() : api.maximize())}
+          onClick={(event) => {
+            trackStudioClick("preview", maximized ? "restore_preview" : "expand_preview", undefined, clickMethod(event));
+            if (maximized) return api.exitMaximized();
+            api.maximize();
+          }}
         />
       </Tooltip>
     </div>

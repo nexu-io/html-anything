@@ -20,6 +20,16 @@ import {
 } from "../../icons/RemixIcons";
 import type { IDockviewPanelHeaderProps } from "dockview-react";
 import { isPanelId, PANEL_DEFINITIONS, type PanelId } from "./panelRegistry";
+import { trackStudioClick } from "../../motion/editorTracking";
+
+const TAB_CLICKS = {
+  compositions: ["left_panel", "tab_clips"],
+  assets: ["left_panel", "tab_assets"],
+  catalog: ["left_panel", "tab_catalog"],
+  design: ["right_panel", "tab_properties"],
+  layers: ["right_panel", "tab_layers"],
+  renders: ["right_panel", "tab_export"],
+} as const;
 
 const TAB_ICONS: Record<PanelId, Icon> = {
   preview: Monitor,
@@ -57,7 +67,15 @@ export function DockTab({ api }: IDockviewPanelHeaderProps) {
     ? TAB_ICONS[api.id]
     : null;
   return (
-    <div className="hf-dock-tab" data-panel-zone={isPanelId(api.id) ? PANEL_DEFINITIONS[api.id].zone : undefined}>
+    <div
+      className="hf-dock-tab"
+      data-panel-zone={isPanelId(api.id) ? PANEL_DEFINITIONS[api.id].zone : undefined}
+      // Capture runs before the dock activates the tab, so a press on the shown tab is not a switch.
+      onPointerDownCapture={(event) => {
+        const click = mvp && event.button === 0 && !api.isVisible ? TAB_CLICKS[api.id as keyof typeof TAB_CLICKS] : undefined;
+        if (click) trackStudioClick(click[0], click[1], undefined, "pointer");
+      }}
+    >
       {TypeIcon ? <TypeIcon className="hf-dock-tab-icon" size={14} aria-hidden /> : null}
       <span className="hf-dock-tab-label">{title}</span>
       {/* Same shape as dockview's own close control: a tab cannot hold a focusable button. */}

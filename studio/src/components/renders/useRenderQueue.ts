@@ -9,6 +9,14 @@ import { readServerError } from "./serverError";
 import { ffmpegInstallMessage, useFfmpegStatus } from "./useFfmpegStatus";
 import { requestStudioFeedback, type FeedbackContext } from "../feedback/feedbackTrigger";
 import { studioApiFetch, studioProjectUrl } from "../../utils/studioApiFetch";
+import {
+  exportRejection,
+  exportSettings,
+  projectFields,
+  reportExportRequest,
+  reportExportResult,
+  type ExportOrigin,
+} from "../../motion/editorTracking";
 
 export interface RenderJob {
   id: string;
@@ -46,6 +54,8 @@ export interface StartRenderOptions {
    * `hyperframes render --variables` uses.
    */
   variables?: Record<string, unknown>;
+  /** Which control asked for this render. Reported as a category only; defaults to the header. */
+  origin?: ExportOrigin;
 }
 
 // "Hide" (formerly "Clear") is a view operation, not a delete: hidden ids are
@@ -105,6 +115,10 @@ export function useRenderQueue(
   // never trigger a feedback prompt — the user did not just watch them happen.
   const sessionJobs = useRef(new Map<string, FeedbackContext>());
   const promptedJobIds = useRef(new Set<string>());
+  // Accepted renders this tab started and has not yet reported a terminal state for.
+  const trackedExports = useRef(
+    new Map<string, { exportId: string; settings: ReturnType<typeof exportSettings>; lost?: boolean }>(),
+  );
 
   /**
    * The one way a render started here enters the list. Every start path — the
@@ -177,10 +191,26 @@ export function useRenderQueue(
     // fallow-ignore-next-line complexity
     async (opts: StartRenderOptions = {}) => {
       if (!projectId) return;
+      // One request result per start attempt. The id is minted here because the
+      // server's job id embeds the project id and a timestamp.
+      const exportId = generateId();
+      const tracked = exportSettings(opts.origin, opts);
+      const requestResult = (
+        outcome: "accepted" | "rejected",
+        error_code?: Parameters<typeof reportExportRequest>[0]["error_code"],
+      ) =>
+        reportExportRequest({
+          export_id: exportId,
+          outcome,
+          ...tracked,
+          ...(error_code ? { error_code } : {}),
+          ...projectFields(projectId),
+        });
       // The server would answer this with a 503 anyway. Refusing here keeps
       // the reason and the fix in the message, and keeps a control that
       // forgot to disable itself from producing a mystery failure.
       if (ffmpegMissing) {
+        requestResult("rejected", "FFMPEG_MISSING");
         addSessionJob(
           {
             id: generateId(),
@@ -281,6 +311,7 @@ export function useRenderQueue(
         // report too, so field reports of a render that fails *every time*
         // still carried nothing to act on. Keep the CLI guidance, name the
         // cause after it.
+        requestResult("rejected", "SERVER_UNREACHABLE");
         const cause = err instanceof Error ? err.message : String(err);
         const failedJob: RenderJob = {
           id: generateId(),
@@ -294,6 +325,7 @@ export function useRenderQueue(
         return;
       }
       if (!res.ok) {
+        requestResult("rejected", exportRejection(res.status));
         const failedJob: RenderJob = {
           id: generateId(),
           status: "failed",
@@ -306,6 +338,10 @@ export function useRenderQueue(
         return;
       }
       const { jobId } = await res.json();
+      if (typeof jobId === "string" && jobId) {
+        requestResult("accepted");
+        trackedExports.current.set(jobId, { exportId, settings: tracked });
+      } else requestResult("rejected", "INVALID_RESPONSE");
 
       const FORMAT_EXT: Record<string, string> = {
         mp4: ".mp4",
@@ -357,6 +393,8 @@ export function useRenderQueue(
 
       es.onerror = () => {
         es.close();
+        const lost = trackedExports.current.get(jobId);
+        if (lost) lost.lost = true;
         setJobs((prev) =>
           prev.map((j) =>
             j.id === jobId && j.status === "rendering"
@@ -451,6 +489,23 @@ export function useRenderQueue(
   // keeps one trigger for every path, including SSE drops and cancels-that-
   // finished-anyway. `requestStudioFeedback` decides whether to actually ask.
   useEffect(() => {
+    // The terminal state this tab observed, once per accepted render. Rows loaded
+    // from disk history and rows for refused starts were never tracked here.
+    for (const job of jobs) {
+      const started = job.status === "rendering" ? undefined : trackedExports.current.get(job.id);
+      if (!started) continue;
+      trackedExports.current.delete(job.id);
+      reportExportResult({
+        export_id: started.exportId,
+        job_state: job.status === "complete" ? "completed" : job.status === "cancelled" ? "cancelled" : "failed",
+        duration_ms: Math.min(86_400_000, Math.max(0, Math.round(job.durationMs ?? Date.now() - job.createdAt))),
+        ...started.settings,
+        ...(job.status === "failed"
+          ? { error_code: started.lost ? ("CONNECTION_LOST" as const) : ("RENDER_FAILED" as const) }
+          : {}),
+        ...projectFields(projectId),
+      });
+    }
     for (const job of jobs) {
       if (job.status === "rendering" || job.status === "cancelled") continue;
       const settings = sessionJobs.current.get(job.id);
@@ -474,13 +529,14 @@ export function useRenderQueue(
         },
       });
     }
-  }, [jobs]);
+  }, [jobs, projectId]);
 
   // Clean up EventSource on unmount or projectId change
   useEffect(() => {
     return () => {
       eventSourceRef.current?.close();
       eventSourceRef.current = null;
+      trackedExports.current.clear();
     };
   }, [projectId]);
 

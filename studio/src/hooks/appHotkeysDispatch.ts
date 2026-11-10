@@ -8,6 +8,7 @@ import { isEditableTarget } from "../utils/timelineDiscovery";
 import { shouldIgnoreHistoryShortcut } from "../utils/studioHelpers";
 import { canSplitElement } from "../utils/timelineElementSplit";
 import { trackStudioEvent } from "../utils/studioTelemetry";
+import { noteHistoryTrigger } from "../motion/editorTracking";
 import { razorClaimsKey } from "../player/lib/playbackShortcuts";
 import { getStudioKeys, keyHint, matchesKey } from "../player/components/studioShortcuts";
 import { zoomTimelineToSelectedClips } from "../player/components/timelineZoomInput";
@@ -130,10 +131,12 @@ export function dispatchModifierKey(
       event,
       () => {
         trackStudioEvent("keyboard_shortcut", { action: "undo" });
+        noteHistoryTrigger("keyboard");
         void cb.handleUndo();
       },
       () => {
         trackStudioEvent("keyboard_shortcut", { action: "redo" });
+        noteHistoryTrigger("keyboard");
         void cb.handleRedo();
       },
     );

@@ -6,6 +6,8 @@ import { studioApiFetch } from "../utils/studioApiFetch";
 import { setStudioPendingEditClaimClock } from "../utils/studioPendingEdits";
 import type { RecordEditInput } from "../utils/studioFileHistory";
 import { generateId } from "../utils/generateId";
+import { reportManualEdit, setTrackedProject, watchEditSurface } from "../motion/editorTracking";
+import { studioEditLifecycle } from "../webmcp/writeCoordinator";
 
 interface ApplyCallbacks {
   readFile: (path: string) => Promise<string>;
@@ -234,6 +236,12 @@ export function usePersistentEditHistory({ projectId }: UsePersistentEditHistory
     void refresh().finally(() => setLoaded(true));
   }, [refresh, own]);
 
+  useEffect(watchEditSurface, []);
+  useEffect(() => {
+    setTrackedProject(projectId);
+    return () => setTrackedProject(null);
+  }, [projectId]);
+
   useEffect(() => {
     setStudioPendingEditClaimClock(own.claimCount);
     return () => setStudioPendingEditClaimClock(null);
@@ -243,6 +251,10 @@ export function usePersistentEditHistory({ projectId }: UsePersistentEditHistory
     async ({ label, coalesceKey, coalesceMs, files, targets, created = [] }: RecordEditInput) => {
       if (!projectId) return;
       const paths = [...Object.keys(files), ...created];
+      // Read before the first await: an Agent tool's write is dispatching (or dispatched and still
+      // saving) when its commit records here, and that is not a manual edit.
+      const agentPhase = studioEditLifecycle.getSnapshot().phase;
+      const agent = agentPhase === "dispatching" || agentPhase === "dispatched";
       own.overtake();
       const reply = await post(historyUrl(projectId, "/claim"), {
         label,
@@ -255,6 +267,8 @@ export function usePersistentEditHistory({ projectId }: UsePersistentEditHistory
         }),
       });
       const claimed = claimHeld(reply, label);
+      // The files are already written; one event per history entry, not per coalesced claim.
+      reportManualEdit({ projectId, label, entryId: claimed, coalesceKey, coalesceMs, agent });
       if (claimed) {
         own.remember(claimed, files);
         own.noteClaim(claimed);

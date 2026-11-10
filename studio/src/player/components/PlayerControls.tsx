@@ -1,4 +1,5 @@
 import { RemixIcon } from "../../icons/RemixIcons";
+import { clickMethod, trackStudioClick } from "../../motion/editorTracking";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useRef, useEffect, memo } from "react";
@@ -76,8 +77,9 @@ const LoopButton = memo(function LoopButton({
     <Tooltip label={t("Loop playback")}>
       <button
         type="button"
-        onClick={() => {
+        onClick={(event) => {
           trackStudioEvent("playback", { action: "loop_toggle", enabled: !loopEnabled });
+          trackStudioClick("preview", "loop_toggle", undefined, clickMethod(event), loopEnabled ? "off" : "on");
           setLoopEnabled(!loopEnabled);
         }}
         disabled={disabled}
@@ -228,8 +230,9 @@ export const PlayerControls = memo(function PlayerControls({
             type="button"
             data-studio-control="playback"
             aria-label={isPlaying ? t("Pause") : t("Play")}
-            onClick={() => {
+            onClick={(event) => {
               trackStudioEvent("playback", { action: isPlaying ? "pause" : "play" });
+              trackStudioClick("preview", isPlaying ? "pause" : "play", undefined, clickMethod(event));
               onTogglePlay();
             }}
             disabled={controlsDisabled}

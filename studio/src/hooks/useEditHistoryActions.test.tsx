@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { STUDIO_MOTION_PATH } from "../components/editor/studioMotion";
 import { isPreviewChanging } from "../player/previewReloading";
 import { useEditHistoryActions, type EditHistoryHandle } from "./useEditHistoryActions";
+import { installEditorTracking, noteHistoryTrigger, resetEditorTrackingForTests } from "../motion/editorTracking";
 import {
   beginStudioPendingEdit,
   isStudioEditSaving,
@@ -292,5 +293,49 @@ describe("useEditHistoryActions", () => {
     expect(deps.readOptionalProjectFile).toHaveBeenCalledWith(STUDIO_MOTION_PATH);
     expect(deps.readProjectFile).toHaveBeenCalledWith("index.html");
     expect(deps.readProjectFile).not.toHaveBeenCalledWith(STUDIO_MOTION_PATH);
+  });
+});
+
+describe("undo/redo reporting", () => {
+  const sent = vi.fn((_event: string, _properties: Record<string, unknown>) => "queued");
+  const steps = () => sent.mock.calls.filter(([event]) => event === "studio_history_step_result").map(([, properties]) => properties);
+  afterEach(() => installEditorTracking(undefined));
+  const start = () => {
+    sent.mockClear();
+    resetEditorTrackingForTests();
+    installEditorTracking(sent as never);
+  };
+
+  it("reports one outcome per step: stepped, nothing to step, refused and failed", async () => {
+    start();
+    // mount() itself renders inside act(), so the hook is mounted before the step runs.
+    const step = async (result: Parameters<typeof mount>[0], direction: "undo" | "redo") => {
+      const { actions } = mount(result);
+      await act(() => actions[direction]());
+      act(() => root?.unmount());
+    };
+    noteHistoryTrigger("keyboard");
+    await step({ ok: true, label: "Undid: Move", paths: ["index.html"] }, "undo");
+    await step({ ok: false, reason: "empty" }, "redo");
+    await step({ ok: false, reason: "content-mismatch", paths: ["secret/path.html"] }, "undo");
+    await step({ ok: false, reason: "failed", message: "EACCES /Users/someone/project" }, "undo");
+    expect(steps()).toEqual([
+      { action: "undo", outcome: "success", interaction_method: "keyboard" },
+      { action: "redo", outcome: "unavailable" },
+      { action: "undo", outcome: "unavailable" },
+      { action: "undo", outcome: "failure" },
+    ]);
+    expect(JSON.stringify(sent.mock.calls)).not.toMatch(/secret|someone/);
+  });
+
+  it("steps the history the same when the tracker throws", async () => {
+    start();
+    installEditorTracking((() => {
+      throw new Error("collector down");
+    }) as never);
+    const { deps, actions } = mount({ ok: true, label: "Undid: Move", paths: ["index.html"] });
+    await act(() => actions.undo());
+    expect(deps.syncHistoryPreviewAfterApply).toHaveBeenCalledTimes(1);
+    expect(deps.showToast).toHaveBeenCalledWith("Undid: Move", "info");
   });
 });

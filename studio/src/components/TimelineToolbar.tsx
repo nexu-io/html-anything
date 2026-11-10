@@ -1,4 +1,5 @@
 import { RemixIcon } from "../icons/RemixIcons";
+import { trackStudioClick } from "../motion/editorTracking";
 import { useMvpEditor } from "../motion/StudioHost";
 import { useI18n } from "../i18n/I18n";
 import { memo, useEffect, useRef, type ReactNode } from "react";
@@ -259,7 +260,10 @@ export const TimelineToolbar = memo(function TimelineToolbar({
           >
             <button
               type="button"
-              onClick={() => setTimelineSnapEnabled(!timelineSnapEnabled)}
+              onClick={() => {
+                trackStudioClick("timeline", "snap_toggle", undefined, undefined, timelineSnapEnabled ? "off" : "on");
+                setTimelineSnapEnabled(!timelineSnapEnabled);
+              }}
               aria-label={t("Toggle timeline snapping")}
               aria-pressed={timelineSnapEnabled}
               className={timelineSnapEnabled ? flatActive : flatIdle}
@@ -521,7 +525,10 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               aria-label={
                 canZoomSelection ? t("Zoom to selected clips") : t("Select a clip to zoom the timeline")
               }
-              onClick={() => zoomTimelineToSelectedClips()}
+              onClick={() => {
+                trackStudioClick("timeline", "zoom_selection");
+                zoomTimelineToSelectedClips();
+              }}
               className={canZoomSelection ? flatIdle : flatDisabled}
             >
               <FrameCorners size={16} aria-hidden="true" />
@@ -533,7 +540,10 @@ export const TimelineToolbar = memo(function TimelineToolbar({
           >
             <button
               type="button"
-              onClick={() => setZoomMode("fit")}
+              onClick={() => {
+                trackStudioClick("timeline", "zoom_fit");
+                setZoomMode("fit");
+              }}
               aria-label={t("Fit timeline to width")}
               className={flatIdle}
             >
@@ -549,7 +559,10 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             <button
               type="button"
               aria-label={t("Zoom out")}
-              onClick={() => zoomTimelineStep("out")}
+              onClick={() => {
+                trackStudioClick("timeline", "zoom_out");
+                zoomTimelineStep("out");
+              }}
               className={flatIdle}
             >
               <MagnifyingGlassMinus size={16} aria-hidden="true" />
@@ -576,7 +589,10 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             <button
               type="button"
               aria-label={t("Zoom in")}
-              onClick={() => zoomTimelineStep("in")}
+              onClick={() => {
+                trackStudioClick("timeline", "zoom_in");
+                zoomTimelineStep("in");
+              }}
               className={flatIdle}
             >
               <MagnifyingGlassPlus size={16} aria-hidden="true" />

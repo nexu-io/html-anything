@@ -2,6 +2,7 @@
 // placement, or upload dragged-in OS files and place them sequentially.
 // Extracted verbatim from useTimelineEditing.ts to keep it under the studio
 // 600-line cap.
+import { takeImportEntry, type ImportEntryPoint } from "../motion/editorTracking";
 import { useCallback, type MutableRefObject, type RefObject } from "react";
 import type { TimelineElement } from "../player";
 import type { TimelineDropPlacement } from "../player/components/timelineCallbacks";
@@ -68,7 +69,7 @@ interface UseTimelineAssetDropOpsOptions {
   writeProjectFile: (path: string, content: string, expectedContent?: string) => Promise<void>;
   recordEdit: (input: RecordEditInput) => Promise<void>;
   reloadPreview: () => void;
-  uploadProjectFiles: (files: Iterable<File>, dir?: string) => Promise<string[]>;
+  uploadProjectFiles: (files: Iterable<File>, dir?: string, entryPoint?: ImportEntryPoint) => Promise<string[]>;
   isRecordingRef?: RefObject<boolean>;
   forceReloadSdkSession?: () => void;
   observeProjectFileVersion?: (path: string, version: string | null) => void;
@@ -242,7 +243,7 @@ export function useTimelineAssetDropOps({
       }
       const pid = projectIdRef.current;
       if (!pid) return;
-      const uploaded = await uploadProjectFiles(files);
+      const uploaded = await uploadProjectFiles(files, undefined, takeImportEntry() ?? "timeline_drop");
       if (uploaded.length === 0) return;
       const durations: number[] = [];
       for (const assetPath of uploaded) {

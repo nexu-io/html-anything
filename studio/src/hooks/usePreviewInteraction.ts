@@ -1,4 +1,5 @@
 import { useMvpEditor } from "../motion/StudioHost";
+import { trackStudioClick } from "../motion/editorTracking";
 import { trackPreviewFeatureUsed } from "../utils/previewFeatureUsage";
 import { useCallback, useRef } from "react";
 import { liveTime, usePlayerStore } from "../player";
@@ -142,6 +143,7 @@ export function usePreviewInteraction({
           e.preventDefault();
           e.stopPropagation();
           cycleRef.current = null;
+          trackStudioClick("preview", "select_element", undefined, "pointer");
           applyDomSelection(hit);
           return;
         }

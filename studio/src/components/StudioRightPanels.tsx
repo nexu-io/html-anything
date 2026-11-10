@@ -232,7 +232,7 @@ export const StudioRightPanels = memo(function StudioRightPanels({
         onAddTextField={handleDomAddTextField}
         onRemoveTextField={handleDomRemoveTextField}
         onAskAgent={handleAskAgent}
-        onImportAssets={handleImportFiles}
+        onImportAssets={(files, dir) => handleImportFiles(files, dir, "properties")}
         onAddMediaOverlay={onAddMediaOverlay}
         fontAssets={fontAssets}
         onImportFonts={handleImportFonts}

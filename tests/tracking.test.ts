@@ -5,7 +5,8 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createTracker, deviceContext } from '../tracking/core.ts';
 import { createPosthogSender, loadIdentity } from '../tracking/node.ts';
-import { omEvents } from '../tracking/events.ts';
+import { omEvents, studioEvents } from '../tracking/events.ts';
+import { validProperties } from '../tracking/core.ts';
 import { closeTracking, createAppTracking, saveTrackingPreference, trackingError } from '../shared/tracking.ts';
 import { Phase1Service } from '../phase1.ts';
 import { renderNext } from '../server.ts';
@@ -28,6 +29,49 @@ test('Studio event types reject Node-only events and invalid semantic fields', (
     '--noEmit', '--strict', '--allowImportingTsExtensions', '--module', 'ESNext', '--moduleResolution', 'Bundler',
     '--target', 'ES2022', '--lib', 'ES2023,DOM', '--skipLibCheck', path.join(pluginRoot, 'tests/tracking-types.ts')],
   { cwd: pluginRoot, stdio: 'pipe' });
+});
+
+test('Motion editor events admit only closed categories, UUID projects and bounded counts', () => {
+  const projectId = crypto.randomUUID(), exportId = crypto.randomUUID();
+  const settings = { origin: 'export_panel', format: 'mp4', quality: 'standard', resolution: '1080p', fps: '30' };
+  const valid: Array<[string, Record<string, unknown>]> = [
+    ['studio_load_result', { load_id: exportId, outcome: 'success', duration_ms: 10, embedded: false, project_scope: 'default' }],
+    ['ui_click', { page_name: 'studio', area: 'header', element: 'export', interaction_method: 'pointer', project_scope: 'managed', project_id: projectId }],
+    ['ui_click', { page_name: 'studio', area: 'project_drawer', element: 'language_change', option: 'pt-BR' }],
+    ['studio_export_request_result', { export_id: exportId, outcome: 'rejected', ...settings, error_code: 'FFMPEG_MISSING' }],
+    ['studio_export_result', { export_id: exportId, job_state: 'failed', duration_ms: 1200, ...settings, error_code: 'RENDER_FAILED', project_id: projectId }],
+    ['studio_notice_shown', { notice: 'ffmpeg_missing' }],
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'timeline_trim', surface: 'timeline', project_scope: 'managed', project_id: projectId }],
+    ['studio_edit_result', { outcome: 'failure', edit_kind: 'other', surface: 'other', error_code: 'CONFLICT' }],
+    ['studio_history_step_result', { action: 'redo', outcome: 'unavailable', interaction_method: 'keyboard' }],
+    ['studio_asset_import_result', { outcome: 'partial', entry_point: 'assets_drop', requested_count: 3, added_count: 2, failed_count: 1, error_category: 'too_large' }],
+  ];
+  for (const [event, properties] of valid) {
+    assert.equal(validProperties(studioEvents, event, properties), true, event);
+    // Every new event is Studio-produced and so admitted by the browser ingress registry.
+    assert.deepEqual((omEvents as Record<string, { producers: readonly string[] }>)[event].producers, ['studio'], event);
+  }
+  const invalid: Array<[string, Record<string, unknown>]> = [
+    // The built-in project id is the literal `project`: it is a scope, never a project_id.
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'move', surface: 'canvas', project_id: 'project' }],
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'move', surface: 'canvas', project_name: 'Launch film' }],
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'Edit layer style', surface: 'canvas' }],
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'move' }],
+    ['studio_export_request_result', { export_id: exportId, outcome: 'accepted', ...settings, composition: 'scenes/intro.html' }],
+    ['studio_export_request_result', { export_id: 'demo_2026-11-10_10-00-00', outcome: 'accepted', ...settings }],
+    ['studio_export_request_result', { export_id: exportId, outcome: 'rejected', ...settings, error_code: 'ENOENT /Users/a/b' }],
+    ['studio_export_result', { export_id: exportId, job_state: 'completed', duration_ms: 1, ...settings, filename: 'out.mp4' }],
+    ['studio_export_result', { export_id: exportId, job_state: 'completed', duration_ms: 1, ...settings, fps: 30 }],
+    ['studio_asset_import_result', { outcome: 'failure', entry_point: 'assets_button', requested_count: 1, added_count: 0, failed_count: 1, error_category: 'clip.mov too large' }],
+    ['studio_asset_import_result', { outcome: 'success', entry_point: 'assets_button', requested_count: -1, added_count: 0, failed_count: 0 }],
+    ['studio_history_step_result', { action: 'undo', outcome: 'success', label: 'Undid: Move Title' }],
+    ['studio_notice_shown', { notice: 'ffmpeg_missing', command: 'brew install ffmpeg' }],
+    ['ui_click', { page_name: 'studio', area: 'header', element: 'export', option: 'My private folder' }],
+    ['ui_click', { page_name: 'studio', area: 'assets', element: 'asset_search', query: 'invoice' }],
+  ];
+  for (const [event, properties] of invalid) assert.equal(validProperties(studioEvents, event, properties), false, JSON.stringify(properties));
+  // The worker's terminal event stays worker-only; Studio cannot submit it.
+  assert.equal(Object.hasOwn(studioEvents, 'export_result'), false);
 });
 
 test('bounded queue rejects private properties, preserves UUID/time on retries and serializes flushes', async () => {

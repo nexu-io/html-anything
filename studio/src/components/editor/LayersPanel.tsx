@@ -1,4 +1,5 @@
 import { RemixIcon } from "../../icons/RemixIcons";
+import { trackStudioClick } from "../../motion/editorTracking";
 import { useI18n } from "../../i18n/I18n";
 import { useLivePreviewIframe } from "../../player/store/previewIframeStore";
 import { onPreviewContentReplaced } from "../../player/sceneSwap";
@@ -263,6 +264,7 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
     async (layer: DomEditLayerItem) => {
       const selection = await resolveSelection(layer);
       if (!selection) return;
+      trackStudioClick("layers", "locate_layer");
       applyDomSelection(selection);
       await seekToLayer(layer);
       // Force-reveal AFTER the seek's runtime visibility sync has had a beat:

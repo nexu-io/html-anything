@@ -62,7 +62,7 @@ function PanelSlot({ api }: IDockviewPanelProps) {
     },
     [id, registerSlot],
   );
-  return <div ref={ref} className="h-full w-full min-h-0 min-w-0 overflow-hidden" />;
+  return <div ref={ref} data-dock-panel={id} className="h-full w-full min-h-0 min-w-0 overflow-hidden" />;
 }
 
 const COMPONENTS = { [DOCK_PANEL_COMPONENT]: PanelSlot };

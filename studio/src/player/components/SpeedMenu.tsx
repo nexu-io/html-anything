@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { clickOption, trackStudioClick } from "../../motion/editorTracking";
 import { useState, memo } from "react";
 import { trackStudioEvent } from "../../utils/studioTelemetry";
 import { Tooltip } from "../../components/ui";
@@ -46,6 +47,7 @@ export const SpeedMenu = memo(function SpeedMenu({
             onValueChange={(value) => {
               const rate = Number(value);
               trackStudioEvent("playback", { action: "speed_change", rate });
+              if (rate !== playbackRate) trackStudioClick("preview", "speed_change", undefined, undefined, clickOption(rate));
               setPlaybackRate(rate);
               setOpen(false);
             }}

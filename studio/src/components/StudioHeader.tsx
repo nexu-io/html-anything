@@ -12,6 +12,7 @@ import { OpenInDesktopButton } from "./OpenInDesktopButton";
 import { HyperframesLogo } from "./ui/HyperframesLogo";
 import { ShowThemeToggle, ThemeToggle } from "./ThemeToggle";
 import { useStudioHost } from "../motion/StudioHost";
+import { clickMethod, trackStudioClick } from "../motion/editorTracking";
 
 interface StudioHeaderProps {
   captureFrameHref: string;
@@ -160,8 +161,9 @@ export const StudioHeader = memo(function StudioHeader({
             variant="primary"
             data-testid="header-export"
             disabled={isRendering}
-            onClick={() => {
+            onClick={(event) => {
               if (isRendering) return;
+              trackStudioClick("header", "export", projectId, clickMethod(event));
               setRightPanelTab("renders");
               setRightCollapsed(false);
               // Without an encoder this render cannot finish, so the click

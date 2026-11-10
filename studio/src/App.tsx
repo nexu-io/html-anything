@@ -461,7 +461,7 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
   const handleExport = useCallback(() => {
     void previewPersistence
       .waitForPendingDomEditSaves()
-      .then(() => renderQueue.startRender(undefined));
+      .then(() => renderQueue.startRender({ origin: "header" }));
   }, [previewPersistence, renderQueue]);
   const clearConsoleErrors = useCallback(() => setConsoleErrors(null), [setConsoleErrors]);
   const panels = useStudioSidePanels(

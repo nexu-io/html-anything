@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { trackStudioClick } from "../../motion/editorTracking";
 import { memo, useEffect, useRef } from "react";
 import { formatTime } from "../lib/time";
 import { liveTime, usePlayerStore } from "../store/playerStore";
@@ -47,6 +48,8 @@ export const PreviewSeekBar = memo(function PreviewSeekBar({
         data-studio-control="seek-preview"
         aria-label={t("Seek preview")}
         onChange={(event) => onSeek(event.currentTarget.valueAsNumber)}
+        // One seek per press on the bar, not one per position it passes through.
+        onPointerUp={() => trackStudioClick("preview", "seek", undefined, "pointer")}
         className="h-6 w-full cursor-pointer accent-neutral-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ink disabled:cursor-default disabled:opacity-30"
       />
     </div>

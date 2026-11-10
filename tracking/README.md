@@ -102,11 +102,34 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
   it is distinct from queue acceptance and does not assert human content acceptance.
 - Studio home/project page readiness, editor load outcome, new/recent-session and
   template-selection intent, plus actual instruction-copy/fallback results.
+- Motion editor exports started from the Studio UI: one `studio_export_request_result`
+  per start attempt (accepted or rejected with a safe code) and one
+  `studio_export_result` per accepted render when that tab observes its terminal
+  state, joined by a browser-minted `export_id`. These renders run in the editor's
+  own pipeline and never reach the worker `export_result`, which stays MCP-only.
+- Motion editor manual edits: one `studio_edit_result` per committed history entry,
+  emitted where Studio claims the entry, with a closed `edit_kind` and the `surface`
+  the gesture started on. Coalesced claims of one entry report once. Writes
+  dispatched by an in-page Agent tool are skipped; MCP edits never reach this path.
+  Project rename and asset rename/delete report from their own commit points, and
+  save failures report `outcome=failure` with a status class only.
+- Undo/redo outcomes, UI asset imports (counts, entry point, safe category),
+  notices actually shown (missing FFmpeg, external file conflict, unreachable
+  project) and editor intent clicks through `ui_click` with `page_name=studio`.
+  `ui_click.option` carries the chosen value of a control with a small fixed set.
+- Editor events carry `project_scope`; `project_id` is sent only when the Studio
+  project id is a UUID. The built-in local project (id `project`) reports
+  `project_scope=default` and no id; names and titles are never sent.
 
 This first integration does not implement the entire tracking specification:
-installer/integration/resource-read events, WebMCP execution, every editor save,
-timeline/history/import gesture, review/adoption and optional media events remain
-outside this change. Worker origin is `worker`; request-to-worker operation context
+installer/integration/resource-read events, WebMCP execution, review/adoption and
+optional media events remain outside this change. Editor coverage has known gaps:
+a render whose tab reloads before it finishes has a request result but no terminal
+result; caption and beat undo stacks, keyboard playback and frame stepping, and
+source-editor saves are not reported; `edit_kind` is derived from Studio's fixed
+history labels, so an unmapped label reports `other`; clip trim does not say which
+edge moved. Turning sharing off is itself not reported, because the preference
+applies before the event could be sent. Worker origin is `worker`; request-to-worker operation context
 is not yet persisted. Pending export cancellation has a cancel result but no worker
 completion because no worker claimed it.
 

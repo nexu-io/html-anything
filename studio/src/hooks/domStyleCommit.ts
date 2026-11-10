@@ -1,4 +1,5 @@
 import type { PatchOperation } from "../utils/sourcePatcher";
+import { styleEditKind, withEditKind } from "../motion/editorTracking";
 import {
   cssPropertyName,
   isImageBackgroundValue,
@@ -104,12 +105,14 @@ export async function commitDomStyles(
       }
     },
     persist: () =>
-      persistDomEditOperations(selection, operations, {
-        label: "Edit layer style",
-        // Inline styles are already live, so a reload would only blank the preview.
-        skipRefresh: true,
-        importedFont: importedFont ?? undefined,
-      }),
+      withEditKind("Edit layer style", styleEditKind(entries.map(([property]) => property)), () =>
+        persistDomEditOperations(selection, operations, {
+          label: "Edit layer style",
+          // Inline styles are already live, so a reload would only blank the preview.
+          skipRefresh: true,
+          importedFont: importedFont ?? undefined,
+        }),
+      ),
     shouldRevert: ownsAny,
     revert: () => {
       const el = editedElement;

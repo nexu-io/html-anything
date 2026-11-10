@@ -11,6 +11,7 @@ import { useFileTree } from "./useFileTree";
 import { useEditorSave } from "./useEditorSave";
 import { useProjectFileWriter } from "./useProjectFileWriter";
 import { studioApiFetch } from "../utils/studioApiFetch";
+import { importErrorCategory, reportAssetImport, reportEdit, type ImportEntryPoint, type ImportErrorCategory } from "../motion/editorTracking";
 import { encodeUrlPath } from "@hyperframes/parsers";
 
 // ── Types ──
@@ -196,10 +197,13 @@ export function useFileManager({
   // ── Upload ──
 
   const uploadProjectFiles = useCallback(
-    async (files: Iterable<File>, dir?: string): Promise<string[]> => {
+    async (files: Iterable<File>, dir?: string, entryPoint?: ImportEntryPoint): Promise<string[]> => {
       const pid = projectIdRef.current;
       const fileList = Array.from(files);
       if (!pid || fileList.length === 0) return [];
+      // One result per upload request, after the server has answered (or could not).
+      const report = (added: number, category?: ImportErrorCategory) =>
+        reportAssetImport({ projectId: pid, entryPoint, requested: fileList.length, added, category });
 
       const formData = new FormData();
       for (const file of fileList) {
@@ -227,15 +231,27 @@ export function useFileManager({
             const names = data.unchecked.map((entry: { name: string }) => entry.name).join(", ");
             showToast(t("Added {name}, {message}", { name: names, message: importValidationMessage(data.unchecked[0].reason, t) }), "info");
           }
+          const added: string[] = Array.isArray(data.files) ? data.files : [];
+          report(
+            added.length,
+            data.skipped?.length
+              ? "too_large"
+              : data.invalid?.length
+                ? importErrorCategory(String(data.invalid[0].reason))
+                : "other",
+          );
           await refreshFileTree();
           setRefreshKey((k) => k + 1);
-          return Array.isArray(data.files) ? data.files : [];
+          return added;
         } else if (res.status === 413) {
+          report(0, "too_large");
           showToast("Upload rejected: payload too large");
         } else {
+          report(0, "other");
           showToast(`Upload failed (${res.status})`);
         }
       } catch {
+        report(0, "other");
         showToast("Upload failed: network error");
       }
       return [];
@@ -307,6 +323,7 @@ export function useFileManager({
           method: "DELETE",
         },
       );
+      if (isMediaFile(path) || FONT_EXT.test(path)) reportEdit("asset_delete", "assets", res.ok, pid);
       if (res.ok) {
         if (editingPathRef.current === path) setEditingFile(null);
         await refreshFileTree();
@@ -331,6 +348,7 @@ export function useFileManager({
           body: JSON.stringify({ newPath }),
         },
       );
+      if (isMediaFile(oldPath) || FONT_EXT.test(oldPath)) reportEdit("asset_rename", "assets", res.ok, pid);
       if (res.ok) {
         if (editingPathRef.current === oldPath) {
           handleFileSelect(newPath);
@@ -371,8 +389,8 @@ export function useFileManager({
   const handleMoveFile = handleRenameFile;
 
   const handleImportFiles = useCallback(
-    async (files: FileList | File[], dir?: string) => {
-      return uploadProjectFiles(Array.from(files), dir);
+    async (files: FileList | File[], dir?: string, entryPoint?: ImportEntryPoint) => {
+      return uploadProjectFiles(Array.from(files), dir, entryPoint);
     },
     [uploadProjectFiles],
   );
@@ -384,6 +402,7 @@ export function useFileManager({
       const uploaded = await uploadProjectFiles(
         Array.from(files).filter((file) => FONT_EXT.test(file.name)),
         "assets/fonts",
+        "properties",
       );
       const imported = uploaded
         .filter((asset) => FONT_EXT.test(asset))

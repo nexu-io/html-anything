@@ -3,6 +3,8 @@ import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 import { keyHint, useStudioKeys } from "../../player/components/studioShortcuts";
+import { clickMethod, trackStudioClick } from "../../motion/editorTracking";
+import { useStudioShellContextOptional } from "../../contexts/StudioContext";
 
 export function PropertyPanelFlatFooter({
   onAskAgent,
@@ -17,6 +19,7 @@ export function PropertyPanelFlatFooter({
 }) {
   const { t } = useI18n();
   const mvp = useMvpEditor();
+  const projectId = useStudioShellContextOptional()?.projectId;
   const track = useTrackDesignInput();
   const recording = recordingState === "recording";
   const recordKey = keyHint("record", useStudioKeys());
@@ -35,8 +38,9 @@ export function PropertyPanelFlatFooter({
       <button
         type="button"
         data-flat-footer-ask="true"
-        onClick={() => {
+        onClick={(event) => {
           track("button", "Ask agent");
+          trackStudioClick("properties", "ask_agent_element", projectId, clickMethod(event));
           onAskAgent?.();
         }}
         disabled={!onAskAgent}

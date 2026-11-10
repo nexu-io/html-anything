@@ -2,6 +2,8 @@ import { useI18n } from "../../i18n/I18n";
 import { memo, useEffect, useRef, useState } from "react";
 import { copyTextToClipboard } from "../../utils/clipboard";
 import type { FfmpegStatus } from "./useFfmpegStatus";
+import { clickMethod, reportNoticeShown, trackStudioClick } from "../../motion/editorTracking";
+import { useNoticeShown } from "../../motion/useNoticeShown";
 
 const DOWNLOAD_URL = "https://ffmpeg.org/download.html";
 const CUE_MS = 1600;
@@ -25,7 +27,9 @@ export const FfmpegRequiredNotice = memo(function FfmpegRequiredNotice({
   status,
   checking,
   onRecheck,
+  projectId,
 }: {
+  projectId?: string | null;
   status: FfmpegStatus;
   checking: boolean;
   onRecheck: () => void;
@@ -38,6 +42,8 @@ export const FfmpegRequiredNotice = memo(function FfmpegRequiredNotice({
   const [recheckFailed, setRecheckFailed] = useState(false);
   const wasChecking = useRef(false);
   const cueTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // Once per time the card is put on screen; rechecks and re-renders keep it mounted.
+  useNoticeShown(true, () => reportNoticeShown("ffmpeg_missing", projectId));
 
   useEffect(() => {
     // Still mounted after a check finished means the answer was "still no":
@@ -55,6 +61,7 @@ export const FfmpegRequiredNotice = memo(function FfmpegRequiredNotice({
   useEffect(() => () => clearTimeout(cueTimer.current), []);
 
   const copy = async (command: string) => {
+    trackStudioClick("export_panel", "copy_install_command", projectId);
     const ok = await copyTextToClipboard(command);
     if (!ok) return;
     setCopied(true);
@@ -107,7 +114,10 @@ export const FfmpegRequiredNotice = memo(function FfmpegRequiredNotice({
       <div className="flex items-center gap-3">
         <button
           type="button"
-          onClick={onRecheck}
+          onClick={(event) => {
+            trackStudioClick("export_panel", "ffmpeg_recheck", projectId, clickMethod(event));
+            onRecheck();
+          }}
           disabled={checking}
           className={`rounded-xs py-0.5 text-[10px] font-medium text-warning-ink underline-offset-2 transition-colors hover:underline disabled:opacity-50 ${FOCUS_RING}`}
         >

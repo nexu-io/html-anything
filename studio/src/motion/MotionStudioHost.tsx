@@ -12,6 +12,9 @@ import { MediaGatewayProvider } from './MediaGatewayContext';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
 import { trackMotion } from './tracking';
+import { clickMethod, installEditorTracking, projectFields, reportEdit, trackStudioClick } from './editorTracking';
+
+installEditorTracking(trackMotion);
 
 function WorkspaceBrand() {
   const theme = useShownStudioTheme();
@@ -33,7 +36,7 @@ export function MotionEditorFrame({ children }: { children: ReactNode }) {
     if (load.current.sent) return;
     load.current.sent = true;
     void trackMotion('studio_load_result', { load_id: load.current.id, outcome: 'success',
-      embedded: workspacePresentation(location.search).embedded, duration_ms: Math.min(86_400_000, Math.round(performance.now())) });
+      embedded: workspacePresentation(location.search).embedded, duration_ms: Math.min(86_400_000, Math.round(performance.now())), ...projectFields(projectId) });
   }, []);
   useEffect(() => {
     const timer = window.setInterval(() => setSaving(isStudioEditSaving()), 250);
@@ -64,7 +67,12 @@ function WorkspaceProject() {
     const nextTitle = title.trim();
     if (!project || !nextTitle || nextTitle === project.title) { finishEditing(); return; }
     savingRef.current = true;
-    try { if (await workspace.rename(project.id, nextTitle)) finishEditing(); }
+    try {
+      // The committed rename, not each keystroke; the title itself is never reported.
+      const renamed = Boolean(await workspace.rename(project.id, nextTitle));
+      reportEdit('project_rename', 'header', renamed, project.id);
+      if (renamed) finishEditing();
+    }
     finally { savingRef.current = false; }
   };
   return <span className="motion-project-control">
@@ -110,9 +118,9 @@ function WorkspaceHistoryActions() {
 
 function WorkspaceActions() {
   const { t } = useI18n();
-  const { switchingDisabled, openLibrary } = useWorkspaceChrome();
+  const { switchingDisabled, openLibrary, workspace } = useWorkspaceChrome();
   return <div className="motion-workspace-actions">
-    <button className="motion-button motion-button-quiet" aria-haspopup="dialog" disabled={switchingDisabled} onClick={openLibrary}><MotionIcon name="grid" />{t("Template library")}</button>
+    <button className="motion-button motion-button-quiet" aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => { trackStudioClick('header', 'template_library', workspace.status?.projectId, clickMethod(event)); openLibrary(); }}><MotionIcon name="grid" />{t("Template library")}</button>
   </div>;
 }
 
