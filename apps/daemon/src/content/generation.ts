@@ -29,7 +29,7 @@ export class Generations {
           configured: false,
           providers: [],
           limits: { active: 32, page: 16, pngBytes: 6291456, pngDimension: 4096 },
-        } as GenerationOutput<K>;
+        } as unknown as GenerationOutput<K>;
       return this.call("generation_status", {}) as Promise<GenerationOutput<K>>;
     }
     if (operation === "generation_adopt") {
@@ -67,13 +67,16 @@ export class Generations {
       });
     }
     if (!this.peer || !this.binding) {
-      if (operation === "generation_list") return { jobs: [], next: null } as GenerationOutput<K>;
+      if (operation === "generation_list") return { jobs: [], next: null } as unknown as GenerationOutput<K>;
       throw new Fault("invalid", "PNG generation is not configured");
     }
     if (operation === "generation_result") {
       const result = await this.call("generation_result", input),
         bytes = await readCandidate(this.binding.root, result.candidate);
-      return { candidate: result.candidate, data: Buffer.from(bytes).toString("base64") } as GenerationOutput<K>;
+      return {
+        candidate: result.candidate,
+        data: Buffer.from(bytes).toString("base64"),
+      } as unknown as GenerationOutput<K>;
     }
     return this.call(
       operation as Exclude<GenerationOperation, "generation_adopt" | "generation_result" | "generation_status">,
