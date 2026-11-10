@@ -1,0 +1,43 @@
+{
+  "name": "@open-motion/gateway",
+  "private": true,
+  "type": "module",
+  "description": "Durable injection-only PNG generation candidates",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "esbuild": "0.28.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/html-anything.git",
+    "directory": "packages/gateway"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./contract": {
+      "types": "./dist/contract.d.ts",
+      "default": "./dist/contract.mjs"
+    },
+    "./host": {
+      "types": "./dist/host.d.ts",
+      "default": "./dist/host.mjs"
+    }
+  },
+  "dependencies": {
+    "@odsuite/blob": "workspace:*",
+    "@odsuite/protocol": "workspace:*",
+    "@odsuite/sidecar": "workspace:*",
+    "@open-motion/workspace": "workspace:*",
+    "zod": "4.6.7"
+  }
+}

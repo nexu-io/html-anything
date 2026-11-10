@@ -1,0 +1,2 @@
+import { build } from "esbuild";
+await build({ bundle: true, splitting: true, entryPoints: { index: "src/index.ts", contract: "src/contract.ts", host: "src/host.ts" }, outdir: "dist", outExtension: { ".js": ".mjs" }, format: "esm", packages: "external", platform: "node", target: "node24" });
