@@ -28,7 +28,8 @@ async function fixture(t: any, candidate = false) {
   const directory = path.join(root, 'guide'), record = await generateInstallGuide(tgz, directory, candidate);
   return { directory, record };
 }
-function storage(directory: string, record: any, previous = 'previous accepted instructions') {
+const previousGuide = '# Install OpenMotion 0.6.3-test.1\n';
+function storage(directory: string, record: any, previous = previousGuide) {
   const plan = storagePlan(record, config), objects = new Map<string, Buffer>(), writes: any[] = [];
   objects.set(plan.fixedKey, Buffer.from(previous));
   const run = async (command: string, args: string[]) => {
@@ -74,7 +75,7 @@ test('publication verifies the immutable URL before conditional fixed promotion 
   assert(store.writes[0].args.includes('--if-none-match'));
   assert(store.writes[1].args.includes('--if-match') && store.writes[1].args.includes('"previous-etag"'));
   assert(store.writes[1].args.includes('public, max-age=60, must-revalidate'));
-  assert.equal(await readFile(path.join(directory, 'previous-install.md'), 'utf8'), 'previous accepted instructions');
+  assert.equal(await readFile(path.join(directory, 'previous-install.md'), 'utf8'), previousGuide);
   assert.equal(result.phase, 'verified'); assert(result.previousSHA256);
 });
 
@@ -84,7 +85,7 @@ test('an immutable version mismatch or failed public version verification leaves
   await assert.rejects(publishGuide(directory, config, store), /immutable/); assert.equal(store.writes.length, 0);
   store.objects.delete(store.plan.versionKey);
   await assert.rejects(publishGuide(directory, config, { ...store, fetcher: async () => new Response('wrong edge bytes') }), /bytes differ/);
-  assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), 'previous accepted instructions');
+  assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), previousGuide);
 });
 
 test('short version URLs preserve the bytes of an existing immutable legacy URL', async t => {
@@ -105,7 +106,7 @@ test('a post-promotion public failure records the partial state and preserves re
   await assert.rejects(publishGuide(directory, config, { ...store, fetcher: async (url: URL) => url.pathname.slice(1) === store.plan.versionKey ? store.fetcher(url) : new Response('stale edge bytes') }), /bytes differ/);
   const state = JSON.parse(await readFile(path.join(directory, 'publication.json'), 'utf8'));
   assert.equal(state.phase, 'fixed-written-public-unverified');
-  assert.equal(await readFile(path.join(directory, 'previous-install.md'), 'utf8'), 'previous accepted instructions');
+  assert.equal(await readFile(path.join(directory, 'previous-install.md'), 'utf8'), previousGuide);
 });
 
 test('candidate previews, changed guide bytes and unsafe storage destinations cannot publish', async t => {
@@ -125,14 +126,34 @@ test('archive-only guide publication never accesses the moving default', async t
   } });
   assert.equal(result.promoted, false); assert.equal(result.phase, 'version-verified');
   assert.deepEqual(store.writes.map(x => x.key), [store.plan.versionKey]);
-  assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), 'previous accepted instructions');
+  assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), previousGuide);
 });
 
-test('PR CI has no publication credentials; publication requires the separate manual protected workflow', async () => {
+test('late completion archives its exact version without rolling a newer default back', async t => {
+  const { directory, record } = await fixture(t), newer = '# Install OpenMotion 0.6.4-test.10\n';
+  const store = storage(directory, record, newer);
+  const result = await publishGuide(directory, config, store);
+  assert.equal(result.phase, 'superseded'); assert.equal(result.promoted, false);
+  assert.deepEqual(store.writes.map(x => x.key), [store.plan.versionKey]);
+  assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), newer);
+});
+
+test('unrecognized or conflicting same-version defaults require inspection instead of replacement', async t => {
+  const { directory, record } = await fixture(t);
+  for (const previous of ['unrecognized instructions', `# Install OpenMotion ${record.version}\nchanged`]) {
+    const store = storage(directory, record, previous);
+    await assert.rejects(publishGuide(directory, config, store), /recognizable version|Same-version/);
+    assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), previous);
+    assert(!store.writes.some(x => x.key === store.plan.fixedKey));
+  }
+});
+
+test('PR CI has no publication credentials; publication requires a separate manual accepted workflow', async () => {
   const ci = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
   const workflow = await readFile(new URL('../.github/workflows/motion-publish-test.yml', import.meta.url), 'utf8');
   assert(!ci.includes('secrets.') && !ci.includes('publish-install-guide:'));
   assert(workflow.includes('workflow_dispatch:') && !workflow.includes('pull_request:') && !workflow.includes('push:'));
-  assert(workflow.includes('environment: motion-test-publish') && workflow.includes('default: false'));
+  assert(!workflow.includes('environment:'), 'No independent approval environment is enabled');
+  assert(workflow.includes('accepted:') && workflow.includes('default: false'));
   assert(!workflow.split('  snapshot:\n')[0].includes('secrets.'));
 });

@@ -1,29 +1,29 @@
 name: Motion test publication
+run-name: Motion test publication · ${{ inputs.version }}
 
 on:
   workflow_dispatch:
     inputs:
-      candidate_run_id:
-        description: 'Successful Motion candidate build run ID'
+      version:
+        description: 'Exact accepted candidate version, e.g. 0.6.4-test.7; candidate identity is resolved automatically'
         type: string
         required: true
-      tgz_sha256:
-        description: 'Accepted candidate tgz SHA256'
-        type: string
-        required: true
-      acceptance_sha256:
-        description: 'SHA256 of the completed internal acceptance record; no internal URL or private content'
-        type: string
-        required: true
-      action:
-        description: 'Publish to npm test and promote guide, or only backfill immutable snapshots'
-        type: choice
-        options: [publish-test, archive-only]
-        default: archive-only
-      approved:
-        description: 'I approve this exact version/hash after reviewing its acceptance record'
+      accepted:
+        description: 'I completed the required acceptance for this exact candidate and authorize public test publication'
         type: boolean
+        required: true
         default: false
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
+      accepted:
+        type: boolean
+        required: true
+      archive_only:
+        type: boolean
+        required: true
 
 permissions:
   contents: read
@@ -34,11 +34,9 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  MOTION_CANDIDATE_RUN: ${{ inputs.candidate_run_id }}
-  MOTION_EXPECTED_SHA256: ${{ inputs.tgz_sha256 }}
-  MOTION_ACCEPTANCE_SHA256: ${{ inputs.acceptance_sha256 }}
-  MOTION_RELEASE_ACTION: ${{ inputs.action }}
-  MOTION_APPROVED: ${{ inputs.approved }}
+  MOTION_VERSION: ${{ inputs.version }}
+  MOTION_ACCEPTED: ${{ inputs.accepted }}
+  MOTION_RELEASE_ACTION: ${{ inputs.archive_only && 'archive-only' || 'publish-test' }}
 
 jobs:
   verify:
@@ -47,6 +45,7 @@ jobs:
     timeout-minutes: 15
     outputs:
       artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+      tgz_sha256: ${{ steps.download.outputs.tgz_sha256 }}
     steps:
       - uses: actions/checkout@v6.0.2
         with:
@@ -56,11 +55,16 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '26.11.1'
-      - name: Verify originating run, artifact digest, version and source; rescan
+      - name: Verify successful candidate producer and download its immutable artifact
+        id: download
         env:
           GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/motion-release.mjs download "$RUNNER_TEMP/candidate"
+      - name: Recheck the integrated source and both archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MOTION_EXPECTED_SHA256: ${{ steps.download.outputs.tgz_sha256 }}
         run: |
-          node .github/scripts/motion-release.mjs download "$RUNNER_TEMP/candidate"
           git fetch origin feature/motion:refs/remotes/origin/feature/motion
           node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node .github/scripts/motion-release.mjs rescan "$RUNNER_TEMP/candidate" "$PWD" "$RUNNER_TEMP/scanner/gitleaks"
@@ -73,8 +77,10 @@ jobs:
           if-no-files-found: error
 
   npm:
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' }}
+    env:
+      MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
     needs: verify
-    environment: motion-test-publish
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:
@@ -98,6 +104,10 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ github.run_id }}
           path: ${{ runner.temp }}/candidate
+      - name: Record explicit operator acceptance authorization
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/motion-release.mjs authorize "$RUNNER_TEMP/candidate"
       - name: Publish the accepted bytes with npm trusted publishing, or verify an identical existing version
         run: node .github/scripts/motion-release.mjs npm "$RUNNER_TEMP/candidate"
       - name: Retain npm publication state even after a partial failure
@@ -106,11 +116,16 @@ jobs:
         uses: actions/upload-artifact@v7.0.2
         with:
           name: npm-publication-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/candidate/npm-publication.json
+          path: |
+            ${{ runner.temp }}/candidate/npm-publication.json
+            ${{ runner.temp }}/candidate/authorization.json
           retention-days: 30
           if-no-files-found: warn
 
   registry-mac:
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' }}
+    env:
+      MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
     needs: [verify, npm]
     runs-on: macos-26
     timeout-minutes: 40
@@ -145,6 +160,9 @@ jobs:
           if-no-files-found: warn
 
   registry-windows:
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' }}
+    env:
+      MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
     needs: [verify, npm]
     runs-on: windows-2025
     timeout-minutes: 40
@@ -179,8 +197,11 @@ jobs:
           if-no-files-found: warn
 
   snapshot:
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' && needs.registry-mac.result == 'success' && needs.registry-windows.result == 'success' }}
+    env:
+      MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
+      MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN }}
     needs: [verify, npm, registry-mac, registry-windows]
-    environment: motion-test-publish
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -237,3 +258,13 @@ jobs:
             ${{ runner.temp }}/candidate/previous-install.md
           retention-days: 30
           if-no-files-found: warn
+      - name: Show the exact-version result and default guide status
+        if: success()
+        run: |
+          node --input-type=module <<'JS'
+          import { readFileSync, appendFileSync } from 'node:fs';
+          const c = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/candidate.json'));
+          const a = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/release-attempt.json'));
+          const origin = process.env.MOTION_INSTALL_PUBLIC_ORIGIN;
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Test publication result\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nResult: ${a.stage}\n\n[Exact-version installation guide](${origin}/open-motion/dev/${c.version}/install.md)\n\n[Default test guide](${origin}/open-motion/dev/install.md)\n\nThe default is advanced only after registry/native checks and public readback; a superseded candidate keeps its version snapshot without moving the default. No stable release occurred.\n`);
+          JS

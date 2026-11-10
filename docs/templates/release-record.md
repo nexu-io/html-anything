@@ -1,17 +1,19 @@
 # Motion candidate acceptance record
 
-Keep the completed record and attachments internally. Only its SHA256 goes into the public publication workflow. Do not attach user material, credentials, internal URLs or this completed record to public artifacts.
+The candidate artifact includes this checklist as `acceptance.md` with its package/source/hash identity already filled. Keep the completed copy and attachments internally. Do not attach user material, credentials, internal URLs or the completed record to public artifacts. No manual file hash is required by the release form.
 
-## Frozen identity
+## Generated frozen identity
 
-- Package / exact version:
-- Source full SHA / integration PR / review:
-- Candidate workflow SHA / run ID / attempt / artifact expiry:
-- TGZ filename / size / SHA256 / npm SHA512 integrity:
-- Embedded application / manifest / npm lock / native lock hashes:
+<!-- CANDIDATE_IDENTITY -->
+
+The release builder replaces this marker. Do not change its generated identity; fill only the tester context and results below. In a source checkout, download the generated checklist from the actual candidate instead.
+
+## Tester context
+
+- Integration PR / source review / artifact expiry:
 - Template environment / Resource / locale / catalog publication version:
 - Supported OS / CPU / Node / npm / host versions:
-- Acceptance owner / independent reviewer / release operator:
+- Acceptance owner / reviewer (if used) / release operator:
 - Prior accepted compatible version or backup (or none):
 
 ## Acceptance matrix
@@ -36,7 +38,8 @@ Use PASS / FAIL / NOT RUN and link retained evidence. CI success alone cannot fi
 - Public source/package scans, dependency/license review and telemetry state:
 - Approved exact version and TGZ SHA256:
 - Reviewer / date / explicit release authorization:
-- Frozen record filename / SHA256 (hash the final file and retain those same bytes):
+- Internal retained record revision / filename (keep this private):
+- The release operator enters this exact version in Motion test publication and confirms acceptance before dispatch. No independent approval environment is enabled. Never confirm a failed or incomplete required check.
 
 ## Publication follow-up
 
@@ -46,4 +49,4 @@ Use PASS / FAIL / NOT RUN and link retained evidence. CI success alone cannot fi
 - Default entry / previous entry / final publication phase:
 - Failure, recovery or user feedback:
 
-Append follow-up as a separate record linked to the frozen acceptance digest; do not edit the already-hashed approval file in place. Formal publication additionally requires the stable-package checks in the acceptance guide.
+Retain the completed acceptance revision; append publication follow-up separately against the same candidate identity. The public release record contains the manual operator authorization, not the private evidence or its digest. That receipt records explicit operator confirmation, not independent review or proof that every test was performed. Formal publication additionally requires the stable-package checks in the acceptance guide.

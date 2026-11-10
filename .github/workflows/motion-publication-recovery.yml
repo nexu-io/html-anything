@@ -1,0 +1,32 @@
+name: Motion snapshot recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Exact existing candidate version; the identical package must already be public on npm'
+        type: string
+        required: true
+      accepted:
+        description: 'I verified this exact candidate and authorize snapshot-only recovery'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  recover:
+    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    uses: ./.github/workflows/motion-publish-test.yml
+    with:
+      version: ${{ inputs.version }}
+      accepted: ${{ inputs.accepted }}
+      archive_only: true
+    secrets: inherit
