@@ -82,7 +82,7 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
         const response = await fetch(origin + '/motion-api/phase1/call', { method: 'POST', headers: await editorHeaders(store, origin),
           body: JSON.stringify({ name, arguments: args }), signal: AbortSignal.timeout(600_000) });
         const value = await response.json();
-        if (!response.ok) throw new Error(value.error || 'Tool failed');
+        if (!response.ok) throw Object.assign(new Error(value.error || 'Tool failed'), { code: value.code, details: value.runtime });
         if (value.projectId && value.sessionId) selections.set(store, { projectId: value.projectId, sessionId: value.sessionId });
         return result({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value });
       }
@@ -96,10 +96,10 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Tool failed';
       const code = (error as any).code || /^([A-Z][A-Z_]+):?/.exec(message)?.[1] || 'TOOL_FAILED';
-      const runtimeFailure = ['MCP_RUNTIME_RELOAD_REQUIRED', 'EDITOR_RUNTIME_INCOMPATIBLE'].includes(code);
+      const runtimeFailure = ['MCP_RUNTIME_RELOAD_REQUIRED', 'EDITOR_RUNTIME_INCOMPATIBLE', 'NATIVE_RUNTIME_NOT_READY'].includes(code);
       return result({ isError: true, content: [{ type: 'text', text: message }], structuredContent: { error: { code, message,
         ...(runtimeFailure && (error as any).details ? { details: (error as any).details } : {}),
-        applied: runtimeFailure || /^(INVALID_|VERSION_CONFLICT|PROJECT_NOT_|PROJECT_SESSION_|REQUEST_ID_CONFLICT|MCP_TOOL_NOT_EXPOSED|EXPORT_NOT_|TEMPLATE_NOT_)/.test(code) ? false : 'unknown' } } });
+        applied: runtimeFailure || /^(NATIVE_RUNTIME_NOT_READY|INVALID_|VERSION_CONFLICT|PROJECT_NOT_|PROJECT_SESSION_|REQUEST_ID_CONFLICT|MCP_TOOL_NOT_EXPOSED|EXPORT_NOT_|TEMPLATE_NOT_)/.test(code) ? false : 'unknown' } } });
     }
   }
   return { jsonrpc: '2.0', id: message.id, error: { code: -32601, message: 'Method not found' } };

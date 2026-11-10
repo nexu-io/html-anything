@@ -7,7 +7,7 @@ import { realpathSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, relativePath, runFile, withLock, writeAtomic, writeJSON } from './runtime-assets.mjs';
-import { ensureNativeRuntime } from './npm-runtime.mjs';
+import { ensureNativeRuntime, startNativePreparation } from './npm-runtime.mjs';
 import { hosts, hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
 
 // Keep ownership stable so earlier local installations remain upgradable.
@@ -32,7 +32,8 @@ Setup options:
   --profile NAME     Harness profile (default: web); use the selected host profile
   --manifest FILE    Explicit release manifest for controlled local installations
 
-Run prepare after successful setup and wait before native project operations.
+Setup starts native preparation in the background; editing does not wait for it.
+Use prepare to wait explicitly for every video component or retry failed preparation.
 Refresh the selected host's Tools/Skills; registration alone does not prove loading.
 Use separate host configuration, home, data and Skills paths for test candidates.
   -h, --help         Show this help without installing or changing configuration
@@ -133,7 +134,8 @@ export async function setup(options) {
       await writeJSON(stateFile, state); wroteState = true;
       await plan.register();
       for (const item of directories) await rm(item.backup, { recursive: true, force: true }).catch(error => console.error('Old instruction backup retained: ' + error.message));
-      return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'deferred-until-native-operation-or-prepare' };
+      await startNativePreparation(appRoot).catch(error => console.error('OpenMotion: background preparation could not start; retry in Studio or run prepare. ' + error.message));
+      return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'background-preparation; status and retry available in Studio' };
     } catch (error) {
       if (wroteLauncher && !previous) await rm(launcher, { force: true });
       if (wroteState) { if (previous) await writeJSON(stateFile, previous); else await rm(stateFile, { force: true }); }
