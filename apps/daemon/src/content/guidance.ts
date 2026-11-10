@@ -1,83 +1,147 @@
 import { createHash } from "node:crypto";
+import { posix } from "node:path";
 import { Fault } from "@open-motion/workspace/contract";
+import { craft } from "./guidance/craft.js";
+import { planning } from "./guidance/planning.js";
+import { reconstruction } from "./guidance/reconstruction.js";
+import { review } from "./guidance/review.js";
+import { routes } from "./guidance/routes.js";
+import { technical } from "./guidance/technical.js";
 
 export const instructions =
-  "OpenMotion shares native projects between people and Agents. Discover and read the relevant open-motion://guidance resources before dependent operations; reuse complete bodies by documentId/contentHash. Read actual workspace ownership and revisions, retain request identities across unknown outcomes, and preserve editable source. A requested draft stops at an editable project; export only when requested. A returned URL is not proof that a host view opened. Do not start another server or assume tools from another installation exist.";
-const bodies = {
-  production: `# Continuing production and project ownership
+  "OpenMotion shares native projects between people and Agents. Read open-motion://guidance/context and the relevant complete versioned bodies before dependent operations, reusing retained bodies by documentId/contentHash. Route determined local edits to production, new concepts/motion/sound design to director, editable templates to template, a finished reference to recreate, and a requested reusable template to videotemplate. Keep actual workspace ownership/revisions and stable request identities; preserve current user presentation/background preferences. Source saves, host display, technical film checks and creative acceptance are distinct evidence. Current tools do not imply reference-video acquisition, provider generation, arbitrary media import or portable packaging. Discover actual tools and host capabilities; never fabricate execution, launch another service, assume legacy endpoints or steal chat/desktop focus.";
 
-Start from the user's current intent, selected project and preserved creative decisions. Existing source does not force every follow-up through intake or template selection. A local text edit, an already chosen asset replacement, a preview and an export are separate scopes. New narrative/motion/sound design needs an explicit creative brief; these technical tools do not manufacture an accepted creative decision.
-
-Read workspace_state and session_get to recover instructions, actual messages, artifacts and selection. Read project_read using explicit sessionId/artifactId before any edit. A session can own multiple independent artifacts; an empty session is valid. Never fabricate an assistant reply or claim a model ran merely because source was saved. message_append records only actual caller-supplied content.
-
-Create a session once with a stable requestId and preserved instruction. Create a native artifact through artifact_create, or use the selected template route. Creation and entry are distinct: creating a project never changes the current selection. To enter it, call artifact_open with the observed selection revision and expected current artifact/revision (or null). A stale selection rejects; refresh and preserve unsaved work rather than switching another user's context. The browser Refresh action reads shared committed state and refuses to discard a draft implicitly. A tool-returned runtime URL does not prove the editor was opened; only use host browser/panel capabilities when the user's scope permits it.
-
-Before writing, obtain the complete relevant guidance and actual target source in a read-only call that returns to the Agent. Then perform dependent changes in a later call. A path, document listing or truncated response is not a completed read. Keep documentId/contentHash for bodies actually retained in context; reuse them until missing or changed. Do not restart routing for every turn.
-
-Read [native authoring](open-motion://guidance/native) before authoring source; read [templates](open-motion://guidance/templates) for a selected template; read [verification](open-motion://guidance/verification) for export. Use the native source and workspace history as the common edit model. project_save replaces the complete source snapshot against expectedRevision. Touch only requested content, preserve supporting files, media membership, ownership and creative decisions. On conflict read current source and reconcile intentionally; never silently overwrite a newer revision.
-
-Every mutation carries a stable requestId. After a timeout or lost response, repeat the same operation and exact payload; do not generate another template/project or reapply a transformation. A committed response can precede transport failure. The returned receipt confirms the original command, while project_read returns current content. Persisted undo/redo requires both current revision and history version. Keep editable source even if preview or export fails. No tool result alone proves visual quality, listening acceptance or completion of a paid generation task.
-`,
-  native: `# Native source authoring contract
-
-The current native adapters pin Hyperframes core/parser/SDK/engine 0.9.7 and GSAP 3.15.0. Author HTML compositions with explicitly registered paused GSAP timelines. Do not replace them with a second shot JSON model, a recorder canvas or timer-driven scene engine. The actual native runtime owns seeking and rendering; editable source must not contain injected preview bridges or engine tags.
-
-A project has index.html and finite relative UTF-8 source files. The root declares one data-composition-id plus numeric data-width/data-height/data-duration. Keep reusable source definitions distinct from mounted instances. An external composition uses an explicit data-composition-src and a stable host identity in the declaring file. Nested definitions may use a template wrapper. A second embedded composition needs an explicit file boundary. Keep authored source paths inside the snapshot; no host filesystem, remote script/font/media dependency, node_modules, cache or rendered output belongs in source. SVG artwork and finite source CSS/JS are film content, separate from Web application styling.
-
-Use the supplied pinned runtime's gsap global and register window.__timelines[compositionId]. Child scripts use their own composition identity and local time; parent hosts declare starts and durations. Repeated mounts share one editable source definition. Do not persist assembled HTML, runtime instance markers, absolute host paths or a shadow editable directory. Dynamic/unproven selectors, nonlinear clocks or effects cannot be treated as supported numeric Studio fields; keep source repair available and report the actual limit.
-
-Workspace bounds text to 128 files / 4 MiB with at most 1 MiB per file. The native graph bounds mounts to 256 instances and 20 nested file edges; expanded source/assembled HTML have separate bounds. project_save submits the full finite file set with expectedRevision. Preserve canonical supporting files and licenses. Native CSS can consume embedded licensed font bytes from the template's source CSS; the supplied fonts cover the original Latin template content, not arbitrary international typography.
-
-User media is imported through resource_import as verified PNG or PCM16 WAV, never through a host path. Each resource is at most 6 MiB; a revision allows 64 resources / 64 MiB. resource_read requires the owned immutable revision. Saves preserve media membership. Removing media changes current membership but preserves historical bytes and undo. Do not smuggle other codecs into these supported types. Additional media/font formats require their own verified contract.
-
-For a requested source change, preserve untouched authored values, supporting compositions and media. The Web Studio's native transforms share this source/save chain. MCP currently exposes explicit source transactions; use only discovered tools and never assume a legacy editing endpoint is available. Read back the saved revision and inspect its actual preview. Confirm native play/seek, affected intervals and context identity before reporting technical success. A saved file, a loaded frame, a rendered film and creative acceptance are different evidence.
-`,
-  templates: `# Selected native templates
-
-A known selected template ID can go directly to template_read when its contentHash is already known. Otherwise call template_list to discover the finite catalog. The current built-ins are product-promo (20 seconds), nyt-graph (15 seconds) and decision-tree (10 seconds), all 1920 by 1080. Their sources, Apache license, file digests, adapted content identity and font notices are returned explicitly. This is the built-in catalog; Prism publications and video-only reference reconstruction have separate pending adapters. Never substitute one for the other or report a video reference as an editable template.
-
-Read template_read with the exact id/contentHash. It returns the complete adapted native source and manifest, not an arbitrary local path. Original animation, copy, scene structure and artwork are retained. Adaptations remove CDN engines, embed verified original Latin fonts with OFL notices, and give Product Promo captions an explicit source-file boundary. Native playback and creative fidelity still need actual evidence. An edited project is no longer the untouched template preview.
-
-A user-selected template or delegated choice already authorizes that selection within the requested scope. Do not repeat optional brand/material intake for an unchanged starter. For actual product claims, use verified user facts and approved material; sample copy/brands remain sample content until deliberately replaced. If a choice is unresolved, present only relevant alternatives with their opening, pacing, duration, material needs and tradeoff. A thumbnail is not evidence that a reference was inspected.
-
-Call template_create with the chosen id/contentHash, sessionId, title and a stable requestId. It creates one independent workspace artifact from the exact version, retains source/license/font provenance in template.json and preserves all older projects. A repeated exact command confirms the same artifact even after later edits. Reusing requestId with another template/title is an error. An unavailable contentHash rejects rather than silently taking new catalog content.
-
-Creation does not enter the project. Read current workspace selection and use artifact_open with explicit expectedSelection/expectedCurrent only when entering is appropriate. Read project_read after creation and before adaptation. Save native edits through project_save, preserving supporting files and original notices. Web and MCP observe the same committed artifact; browser refresh is explicit and must preserve unsaved drafts. Never copy files into another physical project store or regenerate a template after a lost response.
-
-A requested starter ends with an editable project and actual preview verification. Do not render an MP4 just because a template was selected. When the user requests a film, follow [verification](open-motion://guidance/verification) against the reviewed immutable source revision. Keep the editable artifact and distinguish technical export from creative acceptance.
-`,
-  verification: `# Export and acceptance
-
-Confirm the requested deliverable before rendering. A source draft, editable editor handoff, preview, MP4 and reusable template are separate outcomes. Preserve prior creative decisions and inspect the actual edited source; later edits must not silently alter the input of an already accepted export.
-
-Read project_read and existing export_list pages for the owned session/artifact. Reuse a suitable known task before creating another. export_create takes explicit revision, rational fps and stable requestId. The native contract is H.264/yuv420p MP4, even dimensions up to 4096, at most 600 seconds / 36000 frames and optional authored PCM16 WAV mixed into AAC. The current native toolchain is qualified on macOS arm64; source CI or an empty list does not qualify another platform.
-
-A queued receipt means durable intent, not a completed film. Poll export_read for preparing/capturing/encoding/verifying and terminal state. An accepted task is independent of HTTP completion and browser-panel lifetime. Development MCP attachment disconnect leaves its separate runtime running. Self-hosted Codex EOF drains its owned runtime: running intent becomes interrupted, queued intent survives for restart. Do not claim background execution continues after its carrier is stopped.
-
-export_cancel and export_retry require an observed version and stable requestId. Cancellation completes only after the actual worker drains. Retry of failed/cancelled/interrupted work creates another attempt against the original frozen source, even if the current project changed. To export a different revision, submit a new explicit intent. A recovering task requires explicit sidecar ownership recovery; never erase a ledger, guess death by elapsed time or launch a replacement worker yourself. Pre-ready process-witness recovery remains a separately unqualified window.
-
-Success means actual output passed codec/dimensions/fps/duration/audio checks, full decode, exact frame count, sampled seeks and digest verification after worker retirement. Call export_download for the successful owned job. It returns a temporary read-only resource link, digest, size and filename, never a host path or embedded movie. Download links expire after ten minutes or Daemon restart; request a new link for the persistent job. Do not put capability URLs into shared logs.
-
-Separately inspect the real movie's first/middle/last and affected intervals, normal-speed playback, visible copy/layout, synchronization and audible output when present. Frame/codec checks do not prove creative quality or listening acceptance. Record what was actually observed and any unsupported material/effect/platform. Keep the editable source and report export failure without discarding the project or fabricating completion.
-`,
-};
+const bodies = { ...technical, ...routes, ...planning, ...craft, ...review, ...reconstruction };
+type Id = keyof typeof bodies;
+const sourceCommit = "03d6df8615a2cb87727241406b9671c184ff497a";
 const uri = (id: string) => `open-motion://guidance/${id}`;
+const hash = (content: string) => `sha256:${createHash("sha256").update(content).digest("hex")}`;
+
+export const guidanceSkills = [
+  {
+    name: "motion-production",
+    entry: "production",
+    description:
+      "Continue an existing editable OpenMotion project using established creative decisions: local content or chosen-media changes, preview, technical repair, export and handoff. New narrative/motion/sound design uses motion-director; selected templates, reference reconstruction and reusable templates have their own routes.",
+  },
+  {
+    name: "motion-director",
+    entry: "director",
+    description:
+      "Direct original motion concepts, dynamic narrative, movement and sound design, major restructuring or creative review. Local creative work stays scoped; locked picture permits sound-only design. Determined engineering edits use motion-production.",
+  },
+  {
+    name: "motion-template-to-video",
+    entry: "template",
+    description:
+      "Use an actual editable template or selected catalog source for an unchanged starter or content/brand/material adaptation while preserving agreed structure and motion. Includes an explicitly accepted first experience. Video-only references and reusable-template creation use their own routes.",
+  },
+  {
+    name: "motion-recreate",
+    entry: "recreate",
+    description:
+      "Rebuild a finished reference motion video as this user's editable film, including changes when editable source is absent. Inspect actual reference and user material; preserve scope and compare observed results. Loose inspiration, existing templates and reusable-template packages use their own routes.",
+  },
+  {
+    name: "motion-video-to-template",
+    entry: "videotemplate",
+    description:
+      "Rebuild a reference motion video as a reusable editable native template with source, permitted dependencies and requested preview/package evidence. Keep faithful reconstruction distinct from later adaptation; report unavailable reference analysis, media or packaging capabilities honestly.",
+  },
+] as const;
+
+type Skill = (typeof guidanceSkills)[number]["name"];
+const owner: Record<Id, [Skill, string]> = {
+  production: ["motion-production", "SKILL.md"],
+  native: ["motion-production", "references/native.md"],
+  templates: ["motion-production", "references/templates.md"],
+  verification: ["motion-production", "references/verification.md"],
+  context: ["motion-production", "references/context.md"],
+  edit: ["motion-production", "references/edit.md"],
+  intake: ["motion-production", "references/intake.md"],
+  portable: ["motion-production", "references/portable-project.md"],
+  director: ["motion-director", "SKILL.md"],
+  actionscript: ["motion-director", "references/action-script.md"],
+  craft: ["motion-director", "references/motion-craft.md"],
+  phrases: ["motion-director", "references/motion-phrases.md"],
+  examples: ["motion-director", "references/examples.md"],
+  decisions: ["motion-director", "references/production-decisions.md"],
+  sound: ["motion-director", "references/sound-narrative.md"],
+  review: ["motion-director", "references/motion-review.md"],
+  template: ["motion-template-to-video", "SKILL.md"],
+  recreate: ["motion-recreate", "SKILL.md"],
+  rebuild: ["motion-recreate", "references/rebuild.md"],
+  recreateverify: ["motion-recreate", "references/verify.md"],
+  videotemplate: ["motion-video-to-template", "SKILL.md"],
+  measure: ["motion-video-to-template", "references/measure.md"],
+  videorebuild: ["motion-video-to-template", "references/rebuild.md"],
+  rules: ["motion-video-to-template", "references/rule-sources.md"],
+  videoverify: ["motion-video-to-template", "references/verify.md"],
+};
+const file = (id: Id) => posix.join(...owner[id]);
+const ids = Object.keys(bodies) as Id[];
+function references(content: string) {
+  return [...new Set(content.match(/open-motion:\/\/guidance\/[a-z]+/g) ?? [])];
+}
+for (const id of ids) {
+  for (const reference of references(bodies[id]))
+    if (!ids.some((candidate) => uri(candidate) === reference)) throw Error("guidance reference is not registered");
+}
 export function listGuidance() {
-  return Object.entries(bodies).map(([id, content]) => ({
+  return ids.map((id) => ({
     uri: uri(id),
     name: id,
     mimeType: "application/json",
-    contentHash: `sha256:${createHash("sha256").update(content).digest("hex")}`,
+    contentHash: hash(bodies[id]),
   }));
 }
 export function readGuidance(value: string) {
-  const id = Object.keys(bodies).find((id) => uri(id) === value);
+  const id = ids.find((candidate) => uri(candidate) === value);
   if (!id) throw new Fault("missing", "guidance document is not registered");
-  const content = bodies[id as keyof typeof bodies];
+  const content = bodies[id];
   return {
     documentId: value,
-    contentHash: listGuidance().find((entry) => entry.uri === value)!.contentHash,
+    contentHash: hash(content),
     content,
-    references: [...new Set(content.match(/open-motion:\/\/guidance\/[a-z]+/g) ?? [])],
+    references: references(content),
+    source: {
+      commit: sourceCommit,
+      paths: [
+        `skills/${file(id)}`,
+        ...(id === "production" ? ["skills/motion-production/references/production.md"] : []),
+      ],
+    },
   };
+}
+
+/** Build-only projection: callers receive finite files, never a reader or an arbitrary path resolver. */
+export function localGuidance() {
+  const files: { path: string; content: string }[] = [];
+  const documents = ids.map((id) => {
+    const document = readGuidance(uri(id)),
+      path = file(id),
+      body = document.content.replace(/open-motion:\/\/guidance\/[a-z]+/g, (reference) => {
+        const target = ids.find((candidate) => uri(candidate) === reference);
+        if (!target) throw Error("guidance reference is not registered");
+        return posix.relative(posix.dirname(path), file(target));
+      }),
+      skill = guidanceSkills.find((entry) => entry.entry === id),
+      content = skill
+        ? `---\nname: ${skill.name}\ndescription: ${JSON.stringify(skill.description)}\n---\n\n${body}`
+        : body;
+    files.push({ path: `skills/${path}`, content });
+    return {
+      documentId: document.documentId,
+      contentHash: document.contentHash,
+      localContentHash: hash(content),
+      path,
+      references: document.references,
+      source: document.source,
+    };
+  });
+  files.push({
+    path: "skills/manifest.json",
+    content: `${JSON.stringify({ schema: 1, skills: guidanceSkills, documents }, null, 2)}\n`,
+  });
+  return files;
 }

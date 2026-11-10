@@ -19,19 +19,23 @@ export function button(document: Document, options: ButtonOptions): HTMLButtonEl
   setButton(element, options);
   return element;
 }
+/** Change selection without replacing button content, focus or action. */
+export function setButtonSelected(element: HTMLButtonElement, selected: boolean): void {
+  element.classList.toggle("om-button--selected", selected);
+  element.setAttribute("aria-pressed", String(selected));
+}
 /** Controlled props update the same focusable element; leaf content has no independent lifecycle. */
 export function setButton(element: HTMLButtonElement, options: ButtonOptions): void {
   const document = element.ownerDocument;
   const external = [...element.classList].filter((name) => !name.startsWith("om-button"));
   element.className = ["om-button", ...external].join(" ");
   if (options.primary) element.classList.add("om-button--primary");
-  if (options.selected) element.classList.add("om-button--selected");
   if (options.fullWidth) element.classList.add("om-button--wide");
   if (options.variant) element.classList.add(`om-button--${options.variant}`);
   if (options.compact) element.classList.add("om-button--compact");
   if (options.iconOnly) element.classList.add("om-button--icon");
   element.setAttribute("aria-label", options.label);
-  if (options.selected !== undefined) element.setAttribute("aria-pressed", String(options.selected));
+  if (options.selected !== undefined) setButtonSelected(element, options.selected);
   else element.removeAttribute("aria-pressed");
   if (options.detail) element.setAttribute("aria-description", options.detail);
   else element.removeAttribute("aria-description");

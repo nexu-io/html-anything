@@ -57,6 +57,22 @@ export class Navigation {
       footer,
     );
     this.search.oninput = () => this.list();
+    this.sessions.onkeydown = (event) => {
+      const items = [...this.sessions.querySelectorAll<HTMLButtonElement>("button:not(:disabled)")],
+        at = items.indexOf(document.activeElement as HTMLButtonElement);
+      if (at < 0 || !["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const next =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? items.length - 1
+            : (at + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+      items.forEach((item, index) => {
+        item.tabIndex = index === next ? 0 : -1;
+      });
+      items[next]?.focus();
+    };
   }
   created(value: string) {
     if (this.title.value === value) this.title.value = "";
@@ -86,6 +102,8 @@ export class Navigation {
         item.remove();
         this.items.delete(id);
       }
+    const active =
+      sessions.find((session) => session.id === this.editor?.state.selection.sessionId)?.id ?? sessions[0]?.id;
     sessions.forEach((session, index) => {
       let item = this.items.get(session.id);
       if (!item) {
@@ -102,6 +120,9 @@ export class Navigation {
         disabled: this.blocked,
         onClick: () => this.actions.open(session.id),
       });
+      item.tabIndex = session.id === active ? 0 : -1;
+      if (session.id === this.editor?.state.selection.sessionId) item.setAttribute("aria-current", "true");
+      else item.removeAttribute("aria-current");
       if (this.sessions.children[index] !== item)
         this.sessions.insertBefore(item, this.sessions.children[index] ?? null);
     });

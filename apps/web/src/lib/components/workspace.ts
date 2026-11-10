@@ -1,4 +1,15 @@
-import { badge, button, codeEditor, field, note, readout, slot, tabs, tooltip } from "@open-motion/components";
+import {
+  badge,
+  button,
+  codeEditor,
+  field,
+  note,
+  readout,
+  setButton,
+  slot,
+  tabs,
+  tooltip,
+} from "@open-motion/components";
 import { setTheme, type Theme } from "@open-motion/theme";
 import type { Artifact } from "@open-motion/workspace/contract";
 import type { Client } from "../../api.js";
@@ -33,6 +44,8 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     retry: (() => void) | undefined,
     file = "index.html",
     activity = 0,
+    navigationOpen = true,
+    conversationOpen = true,
     flight = Promise.resolve();
   const run = (action: () => Promise<void>, next?: () => Promise<void>) => {
     if (busy || disposed) return;
@@ -75,7 +88,10 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
         id = await editor.createSession(title || `新会话 ${editor.state.sessions.length + 1}`);
         navigation.created(title);
       },
-      () => editor.openSession(id),
+      async () => {
+        await editor.openSession(id);
+        conversationOpen = true;
+      },
     );
   };
   const enterArtifact = (title: string) => {
@@ -116,6 +132,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       async () => {
         artifact = await editor.createTemplate(title, template.id, template.contentHash);
         templates.created();
+        conversation.created();
       },
       () => editor.openArtifact(artifact),
     );
@@ -154,7 +171,11 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     icon: "plus",
     iconOnly: true,
     variant: "ghost",
-    onClick: () => conversation.newProject(),
+    onClick: () => {
+      conversationOpen = true;
+      updatePanels();
+      conversation.newProject();
+    },
   });
   artifactTabs.append(projectTabs.element, addProject, badge(document, "产物类型", "Motion"));
   const title = slot(document, "title"),
@@ -163,7 +184,13 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     left = slot(document, "toolbar"),
     actions = slot(document, "toolbar");
   state.setAttribute("aria-live", "polite");
-  left.append(title, saved);
+  shell.navigation.id = `navigation-${crypto.randomUUID()}`;
+  shell.conversation.id = `conversation-${crypto.randomUUID()}`;
+  const navigationToggle = button(document, { label: "隐藏工作区导航" }),
+    conversationToggle = button(document, { label: "隐藏会话" });
+  navigationToggle.setAttribute("aria-controls", shell.navigation.id);
+  conversationToggle.setAttribute("aria-controls", shell.conversation.id);
+  left.append(navigationToggle, conversationToggle, title, saved);
   shell.header.append(left, actions);
   const undo = button(document, {
       label: "撤销",
@@ -241,6 +268,45 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
         run(() => editor.history(direction));
     }
   });
+  function updatePanels() {
+    for (const [control, pane, open, label, icon, change] of [
+      [
+        navigationToggle,
+        shell.navigation,
+        navigationOpen,
+        "工作区导航",
+        "sidebar",
+        () => {
+          navigationOpen = !navigationOpen;
+        },
+      ],
+      [
+        conversationToggle,
+        shell.conversation,
+        conversationOpen,
+        "会话",
+        "conversation",
+        () => {
+          conversationOpen = !conversationOpen;
+        },
+      ],
+    ] as const) {
+      if (!open && pane.contains(document.activeElement)) control.focus();
+      setButton(control, {
+        label: `${open ? "隐藏" : "显示"}${label}`,
+        icon,
+        iconOnly: true,
+        variant: "ghost",
+        onClick: () => {
+          change();
+          updatePanels();
+        },
+      });
+      control.setAttribute("aria-expanded", String(open));
+    }
+    shell.showNavigation(navigationOpen);
+    shell.showConversation(conversationOpen);
+  }
   function refreshHeader() {
     const blocked = busy || editor.unconfirmed,
       artifact = editor.session?.artifacts.find((a) => a.id === editor.project?.artifactId);
@@ -263,6 +329,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     message = next;
     const blocked = busy || editor.unconfirmed;
     setTheme(root, theme);
+    updatePanels();
     root.setAttribute("data-session-id", editor.state.selection.sessionId ?? "");
     root.setAttribute("data-artifact-id", editor.state.selection.artifactId ?? "");
     navigation.update(editor, blocked, theme === "dark");

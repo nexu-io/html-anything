@@ -7,6 +7,7 @@ export function metadata(version: string) {
       version,
       description: "Open Motion local managed runtime",
       mcpServers: "./mcp.json",
+      skills: "./skills/",
       requires_local_executor: true,
     },
     mcp: {
