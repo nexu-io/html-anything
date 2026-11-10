@@ -26,7 +26,6 @@ export async function plan(options: {
   scope: FactoryScope;
   carrier: string;
   watch?: boolean;
-  headless?: boolean;
 }): Promise<Plan> {
   const scope = factoryScope(options.scope),
     repo = await realpath(options.repo);
@@ -85,6 +84,5 @@ export async function plan(options: {
     entry,
     version,
     watch: options.watch ?? true,
-    headless: options.headless ?? false,
   };
 }

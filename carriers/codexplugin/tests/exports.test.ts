@@ -23,7 +23,8 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
       plugin = join(temporary, "installed"),
       root = join(temporary, "data"),
       evidence = fileURLToPath(new URL(`../../../.artifacts/codex-export/${randomUUID()}/`, import.meta.url)),
-      scope = { channel: channel("stable"), namespace: namespace("exports") };
+      built = JSON.parse(await readFile(resolve("dist/runtime.json"), "utf8")),
+      scope = { channel: channel(built.channel), namespace: namespace("exports") };
     await mkdir(evidence, { recursive: true });
     await cp(resolve("dist"), plugin, { recursive: true });
     const manager = await serve(managerEndpoint(root), { root }),
@@ -56,7 +57,12 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
       command: process.execPath,
       args: [join(plugin, "main.mjs")],
       cwd: temporary,
-      env: { OPEN_MOTION_ROOT: root, OPEN_MOTION_CHANNEL: "stable", OPEN_MOTION_NAMESPACE: "exports", NODE_PATH: "" },
+      env: {
+        OPEN_MOTION_ROOT: root,
+        OPEN_MOTION_CHANNEL: built.channel,
+        OPEN_MOTION_NAMESPACE: "exports",
+        NODE_PATH: "",
+      },
       stderr: "pipe",
     });
     const client = new Client({ name: "native-export-verifier", version: "1.0.0" });

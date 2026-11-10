@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { channel, namespace } from "@odsuite/protocol";
@@ -13,12 +13,13 @@ it("rejects a SIGKILL-interrupted root until explicit fingerprint recovery and r
   const root = await mkdtemp(join(tmpdir(), "standalone-crash-"));
   const hostTemporary = join(root, "host-temporary");
   await mkdir(hostTemporary);
+  const built = JSON.parse(await readFile(resolve("dist/runtime/runtime.json"), "utf8"));
   const child = spawn(
     process.execPath,
-    [resolve("dist/main.mjs"), "--root", root, "--channel", "stable", "--namespace", "crash"],
+    [resolve("dist/runtime/main.mjs"), "--root", root, "--channel", built.channel, "--namespace", "crash"],
     { stdio: ["ignore", "pipe", "pipe"], env: { ...process.env, TMPDIR: hostTemporary } },
   );
-  const scope = { channel: channel("stable"), namespace: namespace("crash") };
+  const scope = { channel: channel(built.channel), namespace: namespace("crash") };
   let runtime: Awaited<ReturnType<typeof open>> | undefined;
   let passed = false;
   try {
@@ -51,12 +52,12 @@ it("rejects a SIGKILL-interrupted root until explicit fingerprint recovery and r
     while ((await observeProcesses(root)).length && Date.now() < deadline)
       await new Promise((done) => setTimeout(done, 25));
     expect(await observeProcesses(root)).toEqual([]);
-    await expect(open({ root, scope, version: "0.6.1" })).rejects.toThrow();
+    await expect(open({ root, scope, version: built.version })).rejects.toThrow();
     const plan = await inspectRecovery(root);
     expect(plan.phase).toBe("ready");
     await expect(recover(root, { expected: "wrong" })).rejects.toThrow();
     await recover(root, { expected: plan.fingerprint });
-    runtime = await open({ root, scope, version: "0.6.1" });
+    runtime = await open({ root, scope, version: built.version });
     expect((await runtime.execute("session_get", { sessionId: session.id })).title).toBe("survives-crash");
     passed = true;
   } finally {

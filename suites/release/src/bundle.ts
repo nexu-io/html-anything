@@ -15,7 +15,7 @@ interface Bundle {
   schema: 1;
 }
 
-const pattern = /^[A-Za-z0-9][A-Za-z0-9./-]*$/;
+const pattern = /^[A-Za-z0-9.][A-Za-z0-9./-]*$/;
 
 function path(value: string): string {
   if (!pattern.test(value) || value.includes("//") || value.split("/").some((part) => part === ".." || part === ".")) {

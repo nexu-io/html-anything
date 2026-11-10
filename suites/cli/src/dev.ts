@@ -1,7 +1,7 @@
 import { configure, connect, repository, restart, start, status, stop } from "@odsuite/dev";
 import { channel, namespace } from "@odsuite/protocol";
 import type { Output } from "./index.js";
-export const devHelp = `odsuite dev start|restart --carrier=<name> [--channel=dev] [--namespace=default] [--watch=true|false] [--headless] [--root=<repo>]
+export const devHelp = `odsuite dev start|restart --carrier=<name> [--channel=dev] [--namespace=default] [--watch=true|false] [--root=<repo>]
 odsuite dev status|stop [--channel=dev] [--namespace=default] [--carrier=<name>] [--root=<repo>]
 odsuite dev connect --carrier=codexplugin [--channel=dev] [--namespace=default] [--root=<repo>]
 Use through pnpm exec. Control/liveness come only from sidecar. connect attaches carrier stdio without owning its manager.`;
@@ -19,22 +19,19 @@ export async function development(args: string[], cwd: string, output: Output) {
     if (!arg.startsWith("--")) throw new Error("expected named dev option");
     const at = arg.indexOf("="),
       key = arg.slice(2, at < 0 ? undefined : at);
-    if (!["carrier", "channel", "namespace", "root", "watch", "headless"].includes(key) || values.has(key))
+    if (!["carrier", "channel", "namespace", "root", "watch"].includes(key) || values.has(key))
       throw new Error("unknown or duplicate dev option");
     let value = at < 0 ? undefined : arg.slice(at + 1);
     if (value === undefined) {
-      if (key === "headless") value = "true";
-      else {
-        value = args[++i];
-        if (!value || value.startsWith("--")) throw new Error("incomplete dev option");
-      }
+      value = args[++i];
+      if (!value || value.startsWith("--")) throw new Error("incomplete dev option");
     }
     if (!value) throw new Error("empty dev option");
     values.set(key, value);
   }
-  if (!["start", "restart"].includes(operation ?? "") && (values.has("watch") || values.has("headless")))
-    throw new Error("watch/headless apply only to start/restart");
-  for (const key of ["watch", "headless"])
+  if (!["start", "restart"].includes(operation ?? "") && values.has("watch"))
+    throw new Error("watch applies only to start/restart");
+  for (const key of ["watch"])
     if (values.has(key) && !["true", "false"].includes(values.get(key) ?? ""))
       throw new Error(`--${key} must be true or false`);
   const repo = await repository(cwd, values.get("root")),
@@ -57,7 +54,6 @@ export async function development(args: string[], cwd: string, output: Output) {
             const plan = await configure({
               ...target,
               ...(values.has("watch") ? { watch: values.get("watch") === "true" } : {}),
-              ...(values.has("headless") ? { headless: values.get("headless") === "true" } : {}),
             });
             return operation === "start" ? start(plan) : restart(plan);
           })();

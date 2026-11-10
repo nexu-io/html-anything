@@ -3,7 +3,6 @@ import { join } from "node:path";
 import { namespace } from "@odsuite/protocol";
 import { formatReleaseVersion, parseReleaseVersion, releaseChannel } from "@odsuite/release";
 import { parseDocument } from "yaml";
-import { located } from "./files.js";
 import type { Configuration, Selection } from "./types.js";
 
 function record(value: unknown, keys: string[]): Record<string, unknown> {
@@ -33,47 +32,25 @@ export async function configuration(root: string, lane: string): Promise<Configu
   const baseVersion = parseReleaseVersion(String(runtime.version), "stable").baseVersion;
   for (const key of ["appid", "name", "scheme", "namespace"])
     if (typeof runtime[key] !== "string") throw new Error(`runtime.${key} is required`);
-  if (!Number.isSafeInteger(runtime.carrier) || Number(runtime.carrier) < 1) throw new Error("invalid carrier ABI");
-  const pipeline = record(data.pipeline, ["carrier", "capsule", "daemon", "web", "outputs", "blobs"]);
-  const units = {} as Configuration["units"];
-  for (const key of ["carrier", "capsule", "daemon", "web"] as const) units[key] = await located(root, pipeline[key]);
-  const declared =
-    pipeline.outputs === undefined ? {} : record(pipeline.outputs, ["carrier", "capsule", "daemon", "web"]);
-  const outputs = {} as Configuration["outputs"];
-  for (const key of ["carrier", "capsule", "daemon", "web"] as const) {
-    const value = declared[key] ?? "dist";
-    if (typeof value !== "string" || !/^dist(?:\/[a-z][a-z0-9-]*)*$/.test(value))
-      throw Error("pipeline output must be a bounded dist path");
-    outputs[key] = value;
+  const pipeline = record(data.pipeline, ["carriers"]);
+  const declared = record(pipeline.carriers, ["standalone", "codexplugin"]);
+  const units = { standalone: "", codexplugin: "" };
+  for (const key of ["standalone", "codexplugin"] as const) {
+    const value = declared[key];
+    if (typeof value !== "string" || !/^carriers\/[a-z][a-z0-9-]*\/dist(?:\/[a-z][a-z0-9-]*)*$/.test(value))
+      throw Error("carrier output must be a bounded carriers/<module>/dist path");
+    units[key] = value;
   }
-  if (
-    new Set(Object.keys(units).map((k) => join(units[k as keyof typeof units], outputs[k as keyof typeof outputs])))
-      .size !== 4
-  )
-    throw Error("pipeline units must have distinct outputs");
-  const blobs: Record<string, string> = {};
-  if (pipeline.blobs !== undefined) {
-    if (!pipeline.blobs || typeof pipeline.blobs !== "object" || Array.isArray(pipeline.blobs))
-      throw new Error("pipeline.blobs must map slots to paths");
-    for (const [key, value] of Object.entries(pipeline.blobs)) {
-      if (!/^[a-z][a-z0-9]*$/.test(key) || typeof value !== "string") throw new Error("invalid blob declaration");
-      // Build outputs may not exist yet; validate and canonicalize after compiling.
-      if (!value || value.startsWith("/") || value.split(/[\\/]/).includes("..")) throw new Error("invalid blob path");
-      blobs[key] = value;
-    }
-  }
+  if (units.standalone === units.codexplugin) throw Error("carriers require distinct outputs");
   return {
     root,
     channel: lane,
     baseVersion,
-    carrier: Number(runtime.carrier),
-    namespace: namespace(String(runtime.namespace)),
-    product: { appid: String(runtime.appid), name: String(runtime.name), scheme: String(runtime.scheme) },
     units,
-    outputs,
-    blobs,
+    product: { appid: String(runtime.appid), name: String(runtime.name), scheme: String(runtime.scheme) },
   };
 }
+
 export function version(selection: Selection, baseVersion: string): string {
   if (selection.version !== undefined) {
     if (selection.number !== undefined || selection.base !== undefined)

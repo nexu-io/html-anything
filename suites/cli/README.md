@@ -1,12 +1,7 @@
 # @odsuite/cli · private workspace
 
-本仓唯一工具入口 `odsuite`，由 suites/cli 构建并通过 workspace 接入。Node24 / pnpm11.13.0；先安装并显式构建，再执行：
+The repository-local engineering entry is `pnpm exec odsuite`, configured by `odsuite.yaml`. Use Node24 and pnpm11.13.0, install explicitly and build before execution.
 
-```sh
-pnpm exec odsuite guard
-pnpm exec odsuite guard --root /path/to/repo --json
-```
+Commands cover guard, development, inspect/recovery, serve, version, shared-version build, local carrier packaging and independent quality checks. Mechanisms stay in their suites. There is no global install, root shortcut or retained Electron release command.
 
-没有独立 guard 或 Daemon 命令。配置只读取 repo/odsuite.yaml，完整扫描文件系统；退出码 0 通过、1 规范发现、2 操作错误。版本/构建/发布子命令的已有实现属于工程参考，不表示 Motion 的 Codex/standalone 发布已经支持。
-
-本套件是私有仓内模块，只由本仓 workspace 提供、不单独发布。职责与当前状态见 [AGENTS](../../AGENTS.md) 和 [运维](../../docs/operations.md)。
+Both standalone and Codex Plugin use the same product version. Local closure archives do not imply npm installation, host registration or publication. See [AGENTS](../../AGENTS.md) and [operations](../../docs/operations.md) for current boundaries.
