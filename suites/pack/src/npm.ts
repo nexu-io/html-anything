@@ -1,3 +1,5 @@
+export { inspectNpm, type NpmContents } from "./tar.js";
+
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { chmod, lstat, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -22,7 +24,11 @@ export interface NpmArtifact {
 }
 const execute = promisify(execFile);
 function filename(value: string): string {
-  if (!/^[A-Za-z0-9.][A-Za-z0-9./-]*$/.test(value) || value.split("/").some((p) => !p || p === "." || p === ".."))
+  if (
+    Buffer.byteLength(`package/${value}`) > 100 ||
+    !/^[A-Za-z0-9.][A-Za-z0-9./-]*$/.test(value) ||
+    value.split("/").some((p) => !p || p === "." || p === "..")
+  )
     throw Error("invalid npm payload path");
   if (["package.json", ".npmrc", ".npmignore"].includes(value)) throw Error("reserved npm payload path");
   return value;

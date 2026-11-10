@@ -5,6 +5,7 @@ import { dirname, join } from "node:path";
 import { promisify } from "node:util";
 import { afterEach, expect, it } from "vitest";
 import { npm } from "@";
+import { inspectNpm } from "../src/tar.js";
 
 const roots: string[] = [],
   execute = promisify(execFile);
@@ -23,6 +24,9 @@ it("packs only explicit files and executes the actual local tgz without dependen
     files: { "dist/main.mjs": Buffer.from(bin), "payload/manifest.json": Buffer.from('{"version":"1.2.3-beta.4"}') },
     output,
   });
+  const inspected = inspectNpm(await readFile(output));
+  expect(inspected.metadata).toMatchObject({ name: "@fixture/closed-app", version: "1.2.3-beta.4" });
+  expect([...inspected.files.keys()].sort()).toEqual(["dist/main.mjs", "package.json", "payload/manifest.json"]);
   expect(result.bytes).toBeGreaterThan(100);
   expect(result.integrity).toMatch(/^sha512-/);
   const cli = join(
