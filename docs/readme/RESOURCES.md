@@ -1,6 +1,6 @@
 # Local README resources
 
-The README's viewing and reuse path stays in this checkout: covers, GIFs, posters, full reference films, before/after videos, contributor avatars, editable examples, fonts and browser scripts all have local files. The four language introductions share those files. Original websites provide attribution; the explicitly labeled official campaign link opens its external viewing page.
+The README's viewing and reuse path stays in this checkout: covers, GIFs, posters, full reference films, before/after videos, contributor avatars, editable examples, fonts and browser scripts all have local files. The English, Simplified Chinese and Japanese introductions (four README files in total) share those files. Original websites provide attribution; the explicitly labeled official campaign link opens its external viewing page.
 
 ## What is included
 
