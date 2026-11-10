@@ -20,6 +20,14 @@ Keep persistent user instructions for repository work in this file, and keep `CL
 2. All repository collaboration content you create or update must be in English: issue and pull request titles and descriptions, comments, review summaries, discussions, and release notes. This applies even when the user's request is in another language.
 3. Before committing or submitting repository content, verify that it follows these English-language requirements.
 
+## README writing and acknowledgements
+
+When creating or updating any README, including alternative drafts and translations, describe OpenMotion's own capabilities, workflows and the meaning of each example. Do not introduce other products as comparisons, inspiration or source labels in the main narrative, headings, feature descriptions or showcase copy. Avoid wording such as "From MotionGit", "inspired by Hypit" or "the alternative to ...".
+
+Consolidate references to other products, upstream origins, comparisons and source acknowledgements in the final **Acknowledgements** section. Preserve required licenses, copyright notices and detailed provenance in their source files, and link them from that section. Describe external examples accurately without presenting them as OpenMotion-generated results.
+
+Keep technical identifiers needed for setup, supported agent/model names and explicitly requested example brand names accurate; these factual labels are not invitations to add product comparisons or inspiration commentary. Before finishing a README edit, check that product-reference commentary appears only in the final acknowledgements.
+
 ## Product architecture review
 
 For every change, review the entire [product architecture](docs/product/architecture.md) and decide whether it still accurately describes the product. Consider positioning, core user flows, module responsibilities, dependencies, data and API boundaries, implemented capabilities, and current limitations together.

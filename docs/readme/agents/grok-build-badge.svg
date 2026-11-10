@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144" height="34" viewBox="0 0 144 34">
+  <title>Grok Build</title>
+  <rect x=".5" y=".5" width="143" height="33" rx="7" fill="#f6f8fa" stroke="#d1d9e0"/>
+  <image x="12" y="6" width="22" height="22" xlink:href="data:image/svg+xml;base64,PCEtLQogIEdlb21ldHJpYyAiWCIgc2lsaG91ZXR0ZSBldm9raW5nIHhBSSdzIG1hdGhlbWF0aWNhbC1kb3VibGUtc3RydWNrIFgKICBicmFuZCBtYXJrIChVbmljb2RlIFUrMUQ1NEYg8J2VjykuIERyYXduIGFzIHNpbXBsZSBzdHJhaWdodCBzdHJva2VzIHNvCiAgQWdlbnRJY29uJ3MgbW9ubyBtYXNrIHBhdGggY2FuIHBhaW50IGl0IGluIHRoZSBhY3RpdmUgdGhlbWUgY29sb3IKICBhbG9uZ3NpZGUgaGVybWVzIC8gbWltbyAvIHBpIC8ga2lsbyAvIGN1cnNvci1hZ2VudC4gVGhlIGZpbGwgaXMgc2V0CiAgdG8gYSBiYWtlZCBkYXJrIGNvbG9yIHNvIGFueSBub24tbWFza2VkIHJlbmRlciBwYXRoIHN0aWxsIHByb2R1Y2VzCiAgYSBsZWdpYmxlIG1hcmsgaW5zdGVhZCBvZiBibGFjay1vbi1ibGFjay4KLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSIjMWMxYjFhIj4KICA8cGF0aCBkPSJNIDE1OCAxNTggTCA0MzIgNDMyIEwgMTU4IDQzMiBMIDE1OCAxNTggWiIgLz4KICA8cGF0aCBkPSJNIDg2NiAxNTggTCA4NjYgNDMyIEwgNTkyIDQzMiBMIDg2NiAxNTggWiIgLz4KICA8cGF0aCBkPSJNIDQzMiA1OTIgTCAxNTggNTkyIEwgMTU4IDg2NiBMIDQzMiA1OTIgWiIgLz4KICA8cGF0aCBkPSJNIDU5MiA1OTIgTCA4NjYgNTkyIEwgODY2IDg2NiBMIDU5MiA1OTIgWiIgLz4KICA8cGF0aCBkPSJNIDQzMiA0MzIgTCA1OTIgNDMyIEwgNTkyIDU5MiBMIDQzMiA1OTIgTCA0MzIgNDMyIFoiIC8+Cjwvc3ZnPgo="/>
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <text x="40" y="22" font-weight="600" font-size="13" fill="#24292f">Grok Build</text>
+  </g>
+</svg>

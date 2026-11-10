@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Motion Studies · OpenDesign</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+    #film { width: 100%; height: 100%; position: relative; background: #111518; }
+    canvas, #signoff { position: absolute; inset: 0; width: 100%; height: 100%; }
+    #signoff { background: #fff; color: #101214; visibility: hidden; }
+    #word, #mark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    #word { font: 650 86px/1 "Helvetica Neue", Arial, sans-serif; letter-spacing: -4px; }
+    #mark { width: 144px; height: 144px; opacity: 0; }
+  </style>
+</head>
+<body>
+<main id="film" data-composition-id="main" data-start="0" data-width="1280" data-height="720" data-fps="24" data-duration="31.9583333333">
+  <canvas id="board" class="clip" data-start="0" data-duration="28.5416666667" data-track-index="0" width="1280" height="720" aria-label="Animated packing, lattice, hatching and graph studies"></canvas>
+  <div id="signoff" class="clip" data-start="28.5416666667" data-duration="3.4166666666" data-track-index="1"><div id="word"></div><img id="mark" src="assets/mark.svg" alt="OpenDesign"></div>
+  <audio class="clip" id="score" data-start="0" data-duration="31.9583333333" data-track-index="2" src="assets/score.m4a"></audio>
+</main>
+<script>
+  // Positions use a 640 × 360 drawing surface. Each study has its own timing and geometry.
+  const board = document.querySelector('#board'), pen = board.getContext('2d');
+  const paper = document.createElement('canvas');
+  paper.width = 1280; paper.height = 720;
+  const grain = paper.getContext('2d'), pixels = grain.createImageData(1280, 720);
+  let seed = 28471;
+  function random() { seed = (1664525 * seed + 1013904223) >>> 0; return seed / 4294967296; }
+  for (let y = 0; y < 720; y++) {
+    for (let x = 0; x < 1280; x++) {
+      const i = 4 * (y * 1280 + x), dx = (x - 670) / 710, dy = (y - 335) / 480;
+      const light = 11 + 10 * Math.exp(-dx * dx - dy * dy) + 1.5 * Math.sin(y / 60 + x / 100) + 2.5 * (random() - .5);
+      pixels.data.set([light, light + 3, light + 5, 255], i);
+    }
+  }
+  grain.putImageData(pixels, 0, 0);
+  const cream = '#fafbfa', chalk = '#c3cbd0', green = '#74df99', violet = '#c6acf0', amber = '#f7d562';
+  const clamp = n => Math.max(0, Math.min(1, n));
+  const mix = (a, b, t) => a + (b - a) * t;
+  function step(a, b, t) { const u = clamp((t-a)/(b-a)); return u*u*(3-2*u); }
+  function dot(x, y, r, color=cream) {
+    if (r <= 0) return;
+    pen.beginPath(); pen.arc(x,y,r,0,Math.PI*2); pen.fillStyle=color; pen.fill();
+  }
+  function stroke(a,b,width,color,progress=1) {
+    if (progress<=0) return;
+    pen.beginPath(); pen.moveTo(...a); pen.lineTo(mix(a[0],b[0],progress),mix(a[1],b[1],progress));
+    pen.strokeStyle=color; pen.lineWidth=width; pen.stroke();
+  }
+  function text(value,x,y,size,color=chalk,face='monospace',align='left') {
+    pen.fillStyle=color; pen.font=size+'px '+face; pen.textAlign=align; pen.fillText(value,x,y);
+  }
+  function legend(top,number,name,mode='row') {
+    const labels=['STUDY','NUMBER','MEDIUM'], values=[name,number,'MOTION DESIGN'];
+    [0,1,2].forEach(i=>{
+      const x=mode==='row'?[27,308,487][i]:27, y=top+(mode==='row'?0:22*i);
+      text(labels[i],x,y,6.5,'#a5afb4'); text(values[i],x+(mode==='row'?50:68),y,7,'#e5e9e7');
+    });
+  }
+  function note(s,x,y,rotation,opacity=1) {
+    pen.save(); pen.translate(x,y); pen.rotate(rotation); pen.globalAlpha*=opacity;
+    text(s,0,0,22,'#abb2b6','"Times New Roman", serif'); pen.restore();
+  }
+  function title(t) {
+    const a=1-step(3.08,3.4,t);
+    pen.save();pen.globalAlpha=a;
+    function type(line,start,baseline) {
+      const count=Math.floor(step(start,start+.55,t)*line.length);
+      pen.font='600 48px "Helvetica Neue", Arial'; pen.textAlign='left';pen.fillStyle=cream;
+      const x=320-pen.measureText(line).width/2;pen.fillText(line.slice(0,count),x,baseline);
+    }
+    type('Generative',.2,69);type('Motion',.73,324);
+    for(let n=0;n<10;n++){const x=257+(n%5)*31.5,y=164+Math.floor(n/5)*30;dot(x,y,6.2*step(n*.055,n*.055+.17,t));}
+    pen.restore();
+    dot(320,mix(194,180,step(3.5,3.8,t)),8*step(3.22,3.55,t),green);
+  }
+  function packing(t) {
+    const growth=step(4.34,5,t)*(1-step(7.88,8.54,t));
+    const spread=step(4.36,4.98,t)*(1-step(7.91,8.58,t));
+    dot(320,180,mix(8,14,growth),t<4.37?green:cream);
+    for(let row=-4;row<=4;row++) for(let col=-5;col<=5;col++){
+      const x=(col+(Math.abs(row)%2)*.5)*29.7,y=row*25.8,r=Math.hypot(x,y);
+      if(r<1 || r>121) continue;
+      const available=clamp(growth*3-r/124);
+      dot(320+x*spread,180+y*spread,14.2*available,cream);
+    }
+    const ink=step(4.47,4.95,t)*(1-step(8.05,8.55,t));
+    if(!ink)return;
+    pen.save();pen.globalAlpha=ink;pen.strokeStyle=chalk;pen.lineWidth=1;
+    pen.beginPath();pen.arc(320,180,131*(.72+spread*.28),-.72,5.55);pen.stroke();
+    note('d ≤ 2r',163,93,-.2,.8);note('R',426,286,-.14,.8);
+    legend(342,'01/05','CIRCLE PACKING');pen.restore();
+  }
+  function lattice(t) {
+    const inside=step(8.54,9.26,t)*(1-step(12.15,12.65,t));
+    const space=45, angle=-.115;
+    pen.save();pen.translate(320,180);pen.rotate(angle);
+    for(let j=-5;j<=5;j++)for(let i=-2;i<=7;i++){
+      const x=i*space+8*j,y=j*space;
+      const p=clamp(inside*3-Math.hypot(x,y)/175);dot(x,y,1.5*p);
+    }
+    pen.restore();pen.save();pen.globalAlpha=inside;
+    legend(39,'02/05','ANCHOR LATTICE','column');
+    note('path → xy',166,196,-.18);
+    [[320,180],[408,166],[495,141],[572,91]].forEach(([x,y],i)=>{
+      const p=step(9.33+i*.13,9.9+i*.13,t);
+      if(i)stroke([320,180],[x,y],.7,'#a2a8ac',p);
+      dot(x,y,4*p,i===0?'#f09552':cream);
+    });
+    pen.restore();
+    if(t>12.15)dot(320,180,8*step(12.15,12.63,t),'#f5954e');
+  }
+  function hatch(t) {
+    const f=step(13.02,13.93,t)*(1-step(17.53,18,t));
+    pen.fillStyle="rgba(211,222,230,"+(.016*f)+")"; pen.fillRect(0,0,640,360);
+    for(let j=-2;j<=2;j++) for(let i=-4;i<=4;i++) {
+      dot(320+i*61.5,180+j*61.5,2.55*clamp(f*2.6-Math.hypot(i,j)*.25));
+    }
+    pen.save();pen.globalAlpha=f;legend(27,'03/05','FRAME HATCHING');
+    const hatch=step(14.6,15.35,t)*(1-step(17.03,17.55,t));
+    const left=[197,303],right=[443,303],peak=[320,180];
+    stroke(peak,right,1.9,chalk,step(14,14.35,t));
+    stroke(right,left,1.9,chalk,step(14.2,14.6,t)*(1-step(17.4,17.7,t)));
+    stroke(left,peak,1.9,chalk,step(14.44,14.85,t)*(1-step(17.2,17.55,t)));
+    for(let i=0;i<72;i++){
+      const x=197+i*3.46, height=Math.min(x-197,443-x);
+      if((1-i/72)>hatch)continue;
+      stroke([x,302],[x,303-height*(.78+.20*Math.sin(i*7))],.65,'#d7dbde');
+    }
+    pen.restore();
+    if(t<13.7||t>17.55)dot(320,180,8*(1-.8*f),t<13.25?'#f5954e':violet);
+  }
+  function graph(t) {
+    const expand=step(18.43,18.99,t)*(1-step(22.64,23.07,t));
+    const zoom=step(19.82,20.42,t)*(1-step(22.50,22.96,t));
+    const vertices=[[410,38],[583,47],[656,195],[568,348],[394,339],[315,184]];
+    const points=vertices.map(([x,y])=>[320+((x-480)*(.38+.62*zoom)+160*zoom)*expand,180+(y-180)*(.38+.62*zoom)*expand]);
+    pen.save();pen.globalAlpha=zoom*.28;
+    for(let x=87;x<650;x+=114)stroke([x,0],[x,360],.6,chalk);
+    for(let y=68;y<360;y+=115)stroke([0,y],[640,y],.6,chalk);
+    pen.restore();
+    const flash=t>20.82&&t<21.38||t>21.8&&t<22.46;
+    points.forEach((p,i)=>{for(let j=i+1;j<points.length;j++){
+      const edge=flash&&[0,3,4].includes(i)&&[3,4].includes(j);
+      stroke(p,points[j],edge?2.4:.75,edge?'#fa90b3':(i+j)%3?'#778994':'#336fa0',step(18.7,19.36,t));
+    }});
+    points.forEach(p=>dot(...p,4*expand));
+    pen.save();pen.globalAlpha=zoom;legend(161,'04/05','CONNECTED VERTICES','column');note('R (n)',288,108,-.2);pen.restore();
+    if(!expand)dot(320,180,8,violet);
+  }
+  function mesh(t) {
+    const f=step(23,23.55,t)*(1-step(26.79,27.4,t));
+    const verts=[[59,183],[154,130],[59,287],[319,193],[319,275],[486,130],[580,186],[580,287]];
+    const points=verts.map(([x,y])=>[mix(320,x,f),mix(180,y,f)]);
+    const edges=[[0,1],[0,3],[0,4],[1,2],[2,3],[2,4],[3,6],[3,7],[4,6],[4,7],[5,6],[5,7],[6,7],[1,5]];
+    edges.forEach(([i,j],n)=>stroke(points[i],points[j],.8,'#aeb4bc',step(23.26+n*.021,23.85+n*.025,t)));
+    const secondary=step(24.61,25.03,t)*(1-step(26.72,27.08,t));
+    [[178,208],[178,250],[455,208],[455,250],[108,203],[547,206]].forEach(([x,y])=>dot(x,y,4*secondary,violet));
+    points.forEach(p=>dot(...p,5*f,amber));pen.save();pen.globalAlpha=f;legend(26,'05/05','MOTION NETWORK');
+    [[42,186],[140,117],[571,304]].forEach(([x,y],i)=>text(['a','x','b'][i],x,y,12,chalk,'Georgia'));pen.restore();
+    if(t>27.13){
+      const colors=[cream,'#ff8656',violet,green,amber,'#80afff','#ffc4d2'];
+      dot(320,180,10.5,colors[Math.min(6,Math.floor((t-27.13)/.18))]);
+    }
+  }
+  const signoff=document.querySelector('#signoff'), word=document.querySelector('#word'), mark=document.querySelector('#mark');
+  function draw(t) {
+    pen.setTransform(1,0,0,1,0,0);pen.drawImage(paper,0,0);pen.scale(2,2);
+    if(t<4.34) title(t);
+    else if(t<8.58) packing(t);
+    else if(t<13.02) lattice(t);
+    else if(t<18.43) hatch(t);
+    else if(t<23) graph(t);
+    else if(t<28.5417) mesh(t);
+    signoff.style.visibility=t>=28.5416?'visible':'hidden';
+    const letters='OpenDesign', enter=step(28.5,28.95,t),erase=step(29.68,30.08,t);
+    word.textContent=letters.slice(0,Math.max(0,Math.round(letters.length*(enter-erase))));
+    word.style.left=(50+12*erase)+'%';
+    const rise=step(30.00,30.62,t);mark.style.opacity=t>=30?'1':'0';
+    mark.style.transform='translate(-50%,-50%) scale('+mix(.37,1,rise)+') rotate('+mix(-64,0,rise)+'deg)';
+  }
+  const playhead={seconds:0};const timeline=gsap.timeline({paused:true});
+  timeline.to(playhead,{seconds:31.9583333333,duration:31.9583333333,ease:'none',onUpdate:()=>draw(playhead.seconds)},0);
+  draw(0);window.__timelines={main:timeline};
+</script>
+</body>
+</html>
