@@ -6,11 +6,12 @@ If you are reading this file in the source repository and see `{{...}}`, it is a
 
 ## Instructions for the Agent
 
-1. Collect OS/CPU, Node.js/npm versions and the current Agent identity together, using the host's supplied context where available. Node.js 22.18+ with npm and the Agent must already be installed. Supported native targets: {{TARGETS}}. Do not claim support for another target from package-download success.
+1. Use the host-supplied OS/CPU, Node.js/npm and current Agent context where available. Setup runs the shared platform, Node/npm, path, ownership and selected-host checks before application installation; avoid a separate series of shell probes or source reads when that context is already known. Node.js 22.18+ with npm and the Agent must already be installed. Supported native targets: {{TARGETS}}. Do not claim support for another target from package-download success.
 2. Select the current host explicitly: `codex` (Codex), `claude` (Claude Code), `deepseek` (DeepSeek Harness) or `workbuddy` (WorkBuddy). An explicit user selection takes precedence. Do not infer the current host from which CLIs happen to be installed. Ask only when the current host or required profile cannot be established. Configure only that host; preserve projects, credentials and unrelated MCP/Skills settings.
 3. For a test candidate, use a separate host profile, application home, project data and Skills directory. Keep those paths and reuse them for prepare and future reconnects. The [platform installation recipes]({{DETAILS_URL}}) describe the actual supported options. Do not run a test candidate into the user's daily profile by default.
 4. Choose exactly one setup command below, applying the test isolation paths first when required. Setup starts checked video-component downloads in the background. Do not wait for prepare to connect MCP, create/edit projects or open ordinary preview. Studio shows preparation status and retry; media import, automated capture and export require their respective components. Follow the selected host's discovery/reload mechanism. Compatible phase-one updates can keep existing connections; reconnect closed or incompatible transports. Confirm the application version, template environment, eleven public Tools and five Skills through that host, including an actual `motion_get_project` call. Registration alone does not prove loading.
-5. Report the result and any failed step. Introduce the available capabilities and wait for the user's next request. Installation does not authorize generating a video or calling a paid model.
+5. If the install request explicitly supplies a source label, append `--source=LABEL` to the selected setup command. Accept only 1–64 ASCII letters, digits, underscores, dots or hyphens; do not infer a source from the Agent host, send a full URL, or open a browser for attribution. Preserve the explicit label in the setup command rather than losing it when following this guide.
+6. Use `openmotion status --json` from this exact package, repeating the installation home and host options when needed. It does not download components or prove host loading. Confirm Tools and Skills through the current host and make the actual read-only Tool call described above. Report the result and any failed step. Introduce the available capabilities and wait for the user's next request. Installation does not authorize generating a video or calling a paid model.
 
 ## Choose the selected host's setup command
 
@@ -22,6 +23,11 @@ The commands below show normal installations. For test candidates, apply the sep
 | Claude Code | `npx --yes --package "{{PACKAGE_SPEC}}" openmotion setup --host claude` | Preserve the selected `CLAUDE_CONFIG_DIR` and Skills root. |
 | DeepSeek Harness | `npx --yes --package "{{PACKAGE_SPEC}}" openmotion setup --host deepseek --profile PROFILE` | Replace `PROFILE` with the actual selected profile from the host context; do not guess `web` or `desktop`. The standard macOS Desktop CLI is detected even when `dsh` is absent from PATH; use `--dsh` for another executable location. |
 | WorkBuddy | `npx --yes --package "{{PACKAGE_SPEC}}" openmotion setup --host workbuddy` | Preserve the selected `WORKBUDDY_CONFIG_DIR` and Skills root. |
+
+Optional diagnostics from the same package:
+
+- `openmotion preflight --host HOST --json` checks the same setup plan without changing files, registering the host, downloading or sending telemetry. Reuse setup's explicit paths/profile and executable overrides. It is for a dry run or diagnosis, not a mandatory extra step before every setup.
+- `openmotion status --home DIR --json` reads the installation and current component state. An owned configuration is distinct from actual host Tools/Skills discovery; that remains `unverified` until observed through the host. `prepare` is not a status query.
 
 Optional: explicitly wait for all video components or retry preparation for the same installation:
 

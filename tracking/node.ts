@@ -7,8 +7,12 @@ import type { Entry, Registry, PendingEvent, Receipt } from './core.ts';
 export type Identity = { installation_id: string; utm_source: string | null; created_at: string };
 const sourcePattern = /^[A-Za-z0-9_.-]{1,64}$/;
 
-export async function loadIdentity(directory: string, source?: string): Promise<Identity> {
+export function validateSource(source?: string) {
   if (source !== undefined && (typeof source !== 'string' || !sourcePattern.test(source))) throw new Error('INVALID_SOURCE');
+}
+
+export async function loadIdentity(directory: string, source?: string): Promise<Identity> {
+  validateSource(source);
   const file = path.join(directory, 'identity.json');
   async function read(): Promise<Identity> {
     const value = JSON.parse(await readFile(file, 'utf8'));

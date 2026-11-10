@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
+import { createServer } from 'node:http';
+import { loadIdentity } from '../tracking/node.ts';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { ensureNativeRuntime, nativeConfiguration, nativeRuntimeStatus, requireNativeRuntime, startNativePreparation } from '../scripts/npm-runtime.mjs';
 import { runFile, sha256, writeJSON, withCacheLock } from '../scripts/runtime-assets.mjs';
@@ -19,7 +21,7 @@ async function fixture(t: any) {
   const previous = keys.map(key => process.env[key]); keys.forEach(key => delete process.env[key]);
   t.after(() => keys.forEach((key, i) => previous[i] === undefined ? delete process.env[key] : process.env[key] = previous[i]));
   const root = path.join(directory, 'app'); await mkdir(path.join(root, 'scripts'), { recursive: true });
-  for (const file of ['npm-runtime.mjs', 'runtime-assets.mjs']) await cp(new URL('../scripts/' + file, import.meta.url), path.join(root, 'scripts', file));
+  for (const file of ['npm-runtime.mjs', 'runtime-assets.mjs', 'installer-tracking.mjs']) await cp(new URL('../scripts/' + file, import.meta.url), path.join(root, 'scripts', file));
   const assets: Record<string, any> = {};
   for (const id of ['browser', 'ffmpeg', 'ffprobe']) {
     const source = path.join(directory, id); await mkdir(source);
@@ -154,4 +156,47 @@ test('an unreadable component state is reported without blocking basic service h
   const health = await response.json(); assert.equal(health.ready, true);
   assert.equal(health.nativeRuntime.components.find(item => item.id === 'browser').stage, 'failed');
   assert.equal(health.nativeRuntime.capabilities.export, false);
+});
+
+
+test('detached preparation keeps the setup flow and shares acquisition identity with the application', { skip: process.platform === 'win32', timeout: 20_000 }, async t => {
+  const { directory, root, config, configFile } = await fixture(t);
+  const events: any[] = [];
+  const collector = createServer(async (req, res) => {
+    let body = ''; for await (const chunk of req) body += chunk;
+    events.push(...JSON.parse(body).batch); res.setHeader('Content-Type', 'application/json'); res.end('{"status":1}');
+  });
+  collector.listen(0, '127.0.0.1'); await once(collector, 'listening');
+  t.after(() => new Promise<void>(resolve => collector.close(() => resolve())));
+  const keys = ['OPENMOTION_TELEMETRY', 'DO_NOT_TRACK', 'OPENMOTION_POSTHOG_HOST', 'OPENMOTION_POSTHOG_KEY', 'OPENMOTION_TRACKING_ENV', 'OPENMOTION_TRACKING_TEST_RUN_ID'];
+  const previous = keys.map(key => process.env[key]);
+  t.after(() => keys.forEach((key, i) => previous[i] === undefined ? delete process.env[key] : process.env[key] = previous[i]));
+  process.env.OPENMOTION_TELEMETRY = '1'; delete process.env.DO_NOT_TRACK;
+  process.env.OPENMOTION_POSTHOG_HOST = `http://127.0.0.1:${(collector.address() as any).port}`;
+  process.env.OPENMOTION_POSTHOG_KEY = 'phc_fixture'; process.env.OPENMOTION_TRACKING_ENV = 'test';
+  process.env.OPENMOTION_TRACKING_TEST_RUN_ID = crypto.randomUUID();
+  await mkdir(path.join(root, 'tracking'));
+  await writeJSON(path.join(root, 'package.json'), { type: 'module' });
+  for (const file of ['runtime.ts', 'core.ts', 'node.ts', 'events.ts']) await cp(new URL('../tracking/' + file, import.meta.url), path.join(root, 'tracking', file));
+  const dataDirectory = path.join(directory, 'data'), flowId = crypto.randomUUID();
+  const identity = await loadIdentity(path.join(dataDirectory, 'tracking'), 'channel_a');
+  const tracked = { ...config, tracking: { dataDirectory, version: '1.2.3', flowId, host: 'workbuddy', operation: 'install' } };
+  await writeJSON(configFile, tracked);
+  await startNativePreparation(root, false, 'setup');
+  // A later installer cannot relabel a worker that was already launched.
+  tracked.tracking.flowId = crypto.randomUUID(); await writeJSON(configFile, tracked);
+  const deadline = Date.now() + 10_000;
+  while (!events.some(e => e.event === 'native_prepare_result')) {
+    if (Date.now() >= deadline) {
+      const native = await nativeConfiguration(root);
+      assert.fail('Detached worker did not report a terminal preparation result: ' + await readFile(path.join(native.cache, 'preparation.log'), 'utf8').catch(() => 'no worker log'));
+    }
+    await new Promise(resolve => setTimeout(resolve, 30));
+  }
+  assert.equal((await nativeRuntimeStatus(root)).capabilities.export, true);
+  assert(events.every(e => e.properties.install_flow_id === flowId && e.properties.installation_id === identity.installation_id && e.properties.utm_source === 'channel_a'));
+  assert.equal(events.filter(e => e.event === 'native_prepare_started').length, 1);
+  assert.equal(events.filter(e => e.event === 'native_prepare_result')[0].properties.outcome, 'success');
+  for (const component of ['browser', 'ffmpeg', 'ffprobe']) assert(events.some(e => e.properties.component === component && e.properties.step === 'native_download'));
+  assert.doesNotMatch(JSON.stringify(events), /motion-native-|dataDirectory|example.invalid/);
 });

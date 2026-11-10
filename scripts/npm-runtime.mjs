@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
+import { existsSync, realpathSync } from 'node:fs';
 import { mkdir, mkdtemp, open, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
+import { installerTracking, installError } from './installer-tracking.mjs';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { executable, extractArchive, nativeComponents, obtainAsset, readJSON, relativePath, runFile, withCacheLock, writeJSON, processAlive } from './runtime-assets.mjs';
@@ -74,10 +76,14 @@ export async function nativeRuntimeStatus(root) {
   return { managed: true, components, capabilities: { capture: available(native.components), media: available(['media', 'ffmpeg', 'ffprobe']), export: available(native.components) } };
 }
 
-async function prepareComponent(native, component) {
+async function prepareComponent(native, component, observer) {
   const destination = location(native, component);
   if (preparing.has(destination)) return preparing.get(destination);
-  if (await ready(native, component)) return;
+  const checkedAt = performance.now();
+  if (await ready(native, component)) {
+    observer.track('installation_step_result', { step: 'native_probe', component, cache_hit: true, outcome: 'success', duration_ms: observer.elapsed(checkedAt) });
+    return;
+  }
   if (preparing.has(destination)) return preparing.get(destination);
   const task = withCacheLock(destination + '.lock', async () => {
     if (await ready(native, component)) return;
@@ -101,19 +107,21 @@ async function prepareComponent(native, component) {
       console.error(`OpenMotion: preparing pinned ${component} in the background.`);
       const archive = path.join(config.cacheDirectory, 'downloads', asset.sha256 + (new URL(asset.url).pathname.endsWith('.zip') ? '.zip' : '.tar.gz'));
       await update({ stage: 'downloading' });
-      await obtainAsset(asset, archive, config.allowLocalAssets === true, update);
+      await observer.step('native_download', () => obtainAsset(asset, archive, config.allowLocalAssets === true, update), { component });
       await update({ stage: 'extracting' });
       await mkdir(cache, { recursive: true });
       const temporary = await mkdtemp(path.join(cache, component + '-'));
       try {
-        await extractArchive(archive, temporary);
+        await observer.step('native_extract', () => extractArchive(archive, temporary), { component });
         await update({ stage: 'checking' });
+        await observer.step('native_probe', async () => {
         for (const key of keys) {
           const filename = path.join(temporary, path.relative(destination, paths[key]));
           if (process.platform === 'win32') assert(filename.length < 260, 'Native tool path is too long; choose a shorter --home directory');
           await executable(filename);
           await runFile(filename, [component === 'browser' ? '--version' : '-version']);
         }
+        }, { component, cache_hit: false });
         await writeFile(path.join(temporary, 'ready.json'), JSON.stringify({ sha256: asset.sha256 }));
         await rm(destination, { recursive: true, force: true });
         await rename(temporary, destination);
@@ -129,17 +137,30 @@ async function prepareComponent(native, component) {
   try { return await task; } finally { preparing.delete(destination); }
 }
 
-export async function ensureNativeRuntime(root, components) {
+export async function ensureNativeRuntime(root, components, trigger = 'explicit') {
   const native = await configureNativeEnvironment(root);
   if (!native) return;
-  const selected = components ?? native.components;
-  assert(selected.every(component => native.components.includes(component)), 'Unknown native component');
-  const prepared = await Promise.allSettled(selected.map(component => prepareComponent(native, component)));
-  const failed = prepared.find(result => result.status === 'rejected');
-  if (failed) throw failed.reason;
+  let context = native.config.tracking;
+  try {
+    const inherited = JSON.parse(process.env.OPENMOTION_NATIVE_TRACKING_CONTEXT || 'null');
+    if (inherited?.root === path.resolve(root)) { context = inherited.context; trigger = inherited.trigger; }
+  } catch { /* Invalid diagnostic context never blocks native preparation. */ }
+  const observer = await installerTracking(context), started = performance.now();
+  observer.track('native_prepare_started', { trigger });
+  try {
+    const selected = components ?? native.components;
+    assert(selected.every(component => native.components.includes(component)), 'Unknown native component');
+    const prepared = await Promise.allSettled(selected.map(component => prepareComponent(native, component, observer)));
+    const failed = prepared.find(result => result.status === 'rejected');
+    if (failed) throw failed.reason;
+    observer.track('native_prepare_result', { trigger, outcome: 'success', duration_ms: observer.elapsed(started) });
+  } catch (error) {
+    observer.track('native_prepare_result', { trigger, outcome: 'failure', duration_ms: observer.elapsed(started), error_code: installError(error) });
+    throw error;
+  } finally { await observer.close(); }
 }
 
-export async function startNativePreparation(root, retry = false) {
+export async function startNativePreparation(root, retry = false, trigger = 'app_start', context) {
   if (launching.has(root)) return launching.get(root);
   const task = (async () => {
     const status = await nativeRuntimeStatus(root);
@@ -150,7 +171,7 @@ export async function startNativePreparation(root, retry = false) {
     const log = await open(path.join(native.cache, 'preparation.log'), 'a', 0o600);
     try {
       const child = spawn(process.execPath, [path.join(root, 'scripts/npm-runtime.mjs'), root, ...components], {
-        detached: true, stdio: ['ignore', log.fd, log.fd], env: process.env, windowsHide: true,
+        detached: true, stdio: ['ignore', log.fd, log.fd], env: { ...process.env, OPENMOTION_NATIVE_TRACKING_CONTEXT: JSON.stringify({ root: path.resolve(root), context: context ?? native.config.tracking, trigger }) }, windowsHide: true,
       });
       await new Promise((resolve, reject) => { child.once('spawn', resolve); child.once('error', reject); });
       child.unref();
@@ -170,6 +191,6 @@ export async function requireNativeRuntime(root, capability) {
     { code: 'NATIVE_RUNTIME_NOT_READY', details: status });
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && existsSync(process.argv[1]) && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   ensureNativeRuntime(process.argv[2], process.argv.length > 3 ? process.argv.slice(3) : undefined).catch(error => { console.error(error.message); process.exitCode = 1; });
 }

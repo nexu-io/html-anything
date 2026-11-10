@@ -26,11 +26,26 @@ function trackingFor(store: WorkspaceStore) {
   if (!tracking) { tracking = createAppTracking(store.directory, 'mcp'); trackingByStore.set(store, tracking); }
   return tracking;
 }
+const integrationByConnection = new WeakMap<object, { id: string; stages: Set<string> }>();
+async function integrationResult(store: WorkspaceStore, connection: object | undefined, stage: 'initialize' | 'tools_list' | 'first_tool') {
+  const key = connection ?? store;
+  let state = integrationByConnection.get(key);
+  if (!state) { state = { id: crypto.randomUUID(), stages: new Set() }; integrationByConnection.set(key, state); }
+  if (state.stages.has(stage)) return;
+  state.stages.add(stage);
+  (await trackingFor(store)).track('integration_check_result', { connection_id: state.id, stage, outcome: 'success' });
+}
 const runtimeRoot = fileURLToPath(new URL('./', import.meta.url));
 const runtimeDirectory = statSync(runtimeRoot);
 
 export async function rpc(message: any, store = new WorkspaceStore(), registry = releaseRegistry, connection?: { selection: Selection }) {
   const name = message?.params?.name;
+  if (registry.profile === 'phase1' && message?.jsonrpc === '2.0' && message.id !== undefined && ['initialize', 'tools/list'].includes(message.method)) {
+    const response = await invokeRpc(message, store, registry, connection);
+    await integrationResult(store, connection, message.method === 'initialize' ? 'initialize' : 'tools_list');
+    return response;
+  }
+
   if (message?.jsonrpc !== '2.0' || message.id === undefined || message.method !== 'tools/call'
     || registry.profile !== 'phase1' || !(toolNames as readonly unknown[]).includes(name)) return invokeRpc(message, store, registry, connection);
   const tracking = await trackingFor(store), started = performance.now(), callId = crypto.randomUUID();
@@ -46,6 +61,7 @@ export async function rpc(message: any, store = new WorkspaceStore(), registry =
   tracking.track('mcp_tool_finished', { ...fields, outcome, duration_ms: Math.min(86_400_000, Math.round(performance.now() - started)),
     ...(value?.isError ? { error_code: trackingError(new Error(String(content?.error?.code ?? 'TOOL_FAILED'))) } : {}),
     ...(typeof content?.replayed === 'boolean' ? { replayed: content.replayed } : {}) });
+  if (outcome === 'success') await integrationResult(store, connection, 'first_tool');
   return response;
 }
 

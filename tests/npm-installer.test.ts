@@ -6,6 +6,9 @@ import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { fileURLToPath } from 'node:url';
 import { localManifest, setup } from '../scripts/npm-installer.mjs';
+import { preflight, installationStatus } from '../scripts/install-state.mjs';
+import { loadIdentity } from '../tracking/node.ts';
+import { createAppTracking, closeTracking, saveTrackingPreference } from '../shared/tracking.ts';
 import { hosts } from '../scripts/npm-hosts.mjs';
 import { configureNativeEnvironment, ensureNativeRuntime, nativeConfiguration } from '../scripts/npm-runtime.mjs';
 import { obtainAsset, relativePath, runFile, sha256, withLock, writeJSON } from '../scripts/runtime-assets.mjs';
@@ -51,7 +54,7 @@ async function setupFixture(t: any) {
 test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and rejects a mixed-environment home', async t => {
   const options = await setupFixture(t), bundle = path.join(options.directory, 'bundle');
   await mkdir(path.join(bundle, 'scripts'), { recursive: true }); await mkdir(path.join(bundle, 'payload'));
-  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs']) {
+  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'install-state.mjs', 'installer-tracking.mjs']) {
     await cp(new URL('../scripts/' + file, import.meta.url), path.join(bundle, 'scripts', file));
   }
   await writeJSON(path.join(bundle, 'package.json'), { version: '1.2.3', type: 'module' });
@@ -304,12 +307,13 @@ test('Claude flat Skills keep external document links and refuse an unowned skil
   await mkdir(clientHome);
   const claude = path.join(options.directory, 'claude-cli'), config = path.join(clientHome, '.claude.json');
   await writeJSON(config, { keep: true });
-  await writeFile(claude, `#!${process.execPath}\nimport fs from 'node:fs';\nconst f=${JSON.stringify(config)},v=JSON.parse(fs.readFileSync(f,'utf8'));const a=process.argv.slice(2);v.mcpServers={...v.mcpServers,openmotion:JSON.parse(a[5])};fs.writeFileSync(f,JSON.stringify(v));\n`, { mode: 0o755 });
+  await writeFile(claude, `#!${process.execPath}\nif(process.argv.includes('--version')){console.log('fixture');process.exit(0);}\nimport fs from 'node:fs';\nconst f=${JSON.stringify(config)},v=JSON.parse(fs.readFileSync(f,'utf8'));const a=process.argv.slice(2);v.mcpServers={...v.mcpServers,openmotion:JSON.parse(a[5])};fs.writeFileSync(f,JSON.stringify(v));\n`, { mode: 0o755 });
   await mkdir(path.join(options.application, 'skills/motion-production/references'));
   await writeFile(path.join(options.application, 'docs/model-gateway.md'), 'Shared gateway');
   await writeFile(path.join(options.application, 'skills/motion-production/references/production.md'), '[gateway](../../../docs/model-gateway.md)');
   const manifest = JSON.parse(await readFile(options.manifest, 'utf8'));
   manifest.application = await archive(options.directory, options.application, 'with-links'); await writeJSON(options.manifest, manifest);
+  assert.equal((await preflight({ ...options, host: 'claude', claude })).ok, true);
   const installed = await setup({ ...options, host: 'claude', claude });
   assert.equal(JSON.parse(await readFile(config, 'utf8')).keep, true);
   assert.match(await readFile(path.join(options.skillsDirectory, 'motion-production/references/production.md'), 'utf8'), /\]\(<.*apps\/.*docs\/model-gateway\.md>\)/);
@@ -329,7 +333,8 @@ test('Harness installs a bundle with its own direct Skill root and recognizes re
   const previous = process.env.DSH_HOME; process.env.DSH_HOME = dshHome;
   t.after(() => { if (previous === undefined) delete process.env.DSH_HOME; else process.env.DSH_HOME = previous; });
   const dsh = path.join(options.directory, 'dsh-cli'), profile = path.join(dshHome, 'profiles/web');
-  await writeFile(dsh, `#!${process.execPath}\nimport fs from 'node:fs';import path from 'node:path';\nconst a=process.argv.slice(2),p=path.join(process.env.DSH_HOME,'profiles/web');fs.mkdirSync(p,{recursive:true});fs.writeFileSync(path.join(p,'package.json'),JSON.stringify({dependencies:{'dsh-plugin-openmotion-local':'link:'+path.relative(p,a[4])}}));\n`, { mode: 0o755 });
+  await writeFile(dsh, `#!${process.execPath}\nif(process.argv.includes('--version')){console.log('fixture');process.exit(0);}\nimport fs from 'node:fs';import path from 'node:path';\nconst a=process.argv.slice(2),p=path.join(process.env.DSH_HOME,'profiles/web');fs.mkdirSync(p,{recursive:true});fs.writeFileSync(path.join(p,'package.json'),JSON.stringify({dependencies:{'dsh-plugin-openmotion-local':'link:'+path.relative(p,a[4])}}));\n`, { mode: 0o755 });
+  assert.equal((await preflight({ ...options, host: 'deepseek', dsh })).ok, true);
   const first = await setup({ ...options, host: 'deepseek', dsh });
   const bundle = first.hostInstallation.bundleDirectory;
   const patch = JSON.parse(await readFile(path.join(bundle, 'cordis.patch.yml'), 'utf8'))[0].insert;
@@ -401,4 +406,97 @@ test('registration failure restores obsolete flat Skills, and malformed install 
   const state = path.join(options.home, 'install.json'); await writeJSON(state, false);
   await assert.rejects(setup(options), /belongs to another/);
   assert.equal(JSON.parse(await readFile(state, 'utf8')), false);
+});
+
+
+test('shared preflight and status are read-only and keep registration separate from host discovery', async t => {
+  clearNativeEnvironment(t);
+  const options = await setupFixture(t), before = await readFile(options.config, 'utf8');
+  const report = await preflight({ ...options, source: 'partner_a' });
+  assert.equal(report.ok, true); assert.equal(report.plan.host, 'codex');
+  assert.equal(await readFile(options.config, 'utf8'), before);
+  await assert.rejects(readFile(path.join(options.home, 'install.json')), { code: 'ENOENT' });
+  await assert.rejects(readdir(options.home), { code: 'ENOENT' });
+  assert.equal((await installationStatus(options)).installation.state, 'not_installed');
+  const installed = await setup(options);
+  const state = await installationStatus(options);
+  assert.deepEqual(state.registrations, [{ host: 'codex', configuration: 'owned', instructionFiles: 'present' }]);
+  assert.equal((await installationStatus({ ...options, home: path.relative(process.cwd(), options.home) })).registrations[0].configuration, 'owned');
+  assert.deepEqual(state.hostDiscovery, { tools: 'unverified', skills: 'unverified' });
+  assert.equal(state.installation.state, 'installed'); assert.equal(state.nativeRuntime.capabilities.export, false);
+  assert(state.nextActions.includes('wait_for_native_preparation'));
+  assert.equal((await readFile(installed.launcher, 'utf8')).includes('plan.host'), false);
+  const skillFile = path.join(options.skillsDirectory, 'openmotion/skills/motion-production/SKILL.md');
+  const skillText = await readFile(skillFile); await rm(skillFile);
+  const missingSkill = await installationStatus(options);
+  assert.equal(missingSkill.registrations[0].instructionFiles, 'missing'); assert(missingSkill.nextActions.includes('run_setup'));
+  await writeFile(skillFile, skillText);
+  await writeJSON(options.config, { openmotion: { transport: { command: 'foreign', args: [] } } });
+  assert.equal((await preflight(options)).ok, false);
+  assert.equal((await installationStatus(options)).registrations[0].configuration, 'unverified');
+});
+
+function trackingFixture(t: any) {
+  const keys = ['OPENMOTION_TELEMETRY', 'DO_NOT_TRACK', 'OPENMOTION_POSTHOG_HOST', 'OPENMOTION_POSTHOG_KEY', 'OPENMOTION_TRACKING_ENV', 'OPENMOTION_TRACKING_TEST_RUN_ID'];
+  const previous = keys.map(key => process.env[key]);
+  t.after(() => keys.forEach((key, i) => previous[i] === undefined ? delete process.env[key] : process.env[key] = previous[i]));
+  process.env.OPENMOTION_TELEMETRY = '1'; delete process.env.DO_NOT_TRACK;
+  process.env.OPENMOTION_POSTHOG_HOST = 'http://127.0.0.1:1'; process.env.OPENMOTION_POSTHOG_KEY = 'phc_fixture';
+  process.env.OPENMOTION_TRACKING_ENV = 'test'; process.env.OPENMOTION_TRACKING_TEST_RUN_ID = crypto.randomUUID();
+  const events: any[] = [];
+  t.mock.method(globalThis, 'fetch', async (url: URL, init: any) => {
+    assert.equal(url.hostname, '127.0.0.1'); events.push(...JSON.parse(init.body).batch);
+    return Response.json({ status: 1 });
+  });
+  return events;
+}
+
+test('installer first source and identity survive reinstall and reach MCP and Studio events', async t => {
+  const options = await setupFixture(t), events = trackingFixture(t);
+  const first = await setup({ ...options, source: 'partner_a' });
+  const identity = JSON.parse(await readFile(path.join(first.dataDirectory, 'tracking/identity.json'), 'utf8'));
+  assert.equal(identity.utm_source, 'partner_a');
+  await setup({ ...options, source: 'partner_b' });
+  assert.deepEqual(JSON.parse(await readFile(path.join(first.dataDirectory, 'tracking/identity.json'), 'utf8')), identity);
+  const runtime = await createAppTracking(first.dataDirectory, 'mcp');
+  runtime.track('mcp_tool_started', { tool_name: 'motion_get_project', call_id: crypto.randomUUID(), accepted: true });
+  runtime.track('ui_click', { page_name: 'home', area: 'workspace', element: 'new_creation' }, undefined, 'studio');
+  await closeTracking(runtime);
+  assert(events.some(e => e.event === 'installation_step_result' && e.properties.step === 'npm_runtime'));
+  assert(events.some(e => e.event === 'installation_result' && e.properties.operation === 'reinstall'));
+  assert(events.some(e => e.event === 'mcp_tool_started')); assert(events.some(e => e.properties.entrypoint === 'studio'));
+  assert(events.every(e => e.properties.installation_id === identity.installation_id && e.properties.utm_source === 'partner_a'));
+  assert(events.some(e => e.properties.attempt_source === 'partner_b'));
+  assert.doesNotMatch(JSON.stringify(events), /motion-npm-|README|install.json|dataDirectory/);
+});
+
+test('unknown historical acquisition is not backfilled; registration failures report safe terminal results', async t => {
+  const options = await setupFixture(t), events = trackingFixture(t), directory = path.join(options.home, 'data');
+  const identity = await loadIdentity(path.join(directory, 'tracking'));
+  await writeJSON(options.config, { fail: true });
+  await assert.rejects(setup({ ...options, source: 'later_campaign' }), /registration failed/);
+  assert.equal(JSON.parse(await readFile(path.join(directory, 'tracking/identity.json'), 'utf8')).utm_source, null);
+  const result = events.find(e => e.event === 'installation_result');
+  assert.equal(result.properties.outcome, 'failure'); assert.equal(result.properties.installation_id, identity.installation_id);
+  assert.equal(result.properties.error_code, 'INSTALL_FAILED');
+  assert(events.some(e => e.properties.step === 'rollback'));
+  assert.doesNotMatch(JSON.stringify(events), /registration failed|motion-npm-|later_campaign.*https/);
+});
+
+test('invalid source fails before writes and opt-out persists neither source nor a new tracking identity', async t => {
+  const options = await setupFixture(t), events = trackingFixture(t);
+  for (const source of ['', 'https://example.com/private', 'a b', 'x'.repeat(65), '中文']) {
+    assert.equal((await preflight({ ...options, source })).error.code, 'INVALID_SOURCE');
+    await assert.rejects(setup({ ...options, source }), /INVALID_SOURCE/);
+  }
+  await assert.rejects(readdir(options.home), { code: 'ENOENT' });
+  process.env.DO_NOT_TRACK = '1';
+  const state = await setup({ ...options, source: 'ignored' });
+  await assert.rejects(readFile(path.join(state.dataDirectory, 'tracking/identity.json')), { code: 'ENOENT' });
+  assert.equal(events.length, 0);
+  delete process.env.DO_NOT_TRACK;
+  await saveTrackingPreference(state.dataDirectory, false);
+  await setup({ ...options, source: 'also_ignored' });
+  await assert.rejects(readFile(path.join(state.dataDirectory, 'tracking/identity.json')), { code: 'ENOENT' });
+  assert.equal(events.length, 0);
 });
