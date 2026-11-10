@@ -1,0 +1,152 @@
+[
+  {
+    "id": "ui-3d-reveal",
+    "startSeconds": 3,
+    "durationSeconds": 5.5,
+    "framesPerSide": 66,
+    "fps": 12,
+    "audio": false,
+    "files": [
+      {
+        "file": "ui-3d-reveal.mp4",
+        "bytes": 444119,
+        "sha256": "d9f294a454173e0cb859174849ee7be442667c761c3794b4ae970501e340f5ee"
+      },
+      {
+        "file": "ui-3d-reveal.gif",
+        "bytes": 1869557,
+        "sha256": "bb31f3558e38bde6ee01b3dbf23c8bed8b7d458ae7af851b3a3c198aee382d40"
+      },
+      {
+        "file": "ui-3d-reveal.jpg",
+        "bytes": 40315,
+        "sha256": "b2a0547f309ab78d7cce8b35950502f7db8bf7c34632c129874a29de39fea962"
+      }
+    ]
+  },
+  {
+    "id": "wireframe-portal-title",
+    "startSeconds": 0,
+    "durationSeconds": 6,
+    "framesPerSide": 72,
+    "fps": 12,
+    "audio": false,
+    "files": [
+      {
+        "file": "wireframe-portal-title.mp4",
+        "bytes": 1943815,
+        "sha256": "fdbf1bda1eb1efbee135d2bd9cbedacc1f59fe7ce9fcdda37648c0f81eb8e4e6"
+      },
+      {
+        "file": "wireframe-portal-title.gif",
+        "bytes": 7014953,
+        "sha256": "0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a"
+      },
+      {
+        "file": "wireframe-portal-title.jpg",
+        "bytes": 81490,
+        "sha256": "78ad8227e964260ba1281510608684295f5ff5371bfb1c9de154b1030fb94e9d"
+      }
+    ]
+  },
+  {
+    "id": "canopy-part-title",
+    "startSeconds": 0.25,
+    "durationSeconds": 5.5,
+    "framesPerSide": 66,
+    "fps": 12,
+    "audio": false,
+    "files": [
+      {
+        "file": "canopy-part-title.mp4",
+        "bytes": 1068254,
+        "sha256": "080816d50bc07f681f916c07dc065710906f0397ccf072f348f66bace5de6587"
+      },
+      {
+        "file": "canopy-part-title.gif",
+        "bytes": 3298524,
+        "sha256": "600a3791258b1b9873bc5626254f6a024a6dfc5df88dded9b468400853c0ccb0"
+      },
+      {
+        "file": "canopy-part-title.jpg",
+        "bytes": 34014,
+        "sha256": "5e4b09d1bc8747e8731e62d68ab664deb3ac0d5262bae84028f0a3c6b0f938b5"
+      }
+    ]
+  },
+  {
+    "id": "code-3d-extrude",
+    "startSeconds": 0,
+    "durationSeconds": 5,
+    "framesPerSide": 60,
+    "fps": 12,
+    "audio": false,
+    "files": [
+      {
+        "file": "code-3d-extrude.mp4",
+        "bytes": 297695,
+        "sha256": "a046da7099b1fd52692252c6af433767c71504b2f2d23b704b7d3fadc3c07d64"
+      },
+      {
+        "file": "code-3d-extrude.gif",
+        "bytes": 1336002,
+        "sha256": "ad7adbd831a97e3af69ce46d332396cec0b633f04de9f8c5c2cf070d9df7b076"
+      },
+      {
+        "file": "code-3d-extrude.jpg",
+        "bytes": 39842,
+        "sha256": "9bf6b790bba43d46f51325f6e92ee3e2be5b830ff3254b496555c28aa45d4ad3"
+      }
+    ]
+  },
+  {
+    "id": "code-particle-assemble",
+    "startSeconds": 0,
+    "durationSeconds": 5,
+    "framesPerSide": 60,
+    "fps": 12,
+    "audio": false,
+    "files": [
+      {
+        "file": "code-particle-assemble.mp4",
+        "bytes": 1674994,
+        "sha256": "c6b9badfa3e7316faaf65695ca7581c1b7ae7bf357bf32e5f45a158596fde703"
+      },
+      {
+        "file": "code-particle-assemble.gif",
+        "bytes": 3266848,
+        "sha256": "6866faabec5d5cf7d1a7b609166915e22c2e0ec44202999344491abe5e6df516"
+      },
+      {
+        "file": "code-particle-assemble.jpg",
+        "bytes": 62906,
+        "sha256": "e5f75affef5d4affd9d11f037e790cbecf9fec730a4f276b6e93b7153c0b3677"
+      }
+    ]
+  },
+  {
+    "id": "liquid-glass-widgets",
+    "startSeconds": 0,
+    "durationSeconds": 6,
+    "framesPerSide": 72,
+    "fps": 12,
+    "audio": false,
+    "files": [
+      {
+        "file": "liquid-glass-widgets.mp4",
+        "bytes": 615295,
+        "sha256": "2598a2785d379020bc55ca0921f3855ff2b75117d69f75fd60eecbfe6c5caae9"
+      },
+      {
+        "file": "liquid-glass-widgets.gif",
+        "bytes": 3239923,
+        "sha256": "39d97875c565d4673f5aa74df2a0f0a46244c12d3466b059b5b8de7d09b2ed9f"
+      },
+      {
+        "file": "liquid-glass-widgets.jpg",
+        "bytes": 71730,
+        "sha256": "527f7a27eba82d37d9b9f58f43c54a58935ab2bdabc7fc105997fc97e7f31f9c"
+      }
+    ]
+  }
+]

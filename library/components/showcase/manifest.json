@@ -1,0 +1,181 @@
+{
+  "upstreamCommit": "070b964d7b8cd844a893f0abbe8e0b7f1ac6d879",
+  "files": [
+    {
+      "file": "LICENSE",
+      "sha256": "4259155fb06f127687ee7b0a8a3682d45132db0f2da26cbc0b7a2d1e796436b8"
+    },
+    {
+      "file": "NOTICE.md",
+      "sha256": "5a8d50fa3894f91a5ec154d6c98e68d3608e5b271c60e93e84a39a623d8b2ff6"
+    },
+    {
+      "file": "README.md",
+      "sha256": "2b2cc010f73a3f2ddb4e57e9b340292aa2af94ed539ebad693f62eb3c64755e6"
+    },
+    {
+      "file": "app-showcase/index.html",
+      "sha256": "a29429d9f1231db7d6ad323122c635198d83ee7bd7cc1cfdb98ab72f043a8df2"
+    },
+    {
+      "file": "app-showcase/vendor/fonts/dm-sans-2a8e7f713ee7.ttf",
+      "sha256": "2a8e7f713ee79fbccdef3cef5c787aff47580299f7da60144961e7db2ec08211"
+    },
+    {
+      "file": "app-showcase/vendor/fonts/dm-sans-376427b53221.ttf",
+      "sha256": "376427b5322148d8de1e03f263bcca4935a2d60ba71d9f94f4947ab664c711ae"
+    },
+    {
+      "file": "app-showcase/vendor/fonts/dm-sans-OFL.txt",
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "file": "app-showcase/vendor/fonts/dm-sans-b0ae3e89a7d3.ttf",
+      "sha256": "b0ae3e89a7d3ef2b1838bb4b1ceb0b17cc3435af061eee809d76aa623ff116e9"
+    },
+    {
+      "file": "app-showcase/vendor/fonts/dm-sans.css",
+      "sha256": "737f88e9fc65d09cd9d696ce99acb99645acd1b2d9a10dc56e2a1f1e7f26a322"
+    },
+    {
+      "file": "app-showcase/vendor/gsap-3.14.2/LICENSE.txt",
+      "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b"
+    },
+    {
+      "file": "app-showcase/vendor/gsap-3.14.2/README.md",
+      "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0"
+    },
+    {
+      "file": "app-showcase/vendor/gsap-3.14.2/dist/gsap.min.js",
+      "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280"
+    },
+    {
+      "file": "app-showcase/vendor/manifest.json",
+      "sha256": "e3b5d793723ccc0ee6ce75146a095776d56d23ed75de2a01050a8aa6f2e5ed6a"
+    },
+    {
+      "file": "aurora/index.html",
+      "sha256": "02d560c5e7fb654b874af3ea2b52941733a4e59f0e8b14550543744833c4c203"
+    },
+    {
+      "file": "aurora/lib/shaders.THIRD-PARTY-LICENSES.txt",
+      "sha256": "ace6fbd142afaa20894b285ab6d4e20f164f6ec8557978d23db36197f1bc067c"
+    },
+    {
+      "file": "aurora/lib/shaders.iife.js",
+      "sha256": "6ad60b5fe00c6f092ddc9ccc6138743d89401e2886d550b275fc8ce0d0345f2d"
+    },
+    {
+      "file": "aurora/vendor/gsap-3.14.2/LICENSE.txt",
+      "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b"
+    },
+    {
+      "file": "aurora/vendor/gsap-3.14.2/README.md",
+      "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0"
+    },
+    {
+      "file": "aurora/vendor/gsap-3.14.2/dist/gsap.min.js",
+      "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280"
+    },
+    {
+      "file": "aurora/vendor/manifest.json",
+      "sha256": "eb9e49b2c6ca658e2f0898a84b22acd8dba3d4ee837ff53ce1d20383ca998700"
+    },
+    {
+      "file": "glass-shard-title/assets/Three-LICENSE.txt",
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "file": "glass-shard-title/assets/ferndale_studio_01_1k.hdr",
+      "sha256": "e76abcf0e02675ec3ec49a608e94742f1e9cb47069f99a31cc95233d29ca2745"
+    },
+    {
+      "file": "glass-shard-title/assets/fonts/CormorantGaramond-OFL.txt",
+      "sha256": "60700d351cac4650c51f3f9db318d2a420f8b45052dba2715eb5fec41f0f6956"
+    },
+    {
+      "file": "glass-shard-title/assets/fonts/Geist-Bold.ttf",
+      "sha256": "f032f37d12e82a37977fd1159c01e1a14415672244d2e6865d57e28c74886d03"
+    },
+    {
+      "file": "glass-shard-title/assets/fonts/Geist-OFL.txt",
+      "sha256": "930853ee1daa68554d9e35c8a9175affb74f699fad9a5da6ee5ebe76379d9137"
+    },
+    {
+      "file": "glass-shard-title/assets/fonts/Geist-Regular.ttf",
+      "sha256": "09af32bab931f1ccc6e4776c5c39c8ea6c0d59b096f6f6c2959b1fdf18df0901"
+    },
+    {
+      "file": "glass-shard-title/assets/fonts/Geist-SemiBold.ttf",
+      "sha256": "4c11a19d17e7a608f797e6a7e1f266778cc75510861f61063acaa2c0dec7c906"
+    },
+    {
+      "file": "glass-shard-title/assets/fonts/cormorant-garamond.woff2",
+      "sha256": "d80df8ff5aecd299a61549f9e29ab1ed0b9b05f4ea71d50fe978e07d5240b235"
+    },
+    {
+      "file": "glass-shard-title/assets/glass-main.js",
+      "sha256": "6d411a955eaee6a0fd26a77e84411e1dcb2a01c7b87bbcb3e87354d652f09a52"
+    },
+    {
+      "file": "glass-shard-title/assets/matcap-1.svg",
+      "sha256": "bd2bb75d2ce52b7e14b37d817f8a50f52bdfeaa36bcb74b41916d0c9e4b1ed53"
+    },
+    {
+      "file": "glass-shard-title/index.html",
+      "sha256": "7bd82b124a2296ec0eff6cf5df51e59e470d535cea92edca0116c1b959d5c06d"
+    },
+    {
+      "file": "glass-shard-title/vendor/d3-delaunay-6.0.4/LICENSE",
+      "sha256": "582c3022bd01942336095f92b58a90b1be624dc547d987555c6c956512dd24c1"
+    },
+    {
+      "file": "glass-shard-title/vendor/d3-delaunay-6.0.4/dist/d3-delaunay.min.js",
+      "sha256": "efc726aa8aea0897f6dda19874709d09fd791781208ed5847ef1fd36f9886b18"
+    },
+    {
+      "file": "glass-shard-title/vendor/gsap-3.14.2/LICENSE.txt",
+      "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b"
+    },
+    {
+      "file": "glass-shard-title/vendor/gsap-3.14.2/README.md",
+      "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0"
+    },
+    {
+      "file": "glass-shard-title/vendor/gsap-3.14.2/dist/gsap.min.js",
+      "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280"
+    },
+    {
+      "file": "glass-shard-title/vendor/manifest.json",
+      "sha256": "3ec3e4d81a37011e4194157b19e0036a65769b0cf81533d37cfa76001dfd562a"
+    },
+    {
+      "file": "nyc-paris-flight/assets/map-nyc-paris.png",
+      "sha256": "982e87145e1f7aa4b97674dba2ceabc7605d67c46234d4f105cdb336ce411688"
+    },
+    {
+      "file": "nyc-paris-flight/assets/sfx-mix.wav",
+      "sha256": "e3da3426014c629093ef5a50883f24de6445d5ea9f636ad029b25cb68f854493"
+    },
+    {
+      "file": "nyc-paris-flight/index.html",
+      "sha256": "611cc62587d2d9c27e96e09a88aff430677c5666b25d2aebedb89a18757e9b81"
+    },
+    {
+      "file": "nyc-paris-flight/vendor/gsap-3.14.2/LICENSE.txt",
+      "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b"
+    },
+    {
+      "file": "nyc-paris-flight/vendor/gsap-3.14.2/README.md",
+      "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0"
+    },
+    {
+      "file": "nyc-paris-flight/vendor/gsap-3.14.2/dist/gsap.min.js",
+      "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280"
+    },
+    {
+      "file": "nyc-paris-flight/vendor/manifest.json",
+      "sha256": "eb9e49b2c6ca658e2f0898a84b22acd8dba3d4ee837ff53ce1d20383ca998700"
+    }
+  ]
+}

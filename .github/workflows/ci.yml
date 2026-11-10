@@ -71,7 +71,7 @@ jobs:
         shell: bash
     env:
       OPENMOTION_TELEMETRY: '0'
-      HYPERFRAMES_BROWSER_PATH: /usr/bin/chromium
+      HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome
       HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
       HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
     steps:
@@ -84,7 +84,11 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - name: Install rendering test tools
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends zip unzip chromium ffmpeg fonts-noto-core
+        run: |
+          # The hosted Ubuntu image provides Chrome; Ubuntu's chromium package pulls a desktop snap.
+          "$HYPERFRAMES_BROWSER_PATH" --version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends zip unzip ffmpeg fonts-noto-core
       - name: Validate manual package selection
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
@@ -110,7 +114,7 @@ jobs:
           npm run build:tracking
           node --experimental-strip-types --test tests/tracking.test.ts
       - name: Validate standalone installation and packaging
-        run: node --experimental-strip-types --test tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
+        run: node --experimental-strip-types --test tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
       - name: Studio regression
         run: npm run test:studio -- --maxWorkers=2
       - name: Build phase-one ZIP and exercise all public tools

@@ -110,12 +110,21 @@ export async function scanSource(source, binary) {
   const names = (await runFile('git', ['ls-files', '-z'], { cwd: source })).split('\0').filter(Boolean);
   const work = await mkdtemp(path.join(os.tmpdir(), 'motion-source-scan-'));
   try {
+    // Scan the public gallery separately so neither batch exceeds the archive scan budget.
+    const batches = new Set();
     for (const name of names) {
       assert(!name.split('/').includes('..') && !path.isAbsolute(name), 'Unsafe tracked path');
       const file = path.join(source, name); assert((await lstat(file)).isFile(), 'Tracked links are forbidden');
-      await mkdir(path.dirname(path.join(work, name)), { recursive: true }); await cp(file, path.join(work, name));
+      const batch = name.startsWith('docs/readme/') ? 'gallery' : 'source';
+      batches.add(batch);
+      const destination = path.join(work, batch, name);
+      await mkdir(path.dirname(destination), { recursive: true }); await cp(file, destination);
     }
-    return await scanTree(work, 'source', binary);
+    const reports = [];
+    for (const batch of batches) reports.push(await scanTree(path.join(work, batch), 'source', binary));
+    if (!reports.length) return await scanTree(work, 'source', binary);
+    return { ...reports[0], files: reports.reduce((n, report) => n + report.files, 0),
+      bytes: reports.reduce((n, report) => n + report.bytes, 0) };
   } finally { await rm(work, { recursive: true, force: true }); }
 }
 

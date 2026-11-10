@@ -1,0 +1,74 @@
+{
+  "scope": "External references in the main README and its translations; original media ownership retained, not OpenMotion remake evidence.",
+  "retrievedOn": "2026-11-09",
+  "entries": [
+    {
+      "id": "rea-unboxing",
+      "kind": "external case-study reference",
+      "curator": "JuneYaooo/rea-video",
+      "sourceUrl": "https://raw.githubusercontent.com/JuneYaooo/rea-video/main/docs/cases/videos/unboxing.mp4",
+      "reportUrl": "https://github.com/JuneYaooo/rea-video/blob/main/docs/cases/unboxing/report_en.md",
+      "video": {
+        "file": "rea-unboxing.mp4",
+        "bytes": 6593523,
+        "sha256": "83c826f7efbccaad268bff5e63ad66097f06634f1c915634fce29d2af5f1f7ad"
+      },
+      "excerpt": {
+        "startSeconds": 1,
+        "durationSeconds": 5,
+        "fps": 10,
+        "width": 320,
+        "gif": {
+          "file": "rea-unboxing.gif",
+          "bytes": 3238852,
+          "sha256": "f4c8addcc5c60f7c0f6aa2ef6f3e652d88b9b0d3b78d96f612c63ed506c65047"
+        },
+        "reducedMotionStill": {
+          "file": "rea-unboxing.jpg",
+          "bytes": 41679,
+          "sha256": "8d604b4d67df6118149c5767fdeae31d611f8711e1c297696929173a61cdcb1c"
+        }
+      }
+    },
+    {
+      "id": "rea-dual-role",
+      "kind": "external case-study reference",
+      "curator": "JuneYaooo/rea-video",
+      "sourceUrl": "https://raw.githubusercontent.com/JuneYaooo/rea-video/main/docs/cases/videos/dual_role.mp4",
+      "reportUrl": "https://github.com/JuneYaooo/rea-video/blob/main/docs/cases/dual_role/report_en.md",
+      "video": {
+        "file": "rea-dual-role.mp4",
+        "bytes": 968133,
+        "sha256": "4ca7b6cf2eca6c240a85a3404e958d4410d0e183cde233dcbe8b768bb25d688a"
+      },
+      "excerpt": {
+        "startSeconds": 5,
+        "durationSeconds": 6,
+        "fps": 10,
+        "width": 320,
+        "gif": {
+          "file": "rea-dual-role.gif",
+          "bytes": 1808896,
+          "sha256": "0d02c85931e92aae6753716c4a59f1b5023922e346661f194271e8d5b1959fa6"
+        },
+        "reducedMotionStill": {
+          "file": "rea-dual-role.jpg",
+          "bytes": 25755,
+          "sha256": "3f4c8e06005cc80ec9d42df813222d9bf3f0bc3542b64c3089f141f9f1b46044"
+        }
+      }
+    },
+    {
+      "id": "codex-originals",
+      "kind": "official campaign still",
+      "author": "OpenAI",
+      "sourcePage": "https://openai.com/codex-originals/",
+      "sourceUrl": "https://images.ctfassets.net/kftzwdyauwt9/530Ae7RFCNqlS1b7cTFYKn/2294e3fe2ef826029f1d31bdb0ce46bf/06_groupshot-sharp.webp?fm=webp&q=90&w=3840",
+      "still": {
+        "file": "codex-originals.webp",
+        "bytes": 125996,
+        "sha256": "7685c884a8edd336e788ee1553de075479f7e1da8e71547e7c3773f52af3ec54"
+      }
+    }
+  ]
+}

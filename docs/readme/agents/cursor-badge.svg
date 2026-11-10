@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144" height="34" viewBox="0 0 144 34">
+  <title>Cursor Agent</title>
+  <rect x=".5" y=".5" width="143" height="33" rx="7" fill="#f6f8fa" stroke="#d1d9e0"/>
+  <image x="12" y="6" width="22" height="22" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9IiMxYzFiMWEiIGZpbGwtcnVsZT0iZXZlbm9kZCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjIuMTA2IDUuNjggMTIuNS4xMzVhMSAxIDAgMCAwLS45OTggMEwxLjg5MyA1LjY4YS44NC44NCAwIDAgMC0uNDE5LjcyNnYxMS4xODZjMCAuMy4xNi41NzcuNDIuNzI3bDkuNjA3IDUuNTQ3YTEgMSAwIDAgMCAuOTk4IDBsOS42MDgtNS41NDdhLjg0Ljg0IDAgMCAwIC40Mi0uNzI3VjYuNDA3YS44NC44NCAwIDAgMC0uNDItLjcyNnptLS42MDMgMS4xNzZMMTIuMjI4IDIyLjkyYy0uMDYzLjEwOC0uMjI4LjA2NC0uMjI4LS4wNjFWMTIuMzRhLjU5LjU5IDAgMCAwLS4yOTUtLjUxbC05LjExLTUuMjZjLS4xMDctLjA2Mi0uMDYzLS4yMjguMDYyLS4yMjhoMTguNTVjLjI2NCAwIC40MjguMjg2LjI5Ni41MTQiLz48L3N2Zz4="/>
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <text x="40" y="22" font-weight="600" font-size="13" fill="#24292f">Cursor Agent</text>
+  </g>
+</svg>
