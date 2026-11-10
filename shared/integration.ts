@@ -11,6 +11,7 @@ export const hostDescriptions: Record<IntegrationHost, string> = {
   mcp: '连接你喜欢的 MCP 客户端，也可以从终端和脚本开始。',
 };
 export type IntegrationInfo = {
+  templateEnvironment?: 'dev' | 'prod';
   name: string; version: string; previewUrl: string; dataDirectory: string;
   transport: { type: 'stdio'; command: string; args: string[]; cwd: string; env: Record<string, string> };
   tools: { name: string; description: string }[];
@@ -70,8 +71,19 @@ export function setupPrompt(info: IntegrationInfo, host: IntegrationHost, locale
   if (host === 'chatgpt') return 'ChatGPT 云端需要公开 HTTPS MCP 服务。当前工作区使用本机 stdio，可先选择 Codex、Claude Code 或 DeepSeek Harness 开始创作。';
   return `请读取 ${guideUrl(info, host)}，将 OpenDesign 接入 ${hostNames[host]}，验证后带我开始创作。`;
 }
-export function templatePrompt(info: IntegrationInfo, host: IntegrationHost, template: { id: string; title: string }) {
-  return `请读取 ${guideUrl(info, host, template.id)} 并在 OpenDesign 复刻模板 ${template.id}，完成后打开可编辑工程。`;
+export function templatePrompt(info: IntegrationInfo, _host: IntegrationHost, template: { id: string; title: string }, locale = 'zh-CN') {
+  const environment = info.templateEnvironment ?? info.transport.env?.MOTION_TEMPLATE_ENV ?? 'prod';
+  const installUrl = `https://releases.open-design.ai/open-motion/${environment === 'dev' ? 'dev/' : ''}install.md`;
+  if (locale === 'zh-CN') return `使用说明：请使用 OpenMotion 插件。如未安装，请按 ${installUrl} 安装并接入后继续。
+指定模板：${template.title}（${template.id}）
+创作要求：基于模板，结合我的要求和附件创作，默认保留主要动效与风格，并交付 HTML 和 MP4。
+我的要求：
+`;
+  return `Instructions: Use the OpenMotion plugin. If it is not installed, follow ${installUrl} to install and connect it, then continue.
+Selected template: ${template.title} (${template.id})
+Creative brief: Adapt the template using my requirements and attachments. Preserve its main motion and style by default, and deliver HTML and MP4.
+My requirements:
+`;
 }
 
 export function agentGuide(info: IntegrationInfo, host: IntegrationHost) {

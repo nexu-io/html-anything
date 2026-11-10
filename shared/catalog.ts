@@ -14,6 +14,11 @@ export type GalleryTemplate = {
   previewUrl?: string; posterUrl?: string; sourceUrl?: string; author: string; mediaFingerprint?: string;
   authorName?: string; social?: TemplateSocial;
   variants?: GalleryTemplate[];
+  motionDocumentUrl?: string; motionGuideUrl?: string; projectFileUrl?: string; authorAvatarUrl?: string;
+  styleDescription?: string; reviewFocus?: string;
+  brand?: string; uses?: string[]; styles?: string[]; industries?: string[];
+  creationModels?: string[]; colors?: string[]; width?: number; height?: number;
+  sortOrder?: number; featuredOrder?: number | null; hasHtmlProject?: boolean;
 };
 export type SocialPlatform = 'X' | 'Instagram' | 'YouTube' | 'TikTok';
 export type TemplateSocial = { platform: SocialPlatform; views: number; sourceUrl: string; syncedAt: string; metadataUrl: string };
@@ -23,7 +28,7 @@ export const featuredTemplateIds = [
   'hf-moment-M1023', 'hf-moment-M1000', 'hf-moment-M990',
 ];
 const roleNames: Record<string, string> = { 'a-roll': '口播', hook: '开场', setup: '铺垫', proof: '产品展示', turn: '转场', payoff: '高潮', cta: '结尾' };
-export function isEditableTemplate(template: GalleryTemplate): boolean { return template.kind === 'builtin' || template.kind === 'prism'; }
+export function isEditableTemplate(template: GalleryTemplate): boolean { return template.kind === 'builtin' || (template.kind === 'prism' && template.hasHtmlProject !== false); }
 
 export function templateCategoryLabel(template: GalleryTemplate) {
   if (template.role === 'a-roll' || template.tags.includes('口播')) return 'A-roll Cuts';

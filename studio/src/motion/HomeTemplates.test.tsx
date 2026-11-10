@@ -4,6 +4,12 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { I18nProvider, translate, type Locale } from '../i18n/I18n';
 import { HomeTemplates } from './HomeTemplates';
+import type { IntegrationInfo } from '../../../shared/integration';
+
+const integration: IntegrationInfo = {
+  name: 'OpenMotion', version: 'test', previewUrl: 'http://localhost:4173', dataDirectory: '/test',
+  transport: { type: 'stdio', command: 'node', args: [], cwd: '/test', env: { MOTION_TEMPLATE_ENV: 'dev' } }, tools: [],
+};
 
 const state = vi.hoisted(() => ({ open: vi.fn(), disabled: false }));
 vi.mock('./WorkspaceFrame', () => ({ useWorkspaceChrome: () => ({ workspace: { open: state.open }, switchingDisabled: state.disabled }) }));
@@ -18,7 +24,7 @@ beforeEach(() => {
   container = document.createElement('div'); document.body.append(container); root = createRoot(container);
   clipboard = vi.fn(async () => {});
   vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(clipboard);
-  fetcher = vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? { previewUrl: 'http://localhost:4173' } : {
+  fetcher = vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? integration : {
     items: url.includes('category=builtin') ? [builtin] : [reference], total: 1, entryTotal: 1, catalogTotal: 2, offset: 0, next: null,
   })));
   vi.stubGlobal('fetch', fetcher);
@@ -36,7 +42,9 @@ it('only editable templates open a new engineering project; references copy thei
   expect(container.querySelector('.motion-editable-badge')).toBeNull();
   await act(async () => button('一键复制').click());
   expect(clipboard).toHaveBeenCalledOnce();
-  expect(clipboard.mock.calls[0][0]).toContain('template=hf-moment-M953');
+  expect(clipboard.mock.calls[0][0]).toContain('指定模板：Reference（hf-moment-M953）');
+  expect(clipboard.mock.calls[0][0]).toContain('https://releases.open-design.ai/open-motion/dev/install.md');
+  expect(clipboard.mock.calls[0][0]).not.toContain('localhost');
   expect(state.open).toHaveBeenCalledTimes(1);
   expect(container.textContent).toContain('已复制');
 });

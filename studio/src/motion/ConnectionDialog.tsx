@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/I18n';
 import { useEffect, useRef } from 'react';
 import { mountConnection } from '../../../web/connect';
 import connectionPage from '../../../web/connect.html?raw';
+import { TemplateLibraryDialog } from './TemplateLibraryDialog';
 import { MotionIcon } from './icons';
 import '../../../web/design-system/controls.css';
 import '../../../web/connect.css';
@@ -12,6 +13,11 @@ type Props = { open: boolean; section?: 'setup' | 'templates'; busy: boolean; er
 
 /** The original integration page lives inside one modal; Studio stays mounted beneath it. */
 export function ConnectionDialog(props: Props) {
+  const mvp = useMvpEditor();
+  return mvp || props.section === 'templates' ? <TemplateLibraryDialog {...props} /> : <LegacyConnectionDialog {...props} />;
+}
+
+function LegacyConnectionDialog(props: Props) {
   const { t, locale } = useI18n();
   const mvp = useMvpEditor();
   const dialog = useRef<HTMLDialogElement>(null), root = useRef<HTMLDivElement>(null);

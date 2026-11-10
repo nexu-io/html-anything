@@ -147,3 +147,18 @@ test('reopening a template reuses verified files without sharing mutable project
   assert.equal(await readFile(path.join(directory, 'second', 'index.html'), 'utf8'), contents['index.html']);
   assert.equal((await reopened.detail('test-motion-1')).instructions, contents['TEMPLATE.md']);
 });
+
+test('gallery carries Prism facets and ordering without leaking project files', async t => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-library-facets-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const data = publication();
+  Object.assign(data.content['zh-CN'].templates[0], { motionDocumentUrl: 'https://example.com/motion.zip', motionGuideUrl: 'https://example.com/guide', brand: 'Figma', featuredOrder: 0, creationModels: ['Model A'], colors: ['blue'], industries: ['Design'], width: 1920, height: 1080 });
+  Object.assign(data.content['zh-CN'].templates[0].original, { promotionalUseCases: 'Launch, Demo', visualPresentation: 'UI, Typography' });
+  const catalog = new TemplateCatalog(directory, { fetch: async () => Response.json(data) });
+  const { items } = await catalog.page({ category: 'all' });
+  assert.equal(items[0].motionDocumentUrl, 'https://example.com/motion.zip'); assert.equal(items[0].motionGuideUrl, 'https://example.com/guide');
+  assert.equal(items[0].brand, 'Figma'); assert.equal(items[0].featuredOrder, 0);
+  assert.deepEqual(items[0].uses, ['Launch', 'Demo']); assert.deepEqual(items[0].styles, ['UI', 'Typography']);
+  assert.deepEqual(items[0].creationModels, ['Model A']); assert.equal(items[0].hasHtmlProject, true);
+  assert.equal('files' in items[0], false);
+});
