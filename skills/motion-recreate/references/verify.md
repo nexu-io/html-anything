@@ -14,7 +14,7 @@ Inspect representative frames of the exported file at the delivered size:
 
 ## 3. Measure with numbers
 
-Looking is not enough, and this step cannot be skipped or recorded as "not run". Pick at least three moments: the opening title, the densest middle frame and the end card. For each one, view both frames at the delivered size and run the measurer bundled with this Skill (the Skill directory is the one holding this Skill's `SKILL.md`):
+Looking is not enough, and this step cannot be skipped or recorded as "not run". Measure at least one moment in every segment you found while reading the reference (the parts between cuts and major changes), including the opening, the densest frame and the ending frame (or the end card when there is one). In a segment that moves, such as a zoom, camera move or transition, pick a moment in the middle of the movement, not a hold before or after it. For each moment, view both frames at the delivered size and run the measurer bundled with this Skill (the Skill directory is the one holding this Skill's `SKILL.md`):
 
 ```sh
 node <skill directory>/scripts/measure_frame.mjs reference.mp4 remix.mp4 --t <remix seconds> --ref-t <reference seconds> [--region x,y,w,h --ref-region x,y,w,h]
@@ -32,13 +32,3 @@ Fix failures by resizing, wrapping, moving, re-timing or adding the missing laye
 ## 4. Record
 
 Keep the record outside the live project, in the workspace `VERIFY.md` described by the shared verification: the source video and checksum, the material used, requested changes, assumptions, remaining differences, the measurement table (moments, elements, regions, values, results) and every check as passed, failed or not run. Real review evidence can also be stored with `action: "record_review"` on `motion_export_request`. Humans decide visual acceptance.
-
-## 5. Comparison video
-
-Save a side-by-side `<name>-comparison.mp4` next to `<name>-remix.mp4` in the workspace: original left, remix right, on one clock, H.264 at web bitrate. For example, with both scaled to the same height (use the package's FFmpeg when `ffmpeg` is not on `PATH`):
-
-```sh
-ffmpeg -i reference.mp4 -i remix.mp4 -filter_complex "[0:v]scale=-2:540[a];[1:v]scale=-2:540[b];[a][b]hstack=inputs=2[v]" -map "[v]" -map 1:a? -c:v libx264 -crf 28 -pix_fmt yuv420p -c:a aac <name>-comparison.mp4
-```
-
-The comparison is for human review only; it is not part of the project.

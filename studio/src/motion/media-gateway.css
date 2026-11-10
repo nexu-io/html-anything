@@ -23,6 +23,7 @@
 .motion-media-surface summary { cursor: pointer; color: var(--motion-muted); font-size: 12px; padding: 4px 0; }
 .motion-media-surface details[open] summary { margin-bottom: 8px; }
 .motion-model-dialog { position: fixed; inset: 0; margin: auto; width: min(960px, calc(100vw - 40px)); max-height: calc(100dvh - 48px); padding: 24px; overflow: auto; }
+.motion-privacy-dialog { width: min(520px, calc(100vw - 40px)); }
 .motion-model-dialog::backdrop { background: var(--motion-overlay); backdrop-filter: blur(3px); }
 .motion-model-dialog section + section { border-top: 1px solid var(--motion-border); margin-top: 24px; padding-top: 20px; }
 .motion-model-routes select { min-height: 36px; }
@@ -30,8 +31,8 @@
 .motion-provider-card { background: var(--motion-panel); border: 1px solid var(--motion-border); border-radius: 12px; padding: 16px; }
 .motion-provider-card .motion-media-row { gap: 6px; flex-wrap: wrap; }
 .motion-provider-card p { min-height: 38px; margin: 10px 0; }
-.motion-provider-card .motion-media-toggle { display: flex; flex-direction: row; align-items: center; gap: 5px; }
-.motion-provider-card input[type=checkbox] { accent-color: var(--motion-accent); }
+.motion-provider-card .motion-media-toggle, .motion-privacy-dialog .motion-media-toggle { display: flex; flex-direction: row; align-items: center; gap: 5px; }
+.motion-provider-card input[type=checkbox], .motion-privacy-dialog input[type=checkbox] { accent-color: var(--motion-accent); }
 .motion-provider-card label + .motion-media-row { margin: 10px 0; }
 .motion-capability-badge { display: inline-block; border-radius: 4px; padding: 2px 6px; margin-top: 10px; font-size: 11px; background: var(--motion-inset); color: var(--motion-muted); }
 .motion-capability-badge[data-available=true] { color: var(--motion-accent); background: var(--motion-accent-soft); }

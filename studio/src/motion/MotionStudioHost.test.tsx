@@ -71,6 +71,7 @@ it('keeps project switching, templates, history actions and native export in the
   expect(container.querySelector('a[download]')).toBeNull();
   expect(document.querySelector('.motion-brand')?.tagName).toBe('DIV');
   expect(document.querySelector('.motion-sidebar-settings [aria-label="模型设置"]')).toBeNull();
+  expect(document.querySelector('.motion-sidebar-settings [aria-label="隐私设置"]')).not.toBeNull();
   expect(header.querySelector('[aria-label="语言"]')).toBeNull();
   expect(document.querySelector('.motion-sidebar-settings [aria-label="语言"]')).not.toBeNull();
   act(() => container.querySelector<HTMLButtonElement>('[aria-label="撤销"]')!.click());

@@ -1717,5 +1717,12 @@
   "Get the template catalogue and local index.": "获取模板目录和本地索引。",
   "Read the details and files for one template.": "读取单个模板的详情和文件。",
   "Template cache unavailable; downloading again": "模板缓存不可用，重新下载",
-  "Template update failed; using cached catalogue: {message}": "模板更新失败，使用已缓存目录：{message}"
+  "Template update failed; using cached catalogue: {message}": "模板更新失败，使用已缓存目录：{message}",
+  "Privacy settings": "隐私设置",
+  "Share usage data": "分享使用数据",
+  "Send feature usage, error categories and approximate region to improve OpenMotion. Prompts and project contents are excluded.": "发送功能使用情况、错误类别和大致地区，帮助改进 OpenMotion。不会发送提示词或工程内容。",
+  "This setting applies to MCP and Studio on this installation and is kept after restart.": "此设置同时适用于本次安装的 MCP 和 Studio，重启后仍然保留。",
+  "Disabled by your environment settings.": "已由环境设置关闭。",
+  "Could not load privacy settings.": "无法加载隐私设置。",
+  "Could not save privacy settings.": "无法保存隐私设置。"
 }

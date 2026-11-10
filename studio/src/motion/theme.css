@@ -299,8 +299,8 @@ button, input, select, textarea { font-family: inherit; }
 
 :root[data-motion-ui] .hf-od-floating-surface.motion-speed-menu { background: var(--motion-raised); border: 0; outline: none; box-shadow: var(--motion-shadow-sm); }
 
-/* Equal side columns keep the project name centered in the editor. */
-.motion-studio-header.motion-studio-header-centered { padding-block: 11.5px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+/* Equal side columns center the title; narrow hosts preserve the controls before the title. */
+.motion-studio-header.motion-studio-header-centered { padding-block: 11.5px; display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 1fr) minmax(max-content, 1fr); gap: 12px; }
 .motion-studio-header.motion-studio-header-centered > div { min-width: 0; width: auto; }
 .motion-studio-header.motion-studio-header-centered > div:last-child { justify-self: end; flex-wrap: nowrap; }
 .motion-studio-header-centered .motion-workspace-actions { padding-right: 0; margin-right: 0; border-right: 0; }

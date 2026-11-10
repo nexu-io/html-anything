@@ -48,7 +48,13 @@ list 无参数，返回 indexPath、total、catalogVersion 和可选 warning，�
 
 ### motion_open_preview
 
-默认 action=open；传 projectId 或已绑定 sessionId，可选 embedded。执行原生 lint，再选择同一实际工程，返回工程详情、previewUrl、preflight、selectionSource、openedByHost=false。无项目不自动创建；真正打开网页由宿主浏览器执行。
+Default action=open accepts an explicit projectId or bound sessionId, optional embedded, presentation, expectedRevision and expectedVersionId. When supplied, both identities are checked before and after lint/open. The result includes previewHandoff, previewUrl, preflight, selectionSource and openedByHost=false; the host must present the existing project. No project is created implicitly.
+
+The handoff preserves the current chat by default (presentation=foreground): reuse its native Tab and queue while inactive. On return, resolve the latest project version without replaying the queued version. Codex actions include a calling-chat-only visibilitySync and bounded observation instructions; queued alone is not confirmation. Only an explicit presentation=now request allows switching back for this turn; background skips presentation. See the shared [continuing-edit workflow](../skills/motion-production/references/native.md#continuing-edits).
+
+action=record_display requires projectId, requestId and display={revision,versionId,previewUrl,visibility,contentVerified,evidence}; optional hostStatus and hostTabId retain the acknowledgment and actual native providerTabId independently. Only visible plus inspected latest content returns confirmed. Hidden/queued/unavailable or unverified content remains pending. Reject foreign project/session/origin URLs and stale revision/version identities, including same-hash restores and retries. Records are host_reported; motion_get_project.previewDisplay exposes isCurrentVersion and liveVisibilityVerified=false, never a live visibility claim.
+
+motion_edit_project and motion_restore_version accept the same optional presentation and return a fresh version-bound previewHandoff after each save or replay. The host owns persistent background preferences; show-now permission does not persist. Stored native Tab IDs are reuse hints that must be validated against the current host inventory. A host queue can open on return without another model turn; absent a new observation the service receipt stays pending.
 
 可选 action=record_review，须 projectId、requestId、review，记录已观察对象/versionId/结论/依据/来源与可选时间范围，不修改源码。
 
@@ -142,7 +148,7 @@ Protocol 1 preserves existing request/response shapes and semantics. New Tools a
 | motion_restore_version | v5恢复v3产生v6并保留v4/v5；历史音视频；中断恢复及外部第三种内容保护 | tests/phase1.test.ts |
 | motion_export_cancel | 排队取消、运行中确认停止、跨项目拒绝、已完成不改状态、旧结果保留 | tests/phase1.test.ts、tests/phase1-runtime.test.ts、tests/phase1-package.mjs |
 
-复测命令：后端 `node --experimental-strip-types --test --test-concurrency=1 tests/*.test.ts`；实际包 `node tests/phase1-package.mjs /absolute/path/motion-0.6.2-phase1.zip /absolute/path/evidence`。涉及真实浏览器/渲染时按团队browser-lock包装器执行。完整测试包和四宿主真实模型任务另行验收。
+复测命令：后端 `node --experimental-strip-types --test --test-concurrency=1 tests/*.test.ts`；实际包 `node tests/phase1-package.mjs /absolute/path/motion-0.6.2-phase1.zip /absolute/path/evidence`。完整测试包和四宿主真实模型任务另行验收。
 
 
 ### 测试代码与CI范围
@@ -155,7 +161,7 @@ Protocol 1 preserves existing request/response shapes and semantics. New Tools a
 
 各Tool的用例按用户场景复用，不要求每项单独一个文件。原九个工程工具及两个模板工具均进入ZIP端到端链路；预览部分检查实际服务和URL，尚未覆盖完整GUI点击操作。宿主模型对话、Windows实机、播放器人工听看和所有参数组合不在当前完成范围。独立ZIP E2E已加入普通PR CI；完整GUI点击和macOS共享后台集成仍是单独验证范围。
 
-CI不按路径过滤、不跳过渲染、无失败重试或continue-on-error；缺浏览器、依赖安装失败、任一Tool失败或视频校验失败均使任务失败。每次在独立临时数据目录安装，使用Linux临时容器与自带Chromium，不接入宿主共享浏览器；本地复测继续使用团队browser-lock包装器。CI保留14天的HEAD、ZIP校验和、Tool调用结果、MCP/预览日志及通过时的MP4。基础构建失败时以该任务日志为准。
+CI不按路径过滤、不跳过渲染、无失败重试或continue-on-error；缺浏览器、依赖安装失败、任一Tool失败或视频校验失败均使任务失败。每次在独立临时数据目录安装，使用Linux临时容器与自带Chromium，不接入宿主共享浏览器。CI保留14天的HEAD、ZIP校验和、Tool调用结果、MCP/预览日志及通过时的MP4。基础构建失败时以该任务日志为准。
 
 **合并门禁还依赖仓库配置：** 管理员需为main开启分支保护，启用必需状态检查，并将实际CI产生的phase1-package-e2e检查上下文（以及现有assemble检查）设为必需；禁止跳过检查合并。工作流文件不能自行修改仓库权限。2026-11-05用户确认先不配置分支保护：本期先交付自动E2E与失败标红，按CI全绿才合并执行；平台暂不会强制锁住合并按钮。后续启用硬门禁仍需管理员配置，不能把CI接入等同于“服务端已禁止失败合并”。
 

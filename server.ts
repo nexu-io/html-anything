@@ -25,9 +25,12 @@ import { Phase1Service } from './phase1.ts';
 import { phase1McpCapabilities } from './shared/phase1-tools.ts';
 import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
+import { createAppTracking, closeTracking, saveTrackingPreference, trackingPreference, trackingLocked, type OmTracking } from './shared/tracking.ts';
+import { studioEvents } from './tracking/events.ts';
+import { validPending } from './tracking/core.ts';
 
 const sharedStore = new WorkspaceStore();
-export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void> };
+export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
 const service: Service = {};
 const working = new Set<string>();
 const runningExports = new Map<string, AbortController>();
@@ -45,7 +48,7 @@ export async function cancelExport(store: WorkspaceStore, projectId: string, job
   });
 }
 
-export async function renderNext(store: WorkspaceStore, runtimeRoot: string) {
+export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tracking?: OmTracking) {
   const pending = await store.job();
   if (pending?.projectId) store = store.forProject(pending.projectId);
   const key = store.directory;
@@ -71,7 +74,8 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string) {
     await mkdir(path.dirname(output), { recursive: true });
     // The service owns this job; a short-lived Agent client must not cancel it.
     await stage('rendering');
-    const result = await runHyperframes(runtimeRoot, directory, ['render', '.', '--output', output, '--format', 'mp4', ...(job.phase1 ? ['--fps', String(job.expected!.fps)] : []), '--json'], 25 * 60_000, { HYPERFRAMES_RENDER_DETACHED: '1' }, control.signal);
+    // Let the engine read the snapshot's exact data-fps (including rational rates).
+    const result = await runHyperframes(runtimeRoot, directory, ['render', '.', '--output', output, '--format', 'mp4', '--json'], 25 * 60_000, { HYPERFRAMES_RENDER_DETACHED: '1' }, control.signal);
     await writeFile(path.join(store.directory, 'jobs', job.id, 'render.log'), result.stdout + '\n' + result.stderr, { mode: 0o600 });
     if (result.code) throw new Error('Hyperframes render 失败：' + (result.stderr || result.stdout).slice(-1800));
     // Never label an absent or non-MP4 output as completed, even after exit code 0.
@@ -94,6 +98,15 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string) {
     const current = await store.job(job.id);
     if (current && ['running', 'cancelling'].includes(current.state)) await store.finishExport(job.id, job.token!, error instanceof Error ? error.message : '渲染失败');
   } finally {
+    if (job && tracking) {
+      const final = await store.job(job.id).catch(() => null);
+      if (final && ['completed', 'failed', 'cancelled'].includes(final.state)) tracking.track('export_result', {
+        job_id: final.id, job_state: final.state as 'completed' | 'failed' | 'cancelled',
+        duration_ms: Math.min(86_400_000, Math.max(0, Date.now() - final.createdAt)),
+        technical_check: (final.verification as any)?.status === 'passed' ? 'passed'
+          : (final.verification as any)?.status === 'failed' ? 'failed' : 'unknown',
+      }, undefined, 'worker');
+    }
     if (job) runningExports.delete(job.id);
     if (job) await rm(store.snapshotDirectory(job.id), { recursive: true, force: true });
     working.delete(key);
@@ -103,12 +116,12 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string) {
 function json(res: ServerResponse, status: number, data: unknown) {
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(data));
 }
-async function input(req: IncomingMessage) {
+async function input(req: IncomingMessage, maxBytes = 9 * 1024 * 1024) {
   if (!req.headers['content-type']?.startsWith('application/json')) throw new Error('需要 application/json');
   let size = 0; const chunks: Buffer[] = [];
   for await (const chunk of req) {
     size += chunk.length;
-    if (size > 9 * 1024 * 1024) throw new Error('提交内容超过大小限制');
+    if (size > maxBytes) throw new Error('提交内容超过大小限制');
     chunks.push(chunk);
   }
   return JSON.parse(Buffer.concat(chunks).toString());
@@ -239,6 +252,25 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (motionRequest) url.pathname = url.pathname.replace(/^\/(?:motion|design)-api\//, '/api/');
     const editorUrl = `http://${host || 'localhost'}/#project/${store.projectId}`;
+    if (motionRequest && url.pathname === '/api/tracking/preferences' && ['GET', 'PUT'].includes(req.method!)) {
+      const directory = (store.workspaceStore ?? store).directory;
+      if (req.method === 'PUT') {
+        if (trackingLocked()) return json(res, 403, { error: 'TRACKING_DISABLED_BY_ENVIRONMENT' });
+        const data = await input(req, 1024);
+        if (!data || Object.keys(data).length !== 1 || typeof data.enabled !== 'boolean') return json(res, 400, { error: 'INVALID_TRACKING_PREFERENCE' });
+        await saveTrackingPreference(directory, data.enabled);
+      }
+      return json(res, 200, { enabled: context.tracking?.enabled() ?? false, preference: trackingPreference(directory), locked: trackingLocked() });
+    }
+    if (motionRequest && url.pathname === '/api/tracking' && req.method === 'GET') return json(res, 200, { enabled: context.tracking?.enabled() ?? false });
+    if (motionRequest && url.pathname === '/api/tracking' && req.method === 'POST') {
+      if (!context.tracking?.enabled()) return json(res, 200, { accepted: 0, enabled: false });
+      const data = await input(req, 64 * 1024);
+      if (!data || Object.keys(data).length !== 1 || !Array.isArray(data.events) || data.events.length > 16
+        || !data.events.every((event: unknown) => validPending(studioEvents, event) && event.entrypoint === 'studio')) return json(res, 400, { error: 'INVALID_TRACKING_BATCH' });
+      const statuses = data.events.map((event: unknown) => context.tracking!.ingest(event));
+      return json(res, statuses.includes('full') ? 429 : 200, { accepted: statuses.filter((status: string) => status === 'queued').length });
+    }
     if (motionRequest && url.pathname === '/api/phase1/call' && req.method === 'POST') {
       if (!context.runtimeRoot) throw new Error('RUNTIME_NOT_READY');
       const authority = store.workspaceStore ?? store;
@@ -252,6 +284,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
           try { return await task(); } finally { release(); context.phase1Mutation = undefined; }
         },
         cancel: (projectId, jobId) => cancelExport(authority, projectId, jobId),
+        tracking: context.tracking,
       });
       const data = await input(req);
       try { return json(res, 200, await context.phase1.call(data.name, data.arguments ?? {})); }
@@ -442,7 +475,8 @@ export async function startServer(store = sharedStore, port = Number(process.env
   const runtimeRoot = await ensureRuntime(store.directory);
   await recoverProjectTransactions(store, runtimeRoot);
   const ffmpeg = await execute(process.env.HYPERFRAMES_FFMPEG_PATH || process.env.FFMPEG_PATH || 'ffmpeg', ['-version'], pluginRoot, 5000).then(r => r.code === 0, () => false);
-  const context: Service = { runtimeRoot, ffmpeg, studioPort: !port || port === 65535 ? 4174 : port + 1, editorToken: options.editorToken };
+  const context: Service = { runtimeRoot, ffmpeg, studioPort: !port || port === 65535 ? 4174 : port + 1, editorToken: options.editorToken,
+    tracking: await createAppTracking(store.directory, 'mcp') };
   context.launchStudio = async (directory, chosenPort) => {
     if (!process.env.OPENMOTION_EDITOR_LOCK_FD) return startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), chosenPort, store.directory);
     const probe = createServer();
@@ -471,16 +505,16 @@ export async function startServer(store = sharedStore, port = Number(process.env
   const server = createServer((req, res) => { void (async () => { if (!options.privateHandler || !await options.privateHandler(req, res)) await handler(req, res, store, context); })().catch(error => { if (!res.headersSent) json(res, 500, { error: (error as Error).message }); else res.destroy(); }); });
   try {
     await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
-  } catch (error) { await context.studio?.close(); throw error; }
+  } catch (error) { context.tracking?.close(); await context.studio?.close(); throw error; }
   const gateway = gatewayFor(store);
   const tick = () => {
-    void renderNext(store, runtimeRoot).catch(error => console.error(error.message));
+    void renderNext(store, runtimeRoot, context.tracking).catch(error => console.error(error.message));
     void gateway.tick().catch(() => console.error('Model gateway queue could not be processed'));
   };
   const timer = setInterval(tick, 500); tick();
   return { server, get activeToolCalls() { return context.phase1?.pending ?? 0; }, openProject: async (projectId: string) => openProject(store, context, (await store.get()).revision, { projectId }, store.projectId), get studio() { return context.studio!; }, ensureStudio: context.ensureStudio,
     info: async () => ({ previewUrl: `http://127.0.0.1:${(server.address() as any).port}`, studioUrl: context.studio?.url, engine: 'hyperframes', ready: true, editorReady: Boolean(context.studio?.alive()), ffmpeg, revision: (await store.get()).revision, dataDirectory: store.directory, browserOpened: false, authoringGuide: path.join(runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'), hyperframesCli: cliPath(runtimeRoot) }),
-    close: async () => { clearInterval(timer); await context.browser?.close(); await gateway.close(); server.closeAllConnections(); server.close(); await context.studio?.close(); } };
+    close: async () => { clearInterval(timer); await context.browser?.close(); await gateway.close(); server.closeAllConnections(); server.close(); await context.studio?.close(); await closeTracking(context.tracking); } };
 }
 if (isMain(import.meta.url)) {
   try {

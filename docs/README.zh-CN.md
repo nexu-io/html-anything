@@ -52,7 +52,7 @@
 
 这些画面来自随包提供的 [Hyperframes 示例](../template-library/NOTICE.md)。选好模板后，可以这样告诉 Codex：
 
-> 保留开场和产品揭示的节奏，换成这个项目里的 Logo 和产品截图。第二张截图多停一会儿，让观众能读完新标题。给我可编辑工程和 MP4。
+> 保留开场和产品揭示的节奏，换成这个项目里的 Logo 和产品截图。第二张截图多停一会儿，让观众能读完新标题。
 
 画廊里的**一键复刻**会复制对应的参考和指令。内置模板能直接打开；外部参考需要 Agent 分析并重建。随后可以在 Studio 里调整文字、时长、布局与素材，也可以继续在 Codex 里改。导入的视频仍是媒体片段。
 
@@ -67,7 +67,7 @@
 ```text
 在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。
 安装成功后，问我是否体验 20 秒的 Product Promo 示例。
-我确认后，打开一份独立的可编辑工程，并交付导出的 MP4。
+我确认后，在对话旁打开一份独立的可编辑工程。
 ```
 
 确认体验后，Agent 会按[模板出片流程](../skills/motion-template-to-video/SKILL.md)执行。宿主不支持在对话旁打开编辑器时，可以打开返回的本地工程链接。[安装与首次体验手册](usage.md#使用) · [其他 Agent 接入](agent-adapters.md)
@@ -78,9 +78,11 @@
 
 ## MCP 与轻量安装
 
-[npm 轻量安装器](npm-installation.md) 可为 Codex、Claude Code、DeepSeek Harness、WorkBuddy 同装11 个 MCP Tool 和五个 Skill，共用应用并按需准备经过校验的原生工具。运行 `npm run package:npm` 本地构建；npm 包尚未公开发布，完整 ZIP 保留备用。
+The [Motion application npm package](npm-installation.md) bundles the application and default manifest, installs 11 MCP Tools and five Skills, and prepares locked dependencies/native tools separately. [test/stable acceptance](release-guide.md) includes DEV isolation and upgrade/recovery checks. Build locally with `npm run package:npm`; this change does not publish a package.
 
 五个入口为 [motion-production](../skills/motion-production/SKILL.md)、[motion-director](../skills/motion-director/SKILL.md)、[motion-template-to-video](../skills/motion-template-to-video/SKILL.md)、[motion-recreate](../skills/motion-recreate/SKILL.md)、[motion-video-to-template](../skills/motion-video-to-template/SKILL.md)。参考复刻已实现；产品 UI 沿用 [OpenDesign 视觉规范](design-system.md)，视频作品保留自身样式。
+
+[Motion Director v1.5.5](motion-director.md) adds concrete visual-event, material, choreography and audiovisual-timing guidance. These are Agent instructions; cross-task quality and reliable model audiovisual review remain unverified.
 
 ## 下一步
 

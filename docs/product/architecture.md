@@ -15,7 +15,7 @@ Model Gateway remains a shared media-generation backend for MCP, using local Cod
 已确认的体验原则：
 
 - Agent 与用户操作同一份工程，修改能在工作室继续编辑。
-- The project sidebar opens as a modal drawer over the editor at every viewport size. It starts closed, leaves the editor dimensions unchanged, and closes via its button, outside click or Escape. The header toggle remains mounted for focus restoration; theme and language switching live in the drawer footer. Project rows show names without dates; the heading offers a New project button instead of a count. Creation uses the existing save and revision guards before opening the blank project.
+- The project sidebar opens as a modal drawer over the editor at every viewport size. It starts closed, leaves the editor dimensions unchanged, and closes via its button, outside click or Escape. The header toggle remains mounted for focus restoration; privacy, theme and language settings live in the drawer footer. Error and empty-session views retain a drawer toggle so users can select an existing project or create one. Project rows show names without dates; the heading offers a New project button instead of a count. Creation uses the existing save and revision guards before opening the blank project.
 - Preview zoom percentage and Fit sit in the MVP preview header, outside the picture; fullscreen retains the in-view controls.
 - The composition list marks the live preview target, including the full video. The MVP omits the duplicate preview breadcrumb; composition switching and existing return shortcuts remain available.
 - The editor header keeps the OpenDesign logo, drawer toggle and template library on the left, centers the editable project name, and places undo/redo and export on the right. Transient save/error status remains available. The template modal preserves previews and author/source links, without integration setup sections.
@@ -51,9 +51,8 @@ Model Gateway remains a shared media-generation backend for MCP, using local Cod
 ## 核心用户流程
 
 1. The user creates a blank project or opens an existing one from the sidebar, asks an external Agent to create a project, or chooses a template in the editor. Bundled templates create independent project copies; external references require Agent reconstruction.
-2. The Agent uses the existing MCP integration and verifies the selected project, revision and workflow. Integration setup remains available outside the MVP editor.
-3. `motion_open_preview({projectId})` opens the project directly. Project switching waits for pending saves and reloads the document to release the previous edit session. Opening a bookmark warms only its scoped native context without switching other editor tabs. Rendering and write conflicts continue to block unsafe switches.
-   The existing [first-run defaults](../../skills/motion-production/references/templates.md#first-run-experience-defaults) and [editable preview handoff](../../skills/motion-production/references/native.md#editable-preview-handoff) still govern Agent delivery. Original creation, recreation and template production open the saved project before export; continued edits reuse its visible editor unless the user requests background work. First-run delivery retains the playable MP4 and contextual follow-up.
+2. The Agent uses the existing MCP integration and verifies the selected project, revision and workflow. Integration setup remains available outside the MVP editor. After installation, introduce the capabilities and wait for a choice; accepting the first-run experience selects the independent 20-second `product-promo` project and its editable host panel. Do not ask for another material/template confirmation or export an MP4 unless requested. Check that the project loads and plays; a host without a panel uses an explicit link fallback. Follow the [first-run defaults](../../skills/motion-production/references/templates.md#first-run-experience-defaults) for the completion sentence and contextual invitation.
+3. `motion_open_preview({projectId})` opens the project directly. Project switching waits for pending saves and reloads the document to release the previous edit session. Opening a bookmark warms only its scoped native context without switching other editor tabs. Rendering and write conflicts continue to block unsafe switches. Original creation, reference recreation and template production automatically open the saved project before delivery; the open editor is the deliverable, and video files are handed over only when requested (video-to-template still delivers its template ZIP). Continued edits and restores return a project/revision/version-bound previewHandoff. Reuse the native project tab: present it when the calling chat is active, otherwise queue it without switching chats and resolve the latest version when the user returns. Only this turn's explicit `presentation=now` request permits switching back; explicit background requests suppress presentation. Codex IAB synchronizes visibility within the calling chat. A queued acknowledgment is separate from observed visibility and live-content freshness; `record_display` rejects stale content identities, and stored previewDisplay remains historical host-reported evidence. The shared [editable preview handoff](../../skills/motion-production/references/native.md#editable-preview-handoff) defines readiness, host checks and capability limitations.
 4. Agent 根据本轮目标直接选择 Skill：motion-director 负责原创、局部/整体叙事动作声音重新设计和创作审片；motion-template-to-video 负责已有模板出片；motion-recreate 负责参考作品重建（已接入实际流程、独立参考与测量脚本）；motion-video-to-template 负责可复用模板生产；motion-production 承接既定决定下的工程操作、预览、技术检查、排错和导出。共享规则同源引用，已有 production/start 保留导航，无需前置总路由。项目来源与画面锁定不固定入口；保持项和已完成操作继续有效。
 5. The Agent imports or generates media through the existing backend. In the editor, the user imports assets, edits text/solid color/opacity/geometry, previews, and edits clips on the timeline. Element, clip and time-range prompts still provide Ask Agent. Generation, image replacement, advanced style/animation controls, code and version-history panels are hidden without rewriting existing source content or removing Agent capabilities.
 6. 完成画面、文案、声音检查后，按用户要求导出固定 revision 的快照，等待真实产物并验证。
@@ -113,7 +112,7 @@ Model Gateway remains a shared media-generation backend for MCP, using local Cod
 | 引擎与生命周期 | `hyperframes.ts`、`preview.ts`、`editor-runtime.ts`、`shared/owned-studio.mjs` | 锁定 Hyperframes；macOS 共享后台与 Studio 守卫，校验身份/版本/目录并管理崩溃清理 |
 | 导出与质量验证 | `server.ts`、`scripts/verify-export.ts`、制作 skills | 独立快照、后台渲染、技术验证；视觉审阅另行完成 |
 | Skill 路由与文档读取 | `skills/`、`shared/workflow.ts`、`mcp.ts` | production 通用工程入口 + 可直达 director + motion-template-to-video + motion-recreate 实际流程 + motion-video-to-template（五个入口均分发）；26 份唯一文档含共享 edit（27 个 workflow/section 地址，portable 共享），具有 canonical ID/哈希/引用映射，按需读取，不自动执行或强制编排；见 [调用契约](../skills.md) |
-| 动态叙事指导 | `skills/motion-director/` | v1.4.5 明确原创与局部创作、声音重新设计和创作审片职责；沿用原创路线与七份 v1.4 质量参考，模板/复刻按需复用；效果边界见 [说明](../motion-director.md) |
+| 动态叙事指导 | `skills/motion-director/` | v1.5.5 guides concrete visual events, material/motion design, representative prototypes and actual audiovisual phases; shared edit/verification preserve locked content and evidence scope. Five routes, eleven public Tools and editor-first handoff remain unchanged. Cross-task reliability and native model audiovisual review remain unverified; see [director guidance](../motion-director.md). |
 
 源码位置的详细映射见 [编辑器开发指南](../editor-fork.md)，引擎适配见 [Hyperframes 集成](../hyperframes.md)。
 
@@ -143,7 +142,7 @@ flowchart LR
   Native <--> Workspace
   Workspace --> Snapshot[固定版本快照]
   Snapshot --> Render[lint / render]
-  Render --> Output[MP4 与工程交付]
+  Render --> Output[MP4：自检，用户要求时交付]
   Output --> Review[技术验证与实际视听检查]
 ```
 
@@ -173,7 +172,9 @@ flowchart LR
 
 当前交付标准：连接可验证、模板可定位、工程可继续编辑、预览与源文件一致、导出存在真实文件、检查结果有证据。相关实现由 `tests/`、`npm run test:studio` 的原生单元/DOM 与宿主回归、类型检查、设计检查和按需浏览器验证覆盖；没有执行的检查不能记为通过。
 
-以下是待建立的产品衡量口径，尚无仓库内用户分析系统或统计基线：
+The runtime includes a default-on, explicit-event tracking package shared by MCP and Studio. A persistent user preference and environment overrides can disable collection for the whole installation. Studio submits allowlisted events to the local service; Node adds a random installation identity before asynchronous ingestion into the existing OpenDesign PostHog project. OM events carry product=openmotion; queries must distinguish products. An OM-only transformation preserves coarse country/region/timezone and removes raw IP and precise location after the existing GeoIP transformation, without changing other OpenDesign events or global project settings. The implementation covers tool results, selected domain operations and selected Studio interactions; it does not establish a product analytics baseline or implement every proposed event. See [tracking configuration, privacy and coverage](../../tracking/README.md).
+
+The following product measures still require agreed observation windows and validated evidence:
 
 | 指标 | 建议定义 | 用途 |
 | --- | --- | --- |
@@ -185,13 +186,17 @@ flowchart LR
 
 开始采集前需记录事件定义、观察窗口、样本来源和隐私边界。人物、商业和指标实验的证据写回对应文档，不能用开源仓库热度或模板原帖播放量替代。
 
-## npm 本地安装渠道
+## Application npm distribution
 
-当前分支增加独立于插件的 npm 轻量安装入口（本地 / Actions 测试制品，不发布 npm）：按宿主安装 Codex、Claude Code、DeepSeek Harness、WorkBuddy 的 一期 11 Tool MCP 与 production/director/template/recreate/video-to-template 五个 Skills，共用应用、工程目录和依赖缓存；固定原生依赖首次使用时下载到用户缓存。应用不从临时 npx 缓存运行，作品与应用/依赖目录分开；已有插件和完整测试包保留。下载来源、版本和校验值共用运行时清单；Mac FFmpeg/ffprobe 使用独立的公开 9.0.2 ZIP 并自动安装，原生依赖无需公司仓库凭据，尚未发布 npm。实现与验证边界见 [npm 安装](../npm-installation.md)。
+The `@openmotion/app` npm tgz contains installer scripts, the prebuilt application archive and its pinned default manifest. Setup needs only that tgz, stages the checked application into a managed writable directory, installs production npm dependencies from its lock and registers the selected host's eleven MCP Tools and five Skills. It never runs the app or writes projects in the npx cache. Node/Agent remain user-provided; FFmpeg, ffprobe and the browser are checked downloads, deferred until prepare or native use. Existing plugin and complete platform ZIP channels remain available.
+
+Explicit test/stable prod builds produce publishable artifact metadata with test/stage defaults; the source manifests and local/DEV artifacts stay private. Packaging does not publish, update users, move main or rename the repository. DEV packages embed their template source, default to a separate installation home and refuse cross-environment reuse. Application, project data, host configuration and dependency cache retain distinct ownership. See [installation](../npm-installation.md) and [test/stable acceptance](../release-guide.md).
 
 ## 演进约束
 
-本地测试包按 mac-arm64 / win-x64 准备固定公开原生依赖。npm 为默认轻量格式，完整 ZIP 为备用；平台安装和真实出片必须独立验收。工程保留在包外，当前 CI 只构建与校验，不上传或发布。见 [测试包说明](../test-packages.md)。
+The application npm format is the default; complete platform ZIPs are backups. Ordinary PR CI scans tracked source and both npm archive layers without publication credentials. Separate manual candidate-build and test-publication entries implement build → download/accept → publish. The build freezes an integrated source SHA, builds one immutable prod candidate and generates a local candidate-install.md plus an identity-filled acceptance checklist. Publication resolves a unique unexpired versioned artifact from a completed successful build, validates official ZIP/file hashes and source integration, and requires explicit operator acceptance. No independent approval environment is enabled; the manual operator receipt is not proof of private tests or independent review. The same tgz is published to npm test, checked anonymously on separate Mac/Windows runners and archived before conditionally advancing the default guide. Builds can continue during acceptance; publication-only serialization, version checks and ETag writes prevent late older candidates from rolling the moving entry backward. Snapshot-only recovery requires an existing identical npm version and does not move the default. Private DEV template artifacts remain outside these public workflows. Stable publication is a separate authorized process. Trusted default-branch registration and npm OIDC setup remain separate prerequisites, not enabled by this feature PR. Build, native installation, real Agent creation and human playback remain separate evidence. See [release workflows](../release-workflows.md) and [package checks](../test-packages.md).
+
+Downstream publication jobs consume immutable producer artifact IDs retained across partial retries; native Mac and Windows jobs expose separate report identities. OIDC authenticates publication, but automatic npm provenance is disabled for prebuilt candidates because the publication workflow SHA differs from the application source. Candidate/manifest/hash records provide traceability without claiming a signed build attestation. Stable version construction and URL contracts exist; a stable candidate/publication workflow is not implemented.
 
 已确认方向是继续支持多 Agent 接入、可编辑工程与一个工作区内的发现/制作闭环。
 

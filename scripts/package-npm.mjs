@@ -7,6 +7,7 @@ import { PUPPETEER_REVISIONS } from 'puppeteer-core';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
+import { checkReleaseVersion } from './release-version.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 export function checkReleaseLocks(pkg, lockfile, runtime) {
@@ -34,15 +35,17 @@ export function checkReleaseLocks(pkg, lockfile, runtime) {
 export async function packageNpm(output = path.join(root, 'dist/npm-local'), version, templateEnvironment = 'prod') {
   const templateConfig = packageTemplateConfig(templateEnvironment);
   output = path.resolve(output);
-  if (version) assert.match(version, /^\d+\.\d+\.\d+-beta\.[1-9]\d*\.[1-9]\d*$/, 'Use a unique beta run and attempt');
+  const explicitVersion = version !== undefined;
+  if (explicitVersion) checkReleaseVersion(version);
   const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   const lockfile = JSON.parse(await readFile(path.join(root, 'package-lock.json'), 'utf8'));
   const runtime = JSON.parse(await readFile(path.join(root, 'scripts/runtime-lock.json'), 'utf8'));
   checkReleaseLocks(pkg, lockfile, runtime);
+  version ??= pkg.version + '-local.1';
   const { mcpRegistry } = await import('../mcp.ts');
   const registry = mcpRegistry();
   await mkdir(output, { recursive: true });
-  if (version) assert.equal((await readdir(output)).length, 0, 'Use a new output directory; beta artifacts are immutable');
+  assert.equal((await readdir(output)).length, 0, 'Use a new output directory; artifacts are immutable');
   const temporary = await mkdtemp(path.join(output, '.build-'));
   try {
     const application = path.join(temporary, 'application'), installer = path.join(temporary, 'installer');
@@ -56,30 +59,42 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
     for (const name of ['runtime-assets.mjs', 'npm-runtime.mjs', 'npm-hosts.mjs', 'npm-installer.mjs']) await cp(path.join(root, 'scripts', name), path.join(installer, 'scripts', name));
     await chmod(path.join(installer, 'scripts/npm-installer.mjs'), 0o755);
     const installerPkg = JSON.parse(await readFile(path.join(root, 'packages/npm/package.json'), 'utf8'));
-    if (version) installerPkg.version = version;
-    assert.equal(installerPkg.private, true, 'The installer must remain unpublished');
+    assert.equal(installerPkg.private, true, 'Keep the source package protected; publish only an explicitly versioned artifact');
+    installerPkg.version = version;
+    installerPkg.private = !explicitVersion || templateConfig.environment === 'dev';
+    installerPkg.publishConfig = { access: 'public', registry: 'https://registry.npmjs.org/', tag: version.includes('-test.') ? 'test' : 'stage' };
     await writeJSON(path.join(installer, 'package.json'), installerPkg);
-    await cp(path.join(root, 'docs/npm-installation.md'), path.join(installer, 'README.md'));
-    if (version) {
-      pkg.version = version; lockfile.version = version; lockfile.packages[''].version = version;
-      await writeJSON(path.join(application, 'package.json'), pkg);
-      await writeJSON(path.join(application, 'package-lock.json'), lockfile);
-      const plugin = JSON.parse(await readFile(path.join(application, '.codex-plugin/plugin.json'), 'utf8'));
-      plugin.version = version;
-      await writeJSON(path.join(application, '.codex-plugin/plugin.json'), plugin);
-    }
+    const commit = (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim();
+    const repository = `https://github.com/nexu-io/html-anything/blob/${commit}/`;
+    const images = `https://raw.githubusercontent.com/nexu-io/html-anything/${commit}/`;
+    const link = (target, image) => /^(?:#|[a-z][a-z\d+.-]*:|\/\/)/i.test(target) ? target : new URL(target, image ? images : repository).href;
+    const readme = (await readFile(path.join(root, 'README.md'), 'utf8'))
+      .replace(/(!?\[[^\]\n]*\]\()([^\s)]+)(\))/g, (_, start, target, end) => start + link(target, start.startsWith('!')) + end)
+      .replace(/(<img\b[^>]*\bsrc=["'])([^"']+)(["'])/g, (_, start, target, end) => start + link(target, true) + end);
+    await writeAtomic(path.join(installer, 'README.md'), readme);
+    await cp(path.join(root, 'LICENSE'), path.join(installer, 'LICENSE'));
+    pkg.version = version; lockfile.version = version; lockfile.packages[''].version = version;
+    await writeJSON(path.join(application, 'package.json'), pkg);
+    await writeJSON(path.join(application, 'package-lock.json'), lockfile);
+    const plugin = JSON.parse(await readFile(path.join(application, '.codex-plugin/plugin.json'), 'utf8'));
+    plugin.version = version;
+    await writeJSON(path.join(application, '.codex-plugin/plugin.json'), plugin);
     const archive = path.join(output, `openmotion-application-${pkg.version}${templateConfig.environment === 'dev' ? '-dev' : ''}.tar.gz`);
     await runFile(process.platform === 'win32' ? path.join(process.env.SystemRoot, 'System32/tar.exe') : 'tar', ['-czf', archive, '-C', application, '.'], { env: { ...process.env, COPYFILE_DISABLE: '1' } });
+    const manifest = { schemaVersion: 1, version: pkg.version, format: 'npm', templateEnvironment: templateConfig.environment,
+      commit, run: process.env.GITHUB_RUN_ID || null, attempt: process.env.GITHUB_RUN_ATTEMPT || '1',
+      application: { url: './' + path.basename(archive), sha256: await sha256(archive) },
+      locks: { npm: await sha256(path.join(application, 'package-lock.json')), native: await sha256(path.join(root, 'scripts/runtime-lock.json')) },
+      mcp: { profile: registry.profile, tools: registry.tools.map(tool => tool.name) }, skills, runtime };
+    // The embedded manifest omits the containing tgz's identity to avoid a self-hash cycle.
+    await mkdir(path.join(installer, 'payload'));
+    await cp(archive, path.join(installer, 'payload', path.basename(archive)));
+    await writeJSON(path.join(installer, 'payload/release-npm.json'), manifest);
     const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
     const packed = JSON.parse(await runFile(process.execPath, [npm, 'pack', '--json', '--ignore-scripts', '--pack-destination', output], { cwd: installer }))[0];
     const installerFile = path.join(output, packed.filename);
-    const manifest = { schemaVersion: 1, version: pkg.version, format: 'npm', templateEnvironment: templateConfig.environment,
-      commit: (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim(), run: process.env.GITHUB_RUN_ID || null, attempt: process.env.GITHUB_RUN_ATTEMPT || '1',
-      application: { url: './' + path.basename(archive), sha256: await sha256(archive) },
-      installer: { version: installerPkg.version, url: './' + packed.filename, sha256: await sha256(installerFile) },
-      locks: { npm: await sha256(path.join(application, 'package-lock.json')), native: await sha256(path.join(root, 'scripts/runtime-lock.json')) },
-      mcp: { profile: registry.profile, tools: registry.tools.map(tool => tool.name) }, skills, runtime };
-    const manifestPath = path.join(output, version ? 'release-npm.json' : 'release.local.json');
+    manifest.installer = { version, url: './' + packed.filename, sha256: await sha256(installerFile) };
+    const manifestPath = path.join(output, explicitVersion ? 'release-npm.json' : 'release.local.json');
     await writeJSON(manifestPath, manifest);
     for (const file of [archive, installerFile, manifestPath]) await writeAtomic(file + '.sha256', `${await sha256(file)}  ${path.basename(file)}\n`);
     return { installer: installerFile, installerBytes: packed.size, application: archive, manifest: manifestPath };

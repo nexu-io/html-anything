@@ -78,6 +78,24 @@ it('Prism templates open as editable projects and published catalog changes refr
   expect(state.open).toHaveBeenCalledTimes(1);
 });
 
+it('updates and clears cache warnings without resetting an unchanged template list', async () => {
+  let warning: string | undefined;
+  fetcher.mockImplementation(async () => Response.json({
+    items: [{ ...builtin, kind: 'prism' }], total: 1, entryTotal: 1, catalogTotal: 1,
+    offset: 0, next: null, catalogVersion: 'same-publication', warning,
+  }));
+  await render();
+  const card = container.querySelector('.motion-home-template');
+  warning = '模板更新失败，使用已缓存目录：HTTP 503';
+  await act(async () => { await vi.advanceTimersByTimeAsync(5_000); });
+  expect(container.querySelector('[role="status"]')?.textContent).toContain(warning);
+  expect(container.querySelector('.motion-home-template')).toBe(card);
+  warning = undefined;
+  await act(async () => { await vi.advanceTimersByTimeAsync(5_000); });
+  expect(container.querySelector('[role="status"]')).toBeNull();
+  expect(container.querySelector('.motion-home-template')).toBe(card);
+});
+
 it.each(['de', 'ja', 'ru'] as const)('keeps Prism editing and project guards while localizing labels in %s', async locale => {
   const id = 'hf-moment-M1147';
   const warning = '模板更新失败，使用已缓存目录：HTTP 503';

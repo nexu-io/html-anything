@@ -1717,5 +1717,12 @@
   "Get the template catalogue and local index.": "템플릿 카탈로그와 로컬 인덱스를 가져옵니다.",
   "Read the details and files for one template.": "템플릿 하나의 세부 정보와 파일을 읽습니다.",
   "Template cache unavailable; downloading again": "템플릿 캐시를 사용할 수 없어 다시 다운로드합니다",
-  "Template update failed; using cached catalogue: {message}": "템플릿 업데이트에 실패하여 캐시된 카탈로그를 사용합니다: {message}"
+  "Template update failed; using cached catalogue: {message}": "템플릿 업데이트에 실패하여 캐시된 카탈로그를 사용합니다: {message}",
+  "Privacy settings": "개인정보 설정",
+  "Share usage data": "사용 데이터 공유",
+  "Send feature usage, error categories and approximate region to improve OpenMotion. Prompts and project contents are excluded.": "OpenMotion 개선을 위해 기능 사용 현황, 오류 유형, 대략적인 지역을 전송합니다. 프롬프트와 프로젝트 내용은 제외됩니다.",
+  "This setting applies to MCP and Studio on this installation and is kept after restart.": "이 설정은 이 설치의 MCP와 Studio에 적용되며 다시 시작해도 유지됩니다.",
+  "Disabled by your environment settings.": "환경 설정으로 비활성화되었습니다.",
+  "Could not load privacy settings.": "개인정보 설정을 불러오지 못했습니다.",
+  "Could not save privacy settings.": "개인정보 설정을 저장하지 못했습니다."
 }

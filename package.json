@@ -17,6 +17,7 @@
     "package:test": "node scripts/test-package.mjs",
     "package:npm": "npm run build:studio && node scripts/package-npm.mjs",
     "build:studio": "vite build --config studio/vite.config.ts",
+    "build:tracking": "tsc -p tracking/tsconfig.json",
     "typecheck:studio": "tsc -p studio/tsconfig.json",
     "design:tokens": "node --experimental-strip-types scripts/design-tokens.ts",
     "design:check": "node --experimental-strip-types scripts/design-check.ts",

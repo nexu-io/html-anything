@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       format:
-        description: 'Build npm lightweight artifacts or complete ZIP backups'
+        description: 'Build self-contained npm application artifacts or complete ZIP backups'
         type: choice
         options: [npm, full]
         default: npm
@@ -38,6 +38,7 @@ jobs:
       run:
         shell: bash
     env:
+      OPENMOTION_TELEMETRY: '0'
       HYPERFRAMES_BROWSER_PATH: /usr/bin/chromium
       HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
       HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
@@ -62,6 +63,11 @@ jobs:
             npm|full) ;;
             *) echo 'Unknown package format' >&2; exit 1 ;;
           esac
+      - name: Scan tracked source and test release controls without publication credentials
+        run: |
+          node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
+          node .github/scripts/motion-scan.mjs source . "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
+          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs
       - name: Install locked Motion dependencies
         run: npm ci --no-audit --no-fund
       - name: Check and build Studio
@@ -69,8 +75,10 @@ jobs:
           npm run check
           npm run typecheck:studio
           npm run build:studio
+          npm run build:tracking
+          node --experimental-strip-types --test tests/tracking.test.ts
       - name: Validate standalone installation and packaging
-        run: node --experimental-strip-types --test tests/install.test.ts tests/npm-installer.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts
+        run: node --experimental-strip-types --test tests/install.test.ts tests/npm-installer.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
       - name: Studio regression
         run: npm run test:studio -- --maxWorkers=2
       - name: Build phase-one ZIP and exercise all public tools
@@ -92,6 +100,24 @@ jobs:
               node scripts/test-package.mjs build "$target" "$version" --template-env="$TEMPLATE_ENVIRONMENT"
             done
           fi
+      - name: Generate candidate installation guide
+        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'prod') == 'prod'
+        run: |
+          version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
+          candidate=$(node --input-type=module -e 'import fs from "node:fs"; const m=JSON.parse(fs.readFileSync(process.argv[1]));process.stdout.write(m.installer.url.replace(/^\.\//,""));' "dist/$version/release-npm.json")
+          node --experimental-strip-types scripts/install-guide.mjs "dist/$version/$candidate" .artifacts/install-guide --candidate
+          node .github/scripts/motion-scan.mjs package "dist/$version/$candidate" "$RUNNER_TEMP/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
+      - name: Retain candidate installation guide for review
+        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'prod') == 'prod'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: motion-install-guide-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .artifacts/install-guide/install.md
+            .artifacts/install-guide/install-record.json
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: error
       - name: Record validation scope
         run: |
-          echo 'Motion standalone artifacts were built and checked; no package or release was published.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Motion artifacts were built and checked; the candidate guide is a review artifact only. No npm, R2 or Release publication occurred.' >> "$GITHUB_STEP_SUMMARY"

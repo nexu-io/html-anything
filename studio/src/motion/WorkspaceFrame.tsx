@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useRef, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useRef, useCallback, lazy, Suspense, type ReactNode } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { LanguageMenu } from '../i18n/LanguageMenu';
 import { ConnectionDialog } from './ConnectionDialog';
@@ -9,6 +9,8 @@ import { Tooltip } from '../components/ui/Tooltip';
 import { Dialog } from '@base-ui/react/dialog';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
+
+const PrivacySettings = lazy(() => import('./PrivacySettings').then(module => ({ default: module.PrivacySettings })));
 
 type WorkspaceChrome = {
   workspace: ReturnType<typeof useWorkspace>;
@@ -76,6 +78,12 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
   </WorkspaceChromeContext.Provider>;
 }
 
+function PrivacySettingsButton() {
+  const { t } = useI18n(); const [open, setOpen] = useState(false);
+  return <><button className="motion-icon-button" aria-label={t('Privacy settings')} title={t('Privacy settings')} onClick={() => setOpen(true)}><MotionIcon name="eye" /></button>
+    {open && <Suspense fallback={null}><PrivacySettings onClose={() => setOpen(false)} /></Suspense>}</>;
+}
+
 function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () => void }) {
   const { t } = useI18n();
   const theme = useShownStudioTheme();
@@ -108,7 +116,7 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
       </button>)}
     </nav>
     <footer className="motion-sidebar-footer">
-      <div className="motion-sidebar-settings"><ThemeToggle /><LanguageMenu /></div>
+      <div className="motion-sidebar-settings"><PrivacySettingsButton /><ThemeToggle /><LanguageMenu /></div>
     </footer>
   </aside>;
 }

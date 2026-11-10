@@ -1777,5 +1777,12 @@
   "Get the template catalogue and local index.": "Получить каталог шаблонов и локальный индекс.",
   "Read the details and files for one template.": "Прочитать сведения и файлы одного шаблона.",
   "Template cache unavailable; downloading again": "Кэш шаблонов недоступен; повторная загрузка",
-  "Template update failed; using cached catalogue: {message}": "Не удалось обновить шаблоны; используется кэшированный каталог: {message}"
+  "Template update failed; using cached catalogue: {message}": "Не удалось обновить шаблоны; используется кэшированный каталог: {message}",
+  "Privacy settings": "Настройки конфиденциальности",
+  "Share usage data": "Делиться данными об использовании",
+  "Send feature usage, error categories and approximate region to improve OpenMotion. Prompts and project contents are excluded.": "Отправлять данные об использовании функций, категориях ошибок и примерном регионе для улучшения OpenMotion. Запросы и содержимое проектов не отправляются.",
+  "This setting applies to MCP and Studio on this installation and is kept after restart.": "Настройка действует для MCP и Studio этой установки и сохраняется после перезапуска.",
+  "Disabled by your environment settings.": "Отключено настройками окружения.",
+  "Could not load privacy settings.": "Не удалось загрузить настройки конфиденциальности.",
+  "Could not save privacy settings.": "Не удалось сохранить настройки конфиденциальности."
 }
