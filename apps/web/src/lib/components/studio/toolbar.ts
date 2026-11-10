@@ -1,4 +1,4 @@
-import { badge, button, field, numberField, slot } from "@open-motion/components";
+import { badge, button, field, numberField, setButtonSelected, slot } from "@open-motion/components";
 /** One transport view per Studio; playback updates never replace an active seek input. */
 export function playerControls(
   document: Document,
@@ -67,17 +67,18 @@ export function studioTools(
   title.textContent = options.title;
   file.textContent = options.file === "index.html" ? "主合成 / index.html" : `局部合成 / ${options.file}`;
   context.append(title, badge(document, "编辑器类型", "Motion"));
-  for (const mode of ["preview", "source"] as const)
-    tools.append(
-      button(document, {
-        label: mode === "preview" ? "预览" : "源码",
-        icon: mode === "preview" ? "eye" : "code",
-        variant: "tab",
-        compact: true,
-        selected: options.mode === mode,
-        onClick: () => options.setMode(mode),
-      }),
-    );
+  for (const mode of ["preview", "source"] as const) {
+    const control = button(document, {
+      label: mode === "preview" ? "预览" : "源码",
+      icon: mode === "preview" ? "eye" : "code",
+      variant: "tab",
+      compact: true,
+      selected: options.mode === mode,
+      onClick: () => options.setMode(mode),
+    });
+    control.dataset.mode = mode;
+    tools.append(control);
+  }
   tools.append(
     button(document, {
       label: "添加文本",
@@ -105,4 +106,10 @@ export function studioTools(
   );
   controls.append(file, tools);
   return [context, controls];
+}
+
+/** Mode chrome is presentation state even while source changes invalidate the native model. */
+export function syncMode(root: HTMLElement, mode: "preview" | "source") {
+  for (const control of root.querySelectorAll<HTMLButtonElement>("[data-mode]"))
+    setButtonSelected(control, control.dataset.mode === mode);
 }

@@ -1,4 +1,6 @@
 const paths = {
+  sidebar: "M3 3h18v18H3ZM9 3v18M5 7h2M5 11h2",
+  conversation: "M3 3h18v18H3ZM11 3v18M5 8h4M5 12h4",
   plus: "M12 5v14M5 12h14",
   search: "M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0",
   home: "m3 10 9-7 9 7v11h-7v-7h-4v7H3Z",
