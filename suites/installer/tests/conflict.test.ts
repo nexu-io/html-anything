@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { canonical, channel, namespace } from "@odsuite/protocol";
 import { bundle, bundleEntries } from "@odsuite/release";
 import { expect, it } from "vitest";
-import { type Options, open } from "@";
+import { type Input, type Options, open } from "@";
 import { hash } from "../src/archive.js";
 
 async function fixture() {
@@ -149,7 +149,7 @@ it("pins the accepted intent and verified bytes against caller mutation during a
   const f = await fixture(),
     source = await f.archive(),
     requestId = randomUUID();
-  const input = { data: f.data, requestId, source: { ...source, bytes: Buffer.from(source.bytes) } };
+  const input: Input = { data: f.data, requestId, source: { ...source, bytes: Buffer.from(source.bytes) } };
   const session = await open({
     ...f.options,
     onCheckpoint: async (event) => {
