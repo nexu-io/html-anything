@@ -1,5 +1,5 @@
-import { createHash } from "node:crypto";
 import { parseHTMLContent } from "@hyperframes/core/compiler";
+import { canonical, digest as hash } from "@odsuite/protocol";
 import { assembleProject } from "@open-motion/motion/project";
 import { Fault, initialFiles, type SourceFile } from "@open-motion/workspace/contract";
 import type { Descriptor, TemplateInput } from "./contract.js";
@@ -8,7 +8,6 @@ import graph from "./native/graph.json" with { type: "json" };
 import promo from "./native/promo.json" with { type: "json" };
 import tree from "./native/tree.json" with { type: "json" };
 
-const hash = (value: string | Buffer) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
 const adaptations = [
   "Pinned local GSAP is injected only into derived previews/captures; CDN scripts are removed.",
   "Original Latin font faces are embedded in editable source CSS with verified bytes and OFL notices; no font network dependency.",
@@ -88,23 +87,26 @@ function prepare(input: typeof promo) {
     initialFiles().find((file) => file.path === "hyperframes.json")!,
   );
   files.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
-  const contentHash = hash(
-    JSON.stringify({ schema: 1, id: input.id, source: input.source, upstream: input.upstream, files }),
-  );
-  files.push({
-    path: "template.json",
-    content: JSON.stringify({
-      schema: 1,
-      id: input.id,
-      contentHash,
-      source: input.source,
-      upstream: input.upstream,
-      fontSource: fonts.source,
-      fonts: fonts.faces.filter((face) => families.includes(face.family)).map(({ data: _data, ...face }) => face),
-      adaptations,
-    }),
-  });
-  assembleProject(files);
+  const provenance = {
+    schema: 1,
+    id: input.id,
+    title: input.title,
+    description: input.description,
+    spec: { width: input.width, height: input.height, duration: input.duration },
+    license: input.license,
+    source: input.source,
+    upstream: input.upstream,
+    fontSource: fonts.source,
+    fonts: fonts.faces.filter((face) => families.includes(face.family)).map(({ data: _data, ...face }) => face),
+    adaptations,
+  };
+  const contentHash = hash(canonical({ ...provenance, files }));
+  files.push({ path: "template.json", content: canonical({ ...provenance, contentHash }) });
+  const assembled = assembleProject(files);
+  const root = parseHTMLContent(assembled.html).querySelector("[data-composition-id]");
+  for (const key of ["width", "height", "duration"] as const)
+    if (Number(root?.getAttribute(`data-${key}`)) !== input[key])
+      throw Error("template metadata differs from native source");
   const template: Descriptor = {
     id: input.id,
     title: input.title,

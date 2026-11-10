@@ -12,7 +12,8 @@
     "@open-motion/workspace": "workspace:*",
     "@open-motion/motion": "workspace:*",
     "zod": "4.6.7",
-    "@hyperframes/core": "0.9.7"
+    "@hyperframes/core": "0.9.7",
+    "@odsuite/protocol": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "24.12.2",

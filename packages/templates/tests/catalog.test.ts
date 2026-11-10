@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { canonical, digest } from "@odsuite/protocol";
 import { assembleProject } from "@open-motion/motion/project";
 import { expect, it } from "vitest";
 import { list, read } from "@";
@@ -16,6 +17,10 @@ it("closes every built-in over verified offline source, licensed fonts and an ex
     expect(entry.files.find((file) => file.path === "licenses/templates.txt")?.content).toContain("Apache License");
     const provenance = JSON.parse(entry.files.find((file) => file.path === "template.json")!.content);
     expect(provenance.contentHash).toBe(descriptor.contentHash);
+    const { contentHash: _identity, ...origin } = provenance;
+    expect(digest(canonical({ ...origin, files: entry.files.filter((file) => file.path !== "template.json") }))).toBe(
+      descriptor.contentHash,
+    );
     for (const file of entry.files) {
       const expected = descriptor.files.find((item) => item.path === file.path)!;
       expect(expected.bytes).toBe(Buffer.byteLength(file.content));

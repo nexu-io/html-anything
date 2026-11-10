@@ -415,6 +415,9 @@ importers:
       '@hyperframes/core':
         specifier: 0.9.7
         version: 0.9.7(@types/node@24.12.2)
+      '@odsuite/protocol':
+        specifier: workspace:*
+        version: link:../../suites/protocol
       '@open-motion/motion':
         specifier: workspace:*
         version: link:../motion
