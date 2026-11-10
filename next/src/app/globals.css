@@ -35,7 +35,43 @@
   --amber: #b26200;
   --red: #9c2a25;
 
+  --header-bg: rgba(250, 249, 247, 0.92);
+  --grain-a: rgba(106, 92, 56, 0.07);
+  --grain-b: rgba(106, 92, 56, 0.05);
+
   color-scheme: light;
+}
+
+/* ── dark palette — same warm paper/ink language, inverted ──────── */
+:root[data-theme="dark"] {
+  --paper: #16140f;
+  --bone: #1d1a12;
+  --surface: #201d17;
+  --ink: #ece7dc;
+  --ink-soft: #d8d1c2;
+  --ink-mute: #a49b88;
+  --ink-faint: #7b7365;
+  --line: rgba(236, 231, 220, 0.20);
+  --line-soft: rgba(236, 231, 220, 0.11);
+  --line-faint: rgba(236, 231, 220, 0.07);
+
+  --coral: #e07a52;
+  --coral-warm: #f0836a;
+  --coral-hover: #e98d67;
+  --coral-soft: rgba(224, 122, 82, 0.16);
+
+  --olive: #99a068;
+  --green: #4fae6c;
+  --blue: #7d96f0;
+  --purple: #b28ae0;
+  --amber: #dd9a3f;
+  --red: #de6a63;
+
+  --header-bg: rgba(22, 20, 15, 0.92);
+  --grain-a: rgba(233, 185, 74, 0.05);
+  --grain-b: rgba(233, 185, 74, 0.035);
+
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -69,8 +105,8 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(circle at 12% 18%, rgba(106, 92, 56, 0.07), transparent 45%),
-    radial-gradient(circle at 88% 72%, rgba(106, 92, 56, 0.05), transparent 50%);
+    radial-gradient(circle at 12% 18%, var(--grain-a), transparent 45%),
+    radial-gradient(circle at 88% 72%, var(--grain-b), transparent 50%);
 }
 
 /* serif italic for accent — open-design hero pattern */

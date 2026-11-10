@@ -6,6 +6,7 @@ import { TemplatePicker } from "./template-picker";
 import { ExportMenu } from "./export-menu";
 import { LayoutModeToggle } from "./layout-mode-toggle";
 import { DeployControl } from "./deploy-control";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Toolbar({
   iframeRef,
@@ -32,7 +33,7 @@ export function Toolbar({
     <header
       className="relative z-40 flex flex-wrap items-center justify-between gap-3 px-5 py-3"
       style={{
-        background: "rgba(250, 249, 247, 0.92)",
+        background: "var(--header-bg)",
         borderBottom: "1px solid var(--line-faint)",
         backdropFilter: "blur(10px)",
       }}
@@ -75,6 +76,7 @@ export function Toolbar({
       <div className="flex items-center gap-2">
         <LayoutModeToggle />
         <div className="hidden h-6 w-px sm:block" style={{ background: "var(--line)" }} />
+        <ThemeToggle />
         <HistoryToggle />
         <button
           onClick={onOpenSettings}
