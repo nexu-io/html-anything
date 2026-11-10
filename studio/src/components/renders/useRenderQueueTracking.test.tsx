@@ -28,13 +28,13 @@ type Listener = (event: { data: string }) => void;
 let source: { listeners: Listener[]; onerror?: () => void } | null = null;
 let queue: MountedQueue | null = null;
 
-function stubServer(post: () => Response | Promise<Response>, ffmpegOk = true) {
+function stubServer(post: () => Response | Promise<Response>, ffmpegOk = true, cancelStatus = "cancelled") {
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string, init?: RequestInit) => {
       if (String(url).includes("/environment/ffmpeg")) return Response.json({ ok: ffmpegOk });
       if (init?.method === "POST" && String(url).endsWith("/render")) return post();
-      if (init?.method === "POST") return Response.json({ status: "cancelled" });
+      if (init?.method === "POST") return Response.json({ status: cancelStatus });
       return Response.json({ renders: [] });
     }),
   );
@@ -142,6 +142,29 @@ describe("Studio export tracking", () => {
     });
     expect(events("studio_export_result")).toEqual([expect.objectContaining({ job_state: "cancelled" })]);
     expect(events("studio_export_result")[0]).not.toHaveProperty("error_code");
+  });
+
+  it("reports the server's outcome when a cancel lands after the render already finished", async () => {
+    stubServer(() => Response.json({ jobId: "job-3", status: "rendering" }), true, "complete");
+    const mounted = await mount();
+    await act(async () => {
+      await mounted.api().startRender({ origin: "header" });
+    });
+    await act(async () => {
+      await mounted.api().cancelRender("job-3");
+    });
+    await act(async () => mounted.api().dismissActionError());
+    expect(events("studio_export_result")).toEqual([expect.objectContaining({ job_state: "completed" })]);
+    expect(events("studio_export_result")[0]).not.toHaveProperty("error_code");
+  });
+
+  it("classifies an omitted frame rate as the 30 fps the render actually uses", async () => {
+    stubServer(() => Response.json({ jobId: "job-4", status: "rendering" }));
+    const mounted = await mount();
+    await act(async () => {
+      await mounted.api().startRender({ origin: "header" });
+    });
+    expect(events("studio_export_request_result")).toEqual([expect.objectContaining({ outcome: "accepted", fps: "30" })]);
   });
 
   it("reports a rejected request with its category and no terminal result", async () => {

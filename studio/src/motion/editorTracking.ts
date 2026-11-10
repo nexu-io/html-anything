@@ -229,7 +229,8 @@ export function exportSettings(origin: ExportOrigin | undefined, options: { form
     format: format === 'webm' || format === 'mov' || format === 'gif' ? format : 'mp4',
     quality: quality === 'draft' || quality === 'high' ? quality : 'standard',
     resolution: !resolution || resolution === 'auto' ? 'auto' : resolution.endsWith('-4k') ? '4k' : '1080p',
-    fps: fps === 24 ? '24' : fps === 30 ? '30' : fps === 60 ? '60' : 'other',
+    // An omitted rate renders at the queue's default of 30 fps.
+    fps: fps === 24 ? '24' : fps === undefined || fps === 30 ? '30' : fps === 60 ? '60' : 'other',
   };
 }
 export function exportRejection(status: number): NonNullable<Fields<'studio_export_request_result'>['error_code']> {

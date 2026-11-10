@@ -120,6 +120,12 @@ export function useRenderQueue(
   const sessionJobs = useRef(new Map<string, FeedbackContext>());
   const promptedJobIds = useRef(new Set<string>());
   // Accepted renders this tab started and has not yet reported a terminal state for.
+  // Cancels are optimistic: the row flips to "cancelled" before the server confirms, and a
+  // render that had already finished is reconciled afterwards. Hold the terminal report until then.
+  const cancelling = useRef(new Set<string>());
+  // What the cancel route said the render had already become, when it was not "cancelled".
+  const settledBeforeCancel = useRef(new Map<string, "completed" | "failed">());
+  const [cancelSettled, setCancelSettled] = useState(0);
   const trackedExports = useRef(
     new Map<
       string,
@@ -441,6 +447,7 @@ export function useRenderQueue(
   const cancelRender = useCallback(
     async (jobId: string) => {
       setActionError(null);
+      cancelling.current.add(jobId);
       closeActiveEventSource(jobId);
       setJobs((prev) =>
         prev.map((j) =>
@@ -460,11 +467,16 @@ export function useRenderQueue(
         if (res.ok) {
           const body = (await res.json().catch(() => null)) as { status?: string } | null;
           if (body?.status && body.status !== "cancelled") {
-            void loadRenders();
+            if (body.status === "complete") settledBeforeCancel.current.set(jobId, "completed");
+            else if (body.status === "failed") settledBeforeCancel.current.set(jobId, "failed");
+            await loadRenders();
           }
         }
       } catch {
         setActionError("Couldn't reach the server to cancel. The render may still be running.");
+      } finally {
+        cancelling.current.delete(jobId);
+        setCancelSettled((n) => n + 1);
       }
     },
     [closeActiveEventSource, loadRenders],
@@ -516,13 +528,16 @@ export function useRenderQueue(
     for (const job of jobs) {
       const started = job.status === "rendering" ? undefined : trackedExports.current.get(job.id);
       if (!started) continue;
+      if (job.status === "cancelled" && cancelling.current.has(job.id)) continue;
       trackedExports.current.delete(job.id);
+      const reconciled = settledBeforeCancel.current.get(job.id);
+      settledBeforeCancel.current.delete(job.id);
       reportExportResult({
         export_id: started.exportId,
-        job_state: job.status === "complete" ? "completed" : job.status === "cancelled" ? "cancelled" : "failed",
+        job_state: reconciled ?? (job.status === "complete" ? "completed" : job.status === "cancelled" ? "cancelled" : "failed"),
         duration_ms: Math.min(86_400_000, Math.max(0, Math.round(job.durationMs ?? Date.now() - job.createdAt))),
         ...started.settings,
-        ...(job.status === "failed"
+        ...((reconciled ?? job.status) === "failed"
           ? { error_code: started.lost ? ("CONNECTION_LOST" as const) : ("RENDER_FAILED" as const) }
           : {}),
         ...projectFields(projectId),
@@ -551,7 +566,7 @@ export function useRenderQueue(
         },
       });
     }
-  }, [jobs, projectId]);
+  }, [jobs, projectId, cancelSettled]);
 
   // Clean up EventSource on unmount or projectId change
   useEffect(() => {
