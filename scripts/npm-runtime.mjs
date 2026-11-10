@@ -81,7 +81,7 @@ async function prepareComponent(native, component, observer) {
   if (preparing.has(destination)) return preparing.get(destination);
   const checkedAt = performance.now();
   if (await ready(native, component)) {
-    observer.track('installation_step_result', { step: 'native_probe', component, cache_hit: true, outcome: 'success', duration_ms: observer.elapsed(checkedAt) });
+    observer.track('installation_step_result', { step: 'native_probe', component, reused: true, outcome: 'success', duration_ms: observer.elapsed(checkedAt) });
     return;
   }
   if (preparing.has(destination)) return preparing.get(destination);
@@ -125,7 +125,7 @@ async function prepareComponent(native, component, observer) {
           await executable(filename);
           await runFile(filename, [component === 'browser' ? '--version' : '-version']);
         }
-        }, { component, cache_hit: false });
+        }, { component, reused: false });
         await writeFile(path.join(temporary, 'ready.json'), JSON.stringify({ sha256: asset.sha256 }));
         await rm(destination, { recursive: true, force: true });
         await rename(temporary, destination);

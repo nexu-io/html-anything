@@ -199,4 +199,9 @@ test('detached preparation keeps the setup flow and shares acquisition identity 
   assert.equal(events.filter(e => e.event === 'native_prepare_result')[0].properties.outcome, 'success');
   for (const component of ['browser', 'ffmpeg', 'ffprobe']) assert(events.some(e => e.properties.component === component && e.properties.step === 'native_download'));
   assert.doesNotMatch(JSON.stringify(events), /motion-native-|dataDirectory|example.invalid/);
+  const completed = events.length; await ensureNativeRuntime(root);
+  const reused = events.slice(completed);
+  assert(reused.some(e => e.properties.step === 'native_probe' && e.properties.reused === true));
+  assert(!reused.some(e => e.properties.step === 'native_download'));
+
 });

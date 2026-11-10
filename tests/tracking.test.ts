@@ -95,6 +95,7 @@ test('PostHog adapter uses public ingest only, privacy fields and real receipt s
   response = new Response('{}', { status: 400 }); assert.equal(await sender([event], new AbortController().signal), 'drop');
   response = new Response('not json'); assert.equal(await sender([event], new AbortController().signal), 'retry');
   assert.equal(trackingError(new Error('private user prompt and /local/path')), 'TOOL_FAILED');
+  assert.equal(trackingError(new Error('NATIVE_RUNTIME_NOT_READY: waiting for video components')), 'NATIVE_RUNTIME_NOT_READY');
   const enriched: any[] = [];
   const geoip = createPosthogSender({ ...options, geoip: true, fetch: async (_url, init) => { enriched.push(JSON.parse(String(init?.body))); return Response.json({ status: 'Ok' }); } });
   await geoip([event], new AbortController().signal);
