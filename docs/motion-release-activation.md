@@ -1,12 +1,12 @@
 # Motion release controls on the legacy default branch
 
-This branch retains the legacy HTML Anything application. The Motion application still lives at the root of `feature/motion`. These additions register manual Actions entries on the default branch; they do not replace the application, change package/workspace metadata, merge Motion into main, or publish anything on a push/merge.
+This branch retains the legacy HTML Anything application. The Motion application still lives at the root of `feature/motion`. Registration takes effect only after this PR is merged into `main`; until then, its manual entries are not available on the default branch. These additions do not replace the application, change package/workspace metadata, merge Motion into main, or publish anything on a push/merge.
 
 ## Scope and provenance
 
-The three manual workflows, their runtime helpers, installation/acceptance templates and deterministic tests are copied without modification from reviewed PR [#214](https://github.com/nexu-io/html-anything/pull/214), source commit `de45dadea282214762c7b3123cea7e6b1044f26f`. No private Git history or application files are imported. The extra `Motion release controls` CI job runs only syntax checks and simulated-service tests with read-only permissions; the legacy CI commands and permissions are preserved. Its runner is pinned to Ubuntu 24.04 because the locked Playwright cannot install browsers on the Ubuntu 26.04 image now selected by ubuntu-latest.
+The three manual workflows, their runtime helpers, installation/acceptance templates and deterministic tests are copied without modification from reviewed PR [#214](https://github.com/nexu-io/html-anything/pull/214), source commit `de45dadea282214762c7b3123cea7e6b1044f26f`. No application business logic or private Git history is imported; shared runtime helpers and tests are included as control dependencies. The extra `Motion release controls` CI job runs only syntax checks and simulated-service tests with read-only permissions; the legacy CI commands and permissions are preserved. Its runner is pinned to Ubuntu 24.04 because the locked Playwright cannot install browsers on the Ubuntu 26.04 image now selected by ubuntu-latest.
 
-GitHub requires a manual workflow to exist on the default branch before its Run workflow entry is available. Our controls additionally require execution from `main`; they fetch the Motion application from a reviewed commit integrated into `feature/motion`. See [GitHub manual workflows](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
+GitHub requires a manual workflow to exist on the default branch before its Run workflow entry is available. After registration, our controls additionally require execution from `main`; they fetch the Motion application from a reviewed commit integrated into `feature/motion`. See [GitHub manual workflows](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
 
 ## Activation order
 
@@ -30,7 +30,7 @@ Before npm publication, use the candidate's **local** `candidate-install.md`, no
 - Registration is a capability change: users who can dispatch the trusted publication workflow can confirm and start a public release. There is no independent approval gate at this stage. Protect workflow edits and restrict operational access; the operator confirmation records intent, not proof of private testing.
 - Builds do not publish. The publication form defaults acceptance to false and rejects missing, expired, ambiguous or untrusted candidates, changed bytes and unintegrated source. Do not rebuild a published version or guess among duplicate candidate artifacts.
 - npm publication cannot be rolled back atomically with later checks. If native verification or R2 upload fails, npm may already be public while the default guide stays unchanged. Inspect retained records before using Re-run failed jobs; those retries reuse successful producer artifact IDs and never rebuild the candidate.
-- Motion snapshot recovery is maintenance only: an exact already published identical version is required; no build, npm publication, tag movement or default-guide access is allowed. Channel rollback and client/data recovery require separate decisions.
+- Motion snapshot recovery writes versioned R2 snapshots for an already published identical npm package; it does not build, publish npm, move tags or access the default guide. Channel rollback and client/data recovery require separate decisions.
 - A single publication concurrency group and version/ETag checks protect channel promotion. Operate one release at a time; GitHub does not provide a durable FIFO queue.
 - Disabling/removing these workflow registrations later does not undo a published npm version, restore user projects or revoke npm trust. Those are separate operations.
 

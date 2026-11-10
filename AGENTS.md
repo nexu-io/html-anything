@@ -6,11 +6,19 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Workspace Shape
 
-- Root is the public harness boundary only: workspace metadata, `.github/workflows/ci.yml`, `scripts/guard.ts`, and repository docs.
+- Root is the public harness boundary: workspace metadata, repository workflows, release-control helpers and tests, `scripts/guard.ts`, and repository docs.
+- `.github/scripts/` owns Motion release controls; `scripts/*.mjs` supplies their shared helpers, and `tests/` holds their deterministic tests. Browser tests remain under `e2e/`.
 - `next/` owns the complete Next application: app routes, components, app libraries, public assets, Next config, app TypeScript config, and app unit tests.
 - `e2e/` owns browser-level tests as the only source of truth: Playwright config, e2e TypeScript config, helper scripts, and flat `ui/*.test.ts` cases.
 - Do not add Playwright tests under `next/`. Do not add app source back at root `src/` or root `app/`.
 - Root `package.json` must not proxy app or e2e scripts. Use pnpm workspace filters from the repository root.
+
+## Motion release controls
+
+- Motion application development remains on `feature/motion`. Registering manual workflows on `main` does not move the application or authorize publication.
+- After registration is merged, manual release jobs execute the trusted controls from `main` and select integrated application source from `feature/motion`. Before registration, those manual entries are not available on the default branch.
+- Use Node 26.11.1 for control checks: `node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/install-guide.test.ts`. These tests need no workspace dependency installation and simulate publication services.
+- Follow [activation and operation](docs/motion-release-activation.md). Keep completed acceptance evidence private; do not merge or publish without the task's explicit authorization.
 
 ## Commands
 
