@@ -329,7 +329,10 @@ sudo() {
     const workflow = await readFile(new URL(`../.github/workflows/${name}.yml`, import.meta.url), 'utf8');
     const step = workflow.split('      - name: Install rendering test tools\n')[1].split('\n      - name: ')[0];
     assert.match(workflow, /path: \$\{\{ runner.temp \}\}\/motion-rendering-apt/);
-    assert.match(workflow, /key: rendering-apt-ubuntu24\.04-\$\{\{ runner.arch \}\}-zip-unzip-ffmpeg-fonts-noto-core-v1/);
+    const cacheStep = workflow.split('      - name: Restore rendering package downloads\n')[1].split('\n      - name: ')[0];
+    const keyPrefix = 'rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-';
+    assert(cacheStep.includes(`key: ${keyPrefix}\${{ github.run_id }}-\${{ github.run_attempt }}\n`), 'the save key must rotate so newer packages can be stored');
+    assert(cacheStep.includes(`restore-keys: |\n            ${keyPrefix}`), 'the newest saved entry must be restored by key prefix');
     const script = step.split('        run: |\n')[1].split('\n').map(line => line.replace(/^ {10}/, '')).join('\n');
     const run = (missing, failure) => runFile('bash', ['-e', '-o', 'pipefail', '-c', mock + '\n' + script], {
       env: { ...env, MISSING_FONT: missing, FAIL_APT: failure },
