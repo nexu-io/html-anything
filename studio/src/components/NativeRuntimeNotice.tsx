@@ -18,7 +18,7 @@ export function NativeRuntimeNotice({ status, checking, onRetry, pendingImport }
   if (!runtime || status.ok && !status.runtimeUnavailable && !pendingImport) return null;
   const failed = runtime.components.some(component => component.stage === 'failed');
   const retryable = failed || runtime.components.some(component => component.stage === 'idle') || status.runtimeUnavailable;
-  const headline = status.runtimeUnavailable ? 'Preparation progress unavailable' : status.ok ? 'Your files are ready to import' : failed ? 'Video features are not ready' : 'Preparing video features';
+  const headline = status.runtimeUnavailable ? 'Preparation progress unavailable' : status.ok ? 'Your files are ready to import' : failed ? 'Video export is not ready' : 'Preparing video features';
   return (
     <div data-testid="native-runtime-notice" className="flex min-h-9 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border-strong bg-surface px-3 py-1 text-step-11 text-text-2">
       <div className="flex min-w-0 items-center gap-2" role="status" aria-live="polite">

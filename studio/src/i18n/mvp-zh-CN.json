@@ -958,7 +958,7 @@
   "Download failed. Check your connection and retry.": "下载失败，请检查网络后重试。",
   "The component could not be prepared. Retry or inspect the details.": "组件准备失败，请重试或展开查看详情。",
   "Preparing video features": "正在准备视频功能",
-  "Video features are not ready": "视频功能尚未就绪",
+  "Video export is not ready": "视频导出功能尚未就绪",
   "You can keep editing": "可继续编辑",
   "View progress": "查看进度",
   "Video preparation": "视频功能准备",
