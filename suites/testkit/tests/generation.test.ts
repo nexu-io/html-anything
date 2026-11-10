@@ -25,6 +25,11 @@ it("hands a generated PNG from unknown Web responses to explicit adoption, manua
     scope = { channel: channel("dev"), namespace: namespace("generation-web") },
     report: Record<string, unknown> = { proof: "loopback provider protocol/lifecycle; no actual model execution" };
   await mkdir(evidence, { recursive: true });
+  const stage = async (name: string) => {
+    report.stage = name;
+    console.info(`[generation-web] ${name}`);
+    await writeFile(join(evidence, "progress.json"), JSON.stringify(report, null, 2));
+  };
   const image = new PNG({ width: 256, height: 256 });
   let seed = 29;
   for (let offset = 0; offset < image.data.length; offset += 4) {
@@ -119,6 +124,7 @@ it("hands a generated PNG from unknown Web responses to explicit adoption, manua
       };
       tools = { browser: tool("browser"), ffmpeg: tool("ffmpeg"), ffprobe: tool("ffprobe") };
     }
+    await stage("start actual runtime");
     runtime = await open({ root, scope, gateway, tools, version: "0.6.1-dev.1" });
     const session = await runtime.execute("session_create", {
         requestId: randomUUID(),
@@ -151,6 +157,7 @@ it("hands a generated PNG from unknown Web responses to explicit adoption, manua
           .filter({ hasText: /^就绪$/ })
           .waitFor(),
       shown = () => page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
+    await stage("open actual Web");
     await page.goto((await runtime.status()).web);
     await ready();
     await shown();
@@ -171,6 +178,7 @@ it("hands a generated PNG from unknown Web responses to explicit adoption, manua
         await route.abort("failed");
       } else await route.fulfill({ response });
     });
+    await stage("create with lost response");
     await panel.getByRole("button", { name: "生成新的 PNG 候选", exact: true }).click();
     await panel.getByRole("button", { name: "重试同一素材提交", exact: true }).waitFor();
     await panel.getByRole("button", { name: "重试同一素材提交", exact: true }).click();
@@ -187,6 +195,7 @@ it("hands a generated PNG from unknown Web responses to explicit adoption, manua
     expect(result.candidate).toMatchObject({ contentHash: hash, bytes: png.length, width: 256, height: 256 });
     expect(await runtime.execute("project_read", owner)).toEqual(original);
     expect(await runtime.execute("workspace_state", {})).toEqual(selected);
+    await stage("decode verified candidate");
     await card.getByRole("button", { name: "预览 PNG 候选", exact: true }).click();
     const candidate = panel.getByRole("img", { name: `PNG 候选：${create.prompt}`, exact: true });
     await poll(() => candidate.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBe(256);
@@ -210,6 +219,7 @@ it("hands a generated PNG from unknown Web responses to explicit adoption, manua
         await route.abort("failed");
       } else await route.fulfill({ response });
     });
+    await stage("adopt with lost response");
     await card.getByRole("button", { name: "采用为工程资源", exact: true }).click();
     const retry = page.getByRole("button", { name: "重试", exact: true });
     await retry.waitFor();
@@ -271,6 +281,7 @@ it("hands a generated PNG from unknown Web responses to explicit adoption, manua
       adoptUnknownRetry: true,
       finalRevision: saved.revision,
     };
+    await stage("export actual native MP4");
     if (tools) {
       const film = await runtime.execute("export_create", {
         ...owner,
@@ -333,6 +344,7 @@ it("hands a generated PNG from unknown Web responses to explicit adoption, manua
     runtime = undefined;
     expect((await readDirectory(root)).manager.phase).toBe("closed");
     expect(await observeProcesses(root)).toEqual([]);
+    await stage("cold restore unconfigured");
     online = false;
     const counts = { submits, reads };
     runtime = await open({ root, scope, tools, version: "0.6.1-dev.1" });
