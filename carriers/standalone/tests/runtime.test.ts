@@ -22,7 +22,8 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST) && process.platform ==
     const root = await mkdtemp(join(tmpdir(), "installed-native-prepare-")),
       path = resolve(process.env.OPEN_MOTION_NATIVE_MANIFEST!),
       manifest = JSON.parse(await readFile(path, "utf8")),
-      scope = { channel: channel("stable"), namespace: namespace("installed-prep") };
+      built = JSON.parse(await readFile(new URL("../dist/runtime/runtime.json", import.meta.url), "utf8")),
+      scope = { channel: channel(built.channel), namespace: namespace("installed-prep") };
     const tool = (name: keyof Tools) => {
       const spec = manifest[name] as { path: string; resource: Tools["browser"]["resource"]; executable: string };
       return {
@@ -34,7 +35,7 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST) && process.platform ==
     const warm = await openPreparation({
       root,
       scope,
-      version: "0.6.1",
+      version: built.version,
       tools: { browser: tool("browser"), ffmpeg: tool("ffmpeg"), ffprobe: tool("ffprobe") },
     });
     try {
@@ -51,11 +52,9 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST) && process.platform ==
         "--root",
         root,
         "--channel",
-        "stable",
+        built.channel,
         "--namespace",
         "installed-prep",
-        "--version",
-        "0.6.1",
         "--mode",
         "prepare",
       ],
@@ -64,7 +63,7 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST) && process.platform ==
     try {
       expect(owner.pid).not.toBe(process.pid);
       const { factory } = await connectRoot(root, scope),
-        peer = await factory.connect<RenderMethods>({ service: "renderer", generation: digest("0.6.1") });
+        peer = await factory.connect<RenderMethods>({ service: "renderer", generation: digest(built.version) });
       expect(
         (await factory.directory()).instances.filter((entry) => entry.phase === "ready").map((entry) => entry.service),
       ).toEqual(["renderer"]);

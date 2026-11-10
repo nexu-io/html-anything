@@ -11,12 +11,12 @@ for (let i = 0; i < args.length; i += 2) {
     value = args[i + 1];
   if (
     !flag ||
-    !["--root", "--channel", "--namespace", "--version", "--mode"].includes(flag) ||
+    !["--root", "--channel", "--namespace", "--mode"].includes(flag) ||
     !value ||
     value.startsWith("--") ||
     values.has(flag)
   )
-    throw new Error("expected root/channel/namespace and optional version/mode arguments");
+    throw new Error("expected root/channel/namespace and optional mode argument");
   values.set(flag, value);
 }
 const root = values.get("--root");
@@ -30,7 +30,6 @@ const options = {
   daemon: fileURLToPath(new URL("./daemon/main.mjs", import.meta.url)),
   worker: fileURLToPath(new URL("./render/worker.mjs", import.meta.url)),
   scope: { channel: channel(values.get("--channel") ?? ""), namespace: namespace(values.get("--namespace") ?? "") },
-  version: values.get("--version"),
 };
 const runtime = await (mode === "prepare" ? openPreparation(options) : open(options));
 await managerReady(runtime.manager, root, {

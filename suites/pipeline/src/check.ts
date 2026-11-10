@@ -21,6 +21,12 @@ export async function check(root: string, lane: string, gate: Gate): Promise<Che
     )
       throw Error("source gate requires the clean build commit");
     const config = await configuration(root, lane);
+    const stagedApp = await located(root, built.application);
+    for (const file of config.application.files) {
+      const source = await readFile(join(root, config.application.directory, file));
+      if (!source.equals(await readFile(join(stagedApp, file))))
+        throw Error("source gate requires the built application files");
+    }
     for (const carrier of Object.keys(config.units))
       if (
         (await inventory(await located(root, config.units[carrier]))) !==
@@ -51,7 +57,10 @@ export async function check(root: string, lane: string, gate: Gate): Promise<Che
         ODSUITE_BUILD: built.version,
       });
       receipt.details = { command: "pnpm -r --workspace-concurrency=1 --if-present run test" };
-    } else receipt.details = (await loadPackage(root, lane)).packages;
+    } else {
+      const packaged = await loadPackage(root, lane);
+      receipt.details = { carriers: packaged.packages, npm: packaged.npm };
+    }
     if (gate !== "artifacts") await confirmSource();
     receipt.result = "passed";
     return receipt;

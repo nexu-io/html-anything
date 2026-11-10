@@ -115,6 +115,13 @@ dev:
       entry: carriers/codexplugin/dist/dev.mjs
 
 pipeline:
+  application:
+    directory: packages/application/dist
+    name: "@openmotion/app"
+    bin: odsuite
+    entry: main.mjs
+    license: Apache-2.0
+    files: [main.mjs, codex-worker.mjs, LICENSE, NOTICE]
   carriers:
     standalone: carriers/standalone/dist/runtime
     codexplugin: carriers/codexplugin/dist/runtime

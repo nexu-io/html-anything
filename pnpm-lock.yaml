@@ -271,6 +271,55 @@ importers:
         specifier: 4.1.6
         version: 4.1.6(@types/node@24.12.2)(jsdom@29.1.1)(vite@8.3.0(@types/node@24.12.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.9.1)(yaml@2.9.1))
 
+  packages/application:
+    dependencies:
+      '@odsuite/installer':
+        specifier: workspace:*
+        version: link:../../suites/installer
+      '@odsuite/pack':
+        specifier: workspace:*
+        version: link:../../suites/pack
+      '@odsuite/protocol':
+        specifier: workspace:*
+        version: link:../../suites/protocol
+      '@odsuite/release':
+        specifier: workspace:*
+        version: link:../../suites/release
+      '@odsuite/sidecar':
+        specifier: workspace:*
+        version: link:../../suites/sidecar
+      '@open-motion/codexplugin':
+        specifier: workspace:*
+        version: link:../../carriers/codexplugin
+    devDependencies:
+      '@modelcontextprotocol/client':
+        specifier: 2.4.0
+        version: 2.4.0
+      '@odsuite/blob':
+        specifier: workspace:*
+        version: link:../../suites/blob
+      '@open-motion/daemon':
+        specifier: workspace:*
+        version: link:../../apps/daemon
+      '@open-motion/render':
+        specifier: workspace:*
+        version: link:../render
+      '@open-motion/standalone':
+        specifier: workspace:*
+        version: link:../../carriers/standalone
+      '@types/node':
+        specifier: 24.12.2
+        version: 24.12.2
+      esbuild:
+        specifier: 0.28.0
+        version: 0.28.0
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: 4.1.6
+        version: 4.1.6(@types/node@24.12.2)(jsdom@29.1.1)(vite@8.3.0(@types/node@24.12.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.9.1)(yaml@2.9.1))
+
   packages/components:
     dependencies:
       '@open-motion/theme':
