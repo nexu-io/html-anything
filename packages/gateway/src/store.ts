@@ -97,7 +97,10 @@ export class Store {
     const jobs: Job[] = [];
     for (const row of rows.slice(0, limit)) {
       const value = this.decode(row.record);
-      if (Buffer.byteLength(JSON.stringify({ jobs: [...jobs, value], next: value.id })) > 48 * 1024) break;
+      const bytes = Buffer.byteLength(JSON.stringify({ jobs: [...jobs, value], next: value.id }));
+      if (bytes > 48 * 1024 && jobs.length) break;
+      // Escaped legal text can exceed the normal page target; never hide a complete first job.
+      if (bytes > 60 * 1024) throw new Fault("integrity", "generation record exceeds the control projection budget");
       jobs.push(value);
     }
     return { jobs, next: rows.length > jobs.length ? (jobs.at(-1)?.id ?? null) : null };

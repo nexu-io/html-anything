@@ -168,10 +168,12 @@ describe("daemon", () => {
   });
 });
 
-it("adopts one immutable owned PNG over HTTP and replays its receipt after edits and offline restart", async () => {
+it("preserves an escaped singleton over Peer and replays PNG adoption after edits and offline restart", async () => {
   const evidence = fileURLToPath(new URL(`../../../.artifacts/generation-adapter/${randomUUID()}/`, import.meta.url)),
     root = join(evidence, "sidecar"),
     scope = { channel: channel("dev"), namespace: namespace("adoption") },
+    identity = "x".repeat(120),
+    prompt = "\u0001".repeat(8000),
     png =
       "iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAAPklEQVR4AcXBMQEAIAzAsK5CuPEvChtMRpN5535CEpOYxCQmMYlJTGISk5jEJCYxiUlMYhKTmMQkJjGJSWwBYl8CWwMRvGQAAAAASUVORK5CYII=";
   await mkdir(evidence, { recursive: true });
@@ -188,12 +190,12 @@ it("adopts one immutable owned PNG over HTTP and replays its receipt after edits
         generation: digest("adoption-gateway"),
         provider: configured
           ? {
-              id: "fixture",
-              version: "v1",
-              models: [{ id: "png", label: "Fixture PNG" }],
+              id: identity,
+              version: identity,
+              models: [{ id: identity, label: "Fixture PNG" }],
               submit: async () => {
                 submissions++;
-                return { remoteId: "fixture-task" };
+                return { remoteId: "\u0001".repeat(256) };
               },
               read: async () => ({ state: "succeeded", bytes: Buffer.from(png, "base64") }),
               cancel: async () => ({ confirmed: true }),
@@ -250,16 +252,21 @@ it("adopts one immutable owned PNG over HTTP and replays its receipt after edits
         ...owner,
         requestId: randomUUID(),
         revision: project.revision,
-        providerId: "fixture",
-        providerVersion: "v1",
-        modelId: "png",
-        prompt: "Red PNG fixture",
+        providerId: identity,
+        providerVersion: identity,
+        modelId: identity,
+        prompt,
       },
       created = await client().execute("generation_create", create),
       selected = { ...owner, id: created.id };
     await expect.poll(async () => (await client().execute("generation_read", selected)).state).toBe("succeeded");
     expect(await client().execute("generation_create", create)).toEqual(created);
     expect(submissions).toBe(1);
+    const page = await client().execute("generation_list", owner);
+    expect(page.jobs.map((job) => job.id)).toEqual([created.id]);
+    expect(page.jobs[0]?.prompt).toBe(prompt);
+    expect(Buffer.byteLength(JSON.stringify(page))).toBeGreaterThan(48 * 1024);
+    expect(Buffer.byteLength(JSON.stringify({ ok: true, value: { ok: true, value: page } }))).toBeLessThan(64 * 1024);
     expect(await client().execute("project_read", owner)).toEqual(project);
     expect((await client().execute("workspace_state", {})).selection).toEqual(selection);
     const result = await client().execute("generation_result", selected);
