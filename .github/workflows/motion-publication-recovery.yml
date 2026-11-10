@@ -18,8 +18,18 @@ permissions:
   actions: read
 
 jobs:
+  select-ref:
+    if: github.repository == 'nexu-io/html-anything'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require Motion integration branch
+        run: |
+          if [ "$GITHUB_REF" != 'refs/heads/feature/motion' ]; then
+            echo '::error::Select feature/motion in Run workflow for Motion operations.'
+            exit 1
+          fi
   recover:
-    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main'
+    needs: select-ref
     permissions:
       contents: read
       actions: read
