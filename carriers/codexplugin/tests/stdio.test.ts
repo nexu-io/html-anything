@@ -7,6 +7,7 @@ import { join, resolve } from "node:path";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { readDirectory } from "@odsuite/sidecar";
+import { schemas } from "@open-motion/daemon/contract";
 import type { Status } from "@open-motion/standalone";
 import {
   type Artifact,
@@ -15,7 +16,6 @@ import {
   type Project,
   resourceLimit,
   type SessionDetail,
-  schemas,
 } from "@open-motion/workspace/contract";
 import { expect, it } from "vitest";
 

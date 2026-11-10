@@ -90,6 +90,7 @@ export class Hosted {
         if (retired) return Promise.resolve();
         const quiesce = (): Promise<void> => {
           quiescing ??= (async () => {
+            entry.requestStop();
             await initialization;
             await options.lifecycle.quiesce?.();
           })();
@@ -155,6 +156,12 @@ export class Hosted {
       const runtime = await resources.grant({ kind: "staging", name, owner: incarnation, scope: "attempt" });
       temporary = runtime.lease;
       const context: Context = Object.freeze({
+        cleanup: <T>(operation: () => Promise<T>): Promise<T> => {
+          if (retired) return Promise.reject(new Error("cleanup owner retired"));
+          if (ambient.getStore()?.business)
+            return Promise.reject(new Error("business callbacks cannot enter owner cleanup"));
+          return this.sessions ? this.sessions.cleanup(scope, operation) : operation();
+        },
         background: <T>(operation: () => T): T => {
           const current = ambient.getStore();
           if (entry.phase !== "initializing" || current?.business || (current?.hint && !current.valid?.()))

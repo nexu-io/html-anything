@@ -34,6 +34,7 @@
     "@open-motion/daemon": "workspace:*",
     "@open-motion/web": "workspace:*",
     "@open-motion/workspace": "workspace:*",
-    "@odsuite/dev": "workspace:*"
+    "@odsuite/dev": "workspace:*",
+    "@open-motion/render": "workspace:*"
   }
 }

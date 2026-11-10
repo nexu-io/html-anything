@@ -9,6 +9,7 @@ export async function connect(options: Omit<Options, "environment">) {
     ...options,
     environment: collect(),
     web: options.web ?? fileURLToPath(new URL("./web/", import.meta.url)),
+    worker: options.worker ?? fileURLToPath(new URL("./render/worker.mjs", import.meta.url)),
     daemon: options.daemon ?? fileURLToPath(new URL("./daemon/main.mjs", import.meta.url)),
   });
   try {

@@ -16,6 +16,10 @@
     "./mcp": {
       "types": "./dist/mcp.d.ts",
       "default": "./dist/mcp.mjs"
+    },
+    "./contract": {
+      "types": "./dist/contract.d.ts",
+      "default": "./dist/contract.mjs"
     }
   },
   "files": [
@@ -27,8 +31,6 @@
     "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
   },
   "devDependencies": {
-    "@odsuite/protocol": "workspace:*",
-    "@odsuite/sidecar": "workspace:*",
     "@types/node": "24.12.2",
     "esbuild": "0.28.0",
     "typescript": "7.0.2",
@@ -38,6 +40,10 @@
   "dependencies": {
     "@odsuite/carrier": "workspace:*",
     "@open-motion/workspace": "workspace:*",
-    "@open-motion/motion": "workspace:*"
+    "@open-motion/motion": "workspace:*",
+    "@open-motion/render": "workspace:*",
+    "@odsuite/sidecar": "workspace:*",
+    "@odsuite/protocol": "workspace:*",
+    "zod": "4.6.7"
   }
 }

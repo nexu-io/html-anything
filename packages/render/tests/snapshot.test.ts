@@ -20,7 +20,7 @@ it("keeps fixed input and reopened source independent of subsequent edits and va
       }),
       owner = { sessionId: session.id, artifactId: artifact.id },
       project = workspace.execute("project_read", owner),
-      input = { ...owner, expectedRevision: project.revision, fps: { num: 30000, den: 1001 } },
+      input = { ...owner, revision: project.revision, fps: { num: 30000, den: 1001 } },
       snapshot = freeze(workspace, input);
     expect(snapshot.spec).toMatchObject({ width: 1920, height: 1080, duration: 5, frames: 150, audio: "silent" });
     const saved = workspace.execute("project_save", {
@@ -34,7 +34,7 @@ it("keeps fixed input and reopened source independent of subsequent edits and va
     const restored = workspace.execute("project_snapshot", { ...owner, revision: snapshot.project.revision });
     expect(restored).toEqual(snapshot.project);
     expect(workspace.execute("project_read", owner)).toEqual(saved);
-    expect(() => freeze(workspace, input)).toThrow("revision changed");
+    expect(freeze(workspace, input)).toEqual(snapshot);
     expect(() =>
       workspace.execute("project_snapshot", { ...owner, sessionId: other.id, revision: project.revision }),
     ).toThrow("belong");

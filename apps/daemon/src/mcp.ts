@@ -1,5 +1,5 @@
 import type { McpServer, StandardSchemaWithJSON } from "@modelcontextprotocol/server";
-import { descriptions, Fault, type Input, type Operation, type Output, schemas } from "@open-motion/workspace/contract";
+import { descriptions, Fault, type Input, type Operation, type Output, schemas } from "./contract.js";
 export type Execute = <K extends Operation>(operation: K, input: Input<K>) => Promise<Output<K>>;
 /** Business tool descriptors and routing belong to the application; hosts only attach transports. */
 export function register(server: McpServer, execute: Execute): void {
@@ -20,6 +20,21 @@ export function register(server: McpServer, execute: Execute): void {
       async (input: unknown) => {
         try {
           const result = await execute(operation, input as Input<typeof operation>);
+          if (operation === "export_download") {
+            const download = result as Output<"export_download">;
+            return {
+              content: [
+                {
+                  type: "resource_link",
+                  uri: download.url,
+                  name: download.filename,
+                  mimeType: "video/mp4",
+                  size: download.bytes,
+                },
+              ],
+              structuredContent: { ...download },
+            };
+          }
           // Binary data is present once in structured output, keeping the stock stdio envelope bounded.
           const text =
             operation === "resource_read" ? { resource: (result as Output<"resource_read">).resource } : result;

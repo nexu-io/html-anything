@@ -3,7 +3,7 @@ export { Client } from "./client.js";
 export { connectRoot } from "./control/connection.js";
 export type { Directory, FactoryEntry, Instance, Phase } from "./control/directory.js";
 export { Factory } from "./control/factory.js";
-export { Peer } from "./control/peer.js";
+export { type Connection, Peer } from "./control/peer.js";
 export type { SessionRecord, SessionScope } from "./control/session.js";
 export type { Attachment, Context, Expose, Identity } from "./control/types.js";
 export type {

@@ -5,8 +5,8 @@ import { parseAudioElements } from "@hyperframes/engine";
 import { canonical, digest } from "@odsuite/protocol";
 import { assembleProject } from "@open-motion/motion/project";
 import { capture, gsap, runtime } from "@open-motion/motion/runtime";
-import { Fault, type ProjectSnapshot, type Workspace } from "@open-motion/workspace";
-import { fps, type Specification, specification } from "./contract.js";
+import type { ProjectSnapshot, Workspace } from "@open-motion/workspace";
+import { fps, type Specification, specification } from "./jobs/contract.js";
 
 export interface Snapshot {
   project: ProjectSnapshot;
@@ -39,12 +39,15 @@ export function freeze(
   input: {
     sessionId: string;
     artifactId: string;
-    expectedRevision: string;
+    revision: string;
     fps: { num: number; den: number };
   },
 ): Snapshot {
-  const project = workspace.execute("project_read", { sessionId: input.sessionId, artifactId: input.artifactId });
-  if (project.revision !== input.expectedRevision) throw new Fault("conflict", "export revision changed");
+  const project = workspace.execute("project_snapshot", {
+    sessionId: input.sessionId,
+    artifactId: input.artifactId,
+    revision: input.revision,
+  });
   const spec = fromSource(assembleProject(project.files, project.resources).html, input.fps);
   const assets = project.resources.map((resource) => ({
     path: resource.path,

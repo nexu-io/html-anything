@@ -79,7 +79,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | packages/theme, packages/components               | Primitive/semantic/light-dark tokens, licensed local fonts, atoms and anonymous layouts                     |
 | apps/web/src/lib/components                       | Web business components; no style definitions                                                               |
 | packages/motion                                   | Native editing, composition graph/assembly, preview and canvas bridge; no persistence or OS allocation      |
-| packages/render                                   | Fixed-revision native execution, verified film output; sidecar/blob retain process/resource authority       |
+| packages/render                                   | Durable export intent, serial fixed-revision execution and verified films; sidecar/blob own OS resources    |
 | packages/workspace                                | Session/message/artifact ownership, revisions, history, transactions and idempotency shared by HTTP/MCP/Web |
 | docs/README.md                                    | Durable documentation index                                                                                 |
 | docs/architecture.md, domains.md                  | Engineering architecture and product/data responsibilities                                                  |
@@ -110,6 +110,8 @@ Native appearance/animation is closed-schema film content. Motion transforms thr
 Independent fixed-rate audio source-in-point/rate/gain/mute changes use the same SDK/save chain. Validate source in-point + duration × rate against verified source length; the fixed rate is 0.1..10 and remaining-source trim is divided by that rate. Changing authored rate preserves clip start/duration and is separate from preview transport speed. Write only touched attributes, and verify rendered length/type against immutable media facts. Unproven ramped-rate, automation, effect or SDK-detected script-driven audio remains read-only.
 
 Media links belong to one source file/composition. Aligned static PNG/WAV groups share start/duration; audio members share in-point/rate, while gain/mute and visual appearance remain individual. Validate every member before one SDK batch and one workspace save/history step. Group trim uses the shortest remaining audio window. Link/unlink/delete retries retain applied source and the same save receipt; never regenerate a group after an unknown commit. Invalid groups stay read-only until explicitly unlinked. SDK-recognized writers are the static analysis boundary; this is not proof against arbitrary author-script side effects.
+
+Export jobs belong to render, independently of Web/HTTP/MCP connection lifetime. Daemon validates workspace ownership and freezes an explicitly selected revision; render journals intent and executes it. Retry unknown submissions with the same payload/request identity. Cancellation completes only after actual worker retirement; uncertain ownership requires explicit sidecar recovery. Public job receipts exclude paths and process authority.
 
 User media is workspace-owned persistent data, outside blob GC. Bind reads to owned immutable revision manifests; removal never erases historical bytes. Preserve import request identities and applied insertion state across unknown transport outcomes; reject old database formats without migration/reset.
 

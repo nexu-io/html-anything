@@ -3,7 +3,10 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import type { Environment } from "@odsuite/carrier";
 import { animationInput, editInput, inspectInput, Motion, patchInput } from "@open-motion/motion";
 import { inspectContext, retimeHost } from "@open-motion/motion/project";
-import { Fault, type Input, type Operation, schemas, Workspace } from "@open-motion/workspace";
+import { type ExportOperation, exportSchemas } from "@open-motion/render/contract";
+import { Fault, type Input, type Operation, Workspace } from "@open-motion/workspace";
+import { schemas } from "./contract.js";
+import { type Binding, Exports } from "./exports/index.js";
 import { Previews } from "./preview.js";
 export interface Options {
   data: string;
@@ -11,6 +14,8 @@ export interface Options {
   socket: string;
   token: string;
   environment?: Readonly<Environment>;
+  renderer?: Binding;
+  endpoint?: string;
 }
 export interface Service {
   close(): Promise<void>;
@@ -48,9 +53,14 @@ async function body(request: IncomingMessage): Promise<unknown> {
 export async function serve(options: Options): Promise<Service> {
   const workspace = new Workspace(options.data);
   const previews = new Previews(workspace);
+  const exports = new Exports(workspace, options.renderer, options.endpoint);
   const server = createServer((request, response) => {
     const origin = request.headers.origin === options.origin ? options.origin : undefined;
     const handle = async () => {
+      if (["GET", "HEAD"].includes(request.method ?? "") && request.url?.startsWith("/exports/files/")) {
+        await exports.downloads.serve(request.url, response, request.method === "HEAD");
+        return;
+      }
       if (["GET", "HEAD"].includes(request.method ?? "") && request.url?.startsWith("/preview/")) {
         previews.serve(request.url, response, request.headers.host, request.headers.range, request.method === "HEAD");
         return;
@@ -132,7 +142,9 @@ export async function serve(options: Options): Promise<Service> {
       if (request.method !== "POST" || !Object.hasOwn(schemas, operation))
         return reply(response, 404, { error: { code: "invalid", message: "unknown operation" } }, origin);
       const input = await body(request);
-      const result = workspace.execute(operation as Operation, input as Input<Operation>);
+      const result = Object.hasOwn(exportSchemas, operation)
+        ? await exports.execute(operation as ExportOperation, input)
+        : workspace.execute(operation as Operation, input as Input<Operation>);
       reply(response, 200, result, origin);
     };
     void handle().catch((error) => {
@@ -169,6 +181,7 @@ export async function serve(options: Options): Promise<Service> {
             reject(error);
             return;
           }
+          exports.close();
           previews.close();
           workspace.close();
           done();

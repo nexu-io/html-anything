@@ -72,8 +72,8 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
         }),
         owner = { sessionId: session.id, artifactId: artifact.id };
       let current = workspace.execute("project_read", owner);
-      const snapshot = freeze(workspace, { ...owner, expectedRevision: current.revision, fps: { num: 12, den: 1 } }),
-        first = render({ factory, context, library, tools, input: snapshot });
+      const snapshot = freeze(workspace, { ...owner, revision: current.revision, fps: { num: 12, den: 1 } }),
+        first = render({ id: randomUUID(), factory, context, library, tools, input: snapshot });
       current = workspace.execute("project_save", {
         ...owner,
         requestId: randomUUID(),
@@ -95,22 +95,24 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
         data: wav(),
       });
       const sound = await render({
+        id: randomUUID(),
         factory,
         context,
         library,
         tools,
-        input: freeze(workspace, { ...owner, expectedRevision: current.revision, fps: { num: 12, den: 1 } }),
+        input: freeze(workspace, { ...owner, revision: current.revision, fps: { num: 12, den: 1 } }),
       });
       expect(sound.verification).toMatchObject({ frames: 12, audio: true });
       expect(JSON.parse(await readFile(sound.path.replace(/\.mp4$/, ".json"), "utf8"))).toEqual(sound);
       results.push({ kind: "audio", ...sound });
       const controller = new AbortController(),
         pending = render({
+          id: randomUUID(),
           factory,
           context,
           library,
           tools,
-          input: freeze(workspace, { ...owner, expectedRevision: current.revision, fps: { num: 60, den: 1 } }),
+          input: freeze(workspace, { ...owner, revision: current.revision, fps: { num: 60, den: 1 } }),
           signal: controller.signal,
         });
       const rejected = expect(pending).rejects.toThrow(/aborted|acceptance cancellation/);
@@ -149,16 +151,17 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
       ).toBe(true);
       expect(Object.values((await library.status()).entries).flatMap((e) => e.uses)).toEqual([]);
       const retry = await render({
+        id: randomUUID(),
         factory,
         context,
         library,
         tools,
-        input: freeze(workspace, { ...owner, expectedRevision: current.revision, fps: { num: 12, den: 1 } }),
+        input: freeze(workspace, { ...owner, revision: current.revision, fps: { num: 12, den: 1 } }),
       });
       results.push({ kind: "retry", ...retry });
-      const bad = freeze(workspace, { ...owner, expectedRevision: current.revision, fps: { num: 12, den: 1 } });
+      const bad = freeze(workspace, { ...owner, revision: current.revision, fps: { num: 12, den: 1 } });
       bad.spec.width = 162;
-      await expect(render({ factory, context, library, tools, input: bad })).rejects.toThrow(
+      await expect(render({ id: randomUUID(), factory, context, library, tools, input: bad })).rejects.toThrow(
         "differs from fixed source",
       );
       expect(await library.collect()).toHaveLength(3);

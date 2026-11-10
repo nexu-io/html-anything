@@ -5,7 +5,10 @@ import { canonical, digest, type FactoryScope, factoryScope } from "@odsuite/pro
 import { type Manifest, resolve as release } from "@odsuite/release";
 import { source } from "@odsuite/serve";
 import { managerEndpoint, type Service, serve } from "@odsuite/sidecar";
-import type { Input, Operation, Output } from "@open-motion/workspace/contract";
+import type { Input, Operation, Output } from "@open-motion/daemon/contract";
+import type { Tools } from "@open-motion/render";
+import { host } from "@open-motion/render/host";
+import { nativeTools } from "@open-motion/render/tools";
 import { Daemon } from "./daemon.js";
 import { collect } from "./environment.js";
 
@@ -17,6 +20,8 @@ export interface Options {
   version?: string;
   web?: string;
   daemon?: string;
+  worker?: string;
+  tools?: Tools;
 }
 export interface Status {
   environment: Environment;
@@ -45,6 +50,10 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
   const entry = await realpath(options.daemon ?? fileURLToPath(import.meta.resolve("@open-motion/daemon/main")));
   const factory = manager.factory(scope),
     daemon = new Daemon(factory);
+  const tools = options.tools ?? nativeTools();
+  const renderer = tools
+    ? await host(factory, { generation: digest(manifest.identity.version), tools, worker: options.worker })
+    : undefined;
   const opened = await source(factory, {
     name: "web",
     directory: web,
@@ -74,6 +83,7 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
           origin: opened.endpoint.url,
           generation: digest(manifest.identity.version),
           environment,
+          renderer,
         }),
       stop: () => daemon.close(),
     },

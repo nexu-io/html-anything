@@ -43,7 +43,7 @@ function alive(owner: Owner, directory: Directory): "live" | "retired" | "unknow
   if (entry.generation !== owner.generation) return "unknown";
   return entry.phase === "retired"
     ? "retired"
-    : entry.phase === "ready" || entry.phase === "initializing"
+    : entry.phase === "ready" || entry.phase === "initializing" || entry.phase === "stopping"
       ? "live"
       : "unknown";
 }
@@ -194,17 +194,19 @@ export class Library {
     settle(state);
   }
   private mutate<T>(operation: (state: State, directory: Directory) => Promise<T>) {
-    return this.options.factory.session(async () => {
-      const state = await this.state(),
-        directory = await this.options.factory.directory();
-      if (alive(this.owner, directory) !== "live") throw Error("blob controller is not live");
-      const before = canonical(state);
-      await this.reconcile(state, directory);
-      const value = await operation(state, directory);
-      settle(state);
-      if (canonical(state) !== before) await this.write(state);
-      return value;
-    });
+    return this.options.context.cleanup(() =>
+      this.options.factory.session(async () => {
+        const state = await this.state(),
+          directory = await this.options.factory.directory();
+        if (alive(this.owner, directory) !== "live") throw Error("blob controller is not live");
+        const before = canonical(state);
+        await this.reconcile(state, directory);
+        const value = await operation(state, directory);
+        settle(state);
+        if (canonical(state) !== before) await this.write(state);
+        return value;
+      }),
+    );
   }
   private entry(state: State, value: Resource) {
     const id = key(value);
