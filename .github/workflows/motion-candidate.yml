@@ -1,13 +1,14 @@
 name: Motion candidate build
-run-name: Motion candidate · ${{ inputs.version }}
+run-name: Motion candidate · ${{ inputs.version || 'auto' }}
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'New test version, e.g. 0.6.4-test.7; build and retain only, never publish'
+        description: 'Optional override; empty uses next Motion patch-test.<run ID>.<attempt>; build only'
         type: string
-        required: true
+        required: false
+        default: ''
       source_sha:
         description: 'Optional reviewed full SHA integrated into feature/motion; empty freezes its current head'
         type: string
@@ -20,7 +21,7 @@ permissions:
 jobs:
   candidate:
     name: Build immutable candidate
-    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main'
+    if: github.repository == 'nexu-io/html-anything' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/motion')
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -76,6 +77,7 @@ jobs:
       - name: Build the final DEV application tgz once and scan both archives
         env:
           MOTION_SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+          MOTION_VERSION: ${{ steps.source.outputs.version }}
         run: |
           node source/scripts/package-npm.mjs "$RUNNER_TEMP/build" "$MOTION_VERSION" --template-env=dev
           cp "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/build/source-scan.json"
@@ -85,7 +87,7 @@ jobs:
         id: artifact
         uses: actions/upload-artifact@v7.0.2
         with:
-          name: motion-candidate-${{ inputs.version }}
+          name: motion-candidate-${{ steps.source.outputs.version }}
           path: ${{ runner.temp }}/candidate/
           retention-days: 30
           if-no-files-found: error
