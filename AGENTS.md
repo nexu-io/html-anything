@@ -42,3 +42,9 @@ Phase one exposes eleven motion_ Tools (nine project tools plus catalog fetch an
 ## Template production and reuse
 
 `motion-template-to-video` implements the default template route and reuses shared context/edit and managed-project revision protection. Unchanged requests are delivered by opening the template in the editor; edited content is checked by playing it in the editor preview, with native snapshots only for layout; renders and exports, including of an unchanged template, happen only when the user asks for a video file. `motion-video-to-template` separately produces a portable reusable template from a video; it does not replace ordinary video recreation. Visual acceptance belongs to the user. Repository work does not invoke production Skills.
+
+## Candidate and publication controls
+
+Follow [the release workflow manual](docs/release-workflows.md). Public candidates must use an exact reviewed source SHA integrated into `feature/motion`, a new test version and prod template defaults. Scan tracked source plus the outer npm tgz and inner application; preserve the positive distribution list and licenses. Keep candidate, native registry installation, real Agent creation and human acceptance evidence separate.
+
+Publication uses the accepted candidate bytes, never a rebuild. Only the separately authorized manual test publication workflow may use npm OIDC or R2 credentials; validate candidate provenance and hashes first, archive immutable version records, and update the moving guide last. Archive-only work must not move tags or default entries. Never overwrite published versions, put private DEV data/internal acceptance material into public artifacts, or infer merge/publication authorization from green CI. Main registration, environment protection, npm trust, main cutover and repository rename remain separate operations.

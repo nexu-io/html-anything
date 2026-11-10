@@ -62,7 +62,9 @@ After each editing turn, the Agent requests the latest preview in the same chat 
 
 ## Start in Codex
 
-Clone this public repository at `feature/motion` and open the checkout in Codex. You'll need Git, Node.js **22.18+** with npm, and a Codex CLI that supports plugins. MP4 export also requires Chrome/Chromium and FFmpeg/FFprobe. See [Windows test packages](docs/test-packages.md) for that installation path.
+For a packaged test installation, give your Agent the [test installation instructions](https://releases.open-design.ai/open-motion/dev/install.md). They pin an exact npm version and describe isolated setup and native preparation. To reproduce a particular version, use `https://releases.open-design.ai/open-motion/dev/<exact-version>/install.md`; see the [current delivery record and limitations](docs/release-guide.md#published-test-candidate-064-test6). Software test versions default to the production template environment.
+
+For source development, clone this public repository at `feature/motion` and open the checkout in Codex. You'll need Git, Node.js **22.18+** with npm, and a Codex CLI that supports plugins. MP4 export also requires Chrome/Chromium and FFmpeg/FFprobe. See [Windows test packages](docs/test-packages.md) for that installation path.
 
 Paste this into a Codex conversation:
 
@@ -80,7 +82,7 @@ Media panels open beside the triggering button or timeline selection and adjust 
 
 ## MCP and lightweight installation
 
-The [Motion application npm package](docs/npm-installation.md) includes the application and default manifest alongside its installer. It installs eleven MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy without adjacent files; locked npm dependencies and native tools are prepared separately. Build an test with `npm run package:npm -- dist/npm-test 0.6.4-test.1`. [test/stable acceptance](docs/release-guide.md) and isolated DEV template instructions are documented; no npm version has been published by this change. Complete platform ZIPs remain a backup.
+The [Motion application npm package](docs/npm-installation.md), published as [@openmotion/app](https://www.npmjs.com/package/@openmotion/app), includes the application and default manifest alongside its installer. It installs eleven MCP Tools and five Skills for Codex, Claude Code, DeepSeek Harness or WorkBuddy without adjacent files; locked npm dependencies and native tools are prepared separately. Maintainers can build a test with `npm run package:npm -- dist/npm-test 0.6.4-test.1`. [Test/stable acceptance](docs/release-guide.md) and isolated DEV template instructions are documented. Complete platform ZIPs remain a backup.
 
 The five entries are [motion-production](skills/motion-production/SKILL.md), [motion-director](skills/motion-director/SKILL.md), [motion-template-to-video](skills/motion-template-to-video/SKILL.md), [motion-recreate](skills/motion-recreate/SKILL.md), and [motion-video-to-template](skills/motion-video-to-template/SKILL.md). Reference recreation is implemented. Product UI follows the [OpenDesign visual system](docs/design-system.md); video artwork keeps its own styles.
 
@@ -94,7 +96,7 @@ OpenMotion collects feature usage, safe error categories, device information and
 
 To contribute a style, include the reference and its creator, the Motion MD, a preview, editable source and asset permissions. [Contribution guide](AGENTS.md) · [Documentation](docs/README.md)
 
-**Credits & release status.** openmotion uses [Hyperframes](https://github.com/heygen-com/hyperframes) for native compositions, the Studio foundation and rendering. Its [editor](studio/LICENSE) and [bundled examples](template-library/LICENSE) retain their upstream Apache-2.0 licenses. This public repository is licensed under [Apache-2.0](LICENSE); bundled components and fonts retain their notices. Development targets [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion); the former HTML Anything application remains on `main` and is preserved on [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). Packages are not published. See the [repository workflow](docs/repository-migration.md).
+**Credits & release status.** openmotion uses [Hyperframes](https://github.com/heygen-com/hyperframes) for native compositions, the Studio foundation and rendering. Its [editor](studio/LICENSE) and [bundled examples](template-library/LICENSE) retain their upstream Apache-2.0 licenses. This public repository is licensed under [Apache-2.0](LICENSE); bundled components and fonts retain their notices. Development targets [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion); the former HTML Anything application remains on `main` and is preserved on [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). A test npm version is available; no stable version has been published. See the [repository workflow](docs/repository-migration.md).
 
 Multiple local conversations can keep different projects open through one native Studio service. Each preview stays bound to its project; same-project writes still use revision checks. See [shared editor](docs/shared-editor.md).
 

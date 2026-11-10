@@ -3,7 +3,7 @@ import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeAtomic, writeJSON } from './runtime-assets.mjs';
-import { checkReleaseVersion } from './test-package.mjs';
+import { checkReleaseVersion } from './release-version.mjs';
 
 export function validateGuideSpec(name, version) {
   assert.match(name || '', /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/, 'Require an npm package name');

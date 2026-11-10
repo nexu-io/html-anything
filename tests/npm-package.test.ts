@@ -41,6 +41,16 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.match(release.commit, /^[a-f0-9]{40}$/);
     const application = path.join(directory, 'app'), installer = path.join(directory, 'installer');
     await extractArchive(built.application, application); await extractArchive(built.installer, installer);
+    const readme = await readFile(path.join(installer, 'package/README.md'), 'utf8');
+    assert(readme.includes("We're building the best open-source alternative to Claude Motion."));
+    assert(readme.includes(`https://raw.githubusercontent.com/nexu-io/html-anything/${release.commit}/docs/readme/hero.svg`));
+    assert(readme.includes(`src="https://raw.githubusercontent.com/nexu-io/html-anything/${release.commit}/docs/readme/opendesign-symbol.svg"`));
+    assert(readme.includes(`https://github.com/nexu-io/html-anything/blob/${release.commit}/docs/motion-md.md`));
+    assert(readme.includes('](#start-in-codex)'));
+    assert(readme.includes('](https://open-design.ai/motion/)'));
+    assert(!readme.includes('](docs/') && !readme.includes('](template-library/'));
+    assert(!readme.startsWith('# Motion application npm package'));
+    assert.equal(await readFile(path.join(application, 'README.md'), 'utf8'), await readFile('README.md', 'utf8'), 'The embedded repository README retains its local links');
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
     assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'prod');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);

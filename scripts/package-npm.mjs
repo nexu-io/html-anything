@@ -7,7 +7,7 @@ import { PUPPETEER_REVISIONS } from 'puppeteer-core';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
-import { checkReleaseVersion } from './test-package.mjs';
+import { checkReleaseVersion } from './release-version.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 export function checkReleaseLocks(pkg, lockfile, runtime) {
@@ -64,7 +64,14 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
     installerPkg.private = !explicitVersion || templateConfig.environment === 'dev';
     installerPkg.publishConfig = { access: 'public', registry: 'https://registry.npmjs.org/', tag: version.includes('-test.') ? 'test' : 'stage' };
     await writeJSON(path.join(installer, 'package.json'), installerPkg);
-    await cp(path.join(root, 'docs/npm-installation.md'), path.join(installer, 'README.md'));
+    const commit = (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim();
+    const repository = `https://github.com/nexu-io/html-anything/blob/${commit}/`;
+    const images = `https://raw.githubusercontent.com/nexu-io/html-anything/${commit}/`;
+    const link = (target, image) => /^(?:#|[a-z][a-z\d+.-]*:|\/\/)/i.test(target) ? target : new URL(target, image ? images : repository).href;
+    const readme = (await readFile(path.join(root, 'README.md'), 'utf8'))
+      .replace(/(!?\[[^\]\n]*\]\()([^\s)]+)(\))/g, (_, start, target, end) => start + link(target, start.startsWith('!')) + end)
+      .replace(/(<img\b[^>]*\bsrc=["'])([^"']+)(["'])/g, (_, start, target, end) => start + link(target, true) + end);
+    await writeAtomic(path.join(installer, 'README.md'), readme);
     await cp(path.join(root, 'LICENSE'), path.join(installer, 'LICENSE'));
     pkg.version = version; lockfile.version = version; lockfile.packages[''].version = version;
     await writeJSON(path.join(application, 'package.json'), pkg);
@@ -75,7 +82,7 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
     const archive = path.join(output, `openmotion-application-${pkg.version}${templateConfig.environment === 'dev' ? '-dev' : ''}.tar.gz`);
     await runFile(process.platform === 'win32' ? path.join(process.env.SystemRoot, 'System32/tar.exe') : 'tar', ['-czf', archive, '-C', application, '.'], { env: { ...process.env, COPYFILE_DISABLE: '1' } });
     const manifest = { schemaVersion: 1, version: pkg.version, format: 'npm', templateEnvironment: templateConfig.environment,
-      commit: (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim(), run: process.env.GITHUB_RUN_ID || null, attempt: process.env.GITHUB_RUN_ATTEMPT || '1',
+      commit, run: process.env.GITHUB_RUN_ID || null, attempt: process.env.GITHUB_RUN_ATTEMPT || '1',
       application: { url: './' + path.basename(archive), sha256: await sha256(archive) },
       locks: { npm: await sha256(path.join(application, 'package-lock.json')), native: await sha256(path.join(root, 'scripts/runtime-lock.json')) },
       mcp: { profile: registry.profile, tools: registry.tools.map(tool => tool.name) }, skills, runtime };

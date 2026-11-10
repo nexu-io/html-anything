@@ -1,0 +1,239 @@
+name: Motion test publication
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: 'Successful Motion candidate build run ID'
+        type: string
+        required: true
+      tgz_sha256:
+        description: 'Accepted candidate tgz SHA256'
+        type: string
+        required: true
+      acceptance_sha256:
+        description: 'SHA256 of the completed internal acceptance record; no internal URL or private content'
+        type: string
+        required: true
+      action:
+        description: 'Publish to npm test and promote guide, or only backfill immutable snapshots'
+        type: choice
+        options: [publish-test, archive-only]
+        default: archive-only
+      approved:
+        description: 'I approve this exact version/hash after reviewing its acceptance record'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: motion-test-publication
+  cancel-in-progress: false
+
+env:
+  MOTION_CANDIDATE_RUN: ${{ inputs.candidate_run_id }}
+  MOTION_EXPECTED_SHA256: ${{ inputs.tgz_sha256 }}
+  MOTION_ACCEPTANCE_SHA256: ${{ inputs.acceptance_sha256 }}
+  MOTION_RELEASE_ACTION: ${{ inputs.action }}
+  MOTION_APPROVED: ${{ inputs.approved }}
+
+jobs:
+  verify:
+    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - name: Verify originating run, artifact digest, version and source; rescan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node .github/scripts/motion-release.mjs download "$RUNNER_TEMP/candidate"
+          git fetch origin feature/motion:refs/remotes/origin/feature/motion
+          node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
+          node .github/scripts/motion-release.mjs rescan "$RUNNER_TEMP/candidate" "$PWD" "$RUNNER_TEMP/scanner/gitleaks"
+      - uses: actions/upload-artifact@v7.0.2
+        id: artifact
+        with:
+          name: verified-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate/
+          retention-days: 30
+          if-no-files-found: error
+
+  npm:
+    needs: verify
+    environment: motion-test-publish
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+          registry-url: 'https://registry.npmjs.org'
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.verify.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - name: Publish the accepted bytes with npm trusted publishing, or verify an identical existing version
+        run: node .github/scripts/motion-release.mjs npm "$RUNNER_TEMP/candidate"
+      - name: Retain npm publication state even after a partial failure
+        id: artifact
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: npm-publication-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate/npm-publication.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  registry-mac:
+    needs: [verify, npm]
+    runs-on: macos-26
+    timeout-minutes: 40
+    outputs:
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.verify.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - name: Anonymous exact-version cold installation and native MCP discovery
+        shell: bash
+        run: |
+          node .github/scripts/motion-release.mjs verify "$RUNNER_TEMP/candidate"
+          node .github/scripts/motion-registry-smoke.mjs "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v7.0.2
+        id: artifact
+        if: always()
+        with:
+          name: registry-darwin-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate/registry-darwin-arm64.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  registry-windows:
+    needs: [verify, npm]
+    runs-on: windows-2025
+    timeout-minutes: 40
+    outputs:
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.verify.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - name: Anonymous exact-version cold installation and native MCP discovery
+        shell: bash
+        run: |
+          node .github/scripts/motion-release.mjs verify "$RUNNER_TEMP/candidate"
+          node .github/scripts/motion-registry-smoke.mjs "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v7.0.2
+        id: artifact
+        if: always()
+        with:
+          name: registry-win32-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate/registry-win32-x64.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  snapshot:
+    needs: [verify, npm, registry-mac, registry-windows]
+    environment: motion-test-publish
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.verify.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.npm.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.registry-mac.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.registry-windows.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - name: Archive exact-version snapshots, verify canonical public bytes, then promote the default guide last
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_RELEASES_AK }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_RELEASES_SK }}
+          AWS_EC2_METADATA_DISABLED: 'true'
+          AWS_PAGER: ''
+          MOTION_R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_RELEASES_URL }}
+          MOTION_R2_BUCKET: ${{ vars.CLOUDFLARE_R2_RELEASES_BUCKET }}
+          MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN }}
+        run: node .github/scripts/motion-release.mjs archive "$RUNNER_TEMP/candidate"
+      - name: Retain the attempt, immutable release identity and previous default guide
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: release-record-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/candidate/release-record.json
+            ${{ runner.temp }}/candidate/release-attempt.json
+            ${{ runner.temp }}/candidate/publication.json
+            ${{ runner.temp }}/candidate/previous-install.md
+          retention-days: 30
+          if-no-files-found: warn

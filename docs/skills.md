@@ -45,7 +45,7 @@ MCP 工具说明和领域执行位于 `mcp-tools.ts`；`mcp.ts` 保留初始化�
 
 共享 context 维护按任务范围的依赖清单。Agent 计算本次必需正文与仍可用的已读正文之差，只补缺口；完整正文返回后记录文档标识和版本，复用会话或已有 STATE，不在活动工程内存放阅读记录。声音专项明确需要 actions，模板明确需要 templates，多段模板也需要 decisions。阶段或轮次切换本身不触发重新加载；只在正文丢失、截断或版本变化时补读并记录原因。不遍历全部 references，也不因加载新文档重复工程操作。MCP 不维护模型的阅读状态，不新增读前写硬门禁；记录与文字约束不能强制宿主执行。
 
-画廊短指令携带指引 URL 和精确 ID；宿主读取该指引取得来源与路线，直接进入对应专业入口，不再统一回 production/start。一期没有模板查询 Tool，内部目录 handler 的 workflowGuide 字段不代表公开 MCP 可调用。仅 starter 默认不导出，用户明确要求成片时包含导出。
+Gallery prompts carry the guide URL and exact template ID; the host reads the guide and enters the corresponding specialist without returning to production/start. Phase one exposes `motion_list_templates` for the local catalog index and `motion_get_template` for a selected template's details and instructions. Legacy catalog handlers remain internal; use only the public contract. The starter does not export by default; a user request for a video file includes export.
 
 ## 共享质量与工具边界
 
