@@ -3,7 +3,7 @@ import path from "node:path";
 export function findCommonPath(dirs: string[]): string {
   if (dirs.length === 0) return "";
   const resolved = dirs.map((d) => path.resolve(d));
-  const segments = resolved.map((d) => d.split(path.sep).filter(Boolean));
+  const segments = resolved.map((d) => d.split(path.sep));
   const minLen = Math.min(...segments.map((s) => s.length));
   let common = 0;
   for (let i = 0; i < minLen; i++) {
