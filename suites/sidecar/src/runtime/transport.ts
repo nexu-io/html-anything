@@ -6,7 +6,9 @@ import { encode, type Request, type Response } from "./wire.js";
 const limit = 64 * 1024;
 
 function decode(input: Buffer, end: number): Response {
-  const value: unknown = JSON.parse(new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(input.subarray(0, end)));
+  const value: unknown = JSON.parse(
+    new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(input.subarray(0, end)),
+  );
 
   if (!value || typeof value !== "object" || !("ok" in value)) {
     throw new TypeError("invalid response");
