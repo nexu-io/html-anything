@@ -55,7 +55,6 @@ await writeFile("dist/runtime/mcp.json", `${JSON.stringify(manifests.mcp, null, 
 await build({
   bundle: true,
   entryPoints: {
-    index: "src/index.ts",
     dev: "src/dev.ts",
     install: "src/install/index.ts",
     installworker: "src/install/worker.ts",

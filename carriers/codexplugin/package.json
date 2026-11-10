@@ -34,7 +34,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
+      "default": "./dist/runtime/index.mjs"
     },
     "./main": "./dist/runtime/main.mjs",
     "./install": {
