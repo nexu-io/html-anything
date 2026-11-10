@@ -26,24 +26,8 @@ it("routes large native source through actual pnpm exec development attachments 
       ),
     attach = async () => {
       const transport = new StdioClientTransport({
-        command: process.execPath,
-        args: [
-          "--input-type=module",
-          "-e",
-          `import { spawn } from "node:child_process";
-const child = spawn("pnpm", process.argv.slice(1), { stdio: "inherit" });
-child.once("error", (error) => { console.error(error.message); process.exitCode = 1; });
-child.once("exit", (code, signal) => {
-  console.error(JSON.stringify({ event: "attachment-exit", code, signal }));
-  process.exitCode = code ?? 1;
-});
-for (const signal of ["SIGINT", "SIGTERM"]) process.once(signal, () => child.kill(signal));`,
-          "exec",
-          "odsuite",
-          "dev",
-          "connect",
-          ...args,
-        ],
+        command: "pnpm",
+        args: ["exec", "odsuite", "dev", "connect", ...args],
         cwd: repo,
         stderr: "pipe",
       });

@@ -96,7 +96,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 
 Read the docs, find the owner and delivery record, then create an isolated topic worktree from the fetched integration SHA. Baseline and integration checkouts are read-only references: no installs, builds, tests or edits there. Pin the `feature/motion` reference used for business comparisons; a moving branch or old test result is not current evidence.
 
-Use Node24 and pnpm11.13.0. Linux requires `ps` (`procps` on Debian); containers require init to reap orphaned processes. Install with `pnpm install --frozen-lockfile`, then explicitly `pnpm build`. Installation must not build or configure hooks. No private registry token is required or committed.
+Use Node24 and pnpm11.13.0. Linux requires `ps` (`procps` on Debian); containers require init to reap orphaned processes. The workspace explicitly disables the global virtual store and rejects stale dependencies before running commands. CI and SDK subprocesses must agree without forwarding the whole host environment; execution never installs dependencies implicitly. Install with `pnpm install --frozen-lockfile`, then explicitly `pnpm build`. Installation must not build or configure hooks. No private registry token is required or committed.
 
 ### Local checks and debugging
 

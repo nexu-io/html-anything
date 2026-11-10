@@ -4,6 +4,9 @@ packages:
   - suites/*
   - packages/*
 
+enableGlobalVirtualStore: false
+verifyDepsBeforeRun: error
+
 allowBuilds:
   puppeteer: false
   electron: true

@@ -14,7 +14,7 @@ pnpm exec biome check .
 pnpm exec odsuite guard
 ```
 
-CI uses `pnpm install --frozen-lockfile --store-dir node_modules/.pnpm-store`, with no extra root-cache exemption. Run all modules serially using `pnpm -r --workspace-concurrency=1 --if-present run test`. Process/network/persistence tests need explicit, justified finite budgets; do not change production timing or GC for CI. Installation has no build or hook. There are no root dev/check/typecheck shortcuts; use module-standard commands for focused iteration and Biome for formatting.
+CI uses `pnpm install --frozen-lockfile --store-dir node_modules/.pnpm-store`, with no extra root-cache exemption. Run all modules serially using `pnpm -r --workspace-concurrency=1 --if-present run test`. Process/network/persistence tests need explicit, justified finite budgets; do not change production timing or GC for CI. The workspace pins `enableGlobalVirtualStore: false` and `verifyDepsBeforeRun: error`: CI, interactive commands and SDK subprocesses use the same dependency policy without inheriting the full host environment. A stale installation fails with an instruction to install explicitly; runtime/debug commands never repair dependencies implicitly. Installation has no build or hook. There are no root dev/check/typecheck shortcuts; use module-standard commands for focused iteration and Biome for formatting.
 
 Chromium is pinned by Playwright and installed inside this worktree's node_modules, not borrowed from another checkout/system browser. Linux CI uses `install --with-deps chromium`. Full tests include browser cases; focus them with:
 
