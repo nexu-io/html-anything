@@ -11,6 +11,9 @@ type PrismTemplate = {
   templateId: string; sortOrder: number; original: Record<string, string>;
   indexUrl: string; previewUrl: string; coverUrl: string; files: TemplateFile[];
   conversionStatus?: string; conversionNotes?: string;
+  motionDocumentUrl?: string; motionGuideUrl?: string; projectFileUrl?: string; authorAvatarUrl?: string;
+  brand?: string; creationModels?: string[]; colors?: string[]; industries?: string[];
+  width?: number; height?: number; featuredOrder?: number | null;
 };
 type Publication = {
   resourceId: string; environment: string; channel: string; publicationId: string;
@@ -18,6 +21,7 @@ type Publication = {
 };
 type Snapshot = { etag: string | null; publication: Publication };
 export type EditableTemplate = GalleryTemplate & { files?: TemplateFile[]; catalogVersion?: string; conversionStatus?: string; conversionNotes?: string };
+const splitTags = (value = '') => value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean);
 const builtinTemplates = libraryTemplates.filter(template => template.kind === 'builtin');
 const hash = (value: string | Buffer) => createHash('sha256').update(value).digest('hex');
 
@@ -115,6 +119,13 @@ export class TemplateCatalog {
       sourceUrl: item.original.sourceUrl, previewUrl: item.previewUrl, posterUrl: item.coverUrl,
       files: item.files, catalogVersion: snapshot.publication.publicationId,
       conversionStatus: item.conversionStatus, conversionNotes: item.conversionNotes,
+      motionDocumentUrl: item.motionDocumentUrl, motionGuideUrl: item.motionGuideUrl,
+      projectFileUrl: item.projectFileUrl, authorAvatarUrl: item.authorAvatarUrl,
+      styleDescription: item.original.styleDescription, reviewFocus: item.original.reviewFocus,
+      brand: item.brand, uses: splitTags(item.original.promotionalUseCases), styles: splitTags(item.original.visualPresentation),
+      industries: item.industries ?? [], creationModels: item.creationModels ?? [], colors: item.colors ?? [],
+      width: item.width, height: item.height, sortOrder: item.sortOrder, featuredOrder: item.featuredOrder ?? null,
+      hasHtmlProject: item.files.some(file => file.path === 'index.html'),
     }));
     return [...remote, ...builtinTemplates];
   }
