@@ -11,6 +11,7 @@ import { checkReleaseVersion, compareReleaseVersions, testVersion } from '../../
 import { generateInstallGuide } from '../../scripts/install-guide.mjs';
 import { publishGuide, storagePlan } from './publish-install-guide.mjs';
 import { scanPackage, scanSource } from './motion-scan.mjs';
+import { registryReport, verifyRegistryDownload } from './motion-registry.mjs';
 
 export const repository = 'nexu-io/html-anything';
 export const candidateWorkflow = '.github/workflows/motion-candidate.yml';
@@ -182,22 +183,6 @@ export async function verifyDownloaded(directory, expectedSHA256, version) {
   return candidate;
 }
 
-export async function platformReports(directory, candidate) {
-  const reports = [];
-  for (const platform of ['darwin-arm64', 'win32-x64']) {
-    const name = `registry-${platform}.json`, report = await json(path.join(directory, name));
-    assert.equal(report.status, 'passed'); assert.equal(report.platform, platform);
-    assert.equal(report.version, candidate.version); assert.equal(report.tgzSHA256, candidate.tgzSHA256);
-    assert.equal(report.sourceCommit, candidate.sourceCommit);
-    assert.equal(report.templateEnvironment, 'dev');
-    assert.equal(report.registryColdInstall, 'passed'); assert.equal(report.nativePreparation, 'passed');
-    assert.equal(report.repeatSetup, 'passed'); assert.equal(report.resources, 'passed');
-    assert.equal(report.mcpTools, 11); assert.equal(report.skills, 5);
-    reports.push({ platform, reportSHA256: await sha256(path.join(directory, name)) });
-  }
-  return reports;
-}
-
 export async function findCandidate(version, fetcher = fetch) {
   checkReleaseVersion(version); assert(version.includes('-test.'));
   const name = `motion-candidate-${version}`;
@@ -266,7 +251,7 @@ export async function publishNpm(directory, inputs, { fetcher = fetch, run = run
 export async function promoteTest(directory, inputs, { fetcher = fetch, run = runFile, env = process.env } = {}) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
   await verifyAuthorization(directory, inputs, env);
-  const platforms = await platformReports(directory, candidate);
+  const registryVerification = await registryReport(directory, candidate);
   const npm = await json(path.join(directory, 'npm-publication.json'));
   assert.equal(npm.tgzSHA256, candidate.tgzSHA256);
   const before = await registryPackage(candidate, fetcher);
@@ -282,7 +267,7 @@ export async function promoteTest(directory, inputs, { fetcher = fetch, run = ru
     status = 'promoted';
   }
   const record = { schemaVersion: 1, version: candidate.version, tgzSHA256: candidate.tgzSHA256, action: inputs.action,
-    publicationRun: env.GITHUB_RUN_ID, platformVerification: platforms, previousTest: before.tags.test ?? null, status };
+    publicationRun: env.GITHUB_RUN_ID, registryVerification, platformVerification: { status: 'independent-not-attached', workflow: '.github/workflows/motion-install-check.yml' }, previousTest: before.tags.test ?? null, status };
   await writeJSON(path.join(directory, 'test-promotion.json'), record);
   return record;
 }
@@ -291,11 +276,11 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
   await writeJSON(path.join(directory, 'release-attempt.json'), { action: inputs.action, tgzSHA256: inputs.expectedSHA256, stage: 'verifying-release', runId: env.GITHUB_RUN_ID });
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
   const authorization = await verifyAuthorization(directory, inputs, env);
-  const platforms = await platformReports(directory, candidate);
+  const registryVerification = await registryReport(directory, candidate);
   const promotion = await json(path.join(directory, 'test-promotion.json'));
   assert.equal(promotion.version, candidate.version); assert.equal(promotion.tgzSHA256, candidate.tgzSHA256);
   assert.equal(promotion.action, inputs.action); assert.equal(promotion.publicationRun, env.GITHUB_RUN_ID);
-  assert.deepEqual(promotion.platformVerification, platforms);
+  assert.deepEqual(promotion.registryVerification, registryVerification);
   assert((inputs.action === 'archive-only' ? ['archive-only'] : ['promoted', 'already-promoted', 'superseded']).includes(promotion.status), 'Require a successful channel verification');
   const record = await json(path.join(directory, 'install-record.json')), plan = storagePlan(record, config);
   assert.equal(candidate.tgzSHA256, inputs.expectedSHA256);
@@ -315,10 +300,10 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
       catch (error) { if (/NoSuchKey|\(404\)|Not Found/.test(error.message)) return null; throw error; }
     };
     const prior = await get(`${prefix}/release-record.json`);
-    let release = { schemaVersion: 2, packageName: candidate.packageName, version: candidate.version, sourceCommit: candidate.sourceCommit,
+    let release = { schemaVersion: 3, packageName: candidate.packageName, version: candidate.version, sourceCommit: candidate.sourceCommit,
       tgzSHA256: candidate.tgzSHA256, integrity: candidate.integrity, candidateRun: candidate.workflow,
       authorization, publicationRun: env.GITHUB_RUN_ID,
-      platformVerification: platforms, channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
+      registryVerification, platformVerification: { status: 'independent-not-attached', workflow: '.github/workflows/motion-install-check.yml' }, channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
       status: 'registry-verified', publishedAt: new Date().toISOString() };
     if (prior) {
       const existing = JSON.parse(prior);
@@ -326,7 +311,7 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
       release = existing;
     }
     await writeJSON(path.join(directory, 'release-record.json'), release);
-    const names = [...Object.keys(candidate.files), 'candidate.json', 'registry-darwin-arm64.json', 'registry-win32-x64.json', 'release-record.json'];
+    const names = [...Object.keys(candidate.files), 'candidate.json', 'registry-package.json', 'release-record.json'];
     const objects = [];
     for (const name of names) {
       const file = path.join(directory, name), bytes = await readFile(file), key = `${prefix}/${name}`, existing = await get(key);
@@ -373,6 +358,10 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
         await writeJSON(path.join(directory, 'publication-package-scan.json'), await scanPackage(path.join(directory, c.tgz), final));
       } finally { await runFile('git', ['worktree', 'remove', '--force', work], { cwd: extra }).catch(() => {}); }
     } else if (command === 'verify') await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
+    else if (command === 'registry') {
+      await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
+      await verifyRegistryDownload(directory);
+    }
     else if (command === 'npm') await publishNpm(directory, inputs);
     else if (command === 'promote-test') await promoteTest(directory, inputs);
     else if (command === 'archive') {

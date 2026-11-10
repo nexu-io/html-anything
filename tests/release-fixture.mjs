@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeJSON } from '../scripts/runtime-assets.mjs';
-import { sealCandidate, repository, candidateWorkflow, publicationWorkflow, authorizationReceipt, platformReports } from '../.github/scripts/motion-release.mjs';
+import { sealCandidate, repository, candidateWorkflow, publicationWorkflow, authorizationReceipt } from '../.github/scripts/motion-release.mjs';
 
 export async function candidateFixture(t, branch = 'main') {
   const work = await mkdtemp(path.join(os.tmpdir(), 'motion-release-test-'));
@@ -42,7 +42,9 @@ export async function candidateFixture(t, branch = 'main') {
     status: 'passed', templateEnvironment: 'dev', platform, version, sourceCommit: commit, tgzSHA256: candidate.tgzSHA256,
     registryColdInstall: 'passed', nativePreparation: 'passed', repeatSetup: 'passed', resources: 'passed', mcpTools: 11, skills: 5,
   });
+  const registryVerification = { schemaVersion: 1, status: 'passed', registryDownload: 'passed', nativeInstallation: 'not-run', version, sourceCommit: commit, tgzSHA256: candidate.tgzSHA256, integrity: candidate.integrity };
+  await writeJSON(path.join(directory, 'registry-package.json'), registryVerification);
   await writeJSON(path.join(directory, 'npm-publication.json'), { tgzSHA256: candidate.tgzSHA256, previousLatest: '0.5.0' });
-  await writeJSON(path.join(directory, 'test-promotion.json'), { version, tgzSHA256: candidate.tgzSHA256, action: inputs.action, publicationRun: publicationEnv.GITHUB_RUN_ID, status: 'already-promoted', platformVerification: await platformReports(directory, candidate) });
+  await writeJSON(path.join(directory, 'test-promotion.json'), { version, tgzSHA256: candidate.tgzSHA256, action: inputs.action, publicationRun: publicationEnv.GITHUB_RUN_ID, status: 'already-promoted', registryVerification, platformVerification: { status: 'independent-not-attached', workflow: '.github/workflows/motion-install-check.yml' } });
   return { work, root, build, directory, candidate, inputs, provenance, app, pkg, manifest, authorization, env: publicationEnv };
 }

@@ -181,14 +181,14 @@ test('a stale candidate or authorization from another run cannot publish or move
   assert.equal(calls, 0);
 });
 
-test('test promotion requires both matching DEV native reports and preserves the old channel on failure', async t => {
+test('test promotion requires an exact public download report and preserves the old channel on failure', async t => {
   const f = await candidateFixture(t); let writes = 0, tag = '0.6.4-test.1';
   const options = { env: f.env, fetcher: () => registry(f.candidate, true, tag)(), run: async (command, args) => {
     assert.equal(command, 'npm'); assert.deepEqual(args.slice(0, 4), ['dist-tag', 'add', '@openmotion/app@' + f.candidate.version, 'test']);
     writes++; tag = f.candidate.version;
   } };
-  const file = path.join(f.directory, 'registry-win32-x64.json'), original = await readFile(file, 'utf8');
-  for (const patch of [{ status: 'failed' }, { tgzSHA256: '0'.repeat(64) }, { templateEnvironment: 'prod' }, { nativePreparation: 'failed' }]) {
+  const file = path.join(f.directory, 'registry-package.json'), original = await readFile(file, 'utf8');
+  for (const patch of [{ status: 'failed' }, { tgzSHA256: '0'.repeat(64) }, { integrity: 'different' }, { registryDownload: 'failed' }]) {
     await writeFile(file, JSON.stringify({ ...JSON.parse(original), ...patch }));
     await assert.rejects(promoteTest(f.directory, f.inputs, options));
     assert.equal(writes, 0); assert.equal(tag, '0.6.4-test.1');
@@ -223,24 +223,25 @@ test('test version ordering handles numeric suffixes, stable versions and unsafe
 test('partial publication retries use the retained producer artifact IDs across attempts', async () => {
   const workflow = await readFile(new URL('../.github/workflows/motion-publish-test.yml', import.meta.url), 'utf8');
   const jobs = Object.fromEntries(workflow.split('\njobs:\n')[1].split(/(?=^  [\w-]+:\n)/m).filter(s => s.trim()).map(s => [s.match(/^  ([\w-]+):\n/)[1], s]));
-  const producers = ['verify', 'npm', 'registry-mac', 'registry-windows', 'promote-test'];
+  const producers = ['verify', 'npm', 'registry', 'promote-test'];
   const render = (value, attempt) => value.replaceAll('${{ github.run_id }}', '800').replaceAll('${{ github.run_attempt }}', String(attempt));
   for (const id of producers) {
     assert(jobs[id], 'A platform needs its own retained output: ' + id);
     assert(jobs[id].includes('artifact_id: ${{ steps.artifact.outputs.artifact-id }}'), 'Expose the actual uploaded artifact ID');
     assert(jobs[id].includes('        id: artifact\n'));
   }
-  for (const id of ['npm', 'registry-mac', 'registry-windows', 'promote-test', 'snapshot']) {
+  for (const id of ['npm', 'registry', 'promote-test', 'snapshot']) {
     assert(jobs[id].includes('if: ${{ always() && !cancelled() && needs.verify.result'), 'Successful retained producers must still supply partial retry consumers: ' + id);
   }
   const downloads = id => [...jobs[id].matchAll(/artifact-ids: \$\{\{ needs\.([\w-]+)\.outputs\.artifact_id \}\}/g)].map(m => m[1]);
   assert.deepEqual(downloads('npm'), ['verify']);
-  assert.deepEqual(downloads('registry-mac'), ['verify']);
-  assert.deepEqual(downloads('registry-windows'), ['verify']);
+  assert.deepEqual(downloads('registry'), ['verify']);
   assert.deepEqual(downloads('promote-test'), producers.slice(0, -1));
   assert.deepEqual(downloads('snapshot'), producers);
-  assert(jobs.snapshot.includes('needs: [verify, npm, registry-mac, registry-windows, promote-test]'));
-  assert(jobs['promote-test'].includes('needs.registry-mac.result') && jobs['promote-test'].includes('needs.registry-windows.result'));
+  assert(jobs.snapshot.includes('needs: [verify, npm, registry, promote-test]'));
+  assert(jobs['promote-test'].includes('needs.registry.result'));
+  assert(!workflow.includes('registry-mac') && !workflow.includes('registry-windows'));
+  assert(!jobs.registry.includes('id-token: write') && !jobs.registry.includes('secrets.'));
   assert(jobs['promote-test'].includes('id-token: write') && !jobs.snapshot.includes('id-token: write'));
   assert(jobs['promote-test'].includes('npm@11.21.2'));
   assert(jobs.npm.includes('      actions: read\n'), 'The credentialed npm job needs only read access to input artifacts');
@@ -250,7 +251,7 @@ test('partial publication retries use the retained producer artifact IDs across 
       assert(!step.includes('github.run_attempt'), 'A consumer must not guess the producing attempt');
     }
   }
-  for (const rerun of [[], ['registry-mac'], ['registry-windows'], ['registry-mac', 'registry-windows'], ['npm', 'registry-mac', 'registry-windows'], producers]) {
+  for (const rerun of [[], ['registry'], ['npm', 'registry'], producers]) {
     const stored = new Map(), outputs = {};
     for (const [index, id] of producers.entries()) {
       const name = jobs[id].match(/          name: ([^\n]+)/)[1];
@@ -384,14 +385,14 @@ test('interrupted archive resumes identical snapshots, verifies the exact public
   await assert.rejects(archiveRelease(f.directory, f.inputs, config, store), /Immutable snapshot/);
 });
 
-test('archive-only never reads or writes the moving entry, and failed platform acceptance blocks all storage calls', async t => {
+test('archive-only never reads or writes the moving entry, and failed public download verification blocks all storage calls', async t => {
   const f = await candidateFixture(t), store = storage(f.candidate);
   await writeFile(path.join(f.directory, 'authorization.json'), JSON.stringify({ ...f.authorization, action: 'archive-only' }));
   await promoteTest(f.directory, { ...f.inputs, action: 'archive-only' }, { fetcher: registry(f.candidate), env: f.env, run: async () => { throw Error('Archive-only cannot write npm'); } });
   await archiveRelease(f.directory, { ...f.inputs, action: 'archive-only' }, config, store);
   assert(!store.reads.includes('open-motion/dev/install.md') && !store.writes.includes('open-motion/dev/install.md'));
   await writeFile(path.join(f.directory, 'authorization.json'), JSON.stringify(f.authorization));
-  await writeFile(path.join(f.directory, 'registry-win32-x64.json'), JSON.stringify({ status: 'failed' }));
+  await writeFile(path.join(f.directory, 'registry-package.json'), JSON.stringify({ status: 'failed' }));
   const before = store.reads.length; await assert.rejects(archiveRelease(f.directory, f.inputs, config, store)); assert.equal(store.reads.length, before);
 });
 
@@ -442,7 +443,7 @@ test('no-publication rehearsal carries one accepted candidate through npm and st
   await archiveRelease(f.directory, f.inputs, config, store);
   assert.equal(npmWrites, 1);
   const release = JSON.parse(store.objects.get(`open-motion/dev/${f.candidate.version}/release-record.json`));
-  assert.equal(release.schemaVersion, 2); assert.equal(release.authorization.actor, 'operator');
+  assert.equal(release.schemaVersion, 3); assert.equal(release.authorization.actor, 'operator');
   assert.equal(release.authorization.acceptanceConfirmed, true);
   assert.equal(release.tgzSHA256, f.candidate.tgzSHA256);
   assert.equal(store.writes.at(-1), 'open-motion/dev/install.md');

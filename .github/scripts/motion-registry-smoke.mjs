@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { createInterface } from 'node:readline';
 import { access, mkdir, mkdtemp, readFile, readdir, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runFile, sha256, writeJSON } from '../../scripts/runtime-assets.mjs';
+import { runFile, writeJSON } from '../../scripts/runtime-assets.mjs';
+import { verifyRegistryDownload } from './motion-registry.mjs';
+import { verifyDownloaded } from './motion-release.mjs';
 
 export function consumerEnvironment(work, source = process.env) {
   // Consumer code receives OS basics only, never CI credentials or Agent/browser IPC capabilities.
@@ -15,6 +16,7 @@ export function consumerEnvironment(work, source = process.env) {
   return { ...env, CODEX_HOME: path.join(work, 'codex'), npm_config_cache: path.join(work, 'npm-cache'),
     npm_config_userconfig: path.join(work, 'user.npmrc'), npm_config_globalconfig: path.join(work, 'global.npmrc'),
     npm_config_registry: 'https://registry.npmjs.org/', npm_config_ignore_scripts: 'true',
+    npm_config_fetch_retries: '3', npm_config_fetch_retry_mintimeout: '10000', npm_config_fetch_retry_maxtimeout: '30000',
     OPENMOTION_TELEMETRY: '0', HYPERFRAMES_NO_TELEMETRY: '1' };
 }
 
@@ -43,12 +45,12 @@ async function discover(transport, env, version, tools) {
 }
 
 export async function registrySmoke(directory) {
-  const c = JSON.parse(await readFile(path.join(directory, 'candidate.json')));
+  const c = await verifyDownloaded(directory, process.env.MOTION_EXPECTED_SHA256, process.env.MOTION_VERSION);
   const platform = process.platform + '-' + process.arch;
   assert(['darwin-arm64', 'win32-x64'].includes(platform), 'Use a supported native runner');
   const file = path.join(directory, `registry-${platform}.json`);
   let phase = 'registry-download';
-  const checkpoint = async next => { phase = next; await writeJSON(file, { status: 'running', phase, version: c.version, platform, tgzSHA256: c.tgzSHA256 }); };
+  const checkpoint = async next => { phase = next; console.log('Installation phase: ' + phase); await writeJSON(file, { status: 'running', phase, version: c.version, platform, tgzSHA256: c.tgzSHA256 }); };
   await checkpoint(phase);
   try {
   const work = await mkdtemp(path.join(os.tmpdir(), 'om-registry-')), env = consumerEnvironment(work);
@@ -59,18 +61,7 @@ export async function registrySmoke(directory) {
   const npm = path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
   const cli = args => runFile(process.execPath, [npm, ...args], { cwd: project, env, timeout: 20 * 60_000 });
   console.log('Fetching the exact version anonymously from the public registry');
-  let metadata;
-  for (let attempt = 0; attempt < 30; attempt++) {
-    const response = await fetch('https://registry.npmjs.org/@openmotion%2fapp/' + c.version, { signal: AbortSignal.timeout(30_000) });
-    if (response.ok) { metadata = await response.json(); break; }
-    assert.equal(response.status, 404, 'Registry lookup failed');
-    await new Promise(resolve => setTimeout(resolve, 10_000));
-  }
-  assert(metadata, 'Registry version did not become visible'); assert.equal(metadata.dist.integrity, c.integrity);
-  const [packed] = JSON.parse(await cli(['pack', `${c.packageName}@${c.version}`, '--ignore-scripts', '--json', '--pack-destination', work]));
-  assert.equal(path.basename(packed.filename), packed.filename);
-  const tgz = path.join(work, packed.filename), bytes = await readFile(tgz);
-  assert.equal(await sha256(tgz), c.tgzSHA256); assert.equal('sha512-' + createHash('sha512').update(bytes).digest('base64'), c.integrity);
+  const { tgz } = await verifyRegistryDownload(directory, { destination: work });
   await checkpoint('host-install');
   console.log('Installing the pinned test host in an isolated prefix');
   await cli(['install', '--prefix', host, '--no-save', '--ignore-scripts', '--no-audit', '--no-fund', '@openai/codex@0.166.0']);
