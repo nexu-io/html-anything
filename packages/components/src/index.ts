@@ -1,4 +1,4 @@
-export { type ButtonOptions, button, setButton } from "./controls/button.js";
+export { type ButtonOptions, button, setButton, setButtonSelected } from "./controls/button.js";
 export { numberField } from "./controls/number.js";
 export { menu, popover, tooltip } from "./controls/popup.js";
 export { tabs } from "./controls/tabs.js";

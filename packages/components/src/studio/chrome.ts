@@ -9,14 +9,29 @@ export function railLayout(document: Document) {
     rail = box(document, "om-shell__rail"),
     body = box(document, "om-shell__body");
   element.append(rail, body);
-  return { element, rail, body };
+  return {
+    element,
+    rail,
+    body,
+    showRail(visible: boolean) {
+      rail.hidden = !visible;
+      element.classList.toggle("om-shell--rail-hidden", !visible);
+    },
+  };
 }
 export function splitLayout(document: Document) {
   const element = box(document, "om-split"),
     start = box(document, "om-split__start"),
     end = box(document, "om-split__end");
   element.append(start, end);
-  return { element, start, end };
+  return {
+    element,
+    start,
+    end,
+    showStart(visible: boolean) {
+      start.hidden = !visible;
+    },
+  };
 }
 export function panelGrid(document: Document) {
   const element = box(document, "om-grid"),
