@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { cp, lstat, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { cp, lstat, mkdir, readdir, readFile, rmdir, writeFile } from "node:fs/promises";
+import { dirname, join, parse, resolve } from "node:path";
 import { channel, digest, namespace } from "@odsuite/protocol";
 import { type Context, managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
 import { expect, it } from "vitest";
@@ -70,6 +70,7 @@ await writeFile(file,JSON.stringify({type:'stdio',command:args[split+1],args:arg
   );
   const failures: unknown[] = [];
   try {
+    await expect(register({ ...own.options, root: parse(own.root).root, codex })).rejects.toThrow("filesystem root");
     await expect(register({ ...own.options, codex })).rejects.toThrow("unknown");
     const confirmed = await register({ ...own.options, codex });
     expect(confirmed.state).toBe("registered");
@@ -78,6 +79,10 @@ await writeFile(file,JSON.stringify({type:'stdio',command:args[split+1],args:arg
     const names = (await readdir(own.options.skills)).filter((name) => !name.startsWith("."));
     expect(names).toHaveLength(5);
     const original = join(own.options.skills, "motion-production", "SKILL.md");
+    const addedDirectory = join(dirname(original), "user-empty-directory");
+    await mkdir(addedDirectory);
+    await expect(register({ ...own.options, codex })).rejects.toThrow("directory has changed");
+    await rmdir(addedDirectory);
     await writeFile(original, "User changed this owned Skill");
     await expect(register({ ...own.options, codex })).rejects.toThrow("changed");
     const transport = join(own.options.profile, "transport.json");

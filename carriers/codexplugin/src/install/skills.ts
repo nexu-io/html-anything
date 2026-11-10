@@ -22,12 +22,15 @@ async function optional<T>(path: string): Promise<T | undefined> {
     throw error;
   }
 }
-async function listing(root: string, prefix = ""): Promise<string[]> {
+async function listing(root: string, expected: string[], prefix = ""): Promise<string[]> {
   const names: string[] = [];
   for (const item of await readdir(join(root, prefix), { withFileTypes: true })) {
     const path = join(prefix, item.name);
-    if (item.isDirectory()) names.push(...(await listing(root, path)));
-    else if (item.isFile()) names.push(path);
+    if (item.isDirectory()) {
+      if (!expected.some((file) => file.startsWith(`${path}${sep}`)))
+        throw Error("Owned Skill directory has changed; refusing replacement");
+      names.push(...(await listing(root, expected, path)));
+    } else if (item.isFile()) names.push(path);
     else throw Error("Skill projection contains a link or special file");
     if (names.length > 64) throw Error("Skill projection exceeds its finite manifest");
   }
@@ -43,8 +46,8 @@ async function owner(path: string, installation: string, partial = false): Promi
   const value = await optional<Owner>(join(path, marker));
   if (value?.owner !== "open-motion" || value.installation !== installation || !value.projection?.files)
     throw Error("Skill target is not owned by this installation");
-  const files = await listing(path),
-    expected = Object.keys(value.projection.files).sort();
+  const expected = Object.keys(value.projection.files).sort(),
+    files = await listing(path, expected);
   if (
     files.some((file) => file !== marker && !expected.includes(file)) ||
     (!partial && files.length !== expected.length + 1)

@@ -63,6 +63,7 @@ async function save(path: string, value: unknown) {
 }
 async function path(value: string, missingParents = false) {
   if (!isAbsolute(value) || resolve(value) !== value) throw Error("Registration paths must be absolute and normalized");
+  if (dirname(value) === value) throw Error("Registration paths cannot be a filesystem root");
   let ancestor = dirname(value);
   for (;;) {
     try {
