@@ -6,7 +6,10 @@
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
-<p align="center"><a href="#agent-wall"><picture><source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg"><img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="OpenMotion · 可编辑 HTML 视频 · 开源免费 · 21 个本地 Agent · BYOK · 100+ 份 Motion.md。WorkBuddy、Codex、Claude Code 和 DeepSeek Harness 等。查看全部 22 个本地 Agent。"></picture></a></p>
+<p align="center">
+  <a href="readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg"><img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="Dan Martell 原片与 OpenMotion 复刻并排展示：Riya 出镜，荧光黄手写关键词叠在两行白色粗体字幕之间。下方是 Studio 字幕时间轴。"></picture></a><br>
+  <a href="readme/media/presenter-caption-remake.mp4">播放 2.4 秒真人口播复刻对照</a>
+</p>
 
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything"><img src="readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>

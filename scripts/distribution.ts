@@ -255,6 +255,7 @@ const localReadmeResourceFiles = [
   'docs/readme/media/khris-sheer-founder-reference.mp4',
   'docs/readme/media/manifest.json',
   'docs/readme/media/nyc-paris-flight.mp4',
+  'docs/readme/media/presenter-caption-remake.mp4',
   'docs/readme/media/remix-authorize-once-reference.mp4',
   'docs/readme/media/remix-cyera-reference.mp4',
   'docs/readme/media/remix-elevenlabs-reception-reference.mp4',

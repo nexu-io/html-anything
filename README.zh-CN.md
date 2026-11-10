@@ -7,6 +7,11 @@
 **Reverse engineering for any video**
 
 <p align="center">
+  <a href="docs/readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.zh-CN.jpg"><img src="docs/readme/brand-hero.zh-CN.jpg" width="100%" alt="Dan Martell 原片与 OpenMotion 复刻并排展示：Riya 出镜，荧光黄手写关键词叠在两行白色粗体字幕之间。下方是 Studio 字幕时间轴。"></picture></a><br>
+  <a href="docs/readme/media/presenter-caption-remake.mp4">播放 2.4 秒真人口播复刻对照</a>
+</p>
+
+<p align="center">
   <a href="https://github.com/nexu-io/html-anything"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>
   <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
   <a href="LICENSE"><img src="docs/readme/badges/license.svg" alt="Apache 2.0 许可证"></a>
