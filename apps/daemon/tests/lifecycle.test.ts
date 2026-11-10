@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
+import { createConnection, type Socket } from "node:net";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { digest, factoryScope } from "@odsuite/protocol";
@@ -105,6 +106,7 @@ async function fixture(checkpoint: () => Promise<void>, sourceGate?: () => Promi
           );
           await context.forward(port.value, socket.value);
         },
+        quiesce: async () => service?.quiesce(),
         stop: async () => service?.close(),
       },
     });
@@ -124,6 +126,7 @@ async function fixture(checkpoint: () => Promise<void>, sourceGate?: () => Promi
     control,
     factory,
     client: () => new Client(address, "authority"),
+    address: () => address,
     uses,
     metadata: join(metadata.value, "catalog.json"),
     requests: () => catalogRequests,
@@ -156,7 +159,16 @@ for (const mode of ["manager", "same-factory"] as const)
     let read: Promise<unknown> | undefined,
       closing: Promise<unknown> | undefined,
       closed = false;
+    let unused: Socket | undefined;
     try {
+      if (mode === "manager") {
+        const address = new URL(runtime.address());
+        unused = createConnection({ host: address.hostname, port: Number(address.port) });
+        await new Promise<void>((done, reject) => {
+          unused?.once("connect", done);
+          unused?.once("error", reject);
+        });
+      }
       const catalog = await runtime.client().execute("template_list", {}),
         entry = catalog.catalog!.entries[0]!;
       await expect.poll(runtime.uses).toEqual([]);
@@ -184,6 +196,7 @@ for (const mode of ["manager", "same-factory"] as const)
       release();
       expect(await read).toMatchObject({ template: { id: entry.id, width: 1920, height: 1080, duration: 5 } });
       await closing;
+      if (unused) await expect.poll(() => unused?.destroyed).toBe(true);
       expect(await runtime.uses()).toEqual([]);
       await runtime.control.close();
       expect((await readDirectory(runtime.root)).manager.phase).toBe("closed");
@@ -191,12 +204,21 @@ for (const mode of ["manager", "same-factory"] as const)
       await writeFile(
         join(runtime.root, "result.json"),
         JSON.stringify(
-          { mode, heldUseOwner: "daemon", readCompleted: true, closed: true, uses: 0, processes: [] },
+          {
+            mode,
+            heldUseOwner: "daemon",
+            readCompleted: true,
+            unusedConnectionRetired: unused?.destroyed,
+            closed: true,
+            uses: 0,
+            processes: [],
+          },
           null,
           2,
         ),
       );
     } finally {
+      unused?.destroy();
       release();
       await read?.catch(() => {});
       await closing?.catch(() => {});

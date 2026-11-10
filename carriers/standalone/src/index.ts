@@ -95,6 +95,10 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
           renderer,
           prism,
         }),
+      quiesce: async () => {
+        await prism?.quiesce();
+        await daemon.quiesce();
+      },
       stop: () => daemon.close(),
     },
   });

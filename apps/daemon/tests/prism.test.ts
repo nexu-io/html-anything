@@ -144,6 +144,7 @@ it("uses actual HTTP, sidecar and blob for verified templates, offline/corrupt u
             );
             await context.forward(port.value, socket.value);
           },
+          quiesce: async () => service?.quiesce(),
           stop: async () => service?.close(),
         },
       });

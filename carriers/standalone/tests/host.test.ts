@@ -1,10 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
+import { createServer } from "node:http";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { browser } from "@odsuite/automation";
-import { channel, namespace } from "@odsuite/protocol";
-import { observeProcesses, readDirectory } from "@odsuite/sidecar";
+import { channel, digest, namespace } from "@odsuite/protocol";
+import { serve as manage, managerEndpoint, observeProcesses, readDirectory } from "@odsuite/sidecar";
+import { initialFiles } from "@open-motion/workspace";
 import { expect, it } from "vitest";
 import { open } from "@";
 
@@ -252,3 +254,173 @@ it("edits parent host windows without stretching shared child source and restore
     await writeFile(join(evidence, "report.json"), JSON.stringify(report, null, 2));
   }
 }, 60000);
+
+it("quiesces real child Prism reads before entering process retirement", async () => {
+  const evidence = fileURLToPath(new URL(`../../../.artifacts/child-drain/${randomUUID()}/`, import.meta.url)),
+    productRoot = join(evidence, "product"),
+    publicationRoot = join(evidence, "publication"),
+    scope = { channel: channel("dev"), namespace: namespace("child-drain") };
+  await mkdir(evidence, { recursive: true });
+  const publication = await manage(managerEndpoint(publicationRoot), { root: publicationRoot }),
+    factory = publication.factory(scope),
+    files = initialFiles();
+  let origin = "",
+    release = () => {},
+    sourceStarted = false;
+  const gate = new Promise<void>((done) => {
+      release = done;
+    }),
+    report: Record<string, unknown> = {};
+  const stage = async (name: string) => {
+    report.stage = name;
+    console.info(`[child-drain] ${name}`);
+    await writeFile(join(evidence, "progress.json"), JSON.stringify(report, null, 2));
+  };
+  let runtime: Awaited<ReturnType<typeof open>> | undefined, reading: Promise<unknown> | undefined, failure: unknown;
+  const errors: unknown[] = [];
+  const remote = createServer((request, response) => {
+    if (request.url?.startsWith("/resources/")) {
+      response.writeHead(200, { "content-type": "application/json" });
+      response.end(
+        JSON.stringify({
+          resourceId: "1500c9af-186b-457f-b74d-a58113f657d8",
+          environment: "dev",
+          channel: "default",
+          publicationId: "child-drain",
+          defaultLocale: "en",
+          content: {
+            en: {
+              templates: [
+                {
+                  templateId: "child-drain",
+                  sortOrder: 1,
+                  original: { templateName: "Child drain", license: "Apache-2.0" },
+                  files: files.map((file) => ({
+                    path: file.path,
+                    url: `${origin}/files/${digest(file.content).slice(7)}`,
+                    bytes: Buffer.byteLength(file.content),
+                    sha256: digest(file.content).slice(7),
+                  })),
+                },
+              ],
+            },
+          },
+        }),
+      );
+      return;
+    }
+    const file = files.find((file) => request.url === `/files/${digest(file.content).slice(7)}`);
+    if (!file) {
+      response.writeHead(404);
+      response.end();
+      return;
+    }
+    response.writeHead(200);
+    response.write(Buffer.from(file.content).subarray(0, 1));
+    sourceStarted = true;
+    void gate.then(() => response.end(Buffer.from(file.content).subarray(1)));
+  });
+  try {
+    await factory.expose({
+      identity: { service: "publication", generation: digest("child-drain") },
+      handlers: {},
+      lifecycle: {
+        initialize: async (context) => {
+          const socket = await context.allocate({ kind: "socket", name: "publication" }),
+            port = await context.allocate({ kind: "port", name: "publication", scheme: "http" });
+          await new Promise<void>((done) => remote.listen(socket.value, done));
+          await context.forward(port.value, socket.value);
+          origin = port.value;
+        },
+        stop: async () =>
+          new Promise<void>((done, reject) => remote.close((error) => (error ? reject(error) : done()))),
+      },
+    });
+    await stage("start actual child");
+    runtime = await open({
+      root: productRoot,
+      scope,
+      version: "0.6.1-dev.1",
+      prism: {
+        origin,
+        environment: "dev",
+        channel: "default",
+        locale: "en",
+        resourceId: "1500c9af-186b-457f-b74d-a58113f657d8",
+      },
+    });
+    const pid = (await runtime.status()).daemon.pid;
+    expect(pid).not.toBe(process.pid);
+    expect(
+      (await observeProcesses(productRoot)).some((entry) => entry.processes.some((process) => process.pid === pid)),
+    ).toBe(true);
+    await stage("read publication catalog");
+    const catalog = (await runtime.execute("template_list", {})).catalog;
+    const entry = catalog?.entries[0];
+    if (!entry) throw Error("published child template is missing");
+    expect(entry.availability).toBe("source-required");
+    await stage("wait actual partial source");
+    reading = runtime.execute("template_read", { id: entry.id, contentHash: entry.contentHash });
+    let outcome = "pending";
+    void reading.then(
+      () => {
+        outcome = "succeeded";
+      },
+      (error) => {
+        outcome = "failed";
+        report.readFailure = error instanceof Error ? error.name : "unknown";
+      },
+    );
+    await expect.poll(() => sourceStarted || outcome !== "pending").toBe(true);
+    expect(sourceStarted).toBe(true);
+    await stage("quiesce actual child");
+    const closing = runtime.close();
+    await expect(reading).rejects.toThrow();
+    await closing;
+    report.partialSourceAborted = true;
+    report.childRetired = true;
+    await stage("actual child retired");
+  } catch (error) {
+    failure = error;
+    report.failure = error instanceof Error ? error.name : "unknown";
+  } finally {
+    release();
+    await reading?.catch(() => {});
+    try {
+      await runtime?.close();
+    } catch (error) {
+      errors.push(error);
+    }
+    try {
+      await publication.close();
+    } catch (error) {
+      errors.push(error);
+    }
+    for (const [name, root] of [
+      ["product", productRoot],
+      ["publication", publicationRoot],
+    ] as const) {
+      report[`${name}Phase`] = "unknown";
+      report[`${name}Processes`] = "unknown";
+      try {
+        report[`${name}Phase`] = (await readDirectory(root)).manager.phase;
+      } catch (error) {
+        errors.push(error);
+      }
+      try {
+        report[`${name}Processes`] = await observeProcesses(root);
+      } catch (error) {
+        errors.push(error);
+      }
+    }
+    report.cleanupErrors = errors.map((error) => (error instanceof Error ? error.name : "unknown"));
+    await writeFile(join(evidence, "report.json"), JSON.stringify(report, null, 2));
+  }
+  if (failure || errors.length)
+    throw new AggregateError([...(failure ? [failure] : []), ...errors], "child drain failed");
+  expect(errors).toEqual([]);
+  expect(report.productPhase).toBe("closed");
+  expect(report.publicationPhase).toBe("closed");
+  expect(report.productProcesses).toEqual([]);
+  expect(report.publicationProcesses).toEqual([]);
+}, 20000);

@@ -98,6 +98,7 @@ async function start() {
           },
         };
       },
+      quiesce: async () => daemon?.quiesce(),
       stop: async () => {
         await daemon?.close();
         if (capability) await factory.retire(capability);

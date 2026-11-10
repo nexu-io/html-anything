@@ -83,9 +83,13 @@ export class Daemon {
     }
   }
 
-  async close() {
+  async quiesce() {
     this.ready = false;
     await Promise.allSettled([...this.requests]);
+  }
+
+  async close() {
+    await this.quiesce();
     if (this.lease) {
       const result = await this.factory.release(this.lease);
       if (result.status !== "stopped" || result.survivors.length) throw new Error("daemon did not retire");
