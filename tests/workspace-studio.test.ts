@@ -1,9 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, copyFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { startWorkspaceStudio } from '../shared/workspace-studio.ts';
+
+test('the shipped history availability module loads without plugin-local node_modules', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'motion-history-module-'));
+  try {
+    const module = path.join(root, 'history.ts');
+    await copyFile(new URL('../shared/studio-history-availability.ts', import.meta.url), module);
+    const detached = await import(pathToFileURL(module).href);
+    assert.equal(typeof detached.withAvailableHistorySteps, 'function');
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
 
 test('workspace host refuses unsupported, missing, ambiguous and incompatible native factories before serving', async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'motion-host-contract-'));

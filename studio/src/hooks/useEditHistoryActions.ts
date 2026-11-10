@@ -1,5 +1,5 @@
 // fallow-ignore-file complexity
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { STUDIO_MOTION_PATH } from "../components/editor/studioMotion";
 import { serializeStudioFileMutations } from "../utils/studioFileMutationCoordinator";
 import type { RestoreFiles } from "../utils/gsapUndoRestore";
@@ -27,6 +27,8 @@ interface HistoryFileCallbacks {
   claimedAfter?: number;
 }
 export interface EditHistoryHandle {
+  canUndo: boolean;
+  canRedo: boolean;
   undo: (cb: HistoryFileCallbacks) => Promise<HistoryResult>;
   redo: (cb: HistoryFileCallbacks) => Promise<HistoryResult>;
   predict?: (direction: "undo" | "redo") => { id: string; files: RestoreFiles } | null;
@@ -38,7 +40,7 @@ export interface EditHistoryHandle {
 }
 
 export interface UseEditHistoryActionsOptions {
-  editHistory: Pick<EditHistoryHandle, "undo" | "redo" | "predict" | "claims">;
+  editHistory: Pick<EditHistoryHandle, "undo" | "redo" | "predict" | "claims" | "canUndo" | "canRedo">;
   readOptionalProjectFile: (path: string) => Promise<string>;
   readProjectFile: (path: string) => Promise<string>;
   writeProjectFile: (path: string, content: string) => Promise<void>;
@@ -67,6 +69,8 @@ export function useEditHistoryActions({
   activeCompPath,
   forceReloadSdkSession,
 }: UseEditHistoryActionsOptions) {
+  const historyRef = useRef(editHistory);
+  historyRef.current = editHistory;
   const readHistoryFile = useCallback(
     (path: string): Promise<string> =>
       path === STUDIO_MOTION_PATH ? readOptionalProjectFile(path) : readProjectFile(path),
@@ -82,6 +86,8 @@ export function useEditHistoryActions({
     async (direction: "undo" | "redo") => {
       const noun = direction === "undo" ? "Undo" : "Redo";
       if (direction === "undo" && cancelNewestStudioWaitingPress()) return;
+      const available = direction === "undo" ? historyRef.current.canUndo : historyRef.current.canRedo;
+      if (!available && !(direction === "undo" && hasStudioPendingEdits())) return;
       // An edit still saving is newer than any step this tab predicts, so it paints back first.
       const pendingEditShown = direction === "undo" ? paintBackNewestStudioPendingEdit() : null;
       const predicted = pendingEditShown ? null : (editHistory.predict?.(direction) ?? null);

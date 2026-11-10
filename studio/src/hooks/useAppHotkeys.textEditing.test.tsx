@@ -77,6 +77,8 @@ function Harness() {
     domEditSelectionRef: selectionRef,
     clearDomSelectionRef: clearSelectionRef,
     editHistory: {
+      canUndo: true,
+      canRedo: true,
       undo: vi.fn(async () => ({ ok: false })),
       redo: vi.fn(async () => ({ ok: false })),
       state: { undo: [], redo: [] },
