@@ -22,7 +22,7 @@ export function NativeRuntimeNotice({ status, checking, onRetry, pendingImport }
   return (
     <div data-testid="native-runtime-notice" className="flex min-h-9 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border-strong bg-surface px-3 py-1 text-step-11 text-text-2">
       <div className="flex min-w-0 items-center gap-2" role="status" aria-live="polite">
-        {failed || status.runtimeUnavailable ? <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-warning" /> : status.ok ? null : <RemixIcon name="loader-4-line" size={12} className="shrink-0 animate-spin motion-reduce:animate-none" />}
+        {failed || status.runtimeUnavailable ? <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-warning-ink" /> : status.ok ? null : <RemixIcon name="loader-4-line" size={12} className="shrink-0 animate-spin motion-reduce:animate-none" />}
         <span className="truncate">{t(headline)}</span>
         {!status.ok && <span className="hidden shrink-0 text-text-4 sm:inline">{t('You can keep editing')}</span>}
       </div>
