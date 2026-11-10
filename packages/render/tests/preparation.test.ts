@@ -10,6 +10,7 @@ import { expect, it } from "vitest";
 import type { Tools } from "@";
 import { host } from "@/host.js";
 import type { RenderMethods } from "@/jobs/contract.js";
+import { Store } from "@/jobs/store.js";
 
 const names = ["browser", "ffmpeg", "ffprobe"] as const;
 const poll = <T>(read: () => T | Promise<T>) => expect.poll(read, { timeout: 10000 });
@@ -39,12 +40,12 @@ function tool(name: string, load?: (signal: AbortSignal) => Promise<void>, mode 
     },
   };
 }
-async function fixture(tools: Tools) {
+async function fixture(tools: Tools, preparationOnly?: true) {
   const root = await realpath(await mkdtemp(join(tmpdir(), "native-prepare-"))),
     manager = await serve(managerEndpoint(root), { root }),
     factory = manager.factory({ channel: channel("dev"), namespace: namespace("preparation") }),
     generation = digest("renderer prepare"),
-    renderer = await host(factory, { generation, tools });
+    renderer = await host(factory, { generation, tools, preparationOnly });
   const libraryRoot = (await factory.resources()).grants.find(
     (grant) => grant.kind === "data" && grant.name === "blob",
   )?.value;
@@ -63,6 +64,62 @@ async function fixture(tools: Tools) {
     },
   };
 }
+
+it("prepares without creating or reconciling the export queue and denies every export control", async () => {
+  const f = await fixture({ browser: tool("browser"), ffmpeg: tool("ffmpeg"), ffprobe: tool("ffprobe") }, true),
+    path = join(f.renderer.root, "exports.sqlite"),
+    owner = { sessionId: randomUUID(), artifactId: randomUUID() };
+  try {
+    await expect(readFile(path)).rejects.toMatchObject({ code: "ENOENT" });
+    const journal = new Store(f.renderer.root),
+      input = {
+        ...owner,
+        requestId: randomUUID(),
+        revision: digest("untouched user revision"),
+        fps: { num: 12, den: 1 },
+        projection: { digest: digest("absent projection"), bytes: 1 },
+      },
+      queued = journal.create(input),
+      running = journal.create({ ...input, requestId: randomUUID() }),
+      interrupted = journal.read(running.id);
+    interrupted.job.state = "preparing";
+    journal.write(interrupted);
+    journal.close();
+    const before = await readFile(path);
+    await f.renderer.close();
+    const reopened = await host(f.factory, {
+        generation: f.generation,
+        tools: { browser: tool("browser"), ffmpeg: tool("ffmpeg"), ffprobe: tool("ffprobe") },
+        preparationOnly: true,
+      }),
+      peer = new Peer<RenderMethods>(reopened.connection.endpoint, reopened.connection.capability);
+    expect(await reopened.prepare()).toMatchObject({ state: "ready" });
+    const selected = { ...owner, id: queued.id },
+      control = { ...selected, requestId: randomUUID(), expectedVersion: queued.version };
+    for (const result of await Promise.all([
+      peer.call("export_create", { ...input, requestId: randomUUID() }),
+      peer.call("export_list", owner),
+      peer.call("export_read", selected),
+      peer.call("export_cancel", control),
+      peer.call("export_retry", control),
+    ]))
+      expect(result).toMatchObject({
+        ok: false,
+        error: { code: "invalid", message: "Exports are unavailable in native preparation mode" },
+      });
+    expect(await readFile(path)).toEqual(before);
+    const retained = new Store(f.renderer.root);
+    try {
+      expect(retained.read(queued.id).job.state).toBe("queued");
+      expect(retained.read(running.id).job.state).toBe("preparing");
+    } finally {
+      retained.close();
+    }
+    expect(await f.factory.inspect()).toEqual([]);
+  } finally {
+    await f.close();
+  }
+});
 
 it("starts without waiting on loaders, settles all components, and reuses verified siblings on explicit retry and reopen", async () => {
   const browser = gate(),
@@ -220,7 +277,7 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
         },
       };
     };
-    const f = await fixture({ browser: tool("browser"), ffmpeg: tool("ffmpeg"), ffprobe: tool("ffprobe") });
+    const f = await fixture({ browser: tool("browser"), ffmpeg: tool("ffmpeg"), ffprobe: tool("ffprobe") }, true);
     try {
       expect(await f.renderer.prepare()).toMatchObject({ state: "ready" });
       expect(await f.renderer.prepare()).toMatchObject({ state: "ready" });
