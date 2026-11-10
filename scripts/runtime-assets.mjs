@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
 import { createReadStream, createWriteStream, constants } from 'node:fs';
-import { access, copyFile, mkdir, open, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
+import { access, copyFile, link, mkdir, open, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -13,7 +13,7 @@ export async function sha256(filename) {
   for await (const chunk of createReadStream(filename)) hash.update(chunk);
   return hash.digest('hex');
 }
-export async function download(asset, filename) {
+export async function download(asset, filename, progress = async () => {}) {
   const url = new URL(asset.url);
   assert(url.protocol === 'https:' && /^[a-f0-9]{64}$/.test(asset.sha256), 'Require HTTPS and a pinned SHA256');
   try { if (await sha256(filename) === asset.sha256) return; } catch (error) { if (error.code !== 'ENOENT') throw error; }
@@ -32,7 +32,18 @@ export async function download(asset, filename) {
       current = new URL(location, current);
     }
     assert(response.ok && response.body, `Download ${url.hostname}${url.pathname}: HTTP ${response.status}`);
-    await pipeline(Readable.fromWeb(response.body), createWriteStream(temporary));
+    let receivedBytes = 0;
+    const encoding = response.headers.get('content-encoding');
+    const totalBytes = !encoding || encoding === 'identity' ? Number(response.headers.get('content-length')) || undefined : undefined;
+    async function* measured(source) {
+      for await (const chunk of source) {
+        receivedBytes += chunk.length;
+        await progress({ stage: 'downloading', receivedBytes, totalBytes });
+        yield chunk;
+      }
+    }
+    await pipeline(Readable.fromWeb(response.body), measured, createWriteStream(temporary));
+    await progress({ stage: 'verifying' });
     assert.equal(await sha256(temporary), asset.sha256, `SHA256 mismatch: ${url.pathname}`);
     await rename(temporary, filename);
   } finally { await rm(temporary, { force: true }); }
@@ -77,10 +88,43 @@ export async function withLock(filename, work) {
   finally { await handle.close(); await rm(filename, { force: true }); }
 }
 
-export async function obtainAsset(asset, filename, allowLocal = false) {
+export function processAlive(pid) {
+  if (!Number.isSafeInteger(pid) || pid <= 0) return false;
+  try { process.kill(pid, 0); return true; } catch (error) { return error.code !== 'ESRCH'; }
+}
+
+// Native caches are shared by installers and running apps; contenders join the owner.
+export async function withCacheLock(filename, work) {
+  await mkdir(path.dirname(filename), { recursive: true });
+  const token = randomUUID(), candidate = filename + '.' + token;
+  await writeFile(candidate, JSON.stringify({ pid: process.pid, token }), { mode: 0o600 });
+  const deadline = Date.now() + 15 * 60_000;
+  try {
+    for (;;) {
+      try { await link(candidate, filename); break; }
+      catch (error) { if (error.code !== 'EEXIST') throw error; }
+      const owner = await readJSON(filename);
+      const pid = typeof owner === 'number' ? owner : owner?.pid;
+      if (pid && !processAlive(pid)) {
+        await withCacheLock(filename + '.reclaim', async () => {
+          if (JSON.stringify(await readJSON(filename)) === JSON.stringify(owner)) await rm(filename, { force: true });
+        });
+      }
+      if (Date.now() > deadline) throw new Error('Timed out waiting for native preparation; no live download lock was removed.');
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    try { return await work(); }
+    finally { if ((await readJSON(filename))?.token === token) await rm(filename, { force: true }); }
+  } finally { await rm(candidate, { force: true }); }
+}
+
+export async function obtainAsset(asset, filename, allowLocal = false, progress) {
+  return withCacheLock(filename + '.lock', () => obtainLockedAsset(asset, filename, allowLocal, progress));
+}
+async function obtainLockedAsset(asset, filename, allowLocal, progress) {
   assert(/^[a-f0-9]{64}$/.test(asset.sha256), 'Require a pinned SHA256');
   const url = new URL(asset.url);
-  if (url.protocol !== 'file:') return download(asset, filename);
+  if (url.protocol !== 'file:') return download(asset, filename, progress);
   assert(allowLocal, 'Local assets require an explicitly supplied local manifest');
   if (await sha256(filename).catch(error => { if (error.code !== 'ENOENT') throw error; }) === asset.sha256) return;
   await mkdir(path.dirname(filename), { recursive: true });

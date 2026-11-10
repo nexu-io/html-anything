@@ -302,7 +302,7 @@ function FormatExportButton({
 
   return (
     <div className="flex flex-col gap-3">
-      {missingFfmpeg && (
+      {missingFfmpeg && !missingFfmpeg.runtime && (
         <FfmpegRequiredNotice
           projectId={projectId}
           status={missingFfmpeg}
@@ -481,7 +481,7 @@ export const RenderQueue = memo(function RenderQueue({
           role="alert"
           className="flex items-start justify-between gap-2 px-3 py-2 border-b border-border bg-danger/10"
         >
-          <span className="text-step-10 text-danger-ink">{actionError}</span>
+          <span className="text-step-10 text-danger-ink">{t(actionError)}</span>
           {onDismissActionError && (
             <IconButton
               size="sm"

@@ -54,7 +54,7 @@ export const omEvents = {
     page_name: ['home', 'studio'], ...project, ...template }, required: ['host_product', 'copy_status'] },
   // Studio UI exports run in the editor's own render pipeline, not the worker that owns export_result.
   studio_export_request_result: { producers: ['studio'], fields: { export_id: 'uuid', outcome: ['accepted', 'rejected'], ...exportSettings,
-    error_code: ['FFMPEG_MISSING', 'SERVER_UNREACHABLE', 'SERVICE_UNAVAILABLE', 'REQUEST_REJECTED', 'SERVER_ERROR', 'INVALID_RESPONSE'], ...videoDuration, ...projectScale, ...project, ...template },
+    error_code: ['FFMPEG_MISSING', 'SERVER_UNREACHABLE', 'SERVICE_UNAVAILABLE', 'REQUEST_REJECTED', 'SERVER_ERROR', 'INVALID_RESPONSE', 'RUNTIME_NOT_READY'], ...videoDuration, ...projectScale, ...project, ...template },
     required: ['export_id', 'outcome', 'origin', 'format', 'quality', 'resolution', 'fps'] },
   studio_export_result: { producers: ['studio'], fields: { export_id: 'uuid', job_state: ['completed', 'failed', 'cancelled'], duration_ms: 'integer',
     ...exportSettings, error_code: ['RENDER_FAILED', 'CONNECTION_LOST'], ...videoDuration, ...project, ...template },
@@ -74,7 +74,7 @@ export const omEvents = {
   studio_asset_import_result: { producers: ['studio'], fields: { outcome: ['success', 'partial', 'failure'],
     entry_point: ['assets_button', 'assets_drop', 'timeline_button', 'timeline_drop', 'properties', 'other'],
     requested_count: 'integer', added_count: 'integer', failed_count: 'integer',
-    error_category: ['too_large', 'unsupported_format', 'unreadable', 'other'], ...project },
+    error_category: ['too_large', 'unsupported_format', 'unreadable', 'runtime_not_ready', 'other'], ...project },
     required: ['outcome', 'entry_point', 'requested_count', 'added_count', 'failed_count'] },
 } as const satisfies Registry & Record<string, { producers: readonly Entry[] }>;
 

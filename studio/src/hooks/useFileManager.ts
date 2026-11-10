@@ -40,6 +40,7 @@ export function useFileManager({
   const { t } = useI18n();
   // ── Shared refs ──
 
+  const [pendingImport, setPendingImport] = useState<{ projectId: string; files: File[]; dir?: string } | null>(null);
   const [editingFile, setEditingFile] = useState<EditingFile | null>(null);
   const [revealSourceOffset, setRevealSourceOffset] = useState<number | null>(null);
 
@@ -245,9 +246,14 @@ export function useFileManager({
                 ? importErrorCategory(String(data.invalid[0].reason))
                 : "other",
           );
+          setPendingImport(previous => previous?.projectId === pid && previous.dir === dir && previous.files.length === fileList.length && previous.files.every((file, index) => file === fileList[index]) ? null : previous);
           await refreshFileTree();
           setRefreshKey((k) => k + 1);
           return added;
+        } else if (res.status === 409 && (await res.clone().json().catch(() => null))?.code === 'NATIVE_RUNTIME_NOT_READY') {
+          if (projectIdRef.current === pid) setPendingImport({ projectId: pid, files: fileList, dir });
+          report(0, "runtime_not_ready");
+          showToast(t('Media components are preparing. Selected files are kept for retry.'), 'info');
         } else if (res.status === 413) {
           report(0, "too_large");
           showToast("Upload rejected: payload too large");
@@ -393,6 +399,9 @@ export function useFileManager({
 
   const handleMoveFile = handleRenameFile;
 
+  const retryPendingImport = useCallback(() => pendingImport?.projectId === projectIdRef.current
+    ? uploadProjectFiles(pendingImport.files, pendingImport.dir) : Promise.resolve([]), [pendingImport, uploadProjectFiles]);
+
   const handleImportFiles = useCallback(
     async (files: FileList | File[], dir?: string, entryPoint?: ImportEntryPoint) => {
       return uploadProjectFiles(Array.from(files), dir, entryPoint);
@@ -464,6 +473,8 @@ export function useFileManager({
     handleContentChange,
     refreshFileTree,
     uploadProjectFiles,
+    pendingImport: pendingImport?.projectId === projectId ? pendingImport : null,
+    retryPendingImport,
     handleCreateFile,
     handleCreateFolder,
     handleDeleteFile,

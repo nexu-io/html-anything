@@ -97,6 +97,8 @@ function mountLanes(target: TimelineElement, canEdit?: CanEdit, recording = fals
   let binding: AutomationLaneBinding | null = null;
   let history: ReturnType<typeof useEditHistoryActions> | null = null;
   const editHistory = {
+    canUndo: true,
+    canRedo: false,
     // In the file queue, like the real step, so saves started meanwhile queue behind it.
     undo: async ({ serialize }: Parameters<EditHistoryHandle["undo"]>[0]) => {
       const path = undoPath ?? composition;

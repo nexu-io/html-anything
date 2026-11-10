@@ -41,6 +41,8 @@ function Harness() {
     domEditSelectionRef: selectionRef,
     clearDomSelectionRef: useRef<() => void>(() => undefined),
     editHistory: {
+      canUndo: true,
+      canRedo: true,
       undo: historyUndo,
       redo: historyRedo,
       state: { undo: [], redo: [] },

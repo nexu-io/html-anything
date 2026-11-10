@@ -21,6 +21,7 @@ import {
 import { usePersistentEditHistory } from "./usePersistentEditHistory";
 import { installEditorTracking, resetEditorTrackingForTests } from "../motion/editorTracking";
 import { studioEditLifecycle } from "../webmcp/writeCoordinator";
+import { withAvailableHistorySteps } from "../../../shared/studio-history-availability";
 
 const cleanup: Array<() => unknown> = [];
 
@@ -36,19 +37,21 @@ function tempDir(prefix: string): string {
 }
 
 /** The hook over the real history routes and engine, on a project whose index.html reads "A". */
-async function studio({ withHistory = true } = {}) {
+async function studio({ withHistory = true, initialFiles = {} as Record<string, string> } = {}) {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
   const dir = tempDir("hf-studio-history-");
   writeFileSync(join(dir, "index.html"), "A");
+  for (const [name, content] of Object.entries(initialFiles)) writeFileSync(join(dir, name), content);
+  const historyRoot = tempDir("hf-studio-history-root-");
   const history = await openProjectHistory({
     projectDir: dir,
-    historyRoot: tempDir("hf-studio-history-root-"),
+    historyRoot,
   });
   cleanup.push(() => history.close());
   const api = createStudioApi({
     listProjects: () => [],
     resolveProject: (id: string) => (id === "demo" ? { id, dir } : null),
-    ...(withHistory && { history: () => history }),
+    ...(withHistory && { history: () => withAvailableHistorySteps(history, historyRoot) }),
   } as unknown as StudioApiAdapter);
   vi.stubGlobal("fetch", (url: string, init?: RequestInit) =>
     api.request(url.replace(/^\/api/, ""), init),
@@ -66,6 +69,21 @@ async function studio({ withHistory = true } = {}) {
   const readFile = async (path: string) => readFileSync(join(dir, path), "utf8");
   return { dir, history, hook: () => hook, file, save, readFile };
 }
+
+it("an undo whose media bytes are missing has the same disabled flags as empty history", async () => {
+  const { dir, history, hook } = await studio({ initialFiles: { "clip.mp4": "original" } });
+  expect(hook().canUndo).toBe(false);
+  expect(hook().canRedo).toBe(false);
+  const window = await history.beginWindow({ kind: "person", name: "You" }, "Overwrite media");
+  writeFileSync(join(dir, "clip.mp4"), "replacement");
+  await window.close();
+  expect(history.next("back", { kind: "person", name: "You" })).toBeDefined();
+  await act(() => hook().noteOutsideChange());
+  await vi.waitFor(() => expect(hook().undoLabel).toBeUndefined());
+  expect(hook().canUndo).toBe(false);
+  expect(hook().canRedo).toBe(false);
+  expect(readFileSync(join(dir, "clip.mp4"), "utf8")).toBe("replacement");
+});
 
 it("an edit Studio saved is undone and redone by the project's history, with the preview's before and after", async () => {
   const { hook, file, save, readFile } = await studio();

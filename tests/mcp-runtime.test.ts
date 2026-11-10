@@ -1,13 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { cp, mkdir, mkdtemp, readFile, readdir, rename, rm, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { editorBuild, editorDirectory, sharedEditorEnabled } from '../editor-runtime.ts';
 import { pluginRoot } from '../hyperframes.ts';
 import { rpc } from '../mcp.ts';
+import { copyRuntimeFixture } from './fixtures.ts';
 import { WorkspaceStore } from '../workspace.ts';
 
 async function incompatibleEditor(directory: string, changed: Record<string, unknown>) {
@@ -64,8 +65,7 @@ test('a live phase1 MCP connection survives a replaced or removed plugin directo
   for (const replaced of [true, false]) await t.test(replaced ? 'replaced' : 'removed', async () => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'motion-stale-plugin-'));
     const app = path.join(temporary, 'app'), directory = path.join(temporary, 'data');
-    await cp(pluginRoot, app, { recursive: true, filter: source => !['.git', 'node_modules', 'studio', 'dist', '.artifacts'].includes(path.relative(pluginRoot, source).split(path.sep)[0]) });
-    await symlink(path.join(pluginRoot, 'node_modules'), path.join(app, 'node_modules'), 'dir');
+    await copyRuntimeFixture(app);
     const editor = await incompatibleEditor(directory, { version: '0.6.4', build: '0'.repeat(64), mcp: { protocol: 1, tools: ['motion_get_project', 'motion_export_request'] } });
     const { Client } = await import(pathToFileURL(path.join(app, 'tests/shared-editor-client.mjs')).href);
     const client = new Client(directory);

@@ -1,7 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 import { startServer } from '../server.ts';
 import { fixture } from './fixtures.ts';
+
+test('the workspace Studio host hides an unrecoverable media step and retains native write validation', { timeout: 60_000 }, () => fixture(async store => {
+  const file = path.join(store.projectDirectory, 'clip.mp4');
+  await writeFile(file, 'original media');
+  const running = await startServer(store, 0);
+  const address = running.server.address(); assert.ok(address && typeof address !== 'string');
+  const base = `http://127.0.0.1:${address.port}`;
+  const request = (action = '', body?: object) => fetch(`${base}/api/projects/project/history${action}`, {
+    ...(body ? { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: base }, body: JSON.stringify(body) } : {}),
+  });
+  try {
+    assert.equal((await request()).status, 200);
+    await writeFile(file, 'replacement media');
+    assert.equal((await request('/checkpoint', {})).status, 200);
+    const view = await (await request()).json();
+    assert.ok(view.entries.some(entry => entry.files.some(file => file.path === 'clip.mp4')));
+    assert.equal(view.back, null);
+    assert.equal(view.forward, null);
+    assert.equal((await request('/step', { direction: 'back' })).status, 409);
+    assert.equal(await readFile(file, 'utf8'), 'replacement media');
+  } finally { await running.close(); }
+}));
 
 test('native history retains pinned versions across restart and restores without losing later edits', { timeout: 60_000 }, () => fixture(async store => {
   let running = await startServer(store, 0);
