@@ -7,7 +7,6 @@ import { useDismissingTabSetter, useRightPanelIntent } from "./hooks/useRightPan
 import { useRenderQueue } from "./components/renders/useRenderQueue";
 import { usePlayerStore } from "./player";
 import { StudioOverlays } from "./components/StudioOverlays";
-import { NativeRuntimeNotice } from "./components/NativeRuntimeNotice";
 import { SaveQueuePausedBanner } from "./components/SaveQueuePausedBanner";
 import { ExternalFileConflictBanner } from "./components/ExternalFileConflictBanner";
 import { ProjectUnreachableBanner } from "./components/ProjectUnreachableBanner";
@@ -523,7 +522,6 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
                   inspectorPanelActive={inspectorPanelActive}
                   onExport={handleExport}
                 />
-                <NativeRuntimeNotice status={renderQueue.ffmpeg} checking={renderQueue.ffmpegChecking} onRetry={renderQueue.recheckFfmpeg} pendingImport={fileManager.pendingImport ? { count: fileManager.pendingImport.files.length, retry: () => { void fileManager.retryPendingImport(); } } : undefined} />
                 {previewPersistence.domEditSaveQueuePaused && !externalFileChanges.blocked && (
                   <SaveQueuePausedBanner
                     message={previewPersistence.domEditSaveQueuePaused}

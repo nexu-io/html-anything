@@ -20,7 +20,7 @@ export function NativeRuntimeNotice({ status, checking, onRetry, pendingImport }
   const retryable = failed || runtime.components.some(component => component.stage === 'idle') || status.runtimeUnavailable;
   const headline = status.runtimeUnavailable ? 'Preparation progress unavailable' : status.ok ? 'Your files are ready to import' : failed ? 'Video features are not ready' : 'Preparing video features';
   return (
-    <div data-testid="native-runtime-notice" className="flex min-h-9 shrink-0 items-center justify-between gap-2 border-b border-border-strong bg-surface px-3 py-1 text-step-11 text-text-2">
+    <div data-testid="native-runtime-notice" className="flex min-h-9 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border-strong bg-surface px-3 py-1 text-step-11 text-text-2">
       <div className="flex min-w-0 items-center gap-2" role="status" aria-live="polite">
         {failed || status.runtimeUnavailable ? <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-warning" /> : status.ok ? null : <RemixIcon name="loader-4-line" size={12} className="shrink-0 animate-spin motion-reduce:animate-none" />}
         <span className="truncate">{t(headline)}</span>
