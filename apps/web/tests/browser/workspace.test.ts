@@ -38,10 +38,10 @@ async function seek(time: number) {
   await expect
     .poll(() => frame.locator("body").evaluate(() => Reflect.get(window, "__timelines").main.time()))
     .toBeCloseTo(time, 2);
-  await frame.locator("body").evaluate(async () => {
-    await document.fonts.ready;
-    await new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())));
-  });
+  await expect.poll(() => frame.locator("body").evaluate(() => document.fonts.status)).toBe("loaded");
+  await expect
+    .poll(() => frame.locator("body").evaluate(() => Reflect.get(window, "__timelines").main.time()))
+    .toBeCloseTo(time, 2);
 }
 async function start() {
   manager = await manage(managerEndpoint(root), { root });
