@@ -598,6 +598,8 @@ Then make it yours:
 
 To start from a video instead, supply your reference and use the [recreation brief](#reverse-engineer-a-video). If your host cannot open Studio beside the conversation, use the returned local project link.
 
+New test npm builds embed **DEV** template defaults; stable packages embed **prod**. Existing published versions keep their original defaults. The environment is stored in the package, so Studio and MCP agree without setup-only environment variables. Use isolated test host, application and data directories. See [test installation and template configuration](docs/npm-installation.md#test-template-data-dev) and the [test publication manual](docs/release-workflows.md).
+
 ##### Skills, MCP and CLI
 
 From the checkout, discover and install the five core workflows with the [Skills CLI](https://github.com/vercel-labs/skills):

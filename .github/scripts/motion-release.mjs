@@ -51,7 +51,7 @@ export async function sealCandidate(build, output, source, env = process.env) {
   const manifest = await json(path.join(build, 'release-npm.json'));
   assert.equal(manifest.commit, (await runFile('git', ['rev-parse', 'HEAD'], { cwd: source })).trim());
   assert.equal(manifest.commit, env.MOTION_SOURCE_SHA); assert.equal(manifest.version, env.MOTION_VERSION);
-  assert(manifest.version.includes('-test.') && manifest.templateEnvironment === 'prod');
+  assert(manifest.version.includes('-test.') && manifest.templateEnvironment === 'dev', 'Test candidates require DEV template defaults');
   assert.match(env.GITHUB_SHA || '', /^[a-f0-9]{40}$/);
   assert.equal(env.GITHUB_WORKFLOW_REF, `${repository}/${candidateWorkflow}@refs/heads/main`);
   assert(/^[1-9]\d*$/.test(env.GITHUB_RUN_ID || '') && /^[1-9]\d*$/.test(env.GITHUB_RUN_ATTEMPT || ''));
@@ -67,7 +67,7 @@ export async function sealCandidate(build, output, source, env = process.env) {
   const identity = { package: `${guide.packageName}@${guide.version}`, sourceCommit: guide.commit,
     workflowCommit: env.GITHUB_SHA, candidateRun: Number(env.GITHUB_RUN_ID), attempt: Number(env.GITHUB_RUN_ATTEMPT),
     tgz: filename, tgzSHA256: await sha256(path.join(output, filename)), applicationSHA256: guide.applicationSHA256, locks: guide.locks,
-    templateEnvironment: 'prod' };
+    templateEnvironment: guide.templateEnvironment };
   await writeFile(path.join(output, 'acceptance.md'), template.replace('<!-- CANDIDATE_IDENTITY -->', '```json\n' + JSON.stringify(identity, null, 2) + '\n```'));
   const installTemplate = await readFile(new URL('../../docs/templates/candidate-install.md', import.meta.url), 'utf8');
   const values = { VERSION: guide.version, TGZ: filename, SHA256: identity.tgzSHA256, SOURCE_SHA: guide.commit,
@@ -148,10 +148,11 @@ export async function verifyCandidate(directory, expectedSHA256, run) {
   assert.equal(integrity(await readFile(path.join(directory, candidate.tgz))), candidate.integrity);
   const guide = await json(path.join(directory, 'install-record.json'));
   assert.equal(guide.commit, candidate.sourceCommit); assert.equal(guide.version, candidate.version); assert.equal(guide.packageName, candidate.packageName);
-  assert.equal(guide.tgzSHA256, expectedSHA256); assert.equal(guide.channel, 'test'); assert.equal(guide.templateEnvironment, 'prod');
+  assert.equal(guide.tgzSHA256, expectedSHA256); assert.equal(guide.channel, 'test'); assert.equal(guide.templateEnvironment, 'dev');
   assert.equal(guide.guideSHA256, candidate.files['install.md']); assert.equal(guide.candidate, false);
   const manifest = await json(path.join(directory, 'release-npm.json'));
   assert.equal(manifest.commit, candidate.sourceCommit); assert.equal(manifest.version, candidate.version);
+  assert.equal(manifest.templateEnvironment, guide.templateEnvironment);
   assert.equal(manifest.installer.sha256, expectedSHA256);
   for (const name of ['source-scan.json', 'package-scan.json']) assert.equal((await json(path.join(directory, name))).status, 'passed');
   return candidate;
@@ -171,6 +172,7 @@ export async function platformReports(directory, candidate) {
     assert.equal(report.status, 'passed'); assert.equal(report.platform, platform);
     assert.equal(report.version, candidate.version); assert.equal(report.tgzSHA256, candidate.tgzSHA256);
     assert.equal(report.sourceCommit, candidate.sourceCommit);
+    assert.equal(report.templateEnvironment, 'dev');
     assert.equal(report.registryColdInstall, 'passed'); assert.equal(report.nativePreparation, 'passed');
     assert.equal(report.repeatSetup, 'passed'); assert.equal(report.resources, 'passed');
     assert.equal(report.mcpTools, 11); assert.equal(report.skills, 5);
@@ -238,9 +240,33 @@ export async function publishNpm(directory, inputs, { fetcher = fetch, run = run
   await writeJSON(path.join(directory, 'npm-publication.json'), record);
   if (!before.version) {
     // OIDC authenticates this publisher; its main SHA is not the prebuilt application's source.
-    await run('npm', ['publish', path.join(directory, candidate.tgz), '--access', 'public', '--tag', 'test', '--ignore-scripts', '--provenance=false', '--registry=https://registry.npmjs.org/']);
+    await run('npm', ['publish', path.join(directory, candidate.tgz), '--access', 'public', '--tag', 'candidate', '--ignore-scripts', '--provenance=false', '--registry=https://registry.npmjs.org/']);
     record.status = 'published-awaiting-registry'; await writeJSON(path.join(directory, 'npm-publication.json'), record);
   }
+  return record;
+}
+
+export async function promoteTest(directory, inputs, { fetcher = fetch, run = runFile, env = process.env } = {}) {
+  const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
+  await verifyAuthorization(directory, inputs, env);
+  const platforms = await platformReports(directory, candidate);
+  const npm = await json(path.join(directory, 'npm-publication.json'));
+  assert.equal(npm.tgzSHA256, candidate.tgzSHA256);
+  const before = await registryPackage(candidate, fetcher);
+  assert(before.version, 'Exact npm version is not public');
+  assert.equal(before.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly; stop before channel promotion');
+  const superseded = before.tags.test && compareReleaseVersions(before.tags.test, candidate.version) > 0;
+  let status = inputs.action === 'archive-only' ? 'archive-only' : superseded ? 'superseded' : 'already-promoted';
+  if (inputs.action === 'publish-test' && !superseded && before.tags.test !== candidate.version) {
+    await run('npm', ['dist-tag', 'add', `${candidate.packageName}@${candidate.version}`, 'test', '--registry=https://registry.npmjs.org/']);
+    const after = await registryPackage(candidate, fetcher);
+    assert(after.version); assert.equal(after.tags.test, candidate.version, 'npm test promotion readback failed');
+    assert.equal(after.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly');
+    status = 'promoted';
+  }
+  const record = { schemaVersion: 1, version: candidate.version, tgzSHA256: candidate.tgzSHA256, action: inputs.action,
+    publicationRun: env.GITHUB_RUN_ID, platformVerification: platforms, previousTest: before.tags.test ?? null, status };
+  await writeJSON(path.join(directory, 'test-promotion.json'), record);
   return record;
 }
 
@@ -249,6 +275,11 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
   const authorization = await verifyAuthorization(directory, inputs, env);
   const platforms = await platformReports(directory, candidate);
+  const promotion = await json(path.join(directory, 'test-promotion.json'));
+  assert.equal(promotion.version, candidate.version); assert.equal(promotion.tgzSHA256, candidate.tgzSHA256);
+  assert.equal(promotion.action, inputs.action); assert.equal(promotion.publicationRun, env.GITHUB_RUN_ID);
+  assert.deepEqual(promotion.platformVerification, platforms);
+  assert((inputs.action === 'archive-only' ? ['archive-only'] : ['promoted', 'already-promoted', 'superseded']).includes(promotion.status), 'Require a successful channel verification');
   const record = await json(path.join(directory, 'install-record.json')), plan = storagePlan(record, config);
   assert.equal(candidate.tgzSHA256, inputs.expectedSHA256);
   const registry = await registryPackage(candidate, fetcher); assert(registry.version, 'Exact npm version is not public');
@@ -270,7 +301,8 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
     let release = { schemaVersion: 2, packageName: candidate.packageName, version: candidate.version, sourceCommit: candidate.sourceCommit,
       tgzSHA256: candidate.tgzSHA256, integrity: candidate.integrity, candidateRun: candidate.workflow,
       authorization, publicationRun: env.GITHUB_RUN_ID,
-      platformVerification: platforms, status: 'registry-verified', publishedAt: new Date().toISOString() };
+      platformVerification: platforms, channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
+      status: 'registry-verified', publishedAt: new Date().toISOString() };
     if (prior) {
       const existing = JSON.parse(prior);
       for (const key of ['packageName', 'version', 'sourceCommit', 'tgzSHA256', 'integrity']) assert.equal(existing[key], release[key], 'Existing release record differs: ' + key);
@@ -325,6 +357,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       } finally { await runFile('git', ['worktree', 'remove', '--force', work], { cwd: extra }).catch(() => {}); }
     } else if (command === 'verify') await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
     else if (command === 'npm') await publishNpm(directory, inputs);
+    else if (command === 'promote-test') await promoteTest(directory, inputs);
     else if (command === 'archive') {
       for (const name of ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']) assert(process.env[name], 'Missing R2 credential: ' + name);
       await archiveRelease(directory, inputs, { endpoint: process.env.MOTION_R2_ENDPOINT, bucket: process.env.MOTION_R2_BUCKET, publicOrigin: process.env.MOTION_INSTALL_PUBLIC_ORIGIN });

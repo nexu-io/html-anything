@@ -2,7 +2,7 @@
 
 ## 当前：Prism 目录、界面与 Agent 共用
 
-For application npm DEV builds, isolated installation and source MCP overrides, follow [test template data](npm-installation.md#test-template-data-dev). npm test/latest selects software versions; it does not select the template environment.
+For application npm DEV builds, isolated installation and source MCP overrides, follow [test template data](npm-installation.md#test-template-data-dev). npm tags select software versions. Newly built test npm versions embed DEV defaults; stable versions embed prod. Previously published versions keep their embedded environment.
 
 模板通过一个 Prism Resource 的 `main.json` 发布。当前绑定 Resource `1500c9af-186b-457f-b74d-a58113f657d8`，默认语言 `zh-CN`。消费现有 `content[locale].templates`：templateId、sortOrder、original 展示信息、coverUrl、previewUrl 和 files（path/url/bytes/sha256）。不新增后台接口或另一套模板 Schema。
 
@@ -17,9 +17,9 @@ Studio 使用发布的模板和三个内置示例；旧 891 条参考快照只�
 | `npm run dev` | DEV：`r.powerformer.net` |
 | `npm run package:phase1` | 线上：`r.open-design.ai` |
 | `npm run package:phase1 -- --template-env=dev` | DEV，ZIP 文件名带 `-dev` |
-| `npm run package:npm -- dist/npm-dev --template-env=dev` | DEV npm 安装产物；省略环境参数则为线上 |
+| `npm run package:npm -- dist/npm-dev --template-env=dev` | Unversioned local DEV artifact (private); explicit `X.Y.Z-test.N` npm builds default to DEV, stable builds to prod |
 | `npm run package:test -- build <target> <release-version> --template-env=dev` | DEV 完整运行包；省略环境参数则为线上 |
-| Actions → Run workflow → `template_environment` | 选择 `prod`（默认）或 `dev`，适用于 npm 和完整 ZIP |
+| Actions → Run workflow → `template_environment` | Select `dev` (default) or `prod` for npm and backup ZIP builds |
 
 环境写入包内 `shared/template-config.json`，不要求安装用户另设变量，GUI 和 MCP 读取同一配置。正式构建默认线上，不受打包机器的 `MOTION_TEMPLATE_ENV` 影响。运行时可显式用该变量覆盖包默认值；从源码独立启动 MCP 调试时设为 dev。
 

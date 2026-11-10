@@ -1,6 +1,6 @@
 # Install OpenMotion {{VERSION}}
 
-This guide pins the complete npm application `{{PACKAGE_SPEC}}` on the **{{CHANNEL}}** software channel. It includes MCP, the built Studio and five Skills. The default template environment is **{{TEMPLATE_ENVIRONMENT}}**; a software test version does not select DEV templates.
+This guide pins the complete npm application `{{PACKAGE_SPEC}}` on the **{{CHANNEL}}** software channel. It includes MCP, the built Studio and five Skills. The default template environment is **{{TEMPLATE_ENVIRONMENT}}**: new test versions embed DEV defaults, stable versions embed prod, and previously published versions keep their original environment.
 
 If you are reading this file in the source repository and see `{{...}}`, it is a template, not a published installation instruction. Do not guess a package name or version.
 
@@ -35,7 +35,7 @@ Repeat an explicit `--home` from setup on prepare. Setup installs the selected h
 
 Setup copies the checked application into a managed writable directory and installs its locked production npm dependencies. The application and user projects do not run from the temporary npx cache. Setup starts a detached preparation worker for the platform's independent native archives concurrently: browser/FFmpeg/ffprobe separately on macOS, browser/combined media on Windows. The local backend and Studio start without waiting. Studio displays per-component download/verification/extraction/checking status and retries failed components. Installers, MCP and Studio join shared cache locks rather than downloading again. An explicit prepare waits for all components and reports failure; successful checked components remain reusable. No export starts automatically after preparation. This is not an offline package.
 
-There is no persisted switch-environment command in this version. Internal DEV testing uses its separately configured installation; merely setting an environment variable while running setup does not configure a later desktop Agent. Do not silently fall back from one environment to another.
+There is no persisted switch-environment command in this version. Test versions embed DEV defaults and use an environment-specific installation; stable versions embed prod. DEV access still requires the service network/authentication. A public npm package does not grant access or bundle private catalog contents. When changing environment, use a separate home/data/profile; merely setting an environment variable while running setup does not configure a later desktop Agent. Do not silently fall back from one environment to another.
 
 ## Upgrade, recovery and feedback
 
