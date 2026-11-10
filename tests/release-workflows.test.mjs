@@ -211,16 +211,6 @@ test('partial publication retries use the retained producer artifact IDs across 
   }
 });
 
-test('shared Agent instructions keep the release controls synchronized', async () => {
-  const section = async file => {
-    const text = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
-    return text.split('## Candidate and publication controls\n')[1].split('\n## ')[0].trim();
-  };
-  const shared = await section('AGENTS.md');
-  assert(shared.includes('DEV template defaults') && shared.includes('Publish under `candidate` first') && shared.includes('after both matching DEV native reports pass'));
-  assert.equal(await section('CLAUDE.md'), shared, 'CLAUDE.md must mirror the AGENTS.md release controls');
-});
-
 test('daily build and publication are separate manual entries without an independent environment gate', async () => {
   const build = await readFile(new URL('../.github/workflows/motion-candidate.yml', import.meta.url), 'utf8');
   const workflow = await readFile(new URL('../.github/workflows/motion-publish-test.yml', import.meta.url), 'utf8');
@@ -229,6 +219,8 @@ test('daily build and publication are separate manual entries without an indepen
   assert(build.includes('workflow_dispatch:') && build.includes('version:') && build.includes('source_sha:'));
   assert(build.includes('name: ' + candidateJobName) && build.includes('ref: ${{ steps.source.outputs.source_sha }}'));
   assert(build.includes('--template-env=dev') && !build.includes('--template-env=prod'));
+  assert(build.includes('HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome') && build.includes('\"$HYPERFRAMES_BROWSER_PATH\" --version'));
+  assert(!/apt-get install[^\n]*\bchromium\b/.test(build), 'Candidate builds must not install Ubuntu desktop snaps');
   assert(build.includes('name: motion-candidate-${{ inputs.version }}') && build.includes('candidate-install.md'));
   assert(!build.includes('concurrency:') && !build.includes('secrets.') && !build.includes('id-token:'));
   assert(header.includes('version:') && header.includes('accepted:') && header.includes('default: false'));

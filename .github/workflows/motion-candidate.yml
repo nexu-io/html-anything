@@ -27,7 +27,7 @@ jobs:
       MOTION_SOURCE_SHA: ${{ inputs.source_sha }}
       MOTION_VERSION: ${{ inputs.version }}
       OPENMOTION_TELEMETRY: '0'
-      HYPERFRAMES_BROWSER_PATH: /usr/bin/chromium
+      HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome
       HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
       HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
     steps:
@@ -55,7 +55,11 @@ jobs:
           node control/.github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node control/.github/scripts/motion-scan.mjs source source "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
       - name: Install rendering test tools
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends zip unzip chromium ffmpeg fonts-noto-core
+        run: |
+          # The hosted Ubuntu image provides Chrome; avoid Ubuntu's desktop Chromium snap.
+          "$HYPERFRAMES_BROWSER_PATH" --version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends zip unzip ffmpeg fonts-noto-core
       - name: Check the selected source
         working-directory: source
         run: |

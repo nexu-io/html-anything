@@ -11,6 +11,16 @@ import { mcpRegistry } from '../mcp.ts';
 
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
 
+test('shared Agent instructions keep the release controls synchronized', async () => {
+  const section = async file => {
+    const text = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+    return text.split('## Candidate and publication controls\n')[1].split('\n## ')[0].trim();
+  };
+  const shared = await section('AGENTS.md');
+  assert(shared.includes('DEV template defaults') && shared.includes('Publish under `candidate` first') && shared.includes('after both matching DEV native reports pass'));
+  assert.equal(await section('CLAUDE.md'), shared, 'CLAUDE.md must mirror the AGENTS.md release controls');
+});
+
 test('release packaging rejects floating npm versions, lock drift, unpinned native assets and a mismatched browser', async () => {
   const pkg = await json('package.json'), lock = await json('package-lock.json'), runtime = await json('scripts/runtime-lock.json');
   checkReleaseLocks(pkg, lock, runtime);
