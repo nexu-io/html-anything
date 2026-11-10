@@ -41,7 +41,8 @@
     "@open-motion/workspace": "workspace:*",
     "@odsuite/automation": "workspace:*",
     "@odsuite/serve": "workspace:*",
-    "@open-motion/render": "workspace:*"
+    "@open-motion/render": "workspace:*",
+    "@open-motion/gateway": "workspace:*"
   },
   "repository": {
     "type": "git",
