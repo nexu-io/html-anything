@@ -1,7 +1,9 @@
+import { createHash } from "node:crypto";
 import { cp, lstat, mkdir, mkdtemp, readFile, realpath, rename, rm } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { inspect, pack as packageClosure } from "@odsuite/pack";
 import { bundle, resolve as manifest, parse, parseReleaseVersion, releaseChannel } from "@odsuite/release";
+import { packageApplication, stageApplication } from "./application.js";
 import { channelRoot, configuration, configuredBase, version } from "./config.js";
 import { hash, inventory, json, located, owned, read, revision, run } from "./files.js";
 import type { BuildReceipt, PackReceipt, Selection } from "./types.js";
@@ -34,6 +36,7 @@ export async function build(selection: Selection): Promise<BuildReceipt> {
       ODSUITE_BUILD: identity.identity.version,
     });
     temporary = await mkdtemp(join(base, "build-"));
+    await mkdir(join(temporary, "carriers"), { recursive: true });
     for (const carrier of Object.keys(config.units)) {
       const output = await located(config.root, config.units[carrier]);
       // Validate the actual finite runtime closure before accepting build evidence.
@@ -44,8 +47,9 @@ export async function build(selection: Selection): Promise<BuildReceipt> {
         actual.version !== identity.identity.version
       )
         throw Error("built runtime identity mismatch");
-      await cp(output, join(temporary, carrier), { recursive: true });
+      await cp(output, join(temporary, "carriers", carrier), { recursive: true });
     }
+    await stageApplication(config, join(temporary, "application"));
     await json(join(temporary, "release.json"), identity);
     const fingerprint = await inventory(temporary);
     const directory = join(base, "versions", identity.identity.version, fingerprint);
@@ -66,8 +70,12 @@ export async function build(selection: Selection): Promise<BuildReceipt> {
       source,
       fingerprint,
       directory: relative(config.root, directory),
+      application: relative(config.root, join(directory, "application")),
       carriers: Object.fromEntries(
-        Object.keys(config.units).map((carrier) => [carrier, relative(config.root, join(directory, carrier))]),
+        Object.keys(config.units).map((carrier) => [
+          carrier,
+          relative(config.root, join(directory, "carriers", carrier)),
+        ]),
       ),
     };
     await json(join(base, "build.json"), receipt);
@@ -95,10 +103,12 @@ export async function loadBuild(root: string, lane: string): Promise<BuildReceip
   const config = await configuration(root, lane);
   if (Object.keys(receipt.carriers).sort().join(":") !== Object.keys(config.units).sort().join(":"))
     throw Error("build carrier set mismatch");
+  if ((await located(root, receipt.application)) !== join(directory, "application"))
+    throw Error("application path mismatch");
   for (const carrier of Object.keys(config.units)) {
-    if ((await located(root, receipt.carriers[carrier])) !== join(directory, carrier))
+    if ((await located(root, receipt.carriers[carrier])) !== join(directory, "carriers", carrier))
       throw Error("carrier path mismatch");
-    const actual = inspect(await bundle(join(directory, carrier)));
+    const actual = inspect(await bundle(join(directory, "carriers", carrier)));
     if (actual.carrier !== carrier || actual.channel !== lane || actual.version !== receipt.version)
       throw Error("build runtime identity mismatch");
   }
@@ -118,6 +128,7 @@ export async function pack(root: string, lane: string): Promise<PackReceipt> {
     source: built.source,
     fingerprint: built.fingerprint,
     packages: {} as PackReceipt["packages"],
+    npm: {} as PackReceipt["npm"],
   };
   try {
     for (const carrier of Object.keys(built.carriers)) {
@@ -130,6 +141,8 @@ export async function pack(root: string, lane: string): Promise<PackReceipt> {
       });
       receipt.packages[carrier] = { ...result, path: relative(root, join(base, `${carrier}.bundle`)) };
     }
+    const npm = await packageApplication(root, built, temporary, receipt);
+    receipt.npm = { ...npm, path: relative(root, join(base, "application.tgz")) };
     try {
       await lstat(base);
       if ((await inventory(base)) !== (await inventory(temporary))) throw Error("existing package content changed");
@@ -172,5 +185,12 @@ export async function loadPackage(root: string, lane: string): Promise<PackRecei
     )
       throw Error("package integrity mismatch");
   }
+  const npm = await readFile(await located(root, receipt.npm.path));
+  if (
+    npm.length !== receipt.npm.bytes ||
+    hash(npm) !== receipt.npm.sha256 ||
+    `sha512-${createHash("sha512").update(npm).digest("base64")}` !== receipt.npm.integrity
+  )
+    throw Error("npm package integrity mismatch");
   return receipt;
 }

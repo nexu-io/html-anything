@@ -65,3 +65,6 @@ export async function pack(input: Input): Promise<Package> {
   await writeFile(output, bytes, { flag: "wx", mode: 0o600 });
   return { ...identity, path: output, sha256: hash(bytes), bytes: bytes.length };
 }
+
+export type { NpmArtifact, NpmInput } from "./npm.js";
+export { npm } from "./npm.js";

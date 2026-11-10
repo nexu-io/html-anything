@@ -1,5 +1,7 @@
 import type { Package } from "@odsuite/pack";
+import type { NpmArtifact } from "@odsuite/pack/npm";
 import type { Manifest } from "@odsuite/release";
+import type { Application } from "./application.js";
 export interface Selection {
   root: string;
   channel: string;
@@ -13,6 +15,8 @@ export interface Configuration {
   baseVersion: string;
   product: { appid: string; name: string; scheme: string };
   units: Record<string, string>;
+  namespace: string;
+  application: Application;
 }
 export interface BuildReceipt {
   channel: string;
@@ -22,6 +26,7 @@ export interface BuildReceipt {
   fingerprint: string;
   directory: string;
   carriers: Record<string, string>;
+  application: string;
 }
 export interface PackReceipt {
   channel: string;
@@ -29,6 +34,7 @@ export interface PackReceipt {
   source: string | null;
   fingerprint: string;
   packages: Record<string, Package>;
+  npm: NpmArtifact;
 }
 export type Gate = "policy" | "tests" | "artifacts";
 export interface CheckReceipt {

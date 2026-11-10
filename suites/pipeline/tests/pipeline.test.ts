@@ -26,7 +26,7 @@ async function fixture() {
   const root = await realpath(await mkdtemp(join(tmpdir(), "pipeline-node-")));
   roots.push(root);
   await writeFile(join(root, "package.json"), JSON.stringify({ private: true, packageManager: "pnpm@11.13.0" }));
-  await writeFile(join(root, "pnpm-workspace.yaml"), "packages:\n  - carriers/*\n");
+  await writeFile(join(root, "pnpm-workspace.yaml"), "packages:\n  - carriers/*\n  - packages/*\n");
   await writeFile(join(root, ".gitignore"), "node_modules/\n.artifacts/\n.state/\ndist/\npnpm-lock.yaml\n");
   await writeFile(
     join(root, "odsuite.yaml"),
@@ -39,6 +39,13 @@ runtime:
   channel: stable
   namespace: fixture
 pipeline:
+  application:
+    directory: packages/application/dist
+    name: fixture-application
+    bin: fixture
+    entry: main.mjs
+    license: UNLICENSED
+    files: [main.mjs]
   carriers:
     standalone: carriers/standalone/dist
     codexplugin: carriers/codexplugin/dist
@@ -62,6 +69,16 @@ pipeline:
       `import{mkdir,writeFile}from'node:fs/promises';import{dirname}from'node:path';(async()=>{for(const file of ['main.mjs','LICENSE','NOTICE','web/index.html','daemon/main.mjs','render/worker.mjs']){await mkdir(dirname('dist/'+file),{recursive:true});await writeFile('dist/'+file,process.env.ODSUITE_BUILD)}await writeFile('dist/runtime.json',JSON.stringify({files:['main.mjs','LICENSE','NOTICE','web/index.html','daemon/main.mjs','render/worker.mjs'],carrier:'${name}',version:process.env.ODSUITE_BUILD,channel:process.env.ODSUITE_BUILD.includes('-')?process.env.ODSUITE_BUILD.split('-')[1].split('.')[0]:'stable'}));if('${name}'==='codexplugin'){await mkdir('dist/.codex-plugin',{recursive:true});await writeFile('dist/.codex-plugin/plugin.json',JSON.stringify({version:process.env.ODSUITE_BUILD}))}})();`,
     );
   }
+  const app = join(root, "packages/application");
+  await mkdir(app, { recursive: true });
+  await writeFile(
+    join(app, "package.json"),
+    JSON.stringify({ name: "fixture-application", scripts: { build: "node build.mjs" } }),
+  );
+  await writeFile(
+    join(app, "build.mjs"),
+    `import{mkdir,writeFile}from'node:fs/promises';(async()=>{await mkdir('dist',{recursive:true});await writeFile('dist/main.mjs',"#!/usr/bin/env node\\nconsole.log('fixture application');")})();`,
+  );
   for (const args of [
     ["init", "-q"],
     ["add", "."],

@@ -10,6 +10,10 @@
     "./compile": {
       "types": "./dist/compile.d.ts",
       "default": "./dist/compile.mjs"
+    },
+    "./npm": {
+      "types": "./dist/npm.d.ts",
+      "default": "./dist/npm.mjs"
     }
   },
   "files": [
