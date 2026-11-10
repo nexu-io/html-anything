@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { chmod, mkdir, mkdtemp, readFile, rename, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "node:url";
 import { canonical, channel, namespace } from "@odsuite/protocol";
 import { bundle, bundleEntries } from "@odsuite/release";
@@ -165,6 +166,29 @@ it("pins the accepted intent and verified bytes against caller mutation during a
     expect(result.requestId).toBe(requestId);
     expect(result.digest).toBe(`sha256:${source.sha256}`);
     expect(await readFile(join(result.path, "main.mjs"), "utf8")).toBe("export default true;");
+  } finally {
+    await session.close();
+  }
+}, 15000);
+it("rejects a corrupt receipt substituted from another verified version before reading source bytes", async () => {
+  const f = await fixture(),
+    session = await open(f.options),
+    input = { data: f.data, requestId: randomUUID(), source: await f.archive() };
+  try {
+    await session.install(input);
+    const other = await session.install({ data: f.data, requestId: randomUUID(), source: await f.archive("1.1.0") });
+    const database = new DatabaseSync(join(session.context.roots.data, "installations.sqlite"));
+    try {
+      database
+        .prepare("UPDATE receipts SET result=? WHERE id=?")
+        .run(JSON.stringify({ ...other, requestId: input.requestId }), input.requestId);
+    } finally {
+      database.close();
+    }
+    await expect(
+      session.install({ ...input, source: { sha256: input.source.sha256, bytes: new Uint8Array() } }),
+    ).rejects.toMatchObject({ code: "integrity" });
+    expect(await session.read("codexplugin")).toEqual(other);
   } finally {
     await session.close();
   }

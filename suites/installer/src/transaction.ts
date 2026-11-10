@@ -78,7 +78,11 @@ export class Transaction {
       ...this.options.scope,
     });
     const prior = this.store.lookup(input.requestId, key);
-    if (prior) return this.verified(prior);
+    if (prior) {
+      if (prior.digest !== `sha256:${input.source.sha256}` || prior.data !== data)
+        throw new InstallerFault("integrity", "installation receipt changed its pinned intent");
+      return this.verified(prior);
+    }
     // Reject changed intent before touching source bytes, including for an interrupted transaction.
     const pending = this.store.pending(input.requestId, key);
     if (!(input.source.bytes instanceof Uint8Array) || input.source.bytes.length > 64 * 1024 ** 2)
