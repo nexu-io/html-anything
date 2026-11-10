@@ -11,6 +11,7 @@ import { VERSION } from './preview.ts';
 import { templates } from './template-library.ts';
 import { templateRecipe } from './template-catalog.ts';
 import { templateCatalogFor } from './prism-templates.ts';
+import { templateConfig } from './shared/template-config.ts';
 import { isEditableTemplate } from './shared/catalog.ts';
 import { proxyStudio, serveEditorFile } from './editor-server.ts';
 import { publicTools as mcpTools } from './mcp.ts';
@@ -294,6 +295,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const address = new URL(editorUrl);
       const info: IntegrationInfo = {
         name: 'OpenDesign', version: VERSION, previewUrl: address.origin, dataDirectory: store.directory,
+        templateEnvironment: templateConfig().environment,
         transport: { type: 'stdio', command: process.execPath, args: ['--experimental-strip-types', path.join(pluginRoot, 'mcp.ts')], cwd: pluginRoot,
           env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', ...Object.fromEntries(['MOTION_TEMPLATE_ENV', 'MOTION_TEMPLATE_RESOURCE_ID', 'MOTION_TEMPLATE_LOCALE', 'MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
         tools: mcpTools.map(({ name, description }) => ({ name, description })),

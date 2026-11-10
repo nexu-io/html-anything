@@ -6,8 +6,9 @@ import { mkdtemp, realpath, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { transport } from './http.ts';
+import { templateConfig } from '../shared/template-config.ts';
 import { WorkspaceStore } from '../workspace.ts';
-import { integrationConfig, manualConnection } from '../shared/integration.ts';
+import { integrationConfig, manualConnection, templatePrompt } from '../shared/integration.ts';
 
 test('MCP connection configs launch the native tools in the exact workspace and safely quote shell paths', async () => {
   const directory = await mkdtemp(path.join(tmpdir(), "motion ' $(literal) "));
@@ -85,6 +86,35 @@ test('connection configs preserve custom ffprobe paths for rendering and export 
     for (const [key, value] of Object.entries(previous)) {
       if (value === undefined) delete process.env[key]; else process.env[key] = value;
     }
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+
+test('template prompts use the effective catalog environment and retain editable requirements in both languages', async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-template-prompt-'));
+  const previous = process.env.MOTION_TEMPLATE_ENV;
+  const template = { id: 'hf-moment-M1147', title: 'Figma $& {id}' };
+  try {
+    for (const environment of [undefined, 'dev', 'prod']) {
+      if (environment === undefined) delete process.env.MOTION_TEMPLATE_ENV;
+      else process.env.MOTION_TEMPLATE_ENV = environment;
+      const info = await (await transport(new WorkspaceStore(directory))('/api/integration')).json();
+      assert.equal(info.templateEnvironment, templateConfig().environment);
+      for (const locale of ['zh-CN', 'en'] as const) {
+        const prompt = templatePrompt(info, template, locale);
+        const expectedUrl = `https://releases.open-design.ai/open-motion/${info.templateEnvironment === 'dev' ? 'dev/' : ''}install.md`;
+        assert.ok(prompt.includes(expectedUrl));
+        assert.ok(prompt.includes(template.title)); assert.ok(prompt.includes(template.id));
+        assert.equal(prompt.split('\n\n').length, 4);
+        assert.ok(prompt.endsWith(locale === 'zh-CN' ? '我的要求：\n' : 'My requirements:\n'));
+        assert.match(prompt, /HTML.*MP4/);
+        assert.doesNotMatch(prompt, /localhost|127\.0\.0\.1|connect\/guide|github\.com/);
+      }
+    }
+  } finally {
+    if (previous === undefined) delete process.env.MOTION_TEMPLATE_ENV;
+    else process.env.MOTION_TEMPLATE_ENV = previous;
     await rm(directory, { recursive: true, force: true });
   }
 });

@@ -18,7 +18,7 @@ beforeEach(() => {
   container = document.createElement('div'); document.body.append(container); root = createRoot(container);
   clipboard = vi.fn(async () => {});
   vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(clipboard);
-  fetcher = vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? { previewUrl: 'http://localhost:4173' } : {
+  fetcher = vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? { previewUrl: 'http://localhost:4173', templateEnvironment: 'dev' } : {
     items: url.includes('category=builtin') ? [builtin] : [reference], total: 1, entryTotal: 1, catalogTotal: 2, offset: 0, next: null,
   })));
   vi.stubGlobal('fetch', fetcher);
@@ -36,7 +36,9 @@ it('only editable templates open a new engineering project; references copy thei
   expect(container.querySelector('.motion-editable-badge')).toBeNull();
   await act(async () => button('一键复制').click());
   expect(clipboard).toHaveBeenCalledOnce();
-  expect(clipboard.mock.calls[0][0]).toContain('template=hf-moment-M953');
+  expect(clipboard.mock.calls[0][0]).toContain('https://releases.open-design.ai/open-motion/dev/install.md');
+  expect(clipboard.mock.calls[0][0]).not.toContain('localhost');
+  expect(clipboard.mock.calls[0][0]).toContain('指定模板：Reference（hf-moment-M953）');
   expect(state.open).toHaveBeenCalledTimes(1);
   expect(container.textContent).toContain('已复制');
 });
@@ -115,4 +117,14 @@ it.each(['de', 'ja', 'ru'] as const)('keeps Prism editing and project guards whi
   state.disabled = true;
   await act(async () => { root.render(<I18nProvider initialLocale={locale}><HomeTemplates /></I18nProvider>); });
   expect(button(translate(locale, 'Open and edit')).disabled).toBe(true);
+});
+
+
+it('copies the English brief when the interface is English', async () => {
+  await render('en');
+  act(() => button('Featured references').click());
+  await act(async () => { await vi.runOnlyPendingTimersAsync(); });
+  await act(async () => button('Copy to recreate').click());
+  expect(clipboard.mock.calls[0][0]).toContain('Selected template: Reference (hf-moment-M953)');
+  expect(clipboard.mock.calls[0][0]).toMatch(/My requirements:\n$/);
 });
