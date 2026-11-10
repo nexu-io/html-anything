@@ -126,8 +126,8 @@ The retained runtime/distribution suites' shell-specific bootstrap variables and
 Build/package the shared kit through the repository tool:
 
 ```sh
-pnpm exec odsuite build --channel=beta --version=0.6.1-beta.1
-pnpm exec odsuite pack --channel=beta
+pnpm exec odsuite build --channel beta --version 0.6.1-beta.1
+pnpm exec odsuite pack --channel beta
 ```
 
 Use the returned `npm.path` tarball with `npm exec --yes --ignore-scripts --package /absolute/application.tgz -- odsuite`. No registry publication or global bin is needed. The installed kit exposes:
@@ -149,7 +149,7 @@ The finite npm payload contains `dist/main.mjs`, transient `dist/codex-worker.mj
 
 ## Codex closure
 
-After build, `carriers/codexplugin/dist/runtime` is the movable Node24 closure. Installation/development helper entries stay outside that payload. Its production identity is baked at build time. Runtime environment selects exactly:
+After build, `carriers/codexplugin/dist/runtime` is the movable Node24 closure. Installation/development helper entries stay outside that payload. Both installed carrier entries use their baked release identity; neither accepts a version override. Runtime environment selects exactly:
 
 | Variable              | Responsibility                                               |
 | --------------------- | ------------------------------------------------------------ |
