@@ -4,7 +4,7 @@
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
-<p align="center"><a href="#agent-wall"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg"><img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion · Editable HTML video · Open source · 21 local agents · BYOK · 100+ Motion.md. WorkBuddy is the newest addition. Explore all 22 agents."></picture></a></p>
+<p align="center"><a href="#agent-wall"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg"><img src="docs/readme/brand-hero.jpg" width="100%" alt="OpenMotion · Editable HTML video · Open source · 21 local agents · BYOK · 100+ Motion.md. WorkBuddy, Codex, Claude Code and DeepSeek Harness. Explore all 22 agents."></picture></a></p>
 
 <p align="center">
   <a href="https://github.com/nexu-io/html-anything"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
