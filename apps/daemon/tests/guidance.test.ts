@@ -110,3 +110,22 @@ it("ships every local body from the canonical graph with reversible links and ac
     expect(file.content).toContain(`description: ${JSON.stringify(skill.description)}\n`);
   }
 });
+
+it("keeps finished recreation internal verification separate from file attachment and draft/starter scopes", () => {
+  const recreation = readGuidance("open-motion://guidance/recreate"),
+    check = readGuidance("open-motion://guidance/recreateverify"),
+    verification = readGuidance("open-motion://guidance/verification"),
+    template = readGuidance("open-motion://guidance/template");
+  expect(recreation.references).toContain(check.documentId);
+  expect(recreation.content).toMatch(
+    /finished recreation[\s\S]*mandatory internal verification[\s\S]*actual MP4[\s\S]*visually and numerically/,
+  );
+  expect(check.content).toMatch(/mandatory internal export[\s\S]*before editable-project handoff/);
+  for (const document of [recreation, check, verification]) {
+    expect(document.content).toMatch(/even (?:when|without)[^\n]*MP4 attachment/);
+    expect(document.content).toMatch(/explicit draft(?: or |\/)source-only/i);
+    expect(document.content).toMatch(/attach(?:ing)?[^\n]*(?:only when requested|own request)/i);
+  }
+  expect(template.content).toMatch(/unchanged request[^\n]*not a fresh export\/comparison/i);
+  expect(verification.content).toContain("does not trigger a fresh render for an unchanged template starter");
+});

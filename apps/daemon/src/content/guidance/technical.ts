@@ -65,7 +65,7 @@ A requested starter ends with an editable project and actual preview verificatio
 `,
   verification: `# Export and acceptance
 
-Confirm the requested deliverable before rendering. A source draft, editable editor handoff, preview, MP4 and reusable template are separate outcomes. Preserve prior creative decisions and inspect the actual edited source; later edits must not silently alter the input of an already accepted export.
+Confirm the requested deliverable before rendering. A source draft, editable editor handoff, preview, MP4 and reusable template are separate outcomes. A finished [recreation](open-motion://guidance/recreate) requires mandatory internal actual-film and reference verification before handoff even when no MP4 attachment was requested; an explicit draft/source-only scope may leave it pending. Attaching/publishing the internally verified movie still requires its own request. This route-specific requirement does not trigger a fresh render for an unchanged template starter. Preserve prior creative decisions and inspect the actual edited source; later edits must not silently alter the input of an already accepted export.
 
 Read project_read and existing export_list pages for the owned session/artifact. Reuse a suitable known task before creating another. export_create takes explicit revision, rational fps and stable requestId. The native contract is H.264/yuv420p MP4, even dimensions up to 4096, at most 600 seconds / 36000 frames and optional authored PCM16 WAV mixed into AAC. The current native toolchain is qualified on macOS arm64; source CI or an empty list does not qualify another platform.
 

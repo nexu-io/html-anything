@@ -18,7 +18,7 @@ Missing guidance and target source must finish returning to the Agent before a l
 | Unchanged selected template | Template route and [native handoff](open-motion://guidance/native); no authoring/export dependency merely to show it |
 | Editable template creation/adaptation | [Template capabilities](open-motion://guidance/templates), review and the current selected source |
 | Reusable template from video | Video-template route, [measurement](open-motion://guidance/measure), [rebuild](open-motion://guidance/videorebuild), [packaging checks](open-motion://guidance/videoverify), actual reference |
-| Reference reconstruction for this film | Recreation route, [rebuild](open-motion://guidance/rebuild), [decisions](open-motion://guidance/decisions), review and actual reference |
+| Finished reference reconstruction for this film | Recreation route, [rebuild](open-motion://guidance/rebuild), [decisions](open-motion://guidance/decisions), review, actual reference and mandatory internal [actual-film/reference verification](open-motion://guidance/recreateverify); movie attachment remains a separate request |
 | Local visual/text changes or motion review | Review; preserve existing structure instead of loading a full new-film process |
 | Any change to existing content | Add [edit](open-motion://guidance/edit); initial creation, read-only review and export-only do not require an editing ritual |
 | Multiple passages, screenshots or objects recurring later | Add decisions, including default template drafts when these relationships are relevant |
