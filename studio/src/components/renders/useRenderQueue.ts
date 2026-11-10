@@ -9,9 +9,13 @@ import { readServerError } from "./serverError";
 import { ffmpegInstallMessage, useFfmpegStatus } from "./useFfmpegStatus";
 import { requestStudioFeedback, type FeedbackContext } from "../feedback/feedbackTrigger";
 import { studioApiFetch, studioProjectUrl } from "../../utils/studioApiFetch";
+import { usePlayerStore } from "../../player/store/playerStore";
 import {
+  durationBucket,
   exportRejection,
   exportSettings,
+  openTemplateFields,
+  projectScaleFields,
   projectFields,
   reportExportRequest,
   reportExportResult,
@@ -117,7 +121,14 @@ export function useRenderQueue(
   const promptedJobIds = useRef(new Set<string>());
   // Accepted renders this tab started and has not yet reported a terminal state for.
   const trackedExports = useRef(
-    new Map<string, { exportId: string; settings: ReturnType<typeof exportSettings>; lost?: boolean }>(),
+    new Map<
+      string,
+      {
+        exportId: string;
+        settings: ReturnType<typeof exportSettings> & { video_duration_bucket: ReturnType<typeof durationBucket>; template_id?: string };
+        lost?: boolean;
+      }
+    >(),
   );
 
   /**
@@ -194,7 +205,17 @@ export function useRenderQueue(
       // One request result per start attempt. The id is minted here because the
       // server's job id embeds the project id and a timestamp.
       const exportId = generateId();
-      const tracked = exportSettings(opts.origin, opts);
+      // Length and size of what is being rendered, from the player's memory at request time, bucketed.
+      // A composition other than the open one has no loaded timeline here, so it reports `unknown`.
+      const player = usePlayerStore.getState();
+      const openComposition = !opts.composition || opts.composition === activeCompPathRef.current;
+      const timeline = openComposition && player.timelineReady;
+      const tracked = {
+        ...exportSettings(opts.origin, opts),
+        video_duration_bucket: durationBucket(timeline ? player.duration : undefined),
+        ...openTemplateFields(),
+      };
+      const scale = projectScaleFields(timeline ? player.elements.length : undefined);
       const requestResult = (
         outcome: "accepted" | "rejected",
         error_code?: Parameters<typeof reportExportRequest>[0]["error_code"],
@@ -203,6 +224,7 @@ export function useRenderQueue(
           export_id: exportId,
           outcome,
           ...tracked,
+          ...scale,
           ...(error_code ? { error_code } : {}),
           ...projectFields(projectId),
         });

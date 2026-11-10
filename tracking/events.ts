@@ -9,6 +9,12 @@ const tool = { tool_name: toolNames, call_id: 'uuid', operation_id: 'uuid', acce
 const project = { project_id: 'uuid', project_scope: ['default', 'managed', 'other'] } as const;
 const exportSettings = { origin: ['header', 'export_panel', 'composition_card'], format: ['mp4', 'webm', 'mov', 'gif'],
   quality: ['draft', 'standard', 'high'], resolution: ['auto', '1080p', '4k'], fps: ['24', '30', '60', 'other'] } as const;
+// A template is identified by its catalogue id only; titles, authors and URLs are never fields.
+const template = { template_id: 'slug' } as const;
+const countBucket = ['0', '1_5', '6_20', '21_50', 'gt_50', 'unknown'] as const;
+const projectScale = { clip_count_bucket: countBucket, asset_count_bucket: countBucket,
+  composition_count_bucket: ['1', '2_5', '6_20', 'gt_20', 'unknown'] } as const;
+const videoDuration = { video_duration_bucket: ['lt_15s', '15_60s', '1_3min', '3_10min', 'gt_10min', 'unknown'] } as const;
 const business = { outcome, project_id: 'uuid', operation_id: 'uuid', replayed: 'boolean', error_code: 'code' } as const;
 
 export const omEvents = {
@@ -24,7 +30,7 @@ export const omEvents = {
   export_cancel_result: { producers: ['mcp'], fields: { ...business, job_id: 'uuid', state_after: ['pending', 'running', 'cancelling', 'cancelled', 'completed', 'failed'] }, required: ['outcome'] },
   export_result: { producers: ['worker'], fields: { job_id: 'uuid', job_state: ['completed', 'failed', 'cancelled'], duration_ms: 'integer', technical_check: ['passed', 'failed', 'unknown'] }, required: ['job_id', 'job_state', 'duration_ms', 'technical_check'] },
   page_view: { producers: ['studio'], fields: { page_name: ['home', 'studio'], view_id: 'uuid', embedded: 'boolean', has_project: 'boolean' }, required: ['page_name', 'view_id', 'embedded', 'has_project'] },
-  studio_load_result: { producers: ['studio'], fields: { load_id: 'uuid', outcome, duration_ms: 'integer', embedded: 'boolean', ...project }, required: ['load_id', 'outcome', 'duration_ms', 'embedded'] },
+  studio_load_result: { producers: ['studio'], fields: { load_id: 'uuid', outcome, duration_ms: 'integer', embedded: 'boolean', ...project, ...projectScale, ...template }, required: ['load_id', 'outcome', 'duration_ms', 'embedded'] },
   ui_click: { producers: ['studio'], fields: { page_name: ['home', 'studio'],
     area: ['workspace', 'templates', 'header', 'project_drawer', 'left_panel', 'right_panel', 'clips', 'assets', 'catalog',
       'preview', 'properties', 'layers', 'timeline', 'export_panel'],
@@ -36,20 +42,22 @@ export const omEvents = {
       'select_element', 'play', 'pause', 'seek', 'speed_change', 'loop_toggle', 'expand_preview', 'restore_preview', 'locate_layer',
       'tool_select', 'tool_split', 'copy', 'snap_toggle', 'zoom_in', 'zoom_out', 'zoom_fit', 'zoom_selection', 'ruler_seek', 'fx_badge',
       'start_export', 'cancel_render', 'download_render', 'delete_render', 'ffmpeg_recheck', 'copy_install_command',
-      'ask_agent_element', 'ask_agent_clip', 'ask_agent_time_range', 'ask_agent_playhead', 'ask_agent_catalog_item'],
+      'ask_agent_element', 'ask_agent_clip', 'ask_agent_time_range', 'ask_agent_playhead', 'ask_agent_catalog_item',
+      'preview_template', 'use_template', 'template_category', 'template_search'],
     // The chosen value of a control with a small fixed set of choices; never free text.
     option: ['on', 'off', 'light', 'dark', 'en', 'zh-CN', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr',
       'all', 'images', 'video', 'audio', 'fonts',
       'captions', 'code-animation', 'vfx', 'transitions', 'effects', 'text-effects', 'social', 'data', 'scenes',
-      '0.25', '0.5', '1', '1.5', '2', 'other'],
-    interaction_method: ['pointer', 'keyboard'], ...project }, required: ['page_name', 'area', 'element'] },
-  template_instruction_copy_result: { producers: ['studio'], fields: { host_product: ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'], copy_status: ['clipboard_written', 'manual_fallback_shown', 'failed'] }, required: ['host_product', 'copy_status'] },
+      '0.25', '0.5', '1', '1.5', '2', 'featured', 'ads', 'clone', 'motion', 'script', 'other'],
+    interaction_method: ['pointer', 'keyboard'], ...project, ...template }, required: ['page_name', 'area', 'element'] },
+  template_instruction_copy_result: { producers: ['studio'], fields: { host_product: ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'], copy_status: ['clipboard_written', 'manual_fallback_shown', 'failed'],
+    page_name: ['home', 'studio'], ...project, ...template }, required: ['host_product', 'copy_status'] },
   // Studio UI exports run in the editor's own render pipeline, not the worker that owns export_result.
   studio_export_request_result: { producers: ['studio'], fields: { export_id: 'uuid', outcome: ['accepted', 'rejected'], ...exportSettings,
-    error_code: ['FFMPEG_MISSING', 'SERVER_UNREACHABLE', 'SERVICE_UNAVAILABLE', 'REQUEST_REJECTED', 'SERVER_ERROR', 'INVALID_RESPONSE'], ...project },
+    error_code: ['FFMPEG_MISSING', 'SERVER_UNREACHABLE', 'SERVICE_UNAVAILABLE', 'REQUEST_REJECTED', 'SERVER_ERROR', 'INVALID_RESPONSE'], ...videoDuration, ...projectScale, ...project, ...template },
     required: ['export_id', 'outcome', 'origin', 'format', 'quality', 'resolution', 'fps'] },
   studio_export_result: { producers: ['studio'], fields: { export_id: 'uuid', job_state: ['completed', 'failed', 'cancelled'], duration_ms: 'integer',
-    ...exportSettings, error_code: ['RENDER_FAILED', 'CONNECTION_LOST'], ...project },
+    ...exportSettings, error_code: ['RENDER_FAILED', 'CONNECTION_LOST'], ...videoDuration, ...project, ...template },
     required: ['export_id', 'job_state', 'duration_ms', 'origin', 'format', 'quality', 'resolution', 'fps'] },
   studio_notice_shown: { producers: ['studio'], fields: { notice: ['ffmpeg_missing', 'external_file_conflict', 'project_unreachable'], ...project }, required: ['notice'] },
   // One per committed manual change; failures come from Studio's save-failure reporter.

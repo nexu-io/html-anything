@@ -9,7 +9,13 @@ import { act } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { validProperties } from "../../../../tracking/core.ts";
 import { studioEvents } from "../../../../tracking/events.ts";
-import { installEditorTracking } from "../../motion/editorTracking";
+import {
+  installEditorTracking,
+  resetEditorTrackingForTests,
+  setProjectInventory,
+  setProjectTemplate,
+} from "../../motion/editorTracking";
+import { usePlayerStore } from "../../player/store/playerStore";
 import { mountRenderQueue, type MountedQueue } from "./renderQueueTestHarness";
 import { useRenderQueue } from "./useRenderQueue";
 
@@ -59,6 +65,8 @@ const progress = (status: string) =>
 beforeEach(() => {
   sent.mockClear();
   source = null;
+  resetEditorTrackingForTests();
+  usePlayerStore.setState({ timelineReady: false, duration: 0, elements: [] });
   installEditorTracking(sent as never);
 });
 afterEach(() => {
@@ -89,6 +97,8 @@ describe("Studio export tracking", () => {
     expect(request).toEqual({
       export_id: expect.stringMatching(/^[0-9a-f-]{36}$/), outcome: "accepted", origin: "export_panel",
       format: "webm", quality: "high", resolution: "4k", fps: "60", project_scope: "managed", project_id: PROJECT,
+      // Nothing about the project is loaded in this harness; the buckets say so rather than being absent.
+      video_duration_bucket: "unknown", clip_count_bucket: "unknown", asset_count_bucket: "unknown", composition_count_bucket: "unknown",
     });
     expect(results[0]).toMatchObject({ export_id: request.export_id, job_state: "completed", origin: "export_panel", format: "webm" });
     for (const [event, properties] of sent.mock.calls) expect(validProperties(studioEvents, event, properties), event).toBe(true);
@@ -188,5 +198,59 @@ describe("Studio export tracking", () => {
       await mounted.api().startRender({ origin: "header" });
     });
     expect(mounted.api().jobs).toHaveLength(2);
+  });
+
+  it("adds video length, project size and the source template as buckets and an id, from memory", async () => {
+    stubServer(() => Response.json({ jobId: "job-1", status: "rendering" }));
+    usePlayerStore.setState({
+      timelineReady: true,
+      duration: 95.4,
+      elements: Array.from({ length: 7 }, (_, index) => ({ id: `clip-${index}` })) as never,
+    });
+    setProjectInventory({ assets: 30, compositions: 1 });
+    setProjectTemplate("hf-moment-M1147");
+    const mounted = await mount();
+    await act(async () => {
+      await mounted.api().startRender({ origin: "export_panel" });
+    });
+    await progress("complete");
+    expect(events("studio_export_request_result")[0]).toMatchObject({
+      video_duration_bucket: "1_3min", clip_count_bucket: "6_20", asset_count_bucket: "21_50",
+      composition_count_bucket: "1", template_id: "hf-moment-M1147",
+    });
+    const [result] = events("studio_export_result");
+    expect(result).toMatchObject({ job_state: "completed", video_duration_bucket: "1_3min", template_id: "hf-moment-M1147" });
+    expect(result).not.toHaveProperty("clip_count_bucket");
+    expect(JSON.stringify(sent.mock.calls)).not.toContain("95.4");
+    for (const [event, properties] of sent.mock.calls) expect(validProperties(studioEvents, event, properties), event).toBe(true);
+  });
+
+  it("still reports the export when nothing about the project has loaded yet", async () => {
+    stubServer(() => Response.json({ jobId: "job-1", status: "rendering" }));
+    setProjectTemplate("A customer's template name");
+    const mounted = await mount();
+    await act(async () => {
+      await mounted.api().startRender({ origin: "header" });
+    });
+    await progress("failed");
+    const [request] = events("studio_export_request_result");
+    expect(request).toMatchObject({
+      outcome: "accepted", video_duration_bucket: "unknown", clip_count_bucket: "unknown",
+      asset_count_bucket: "unknown", composition_count_bucket: "unknown",
+    });
+    expect(request).not.toHaveProperty("template_id");
+    expect(events("studio_export_result")).toEqual([expect.objectContaining({ job_state: "failed", video_duration_bucket: "unknown" })]);
+    for (const [event, properties] of sent.mock.calls) expect(validProperties(studioEvents, event, properties), event).toBe(true);
+  });
+
+  it("does not describe the open timeline when a different composition is rendered", async () => {
+    stubServer(() => Response.json({ jobId: "job-1", status: "rendering" }));
+    usePlayerStore.setState({ timelineReady: true, duration: 20, elements: [{ id: "a" }] as never });
+    const mounted = await mount();
+    await act(async () => {
+      await mounted.api().startRender({ origin: "composition_card", composition: "scenes/other.html" });
+    });
+    expect(events("studio_export_request_result")[0]).toMatchObject({ video_duration_bucket: "unknown", clip_count_bucket: "unknown" });
+    expect(JSON.stringify(sent.mock.calls)).not.toContain("scenes");
   });
 });

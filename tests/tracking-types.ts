@@ -21,5 +21,11 @@ function studioContract() {
   void trackMotion('studio_edit_result', { outcome: 'success', edit_kind: 'move', surface: 'canvas', project_name: 'x' });
   // @ts-expect-error Export settings are bucketed; a raw frame rate number is not accepted.
   void trackMotion('studio_export_result', { export_id: '', job_state: 'completed', duration_ms: 1, origin: 'header', format: 'mp4', quality: 'high', resolution: 'auto', fps: 30 });
+  void trackMotion('ui_click', { page_name: 'studio', area: 'templates', element: 'preview_template', template_id: 'hf-moment-M1147' });
+  void trackMotion('studio_load_result', { load_id: '', outcome: 'success', duration_ms: 1, embedded: false, clip_count_bucket: 'unknown', composition_count_bucket: '2_5' });
+  // @ts-expect-error Video length is a bucket; seconds are not accepted.
+  void trackMotion('studio_export_result', { export_id: '', job_state: 'completed', duration_ms: 1, origin: 'header', format: 'mp4', quality: 'high', resolution: 'auto', fps: '30', video_duration_bucket: 42 });
+  // @ts-expect-error Project size is a bucket; a raw count is not accepted.
+  void trackMotion('studio_load_result', { load_id: '', outcome: 'success', duration_ms: 1, embedded: false, clip_count_bucket: 12 });
 }
 void studioContract;

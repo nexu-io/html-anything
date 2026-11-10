@@ -140,8 +140,10 @@ await delivery in a business operation. `track()` returning `queued` means local
 acceptance; `trackMotion()` resolves with a local queue/configuration status. Neither proves
 that the event is queryable in PostHog. Normal calls do not need an explicit flush.
 
-Current field rules are closed enums, booleans, UUIDv4 values, safe-code strings or
-nonnegative safe integers up to 86,400,000. Do not invent arbitrary string fields
+Current field rules are closed enums, booleans, UUIDv4 values, safe-code strings,
+catalogue slugs (`slug`: letters, digits and single hyphens, at most 64 characters) or
+nonnegative safe integers up to 86,400,000. Use `slug` only for an identifier the
+catalogue assigns, such as a template id; it is not a channel for names or titles. Do not invent arbitrary string fields
 or use the safe-code rule to tunnel user content. Omit unknown optional counts;
 missing is not zero. If the measurement needs a new type, review the validator and
 its tests rather than bypassing it. Do not silently change an existing event's

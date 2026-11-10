@@ -1,5 +1,5 @@
 import type { EventFields } from '../../../tracking/core.ts';
-import { uuid } from '../../../tracking/core.ts';
+import { slug, uuid } from '../../../tracking/core.ts';
 import type { StudioEvent, studioEvents } from '../../../tracking/events.ts';
 
 type Send = <E extends StudioEvent>(event: E, properties: EventFields<typeof studioEvents[E]>) => unknown;
@@ -33,11 +33,11 @@ export function projectFields(projectId: string | null | undefined) {
   return { project_scope: projectId === 'project' ? 'default' : 'other' } as const;
 }
 
-export function trackStudioClick(area: Click['area'], element: Click['element'], projectId?: string | null, method?: InteractionMethod, option?: ClickOption) {
-  void trackMotion('ui_click', { page_name: 'studio', area, element, ...(option ? { option } : {}), ...(method ? { interaction_method: method } : {}), ...projectFields(projectId ?? activeProjectId) });
+export function trackStudioClick(area: Click['area'], element: Click['element'], projectId?: string | null, method?: InteractionMethod, option?: ClickOption, templateId?: string) {
+  void trackMotion('ui_click', { page_name: 'studio', area, element, ...templateFields(templateId), ...(option ? { option } : {}), ...(method ? { interaction_method: method } : {}), ...projectFields(projectId ?? activeProjectId) });
 }
 export type ClickOption = NonNullable<Click['option']>;
-const OPTIONS = new Set<string>(['on', 'off', 'light', 'dark', 'en', 'zh-CN', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr',
+const OPTIONS = new Set<string>(['featured', 'ads', 'clone', 'motion', 'script', 'on', 'off', 'light', 'dark', 'en', 'zh-CN', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr',
   'all', 'images', 'video', 'audio', 'fonts', 'captions', 'code-animation', 'vfx', 'transitions', 'effects', 'text-effects', 'social',
   'data', 'scenes', '0.25', '0.5', '1', '1.5', '2']);
 /** A control's chosen value as a registered option; anything else is reported as `other`. */
@@ -47,6 +47,59 @@ export const searchStarted = (previous: string, next: string) => !previous.trim(
 
 /** A click event with no pointer coordinates was produced by the keyboard. */
 export const clickMethod = (event: { detail: number }): InteractionMethod => event.detail === 0 ? 'keyboard' : 'pointer';
+
+// ── Templates, project scale and video length ──
+
+/** A catalogue id is sent only when it is a bounded slug; anything else is left out, never rewritten. */
+export function templateFields(templateId: string | null | undefined) {
+  return typeof templateId === 'string' && slug.test(templateId) ? { template_id: templateId } : {};
+}
+type Scale = Pick<Fields<'studio_export_request_result'>, 'clip_count_bucket' | 'asset_count_bucket' | 'composition_count_bucket'>;
+const known = (value: number | null | undefined): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0;
+export function countBucket(count: number | null | undefined): NonNullable<Scale['clip_count_bucket']> {
+  if (!known(count)) return 'unknown';
+  return count === 0 ? '0' : count <= 5 ? '1_5' : count <= 20 ? '6_20' : count <= 50 ? '21_50' : 'gt_50';
+}
+export function compositionBucket(count: number | null | undefined): NonNullable<Scale['composition_count_bucket']> {
+  if (!known(count) || count < 1) return 'unknown';
+  return count === 1 ? '1' : count <= 5 ? '2_5' : count <= 20 ? '6_20' : 'gt_20';
+}
+export function durationBucket(seconds: number | null | undefined): NonNullable<Fields<'studio_export_result'>['video_duration_bucket']> {
+  if (!known(seconds) || seconds === 0) return 'unknown';
+  return seconds < 15 ? 'lt_15s' : seconds < 60 ? '15_60s' : seconds < 180 ? '1_3min' : seconds < 600 ? '3_10min' : 'gt_10min';
+}
+// What Studio already holds about the open project. Null until its file tree has loaded.
+let inventory: { assets: number; compositions: number } | null = null;
+let openTemplateId: string | undefined;
+export function setProjectInventory(next: { assets: number; compositions: number } | null) { inventory = next; }
+/** The template the open project was created from, when the workspace catalogue says so. */
+export function setProjectTemplate(templateId: string | undefined) { openTemplateId = templateId; }
+/** Buckets from memory only; a value that has not loaded yet is `unknown`, never waited for. */
+export function projectScaleFields(clipCount: number | null | undefined): Required<Scale> {
+  return { clip_count_bucket: countBucket(clipCount), asset_count_bucket: countBucket(inventory?.assets),
+    composition_count_bucket: compositionBucket(inventory?.compositions) };
+}
+export const openTemplateFields = () => templateFields(openTemplateId);
+
+type TemplateEvent =
+  | { kind: 'copy_click' | 'preview' | 'use'; templateId: string }
+  | { kind: 'copy_result'; templateId: string; host: string; status: 'clipboard_written' | 'manual_fallback_shown' | 'failed' }
+  | { kind: 'category'; category: string }
+  | { kind: 'search' };
+const HOSTS = ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'] as const;
+/** The template library dialog reports here; it owns no tracking code of its own. */
+export function reportTemplateEvent(event: TemplateEvent, projectId?: string | null) {
+  if (event.kind === 'copy_result') {
+    const host = HOSTS.find(item => item === event.host);
+    if (host) void trackMotion('template_instruction_copy_result', { host_product: host, copy_status: event.status, page_name: 'studio',
+      ...templateFields(event.templateId), ...projectFields(projectId ?? activeProjectId) });
+    return;
+  }
+  if (event.kind === 'category') return trackStudioClick('templates', 'template_category', projectId, undefined, clickOption(event.category));
+  if (event.kind === 'search') return trackStudioClick('templates', 'template_search', projectId);
+  trackStudioClick('templates', event.kind === 'copy_click' ? 'copy_template' : event.kind === 'preview' ? 'preview_template' : 'use_template',
+    projectId, undefined, undefined, event.templateId);
+}
 
 // ── Manual edits ──
 
@@ -214,4 +267,4 @@ export function takeImportEntry(): ImportEntryPoint | undefined {
 }
 
 /** Test-only: forget module state between cases. */
-export function resetEditorTrackingForTests() { gesture = null; lastEdit = null; historyMethod = null; importEntry = null; pendingKinds.length = 0; activeProjectId = null; }
+export function resetEditorTrackingForTests() { gesture = null; lastEdit = null; historyMethod = null; importEntry = null; pendingKinds.length = 0; activeProjectId = null; inventory = null; openTemplateId = undefined; }

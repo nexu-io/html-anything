@@ -74,6 +74,57 @@ test('Motion editor events admit only closed categories, UUID projects and bound
   assert.equal(Object.hasOwn(studioEvents, 'export_result'), false);
 });
 
+test('editor dimensions are closed buckets and a bounded template id, never raw values', () => {
+  const exportId = crypto.randomUUID();
+  const settings = { origin: 'export_panel', format: 'mp4', quality: 'standard', resolution: 'auto', fps: '30' };
+  const request = { export_id: exportId, outcome: 'accepted', ...settings };
+  const result = { export_id: exportId, job_state: 'completed', duration_ms: 900, ...settings };
+  const load = { load_id: exportId, outcome: 'success', duration_ms: 10, embedded: false };
+  const ok = (event: string, properties: Record<string, unknown>) => assert.equal(validProperties(studioEvents, event, properties), true, JSON.stringify(properties));
+  const no = (event: string, properties: Record<string, unknown>) => assert.equal(validProperties(studioEvents, event, properties), false, JSON.stringify(properties));
+
+  for (const bucket of ['lt_15s', '15_60s', '1_3min', '3_10min', 'gt_10min', 'unknown']) {
+    ok('studio_export_request_result', { ...request, video_duration_bucket: bucket });
+    ok('studio_export_result', { ...result, video_duration_bucket: bucket });
+  }
+  for (const raw of [42.5, '42.5', '42s', 'long']) no('studio_export_result', { ...result, video_duration_bucket: raw });
+  no('studio_export_result', { ...result, video_duration_seconds: 42 });
+
+  for (const bucket of ['0', '1_5', '6_20', '21_50', 'gt_50', 'unknown']) {
+    ok('studio_load_result', { ...load, clip_count_bucket: bucket, asset_count_bucket: bucket });
+    ok('studio_export_request_result', { ...request, clip_count_bucket: bucket, asset_count_bucket: bucket });
+  }
+  for (const bucket of ['1', '2_5', '6_20', 'gt_20', 'unknown']) ok('studio_load_result', { ...load, composition_count_bucket: bucket });
+  no('studio_load_result', { ...load, clip_count_bucket: 37 });
+  no('studio_load_result', { ...load, asset_count_bucket: '37' });
+  no('studio_load_result', { ...load, composition_count_bucket: '0' });
+  no('studio_load_result', { ...load, project_bytes: 1024 });
+  // The terminal event describes the render, not the project: scale stays on the request.
+  no('studio_export_result', { ...result, clip_count_bucket: '1_5' });
+  // The events are still valid when a dimension is simply absent.
+  ok('studio_load_result', load); ok('studio_export_request_result', request); ok('studio_export_result', result);
+
+  const click = { page_name: 'studio', area: 'templates', element: 'copy_template' };
+  const copied = { host_product: 'codex', copy_status: 'clipboard_written' };
+  for (const id of ['product-promo', 'hf-moment-M1147', 'hf-block-ai-chat-reveal', 'a', 'A1', 'x'.repeat(64)]) {
+    ok('ui_click', { ...click, template_id: id });
+    ok('template_instruction_copy_result', { ...copied, page_name: 'studio', template_id: id });
+    ok('studio_load_result', { ...load, template_id: id });
+    ok('studio_export_request_result', { ...request, template_id: id });
+    ok('studio_export_result', { ...result, template_id: id });
+  }
+  for (const id of ['', 'x'.repeat(65), 'Launch Film', 'launch_film', 'a.b', 'a/b', '../etc', 'https://x.test/t', 'a--b', '-a', 'a-', 'café', 'a\nb', 7]) {
+    no('ui_click', { ...click, template_id: id });
+    no('studio_export_result', { ...result, template_id: id });
+  }
+  no('ui_click', { ...click, template_title: 'Product Promo' });
+  no('template_instruction_copy_result', { ...copied, template_author: 'someone' });
+  no('ui_click', { ...click, element: 'template_category', option: 'my-private-category' });
+  ok('ui_click', { ...click, element: 'template_category', option: 'featured' });
+  // No host field was added to the load event: the Studio page does not know its host.
+  no('studio_load_result', { ...load, host_product: 'codex' });
+});
+
 test('bounded queue rejects private properties, preserves UUID/time on retries and serializes flushes', async () => {
   const batches: PendingEvent[][] = []; let attempts = 0;
   const tracker = core(async events => { batches.push(structuredClone([...events])); return ++attempts === 1 ? 'retry' : 'accepted'; }, 2);

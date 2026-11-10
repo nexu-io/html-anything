@@ -1,6 +1,6 @@
 import { useI18n } from "../i18n/I18n";
 import { importValidationMessage } from "../i18n/importMessages";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { EditingFile } from "../utils/studioHelpers";
 import { FONT_EXT, isMediaFile } from "../utils/mediaTypes";
 import { fontFamilyFromAssetPath, type ImportedFontAsset } from "../components/editor/fontAssets";
@@ -11,7 +11,7 @@ import { useFileTree } from "./useFileTree";
 import { useEditorSave } from "./useEditorSave";
 import { useProjectFileWriter } from "./useProjectFileWriter";
 import { studioApiFetch } from "../utils/studioApiFetch";
-import { importErrorCategory, reportAssetImport, reportEdit, type ImportEntryPoint, type ImportErrorCategory } from "../motion/editorTracking";
+import { importErrorCategory, reportAssetImport, reportEdit, setProjectInventory, type ImportEntryPoint, type ImportErrorCategory } from "../motion/editorTracking";
 import { encodeUrlPath } from "@hyperframes/parsers";
 
 // ── Types ──
@@ -69,6 +69,11 @@ export function useFileManager({
     assets,
     fontAssets,
   } = useFileTree({ projectId, projectIdRef });
+  // Counts Studio already holds, for bucketed project-scale fields. Unknown until the tree loads.
+  useEffect(() => {
+    setProjectInventory(fileTreeLoaded ? { assets: assets.length, compositions: compositions.length } : null);
+    return () => setProjectInventory(null);
+  }, [fileTreeLoaded, assets.length, compositions.length]);
 
   const updateEditingFileContent = useCallback((path: string, content: string) => {
     if (editingPathRef.current === path) {

@@ -5,7 +5,8 @@ import { studioEvents } from '../../../tracking/events.ts';
 import {
   classifyEdit, exportRejection, exportSettings, importErrorCategory, installEditorTracking, noteHistoryTrigger,
   noteImportEntry, projectFields, reportAssetImport, reportHistoryStep, reportManualEdit, resetEditorTrackingForTests,
-  clickOption, reportEdit, reportSaveFailure, searchStarted, setTrackedProject, styleEditKind, takeHistoryTrigger, takeImportEntry,
+  clickOption, compositionBucket, countBucket, durationBucket, openTemplateFields, projectScaleFields, reportEdit, reportTemplateEvent,
+  setProjectInventory, setProjectTemplate, templateFields, reportSaveFailure, searchStarted, setTrackedProject, styleEditKind, takeHistoryTrigger, takeImportEntry,
   trackStudioClick, watchEditSurface, withEditKind,
 } from './editorTracking';
 
@@ -161,4 +162,56 @@ it('keeps the feature working when no tracker is installed or the tracker throws
   installEditorTracking((() => { throw new Error('collector down'); }) as never);
   expect(() => trackStudioClick('header', 'export')).not.toThrow();
   expect(() => reportHistoryStep('redo', 'success', PROJECT)).not.toThrow();
+});
+
+it('buckets video length and project size, and reports unknown instead of guessing', () => {
+  expect([0.5, 14.99, 15, 59.9, 60, 179, 180, 599, 600, 7200].map(durationBucket))
+    .toEqual(['lt_15s', 'lt_15s', '15_60s', '15_60s', '1_3min', '1_3min', '3_10min', '3_10min', 'gt_10min', 'gt_10min']);
+  expect([undefined, null, 0, NaN, Infinity, -3].map(durationBucket)).toEqual(Array(6).fill('unknown'));
+  expect([0, 1, 5, 6, 20, 21, 50, 51, 4000].map(countBucket)).toEqual(['0', '1_5', '1_5', '6_20', '6_20', '21_50', '21_50', 'gt_50', 'gt_50']);
+  expect([undefined, NaN, -1].map(countBucket)).toEqual(['unknown', 'unknown', 'unknown']);
+  expect([1, 2, 5, 6, 20, 21].map(compositionBucket)).toEqual(['1', '2_5', '2_5', '6_20', '6_20', 'gt_20']);
+  expect([0, undefined].map(compositionBucket)).toEqual(['unknown', 'unknown']);
+
+  expect(projectScaleFields(undefined)).toEqual({ clip_count_bucket: 'unknown', asset_count_bucket: 'unknown', composition_count_bucket: 'unknown' });
+  setProjectInventory({ assets: 12, compositions: 3 });
+  expect(projectScaleFields(7)).toEqual({ clip_count_bucket: '6_20', asset_count_bucket: '6_20', composition_count_bucket: '2_5' });
+  setProjectInventory(null);
+  expect(projectScaleFields(0).asset_count_bucket).toBe('unknown');
+});
+
+it('sends a template id only when it is a bounded catalogue slug', () => {
+  expect(templateFields('hf-moment-M1147')).toEqual({ template_id: 'hf-moment-M1147' });
+  expect(templateFields('product-promo')).toEqual({ template_id: 'product-promo' });
+  for (const id of [undefined, null, '', 'Launch Film', 'a/b', 'a.b', 'https://x.test/t', 'x'.repeat(65), '../secret'])
+    expect(templateFields(id), String(id)).toEqual({});
+  expect(openTemplateFields()).toEqual({});
+  setProjectTemplate('nyt-graph');
+  expect(openTemplateFields()).toEqual({ template_id: 'nyt-graph' });
+  setProjectTemplate('My client template');
+  expect(openTemplateFields()).toEqual({});
+});
+
+it('reports template library use with ids only, and still reports when the id is not sendable', () => {
+  reportTemplateEvent({ kind: 'copy_click', templateId: 'hf-block-aurora' }, PROJECT);
+  reportTemplateEvent({ kind: 'copy_result', templateId: 'hf-block-aurora', host: 'claude', status: 'manual_fallback_shown' }, PROJECT);
+  reportTemplateEvent({ kind: 'preview', templateId: 'Customer Draft Template' }, PROJECT);
+  reportTemplateEvent({ kind: 'use', templateId: 'product-promo' }, 'project');
+  reportTemplateEvent({ kind: 'category', category: 'ads' }, 'project');
+  reportTemplateEvent({ kind: 'category', category: 'a category added later' }, 'project');
+  reportTemplateEvent({ kind: 'search' }, 'project');
+  reportTemplateEvent({ kind: 'copy_result', templateId: 'hf-block-aurora', host: 'a host added later', status: 'failed' }, PROJECT);
+  const managed = { project_scope: 'managed', project_id: PROJECT }, local = { project_scope: 'default' };
+  const click = { page_name: 'studio', area: 'templates' };
+  expect(sent.mock.calls).toEqual([
+    ['ui_click', { ...click, element: 'copy_template', template_id: 'hf-block-aurora', ...managed }],
+    ['template_instruction_copy_result', { host_product: 'claude', copy_status: 'manual_fallback_shown', page_name: 'studio', template_id: 'hf-block-aurora', ...managed }],
+    ['ui_click', { ...click, element: 'preview_template', ...managed }],
+    ['ui_click', { ...click, element: 'use_template', template_id: 'product-promo', ...local }],
+    ['ui_click', { ...click, element: 'template_category', option: 'ads', ...local }],
+    ['ui_click', { ...click, element: 'template_category', option: 'other', ...local }],
+    ['ui_click', { ...click, element: 'template_search', ...local }],
+  ]);
+  for (const [event, properties] of sent.mock.calls) expect(validProperties(studioEvents, event, properties), event).toBe(true);
+  expect(JSON.stringify(sent.mock.calls)).not.toMatch(/Customer|added later/);
 });

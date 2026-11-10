@@ -75,7 +75,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
       </div>
     </div>
     </Dialog.Root>
-    {connectionsOpen && <ConnectionDialog open section={connectionSection} busy={switchingDisabled} error={workspace.error} onClose={() => setConnectionsOpen(false)} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
+    {connectionsOpen && <ConnectionDialog open projectId={projectId} section={connectionSection} busy={switchingDisabled} error={workspace.error} onClose={() => setConnectionsOpen(false)} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
   </WorkspaceChromeContext.Provider>;
 }
 
