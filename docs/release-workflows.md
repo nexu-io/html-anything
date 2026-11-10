@@ -18,7 +18,7 @@ The default `main` currently contains the legacy project. GitHub requires a `wor
 
 Register these files together:
 
-- `.github/workflows/motion-candidate.yml`, `motion-publish-test.yml` and `motion-publication-recovery.yml`.
+- `.github/workflows/motion-candidate.yml`, `motion-publish-test.yml`, `motion-publication-recovery.yml` and `motion-install-check.yml`. The installation check is read-only, but its manual entry appears only after the same default-branch registration.
 - `.github/scripts/motion-release.mjs`, `motion-scan.mjs`, `motion-registry.mjs`, `motion-registry-smoke.mjs`, `publish-install-guide.mjs` and `.github/gitleaks.toml`.
 - `scripts/runtime-assets.mjs`, `release-version.mjs`, `install-guide.mjs`, `docs/install.md`, `docs/templates/release-record.md` and `docs/templates/candidate-install.md`.
 
