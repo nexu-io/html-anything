@@ -22,13 +22,17 @@ const exec = promisify(execFile), hashPattern = /^[a-f0-9]{64}$/;
 const json = async file => JSON.parse(await readFile(file, 'utf8'));
 const integrity = bytes => 'sha512-' + createHash('sha512').update(bytes).digest('base64');
 
-export function releaseInputs(env = process.env) {
+function manualEntry(env, workflows) {
   assert.equal(env.GITHUB_REPOSITORY, repository, 'Wrong repository');
   assert.equal(env.GITHUB_EVENT_NAME, 'workflow_dispatch', 'Manual invocation required');
-  assert.equal(env.GITHUB_REF, 'refs/heads/main', 'Run the trusted workflow registered on main');
+  assert.equal(env.GITHUB_REF, 'refs/heads/feature/motion', 'Select feature/motion in Run workflow for Motion operations');
+  assert(workflows.some(p => env.GITHUB_WORKFLOW_REF === `${repository}/${p}@refs/heads/feature/motion`), 'Require a trusted manual entry');
+}
+
+export function releaseInputs(env = process.env) {
+  manualEntry(env, [publicationWorkflow, recoveryWorkflow]);
   assert(['publish-test', 'archive-only'].includes(env.MOTION_RELEASE_ACTION), 'Unknown release action');
   const workflow = env.GITHUB_WORKFLOW_REF;
-  assert([publicationWorkflow, recoveryWorkflow].some(p => workflow === `${repository}/${p}@refs/heads/main`), 'Require a trusted manual entry');
   if (workflow.includes(recoveryWorkflow)) assert.equal(env.MOTION_RELEASE_ACTION, 'archive-only', 'Recovery never publishes or moves a channel');
   if (env.MOTION_EXPECTED_SHA256) assert.match(env.MOTION_EXPECTED_SHA256, hashPattern);
   assert.equal(env.MOTION_ACCEPTED, 'true', 'Explicit operator acceptance confirmation is required');
@@ -37,13 +41,15 @@ export function releaseInputs(env = process.env) {
 }
 
 export async function resolveCandidate(control, requested, version, env = process.env, run = runFile) {
-  const commit = requested || (await run('git', ['rev-parse', 'refs/remotes/origin/feature/motion'], { cwd: control })).trim();
+  manualEntry(env, [candidateWorkflow]);
+  const commit = requested || env.GITHUB_SHA;
   assert.match(commit, /^[a-f0-9]{40}$/, 'Use a full immutable source SHA');
   if (!version) {
-    assert(/^[1-9]\d*$/.test(env.GITHUB_RUN_ATTEMPT || ''), 'A positive GitHub run attempt is required');
-    // main still contains the legacy application; read the frozen Motion source instead.
+    assert(/^[1-9]\d*$/.test(env.GITHUB_RUN_NUMBER || '') && /^[1-9]\d*$/.test(env.GITHUB_RUN_ATTEMPT || ''), 'Positive GitHub run and attempt numbers are required');
     const source = JSON.parse(await run('git', ['show', `${commit}:package.json`], { cwd: control }));
-    version = testVersion(source.version, env.GITHUB_RUN_ID, env.GITHUB_RUN_ATTEMPT);
+    // Continue after historical test.6: candidate run #1 used the retired long format.
+    version = testVersion(source.version, String(BigInt(env.GITHUB_RUN_NUMBER) + 5n), env.GITHUB_RUN_ATTEMPT);
+    if (env.GITHUB_RUN_ATTEMPT === '1') version = version.slice(0, -2);
   }
   await validateSource(control, commit, version, run);
   return { commit, version };
@@ -126,7 +132,7 @@ export async function recordAuthorization(directory, inputs, fetcher = fetch, en
   assert.equal(authorized.action, inputs.action); assert.equal(authorized.version, inputs.version);
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
   const run = await github(`/actions/runs/${env.GITHUB_RUN_ID}`, fetcher);
-  assert.equal(String(run.id), env.GITHUB_RUN_ID); assert.equal(run.head_branch, 'main'); assert.equal(run.event, 'workflow_dispatch');
+  assert.equal(String(run.id), env.GITHUB_RUN_ID); assert.equal(run.head_branch, 'feature/motion'); assert.equal(run.event, 'workflow_dispatch');
   assert.equal(run.head_repository?.full_name, repository); assert.equal(run.head_sha, env.GITHUB_SHA);
   assert.equal(run.path.split('@')[0], env.GITHUB_WORKFLOW_REF.slice(repository.length + 1).split('@')[0]);
   await writeJSON(path.join(directory, 'authorization.json'), authorizationReceipt(candidate, run, inputs.action));
@@ -198,7 +204,7 @@ export async function findCandidate(version, fetcher = fetch) {
   const result = await github(`/actions/artifacts?name=${encodeURIComponent(name)}&per_page=100`, fetcher);
   assert(result.total_count <= 100, 'Too many matching artifacts; refusing an incomplete lookup');
   const matches = result.artifacts.filter(a => a.name === name && !a.expired);
-  assert.equal(matches.length, 1, 'Candidate missing, expired or ambiguous; build a new unique version');
+  assert.equal(matches.length, 1, `Expected one unexpired candidate for ${version}; found ${matches.length}. Copy the exact version from a successful Motion candidate build. Changing this publication field cannot rename a candidate; build and accept a new unique version if needed.`);
   assert(Number.isSafeInteger(matches[0].workflow_run?.id) && matches[0].workflow_run.id > 0);
   return matches[0];
 }
@@ -250,7 +256,7 @@ export async function publishNpm(directory, inputs, { fetcher = fetch, run = run
     previousLatest: before.tags.latest ?? null, status: before.version ? 'already-published-identical' : 'publish-started' };
   await writeJSON(path.join(directory, 'npm-publication.json'), record);
   if (!before.version) {
-    // OIDC authenticates this publisher; its main SHA is not the prebuilt application's source.
+    // OIDC authenticates this publisher; its workflow SHA may differ from the prebuilt application's source.
     await run('npm', ['publish', path.join(directory, candidate.tgz), '--access', 'public', '--tag', 'candidate', '--ignore-scripts', '--provenance=false', '--registry=https://registry.npmjs.org/']);
     record.status = 'published-awaiting-registry'; await writeJSON(path.join(directory, 'npm-publication.json'), record);
   }

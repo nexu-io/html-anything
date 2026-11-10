@@ -40,13 +40,19 @@ env:
 
 jobs:
   verify:
-    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main'
+    if: github.repository == 'nexu-io/html-anything'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:
       artifact_id: ${{ steps.artifact.outputs.artifact-id }}
       tgz_sha256: ${{ steps.download.outputs.tgz_sha256 }}
     steps:
+      - name: Require Motion integration branch
+        run: |
+          if [ "$GITHUB_REF" != 'refs/heads/feature/motion' ]; then
+            echo '::error::Select feature/motion in Run workflow for Motion operations.'
+            exit 1
+          fi
       - uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.sha }}
