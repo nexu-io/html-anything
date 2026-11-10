@@ -21,6 +21,7 @@ guard:
       - .githooks
       - docs
       - packages/templates/src/native
+      - packages/templates/src/prism
       - packages/render/src/jobs
       - apps/daemon/src/content
       - apps/daemon/src/exports

@@ -9,6 +9,8 @@ import type { Input, Operation, Output } from "@open-motion/daemon/contract";
 import type { Tools } from "@open-motion/render";
 import { host } from "@open-motion/render/host";
 import { nativeTools } from "@open-motion/render/tools";
+import { host as hostTemplates } from "@open-motion/templates/host";
+import { configuration, type PrismConfig } from "@open-motion/templates/prism";
 import { Daemon } from "./daemon.js";
 import { collect } from "./environment.js";
 
@@ -22,6 +24,7 @@ export interface Options {
   daemon?: string;
   worker?: string;
   tools?: Tools;
+  prism?: PrismConfig;
 }
 export interface Status {
   environment: Environment;
@@ -50,6 +53,12 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
   const entry = await realpath(options.daemon ?? fileURLToPath(import.meta.resolve("@open-motion/daemon/main")));
   const factory = manager.factory(scope),
     daemon = new Daemon(factory);
+  const prism = options.prism
+    ? await hostTemplates(factory, {
+        generation: digest(canonical(configuration(options.prism))),
+        config: options.prism,
+      })
+    : undefined;
   const tools = options.tools ?? nativeTools();
   const renderer = tools
     ? await host(factory, { generation: digest(manifest.identity.version), tools, worker: options.worker })
@@ -84,6 +93,7 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
           generation: digest(manifest.identity.version),
           environment,
           renderer,
+          prism,
         }),
       stop: () => daemon.close(),
     },
@@ -109,3 +119,5 @@ export async function open(options: Options): Promise<Standalone> {
     throw error;
   }
 }
+
+export { prismConfiguration } from "./prism.js";

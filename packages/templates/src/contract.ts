@@ -28,7 +28,7 @@ export interface Descriptor {
   files: { path: string; bytes: number; digest: string }[];
 }
 export type TemplateOutput<K extends TemplateOperation> = K extends "template_list"
-  ? { templates: Descriptor[] }
+  ? { templates: Descriptor[]; catalog: import("./prism/contract.js").DiscoveryCatalog | null; catalogError?: string }
   : K extends "template_create"
     ? import("@open-motion/workspace/contract").Artifact
     : { template: Descriptor; files: import("@open-motion/workspace/contract").SourceFile[] };

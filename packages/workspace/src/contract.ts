@@ -8,6 +8,14 @@ const title = z.string().trim().min(1).max(120);
 const text = z.string().trim().min(1).max(8000);
 const request = { requestId: id };
 export const file = z.strictObject({ path: z.string().min(1).max(240), content: z.string().max(1048576) });
+/** Immutable source intent; resolved files remain outside its retry identity. */
+export const sourceIntent = z.strictObject({
+  ...request,
+  sessionId: id,
+  title,
+  source: z.strictObject({ id: z.string().regex(/^[a-z][a-z0-9-]{0,119}$/), contentHash: revision }),
+});
+export type SourceIntent = z.infer<typeof sourceIntent>;
 const owner = { sessionId: id, artifactId: id };
 const selection = {
   expectedSelection: z.number().int().nonnegative(),

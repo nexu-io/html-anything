@@ -13,7 +13,9 @@
     "@open-motion/motion": "workspace:*",
     "zod": "4.6.7",
     "@hyperframes/core": "0.9.7",
-    "@odsuite/protocol": "workspace:*"
+    "@odsuite/protocol": "workspace:*",
+    "@odsuite/blob": "workspace:*",
+    "@odsuite/sidecar": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "24.12.2",
@@ -29,6 +31,14 @@
     "./contract": {
       "types": "./dist/contract.d.ts",
       "default": "./dist/contract.mjs"
+    },
+    "./prism": {
+      "types": "./dist/prism/index.d.ts",
+      "default": "./dist/prism.mjs"
+    },
+    "./host": {
+      "types": "./dist/prism/host.d.ts",
+      "default": "./dist/host.mjs"
     }
   }
 }

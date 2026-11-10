@@ -16,13 +16,18 @@ export class Templates {
     if (!parsed.success) throw new Fault("invalid", "invalid template request");
     if (operation === "template_list") return list() as TemplateOutput<K>;
     const input = parsed.data as TemplateInput<"template_create">;
-    const selected = read(input);
-    if (operation === "template_read") return selected as TemplateOutput<K>;
-    return this.workspace.execute("artifact_create", {
+    const intent = {
       requestId: input.requestId,
       sessionId: input.sessionId,
       title: input.title,
-      files: selected.files,
-    }) as TemplateOutput<K>;
+      source: { id: input.id, contentHash: input.contentHash },
+    };
+    if (operation === "template_create") {
+      const prior = this.workspace.sourceReceipt(intent);
+      if (prior) return prior as TemplateOutput<K>;
+    }
+    const selected = read(input);
+    if (operation === "template_read") return selected as TemplateOutput<K>;
+    return this.workspace.createSource(intent, selected.files) as TemplateOutput<K>;
   }
 }

@@ -35,6 +35,8 @@
     "@open-motion/web": "workspace:*",
     "@open-motion/workspace": "workspace:*",
     "@odsuite/dev": "workspace:*",
-    "@open-motion/render": "workspace:*"
+    "@open-motion/render": "workspace:*",
+    "@open-motion/templates": "workspace:*",
+    "yaml": "2.9.1"
   }
 }

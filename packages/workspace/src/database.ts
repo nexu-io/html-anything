@@ -61,7 +61,21 @@ export class Database {
       throw error;
     }
   }
-  request<T>(operation: Operation, input: object & { requestId: string }, perform: () => T): T {
+  receipt<T>(operation: Operation | "artifact_source_create", input: object & { requestId: string }): T | undefined {
+    const fingerprint = createHash("sha256")
+      .update(JSON.stringify([operation, input]))
+      .digest("hex");
+    const prior = this.one("SELECT fingerprint,result FROM requests WHERE id=?", input.requestId);
+    if (!prior) return undefined;
+    if (prior.fingerprint !== fingerprint)
+      throw new Fault("idempotency", "requestId was already used for another payload");
+    return JSON.parse(String(prior.result)) as T;
+  }
+  request<T>(
+    operation: Operation | "artifact_source_create",
+    input: object & { requestId: string },
+    perform: () => T,
+  ): T {
     const fingerprint = createHash("sha256")
       .update(JSON.stringify([operation, input]))
       .digest("hex");

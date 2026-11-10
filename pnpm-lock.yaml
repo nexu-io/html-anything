@@ -285,12 +285,18 @@ importers:
       '@open-motion/render':
         specifier: workspace:*
         version: link:../../packages/render
+      '@open-motion/templates':
+        specifier: workspace:*
+        version: link:../../packages/templates
       '@open-motion/web':
         specifier: workspace:*
         version: link:../../apps/web
       '@open-motion/workspace':
         specifier: workspace:*
         version: link:../../packages/workspace
+      yaml:
+        specifier: 2.9.1
+        version: 2.9.1
     devDependencies:
       '@odsuite/automation':
         specifier: workspace:*
@@ -415,9 +421,15 @@ importers:
       '@hyperframes/core':
         specifier: 0.9.7
         version: 0.9.7(@types/node@24.12.2)
+      '@odsuite/blob':
+        specifier: workspace:*
+        version: link:../../suites/blob
       '@odsuite/protocol':
         specifier: workspace:*
         version: link:../../suites/protocol
+      '@odsuite/sidecar':
+        specifier: workspace:*
+        version: link:../../suites/sidecar
       '@open-motion/motion':
         specifier: workspace:*
         version: link:../motion

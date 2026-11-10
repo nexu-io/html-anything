@@ -1,4 +1,14 @@
-import { Fault, type Input, type Operation, type Output, type SourceFile, schemas } from "./contract.js";
+import {
+  type Artifact,
+  Fault,
+  type Input,
+  type Operation,
+  type Output,
+  type SourceFile,
+  type SourceIntent,
+  schemas,
+  sourceIntent,
+} from "./contract.js";
 import { Database } from "./database.js";
 import { sources } from "./native.js";
 import { Projects } from "./projects.js";
@@ -34,6 +44,31 @@ export class Workspace {
       return this.db.request(operation, { ...data, requestId: data.requestId }, perform) as Output<K>;
     // Reads also pin one SQLite snapshot across ownership/revision queries.
     return this.db.transaction(perform, false) as Output<K>;
+  }
+  /** Confirm a committed immutable source intent before any external source resolution. */
+  sourceReceipt(input: SourceIntent): Artifact | undefined {
+    if (this.closed) throw new Fault("integrity", "workspace is closed");
+    const parsed = sourceIntent.safeParse(input);
+    if (!parsed.success) throw new Fault("invalid", "invalid immutable source intent");
+    const data = parsed.data;
+    return this.db.transaction(() => this.db.receipt<Artifact>("artifact_source_create", data), false);
+  }
+  /** Workspace atomically owns source-derived project, history and command receipt. */
+  createSource(input: SourceIntent, files: SourceFile[]): Artifact {
+    if (this.closed) throw new Fault("integrity", "workspace is closed");
+    const parsed = sourceIntent.safeParse(input);
+    if (!parsed.success) throw new Fault("invalid", "invalid immutable source intent");
+    const data = parsed.data;
+    return this.db.request("artifact_source_create", data, () => {
+      const create = schemas.artifact_create.safeParse({
+        requestId: data.requestId,
+        sessionId: data.sessionId,
+        title: data.title,
+        files,
+      });
+      if (!create.success) throw new Fault("invalid", "invalid immutable source files");
+      return this.projects.create({ ...create.data, files: sources(create.data.files) });
+    });
   }
   private dispatch(operation: Operation, input: unknown): Output<Operation> {
     switch (operation) {
