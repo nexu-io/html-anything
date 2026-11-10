@@ -1,10 +1,10 @@
 # Motion test release: build, accept, publish
 
-Use two manual Actions entries: **Motion candidate build**, then **Motion test publication** after acceptance. The daily flow is **build → download and accept → publish**. Neither entry runs on pushes, PR merges, tags or a schedule. This implementation does not register workflows on `main`, configure repository/npm permissions, publish a package or switch the product main branch.
+Use two manual Actions entries: **Motion candidate build**, then **Motion test publication** after acceptance. The daily flow is **build → download and accept → publish**. Neither entry runs on pushes, PR merges, tags or a schedule. The entries are registered on `main`; Motion application development stays on `feature/motion`. Merging a workflow change does not publish a package, configure npm permissions or switch the product main branch.
 
 | Operator step | Automated work |
 | --- | --- |
-| Build: enter a new test version | Freeze the current `feature/motion` SHA, check/build/scan once, retain the candidate and show download/install instructions |
+| Build: select `feature/motion`, normally leave version empty | Freeze the current `feature/motion` SHA, check/build/scan once, retain the candidate and show download/install instructions |
 | Download and accept | Use `candidate-install.md` and the local tgz in an isolated host; retain completed `acceptance.md` internally |
 | Publish: enter the accepted version and confirm acceptance | Find the unique candidate automatically, verify its source/hashes, publish the same tgz under `candidate`, check native installations, then advance npm `test`, archive snapshots and update the default guide last |
 
@@ -14,7 +14,7 @@ New public test packages use **DEV templates**; stable packages use prod. The `d
 
 ## First-time administrator setup
 
-The default `main` currently contains the legacy project. GitHub requires a `workflow_dispatch` workflow to exist on the **default branch** before its manual entry is available; it can otherwise run from another ref. This project's controls deliberately require **Use workflow from: main**, while the application source comes from `feature/motion`. Register the reviewed control files through a separately authorized small PR. This does not copy the Motion application onto `main` or rewrite its history. See [GitHub's manual workflow requirements](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
+The default `main` currently contains the legacy project. GitHub requires a `workflow_dispatch` workflow to exist on the **default branch** before its manual entry is available; it can otherwise run from another ref. For **Motion candidate build**, select **Use workflow from: feature/motion**; `main` also remains supported. Only these two integrated branches can produce publishable candidates. Publication and snapshot recovery still require **main**; arbitrary feature/fix branches cannot supply a release candidate. Application source always comes from a commit integrated into `feature/motion`. Register the reviewed control files through a separately authorized small PR. This does not copy the Motion application onto `main` or rewrite its history. See [GitHub's manual workflow requirements](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
 
 Register these files together:
 
@@ -37,7 +37,13 @@ Reuse the existing R2 settings. Only the final snapshot step receives the storag
 
 ## 1. Build
 
-Open **Actions → Motion candidate build → Run workflow**, select `main` and fill in **version**, for example `0.6.4-test.7`. Use a new `MAJOR.MINOR.PATCH-test.N[.N]` for each candidate. Never change bytes under an existing published version.
+Open **Actions → Motion candidate build → Run workflow**, select **`feature/motion`**, leave **version** empty and run. `main` remains supported for candidate builds; publication/recovery still run only from `main`.
+
+An empty version uses the frozen Motion source's `package.json`, increments its patch and appends `-test.<GITHUB_RUN_ID>.<GITHUB_RUN_ATTEMPT>`. For example, source `0.6.3`, run `42812345678`, attempt `1` produces **`0.6.4-test.42812345678.1`**. The run ID is unique within the repository, and the attempt changes on a rerun. These are unique build identifiers, not consecutive `test.7`, `test.8` counters. See [GitHub run variables](https://docs.github.com/en/actions/reference/variables-reference#default-environment-variables). An older rerun can still be rejected by the existing no-regression publication check; start a new build instead.
+
+The checkout version is a development baseline, not the last published package version. Packaging stamps the resolved version into the output package, application, lock and plugin metadata without rewriting source manifests. Thus source `0.6.3` and the historical npm `0.6.4-test.6` can coexist; no stable `0.6.4` is implied. The legacy `main` package version is never used for automatic Motion numbering. After a stable release, maintainers must advance the Motion source baseline for the next patch series.
+
+To override numbering, enter a new `MAJOR.MINOR.PATCH-test.N[.N]`. Do not reuse an existing candidate/published version or choose one older than the current npm `test` channel. Never change bytes under an existing published version. The successful summary and artifact name show the resolved version; copy that exact version into the publication form after accepting its bytes. Publication never generates a new number.
 
 Normally leave **source_sha** empty. The build fetches `feature/motion`, resolves its current full SHA once, records it and checks out exactly that SHA. To test a particular reviewed integrated commit, supply its full 40-character SHA. A later branch update cannot silently change this candidate. Confirm the chosen source has completed the required integration review.
 
@@ -63,7 +69,7 @@ Keep completed evidence against the generated candidate identity. Do not edit/re
 
 Open **Actions → Motion test publication → Run workflow**, select `main`, enter the exact accepted **version**, and tick **accepted** only after its required acceptance passes. Click **Run workflow**. This is the explicit publication action; there is no later independent approval dialog. Leaving the checkbox false fails before any publication.
 
-The workflow searches GitHub artifacts by the exact versioned name and requires exactly one unexpired match from a completed successful registered candidate build on `main` in this repository. Missing, ambiguous, expired or failed candidates stop instead of choosing a different run. The official ZIP digest, frozen file hashes and source integration are checked; source and package scans run again. The current manual run's actual operator, candidate identity and acceptance confirmation are retained in `authorization.json`.
+The workflow searches GitHub artifacts by the exact versioned name and requires exactly one unexpired match from a completed successful registered candidate build on `main` or `feature/motion` in this repository. Missing, ambiguous, expired or failed candidates stop instead of choosing a different run. The official ZIP digest, frozen file hashes and source integration are checked; source and package scans run again. The current manual run's actual operator, candidate identity and acceptance confirmation are retained in `authorization.json`.
 
 It then automatically:
 

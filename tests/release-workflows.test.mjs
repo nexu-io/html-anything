@@ -1,10 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, writeFile, rm } from 'node:fs/promises';
+import { readFile, writeFile, rm, mkdtemp } from 'node:fs/promises';
+import os from 'node:os';
+import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { candidateFixture } from './release-fixture.mjs';
-import { releaseInputs, resolveSource, validateSource, validateRun, verifyDownloaded, downloadCandidate, publishNpm, promoteTest, archiveRelease, repository, candidateWorkflow, recoveryWorkflow, publicationWorkflow, candidateJobName, findCandidate, authorizationReceipt, recordAuthorization } from '../.github/scripts/motion-release.mjs';
+import { releaseInputs, resolveCandidate, validateSource, validateRun, verifyDownloaded, downloadCandidate, publishNpm, promoteTest, archiveRelease, repository, candidateWorkflow, recoveryWorkflow, publicationWorkflow, candidateJobName, findCandidate, authorizationReceipt, recordAuthorization } from '../.github/scripts/motion-release.mjs';
 import { compareReleaseVersions } from '../scripts/release-version.mjs';
 import { consumerEnvironment } from '../.github/scripts/motion-registry-smoke.mjs';
 import { runFile } from '../scripts/runtime-assets.mjs';
@@ -24,13 +26,45 @@ test('manual entry and source selection reject untrusted callers, mutable refs a
   await validateSource('.', 'a'.repeat(40), '0.6.4-test.7', async (_, args) => { called = true; assert(args.includes('refs/remotes/origin/feature/motion')); }); assert(called);
   for (const [sha, version] of [['main', '0.6.4-test.7'], ['a'.repeat(40), '0.6.4'], ['a'.repeat(40), '0.6.4-test.0']]) await assert.rejects(validateSource('.', sha, version, async () => { throw Error('must not run'); }));
   await assert.rejects(validateSource('.', 'a'.repeat(40), '0.6.4-test.7', async () => { throw Error('not integrated'); }), /not integrated/);
-  const resolved = await resolveSource('.', '', '0.6.4-test.7', async (_, args) => args[0] === 'rev-parse' ? 'a'.repeat(40) + '\n' : '');
-  assert.equal(resolved, 'a'.repeat(40));
+  const resolved = await resolveCandidate('.', '', '0.6.4-test.7', {}, async (_, args) => args[0] === 'rev-parse' ? 'a'.repeat(40) + '\n' : '');
+  assert.deepEqual(resolved, { commit: 'a'.repeat(40), version: '0.6.4-test.7' });
+  await assert.rejects(resolveCandidate('.', 'main', '', {}, async () => { throw Error('must not run'); }), /immutable/);
+  for (const env of [{}, { GITHUB_RUN_ID: '42812345678', GITHUB_RUN_ATTEMPT: '0' }, { GITHUB_RUN_ID: 'bad', GITHUB_RUN_ATTEMPT: '1' }]) {
+    await assert.rejects(resolveCandidate('.', 'a'.repeat(40), '', env, async () => JSON.stringify({ version: '0.6.3' })), /positive/);
+  }
+});
+
+test('candidate CLI numbers the frozen Motion source, not the legacy control checkout, and preserves overrides', async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'motion-version-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const git = (...args) => runFile('git', args, { cwd: directory });
+  await git('init', '-q');
+  await writeFile(path.join(directory, 'package.json'), JSON.stringify({ version: '0.6.3' }));
+  await git('add', 'package.json');
+  await git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false', 'commit', '-qm', 'Motion source');
+  const commit = (await git('rev-parse', 'HEAD')).trim();
+  await git('update-ref', 'refs/remotes/origin/feature/motion', commit);
+  await writeFile(path.join(directory, 'package.json'), JSON.stringify({ version: '0.1.0' }));
+  const output = path.join(directory, 'output'), script = fileURLToPath(new URL('../.github/scripts/motion-release.mjs', import.meta.url));
+  for (const [source, version, run, attempt, expected] of [
+    ['', '', '42812345678', '1', '0.6.4-test.42812345678.1'],
+    [commit, '', '42812345678', '2', '0.6.4-test.42812345678.2'],
+    ['', '', '42812345679', '1', '0.6.4-test.42812345679.1'],
+    [commit, '0.6.5-test.1', '', '', '0.6.5-test.1'],
+  ]) {
+    await writeFile(output, '');
+    await runFile(process.execPath, [script, 'source', directory], { env: { ...process.env, GITHUB_OUTPUT: output,
+      MOTION_SOURCE_SHA: source, MOTION_VERSION: version, GITHUB_RUN_ID: run, GITHUB_RUN_ATTEMPT: attempt } });
+    assert.equal(await readFile(output, 'utf8'), `source_sha=${commit}\nversion=${expected}\n`);
+    assert(compareReleaseVersions(expected, '0.6.4-test.6') > 0);
+  }
+  assert.equal(JSON.parse(await readFile(path.join(directory, 'package.json'))).version, '0.1.0');
 });
 
 test('only a completed successful registered candidate build can supply a version', () => {
   validateRun(origin, artifact, '0.6.4-test.99');
-  for (const patch of [{ event: 'pull_request' }, { head_branch: 'feature/motion' }, { path: '.github/workflows/other.yml' }, { head_repository: { full_name: 'fork/repo' } }, { status: 'in_progress' }, { conclusion: 'failure' }]) assert.throws(() => validateRun({ ...origin, ...patch }, artifact, '0.6.4-test.99'));
+  validateRun({ ...origin, head_branch: 'feature/motion' }, artifact, '0.6.4-test.99');
+  for (const patch of [{ event: 'pull_request' }, { head_branch: 'codex/unreviewed' }, { head_branch: 'legacy' }, { path: '.github/workflows/other.yml' }, { head_repository: { full_name: 'fork/repo' } }, { status: 'in_progress' }, { conclusion: 'failure' }]) assert.throws(() => validateRun({ ...origin, ...patch }, artifact, '0.6.4-test.99'));
   for (const patch of [{ expired: true }, { name: 'motion-candidate-0.6.4-test.100' }, { digest: null }, { workflow_run: { id: 999 } }]) assert.throws(() => validateRun(origin, { ...artifact, ...patch }, '0.6.4-test.99'));
 });
 
@@ -83,23 +117,36 @@ test('the sealed candidate detects tgz, guide, identity and provenance tampering
   await assert.rejects(verifyDownloaded(directory, candidate.tgzSHA256));
 });
 
-test('artifact download verifies GitHub ZIP digest and does not forward the credential to the signed URL', async t => {
-  const f = await candidateFixture(t), zip = path.join(f.work, 'candidate.zip');
+for (const branch of ['main', 'feature/motion']) test(`artifact download binds ${branch} provenance and does not forward credentials to signed URLs`, async t => {
+  const f = await candidateFixture(t, branch), zip = path.join(f.work, 'candidate.zip');
+  const producer = { ...origin, head_branch: branch };
   await runFile('zip', ['-j', zip, ...['candidate.json', ...Object.keys(f.candidate.files)].map(name => path.join(f.directory, name))]);
   const bytes = await readFile(zip), digest = 'sha256:' + createHash('sha256').update(bytes).digest('hex');
   const fetcher = async (url, options) => {
     const value = String(url);
-    if (value.endsWith('/actions/runs/123')) return Response.json(origin);
+    if (value.endsWith('/actions/runs/123')) return Response.json(producer);
     if (value.includes('/artifacts?')) return Response.json({ total_count: 1, artifacts: [{ ...artifact, digest, size_in_bytes: bytes.length }] });
     if (value.endsWith('/456/zip')) return new Response(null, { status: 302, headers: { location: 'https://signed.example.invalid/candidate' } });
     assert.equal(value, 'https://signed.example.invalid/candidate'); assert.equal(options.headers, undefined);
     return new Response(bytes);
   };
   assert.equal((await downloadCandidate(f.candidate.version, path.join(f.work, 'download'), f.candidate.tgzSHA256, fetcher)).tgzSHA256, f.candidate.tgzSHA256);
-  const retryFetcher = (url, options) => String(url).endsWith('/actions/runs/123') ? Response.json({ ...origin, run_attempt: 2, conclusion: 'failure' }) : fetcher(url, options);
+  assert.equal((await verifyDownloaded(path.join(f.work, 'download'), f.candidate.tgzSHA256)).workflow.ref, `refs/heads/${branch}`);
+  const retryFetcher = (url, options) => String(url).endsWith('/actions/runs/123') ? Response.json({ ...producer, run_attempt: 2, conclusion: 'failure' }) : fetcher(url, options);
   await assert.rejects(downloadCandidate(f.candidate.version, path.join(f.work, 'retry'), undefined, retryFetcher), /success/);
   assert.equal((await downloadCandidate(f.candidate.version, path.join(f.work, 'automatic'), undefined, fetcher)).tgzSHA256, f.candidate.tgzSHA256);
   await assert.rejects(downloadCandidate(f.candidate.version, path.join(f.work, 'corrupt'), f.candidate.tgzSHA256, async (url, options) => String(url).includes('signed.') ? new Response('tampered ZIP') : fetcher(url, options)));
+  const other = branch === 'main' ? 'feature/motion' : 'main';
+  await assert.rejects(downloadCandidate(f.candidate.version, path.join(f.work, 'wrong-branch'), f.candidate.tgzSHA256,
+    (url, options) => String(url).endsWith('/actions/runs/123') ? Response.json({ ...producer, head_branch: other }) : fetcher(url, options)));
+});
+
+test('old main receipts remain readable but unregistered candidate branches cannot seal artifacts', async t => {
+  const f = await candidateFixture(t);
+  const { head_branch, ...legacy } = f.provenance;
+  await writeFile(path.join(f.directory, 'provenance.json'), JSON.stringify(legacy));
+  assert.equal((await verifyDownloaded(f.directory, f.candidate.tgzSHA256)).workflow.ref, 'refs/heads/main');
+  await assert.rejects(candidateFixture(t, 'codex/unreviewed'), /only from main or feature/);
 });
 
 function registry(candidate, exists = true, tag = candidate.version, latest = '0.5.0') {
@@ -218,12 +265,16 @@ test('daily build and publication are separate manual entries without an indepen
   const header = workflow.split('\njobs:\n')[0];
   assert(build.includes('workflow_dispatch:') && build.includes('version:') && build.includes('source_sha:'));
   assert(build.includes('name: ' + candidateJobName) && build.includes('ref: ${{ steps.source.outputs.source_sha }}'));
+  assert(build.includes("github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/motion'"));
   assert(build.includes('--template-env=dev') && !build.includes('--template-env=prod'));
   assert(build.includes('HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome') && build.includes('\"$HYPERFRAMES_BROWSER_PATH\" --version'));
   assert(!/apt-get install[^\n]*\bchromium\b/.test(build), 'Candidate builds must not install Ubuntu desktop snaps');
-  assert(build.includes('name: motion-candidate-${{ inputs.version }}') && build.includes('candidate-install.md'));
+  assert.match(build, /version:\n(?:[^\n]*\n)*?        required: false\n        default: ''/);
+  assert(build.includes('MOTION_VERSION: ${{ steps.source.outputs.version }}'));
+  assert(build.includes('name: motion-candidate-${{ steps.source.outputs.version }}') && build.includes('candidate-install.md'));
   assert(!build.includes('concurrency:') && !build.includes('secrets.') && !build.includes('id-token:'));
   assert(header.includes('version:') && header.includes('accepted:') && header.includes('default: false'));
+  assert.match(header, /version:\n(?:[^\n]*\n)*?        required: true/);
   for (const manualField of ['candidate_run_id:', 'source_sha:', 'tgz_sha256:', 'acceptance_sha256:', 'approved:', 'action:']) assert(!header.includes(manualField));
   assert(!workflow.includes('  candidate:') && !workflow.includes('environment:'));
   assert(header.includes('group: motion-test-publication') && header.includes('cancel-in-progress: false'));
