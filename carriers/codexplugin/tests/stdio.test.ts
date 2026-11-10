@@ -7,6 +7,7 @@ import { join, resolve } from "node:path";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { readDirectory } from "@odsuite/sidecar";
+import { schemas } from "@open-motion/daemon/contract";
 import type { Status } from "@open-motion/standalone";
 import {
   type Artifact,
@@ -15,7 +16,6 @@ import {
   type Project,
   resourceLimit,
   type SessionDetail,
-  schemas,
 } from "@open-motion/workspace/contract";
 import { expect, it } from "vitest";
 
@@ -24,10 +24,15 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
   const plugin = join(root, "plugin");
   await cp(resolve("dist"), plugin, { recursive: true });
   for (const name of ["LICENSE", "NOTICE"]) {
-    expect(await readFile(join(plugin, name), "utf8")).toBe(
-      await readFile(new URL(`../../../${name}`, import.meta.url), "utf8"),
-    );
-    expect(await readFile(join(plugin, "web", name), "utf8")).toBe(await readFile(join(plugin, name), "utf8"));
+    const original = await readFile(new URL(`../../../${name}`, import.meta.url), "utf8"),
+      bundled = await readFile(join(plugin, name), "utf8");
+    expect(await readFile(join(plugin, "web", name), "utf8")).toBe(original);
+    if (name === "LICENSE") expect(bundled).toBe(original);
+    else {
+      expect(bundled.startsWith(original)).toBe(true);
+      expect(bundled).toContain("Bundled dependency: @hyperframes/engine@0.9.7");
+      expect(bundled).toContain("Bundled dependency: @modelcontextprotocol/server@2.4.0 (Apache-2.0)");
+    }
   }
   const data = join(root, "data");
   const transport = new StdioClientTransport({

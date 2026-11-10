@@ -1,7 +1,7 @@
 import type { CarrierContext } from "@odsuite/dev";
 import type { Factory } from "@odsuite/sidecar";
+import type { Input, Operation, Output } from "@open-motion/daemon/contract";
 import { attach, type Methods } from "@open-motion/standalone";
-import type { Input, Operation, Output } from "@open-motion/workspace/contract";
 import { collect } from "./environment.js";
 import { listen } from "./stdio.js";
 export async function open(context: CarrierContext) {

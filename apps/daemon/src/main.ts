@@ -15,6 +15,8 @@ const service = await serve({
   origin,
   socket,
   token,
+  endpoint: process.env.ODSUITE_RUNTIME_ENDPOINT,
+  renderer: process.env.ODSUITE_RUNTIME_RENDERER ? JSON.parse(process.env.ODSUITE_RUNTIME_RENDERER) : undefined,
   ...(environment ? { environment: decode(environment) } : {}),
 });
 const stop = async () => {

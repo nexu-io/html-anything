@@ -1,8 +1,8 @@
 import { type Environment, encode } from "@odsuite/carrier";
 import type { Digest } from "@odsuite/protocol";
-import type { Context, Factory, Lease } from "@odsuite/sidecar";
+import type { Connection, Context, Factory, Lease } from "@odsuite/sidecar";
 import { Client } from "@open-motion/daemon/client";
-import type { Input, Operation, Output } from "@open-motion/workspace/contract";
+import type { Input, Operation, Output } from "@open-motion/daemon/contract";
 
 export class Daemon {
   private lease?: Lease;
@@ -15,7 +15,13 @@ export class Daemon {
   constructor(private factory: Factory) {}
   async start(
     context: Context,
-    options: { entry: string; origin: string; generation: Digest; environment: Environment },
+    options: {
+      entry: string;
+      origin: string;
+      generation: Digest;
+      environment: Environment;
+      renderer?: { root: string; connection: Connection };
+    },
   ) {
     const socket = await context.allocate({ kind: "socket", name: "daemon" });
     const port = await context.allocate({ kind: "port", name: "daemon", scheme: "http" });
@@ -32,6 +38,8 @@ export class Daemon {
       ready: "ready",
       env: {
         HYPERFRAMES_NO_TELEMETRY: "1",
+        ODSUITE_RUNTIME_ENDPOINT: port.value,
+        ...(options.renderer ? { ODSUITE_RUNTIME_RENDERER: JSON.stringify(options.renderer) } : {}),
         ODSUITE_RUNTIME_SOCKET: socket.value,
         ODSUITE_RUNTIME_DATA: context.roots.data,
         ODSUITE_RUNTIME_ORIGIN: options.origin,

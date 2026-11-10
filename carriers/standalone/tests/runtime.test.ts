@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { channel, namespace } from "@odsuite/protocol";
 import { readDirectory } from "@odsuite/sidecar";
+import { nativeTools } from "@open-motion/render/tools";
 import { expect, it } from "vitest";
 import { open } from "@";
 
@@ -40,7 +41,9 @@ it("runs real Web and a sidecar-owned Daemon with propagated environment and dur
     });
     const directory = runtime.manager.directory(scope);
     expect(directory.instances.filter((i) => i.kind === "process").map((i) => i.service)).toEqual(["daemon"]);
-    expect(directory.instances.map((i) => i.service).sort()).toEqual(["daemon", "standalone", "web"]);
+    const services = ["daemon", "standalone", "web"];
+    if (nativeTools()) services.push("renderer");
+    expect(directory.instances.map((i) => i.service).sort()).toEqual(services.sort());
     const registry = await runtime.manager.factory(scope).resources();
     expect(registry.grants.filter((g) => g.kind === "port")).toHaveLength(2);
     expect(registry.grants.filter((g) => g.kind === "socket")).toHaveLength(2);

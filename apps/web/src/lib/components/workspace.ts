@@ -3,6 +3,7 @@ import { setTheme, type Theme } from "@open-motion/theme";
 import type { Artifact } from "@open-motion/workspace/contract";
 import type { Client } from "../../api.js";
 import type { Editor } from "../editor.js";
+import { Exports } from "./exports.js";
 import { workspaceLayout } from "./layout.js";
 import { Studio } from "./studio.js";
 import { Conversation } from "./workspace/conversation.js";
@@ -126,6 +127,8 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       }),
     start: () => (editor.session ? enterArtifact(`工程 ${editor.session.artifacts.length + 1}`) : enterSession("")),
   });
+  const exports = new Exports(document, editor, client, (action) => run(action));
+  shell.editor.append(exports.element);
   const projectTabs = tabs(document, {
     label: "产物",
     appearance: "pill",
@@ -265,6 +268,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     revision.textContent = editor.project?.revision ?? "尚未打开工程";
     refreshHeader();
     studio.sync(editor.project, blocked);
+    exports.update(editor.project, blocked);
   }
   render("加载中");
   run(() => editor.load());
@@ -275,6 +279,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       disposed = true;
       disposal = (async () => {
         await flight;
+        await exports.dispose();
         await studio.dispose();
         conversation.dispose();
         for (const hint of hints) hint.dispose();

@@ -14,7 +14,7 @@ import {
   processCompositionAudio,
   setHostHandlesSigint,
 } from "@hyperframes/engine";
-import type { Progress, Specification } from "./contract.js";
+import type { Progress, Specification } from "./jobs/contract.js";
 
 export async function encode(options: {
   origin: string;

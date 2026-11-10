@@ -2,8 +2,8 @@ import { readFile, rename, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { setTimeout } from "node:timers/promises";
 import { digest } from "@odsuite/protocol";
-import { type Progress, specification } from "./contract.js";
 import { encode } from "./encode.js";
+import { type Progress, specification } from "./jobs/contract.js";
 import { verify } from "./verify.js";
 
 const [root, expected] = process.argv.slice(2);

@@ -1,6 +1,10 @@
 import { call } from "../runtime/transport.js";
 import { type Descriptor, descriptor, type Identity, type Input, type Output } from "./types.js";
 
+export interface Connection {
+  endpoint: string;
+  capability: Descriptor;
+}
 export class Peer<Methods> {
   private readonly capability: Descriptor;
   constructor(
@@ -9,6 +13,10 @@ export class Peer<Methods> {
     private timeout = 5000,
   ) {
     this.capability = Object.freeze(descriptor(capability));
+  }
+  /** Delegate this business capability only; never the manager authority. */
+  connection(): Connection {
+    return structuredClone({ endpoint: this.endpoint, capability: this.capability });
   }
   async call<K extends Extract<keyof Methods, string>>(
     method: K,

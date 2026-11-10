@@ -35,7 +35,14 @@ OPEN_MOTION_NATIVE_MANIFEST=/absolute/owned/native-manifest.json pnpm --filter @
 
 The manifest has exactly `browser`, `ffmpeg`, `ffprobe` entries, each containing `path` (absolute or relative to the manifest directory), `executable` (inside the materialized ZIP) and a platform/arch-bound blob `resource` descriptor. Trust both the compressed artifact digest/size and expanded tree digest/byte count from the publisher; deriving a tree digest from an untrusted download is not verification. The current local native pin is Chromium156 / FFmpeg9.0.2 on macOS arm64. Puppeteer install scripts remain disabled, and the product never discovers a system binary through PATH. These seeds are test inputs, not a published toolchain feed.
 
-Set `OPEN_MOTION_RENDER_EVIDENCE` to an owned `.artifacts` JSON path to retain result digests, decoded frame/seek facts, process occupancy, GC and final manager state. The test covers silent/AAC films, edit-after-freeze and historical source reopen, real capture cancellation/retry and tool GC without deleting exports. Without the explicit seed manifest, this native case is skipped; source CI does not thereby qualify native rendering on its platform. This execution primitive is not yet a Web export queue or an all-carrier acceptance.
+Set `OPEN_MOTION_RENDER_EVIDENCE` to an owned `.artifacts` JSON path to retain result digests, decoded frame/seek facts, process occupancy, GC and final manager state. The test covers silent/AAC films, edit-after-freeze and historical source reopen, real capture cancellation/retry and tool GC without deleting exports. Without the explicit seed manifest, this native case is skipped; source CI does not thereby qualify native rendering on its platform. The same explicit seed manifest enables the native Web and relocated Codex export tests:
+
+```sh
+OPEN_MOTION_NATIVE_MANIFEST=/absolute/owned/native-manifest.json PLAYWRIGHT_BROWSERS_PATH=0 pnpm --filter @open-motion/standalone test
+OPEN_MOTION_NATIVE_MANIFEST=/absolute/owned/native-manifest.json pnpm --filter @open-motion/codexplugin test
+```
+
+Web checks real submission, lost-response retry, cancellation/retry against frozen source, MP4 download and carrier restart. Codex copies its built closure outside repository ancestry, uses the stock MCP client and verifies actual film bytes and `resource_link`; no adjacent runtime or node_modules supplies its worker. Source CI separately covers queued/interrupted intent, ownership, pagination and ready-stage explicit dead-owner recovery. These are bounded native/macOS arm64 qualifications, not all-carrier or power-loss acceptance.
 
 ## Unified local development
 
@@ -66,7 +73,7 @@ pnpm exec odsuite guard --root /path/to/repo --json
 node --input-type=module -e 'import {run} from "@odsuite/testkit"; const r=await run({root:process.cwd(),output:".artifacts/qualification.json",packaged:false}); if(r.result==="failed")process.exitCode=1;'
 ```
 
-Testkit distinguishes passed/failed/unqualified and never substitutes for product acceptance. Electron is a reference carrier, Docker a skeleton, standalone/Codex carry the actual session/source workspace. Advanced animation, unresolved/nonlinear composition clocks, broader media/audio editing, additional codecs, layout preferences, generation and export are not fully connected.
+Testkit distinguishes passed/failed/unqualified and never substitutes for product acceptance. Electron is a reference carrier, Docker a skeleton, standalone/Codex carry the actual session/source workspace. Advanced animation, unresolved/nonlinear composition clocks, broader media/audio editing, additional codecs, layout preferences, generation and other-carrier export are not fully connected.
 
 ## Resources and recovery
 
@@ -89,7 +96,7 @@ GUI/package/native observer checks require the corresponding `ODSUITE_RUNTIME_GU
 
 ## Codex closure
 
-After build, `carriers/codexplugin/dist` is a movable local Node24 closure with one plugin manifest/MCP descriptor, main, Web and Daemon. Host PLUGIN_ROOT locates its entry; use explicit external resource identity:
+After build, `carriers/codexplugin/dist` is a movable local Node24 closure with one plugin manifest/MCP descriptor, main, Web, Daemon and the render worker. Host PLUGIN_ROOT locates its entry; use explicit external resource identity:
 
 | Variable              | Responsibility                                              |
 | --------------------- | ----------------------------------------------------------- |
@@ -102,7 +109,7 @@ Stdout is MCP JSON-RPC and stderr is diagnostics. Runtime status reports real he
 
 ## Workspace editing and preview
 
-Daemon exposes granted sockets/forwarded ports only. GET /health and POST /api/<operation> require the runtime Bearer capability; fixed composition origin controls browser CORS/OPTIONS. Workspace schemas are in `packages/workspace/src/contract.ts`; browser client and MCP use the same rules. No default-project aliases or parallel state endpoint exist.
+Daemon exposes granted sockets/forwarded ports only. GET /health and POST /api/<operation> require the runtime Bearer capability; fixed composition origin controls browser CORS/OPTIONS. Daemon combines workspace and export schemas in `apps/daemon/src/contract.ts`; browser client and MCP use the same rules. No default-project aliases or parallel state endpoint exist.
 
 `workspace.sqlite` is persistent hosted data, containing immutable source snapshots and command receipts. It is neither a working-copy directory nor GC content. Read current state explicitly; replaying requestId returns its original receipt. Save conflicts/unknown outcomes preserve drafts/context; retry confirms the same command. Explicit discard is a user action.
 
@@ -113,6 +120,14 @@ Canvas selection reads actual preview geometry. 2D movement commits on release t
 Preview open/close require capability and caller view ID; open verifies session/artifact/expectedRevision. Read-only snapshot URLs do not carry write authority, but reveal that view's content and should not enter shared logs. Page teardown/close revokes URLs; carrier close clears all ephemeral views. Unknown closure retains bounded state and can retry by ID, never by deleting user data. Full view capacity rejects explicitly.
 
 Differentiate failed save from failed preview. A confirmed old preview may remain beside a draft; it must not cross artifact ownership. Validate actual iframe text/paint/timing, play/seek, edit/reopen/reload, failure retention, old URL revocation and restart persistence. Build-injected pinned engines need no CDN. History requires content revision plus monotonic history version; schema 3 rejects old experiments without migrating or deleting them. Use fresh namespaces for verification; user-data import is separate work.
+
+## Background film export
+
+Standalone and Codex compose a hosted renderer on macOS arm64. Open the Web film-export disclosure after selecting an artifact; export saves confirmed source first and queues a 30fps film. Keep the same create/control request identity after an unknown response. Panel closure does not cancel accepted work. A development MCP attachment can disconnect while its runtime continues; self-hosted Codex EOF drains the owned runtime, retaining active intent as interrupted and queued intent for restart. A later source edit does not change its frozen input; retry uses that original revision. HTTP and MCP expose `export_create`, `export_list`, `export_read`, `export_cancel`, `export_retry` and `export_download` with the same explicit session/artifact ownership. Create takes an explicit revision and rational frame rate. List uses a maximum-16 cursor page; controls require the observed job version and a request UUID.
+
+The renderer's granted persistent data contains `exports.sqlite` (journal format 1), content-addressed read-only `inbox` snapshots and verified `exports` films/receipts. Workspace's schema 3 source/history is unchanged. Download returns a ten-minute read-only capability URL, digest, size and filename; MCP returns a resource link. URLs are process-local and must not enter shared logs. After restart, request a new download for the retained completed job. Movies are streamed after digest/size verification, never embedded in MCP JSON or collected by blob GC.
+
+Normal stop drains active work into interrupted state and retains queued work; restart runs queued intent, while interrupted jobs require explicit retry. Cancellation waits for actual worker retirement. After SIGKILL recover sidecar explicitly before reopening the composition. A `recovering` job blocks replacement until ownership is reconciled. The ready-stage witness path is tested; an interruption before the process ownership witness is committed can still reject recovery as unknown. Preserve that ledger and diagnostics; do not delete them, infer death or reset the root. Native generation/provider/template integration, unqualified platforms and broader interruption windows remain separate acceptance work.
 
 ## Distribution qualification
 

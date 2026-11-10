@@ -2,7 +2,7 @@ import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
-import { type Specification, specification, type Verification } from "./contract.js";
+import { type Specification, specification, type Verification } from "./jobs/contract.js";
 
 function run(command: string, args: string[], signal?: AbortSignal) {
   return new Promise<string>((resolve, reject) =>

@@ -41,22 +41,28 @@ importers:
       '@odsuite/carrier':
         specifier: workspace:*
         version: link:../../suites/carrier
-      '@open-motion/motion':
-        specifier: workspace:*
-        version: link:../../packages/motion
-      '@open-motion/workspace':
-        specifier: workspace:*
-        version: link:../../packages/workspace
-    devDependencies:
-      '@modelcontextprotocol/server':
-        specifier: 2.4.0
-        version: 2.4.0
       '@odsuite/protocol':
         specifier: workspace:*
         version: link:../../suites/protocol
       '@odsuite/sidecar':
         specifier: workspace:*
         version: link:../../suites/sidecar
+      '@open-motion/motion':
+        specifier: workspace:*
+        version: link:../../packages/motion
+      '@open-motion/render':
+        specifier: workspace:*
+        version: link:../../packages/render
+      '@open-motion/workspace':
+        specifier: workspace:*
+        version: link:../../packages/workspace
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
+    devDependencies:
+      '@modelcontextprotocol/server':
+        specifier: 2.4.0
+        version: 2.4.0
       '@types/node':
         specifier: 24.12.2
         version: 24.12.2
@@ -84,6 +90,9 @@ importers:
       '@open-motion/motion':
         specifier: workspace:*
         version: link:../../packages/motion
+      '@open-motion/render':
+        specifier: workspace:*
+        version: link:../../packages/render
       '@open-motion/theme':
         specifier: workspace:*
         version: link:../../packages/theme
@@ -158,9 +167,15 @@ importers:
       '@modelcontextprotocol/client':
         specifier: 2.4.0
         version: 2.4.0
+      '@odsuite/blob':
+        specifier: workspace:*
+        version: link:../../suites/blob
       '@odsuite/sidecar':
         specifier: workspace:*
         version: link:../../suites/sidecar
+      '@open-motion/render':
+        specifier: workspace:*
+        version: link:../../packages/render
       '@open-motion/web':
         specifier: workspace:*
         version: link:../../apps/web
@@ -261,6 +276,9 @@ importers:
       '@open-motion/daemon':
         specifier: workspace:*
         version: link:../../apps/daemon
+      '@open-motion/render':
+        specifier: workspace:*
+        version: link:../../packages/render
       '@open-motion/web':
         specifier: workspace:*
         version: link:../../apps/web

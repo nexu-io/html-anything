@@ -2,7 +2,14 @@ import type { Environment } from "@odsuite/carrier";
 import type { Clip } from "@open-motion/motion";
 import type { AnimationInput, EditInput, NativeValues } from "@open-motion/motion/contract";
 import type { ContextModel, HostChange, Source } from "@open-motion/motion/project";
-import { Fault, type Input, type Operation, type Output, type Project } from "@open-motion/workspace/contract";
+import type { ExportInput, ExportOperation, ExportOutput } from "@open-motion/render/contract";
+import type {
+  Project,
+  Input as WorkspaceInput,
+  Operation as WorkspaceOperation,
+  Output as WorkspaceOutput,
+} from "@open-motion/workspace/contract";
+import { Fault, type Input, type Operation, type Output } from "./contract.js";
 export type Transport = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 export interface Health {
   ok: boolean;
@@ -80,8 +87,11 @@ export class Client {
   async health(): Promise<Health> {
     return (await this.send("/health")) as Health;
   }
-  async execute<K extends Operation>(operation: K, input: Input<K>): Promise<Output<K>> {
-    return (await this.send(`/api/${operation}`, input)) as Output<K>;
+  execute<K extends WorkspaceOperation>(operation: K, input: WorkspaceInput<K>): Promise<WorkspaceOutput<K>>;
+  execute<K extends ExportOperation>(operation: K, input: ExportInput<K>): Promise<ExportOutput<K>>;
+  execute<K extends Operation>(operation: K, input: Input<K>): Promise<Output<K>>;
+  async execute(operation: Operation, input: unknown): Promise<Output<Operation>> {
+    return (await this.send(`/api/${operation}`, input)) as Output<Operation>;
   }
   private async send(path: string, input?: unknown, keepalive = false): Promise<unknown> {
     const response = await this.transport(`${this.origin}${path}`, {

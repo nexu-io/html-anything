@@ -14,7 +14,9 @@
     "@modelcontextprotocol/client": "2.4.0",
     "@odsuite/sidecar": "workspace:*",
     "@open-motion/web": "workspace:*",
-    "esbuild": "0.28.0"
+    "esbuild": "0.28.0",
+    "@open-motion/render": "workspace:*",
+    "@odsuite/blob": "workspace:*"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",

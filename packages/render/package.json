@@ -27,6 +27,18 @@
     "./worker": {
       "types": "./dist/worker.d.ts",
       "default": "./dist/worker.mjs"
+    },
+    "./contract": {
+      "types": "./dist/jobs/contract.d.ts",
+      "default": "./dist/contract.mjs"
+    },
+    "./host": {
+      "types": "./dist/host.d.ts",
+      "default": "./dist/host.mjs"
+    },
+    "./tools": {
+      "types": "./dist/tools.d.ts",
+      "default": "./dist/tools.mjs"
     }
   },
   "dependencies": {

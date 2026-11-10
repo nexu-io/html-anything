@@ -11,6 +11,8 @@ export interface Descriptor extends Identity {
   token: string;
 }
 export interface Context {
+  /** Registered-owner cleanup, including quiesce; new allocations remain forbidden during manager shutdown. */
+  cleanup<T>(operation: () => Promise<T>): Promise<T>;
   /** Create background controller tasks during initialize; stop must cancel and drain them. */
   background<T>(operation: () => T): T;
   readonly identity: Readonly<Identity>;

@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { lstat, mkdir, open, readFile, realpath, rename, writeFile } from "node:fs/promises";
 import { join, resolve, sep } from "node:path";
 import { setTimeout } from "node:timers/promises";
@@ -7,10 +6,10 @@ import { type Library, type Loader, type Resource, resourceKey, type Use } from 
 import { canonical, digest } from "@odsuite/protocol";
 import { source } from "@odsuite/serve";
 import type { Context, Factory, Lease } from "@odsuite/sidecar";
-import type { Verification } from "./contract.js";
+import type { Verification } from "./jobs/contract.js";
 import { materialize, type Snapshot } from "./snapshot.js";
 
-export { fps, type Progress, type Specification, specification, type Verification } from "./contract.js";
+export { fps, type Progress, type Specification, specification, type Verification } from "./jobs/contract.js";
 export { freeze, type Snapshot } from "./snapshot.js";
 export interface Tool {
   resource: Resource;
@@ -19,6 +18,8 @@ export interface Tool {
 }
 export type Tools = { browser: Tool; ffmpeg: Tool; ffprobe: Tool };
 export interface Options {
+  id: string;
+  progress?(phase: import("./jobs/contract.js").Progress): void;
   factory: Factory;
   context: Context;
   library: Library;
@@ -29,9 +30,10 @@ export interface Options {
 }
 /** Service-owned execution. Cancellation requests drain; they never declare a process dead. */
 export async function render(options: Options) {
+  if (!/^[a-f0-9-]{36}$/.test(options.id)) throw Error("invalid execution attempt");
   const { factory, library, context, signal } = options,
     input = structuredClone(options.input),
-    id = randomUUID(),
+    id = options.id,
     grant = await factory.grant({ kind: "staging", name: "render", scope: "attempt", owner: id }),
     root = grant.value,
     view = join(root, "view"),
@@ -43,7 +45,7 @@ export async function render(options: Options) {
   try {
     signal?.throwIfAborted();
     const html = await materialize(input, view);
-    served = await source(factory, { name: `preview${id.replaceAll("-", "")}`, directory: view });
+    served = await source(factory, { name: "renderpreview", directory: view });
     const payload = Buffer.from(
       canonical({ html, spec: input.spec, origin: served.endpoint.url, view, scratch: root, output }),
     );
@@ -89,12 +91,17 @@ export async function render(options: Options) {
     await writeFile(join(root, "launch.next"), JSON.stringify(paths), { flag: "wx", mode: 0o600, flush: true });
     await rename(join(root, "launch.next"), join(root, "launch.json"));
     const deadline = Date.now() + 25 * 60 * 1000;
-    let verification: Verification | undefined;
+    let verification: Verification | undefined,
+      phase = "";
     while (!verification) {
       signal?.throwIfAborted();
       if (Date.now() > deadline) throw Error("render execution deadline exceeded");
       try {
         const result = JSON.parse(await readFile(join(root, "result.json"), "utf8"));
+        if (["capturing", "encoding", "verifying"].includes(result.phase) && result.phase !== phase) {
+          phase = result.phase;
+          options.progress?.(result.phase);
+        }
         if (result.phase === "failed") throw Error(result.error);
         if (result.phase === "succeeded") verification = result.verification;
       } catch (error) {
@@ -150,10 +157,13 @@ export async function render(options: Options) {
       const stopped = await factory.release(lease);
       retired = stopped.status === "stopped" && !stopped.survivors.length;
     }
-    if (retired) {
-      for (const use of uses) await library.release(use);
-      await served?.attachment.close();
-      await factory.revoke(grant.lease);
-    }
+    if (retired)
+      await context.cleanup(async () => {
+        await library.session(async (session) => {
+          for (const use of uses) await session.release(use);
+        });
+        await served?.attachment.close();
+        await factory.revoke(grant.lease);
+      });
   }
 }
