@@ -91,9 +91,23 @@ export type Reply<T> =
       ok: false;
       error: { code: "invalid" | "missing" | "ownership" | "conflict" | "idempotency" | "integrity"; message: string };
     };
+export interface NativeComponent {
+  state: "pending" | "preparing" | "ready" | "failed" | "cancelled";
+  resourceKey: `sha256:${string}`;
+  error?: string;
+}
+/** Last explicit preparation attempt, not a guarantee against later cache GC or execution failure. */
+export interface NativePreparation {
+  attempt: number;
+  state: "idle" | "preparing" | "ready" | "partial" | "failed" | "cancelled";
+  components: { browser: NativeComponent; ffmpeg: NativeComponent; ffprobe: NativeComponent };
+}
 export type RenderMethods = {
   [K in Exclude<ExportOperation, "export_download">]: {
     input: ExportInput<K> & (K extends "export_create" ? { projection: Projection } : object);
     output: Reply<ExportOutput<K>>;
   };
+} & {
+  native_prepare: { input: object; output: Reply<NativePreparation> };
+  native_prepare_read: { input: object; output: Reply<NativePreparation> };
 };

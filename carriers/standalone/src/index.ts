@@ -132,4 +132,5 @@ export async function open(options: Options): Promise<Standalone> {
   }
 }
 
+export { openPreparation } from "./preparation.js";
 export { prismConfiguration } from "./prism.js";

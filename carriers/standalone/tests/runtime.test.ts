@@ -1,17 +1,139 @@
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { once } from "node:events";
+import { createReadStream } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { pack } from "@odsuite/pack";
-import { channel, namespace } from "@odsuite/protocol";
+import { canonical, channel, digest, namespace } from "@odsuite/protocol";
 import { materialize } from "@odsuite/release";
-import { observeProcesses, readDirectory } from "@odsuite/sidecar";
+import { connectRoot, observeProcesses, readDirectory, startManager, stopManager } from "@odsuite/sidecar";
+import type { Tools } from "@open-motion/render";
+import type { RenderMethods } from "@open-motion/render/contract";
 import { nativeTools } from "@open-motion/render/tools";
 import { expect, it } from "vitest";
-import { open } from "@";
+import { open, openPreparation } from "@";
+
+it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST) && process.platform === "darwin" && process.arch === "arm64")(
+  "starts the actual installed preparation entry with a manager stamp and never activates application or export services",
+  async () => {
+    const root = await mkdtemp(join(tmpdir(), "installed-native-prepare-")),
+      path = resolve(process.env.OPEN_MOTION_NATIVE_MANIFEST!),
+      manifest = JSON.parse(await readFile(path, "utf8")),
+      scope = { channel: channel("stable"), namespace: namespace("installed-prep") };
+    const tool = (name: keyof Tools) => {
+      const spec = manifest[name] as { path: string; resource: Tools["browser"]["resource"]; executable: string };
+      return {
+        resource: spec.resource,
+        executable: spec.executable,
+        load: async () => createReadStream(resolve(dirname(path), spec.path)),
+      };
+    };
+    const warm = await openPreparation({
+      root,
+      scope,
+      version: "0.6.1",
+      tools: { browser: tool("browser"), ffmpeg: tool("ffmpeg"), ffprobe: tool("ffprobe") },
+    });
+    try {
+      expect(await warm.prepare()).toMatchObject({ state: "ready" });
+    } finally {
+      await warm.close();
+    }
+    const owner = await startManager({
+      root,
+      scope,
+      command: process.execPath,
+      args: [
+        fileURLToPath(new URL("../dist/runtime/main.mjs", import.meta.url)),
+        "--root",
+        root,
+        "--channel",
+        "stable",
+        "--namespace",
+        "installed-prep",
+        "--version",
+        "0.6.1",
+        "--mode",
+        "prepare",
+      ],
+      log: join(root, "private-manager.log"),
+    });
+    try {
+      expect(owner.pid).not.toBe(process.pid);
+      const { factory } = await connectRoot(root, scope),
+        peer = await factory.connect<RenderMethods>({ service: "renderer", generation: digest("0.6.1") });
+      expect(
+        (await factory.directory()).instances.filter((entry) => entry.phase === "ready").map((entry) => entry.service),
+      ).toEqual(["renderer"]);
+      expect(await peer.call("native_prepare", {})).toMatchObject({ ok: true, value: { state: "preparing" } });
+      await expect
+        .poll(
+          async () => {
+            const reply = await peer.call("native_prepare_read", {});
+            return reply.ok ? reply.value.state : reply.error.message;
+          },
+          { timeout: 10000 },
+        )
+        .toBe("ready");
+      expect(await peer.call("export_list", { sessionId: randomUUID(), artifactId: randomUUID() })).toMatchObject({
+        ok: false,
+        error: { code: "invalid" },
+      });
+      for (const grant of (await factory.resources()).grants.filter((grant) => grant.kind === "data"))
+        await expect(readFile(join(grant.value, "exports.sqlite"))).rejects.toMatchObject({ code: "ENOENT" });
+      expect(await factory.inspect()).toEqual([]);
+    } finally {
+      await stopManager(owner);
+      expect((await readDirectory(root)).manager.phase).toBe("closed");
+      expect(await observeProcesses(root)).toEqual([]);
+    }
+  },
+  60000,
+);
+
+it("prepares in the same renderer cache factory without composing Web, Daemon or an export queue", async () => {
+  const root = await mkdtemp(join(tmpdir(), "standalone-preparation-")),
+    bytes = Buffer.from(
+      canonical({
+        schema: 1,
+        files: [{ path: "binary", mode: 0o755, bytes: Buffer.from("materialization fixture only").toString("base64") }],
+      }),
+    ),
+    tool = (slot: string) => ({
+      resource: {
+        type: "directory" as const,
+        artifact: { kind: "blob" as const, slot, bytes: bytes.length, digest: digest(bytes) },
+      },
+      executable: "binary",
+      load: async () => bytes,
+    }),
+    runtime = await openPreparation({
+      root,
+      scope: { channel: channel("stable"), namespace: namespace("prep") },
+      version: "0.6.1",
+      tools: { browser: tool("browser"), ffmpeg: tool("ffmpeg"), ffprobe: tool("ffprobe") },
+    });
+  try {
+    expect(runtime.manager.directory().instances.map((entry) => entry.service)).toEqual(["renderer"]);
+    expect(await runtime.status()).toMatchObject({ mode: "prepare", native: { state: "idle" } });
+    expect(await runtime.prepare()).toMatchObject({ state: "ready" });
+    const factory = runtime.manager.factory({ channel: channel("stable"), namespace: namespace("prep") }),
+      resources = await factory.resources();
+    expect(resources.grants.some((grant) => grant.kind === "port")).toBe(false);
+    const data = resources.grants.filter((grant) => grant.kind === "data");
+    expect(data.length).toBeGreaterThan(0);
+    for (const grant of data)
+      await expect(readFile(join(grant.value, "exports.sqlite"))).rejects.toMatchObject({ code: "ENOENT" });
+    expect(await observeProcesses(root)).toEqual([]);
+  } finally {
+    await runtime.close();
+    expect((await readDirectory(root)).manager.phase).toBe("closed");
+    expect(await observeProcesses(root)).toEqual([]);
+  }
+});
 
 it("runs real Web and a sidecar-owned Daemon with propagated environment and durable state", async () => {
   const root = await mkdtemp(join(tmpdir(), "standalone-"));
