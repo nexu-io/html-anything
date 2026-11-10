@@ -15,6 +15,8 @@ Agent 结合当前目标、保持项与工程状态选择本轮入口；工程�
 
 通过 npm 安装的平铺 Skill 可读取入口旁的 `openmotion-install.json`：`runtimeRoot` 指向应用和共享 `docs/`，不要从当前工程猜测服务路径。完整包或薄插件仍按其 `scope.json.runtimeRoot` / 已注册启动配置定位；五个入口的相对参考保持同一技能目录布局。
 
+If Motion tools are unavailable, apply the [connection diagnosis and recovery rules](production.md#tool-transport-and-workspace-readiness) before creating or importing work. Use the installed host/home identity, retain the actual connection error and verify recovery through a real host MCP read; a separate CLI probe cannot confirm the current chat connection.
+
 ## 先补齐阅读缺口，再执行当前范围
 
 每轮先复用会话或已有 `STATE.md` 中的**已读文档**，再计算“本次必需 − 正文仍在上下文中的已读文档”。只读取差集。独立读取可以并行，但长文档应按外层工具的实际输出预算分批或分段，检查模型收到的结果是否截断，不能只看命令成功或完整 stdout。后续章节再次提到“读取”同一参考，表示应用其规范，不是重新加载全文。

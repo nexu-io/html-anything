@@ -37,9 +37,12 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
         const host = createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
           origin: () => origin, historyRoot });
         const openHistory = host.adapter.history;
+        const histories = new WeakMap();
         host.adapter.history = async () => {
           const history = await openHistory();
-          return history && withAvailableHistorySteps(history, historyRoot);
+          // Native window/close requests compare history objects by identity.
+          if (history && !histories.has(history)) histories.set(history, withAvailableHistorySteps(history, historyRoot));
+          return history && histories.get(history);
         };
         return host;
       })().catch(error => { hosts.delete(id); throw error; });

@@ -107,6 +107,7 @@ ${integrationConfig(info, host).text}\`\`\`
 配置中的绝对路径、MOTION_DATA_DIR 和 PORT 来自正在运行的服务，不要换成其他副本。必要时新建会话加载工具。
 通过 initialize 和 tools/list 确认工具加载，再调用 motion_get_project，核对返回的 dataDirectory。
 网页可达或复制配置不代表 MCP 已连接。只验证接入时不要修改工程。
+If tools are missing, inspect this host's server status and startup output before authoring. Follow the connection diagnosis and recovery section in the shared production guide. A separate command-line probe cannot reconnect or verify this chat; after the host reconnects, read the expected data directory and original project/version through its actual MCP connection.
 ${host === 'deepseek' ? '\n将上方条目合并到 Harness 当前配置，保留其他插件。配置模型后重新加载会话，验证工具 mcp__motion__motion_get_project；以工具列表中的实际名称为准。MCP 启动不需要 DeepSeek 模型 API Key，模型凭据由 Harness 自身管理。官方配置：https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/mcp/mcp-client/README.md\n' : ''}
 
 ## 工具
