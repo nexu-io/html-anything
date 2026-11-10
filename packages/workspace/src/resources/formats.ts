@@ -59,6 +59,7 @@ function wave(bytes: Buffer) {
 }
 export function identify(path: string, name: string, bytes: Buffer): Resource {
   try {
+    if (!bytes.length || bytes.length > resourceLimit) throw Error("resource bytes outside supported bounds");
     let metadata: ReturnType<typeof wave> | { type: "image/png"; width: number; height: number };
     if (path.toLowerCase().endsWith(".png")) {
       if (

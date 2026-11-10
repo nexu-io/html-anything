@@ -9,11 +9,13 @@ export class Resources {
     private projects: Projects,
   ) {}
   import(input: Input<"resource_import">) {
+    return this.importBytes(input, decode(input.data));
+  }
+  importBytes(input: Omit<Input<"resource_import">, "data">, bytes: Buffer) {
     const project = this.current(input);
     if (project.resources.some((entry) => entry.path === input.path))
       throw new Fault("conflict", "resource path already exists");
-    const bytes = decode(input.data),
-      resource = identify(input.path, input.name, bytes),
+    const resource = identify(input.path, input.name, bytes),
       prior = this.db.one("SELECT bytes FROM resources WHERE digest=?", resource.digest);
     if (prior && !Buffer.from(prior.bytes as Uint8Array).equals(bytes))
       throw new Fault("integrity", "persistent resource content mismatch");
@@ -40,7 +42,7 @@ export class Resources {
       throw new Fault("integrity", "persistent resource bytes are corrupt");
     return { resource, data: bytes.toString("base64") };
   }
-  private current(input: Input<"resource_import"> | Input<"resource_remove">) {
+  private current(input: Omit<Input<"resource_import">, "data"> | Input<"resource_remove">) {
     const project = this.projects.read(input);
     if (project.revision !== input.expectedRevision)
       throw new Fault("conflict", "project revision changed; read before changing resources");
