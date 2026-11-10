@@ -36,7 +36,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，�
 
 <a id="agent-wall"></a>
 
-**22 个本地 Agent** · [新增 WorkBuddy](#workbuddy-setup) · [选择你的 Agent](#choose-agent)
+**22 个本地 Agent** · [选择你的 Agent](#choose-agent)
 
 <p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="readme/agents/local-agents.mobile.png"><img src="readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 

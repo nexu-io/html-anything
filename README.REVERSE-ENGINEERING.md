@@ -34,7 +34,7 @@ The remake is an editable HTML project. Fine-tune the cut in Studio and export a
 
 <a id="agent-wall"></a>
 
-**22 local agents** · [New in OpenMotion: WorkBuddy](#workbuddy-setup) · [Choose your agent](#choose-agent)
+**22 local agents** · [Choose your agent](#choose-agent)
 
 <p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="docs/readme/agents/local-agents.mobile.png"><img src="docs/readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 
