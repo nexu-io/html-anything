@@ -1,7 +1,8 @@
 import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { createReadStream } from "node:fs";
-import { access, mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, realpath, rename, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { promisify } from "node:util";
 import { Client } from "@modelcontextprotocol/client";
@@ -19,7 +20,9 @@ import { hash } from "@/contract.js";
 
 const run = promisify(execFile);
 async function fixture() {
-  const root = resolve("../../.artifacts/npx-delivery", randomUUID());
+  const evidence = resolve("../../.artifacts/npx-delivery", randomUUID()),
+    root = await realpath(await mkdtemp(join(tmpdir(), "openmotion-npx-")));
+  await mkdir(evidence, { recursive: true });
   await mkdir(join(root, "workspace"), { recursive: true });
   await mkdir(join(root, "profile"));
   const files: Record<string, string | Uint8Array> = {},
@@ -52,8 +55,9 @@ async function fixture() {
     license: "Apache-2.0",
     bin: { odsuite: "dist/main.mjs" },
     files,
-    output: join(root, "application.tgz"),
+    output: join(evidence, "application.tgz"),
   });
+  await writeFile(join(evidence, "fixture.json"), JSON.stringify({ root, archive }, null, 2));
   const common = ["--home", join(root, "installation"), "--data", join(root, "data"), "--namespace", "installation"];
   const invoke = (args: string[]) =>
     run(
@@ -74,7 +78,7 @@ async function fixture() {
       { cwd: root, timeout: 60000, maxBuffer: 1024 ** 2, env: { ...process.env, npm_config_update_notifier: "false" } },
     );
   const command = async (args: string[]) => JSON.parse((await invoke(args)).stdout.trim());
-  return { root, version, channel, command, invoke, data: join(root, "data", channel, "installation") };
+  return { root, evidence, version, channel, command, invoke, data: join(root, "data", channel, "installation") };
 }
 
 it("installs a real local npm kit idempotently and controls its stamped standalone runtime", async () => {
@@ -96,7 +100,7 @@ it("installs a real local npm kit idempotently and controls its stamped standalo
   expect((await own.command(["stop"])).result.state).toBe("stopped");
   expect((await readDirectory(own.data)).manager.phase).toBe("closed");
   expect(await observeProcesses(own.data)).toEqual([]);
-  await writeFile(join(own.root, "receipt.json"), JSON.stringify(first, null, 2));
+  await writeFile(join(own.evidence, "receipt.json"), JSON.stringify(first, null, 2));
 }, 120000);
 
 it("registers an installed MCP transport that survives removal of its npx cache", async () => {
@@ -138,7 +142,7 @@ else if(args[1]==='add'){const at=args.indexOf('--'),env={};for(let i=3;i<at;i+=
   }
   expect((await readDirectory(own.data)).manager.phase).toBe("closed");
   expect(await observeProcesses(own.data)).toEqual([]);
-  await writeFile(join(own.root, "receipt.json"), JSON.stringify(registered, null, 2));
+  await writeFile(join(own.evidence, "receipt.json"), JSON.stringify(registered, null, 2));
 }, 120000);
 
 it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
@@ -216,7 +220,7 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
         )
         .toBe("closed");
       expect(await observeProcesses(own.data)).toEqual([]);
-      await writeFile(join(own.root, `${signal}.json`), JSON.stringify(await outcome));
+      await writeFile(join(own.evidence, `${signal}.json`), JSON.stringify(await outcome));
     }
     const prepared = await own.command(["prepare"]);
     expect(prepared.result.state).toBe("ready");
@@ -284,7 +288,7 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
       expect(bytes.subarray(4, 8).toString()).toBe("ftyp");
       expect(`sha256:${hash(bytes)}`).toBe(info.digest);
       expect(completed.result?.verification.frames).toBe(12);
-      await writeFile(join(own.root, "film.mp4"), bytes);
+      await writeFile(join(own.evidence, "film.mp4"), bytes);
       await writeFile(
         join(own.root, "native-evidence.json"),
         JSON.stringify({ archive: "application.tgz", prepared, completed, digest: info.digest }, null, 2),
