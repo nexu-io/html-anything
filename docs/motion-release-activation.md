@@ -4,7 +4,7 @@ This branch retains the legacy HTML Anything application. The Motion application
 
 ## Scope and provenance
 
-The three manual workflows, their runtime helpers, installation/acceptance templates and deterministic tests are copied without modification from reviewed PR [#214](https://github.com/nexu-io/html-anything/pull/214), source commit `de45dadea282214762c7b3123cea7e6b1044f26f`. No private Git history or application files are imported. The extra `Motion release controls` CI job runs only syntax checks and simulated-service tests with read-only permissions; the existing legacy CI remains unchanged.
+The three manual workflows, their runtime helpers, installation/acceptance templates and deterministic tests are copied without modification from reviewed PR [#214](https://github.com/nexu-io/html-anything/pull/214), source commit `de45dadea282214762c7b3123cea7e6b1044f26f`. No private Git history or application files are imported. The extra `Motion release controls` CI job runs only syntax checks and simulated-service tests with read-only permissions; the legacy CI commands and permissions are preserved. Its runner is pinned to Ubuntu 24.04 because the locked Playwright cannot install browsers on the Ubuntu 26.04 image now selected by ubuntu-latest.
 
 GitHub requires a manual workflow to exist on the default branch before its Run workflow entry is available. Our controls additionally require execution from `main`; they fetch the Motion application from a reviewed commit integrated into `feature/motion`. See [GitHub manual workflows](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
 
