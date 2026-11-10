@@ -176,6 +176,9 @@ importers:
       '@odsuite/blob':
         specifier: workspace:*
         version: link:../../suites/blob
+      '@odsuite/serve':
+        specifier: workspace:*
+        version: link:../../suites/serve
       '@odsuite/sidecar':
         specifier: workspace:*
         version: link:../../suites/sidecar

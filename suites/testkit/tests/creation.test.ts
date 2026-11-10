@@ -40,7 +40,14 @@ it("hands a verified remote template from guidance and Web creation to manual ed
         content: file.content
           .replace('data-duration="5"', 'data-duration="2"')
           .replace("duration:5", "duration:2")
-          .replace("</main>", "<h1>Prism accepted source</h1></main>"),
+          .replace(
+            "<head>",
+            "<head><style>html,body{margin:0;width:1920px;height:1080px;background:#164080;color:white}main{width:1920px;height:1080px}h1{margin:0;padding:120px;font:96px sans-serif}</style>",
+          )
+          .replace(
+            "</main>",
+            '<h1 id="caption" class="clip" data-start="0" data-duration="2" data-track-index="0">Prism accepted source</h1></main>',
+          ),
       })),
       manifest = files.map((file) => ({
         path: file.path,
@@ -321,6 +328,21 @@ it("hands a verified remote template from guidance and Web creation to manual ed
           time: (element as HTMLVideoElement).currentTime,
         }));
         expect(report.playback).toEqual({ width: 1920, height: 1080, duration: 2, time: 1 });
+        const decodedCaptionPixels = () =>
+          video.evaluate((element) => {
+            const canvas = document.createElement("canvas");
+            canvas.width = 1200;
+            canvas.height = 160;
+            const context = canvas.getContext("2d")!;
+            context.drawImage(element as HTMLVideoElement, 100, 100, 1200, 160, 0, 0, 1200, 160);
+            const pixels = context.getImageData(0, 0, 1200, 160).data;
+            let bright = 0;
+            for (let i = 0; i < pixels.length; i += 4)
+              if (pixels[i]! > 220 && pixels[i + 1]! > 220 && pixels[i + 2]! > 220) bright++;
+            return bright;
+          });
+        await expect.poll(decodedCaptionPixels).toBeGreaterThan(5000);
+        report.decodedCaptionPixels = await decodedCaptionPixels();
         await video.screenshot({ path: join(evidence, "film-playback.png") });
       } finally {
         await playback.evaluate(() => URL.revokeObjectURL(document.querySelector("video")?.src ?? ""));

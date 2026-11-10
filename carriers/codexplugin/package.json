@@ -16,7 +16,8 @@
     "@open-motion/web": "workspace:*",
     "esbuild": "0.28.0",
     "@open-motion/render": "workspace:*",
-    "@odsuite/blob": "workspace:*"
+    "@odsuite/blob": "workspace:*",
+    "@odsuite/serve": "workspace:*"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",
