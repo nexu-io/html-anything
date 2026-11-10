@@ -9,6 +9,7 @@ import { parseArgs } from 'node:util';
 import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, relativePath, runFile, withLock, writeAtomic, writeJSON } from './runtime-assets.mjs';
 import { ensureNativeRuntime, startNativePreparation } from './npm-runtime.mjs';
 import { hosts, hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
+import { checkTransport, redact } from './check-installed-mcp.mjs';
 
 // Keep ownership stable so earlier local installations remain upgradable.
 export const managedBy = '@openmotion/installer';
@@ -18,6 +19,7 @@ const contains = (parent, child) => { const rel = path.relative(parent, child); 
 const usage = `Usage:
   openmotion setup --host <${hosts.join('|')}> [options]
   openmotion prepare [--home DIR]
+  openmotion diagnose --host <${hosts.join('|')}> [--home DIR] [host options]
   openmotion --version
 
 Select the current Agent host explicitly; installed CLIs do not identify the current host.
@@ -35,6 +37,8 @@ Setup options:
 Setup starts native preparation in the background; editing does not wait for it.
 Use prepare to wait explicitly for every video component or retry failed preparation.
 Refresh the selected host's Tools/Skills; registration alone does not prove loading.
+Diagnose checks the installed host configuration and probes its MCP command without changing configuration.
+It does not reconnect the host; follow its recovery guidance and verify a read in the active Agent chat.
 Use separate host configuration, home, data and Skills paths for test candidates.
   -h, --help         Show this help without installing or changing configuration
   --version          Show this package's version`;
@@ -149,6 +153,33 @@ export async function setup(options) {
   });
 }
 
+export async function diagnose(options) {
+  let stage = 'installation';
+  const host = options.host || 'codex';
+  const recovery = host === 'claude'
+    ? 'After correcting the reported cause, open /mcp in the current Claude Code session and select Reconnect for openmotion.'
+    : `After correcting the reported cause, refresh or reconnect openmotion in the current ${host} host${options.profile ? ' profile ' + options.profile : ''}.`;
+  try {
+    const environment = (await readJSON(bundledManifest))?.templateEnvironment;
+    const home = await canonical(options.home || defaultHome(environment));
+    const state = await readJSON(path.join(home, 'install.json'));
+    assert(state?.managedBy === managedBy, 'Run setup for the selected host and installation home first.');
+    assert(state.hosts?.[host] || host === 'codex' && state.skillsDirectory, 'This installation is not registered for the selected host.');
+    stage = 'host_configuration';
+    const saved = state.hosts?.[host];
+    const plan = await hostPlan({ ...options, skillsDirectory: saved?.skillsDirectory, profile: options.profile || saved?.profile }, home, state.launcher, state);
+    const connection = plan.readConnection ? await plan.readConnection() : plan.connection;
+    stage = 'mcp_probe';
+    const expectedTools = (await readJSON(path.join(state.appRoot, 'shared/mcp-profiles.json'))).phase1.tools;
+    const checked = checkTransport(connection, state.version, { expectedTools, dataDirectory: state.dataDirectory });
+    return { status: 'passed', host, ...checked, hostSessionVerified: false,
+      nextAction: 'Call motion_get_project through the active host connection and verify the original project and version. This independent probe does not verify the active chat connection. If that chat still lacks Motion tools: ' + recovery };
+  } catch (error) {
+    return { status: 'failed', host, stage, code: error.code || 'MCP_DIAGNOSIS_FAILED', message: redact(error.message, process.env),
+      hostSessionVerified: false, nextAction: recovery + ' Keep existing projects and exports; do not create replacement work or blindly replay a mutation.' };
+  }
+}
+
 async function main() {
   const { positionals, values } = parseArgs({ allowPositionals: true, options: {
     manifest: { type: 'string' }, home: { type: 'string' }, 'data-dir': { type: 'string' }, 'skills-dir': { type: 'string' }, host: { type: 'string' }, codex: { type: 'string' }, claude: { type: 'string' }, dsh: { type: 'string' }, profile: { type: 'string' },
@@ -166,6 +197,10 @@ async function main() {
     assert(state?.managedBy === managedBy, 'Run setup first');
     await ensureNativeRuntime(state.appRoot);
     console.log('Pinned FFmpeg, ffprobe and browser are ready.');
-  } else throw new Error('Supported commands: setup, prepare');
+  } else if (command === 'diagnose') {
+    const result = await diagnose({ home: values.home, host: values.host, codex: values.codex, claude: values.claude, dsh: values.dsh, profile: values.profile });
+    console.log(JSON.stringify(result, null, 2));
+    if (result.status !== 'passed') process.exitCode = 1;
+  } else throw new Error('Supported commands: setup, prepare, diagnose');
 }
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) main().catch(error => { console.error(error.message + '\nRun openmotion --help for supported hosts and installation options.'); process.exitCode = 1; });

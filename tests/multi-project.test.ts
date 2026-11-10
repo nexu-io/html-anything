@@ -59,6 +59,17 @@ test('one native service keeps both projects editable, scoped and recoverable af
     for (const id of [a, b]) {
       const history = await fetch(`${base()}/api/projects/${id}/history`);
       assert.equal(history.status, 200, await history.clone().text());
+      const postHistory = (projectId: string, action: string) => fetch(`${base()}/api/projects/${projectId}/history/${action}`, {
+        method: 'POST', headers: { Origin: base(), 'Content-Type': 'application/json' }, body: JSON.stringify({ label: 'Agent edit', exclusive: true }),
+      });
+      const opened = await postHistory(id, 'window');
+      assert.equal(opened.status, 200, await opened.clone().text());
+      const { windowId } = await opened.json();
+      assert.equal((await postHistory(id === a ? b : a, `window/${windowId}/close`)).status, 409);
+      await writeFile(path.join(store.projectDirectoryFor(id), 'notes.txt'), `Updated by ${id}`);
+      const closed = await postHistory(id, `window/${windowId}/close`);
+      assert.equal(closed.status, 200, await closed.clone().text());
+      assert.ok((await closed.json()).entry, 'a history window must survive separate requests for its own project');
       const project = await call('motion_get_project', { projectId: id });
       const edit = await call('motion_edit_project', {
         projectId: id, requestId: crypto.randomUUID(), expectedRevision: project.revision,

@@ -5,10 +5,10 @@ import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { fileURLToPath } from 'node:url';
-import { localManifest, setup } from '../scripts/npm-installer.mjs';
+import { diagnose, localManifest, setup } from '../scripts/npm-installer.mjs';
 import { hosts } from '../scripts/npm-hosts.mjs';
 import { configureNativeEnvironment, ensureNativeRuntime, nativeConfiguration } from '../scripts/npm-runtime.mjs';
-import { obtainAsset, relativePath, runFile, sha256, withLock, writeJSON } from '../scripts/runtime-assets.mjs';
+import { canonical, obtainAsset, relativePath, runFile, sha256, withLock, writeJSON } from '../scripts/runtime-assets.mjs';
 
 const dummyRuntime = () => ({ targets: { fixture: { platform: process.platform, arch: process.arch,
   browser: { url: 'https://example.invalid/browser.zip', sha256: 'b'.repeat(64), executable: 'browser/chrome' },
@@ -37,13 +37,14 @@ async function setupFixture(t: any) {
   for (const name of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'README.md', 'AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(application, name), 'fixture');
   await writeFile(path.join(application, 'skills/motion-production/SKILL.md'), '---\nname: motion-production\ndescription: fixture\n---\nFixture');
   await writeJSON(path.join(application, 'shared/template-config.json'), { environment: 'prod' });
+  await cp(new URL('../shared/mcp-profiles.json', import.meta.url), path.join(application, 'shared/mcp-profiles.json'));
   await writeJSON(path.join(application, 'package.json'), { name: 'motion-fixture', version: '1.2.3', private: true });
   await writeJSON(path.join(application, 'package-lock.json'), { name: 'motion-fixture', version: '1.2.3', lockfileVersion: 3, packages: { '': { name: 'motion-fixture', version: '1.2.3' } } });
   const manifest = path.join(directory, 'release.json');
   await writeJSON(manifest, { schemaVersion: 1, version: '1.2.3', application: await archive(directory, application, 'application'), runtime: dummyRuntime() });
   const codex = path.join(directory, 'codex'), config = path.join(directory, 'codex.json');
   await writeJSON(config, { unrelated: { transport: { command: 'keep-this' } } });
-  await writeFile(codex, `#!${process.execPath}\nimport fs from 'node:fs';\nconst file=${JSON.stringify(config)};\nconst state=JSON.parse(fs.readFileSync(file,'utf8'));\nconst args=process.argv.slice(2);\nif(args[1]==='get'){if(!state.openmotion){console.error(\"No MCP server named 'openmotion' found.\");process.exit(1);}console.log(JSON.stringify(state.openmotion));}\nelse if(args[1]==='add'){if(state.fail){console.error('registration failed');process.exit(1);}state.openmotion={transport:{command:args[4],args:args.slice(5)}};fs.writeFileSync(file,JSON.stringify(state));}\n`, { mode: 0o755 });
+  await writeFile(codex, `#!${process.execPath}\nimport fs from 'node:fs';\nconst file=${JSON.stringify(config)};\nconst state=JSON.parse(fs.readFileSync(file,'utf8'));\nconst args=process.argv.slice(2);\nif(args[1]==='get'){if(!state.openmotion){console.error(\"No MCP server named 'openmotion' found.\");process.exit(1);}console.log(JSON.stringify(state.openmotion));}\nelse if(args[1]==='add'){if(state.fail){console.error('registration failed');process.exit(1);}state.openmotion={transport:{type:'stdio',command:args[4],args:args.slice(5)}};fs.writeFileSync(file,JSON.stringify(state));}\n`, { mode: 0o755 });
   await chmod(codex, 0o755);
   return { directory, application, home, skillsDirectory, manifest, codex, config };
 }
@@ -51,7 +52,7 @@ async function setupFixture(t: any) {
 test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and rejects a mixed-environment home', async t => {
   const options = await setupFixture(t), bundle = path.join(options.directory, 'bundle');
   await mkdir(path.join(bundle, 'scripts'), { recursive: true }); await mkdir(path.join(bundle, 'payload'));
-  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs']) {
+  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs']) {
     await cp(new URL('../scripts/' + file, import.meta.url), path.join(bundle, 'scripts', file));
   }
   await writeJSON(path.join(bundle, 'package.json'), { version: '1.2.3', type: 'module' });
@@ -179,7 +180,7 @@ test('separate ffmpeg and ffprobe archives validate independently and recover wi
 test('CLI help and version cover every host without reading a manifest or changing an installation', async t => {
   const directory = await fixture(t), cli = fileURLToPath(new URL('../scripts/npm-installer.mjs', import.meta.url));
   const missing = path.join(directory, 'missing.json'), home = path.join(directory, 'app');
-  for (const command of [['--help'], ['setup', '-h'], ['prepare', '--help']]) {
+  for (const command of [['--help'], ['setup', '-h'], ['prepare', '--help'], ['diagnose', '--help']]) {
     const help = await runFile(process.execPath, [cli, ...command, '--manifest', missing, '--home', home]);
     for (const host of hosts) assert(help.includes(host), host);
     for (const option of ['--profile', '--skills-dir', '--codex', '--claude', '--dsh']) assert(help.includes(option), option);
@@ -194,6 +195,62 @@ test('npm bin symlink executes the CLI instead of silently exiting', { skip: pro
   const directory = await fixture(t), link = path.join(directory, 'openmotion');
   await symlink(fileURLToPath(new URL('../scripts/npm-installer.mjs', import.meta.url)), link);
   await assert.rejects(runFile(process.execPath, [link, 'prepare', '--home', directory]), /Run setup first/);
+});
+
+test('diagnose verifies each installed host without changing its configuration or projects', { skip: process.platform === 'win32' }, async t => {
+  const options = await setupFixture(t), installed = await setup(options);
+  const expected = JSON.parse(await readFile(new URL('../shared/mcp-profiles.json', import.meta.url), 'utf8')).phase1.tools;
+  await writeFile(installed.launcher, `import {createInterface} from 'node:readline';
+for await(const line of createInterface({input:process.stdin})){
+ const q=JSON.parse(line);if(q.id===undefined)continue;
+ const result=q.id===1?{serverInfo:{version:'1.2.3'}}:q.id===2?{tools:${JSON.stringify(expected)}.map(name=>({name}))}:{structuredContent:{dataDirectory:process.env.PROBE_DIRECTORY||${JSON.stringify(installed.dataDirectory)}}};
+ console.log(JSON.stringify({jsonrpc:'2.0',id:q.id,result}));
+}`);
+  await mkdir(installed.dataDirectory, { recursive: true });
+  const project = path.join(installed.dataDirectory, 'keep.txt'); await writeFile(project, 'existing project');
+  const stateFile = path.join(options.home, 'install.json');
+  const state = JSON.parse(await readFile(stateFile, 'utf8'));
+  const transport = { type: 'stdio', command: process.execPath, args: [installed.launcher] };
+  const previous = Object.fromEntries(['CLAUDE_CONFIG_DIR', 'WORKBUDDY_CONFIG_DIR', 'DSH_HOME'].map(key => [key, process.env[key]]));
+  t.after(() => { for (const [key, value] of Object.entries(previous)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; } });
+  process.env.CLAUDE_CONFIG_DIR = path.join(options.directory, 'claude');
+  process.env.WORKBUDDY_CONFIG_DIR = path.join(options.directory, 'buddy');
+  process.env.DSH_HOME = path.join(options.directory, 'dsh');
+  const claude = path.join(process.env.CLAUDE_CONFIG_DIR, '.claude.json');
+  const buddy = path.join(process.env.WORKBUDDY_CONFIG_DIR, 'mcp.json');
+  const profile = path.join(process.env.DSH_HOME, 'profiles/custom/package.json');
+  const bundle = path.join(options.home, 'hosts/deepseek');
+  for (const directory of [path.dirname(claude), path.dirname(buddy), path.dirname(profile), bundle]) await mkdir(directory, { recursive: true });
+  await writeJSON(claude, { mcpServers: { openmotion: transport } });
+  await writeJSON(buddy, { mcpServers: { openmotion: transport } });
+  await writeJSON(profile, { dependencies: { 'dsh-plugin-openmotion-local': 'file:' + bundle } });
+  const patch = path.join(bundle, 'cordis.patch.yml');
+  await writeJSON(patch, [{ insert: [{ id: 'mcp-openmotion', config: { ...transport, transport: 'stdio' } }] }]);
+  state.hosts.claude = { configFile: await canonical(claude), skillsDirectory: options.skillsDirectory };
+  state.hosts.workbuddy = { configFile: await canonical(buddy), skillsDirectory: options.skillsDirectory };
+  state.hosts.deepseek = { configFile: await canonical(profile), profile: 'custom', skillsDirectory: path.join(bundle, 'skills') };
+  await writeJSON(stateFile, state);
+  const files = [options.config, claude, buddy, profile, patch, stateFile, project, installed.launcher];
+  const before = await Promise.all(files.map(file => readFile(file, 'utf8')));
+  for (const host of hosts) {
+    const result = await diagnose({ home: options.home, host, codex: options.codex });
+    assert.equal(result.status, 'passed', JSON.stringify(result));
+    assert.equal(result.hostSessionVerified, false, 'an independent process cannot confirm the active chat');
+    assert.equal(result.dataDirectory, installed.dataDirectory);
+    assert.deepEqual(result.tools, expected);
+    assert.match(result.nextAction, /motion_get_project/);
+  }
+  assert.deepEqual(await Promise.all(files.map(file => readFile(file, 'utf8'))), before);
+  const configured = JSON.parse(await readFile(options.config, 'utf8'));
+  configured.openmotion.enabled = false; await writeJSON(options.config, configured);
+  assert.equal((await diagnose({ home: options.home, host: 'codex', codex: options.codex })).code, 'MCP_DISABLED');
+  delete configured.openmotion; await writeJSON(options.config, configured);
+  const missing = await diagnose({ home: options.home, host: 'codex', codex: options.codex });
+  assert.equal(missing.code, 'MCP_NOT_REGISTERED');
+  assert.match(missing.nextAction, /do not create replacement/);
+  const cli = fileURLToPath(new URL('../scripts/npm-installer.mjs', import.meta.url));
+  await assert.rejects(runFile(process.execPath, [cli, 'diagnose', '--host', 'codex', '--codex', options.codex, '--home', options.home]), /MCP_NOT_REGISTERED/);
+  assert.equal(await readFile(project, 'utf8'), 'existing project');
 });
 
 test('setup installs complete Skills and MCP without waiting for native downloads and preserves repeated-install data', { skip: process.platform === 'win32' }, async t => {
