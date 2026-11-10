@@ -17,6 +17,16 @@ export const sourceIntent = z.strictObject({
 });
 export type SourceIntent = z.infer<typeof sourceIntent>;
 const owner = { sessionId: id, artifactId: id };
+/** Canonical immutable resource adoption identity; independent of gateway implementation. */
+export const resourceSourceIntent = z.strictObject({
+  ...request,
+  ...owner,
+  expectedRevision: revision,
+  path: resourcePath,
+  name: title,
+  source: z.strictObject({ id, contentHash: revision }),
+});
+export type ResourceSourceIntent = z.infer<typeof resourceSourceIntent>;
 const selection = {
   expectedSelection: z.number().int().nonnegative(),
   expectedCurrent: z.strictObject({ artifactId: id, revision }).nullable(),

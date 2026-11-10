@@ -61,7 +61,10 @@ export class Database {
       throw error;
     }
   }
-  receipt<T>(operation: Operation | "artifact_source_create", input: object & { requestId: string }): T | undefined {
+  receipt<T>(
+    operation: Operation | "artifact_source_create" | "resource_source_import",
+    input: object & { requestId: string },
+  ): T | undefined {
     const fingerprint = createHash("sha256")
       .update(JSON.stringify([operation, input]))
       .digest("hex");
@@ -72,7 +75,7 @@ export class Database {
     return JSON.parse(String(prior.result)) as T;
   }
   request<T>(
-    operation: Operation | "artifact_source_create",
+    operation: Operation | "artifact_source_create" | "resource_source_import",
     input: object & { requestId: string },
     perform: () => T,
   ): T {

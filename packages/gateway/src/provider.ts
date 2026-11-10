@@ -6,10 +6,9 @@ import type { GenerationInput, ProviderDescriptor } from "./contract.js";
  */
 export interface Provider extends ProviderDescriptor {
   submit(input: GenerationInput<"generation_create">, signal: AbortSignal): Promise<{ remoteId: string }>;
-  read(remoteId: string, signal: AbortSignal): Promise<
-    | { state: "pending" }
-    | { state: "failed" }
-    | { state: "succeeded"; bytes: Uint8Array }
-  >;
+  read(
+    remoteId: string,
+    signal: AbortSignal,
+  ): Promise<{ state: "pending" } | { state: "failed" } | { state: "succeeded"; bytes: Uint8Array }>;
   cancel(remoteId: string, signal: AbortSignal): Promise<{ confirmed: boolean }>;
 }

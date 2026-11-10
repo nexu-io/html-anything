@@ -4,6 +4,9 @@ import {
   type Input,
   type Operation,
   type Output,
+  type Project,
+  type ResourceSourceIntent,
+  resourceSourceIntent,
   type SourceFile,
   type SourceIntent,
   schemas,
@@ -17,6 +20,7 @@ import { Selections } from "./selection.js";
 import { Sessions } from "./sessions.js";
 
 export * from "./contract.js";
+export { identify as identifyResource } from "./resources/formats.js";
 /** The one product transaction authority; consumers supply a sidecar-granted data root. */
 export class Workspace {
   private db: Database;
@@ -68,6 +72,27 @@ export class Workspace {
       });
       if (!create.success) throw new Fault("invalid", "invalid immutable source files");
       return this.projects.create({ ...create.data, files: sources(create.data.files) });
+    });
+  }
+  /** Check before resolving any external candidate, including after edits/offline restart. */
+  resourceSourceReceipt(input: ResourceSourceIntent): Project | undefined {
+    if (this.closed) throw new Fault("integrity", "workspace is closed");
+    const parsed = resourceSourceIntent.safeParse(input);
+    if (!parsed.success) throw new Fault("invalid", "invalid immutable resource intent");
+    return this.db.transaction(() => this.db.receipt<Project>("resource_source_import", parsed.data), false);
+  }
+  /** One atomic resource/history/receipt transaction; caller resolves bytes outside SQLite. */
+  importResourceSource(input: ResourceSourceIntent, bytes: Uint8Array): Project {
+    if (this.closed) throw new Fault("integrity", "workspace is closed");
+    const parsed = resourceSourceIntent.safeParse(input);
+    if (!parsed.success) throw new Fault("invalid", "invalid immutable resource intent");
+    const data = parsed.data;
+    return this.db.request("resource_source_import", data, () => {
+      const checked = Buffer.from(bytes);
+      const resource = this.resources.importBytes(data, checked);
+      if (resource.resources.find((entry) => entry.path === data.path)?.digest !== data.source.contentHash)
+        throw new Fault("invalid", "immutable resource digest does not match source intent");
+      return resource;
     });
   }
   private dispatch(operation: Operation, input: unknown): Output<Operation> {
