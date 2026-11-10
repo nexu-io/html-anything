@@ -7,6 +7,83 @@ import { dictionaries, languages, translate, type Locale } from './messages';
 let controller: ReturnType<typeof mountConnection> | undefined;
 afterEach(() => { controller?.destroy(); controller = undefined; document.body.replaceChildren(); vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers(); });
 
+it('keeps the current video frame visible when an animated gallery preview pauses', async () => {
+  vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+  vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(function (this: HTMLMediaElement) {
+    this.dispatchEvent(new Event('pause'));
+  });
+  vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {});
+  const template = {
+    id: 'prism', title: 'Published template', tags: [], collection: 'example', kind: 'prism',
+    previewUrl: '/preview.mp4', posterUrl: '/poster.jpg',
+  };
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => url.endsWith('/integration')
+    ? new Response(null, { status: 503 })
+    : Response.json({ items: [template], total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null })));
+  const root = document.createElement('div');
+  root.innerHTML = '<input id="template-search"><button id="connection-templates"></button>' + page;
+  document.body.append(root);
+  controller = mountConnection(root, { locale: 'en', t: message => message, close() {}, useTemplate() {} });
+  controller.resume();
+  await vi.waitFor(() => expect(root.querySelector('.connect-template-media video')).not.toBeNull());
+  const video = root.querySelector<HTMLVideoElement>('.connect-template-media video')!;
+  const poster = root.querySelector<HTMLImageElement>('.connect-template-media img')!;
+  poster.dispatchEvent(new Event('load'));
+  video.dispatchEvent(new Event('loadeddata'));
+  expect(video.hidden).toBe(true);
+  expect(poster.hidden).toBe(false);
+
+  video.currentTime = 3.5;
+  video.dispatchEvent(new Event('playing'));
+  root.querySelector<HTMLButtonElement>('#toggle-previews')!.click();
+  expect(video.hidden).toBe(false);
+  expect(poster.hidden).toBe(true);
+  expect(video.currentTime).toBe(3.5);
+  localStorage.removeItem('openmotion.template-previews');
+});
+
+it('recovers a preview whose media buffer was discarded in a background tab', async () => {
+  vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+  vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
+  const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(false);
+  const load = vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {});
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
+  const template = { id: 'prism', title: 'Published template', tags: [], collection: 'example',
+    kind: 'prism', previewUrl: '/preview.mp4' };
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => url.endsWith('/integration')
+    ? new Response(null, { status: 503 })
+    : Response.json({ items: [template], total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null })));
+  const root = document.createElement('div');
+  root.innerHTML = '<input id="template-search"><button id="connection-templates"></button>' + page;
+  document.body.append(root);
+  controller = mountConnection(root, { locale: 'en', t: message => message, close() {}, useTemplate() {} });
+  controller.resume();
+  await vi.waitFor(() => expect(root.querySelector('.connect-template-cover')).not.toBeNull());
+  root.querySelector<HTMLButtonElement>('.connect-template-cover')!.click();
+  const video = root.querySelector<HTMLVideoElement>('#template-preview-stage video')!;
+  vi.stubGlobal('HTMLMediaElement', Object.assign(Object.create(HTMLMediaElement), { HAVE_CURRENT_DATA: 2 }));
+  const ready = vi.spyOn(video, 'readyState', 'get').mockReturnValue(2);
+  const setVisibility = (isHidden: boolean) => {
+    hidden.mockReturnValue(isHidden);
+    document.dispatchEvent(new Event('visibilitychange'));
+  };
+
+  video.currentTime = 3.5;
+  setVisibility(true);
+  setVisibility(false);
+  expect(load).not.toHaveBeenCalled();
+
+  setVisibility(true);
+  ready.mockReturnValue(0);
+  setVisibility(false);
+  expect(load).toHaveBeenCalledTimes(1);
+  expect(video.autoplay).toBe(false);
+  video.currentTime = 0;
+  video.dispatchEvent(new Event('loadedmetadata'));
+  expect(video.currentTime).toBe(3.5);
+});
+
 it('polls cache warnings independently of publication changes and preserves gallery cards', async () => {
   vi.useFakeTimers();
   vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));

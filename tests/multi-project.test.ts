@@ -22,6 +22,14 @@ test('one native service keeps both projects editable, scoped and recoverable af
     const response = await fetch(`${base()}/motion-api/projects/${id}/open`, { method: 'POST', headers: { Origin: base(), 'Content-Type': 'application/json' }, body: JSON.stringify({ expectedRevision: current.revision, expectedProjectId: current.projectId }) });
     assert.equal(response.status, 200, await response.clone().text());
   };
+  const call = async (name: string, args: Record<string, unknown>) => {
+    const response = await fetch(`${base()}/motion-api/phase1/call`, {
+      method: 'POST', headers: { Origin: base(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, arguments: args }),
+    });
+    assert.equal(response.status, 200, await response.clone().text());
+    return response.json();
+  };
   try {
     const initialStudio = running.studio, initialIdentity = await (await fetch(new URL('/__hyperframes_config', initialStudio.url))).json();
     const fileA = await source(a);
@@ -51,6 +59,14 @@ test('one native service keeps both projects editable, scoped and recoverable af
     for (const id of [a, b]) {
       const history = await fetch(`${base()}/api/projects/${id}/history`);
       assert.equal(history.status, 200, await history.clone().text());
+      const project = await call('motion_get_project', { projectId: id });
+      const edit = await call('motion_edit_project', {
+        projectId: id, requestId: crypto.randomUUID(), expectedRevision: project.revision,
+        expectedVersionId: project.currentVersionId, presentation: 'background',
+        files: [{ path: 'agent-notes.txt', content: `Edited in ${id}` }],
+      });
+      assert.equal(edit.changed, true);
+      assert.equal(await readFile(path.join(store.projectDirectoryFor(id), 'agent-notes.txt'), 'utf8'), `Edited in ${id}`);
     }
     for (const id of [crypto.randomUUID(), '..%2Fescape']) {
       assert.ok([400, 404].includes((await fetch(`${base()}/api/projects/${id}/files/index.html`)).status));

@@ -49,11 +49,12 @@ export function mountTemplates(root: HTMLElement, options: {
       // IntersectionObserver assigns src lazily; a hidden native-lazy image would never load.
       poster.alt = ''; poster.loading = 'eager'; poster.decoding = 'async';
       video.muted = true; video.playsInline = true; video.loop = true; video.preload = 'metadata'; video.setAttribute('aria-hidden', 'true');
-      let posterReady = false, frameReady = false, failed = false, playing = false, started = false;
+      let posterReady = false, frameReady = false, failed = false, playing = false, hasPlayed = false, started = false;
       let timer: ReturnType<typeof setTimeout> | undefined;
       const update = () => {
-        poster.hidden = !posterReady; video.hidden = !frameReady || (posterReady && !playing);
-        content.hidden = posterReady || frameReady; media.dataset.previewState = playing ? 'playing' : frameReady ? 'frame' : posterReady ? 'poster' : failed ? 'unavailable' : 'content';
+        const showFrame = frameReady && (hasPlayed || !posterReady);
+        poster.hidden = !posterReady || showFrame; video.hidden = !showFrame;
+        content.hidden = posterReady || frameReady; media.dataset.previewState = playing ? 'playing' : showFrame ? 'frame' : posterReady ? 'poster' : failed ? 'unavailable' : 'content';
         language.text(status, failed ? "Preview unavailable · You can still copy the recreation instruction" : !template.previewUrl && !template.posterUrl ? "View template content and source" : "Loading preview…");
       };
       const unregister = playback.register(template.id, {
@@ -64,7 +65,7 @@ export function mountTemplates(root: HTMLElement, options: {
       poster.onerror = () => { posterReady = false; if (!template.previewUrl || failed) failed = true; update(); };
       video.onloadedmetadata = () => { if (Number.isFinite(video.duration) && video.duration > .2) video.currentTime = Math.min(.6, video.duration / 4); };
       video.onloadeddata = () => { clearTimeout(timer); frameReady = true; failed = false; update(); playback.update(template.id, { ready: true }); };
-      video.onplaying = () => { playing = true; update(); };
+      video.onplaying = () => { playing = hasPlayed = true; update(); };
       video.onpause = () => { playing = false; update(); };
       video.onerror = () => { clearTimeout(timer); failed = true; playing = false; frameReady = false; playback.update(template.id, { ready: false }); update(); };
       const start = () => {
@@ -215,10 +216,35 @@ export function mountTemplates(root: HTMLElement, options: {
     dialog.classList.toggle('connect-preview-dialog--portrait', template.ratio === '9:16' || template.kind === 'builtin');
     if (template.previewUrl) {
       const video = document.createElement('video'); video.controls = true; video.muted = true; video.playsInline = true; video.autoplay = !reducedMotion.matches; video.loop = true; video.preload = 'metadata'; language.attribute(video, 'aria-label', '{title} reference video', { title: template.title }); if (template.posterUrl) video.poster = template.posterUrl;
+      const mediaEvents = new AbortController();
+      let hiddenTime: number | undefined;
       let timer: ReturnType<typeof setTimeout>;
       const failed = () => { clearTimeout(timer); language.text(element('preview-error'), "Preview could not load. View the template content and recreation instruction, or reopen the preview to try again."); element('preview-error').hidden = false; };
-      video.onerror = failed; video.onloadeddata = () => clearTimeout(timer); video.src = template.previewUrl; stage.append(video); timer = setTimeout(failed, 15000);
-      previewCleanup = () => { clearTimeout(timer); video.onerror = null; video.pause(); video.removeAttribute('src'); video.load(); };
+      video.onerror = failed;
+      video.onloadeddata = () => { clearTimeout(timer); element('preview-error').hidden = true; };
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) hiddenTime = video.currentTime;
+          video.pause();
+          return;
+        }
+        const time = hiddenTime;
+        hiddenTime = undefined;
+        if (time === undefined || (!video.error && video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA)) return;
+        // A discarded media buffer needs a fresh decoder. Keep the viewer paused and restore its position.
+        video.autoplay = false;
+        video.addEventListener('loadedmetadata', () => {
+          video.currentTime = Number.isFinite(video.duration) ? Math.min(time, video.duration) : time;
+        }, { once: true, signal: mediaEvents.signal });
+        clearTimeout(timer);
+        timer = setTimeout(failed, 15000);
+        video.load();
+      }, { signal: mediaEvents.signal });
+      video.src = template.previewUrl; stage.append(video); timer = setTimeout(failed, 15000);
+      previewCleanup = () => {
+        clearTimeout(timer); mediaEvents.abort(); video.onerror = null; video.onloadeddata = null;
+        video.pause(); video.removeAttribute('src'); video.load();
+      };
     } else if (template.posterUrl) {
       const poster = document.createElement('img'); language.attribute(poster, 'alt', '{title} template cover', { title: template.title }); poster.src = template.posterUrl; stage.append(poster);
       poster.onerror = () => { stage.replaceChildren(contentPreview(template)); }; previewCleanup = () => { poster.onerror = null; poster.removeAttribute('src'); };
@@ -240,7 +266,7 @@ export function mountTemplates(root: HTMLElement, options: {
   dialog.addEventListener('close', () => { previewCleanup(); previewCleanup = () => {}; preview = undefined; configurePlayback(); }, { signal: lifetime.signal });
   element('copy-preview-template').onclick = event => { if (preview) copyTemplate(preview, event.currentTarget as HTMLButtonElement); };
   element('use-preview-template').onclick = () => { if (preview && isEditableTemplate(preview)) { const id = preview.id; dialog.close(); options.useTemplate(id); } };
-  document.addEventListener('visibilitychange', () => { configurePlayback(); if (document.hidden) element('template-preview-stage').querySelector('video')?.pause(); }, { signal: lifetime.signal });
+  document.addEventListener('visibilitychange', configurePlayback, { signal: lifetime.signal });
   function suspend() { active = false; if (request) { request.abort(); loaded = false; } clearTimeout(debounce); clearInterval(rotation); configurePlayback(); if (dialog.open) dialog.close(); previewCleanup(); }
   return {
     updateConnection,

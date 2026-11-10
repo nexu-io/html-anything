@@ -270,6 +270,8 @@
   "Upload failed: network error": "上传失败：网络错误",
   "Only image, video, and audio assets can be dropped onto the timeline.": "只能将图片、视频和音频素材拖入时间轴。",
   "Composition added to the timeline.": "已将合成添加到时间轴。",
+  "Adding this composition would create a circular reference. Choose a different composition.": "添加这个合成会造成循环引用，请选择其他合成。",
+  "Set a valid duration on the composition before adding it to the timeline.": "请先为合成设置有效时长，再添加到时间轴。",
   "Project-wide color grading cannot copy relative LUT paths. Apply to this file or use a URL/data LUT.": "全工程调色无法复制相对路径的 LUT。请应用到当前文件，或使用网址／内嵌数据 LUT。",
   "No color grading changed": "调色未发生变化",
   "Opening this project in the HyperFrames desktop app": "正在 HyperFrames 桌面应用中打开此工程",

@@ -16,7 +16,7 @@ let nextToastId = 1;
 
 /**
  * Stacked toasts (max 3). Info toasts auto-dismiss after 4s; error toasts
- * persist until explicitly dismissed so failures can't silently vanish.
+ * persist until explicitly dismissed. Identical active errors share one toast.
  */
 export function useToast() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -53,6 +53,9 @@ export function useToast() {
     (message: string, tone: AppToast["tone"] = "error"): number => {
       const id = nextToastId++;
       setToasts((prev) => {
+        if (tone === "error" && prev.some((toast) => toast.tone === tone && toast.message === message && !toast.leaving)) {
+          return prev;
+        }
         const next = [...prev, { id, message, tone }];
         // Cap the stack; drop the oldest (and its pending timer).
         while (next.length > MAX_TOASTS) {

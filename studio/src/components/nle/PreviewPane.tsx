@@ -168,7 +168,7 @@ export function PreviewPane({
       </div>
       {/* Transport row: no own background or border — the controls sit flat on
           the preview panel's surface (CapCut-style). */}
-      <div className="shrink-0">
+      <div className="shrink-0" data-preview-transport="">
         {!mvp && !isFullscreen && compositionStack.length > 1 && (
           <CompositionBreadcrumb stack={compositionStack} onNavigate={handleNavigateComposition} />
         )}

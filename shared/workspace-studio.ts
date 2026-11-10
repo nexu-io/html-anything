@@ -7,6 +7,7 @@ import { WorkspaceStore } from '../workspace.ts';
 import { HYPERFRAMES_VERSION, repairGeneratedRegistry } from '../hyperframes.ts';
 import { isMain } from './entry.ts';
 import { withAvailableHistorySteps } from './studio-history-availability.ts';
+import type { ProjectHistory } from '@hyperframes/studio-server';
 
 export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: string, initialDirectory: string, port: number) {
   const require = createRequire(path.join(runtimeRoot, 'package.json'));
@@ -37,9 +38,17 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
         const host = createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
           origin: () => origin, historyRoot });
         const openHistory = host.adapter.history;
+        const wrappedHistories = new WeakMap<ProjectHistory, ProjectHistory>();
         host.adapter.history = async () => {
           const history = await openHistory();
-          return history && withAvailableHistorySteps(history, historyRoot);
+          if (!history) return history;
+          let wrapped = wrappedHistories.get(history);
+          if (!wrapped) {
+            // Native edit windows compare the history owner by identity across HTTP requests.
+            wrapped = withAvailableHistorySteps(history, historyRoot);
+            wrappedHistories.set(history, wrapped);
+          }
+          return wrapped;
         };
         return host;
       })().catch(error => { hosts.delete(id); throw error; });
