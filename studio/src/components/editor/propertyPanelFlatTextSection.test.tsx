@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import { StudioHostContext } from "../../motion/StudioHost";
 import React, { act, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { compile } from "tailwindcss";
@@ -520,4 +521,26 @@ describe("FlatTextSection — multi-field", () => {
 
     act(() => root.unmount());
   });
+});
+
+it("MVP keeps text, font, size, color and three alignments without changing advanced text styles", () => {
+  const onSetTextFieldStyle = vi.fn();
+  const element = makeSingleFieldElement({ inlineStyles: { "font-weight": "700", "font-style": "italic", "line-height": "1.4" } });
+  const before = JSON.stringify(element.textFields);
+  const { host, root } = renderInto(
+    <StudioHostContext.Provider value={{ mvpEditor: true }}>
+      <FlatTextSection element={element} styles={{}} fontAssets={[]}
+        onSetText={vi.fn()} onSetTextFieldStyle={onSetTextFieldStyle}
+        onAddTextField={vi.fn()} onRemoveTextField={vi.fn()} />
+    </StudioHostContext.Provider>,
+  );
+  for (const label of ["Font", "Size", "Color"]) expect(host.textContent).toContain(label);
+  for (const label of ["Weight", "Case · Style", "Tracking", "Leading"]) expect(host.textContent).not.toContain(label);
+  const align = segmentedRowButtons(host, "Align");
+  expect(align).toHaveLength(3);
+  expect(onSetTextFieldStyle).not.toHaveBeenCalled();
+  act(() => align.find(button => button.textContent === "C")!.click());
+  expect(onSetTextFieldStyle).toHaveBeenCalledWith("a", "text-align", "center");
+  expect(JSON.stringify(element.textFields)).toBe(before);
+  act(() => root.unmount());
 });

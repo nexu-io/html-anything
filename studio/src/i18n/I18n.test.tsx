@@ -3,9 +3,18 @@ import React, { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { I18nProvider, LOCALE_STORAGE_KEY, languages, readLocale, translate, useI18n } from './I18n';
-import zhCN from './zh-CN.json';
+import baseZhCN from './zh-CN.json';
+import mvpZhCN from './mvp-zh-CN.json';
+const zhCN = { ...baseZhCN, ...mvpZhCN };
 import { FlatSelectRow } from '../components/editor/propertyPanelFlatSelectRow';
 import { Section } from '../components/editor/propertyPanelPrimitives';
+import { StudioToast } from '../components/StudioToast';
+import { systemMessage } from './systemMessages';
+import { HF_COLOR_GRADING_PRESETS, HF_COLOR_GRADING_PALETTES } from '@hyperframes/core/color-grading';
+import { FlatColorGradingAccessory } from '../components/editor/propertyPanelFlatColorGradingAccessory';
+import { normalizeHfColorGrading } from '@hyperframes/core/color-grading';
+import { BLOCK_CATEGORIES } from '../utils/blockCategories';
+import { EFFECT_GROUPS } from '../components/editor/propertyPanelFlatEffectSpecs';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root;
@@ -117,4 +126,105 @@ it.each(languages)('keeps every native property section identifier stable in $lo
   act(() => root.render(<I18nProvider initialLocale={locale}>{titles.map(title => <Section key={title} title={title} icon={null}><span /></Section>)}</I18nProvider>));
   expect([...host.querySelectorAll('section')].map(section => section.dataset.panelSection)).toEqual(['animation', 'layout', 'color-grading', 'text', 'flex', 'radius', 'stroke', 'effects', 'clip', 'transparency', 'fill', 'timing', 'image', 'video', 'audio']);
   expect([...host.querySelectorAll('h3')].map(title => title.textContent)).toEqual(titles.map(title => translate(locale, title)));
+});
+
+it('covers every grade/effect label and keeps preset identifiers unchanged', () => {
+  const labels = [...HF_COLOR_GRADING_PRESETS.map(p => p.label), ...HF_COLOR_GRADING_PALETTES.flatMap(p => [p.label, p.group]),
+    ...EFFECT_GROUPS.flatMap(g => [g.label, ...g.effects.flatMap(e => [e.label, e.masterLabel,
+      ...(e.settings ?? []).flatMap(c => [c.label, ...(c.kind === 'select' ? c.options.map(o => o.label) : [])])])])];
+  for (const label of labels) {
+    if (!label || label === 'HyperFrames') continue;
+    expect(translate('zh-CN', label), label).not.toBe(label);
+    expect(translate('en', label)).toBe(label);
+  }
+});
+
+it('localizes system feedback without translating authored names or persisted history', () => {
+  const zh = (message: string, values?: Record<string, string | number>) => translate('zh-CN', message, values);
+  expect(systemMessage('Undid: Edit layer style', zh)).toBe('已撤销：编辑图层样式');
+  expect(systemMessage('Copied 3 clips', zh)).toBe('已复制 3 个片段');
+  expect(systemMessage('Unable to copy "Preview".', zh)).toBe('无法复制“Preview”。');
+  expect(systemMessage("Can't undo: Preview.html changed since that edit.", zh)).toBe('无法撤销：Preview.html 在此次编辑后已发生变化。');
+  expect(systemMessage('Undid: Edit layer style', (m, v) => translate('en', m, v))).toBe('Undid: Edit layer style');
+  expect(systemMessage('Adding cosmic-orb…', zh)).toBe('正在添加 cosmic-orb…');
+  expect(systemMessage('Undid: Add block: Cosmic Orb', zh)).toBe('已撤销：添加动效：Cosmic Orb');
+  expect(systemMessage('Redid: Add component: Word Reveal', zh)).toBe('已重做：添加组件：Word Reveal');
+  expect(systemMessage('Adding cosmic-orb…', (m, v) => translate('en', m, v))).toBe('Adding cosmic-orb…');
+  expect(systemMessage("Couldn't find the current value in compositions/orb.html. It may have been edited by hand.", zh)).toBe('在 compositions/orb.html 中未找到当前值，文件可能已被手动修改。');
+});
+
+it('translates every official catalog category without changing English labels', () => {
+  for (const category of BLOCK_CATEGORIES) {
+    expect(translate('zh-CN', category.label)).not.toBe(category.label);
+    expect(translate('en', category.label)).toBe(category.label);
+  }
+});
+
+it('updates an already visible toast when the interface language changes', () => {
+  function Feedback() {
+    const { setLocale } = useI18n();
+    return <><button onClick={() => setLocale('en')}>Switch</button><StudioToast message="Undid: Edit layer style" /></>;
+  }
+  act(() => root.render(<I18nProvider initialLocale="zh-CN"><Feedback /></I18nProvider>));
+  expect(host.querySelector('[role="status"]')?.textContent).toContain('已撤销：编辑图层样式');
+  act(() => host.querySelector('button')!.click());
+  expect(host.querySelector('[role="status"]')?.textContent).toContain('Undid: Edit layer style');
+});
+
+it('updates runtime grading feedback without rebuilding the grading controls', () => {
+  function GradingFeedback() {
+    const { setLocale } = useI18n();
+    return <><button onClick={() => setLocale('en')}>Switch</button>
+      <FlatColorGradingAccessory state={{ grading: normalizeHfColorGrading('neutral')!, compareEnabled: false,
+        runtimeStatus: { state: 'inactive', message: 'No grading applied' }, commitCompare: vi.fn(), resetGrading: vi.fn() }} /></>;
+  }
+  act(() => root.render(<I18nProvider initialLocale="zh-CN"><GradingFeedback /></I18nProvider>));
+  const status = host.querySelector('[data-flat-grade-status-message]')!;
+  expect(status.textContent).toBe('尚未应用调色');
+  act(() => host.querySelector('button')!.click());
+  expect(host.querySelector('[data-flat-grade-status-message]')).toBe(status);
+  expect(status.textContent).toBe('No grading applied');
+});
+
+it('localizes media option labels in both languages without changing serialized values', () => {
+  const options = ['fast', 'balanced', 'best', 'contain', 'cover', 'fill', 'none', 'scale-down', 'left top', 'right top', 'left bottom', 'right bottom', 'Montage', 'Hero', 'Bullet', 'Jump cut', 'Flash in', 'Flash out', 'Ramp in', 'Ramp out', 'Slow-mo middle'];
+  const change = vi.fn();
+  function Options() {
+    const { setLocale } = useI18n();
+    return <><button onClick={() => setLocale('en')}>Switch</button><FlatSelectRow label="Fit" value="contain" options={options} tier="default" onChange={change} /></>;
+  }
+  act(() => root.render(<I18nProvider initialLocale="zh-CN"><Options /></I18nProvider>));
+  const select = host.querySelector('select')!;
+  for (const option of select.options) {
+    expect(option.textContent, option.value).not.toBe(option.value);
+    expect(options).toContain(option.value);
+  }
+  act(() => { select.value = 'cover'; select.dispatchEvent(new Event('change', { bubbles: true })); });
+  expect(change).toHaveBeenCalledWith('cover');
+  act(() => host.querySelector('button')!.click());
+  expect(host.querySelector('select')).toBe(select);
+  for (const option of select.options) expect(option.textContent).toBe(option.value);
+});
+
+it('localizes dynamic split and grading feedback without translating user names', () => {
+  const zh = (m: string, v?: Record<string, string | number>) => translate('zh-CN', m, v);
+  expect(systemMessage('Split Preview at 2.94s', zh)).toBe('已在 2.94 秒处分割 Preview');
+  expect(systemMessage('Split 2 clips at 2.94s', zh)).toBe('已在 2.94 秒处分割 2 个片段');
+  expect(systemMessage('Applied color grading on 2 media items', zh)).toBe('已为 2 个素材应用调色');
+  expect(systemMessage('Split Preview at 2.94s', (m, v) => translate('en', m, v))).toBe('Split Preview at 2.94s');
+});
+
+it('localizes singular, plural and parameterized undo/redo operations without changing clip names', () => {
+  const zh = (m: string, v?: Record<string, string | number>) => translate('zh-CN', m, v);
+  const en = (m: string, v?: Record<string, string | number>) => translate('en', m, v);
+  for (const label of ['Duplicate clip', 'Duplicate clips', 'Paste clip', 'Paste clips', 'Split timeline clip', 'Edit text']) {
+    expect(systemMessage(`Undid: ${label}`, zh)).not.toContain(label);
+    expect(systemMessage(`Redid: ${label}`, zh)).not.toContain(label);
+    expect(systemMessage(`Redid: ${label}`, en)).toBe(`Redid: ${label}`);
+  }
+  expect(systemMessage('Undid: Split 2 clips at 1.50s', zh)).toBe(`已撤销：${translate('zh-CN', 'Split {count} clips at {time}s', {count: 2, time: '1.50'})}`);
+  expect(systemMessage('Split Preview at 1.50s', zh)).toContain('Preview');
+  expect(translate('zh-CN', 'Split (move playhead inside clip)')).toBe('分割（请将播放头移到片段内）');
+  expect(systemMessage('Undo failed: fetch failed', zh)).toBe('撤销失败：无法连接预览服务，请检查连接后重试。');
+  expect(systemMessage('Redo failed: unexpected internal error', zh)).not.toContain('unexpected');
 });

@@ -44,6 +44,71 @@
       "path": "index.html",
       "target": "index.html",
       "type": "hyperframes:composition"
+    },
+    {
+      "path": "vendor/fonts/inter-1b08e7fc267a.ttf",
+      "target": "vendor/fonts/inter-1b08e7fc267a.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/inter-5b717029a2c4.ttf",
+      "target": "vendor/fonts/inter-5b717029a2c4.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/inter-8c883f63b2c4.ttf",
+      "target": "vendor/fonts/inter-8c883f63b2c4.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/inter-OFL.txt",
+      "target": "vendor/fonts/inter-OFL.txt",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/inter-b37284b5701b.ttf",
+      "target": "vendor/fonts/inter-b37284b5701b.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/inter-d0f4bc7faca4.ttf",
+      "target": "vendor/fonts/inter-d0f4bc7faca4.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/inter-e7a1aaf7eda9.ttf",
+      "target": "vendor/fonts/inter-e7a1aaf7eda9.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/inter-eec66af7f233.ttf",
+      "target": "vendor/fonts/inter-eec66af7f233.ttf",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/fonts/inter.css",
+      "target": "vendor/fonts/inter.css",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/gsap-3.14.2/LICENSE.txt",
+      "target": "vendor/gsap-3.14.2/LICENSE.txt",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/gsap-3.14.2/README.md",
+      "target": "vendor/gsap-3.14.2/README.md",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/gsap-3.14.2/dist/gsap.min.js",
+      "target": "vendor/gsap-3.14.2/dist/gsap.min.js",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "vendor/manifest.json",
+      "target": "vendor/manifest.json",
+      "type": "hyperframes:asset"
     }
   ]
 }

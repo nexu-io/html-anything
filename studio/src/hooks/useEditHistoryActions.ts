@@ -128,7 +128,8 @@ export function useEditHistoryActions({
         return;
       }
       if (!result.ok && result.reason === "failed") {
-        showToast(`${noun} failed: ${result.message}`, "error");
+        console.warn(`${noun} failed`, result.message);
+        showToast(`${noun} failed: ${result.message ?? "Unknown save failure"}`, "error");
         return;
       }
       if (result.ok && result.label) {

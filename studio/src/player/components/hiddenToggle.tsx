@@ -1,4 +1,4 @@
-import { Eye, EyeSlash, SpeakerHigh, SpeakerSlash } from "@phosphor-icons/react";
+import { Eye, EyeSlash, SpeakerHigh, SpeakerSlash } from "../../icons/RemixIcons";
 
 /** The action a hide toggle offers from the current `hidden` state; on audio `data-hidden` is a mute. */
 export function hiddenToggleVerb(asMute: boolean, hidden: boolean): string {

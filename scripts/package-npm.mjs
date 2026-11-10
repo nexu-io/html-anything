@@ -7,9 +7,32 @@ import { PUPPETEER_REVISIONS } from 'puppeteer-core';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
-import { checkReleaseVersion } from './release-version.mjs';
+import { checkReleaseVersion, releaseTemplateEnvironment } from './release-version.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+// GitHub serves the full showcase. npm ships the application and its technical documentation.
+function isShowcaseAsset(file) {
+  return /^(?:examples|library)\//.test(file) || file.startsWith('docs/readme/');
+}
+
+function rewriteGuideLinks(text, file, commit, localPaths = new Set()) {
+  const directory = path.posix.dirname(file);
+  const link = (target, image = false) => {
+    if (/^(?:#|[a-z][a-z\d+.-]*:|\/\/)/i.test(target)) return target;
+    const pathname = target.split(/[?#]/, 1)[0];
+    if (localPaths.has(path.posix.join(directory, pathname).replace(/\/$/, ''))) return target;
+    const base = image ? 'https://raw.githubusercontent.com/nexu-io/html-anything/' : 'https://github.com/nexu-io/html-anything/blob/';
+    return new URL(target, base + commit + '/' + (directory === '.' ? '' : directory + '/')).href;
+  };
+  return text
+    .replace(/(!\[[^\]\n]*\]\()([^\s)]+)(\))/g, (_, start, target, end) => start + link(target, true) + end)
+    .replace(/(\]\()([^\s)]+)(\))/g, (_, start, target, end) => start + link(target) + end)
+    .replace(/(<img\b[^>]*\bsrc=["'])([^"']+)(["'])/g, (_, start, target, end) => start + link(target, true) + end)
+    .replace(/(<source\b[^>]*\bsrcset=["'])([^"']+)(["'])/g, (_, start, targets, end) =>
+      start + targets.replace(/(^|,\s*)([^,\s]+)/g, (_m, sep, url) => sep + link(url, true)) + end)
+    .replace(/(<a\b[^>]*\bhref=["'])([^"']+)(["'])/g, (_, start, target, end) => start + link(target) + end);
+}
+
 export function checkReleaseLocks(pkg, lockfile, runtime) {
   assert.equal(lockfile.packages[''].version, pkg.version, 'npm root version differs from lockfile');
   for (const group of ['dependencies', 'devDependencies']) {
@@ -32,11 +55,11 @@ export function checkReleaseLocks(pkg, lockfile, runtime) {
   }
 }
 
-export async function packageNpm(output = path.join(root, 'dist/npm-local'), version, templateEnvironment = 'prod') {
-  const templateConfig = packageTemplateConfig(templateEnvironment);
+export async function packageNpm(output = path.join(root, 'dist/npm-local'), version, templateEnvironment) {
   output = path.resolve(output);
   const explicitVersion = version !== undefined;
   if (explicitVersion) checkReleaseVersion(version);
+  const templateConfig = packageTemplateConfig(templateEnvironment ?? (explicitVersion ? releaseTemplateEnvironment(version) : 'prod'));
   const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   const lockfile = JSON.parse(await readFile(path.join(root, 'package-lock.json'), 'utf8'));
   const runtime = JSON.parse(await readFile(path.join(root, 'scripts/runtime-lock.json'), 'utf8'));
@@ -50,9 +73,25 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
   try {
     const application = path.join(temporary, 'application'), installer = path.join(temporary, 'installer');
     await mkdir(application); await mkdir(path.join(installer, 'scripts'), { recursive: true });
-    for (const name of await distributionFiles(releaseProfile)) {
-      await mkdir(path.dirname(path.join(application, name)), { recursive: true });
-      await cp(path.join(root, name), path.join(application, name));
+    const commit = (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim();
+    const files = (await distributionFiles(releaseProfile)).filter(file => !isShowcaseAsset(file));
+    const localPaths = new Set(files);
+    for (const file of files) {
+      let directory = path.posix.dirname(file);
+      while (directory !== '.' && !localPaths.has(directory)) {
+        localPaths.add(directory);
+        directory = path.posix.dirname(directory);
+      }
+    }
+    for (const name of files) {
+      const destination = path.join(application, name);
+      await mkdir(path.dirname(destination), { recursive: true });
+      if (/^(?:README|CONTRIBUTING|docs\/).*\.md$/.test(name)) {
+        const guide = await readFile(path.join(root, name), 'utf8');
+        await writeAtomic(destination, rewriteGuideLinks(guide, name, commit, localPaths));
+      } else {
+        await cp(path.join(root, name), destination);
+      }
     }
     await writeJSON(path.join(application, 'shared/template-config.json'), templateConfig);
     const skills = (await readdir(path.join(application, 'skills'))).sort();
@@ -61,16 +100,10 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
     const installerPkg = JSON.parse(await readFile(path.join(root, 'packages/npm/package.json'), 'utf8'));
     assert.equal(installerPkg.private, true, 'Keep the source package protected; publish only an explicitly versioned artifact');
     installerPkg.version = version;
-    installerPkg.private = !explicitVersion || templateConfig.environment === 'dev';
-    installerPkg.publishConfig = { access: 'public', registry: 'https://registry.npmjs.org/', tag: version.includes('-test.') ? 'test' : 'stage' };
+    installerPkg.private = !explicitVersion || templateConfig.environment !== releaseTemplateEnvironment(version);
+    installerPkg.publishConfig = { access: 'public', registry: 'https://registry.npmjs.org/', tag: version.includes('-test.') ? 'candidate' : 'stage' };
     await writeJSON(path.join(installer, 'package.json'), installerPkg);
-    const commit = (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim();
-    const repository = `https://github.com/nexu-io/html-anything/blob/${commit}/`;
-    const images = `https://raw.githubusercontent.com/nexu-io/html-anything/${commit}/`;
-    const link = (target, image) => /^(?:#|[a-z][a-z\d+.-]*:|\/\/)/i.test(target) ? target : new URL(target, image ? images : repository).href;
-    const readme = (await readFile(path.join(root, 'README.md'), 'utf8'))
-      .replace(/(!?\[[^\]\n]*\]\()([^\s)]+)(\))/g, (_, start, target, end) => start + link(target, start.startsWith('!')) + end)
-      .replace(/(<img\b[^>]*\bsrc=["'])([^"']+)(["'])/g, (_, start, target, end) => start + link(target, true) + end);
+    const readme = rewriteGuideLinks(await readFile(path.join(root, 'README.md'), 'utf8'), 'README.md', commit);
     await writeAtomic(path.join(installer, 'README.md'), readme);
     await cp(path.join(root, 'LICENSE'), path.join(installer, 'LICENSE'));
     pkg.version = version; lockfile.version = version; lockfile.packages[''].version = version;

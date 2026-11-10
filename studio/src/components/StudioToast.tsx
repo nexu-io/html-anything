@@ -1,4 +1,6 @@
+import { RemixIcon } from "../icons/RemixIcons";
 import { useI18n } from "../i18n/I18n";
+import { systemMessage } from "../i18n/systemMessages";
 interface StudioToastProps {
   message: string;
   tone?: "error" | "info";
@@ -21,7 +23,7 @@ export function StudioToast({ message, tone, leaving, onDismiss }: StudioToastPr
         <span
           className={`min-w-0 wrap-break-word leading-5 ${isError ? "text-danger-ink" : "text-text-0"}`}
         >
-          {message}
+          {systemMessage(message, t)}
         </span>
         {onDismiss && (
           <button
@@ -30,16 +32,7 @@ export function StudioToast({ message, tone, leaving, onDismiss }: StudioToastPr
             className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-hover hover:text-neutral-300"
             aria-label={t("Dismiss")}
           >
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path d="M2 2l6 6M8 2l-6 6" />
-            </svg>
+            <RemixIcon name="close-line" size={14} />
           </button>
         )}
       </div>

@@ -1,6 +1,8 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { classifyWebAudioMediaRoute } from "@hyperframes/core/runtime/web-audio-route";
+import { InlineAssetRename } from "./InlineAssetRename";
 import { ContextMenu } from "./AssetContextMenu";
 import { basename, getAudioSubtype, type CopyFeedback } from "./assetHelpers";
 import { TIMELINE_ASSET_MIME } from "../../utils/timelineAssetDrop";
@@ -36,6 +38,7 @@ export function AudioRow({
 }) {
   const { t } = useI18n();
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
+  const [renaming, setRenaming] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [bars, setBars] = useState<number[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -229,12 +232,10 @@ export function AudioRow({
           e.preventDefault();
           setContextMenu({ x: e.clientX, y: e.clientY });
         }}
-        className={`group w-full text-left px-4 py-1.5 flex items-center gap-2.5 transition-colors cursor-pointer outline-hidden focus-visible:bg-neutral-800/60 ${
-          playing
-            ? "bg-panel-accent/6"
-            : isCopied
-              ? "bg-panel-accent/10"
-              : "hover:bg-panel-surface-hover"
+        className={`group w-full mb-1 rounded-md border border-panel-border text-left px-3 py-2 flex items-center gap-2.5 transition-colors cursor-pointer outline-hidden focus-visible:ring-1 focus-visible:ring-panel-border ${
+          isCopied
+            ? "bg-panel-accent/10"
+            : "bg-panel-surface hover:bg-panel-hover"
         }`}
       >
         <button
@@ -242,7 +243,7 @@ export function AudioRow({
           aria-pressed={playing}
           className={`w-7 h-7 rounded-md shrink-0 flex items-center justify-center transition-colors active:scale-[0.95] ${
             playing
-              ? "bg-panel-accent/15 text-accent-ink"
+              ? "text-panel-text-1"
               : "text-panel-text-5 group-hover:text-panel-text-3"
           }`}
           onClick={(e) => {
@@ -251,23 +252,18 @@ export function AudioRow({
           }}
         >
           {playing ? (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16" rx="1" />
-              <rect x="14" y="4" width="4" height="16" rx="1" />
-            </svg>
+            <RemixIcon name="pause-fill" size={14} />
           ) : (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="6,4 20,12 6,20" />
-            </svg>
+            <RemixIcon name="play-fill" size={14} />
           )}
         </button>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <span
+            {renaming && onRename ? <InlineAssetRename asset={asset} onRename={onRename} onDone={() => setRenaming(false)} /> : <span
               className={`text-[12px] font-medium truncate ${used ? "text-panel-text-1" : "text-panel-text-3"}`}
             >
               {name}
-            </span>
+            </span>}
             {!playing && (
               <span className="text-[11px] text-panel-text-5 shrink-0">
                 {meta?.duration ? `${meta.duration}s · ` : ""}
@@ -307,7 +303,7 @@ export function AudioRow({
             </div>
           )}
         </div>
-        <button type="button" className="motion-audio-menu-button" aria-label={t("Actions for {value0}", { value0: name })} aria-haspopup="menu" onPointerDown={e => e.stopPropagation()} onPointerUp={e => e.stopPropagation()} onClick={e => { e.stopPropagation(); const rect = e.currentTarget.getBoundingClientRect(); setContextMenu({ x: rect.left, y: rect.bottom }); }}>…</button>
+        <button type="button" className="motion-audio-menu-button" aria-label={t("Actions for {value0}", { value0: name })} aria-haspopup="menu" onPointerDown={e => e.stopPropagation()} onPointerUp={e => e.stopPropagation()} onClick={e => { e.stopPropagation(); const rect = e.currentTarget.getBoundingClientRect(); setContextMenu({ x: rect.left, y: rect.bottom }); }}><RemixIcon name="more-line" size={16} /></button>
       </div>
       {contextMenu && (
         <ContextMenu
@@ -318,6 +314,7 @@ export function AudioRow({
           onCopy={onCopy}
           onDelete={onDelete}
           onRename={onRename}
+          onStartRename={() => setRenaming(true)}
           onAddAtPlayhead={onAddAssetToTimeline}
           onPreview={path => setPreviewAsset(path, projectId)}
           downloadUrl={serveUrl}

@@ -39,11 +39,20 @@ test('tracked source is scanned without ignore-file bypasses; secret errors expo
 test('the scanner opens the nested application, rejects hidden private content and rejects linked archive entries', async t => {
   const f = await candidateFixture(t), { binary } = await scanner(t);
   assert.equal((await scanPackage(path.join(f.directory, f.candidate.tgz), binary)).status, 'passed');
-  await writeFile(path.join(f.app, '.env'), 'EXAMPLE=not-a-real-secret');
+  const templates = path.join(f.app, 'shared/template-config.json');
+  await writeJSON(templates, { environment: 'prod' });
   const appArchive = path.join(f.pkg, 'payload', f.manifest.application.url.slice(2));
-  await runFile('tar', ['-czf', appArchive, '-C', f.app, '.']);
-  await writeJSON(path.join(f.pkg, 'payload/release-npm.json'), { ...f.manifest, application: { ...f.manifest.application, sha256: await sha256(appArchive) } });
-  const tgz = path.join(f.work, 'hidden.tgz'); await runFile('tar', ['-czf', tgz, '-C', f.work, 'package']);
+  const tgz = path.join(f.work, 'hidden.tgz');
+  const repack = async () => {
+    await runFile('tar', ['-czf', appArchive, '-C', f.app, '.']);
+    await writeJSON(path.join(f.pkg, 'payload/release-npm.json'), { ...f.manifest, application: { ...f.manifest.application, sha256: await sha256(appArchive) } });
+    await runFile('tar', ['-czf', tgz, '-C', f.work, 'package']);
+  };
+  await repack();
+  await assert.rejects(scanPackage(tgz, binary), /template defaults differ/);
+  await writeJSON(templates, { environment: 'dev' });
+  await writeFile(path.join(f.app, '.env'), 'EXAMPLE=not-a-real-secret');
+  await repack();
   await assert.rejects(scanPackage(tgz, binary), /environment-file/);
   await symlink('package.json', path.join(f.app, 'linked')); const linked = path.join(f.work, 'linked.tar.gz');
   await runFile('tar', ['-czf', linked, '-C', f.app, '.']);

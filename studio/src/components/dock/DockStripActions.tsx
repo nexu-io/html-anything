@@ -1,8 +1,10 @@
+import { DockHeaderSlot } from "./DockHeaderSlots";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
-import { useCallback, useSyncExternalStore } from "react";
-import { CornersIn, CornersOut, DotsThree, X } from "@phosphor-icons/react";
+import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
+import { CornersIn, CornersOut, DotsThree, X } from "../../icons/RemixIcons";
 import type { IDockviewHeaderActionsProps } from "dockview-react";
-import { IconButton, Menu, MenuCheckboxItem, MenuItem, MenuSeparator } from "../ui";
+import { IconButton, Menu, MenuCheckboxItem, MenuItem, MenuSeparator, Tooltip } from "../ui";
 import { useDockLayoutStore } from "./dockLayoutStore";
 import { PANEL_DEFINITIONS, isPanelId, panelsInZone } from "./panelRegistry";
 
@@ -14,6 +16,7 @@ export function DockStripActions({
   isGroupActive,
 }: IDockviewHeaderActionsProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const subscribe = useCallback(
     (onChange: () => void) => {
       const subscription = containerApi.onDidMaximizedGroupChange(onChange);
@@ -25,6 +28,39 @@ export function DockStripActions({
   const openPanels = useDockLayoutStore((state) => state.openPanels);
   const togglePanel = useDockLayoutStore((state) => state.togglePanel);
   const resetLayout = useDockLayoutStore((state) => state.resetLayout);
+  const previewGroup = panels.some((panel) => panel.id === "preview");
+  const expandButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!mvp || !previewGroup || !maximized) return;
+    const restore = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented || document.fullscreenElement) return;
+      if (document.querySelector('[role="dialog"], [role="menu"], [role="listbox"]')) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      api.exitMaximized();
+      expandButton.current?.focus({ preventScroll: true });
+    };
+    window.addEventListener("keydown", restore, true);
+    return () => window.removeEventListener("keydown", restore, true);
+  }, [api, mvp, previewGroup, maximized]);
+  if (mvp) return previewGroup ? (
+    <div className="flex items-center h-full gap-1 pr-1">
+      <DockHeaderSlot id="preview" />
+      <Tooltip
+        label={t(maximized ? "Restore preview" : "Expand preview")}
+        description={t(maximized ? "Return to the editor layout. You can also press Esc." : "Enlarge the preview within this workspace, keeping your chat visible.")}
+      >
+        <IconButton
+          ref={expandButton}
+          size="sm"
+          aria-label={t(maximized ? "Restore preview" : "Expand preview")}
+          aria-expanded={maximized}
+          icon={maximized ? <CornersIn size={16} /> : <CornersOut size={16} />}
+          onClick={() => (maximized ? api.exitMaximized() : api.maximize())}
+        />
+      </Tooltip>
+    </div>
+  ) : null;
   if (!isGroupActive) return null;
 
   const first = panels.find((panel) => isPanelId(panel.id))?.id;

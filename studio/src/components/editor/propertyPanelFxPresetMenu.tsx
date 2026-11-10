@@ -106,7 +106,7 @@ export function FxPresetMenu({
       {families.map((family) => (
         <div key={family} className="hf-fx-preset-group space-y-0.5">
           <span className="hf-fx-preset-group-label block font-mono text-[9px] uppercase tracking-wide text-panel-text-2">
-            {FAMILY_LABEL[family]}
+            {t(FAMILY_LABEL[family])}
           </span>
           {audioFxPresetsByFamily(family).map((preset) => (
             <button
@@ -117,7 +117,7 @@ export function FxPresetMenu({
               // The description says what it does; the count is doing real work
               // — it tells the author a preset IS a chain they can open and
               // edit, rather than an opaque setting they cannot follow.
-              title={t("{description} ({count} effects)", { description: preset.description, count: preset.nodes.length })}
+              title={t("{description} ({count} effects)", { description: t(preset.description), count: preset.nodes.length })}
               onClick={() => onPick(preset.id)}
               onMouseEnter={() => {
                 reportAudition(preset.id);
@@ -131,7 +131,7 @@ export function FxPresetMenu({
               }}
             >
               <span className="hf-fx-preset-problem block truncate text-[10px]">
-                {PRESET_PROBLEM[preset.id] ?? preset.description}
+                {t(PRESET_PROBLEM[preset.id] ?? preset.description)}
               </span>
               {/* "Clean Voice · 5 effects" — the count is on the row in the
                   designs, not hidden in a tooltip. It is doing real work there:
@@ -140,7 +140,7 @@ export function FxPresetMenu({
                   its own span so `.hf-fx-preset-name` stays the NAME — several
                   tests read it as the preset's identity. */}
               <span className="block truncate font-mono text-[9px] text-panel-text-2">
-                <span className="hf-fx-preset-name">{preset.label}</span>
+                <span className="hf-fx-preset-name">{t(preset.label)}</span>
                 <span className="hf-fx-preset-count">
                   {" · "}
                   {t("{count} effects", { count: preset.nodes.length })}

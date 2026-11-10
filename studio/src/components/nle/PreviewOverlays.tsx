@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useCallback } from "react";
 import { CaptionOverlay } from "../../captions/components/CaptionOverlay";
@@ -34,6 +35,7 @@ export function PreviewOverlays({
   gestureOverlay,
 }: PreviewOverlaysProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const { activeCompPath, previewIframeRef } = useStudioShellContext();
   const { captionEditMode, compositionLoading, isPlaying } = useStudioPlaybackContext();
   const compositionDimensions = useCompositionDimensions(previewIframeRef);
@@ -131,15 +133,15 @@ export function PreviewOverlays({
   return (
     <>
       <TopologyLens iframeRef={previewIframeRef} activeCompositionPath={activeCompPath} />
-      <GridOverlay />
+      {!mvp && <GridOverlay />}
       <ConnectedDomEditOverlay
         activeCompositionPath={activeCompPath}
         showHoverSelection={!previewCaptionEditMode && !compositionLoading && !isPlaying}
         shouldShowSelectedDomBounds={shouldShowSelectedDomBounds}
         isGestureRecording={isGestureRecording}
       />
-      <SnapToolbar />
-      {!readOnly && (
+      {!mvp && <SnapToolbar />}
+      {!mvp && !readOnly && (
         <MotionPathOverlay
           iframeRef={previewIframeRef}
           selection={shouldShowMotionPath ? domEditSelection : null}

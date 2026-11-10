@@ -62,9 +62,9 @@ function ConflictReview({
             { title: "File on disk", content: external, suffix: "external" },
             { title: "Unsaved Studio version", content: studio, suffix: "studio" },
           ].map((side) => (
-            <section key={side.suffix} aria-label={side.title}>
+            <section key={side.suffix} aria-label={t(side.title)}>
               <div className="mb-2 flex items-center justify-between gap-2">
-                <h3 className="text-sm font-medium">{side.title}</h3>
+                <h3 className="text-sm font-medium">{t(side.title)}</h3>
                 <div className="flex gap-2">
                   <button
                     type="button"

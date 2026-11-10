@@ -104,6 +104,8 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ github.run_id }}
           path: ${{ runner.temp }}/candidate
+      - name: Use the pinned npm CLI with trusted dist-tag support
+        run: npm install --global npm@11.21.2 --ignore-scripts --no-audit --no-fund
       - name: Record explicit operator acceptance authorization
         env:
           GH_TOKEN: ${{ github.token }}
@@ -196,12 +198,72 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-  snapshot:
+  promote-test:
     if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' && needs.registry-mac.result == 'success' && needs.registry-windows.result == 'success' }}
     env:
       MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
-      MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN }}
     needs: [verify, npm, registry-mac, registry-windows]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Use the pinned npm CLI with trusted dist-tag support
+        run: npm install --global npm@11.21.2 --ignore-scripts --no-audit --no-fund
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.verify.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.npm.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.registry-mac.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.registry-windows.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - name: Advance npm test only after both native registry checks pass
+        run: node .github/scripts/motion-release.mjs promote-test "$RUNNER_TEMP/candidate"
+      - name: Retain the verified channel result
+        id: artifact
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: test-promotion-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate/test-promotion.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  snapshot:
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' && needs.registry-mac.result == 'success' && needs.registry-windows.result == 'success' && needs.promote-test.result == 'success' }}
+    env:
+      MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
+      MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN }}
+    needs: [verify, npm, registry-mac, registry-windows, promote-test]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -233,6 +295,12 @@ jobs:
       - uses: actions/download-artifact@v8.0.2
         with:
           artifact-ids: ${{ needs.registry-windows.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.promote-test.outputs.artifact_id }}
           github-token: ${{ github.token }}
           run-id: ${{ github.run_id }}
           path: ${{ runner.temp }}/candidate

@@ -59,13 +59,13 @@ These are documented commands, not proof of Windows acceptance. Use a directly e
 
 ## Test template data (DEV)
 
-The software channel (`test`/`latest`) and template environment (`dev`/`prod`) are independent. Public test candidates and stable packages default to **prod**. To debug unpublished/test Prism templates, publish them to Prism **DEV**, then build a local DEV candidate:
+New explicitly versioned test npm packages default to **DEV**; stable packages default to **prod**. Existing published versions retain their original environment (test.6 used prod). To test Prism templates, publish the resource to **DEV**, then download an accepted DEV candidate or build one locally:
 
 ```sh
 npm run package:npm -- dist/npm-dev 0.6.4-test.1 --template-env=dev
 ```
 
-Use that tgz in the installation commands above, with an **independent Codex profile, home, data and Skills directory**. DEV packages remain `private:true`, even with an explicit test version. DEV setup defaults to `openmotion-dev` instead of `openmotion`; `prepare` uses the same environment-specific default. Explicit `--home` must be identical for setup and prepare. An existing installation refuses an implicit data-directory change or a dev/prod switch: use a different home rather than altering the old projects.
+Use that tgz in the installation commands above, with an **independent Codex profile, home, data and Skills directory**. Explicit test/DEV builds are publishable under the candidate channel. Unversioned builds and channel/environment mismatches remain `private:true`. Public packaging exposes DEV routing configuration, not credentials or cached catalog contents; network access/authentication remains a service prerequisite. DEV setup defaults to `openmotion-dev` instead of `openmotion`; `prepare` uses the same environment-specific default. Explicit `--home` must be identical for setup and prepare. An existing installation refuses an implicit data-directory change or a dev/prod switch: use a different home rather than altering the old projects.
 
 The environment is embedded in `shared/template-config.json`; the resulting `install.json.templateEnvironment` identifies the installation. Studio and MCP read the same source. [Template configuration](template-catalog.md#environment-and-build) explains the current Resource and catalog behavior. Saving a CMS draft does not publish it. Refresh the catalog, find the template ID and record its catalog/publication version; existing projects are independent copies and do not change when a template is republished.
 
@@ -107,7 +107,7 @@ Compatible phase-one updates do not require closing existing MCP connections or 
 
 Explicit builds accept `MAJOR.MINOR.PATCH-test.N[.N]` or `MAJOR.MINOR.PATCH`. CI-generated candidates use next-patch `test.<run>.<attempt>`; manually assigned candidates can use `test.1`, `test.2`. Every artifact has one identity across the installer, app package/lock and plugin metadata. Build numbers never overwrite old output; source versions are not bumped by packaging.
 
-Source package manifests remain `private:true`. Only an explicitly versioned **prod** build produces publishable tgz metadata. test artifacts default to the `test` npm tag; stable artifacts default to `stage` so a later authorized registry smoke can precede moving `latest`. Local/default and DEV artifacts remain private. No command here publishes or changes npm tags. See [test and stable acceptance](release-guide.md) for separate maintainer authorization and gates.
+Source package manifests remain `private:true`. Only an explicit test/DEV or stable/prod build produces publishable tgz metadata. Test artifacts default to `candidate`; the manual publisher advances `test` only after matching Mac/Windows registry installation checks. Stable artifacts default to `stage`; stable publication and `latest` promotion are separate follow-ups. Local/default and channel/environment-mismatched artifacts remain private. No command here publishes or changes npm tags. See [test and stable acceptance](release-guide.md) for separate maintainer authorization and gates.
 
 After publication, the intended user entry is `npx --yes --package @openmotion/app@<exact-version> -- openmotion setup --host codex`, followed by `prepare` and host discovery/reload for a new installation. `@test` and `@latest` select channels; acceptance always records the exact resolved version. Installing/running npx alone, publishing a new package or moving a tag does not update an existing managed app.
 

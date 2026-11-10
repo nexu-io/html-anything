@@ -53,7 +53,7 @@ describe("menu style", () => {
 
   it("is the panel of every role=menu, wherever its element is written", () => {
     const unowned = files
-      .filter(({ text }) => text.includes('role="menu"'))
+      .filter(({ text }) => /<[A-Za-z][\w.]*\s[^>]*\brole="menu"/.test(text))
       .filter(({ name, text }) => !NOT_ROW_MENUS.has(name) && !text.includes("menuClasses.panel"))
       .map(({ name }) => name);
     expect(unowned).toEqual([]);

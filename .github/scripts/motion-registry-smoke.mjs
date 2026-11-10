@@ -52,7 +52,7 @@ export async function registrySmoke(directory) {
   await checkpoint(phase);
   try {
   const work = await mkdtemp(path.join(os.tmpdir(), 'om-registry-')), env = consumerEnvironment(work);
-  for (const file of ['user.npmrc', 'global.npmrc']) await writeFile(path.join(work, file), '');
+  for (const name of ['user.npmrc', 'global.npmrc']) await writeFile(path.join(work, name), '');
   const project = path.join(work, 'project'), host = path.join(work, 'host');
   await mkdir(project); await mkdir(env.CODEX_HOME);
   await writeFile(path.join(env.CODEX_HOME, 'config.toml'), '[mcp_servers.unrelated]\ncommand = "keep-this-server"\n');
@@ -84,6 +84,11 @@ export async function registrySmoke(directory) {
   assert.equal(first.appRoot, second.appRoot); assert.equal((await readdir(path.join(home, 'apps'))).length, 1);
   assert.match(await readFile(path.join(env.CODEX_HOME, 'config.toml'), 'utf8'), /keep-this-server/);
   const manifest = JSON.parse(await readFile(path.join(directory, 'release-npm.json')));
+  assert.equal(manifest.templateEnvironment, 'dev');
+  const state = JSON.parse(await readFile(path.join(home, 'install.json')));
+  assert.equal(state.templateEnvironment, manifest.templateEnvironment);
+  const templateConfig = JSON.parse(await readFile(path.join(first.appRoot, 'shared/template-config.json')));
+  assert.equal(templateConfig.environment, manifest.templateEnvironment);
   for (const skill of manifest.skills) await access(path.join(skills, 'openmotion/skills', skill, 'SKILL.md'));
   console.log('Preparing the checksum-pinned browser, FFmpeg and ffprobe');
   await checkpoint('native-prepare');
@@ -94,7 +99,7 @@ export async function registrySmoke(directory) {
   await checkpoint('mcp-discovery');
   await discover(installed.transport, env, c.version, manifest.mcp.tools);
   const report = { status: 'passed', platform, version: c.version, sourceCommit: c.sourceCommit, tgzSHA256: c.tgzSHA256,
-    node: process.version, codex: '0.166.0', registryColdInstall: 'passed', repeatSetup: 'passed', unrelatedSettings: 'preserved',
+    node: process.version, codex: '0.166.0', templateEnvironment: templateConfig.environment, registryColdInstall: 'passed', repeatSetup: 'passed', unrelatedSettings: 'preserved',
     nativePreparation: 'passed', mcpTools: manifest.mcp.tools.length, skills: manifest.skills.length, resources: 'passed',
     realModelTurn: 'not-run', humanPlayback: 'not-run', windowsDesktopAcceptance: 'not-run' };
   await writeJSON(file, report); return report;

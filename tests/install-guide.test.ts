@@ -8,7 +8,7 @@ import { publishGuide, storagePlan } from '../.github/scripts/publish-install-gu
 import { runFile } from '../scripts/runtime-assets.mjs';
 
 const pkg = { name: '@openmotion/app', version: '0.6.4-test.1', private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } };
-const manifest = { schemaVersion: 1, version: pkg.version, templateEnvironment: 'prod', commit: 'a'.repeat(40),
+const manifest = { schemaVersion: 1, version: pkg.version, templateEnvironment: 'dev', commit: 'a'.repeat(40),
   application: { sha256: 'b'.repeat(64) }, locks: { npm: 'c'.repeat(64), native: 'd'.repeat(64) },
   runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64', minimumOS: '26.0' } } } };
 const config = { endpoint: 'https://example.r2.cloudflarestorage.com', bucket: 'example-guides', publicOrigin: 'https://download.example.invalid' };
@@ -54,6 +54,8 @@ test('guide rendering pins the exact npm package, built source and hash while re
   assert(text.includes(manifest.commit) && text.includes(record.tgzSHA256));
   assert(!text.includes('{{') && !text.includes('see `{{...}}`'));
   assert(text.includes('eleven public Tools') && text.includes('five Skills'));
+  assert(text.includes('new test versions embed DEV defaults') && !text.includes('does not select DEV templates'),
+    'A generated test guide must not claim test versions skip DEV templates');
   for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(text.includes(`openmotion setup --host ${host}`), host);
   assert(text.includes('--profile PROFILE') && text.includes('Do not infer the current host'));
   assert.equal(record.channel, 'test'); assert.equal(record.candidate, false);
@@ -61,8 +63,11 @@ test('guide rendering pins the exact npm package, built source and hash while re
   for (const name of ['https://evil.invalid/a', 'x;echo bad', '--script', '@bad/no/extra']) assert.throws(() => validateGuideSpec(name, pkg.version));
   assert.throws(() => validateGuideSpec(pkg.name, 'latest'));
   assert.throws(() => validateGuideIdentity({ ...pkg, private: true }, manifest), /public/);
-  assert.throws(() => validateGuideIdentity(pkg, { ...manifest, templateEnvironment: 'dev' }), /prod/);
+  assert.throws(() => validateGuideIdentity(pkg, { ...manifest, templateEnvironment: 'prod' }), /Template defaults/);
   assert.throws(() => validateGuideIdentity(pkg, { ...manifest, version: '0.6.4' }), /versions differ/);
+  const stable = { ...pkg, version: '0.6.4' };
+  assert.equal(validateGuideIdentity(stable, { ...manifest, version: stable.version, templateEnvironment: 'prod' }), 'stable');
+  assert.throws(() => validateGuideIdentity(stable, { ...manifest, version: stable.version }), /Template defaults/);
 });
 
 test('publication verifies the immutable URL before conditional fixed promotion and retains the prior guide', async t => {

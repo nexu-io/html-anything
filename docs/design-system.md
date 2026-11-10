@@ -17,6 +17,10 @@
 
 ## 视觉规范
 
+Functional editor icons use Remix Icon 4.9.1, matching the [reference icon catalog](https://open-design-system-leon.leon-wcl.chatgpt.site/#/icons). Original vector paths are bundled in `web/design-system/icons.svg`, with the upstream license and notice beside it. `studio/src/icons/RemixIcons.tsx` provides the shared React interface and legacy-name mappings; `MotionIcon` uses the same sprite. Controls default to line icons; play/pause and explicit filled states retain distinct glyphs. Brand artwork and timeline drawing geometry remain separate. MVP side-panel tabs and the preview title use text without icons. A tab strip with only one panel shows a plain heading without a selected underline. Selected tabs use the strong neutral text token, semibold weight and a 2px neutral underline. Enabled toolbar toggles use the same strong text on an inset neutral background; inactive and disabled controls retain separate contrast levels.
+
+The sidebar uses the official horizontal OpenDesign logo from the reference system's Brand page. Original dark and light SVGs live in `web/design-system/opendesign-{dark,light}.svg`, selected by the editor theme; the logo is not assembled from a library icon and interface text.
+
 | 用途 | 浅色 | 深色 |
 | --- | --- | --- |
 | 工作区 | `#ffffff` | `#202020` |

@@ -3,7 +3,7 @@ import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeAtomic, writeJSON } from './runtime-assets.mjs';
-import { checkReleaseVersion } from './release-version.mjs';
+import { checkReleaseVersion, releaseTemplateEnvironment } from './release-version.mjs';
 
 export function validateGuideSpec(name, version) {
   assert.match(name || '', /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/, 'Require an npm package name');
@@ -17,7 +17,7 @@ export function validateGuideIdentity(pkg, manifest) {
   assert.equal(pkg.private, false, 'Only public release candidates may have a public installation guide');
   assert.equal(pkg.version, manifest.version, 'Package and embedded manifest versions differ');
   assert.equal(manifest.schemaVersion, 1, 'Unsupported release manifest');
-  assert.equal(manifest.templateEnvironment, 'prod', 'Public guides require prod defaults');
+  assert.equal(manifest.templateEnvironment, releaseTemplateEnvironment(pkg.version), 'Template defaults must match the release channel');
   assert.equal(pkg.bin?.openmotion, 'scripts/npm-installer.mjs', 'Missing Motion entry point');
   assert.match(manifest.commit || '', /^[a-f0-9]{40}$/, 'Require the built source SHA');
   for (const hash of [manifest.application?.sha256, manifest.locks?.npm, manifest.locks?.native]) assert.match(hash || '', /^[a-f0-9]{64}$/, 'Require release checksums');

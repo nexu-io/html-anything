@@ -16,7 +16,7 @@ import {
   Waveform,
   TextAa,
   Image as PhImage,
-} from "@phosphor-icons/react";
+} from "../../icons/RemixIcons";
 
 const SZ = 14;
 const W = "duotone" as const;

@@ -435,7 +435,7 @@ function MediaFadeSliders({
     return (
       <FlatSlider
         key={edge}
-        label={t("Fade {edge}", { edge: edge })}
+        label={t(edge === "in" ? "Fade in" : "Fade out")}
         value={Math.round(seconds * 100)}
         min={0}
         max={Math.round(edgeMax * 100)}

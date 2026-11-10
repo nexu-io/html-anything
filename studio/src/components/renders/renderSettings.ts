@@ -67,15 +67,15 @@ export function isRenderExportBlocked(
 
 export const FORMAT_INFO: Record<"mp4" | "webm" | "mov" | "gif", { label: string; desc: string }> =
   {
-    gif: { label: "GIF", desc: "Animated image for docs and chat. No audio; up to 30 fps." },
-    mp4: { label: "MP4", desc: "Best for general use. Smallest file, universal playback." },
+    gif: { label: "GIF", desc: "Animated image, no audio. Up to 30 fps." },
+    mp4: { label: "MP4", desc: "Everyday video, widely compatible." },
     mov: {
       label: "MOV (ProRes 4444)",
-      desc: "Transparent video. Works in Final Cut Pro, DaVinci Resolve, and most video editors. Large files.",
+      desc: "Transparent video for editing. Larger files.",
     },
     webm: {
       label: "WebM (VP9)",
-      desc: "Transparent video for web. Smaller than MOV but limited editor support.",
+      desc: "Transparent video for web. Limited editor support.",
     },
   };
 

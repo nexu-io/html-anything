@@ -22,9 +22,6 @@ export function RenderQueueInfo({ job }: { job: RenderJob }) {
     <div className="flex-1 min-w-0">
       <div className="flex items-center gap-1.5">
         <span className="text-step-11 font-medium text-text-2 truncate">{job.filename}</span>
-        {job.durationMs && (
-          <span className="text-step-9 text-text-5 shrink-0">{formatDuration(job.durationMs)}</span>
-        )}
       </div>
 
       {isRendering && (
@@ -57,7 +54,14 @@ export function RenderQueueInfo({ job }: { job: RenderJob }) {
       )}
 
       {!isRendering && (
-        <span className="text-step-9 text-text-5">{formatTimeAgo(job.createdAt, locale)}</span>
+        <div className="flex flex-wrap items-center gap-x-1 text-step-9 text-text-5">
+          <span>{formatTimeAgo(job.createdAt, locale)}</span>
+          {job.status === "complete" && job.durationMs !== undefined && (
+            <span className="whitespace-nowrap">
+              · {t("Took {value0}", { value0: formatDuration(job.durationMs) })}
+            </span>
+          )}
+        </div>
       )}
     </div>
   );

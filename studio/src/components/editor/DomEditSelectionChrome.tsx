@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import type { RefObject } from "react";
 import { type DomEditSelection } from "./domEditing";
 import {
@@ -169,6 +170,7 @@ export function DomEditSelectionChrome({
   onBoxClick,
   inlineText,
 }: DomEditSelectionChromeProps) {
+  const mvp = useMvpEditor();
   // While the text is being edited the chrome is a mark, not a control. The
   // overlay above the preview already stands aside for the caret, but
   // `pointer-events: none` on a parent does not disable a child that asks for
@@ -189,7 +191,7 @@ export function DomEditSelectionChrome({
           transform: overlayRect.angle ? `rotate(${overlayRect.angle}deg)` : undefined,
         }}
       >
-        {canManipulate && !editing && selection.capabilities.canApplyManualRotation && (
+        {!mvp && canManipulate && !editing && selection.capabilities.canApplyManualRotation && (
           <DomEditRotateHandle
             overlayRect={overlayRect}
             cropOutlineInsetPx={cropOutlineInsetPx}

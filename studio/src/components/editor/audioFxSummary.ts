@@ -7,6 +7,7 @@
  * grouping exists to prevent — that they are seven things to manage.
  */
 
+import { translate, type Translate } from "../../i18n/I18n";
 import { HF_AUDIO_FX_DATA_KEY, parseAudioFxChain } from "@hyperframes/core/audio-fx";
 import type { DomEditSelection } from "./domEditingTypes";
 
@@ -27,22 +28,22 @@ function countEnabledNodes(raw: string | undefined): { handBuilt: number; carve:
   }
 }
 
-export function audioFxSummary(element: DomEditSelection, groupLabel?: string): string {
+export function audioFxSummary(element: DomEditSelection, groupLabel?: string, t: Translate = (message, values) => translate("en", message, values)): string {
   // A clip inside a group reads "in Voiceover" — the designs use this line to
   // answer "where does this go?" before the author opens anything, which is
   // the same job the rack's OUT does from the other end. It outranks the effect
   // count: a member with no effects of its own is still IN the group, and that
   // is the more useful thing to say about it.
-  if (groupLabel) return `in ${groupLabel}`;
+  if (groupLabel) return t("in {group}", { group: groupLabel });
   const counts = countEnabledNodes(element.dataAttributes?.[HF_AUDIO_FX_DATA_KEY]);
-  if (!counts) return "unreadable";
+  if (!counts) return t("unreadable");
   const parts: string[] = [];
   if (counts.handBuilt > 0) {
-    parts.push(`${counts.handBuilt} effect${counts.handBuilt === 1 ? "" : "s"}`);
+    parts.push(t(counts.handBuilt === 1 ? "{count} effect" : "{count} effects", { count: counts.handBuilt }));
   }
   // One name for the module however many filters are behind it. Named when the
   // carve is switched on at all, because the control is in this section whether or
   // not it has compiled to anything yet.
-  if (counts.carve > 0 || element.dataAttributes?.["fx-carve"]) parts.push("carve");
-  return parts.length > 0 ? parts.join(" + ") : "none";
+  if (counts.carve > 0 || element.dataAttributes?.["fx-carve"]) parts.push(t("carve"));
+  return parts.length > 0 ? parts.join(" + ") : t("none");
 }

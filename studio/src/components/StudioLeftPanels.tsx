@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../motion/StudioHost";
 import { useI18n } from "../i18n/I18n";
 import { memo, useCallback, type ReactNode } from "react";
 import { SourceEditor } from "./editor/SourceEditor";
@@ -49,6 +50,7 @@ export const StudioLeftPanels = memo(function StudioLeftPanels({
   onAddAssetToTimeline,
   onAddCompositionToTimeline,
 }: StudioLeftPanelsProps) {
+  const mvp = useMvpEditor();
   const { projectId, renderQueue, waitForPendingDomEditSaves } = useStudioShellContext();
   const {
     compositions,
@@ -85,7 +87,7 @@ export const StudioLeftPanels = memo(function StudioLeftPanels({
   const importFiles = async (files: FileList, dir?: string) => {
     await handleImportFiles(files, dir);
   };
-  const lintButton = (
+  const lintButton = mvp ? null : (
     <SidebarLintButton
       onLint={onLint}
       linting={linting}
@@ -101,10 +103,9 @@ export const StudioLeftPanels = memo(function StudioLeftPanels({
           <CompositionsPanel
             projectId={projectId}
             compositions={compositions}
-            activeComposition={editingFile?.path ?? null}
             onSelect={onSelectComposition}
-            onAddToTimeline={onAddCompositionToTimeline}
-            onRenderComposition={handleRenderComposition}
+            onAddToTimeline={mvp ? undefined : onAddCompositionToTimeline}
+            onRenderComposition={mvp ? undefined : handleRenderComposition}
             isRendering={renderQueue.isRendering}
             lintFindingsByFile={lintFindingsByFile}
           />
@@ -174,6 +175,7 @@ function CodeBody({
   onChange: (content: string) => void;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   if (!editingFile) {
     return (
       <div className="flex items-center justify-center h-full text-neutral-600 text-sm">

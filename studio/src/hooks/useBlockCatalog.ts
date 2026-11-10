@@ -6,6 +6,7 @@ import {
   resolveBlockCategory,
 } from "../utils/blockCategories";
 import { studioApiFetch } from "../utils/studioApiFetch";
+import { useI18n } from "../i18n/I18n";
 
 type CatalogItem = RegistryItem & {
   category: BlockCategory;
@@ -38,6 +39,7 @@ function loadCatalog(): Promise<CatalogItem[]> {
 }
 
 export function useBlockCatalog() {
+  const { t } = useI18n();
   const [blocks, setBlocks] = useState<CatalogItem[]>(() => catalogCache ?? []);
   const [loading, setLoading] = useState(catalogCache === null);
   const [error, setError] = useState<string | null>(null);
@@ -71,17 +73,23 @@ export function useBlockCatalog() {
       result = result.filter((b) => b.category === category);
     }
     if (search.trim()) {
-      const q = search.toLowerCase();
+      const q = search.trim().toLowerCase();
+      const matchingCategories = new Set(
+        BLOCK_CATEGORIES.filter((item) =>
+          [item.id, item.label, t(item.label)].some((label) => label.toLowerCase().includes(q)),
+        ).map((item) => item.id),
+      );
       result = result.filter(
         (b) =>
           b.title.toLowerCase().includes(q) ||
           b.description.toLowerCase().includes(q) ||
           b.category.toLowerCase().includes(q) ||
+          matchingCategories.has(b.category) ||
           b.tags?.some((t) => t.toLowerCase().includes(q)),
       );
     }
     return result;
-  }, [blocks, category, search]);
+  }, [blocks, category, search, t]);
 
   return {
     blocks,

@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { memo, type CSSProperties, type ReactNode } from "react";
 import type { TimelineElement } from "../store/playerStore";
 import {
@@ -22,6 +23,7 @@ import { timeLayerPercent } from "./TimelineTimeLayer";
 
 interface TimelineClipProps {
   el: TimelineElement;
+  trackLabel?: string;
   pps: number;
   passengerStyle?: CSSProperties;
   clipY: number;
@@ -63,6 +65,7 @@ export function clipZoomKey(el: TimelineElement, pps: number, interacting: boole
 // fallow-ignore-next-line complexity
 export const TimelineClip = memo(function TimelineClip({
   el,
+  trackLabel,
   pps,
   passengerStyle,
   clipY,
@@ -87,13 +90,15 @@ export const TimelineClip = memo(function TimelineClip({
   children,
 }: TimelineClipProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const widthPx = clipWidthPx(el, pps);
   const handleOpacity = getClipHandleOpacity({ isHovered, isSelected, isDragging });
   const displayLabel = `${el.label || el.id || el.tag}${clipSpeedSuffix(el.playbackRate, el.automation)}`;
   const isAudioClip = isAudioTimelineElement(el);
   const ladder = clipWidthLadder(widthPx);
   const showHandles = handleOpacity > 0.01 && (widthPx >= HANDLES_MIN_PX || isSelected);
-  const showLabel = !isAudioClip || ladder === "labeled";
+  const duplicateLabel = mvp && trackLabel === displayLabel;
+  const showLabel = !duplicateLabel && (!isAudioClip || ladder === "labeled");
   const showDefaultText = !hasCustomContent && ladder === "labeled";
   const startLabel = el.start.toFixed(1);
   const endLabel = (el.start + el.duration).toFixed(1);
@@ -154,6 +159,7 @@ export const TimelineClip = memo(function TimelineClip({
       data-clip-start={el.start}
       data-clip-end={el.start + el.duration}
       data-clip-hidden={el.hidden ? "true" : undefined}
+      data-label-in-track={duplicateLabel ? "true" : undefined}
       data-link-color={linkColor ?? undefined}
       data-ladder={ladder}
       data-active={isActive ? "" : undefined}
@@ -247,7 +253,7 @@ export const TimelineClip = memo(function TimelineClip({
           {!isAudioClip && badges}
         </span>
       )}
-      {isAudioClip && badges}
+      {(isAudioClip || !showLabel) && badges}
       {!isGestureActor && el.syncOrigin && <OutOfSyncBadge el={el} />}
       {showDefaultText && (
         <span className="timeline-clip__timecode">

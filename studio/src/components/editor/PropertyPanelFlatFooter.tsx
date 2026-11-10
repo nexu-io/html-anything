@@ -1,3 +1,5 @@
+import { RemixIcon } from "../../icons/RemixIcons";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 import { keyHint, useStudioKeys } from "../../player/components/studioShortcuts";
@@ -14,6 +16,7 @@ export function PropertyPanelFlatFooter({
   onToggleRecording?: () => void;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const track = useTrackDesignInput();
   const recording = recordingState === "recording";
   const recordKey = keyHint("record", useStudioKeys());
@@ -39,17 +42,9 @@ export function PropertyPanelFlatFooter({
         disabled={!onAskAgent}
         className="flex items-center gap-[7px] text-[11px] font-medium text-panel-text-2 disabled:cursor-not-allowed"
       >
-        <svg
-          width="13"
-          height="13"
-          viewBox="0 0 16 16"
-          fill="currentColor"
-          className="text-accent-ink"
-        >
-          <path d="M8 1l1.4 4.6L14 7l-4.6 1.4L8 13l-1.4-4.6L2 7l4.6-1.4z" />
-        </svg>
+        <RemixIcon name="sparkling-line" size={14} className="text-accent-ink" />
         {t("Ask agent about this element")}</button>
-      {onToggleRecording && (
+      {!mvp && onToggleRecording && (
         <button
           type="button"
           data-flat-footer-record="true"

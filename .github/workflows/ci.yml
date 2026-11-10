@@ -16,8 +16,8 @@ on:
       template_environment:
         description: 'Template configuration platform used by the package'
         type: choice
-        options: [prod, dev]
-        default: prod
+        options: [dev, prod]
+        default: dev
       publish:
         description: 'Publication is disabled during migration; leave unchecked'
         type: boolean
@@ -31,6 +31,38 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  maintainability:
+    name: Maintainability report
+    if: github.event_name == 'pull_request' && github.base_ref == 'feature/motion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout PR merge result
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup pinned Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            .github/maintainability/package-lock.json
+      - name: Compare source against the PR base
+        shell: bash
+        env:
+          BASE_REVISION: ${{ github.event.pull_request.base.sha }}
+        run: |
+          test "$(git rev-parse HEAD^1)" = "$BASE_REVISION"
+          base_dir=$(mktemp -d "$RUNNER_TEMP/motion-base.XXXXXX")
+          git archive "$BASE_REVISION" | tar -x -C "$base_dir"
+          npm ci --prefix "$base_dir" --ignore-scripts --no-audit --no-fund
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix .github/maintainability --ignore-scripts --no-audit --no-fund
+          node .github/maintainability/report.mjs "$base_dir" "$BASE_REVISION" >> "$GITHUB_STEP_SUMMARY"
+
   standalone:
     runs-on: ubuntu-24.04
     timeout-minutes: 40
@@ -39,7 +71,7 @@ jobs:
         shell: bash
     env:
       OPENMOTION_TELEMETRY: '0'
-      HYPERFRAMES_BROWSER_PATH: /usr/bin/chromium
+      HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome
       HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
       HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
     steps:
@@ -52,7 +84,11 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - name: Install rendering test tools
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends zip unzip chromium ffmpeg fonts-noto-core
+        run: |
+          # The hosted Ubuntu image provides Chrome; Ubuntu's chromium package pulls a desktop snap.
+          "$HYPERFRAMES_BROWSER_PATH" --version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends zip unzip ffmpeg fonts-noto-core
       - name: Validate manual package selection
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
@@ -78,7 +114,7 @@ jobs:
           npm run build:tracking
           node --experimental-strip-types --test tests/tracking.test.ts
       - name: Validate standalone installation and packaging
-        run: node --experimental-strip-types --test tests/install.test.ts tests/npm-installer.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
+        run: node --experimental-strip-types --test tests/install.test.ts tests/npm-installer.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
       - name: Studio regression
         run: npm run test:studio -- --maxWorkers=2
       - name: Build phase-one ZIP and exercise all public tools
@@ -89,7 +125,7 @@ jobs:
       - name: Build immutable standalone artifacts
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
-          TEMPLATE_ENVIRONMENT: ${{ inputs.template_environment || 'prod' }}
+          TEMPLATE_ENVIRONMENT: ${{ inputs.template_environment || 'dev' }}
         run: |
           version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
           if [ "$PACKAGE_FORMAT" = npm ]; then
@@ -101,14 +137,14 @@ jobs:
             done
           fi
       - name: Generate candidate installation guide
-        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'prod') == 'prod'
+        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
         run: |
           version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
           candidate=$(node --input-type=module -e 'import fs from "node:fs"; const m=JSON.parse(fs.readFileSync(process.argv[1]));process.stdout.write(m.installer.url.replace(/^\.\//,""));' "dist/$version/release-npm.json")
           node --experimental-strip-types scripts/install-guide.mjs "dist/$version/$candidate" .artifacts/install-guide --candidate
           node .github/scripts/motion-scan.mjs package "dist/$version/$candidate" "$RUNNER_TEMP/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
       - name: Retain candidate installation guide for review
-        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'prod') == 'prod'
+        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
         uses: actions/upload-artifact@v7.0.2
         with:
           name: motion-install-guide-preview-${{ github.run_id }}-${{ github.run_attempt }}

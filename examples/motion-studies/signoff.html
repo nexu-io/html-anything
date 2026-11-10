@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenMotion · The edit point</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box }
+    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden }
+    main { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Helvetica Neue", Arial, sans-serif }
+    .layer { position: absolute; inset: 0 }
+    .credit { position: absolute; display: flex; gap: 8px; align-items: center; font-weight: 650; font-size: 22px; letter-spacing: -1px }
+    .brand-mark { width: 23px; height: 23px; display: inline-block }
+    main { background: #102e2e; color: #d4f5a1 }
+    .credit { left: 44px; top: 34px }
+    #score { position: absolute; inset: 82px 42px 75px; width: 876px; height: 383px }
+    #score path { fill: none; stroke: #7ca299; stroke-width: 1.4 }
+    .caption { position: absolute; bottom: 27px; left: 46px; color: #b3cbc5; font: 15px monospace; letter-spacing: 1px }
+    #seal { background: #ffc49d; color: #123c39; display: grid; place-items: center }
+    #title { font: italic 99px/1 Georgia,serif; letter-spacing: -7px }
+    #logo { position: absolute; left: 50%; top: 50%; width: 117px; height: 117px; margin: -58.5px }
+    #logo svg { width: 100%; height: 100% }
+    .rule { position: absolute; left: 45px; right: 45px; bottom: 48px; border-top: 1px solid #c18f6f; padding-top: 8px; font: 15px monospace; display: flex; justify-content: space-between }
+  </style>
+</head>
+<body>
+  <main data-composition-id="main" data-width="960" data-height="540" data-start="0" data-duration="5" data-fps="24">
+    <div id="sequence" class="layer" data-start="0" data-duration="5" data-track-index="0">
+      <div class="credit"><svg class="brand-mark" viewBox="0 0 291 291" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="currentColor"/>
+<path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="currentColor"/>
+</svg><span>OpenMotion</span></div><div class="caption">TIMELINE &nbsp; / &nbsp; FIVE SHOTS</div>
+      <svg id="score" viewBox="0 0 876 383"><g id="grid"></g><g id="paths"></g><g id="clips"></g><circle id="point" cx="438" cy="192" r="13" fill="#e7fc92"/></svg>
+    </div>
+    <div id="seal" class="layer" data-start="0" data-duration="5" data-track-index="1"><span id="title">OpenMotion</span><span id="logo"><svg class="brand-mark" viewBox="0 0 291 291" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="currentColor"/>
+<path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="currentColor"/>
+</svg></span><div class="rule"><span>OPENMOTION</span><span>EDIT COMPLETE</span></div></div>
+  </main>
+  <script>
+    const cut = gsap.timeline({paused: true});
+    const ns = 'http://www.w3.org/2000/svg';
+    function shape(tag, attributes, parent) {
+      const el = document.createElementNS(ns, tag);
+      for (const [key, value] of Object.entries(attributes)) el.setAttribute(key, value);
+      document.querySelector(parent).append(el);
+      return el;
+    }
+    for (let x = 38; x < 870; x += 42) {
+      shape('path', { d: 'M'+x+' 30v319', opacity: .13 }, '#grid');
+    }
+    const tracks = [[71,79,100], [237,211,119], [435,119,88], [577,261,125], [730,87,92]];
+    const palette = ['#ff9276','#bcebaa','#f0c277','#8dcccd','#e9bda6'];
+    tracks.forEach(([x,y,w], i) => {
+      shape('path', { d: 'M'+x+' '+y+' Q438 '+y+' 438 192' }, '#paths');
+      const clip = shape('g', {class:'clip-art'}, '#clips');
+      const rect = document.createElementNS(ns, 'rect');
+      for (const [k,v] of Object.entries({x,y:y-18,width:w,height:37,rx:6,fill:palette[i]})) rect.setAttribute(k,v);
+      clip.append(rect);
+      const name = document.createElementNS(ns,'text');
+      name.setAttribute('x',x+9); name.setAttribute('y',y+6); name.setAttribute('fill','#153b38');
+      name.setAttribute('font-family','monospace'); name.setAttribute('font-size','16');
+      name.textContent = ['01 OPEN','02 PAN','03 CUT','04 TYPE','05 END'][i]; clip.append(name);
+      cut.to(clip,{x:438-x-w/2,y:192-y,scale:.06,transformOrigin:'center',duration:.72,ease:'power3.inOut'},.23+i*.04);
+    });
+    cut.set('#seal, #logo',{autoAlpha:0},0);
+    cut.to('#paths, #grid',{opacity:0,duration:.56},.3);
+    cut.to('#point',{scale:1.55,transformOrigin:'center',yoyo:true,repeat:1,duration:.28},1.05);
+    cut.set('#seal',{autoAlpha:1},2.04);
+    cut.from('#title',{clipPath:'inset(0 100% 0 0)',duration:.48,ease:'power2.inOut'},2.05);
+    cut.to('#title',{clipPath:'inset(0 0 0 100%)',duration:.37},3.15);
+    cut.fromTo('#logo',{autoAlpha:0,scale:.34,rotation:-58},{autoAlpha:1,scale:1,rotation:0,duration:.54,ease:'power3.out'},3.52);
+    cut.set({}, {}, 5);
+    window.__timelines = { main: cut };
+  </script>
+</body>
+</html>

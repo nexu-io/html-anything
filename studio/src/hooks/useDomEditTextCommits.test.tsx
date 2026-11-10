@@ -391,6 +391,36 @@ describe("useDomEditTextCommits", () => {
     expect(persistDomEditOperations).not.toHaveBeenCalled();
   });
 
+  it.each([false, true])("replaces a gradient atomically and rolls back a failed save (%s)", async (fail) => {
+    const { iframe, element } = previewElement("<div id='card'>Original</div>", "card");
+    element.style.backgroundImage = "linear-gradient(90deg, black, white)";
+    element.style.backgroundColor = "blue";
+    element.style.borderRadius = "20px";
+    const before = element.style.cssText;
+    const persist = vi.fn().mockImplementation(async () => {
+      expect(element.style.backgroundImage).toBe("none");
+      expect(element.style.backgroundColor).toBe("red");
+      if (fail) throw new Error("Save failed");
+      return { sourceFile: "index.html", changed: true };
+    });
+    const hook = renderTextCommitHook(commitParams({
+      previewIframeRef: { current: iframe },
+      domEditSelection: selectionFor(element),
+      persistDomEditOperations: persist,
+    }));
+    await act(async () => {
+      const outcome = await hook.handleDomStyleCommit({
+        "background-color": "red", "background-image": "none",
+      });
+      expect(outcome.ok).toBe(!fail);
+    });
+    expect(persist).toHaveBeenCalledTimes(1);
+    expect(persist.mock.calls[0][1]).toHaveLength(2);
+    expect(element.style.borderRadius).toBe("20px");
+    if (fail) expect(element.style.cssText).toBe(before);
+    else expect(element.style.backgroundImage).toBe("none");
+  });
+
   it("declines a style commit for a manual-geometry property", async () => {
     const persistDomEditOperations = vi.fn().mockResolvedValue(undefined);
     const { element } = previewElement("<div id='card'>Original</div>", "card");

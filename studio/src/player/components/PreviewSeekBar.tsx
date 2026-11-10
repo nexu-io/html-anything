@@ -20,6 +20,10 @@ export const PreviewSeekBar = memo(function PreviewSeekBar({
     if (!input) return;
     const updateTime = (time: number) => {
       input.value = String(time);
+      const progress = Number.isFinite(duration) && duration > 0 && Number.isFinite(time)
+        ? Math.max(0, Math.min(100, (time / duration) * 100))
+        : 0;
+      input.style.setProperty("--preview-progress", `${progress}%`);
       const text = t("{value0} of {value1}", { value0: formatTime(time), value1: formatTime(duration) });
       if (input.getAttribute("aria-valuetext") !== text) input.setAttribute("aria-valuetext", text);
     };

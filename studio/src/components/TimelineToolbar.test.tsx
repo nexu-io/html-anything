@@ -429,20 +429,22 @@ describe("TimelineToolbar Fit", () => {
     act(() => unregister());
   });
 
-  it("shows Fit as a named icon and says whether fit is on", () => {
+  it("fits the timeline with an ordinary named icon button", () => {
     const { host, root } = renderToolbar();
     const fit = () => host.querySelector('button[aria-label="Fit timeline to width"]');
     expect(fit()?.textContent).toBe("");
     expect(fit()?.querySelector("svg")).not.toBeNull();
     act(() => fit()?.dispatchEvent(new MouseEvent("click", { bubbles: true })));
-    expect(fit()?.getAttribute("aria-pressed")).toBe("true");
+    expect(usePlayerStore.getState().zoomMode).toBe("fit");
+    expect(fit()?.hasAttribute("aria-pressed")).toBe(false);
     act(() =>
       host
         .querySelector('button[aria-label="Zoom in"]')
         ?.dispatchEvent(new MouseEvent("click", { bubbles: true })),
     );
     act(() => vi.advanceTimersToNextFrame());
-    expect(fit()?.getAttribute("aria-pressed")).toBe("false");
+    expect(usePlayerStore.getState().zoomMode).toBe("manual");
+    expect(fit()?.hasAttribute("aria-pressed")).toBe(false);
     act(() => root.unmount());
   });
 

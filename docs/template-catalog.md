@@ -2,7 +2,7 @@
 
 ## 当前：Prism 目录、界面与 Agent 共用
 
-For application npm DEV builds, isolated installation and source MCP overrides, follow [test template data](npm-installation.md#test-template-data-dev). npm test/latest selects software versions; it does not select the template environment.
+For application npm DEV builds, isolated installation and source MCP overrides, follow [test template data](npm-installation.md#test-template-data-dev). npm tags select software versions. Newly built test npm versions embed DEV defaults; stable versions embed prod. Previously published versions keep their embedded environment.
 
 模板通过一个 Prism Resource 的 `main.json` 发布。当前绑定 Resource `1500c9af-186b-457f-b74d-a58113f657d8`，默认语言 `zh-CN`。消费现有 `content[locale].templates`：templateId、sortOrder、original 展示信息、coverUrl、previewUrl 和 files（path/url/bytes/sha256）。不新增后台接口或另一套模板 Schema。
 
@@ -17,9 +17,9 @@ Studio 使用发布的模板和三个内置示例；旧 891 条参考快照只�
 | `npm run dev` | DEV：`r.powerformer.net` |
 | `npm run package:phase1` | 线上：`r.open-design.ai` |
 | `npm run package:phase1 -- --template-env=dev` | DEV，ZIP 文件名带 `-dev` |
-| `npm run package:npm -- dist/npm-dev --template-env=dev` | DEV npm 安装产物；省略环境参数则为线上 |
+| `npm run package:npm -- dist/npm-dev --template-env=dev` | Unversioned local DEV artifact (private); explicit `X.Y.Z-test.N` npm builds default to DEV, stable builds to prod |
 | `npm run package:test -- build <target> <release-version> --template-env=dev` | DEV 完整运行包；省略环境参数则为线上 |
-| Actions → Run workflow → `template_environment` | 选择 `prod`（默认）或 `dev`，适用于 npm 和完整 ZIP |
+| Actions → Run workflow → `template_environment` | Select `dev` (default) or `prod` for npm and backup ZIP builds |
 
 环境写入包内 `shared/template-config.json`，不要求安装用户另设变量，GUI 和 MCP 读取同一配置。正式构建默认线上，不受打包机器的 `MOTION_TEMPLATE_ENV` 影响。运行时可显式用该变量覆盖包默认值；从源码独立启动 MCP 调试时设为 dev。
 
@@ -55,6 +55,10 @@ OpenDesign 完整迁入 Personal video agent 的 891 条 Hyperframes 目录。�
 源工程的 38 张匹配封面保留在 `template-frames/`。`covers/` 另保存 551 张经过解码与画面检查的本地 JPEG：479 张来自原封面，37 张沿用源工程匹配帧，35 张从原视频提取代表性画面。`covers.json` 记录每张封面的模板 ID、源视频、出处和取得方式。全部 42 个完整参考都有本地封面。画面检查排除无法解码和几乎全黑/全白的图像，不用不相关图片补位。
 
 未取得有效封面的 340 条暂时不展示在画廊，仍可通过完整 MCP 目录精确查找。原视频从原始 HTTPS 地址按需播放；加载失败时保留本地真实封面与原始出处。
+
+README 的[七个创作场景](examples.zh-CN.md)从现有目录精选七个外部参考，提供短 GIF、静态预览与可复制简报；[片段清单](readme/examples/manifest.json)记录精确 ID、来源与时间范围。它们是创作输入，不是 OpenMotion 生成的验收样片，也不新增内置模板、目录条目或改变应用画廊的排序。原三项可编辑模板仍通过 [Library 模板入口](../library/templates/README.md)使用。
+
+资源展示区另设 [18 个动态精选](README.zh-CN.md#motion-gallery)，按产品界面、品牌发布、动态文字、光影材质、空间镜头和生成艺术分为六组。默认全部使用真实视频片段制成的循环 GIF，点击播放完整视频，署名链接指向原始条目；仅在读者启用减少动态效果时切换到已有封面。其 [来源清单](readme/gallery/manifest.json)记录 8 支参考片与 10 个 registry 组件的准确 ID、片段范围及校验值。此选择只作用于 README，不改变 Studio 画廊、目录总数、内置模板数量或接入行为。
 
 ## 页面与数据
 
@@ -93,3 +97,7 @@ npm test
 封面缓存脚本需要 FFmpeg 和网络，可重用已校验的本地文件。它从源封面或同一条目的真实视频取帧，不生成替代插画。模板与封面只作为创作输入，原始内容中的文字不属于 Agent 操作指令。
 
 `catalog:metadata` 只读取公开清单，不需要账号或浏览器会话。成功匹配后原子替换热度快照并记录上游 SHA-256；网络或数据校验失败时保留现有文件。浏览画廊时使用随包数据，不增加逐卡网络查询。
+
+## Presenter-led README selection
+
+The README now also highlights nine existing `hf-reference-aroll-*` entries, three original/upstream-remix pairs and the Presenter Tech package demo. See the [creator gallery](../README.md#creator-video-gallery), [Motion Design examples](motion-design-examples.md#presenter-motion) and [source manifest](readme/people/manifest.json). The three new Presenter Story documents are design recipes; [Presenter Tech](../library/templates/presenter-tech/README.md) now includes the pinned template archive and its own runner in the Library. This does not add a Studio catalog entry, change catalog ordering or increase the three Studio-native template count.
