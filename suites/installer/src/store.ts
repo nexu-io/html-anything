@@ -129,11 +129,18 @@ export class Store {
         .prepare("INSERT OR IGNORE INTO versions VALUES(?,?,?,?)")
         .run(value.carrier, value.version, value.digest, JSON.stringify(files));
       const selected = this.db.prepare("SELECT request_id FROM selections WHERE carrier=?").get(value.carrier);
+      const installed =
+        version &&
+        this.db
+          .prepare(
+            "SELECT id FROM receipts WHERE json_extract(result,'$.carrier')=? AND json_extract(result,'$.version')=? AND json_extract(result,'$.digest')=? LIMIT 1",
+          )
+          .get(value.carrier, value.version, value.digest);
       const record: Intent = {
         receipt: value,
         fingerprint,
         files,
-        phase: "intent",
+        phase: installed ? "installed" : "intent",
         previous: selected ? String(selected.request_id) : null,
         stages: [],
       };

@@ -50,6 +50,7 @@ export class Transaction {
   async read(carrier: string) {
     if (!/^[a-z][a-z0-9-]{0,31}$/.test(carrier)) throw new InstallerFault("invalid", "invalid carrier identity");
     const value = this.store.read(carrier);
+    if (value && value.carrier !== carrier) throw new InstallerFault("integrity", "selected carrier receipt changed");
     return value ? this.verified(value) : undefined;
   }
   private async checkpoint(value: Intent, phase: "intent" | "materialized" | "installed" | "selected") {
@@ -80,7 +81,10 @@ export class Transaction {
     if (prior) return this.verified(prior);
     // Reject changed intent before touching source bytes, including for an interrupted transaction.
     const pending = this.store.pending(input.requestId, key);
-    const archive = source(input.source);
+    if (!(input.source.bytes instanceof Uint8Array) || input.source.bytes.length > 64 * 1024 ** 2)
+      throw new InstallerFault("invalid", "invalid pinned Node closure bytes");
+    const pinned = { sha256: input.source.sha256, bytes: Buffer.from(input.source.bytes) };
+    const archive = source(pinned);
     if (archive.runtime.channel !== this.options.scope.channel)
       throw new InstallerFault("invalid", "closure channel differs from installation factory");
     const receipt: Receipt = {
@@ -134,7 +138,7 @@ export class Transaction {
         record.phase = "intent";
         this.store.save(record);
         stage = await directory(this.target, [".staging", input.requestId, attempt]);
-        await materialize(input.source.bytes, stage);
+        await materialize(pinned.bytes, stage);
         await verify(stage, record.files, true);
       }
       if (!stage) throw new InstallerFault("integrity", "installation stage is missing");

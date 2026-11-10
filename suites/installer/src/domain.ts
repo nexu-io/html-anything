@@ -86,7 +86,10 @@ export async function open(options: Options): Promise<Session> {
     return {
       factory,
       context,
-      install: (input) => run(() => active.install(input)),
+      install: (input) => {
+        const accepted = { ...input, source: input?.source ? { ...input.source } : input?.source };
+        return run(() => active.install(accepted));
+      },
       read: (carrier) => run(() => active.read(carrier)),
       close: () => {
         closed ??= (async () => {

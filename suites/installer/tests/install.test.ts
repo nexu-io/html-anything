@@ -50,6 +50,9 @@ it("installs immutable closures for both carriers in one sidecar factory and rep
     });
     expect(await readFile(join(result.path, "main.mjs"), "utf8")).toBe("export const value=1;");
     expect(await session.read("codexplugin")).toEqual(result);
+    const another = await session.install({ ...command, requestId: randomUUID() });
+    expect(another.path).toBe(result.path);
+    expect(another.digest).toBe(result.digest);
     expect(await session.install({ ...command, source: { sha256: source.sha256, bytes: new Uint8Array() } })).toEqual(
       result,
     );
