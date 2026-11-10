@@ -1,10 +1,19 @@
 import { fileURLToPath } from "node:url";
 import { type Options, open } from "@open-motion/standalone";
+import { existing } from "./attachment.js";
 import { collect } from "./environment.js";
 import { listen } from "./stdio.js";
 
+declare const OPEN_MOTION_VERSION: string;
+
 export { metadata } from "./manifest.js";
 export async function connect(options: Omit<Options, "environment">) {
+  const attached = await existing(options.root, options.scope, options.version ?? OPEN_MOTION_VERSION);
+  if (attached) {
+    const transport = await listen(attached, async () => {});
+    void transport.closed.catch(() => {});
+    return { close: transport.close };
+  }
   const runtime = await open({
     ...options,
     environment: collect(),

@@ -5,6 +5,7 @@ guard:
       - carriers
       - carriers/*
       - carriers/standalone/tests/media
+      - carriers/codexplugin/src/install
       - apps
       - suites
       - suites/*
@@ -116,4 +117,4 @@ dev:
 pipeline:
   carriers:
     standalone: carriers/standalone/dist/runtime
-    codexplugin: carriers/codexplugin/dist
+    codexplugin: carriers/codexplugin/dist/runtime

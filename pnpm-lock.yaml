@@ -166,6 +166,9 @@ importers:
       '@odsuite/release':
         specifier: workspace:*
         version: link:../../suites/release
+      '@odsuite/sidecar':
+        specifier: workspace:*
+        version: link:../../suites/sidecar
       '@open-motion/daemon':
         specifier: workspace:*
         version: link:../../apps/daemon
@@ -188,9 +191,6 @@ importers:
       '@odsuite/serve':
         specifier: workspace:*
         version: link:../../suites/serve
-      '@odsuite/sidecar':
-        specifier: workspace:*
-        version: link:../../suites/sidecar
       '@open-motion/render':
         specifier: workspace:*
         version: link:../../packages/render

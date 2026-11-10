@@ -26,7 +26,7 @@ await compile({
     version: process.env.ODSUITE_BUILD ?? product.version,
     channel: parseReleaseVersion(process.env.ODSUITE_BUILD ?? product.version).channel,
   },
-  directory: "dist",
+  directory: "dist/runtime",
   entries: {
     "index.mjs": "src/index.ts",
     "main.mjs": "src/main.ts",
@@ -43,21 +43,28 @@ await compile({
 });
 const { localGuidance } = await import("@open-motion/daemon/mcp");
 for (const file of localGuidance()) {
-  await mkdir(dirname(join("dist", file.path)), { recursive: true });
-  await writeFile(join("dist", file.path), file.content);
+  await mkdir(dirname(join("dist/runtime", file.path)), { recursive: true });
+  await writeFile(join("dist/runtime", file.path), file.content);
 }
-const { metadata } = await import("./dist/index.mjs");
+const { metadata } = await import("./dist/runtime/index.mjs");
 const manifests = metadata(process.env.ODSUITE_BUILD ?? product.version);
-await mkdir("dist/.codex-plugin", { recursive: true });
-await writeFile("dist/.codex-plugin/plugin.json", `${JSON.stringify(manifests.plugin, null, 2)}\n`);
-await writeFile("dist/mcp.json", `${JSON.stringify(manifests.mcp, null, 2)}\n`);
+await mkdir("dist/runtime/.codex-plugin", { recursive: true });
+await writeFile("dist/runtime/.codex-plugin/plugin.json", `${JSON.stringify(manifests.plugin, null, 2)}\n`);
+await writeFile("dist/runtime/mcp.json", `${JSON.stringify(manifests.mcp, null, 2)}\n`);
 
 await build({
   bundle: true,
-  entryPoints: ["src/dev.ts"],
-  outfile: "dist/dev.mjs",
+  entryPoints: {
+    index: "src/index.ts",
+    dev: "src/dev.ts",
+    install: "src/install/index.ts",
+    installworker: "src/install/worker.ts",
+  },
+  outdir: "dist",
+  outExtension: { ".js": ".mjs" },
   format: "esm",
   packages: "external",
   platform: "node",
   target: "node24",
+  define: { OPEN_MOTION_VERSION: JSON.stringify(process.env.ODSUITE_BUILD ?? product.version) },
 });
