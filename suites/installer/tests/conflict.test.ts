@@ -213,3 +213,25 @@ for (const damage of ["missing", "truncated"] as const)
     expect((await stat(`${journal}.retained`)).size).toBeGreaterThan(0);
     expect(await readFile(join(result.path, "main.mjs"), "utf8")).toBe("export default true;");
   }, 15000);
+for (const field of ["data", "requestId"] as const)
+  it(`rejects a selected receipt with a corrupt ${field} binding`, async () => {
+    const f = await fixture(),
+      session = await open(f.options);
+    try {
+      const result = await session.install({ data: f.data, requestId: randomUUID(), source: await f.archive() });
+      const database = new DatabaseSync(join(session.context.roots.data, "installations.sqlite"));
+      try {
+        database
+          .prepare("UPDATE receipts SET result=? WHERE id=?")
+          .run(
+            JSON.stringify({ ...result, [field]: field === "data" ? join(f.root, "other-runtime") : randomUUID() }),
+            result.requestId,
+          );
+      } finally {
+        database.close();
+      }
+      await expect(session.read("codexplugin")).rejects.toMatchObject({ code: "integrity" });
+    } finally {
+      await session.close();
+    }
+  }, 15000);

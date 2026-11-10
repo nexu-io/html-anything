@@ -166,6 +166,9 @@ export class Store {
     this.db.prepare("UPDATE intents SET record=? WHERE id=?").run(JSON.stringify(checked), value.receipt.requestId);
   }
   files(value: Receipt) {
+    const policy = this.db.prepare("SELECT data FROM policy WHERE id=1").get();
+    if (!policy || policy.data !== value.data)
+      throw new InstallerFault("integrity", "installation receipt runtime data differs from its policy");
     const row = this.db
       .prepare("SELECT digest,files FROM versions WHERE carrier=? AND version=?")
       .get(value.carrier, value.version);
@@ -175,9 +178,13 @@ export class Store {
   }
   read(carrier: string) {
     const row = this.db
-      .prepare("SELECT r.result FROM selections s JOIN receipts r ON r.id=s.request_id WHERE s.carrier=?")
+      .prepare("SELECT r.id,r.result FROM selections s JOIN receipts r ON r.id=s.request_id WHERE s.carrier=?")
       .get(carrier);
-    return row ? decode(receipt, row.result) : undefined;
+    if (!row) return undefined;
+    const result = decode(receipt, row.result);
+    if (result.requestId !== row.id)
+      throw new InstallerFault("integrity", "selected installation receipt identity changed");
+    return result;
   }
   complete(value: Intent) {
     return this.transaction(() => {
