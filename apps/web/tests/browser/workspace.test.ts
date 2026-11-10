@@ -19,6 +19,15 @@ const repo = fileURLToPath(new URL("../../../../", import.meta.url)),
 let manager: Awaited<ReturnType<typeof manage>>,
   driver: Awaited<ReturnType<typeof browser>>,
   url = "";
+const stages: { name: string; elapsed: number }[] = [],
+  began = Date.now();
+async function stage(name: string) {
+  report.stage = name;
+  stages.push({ name, elapsed: Date.now() - began });
+  report.stages = stages;
+  console.info(`[workspace] ${name}`);
+  await writeFile(join(evidence, "progress.json"), JSON.stringify(report, null, 2));
+}
 const ready = async () => {
   await driver.page
     .locator("[aria-live]")
@@ -26,10 +35,13 @@ const ready = async () => {
     .waitFor();
 };
 async function click(name: string) {
+  await stage(`click ${name}`);
   await driver.page.getByRole("button", { name, exact: true }).click();
   await ready();
+  await stage(`ready after ${name}`);
 }
 async function seek(time: number) {
+  await stage(`seek ${time}`);
   const page = driver.page,
     frame = page.frameLocator("iframe:not([hidden])");
   await expect.poll(() => page.locator("iframe:not([hidden])").isVisible()).toBe(true);
@@ -110,33 +122,55 @@ beforeAll(async () => {
   };
 }, 30000);
 afterAll(async () => {
+  const failures: unknown[] = [];
+  try {
+    await driver?.page.unrouteAll({ behavior: "wait" });
+  } catch (error) {
+    failures.push(error);
+  }
   try {
     await driver?.close();
-  } finally {
+  } catch (error) {
+    failures.push(error);
+  }
+  try {
     await manager?.close();
+  } catch (error) {
+    failures.push(error);
   }
-  if (manager) {
-    expect((await readDirectory(root)).manager.phase).toBe("closed");
-    expect(await observeProcesses(root)).toEqual([]);
+  try {
+    report.phase = (await readDirectory(root)).manager.phase;
+    report.processes = await observeProcesses(root);
+  } catch (error) {
+    failures.push(error);
   }
-  report.closed = true;
-  report.processes = await observeProcesses(root);
+  report.closed = report.phase === "closed";
   report.errors = driver?.errors ?? [];
+  report.cleanupErrors = failures.map(String);
   await writeFile(join(evidence, "report.json"), JSON.stringify(report, null, 2));
+  expect(failures).toEqual([]);
+  expect(report.phase).toBe("closed");
+  expect(report.processes).toEqual([]);
 }, 30000);
 
 afterEach(async (context) => {
   if (context.task.result?.state === "fail" && driver) {
-    await driver.capture("failure");
     await writeFile(
       join(evidence, "failure.txt"),
       context.task.result.errors?.map((error) => error.message).join("\n") ?? "failed",
     );
+    try {
+      await driver.capture("failure");
+    } catch (error) {
+      report.captureFailure = String(error);
+      await writeFile(join(evidence, "progress.json"), JSON.stringify(report, null, 2));
+    }
   }
 });
 
 it("keeps project handoff and navigation explicit across workspace views", async () => {
   const page = driver.page;
+  await stage("open workspace");
   await page.goto(url);
   await ready();
   await page.getByText("会话选项", { exact: true }).click();
@@ -149,7 +183,9 @@ it("keeps project handoff and navigation explicit across workspace views", async
   await click("创建模板工程");
   await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
   await seek(6);
+  await stage("capture workspace-expanded");
   await driver.capture("workspace-expanded");
+  await stage("captured workspace-expanded");
   report.selection = await page.locator("[data-artifact-id]").first().getAttribute("data-artifact-id");
   expect(report.selection).toBeTruthy();
   const expanded = await page.getByRole("region", { name: "编辑工作区", exact: true }).boundingBox();
@@ -206,7 +242,9 @@ it("keeps project handoff and navigation explicit across workspace views", async
   expect(await page.locator("iframe").isVisible()).toBe(true);
   expect(await page.getByRole("button", { name: "预览", exact: true }).getAttribute("aria-pressed")).toBe("true");
   expect(await page.getByRole("button", { name: "源码", exact: true }).getAttribute("aria-pressed")).toBe("false");
+  await stage("capture workspace-focused");
   await driver.capture("workspace-focused");
+  await stage("captured workspace-focused");
   report.widths = { expanded: expanded?.width, focused: focused?.width };
   await page.getByRole("button", { name: "显示工作区导航", exact: true }).click();
   await page.getByRole("button", { name: "新建工程", exact: true }).click();
@@ -219,22 +257,40 @@ it("keeps project handoff and navigation explicit across workspace views", async
   await page.getByLabel("工程标题", { exact: true }).fill("Second project");
   let lose = true;
   const saveIds: string[] = [];
+  let accepted = false,
+    saveFailure: string | undefined;
   await page.route("**/api/project_save", async (route) => {
     saveIds.push(route.request().postDataJSON().requestId);
     if (!lose) return route.continue();
     lose = false;
-    await route.fetch();
-    await route.abort("failed");
+    try {
+      const response = await route.fetch();
+      report.saveStatus = response.status();
+      if (!response.ok()) throw Error("save response was unsuccessful");
+      accepted = true;
+      await route.abort("failed");
+    } catch (error) {
+      saveFailure = error instanceof Error ? error.name : "unknown";
+      report.saveFailure = saveFailure;
+      await route.abort("failed").catch(() => undefined);
+    }
   });
+  await stage("unknown save receipt");
   await page.getByRole("button", { name: "创建工程", exact: true }).click();
-  await page.getByRole("button", { name: "重试", exact: true }).waitFor();
+  const retry = page.getByRole("button", { name: "重试", exact: true });
+  await expect.poll(() => accepted || Boolean(saveFailure)).toBe(true);
+  expect(saveFailure).toBeUndefined();
+  expect(accepted).toBe(true);
+  await expect.poll(() => retry.isEnabled()).toBe(true);
   expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(original);
   const acceptedWrites = writes.length;
   await page.getByRole("button", { name: "隐藏会话", exact: true }).click();
   await page.getByRole("button", { name: "显示会话", exact: true }).click();
   expect(writes).toHaveLength(acceptedWrites);
   expect(await note.getAttribute("data-retained")).toBe("note");
+  await stage("retry same save receipt");
   await click("重试");
+  await stage("save receipt replayed");
   expect(saveIds).toHaveLength(2);
   expect(saveIds[0]).toBe(saveIds[1]);
   await page.unroute("**/api/project_save");
@@ -274,7 +330,9 @@ it("keeps project handoff and navigation explicit across workspace views", async
   await click("预览");
   await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
   await seek(6);
+  await stage("capture workspace-handoff");
   await driver.capture("workspace-handoff");
+  await stage("captured workspace-handoff");
   await page.setViewportSize({ width: 960, height: 900 });
   await page.getByRole("button", { name: "隐藏工作区导航", exact: true }).click();
   await page.getByRole("button", { name: "隐藏会话", exact: true }).click();
@@ -283,11 +341,17 @@ it("keeps project handoff and navigation explicit across workspace views", async
       .getByRole("region", { name: "编辑工作区", exact: true })
       .evaluate((node) => node.getBoundingClientRect().width),
   ).toBe(960);
+  await stage("capture workspace-narrow");
   await driver.capture("workspace-narrow");
+  await stage("captured workspace-narrow");
+  await stage("close before cold reopen");
   await manager.close();
+  await stage("closed before cold reopen");
   expect((await readDirectory(root)).manager.phase).toBe("closed");
   expect(await observeProcesses(root)).toEqual([]);
+  await stage("start cold reopen");
   await start();
+  await stage("started cold reopen");
   await page.setViewportSize({ width: 1600, height: 1000 });
   await page.goto(url);
   await ready();
@@ -300,7 +364,9 @@ it("keeps project handoff and navigation explicit across workspace views", async
   await seek(6);
   await page.getByRole("button", { name: "隐藏工作区导航", exact: true }).click();
   await page.getByRole("button", { name: "隐藏会话", exact: true }).click();
+  await stage("capture workspace-restored");
   await driver.capture("workspace-restored");
+  await stage("captured workspace-restored");
   report.handoff = { original, second, retrySameRequest: saveIds[0] === saveIds[1], restored: true };
   expect(driver.errors).toEqual([]);
 }, 90000);

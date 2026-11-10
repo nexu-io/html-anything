@@ -20,13 +20,20 @@ export async function browser(options: { evidence: string; viewport: { width: nu
     errors,
     async capture(name: string) {
       if (!/^[a-z][a-z0-9-]*$/.test(name)) throw new Error("invalid browser evidence name");
-      await page.evaluate(async () => {
-        await document.fonts.ready;
-        await new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())));
-      });
-      const data = await page.screenshot({ animations: "disabled" });
-      await writeFile(join(options.evidence, `${name}.png`), data);
-      return data;
+      let phase = "font readiness";
+      try {
+        await page.waitForFunction(() => document.fonts.status === "loaded", {}, { polling: 100, timeout: 8000 });
+        phase = "paint";
+        // Chromium's screenshot captures the actual paint; page rAF may be suspended in a background document.
+        const data = await page.screenshot({ animations: "disabled", timeout: 8000 });
+        phase = "PNG write";
+        await writeFile(join(options.evidence, `${name}.png`), data);
+        return data;
+      } catch (cause) {
+        throw new Error(`Browser evidence "${name}" failed during ${phase}`, {
+          cause,
+        });
+      }
     },
     async close() {
       await driver.close();
