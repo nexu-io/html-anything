@@ -71,9 +71,17 @@ export function setupPrompt(info: IntegrationInfo, host: IntegrationHost, locale
   if (host === 'chatgpt') return 'ChatGPT 云端需要公开 HTTPS MCP 服务。当前工作区使用本机 stdio，可先选择 Codex、Claude Code 或 DeepSeek Harness 开始创作。';
   return `请读取 ${guideUrl(info, host)}，将 OpenDesign 接入 ${hostNames[host]}，验证后带我开始创作。`;
 }
+// The public guides install a production-template build; the `dev` path is the test software channel, not DEV templates.
+export const publicInstallGuide = 'https://releases.open-design.ai/open-motion/install.md';
 export function templatePrompt(info: IntegrationInfo, template: { id: string; title: string }, locale: 'zh-CN' | 'en' = 'zh-CN') {
-  const installUrl = `https://releases.open-design.ai/open-motion/${info.templateEnvironment === 'dev' ? 'dev/' : ''}install.md`;
-  if (locale === 'en') return `Instructions: Use the OpenMotion plugin. If it is not installed, follow ${installUrl} to install and connect it, then continue.
+  const installation = info.templateEnvironment === 'dev'
+    ? locale === 'en'
+      ? `Instructions: Use the OpenMotion plugin. This workspace reads the DEV template catalogue, and the public installation guides install a production-template build that cannot retrieve the selected template. Install and connect the matching DEV application instead - run from source with npm run dev, or install a package built with --template-env=dev - then continue.`
+      : '使用说明：请使用 OpenMotion 插件。当前工作区读取 DEV 模板目录，公共安装指引安装的是线上模板版本，无法取到指定模板；请改为从源码 npm run dev 启动，或安装以 --template-env=dev 构建的 DEV 包并接入后继续。'
+    : locale === 'en'
+      ? `Instructions: Use the OpenMotion plugin. If it is not installed, follow ${publicInstallGuide} to install and connect it, then continue.`
+      : `使用说明：请使用 OpenMotion 插件。如未安装，请按 ${publicInstallGuide} 安装并接入后继续。`;
+  if (locale === 'en') return `${installation}
 
 Selected template: ${template.title} (${template.id})
 
@@ -81,7 +89,7 @@ Creative brief: Create from the selected template using my requirements and atta
 
 My requirements:
 `;
-  return `使用说明：请使用 OpenMotion 插件。如未安装，请按 ${installUrl} 安装并接入后继续。
+  return `${installation}
 
 指定模板：${template.title}（${template.id}）
 

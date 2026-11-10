@@ -18,7 +18,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 - 全部页面共享左侧会话列表，一个会话可拥有多个工程。左侧会话和右侧浏览器顶格并列，工程工具与编辑器完整从属于浏览器 Tab；两侧可独立收起、恢复。移除全局顶栏，设置收纳在侧栏；列表可从会话顶部完全折叠，隐藏会话时由浏览器顶部恢复。
 - MCP 接入、模板发现、预览和复制指令在一个弹框里完成，保留编辑器上下文。
 - 模板先展示真实成片效果；作者、出处、内容种类和有来源的热度帮助选择。
-- Copied template instructions contain a public environment-specific installation guide, the exact template title/ID, a creative brief and an empty requirements section. They request editable HTML and MP4; local connection guides remain separate for binding a running workspace.
+- Copied template instructions contain an installation section, the exact template title/ID, a creative brief and an empty requirements section. The installation section points at the public guide for production-template software and, in a DEV workspace, at the matching DEV application path because the public guides cannot read the private DEV catalog. They request editable HTML and MP4; local connection guides remain separate for binding a running workspace.
 - 导出成功需要真实产物与验证证据；技术检查与画面、声音、播放器检查分别记录。
 
 ## 对外主张与 Motion MD 方向

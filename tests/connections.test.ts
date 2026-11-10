@@ -103,10 +103,16 @@ test('template prompts use the effective catalog environment and retain editable
       assert.equal(info.templateEnvironment, templateConfig().environment);
       for (const locale of ['zh-CN', 'en'] as const) {
         const prompt = templatePrompt(info, template, locale);
-        const expectedUrl = `https://releases.open-design.ai/open-motion/${info.templateEnvironment === 'dev' ? 'dev/' : ''}install.md`;
-        assert.ok(prompt.includes(expectedUrl));
-        assert.ok(prompt.includes(template.title)); assert.ok(prompt.includes(template.id));
         assert.equal(prompt.split('\n\n').length, 4);
+        // The public guide installs a production-template build, so DEV workspaces get the matching DEV application path instead.
+        if (info.templateEnvironment === 'dev') {
+          assert.ok(prompt.includes('npm run dev')); assert.ok(prompt.includes('--template-env=dev'));
+          assert.doesNotMatch(prompt, /releases\.open-design\.ai/);
+        } else {
+          assert.ok(prompt.includes('https://releases.open-design.ai/open-motion/install.md'));
+          assert.doesNotMatch(prompt, /open-motion\/dev\//);
+        }
+        assert.ok(prompt.includes(template.title)); assert.ok(prompt.includes(template.id));
         assert.ok(prompt.endsWith(locale === 'zh-CN' ? '我的要求：\n' : 'My requirements:\n'));
         assert.match(prompt, /HTML.*MP4/);
         assert.doesNotMatch(prompt, /localhost|127\.0\.0\.1|connect\/guide|github\.com/);

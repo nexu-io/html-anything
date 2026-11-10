@@ -10,15 +10,16 @@ vi.mock('./WorkspaceFrame', () => ({ useWorkspaceChrome: () => ({ workspace: { o
 const builtin = { id: 'product-promo', kind: 'builtin', title: 'Product Promo', author: 'Hyperframes', description: 'Editable', tags: [], collection: 'builtin' };
 const reference = { id: 'hf-moment-M953', kind: 'reference', title: 'Reference', author: 'Creator', description: 'Reference video', tags: [], collection: 'moment' };
 let root: Root, container: HTMLDivElement;
+let environment: 'dev' | 'prod' = 'prod';
 let fetcher: ReturnType<typeof vi.fn>;
 let clipboard: ReturnType<typeof vi.fn>;
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 beforeEach(() => {
-  state.disabled = false; vi.clearAllMocks(); vi.useFakeTimers();
+  state.disabled = false; environment = 'prod'; vi.clearAllMocks(); vi.useFakeTimers();
   container = document.createElement('div'); document.body.append(container); root = createRoot(container);
   clipboard = vi.fn(async () => {});
   vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(clipboard);
-  fetcher = vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? { previewUrl: 'http://localhost:4173', templateEnvironment: 'dev' } : {
+  fetcher = vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? { previewUrl: 'http://localhost:4173', templateEnvironment: environment } : {
     items: url.includes('category=builtin') ? [builtin] : [reference], total: 1, entryTotal: 1, catalogTotal: 2, offset: 0, next: null,
   })));
   vi.stubGlobal('fetch', fetcher);
@@ -36,7 +37,7 @@ it('only editable templates open a new engineering project; references copy thei
   expect(container.querySelector('.motion-editable-badge')).toBeNull();
   await act(async () => button('一键复制').click());
   expect(clipboard).toHaveBeenCalledOnce();
-  expect(clipboard.mock.calls[0][0]).toContain('https://releases.open-design.ai/open-motion/dev/install.md');
+  expect(clipboard.mock.calls[0][0]).toContain('https://releases.open-design.ai/open-motion/install.md');
   expect(clipboard.mock.calls[0][0]).not.toContain('localhost');
   expect(clipboard.mock.calls[0][0]).toContain('指定模板：Reference（hf-moment-M953）');
   expect(state.open).toHaveBeenCalledTimes(1);
@@ -119,6 +120,19 @@ it.each(['de', 'ja', 'ru'] as const)('keeps Prism editing and project guards whi
   expect(button(translate(locale, 'Open and edit')).disabled).toBe(true);
 });
 
+
+it('copies a DEV application path instead of the public software channel when the workspace reads DEV templates', async () => {
+  environment = 'dev';
+  await render();
+  act(() => button('精选参考').click());
+  await act(async () => { await vi.runOnlyPendingTimersAsync(); });
+  await act(async () => button('一键复制').click());
+  const brief = clipboard.mock.calls[0][0];
+  expect(brief).toContain('npm run dev');
+  expect(brief).toContain('--template-env=dev');
+  expect(brief).not.toContain('releases.open-design.ai');
+  expect(brief).toContain('指定模板：Reference（hf-moment-M953）');
+});
 
 it('copies the English brief when the interface is English', async () => {
   await render('en');
