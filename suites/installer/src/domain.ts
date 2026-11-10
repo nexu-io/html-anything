@@ -58,13 +58,21 @@ export async function open(options: Options): Promise<Session> {
     );
     if (old && old.value !== target) throw new InstallerFault("integrity", "installation grant target changed");
     await factory.grant({ kind: "installation", name: "application", scope: "factory", target });
+    const established = new Set(
+      (await factory.resources()).grants.filter((grant) => grant.kind === "data").map((grant) => grant.value),
+    );
     await factory.expose({
       identity: { service: "installer", generation: digest("node-installation-v1") },
       handlers: {},
       lifecycle: {
         initialize: async (value) => {
           context = value;
-          transaction = new Transaction({ ...options, home, scope }, target, value.roots.data);
+          transaction = new Transaction(
+            { ...options, home, scope },
+            target,
+            value.roots.data,
+            established.has(value.roots.data),
+          );
         },
         stop: async () => {
           transaction?.store.close();

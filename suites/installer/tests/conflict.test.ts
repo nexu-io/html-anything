@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { chmod, mkdir, mkdtemp, readFile, rename, symlink, writeFile } from "node:fs/promises";
+import { chmod, copyFile, mkdir, mkdtemp, readFile, rename, stat, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "node:url";
@@ -193,3 +193,23 @@ it("rejects a corrupt receipt substituted from another verified version before r
     await session.close();
   }
 }, 15000);
+for (const damage of ["missing", "truncated"] as const)
+  it(`never reinitializes a ${damage} journal in an established sidecar data grant`, async () => {
+    const f = await fixture(),
+      session = await open(f.options),
+      input = { data: f.data, requestId: randomUUID(), source: await f.archive() };
+    const result = await session.install(input),
+      journal = join(session.context.roots.data, "installations.sqlite");
+    await session.close();
+    if (damage === "missing") await rename(journal, `${journal}.retained`);
+    else {
+      await copyFile(journal, `${journal}.retained`);
+      await writeFile(journal, new Uint8Array());
+    }
+    for (let attempt = 0; attempt < 2; attempt++)
+      await expect(open(f.options)).rejects.toThrow("reconciliation required");
+    if (damage === "missing") await expect(stat(journal)).rejects.toMatchObject({ code: "ENOENT" });
+    else expect((await stat(journal)).size).toBe(0);
+    expect((await stat(`${journal}.retained`)).size).toBeGreaterThan(0);
+    expect(await readFile(join(result.path, "main.mjs"), "utf8")).toBe("export default true;");
+  }, 15000);

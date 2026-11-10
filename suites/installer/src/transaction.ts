@@ -14,8 +14,9 @@ export class Transaction {
     private options: Options,
     private target: string,
     data: string,
+    established: boolean,
   ) {
-    this.store = new Store(data);
+    this.store = new Store(data, established);
   }
   private check(value: Receipt) {
     if (

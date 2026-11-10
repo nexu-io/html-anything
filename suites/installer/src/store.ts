@@ -60,17 +60,30 @@ export const fingerprint = (value: {
 export class Store {
   private db: DatabaseSync;
   private closed = false;
-  constructor(root: string) {
+  constructor(root: string, established: boolean) {
     const path = join(root, "installations.sqlite");
+    let exists = false;
     try {
       if (!lstatSync(path).isFile()) throw new InstallerFault("integrity", "installation journal is not regular");
+      exists = true;
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
     }
+    if (established && !exists)
+      throw new InstallerFault(
+        "integrity",
+        "established installation journal is missing; explicit reconciliation required",
+      );
+    if (!established && exists) throw new InstallerFault("integrity", "unclaimed installation journal already exists");
     this.db = new DatabaseSync(path);
     try {
       this.db.exec("PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; PRAGMA synchronous=FULL;");
       const version = Number(this.db.prepare("PRAGMA user_version").get()?.user_version);
+      if (established && version !== 1)
+        throw new InstallerFault(
+          "integrity",
+          "established installation journal schema changed; explicit reconciliation required",
+        );
       if (version === 0) {
         if (this.db.prepare("SELECT name FROM sqlite_master WHERE type='table'").get())
           throw new InstallerFault("integrity", "unknown installation journal");
