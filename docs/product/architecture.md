@@ -18,7 +18,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 - 全部页面共享左侧会话列表，一个会话可拥有多个工程。左侧会话和右侧浏览器顶格并列，工程工具与编辑器完整从属于浏览器 Tab；两侧可独立收起、恢复。移除全局顶栏，设置收纳在侧栏；列表可从会话顶部完全折叠，隐藏会话时由浏览器顶部恢复。
 - MCP 接入、模板发现、预览和复制指令在一个弹框里完成，保留编辑器上下文。
 - 模板先展示真实成片效果；作者、出处、内容种类和有来源的热度帮助选择。
-- 交给 Agent 的复刻指令保持简短；详细配置、模板 ID 和流程由参数化指引链接承载。
+- Copied template instructions contain an installation section, the exact template title/ID, a creative brief and an empty requirements section. The installation section points at the public guide for production-template software and, in a DEV workspace, at the matching DEV application path because the public guides cannot read the private DEV catalog. They request editable HTML and MP4; local connection guides remain separate for binding a running workspace.
 - 导出成功需要真实产物与验证证据；技术检查与画面、声音、播放器检查分别记录。
 
 ## 对外主张与 Motion MD 方向
@@ -91,7 +91,7 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 | 编辑器与工作区交互 | `studio/src/`，尤其 `studio/src/motion/` | 完整 Hyperframes 0.9.7 Studio 前端源码；宿主通过插槽适配品牌和入口，预览使用独立 iframe |
 | 面板与布局恢复 | `studio/src/components/dock/`、`MotionLayoutControls.tsx` | 原生 Dock 持久化；常驻预览入口、面板开关及布局预设 |
 | 撤销、版本保留与恢复 | `MotionHistoryPanel.tsx`、原生历史 API | 顶栏/时间轴撤销重做；新增历史 UI 复用原生存储，恢复保留后续记录 |
-| Editor interface language | `studio/src/i18n/`、`web/i18n.ts` | Eleven languages, Chinese by default; editor and embedded dialog labels update without remounting. Authored content, copied Agent instructions and long guides retain their source language; native-speaker review remains separate. |
+| Editor interface language | `studio/src/i18n/`、`web/i18n.ts` | Eleven languages, Chinese by default; editor and embedded dialog labels update without remounting. Template copy instructions use Chinese for the Chinese interface and English for other interface languages. Authored content and long guides retain their source language; native-speaker review remains separate. |
 | 多 Agent 薄适配器 | `scripts/export-adapters.ts`、`shared/integration.ts` | Codex、Claude、DSH、WorkBuddy Connector 共用外置运行时；本机生成，WorkBuddy 桌面待验收，详见 [适配器](../agent-adapters.md) |
 | MCP 接入与指引 | `mcp.ts`、`mcp-tools.ts`、`shared/integration.ts`、`web/connect.*` | 本机 stdio；macOS 业务由共享后台执行，ChatGPT 云端远程 MCP 尚未提供 |
 | Codex 安装 | `install.sh`、`scripts/install-motion.command` | 远端源码下载、依赖安装与编辑器构建、本地插件注册和 MCP 握手；需预装 Git、Node/npm 与支持插件的 Codex CLI，保留安装目录，遇到已有目录停止；远端一行入口待发布到 main |

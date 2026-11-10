@@ -29,7 +29,7 @@ export function mountTemplates(root: HTMLElement, options: {
     svg.setAttribute('class', 'ui-icon'); svg.setAttribute('aria-hidden', 'true'); use.setAttribute('href', '/web/design-system/icons.svg#icon-' + name); svg.append(use); return svg;
   };
   const copyTemplate = (template: GalleryTemplate, button: HTMLButtonElement) => {
-    const info = options.info(); if (info && canCopy()) void options.copy(templatePrompt(info, options.host(), template), 'Template instruction', button);
+    const info = options.info(); if (info && canCopy()) void options.copy(templatePrompt(info, template, language.locale === 'zh-CN' ? 'zh-CN' : 'en'), 'Template instruction', button);
   };
   function configurePlayback() {
     playback.configure(active && enabled && !dialog.open && !document.hidden, window.innerWidth < 680 ? 1 : 2);
@@ -201,7 +201,7 @@ export function mountTemplates(root: HTMLElement, options: {
   function updateConnection() {
     root.querySelectorAll<HTMLButtonElement>('[data-copy-template], #copy-preview-template').forEach(button => button.disabled = !canCopy());
     if (preview) {
-      const info = options.info(); language.text(element('preview-prompt'), info ? templatePrompt(info, options.host(), preview) : "Reconnect to copy the recreation instruction.");
+      const info = options.info(); language.text(element('preview-prompt'), info ? templatePrompt(info, preview, language.locale === 'zh-CN' ? 'zh-CN' : 'en') : "Reconnect to copy the recreation instruction.");
       language.text(element('preview-copy-hint'), options.host() === 'chatgpt' ? 'Choose an available local client to start recreating.' : 'Copy the instruction and send it to {host} to start recreating.', { host: hostNames[options.host()] });
     }
   }

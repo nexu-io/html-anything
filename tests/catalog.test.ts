@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { catalogTemplates, featuredTemplateIds, groupTemplates, isCatalogMedia } from '../shared/catalog.ts';
 import { libraryTemplates, listTemplates, getTemplate, readTemplate } from '../template-catalog.ts';
-import { templatePrompt } from '../shared/integration.ts';
+import { guideUrl, templatePrompt } from '../shared/integration.ts';
 import { pluginRoot } from '../hyperframes.ts';
 import { callTool, rpc, mcpRegistry } from '../mcp.ts';
 import { WorkspaceStore } from '../workspace.ts';
@@ -85,11 +85,12 @@ test('HTTP catalog, local posters and copied guides resolve the exact selected t
     for (const id of ['nyt-graph', 'decision-tree', 'product-promo']) {
       const template = getTemplate(id);
       for (const host of ['codex', 'claude', 'deepseek', 'mcp'] as const) {
-        const prompt = templatePrompt(info, host, template);
-        assert.ok(prompt.includes(id)); assert.ok(prompt.length < 250); assert.equal(prompt.split('\n').length, 1);
+        const prompt = templatePrompt(info, template);
+        assert.ok(prompt.includes(id)); assert.ok(prompt.includes(template.title));
+        assert.ok(prompt.endsWith('我的要求：\n'));
+        assert.doesNotMatch(prompt, /localhost|127\.0\.0\.1|connect\/guide/);
         assert.doesNotMatch(prompt, /dataDirectory|motion_write_files|expectedRevision/);
-        const guideUrl = prompt.match(/http:\/\/localhost:4173\/connect\/guide\?[^\s]+/)![0];
-        const response = await request(guideUrl); assert.equal(response.status, 200);
+        const response = await request(guideUrl(info, host, id)); assert.equal(response.status, 200);
         const guide = await response.text(); assert.ok(guide.includes(`模板 ID：${id}`));
         assert.ok(guide.includes(template.title));
         const expectedRoute = template.kind === 'reference' ? 'recreate' : 'template';
