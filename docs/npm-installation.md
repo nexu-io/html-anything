@@ -4,7 +4,7 @@ The npm tgz contains the installer, a prebuilt Motion application archive and it
 
 `@openmotion/app@0.6.4-test.6` is available from npm through the `test` channel. It was published separately after authorization; ordinary CI still does not publish packages. Its anonymous registry download, isolated macOS Codex setup, repeat setup, eleven MCP Tools and five Skills have been verified. Use the exact version for reproduction. See the [delivery record and known limitations](release-guide.md#published-test-candidate-064-test6), including the production template catalog and the registry's unexpected `latest` tag.
 
-Source `package.json` is the development baseline; the published artifact can have a different version. For example, source `0.6.3` can produce `0.6.4-test.6` without a stable `0.6.4` release. Packaging changes output identities only. Manual [candidate builds](release-workflows.md#1-build) accept an empty version and automatically generate the next patch plus a unique GitHub run ID/attempt; publication keeps the exact accepted version.
+Source `package.json` is the development baseline; the published artifact can have a different version. For example, source `0.6.3` can produce `0.6.4-test.6` without a stable `0.6.4` release. Packaging changes output identities only. Manual [candidate builds](release-workflows.md#1-build) accept an empty version and automatically generate the next patch plus a short `test.N` workflow counter (with an attempt suffix on reruns); publication keeps the exact accepted version.
 
 ## Requirements and package contents
 
