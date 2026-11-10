@@ -6,7 +6,7 @@ export const pipelineHelp = `odsuite version|build --channel <name> [--version <
 odsuite pack --channel <name> [--root <repo>]
 odsuite check --channel <name> --gate policy|tests|artifacts [--root <repo>]
 
-Both Node carriers share one version. Pack verifies local closures; npm installation and publication are separate lifecycles.`;
+Both Node carriers share one version. Pack verifies local closures and emits the finite npm kit; publication is a separate lifecycle.`;
 export async function pipeline(args: string[], cwd: string, output: Output): Promise<number> {
   if (args.length === 2 && ["--help", "-h"].includes(args[1] ?? "")) {
     output.stdout(`${pipelineHelp}\n`);

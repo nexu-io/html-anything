@@ -4,8 +4,8 @@ import { build, type Plugin } from "esbuild";
 import type { Identity } from "./index.js";
 
 export interface Compilation {
-  identity: Identity;
-  required: string[];
+  identity?: Identity;
+  required?: string[];
   directory: string;
   entries: Record<string, string>;
   copies: Record<string, string>;
@@ -15,6 +15,7 @@ export interface Compilation {
 }
 /** Carrier authors choose the finite closure; this mechanism knows no product or host. */
 export async function compile(input: Compilation): Promise<void> {
+  if (input.identity && !input.required?.length) throw Error("carrier compilation requires its file contract");
   const destination = (name: string) => {
     if (!/^[a-zA-Z0-9.][a-zA-Z0-9./-]*$/.test(name) || name.split("/").some((p) => !p || p === "." || p === ".."))
       throw Error("invalid closure destination");
@@ -70,5 +71,6 @@ export async function compile(input: Compilation): Promise<void> {
       notices += `\n${filename}\n${await readFile(join(directory, filename), "utf8")}\n`;
   }
   await writeFile(destination("NOTICE"), notices);
-  await writeFile(destination("runtime.json"), JSON.stringify({ ...input.identity, files: input.required }));
+  if (input.identity)
+    await writeFile(destination("runtime.json"), JSON.stringify({ ...input.identity, files: input.required }));
 }

@@ -52,7 +52,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | distribution | Product metadata, minimum-shell compatibility, platform-shell selection and S3 IO; not installation or runtime commit authority.                             |
 | update       | Candidate discovery, verification and preparation; actual lifecycle owners activate.                                                                         |
 | runtime      | Unconnected content-generation activation/recovery mechanism; its shell-oriented contract is not the current Node-carrier update lifecycle.                  |
-| installer    | Independent installation authority, host drain, physical replacement, confirmation and interruption recovery; currently macOS.                               |
+| installer    | Immutable Node-closure installation, durable intent/receipts and carrier selection; sidecar owns authority and explicit interruption recovery.               |
 | pack         | Generic Node closure compilation, dependency notices and verified immutable local archives; carriers choose entries and resources.                           |
 | pipeline     | Shared-version build/package/check orchestration for both Node carriers; workflows choose quality requirements. Publication is not connected.                |
 | dev          | Repository development configuration, managed builds/watchers and carrier orchestration; sidecar owns all control paths, liveness and lifecycle.             |
@@ -69,7 +69,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | package.json, pnpm-workspace.yaml, pnpm-lock.yaml | Workspaces, standard commands and pinned dependencies                                                                                |
 | odsuite.yaml, biome.json                          | Finite engineering policy and runtime/development configuration                                                                      |
 | suites/*/src/index.ts                             | Public mechanism entry points                                                                                                        |
-| suites/cli/src/odsuite.mjs                        | Sole CLI bootstrap                                                                                                                   |
+| suites/cli/src/odsuite.mjs                        | Repository CLI bootstrap; installed product entry is packages/application                                                            |
 | carriers/standalone                               | Actual managed Web/Daemon composition, independent Node closure and development adapter                                              |
 | carriers/codexplugin                              | Codex host composition, closed runtime, guidance and stdio drain; npx installation remains separate from descriptor loading          |
 | apps/web, apps/daemon                             | Product workspace UI, HTTP/MCP adaptation and protected native previews                                                              |
@@ -78,6 +78,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | packages/motion                                   | Native editing, composition graph/assembly, preview and canvas bridge; no persistence or OS allocation                               |
 | packages/gateway                                  | Fixed-intent PNG tasks, explicit provider adapters and durable verified candidates; workspace owns explicit adoption transactions    |
 | packages/templates                                | Finite built-ins and explicit Prism discovery/source verification, provenance; blob caches resources and workspace creates artifacts |
+| packages/application                              | Product npx setup/control composition, installed carrier selection and explicit host registration; no resource authority             |
 | packages/render                                   | Durable export intent, serial fixed-revision execution and verified films; sidecar/blob own OS resources                             |
 | packages/workspace                                | Session/message/artifact ownership, revisions, history, transactions and idempotency shared by HTTP/MCP/Web                          |
 | docs/README.md                                    | Durable documentation index                                                                                                          |
@@ -126,7 +127,7 @@ Real browser tests live in `apps/web/tests/browser`; carrier composition tests l
 
 Obtain resources through sidecar factories and hosted Context. Observe actual OS liveness; directory discovery is not proof. Compose writes in the same factory/session: same-factory reentry is allowed, cross-factory calls rejected, scoped handles expire after callbacks. Use Context.background only for initialization scheduling; quiesce drains background controllers before stop lanes. Do not acquire a competing background lane while already holding one.
 
-Update discovers/prepares; actual lifecycle owners activate/commit. Node installation and activation must be modeled through their responsible suites and carriers; the retained shell-oriented runtime/installer contracts are not a current product update path. Blob references and actual Uses protect content until processes/documents/streams/readers drain. Unknown or failed consumers remain protected. Use Library.session when already in a lifecycle lane.
+Update discovers/prepares; actual lifecycle owners activate/commit. Installer owns immutable Node applications and durable selections; application composes installation and carrier registration. Retained shell-oriented runtime/distribution contracts are not a current Node update path. Blob references and actual Uses protect content until processes/documents/streams/readers drain. Unknown or failed consumers remain protected. Use Library.session when already in a lifecycle lane.
 
 After SIGKILL, explicitly recover the whole root before binding replay. Preserve diagnostics and failed layouts; do not erase authority or infer death by elapsed time. Persistent user data and reclaimable content have separate owners.
 

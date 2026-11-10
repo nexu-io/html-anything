@@ -115,24 +115,49 @@ pnpm exec odsuite recover inspect --data /path/to/root
 pnpm exec odsuite recover apply --data /path/to/root --expected <fingerprint>
 ```
 
-The CLI validates actual contracts. Recovery rejects live owners, changed plans, replaced endpoints and uncertainty; never delete authority/registry/ledger or take over a live manager. Preserve failed layouts and evidence. Metadata history and installation policy/transactions/backups/executors are retained independently of content GC. Normal stop/installation confirmation does not authorize deletion. The retained physical shell installer mechanism is macOS-only and is not the standalone/Codex installation path.
+The CLI validates actual contracts. Recovery rejects live owners, changed plans, replaced endpoints and uncertainty; never delete authority/registry/ledger or take over a live manager. Preserve failed layouts and evidence. Metadata history and installation policy/transactions/backups/executors are retained independently of content GC. Normal stop/installation confirmation does not authorize deletion. Node installation has its own durable journal and immutable closures; product runtime data is separate.
 
 Node-carrier startup explicitly selects its root, channel and namespace. Carriers inject private Daemon connections and environment facts; Web receives an in-memory bootstrap. Do not set paths/ports manually to evade sidecar, log capabilities or forward runtime tokens through installers. Product engine children disable telemetry with `HYPERFRAMES_NO_TELEMETRY=1`.
 
-The retained runtime/installer suites' shell-specific bootstrap variables and observer tests are not current product startup contracts. Background qualification must not focus the desktop or open a browser without instruction.
+The retained runtime/distribution suites' shell-specific bootstrap variables and observer tests are not current product startup contracts. Background qualification must not focus the desktop or open a browser without instruction.
+
+## Local npm installation
+
+Build/package the shared kit through the repository tool:
+
+```sh
+pnpm exec odsuite build --channel=beta --version=0.6.1-beta.1
+pnpm exec odsuite pack --channel=beta
+```
+
+Use the returned `npm.path` tarball with `npm exec --yes --ignore-scripts --package /absolute/application.tgz -- odsuite`. No registry publication or global bin is needed. The installed kit exposes:
+
+```text
+odsuite setup --carrier standalone|codexplugin --home INSTALLATION --data DATA_BASE
+odsuite start|stop|status|prepare --home INSTALLATION --data DATA_BASE --channel beta --namespace default
+odsuite recover inspect --root EXACT_AUTHORITY_ROOT
+odsuite recover apply --root EXACT_AUTHORITY_ROOT --expected FINGERPRINT
+```
+
+The package channel must match `--channel`; namespace defaults to its product metadata. Setup installs both carriers at one version. Codex setup also accepts explicit `--profile`, `--skills` and `--codex`. Profile selects `CODEX_HOME` (default existing environment selection or `~/.codex`); Skills must use supported home/workspace `.agents/skills` discovery. Their existing home/workspace parent is required. Use isolated profiles/workspaces for verification. No invented scan setting or daily-profile writes are part of acceptance.
+
+Installation defaults to `~/.local/share/open-motion`. Its authority is `authority/<product>`, immutable applications are `applications/<product>/<channel>/<namespace>/versions/<carrier>/<version>/<digest>`, and the default data base is `data`. Sidecar derives actual runtime root `<DATA_BASE>/<channel>/<namespace>`. The carrier is not another resource-factory dimension. Installer-granted SQLite intents/receipts and registration ownership manifests stay separate from runtime user data; do not copy/reset/delete them. Setup alone does not create runtime data. Preserve earlier committed steps after a later failure and retry the identical intent; interrupted authority requires explicit recovery first.
+
+The finite npm payload contains `dist/main.mjs`, transient `dist/codex-worker.mjs`, licenses/notices and `payload/manifest.json` plus both carrier archives. The registrar pins Node and the immutable installed main, never npm cache. Normal cache eviction therefore cannot remove the installed runtime or Skills. Modified/unowned destinations, conflicting versions and changed host ownership fail closed. These commands do not implement automatic Node updates or registry distribution.
+
+`prepare` verifies/materializes the pinned Chromium/FFmpeg/FFprobe through the real renderer Blob library. It reports each component; a successful attempt is warm-cache evidence, not an execution probe or permanent pin. An absent runtime uses a preparation-only sidecar composition with no Web/Daemon/export queue, so existing queued exports cannot resume. It stops only its own exact managed witness. An existing matching full runtime stays running. Blob retains normal GC/retention; actual export independently acquires worker Uses. The default native pin is macOS arm64; unsupported native platforms are not qualified.
 
 ## Codex closure
 
-After build, `carriers/codexplugin/dist` is a movable local Node24 closure with one plugin manifest/MCP descriptor, main, Web, Daemon and the render worker. Host PLUGIN_ROOT locates its entry; use explicit external resource identity:
+After build, `carriers/codexplugin/dist/runtime` is the movable Node24 closure. Installation/development helper entries stay outside that payload. Its production identity is baked at build time. Runtime environment selects exactly:
 
-| Variable              | Responsibility                                              |
-| --------------------- | ----------------------------------------------------------- |
-| OPEN_MOTION_ROOT      | Absolute manager data root outside the plugin installation  |
-| OPEN_MOTION_CHANNEL   | Product distribution channel                                |
-| OPEN_MOTION_NAMESPACE | Isolated resource domain within that channel                |
-| OPEN_MOTION_VERSION   | Optional full version; prerelease suffix must match channel |
+| Variable              | Responsibility                                               |
+| --------------------- | ------------------------------------------------------------ |
+| OPEN_MOTION_ROOT      | Absolute manager data root outside the installed application |
+| OPEN_MOTION_CHANNEL   | Product distribution channel                                 |
+| OPEN_MOTION_NAMESPACE | Isolated resource domain within that channel                 |
 
-Stdout is MCP JSON-RPC and stderr is diagnostics. Runtime status reports real health and URL, not proof that a host panel opened. Use separate test profiles, never daily host configuration/user data. Installation, stdio handshake, browser business behavior, provider calls and creative acceptance have independent evidence. Normal EOF retains data; interrupted authority needs explicit witness-based recovery rather than a reset. Socket probing may use a shorter canonical-equivalent system-temp spelling only after verifying the same object; connection failure never proves death.
+Stdout is MCP JSON-RPC and stderr is diagnostics. Installed MCP attaches only to a ready matching standalone; disconnect preserves that separately owned runtime. Absent/closed authority may self-host; its EOF drains its owned composition. Unready, mismatched or interrupted authority rejects without takeover. Runtime status reports real health/URL, not proof a host panel opened. Installation, stdio handshake, browser behavior, provider calls and creative acceptance have independent evidence. Socket probing may use a shorter canonical-equivalent system-temp spelling only after verifying the same object; connection failure never proves death.
 
 ## Workspace editing and preview
 
@@ -170,7 +195,7 @@ Normal stop drains active work into interrupted state and retains queued work; r
 
 ## Distribution qualification
 
-Pack compiles and verifies Node closures; pipeline builds/packages both carriers at one version. The retained runtime/distribution/installer mechanisms still have shell-oriented contracts and are disconnected from product composition. Node installation and update activation remain separately modeled and qualified. Tools own shared capabilities; workflows choose channel/quality policy.
+Pack compiles and verifies Node closures; pipeline builds/packages both carriers at one version. The retained runtime/distribution mechanisms still have shell-oriented contracts and are disconnected from product composition. Installer owns current immutable Node installation; automatic update activation remains separate. Tools own shared capabilities; workflows choose channel/quality policy.
 
 Use explicit positive composition/manifests for actual artifacts. No registry, storage, release or service publication is configured or authorized by source CI. Signing, target-platform installation, network distribution, power loss and actual product acceptance remain independent. Node update qualification must cover version discovery/preparation, actual owner activation, compatibility rejection, data preservation and interruption recovery. Old minimum-shell/forced-update tests do not qualify a Node installation.
 

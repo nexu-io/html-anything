@@ -1,0 +1,270 @@
+import { execFile } from "node:child_process";
+import { randomUUID } from "node:crypto";
+import { createReadStream } from "node:fs";
+import { access, mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
+import { promisify } from "node:util";
+import { Client } from "@modelcontextprotocol/client";
+import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
+import { Library, type Resource } from "@odsuite/blob";
+import { inspect, npm } from "@odsuite/pack";
+import { channel, digest, namespace } from "@odsuite/protocol";
+import { bundle, resolve as release, releaseChannel } from "@odsuite/release";
+import { connectRoot, managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
+import type { Input, Operation, Output } from "@open-motion/daemon/contract";
+import type { Job } from "@open-motion/render/contract";
+import { nativeTools } from "@open-motion/render/tools";
+import { expect, it } from "vitest";
+import { hash } from "@/contract.js";
+
+const run = promisify(execFile);
+async function fixture() {
+  const root = resolve("../../.artifacts/npx-delivery", randomUUID());
+  await mkdir(join(root, "workspace"), { recursive: true });
+  await mkdir(join(root, "profile"));
+  const files: Record<string, string | Uint8Array> = {},
+    descriptors: Record<string, unknown> = {};
+  let version = "",
+    channel = "";
+  for (const carrier of ["standalone", "codexplugin"]) {
+    const bytes = await bundle(resolve(`../../carriers/${carrier}/dist/runtime`));
+    const identity = inspect(bytes);
+    if (version && identity.version !== version) throw Error("carrier versions differ");
+    ({ version, channel } = identity);
+    files[`payload/${carrier}.bundle`] = bytes;
+    descriptors[carrier] = { file: `${carrier}.bundle`, sha256: hash(bytes), bytes: bytes.length };
+  }
+  const product = { appid: "io.openmotion.app", name: "open-motion", scheme: "open-motion" };
+  files["payload/manifest.json"] = Buffer.from(
+    JSON.stringify({
+      schemaVersion: 1,
+      product,
+      release: release({}, { version, channel: releaseChannel(channel) }, product),
+      namespace: "installation",
+      carriers: descriptors,
+    }),
+  );
+  for (const name of ["main.mjs", "codex-worker.mjs", "LICENSE", "NOTICE"])
+    files[`dist/${name}`] = resolve("dist", name);
+  const archive = await npm({
+    name: "@openmotion/app",
+    version,
+    license: "Apache-2.0",
+    bin: { odsuite: "dist/main.mjs" },
+    files,
+    output: join(root, "application.tgz"),
+  });
+  const common = ["--home", join(root, "installation"), "--data", join(root, "data"), "--namespace", "installation"];
+  const command = async (args: string[]) => {
+    const result = await run(
+      "npm",
+      [
+        "exec",
+        "--yes",
+        "--ignore-scripts",
+        "--cache",
+        join(root, "npm-cache"),
+        "--package",
+        archive.path,
+        "--",
+        "odsuite",
+        ...args,
+        ...common,
+      ],
+      { cwd: root, timeout: 60000, maxBuffer: 1024 ** 2, env: { ...process.env, npm_config_update_notifier: "false" } },
+    );
+    return JSON.parse(result.stdout.trim());
+  };
+  return { root, version, channel, command, data: join(root, "data", channel, "installation") };
+}
+
+it("installs a real local npm kit idempotently and controls its stamped standalone runtime", async () => {
+  const own = await fixture();
+  const first = await own.command(["setup", "--carrier", "standalone"]);
+  expect(first.result.version).toBe(own.version);
+  expect(Object.keys(first.result.receipts).sort()).toEqual(["codexplugin", "standalone"]);
+  await expect(access(own.data)).rejects.toThrow();
+  const again = await own.command(["setup", "--carrier", "standalone"]);
+  expect(again.result.receipts).toEqual(first.result.receipts);
+  expect((await own.command(["status"])).result.state).toBe("uninitialized");
+  try {
+    expect((await own.command(["start"])).result.state).toBe("running");
+    expect((await own.command(["start"])).result.state).toBe("running");
+    expect((await own.command(["status"])).result.runtime.manifest.identity.version).toBe(own.version);
+  } finally {
+    await own.command(["stop"]);
+  }
+  expect((await own.command(["stop"])).result.state).toBe("stopped");
+  expect((await readDirectory(own.data)).manager.phase).toBe("closed");
+  expect(await observeProcesses(own.data)).toEqual([]);
+  await writeFile(join(own.root, "receipt.json"), JSON.stringify(first, null, 2));
+}, 120000);
+
+it("registers an installed MCP transport that survives removal of its npx cache", async () => {
+  const own = await fixture(),
+    controlled = join(own.root, "codex.mjs"),
+    profile = join(own.root, "profile"),
+    skills = join(own.root, "workspace/.agents/skills");
+  await writeFile(
+    controlled,
+    `import{readFile,writeFile}from'node:fs/promises';
+const args=process.argv.slice(2),file=process.env.CODEX_HOME+'/transport.json';
+if(args[1]==='get'){try{console.log(JSON.stringify({enabled:true,transport:JSON.parse(await readFile(file,'utf8'))}))}catch(e){if(e.code!=='ENOENT')throw e;console.error('No MCP server named "open-motion" found');process.exitCode=1}}
+else if(args[1]==='add'){const at=args.indexOf('--'),env={};for(let i=3;i<at;i+=2){const p=args[i+1].indexOf('=');env[args[i+1].slice(0,p)]=args[i+1].slice(p+1)}await writeFile(file,JSON.stringify({type:'stdio',command:args[at+1],args:args.slice(at+2),env}))}
+`,
+  );
+  const args = ["setup", "--carrier", "codexplugin", "--profile", profile, "--skills", skills, "--codex", controlled];
+  const registered = await own.command(args);
+  expect(registered.result.registration.state).toBe("registered");
+  expect((await own.command(args)).result).toEqual(registered.result);
+  const transport = JSON.parse(await readFile(join(profile, "transport.json"), "utf8"));
+  expect(transport.command).toBe(process.execPath);
+  expect(transport.args[0]).toBe(join(registered.result.receipts.codexplugin.path, "main.mjs"));
+  expect(dirname(transport.args[0])).not.toContain("npm-cache");
+  await rename(join(own.root, "npm-cache"), join(own.root, "retained-npm-cache"));
+  const client = new Client({ name: "installed-npx-proof", version: "1.0.0" }),
+    connection = new StdioClientTransport({ ...transport, stderr: "pipe" });
+  try {
+    await client.connect(connection);
+    expect((await client.listTools()).tools.some((tool) => tool.name === "session_create")).toBe(true);
+    const created = await client.callTool({
+      name: "session_create",
+      arguments: { requestId: randomUUID(), title: "Installed npx kit", mode: "motion" },
+    });
+    expect(created.isError).not.toBe(true);
+    expect(created.structuredContent).toBeDefined();
+  } finally {
+    await client.close();
+    await connection.close();
+  }
+  expect((await readDirectory(own.data)).manager.phase).toBe("closed");
+  expect(await observeProcesses(own.data)).toEqual([]);
+  await writeFile(join(own.root, "receipt.json"), JSON.stringify(registered, null, 2));
+}, 120000);
+
+it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
+  "prepares installed native resources without a business queue and exports through an installed MCP attachment",
+  async () => {
+    const own = await fixture(),
+      installed = (await own.command(["setup", "--carrier", "standalone"])).result,
+      manifestPath = resolve(process.env.OPEN_MOTION_NATIVE_MANIFEST ?? ""),
+      seeds = JSON.parse(await readFile(manifestPath, "utf8")),
+      tools = nativeTools();
+    if (!tools) throw Error("native fixture requires a qualified platform");
+    const scope = { channel: channel(own.channel), namespace: namespace("installation") },
+      seedManager = await serve(managerEndpoint(own.data), { root: own.data }),
+      factory = seedManager.factory(scope);
+    let library: Library | undefined;
+    await factory.expose({
+      identity: { service: "seed", generation: digest("npx-native-fixture") },
+      handlers: {},
+      lifecycle: {
+        initialize: async (context) => {
+          library = await Library.open({ factory, context });
+        },
+        stop: async () => {
+          await library?.close();
+        },
+      },
+    });
+    try {
+      if (!library) throw Error("seed context unavailable");
+      await library.retain(
+        "prepared",
+        "native-fixture",
+        Object.values(tools).map((tool) => tool.resource),
+      );
+      for (const name of ["browser", "ffmpeg", "ffprobe"] as const) {
+        const seed = seeds[name] as { path: string; resource: Resource };
+        expect(seed.resource).toEqual(tools[name].resource);
+        await library.prefetch(seed.resource, async () => createReadStream(resolve(dirname(manifestPath), seed.path)));
+      }
+      await library.unretain("prepared", "native-fixture");
+    } finally {
+      await seedManager.close();
+    }
+    const prepared = await own.command(["prepare"]);
+    expect(prepared.result.state).toBe("ready");
+    expect(
+      Object.values(prepared.result.components).every((value) => (value as { state: string }).state === "ready"),
+    ).toBe(true);
+    const preparedDirectory = await readDirectory(own.data);
+    expect(preparedDirectory.manager.phase).toBe("closed");
+    expect(preparedDirectory.instances.map((value) => value.service).sort()).toEqual(["renderer", "seed"]);
+    expect(await observeProcesses(own.data)).toEqual([]);
+    const client = new Client({ name: "installed-native-export", version: "1.0.0" }),
+      transport = new StdioClientTransport({
+        command: process.execPath,
+        args: [join(installed.receipts.codexplugin.path, "main.mjs")],
+        env: {
+          OPEN_MOTION_ROOT: own.data,
+          OPEN_MOTION_CHANNEL: own.channel,
+          OPEN_MOTION_NAMESPACE: "installation",
+          NODE_PATH: "",
+        },
+        stderr: "pipe",
+      });
+    const call = async <K extends Operation>(name: K, args: Input<K>): Promise<Output<K>> => {
+      const result = await client.callTool({ name, arguments: args });
+      if (result.isError) throw Error(JSON.stringify(result.content));
+      return result.structuredContent as unknown as Output<K>;
+    };
+    try {
+      expect((await own.command(["start"])).result.state).toBe("running");
+      const manager = (await connectRoot(own.data, scope)).manager;
+      await client.connect(transport);
+      const session = await call("session_create", {
+          requestId: randomUUID(),
+          title: "Installed film",
+          mode: "motion",
+        }),
+        artifact = await call("artifact_create", {
+          requestId: randomUUID(),
+          sessionId: session.id,
+          title: "Film",
+          files: [
+            {
+              path: "index.html",
+              content:
+                '<html><body><main data-composition-id="main" data-width="160" data-height="90" data-duration="1"><svg width="160" height="90"><rect id="square" width="40" height="40" fill="blue"/></svg></main><script>window.__timelines={main:gsap.timeline({paused:true}).to("#square",{attr:{x:100},duration:1})};</script></body></html>',
+            },
+          ],
+        }),
+        owner = { sessionId: session.id, artifactId: artifact.id },
+        project = await call("project_read", owner),
+        job = await call("export_create", {
+          ...owner,
+          requestId: randomUUID(),
+          revision: project.revision,
+          fps: { num: 12, den: 1 },
+        });
+      await expect
+        .poll(async () => (await call("export_read", { ...owner, id: job.id })).state, { timeout: 60000 })
+        .toBe("succeeded");
+      const completed = (await call("export_read", { ...owner, id: job.id })) as unknown as Job,
+        info = await call("export_download", { ...owner, id: job.id }),
+        response = await fetch(info.url),
+        bytes = Buffer.from(await response.arrayBuffer());
+      expect(response.status).toBe(200);
+      expect(bytes.subarray(4, 8).toString()).toBe("ftyp");
+      expect(`sha256:${hash(bytes)}`).toBe(info.digest);
+      expect(completed.result?.verification.frames).toBe(12);
+      await writeFile(join(own.root, "film.mp4"), bytes);
+      await writeFile(
+        join(own.root, "native-evidence.json"),
+        JSON.stringify({ archive: "application.tgz", prepared, completed, digest: info.digest }, null, 2),
+      );
+      await client.close();
+      await transport.close();
+      expect((await own.command(["status"])).result.state).toBe("running");
+      expect((await connectRoot(own.data, scope)).manager.incarnation).toBe(manager.incarnation);
+    } finally {
+      await client.close();
+      await transport.close();
+      await own.command(["stop"]);
+    }
+    expect((await readDirectory(own.data)).manager.phase).toBe("closed");
+    expect(await observeProcesses(own.data)).toEqual([]);
+  },
+  180000,
+);
