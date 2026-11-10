@@ -66,6 +66,10 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal(metadata.name, (await json('packages/npm/package.json')).name);
     assert.equal(metadata.publishConfig.tag, 'test'); assert.equal(metadata.publishConfig.access, 'public');
     assert.equal(metadata.bin.openmotion, 'scripts/npm-installer.mjs');
+    const cli = path.join(installer, 'package', metadata.bin.openmotion);
+    assert.equal((await runFile(process.execPath, [cli, '--version'])).trim(), version);
+    const help = await runFile(process.execPath, [cli, 'setup', '--help']);
+    for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(help.includes(host), host);
     await readFile(path.join(installer, 'package/LICENSE'));
     assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...phase1Skills].sort());
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);

@@ -53,6 +53,8 @@ test('guide rendering pins the exact npm package, built source and hash while re
   assert(text.includes(manifest.commit) && text.includes(record.tgzSHA256));
   assert(!text.includes('{{') && !text.includes('see `{{...}}`'));
   assert(text.includes('eleven public Tools') && text.includes('five Skills'));
+  for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(text.includes(`openmotion setup --host ${host}`), host);
+  assert(text.includes('--profile PROFILE') && text.includes('Do not infer the current host'));
   assert.equal(record.channel, 'test'); assert.equal(record.candidate, false);
   assert.equal(validateGuideSpec('openmotion', '0.6.4'), 'stable');
   for (const name of ['https://evil.invalid/a', 'x;echo bad', '--script', '@bad/no/extra']) assert.throws(() => validateGuideSpec(name, pkg.version));

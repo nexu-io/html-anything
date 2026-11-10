@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { fileURLToPath } from 'node:url';
 import { localManifest, setup } from '../scripts/npm-installer.mjs';
+import { hosts } from '../scripts/npm-hosts.mjs';
 import { configureNativeEnvironment, ensureNativeRuntime, nativeConfiguration } from '../scripts/npm-runtime.mjs';
 import { obtainAsset, relativePath, runFile, sha256, withLock, writeJSON } from '../scripts/runtime-assets.mjs';
 
@@ -111,6 +112,42 @@ test('installation locks reject simultaneous mutation and release after an error
   await withLock(filename, async () => {});
 });
 
+test('native preparation runs independent components together for separate and combined media archives', { skip: process.platform === 'win32', timeout: 20_000 }, async t => {
+  for (const combined of [false, true]) await t.test(combined ? 'combined media' : 'separate media', async t => {
+    clearNativeEnvironment(t);
+    const dir = await fixture(t), root = path.join(dir, 'app'); await mkdir(root);
+    const components = combined ? ['browser', 'media'] : ['browser', 'ffmpeg', 'ffprobe'];
+    const assets: Record<string, any> = {};
+    const downloads = new Map<string, Buffer>(), started: string[] = [];
+    for (const component of components) {
+      const source = path.join(dir, component); await mkdir(source);
+      if (component === 'media') await mkdir(path.join(source, 'bin'));
+      for (const tool of component === 'media' ? ['ffmpeg', 'ffprobe'] : [component]) {
+        await writeFile(path.join(source, component === 'media' ? 'bin' : '', tool), '#!/bin/sh\necho fixture-version\n', { mode: 0o755 });
+      }
+      assets[component] = { ...await archive(dir, source, component), ...(component === 'media' ? { directory: '.' } : { executable: component }) };
+      const bytes = await readFile(new URL(assets[component].url));
+      assets[component].url = `https://example.invalid/${component}.tar.gz`;
+      downloads.set(assets[component].url, bytes);
+    }
+    const gate = Promise.withResolvers<void>();
+    const timeout = setTimeout(() => gate.reject(new Error('Independent downloads did not start together')), 5000);
+    t.after(() => clearTimeout(timeout));
+    t.mock.method(globalThis, 'fetch', async (url: URL) => {
+      started.push(url.href);
+      if (started.length === components.length) gate.resolve();
+      await gate.promise;
+      return new Response(downloads.get(url.href));
+    });
+    await writeJSON(path.join(root, '.npm-install.json'), { schemaVersion: 1, cacheDirectory: path.join(dir, 'cache'), allowLocalAssets: true,
+      runtime: { targets: { fixture: { platform: process.platform, arch: process.arch, ...assets } } } });
+    await ensureNativeRuntime(root);
+    assert.deepEqual(started.sort(), [...downloads.keys()].sort());
+    const native = await nativeConfiguration(root);
+    assert.deepEqual((await readdir(native.cache)).sort(), Object.entries(assets).map(([name, asset]: any) => name + '-' + asset.sha256).sort());
+  });
+});
+
 test('separate ffmpeg and ffprobe archives validate independently and recover without replacing a ready tool', { skip: process.platform === 'win32' }, async t => {
   clearNativeEnvironment(t);
   const dir = await fixture(t), assets: Record<string, any> = {};
@@ -137,6 +174,20 @@ test('separate ffmpeg and ffprobe archives validate independently and recover wi
   await writeJSON(manifest, value); await localManifest(manifest);
   value.runtime.targets.fixture.ffprobe.sha256 = '';
   await writeJSON(manifest, value); await assert.rejects(localManifest(manifest), /SHA256/);
+});
+
+test('CLI help and version cover every host without reading a manifest or changing an installation', async t => {
+  const directory = await fixture(t), cli = fileURLToPath(new URL('../scripts/npm-installer.mjs', import.meta.url));
+  const missing = path.join(directory, 'missing.json'), home = path.join(directory, 'app');
+  for (const command of [['--help'], ['setup', '-h'], ['prepare', '--help']]) {
+    const help = await runFile(process.execPath, [cli, ...command, '--manifest', missing, '--home', home]);
+    for (const host of hosts) assert(help.includes(host), host);
+    for (const option of ['--profile', '--skills-dir', '--codex', '--claude', '--dsh']) assert(help.includes(option), option);
+  }
+  const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.equal((await runFile(process.execPath, [cli, '--version', '--manifest', missing, '--home', home])).trim(), pkg.version);
+  await assert.rejects(runFile(process.execPath, [cli, 'setup', '--unknown-option']), /openmotion --help/);
+  assert.deepEqual(await readdir(directory), []);
 });
 
 test('npm bin symlink executes the CLI instead of silently exiting', { skip: process.platform === 'win32' }, async t => {

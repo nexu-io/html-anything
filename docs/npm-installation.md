@@ -84,6 +84,21 @@ There is no automatic fallback from prod to DEV and no `switch-env` CLI. This se
 
 Select `--host codex|claude|deepseek|workbuddy`. `--skills-dir` selects the Codex/Claude/WorkBuddy root; Harness uses its own provider. Executable overrides are `--codex`, `--claude`, `--dsh`; Harness also accepts `--profile`. Isolate host configuration with `CODEX_HOME`, `CLAUDE_CONFIG_DIR`, `DSH_HOME` or `WORKBUDDY_CONFIG_DIR`; `--home` controls the application installation, not the host profile.
 
+Use the same installation flow for every host: collect the platform and Node/npm facts once, select the current Agent, run its setup adapter, prepare the same home, then verify actual host loading. An explicit `--host` takes precedence over host context; do not choose a host merely because its CLI is installed. The CLI retains its Codex default for compatibility, so Agent-driven installs should always pass `--host`. Only ask for the missing host/profile when reliable context is unavailable. `openmotion --help`, `setup --help`, `prepare --help` and `--version` work without installing or modifying configuration.
+
+For a non-Codex test, keep the isolated application/data paths from the examples above and change only the host-specific configuration:
+
+| Selected host | Isolated host configuration | Setup adapter options |
+| --- | --- | --- |
+| Codex | Separate `CODEX_HOME` | `--host codex --skills-dir <isolated-skills-root>` |
+| Claude Code | Separate `CLAUDE_CONFIG_DIR` | `--host claude --skills-dir <isolated-skills-root>` |
+| DeepSeek Harness | Separate `DSH_HOME` and selected profile | `--host deepseek --profile <selected-profile>`; Skills live in this installation's managed bundle |
+| WorkBuddy | Separate `WORKBUDDY_CONFIG_DIR` | `--host workbuddy --skills-dir <isolated-skills-root>` |
+
+Harness callers should pass the actual current profile from their host context, such as `DSH_PROFILE`, rather than assuming `web` or `desktop`. On macOS, setup already detects the standard Desktop CLI at `/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh`; it need not be on PATH. Keep that host-specific lookup in the Harness adapter. Other executable locations use `--dsh`; do not unpack the host or invent a wrapper for ordinary installation.
+
+After prepare, use each host's supported discovery/reload action to load the Tools and Skills. Confirm all eleven public Tools and five Skills, and call `motion_get_project` to verify the expected data directory. Do not impose another host's restart or refresh procedure, or substitute an on-disk registration for host loading evidence.
+
 The internal ownership marker remains stable across the npm package rename so earlier local installations can be upgraded in place. An installation can serve multiple hosts using the same home/data. `install.json.hosts` retains each host. Skill documentation links are rewritten for flat layouts; Codex/Harness retain bundle-relative links. Re-run setup for each installed host when upgrading Skills. Unowned same-name MCP/Skills are refused. Unrelated settings/Skills and existing projects are retained. Registration failure restores the prior install state and Skills; checked application caches remain available for retry.
 
 Compatible phase-one updates do not require closing existing MCP connections or stopping the same workspace's backend. Connections negotiate the API protocol and requested Tool, retaining running exports and completed results; see [shared editor recovery](shared-editor.md). The installer does not terminate existing processes. Incompatible protocols or internal legacy ABIs still require updating the connection and idle backend together. Refresh the host to discover new Tools or reload changed Skills; an already-closed transport needs host reconnection.
@@ -100,7 +115,7 @@ Before upgrading, back up projects/configuration, run setup with the new exact t
 
 ## Native tools and diagnostics
 
-The runtime lock pins HTTPS URLs, versions, target OS/CPU and SHA256 for FFmpeg, ffprobe and Chrome for Testing. Downloads require no repository credentials, never attach repository tokens, and do not run brew/winget. Separate component locks, temporary extraction and completion markers support retry/cache reuse. A failed download is not ready. Explicit native path overrides remain supported. See [runtime details](test-packages.md).
+The runtime lock pins HTTPS URLs, versions, target OS/CPU and SHA256 for FFmpeg, ffprobe and Chrome for Testing. Downloads require no repository credentials, never attach repository tokens, and do not run brew/winget. Independent archives are prepared concurrently from the existing platform manifest: three separate components on macOS, browser and combined media on Windows. Preparation settles every component before returning; any failure rejects the operation while completed components remain reusable. Separate component locks, temporary extraction and completion markers retain retry/cache protection. A failed download is not ready. Explicit native path overrides remain supported. See [runtime details](test-packages.md).
 
 A local `--manifest /absolute/release-npm.json` remains available for legacy delivery and controlled fixtures. HTTP, URL credentials, unsafe extraction paths and invalid hashes are rejected. Do not remove a leftover install lock until its owning process is confirmed stopped.
 
