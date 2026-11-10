@@ -734,9 +734,9 @@ importers:
 
   suites/installer:
     dependencies:
-      '@odsuite/distribution':
+      '@odsuite/pack':
         specifier: workspace:*
-        version: link:../distribution
+        version: link:../pack
       '@odsuite/protocol':
         specifier: workspace:*
         version: link:../protocol
@@ -746,19 +746,13 @@ importers:
       '@odsuite/sidecar':
         specifier: workspace:*
         version: link:../sidecar
-      plist:
-        specifier: 5.0.0
-        version: 5.0.0
-      yauzl:
-        specifier: 3.4.0
-        version: 3.4.0
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: 24.12.2
         version: 24.12.2
-      '@types/yauzl':
-        specifier: 3.4.0
-        version: 3.4.0
       esbuild:
         specifier: 0.28.0
         version: 0.28.0
@@ -2189,10 +2183,6 @@ packages:
   '@vitest/utils@4.1.6':
     resolution: {integrity: sha512-FxIY+U81R3LGKCxaHHFRQ5+g6/iRgGLmeHWdp2Amj4ljQRrEIWHmZyDfDYBRZlpyqA7qKxtS9DD1dhk8RnRIVQ==}
 
-  '@xmldom/xmldom@0.9.12':
-    resolution: {integrity: sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A==}
-    engines: {node: '>=14.6'}
-
   acorn-walk@8.3.5:
     resolution: {integrity: sha512-HEHNfbars9v4pgpW6SO1KSPkfoS0xVOM/9UzkJltjlsHZmJasxg8aXkuZa7SMf8vKGIBhpUsPluQSqhJFCqebw==}
     engines: {node: '>=0.4.0'}
@@ -2659,10 +2649,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  plist@5.0.0:
-    resolution: {integrity: sha512-20N+g1DvMm/DFRbsvER7tT4wDryq0WunK7VMkDaiJcKNapAnUMkTsAnacFYf8n420F4Hf6/hefgmJRkMb1M0fg==}
-    engines: {node: '>=18'}
-
   pngjs@7.0.0:
     resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
     engines: {node: '>=14.19.0'}
@@ -2979,10 +2965,6 @@ packages:
   xml-name-validator@5.0.0:
     resolution: {integrity: sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg==}
     engines: {node: '>=18'}
-
-  xmlbuilder@15.1.1:
-    resolution: {integrity: sha512-yMqGBqtXyeN1e3TGYvgNgDVZ3j84W4cwkOXQswghol6APgZWaff9lnbvN7MHYJOiXsvGPXtjTYJEiC9J2wv9Eg==}
-    engines: {node: '>=8.0'}
 
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
@@ -3917,8 +3899,6 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
-  '@xmldom/xmldom@0.9.12': {}
-
   acorn-walk@8.3.5:
     dependencies:
       acorn: 8.19.0
@@ -4372,11 +4352,6 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.2
 
-  plist@5.0.0:
-    dependencies:
-      '@xmldom/xmldom': 0.9.12
-      xmlbuilder: 15.1.1
-
   pngjs@7.0.0: {}
 
   postcss-selector-parser@7.1.7:
@@ -4750,8 +4725,6 @@ snapshots:
   ws@8.22.2: {}
 
   xml-name-validator@5.0.0: {}
-
-  xmlbuilder@15.1.1: {}
 
   xmlchars@2.2.0: {}
 

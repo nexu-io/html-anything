@@ -12,14 +12,3 @@ await build({
   platform: "node",
   target: "node24",
 });
-await build({
-  entryPoints: ["src/worker.ts"],
-  bundle: true,
-  format: "esm",
-  outfile: "dist/worker.mjs",
-  platform: "node",
-  target: "node24",
-  banner: {
-    js: 'import {createRequire as workerRequire} from "node:module";const require=workerRequire(import.meta.url);',
-  },
-});

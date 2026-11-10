@@ -1,89 +1,98 @@
-import { dirname, join, resolve } from "node:path";
-import { pipeline } from "node:stream/promises";
-import { type Entry, fromBuffer, type ZipFile } from "yauzl";
-import { inside, io, raw, sync } from "./files.js";
+import { createHash } from "node:crypto";
+import { constants } from "node:fs";
+import { chmod, lstat, open, readdir } from "node:fs/promises";
+import { join } from "node:path";
+import { inspect } from "@odsuite/pack";
+import { canonical } from "@odsuite/protocol";
+import { bundleEntries } from "@odsuite/release";
+import { sync } from "./files.js";
+import { InstallerFault, type Source } from "./types.js";
 
-const { chmod, lstat, mkdir, realpath, symlink } = io;
-
-export async function extract(bytes: Uint8Array, root: string, name: string): Promise<string> {
-  if (!/^[a-z][a-z0-9-]*\.app$/.test(name)) throw Error("invalid application archive root");
-  await mkdir(root, { recursive: false, mode: 0o700 });
-  const zip = await new Promise<ZipFile>((done, reject) =>
-    fromBuffer(Buffer.from(bytes), { lazyEntries: true, strictFileNames: true, validateEntrySizes: true }, (e, z) =>
-      e ? reject(e) : done(z!),
-    ),
-  );
-  const seen = new Set<string>(),
-    links: { path: string; target: string }[] = [];
-  let total = 0,
-    count = 0;
-  const stream = (entry: Entry) =>
-    new Promise<NodeJS.ReadableStream>((done, reject) =>
-      zip.openReadStream(entry, (e, s) => (e ? reject(e) : done(s!))),
-    );
-  const processEntry = async (entry: Entry) => {
-    const filename = entry.fileName;
-    if (
-      filename.startsWith("/") ||
-      filename.includes("\\") ||
-      filename.split("/").some((p) => p === ".." || p === ".") ||
-      filename.includes("\0")
-    )
-      throw Error("unsafe archive path");
-    count++;
-    total += entry.uncompressedSize;
-    if (count > 30000 || total > 2 * 1024 ** 3 || entry.uncompressedSize > 512 * 1024 ** 2)
-      throw Error("archive size limit");
-    if (filename.startsWith("__MACOSX/")) return;
-    if (filename !== `${name}/` && !filename.startsWith(`${name}/`)) throw Error("unexpected archive root");
-    const path = resolve(root, filename);
-    if (!inside(root, path) || seen.has(path)) throw Error("duplicate or escaping archive entry");
-    seen.add(path);
-    const mode = entry.externalFileAttributes >>> 16,
-      type = mode & 0o170000;
-    if (mode & 0o6000) throw Error("privileged archive mode");
-    if (filename.endsWith("/")) {
-      if (type !== 0 && type !== 0o040000) throw Error("invalid archive directory");
-      await mkdir(path, { recursive: true, mode: mode & 0o777 || 0o755 });
-      return;
-    }
-    await mkdir(dirname(path), { recursive: true, mode: 0o755 });
-    if (type === 0o120000) {
-      const chunks: Buffer[] = [];
-      for await (const chunk of (await stream(entry)) as AsyncIterable<Uint8Array>) chunks.push(Buffer.from(chunk));
-      const target = Buffer.concat(chunks).toString();
-      if (!target || target.includes("\0") || !inside(join(root, name), resolve(dirname(path), target)))
-        throw Error("escaping archive symlink");
-      links.push({ path, target });
-      return;
-    }
-    if (type !== 0 && type !== 0o100000) throw Error("unsupported archive entry type");
-    await pipeline(
-      await stream(entry),
-      raw.createWriteStream(path, { flags: "wx", mode: mode & 0o777 || 0o644, flush: true }),
-    );
-    await chmod(path, mode & 0o777 || 0o644);
-  };
+export interface File {
+  path: string;
+  bytes: number;
+  sha256: string;
+  mode: 420 | 493;
+}
+export const hash = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex");
+export function source(value: Source) {
+  if (
+    !(value?.bytes instanceof Uint8Array) ||
+    !value.bytes.length ||
+    value.bytes.length > 64 * 1024 ** 2 ||
+    !/^[a-f0-9]{64}$/.test(value.sha256) ||
+    hash(value.bytes) !== value.sha256
+  )
+    throw new InstallerFault("invalid", "invalid pinned Node closure bytes");
   try {
-    await new Promise<void>((done, reject) => {
-      zip.on("error", reject);
-      zip.on("end", done);
-      zip.on("entry", (entry: Entry) => {
-        void processEntry(entry).then(() => zip.readEntry(), reject);
-      });
-      zip.readEntry();
-    });
-    for (const link of links) {
-      for (let parent = dirname(link.path); parent !== root; parent = dirname(parent)) {
-        if ((await lstat(parent)).isSymbolicLink()) throw Error("archive symlink parent");
-      }
-      await symlink(link.target, link.path);
+    const runtime = inspect(value.bytes),
+      entries = bundleEntries(value.bytes);
+    if (hash(Buffer.from(canonical({ schema: 1, files: entries }))) !== value.sha256)
+      throw Error("Node archive must be canonical");
+    const seen = new Set<string>();
+    for (const entry of entries) {
+      if (entry.path.length > 240 || entry.path.split("/").length > 16 || seen.has(entry.path.toLowerCase()))
+        throw Error("invalid or case-colliding closure path");
+      seen.add(entry.path.toLowerCase());
     }
-    for (const link of links)
-      if (!inside(join(root, name), await realpath(link.path))) throw Error("resolved archive symlink escape");
-    await sync(root);
-    return join(root, name);
-  } finally {
-    zip.close();
+    for (const entry of entries)
+      for (let i = entry.path.indexOf("/"); i !== -1; i = entry.path.indexOf("/", i + 1))
+        if (seen.has(entry.path.slice(0, i).toLowerCase())) throw Error("closure path collision");
+    const files: File[] = entries.map((entry) => {
+      const bytes = Buffer.from(entry.bytes, "base64");
+      return { path: entry.path, bytes: bytes.length, mode: entry.mode, sha256: hash(bytes) };
+    });
+    return { runtime, files };
+  } catch (error) {
+    throw new InstallerFault("invalid", error instanceof Error ? error.message : "invalid Node closure");
   }
+}
+export async function verify(root: string, files: File[], freeze = false) {
+  const expected = new Map(files.map((file) => [file.path, file])),
+    found = new Set<string>();
+  const walk = async (path: string, prefix: string) => {
+    const info = await lstat(path);
+    if (!info.isDirectory() || info.isSymbolicLink())
+      throw new InstallerFault("integrity", "installed closure directory changed");
+    for (const entry of await readdir(path, { withFileTypes: true })) {
+      const name = prefix ? `${prefix}/${entry.name}` : entry.name,
+        full = join(path, entry.name);
+      if (entry.isDirectory()) {
+        if (![...expected.keys()].some((key) => key.startsWith(`${name}/`)))
+          throw new InstallerFault("integrity", "unexpected closure directory");
+        await walk(full, name);
+        continue;
+      }
+      const file = expected.get(name);
+      if (!file || !entry.isFile() || entry.isSymbolicLink())
+        throw new InstallerFault("integrity", "unexpected closure entry");
+      const handle = await open(full, constants.O_RDONLY | constants.O_NOFOLLOW);
+      try {
+        const stat = await handle.stat();
+        if (
+          !stat.isFile() ||
+          stat.size !== file.bytes ||
+          (stat.mode & 0o111 ? 493 : 420) !== file.mode ||
+          (stat.mode & 0o7000) !== 0 ||
+          (!freeze && (stat.mode & 0o777) !== (file.mode & 0o555)) ||
+          hash(await handle.readFile()) !== file.sha256
+        )
+          throw new InstallerFault("integrity", "installed closure bytes or mode changed");
+        if (freeze) await handle.sync();
+      } finally {
+        await handle.close();
+      }
+      if (freeze) {
+        await chmod(full, file.mode & 0o555);
+        await sync(full);
+      }
+      found.add(name);
+    }
+    if (freeze) {
+      await chmod(path, 0o555);
+      await sync(path);
+    }
+  };
+  await walk(root, "");
+  if (found.size !== expected.size) throw new InstallerFault("integrity", "installed closure is incomplete");
 }
