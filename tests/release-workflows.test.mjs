@@ -318,16 +318,18 @@ test('rendering tools reuse packages and indexes, refresh stale indexes once, an
 sudo() {
   printf '%s\\n' "$*" >> "$APT_CALLS"
   case "$FAIL_APT" in
-    first) [[ $(wc -l < "$APT_CALLS") -ne 1 ]] ;;
+    first) if [[ $(wc -l < "$APT_CALLS") -eq 1 ]]; then return 1; fi ;;
     always) return 1 ;;
-    install) [[ "$*" != *' install '* ]] ;;
+    install) if [[ "$*" == *' install '* ]]; then return 1; fi ;;
   esac
+  if [[ "$*" == *' install '* ]]; then touch "$RUNNER_TEMP/motion-rendering-apt/fixture.deb"; fi
 }`;
-  const env = { ...process.env, APT_CALLS: calls, HYPERFRAMES_BROWSER_PATH: '/usr/bin/true' };
+  const env = { ...process.env, APT_CALLS: calls, HYPERFRAMES_BROWSER_PATH: '/usr/bin/true', RUNNER_TEMP: directory };
   for (const name of ['ci', 'motion-candidate']) {
     const workflow = await readFile(new URL(`../.github/workflows/${name}.yml`, import.meta.url), 'utf8');
     const step = workflow.split('      - name: Install rendering test tools\n')[1].split('\n      - name: ')[0];
-    assert.match(step, /timeout-minutes: 5/);
+    assert.match(workflow, /path: \$\{\{ runner.temp \}\}\/motion-rendering-apt/);
+    assert.match(workflow, /key: rendering-apt-ubuntu24\.04-\$\{\{ runner.arch \}\}-zip-unzip-ffmpeg-fonts-noto-core-v1/);
     const script = step.split('        run: |\n')[1].split('\n').map(line => line.replace(/^ {10}/, '')).join('\n');
     const run = (missing, failure) => runFile('bash', ['-e', '-o', 'pipefail', '-c', mock + '\n' + script], {
       env: { ...env, MISSING_FONT: missing, FAIL_APT: failure },
@@ -346,6 +348,7 @@ sudo() {
       assert.deepEqual(commands.map(command => command.includes(' install ') ? 'install' : 'update'), expected);
       assert(commands.every(command => command.includes('Acquire::Retries=2') && command.includes('Acquire::http::Timeout=30') && command.includes('Acquire::https::Timeout=30')));
       assert(commands.filter(command => command.includes(' install ')).every(command => command.endsWith(' install -y --no-install-recommends fonts-noto-core')));
+      assert(commands.every(command => command.includes(`Dir::Cache::archives=${directory}/motion-rendering-apt`) && command.includes('APT::Keep-Downloaded-Packages=true')));
     }
   }
 });

@@ -83,8 +83,12 @@ jobs:
           node-version: '26.11.1'
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Restore rendering package downloads
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/motion-rendering-apt/*.deb
+          key: rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-v1
       - name: Install rendering test tools
-        timeout-minutes: 5
         run: |
           # The hosted Ubuntu image provides Chrome; Ubuntu's chromium package pulls a desktop snap.
           "$HYPERFRAMES_BROWSER_PATH" --version
@@ -95,12 +99,15 @@ jobs:
             fi
           done
           if ((${#missing[@]})); then
-            apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+            mkdir -p "$RUNNER_TEMP/motion-rendering-apt/partial"
+            apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30
+              -o "Dir::Cache::archives=$RUNNER_TEMP/motion-rendering-apt" -o APT::Keep-Downloaded-Packages=true)
             # Hosted runners already have package indexes. Refresh only if installation needs it.
             if ! sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"; then
               sudo apt-get "${apt_options[@]}" update
               sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
             fi
+            du -sh "$RUNNER_TEMP/motion-rendering-apt/"*.deb
           fi
       - name: Validate manual package selection
         env:
