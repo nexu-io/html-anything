@@ -5,12 +5,12 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Optional override; empty uses next Motion patch-test.<run ID>.<attempt>; build only'
+        description: 'Optional override; empty uses short next Motion patch-test.N (reruns add .attempt); build only'
         type: string
         required: false
         default: ''
       source_sha:
-        description: 'Optional reviewed full SHA integrated into feature/motion; empty freezes its current head'
+        description: 'Optional reviewed full SHA integrated into feature/motion; empty freezes the selected dispatch commit'
         type: string
         required: false
         default: ''
@@ -21,7 +21,7 @@ permissions:
 jobs:
   candidate:
     name: Build immutable candidate
-    if: github.repository == 'nexu-io/html-anything' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/motion')
+    if: github.repository == 'nexu-io/html-anything'
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -32,6 +32,12 @@ jobs:
       HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
       HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
     steps:
+      - name: Require Motion integration branch
+        run: |
+          if [ "$GITHUB_REF" != 'refs/heads/feature/motion' ]; then
+            echo '::error::Select feature/motion in Run workflow for Motion operations.'
+            exit 1
+          fi
       - uses: actions/checkout@v6.0.2
         with:
           path: control

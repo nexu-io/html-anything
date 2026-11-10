@@ -33,8 +33,8 @@ export async function candidateFixture(t, branch = 'main') {
   const provenance = { head_branch: branch, head_sha: env.GITHUB_SHA, runId: 123, attempt: 1 };
   await writeJSON(path.join(directory, 'provenance.json'), provenance);
   const inputs = { action: 'publish-test', version, accepted: true, expectedSHA256: candidate.tgzSHA256 };
-  const publicationEnv = { GITHUB_REPOSITORY: repository, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REF: 'refs/heads/main',
-    GITHUB_RUN_ID: '800', GITHUB_SHA: env.GITHUB_SHA, GITHUB_WORKFLOW_REF: `${repository}/${publicationWorkflow}@refs/heads/main`,
+  const publicationEnv = { GITHUB_REPOSITORY: repository, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REF: 'refs/heads/feature/motion',
+    GITHUB_RUN_ID: '800', GITHUB_SHA: env.GITHUB_SHA, GITHUB_WORKFLOW_REF: `${repository}/${publicationWorkflow}@refs/heads/feature/motion`,
     MOTION_VERSION: version, MOTION_ACCEPTED: 'true', MOTION_RELEASE_ACTION: 'publish-test' };
   const authorization = authorizationReceipt(candidate, { id: 800, run_attempt: 1, actor: { login: 'operator' } }, inputs.action);
   await writeJSON(path.join(directory, 'authorization.json'), authorization);
