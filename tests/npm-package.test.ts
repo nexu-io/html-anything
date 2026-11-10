@@ -34,7 +34,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     const version = '0.6.4-test.1', output = path.join(directory, 'build');
     const built = await packageNpm(output, version), release = await json(built.manifest);
     assert.equal(release.version, version); assert.equal(release.installer.version, version); assert.equal(release.format, 'npm');
-    assert.equal(release.templateEnvironment, 'prod');
+    assert.equal(release.templateEnvironment, 'dev');
     assert.equal(release.mcp.profile, 'phase1'); assert.deepEqual(release.mcp.tools, mcpRegistry().tools.map(tool => tool.name));
     assert.deepEqual(release.skills, [...phase1Skills].sort());
     assert.equal(release.installer.sha256, await sha256(built.installer)); assert.equal(release.application.sha256, await sha256(built.application));
@@ -52,7 +52,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert(!readme.startsWith('# Motion application npm package'));
     assert.equal(await readFile(path.join(application, 'README.md'), 'utf8'), await readFile('README.md', 'utf8'), 'The embedded repository README retains its local links');
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
-    assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'prod');
+    assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
     assert.equal((await json(path.join(application, 'package-lock.json'))).packages[''].version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).version, version);
@@ -64,7 +64,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal(await sha256(path.join(bundled, embedded.application.url)), release.application.sha256);
     const metadata = await json(path.join(installer, 'package/package.json'));
     assert.equal(metadata.name, (await json('packages/npm/package.json')).name);
-    assert.equal(metadata.publishConfig.tag, 'test'); assert.equal(metadata.publishConfig.access, 'public');
+    assert.equal(metadata.publishConfig.tag, 'candidate'); assert.equal(metadata.publishConfig.access, 'public');
     assert.equal(metadata.bin.openmotion, 'scripts/npm-installer.mjs');
     const cli = path.join(installer, 'package', metadata.bin.openmotion);
     assert.equal((await runFile(process.execPath, [cli, '--version'])).trim(), version);
@@ -103,7 +103,7 @@ test('DEV npm packages carry their catalog environment without changing the chec
     const built = await packageNpm(path.join(directory, 'build'), '0.6.4-test.2', 'dev');
     assert.equal((await json(built.manifest)).templateEnvironment, 'dev');
     const unpacked = path.join(directory, 'npm'); await extractArchive(built.installer, unpacked);
-    assert.equal((await json(path.join(unpacked, 'package/package.json'))).private, true);
+    assert.equal((await json(path.join(unpacked, 'package/package.json'))).private, false);
     assert.equal((await json(built.manifest)).installer.version, (await json(built.manifest)).version);
     assert.match(built.application, /-dev\.tar\.gz$/);
     const application = path.join(directory, 'app');
@@ -119,9 +119,16 @@ test('stable artifacts stage publication instead of replacing latest and retain 
     const built = await packageNpm(path.join(directory, 'build'), '0.6.4');
     await extractArchive(built.installer, path.join(directory, 'npm'));
     const metadata = await json(path.join(directory, 'npm/package/package.json'));
+    assert.equal((await json(built.manifest)).templateEnvironment, 'prod');
     assert.equal(metadata.version, '0.6.4'); assert.equal(metadata.private, false); assert.equal(metadata.publishConfig.tag, 'stage');
     assert.equal((await json('package.json')).private, true);
     assert.equal((await json('packages/npm/package.json')).private, true);
+    for (const [version, environment] of [['0.6.4-test.3', 'prod'], ['0.6.4', 'dev']]) {
+      const alternate = await packageNpm(path.join(directory, version + '-' + environment), version, environment);
+      const unpacked = path.join(directory, version + '-' + environment + '-npm');
+      await extractArchive(alternate.installer, unpacked);
+      assert.equal((await json(path.join(unpacked, 'package/package.json'))).private, true, 'Non-channel environment builds stay private');
+    }
     const local = await packageNpm(path.join(directory, 'local'));
     await extractArchive(local.installer, path.join(directory, 'local-npm'));
     const localPkg = await json(path.join(directory, 'local-npm/package/package.json'));

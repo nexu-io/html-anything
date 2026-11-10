@@ -62,7 +62,7 @@ After each editing turn, the Agent requests the latest preview in the same chat 
 
 ## Start in Codex
 
-For a packaged test installation, give your Agent the [test installation instructions](https://releases.open-design.ai/open-motion/dev/install.md). They pin an exact npm version and describe isolated setup and native preparation. To reproduce a particular version, use `https://releases.open-design.ai/open-motion/dev/<exact-version>/install.md`; see the [current delivery record and limitations](docs/release-guide.md#published-test-candidate-064-test6). Software test versions default to the production template environment.
+For a packaged test installation, give your Agent the [test installation instructions](https://releases.open-design.ai/open-motion/dev/install.md). They pin an exact npm version and describe isolated setup and native preparation. To reproduce a particular version, use `https://releases.open-design.ai/open-motion/dev/<exact-version>/install.md`; see the [current delivery record and limitations](docs/release-guide.md#published-test-candidate-064-test6). New test builds default to DEV templates; existing published versions retain their embedded defaults.
 
 For source development, clone this public repository at `feature/motion` and open the checkout in Codex. You'll need Git, Node.js **22.18+** with npm, and a Codex CLI that supports plugins. MP4 export also requires Chrome/Chromium and FFmpeg/FFprobe. See [Windows test packages](docs/test-packages.md) for that installation path.
 
@@ -106,4 +106,4 @@ Multiple local conversations can keep different projects open through one native
 
 Studio and MCP read the same disk-cached Prism catalog. `motion_list_templates({})` returns a local JSONL index path, total and catalog version; the Agent searches that file with its own shell tools. `motion_get_template({templateId})` reads one template and its editing guide. `motion_create_project` with `projectType=template` downloads its files into a new editable project.
 
-`npm run dev` reads DEV content. Standard packages read production; `npm run package:phase1 -- --template-env=dev` creates a separate DEV ZIP. The environment is stored in the package, so GUI and MCP agree without extra host configuration. `MOTION_TEMPLATE_ENV` can override it for debugging. DEV uses a separate default workspace and cache; environments never fall back to each other. See [catalog configuration and build commands](docs/template-catalog.md).
+`npm run dev` reads DEV content. New test npm builds read DEV; stable packages read production; `npm run package:phase1 -- --template-env=dev` creates a separate DEV ZIP. The environment is stored in the package, so GUI and MCP agree without extra host configuration. `MOTION_TEMPLATE_ENV` can override it for debugging. DEV uses a separate default workspace and cache; environments never fall back to each other. See [catalog configuration and build commands](docs/template-catalog.md).

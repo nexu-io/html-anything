@@ -7,7 +7,7 @@ import { PUPPETEER_REVISIONS } from 'puppeteer-core';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
-import { checkReleaseVersion } from './release-version.mjs';
+import { checkReleaseVersion, releaseTemplateEnvironment } from './release-version.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 export function checkReleaseLocks(pkg, lockfile, runtime) {
@@ -32,11 +32,11 @@ export function checkReleaseLocks(pkg, lockfile, runtime) {
   }
 }
 
-export async function packageNpm(output = path.join(root, 'dist/npm-local'), version, templateEnvironment = 'prod') {
-  const templateConfig = packageTemplateConfig(templateEnvironment);
+export async function packageNpm(output = path.join(root, 'dist/npm-local'), version, templateEnvironment) {
   output = path.resolve(output);
   const explicitVersion = version !== undefined;
   if (explicitVersion) checkReleaseVersion(version);
+  const templateConfig = packageTemplateConfig(templateEnvironment ?? (explicitVersion ? releaseTemplateEnvironment(version) : 'prod'));
   const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   const lockfile = JSON.parse(await readFile(path.join(root, 'package-lock.json'), 'utf8'));
   const runtime = JSON.parse(await readFile(path.join(root, 'scripts/runtime-lock.json'), 'utf8'));
@@ -61,8 +61,8 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
     const installerPkg = JSON.parse(await readFile(path.join(root, 'packages/npm/package.json'), 'utf8'));
     assert.equal(installerPkg.private, true, 'Keep the source package protected; publish only an explicitly versioned artifact');
     installerPkg.version = version;
-    installerPkg.private = !explicitVersion || templateConfig.environment === 'dev';
-    installerPkg.publishConfig = { access: 'public', registry: 'https://registry.npmjs.org/', tag: version.includes('-test.') ? 'test' : 'stage' };
+    installerPkg.private = !explicitVersion || templateConfig.environment !== releaseTemplateEnvironment(version);
+    installerPkg.publishConfig = { access: 'public', registry: 'https://registry.npmjs.org/', tag: version.includes('-test.') ? 'candidate' : 'stage' };
     await writeJSON(path.join(installer, 'package.json'), installerPkg);
     const commit = (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim();
     const repository = `https://github.com/nexu-io/html-anything/blob/${commit}/`;

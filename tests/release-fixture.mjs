@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeJSON } from '../scripts/runtime-assets.mjs';
-import { sealCandidate, repository, candidateWorkflow, publicationWorkflow, authorizationReceipt } from '../.github/scripts/motion-release.mjs';
+import { sealCandidate, repository, candidateWorkflow, publicationWorkflow, authorizationReceipt, platformReports } from '../.github/scripts/motion-release.mjs';
 
 export async function candidateFixture(t) {
   const work = await mkdtemp(path.join(os.tmpdir(), 'motion-release-test-'));
@@ -11,12 +11,13 @@ export async function candidateFixture(t) {
   const root = fileURLToPath(new URL('../', import.meta.url)), build = path.join(work, 'build'), directory = path.join(work, 'candidate');
   const commit = (await runFile('git', ['rev-parse', 'HEAD'], { cwd: root })).trim(), version = '0.6.4-test.99';
   const app = path.join(work, 'app'), pkg = path.join(work, 'package');
-  await mkdir(path.join(app, 'scripts'), { recursive: true }); await mkdir(path.join(pkg, 'payload'), { recursive: true }); await mkdir(build);
+  await mkdir(path.join(app, 'scripts'), { recursive: true }); await mkdir(path.join(app, 'shared')); await mkdir(path.join(pkg, 'payload'), { recursive: true }); await mkdir(build);
   await writeJSON(path.join(app, 'package.json'), { version }); await writeJSON(path.join(app, 'package-lock.json'), {});
   await writeJSON(path.join(app, 'scripts/runtime-lock.json'), {});
-  const application = path.join(pkg, 'payload', `openmotion-application-${version}.tar.gz`);
+  await writeJSON(path.join(app, 'shared/template-config.json'), { environment: 'dev' });
+  const application = path.join(pkg, 'payload', `openmotion-application-${version}-dev.tar.gz`);
   await runFile('tar', ['-czf', application, '-C', app, '.']);
-  const manifest = { schemaVersion: 1, version, format: 'npm', templateEnvironment: 'prod', commit,
+  const manifest = { schemaVersion: 1, version, format: 'npm', templateEnvironment: 'dev', commit,
     application: { url: './' + path.basename(application), sha256: await sha256(application) },
     locks: { npm: await sha256(path.join(app, 'package-lock.json')), native: await sha256(path.join(app, 'scripts/runtime-lock.json')) },
     runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64', minimumOS: '26.0' } } } };
@@ -38,9 +39,10 @@ export async function candidateFixture(t) {
   const authorization = authorizationReceipt(candidate, { id: 800, run_attempt: 1, actor: { login: 'operator' } }, inputs.action);
   await writeJSON(path.join(directory, 'authorization.json'), authorization);
   for (const platform of ['darwin-arm64', 'win32-x64']) await writeJSON(path.join(directory, `registry-${platform}.json`), {
-    status: 'passed', platform, version, sourceCommit: commit, tgzSHA256: candidate.tgzSHA256,
+    status: 'passed', templateEnvironment: 'dev', platform, version, sourceCommit: commit, tgzSHA256: candidate.tgzSHA256,
     registryColdInstall: 'passed', nativePreparation: 'passed', repeatSetup: 'passed', resources: 'passed', mcpTools: 11, skills: 5,
   });
   await writeJSON(path.join(directory, 'npm-publication.json'), { tgzSHA256: candidate.tgzSHA256, previousLatest: '0.5.0' });
+  await writeJSON(path.join(directory, 'test-promotion.json'), { version, tgzSHA256: candidate.tgzSHA256, action: inputs.action, publicationRun: publicationEnv.GITHUB_RUN_ID, status: 'already-promoted', platformVerification: await platformReports(directory, candidate) });
   return { work, root, build, directory, candidate, inputs, provenance, app, pkg, manifest, authorization, env: publicationEnv };
 }

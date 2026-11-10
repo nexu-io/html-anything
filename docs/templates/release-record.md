@@ -44,7 +44,8 @@ Use PASS / FAIL / NOT RUN and link retained evidence. CI success alone cannot fi
 ## Publication follow-up
 
 - Publication run / npm exact version / registry hash and integrity:
-- Native registry cold-install report per platform:
+- Native registry cold-install report per platform, including embedded/installed template environment:
+- Verified npm test promotion / prior test version / promotion run:
 - Immutable R2 version / release-record / guide URL and verified hash:
 - Default entry / previous entry / final publication phase:
 - Failure, recovery or user feedback:

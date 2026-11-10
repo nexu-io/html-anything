@@ -16,8 +16,8 @@ on:
       template_environment:
         description: 'Template configuration platform used by the package'
         type: choice
-        options: [prod, dev]
-        default: prod
+        options: [dev, prod]
+        default: dev
       publish:
         description: 'Publication is disabled during migration; leave unchecked'
         type: boolean
@@ -89,7 +89,7 @@ jobs:
       - name: Build immutable standalone artifacts
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
-          TEMPLATE_ENVIRONMENT: ${{ inputs.template_environment || 'prod' }}
+          TEMPLATE_ENVIRONMENT: ${{ inputs.template_environment || 'dev' }}
         run: |
           version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
           if [ "$PACKAGE_FORMAT" = npm ]; then
@@ -101,14 +101,14 @@ jobs:
             done
           fi
       - name: Generate candidate installation guide
-        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'prod') == 'prod'
+        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
         run: |
           version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
           candidate=$(node --input-type=module -e 'import fs from "node:fs"; const m=JSON.parse(fs.readFileSync(process.argv[1]));process.stdout.write(m.installer.url.replace(/^\.\//,""));' "dist/$version/release-npm.json")
           node --experimental-strip-types scripts/install-guide.mjs "dist/$version/$candidate" .artifacts/install-guide --candidate
           node .github/scripts/motion-scan.mjs package "dist/$version/$candidate" "$RUNNER_TEMP/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
       - name: Retain candidate installation guide for review
-        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'prod') == 'prod'
+        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
         uses: actions/upload-artifact@v7.0.2
         with:
           name: motion-install-guide-preview-${{ github.run_id }}-${{ github.run_attempt }}

@@ -35,7 +35,7 @@ Repeat an explicit `--home` from setup on prepare. Setup installs the selected h
 
 Setup copies the checked application into a managed writable directory and installs its locked production npm dependencies. The application and user projects do not run from the temporary npx cache. Prepare or first native use prepares the platform's independent native archives concurrently: browser/FFmpeg/ffprobe separately on macOS, browser/combined media on Windows. It waits for all components and reports a failure if any component fails; successful checked components remain reusable. This is not an offline package.
 
-There is no persisted switch-environment command in this version. Internal DEV testing uses its separately configured installation; merely setting an environment variable while running setup does not configure a later desktop Agent. Do not silently fall back from one environment to another.
+There is no persisted switch-environment command in this version. Test versions embed DEV defaults and use an environment-specific installation; stable versions embed prod. DEV access still requires the service network/authentication. A public npm package does not grant access or bundle private catalog contents. When changing environment, use a separate home/data/profile; merely setting an environment variable while running setup does not configure a later desktop Agent. Do not silently fall back from one environment to another.
 
 ## Upgrade, recovery and feedback
 
