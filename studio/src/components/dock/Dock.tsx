@@ -233,6 +233,8 @@ function Root({
       disposeRef.current();
       const options = { panels, storageKey, dockWidth, fixedLayout };
       restoreOrBuild(api, projectId, options);
+      const controller = createController(api, options);
+      if (fixedLayout) for (const id of panels) controller.open(id);
       const timeline = api.getPanel("timeline");
       if (fixedLayout && timeline) timeline.group.header.hidden = true;
       applySideMinimums(api, dockWidth());
@@ -243,7 +245,7 @@ function Root({
       const resizeObserver = new ResizeObserver(() => applySideMinimums(api, dockWidth()));
       if (root) resizeObserver.observe(root);
       const store = useDockLayoutStore.getState();
-      store.attach(createController(api, options), panels);
+      store.attach(controller, panels);
       store.sync(snapshot(api));
       const pending = store.takePendingActivation();
       if (pending) store.activatePanel(pending);

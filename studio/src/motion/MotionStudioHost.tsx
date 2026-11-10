@@ -3,11 +3,13 @@ import { I18nProvider, useI18n } from "../i18n/I18n";
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useStudioShellContext } from '../contexts/StudioContext';
 import { TimelineHistoryButtons } from '../components/TimelineHistoryButtons';
+import { Dock } from '../components/dock/Dock';
 import { isStudioEditSaving } from '../utils/studioPendingEdits';
 import { MotionIcon } from './icons';
 import { StudioHostContext, type StudioHost } from './StudioHost';
 import { WorkspaceFrame, WorkspaceMenuButton, useWorkspaceChrome, useOptionalWorkspaceChrome } from './WorkspaceFrame';
 import { MotionHistoryProvider, useMotionHistoryOperation } from './MotionHistoryState';
+import { MotionHistoryPanel } from './MotionHistoryPanel';
 import { MediaGatewayProvider } from './MediaGatewayContext';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
@@ -122,6 +124,7 @@ const host: StudioHost = {
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,
   historyActions: <WorkspaceHistoryActions />,
+  panels: <Dock.Panel id="history"><MotionHistoryPanel /></Dock.Panel>,
   previewAction: <></>,
   windowMenu: <></>,
   themeToggle: false,

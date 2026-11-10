@@ -8,9 +8,9 @@
 
 The Motion host now exposes an MVP editor. `StudioHost.mvpEditor` gates product entry points without deleting native editing, source, history or MCP services. The root route resolves the active project before mounting `ArtifactViewer`; home, conversation and browser-tab components are not mounted. `WorkspaceFrame` lists searchable projects, waits for pending saves before switching, and opens the project drawer on demand, including embedded views.
 
-The visible panels are Compositions, Assets, Catalog, Preview, Design, Layers, Renders and Timeline. `Dock.Root` uses fixed positions and `motion.mvp.dock.v1` preferences; resizing dividers and restoring their sizes remain supported. Panel close/move/reset controls and layout presets are hidden. Preview alone supports temporary expansion within the editor. The allowed-panel list also rejects programmatic reopening of excluded panels.
+The visible panels are Compositions, Assets, Catalog, Preview, Design, Layers, Renders, Version history and Timeline. `Dock.Root` uses fixed positions and `motion.mvp.dock.v1` preferences; resizing dividers and restoring their sizes remain supported. Newly enabled fixed panels are added to saved layouts without resetting divider sizes. Panel close/move/reset controls and layout presets are hidden. Preview alone supports temporary expansion within the editor. The allowed-panel list also rejects programmatic reopening of excluded panels.
 
-The header retains rename, transient save/error status, templates, undo/redo and native export. Save status is not a history action and disappears when idle. The sidebar footer keeps theme/language. Integration/model setup, Capture, Inspector toggle, version history and preview/slideshow controls are hidden. Existing native history and Agent version APIs remain unchanged.
+The header retains rename, transient save/error status, templates, undo/redo and native export. Save status is not a history action and disappears when idle. The sidebar footer keeps theme/language. Integration/model setup, Capture, Inspector toggle and preview/slideshow controls are hidden. The right-side Version history tab reuses `MotionHistoryPanel` for entries, changed-file details, pins and restores. Existing native history and Agent version APIs remain unchanged.
 
 The inspector retains text, font, size, color, three alignments, solid fill, opacity, geometry and Ask Agent. Advanced animation/style controls, recording, rotation, variables and blur are hidden. Opening an authored project must not remove its existing animations, gradients, effects or styles. Canvas selection, drag, resize, crop, text editing and context actions remain; canvas snapping stays enabled without guide/grid controls.
 
@@ -59,7 +59,7 @@ Model configuration and media generation are hidden in the MVP editor. `MediaGat
 | 编辑器主题 | `studio/src/motion/theme.css` |
 | Dock 与面板注册 | `studio/src/components/dock/` |
 | Legacy preview/layout presets (hidden in MVP) | `studio/src/motion/MotionLayoutControls.tsx` |
-| Hidden history panel and retained native history API | `studio/src/motion/MotionHistoryPanel.tsx` |
+| Version history panel and native history API | `studio/src/motion/MotionHistoryPanel.tsx` |
 | Editor language resources, formatting and language menu | `studio/src/i18n/` |
 | 时间轴、片段、关键帧 | `studio/src/player/` |
 | 画布、属性与动画编辑 | `studio/src/components/editor/` |
