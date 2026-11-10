@@ -1,10 +1,9 @@
 import { accessSync, constants, statSync } from 'node:fs';
 import path from 'node:path';
-import { DEFAULT_HISTORY_ROOT, HISTORY_START } from '@hyperframes/studio-server';
 import type { ProjectHistory } from '@hyperframes/studio-server';
 
 /** Filter the offered steps; native undo/redo still validates files immediately before writing. */
-export function withAvailableHistorySteps(history: ProjectHistory, historyRoot = DEFAULT_HISTORY_ROOT): ProjectHistory {
+export function withAvailableHistorySteps(history: ProjectHistory, historyRoot: string): ProjectHistory {
   const home = path.join(historyRoot, history.projectId);
   // shortcut: the pinned 0.9.7 API has no blob-existence probe; replace this when upstream exposes one.
   const readable = (hash: string) => /^[a-f0-9]{64}$/.test(hash) && ['blobs', 'aside'].some(directory => {
@@ -20,7 +19,7 @@ export function withAvailableHistorySteps(history: ProjectHistory, historyRoot =
       const entry = history.next(direction, who);
       if (!entry) return undefined;
       const entries = history.list();
-      const current: Record<string, string | null> = history.peek(entries.at(-1)?.id ?? HISTORY_START) ?? {};
+      const current: Record<string, string | null> = history.peek(entries.at(-1)?.id ?? 'start') ?? {};
       // A pending step is not in the log yet, but its after hashes describe the observed files.
       if (!entries.some(saved => saved.id === entry.id)) {
         for (const file of entry.files) current[file.path] = file.after;
