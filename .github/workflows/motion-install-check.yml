@@ -21,6 +21,7 @@ permissions:
   actions: read
 
 env:
+  # shortcut: PR regression pins test.7; refresh it before its candidate artifact expires.
   MOTION_VERSION: ${{ inputs.version || '0.6.4-test.7' }}
 
 jobs:
