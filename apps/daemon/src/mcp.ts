@@ -2,7 +2,7 @@ import type { McpServer, StandardSchemaWithJSON } from "@modelcontextprotocol/se
 import { listGuidance, readGuidance } from "./content/guidance.js";
 import { descriptions, Fault, type Input, type Operation, type Output, schemas } from "./contract.js";
 
-export { instructions } from "./content/guidance.js";
+export { guidanceSkills, instructions, listGuidance, localGuidance, readGuidance } from "./content/guidance.js";
 export type Execute = <K extends Operation>(operation: K, input: Input<K>) => Promise<Output<K>>;
 /** Business tool descriptors and routing belong to the application; hosts only attach transports. */
 export function register(server: McpServer, execute: Execute): void {

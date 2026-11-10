@@ -87,6 +87,11 @@ for (const [name, { directory, pkg }] of [...dependencies].sort(([a], [b]) => a.
   }
 }
 await writeFile("dist/NOTICE", notices);
+const { localGuidance } = await import("@open-motion/daemon/mcp");
+for (const file of localGuidance()) {
+  await mkdir(dirname(join("dist", file.path)), { recursive: true });
+  await writeFile(join("dist", file.path), file.content);
+}
 const { metadata } = await import("./dist/index.mjs");
 const manifests = metadata(product.version);
 await mkdir("dist/.codex-plugin", { recursive: true });

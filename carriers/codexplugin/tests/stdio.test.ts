@@ -1,12 +1,13 @@
 import { spawn } from "node:child_process";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { once } from "node:events";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join, posix, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
-import { readDirectory } from "@odsuite/sidecar";
+import { observeProcesses, readDirectory } from "@odsuite/sidecar";
 import { schemas } from "@open-motion/daemon/contract";
 import type { Status } from "@open-motion/standalone";
 import {
@@ -67,12 +68,33 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
     expect((await client.callTool({ name: "session_create", arguments: command })).structuredContent).toEqual(session);
     expect(client.getInstructions()).toContain("open-motion://guidance");
     const resources = await client.listResources();
-    expect(resources.resources.map((entry) => entry.name)).toEqual([
-      "production",
-      "native",
-      "templates",
-      "verification",
+    const pluginManifest = JSON.parse(await readFile(join(plugin, ".codex-plugin", "plugin.json"), "utf8"));
+    expect(pluginManifest.skills).toBe("./skills/");
+    const guideManifest = JSON.parse(await readFile(join(plugin, "skills", "manifest.json"), "utf8")) as {
+      skills: { name: string }[];
+      documents: { documentId: string; path: string; contentHash: string; localContentHash: string }[];
+    };
+    expect(guideManifest.skills.map((entry) => entry.name)).toEqual([
+      "motion-production",
+      "motion-director",
+      "motion-template-to-video",
+      "motion-recreate",
+      "motion-video-to-template",
     ]);
+    expect(guideManifest.documents).toHaveLength(25);
+    expect(resources.resources).toHaveLength(25);
+    expect(resources.resources.map((entry) => entry.name)).toEqual(
+      expect.arrayContaining([
+        "production",
+        "native",
+        "templates",
+        "verification",
+        "director",
+        "template",
+        "recreate",
+        "videotemplate",
+      ]),
+    );
     for (const entry of resources.resources) {
       const document = await client.readResource({ uri: entry.uri });
       const text = document.contents[0]!;
@@ -80,7 +102,21 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
       const http = await fetch(`${bootstrap.daemon}/guidance/${entry.name}`, {
         headers: { authorization: `Bearer ${bootstrap.token}` },
       });
-      expect(await http.json()).toEqual(JSON.parse(text.text));
+      const canonical = JSON.parse(text.text) as { documentId: string; contentHash: string; content: string };
+      expect(await http.json()).toEqual(canonical);
+      const local = guideManifest.documents.find((item) => item.documentId === canonical.documentId)!;
+      const localContent = await readFile(join(plugin, "skills", local.path), "utf8");
+      expect(`sha256:${createHash("sha256").update(localContent).digest("hex")}`).toBe(local.localContentHash);
+      expect(local.contentHash).toBe(canonical.contentHash);
+      const body = localContent.replace(/^---\n[\s\S]*?\n---\n\n/, "");
+      const restored = body.replace(/\]\(([^)]+)\)/g, (match, reference: string) => {
+        if (/^[a-z]+:/.test(reference)) return match;
+        const target = posix.normalize(posix.join(posix.dirname(local.path), reference));
+        const document = guideManifest.documents.find((candidate) => candidate.path === target);
+        expect(document).toBeDefined();
+        return `](${document!.documentId})`;
+      });
+      expect(restored).toBe(canonical.content);
     }
     const catalog = (await client.callTool({ name: "template_list", arguments: {} })).structuredContent as {
       templates: { id: string; contentHash: string; title: string }[];
@@ -194,6 +230,32 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
     const directory = await readDirectory(data);
     expect(directory.manager.phase).toBe("closed");
     expect(directory.instances.every((i) => i.phase === "retired")).toBe(true);
+    const processes = await observeProcesses(data);
+    expect(processes).toEqual([]);
+    const evidence = join(
+      fileURLToPath(new URL("../../../", import.meta.url)),
+      ".artifacts",
+      "guidance-acceptance",
+      randomUUID(),
+    );
+    await mkdir(evidence, { recursive: true });
+    await writeFile(
+      join(evidence, "result.json"),
+      JSON.stringify(
+        {
+          skills: guideManifest.skills.map((entry) => entry.name),
+          documents: guideManifest.documents,
+          bodiesIdenticalAfterLocalLinkResolution: true,
+          transports: ["authenticated HTTP", "stock SDK stdio MCP", "relocated local files"],
+          sourceOperationAndMaximumMediaRoundtrip: true,
+          manager: directory.manager.phase,
+          processes,
+          instances: directory.instances.map((instance) => ({ service: instance.service, phase: instance.phase })),
+        },
+        null,
+        2,
+      ),
+    );
     passed = true;
   } finally {
     await client.close();
