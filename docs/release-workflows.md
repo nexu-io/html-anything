@@ -1,105 +1,106 @@
-# Manual candidate and test publication workflows
+# Motion test release: build, accept, approve
 
-These workflows implement controlled delivery of the complete `@openmotion/app` npm application. They do not run on a push, PR merge, tag or schedule. This feature PR does not enable them on the default branch, configure npm trust, publish anything, change `main` or rename the repository.
+The daily entry is **Actions → Motion test release → Run workflow**. It builds a complete `@openmotion/app` candidate, pauses at one protected environment approval, then publishes those same bytes. It never runs on pushes, PR merges, tags or a schedule. This implementation does not register workflows on `main`, configure repository/npm permissions, publish a package or switch the product main branch.
 
-| Capability | Test version | Stable version |
-| --- | --- | --- |
-| Package builder | Supports `X.Y.Z-test.N[.N]` | Supports `X.Y.Z` |
-| Manual candidate and publication workflows | Implemented here; require administrator enablement | Not implemented |
-| npm channel | `test` | Planned: verify under `stage`, then separately authorize `latest` |
-| Hosted guide paths | Test moving/versioned paths | Stable moving/versioned paths supported by the storage helper; no stable publication job |
+| Operator step | Automated work |
+| --- | --- |
+| Enter a new version and run | Freeze the current `feature/motion` SHA, check/build/scan once, retain the candidate and show download/install instructions |
+| Download and accept the candidate | Retain the exact package identity and generate `acceptance.md`; no publication yet |
+| Independently approve with `PASS` | Publish the accepted tgz to npm `test`, perform native registry checks, archive version snapshots and update the default guide last |
 
-Both public channels use prod template defaults. A test software version does not select private DEV templates. Stable acceptance rules exist in [the acceptance guide](release-guide.md); they are not an automated stable release pipeline.
+Public test software uses **prod templates**. A URL containing `dev` selects the test software channel, not private DEV template data. Stable version construction and URL contracts exist, but a stable release workflow is not implemented.
 
-## Administrator setup before first use
+## First-time administrator setup
 
-The current default `main` contains the legacy project. GitHub requires a manual workflow to be registered on the default branch before showing its Run workflow entry. Register the reviewed release controls on `main` through a separately authorized PR; do not copy the Motion application or force-push its history. Both entries must run with **Use workflow from: main**. Feature-branch invocations fail closed.
+The default `main` currently contains the legacy project. GitHub must register these reviewed control files on the default branch through a separately authorized PR before the manual entries are available. This registration does not copy the Motion application onto `main` or rewrite its history. Always select **Use workflow from: main**.
 
-The minimal registration includes:
+Register these files together:
 
-- `.github/workflows/motion-candidate.yml` and `motion-publish-test.yml`.
+- `.github/workflows/motion-publish-test.yml` and `motion-publication-recovery.yml`; remove an older `motion-candidate.yml` registration if one exists.
 - `.github/scripts/motion-release.mjs`, `motion-scan.mjs`, `motion-registry-smoke.mjs`, `publish-install-guide.mjs` and `.github/gitleaks.toml`.
-- `scripts/runtime-assets.mjs`, `release-version.mjs`, `install-guide.mjs` and `docs/install.md`.
+- `scripts/runtime-assets.mjs`, `release-version.mjs`, `install-guide.mjs`, `docs/install.md` and `docs/templates/release-record.md`.
 
-Protect changes to these trusted files and `main`. Create the **`motion-test-publish` GitHub Environment**, restrict deployment branches to `main`, require an independent reviewer and prevent self-review. Referencing an environment in YAML does not configure those protections: GitHub can create an unprotected environment automatically. Verify the rejection/approval behavior before enabling publication.
+Protect changes to the trusted control files and `main`. Configure the **`motion-test-publish` GitHub Environment** with required independent reviewers, **prevent self-review**, **disable administrator bypass**, and allow exactly the `main` **branch** (no tag or wildcard policy). The workflow checks these actual settings before it can request approval and again inside the protected npm job. A missing or unprotected environment fails closed; naming an environment in YAML alone does not configure it. Test both rejection and approval before enabling real publication.
 
-In npm package settings for `@openmotion/app`, configure a GitHub trusted publisher for owner `nexu-io`, repository `html-anything`, workflow `motion-publish-test.yml`, environment `motion-test-publish`, allowing **publish**. The workflow uses GitHub-hosted runners and Node 26.11.1/npm 11.20.0 with `id-token: write`; it does not require a stored npm token. Do not grant tag-management actions for this workflow. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
+For `@openmotion/app`, configure npm trusted publishing for owner `nexu-io`, repository `html-anything`, workflow **`motion-publish-test.yml`**, environment **`motion-test-publish`**, allowing publish. The workflow uses GitHub-hosted runners, Node 26.11.1/npm 11.20.0 and `id-token: write`; no stored npm token is needed. Do not grant tag-management actions. The recovery caller is not an npm trusted publisher and never calls npm publish. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
 
-Keep the existing R2 settings; only the final snapshot step receives the credentials:
+Reuse the existing R2 settings. Only the final snapshot step receives the storage credentials:
 
-| Setting | Value or role |
+| Setting | Role |
 | --- | --- |
 | Secrets `CLOUDFLARE_R2_RELEASES_AK`, `CLOUDFLARE_R2_RELEASES_SK` | Bucket-scoped S3 write credentials |
 | Variable `CLOUDFLARE_R2_RELEASES_BUCKET` | `open-design-releases` |
-| Variable `CLOUDFLARE_R2_RELEASES_URL` | The approved R2 S3 HTTPS origin |
+| Variable `CLOUDFLARE_R2_RELEASES_URL` | Approved R2 S3 HTTPS origin |
 | Variable `CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN` | `https://releases.open-design.ai` |
 
-Protect publication control changes as well as the environment. The application source is checked out separately at its selected SHA. Neither that source nor the downloaded application executes in a credentialed job. Native installation runs in separate jobs without npm/R2 credentials or OIDC permission.
+## 1. Build
 
-## 1. Build a candidate without publication
+Open **Motion test release → Run workflow**, select `main` and fill in **version**, for example `0.6.4-test.7`. Use a new `MAJOR.MINOR.PATCH-test.N[.N]`; never change bytes under an existing published version.
 
-After review and integration into `feature/motion`, open **Actions → Motion candidate build → Run workflow**. Select `main` for the workflow and supply:
+Normally leave **source_sha** empty. The build fetches `feature/motion`, resolves its current full SHA once, records it and checks out exactly that SHA. To test a particular reviewed integrated commit, supply its full 40-character SHA. A later branch update cannot silently change this candidate. Confirm the chosen source has completed the required integration review.
 
-| Input | Example | Requirement |
-| --- | --- | --- |
-| `source_sha` | A full 40-character Git SHA | Already integrated into `feature/motion`; not a mutable branch name |
-| `version` | `0.6.4-test.7` | New `MAJOR.MINOR.PATCH-test.N[.N]`; never reuse a version for changed bytes |
+The build scans tracked source before dependency installation, runs the technical checks/Studio regression/eleven-Tool ZIP E2E, builds the final prod npm tgz once and scans its outer and inner archives. It does not have npm OIDC or R2 credentials. Successful output is retained as `motion-candidate-<run-id>-<attempt>` for **30 days**.
 
-The trusted workflow validates ancestry, scans tracked source before installing dependencies, runs the technical checks/Studio regressions/eleven-Tool ZIP E2E, and builds the final npm tgz **once** with prod template defaults. It scans both the outer npm package and its inner application archive, then freezes the guide and records.
+The artifact contains eight files: `openmotion-app-<version>.tgz`, `release-npm.json`, `source-scan.json`, `package-scan.json`, `install.md`, `install-record.json`, `acceptance.md` and `candidate.json`. The schema-2 candidate records source/control SHA, producer run/attempt and file hashes. Its acceptance state remains `not-performed`. The generated checklist has the machine identity filled in and human results set to `NOT RUN`.
 
-Download the `motion-candidate-<run-id>-<attempt>` Actions artifact within its **30-day retention**. Preserve it in the internal acceptance record before expiry; an expired candidate cannot be published through this entry and must be rebuilt under a new version. Artifacts in this public repository are not an internal-data channel.
+The frozen `install.md` pins a registry version which is not published yet. Do not hand it out as a working npm installation link before publication.
 
-The artifact has seven files: the complete `openmotion-app-<version>.tgz`, `release-npm.json`, `source-scan.json`, `package-scan.json`, `install.md`, `install-record.json` and `candidate.json`. The latter records source/workflow SHA, run/attempt, package SHA256, npm SHA512 integrity and every file hash. Its acceptance state is `not-performed`. The frozen guide is intended for publication **after npm succeeds**; do not distribute it as a working registry entry before publication.
+## 2. Accept the downloaded package
 
-The run summary gives the source/version/hash for reviewers. Build success is technical evidence, not an acceptance approval. Use [the acceptance checklist](release-guide.md) to install that tgz in isolated profiles, test upgrades, templates, real Agent creation and human audiovisual playback. Record PASS / FAIL / NOT RUN, supported OS/host, known issues, owner and prior usable version. Keep the accepted artifact byte-for-byte; do not rebuild it for publication.
+Open the run summary and download/extract its candidate artifact. Follow the isolated profile, application home, project data and Skills recipes in [npm installation](npm-installation.md). Use the **local tgz**, replacing `HOST` with the actual selected supported host:
 
-## 2. Publish the accepted test candidate
+```sh
+npx --yes --package "./openmotion-app-0.6.4-test.7.tgz" openmotion setup --host HOST
+npx --yes --package "./openmotion-app-0.6.4-test.7.tgz" openmotion prepare
+```
 
-Use [the record template](templates/release-record.md). Export the completed internal acceptance record as a fixed UTF-8 file, keep it internally, and calculate its SHA256 (`shasum -a 256 acceptance.md`, or PowerShell `Get-FileHash acceptance.md -Algorithm SHA256`). This digest links public release identity to the retained private acceptance evidence; it does not itself prove that testing happened. The environment reviewer must inspect the actual record.
+These short commands require the isolation options/environment from the platform recipe first. Repeat the same explicit application home on setup and prepare. Do not use the unpublished npm version or your normal daily Agent profile for candidate acceptance. Copy the one tgz into a clean consumer directory; its application is embedded and needs no source checkout or sidecar archive.
 
-Open **Actions → Motion test publication → Run workflow**, use `main`, and supply:
+Complete the generated **`acceptance.md` privately**: record PASS / FAIL / NOT RUN, supported OS/host, template/catalog identity, existing-data preservation, real Agent creation/edit/export, normal-speed human audio/video playback, known issues and recovery. [The acceptance guide](release-guide.md) defines the checks. Build success cannot fill the human results. Keep that completed evidence against the generated candidate identity; do not edit or re-upload the frozen public candidate artifact. No run ID, tgz hash or private-record hash needs to be typed into a second release form.
 
-| Input | Meaning |
-| --- | --- |
-| `candidate_run_id` | Successful trusted candidate build run ID; the current successful attempt is selected |
-| `tgz_sha256` | Exact accepted SHA256 from that candidate |
-| `acceptance_sha256` | Digest of the completed, retained internal acceptance record; no private URLs or logs |
-| `action` | `publish-test` to publish/promote; default `archive-only` only fills snapshots for an already published identical version |
-| `approved` | Explicitly check after reviewing this exact identity; defaults to false |
+## 3. Approve once
 
-An independent environment reviewer approves the protected jobs. A rerun or workflow invocation is publication authorization and must be treated accordingly. Do not run the workflow merely to check its configuration.
+The npm job waits at **Review deployments → motion-test-publish**. An independent configured reviewer inspects this run's exact version/source/hash and the internally retained acceptance record. If required checks failed or remain incomplete, reject. If accepted, enter only **`PASS`** in the approval comment and approve. The comment is a public, non-sensitive authorization signal; never paste internal URLs, logs, credentials or user material there.
 
-The pipeline then:
+The protected job rechecks the environment and reads GitHub's review history. It requires an independent approved review with that exact comment. The receipt records actual reviewer logins, the observed time and a review-history digest, not the triggering operator as the approver. GitHub's history is run-scoped and has no per-review timestamp/attempt binding: the receipt says so, and the environment gate enforces approval for the job execution. The receipt does not prove that the private tests happened or cryptographically attest the private acceptance document. Keep the completed internal record.
 
-1. Verifies the originating repository, manual workflow/main ref, successful run/attempt, GitHub artifact digest and all candidate hashes; rechecks integrated source ancestry and rescans source plus both archives using the trusted control policy.
-2. In the protected npm job, publishes **only the accepted tgz bytes** with `--tag test --ignore-scripts --provenance=false`. An existing identical version resumes without another publish; a different integrity fails. `archive-only` requires an existing identical version and never changes npm tags.
-3. On separate macOS 26 arm64 and Windows Server 2025 x64 runners, downloads the exact registry version anonymously using empty npm configs and a fresh cache, verifies SHA256/SHA512, installs a pinned Codex CLI into a temporary prefix, runs isolated setup/repeat setup, prepares Chromium/FFmpeg/ffprobe, and checks MCP Tools/resources and installed Skill files. This is native technical acceptance; Windows Server results do not replace Windows desktop/real model/human playback acceptance. No model credentials are provided.
-4. Requires both platform reports, confirms exact registry identity and test tag, rejects an unexpected `latest` change, then writes immutable R2 snapshots and checks the **canonical public bytes**. Only after all of these succeed does `publish-test` conditionally advance the default test guide using its prior ETag. `archive-only` never reads or writes the default guide.
+After approval the workflow automatically:
 
-The workflow does not move `latest`, publish a stable version, create a GitHub Release, announce a release or update installed clients. Keep the package pinned by exact version in every guide. Node/Agent and checked native downloads remain prerequisites as documented in [installation](npm-installation.md).
+1. Publishes only the accepted tgz with `--tag test --ignore-scripts --provenance=false`, or verifies an already published identical version. It rejects an older test version than the current npm test channel and never overwrites different bytes.
+2. On separate macOS arm64 and Windows x64 runners without publication credentials, anonymously downloads the exact registry version, verifies its hashes, prepares Chromium/FFmpeg/ffprobe, runs isolated setup/repeat setup and checks the eleven Tools/resources and five Skills. These are native technical checks, not real-model or human playback acceptance.
+3. Requires both platform reports, archives immutable R2 snapshots and checks canonical public bytes. Only then conditionally advances the default test guide. R2 needs no second approval: it consumes the retained approval from the successful npm job plus both native reports. The snapshot job executes trusted `main` controls and never executes the candidate application.
+4. Shows the exact version, publication phase, versioned installation guide and default guide in the run summary.
 
-OIDC still authenticates the publisher. Automatic npm provenance is explicitly disabled: it would describe the publication workflow's `main` SHA, while the accepted application was built from a different selected source SHA. `candidate.json`, the embedded manifest, source/lock hashes and the immutable release record provide the actual application identity and candidate build reference. These records are not a signed build-provenance attestation. Supporting such an attestation requires a separate implementation that binds the real candidate build and its inputs; do not substitute the workflow SHA or rewrite GitHub's source context.
+OIDC authenticates the publisher. Automatic npm provenance remains disabled because this trusted control workflow's `main` SHA differs from the selected application source SHA. Candidate/manifest/lock/hash records provide traceability, not a signed build attestation.
 
-## Immutable snapshots and moving entries
+## Versions and records
 
 | Channel | Moving guide, updated last | Immutable guide |
 | --- | --- | --- |
-| Test software with prod templates | `/open-motion/dev/install.md` | `/open-motion/dev/<version>/install.md` |
-| Stable software with prod templates | `/open-motion/install.md` | `/open-motion/<version>/install.md` |
+| Test software, prod templates | `/open-motion/dev/install.md` | `/open-motion/dev/<version>/install.md` |
+| Stable software, prod templates | `/open-motion/install.md` | `/open-motion/<version>/install.md` |
 
-The stable path contract is supported by the storage helper; **this PR adds no stable publication workflow**. Existing `/versions/<version>/install.md` bytes remain immutable and are not overwritten. `dev` in a URL means test software, not DEV template data. Public candidate/publish workflows offer no DEV package option. Use the separate local/private DEV instructions for internal templates; environment variables cannot turn network authorization into access.
+This workflow does not publish stable versions or move npm `latest`. The storage helper supports stable paths without providing a stable publication job. Existing legacy `/versions/<version>/install.md` objects remain immutable.
 
-Each test version directory additionally archives the exact tgz, manifest, scan reports, `install-record.json`, `candidate.json`, both registry reports and `release-record.json`. No sidecar application download is needed to install the complete npm tgz. The public release record includes source/hash/integrity, candidate workflow identity, acceptance-record digest, approving actor, publication run, platform evidence hashes and timestamp. Never put internal Feishu links, acceptance material or user projects in it.
+Each test version also archives the exact tgz, manifests, blank generated acceptance checklist, scans, candidate identity, both platform reports and the schema-2 release record. The release record contains package/source identity and the run-scoped approval receipt. Completed private acceptance material is never uploaded. A previous immutable release record is preserved during snapshot recovery, while the recovery attempt retains its own fresh approval receipt.
 
-Actions retains each npm publication state and R2 attempt/prior default instructions for 30 days. R2 version snapshots persist under the bucket's separately managed lifecycle; do not apply an expiry policy without an agreed retention decision. The original candidate artifact must still exist for a publication retry.
+Builds and approval waits do not hold a workflow-wide release lock, so another version can build. npm writes and default-guide writes have separate job-level concurrency groups. GitHub concurrency is not a durable FIFO: it retains one running and one newest pending job, so do not enqueue a batch of releases for automatic publication; a displaced run keeps its candidate and can be reviewed/rerun deliberately. Approve one release at a time. A candidate superseded after npm publication can retain version snapshots without moving the default. Default-guide version comparison plus ETag conditional writes prevent a late older completion from rolling a newer entry back; unrecognized or conflicting same-version guide bytes require inspection.
 
-## Failure, retry and recovery
+Actions artifacts and attempt records expire after **30 days**. R2 snapshots follow the separately managed bucket lifecycle. Approval does not extend artifact retention. Expired/deleted artifacts fail closed; keep internal evidence before expiry and build a new version when necessary.
 
-- A failed source/package scan blocks the candidate or publication before credentials are used. Gitleaks 8.30.1 is checksum-pinned; source-controlled ignore files and inline allow markers cannot bypass the trusted policy. Reports expose rule/path/line, never matched secrets. Targeted rules also reject private files, internal links and personal paths. Narrow exceptions cover the already public DEV routing hostname, synthetic redaction fixtures and the exact approved public analytics ingestion identifier. Scans cover the selected source tree and final package, **not all historical Git objects** or business classification of every binary asset; reviewers still inspect content, dependencies and licenses.
-- npm success followed by registry/platform/R2 failure leaves the default guide unchanged. Inspect `npm-publication.json`, the failed job and `release-attempt.json`/`publication.json`. The npm version may already be public; do not rebuild, overwrite or blindly republish it. Rerun with the same candidate/hash/acceptance digest after fixing infrastructure. If bytes change, start a new version.
-- GitHub's **Re-run failed jobs** and **Re-run all jobs** are supported. Verify, npm and each native platform expose their actual immutable upload ID as a job output. A downstream retry downloads those retained producer IDs within the same workflow run instead of guessing names from its own attempt number. Mac and Windows have separate outputs, so a failed Mac check can rerun while retaining the successful Windows report. Each attempt still creates new artifacts; previous attempts and the original candidate are not overwritten. Expired/deleted producer artifacts fail the download rather than falling back to another package.
-- Snapshot writes use conditional create and byte comparison. Identical existing objects resume; any different version object stops the run. A CDN readback failure stops promotion. A failure after `fixed-write-attempted` may mean the default write completed: inspect storage and canonical URL before recovery.
-- `archive-only` is for an identical existing npm version and missing immutable snapshots. It does not restore a missing npm `test` tag or roll back a moving guide. Those are separate reviewed channel/recovery actions. An unexpected `latest` change requires investigation; this workflow does not silently remove or rewrite it.
-- Reverting a guide or npm tag does not downgrade clients or restore project data. Use an accepted compatible reinstall or retained backup according to [recovery](release-guide.md#recovery-and-feedback). If no compatible prior version exists, state that.
+## Failure and snapshot recovery
 
-The currently published `0.6.4-test.6` predates these candidate records. Its historical evidence remains in the acceptance guide; do not fabricate a new trusted candidate run or republish it merely to fill the new format.
+- Before approval: a scan/build/configuration failure or rejection publishes nothing. Cancel/reject an unwanted candidate. Fix code under a new version when bytes change.
+- After approval: npm may already be public if a native or R2 stage fails. The default guide remains unchanged until its checks pass. Inspect retained npm state and release-attempt/publication files; do not rebuild or blindly republish.
+- Use **Re-run failed jobs** for a partial failure. Consumers use successful producer artifact IDs rather than guessing their own attempt. A retry of the protected npm job requires approval again; a snapshot-only retry continues under its retained successful approval. **Re-run all jobs rebuilds the candidate** and requires renewed acceptance; do not use it to resume already-published changed bytes.
+- **Motion snapshot recovery** is a separate maintenance entry. Select `main`, enter the original daily release run ID and independently approve its existing candidate. It skips the build, requires an already published identical npm version, repeats native checks and fills missing immutable snapshots. It never publishes npm, moves npm tags or accesses the moving guide. If the latest candidate-producing attempt is failed, ambiguous, expired or incompatible, it stops rather than guessing another artifact.
+- Version writes use conditional create and byte comparison. Same bytes resume; different immutable bytes stop. A public readback error blocks promotion. A failure after `fixed-write-attempted` may mean the moving write completed: inspect storage and its canonical URL before retrying.
+- An unexpected npm `latest` change stops promotion. This workflow does not silently repair tags. Channel rollback is a separate reviewed operation and does not downgrade installed clients or restore their data.
+
+Source/package scans are not a scan of every historical Git object or business classification of all binary assets; reviewers still check content, dependencies, licenses and telemetry boundaries. The historical `0.6.4-test.6` predates these candidate records: do not invent a trusted run for it or republish it to fill this format.
+
+## Validation before activation
+
+Run the repository's release/scanner/guide tests and actionlint. Their no-publication rehearsal uses temporary candidate files and simulated GitHub/npm/R2 responses to test the whole transition and failures. It does **not** exercise hosted approval policy, npm OIDC, real registry installation or CDN routing.
+
+After separately authorized default-branch/environment/npm setup, first run a new candidate and reject its deployment to verify that no publication occurs. A positive hosted rehearsal that proceeds beyond approval is a real publication and requires explicit release authorization. Ordinary PR CI remains credential-free. This implementation PR alone enables none of those administrative actions.

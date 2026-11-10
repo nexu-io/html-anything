@@ -1,0 +1,25 @@
+name: Motion snapshot recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: 'Original Motion test release run; package must already exist identically on npm'
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  recover:
+    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    uses: ./.github/workflows/motion-publish-test.yml
+    with:
+      candidate_run_id: ${{ inputs.candidate_run_id }}
+    secrets: inherit
