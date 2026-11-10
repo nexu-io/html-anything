@@ -45,3 +45,11 @@ export function list(document: Document, label: string): HTMLOListElement {
   element.setAttribute("aria-label", label);
   return element;
 }
+
+/** Anonymous, bounded image evidence surface; callers own bytes and object-URL lifetime. */
+export function imagePreview(document: Document, alt: string): HTMLImageElement {
+  const image = document.createElement("img");
+  image.className = "om-preview__image";
+  image.alt = alt;
+  return image;
+}

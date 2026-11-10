@@ -2,10 +2,11 @@ import { button, field, note, slot, tabs, tree } from "@open-motion/components";
 import type { Clip } from "@open-motion/motion/contract";
 import { type Input, type Resource, resourceLimit, type SourceFile } from "@open-motion/workspace/contract";
 
-import type { Client } from "../../../api.js";
-import type { Editor } from "../../editor.js";
-import type { CompositionContext } from "./context.js";
-import { insertResource } from "./transactions.js";
+import type { Client } from "../../../../api.js";
+import type { Editor } from "../../../editor.js";
+import type { CompositionContext } from "../context.js";
+import { insertResource } from "../transactions.js";
+import { GenerationPanel } from "./generation.js";
 /** Stable layer/file controls; composition navigation and source transactions belong to Studio's context. */
 export class StudioLibrary {
   private layers: ReturnType<typeof tree>;
@@ -18,6 +19,7 @@ export class StudioLibrary {
   private mediaList: HTMLElement;
   private upload: HTMLInputElement;
   private mediaKey = "";
+  private generation: GenerationPanel;
   private mode = "layers";
   private current?: { clips: Clip[]; selected: string; blocked: boolean; files: SourceFile[] };
   constructor(
@@ -94,7 +96,9 @@ export class StudioLibrary {
         await this.editing.editor.importResource(input);
       });
     });
+    this.generation = new GenerationPanel(document, editing);
     this.media.append(
+      this.generation.element,
       field(document, "导入媒体", this.upload),
       note(document, "PNG / PCM16 WAV · 单资源最多 6 MiB；素材随工程历史持久保存。"),
       this.mediaList,
@@ -102,6 +106,12 @@ export class StudioLibrary {
     this.open = file;
     actions.append(this.tabs.element);
     host.append(this.layers.element, this.files, this.media);
+  }
+  sync(blocked: boolean) {
+    this.generation.update(this.editing.editor.project, blocked);
+  }
+  dispose() {
+    return this.generation.dispose();
   }
   private open: (path: string) => void;
   reset() {

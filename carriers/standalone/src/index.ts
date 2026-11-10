@@ -6,6 +6,8 @@ import { type Manifest, resolve as release } from "@odsuite/release";
 import { source } from "@odsuite/serve";
 import { managerEndpoint, type Service, serve } from "@odsuite/sidecar";
 import type { Input, Operation, Output } from "@open-motion/daemon/contract";
+import type { Provider } from "@open-motion/gateway";
+import { host as hostGateway } from "@open-motion/gateway/host";
 import type { Tools } from "@open-motion/render";
 import { host } from "@open-motion/render/host";
 import { nativeTools } from "@open-motion/render/tools";
@@ -25,6 +27,7 @@ export interface Options {
   worker?: string;
   tools?: Tools;
   prism?: PrismConfig;
+  gateway?: Provider;
 }
 export interface Status {
   environment: Environment;
@@ -59,6 +62,10 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
         config: options.prism,
       })
     : undefined;
+  const gateway = await hostGateway(factory, {
+    generation: digest(manifest.identity.version),
+    provider: options.gateway,
+  });
   const tools = options.tools ?? nativeTools();
   const renderer = tools
     ? await host(factory, { generation: digest(manifest.identity.version), tools, worker: options.worker })
@@ -94,9 +101,10 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
           environment,
           renderer,
           prism,
+          gateway: { root: gateway.root, connection: gateway.connection },
         }),
       quiesce: async () => {
-        await prism?.quiesce();
+        await Promise.all([prism?.quiesce(), gateway.quiesce()]);
         await daemon.quiesce();
       },
       stop: () => daemon.close(),

@@ -1,13 +1,24 @@
 import { randomUUID } from "node:crypto";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { request } from "node:http";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { channel, digest, namespace } from "@odsuite/protocol";
-import { Client, type Lease, type Service, serve } from "@odsuite/sidecar";
+import {
+  Client,
+  type Lease,
+  managerEndpoint,
+  observeProcesses,
+  readDirectory,
+  type Service,
+  serve,
+} from "@odsuite/sidecar";
+import { host as gatewayHost } from "@open-motion/gateway/host";
+import { initialFiles } from "@open-motion/workspace";
 import { afterEach, describe, expect, it } from "vitest";
 import { Client as APIClient } from "@/client.js";
+import { serve as serveDaemon } from "@/service.js";
 
 const roots: string[] = [];
 const services: Service[] = [];
@@ -156,3 +167,186 @@ describe("daemon", () => {
     }
   });
 });
+
+it("adopts one immutable owned PNG over HTTP and replays its receipt after edits and offline restart", async () => {
+  const evidence = fileURLToPath(new URL(`../../../.artifacts/generation-adapter/${randomUUID()}/`, import.meta.url)),
+    root = join(evidence, "sidecar"),
+    scope = { channel: channel("dev"), namespace: namespace("adoption") },
+    png =
+      "iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAAPklEQVR4AcXBMQEAIAzAsK5CuPEvChtMRpN5535CEpOYxCQmMYlJTGISk5jEJCYxiUlMYhKTmMQkJjGJSWwBYl8CWwMRvGQAAAAASUVORK5CYII=";
+  await mkdir(evidence, { recursive: true });
+  let manager: Service | undefined,
+    api: APIClient | undefined,
+    submissions = 0,
+    failure: unknown;
+  const report: Record<string, unknown> = {},
+    errors: unknown[] = [];
+  const start = async (configured: boolean) => {
+    manager = await serve(managerEndpoint(root), { root });
+    const factory = manager.factory(scope),
+      gateway = await gatewayHost(factory, {
+        generation: digest("adoption-gateway"),
+        provider: configured
+          ? {
+              id: "fixture",
+              version: "v1",
+              models: [{ id: "png", label: "Fixture PNG" }],
+              submit: async () => {
+                submissions++;
+                return { remoteId: "fixture-task" };
+              },
+              read: async () => ({ state: "succeeded", bytes: Buffer.from(png, "base64") }),
+              cancel: async () => ({ confirmed: true }),
+            }
+          : undefined,
+      });
+    let daemon: Awaited<ReturnType<typeof serveDaemon>> | undefined;
+    await factory.expose({
+      identity: { service: "daemon", generation: digest("adoption-daemon") },
+      handlers: {},
+      lifecycle: {
+        initialize: async (context) => {
+          const socket = await context.allocate({ kind: "socket", name: "daemon" }),
+            port = await context.allocate({ kind: "port", name: "daemon", scheme: "http" });
+          daemon = await context.background(() =>
+            serveDaemon({
+              data: context.roots.data,
+              origin: "http://fixture.invalid",
+              socket: socket.value,
+              token: "fixture-authority",
+              gateway,
+            }),
+          );
+          await context.forward(port.value, socket.value);
+          api = new APIClient(port.value, "fixture-authority");
+        },
+        quiesce: async () => daemon?.quiesce(),
+        stop: async () => daemon?.close(),
+      },
+    });
+  };
+  try {
+    await start(true);
+    const client = () => {
+      if (!api) throw Error("Daemon not ready");
+      return api;
+    };
+    expect((await client().execute("generation_status", {})).configured).toBe(true);
+    const session = await client().execute("session_create", {
+        requestId: randomUUID(),
+        title: "Material",
+        mode: "motion",
+      }),
+      artifact = await client().execute("artifact_create", {
+        requestId: randomUUID(),
+        sessionId: session.id,
+        title: "Project",
+        files: initialFiles(),
+      }),
+      owner = { sessionId: session.id, artifactId: artifact.id },
+      project = await client().execute("project_read", owner),
+      selection = (await client().execute("workspace_state", {})).selection,
+      create = {
+        ...owner,
+        requestId: randomUUID(),
+        revision: project.revision,
+        providerId: "fixture",
+        providerVersion: "v1",
+        modelId: "png",
+        prompt: "Red PNG fixture",
+      },
+      created = await client().execute("generation_create", create),
+      selected = { ...owner, id: created.id };
+    await expect.poll(async () => (await client().execute("generation_read", selected)).state).toBe("succeeded");
+    expect(await client().execute("generation_create", create)).toEqual(created);
+    expect(submissions).toBe(1);
+    expect(await client().execute("project_read", owner)).toEqual(project);
+    expect((await client().execute("workspace_state", {})).selection).toEqual(selection);
+    const result = await client().execute("generation_result", selected);
+    expect(result.data).toBe(png);
+    expect(result.candidate).toMatchObject({
+      jobId: created.id,
+      width: 32,
+      height: 24,
+      contentHash: digest(Buffer.from(png, "base64")),
+    });
+    expect(JSON.stringify(result)).not.toContain(root);
+    const adopt = {
+        ...selected,
+        requestId: randomUUID(),
+        expectedRevision: project.revision,
+        path: "assets/generated.png",
+        name: "Generated fixture",
+        contentHash: result.candidate.contentHash,
+      },
+      adopted = await client().execute("generation_adopt", adopt);
+    expect(adopted.files).toEqual(project.files);
+    expect(adopted.resources).toHaveLength(1);
+    expect((await client().execute("workspace_state", {})).selection).toEqual(selection);
+    expect(await client().execute("generation_adopt", adopt)).toEqual(adopted);
+    const later = await client().execute("project_save", {
+      ...owner,
+      requestId: randomUUID(),
+      expectedRevision: adopted.revision,
+      files: adopted.files.map((file) =>
+        file.path === "index.html" ? { ...file, content: `${file.content}<!-- human edit -->` } : file,
+      ),
+    });
+    expect(await client().execute("generation_adopt", adopt)).toEqual(adopted);
+    expect(await client().execute("project_read", owner)).toEqual(later);
+    await expect(
+      client().execute("generation_adopt", { ...adopt, requestId: randomUUID(), path: "assets/stale.png" }),
+    ).rejects.toMatchObject({ code: "conflict" });
+    const other = await client().execute("session_create", { requestId: randomUUID(), title: "Other", mode: "motion" });
+    await expect(client().execute("generation_result", { ...selected, sessionId: other.id })).rejects.toMatchObject({
+      code: "ownership",
+    });
+    await expect(
+      client().execute("generation_adopt", { ...adopt, requestId: randomUUID(), sessionId: other.id }),
+    ).rejects.toMatchObject({ code: "ownership" });
+    await manager!.close();
+    expect((await readDirectory(root)).manager.phase).toBe("closed");
+    expect(await observeProcesses(root)).toEqual([]);
+    await start(false);
+    expect((await client().execute("generation_status", {})).configured).toBe(false);
+    expect((await client().execute("generation_list", owner)).jobs.map((job) => job.id)).toEqual([created.id]);
+    expect(await client().execute("generation_result", selected)).toEqual(result);
+    expect(await client().execute("generation_adopt", adopt)).toEqual(adopted);
+    expect(await client().execute("project_read", owner)).toEqual(later);
+    expect(submissions).toBe(1);
+    report.acceptance = {
+      id: created.id,
+      candidate: result.candidate,
+      adoptionRevision: adopted.revision,
+      laterRevision: later.revision,
+      offlineReceiptReplay: true,
+      providerSubmissions: submissions,
+      transport: "real authenticated HTTP; deterministic injected Provider, no model execution",
+    };
+  } catch (error) {
+    failure = error;
+  } finally {
+    try {
+      await manager?.close();
+    } catch (error) {
+      errors.push(error);
+    }
+    try {
+      report.phase = (await readDirectory(root)).manager.phase;
+      report.processes = await observeProcesses(root);
+    } catch (error) {
+      report.observation = "unknown";
+      errors.push(error);
+    }
+    if (failure) report.failure = (failure as Error).message;
+    report.cleanupErrors = errors.map(String);
+    await writeFile(join(evidence, "result.json"), JSON.stringify(report, null, 2));
+  }
+  if (failure || errors.length)
+    throw new AggregateError(
+      [...(failure ? [failure] : []), ...errors],
+      "Generation adapter acceptance failed; evidence retained",
+    );
+  expect(report.phase).toBe("closed");
+  expect(report.processes).toEqual([]);
+}, 20000);

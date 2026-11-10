@@ -41,7 +41,12 @@
     "@open-motion/workspace": "workspace:*",
     "@odsuite/automation": "workspace:*",
     "@odsuite/serve": "workspace:*",
-    "@open-motion/render": "workspace:*"
+    "@open-motion/render": "workspace:*",
+    "@open-motion/gateway": "workspace:*",
+    "pngjs": "7.0.0",
+    "@types/pngjs": "6.0.5",
+    "@modelcontextprotocol/client": "2.4.0",
+    "@open-motion/codexplugin": "workspace:*"
   },
   "repository": {
     "type": "git",
