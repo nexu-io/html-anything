@@ -26,7 +26,7 @@ export function register(server: McpServer, execute: Execute): void {
           readOnlyHint: !("requestId" in schemas[operation].shape),
           destructiveHint: ["project_save", "project_undo", "project_redo", "resource_remove"].includes(operation),
           idempotentHint: true,
-          openWorldHint: false,
+          openWorldHint: ["generation_create", "generation_cancel"].includes(operation),
         },
       },
       async (input: unknown) => {
@@ -49,7 +49,11 @@ export function register(server: McpServer, execute: Execute): void {
           }
           // Binary data is present once in structured output, keeping the stock stdio envelope bounded.
           const text =
-            operation === "resource_read" ? { resource: (result as Output<"resource_read">).resource } : result;
+            operation === "resource_read"
+              ? { resource: (result as Output<"resource_read">).resource }
+              : operation === "generation_result"
+                ? { candidate: (result as Output<"generation_result">).candidate }
+                : result;
           return { content: [{ type: "text", text: JSON.stringify(text) }], structuredContent: { ...result } };
         } catch (error) {
           return {
