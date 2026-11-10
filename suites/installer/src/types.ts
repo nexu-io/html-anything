@@ -1,64 +1,48 @@
-import type { CatalogOptions, Metadata, Shell } from "@odsuite/distribution";
-import type { Manager } from "@odsuite/sidecar";
+import type { FactoryScope } from "@odsuite/protocol";
+import type { Context, Factory } from "@odsuite/sidecar";
 
-export interface Runtime {
-  root: string;
+export interface Options {
+  home: string;
+  product: string;
+  scope: FactoryScope;
+  /** In-process diagnostic only; no policy, serialization or control transport. */
+  onCheckpoint?: (event: {
+    phase: "intent" | "materialized" | "installed" | "selected";
+    requestId: string;
+  }) => Promise<void>;
+}
+export interface Source {
+  bytes: Uint8Array;
+  sha256: string;
+}
+export interface Input {
+  data: string;
+  requestId: string;
+  source: Source;
+}
+export interface Receipt {
+  requestId: string;
+  product: string;
+  carrier: string;
+  channel: string;
   namespace: string;
   version: string;
-  owner: Manager;
+  digest: `sha256:${string}`;
+  path: string;
+  data: string;
 }
-export interface Options {
-  root: string;
-  target: string;
-  runtime: Omit<Runtime, "owner">;
-  catalog: Omit<CatalogOptions, "root">;
-  env: Record<string, string>;
-  /** Diagnostic fault point; never a policy/readiness input. */
-  checkpoint?: "ready" | "vacated" | "displaced" | "installed" | "launched" | "confirming" | "confirmed";
+export interface Session {
+  readonly factory: Factory;
+  readonly context: Context;
+  install(input: Input): Promise<Receipt>;
+  read(carrier: string): Promise<Receipt | undefined>;
+  close(): Promise<void>;
 }
-export interface Job extends Options {
-  schema: 1;
-  id: string;
-  nonce: string;
-  metadata: Metadata;
-  shell: Shell;
-  home: string;
-  executor: string;
-  worker: string;
-  appName: string;
-}
-export interface Journal {
-  schema: 1;
-  id: string;
-  phase: "ready" | "waiting" | "vacated" | "displaced" | "installed" | "launched" | "confirmed" | "failed";
-  oldHash: string;
-  newHash: string;
-  old: Runtime[];
-  manager?: Manager;
-  next?: Manager;
-  error?: string;
-  history: { phase: string; at: number; pid: number }[];
-}
-export interface Registration extends Runtime {
-  target: string;
-}
-export interface Confirmation {
-  id: string;
-  nonce: string;
-  version: string;
-  root: string;
-  generation: string;
-}
-export interface Methods {
-  status: { input: null; output: Journal | undefined };
-  register: { input: Registration; output: boolean };
-  arm: { input: { id: string; nonce: string }; output: boolean };
-  confirm: { input: Confirmation; output: boolean };
-}
-export interface Handle {
-  root: string;
-  channel: string;
-  id: string;
-  nonce: string;
-  manager: Manager;
+export class InstallerFault extends Error {
+  constructor(
+    readonly code: "invalid" | "conflict" | "integrity" | "idempotency",
+    message: string,
+  ) {
+    super(message);
+  }
 }

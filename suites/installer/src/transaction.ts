@@ -1,200 +1,171 @@
-import { mkdir, readFile, rename, stat } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { Catalog } from "@odsuite/distribution";
-import { canonical, digest, namespace } from "@odsuite/protocol";
-import { readProduct } from "@odsuite/release";
-import { connectRoot, type Manager, managerAlive, observeOwner, readDirectory, startManager } from "@odsuite/sidecar";
-import { scope } from "./domain.js";
-import { bundle, hash, save, sync } from "./files.js";
-import type { Confirmation, Job, Journal, Options } from "./types.js";
+import { randomUUID } from "node:crypto";
+import { chmod, lstat, rename } from "node:fs/promises";
+import { join } from "node:path";
+import { canonical as serialize } from "@odsuite/protocol";
+import { materialize, parseReleaseVersion } from "@odsuite/release";
+import { source, verify } from "./archive.js";
+import { canonical, directory, inside, sync } from "./files.js";
+import { fingerprint, type Intent, Store } from "./store.js";
+import { type Input, InstallerFault, type Options, type Receipt } from "./types.js";
 
-async function exists(path: string) {
-  try {
-    await stat(path);
-    return true;
-  } catch (e) {
-    if ((e as NodeJS.ErrnoException).code === "ENOENT") return false;
-    throw e;
-  }
-}
 export class Transaction {
-  record: Journal;
-  private accepted?: () => void;
-  private launched?: Promise<Manager>;
+  readonly store: Store;
   constructor(
-    readonly job: Job,
-    record: Journal,
+    private options: Options,
+    private target: string,
+    data: string,
+    established: boolean,
   ) {
-    this.record = record;
+    this.store = new Store(data, established);
   }
-  async persist(phase: Journal["phase"]) {
-    this.record.phase = phase;
-    this.record.history.push({ phase, at: Date.now(), pid: process.pid });
-    await save(join(this.job.home, "record.json"), this.record);
-  }
-  async checkpoint(phase: NonNullable<Options["checkpoint"]>) {
-    if (this.job.checkpoint === phase) {
-      await save(join(this.job.home, "checkpoint.json"), { phase, pid: process.pid, id: this.job.id });
-      await new Promise(() => {});
-    }
-  }
-  async verify() {
-    if (this.record.schema !== 1 || this.record.id !== this.job.id) throw Error("installation transaction mismatch");
-    const catalog = new Catalog({ ...this.job.catalog, root: join(this.job.home, "policy") }),
-      current = await catalog.refresh();
-    if (digest(canonical(current)) !== digest(canonical(this.job.metadata)))
-      throw Error("installation publication changed");
-    if (digest(await readFile(join(this.job.home, "archive.zip"))) !== this.job.shell.digest)
-      throw Error("retained installation archive mismatch");
-    const content = await readProduct(join(this.job.home, "content"));
-    if (canonical(content.envelope) !== canonical(this.job.metadata.content))
-      throw Error("retained installation content mismatch");
-  }
-  async confirm(value: Confirmation) {
+  private check(value: Receipt) {
     if (
-      value.id !== this.job.id ||
-      value.nonce !== this.job.nonce ||
-      value.version !== this.job.shell.version ||
-      value.root !== this.job.runtime.root ||
-      value.generation !== this.job.metadata.content.digest
+      value.product !== this.options.product ||
+      value.channel !== this.options.scope.channel ||
+      value.namespace !== this.options.scope.namespace ||
+      !/^[a-z][a-z0-9-]{0,31}$/.test(value.carrier)
     )
-      throw Error("installation confirmation mismatch");
-    const owner = await this.launched;
-    if (!owner || this.record.phase !== "launched" || !(await managerAlive(owner)))
-      throw Error("installation launch is not live");
-    if ((await hash(this.job.target)) !== this.record.newHash)
-      throw Error("installed bytes changed before confirmation");
-    await this.checkpoint("confirming");
-    await this.persist("confirmed");
-    this.accepted?.();
-    return true;
+      throw new InstallerFault("integrity", "installation receipt identity changed");
+    parseReleaseVersion(value.version, value.channel);
+    if (value.path !== join(this.target, "versions", value.carrier, value.version, value.digest.slice(7)))
+      throw new InstallerFault("integrity", "installed path escaped its grant");
+    if (
+      inside(join(this.options.home, "authority"), value.data) ||
+      inside(join(this.options.home, "applications"), value.data) ||
+      inside(value.data, this.options.home)
+    )
+      throw new InstallerFault("integrity", "runtime data overlaps installation paths");
   }
-  private async shutdown() {
-    for (const runtime of this.record.old) {
-      if (!(await managerAlive(runtime.owner))) continue;
-      const { factory } = await connectRoot(runtime.root, runtime.owner.scope),
-        entry = (await factory.directory()).instances.find((i) => i.service === "electron" && i.phase === "ready");
-      if (!entry) throw Error("runtime shutdown adapter unavailable");
-      const peer = await factory.connect<{ quit: { input: null; output: boolean } }>({
-        service: "electron",
-        generation: entry.generation,
-      });
-      await peer.call("quit", null);
-    }
-    const deadline = Date.now() + 20000;
-    for (;;) {
-      let alive = false;
-      for (const runtime of this.record.old) if (await managerAlive(runtime.owner)) alive = true;
-      if (!alive) {
-        for (const runtime of this.record.old)
-          if ((await readDirectory(runtime.root)).manager.phase !== "closed")
-            throw Error(`old runtime ownership did not drain cleanly: ${runtime.root}`);
-        return;
-      }
-      if (Date.now() > deadline) throw Error("old runtime participants did not exit");
-      await new Promise((done) => setTimeout(done, 25));
-    }
-  }
-  async run() {
-    const job = this.job,
-      backup = join(job.home, "backup", job.appName),
-      candidate = join(job.home, "candidate", job.appName);
+  private async verified(value: Receipt) {
+    this.check(value);
     try {
-      await this.verify();
-      await this.checkpoint("ready");
-      await this.persist("waiting");
-      await this.shutdown();
-      await this.persist("vacated");
-      await this.checkpoint("vacated");
-      await mkdir(dirname(backup), { recursive: true, mode: 0o700 });
-      const targetExists = await exists(job.target),
-        backupExists = await exists(backup),
-        candidateExists = await exists(candidate);
-      if (targetExists && (await hash(job.target)) === this.record.oldHash && !backupExists && candidateExists) {
-        if ((await hash(candidate)) !== this.record.newHash) throw Error("candidate bytes changed");
-        await rename(job.target, backup);
-        await sync(dirname(job.target));
-        await sync(dirname(backup));
-        await this.persist("displaced");
-        await this.checkpoint("displaced");
-      } else if (!targetExists && backupExists && candidateExists) {
-        if ((await hash(backup)) !== this.record.oldHash || (await hash(candidate)) !== this.record.newHash)
-          throw Error("interrupted install bytes mismatch");
-      } else if (
-        !(
-          targetExists &&
-          backupExists &&
-          !candidateExists &&
-          (await hash(job.target)) === this.record.newHash &&
-          (await hash(backup)) === this.record.oldHash
-        )
-      )
-        throw Error("unrecognized installation layout; recovery required");
-      if (await exists(candidate)) {
-        await rename(candidate, job.target);
-        await sync(dirname(job.target));
-      }
-      await bundle(job.target, {
-        appid:
-          job.metadata.channel === "stable" ? job.metadata.product : `${job.metadata.product}.${job.metadata.channel}`,
-        version: job.shell.version,
-      });
-      if ((await hash(job.target)) !== this.record.newHash) throw Error("installed candidate hash mismatch");
-      await this.persist("installed");
-      await this.checkpoint("installed");
-      const current = await observeOwner(job.runtime.root, {
-        channel: scope(job.metadata.channel).channel,
-        namespace: namespace(job.runtime.namespace),
-      });
-      if (current) throw Error("runtime root is still live; adoption is not allowed");
-      const executable = (
-        await bundle(job.target, {
-          appid:
-            job.metadata.channel === "stable"
-              ? job.metadata.product
-              : `${job.metadata.product}.${job.metadata.channel}`,
-          version: job.shell.version,
-        })
-      ).executable;
-      const env = {
-        ...job.env,
-        ODSUITE_INSTALLATION_ROOT: job.root,
-        ODSUITE_INSTALLATION_ID: job.id,
-        ODSUITE_INSTALLATION_NONCE: job.nonce,
-        ODSUITE_PROBE: "0",
-        ELECTRON_RUN_AS_NODE: undefined,
-        ODSUITE_CANDIDATE: join(job.home, "content"),
-        ODSUITE_RECOVER: "0",
-        ODSUITE_DATA: job.runtime.root,
-        ODSUITE_INSTALLATION_PAUSE: undefined,
-      };
-      this.launched = startManager({
-        root: job.runtime.root,
-        scope: { channel: scope(job.metadata.channel).channel, namespace: namespace(job.runtime.namespace) },
-        command: executable,
-        args: [],
-        env,
-        timeout: 30000,
-        log: join(job.home, "manager.log"),
-      });
-      this.record.next = await this.launched;
-      await this.persist("launched");
-      await this.checkpoint("launched");
-      await new Promise<void>((done, reject) => {
-        if (this.record.phase === "confirmed") return done();
-        this.accepted = done;
-        const timer = setTimeout(() => reject(Error("new host confirmation timeout")), 30000);
-        const accepted = this.accepted;
-        this.accepted = () => {
-          clearTimeout(timer);
-          accepted();
-        };
-      });
-      await this.checkpoint("confirmed");
+      if ((await canonical(value.path)) !== value.path)
+        throw new InstallerFault("integrity", "installed path escaped its grant");
+      await verify(value.path, this.store.files(value));
+      return value;
     } catch (error) {
-      this.record.error = String(error);
-      await this.persist("failed");
-      throw error;
+      if (error instanceof InstallerFault) throw error;
+      throw new InstallerFault("integrity", "installed closure cannot be verified");
     }
+  }
+  async read(carrier: string) {
+    if (!/^[a-z][a-z0-9-]{0,31}$/.test(carrier)) throw new InstallerFault("invalid", "invalid carrier identity");
+    const value = this.store.read(carrier);
+    if (value && value.carrier !== carrier) throw new InstallerFault("integrity", "selected carrier receipt changed");
+    return value ? this.verified(value) : undefined;
+  }
+  private async checkpoint(value: Intent, phase: "intent" | "materialized" | "installed" | "selected") {
+    await this.options.onCheckpoint?.({ phase, requestId: value.receipt.requestId });
+  }
+  async install(input: Input) {
+    if (
+      !/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(input.requestId) ||
+      !input.source ||
+      !/^[a-f0-9]{64}$/.test(input.source.sha256)
+    )
+      throw new InstallerFault("invalid", "invalid installation request identity");
+    const data = await canonical(input.data);
+    if (
+      inside(join(this.options.home, "authority"), data) ||
+      inside(join(this.options.home, "applications"), data) ||
+      inside(data, this.options.home)
+    )
+      throw new InstallerFault("invalid", "runtime data must remain separate from installation authority/applications");
+    const key = fingerprint({
+      requestId: input.requestId,
+      data,
+      sha256: input.source.sha256,
+      product: this.options.product,
+      ...this.options.scope,
+    });
+    const prior = this.store.lookup(input.requestId, key);
+    if (prior) {
+      if (prior.digest !== `sha256:${input.source.sha256}` || prior.data !== data)
+        throw new InstallerFault("integrity", "installation receipt changed its pinned intent");
+      return this.verified(prior);
+    }
+    // Reject changed intent before touching source bytes, including for an interrupted transaction.
+    const pending = this.store.pending(input.requestId, key);
+    if (!(input.source.bytes instanceof Uint8Array) || input.source.bytes.length > 64 * 1024 ** 2)
+      throw new InstallerFault("invalid", "invalid pinned Node closure bytes");
+    const pinned = { sha256: input.source.sha256, bytes: Buffer.from(input.source.bytes) };
+    const archive = source(pinned);
+    if (archive.runtime.channel !== this.options.scope.channel)
+      throw new InstallerFault("invalid", "closure channel differs from installation factory");
+    const receipt: Receipt = {
+      requestId: input.requestId,
+      product: this.options.product,
+      carrier: archive.runtime.carrier,
+      channel: this.options.scope.channel,
+      namespace: this.options.scope.namespace,
+      version: archive.runtime.version,
+      digest: `sha256:${input.source.sha256}`,
+      path: join(this.target, "versions", archive.runtime.carrier, archive.runtime.version, input.source.sha256),
+      data,
+    };
+    this.check(receipt);
+    const record = pending ?? this.store.prepare(receipt, key, archive.files);
+    if (serialize(record.receipt) !== serialize(receipt) || serialize(record.files) !== serialize(archive.files))
+      throw new InstallerFault("integrity", "retained installation intent differs from verified archive");
+    await this.checkpoint(record, "intent");
+    let exists = false;
+    try {
+      await lstat(receipt.path);
+      exists = true;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+    if (exists) {
+      if (record.phase === "intent")
+        throw new InstallerFault("conflict", "uncommitted installation target already exists");
+      if ((await canonical(receipt.path)) !== receipt.path)
+        throw new InstallerFault("integrity", "installed path escaped its grant");
+      await verify(receipt.path, record.files, true);
+    } else {
+      if (record.phase === "installed" || record.phase === "selected")
+        throw new InstallerFault("integrity", "committed installation disappeared");
+      const latest = record.stages.at(-1);
+      let stage = latest ? join(this.target, ".staging", input.requestId, latest) : undefined,
+        ready = false;
+      if (stage) {
+        try {
+          await verify(stage, record.files, true);
+          ready = true;
+        } catch (error) {
+          if (record.phase === "materialized") throw error;
+        }
+      }
+      if (!ready) {
+        if (record.stages.length >= 32)
+          throw new InstallerFault("conflict", "retained installation attempts require explicit reconciliation");
+        const attempt = randomUUID();
+        record.stages.push(attempt);
+        record.phase = "intent";
+        this.store.save(record);
+        stage = await directory(this.target, [".staging", input.requestId, attempt]);
+        await materialize(pinned.bytes, stage);
+        await verify(stage, record.files, true);
+      }
+      if (!stage) throw new InstallerFault("integrity", "installation stage is missing");
+      record.phase = "materialized";
+      this.store.save(record);
+      await this.checkpoint(record, "materialized");
+      const parent = await directory(this.target, ["versions", receipt.carrier, receipt.version]);
+      if ((await lstat(stage)).dev !== (await lstat(parent)).dev)
+        throw new InstallerFault("invalid", "installation staging and version must share a filesystem");
+      await chmod(stage, 0o700);
+      await rename(stage, receipt.path);
+      await sync(parent);
+      await sync(join(this.target, ".staging", input.requestId));
+      if ((await canonical(receipt.path)) !== receipt.path)
+        throw new InstallerFault("integrity", "installed path escaped its grant");
+      await verify(receipt.path, record.files, true);
+    }
+    record.phase = "installed";
+    this.store.save(record);
+    await this.checkpoint(record, "installed");
+    const result = this.store.complete(record);
+    await this.checkpoint(record, "selected");
+    return result;
   }
 }
