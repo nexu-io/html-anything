@@ -285,6 +285,7 @@ export interface Dict {
   "export.action.text": string;
   "export.action.downloadHtml": string;
   "export.action.downloadPng": string;
+  "export.action.downloadPdf": string;
   "export.action.deckPdf": string;
   "export.action.deckPngZip": string;
   "export.action.deckPptx": string;
@@ -296,6 +297,7 @@ export interface Dict {
   "export.toast.text": string;
   "export.toast.htmlSaved": string;
   "export.toast.imgSaved": string;
+  "export.toast.pdfSaved": string;
   "export.toast.deckPdf": string;
   "export.toast.deckPngZip": string;
   "export.toast.deckPptx": string;
@@ -649,6 +651,7 @@ const en: Dict = {
   "export.action.text": "Plain text",
   "export.action.downloadHtml": ".html single file",
   "export.action.downloadPng": ".png hi-res image",
+  "export.action.downloadPdf": ".pdf document",
   "export.action.deckPdf": "PDF · all slides (print)",
   "export.action.deckPngZip": "PNG · per-slide (.zip)",
   "export.action.deckPptx": ".pptx · PowerPoint",
@@ -660,6 +663,7 @@ const en: Dict = {
   "export.toast.text": "Text copied",
   "export.toast.htmlSaved": "HTML downloaded",
   "export.toast.imgSaved": "Image downloaded",
+  "export.toast.pdfSaved": "PDF downloaded",
   "export.toast.deckPdf": "Print dialog opened — pick “Save as PDF”",
   "export.toast.deckPngZip": "Slide PNGs zipped",
   "export.toast.deckPptx": "PPTX downloaded",
@@ -1008,6 +1012,7 @@ const zhCN: Dict = {
   "export.action.text": "纯文本",
   "export.action.downloadHtml": ".html 单文件",
   "export.action.downloadPng": ".png 高清图",
+  "export.action.downloadPdf": ".pdf 文档",
   "export.action.deckPdf": "PDF · 全部幻灯片 (打印)",
   "export.action.deckPngZip": "PNG · 每页一张 (.zip)",
   "export.action.deckPptx": ".pptx · PowerPoint",
@@ -1019,6 +1024,7 @@ const zhCN: Dict = {
   "export.toast.text": "已复制文本",
   "export.toast.htmlSaved": "已下载 HTML",
   "export.toast.imgSaved": "已下载图片",
+  "export.toast.pdfSaved": "已下载 PDF",
   "export.toast.deckPdf": "已打开打印窗口 — 选「另存为 PDF」",
   "export.toast.deckPngZip": "已打包 PNG ZIP",
   "export.toast.deckPptx": "已下载 PPTX",
