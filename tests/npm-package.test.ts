@@ -42,7 +42,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
   const unapproved = ['docs/private-sentinel.md', 'scripts/private-sentinel.mjs', 'private-sentinel.ts'];
   for (const file of unapproved) await writeFile(file, 'must not ship');
   try {
-    const version = '0.6.4-test.1', output = path.join(directory, 'build');
+    const version = '0.6.4-test.42812345678.1', output = path.join(directory, 'build');
     const built = await packageNpm(output, version), release = await json(built.manifest);
     assert.equal(release.version, version); assert.equal(release.installer.version, version); assert.equal(release.format, 'npm');
     assert.equal(release.templateEnvironment, 'dev');

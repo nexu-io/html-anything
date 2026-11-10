@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeJSON } from '../../scripts/runtime-assets.mjs';
-import { checkReleaseVersion, compareReleaseVersions } from '../../scripts/release-version.mjs';
+import { checkReleaseVersion, compareReleaseVersions, testVersion } from '../../scripts/release-version.mjs';
 import { generateInstallGuide } from '../../scripts/install-guide.mjs';
 import { publishGuide, storagePlan } from './publish-install-guide.mjs';
 import { scanPackage, scanSource } from './motion-scan.mjs';
@@ -17,6 +17,7 @@ export const candidateWorkflow = '.github/workflows/motion-candidate.yml';
 export const publicationWorkflow = '.github/workflows/motion-publish-test.yml';
 export const recoveryWorkflow = '.github/workflows/motion-publication-recovery.yml';
 export const candidateJobName = 'Build immutable candidate';
+const candidateRefs = ['refs/heads/main', 'refs/heads/feature/motion'];
 const exec = promisify(execFile), hashPattern = /^[a-f0-9]{64}$/;
 const json = async file => JSON.parse(await readFile(file, 'utf8'));
 const integrity = bytes => 'sha512-' + createHash('sha512').update(bytes).digest('base64');
@@ -35,10 +36,17 @@ export function releaseInputs(env = process.env) {
   return { action: env.MOTION_RELEASE_ACTION, accepted: true, version: env.MOTION_VERSION, expectedSHA256: env.MOTION_EXPECTED_SHA256 };
 }
 
-export async function resolveSource(control, requested, version, run = runFile) {
+export async function resolveCandidate(control, requested, version, env = process.env, run = runFile) {
   const commit = requested || (await run('git', ['rev-parse', 'refs/remotes/origin/feature/motion'], { cwd: control })).trim();
+  assert.match(commit, /^[a-f0-9]{40}$/, 'Use a full immutable source SHA');
+  if (!version) {
+    assert(/^[1-9]\d*$/.test(env.GITHUB_RUN_ATTEMPT || ''), 'A positive GitHub run attempt is required');
+    // main still contains the legacy application; read the frozen Motion source instead.
+    const source = JSON.parse(await run('git', ['show', `${commit}:package.json`], { cwd: control }));
+    version = testVersion(source.version, env.GITHUB_RUN_ID, env.GITHUB_RUN_ATTEMPT);
+  }
   await validateSource(control, commit, version, run);
-  return commit;
+  return { commit, version };
 }
 
 export async function validateSource(control, commit, version, run = runFile) {
@@ -53,7 +61,8 @@ export async function sealCandidate(build, output, source, env = process.env) {
   assert.equal(manifest.commit, env.MOTION_SOURCE_SHA); assert.equal(manifest.version, env.MOTION_VERSION);
   assert(manifest.version.includes('-test.') && manifest.templateEnvironment === 'dev', 'Test candidates require DEV template defaults');
   assert.match(env.GITHUB_SHA || '', /^[a-f0-9]{40}$/);
-  assert.equal(env.GITHUB_WORKFLOW_REF, `${repository}/${candidateWorkflow}@refs/heads/main`);
+  const workflowRef = candidateRefs.find(ref => env.GITHUB_WORKFLOW_REF === `${repository}/${candidateWorkflow}@${ref}`);
+  assert(workflowRef, 'Build candidates only from main or feature/motion');
   assert(/^[1-9]\d*$/.test(env.GITHUB_RUN_ID || '') && /^[1-9]\d*$/.test(env.GITHUB_RUN_ATTEMPT || ''));
   const filename = manifest.installer.url.replace(/^\.\//, '');
   assert.equal(filename, `openmotion-app-${manifest.version}.tgz`);
@@ -79,7 +88,7 @@ export async function sealCandidate(build, output, source, env = process.env) {
   const files = Object.fromEntries(await Promise.all(names.map(async name => [name, await sha256(path.join(output, name))])));
   const candidate = { schemaVersion: 2, kind: 'motion-candidate', packageName: guide.packageName, version: guide.version,
     sourceCommit: guide.commit, tgz: filename, tgzSHA256: files[filename], integrity: integrity(await readFile(path.join(output, filename))), files,
-    workflow: { repository, path: candidateWorkflow, ref: 'refs/heads/main', sha: env.GITHUB_SHA,
+    workflow: { repository, path: candidateWorkflow, ref: workflowRef, sha: env.GITHUB_SHA,
       runId: Number(env.GITHUB_RUN_ID), attempt: Number(env.GITHUB_RUN_ATTEMPT) },
     createdAt: new Date().toISOString(), acceptance: 'not-performed' };
   await writeJSON(path.join(output, 'candidate.json'), candidate);
@@ -87,7 +96,7 @@ export async function sealCandidate(build, output, source, env = process.env) {
 }
 
 export function validateRun(run, artifact, version) {
-  assert.equal(run.event, 'workflow_dispatch'); assert.equal(run.head_branch, 'main');
+  assert.equal(run.event, 'workflow_dispatch'); assert(candidateRefs.includes(`refs/heads/${run.head_branch}`), 'Untrusted candidate branch');
   assert.equal(run.head_repository?.full_name, repository);
   assert.equal(run.status, 'completed'); assert.equal(run.conclusion, 'success', 'Candidate build must finish successfully');
   assert.equal(run.path.split('@')[0], candidateWorkflow, 'Candidate must come from the registered build workflow');
@@ -140,7 +149,9 @@ export async function verifyCandidate(directory, expectedSHA256, run) {
   checkReleaseVersion(candidate.version); assert(candidate.version.includes('-test.'));
   assert.equal(candidate.tgz, `openmotion-app-${candidate.version}.tgz`); assert.equal(candidate.tgzSHA256, expectedSHA256);
   assert.match(expectedSHA256, hashPattern); assert.match(candidate.sourceCommit, /^[a-f0-9]{40}$/);
-  assert.deepEqual(candidate.workflow, { repository, path: candidateWorkflow, ref: 'refs/heads/main', sha: run.head_sha, runId: run.id, attempt: run.run_attempt });
+  const ref = `refs/heads/${run.head_branch || 'main'}`; // Older main-only receipts omitted the branch.
+  assert(candidateRefs.includes(ref), 'Untrusted candidate branch');
+  assert.deepEqual(candidate.workflow, { repository, path: candidateWorkflow, ref, sha: run.head_sha, runId: run.id, attempt: run.run_attempt });
   const names = [candidate.tgz, 'release-npm.json', 'source-scan.json', 'package-scan.json', 'install.md', 'install-record.json', 'acceptance.md', 'candidate-install.md'];
   assert.deepEqual(Object.keys(candidate.files).sort(), names.sort());
   for (const name of names) assert.equal(await sha256(path.join(directory, name)), candidate.files[name], 'Candidate file changed: ' + name);
@@ -160,7 +171,7 @@ export async function verifyCandidate(directory, expectedSHA256, run) {
 
 export async function verifyDownloaded(directory, expectedSHA256, version) {
   const provenance = await json(path.join(directory, 'provenance.json'));
-  const candidate = await verifyCandidate(directory, expectedSHA256, { head_sha: provenance.head_sha, id: provenance.runId, run_attempt: provenance.attempt });
+  const candidate = await verifyCandidate(directory, expectedSHA256, { head_branch: provenance.head_branch, head_sha: provenance.head_sha, id: provenance.runId, run_attempt: provenance.attempt });
   if (version) assert.equal(candidate.version, version, 'Candidate version differs from the accepted version');
   return candidate;
 }
@@ -215,7 +226,7 @@ export async function downloadCandidate(version, directory, expectedSHA256, fetc
     }
     const candidate = await verifyCandidate(directory, expectedSHA256 || (await json(path.join(directory, 'candidate.json'))).tgzSHA256, run);
     assert.equal(candidate.version, version, 'Artifact version differs from the accepted version');
-    await writeJSON(path.join(directory, 'provenance.json'), { runId: run.id, attempt: run.run_attempt, head_sha: run.head_sha, artifactId: artifact.id, digest: artifact.digest });
+    await writeJSON(path.join(directory, 'provenance.json'), { runId: run.id, attempt: run.run_attempt, head_branch: run.head_branch, head_sha: run.head_sha, artifactId: artifact.id, digest: artifact.digest });
     return candidate;
   } finally { await rm(work, { recursive: true, force: true }); }
 }
@@ -333,9 +344,9 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const [command, directory, extra, final] = process.argv.slice(2);
   if (command === 'source') {
-    const commit = await resolveSource(directory, process.env.MOTION_SOURCE_SHA, process.env.MOTION_VERSION);
+    const { commit, version } = await resolveCandidate(directory, process.env.MOTION_SOURCE_SHA, process.env.MOTION_VERSION);
     const { appendFile } = await import('node:fs/promises');
-    await appendFile(process.env.GITHUB_OUTPUT, `source_sha=${commit}\n`);
+    await appendFile(process.env.GITHUB_OUTPUT, `source_sha=${commit}\nversion=${version}\n`);
   }
   else if (command === 'seal') await sealCandidate(directory, extra, final);
   else {

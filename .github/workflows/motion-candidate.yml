@@ -1,13 +1,14 @@
 name: Motion candidate build
-run-name: Motion candidate · ${{ inputs.version }}
+run-name: Motion candidate · ${{ inputs.version || 'auto' }}
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'New test version, e.g. 0.6.4-test.7; build and retain only, never publish'
+        description: 'Optional override; empty uses next Motion patch-test.<run ID>.<attempt>; build only'
         type: string
-        required: true
+        required: false
+        default: ''
       source_sha:
         description: 'Optional reviewed full SHA integrated into feature/motion; empty freezes its current head'
         type: string
@@ -20,7 +21,7 @@ permissions:
 jobs:
   candidate:
     name: Build immutable candidate
-    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main'
+    if: github.repository == 'nexu-io/html-anything' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/motion')
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -58,8 +59,17 @@ jobs:
         run: |
           # The hosted Ubuntu image provides Chrome; avoid Ubuntu's desktop Chromium snap.
           "$HYPERFRAMES_BROWSER_PATH" --version
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq --no-install-recommends zip unzip ffmpeg fonts-noto-core
+          missing=()
+          for package in zip unzip ffmpeg fonts-noto-core; do
+            if [ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null)" != 'install ok installed' ]; then
+              missing+=("$package")
+            fi
+          done
+          if ((${#missing[@]})); then
+            apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+            sudo apt-get "${apt_options[@]}" update
+            sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
+          fi
       - name: Check the selected source
         working-directory: source
         run: |
@@ -68,7 +78,7 @@ jobs:
           npm run typecheck:studio
           npm run build:studio
           npm run build:tracking
-          node --experimental-strip-types --test tests/tracking.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
+          node --experimental-strip-types --test tests/tracking.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
           npm run test:studio -- --maxWorkers=2
           npm run package:phase1
           archive="$PWD/dist/motion-$(node -p "require('./package.json').version")-phase1.zip"
@@ -76,6 +86,7 @@ jobs:
       - name: Build the final DEV application tgz once and scan both archives
         env:
           MOTION_SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+          MOTION_VERSION: ${{ steps.source.outputs.version }}
         run: |
           node source/scripts/package-npm.mjs "$RUNNER_TEMP/build" "$MOTION_VERSION" --template-env=dev
           cp "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/build/source-scan.json"
@@ -85,7 +96,7 @@ jobs:
         id: artifact
         uses: actions/upload-artifact@v7.0.2
         with:
-          name: motion-candidate-${{ inputs.version }}
+          name: motion-candidate-${{ steps.source.outputs.version }}
           path: ${{ runner.temp }}/candidate/
           retention-days: 30
           if-no-files-found: error
