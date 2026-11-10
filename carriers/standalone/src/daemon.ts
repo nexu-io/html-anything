@@ -3,6 +3,7 @@ import type { Digest } from "@odsuite/protocol";
 import type { Connection, Context, Factory, Lease } from "@odsuite/sidecar";
 import { Client } from "@open-motion/daemon/client";
 import type { Input, Operation, Output } from "@open-motion/daemon/contract";
+import type { Binding as GatewayBinding } from "@open-motion/gateway/host";
 import type { Binding as PrismBinding } from "@open-motion/templates/host";
 
 export class Daemon {
@@ -23,6 +24,7 @@ export class Daemon {
       environment: Environment;
       renderer?: { root: string; connection: Connection };
       prism?: PrismBinding;
+      gateway?: GatewayBinding;
     },
   ) {
     const socket = await context.allocate({ kind: "socket", name: "daemon" });
@@ -40,6 +42,7 @@ export class Daemon {
       ready: "ready",
       env: {
         HYPERFRAMES_NO_TELEMETRY: "1",
+        ...(options.gateway ? { ODSUITE_RUNTIME_GATEWAY: JSON.stringify(options.gateway) } : {}),
         ...(options.prism ? { ODSUITE_RUNTIME_PRISM: JSON.stringify(options.prism) } : {}),
         ODSUITE_RUNTIME_ENDPOINT: port.value,
         ...(options.renderer ? { ODSUITE_RUNTIME_RENDERER: JSON.stringify(options.renderer) } : {}),
