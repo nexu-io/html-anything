@@ -73,7 +73,7 @@ it("creates a verified Prism project through stock SDK stdio and replays its rec
     ]);
     origin = (await source(fixture.factory(scope), { name: "publication", directory, documents })).endpoint.url;
     const prism = { origin, environment: "prod", resourceId, channel: "default", locale: "zh-CN" },
-      entry = fileURLToPath(new URL("../dist/index.mjs", import.meta.url)),
+      entry = fileURLToPath(new URL("../dist/runtime/index.mjs", import.meta.url)),
       script = `import {connect} from ${JSON.stringify(entry)}; await connect(${JSON.stringify({ root, scope, prism, version: "0.6.1-dev.1" })});`;
     client = new Client({ name: "prism-stdio-verifier", version: "1.0.0" });
     const transport = new StdioClientTransport({

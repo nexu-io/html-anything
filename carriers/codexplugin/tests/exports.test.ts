@@ -23,10 +23,10 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
       plugin = join(temporary, "installed"),
       root = join(temporary, "data"),
       evidence = fileURLToPath(new URL(`../../../.artifacts/codex-export/${randomUUID()}/`, import.meta.url)),
-      built = JSON.parse(await readFile(resolve("dist/runtime.json"), "utf8")),
+      built = JSON.parse(await readFile(resolve("dist/runtime/runtime.json"), "utf8")),
       scope = { channel: channel(built.channel), namespace: namespace("exports") };
     await mkdir(evidence, { recursive: true });
-    await cp(resolve("dist"), plugin, { recursive: true });
+    await cp(resolve("dist/runtime"), plugin, { recursive: true });
     const manager = await serve(managerEndpoint(root), { root }),
       factory = manager.factory(scope);
     let library!: Library;

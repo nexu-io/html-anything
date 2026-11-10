@@ -23,7 +23,7 @@ import { expect, it } from "vitest";
 it("runs a relocated closed plugin through actual SDK stdio, real health and clean EOF", async () => {
   const root = await mkdtemp(join(tmpdir(), "codex-stdio-"));
   const plugin = join(root, "plugin");
-  await cp(resolve("dist"), plugin, { recursive: true });
+  await cp(resolve("dist/runtime"), plugin, { recursive: true });
   for (const name of ["LICENSE", "NOTICE"]) {
     const original = await readFile(new URL(`../../../${name}`, import.meta.url), "utf8"),
       bundled = await readFile(join(plugin, name), "utf8");
@@ -266,8 +266,8 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
 
 it("drains a real runtime when stdin ends before any initialize request", async () => {
   const root = await mkdtemp(join(tmpdir(), "codex-early-eof-"));
-  const built = JSON.parse(await readFile(resolve("dist/runtime.json"), "utf8"));
-  const child = spawn(process.execPath, [resolve("dist/main.mjs")], {
+  const built = JSON.parse(await readFile(resolve("dist/runtime/runtime.json"), "utf8"));
+  const child = spawn(process.execPath, [resolve("dist/runtime/main.mjs")], {
     env: { ...process.env, OPEN_MOTION_ROOT: root, OPEN_MOTION_CHANNEL: built.channel, OPEN_MOTION_NAMESPACE: "early" },
     stdio: ["pipe", "pipe", "pipe"],
   });
