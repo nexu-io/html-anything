@@ -114,7 +114,7 @@ describe("Studio export tracking", () => {
     });
     await act(async () =>
       source?.listeners.forEach((listener) =>
-        listener({ data: JSON.stringify({ status: "failed", error: "ENOENT /Users/someone/film/index.html" }) }),
+        listener({ data: JSON.stringify({ status: "failed", error: "ENOENT /srv/someone/film/index.html" }) }),
       ),
     );
     expect(events("studio_export_result")).toEqual([

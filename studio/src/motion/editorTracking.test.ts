@@ -124,7 +124,7 @@ it('buckets export settings and rejections into closed values', () => {
 it('reports asset import counts with a safe category only when something failed', () => {
   expect(importErrorCategory('no supported video stream found')).toBe('unsupported_format');
   expect(importErrorCategory('ffprobe failed to read the media file')).toBe('unreadable');
-  expect(importErrorCategory('/Users/someone/private.mov exploded')).toBe('other');
+  expect(importErrorCategory('/srv/someone/private.mov exploded')).toBe('other');
   reportAssetImport({ projectId: PROJECT, entryPoint: 'assets_button', requested: 2, added: 2, category: 'other' });
   reportAssetImport({ projectId: PROJECT, entryPoint: 'assets_drop', requested: 3, added: 1, category: 'too_large' });
   reportAssetImport({ projectId: PROJECT, requested: 1, added: 0, category: 'unreadable' });

@@ -59,7 +59,7 @@ test('Motion editor events admit only closed categories, UUID projects and bound
     ['studio_edit_result', { outcome: 'success', edit_kind: 'move' }],
     ['studio_export_request_result', { export_id: exportId, outcome: 'accepted', ...settings, composition: 'scenes/intro.html' }],
     ['studio_export_request_result', { export_id: 'demo_2026-11-10_10-00-00', outcome: 'accepted', ...settings }],
-    ['studio_export_request_result', { export_id: exportId, outcome: 'rejected', ...settings, error_code: 'ENOENT /Users/a/b' }],
+    ['studio_export_request_result', { export_id: exportId, outcome: 'rejected', ...settings, error_code: 'ENOENT /srv/a/b' }],
     ['studio_export_result', { export_id: exportId, job_state: 'completed', duration_ms: 1, ...settings, filename: 'out.mp4' }],
     ['studio_export_result', { export_id: exportId, job_state: 'completed', duration_ms: 1, ...settings, fps: 30 }],
     ['studio_asset_import_result', { outcome: 'failure', entry_point: 'assets_button', requested_count: 1, added_count: 0, failed_count: 1, error_category: 'clip.mov too large' }],

@@ -342,7 +342,7 @@ describe("undo/redo reporting", () => {
     await step({ ok: true, label: "Undid: Move", paths: ["index.html"] }, "undo");
     await step({ ok: false, reason: "empty" }, "redo");
     await step({ ok: false, reason: "content-mismatch", paths: ["secret/path.html"] }, "undo");
-    await step({ ok: false, reason: "failed", message: "EACCES /Users/someone/project" }, "undo");
+    await step({ ok: false, reason: "failed", message: "EACCES /srv/someone/project" }, "undo");
     expect(steps()).toEqual([
       { action: "undo", outcome: "success", interaction_method: "keyboard" },
       { action: "redo", outcome: "unavailable" },
