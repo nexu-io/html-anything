@@ -27,7 +27,7 @@ export async function hostPlan(options, home, launcher, previous) {
     try { current = JSON.parse(await cli(['mcp', 'get', 'openmotion', '--json'])); }
     catch (error) { if (!/No MCP server named ['"]openmotion['"] found/.test(error.message)) throw error; }
     assert(!current || (saved && equalTransport(current.transport, transport)), 'Existing openmotion MCP configuration is not owned by this installation');
-    return { host, ...metadata, metadata, register: async () => { if (!current) await cli(['mcp', 'add', 'openmotion', '--', process.execPath, launcher]); } };
+    return { host, ...metadata, metadata, connection: current, register: async () => { if (!current) await cli(['mcp', 'add', 'openmotion', '--', process.execPath, launcher]); } };
   }
   if (host === 'claude') {
     const claude = options.claude || 'claude';
@@ -38,7 +38,7 @@ export async function hostPlan(options, home, launcher, previous) {
     const current = settings?.mcpServers?.openmotion;
     assert(!current || (saved?.configFile === configFile && equalTransport(current, transport)), 'Existing Claude openmotion MCP is not owned by this installation');
     metadata.configFile = configFile;
-    return { host, ...metadata, metadata, register: async () => {
+    return { host, ...metadata, metadata, connection: current && { transport: current }, register: async () => {
       if (!current) await runFile(claude, ['mcp', 'add-json', '-s', 'user', 'openmotion', JSON.stringify(transport)]);
     } };
   }
@@ -50,8 +50,9 @@ export async function hostPlan(options, home, launcher, previous) {
       const current = config?.mcpServers?.openmotion;
       assert(!current || (saved?.configFile === configFile && equalTransport(current, transport)), 'Existing WorkBuddy openmotion MCP is not owned by this installation');
     };
-    check(await readJSON(configFile)); metadata.configFile = configFile;
-    return { host, ...metadata, metadata, register: async () => {
+    const configured = await readJSON(configFile);
+    check(configured); metadata.configFile = configFile;
+    return { host, ...metadata, metadata, connection: configured?.mcpServers?.openmotion && { transport: configured.mcpServers.openmotion }, register: async () => {
       await withLock(configFile + '.openmotion.lock', async () => {
         const config = await readJSON(configFile) || {}; check(config);
         await writeJSON(configFile, { ...config, mcpServers: { ...config.mcpServers, openmotion: transport } });
@@ -76,7 +77,14 @@ export async function hostPlan(options, home, launcher, previous) {
     try { await access(desktop); dsh = desktop; } catch {}
   }
   metadata.configFile = configFile; metadata.profile = profile; metadata.bundleDirectory = bundleDirectory; metadata.skillsDirectory = path.join(bundleDirectory, 'skills'); metadata.layout = 'deepseek';
-  return { host, skillsDirectory: path.join(bundleDirectory, 'skills'), layout: 'deepseek', metadata, register: async () => {
+  return { host, skillsDirectory: path.join(bundleDirectory, 'skills'), layout: 'deepseek', metadata,
+    readConnection: async () => {
+      if (!dependency) return null;
+      const patch = await readJSON(path.join(bundleDirectory, 'cordis.patch.yml'));
+      assert(patch === null || Array.isArray(patch), 'Invalid managed Harness MCP bundle. Run setup for the same host, home and profile to repair it.');
+      const configured = patch?.flatMap(item => item.insert || []).find(item => item.id === 'mcp-openmotion')?.config;
+      return configured && { transport: { ...configured, type: configured.transport } };
+    }, register: async () => {
     await runFile(dsh, ['plugin', '--profile', profile, 'add', bundleDirectory, '--ignore-scripts'], { env: { ...process.env, DSH_HOME: dshHome } });
   }, writeBundle: async (stage, appRoot, version) => {
     await writeJSON(path.join(stage, 'package.json'), { name: bundleName, version, private: true, type: 'module', files: ['cordis.patch.yml'], dsh: { bundle: { patch: './cordis.patch.yml' } } });

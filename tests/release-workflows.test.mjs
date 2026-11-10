@@ -12,25 +12,29 @@ import { consumerEnvironment } from '../.github/scripts/motion-registry-smoke.mj
 import { runFile } from '../scripts/runtime-assets.mjs';
 
 const config = { endpoint: 'https://example.r2.cloudflarestorage.com', bucket: 'example-releases', publicOrigin: 'https://download.example.invalid' };
-const valid = { GITHUB_REPOSITORY: repository, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REF: 'refs/heads/main',
-  GITHUB_WORKFLOW_REF: `${repository}/${publicationWorkflow}@refs/heads/main`, MOTION_VERSION: '0.6.4-test.99', MOTION_ACCEPTED: 'true', MOTION_RELEASE_ACTION: 'publish-test', MOTION_EXPECTED_SHA256: 'a'.repeat(64) };
+const valid = { GITHUB_REPOSITORY: repository, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REF: 'refs/heads/feature/motion',
+  GITHUB_WORKFLOW_REF: `${repository}/${publicationWorkflow}@refs/heads/feature/motion`, MOTION_VERSION: '0.6.4-test.99', MOTION_ACCEPTED: 'true', MOTION_RELEASE_ACTION: 'publish-test', MOTION_EXPECTED_SHA256: 'a'.repeat(64) };
 const origin = { id: 123, run_attempt: 1, event: 'workflow_dispatch', head_branch: 'main', head_repository: { full_name: repository }, status: 'completed', conclusion: 'success', path: candidateWorkflow, head_sha: 'b'.repeat(40) };
 const artifact = { id: 456, name: 'motion-candidate-0.6.4-test.99', workflow_run: { id: 123 }, expired: false, size_in_bytes: 100, digest: 'sha256:' + 'a'.repeat(64) };
 test('manual entry and source selection reject untrusted callers, mutable refs and non-test versions', async () => {
   assert.equal(releaseInputs(valid).action, 'publish-test');
-  for (const [key, value] of Object.entries({ GITHUB_REPOSITORY: 'fork/repo', GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/feature/motion', GITHUB_WORKFLOW_REF: `${repository}/evil.yml@refs/heads/main`, MOTION_EXPECTED_SHA256: 'bad', MOTION_ACCEPTED: 'false', MOTION_VERSION: '0.6.4', MOTION_RELEASE_ACTION: 'stable' })) assert.throws(() => releaseInputs({ ...valid, [key]: value }));
-  const recovery = { ...valid, GITHUB_WORKFLOW_REF: `${repository}/${recoveryWorkflow}@refs/heads/main` };
+  for (const [key, value] of Object.entries({ GITHUB_REPOSITORY: 'fork/repo', GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/main', GITHUB_WORKFLOW_REF: `${repository}/evil.yml@refs/heads/feature/motion`, MOTION_EXPECTED_SHA256: 'bad', MOTION_ACCEPTED: 'false', MOTION_VERSION: '0.6.4', MOTION_RELEASE_ACTION: 'stable' })) assert.throws(() => releaseInputs({ ...valid, [key]: value }));
+  const recovery = { ...valid, GITHUB_WORKFLOW_REF: `${repository}/${recoveryWorkflow}@refs/heads/feature/motion` };
   assert.throws(() => releaseInputs(recovery), /Recovery/);
   assert.equal(releaseInputs({ ...recovery, MOTION_RELEASE_ACTION: 'archive-only' }).action, 'archive-only');
   let called = false;
   await validateSource('.', 'a'.repeat(40), '0.6.4-test.7', async (_, args) => { called = true; assert(args.includes('refs/remotes/origin/feature/motion')); }); assert(called);
   for (const [sha, version] of [['main', '0.6.4-test.7'], ['a'.repeat(40), '0.6.4'], ['a'.repeat(40), '0.6.4-test.0']]) await assert.rejects(validateSource('.', sha, version, async () => { throw Error('must not run'); }));
   await assert.rejects(validateSource('.', 'a'.repeat(40), '0.6.4-test.7', async () => { throw Error('not integrated'); }), /not integrated/);
-  const resolved = await resolveCandidate('.', '', '0.6.4-test.7', {}, async (_, args) => args[0] === 'rev-parse' ? 'a'.repeat(40) + '\n' : '');
+  const buildEnv = { ...valid, GITHUB_SHA: 'a'.repeat(40), GITHUB_WORKFLOW_REF: `${repository}/${candidateWorkflow}@refs/heads/feature/motion` };
+  const resolved = await resolveCandidate('.', '', '0.6.4-test.7', buildEnv, async (_, args) => { assert.notEqual(args[0], 'rev-parse'); });
   assert.deepEqual(resolved, { commit: 'a'.repeat(40), version: '0.6.4-test.7' });
-  await assert.rejects(resolveCandidate('.', 'main', '', {}, async () => { throw Error('must not run'); }), /immutable/);
-  for (const env of [{}, { GITHUB_RUN_ID: '42812345678', GITHUB_RUN_ATTEMPT: '0' }, { GITHUB_RUN_ID: 'bad', GITHUB_RUN_ATTEMPT: '1' }]) {
-    await assert.rejects(resolveCandidate('.', 'a'.repeat(40), '', env, async () => JSON.stringify({ version: '0.6.3' })), /positive/);
+  await assert.rejects(resolveCandidate('.', 'main', '', buildEnv, async () => { throw Error('must not run'); }), /immutable/);
+  for (const env of [{}, { GITHUB_RUN_NUMBER: '2', GITHUB_RUN_ATTEMPT: '0' }, { GITHUB_RUN_NUMBER: 'bad', GITHUB_RUN_ATTEMPT: '1' }]) {
+    await assert.rejects(resolveCandidate('.', 'a'.repeat(40), '', { ...buildEnv, ...env }, async () => JSON.stringify({ version: '0.6.3' })), /Positive/);
+  }
+  for (const patch of [{ GITHUB_REF: 'refs/heads/main' }, { GITHUB_REF: 'refs/heads/codex/unreviewed' }, { GITHUB_WORKFLOW_REF: `${repository}/${candidateWorkflow}@refs/heads/main` }]) {
+    await assert.rejects(resolveCandidate('.', '', '0.6.4-test.7', { ...buildEnv, ...patch }, async () => { throw Error('Must reject before git'); }));
   }
 });
 
@@ -47,14 +51,15 @@ test('candidate CLI numbers the frozen Motion source, not the legacy control che
   await writeFile(path.join(directory, 'package.json'), JSON.stringify({ version: '0.1.0' }));
   const output = path.join(directory, 'output'), script = fileURLToPath(new URL('../.github/scripts/motion-release.mjs', import.meta.url));
   for (const [source, version, run, attempt, expected] of [
-    ['', '', '42812345678', '1', '0.6.4-test.42812345678.1'],
-    [commit, '', '42812345678', '2', '0.6.4-test.42812345678.2'],
-    ['', '', '42812345679', '1', '0.6.4-test.42812345679.1'],
+    ['', '', '2', '1', '0.6.4-test.7'],
+    [commit, '', '2', '2', '0.6.4-test.7.2'],
+    ['', '', '3', '1', '0.6.4-test.8'],
     [commit, '0.6.5-test.1', '', '', '0.6.5-test.1'],
   ]) {
     await writeFile(output, '');
     await runFile(process.execPath, [script, 'source', directory], { env: { ...process.env, GITHUB_OUTPUT: output,
-      MOTION_SOURCE_SHA: source, MOTION_VERSION: version, GITHUB_RUN_ID: run, GITHUB_RUN_ATTEMPT: attempt } });
+      ...valid, GITHUB_SHA: commit, GITHUB_WORKFLOW_REF: `${repository}/${candidateWorkflow}@refs/heads/feature/motion`,
+      MOTION_SOURCE_SHA: source, MOTION_VERSION: version, GITHUB_RUN_ID: '42812345678', GITHUB_RUN_NUMBER: run, GITHUB_RUN_ATTEMPT: attempt } });
     assert.equal(await readFile(output, 'utf8'), `source_sha=${commit}\nversion=${expected}\n`);
     assert(compareReleaseVersions(expected, '0.6.4-test.6') > 0);
   }
@@ -79,12 +84,13 @@ test('version lookup uses the exact artifact name and rejects missing, expired, 
   for (const artifacts of [[], [{ ...artifact, expired: true }], [artifact, { ...artifact, id: 457 }], [{ ...artifact, workflow_run: {} }]]) {
     await assert.rejects(findCandidate('0.6.4-test.99', async () => Response.json({ total_count: artifacts.length, artifacts })));
   }
+  await assert.rejects(findCandidate('0.6.4-test.7', async () => Response.json({ total_count: 0, artifacts: [] })), /0\.6\.4-test\.7; found 0[\s\S]*cannot rename/);
   await assert.rejects(findCandidate('0.6.4-test.99', async () => Response.json({ total_count: 101, artifacts: [artifact] })), /incomplete/);
 });
 
 test('operator authorization requires explicit acceptance and records the actual manual caller without independent approval', async t => {
   const f = await candidateFixture(t);
-  const run = { ...origin, id: 800, path: publicationWorkflow, actor: { login: 'operator' }, triggering_actor: { login: 'rerunner' } };
+  const run = { ...origin, head_branch: 'feature/motion', id: 800, path: publicationWorkflow, actor: { login: 'operator' }, triggering_actor: { login: 'rerunner' } };
   assert.equal(authorizationReceipt(f.candidate, run, 'publish-test').actor, 'rerunner');
   assert.throws(() => authorizationReceipt(f.candidate, { ...run, actor: {}, triggering_actor: {} }, 'publish-test'));
   const fetcher = async url => { assert(String(url).endsWith('/actions/runs/800')); return Response.json(run); };
@@ -93,7 +99,7 @@ test('operator authorization requires explicit acceptance and records the actual
   assert.equal(record.publicationRun, 800); assert.equal(record.tgzSHA256, f.candidate.tgzSHA256);
   assert.equal(record.actor, 'rerunner'); assert.equal(record.acceptanceConfirmed, true);
   await assert.rejects(recordAuthorization(f.directory, f.inputs, fetcher, { ...f.env, MOTION_ACCEPTED: 'false' }), /acceptance/);
-  for (const patch of [{ id: 801 }, { event: 'push' }, { head_branch: 'feature/motion' }, { head_sha: 'f'.repeat(40) }, { path: candidateWorkflow }, { head_repository: { full_name: 'fork/repo' } }]) {
+  for (const patch of [{ id: 801 }, { event: 'push' }, { head_branch: 'main' }, { head_sha: 'f'.repeat(40) }, { path: candidateWorkflow }, { head_repository: { full_name: 'fork/repo' } }]) {
     await assert.rejects(recordAuthorization(f.directory, f.inputs, async () => Response.json({ ...run, ...patch }), f.env));
   }
 });
@@ -156,7 +162,7 @@ function registry(candidate, exists = true, tag = candidate.version, latest = '0
 test('npm publishes only new exact bytes; identical retry and archive-only never write, mismatches fail', async t => {
   const f = await candidateFixture(t); let calls = 0;
   assert.notEqual(f.candidate.sourceCommit, f.candidate.workflow.sha, 'Application and workflow source identities are independent');
-  const run = async (command, args) => { calls++; assert.equal(command, 'npm'); assert(args.includes('--ignore-scripts') && args.includes('candidate')); assert(args.includes('--provenance=false'), 'Do not attest the publication main SHA as the prebuilt application source'); assert.equal(args[1], path.join(f.directory, f.candidate.tgz)); };
+  const run = async (command, args) => { calls++; assert.equal(command, 'npm'); assert(args.includes('--ignore-scripts') && args.includes('candidate')); assert(args.includes('--provenance=false'), 'Do not attest the publication workflow SHA as the prebuilt application source'); assert.equal(args[1], path.join(f.directory, f.candidate.tgz)); };
   await publishNpm(f.directory, f.inputs, { run, fetcher: registry(f.candidate, false), env: f.env }); assert.equal(calls, 1);
   await publishNpm(f.directory, f.inputs, { run, fetcher: registry(f.candidate), env: f.env });
   await assert.rejects(publishNpm(f.directory, f.inputs, { run, fetcher: registry({ ...f.candidate, integrity: 'different' }), env: f.env }), /different bytes/); assert.equal(calls, 1);
@@ -265,7 +271,13 @@ test('daily build and publication are separate manual entries without an indepen
   const header = workflow.split('\njobs:\n')[0];
   assert(build.includes('workflow_dispatch:') && build.includes('version:') && build.includes('source_sha:'));
   assert(build.includes('name: ' + candidateJobName) && build.includes('ref: ${{ steps.source.outputs.source_sha }}'));
-  assert(build.includes("github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/motion'"));
+  for (const entry of [build, workflow, recovery]) {
+    assert(entry.includes('name: Require Motion integration branch'));
+    assert(entry.includes("Select feature/motion in Run workflow"));
+    const guard = entry.split('      - name: Require Motion integration branch\n')[1].split(/\n      - |\n  [a-z]/)[0];
+    assert(guard.includes("exit 1"));
+  }
+  assert(recovery.includes('needs: select-ref'));
   assert(build.includes('--template-env=dev') && !build.includes('--template-env=prod'));
   assert(build.includes('tests/native-runtime.test.ts'), 'Candidate checks include the integrated native-preparation regression');
   assert(build.includes('HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome') && build.includes('\"$HYPERFRAMES_BROWSER_PATH\" --version'));
@@ -283,6 +295,19 @@ test('daily build and publication are separate manual entries without an indepen
   assert(workflow.includes('MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}'));
   assert(recovery.includes('version:') && recovery.includes('accepted:') && recovery.includes('archive_only: true'));
   assert(recovery.includes('uses: ./.github/workflows/motion-publish-test.yml') && !recovery.includes('source_sha:'));
+});
+
+test('each manual entry accepts only feature/motion before checkout or publication', async () => {
+  for (const name of ['motion-candidate', 'motion-publish-test', 'motion-publication-recovery']) {
+    const workflow = await readFile(new URL(`../.github/workflows/${name}.yml`, import.meta.url), 'utf8');
+    const step = workflow.split('      - name: Require Motion integration branch\n')[1].split(/\n      - |\n  [a-z]/)[0];
+    const script = step.split('        run: |\n')[1].split('\n').map(line => line.replace(/^ {10}/, '')).join('\n');
+    const run = ref => runFile('bash', ['-e', '-o', 'pipefail', '-c', script], { env: { ...process.env, GITHUB_REF: ref } });
+    await run('refs/heads/feature/motion');
+    for (const ref of ['refs/heads/main', 'refs/heads/legacy', 'refs/heads/codex/unreviewed', 'refs/tags/feature/motion']) {
+      await assert.rejects(run(ref), /Select feature\/motion/);
+    }
+  }
 });
 
 test('rendering tools reuse installed packages, bound apt networking and stop on installation failure', async t => {
@@ -380,7 +405,7 @@ test('an unexpected npm latest change stops promotion and consumer processes can
 
 test('no-publication rehearsal carries one accepted candidate through npm and storage using simulated services only', async t => {
   const f = await candidateFixture(t), store = storage(f.candidate);
-  const run = { ...origin, id: 800, path: publicationWorkflow, actor: { login: 'operator' } };
+  const run = { ...origin, head_branch: 'feature/motion', id: 800, path: publicationWorkflow, actor: { login: 'operator' } };
   const github = async url => { assert(String(url).endsWith('/actions/runs/800')); return Response.json(run); };
   await writeFile(path.join(f.directory, 'authorization.json'), '{}');
   let npmWrites = 0, tagWrites = 0, published = false, testTag = '0.6.4-test.1';

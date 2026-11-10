@@ -30,6 +30,8 @@ Studio 前端从上游 0.9.7 的固定 commit 迁入 `studio/src/` 并在本仓�
 
 导出链是版本校验 → 复制并校验内容快照 → 记录快照尺寸/fps/时长 → 后台独占领取 → 上游 lint/render → 实际 MP4 头检查 → completed。渲染日志和预期规格保留，结束后删除媒体快照，查询返回原请求版本。一期 `motion_export_request` 在 completed 前自动按任务规格检查实际 MP4、完整解码视频/音频并执行代表帧 seek；通过 `motion_get_project` 的 exportJobId 查询报告；视觉、声音内容与实际播放器检查仍独立执行。旧浏览器 WebM 上传端点、claim/fail 协议、Canvas renderer、MediaRecorder、离线打包和 IndexedDB 草稿已删除。
 
+OpenMotion preview and export preflight run the pinned native `lintProject` with `host: "studio"` in an isolated child process, retaining timeout, cancellation, referenced-file checks and native finding locations/fix hints. Root composition structure errors are rejected before opening Studio or invoking the renderer; ordinary warnings remain non-blocking. The same check is available from `node scripts/lint-project.mjs RUNTIME_ROOT PROJECT_DIRECTORY` (exit 0 for no errors, 1 for validation errors). Direct upstream `hyperframes lint` retains its CLI warning policy; its success alone is not Studio acceptance. `info` and `timeline` keep their original CLI behavior.
+
 测试包含真实 Studio API 的 If-Match 编辑、MCP 反向编辑、原生模板 lint/timeline、旧文件保留、路径/链接隔离、缓存与 manifest 的区别，以及无浏览器页面参与的带音轨渲染。集成测试验证 320×180、24fps、H.264、音频、时长、移动图形帧差和下载字节。没有本机渲染依赖时显式跳过集成测试。
 
 官方参考：[代码与包结构](https://github.com/heygen-com/hyperframes)、[Composition 格式](https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/format.md)、[Studio CLI](https://github.com/heygen-com/hyperframes/blob/main/packages/cli/src/commands/preview.ts)。具体行为按锁定的 npm 版本验证，更新上游版本时应复测原生 API、Studio manifests、生命周期输出和渲染链路。
