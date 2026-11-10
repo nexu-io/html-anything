@@ -13,7 +13,15 @@ export function workspaceLayout(document: Document) {
   label(header, "toolbar", "工程工具栏");
   split.end.append(header);
   shell.body.append(split.element);
-  return { element: shell.element, navigation: shell.rail, conversation: split.start, editor: split.end, header };
+  return {
+    element: shell.element,
+    navigation: shell.rail,
+    conversation: split.start,
+    editor: split.end,
+    header,
+    showNavigation: (visible: boolean) => shell.showRail(visible),
+    showConversation: (visible: boolean) => split.showStart(visible),
+  };
 }
 /** Product registration and placement. Atoms own only anonymous grid cells and panel surfaces. */
 export function studioLayout(document: Document) {

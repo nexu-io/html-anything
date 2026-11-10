@@ -11,7 +11,7 @@ import { type Binding, CompositionContext } from "./studio/context.js";
 import { StudioLibrary } from "./studio/library.js";
 import { Properties } from "./studio/properties.js";
 import { studioTimeline } from "./studio/timeline.js";
-import { playerControls, studioTools } from "./studio/toolbar.js";
+import { playerControls, studioTools, syncMode } from "./studio/toolbar.js";
 import { applyClip, commitClip, editClip, retimeKey } from "./studio/transactions.js";
 
 const editorLabel = (session: boolean) => (session ? "新建影片工程" : "开始创作");
@@ -465,6 +465,7 @@ export class Studio {
     this.previewWrapper.hidden = mode !== "preview";
     this.options.source.hidden = mode !== "source";
     if (mode === "source") this.control("pause");
+    syncMode(this.toolbar, mode);
     if (this.model) this.render(this.model.clips);
   }
   private show(project: Project) {

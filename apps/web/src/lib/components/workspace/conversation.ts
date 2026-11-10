@@ -133,9 +133,9 @@ export class Conversation {
       this.instruction.value = "";
     }
   }
-  created(text: string) {
+  created(text?: string) {
     const d = this.drafts.get(this.current);
-    if (d?.project === text) {
+    if (text !== undefined && d?.project === text) {
       d.project = "";
       this.project.value = "";
     }
@@ -211,12 +211,15 @@ export class Conversation {
       }
       setButton(card, {
         label: artifact.title,
-        detail: "Motion 工程",
+        detail: artifact.id === editor.project?.artifactId ? "当前打开 · Motion 工程" : "Motion 工程",
+        selected: artifact.id === editor.project?.artifactId,
         icon: "film",
         variant: "card",
         disabled: blocked,
         onClick: () => this.actions.open(artifact),
       });
+      if (artifact.id === editor.project?.artifactId) card.setAttribute("aria-current", "true");
+      else card.removeAttribute("aria-current");
     }
     this.artifacts.querySelector("p")?.remove();
     if (!session?.artifacts.length && !messages.length)
