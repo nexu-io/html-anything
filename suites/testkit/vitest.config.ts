@@ -10,6 +10,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    env: { PLAYWRIGHT_BROWSERS_PATH: "0" },
     include: ["tests/**/*.test.ts"],
   },
 });

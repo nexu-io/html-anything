@@ -49,8 +49,16 @@ Before adding a document, identify its lasting topic and owning source module. U
 
 Keep contracts and related operations accurate in the same delivery. Distinguish constraints, implemented support and missing capabilities, and never substitute reference tests for real product/platform/distribution evidence. Collaboration content is English. Preserve public licenses, disabled telemetry, finite resource manifests and credential/user-data separation.
 
+## Runtime acceptance fixtures
+
+Resolve retained fixture evidence under the repository's `.artifacts` using the test module URL. A package runner's current directory is not the repository root. Preserve failed authority/ledger layouts at their original paths; correct future output locations rather than expanding the directory whitelist to normalize accidental locations. A clean source-policy check and retained local-evidence findings must be reported separately.
+
+Publish a checkpoint observed by another process through a completed temporary file and same-directory atomic rename. Flushing a directly visible file does not make its publication atomic; existence alone cannot prove that JSON or other readiness evidence is complete. Keep readers strict and retain the original failure instead of masking partial publication with parse-error retries or longer deadlines.
+
 ## Worktrees and PRs
 
 Branch from a freshly fetched pinned origin/refactor/odsuite into an owned topic worktree. Install/build/test/generate only there, never in a baseline or integration checkout. Describe the trigger, resulting behavior, owner/dependency/lifecycle changes and actual validation in an English PR targeting refactor/odsuite. Verify base/head/checks and squash only; never direct-push implementation or merge/rebase-merge.
 
 The complete product remains on feature/motion until separate acceptance. No main change, repository rename or package/storage/release publication follows automatically. Keep unmerged/unpublished worktrees and record their recoverable state. Cleanup is separately scoped; routine implementation authorization is not a reason for repeated confirmation, while a real unresolved ownership/dependency/lifecycle change needs discussion.
+
+When concurrent delivery is authorized, each independently accepted unit has its own owner, worktree and PR. Agree shared contracts and file responsibilities before implementation. A coordinator reviews cross-layer changes and integrates serially; dependent branches incorporate the accepted integration base and validate that actual combined head. Commit/check receipts distinguish superseded candidates and original failures from the final verified source.

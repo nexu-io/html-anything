@@ -75,6 +75,9 @@ Daemon owns 25 complete versioned guidance documents for five intent routes: con
 
 Development Codex attachments negotiate only a delegated Daemon connection through the sidecar business Peer, then transfer source/media over the existing HTTP business transport. Large source snapshots never widen the sidecar control-frame bound. The old generic execute Peer handler is removed. Delegated endpoint/token metadata stays inside composition/attachment code and never enters runtime_status, public guidance or job responses. Attachment EOF leaves its separately owned runtime running; self-hosted Codex still owns/drains its composition.
 
+
+Web owns navigation/conversation visibility and session keyboard navigation. Collapsing anonymous panels keeps DOM, drafts, selection and pending command identity; it neither saves nor disposes. Opening New Project reveals its conversation form. Active session/artifact cues reflect committed workspace selection. Source/preview mode visibility and chrome remain correct while dirty source invalidates native transforms; this does not enable stale edits. Template selection pins both ID and contentHash per session: catalog refresh never silently adopts another version. Unsupported discoveries expose their reason without enabling creation; a configured first-load catalog error preserves access to built-ins.
+
 ## Native editing and previews
 
 Motion owns SDK source transforms and pinned runtime adaptation. Workspace owns persistence/revisions/history. Daemon exposes protected pure transforms and read-only previews; Web owns drafts and candidate-frame retirement. There is no preview process/port/project registry outside sidecar, and no editable physical project copy is created just to preview a confirmed snapshot. Physical export uses the separate fixed-revision materialization contract below.
