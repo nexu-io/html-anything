@@ -1,0 +1,13 @@
+{
+  "format": ["javascript", "typescript", "jsx", "tsx"],
+  "mode": "weak",
+  "minLines": 12,
+  "minTokens": 80,
+  "ignore": [
+    "**/.github/**",
+    "**/{build,dist,fixtures,node_modules,template-library,templates,tests}/**",
+    "**/*.{test,spec}.{ts,tsx,js,jsx,mjs,cjs}",
+    "**/*.d.ts"
+  ],
+  "reporters": ["json", "silent"]
+}
