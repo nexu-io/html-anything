@@ -8,6 +8,8 @@
 
 ![A three-step guide: find a film in the Motion library, describe its style in Motion MD, and adapt it in Codex.](docs/readme/hero.svg)
 
+The editor visibility pilot hides media-generation entries and timeline keyframe buttons through one [UI configuration](docs/editor-fork.md#editor-entry-visibility). Editing commands, generation services and existing project content remain available.
+
 ## Motion MD
 
 **Motion MD is openmotion's first proposal for a reusable motion style specification.** A still image can tell you what a launch film looks like. To make another film in that style, you also need to know when the product appears, how the camera moves and how long the viewer has to read each line. Motion MD puts those decisions in plain Markdown.

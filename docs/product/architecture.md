@@ -185,6 +185,12 @@ The `@openmotion/app` npm tgz contains installer scripts, the prebuilt applicati
 
 Explicit test/stable prod builds produce publishable artifact metadata with test/stage defaults; the source manifests and local/DEV artifacts stay private. Packaging does not publish, update users, move main or rename the repository. DEV packages embed their template source, default to a separate installation home and refuse cross-environment reuse. Application, project data, host configuration and dependency cache retain distinct ownership. See [installation](../npm-installation.md) and [test/stable acceptance](../release-guide.md).
 
+## Editor entry visibility
+
+Motion's existing Studio host supplies a small visibility configuration. The initial pilot hides Generate media entries and timeline Add keyframe/auto-record buttons. Other editor entries, panels and saved layouts retain their existing behavior. Studio without a configured host retains its complete UI.
+
+The configuration affects visible entries only. It preserves keyboard commands, recording state, project data, generation services, MCP and rendering; the separate Edit image entry remains available. Restoring an entry requires changing its boolean, rebuilding and reloading. The implementation and Agent procedure are described in [editor development](../editor-fork.md#editor-entry-visibility).
+
 ## 演进约束
 
 The application npm format is the default; complete platform ZIPs are backups. Ordinary PR CI scans tracked source and both npm archive layers without publication credentials. Two manual controls implement candidate build and test publication: a fixed integrated source SHA produces one immutable prod candidate; publication verifies its originating workflow, hashes and acceptance-record digest, publishes the same tgz to npm test, runs anonymous native registry checks on separate Mac/Windows runners, and archives version snapshots before conditionally advancing the default guide. Snapshot-only recovery does not move the default. Private DEV template artifacts remain outside these public workflows. Stable publication is a separate authorized process. Trusted default-branch registration, a protected publication environment and npm OIDC setup remain administrator prerequisites, not enabled by this feature PR. Build, native installation, real Agent creation and human playback remain separate evidence. See [release workflows](../release-workflows.md) and [package checks](../test-packages.md).

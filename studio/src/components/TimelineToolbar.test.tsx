@@ -11,6 +11,8 @@ import { readStudioUiPreferences } from "../utils/studioUiPreferences";
 import { dispatchPlainKey, type HotkeyCallbacks } from "../hooks/appHotkeysDispatch";
 import { AudioMeterStrip } from "./nle/AudioMeterStrip";
 import { TimelineToolbar } from "./TimelineToolbar";
+import { StudioHostContext } from "../motion/StudioHost";
+import { editorEntryVisibility } from "../motion/editorEntryVisibility";
 import { registerTimelineZoomViewport } from "../player/components/timelineZoomInput";
 
 vi.mock("../contexts/StudioContext", () => ({
@@ -199,6 +201,19 @@ describe("TimelineToolbar — keyframes on audio tracks", () => {
   it("shows Add keyframe and auto-record, and K adds a keyframe, by default", () => {
     const { host, root } = renderToolbar(sessionFor("div"));
     expect(keyframeControls(host).every(Boolean)).toBe(true);
+    expect(pressK()).toBe(true);
+    act(() => root.unmount());
+  });
+
+  it("hides only keyframe controls without changing recording state or the K command", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    act(() => root.render(<StudioHostContext.Provider value={{ entryVisibility: editorEntryVisibility }}>
+      <TimelineToolbar domEditSession={sessionFor("div")} />
+    </StudioHostContext.Provider>));
+    expect(keyframeControls(host)).toEqual([null, null]);
+    expect(usePlayerStore.getState().autoKeyframeEnabled).toBe(true);
     expect(pressK()).toBe(true);
     act(() => root.unmount());
   });

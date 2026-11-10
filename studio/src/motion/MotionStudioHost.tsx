@@ -1,3 +1,4 @@
+import { editorEntryVisibility } from './editorEntryVisibility';
 import { StudioErrorBoundary } from '../components/StudioErrorBoundary';
 import { I18nProvider, useI18n } from "../i18n/I18n";
 import { useEffect, useRef, useState, type ReactNode } from 'react';
@@ -90,6 +91,7 @@ function WorkspaceActions() {
 }
 
 const host: StudioHost = {
+  entryVisibility: editorEntryVisibility,
   brand: <></>,
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,

@@ -3,6 +3,8 @@ import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { TimelineMediaBar } from './TimelineMediaBar';
+import { StudioHostContext } from './StudioHost';
+import { editorEntryVisibility, type EditorEntryVisibility } from './editorEntryVisibility';
 import { TimelineReadOnlyContext } from '../player/components/timelineReadOnly';
 import type { TimelineState } from '../player/components/TimelineProvider';
 import type { TimelineElement } from '../player/store/playerStore';
@@ -28,7 +30,7 @@ beforeEach(() => {
     canvas: { scrollRef: { current: viewport }, pps: 100, contentOrigin: 80 }, overlays: {} } as TimelineState;
 });
 afterEach(() => { act(() => root.unmount()); document.body.innerHTML = ''; vi.restoreAllMocks(); usePlayerStore.getState().reset(); });
-async function render(readOnly = false) { await act(async () => root.render(<I18nProvider initialLocale="en"><TimelineReadOnlyContext.Provider value={readOnly ? () => {} : null}><TimelineMediaBar /></TimelineReadOnlyContext.Provider></I18nProvider>)); }
+async function render(readOnly = false, entries?: EditorEntryVisibility) { await act(async () => root.render(<I18nProvider initialLocale="en"><StudioHostContext.Provider value={entries ? { entryVisibility: entries } : null}><TimelineReadOnlyContext.Provider value={readOnly ? () => {} : null}><TimelineMediaBar /></TimelineReadOnlyContext.Provider></StudioHostContext.Provider></I18nProvider>)); }
 function button(label: string) { return Array.from(document.querySelectorAll('button')).find(b => b.textContent === label)!; }
 
 it('opens image editing from the selected clip with the original media and exact timing, and supports dismiss/reopen', async () => {
@@ -94,4 +96,25 @@ it('removes the portalled media actions while the owning Viewer is hidden and re
   expect(document.querySelector('.motion-timeline-media-bar')).toBeNull();
   await renderActive(true);
   expect(document.querySelector('.motion-timeline-media-bar')).not.toBeNull();
+});
+
+it('hides generation for a selected clip while retaining image editing and routing prompt submission to Ask Agent', async () => {
+  await render(false, editorEntryVisibility);
+  expect(button('Generate media')).toBeUndefined();
+  await act(async () => button('Edit image').click());
+  expect(hooks.open).toHaveBeenCalledWith(expect.objectContaining({ intent: 'edit' }));
+  hooks.open.mockClear();
+  await act(async () => document.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+  expect(document.querySelector('textarea')).not.toBeNull();
+  expect(hooks.open).not.toHaveBeenCalled();
+});
+
+it('hides generation for a selected range while keeping Ask Agent available', async () => {
+  hooks.state.overlays = { ...hooks.state.overlays, showPopover: true, rangeSelection: { start: 5, end: 8, anchorX: 0, anchorY: 0 } };
+  await render(false, editorEntryVisibility);
+  expect(button('Generate media')).toBeUndefined();
+  expect(button('Edit image')).toBeUndefined();
+  await act(async () => button('Ask Agent').click());
+  expect(document.querySelector('textarea')).not.toBeNull();
+  expect(hooks.open).not.toHaveBeenCalled();
 });

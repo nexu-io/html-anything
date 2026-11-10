@@ -1,3 +1,4 @@
+import { useEditorEntryVisibility } from "../motion/StudioHost";
 import { useI18n } from "../i18n/I18n";
 import { memo, useEffect, useRef, type ReactNode } from "react";
 import {
@@ -162,6 +163,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
   rightActions,
 }: TimelineToolbarProps) {
   const { t } = useI18n();
+  const entries = useEditorEntryVisibility();
   const keys = useStudioKeys();
   const kf = keyHint("addKeyframe", keys);
   const timelineSnapEnabled = usePlayerStore((s) => s.timelineSnapEnabled);
@@ -280,7 +282,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               </button>
             </Tooltip>
           )}
-          {showKeyframes && (
+          {showKeyframes && entries.timelineKeyframeControls && (
             <>
               {/* With no keyframeable selection the button fades to disabled instead of
               unmounting, so the toolbar layout never shifts (CapCut-style). */}
