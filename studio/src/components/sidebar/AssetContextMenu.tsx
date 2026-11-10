@@ -1,5 +1,7 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { filename } from "./assetHelpers";
 import { menuClasses } from "../ui/menuStyle";
 
@@ -17,6 +19,7 @@ export function ContextMenu({
   onCopy,
   onDelete,
   onRename,
+  onStartRename,
   onAddAtPlayhead,
   onPreview,
   downloadUrl,
@@ -28,11 +31,13 @@ export function ContextMenu({
   onCopy: (path: string) => void;
   onDelete?: (path: string) => void;
   onRename?: (oldPath: string, newPath: string) => void;
+  onStartRename?: () => void;
   onAddAtPlayhead?: (path: string) => void;
   onPreview?: (path: string) => void;
   downloadUrl?: string;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const menuRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x, y });
   const [mode, setMode] = useState<"menu" | "confirm-delete" | "rename">("menu");
@@ -46,8 +51,8 @@ export function ContextMenu({
     const rect = el.getBoundingClientRect();
     const margin = 8;
     setPos({
-      x: Math.min(x, window.innerWidth - rect.width - margin),
-      y: Math.min(y, window.innerHeight - rect.height - margin),
+      x: Math.max(margin, Math.min(x, window.innerWidth - rect.width - margin)),
+      y: Math.max(margin, Math.min(y, window.innerHeight - rect.height - margin)),
     });
   }, [x, y, mode]);
 
@@ -103,7 +108,8 @@ export function ContextMenu({
 
   const itemCls = `${menuClasses.row} ${menuClasses.rowEnabled} active:bg-neutral-700/70 transition-colors`;
 
-  return (
+  // Dock containers clip overflow and establish containing blocks for fixed elements.
+  return createPortal(
     <div
       className="fixed inset-0 z-200"
       onClick={onClose}
@@ -117,13 +123,13 @@ export function ContextMenu({
         role="menu"
         aria-label={t("Actions for {value0}", { value0: filename(asset) })}
         className={`${menuClasses.panel} absolute min-w-[160px] text-xs`}
-        style={{ left: pos.x, top: pos.y }}
+        style={{ left: pos.x, top: pos.y, maxWidth: "calc(100vw - 16px)", maxHeight: "calc(100vh - 16px)", overflow: "auto" }}
         onClick={(e) => e.stopPropagation()}
       >
         {mode === "menu" && (
           <>
-            {onPreview && <button role="menuitem" className={itemCls} onClick={() => { onPreview(asset); onClose(); }}>{t("Show in preview")}</button>}
-            {onAddAtPlayhead && (
+            {!mvp && onPreview && <button role="menuitem" className={itemCls} onClick={() => { onPreview(asset); onClose(); }}>{t("Show in preview")}</button>}
+            {!mvp && onAddAtPlayhead && (
               <button
                 role="menuitem"
                 onClick={() => {
@@ -134,7 +140,7 @@ export function ContextMenu({
               >
                 {t("Add at playhead")}</button>
             )}
-            <button
+{!mvp && <>             <button
               role="menuitem"
               onClick={() => {
                 onCopy(asset);
@@ -142,10 +148,10 @@ export function ContextMenu({
               }}
               className={itemCls}
             >
-              {t("Copy path")}</button>
-            {downloadUrl && <a role="menuitem" className={itemCls} href={downloadUrl} download={filename(asset)} onClick={onClose}>{t("Download file")}</a>}
+              {t("Copy path")}</button> </>}
+            {!mvp && downloadUrl && <a role="menuitem" className={itemCls} href={downloadUrl} download={filename(asset)} onClick={onClose}>{t("Download file")}</a>}
             {onRename && (
-              <button role="menuitem" onClick={() => setMode("rename")} className={itemCls}>
+              <button role="menuitem" onClick={() => { if (onStartRename) { onClose(); onStartRename(); } else setMode("rename"); }} className={itemCls}>
                 {t("Rename")}</button>
             )}
             {onDelete && (
@@ -203,7 +209,8 @@ export function ContextMenu({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

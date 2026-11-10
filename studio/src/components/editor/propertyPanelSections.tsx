@@ -67,6 +67,7 @@ export function TextAreaField({
   disabled,
   autoFocus,
   flat,
+  boxed,
   onCommit,
 }: {
   label: string;
@@ -74,6 +75,7 @@ export function TextAreaField({
   disabled?: boolean;
   autoFocus?: boolean;
   flat?: boolean;
+  boxed?: boolean;
   onCommit: (nextValue: string) => void;
 }) {
   const { t } = useI18n();
@@ -137,7 +139,9 @@ export function TextAreaField({
 
   if (flat) {
     return (
-      <div className="border-l-2 border-panel-border-input py-0.5 pl-[10px]">
+      <div className={boxed
+        ? "rounded-md bg-panel-bg-inset px-3 py-2 focus-within:ring-1 focus-within:ring-panel-accent/30"
+        : "border-l-2 border-panel-border-input py-0.5 pl-[10px]"}>
         <div className="mb-[3px] text-[9px] font-semibold uppercase tracking-[0.12em] text-panel-text-5">
           {t(label)}
         </div>
@@ -317,7 +321,7 @@ function TextFieldEditor({
       <div className={showRemove ? "flex min-w-0 items-center justify-between gap-2" : "min-w-0"}>
         <div className="min-w-0">
           <div className="truncate text-[11px] font-medium text-neutral-100">
-            {formatTextFieldPreview(field.value) || "Text"}
+            {formatTextFieldPreview(field.value) || t("Text")}
           </div>
           <div className="text-[10px] text-neutral-500">{field.tagName}</div>
         </div>
@@ -460,7 +464,7 @@ export function TextSection({
     );
     if (hideOwnHeading) return content;
     return (
-      <Section title={t("Text")} icon={<Type size={15} />} defaultCollapsed>
+      <Section title="Text" icon={<Type size={15} />} defaultCollapsed>
         {content}
       </Section>
     );
@@ -506,7 +510,7 @@ export function TextSection({
                       style={{ backgroundColor: getTextFieldColor(field, styles) }}
                     />
                     <span className="min-w-0 truncate text-[11px] font-medium text-neutral-100">
-                      {formatTextFieldPreview(field.value) || `Text ${index + 1}`}
+                      {formatTextFieldPreview(field.value) || t("Text {index}", { index: index + 1 })}
                     </span>
                   </div>
                   <span className="shrink-0 rounded-md border border-neutral-700 bg-neutral-950 px-1.5 py-0.5 text-[10px] text-neutral-500">
@@ -532,7 +536,7 @@ export function TextSection({
   );
   if (hideOwnHeading) return content;
   return (
-    <Section title={t("Text")} icon={<Type size={15} />}>
+    <Section title="Text" icon={<Type size={15} />}>
       {content}
     </Section>
   );

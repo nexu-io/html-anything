@@ -50,7 +50,7 @@ async function mountTestFileManager(projectId = "project-a", showToast = vi.fn()
   await act(async () => root.render(<Probe />));
   const manager = captured.manager;
   if (!manager) throw new Error("file manager did not render");
-  return { manager, root };
+  return { get manager() { return captured.manager!; }, root };
 }
 
 async function mountOverwriteRequest(response: Response) {
@@ -272,7 +272,7 @@ describe("useFileManager uploads", () => {
     });
 
     expect(added).toEqual(["clip.mp4"]);
-    expect(showToast).toHaveBeenCalledWith(`Added clip.mp4, ${reason}`, "info");
+    expect(showToast).toHaveBeenCalledWith("Added clip.mp4, Media checking is unavailable. The file was added, but playback has not been verified.", "info");
   });
 
   it("says why each upload was not added", async () => {
@@ -285,7 +285,24 @@ describe("useFileManager uploads", () => {
 
     expect(added).toEqual([]);
     expect(showToast).toHaveBeenCalledWith(
-      "Not added: clip.mp4 (no supported video stream found), song.mp3 (no supported audio stream found)",
+      "Not added: clip.mp4 (No playable video found. Export a video file and try again.), song.mp3 (No playable audio found. Export an audio file and try again.)",
     );
   });
+});
+
+
+it("retains selected files on native preparation refusal and imports them only on explicit retry", async () => {
+  let ready = false;
+  const fetch = vi.fn(async () => Response.json(ready ? { ok: true, files: ['clip.mp4'] } : { code: 'NATIVE_RUNTIME_NOT_READY' }, { status: ready ? 201 : 409 }));
+  vi.stubGlobal('fetch', fetch);
+  const mounted = await mountTestFileManager('project-a'), file = new File(['x'], 'clip.mp4');
+  await act(async () => { await mounted.manager.uploadProjectFiles([file]); });
+  expect(mounted.manager.pendingImport?.files[0]).toBe(file);
+  expect(fetch).toHaveBeenCalledTimes(1);
+  ready = true;
+  await act(async () => { await mounted.manager.retryPendingImport(); });
+  expect(fetch).toHaveBeenCalledTimes(2);
+  expect(mounted.manager.pendingImport).toBeNull();
+  await act(async () => mounted.root.unmount());
+  vi.unstubAllGlobals();
 });

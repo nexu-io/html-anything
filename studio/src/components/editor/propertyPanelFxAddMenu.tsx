@@ -163,7 +163,7 @@ export function FxAddMenu({
       {GROUPED.map(({ group, defs, jobs }) => (
         <div key={group} className="hf-fx-add-group flex flex-wrap items-center gap-1">
           <span className="hf-fx-add-group-label w-full font-mono text-[9px] uppercase tracking-wide text-panel-text-2">
-            {GROUP_LABEL[group]}
+            {t(GROUP_LABEL[group])}
           </span>
           {jobs.map((job) => (
             <button
@@ -173,7 +173,7 @@ export function FxAddMenu({
               // that looked special would read as a preset rather than as the
               // thing the author is about to add.
               className="hf-fx-add-item rounded-[3px] bg-panel-surface px-1.5 py-0.5 text-[10px] text-panel-text-1 hover:text-panel-text-0"
-              title={job.does}
+              title={t(job.does)}
               onClick={() => onJob(job)}
               onMouseEnter={() => {
                 onAuditionLevel?.(false);
@@ -181,7 +181,7 @@ export function FxAddMenu({
               }}
               onFocus={() => audition((base) => withJob(base, job))}
             >
-              {job.label}
+              {t(job.label)}
             </button>
           ))}
           {defs.map((d) => (
@@ -194,7 +194,7 @@ export function FxAddMenu({
               // "Remove Rumble" appears. The registry's own description stays
               // as the tooltip beside the plain one: the mechanism is taught
               // here rather than withheld.
-              title={EFFECT_COPY[d.id] ? `${EFFECT_COPY[d.id]?.does} (${d.label})` : d.description}
+              title={EFFECT_COPY[d.id] ? `${t(EFFECT_COPY[d.id]?.does ?? "")} (${t(d.label)})` : t(d.description)}
               onClick={() => onEffect(d.id)}
               // Cancels the levelling audition as well as starting its own.
               // The shelf's leave handler only fires on the way OUT of the
@@ -208,7 +208,7 @@ export function FxAddMenu({
               }}
               onFocus={() => audition((base) => withEffect(base, d.id))}
             >
-              {EFFECT_COPY[d.id]?.title ?? d.label}
+              {t(EFFECT_COPY[d.id]?.title ?? d.label)}
             </button>
           ))}
         </div>

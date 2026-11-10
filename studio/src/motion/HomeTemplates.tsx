@@ -5,6 +5,7 @@ import { useI18n } from '../i18n/I18n';
 import { MotionIcon } from './icons';
 import { motionApi } from './useWorkspace';
 import { useWorkspaceChrome } from './WorkspaceFrame';
+import { trackMotion } from './tracking';
 
 const categories = [
   ['builtin', 'Ready to edit'], ['featured', 'Featured references'], ['ads', 'Product promos'],
@@ -12,7 +13,7 @@ const categories = [
 ] as const;
 
 export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTemplate) => void }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { workspace, switchingDisabled } = useWorkspaceChrome();
   const [category, setCategory] = useState<string>('builtin');
   const [query, setQuery] = useState('');
@@ -45,7 +46,10 @@ export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTempl
     const timer = setInterval(() => {
       if (document.visibilityState === 'hidden') return;
       void motionApi<TemplatePage>('/template-catalog?limit=1', { signal: controller.signal }).then(next => {
+        if (controller.signal.aborted) return;
         if (next.catalogVersion !== page.catalogVersion) { setOffset(0); setPage(null); retry(value => value + 1); }
+        else setPage(previous => previous && previous.catalogVersion === next.catalogVersion && previous.warning !== next.warning
+          ? { ...previous, warning: next.warning } : previous);
       }).catch(() => {});
     }, 5_000);
     return () => { clearInterval(timer); controller.abort(); };
@@ -63,17 +67,23 @@ export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTempl
   }
   async function copy(template: GalleryTemplate) {
     setFeedback(''); setManualCopy('');
+    void trackMotion('ui_click', { page_name: 'studio', area: 'templates', element: 'copy_template' });
     try {
       const connection = info ?? await motionApi<IntegrationInfo>('/integration');
       setInfo(connection);
       const prompt = templatePrompt(connection, host, template);
       try {
         await navigator.clipboard.writeText(prompt);
+        void trackMotion('template_instruction_copy_result', { host_product: host, copy_status: 'clipboard_written' });
         setFeedback(t('Copied. Send it to {agent} to recreate this template.', { agent: hostNames[host] }));
       } catch {
+        void trackMotion('template_instruction_copy_result', { host_product: host, copy_status: 'manual_fallback_shown' });
         setManualCopy(prompt); setFeedback(t('Copy the instruction below and send it to your Agent.'));
       }
-    } catch (err) { setFeedback((err as Error).message); }
+    } catch (err) {
+      void trackMotion('template_instruction_copy_result', { host_product: host, copy_status: 'failed' });
+      setFeedback((err as Error).message);
+    }
   }
   function action(template: GalleryTemplate) {
     if (onSelect) { if (!switchingDisabled) { setPreview(null); onSelect(template); } return; }
@@ -100,15 +110,15 @@ export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTempl
           <span className="motion-template-preview-hint"><MotionIcon name="eye" />{t('Preview')}</span>
         </button>
         <div className="motion-template-info"><h3>{template.title}</h3>
-          <div className="motion-template-footer"><div><a href={template.sourceUrl} target="_blank" rel="noreferrer">{template.authorName || template.author}<MotionIcon name="arrow-up-right" size={11} /></a>{template.social && <small title={`${template.social.platform} · ${template.social.views} · ${template.social.syncedAt}`}>{formatTemplateViews(template.social.views)} {t('views')}</small>}</div>
+          <div className="motion-template-footer"><div><a href={template.sourceUrl} target="_blank" rel="noreferrer">{template.authorName || template.author}<MotionIcon name="arrow-up-right" size={11} /></a>{template.social && <small title={`${template.social.platform} · ${template.social.views} · ${template.social.syncedAt}`}>{formatTemplateViews(template.social.views, locale)} {t('views')}</small>}</div>
             <button className="motion-button" disabled={(Boolean(onSelect) || isEditableTemplate(template)) && switchingDisabled} onClick={() => action(template)}><MotionIcon name={onSelect ? 'plus' : isEditableTemplate(template) ? 'scissors' : 'copy'} size={14} />{t(onSelect ? 'Use template' : isEditableTemplate(template) ? 'Open and edit' : 'Copy to recreate')}</button>
           </div>
         </div>
       </article>)}
     </div>
-    {page?.warning && <p role="status">{page.warning}</p>}
+    {page?.warning && <p role="status">{t(page.warning)}</p>}
     {loading && <p className="motion-home-empty" role="status">{t('Loading templates…')}</p>}
-    {error && <div className="motion-home-empty" role="alert">{error} <button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div>}
+    {error && <div className="motion-home-empty" role="alert">{t(error)} <button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div>}
     {!loading && !error && page?.items.length === 0 && <p className="motion-home-empty">{t('No matching templates. Try another name or category.')}</p>}
     {page?.next != null && !error && <button className="motion-button motion-more-templates" disabled={loading} onClick={() => setOffset(page.next!)}>{t('More templates')}<MotionIcon name="arrow-right" /></button>}
     {preview && <TemplatePreview template={preview} selecting={Boolean(onSelect)} busy={switchingDisabled} onClose={() => setPreview(null)} onAction={action} feedback={feedback} manualCopy={manualCopy} />}

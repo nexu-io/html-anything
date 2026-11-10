@@ -1,3 +1,4 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { useLivePreviewIframe } from "../../player/store/previewIframeStore";
 import { onPreviewContentReplaced } from "../../player/sceneSwap";
@@ -448,7 +449,7 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
           >
             <span aria-hidden="true">←</span>
             <span className="truncate">
-              {activeGroupElement.getAttribute("data-hf-group") || "Group"}
+              {activeGroupElement.getAttribute("data-hf-group") || t("Group")}
             </span>
           </button>
         )}
@@ -492,7 +493,7 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
                     : "text-panel-text-2 hover:bg-panel-hover/40 hover:text-panel-text-1"
               } ${dragKey ? "cursor-grabbing" : "cursor-pointer"}`}
               style={{ paddingLeft: 8 + layer.depth * CHILD_INDENT }}
-              title={hint}
+              title={hint ? t(hint) : undefined}
             >
               {hasChildren ? (
                 <button
@@ -502,20 +503,12 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
                   aria-label={isCollapsed ? t("Expand children") : t("Collapse children")}
                   className="relative flex h-4 w-4 shrink-0 items-center justify-center rounded-sm text-neutral-500 hover:text-neutral-300 before:absolute before:-inset-1.5 before:content-['']"
                 >
-                  <svg
-                    width="8"
-                    height="8"
-                    viewBox="0 0 8 8"
-                    fill="currentColor"
-                    className={`transition-transform ${isCollapsed ? "" : "rotate-90"}`}
-                  >
-                    <path d="M2 1l4 3-4 3z" />
-                  </svg>
+                  <RemixIcon name="arrow-right-s-line" size={12} className={`transition-transform ${isCollapsed ? "" : "rotate-90"}`} />
                 </button>
               ) : null}
               <span
                 data-layer-kind={kind}
-                title={hint ? `${kindName} · ${hint}` : kindName}
+                title={hint ? `${t(kindName)} · ${t(hint)}` : t(kindName)}
                 className={`flex h-5 w-5 shrink-0 items-center justify-center rounded ${
                   selected
                     ? "bg-panel-accent/18 text-accent-ink"

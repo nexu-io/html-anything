@@ -174,7 +174,7 @@ export function StyleSections({
   return (
     <>
       {isFlex && !hideFlex && (
-        <Section title={t("Flex")} icon={<Layers size={15} />} defaultCollapsed>
+        <Section title="Flex" icon={<Layers size={15} />} defaultCollapsed>
           <div className="space-y-4">
             <SegmentedControl
               trackName="Flex direction"
@@ -220,7 +220,7 @@ export function StyleSections({
       )}
 
       {hasVisualBackground && (
-        <Section title={t("Radius")} icon={<Settings size={15} />} defaultCollapsed>
+        <Section title="Radius" icon={<Settings size={15} />} defaultCollapsed>
           <BorderRadiusEditor
             tl={radiusTL}
             tr={radiusTR}
@@ -245,7 +245,7 @@ export function StyleSections({
         </Section>
       )}
 
-      <Section title={t("Stroke")} icon={<Square size={15} />} defaultCollapsed>
+      <Section title="Stroke" icon={<Square size={15} />} defaultCollapsed>
         <div className="space-y-4">
           <div className={RESPONSIVE_GRID}>
             <MetricField
@@ -303,7 +303,7 @@ export function StyleSections({
         </div>
       </Section>
 
-      <Section title={t("Effects")} icon={<Zap size={15} />} defaultCollapsed>
+      <Section title="Effects" icon={<Zap size={15} />} defaultCollapsed>
         <div className="space-y-4">
           <SelectField
             label={t("Shadow")}
@@ -358,7 +358,7 @@ export function StyleSections({
         </div>
       </Section>
 
-      <Section title={t("Clip")} icon={<Layers size={15} />} defaultCollapsed>
+      <Section title="Clip" icon={<Layers size={15} />} defaultCollapsed>
         <div className="space-y-4">
           <div className={RESPONSIVE_GRID}>
             <SelectField
@@ -435,7 +435,7 @@ export function StyleSections({
         </div>
       </Section>
 
-      <Section title={t("Transparency")} icon={<Eye size={15} />} defaultCollapsed>
+      <Section title="Transparency" icon={<Eye size={15} />} defaultCollapsed>
         <div className="space-y-4">
           <SliderControl
             trackName="Opacity"
@@ -458,7 +458,7 @@ export function StyleSections({
         </div>
       </Section>
 
-      <Section title={t("Fill")} icon={<Palette size={15} />}>
+      <Section title="Fill" icon={<Palette size={15} />}>
         <div className="space-y-4">
           <SegmentedControl
             trackName="Fill type"

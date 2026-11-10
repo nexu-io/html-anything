@@ -139,7 +139,7 @@ export function AudioGainDialog({
         type="number"
         step={0.1}
         max={PEAK_MODES.has(rowMode) ? 0 : undefined}
-        aria-label={`${ROWS.find((row) => row.mode === rowMode)?.label ?? ""} dB`}
+        aria-label={`${t(ROWS.find((row) => row.mode === rowMode)?.label ?? "")} dB`}
         value={values[rowMode]}
         disabled={mode !== rowMode}
         className="w-16 rounded border border-neutral-700 bg-neutral-950 px-1 text-right disabled:opacity-50"
@@ -159,7 +159,7 @@ export function AudioGainDialog({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={AUDIO_GAIN_LABEL}
+        aria-label={t(AUDIO_GAIN_LABEL)}
         className="w-[340px] rounded-md border border-neutral-700 bg-neutral-900 p-4 text-xs text-neutral-200 shadow-xl"
         onKeyDown={(event) => {
           event.stopPropagation();
@@ -169,11 +169,11 @@ export function AudioGainDialog({
           void apply();
         }}
       >
-        <div className="mb-3 text-sm font-medium">{AUDIO_GAIN_LABEL}</div>
+        <div className="mb-3 text-sm font-medium">{t(AUDIO_GAIN_LABEL)}</div>
         {ROWS.map((row) => (
           <Row
             key={row.mode}
-            label={row.label}
+            label={t(row.label)}
             checked={mode === row.mode}
             disabled={PEAK_MODES.has(row.mode) && peaks !== null && peakDb === null}
             onSelect={() => setMode(row.mode)}
@@ -205,7 +205,7 @@ export function AudioGainDialog({
             className="rounded bg-blue-500 px-3 py-1 text-white disabled:opacity-40"
             onClick={() => void apply()}
           >
-            OK
+            {t("OK")}
           </button>
         </div>
       </div>

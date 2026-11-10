@@ -1,3 +1,4 @@
+import { RemixIcon } from "../icons/RemixIcons";
 import { useI18n } from "../i18n/I18n";
 import { Fragment, memo, useContext, type MouseEvent } from "react";
 import { Camera } from "../icons/SystemIcons";
@@ -59,21 +60,23 @@ export const StudioHeader = memo(function StudioHeader({
 
   return (
     <HeaderFrame>
-    <div className={cn("flex items-center justify-between h-10 px-3 bg-surface border-b border-border-strong shrink-0", host && "motion-studio-header")}>
+    <div className={cn("flex items-center justify-between h-10 px-3 bg-surface shrink-0", !host?.mvpEditor && "border-b border-border-strong", host && "motion-studio-header", host?.mvpEditor && "motion-studio-header-centered")}>
       {/* Left: logo + project name */}
       <div className="flex items-center gap-3">
         {host?.brand ?? <HyperframesLogo />}
-        <span className="text-text-5 select-none" aria-hidden="true">
+        {host?.mvpEditor && host.headerActions}
+        {!host?.mvpEditor && <><span className="text-text-5 select-none" aria-hidden="true">
           |
         </span>
-        <span className="text-step-11 font-medium text-text-1">{host?.projectLabel ?? projectId}</span>
+        <span className="text-step-11 font-medium text-text-1">{host?.projectLabel ?? projectId}</span></>}
       </div>
+      {host?.mvpEditor && <div className="motion-header-project">{host.projectLabel ?? projectId}</div>}
       {/* Right: toolbar buttons */}
       <div className="flex items-center gap-3">
-        {host?.headerActions}
+        {!host?.mvpEditor && host?.headerActions}
         {host?.historyActions}
         {host?.previewAction}
-        <div className="flex h-ctl items-center divide-x divide-border-strong overflow-hidden rounded-md border border-border-strong bg-bg-2">
+        {!host?.mvpEditor && <div className="flex h-ctl items-center divide-x divide-border-strong overflow-hidden rounded-md border border-border-strong bg-bg-2">
           <Tooltip label={capturing ? t("Capturing frame…") : t("Capture current frame")} side="bottom">
             {/* A real download link, so it wears Button's recipe rather than being
               one: `download` on an <a> is what saves the frame, and no <button>
@@ -105,26 +108,7 @@ export const StudioHeader = memo(function StudioHeader({
               aria-label={capturing ? t("Capturing frame") : t("Capture current frame")}
             >
               {capturing ? (
-                <svg
-                  className="animate-spin motion-reduce:animate-none h-3.5 w-3.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  />
-                </svg>
+                <RemixIcon name="loader-4-line" size={14} className="animate-spin motion-reduce:animate-none" />
               ) : (
                 <Camera size={14} />
               )}
@@ -157,7 +141,7 @@ export const StudioHeader = memo(function StudioHeader({
             >
               {t("Inspector")}</Button>
           </Tooltip>
-        </div>
+        </div>}
         {showThemeToggle && host?.themeToggle !== false && <ThemeToggle />}
         {host?.languageMenu}
         {host?.windowMenu ?? <Dock.WindowMenu />}
@@ -165,7 +149,7 @@ export const StudioHeader = memo(function StudioHeader({
         <Tooltip
           label={
             ffmpegMissing
-              ? t("FFmpeg is not installed. Opens the Renders panel with the install command.")
+              ? renderQueue.ffmpeg?.runtime ? t("Video components are not ready. Check preparation status.") : t("FFmpeg is not installed. Opens the Renders panel with the install command.")
               : isRendering
                 ? t("A render is already in progress")
                 : t("Render and export this composition")

@@ -2,7 +2,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { I18nProvider } from '../i18n/I18n';
+import { I18nProvider, translate, type Locale } from '../i18n/I18n';
 import { HomeTemplates } from './HomeTemplates';
 
 const state = vi.hoisted(() => ({ open: vi.fn(), disabled: false }));
@@ -24,7 +24,7 @@ beforeEach(() => {
   vi.stubGlobal('fetch', fetcher);
 });
 afterEach(() => { act(() => root.unmount()); container.remove(); vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers(); });
-async function render() { await act(async () => { root.render(<I18nProvider initialLocale="zh-CN"><HomeTemplates /></I18nProvider>); }); await act(async () => { await vi.runOnlyPendingTimersAsync(); }); }
+async function render(locale: Locale = 'zh-CN') { await act(async () => { root.render(<I18nProvider initialLocale={locale}><HomeTemplates /></I18nProvider>); }); await act(async () => { await vi.runOnlyPendingTimersAsync(); }); }
 const button = (text: string) => [...container.querySelectorAll('button')].find(item => item.textContent === text)!;
 it('only editable templates open a new engineering project; references copy their exact Agent instruction', async () => {
   await render();
@@ -76,4 +76,43 @@ it('Prism templates open as editable projects and published catalog changes refr
   await act(async () => { await vi.advanceTimersByTimeAsync(1); });
   expect(container.textContent).toContain('更新后的模板');
   expect(state.open).toHaveBeenCalledTimes(1);
+});
+
+it('updates and clears cache warnings without resetting an unchanged template list', async () => {
+  let warning: string | undefined;
+  fetcher.mockImplementation(async () => Response.json({
+    items: [{ ...builtin, kind: 'prism' }], total: 1, entryTotal: 1, catalogTotal: 1,
+    offset: 0, next: null, catalogVersion: 'same-publication', warning,
+  }));
+  await render();
+  const card = container.querySelector('.motion-home-template');
+  warning = '模板更新失败，使用已缓存目录：HTTP 503';
+  await act(async () => { await vi.advanceTimersByTimeAsync(5_000); });
+  expect(container.querySelector('[role="status"]')?.textContent).toContain(warning);
+  expect(container.querySelector('.motion-home-template')).toBe(card);
+  warning = undefined;
+  await act(async () => { await vi.advanceTimersByTimeAsync(5_000); });
+  expect(container.querySelector('[role="status"]')).toBeNull();
+  expect(container.querySelector('.motion-home-template')).toBe(card);
+});
+
+it.each(['de', 'ja', 'ru'] as const)('keeps Prism editing and project guards while localizing labels in %s', async locale => {
+  const id = 'hf-moment-M1147';
+  const warning = '模板更新失败，使用已缓存目录：HTTP 503';
+  fetcher.mockImplementation(async () => Response.json({
+    items: [{ ...builtin, id, kind: 'prism', title: 'Original template title', social: { platform: 'X', views: 12345, syncedAt: '2026-11-09' } }],
+    total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null, warning,
+  }));
+  await render(locale);
+  expect(container.textContent).toContain('Original template title');
+  expect(container.querySelector('.motion-editable-badge')?.textContent).toBe(translate(locale, 'Ready to edit'));
+  expect(container.querySelector('[role="status"]')?.textContent).toBe(translate(locale, warning));
+  if (locale === 'de') expect(container.querySelector('.motion-template-footer small')?.textContent).toContain('12.345');
+  const open = button(translate(locale, 'Open and edit'));
+  expect(open.disabled).toBe(false);
+  act(() => open.click());
+  expect(state.open).toHaveBeenCalledWith('templates', id);
+  state.disabled = true;
+  await act(async () => { root.render(<I18nProvider initialLocale={locale}><HomeTemplates /></I18nProvider>); });
+  expect(button(translate(locale, 'Open and edit')).disabled).toBe(true);
 });

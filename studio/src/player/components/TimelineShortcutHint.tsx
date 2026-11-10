@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type { TimelineTheme } from "./timelineTheme";
 
@@ -7,6 +8,8 @@ interface TimelineShortcutHintProps {
 
 export function TimelineShortcutHint({ theme }: TimelineShortcutHintProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
+  if (mvp) return null;
   return (
     <div className="absolute bottom-2 right-3 pointer-events-none z-20">
       <div

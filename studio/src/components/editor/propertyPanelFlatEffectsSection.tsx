@@ -158,7 +158,7 @@ export function FlatEffectsSection({
               <button
                 key={preset.id}
                 type="button"
-                title={`${preset.group}: ${preset.label}`}
+                title={`${t(preset.group)}: ${t(preset.label)}`}
                 data-flat-effects-palette-preset={preset.id}
                 aria-pressed={selected}
                 onClick={() => {
@@ -176,7 +176,7 @@ export function FlatEffectsSection({
                     <span key={color} className="flex-1" style={{ backgroundColor: color }} />
                   ))}
                 </span>
-                <span className="block truncate text-[8px] text-panel-text-3">{preset.label}</span>
+                <span className="block truncate text-[8px] text-panel-text-3">{t(preset.label)}</span>
               </button>
             );
           })}
@@ -277,7 +277,7 @@ export function FlatEffectsSection({
                     : "border-panel-hairline bg-panel-bg-soft text-panel-text-3 hover:border-panel-border-input hover:text-panel-text-1"
                 }`}
               >
-                <span>{effect.label}</span>
+                <span>{t(effect.label)}</span>
                 <span className="text-[9px] text-panel-text-5">
                   {selected ? t("Editing") : t("Active")}
                 </span>
@@ -294,12 +294,12 @@ export function FlatEffectsSection({
         >
           <div className="flex min-h-[26px] items-center justify-between gap-2">
             <span className="text-[11px] font-medium text-panel-text-1">
-              {selectedEffect.label}
+              {t(selectedEffect.label)}
             </span>
             <span className="flex items-center gap-2">
               <button
                 type="button"
-                title={t("Reset {value0}", { value0: selectedEffect.label })}
+                title={t("Reset {value0}", { value0: t(selectedEffect.label) })}
                 onClick={() => applyEffect(selectedEffect)}
                 className="text-panel-text-4 hover:text-panel-text-1"
               >
@@ -307,7 +307,7 @@ export function FlatEffectsSection({
               </button>
               <button
                 type="button"
-                title={t("Remove {value0}", { value0: selectedEffect.label })}
+                title={t("Remove {value0}", { value0: t(selectedEffect.label) })}
                 onClick={() => removeEffect(selectedEffect)}
                 className="text-panel-text-4 hover:text-danger-ink"
               >
@@ -379,7 +379,7 @@ export function FlatEffectsSection({
                     : "text-panel-text-4 hover:text-panel-text-1"
                 }`}
               >
-                {group.label}
+                {t(group.label)}
               </button>
             ))}
           </div>
@@ -406,6 +406,7 @@ export function FlatEffectsSection({
                         onPreview: onPreviewColorGrading,
                         onCommit: onCommitColorGrading,
                         onTrack: (name) => track("button", `Apply ${name}`),
+                        t,
                       })}
                       className={`min-w-0 overflow-hidden border text-left text-[10px] transition-colors ${
                         selected
@@ -434,7 +435,7 @@ export function FlatEffectsSection({
                           />
                         )}
                       </span>
-                      <span className="block truncate px-2 py-1.5">{preset.label}</span>
+                      <span className="block truncate px-2 py-1.5">{t(preset.label)}</span>
                     </button>
                   );
                 })}
@@ -447,7 +448,7 @@ export function FlatEffectsSection({
                       type="button"
                       data-flat-effect-option={effect.key}
                       aria-pressed={active}
-                      title={t("Preview {value0}", { value0: effect.label })}
+                      title={t("Preview {value0}", { value0: t(effect.label) })}
                       onPointerEnter={() =>
                         onPreviewColorGrading(resolveEffect(effect), {
                           animatedPreview: { kind: "effects", id: effect.key },
@@ -490,7 +491,7 @@ export function FlatEffectsSection({
                           />
                         )}
                       </span>
-                      <span className="block truncate px-2 py-1.5">{effect.label}</span>
+                      <span className="block truncate px-2 py-1.5">{t(effect.label)}</span>
                     </button>
                   );
                 })}

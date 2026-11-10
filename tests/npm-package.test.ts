@@ -11,6 +11,16 @@ import { mcpRegistry } from '../mcp.ts';
 
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
 
+test('shared Agent instructions keep the release controls synchronized', async () => {
+  const section = async file => {
+    const text = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+    return text.split('## Candidate and publication controls\n')[1].split('\n## ')[0].trim();
+  };
+  const shared = await section('AGENTS.md');
+  assert(shared.includes('DEV template defaults') && shared.includes('Publish under `candidate` first') && shared.includes('after both matching DEV native reports pass'));
+  assert.equal(await section('CLAUDE.md'), shared, 'CLAUDE.md must mirror the AGENTS.md release controls');
+});
+
 test('release packaging rejects floating npm versions, lock drift, unpinned native assets and a mismatched browser', async () => {
   const pkg = await json('package.json'), lock = await json('package-lock.json'), runtime = await json('scripts/runtime-lock.json');
   checkReleaseLocks(pkg, lock, runtime);
@@ -25,28 +35,57 @@ test('release packaging rejects floating npm versions, lock drift, unpinned nati
   assert.throws(() => checkReleaseLocks(pkg, lock, browser), /Browser must match/);
 });
 
-test('beta npm artifacts carry one immutable version, both lock identities and no bundled native runtime', { timeout: 60_000 }, async () => {
+test('test npm artifacts contain their application, locked manifest and no bundled native runtime', { timeout: 60_000 }, async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-npm-pack-'));
   const before = await readFile('package.json', 'utf8');
   const unapproved = ['docs/private-sentinel.md', 'scripts/private-sentinel.mjs', 'private-sentinel.ts'];
   for (const file of unapproved) await writeFile(file, 'must not ship');
   try {
-    const version = '0.6.2-beta.999001.1', output = path.join(directory, 'build');
+    const version = '0.6.4-test.42812345678.1', output = path.join(directory, 'build');
     const built = await packageNpm(output, version), release = await json(built.manifest);
     assert.equal(release.version, version); assert.equal(release.installer.version, version); assert.equal(release.format, 'npm');
-    assert.equal(release.templateEnvironment, 'prod');
+    assert.equal(release.templateEnvironment, 'dev');
     assert.equal(release.mcp.profile, 'phase1'); assert.deepEqual(release.mcp.tools, mcpRegistry().tools.map(tool => tool.name));
     assert.deepEqual(release.skills, [...phase1Skills].sort());
     assert.equal(release.installer.sha256, await sha256(built.installer)); assert.equal(release.application.sha256, await sha256(built.application));
     assert.match(release.commit, /^[a-f0-9]{40}$/);
     const application = path.join(directory, 'app'), installer = path.join(directory, 'installer');
     await extractArchive(built.application, application); await extractArchive(built.installer, installer);
+    const readme = await readFile(path.join(installer, 'package/README.md'), 'utf8');
+    assert(readme.includes("Reverse engineering for any video"));
+    assert(readme.includes(`https://raw.githubusercontent.com/nexu-io/html-anything/${release.commit}/docs/readme/brand-hero.jpg`));
+    assert(readme.includes(`src="https://raw.githubusercontent.com/nexu-io/html-anything/${release.commit}/docs/readme/openmotion-logo.svg"`));
+    assert(readme.includes(`https://github.com/nexu-io/html-anything/blob/${release.commit}/docs/motion-md.md`));
+    assert(readme.includes('](#choose-agent)'));
+    assert(readme.includes('href="https://open-design.ai/motion/'));
+    assert(readme.includes(`srcset="https://raw.githubusercontent.com/nexu-io/html-anything/${release.commit}/docs/readme/brand-hero.mobile.jpg"`));
+    assert(readme.includes(`href="https://github.com/nexu-io/html-anything/blob/${release.commit}/docs/readme/media/presenter-caption-remake.mp4"`));
+    assert(!readme.includes('](docs/') && !readme.includes('](template-library/'));
+    assert(!readme.startsWith('# Motion application npm package'));
+    const embeddedReadme = await readFile(path.join(application, 'README.md'), 'utf8');
+    assert(embeddedReadme.includes('](docs/motion-md.md)'), 'Installed documentation keeps local links to shipped guides');
+    assert(embeddedReadme.includes(`srcset="https://raw.githubusercontent.com/nexu-io/html-anything/${release.commit}/docs/readme/brand-hero.mobile.jpg"`));
+    await assert.rejects(readdir(path.join(application, 'docs/readme/media')), { code: 'ENOENT' });
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
-    assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'prod');
+    assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
     assert.equal((await json(path.join(application, 'package-lock.json'))).packages[''].version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).version, version);
-    assert.equal((await json(path.join(installer, 'package/package.json'))).private, true);
+    assert.equal((await json(path.join(installer, 'package/package.json'))).private, false);
+    const bundled = path.join(installer, 'package/payload');
+    const embedded = await json(path.join(bundled, 'release-npm.json'));
+    assert.equal(embedded.installer, undefined, 'The containing archive cannot include its own hash');
+    assert.equal(embedded.version, version);
+    assert.equal(await sha256(path.join(bundled, embedded.application.url)), release.application.sha256);
+    const metadata = await json(path.join(installer, 'package/package.json'));
+    assert.equal(metadata.name, (await json('packages/npm/package.json')).name);
+    assert.equal(metadata.publishConfig.tag, 'candidate'); assert.equal(metadata.publishConfig.access, 'public');
+    assert.equal(metadata.bin.openmotion, 'scripts/npm-installer.mjs');
+    const cli = path.join(installer, 'package', metadata.bin.openmotion);
+    assert.equal((await runFile(process.execPath, [cli, '--version'])).trim(), version);
+    const help = await runFile(process.execPath, [cli, 'setup', '--help']);
+    for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(help.includes(host), host);
+    await readFile(path.join(installer, 'package/LICENSE'));
     assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...phase1Skills].sort());
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);
     assert.equal(await sha256(path.join(application, 'scripts/runtime-lock.json')), release.locks.native);
@@ -64,7 +103,7 @@ test('beta npm artifacts carry one immutable version, both lock identities and n
     assert(entries.includes('template-library/NOTICE.md'));
     assert(!entries.includes('studio/build/index.html.map'));
     await assert.rejects(packageNpm(output, version), /immutable/);
-    await assert.rejects(packageNpm(path.join(directory, 'invalid'), 'latest'), /unique beta/);
+    await assert.rejects(packageNpm(path.join(directory, 'invalid'), 'latest'), /MAJOR.MINOR.PATCH/);
     assert.equal(await readFile('package.json', 'utf8'), before, 'Packaging must not bump the checkout');
   } finally {
     for (const file of unapproved) await rm(file, { force: true });
@@ -76,13 +115,40 @@ test('DEV npm packages carry their catalog environment without changing the chec
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-npm-dev-'));
   try {
     const before = await readFile('shared/template-config.json', 'utf8');
-    const built = await packageNpm(path.join(directory, 'build'), undefined, 'dev');
+    const built = await packageNpm(path.join(directory, 'build'), '0.6.4-test.2', 'dev');
     assert.equal((await json(built.manifest)).templateEnvironment, 'dev');
+    const unpacked = path.join(directory, 'npm'); await extractArchive(built.installer, unpacked);
+    assert.equal((await json(path.join(unpacked, 'package/package.json'))).private, false);
+    assert.equal((await json(built.manifest)).installer.version, (await json(built.manifest)).version);
     assert.match(built.application, /-dev\.tar\.gz$/);
     const application = path.join(directory, 'app');
     await extractArchive(built.application, application);
     assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
     assert.equal(await readFile('shared/template-config.json', 'utf8'), before);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test('stable artifacts stage publication instead of replacing latest and retain source publish guards', { timeout: 60_000 }, async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-npm-stable-'));
+  try {
+    const built = await packageNpm(path.join(directory, 'build'), '0.6.4');
+    await extractArchive(built.installer, path.join(directory, 'npm'));
+    const metadata = await json(path.join(directory, 'npm/package/package.json'));
+    assert.equal((await json(built.manifest)).templateEnvironment, 'prod');
+    assert.equal(metadata.version, '0.6.4'); assert.equal(metadata.private, false); assert.equal(metadata.publishConfig.tag, 'stage');
+    assert.equal((await json('package.json')).private, true);
+    assert.equal((await json('packages/npm/package.json')).private, true);
+    for (const [version, environment] of [['0.6.4-test.3', 'prod'], ['0.6.4', 'dev']]) {
+      const alternate = await packageNpm(path.join(directory, version + '-' + environment), version, environment);
+      const unpacked = path.join(directory, version + '-' + environment + '-npm');
+      await extractArchive(alternate.installer, unpacked);
+      assert.equal((await json(path.join(unpacked, 'package/package.json'))).private, true, 'Non-channel environment builds stay private');
+    }
+    const local = await packageNpm(path.join(directory, 'local'));
+    await extractArchive(local.installer, path.join(directory, 'local-npm'));
+    const localPkg = await json(path.join(directory, 'local-npm/package/package.json'));
+    assert.equal(localPkg.private, true); assert.match(localPkg.version, /-local\.1$/);
+    assert.equal((await json(local.manifest)).version, localPkg.version);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
@@ -109,7 +175,7 @@ test('manual CI passes the selected template environment to both package formats
     const step = workflow.split('      - name: Build immutable standalone artifacts\n')[1].split('      - name:')[0];
     const script = step.split('        run: |\n')[1].replace(/^ {10}/gm, '');
     const calls = path.join(directory, 'calls.txt');
-    await writeFile(path.join(directory, 'node'), '#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOTION_PACKAGE_CALLS"\nif [ "$2" = version ]; then echo 0.6.4-beta.42.1; fi\n', { mode: 0o755 });
+    await writeFile(path.join(directory, 'node'), '#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOTION_PACKAGE_CALLS"\nif [ "$2" = version ]; then echo 0.6.4-test.42.1; fi\n', { mode: 0o755 });
     for (const format of ['npm', 'full']) for (const environment of ['prod', 'dev']) {
       await writeFile(calls, '');
       await runFile('bash', ['-c', script], { env: { ...process.env,
@@ -118,10 +184,10 @@ test('manual CI passes the selected template environment to both package formats
       } });
       const commands = (await readFile(calls, 'utf8')).trim().split('\n');
       assert.deepEqual(commands, ['scripts/test-package.mjs version 42 1', ...(format === 'npm'
-        ? [`scripts/package-npm.mjs dist/0.6.4-beta.42.1 0.6.4-beta.42.1 --template-env=${environment}`]
+        ? [`scripts/package-npm.mjs dist/0.6.4-test.42.1 0.6.4-test.42.1 --template-env=${environment}`]
         : ['mac-arm64', 'win-x64'].flatMap(target => [
           `scripts/test-package.mjs prepare ${target}`,
-          `scripts/test-package.mjs build ${target} 0.6.4-beta.42.1 --template-env=${environment}`,
+          `scripts/test-package.mjs build ${target} 0.6.4-test.42.1 --template-env=${environment}`,
         ]))]);
     }
   } finally { await rm(directory, { recursive: true, force: true }); }

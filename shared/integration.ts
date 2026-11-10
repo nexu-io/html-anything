@@ -129,7 +129,7 @@ ${workflowEntryGuide}
 
 素材通过 motion_import_assets 批量持久导入实际本机附件，检查逐项结果；再用 motion_edit_project 保存原生 HTML/CSS/JS 和可选需求，传 expectedRevision、expectedVersionId 及稳定 requestId。冲突时重新读，不盲目覆盖 GUI 修改。媒体生成使用宿主或 Studio 已有能力，本期 MCP 不公开生成/供应商配置入口。
 
-motion_open_preview 打开指定已有项目，宿主浏览器打开完整 previewUrl 后才能说已打开；保留查询参数和路由。未绑定的宿主不能用全局最近项目猜测当前会话。
+After each content edit or restore, follow previewHandoff and production/native#continuing-edits. Request the same project on the calling chat's right panel, preserving embed/query/hash and reusing the actual native Tab ID. Default foreground preserves the current chat: queue while inactive, resolve the latest version on return, and verify actual visibility and changed live content before action=record_display. Codex IAB visibility synchronization is scoped to the calling chat and does not navigate. queued is only an acknowledgment. Only this turn's explicit show-now request permits presentation=now and switching back; background skips presentation. Never guess a project from another chat or workspace.
 
 ## 版本与导出
 

@@ -1,3 +1,4 @@
+import { translate, type Translate } from "../../i18n/I18n";
 import type { NormalizedHfColorGrading } from "@hyperframes/core/color-grading";
 import type { ColorGradingPreviewOptions } from "./useColorGradingController";
 
@@ -8,6 +9,7 @@ export function presetPreviewHandlers({
   onPreview,
   onCommit,
   onTrack,
+  t = (message, values) => translate("en", message, values),
 }: {
   id: string;
   label: string;
@@ -18,9 +20,10 @@ export function presetPreviewHandlers({
   ) => void;
   onCommit: (grading: NormalizedHfColorGrading) => void;
   onTrack: (label: string) => void;
+  t?: Translate;
 }) {
   return {
-    title: `Preview ${label}`,
+    title: t("Preview {value0}", { value0: t(label) }),
     onPointerEnter: () =>
       onPreview(resolve(), {
         animatedPreview: { kind: "presets" as const, id },

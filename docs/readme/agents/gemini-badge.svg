@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144" height="34" viewBox="0 0 144 34">
+  <title>Gemini CLI</title>
+  <rect x=".5" y=".5" width="143" height="33" rx="7" fill="#f6f8fa" stroke="#d1d9e0"/>
+  <image x="12" y="6" width="22" height="22" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0idXJsKCNhKSIgZD0iTTAgNC4zOTFBNC4zOSA0LjM5IDAgMCAxIDQuMzkxIDBoMTUuMjE3QTQuMzkgNC4zOSAwIDAgMSAyNCA0LjM5MXYxNS4yMTdBNC4zOSA0LjM5IDAgMCAxIDE5LjYwOCAyNEg0LjM5MUE0LjM5IDQuMzkgMCAwIDEgMCAxOS42MDh6Ii8+PHBhdGggZmlsbD0iIzFlMWUyZSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMTkuNzQgMS40NDRhMi44MTYgMi44MTYgMCAwIDEgMi44MTYgMi44MTZ2MTUuNDhhMi44MTYgMi44MTYgMCAwIDEtMi44MTYgMi44MTZINC4yNmEyLjgxNiAyLjgxNiAwIDAgMS0yLjgxNi0yLjgxNlY0LjI2QTIuODE2IDIuODE2IDAgMCAxIDQuMjYgMS40NDR6TTcuMjM2IDguNTY0bDcuNzUyIDMuNzI4LTcuNzUyIDMuNzI3djIuODAybDkuNTU3LTQuNTk2di0zLjg2Nkw3LjIzNiA1Ljc2M3oiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjI0IiB4Mj0iMCIgeTE9IjYuNTg3IiB5Mj0iMTYuNDk0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iI2VlNGQ1ZCIvPjxzdG9wIG9mZnNldD0iLjMyOCIgc3RvcC1jb2xvcj0iI2IzODFkZCIvPjxzdG9wIG9mZnNldD0iLjQ3NiIgc3RvcC1jb2xvcj0iIzIwN2NmZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg=="/>
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <text x="40" y="22" font-weight="600" font-size="13" fill="#24292f">Gemini CLI</text>
+  </g>
+</svg>

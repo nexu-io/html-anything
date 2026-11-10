@@ -1,8 +1,11 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 // fallow-ignore-file code-duplication
 import { memo, useState, useCallback, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { SearchInput } from "../ui/SearchInput";
+import { Tooltip } from "../ui/Tooltip";
+import { FilterChip } from "../ui/FilterChip";
 import { PromptPreviewModal } from "./PromptPreviewModal";
 import { useBlockCatalog } from "../../hooks/useBlockCatalog";
 import {
@@ -42,7 +45,7 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
   if (error) {
     return (
       <div className="flex flex-1 items-center justify-center text-danger-ink text-xs px-4 text-center">
-        {error}
+        {t(error)}
       </div>
     );
   }
@@ -60,14 +63,13 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
       </div>
 
       {/* Category pills */}
-      <div className="px-3 pt-1 pb-2 shrink-0 overflow-x-auto">
-        <div className="flex gap-1">
+      <div className="px-3 pt-1 pb-2 shrink-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-1.5">
           <CategoryPill label={t("All")} active={category === null} onClick={() => setCategory(null)} />
           {BLOCK_CATEGORIES.map((cat) => (
             <CategoryPill
               key={cat.id}
               label={t(cat.label)}
-              category={cat.id}
               active={category === cat.id}
               onClick={() => setCategory(category === cat.id ? null : cat.id)}
             />
@@ -76,7 +78,7 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
       </div>
 
       {/* Block grid */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-2 pb-2">
+      <div className="flex-1 overflow-y-auto min-h-0 px-2 pb-2 [scrollbar-gutter:stable]">
         {category === "vfx" && (
           <div className="mb-2 px-2 py-1.5 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] text-text-2 leading-relaxed">
             {t("VFX blocks use WebGL via HTML-in-Canvas. Enable")}{" "}
@@ -86,10 +88,7 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
           <div className="flex items-center justify-center h-32 text-neutral-600 text-xs">
             {t("No blocks match your search")}</div>
         ) : (
-          <div
-            className="grid gap-1.5"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))" }}
-          >
+          <div className="hf-media-card-grid">
             {filteredBlocks.map((block) => {
               const dur = "duration" in block ? (block.duration as number) : undefined;
               return (
@@ -134,32 +133,14 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
 
 function CategoryPill({
   label,
-  category,
   active,
   onClick,
 }: {
   label: string;
-  category?: BlockCategory;
   active: boolean;
   onClick: () => void;
 }) {
-  const colors = category ? getCategoryColors(category) : null;
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={`shrink-0 px-2 py-1 rounded-full text-[10px] font-medium transition-colors active:scale-[0.98] ${
-        active
-          ? colors
-            ? `${colors.bg} ${colors.text}`
-            : "bg-neutral-700 text-neutral-200"
-          : "bg-neutral-900 text-neutral-500 hover:text-neutral-300"
-      }`}
-    >
-      {label}
-    </button>
-  );
+  return <FilterChip active={active} onClick={onClick}>{label}</FilterChip>;
 }
 
 interface CompositionContext {
@@ -408,7 +389,7 @@ function BlockCard({
         ) : (
           <div className={`w-full h-full flex items-center justify-center ${colors.bg}`}>
             <span className={`text-[9px] font-medium ${colors.text}`}>
-              {category.toUpperCase()}
+              {t(BLOCK_CATEGORIES.find((c) => c.id === category)?.label ?? category)}
             </span>
           </div>
         )}
@@ -416,57 +397,40 @@ function BlockCard({
         {/* Action overlay — also revealed when a button inside receives focus */}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/60 opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100 transition-opacity">
           {onAdd && (
+            <Tooltip label={t("Add")} description={t("Add to composition at current time")}>
+              <button
+                type="button"
+                onClick={handleAdd}
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-[10px] font-semibold transition-colors active:scale-[0.97] ${
+                  addState === "failed"
+                    ? "bg-danger text-on-danger"
+                    : "bg-white text-black hover:bg-white/85"
+                }`}
+              >
+                <RemixIcon name="add-line" size={14} />
+                {addState === "adding"
+                  ? t("Adding…")
+                  : addState === "added"
+                    ? t("Added!")
+                    : addState === "failed"
+                      ? t("Failed")
+                      : t("Add")}
+              </button>
+            </Tooltip>
+          )}
+          <Tooltip label={t("Ask agent")} description={t("Generate a prompt to paste into your AI agent")}>
             <button
               type="button"
-              onClick={handleAdd}
-              title={t("Add to composition at current time")}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-[10px] font-semibold transition-colors active:scale-[0.97] ${
-                addState === "failed"
-                  ? "bg-danger text-on-danger"
-                  : "bg-white text-black hover:bg-white/85"
+              onClick={handleShowPrompt}
+              className={`flex items-center gap-1.5 px-3 ${onAdd ? "py-1" : "py-1.5"} rounded-md transition-colors active:scale-[0.97] ${
+                onAdd
+                  ? "bg-white/15 text-white/90 hover:bg-white/25 text-[9px]"
+                  : "bg-text-0 text-bg-0 hover:bg-text-2 text-[10px] font-semibold"
               }`}
             >
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              {addState === "adding"
-                ? t("Adding…")
-                : addState === "added"
-                  ? t("Added!")
-                  : addState === "failed"
-                    ? t("Failed")
-                    : t("Add")}
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={handleShowPrompt}
-            title={t("Generate a prompt to paste into your AI agent")}
-            className={`flex items-center gap-1.5 px-3 ${onAdd ? "py-1" : "py-1.5"} rounded-md transition-colors active:scale-[0.97] ${
-              onAdd
-                ? "bg-white/15 text-white/90 hover:bg-white/25 text-[9px]"
-                : "bg-text-0 text-bg-0 hover:bg-text-2 text-[10px] font-semibold"
-            }`}
-          >
-            <svg
-              width={onAdd ? 9 : 11}
-              height={onAdd ? 9 : 11}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <rect x="9" y="9" width="13" height="13" rx="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
-            {t("Ask agent")}</button>
+              <RemixIcon name="file-copy-line" size={14} />
+              {t("Ask agent")}</button>
+          </Tooltip>
         </div>
 
         {/* Badges */}

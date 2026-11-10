@@ -1,0 +1,26 @@
+{
+  "id": "ui-3d-reveal",
+  "sourceSha256": "158ce64b3bc045238636a42fc6e866a3b2b80418fa6b626f46baafff59ffefa4",
+  "replacements": [
+    {
+      "from": "Turn your ideas into<br />production-ready video",
+      "to": "Edit with AI.<br />Tell your story.",
+      "count": 1
+    },
+    {
+      "from": "HeyGen — Home",
+      "to": "OpenMotion — Studio",
+      "count": 2
+    },
+    {
+      "from": "Design System",
+      "to": "Motion Design",
+      "count": 2
+    },
+    {
+      "from": "Styles from the community",
+      "to": "Motion packs from the community",
+      "count": 1
+    }
+  ]
+}

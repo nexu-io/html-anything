@@ -7,7 +7,7 @@ import {
   FilePlus,
   FolderSimplePlus,
   FolderSimple,
-} from "@phosphor-icons/react";
+} from "../../icons/RemixIcons";
 import { ChevronDown, ChevronRight } from "../../icons/SystemIcons";
 import {
   FileIcon,

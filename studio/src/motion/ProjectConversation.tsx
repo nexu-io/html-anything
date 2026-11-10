@@ -86,7 +86,7 @@ export function ProjectConversation({ sessionId, onOpenArtifact }: { sessionId: 
       {conversation && artifacts.map(artifact => <button className="motion-conversation-project" key={artifact.id} disabled={switchingDisabled} onClick={() => onOpenArtifact(artifact)}><MotionIcon name="film" /><span><strong>{artifact.title}</strong><small>Motion</small></span><MotionIcon name="arrow-up-right" size={14} /></button>)}
       {conversation && !artifacts.length && <button className="motion-button" disabled={switchingDisabled} onClick={() => void workspace.createArtifact(sessionId)}><MotionIcon name="plus" />{t('Create artifact')}</button>}
       {!conversation && !error && <p className="motion-conversation-status" role="status">{t('Loading conversation…')}</p>}
-      {error && <div className="motion-conversation-status" role="alert">{error}{!conversation && <button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button>}</div>}
+      {error && <div className="motion-conversation-status" role="alert">{t(error)}{!conversation && <button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button>}</div>}
       {feedback && <p className="motion-conversation-status" role="status">{feedback}</p>}
       {manualCopy && <textarea className="motion-manual-copy" aria-label={t('Agent instruction')} readOnly value={manualCopy} onFocus={event => event.target.select()} />}
     </div>

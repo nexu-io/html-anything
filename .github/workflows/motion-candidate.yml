@@ -1,0 +1,110 @@
+name: Motion candidate build
+run-name: Motion candidate · ${{ inputs.version || 'auto' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Optional override; empty uses next Motion patch-test.<run ID>.<attempt>; build only'
+        type: string
+        required: false
+        default: ''
+      source_sha:
+        description: 'Optional reviewed full SHA integrated into feature/motion; empty freezes its current head'
+        type: string
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  candidate:
+    name: Build immutable candidate
+    if: github.repository == 'nexu-io/html-anything' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/motion')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      MOTION_SOURCE_SHA: ${{ inputs.source_sha }}
+      MOTION_VERSION: ${{ inputs.version }}
+      OPENMOTION_TELEMETRY: '0'
+      HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome
+      HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
+      HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          path: control
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - name: Resolve and freeze the integrated source
+        id: source
+        run: |
+          git -C control fetch origin feature/motion:refs/remotes/origin/feature/motion
+          node control/.github/scripts/motion-release.mjs source control
+      - uses: actions/checkout@v6.0.2
+        with:
+          path: source
+          ref: ${{ steps.source.outputs.source_sha }}
+          persist-credentials: false
+      - name: Scan tracked source before dependency installation
+        run: |
+          node control/.github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
+          node control/.github/scripts/motion-scan.mjs source source "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
+      - name: Install rendering test tools
+        run: |
+          # The hosted Ubuntu image provides Chrome; avoid Ubuntu's desktop Chromium snap.
+          "$HYPERFRAMES_BROWSER_PATH" --version
+          missing=()
+          for package in zip unzip ffmpeg fonts-noto-core; do
+            if [ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null)" != 'install ok installed' ]; then
+              missing+=("$package")
+            fi
+          done
+          if ((${#missing[@]})); then
+            apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+            sudo apt-get "${apt_options[@]}" update
+            sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
+          fi
+      - name: Check the selected source
+        working-directory: source
+        run: |
+          npm ci --no-audit --no-fund
+          npm run check
+          npm run typecheck:studio
+          npm run build:studio
+          npm run build:tracking
+          node --experimental-strip-types --test tests/tracking.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
+          npm run test:studio -- --maxWorkers=2
+          npm run package:phase1
+          archive="$PWD/dist/motion-$(node -p "require('./package.json').version")-phase1.zip"
+          node tests/phase1-package.mjs "$archive" "$RUNNER_TEMP/phase1-e2e"
+      - name: Build the final DEV application tgz once and scan both archives
+        env:
+          MOTION_SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+          MOTION_VERSION: ${{ steps.source.outputs.version }}
+        run: |
+          node source/scripts/package-npm.mjs "$RUNNER_TEMP/build" "$MOTION_VERSION" --template-env=dev
+          cp "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/build/source-scan.json"
+          node control/.github/scripts/motion-scan.mjs package "$RUNNER_TEMP/build/openmotion-app-$MOTION_VERSION.tgz" "$RUNNER_TEMP/build/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
+          node control/.github/scripts/motion-release.mjs seal "$RUNNER_TEMP/build" "$RUNNER_TEMP/candidate" source
+      - name: Retain the immutable candidate
+        id: artifact
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: motion-candidate-${{ steps.source.outputs.version }}
+          path: ${{ runner.temp }}/candidate/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Show candidate download and tester instructions
+        run: |
+          node --input-type=module <<'JS'
+          import { readFileSync, appendFileSync } from 'node:fs';
+          const c = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/candidate.json'));
+          const run = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Candidate ready for acceptance\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nTGZ SHA256: ${c.tgzSHA256}\n\n[Download motion-candidate-${c.version}](${run}#artifacts), extract it and give the folder to your Agent with this instruction:\n\n> Follow candidate-install.md in this folder to install this exact local candidate into an isolated test profile, application home, project data and Skills directory. Complete prepare and verify host loading. Record requested template/edit/export acceptance results in a private copy of acceptance.md; mark unrun checks NOT RUN. Do not publish.\n\nUse candidate-install.md before publication, not the sibling registry install.md. After acceptance, manually open Motion test publication, enter ${c.version} and confirm acceptance. Nothing was published by this build.\n`);
+          JS

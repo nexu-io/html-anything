@@ -18,6 +18,7 @@ import {
 import { readStudioUiPreferences, writeStudioUiPreferences } from "../../utils/studioUiPreferences";
 import { installDockAccessibility } from "./dockAccessibility";
 import { DockStripActions } from "./DockStripActions";
+import { DockHeaderSlotsProvider } from "./DockHeaderSlots";
 import { DockTab } from "./DockTab";
 import { installTabFill } from "./dockTabFill";
 import { addRegisteredPanel, applySideMinimums, buildEditLayout, defaultSideWidths } from "./dockLayout";
@@ -91,11 +92,12 @@ interface DockOptions {
   panels: readonly PanelId[];
   storageKey?: string | undefined;
   dockWidth: () => number;
+  fixedLayout?: boolean;
 }
 
 function createController(api: DockviewApi, options: DockOptions): DockController {
   const open = (id: PanelId) => {
-    if (api.getPanel(id)) return;
+    if (!options.panels.includes(id) || api.getPanel(id)) return;
     if (id === "preview") {
       // The timeline spans the whole workspace. Anchoring above it creates a new
       // row; anchor to a side column to put a closed preview back in the centre.
@@ -159,15 +161,20 @@ function createController(api: DockviewApi, options: DockOptions): DockControlle
       panel?.api.setActive();
     },
     close: (id) => {
+      if (options.fixedLayout) return;
       const panel = api.getPanel(id);
       if (panel) api.removePanel(panel);
     },
     setTitle: (id, title) => api.getPanel(id)?.api.setTitle(title),
     setGroupVisible: (id, visible) => {
       const group = api.getPanel(id)?.group;
-      if (group && group.api.isVisible !== visible) group.api.setVisible(visible);
+      if ((!options.fixedLayout || visible) && group && group.api.isVisible !== visible) group.api.setVisible(visible);
     },
-    reset: () => buildEditLayout(api, options.dockWidth(), options.panels),
+    reset: () => {
+      buildEditLayout(api, options.dockWidth(), options.panels);
+      const timeline = api.getPanel("timeline");
+      if (options.fixedLayout && timeline) timeline.group.header.hidden = true;
+    },
   };
 }
 
@@ -176,7 +183,9 @@ function restoreOrBuild(api: DockviewApi, projectId: string | null, options: Doc
   const stored = parseDockLayout(dockLayout, options.panels);
   if (stored) {
     try {
+      // Expanded preview is a temporary viewing mode, not a saved workspace layout.
       api.fromJSON(stored);
+      if (options.fixedLayout && api.hasMaximizedGroup()) api.exitMaximizedGroup();
       return;
     } catch {
       /* a layout the schema accepted but dockview cannot load: start over */
@@ -191,15 +200,20 @@ function Root({
   projectId,
   panels = PANEL_IDS,
   storageKey,
+  fixedLayout = false,
   dockWidth = windowWidth,
   children,
 }: {
   projectId: string | null;
   panels?: readonly PanelId[];
   storageKey?: string;
+  fixedLayout?: boolean;
   dockWidth?: () => number;
   children: ReactNode;
 }) {
+  const { t } = useI18n();
+  const translateRef = useRef(t);
+  translateRef.current = t;
   const [slots, setSlots] = useState<Slots>({});
   const registerSlot = useCallback((id: PanelId, element: HTMLElement | null) => {
     setSlots((prev) => {
@@ -217,11 +231,13 @@ function Root({
   const onReady = useCallback(
     ({ api }: DockviewReadyEvent) => {
       disposeRef.current();
-      const options = { panels, storageKey, dockWidth };
+      const options = { panels, storageKey, dockWidth, fixedLayout };
       restoreOrBuild(api, projectId, options);
+      const timeline = api.getPanel("timeline");
+      if (fixedLayout && timeline) timeline.group.header.hidden = true;
       applySideMinimums(api, dockWidth());
       const root = api.groups[0]?.element.closest<HTMLElement>(".hf-dock");
-      const disposeAccessibility = root ? installDockAccessibility(api, root) : () => {};
+      const disposeAccessibility = root ? installDockAccessibility(api, root, (message) => translateRef.current(message)) : () => {};
       const disposeTabFill = root ? installTabFill(api, root) : () => {};
       // Sides size against dockWidth, the window by default; the dock's own box lags a resize.
       const resizeObserver = new ResizeObserver(() => applySideMinimums(api, dockWidth()));
@@ -236,6 +252,7 @@ function Root({
       const persist = () => {
         clearTimeout(timer);
         timer = setTimeout(() => {
+          if (fixedLayout && api.hasMaximizedGroup()) return;
           writeStudioUiPreferences({ dockLayout: api.toJSON() }, undefined, projectId, storageKey);
         }, PERSIST_DEBOUNCE_MS);
       };
@@ -257,6 +274,7 @@ function Root({
         api.onDidRemovePanel(onDockChange),
         api.onDidActivePanelChange(onDockChange),
         api.onDidLayoutChange(onDockChange),
+        api.onDidMaximizedGroupChange(onDockChange),
       ];
       disposeRef.current = () => {
         clearTimeout(timer);
@@ -267,24 +285,33 @@ function Root({
         useDockLayoutStore.getState().detach();
       };
     },
-    [projectId, panels, storageKey, dockWidth],
+    [projectId, panels, storageKey, dockWidth, fixedLayout],
   );
 
   return (
-    <SlotsContext.Provider value={{ slots, registerSlot }}>
-      <DockviewReact
-        key={projectId ?? ""}
-        className="hf-dock flex-1 min-h-0"
-        components={COMPONENTS}
-        defaultTabComponent={DockTab}
-        rightHeaderActionsComponent={DockStripActions}
-        defaultRenderer="always"
-        disableFloatingGroups
-        disableTabsOverflowList
-        onReady={onReady}
-      />
-      {children}
-    </SlotsContext.Provider>
+    <DockHeaderSlotsProvider>
+      <SlotsContext.Provider value={{ slots, registerSlot }}>
+        <DockviewReact
+          key={projectId ?? ""}
+          className="hf-dock flex-1 min-h-0"
+          components={COMPONENTS}
+          defaultTabComponent={DockTab}
+          rightHeaderActionsComponent={DockStripActions}
+          defaultRenderer="always"
+          disableDnd={fixedLayout}
+          disableFloatingGroups
+          disableTabsOverflowList
+          messages={{
+            panelOpened: title => t('{title} opened', { title: t(title) }),
+            panelClosed: title => t('{title} closed', { title: t(title) }),
+            groupMaximized: title => t('{title} maximized', { title: t(title) }),
+            groupRestored: title => t('{title} restored', { title: t(title) }),
+          }}
+          onReady={onReady}
+        />
+        {children}
+      </SlotsContext.Provider>
+    </DockHeaderSlotsProvider>
   );
 }
 

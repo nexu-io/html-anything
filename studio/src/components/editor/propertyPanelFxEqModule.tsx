@@ -59,6 +59,7 @@ function Fader({
    * on the first move and the fader snaps out from under the pointer. Same
    * split the rack's other controls already make.
    */
+  const { t } = useI18n();
   const [local, setLocal] = useState(band.gain);
   const [dragging, setDragging] = useState(false);
   useEffect(() => {
@@ -104,7 +105,7 @@ function Fader({
           step={0.5}
           value={value}
           disabled={disabled}
-          aria-label={`${band.name} ${shown(value)} dB`}
+          aria-label={`${t(band.name)} ${shown(value)} dB`}
           onChange={(e) => move(Number(e.target.value))}
           onPointerUp={settle}
           onKeyUp={settle}
@@ -112,7 +113,7 @@ function Fader({
         />
       </div>
       <span className="hf-fx-eq-name w-full truncate text-center font-mono text-[9px] uppercase tracking-wide text-panel-text-2">
-        {band.name}
+        {t(band.name)}
       </span>
       <span
         className={`hf-fx-eq-value font-mono text-[9px] tabular-nums ${
@@ -158,7 +159,7 @@ export function FxEqModule({
           onClick={onToggleOpen}
         >
           {t("Tone")}</button>
-        <span className="font-mono text-[9px] text-panel-text-2">{bands.length}-band</span>
+        <span className="font-mono text-[9px] text-panel-text-2">{t("{count}-band", { count: bands.length })}</span>
         <button
           type="button"
           className="hf-fx-remove px-1 text-[11px] text-panel-text-2 hover:text-danger-ink"

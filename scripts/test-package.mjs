@@ -8,6 +8,8 @@ import { spawn } from 'node:child_process';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
+import { checkReleaseVersion, testVersion } from './release-version.mjs';
+export { checkReleaseVersion, testVersion } from './release-version.mjs';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
 // Git Bash tar interprets C: as a remote host; use Windows' native archive tool.
@@ -17,12 +19,6 @@ export function targetInfo(target) {
   const info = lock.targets[target];
   assert(info, `Unsupported target: ${target}`);
   return info;
-}
-export function testVersion(base, run, attempt = '1') {
-  assert(/^\d+\.\d+\.\d+$/.test(base), 'Source version must be MAJOR.MINOR.PATCH');
-  assert(/^[1-9]\d*$/.test(String(run)) && /^[1-9]\d*$/.test(String(attempt)), 'Use positive run and attempt numbers');
-  const [major, minor, patch] = base.split('.').map(Number);
-  return `${major}.${minor}.${patch + 1}-beta.${run}.${attempt}`;
 }
 export async function run(command, args, options = {}) {
   await new Promise((resolve, reject) => {
@@ -71,7 +67,7 @@ export async function prepare(target) {
 export async function build(target, version, profile = releaseProfile, templateEnvironment = 'prod') {
   const info = targetInfo(target);
   const templateConfig = packageTemplateConfig(templateEnvironment);
-  assert(/^\d+\.\d+\.\d+-beta\.\d+\.\d+$/.test(version), 'Only uniquely numbered beta packages are supported');
+  checkReleaseVersion(version);
   const { mcpRegistry } = await import('../mcp.ts');
   const registry = mcpRegistry(profile);
   const suffix = templateConfig.environment === 'dev' ? '-dev' : '';
@@ -114,7 +110,7 @@ export async function build(target, version, profile = releaseProfile, templateE
     child.stdout.on('data', chunk => { value += chunk; }); child.once('error', reject);
     child.once('exit', code => code === 0 ? resolve(value.trim()) : reject(new Error('git rev-parse failed')));
   });
-  const metadata = { schemaVersion: 1, version, channel: 'prerelease', templateEnvironment: templateConfig.environment, commit, run: process.env.GITHUB_RUN_ID || null,
+  const metadata = { schemaVersion: 1, version, channel: version.includes('-test.') ? 'test' : 'stable', templateEnvironment: templateConfig.environment, commit, run: process.env.GITHUB_RUN_ID || null,
     mcp: { profile, tools: registry.tools.map(tool => tool.name) },
     attempt: process.env.GITHUB_RUN_ATTEMPT || '1', target, minimumOS: info.minimumOS, builtOn: `${process.platform}-${process.arch}`,
     runtime: { node: lock.node, chromium: lock.chromium, ffmpeg: lock.ffmpeg, hyperframes: lock.hyperframes } };
@@ -134,5 +130,5 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   if (command === 'prepare') console.log(JSON.stringify(await prepare(target)));
   else if (command === 'build') console.log(JSON.stringify(await build(target, version, profile, flag?.split('=')[1])));
   else if (command === 'version') console.log(testVersion(JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')).version, target, version));
-  else throw new Error('Usage: test-package.mjs prepare <target> | build <target> <beta-version> [legacy|phase1] [--template-env=dev|prod] | version <run> <attempt>');
+  else throw new Error('Usage: test-package.mjs prepare <target> | build <target> <release-version> [legacy|phase1] [--template-env=dev|prod] | version <run> <attempt>');
 }

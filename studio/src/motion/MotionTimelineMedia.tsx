@@ -1,3 +1,4 @@
+import { useMvpEditor } from "./StudioHost";
 import { useEffect, useRef } from 'react';
 import { useMediaGateway } from './MediaGatewayContext';
 import { usePlayerStore } from '../player/store/playerStore';
@@ -17,6 +18,7 @@ export function MotionTimelineMedia({ projectId, compositionId, disabled, onFile
   onAssetDrop?: (path: string, placement: { start: number; track: number }, duration?: number, reportFailure?: boolean) => Promise<void> | void;
 }) {
   const gateway = useMediaGateway(); const { t } = useI18n();
+  const mvp = useMvpEditor();
   const shell = useStudioShellContextOptional();
   const edits = useDomEditActionsContextOptional();
   const state = useRef({ projectId, compositionId, disabled, onFileDrop, onAssetDrop, shell, edits }); state.current = { projectId, compositionId, disabled, onFileDrop, onAssetDrop, shell, edits };
@@ -57,5 +59,5 @@ export function MotionTimelineMedia({ projectId, compositionId, disabled, onFile
     return () => { bound = false; bind(null); };
   }, [bind, projectId, compositionId, t]);
   if (!gateway) return null;
-  return <div className="motion-timeline-media-actions"><button disabled={disabled} onClick={event => gateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t('Generate media')}</button><button disabled={disabled || !onFileDrop} onClick={gateway.importFiles}>{t('Import files…')}</button></div>;
+  return <div className="motion-timeline-media-actions">{!mvp && <button disabled={disabled} onClick={event => gateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t('Generate media')}</button>}<button disabled={disabled || !onFileDrop} onClick={gateway.importFiles}>{t('Import files')}</button></div>;
 }

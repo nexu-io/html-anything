@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm, stat } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -129,4 +129,21 @@ test('template files cannot escape the destination; known built-ins work without
   await assert.rejects(stat(path.join(directory, 'outside.html')), { code: 'ENOENT' });
   remote.offline();
   assert.equal((await catalog.get('product-promo')).kind, 'builtin');
+});
+
+test('reopening a template reuses verified files without sharing mutable project files', async t => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-prism-files-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const remote = mockPrism();
+  const catalog = new TemplateCatalog(directory, { fetch: remote.request });
+  const template = await catalog.get('test-motion-1');
+  await catalog.copy(template, path.join(directory, 'first'), pluginRoot);
+  await writeFile(path.join(directory, 'first', 'index.html'), 'User edits');
+  const requests = remote.requests.length;
+  remote.offline();
+  const reopened = new TemplateCatalog(directory, { fetch: remote.request });
+  await reopened.copy(template, path.join(directory, 'second'), pluginRoot);
+  assert.equal(remote.requests.length, requests);
+  assert.equal(await readFile(path.join(directory, 'second', 'index.html'), 'utf8'), contents['index.html']);
+  assert.equal((await reopened.detail('test-motion-1')).instructions, contents['TEMPLATE.md']);
 });

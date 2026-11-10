@@ -27,6 +27,17 @@ describe("studioApiFetch", () => {
       credentials: "omit",
     });
   });
+  it('binds unscoped native requests and event URLs to the page project', async () => {
+    vi.stubGlobal('location', new URL('http://localhost:5190/?project=project-a#project/project-a'));
+    const fetchMock = vi.fn(async () => new Response('ok')); vi.stubGlobal('fetch', fetchMock);
+    const { studioApiFetch, studioProjectUrl } = await loadWithEnv({});
+    await studioApiFetch('/api/render/job-a/cancel', { method: 'POST' });
+    expect(fetchMock).toHaveBeenCalledWith('/api/render/job-a/cancel?projectId=project-a', expect.objectContaining({ method: 'POST' }));
+    expect(studioProjectUrl('/api/events')).toBe('/api/events?projectId=project-a');
+    expect(studioProjectUrl('/api/projects/project-b/files/index.html')).toBe('/api/projects/project-b/files/index.html');
+    expect(studioProjectUrl('/api/events?projectId=project-b')).toBe('/api/events?projectId=project-b');
+    expect(studioProjectUrl('https://another.example/api/events')).toBe('https://another.example/api/events');
+  });
 
   it.each([
     ["the CLI or Studio dev server", "http://localhost:5190/"],

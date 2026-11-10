@@ -1,6 +1,6 @@
 import { useI18n } from "../i18n/I18n";
 import { useRef, useState } from "react";
-import { XIcon, WarningIcon, CheckCircleIcon, CaretRightIcon } from "@phosphor-icons/react";
+import { XIcon, WarningIcon, CheckCircleIcon, CaretRightIcon } from "../icons/RemixIcons";
 import { copyTextToClipboard } from "../utils/clipboard";
 import { useDialogBehavior } from "./ui/useDialogBehavior";
 

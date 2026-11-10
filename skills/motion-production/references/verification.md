@@ -1,14 +1,16 @@
 # Review and delivery verification
 
-Unchanged template preview reuse follows motion-template-to-video: confirm the actual preview exists and decodes, then deliver its copy without rendering, comparison or a fabricated export job. The fresh-export and job/revision checks below apply when a new render is required.
+Unchanged template delivery follows motion-template-to-video: confirm the template loaded and plays in the editor, without rendering, comparison or a fabricated export job. The fresh-export and job/revision checks below apply when a new render is required.
 
 Use separate evidence for creative quality, technical media integrity and playback. Each check is `passed`, `failed` or `not_run`; a missing tool or an unseen render cannot become `passed`. Scores are optional diagnostics, never the acceptance criterion.
 
 For dynamic creative work, also read the shared [Motion review](../../motion-director/references/motion-review.md); use it within the current route, without restarting director's full creation workflow. Local changes review the affected interval and adjacent joins; full-film delivery reviews the whole film. Export-only checks the requested file without authorizing creative rewrites. Apply the checks relevant to the requested stage: draft/review tasks do not trigger export.
 
+Keep audiovisual evidence tied to the actual picture/audio pair and export revision. After timing or audio-source changes, apply the affected-scope invalidation rules in [edit](edit.md); an earlier listen or an unchanged duration does not verify the new pair. Record technical integrity, player operation, event/phase timing and normal-speed audiovisual perception separately. A running player, RMS peaks, matching timestamps or a shared event table cannot establish audible continuity or perceived synchronization. If reliable listening is unavailable, prepare the actual auditionable result, mark that check `not_run` and state the limitation; do not claim audiovisual acceptance or add a default user-approval gate.
+
 ## 1. Visual self-check: make the film specific
 
-Inspect actual representative frames from every shot, the first/last frames, neighboring cut frames and a moving preview. For a cut at frame N, inspect N−1 and N; use a short strip around fast actions when source material needs it. Review at roughly 360 px wide as well as the full canvas. Label evidence with revision, shot and time/frame.
+Inspect actual representative frames from every shot, the first/last frames, neighboring cut frames and a moving preview. For a cut at frame N, inspect N−1 and N; when an important action can start and finish between overview samples, use its actual timeline/source interval or output-frame changes to inspect the intervening frames. Two endpoint frames cannot establish that action’s perceptual phase. Review at roughly 360 px wide as well as the full canvas. Label evidence with revision, shot and time/frame.
 
 | Check | Failure to look for | Smallest useful correction |
 | --- | --- | --- |

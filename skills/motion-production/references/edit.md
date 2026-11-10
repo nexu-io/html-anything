@@ -12,6 +12,10 @@
 
 例子用于说明范围判断，不限定对象形式、镜头结构或实现手法。文字变长可能需要排版调整，时长变化可能影响相邻转场和声音；在已授权范围内处理必要依赖并说明实际影响，不能为形式上的“少改几行”留下坏结果。只有影响目标的重要歧义或需要扩大授权范围时才追问。
 
+## Present the latest preview without switching chats
+
+Before the first content write and after the saved batch, apply the [continuing-edit preview rules](native.md#continuing-edits). Reuse the same project/native tab; show it when the calling chat is active, otherwise queue it until the user returns. Confirm the latest version and live content before recording display evidence. Only an explicit show-now request permits switching back for this turn. Explicit background requests take precedence.
+
 ## 基于当前工程修改
 
 先按 [共享上下文](context.md) 补齐本轮所需正文并完成读后决策边界，再检查目标工程、最新 revision 与受影响源文件。STATE 用于恢复决定，不能代替当前源文件。首次修改某对象时，留存足够的修改前证据：可用源文件片段、相关文件副本/哈希、时间线事件或对应画面；按风险选择，不要求每轮复制全工程。
@@ -30,6 +34,8 @@
 | 动作、时长、镜头结构 | 修改区间的动态表现、进入与离开接点、后续时间偏移、声音锚点和总时长 |
 | 仅声音 | 画面源/时间线保持；实际音轨的素材、裁切、事件位置与试听；换音乐后检查原音效延续 |
 | 同一对象在后续镜头再现 | 修改后的内容与时间状态是否贯穿后续展示、预览和交付；缩略图相同不能证明动作已延续 |
+
+动作的起止、相位或可见完成时刻改变，或相关音轨（音乐、音效、旁白等）的来源、裁切、偏移改变时，受影响区间原有的声画同步结论失效；总时长相同也不能沿用。核对当前产物中的感知重点、实际声音事件及邻接转场，更新对应版本与证据。复核后关系仍成立可保留原音轨，不强制改音乐或重做全片。仅颜色、样式或整体增益变化未影响这些关系时，不因此重启编排；仍检查本轮实际影响。
 
 对完全锁定的源文件，可用字节或哈希核对；引擎缓存、历史记录及自动补写 ID 与内容变化分开说明，不能把全部差异一概排除。调整过的文件也要核对未授权变化；只检查“改动文件名单”不足以证明局部性。技术 lint 不替代画面、动态或声音检查；检查能力不足时标明具体缺口。
 

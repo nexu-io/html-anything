@@ -22,11 +22,17 @@ import { creationMode, creationModes, artifactViewers, type CreativeSession, typ
 import { gatewayFor } from './gateway/service.ts';
 import { WorkspaceBrowser } from './browser.ts';
 import { Phase1Service } from './phase1.ts';
+import { phase1McpCapabilities } from './shared/phase1-tools.ts';
 import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
+import { createAppTracking, closeTracking, saveTrackingPreference, trackingPreference, trackingLocked, type OmTracking } from './shared/tracking.ts';
+import { studioEvents } from './tracking/events.ts';
+import { nativeRuntimeStatus, startNativePreparation, requireNativeRuntime } from './scripts/npm-runtime.mjs';
+import { nativeRouteCapability } from './shared/native-runtime.ts';
+import { validPending } from './tracking/core.ts';
 
 const sharedStore = new WorkspaceStore();
-export type Service = { studio?: Studio; runtimeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: () => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void> };
+export type Service = { studio?: Studio; runtimeRoot?: string; nativeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
 const service: Service = {};
 const working = new Set<string>();
 const runningExports = new Map<string, AbortController>();
@@ -44,7 +50,7 @@ export async function cancelExport(store: WorkspaceStore, projectId: string, job
   });
 }
 
-export async function renderNext(store: WorkspaceStore, runtimeRoot: string) {
+export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tracking?: OmTracking) {
   const pending = await store.job();
   if (pending?.projectId) store = store.forProject(pending.projectId);
   const key = store.directory;
@@ -70,7 +76,8 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string) {
     await mkdir(path.dirname(output), { recursive: true });
     // The service owns this job; a short-lived Agent client must not cancel it.
     await stage('rendering');
-    const result = await runHyperframes(runtimeRoot, directory, ['render', '.', '--output', output, '--format', 'mp4', ...(job.phase1 ? ['--fps', String(job.expected!.fps)] : []), '--json'], 25 * 60_000, { HYPERFRAMES_RENDER_DETACHED: '1' }, control.signal);
+    // Let the engine read the snapshot's exact data-fps (including rational rates).
+    const result = await runHyperframes(runtimeRoot, directory, ['render', '.', '--output', output, '--format', 'mp4', '--json'], 25 * 60_000, { HYPERFRAMES_RENDER_DETACHED: '1' }, control.signal);
     await writeFile(path.join(store.directory, 'jobs', job.id, 'render.log'), result.stdout + '\n' + result.stderr, { mode: 0o600 });
     if (result.code) throw new Error('Hyperframes render 失败：' + (result.stderr || result.stdout).slice(-1800));
     // Never label an absent or non-MP4 output as completed, even after exit code 0.
@@ -93,6 +100,15 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string) {
     const current = await store.job(job.id);
     if (current && ['running', 'cancelling'].includes(current.state)) await store.finishExport(job.id, job.token!, error instanceof Error ? error.message : '渲染失败');
   } finally {
+    if (job && tracking) {
+      const final = await store.job(job.id).catch(() => null);
+      if (final && ['completed', 'failed', 'cancelled'].includes(final.state)) tracking.track('export_result', {
+        job_id: final.id, job_state: final.state as 'completed' | 'failed' | 'cancelled',
+        duration_ms: Math.min(86_400_000, Math.max(0, Date.now() - final.createdAt)),
+        technical_check: (final.verification as any)?.status === 'passed' ? 'passed'
+          : (final.verification as any)?.status === 'failed' ? 'failed' : 'unknown',
+      }, undefined, 'worker');
+    }
     if (job) runningExports.delete(job.id);
     if (job) await rm(store.snapshotDirectory(job.id), { recursive: true, force: true });
     working.delete(key);
@@ -102,12 +118,12 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string) {
 function json(res: ServerResponse, status: number, data: unknown) {
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(data));
 }
-async function input(req: IncomingMessage) {
+async function input(req: IncomingMessage, maxBytes = 9 * 1024 * 1024) {
   if (!req.headers['content-type']?.startsWith('application/json')) throw new Error('需要 application/json');
   let size = 0; const chunks: Buffer[] = [];
   for await (const chunk of req) {
     size += chunk.length;
-    if (size > 9 * 1024 * 1024) throw new Error('提交内容超过大小限制');
+    if (size > maxBytes) throw new Error('提交内容超过大小限制');
     chunks.push(chunk);
   }
   return JSON.parse(Buffer.concat(chunks).toString());
@@ -132,7 +148,8 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
       if (!entry && !store.projectCatalog().projects.some(item => item.id === id)) throw new Error('工程不存在');
       if (sessionTarget?.sessionId && !store.projectCatalog().sessions!.some(item => item.id === sessionTarget.sessionId)) throw new Error('会话不存在');
       if (!entry && store.projectCatalog().activeId === id) {
-        if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectory, context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectory, path.join(store.directory, 'studio.log'), context.studioPort || 4174);
+        if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectoryFor(id), context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectoryFor(id), path.join(store.directory, 'studio.log'), context.studioPort || 4174);
+        await context.studio.openProject?.(id);
         await store.selectProject(id);
         return { ...(await store.status()), studioUrl: context.studio.url };
       }
@@ -146,16 +163,17 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
         const oldStudio = context.studio;
         const oldPort = oldStudio ? Number(new URL(oldStudio.url).port) : undefined;
         const candidatePort = oldPort === undefined ? context.studioPort || 4174 : oldPort === 65535 ? 4174 : oldPort + 1;
-        candidate = context.launchStudio ? await context.launchStudio(directory, candidatePort) : await startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), candidatePort);
+        candidate = oldStudio?.alive() && oldStudio.openProject ? oldStudio : context.launchStudio ? await context.launchStudio(directory, candidatePort) : await startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), candidatePort);
         // Native Studio writes are independent of our lock. Recheck before switching.
         if ((await store.get()).revision !== expectedRevision) throw new Conflict();
         await store.selectProject(id, entry, sessionTarget?.instruction ?? ('instruction' in target ? target.instruction : undefined), sessionTarget);
         context.studio = candidate; committed = true;
-        await oldStudio?.close();
+        await candidate.openProject?.(id);
+        if (oldStudio !== candidate) await oldStudio?.close();
         return { ...(await store.status()), studioUrl: candidate.url };
       } finally {
         if (!committed) {
-          await candidate?.close();
+          if (candidate !== context.studio) await candidate?.close();
           if (creating) await rm(directory, { recursive: true, force: true });
         }
       }
@@ -164,7 +182,7 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
 }
 
 async function openEditor(store: WorkspaceStore, context: Service) {
-  if (context.ensureStudio) { await context.ensureStudio(); return; }
+  if (context.ensureStudio) { await context.ensureStudio(store.projectId); return; }
   if (!context.runtimeRoot) throw new Error('Hyperframes 服务尚未就绪');
   if (context.switching) throw new Error('正在打开工程，请稍候');
   if (context.studio?.alive()) return;
@@ -219,15 +237,57 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     const originalUrl = new URL(req.url || '/', 'http://localhost');
     const motionRequest = /^\/(?:motion|design)-api\//.test(originalUrl.pathname);
     const url = new URL(originalUrl);
-    if (context.ensureStudio && (url.pathname === '/' || url.pathname.startsWith('/sessions/'))) await context.ensureStudio();
+    if (motionRequest && url.searchParams.has('projectId')) {
+      const id = url.searchParams.get('projectId')!;
+      if (projectHeader !== undefined && projectHeader !== id) return json(res, 400, { error: 'PROJECT_SCOPE_MISMATCH' });
+      store = store.forProject(id);
+    }
+    if (context.ensureStudio && (url.pathname === '/' || url.pathname.startsWith('/sessions/'))) {
+      const projectId = url.searchParams.get('project'), sessionId = url.searchParams.get('session');
+      if (projectId !== null) {
+        if (store.projectCatalog().projects.some(project => project.id === projectId)) await context.ensureStudio(projectId);
+      } else if (sessionId) {
+        const session = store.projectCatalog().sessions!.find(session => session.id === sessionId);
+        const artifact = session?.artifacts.find(artifact => artifact.id === session.activeArtifactId) ?? session?.artifacts.at(-1);
+        if (artifact) await context.ensureStudio(artifact.projectId);
+      }
+    }
     if (motionRequest) url.pathname = url.pathname.replace(/^\/(?:motion|design)-api\//, '/api/');
-    const editorUrl = `http://${host || 'localhost'}/#project/${store.projectCatalog().activeId}`;
+    const editorUrl = `http://${host || 'localhost'}/#project/${store.projectId}`;
+    if (motionRequest && url.pathname === '/api/runtime' && ['GET', 'POST'].includes(req.method!)) {
+      const root = context.nativeRoot ?? pluginRoot;
+      if (req.method === 'POST') {
+        const data = await input(req, 1024);
+        if (!data || Object.keys(data).length !== 1 || data.retry !== true) return json(res, 400, { error: 'INVALID_RUNTIME_RETRY' });
+        await startNativePreparation(root, true);
+      }
+      return json(res, 200, await nativeRuntimeStatus(root));
+    }
+    if (motionRequest && url.pathname === '/api/tracking/preferences' && ['GET', 'PUT'].includes(req.method!)) {
+      const directory = (store.workspaceStore ?? store).directory;
+      if (req.method === 'PUT') {
+        if (trackingLocked()) return json(res, 403, { error: 'TRACKING_DISABLED_BY_ENVIRONMENT' });
+        const data = await input(req, 1024);
+        if (!data || Object.keys(data).length !== 1 || typeof data.enabled !== 'boolean') return json(res, 400, { error: 'INVALID_TRACKING_PREFERENCE' });
+        await saveTrackingPreference(directory, data.enabled);
+      }
+      return json(res, 200, { enabled: context.tracking?.enabled() ?? false, preference: trackingPreference(directory), locked: trackingLocked() });
+    }
+    if (motionRequest && url.pathname === '/api/tracking' && req.method === 'GET') return json(res, 200, { enabled: context.tracking?.enabled() ?? false });
+    if (motionRequest && url.pathname === '/api/tracking' && req.method === 'POST') {
+      if (!context.tracking?.enabled()) return json(res, 200, { accepted: 0, enabled: false });
+      const data = await input(req, 64 * 1024);
+      if (!data || Object.keys(data).length !== 1 || !Array.isArray(data.events) || data.events.length > 16
+        || !data.events.every((event: unknown) => validPending(studioEvents, event) && event.entrypoint === 'studio')) return json(res, 400, { error: 'INVALID_TRACKING_BATCH' });
+      const statuses = data.events.map((event: unknown) => context.tracking!.ingest(event));
+      return json(res, statuses.includes('full') ? 429 : 200, { accepted: statuses.filter((status: string) => status === 'queued').length });
+    }
     if (motionRequest && url.pathname === '/api/phase1/call' && req.method === 'POST') {
       if (!context.runtimeRoot) throw new Error('RUNTIME_NOT_READY');
       const authority = store.workspaceStore ?? store;
       context.phase1 ??= new Phase1Service(authority, context.runtimeRoot, {
         origin: () => new URL(editorUrl).origin,
-        nativeUrl: projectId => context.studio?.alive() && context.studio.projectDirectory === authority.projectDirectoryFor(projectId) ? context.studio.url : undefined,
+        nativeUrl: () => context.studio?.alive() ? context.studio.url : undefined,
         openProject: async projectId => { await openProject(authority, context, (await authority.get()).revision, { projectId }, authority.projectId); },
         mutation: async task => {
           let release!: () => void;
@@ -235,6 +295,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
           try { return await task(); } finally { release(); context.phase1Mutation = undefined; }
         },
         cancel: (projectId, jobId) => cancelExport(authority, projectId, jobId),
+        tracking: context.tracking,
       });
       const data = await input(req);
       try { return json(res, 200, await context.phase1.call(data.name, data.arguments ?? {})); }
@@ -262,12 +323,15 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     if (req.method === 'GET' && /^\/connect\/?$/.test(url.pathname)) {
       res.writeHead(302, { Location: '/?panel=connections&host=' + integrationHost(url.searchParams.get('host')) }); return res.end();
     }
-    if (url.pathname === '/api/health' && req.method === 'GET') return json(res, 200, {
-      service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: store.directory,
-      engine: 'hyperframes', engineVersion: HYPERFRAMES_VERSION, editor: 'opendesign-motion', ffmpeg: Boolean(context.ffmpeg),
-      ready: Boolean(context.runtimeRoot && (!context.studio || context.studio.alive())), editorReady: Boolean(context.studio?.alive()), studioUrl: context.studio?.alive() ? editorUrl : undefined, nativeStudioUrl: context.studio?.url,
-      ...(context.runtimeRoot ? { hyperframesCli: cliPath(context.runtimeRoot), authoringGuide: path.join(context.runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md') } : {}),
-    });
+    if (url.pathname === '/api/health' && req.method === 'GET') {
+      const nativeRuntime = await nativeRuntimeStatus(context.nativeRoot ?? pluginRoot);
+      return json(res, 200, {
+        service: 'motion-preview', protocol: 2, version: VERSION, dataDirectory: store.directory, mcp: phase1McpCapabilities,
+        engine: 'hyperframes', engineVersion: HYPERFRAMES_VERSION, editor: 'opendesign-motion', nativeRuntime, ffmpeg: nativeRuntime.managed ? nativeRuntime.capabilities.media : Boolean(context.ffmpeg),
+        ready: Boolean(context.runtimeRoot && (!context.studio || context.studio.alive())), editorReady: Boolean(context.studio?.alive()), studioUrl: context.studio?.alive() ? editorUrl : undefined, nativeStudioUrl: context.studio?.url,
+        ...(context.runtimeRoot ? { hyperframesCli: cliPath(context.runtimeRoot), authoringGuide: path.join(context.runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md') } : {}),
+      });
+    }
     if (motionRequest && url.pathname === '/api/preview/open' && req.method === 'POST') {
       await openEditor(store, context);
       return json(res, 200, { studioUrl: editorUrl, ...(await store.status()) });
@@ -389,6 +453,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (url.pathname === '/api/export' && req.method === 'POST') {
       if (!context.runtimeRoot) return json(res, 503, { error: 'Hyperframes 服务尚未就绪' });
+      await requireNativeRuntime(context.nativeRoot ?? pluginRoot, 'export');
       const data = await input(req); revision(data.expectedRevision);
       return json(res, 202, { job: await store.requestExport(data.expectedRevision) });
     }
@@ -406,11 +471,11 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (!motionRequest && (url.pathname.startsWith('/api/') || url.pathname === '/__hyperframes_config')) {
       if (context.phase1Mutation) await context.phase1Mutation;
-      // A stale tab must never write its old session into the newly selected directory.
       const scopedProject = url.pathname.match(/^\/api\/projects\/([^/]+)/);
-      if (scopedProject && decodeURIComponent(scopedProject[1]) !== store.projectCatalog().activeId) return json(res, 409, { error: '当前项目已切换，请重新打开对应会话。' });
-      if (context.switching && !['GET', 'HEAD'].includes(req.method || '')) return json(res, 409, { error: '正在切换项目，请稍候。' });
+      if (scopedProject) store.forProject(decodeURIComponent(scopedProject[1]));
       if (!context.studio?.alive()) return json(res, 503, { error: '编辑服务尚未就绪' });
+      const capability = nativeRouteCapability(req.method!, url.pathname);
+      if (capability) await requireNativeRuntime(context.nativeRoot ?? pluginRoot, capability);
       return await proxyStudio(req, res, url, context.studio.url);
     }
     if (req.method !== 'GET') return json(res, 405, { error: '不支持此操作' });
@@ -418,18 +483,20 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     return json(res, 404, { error: 'Not found' });
   } catch (error) {
     if (res.headersSent) res.destroy();
-    else json(res, error instanceof Conflict ? 409 : 400, { error: error instanceof Error ? error.message : '操作失败' });
+    else json(res, error instanceof Conflict || (error as any).code === 'NATIVE_RUNTIME_NOT_READY' ? 409 : 400, { error: error instanceof Error ? error.message : '操作失败', ...((error as any).code === 'NATIVE_RUNTIME_NOT_READY' ? { code: (error as any).code, applied: false, runtime: (error as any).details } : {}) });
   }
 }
 
 export async function startServer(store = sharedStore, port = Number(process.env.PORT || 4173), options: { editor?: boolean; editorToken?: string; privateHandler?: (req: IncomingMessage, res: ServerResponse) => Promise<boolean> } = { editor: process.env.MOTION_HEADLESS !== '1' }) {
   await access(path.join(pluginRoot, 'studio/build/index.html')).catch(() => { throw new Error('编辑器尚未构建，请先运行 npm run build:studio。'); });
-  const runtimeRoot = await ensureRuntime(store.directory);
+  const runtimeRoot = await ensureRuntime(store.directory, false);
+  void startNativePreparation(pluginRoot).catch(error => console.error('Native preparation could not start: ' + error.message));
   await recoverProjectTransactions(store, runtimeRoot);
   const ffmpeg = await execute(process.env.HYPERFRAMES_FFMPEG_PATH || process.env.FFMPEG_PATH || 'ffmpeg', ['-version'], pluginRoot, 5000).then(r => r.code === 0, () => false);
-  const context: Service = { runtimeRoot, ffmpeg, studioPort: !port || port === 65535 ? 4174 : port + 1, editorToken: options.editorToken };
+  const context: Service = { runtimeRoot, nativeRoot: pluginRoot, ffmpeg, studioPort: !port || port === 65535 ? 4174 : port + 1, editorToken: options.editorToken,
+    tracking: await createAppTracking(store.directory, 'mcp') };
   context.launchStudio = async (directory, chosenPort) => {
-    if (!process.env.OPENMOTION_EDITOR_LOCK_FD) return startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), chosenPort);
+    if (!process.env.OPENMOTION_EDITOR_LOCK_FD) return startStudio(runtimeRoot, directory, path.join(store.directory, 'studio.log'), chosenPort, store.directory);
     const probe = createServer();
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });
     const available = (probe.address() as any).port;
@@ -437,32 +504,35 @@ export async function startServer(store = sharedStore, port = Number(process.env
     return startOwnedStudio(store.directory, runtimeRoot, directory, path.join(store.directory, 'studio.log'), available);
   };
   let opening: Promise<Studio> | undefined;
-  context.ensureStudio = async () => {
-    if (context.studio?.alive()) return context.studio;
+  context.ensureStudio = async (projectId = store.projectId) => {
+    const scoped = store.forProject(projectId);
+    if (context.studio?.alive()) { await context.studio.openProject?.(projectId); return context.studio; }
     if (!opening && context.switching) throw new Error('正在打开工程，请稍候');
     if (!opening) opening = (async () => {
       context.switching = true;
       await context.studio?.close();
-      await store.initialize(runtimeRoot);
-      context.studio = await context.launchStudio!(store.projectDirectory, !port || port === 65535 ? 4174 : port + 1);
+      await scoped.initialize(runtimeRoot);
+      context.studio = await context.launchStudio!(scoped.projectDirectory, !port || port === 65535 ? 4174 : port + 1);
       return context.studio;
     })().finally(() => { opening = undefined; context.switching = false; });
-    return opening;
+    const studio = await opening;
+    await studio.openProject?.(projectId);
+    return studio;
   };
   if (options.editor !== false) await context.ensureStudio();
   const server = createServer((req, res) => { void (async () => { if (!options.privateHandler || !await options.privateHandler(req, res)) await handler(req, res, store, context); })().catch(error => { if (!res.headersSent) json(res, 500, { error: (error as Error).message }); else res.destroy(); }); });
   try {
     await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
-  } catch (error) { await context.studio?.close(); throw error; }
+  } catch (error) { context.tracking?.close(); await context.studio?.close(); throw error; }
   const gateway = gatewayFor(store);
   const tick = () => {
-    void renderNext(store, runtimeRoot).catch(error => console.error(error.message));
+    void renderNext(store, runtimeRoot, context.tracking).catch(error => console.error(error.message));
     void gateway.tick().catch(() => console.error('Model gateway queue could not be processed'));
   };
   const timer = setInterval(tick, 500); tick();
   return { server, get activeToolCalls() { return context.phase1?.pending ?? 0; }, openProject: async (projectId: string) => openProject(store, context, (await store.get()).revision, { projectId }, store.projectId), get studio() { return context.studio!; }, ensureStudio: context.ensureStudio,
-    info: async () => ({ previewUrl: `http://127.0.0.1:${(server.address() as any).port}`, studioUrl: context.studio?.url, engine: 'hyperframes', ready: true, editorReady: Boolean(context.studio?.alive()), ffmpeg, revision: (await store.get()).revision, dataDirectory: store.directory, browserOpened: false, authoringGuide: path.join(runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'), hyperframesCli: cliPath(runtimeRoot) }),
-    close: async () => { clearInterval(timer); await context.browser?.close(); await gateway.close(); server.closeAllConnections(); server.close(); await context.studio?.close(); } };
+    info: async () => ({ previewUrl: `http://127.0.0.1:${(server.address() as any).port}`, studioUrl: context.studio?.url, engine: 'hyperframes', ready: true, editorReady: Boolean(context.studio?.alive()), ffmpeg, revision: (await store.get()).revision, dataDirectory: store.directory, browserOpened: false, nativeRuntime: await nativeRuntimeStatus(pluginRoot), authoringGuide: path.join(runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'), hyperframesCli: cliPath(runtimeRoot) }),
+    close: async () => { clearInterval(timer); await context.browser?.close(); await gateway.close(); server.closeAllConnections(); server.close(); await context.studio?.close(); await closeTracking(context.tracking); } };
 }
 if (isMain(import.meta.url)) {
   try {

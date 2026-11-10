@@ -434,6 +434,7 @@ export function TimelineLanes({
                         <TimelineLaneClip
                           key={clipKey}
                           el={el}
+                          trackLabel={els.length === 1 ? (els[0]?.label ?? els[0]?.domId ?? els[0]?.id) : undefined}
                           previewElement={previewElement}
                           elementKey={elementKey}
                           capabilities={capabilities}

@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 /**
  * Wraps a Design-panel property control with the promote-to-variable gesture.
@@ -39,6 +40,7 @@ export function PromotableControl({
   children: (args: RenderArgs) => React.ReactNode;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const promote = useVariablePromoteChannel(channel);
 
   // A binding attribute (`data-var-*` / `var(--id)`) pointing at a declaration
@@ -78,6 +80,8 @@ export function PromotableControl({
       : { bound: false },
   );
 
+  if (mvp) return <>{rendered}</>;
+
   return (
     <div className={`relative ${bound ? "rounded-lg ring-1 ring-studio-accent/40" : ""}`}>
       {rendered}
@@ -101,7 +105,7 @@ export function PromotableControl({
           }}
           className="absolute -top-2 right-1.5 z-10 inline-flex items-center gap-1 rounded-sm bg-raised/80 px-1 py-px font-mono text-[8px] font-medium text-neutral-400 opacity-70 transition-colors hover:bg-studio-accent/20 hover:text-accent-ink hover:opacity-100"
         >
-          ◇ var
+          ◇ {t('Variable')}
         </button>
       )}
     </div>

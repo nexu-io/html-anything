@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import { StudioHostContext } from "../../motion/StudioHost";
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -48,6 +49,7 @@ function renderSection(
   styles: Record<string, string> = {},
   overrides: Partial<DomEditSelection> = {},
   gsapBorderRadius: { tl: number; tr: number; br: number; bl: number } | null = null,
+  mvpEditor = false,
 ) {
   const host = document.createElement("div");
   document.body.append(host);
@@ -57,7 +59,7 @@ function renderSection(
   const mergedStyles = { "background-color": "#0D0C09", "border-width": "0px", ...styles };
   act(() => {
     root.render(
-      <FlatStyleSection
+      <StudioHostContext.Provider value={{ mvpEditor }}><FlatStyleSection
         projectId="proj-1"
         element={element}
         styles={mergedStyles}
@@ -65,7 +67,7 @@ function renderSection(
         onSetStyle={onSetStyle}
         onSetHtmlAttribute={vi.fn()}
         gsapBorderRadius={gsapBorderRadius}
-      />,
+      /></StudioHostContext.Provider>,
     );
   });
   return { host, root, onSetStyle };
@@ -613,6 +615,57 @@ describe("FlatStyleSection — Opacity", () => {
       opacityTrack.dispatchEvent(new MouseEvent("pointerup", { bubbles: true, clientX: 50 }));
     });
     expect(onSetStyle).toHaveBeenCalledWith("opacity", "0.5");
+    act(() => root.unmount());
+  });
+});
+
+it("MVP exposes only solid color and opacity, leaving authored effects untouched", () => {
+  const styles = { "background-image": "linear-gradient(90deg, #000, #fff)", "box-shadow": "2px 2px 4px #000", "border-radius": "20px", filter: "blur(2px)" };
+  const before = JSON.stringify(styles);
+  const { host, root, onSetStyle } = renderSection(styles, {}, null, true);
+  expect(host.textContent).toContain("Fill color");
+  expect(host.textContent).toContain("Opacity");
+  for (const label of ["Gradient", "Stroke", "Radius", "Shadow", "Blend", "Blur", "Mask"]) expect(host.textContent).not.toContain(label);
+  expect(onSetStyle).not.toHaveBeenCalled();
+  expect(JSON.stringify(styles)).toBe(before);
+  act(() => root.unmount());
+});
+
+describe("MVP solid fill", () => {
+  function openFill(host: HTMLElement) {
+    act(() => host.querySelector<HTMLButtonElement>('[data-flat-color-trigger="true"]')!.click());
+    return document.querySelector<HTMLInputElement>('input[spellcheck="false"]')!;
+  }
+
+  it.each(["linear-gradient(90deg, #000, #fff)", "none"])(
+    "commits a pure color as one edit over %s, without touching other effects",
+    (backgroundImage) => {
+      const { host, root, onSetStyle } = renderSection({
+        "background-image": backgroundImage,
+        "border-radius": "20px",
+        "box-shadow": "2px 2px 4px #000",
+      }, {}, null, true);
+      const input = openFill(host);
+      act(() => setInputValue(input, "#FF0000"));
+      expect(onSetStyle).not.toHaveBeenCalled();
+      act(() => input.dispatchEvent(new Event("focusout", { bubbles: true })));
+      expect(onSetStyle).toHaveBeenCalledExactlyOnceWith({
+        "background-color": "rgb(255, 0, 0)",
+        "background-image": "none",
+      });
+      act(() => root.unmount());
+    },
+  );
+
+  it("keeps the gradient when opening or cancelling the color picker", () => {
+    const { host, root, onSetStyle } = renderSection({
+      "background-image": "linear-gradient(90deg, #000, #fff)",
+    }, {}, null, true);
+    const input = openFill(host);
+    expect(onSetStyle).not.toHaveBeenCalled();
+    act(() => setInputValue(input, "#FF0000"));
+    act(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" })));
+    expect(onSetStyle).not.toHaveBeenCalled();
     act(() => root.unmount());
   });
 });

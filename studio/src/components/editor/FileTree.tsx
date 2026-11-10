@@ -1,6 +1,6 @@
 import { useI18n } from "../../i18n/I18n";
 import { memo, useState, useCallback, useMemo, useRef } from "react";
-import { Plus, FolderSimplePlus } from "@phosphor-icons/react";
+import { Plus, FolderSimplePlus } from "../../icons/RemixIcons";
 import {
   buildTree,
   sortChildren,

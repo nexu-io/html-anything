@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenMotion · The color cut</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box }
+    html, body { margin: 0; width: 960px; height: 540px; overflow: hidden }
+    main { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Helvetica Neue", Arial, sans-serif }
+    .layer { position: absolute; inset: 0 }
+    .credit { position: absolute; display: flex; gap: 8px; align-items: center; font-weight: 650; font-size: 22px; letter-spacing: -1px }
+    .brand-mark { width: 23px; height: 23px; display: inline-block }
+    main { background: #233eb8; color: #fff8df }
+    .credit { left: 48px; top: 35px }
+    .scene { position: absolute; left: 52px; top: 122px; width: 349px; height: 322px; background: #ff7951; border-radius: 4px; overflow: hidden }
+    .scene::before { content: ''; position: absolute; width: 216px; height: 216px; border-radius: 100%; background: #fff8c2; left: -20px; top: 45px }
+    .scene::after { content: ''; position: absolute; inset: 120px -50px -40px; background: #12286d; clip-path: polygon(0 64%, 38% 23%, 54% 42%, 78% 5%, 100% 15%, 100% 100%, 0 100%) }
+    .stamp { position: absolute; bottom: 13px; left: 16px; z-index: 1; font: 600 18px Georgia, serif }
+    .panel { position: absolute; right: 57px; top: 121px; width: 459px; color: #172661; background: #fffbe9; padding: 19px 23px; border-radius: 5px; box-shadow: 6px 8px 0 #182e91 }
+    header { font-size: 31px; letter-spacing: -1.2px; font-weight: 650; padding-bottom: 11px }
+    .row { height: 67px; border-top: 1px solid #bfbda8; display: flex; gap: 15px; align-items: center; font-size: 21px }
+    .swatch { display: inline-grid; place-items: center; width: 53px; height: 31px; border-radius: 2px; font: italic 22px Georgia, serif; color: #16296a }
+    .switch { position: relative; margin-left: auto; width: 48px; height: 24px; border-radius: 16px; background: #b9b9a8 }
+    .knob { position: absolute; width: 18px; height: 18px; background: white; border-radius: 100%; left: 3px; top: 3px }
+    #pointer { position: absolute; left: 855px; top: 290px; width: 43px; filter: drop-shadow(2px 3px 0 #182e9155) }
+    #message { background: #ff865b; color: #142768 }
+    #headline { position: absolute; left: 86px; top: 158px; font: 700 88px/.93 Georgia, serif; letter-spacing: -6px }
+    #ring { position: absolute; left: 53px; top: 220px; width: 554px; height: 118px }
+    .ink { fill: none; stroke: #fff9cc; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1 }
+    .palette { position: absolute; bottom: 40px; right: 47px; display: flex }
+    .palette b { display: block; width: 56px; height: 76px; margin-left: -17px; border: 2px solid #152769; border-radius: 3px; transform: rotate(9deg) }
+  </style>
+</head>
+<body>
+  <main data-composition-id="main" data-width="960" data-height="540" data-start="0" data-duration="5" data-fps="24">
+    <div id="settings" class="layer" data-start="0" data-duration="5" data-track-index="0">
+      <div class="credit"><svg class="brand-mark" viewBox="0 0 291 291" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="currentColor"/>
+<path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="currentColor"/>
+</svg><span>OpenMotion</span></div>
+      <div class="scene"><span class="stamp">Color study / 01</span></div>
+      <section class="panel"><header>Brand palette</header>
+        <div class="row"><i class="swatch" style="background:#ff825b"></i>Persimmon<b class="switch"><i class="knob"></i></b></div>
+        <div class="row"><i class="swatch" style="background:#ffed99"></i>Butter yellow<b class="switch"><i class="knob"></i></b></div>
+        <div class="row"><i class="swatch" style="background:#a2b9fa"></i>Cobalt blue<b class="switch"><i class="knob"></i></b></div>
+      </section>
+      <svg id="pointer" viewBox="0 0 36 43"><path d="m3 2 29 21-13 2-6 13Z" fill="#fff8ce" stroke="#132a71" stroke-width="2.4"/></svg>
+    </div>
+    <div id="message" class="layer" data-start="0" data-duration="5" data-track-index="1">
+      <div class="credit"><svg class="brand-mark" viewBox="0 0 291 291" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M145.5 0C225.857 0 291 65.1426 291 145.5C291 225.857 225.857 291 145.5 291H19.3581C8.64385 291 0.000681982 282.358 0.000616442 271.644C0.000417939 239.193 1.50624e-09 174.523 0 145.5C0 65.1426 65.1426 5.2069e-06 145.5 0ZM145.501 29.1004C81.2147 29.1004 29.1004 81.2147 29.1004 145.501C29.1005 209.786 81.2147 261.9 145.501 261.9C209.786 261.9 261.9 209.786 261.9 145.501C261.9 81.2147 209.786 29.1004 145.501 29.1004Z" fill="currentColor"/>
+<path d="M137.934 215.04L94.3119 100.247C92.9002 96.5317 96.5286 92.8895 100.219 94.3172L215.067 138.749C219.793 140.578 218.491 147.633 213.427 147.633H146.769V213.4C146.769 218.499 139.744 219.804 137.934 215.04Z" fill="currentColor"/>
+</svg><span>OpenMotion</span></div><div id="headline">Cut in<br>full color.</div>
+      <svg id="ring" viewBox="0 0 550 115"><path class="ink" pathLength="1" d="M352 16 C173 -6 5 17 9 62 C15 108 325 124 408 77 C462 44 345 8 181 12"/></svg>
+      <div class="palette"><b style="background:#233eb8"></b><b style="background:#fff3ab"></b><b style="background:#ff956c"></b></div>
+    </div>
+  </main>
+  <script>
+    const cut = gsap.timeline({paused: true});
+    cut.set('#message', { x: 960 }, 0);
+    cut.from('.row', { y: 8, opacity: 0, stagger: .08, duration: .3 }, 0);
+    cut.to('#pointer', { x: -12, y: -78, duration: .8, ease: 'power2.inOut' }, .15);
+    cut.to('#pointer', { scale: .82, yoyo: true, repeat: 1, duration: .1 }, 1.24);
+    cut.to('.switch', { backgroundColor: '#2b48bd', stagger: .07, duration: .18 }, 1.36);
+    cut.to('.knob', { x: 24, stagger: .07, duration: .18 }, 1.36);
+    cut.to('#settings', { x: -960, duration: .67, ease: 'power3.inOut' }, 2.58);
+    cut.to('#message', { x: 0, duration: .67, ease: 'power3.inOut' }, 2.58);
+    cut.to('.ink', { strokeDashoffset: 0, duration: .65, ease: 'power2.out' }, 3.48);
+    cut.from('.palette b', { y: 65, opacity: 0, rotation: -12, stagger: .08, duration: .42 }, 3.93);
+    cut.set({}, {}, 5);
+    window.__timelines = { main: cut };
+  </script>
+</body>
+</html>

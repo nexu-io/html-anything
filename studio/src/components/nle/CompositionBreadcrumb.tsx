@@ -1,5 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
-import { ArrowLeft, CaretRight } from "@phosphor-icons/react";
+import { ArrowLeft, CaretRight } from "../../icons/RemixIcons";
 import { trackStudioEvent } from "../../utils/studioTelemetry";
 
 export interface CompositionLevel {

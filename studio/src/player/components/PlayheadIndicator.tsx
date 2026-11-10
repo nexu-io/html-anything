@@ -22,7 +22,7 @@ interface PlayheadIndicatorProps {
   /** Whether the playhead is being actively scrubbed — fills the head. */
   scrubbing?: boolean;
   /**
-   * When false, the head chip is rendered in normal flow (top:1) instead of the
+   * When false, the head chip is absolutely positioned instead of using the
    * sticky pin — used by the static illustration where there is no scroll area.
    */
   stickyHead?: boolean;
@@ -42,8 +42,10 @@ export function PlayheadIndicator({
   // wrapper) lands exactly on GUTTER + time * pps — the ruler ticks' center x.
   const HEAD_W = PLAYHEAD_HEAD_W;
   const HEAD_H = 9;
-  // marginTop(1) + HEAD_H = where the line should start.
-  const HEAD_TOTAL_H = 1 + HEAD_H;
+  // Rotation expands the 9px square to ~13px. Reserve its full bounds so the
+  // scroll viewport cannot clip the upper tip when the head becomes sticky.
+  const HEAD_INSET = 3;
+  const HEAD_TOTAL_H = Math.ceil(HEAD_INSET + HEAD_H / 2 + Math.hypot(HEAD_W, HEAD_H) / 2);
 
   return (
     <>
@@ -78,22 +80,27 @@ export function PlayheadIndicator({
           horizontal translate puts its LEFT edge at wrapper.left and its CENTER
           at wrapper.left + HEAD_W/2 — exactly on the line. */}
       <div
+        data-timeline-playhead-head=""
         className={stickyHead ? "sticky" : "absolute"}
         style={{
           left: 0,
-          top: stickyHead ? 0 : 1,
-          // Zero height keeps it from covering rows (sticky strip trick).
-          height: stickyHead ? 0 : undefined,
+          top: 0,
+          width: HEAD_W,
+          height: HEAD_TOTAL_H,
+          // The line scrolls behind the pinned head. Mask it above the lower
+          // tip too, rather than allowing it to cross the hollow diamond.
+          background: stickyHead ? "var(--timeline-shell-bg)" : undefined,
         }}
       >
         <div
           style={{
+            position: "absolute",
+            top: HEAD_INSET,
             width: HEAD_W,
             height: HEAD_H,
             borderRadius: 2,
-            marginTop: 1,
             // Outline-only at rest, filled while scrubbing.
-            background: scrubbing ? color : "transparent",
+            background: scrubbing ? color : stickyHead ? "var(--timeline-shell-bg)" : "transparent",
             border: `1.5px solid ${color}`,
             boxSizing: "border-box",
             boxShadow: `0 1px 3px var(--timeline-playhead-shadow), 0 0 5px ${glowColor}`,

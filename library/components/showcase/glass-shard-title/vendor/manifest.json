@@ -1,0 +1,40 @@
+{
+  "scope": "Browser dependencies used by this composition, with their original licenses.",
+  "files": [
+    {
+      "file": "gsap-3.14.2/dist/gsap.min.js",
+      "url": "https://registry.npmjs.org/gsap/-/gsap-3.14.2.tgz#dist/gsap.min.js",
+      "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+      "bytes": 72779,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "gsap-3.14.2/README.md",
+      "url": "https://registry.npmjs.org/gsap/-/gsap-3.14.2.tgz#README.md",
+      "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0",
+      "bytes": 6199,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "d3-delaunay-6.0.4/dist/d3-delaunay.min.js",
+      "url": "https://registry.npmjs.org/d3-delaunay/-/d3-delaunay-6.0.4.tgz#dist/d3-delaunay.min.js",
+      "sha256": "efc726aa8aea0897f6dda19874709d09fd791781208ed5847ef1fd36f9886b18",
+      "bytes": 19071,
+      "license": "LICENSE"
+    },
+    {
+      "file": "d3-delaunay-6.0.4/LICENSE",
+      "url": "https://registry.npmjs.org/d3-delaunay/-/d3-delaunay-6.0.4.tgz#LICENSE",
+      "sha256": "582c3022bd01942336095f92b58a90b1be624dc547d987555c6c956512dd24c1",
+      "bytes": 757,
+      "license": "LICENSE"
+    },
+    {
+      "file": "gsap-3.14.2/LICENSE.txt",
+      "url": "https://gsap.com/community/standard-license/",
+      "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b",
+      "bytes": 5494,
+      "license": "GSAP Standard No Charge License"
+    }
+  ]
+}

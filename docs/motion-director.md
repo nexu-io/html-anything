@@ -1,6 +1,20 @@
-# Motion Director v1.4.5
+# Motion Director v1.5.5
 
-## 当前接入范围
+## Current guidance: v1.5.5
+
+This update integrates the creative guidance developed after v1.4.5. The existing five Skill routes, eleven public Tools, MCP Resources, editable-preview handoff and requested-export boundary remain unchanged.
+
+- Describe a concrete visual event and its recognizable result, then design materials, subject motion, framing and timing together. Reference analysis transfers the viewing mechanism rather than copying a color palette or transition name.
+- Select or acquire materials within the task's permissions; inspect identity, structure, quality and controllability at the largest intended framing. Programmatic graphics remain valid final materials when they fit the film.
+- Keep the subject's important change legible when framing, occlusion and camera motion also change. Test difficult views and geometry before expanding the film.
+- Prototype the representative creative risk, including middle or ending sections when relevant. Preserve accepted implementations and timing while adding context; a successful opening does not validate the remaining film.
+- Choose sound materials and timing order for the task, then cross-check actual visible action phases against real audio events. Shared edit and verification guidance invalidates affected timing evidence after changes and separates technical integrity, player operation, event timing and normal-speed perception.
+
+These are Agent instructions, not a new audiovisual evaluator or media-generation service. Iterative prototype improvements do not establish reliable first-pass or cross-task quality gains. Reliable native audiovisual model input and an automatic critique–revision loop have not been demonstrated by this integration. Missing perceptual evidence remains unverified; formatting, frame inspection and timestamp agreement do not establish perceived synchronization.
+
+The historical records below apply to their named versions and environments. They do not certify this version or its current host capabilities.
+
+## Historical integration through v1.4.5
 
 v1.4.4 明确导演视角与职责，合并原有成功标准并前置；正文按职责与目标、工作范围、工程接入、创作流程组织。表达方式根据产品事实、受众和传播目的选择，七份质量参考与原有创作流程保持。角色文字的效果尚未单独做生成对照验证。
 
@@ -37,7 +51,7 @@ v1.4.2 补充按范围读取依赖、记录完整正文和跨阶段复用；v1.4
 
 第三轮成片完成 900 帧及音轨完整解码、首中尾寻址与浏览器完整播放。完整 3 fps 帧序列、变化区间 10 fps 序列、源状态核对和独立复核支持上述内容与状态结论；不证明正常速度下的丝滑度或声音质量。概念片中的工程与 MP4 展示不是真实产品操作的端到端测试。
 
-v1.4 历史冻结标识（入口哈希不代表当前 v1.4.5）：
+v1.4 historical identifiers (the entry hash does not identify current v1.5.5):
 
 - Skill 入口 SHA256：`c154050a7fcd9658d5d4bdcdd3a42bb8f8bf440333fdfa012cea0d7ccb563fdb`。
 - 第三轮主时间线 SHA256：`eb4b94626caf6f4acf4f843c1e0f317b90bdf998e7b659335dbf1eea779383b9`。

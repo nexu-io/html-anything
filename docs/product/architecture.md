@@ -1,38 +1,116 @@
-# OpenDesign 产品架构
+# OpenMotion 产品架构
 
 本文描述仓库根目录的独立 Motion 运行时；它与 OD 主应用的会话、账号和部署整合尚未包含在本次源码迁移中。参见[迁移边界](../repository-migration.md)。
 
-更新：2026-11-05。实现基线：0.6.2；状态：下文标记为“当前”的能力已在仓库实现。公开范围为本机创作、编辑、MCP 和独立安装分发。
+Updated: 2026-11-09. 实现基线：0.6.2；状态：下文标记为“当前”的能力已在仓库实现。公开范围为本机创作、编辑、MCP 和独立安装分发。
 
 ## 产品定位与目标
 
-OpenDesign 的底层组织是通用 Agent 会话：会话拥有模式、需求与多个 Artifact，模式选择模板目录和 skill，Artifact Viewer 负责打开可编辑产物。完整与嵌入视图使用同一产物；`embed=1` 可只显示 Viewer，供 Codex 等宿主打开。当前一期只有 Motion 模式，制作与导出仍使用原生 Hyperframes。其他模式是已确认方向，未作为可执行模式上线。
+**对外主张是 Reverse engineering for any video：让用户的本地 Agent 成为全栈视频创作者。** 以参考视频和用户品牌为起点，研究叙事、镜头、动效与声音，用 HTML/CSS/JavaScript 重建可编辑工程，补齐素材并在同一 Studio 继续剪辑、预览和渲染。产品形态仍为 **All-in-One AI-native Studio for AI editing & Motion**；真人口播、原创制作、模板改编和局部改稿继续使用各自入口，参考重建不替代其他创作流程。
+
+The MVP opens directly into the Motion editor with a searchable project sidebar, including `embed=1`. Home, conversation, browser tabs and integration/model settings are not exposed in this editor. Users can create a blank project from the sidebar, create through the external Agent workflow, or use the editor's template library. The underlying session, mode and Artifact model is retained, with Motion as the only executable mode and Hyperframes owning editing and export.
 
 会话的 Agent 推理与工具编排由用户已有的 MCP 客户端执行；本地网页保存需求、接收调用方写回的真实回复、管理产物与继续编辑，不包含内置聊天 Agent 运行器。自有 Agent、Codex 和其他 MCP 客户端共用先创建会话、后生成产物的生命周期。
 
-Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调用本地 Codex 与云供应商；它不接管会话编排。创作模式、媒体模态与供应商模型分别定义产物、素材类型和执行能力，详见[会话架构的分层说明](../session-architecture.md#会话编排与媒体生成的分层)。
+Model Gateway remains a shared media-generation backend for MCP, using local Codex and cloud providers. Generation entry points are hidden in the MVP editor; the Gateway does not orchestrate conversations. 创作模式、媒体模态与供应商模型分别定义产物、素材类型和执行能力，详见[会话架构的分层说明](../session-architecture.md#会话编排与媒体生成的分层)。
 
 已确认的体验原则：
 
 - Agent 与用户操作同一份工程，修改能在工作室继续编辑。
-- 全部页面共享左侧会话列表，一个会话可拥有多个工程。左侧会话和右侧浏览器顶格并列，工程工具与编辑器完整从属于浏览器 Tab；两侧可独立收起、恢复。移除全局顶栏，设置收纳在侧栏；列表可从会话顶部完全折叠，隐藏会话时由浏览器顶部恢复。
-- MCP 接入、模板发现、预览和复制指令在一个弹框里完成，保留编辑器上下文。
+- The project sidebar opens as a modal drawer over the editor at every viewport size. It starts closed, leaves the editor dimensions unchanged, and closes via its button, outside click or Escape. The header toggle remains mounted for focus restoration; privacy, theme and language settings live in the drawer footer. Error and empty-session views retain a drawer toggle so users can select an existing project or create one. Project rows show names without dates; the heading offers a New project button instead of a count. Creation uses the existing save and revision guards before opening the blank project.
+- Preview zoom percentage and Fit sit in the MVP preview header, outside the picture; fullscreen retains the in-view controls.
+- The composition list marks the live preview target, including the full video. The MVP omits the duplicate preview breadcrumb; composition switching and existing return shortcuts remain available.
+- The editor header keeps the OpenDesign logo, drawer toggle and template library on the left, centers the editable project name, and places undo/redo and export on the right. Transient save/error status remains available. The template modal preserves previews and author/source links, without integration setup sections.
+- The asset panel shows only the current project, with compact search/import controls, type filters, and a dedicated scrollable list. Usage filtering is omitted; used assets still sort first within each type. The global cache view remains in source but has no editor entry in the MVP.
+- Panel positions are fixed. Divider resizing and per-project size persistence remain; panel movement, closing and layout presets are absent. Preview alone can temporarily expand within the editor workspace, keeping the host chat visible and the player mounted. Its header button or Escape restores the previous layout and playback position; expansion is not persisted across reloads.
+- MVP controls share a locally bundled Remix Icon 4.9.1 set with the reference design system. Side-panel tabs remain text-only; brand artwork and timeline geometry are separate from control icons.
+- Timeline clips omit a title that duplicates the track header, giving its space to the preview. Distinct clip names, accessible labels, status badges and track visibility controls remain available.
+- The MVP omits the standalone timeline title strip to give its space to tracks, retaining the tool row and ruler.
+- The MVP shows Select and Split as adjacent timeline tools. Split at playhead remains available by keyboard shortcut, without a duplicate toolbar button. Tooltips add a short explanation for less familiar controls while simple actions retain a name-only hint.
 - 模板先展示真实成片效果；作者、出处、内容种类和有来源的热度帮助选择。
 - 交给 Agent 的复刻指令保持简短；详细配置、模板 ID 和流程由参数化指引链接承载。
 - 导出成功需要真实产物与验证证据；技术检查与画面、声音、播放器检查分别记录。
 
-## 对外主张与 Motion MD 方向
+## 对外主张与 Motion.md 方向
 
-产品对外名称统一为小写 **openmotion**，标志沿用 OpenDesign 官网原件；现有 `open-motion` 仓库路径、`motion` 插件标识与环境变量保留兼容。定位目标是成为最好的 Claude Motion 开源替代，以 Codex 工作流、品牌资产复用、参考风格复刻与可编辑工程支撑这一主张。“最好”是愿景，不代表已有比较评测结论。统一开源许可证仍需维护者确认，不能用上游 Apache-2.0 许可代替自主代码的许可决定。
+产品对外名称统一为 **OpenMotion**（O 和 M 大写），README 顶部居中展示 Logo，正文简介前使用纯文本一级标题 OpenMotion，首图和页尾横幅沿用同一标识；现有仓库路径、`motion` 插件标识与环境变量保留兼容。公开介绍以“参考 → 理解与重建 → 品牌改编 → 多模态生成 → 剪辑与渲染”为主线，强调 HTML 视频源码、BYOA / BYOK、真人故事、可编辑作品和 Motion.md 社区。英文、简体中文、日文 README 共用案例、媒体与稳定章节锚点；README 语言与 Studio 界面语言分别维护；Studio 当前支持十一种界面语言。
 
-[Motion MD](../motion-md.md) 是本轮加入的 **v0.1 格式提案**，描述来源、品牌、叙事、节奏、运动、素材、可修改项与验收信息。当前仅供用户显式交给 Agent 作为创作上下文；没有自动发现、解析、校验或注册接口。它不改变 HTML/CSS/JS 原生工程，也不替换现有 motion-video-to-template 的单份 `TEMPLATE.md` 交付约定。
+“任何视频”是工作流的创作范围表述，不保证任意输入的获取、解析、还原度或传播结果。参考获取与媒体分析依赖宿主工具和用户材料，生成效果依赖模型配置，成片需按参考、简报与实际视听结果审阅。README 的发布部分明确区分当前 MP4 手动交接与规划中的平台连接、排期和反馈。外部产品来源和比较统一放在 README 最后的 Acknowledgements，技术依赖与具体出处仍保留在专题和源文件中。
+
+AI 剪辑的当前路径是：用户提供素材、脚本或确认的时间码，外部 Agent 根据选段、删改、排序、字幕、声画与节奏要求修改真实工程，用户在 Studio 预览并继续调整；自动语音理解仍取决于宿主工具与输入材料。对外介绍以 OpenMotion 本身与创作者的完整工作流为主，Hyperframes 作为技术来源在文末致谢，具体依赖继续在技术专题中准确记录。独立应用是首要产品身份，外部 Agent 通过 Skills、MCP 和固定版本 CLI 操作同一份本地工程；应用可连接多种客户端，当前不内置聊天 Agent 运行器。核心原则是人和 Agent 共用作品、经验沉淀为规范和模板、源文件可检查与可延续。仓库已采用 [Apache-2.0](../../LICENSE)，保留上游组件与字体声明；这取代此前“统一许可证待确认”的过时状态，依据见 2026-11-06 的公开记录。
+
+README 正文先展示场景与复刻效果，再介绍核心特性，最后说明安装与技术架构。创作流程仍是 **Input → Process → Output**：本地视频/录音/图片、在线参考、文本和 SRT/VTT → Agent 按脚本或已确认时间码剪辑、设计动效、通过 Studio 采用声音与媒体 → 固定版本 MP4 与可编辑工程。在线获取和语音分析依赖宿主能力或用户提供的素材/字幕；原生文本存储不等于字幕自动导入器。通过修改工程画幅可制作竖屏、横屏、方形版本；当前没有各社交平台的专用导出预设或直接发布，公开导出容器仍为 MP4。
+
+[媒体事实包](../media-kit.md) 是面向报道、演示与内容 Agent 的可引用入口，区分可验证能力、产品方向和待验证主张。现有资料不能证明“99% 还原”或“覆盖 Claude Motion 几乎全部核心模板”；资源数量与来源仍以目录快照及逐条出处为准。
+
+[Motion.md](../motion-md.md) 是 **v0.1 格式提案**，约定文件名 `MOTION_DESIGN.md`，保留现有 `MOTION.md` 示例；它描述来源、品牌、叙事、节奏、运动、素材、可修改项与验收信息。当前仅供用户显式交给 Agent 作为创作上下文；没有自动发现、解析、校验或注册接口。它不改变 HTML/CSS/JS 原生工程，也不替换现有 motion-video-to-template 的单份 `TEMPLATE.md` 交付约定。
+
+Motion.md 是统一的创作设计规范，**Brand Kit 属于它内部的品牌章节**：身份、产品事实、Logo、配色、字体、语气和已确认素材与叙事、动效、声音、审阅规则共同组织。已有 `BRANDKIT.md` 可以作为该章节引用的材料，不要求另建并列的品牌规范。此处明确的是文档和创作上下文的层级，不新增自动解析器或迁移已有工程文件。
+
+### Motion Design Skill 包：从参考到可复用资产
+
+Motion Design 的资源单位进一步明确为“创作规则 + Agent 方法 + 可编辑实现 + 替换输入 + 对比证据”。`MOTION_DESIGN.md` 记录保持项和运动意图，`SKILL.md` 记录使用方法，源码执行动画，preset 记录本次内容；真实 reference/remix 对照记录结果。参考片缺少源码时仍先走 `motion-recreate`；已有源码复用走模板路径；用户明确需要可复用模板时继续使用 `motion-video-to-template` 和其 `TEMPLATE.md` 交付，不新增核心路由。
+
+[`motion-design-remix`](../../library/skills/motion-design-remix/SKILL.md) 是可选 Library Skill，包含六个已经收录为 registry 资源的上游动效源码 profile、各自的 Motion.md、可执行内容替换脚本与实际并排渲染示例。它固定上游源码版本、校验替换次数、拒绝覆盖已有输出，不解释 Markdown、不自动分析视频、不接入模板注册表；对托管工程的修改仍遵守现有 revision 契约。六个 profile 不改变三个内置模板和五个核心制作 Skill 的数量。
+
+[`presenter-story`](../../library/skills/presenter-story/SKILL.md) 补充知识口播、工作流演示和产品讲解三份 Motion.md 设计配方，采用“真人语音主线 + 源片段到输出时间的映射 + 字幕 / 画中画 / 动效叠层”的构造。它没有人物素材或可执行模板，展示的三组真人前后对比为目录已有的上游演示，不是新 Skill 的验证结果。README 还展示九条真人视频参考。
+
+[实例说明](../motion-design-examples.zh-CN.md) 区分已有源码的改编与任意原片的重建；帧采样渲染证据不替代 Studio 导出、声音、目标机器或用户视觉验收。包内保留源码许可和字体声明。工作副本将 CDN / 字体替换为已收录的本地资源，原始源码与哈希保留；浏览器、Node、FFmpeg 等执行工具仍另行安装，不声称任意跨引擎可执行。借鉴 [MotionGit](https://motiongit.com/spec) 的内容、运行时、分发分层，并不构成 `.motion` 格式兼容。社区可以通过普通文件与 Git 分享、Fork、改进和评审；自动 marketplace 入库、数据回流学习与 RAG 仍为方向。
 
 [Motion 资源索引](../collections/README.zh-CN.md) 已可使用，区分可观看参考与可编辑模板；OpenDesign 官网展示案例，公开的品牌／榜单专题集合站仍在规划。Motion Benchmark／Arena 为待讨论规划，无已发布榜单、排名或确定日期。
+
+### Presenter Tech 本地模板包
+
+[`library/templates/presenter-tech/`](../../library/templates/presenter-tech/README.md) 收入可再分发的固定版本源码包，提供本地 `.motion` ZIP、参数 / 运行器 / 字体 / 声音配方、Motion.md、制作指南与来源记录。公开展示名为 Presenter Tech，原始 Kinetic Tech 身份、MIT 版权与第三方条款保留在包内及 NOTICE；不主张上游模板为 OpenMotion 原创。
+
+此条目使用包内 `adapter.py` 的 plan → prepare → preview → render 路线，依赖安装和输出均在 checkout 外的独立目录。它不是直接写入 Hyperframes 原生时间轴的模板，也没有新增 Studio `.motion` 解析、MCP Tool 或核心 Skill。Library 多一个本地模板包，Studio 原生模板仍为三个、目录计数仍为 894。源码完整性、本地 runner 验证与用户真人成片验收分开记录，见 [verification.json](../../library/templates/presenter-tech/verification.json)。
+
+### README 与示例资源闭环
+
+[本地资源契约](../readme/RESOURCES.md)覆盖英文、简体中文和日文 README（共四个文件）及其场景、对比、精选集合页中的完整视频、GIF、封面和贡献者头像，以及六个 Motion Design 工程、四个展示组件、三个 Studio 原生模板和 Presenter Tech 包需要的素材、浏览器脚本与字体。页面展示媒体使用仓库文件；外部官方活动可通过明确标记的链接跳转观看。品牌案例的来源与校验值另见 [展示清单](../readme/brand-showcase/manifest.json)，架构图的封面同款视觉、创作流程与 Motion.md 内部品牌层级见[图示及生成记录](../readme/diagrams/ARTWORK.md)；文字架构继续保留可检索的模块职责与边界。校验脚本检查本地引用和哈希，捕获器阻断非本机网络请求。所有分发格式继续使用正向清单。894 条发现目录仍是索引，不能把精选资源闭环写成整个目录已镜像；工具初次安装、云模型与原作者网站也不属于离线资源承诺。
+
+### 创作资源与贡献架构
+
+[`library/`](../../library/README.zh-CN.md) 是源码中的统一创作资源入口，按 Skills、模板、Motion 组件、动效设计体系和 Brandkits 五类组织。当前包含可选 Brandkit 整理 Skill、六种 profile 的 Motion Design Remix Skill、三份真人叙事配方的 Presenter Story Skill、三个现有模板的索引、标题揭示配方、Ink & Water `MOTION_DESIGN.md` 与 OpenMotion `BRANDKIT.md`。模板源码继续单份维护于 `template-library/`，索引不增加内置模板数量。
+
+资源库由人或 Agent 明确选择文件使用；尚无自动导入、自动注册、远端 marketplace 或新增 MCP API。这些 Library 资源不改变核心制作 Skills、workflow registry 和十一 Tool 契约。Library 内的 Brandkit、Presenter Story 与 Motion Design Remix Skill 可分别选择使用，服务品牌整理、真人叙事设计或具体源码改编，不增加核心制作路线。
+
+`MOTION_DESIGN.md` 统一维护创作设计，其中 Brand Kit 章节维护身份、事实与资产，其他章节维护叙事、视觉、节奏、声音与审阅规则；组件描述局部可复用行为；模板包含实现；Skill 描述方法。资源目录仍可独立存放可复用的品牌资料，供 Motion.md 引用，不代表两套并列的创作规范。贡献按[条目清单](../../library/ENTRY_TEMPLATE.md)记录来源、许可、编辑项、状态与实际验证，新增分发文件仍逐项进入正向清单。参考片、配方和经过验证的可编辑作品分开标注。
+
+README 参考 OpenDesign 的产品导览和 HTML Anything 的贡献、来源表格与文字架构图。对外视觉采用统一蓝绿水墨肌理、奶油白留白与深色字体，详见 [Brandkit](../../library/brandkits/openmotion/BRANDKIT.md)；真实产品截图和参考作品保留原貌。该美术方向不改应用 UI tokens、工程格式、模型行为或价格。
+
+### AI 原生时间轴：当前能力与产品方向
+
+核心产品是围绕时间轴持续改稿的 AI 剪辑应用。素材、叙事、图片替换、动效、声音与导出都归属同一份可编辑工程；Agent 执行剪辑意图，Studio 保留人工调整入口，导出使用固定版本。参考 [OpenChatCut](https://github.com/0xsline/OpenChatCut) 的连续编辑理念组织公开说明，本次未引入其代码或移植其能力。
+
+| 产品主线 | 当前已实现路径 | 已确认方向，尚未实现为通用能力 |
+| --- | --- | --- |
+| 智能剪辑与组织 | 导入、排列素材，Agent 根据脚本/时间码落实选段删改与节奏要求，用户在时间轴调整 | 自动理解并选择内容、去除无关段落、按发布目标自动适配画幅 |
+| 素材生成与搜索 | 配置 Model Gateway 后生成图片、视频、音乐和语音；参考图编辑、候选入库与显式替换保留时长和动画 | 跨媒体、配音、音乐与 Avatar 服务的资源搜索和统一选用 |
+| 多平台输入与输出 | 支持的本地媒体、宿主获取的参考与文本输入；改编构图，固定版本导出 MP4 并保留源工程 | 更广的平台解析/导入、自动格式适配与平台导出预设 |
+
+图片编辑的现有实现仅承诺支持参考图的模型路径，不将图片替换泛化为任意视频、音频或人物替换。模型配置与真实生成效果分别验证；搜索目录、Avatar、语音分析和发布平台能力以后按独立需求落地。
+
+### 人与 Agent 协作创作空间 — is coming
+
+已确认方向是在同一视频项目中支持人和 Agent 共同进行 AI 剪辑与 Motion 创作，并把评论、讨论、协作和评审关联到时间轴的具体时刻或范围，形成“反馈 → 修改 → 评审 → 继续迭代”的空间。README 的水墨协作图为生成式概念预览，保留 **Concept preview** 标记，正文明确其规划状态；它不是当前界面截图。
+
+当前人和 Agent 可以先后修改同一份本地工程，沿用 revision 保护；时间轴评论、协作评审与多人同步编辑尚未实现。评论归属、修订关联、并发合并和协作状态的具体技术契约仍待设计，不能从概念图推导为已交付能力，也未承诺发布日期。
+
+### 两个 Agent 接入方向
+
+[README 产品演示](../../README.md#product-tour) 将这两种接入方向展示为 Codex 嵌入编辑器、独立 Studio、Claude Code / CLI 三种使用入口，并串起 Connect Agent 与单模板精确指令；它们共用现有工程与工具契约，未新增运行模式。截图及复现范围见[产品演示说明](../product-tour.md)。
+
+- **从应用连接 Agent：** 用户先在 OpenMotion 打开工程，再通过 Connect Agent 为当前工作区配置 Codex、Claude Code 等客户端，将工程上下文和要求交给客户端执行，回到 Studio 审阅并继续改稿。
+- **从 Agent 使用 OpenMotion：** 用户先在已有客户端安装 Skills、连接 MCP，按需使用 CLI；由 Agent 创建或读取工程、剪辑、预览与导出，随时打开同一 Studio。
+
+这两种入口共用工程与服务契约，不创建两套项目状态，也不表示 Studio 已内置聊天 Agent。需要人工与 Agent 协作时，必须指向同一工作区和明确工程；写入前读取当前 revision，沿用冲突保护。宿主接入与能力边界见 [适配器说明](../agent-adapters.md)。
 
 ## 目标场景与交付
 
 | 场景 | 用户输入 | 期望交付 | 当前支持方式 |
 | --- | --- | --- | --- |
+| AI 口播剪辑与素材重组 | 录制素材、脚本/时间码与剪辑目标 | 精简、重排、配合字幕和声画的可编辑短片 | 外部 Agent 依据输入修改工程，Studio 预览与时间轴细调；媒体理解依赖宿主能力 |
 | 产品演示与发布 | 产品事实、页面/素材、参考视频 | 可编辑的宣传或功能演示视频 | Agent 写原生工程，Studio 调整，后台导出 |
 | 模板复刻 | 选定参考、模板 ID、主题替换要求 | 复用结构与风格的可编辑工程 | 模板清单、短指令、画廊/指引和 `motion_create_project` |
 | 动态图形与信息表达 | 数据、文字、品牌元素 | 图表、流程、字幕和动画片段 | 原生 HTML compositions、GSAP 与素材 |
@@ -42,11 +120,11 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 ## 核心用户流程
 
-1. 用户在首页切到 Motion 模式，选择 Motion 模板并提交需求创建会话；也可直接新建空白创作，或打开左侧已有会话。内置模板复制为该会话的工程，外部参考由 Agent 制作。
-2. 需要 Agent 时选择 Codex、Claude Code、DeepSeek Harness 或通用 stdio 客户端。接入配置绑定当前工作区；Agent 验证工具和数据目录，读取当前工程与制作规范。 安装后先介绍能力、邀请并等待选择；接受首次体验即确认 `product-promo` 示例内容、独立 20 秒工程、MP4 导出及右侧可编辑页面。Agent 不再问素材/模板/导出确认，实际打开宿主面板，等待并验证成片，最终回复交付 MP4 与简短说明。宿主没有面板能力时明确提供链接作为降级，不能冒称已打开；实际行为按客户端验证。
-3. 用户在会话补充需求并复制给外部 Agent。一期 Agent 用 `motion_get_project` 读取明确工程及其 sessionId、需求、来源与版本，按本轮意图选择入口或直接继续已选范围；编辑前校验工程归属，仅需编辑器时用 `motion_open_preview({projectId})` 打开。旧 design_* handler 仅留内部兼容。
+1. The user creates a blank project or opens an existing one from the sidebar, asks an external Agent to create a project, or chooses a template in the editor. Bundled templates create independent project copies; external references require Agent reconstruction.
+2. The Agent uses the existing MCP integration and verifies the selected project, revision and workflow. Integration setup remains available outside the MVP editor. After installation, introduce the capabilities and wait for a choice; accepting the first-run experience selects the independent 20-second `product-promo` project and its editable host panel. Do not ask for another material/template confirmation or export an MP4 unless requested. Check that the project loads and plays; a host without a panel uses an explicit link fallback. Follow the [first-run defaults](../../skills/motion-production/references/templates.md#first-run-experience-defaults) for the completion sentence and contextual invitation.
+3. `motion_open_preview({projectId})` opens the project directly. Project switching waits for pending saves and reloads the document to release the previous edit session. Opening a bookmark warms only its scoped native context without switching other editor tabs. Rendering and write conflicts continue to block unsafe switches. Original creation, reference recreation and template production automatically open the saved project before delivery; the open editor is the deliverable, and video files are handed over only when requested (video-to-template still delivers its template ZIP). Continued edits and restores return a project/revision/version-bound previewHandoff. Reuse the native project tab: present it when the calling chat is active, otherwise queue it without switching chats and resolve the latest version when the user returns. Only this turn's explicit `presentation=now` request permits switching back; explicit background requests suppress presentation. Codex IAB synchronizes visibility within the calling chat. A queued acknowledgment is separate from observed visibility and live-content freshness; `record_display` rejects stale content identities, and stored previewDisplay remains historical host-reported evidence. The shared [editable preview handoff](../../skills/motion-production/references/native.md#editable-preview-handoff) defines readiness, host checks and capability limitations.
 4. Agent 根据本轮目标直接选择 Skill：motion-director 负责原创、局部/整体叙事动作声音重新设计和创作审片；motion-template-to-video 负责已有模板出片；motion-recreate 负责参考作品重建（已接入实际流程、独立参考与测量脚本）；motion-video-to-template 负责可复用模板生产；motion-production 承接既定决定下的工程操作、预览、技术检查、排错和导出。共享规则同源引用，已有 production/start 保留导航，无需前置总路由。项目来源与画面锁定不固定入口；保持项和已完成操作继续有效。
-5. Agent 导入素材或通过 Model Gateway 生成图片/视频/音频，完成后写入原生工程。用户在右侧浏览器 Tab 的 Motion Artifact Viewer 预览与编辑，可从空时间轴、素材面板或时间轴选区生成并放入指定时段；选中图片可交给 Codex 参考修改，确认后只替换素材引用并保留原生撤销。也可新增同会话的另一个工程，关闭浏览器继续会话、收起会话沉浸浏览。发生 revision 冲突时重新读取并合并。 按共享 context 补齐缺少的正文并先返回模型再执行；修改按共享 edit 核对保持项、相邻关系与后续延续。
+5. The Agent imports or generates media through the existing backend. In the editor, the user imports assets, edits text/solid color/opacity/geometry, previews, and edits clips on the timeline. Element, clip and time-range prompts still provide Ask Agent. Generation, image replacement, advanced style/animation controls, code and version-history panels are hidden without rewriting existing source content or removing Agent capabilities.
 6. 完成画面、文案、声音检查后，按用户要求导出固定 revision 的快照，等待真实产物并验证。
 
 后续需求应注明改变了哪一步、影响哪些角色，以及用户能观察到的完成条件。
@@ -68,6 +146,8 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 ### 应保持的架构约束
 
 1. **两类入口共用领域能力。** Studio 与 MCP 使用同一 Gateway 合约和持久化数据。macOS 的 stdio 适配器按数据目录连接唯一后台，共用网关、任务与工程能力；每条连接绑定自己的工程。Windows / Linux 保留原生命周期。唯一后台依赖系统文件锁与私有身份验证，不以固定端口或 PID 文件作为唯一依据，见 [共享编辑器](../shared-editor.md)。
+
+   Public phase-one MCP calls negotiate a stable API protocol and supported Tool independently of the editor version/build. Compatible plugin updates preserve existing stdio connections, workspace/project bindings and active exports; they do not restart the authority or replay mutations. Private authority identity and protocol checks remain strict, and internal legacy calls retain exact version/build checks. This boundary does not refresh host discovery metadata or revive a transport the host already closed; see [API compatibility](../mcp-phase1-tools.md#phase-one-api-compatibility).
 2. **作品与执行配置分开。** 原生工程包含作品源文件与媒体；供应商凭据、模型默认路由和生成任务属于工作区。项目包可以交给别人继续编辑，使用者无需继承原作者的 Key。
 3. **素材成功不自动成为编辑成功。** 生成任务产生候选文件，采用结果才触发原生放置/替换。撤销作品修改不删除候选文件，也不撤销已经发生的供应商调用或费用。
 4. **上下文不能随等待漂移。** 提交时固定生成工程和参考输入，采用时验证编辑目标；切换工程、合成、删除或改换原素材引用后，旧回调不得覆盖新目标。
@@ -83,13 +163,13 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 
 | 能力 | 负责模块 | 当前边界 |
 | --- | --- | --- |
-| 首页与项目会话 | `MotionApp.tsx`、`WorkspaceFrame.tsx`、`MotionHome.tsx`、`useWorkspace.ts`（位于 `studio/src/motion/`） | 根地址显示首页，左侧会话共享工程目录；切换前保存、切换后整页重建；详见 [项目专题](../project-workspace.md) |
-| 项目创作会话 | `MotionSessionFrame.tsx`、`ProjectConversation.tsx`、`shared/session.ts` | 独立会话身份、模式、需求与多个产物；`artifactBrowser.ts` 管理 Tabs / 面板恢复；会话 Agent 执行由外部客户端负责 |
-| 会话内网页浏览 | `browser.ts`、`WebBrowser.tsx`、`shared/browser.ts` | 独立 Chromium，支持真实网址、输入、历史与刷新；按会话隔离，详见 [浏览器运行架构](../browser-runtime.md) |
-| 编辑器与工作区交互 | `studio/src/`，尤其 `studio/src/motion/` | 完整 Hyperframes 0.9.7 Studio 前端源码；宿主通过插槽适配品牌和入口，预览使用独立 iframe；编辑器顶栏展示 OpenDesign 标志与 OpenMotion 名称，中文界面称项目 |
-| 面板与布局恢复 | `studio/src/components/dock/`、`MotionLayoutControls.tsx` | 原生 Dock 持久化；常驻预览入口、面板开关及布局预设 |
-| 撤销、版本保留与恢复 | `MotionHistoryPanel.tsx`、原生历史 API | 顶栏/时间轴撤销重做；新增历史 UI 复用原生存储，恢复保留后续记录 |
-| 编辑器语言 | `studio/src/i18n/` | 简体中文/英文，不重挂载编辑器；统一接入弹框内部仍以中文为主 |
+| MVP editor and project navigation | `MotionApp.tsx`、`WorkspaceFrame.tsx`、`MotionHome.tsx`、`useWorkspace.ts`（位于 `studio/src/motion/`） | Root and project URLs open the editor directly. The sidebar lists projects; switching retains native save guards. Home/session UI modules remain unmounted. |
+| 项目创作会话 | `MotionSessionFrame.tsx`、`ProjectConversation.tsx`、`shared/session.ts` | Session identities, requirements and artifacts remain backend data. Conversation and Artifact browser UI are not mounted in the MVP. |
+| 会话内网页浏览 | `browser.ts`、`WebBrowser.tsx`、`shared/browser.ts` | Retained browser runtime; no webpage/browser-tab entry in the MVP editor. See [browser runtime](../browser-runtime.md). |
+| 编辑器与工作区交互 | `studio/src/`，尤其 `studio/src/motion/` | 完整 Hyperframes 0.9.7 Studio 前端源码；宿主通过插槽适配品牌和入口，预览使用独立 iframe |
+| 面板与布局恢复 | `studio/src/components/dock/`、`MotionLayoutControls.tsx` | MVP allows only preview, timeline, compositions, assets, catalog, design, layers and renders. Fixed positions, resizable dividers, separate per-project `motion.mvp.dock.v1` preferences. |
+| 撤销、版本保留与恢复 | `MotionHistoryPanel.tsx`、原生历史 API | Header undo/redo remains. Timeline history buttons and version-history UI are hidden; native history and MCP restore continue to preserve later records. |
+| Editor interface language | `studio/src/i18n/`、`web/i18n.ts` | Eleven languages, Chinese by default; editor and embedded dialog labels update without remounting. Authored content, copied Agent instructions and long guides retain their source language; native-speaker review remains separate. |
 | 多 Agent 薄适配器 | `scripts/export-adapters.ts`、`shared/integration.ts` | Codex、Claude、DSH、WorkBuddy Connector 共用外置运行时；本机生成，WorkBuddy 桌面待验收，详见 [适配器](../agent-adapters.md) |
 | MCP 接入与指引 | `mcp.ts`、`mcp-tools.ts`、`shared/integration.ts`、`web/connect.*` | 本机 stdio；macOS 业务由共享后台执行，ChatGPT 云端远程 MCP 尚未提供 |
 | Codex 安装 | `install.sh`、`scripts/install-motion.command` | 远端源码下载、依赖安装与编辑器构建、本地插件注册和 MCP 握手；需预装 Git、Node/npm 与支持插件的 Codex CLI，保留安装目录，遇到已有目录停止；远端一行入口待发布到 main |
@@ -97,24 +177,23 @@ Model Gateway 是共用的素材生成服务，可由 Motion Viewer 或 MCP 调�
 | 空白工程与模板副本 | `workspace.ts`、`template-library.ts`、`template-library/` | 新建空白原生工程或创建模板独立副本，保留之前工程 |
 | 封面、来源与热度 | `web/catalog/`、`scripts/*template*.ts` | 本地资源/快照；热度不代表实时查询 |
 | 工程状态与素材 | `workspace.ts` | 本地目录、内容 revision、当前工程选择与插件写入锁 |
-| 模型路由与素材生成 | `gateway/`、`shared/gateway.ts`、`studio/src/motion/Media*` | 本地 Codex 生图、Atlas/fal 适配器、BYOK、目录与持久化任务；Studio 和 MCP 共用 |
+| 模型路由与素材生成 | `gateway/`、`shared/gateway.ts`、`studio/src/motion/Media*` | Local Codex, Atlas/fal, BYOK and persisted media tasks remain shared backend capabilities; the MVP hides model configuration and generation UI. |
 | 产品服务与代理 | `server.ts`、`editor-server.ts` | 通用会话 API `/design-api/`、兼容 `/motion-api/`，原生 API `/api/` |
 | 引擎与生命周期 | `hyperframes.ts`、`preview.ts`、`editor-runtime.ts`、`shared/owned-studio.mjs` | 锁定 Hyperframes；macOS 共享后台与 Studio 守卫，校验身份/版本/目录并管理崩溃清理 |
 | 导出与质量验证 | `server.ts`、`scripts/verify-export.ts`、制作 skills | 独立快照、后台渲染、技术验证；视觉审阅另行完成 |
 | Skill 路由与文档读取 | `skills/`、`shared/workflow.ts`、`mcp.ts` | production 通用工程入口 + 可直达 director + motion-template-to-video + motion-recreate 实际流程 + motion-video-to-template（五个入口均分发）；26 份唯一文档含共享 edit（27 个 workflow/section 地址，portable 共享），具有 canonical ID/哈希/引用映射，按需读取，不自动执行或强制编排；见 [调用契约](../skills.md) |
-| 动态叙事指导 | `skills/motion-director/` | v1.4.5 明确原创与局部创作、声音重新设计和创作审片职责；沿用原创路线与七份 v1.4 质量参考，模板/复刻按需复用；效果边界见 [说明](../motion-director.md) |
+| 动态叙事指导 | `skills/motion-director/` | v1.5.5 guides concrete visual events, material/motion design, representative prototypes and actual audiovisual phases; shared edit/verification preserve locked content and evidence scope. Five routes, eleven public Tools and editor-first handoff remain unchanged. Cross-task reliability and native model audiovisual review remain unverified; see [director guidance](../motion-director.md). |
 
 源码位置的详细映射见 [编辑器开发指南](../editor-fork.md)，引擎适配见 [Hyperframes 集成](../hyperframes.md)。
 
 ```mermaid
 flowchart LR
-  User[用户] --> Studio[OpenDesign 会话工作区]
-  Studio --> Session[会话 / 模式 / 模板 / skill]
-  Session --> Browser[Artifact 浏览器 Tabs]
-  Browser --> Viewer[Motion 工程编辑器]
+  User[用户] --> Studio[Motion MVP editor and project sidebar]
+  Studio --> Viewer[Native project editing]
+  Studio --> Session[Internal session and artifact ownership]
   User --> Host[Codex / Claude Code / DeepSeek Harness]
   Host --> MCP[本机 stdio MCP]
-  Studio --> Hub[MCP 与模板统一弹框]
+  Studio --> Hub[Template library]
   Hub --> Catalog[模板 / 封面 / 原帖热度快照]
   Hub --> Guide[短指令与参数化指引]
   Guide --> Host
@@ -133,7 +212,7 @@ flowchart LR
   Native <--> Workspace
   Workspace --> Snapshot[固定版本快照]
   Snapshot --> Render[lint / render]
-  Render --> Output[MP4 与工程交付]
+  Render --> Output[MP4：自检，用户要求时交付]
   Output --> Review[技术验证与实际视听检查]
 ```
 
@@ -148,22 +227,24 @@ flowchart LR
 | 编辑会话 | 当前选区、目标元素、待放置时段、生成面板状态 | 辅助当前操作；与作品文件、持久化任务区分。当前没有完整生成表单的跨会话恢复 |
 | 导出快照与验证 | 固定 revision、预期规格、真实 MP4、校验报告 | 证明该次导出的结果；后续编辑不能沿用旧文件的验证结论 |
 
-- **工程真源：** HTML、CSS、JS、媒体和 Studio manifest 位于各自工程目录。新会话 ID、产物 ID 和工程 ID 分离；`projects.json` 原子保存两个索引、产物归属和当前选择。旧工程按原 ID 兼容为会话，需求继续在 `sessions/<sessionId>.json`，通过会话 HTTP 接口及一期 `motion_get_project` 暴露（旧 design_get_session 为内部兼容），独立于视频内容 revision。Agent 每次写入前读取当前工程与 revision。单服务只打开一个原生工程，旧项目请求由代理拒绝，避免跨标签页误写。
-- **历史真源：** Studio 原生历史服务记录版本、checkpoint、pin 与 restore，宿主只呈现 UI，不另建版本库。恢复前等待保存并创建 checkpoint，完成后重新加载编辑会话；后续历史保留，恢复操作可以撤销。
-- **界面状态：** 浏览器 Tabs、左右面板与宽度按会话保存；关闭 Tab 不删除产物。原生 Dock 按工程保存，主题沿用 Studio 偏好；语言单独保存为 `motion.studio.locale`，均不写入影片源文件。
+- **工程真源：** HTML、CSS、JS、媒体和 Studio manifest 位于各自工程目录。新会话 ID、产物 ID 和工程 ID 分离；`projects.json` 原子保存两个索引、产物归属和当前选择。旧工程按原 ID 兼容为会话，需求继续在 `sessions/<sessionId>.json`，通过会话 HTTP 接口及一期 `motion_get_project` 暴露（旧 design_get_session 为内部兼容），独立于视频内容 revision。Agent 每次写入前读取当前工程与 revision。一个原生服务进程按 projectId 分发多个工程；页面固定自己的工程，其他会话的打开操作不会替换它。工程状态请求也携带 projectId；未知工程和冲突身份拒绝处理。
+- **History authority:** Native Studio history owns file revisions, checkpoints, pins and restores; the host does not create a parallel Studio history store. The workspace host only offers undo/redo steps whose required contents are readable and whose recorded files have no known later conflict. Unavailable steps disable the matching toolbar button and do not dispatch a shortcut mutation. Native execution still validates current files before writing, since files can change after the availability check. Restores wait for pending saves and create a checkpoint before reloading the editing session; subsequent history remains available subject to native retention and content availability.
+- **UI state:** The MVP project drawer has transient open state; fixed Dock sizes persist per project under a separate key, so old free-layout preferences cannot reopen excluded panels. Theme and `motion.studio.locale` remain independent of project source files. Legacy browser preferences are retained but unused by the MVP route.
 - **参考数据：** 模板原始目录、封面和热度快照与用户工程分开。热度按模板 ID、视频地址和原帖身份匹配；同源片段不累加查看量。
 - **导出输入：** 后台任务使用不可变快照并记录期望规格；后续编辑不改变该任务的本地输入。远程媒体需要稳定复现时先导入本地。
-- **后台与编辑器启动：** 仅导出启动后台服务，不初始化或补写当前工程；冷启动套模板直接创建选中的模板工程。显式打开预览时才初始化空工程或启动 Studio，已有后台服务原地升级。健康检查区分服务 `ready` 与 `editorReady`，不靠自动替换 expectedRevision 消除冲突。
+- **后台与编辑器启动：** 仅导出启动后台服务，不初始化或补写当前工程；冷启动套模板直接创建选中的模板工程。Studio starts when the Agent calls preview for an existing project, including the automatic handoff after production HTML is ready; the existing background service is reused. 健康检查区分服务 `ready` 与 `editorReady`，不靠自动替换 expectedRevision 消除冲突。
 - **服务边界：** 当前在本机回环地址运行。Model Gateway 使用本机 Codex 登录或用户自有 Atlas/fal Key 发起媒体生成，接口共用本地任务与素材入库；不托管聊天 Agent、团队协作或计费。当前使用用户自有账户接入，详见 [模型网关](../model-gateway.md)。
 - **模型与凭据：** 配置和任务独立于工程，Key 不通过 API 返回。安装、配置、允许请求、生成成功是不同状态；任务固定发起工程，失败不静默重试。完成后的素材参与工程 revision 与导出快照。
-- **并发边界：** macOS 同目录多个 MCP 连接共用后台，各自绑定工程；工作区仍只有一个活动原生 Studio、一个等待/运行的导出。导出固定工程与快照，重启将中断任务持久化为失败且不重放。文件锁和 revision 保护工具写入；人工与 Agent 同时编辑同一文件仍需协调，不能当作跨工具数据库事务。
+- **并发边界：** macOS 同目录多个 MCP 连接共用后台，各自绑定工程；工作区使用一个原生 Studio 服务进程，按需保留多个工程的原生上下文；后台仍只有一个等待/运行的导出。导出固定工程与快照，重启将中断任务持久化为失败且不重放。文件锁和 revision 保护工具写入；人工与 Agent 同时编辑同一文件仍需协调，不能当作跨工具数据库事务。
 - **数据归属：** 产品文档描述数据类别与流程，不复制用户的私有工程、访问凭据或个人机器配置。
 
 ## 成功标准与验证
 
 当前交付标准：连接可验证、模板可定位、工程可继续编辑、预览与源文件一致、导出存在真实文件、检查结果有证据。相关实现由 `tests/`、`npm run test:studio` 的原生单元/DOM 与宿主回归、类型检查、设计检查和按需浏览器验证覆盖；没有执行的检查不能记为通过。
 
-以下是待建立的产品衡量口径，尚无仓库内用户分析系统或统计基线：
+The runtime includes a default-on, explicit-event tracking package shared by MCP and Studio. A persistent user preference and environment overrides can disable collection for the whole installation. Studio submits allowlisted events to the local service; Node adds a random installation identity before asynchronous ingestion into the existing OpenDesign PostHog project. OM events carry product=openmotion; queries must distinguish products. An OM-only transformation preserves coarse country/region/timezone and removes raw IP and precise location after the existing GeoIP transformation, without changing other OpenDesign events or global project settings. The implementation covers tool results, selected domain operations and selected Studio interactions; it does not establish a product analytics baseline or implement every proposed event. See [tracking configuration, privacy and coverage](../../tracking/README.md).
+
+The following product measures still require agreed observation windows and validated evidence:
 
 | 指标 | 建议定义 | 用途 |
 | --- | --- | --- |
@@ -175,13 +256,17 @@ flowchart LR
 
 开始采集前需记录事件定义、观察窗口、样本来源和隐私边界。人物、商业和指标实验的证据写回对应文档，不能用开源仓库热度或模板原帖播放量替代。
 
-## npm 本地安装渠道
+## Application npm distribution
 
-当前分支增加独立于插件的 npm 轻量安装入口（本地 / Actions 测试制品，不发布 npm）：按宿主安装 Codex、Claude Code、DeepSeek Harness、WorkBuddy 的 一期 11 Tool MCP 与 production/director/template/recreate/video-to-template 五个 Skills，共用应用、工程目录和依赖缓存；固定原生依赖首次使用时下载到用户缓存。应用不从临时 npx 缓存运行，作品与应用/依赖目录分开；已有插件和完整测试包保留。下载来源、版本和校验值共用运行时清单；Mac FFmpeg/ffprobe 使用独立的公开 9.0.2 ZIP 并自动安装，原生依赖无需公司仓库凭据，尚未发布 npm。实现与验证边界见 [npm 安装](../npm-installation.md)。
+The `@openmotion/app` npm tgz contains installer scripts, the prebuilt application archive and its pinned default manifest. Setup needs only that tgz, stages the checked application into a managed writable directory, installs production npm dependencies from its lock and registers the selected host's eleven MCP Tools and five Skills. The application server and projects never run in the npx cache. Node/Agent remain user-provided. After successful setup, a detached worker prepares pinned FFmpeg, ffprobe and browser assets concurrently. MCP and the local editor backend start without waiting for native downloads. Installers and running apps share platform/hash cache locks and atomic component status; Studio polls readiness and displays preparation progress and failure retry inside the Export panel. The header Export action opens that panel while dependencies are unavailable; readiness updates without reloading. Media import checks the media components before applying work; automated capture and export require the full local runtime because captured compositions may contain media. Selected Studio imports are retained in memory for explicit retry in the same project; preparation does not create or replay exports. Explicit prepare remains a blocking wait/retry, completed assets are reused across app versions sharing the cache, and interrupted transfers restart only the incomplete asset. Existing plugin and complete platform ZIP channels remain available.
+
+Explicit test/DEV and stable/prod builds produce publishable artifact metadata with candidate/stage defaults; source manifests, unversioned builds and channel/environment mismatches stay private. New public test versions use DEV template routing; catalog access still depends on service network/authentication. No private catalog payloads or credentials are bundled. Existing versions retain their original defaults. Packaging does not publish, update users, move main or rename the repository. DEV packages embed their template source, default to a separate installation home and refuse cross-environment reuse. Application, project data, host configuration and dependency cache retain distinct ownership. See [installation](../npm-installation.md) and [test/stable acceptance](../release-guide.md).
 
 ## 演进约束
 
-本地测试包按 mac-arm64 / win-x64 准备固定公开原生依赖。npm 为默认轻量格式，完整 ZIP 为备用；平台安装和真实出片必须独立验收。工程保留在包外，当前 CI 只构建与校验，不上传或发布。见 [测试包说明](../test-packages.md)。
+The application npm format is the default; complete platform ZIPs are backups. Ordinary PR CI scans tracked source and both npm archive layers without publication credentials. Separate manual candidate-build and test-publication entries implement build → download/accept → publish. Candidate builds can run from feature/motion or main, while publication/recovery remain main-only. The build freezes an integrated Motion source SHA and automatically numbers an empty version as the next source patch plus test.<GitHub run ID>.<attempt>, without rewriting the source baseline; an explicit test-version override remains available. It builds one immutable DEV candidate and generates a local candidate-install.md plus an identity-filled acceptance checklist. Publication resolves a unique unexpired versioned artifact from a completed successful build, validates official ZIP/file hashes and source integration, and requires explicit operator acceptance. No independent approval environment is enabled; the manual operator receipt is not proof of private tests or independent review. The same tgz is published under npm candidate, checked anonymously on separate Mac/Windows runners, then promoted to test in an npm-OIDC-only job before archiving and conditionally advancing the default guide. Failed native checks leave test unchanged; the exact candidate version is already public. R2 failure after tag promotion can leave the guide on the earlier accepted version. Builds can continue during acceptance; publication-only serialization, version checks and ETag writes prevent late older candidates from rolling the moving entry backward. Snapshot-only recovery requires an existing identical npm version and does not move the default. DEV configuration is public; private template contents and credentials remain outside the artifacts. Stable publication is a separate authorized process. Trusted default-branch registration and npm OIDC setup remain separate prerequisites, not enabled by this feature PR. Build, native installation, real Agent creation and human playback remain separate evidence. See [release workflows](../release-workflows.md) and [package checks](../test-packages.md).
+
+Downstream publication jobs consume immutable producer artifact IDs retained across partial retries; native Mac and Windows jobs expose separate report identities. OIDC authenticates publication, but automatic npm provenance is disabled for prebuilt candidates because the publication workflow SHA differs from the application source. Candidate/manifest/hash records provide traceability without claiming a signed build attestation. Stable version construction and URL contracts exist; stable candidate/publication, npm latest promotion and Skills marketplace/platform publication are not implemented. The bundled Skills are installed into local hosts only.
 
 已确认方向是继续支持多 Agent 接入、可编辑工程与一个工作区内的发现/制作闭环。
 

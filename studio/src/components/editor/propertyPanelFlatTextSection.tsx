@@ -1,3 +1,5 @@
+import { RemixIcon } from "../../icons/RemixIcons";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type { PropertyPanelProps } from "./propertyPanelTypes";
 import { useEffect, useState } from "react";
@@ -62,6 +64,7 @@ function FlatTextFieldEditor({
   autoFocus?: boolean;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const track = useTrackDesignInput();
   const weight = getTextStyleValue(field, styles, "font-weight", "400");
   const weightOptions = detectAvailableWeights(
@@ -77,6 +80,7 @@ function FlatTextFieldEditor({
         {({ value, onCommit }) => (
           <TextAreaField
             flat
+            boxed={mvp}
             label={t("Content")}
             value={value ?? field.value}
             autoFocus={autoFocus}
@@ -102,12 +106,15 @@ function FlatTextFieldEditor({
       </PromotableControl>
       <FlatRow
         label={t("Size")}
+        boxed={mvp}
+        stepper={mvp}
         value={field.computedStyles["font-size"] || styles["font-size"] || "16px"}
         tier={resolveValueTier(field.inlineStyles["font-size"], styles["font-size"] || "16px")}
         liveCommit
         onPreview={(next) => onPreviewTextFieldStyle?.(field.key, "font-size", next)}
         onCommit={(next) => onSetTextFieldStyle(field.key, "font-size", next)}
       />
+      {!mvp && <>
       <div className="flex min-h-[30px] items-center justify-between">
         <span
           className={
@@ -135,15 +142,7 @@ function FlatTextFieldEditor({
               ),
             )}
           </select>
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 10 10"
-            fill="currentColor"
-            className="shrink-0 text-panel-text-5"
-          >
-            <path d="M2 3l3 4 3-4z" />
-          </svg>
+          <RemixIcon name="arrow-down-s-line" size={14} className="shrink-0 text-panel-text-5" />
         </label>
       </div>
       <FlatRow
@@ -172,9 +171,11 @@ function FlatTextFieldEditor({
         }
         onReset={() => onSetTextFieldStyle(field.key, "line-height", "")}
       />
+      </>}
       <FlatSegmentedRow
+        filled={mvp}
         label={t("Align")}
-        options={ALIGN_OPTIONS.map((option) => ({
+        options={ALIGN_OPTIONS.filter(option => !mvp || option.key !== "justify").map((option) => ({
           key: option.key,
           node: option.node,
           label: option.label,
@@ -195,27 +196,29 @@ function FlatTextFieldEditor({
           onSetTextFieldStyle(field.key, "text-align", next);
         }}
       />
-      <FlatSegmentedRow
-        label={t("Case · Style")}
-        options={[
-          ...CASE_OPTIONS.map((option) => ({
-            key: option.key,
-            node: option.node,
-            label: option.label,
-            active: textTransform === option.key,
-          })),
-          { key: "normal", node: "A", label: "upright", active: fontStyle === "normal" },
-          { key: "italic", node: "A", label: "italic", active: fontStyle === "italic" },
-        ]}
-        spacerAfterIndex={2}
-        onChange={(next) => {
-          if (next === "normal" || next === "italic") {
-            onSetTextFieldStyle(field.key, "font-style", next);
-          } else {
-            onSetTextFieldStyle(field.key, "text-transform", next);
-          }
-        }}
-      />
+      {!mvp && (
+        <FlatSegmentedRow
+          label={t("Case · Style")}
+          options={[
+            ...CASE_OPTIONS.map((option) => ({
+              key: option.key,
+              node: option.node,
+              label: option.label,
+              active: textTransform === option.key,
+            })),
+            { key: "normal", node: "A", label: "upright", active: fontStyle === "normal" },
+            { key: "italic", node: "A", label: "italic", active: fontStyle === "italic" },
+          ]}
+          spacerAfterIndex={2}
+          onChange={(next) => {
+            if (next === "normal" || next === "italic") {
+              onSetTextFieldStyle(field.key, "font-style", next);
+            } else {
+              onSetTextFieldStyle(field.key, "text-transform", next);
+            }
+          }}
+        />
+      )}
       <PromotableControl
         channel={{ kind: "style", prop: "color" }}
         enabled={field.source === "self"}
@@ -395,7 +398,7 @@ export function FlatTextLayerList({
                 style={{ backgroundColor: getTextFieldColor(field, styles) }}
               />
               <span className="min-w-0 flex-1 truncate text-[11px] text-panel-text-1">
-                {formatTextFieldPreview(field.value) || `Text ${index + 1}`}
+                {formatTextFieldPreview(field.value) || t("Text {index}", { index: index + 1 })}
               </span>
               <span className="shrink-0 font-mono text-[9px] text-panel-text-4">
                 {field.tagName}

@@ -28,6 +28,20 @@ function renderInto(node: React.ReactElement) {
 }
 
 describe("FlatRow", () => {
+  it("steps the current numeric draft while preserving its unit", async () => {
+    const onCommit = vi.fn();
+    const { host, root } = renderInto(
+      <FlatRow label="Size" value="27px" tier="default" boxed stepper onCommit={onCommit} />,
+    );
+    const buttons = host.querySelectorAll<HTMLButtonElement>("button");
+    await act(async () => buttons[0].click());
+    await act(async () => buttons[0].click());
+    await act(async () => buttons[1].click());
+    expect(onCommit.mock.calls.map(([value]) => value)).toEqual(["28px", "29px", "28px"]);
+    expect(host.querySelector("input")?.value).toBe("28px");
+    act(() => root.unmount());
+  });
+
   it("renders the default tier with no reset button", () => {
     const { host, root } = renderInto(
       <FlatRow label="Weight" value="400 · Regular" tier="default" onCommit={vi.fn()} />,

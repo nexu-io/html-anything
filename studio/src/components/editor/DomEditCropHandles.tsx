@@ -359,7 +359,7 @@ export function DomEditCropHandles({
             <button
               key={edge}
               type="button"
-              aria-label={t("Crop {edge}", { edge: edge })}
+              aria-label={t("Crop {edge}", { edge: t(edge) })}
               title={t("Crop")}
               data-dom-edit-crop-handle="true"
               className="pointer-events-auto absolute flex items-center justify-center border-0 bg-transparent p-0"

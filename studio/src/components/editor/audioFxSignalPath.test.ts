@@ -48,3 +48,10 @@ describe("audioFxSignalPath", () => {
     ).toMatchObject({ inLabel: "nothing yet", subject: "group" });
   });
 });
+
+it('translates routing sentences while preserving authored track and group names', async () => {
+  const { translate } = await import('../../i18n/I18n');
+  const t = (m: string, v?: Record<string, string | number>) => translate('zh-CN', m, v);
+  expect(audioFxSignalPath('audio', 'vo-1', [group({ label: 'Preview' })], t)).toMatchObject({ inLabel: '当前音轨', outLabel: '输出到 Preview' });
+  expect(audioFxSignalPath('hf-audio-group', 'voiceover', [group()], t)).toMatchObject({ inLabel: '合并 vo-1 和 vo-2', outLabel: '输出到混音' });
+});

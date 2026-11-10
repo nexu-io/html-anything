@@ -226,7 +226,7 @@ export function FlatMediaSection({
             <div className="mt-1 space-y-1">
               <div className="flex items-center justify-between text-[10px] text-panel-text-4">
                 <span className="min-w-0 flex-1 truncate">
-                  {removeProgress.error ?? removeProgress.stage ?? "Processing"}
+                  {t(removeProgress.error ?? removeProgress.stage ?? "Processing")}
                 </span>
                 <span>{Math.round(removeProgress.progress)}%</span>
               </div>
@@ -435,7 +435,7 @@ function MediaFadeSliders({
     return (
       <FlatSlider
         key={edge}
-        label={t("Fade {edge}", { edge: edge })}
+        label={t(edge === "in" ? "Fade in" : "Fade out")}
         value={Math.round(seconds * 100)}
         min={0}
         max={Math.round(edgeMax * 100)}

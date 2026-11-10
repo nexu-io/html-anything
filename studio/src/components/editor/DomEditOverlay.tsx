@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type { DomSelectionResult } from "../../hooks/useDomSelectionTypes";
 import type { RotationCommit } from "./rotationDraft";
@@ -156,6 +157,7 @@ export const DomEditOverlay = memo(function DomEditOverlay({
   onDeleteSelection,
   onApplyZIndex,
 }: DomEditOverlayProps) {
+  const mvp = useMvpEditor();
   const { t } = useI18n();
   const readOnly = usePreviewReadOnly();
   const hostInput = canvasInput === "host";
@@ -376,7 +378,7 @@ export const DomEditOverlay = memo(function DomEditOverlay({
   // fallow-ignore-next-line complexity
   const handleOverlayPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!allowCanvasMovement || hostInput || event.button !== 0) return;
-    if (event.shiftKey) {
+    if (!mvp && event.shiftKey) {
       const shiftIframe = iframeRef.current;
       const candidate = resolveShiftClickCandidate({
         cached: hoverSelectionRef.current,
@@ -418,7 +420,7 @@ export const DomEditOverlay = memo(function DomEditOverlay({
     // an element IS under the pointer — starting a marquee here would swallow
     // the selection mousedown and the click would silently select nothing.
     // Confirm emptiness with a fresh SYNCHRONOUS hit-test before committing.
-    if (!hoverSelectionRef.current && onMarqueeSelectRef.current && compRect.width > 0) {
+    if (!mvp && !hoverSelectionRef.current && onMarqueeSelectRef.current && compRect.width > 0) {
       const iframe = iframeRef.current;
       const freshTarget = iframe
         ? getPreviewTargetFromPointer(

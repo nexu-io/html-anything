@@ -16,6 +16,7 @@
  * 2–20 kHz, and a linear ruler would crush six of the seven bands into a corner.
  */
 
+import { useI18n } from "../../i18n/I18n";
 import { audioBandAt, BANDS } from "@hyperframes/core/audio-fx-copy";
 
 const LOW = BANDS[0]?.from ?? 20;
@@ -36,6 +37,7 @@ export interface FxBandRulerProps {
 }
 
 export function FxBandRuler({ band, at }: FxBandRulerProps) {
+  const { t } = useI18n();
   const here = audioBandAt(at);
   if (!here) return null;
   const [from, to] = band;
@@ -49,7 +51,7 @@ export function FxBandRuler({ band, at }: FxBandRulerProps) {
           return (
             <span
               key={range.name}
-              title={`${range.name}: ${range.says}`}
+              title={`${t(range.name)}: ${t(range.says)}`}
               className={
                 range.name === here.name
                   ? "hf-fx-ruler-band bg-panel-accent"
@@ -65,7 +67,7 @@ export function FxBandRuler({ band, at }: FxBandRulerProps) {
         })}
       </div>
       <p className="hf-fx-ruler-label truncate pt-0.5 text-[9px] text-panel-text-2">
-        <span className="hf-fx-ruler-name text-panel-text-1">{here.name}</span>: {here.says}
+        <span className="hf-fx-ruler-name text-panel-text-1">{t(here.name)}</span>: {t(here.says)}
       </p>
     </div>
   );

@@ -1,3 +1,4 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { useEffect, useRef, useState } from "react";
 import { adjustNumericToken, parseNumericToken } from "./propertyPanelHelpers";
@@ -13,6 +14,7 @@ export function CommitField({
   value,
   disabled,
   liveCommit,
+  stepper,
   align = "left",
   onPreview,
   onCommit,
@@ -20,6 +22,7 @@ export function CommitField({
   value: string;
   disabled?: boolean;
   liveCommit?: boolean;
+  stepper?: boolean;
   align?: "left" | "right";
   onPreview?: (nextValue: string) => void;
   onCommit: (nextValue: string) => void | Promise<unknown>;
@@ -182,7 +185,7 @@ export function CommitField({
     };
   }, [disabled]);
 
-  return (
+  const input = (
     <input
       ref={inputRef}
       type="text"
@@ -219,5 +222,32 @@ export function CommitField({
         align === "right" ? "text-right" : "text-left"
       }`}
     />
+  );
+  if (!stepper) return input;
+  return (
+    <span className="flex items-center gap-1">
+      {input}
+      <span className="flex shrink-0 flex-col">
+        {([1, -1] as const).map((direction) => (
+          <button
+            key={direction}
+            type="button"
+            aria-label={t(direction === 1 ? "Increase" : "Decrease")}
+            disabled={disabled || !parseNumericToken(draft)}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={(event) => {
+              const next = adjustNumericToken(draftRef.current, direction, event);
+              if (!next) return;
+              settleGesture();
+              dirtyRef.current = false;
+              commitDraft(next);
+            }}
+            className="rounded-sm text-panel-text-3 hover:bg-panel-border-input/50 hover:text-panel-text-0 disabled:opacity-40"
+          >
+            <RemixIcon name="arrow-down-s-line" className={direction === 1 ? "rotate-180" : undefined} size={12} />
+          </button>
+        ))}
+      </span>
+    </span>
   );
 }

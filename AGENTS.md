@@ -2,7 +2,15 @@
 
 OpenMotion is a standalone npm application at the repository root. Run commands here with the Node version pinned in `.github/workflows/ci.yml`. Preserve `package-lock.json` and `scripts/runtime-lock.json`; do not introduce workspace-only dependencies. Follow the [migration guide](docs/repository-migration.md), keep user data and credentials outside the checkout, and preserve third-party licenses.
 
-Before publishing a branch, run `npm ci`, `npm run check`, `npm run typecheck:studio`, `npm run build:studio`, affected deterministic tests and the applicable packaging/installation checks. Browser tests on shared machines use the existing browser-lock lanes. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
+## Local validation
+
+Before publishing a branch, select local checks for the changed boundary. Run `npm ci` when dependencies or lockfiles change, or installed dependencies are missing or stale; otherwise reuse the existing installation.
+
+- Runtime or Studio changes: run `npm run check`, `npm run typecheck:studio`, `npm run build:studio` and affected deterministic tests.
+- Skill, contract, installer or distribution changes: run the affected deterministic and packaging/installation checks.
+- Prose-only changes that do not alter those boundaries: check links and run `git diff --check`; no dependency reinstall or Studio build is required.
+
+Local check selection does not change the full PR CI gate. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
 
 ## Repository collaboration instructions
 
@@ -11,6 +19,14 @@ Keep persistent user instructions for repository work in this file, and keep `CL
 1. All commit messages must be in English, including both the subject and body, as well as merge and revert messages.
 2. All repository collaboration content you create or update must be in English: issue and pull request titles and descriptions, comments, review summaries, discussions, and release notes. This applies even when the user's request is in another language.
 3. Before committing or submitting repository content, verify that it follows these English-language requirements.
+
+## README writing and acknowledgements
+
+When creating or updating any README, including alternative drafts and translations, describe OpenMotion's own capabilities, workflows and the meaning of each example. Do not introduce other products as comparisons, inspiration or source labels in the main narrative, headings, feature descriptions or showcase copy. Avoid wording such as "From MotionGit", "inspired by Hypit" or "the alternative to ...".
+
+Consolidate references to other products, upstream origins, comparisons and source acknowledgements in the final **Acknowledgements** section. Preserve required licenses, copyright notices and detailed provenance in their source files, and link them from that section. Describe external examples accurately without presenting them as OpenMotion-generated results.
+
+Keep technical identifiers needed for setup, supported agent/model names and explicitly requested example brand names accurate; these factual labels are not invitations to add product comparisons or inspiration commentary. Before finishing a README edit, check that product-reference commentary appears only in the final acknowledgements.
 
 ## Product architecture review
 
@@ -24,7 +40,7 @@ Use the [documentation index](docs/README.md) for related topics. Distinguish im
 
 ## Video production entry points
 
-Choose the entry for the current intent directly. Original creation, narrative/motion/sound redesign and creative review use motion-director; existing editable-template use/adaptation uses motion-template-to-video; reference-video reconstruction of this work uses motion-recreate (read user materials, rebuild the requested film in an editable project, measure against the reference and deliver a comparison; its rules and measurer ship inside the Skill); requested reusable template production uses motion-video-to-template. [motion-production](skills/motion-production/SKILL.md) handles scoped engineering under established creative decisions, preview, technical checks, troubleshooting and export. Its existing start resource retains short navigation; it is not a mandatory router.
+Choose the entry for the current intent directly. Original creation, narrative/motion/sound redesign and creative review use motion-director; existing editable-template use/adaptation uses motion-template-to-video; reference-video reconstruction of this work uses motion-recreate (read user materials, rebuild the requested film in an editable project, measure the export against the reference and hand over the project open in the editor; its rules and measurer ship inside the Skill); requested reusable template production uses motion-video-to-template. [motion-production](skills/motion-production/SKILL.md) handles scoped engineering under established creative decisions, preview, technical checks, troubleshooting and export. Its existing start resource retains short navigation; it is not a mandatory router.
 
 A directly selected specialist reads shared context and continues; do not bounce back to the production start. Small edits, audio-only changes, review-only and export-only requests resume their affected scope. Keep existing decisions and locked content. Repository development and documentation do not trigger video production.
 
@@ -33,4 +49,10 @@ Phase one exposes eleven motion_ Tools (nine project tools plus catalog fetch an
 
 ## Template production and reuse
 
-`motion-template-to-video` implements the default template route and reuses shared context/edit and managed-project revision protection. Unchanged requests can deliver the template's existing preview; edited content or missing previews use the appropriate render/verification path. `motion-video-to-template` separately produces a portable reusable template from a video; it does not replace ordinary video recreation. Visual acceptance belongs to the user. Repository work does not invoke production Skills.
+`motion-template-to-video` implements the default template route and reuses shared context/edit and managed-project revision protection. Unchanged requests are delivered by opening the template in the editor; edited content is checked by playing it in the editor preview, with native snapshots only for layout; renders and exports, including of an unchanged template, happen only when the user asks for a video file. `motion-video-to-template` separately produces a portable reusable template from a video; it does not replace ordinary video recreation. Visual acceptance belongs to the user. Repository work does not invoke production Skills.
+
+## Candidate and publication controls
+
+Follow [the release workflow manual](docs/release-workflows.md): separate manual candidate-build and test-publication entries, plus snapshot-only recovery. Download and accept the local tgz using candidate-install.md; keep completed acceptance.md private. The publication operator enters the accepted version and explicitly confirms acceptance, without manually copying hashes. No independent approval environment is enabled at this stage. Public candidates must use an exact reviewed source SHA integrated into `feature/motion`, a new test version and DEV template defaults. Scan tracked source plus the outer npm tgz and inner application; preserve the positive distribution list and licenses. Keep candidate, native registry installation, real Agent creation and human acceptance evidence separate.
+
+Publication uses the accepted candidate bytes, never a rebuild. Publish under `candidate` first; only the credential-isolated promotion job may move npm `test` after both matching DEV native reports pass. Stable publication, npm `latest` promotion and platform/marketplace Skills distribution are not implemented by these entries. Only the separately authorized manual test publication workflow may use npm OIDC or R2 credentials; validate candidate provenance and hashes first, archive immutable version records, and update the moving guide last. Archive-only work must not move tags or default entries. Never overwrite published versions, put private template payloads/internal acceptance material into public artifacts, or infer merge/publication authorization from green CI. Main registration, npm trust, main cutover and repository rename remain separate operations.

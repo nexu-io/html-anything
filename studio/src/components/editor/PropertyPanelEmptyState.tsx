@@ -1,3 +1,5 @@
+import { RemixIcon } from "../../icons/RemixIcons";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { Eye, Layers } from "../../icons/SystemIcons";
 import type { DomEditSelection } from "./domEditingTypes";
@@ -6,24 +8,17 @@ import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 
 function FlatEmptyState() {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   return (
     <div className="flex h-full flex-col items-center justify-center gap-2.5 px-8 py-10 text-center">
       <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-panel-border-input bg-panel-input text-panel-text-3">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-        >
-          <path d="M4 3l6 14 2-6 6-2z" strokeLinejoin="round" />
-        </svg>
+        <RemixIcon name="cursor-line" size={20} />
       </span>
       <div className="text-[13px] font-semibold text-panel-text-0">{t("Nothing selected")}</div>
       <div className="max-w-[250px] text-[11px] leading-normal text-panel-text-3">
-        {t("Click any element on the canvas to edit it, or drag to select several.")}</div>
+        {t(mvp ? "Click any element on the canvas to edit it." : "Click any element on the canvas to edit it, or drag to select several.")}</div>
       <div className="mt-2 flex w-full flex-col gap-1.5">
+        {!mvp && <>
         <span className="flex items-center justify-between rounded-lg border border-panel-border bg-panel-bg px-3 py-2">
           <span className="flex items-center gap-2 text-[11px] text-panel-text-2">
             <span className="text-danger-ink">●</span>
@@ -32,9 +27,10 @@ function FlatEmptyState() {
             R
           </span>
         </span>
+        </>}
         <span className="flex items-center justify-between rounded-lg border border-panel-border bg-panel-bg px-3 py-2">
           <span className="flex items-center gap-2 text-[11px] text-panel-text-2">
-            <span className="text-accent-ink">✦</span>
+            <RemixIcon name="sparkling-line" size={14} className="text-accent-ink" />
             {t("Describe a change to the agent")}</span>
           <span className="rounded-sm border border-panel-border-input px-[5px] py-px font-mono text-[9px] text-panel-text-5">
             ⌘K
@@ -81,7 +77,7 @@ function FlatMultiSelectState({
         </span>
         <div className="min-w-0 flex-1">
           <div className="text-[13px] font-semibold text-panel-text-0">
-            {multiSelectCount} {t("elements selected")}</div>
+            {t('{count} elements selected', { count: multiSelectCount })}</div>
           <div className="mt-px font-mono text-[10px] text-panel-text-3">
             {t("shift-click to add or remove")}</div>
         </div>
@@ -92,16 +88,7 @@ function FlatMultiSelectState({
           onClick={onClearSelection}
           className="flex h-[26px] w-[26px] shrink-0 items-center justify-center text-panel-text-3"
         >
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          >
-            <path d="M3 3l10 10M13 3L3 13" />
-          </svg>
+          <RemixIcon name="close-line" size={14} />
         </button>
       </div>
       <div className="flex flex-col gap-1">
@@ -205,7 +192,7 @@ export function PropertyPanelEmptyState({
           <>
             <Layers size={18} className="mb-3 text-neutral-600" />
             <p className="text-sm font-medium text-neutral-200">
-              {multiSelectCount} {t("elements selected")}</p>
+              {t('{count} elements selected', { count: multiSelectCount })}</p>
             <p className="mt-2 max-w-[260px] text-xs leading-5 text-neutral-500">
               {t("Select a single element to edit its properties. Click an element in the preview or use the timeline layer panel.")}</p>
           </>

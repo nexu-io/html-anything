@@ -1,4 +1,5 @@
-import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { useI18n } from '../../i18n/I18n';
+import { Eye, EyeSlash } from "../../icons/RemixIcons";
 import { X } from "../../icons/SystemIcons";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 import type { DomEditSelection } from "./domEditingTypes";
@@ -27,6 +28,7 @@ export function InspectorHeaderActions({
   visibilityLabel?: string;
   onToggleHidden?: (id: string, hidden: boolean) => void;
 }) {
+  const { t } = useI18n();
   const track = useTrackDesignInput();
   return (
     <div className="flex items-center gap-1">
@@ -55,10 +57,10 @@ export function InspectorHeaderActions({
             track("button", "Ungroup");
             onUngroup();
           }}
-          title={`Ungroup (${keyHint("ungroup", useStudioKeys())})`}
+          title={t('Ungroup ({shortcut})', { shortcut: keyHint('ungroup', useStudioKeys()) })}
           className="flex h-6 items-center rounded-sm px-2 text-[11px] font-medium text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-200"
         >
-          Ungroup
+          {t('Ungroup')}
         </button>
       )}
       <button
@@ -72,7 +74,7 @@ export function InspectorHeaderActions({
             ? "text-accent-ink"
             : "text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300"
         }`}
-        title={copied ? "Copied!" : "Copy element info to clipboard"}
+        title={t(copied ? "Copied!" : "Copy element info to clipboard")}
       >
         <svg
           width="13"
@@ -88,7 +90,7 @@ export function InspectorHeaderActions({
       </button>
       <button
         type="button"
-        aria-label="Clear selection"
+        aria-label={t("Clear selection")}
         onClick={() => {
           track("button", "Clear selection");
           onClear();

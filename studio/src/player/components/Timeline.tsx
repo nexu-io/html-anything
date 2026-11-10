@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { TimelineMediaBar } from '../../motion/TimelineMediaBar';
 import type { TimelineProps } from "./TimelineTypes";
 import { TimelineProvider, useTimelineContext } from "./TimelineProvider";
@@ -53,8 +54,9 @@ function TimelineView() {
 }
 
 const TimelineComposed = memo(function TimelineComposed(props: TimelineProps = {}) {
+  const mvp = useMvpEditor();
   return (
-    <TimelineProvider {...props}>
+    <TimelineProvider {...props} showKeyframes={mvp ? false : props.showKeyframes}>
       <TimelineView />
       <TimelineMediaBar />
     </TimelineProvider>

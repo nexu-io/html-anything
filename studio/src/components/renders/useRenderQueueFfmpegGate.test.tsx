@@ -77,3 +77,11 @@ describe("useRenderQueue FFmpeg gate", () => {
     expect(mounted.api().ffmpegMissing).toBe(false);
   });
 });
+
+it('does not create a failed render row while managed components are preparing', async () => {
+  ffmpegStatus = { ok: false, runtime: { managed: true, components: [{ id: 'browser', stage: 'downloading' }], capabilities: { capture: false, media: true, export: false } } };
+  queue = mountRenderQueue(useRenderQueue);
+  await queue.api().startRender();
+  expect(renderPosts(fetchMock)).toHaveLength(0);
+  expect(queue.api().jobs).toHaveLength(0);
+});

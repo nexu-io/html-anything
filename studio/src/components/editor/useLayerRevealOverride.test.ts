@@ -110,6 +110,38 @@ describe("useLayerRevealOverride — delayed reveal ownership", () => {
     document.body.innerHTML = "";
   });
 
+  it("ignores a reveal requested by a layer-selection continuation after its panel unmounts", async () => {
+    const host = document.createElement("div");
+    const background = makeEl("0", "absolute");
+    document.body.appendChild(host);
+    const root = createRoot(host);
+    let scheduleReveal!: (element: HTMLElement, delayMs: number) => void;
+    function Harness() {
+      ({ scheduleReveal } = useLayerRevealOverride({
+        isPlaying: false,
+        selectedElement: background,
+      }));
+      return null;
+    }
+    act(() => root.render(React.createElement(Harness)));
+    // Selecting a layer opens Properties and unmounts Layers while seekToLayer
+    // is awaited. The old handler resumes after the hook's cleanup has run.
+    let finishSeek!: () => void;
+    const seek = new Promise<void>((resolve) => {
+      finishSeek = resolve;
+    });
+    const selection = seek.then(() => scheduleReveal(background, 150));
+    act(() => root.unmount());
+    await act(async () => {
+      finishSeek();
+      await selection;
+    });
+    act(() => vi.advanceTimersByTime(150));
+    expect(background.style.zIndex).toBe("0");
+    expect(background.hasAttribute(LAYER_REVEAL_PRIOR_Z_ATTR)).toBe(false);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
   it("cancels a pending reveal when selection changes or playback begins", () => {
     const host = document.createElement("div");
     const selected = makeEl("2", "absolute");

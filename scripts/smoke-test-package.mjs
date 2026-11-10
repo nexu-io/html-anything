@@ -39,7 +39,7 @@ export async function smoke(archive, codexJS, preparedBundle) {
   const data = path.join(out, 'user-projects'), profile = path.join(out, 'isolated-codex');
   await mkdir(profile, { recursive: true });
   await writeFile(path.join(profile, 'config.toml'), 'cli_auth_credentials_store = "file"\nmcp_oauth_credentials_store = "file"\n');
-  const env = { ...process.env, CODEX_HOME: profile, MOTION_DATA_DIR: data, PORT: process.env.D4_LANE_PORT_RANGE?.split('-')[0] || process.env.SEATS_PORT || process.env.PORT || String(await testPort()) };
+  const env = { ...process.env, CODEX_HOME: profile, MOTION_DATA_DIR: data, PORT: process.env.PORT || String(await testPort()) };
   await run(node, ['--import', './bootstrap.mjs', '-e', 'console.log("Bundled runtime ready")'], { cwd: bundle, env });
   await run(node, ['scripts/configure-plugin.mjs'], { cwd: bundle, env });
   const timings = {};

@@ -37,7 +37,7 @@ function remoteHistory(base: string): NativeHistory {
   if (url.protocol !== 'http:' || !['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)) throw new Error('INVALID_HISTORY_OWNER');
   async function call(action = '', body?: unknown, binary = false) {
     const response = await fetch(base.replace(/\/$/, '') + action, { method: body === undefined ? 'GET' : 'POST',
-      headers: { 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body), signal: AbortSignal.timeout(120_000) });
+      headers: { 'Content-Type': 'application/json', Origin: url.origin }, body: body === undefined ? undefined : JSON.stringify(body), signal: AbortSignal.timeout(120_000) });
     if (!response.ok) throw new Error('NATIVE_HISTORY_FAILED: ' + (await response.text()).slice(0, 1200));
     return binary ? Buffer.from(await response.arrayBuffer()) : response.json();
   }

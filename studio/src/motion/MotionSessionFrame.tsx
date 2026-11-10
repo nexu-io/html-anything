@@ -119,7 +119,7 @@ function SessionBrowser({ children, sessionId, projectId, artifacts }: { childre
     // Native editor shortcuts must not edit a hidden artifact while chatting or browsing.
     if (!(event.target as Element).closest('.motion-artifact-editor:not([hidden])')) event.stopPropagation();
   }}>
-    {error && <div className="motion-workspace-notice" role="alert">{error}<button className="motion-icon-button" aria-label={t('Dismiss')} onClick={() => setError('')}><MotionIcon name="close" /></button></div>}
+    {error && <div className="motion-workspace-notice" role="alert">{t(error)}<button className="motion-icon-button" aria-label={t('Dismiss')} onClick={() => setError('')}><MotionIcon name="close" /></button></div>}
     <div className="motion-session-body">
       <aside className="motion-conversation" data-full={!geometry.showBrowser} aria-label={t('Conversation')} hidden={!geometry.showConversation} style={{ width: geometry.narrow || !geometry.showBrowser ? '100%' : geometry.conversationWidth }}>
         <header className="motion-conversation-header"><WorkspaceMenuButton /><SessionTitle /><div>{(!state.browserOpen || geometry.narrow) && <button className="motion-icon-button" aria-label={t('Open browser')} title={t('Open browser')} onClick={openBrowser}><MotionIcon name="monitor" /></button>}</div></header>

@@ -70,14 +70,14 @@ export const FfmpegRequiredNotice = memo(function FfmpegRequiredNotice({
     >
       <div className="flex flex-col gap-0.5">
         <span className="text-[11px] font-semibold text-warning-ink">
-          {status.title ?? "FFmpeg not found"}
+          {t(status.title ?? "FFmpeg not found")}
         </span>
         {/* text-2, not the panel's usual text-4 for secondary copy: the amber
             wash lifts the background, and text-4 measures 2.2:1 on it against
             the 4.5:1 minimum. This is the line that explains why Export is
             off, so it has to be readable. text-2 measures 6.6:1. */}
         <span className="text-[10px] leading-snug text-pretty text-panel-text-2">
-          {status.detail ?? "FFmpeg is required to encode video."}
+          {t(status.detail ?? "FFmpeg is required to encode video.")}
         </span>
       </div>
 

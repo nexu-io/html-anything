@@ -1,4 +1,4 @@
-:where([data-motion-ui]) .ui-icon { width: var(--motion-icon); height: var(--motion-icon); flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+:where([data-motion-ui]) .ui-icon { width: var(--motion-icon); height: var(--motion-icon); flex: none; fill: currentColor; stroke: none; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-motion-ui]) .ui-button {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--motion-space-6);
   min-height: var(--motion-control); padding: var(--motion-space-6) var(--motion-space-12);
