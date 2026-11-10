@@ -65,29 +65,30 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 
 ## Core files and product index
 
-| Location                                          | Responsibility                                                                                              |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| package.json, pnpm-workspace.yaml, pnpm-lock.yaml | Workspaces, standard commands and pinned dependencies                                                       |
-| odsuite.yaml, biome.json                          | Finite engineering policy and runtime/development configuration                                             |
-| suites/*/src/index.ts                             | Public mechanism entry points                                                                               |
-| suites/cli/src/odsuite.mjs                        | Sole CLI bootstrap                                                                                          |
-| carriers/electron/src, tests                      | Electron reference carrier and independently built Capsule                                                  |
-| carriers/standalone                               | Actual managed Web/Daemon composition and development adapter                                               |
-| carriers/codexplugin                              | Local descriptor, closure build, stdio attachment and drain                                                 |
-| carriers/docker                                   | Empty carrier placeholder                                                                                   |
-| apps/web, apps/daemon                             | Product workspace UI, HTTP/MCP adaptation and protected native previews                                     |
-| packages/theme, packages/components               | Primitive/semantic/light-dark tokens, licensed local fonts, atoms and anonymous layouts                     |
-| apps/web/src/lib/components                       | Web business components; no style definitions                                                               |
-| packages/motion                                   | Native editing, composition graph/assembly, preview and canvas bridge; no persistence or OS allocation      |
-| packages/render                                   | Durable export intent, serial fixed-revision execution and verified films; sidecar/blob own OS resources    |
-| packages/workspace                                | Session/message/artifact ownership, revisions, history, transactions and idempotency shared by HTTP/MCP/Web |
-| docs/README.md                                    | Durable documentation index                                                                                 |
-| docs/architecture.md, domains.md                  | Engineering architecture and product/data responsibilities                                                  |
-| docs/operations.md, conventions.md                | Runtime recovery, verification and engineering conventions                                                  |
-| .github/workflows/ci.yml                          | Source checks; no publication                                                                               |
-| .github/PULL_REQUEST_TEMPLATE.md                  | Review scope, responsibility, evidence and limitations                                                      |
-| LICENSE, NOTICE                                   | Public repository license and third-party attribution                                                       |
-| CLAUDE.md                                         | Shared entry to this document                                                                               |
+| Location                                          | Responsibility                                                                                                  |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| package.json, pnpm-workspace.yaml, pnpm-lock.yaml | Workspaces, standard commands and pinned dependencies                                                           |
+| odsuite.yaml, biome.json                          | Finite engineering policy and runtime/development configuration                                                 |
+| suites/*/src/index.ts                             | Public mechanism entry points                                                                                   |
+| suites/cli/src/odsuite.mjs                        | Sole CLI bootstrap                                                                                              |
+| carriers/electron/src, tests                      | Electron reference carrier and independently built Capsule                                                      |
+| carriers/standalone                               | Actual managed Web/Daemon composition and development adapter                                                   |
+| carriers/codexplugin                              | Local descriptor, closure build, stdio attachment and drain                                                     |
+| carriers/docker                                   | Empty carrier placeholder                                                                                       |
+| apps/web, apps/daemon                             | Product workspace UI, HTTP/MCP adaptation and protected native previews                                         |
+| packages/theme, packages/components               | Primitive/semantic/light-dark tokens, licensed local fonts, atoms and anonymous layouts                         |
+| apps/web/src/lib/components                       | Web business components; no style definitions                                                                   |
+| packages/motion                                   | Native editing, composition graph/assembly, preview and canvas bridge; no persistence or OS allocation          |
+| packages/templates                                | Finite native template sources, content identity, font/license provenance; workspace creates editable artifacts |
+| packages/render                                   | Durable export intent, serial fixed-revision execution and verified films; sidecar/blob own OS resources        |
+| packages/workspace                                | Session/message/artifact ownership, revisions, history, transactions and idempotency shared by HTTP/MCP/Web     |
+| docs/README.md                                    | Durable documentation index                                                                                     |
+| docs/architecture.md, domains.md                  | Engineering architecture and product/data responsibilities                                                      |
+| docs/operations.md, conventions.md                | Runtime recovery, verification and engineering conventions                                                      |
+| .github/workflows/ci.yml                          | Source checks; no publication                                                                                   |
+| .github/PULL_REQUEST_TEMPLATE.md                  | Review scope, responsibility, evidence and limitations                                                          |
+| LICENSE, NOTICE                                   | Public repository license and third-party attribution                                                           |
+| CLAUDE.md                                         | Shared entry to this document                                                                                   |
 
 ## Typical iteration workflows
 
@@ -95,7 +96,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 
 Read the docs, find the owner and delivery record, then create an isolated topic worktree from the fetched integration SHA. Baseline and integration checkouts are read-only references: no installs, builds, tests or edits there. Pin the `feature/motion` reference used for business comparisons; a moving branch or old test result is not current evidence.
 
-Use Node24 and pnpm11.13.0. Linux requires `ps` (`procps` on Debian); containers require init to reap orphaned processes. Install with `pnpm install --frozen-lockfile`, then explicitly `pnpm build`. Installation must not build or configure hooks. No private registry token is required or committed.
+Use Node24 and pnpm11.13.0. Linux requires `ps` (`procps` on Debian); containers require init to reap orphaned processes. The workspace explicitly disables the global virtual store and rejects stale dependencies before running commands. CI and SDK subprocesses must agree without forwarding the whole host environment; execution never installs dependencies implicitly. Install with `pnpm install --frozen-lockfile`, then explicitly `pnpm build`. Installation must not build or configure hooks. No private registry token is required or committed.
 
 ### Local checks and debugging
 
@@ -112,6 +113,8 @@ Independent fixed-rate audio source-in-point/rate/gain/mute changes use the same
 Media links belong to one source file/composition. Aligned static PNG/WAV groups share start/duration; audio members share in-point/rate, while gain/mute and visual appearance remain individual. Validate every member before one SDK batch and one workspace save/history step. Group trim uses the shortest remaining audio window. Link/unlink/delete retries retain applied source and the same save receipt; never regenerate a group after an unknown commit. Invalid groups stay read-only until explicitly unlinked. SDK-recognized writers are the static analysis boundary; this is not proof against arbitrary author-script side effects.
 
 Export jobs belong to render, independently of Web/HTTP/MCP connection lifetime. Daemon validates workspace ownership and freezes an explicitly selected revision; render journals intent and executes it. Retry unknown submissions with the same payload/request identity. Cancellation completes only after actual worker retirement; uncertain ownership requires explicit sidecar recovery. Public job receipts exclude paths and process authority.
+
+Built-in templates are finite product content in `packages/templates/src/native`, not Web styles or an unrestricted asset tree. Verify source/font digests, preserve notices, require the selected contentHash and create through workspace transactions. Creation never changes selection. Daemon owns current-contract production guidance; MCP resources and authenticated HTTP return the same complete bodies and hashes. Creative guidance, Prism/provider adapters and their acceptance remain explicit work rather than implied capabilities.
 
 User media is workspace-owned persistent data, outside blob GC. Bind reads to owned immutable revision manifests; removal never erases historical bytes. Preserve import request identities and applied insertion state across unknown transport outcomes; reject old database formats without migration/reset.
 

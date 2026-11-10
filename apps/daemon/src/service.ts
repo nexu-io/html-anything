@@ -4,10 +4,13 @@ import type { Environment } from "@odsuite/carrier";
 import { animationInput, editInput, inspectInput, Motion, patchInput } from "@open-motion/motion";
 import { inspectContext, retimeHost } from "@open-motion/motion/project";
 import { type ExportOperation, exportSchemas } from "@open-motion/render/contract";
+import { type TemplateOperation, templateSchemas } from "@open-motion/templates/contract";
 import { Fault, type Input, type Operation, Workspace } from "@open-motion/workspace";
+import { listGuidance, readGuidance } from "./content/guidance.js";
+import { Previews } from "./content/preview.js";
+import { Templates } from "./content/templates.js";
 import { schemas } from "./contract.js";
 import { type Binding, Exports } from "./exports/index.js";
-import { Previews } from "./preview.js";
 export interface Options {
   data: string;
   origin: string;
@@ -53,6 +56,7 @@ async function body(request: IncomingMessage): Promise<unknown> {
 export async function serve(options: Options): Promise<Service> {
   const workspace = new Workspace(options.data);
   const previews = new Previews(workspace);
+  const templates = new Templates(workspace);
   const exports = new Exports(workspace, options.renderer, options.endpoint);
   const server = createServer((request, response) => {
     const origin = request.headers.origin === options.origin ? options.origin : undefined;
@@ -78,6 +82,13 @@ export async function serve(options: Options): Promise<Service> {
       }
       if (!equal(request.headers.authorization ?? "", `Bearer ${options.token}`))
         return reply(response, 401, { error: { code: "invalid", message: "authority rejected" } }, origin);
+      if (request.method === "GET" && request.url?.startsWith("/guidance")) {
+        const result =
+          request.url === "/guidance"
+            ? listGuidance()
+            : readGuidance(`open-motion://guidance/${request.url.slice("/guidance/".length)}`);
+        return reply(response, 200, result, origin);
+      }
       if (request.url === "/health" && request.method === "GET")
         return reply(
           response,
@@ -142,9 +153,11 @@ export async function serve(options: Options): Promise<Service> {
       if (request.method !== "POST" || !Object.hasOwn(schemas, operation))
         return reply(response, 404, { error: { code: "invalid", message: "unknown operation" } }, origin);
       const input = await body(request);
-      const result = Object.hasOwn(exportSchemas, operation)
-        ? await exports.execute(operation as ExportOperation, input)
-        : workspace.execute(operation as Operation, input as Input<Operation>);
+      const result = Object.hasOwn(templateSchemas, operation)
+        ? templates.execute(operation as TemplateOperation, input)
+        : Object.hasOwn(exportSchemas, operation)
+          ? await exports.execute(operation as ExportOperation, input)
+          : workspace.execute(operation as Operation, input as Input<Operation>);
       reply(response, 200, result, origin);
     };
     void handle().catch((error) => {

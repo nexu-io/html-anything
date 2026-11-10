@@ -118,6 +118,9 @@ export class Conversation {
     this.settings.element.open = true;
     this.rename.focus();
   }
+  addCreator(element: HTMLElement) {
+    this.creation.body.append(element);
+  }
   newProject() {
     this.creation.element.hidden = false;
     this.creation.element.open = true;

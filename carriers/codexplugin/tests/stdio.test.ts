@@ -65,6 +65,47 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
     const session = (await client.callTool({ name: "session_create", arguments: command }))
       .structuredContent as unknown as SessionDetail;
     expect((await client.callTool({ name: "session_create", arguments: command })).structuredContent).toEqual(session);
+    expect(client.getInstructions()).toContain("open-motion://guidance");
+    const resources = await client.listResources();
+    expect(resources.resources.map((entry) => entry.name)).toEqual([
+      "production",
+      "native",
+      "templates",
+      "verification",
+    ]);
+    for (const entry of resources.resources) {
+      const document = await client.readResource({ uri: entry.uri });
+      const text = document.contents[0]!;
+      if (!("text" in text)) throw Error("guidance was not text");
+      const http = await fetch(`${bootstrap.daemon}/guidance/${entry.name}`, {
+        headers: { authorization: `Bearer ${bootstrap.token}` },
+      });
+      expect(await http.json()).toEqual(JSON.parse(text.text));
+    }
+    const catalog = (await client.callTool({ name: "template_list", arguments: {} })).structuredContent as {
+      templates: { id: string; contentHash: string; title: string }[];
+    };
+    expect(catalog.templates).toHaveLength(3);
+    for (const template of catalog.templates) {
+      const selected = await client.callTool({
+        name: "template_read",
+        arguments: { id: template.id, contentHash: template.contentHash },
+      });
+      expect(selected.isError).not.toBe(true);
+      expect(JSON.stringify(selected.structuredContent).length).toBeGreaterThan(65536);
+      const input = {
+        id: template.id,
+        contentHash: template.contentHash,
+        sessionId: session.id,
+        title: template.title,
+        requestId: randomUUID(),
+      };
+      const created = await client.callTool({ name: "template_create", arguments: input });
+      expect(created.isError).not.toBe(true);
+      expect((await client.callTool({ name: "template_create", arguments: input })).structuredContent).toEqual(
+        created.structuredContent,
+      );
+    }
     const artifact = (
       await client.callTool({
         name: "artifact_create",
