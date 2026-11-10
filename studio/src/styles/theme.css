@@ -3,6 +3,30 @@
  * tokens in `:root` so plain CSS and canvas code can still read them. */
 
 @theme static {
+  /* Website-aligned template catalog palette, independent of the editor theme. */
+  --color-template-surface: #fcfff5;
+  --color-template-text: #171a15;
+  --color-template-muted: #858880;
+  --color-template-line: #e5e8df;
+  --color-template-backdrop: #0007;
+  --color-template-focus: #297126;
+  --color-template-header-hover: #edf0e7;
+  --color-template-selected-text: #245c24;
+  --color-template-selected: #eff2e8;
+  --color-template-hover: #f0f3e9;
+  --color-template-brand-bg: #e7eae1;
+  --color-template-brand-text: #666c61;
+  --color-template-preview-bg: #eceee7;
+  --color-template-play-bg: #fcfff5f2;
+  --color-template-controls-bg: #f1f3eb;
+  --color-template-description: #62675c;
+  --color-template-action-bg: #151713;
+  --color-template-action-text: #fff;
+  --color-template-label: #777c71;
+  --color-template-prompt-bg: #f4f5f0;
+  --color-template-checkbox: #246824;
+  --color-template-guide-link: #376637;
+
   /* ---------------------------------------------------------------- colour */
 
   /* Graphite. Each colour is `light-dark(light, dark)`, resolved where it is painted, so the
