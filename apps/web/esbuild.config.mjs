@@ -1,4 +1,4 @@
-import { copyFile, mkdir } from "node:fs/promises";
+import { copyFile, mkdir, rm } from "node:fs/promises";
 
 import { documentStyles } from "@odsuite/style";
 import { build } from "esbuild";
@@ -10,6 +10,7 @@ const shared = {
   target: "es2024",
 };
 
+await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
 await Promise.all([
   copyFile(new URL("../../LICENSE", import.meta.url), "dist/LICENSE"),

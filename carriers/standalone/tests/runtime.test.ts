@@ -41,7 +41,7 @@ it("runs real Web and a sidecar-owned Daemon with propagated environment and dur
     });
     const directory = runtime.manager.directory(scope);
     expect(directory.instances.filter((i) => i.kind === "process").map((i) => i.service)).toEqual(["daemon"]);
-    const services = ["daemon", "standalone", "web"];
+    const services = ["daemon", "gateway", "standalone", "web"];
     if (nativeTools()) services.push("renderer");
     expect(directory.instances.map((i) => i.service).sort()).toEqual(services.sort());
     const registry = await runtime.manager.factory(scope).resources();
