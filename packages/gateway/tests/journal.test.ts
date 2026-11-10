@@ -1,5 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { mkdirSync, mkdtempSync } from "node:fs";
+import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "node:url";
 import { digest } from "@odsuite/protocol";
 import { expect, it } from "vitest";
@@ -9,7 +11,8 @@ import { Store } from "../src/store.js";
 function fixture() {
   const directory = fileURLToPath(new URL("../../../.artifacts/gateway/", import.meta.url));
   mkdirSync(directory, { recursive: true });
-  const store = new Store(mkdtempSync(`${directory}journal-`));
+  const root = mkdtempSync(`${directory}journal-`),
+    store = new Store(root);
   const input = generationSchemas.generation_create.parse({
     sessionId: randomUUID(),
     artifactId: randomUUID(),
@@ -20,7 +23,7 @@ function fixture() {
     prompt: "PNG",
     requestId: randomUUID(),
   });
-  return { store, input };
+  return { store, input, root };
 }
 it("checks original canonical intent before provider availability and rejects changed intent/operation", () => {
   const { store, input } = fixture();
@@ -53,6 +56,21 @@ it("checks original canonical intent before provider availability and rejects ch
     ).toThrowError(expect.objectContaining({ code: "idempotency" }));
   } finally {
     store.close();
+  }
+});
+it("rejects inconsistent committed submission state instead of ever submitting it again", () => {
+  const { store, input, root } = fixture();
+  const value = store.create(input, () => {});
+  store.close();
+  const database = new DatabaseSync(join(root, "generations.sqlite"));
+  const corrupt = JSON.stringify({ ...value, submission: "accepted", remoteId: "already-accepted" });
+  try {
+    database.prepare("UPDATE jobs SET record=? WHERE id=?").run(corrupt, value.id);
+    expect(() => new Store(root)).toThrowError(expect.objectContaining({ code: "integrity" }));
+    expect(() => new Store(root)).toThrowError(expect.objectContaining({ code: "integrity" }));
+    expect(database.prepare("SELECT record FROM jobs WHERE id=?").get(value.id)?.record).toBe(corrupt);
+  } finally {
+    database.close();
   }
 });
 it("bounds active intent at 32 and uses explicit optimistic cancellation receipts", () => {

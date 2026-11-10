@@ -44,7 +44,18 @@ export class Store {
     const result = job.safeParse(parsed);
     if (!result.success) throw new Fault("integrity", "invalid generation record");
     const data = result.data;
+    const validSubmission =
+      data.state === "queued"
+        ? data.submission === "not-started"
+        : data.state === "submitting"
+          ? data.submission === "unknown"
+          : ["running", "succeeded", "failed"].includes(data.state)
+            ? data.submission === "accepted"
+            : data.state === "cancelled"
+              ? data.submission !== "unknown"
+              : data.submission !== "not-started";
     if (
+      !validSubmission ||
       (data.submission === "accepted") !== !!data.remoteId ||
       (data.candidate &&
         (data.candidate.jobId !== data.id ||
@@ -97,14 +108,14 @@ export class Store {
     const checked = this.decode(JSON.stringify(value));
     this.db.prepare("UPDATE jobs SET record=? WHERE id=?").run(JSON.stringify(checked), value.id);
   }
-  private request<T>(operation: string, input: { requestId: string }, perform: () => T): T {
+  private request(operation: string, input: { requestId: string }, perform: () => Job): Job {
     this.db.exec("BEGIN IMMEDIATE");
     try {
       const fingerprint = digest(canonical({ operation, input })),
         prior = this.db.prepare("SELECT * FROM requests WHERE id=?").get(input.requestId);
       if (prior && prior.fingerprint !== fingerprint)
         throw new Fault("idempotency", "generation requestId reused with a different intent");
-      const value = prior ? (JSON.parse(String(prior.result)) as T) : perform();
+      const value = prior ? this.decode(prior.result) : perform();
       if (!prior)
         this.db.prepare("INSERT INTO requests VALUES(?,?,?)").run(input.requestId, fingerprint, JSON.stringify(value));
       this.db.exec("COMMIT");
