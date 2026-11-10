@@ -46,7 +46,7 @@ export async function check(root: string, lane: string, gate: Gate): Promise<Che
       await run(root, ["exec", "biome", "check", "."]);
       receipt.details = { files: report.files };
     } else if (gate === "tests") {
-      await run(root, ["-r", "--if-present", "run", "test"]);
+      await run(root, ["-r", "--if-present", "run", "test"], { ...process.env, ODSUITE_BUILD: built.version });
       receipt.details = { command: "pnpm -r --if-present run test" };
     } else receipt.details = (await loadPackage(root, lane)).packages;
     if (gate !== "artifacts") await confirmSource();

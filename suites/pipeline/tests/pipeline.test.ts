@@ -51,7 +51,10 @@ pipeline:
       join(dir, "package.json"),
       JSON.stringify({
         name: `fixture-${name}`,
-        scripts: { build: "node build.mjs", test: 'node -e "process.exit(0)"' },
+        scripts: {
+          build: "node build.mjs",
+          test: "node -e \"if(process.env.ODSUITE_BUILD!==JSON.parse(require('node:fs').readFileSync('dist/runtime.json')).version)process.exit(1)\"",
+        },
       }),
     );
     await writeFile(
@@ -83,6 +86,7 @@ it("builds both carrier closures with one version and rejects modified materiali
     expect(await readFile(join(root, path, "main.mjs"), "utf8")).toBe(result.version);
   expect(await loadBuild(root, "beta")).toEqual(result);
   expect(await readFile(join(root, "odsuite.yaml"))).toEqual(before);
+  expect((await check(root, "beta", "tests")).result).toBe("passed");
   const packed = await pack(root, "beta");
   expect(await pack(root, "beta")).toEqual(packed);
   expect(Object.keys(packed.packages).sort()).toEqual(["codexplugin", "standalone"]);
