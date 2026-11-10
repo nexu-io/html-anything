@@ -164,14 +164,14 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
       if (promptViaMessageFlag) argv = [...argv, "--message", opts.prompt];
 
       try {
-        // On Windows, `spawn` cannot launch a `.cmd` / `.bat` shim (which is
-        // what npm installs for most CLI agents) without going through the
-        // shell. Without this, every agent invocation fails with
-        // EINVAL / "spawn 无效的参数". macOS/Linux use direct exec.
-        // Safety: prompt content is delivered via stdin or `--message
-        // <text>` (argv-message), not interpolated into a shell command,
-        // so this does not introduce a shell-injection vector.
-        const useShell = process.platform === "win32";
+        // Only `.cmd` / `.bat` shims need cmd.exe. A real `.exe` is spawned
+        // directly: routing it through the shell lets cmd.exe interpret `<`,
+        // `>` and `&` inside argv, which truncates any prompt that carries
+        // HTML — the exact payload this app sends — with
+        // `"<" kann syntaktisch an dieser Stelle nicht verarbeitet werden.`
+        // (Reproduced with `hermes -z '<!doctype html>…'` on Windows.)
+        const useShell =
+          process.platform === "win32" && /\.(cmd|bat)$/i.test(bin);
         child = spawn(useShell ? `"${bin}"` : bin!, argv, {
           cwd: opts.cwd ?? process.cwd(),
           env,
@@ -321,7 +321,12 @@ export function invokeAgent(opts: InvokeOpts): ReadableStream<InvokeEvent> {
             }
           }
         } else if (stdoutBuf) {
-          if (opts.agent === "aider" || opts.agent === "codewhale" || opts.agent === "deepseek-tui") {
+          if (
+            opts.agent === "aider" ||
+            opts.agent === "codewhale" ||
+            opts.agent === "deepseek-tui" ||
+            opts.agent === "hermes"
+          ) {
             safeEnqueue({ type: "delta", text: stdoutBuf });
           } else {
             for (const part of parse(stdoutBuf)) {
