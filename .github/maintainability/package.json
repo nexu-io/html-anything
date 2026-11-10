@@ -1,0 +1,8 @@
+{
+  "name": "openmotion-maintainability-checks",
+  "private": true,
+  "devDependencies": {
+    "jscpd": "5.4.3",
+    "knip": "6.44.2"
+  }
+}
