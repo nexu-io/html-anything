@@ -3,10 +3,15 @@ name: Motion snapshot recovery
 on:
   workflow_dispatch:
     inputs:
-      candidate_run_id:
-        description: 'Original Motion test release run; package must already exist identically on npm'
+      version:
+        description: 'Exact existing candidate version; the identical package must already be public on npm'
         type: string
         required: true
+      accepted:
+        description: 'I verified this exact candidate and authorize snapshot-only recovery'
+        type: boolean
+        required: true
+        default: false
 
 permissions:
   contents: read
@@ -21,5 +26,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/motion-publish-test.yml
     with:
-      candidate_run_id: ${{ inputs.candidate_run_id }}
+      version: ${{ inputs.version }}
+      accepted: ${{ inputs.accepted }}
+      archive_only: true
     secrets: inherit

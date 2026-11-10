@@ -13,9 +13,9 @@ import { publishGuide, storagePlan } from './publish-install-guide.mjs';
 import { scanPackage, scanSource } from './motion-scan.mjs';
 
 export const repository = 'nexu-io/html-anything';
-export const candidateWorkflow = '.github/workflows/motion-publish-test.yml';
+export const candidateWorkflow = '.github/workflows/motion-candidate.yml';
+export const publicationWorkflow = '.github/workflows/motion-publish-test.yml';
 export const recoveryWorkflow = '.github/workflows/motion-publication-recovery.yml';
-export const publicationEnvironment = 'motion-test-publish';
 export const candidateJobName = 'Build immutable candidate';
 const exec = promisify(execFile), hashPattern = /^[a-f0-9]{64}$/;
 const json = async file => JSON.parse(await readFile(file, 'utf8'));
@@ -27,12 +27,12 @@ export function releaseInputs(env = process.env) {
   assert.equal(env.GITHUB_REF, 'refs/heads/main', 'Run the trusted workflow registered on main');
   assert(['publish-test', 'archive-only'].includes(env.MOTION_RELEASE_ACTION), 'Unknown release action');
   const workflow = env.GITHUB_WORKFLOW_REF;
-  assert([candidateWorkflow, recoveryWorkflow].some(p => workflow === `${repository}/${p}@refs/heads/main`), 'Require a trusted manual entry');
+  assert([publicationWorkflow, recoveryWorkflow].some(p => workflow === `${repository}/${p}@refs/heads/main`), 'Require a trusted manual entry');
   if (workflow.includes(recoveryWorkflow)) assert.equal(env.MOTION_RELEASE_ACTION, 'archive-only', 'Recovery never publishes or moves a channel');
   if (env.MOTION_EXPECTED_SHA256) assert.match(env.MOTION_EXPECTED_SHA256, hashPattern);
-  assert(/^[1-9]\d*$/.test(env.MOTION_CANDIDATE_RUN || ''), 'Require a candidate workflow run ID');
-  return { action: env.MOTION_RELEASE_ACTION, expectedSHA256: env.MOTION_EXPECTED_SHA256,
-    candidateRun: env.MOTION_CANDIDATE_RUN, artifactId: env.MOTION_CANDIDATE_ARTIFACT_ID };
+  assert.equal(env.MOTION_ACCEPTED, 'true', 'Explicit operator acceptance confirmation is required');
+  checkReleaseVersion(env.MOTION_VERSION); assert(env.MOTION_VERSION.includes('-test.'), 'Only test versions may use this entry');
+  return { action: env.MOTION_RELEASE_ACTION, accepted: true, version: env.MOTION_VERSION, expectedSHA256: env.MOTION_EXPECTED_SHA256 };
 }
 
 export async function resolveSource(control, requested, version, run = runFile) {
@@ -69,7 +69,13 @@ export async function sealCandidate(build, output, source, env = process.env) {
     tgz: filename, tgzSHA256: await sha256(path.join(output, filename)), applicationSHA256: guide.applicationSHA256, locks: guide.locks,
     templateEnvironment: 'prod' };
   await writeFile(path.join(output, 'acceptance.md'), template.replace('<!-- CANDIDATE_IDENTITY -->', '```json\n' + JSON.stringify(identity, null, 2) + '\n```'));
-  const names = [filename, 'release-npm.json', 'source-scan.json', 'package-scan.json', 'install.md', 'install-record.json', 'acceptance.md'];
+  const installTemplate = await readFile(new URL('../../docs/templates/candidate-install.md', import.meta.url), 'utf8');
+  const values = { VERSION: guide.version, TGZ: filename, SHA256: identity.tgzSHA256, SOURCE_SHA: guide.commit,
+    DETAILS_URL: `https://github.com/${repository}/blob/${guide.commit}/docs/npm-installation.md` };
+  const instructions = installTemplate.replace(/\{\{([A-Z0-9_]+)\}\}/g, (_, key) => { assert(Object.hasOwn(values, key)); return values[key]; });
+  assert(!instructions.includes('{{'), 'Unresolved candidate instructions');
+  await writeFile(path.join(output, 'candidate-install.md'), instructions);
+  const names = [filename, 'release-npm.json', 'source-scan.json', 'package-scan.json', 'install.md', 'install-record.json', 'acceptance.md', 'candidate-install.md'];
   const files = Object.fromEntries(await Promise.all(names.map(async name => [name, await sha256(path.join(output, name))])));
   const candidate = { schemaVersion: 2, kind: 'motion-candidate', packageName: guide.packageName, version: guide.version,
     sourceCommit: guide.commit, tgz: filename, tgzSHA256: files[filename], integrity: integrity(await readFile(path.join(output, filename))), files,
@@ -80,14 +86,12 @@ export async function sealCandidate(build, output, source, env = process.env) {
   return candidate;
 }
 
-export function validateRun(run, artifact, job, attempt) {
+export function validateRun(run, artifact, version) {
   assert.equal(run.event, 'workflow_dispatch'); assert.equal(run.head_branch, 'main');
   assert.equal(run.head_repository?.full_name, repository);
-  assert.equal(run.path.split('@')[0], candidateWorkflow, 'Candidate must come from the registered workflow');
-  assert(Number.isSafeInteger(attempt) && attempt > 0 && attempt <= run.run_attempt, 'Invalid producer attempt');
-  assert.equal(job.name, candidateJobName); assert.equal(job.status, 'completed'); assert.equal(job.conclusion, 'success');
-  assert.equal(job.run_id, run.id); assert.equal(job.head_sha, run.head_sha);
-  assert.equal(artifact.name, `motion-candidate-${run.id}-${attempt}`);
+  assert.equal(run.status, 'completed'); assert.equal(run.conclusion, 'success', 'Candidate build must finish successfully');
+  assert.equal(run.path.split('@')[0], candidateWorkflow, 'Candidate must come from the registered build workflow');
+  assert.equal(artifact.name, `motion-candidate-${version}`);
   assert.equal(artifact.workflow_run?.id, run.id); assert.equal(artifact.expired, false);
   assert.match(artifact.digest || '', /^sha256:[a-f0-9]{64}$/, 'Require the GitHub artifact digest');
   assert(artifact.size_in_bytes > 0 && artifact.size_in_bytes < 150 * 1024 * 1024, 'Unexpected artifact size');
@@ -100,55 +104,34 @@ async function github(route, fetcher = fetch) {
   return response.json();
 }
 
-export function validatePublicationEnvironment(environment, branches) {
-  assert.equal(environment.name, publicationEnvironment);
-  const rule = environment.protection_rules?.find(r => r.type === 'required_reviewers');
-  assert(rule?.reviewers?.length > 0 && rule.prevent_self_review === true, 'Configure independent required reviewers and prevent self-review');
-  assert.equal(environment.can_admins_bypass, false, 'Disable environment protection bypass');
-  assert.equal(environment.deployment_branch_policy?.custom_branch_policies, true, 'Restrict the publication environment to main');
-  assert.equal(environment.deployment_branch_policy?.protected_branches, false);
-  assert.deepEqual(branches.branch_policies?.map(b => ({ name: b.name, type: b.type })).sort((a, b) => a.name.localeCompare(b.name)), [{ name: 'main', type: 'branch' }]);
+export function authorizationReceipt(candidate, run, action, observedAt = new Date().toISOString()) {
+  const actor = run.triggering_actor?.login || run.actor?.login;
+  assert(typeof actor === 'string' && actor.length > 0, 'Require the actual publication operator');
+  return { schemaVersion: 1, type: 'manual-workflow-dispatch', publicationRun: run.id, runAttempt: run.run_attempt,
+    action, version: candidate.version, tgzSHA256: candidate.tgzSHA256, candidateRun: candidate.workflow,
+    actor, acceptanceConfirmed: true, observedAt };
 }
 
-export async function checkPublicationEnvironment(fetcher = fetch) {
-  const environment = await github(`/environments/${publicationEnvironment}`, fetcher);
-  const branches = await github(`/environments/${publicationEnvironment}/deployment-branch-policies?per_page=100`, fetcher);
-  validatePublicationEnvironment(environment, branches);
-}
-
-export function approvalReceipt(candidate, reviews, run, action, observedAt = new Date().toISOString()) {
-  // shortcut: GitHub reviews are run-scoped; use deployment-specific receipts if the API gains attempt identities.
-  const reviewers = [...new Set(reviews.filter(r => r.state === 'approved' && r.comment?.trim() === 'PASS' &&
-    r.environments?.some(e => e.name === publicationEnvironment) && r.user?.login &&
-    ![run.actor?.login, run.triggering_actor?.login].includes(r.user.login)).map(r => r.user.login))].sort();
-  assert(reviewers.length > 0, 'Require an independent environment approval with the non-sensitive comment PASS');
-  return { schemaVersion: 1, environment: publicationEnvironment, publicationRun: run.id, action,
-    version: candidate.version, tgzSHA256: candidate.tgzSHA256, candidateRun: candidate.workflow,
-    reviewers, observedAt, historySHA256: createHash('sha256').update(JSON.stringify(reviews)).digest('hex'),
-    scope: 'run-review-history; the protected npm job enforces approval for its execution' };
-}
-
-export async function recordApproval(directory, inputs, fetcher = fetch, env = process.env) {
-  await checkPublicationEnvironment(fetcher);
-  const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
+export async function recordAuthorization(directory, inputs, fetcher = fetch, env = process.env) {
+  const authorized = releaseInputs(env);
+  assert.equal(authorized.action, inputs.action); assert.equal(authorized.version, inputs.version);
+  const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
   const run = await github(`/actions/runs/${env.GITHUB_RUN_ID}`, fetcher);
-  assert.equal(run.head_branch, 'main'); assert.equal(run.event, 'workflow_dispatch');
-  assert.equal(run.head_sha, env.GITHUB_SHA);
+  assert.equal(String(run.id), env.GITHUB_RUN_ID); assert.equal(run.head_branch, 'main'); assert.equal(run.event, 'workflow_dispatch');
+  assert.equal(run.head_repository?.full_name, repository); assert.equal(run.head_sha, env.GITHUB_SHA);
   assert.equal(run.path.split('@')[0], env.GITHUB_WORKFLOW_REF.slice(repository.length + 1).split('@')[0]);
-  const reviews = await github(`/actions/runs/${run.id}/approvals`, fetcher);
-  await writeJSON(path.join(directory, 'approval.json'), approvalReceipt(candidate, reviews, run, inputs.action));
+  await writeJSON(path.join(directory, 'authorization.json'), authorizationReceipt(candidate, run, inputs.action));
 }
 
-async function verifyApproval(directory, inputs, env = process.env) {
-  const candidate = await verifyDownloaded(directory, inputs.expectedSHA256), approval = await json(path.join(directory, 'approval.json'));
-  assert.equal(approval.schemaVersion, 1);
-  assert.equal(approval.environment, publicationEnvironment); assert.equal(approval.version, candidate.version);
-  assert.equal(approval.tgzSHA256, candidate.tgzSHA256); assert.equal(approval.action, inputs.action);
-  assert.deepEqual(approval.candidateRun, candidate.workflow);
-  assert.equal(String(approval.publicationRun), env.GITHUB_RUN_ID, 'Approval belongs to another publication run');
-  assert(Array.isArray(approval.reviewers) && approval.reviewers.length > 0 && approval.reviewers.every(v => typeof v === 'string' && v.length > 0));
-  assert.match(approval.historySHA256, hashPattern);
-  return approval;
+async function verifyAuthorization(directory, inputs, env = process.env) {
+  const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version), authorization = await json(path.join(directory, 'authorization.json'));
+  assert.equal(inputs.accepted, true); assert.equal(authorization.schemaVersion, 1);
+  assert.equal(authorization.type, 'manual-workflow-dispatch'); assert.equal(authorization.acceptanceConfirmed, true);
+  assert.equal(authorization.version, candidate.version); assert.equal(authorization.tgzSHA256, candidate.tgzSHA256);
+  assert.equal(authorization.action, inputs.action); assert.deepEqual(authorization.candidateRun, candidate.workflow);
+  assert.equal(String(authorization.publicationRun), env.GITHUB_RUN_ID, 'Authorization belongs to another publication run');
+  assert(typeof authorization.actor === 'string' && authorization.actor.length > 0);
+  return authorization;
 }
 
 export async function verifyCandidate(directory, expectedSHA256, run) {
@@ -158,7 +141,7 @@ export async function verifyCandidate(directory, expectedSHA256, run) {
   assert.equal(candidate.tgz, `openmotion-app-${candidate.version}.tgz`); assert.equal(candidate.tgzSHA256, expectedSHA256);
   assert.match(expectedSHA256, hashPattern); assert.match(candidate.sourceCommit, /^[a-f0-9]{40}$/);
   assert.deepEqual(candidate.workflow, { repository, path: candidateWorkflow, ref: 'refs/heads/main', sha: run.head_sha, runId: run.id, attempt: run.run_attempt });
-  const names = [candidate.tgz, 'release-npm.json', 'source-scan.json', 'package-scan.json', 'install.md', 'install-record.json', 'acceptance.md'];
+  const names = [candidate.tgz, 'release-npm.json', 'source-scan.json', 'package-scan.json', 'install.md', 'install-record.json', 'acceptance.md', 'candidate-install.md'];
   assert.deepEqual(Object.keys(candidate.files).sort(), names.sort());
   for (const name of names) assert.equal(await sha256(path.join(directory, name)), candidate.files[name], 'Candidate file changed: ' + name);
   assert.equal(await sha256(path.join(directory, candidate.tgz)), expectedSHA256);
@@ -174,9 +157,11 @@ export async function verifyCandidate(directory, expectedSHA256, run) {
   return candidate;
 }
 
-export async function verifyDownloaded(directory, expectedSHA256) {
+export async function verifyDownloaded(directory, expectedSHA256, version) {
   const provenance = await json(path.join(directory, 'provenance.json'));
-  return verifyCandidate(directory, expectedSHA256, { head_sha: provenance.head_sha, id: provenance.runId, run_attempt: provenance.attempt });
+  const candidate = await verifyCandidate(directory, expectedSHA256, { head_sha: provenance.head_sha, id: provenance.runId, run_attempt: provenance.attempt });
+  if (version) assert.equal(candidate.version, version, 'Candidate version differs from the accepted version');
+  return candidate;
 }
 
 export async function platformReports(directory, candidate) {
@@ -194,18 +179,20 @@ export async function platformReports(directory, candidate) {
   return reports;
 }
 
-export async function downloadCandidate(runId, directory, expectedSHA256, fetcher = fetch, artifactId) {
-  assert(/^[1-9]\d*$/.test(runId));
-  const run = await github(`/actions/runs/${runId}`, fetcher);
-  const { artifacts } = await github(`/actions/runs/${runId}/artifacts?per_page=100`, fetcher);
-  const matches = artifacts.filter(a => artifactId ? String(a.id) === String(artifactId) : new RegExp(`^motion-candidate-${run.id}-[1-9]\\d*$`).test(a.name));
-  assert(matches.length > 0, 'Candidate artifact missing');
-  matches.sort((a, b) => Number(b.name.split('-').at(-1)) - Number(a.name.split('-').at(-1)));
-  const artifact = matches[0], attempt = Number(artifact.name.split('-').at(-1));
-  assert.equal(matches.filter(a => a.name === artifact.name).length, 1, 'Candidate artifact ambiguous');
-  const { jobs } = await github(`/actions/runs/${run.id}/attempts/${attempt}/jobs?per_page=100`, fetcher);
-  const builds = jobs.filter(j => j.name === candidateJobName); assert.equal(builds.length, 1, 'Successful candidate producer is missing or ambiguous');
-  validateRun(run, artifact, builds[0], attempt);
+export async function findCandidate(version, fetcher = fetch) {
+  checkReleaseVersion(version); assert(version.includes('-test.'));
+  const name = `motion-candidate-${version}`;
+  const result = await github(`/actions/artifacts?name=${encodeURIComponent(name)}&per_page=100`, fetcher);
+  assert(result.total_count <= 100, 'Too many matching artifacts; refusing an incomplete lookup');
+  const matches = result.artifacts.filter(a => a.name === name && !a.expired);
+  assert.equal(matches.length, 1, 'Candidate missing, expired or ambiguous; build a new unique version');
+  assert(Number.isSafeInteger(matches[0].workflow_run?.id) && matches[0].workflow_run.id > 0);
+  return matches[0];
+}
+
+export async function downloadCandidate(version, directory, expectedSHA256, fetcher = fetch) {
+  const artifact = await findCandidate(version, fetcher), run = await github(`/actions/runs/${artifact.workflow_run.id}`, fetcher);
+  validateRun(run, artifact, version);
   const redirect = await fetcher(`https://api.github.com/repos/${repository}/actions/artifacts/${artifact.id}/zip`, {
     redirect: 'manual', signal: AbortSignal.timeout(30_000), headers: { Authorization: `Bearer ${process.env.GH_TOKEN || process.env.GITHUB_TOKEN}` } });
   assert.equal(redirect.status, 302); const url = new URL(redirect.headers.get('location')); assert.equal(url.protocol, 'https:'); assert(!url.username && !url.password);
@@ -217,15 +204,16 @@ export async function downloadCandidate(runId, directory, expectedSHA256, fetche
   try {
     const archive = path.join(work, 'candidate.zip'); await writeFile(archive, bytes);
     const entries = (await runFile('unzip', ['-Z1', archive])).trim().split('\n');
-    assert(entries.length === 8 && new Set(entries).size === 8, 'Unexpected candidate artifact files');
+    assert(entries.length === 9 && new Set(entries).size === 9, 'Unexpected candidate artifact files');
     assert(entries.every(name => /^[a-zA-Z0-9._-]+$/.test(name) && name.length < 160), 'Unsafe candidate artifact entry');
     await mkdir(directory, { recursive: true });
     for (const name of entries) {
       const { stdout } = await exec('unzip', ['-p', archive, name], { encoding: 'buffer', maxBuffer: 150 * 1024 * 1024 });
       await writeFile(path.join(directory, name), stdout);
     }
-    const candidate = await verifyCandidate(directory, expectedSHA256 || (await json(path.join(directory, 'candidate.json'))).tgzSHA256, { ...run, run_attempt: attempt });
-    await writeJSON(path.join(directory, 'provenance.json'), { runId: run.id, attempt, head_sha: run.head_sha, artifactId: artifact.id, digest: artifact.digest });
+    const candidate = await verifyCandidate(directory, expectedSHA256 || (await json(path.join(directory, 'candidate.json'))).tgzSHA256, run);
+    assert.equal(candidate.version, version, 'Artifact version differs from the accepted version');
+    await writeJSON(path.join(directory, 'provenance.json'), { runId: run.id, attempt: run.run_attempt, head_sha: run.head_sha, artifactId: artifact.id, digest: artifact.digest });
     return candidate;
   } finally { await rm(work, { recursive: true, force: true }); }
 }
@@ -241,7 +229,7 @@ export async function registryPackage(candidate, fetcher = fetch) {
 
 export async function publishNpm(directory, inputs, { fetcher = fetch, run = runFile, env = process.env } = {}) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
-  await verifyApproval(directory, inputs, env);
+  await verifyAuthorization(directory, inputs, env);
   const before = await registryPackage(candidate, fetcher);
   if (inputs.action === 'archive-only') assert(before.version, 'Archive-only requires an existing identical npm version');
   if (inputs.action === 'publish-test' && before.tags.test) assert(compareReleaseVersions(candidate.version, before.tags.test) >= 0, 'A newer npm test version already exists; use snapshot recovery for an identical published version');
@@ -259,7 +247,7 @@ export async function publishNpm(directory, inputs, { fetcher = fetch, run = run
 export async function archiveRelease(directory, inputs, config, { run = runFile, fetcher = fetch, env = process.env } = {}) {
   await writeJSON(path.join(directory, 'release-attempt.json'), { action: inputs.action, tgzSHA256: inputs.expectedSHA256, stage: 'verifying-release', runId: env.GITHUB_RUN_ID });
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
-  const approval = await verifyApproval(directory, inputs, env);
+  const authorization = await verifyAuthorization(directory, inputs, env);
   const platforms = await platformReports(directory, candidate);
   const record = await json(path.join(directory, 'install-record.json')), plan = storagePlan(record, config);
   assert.equal(candidate.tgzSHA256, inputs.expectedSHA256);
@@ -281,7 +269,7 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
     const prior = await get(`${prefix}/release-record.json`);
     let release = { schemaVersion: 2, packageName: candidate.packageName, version: candidate.version, sourceCommit: candidate.sourceCommit,
       tgzSHA256: candidate.tgzSHA256, integrity: candidate.integrity, candidateRun: candidate.workflow,
-      approval, publicationRun: env.GITHUB_RUN_ID,
+      authorization, publicationRun: env.GITHUB_RUN_ID,
       platformVerification: platforms, status: 'registry-verified', publishedAt: new Date().toISOString() };
     if (prior) {
       const existing = JSON.parse(prior);
@@ -321,12 +309,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   else {
     const inputs = releaseInputs();
     if (command === 'download') {
-      const candidate = await downloadCandidate(inputs.candidateRun, directory, inputs.expectedSHA256, fetch, inputs.artifactId);
+      const candidate = await downloadCandidate(inputs.version, directory, inputs.expectedSHA256);
       const { appendFile } = await import('node:fs/promises');
       await appendFile(process.env.GITHUB_OUTPUT, `tgz_sha256=${candidate.tgzSHA256}\n`);
     }
-    else if (command === 'environment') await checkPublicationEnvironment();
-    else if (command === 'approval') await recordApproval(directory, inputs);
+    else if (command === 'authorize') await recordAuthorization(directory, inputs);
     else if (command === 'rescan') {
       const c = await verifyDownloaded(directory, inputs.expectedSHA256);
       await validateSource(extra, c.sourceCommit, c.version);
@@ -336,7 +323,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
         await writeJSON(path.join(directory, 'publication-source-scan.json'), await scanSource(work, final));
         await writeJSON(path.join(directory, 'publication-package-scan.json'), await scanPackage(path.join(directory, c.tgz), final));
       } finally { await runFile('git', ['worktree', 'remove', '--force', work], { cwd: extra }).catch(() => {}); }
-    } else if (command === 'verify') await verifyDownloaded(directory, inputs.expectedSHA256);
+    } else if (command === 'verify') await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
     else if (command === 'npm') await publishNpm(directory, inputs);
     else if (command === 'archive') {
       for (const name of ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']) assert(process.env[name], 'Missing R2 credential: ' + name);

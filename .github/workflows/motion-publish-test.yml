@@ -1,115 +1,46 @@
-name: Motion test release
-run-name: Motion test release · ${{ inputs.version || format('snapshot recovery for run {0}', inputs.candidate_run_id) }}
+name: Motion test publication
+run-name: Motion test publication · ${{ inputs.version }}
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'New test version, e.g. 0.6.4-test.7; build first, publish only after independent acceptance approval'
+        description: 'Exact accepted candidate version, e.g. 0.6.4-test.7; candidate identity is resolved automatically'
         type: string
         required: true
-      source_sha:
-        description: 'Optional reviewed full SHA already integrated into feature/motion; empty freezes its current head'
-        type: string
-        required: false
-        default: ''
+      accepted:
+        description: 'I completed the required acceptance for this exact candidate and authorize public test publication'
+        type: boolean
+        required: true
+        default: false
   workflow_call:
     inputs:
-      candidate_run_id:
-        description: 'Existing candidate run for snapshot-only recovery; never publishes npm or advances a guide'
+      version:
         type: string
+        required: true
+      accepted:
+        type: boolean
+        required: true
+      archive_only:
+        type: boolean
         required: true
 
 permissions:
   contents: read
   actions: read
 
+concurrency:
+  group: motion-test-publication
+  cancel-in-progress: false
+
 env:
-  MOTION_CANDIDATE_RUN: ${{ inputs.candidate_run_id || github.run_id }}
-  MOTION_RELEASE_ACTION: ${{ inputs.candidate_run_id != '' && 'archive-only' || 'publish-test' }}
+  MOTION_VERSION: ${{ inputs.version }}
+  MOTION_ACCEPTED: ${{ inputs.accepted }}
+  MOTION_RELEASE_ACTION: ${{ inputs.archive_only && 'archive-only' || 'publish-test' }}
 
 jobs:
-  candidate:
-    name: Build immutable candidate
-    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main' && inputs.candidate_run_id == ''
-    runs-on: ubuntu-24.04
-    timeout-minutes: 45
-    outputs:
-      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
-    env:
-      MOTION_SOURCE_SHA: ${{ inputs.source_sha }}
-      MOTION_VERSION: ${{ inputs.version }}
-      OPENMOTION_TELEMETRY: '0'
-      HYPERFRAMES_BROWSER_PATH: /usr/bin/chromium
-      HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
-      HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
-    steps:
-      - uses: actions/checkout@v6.0.2
-        with:
-          path: control
-          ref: ${{ github.sha }}
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '26.11.1'
-      - name: Resolve and freeze the integrated source
-        id: source
-        run: |
-          git -C control fetch origin feature/motion:refs/remotes/origin/feature/motion
-          node control/.github/scripts/motion-release.mjs source control
-      - uses: actions/checkout@v6.0.2
-        with:
-          path: source
-          ref: ${{ steps.source.outputs.source_sha }}
-          persist-credentials: false
-      - name: Scan tracked source before dependency installation
-        run: |
-          node control/.github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
-          node control/.github/scripts/motion-scan.mjs source source "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
-      - name: Install rendering test tools
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends zip unzip chromium ffmpeg fonts-noto-core
-      - name: Check the selected source
-        working-directory: source
-        run: |
-          npm ci --no-audit --no-fund
-          npm run check
-          npm run typecheck:studio
-          npm run build:studio
-          npm run build:tracking
-          node --experimental-strip-types --test tests/tracking.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
-          npm run test:studio -- --maxWorkers=2
-          npm run package:phase1
-          archive="$PWD/dist/motion-$(node -p "require('./package.json').version")-phase1.zip"
-          node tests/phase1-package.mjs "$archive" "$RUNNER_TEMP/phase1-e2e"
-      - name: Build the final prod application tgz once and scan both archives
-        env:
-          MOTION_SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
-        run: |
-          node source/scripts/package-npm.mjs "$RUNNER_TEMP/build" "$MOTION_VERSION" --template-env=prod
-          cp "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/build/source-scan.json"
-          node control/.github/scripts/motion-scan.mjs package "$RUNNER_TEMP/build/openmotion-app-$MOTION_VERSION.tgz" "$RUNNER_TEMP/build/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
-          node control/.github/scripts/motion-release.mjs seal "$RUNNER_TEMP/build" "$RUNNER_TEMP/candidate" source
-      - name: Retain the immutable candidate
-        id: artifact
-        uses: actions/upload-artifact@v7.0.2
-        with:
-          name: motion-candidate-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/candidate/
-          retention-days: 30
-          if-no-files-found: error
-      - name: Show download, isolated install and acceptance instructions
-        run: |
-          node --input-type=module <<'JS'
-          import { readFileSync, appendFileSync } from 'node:fs';
-          const c = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/candidate.json'));
-          const run = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Candidate ready for acceptance\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nTGZ SHA256: ${c.tgzSHA256}\n\n[Download motion-candidate-${c.workflow.runId}-${c.workflow.attempt}](${run}#artifacts) and extract it.\n\nApply the isolated host/profile, application home, project data and Skills paths from docs/npm-installation.md, then use this local package (select your actual host):\n\n\`npx --yes --package "./${c.tgz}" openmotion setup --host HOST\`\n\nRepeat the same package and explicit home for prepare. Never accept through the unpublished registry version.\n\nComplete the generated acceptance.md internally, including install, templates, real Agent creation, edit/export and human audio/video playback. The independent reviewer then opens Review deployments, checks this exact candidate and enters only PASS in the approval comment. Do not paste internal links or test material. Reject if acceptance failed. Nothing has been published yet.\n`);
-          JS
-
   verify:
-    needs: candidate
-    if: ${{ always() && !cancelled() && github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main' && (needs.candidate.result == 'success' || (inputs.candidate_run_id != '' && needs.candidate.result == 'skipped')) }}
+    if: github.repository == 'nexu-io/html-anything' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:
@@ -128,9 +59,8 @@ jobs:
         id: download
         env:
           GH_TOKEN: ${{ github.token }}
-          MOTION_CANDIDATE_ARTIFACT_ID: ${{ needs.candidate.outputs.artifact_id }}
         run: node .github/scripts/motion-release.mjs download "$RUNNER_TEMP/candidate"
-      - name: Recheck source, archives and protected publication configuration
+      - name: Recheck the integrated source and both archives
         env:
           GH_TOKEN: ${{ github.token }}
           MOTION_EXPECTED_SHA256: ${{ steps.download.outputs.tgz_sha256 }}
@@ -138,7 +68,6 @@ jobs:
           git fetch origin feature/motion:refs/remotes/origin/feature/motion
           node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node .github/scripts/motion-release.mjs rescan "$RUNNER_TEMP/candidate" "$PWD" "$RUNNER_TEMP/scanner/gitleaks"
-          node .github/scripts/motion-release.mjs environment "$RUNNER_TEMP/candidate"
       - uses: actions/upload-artifact@v7.0.2
         id: artifact
         with:
@@ -146,26 +75,12 @@ jobs:
           path: ${{ runner.temp }}/candidate/
           retention-days: 30
           if-no-files-found: error
-      - name: Show the existing candidate for snapshot recovery approval
-        if: inputs.candidate_run_id != ''
-        run: |
-          node --input-type=module <<'JS'
-          import { readFileSync, appendFileSync } from 'node:fs';
-          const c = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/candidate.json'));
-          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Snapshot recovery requires independent approval\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nTGZ SHA256: ${c.tgzSHA256}\n\nOriginal candidate: https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${c.workflow.runId}\n\nReview the retained identity and existing npm publication, then approve with PASS or reject. Recovery never publishes npm or changes the default guide.\n`);
-          JS
 
   npm:
     if: ${{ always() && !cancelled() && needs.verify.result == 'success' }}
     env:
       MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
     needs: verify
-    concurrency:
-      group: motion-npm-test
-      cancel-in-progress: false
-    environment:
-      name: motion-test-publish
-      url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:
@@ -189,10 +104,10 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ github.run_id }}
           path: ${{ runner.temp }}/candidate
-      - name: Record the independent acceptance approval
+      - name: Record explicit operator acceptance authorization
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node .github/scripts/motion-release.mjs approval "$RUNNER_TEMP/candidate"
+        run: node .github/scripts/motion-release.mjs authorize "$RUNNER_TEMP/candidate"
       - name: Publish the accepted bytes with npm trusted publishing, or verify an identical existing version
         run: node .github/scripts/motion-release.mjs npm "$RUNNER_TEMP/candidate"
       - name: Retain npm publication state even after a partial failure
@@ -203,7 +118,7 @@ jobs:
           name: npm-publication-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/candidate/npm-publication.json
-            ${{ runner.temp }}/candidate/approval.json
+            ${{ runner.temp }}/candidate/authorization.json
           retention-days: 30
           if-no-files-found: warn
 
@@ -283,9 +198,6 @@ jobs:
 
   snapshot:
     if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' && needs.registry-mac.result == 'success' && needs.registry-windows.result == 'success' }}
-    concurrency:
-      group: motion-install-guide-test
-      cancel-in-progress: false
     env:
       MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
       MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN }}
