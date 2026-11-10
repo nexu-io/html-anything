@@ -77,7 +77,13 @@ it("bounds active intent at 32 and uses explicit optimistic cancellation receipt
     expect(() => store.cancel({ ...command, requestId: randomUUID() })).toThrowError(
       expect.objectContaining({ code: "conflict" }),
     );
-    expect(store.create({ ...input, requestId: randomUUID() }, () => {}).state).toBe("queued");
+    const unresolved = store.create({ ...input, requestId: randomUUID() }, () => {});
+    unresolved.state = "interrupted";
+    unresolved.submission = "unknown";
+    store.write(unresolved);
+    expect(() => store.create({ ...input, requestId: randomUUID() }, () => {})).toThrow(
+      "unresolved tasks require reconciliation",
+    );
     expect(store.list({ sessionId: input.sessionId, artifactId: input.artifactId, limit: 16 }).jobs).toHaveLength(16);
   } finally {
     store.close();

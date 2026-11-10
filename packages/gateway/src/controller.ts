@@ -10,6 +10,8 @@ import { providerDescriptor } from "./contract.js";
 import type { Provider } from "./provider.js";
 import { Store } from "./store.js";
 
+class InvalidPNG extends Error {}
+
 /** One serial injected provider controller. Never holds a factory lane during provider I/O. */
 export class Controller {
   readonly store: Store;
@@ -112,8 +114,10 @@ export class Controller {
       } catch (error) {
         const latest = this.store.read(value.id);
         if (latest.state === "cancelling" && latest.submission === "accepted" && !this.stopping) {
+          const cancellation = new AbortController();
+          this.active = { id: latest.id, abort: cancellation };
           try {
-            await this.confirmCancel(latest, new AbortController().signal);
+            await this.confirmCancel(latest, cancellation.signal);
           } catch {
             latest.state = "cancelling";
             latest.error = "Cancellation outcome unconfirmed";
@@ -124,7 +128,7 @@ export class Controller {
           latest.state =
             latest.state === "cancelling" && latest.submission === "accepted"
               ? "cancelling"
-              : error instanceof Fault && error.code === "invalid"
+              : error instanceof InvalidPNG && latest.submission === "accepted"
                 ? "failed"
                 : "interrupted";
           latest.error =
@@ -141,6 +145,7 @@ export class Controller {
     }
   }
   private async confirmCancel(value: Job, signal: AbortSignal) {
+    signal.throwIfAborted();
     if (!value.remoteId) {
       value.state = "interrupted";
       value.error = "Submission unknown; cancellation cannot be confirmed";
@@ -221,8 +226,13 @@ export class Controller {
     throw Error("generation owner stopped");
   }
   private async complete(value: Job, data: Uint8Array) {
-    const bytes = Buffer.from(data),
+    const bytes = Buffer.from(data);
+    let facts: ReturnType<typeof identifyResource>;
+    try {
       facts = identifyResource("assets/candidate.png", "Candidate", bytes);
+    } catch {
+      throw new InvalidPNG("Provider result failed PNG verification");
+    }
     if (facts.type !== "image/png") throw new Fault("invalid", "only PNG generation is supported");
     const use = await this.options.library.acquire(
       {

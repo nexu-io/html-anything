@@ -9,6 +9,7 @@ import { type GenerationInput, type Job, job } from "./contract.js";
 /** Intent/status only; candidate bytes are persistent user content, not another editable project. */
 export class Store {
   private db: DatabaseSync;
+  private closed = false;
   constructor(root: string) {
     const path = join(root, "generations.sqlite");
     try {
@@ -64,7 +65,9 @@ export class Store {
   read(id: string): Job {
     const row = this.db.prepare("SELECT record FROM jobs WHERE id=?").get(id);
     if (!row) throw new Fault("missing", "generation job is missing");
-    return this.decode(row.record);
+    const value = this.decode(row.record);
+    if (value.id !== id) throw new Fault("integrity", "generation row identity mismatch");
+    return value;
   }
   owned(input: { id: string; sessionId: string; artifactId: string }) {
     const value = this.read(input.id);
@@ -115,10 +118,13 @@ export class Store {
     return this.request("generation_create", input, () => {
       available();
       if (
-        this.scan().filter((value) => ["queued", "submitting", "running", "cancelling"].includes(value.state)).length >=
-        32
+        this.scan().filter(
+          (value) =>
+            ["queued", "submitting", "running", "cancelling"].includes(value.state) ||
+            (value.state === "interrupted" && value.submission !== "not-started"),
+        ).length >= 32
       )
-        throw new Fault("invalid", "generation queue is full");
+        throw new Fault("invalid", "generation queue is full; unresolved tasks require reconciliation");
       const now = Date.now(),
         value: Job = {
           ...input,
@@ -133,18 +139,25 @@ export class Store {
       return value;
     });
   }
-  cancel(input: GenerationInput<"generation_cancel">): Job {
-    return this.request("generation_cancel", input, () => {
+  cancel(input: GenerationInput<"generation_cancel">, committed?: (id: string) => void): Job {
+    let changed = false;
+    const result = this.request("generation_cancel", input, () => {
       const value = this.owned(input);
       if (value.version !== input.expectedVersion) throw new Fault("conflict", "generation version changed");
       if (["succeeded", "failed", "cancelled"].includes(value.state))
         throw new Fault("conflict", "generation is already terminal");
       value.state = value.submission === "not-started" ? "cancelled" : "cancelling";
       this.write(value);
+      changed = true;
       return value;
     });
+    if (changed) committed?.(result.id);
+    return result;
   }
   close() {
-    this.db.close();
+    if (!this.closed) {
+      this.db.close();
+      this.closed = true;
+    }
   }
 }

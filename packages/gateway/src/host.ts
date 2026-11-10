@@ -23,8 +23,8 @@ export async function host(factory: Factory, options: { generation: Digest; prov
       return {
         ok: false,
         error: {
-          code: error instanceof Fault ? error.code : "invalid",
-          message: error instanceof Fault ? error.message : "invalid generation operation",
+          code: error instanceof Fault ? error.code : "integrity",
+          message: error instanceof Fault ? error.message : "generation operation could not be confirmed",
         },
       };
     }
@@ -60,8 +60,7 @@ export async function host(factory: Factory, options: { generation: Digest; prov
       generation_list: (input) => reply(() => controller.store.list(parse("generation_list", input))),
       generation_cancel: (input) =>
         reply(() => {
-          const value = controller.store.cancel(parse("generation_cancel", input));
-          controller.cancel(value.id);
+          const value = controller.store.cancel(parse("generation_cancel", input), (id) => controller.cancel(id));
           return value;
         }),
       generation_result: (input) =>

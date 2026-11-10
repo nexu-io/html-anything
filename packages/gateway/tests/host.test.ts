@@ -1,9 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, readFile } from "node:fs/promises";
 import { createServer } from "node:http";
+import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "node:url";
+import { Library } from "@odsuite/blob";
 import { channel, digest, namespace } from "@odsuite/protocol";
 import { managerEndpoint, readDirectory, serve } from "@odsuite/sidecar";
+import { Fault } from "@open-motion/workspace/contract";
 import { expect, it } from "vitest";
 import type { Candidate, GatewayMethods, GenerationInput, Reply } from "@";
 import { readCandidate } from "@";
@@ -33,7 +37,18 @@ function unwrap<T>(value: Reply<T>) {
   if (!value.ok) throw Error(`${value.error.code}: ${value.error.message}`);
   return value.value;
 }
-async function fixture(path?: string, behavior: { lost?: boolean; hold?: boolean; invalid?: boolean } = {}) {
+async function fixture(
+  path?: string,
+  behavior: {
+    lost?: boolean;
+    hold?: boolean;
+    invalid?: boolean;
+    ignoreAbort?: boolean;
+    cancelConfirmed?: boolean;
+    submitFault?: boolean;
+    holdCancel?: boolean;
+  } = {},
+) {
   const managerRoot = path ?? (await root()),
     service = await serve(managerEndpoint(managerRoot), { root: managerRoot });
   const factory = service.factory({ channel: channel("dev"), namespace: namespace("gatewaytest") });
@@ -41,7 +56,10 @@ async function fixture(path?: string, behavior: { lost?: boolean; hold?: boolean
     submits = 0,
     reads = 0,
     cancels = 0,
-    aborted = false;
+    aborted = false,
+    cancelEntered = false,
+    cancelAborted = false,
+    journalBeforeSubmit = false;
   let release = () => {};
   const gate = new Promise<void>((resolve) => {
     release = resolve;
@@ -53,7 +71,7 @@ async function fixture(path?: string, behavior: { lost?: boolean; hold?: boolean
       response.end(JSON.stringify({ remoteId: "accepted-one" }));
     } else if (request.url === "/cancel") {
       cancels++;
-      response.end(JSON.stringify({ confirmed: true }));
+      response.end(JSON.stringify({ confirmed: behavior.cancelConfirmed !== false }));
     } else {
       reads++;
       response.end(
@@ -89,13 +107,30 @@ async function fixture(path?: string, behavior: { lost?: boolean; hold?: boolean
     id: "loopback",
     version: "account-one-v1",
     models: [{ id: "png-v1", label: "PNG fixture" }],
-    submit: async (_input, signal) => request("/submit", signal),
+    submit: async (_input, signal) => {
+      const journal = new DatabaseSync(join(gateway.root, "generations.sqlite"), { readOnly: true });
+      try {
+        const rows = journal
+          .prepare("SELECT record FROM jobs")
+          .all()
+          .map((row) => JSON.parse(String(row.record)));
+        journalBeforeSubmit = rows.some(
+          (row) => row.requestId === _input.requestId && row.state === "submitting" && row.submission === "unknown",
+        );
+        if (!journalBeforeSubmit) throw Error("provider invocation preceded durable intent marker");
+      } finally {
+        journal.close();
+      }
+      const result = await request("/submit", signal);
+      if (behavior.submitFault) throw new Fault("invalid", "Private adapter failure must not prove rejection");
+      return result;
+    },
     read: async (_id, signal) => {
       if (behavior.hold) {
         await new Promise<void>((resolve, reject) => {
           const abort = () => {
             aborted = true;
-            reject(Error("aborted actual fixture read"));
+            if (!behavior.ignoreAbort) reject(Error("aborted actual fixture read"));
           };
           signal.addEventListener("abort", abort, { once: true });
           void gate.then(() => {
@@ -104,10 +139,23 @@ async function fixture(path?: string, behavior: { lost?: boolean; hold?: boolean
           });
         });
       }
-      const value = await request("/read", signal);
+      const value = await request("/read", behavior.ignoreAbort ? new AbortController().signal : signal);
       return { state: "succeeded", bytes: Buffer.from(value.data, "base64") };
     },
-    cancel: async (_id, signal) => request("/cancel", signal),
+    cancel: async (_id, signal) => {
+      const result = await request("/cancel", signal);
+      if (behavior.holdCancel)
+        await new Promise<void>((_resolve, reject) => {
+          cancelEntered = true;
+          const abort = () => {
+            cancelAborted = true;
+            reject(Error("actual held cancellation aborted"));
+          };
+          if (signal.aborted) abort();
+          else signal.addEventListener("abort", abort, { once: true });
+        });
+      return result;
+    },
   };
   const gateway = await host(factory, { generation: digest("gateway"), provider });
   const peer = await factory.connect<GatewayMethods>({ service: "gateway", generation: digest("gateway") });
@@ -132,12 +180,22 @@ async function fixture(path?: string, behavior: { lost?: boolean; hold?: boolean
     get aborted() {
       return aborted;
     },
+    get cancelEntered() {
+      return cancelEntered;
+    },
+    get cancelAborted() {
+      return cancelAborted;
+    },
+    get journalBeforeSubmit() {
+      return journalBeforeSubmit;
+    },
     close: async () => {
       release();
       await service.close();
     },
   };
 }
+
 it("uses actual loopback HTTP, verifies persistent PNG, rejects wrong owner and restores result offline", async () => {
   const f = await fixture(),
     input = intent();
@@ -331,6 +389,91 @@ it("rejects invalid PNG output without marking it successful or adoptable", asyn
     const owner = { sessionId: input.sessionId, artifactId: input.artifactId, id: created.id };
     await expect.poll(async () => unwrap(await f.peer.call("generation_read", owner)).state).toBe("failed");
     expect(await f.peer.call("generation_result", owner)).toMatchObject({ ok: false, error: { code: "conflict" } });
+  } finally {
+    await f.close();
+  }
+}, 20000);
+it("preserves a late verified candidate when confirmed cancellation wins without allowing adoption", async () => {
+  const f = await fixture(undefined, { hold: true, ignoreAbort: true }),
+    input = intent();
+  try {
+    const created = unwrap(await f.peer.call("generation_create", input));
+    const owner = { sessionId: input.sessionId, artifactId: input.artifactId, id: created.id };
+    await expect.poll(async () => unwrap(await f.peer.call("generation_read", owner)).submission).toBe("accepted");
+    const current = unwrap(await f.peer.call("generation_read", owner));
+    unwrap(
+      await f.peer.call("generation_cancel", { ...owner, requestId: randomUUID(), expectedVersion: current.version }),
+    );
+    f.release();
+    await expect.poll(async () => unwrap(await f.peer.call("generation_read", owner)).state).toBe("cancelled");
+    const cancelled = unwrap(await f.peer.call("generation_read", owner));
+    if (!cancelled.candidate) throw Error("late immutable candidate was lost");
+    expect(await readCandidate(f.gateway.root, cancelled.candidate)).toEqual(png);
+    expect(await f.peer.call("generation_result", owner)).toMatchObject({ ok: false, error: { code: "conflict" } });
+    expect(f.submits).toBe(1);
+    expect(f.cancels).toBe(1);
+  } finally {
+    await f.close();
+  }
+}, 20000);
+it("retains unconfirmed cancellation intent on restart instead of resuming generation", async () => {
+  const f = await fixture(undefined, { hold: true, cancelConfirmed: false }),
+    input = intent();
+  let id = "";
+  try {
+    id = unwrap(await f.peer.call("generation_create", input)).id;
+    const owner = { sessionId: input.sessionId, artifactId: input.artifactId, id };
+    await expect.poll(async () => unwrap(await f.peer.call("generation_read", owner)).submission).toBe("accepted");
+    const current = unwrap(await f.peer.call("generation_read", owner));
+    unwrap(
+      await f.peer.call("generation_cancel", { ...owner, requestId: randomUUID(), expectedVersion: current.version }),
+    );
+    await expect.poll(() => f.cancels).toBe(1);
+    expect(unwrap(await f.peer.call("generation_read", owner))).toMatchObject({
+      state: "cancelling",
+      submission: "accepted",
+      remoteId: "accepted-one",
+    });
+  } finally {
+    await f.close();
+  }
+  const cold = await fixture(f.managerRoot);
+  try {
+    const owner = { sessionId: input.sessionId, artifactId: input.artifactId, id };
+    await expect.poll(async () => unwrap(await cold.peer.call("generation_read", owner)).state).toBe("cancelled");
+    expect(cold.cancels).toBe(1);
+    expect(cold.submits).toBe(0);
+    expect(cold.reads).toBe(0);
+  } finally {
+    await cold.close();
+  }
+}, 20000);
+it("collects temporary Blob content while immutable PNG candidate remains readable", async () => {
+  const f = await fixture(),
+    input = intent();
+  let library: Library | undefined;
+  try {
+    const created = unwrap(await f.peer.call("generation_create", input));
+    const owner = { sessionId: input.sessionId, artifactId: input.artifactId, id: created.id };
+    await expect.poll(async () => unwrap(await f.peer.call("generation_read", owner)).state).toBe("succeeded");
+    const result = unwrap(await f.peer.call("generation_result", owner));
+    await f.gateway.quiesce();
+    await f.gateway.close();
+    await f.factory.expose({
+      identity: { service: "collectorfixture", generation: digest("collectorfixture") },
+      handlers: {},
+      lifecycle: {
+        initialize: async (context) => {
+          library = await Library.open({ factory: f.factory, context, name: "gatewayblob", retentionMs: 0 });
+        },
+        stop: async () => {
+          await library?.close();
+        },
+      },
+    });
+    if (!library) throw Error("missing actual hosted library");
+    expect(await library.collect()).toHaveLength(1);
+    expect(await readCandidate(f.gateway.root, result.candidate)).toEqual(png);
   } finally {
     await f.close();
   }
