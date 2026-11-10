@@ -1,0 +1,95 @@
+{
+  "scope": "Browser dependencies used by this composition, with their original licenses.",
+  "files": [
+    {
+      "file": "gsap-3.14.2/dist/gsap.min.js",
+      "url": "https://registry.npmjs.org/gsap/-/gsap-3.14.2.tgz#dist/gsap.min.js",
+      "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+      "bytes": 72779,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "gsap-3.14.2/README.md",
+      "url": "https://registry.npmjs.org/gsap/-/gsap-3.14.2.tgz#README.md",
+      "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0",
+      "bytes": 6199,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "fonts/libre-baskerville-f5bc4341f15d.ttf",
+      "url": "https://fonts.gstatic.com/s/librebaskerville/v24/kmKUZrc3Hgbbcjq75U4uslyuy4kn0olVQ-LglH6T17uj8Q4SCQ.ttf",
+      "sha256": "f5bc4341f15de5e877d8d95b6b14b33e9a3da1f8fef4ed0700ed407f096cffb6",
+      "bytes": 106728,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/libre-baskerville-8b008ffdae31.ttf",
+      "url": "https://fonts.gstatic.com/s/librebaskerville/v24/kmKUZrc3Hgbbcjq75U4uslyuy4kn0olVQ-LglH6T17ujFgkSCQ.ttf",
+      "sha256": "8b008ffdae31b314657cb8e28d822da09893035d06bad9b1ab53ea762549cbd1",
+      "bytes": 106752,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/libre-baskerville.css",
+      "url": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=block",
+      "sha256": "6a8c1130c87fa46e9f2cf0d6afe5a1f92d40813c346ad2127ba753f09bbc9b6e",
+      "bytes": 366,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/libre-baskerville-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/librebaskerville/OFL.txt",
+      "sha256": "3624eddd4c8f8a908130a417ae7cd089c9da69899c4e0ca1a5217d0a6fae16fd",
+      "bytes": 4542,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/libre-franklin-04f71a680a40.ttf",
+      "url": "https://fonts.gstatic.com/s/librefranklin/v20/jizOREVItHgc8qDIbSTKq4XkRg8T88bjFuXOnduh8MKUBw.ttf",
+      "sha256": "04f71a680a400bb36a367d4347b243bb23867288c21e11705aa766968939fb96",
+      "bytes": 106412,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/libre-franklin-b03fb188d888.ttf",
+      "url": "https://fonts.gstatic.com/s/librefranklin/v20/jizOREVItHgc8qDIbSTKq4XkRg8T88bjFuXOnduhLsWUBw.ttf",
+      "sha256": "b03fb188d88811436d8b7d7b2b4964921a2c4416f0c042c7ecdb443dcd6e999d",
+      "bytes": 106428,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/libre-franklin-fa16f76d2aff.ttf",
+      "url": "https://fonts.gstatic.com/s/librefranklin/v20/jizOREVItHgc8qDIbSTKq4XkRg8T88bjFuXOnduhcMWUBw.ttf",
+      "sha256": "fa16f76d2affcb19286661cd13e58ae092eb8de8ec8638103371e7e37dd285db",
+      "bytes": 106392,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/libre-franklin.css",
+      "url": "https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600&display=block",
+      "sha256": "53c1c2adc60ce580413fc701491e18a563b82b501f6a91393796b34bf9b49122",
+      "bytes": 531,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/libre-franklin-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/librefranklin/OFL.txt",
+      "sha256": "2710268527181a27b8e938617551bae29e714e6525247be6679bf897a9942a60",
+      "bytes": 4495,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "gsap-3.14.2/LICENSE.txt",
+      "url": "https://gsap.com/community/standard-license/",
+      "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b",
+      "bytes": 5494,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "fonts/libre.css",
+      "sha256": "805d83c653033ebf4e494147bd98cb84ef9de817dc8b4bc7f5eedee9ffe987d0",
+      "bytes": 77,
+      "origin": "OpenMotion stylesheet combining two bundled font families"
+    }
+  ]
+}

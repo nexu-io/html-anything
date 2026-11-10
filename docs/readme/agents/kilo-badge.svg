@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144" height="34" viewBox="0 0 144 34">
+  <title>Kilo</title>
+  <rect x=".5" y=".5" width="143" height="33" rx="7" fill="#f6f8fa" stroke="#d1d9e0"/>
+  <image x="12" y="6" width="22" height="22" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9IiMxYzFiMWEiIGZpbGwtcnVsZT0iZXZlbm9kZCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMCAwdjI0aDI0VjB6bTIyLjIyMiAyMi4yMjJIMS43NzhWMS43NzhoMjAuNDQ0em0tNy41NTUtNC45NjRoMi4yMjJ2MS43NzhoLTIuNzk0TDEyLjg5IDE3Ljgzdi0yLjc5NGgxLjc3OHYyLjIyMnptNCAwaC0xLjc3OHYtMi4yMjJoLTIuMjIydi0xLjc3OGgyLjc5M2wxLjIwNyAxLjIwN3ptLTcuNTU2LTIuNTkxSDkuMzMzdi0xLjc3OGgxLjc3OHptLTUuNzc4LTEuNzc4aDEuNzc4djRoNHYxLjc3OEg2LjU0TDUuMzMzIDE3LjQ2di00LjU3em0xMy4zMzQtMy41NTZ2MS43NzhoLTUuNzc4VjkuMzMzaDEuOTg3VjcuMTExaC0xLjk4N1Y1LjMzM2gyLjU1OGwxLjIwNiAxLjIwN3YyLjc5M3ptLTExLjU1Ni0yaDIuMjIybDEuNzc4IDEuNzc4djJIOS4zMzN2LTJINy4xMTF2Mkg1LjMzM1Y1LjMzM2gxLjc3OHptNCAwSDkuMzMzdi0yaDEuNzc4eiIvPjwvc3ZnPg=="/>
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <text x="40" y="22" font-weight="600" font-size="13" fill="#24292f">Kilo</text>
+  </g>
+</svg>

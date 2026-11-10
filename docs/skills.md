@@ -1,5 +1,13 @@
 # Skill 路由与 MCP 调用契约
 
+## 可选社区资源
+
+[`library/`](../library/README.zh-CN.md) 收纳可选创作 Skills、模板索引、组件配方、`MOTION_DESIGN.md` 设计体系与 Brandkits。首个 [`brandkit`](../library/skills/brandkit/SKILL.md) 只整理品牌上下文，可用 `npx skills add ./library/skills --skill brandkit` 单独安装。它不进入以下五个核心制作入口、不自动注册为 MCP resource，也不改变制作意图路由。资源需要由用户或 Agent 明确选择与提供；新增条目遵循[贡献清单](../library/ENTRY_TEMPLATE.md)。
+
+新增可选 [`motion-design-remix`](../library/skills/motion-design-remix/SKILL.md)，提供六个固定源码 profile 的 Motion Design 说明、替换 preset、独立工程生成脚本和同步对比。它是 Library 内容，不自动注册到 MCP，也不改变五个核心制作入口。与普通 Brandkit 可分别选择安装；脚本只进行指定源码替换，不解释 Markdown 或重建任意视频。
+
+可选 [`presenter-story`](../library/skills/presenter-story/SKILL.md) 提供三份真人口播 / Motion 设计配方：知识清单、工作流演示、产品讲解。它要求用自己的录制和实际语音时间码编排字幕、画中画与动效；展示媒体为目录里的上游原片及改编，不是新 Skill 的成片验收。它不包含人物素材或可执行模板，仍复用现有制作路线。
+
 2026-11-06：五个入口统一为 motion- 前缀，视频转模板纳入一期插件、四宿主薄适配器与 MCP Resources。同时融合已评审的通用工程入口方案，保留原制作实现和导演质量参考；同时保留 main PR #28 的实际复刻流程、独立参考和测量脚本。历史多轮实验记录见下文，其证据不自动覆盖本次命名与分发变更。
 
 ## Director v1.5.5 integration
