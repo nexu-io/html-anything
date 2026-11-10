@@ -1,18 +1,21 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 /**
  * AssetCard and FontRow — visual asset tile / row components for the Assets panel.
  * Extracted from AssetsTab.tsx to keep that file under the 600-line CI gate.
  */
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Tooltip } from "../ui/Tooltip";
 import { VideoFrameThumbnail } from "../ui/VideoFrameThumbnail";
 import { VIDEO_EXT, IMAGE_EXT } from "../../utils/mediaTypes";
 import { TIMELINE_ASSET_MIME } from "../../utils/timelineAssetDrop";
 import { ContextMenu } from "./AssetContextMenu";
+import { InlineAssetRename } from "./InlineAssetRename";
 import { usePlayerStore } from "../../player/store/playerStore";
 import { timelineClipFocusId } from "../../player/components/timelineNavigationIdentity";
 import { useAssetPreviewStore } from "../../utils/assetPreviewStore";
 import { findClipForAsset, isPointerClick } from "../../utils/assetClickBehavior";
-import { basename, ext, truncateMiddle, formatDuration, type CopyFeedback } from "./assetHelpers";
+import { basename, ext, formatDuration, type CopyFeedback } from "./assetHelpers";
 import { resolveMediaPreviewUrl } from "../../player/components/thumbnailUtils";
 
 /** Drag payload writer shared by the asset tile and the font row: copy effect
@@ -116,7 +119,7 @@ export interface AssetCardProps {
 }
 
 /**
- * Thumbnail card for images and video assets. Renders in a 2-col grid.
+ * Thumbnail card for images and video assets in the responsive media grid.
  *
  * Click behaviour (CapCut-style):
  *   - Already added  → selects the clip on the timeline (setSelectedElementId).
@@ -139,6 +142,7 @@ export function AssetCard({
   const { t } = useI18n();
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
   const [hovered, setHovered] = useState(false);
+  const [renaming, setRenaming] = useState(false);
   const [imgError, setImgError] = useState(false);
   const isCopied = copyFeedback?.path === asset && copyFeedback.ok;
   const fullName = asset.split("/").pop() ?? asset;
@@ -226,12 +230,12 @@ export function AssetCard({
         onContextMenu={(e) => openAssetContextMenu(e, setContextMenu)}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
-        className={`flex flex-col gap-1 cursor-pointer rounded-md p-1 transition-colors outline-hidden focus-visible:bg-neutral-800/60 ${
-          isCopied ? "bg-studio-accent/10" : "hover:bg-neutral-800/40"
+        className={`cursor-pointer rounded-md overflow-hidden bg-neutral-900 transition-colors outline-hidden focus-visible:bg-neutral-800/60 ${
+          isCopied ? "bg-studio-accent/10" : "hover:bg-neutral-800"
         }`}
       >
         {/* Thumbnail */}
-        <div className="w-full aspect-video rounded-sm overflow-hidden bg-neutral-900 relative">
+        <div className="w-full aspect-video overflow-hidden bg-neutral-900 relative">
           {isImage && !imgError && (
             <img
               src={serveUrl}
@@ -276,18 +280,15 @@ export function AssetCard({
           )}
         </div>
 
-        {/* Filename caption */}
-        <div className="flex items-center justify-center gap-1">
-          <span
-            className={`text-[10px] leading-tight text-center ${
-              used ? "text-panel-text-2" : "text-panel-text-4"
-            }`}
-            title={fullName}
-          >
-            {truncateMiddle(fullName, 22)}
-          </span>
+        {/* Match catalog caption spacing and typography; keep actions beside the name. */}
+        <div className="flex items-center gap-1 px-1.5 py-1.5">
+          {renaming && onRename ? <InlineAssetRename asset={asset} onRename={onRename} onDone={() => setRenaming(false)} /> : <Tooltip label={fullName} lines={3}>
+            <span className="min-w-0 flex-1 text-[10px] font-medium text-neutral-200 truncate leading-tight text-left">
+              {fullName}
+            </span>
+          </Tooltip>}
           <CopyChip feedback={copyFeedback} asset={asset} />
-          <button type="button" className="motion-asset-menu-button" aria-label={t("Actions for {value0}", { value0: fullName })} aria-haspopup="menu" onPointerDown={e => e.stopPropagation()} onPointerUp={e => e.stopPropagation()} onClick={e => { e.stopPropagation(); const rect = e.currentTarget.getBoundingClientRect(); setContextMenu({ x: rect.left, y: rect.bottom }); }}>…</button>
+          <button type="button" className="motion-asset-menu-button" aria-label={t("Actions for {value0}", { value0: fullName })} aria-haspopup="menu" onPointerDown={e => e.stopPropagation()} onPointerUp={e => e.stopPropagation()} onClick={e => { e.stopPropagation(); const rect = e.currentTarget.getBoundingClientRect(); setContextMenu({ x: rect.left, y: rect.bottom }); }}><RemixIcon name="more-line" size={16} /></button>
         </div>
       </div>
 
@@ -300,6 +301,7 @@ export function AssetCard({
           onCopy={onCopy}
           onDelete={onDelete}
           onRename={onRename}
+          onStartRename={() => setRenaming(true)}
           onAddAtPlayhead={onAddAssetToTimeline}
           onPreview={path => setPreviewAsset(path, projectId)}
           downloadUrl={serveUrl}

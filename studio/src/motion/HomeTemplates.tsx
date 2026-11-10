@@ -5,6 +5,7 @@ import { useI18n } from '../i18n/I18n';
 import { MotionIcon } from './icons';
 import { motionApi } from './useWorkspace';
 import { useWorkspaceChrome } from './WorkspaceFrame';
+import { trackMotion } from './tracking';
 
 const categories = [
   ['builtin', 'Ready to edit'], ['featured', 'Featured references'], ['ads', 'Product promos'],
@@ -45,7 +46,10 @@ export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTempl
     const timer = setInterval(() => {
       if (document.visibilityState === 'hidden') return;
       void motionApi<TemplatePage>('/template-catalog?limit=1', { signal: controller.signal }).then(next => {
+        if (controller.signal.aborted) return;
         if (next.catalogVersion !== page.catalogVersion) { setOffset(0); setPage(null); retry(value => value + 1); }
+        else setPage(previous => previous && previous.catalogVersion === next.catalogVersion && previous.warning !== next.warning
+          ? { ...previous, warning: next.warning } : previous);
       }).catch(() => {});
     }, 5_000);
     return () => { clearInterval(timer); controller.abort(); };
@@ -63,17 +67,23 @@ export function HomeTemplates({ onSelect }: { onSelect?: (template: GalleryTempl
   }
   async function copy(template: GalleryTemplate) {
     setFeedback(''); setManualCopy('');
+    void trackMotion('ui_click', { page_name: 'studio', area: 'templates', element: 'copy_template' });
     try {
       const connection = info ?? await motionApi<IntegrationInfo>('/integration');
       setInfo(connection);
       const prompt = templatePrompt(connection, host, template);
       try {
         await navigator.clipboard.writeText(prompt);
+        void trackMotion('template_instruction_copy_result', { host_product: host, copy_status: 'clipboard_written' });
         setFeedback(t('Copied. Send it to {agent} to recreate this template.', { agent: hostNames[host] }));
       } catch {
+        void trackMotion('template_instruction_copy_result', { host_product: host, copy_status: 'manual_fallback_shown' });
         setManualCopy(prompt); setFeedback(t('Copy the instruction below and send it to your Agent.'));
       }
-    } catch (err) { setFeedback((err as Error).message); }
+    } catch (err) {
+      void trackMotion('template_instruction_copy_result', { host_product: host, copy_status: 'failed' });
+      setFeedback((err as Error).message);
+    }
   }
   function action(template: GalleryTemplate) {
     if (onSelect) { if (!switchingDisabled) { setPreview(null); onSelect(template); } return; }

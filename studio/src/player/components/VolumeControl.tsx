@@ -1,3 +1,4 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { memo } from "react";
 import { Tooltip } from "../../components/ui";
@@ -14,30 +15,7 @@ interface VolumeControlProps {
 function VolumeIcon({ muted, volume }: { muted: boolean; volume: number }) {
   const silent = muted || volume === 0;
   return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M11 5 6 9H3v6h3l5 4V5Z" />
-      {silent ? (
-        <>
-          <path d="m19 9-6 6" />
-          <path d="m13 9 6 6" />
-        </>
-      ) : (
-        <>
-          <path d="M15.5 8.5a5 5 0 0 1 0 7" />
-          {volume >= 0.5 ? <path d="M18.5 5.5a9 9 0 0 1 0 13" /> : null}
-        </>
-      )}
-    </svg>
+    <RemixIcon name={silent ? "volume-mute-line" : volume >= 0.5 ? "volume-up-line" : "volume-down-line"} size={16} />
   );
 }
 
@@ -55,7 +33,7 @@ export const VolumeControl = memo(function VolumeControl({
 
   return (
     <div className="group flex shrink-0 items-center">
-      <div className="w-0 overflow-hidden opacity-0 transition-[width,opacity] duration-150 ease-out group-hover:w-14 group-hover:opacity-100 group-focus-within:w-14 group-focus-within:opacity-100">
+      <div className="w-0 overflow-hidden opacity-0 transition-[width,opacity] duration-150 ease-out group-hover:w-14 group-hover:opacity-100 group-has-[:focus-visible]:w-14 group-has-[:focus-visible]:opacity-100 group-has-[input:active]:w-14 group-has-[input:active]:opacity-100">
         <div className="relative mx-1 flex h-6 w-12 items-center">
           <div className="absolute inset-x-0 h-0.5 overflow-hidden rounded-full bg-neutral-700">
             <div

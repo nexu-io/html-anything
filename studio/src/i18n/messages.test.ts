@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dictionaries, languages, translate } from './messages';
+import { dictionaries, languages, translate, mvpMessages, isKnownMessage } from './messages';
 
 describe('editor language resources', () => {
   it('offers the eleven requested languages and a complete vocabulary in each dictionary', () => {
@@ -42,4 +42,20 @@ describe('editor language resources', () => {
       expect(translate(locale, '模板缓存不可用，重新下载')).toBe(translate(locale, 'Template cache unavailable; downloading again'));
     }
   });
+});
+
+// The audit adds Chinese/English messages without claiming new translations for
+// the other nine locales; their existing shared vocabulary must stay complete.
+it('keeps MVP additions separate, interpolated and safe to fall back to English', () => {
+  for (const [source, translated] of Object.entries(mvpMessages['zh-CN']!)) {
+    expect(dictionaries['zh-CN'][source]).toBeUndefined();
+    expect(isKnownMessage(source)).toBe(true);
+    expect(typeof translated).toBe('string');
+    const values = Object.fromEntries([...source.matchAll(/\{(\w+)\}/g)].map(match => [match[1], 'sample']));
+    expect(translate('zh-CN', source, values)).not.toMatch(/\{\w+\}/);
+    expect(translate('zh-CN', source, values)).not.toBe(source);
+    for (const { locale } of languages.filter(language => language.locale !== 'zh-CN')) {
+      expect(translate(locale, source, values)).toBe(translate('en', source, values));
+    }
+  }
 });

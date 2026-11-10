@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n/I18n";
 import { usePlayerStore, type TimelineElement } from "../store/playerStore";
 import { keyHint } from "./studioShortcuts";
 import { useTimelineEditContextOptional } from "../../contexts/TimelineEditContext";
@@ -126,6 +127,7 @@ export function ClipMenuLinkItems({
   element: TimelineElement;
   onClose: () => void;
 }) {
+  const { t } = useI18n();
   const { onLinkEdit, onDeleteElementOnly } = useTimelineEditContextOptional();
   const elements = usePlayerStore((s) => s.elements);
   const selectedKeys = usePlayerStore((s) => s.selectedElementIds);
@@ -145,7 +147,7 @@ export function ClipMenuLinkItems({
           type="button"
           role="menuitem"
           disabled={item.disabledReason !== undefined}
-          title={item.disabledReason}
+          title={item.disabledReason ? t(item.disabledReason) : undefined}
           className={`w-full flex items-center justify-between px-3 py-1.5 text-xs text-left outline-hidden ${
             item.disabledReason !== undefined
               ? "text-neutral-600 cursor-not-allowed"
@@ -156,7 +158,7 @@ export function ClipMenuLinkItems({
             onClose();
           }}
         >
-          <span>{item.label}</span>
+          <span>{t(item.label)}</span>
           {item.shortcut && (
             <span className="text-neutral-500 text-[10px] ml-3">{item.shortcut}</span>
           )}

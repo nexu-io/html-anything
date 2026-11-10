@@ -1,3 +1,5 @@
+import { HF_COLOR_GRADING_PRESETS } from "@hyperframes/core/color-grading";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { scopedElementKey } from "../../hooks/gsapKeyframeCacheHelpers";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -133,6 +135,7 @@ export function PropertyPanelFlat({
   ...forwardedProps
 }: PropertyPanelFlatProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   // PropertyPanel keys this component by selection, so the default is per element.
   const [openGroupId, setOpenGroupId] = useState<string>(() =>
     isTextEditableSelection(element)
@@ -345,7 +348,7 @@ export function PropertyPanelFlat({
     groups.push({
       id: "style",
       title: "Style",
-      summary: `fill ${styles["background-image"] && styles["background-image"] !== "none" ? "image/gradient" : styles["background-color"] ? "set" : "none"} · ${opacityPct}%`,
+      summary: t("Fill: {fill} · {opacity}%", { fill: t(styles["background-image"] && styles["background-image"] !== "none" ? "Image/gradient" : styles["background-color"] ? "Solid" : "None"), opacity: opacityPct }),
       content: (
         <FlatStyleSection
           projectId={projectId}
@@ -403,7 +406,7 @@ export function PropertyPanelFlat({
       ),
     });
   }
-  if (showMotionGroup) {
+  if (!mvp && showMotionGroup) {
     groups.push({
       id: "motion",
       ...motionSectionLabel({
@@ -427,12 +430,12 @@ export function PropertyPanelFlat({
       ),
     });
   }
-  if (sections.colorGrading) {
+  if (!mvp && sections.colorGrading) {
     groups.push({
       id: "grade",
       title: "Grade",
       accessory: <FlatColorGradingAccessory state={colorGradingController} />,
-      summary: `${colorGradingController.grading.preset ?? "neutral"} · ${Math.round(colorGradingController.grading.intensity * 100)}%`,
+      summary: `${t(HF_COLOR_GRADING_PRESETS.find(preset => preset.id === colorGradingController.grading.preset)?.label ?? "Neutral")} · ${Math.round(colorGradingController.grading.intensity * 100)}%`,
       content: (
         <FlatColorGradingSection
           grading={colorGradingController.grading}
@@ -461,7 +464,7 @@ export function PropertyPanelFlat({
       id: "effects",
       title: "Effects",
       accessory: <FlatEffectsAccessory {...effectsProps} />,
-      summary: activeEffects ? `${activeEffects} active` : "none",
+      summary: activeEffects ? t("{count} active effects", { count: activeEffects }) : t("None"),
       content: (
         <FlatEffectsSection
           {...effectsProps}
@@ -477,7 +480,7 @@ export function PropertyPanelFlat({
       groups.push({
         id: "overlays",
         title: "Overlays",
-        summary: "add layer",
+        summary: t("Add layer"),
         content: (
           <FlatOverlaysSection
             onAddOverlay={(blockName) =>
@@ -495,7 +498,7 @@ export function PropertyPanelFlat({
     groups.push({
       id: "audio-fx",
       title: "Audio FX",
-      summary: audioFxSummary(element, audioGroupLabel),
+      summary: audioFxSummary(element, audioGroupLabel, t),
       content: (
         <AudioFxGroup
           element={element}
@@ -510,7 +513,7 @@ export function PropertyPanelFlat({
     groups.push({
       id: "media",
       title: "Media",
-      summary: element.tagName,
+      summary: t(element.tagName === "img" ? "Image" : element.tagName === "video" ? "Video" : "Audio"),
       content: (
         <FlatMediaSection
           {...forwardedProps}
@@ -535,26 +538,39 @@ export function PropertyPanelFlat({
   return (
     <DesignPanelInputProvider ui="flat">
       <div className="flex h-full min-h-0 flex-col overflow-hidden bg-panel-bg text-panel-text-1">
-        <DesignPanelInputProvider section="header">
-          <PropertyPanelFlatHeader
-            name={element.label}
-            meta={`${sourceLabel} · ${element.tagName}`}
-            elementKind={elementKind}
-            hidden={hiddenNow}
-            asMute={audioSelection}
-            onToggleHidden={toggleHidden}
-            copied={clipboardCopied}
-            onCopy={onCopyElementInfo}
-            onClear={onClearSelection}
-            onUngroup={onUngroup}
-            showUngroup={Boolean(onUngroup && element.dataAttributes["hf-group"] != null)}
-          />
-        </DesignPanelInputProvider>
+        {!mvp && (
+          <DesignPanelInputProvider section="header">
+            <PropertyPanelFlatHeader
+              name={element.label}
+              meta={`${sourceLabel} · ${element.tagName}`}
+              elementKind={elementKind}
+              hidden={hiddenNow}
+              asMute={audioSelection}
+              onToggleHidden={toggleHidden}
+              copied={clipboardCopied}
+              onCopy={onCopyElementInfo}
+              onClear={onClearSelection}
+              onUngroup={onUngroup}
+              showUngroup={Boolean(onUngroup && element.dataAttributes["hf-group"] != null)}
+            />
+          </DesignPanelInputProvider>
+        )}
         <div
           ref={panelBodyRef}
           data-flat-panel-body="true"
           className="flex min-h-0 flex-1 flex-col overflow-y-auto"
         >
+          {mvp ? groups.map((group) => (
+            <DesignPanelInputProvider key={group.id} section={slugifyDesignInput(group.title)}>
+              <section data-flat-group-open="true" className="shrink-0 border-b border-panel-hairline">
+                <div className="flex items-center justify-between px-4 py-3">
+                  <h3 className="text-[12px] font-semibold text-panel-text-0">{t(group.title)}</h3>
+                  {group.accessory}
+                </div>
+                <div className="px-4 pb-4">{group.content}</div>
+              </section>
+            </DesignPanelInputProvider>
+          )) : <>
           {beforeOpen.map(renderClosedGroup)}
           {openGroup && (
             <DesignPanelInputProvider section={slugifyDesignInput(openGroup.title)}>
@@ -567,7 +583,7 @@ export function PropertyPanelFlat({
                   animateEntrance={justToggledIds.includes(openGroup.id)}
                 />
                 <div
-                  className={`${justToggledIds.includes(openGroup.id) ? "hf-flat-group-enter " : ""}min-h-0 flex-1 overflow-y-auto border-b border-panel-hairline bg-panel-bg-inset px-4 py-3 shadow-[inset_0_2px_4px_-1px_rgba(0,0,0,0.5)]`}
+                  className={`${justToggledIds.includes(openGroup.id) ? "hf-flat-group-enter " : ""}min-h-0 flex-1 overflow-y-auto border-b border-panel-hairline px-4 py-3 ${mvp ? "bg-panel-bg" : "bg-panel-bg-inset shadow-[inset_0_2px_4px_-1px_rgba(0,0,0,0.5)]"}`}
                 >
                   {openGroup.content}
                 </div>
@@ -575,6 +591,7 @@ export function PropertyPanelFlat({
             </DesignPanelInputProvider>
           )}
           {afterOpen.map(renderClosedGroup)}
+          </>}
         </div>
         <DesignPanelInputProvider section="footer">
           <PropertyPanelFlatFooter

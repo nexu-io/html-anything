@@ -134,7 +134,7 @@ test('production stdio connections use one authority and keep project identity',
     await new Promise<void>(resolve => fake.listen(0, '127.0.0.1', resolve));
     try {
       await writeFile(path.join(directory, '.editor-runtime/runtime.json'), JSON.stringify({ ...registry, endpoint: `http://127.0.0.1:${(fake.address() as any).port}/` }));
-      await assert.rejects(ensureEditor(directory), /不兼容/);
+      await assert.rejects(ensureEditor(directory), { code: 'EDITOR_RUNTIME_INCOMPATIBLE' });
       assert.equal((await readFile(path.join(directory, '.editor-runtime/starts.jsonl'), 'utf8')).trim().split('\n').length, 2);
     } finally {
       await writeFile(path.join(directory, '.editor-runtime/runtime.json'), JSON.stringify(registry));

@@ -1,3 +1,5 @@
+import { RemixIcon } from "../../icons/RemixIcons";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useRef, useEffect, memo } from "react";
 import gsap from "gsap";
@@ -85,22 +87,7 @@ const LoopButton = memo(function LoopButton({
         aria-label={loopEnabled ? t("Disable loop playback") : t("Enable loop playback")}
         aria-pressed={loopEnabled}
       >
-        <svg
-          width="13"
-          height="13"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M17 2l4 4-4 4" />
-          <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-          <path d="M7 22l-4-4 4-4" />
-          <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-        </svg>
+        <RemixIcon name="repeat-line" size={16} />
       </button>
     </Tooltip>
   );
@@ -128,33 +115,7 @@ const FullscreenButton = memo(function FullscreenButton({
         }`}
         aria-label={isFullscreen ? t("Exit fullscreen") : t("Enter fullscreen")}
       >
-        <svg
-          width="13"
-          height="13"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          {isFullscreen ? (
-            <>
-              <path d="M8 3v3a2 2 0 0 1-2 2H3" />
-              <path d="M21 8h-3a2 2 0 0 1-2-2V3" />
-              <path d="M3 16h3a2 2 0 0 1 2 2v3" />
-              <path d="M16 21v-3a2 2 0 0 1 2-2h3" />
-            </>
-          ) : (
-            <>
-              <path d="M8 3H5a2 2 0 0 0-2 2v3" />
-              <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
-              <path d="M3 16v3a2 2 0 0 0 2 2h3" />
-              <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
-            </>
-          )}
-        </svg>
+        <RemixIcon name={isFullscreen ? "fullscreen-exit-line" : "fullscreen-line"} size={16} />
       </button>
     </Tooltip>
   );
@@ -182,6 +143,7 @@ export const PlayerControls = memo(function PlayerControls({
   onToggleFullscreen,
   shortcutSections,
 }: PlayerControlsProps) {
+  const mvp = useMvpEditor();
   const { t } = useI18n();
   const isPlaying = usePlayerStore((s) => s.isPlaying);
   const duration = usePlayerStore((s) => s.duration);
@@ -194,7 +156,8 @@ export const PlayerControls = memo(function PlayerControls({
   const setAudioMuted = usePlayerStore.getState().setAudioMuted;
   const setAudioVolume = usePlayerStore.getState().setAudioVolume;
   const setLoopEnabled = usePlayerStore.getState().setLoopEnabled;
-  const timeDisplayMode = usePlayerStore((s) => s.timeDisplayMode);
+  const storedTimeDisplayMode = usePlayerStore((s) => s.timeDisplayMode);
+  const timeDisplayMode = mvp ? "time" : storedTimeDisplayMode;
   const setTimeDisplayMode = usePlayerStore.getState().setTimeDisplayMode;
 
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
@@ -230,7 +193,7 @@ export const PlayerControls = memo(function PlayerControls({
   });
 
   return (
-    <div className="relative z-20">
+    <div className="motion-player-controls relative z-20">
       <PreviewSeekBar duration={duration} disabled={controlsDisabled} onSeek={onSeek} />
       <div
         className="grid h-7 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-3"
@@ -239,7 +202,9 @@ export const PlayerControls = memo(function PlayerControls({
           paddingBottom: "env(safe-area-inset-bottom)",
         }}
       >
-        <Tooltip
+        {mvp ? <span className="min-w-0 justify-self-start whitespace-nowrap font-mono text-[11px] tabular-nums text-neutral-400">
+          <span ref={timeDisplayRef}>{formatTime(0)}</span><span className="mx-0.5">/</span><span>{formatTime(duration)}</span>
+        </span> : <Tooltip
           label={timeDisplayMode === "time" ? t("Switch to frame display") : t("Switch to time display")}
         >
           <button
@@ -256,7 +221,7 @@ export const PlayerControls = memo(function PlayerControls({
               </>
             ) : null}
           </button>
-        </Tooltip>
+        </Tooltip>}
 
         <Tooltip label={isPlaying ? t("Pause") : t("Play")}>
           <button
@@ -270,7 +235,7 @@ export const PlayerControls = memo(function PlayerControls({
             disabled={controlsDisabled}
             className="flex h-7 w-8 items-center justify-center justify-self-center rounded-md text-neutral-100 transition-colors hover:text-white disabled:pointer-events-none disabled:opacity-30"
           >
-            <PlayPauseMorphIcon playing={isPlaying} />
+            {mvp ? <RemixIcon name={isPlaying ? "pause-fill" : "play-fill"} size={20} /> : <PlayPauseMorphIcon playing={isPlaying} />}
           </button>
         </Tooltip>
 
@@ -295,7 +260,7 @@ export const PlayerControls = memo(function PlayerControls({
           {onToggleFullscreen && (
             <FullscreenButton isFullscreen={isFullscreen} onToggleFullscreen={onToggleFullscreen} />
           )}
-          <ShortcutsButton disabled={disabled} onSeek={onSeek} sections={shortcutSections} />
+          {!mvp && <ShortcutsButton disabled={disabled} onSeek={onSeek} sections={shortcutSections} />}
         </div>
       </div>
     </div>

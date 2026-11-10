@@ -6,7 +6,7 @@
  * in-memory dispatch. Emits `sdk_resolver_shadow` on any divergence.
  *
  * Headline signal: `element_not_found` — the resolver divergence class that
- * caused the missing-element resolver regression. The writer-parity suite (#1533) cannot see
+ * caused the v0.6.110 regression. The writer-parity suite (#1533) cannot see
  * this class; this tripwire exists specifically to catch it.
  *
  * Decoupled from `STUDIO_SDK_CUTOVER_ENABLED`. Gated by its own flag
@@ -195,7 +195,7 @@ export function sdkResolverShadowCheck(
     // composition <script> creates at runtime (e.g. caption word/group spans),
     // which the SDK session cannot model by design. That is NOT a resolver bug,
     // so suppress it. An hf-id PRESENT in source but missing from the session IS
-    // a genuine resolver divergence (the missing-element class) — keep emitting that.
+    // a genuine resolver divergence (the v0.6.110 class) — keep emitting that.
     // ponytail: substring match; biases toward keeping signal on a loose hit.
     if (sourceContent !== undefined && !sourceContent.includes(hfId)) return [];
     // Loose match here vs. countHfIdInSource's strict data-hf-id="..." match in the

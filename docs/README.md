@@ -29,6 +29,9 @@
 - [motion-director.md](motion-director.md)
 - [motion-extension-scope.md](motion-extension-scope.md)
 - [npm-installation.md](npm-installation.md)
+- [Agent installation guide source template](install.md)
+- [test and stable acceptance](release-guide.md)
+- [Manual candidate build, test publication and immutable snapshots](release-workflows.md)
 - [product/architecture.md](product/architecture.md)
 - [product/media-generation-design.md](product/media-generation-design.md)
 - [project-workspace.md](project-workspace.md)
@@ -39,6 +42,7 @@
 - [template-catalog.md](template-catalog.md)
 - [templates/requirement.md](templates/requirement.md)
 - [test-packages.md](test-packages.md)
+- [Tracking integration and agent task template](../tracking/INTEGRATION.md)
 
 ## 分发与验证
 

@@ -1,3 +1,4 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { HiddenToggleIcon, hiddenToggleVerb } from "../../player/components/hiddenToggle";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
@@ -40,7 +41,7 @@ export function PropertyPanelFlatHeader({
   const { t } = useI18n();
   const track = useTrackDesignInput();
   const Icon = ICON_BY_KIND[elementKind];
-  const visibilityLabel = t("{value0} element", { value0: hiddenToggleVerb(asMute, hidden) });
+  const visibilityLabel = t("{value0} element", { value0: t(hiddenToggleVerb(asMute, hidden)) });
 
   return (
     <div className="flex items-center gap-2.5 border-b border-panel-hairline px-4 py-3">
@@ -64,17 +65,7 @@ export function PropertyPanelFlatHeader({
               onUngroup?.();
             }}
           >
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <rect x="1.5" y="1.5" width="7" height="7" rx="1" />
-              <rect x="7.5" y="7.5" width="7" height="7" rx="1" />
-            </svg>
+            <RemixIcon name="shape-2-line" size={14} />
           </button>
         )}
         {onToggleHidden && (

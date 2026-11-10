@@ -544,7 +544,11 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 
 <a id="quick-start"></a>
 
+<a id="start-in-codex"></a>
+
 ### Quick start
+
+For a packaged install, give your agent the [test installation guide](https://releases.open-design.ai/open-motion/dev/install.md). It pins the package version and walks through isolated setup. To run from source, follow the steps below.
 
 Use Git, npm and **Node.js 26.11.1**. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
 

@@ -385,7 +385,7 @@ describe.each(["classic", "flat"] as const)("shared %s input telemetry", (ui) =>
       ui === "flat" ? '[data-flat-font-trigger="true"]' : "button",
     );
     act(() => trigger?.dispatchEvent(new MouseEvent("click", { bubbles: true })));
-    const option = Array.from(host.querySelectorAll<HTMLButtonElement>("button")).find((button) =>
+    const option = Array.from(document.body.querySelectorAll<HTMLButtonElement>("button")).find((button) =>
       button.textContent?.includes("sans-serif"),
     );
     if (!option) throw new Error("expected sans-serif font option");

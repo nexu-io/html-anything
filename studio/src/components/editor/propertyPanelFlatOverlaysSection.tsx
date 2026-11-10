@@ -58,9 +58,9 @@ export function FlatOverlaysSection({
           key={overlay.name}
           type="button"
           data-flat-overlay={overlay.name}
-          aria-label={t("Add {value0}", { value0: overlay.title })}
+          aria-label={t("Add {value0}", { value0: t(overlay.title) })}
           disabled={busy}
-          title={overlay.description}
+          title={t(overlay.description)}
           onPointerEnter={() => setPreviewing(overlay.name)}
           onPointerLeave={() => setPreviewing(null)}
           onFocus={() => setPreviewing(overlay.name)}
@@ -101,7 +101,7 @@ export function FlatOverlaysSection({
             />
           </span>
           <span className="block truncate px-2 py-1.5 text-[10px] text-panel-text-2">
-            {adding === overlay.name ? t("Adding…") : overlay.title}
+            {adding === overlay.name ? t("Adding…") : t(overlay.title)}
           </span>
         </button>
       ))}

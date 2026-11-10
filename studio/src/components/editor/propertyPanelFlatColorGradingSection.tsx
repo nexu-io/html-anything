@@ -217,7 +217,7 @@ export function FlatColorGradingSection({
         )}
         <div data-flat-grade-preset-group="presets" className={FLAT_PREVIEW_GRID}>
           {HF_COLOR_GRADING_GRADE_PRESETS.map((preset) => {
-            const label = preset.label;
+            const label = t(preset.label);
             const selected = grading.preset === preset.id;
             const preview = presetPreviews.images[preset.id];
             return (
@@ -232,7 +232,8 @@ export function FlatColorGradingSection({
                   resolve: () => resolvePreset(preset.id),
                   onPreview: onPreviewColorGrading,
                   onCommit: onCommitColorGrading,
-                  onTrack: (name) => track("button", `Apply ${name}`),
+                  onTrack: () => track("button", `Apply ${preset.label}`),
+                  t,
                 })}
                 className={`min-w-0 overflow-hidden border text-left text-[10px] transition-colors ${
                   selected

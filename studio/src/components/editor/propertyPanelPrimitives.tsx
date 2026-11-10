@@ -1,3 +1,4 @@
+import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -304,17 +305,7 @@ export function Section({
   const { t } = useI18n();
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
   const collapseIcon = (
-    <svg
-      width="10"
-      height="10"
-      viewBox="0 0 10 10"
-      fill="currentColor"
-      className={`shrink-0 text-panel-text-5 transition-transform duration-150 ${
-        collapsed ? "-rotate-90" : ""
-      }`}
-    >
-      <path d="M2 3l3 4 3-4z" />
-    </svg>
+    <RemixIcon name="arrow-down-s-line" size={14} className={`shrink-0 text-panel-text-5 transition-transform duration-150 ${collapsed ? "-rotate-90" : ""}`} />
   );
 
   const section = slugifyPanelSectionTitle(title);

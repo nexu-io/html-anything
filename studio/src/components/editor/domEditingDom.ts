@@ -30,8 +30,33 @@ export function isTextBearingTag(tagName: string): boolean {
   return ["div", "span", "p", "strong", "h1", "h2", "h3", "h4", "h5", "h6"].includes(tagName);
 }
 
+// Remember text-bearing nodes while editing so clearing copy does not remove
+// its controls. Weak references release this metadata with the preview document.
+const knownTextLeaves = new WeakSet<HTMLElement>();
+
 export function isEditableTextLeaf(el: HTMLElement): boolean {
-  return isTextBearingTag(el.tagName.toLowerCase()) && el.children.length === 0;
+  const tag = el.tagName.toLowerCase();
+  if (!isTextBearingTag(tag) || el.children.length !== 0) return false;
+  if (el.textContent?.trim()) {
+    knownTextLeaves.add(el);
+    return true;
+  }
+  if (tag !== "div" || el.hasAttribute("data-hf-text-key") || knownTextLeaves.has(el)) return true;
+  // An empty painted div is a graphic, not an empty text field. Semantic text
+  // tags and explicitly authored typography retain their editing affordance.
+  if (["font", "font-family", "font-size", "font-weight", "text-align"].some(
+    (property) => el.style.getPropertyValue(property),
+  )) return true;
+  const style = el.ownerDocument.defaultView?.getComputedStyle(el);
+  if (!style) return true;
+  const color = style.backgroundColor;
+  const hasFill = Boolean(color && color !== "transparent" && !/rgba\([^)]*,\s*0(?:\.0+)?\s*\)/.test(color));
+  const hasImage = Boolean(style.backgroundImage && style.backgroundImage !== "none");
+  const hasBorder = ["Top", "Right", "Bottom", "Left"].some((side) =>
+    Number.parseFloat(style.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0 &&
+    !["none", "hidden", ""].includes(style.getPropertyValue(`border-${side.toLowerCase()}-style`)),
+  );
+  return !hasFill && !hasImage && !hasBorder;
 }
 
 /** Does this node render AT ALL, ignoring what it inherits? Sole owner of the

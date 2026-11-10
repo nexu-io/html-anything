@@ -19,6 +19,7 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
     for (const host of exported.hosts) {
       const scope = JSON.parse(await readFile(path.join(output, host, 'openmotion/scope.json'), 'utf8'));
       assert.equal(scope.mcpProfile, 'phase1');
+      assert.equal(await readFile(path.join(output, host, 'openmotion/remix-icon-LICENSE.txt'), 'utf8'), await readFile(path.join(source, 'web/design-system/remix-icon-LICENSE.txt'), 'utf8'));
       const { readdir } = await import('node:fs/promises');
       assert.deepEqual((await readdir(path.join(output, host, 'openmotion/skills'))).sort(), ['motion-director', 'motion-production', 'motion-recreate', 'motion-template-to-video', 'motion-video-to-template']);
       for (const skill of ['motion-template-to-video', 'motion-video-to-template']) {
@@ -99,11 +100,11 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
     await cp(process.execPath, node);
     await mkdir(path.join(runtime, 'docs'));
     for (const name of ['AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(runtime, name), '# Fixture');
-    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'web/design-system/icons.svg']) {
+    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'web/design-system/icons.svg', 'web/design-system/remix-icon-LICENSE.txt', 'web/design-system/remix-icon-NOTICE.txt']) {
       await mkdir(path.dirname(path.join(runtime, filename)), { recursive: true });
       await cp(path.join(source, filename), path.join(runtime, filename));
     }
-    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ type: 'module', version: '0.1.0' }));
+    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ type: 'module', version: '0.6.0' }));
     await writeFile(path.join(runtime, 'bootstrap.mjs'), 'process.env.ADAPTER_PRELOAD_TEST = "loaded";');
     await writeFile(path.join(runtime, 'mcp.ts'), 'console.log(JSON.stringify({preload:process.env.ADAPTER_PRELOAD_TEST,data:process.env.MOTION_DATA_DIR}));');
     const data = path.join(directory, 'projects'), output = path.join(directory, 'adapters');
@@ -130,8 +131,8 @@ test('failed adapter writes remove only the new output and preserve runtime and 
     await mkdir(path.join(runtime, 'skills'), { recursive: true }); await mkdir(path.join(runtime, 'docs'));
     for (const name of ['AGENTS.md', 'CLAUDE.md', 'mcp.ts']) await writeFile(path.join(runtime, name), '');
     await mkdir(path.join(runtime, 'web/design-system'), { recursive: true });
-    await cp(path.join(source, 'web/design-system/icons.svg'), path.join(runtime, 'web/design-system/icons.svg'));
-    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ version: '0.1.0-' + 'a'.repeat(260) }));
+    for (const name of ['icons.svg', 'remix-icon-LICENSE.txt', 'remix-icon-NOTICE.txt']) await cp(path.join(source, 'web/design-system', name), path.join(runtime, 'web/design-system', name));
+    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ version: '0.6.1-' + 'a'.repeat(260) }));
     await assert.rejects(exportAdapters(runtime, data, output), { code: 'ENAMETOOLONG' });
     assert.equal(existsSync(output), false);
     assert.equal(await readFile(path.join(data, 'keep.txt'), 'utf8'), 'user data');

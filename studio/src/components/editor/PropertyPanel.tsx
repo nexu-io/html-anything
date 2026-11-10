@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { scopedElementKey } from "../../hooks/gsapKeyframeCacheHelpers";
 import { memo, useMemo, useRef, useState } from "react";
@@ -58,6 +59,7 @@ export {
 // fallow-ignore-next-line complexity
 export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const {
     projectId,
     assets,
@@ -173,7 +175,7 @@ export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelPro
   if (!element) {
     return (
       <PropertyPanelEmptyState
-        flat={STUDIO_FLAT_INSPECTOR_ENABLED}
+        flat={mvp || STUDIO_FLAT_INSPECTOR_ENABLED}
         multiSelectCount={multiSelectCount}
         multiSelectedElements={multiSelectedElements}
         onGroupSelection={onGroupSelection}
@@ -252,7 +254,7 @@ export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelPro
       });
   };
 
-  if (STUDIO_FLAT_INSPECTOR_ENABLED) {
+  if (mvp || STUDIO_FLAT_INSPECTOR_ENABLED) {
     // Forward the raw props (handlers, ids, assets, recording, fonts, etc.) and
     // the values the legacy path already computed above (so they aren't derived
     // twice). PropertyPanelFlat owns the one-open group state.

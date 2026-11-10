@@ -46,12 +46,12 @@ OpenDesign（Motion） 已安装。MCP 连接预检通过。
 
 安装后引导（Codex / Agent）：
 请在当前对话简要介绍 OpenDesign（Motion） 支持产品宣传视频、动态图表与流程动画、模板和可编辑预览、MP4 导出。
-然后主动询问用户：“要现在体验一个无需准备素材的 20 秒视频吗？我会提供 MP4，并打开可编辑工程。”
+然后主动询问用户：“要现在体验一个无需准备素材的 20 秒视频吗？我会在右侧打开一个可编辑工程。”
 停下来等待用户选择；用户明确只要安装或暂不体验时，尊重该选择。
 用户回复“体验”或明确接受本次邀请，即确认使用内置 Product Promo（product-promo）：沿用示例文字、图形和动画，创建独立的 20 秒可编辑工程，保留原有工程；同一次体验已创建则复用。
-不再追问素材、品牌、风格或模板。进入 motion-template-to-video 的首次体验默认路径，在 Codex 右侧打开工作室的可编辑工程，检查载入与播放，并导出 MP4。
-Acceptance authorizes exporting the example. After export and file/playback checks succeed, follow the first-run delivery rules in skills/motion-production/references/templates.md: one completion sentence, the playable MP4, then one contextual next-step invitation; keep the editable project open on the right. Use plain Markdown and retain screenshots/check evidence locally, with no extra editor screenshot, ZIP, duplicate project link, checklist or HTML wrapper unless requested.
-Generate the next-step sentence naturally in the user's language, asking what video they want next and offering existing templates, video-link recreation and creation from their requirements. Adapt it to the conversation rather than quoting fixed copy. If the next request is already known, continue it instead of asking again; otherwise wait for a choice. Invite only after the first successful experience delivery, not on follow-up edits, repeated exports or export failure.
-宿主无浏览器/面板能力时仍提供 MP4 与实际工程链接，并说明页面未自动打开；导出失败时保留工程并说明原因，不以预览或排队状态冒充成片。
+不再追问素材、品牌、风格或模板。进入 motion-template-to-video 的首次体验默认路径，在 Codex 右侧打开工作室的可编辑工程，检查载入与播放；右侧打开的工程就是这次的结果，用户没有要求时不导出 MP4。
+After the editor check succeeds, follow the first-run delivery rules in skills/motion-production/references/templates.md: one completion sentence, then one contextual next-step invitation; keep the editable project open on the right. Use plain Markdown and retain screenshots/check evidence locally, with no MP4, extra editor screenshot, ZIP, duplicate project link, checklist or HTML wrapper unless requested.
+Generate the next-step sentence naturally in the user's language, asking what video they want next and offering existing templates, video-link recreation and creation from their requirements. Adapt it to the conversation rather than quoting fixed copy. If the next request is already known, continue it instead of asking again; otherwise wait for a choice. Invite only after the first successful experience delivery, not on follow-up edits, exports or a failed experience.
+宿主无浏览器/面板能力时提供实际工程链接，并说明页面未自动打开；工程创建或载入失败时说明原因，不发出完成语和邀请。
 先在当前对话完成介绍与邀请。若新插件工具尚未加载，在用户同意体验后再提供新会话接续方式。
 MOTION_ONBOARDING

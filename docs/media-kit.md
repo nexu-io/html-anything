@@ -2,7 +2,7 @@
 
 [English README](../README.md) · [中文介绍](README.zh-CN.md) · [Asset sources](readme/ASSETS.md)
 
-This page is a source brief for creators, writers and their agents. Use it with the linked implementation documents and actual demo results. It describes the current 0.1.0 source tree; it is not a record of a public package release.
+This page is a source brief for creators, writers and their agents. Use it with the linked implementation documents and actual demo results. It describes the OpenMotion source tree; it is not a record of a public package release.
 
 ## Reusable introduction
 

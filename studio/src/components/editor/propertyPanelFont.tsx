@@ -1,3 +1,7 @@
+import { SearchInput } from "../ui/SearchInput";
+import { useMvpEditor } from "../../motion/StudioHost";
+import { Popover } from "../ui/Popover";
+import type { ReactElement } from "react";
 import { useI18n } from "../../i18n/I18n";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
@@ -196,9 +200,9 @@ export function FontFamilyField({
   onCommit: (nextValue: string) => void;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const track = useTrackDesignInput();
   const currentFamily = primaryFontFamily(value);
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fontInputRef = useRef<HTMLInputElement | null>(null);
   const [open, setOpen] = useState(false);
@@ -212,26 +216,11 @@ export function FontFamilyField({
   const [fontNotice, setFontNotice] = useState<string | null>(null);
   const canQueryLocalFonts =
     typeof window !== "undefined" && typeof window.queryLocalFonts === "function";
+  const showLocalFontsButton = !mvp && canQueryLocalFonts;
   const commitFontFamily = (nextValue: string) => {
     if (nextValue !== value) track("select", "Font family");
     onCommit(nextValue);
   };
-
-  useEffect(() => {
-    if (!open) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) return;
-      if (!containerRef.current?.contains(target)) setOpen(false);
-    };
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    requestAnimationFrame(() => inputRef.current?.focus());
-  }, [open]);
 
   useEffect(() => {
     if (open) loadFontLists();
@@ -411,11 +400,11 @@ export function FontFamilyField({
   };
 
   const dropdown = open && (
-    <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 overflow-hidden rounded-xl border border-neutral-700 bg-neutral-950 shadow-2xl">
-      <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] gap-2 border-b border-neutral-800 p-2">
-        <input
+    <div className="flex max-h-[min(360px,var(--available-height))] min-h-0 flex-col">
+      <div className={`grid shrink-0 ${showLocalFontsButton ? "grid-cols-[minmax(0,1fr)_auto_auto]" : "grid-cols-[minmax(0,1fr)_auto]"} gap-2 border-b border-neutral-800 p-2`}>
+        <SearchInput
           ref={inputRef}
-          type="text"
+          aria-label={t("Search fonts")}
           value={query}
           disabled={disabled}
           placeholder={lists.loaded ? t("Search fonts") : t("Loading Google Fonts...")}
@@ -452,9 +441,9 @@ export function FontFamilyField({
           role="combobox"
           aria-expanded={open}
           aria-autocomplete="list"
-          className="min-w-0 rounded-lg border border-neutral-800 bg-neutral-900 px-2.5 py-2 text-[11px] font-medium text-neutral-100 outline-hidden placeholder:text-neutral-600 focus:border-neutral-600"
+          className="min-w-0"
         />
-        {canQueryLocalFonts && (
+        {showLocalFontsButton && (
           <button
             type="button"
             disabled={disabled || loadingLocalFonts}
@@ -491,7 +480,7 @@ export function FontFamilyField({
           {fontNotice}
         </div>
       )}
-      <div className="max-h-64 overflow-y-auto p-1">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-1">
         {filteredOptions.length === 0 ? (
           <div className="px-2 py-3 text-[11px] text-neutral-500">{t("No fonts found.")}</div>
         ) : (
@@ -510,7 +499,7 @@ export function FontFamilyField({
               }`}
             >
               <span className="flex min-w-0 items-center gap-1.5">
-                <span className="truncate font-medium" style={{ fontFamily: `"${option.family}"` }}>
+                <span title={option.family} className="truncate font-medium" style={{ fontFamily: `"${option.family}"` }}>
                   {option.family}
                 </span>
                 {renderAliasFor(option.family) && (
@@ -520,7 +509,7 @@ export function FontFamilyField({
                 )}
               </span>
               <span className="shrink-0 text-[9px] uppercase tracking-[0.14em] text-neutral-600">
-                {option.source}
+                {t(option.source)}
               </span>
             </button>
           ))
@@ -529,15 +518,28 @@ export function FontFamilyField({
     </div>
   );
 
+  const renderPicker = (trigger: ReactElement) => (
+    <Popover
+      open={open}
+      onOpenChange={setOpen}
+      trigger={trigger}
+      align="end"
+      aria-label={t("Font family")}
+      initialFocus={inputRef}
+      className="w-64 max-w-[calc(100vw-16px)] overflow-hidden p-0"
+    >
+      {dropdown}
+    </Popover>
+  );
+
   if (flat) {
     return (
-      <div ref={containerRef} className="relative flex min-h-[30px] items-center justify-between">
+      <div className="relative flex min-h-[30px] items-center justify-between">
         <span className="text-[11px] text-panel-text-2">{t("Font")}</span>
-        <button
+        {renderPicker(<button
           type="button"
           data-flat-font-trigger="true"
           disabled={disabled}
-          onClick={() => setOpen((next) => !next)}
           className="flex items-center gap-1.5 disabled:cursor-not-allowed"
         >
           <span
@@ -555,19 +557,17 @@ export function FontFamilyField({
           >
             <path d="M2 3l3 4 3-4z" />
           </svg>
-        </button>
-        {dropdown}
+        </button>)}
       </div>
     );
   }
 
   return (
-    <div ref={containerRef} className="relative grid min-w-0 gap-1.5">
+    <div className="relative grid min-w-0 gap-1.5">
       <span className={LABEL}>{t("Font family")}</span>
-      <button
+      {renderPicker(<button
         type="button"
         disabled={disabled}
-        onClick={() => setOpen((next) => !next)}
         className={`${FIELD} flex h-10 items-center justify-between gap-3 text-left hover:border-neutral-700 disabled:cursor-not-allowed`}
       >
         <span
@@ -578,8 +578,7 @@ export function FontFamilyField({
         </span>
         <span className="shrink-0 text-[10px] uppercase tracking-[0.14em] text-neutral-600">
           {t("Font")}</span>
-      </button>
-      {dropdown}
+      </button>)}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "motion",
-  "version": "0.1.0",
+  "version": "0.6.3",
   "description": "OpenDesign — an Agent workspace with Motion templates, editable artifacts and MCP collaboration.",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",

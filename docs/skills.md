@@ -10,6 +10,12 @@
 
 2026-11-06：五个入口统一为 motion- 前缀，视频转模板纳入一期插件、四宿主薄适配器与 MCP Resources。同时融合已评审的通用工程入口方案，保留原制作实现和导演质量参考；同时保留 main PR #28 的实际复刻流程、独立参考和测量脚本。历史多轮实验记录见下文，其证据不自动覆盖本次命名与分发变更。
 
+## Director v1.5.5 integration
+
+Director and its existing quality references now cover concrete visual events, joint material/motion design, recognizable action windows, representative prototypes and reuse of accepted implementations. Shared intake/runtime guidance covers scoped material acquisition; edit and verification own timing-evidence invalidation and evidence classification. No Skill, Resource section, public Tool or media service is added.
+
+The current five-route, eleven-Tool contract, editor-first handoff, requested-export behavior and distribution layout remain unchanged. This guidance does not establish cross-task creative reliability or native audiovisual model-review capability. See [the director guide](motion-director.md). Version-specific statements below describe their historical snapshots.
+
 ## 职责与入口
 
 当前采用“通用工程入口＋可直达专业 Skill＋同源共享规范”。Agent 根据本轮目标、保持项与工程状态直接选择入口，专业任务无需先读 production。production 承接既定创作决定下的工程执行，为已有 production/start 调用保留简短导航。此选择融合了“核查仓库中的 Skill 结构”中已评审并本地实施的职责收窄，取代此前“泛化请求先经薄路由”的描述；不删除兼容资源，不复制共享规则。
@@ -17,7 +23,7 @@
 | 入口 | 职责 | 当前状态 |
 | --- | --- | --- |
 | motion-production | 既定决定下的局部工程修改、预览、技术检查、排错与导出 | 通用工程入口；保留兼容导航 |
-| motion-director | 原创、局部/整体叙事动作声音重新设计、创作审片 | v1.4.5；七份质量参考不变 |
+| motion-director | 原创、局部/整体叙事动作声音重新设计、创作审片 | v1.5.5; visual events, materials, choreography and audiovisual timing guidance |
 | motion-template-to-video | 已有模板原样出片、源码适配与内容替换 | 已接入默认 template 路线，共用修改与 revision 规范 |
 | motion-video-to-template | 把视频制作成可复用模板文件夹 / ZIP | 已纳入分发与资源读取，不代替普通视频复刻 |
 | motion-recreate | 从参考重建用户本次作品 | 已接入实际流程；自带重建、测量参考与脚本 |
@@ -53,7 +59,7 @@ MCP 工具说明和领域执行位于 `mcp-tools.ts`；`mcp.ts` 保留初始化�
 
 共享 context 维护按任务范围的依赖清单。Agent 计算本次必需正文与仍可用的已读正文之差，只补缺口；完整正文返回后记录文档标识和版本，复用会话或已有 STATE，不在活动工程内存放阅读记录。声音专项明确需要 actions，模板明确需要 templates，多段模板也需要 decisions。阶段或轮次切换本身不触发重新加载；只在正文丢失、截断或版本变化时补读并记录原因。不遍历全部 references，也不因加载新文档重复工程操作。MCP 不维护模型的阅读状态，不新增读前写硬门禁；记录与文字约束不能强制宿主执行。
 
-画廊短指令携带指引 URL 和精确 ID；宿主读取该指引取得来源与路线，直接进入对应专业入口，不再统一回 production/start。一期没有模板查询 Tool，内部目录 handler 的 workflowGuide 字段不代表公开 MCP 可调用。仅 starter 默认不导出，用户明确要求成片时包含导出。
+Gallery prompts carry the guide URL and exact template ID; the host reads the guide and enters the corresponding specialist without returning to production/start. Phase one exposes `motion_list_templates` for the local catalog index and `motion_get_template` for a selected template's details and instructions. Legacy catalog handlers remain internal; use only the public contract. The starter does not export by default; a user request for a video file includes export.
 
 ## 共享质量与工具边界
 
@@ -63,7 +69,23 @@ MCP 工具说明和领域执行位于 `mcp-tools.ts`；`mcp.ts` 保留初始化�
 
 原创制作按任务读取动作脚本、动态表现和短句参考，无需用户额外说“Motion 感”。多段/截图/状态延续、声音设计和动态审片按职责加载相应参考。模板与复刻按影响复用相同标准，不强制换成原创叙事、固定动效或固定音乐结构。
 
-一期公开接口已收敛为 [9 个 motion_ Tool](mcp-phase1-tools.md)。旧 28 项实现只留内部兼容；读文件、任务查询及技术校验分别并入项目读取与导出流程。一期插件和四宿主薄适配器包含上述五个入口及其参考，reference-video 仅保留源码兼容入口。核心 Skill 指引同步使用新契约；不新增制作引擎或自动复刻算法。
+一期公开接口已收敛为 [11 个 motion_ Tool](mcp-phase1-tools.md)（9 个工程 Tool 加目录获取和模板详情）。旧 28 项实现只留内部兼容；读文件、任务查询及技术校验分别并入项目读取与导出流程。一期插件和四宿主薄适配器包含上述五个入口及其参考，reference-video 仅保留源码兼容入口。核心 Skill 指引同步使用新契约；不新增制作引擎或自动复刻算法。
+
+## motion-recreate 能力扩展点
+
+复刻目前只支持动态图形。下表是目前已发现的、写死当前能力的位置，不保证穷举。接入 TTS、图片或视频生成模型，或支持实拍/口播/AI 视频时，先按此表修改，再全文检索 `generation Tool`、`phase-one`、`motion graphics` 等字样补漏，并按新能力重新跑评测；新增的能力限制也应写进这些位置，不散落到其他段落。
+
+| 位置 | 当前规则 | 接入新能力后 |
+| --- | --- | --- |
+| [SKILL.md](../skills/motion-recreate/SKILL.md) frontmatter description | 触发范围按动态图形复刻描述 | 支持新视频类型后同步触发范围，并重跑选路测试 |
+| SKILL.md Role and goal 第二段 | 只支持动态图形；实拍、口播、AI 视频说明不支持，不暗示给素材就能复刻，只提出动态图形版 | 放宽支持范围，缩小拒绝条件 |
+| SKILL.md §3 素材缺口（“This package exposes no generation Tool”） | 缺图片、片段、声音时用用户素材、询问，或提出宿主实际已有的生成工具 | 本包公开生成 Tool 时改写此句，补调用、采用结果和失败处理规则 |
+| [production.md](../skills/motion-production/references/production.md) 第 3 条 | 一期 MCP 包不提供生成 Tool，生成交给宿主或 Studio | 与上一行同步修改 |
+| SKILL.md §5 Sound | 默认沿用原片音轨并重新对齐；删去念出原品牌的旁白 | 有 TTS 后可改为重新配音，不只删除 |
+| SKILL.md §5 原片作底层（用户自有成片只改几处细节） | 仅此情况可把原片放在时间线上并打补丁 | 支持实拍局部修改或分镜混排时扩展适用条件 |
+| [rebuild.md](../skills/motion-recreate/references/rebuild.md) 重建方式、[verify.md](../skills/motion-recreate/references/verify.md) 与 `measure_frame.mjs` | 按代码重建的动态图形设计测量和对比 | 新画面类型需确认测量指标和取样是否仍适用 |
+
+以下是交付底线，不随能力扩展放开：不得把整条原片、整帧序列或烘焙进背景的可编辑内容冒充重建（rebuild.md）；不交付在工程外修改的 MP4（SKILL.md §5）。
 
 ## Tool 契约审计与宿主能力边界
 

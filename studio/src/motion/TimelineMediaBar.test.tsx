@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+import { StudioHostContext } from './StudioHost';
 import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -12,6 +13,7 @@ import { projectMediaPath, selectedMedia } from './timelineMediaSelection';
 import { ArtifactViewActive } from './ArtifactViewState';
 
 const hooks = vi.hoisted(() => ({ state: {} as TimelineState, open: vi.fn() }));
+vi.mock('../player/components/EditModal', () => ({ EditPopover: ({ initialPrompt, rangeStart, rangeEnd, selectedElementKey }: { initialPrompt: string; rangeStart: number; rangeEnd: number; selectedElementKey?: string }) => <div data-testid="agent-edit" data-selected-key={selectedElementKey}>{initialPrompt} {rangeStart}–{rangeEnd}</div> }));
 vi.mock('../player/components/TimelineProvider', () => ({ useTimelineContext: () => ({ state: hooks.state }) }));
 vi.mock('./MediaGatewayContext', () => ({ useMediaGateway: () => ({ openGenerator: hooks.open, generationOpen: false }) }));
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -94,4 +96,70 @@ it('removes the portalled media actions while the owning Viewer is hidden and re
   expect(document.querySelector('.motion-timeline-media-bar')).toBeNull();
   await renderActive(true);
   expect(document.querySelector('.motion-timeline-media-bar')).not.toBeNull();
+});
+
+it('MVP keeps clip and range prompts for Agent without opening media generation', async () => {
+  const mountMvp = () => act(async () => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineMediaBar /></StudioHostContext.Provider>));
+  await mountMvp();
+  expect(button('Generate media')).toBeUndefined();
+  expect(button('Edit image')).toBeUndefined();
+  expect(button('Ask Agent')).toBeDefined();
+  const prompt = document.querySelector('input')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(prompt, 'Make this title larger');
+    prompt.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await act(async () => prompt.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+  expect(document.querySelector('[data-testid="agent-edit"]')?.textContent).toBe('Make this title larger 2–8');
+  expect(document.querySelector('[data-testid="agent-edit"]')?.getAttribute('data-selected-key')).toBe('main:image');
+  expect(hooks.open).not.toHaveBeenCalled();
+  await act(async () => root.render(null));
+  hooks.state.overlays = { ...hooks.state.overlays, showPopover: true, rangeSelection: { start: 8, end: 5, anchorX: 0, anchorY: 0 } };
+  await mountMvp();
+  await act(async () => button('Ask Agent').click());
+  expect(document.querySelector('[data-testid="agent-edit"]')?.textContent).toBe(' 5–8');
+  expect(document.querySelector('[data-testid="agent-edit"]')?.hasAttribute('data-selected-key')).toBe(false);
+  expect(hooks.open).not.toHaveBeenCalled();
+});
+
+it('dismisses after leaving the opener and popover, but protects a focused draft', async () => {
+  await render();
+  vi.useFakeTimers();
+  try {
+    const leave = () => document.body.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 1, clientY: 1 }));
+    await act(async () => leave());
+    await act(async () => vi.advanceTimersByTime(349));
+    expect(document.querySelector('aside')).not.toBeNull();
+    await act(async () => vi.advanceTimersByTime(1));
+    expect(document.querySelector('aside')).toBeNull();
+    await act(async () => viewport.dispatchEvent(new PointerEvent('pointerup', { button: 0, clientX: 300, clientY: 550 })));
+    const input = document.querySelector('input')!;
+    await act(async () => { input.focus(); leave(); vi.advanceTimersByTime(1000); });
+    expect(document.querySelector('aside')).not.toBeNull();
+    const outsideControl = document.createElement('button');
+    outsideControl.addEventListener('pointerdown', event => event.stopPropagation());
+    document.body.append(outsideControl);
+    await act(async () => outsideControl.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
+    outsideControl.remove();
+    expect(document.querySelector('aside')).toBeNull();
+  } finally { vi.useRealTimers(); }
+});
+
+it('keeps drafts attached to their target when selecting another clip and reopening', async () => {
+  await render();
+  const input = document.querySelector('input')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, 'Title only');
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  const other = { ...clip, id: 'note', key: 'main:note', label: 'Note' };
+  hooks.state.elements = [clip, other]; hooks.state.selectedElementId = other.key;
+  await render();
+  expect(document.querySelector('input')!.value).toBe('');
+  hooks.state.selectedElementId = clip.key!;
+  await render();
+  expect(document.querySelector('input')!.value).toBe('Title only');
+  hooks.state.sessionEpoch = 2;
+  await render();
+  expect(document.querySelector('input')!.value).toBe('');
 });

@@ -527,10 +527,10 @@ function FadeHandle({
   onFocusChange: (focused: boolean) => void;
 }) {
   const { t } = useI18n();
-  const label = direction === "in" ? "Fade in" : "Fade out";
+  const label = t(direction === "in" ? "Fade in" : "Fade out");
   const text = `${label} ${formatFadeSeconds(value)} s`;
   return (
-    <Tooltip label={snapLabel ? t("{text}, snapped to {snapLabel}", { text: text, snapLabel: snapLabel }) : text}>
+    <Tooltip label={snapLabel ? t("{text}, snapped to {snapLabel}", { text: text, snapLabel: t(snapLabel) }) : text}>
       <div
         role="slider"
         tabIndex={focusable ? 0 : -1}

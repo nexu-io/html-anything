@@ -67,6 +67,7 @@ export function TextAreaField({
   disabled,
   autoFocus,
   flat,
+  boxed,
   onCommit,
 }: {
   label: string;
@@ -74,6 +75,7 @@ export function TextAreaField({
   disabled?: boolean;
   autoFocus?: boolean;
   flat?: boolean;
+  boxed?: boolean;
   onCommit: (nextValue: string) => void;
 }) {
   const { t } = useI18n();
@@ -137,7 +139,9 @@ export function TextAreaField({
 
   if (flat) {
     return (
-      <div className="border-l-2 border-panel-border-input py-0.5 pl-[10px]">
+      <div className={boxed
+        ? "rounded-md bg-panel-bg-inset px-3 py-2 focus-within:ring-1 focus-within:ring-panel-accent/30"
+        : "border-l-2 border-panel-border-input py-0.5 pl-[10px]"}>
         <div className="mb-[3px] text-[9px] font-semibold uppercase tracking-[0.12em] text-panel-text-5">
           {t(label)}
         </div>

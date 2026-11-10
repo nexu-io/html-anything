@@ -42,9 +42,9 @@ export async function ensureNativeRuntime(root) {
   const overrides = Object.fromEntries(Object.entries(paths).filter(([key, value]) => process.env[key] !== value));
   for (const key of Object.keys(overrides)) await executable(process.env[key]);
   const componentKeys = { browser: ['HYPERFRAMES_BROWSER_PATH'], media: ['HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH'], ffmpeg: ['HYPERFRAMES_FFMPEG_PATH'], ffprobe: ['HYPERFRAMES_FFPROBE_PATH'] };
-  for (const component of components) {
+  const prepared = await Promise.allSettled(components.map(async component => {
     const keys = componentKeys[component];
-    if (keys.every(key => Object.hasOwn(overrides, key))) continue;
+    if (keys.every(key => Object.hasOwn(overrides, key))) return;
     const asset = info[component];
     assert(/^[a-f0-9]{64}$/.test(asset.sha256), 'Require a pinned native SHA256');
     if (process.platform === 'darwin') assert(Number(os.release().split('.')[0]) >= 25, 'Pinned native downloads require macOS 26 or later; supply compatible media and browser paths on older systems.');
@@ -54,7 +54,7 @@ export async function ensureNativeRuntime(root) {
       if ((await readJSON(path.join(destination, 'ready.json')))?.sha256 !== asset.sha256) return false;
       try { for (const key of keys) await executable(paths[key]); return true; } catch { return false; }
     };
-    if (await ready()) continue;
+    if (await ready()) return;
     await withLock(destination + '.lock', async () => {
       if (await ready()) return;
       console.error(`OpenMotion: downloading pinned ${component}; this first use needs network access.`);
@@ -75,6 +75,8 @@ export async function ensureNativeRuntime(root) {
         await rename(temporary, destination);
       } finally { await rm(temporary, { recursive: true, force: true }); }
     });
-  }
+  }));
+  const failed = prepared.find(result => result.status === 'rejected');
+  if (failed) throw failed.reason;
   for (const [key] of Object.entries(overrides)) await runFile(process.env[key], [key.includes('BROWSER') ? '--version' : '-version']);
 }

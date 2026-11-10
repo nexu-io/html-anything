@@ -27,19 +27,19 @@ import {
   Image as PhImage,
   BezierCurve,
   FolderSimple,
-} from "@phosphor-icons/react";
-import type { Icon as PhosphorIcon, IconProps as PhosphorIconProps } from "@phosphor-icons/react";
+} from "./RemixIcons";
+import type { Icon as LegacyIcon, IconProps as LegacyIconProps } from "./RemixIcons";
 
-type IconProps = PhosphorIconProps & { title?: string };
+type IconProps = LegacyIconProps & { title?: string };
 
-const makeIcon = (Icon: PhosphorIcon) => {
+const makeIcon = (Icon: LegacyIcon) => {
   const Wrapped = ({ title, ...props }: IconProps) => (
     <Icon alt={title} aria-label={title} aria-hidden={title ? undefined : true} {...props} />
   );
   return Wrapped;
 };
 
-// Lucide name → Phosphor equivalent
+// Existing editor names mapped to the shared Remix Icon components.
 export const Check = makeIcon(PhCheck);
 export const Clock = makeIcon(PhClock);
 export const Eye = makeIcon(PhEye);

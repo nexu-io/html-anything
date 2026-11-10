@@ -37,10 +37,14 @@ flowchart LR
 | 显式打开预览 | 按需启动或复用原生 Studio；返回已有完整/嵌入链接契约 |
 | 全部 MCP 会话退出 | 后台继续服务网页与导出；不会因某个 Agent 退出取消其他人的工作 |
 | 用户停止后台 | 私有停止接口拒绝正在执行的 MCP、视频导出或素材任务；空闲时关闭子服务并退出 |
-| 发现协议、版本或运行时代码不兼容 | 明确报错，请用户停止旧后台；不自动杀进程或另起一个后台 |
+| Compatible plugin/backend version or build change | Existing phase-one connections continue through the same workspace authority when it advertises the same MCP API protocol and requested Tool; keep running exports and request IDs intact. |
+| Incompatible authority/API protocol, missing Tool or legacy version/build mismatch | Refuse before dispatch with expected/actual identity. Never automatically kill or launch a competing backend. |
+| A live MCP client's plugin directory was replaced or removed | Phase-one calls keep their stdio connection and reuse a compatible live backend. Internal legacy connections return `MCP_RUNTIME_RELOAD_REQUIRED`. A transport already closed by the host cannot be revived by the plugin. |
 | 同目录已有旧版预览服务 | 拒绝另外启动共享后台；退出旧服务后重试 |
 
 macOS 使用系统 `/usr/bin/perl` 取得 `flock` 后直接 exec Node；Perl 不常驻。锁描述符同时由后台和 Studio 守卫持有。后台死亡后，守卫先清理旧 Studio，再释放锁，新后台才能启动。锁文件保留不等于锁仍被占用；不通过删除锁文件来恢复。
+
+Phase-one compatibility is independent of the editor's implementation build. Authenticated private health and public preview health advertise `mcp.protocol` and `mcp.tools`; forwarding retains service, workspace, instance and authority-protocol validation. Compatible updates reuse the current authority without restarting it or replaying mutations. If an idle authority is separately replaced, the next call discovers or starts the same workspace's compatible replacement using the existing stdio connection. This does not hot-reload the UI, refresh host Tool metadata or automatically install updates. See the [API compatibility contract](mcp-phase1-tools.md#phase-one-api-compatibility).
 
 显式停止（必须指定同一个数据目录）：
 
@@ -109,7 +113,7 @@ sequenceDiagram
 | UI/MCP 同时多文件写入的完整事务、并行后台导出 | 未实现 |
 | 长时间压力、自动升级、旧数据自动迁移、正式安装包目标机验收 | 未验证 |
 
-运行本项目检查使用 `npm test`、`npm run check`、`npm run typecheck:studio`、`npm run test:studio`。真实 Chrome 相关检查必须经过团队 browser-lock 的 lane 和 real 锁；新增故障脚本 `tests/shared-editor-crash.mjs` 和媒体脚本 `tests/shared-editor-media.mjs` 也遵守该要求。验收结论只覆盖实际执行命令，实际结果以当前提交的测试及 CI 为准。
+运行本项目检查使用 `npm test`、`npm run check`、`npm run typecheck:studio`、`npm run test:studio`。真实 Chrome 检查包括故障脚本 `tests/shared-editor-crash.mjs` 和媒体脚本 `tests/shared-editor-media.mjs`。验收结论只覆盖实际执行命令，实际结果以当前提交的测试及 CI 为准。
 
 ## 多工程宿主的依赖与恢复边界
 
@@ -117,4 +121,4 @@ sequenceDiagram
 
 已打开工程的上下文保留到服务退出；退出关闭所有监听、历史与子任务。不同页面编辑同一工程仍使用原生 If-Match 和工具 revision/version 冲突保护，不提供多人文本合并；工程 ID 也不代表同工程两个页面的独立选区身份。
 
-验证入口：`tests/multi-project.test.ts` 覆盖同进程双工程、文件/预览/历史/通知和重启；`tests/multi-project-browser.mjs` 在共享 browser-lock 的 lane 与 real 锁下使用两个真实 MCP 客户端和浏览器页面。公开 MCP Tool、冷启动导出、原生媒体和守卫强杀仍单独回归。
+验证入口：`tests/multi-project.test.ts` 覆盖同进程双工程、文件/预览/历史/通知和重启；`tests/multi-project-browser.mjs` 使用两个真实 MCP 客户端和浏览器页面。公开 MCP Tool、冷启动导出、原生媒体和守卫强杀仍单独回归。

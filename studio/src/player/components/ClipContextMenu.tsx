@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { memo, useLayoutEffect, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
@@ -101,10 +102,12 @@ export const ClipContextMenu = memo(function ClipContextMenu({
   splitShortcut,
 }: ClipContextMenuProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const keys = useStudioKeys();
   const menuRef = useContextMenuDismiss(onClose);
   useMenuKeyboardNav(menuRef);
-  const tools = useTimelineEditContextOptional().clipMenuTools !== false;
+  const toolsEnabled = useTimelineEditContextOptional().clipMenuTools !== false;
+  const tools = toolsEnabled && !mvp;
   // The right-clicked clip's own id: a member of the live multi-selection
   // means Copy/Duplicate act on the whole group, matching onContextMenuClip's
   // selection-preserving behaviour for a right-click inside it.
@@ -123,7 +126,7 @@ export const ClipContextMenu = memo(function ClipContextMenu({
     ? null
     : canSplit
       ? t("Split at {value0}s", { value0: currentTime.toFixed(2) })
-      : "Split (move playhead inside clip)";
+      : t("Split (move playhead inside clip)");
 
   const menuWidth = 200;
   const adjustedX = x + menuWidth > window.innerWidth ? x - menuWidth : x;

@@ -546,7 +546,11 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 
 <a id="快速开始"></a> <a id="quick-start"></a>
 
+<a id="start-in-codex"></a>
+
 ### 快速开始
+
+安装测试版时，把[安装指南](https://releases.open-design.ai/open-motion/dev/install.md)交给你的 Agent，按指南指定的版本在独立环境中安装。从源码运行可使用下面的步骤。
 
 #### 运行 OpenMotion
 

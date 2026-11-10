@@ -68,7 +68,9 @@ describe("FontFamilyField font list", () => {
       await act(async () => trigger?.click());
       await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
       expect(sortFontOptions).toHaveBeenCalled();
-      expect(host.textContent).toContain("Roboto Slab");
+      expect(document.body.textContent).toContain("Roboto Slab");
+      expect(host.querySelector('[role="combobox"]')).toBeNull();
+      expect(document.body.querySelector('[role="combobox"]')).not.toBeNull();
       expect(document.head.querySelector('link[href*="fonts.googleapis.com"]')).toBeNull();
     } finally {
       act(() => root.unmount());
@@ -122,7 +124,7 @@ describe("FontFamilyField session font lists", () => {
       await act(async () => vi.advanceTimersByTimeAsync(500));
       expect(t.uniqueFontFamilies).toHaveBeenCalledTimes(1);
       await act(async () => t.toggle());
-      expect(t.host.textContent).toContain("Roboto Slab");
+      expect(document.body.textContent).toContain("Roboto Slab");
     } finally {
       stopLoop();
       t.done();
@@ -142,7 +144,7 @@ describe("FontFamilyField session font lists", () => {
       await act(async () => t.toggle());
       await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
       expect(fetch).toHaveBeenCalledTimes(4);
-      expect(t.host.textContent).toContain("Roboto Slab");
+      expect(document.body.textContent).toContain("Roboto Slab");
     } finally {
       t.done();
     }

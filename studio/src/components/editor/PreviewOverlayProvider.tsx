@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { createContext, useContext, useRef, useState, type ReactNode, type RefObject } from "react";
 import {
   usePreviewCompositionRect,
@@ -47,6 +48,7 @@ export interface PreviewOverlayProviderProps {
 }
 
 export function PreviewOverlayProvider({ iframe, children }: PreviewOverlayProviderProps) {
+  const mvp = useMvpEditor();
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const [snapPrefs, setSnapPrefs] = useState(readSnapPrefs);
   const rulerVisible = usePreviewGuidesStore((state) => state.rulerVisible);
@@ -58,7 +60,7 @@ export function PreviewOverlayProvider({ iframe, children }: PreviewOverlayProvi
   const compositionRect = usePreviewCompositionRect(overlayRef, resolvedIframe);
 
   const contextValue: PreviewOverlayContextValue = {
-    state: { snapPrefs, rulerVisible, safeMarginsVisible, iframeRef, compositionRect },
+    state: { snapPrefs: mvp ? { ...snapPrefs, snapEnabled: true, gridVisible: false, snapToGrid: false } : snapPrefs, rulerVisible: !mvp && rulerVisible, safeMarginsVisible: !mvp && safeMarginsVisible, iframeRef, compositionRect },
     actions: {
       setSnapPrefs: (patch) => {
         writeStudioUiPreferences(patch);

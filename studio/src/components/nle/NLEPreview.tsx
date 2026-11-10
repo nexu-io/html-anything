@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import {
   readPreviewCompositionSize,
@@ -59,6 +60,7 @@ interface NLEPreviewProps extends Pick<
   /** Draws the picture edge to edge in this box, without Studio's inset band. */
   fillBox?: boolean;
   compositionSizeHint?: PreviewCompositionSize;
+  zoomControlsTarget?: HTMLElement | null;
 }
 
 export function getPreviewPlayerKey({
@@ -93,6 +95,7 @@ export const NLEPreview = memo(function NLEPreview({
   onCompositionSizeChange,
   fillBox,
   compositionSizeHint,
+  zoomControlsTarget,
 }: NLEPreviewProps) {
   const { t } = useI18n();
   const activeKey = getPreviewPlayerKey({ projectId, directUrl });
@@ -115,7 +118,8 @@ export const NLEPreview = memo(function NLEPreview({
   const reportPreviewFirstFrame = usePreviewFirstFrameTelemetry(previewSlots);
   const [compositionSize, setCompositionSize] = useState<PreviewCompositionSize | null>(null);
   const poster = usePreviewPoster(projectId, activeKey, directUrl);
-  const gutterPx = usePreviewGuidesStore((s) => (s.rulerVisible ? RULER_GUTTER_PX : 0));
+  const mvp = useMvpEditor();
+  const gutterPx = usePreviewGuidesStore((s) => (s.rulerVisible && !mvp ? RULER_GUTTER_PX : 0));
   const insetPx = fillBox ? 0 : PREVIEW_STAGE_INSET_PX;
   const [stageSize, setStageSize] = useState(() => resolvePreviewStageSize(0, 0, null, portrait));
   const hintWidth = compositionSizeHint?.width;
@@ -240,7 +244,7 @@ export const NLEPreview = memo(function NLEPreview({
           }
           // Live per-frame readout — without this the HUD shows an empty pill
           // on the first-ever zoom and a stale percentage mid-gesture.
-          hud.textContent = isPreviewAtFit(clamped) ? "Fit" : `${Math.round(clamped.zoomPercent)}%`;
+          hud.textContent = isPreviewAtFit(clamped) ? t("Fit") : `${Math.round(clamped.zoomPercent)}%`;
         }
       }
 
@@ -260,7 +264,7 @@ export const NLEPreview = memo(function NLEPreview({
         if (showHud) {
           const hud = hudRef.current;
           if (hud) {
-            hud.textContent = isPreviewAtFit(final) ? "Fit" : `${Math.round(final.zoomPercent)}%`;
+            hud.textContent = isPreviewAtFit(final) ? t("Fit") : `${Math.round(final.zoomPercent)}%`;
             if (hudTimerRef.current) clearTimeout(hudTimerRef.current);
             hudTimerRef.current = setTimeout(() => {
               if (hudRef.current) hudRef.current.style.opacity = "0";
@@ -269,7 +273,7 @@ export const NLEPreview = memo(function NLEPreview({
         }
       }, ZOOM_SETTLE_MS);
     },
-    [writeTransform],
+    [writeTransform, t],
   );
 
   const applyZoom = useCallback(
@@ -460,6 +464,7 @@ export const NLEPreview = memo(function NLEPreview({
     <div className="flex flex-col h-full min-h-0">
       <div
         ref={viewportRef}
+        style={mvp ? { background: "var(--motion-panel)" } : undefined}
         className="relative flex-1 flex items-center justify-center overflow-hidden min-h-0 outline-hidden focus:ring-1 focus:ring-studio-accent/40 bg-[var(--studio-preview-bg,var(--color-neutral-950))]"
         tabIndex={0}
         aria-label={t("Composition preview")}
@@ -470,7 +475,7 @@ export const NLEPreview = memo(function NLEPreview({
         >
           <div
             ref={stageRef}
-            className="relative shrink-0 pointer-events-auto shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_4px_32px_rgba(0,0,0,0.7)]"
+            className={`relative shrink-0 pointer-events-auto ${mvp ? "motion-preview-frame" : "shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_4px_32px_rgba(0,0,0,0.7)]"}`}
             style={{
               width: `${stageSize.width}px`,
               height: `${stageSize.height}px`,
@@ -544,13 +549,16 @@ export const NLEPreview = memo(function NLEPreview({
             )}
           </div>
         </div>
-        <div
-          ref={hudRef}
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 rounded-lg px-4 py-2 text-sm font-mono tabular-nums text-white/90 bg-black/60 backdrop-blur-xs shadow-lg"
-          style={{ opacity: 0, transition: "opacity 200ms ease-in" }}
-          aria-live="polite"
-        />
+        {!zoomControlsTarget && (
+          <div
+            ref={hudRef}
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 rounded-lg px-4 py-2 text-sm font-mono tabular-nums text-white/90 bg-black/60 backdrop-blur-xs shadow-lg"
+            style={{ opacity: 0, transition: "opacity 200ms ease-in" }}
+            aria-live="polite"
+          />
+        )}
         <PreviewZoomOverlay
+          controlsTarget={zoomControlsTarget}
           zoom={settledZoom}
           stageSize={stageSize}
           onFit={() => {

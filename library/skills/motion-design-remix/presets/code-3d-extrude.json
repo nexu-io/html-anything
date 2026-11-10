@@ -1,6 +1,6 @@
 {
   "id": "code-3d-extrude",
-  "sourceSha256": "173bbf881d571d0c434cf786f599904a2f544d0af95445c91fd7bf58c7c45eda",
+  "sourceSha256": "466b7b08c4b9844f4d7e188b1ba59439e5da10dc8457aebb30c5ef74e671afe3",
   "replacements": [
     {
       "from": "content: \"loadConfig\"",

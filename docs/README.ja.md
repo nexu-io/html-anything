@@ -548,7 +548,11 @@ Brand Kit 欄にはロゴ、配色、書体、文体、確認済みの製品情�
 
 <a id="快速开始"></a> <a id="quick-start"></a>
 
+<a id="start-in-codex"></a>
+
 ### クイックスタート
+
+テスト版をインストールするには、[インストールガイド](https://releases.open-design.ai/open-motion/dev/install.md)をエージェントに渡してください。指定されたバージョンを独立した環境にセットアップできます。ソースから起動する手順は次のとおりです。
 
 #### OpenMotion を起動する
 

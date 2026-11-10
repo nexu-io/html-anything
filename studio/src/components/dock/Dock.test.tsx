@@ -7,9 +7,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as dockLayout from "./dockLayout";
 import { I18nProvider, useI18n } from "../../i18n/I18n";
 import { Dock } from "./Dock";
+import { StudioHostContext } from "../../motion/StudioHost";
 import { parseDockLayout } from "./dockLayoutSchema";
 import { useDockLayoutStore } from "./dockLayoutStore";
-import { PANEL_IDS } from "./panelRegistry";
+import { MVP_PANEL_IDS, PANEL_IDS } from "./panelRegistry";
 import { readStudioUiPreferences } from "../../utils/studioUiPreferences";
 import { applyMotionLayout, MotionPreviewButton } from "../../motion/MotionLayoutControls";
 
@@ -434,7 +435,7 @@ it('changes native dock titles live without recreating panels, preview or layout
   expect(api.getPanel('preview')!.title).toBe('Preview');
   switchLanguage();
   expect(api.getPanel('preview')!.title).toBe('预览');
-  expect(api.getPanel('compositions')!.title).toBe('合成');
+  expect(api.getPanel('compositions')!.title).toBe('片段');
   expect(api.getPanel('preview')!.group.id).toBe(groupId);
   expect(JSON.stringify(api.toJSON().grid)).toBe(grid);
   expect(host.querySelector('iframe')).toBe(preview);
@@ -444,4 +445,73 @@ it('changes native dock titles live without recreating panels, preview or layout
   expect(api.getPanel('history')!.title).toBe('Version history');
   expect(api.getPanel('preview')!.title).toBe('Preview');
   expect(host.querySelector('iframe')).toBe(preview);
+});
+
+it("keeps the MVP panels fixed, rejects hidden panels, and restores divider sizes", () => {
+  mount("p1", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, storageKey: "motion.mvp.dock.v1" });
+  const store = useDockLayoutStore.getState();
+  expect(store.openPanels).toEqual(new Set(MVP_PANEL_IDS));
+  act(() => {
+    store.closePanel("preview");
+    store.closePanel("assets");
+    store.activatePanel("code");
+    dockApi!.getPanel("compositions")!.api.setSize({ width: 320 });
+    vi.advanceTimersByTime(1000);
+  });
+  expect(useDockLayoutStore.getState().openPanels).toEqual(new Set(MVP_PANEL_IDS));
+  expect(dockApi!.getPanel("timeline")!.group.header.hidden).toBe(true);
+  expect(dockApi!.getPanel("preview")!.group.header.hidden).toBe(false);
+  const saved = dockApi!.toJSON();
+  expect(saved.panels.code).toBeUndefined();
+  act(() => root?.unmount());
+  root = null;
+  mount("p1", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, storageKey: "motion.mvp.dock.v1" });
+  expect(dockApi!.toJSON().grid).toEqual(saved.grid);
+  expect(dockApi!.getPanel("timeline")!.group.header.hidden).toBe(true);
+  expect(useDockLayoutStore.getState().openPanels).toEqual(new Set(MVP_PANEL_IDS));
+});
+
+
+it("expands only the MVP preview and restores layout without remounting the player", () => {
+  const host = document.createElement("div");
+  document.body.append(host);
+  root = createRoot(host);
+  act(() => root?.render(
+    <I18nProvider initialLocale="en"><StudioHostContext.Provider value={{ mvpEditor: true }}>
+      <Dock.Root projectId="p1" panels={MVP_PANEL_IDS} fixedLayout storageKey="motion.mvp.dock.v1">
+        {MVP_PANEL_IDS.map(id => <Dock.Panel key={id} id={id}>
+          {id === "preview" ? <iframe title="Preview player" /> : <div>{id}</div>}
+        </Dock.Panel>)}
+      </Dock.Root>
+    </StudioHostContext.Provider></I18nProvider>,
+  ));
+  const api = dockApi!;
+  act(() => {
+    api.getPanel("compositions")!.api.setSize({ width: 310 });
+    api.getPanel("renders")!.api.setActive();
+    vi.advanceTimersByTime(1000);
+  });
+  const grid = api.toJSON().grid;
+  const player = host.querySelector("iframe");
+  const click = (label: string) => act(() => host.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!.click());
+  click("Expand preview");
+  expect(api.getPanel("preview")!.group.api.isMaximized()).toBe(true);
+  expect(host.querySelector("iframe")).toBe(player);
+  expect(document.fullscreenElement).toBeFalsy();
+  act(() => vi.advanceTimersByTime(1000));
+  expect(readStudioUiPreferences(undefined, "p1", "motion.mvp.dock.v1").dockLayout?.grid).toEqual(grid);
+  click("Restore preview");
+  expect(api.hasMaximizedGroup()).toBe(false);
+  expect(api.toJSON().grid).toEqual(grid);
+  expect(host.querySelector("iframe")).toBe(player);
+  click("Expand preview");
+  const exitComposition = vi.fn();
+  window.addEventListener("keydown", exitComposition);
+  act(() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true })));
+  window.removeEventListener("keydown", exitComposition);
+  expect(exitComposition).not.toHaveBeenCalled();
+  expect(api.hasMaximizedGroup()).toBe(false);
+  expect(api.toJSON().grid).toEqual(grid);
+  expect(host.querySelector("iframe")).toBe(player);
+  expect(document.activeElement).toBe(host.querySelector('[aria-label="Expand preview"]'));
 });

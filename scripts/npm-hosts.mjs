@@ -5,6 +5,7 @@ import os from 'node:os';
 import { canonical, readJSON, runFile, withLock, writeJSON } from './runtime-assets.mjs';
 
 export const hosts = ['codex', 'claude', 'deepseek', 'workbuddy'];
+// Keep ownership stable so earlier local installations remain upgradable.
 const owner = '@openmotion/installer';
 const bundleName = 'dsh-plugin-openmotion-local';
 const equalTransport = (actual, expected) => actual?.command === expected.command && JSON.stringify(actual.args) === JSON.stringify(expected.args);

@@ -141,7 +141,7 @@
       "bundledFiles": [
         {
           "path": "assets/code-3d-extrude/index.html",
-          "sha256": "173bbf881d571d0c434cf786f599904a2f544d0af95445c91fd7bf58c7c45eda"
+          "sha256": "466b7b08c4b9844f4d7e188b1ba59439e5da10dc8457aebb30c5ef74e671afe3"
         },
         {
           "path": "assets/code-3d-extrude/reference.mp4",
@@ -178,7 +178,7 @@
       "bundledFiles": [
         {
           "path": "assets/code-particle-assemble/index.html",
-          "sha256": "f37d702f7c1f80e48d8a918901f030b8acfc21d2ddb65d22f5dfb5a099280a72"
+          "sha256": "93303ce40c5c8bd021a0120a3dfef678bd22655a67fad84b594ded6eacd00d3e"
         },
         {
           "path": "assets/code-particle-assemble/reference.mp4",

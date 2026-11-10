@@ -108,7 +108,7 @@ export function ColorCurves({
                 : "border-transparent text-panel-text-4 hover:text-panel-text-2"
             }`}
           >
-            {candidate.label}
+            {t(candidate.label)}
           </button>
         ))}
       </div>
@@ -171,8 +171,8 @@ export function ColorCurves({
         )}
         <button
           type="button"
-          aria-label={t("Reset {value0} curve", { value0: tab.label })}
-          title={t("Reset {value0} curve", { value0: tab.label })}
+          aria-label={t("Reset {value0} curve", { value0: t(tab.label) })}
+          title={t("Reset {value0} curve", { value0: t(tab.label) })}
           disabled={disabled}
           onClick={resetActive}
           className="pb-0.5 text-panel-text-4 hover:text-panel-text-1 disabled:opacity-40"

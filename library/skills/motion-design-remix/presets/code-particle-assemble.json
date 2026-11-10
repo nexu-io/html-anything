@@ -1,6 +1,6 @@
 {
   "id": "code-particle-assemble",
-  "sourceSha256": "f37d702f7c1f80e48d8a918901f030b8acfc21d2ddb65d22f5dfb5a099280a72",
+  "sourceSha256": "93303ce40c5c8bd021a0120a3dfef678bd22655a67fad84b594ded6eacd00d3e",
   "replacements": [
     {
       "from": "content: \"app\"",

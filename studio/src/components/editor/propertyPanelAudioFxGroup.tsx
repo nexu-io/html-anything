@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n/I18n";
 /**
  * The audio FX panel's bridge to the element/attribute world.
  *
@@ -275,6 +276,7 @@ export function AudioFxGroup({
   // clip that had just been grouped. `syncStoredGroupAttribute` and
   // `updateElement` both replace the array, so its identity is the cheap signal
   // that membership may have moved.
+  const { t } = useI18n();
   const storeElements = usePlayerStore((s) => s.elements);
   const signalPath = useMemo(() => {
     const doc = element.element?.ownerDocument;
@@ -282,9 +284,10 @@ export function AudioFxGroup({
       element.tagName?.toLowerCase(),
       element.id ?? undefined,
       doc ? resolveAudioGroups(doc) : [],
+      t,
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [element, storeElements]);
+  }, [element, storeElements, t]);
 
   // A bus has no span of its own, so resolve the live members. The
   // `storeElements` subscription above rerenders this panel when membership

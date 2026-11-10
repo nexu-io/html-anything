@@ -1,3 +1,5 @@
+import { RemixIcon } from "../../icons/RemixIcons";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useMediaGateway } from "../../motion/MediaGatewayContext";
 import { mediaPopoverAnchor } from "../../motion/mediaPopoverPosition";
@@ -5,6 +7,7 @@ import { buildProjectApiPath } from "../../utils/projectRouting";
 // fallow-ignore-file code-duplication
 import { memo, useState, useCallback, useRef, useMemo, useEffect } from "react";
 import { SearchInput } from "../ui/SearchInput";
+import { FilterChip } from "../ui/FilterChip";
 import { MEDIA_EXT, FONT_EXT } from "../../utils/mediaTypes";
 import { copyTextToClipboard } from "../../utils/clipboard";
 import { usePlayerStore } from "../../player/store/playerStore";
@@ -17,7 +20,6 @@ import {
   FILTER_ORDER,
 } from "./assetHelpers";
 import { AudioRow } from "./AudioRow";
-import { GlobalAssetsView } from "./GlobalAssetsView";
 import { AssetCard, FontRow } from "./AssetCard";
 import { studioApiFetch } from "../../utils/studioApiFetch";
 
@@ -112,38 +114,16 @@ function ImportButton({ importing, onClick }: { importing: boolean; onClick: () 
       onClick={onClick}
       disabled={importing}
       aria-busy={importing}
-      className="w-full flex items-center justify-center gap-1.5 rounded-md bg-panel-input px-3 py-[7px] text-[11px] font-medium text-panel-text-3 enabled:hover:text-panel-text-1 enabled:active:scale-[0.98] disabled:opacity-60 transition-colors mb-2.5"
+      aria-label={t("Import media")}
+      title={t("Import media")}
+      className="flex shrink-0 items-center justify-center gap-1 rounded-md bg-panel-input px-2 py-[5px] text-[11px] font-medium text-panel-text-3 enabled:hover:text-panel-text-1 enabled:active:scale-[0.98] disabled:opacity-60 transition-colors"
     >
       {importing ? (
-        <svg className="animate-spin" width="11" height="11" viewBox="0 0 24 24" fill="none">
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-          />
-        </svg>
+        <RemixIcon name="loader-4-line" size={14} className="animate-spin" />
       ) : (
-        <svg
-          width="11"
-          height="11"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        >
-          <path d="M12 5v14M5 12h14" />
-        </svg>
+        <RemixIcon name="add-line" size={14} />
       )}
-      {importing ? t("Importing…") : t("Import media")}
+      {importing ? t("Importing…") : t("Import")}
     </button>
   );
 }
@@ -175,23 +155,7 @@ function EmptyState({
   }
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 gap-2">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        className="text-text-off"
-      >
-        <path
-          d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <polyline points="17 8 12 3 7 8" strokeLinecap="round" strokeLinejoin="round" />
-        <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
-      </svg>
+      <RemixIcon name="upload-2-line" size={24} className="text-text-off" />
       <p className="text-[10px] text-neutral-600 text-center">{t("Drop media files here")}</p>
     </div>
   );
@@ -207,14 +171,13 @@ export const AssetsTab = memo(function AssetsTab({
 }: AssetsTabProps) {
   const { t } = useI18n();
   const mediaGateway = useMediaGateway();
+  const mvp = useMvpEditor();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState<CopyFeedback>(null);
   const [importing, setImporting] = useState(false);
   const [activeFilter, setActiveFilter] = useState<MediaCategory | "all">("all");
-  const [usageFilter, setUsageFilter] = useState<"all" | "used" | "unused">("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"local" | "global">("local");
   const [manifest, setManifest] = useState<
     Map<string, { description?: string; duration?: number; width?: number; height?: number }>
   >(new Map());
@@ -293,7 +256,7 @@ export const AssetsTab = memo(function AssetsTab({
   );
 
   const mediaAssets = useMemo(() => {
-    const all = filterByUsage(allMediaAssets, usedPaths, usageFilter);
+    const all = allMediaAssets;
     if (!searchQuery) return all;
     const q = searchQuery.toLowerCase();
     return all.filter((a) => {
@@ -301,7 +264,7 @@ export const AssetsTab = memo(function AssetsTab({
       const rec = manifest.get(a);
       return rec?.description?.toLowerCase().includes(q);
     });
-  }, [allMediaAssets, searchQuery, manifest, usageFilter, usedPaths]);
+  }, [allMediaAssets, searchQuery, manifest]);
 
   const categorized = useMemo(() => {
     const groups: Record<MediaCategory, string[]> = { audio: [], images: [], video: [], fonts: [] };
@@ -324,14 +287,6 @@ export const AssetsTab = memo(function AssetsTab({
     for (const cat of FILTER_ORDER) c[cat] = categorized[cat].length;
     return c;
   }, [mediaAssets, categorized]);
-  const usageCounts = useMemo(
-    () =>
-      countUsage(
-        assets.filter((a) => MEDIA_EXT.test(a) || FONT_EXT.test(a)),
-        usedPaths,
-      ),
-    [assets, usedPaths],
-  );
   const visibleCategories =
     activeFilter === "all"
       ? FILTER_ORDER.filter((c) => categorized[c].length > 0)
@@ -346,125 +301,72 @@ export const AssetsTab = memo(function AssetsTab({
       onDragLeave={() => setDragOver(false)}
       onDrop={handleDrop}
     >
-      {/* Header — matches design panel Section pattern */}
-      <div className="px-4 pt-2.5 pb-1.5 shrink-0">
-        {/* Scope toggle */}
-        <div className="flex gap-1 mb-2.5 p-0.5 rounded-md bg-panel-input">
-          {(["local", "global"] as const).map((m) => (
-            <button
-              key={m}
-              onClick={() => setViewMode(m)}
-              className={`flex-1 px-2 py-1 text-[11px] font-medium rounded transition-colors ${
-                viewMode === m
-                  ? "bg-panel-accent/15 text-accent-ink"
-                  : "text-panel-text-3 hover:text-panel-text-1"
-              }`}
-            >
-              {m === "local" ? t("This project") : t("All projects")}
-            </button>
-          ))}
-        </div>
-        {/* Import */}
-        {onImport && mediaGateway && <button className="motion-asset-generate" onClick={event => mediaGateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t("Generate media")}</button>}
-        {onImport && (
-          <>
-            <ImportButton importing={importing} onClick={() => fileInputRef.current?.click()} />
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="video/*,image/*,audio/*,font/*"
-              multiple
-              className="hidden"
-              onChange={(e) => {
-                if (e.target.files?.length) {
-                  void handleImport(e.target.files);
-                  e.target.value = "";
-                }
-              }}
-            />
-          </>
-        )}
-
-        {/* Search — gated on the UNFILTERED pool so it never unmounts itself */}
-        {allMediaAssets.length > 0 && (
+      <div className="shrink-0 space-y-1.5 border-b border-panel-border px-2 py-2" data-assets-toolbar>
+        <div className="flex items-center gap-1.5">
           <SearchInput
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t("Search assets...")}
             aria-label={t("Search assets")}
-            className="mb-2"
+            className="min-w-0 flex-1"
+          />
+          {onImport && <ImportButton importing={importing} onClick={() => fileInputRef.current?.click()} />}
+        </div>
+        {!mvp && onImport && mediaGateway && <button className="motion-asset-generate" onClick={event => mediaGateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t("Generate media")}</button>}
+        {onImport && (
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="video/*,image/*,audio/*,font/*"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files?.length) {
+                void handleImport(e.target.files);
+                e.target.value = "";
+              }
+            }}
           />
         )}
 
         {/* Filter chips */}
-        {viewMode === "local" && allMediaAssets.length > 0 && (
+        {allMediaAssets.length > 0 && (
           <div className="flex gap-1.5 flex-wrap">
-            <button
+            <FilterChip
               onClick={() => setActiveFilter("all")}
-              aria-pressed={activeFilter === "all"}
-              className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors active:scale-[0.98] ${
-                activeFilter === "all"
-                  ? "bg-panel-accent/15 text-accent-ink"
-                  : "bg-panel-input text-panel-text-3 hover:text-panel-text-1"
-              }`}
+              active={activeFilter === "all"}
             >
               {t("All")}{" "}{counts.all}
-            </button>
+            </FilterChip>
             {FILTER_ORDER.map((cat) =>
-              counts[cat] > 0 ? (
-                <button
+              counts[cat] > 0 || activeFilter === cat ? (
+                <FilterChip
                   key={cat}
                   onClick={() => setActiveFilter(activeFilter === cat ? "all" : cat)}
-                  aria-pressed={activeFilter === cat}
-                  className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors active:scale-[0.98] ${
-                    activeFilter === cat
-                      ? "bg-panel-accent/15 text-accent-ink"
-                      : "bg-panel-input text-panel-text-3 hover:text-panel-text-1"
-                  }`}
+                  active={activeFilter === cat}
                 >
                   {t(CATEGORY_LABELS[cat])} {counts[cat]}
-                </button>
+                </FilterChip>
               ) : null,
-            )}
-            {usageCounts.used > 0 && usageCounts.unused > 0 && (
-              <>
-                <span className="w-px self-stretch bg-panel-input mx-0.5" aria-hidden="true" />
-                <button
-                  onClick={() => setUsageFilter(usageFilter === "used" ? "all" : "used")}
-                  className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors ${
-                    usageFilter === "used"
-                      ? "bg-panel-accent/15 text-accent-ink"
-                      : "bg-panel-input text-panel-text-3 hover:text-panel-text-1"
-                  }`}
-                >
-                  {t("In use")}{" "}{usageCounts.used}
-                </button>
-                <button
-                  onClick={() => setUsageFilter(usageFilter === "unused" ? "all" : "unused")}
-                  className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors ${
-                    usageFilter === "unused"
-                      ? "bg-panel-accent/15 text-accent-ink"
-                      : "bg-panel-input text-panel-text-3 hover:text-panel-text-1"
-                  }`}
-                >
-                  {t("Unused")}{" "}{usageCounts.unused}
-                </button>
-              </>
             )}
           </div>
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto mt-1">
-        {viewMode === "global" ? (
-          <GlobalAssetsView searchQuery={searchQuery} />
-        ) : mediaAssets.length === 0 ? (
+      <div
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-1 [scrollbar-gutter:stable]"
+        role="region"
+        aria-label={t("Project assets")}
+        tabIndex={0}
+        data-assets-list
+      >
+        {mediaAssets.length === 0 ? (
           <EmptyState searchQuery={searchQuery} onClearSearch={() => setSearchQuery("")} />
         ) : (
           visibleCategories.map((cat) => (
             <div key={cat} className="mb-1">
-              {activeFilter === "all" && (
-                <div className="flex items-center gap-2 px-4 py-2 border-t border-panel-border">
+              {activeFilter === "all" && visibleCategories.length > 1 && (
+                <div className="flex items-center gap-2 px-2 py-1.5">
                   <h3 className="text-[12px] font-semibold text-panel-text-1">
                     {t(CATEGORY_LABELS[cat])}
                   </h3>
@@ -487,7 +389,7 @@ export const AssetsTab = memo(function AssetsTab({
                   />
                 ))}
               {(cat === "images" || cat === "video") && (
-                <div className="grid grid-cols-2 gap-1 px-2 pb-1">
+                <div className="hf-media-card-grid pb-1">
                   {categorized[cat].map((a) => (
                     <AssetCard
                       key={a}

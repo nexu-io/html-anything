@@ -14,6 +14,8 @@ interface EditPopoverProps {
   anchorY: number;
   onClose: () => void;
   initialPrompt?: string;
+  /** Exact clip identity; omit for a time-range request. */
+  selectedElementKey?: string;
 }
 
 function draftKey(start: number, end: number): string {
@@ -37,7 +39,7 @@ function writeDraft(key: string, value: string): void {
   }
 }
 
-export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose, initialPrompt }: EditPopoverProps) {
+export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose, initialPrompt, selectedElementKey }: EditPopoverProps) {
   const { t } = useI18n();
   const elements = usePlayerStore((s) => s.elements);
   const start = Math.min(rangeStart, rangeEnd);
@@ -56,11 +58,17 @@ export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose, i
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const elementsInRange = useMemo(() => {
+    // A single-clip request must not expand to overlapping clips, even if its
+    // target disappears while this popover is open. Keys distinguish nested
+    // compositions whose elements share the same authored DOM id.
+    if (selectedElementKey !== undefined) {
+      return elements.filter((el) => (el.key ?? el.id) === selectedElementKey);
+    }
     return elements.filter((el) => {
       const elEnd = el.start + el.duration;
       return el.start < end && elEnd > start;
     });
-  }, [elements, start, end]);
+  }, [elements, start, end, selectedElementKey]);
 
   useMountEffect(() => {
     setTimeout(() => textareaRef.current?.focus(), 50);
@@ -150,7 +158,7 @@ export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose, i
         {elementsInRange.length > 0 && (
           <div className="px-4 py-2 border-b border-neutral-800/40 max-h-24 overflow-y-auto">
             {elementsInRange.map((el) => (
-              <div key={el.id} className="flex items-center justify-between py-0.5">
+              <div key={el.key ?? el.id} className="flex items-center justify-between py-0.5">
                 <span className="text-[10px] font-mono text-accent-ink/80">#{el.id}</span>
                 <span className="text-[10px] text-neutral-600">{el.tag}</span>
               </div>

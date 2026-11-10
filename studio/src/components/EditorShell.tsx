@@ -1,3 +1,4 @@
+import { MVP_PANEL_IDS } from "./dock/panelRegistry";
 import { useI18n } from "../i18n/I18n";
 import { memo, useCallback, type ReactNode } from "react";
 import { matchesKey } from "../player/components/studioShortcuts";
@@ -319,7 +320,13 @@ function EditorShellBody({
       {/* Renders nothing; exposes Studio's state to an agentic browser. Mounted
           here rather than in App because it needs the DomEdit contexts. */}
       <StudioAgentTools />
-      <Dock.Root projectId={projectId} dockWidth={dockWidth}>
+      <Dock.Root
+        projectId={projectId}
+        dockWidth={dockWidth}
+        panels={host?.mvpEditor ? MVP_PANEL_IDS : undefined}
+        storageKey={host?.mvpEditor ? "motion.mvp.dock.v1" : undefined}
+        fixedLayout={host?.mvpEditor}
+      >
         <Dock.Panel id="preview">
           <div className="relative flex h-full w-full min-w-0 flex-col">
             <PreviewPane
