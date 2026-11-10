@@ -336,7 +336,7 @@ describe("PropertyPanel — STUDIO_FLAT_INSPECTOR_ENABLED on", () => {
     const { host, root } = await renderPanel(true);
     expect(host.querySelector('[data-flat-header-icon="true"]')).not.toBeNull();
     expect(host.querySelector('[data-flat-group-open="true"]')).not.toBeNull();
-    expect(host.textContent).toContain("Ask agent about this element");
+    expect(host.textContent).toContain("Ask agent to change only this element");
     act(() => root.unmount());
   });
 
