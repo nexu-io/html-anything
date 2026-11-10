@@ -310,30 +310,50 @@ test('each manual entry accepts only feature/motion before checkout or publicati
   }
 });
 
-test('rendering tools reuse installed packages, bound apt networking and stop on installation failure', async t => {
+test('rendering tools reuse packages and indexes, refresh stale indexes once, and preserve failures', async t => {
   const directory = await mkdtemp(path.join(os.tmpdir(), 'motion-render-tools-'));
   t.after(() => rm(directory, { recursive: true, force: true }));
-  const workflow = await readFile(new URL('../.github/workflows/motion-candidate.yml', import.meta.url), 'utf8');
-  const step = workflow.split('      - name: Install rendering test tools\n')[1].split('\n      - name: ')[0];
-  const script = step.split('        run: |\n')[1].split('\n').map(line => line.replace(/^ {10}/, '')).join('\n');
   const calls = path.join(directory, 'apt-calls');
   const mock = `dpkg-query() { if [[ "$MISSING_FONT" == 1 && "$*" == *fonts-noto-core* ]]; then return 1; fi; printf 'install ok installed'; }
-sudo() { printf '%s\\n' "$*" >> "$APT_CALLS"; [[ "$FAIL_APT" != 1 ]]; }`;
-  const env = { ...process.env, APT_CALLS: calls, HYPERFRAMES_BROWSER_PATH: '/usr/bin/true', FAIL_APT: '0' };
-  for (const missing of ['0', '1']) {
-    await writeFile(calls, '');
-    await runFile('bash', ['-e', '-o', 'pipefail', '-c', mock + '\n' + script], { env: { ...env, MISSING_FONT: missing } });
-    const commands = (await readFile(calls, 'utf8')).trim().split('\n').filter(Boolean);
-    assert.equal(commands.length, missing === '1' ? 2 : 0);
-    if (missing === '1') {
+sudo() {
+  printf '%s\\n' "$*" >> "$APT_CALLS"
+  case "$FAIL_APT" in
+    first) if [[ $(wc -l < "$APT_CALLS") -eq 1 ]]; then return 1; fi ;;
+    always) return 1 ;;
+    install) if [[ "$*" == *' install '* ]]; then return 1; fi ;;
+  esac
+  if [[ "$*" == *' install '* ]]; then touch "$RUNNER_TEMP/motion-rendering-apt/fixture.deb"; fi
+}`;
+  const env = { ...process.env, APT_CALLS: calls, HYPERFRAMES_BROWSER_PATH: '/usr/bin/true', RUNNER_TEMP: directory };
+  for (const name of ['ci', 'motion-candidate']) {
+    const workflow = await readFile(new URL(`../.github/workflows/${name}.yml`, import.meta.url), 'utf8');
+    const step = workflow.split('      - name: Install rendering test tools\n')[1].split('\n      - name: ')[0];
+    assert.match(workflow, /path: \$\{\{ runner.temp \}\}\/motion-rendering-apt/);
+    const cacheStep = workflow.split('      - name: Restore rendering package downloads\n')[1].split('\n      - name: ')[0];
+    const keyPrefix = 'rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-';
+    assert(cacheStep.includes(`key: ${keyPrefix}\${{ github.run_id }}-\${{ github.run_attempt }}\n`), 'the save key must rotate so newer packages can be stored');
+    assert(cacheStep.includes(`restore-keys: |\n            ${keyPrefix}`), 'the newest saved entry must be restored by key prefix');
+    const script = step.split('        run: |\n')[1].split('\n').map(line => line.replace(/^ {10}/, '')).join('\n');
+    const run = (missing, failure) => runFile('bash', ['-e', '-o', 'pipefail', '-c', mock + '\n' + script], {
+      env: { ...env, MISSING_FONT: missing, FAIL_APT: failure },
+    });
+    for (const [missing, failure, expected, rejects] of [
+      ['0', '', [], false],
+      ['1', '', ['install'], false],
+      ['1', 'first', ['install', 'update', 'install'], false],
+      ['1', 'always', ['install', 'update'], true],
+      ['1', 'install', ['install', 'update', 'install'], true],
+    ]) {
+      await writeFile(calls, '');
+      if (rejects) await assert.rejects(run(missing, failure));
+      else await run(missing, failure);
+      const commands = (await readFile(calls, 'utf8')).trim().split('\n').filter(Boolean);
+      assert.deepEqual(commands.map(command => command.includes(' install ') ? 'install' : 'update'), expected);
       assert(commands.every(command => command.includes('Acquire::Retries=2') && command.includes('Acquire::http::Timeout=30') && command.includes('Acquire::https::Timeout=30')));
-      assert(commands[0].endsWith(' update'));
-      assert(commands[1].endsWith(' install -y --no-install-recommends fonts-noto-core'));
+      assert(commands.filter(command => command.includes(' install ')).every(command => command.endsWith(' install -y --no-install-recommends fonts-noto-core')));
+      assert(commands.every(command => command.includes(`Dir::Cache::archives=${directory}/motion-rendering-apt`) && command.includes('APT::Keep-Downloaded-Packages=true')));
     }
   }
-  await writeFile(calls, '');
-  await assert.rejects(runFile('bash', ['-e', '-o', 'pipefail', '-c', mock + '\n' + script], { env: { ...env, MISSING_FONT: '1', FAIL_APT: '1' } }));
-  assert.equal((await readFile(calls, 'utf8')).trim().split('\n').length, 1, 'Failed apt update must not continue');
 });
 
 function storage(candidate) {
