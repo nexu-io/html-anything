@@ -1,5 +1,12 @@
 import assert from 'node:assert/strict';
 
+export function testVersion(base, run, attempt = '1') {
+  assert(/^\d+\.\d+\.\d+$/.test(base), 'Source version must be MAJOR.MINOR.PATCH');
+  assert(/^[1-9]\d*$/.test(String(run)) && /^[1-9]\d*$/.test(String(attempt)), 'Use positive run and attempt numbers');
+  const [major, minor, patch] = base.split('.').map(Number);
+  return `${major}.${minor}.${patch + 1}-test.${run}.${attempt}`;
+}
+
 export function checkReleaseVersion(version) {
   assert.match(version, /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-test\.[1-9]\d*(?:\.[1-9]\d*)*)?$/, 'Use MAJOR.MINOR.PATCH or MAJOR.MINOR.PATCH-test.N[.N]');
 }
