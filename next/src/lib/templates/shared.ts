@@ -35,6 +35,13 @@ export const SHARED_DESIGN_DIRECTIVES = `
 - 如果用户数据是结构化数据 (CSV/JSON), 请提取关键洞察并以图表/表格呈现。
 - 中文与英文混排时, 中英文之间留半角空格 (盘古之白)。
 
+【Mermaid 图表 — 渲染兼容性】
+- **推荐**: 将每张 mermaid 图源放进 JS 字符串常量, 渲染时用 \`pre.textContent = source\` 写入 \`<pre class="mermaid">\` (或 \`<div class="mermaid">\`) 占位元素, 然后调用 \`mermaid.run({ nodes: [...] })\` 或 \`mermaid.contentLoaded()\`。这是**最稳健**的方式 — \`textContent\` 跳过浏览器对内嵌 HTML 标签的解析, 保证 \`<br/>\` 等字面字符串原样到达 mermaid。
+- **如果直接把图源写进 \`<div class="mermaid">…</div>\`**, 则:
+  - **不要嵌套** \`<pre>\` / \`<code>\`。mermaid 直接读 div 的 \`textContent\`, 嵌套包装层只会破坏空格/缩进。
+  - 图源里出现的 \`<br/>\` 标签必须 **HTML-entity 编码** 为 \`&lt;br/&gt;\`, 否则浏览器解析时会把它当真 \`<br>\` 元素吃掉, mermaid 拿到换行符 → 报 \`Syntax error in text\`。
+- mermaid 配置: \`startOnLoad: true\` 即可自动渲染; 对超宽时序图/类图考虑 \`sequence: { useMaxWidth: true }\` + 在容器上加 \`overflow-x: auto\`。
+
 `;
 
 /**
