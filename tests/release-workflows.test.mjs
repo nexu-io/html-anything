@@ -211,6 +211,16 @@ test('partial publication retries use the retained producer artifact IDs across 
   }
 });
 
+test('shared Agent instructions keep the release controls synchronized', async () => {
+  const section = async file => {
+    const text = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+    return text.split('## Candidate and publication controls\n')[1].split('\n## ')[0].trim();
+  };
+  const shared = await section('AGENTS.md');
+  assert(shared.includes('DEV template defaults') && shared.includes('Publish under `candidate` first') && shared.includes('after both matching DEV native reports pass'));
+  assert.equal(await section('CLAUDE.md'), shared, 'CLAUDE.md must mirror the AGENTS.md release controls');
+});
+
 test('daily build and publication are separate manual entries without an independent environment gate', async () => {
   const build = await readFile(new URL('../.github/workflows/motion-candidate.yml', import.meta.url), 'utf8');
   const workflow = await readFile(new URL('../.github/workflows/motion-publish-test.yml', import.meta.url), 'utf8');
