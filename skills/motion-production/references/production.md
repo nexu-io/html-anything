@@ -13,6 +13,8 @@ Use only the Motion MCP Tools actually returned by tools/list. Read [Native auth
 | Export | motion_export_request: immutable snapshot, background MP4, automatic lint and technical verification |
 | Cancel | motion_export_cancel: explicit owned job, distinguish cancelling/cancelled/completed |
 
+For missing or inadequate media, use [asset decisions](../../motion-director/references/production-decisions.md) to choose generation, retrieval or a suitable graphic medium within the current task. Use available host tools or Studio and existing authorization; do not invent tool names or silently add paid dependencies. Inspect completed media at its actual largest framing before composing. A queued generation or imported file does not establish visual quality.
+
 ## Execution
 
 ### Tool transport and workspace readiness
