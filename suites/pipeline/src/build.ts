@@ -4,7 +4,7 @@ import { inspect, pack as packageClosure } from "@odsuite/pack";
 import { bundle, resolve as manifest, parse, parseReleaseVersion, releaseChannel } from "@odsuite/release";
 import { channelRoot, configuration, configuredBase, version } from "./config.js";
 import { hash, inventory, json, located, owned, read, revision, run } from "./files.js";
-import { type BuildReceipt, carriers, type PackReceipt, type Selection } from "./types.js";
+import type { BuildReceipt, PackReceipt, Selection } from "./types.js";
 
 export async function selectedVersion(selection: Selection) {
   const channel = releaseChannel(selection.channel);
@@ -34,7 +34,7 @@ export async function build(selection: Selection): Promise<BuildReceipt> {
       ODSUITE_BUILD: identity.identity.version,
     });
     temporary = await mkdtemp(join(base, "build-"));
-    for (const carrier of carriers) {
+    for (const carrier of Object.keys(config.units)) {
       const output = await located(config.root, config.units[carrier]);
       // Validate the actual finite runtime closure before accepting build evidence.
       const actual = inspect(await bundle(output));
@@ -66,10 +66,9 @@ export async function build(selection: Selection): Promise<BuildReceipt> {
       source,
       fingerprint,
       directory: relative(config.root, directory),
-      carriers: {
-        standalone: relative(config.root, join(directory, "standalone")),
-        codexplugin: relative(config.root, join(directory, "codexplugin")),
-      },
+      carriers: Object.fromEntries(
+        Object.keys(config.units).map((carrier) => [carrier, relative(config.root, join(directory, carrier))]),
+      ),
     };
     await json(join(base, "build.json"), receipt);
     return receipt;
@@ -93,7 +92,10 @@ export async function loadBuild(root: string, lane: string): Promise<BuildReceip
   if (JSON.stringify(parse(receipt.manifest)) !== JSON.stringify(parse(await read(join(directory, "release.json")))))
     throw Error("build manifest mismatch");
   if ((await inventory(directory)) !== receipt.fingerprint) throw Error("build fingerprint mismatch");
-  for (const carrier of carriers) {
+  const config = await configuration(root, lane);
+  if (Object.keys(receipt.carriers).sort().join(":") !== Object.keys(config.units).sort().join(":"))
+    throw Error("build carrier set mismatch");
+  for (const carrier of Object.keys(config.units)) {
     if ((await located(root, receipt.carriers[carrier])) !== join(directory, carrier))
       throw Error("carrier path mismatch");
     const actual = inspect(await bundle(join(directory, carrier)));
@@ -118,7 +120,7 @@ export async function pack(root: string, lane: string): Promise<PackReceipt> {
     packages: {} as PackReceipt["packages"],
   };
   try {
-    for (const carrier of carriers) {
+    for (const carrier of Object.keys(built.carriers)) {
       const result = await packageClosure({
         carrier,
         channel: lane,
@@ -152,10 +154,10 @@ export async function loadPackage(root: string, lane: string): Promise<PackRecei
     receipt.fingerprint !== build.fingerprint
   )
     throw Error("package identity mismatch");
-  if (Object.keys(receipt.packages).sort().join(":") !== "codexplugin:standalone")
+  if (Object.keys(receipt.packages).sort().join(":") !== Object.keys(build.carriers).sort().join(":"))
     throw Error("package carrier set mismatch");
-  for (const carrier of carriers) {
-    const item = receipt.packages[carrier],
+  for (const carrier of Object.keys(build.carriers)) {
+    const item = receipt.packages[carrier]!,
       bytes = await readFile(await located(root, item.path));
     const value = inspect(bytes);
     if (

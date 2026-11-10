@@ -10,6 +10,17 @@ const product = JSON.parse(await readFile(new URL("../../package.json", import.m
 await rm("dist", { recursive: true, force: true });
 const worker = fileURLToPath(import.meta.resolve("@open-motion/render/worker"));
 await compile({
+  required: [
+    "main.mjs",
+    "LICENSE",
+    "NOTICE",
+    "web/index.html",
+    "daemon/main.mjs",
+    "render/worker.mjs",
+    ".codex-plugin/plugin.json",
+    "mcp.json",
+    "skills/motion-production/SKILL.md",
+  ],
   identity: {
     carrier: "codexplugin",
     version: process.env.ODSUITE_BUILD ?? product.version,

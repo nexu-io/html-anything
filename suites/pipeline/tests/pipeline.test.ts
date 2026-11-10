@@ -56,7 +56,7 @@ pipeline:
     );
     await writeFile(
       join(dir, "build.mjs"),
-      `import{mkdir,writeFile}from'node:fs/promises';import{dirname}from'node:path';(async()=>{for(const file of ['main.mjs','LICENSE','NOTICE','web/index.html','daemon/main.mjs','render/worker.mjs']){await mkdir(dirname('dist/'+file),{recursive:true});await writeFile('dist/'+file,process.env.ODSUITE_BUILD)}await writeFile('dist/runtime.json',JSON.stringify({carrier:'${name}',version:process.env.ODSUITE_BUILD,channel:process.env.ODSUITE_BUILD.includes('-')?process.env.ODSUITE_BUILD.split('-')[1].split('.')[0]:'stable'}));if('${name}'==='codexplugin'){await mkdir('dist/.codex-plugin',{recursive:true});await writeFile('dist/.codex-plugin/plugin.json',JSON.stringify({version:process.env.ODSUITE_BUILD}))}})();`,
+      `import{mkdir,writeFile}from'node:fs/promises';import{dirname}from'node:path';(async()=>{for(const file of ['main.mjs','LICENSE','NOTICE','web/index.html','daemon/main.mjs','render/worker.mjs']){await mkdir(dirname('dist/'+file),{recursive:true});await writeFile('dist/'+file,process.env.ODSUITE_BUILD)}await writeFile('dist/runtime.json',JSON.stringify({files:['main.mjs','LICENSE','NOTICE','web/index.html','daemon/main.mjs','render/worker.mjs'],carrier:'${name}',version:process.env.ODSUITE_BUILD,channel:process.env.ODSUITE_BUILD.includes('-')?process.env.ODSUITE_BUILD.split('-')[1].split('.')[0]:'stable'}));if('${name}'==='codexplugin'){await mkdir('dist/.codex-plugin',{recursive:true});await writeFile('dist/.codex-plugin/plugin.json',JSON.stringify({version:process.env.ODSUITE_BUILD}))}})();`,
     );
   }
   for (const args of [
@@ -87,13 +87,13 @@ it("builds both carrier closures with one version and rejects modified materiali
   expect(await pack(root, "beta")).toEqual(packed);
   expect(Object.keys(packed.packages).sort()).toEqual(["codexplugin", "standalone"]);
   expect((await check(root, "beta", "artifacts")).result).toBe("passed");
-  await writeFile(join(root, packed.packages.codexplugin.path), "tampered");
+  await writeFile(join(root, packed.packages.codexplugin!.path), "tampered");
   await expect(loadPackage(root, "beta")).rejects.toThrow();
   await expect(check(root, "beta", "artifacts")).rejects.toThrow();
   expect(JSON.parse(await readFile(join(channelRoot(root, "beta"), "checks/artifacts.json"), "utf8")).result).toBe(
     "failed",
   );
-  await writeFile(join(root, result.carriers.standalone, "main.mjs"), "tampered");
+  await writeFile(join(root, result.carriers.standalone!, "main.mjs"), "tampered");
   await expect(loadBuild(root, "beta")).rejects.toThrow("fingerprint");
 }, 30000);
 it("invalidates old evidence on build failure and rejects escaped carrier outputs", async () => {
@@ -149,7 +149,7 @@ it("invalidates old quality evidence and refuses to label modified source as the
   await rm(join(root, "carriers/standalone/dist/main.mjs"));
   await expect(check(root, "stable", "tests")).rejects.toThrow();
   // The immutable staged build is intact, but source gates still fail on dirty source.
-  await rm(join(root, (await loadBuild(root, "stable")).carriers.standalone, "main.mjs"));
+  await rm(join(root, (await loadBuild(root, "stable")).carriers.standalone!, "main.mjs"));
   await expect(check(root, "stable", "tests")).rejects.toThrow();
   await expect(readFile(path)).rejects.toThrow();
 }, 30000);

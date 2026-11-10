@@ -21,7 +21,7 @@ export async function check(root: string, lane: string, gate: Gate): Promise<Che
     )
       throw Error("source gate requires the clean build commit");
     const config = await configuration(root, lane);
-    for (const carrier of ["standalone", "codexplugin"] as const)
+    for (const carrier of Object.keys(config.units))
       if (
         (await inventory(await located(root, config.units[carrier]))) !==
         (await inventory(await located(root, built.carriers[carrier])))

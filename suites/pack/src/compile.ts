@@ -5,6 +5,7 @@ import type { Identity } from "./index.js";
 
 export interface Compilation {
   identity: Identity;
+  required: string[];
   directory: string;
   entries: Record<string, string>;
   copies: Record<string, string>;
@@ -69,5 +70,5 @@ export async function compile(input: Compilation): Promise<void> {
       notices += `\n${filename}\n${await readFile(join(directory, filename), "utf8")}\n`;
   }
   await writeFile(destination("NOTICE"), notices);
-  await writeFile(destination("runtime.json"), JSON.stringify(input.identity));
+  await writeFile(destination("runtime.json"), JSON.stringify({ ...input.identity, files: input.required }));
 }

@@ -30,7 +30,12 @@ async function fixture() {
   }
   await writeFile(
     join(source, "runtime.json"),
-    JSON.stringify({ carrier: "codexplugin", channel: "beta", version: "1.2.3-beta.4" }),
+    JSON.stringify({
+      carrier: "codexplugin",
+      channel: "beta",
+      version: "1.2.3-beta.4",
+      files: ["main.mjs", "LICENSE", "NOTICE", "web/index.html", "daemon/main.mjs", "render/worker.mjs"],
+    }),
   );
   return { root, source, carrier: "codexplugin" as const, channel: "beta", version: "1.2.3-beta.4" };
 }
@@ -40,7 +45,7 @@ it("roundtrips a deterministic Node closure including hidden plugin metadata", a
   const second = await pack({ ...value, output: join(value.root, "second.bundle") });
   expect(first.sha256).toBe(second.sha256);
   const bytes = await readFile(first.path);
-  expect(inspect(bytes)).toEqual({ carrier: value.carrier, channel: value.channel, version: value.version });
+  expect(inspect(bytes)).toMatchObject({ carrier: value.carrier, channel: value.channel, version: value.version });
   expect(bundleEntries(bytes).some((f) => f.path === ".codex-plugin/plugin.json")).toBe(true);
   const installed = join(value.root, "installed");
   await materialize(bytes, installed);

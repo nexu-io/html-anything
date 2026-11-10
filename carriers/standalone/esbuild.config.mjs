@@ -21,6 +21,7 @@ await build({ ...shared, entryPoints: ["src/dev.ts"], outfile: "dist/dev.mjs" })
 
 const worker = fileURLToPath(import.meta.resolve("@open-motion/render/worker"));
 await compile({
+  required: ["main.mjs", "LICENSE", "NOTICE", "web/index.html", "daemon/main.mjs", "render/worker.mjs"],
   identity: {
     carrier: "standalone",
     version: process.env.ODSUITE_BUILD ?? product.version,

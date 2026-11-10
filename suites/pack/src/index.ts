@@ -4,9 +4,12 @@ import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { bundle, bundleEntries, bundleFile, parseReleaseVersion } from "@odsuite/release";
 
 export interface Identity {
-  carrier: "standalone" | "codexplugin";
+  carrier: string;
   version: string;
   channel: string;
+}
+export interface Runtime extends Identity {
+  files: string[];
 }
 export interface Input extends Identity {
   source: string;
@@ -18,18 +21,23 @@ export interface Package extends Identity {
   bytes: number;
 }
 export const hash = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex");
-export function inspect(bytes: Uint8Array): Identity {
-  const value = JSON.parse(Buffer.from(bundleFile(bytes, "runtime.json")).toString("utf8")) as Identity;
-  if (Object.keys(value).sort().join(":") !== "carrier:channel:version") throw Error("invalid runtime identity");
-  if (!["standalone", "codexplugin"].includes(value.carrier)) throw Error("unsupported carrier");
+export function inspect(bytes: Uint8Array): Runtime {
+  const value = JSON.parse(Buffer.from(bundleFile(bytes, "runtime.json")).toString("utf8")) as Runtime;
+  if (Object.keys(value).sort().join(":") !== "carrier:channel:files:version") throw Error("invalid runtime identity");
+  if (typeof value.carrier !== "string" || !/^[a-z][a-z0-9-]{0,31}$/.test(value.carrier))
+    throw Error("invalid carrier identity");
   parseReleaseVersion(value.version, value.channel);
+  if (
+    !Array.isArray(value.files) ||
+    !value.files.length ||
+    value.files.length > 4096 ||
+    new Set(value.files).size !== value.files.length
+  )
+    throw Error("invalid runtime file contract");
   const entries = bundleEntries(bytes);
-  for (const name of ["main.mjs", "LICENSE", "NOTICE", "web/index.html", "daemon/main.mjs", "render/worker.mjs"])
-    if (!entries.some((file) => file.path === name)) throw Error(`incomplete carrier closure: ${name}`);
-  if (value.carrier === "codexplugin") {
-    const plugin = JSON.parse(Buffer.from(bundleFile(bytes, ".codex-plugin/plugin.json")).toString("utf8"));
-    if (plugin.version !== value.version) throw Error("plugin version mismatch");
-  }
+  for (const name of value.files)
+    if (typeof name !== "string" || !entries.some((file) => file.path === name))
+      throw Error(`incomplete carrier closure: ${name}`);
   return value;
 }
 async function canonical(path: string): Promise<string> {

@@ -1,7 +1,5 @@
-import type { Identity, Package } from "@odsuite/pack";
+import type { Package } from "@odsuite/pack";
 import type { Manifest } from "@odsuite/release";
-export type Carrier = Identity["carrier"];
-export const carriers: Carrier[] = ["standalone", "codexplugin"];
 export interface Selection {
   root: string;
   channel: string;
@@ -14,7 +12,7 @@ export interface Configuration {
   channel: string;
   baseVersion: string;
   product: { appid: string; name: string; scheme: string };
-  units: Record<Carrier, string>;
+  units: Record<string, string>;
 }
 export interface BuildReceipt {
   channel: string;
@@ -23,14 +21,14 @@ export interface BuildReceipt {
   source: string | null;
   fingerprint: string;
   directory: string;
-  carriers: Record<Carrier, string>;
+  carriers: Record<string, string>;
 }
 export interface PackReceipt {
   channel: string;
   version: string;
   source: string | null;
   fingerprint: string;
-  packages: Record<Carrier, Package>;
+  packages: Record<string, Package>;
 }
 export type Gate = "policy" | "tests" | "artifacts";
 export interface CheckReceipt {

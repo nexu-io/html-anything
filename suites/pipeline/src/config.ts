@@ -19,29 +19,35 @@ async function document(root: string): Promise<Record<string, unknown>> {
 }
 export async function configuredBase(root: string): Promise<string> {
   const data = await document(root);
-  const runtime = record(data.runtime, ["appid", "name", "scheme", "version", "channel", "namespace", "carrier"]);
+  const runtime = record(data.runtime, ["appid", "name", "scheme", "version", "channel", "namespace"]);
   return parseReleaseVersion(String(runtime.version), "stable").baseVersion;
 }
 export async function configuration(root: string, lane: string): Promise<Configuration> {
   root = await realpath(root);
   releaseChannel(lane);
   const data = await document(root);
-  const runtime = record(data.runtime, ["appid", "name", "scheme", "version", "channel", "namespace", "carrier"]);
+  const runtime = record(data.runtime, ["appid", "name", "scheme", "version", "channel", "namespace"]);
   if (runtime.channel !== "stable")
     throw new Error("pipeline runtime configuration must declare the stable base identity");
   const baseVersion = parseReleaseVersion(String(runtime.version), "stable").baseVersion;
   for (const key of ["appid", "name", "scheme", "namespace"])
     if (typeof runtime[key] !== "string") throw new Error(`runtime.${key} is required`);
   const pipeline = record(data.pipeline, ["carriers"]);
-  const declared = record(pipeline.carriers, ["standalone", "codexplugin"]);
-  const units = { standalone: "", codexplugin: "" };
-  for (const key of ["standalone", "codexplugin"] as const) {
-    const value = declared[key];
-    if (typeof value !== "string" || !/^carriers\/[a-z][a-z0-9-]*\/dist(?:\/[a-z][a-z0-9-]*)*$/.test(value))
+  if (!pipeline.carriers || typeof pipeline.carriers !== "object" || Array.isArray(pipeline.carriers))
+    throw Error("pipeline.carriers must declare finite carrier outputs");
+  const entries = Object.entries(pipeline.carriers);
+  if (!entries.length || entries.length > 8) throw Error("pipeline requires one to eight carriers");
+  const units: Record<string, string> = {};
+  for (const [key, value] of entries) {
+    if (
+      !/^[a-z][a-z0-9-]{0,31}$/.test(key) ||
+      typeof value !== "string" ||
+      !/^carriers\/[a-z][a-z0-9-]*\/dist(?:\/[a-z][a-z0-9-]*)*$/.test(value)
+    )
       throw Error("carrier output must be a bounded carriers/<module>/dist path");
     units[key] = value;
   }
-  if (units.standalone === units.codexplugin) throw Error("carriers require distinct outputs");
+  if (new Set(Object.values(units)).size !== entries.length) throw Error("carriers require distinct outputs");
   return {
     root,
     channel: lane,

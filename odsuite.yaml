@@ -92,7 +92,6 @@ guard:
     - packages/components
 runtime:
   appid: io.openmotion.app
-  carrier: 1
   channel: stable
   name: open-motion
   namespace: primary
