@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeJSON } from '../scripts/runtime-assets.mjs';
 import { sealCandidate, repository, candidateWorkflow, publicationWorkflow, authorizationReceipt, platformReports } from '../.github/scripts/motion-release.mjs';
 
-export async function candidateFixture(t) {
+export async function candidateFixture(t, branch = 'main') {
   const work = await mkdtemp(path.join(os.tmpdir(), 'motion-release-test-'));
   t.after(() => rm(work, { recursive: true, force: true }));
   const root = fileURLToPath(new URL('../', import.meta.url)), build = path.join(work, 'build'), directory = path.join(work, 'candidate');
@@ -28,9 +28,9 @@ export async function candidateFixture(t) {
   await writeJSON(path.join(build, 'release-npm.json'), { ...manifest, installer: { url: './' + path.basename(tgz), sha256: await sha256(tgz) } });
   for (const name of ['source-scan.json', 'package-scan.json']) await writeJSON(path.join(build, name), { status: 'passed' });
   const env = { MOTION_SOURCE_SHA: commit, MOTION_VERSION: version, GITHUB_SHA: 'b'.repeat(40),
-    GITHUB_WORKFLOW_REF: `${repository}/${candidateWorkflow}@refs/heads/main`, GITHUB_RUN_ID: '123', GITHUB_RUN_ATTEMPT: '1' };
+    GITHUB_WORKFLOW_REF: `${repository}/${candidateWorkflow}@refs/heads/${branch}`, GITHUB_RUN_ID: '123', GITHUB_RUN_ATTEMPT: '1' };
   const candidate = await sealCandidate(build, directory, root, env);
-  const provenance = { head_sha: env.GITHUB_SHA, runId: 123, attempt: 1 };
+  const provenance = { head_branch: branch, head_sha: env.GITHUB_SHA, runId: 123, attempt: 1 };
   await writeJSON(path.join(directory, 'provenance.json'), provenance);
   const inputs = { action: 'publish-test', version, accepted: true, expectedSHA256: candidate.tgzSHA256 };
   const publicationEnv = { GITHUB_REPOSITORY: repository, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REF: 'refs/heads/main',

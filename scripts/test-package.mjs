@@ -8,8 +8,8 @@ import { spawn } from 'node:child_process';
 import { releaseProfile } from '../shared/mcp-registry.ts';
 import { distributionFiles } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
-import { checkReleaseVersion } from './release-version.mjs';
-export { checkReleaseVersion } from './release-version.mjs';
+import { checkReleaseVersion, testVersion } from './release-version.mjs';
+export { checkReleaseVersion, testVersion } from './release-version.mjs';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
 // Git Bash tar interprets C: as a remote host; use Windows' native archive tool.
@@ -19,12 +19,6 @@ export function targetInfo(target) {
   const info = lock.targets[target];
   assert(info, `Unsupported target: ${target}`);
   return info;
-}
-export function testVersion(base, run, attempt = '1') {
-  assert(/^\d+\.\d+\.\d+$/.test(base), 'Source version must be MAJOR.MINOR.PATCH');
-  assert(/^[1-9]\d*$/.test(String(run)) && /^[1-9]\d*$/.test(String(attempt)), 'Use positive run and attempt numbers');
-  const [major, minor, patch] = base.split('.').map(Number);
-  return `${major}.${minor}.${patch + 1}-test.${run}.${attempt}`;
 }
 export async function run(command, args, options = {}) {
   await new Promise((resolve, reject) => {

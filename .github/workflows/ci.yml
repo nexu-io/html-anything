@@ -87,8 +87,17 @@ jobs:
         run: |
           # The hosted Ubuntu image provides Chrome; Ubuntu's chromium package pulls a desktop snap.
           "$HYPERFRAMES_BROWSER_PATH" --version
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq --no-install-recommends zip unzip ffmpeg fonts-noto-core
+          missing=()
+          for package in zip unzip ffmpeg fonts-noto-core; do
+            if [ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null)" != 'install ok installed' ]; then
+              missing+=("$package")
+            fi
+          done
+          if ((${#missing[@]})); then
+            apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+            sudo apt-get "${apt_options[@]}" update
+            sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
+          fi
       - name: Validate manual package selection
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
