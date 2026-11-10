@@ -18,6 +18,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Motion application development remains on `feature/motion`. Registering manual workflows on `main` does not move the application or authorize publication.
 - After registration is merged, manual release jobs execute the trusted controls from `main` and select integrated application source from `feature/motion`. Before registration, those manual entries are not available on the default branch.
 - Use Node 26.11.1 for control checks: `node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/install-guide.test.ts`. These tests need no workspace dependency installation and simulate publication services.
+- New test candidates embed DEV defaults. npm publication uses `candidate` first; only matching successful Mac/Windows native reports permit the separate promotion job to advance `test`. Stable publication, `latest` promotion and Skills platform distribution remain out of scope.
 - Follow [activation and operation](docs/motion-release-activation.md). Keep completed acceptance evidence private; do not merge or publish without the task's explicit authorization.
 
 ## Commands
