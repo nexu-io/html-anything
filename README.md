@@ -7,8 +7,7 @@
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
 <p align="center">
-  <a href="docs/readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg"><img src="docs/readme/brand-hero.jpg" width="100%" alt="Dan Martell’s original beside an OpenMotion remake with Riya. A handwritten keyword sits between two lines of bold captions, with the editable Studio timeline below."></picture></a><br>
-  <a href="docs/readme/media/presenter-caption-remake.mp4">Watch the 2.4-second talking-head comparison</a>
+  <a href="docs/readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg"><img src="docs/readme/brand-hero.jpg" width="100%" alt="Dan Martell’s original beside an OpenMotion remake with Riya. A handwritten keyword sits between two lines of bold captions, with the editable Studio timeline below."></picture></a>
 </p>
 
 <p align="center">
@@ -29,13 +28,12 @@
 
 <p align="center"><a href="#agent-wall">Agents</a> · <a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a> · <a href="#community">Community</a></p>
 
-OpenMotion is **the first full-stack agentic video generator**. Upload a reference video or paste a social video link. OpenMotion breaks down the shots, timing and transitions, then **recreates the sequence with your own footage, logo and copy**.
+OpenMotion is **the first full-stack agentic video generator**. Upload a reference video or paste a social video link to **recreate it with your own footage, logo and copy**.
 
+- 🎬 **Full-stack video recreation.** Code video with HTML. Your agent breaks down the reference, rebuilds its shots and transitions, and generates missing assets. Edit the timing in Studio and render an MP4 from the same project.
 - 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion is free and open source. Recreate videos in [your local agent](#agent-wall) and use your own API keys at every layer.
 - 🧩 OpenMotion introduces **Motion.md**, a Markdown format for shot order, timing and transitions. Use it to share how a brand film works, shot by shot.
 - 🎛️ **Images, video, music and voice.** Generate artwork with Nano Banana 2, add a shot with Seedance 2.0, score it with Suno v4 and narrate it with Kokoro. [Explore all seven built-in models](#model-wall).
-
-The remake is an editable HTML project. Fine-tune the cut in Studio and export an MP4.
 
 <a id="agent-wall"></a>
 

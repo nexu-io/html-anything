@@ -7,8 +7,7 @@
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
 <p align="center">
-  <a href="readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg"><img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="Dan Martell 原片与 OpenMotion 复刻并排展示：Riya 出镜，荧光黄手写关键词叠在两行白色粗体字幕之间。下方是 Studio 字幕时间轴。"></picture></a><br>
-  <a href="readme/media/presenter-caption-remake.mp4">播放 2.4 秒真人口播复刻对照</a>
+  <a href="readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg"><img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="Dan Martell 原片与 OpenMotion 复刻并排展示：Riya 出镜，荧光黄手写关键词叠在两行白色粗体字幕之间。下方是 Studio 字幕时间轴。"></picture></a>
 </p>
 
 <p align="center">
@@ -29,13 +28,12 @@
 
 <p align="center"><a href="#agent-wall">Agent 阵容</a> · <a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
 
-OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频，或粘贴社交平台上的视频链接。OpenMotion 逐镜拆解原片的节奏和转场，再**用你的画面、Logo 和文案复刻这段视频**。
+OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或粘贴社交平台上的视频链接，就能**用自己的画面、Logo 和文案复刻原片**。
 
+- 🎬 **全栈视频复刻。** Agent 拆解参考片，用 HTML 重建镜头和转场，并生成缺少的素材。你可以在同一工程里用 Studio 调整剪辑节奏，再渲染导出 MP4。
 - 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 开源免费。直接在[常用的本地 Agent](#agent-wall) 里复刻视频，每一层都能用自己的 API Key。
 - 🧩 OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。品牌宣传片的拆解可以随工程一起分享。
 - 🎛️ **图片、视频、音乐和语音。** 用 Nano Banana 2 生成图片、Seedance 2.0 补镜头、Suno v4 配乐、Kokoro 加旁白，再放进同一条时间轴。[查看 7 个内置模型](#model-wall)
-
-复刻结果是一份可编辑的 HTML 工程，可以在 Studio 里微调剪辑，再导出 MP4。
 
 <a id="agent-wall"></a>
 
