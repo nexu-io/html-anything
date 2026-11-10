@@ -6,24 +6,34 @@ If you are reading this file in the source repository and see `{{...}}`, it is a
 
 ## Instructions for the Agent
 
-1. Check the user's OS/CPU, Node.js and npm, and selected Agent. Node.js 22.18+ with npm and the Agent must already be installed. Supported native targets: {{TARGETS}}. Do not claim support for another target from package-download success.
-2. Use the current host if it is supported; otherwise ask the user to select one. Setup supports `codex`, `claude`, `deepseek` and `workbuddy`. Configure only that host. Preserve existing projects, credentials and unrelated MCP/Skills settings.
+1. Collect OS/CPU, Node.js/npm versions and the current Agent identity together, using the host's supplied context where available. Node.js 22.18+ with npm and the Agent must already be installed. Supported native targets: {{TARGETS}}. Do not claim support for another target from package-download success.
+2. Select the current host explicitly: `codex` (Codex), `claude` (Claude Code), `deepseek` (DeepSeek Harness) or `workbuddy` (WorkBuddy). An explicit user selection takes precedence. Do not infer the current host from which CLIs happen to be installed. Ask only when the current host or required profile cannot be established. Configure only that host; preserve projects, credentials and unrelated MCP/Skills settings.
 3. For a test candidate, use a separate host profile, application home, project data and Skills directory. Keep those paths and reuse them for prepare and future reconnects. The [platform installation recipes]({{DETAILS_URL}}) describe the actual supported options. Do not run a test candidate into the user's daily profile by default.
-4. Install the exact package version below, run prepare, then refresh that host to discover the new installation or changed Tools/Skills. Compatible phase-one updates can keep their existing connections; reconnect closed or incompatible transports. Confirm the application version, template environment, eleven public Tools and five Skills. A registration entry alone does not prove the host has loaded them.
+4. Choose exactly one setup command below, applying the test isolation paths first when required. Run prepare only after successful setup, with the same application home, and wait for completion before native operations. Follow the selected host's discovery/reload mechanism. Compatible phase-one updates can keep existing connections; reconnect closed or incompatible transports. Confirm the application version, template environment, eleven public Tools and five Skills through that host, including an actual `motion_get_project` call. Registration alone does not prove loading.
 5. Report the result and any failed step. Introduce the available capabilities and wait for the user's next request. Installation does not authorize generating a video or calling a paid model.
 
-For a normal Codex installation, the command shape is:
+## Choose the selected host's setup command
+
+The commands below show normal installations. For test candidates, apply the separate configuration/profile, home, data and Skills paths from the [platform recipes]({{DETAILS_URL}}) first. Run only the selected row.
+
+| Current Agent | Setup command | Host-specific selection |
+| --- | --- | --- |
+| Codex | `npx --yes --package "{{PACKAGE_SPEC}}" openmotion setup --host codex` | Preserve the selected `CODEX_HOME` and Skills root. |
+| Claude Code | `npx --yes --package "{{PACKAGE_SPEC}}" openmotion setup --host claude` | Preserve the selected `CLAUDE_CONFIG_DIR` and Skills root. |
+| DeepSeek Harness | `npx --yes --package "{{PACKAGE_SPEC}}" openmotion setup --host deepseek --profile PROFILE` | Replace `PROFILE` with the actual selected profile from the host context; do not guess `web` or `desktop`. The standard macOS Desktop CLI is detected even when `dsh` is absent from PATH; use `--dsh` for another executable location. |
+| WorkBuddy | `npx --yes --package "{{PACKAGE_SPEC}}" openmotion setup --host workbuddy` | Preserve the selected `WORKBUDDY_CONFIG_DIR` and Skills root. |
+
+Then prepare the same installation:
 
 ```sh
-npx --yes --package "{{PACKAGE_SPEC}}" openmotion setup --host codex
 npx --yes --package "{{PACKAGE_SPEC}}" openmotion prepare
 ```
 
-For test installations, add the isolated paths/profile from step 3 before executing. For another supported host, use its setup `--host` value and documented profile settings. Setup installs the selected host's MCP and Skills; a second installer or application/manifest download is unnecessary.
+Repeat an explicit `--home` from setup on prepare. Setup installs the selected host's MCP and Skills; a second installer or application/manifest download is unnecessary. Use `openmotion --help`, `setup --help` or `prepare --help` from this exact package for supported options. Inspect installer source or host internals only to investigate a concrete failure; a missing CLI on PATH alone is not a reason to create a wrapper.
 
 ## Runtime and environment
 
-Setup copies the checked application into a managed writable directory and installs its locked production npm dependencies. The application and user projects do not run from the temporary npx cache. FFmpeg, ffprobe and the browser are downloaded and verified by prepare or first native use; this is not an offline package.
+Setup copies the checked application into a managed writable directory and installs its locked production npm dependencies. The application and user projects do not run from the temporary npx cache. Prepare or first native use prepares the platform's independent native archives concurrently: browser/FFmpeg/ffprobe separately on macOS, browser/combined media on Windows. It waits for all components and reports a failure if any component fails; successful checked components remain reusable. This is not an offline package.
 
 There is no persisted switch-environment command in this version. Internal DEV testing uses its separately configured installation; merely setting an environment variable while running setup does not configure a later desktop Agent. Do not silently fall back from one environment to another.
 

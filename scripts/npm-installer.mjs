@@ -8,13 +8,35 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, relativePath, runFile, withLock, writeAtomic, writeJSON } from './runtime-assets.mjs';
 import { ensureNativeRuntime } from './npm-runtime.mjs';
-import { hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
+import { hosts, hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
 
 // Keep ownership stable so earlier local installations remain upgradable.
 export const managedBy = '@openmotion/installer';
 const bundledManifest = fileURLToPath(new URL('../payload/release-npm.json', import.meta.url));
 const defaultHome = (environment = 'prod') => path.join(process.platform === 'win32' ? process.env.LOCALAPPDATA || os.homedir() : path.join(os.homedir(), '.local/share'), environment === 'dev' ? 'openmotion-dev' : 'openmotion');
 const contains = (parent, child) => { const rel = path.relative(parent, child); return rel === '' || (!rel.startsWith('..' + path.sep) && rel !== '..' && !path.isAbsolute(rel)); };
+const usage = `Usage:
+  openmotion setup --host <${hosts.join('|')}> [options]
+  openmotion prepare [--home DIR]
+  openmotion --version
+
+Select the current Agent host explicitly; installed CLIs do not identify the current host.
+Setup options:
+  --host HOST        Supported hosts: ${hosts.join(', ')} (default: codex)
+  --home DIR         Managed application home; reuse for prepare and upgrades
+  --data-dir DIR     Project data outside application/cache directories
+  --skills-dir DIR   Skills root for Codex, Claude Code or WorkBuddy
+  --codex FILE       Codex executable or JavaScript CLI entry
+  --claude FILE      Claude Code executable
+  --dsh FILE         Harness executable (macOS Desktop CLI is detected automatically)
+  --profile NAME     Harness profile (default: web); use the selected host profile
+  --manifest FILE    Explicit release manifest for controlled local installations
+
+Run prepare after successful setup and wait before native project operations.
+Refresh the selected host's Tools/Skills; registration alone does not prove loading.
+Use separate host configuration, home, data and Skills paths for test candidates.
+  -h, --help         Show this help without installing or changing configuration
+  --version          Show this package's version`;
 
 export async function localManifest(filename) {
   const file = path.resolve(filename), manifest = await readJSON(file);
@@ -128,9 +150,12 @@ export async function setup(options) {
 async function main() {
   const { positionals, values } = parseArgs({ allowPositionals: true, options: {
     manifest: { type: 'string' }, home: { type: 'string' }, 'data-dir': { type: 'string' }, 'skills-dir': { type: 'string' }, host: { type: 'string' }, codex: { type: 'string' }, claude: { type: 'string' }, dsh: { type: 'string' }, profile: { type: 'string' },
+    help: { type: 'boolean', short: 'h' }, version: { type: 'boolean' },
   } });
+  if (values.help) { console.log(usage); return; }
+  if (values.version) { console.log((await readJSON(new URL('../package.json', import.meta.url))).version); return; }
   const [command] = positionals;
-  assert(positionals.length === 1, 'Usage: openmotion setup --host codex|claude|deepseek|workbuddy [--manifest FILE] [--home DIR] [--data-dir DIR] [--skills-dir DIR] [--codex EXECUTABLE] | prepare --home DIR');
+  assert(positionals.length === 1, usage);
   if (command === 'setup') {
     console.log(JSON.stringify(await setup({ manifest: values.manifest, home: values.home, dataDirectory: values['data-dir'], skillsDirectory: values['skills-dir'], host: values.host, codex: values.codex, claude: values.claude, dsh: values.dsh, profile: values.profile }), null, 2));
   } else if (command === 'prepare') {
@@ -141,4 +166,4 @@ async function main() {
     console.log('Pinned FFmpeg, ffprobe and browser are ready.');
   } else throw new Error('Supported commands: setup, prepare');
 }
-if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) main().catch(error => { console.error(error.message); process.exitCode = 1; });
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) main().catch(error => { console.error(error.message + '\nRun openmotion --help for supported hosts and installation options.'); process.exitCode = 1; });
