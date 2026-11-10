@@ -1,6 +1,6 @@
 # Additional README showcase sources
 
-These assets support the [main README](../../../README.md) and its Chinese, Japanese and Korean translations. They are viewing references and campaign imagery, with their original ownership retained. They are not OpenMotion-generated results, customer endorsements or new editable templates.
+These assets support the [main README](../../../README.md) and its Chinese and Japanese translations. They are viewing references and campaign imagery, with their original ownership retained. They are not OpenMotion-generated results, customer endorsements or new editable templates.
 
 ## Acknowledgements
 

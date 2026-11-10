@@ -4,8 +4,7 @@
 
 ## 阅读入口
 
-- [中文项目介绍](README.zh-CN.md) / [English introduction](../README.md)
-- [日本語](README.ja.md) / [한국어](README.ko.md)
+- [English](../README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
 - [使用与首次体验](usage.md)
 - [All-in-One Studio 产品蓝图与 Super Motion Video Agent](product/studio-vision.md)
 - [创作者与媒体 Agent 事实包](media-kit.md)

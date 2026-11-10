@@ -1,6 +1,6 @@
 # Reverse engineering README artwork
 
-The [English cover](brand-hero.jpg) and [Chinese cover](brand-hero.zh-CN.jpg) show a talking-head caption effect adapted to another speaker. Both link to the [2.4-second comparison](media/presenter-caption-remake.mp4). The timeline pictured below the portraits is from the OpenMotion project used to render the remake.
+The [English](brand-hero.jpg), [Chinese](brand-hero.zh-CN.jpg) and [Japanese](brand-hero.ja.jpg) covers show a talking-head caption effect adapted to another speaker. Each links to the [2.4-second comparison](media/presenter-caption-remake.mp4). The timeline pictured below the portraits is from the OpenMotion project used to render the remake.
 
 The left panel uses 0.83–3.23 seconds from [Dan Martell’s original video](https://www.youtube.com/shorts/mk1zJd9Rm4c). The right panel uses the first 2.4 seconds of [@careerwithriya’s career-skills video](https://www.instagram.com/reel/Ddd57MBszhc/). OpenMotion rebuilt the three caption layers for Riya’s footage. The comparison plays Riya’s original audio. Both creators retain the rights to their footage.
 

@@ -1,20 +1,20 @@
-[English](../README.md) · **简体中文** · [日本語](README.ja.md) · [한국어](README.ko.md)
+[English](../README.md) · **简体中文** · [日本語](README.ja.md)
 
 <a id="openmotion"></a>
 
-<h1 align="center">OpenMotion</h1>
+<h1 align="center"><img src="readme/openmotion-logo.svg" width="230" alt="OpenMotion"></h1>
 
-<p align="center"><strong>Reverse engineering for any video</strong></p>
+<p align="center"><strong>拆解并复刻任何视频</strong></p>
 
 <p align="center">
   <a href="readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.zh-CN.jpg"><img src="readme/brand-hero.zh-CN.jpg" width="100%" alt="Dan Martell 原片与 OpenMotion 复刻并排展示：Riya 出镜，荧光黄手写关键词叠在两行白色粗体字幕之间。下方是 Studio 字幕时间轴。"></picture></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/nexu-io/html-anything"><img src="readme/badges/stars.svg" alt="GitHub Stars · 9.5k（2026-11-09）"></a>
+  <a href="https://github.com/nexu-io/html-anything"><img src="readme/badges/stars.zh-CN.svg" alt="GitHub 星标 · 9.5k（2026-11-09）"></a>
   <a href="../package.json"><img src="readme/badges/node.svg" alt="Node.js 22.18+"></a>
-  <a href="../LICENSE"><img src="readme/badges/license.svg" alt="Apache 2.0 许可证"></a>
-  <a href="https://github.com/nexu-io/open-design"><img src="readme/badges/built-by-opendesign.svg" alt="Built by OpenDesign"></a>
+  <a href="../LICENSE"><img src="readme/badges/license.zh-CN.svg" alt="Apache 2.0 许可证"></a>
+  <a href="https://github.com/nexu-io/open-design"><img src="readme/badges/built-by-opendesign.zh-CN.svg" alt="OpenDesign 出品"></a>
 </p>
 
 <p align="center">
@@ -26,12 +26,12 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
 </p>
 
-<p align="center"><a href="#agent-wall">Agent 阵容</a> · <a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
+<p align="center"><a href="#agent-wall">支持的 Agent</a> · <a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
 
 OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或粘贴社交平台上的视频链接，就能**用自己的画面、Logo 和文案复刻原片**。
 
 - 🎬 **全栈视频复刻。** Agent 拆解参考片，用 HTML 重建镜头和转场，并生成缺少的素材。你可以在同一工程里用 Studio 调整剪辑节奏，再渲染导出 MP4。
-- 🔑 **BYOA — Bring Your Own Agent. BYOK — Bring Your Own Keys.** OpenMotion 开源免费。直接在[常用的本地 Agent](#agent-wall) 里复刻视频，每一层都能用自己的 API Key。
+- 🔑 **BYOA（自带 Agent）与 BYOK（自带 API 密钥）。** OpenMotion 开源免费。直接在[常用的本地 Agent](#agent-wall) 里复刻视频，每一层都能用自己的 API 密钥。
 - 🧩 OpenMotion 首次定义了 **Motion.md**，用 Markdown 记录镜头顺序、时长和转场。品牌宣传片的拆解可以随工程一起分享。
 - 🎛️ **图片、视频、音乐和语音。** 用 Nano Banana 2 生成图片、Seedance 2.0 补镜头、Suno v4 配乐、Kokoro 加旁白，再放进同一条时间轴。[查看 7 个内置模型](#model-wall)
 
@@ -336,7 +336,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 
 **用 HTML 写视频。** OpenMotion 用 HTML、CSS、JavaScript 描述场景、字体、布局、转场和时间。实拍、生成片段、图片、音乐和旁白作为合成素材，同一工程可在 Studio 打开并渲染为 MP4。
 
-![本地 Agent、可选媒体模型账号和创作资源共同支持参考理解、场景编码、素材生成、剪辑及 MP4 渲染，并保留可复用源码。](readme/diagrams/creation-stack.svg)
+![本地 Agent、可选媒体模型账号和创作资源共同支持参考理解、场景编码、素材生成、剪辑及 MP4 渲染，并保留可复用源码。](readme/diagrams/creation-stack.zh-CN.svg)
 
 **编写、观看、修改、渲染。** 让 Agent 替换产品、精简开头、加入真人、修改字幕或尝试新结尾。它修改工程源码，你在可视化编辑器中审阅。本地 MCP 客户端使用工程工具，具备 shell 的 Agent 还可遵循 Skills 和固定版本 CLI 工作流。[Agent 配置](#agent-setup) · [原生合成指南](../skills/motion-production/references/native.md) · [HTML 示例工程](../template-library/product-promo/index.html)
 
@@ -400,7 +400,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 | 自带什么 | 如何用于视频 |
 | --- | --- |
 | **🤖 Agent — BYOA** | 通过 Skills 和 MCP 连接现有本地 Agent，受支持时也可使用 CLI。保留惯用客户端、账号和工作上下文。 |
-| **🔑 Key — BYOK** | 在 Model Settings 配置受支持的媒体 API Key，选择图片、视频、音乐和 TTS 模型；受支持的本地媒体集成可使用已有 Agent 登录。 |
+| **🔑 Key — BYOK** | 在 Model Settings 配置受支持的媒体 API 密钥，选择图片、视频、音乐和 TTS 模型；受支持的本地媒体集成可使用已有 Agent 登录。 |
 | **🎨 品牌与素材** | 加入标志、字体、截图、实拍、脚本和音乐，在 Motion.md 的 Brand Kit 章节记录品牌信息和获准使用的素材。 |
 | **🧩 起步资源** | 浏览参考、动效组件、模板和社区 Skills，选择方向，把源码或参考交给 Agent，做成自己的作品。 |
 
@@ -416,7 +416,7 @@ OpenMotion 首次定义了 **Motion.md**。首批开源的品牌宣传片拆解�
 
 Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信息。叙事、动效、声音和审阅规则说明换品牌时要保留哪些创作决定。开新片时，把这份文件和自己的素材一起交给 Agent。
 
-![Motion.md 记录品牌、分镜、动效和声音。Skill 提供改编方法，工程包含可编辑源码与素材。](readme/diagrams/creative-context.svg)
+![Motion.md 记录品牌、分镜、动效和声音。Skill 提供改编方法，工程包含可编辑源码与素材。](readme/diagrams/creative-context.zh-CN.svg)
 
 <a id="resources-to-start-from"></a>
 
@@ -558,7 +558,7 @@ npm run build:studio
 npm start
 ```
 
-打开 **http://localhost:4173**。选择 **Templates → Ready to edit**，打开 **Product Promo**，用 **Connect Agent** 连接客户端。工程与凭据保存在 checkout 之外；用 `MOTION_DATA_DIR` 选择工作区。
+在浏览器中打开 <http://localhost:4173>。选择 **Templates → Ready to edit**，打开 **Product Promo**，用 **Connect Agent** 连接客户端。工程与凭据保存在代码仓库之外；用 `MOTION_DATA_DIR` 选择工作区。
 
 <a id="agent-setup"></a>
 
@@ -702,7 +702,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 #### 各模块如何协同
 
-![本地 Agent 通过九个 MCP 工程工具连接，Studio 通过本地 HTTP 接入。应用管理版本、素材与导出任务，Model Gateway 向工程提供媒体，渲染器导出并校验选定的工程版本。](readme/diagrams/runtime-architecture-painterly.png)
+![本地 Agent 通过九个 MCP 工程工具连接，Studio 通过本地 HTTP 接入。应用管理版本、素材与导出任务，Model Gateway 向工程提供媒体，渲染器导出并校验选定的工程版本。](readme/diagrams/runtime-architecture.zh-CN.svg)
 
 Agent 通过工程工具写入时会核对版本，避免旧请求覆盖刚完成的修改。生成的素材由你选定后加入工程。每次导出都使用发起导出时的版本，之后的编辑留给下一版。导出器检查文件规格，画面、声音和节奏可以通过播放成片确认。
 
@@ -814,7 +814,7 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 
 ![人与 Agent 在共享时间轴审阅的生成式概念图；协作体验仍在规划。](readme/collaboration-concept-v2.png)
 
-*规划中协作体验的概念预览，尚未公布发布日期。* [Studio 蓝图](product/studio-vision.md) · [知识与反馈](product/studio-vision.md#knowledge-and-feedback)
+*协作概念图：在时间轴上标注“这个镜头多留一拍”，Agent 据此调整节奏。此功能仍在规划中。* [Studio 蓝图](product/studio-vision.md) · [知识与反馈](product/studio-vision.md#knowledge-and-feedback)
 
 <a id="社区共建"></a> <a id="community"></a>
 
@@ -840,11 +840,11 @@ OpenMotion 独立官网将上线于 `open-design.ai/openmotion`。
 
 [**在 GitHub 上给 OpenMotion 点个 Star**](https://github.com/nexu-io/html-anything)
 
-[![Stay tuned with us · 给 OpenMotion 点个 Star](readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
+[![关注 OpenMotion · 在 GitHub 上加星](readme/community-star.zh-CN.svg)](https://github.com/nexu-io/html-anything)
 
 <a id="acknowledgements"></a>
 
-### 致谢 / Acknowledgements
+### 致谢
 
 品牌原片的发布者及时间码见对照区。 [Agent 与模型标志](readme/models/README.md)
 

@@ -12,6 +12,31 @@ test('README viewing resources and shipped browser dependencies resolve locally 
   assert(result.verifiedHashes > 100);
 });
 
+test('each README language opens the full guide and ships its localized cover', async () => {
+  const pages = [
+    ['README.md', 'English', ''],
+    ['docs/README.zh-CN.md', '简体中文', '.zh-CN'],
+    ['docs/README.ja.md', '日本語', '.ja'],
+  ];
+  const shipped = new Set(await distributionFiles('phase1'));
+  for (const [file, language, suffix] of [...pages, ['README.zh-CN.md', '简体中文', '.zh-CN']]) {
+    const text = await readFile(file, 'utf8');
+    const selector = text.split('\n', 1)[0];
+    assert(selector.includes(`**${language}**`), file);
+    const destinations = [...selector.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)]
+      .map(([, label, target]) => [path.normalize(path.join(path.dirname(file), target)), label]);
+    assert.deepEqual(destinations, pages.filter(([, label]) => label !== language)
+      .map(([target, label]) => [target, label]), file);
+    for (const section of ['agent-wall', 'showcase', 'features', 'technical-guide', 'community']) {
+      assert(text.includes(`id="${section}"`), `${file}: missing ${section}`);
+    }
+    for (const asset of ['openmotion-logo.svg', `brand-hero${suffix}.jpg`, `brand-hero.mobile${suffix}.jpg`]) {
+      assert(text.includes(`readme/${asset}"`), `${file}: missing ${asset}`);
+      assert(shipped.has(`docs/readme/${asset}`), `Missing from distribution: ${asset}`);
+    }
+  }
+});
+
 test('copied native templates carry every registered asset in the distributable application', async () => {
   const shipped = new Set(await distributionFiles('phase1'));
   for (const id of ['product-promo', 'nyt-graph', 'decision-tree']) {

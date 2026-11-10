@@ -1,77 +1,79 @@
-[English](../README.md) · [简体中文](README.zh-CN.md) · **日本語** · [한국어](README.ko.md)
+[English](../README.md) · [简体中文](README.zh-CN.md) · **日本語**
 
-<h1 align="center">OpenMotion</h1>
+<a id="openmotion"></a>
 
-<p align="center"><strong>あらゆる動画をリバースエンジニアリング</strong><br/>
-あなたのローカルエージェントが <strong>フルスタックの動画クリエイターに。</strong><br/>
-<strong>BYOA — 自分のエージェントを。BYOK — 自分の API キーを。</strong><br/>
-HTML で動画を記述。生成、編集、レンダリングまで。オープンソースで無料。<br/>
-画像 · 動画 · 音楽 · TTS<br/>
-あなたのブランドの作品に。 <strong>あらゆるプラットフォームへ公開 — 計画中。</strong></p>
+<h1 align="center"><img src="readme/openmotion-logo.svg" width="230" alt="OpenMotion"></h1>
+
+<p align="center"><strong>あらゆる動画を分析・再現</strong></p>
 
 <p align="center">
-  <a href="#reverse-engineer-a-video">🔍 仕組み</a> ·
-  <a href="#creator-video-gallery">🎙️ 人物の動画</a> ·
-  <a href="#brand-film-gallery">🎬 ブランド動画</a> ·
-  <a href="#video-is-code">💻 動画をコードで</a> ·
-  <a href="#bring-your-agent-and-keys">🔑 BYOA / BYOK</a> ·
-  <a href="#quick-start">🚀 はじめる</a> ·
-  <a href="#publish-to-every-platform">📤 公開 · 計画中</a><br/>
-  <a href="#full-video-creation-stack">🎛️ 動画制作の全工程</a> ·
-  <a href="#your-agent-your-studio">Studio とエージェント</a> ·
-  <a href="#motion-design-community">Motion.md とコミュニティ</a> ·
-  <a href="#what-can-you-make">作例</a> ·
-  <a href="#resources-to-start-from">ライブラリ</a> ·
-  <a href="#developer-architecture">アーキテクチャ</a> ·
-  <a href="#community">コミュニティ</a> ·
-  <a href="../LICENSE">Apache 2.0</a>
+  <a href="readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.ja.jpg"><img src="readme/brand-hero.ja.jpg" width="100%" alt="Dan Martell の元動画と Riya の素材で再現した映像。白い太字字幕の間に手書きのキーワードが入り、下に Studio の字幕タイムラインが見える。"></picture></a>
 </p>
 
-<a href="../examples/brand-studies/stripe/comparison.mp4">
-<img src="readme/cover-reverse-engineering-v2.png" width="100%" alt="OpenMotion — あらゆる動画をリバースエンジニアリング。DeepSeek Harness、Codex、Claude Code で好きな動画をブランドの作品に。画像、動画、音楽、TTS。マルチプラットフォーム公開。">
-</a>
+<p align="center">
+  <a href="https://github.com/nexu-io/html-anything"><img src="readme/badges/stars.ja.svg" alt="GitHub スター · 9.5k（2026-11-09）"></a>
+  <a href="../package.json"><img src="readme/badges/node.svg" alt="Node.js 22.18+"></a>
+  <a href="../LICENSE"><img src="readme/badges/license.ja.svg" alt="Apache 2.0 ライセンス"></a>
+  <a href="https://github.com/nexu-io/open-design"><img src="readme/badges/built-by-opendesign.ja.svg" alt="開発元 OpenDesign"></a>
+</p>
 
-**目を引く発表動画、心地よいテンポの製品紹介、複雑な話をわかりやすく伝えるクリエイター。** その参考動画を、ロゴ、画面、映像素材、原稿とともにエージェントへ。OpenMotion は参考を分析し、構成を編集可能なプロジェクトとして再構築して、あなたの物語にする手順を提供します。
+<p align="center">
+  <a href="https://open-design.ai/motion/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_ja"><img src="readme/badges/website.ja.svg" alt="OpenMotion 公式サイト" /></a>
+  <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_ja"><img src="readme/badges/opendesign-go.svg" alt="OpenDesign Go のモデル利用プラン" /></a>
+  <a href="https://discord.gg/mHAjSMV6gz"><img src="readme/badges/discord.svg" alt="OpenDesign の Discord に参加" /></a>
+  <a href="https://x.com/OpenDesignHQ"><img src="readme/badges/x-opendesignhq.svg" alt="OpenDesign の公式 X アカウント @OpenDesignHQ" /></a>
+  <a href="https://x.com/OpenDesignDevs"><img src="readme/badges/x-opendesigndevs.svg" alt="OpenDesign 開発チームの X アカウント @OpenDesignDevs" /></a>
+  <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign の YouTube チャンネル" /></a>
+</p>
 
-**話題の動画を再構築し、あなたのブランドの作品に。** ローカルエージェントを**フルスタックの動画クリエイター**にします。参考を分析し、**HTML、CSS、JavaScript** で表現し、対応する自分の API キーで不足素材を生成。同じ Studio で編集・レンダリングし、いつものエージェントとアカウントでソース、素材、完成動画を手元に残せます。
+<p align="center"><a href="#agent-wall">対応エージェント</a> · <a href="#showcase">用途と再現例</a> · <a href="#features">OpenMotion の特長</a> · <a href="#technical-guide">セットアップと技術資料</a> · <a href="#community">コミュニティ・貢献</a></p>
 
-**🔑 BYOA + BYOK。👐 オープンソースで無料。** 参考から MP4 までを制作ソフトが支えます。エージェントの契約や外部モデル/API の料金は各提供元によります。[エージェントとキーを持ち込む](#bring-your-agent-and-keys) · [ライブラリを見る](#resources-to-start-from)
+OpenMotion は、**エージェントが動画制作の全工程を担う初のフルスタック動画生成ツール**です。参考動画をアップロードするか SNS の動画リンクを貼り付けると、**手持ちの映像、ロゴ、コピーで元の演出を再現できます**。
 
-**分析、制作、公開。** 構造を読み解き、内蔵のマルチモーダル連携で素材を補い、編集可能なタイムラインにまとめます。**マルチプラットフォーム公開は計画中**。完成動画を視聴者へ届ける工程に広げていきます。
+- 🎬 **動画の分析から再現・書き出しまで。** エージェントが参考動画を分析し、カットとトランジションを HTML で組み直し、足りない素材を生成します。同じプロジェクトを Studio で開き、間合いを調整して MP4 に書き出せます。
+- 🔑 **BYOA（自分のエージェント）と BYOK（自分の API キー）。** OpenMotion は無料のオープンソースソフトウェアです。[使い慣れたローカルエージェント](#agent-wall)で動画を再現し、各工程に自分の API キーを使えます。
+- 🧩 **Motion.md** は、OpenMotion が定義した Markdown 形式です。カットの順番、尺、トランジションを記録し、ブランド動画の演出をプロジェクトと一緒に共有できます。
+- 🎛️ **画像・動画・音楽・音声。** Nano Banana 2 で画像を、Seedance 2.0 で追加カットを作り、Suno v4 の音楽と Kokoro のナレーションを同じタイムラインに配置できます。[内蔵の全 7 モデル](#model-wall)
 
-> 「この発表動画を私たちのブランド向けに再構築してください。見せ方、カメラの動き、テンポを保ち、製品、画面、原稿は私たちのものに。設定済みモデルで不足する映像、音楽、ナレーションを生成し、比較を見せてから編集可能なプロジェクトと MP4 を渡してください。」
+<a id="agent-wall"></a>
 
-**動画 → 分析・再構築 → コードでブランド化 → 生成・編集・レンダリング → 各プラットフォームへ公開（計画中）。**
+**22 種類のローカルエージェントに対応** · [エージェントを選ぶ](#choose-agent)
 
-<a id="everyone-can-be-a-creator"></a>
-<a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a>
-<a id="人人都是自媒体"></a>
-<a id="creator-video-gallery"></a>
+<p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="readme/agents/local-agents.mobile.png"><img src="readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 
-## 🎥 人から始める。見たくなる動画を作る。
+<a id="showcase"></a> <a id="用-openmotion-可以做什么"></a>
+<a id="使用场景与复刻效果示例"></a>
 
-**顔、声、物語。それを伝える動き。** 講義、画面デモ、創業者の物語、製品動画など、9 本の参考から構成を学び、自分の録画で作ってみましょう。プレビューをクリックすると全編を見られます。
+## 🎞️ 用途と再現例
 
-<table>
+<a id="可以用它做什么"></a> <a id="what-can-you-make"></a>
+
+<a id="everyone-can-be-a-creator"></a> <a id="everyone-can-be-an-ai-video-editor-everyone-can-be-a-creator"></a> <a id="人人都是自媒体"></a> <a id="creator-video-gallery"></a> <a id="presenter-motion"></a>
+
+### AI でトーク動画を編集
+
+話し手の言葉に合わせて字幕と画面デモを切り替え、説明の流れを作ります。
+
+<table width="100%">
 <tr><th colspan="3" align="left">🎓 教える・解説する</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
 <a href="../library/skills/presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="話し手の動画参考：キャリアを変える 6 つの必須スキル"></picture></a><br>
 <strong>キャリアを変える 6 つの必須スキル</strong><br>
 番号付きの要点 + 動くキーワード<br>
-<sub>参考 · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
+<sub>参考動画 · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="readme/media/dan-martell-tools-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/dan-martell-tools.jpg"><img src="readme/people/dan-martell-tools.gif" width="216" alt="話し手の動画参考：今、最も優れた AI ツールは？"></picture></a><br>
 <strong>今、最も優れた AI ツールは？</strong><br>
 話し手 + 浮かぶツールカード<br>
-<sub>参考 · <a href="https://www.youtube.com/shorts/mk1zJd9Rm4c">Dan Martell</a></sub>
+<sub>参考動画 · <a href="https://www.youtube.com/shorts/mk1zJd9Rm4c">Dan Martell</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="readme/media/harpercarrollai-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/harpercarrollai.jpg"><img src="readme/people/harpercarrollai.gif" width="216" alt="話し手の動画参考：10 日間の AI 基礎・1 日目"></picture></a><br>
 <strong>10 日間の AI 基礎・1 日目</strong><br>
 個人のレッスン + 読みやすい字幕<br>
-<sub>参考 · <a href="https://www.instagram.com/reel/C4eNPF3PdpG/">@harpercarrollai</a></sub>
+<sub>参考動画 · <a href="https://www.instagram.com/reel/C4eNPF3PdpG/">@harpercarrollai</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">🖥️ ワークフローを見せる</th></tr>
@@ -80,19 +82,19 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
 <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="話し手の動画参考：毎日使う 5 つのツール"></picture></a><br>
 <strong>毎日使う 5 つのツール</strong><br>
 デスクでの語り + 作業画面<br>
-<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal</a></sub>
+<sub>参考動画 · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="話し手の動画参考：注釈付きのツールデモ"></picture></a><br>
 <strong>注釈付きのツールデモ</strong><br>
 話し手 + 画面 + 注釈<br>
-<sub>参考 · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
+<sub>参考動画 · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="readme/media/aiwithsachi-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/aiwithsachi.jpg"><img src="readme/people/aiwithsachi.gif" width="216" alt="話し手の動画参考：Claude に入れたい 5 つのプラグイン"></picture></a><br>
 <strong>Claude に入れたい 5 つのプラグイン</strong><br>
 口頭でのリスト + 補足スクリーンショット<br>
-<sub>参考 · <a href="https://www.instagram.com/reel/Dc7G9Pxu_1O/">@aiwithsachi</a></sub>
+<sub>参考動画 · <a href="https://www.instagram.com/reel/Dc7G9Pxu_1O/">@aiwithsachi</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">🎬 物語と製品を伝える</th></tr>
@@ -101,668 +103,94 @@ HTML で動画を記述。生成、編集、レンダリングまで。オープ
 <a href="readme/media/khris-sheer-founder-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/khris-sheer-founder.jpg"><img src="readme/people/khris-sheer-founder.gif" width="216" alt="話し手の動画参考：創業者の実験・第 1 話"></picture></a><br>
 <strong>創業者の実験・第 1 話</strong><br>
 創業者の日記 + 日常の B ロール<br>
-<sub>参考 · <a href="https://www.tiktok.com/@khris.sheer/video/7491715587895430402">@khris.sheer</a></sub>
+<sub>参考動画 · <a href="https://www.tiktok.com/@khris.sheer/video/7491715587895430402">@khris.sheer</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="readme/media/ugc-rachelll-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ugc-rachelll.jpg"><img src="readme/people/ugc-rachelll.gif" width="216" alt="話し手の動画参考：AI クリエイターと製品"></picture></a><br>
 <strong>AI クリエイターと製品</strong><br>
 製品の物語 + 根拠 + ピクチャーインピクチャー<br>
-<sub>参考 · <a href="https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246">@ugc.rachelll</a></sub>
+<sub>参考動画 · <a href="https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246">@ugc.rachelll</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
 <a href="readme/media/kevinstratvert-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/kevinstratvert.jpg"><img src="readme/people/kevinstratvert.gif" width="216" alt="話し手の動画参考：5 つの AI ツールへの支払いをやめよう"></picture></a><br>
 <strong>5 つの AI ツールへの支払いをやめよう</strong><br>
 製品チュートリアル + 実演<br>
-<sub>参考 · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
+<sub>参考動画 · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">元動画 → 外部クリエイターによるアレンジ</th></tr>
+<tr>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="../library/skills/presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
+<strong>キャリアのアドバイス → 動画制作の解説</strong><br>
+出演者を替え、番号付きの要点と具体例を示すカードで、新しい解説を組み立てます。<br>
+<sub><a href="../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/presenter-story/assets/careerwithriya-reference.mp4">元動画</a> · <a href="../library/skills/presenter-story/assets/careerwithriya-result.mp4">アレンジの全編</a></sub>
+</td>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
+<strong>日常のツール → デザインの仕事場</strong><br>
+話し手と画面を交互に映すリズムを生かして、別の作業手順を紹介します。<br>
+<sub><a href="../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">元動画</a> · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4">アレンジの全編</a></sub>
+</td>
+<td colspan="1" width="33%" align="center" valign="top">
+<a href="../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="readme/people/john-tagudin-capso-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
+<strong>ツールのデモ → 動画エディターの使い方</strong><br>
+ワイプと注釈を生かし、ツールのデモを動画編集のチュートリアルに作り替えます。<br>
+<sub><a href="../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4">元動画</a> · <a href="../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4">アレンジの全編</a></sub>
 </td>
 </tr>
 </table>
 
-**この方向で自分の動画を：** 自分の話し手、物語、製品で。導入、字幕のテンポ、画面の見せ方を参考に、素材に合わせた構成をエージェントに依頼します。[Presenter Story Skill](../library/skills/presenter-story/SKILL.md) · [参考作品のクレジット](readme/media/manifest.json)
+### AI で再編集・構成を変更
 
-<a id="brand-film-gallery"></a>
+撮りためた写真と短い動画を、始まりと結末のある一本にまとめます。
 
-## 🚀 自分も作りたかった発表動画を研究する
-
-**Lovable、Kimi、Firecrawl、Figma、ElevenLabs、Codex。** 好きな表現を参考に、自分の製品の動画を作りましょう。以下は参考作品で、各説明は次の制作に向けた提案です。
-
-<table>
+<table width="100%">
 <tr>
-<td width="50%" valign="top" align="center">
-<a href="readme/media/jake-lovable-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/viral-remix.jpg"><img src="readme/examples/viral-remix.gif" width="440" alt="Lovable Aesthetics Update 参考動画"></picture></a><br>
-<strong>Lovable · Aesthetics Update</strong><br>
-自信のある製品の見せ方で、次のデザイン更新を紹介。<br>
-<sub>参考 · @lovable_dev</sub>
-</td>
-<td width="50%" valign="top" align="center">
-<a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser 参考動画"></picture></a><br>
-<strong>Kimi · K3 teaser</strong><br>
-次のリリースを短く印象的な予告に。<br>
-<sub>参考 · @Kimi_Moonshot</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top" align="center">
-<a href="readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="readme/gallery/firecrawl.gif" width="440" alt="Firecrawl Free Keyless 参考動画"></picture></a><br>
-<strong>Firecrawl · Free Keyless</strong><br>
-開発者向け機能を、伝わる製品ストーリーに。<br>
-<sub>参考 · @ericciarla</sub>
-</td>
-<td width="50%" valign="top" align="center">
-<a href="https://openai.com/codex-originals/"><img src="readme/brand-showcase/codex-originals.webp" width="440" alt="Codex Originals：OpenAI キャンペーンの作り手たちの集合写真"></a><br>
-<strong>OpenAI · Codex Originals</strong><br>
-製品で何かを作る人を物語の中心に。<br>
-<sub><a href="https://openai.com/codex-originals/">公式キャンペーンを見る ↗</a> · OpenAI · キャンペーン静止画</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top" align="center">
-<a href="readme/media/jake-figma-draw-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/product-launch.jpg"><img src="readme/examples/product-launch.gif" width="440" alt="Figma Draw product launch 参考動画"></picture></a><br>
-<strong>Figma · Draw</strong><br>
-製品が可能にすることを動きで伝える。<br>
-<sub>参考 · @figma</sub>
-</td>
-<td width="50%" valign="top" align="center">
-<a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs 参考動画"></picture></a><br>
-<strong>ElevenLabs · Reception</strong><br>
-焦点を絞った発表動画で新製品を紹介。<br>
-<sub>参考 · @ElevenLabs</sub>
-</td>
-</tr>
-</table>
-
-> 「この方向で私たちのブランドの発表動画を作ってください。自社 UI、言葉、ブランド表現を使い、テンポと明快な見せ方を活かして、製品に合う新しい構成を提案してください。」
-
-上記は制作者を明記した外部の参考作品です。OpenMotion はそれを自分の作品へ展開する手順を提供します。[動画の出典](readme/media/manifest.json) · [その他の展示素材の出典](readme/brand-showcase/README.md)
-
-<a id="what-is-openmotion"></a>
-<a id="openmotion-是什么"></a>
-<a id="video-is-code"></a>
-
-## 💻 動画はコード。HTML がキャンバス。
-
-**コードを書けるローカルエージェントを、動画制作の全工程へ。** HTML、CSS、JavaScript でシーン、文字、配置、トランジション、時間を記述します。録画、生成動画、画像、音楽、ナレーションを組み込み、同じプロジェクトを Studio で開いて MP4 にレンダリングできます。
-
-![ローカルエージェント、任意のメディアモデル、制作リソースで、参考分析、シーン記述、不足素材生成、編集、MP4 出力とソース保存を行います。](readme/diagrams/creation-stack.svg)
-
-**書いて、見て、変えて、レンダリング。** 製品の差し替え、導入の短縮、話し手の追加、字幕や結末の変更を依頼します。エージェントがソースを編集し、あなたが画面で確認。ローカル MCP クライアントはプロジェクトツールを、シェル対応エージェントは Skills と固定版 CLI も使えます。[エージェント設定](#your-agent-your-studio) · [ネイティブ制作ガイド](../skills/motion-production/references/native.md) · [HTML サンプルプロジェクト](../template-library/product-promo/index.html)
-
-**🎯 初めての 100 万再生を目指して。** 見たくなる導入を研究し、構造を読み解いて自分のブランドで表現しましょう。冒頭、話し手、製品の見せ方を試し、ソースを残して次の編集へつなげます。
-
-<a id="bring-your-agent-and-keys"></a>
-
-## 🔑 BYOA + BYOK。自分のエージェント、キー、動画。
-
-**いつもの知能に、動画制作の一式を。** ローカルのコーディングエージェントが、要件の理解、シーン設計、動画コード、素材配置、編集の修正、最終レンダリングの依頼まで担います。
-
-| 持ち込むもの | 動画への活かし方 |
-| --- | --- |
-| **🤖 エージェント — BYOA** | Skills と MCP、対応環境では CLI で接続。いつものクライアント、アカウント、作業文脈を使えます。 |
-| **🔑 キー — BYOK** | Model Settings に対応するメディア API キーを設定し、画像、動画、音楽、TTS のモデルを選択。対応するローカル連携ではエージェントの既存ログインを利用できます。 |
-| **🎨 ブランドと素材** | ロゴ、フォント、画面、撮影素材、台本、音楽を追加。Brandkit と Motion.md を再利用し、次の編集にも一貫性を保ちます。 |
-| **🧩 制作の出発点** | 参考、モーション部品、テンプレート、コミュニティ Skills から方向を選び、ソースや参考をエージェントへ渡します。 |
-
-### 一人のクリエイターが全工程を担う
-
-**理解 → 演出 → コード → 生成 → 編集 → レンダリング。** エージェントが企画とコードを、Model Gateway が設定済みアカウントでの素材生成を担当。Studio でソース、素材、タイムラインをまとめ、同じプロジェクトを確認・修正してローカル MP4 を作ります。
-
-**動画をコードで作り、改善し続ける。** HTML/CSS/JS と素材を編集して導入、話し手、ブランド、結末を変更。プロジェクトは確認・版管理・継続編集できる普通のソースファイルです。
-
-### オープンソースの制作ソフトを無料で
-
-**Skills、プロジェクトツール、モデル連携、Studio、レンダリングの制作パイプラインはオープンソースです。** ローカルで動かし、実装を確認・拡張できます。このローカル工程にソフトの月額料金やレンダリングごとの料金はありません。生成 API を使わず、手持ちの映像・画像・音声だけでも制作できます。
-
-エージェントやモデル提供元の契約・利用料は別です。BYOA / BYOK は自分のアクセス権を使う方式で、第三者のクレジットを含まず、独自モデルをオープンソース化するものでもありません。認証情報は動画プロジェクトと別のワークスペース設定に保存します。[ライセンス](../LICENSE) · [エージェント設定](agent-adapters.md) · [モデル設定](model-gateway.md)
-
-> 「ローカルエージェントと設定済みメディアモデルで制作してください。Library の参考を選び、HTML/CSS/JS で自社ブランド向けに構成を再構築。不足素材だけを生成し、編集可能なプロジェクトを見せ、確認後に MP4 をレンダリングしてソースを残してください。」
-
-<a id="reverse-engineer-a-video"></a>
-
-## 🔍 動画を再構築し、あなたのブランドの作品に
-
-導入、UI の見せ方、アニメーション解説、最後のロゴなど、研究したい瞬間から。エージェントが、確認・変更できる制作上の判断に分解します。
-
-| 参考から読み解くもの | 自分の物語に置き換えるもの |
-| --- | --- |
-| **導入と物語** — 順序、展開、見せ場への積み上げ | 自分の約束、製品の事実、行動喚起 |
-| **ショット構成** — 画角、カメラ、レイヤー、視覚階層 | 自社 UI、映像、ロゴ、補助画像 |
-| **動きとテンポ** — 登場、切り替え、緩急、読む時間 | 動きの意図を保ち、内容に合わせて調整 |
-| **文字とブランド** — 文字階層、色、構図 | 自分の書体、配色、原稿、Brandkit |
-| **音とリズム** — 発話のタイミング、音楽の合図、強調 | 自分の声、用意した音楽、音の演出 |
-
-1. **参考とブランドを用意。** 動画またはアクセス可能なリンク、対象区間、ロゴ、原稿、画面や録画を渡します。[Brandkit](../library/brandkits/openmotion/BRANDKIT.md) でブランドと製品の事実をまとめます。
-2. **何が効いているかを分析。** ショット、時間、動き、音、維持したい要素を特定し、Motion.md に記録します。
-3. **コードで再構築。** 動画の参考には `motion-recreate`を使用。編集可能なソースがある場合はテンプレートの手順を使います。HTML/CSS/JS でシーン、動き、時間を記述し、映像・音声を素材として配置。自分の内容を使い、不足する画像、動画、音楽、TTS を内蔵連携で生成します。
-4. **比較して磨く。** 参考と再構築動画の同じ時点を確認。見せ方、読む時間、構図、音を見直し、同じ Studio プロジェクトで修正します。
-5. **視聴者に届ける準備。** MP4 を出力し、プロジェクトを残して、承認したブランドと動きのルールを次の動画へ。連携型のマルチプラットフォーム公開は**計画中**です。
-
-```text
-OpenMotion で添付の参考動画を自社ブランド向けに再構築してください。
-
-分析：冒頭、ショットの順序、文字、トランジション、音の合図。
-維持：選択区間の製品の見せ方とカメラのテンポ。
-変更：ロゴ、UI、訴求、原稿、エンドカードを提供素材へ。
-生成：ブランドと承認済み台本に従い、設定済みモデルで不足する
-画像、動画、BGM、TTS ナレーションを用意。
-
-編集可能なプロジェクトを Studio で開き、参考と同時点を比較。
-残る差分を説明し、確認後に MP4 を出力して次の編集用にソースを保存。
-```
-
-参考の取得やメディア分析はホストのツールに依存します。必要に応じてローカル動画とタイムコードを用意し、自作または利用許諾済みの素材と参考のクレジットを使ってください。[再構築ワークフロー](../skills/motion-recreate/SKILL.md) · [参考コレクション](collections/README.md)
-
-<a id="all-in-one-studio"></a>
-<a id="full-video-creation-stack"></a>
-
-## 🎛️ 動画制作の全工程をオープンソースで
-
-**参考とブランドの企画から、編集可能な完成動画まで。** 制作手順、モデル連携、素材管理、タイムライン、モーションエンジン、レンダリングを一つにまとめます。手元の素材から始め、不足分を生成し、エージェントと仕上げます。
-
-### ✨ 画像・動画・音楽・TTS の連携を内蔵
-
-**BYOK で自分のマルチモーダルアカウントを制作へ。** **Model Settings** に対応キーを追加し、モデルを選び、Studio の **Model Gateway** から画像・動画・音楽・音声を生成します。候補を確認して同じプロジェクトへ採用。対応するローカル画像生成は既存のエージェントログインを利用できます。
-
-| 必要な素材 | 内蔵モデルカタログの例 | 動画への用途 |
-| --- | --- | --- |
-| **🖼️ 画像** | Codex Image、Atlas Cloud の Nano Banana 2、fal.ai の FLUX Schnell | ブランド画像、シーンの絵、補助画像。対応する Codex 画像経路で参考画像を用いた編集 |
-| **🎬 動画** | Atlas Cloud の Seedance 2.0、fal.ai の Wan 2.2 | 撮影素材やモーションと組み合わせるショット、B ロール |
-| **🎵 音楽** | Atlas Cloud の Suno v4 | 雰囲気と企画に合ったサウンドトラック |
-| **🎙️ TTS / ナレーション** | fal.ai の Kokoro | 承認済み台本から音声を生成し、映像・音楽と配置 |
-
-これらは同梱の[ソース](../gateway/catalog.ts)にあるカタログ項目です。対応アカウントやキーを接続してください。利用可否、必要パラメーター、料金は提供元によります。モデル探索と明示的なエンドポイント登録にも対応します。[モデル設定と生成](model-gateway.md)
-
-> 「Brandkit と承認済み台本で、冒頭の絵、挿入動画、BGM、TTS を生成してください。選んだ結果を再構築プロジェクトへ追加し、映像と音を合わせて全編を見せてください。」
-
-### 🛠️ 制作意図から完成動画へ
-
-| 工程 | OpenMotion がまとめるもの |
-| --- | --- |
-| **理解・演出** | 参考の再構築、制作 Skills、Brandkit、Motion.md、エージェントの分析ツール |
-| **生成・管理** | マルチモーダルアダプター、モデル選択、生成ジョブ、候補プレビュー、素材 |
-| **編集・アニメーション** | タイムライン、HTML/CSS/JS 合成、文字、トランジション、字幕、音の配置 |
-| **確認・改善** | Studio プレビュー、手動調整、エージェントによる修正、プロジェクトの版 |
-| **レンダリング・納品** | 固定版のレンダリング、技術検証、MP4 と編集可能なソース |
-| **公開・学習 — 計画中** | プラットフォーム連携、公開予約、動画の版と結びつくフィードバック |
-
-**実行し、調べ、拡張する。** アプリと連携コードはオープンソース。第三者のモデルやサービスには各自のライセンスと利用条件があります。次の編集に必要なソース、素材、制作判断はプロジェクトに残ります。
-
-```text
-参考 + 自分のブランド + エージェント
-                 ↓
-            理解・再構築
-                 ↓
-     画像 + 動画 + 音楽 + TTS
-                 ↓
-     編集可能な Studio プロジェクト
-                 ↓
- 確認 → 修正 → レンダリング → MP4 + ソース
-                 ↓
-    各プラットフォームへ公開 · 計画中
-```
-
-[アーキテクチャを見る](product/architecture.md) · [Model Gateway](model-gateway.md) · [アプリを拡張する](../CONTRIBUTING.md)
-
-<a id="product-tour"></a>
-<a id="产品界面"></a>
-<a id="connect-your-agent"></a>
-<a id="use-from-your-agent"></a>
-<a id="从-agent-接入"></a>
-<a id="your-agent-your-studio"></a>
-
-## 🖥️ BYOA：ローカルエージェントが動画制作の全工程を
-
-**自分のエージェントに動画制作の全工程を。** Skills が方法を、MCP がツールを、Studio が確認と調整の画面を提供します。エージェントは元のクライアントとアカウントを使い、OpenMotion がローカルの編集・レンダリングアプリを動かします。
-
-| エージェント / クライアント | 接続方法 |
-| --- | --- |
-| **DeepSeek Harness** | ローカル MCP + Skills、または生成した Harness アダプター |
-| **Codex** | ローカルプラグインまたは MCP + Skills。対応ホストでは Studio Viewer も利用可能 |
-| **Claude Code** | ローカルプラグインまたは MCP + Skills、ローカル作業用 CLI |
-| **WorkBuddy** | MCP + Skills 設定を生成。デスクトップでの制作・再生検証は未完了 |
-| **その他のローカル MCP クライアント** | stdio を手動設定。メディア、シェル、Viewer の機能はホストによる |
-
-[各エージェントの設定](agent-adapters.md) · [統合ローカルインストーラー](npm-installation.md) · [クイックスタート](#quick-start)
-
-### エージェントから始める
-
-DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡し、再構築、プレビュー、修正、書き出しを依頼。既存のアカウントと作業方法を使い続けられます。
-
-![Codex 向け OpenMotion 埋め込み Viewer。編集可能な Product Promo、プレビュー、レイヤー、タイムライン。](readme/product-tour/codex-embedded.png)
-
-### Studio から始める
-
-参考を見て、テンプレートを開くか録画を読み込みます。**Connect Agent** のワークスペース別手順に従い、企画を渡してください。同じタイムラインで変更を確認し、いつでも手動調整できます。
-
-![会話、保存済み要件、編集可能な動画プロジェクトを表示する単体版 OpenMotion Studio。](readme/product-tour/standalone-studio.png)
-
-#### エージェントに接続してテンプレートを開く
-
-![Connect Agent ダイアログ：ワークスペース専用の手順とローカルクライアント選択。](readme/product-tour/connect-agent.png)
-
-![Product Promo プレビューと、エージェントにコピーするテンプレート専用指示。](readme/product-tour/template-to-agent.png)
-
-**プレビュー → 指示をコピー → ブランド素材と一緒にエージェントへ。** 同梱テンプレートは編集可能なコピーを開き、外部参考は再構築タスクを開始します。[製品デモ全体](product-tour.md)
-
-どちらの入口も同じローカルアプリとプロジェクトを使用。エージェントは自身のクライアントで動き、Studio が企画と編集可能な作品を保存します。[接続の仕組み](session-architecture.md)
-
-<a id="ai-video-editing"></a>
-<a id="keep-editing-after-the-remake"></a>
-
-## ✂️ 再構築のあとも編集を続ける
-
-**最初の再構築は、自分の動画の始まり。** 導入を締め、画面を替え、解説を足し、終わりを長くしたり、別の視聴者向けに編集できます。
-
-**AI 編集と Motion のための All-in-One AI-native Studio。** 初稿から最終レンダリングまで、人とエージェントが同じ編集可能なタイムラインで作業します。
-
-| Studio の機能 | 今できること |
-| --- | --- |
-| **物語とタイムライン** | 素材の読み込み・配置、台本や確定タイムコードに基づく切り詰め・並べ替え・修正 |
-| **動きと字幕** | 内容に合わせた動く文字、トランジション、注釈、図表、字幕 |
-| **素材と音** | 手元の素材の読み込み、内蔵モデル連携での画像・動画・音楽・TTS 生成 |
-| **画像の修正** | 参考画像対応モデルで候補を生成し、時間と動きを保ったまま差し替え |
-| **プレビューと版** | Studio で確認し、手動またはエージェントで編集。次の修正にも同じプロジェクトを使用 |
-| **出力とソース** | 固定版を MP4 にレンダリングし、HTML、CSS、JavaScript、素材を保存 |
-
-> 「承認済みの見せ方は維持。中盤をこの画面録画に替え、指定タイムコードで導入を短くし、最後の CTA を 2 秒長くしてください。」
-
-モデルの可用性は提供元の設定によります。自動音声理解、内容選択、投稿先に応じた自動リフレームは別機能であり、タイムライン編集だけでは提供されません。[メディア操作](model-gateway.md) · [プロジェクトと版](project-workspace.md)
-
-<a id="presenter-motion"></a>
-
-### 🎙️ 人の声、物語、伝えるための動き
-
-トーク動画、チュートリアル、製品紹介にも。**人の語りと物語のテンポを保ち、自分の録画、テーマ、ブランドで字幕、画面、ピクチャーインピクチャー、動きを再利用します。**
-
-**話し手を中心とした 3 つの作例と Motion.md レシピ**
-
-各ペアは原作と外部の改編作品の無音抜粋です。自分の録画の方向性を探し、リンク先の設計レシピをエージェントへの指針にしてください。
-
-#### 顔、キーワード、視覚的な例で教える
-
-**キャリアの助言 → 動画制作の解説**
-
-<table>
-<tr><th width="50%">参考 · @careerwithriya</th><th width="50%">改編 · 外部の作例</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="576" alt="元の話し手の動画と、人物・内容を変えた外部の改編"></picture></td></tr>
-</table>
-
-**再利用：** 番号付きの論点、話し手の語り、根拠のカード。**変更：** 出演者、話題、キーワード、補足例。
-
-[Motion.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
-
-#### 語りながらワークフローを見せる
-
-**日常のツール → デザイン作業場の物語**
-
-<table>
-<tr><th width="50%">参考 · Ali Abdaal</th><th width="50%">改編 · 外部の作例</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="元の話し手の動画と、人物・内容を変えた外部の改編"></picture></td></tr>
-</table>
-
-**再利用：** 話し手と画面のリズム、控えめな字幕、読みやすい挿入画面。**変更：** 自分の録画、手順、画面。
-
-[Motion.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
-
-#### 話し手と製品を一つの物語に
-
-**ツールデモ → 動画エディターの紹介**
-
-<table>
-<tr><th width="50%">参考 · @john.tagudin</th><th width="50%">改編 · 外部の作例</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="readme/people/john-tagudin-capso-comparison.gif" width="576" alt="元の話し手の動画と、人物・内容を変えた外部の改編"></picture></td></tr>
-</table>
-
-**再利用：** 導入、ピクチャーインピクチャー、注釈、見える成果。**変更：** 製品、話し手、実演、締めの言葉。
-
-[Motion.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [原作](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [改編全編](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
-
-> この構成で自分の撮影と画面録画を使ってください。声を保ち、実際の発話に沿って編集し字幕を合わせます。画面、ピクチャーインピクチャー、動きで要点を説明。音付きプレビューの後、編集可能なプロジェクトと MP4 を渡してください。
-
-**誰もがクリエイターに。** 伝えたいことから始め、参考で構成を具体化し、自分の声を中心に置きましょう。
-
-<a id="可以用它做什么"></a>
-<a id="what-can-you-make"></a>
-
-## 🎞️ 何を作れる？
-
-**アイデアを見つけ、自分の作品に。** 7 つの用途に、それぞれエージェントへ渡せる企画があります。動く抜粋はカタログの外部作品です。クリックして全編を見て、自分の素材とブランドで始めてください。
-
-<table>
-<tr>
-<td width="50%" valign="top">
-<strong>01 · AI トーク動画編集</strong><br>
-3 分の素材から、伝わる一つの物語へ。
-<p align="center">
-<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/talking-head.jpg">
-<img src="readme/examples/talking-head.gif" width="208" alt="外部の制作参考：Ali Abdaal · 毎日使う 5 つのツール">
-</picture></a>
-</p>
-<sub>参考 · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Ali Abdaal · 毎日使う 5 つのツール</a></sub><br><br>
-<strong>用意するもの</strong> · 自分の録画 + 文字起こし / タイムコード<br>
-<strong>自分の作品にする</strong> · 明快な導入、引き締まった語り、字幕、適切な B ロール。<br><br>
-<a href="examples.md#talking-head">制作ブリーフをコピー →</a> · <a href="readme/examples/talking-head.jpg">静止画プレビュー</a>
-</td>
-<td width="50%" valign="top">
-<strong>02 · AI 再編集と修正</strong><br>
-ばらばらの映像を 100 日の物語に。
-<p align="center">
+<td colspan="1" width="100%" align="center" valign="top">
 <a href="readme/media/hundred-days-story-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/story-recut.jpg">
 <img src="readme/examples/story-recut.gif" width="208" alt="外部の制作参考：ステッカーと写真カードで描く 100 日">
-</picture></a>
-</p>
-<sub>参考 · <a href="https://www.instagram.com/reel/Dd6vHlQgpok/">ステッカーと写真カードで描く 100 日</a></sub><br><br>
-<strong>用意するもの</strong> · クリップ、写真、ナレーション、物語の概要<br>
-<strong>自分の作品にする</strong> · 写真の切り抜き、章立て、新たなテンポで個人のモンタージュに。<br><br>
-<a href="examples.md#story-recut">制作ブリーフをコピー →</a> · <a href="readme/examples/story-recut.jpg">静止画プレビュー</a>
+</picture></a><br>
+<strong>写真でつづる 100 日間</strong><br>
+ステッカーと写真カードを日付の目印にして、日常の断片を日記のような短編にまとめます。<br>
+<sub><a href="https://www.instagram.com/reel/Dd6vHlQgpok/">元動画</a></sub>
 </td>
 </tr>
+</table>
+
+<a id="brand-before-after"></a> <a id="brand-film-gallery"></a>
+
+### 製品発表とデモ
+
+初めて製品が姿を見せる瞬間に合わせ、カットと画面の切り替えを組み立てます。
+
+5 秒間の比較映像では、左が元動画、右が OpenMotion による再現です。スマートフォンでは上下に並び、元動画が上に表示されます。
+
+<table width="100%">
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-stripe"><a href="../examples/brand-studies/stripe/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/stripe/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/stripe/comparison.jpg"><img src="../examples/brand-studies/stripe/comparison.webp" width="100%" alt="Stripe · カードの反転 → 海辺のフィルム"></picture></a></div><br>
+<strong>Stripe · カードの反転 → 海辺のフィルム</strong><br>
+Stripe のカードが裏返るタイミングに合わせ、着地する絵を海辺のイラストに替えました。<br>
+<sub><a href="../examples/brand-studies/stripe/comparison.mp4">横画面で見る</a> · <a href="../examples/brand-studies/stripe/comparison.mobile.mp4">縦画面の MP4</a> · <a href="https://x.com/stripe/status/2049621560743608481">元動画 00:21.50–00:26.50</a> · <a href="../examples/brand-studies/stripe/index.html">HTML</a> · <a href="../examples/brand-studies/stripe/MOTION.md">Motion.md</a></sub>
+</td>
+</tr>
+<tr><th colspan="2" align="left">参考動画</th></tr>
 <tr>
 <td width="50%" valign="top">
-<strong>03 · 製品発表とデモ</strong><br>
-機能を主役に。
-<p align="center">
-<a href="readme/media/jake-figma-draw-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/product-launch.jpg">
-<img src="readme/examples/product-launch.gif" width="480" alt="外部の制作参考：Figma Draw · @figma">
-</picture></a>
-</p>
-<sub>参考 · <a href="readme/media/jake-figma-draw-reference.mp4">Figma Draw · @figma</a></sub><br><br>
-<strong>用意するもの</strong> · 製品画面 + 機能の説明 + Brandkit<br>
-<strong>自分の作品にする</strong> · 機能の登場、焦点を絞った UI デモ、印象に残る締め。<br><br>
-<a href="examples.md#product-launch">制作ブリーフをコピー →</a> · <a href="readme/examples/product-launch.jpg">静止画プレビュー</a>
+<a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser 参考動画"></picture></a><br>
+<strong>Kimi · K3 teaser</strong><br>
+次のリリースを短く印象的な予告に。<br>
+<sub>参考動画 · @Kimi_Moonshot</sub>
 </td>
 <td width="50%" valign="top">
-<strong>04 · 話題の動画を再構築</strong><br>
-リズムを活かし、自分の作品に。
-<p align="center">
-<a href="readme/media/jake-lovable-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/viral-remix.jpg">
-<img src="readme/examples/viral-remix.gif" width="480" alt="外部の制作参考：Lovable: Aesthetics Update · @lovable_dev">
-</picture></a>
-</p>
-<sub>参考 · <a href="readme/media/jake-lovable-reference.mp4">Lovable: Aesthetics Update · @lovable_dev</a></sub><br><br>
-<strong>用意するもの</strong> · 参考動画 + 自分の原稿、画像、ブランド<br>
-<strong>自分の作品にする</strong> · 導入、文字、視覚的リズムを軸に、新たな編集可能な動画へ。<br><br>
-<a href="examples.md#viral-remix">制作ブリーフをコピー →</a> · <a href="readme/examples/viral-remix.jpg">静止画プレビュー</a>
+<a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs 参考動画"></picture></a><br>
+<strong>ElevenLabs · Reception</strong><br>
+焦点を絞った発表動画で新製品を紹介。<br>
+<sub>参考動画 · @ElevenLabs</sub>
 </td>
 </tr>
-<tr>
-<td width="50%" valign="top">
-<strong>05 · 解説とチュートリアル</strong><br>
-一つの手順を、明快な 3 ステップで。
-<p align="center">
-<a href="readme/media/remix-authorize-once-reference.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/explainer.jpg">
-<img src="readme/examples/explainer.gif" width="480" alt="外部の制作参考：一度の認証で、みんなにつながる">
-</picture></a>
-</p>
-<sub>参考 · <a href="readme/media/remix-authorize-once-reference.mp4">一度の認証で、みんなにつながる</a></sub><br><br>
-<strong>用意するもの</strong> · 手順 + 台本 + 正確な UI 画像<br>
-<strong>自分の作品にする</strong> · 一場面一つの要点と、意図のある注釈で案内。<br><br>
-<a href="examples.md#explainer">制作ブリーフをコピー →</a> · <a href="readme/examples/explainer.jpg">静止画プレビュー</a>
-</td>
-<td width="50%" valign="top">
-<strong>06 · データの物語と図表</strong><br>
-数字に伝える意味を。
-<p align="center">
-<a href="readme/media/M1128-clip.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/data-story.jpg">
-<img src="readme/examples/data-story.gif" width="480" alt="外部の制作参考：動く比較棒グラフ · @Vintage_god">
-</picture></a>
-</p>
-<sub>参考 · <a href="https://x.com/Vintage_god/status/2106817967967056165">動く比較棒グラフ · @Vintage_god</a></sub><br><br>
-<strong>用意するもの</strong> · データ、単位、出典、結論<br>
-<strong>自分の作品にする</strong> · 読みやすい図表、動く数値、明快な比較。<br><br>
-<a href="examples.md#data-story">制作ブリーフをコピー →</a> · <a href="readme/examples/data-story.jpg">静止画プレビュー</a>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top">
-<strong>07 · 音楽とアート映像</strong><br>
-音楽に固有のビジュアルを。
-<p align="center">
-<a href="readme/media/M1139-clip.mp4"><picture>
-<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/music-visual.jpg">
-<img src="readme/examples/music-visual.gif" width="480" alt="外部の制作参考：Lyria 3 の映像シーケンス · @GoogleAI">
-</picture></a>
-</p>
-<sub>参考 · <a href="https://x.com/GoogleAI/status/2024154215182926027">Lyria 3 の映像シーケンス · @GoogleAI</a></sub><br><br>
-<strong>用意するもの</strong> · 音源 + 雰囲気 + 拍のマーカー / キューポイント<br>
-<strong>自分の作品にする</strong> · 色の重なり、動く文字、音楽に合わせた映像の流れ。<br><br>
-<a href="examples.md#music-visual">制作ブリーフをコピー →</a> · <a href="readme/examples/music-visual.jpg">静止画プレビュー</a>
-</td>
-</tr>
-</table>
-
-これらは制作の方向性を示す参考で、OpenMotion が生成した検証用デモではありません。編集可能な出発点には、[3 つの同梱テンプレート](../library/templates/README.md)のいずれかを開いてください。[企画例と手順](examples.md) · [出典と抜粋の記録](readme/ASSETS.md#creative-examples)
-
-<a id="make-your-motion-language-reusable"></a>
-<a id="motion-design-community"></a>
-
-## 🎨 Motion.md — 技法を共有するコミュニティ
-
-**一度分析し、動きの言語を共有し、次の作り手へ。** `Motion.md` は、このコミュニティの中心となる Markdown 規約の提案です。動画の動き、その理由、新しいブランドへの適用方法を読める形で残します。
-
-会話の中の制作判断を、人とエージェントが読んでレビュー・改善できるファイルへ。デザイナーが動きを記し、開発者が実装し、別の作り手が新しい物語へ応用します。**完成動画と、その作り方を共有します。**
-
-![Brandkit はブランド、製品情報、承認素材を、Motion.md は物語、時間、動き、レビュー規則を定義。SKILL.md がソース、素材、プリセット、検証記録とともに利用する方法を導きます。](readme/diagrams/creative-context.svg)
-
-### 制作パッケージの構成
-
-```text
-参考 + 自分のブランド
-          ↓
-理解 → 再構築 → 比較 → 修正
-          ↓
-再利用できる制作パッケージ
-  BRANDKIT.md       ブランド、製品情報、承認素材
-  Motion.md  物語、動き、時間、音、維持/変更の規則
-  SKILL.md          改編・レビューの方法
-  ソース + 素材    編集可能な実装
-  プリセット + 検証記録  置換入力と実際の比較
-          ↓
-エージェント → 次の編集可能な動画
-```
-
-**Brandkit はブランド、Motion.md は設計、Skill は方法、プロジェクトは実装を担います。** 最初の書き出しの後も使え、他の人が確認・フォーク・改善できる形になります。
-
-| 現在の Library のリソース | 得られるもの |
-| --- | --- |
-| [OpenMotion Brandkit](../library/brandkits/openmotion/BRANDKIT.md) | ブランドの事実、見た目、語り口、素材の例 |
-| [Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md) | 再利用できるモーションの設計方針 |
-| [Motion Design Remix](../library/skills/motion-design-remix/SKILL.md) | 6 つのソース例：ワイヤーフレーム、樹冠の文字、UI 登場、立体コード、粒子集合、ガラスカード |
-| [Presenter Story](../library/skills/presenter-story/SKILL.md) | 語りを軸にした動画の設計レシピ 3 種 |
-
-`Motion.md` は、エージェントへ明示的に渡す **v0.1 の記述規約**です。自動インポーターや検証器はありません。ソース改編パッケージには 6 種の置換ヘルパーがあり、動画のみの再構築には `motion-recreate`を使います。持ち運べるテンプレートが必要な場合、 `motion-video-to-template` が既定の `TEMPLATE.md` 引き継ぎ形式を提供します。[Motion.md ガイド](motion-md.md) · [全 6 作例](motion-design-examples.md)
-
-### 🌱 自分の改編を、次の作り手の出発点に
-
-```text
-参考を研究 → ブランド向けに再構築 → 実際の結果を比較
-                                      ↓
-                      GitHub に制作パッケージを公開
-                  Motion.md + ソース + プレビュー + 出典
-                                      ↓
-                        フォーク → ブランド変更 → 確認
-                                      ↓
-                        改善と新しい実例を共有
-```
-
-1. **設計を書く。** 参考、物語の節目、時間、構図、カメラ、文字、音、内容を替えても維持する判断を記録。
-2. **動く形にする。** 編集可能なソースと許諾済み素材、置換入力、プレビュー・レンダリングの手順を同梱。
-3. **結果を見せる。** 参考と改編、必要に応じた同時点比較、実施した検査、残る差分を共有。
-4. **貢献し、改編する。** 完結したフォルダーを PR で提案。フォーク、ブランド変更、新たな作例による改善につなげます。
-
-| あなたの貢献 | コミュニティに残るもの |
-| --- | --- |
-| **モーションデザイン** | 文書化された視覚言語、ショットの文法、音の方針 |
-| **クリエイティブコーディング** | 編集可能な実装、部品、再利用できる動作 |
-| **ブランドと物語** | 新しい企画、実際の改編、別の内容でも設計が機能する証拠 |
-| **エージェントの手順** | 再構築、改編、比較、レビューを導く Skills |
-| **調査と評価** | 出典付きの参考、再現できる比較、ベンチマーク課題の提案 |
-
-[Motion Design Remix](../library/skills/motion-design-remix/SKILL.md)、[Presenter Story](../library/skills/presenter-story/SKILL.md) または [Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md)から始めてください。[リソース登録チェックリスト](../library/ENTRY_TEMPLATE.md)を使い、[GitHub](https://github.com/nexu-io/html-anything/issues) で共有し、[Discord](https://discord.gg/mHAjSMV6gz)へ。Git での貢献と明示的な再利用は今すぐ可能です。マーケットプレイス、Motion Benchmark / Arena は将来の方向性です。
-
-<a id="see-the-motion-survive-a-new-brand"></a>
-
-## 🧪 動画の裏側にある編集可能な動きを探る
-
-**カメラ、タイトル、製品の見せ方が気に入ったら、発想を残して物語を変える。** 6 つの編集可能なソース研究に、Motion.md、Skill、内容プリセットを収録しています。[ソース、入力、検証記録](motion-design-examples.md).
-
-**6 つの編集可能なモーション作例**
-
-ペアのプレビューは同じ実装からレンダリングした無音抜粋で、元の内容と改編を同じ時点で比較します。
-
-### ワイヤーフレームのポータル · BREAKTHROUGH → OPENMOTION
-
-<table>
-<tr><th width="50%">参考 · 元の内容</th><th width="50%">改編 · Skill パッケージでの変更</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="ワイヤーフレーム：左が元の内容、右が変更後、同期再生"></picture></a></td></tr>
-</table>
-
-**維持：ポータルのタイミング、立体文字、カメラの前進。** **変更：タイトル、副題、3D フレーズ。**
-
-[Motion.md](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
-
-### 樹冠のタイポグラフィ · Understory → OpenMotion
-
-<table>
-<tr><th width="50%">参考 · 元の内容</th><th width="50%">改編 · Skill パッケージでの変更</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="樹冠の文字：左が元の内容、右が変更後、同期再生"></picture></a></td></tr>
-</table>
-
-**維持：葉の動き、奥行き、遮蔽、読む時間。** **変更：2 つのブランド見出し。**
-
-[Motion.md](../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/motion-design-remix/previews/canopy-part-title.mp4)
-
-### UI の登場 · 製品ツアー → AI 編集の物語
-
-<table>
-<tr><th width="50%">参考 · 元の内容</th><th width="50%">改編 · Skill パッケージでの変更</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="UI の登場：左が元の内容、右が変更後、同期再生"></picture></a></td></tr>
-</table>
-
-**維持：傾いたキャンバス、奥行きの階層、連続したカメラ。** **変更：大見出し、文書、コミュニティの文言。**
-
-[Motion.md](../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
-
-### 立体コード · loadConfig() → cutVideo()
-
-<table>
-<tr><th width="50%">参考 · 元の内容</th><th width="50%">改編 · Skill パッケージでの変更</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体コード：左が元の内容、右が変更後、同期再生"></picture></a></td></tr>
-</table>
-
-**維持：押し出した板、構文の色、カメラの動き。** **変更：関数、変数、表示する呼び出し。**
-
-[Motion.md](../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
-
-### 粒子の集合 · parse / optimize / emit → select / trim / render
-
-<table>
-<tr><th width="50%">参考 · 元の内容</th><th width="50%">改編 · Skill パッケージでの変更</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子の集合：左が元の内容、右が変更後、同期再生"></picture></a></td></tr>
-</table>
-
-**維持：シード固定の粒子運動と集合のテンポ。** **変更：処理の名前と手順。**
-
-[Motion.md](../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
-
-### ガラスの情報カード · 機器ウィジェット → 制作ワークスペース
-
-<table>
-<tr><th width="50%">参考 · 元の内容</th><th width="50%">改編 · Skill パッケージでの変更</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="ガラスカード：左が元の内容、右が変更後、同期再生"></picture></a></td></tr>
-</table>
-
-**維持：ガラス表現、カード階層、時間差、メーター。** **変更：ラベル、単位、機能の物語。**
-
-[Motion.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [内容プリセット](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
-
-動画しかない参考には、別の[再構築ワークフロー](../skills/motion-recreate/SKILL.md) で作り直して比較します。再現度は選んだ参考と制作要件に照らして確認します。
-
-<a id="one-video-more-places-to-share"></a>
-<a id="publish-to-every-platform"></a>
-
-## 📤 あらゆるプラットフォームへ公開 — 計画中
-
-**動画を読み解き、ブランドの作品にして、視聴者へ。** 参考、ブランド制作、マルチモーダル生成、編集、レンダリング、配信をつなぎ、承認済み作品を複数チャネルで公開することを目指します。
-
-**計画中：** 公開アカウントを接続し、投稿先別の動画と文章を用意して、確認後に一か所から公開・予約。「あらゆるプラットフォーム」は製品の方向性で、対応先は接続機能の実装・検証後に発表します。
-
-### 投稿先別の動画は今すぐ作れる
-
-承認済みの動画を各チャネル向けに展開。編集可能なプロジェクトで、ブランドと動きを保ちながら導入、長さ、配置、締めの言葉を変更できます。
-
-> 「承認済みの動画から 9:16 のショート、16:9 の製品発表、正方形のフィード版を作ってください。文字と UI を各画面に合わせ、ブランドと見せ場を維持し、各版を確認させてください。」
-
-| 依頼する版 | 調整するもの |
-| --- | --- |
-| **縦のショート** — Reels、Shorts、TikTok、小紅書など | 導入、大きく読みやすい文字、画角、字幕位置 |
-| **横の動画** — 製品ページ、発表、YouTube | UI の細部、広い構図、説明する時間 |
-| **正方形のフィード版** — SNS キャンペーン | コンパクトな構図、見出し、明快な締め |
-
-これらは制作依頼の例で、内蔵の書き出しプリセットではありません。エージェントが構図を調整し、投稿先の現行要件に照らして各出力を確認します。
-
-**今できること：** 各版を作り、MP4 を出力して、自分で公開するか予約ツールへアップロード。公開は別工程で、OpenMotion 内のアカウント連携と予約は計画中です。
-
-### 公開サービスとの連携 — 計画中
-
-| 計画している工程 | 目指す体験 |
-| --- | --- |
-| **チャネルを接続** | ブランドのアカウントと投稿先を選択 |
-| **公開を準備** | 投稿先別に動画、表紙、字幕、投稿文を用意 |
-| **確認して公開** | 完成版を承認して公開・予約 |
-| **結果から学ぶ** | 成績を公開した正確な版に結びつけ、次の制作へ |
-
-```text
-現在
-分析 → ブランド化 → 生成 → 編集 → レンダリング → MP4
-                                                 ↓
-                                  手動アップロード / 外部予約ツール
-
-計画中 · 各プラットフォームへ公開
-承認済みの版 → 公開連携 → 予約 → 成績のフィードバック
-      ↑                              |
-      +──────── 次の動画を改善 ────────+
-```
-
-**着想から配信まで、一つの制作手順に。** 今の制作基盤は参考の再構築、マルチモーダル生成、編集、レンダリングです。アプリ内公開、予約、自動リフレーム、分析データ取り込みは**計画中**。[現在の機能範囲](product/architecture.md) · [公開とフィードバックの方向性](product/studio-vision.md)
-
-<a id="resources-to-start-from"></a>
-
-## 🧩 ブランド映像の Motion.md 100 本以上 + 制作リソース 890 件以上
-
-**全工程を担うクリエイターに、制作のライブラリを。** 参考動画、動きの断片、コード例、ブロック、部品に、コミュニティ Skills、編集可能なテンプレート、デザインシステム、Brandkit を組み合わせます。
-
-カタログの内訳は、**全編の参考動画 42 本**、**モーションの断片 393 件**、**ブロック 210 件**、**部品 238 件**、**作例 8 件**。視聴用の参考とコードが含まれ、すぐ開ける Studio プロジェクトは別に記載します。[リソース索引](collections/README.md)
-
-**5 種のリソースが制作を支えます。** Skills は方法、テンプレートは出発点、部品は再利用できる動き、デザインシステムは一貫性、Brandkit はブランドを担います。**5 つの基本制作 Skills**、**3 つのネイティブ Studio テンプレート**、**Presenter Tech**、**6 つの動きの研究**、**3 つの話し手のレシピ**から始め、学びを共有してください。
-
-![OpenMotion Library：Skills、テンプレート、モーション部品、デザインシステム、Brandkit。](readme/library.png)
-
-| 分類 | ここから始める |
-| --- | --- |
-| **Skills** | [Brandkit、Motion Design Remix、Presenter Story](../library/skills) |
-| **テンプレート** | [3 つのネイティブプロジェクト](../library/templates/README.md) と [Presenter Tech パッケージ](../library/templates/presenter-tech/README.md) |
-| **モーション部品** | [タイトル、UI の登場などの再利用要素](../library/components/README.md) |
-| **デザインシステム** | [動きの規則と視覚の方針](../library/design-systems) |
-| **Brandkit** | [ブランド、事実、承認済み素材](../library/brandkits) |
-
-### 編集可能な出発点を開く
-
-| [Product Promo · 20 秒](../template-library/product-promo) | [NYT Graph · 15 秒](../template-library/nyt-graph) | [Decision Tree · 10 秒](../template-library/decision-tree) |
-| --- | --- | --- |
-| ![Product Promo プレビュー](../template-library/product-promo/poster.jpg) | ![NYT Graph プレビュー](../template-library/nyt-graph/poster.jpg) | ![Decision Tree プレビュー](../template-library/decision-tree/poster.jpg) |
-| 自分の見出し、製品、エンドカード | 自分の数値、単位、比較 | 自分の問い、分岐、答え |
-
-### 🎬 撮影、生成キャラクター、コード
-
-優れた動画は複数の制作方法を組み合わせられます。これらの外部事例は、撮影・生成・コード表現の使い分けを考える参考です。
-
-<table>
 <tr>
 <td width="50%" valign="top" align="center">
 <a href="readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/brand-showcase/rea-unboxing.jpg"><img src="readme/brand-showcase/rea-unboxing.gif" width="250" alt="製品開封の実写参考"></picture></a><br>
@@ -779,150 +207,350 @@ DeepSeek Harness、Codex、Claude Code に参考とブランドの企画を渡�
 </tr>
 </table>
 
-[制作の全工程を見る](#full-video-creation-stack)
+<a id="see-the-motion-survive-a-new-brand"></a>
 
-<a id="motion-gallery"></a>
+### 話題の動画を再現
 
-### カタログの作品を見る
+参考動画のカットの間合いを生かし、自分の映像とコピーで同じ場面を作り直します。
 
-**18 の動く作例から、自分のスタイルへ。** 発表動画、動く文字、ガラスと光、空間の動き、生成映像を探索。クリックで全編を見て、Studio の同名項目をエージェントへ渡せます。
-
-**リソースはここにあります。** このページと作例ガイドの全編参考、比較動画、GIF、テンプレートソース、ブラウザースクリプト、フォントにはローカルの収録先があります。[リソース一覧と再利用](readme/RESOURCES.md).
-
-**学び、改編し、貢献できるライブラリ。** 編集可能なテンプレートと外部の参考資料を収録し、判明する作者と出典を付記しています。
-
-<table>
-<tr><th colspan="3" align="left">📱 製品と UI</th></tr>
+<table width="100%">
 <tr>
-<td width="33%" valign="top">
-<a href="readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="readme/gallery/app-showcase.gif" width="300" alt="カタログの動画プレビュー：App Showcase"></picture></a><br>
-<strong>App Showcase</strong><br>
-<sub>部品 · <a href="../library/components/showcase/README.md">部品を見る</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="readme/media/remix-firecrawl-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/02f9ae975461fe6290062d7f.jpg"><img src="readme/gallery/firecrawl.gif" width="300" alt="カタログの動画プレビュー：Firecrawl Free Keyless"></picture></a><br>
-<strong>Firecrawl Free Keyless</strong><br>
-<sub>参考 · <a href="readme/media/remix-firecrawl-reference.mp4">@ericciarla</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="readme/gallery/ui-3d-reveal.gif" width="300" alt="カタログの動画プレビュー：3D UI Reveal"></picture></a><br>
-<strong>3D UI Reveal</strong><br>
-<sub>部品 · <a href="../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">部品を見る</a></sub>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-openai"><a href="../examples/motion-studies/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/motion-studies/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/motion-studies/comparison.jpg"><img src="../examples/motion-studies/comparison.webp" width="100%" alt="OpenAI · ワイヤーフレームの節点 → 編集トラック"></picture></a></div><br>
+<strong>OpenAI · ワイヤーフレームの節点 → 編集トラック</strong><br>
+5 本のカラートラックが一つの編集点に集まります。背景の切り替え、文字の登場、ロゴの表示という元動画の三拍を再現しました。<br>
+<sub><a href="../examples/motion-studies/comparison.mp4">横画面で見る</a> · <a href="../examples/motion-studies/comparison.mobile.mp4">縦画面の MP4</a> · <a href="https://x.com/OpenAI/status/2084352161404920316">元動画 00:26.50–00:31.50</a> · <a href="../examples/motion-studies/signoff.html">HTML</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">🚀 ブランドと発表動画</th></tr>
 <tr>
-<td width="33%" valign="top">
-<a href="readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="readme/gallery/pond.gif" width="300" alt="カタログの動画プレビュー：Pond: a new Linux OS"></picture></a><br>
-<strong>Pond: a new Linux OS</strong><br>
-<sub>参考 · <a href="readme/media/jake-pond-reference.mp4">@bflycomputer</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="readme/gallery/kimi-k3.gif" width="300" alt="カタログの動画プレビュー：Kimi K3 teaser"></picture></a><br>
-<strong>Kimi K3 teaser</strong><br>
-<sub>参考 · <a href="readme/media/remix-kimi-k3-reference.mp4">@Kimi_Moonshot</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="readme/gallery/elevenlabs-reception.gif" width="300" alt="カタログの動画プレビュー：Reception by ElevenLabs"></picture></a><br>
-<strong>Reception by ElevenLabs</strong><br>
-<sub>参考 · <a href="readme/media/remix-elevenlabs-reception-reference.mp4">@ElevenLabs</a></sub>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-deepseek"><a href="../examples/brand-studies/deepseek/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/deepseek/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/deepseek/comparison.jpg"><img src="../examples/brand-studies/deepseek/comparison.webp" width="100%" alt="DeepSeek Harness · ターミナル入力 → 撮影用カチンコ"></picture></a></div><br>
+<strong>DeepSeek Harness · ターミナル入力 → 撮影用カチンコ</strong><br>
+カチンコに一文字ずつ文字が現れます。最後の打鍵からエンディングまでの間と、一瞬のフラッシュを残しました。<br>
+<sub><a href="../examples/brand-studies/deepseek/comparison.mp4">横画面で見る</a> · <a href="../examples/brand-studies/deepseek/comparison.mobile.mp4">縦画面の MP4</a> · <a href="https://x.com/DeepSeekHarness/status/2117256196227019194">元動画 01:31.50–01:36.50</a> · <a href="../examples/brand-studies/deepseek/index.html">HTML</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">✍️ 動くタイポグラフィ</th></tr>
+<tr><th colspan="2" align="left">編集可能なモーション · 同じプロジェクトの原版とアレンジ</th></tr>
 <tr>
-<td width="33%" valign="top">
-<a href="readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="readme/gallery/glass-shard-title.gif" width="300" alt="カタログの動画プレビュー：Glass Shard Title"></picture></a><br>
-<strong>Glass Shard Title</strong><br>
-<sub>部品 · <a href="../library/components/showcase/README.md">部品を見る</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="ワイヤーフレームのポータル。左の原版と右のアレンジを同期再生"></picture></a><br>
+<strong>ワイヤーフレームのポータル · BREAKTHROUGH → OPENMOTION</strong><br>
+ポータルが開くタイミング、立体文字、カメラの寄りを残し、見出し、副題、立体文字のフレーズを替えました。<br>
+<sub><a href="../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/wireframe-portal-title.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
 </td>
-<td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="readme/gallery/canopy-title.gif" width="300" alt="カタログの動画プレビュー：Canopy Part Title"></picture></a><br>
-<strong>Canopy Part Title</strong><br>
-<sub>部品 · <a href="../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">部品を見る</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="readme/gallery/wireframe-title.gif" width="300" alt="カタログの動画プレビュー：Wireframe Portal Title"></picture></a><br>
-<strong>Wireframe Portal Title</strong><br>
-<sub>部品 · <a href="../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">部品を見る</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="../library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="木の葉と文字。左の原版と右のアレンジを同期再生"></picture></a><br>
+<strong>木の葉と文字 · Understory → OpenMotion</strong><br>
+葉が横切る動きと奥行き、文字が隠れてから読めるようになるまでの間を残し、二つの見出しを替えました。<br>
+<sub><a href="../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/canopy-part-title.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">💎 光、ガラス、3D の世界</th></tr>
 <tr>
-<td width="33%" valign="top">
-<a href="readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="readme/gallery/iskra-light.gif" width="300" alt="カタログの動画プレビュー：Iskra Light"></picture></a><br>
-<strong>Iskra Light</strong><br>
-<sub>参考 · <a href="readme/media/remix-iskra-light-reference.mp4">@world_is_web</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="UI の登場シーン。左の原版と右のアレンジを同期再生"></picture></a><br>
+<strong>UI の登場シーン · 製品ツアー → AI 編集の紹介</strong><br>
+傾いたキャンバス、重なりの奥行き、連続したカメラ移動を生かし、見出しとドキュメント、コミュニティの紹介文を替えました。<br>
+<sub><a href="../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/ui-3d-reveal.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
 </td>
-<td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="readme/gallery/liquid-glass-widgets.gif" width="300" alt="カタログの動画プレビュー：Liquid Glass Widgets"></picture></a><br>
-<strong>Liquid Glass Widgets</strong><br>
-<sub>部品 · <a href="../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">部品を見る</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="readme/gallery/cyera.gif" width="300" alt="カタログの動画プレビュー：Cyera brand video"></picture></a><br>
-<strong>Cyera brand video</strong><br>
-<sub>参考 · <a href="readme/media/remix-cyera-reference.mp4">Cyera</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="../library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体コード。左の原版と右のアレンジを同期再生"></picture></a><br>
+<strong>立体コード · loadConfig() → cutVideo()</strong><br>
+押し出したコードの層、構文の配色、カメラの動きはそのままに、関数、変数、呼び出し例を替えました。<br>
+<sub><a href="../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/code-3d-extrude.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
 </td>
 </tr>
-<tr><th colspan="3" align="left">🧭 奥行きとカメラの動き</th></tr>
 <tr>
-<td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="readme/gallery/code-3d.gif" width="300" alt="カタログの動画プレビュー：Code 3D Extrude"></picture></a><br>
-<strong>Code 3D Extrude</strong><br>
-<sub>部品 · <a href="../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">部品を見る</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="../library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子の組み立て。左の原版と右のアレンジを同期再生"></picture></a><br>
+<strong>粒子の組み立て · parse / optimize / emit → select / trim / render</strong><br>
+同じ乱数シードによる粒子の軌道と集まるタイミングを生かし、工程名と手順を替えました。<br>
+<sub><a href="../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/code-particle-assemble.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
 </td>
-<td width="33%" valign="top">
-<a href="readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="readme/gallery/glyph.gif" width="300" alt="カタログの動画プレビュー：Glyph: GPU typography for the web"></picture></a><br>
-<strong>Glyph: GPU typography for the web</strong><br>
-<sub>参考 · <a href="readme/media/remix-glyph-reference.mp4">@pmndrs</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="readme/gallery/flight-map.gif" width="300" alt="カタログの動画プレビュー：NYC Paris Flight"></picture></a><br>
-<strong>NYC Paris Flight</strong><br>
-<sub>部品 · <a href="../library/components/showcase/README.md">部品を見る</a></sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">✨ 生成ビジュアル</th></tr>
-<tr>
-<td width="33%" valign="top">
-<a href="readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="readme/gallery/aurora.gif" width="300" alt="カタログの動画プレビュー：Aurora"></picture></a><br>
-<strong>Aurora</strong><br>
-<sub>部品 · <a href="../library/components/showcase/README.md">部品を見る</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="readme/gallery/linear-loops.gif" width="300" alt="カタログの動画プレビュー：Linear Loops"></picture></a><br>
-<strong>Linear Loops</strong><br>
-<sub>参考 · <a href="readme/media/remix-linear-loops-reference.mp4">@linear</a></sub>
-</td>
-<td width="33%" valign="top">
-<a href="../library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="readme/gallery/code-particles.gif" width="300" alt="カタログの動画プレビュー：Code Particle Assemble"></picture></a><br>
-<strong>Code Particle Assemble</strong><br>
-<sub>部品 · <a href="../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">部品を見る</a></sub>
+<td colspan="1" width="50%" align="center" valign="top">
+<a href="../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="ガラス調の情報カード。左の原版と右のアレンジを同期再生"></picture></a><br>
+<strong>ガラス調の情報カード · デバイス部品 → クリエイターの仕事場</strong><br>
+ガラスの質感、カードの重なり、順番に現れる動きとメーターを残し、ラベル、単位、紹介する機能を替えました。<br>
+<sub><a href="../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/liquid-glass-widgets.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
 </td>
 </tr>
 </table>
 
-カタログの原動画から、映像と通常の速度を保った抜粋です。外部参考や部品であり、同梱テンプレートの追加ではありません。[出典と抜粋の記録](readme/ASSETS.md#catalog-preview-grid)
+### 解説とチュートリアル
 
-| 探索先 | 得られるもの |
+クローズアップと注釈を使い、手順ごとに注目してほしい場所を示します。
+
+<table width="100%">
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-claude"><a href="../examples/brand-studies/anthropic/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/anthropic/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/anthropic/comparison.jpg"><img src="../examples/brand-studies/anthropic/comparison.webp" width="100%" alt="Claude · 設定画面 → ブランドのカラーパレット"></picture></a></div><br>
+<strong>Claude · 設定画面 → ブランドのカラーパレット</strong><br>
+スイッチの切り替えと手描きの丸が現れるタイミングを生かし、設定画面を色の選択パネルに替えました。<br>
+<sub><a href="../examples/brand-studies/anthropic/comparison.mp4">横画面で見る</a> · <a href="../examples/brand-studies/anthropic/comparison.mobile.mp4">縦画面の MP4</a> · <a href="https://x.com/ClaudeDevs/status/2091953609185657251">元動画 00:00–00:05</a> · <a href="../examples/brand-studies/anthropic/index.html">HTML</a></sub>
+</td>
+</tr>
+</table>
+
+### データとグラフで伝える
+
+グラフが変化する様子を追いながら、数値の差を読み取れます。
+
+<table width="100%">
+<tr>
+<td colspan="1" width="100%" align="center" valign="top">
+<a href="readme/media/M1128-clip.mp4"><picture>
+<source media="(prefers-reduced-motion: reduce)" srcset="readme/examples/data-story.jpg">
+<img src="readme/examples/data-story.gif" width="480" alt="外部の制作参考：動く比較棒グラフ · @Vintage_god">
+</picture></a><br>
+<strong>比較できる動く棒グラフ</strong><br>
+棒の高さが変わる間も、それぞれの値を読み取れます。<br>
+<sub><a href="https://x.com/Vintage_god/status/2106817967967056165">元動画</a></sub>
+</td>
+</tr>
+</table>
+
+### 音楽と映像表現
+
+曲のビートに合わせて繰り返す映像のモチーフを作ります。
+
+<table width="100%">
+<tr>
+<td colspan="2" width="100%" align="center" valign="top">
+<div id="case-kimi"><a href="../examples/brand-studies/kimi/comparison.mp4"><picture><source media="(max-width: 600px) and (prefers-reduced-motion: no-preference)" srcset="../examples/brand-studies/kimi/comparison.mobile.webp"><source media="(prefers-reduced-motion: reduce)" srcset="../examples/brand-studies/kimi/comparison.jpg"><img src="../examples/brand-studies/kimi/comparison.webp" width="100%" alt="Kimi · 磁力線 → レコード盤"></picture></a></div><br>
+<strong>Kimi · 磁力線 → レコード盤</strong><br>
+回転する磁場をレコードの溝に置き換え、ジャケットにタイトルを表示します。<br>
+<sub><a href="../examples/brand-studies/kimi/comparison.mp4">横画面で見る</a> · <a href="../examples/brand-studies/kimi/comparison.mobile.mp4">縦画面の MP4</a> · <a href="https://x.com/Kimi_Moonshot/status/2077521842080817296">元動画 00:30.75–00:35.75</a> · <a href="../examples/brand-studies/kimi/index.html">HTML</a></sub>
+</td>
+</tr>
+</table>
+
+[7 つの用途別エージェント用プロンプト](examples.md)
+
+<a id="features"></a>
+<a id="为什么选择-openmotion"></a>
+
+## ✨ OpenMotion の特長
+
+<a id="what-is-openmotion"></a> <a id="openmotion-是什么"></a> <a id="video-is-code"></a>
+
+### 1. エージェントが動画制作の全工程を担う初のフルスタック動画生成ツール
+
+**HTML で動画を書く。** シーン、書体、レイアウト、トランジションとそのタイミングを HTML、CSS、JavaScript で記述します。実写、生成したクリップ、画像、音楽、ナレーションを組み合わせ、同じプロジェクトを Studio で開いて MP4 に書き出せます。
+
+![ローカルエージェント、任意のメディアモデル、制作リソースで、参考分析、シーン記述、不足素材生成、編集、MP4 出力とソース保存を行います。](readme/diagrams/creation-stack.ja.svg)
+
+**書いて、観て、直して、書き出す。** 製品を差し替える、冒頭を詰める、出演者を加える、字幕や結末を変える。エージェントがソースを編集し、結果をエディターで確認できます。ローカルの MCP クライアントはプロジェクト用ツールを使用します。シェルを使えるエージェントでは Skills と指定バージョンの CLI も利用できます。[接続設定](#agent-setup) · [ネイティブ合成ガイド](../skills/motion-production/references/native.md) · [HTML の作例](../template-library/product-promo/index.html)
+
+#### Studio で編集できるもの
+
+| Studio の機能 | 今できること |
 | --- | --- |
-| [Motion リソース索引](collections/README.md) | 選んだ動画、出典、編集可能な出発点。 |
-| [同梱テンプレート](../template-library) | Product Promo、NYT Graph、Decision Tree。各ネイティブソースとプレビュー付き。 |
-| Studio のテンプレート一覧 | 検索、プレビュー、テンプレート改編・参考再構築の指示。 |
-| [Motion.md](motion-md.md) | スタイルを支える制作判断を共有する方法。 |
+| **物語とタイムライン** | 素材の読み込み・配置、台本や確定タイムコードに基づく切り詰め・並べ替え・修正 |
+| **動きと字幕** | 内容に合わせた動く文字、トランジション、注釈、図表、字幕 |
+| **素材と音** | 手元の素材の読み込み、内蔵モデル連携での画像・動画・音楽・TTS 生成 |
+| **画像の修正** | 参考画像対応モデルで候補を生成し、時間と動きを保ったまま差し替え |
+| **プレビューと版** | Studio で確認し、手動またはエージェントで編集。次の修正にも同じプロジェクトを使用 |
+| **出力とソース** | 固定版を MP4 にレンダリングし、HTML、CSS、JavaScript、素材を保存 |
 
-参考は研究の対象、編集可能なテンプレートは変更できるソース付きです。ギャラリーの**ワンクリック再構築**は参考と指示をコピーします。同梱テンプレートは直接開けますが、外部映像は分析・再構築が必要です。[カタログの範囲と出典](template-catalog.md)
+> 「承認済みの見せ方は維持。中盤をこの画面録画に替え、指定タイムコードで導入を短くし、最後の CTA を 2 秒長くしてください。」
 
-<a id="快速开始"></a>
-<a id="quick-start"></a>
+[プロジェクトとバージョン管理](project-workspace.md)
 
-## 🚀 はじめる
+<a id="分享可编辑的复刻工程"></a>
 
-### OpenMotion を起動
+#### 参考動画から編集可能なプロジェクトへ
+
+1. **参考動画を分析する。** 再現したい場面を選び、カットの順序、トランジション、音が入る位置を Motion.md に記録します。自分のブランドに合わせて替える部分も明記します。
+2. **カットを組み直す。** エージェントがコピー、製品映像、素材から HTML のシーンを作成し、Studio のタイムラインに並べます。
+3. **同じ時点で見比べる。** 元動画と再現版を同じ時点で比較し、尺、動き、音を調整します。最後に通して再生し、全体のテンポを確認します。
+4. **書き出して共有する。** MP4 を書き出し、HTML ソースと素材を保存します。ほかの人がアレンジできるよう、Motion.md、プレビュー、共有可能な素材をプロジェクトに添えます。[提出時のチェックリスト](../library/ENTRY_TEMPLATE.md)
+
+<a id="bring-your-agent-and-keys"></a>
+
+### 2. 無料・オープンソース。ローカルエージェントで使え、各工程で BYOK に対応
+
+<a id="choose-agent"></a>
+
+**エージェントを選んでください。** WorkBuddy、Codex、Claude Code、DeepSeek Harness には個別のセットアップ手順があります。それ以外のボタンからは MCP と CLI の共通接続手順を開けます。
+
+<p>
+  <a href="#workbuddy-setup"><img src="readme/agents/workbuddy-badge.svg" width="144" height="34" alt="WorkBuddy" /></a>
+  <a href="#agent-setup"><img src="readme/agents/codex-badge.svg" width="144" height="34" alt="Codex CLI" /></a>
+  <a href="#claude-setup"><img src="readme/agents/claude-code-badge.svg" width="144" height="34" alt="Claude Code" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/opencode-badge.svg" width="144" height="34" alt="OpenCode" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/hermes-badge.svg" width="144" height="34" alt="Hermes" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/antigravity-badge.svg" width="144" height="34" alt="Antigravity" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/gemini-badge.svg" width="144" height="34" alt="Gemini CLI" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/grok-build-badge.svg" width="144" height="34" alt="Grok Build" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/kimi-badge.svg" width="144" height="34" alt="Kimi CLI" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/cursor-badge.svg" width="144" height="34" alt="Cursor Agent" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/qwen-badge.svg" width="144" height="34" alt="Qwen Code" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/qoder-badge.svg" width="144" height="34" alt="Qoder CLI" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/copilot-badge.svg" width="144" height="34" alt="GitHub Copilot" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/pi-badge.svg" width="144" height="34" alt="Pi" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/kiro-badge.svg" width="144" height="34" alt="Kiro CLI" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/kilo-badge.svg" width="144" height="34" alt="Kilo" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/vibe-badge.svg" width="144" height="34" alt="Mistral Vibe" /></a>
+  <a href="#deepseek-setup"><img src="readme/agents/deepseek-badge.svg" width="144" height="34" alt="DeepSeek TUI / Harness" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/reasonix-badge.svg" width="144" height="34" alt="Reasonix" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/aider-badge.svg" width="144" height="34" alt="Aider" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/devin-badge.svg" width="144" height="34" alt="Devin" /></a>
+  <a href="#local-agent-connection"><img src="readme/agents/trae-badge.svg" width="144" height="34" alt="Trae CLI" /></a>
+</p>
+
+| 持ち込むもの | 動画への活かし方 |
+| --- | --- |
+| **🤖 エージェント — BYOA** | Skills と MCP、対応環境では CLI で接続。いつものクライアント、アカウント、作業文脈を使えます。 |
+| **🔑 キー — BYOK** | Model Settings に対応するメディア API キーを設定し、画像、動画、音楽、TTS のモデルを選択。対応するローカル連携ではエージェントの既存ログインを利用できます。 |
+| **🎨 ブランドと素材** | ロゴ、書体、スクリーンショット、実写、台本、音楽を用意します。ブランド情報と使用許可のある素材を Motion.md の Brand Kit 欄に記録します。 |
+| **🧩 制作の出発点** | 参考、モーション部品、テンプレート、コミュニティ Skills から方向を選び、ソースや参考をエージェントへ渡します。 |
+
+**Skills、プロジェクトツール、モデル連携、Studio、レンダリングの制作パイプラインはオープンソースです。** ローカルで動かし、実装を確認・拡張できます。このローカル工程にソフトの月額料金やレンダリングごとの料金はありません。生成 API を使わず、手持ちの映像・画像・音声だけでも制作できます。
+
+認証情報はワークスペースの設定に保存します。エージェントの契約や外部モデルの利用料は各提供元の規定に従います。[エージェント別の接続方法と検証状況](agent-adapters.md)
+
+<a id="make-your-motion-language-reusable"></a> <a id="motion-design-community"></a>
+
+### 3. ブランド動画の Motion.md が 100 本以上、制作リソースが 890 件以上
+
+OpenMotion が定義した **Motion.md** は動画の演出を記述する Markdown 形式です。公開されたブランド動画の分析資料には、各カットの順番、尺、トランジション、差し替え可能な素材が記載されています。[Stripe の例](../examples/brand-studies/stripe/MOTION.md)では、カードを映画のフィルム枠に置き換えても同じ拍で反転するよう、動きのタイミングを指定しています。
+
+Brand Kit 欄にはロゴ、配色、書体、文体、確認済みの製品情報をまとめます。構成、動き、音、レビューの指針を記しておけば、ブランドを替えても残したい演出が伝わります。新しい動画を作るときに、このファイルを素材と一緒にエージェントに渡してください。
+
+![Motion.md はブランド、カット割り、動き、音を記録します。Skill はアレンジの手順を、プロジェクトは編集可能なソースと素材を提供します。](readme/diagrams/creative-context.ja.svg)
+
+<a id="resources-to-start-from"></a>
+
+#### Motion.md を書くときに使える資料
+
+カットやトランジションを探すときは、**42 本の参考動画と 393 点のモーション**を参照できます。HTML で画面を組み立てるために、Studio のライブラリには **210 個のブロック、238 個のコンポーネント、8 個のコード例**もあります。
+
+| 作りたいもの | 利用できる資料 |
+| --- | --- |
+| エージェントに制作手順を渡す | [5 つの制作 Skills](skills.md)は演出、再現、テンプレートの応用・作成、編集と書き出しを扱います。[モーションのアレンジ用 Skill](../library/skills/motion-design-remix/SKILL.md)には編集可能な 6 例が、[トーク動画用 Skill](../library/skills/presenter-story/SKILL.md)には 3 種類の構成例があります。 |
+| タイトル、トランジション、UI の登場演出を再利用する | [モーションコンポーネント](../library/components/README.md)には個別に使えるソースとタイミングの説明があります。[タイトルの登場例](../library/components/title-reveal/README.md)でコピーと表示開始時刻の変更を試せます。 |
+| ブランドと動きのルールを渡す | [Brandkit Skill](../library/skills/brandkit/SKILL.md)で資料を整理し、[ロゴ、文体、製品情報](../library/brandkits/openmotion/BRANDKIT.md)を Motion.md の Brand Kit 欄にまとめます。[Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md)は、再利用できるビジュアルと動きのルールの作例です。 |
+
+##### すぐに編集できる Studio テンプレート
+
+3 つの編集可能なプロジェクトを同梱しています。Studio の **Templates → Ready to edit** でテンプレートを選ぶと、自分用のコピーが作成されます。
+
+| [Product Promo · 20 秒](../template-library/product-promo/) | [NYT Graph · 15 秒](../template-library/nyt-graph/) | [Decision Tree · 10 秒](../template-library/decision-tree/) |
+| --- | --- | --- |
+| [![製品プロモーションのプレビュー](../template-library/product-promo/poster.jpg)](../template-library/product-promo/) | [![棒グラフのプレビュー](../template-library/nyt-graph/poster.jpg)](../template-library/nyt-graph/) | [![決定木のプレビュー](../template-library/decision-tree/poster.jpg)](../template-library/decision-tree/) |
+| 製品画面、タイトル、締めのコピーを替えられます。 | 自分のデータ、単位、注釈を使えます。 | 質問や分岐を書き換え、回答の表示順を調整できます。 |
+
+トーク動画と画面デモを組み合わせるには、ローカルで実行できる [Presenter Tech テンプレート](../library/templates/presenter-tech/README.md)も使えます。
+
+<a id="motion-gallery"></a>
+
+##### 参考動画とモーションコンポーネント
+
+プレビューを選ぶとクリップを再生できます。「コンポーネントを見る」からは HTML ソースも開けます。
+
+<table>
+<tr><th colspan="3" align="left">再利用できるモーションコンポーネント</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="readme/gallery/app-showcase.gif" width="300" alt="カタログの動画プレビュー：App Showcase"></picture></a><br>
+<strong>App Showcase</strong><br>
+<sub>コンポーネント · <a href="../library/components/showcase/app-showcase/index.html">コンポーネントを見る</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="readme/gallery/glass-shard-title.gif" width="300" alt="カタログの動画プレビュー：Glass Shard Title"></picture></a><br>
+<strong>Glass Shard Title</strong><br>
+<sub>コンポーネント · <a href="../library/components/showcase/glass-shard-title/index.html">コンポーネントを見る</a></sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="readme/gallery/flight-map.gif" width="300" alt="カタログの動画プレビュー：NYC Paris Flight"></picture></a><br>
+<strong>NYC Paris Flight</strong><br>
+<sub>コンポーネント · <a href="../library/components/showcase/nyc-paris-flight/index.html">コンポーネントを見る</a></sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">製品・ブランドの参考動画</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="readme/gallery/pond.gif" width="300" alt="カタログの動画プレビュー：Pond: a new Linux OS"></picture></a><br>
+<strong>Pond: a new Linux OS</strong><br>
+<sub>参考動画 · @bflycomputer</sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="readme/gallery/cyera.gif" width="300" alt="カタログの動画プレビュー：Cyera brand video"></picture></a><br>
+<strong>Cyera brand video</strong><br>
+<sub>参考動画 · Cyera</sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="readme/gallery/glyph.gif" width="300" alt="カタログの動画プレビュー：Glyph: GPU typography for the web"></picture></a><br>
+<strong>Glyph: GPU typography for the web</strong><br>
+<sub>参考動画 · @pmndrs</sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">光と影、ループの演出</th></tr>
+<tr>
+<td width="33%" valign="top">
+<a href="readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="readme/gallery/iskra-light.gif" width="300" alt="カタログの動画プレビュー：Iskra Light"></picture></a><br>
+<strong>Iskra Light</strong><br>
+<sub>参考動画 · @world_is_web</sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="readme/gallery/linear-loops.gif" width="300" alt="カタログの動画プレビュー：Linear Loops"></picture></a><br>
+<strong>Linear Loops</strong><br>
+<sub>参考動画 · @linear</sub>
+</td>
+<td width="33%" valign="top">
+<a href="readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="readme/gallery/aurora.gif" width="300" alt="カタログの動画プレビュー：Aurora"></picture></a><br>
+<strong>Aurora</strong><br>
+<sub>コンポーネント · <a href="../library/components/showcase/aurora/index.html">コンポーネントを見る</a></sub>
+</td>
+</tr>
+</table>
+
+[厳選した 18 件のリソース](collections/README.md#catalog-picks) · [素材の出典と利用方法](readme/RESOURCES.md)
+
+[編集できる 6 つの作例](motion-design-examples.md) · [Motion.md の書式](motion-md.md)
+
+<a id="all-in-one-studio"></a> <a id="full-video-creation-stack"></a>
+
+<a id="model-wall"></a>
+
+### 4. 画像・動画・音楽・音声を生成
+
+**BYOK で、自分のモデルアカウントを動画制作に使えます。** **Model Settings** で対応する API キーを登録し、モデルを選んでください。Studio の **Model Gateway** で画像、動画、音楽、音声を生成し、プレビューした候補を同じプロジェクトに取り込めます。対応するローカル画像生成では、既存のエージェントのログイン情報も利用できます。
+
+<p><img src="readme/models/codex.svg" width="133" alt="Codex Image">
+<img src="readme/models/nano-banana.svg" width="133" alt="Nano Banana 2">
+<img src="readme/models/flux.svg" width="133" alt="FLUX Schnell">
+<img src="readme/models/seedance.svg" width="133" alt="Seedance 2.0">
+<img src="readme/models/wan.svg" width="133" alt="Wan 2.2">
+<img src="readme/models/suno.svg" width="133" alt="Suno v4">
+<img src="readme/models/kokoro.svg" width="133" alt="Kokoro"></p>
+
+| 必要な素材 | 内蔵モデルカタログの例 | 動画への用途 |
+| --- | --- | --- |
+| **🖼️ 画像** | Codex Image、Atlas Cloud の Nano Banana 2、fal.ai の FLUX Schnell | ブランド画像、シーンの絵、補助画像。対応する Codex 画像経路で参考画像を用いた編集 |
+| **🎬 動画** | Atlas Cloud の Seedance 2.0、fal.ai の Wan 2.2 | 撮影素材やモーションと組み合わせるショット、B ロール |
+| **🎵 音楽** | Atlas Cloud の Suno v4 | 雰囲気と企画に合ったサウンドトラック |
+| **🎙️ TTS / ナレーション** | fal.ai の Kokoro | 承認済み台本から音声を生成し、映像・音楽と配置 |
+
+> 「Motion.md の Brand Kit と確定済みの台本を使って、冒頭のビジュアル、挿入カット、BGM、ナレーションを生成してください。選んだ素材をプロジェクトに入れ、音と映像を合わせてから全編を見せてください。」
+
+[内蔵モデル一覧](../gateway/catalog.ts) · [プロバイダー設定とエンドポイントの登録](model-gateway.md)
+
+<a id="technical-guide"></a>
+<a id="安装与技术文档"></a>
+
+## 🛠️ セットアップと技術資料
+
+リンク先の詳しい技術資料には、英語または中国語のものがあります。
+
+<a id="快速开始"></a> <a id="quick-start"></a>
+
+### クイックスタート
+
+#### OpenMotion を起動する
 
 **無料のローカル制作環境から。** 自分のエージェントを接続し、同梱テンプレートや撮影素材を使ってローカルでレンダリング。新しい素材を生成するときは Model Settings に対応キーを追加します。
 
-Git、npm、**Node.js 26.11.1** を用意してください。ソースからのプレビューと書き出しには Chrome/Chromium、FFmpeg/FFprobe も必要です。[実行環境の設定](usage.md)
+Git、npm、**Node.js 26.11.1** を用意してください。ソースからのプレビューと書き出しには Chrome または Chromium と、FFmpeg・FFprobe も必要です。[実行環境の設定](usage.md)
 
 ```sh
 git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
@@ -934,7 +562,9 @@ npm start
 
 **http://localhost:4173** を開き、**Templates → Ready to edit** から **Product Promo** を選び、**Connect Agent** で接続します。プロジェクトと認証情報はチェックアウトの外へ。 `MOTION_DATA_DIR` でワークスペースを選びます。
 
-### エージェントに接続する
+<a id="agent-setup"></a>
+
+#### エージェントを接続する
 
 プラグイン対応 Codex では、チェックアウトから実行：
 
@@ -942,7 +572,19 @@ npm start
 bash scripts/install-motion.command
 ```
 
-DeepSeek Harness、Claude Code などは[エージェントアダプターガイド](agent-adapters.md) または[ローカル MCP + Skills インストーラー](npm-installation.md)を参照。npm パッケージは未公開で、ガイドはローカルビルドの成果物を使います。[Windows テストパッケージ](test-packages.md)
+<a id="workbuddy-setup"></a>
+
+**WorkBuddy** · OpenMotion Connector をインポートするか、付属の `mcp.json` をカスタム MCP として追加します。WorkBuddy に利用可能な動画テンプレートを一覧表示させてください。[WorkBuddy の設定手順](agent-adapters.md#workbuddy)
+
+<a id="claude-setup"></a>
+
+**Claude Code** · ローカルインストーラーで `--host claude` を選び、Claude Code で `/mcp` を実行して接続を確認します。[ローカルインストーラー](npm-installation.md)
+
+<a id="deepseek-setup"></a>
+
+**DeepSeek** · DeepSeek TUI ではターミナルから HTML プロジェクトを編集できます。DeepSeek Harness では Cordis を使って OpenMotion の MCP ツールに接続できます。[DeepSeek Harness の設定](agent-adapters.md#deepseek-harness)
+
+インストーラーはローカルでビルドしたパッケージを使います。[Windows 用テストパッケージ](test-packages.md)
 
 まず同梱テンプレートで試します：
 
@@ -954,7 +596,11 @@ DeepSeek Harness、Claude Code などは[エージェントアダプターガイ
 
 動画から始める場合は、参考と[再構築ブリーフ](#reverse-engineer-a-video)を渡してください。ホストが会話の横に Studio を開けない場合は、返されたローカルプロジェクトのリンクを使います。
 
-#### Skills、MCP、CLI
+ブランド動画の再現も試せます。
+
+> OpenMotion で https://x.com/stripe/status/2049621560743608481 の 00:21.50–00:26.50 を分析してください。クリック、カメラの寄り、反転の間合いを生かし、カードを自社製品が映るフィルムに置き換えて、Studio で開いてください。
+
+##### Skills、MCP、CLI
 
 チェックアウトから [Skills CLI](https://github.com/vercel-labs/skills) を使い、5 つの基本ワークフローを確認・インストールできます：
 
@@ -973,7 +619,11 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | [motion-video-to-template](../skills/motion-video-to-template/SKILL.md) | 持ち運べる再利用テンプレートの制作 |
 | [motion-production](../skills/motion-production/SKILL.md) | 範囲を定めた編集、プレビュー、検査、問題解決、出力 |
 
-**Connect Agent** でワークスペース専用の設定を取得できます。ローカル stdio クライアントの手動設定では絶対パスを使います：
+<a id="local-agent-connection"></a>
+
+**そのほかのローカルエージェントを接続する** · Studio の **Connect Agent** からワークスペースの起動コマンドをコピーします。stdio MCP 対応のクライアントには下記の設定を使えます。ターミナルを使うエージェントでは、プロジェクトのディレクトリを開き、[ローカルエンジンの CLI](../skills/motion-production/references/native.md) で HTML シーンをプレビュー・レンダリングできます。
+
+<a id="manual-mcp"></a>
 
 ```json
 {
@@ -989,20 +639,74 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 **公開 MCP ツール 11 個**で、テンプレート検索・詳細取得、作成、読み取り、編集、プレビュー、素材の読み込み、出力、版の復元、キャンセルを扱います。共通の手順とエンジンガイドは MCP resources から取得できます。[ツール契約](mcp-phase1-tools.md)
 
-`motion_list_templates` でテンプレートを探し、`motion_get_template` で詳細を確認し、`motion_create_project` で編集用のコピーを作成します。[テンプレートカタログ](template-catalog.md)
+`motion_list_templates` でテンプレートを探し、`motion_get_template` で詳細を確認します。`motion_create_project` で編集用のコピーを作成できます。[テンプレート一覧](template-catalog.md)
 
 アプリには `npm start` 、stdio には `npm run mcp` を使用します。シェル対応エージェントは実行環境が返す固定版エンジン CLI で検査・レンダリング可能。管理対象の編集には revision 検査を適用します。[ネイティブ制作](../skills/motion-production/references/native.md)
 
-<a id="open-projects-reusable-knowledge"></a>
-<a id="developer-architecture"></a>
+<a id="product-tour"></a> <a id="产品界面"></a> <a id="connect-your-agent"></a> <a id="use-from-your-agent"></a> <a id="从-agent-接入"></a> <a id="your-agent-your-studio"></a>
 
-## 🛠️ 作り手のために。開発者にも開かれた設計。
+<a id="reverse-engineer-a-video"></a>
 
-**HTML は編集可能なソース、MP4 はレンダリングした納品物。** TypeScript アプリ、React Studio、エージェントの手順、マルチモーダル生成アダプター、ブラウザーベースの合成・レンダリングエンジンを組み合わせます。プロジェクトが人とエージェントの共通の作品です。
+### 参考動画を編集可能なプロジェクトにする
 
-### モジュールの連携
+| 参考から読み解くもの | 自分の物語に置き換えるもの |
+| --- | --- |
+| **導入と物語** — 順序、展開、見せ場への積み上げ | 自分の約束、製品の事実、行動喚起 |
+| **ショット構成** — 画角、カメラ、レイヤー、視覚階層 | 自社 UI、映像、ロゴ、補助画像 |
+| **動きとテンポ** — 登場、切り替え、緩急、読む時間 | 動きの意図を保ち、内容に合わせて調整 |
+| **文字とブランド** — 文字階層、色、構図 | 自分の書体、配色、原稿、Brandkit |
+| **音とリズム** — 発話のタイミング、音楽の合図、強調 | 自分の声、用意した音楽、音の演出 |
 
-![エージェントは 9 つの MCP プロジェクトツール、Studio はローカル HTTP で接続。アプリが版、素材、出力ジョブを管理し、Gateway が素材を供給。固定スナップショットをレンダリング・検証します。](readme/diagrams/runtime-architecture.svg)
+エージェントが SNS のリンクを開けない場合は、ローカルの動画ファイルとタイムコードを渡してください。元動画だけがある場合は[参考動画の再現手順](../skills/motion-recreate/SKILL.md)、編集可能なソースがある場合は[テンプレートの手順](../skills/motion-template-to-video/SKILL.md)を使います。
+
+```text
+OpenMotion で添付の参考動画を自社ブランド向けに再構築してください。
+
+分析：冒頭、ショットの順序、文字、トランジション、音の合図。
+維持：選択区間の製品の見せ方とカメラのテンポ。
+変更：ロゴ、UI、訴求、原稿、エンドカードを提供素材へ。
+生成：ブランドと承認済み台本に従い、設定済みモデルで不足する
+画像、動画、BGM、TTS ナレーションを用意。
+
+編集可能なプロジェクトを Studio で開き、参考と同時点を比較。
+残る差分を説明し、確認後に MP4 を出力して次の編集用にソースを保存。
+```
+
+<a id="ai-video-editing"></a> <a id="keep-editing-after-the-remake"></a>
+
+#### エージェントから始める
+
+DeepSeek Harness、Codex、Claude Code または WorkBuddy に参考動画とブランドの要件を渡し、再現、プレビュー、修正、書き出しを依頼します。いつものアカウントと作業環境をそのまま使えます。
+
+![Codex 向け OpenMotion 埋め込み Viewer。編集可能な Product Promo、プレビュー、レイヤー、タイムライン。](readme/product-tour/codex-embedded.png)
+
+#### Studio から始める
+
+参考を見て、テンプレートを開くか録画を読み込みます。**Connect Agent** のワークスペース別手順に従い、企画を渡してください。同じタイムラインで変更を確認し、いつでも手動調整できます。
+
+![会話、保存済み要件、編集可能な動画プロジェクトを表示する単体版 OpenMotion Studio。](readme/product-tour/standalone-studio.png)
+
+#### エージェントを接続してテンプレートを開く
+
+![Connect Agent ダイアログ：ワークスペース専用の手順とローカルクライアント選択。](readme/product-tour/connect-agent.png)
+
+![Product Promo プレビューと、エージェントにコピーするテンプレート専用指示。](readme/product-tour/template-to-agent.png)
+
+**プレビュー → 指示をコピー → ブランド素材と一緒にエージェントへ。** 同梱テンプレートは編集可能なコピーを開き、外部参考は再構築タスクを開始します。[製品デモ全体](product-tour.md)
+
+どちらの入口も同じローカルアプリとプロジェクトを使用。エージェントは自身のクライアントで動き、Studio が企画と編集可能な作品を保存します。[接続の仕組み](session-architecture.md)
+
+<a id="open-projects-reusable-knowledge"></a> <a id="developer-architecture"></a>
+
+### システム構成
+
+Studio でタイムラインを調整するときも、エージェントがカットを直すときも、編集対象は同じ HTML プロジェクトです。ローカルの TypeScript サービスが素材とバージョンを管理し、ブラウザーベースのエンジンが選んだバージョンを MP4 に書き出します。
+
+#### モジュール間の連携
+
+![ローカルエージェントは 9 個の MCP プロジェクトツールで、Studio はローカル HTTP で接続。アプリケーションがバージョン、素材、書き出しを管理し、Model Gateway が素材を供給します。レンダラーが選んだバージョンを書き出して検証します。](readme/diagrams/runtime-architecture.ja.svg)
+
+エージェントは書き込み前にバージョンを確認するので、古いリクエストが直前の変更を上書きすることを防げます。生成した素材は選んだものだけがプロジェクトに入ります。書き出しには開始時点のバージョンを使い、その後の編集は次の版に反映されます。ファイル仕様は書き出し時に検証され、映像と音、間合いは再生して確認できます。
 
 <details>
 <summary>全体設計とロードマップをテキストで読む</summary>
@@ -1010,33 +714,33 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 ```text
 制作の入力
 参考動画 + 撮影素材 + 台本 + ブランド素材
-                   ↓
+                 ↓
 コミュニティの知識
 Motion.md + BRANDKIT.md + Skills + テンプレート + 部品
-                   ↓
+                 ↓
 BYOA：ローカルエージェント              OPENMOTION STUDIO
 DeepSeek Harness / Codex / Claude Code  React 19 + TypeScript + Vite
 他のホスト、Skills、ホストの分析ツール  Tailwind CSS + Zustand
-                   |                   CodeMirror + Dockview
+                 |                     CodeMirror + Dockview
             stdio MCP                  素材 / プレビュー / タイムライン
             プロジェクトツール 9 個             ローカル HTTP
-                   └────────┬──────────┘
+                 └──────────┬──────────┘
                             ↓
 ローカルアプリ：Node.js + TypeScript + node:http
 会話 / プロジェクトファイル / 素材 / revision / 出力ジョブ
-                   ↓                         ↓
+                 ↓                         ↓
 BYOK：MODEL GATEWAY                    動画をコードで
 キー / アカウント / モデルルーティング HTML シーン + 素材 + Studio データ
 探索 / 生成ジョブ                     HTML + CSS + JavaScript + GSAP
-                   ↓                         ↑
+                 ↓                         ↑
 モデルアダプター                             |
-Codex Image / Atlas Cloud / fal.ai            |
+Codex Image / Atlas Cloud / fal.ai          |
 画像 / 動画 / 音楽 / TTS                      |
-                   ↓                         |
+                 ↓                         |
 生成候補 → プレビュー / 選択 → 明示的に採用 ──┘
                             ↓
 レンダリングと検証
-固定スナップショット → HTML エンジン + Chromium → FFmpeg / FFprobe
+選択したバージョン → HTML エンジンと Chromium → FFmpeg / FFprobe
                             ↓
 現在の納品物
 MP4 + 編集可能なソース + 素材 + 版と出力の検証記録
@@ -1052,7 +756,7 @@ MP4 + 編集可能なソース + 素材 + 版と出力の検証記録
 
 BYOA は既存クライアントを使い、BYOK は対応するモデルアカウントを接続します。Studio とローカルサービスが作品を管理し、認証情報はプロジェクト外へ。第 1 段階の公開 MCP は**プロジェクト用 9 個とテンプレートカタログ用 2 個、合計 11 個のツール**です。モデル生成は Studio とローカル Gateway から利用し、この図は生成・公開ツールを公開 MCP に追加するものではありません。
 
-### 技術スタックとソース案内
+#### 技術スタックとソースの索引
 
 | 層 | 技術 | ソースの入口 |
 | --- | --- | --- |
@@ -1068,7 +772,7 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 
 依存関係の固定は [package.json](../package.json)、[package-lock.json](../package-lock.json) と[実行環境のロック](../scripts/runtime-lock.json)にあります。モデルと第三者ライブラリは各自の条件を保ち、アプリは Apache-2.0 です。
 
-### 得意な層から一緒に作る
+#### 開発に参加する
 
 | 得意分野 | 役立つ貢献 | 入口 |
 | --- | --- | --- |
@@ -1083,14 +787,23 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 
 [製品アーキテクチャ](product/architecture.md) · [Studio 開発](../studio/README.md) · [Model Gateway](model-gateway.md) · [貢献ガイド](../CONTRIBUTING.md)
 
-<a id="super-motion-video-agent"></a>
-<a id="status--roadmap"></a>
-<a id="当前状态与路线图"></a>
-<a id="roadmap"></a>
+<a id="one-video-more-places-to-share"></a> <a id="publish-to-every-platform"></a>
 
-## 🗺️ 一度の改編から、継続する制作へ
+<a id="super-motion-video-agent"></a> <a id="status--roadmap"></a> <a id="当前状态与路线图"></a> <a id="roadmap"></a>
 
-Studio の大きな構想は、発見、制作、協働、公開、学習です。**Super Motion Video Agent** は企画、ツール、修正をまたいで仕事を進める概念。現在は接続したエージェントがローカル Skills、MCP、Studio を使い、常駐型の自律編成は計画中です。
+### 画面比率ごとの書き出しと公開
+
+画面比率ごとに構図を整え、Studio で各版を確認して MP4 を書き出し、対象のプラットフォームへアップロードします。
+
+| 依頼する版 | 調整するもの |
+| --- | --- |
+| **縦のショート** — Reels、Shorts、TikTok、小紅書など | 導入、大きく読みやすい文字、画角、字幕位置 |
+| **横の動画** — 製品ページ、発表、YouTube | UI の細部、広い構図、説明する時間 |
+| **正方形のフィード版** — SNS キャンペーン | コンパクトな構図、見出し、明快な締め |
+
+配信アカウントとの連携、予約投稿、公開後の成果のフィードバックは計画中です。
+
+#### Studio のロードマップと共同編集の構想
 
 | 分野 | 今できること | 今後の方向 |
 | --- | --- | --- |
@@ -1103,14 +816,15 @@ Studio の大きな構想は、発見、制作、協働、公開、学習です�
 
 ![人とエージェントが共有タイムラインを確認する生成コンセプト画像。協働機能は計画中。](readme/collaboration-concept-v2.png)
 
-*計画中の協働体験のコンセプト。公開日は未発表です。* [Studio の構想](product/studio-vision.md) · [知識とフィードバック](product/studio-vision.md#knowledge-and-feedback)
+*共同編集の構想。タイムラインに「このカットをもう少し長く」とコメントすると、エージェントが間合いを調整します。計画中の機能です。* [Studio の構想](product/studio-vision.md) · [知識とフィードバック](product/studio-vision.md#knowledge-and-feedback)
 
-<a id="社区共建"></a>
-<a id="community"></a>
+<a id="社区共建"></a> <a id="community"></a>
 
-## 🤝 動画も、その作り方も共有する
+<a id="社区"></a>
 
-**参考、改編、再利用できる動きの言語を一つ持ち寄ってください。** [Motion.md コミュニティ](#motion-design-community) で、次の作り手が自分の作品を作れるよう、判断とソースを共有しましょう。
+## 🤝 作品と制作手順を共有する
+
+再現した動画、再利用できるテンプレート、カットの間合いを記録した Motion.md を共有してください。元動画と完成版を並べ、編集可能なプロジェクトを添えると、ほかの人も同じリズムを自分の素材で試せます。
 
 | 貢献するもの | 含めるもの |
 | --- | --- |
@@ -1120,19 +834,21 @@ Studio の大きな構想は、発見、制作、協働、公開、学習です�
 | **Brandkit** | ブランド、正確な製品情報、共有できる素材 |
 | **エージェント対応や編集機能の改善** | 焦点を絞った変更と再現可能な検証 |
 
-[Library 登録チェックリスト](../library/ENTRY_TEMPLATE.md) · [貢献ガイド](../CONTRIBUTING.md) · [リポジトリの規則](../AGENTS.md) · [貢献者一覧](https://github.com/nexu-io/html-anything/graphs/contributors)
+[リソース提出時のチェックリスト](../library/ENTRY_TEMPLATE.md) · [貢献ガイド](../CONTRIBUTING.md) · [問題を報告](https://github.com/nexu-io/html-anything/issues) · [コントリビューター](https://github.com/nexu-io/html-anything/graphs/contributors) · [メディア向け資料](media-kit.md)
 
-[Issue を開く](https://github.com/nexu-io/html-anything/issues) · [Discord に参加](https://discord.gg/mHAjSMV6gz) · [ドキュメント](README.md)
+OpenMotion の専用サイトは `open-design.ai/openmotion` に開設予定です。
 
-制作者・メディアの方へ：参考、提供ブランド、Studio での変更、実際の結果を示してください。レンダリングしたデモ、製品コンセプト、外部参考は区別します。[メディア向け情報と素材](media-kit.md)
+[OpenDesign の動画ギャラリー](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_ja) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_ja) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
-[![OpenMotion を Star して、次の制作をフォロー。](readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
+[**GitHub で OpenMotion にスターを付ける**](https://github.com/nexu-io/html-anything)
 
-**OpenMotion を Star して、研究したい動画を見つけ、次は自分の作品を。**
+[![OpenMotion の更新をフォローするには GitHub でスターを](readme/community-star.ja.svg)](https://github.com/nexu-io/html-anything)
 
 <a id="acknowledgements"></a>
 
-## 🙏 謝辞 / Acknowledgements
+### 謝辞
+
+ブランド動画の制作者と該当箇所のタイムコードは各比較映像に添えています。[エージェントとモデルのロゴ](readme/models/README.md)
 
 OpenMotion のライセンスは [Apache-2.0](../LICENSE)です。第三者のコード、テンプレート、素材、フォントは元のライセンスとクレジットを保ちます。
 
@@ -1149,6 +865,6 @@ OpenMotion のライセンスは [Apache-2.0](../LICENSE)です。第三者の�
 | [OpusClip](https://www.opus.pro/calendar) | 配信と[外部の予約公開](https://www.opus.pro/tools/instagram-reels-scheduler)の製品参考。内蔵コネクターなし |
 | [GSAP](https://github.com/greensock/GSAP) / [FFmpeg](https://ffmpeg.org/) | 動画とメディアの依存ライブラリ。バージョンは [package.json](../package.json) と[実行環境のロック](../scripts/runtime-lock.json) |
 
-[素材の出典](readme/ASSETS.md) · [その他の展示素材の出典](readme/brand-showcase/README.md) · [フォントの告知](../web/design-system/fonts/NOTICES.txt) · [Studio ライセンス](../studio/LICENSE)
+[素材の出典](readme/ASSETS.md) · [その他の展示素材の出典](readme/brand-showcase/README.md) · [フォントのライセンス](../web/design-system/fonts/NOTICES.txt) · [Studio のライセンス](../studio/LICENSE)
 
 旧 HTML Anything アプリは [`legacy` ブランチ](https://github.com/nexu-io/html-anything/tree/legacy)に保存されています。現在のブランチと配布範囲は[リポジトリ移行ガイド](repository-migration.md) を参照してください。

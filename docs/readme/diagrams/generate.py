@@ -8,6 +8,7 @@ resource responsibilities in library/ENTRY_TEMPLATE.md.
 
 from base64 import b64encode
 from html import escape
+import json
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent
@@ -16,29 +17,36 @@ MUTED = "#34535A"
 
 
 class Diagram:
-    def __init__(self, title, description, height):
+    def __init__(self, title, description, height, locale, labels):
+        self.locale = locale
+        self.labels = labels
+        title_text = self.translate(title)
+        description_text = self.translate(description)
         paper = b64encode((OUT / "cover-paper.jpg").read_bytes()).decode("ascii")
         self.parts = [f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="{height}" viewBox="0 0 1200 {height}" role="img" aria-labelledby="title desc">
-<title id="title">{escape(title)}</title><desc id="desc">{escape(description)}</desc>
+<title id="title">{escape(title_text)}</title><desc id="desc">{escape(description_text)}</desc>
 <defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="m1 1 5 3-5 3" fill="none" stroke="#34535A" stroke-width="1.4"/></marker></defs>
 <image width="1200" height="{height}" preserveAspectRatio="none" xlink:href="data:image/jpeg;base64,{paper}"/>
 <rect x="28" y="28" width="1144" height="{height-56}" rx="8" fill="#fffdf8" fill-opacity=".93"/>
 <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">''']
         self.text(600, 100, title, 42, bold=True)
 
+    def translate(self, text):
+        return self.labels[text] if self.locale else text
+
     def text(self, x, y, content, size=22, bold=False):
-        self.parts.append(f'<text x="{x}" y="{y}" font-size="{size}" font-weight="{700 if bold else 400}" fill="{INK if bold else MUTED}">{escape(content)}</text>')
+        self.parts.append(f'<text x="{x}" y="{y}" font-size="{size}" font-weight="{700 if bold else 400}" fill="{INK if bold else MUTED}">{escape(self.translate(content))}</text>')
 
     def line(self, path, arrow=False):
         marker = ' marker-end="url(#arrow)"' if arrow else ''
         self.parts.append(f'<path d="{path}" fill="none" stroke="{MUTED}" stroke-width="2"{marker}/>')
 
     def save(self, slug):
-        (OUT / f"{slug}.svg").write_text("\n".join(self.parts) + "\n</g></svg>\n", encoding="utf-8")
+        (OUT / (f"{slug}.{self.locale}.svg" if self.locale else f"{slug}.svg")).write_text("\n".join(self.parts) + "\n</g></svg>\n", encoding="utf-8")
 
 
-def creation_stack():
-    d = Diagram("From a reference clip to an editable video", "Bring your local agent, your brand and optional media models. Break down the reference, write HTML scenes, generate missing media, edit in Studio and render the MP4.", 495)
+def creation_stack(locale, labels):
+    d = Diagram("From a reference clip to an editable video", "Bring your local agent, your brand and optional media models. Break down the reference, write HTML scenes, generate missing media, edit in Studio and render the MP4.", 495, locale, labels)
     for x, name, detail in [(225, "Your local agent", "Skills and project tools"), (600, "Your media models", "Optional, with your keys"), (975, "Your brand", "Motion.md and assets")]:
         d.text(x, 170, name, 28, bold=True)
         d.text(x, 205, detail)
@@ -55,8 +63,8 @@ def creation_stack():
     d.save("creation-stack")
 
 
-def creative_context():
-    d = Diagram("Inside Motion.md", "The Brand Kit, story, movement, sound and review notes give your agent the creative decisions to carry into the editable project.", 465)
+def creative_context(locale, labels):
+    d = Diagram("Inside Motion.md", "The Brand Kit, story, movement, sound and review notes give your agent the creative decisions to carry into the editable project.", 465, locale, labels)
     fields = [(188, "Brand Kit", "Logo, type, palette", "Voice and product facts"), (465, "Story", "Opening, shot order", "Reveal and closing beat"), (740, "Motion & sound", "Timing, transitions", "Music and voice cues"), (1010, "Review", "What to keep", "What you can change")]
     for x, name, first, second in fields:
         d.text(x, 179, name, 29, bold=True)
@@ -70,8 +78,8 @@ def creative_context():
     d.save("creative-context")
 
 
-def runtime_architecture():
-    d = Diagram("One project, from agent to render", "Your local agent uses MCP and Studio uses local HTTP. Both share the local application. The gateway supplies assets to the editable project and a fixed revision is rendered and verified.", 630)
+def runtime_architecture(locale, labels):
+    d = Diagram("One project, from agent to render", "Your local agent uses MCP and Studio uses local HTTP. Both share the local application. The gateway supplies assets to the editable project and a fixed revision is rendered and verified.", 630, locale, labels)
     for x, name, detail in [(350, "Your local agent", "MCP · 9 project tools"), (850, "Studio", "Local HTTP")]:
         d.text(x, 173, name, 31, bold=True)
         d.text(x, 213, detail)
@@ -92,6 +100,8 @@ def runtime_architecture():
 
 
 if __name__ == "__main__":
-    creation_stack()
-    creative_context()
-    runtime_architecture()
+    translations = json.loads((OUT / "translations.json").read_text(encoding="utf-8"))
+    for locale, labels in [(None, {}), *translations.items()]:
+        creation_stack(locale, labels)
+        creative_context(locale, labels)
+        runtime_architecture(locale, labels)

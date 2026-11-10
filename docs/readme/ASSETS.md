@@ -6,6 +6,10 @@ The public README follows the painterly direction of the [OpenDesign website](ht
 
 The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) records the palette, identity and asset rules. [Ink & Water / MOTION_DESIGN.md](../../library/design-systems/ink-water/MOTION_DESIGN.md) records reusable creative direction.
 
+## Product logo
+
+The [OpenMotion logo](openmotion-logo.svg) uses the symbol and Albert Sans wordmark from the [OpenMotion prototype](https://opendesign-motion-standard-prototype.inovixissu.chatgpt.site/). The lettering is outlined so the mark renders identically across README languages. [Font license](../../web/design-system/fonts/NOTICES.txt)
+
 ## Agent logos
 
 The local agent gallery and setup buttons use client marks from the [source icon collection](https://github.com/nexu-io/open-design/tree/07a86b1041531bfa0bec1006d9c0993985fee560/apps/web/public/agent-icons) and the [individual client artwork credits](models/README.md). Each mark identifies its respective client.
@@ -14,7 +18,7 @@ The local agent gallery and setup buttons use client marks from the [source icon
 
 | Asset | Source and use |
 | --- | --- |
-| [README cover](brand-hero.jpg) · [中文](brand-hero.zh-CN.jpg) | Dan Martell’s talking-head reference and the OpenMotion caption remake with @careerwithriya, with a capture of the editable Studio timeline. The desktop and mobile covers open the [2.4-second comparison](media/presenter-caption-remake.mp4). [Footage and edit credits](reverse-engineering-cover.md) |
+| [README cover](brand-hero.jpg) · [简体中文](brand-hero.zh-CN.jpg) · [日本語](brand-hero.ja.jpg) | Dan Martell’s talking-head reference and the OpenMotion caption remake with @careerwithriya, with a capture of the editable Studio timeline. The desktop and mobile covers open the [2.4-second comparison](media/presenter-caption-remake.mp4). [Footage and edit credits](reverse-engineering-cover.md) |
 | [Earlier cover](cover.png) | Previous AI-editing positioning, preserved as artwork history; no longer the main README cover. |
 | [Animated cover](cover-motion.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |
 | [Social preview](social-preview.jpg) | 1280 × 640 sharing image derived from the cover. |
@@ -23,7 +27,8 @@ The local agent gallery and setup buttons use client marks from the [source icon
 | [Collaboration roadmap](collaboration-concept-v2.png) | Generated 1774 × 887 concept of human–agent editing. Retains **Concept preview**; the README states that collaboration is planned. The [earlier version](collaboration-coming.png) is preserved. |
 | [Architecture diagrams](diagrams/) | Creation workflow, explicit creative context and runtime boundaries; [editable SVG source](diagrams/generate.py). Diagrams explain the architecture, not measured creation results. |
 | [Additional brand and production references](brand-showcase/README.md) | Local campaign still and two case-study videos; external examples with [source and integrity records](brand-showcase/manifest.json). |
-| [Stay tuned GIF](stay-tuned.gif) | Generated 960 × 480 Star → Starred invitation; 40 frames, 4 seconds, infinite loop, about 437 KB. Linked to the repository. Inspired by the community CTA pattern in [Hypit](https://github.com/hypit-ai/hypit); no Hypit image or GitHub screenshot is reproduced. |
+| [Community banner](community-star.svg) · [简体中文](community-star.zh-CN.svg) · [日本語](community-star.ja.svg) | The localized GitHub invitation uses the prototype logo and the cover paper. The star animation respects reduced-motion preferences. |
+| [Earlier stay tuned GIF](stay-tuned.gif) | Generated 960 × 480 Star → Starred invitation; 40 frames, 4 seconds, infinite loop, about 437 KB. Linked to the repository. Inspired by the community CTA pattern in [Hypit](https://github.com/hypit-ai/hypit); no Hypit image or GitHub screenshot is reproduced. |
 | [Star frame](stay-tuned.png) / [Starred frame](stay-tuned-starred.png) | Two ImageGen frames used to reproduce the animation; illustration only, no fabricated repository counts or notification guarantees. |
 | [Editor](editor.jpg) and [workspace](workspace.jpg) | Historical Studio captures at commit `7aee372`, using an isolated demo workspace and bundled Product Promo project. Retained for provenance; the README now uses the product tour below. |
 | [Codex embedded editor](product-tour/codex-embedded.png) / [standalone workspace](product-tour/standalone-studio.png) | Real Studio captures of the same Product Promo project. The Codex image is the embedded Viewer, without a Codex desktop shell. |

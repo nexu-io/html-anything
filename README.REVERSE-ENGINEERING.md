@@ -1,6 +1,8 @@
+**English** · [简体中文](docs/README.zh-CN.md) · [日本語](docs/README.ja.md)
+
 <a id="openmotion"></a>
 
-<h1 align="center">OpenMotion</h1>
+<h1 align="center"><img src="docs/readme/openmotion-logo.svg" width="230" alt="OpenMotion"></h1>
 
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
@@ -839,7 +841,7 @@ The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
 
 [**Star OpenMotion on GitHub**](https://github.com/nexu-io/html-anything)
 
-[![Stay tuned with us · Star OpenMotion](docs/readme/stay-tuned.gif)](https://github.com/nexu-io/html-anything)
+[![Stay tuned with us · Star OpenMotion](docs/readme/community-star.svg)](https://github.com/nexu-io/html-anything)
 
 <a id="acknowledgements"></a>
 
