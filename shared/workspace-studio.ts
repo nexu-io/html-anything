@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { WorkspaceStore } from '../workspace.ts';
 import { HYPERFRAMES_VERSION, repairGeneratedRegistry } from '../hyperframes.ts';
 import { isMain } from './entry.ts';
+import { withAvailableHistorySteps } from './studio-history-availability.ts';
 
 export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: string, initialDirectory: string, port: number) {
   const require = createRequire(path.join(runtimeRoot, 'package.json'));
@@ -18,6 +19,9 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
   const { createStudioServer } = await import(pathToFileURL(path.join(cli, 'dist', bundles[0])).href);
   if (typeof createStudioServer !== 'function') throw new Error('Hyperframes workspace host factory is unavailable');
   const { getRequestListener } = await import(pathToFileURL(require.resolve('@hono/node-server')).href);
+  const historyModule = path.join(path.dirname(require.resolve('@hyperframes/studio-server/package.json')), 'dist/history/index.js');
+  const { DEFAULT_HISTORY_ROOT } = await import(pathToFileURL(historyModule).href);
+  const historyRoot = process.env.HYPERFRAMES_HISTORY_ROOT ?? DEFAULT_HISTORY_ROOT;
   const store = new WorkspaceStore(dataDirectory);
   const hosts = new Map<string, Promise<any>>();
   let origin = '', closing = false;
@@ -30,8 +34,14 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
         await scoped.safePath('index.html');
         await repairGeneratedRegistry(scoped.projectDirectory);
         if (closing) throw new Error('Studio is stopping');
-        return createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
-          origin: () => origin, historyRoot: process.env.HYPERFRAMES_HISTORY_ROOT });
+        const host = createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
+          origin: () => origin, historyRoot });
+        const openHistory = host.adapter.history;
+        host.adapter.history = async () => {
+          const history = await openHistory();
+          return history && withAvailableHistorySteps(history, historyRoot);
+        };
+        return host;
       })().catch(error => { hosts.delete(id); throw error; });
       hosts.set(id, opening);
     }
