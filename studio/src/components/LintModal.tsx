@@ -15,8 +15,8 @@ export function LintModal({
   findings,
   projectId,
   projectDir,
-  title = "HyperFrame Lint Results",
-  promptIntro = "Fix these HyperFrames lint issues",
+  title,
+  promptIntro = "Fix these OpenMotion project check issues",
   onClose,
 }: {
   findings: LintFinding[];
@@ -30,6 +30,7 @@ export function LintModal({
   onClose: () => void;
 }) {
   const { t } = useI18n();
+  const dialogTitle = title ?? t("Project check results");
   const errors = findings.filter((f) => f.severity === "error");
   const warnings = findings.filter((f) => f.severity === "warning");
   const hasIssues = findings.length > 0;
@@ -67,7 +68,7 @@ export function LintModal({
         ref={containerRef}
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-label={dialogTitle}
         tabIndex={-1}
         className="bg-neutral-950 border border-neutral-800 rounded-xl shadow-2xl w-full max-w-xl max-h-[80vh] flex flex-col overflow-hidden outline-hidden"
         onClick={(e) => e.stopPropagation()}
@@ -90,7 +91,7 @@ export function LintModal({
                   ? t("{errors}, {warnings}", { errors: t("{count} errors", { count: errors.length }), warnings: t("{count} warnings", { count: warnings.length }) })
                   : t("All checks passed")}
               </h2>
-              <p className="text-xs text-neutral-500">{title}</p>
+              <p className="text-xs text-neutral-500">{dialogTitle}</p>
             </div>
           </div>
           <button
