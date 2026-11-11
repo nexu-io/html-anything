@@ -66,6 +66,15 @@ OPEN_MOTION_NATIVE_MANIFEST=/absolute/owned/native-manifest.json pnpm --filter @
 
 Web checks real submission, lost-response retry, cancellation/retry against frozen source, MP4 download and carrier restart. Codex copies its built closure outside repository ancestry, uses the stock MCP client and verifies actual film bytes and `resource_link`; no adjacent runtime or node_modules supplies its worker. Source CI separately covers queued/interrupted intent, ownership, pagination and ready-stage explicit dead-owner recovery. These are bounded native/macOS arm64 qualifications, not all-carrier or power-loss acceptance.
 
+The standalone pressure scenarios live in `carriers/standalone/tests/media/exports/pressure.test.ts`. The ordinary case imports twelve unique PNG/WAV resources totaling within four bytes of the existing 64 MiB revision limit, including ten full 6 MiB files; it checks atomic overflow refusal, historical reads/ranges, independent preview revocation and cold restoration. With the explicit native seed manifest, the second case captures the same immutable input while current media/source changes, closes a preview during export, replays a lost submission receipt and cancels another real worker while an independent preview remains readable. It checks worker incarnation, actual descendants, three renderer tool Uses and drain. This is capacity/lifecycle evidence, not a throughput benchmark or permission to widen media contracts.
+
+```sh
+pnpm --filter @open-motion/standalone exec vitest run -c vitest.config.ts tests/media/exports/pressure.test.ts
+OPEN_MOTION_NATIVE_MANIFEST=/absolute/owned/native-manifest.json pnpm --filter @open-motion/standalone exec vitest run -c vitest.config.ts tests/media/exports/pressure.test.ts
+```
+
+Product cache retention stays unchanged. The render module's separate native execution scenario checks eligible tool collection using its explicitly declared zero-retention fixture policy, including live-Use protection and preserved films/workspace data; it does not shorten the product retention window. User media and frozen/history membership remain persistent workspace data outside Blob collection.
+
 ## Unified local development
 
 After explicit install/build, use only the repository-local CLI:
