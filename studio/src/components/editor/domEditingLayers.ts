@@ -70,7 +70,10 @@ function buildTextField(
   return {
     key,
     label: getTextFieldLabel(tagName, index, total, source),
-    value: el.textContent ?? "",
+    value: Array.from(el.childNodes).map(node =>
+      node.nodeType === 1 && (node as Element).tagName.toLowerCase() === "br" ? "\n" : node.textContent ?? "",
+    ).join(""),
+    ...(el.querySelector(":scope > br") ? { preserveLineBreaks: true } : {}),
     tagName,
     attributes: Array.from(el.attributes)
       .filter((attribute) => !NOT_COPIED_ATTRS.has(attribute.name))
@@ -138,6 +141,11 @@ function escapeHtmlText(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+export function serializeDomEditTextFieldValue(field: DomEditTextField): string {
+  const escaped = escapeHtmlText(field.value);
+  return field.preserveLineBreaks ? escaped.replace(/\r?\n/g, "<br>") : escaped;
+}
+
 function serializeTextFieldStyle(field: DomEditTextField): string {
   const entries = Object.entries(field.inlineStyles).filter(([, value]) => Boolean(value));
   if (entries.length === 0) return "";
@@ -159,7 +167,7 @@ export function serializeDomEditTextFields(fields: DomEditTextField[]): string {
         .join("");
       const style = serializeTextFieldStyle(field);
       const styleAttr = style ? ` style="${style.replace(/"/g, "&quot;")}"` : "";
-      return `<${field.tagName}${attrs}${styleAttr}>${escapeHtmlText(field.value)}</${field.tagName}>`;
+      return `<${field.tagName}${attrs}${styleAttr}>${serializeDomEditTextFieldValue(field)}</${field.tagName}>`;
     })
     .join("");
 }

@@ -69,12 +69,14 @@ function clickOutside(): void {
 }
 
 describe("ColorField flat trigger", () => {
-  it("renders label and value inline with a small swatch, no boxed border", () => {
+  it("renders an inline color control with swatch and separate alpha", () => {
     const host = renderColorField({ value: "rgb(255, 176, 32)" });
     const trigger = host.querySelector<HTMLButtonElement>('[data-flat-color-trigger="true"]');
     expect(trigger).not.toBeNull();
     expect(trigger?.className).not.toContain("border-neutral-800");
     expect(host.textContent).toContain("Color");
+    expect(trigger?.textContent).toContain("FFB020");
+    expect(trigger?.textContent).not.toContain("rgb(");
   });
 
   it("persists one keyboard slider gesture on keyup", () => {
@@ -101,6 +103,22 @@ describe("ColorField flat trigger", () => {
 });
 
 describe("ColorField hex editing", () => {
+  it.each([0, 0.5])("displays hex and separate alpha without changing a translucent color (%s)", (alpha) => {
+    const onCommit = vi.fn();
+    const host = renderColorField({ value: `rgba(34, 68, 102, ${alpha})`, onCommit });
+    const trigger = host.querySelector('[data-flat-color-trigger="true"]')!;
+    expect(trigger.textContent).toContain("224466");
+    expect(trigger.textContent).toContain(`${alpha * 100}%`);
+    const input = openHexInput(host);
+    expect(input.value).toBe("#224466");
+    const dialog = document.querySelector('[role="dialog"]')!;
+    expect(dialog.textContent).toContain("#224466");
+    expect(dialog.textContent).not.toContain("rgba(");
+    expect(dialog.textContent).toContain(`A ${alpha * 100}%`);
+    act(clickOutside);
+    expect(onCommit).not.toHaveBeenCalled();
+  });
+
   it("allows #333333 to be backspaced to #3 without snapping", () => {
     const input = openHexInput(renderColorField());
 

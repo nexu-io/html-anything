@@ -326,6 +326,7 @@ function EditorShellBody({
         panels={host?.mvpEditor ? MVP_PANEL_IDS : undefined}
         storageKey={host?.mvpEditor ? "motion.mvp.dock.v1" : undefined}
         fixedLayout={host?.mvpEditor}
+        initialCompactLayout={host?.mvpEditor}
       >
         <Dock.Panel id="preview">
           <div className="relative flex h-full w-full min-w-0 flex-col">

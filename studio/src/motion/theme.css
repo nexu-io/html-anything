@@ -1,4 +1,6 @@
 /* OpenDesign Motion adapter. The shared token JSON owns all UI colors. */
+:root[data-motion-ui] :is(input, textarea)::placeholder { color: var(--motion-placeholder); opacity: 1; }
+:root[data-motion-ui] .motion-audio-row { padding-inline: 6px; gap: 6px; }
 :root[data-motion-ui] .studio-tooltip {
   background: var(--motion-strong);
   color: var(--motion-panel);
@@ -97,9 +99,10 @@ button, input, select, textarea { font-family: inherit; }
 /* A single panel title has no sibling tab to switch to. */
 :root[data-motion-ui] .hf-dock .dv-groupview .dv-tabs-container:not(:has(> .dv-tab ~ .dv-tab)) > .dv-tab.dv-active-tab { box-shadow: none; cursor: default; }
 :root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button:enabled { color: var(--motion-text); }
+:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-header-history-actions) button:disabled { color: color-mix(in srgb, var(--motion-strong) 30%, var(--motion-panel)); opacity: 1; cursor: not-allowed; }
 :root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button:enabled:hover { color: var(--motion-strong); }
-:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button[aria-pressed="true"]:enabled { color: var(--motion-strong); background: var(--motion-inset); }
-:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button[aria-pressed="true"]:enabled:hover { background: var(--motion-border); }
+:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button[aria-pressed="true"]:not([data-studio-control="mute"]):enabled { color: var(--motion-strong); background: var(--motion-inset); }
+:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button[aria-pressed="true"]:not([data-studio-control="mute"]):enabled:hover { background: var(--motion-border); }
 .hf-dock .dv-tab { border-radius: 0; height: 34px; padding: 0 8px; }
 .hf-dock .dv-scrollable { height: 34px; }
 .hf-dock-tab-fill { height: 34px; border-radius: 0; background: transparent; }
@@ -155,6 +158,7 @@ button, input, select, textarea { font-family: inherit; }
 
 .motion-preview-well { margin: 0; border: 0; background: var(--motion-bg); }
 .motion-preview-frame { box-shadow: none; }
+:root[data-motion-ui] .motion-asset-thumbnail { background: var(--motion-inset); }
 .motion-asset-name-input { box-sizing: border-box; width: 100%; min-width: 0; padding: 2px 4px; border: 1px solid var(--motion-border-strong); border-radius: var(--motion-radius-sm); background: var(--motion-inset); color: var(--motion-strong); font-size: 10px; line-height: 14px; outline: none; }
 .motion-asset-name-input[aria-invalid="true"] { border-color: var(--motion-danger); }
 
@@ -232,20 +236,22 @@ button, input, select, textarea { font-family: inherit; }
 .motion-menu-hint { max-width: 224px; padding: 8px 9px 5px; color: var(--motion-dim); font-size: 10px; line-height: 1.6; }
 .motion-history-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; color: var(--motion-text); font-size: 12px; }
 .motion-history-toolbar { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 12px; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--motion-border); }
+.motion-history-toolbar-compact { padding: 4px 12px 12px; }
 .motion-history-toolbar strong { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; }
 .motion-history-toolbar > div > span { display: block; color: var(--motion-dim); font-size: 11px; line-height: 1.6; }
 .motion-history-toolbar .motion-button { font-size: 11px; height: 28px; }
 .motion-history-filters { display: flex; flex-shrink: 0; gap: 4px; padding: 10px 12px; }
 .motion-history-filters button { padding: 5px 9px; border: 0; border-radius: var(--motion-radius-sm); background: transparent; color: var(--motion-muted); font-size: 11px; cursor: pointer; }
-.motion-history-filters button[aria-pressed="true"] { color: var(--motion-accent); background: var(--motion-accent-soft); }
+.motion-history-filters button[aria-pressed="true"] { color: var(--motion-strong); background: var(--motion-inset); font-weight: 600; }
 .motion-history-filters span { margin-left: 4px; font: 10px var(--motion-font-mono); }
 .motion-history-list { flex: 1; min-height: 70px; overflow: auto; padding: 0 8px 8px; }
 .motion-history-entry { display: block; width: 100%; margin-bottom: 4px; padding: 10px; border: 1px solid transparent; border-radius: var(--motion-radius-sm); background: transparent; color: inherit; text-align: left; cursor: pointer; }
 .motion-history-entry:hover { background: var(--motion-hover); }
-.motion-history-entry[aria-pressed="true"] { background: var(--motion-accent-soft); border-color: var(--motion-border); }
+.motion-history-entry[aria-pressed="true"] { background: var(--motion-inset); border-color: var(--motion-border); }
 .motion-history-entry-heading { display: flex; align-items: center; gap: 6px; }
 .motion-history-entry-heading strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 500; }
 .motion-history-badge { flex-shrink: 0; border: 1px solid var(--motion-border); border-radius: 3px; padding: 1px 4px; color: var(--motion-muted); font-size: 9px; }
+.motion-history-badge-latest { border-color: transparent; background: var(--motion-accent-soft); color: var(--motion-accent); }
 .motion-history-entry-meta { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 6px; color: var(--motion-dim); font-size: 10px; line-height: 1.6; }
 .motion-history-empty { padding: 24px 12px; color: var(--motion-dim); text-align: center; line-height: 1.8; }
 .motion-history-detail { flex-shrink: 0; padding: 14px 16px; border-top: 1px solid var(--motion-border); background: var(--motion-panel); }
@@ -274,8 +280,19 @@ button, input, select, textarea { font-family: inherit; }
 
 .motion-language-button { flex-shrink: 1; min-width: 0; white-space: nowrap; }
 .motion-language-button span { min-width: 0; overflow: hidden; text-overflow: ellipsis; text-align: center; }
-.motion-language-menu { width: 340px; max-width: calc(100vw - 24px); }
-.motion-language-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 8px; }
+.motion-language-menu { width: 220px; max-width: calc(100vw - 24px); }
+:root[data-motion-ui] .hf-od-floating-surface.motion-language-menu {
+  max-height: min(280px, calc(100dvh - 24px), var(--available-height, 280px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--motion-raised);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 0;
+  outline: none;
+  box-shadow: var(--motion-shadow-md);
+}
+.motion-language-options { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
 
 /* OD control recipes, scoped to visual hooks; existing sizes and state handling stay native. */
 :root[data-motion-ui] .hf-od-primary {
@@ -302,7 +319,8 @@ button, input, select, textarea { font-family: inherit; }
 /* Equal side columns center the title; narrow hosts preserve the controls before the title. */
 .motion-studio-header.motion-studio-header-centered { padding-block: 11.5px; display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 1fr) minmax(max-content, 1fr); gap: 12px; }
 .motion-studio-header.motion-studio-header-centered > div { min-width: 0; width: auto; }
-.motion-studio-header.motion-studio-header-centered > div:last-child { justify-self: end; flex-wrap: nowrap; }
+.motion-studio-header.motion-studio-header-centered > div:last-child { justify-self: end; flex-wrap: nowrap; gap: 16px; }
+.motion-studio-header-centered .motion-header-history-actions { gap: 16px; }
 .motion-studio-header-centered .motion-workspace-actions { padding-right: 0; margin-right: 0; border-right: 0; }
 .motion-header-brand { display: inline-flex; align-items: center; gap: 10px; }
 .motion-header-brand img { display: block; width: 104px; height: auto; }
@@ -334,7 +352,64 @@ button, input, select, textarea { font-family: inherit; }
 }
 .motion-header-project .motion-save-state { position: absolute; top: 100%; white-space: nowrap; }
 .motion-header-project .motion-project-control { position: relative; }
-@media (max-width: 700px) {
-  .motion-studio-header.motion-studio-header-centered { grid-template-columns: auto minmax(0, 1fr); }
-  .motion-studio-header.motion-studio-header-centered > div:last-child { grid-column: 1 / -1; }
+/* Measure the editor host, including when it sits beside an open sidebar. */
+@container (max-width: 700px) {
+  .motion-studio-header.motion-studio-header-centered {
+    grid-template-columns: auto minmax(24px, 1fr) auto;
+    gap: 8px;
+  }
+  .motion-studio-header-centered .motion-header-history-actions,
+  .motion-studio-header-centered .motion-template-label { display: none; }
+  .motion-studio-header.motion-studio-header-centered > div:first-child { gap: 6px; }
+  .motion-studio-header-centered .motion-workspace-actions .motion-button {
+    width: 28px;
+    padding: 0;
+  }
+  .motion-header-project .motion-project-name-input { padding-inline: 0; text-align: left; }
 }
+
+/* Timeline menus use the shared floating surface and the same menu typography. */
+:root[data-motion-ui] .hf-od-floating-surface.motion-clip-context-menu {
+  font-family: var(--motion-font-sans);
+  background: var(--motion-raised);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 0;
+  box-shadow: var(--motion-shadow-sm);
+}
+:root[data-motion-ui] .motion-clip-context-menu [role="menuitem"] {
+  min-height: 28px;
+  padding: 6px 8px;
+  border-radius: var(--motion-radius-sm);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+}
+:root[data-motion-ui] .motion-clip-context-menu [role="group"] { border-color: var(--motion-border); }
+
+/* Empty projects keep the preview mounted, but offer an actionable blank state. */
+.motion-preview-empty { position: absolute; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; overflow: auto; background: var(--motion-bg); color: var(--motion-text); padding: 20px; }
+.motion-preview-empty-content { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 360px; min-width: 0; margin: auto; text-align: center; }
+.motion-preview-empty-content p { margin: 0; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.motion-preview-empty-content button { min-height: 36px; }
+
+.motion-conflict-notice { position: absolute; top: 64px; left: 50%; transform: translateX(-50%); z-index: 94; width: min(420px, calc(100% - 32px)); max-height: calc(100% - 80px); overflow: auto; padding: 12px 16px; border-radius: 12px; background: var(--motion-panel); color: var(--motion-text); box-shadow: var(--motion-shadow-md); font-size: 12px; line-height: 1.6; }
+.motion-conflict-notice p { margin: 0; overflow-wrap: anywhere; }
+.motion-conflict-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.motion-conflict-actions button { min-width: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+
+/* Empty titles and lanes reuse the populated timeline's column and row geometry. */
+.motion-empty-timeline { position: absolute; left: 0; right: 12px; color: var(--motion-muted); font-size: 11px; line-height: 1.25; pointer-events: none; }
+.motion-empty-timeline-label { position: absolute; inset-block: 0; left: 0; display: flex; align-items: center; padding: 0 6px; color: color-mix(in srgb, var(--motion-muted) 50%, var(--motion-panel)); }
+.motion-empty-timeline-lane { position: absolute; right: 0; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--motion-border); border-radius: 4px; }
+.motion-empty-timeline.is-drag-over .motion-empty-timeline-lane { border-color: var(--motion-accent); color: var(--motion-accent); }
+
+.motion-panel-empty-content { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+.motion-assets-empty-drop { width: min(240px, 100%); min-height: 132px; padding: 24px 16px; border: 1px dashed var(--motion-border); border-radius: 8px; }
+
+/* Passive empty hints share the disabled-control tone in both themes. */
+.motion-panel-empty-content { color: color-mix(in srgb, var(--motion-strong) 30%, var(--motion-panel)); font-size: 10px; line-height: 1.5; }
+.motion-panel-empty-content :is(svg, p) { color: inherit; font-size: inherit; }
+:root[data-motion-ui] .motion-timeline-zoom input:disabled { opacity: .3; cursor: not-allowed; }
+:root[data-motion-ui] .motion-timeline-zoom input:disabled::-webkit-slider-thumb { cursor: not-allowed; }

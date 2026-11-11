@@ -3,6 +3,7 @@ import type { RightPanelTab } from "../utils/studioHelpers";
 import { trackStudioEvent } from "../utils/studioTelemetry";
 import { useDockLayoutStore, visiblePanelInZone } from "../components/dock/dockLayoutStore";
 import { PANEL_DEFINITIONS, type PanelId } from "../components/dock/panelRegistry";
+import { useMvpEditor } from "../motion/StudioHost";
 import { useStableHandlers } from "./useStableHandlers";
 
 export interface InitialPanelLayoutState {
@@ -21,6 +22,7 @@ function tabForPanel(id: PanelId | null): RightPanelTab {
 
 /** The right column as the rest of Studio reads it, backed by the dock's panel state. */
 export function usePanelLayout(initialState?: InitialPanelLayoutState) {
+  const mvp = useMvpEditor();
   const controller = useDockLayoutStore((state) => state.controller);
   const lastActive = useDockLayoutStore((state) => state.lastActive);
   const visiblePanels = useDockLayoutStore((state) => state.visiblePanels);
@@ -35,6 +37,8 @@ export function usePanelLayout(initialState?: InitialPanelLayoutState) {
     let unsubscribe = () => {};
     if (wanted && store.openPanels.has(wanted)) {
       store.activatePanel(wanted);
+      // Hydrate the last tab without opening the MVP's initially collapsed inspector.
+      if (mvp) controller.setGroupCollapsed?.(wanted, true);
     } else if (wanted === "slideshow") {
       // The slideshow panel only opens once the composition loads and turns out to be one.
       unsubscribe = useDockLayoutStore.subscribe((state) => {
@@ -45,7 +49,7 @@ export function usePanelLayout(initialState?: InitialPanelLayoutState) {
     }
     if (rightCollapsed != null) store.setZoneVisible("right", !rightCollapsed);
     return () => unsubscribe();
-  }, [controller]);
+  }, [controller, mvp]);
 
   const visibleRight = visiblePanelInZone("right", lastActive, visiblePanels);
   const rightPanelTab = tabForPanel(visibleRight);

@@ -285,11 +285,11 @@ type FindElementSelection = Pick<DomEditSelection, "id" | "hfId" | "selector" | 
   sourceFile?: string;
 };
 
-export function findElementForSelection(
+export function findElementsForSelection(
   doc: Document,
   selection: FindElementSelection,
   activeCompositionPath: string | null = null,
-): HTMLElement | null {
+): HTMLElement[] {
   const sourceMatches = (candidate: Element): candidate is HTMLElement =>
     isHtmlElement(candidate) &&
     (!selection.sourceFile ||
@@ -299,19 +299,29 @@ export function findElementForSelection(
     querySelectorAllSafely(doc, selector).filter(sourceMatches);
 
   if (selection.hfId) {
-    const byHfId = findAll(`[data-hf-id="${escapeCssString(selection.hfId)}"]`)[0];
-    if (byHfId) return byHfId;
+    const byHfId = findAll(`[data-hf-id="${escapeCssString(selection.hfId)}"]`);
+    if (byHfId.length) return byHfId;
   }
 
   if (selection.id) {
     // Flattened sub-compositions can repeat authored ids. getElementById returns
     // only the first document match, so filter every id match by source first.
-    const byId = findAll(`[id="${escapeCssString(selection.id)}"]`)[0];
-    if (byId) return byId;
+    const byId = findAll(`[id="${escapeCssString(selection.id)}"]`);
+    if (byId.length) return byId;
   }
 
-  if (!selection.selector) return null;
-  return findAll(selection.selector)[selection.selectorIndex ?? 0] ?? null;
+  if (!selection.selector) return [];
+  const match = findAll(selection.selector)[selection.selectorIndex ?? 0];
+  return match ? [match] : [];
+}
+
+/** Single-node callers retain their existing lookup; source style edits update every instance. */
+export function findElementForSelection(
+  doc: Document,
+  selection: FindElementSelection,
+  activeCompositionPath: string | null = null,
+): HTMLElement | null {
+  return findElementsForSelection(doc, selection, activeCompositionPath)[0] ?? null;
 }
 
 // The selected node while mounted, else its copy in the selection's own file (ids repeat across files), else any copy.

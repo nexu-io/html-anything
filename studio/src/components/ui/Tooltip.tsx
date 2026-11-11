@@ -37,7 +37,7 @@ export function Tooltip({
   label,
   description,
   children,
-  delay = 400,
+  delay = 200,
   side = "top",
   disabled = false,
   lines,

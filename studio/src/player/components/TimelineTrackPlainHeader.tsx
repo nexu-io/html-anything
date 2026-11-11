@@ -61,6 +61,8 @@ export function PlainTrackHeader({
   isAudioOnly,
   onToggleTrackHidden,
   trailing,
+  hideVisibility = false,
+  audioControls,
 }: {
   trackNumber: number;
   trackDisplayNumber: number | null;
@@ -74,6 +76,8 @@ export function PlainTrackHeader({
   /** Trailing controls that belong on the control line — the FX entry points,
    *  which the caller owns because only it knows the clip they act on. */
   trailing?: React.ReactNode;
+  hideVisibility?: boolean;
+  audioControls?: React.ReactNode;
 }) {
   return (
     <>
@@ -104,13 +108,14 @@ export function PlainTrackHeader({
             truncating name leaves, so the controls sit on the edge whatever the
             name's length. */}
         <div className="ml-auto flex shrink-0 items-center gap-1">
-          <VisibilityButton
+          {audioControls}
+          {!hideVisibility && <VisibilityButton
             hidden={isTrackHidden}
             trackNumber={trackNumber}
             trackDisplayNumber={trackDisplayNumber}
             asMute={isAudioOnly}
             onToggle={onToggleTrackHidden}
-          />
+          />}
           {trailing}
         </div>
       </div>

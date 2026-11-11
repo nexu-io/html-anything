@@ -53,7 +53,6 @@ describe("useSetElementsAttribute", () => {
       "data-volume",
       "Audio Gain",
     );
-    act(() => root.unmount());
     expect(showToast).not.toHaveBeenCalled();
     expect(saved.inputs).toHaveLength(1);
     const input = saved.inputs[0];
@@ -66,6 +65,16 @@ describe("useSetElementsAttribute", () => {
     const out = typeof build === "function" ? String(build(html)) : "";
     expect(out).toContain('id="a" data-volume="0.5"');
     expect(out).toMatch(/id="b"[^>]*data-volume="2"/);
+    await write?.([{ element: clip("a"), value: "true" }], "muted", "Mute audio");
+    const muteFiles = saved.inputs.at(-1)?.["files"] as Record<string, (source: string) => string>;
+    const mutedHtml = muteFiles['index.html']!(html);
+    expect(mutedHtml).toMatch(/<audio[^>]*\smuted(?:="")?/);
+    expect(mutedHtml).not.toContain('data-muted');
+    expect(mutedHtml).toContain('data-volume="1"');
+    await write?.([{ element: clip("a"), value: null }], "muted", "Unmute audio");
+    const unmuteFiles = saved.inputs.at(-1)?.["files"] as Record<string, (source: string) => string>;
+    expect(unmuteFiles['index.html']!(mutedHtml)).not.toContain('muted');
+    act(() => root.unmount());
   });
 
   it("refuses while recording, like the single-clip write", async () => {

@@ -1,11 +1,12 @@
 import { RemixIcon } from "../icons/RemixIcons";
 import { useI18n } from "../i18n/I18n";
-import { Fragment, memo, useContext, type MouseEvent } from "react";
+import { Fragment, memo, useContext, useEffect, useRef, useState, type MouseEvent } from "react";
 import { Camera } from "../icons/SystemIcons";
 import { useStudioShellContext } from "../contexts/StudioContext";
 import { usePanelLayoutContext } from "../contexts/PanelLayoutContext";
 import { trackStudioEvent } from "../utils/studioTelemetry";
 import { Button, buttonBase, buttonSizes, buttonVariants, cn, Tooltip } from "./ui";
+import { ExportDialog } from "./renders/ExportDialog";
 import { Dock } from "./dock/Dock";
 import { InspectorIcon } from "./icons/InspectorIcon";
 import { OpenInDesktopButton } from "./OpenInDesktopButton";
@@ -51,12 +52,15 @@ export const StudioHeader = memo(function StudioHeader({
 }: StudioHeaderProps) {
   const { t } = useI18n();
   const host = useStudioHost();
+  const [exportOpen, setExportOpen] = useState(false);
+  const exportTriggerRef = useRef<HTMLButtonElement>(null);
   const HeaderFrame = host?.HeaderFrame ?? Fragment;
   const showThemeToggle = useContext(ShowThemeToggle);
   const { projectId, renderQueue } = useStudioShellContext();
   const { rightCollapsed, setRightCollapsed, setRightPanelTab } = usePanelLayoutContext();
   const isRendering = renderQueue.isRendering;
   const ffmpegMissing = renderQueue.ffmpegMissing;
+  useEffect(() => setExportOpen(false), [projectId]);
 
   return (
     <HeaderFrame>
@@ -147,8 +151,9 @@ export const StudioHeader = memo(function StudioHeader({
         {host?.windowMenu ?? <Dock.WindowMenu />}
         {host?.desktopLink !== false && <OpenInDesktopButton />}
         <Tooltip
+          disabled={host?.mvpEditor}
           label={
-            ffmpegMissing
+            host?.mvpEditor ? t("Export") : ffmpegMissing
               ? renderQueue.ffmpeg?.runtime ? t("Video components are not ready. Check preparation status.") : t("FFmpeg is not installed. Opens the Renders panel with the install command.")
               : isRendering
                 ? t("A render is already in progress")
@@ -159,8 +164,11 @@ export const StudioHeader = memo(function StudioHeader({
           <Button
             variant="primary"
             data-testid="header-export"
-            disabled={isRendering}
+            ref={exportTriggerRef}
+            aria-haspopup={host?.mvpEditor ? "dialog" : undefined}
+            disabled={!host?.mvpEditor && isRendering}
             onClick={() => {
+              if (host?.mvpEditor) { setExportOpen(true); return; }
               if (isRendering) return;
               setRightPanelTab("renders");
               setRightCollapsed(false);
@@ -178,6 +186,7 @@ export const StudioHeader = memo(function StudioHeader({
         </Tooltip>
       </div>
     </div>
+    {host?.mvpEditor && <ExportDialog open={exportOpen} onOpenChange={setExportOpen} triggerRef={exportTriggerRef} />}
     </HeaderFrame>
   );
 });

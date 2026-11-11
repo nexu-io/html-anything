@@ -3,13 +3,12 @@ import { I18nProvider, useI18n } from "../i18n/I18n";
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useStudioShellContext } from '../contexts/StudioContext';
 import { TimelineHistoryButtons } from '../components/TimelineHistoryButtons';
-import { Dock } from '../components/dock/Dock';
+import { MotionHistoryPopover } from './MotionHistoryPopover';
 import { isStudioEditSaving } from '../utils/studioPendingEdits';
 import { MotionIcon } from './icons';
 import { StudioHostContext, type StudioHost } from './StudioHost';
 import { WorkspaceFrame, WorkspaceMenuButton, useWorkspaceChrome, useOptionalWorkspaceChrome } from './WorkspaceFrame';
 import { MotionHistoryProvider, useMotionHistoryOperation } from './MotionHistoryState';
-import { MotionHistoryPanel } from './MotionHistoryPanel';
 import { MediaGatewayProvider } from './MediaGatewayContext';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
@@ -118,8 +117,11 @@ function WorkspaceProject() {
 
 function WorkspaceHistoryActions() {
   const operation = useMotionHistoryOperation();
-  return <div className="motion-history-actions">
-    <TimelineHistoryButtons canUndo={operation.busy ? false : undefined} canRedo={operation.busy ? false : undefined} />
+  return <div className="motion-history-actions motion-header-history-actions">
+    <div className="motion-history-actions">
+      <TimelineHistoryButtons canUndo={operation.busy ? false : undefined} canRedo={operation.busy ? false : undefined} />
+    </div>
+    <MotionHistoryPopover />
   </div>;
 }
 
@@ -127,7 +129,7 @@ function WorkspaceActions() {
   const { t } = useI18n();
   const { switchingDisabled, openLibrary } = useWorkspaceChrome();
   return <div className="motion-workspace-actions">
-    <button className="motion-button motion-button-quiet" aria-haspopup="dialog" disabled={switchingDisabled} onClick={openLibrary}><MotionIcon name="grid" />{t("Template library")}</button>
+    <button className="motion-button motion-button-quiet" aria-label={t("Template library")} title={t("Template library")} aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => openLibrary(event.currentTarget)}><MotionIcon name="grid" /><span className="motion-template-label">{t("Template library")}</span></button>
   </div>;
 }
 
@@ -137,7 +139,6 @@ const host: StudioHost = {
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,
   historyActions: <WorkspaceHistoryActions />,
-  panels: <Dock.Panel id="history"><MotionHistoryPanel /></Dock.Panel>,
   previewAction: <></>,
   windowMenu: <></>,
   themeToggle: false,

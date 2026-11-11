@@ -1390,3 +1390,12 @@ describe("hfId — find, key, capabilities (R7 fixes)", () => {
     expect(result.canMove).toBe(true);
   });
 });
+
+it("recognizes a heading with explicit line breaks as editable text", async () => {
+  const document = createDocument('<h1 id="title">Your next<br data-hf-id="break">great story.</h1>');
+  const selection = await resolveDomEditSelection(document.getElementById("title")!, {
+    activeCompositionPath: null, isMasterView: false, preferClipAncestor: false,
+  });
+  expect(isTextEditableSelection(selection!)).toBe(true);
+  expect(selection!.textFields).toMatchObject([{ source: "self", value: "Your next\ngreat story.", preserveLineBreaks: true }]);
+});

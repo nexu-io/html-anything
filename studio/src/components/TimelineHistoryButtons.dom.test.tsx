@@ -5,6 +5,8 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { cleanupMounted, mountHost } from "./ui/mountHost.testHelpers";
 import { isTypingTarget } from "../utils/typingTarget";
 import { shouldIgnorePlaybackShortcutTarget } from "../player/lib/playbackShortcuts";
+import { StudioHostContext } from "../motion/StudioHost";
+import { getHistoryShortcutLabel } from "../utils/studioHelpers";
 
 const editHistory = {
   canUndo: false,
@@ -162,4 +164,13 @@ it("keeps a button disabled when it has no handler, whatever canUndo/canRedo say
   const host = mount(<TimelineHistoryButtons canUndo canRedo />);
 
   for (const label of ["Undo", "Redo"]) expect(button(host, label).disabled).toBe(true);
+});
+
+it("shows only the action and shortcut in MVP history tooltips", async () => {
+  editHistory.canUndo = true;
+  editHistory.undoLabel = "Move timeline clip";
+  const host = mount(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineHistoryButtons /></StudioHostContext.Provider>);
+  act(() => button(host, "Undo").focus());
+  await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
+  expect(document.querySelector('[role="tooltip"]')?.textContent).toBe(`Undo (${getHistoryShortcutLabel('undo')})`);
 });

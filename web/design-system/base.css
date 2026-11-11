@@ -9,6 +9,7 @@
 }
 :where(html[data-motion-ui]), :where(html[data-motion-ui]) body { margin: 0; min-height: 100%; }
 :where([data-motion-ui]) :where(button, input, textarea, select) { font: inherit; color: inherit; }
+[data-motion-ui] :is(input, textarea)::placeholder { color: var(--motion-placeholder); opacity: 1; }
 :where([data-motion-ui]) :where(button, a, label, input, textarea, select) { -webkit-tap-highlight-color: transparent; }
 :where([data-motion-ui]) :where(button) { cursor: pointer; }
 :where([data-motion-ui]) :where(button, input, textarea, select):disabled { cursor: not-allowed; opacity: .4; }

@@ -5,6 +5,7 @@
  */
 import { COLOR_GRADING_SOURCE_HIDDEN_ATTR } from "@hyperframes/core/color-grading";
 import { getSourceScopedSelectorIndex } from "../../utils/sourceScopedSelectorIndex";
+import { LAYER_OPACITY_PROPERTY } from "./layerOpacity";
 import { CURATED_STYLE_PROPERTIES } from "./domEditingTypes";
 
 // ─── Type guard ───────────────────────────────────────────────────────────────
@@ -36,7 +37,7 @@ const knownTextLeaves = new WeakSet<HTMLElement>();
 
 export function isEditableTextLeaf(el: HTMLElement): boolean {
   const tag = el.tagName.toLowerCase();
-  if (!isTextBearingTag(tag) || el.children.length !== 0) return false;
+  if (!isTextBearingTag(tag) || Array.from(el.children).some(child => child.tagName.toLowerCase() !== "br")) return false;
   if (el.textContent?.trim()) {
     knownTextLeaves.add(el);
     return true;
@@ -135,7 +136,7 @@ export function getCuratedComputedStyles(el: HTMLElement): Record<string, string
 
 export function getInlineStyles(el: HTMLElement): Record<string, string> {
   const styles: Record<string, string> = {};
-  for (const property of CURATED_STYLE_PROPERTIES) {
+  for (const property of [...CURATED_STYLE_PROPERTIES, LAYER_OPACITY_PROPERTY]) {
     const value = el.style.getPropertyValue(property);
     if (value) styles[property] = value;
   }

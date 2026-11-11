@@ -17,6 +17,7 @@ export interface DockController {
   close: (id: PanelId) => void;
   /** Hides or shows the panel's whole tab group without closing it. */
   setGroupVisible: (id: PanelId, visible: boolean) => void;
+  setGroupCollapsed?: (id: PanelId, collapsed: boolean, animate?: boolean) => void;
   reset: () => void;
 }
 
@@ -27,6 +28,7 @@ export interface DockSnapshot {
   activePanel: PanelId | null;
   /** The tab each group shows, so a restored layout still records what every side column last showed. */
   groupActivePanels?: readonly PanelId[];
+  collapsedZones?: readonly PanelZone[];
 }
 
 type LastActive = Partial<Record<PanelZone, PanelId>>;

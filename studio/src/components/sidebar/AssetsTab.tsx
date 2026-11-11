@@ -154,9 +154,11 @@ function EmptyState({
     );
   }
   return (
-    <div className="flex flex-col items-center justify-center h-full px-4 gap-2">
-      <RemixIcon name="upload-2-line" size={24} className="text-text-off" />
-      <p className="text-[10px] text-neutral-600 text-center">{t("Drop media files here")}</p>
+    <div className="flex items-center justify-center h-full px-4">
+      <div className="motion-panel-empty-content motion-assets-empty-drop">
+        <RemixIcon name="upload-2-line" size={18} className="text-text-off" />
+        <p className="text-[10px] text-neutral-600 text-center">{t("Drop media files here")}</p>
+      </div>
     </div>
   );
 }
@@ -301,7 +303,7 @@ export const AssetsTab = memo(function AssetsTab({
       onDragLeave={() => setDragOver(false)}
       onDrop={handleDrop}
     >
-      <div className="shrink-0 space-y-1.5 border-b border-panel-border px-2 py-2" data-assets-toolbar>
+      <div className={`shrink-0 space-y-1.5 border-b ${mvp ? "border-transparent" : "border-panel-border"} px-2 py-2`} data-assets-toolbar>
         <div className="flex items-center gap-1.5">
           <SearchInput
             value={searchQuery}

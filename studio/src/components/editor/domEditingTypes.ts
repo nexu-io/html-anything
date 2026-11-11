@@ -74,6 +74,8 @@ export interface DomEditTextField {
   computedStyles: Record<string, string>;
   source: "self" | "child" | "text-node";
   sourceChildIndex?: number;
+  /** Explicit HTML line breaks must survive inspector text edits. */
+  preserveLineBreaks?: boolean;
 }
 
 export interface DomEditSelection extends PatchTarget {

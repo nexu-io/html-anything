@@ -44,6 +44,7 @@ export function buildTextFieldChildOperations(
     if (!originalField || !locator) return null;
 
     if (nextField.value !== originalField.value) {
+      if (nextField.preserveLineBreaks) return null;
       operations.push(buildDomEditTextPatchOperation(nextField.value, locator));
     }
 

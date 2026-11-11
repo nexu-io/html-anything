@@ -29,6 +29,10 @@ export function useWorkspace(waitForSaves: () => Promise<void>, projectId?: stri
   const [status, setStatus] = useState<WorkspaceStatus | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [connectionError, setConnectionError] = useState('');
+  const [connectionCheck, setConnectionCheck] = useState(0);
+  const [checkingConnection, setCheckingConnection] = useState(false);
+  const retryConnection = useCallback(() => { setCheckingConnection(true); setConnectionCheck(value => value + 1); }, []);
   const acting = useRef(false);
   const pendingSession = useRef<{ key: string; id: string } | null>(null);
   const request = useCallback(<T,>(path: string, init?: RequestInit) => motionApi<T>(path, init, projectId), [projectId]);
@@ -54,13 +58,14 @@ export function useWorkspace(waitForSaves: () => Promise<void>, projectId?: stri
         const session = !projectId && sessionId ? catalog.sessions?.find(item => item.id === sessionId) : undefined;
         const generated = session?.artifacts.find(item => item.id === session.activeArtifactId) ?? session?.artifacts.at(-1);
         if (generated && !acting.current) { navigateWorkspace(sessionHref(sessionId!, generated.projectId, true), true); return; }
-        setStatus(data); updateCatalog(catalog);
-      } catch (err) { if (!controller.signal.aborted) setError((err as Error).message); }
+        setStatus(data); updateCatalog(catalog); setConnectionError('');
+      } catch (err) { if (!controller.signal.aborted) setConnectionError((err as Error).message); }
+      finally { if (!controller.signal.aborted) setCheckingConnection(false); }
       if (!controller.signal.aborted) timer = setTimeout(poll, 1800);
     }
     void poll();
     return () => { controller.abort(); clearTimeout(timer); };
-  }, [projectId, sessionId, updateCatalog, request]);
+  }, [projectId, sessionId, updateCatalog, request, connectionCheck]);
 
   const transition = useCallback(async (path?: string, options?: { instruction?: string; mode?: string; templateId?: string; projectId?: string }, sessionRoute = false, revealArtifact = true) => {
     if (acting.current) return false;
@@ -119,5 +124,5 @@ export function useWorkspace(waitForSaves: () => Promise<void>, projectId?: stri
   }, [updateCatalog]);
   const rename = useCallback((id: string, title: string) => renameItem(id, title, 'projects'), [renameItem]);
   const renameSession = useCallback((id: string, title: string) => renameItem(id, title, 'sessions'), [renameItem]);
-  return { projects, sessions, session: sessions.find(item => item.id === sessionId), status, busy, error, open, create, home, rename, startSession, openSession, createArtifact, renameSession, clearError: () => setError('') };
+  return { projects, sessions, session: sessions.find(item => item.id === sessionId), status, busy, error: error || connectionError, errorSource: error ? 'operation' as const : 'connection' as const, checkingConnection, retryConnection, open, create, home, rename, startSession, openSession, createArtifact, renameSession, clearError: () => { setError(''); setConnectionError(''); } };
 }
