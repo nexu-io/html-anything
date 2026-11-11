@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { checkReleaseLocks, packageNpm } from '../scripts/package-npm.mjs';
@@ -10,6 +10,11 @@ import { phase1Skills } from '../shared/workflow.ts';
 import { mcpRegistry } from '../mcp.ts';
 
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
+async function verifyTrackingPolicy(application: string, mode: 'test' | 'stable') {
+  await symlink(path.resolve('node_modules'), path.join(application, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
+  const result = JSON.parse(await runFile(process.execPath, ['--experimental-strip-types', path.resolve('tests/tracking-package.ts'), application, mode]));
+  assert.equal(result.passed, true); assert.equal(result.external_requests, 0);
+}
 
 test('shared Agent instructions keep the release controls synchronized', async () => {
   const section = async file => {
@@ -67,6 +72,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert(embeddedReadme.includes(`srcset="https://raw.githubusercontent.com/nexu-io/html-anything/${release.commit}/docs/readme/brand-hero.mobile.jpg"`));
     await assert.rejects(readdir(path.join(application, 'docs/readme/media')), { code: 'ENOENT' });
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
+    await verifyTrackingPolicy(application, 'test');
     assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
     assert.equal((await json(path.join(application, 'package-lock.json'))).packages[''].version, version);
@@ -137,6 +143,8 @@ test('stable artifacts stage publication instead of replacing latest and retain 
     await extractArchive(built.installer, path.join(directory, 'npm'));
     const metadata = await json(path.join(directory, 'npm/package/package.json'));
     assert.equal((await json(built.manifest)).templateEnvironment, 'prod');
+    const application = path.join(directory, 'app'); await extractArchive(built.application, application);
+    await verifyTrackingPolicy(application, 'stable');
     assert.equal(metadata.version, '0.6.4'); assert.equal(metadata.private, false); assert.equal(metadata.publishConfig.tag, 'stage');
     assert.equal((await json('package.json')).private, true);
     assert.equal((await json('packages/npm/package.json')).private, true);

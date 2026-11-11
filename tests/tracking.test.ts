@@ -4,7 +4,7 @@ import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createTracker, deviceContext } from '../tracking/core.ts';
-import { createPosthogSender, loadIdentity } from '../tracking/node.ts';
+import { createNodeTracking, createPosthogSender, loadIdentity } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
 import { closeTracking, createAppTracking, saveTrackingPreference, trackingError } from '../shared/tracking.ts';
 import { Phase1Service } from '../phase1.ts';
@@ -73,7 +73,7 @@ test('concurrent identity creation has one winner, keeps its first source and fa
 
 test('PostHog adapter uses public ingest only, privacy fields and real receipt semantics', async () => {
   const identity = { installation_id: crypto.randomUUID(), utm_source: 'alice', created_at: new Date().toISOString() };
-  const options = { identity, appVersion: '0.0.0-test', env: 'test' as const, host: 'https://us.i.posthog.com', token: 'phc_test' };
+  const options = { identity, appVersion: '0.0.0', env: 'test' as const, host: 'https://us.i.posthog.com', token: 'phc_test' };
   assert.throws(() => createPosthogSender({ ...options, token: 'phx_private' }), /PUBLIC_PROJECT/);
   assert.throws(() => createPosthogSender({ ...options, host: 'http://example.com' }), /INVALID_INGEST/);
   assert.throws(() => createPosthogSender({ ...options, host: 'https://user:secret@example.com' }), /INVALID_INGEST/);
@@ -99,6 +99,22 @@ test('PostHog adapter uses public ingest only, privacy fields and real receipt s
   await geoip([event], new AbortController().signal);
   assert.equal(enriched[0].batch[0].properties.$geoip_disable, false);
   assert.equal(Object.hasOwn(enriched[0].batch[0].properties, '$ip'), false);
+});
+
+test('test and local versions cannot report even when enabled or given a test-run override', async () => {
+  let sends = 0;
+  const identity = { installation_id: crypto.randomUUID(), utm_source: null, created_at: new Date().toISOString() };
+  for (const appVersion of ['0.6.4-test.8', '0.6.4-test.42.2', '0.6.4-local.1', '0.6.4-beta.1', 'invalid']) {
+    const options = { registry: omEvents, identity, appVersion, entrypoint: 'mcp' as const, enabled: true,
+      env: 'test' as const, testRunId: crypto.randomUUID(), host: 'https://us.i.posthog.com', token: 'phc_test' };
+    const tracking = createNodeTracking(options);
+    tracking.setEnabled(true);
+    assert.equal(tracking.enabled(), false); assert.equal(tracking.ingest(packet()), 'disabled');
+    assert.equal(await tracking.flush(), 'disabled'); tracking.close();
+    const sender = createPosthogSender({ ...options, fetch: async () => { sends++; return Response.json({ status: 'Ok' }); } });
+    assert.equal(await sender([packet()], new AbortController().signal), 'drop');
+  }
+  assert.equal(sends, 0);
 });
 
 test('browser ingress rejects forged identity, worker events and oversized batches', () => fixture(async store => {
@@ -174,7 +190,21 @@ test('default configuration reports without opt-in; saved opt-out covers runtime
     assert.equal(mcp.pending(), 0); assert.equal(worker.pending(), 0); assert.equal(bodies.length, 1);
     const restarted = await createAppTracking(store.directory, 'mcp'); runtimes.push(restarted);
     assert.equal(restarted.enabled(), false); assert.equal(restarted.ingest(packet()), 'disabled');
-    await saveTrackingPreference(store.directory, true); assert.equal(restarted.enabled(), true);
+    for (let cycle = 0; cycle < 2; cycle++) {
+      assert.equal((await set(true)).status, 200);
+      for (const runtime of runtimes) {
+        assert.equal(runtime.enabled(), true); assert.equal(runtime.ingest(packet()), 'queued');
+        assert.equal(await runtime.flush(), 'accepted');
+      }
+      assert.equal(bodies.length, 1 + (cycle + 1) * runtimes.length);
+      assert.equal((await set(false)).status, 200);
+      for (const runtime of runtimes) {
+        assert.equal(runtime.ingest(packet()), 'disabled'); assert.equal(await runtime.flush(), 'disabled');
+      }
+    }
+    assert.equal((await set(true)).status, 200);
+    assert.equal(new Set(bodies.flatMap(body => body.batch.map((event: any) => event.properties.installation_id))).size, 1);
+    assert.equal(restarted.enabled(), true);
     process.env.OPENMOTION_TELEMETRY = '0'; assert.equal(restarted.ingest(packet()), 'disabled');
     assert.equal((await set(true)).status, 403); delete process.env.OPENMOTION_TELEMETRY;
     await writeFile(path.join(store.directory, 'tracking/preferences.json'), 'corrupted');

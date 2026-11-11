@@ -117,6 +117,27 @@ it('does not retry a server opt-out and allows a confirmed preference change to 
   expect(await tracking.trackMotion('ui_click', click)).toBe('disabled');
 });
 
+it('resumes reporting new events after repeated opt-out and re-enable cycles', async () => {
+  const bodies: any[] = [];
+  vi.stubGlobal('fetch', vi.fn(async (_url, init?: RequestInit) => {
+    if (init?.body) bodies.push(JSON.parse(String(init.body)));
+    return Response.json({ enabled: true });
+  }));
+  const tracking = await import('./tracking');
+  for (let cycle = 0; cycle < 3; cycle++) {
+    tracking.setMotionTrackingEnabled(true);
+    expect(await tracking.trackMotion('ui_click', click)).toBe('queued');
+    expect(await tracking.flushMotionTracking()).toBe('accepted');
+    expect(bodies).toHaveLength(cycle + 1);
+    expect(await tracking.trackMotion('ui_click', click)).toBe('queued');
+    tracking.setMotionTrackingEnabled(false);
+    expect(await tracking.trackMotion('ui_click', click)).toBe('disabled');
+    expect(await tracking.flushMotionTracking()).toBe('disabled');
+    expect(tracking.getMotionTrackingStatus().pending).toBe(0);
+  }
+  expect(new Set(bodies.map(body => body.events[0].event_id)).size).toBe(3);
+});
+
 it('exposes safe queue and delivery statuses while rejecting private or non-Studio payloads', async () => {
   let failing = true;
   const fetcher = vi.fn(async (_url, init?: RequestInit) => init?.method === 'POST' && failing

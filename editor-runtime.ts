@@ -8,6 +8,7 @@ import { WorkspaceStore, Conflict } from './workspace.ts';
 import { isMain } from './shared/entry.ts';
 import { templateConfig } from './shared/template-config.ts';
 import { phase1McpCapabilities, supportsPhase1Tool } from './shared/phase1-tools.ts';
+import { trackingReleaseEnabled } from './tracking/node.ts';
 
 export const sharedEditorEnabled = process.platform === 'darwin';
 const root = fileURLToPath(new URL('./', import.meta.url));
@@ -54,7 +55,9 @@ export async function ensureEditor(directory: string, mcpTool?: string): Promise
       try {
         const health = await editorRequest(registry, '/editor-api/health', undefined, 1200);
         if (health.service !== service || health.dataDirectory !== data || health.instanceId !== registry.instanceId) throw Object.assign(new Error('编辑器实例身份不匹配'), { terminal: true });
-        const compatible = mcpTool ? supportsPhase1Tool(health, mcpTool) : health.version === version && health.build === editorBuild;
+        // Test clients must not execute through a stable authority that can report their actions.
+        const sameReleasePolicy = trackingReleaseEnabled(health.version) === trackingReleaseEnabled(version);
+        const compatible = sameReleasePolicy && (mcpTool ? supportsPhase1Tool(health, mcpTool) : health.version === version && health.build === editorBuild);
         if (health.protocol !== protocol || !compatible) throw Object.assign(
           new Error('Editor runtime incompatible. Reconnect the Motion MCP connection to the installed runtime and compare the expected and actual versions/builds. Stop an older editor only after confirming it is idle; do not bypass MCP or switch workspaces to continue.'),
           { terminal: true, code: 'EDITOR_RUNTIME_INCOMPATIBLE', details: {
