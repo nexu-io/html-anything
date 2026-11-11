@@ -79,50 +79,11 @@ export const GENERIC_FONT_FAMILIES = new Set([
   "fangsong",
 ]);
 
-export const DEFAULT_FONT_FAMILIES = [
-  ...COMMON_LOCAL_FONT_FAMILIES,
-  "Inter",
-  "system-ui",
-  "sans-serif",
-  "serif",
-  "monospace",
-];
-
-export interface LocalFontData {
-  family: string;
-  fullName?: string;
-  postscriptName?: string;
-  style?: string;
-  blob?: () => Promise<Blob>;
-}
-
-export type FontSource = "Current" | "Document" | "Imported" | "Local" | "Google" | "System";
+export type FontSource = "Current" | "Document" | "Imported" | "Local";
 
 export interface FontOption {
   family: string;
   source: FontSource;
-}
-
-declare global {
-  interface Window {
-    queryLocalFonts?: () => Promise<LocalFontData[]>;
-  }
-}
-
-export function sanitizeFontFilePart(value: string): string {
-  return value
-    .replace(/[^\w .-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-export function localFontSortScore(font: LocalFontData): number {
-  const style = font.style?.toLowerCase() ?? "";
-  const fullName = font.fullName?.toLowerCase() ?? "";
-  if (style === "regular" || fullName.endsWith(" regular")) return 0;
-  if (style === "normal" || fullName.endsWith(" normal")) return 1;
-  if (style === "medium" || fullName.endsWith(" medium")) return 2;
-  return 3;
 }
 
 export function uniqueFontFamilies(values: string[], seen = new Set<string>()): string[] {
@@ -171,8 +132,7 @@ function fontSourceRank(source: FontSource): number {
   if (source === "Current") return 0;
   if (source === "Document") return 1;
   if (source === "Imported") return 2;
-  if (source === "Google") return 3;
-  if (source === "Local") return 4;
+  if (source === "Local") return 3;
   return 5;
 }
 

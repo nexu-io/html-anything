@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, copyFile, readdir, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, copyFile, readdir, rm, open, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -8,6 +8,25 @@ import { startWorkspaceStudio } from '../shared/workspace-studio.ts';
 import { request } from 'node:http';
 import { fixture } from './fixtures.ts';
 import { pluginRoot } from '../hyperframes.ts';
+import { readFontFile } from '../shared/studio-fonts.ts';
+import { create } from 'fontkit';
+
+test('system fonts above 5 MiB remain readable with the asset limit and no-follow guard', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'motion-system-font-'));
+  const font = { path: path.join(root, 'CJK.ttc'), format: 'ttc' };
+  const bytes = Buffer.alloc(6 * 1024 * 1024, 0x42);
+  try {
+    await writeFile(font.path, bytes);
+    assert.deepEqual(await readFontFile(font.path), bytes);
+    const link = path.join(root, 'link.ttc');
+    await symlink(font.path, link);
+    await assert.rejects(readFontFile(link));
+    await assert.rejects(readFontFile(root));
+    const file = await open(font.path, 'r+');
+    try { await file.truncate(500_000_001); } finally { await file.close(); }
+    await assert.rejects(readFontFile(font.path), /500 MB/);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
 
 test('Studio rejects decimal uploads above 500 MB before saving and still accepts normal uploads', () => fixture(async store => {
   const studio = await startWorkspaceStudio(pluginRoot, store.directory, store.projectDirectory, 0);
@@ -15,6 +34,8 @@ test('Studio rejects decimal uploads above 500 MB before saving and still accept
   const assets = path.join(store.projectDirectory, 'assets');
   const before = await readdir(assets);
   try {
+    assert.equal((await fetch(studio.origin + '/api/fonts/file')).status, 400);
+    assert.equal((await fetch(studio.origin + '/api/fonts/file?family=../../package.json')).status, 404);
     for (const size of [500_000_001, 500_500_000, 524_288_000]) {
       const response = await new Promise<{ status: number; body: string }>((resolve, reject) => {
         const req = request(url, { method: 'POST', headers: { Origin: studio.origin, 'Content-Length': size, Connection: 'close' } }, res => {
@@ -48,6 +69,27 @@ test('the shipped history availability module loads without plugin-local node_mo
     assert.equal(typeof detached.withAvailableHistorySteps, 'function');
   } finally { await rm(root, { recursive: true, force: true }); }
 });
+
+test('installed font import copies an actual face into only the requested project', () => fixture(async store => {
+  const studio = await startWorkspaceStudio(pluginRoot, store.directory, store.projectDirectory, 0);
+  const url = `${studio.origin}/api/projects/${store.projectId}/fonts/import`;
+  const post = body => fetch(url, { method: 'POST', headers: { Origin: studio.origin, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  try {
+    assert.equal((await post({ path: '/etc/passwd' })).status, 400);
+    assert.equal((await post({ family: '../../package.json' })).status, 404);
+    assert.equal((await fetch(url, { method: 'POST', body: JSON.stringify({ family: 'Arial' }) })).status, 403);
+    const { fonts } = await (await fetch(studio.origin + '/api/fonts')).json();
+    assert.ok(fonts.length > 0, 'The runtime test requires the CI system fonts');
+    const response = await post({ family: fonts[0] });
+    assert.equal(response.status, 201);
+    const font = await response.json();
+    assert.ok(font.path.startsWith('assets/fonts/'));
+    const decoded = create(await readFontFile(await store.safePath(font.path)));
+    assert.equal(decoded.getName('preferredFamily') || decoded.familyName, font.family);
+    const listing = await (await fetch(`${studio.origin}/api/projects/${store.projectId}`)).json();
+    assert.ok(listing.fonts.some(entry => entry.path === font.path && entry.family === font.family && entry.weight === font.weight));
+  } finally { await studio.close(); }
+}));
 
 test('workspace host refuses unsupported, missing, ambiguous and incompatible native factories before serving', async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'motion-host-contract-'));

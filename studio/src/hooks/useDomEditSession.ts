@@ -40,6 +40,7 @@ export interface UseDomEditSessionParams extends DomEditTimelineParams {
   updateEditingFileContent: (path: string, content: string) => void;
   editHistory: { recordEdit: (entry: RecordEditInput) => Promise<void> };
   fileTree: string[];
+  fontAssets?: ImportedFontAsset[];
   importedFontAssetsRef: React.MutableRefObject<ImportedFontAsset[]>;
   projectDir: string | null;
   projectIdRef: React.MutableRefObject<string | null>;
@@ -85,6 +86,7 @@ export function useDomEditSession({
   updateEditingFileContent,
   editHistory,
   fileTree,
+  fontAssets,
   importedFontAssetsRef,
   projectDir,
   projectIdRef,
@@ -223,6 +225,7 @@ export function useDomEditSession({
     writeProjectFile,
     editHistory,
     fileTree,
+    fontAssets,
     importedFontAssetsRef,
     projectId,
     projectIdRef,

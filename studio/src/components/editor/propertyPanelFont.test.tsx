@@ -6,6 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FontFamilyField } from "./propertyPanelFont";
 import { sortFontOptions } from "./propertyPanelHelpers";
 
+let previewDocument: Document | null = null;
+vi.mock("../../contexts/StudioContext", () => ({ useStudioShellContextOptional: () => ({ previewIframeRef: { current: { contentDocument: previewDocument } } }) }));
+
 vi.mock("./propertyPanelHelpers", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./propertyPanelHelpers")>();
   return {
@@ -17,13 +20,18 @@ vi.mock("./propertyPanelHelpers", async (importOriginal) => {
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-// The font APIs are stubbed and every family is off the Google lists, so no test reaches the network.
+// Font APIs and browser decoding are stubbed; no test reaches the network.
 beforeEach(() => {
+  previewDocument = null;
+  vi.stubGlobal("FontFace", class {
+    load = vi.fn(async () => this);
+  });
+  Object.defineProperty(document, "fonts", { configurable: true, value: { add: vi.fn(), [Symbol.iterator]: function* () { yield { family: "Outer UI Font" }; } } });
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () => ({ fonts: url.includes("google") ? ["Roboto Slab"] : ["Arial"] }),
+      json: async () => ({ fonts: url.includes("google") ? ["Google Only"] : ["Arial", "Menlo"] }),
     })),
   );
 });
@@ -68,7 +76,7 @@ describe("FontFamilyField font list", () => {
       await act(async () => trigger?.click());
       await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
       expect(sortFontOptions).toHaveBeenCalled();
-      expect(document.body.textContent).toContain("Roboto Slab");
+      expect(document.body.textContent).toContain("Menlo");
       expect(host.querySelector('[role="combobox"]')).toBeNull();
       expect(document.body.querySelector('[role="combobox"]')).not.toBeNull();
       expect(document.head.querySelector('link[href*="fonts.googleapis.com"]')).toBeNull();
@@ -118,13 +126,13 @@ describe("FontFamilyField session font lists", () => {
         window.dispatchEvent(new Event("pointermove"));
         await act(async () => vi.advanceTimersByTimeAsync(16));
       }
-      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(fetch).toHaveBeenCalledTimes(1);
       expect(t.uniqueFontFamilies).not.toHaveBeenCalled();
 
       await act(async () => vi.advanceTimersByTimeAsync(500));
       expect(t.uniqueFontFamilies).toHaveBeenCalledTimes(1);
       await act(async () => t.toggle());
-      expect(document.body.textContent).toContain("Roboto Slab");
+      expect(document.body.textContent).toContain("Menlo");
     } finally {
       stopLoop();
       t.done();
@@ -143,10 +151,95 @@ describe("FontFamilyField session font lists", () => {
 
       await act(async () => t.toggle());
       await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
-      expect(fetch).toHaveBeenCalledTimes(4);
-      expect(document.body.textContent).toContain("Roboto Slab");
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(document.body.textContent).toContain("Menlo");
     } finally {
       t.done();
     }
   });
+});
+
+describe("FontFamilyField installed fonts", () => {
+  it.each([true, false])("uses the server font file without browser font access (available: %s)", async (available) => {
+    vi.resetModules();
+    const { FontFamilyField } = await import("./propertyPanelFont");
+    const { StudioHostContext } = await import("../../motion/StudioHost");
+    const loop = await import("./overlayFrameLoop");
+    const family = "Hiragino Sans GB";
+    vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify({ fonts: [family] })));
+    const onImportFonts = vi.fn(async () => available ? [{
+      family, path: `assets/fonts/${family}.ttf`, url: "/font.ttf",
+    }] : []);
+    const onCommit = vi.fn();
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    try {
+      await act(async () => root.render(
+        <StudioHostContext.Provider value={{ mvpEditor: true }}>
+          <FontFamilyField flat value="Arial" importedFonts={[]} onImportFonts={onImportFonts} onCommit={onCommit} />
+        </StudioHostContext.Provider>,
+      ));
+      await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
+      await act(async () => host.querySelector<HTMLButtonElement>("[data-flat-font-trigger]")?.click());
+      const option = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-font-option-index]"))
+        .find((button) => button.textContent?.includes(family));
+      expect(option?.textContent).toContain("Local");
+      await act(async () => option?.click());
+      expect(onImportFonts).toHaveBeenCalledWith(family);
+      if (available) {
+        expect(onImportFonts).toHaveBeenCalledOnce();
+        expect(onCommit).toHaveBeenCalledWith(`"${family}", ui-sans-serif, system-ui, sans-serif`);
+      } else {
+        expect(onCommit).not.toHaveBeenCalled();
+        expect(document.body.textContent).toContain(`Couldn't import "${family}"`);
+      }
+    } finally {
+      act(() => root.unmount());
+      loop.resetOverlayFrameLoopForTests();
+    }
+  });
+});
+
+it("lists actual project declarations, imports and installed fonts without remote suggestions or Studio fonts", async () => {
+  vi.resetModules();
+  const { FontFamilyField } = await import("./propertyPanelFont");
+  previewDocument = document.implementation.createHTMLDocument();
+  Object.defineProperty(previewDocument, "fonts", { value: {
+    [Symbol.iterator]: function* () { yield { family: '"Project Brand"' }; },
+    load: vi.fn(async () => [{ family: "Project Brand" }]),
+  } });
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host), commit = vi.fn();
+  try {
+    await act(async () => root.render(<FontFamilyField flat value="Authored Remote" importedFonts={[{ family: "Imported Brand", path: "brand.ttf", url: "/brand.ttf" }]} onCommit={commit} />));
+    await act(async () => new Promise(resolve => setTimeout(resolve, 10)));
+    await act(async () => host.querySelector<HTMLButtonElement>("[data-flat-font-trigger]")?.click());
+    const text = document.body.textContent;
+    for (const family of ["Authored Remote", "Project Brand", "Imported Brand", "Menlo"]) expect(text).toContain(family);
+    for (const family of ["Google Only", "Roboto", "system-ui", "Outer UI Font"]) expect(text).not.toContain(family);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    const option = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-font-option-index]")).find(button => button.textContent?.includes("Project Brand"));
+    await act(async () => option?.click());
+    expect(commit).toHaveBeenCalledWith('"Project Brand", ui-sans-serif, system-ui, sans-serif');
+    expect(document.head.querySelector('link[href*="googleapis"]')).toBeNull();
+  } finally { act(() => root.unmount()); }
+});
+
+it("keeps the current family when an existing imported font fails to decode", async () => {
+  vi.resetModules();
+  const { FontFamilyField } = await import("./propertyPanelFont");
+  vi.stubGlobal("FontFace", class { load = vi.fn(async () => { throw new Error("Invalid font"); }); });
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host), commit = vi.fn();
+  try {
+    await act(async () => root.render(<FontFamilyField flat value="Arial" importedFonts={[{ family: "Broken", path: "broken.ttf", url: "/broken.ttf" }]} onCommit={commit} />));
+    await act(async () => host.querySelector<HTMLButtonElement>("[data-flat-font-trigger]")?.click());
+    const option = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-font-option-index]")).find(button => button.textContent?.includes("Broken"));
+    await act(async () => option?.click());
+    expect(commit).not.toHaveBeenCalled();
+    expect(document.body.textContent).toContain('Couldn\'t load "Broken"');
+  } finally { act(() => root.unmount()); }
 });
