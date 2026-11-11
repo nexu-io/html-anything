@@ -21,6 +21,9 @@ export async function observedView(
   ]);
   const fence = await client.execute("workspace_observe", {}, signal);
   if (fence.token !== head.token) return;
+  const summary = head.state.sessions.find((entry) => entry.id === selected.sessionId);
+  // Titles may change and return to the same value without a monotonic revision.
+  if (session && session.title !== summary?.title) return;
   if ((session?.id ?? null) !== selected.sessionId || (project?.artifactId ?? null) !== selected.artifactId)
     throw Error("工作区快照身份不一致");
   if (
