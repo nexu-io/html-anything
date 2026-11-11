@@ -239,7 +239,7 @@ export const PlayerControls = memo(function PlayerControls({
           </button>
         </Tooltip>
 
-        <div className="flex min-w-0 items-center justify-self-end">
+        <div className={`flex min-w-0 items-center justify-self-end ${mvp ? "gap-1.5" : ""}`}>
           <VolumeControl
             audioMuted={audioMuted}
             audioVolume={audioVolume}
@@ -257,7 +257,7 @@ export const PlayerControls = memo(function PlayerControls({
             disabled={disabled}
             setLoopEnabled={setLoopEnabled}
           />
-          {onToggleFullscreen && (
+          {!mvp && onToggleFullscreen && (
             <FullscreenButton isFullscreen={isFullscreen} onToggleFullscreen={onToggleFullscreen} />
           )}
           {!mvp && <ShortcutsButton disabled={disabled} onSeek={onSeek} sections={shortcutSections} />}

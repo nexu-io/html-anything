@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useState, memo } from "react";
 import { trackStudioEvent } from "../../utils/studioTelemetry";
@@ -18,6 +19,7 @@ export const SpeedMenu = memo(function SpeedMenu({
   disabled,
 }: SpeedMenuProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const [open, setOpen] = useState(false);
   return (
     <Tooltip label={t("Playback speed")}>
@@ -35,7 +37,7 @@ export const SpeedMenu = memo(function SpeedMenu({
               type="button"
               disabled={disabled}
               aria-label={t("Playback speed")}
-              className="h-7 w-8 rounded-md font-mono text-[10px] tabular-nums text-neutral-500 transition-colors hover:text-neutral-200 disabled:opacity-30"
+              className={`h-7 rounded-md font-mono tabular-nums text-neutral-500 transition-colors hover:text-neutral-200 disabled:opacity-30 ${mvp ? "w-10 text-[12px]" : "w-8 text-[10px]"}`}
             >
               {playbackRate}x
             </button>

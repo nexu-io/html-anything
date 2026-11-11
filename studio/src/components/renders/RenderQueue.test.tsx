@@ -149,9 +149,9 @@ describe("RenderQueue controls", () => {
     expect(onStartRender).toHaveBeenCalledWith("mp4", "standard", "landscape-4k", 30, false);
   });
 
-  it("refuses a resolution the composition cannot reach, and says why", async () => {
+  it("keeps unavailable resolutions disabled with a concise label", async () => {
     // 1080p on a 1280x720 comp is a 1.5x scale, which the producer rejects; the
-    // option stays listed (its label explains why) but the keyboard skips it.
+    // option stays listed with its dimensions, but the keyboard skips it.
     const onStartRender: Mock<StartRenderHandler> = vi.fn();
     const host = mountRenderQueue(onStartRender, { width: 1280, height: 720 });
     const trigger = triggerFor(host, "Resolution");
@@ -164,7 +164,7 @@ describe("RenderQueue controls", () => {
       option.hasAttribute("data-disabled"),
     );
     expect(blocked).toHaveLength(1);
-    expect(blocked[0]?.textContent).toContain("not an integer scale of 1280×720");
+    expect(blocked[0]?.textContent).toBe("1080p · 1920×1080");
 
     fire(document.activeElement ?? document.body, "keydown", "ArrowDown");
     await settle();
@@ -357,15 +357,30 @@ describe("GIF frame-rate controls", () => {
   });
 });
 
-it("MVP exports keep quality and frame rate while ignoring hidden GIF/GPU preferences", async () => {
+it("MVP offers native GIF and a disabled WebP placeholder", async () => {
+  const host = mountRenderQueue(vi.fn(), undefined, true);
+  act(() => triggerFor(host, "Format").click());
+  await settle();
+  const options = Array.from(document.querySelectorAll('[role="option"]'));
+  const gif = options.find(option => option.textContent === "GIF");
+  const webp = options.find(option => option.textContent?.startsWith("WebP"));
+  expect(gif).toBeDefined();
+  expect(gif?.getAttribute("aria-disabled")).not.toBe("true");
+  expect(webp?.textContent).toContain("not yet available");
+  expect(webp?.getAttribute("aria-disabled")).toBe("true");
+});
+
+it("MVP restores GIF preferences with the native frame-rate cap and ignores hidden GPU preferences", async () => {
   localStorage.setItem("hf-studio-render-settings", JSON.stringify({ format: "gif", gpu: true, quality: "high", fps: 60 }));
   const start = vi.fn();
   const host = mountRenderQueue(start, undefined, true);
-  expect(triggerFor(host, "Format").textContent).toContain("MP4");
+  expect(triggerFor(host, "Format").textContent).toContain("GIF");
+  expect(triggerFor(host, "Frame rate").textContent).toContain("30 fps");
+  expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe("0");
   expect(host.textContent).not.toContain("GPU");
   fire(exportButtonIn(host), "click");
   await settle();
-  expect(start).toHaveBeenCalledWith("mp4", "high", "auto", 60, false);
+  expect(start).toHaveBeenCalledWith("gif", "high", "auto", 30, false, 0);
 });
 
 

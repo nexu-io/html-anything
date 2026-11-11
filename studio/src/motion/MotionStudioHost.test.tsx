@@ -19,8 +19,10 @@ vi.mock('../contexts/StudioContext', () => ({ useStudioShellContext: () => ({
 vi.mock('../contexts/PanelLayoutContext', () => ({ usePanelLayoutContext: () => ({
   rightCollapsed: false, setRightCollapsed: state.setCollapsed, setRightPanelTab: state.setTab,
 }) }));
+vi.mock('../components/renders/RenderQueuePanel', () => ({ RenderQueuePanel: () => <div>Export settings and jobs</div> }));
 vi.mock('../components/dock/Dock', () => ({ Dock: { WindowMenu: () => <button>Window</button>, Panel: () => null } }));
 vi.mock('../utils/studioTelemetry', () => ({ trackStudioEvent: vi.fn() }));
+vi.mock('./MotionHistoryPanel', () => ({ MotionHistoryPanel: () => <div>History versions</div> }));
 vi.mock('./useWorkspace', () => ({ useWorkspace: () => ({
   status: { projectId: 'demo' }, projects: [{ id: 'demo', title: 'Demo' }, { id: 'second', title: 'Second' }],
   busy: false, error: '', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
@@ -78,10 +80,15 @@ it('keeps project switching, templates, history actions and native export in the
   act(() => container.querySelector<HTMLButtonElement>('[aria-label="重做"]')!.click());
   expect(state.undo).toHaveBeenCalledOnce();
   expect(state.redo).toHaveBeenCalledOnce();
+  act(() => container.querySelector<HTMLButtonElement>('[aria-label="版本历史"]')!.click());
+  expect(document.querySelector('[data-testid="history-popover"]')?.textContent).toContain('History versions');
+  act(() => document.querySelector<HTMLButtonElement>('[data-testid="history-popover"] [aria-label="关闭"]')!.click());
   act(() => button('导出').click());
-  expect(state.setTab).toHaveBeenCalledWith('renders');
-  expect(state.setCollapsed).toHaveBeenCalledWith(false);
-  expect(state.export).toHaveBeenCalledOnce();
+  expect(state.setTab).not.toHaveBeenCalled();
+  expect(state.setCollapsed).not.toHaveBeenCalled();
+  expect(state.export).not.toHaveBeenCalled();
+  expect(document.querySelector('[data-testid="export-dialog"]')?.textContent).toContain('Export settings and jobs');
+  act(() => document.querySelector<HTMLButtonElement>('[data-testid="export-dialog"] [aria-label="关闭"]')!.click());
   act(() => project.click());
   expect(state.open).toHaveBeenCalledWith('projects', 'second');
   act(() => button('模板库').click());
@@ -98,7 +105,10 @@ it('prevents project replacement during a native render', () => {
   expect(document.querySelector<HTMLButtonElement>('.motion-session')!.disabled).toBe(true);
   expect(document.querySelector<HTMLButtonElement>('[aria-label="新建项目"]')!.disabled).toBe(true);
   expect(button('模板库').disabled).toBe(true);
-  expect(container.querySelector<HTMLButtonElement>('[data-testid="header-export"]')!.disabled).toBe(true);
+  expect(container.querySelector<HTMLButtonElement>('[data-testid="header-export"]')!.disabled).toBe(false);
+  act(() => container.querySelector<HTMLButtonElement>('[data-testid="header-export"]')!.click());
+  expect(document.querySelector('[data-testid="export-dialog"]')?.textContent).toContain('Export settings and jobs');
+  expect(state.export).not.toHaveBeenCalled();
   expect(container.textContent).toContain('正在渲染…');
 });
 

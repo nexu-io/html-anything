@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useDockLayoutStore, type DockController } from "../components/dock/dockLayoutStore";
 import { PANEL_IDS, type PanelId } from "../components/dock/panelRegistry";
 import { trackStudioEvent } from "../utils/studioTelemetry";
+import { StudioHostContext } from "../motion/StudioHost";
 import { usePanelLayout, type InitialPanelLayoutState } from "./usePanelLayout";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -34,7 +35,7 @@ function showDock(visible: PanelId[], controller = fakeController()) {
   return controller;
 }
 
-function renderLayout(initial?: InitialPanelLayoutState) {
+function renderLayout(initial?: InitialPanelLayoutState, mvp = false) {
   const host = document.createElement("div");
   document.body.append(host);
   const root = createRoot(host);
@@ -43,7 +44,7 @@ function renderLayout(initial?: InitialPanelLayoutState) {
     current = usePanelLayout(initial);
     return null;
   }
-  act(() => root.render(React.createElement(Harness)));
+  act(() => root.render(React.createElement(StudioHostContext.Provider, { value: { mvpEditor: mvp } }, React.createElement(Harness))));
   return {
     get layout() {
       if (!current) throw new Error("layout not rendered");
@@ -149,4 +150,14 @@ describe("usePanelLayout over the dock", () => {
     expect(controller.activate).toHaveBeenCalledWith("slideshow");
     view.unmount();
   });
+});
+
+
+it("hydrates the MVP URL tab while keeping the initial inspector collapsed", () => {
+  const controller = { ...fakeController(), setGroupCollapsed: vi.fn() };
+  showDock(["preview", "design"], controller);
+  const view = renderLayout({ rightPanelTab: "layers", rightCollapsed: false }, true);
+  expect(controller.activate).toHaveBeenCalledWith("layers");
+  expect(controller.setGroupCollapsed).toHaveBeenCalledWith("layers", true);
+  view.unmount();
 });

@@ -17,7 +17,7 @@ function FlatEmptyState() {
       <div className="text-[13px] font-semibold text-panel-text-0">{t("Nothing selected")}</div>
       <div className="max-w-[250px] text-[11px] leading-normal text-panel-text-3">
         {t(mvp ? "Click any element on the canvas to edit it." : "Click any element on the canvas to edit it, or drag to select several.")}</div>
-      <div className="mt-2 flex w-full flex-col gap-1.5">
+      {!mvp && <div className="mt-2 flex w-full flex-col gap-1.5">
         {!mvp && <>
         <span className="flex items-center justify-between rounded-lg border border-panel-border bg-panel-bg px-3 py-2">
           <span className="flex items-center gap-2 text-[11px] text-panel-text-2">
@@ -36,7 +36,7 @@ function FlatEmptyState() {
             ⌘K
           </span>
         </span>
-      </div>
+      </div>}
     </div>
   );
 }

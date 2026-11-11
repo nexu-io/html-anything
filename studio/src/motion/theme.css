@@ -1,4 +1,6 @@
 /* OpenDesign Motion adapter. The shared token JSON owns all UI colors. */
+:root[data-motion-ui] :is(input, textarea)::placeholder { color: var(--motion-placeholder); opacity: 1; }
+:root[data-motion-ui] .motion-audio-row { padding-inline: 6px; gap: 6px; }
 :root[data-motion-ui] .studio-tooltip {
   background: var(--motion-strong);
   color: var(--motion-panel);
@@ -155,6 +157,7 @@ button, input, select, textarea { font-family: inherit; }
 
 .motion-preview-well { margin: 0; border: 0; background: var(--motion-bg); }
 .motion-preview-frame { box-shadow: none; }
+:root[data-motion-ui] .motion-asset-thumbnail { background: var(--motion-inset); }
 .motion-asset-name-input { box-sizing: border-box; width: 100%; min-width: 0; padding: 2px 4px; border: 1px solid var(--motion-border-strong); border-radius: var(--motion-radius-sm); background: var(--motion-inset); color: var(--motion-strong); font-size: 10px; line-height: 14px; outline: none; }
 .motion-asset-name-input[aria-invalid="true"] { border-color: var(--motion-danger); }
 
@@ -232,20 +235,22 @@ button, input, select, textarea { font-family: inherit; }
 .motion-menu-hint { max-width: 224px; padding: 8px 9px 5px; color: var(--motion-dim); font-size: 10px; line-height: 1.6; }
 .motion-history-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; color: var(--motion-text); font-size: 12px; }
 .motion-history-toolbar { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 12px; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--motion-border); }
+.motion-history-toolbar-compact { padding: 4px 12px 12px; }
 .motion-history-toolbar strong { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; }
 .motion-history-toolbar > div > span { display: block; color: var(--motion-dim); font-size: 11px; line-height: 1.6; }
 .motion-history-toolbar .motion-button { font-size: 11px; height: 28px; }
 .motion-history-filters { display: flex; flex-shrink: 0; gap: 4px; padding: 10px 12px; }
 .motion-history-filters button { padding: 5px 9px; border: 0; border-radius: var(--motion-radius-sm); background: transparent; color: var(--motion-muted); font-size: 11px; cursor: pointer; }
-.motion-history-filters button[aria-pressed="true"] { color: var(--motion-accent); background: var(--motion-accent-soft); }
+.motion-history-filters button[aria-pressed="true"] { color: var(--motion-strong); background: var(--motion-inset); font-weight: 600; }
 .motion-history-filters span { margin-left: 4px; font: 10px var(--motion-font-mono); }
 .motion-history-list { flex: 1; min-height: 70px; overflow: auto; padding: 0 8px 8px; }
 .motion-history-entry { display: block; width: 100%; margin-bottom: 4px; padding: 10px; border: 1px solid transparent; border-radius: var(--motion-radius-sm); background: transparent; color: inherit; text-align: left; cursor: pointer; }
 .motion-history-entry:hover { background: var(--motion-hover); }
-.motion-history-entry[aria-pressed="true"] { background: var(--motion-accent-soft); border-color: var(--motion-border); }
+.motion-history-entry[aria-pressed="true"] { background: var(--motion-inset); border-color: var(--motion-border); }
 .motion-history-entry-heading { display: flex; align-items: center; gap: 6px; }
 .motion-history-entry-heading strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 500; }
 .motion-history-badge { flex-shrink: 0; border: 1px solid var(--motion-border); border-radius: 3px; padding: 1px 4px; color: var(--motion-muted); font-size: 9px; }
+.motion-history-badge-latest { border-color: transparent; background: var(--motion-accent-soft); color: var(--motion-accent); }
 .motion-history-entry-meta { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 6px; color: var(--motion-dim); font-size: 10px; line-height: 1.6; }
 .motion-history-empty { padding: 24px 12px; color: var(--motion-dim); text-align: center; line-height: 1.8; }
 .motion-history-detail { flex-shrink: 0; padding: 14px 16px; border-top: 1px solid var(--motion-border); background: var(--motion-panel); }
@@ -302,7 +307,8 @@ button, input, select, textarea { font-family: inherit; }
 /* Equal side columns center the title; narrow hosts preserve the controls before the title. */
 .motion-studio-header.motion-studio-header-centered { padding-block: 11.5px; display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 1fr) minmax(max-content, 1fr); gap: 12px; }
 .motion-studio-header.motion-studio-header-centered > div { min-width: 0; width: auto; }
-.motion-studio-header.motion-studio-header-centered > div:last-child { justify-self: end; flex-wrap: nowrap; }
+.motion-studio-header.motion-studio-header-centered > div:last-child { justify-self: end; flex-wrap: nowrap; gap: 16px; }
+.motion-studio-header-centered .motion-header-history-actions { gap: 16px; }
 .motion-studio-header-centered .motion-workspace-actions { padding-right: 0; margin-right: 0; border-right: 0; }
 .motion-header-brand { display: inline-flex; align-items: center; gap: 10px; }
 .motion-header-brand img { display: block; width: 104px; height: auto; }

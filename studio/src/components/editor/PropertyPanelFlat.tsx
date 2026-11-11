@@ -18,7 +18,7 @@ import { PropertyPanelFlatFooter } from "./PropertyPanelFlatFooter";
 import { closedGroupHeader, isSelectionHidden } from "./propertyPanelFlatClosedGroup";
 import { FlatGroupHeader } from "./propertyPanelFlatPrimitives";
 import { FlatTextSection } from "./propertyPanelFlatTextSection";
-import { FlatStyleSection } from "./propertyPanelFlatStyleSections";
+import { FlatOpacitySlider, FlatStyleSection } from "./propertyPanelFlatStyleSections";
 import { FlatLayoutSection } from "./propertyPanelFlatLayoutSection";
 import { FlatMotionSection, motionSectionLabel } from "./propertyPanelFlatMotionSection";
 import { AudioFxGroup } from "./propertyPanelAudioFxGroup.js";
@@ -328,21 +328,32 @@ export function PropertyPanelFlat({
       title: "Text",
       summary: formatTextFieldPreview(element.textFields[0]?.value ?? ""),
       content: (
-        <FlatTextSection
-          element={element}
-          styles={styles}
-          fontAssets={fontAssets}
-          onImportFonts={onImportFonts}
-          onSetText={onSetText}
-          onSetTextFieldStyle={onSetTextFieldStyle}
-          onPreviewTextFieldStyle={onPreviewTextFieldStyle}
-          onAddTextField={onAddTextField}
-          onRemoveTextField={onRemoveTextField}
-        />
+        <>
+          <FlatTextSection
+            element={element}
+            styles={styles}
+            fontAssets={fontAssets}
+            onImportFonts={onImportFonts}
+            onSetText={onSetText}
+            onSetTextFieldStyle={onSetTextFieldStyle}
+            onPreviewTextFieldStyle={onPreviewTextFieldStyle}
+            onAddTextField={onAddTextField}
+            onRemoveTextField={onRemoveTextField}
+          />
+          {mvp && showEditableSections && (
+            <div className="mt-1.5">
+              <FlatOpacitySlider
+                styles={styles}
+                disabled={!element.capabilities.canEditStyles}
+                onSetStyle={onSetStyle}
+              />
+            </div>
+          )}
+        </>
       ),
     });
   }
-  if (showEditableSections) {
+  if (showEditableSections && !(mvp && isTextEditable)) {
     const opacityValue = parseFloat(styles.opacity ?? "1");
     const opacityPct = Math.round((Number.isFinite(opacityValue) ? opacityValue : 1) * 100);
     groups.push({
@@ -364,7 +375,7 @@ export function PropertyPanelFlat({
       ),
     });
   }
-  if (sections.layout) {
+  if (!mvp && sections.layout) {
     groups.push({
       id: "layout",
       title: "Layout",
@@ -562,7 +573,7 @@ export function PropertyPanelFlat({
         >
           {mvp ? groups.map((group) => (
             <DesignPanelInputProvider key={group.id} section={slugifyDesignInput(group.title)}>
-              <section data-flat-group-open="true" className="shrink-0 border-b border-panel-hairline">
+              <section data-flat-group-open="true" className="shrink-0 border-b border-panel-hairline last:border-b-0">
                 <div className="flex items-center justify-between px-4 py-3">
                   <h3 className="text-[12px] font-semibold text-panel-text-0">{t(group.title)}</h3>
                   {group.accessory}

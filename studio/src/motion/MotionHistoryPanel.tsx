@@ -24,7 +24,7 @@ export async function historyRequest<T>(projectId: string, action = '', body?: o
 const reloadProject = () => window.location.reload();
 
 /** Reads and restores Studio's own history; no parallel snapshot store or undo stack. */
-export function MotionHistoryPanel({ onRestored = reloadProject }: { onRestored?: () => void }) {
+export function MotionHistoryPanel({ onRestored = reloadProject, compact = false, allowPinning = true }: { onRestored?: () => void; compact?: boolean; allowPinning?: boolean }) {
   const { t, formatDate } = useI18n();
   const { projectId, waitForPendingDomEditSaves, writeBlockedReason, renderQueue } = useStudioShellContext();
   const historyOperation = useMotionHistoryOperation();
@@ -97,19 +97,19 @@ export function MotionHistoryPanel({ onRestored = reloadProject }: { onRestored?
     onRestored();
   });
 
-  const shown = [...entries].reverse().filter(entry => !onlyPinned || entry.pinned);
+  const shown = [...entries].reverse().filter(entry => !allowPinning || !onlyPinned || entry.pinned);
   const selected = shown.find(entry => entry.id === selectedId) ?? shown[0];
   const disabled = busy || historyOperation.busy || Boolean(writeBlockedReason) || renderQueue.isRendering;
   return <section className="motion-history-panel" aria-label={t("Version history")} aria-busy={busy || loading}>
-    <div className="motion-history-toolbar">
-      <div><strong>{t("Version history")}</strong><span>{t("Changes are recorded automatically. Pin important versions to keep them.")}</span></div>
-      <button type="button" className="motion-button" disabled={disabled || loading} onClick={() => void keepCurrent()}>
-        <MotionIcon name="save" size={14} />{t("Keep current version")}</button>
-    </div>
-    <div className="motion-history-filters" aria-label={t("Filter versions")}>
+    {(!compact || allowPinning) && <div className={`motion-history-toolbar${compact ? ' motion-history-toolbar-compact' : ''}`}>
+      {!compact && <div><strong>{t("Version history")}</strong><span>{t("Changes are recorded automatically. Pin important versions to keep them.")}</span></div>}
+      {allowPinning && <button type="button" className="motion-button" disabled={disabled || loading} onClick={() => void keepCurrent()}>
+        <MotionIcon name="save" size={14} />{t("Keep current version")}</button>}
+    </div>}
+    {allowPinning && <div className="motion-history-filters" aria-label={t("Filter versions")}>
       <button type="button" aria-pressed={!onlyPinned} onClick={() => setOnlyPinned(false)}>{t("All changes")}{" "}<span>{entries.length}</span></button>
       <button type="button" aria-pressed={onlyPinned} onClick={() => setOnlyPinned(true)}>{t("Pinned")}{" "}<span>{entries.filter(entry => entry.pinned).length}</span></button>
-    </div>
+    </div>}
     {(error || writeBlockedReason) && <div className="motion-history-message motion-error" role="alert">
       {t(error || writeBlockedReason || '')}
       {error && <button type="button" className="motion-button motion-button-quiet" disabled={busy}
@@ -118,12 +118,12 @@ export function MotionHistoryPanel({ onRestored = reloadProject }: { onRestored?
     {notice && <div className="motion-history-message" role="status">{t(notice)}</div>}
     <div className="motion-history-list" aria-label={t("History entries")}>
       {loading ? <p className="motion-history-empty">{t("Reading versions…")}</p> : !shown.length ? <p className="motion-history-empty">
-        {onlyPinned ? t("No pinned versions yet. Select an entry to pin it.") : t("No edits yet. Changes made in the canvas, code, or by an agent will appear here.")}
+        {allowPinning && onlyPinned ? t("No pinned versions yet. Select an entry to pin it.") : t("No edits yet. Changes made in the canvas, code, or by an agent will appear here.")}
       </p> : shown.map(entry => <button type="button" key={entry.id} className="motion-history-entry"
         aria-pressed={selected?.id === entry.id} onClick={() => setSelectedId(entry.id)}>
         <span className="motion-history-entry-heading"><strong>{entry.restoredTo ? t('Restored a previous version') : historyEntryLabel(entry.label, t)}</strong>
-          {entry.pinned && <span className="motion-history-badge">{t("Pinned")}</span>}
-          {entry.id === entries.at(-1)?.id && <span className="motion-history-badge">{t("Latest")}</span>}
+          {allowPinning && entry.pinned && <span className="motion-history-badge">{t("Pinned")}</span>}
+          {entry.id === entries.at(-1)?.id && <span className="motion-history-badge motion-history-badge-latest">{t("Latest")}</span>}
         </span>
         <span className="motion-history-entry-meta"><time dateTime={new Date(entry.endedAt).toISOString()}>{formatDate(entry.endedAt, { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</time>
           <span>{entry.who.kind === 'person' ? t("Manual edit") : entry.who.kind === 'agent' ? entry.who.name : t("External change")} · {t('{count} files', { count: entry.files.length })}{entry.undone ? ` · ${t('Undone')}` : ''}</span>
@@ -131,15 +131,15 @@ export function MotionHistoryPanel({ onRestored = reloadProject }: { onRestored?
       </button>)}
     </div>
     {selected && <div className="motion-history-detail">
-      <div className="motion-history-detail-title">{t("Changes in this version")}</div>
+      {!compact && <><div className="motion-history-detail-title">{t("Changes in this version")}</div>
       <ul>{selected.files.map(file => <li key={file.path}><code title={file.path}>{file.path}</code>
-        <span>{file.before === null ? t('Created') : file.after === null ? t("Deleted") : t("Modified")}</span></li>)}</ul>
+        <span>{file.before === null ? t('Created') : file.after === null ? t("Deleted") : t("Modified")}</span></li>)}</ul></>}
       <div className="motion-history-detail-actions">
-        <button type="button" className="motion-button" disabled={disabled} onClick={() => void pin(selected)}>{selected.pinned ? t("Unpin version") : t("Keep this version")}</button>
+        {allowPinning && <button type="button" className="motion-button" disabled={disabled} onClick={() => void pin(selected)}>{selected.pinned ? t("Unpin version") : t("Keep this version")}</button>}
         <button type="button" className="motion-button motion-button-primary" disabled={disabled || selected.id === entries.at(-1)?.id}
           onClick={() => void restore(selected)}>{t("Restore this version")}</button>
       </div>
-      <p>{t("Restoring creates a new entry and keeps your current changes in history.")}</p>
+      {!compact && <p>{t("Restoring creates a new entry and keeps your current changes in history.")}</p>}
     </div>}
   </section>;
 }

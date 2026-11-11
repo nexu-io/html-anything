@@ -19,11 +19,12 @@
 .motion-session-search input, .motion-template-search input { background: transparent; border: 0; color: var(--motion-text); width: 100%; min-width: 0; font-size: 12px; outline-offset: 4px; }
 .motion-session-list { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; gap: 4px; }
 .motion-session { flex-shrink: 0; }
+.motion-session-dot { width: 5px; height: 5px; flex: 0 0 5px; border-radius: 50%; background: currentColor; }
 .motion-session > span { min-width: 0; }
 .motion-session strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 500; }
 .motion-session small { display: block; margin-top: 5px; font-size: 10px; color: var(--motion-dim); }
 .motion-session-empty { font-size: 12px; line-height: 1.8; color: var(--motion-dim); padding: 12px 8px; }
-.motion-sidebar-footer { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--motion-border); margin-top: 16px; padding: 14px 6px 0; }
+.motion-sidebar-footer { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; padding: 14px 6px 0; }
 .motion-sidebar-identity { display: flex; align-items: center; gap: 10px; width: 100%; }
 .motion-sidebar-identity > span { flex: 1; min-width: 0; }
 .motion-sidebar-settings { display: flex; align-items: center; gap: 8px; width: 100%; }

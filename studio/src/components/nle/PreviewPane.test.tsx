@@ -58,8 +58,10 @@ it("omits duplicate preview navigation only in the MVP", () => {
   const root = createRoot(host);
   act(() => root.render(<PreviewPane />));
   expect(host.querySelector('[data-testid="breadcrumb"]')).not.toBeNull();
+  expect(host.querySelector('[data-studio-fullscreen-target]')).not.toBeNull();
   act(() => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><PreviewPane /></StudioHostContext.Provider>));
   expect(host.querySelector('[data-testid="breadcrumb"]')).toBeNull();
+  expect(host.querySelector('[data-studio-fullscreen-target]')).toBeNull();
   expect(host.querySelector('[data-testid="guides"]')).not.toBeNull();
   act(() => root.unmount());
 });

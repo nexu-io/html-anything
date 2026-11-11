@@ -103,6 +103,8 @@ export const SpeakerHigh = icon("volume-up-line");
 export const SpeakerSlash = icon("volume-mute-line");
 export const Square = icon("checkbox-blank-line");
 export const SquareSplitVertical = icon("layout-column-line");
+export const Sidebar = icon("side-bar-line");
+export const Sparkle = icon("sparkling-line");
 export const SquaresFour = icon("apps-2-line");
 export const Stack = icon("stack-line");
 export const TextAa = icon("font-size");
@@ -112,3 +114,6 @@ export const WarningIcon = icon("alert-line");
 export const Waveform = icon("voiceprint-line");
 export const X = icon("close-line");
 export const XIcon = icon("close-line");
+
+/** Focus the timeline viewport on the selected clip range. */
+export const ZoomSelection = icon("focus-3-line");

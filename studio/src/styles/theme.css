@@ -33,6 +33,10 @@
    * colour-scheme decides: Studio is dark, `data-theme="paper"` makes it light, and the player
    * keeps a dark scheme in both. Text clears 4.5:1 and icons 3:1 on every surface below. */
 
+  --color-media-preview-scrim: rgba(96, 96, 96, 0.65);
+  --color-transparency-light: #fff;
+  --color-transparency-dark: #ddd;
+
   /* Surfaces: the app shell first, menus and popovers last. */
   --color-bg-0: light-dark(oklch(0.955 0.005 70), oklch(0.235 0.007 70));
   --color-bg-1: var(--color-bg-0);

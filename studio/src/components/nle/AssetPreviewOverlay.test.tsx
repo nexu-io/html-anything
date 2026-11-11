@@ -2,7 +2,7 @@
 
 import React, { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { usePlayerStore } from "../../player/store/playerStore";
 import { useAssetPreviewStore } from "../../utils/assetPreviewStore";
 import { AssetPreviewOverlay } from "./AssetPreviewOverlay";
@@ -102,5 +102,28 @@ describe("AssetPreviewOverlay playback dismissal", () => {
     });
 
     expect(useAssetPreviewStore.getState().previewAsset).toBeNull();
+  });
+});
+
+
+describe("modal shared media preview", () => {
+  it("pauses the composition, replaces sources, and returns without moving its playhead", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    root = createRoot(host);
+    usePlayerStore.setState({ currentTime: 2, isPlaying: true });
+    const pause = vi.fn(() => usePlayerStore.getState().setIsPlaying(false));
+    act(() => root!.render(<AssetPreviewOverlay modal onOpen={pause} />));
+    act(() => useAssetPreviewStore.getState().setCatalogPreview({ title: "Caption", videoUrl: "/caption.mp4" }));
+    expect(pause).toHaveBeenCalledOnce();
+    expect(document.querySelector('[role="dialog"] video')?.getAttribute("src")).toBe("/caption.mp4");
+    expect(document.querySelector('[role="dialog"] video')?.hasAttribute("controls")).toBe(false);
+    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    act(() => useAssetPreviewStore.getState().setPreviewAsset("assets/photo.png", "p1"));
+    expect(document.querySelector('[role="dialog"] video')).toBeNull();
+    expect(document.querySelector('[role="dialog"] img')?.getAttribute("alt")).toBe("photo.png");
+    act(() => document.querySelector<HTMLButtonElement>('[role="dialog"] button[aria-label="Close preview"]')!.click());
+    expect(useAssetPreviewStore.getState().previewAsset).toBeNull();
+    expect(usePlayerStore.getState().currentTime).toBe(2);
   });
 });

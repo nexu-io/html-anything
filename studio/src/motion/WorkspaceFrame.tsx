@@ -112,7 +112,7 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
       {workspace.status && !filtered.length && <p className="motion-session-empty">{t(query ? 'No matching projects' : 'Create a project with your Agent to start editing.')}</p>}
       {filtered.map(project => <button key={project.id} className="motion-session" aria-current={currentId === project.id ? 'page' : undefined}
         title={project.title} disabled={switchingDisabled} onClick={() => { if (project.id === currentId) close(); else void workspace.open('projects', project.id); }}>
-        <MotionIcon name="message" /><span><strong>{project.title}</strong></span>
+        <span className="motion-session-dot" aria-hidden="true" /><span><strong>{project.title}</strong></span>
       </button>)}
     </nav>
     <footer className="motion-sidebar-footer">

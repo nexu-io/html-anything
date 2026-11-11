@@ -451,7 +451,7 @@ export const CompositionsTab = memo(function CompositionsTab({
 
   return (
     <div className="flex-1 overflow-y-auto" data-composition-list>
-      {compositions.map((comp) => (
+      {[...compositions].sort((a, b) => Number(b === masterCompositionPath) - Number(a === masterCompositionPath)).map((comp) => (
         <CompCard
           key={`${projectId}:${comp}`}
           projectId={projectId}

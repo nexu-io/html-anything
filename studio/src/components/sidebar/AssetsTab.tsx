@@ -301,7 +301,7 @@ export const AssetsTab = memo(function AssetsTab({
       onDragLeave={() => setDragOver(false)}
       onDrop={handleDrop}
     >
-      <div className="shrink-0 space-y-1.5 border-b border-panel-border px-2 py-2" data-assets-toolbar>
+      <div className={`shrink-0 space-y-1.5 border-b ${mvp ? "border-transparent" : "border-panel-border"} px-2 py-2`} data-assets-toolbar>
         <div className="flex items-center gap-1.5">
           <SearchInput
             value={searchQuery}

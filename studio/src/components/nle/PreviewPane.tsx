@@ -63,6 +63,7 @@ export function PreviewPane({
     projectId,
     iframeRef,
     togglePlay,
+    pause,
     seek,
     onIframeLoad,
     previewSlots,
@@ -121,10 +122,10 @@ export function PreviewPane({
       ref={containerRef}
       // MVP keeps the inset spacing without a second frame inside the dock panel.
       // Fullscreen removes the inset so the preview fills the screen.
-      className={`scheme-dark flex-1 min-h-0 flex flex-col overflow-hidden bg-[var(--studio-preview-bg,var(--color-neutral-950))] ${
+      className={`relative scheme-dark flex-1 min-h-0 flex flex-col overflow-hidden bg-[var(--studio-preview-bg,var(--color-neutral-950))] ${
         isFullscreen ? "" : mvp ? "m-3" : "m-3 rounded-md border border-border"
       }`}
-      data-studio-fullscreen-target=""
+      data-studio-fullscreen-target={mvp ? undefined : ""}
     >
       <div
         className="flex-1 min-h-0 relative overflow-hidden"
@@ -159,7 +160,7 @@ export function PreviewPane({
           {previewDragOver && (
             <div className="absolute inset-2 z-40 rounded-lg border-2 border-dashed border-studio-accent/50 bg-studio-accent/4 pointer-events-none" />
           )}
-          <AssetPreviewOverlay />
+          {!mvp && <AssetPreviewOverlay />}
         </div>
         <PreviewOverlayProvider>
           <PreviewGuides />
@@ -177,9 +178,10 @@ export function PreviewPane({
           onSeek={seek}
           disabled={timelineDisabled}
           isFullscreen={isFullscreen}
-          onToggleFullscreen={toggleFullscreen}
+          onToggleFullscreen={mvp ? undefined : toggleFullscreen}
         />
       </div>
+      {mvp && <AssetPreviewOverlay modal onOpen={pause} />}
     </div>
   );
 }

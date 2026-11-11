@@ -17,7 +17,8 @@ import type { MediaPopoverAnchor } from './mediaPopoverPosition';
 export function TimelineMediaBar() {
   const gateway = useMediaGateway();
   const active = useArtifactViewActive();
-  return gateway && active ? <ConnectedTimelineMediaBar /> : null;
+  const mvp = useMvpEditor();
+  return !mvp && gateway && active ? <ConnectedTimelineMediaBar /> : null;
 }
 
 function ConnectedTimelineMediaBar() {

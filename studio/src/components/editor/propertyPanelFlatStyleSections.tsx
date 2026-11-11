@@ -435,7 +435,7 @@ function FlatOverflowMaskRows({
 /*  Flat Opacity slider                                                */
 /* ------------------------------------------------------------------ */
 
-function FlatOpacitySlider({
+export function FlatOpacitySlider({
   styles,
   disabled,
   onSetStyle,

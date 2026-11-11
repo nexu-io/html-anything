@@ -10,6 +10,9 @@ const MIN_SIDE_W_FLOOR = 120;
 const DEFAULT_TIMELINE_H = 360;
 const DEFAULT_LEFT = ["compositions", "assets", "code", "catalog"] as const;
 const DEFAULT_RIGHT = ["design", "layers", "renders", "variables", "motionBlur"] as const;
+export const COLLAPSED_SIDE_WIDTH = 48;
+export const isSideCollapsed = (group: DockviewApi["groups"][number]) =>
+  group.element.classList.contains("hf-dock-side-collapsed");
 
 /** Preferred side widths; when they overflow the preview's floor the right yields first, then the left. */
 export function defaultSideWidths(viewportWidth: number) {
@@ -46,15 +49,22 @@ function sideZone(group: DockviewApi["groups"][number]): "left" | "right" | null
 }
 
 /** Idempotent; rewrites every group's minimum, since dockview keeps a constraint once set. */
-export function applySideMinimums(api: DockviewApi, dockWidth = window.innerWidth) {
+export function applySideMinimums(api: DockviewApi, dockWidth = window.innerWidth, fixedLayout = false) {
   const minimumWidth = sideMinimumWidth(dockWidth);
   const cap = defaultSideWidths(dockWidth);
   for (const group of api.groups) {
-    if (holdsPreview(group)) {
-      group.api.setConstraints({ minimumWidth: MIN_PREVIEW_W });
+    if (group.element.hasAttribute("data-side-motion")) continue;
+    if (isSideCollapsed(group)) {
+      group.api.setConstraints({ minimumWidth: COLLAPSED_SIDE_WIDTH, maximumWidth: COLLAPSED_SIDE_WIDTH });
       continue;
     }
-    group.api.setConstraints({ minimumWidth });
+    if (holdsPreview(group)) {
+      // Fixed MVP rails must still fit inside very narrow embedded hosts.
+      const previewMinimum = fixedLayout ? Math.min(MIN_PREVIEW_W, Math.max(120, dockWidth - 2 * minimumWidth - 12)) : MIN_PREVIEW_W;
+      group.api.setConstraints({ minimumWidth: previewMinimum });
+      continue;
+    }
+    group.api.setConstraints({ minimumWidth, maximumWidth: Number.POSITIVE_INFINITY });
     const zone = sideZone(group);
     const limit = zone === "right" ? cap.right : cap.left;
     if (zone && minimumWidth < MIN_SIDE_W && group.width > limit) {

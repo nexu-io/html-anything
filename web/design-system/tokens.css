@@ -75,6 +75,7 @@
   --motion-text: #494949;
   --motion-muted: #5c5c5c;
   --motion-dim: #696969;
+  --motion-placeholder: #848484;
   --motion-strong: #202020;
   --motion-accent: #007106;
   --motion-accent-hover: #0d5400;
@@ -121,6 +122,7 @@
   --motion-text: #ededed;
   --motion-muted: #bdbdbd;
   --motion-dim: #c0c0c0;
+  --motion-placeholder: #969696;
   --motion-strong: #fafafa;
   --motion-accent: #adf788;
   --motion-accent-hover: #87ea5c;
@@ -168,6 +170,7 @@
     --motion-text: #ededed;
     --motion-muted: #bdbdbd;
     --motion-dim: #c0c0c0;
+    --motion-placeholder: #969696;
     --motion-strong: #fafafa;
     --motion-accent: #adf788;
     --motion-accent-hover: #87ea5c;

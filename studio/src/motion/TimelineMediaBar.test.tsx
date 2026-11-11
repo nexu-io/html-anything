@@ -98,27 +98,14 @@ it('removes the portalled media actions while the owning Viewer is hidden and re
   expect(document.querySelector('.motion-timeline-media-bar')).not.toBeNull();
 });
 
-it('MVP keeps clip and range prompts for Agent without opening media generation', async () => {
+it('MVP omits clip and range Agent popovers', async () => {
   const mountMvp = () => act(async () => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineMediaBar /></StudioHostContext.Provider>));
   await mountMvp();
-  expect(button('Generate media')).toBeUndefined();
-  expect(button('Edit image')).toBeUndefined();
-  expect(button('Ask Agent')).toBeDefined();
-  const prompt = document.querySelector('input')!;
-  await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(prompt, 'Make this title larger');
-    prompt.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-  await act(async () => prompt.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
-  expect(document.querySelector('[data-testid="agent-edit"]')?.textContent).toBe('Make this title larger 2–8');
-  expect(document.querySelector('[data-testid="agent-edit"]')?.getAttribute('data-selected-key')).toBe('main:image');
-  expect(hooks.open).not.toHaveBeenCalled();
-  await act(async () => root.render(null));
+  expect(document.querySelector('.motion-timeline-media-bar')).toBeNull();
   hooks.state.overlays = { ...hooks.state.overlays, showPopover: true, rangeSelection: { start: 8, end: 5, anchorX: 0, anchorY: 0 } };
   await mountMvp();
-  await act(async () => button('Ask Agent').click());
-  expect(document.querySelector('[data-testid="agent-edit"]')?.textContent).toBe(' 5–8');
-  expect(document.querySelector('[data-testid="agent-edit"]')?.hasAttribute('data-selected-key')).toBe(false);
+  expect(document.querySelector('.motion-timeline-media-bar')).toBeNull();
+  expect(document.querySelector('[data-testid="agent-edit"]')).toBeNull();
   expect(hooks.open).not.toHaveBeenCalled();
 });
 

@@ -1,3 +1,5 @@
+import { MediaDurationBadge } from "./MediaDurationBadge";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 // fallow-ignore-file code-duplication
@@ -7,6 +9,7 @@ import { SearchInput } from "../ui/SearchInput";
 import { Tooltip } from "../ui/Tooltip";
 import { FilterChip } from "../ui/FilterChip";
 import { PromptPreviewModal } from "./PromptPreviewModal";
+import { useAssetPreviewStore } from "../../utils/assetPreviewStore";
 import { useBlockCatalog } from "../../hooks/useBlockCatalog";
 import {
   BLOCK_CATEGORIES,
@@ -31,6 +34,7 @@ interface BlocksTabProps {
 // fallow-ignore-next-line complexity
 export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }: BlocksTabProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const { loading, error, search, setSearch, category, setCategory, filteredBlocks } =
     useBlockCatalog();
   const [promptModal, setPromptModal] = useState<{ title: string; prompt: string } | null>(null);
@@ -104,7 +108,7 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
                   posterUrl={block.preview?.poster}
                   videoUrl={block.preview?.video}
                   onPreview={onPreviewBlock}
-                  onShowPrompt={setPromptModal}
+                  onShowPrompt={mvp ? undefined : setPromptModal}
                   onAdd={
                     block.category === "vfx" ||
                     block.category === "social" ||
@@ -275,6 +279,10 @@ function BlockCard({
 }) {
   const { t } = useI18n();
   const [hovered, setHovered] = useState(false);
+  const mvp = useMvpEditor();
+  const preview = () => {
+    if (mvp && (videoUrl || posterUrl)) useAssetPreviewStore.getState().setCatalogPreview({ videoUrl, posterUrl, title });
+  };
   const [addState, setAddState] = useState<"idle" | "adding" | "added" | "failed">("idle");
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const colors = getCategoryColors(category);
@@ -283,9 +291,9 @@ function BlockCard({
   const handleEnter = useCallback(() => {
     hoverTimer.current = setTimeout(() => {
       setHovered(true);
-      onPreview?.({ videoUrl, posterUrl, title });
+      if (!mvp) onPreview?.({ videoUrl, posterUrl, title });
     }, 300);
-  }, [onPreview, videoUrl, posterUrl, title]);
+  }, [mvp, onPreview, videoUrl, posterUrl, title]);
 
   const handleLeave = useCallback(() => {
     if (hoverTimer.current) {
@@ -293,8 +301,8 @@ function BlockCard({
       hoverTimer.current = null;
     }
     setHovered(false);
-    onPreview?.(null);
-  }, [onPreview]);
+    if (!mvp) onPreview?.(null);
+  }, [mvp, onPreview]);
 
   useEffect(() => {
     return () => {
@@ -356,6 +364,16 @@ function BlockCard({
   return (
     <div
       className="group/card rounded-md overflow-hidden cursor-pointer transition-colors bg-neutral-900 hover:bg-neutral-800"
+      role={mvp ? "button" : undefined}
+      tabIndex={mvp ? 0 : undefined}
+      aria-label={mvp ? t("Preview: {name}", { name: title }) : undefined}
+      onClick={preview}
+      onKeyDown={event => {
+        if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          preview();
+        }
+      }}
       draggable
       onDragStart={(e) => {
         e.dataTransfer.effectAllowed = "copy";
@@ -395,7 +413,7 @@ function BlockCard({
         )}
 
         {/* Action overlay — also revealed when a button inside receives focus */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/60 opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100 transition-opacity">
+        {(onAdd || onShowPrompt) && <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/60 opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100 transition-opacity">
           {onAdd && (
             <Tooltip label={t("Add")} description={t("Add to composition at current time")}>
               <button
@@ -418,7 +436,7 @@ function BlockCard({
               </button>
             </Tooltip>
           )}
-          <Tooltip label={t("Ask agent")} description={t("Generate a prompt to paste into your AI agent")}>
+          {onShowPrompt && <Tooltip label={t("Ask agent")} description={t("Generate a prompt to paste into your AI agent")}>
             <button
               type="button"
               onClick={handleShowPrompt}
@@ -430,8 +448,8 @@ function BlockCard({
             >
               <RemixIcon name="file-copy-line" size={14} />
               {t("Ask agent")}</button>
-          </Tooltip>
-        </div>
+          </Tooltip>}
+        </div>}
 
         {/* Badges */}
         <div className="absolute top-1 right-1 flex items-center gap-0.5 pointer-events-none">
@@ -440,11 +458,7 @@ function BlockCard({
               WebGL
             </span>
           )}
-          {duration != null && (
-            <span className="px-1 py-px rounded-sm text-[8px] font-medium text-white/80 bg-black/50">
-              {duration}s
-            </span>
-          )}
+          <MediaDurationBadge duration={duration} />
         </div>
       </div>
 
@@ -454,7 +468,6 @@ function BlockCard({
           {title}
         </div>
         <div className="flex items-center gap-1 mt-0.5">
-          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${colors.dot}`} />
           <span className={`text-[8px] ${colors.text}`}>
             {t(BLOCK_CATEGORIES.find((c) => c.id === category)?.label ?? category)}
           </span>

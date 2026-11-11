@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { memo } from "react";
@@ -13,9 +14,10 @@ interface VolumeControlProps {
 }
 
 function VolumeIcon({ muted, volume }: { muted: boolean; volume: number }) {
+  const mvp = useMvpEditor();
   const silent = muted || volume === 0;
   return (
-    <RemixIcon name={silent ? "volume-mute-line" : volume >= 0.5 ? "volume-up-line" : "volume-down-line"} size={16} />
+    <RemixIcon name={silent ? "volume-mute-line" : mvp || volume >= 0.5 ? "volume-up-line" : "volume-down-line"} size={16} />
   );
 }
 

@@ -36,7 +36,7 @@ const knownTextLeaves = new WeakSet<HTMLElement>();
 
 export function isEditableTextLeaf(el: HTMLElement): boolean {
   const tag = el.tagName.toLowerCase();
-  if (!isTextBearingTag(tag) || el.children.length !== 0) return false;
+  if (!isTextBearingTag(tag) || Array.from(el.children).some(child => child.tagName.toLowerCase() !== "br")) return false;
   if (el.textContent?.trim()) {
     knownTextLeaves.add(el);
     return true;

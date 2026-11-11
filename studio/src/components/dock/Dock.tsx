@@ -21,7 +21,8 @@ import { DockStripActions } from "./DockStripActions";
 import { DockHeaderSlotsProvider } from "./DockHeaderSlots";
 import { DockTab } from "./DockTab";
 import { installTabFill } from "./dockTabFill";
-import { addRegisteredPanel, applySideMinimums, buildEditLayout, defaultSideWidths } from "./dockLayout";
+import { createSidePanelMotion } from "./dockSidePanelMotion";
+import { addRegisteredPanel, applySideMinimums, buildEditLayout, defaultSideWidths, isSideCollapsed, sideMinimumWidth, COLLAPSED_SIDE_WIDTH } from "./dockLayout";
 import { DOCK_PANEL_COMPONENT, parseDockLayout } from "./dockLayoutSchema";
 import { useDockLayoutStore, type DockController, type DockSnapshot } from "./dockLayoutStore";
 import {
@@ -36,6 +37,7 @@ import "./dock.css";
 import { menuClasses } from "../ui/menuStyle";
 
 const PERSIST_DEBOUNCE_MS = 250;
+const COMPACT_DOCK_WIDTH = 900;
 
 type Slots = Partial<Record<PanelId, HTMLElement>>;
 
@@ -56,13 +58,14 @@ function useSlots(): SlotsContextValue {
 function PanelSlot({ api }: IDockviewPanelProps) {
   const { registerSlot } = useSlots();
   const id = api.id;
+  const collapsed = useDockLayoutStore(state => isPanelId(id) && (state.collapsedZones?.includes(PANEL_DEFINITIONS[id].zone) ?? false));
   const ref = useCallback(
     (element: HTMLDivElement | null) => {
       if (isPanelId(id)) registerSlot(id, element);
     },
     [id, registerSlot],
   );
-  return <div ref={ref} className="h-full w-full min-h-0 min-w-0 overflow-hidden" />;
+  return <div ref={ref} inert={collapsed} style={collapsed ? { display: "none" } : undefined} className="h-full w-full min-h-0 min-w-0 overflow-hidden" />;
 }
 
 const COMPONENTS = { [DOCK_PANEL_COMPONENT]: PanelSlot };
@@ -85,6 +88,10 @@ function snapshot(api: DockviewApi): DockSnapshot {
     visiblePanels,
     activePanel: isPanelId(active) ? active : null,
     groupActivePanels,
+    collapsedZones: api.groups.filter(isSideCollapsed).flatMap(group => {
+      const id = group.panels[0]?.id;
+      return isPanelId(id) ? [PANEL_DEFINITIONS[id].zone] : [];
+    }),
   };
 }
 
@@ -95,7 +102,40 @@ interface DockOptions {
   fixedLayout?: boolean;
 }
 
-function createController(api: DockviewApi, options: DockOptions): DockController {
+function createController(api: DockviewApi, options: DockOptions): DockController & { dispose: () => void } {
+  const motion = createSidePanelMotion();
+  const expandedWidths = new WeakMap<object, number>();
+  const setGroupCollapsed = (id: PanelId, collapsed: boolean, animate = false) => {
+    const group = api.getPanel(id)?.group;
+    if (!options.fixedLayout || !group || PANEL_DEFINITIONS[id].zone === "center" || isSideCollapsed(group) === collapsed) return;
+    // A reversal starts at the current width but retains the original expanded width.
+    if (collapsed && !motion.has(group.element)) expandedWidths.set(group, group.width);
+    const from = group.width;
+    const zone = PANEL_DEFINITIONS[id].zone as "left" | "right";
+    const preferredWidth = expandedWidths.get(group) ?? defaultSideWidths(options.dockWidth())[zone];
+    const target = collapsed ? COLLAPSED_SIDE_WIDTH : options.dockWidth() < COMPACT_DOCK_WIDTH
+      ? Math.min(preferredWidth, Math.max(120, options.dockWidth() - COLLAPSED_SIDE_WIDTH - 240))
+      : preferredWidth;
+    group.element.classList.toggle("hf-dock-side-collapsed", collapsed);
+    const resize = (width: number, finished: boolean) => {
+      // Dockview owns both the card and its separately portaled content. Resize through
+      // its API so borders, hit targets and the live preview stay aligned throughout.
+      const otherSides = api.groups.filter(other => other !== group && other.panels.every(panel => isPanelId(panel.id) && PANEL_DEFINITIONS[panel.id].zone !== "center"));
+      for (const other of otherSides) other.api.setConstraints({ minimumWidth: other.width, maximumWidth: other.width });
+      group.api.setConstraints({ minimumWidth: COLLAPSED_SIDE_WIDTH, maximumWidth: Number.POSITIVE_INFINITY });
+      group.api.setSize({ width });
+      if (finished) group.api.setConstraints({
+        minimumWidth: collapsed ? COLLAPSED_SIDE_WIDTH : sideMinimumWidth(options.dockWidth()),
+        maximumWidth: collapsed ? COLLAPSED_SIDE_WIDTH : Number.POSITIVE_INFINITY,
+      });
+      for (const other of otherSides) other.api.setConstraints({
+        minimumWidth: motion.has(other.element) || isSideCollapsed(other) ? COLLAPSED_SIDE_WIDTH : sideMinimumWidth(options.dockWidth()),
+        maximumWidth: isSideCollapsed(other) && !motion.has(other.element) ? COLLAPSED_SIDE_WIDTH : Number.POSITIVE_INFINITY,
+      });
+    };
+    motion.run(group.element, from, target, animate, resize);
+    useDockLayoutStore.getState().sync(snapshot(api));
+  };
   const open = (id: PanelId) => {
     if (!options.panels.includes(id) || api.getPanel(id)) return;
     if (id === "preview") {
@@ -152,11 +192,14 @@ function createController(api: DockviewApi, options: DockOptions): DockControlle
     addRegisteredPanel(api, id, hasAnchor ? position : fallback);
   };
   return {
+    dispose: motion.dispose,
     open,
+    setGroupCollapsed,
     activate: (id) => {
       open(id);
       const panel = api.getPanel(id);
       if (!panel?.group.api.isMaximized()) api.exitMaximizedGroup();
+      setGroupCollapsed(id, false);
       if (panel && !panel.group.api.isVisible) panel.group.api.setVisible(true);
       panel?.api.setActive();
     },
@@ -171,6 +214,7 @@ function createController(api: DockviewApi, options: DockOptions): DockControlle
       if ((!options.fixedLayout || visible) && group && group.api.isVisible !== visible) group.api.setVisible(visible);
     },
     reset: () => {
+      motion.finishAll();
       buildEditLayout(api, options.dockWidth(), options.panels);
       const timeline = api.getPanel("timeline");
       if (options.fixedLayout && timeline) timeline.group.header.hidden = true;
@@ -201,6 +245,7 @@ function Root({
   panels = PANEL_IDS,
   storageKey,
   fixedLayout = false,
+  initialCompactLayout = false,
   dockWidth = windowWidth,
   children,
 }: {
@@ -208,6 +253,7 @@ function Root({
   panels?: readonly PanelId[];
   storageKey?: string;
   fixedLayout?: boolean;
+  initialCompactLayout?: boolean;
   dockWidth?: () => number;
   children: ReactNode;
 }) {
@@ -237,40 +283,78 @@ function Root({
       if (fixedLayout) for (const id of panels) controller.open(id);
       const timeline = api.getPanel("timeline");
       if (fixedLayout && timeline) timeline.group.header.hidden = true;
-      applySideMinimums(api, dockWidth());
+      applySideMinimums(api, dockWidth(), fixedLayout);
       const root = api.groups[0]?.element.closest<HTMLElement>(".hf-dock");
       const disposeAccessibility = root ? installDockAccessibility(api, root, (message) => translateRef.current(message)) : () => {};
       const disposeTabFill = root ? installTabFill(api, root) : () => {};
       // Sides size against dockWidth, the window by default; the dock's own box lags a resize.
-      const resizeObserver = new ResizeObserver(() => applySideMinimums(api, dockWidth()));
-      if (root) resizeObserver.observe(root);
+      let needsInitialTimelineSize = fixedLayout && initialCompactLayout;
+      let initialSizeFrame: number | undefined;
+      const initializeTimelineSize = () => {
+        if (!needsInitialTimelineSize || initialSizeFrame !== undefined || api.height <= 0) return;
+        // Dockview first lays out against its minimum dimensions. Wait for its
+        // initial host measurement before deriving the opening ratio.
+        initialSizeFrame = requestAnimationFrame(() => {
+          initialSizeFrame = undefined;
+          if (api.height <= 0) return;
+          needsInitialTimelineSize = false;
+          timeline?.group.api.setSize({ height: Math.max(100, Math.round(api.height * 0.3)) });
+        });
+      };
       const store = useDockLayoutStore.getState();
       store.attach(controller, panels);
+      let previousWidth = Number.POSITIVE_INFINITY;
+      const fitHostWidth = () => {
+        const width = dockWidth();
+        if (width <= 0) return;
+        // Only shrinking the host closes panels. Height changes and manual tab
+        // activation must not immediately undo a user's explicit expansion.
+        if (fixedLayout && width < COMPACT_DOCK_WIDTH && width < previousWidth) {
+          for (const zone of ["left", "right"] as const) {
+            const id = panels.find(id => PANEL_DEFINITIONS[id].zone === zone);
+            if (id) controller.setGroupCollapsed?.(id, true);
+          }
+        }
+        previousWidth = width;
+        applySideMinimums(api, width, fixedLayout);
+        initializeTimelineSize();
+      };
+      const resizeObserver = new ResizeObserver(fitHostWidth);
+      if (root) resizeObserver.observe(root);
+      if (fixedLayout && initialCompactLayout) {
+        for (const zone of ["left", "right"] as const) {
+          const id = panels.find(id => PANEL_DEFINITIONS[id].zone === zone);
+          if (id) controller.setGroupCollapsed?.(id, true);
+        }
+        initializeTimelineSize();
+      }
       store.sync(snapshot(api));
       const pending = store.takePendingActivation();
       if (pending) store.activatePanel(pending);
+      fitHostWidth();
 
       let timer: ReturnType<typeof setTimeout> | undefined;
       const persist = () => {
         clearTimeout(timer);
         timer = setTimeout(() => {
-          if (fixedLayout && api.hasMaximizedGroup()) return;
+          if (fixedLayout && (api.hasMaximizedGroup() || api.groups.some(group => isSideCollapsed(group) || group.element.hasAttribute("data-side-motion")))) return;
           writeStudioUiPreferences({ dockLayout: api.toJSON() }, undefined, projectId, storageKey);
         }, PERSIST_DEBOUNCE_MS);
       };
       // dockview does not fire onDidLayoutChange for add/remove/activate,
       // so every event class is wired to the same sync+persist pair.
       const onDockChange = () => {
+        initializeTimelineSize();
         useDockLayoutStore.getState().sync(snapshot(api));
         persist();
       };
       const subscriptions = [
         api.onDidAddPanel(() => {
-          applySideMinimums(api, dockWidth());
+          applySideMinimums(api, dockWidth(), fixedLayout);
           onDockChange();
         }),
         api.onDidMovePanel(() => {
-          applySideMinimums(api, dockWidth());
+          applySideMinimums(api, dockWidth(), fixedLayout);
           onDockChange();
         }),
         api.onDidRemovePanel(onDockChange),
@@ -280,6 +364,8 @@ function Root({
       ];
       disposeRef.current = () => {
         clearTimeout(timer);
+        if (initialSizeFrame !== undefined) cancelAnimationFrame(initialSizeFrame);
+        controller.dispose();
         for (const subscription of subscriptions) subscription.dispose();
         disposeAccessibility();
         disposeTabFill();
@@ -287,7 +373,7 @@ function Root({
         useDockLayoutStore.getState().detach();
       };
     },
-    [projectId, panels, storageKey, dockWidth, fixedLayout],
+    [projectId, panels, storageKey, dockWidth, fixedLayout, initialCompactLayout],
   );
 
   return (

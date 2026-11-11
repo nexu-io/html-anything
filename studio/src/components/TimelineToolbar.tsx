@@ -4,7 +4,7 @@ import { useI18n } from "../i18n/I18n";
 import { memo, useEffect, useRef, type ReactNode } from "react";
 import {
   ArrowsOutLineHorizontal,
-  FrameCorners,
+  ZoomSelection,
   Image,
   Magnet,
   MagnifyingGlassMinus,
@@ -524,7 +524,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               onClick={() => zoomTimelineToSelectedClips()}
               className={canZoomSelection ? flatIdle : flatDisabled}
             >
-              <FrameCorners size={16} aria-hidden="true" />
+              <ZoomSelection size={16} aria-hidden="true" />
             </button>
           </Tooltip>
           <Tooltip

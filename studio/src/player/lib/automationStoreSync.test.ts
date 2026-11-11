@@ -33,6 +33,15 @@ beforeEach(() => {
 });
 
 describe("syncStoredElementAttribute", () => {
+  it("keeps mute state in sync across save, undo and redo without resetting gain", () => {
+    usePlayerStore.setState({ elements: [el({ volume: 0.5 })] });
+    syncStoredElementAttribute(el(), 'muted', '');
+    expect(usePlayerStore.getState().elements[0]).toMatchObject({ muted: true, volume: 0.5 });
+    syncStoredAutomationFromPreview(previewWith({ 'data-volume': '0.5' }));
+    expect(usePlayerStore.getState().elements[0]?.muted).toBeUndefined();
+    syncStoredAutomationFromPreview(previewWith({ 'data-volume': '0.5', muted: '' }));
+    expect(usePlayerStore.getState().elements[0]).toMatchObject({ muted: true, volume: 0.5 });
+  });
   it("records a saved fade on the stored clip, so the timeline draws what the file holds", () => {
     usePlayerStore.setState({ elements: [el({ fadeIn: 1 })] });
     syncStoredElementAttribute(el(), "data-fade-in", "2.5");

@@ -142,18 +142,20 @@ export function TextAreaField({
       <div className={boxed
         ? "rounded-md bg-panel-bg-inset px-3 py-2 focus-within:ring-1 focus-within:ring-panel-accent/30"
         : "border-l-2 border-panel-border-input py-0.5 pl-[10px]"}>
-        <div className="mb-[3px] text-[9px] font-semibold uppercase tracking-[0.12em] text-panel-text-5">
+        {!boxed && <div className="mb-[3px] text-[9px] font-semibold uppercase tracking-[0.12em] text-panel-text-5">
           {t(label)}
-        </div>
+        </div>}
         <textarea
           ref={textareaRef}
           value={draft}
           disabled={disabled}
           rows={2}
+          aria-label={t(label)}
+          style={boxed ? { outline: "none" } : undefined}
           onFocus={handleFocus}
           onChange={handleChange}
           onBlur={handleBlur}
-          className="field-sizing-content max-h-[40vh] min-h-12 w-full resize-y overflow-x-hidden overflow-y-auto bg-transparent font-mono text-[11px] leading-normal text-panel-text-0 outline-hidden disabled:cursor-not-allowed disabled:text-panel-text-4"
+          className={`field-sizing-content max-h-[40vh] min-h-12 w-full ${boxed ? "resize-none" : "resize-y"} overflow-x-hidden overflow-y-auto bg-transparent font-mono text-[11px] leading-normal text-panel-text-0 outline-hidden disabled:cursor-not-allowed disabled:text-panel-text-4`}
         />
       </div>
     );

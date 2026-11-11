@@ -314,7 +314,7 @@ describe("Dock wiring", () => {
         target?.classList.contains("hf-dock"),
       );
       act(() => dockObservers.forEach(({ callback }) => callback()));
-      expect(applySideMinimums).toHaveBeenCalledWith(expect.anything(), 560);
+      expect(applySideMinimums).toHaveBeenCalledWith(expect.anything(), 560, false);
     } finally {
       Object.defineProperty(window, "innerWidth", { value: innerWidth, configurable: true });
     }
@@ -375,7 +375,7 @@ describe("a host's dock", () => {
       target?.classList.contains("hf-dock"),
     );
     act(() => dockObservers.forEach(({ callback }) => callback()));
-    expect(applySideMinimums).toHaveBeenCalledWith(expect.anything(), 700);
+    expect(applySideMinimums).toHaveBeenCalledWith(expect.anything(), 700, false);
   });
 });
 
@@ -447,9 +447,9 @@ it('changes native dock titles live without recreating panels, preview or layout
   expect(host.querySelector('iframe')).toBe(preview);
 });
 
-it("adds version history to an existing MVP layout without resetting divider sizes", () => {
+it("adds a missing allowed side panel to an existing MVP layout without resetting divider sizes", () => {
   const options = { fixedLayout: true, storageKey: "motion.mvp.dock.v1" };
-  mount("p1", {}, { ...options, panels: MVP_PANEL_IDS.filter(id => id !== "history") });
+  mount("p1", {}, { ...options, panels: MVP_PANEL_IDS.filter(id => id !== "layers") });
   act(() => {
     dockApi!.getPanel("compositions")!.api.setSize({ width: 320 });
     vi.advanceTimersByTime(1000);
@@ -460,11 +460,11 @@ it("adds version history to an existing MVP layout without resetting divider siz
   root = null;
 
   const host = mount("p1", {}, { ...options, panels: MVP_PANEL_IDS });
-  expect(dockApi!.getPanel("history")?.group.id).toBe(dockApi!.getPanel("design")!.group.id);
+  expect(dockApi!.getPanel("layers")?.group.id).toBe(dockApi!.getPanel("design")!.group.id);
   expect(dockApi!.getPanel("compositions")!.group.width).toBe(leftWidth);
   expect(dockApi!.getPanel("design")!.group.width).toBe(rightWidth);
-  act(() => useDockLayoutStore.getState().activatePanel("history"));
-  expect(host.querySelector('[data-testid="content-history"]')).not.toBeNull();
+  act(() => useDockLayoutStore.getState().activatePanel("layers"));
+  expect(host.querySelector('[data-testid="content-layers"]')).not.toBeNull();
   expect(dockApi!.getPanel("code")).toBeUndefined();
 });
 
@@ -493,6 +493,12 @@ it("keeps the MVP panels fixed, rejects hidden panels, and restores divider size
 });
 
 
+it("keeps version history outside the MVP dock", () => {
+  mount("p1", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, storageKey: "motion.mvp.dock.v1" });
+  act(() => useDockLayoutStore.getState().activatePanel("history"));
+  expect(dockApi!.getPanel("history")).toBeUndefined();
+});
+
 it("expands only the MVP preview and restores layout without remounting the player", () => {
   const host = document.createElement("div");
   document.body.append(host);
@@ -509,13 +515,18 @@ it("expands only the MVP preview and restores layout without remounting the play
   const api = dockApi!;
   act(() => {
     api.getPanel("compositions")!.api.setSize({ width: 310 });
-    api.getPanel("renders")!.api.setActive();
+    api.getPanel("layers")!.api.setActive();
     vi.advanceTimersByTime(1000);
   });
   const grid = api.toJSON().grid;
   const player = host.querySelector("iframe");
-  const click = (label: string) => act(() => host.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!.click());
+  const animation = { cancel: vi.fn(), onfinish: null };
+  const animate = vi.fn(() => animation);
+  Object.defineProperty(api.getPanel("preview")!.view.content.element, "animate", { value: animate, configurable: true });
+  const click = (label: string) => act(() => host.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!
+    .dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 })));
   click("Expand preview");
+  expect(animate).toHaveBeenCalledWith(expect.any(Array), { duration: 180, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
   expect(api.getPanel("preview")!.group.api.isMaximized()).toBe(true);
   expect(host.querySelector("iframe")).toBe(player);
   expect(document.fullscreenElement).toBeFalsy();
@@ -535,4 +546,192 @@ it("expands only the MVP preview and restores layout without remounting the play
   expect(api.toJSON().grid).toEqual(grid);
   expect(host.querySelector("iframe")).toBe(player);
   expect(document.activeElement).toBe(host.querySelector('[aria-label="Expand preview"]'));
+  expect(animation.cancel).toHaveBeenCalled();
+  const calls = animate.mock.calls.length;
+  const reduced = vi.spyOn(window, "matchMedia").mockReturnValue({ matches: true } as MediaQueryList);
+  try {
+    click("Expand preview");
+    expect(api.hasMaximizedGroup()).toBe(true);
+    expect(animate).toHaveBeenCalledTimes(calls);
+    click("Restore preview");
+    expect(api.toJSON().grid).toEqual(grid);
+  } finally {
+    reduced.mockRestore();
+  }
+});
+
+it("collapses both MVP sides into rails, restores their tabs and widths, and preserves the preview", async () => {
+  const host = document.createElement("div");
+  document.body.append(host);
+  root = createRoot(host);
+  act(() => root?.render(
+    <I18nProvider initialLocale="en"><StudioHostContext.Provider value={{ mvpEditor: true }}>
+      <Dock.Root projectId="p1" panels={MVP_PANEL_IDS} fixedLayout dockWidth={() => 1400} storageKey="motion.mvp.dock.v1">
+        {MVP_PANEL_IDS.map(id => <Dock.Panel key={id} id={id}>
+          {id === "preview" ? <iframe title="Preview player" /> : <textarea aria-label={`${id} draft`} defaultValue="Keep draft" />}
+        </Dock.Panel>)}
+      </Dock.Root>
+    </StudioHostContext.Provider></I18nProvider>,
+  ));
+  const api = dockApi!;
+  act(() => {
+    api.layout(1400, 800);
+    api.getPanel("compositions")!.group.api.setSize({ width: 310 });
+    vi.advanceTimersByTime(1000);
+  });
+  const left = api.getPanel("compositions")!.group;
+  const right = api.getPanel("design")!.group;
+  const preview = api.getPanel("preview")!.group;
+  const widths = [left.width, right.width, preview.width];
+  const saved = readStudioUiPreferences(undefined, "p1", "motion.mvp.dock.v1").dockLayout;
+  const player = host.querySelector("iframe");
+  const draft = host.querySelector('[aria-label="compositions draft"]');
+  const click = async (label: string) => act(async () => {
+    host.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!.click();
+    await Promise.resolve();
+  });
+  await click("Collapse left panel");
+  expect(right.width).toBe(widths[1]);
+  await click("Collapse right panel");
+  expect(left.width).toBe(48);
+  expect(right.width).toBe(48);
+  expect(preview.width).toBeGreaterThan(widths[2]!);
+  expect(host.querySelectorAll(".hf-dock-side-rail")).toHaveLength(2);
+  expect(host.querySelector('[aria-label="compositions draft"]')).toBe(draft);
+  expect(draft?.closest('[inert]')).not.toBeNull();
+  act(() => {
+    dockLayout.applySideMinimums(api, 1000);
+    vi.advanceTimersByTime(1000);
+  });
+  expect(left.width).toBe(48);
+  expect(readStudioUiPreferences(undefined, "p1", "motion.mvp.dock.v1").dockLayout).toEqual(saved);
+  await click("Expand preview");
+  await click("Restore preview");
+  expect(left.width).toBe(48);
+  expect(right.width).toBe(48);
+  expect(host.querySelector("iframe")).toBe(player);
+  await click("Expand left panel");
+  expect(left.width).toBe(widths[0]);
+  expect(draft?.closest('[inert]')).toBeNull();
+  await click("Layers");
+  expect(right.width).toBe(widths[1]);
+  expect(right.activePanel?.id).toBe("layers");
+  expect(host.querySelectorAll(".hf-dock-side-rail")).toHaveLength(0);
+  expect(host.querySelector("iframe")).toBe(player);
+  await click("Collapse right panel");
+  await click("Expand preview");
+  await act(async () => useDockLayoutStore.getState().activatePanel("layers"));
+  expect(api.hasMaximizedGroup()).toBe(false);
+  expect(right.width).toBe(widths[1]);
+  expect(right.activePanel?.id).toBe("layers");
+});
+
+
+it("animates side widths, reverses from the current width, and leaves the opposite side and player intact", () => {
+  mount("motion", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, dockWidth: () => 1400 });
+  const api = dockApi!;
+  act(() => api.layout(1400, 800));
+  const left = api.getPanel("compositions")!.group;
+  const right = api.getPanel("design")!.group;
+  const preview = api.getPanel("preview")!.group;
+  const initial = { left: left.width, right: right.width, preview: preview.width };
+  const controller = useDockLayoutStore.getState().controller!;
+  act(() => controller.setGroupCollapsed!("compositions", true, true));
+  expect(left.width).toBe(initial.left);
+  act(() => vi.advanceTimersByTime(64));
+  expect(left.width).toBeGreaterThan(48);
+  expect(left.width).toBeLessThan(initial.left);
+  expect(right.width).toBe(initial.right);
+  expect(preview.width).toBeGreaterThan(initial.preview);
+  const halfway = left.width;
+  act(() => controller.setGroupCollapsed!("compositions", false, true));
+  expect(left.width).toBe(halfway);
+  act(() => vi.advanceTimersByTime(240));
+  expect(left.width).toBe(initial.left);
+  expect(left.element.hasAttribute("data-side-motion")).toBe(false);
+  act(() => {
+    controller.setGroupCollapsed!("compositions", true, true);
+    controller.setGroupCollapsed!("design", true, true);
+    vi.advanceTimersByTime(240);
+  });
+  expect(left.width).toBe(48);
+  expect(right.width).toBe(48);
+  act(() => {
+    controller.setGroupCollapsed!("compositions", false, true);
+    controller.setGroupCollapsed!("design", false, true);
+    vi.advanceTimersByTime(240);
+  });
+  expect(left.width).toBe(initial.left);
+  expect(right.width).toBe(initial.right);
+});
+
+it("skips side motion when reduced motion is requested", () => {
+  const media = vi.spyOn(window, "matchMedia").mockReturnValue({
+    matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn(),
+  } as unknown as MediaQueryList);
+  try {
+    mount("reduced", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, dockWidth: () => 1400 });
+    act(() => dockApi!.layout(1400, 800));
+    const left = dockApi!.getPanel("compositions")!.group;
+    act(() => useDockLayoutStore.getState().controller!.setGroupCollapsed!("compositions", true, true));
+    expect(left.width).toBe(48);
+    expect(left.element.hasAttribute("data-side-motion")).toBe(false);
+  } finally {
+    media.mockRestore();
+  }
+});
+
+
+it("opens the compact MVP with both rails and a 30% timeline, without locking divider resizing", () => {
+  mount("compact", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, initialCompactLayout: true, dockWidth: () => 1400 });
+  const api = dockApi!;
+  act(() => { api.layout(1400, 800); vi.advanceTimersByTime(32); });
+  expect(api.getPanel("compositions")!.group.width).toBe(48);
+  expect(api.getPanel("design")!.group.width).toBe(48);
+  expect(useDockLayoutStore.getState().collapsedZones).toEqual(expect.arrayContaining(["left", "right"]));
+  const timeline = api.getPanel("timeline")!.group;
+  expect(timeline.height).toBe(240);
+  act(() => timeline.api.setSize({ height: 360 }));
+  expect(timeline.height).toBe(360);
+  act(() => api.layout(1400, 800));
+  expect(timeline.height).toBe(360);
+  act(() => useDockLayoutStore.getState().controller!.setGroupCollapsed!("design", false));
+  expect(api.getPanel("design")!.group.width).toBeGreaterThan(48);
+  expect(timeline.height).toBe(360);
+});
+
+
+it("collapses MVP sides when the host narrows, preserves content, and allows explicit reopening", () => {
+  let width = 1400;
+  const host = mount("responsive", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, dockWidth: () => width });
+  const api = dockApi!;
+  act(() => api.layout(width, 800));
+  const content = host.querySelector('[data-testid="content-preview"]');
+  const left = api.getPanel("compositions")!.group;
+  const right = api.getPanel("design")!.group;
+  act(() => api.getPanel("catalog")!.api.setActive());
+  const resize = (nextWidth: number) => act(() => {
+    width = nextWidth;
+    [...liveObservers].filter(({ target }) => target?.classList.contains("hf-dock"))
+      .forEach(({ callback }) => callback());
+    api.layout(width, 800);
+  });
+  resize(700);
+  expect(left.width).toBe(48);
+  expect(right.width).toBe(48);
+  expect(left.activePanel?.id).toBe("catalog");
+  expect(host.querySelector('[data-testid="content-preview"]')).toBe(content);
+  act(() => useDockLayoutStore.getState().activatePanel("assets"));
+  resize(700); // A height-only resize must not close a manually opened side.
+  expect(left.width).toBeGreaterThan(48);
+  expect(right.width).toBe(48);
+  resize(640);
+  expect(left.width).toBe(48);
+  resize(1400);
+  expect(left.width).toBe(48);
+  expect(right.width).toBe(48);
+  resize(320);
+  expect(api.getPanel("preview")!.group.width).toBeLessThanOrEqual(224);
+  expect(api.getPanel("preview")!.group.width).toBeGreaterThan(0);
+  expect(host.querySelector('[data-testid="content-preview"]')).toBe(content);
 });
