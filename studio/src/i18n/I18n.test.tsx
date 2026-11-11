@@ -179,16 +179,26 @@ it('localizes the complete lint success dialog and updates it when the language 
   }
   act(() => root.render(<I18nProvider initialLocale="zh-CN"><Results /></I18nProvider>));
   const dialog = host.querySelector('[role="dialog"]')!;
-  expect(dialog.getAttribute('aria-label')).toBe('HyperFrame 检查结果');
+  expect(dialog.getAttribute('aria-label')).toBe('项目检查结果');
   expect(dialog.querySelector('h2')?.textContent).toBe('所有检查均通过');
-  expect(dialog.querySelector('p')?.textContent).toBe('HyperFrame 检查结果');
+  expect(dialog.querySelector('p')?.textContent).toBe('项目检查结果');
   expect(dialog.textContent).toContain('未发现错误或警告，合成检查通过。');
   act(() => host.querySelector('button')!.click());
   expect(host.querySelector('[role="dialog"]')).toBe(dialog);
-  expect(dialog.getAttribute('aria-label')).toBe('HyperFrame Lint Results');
+  expect(dialog.getAttribute('aria-label')).toBe('Project check results');
   expect(dialog.querySelector('h2')?.textContent).toBe('All checks passed');
-  expect(dialog.querySelector('p')?.textContent).toBe('HyperFrame Lint Results');
+  expect(dialog.querySelector('p')?.textContent).toBe('Project check results');
   expect(dialog.textContent).toContain('No errors or warnings found. Your composition looks good!');
+  expect(dialog.textContent).not.toContain('HyperFrame');
+});
+
+it('uses OpenMotion in copied project-check instructions', async () => {
+  const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
+  act(() => root.render(<I18nProvider initialLocale="en">
+    <LintModal findings={[{ severity: 'error', message: 'Missing composition' }]} projectId="demo" onClose={vi.fn()} />
+  </I18nProvider>));
+  await act(async () => { [...host.querySelectorAll('button')].find(button => button.textContent === 'Copy to Agent')!.click(); });
+  expect(writeText).toHaveBeenCalledWith('Fix these OpenMotion project check issues for project "demo":\n\n[error] Missing composition');
 });
 
 it('preserves custom console-error titles and original diagnostics in the shared lint dialog', () => {

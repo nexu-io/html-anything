@@ -16,7 +16,7 @@ export function LintModal({
   projectId,
   projectDir,
   title,
-  promptIntro = "Fix these HyperFrames lint issues",
+  promptIntro = "Fix these OpenMotion project check issues",
   onClose,
 }: {
   findings: LintFinding[];
@@ -30,7 +30,7 @@ export function LintModal({
   onClose: () => void;
 }) {
   const { t } = useI18n();
-  const dialogTitle = title ?? t("HyperFrame Lint Results");
+  const dialogTitle = title ?? t("Project check results");
   const errors = findings.filter((f) => f.severity === "error");
   const warnings = findings.filter((f) => f.severity === "warning");
   const hasIssues = findings.length > 0;
