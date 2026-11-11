@@ -35,8 +35,10 @@ export async function exportAdapters(runtimePath: string, dataPath: string, outp
     catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false; throw error; }
   };
   const manifestFile = path.join(runtime, '.codex-plugin/plugin.json');
-  const runtimeManifest = await exists(manifestFile) ? JSON.parse(await readFile(manifestFile, 'utf8')) : null;
-  assert(runtimeManifest === null || (typeof runtimeManifest === 'object' && !Array.isArray(runtimeManifest)), 'Invalid runtime plugin manifest.');
+  // Presence is tracked separately so only a missing manifest uses the legacy fallback; a present null is invalid.
+  const manifestPresent = await exists(manifestFile);
+  const runtimeManifest = manifestPresent ? JSON.parse(await readFile(manifestFile, 'utf8')) : null;
+  assert(!manifestPresent || (typeof runtimeManifest === 'object' && runtimeManifest !== null && !Array.isArray(runtimeManifest)), 'Invalid runtime plugin manifest.');
   const manifestText = (value: unknown, field: string) => {
     if (value === undefined) return undefined;
     assert(typeof value === 'string' && value.trim().length > 0, `Invalid runtime plugin manifest ${field}; host discovery requires a non-empty string.`);

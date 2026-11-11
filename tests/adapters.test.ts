@@ -139,6 +139,7 @@ test('adapter export rejects invalid runtime discovery manifest fields', async (
     await mkdir(path.join(runtime, '.codex-plugin'));
     const manifestFile = path.join(runtime, '.codex-plugin/plugin.json');
     const cases: [unknown, RegExp][] = [
+      [null, /Invalid runtime plugin manifest\./],
       [[], /Invalid runtime plugin manifest\./],
       [{ description: 42 }, /manifest description/],
       [{ description: '' }, /manifest description/],
