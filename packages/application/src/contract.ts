@@ -36,7 +36,9 @@ export async function manifest(directory: string): Promise<PackageManifest> {
   const file = join(directory, "manifest.json"),
     info = await lstat(file);
   if (!info.isFile() || info.size > 32768) throw Error("application manifest must be a bounded regular file");
-  const value: unknown = JSON.parse(await readFile(file, "utf8"));
+  return parseManifest(JSON.parse(await readFile(file, "utf8")));
+}
+export function parseManifest(value: unknown): PackageManifest {
   keys(value, ["schemaVersion", "product", "release", "namespace", "carriers"]);
   if (value.schemaVersion !== 1) throw Error("unsupported application manifest");
   keys(value.product, ["appid", "name", "scheme"]);

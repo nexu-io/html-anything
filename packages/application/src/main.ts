@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { lstat, readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,9 +9,13 @@ import { RuntimeReleaseMismatch } from "@open-motion/standalone/admission";
 import { carriers, manifest, path, type Selection } from "./contract.js";
 import { setup } from "./install.js";
 import { native, start, status, stop } from "./runtime.js";
+import { signals } from "./signals.js";
+import { updates } from "./updates.js";
 
 const help = `odsuite setup --carrier standalone|codexplugin [--home DIR] [--data DIR] [--profile DIR] [--skills DIR] [--codex FILE]
 odsuite start|stop|status|prepare [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite update check|prepare --endpoint URL --public-key FILE [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite update discard [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite recover inspect --root DIR
 odsuite recover apply --root DIR --expected FINGERPRINT
 
@@ -28,9 +33,9 @@ async function main(args: string[]) {
     return;
   }
   const command = args.shift();
-  if (!command || !["setup", "start", "stop", "status", "prepare", "recover"].includes(command))
-    throw Error("expected setup|start|stop|status|prepare|recover");
-  const operation = command === "recover" ? args.shift() : undefined;
+  if (!command || !["setup", "start", "stop", "status", "prepare", "recover", "update"].includes(command))
+    throw Error("expected setup|start|stop|status|prepare|recover|update");
+  const operation = command === "recover" || command === "update" ? args.shift() : undefined;
   const allowed =
     command === "recover"
       ? ["root", ...(operation === "apply" ? ["expected"] : [])]
@@ -40,6 +45,7 @@ async function main(args: string[]) {
           "channel",
           "namespace",
           ...(command === "setup" ? ["carrier", "profile", "skills", "codex"] : []),
+          ...(command === "update" && operation !== "discard" ? ["endpoint", "public-key"] : []),
         ];
   const options = new Map<string, string>();
   for (let i = 0; i < args.length; i++) {
@@ -90,25 +96,29 @@ async function main(args: string[]) {
     else if (command === "start") result = await start(description, selection);
     else if (command === "stop") result = await stop(description, selection);
     else if (command === "status") result = await status(description, selection);
-    else {
-      const cancellation = new AbortController();
-      const interrupt = () => {
-        process.exitCode = 130;
-        cancellation.abort(Error("Preparation interrupted by SIGINT"));
-      };
-      const terminate = () => {
-        process.exitCode = 143;
-        cancellation.abort(Error("Preparation interrupted by SIGTERM"));
-      };
-      process.on("SIGINT", interrupt);
-      process.on("SIGTERM", terminate);
-      try {
-        result = await native(description, selection, cancellation.signal);
-      } finally {
-        process.off("SIGINT", interrupt);
-        process.off("SIGTERM", terminate);
+    else if (command === "update") {
+      if (!["check", "prepare", "discard"].includes(operation ?? ""))
+        throw Error("update requires check|prepare|discard");
+      let publickey = "";
+      if (operation !== "discard") {
+        const key = options.get("public-key");
+        if (!options.get("endpoint") || !key) throw Error("update requires --endpoint and --public-key");
+        const file = await path(key),
+          info = await lstat(file);
+        if (!info.isFile() || info.size > 8192) throw Error("public key must be a bounded regular file");
+        publickey = await readFile(file, "utf8");
       }
-    }
+      const self = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+      result = await signals((signal) =>
+        updates(
+          description,
+          selection,
+          operation as "check" | "prepare" | "discard",
+          { endpoint: options.get("endpoint") ?? "", publickey, name: self.name },
+          signal,
+        ),
+      );
+    } else result = await signals((signal) => native(description, selection, signal));
   }
   process.stdout.write(JSON.stringify({ ok: true, command, ...(operation ? { operation } : {}), result }) + "\n");
   if (command === "prepare" && !["ready"].includes((result as { state: string }).state)) process.exitCode = 1;

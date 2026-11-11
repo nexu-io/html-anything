@@ -10,6 +10,10 @@
     "./s3": {
       "types": "./dist/s3.d.ts",
       "default": "./dist/s3.mjs"
+    },
+    "./kit": {
+      "types": "./dist/kit.d.ts",
+      "default": "./dist/kit.mjs"
     }
   },
   "files": [

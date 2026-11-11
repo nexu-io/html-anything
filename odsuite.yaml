@@ -25,6 +25,7 @@ guard:
       - apps/daemon/src/content
       - apps/daemon/src/content/guidance
       - apps/daemon/src/exports
+      - suites/distribution/src/catalog
       - suites/blob/src/materialize
       - suites/blob/src/control
       - suites/runtime/src/control

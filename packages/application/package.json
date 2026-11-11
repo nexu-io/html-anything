@@ -14,7 +14,9 @@
     "@odsuite/release": "workspace:*",
     "@odsuite/pack": "workspace:*",
     "@open-motion/codexplugin": "workspace:*",
-    "@open-motion/standalone": "workspace:*"
+    "@open-motion/standalone": "workspace:*",
+    "@odsuite/blob": "workspace:*",
+    "@odsuite/distribution": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "24.12.2",
@@ -23,7 +25,6 @@
     "vitest": "4.1.6",
     "@modelcontextprotocol/client": "2.4.0",
     "@open-motion/render": "workspace:*",
-    "@odsuite/blob": "workspace:*",
     "@open-motion/daemon": "workspace:*"
   }
 }

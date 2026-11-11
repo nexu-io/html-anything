@@ -34,9 +34,12 @@ export async function run(args: string[], cwd: string, output: Output): Promise<
     if (args[0] === "recover") return await recovery(args, cwd, output);
     if (args[0] === "inspect") return await inspect(args, cwd, output);
     if (args[0] === "serve") return await serve(args, cwd, output);
-    if (["version", "build", "check", "pack"].includes(args[0] ?? "")) return await pipeline(args, cwd, output);
+    if (["version", "build", "check", "pack", "candidate"].includes(args[0] ?? ""))
+      return await pipeline(args, cwd, output);
     if (args[0] !== "guard")
-      throw new Error("expected subcommand: odsuite guard|dev|inspect|recover|serve|version|build|check|pack");
+      throw new Error(
+        "expected subcommand: odsuite guard|dev|inspect|recover|serve|version|build|check|pack|candidate",
+      );
     if (args.length === 2 && ["--help", "-h"].includes(args[1] ?? "")) {
       output.stdout(`${help}\n`);
       return 0;

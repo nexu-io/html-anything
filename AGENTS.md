@@ -49,12 +49,12 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | blob         | Verified retrieval, typed materialization, CAS/cache, references, actual Uses, retention and GC; uses sidecar ownership and excludes user data.              |
 | release      | Product/channel/version identity, unit manifests, content archives and composition/IO; not installation or workflow quality policy.                          |
 | publish      | Signed generation-publication authority, feed projection and verified retrieval; distribution owns shell negotiation.                                        |
-| distribution | Product metadata, minimum-shell compatibility, platform-shell selection and S3 IO; not installation or runtime commit authority.                             |
+| distribution | Signed product/application-kit catalogs, bounded retrieval and S3 IO; not installation or runtime commit authority.                                          |
 | update       | Candidate discovery, verification and preparation; actual lifecycle owners activate.                                                                         |
 | runtime      | Unconnected content-generation activation/recovery mechanism; its shell-oriented contract is not the current Node-carrier update lifecycle.                  |
 | installer    | Immutable Node-closure installation, durable intent/receipts and carrier selection; sidecar owns authority and explicit interruption recovery.               |
 | pack         | Generic Node closure compilation, dependency notices and verified immutable local archives; carriers choose entries and resources.                           |
-| pipeline     | Shared-version build/package/check orchestration for both Node carriers; workflows choose quality requirements. Publication is not connected.                |
+| pipeline     | Shared-version build/package/check/candidate metadata for both Node carriers; workflows choose quality requirements. Publication is not connected.           |
 | dev          | Repository development configuration, managed builds/watchers and carrier orchestration; sidecar owns all control paths, liveness and lifecycle.             |
 | cli          | Argument parsing, routing and output; mechanisms stay in their suites.                                                                                       |
 | style        | Closed Less/BEM/token/font-manifest validation and explicit build composition/copy; products own tokens/fonts/atoms.                                         |
@@ -78,7 +78,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | packages/motion                                   | Native editing, composition graph/assembly, preview and canvas bridge; no persistence or OS allocation                               |
 | packages/gateway                                  | Fixed-intent PNG tasks, explicit provider adapters and durable verified candidates; workspace owns explicit adoption transactions    |
 | packages/templates                                | Finite built-ins and explicit Prism discovery/source verification, provenance; blob caches resources and workspace creates artifacts |
-| packages/application                              | Product npx setup/control composition, installed carrier selection and explicit host registration; no resource authority             |
+| packages/application                              | Product npx setup/control and candidate verification, installed selection and explicit host registration; no resource authority      |
 | packages/render                                   | Durable export intent, serial fixed-revision execution and verified films; sidecar/blob own OS resources                             |
 | packages/workspace                                | Session/message/artifact ownership, revisions, history, transactions and idempotency shared by HTTP/MCP/Web                          |
 | docs/README.md                                    | Durable documentation index                                                                                                          |
