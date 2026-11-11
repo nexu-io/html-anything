@@ -25,9 +25,12 @@ export async function inspect(description: PackageManifest, selection: Selection
 export async function status(
   description: PackageManifest,
   selection: Selection,
-): Promise<{ state: string; runtime?: Status }> {
+): Promise<{ state: string; root: string; runtime?: Status }> {
   const current = await inspect(description, selection);
-  return current.state === "running" ? { state: current.state, runtime: current.runtime } : current;
+  return {
+    root: selection.data,
+    ...(current.state === "running" ? { state: current.state, runtime: current.runtime } : current),
+  };
 }
 export async function start(description: PackageManifest, selection: Selection) {
   const current = await status(description, selection);
@@ -37,6 +40,7 @@ export async function start(description: PackageManifest, selection: Selection) 
   await usingSession(
     { home: selection.home, product: description.product.appid, scope: selection.scope },
     async (session) => {
+      await operatorReady(session);
       const receipt = await readInstalled(session, description, selection, "standalone");
       await launch(receipt, selection, session);
     },
@@ -45,12 +49,42 @@ export async function start(description: PackageManifest, selection: Selection) 
 }
 export async function stop(description: PackageManifest, selection: Selection) {
   const current = await inspect(description, selection);
-  if (current.state === "stopped" || current.state === "uninitialized") return current;
+  if (current.state === "stopped" || current.state === "uninitialized") return { ...current, root: selection.data };
   if (current.state !== "running") throw Error("application authority requires explicit recovery");
+  if (current.runtime.environment.carrier !== "standalone")
+    throw Error("close the self-hosted Codex stdio connection before stopping its runtime");
   const owner = await observeOwner(selection.data, selection.scope);
   if (!owner || owner.incarnation !== current.link.manager.incarnation)
     throw Error("application manager changed before stop");
   await stopManager(owner);
+  return status(description, selection);
+}
+/** Operator controls must not interrupt an unfinished installation transaction. */
+async function operatorReady(session: Session) {
+  if (await session.gc.read()) throw Error("unfinished collection must resume before runtime launch");
+  if (await session.transitions.read())
+    throw Error("unfinished installation transition must resume before runtime launch");
+}
+export async function restart(description: PackageManifest, selection: Selection) {
+  const prior = await inspect(description, selection);
+  if (!["running", "stopped", "uninitialized"].includes(prior.state))
+    throw Error("application authority requires explicit recovery");
+  if (prior.state === "running" && prior.runtime.environment.carrier !== "standalone")
+    throw Error("close the self-hosted Codex stdio connection before restarting its runtime");
+  await usingSession(
+    { home: selection.home, product: description.product.appid, scope: selection.scope },
+    async (session) => {
+      await operatorReady(session);
+      const receipt = await readInstalled(session, description, selection, "standalone");
+      if (prior.state === "running") {
+        const owner = await observeOwner(selection.data, selection.scope);
+        if (!owner || owner.incarnation !== prior.link.manager.incarnation)
+          throw Error("application manager changed before restart");
+        await stopManager(owner);
+      }
+      await launch(receipt, selection, session);
+    },
+  );
   return status(description, selection);
 }
 async function prepare(factory: Factory, signal?: AbortSignal): Promise<NativePreparation> {
@@ -80,6 +114,7 @@ export async function native(description: PackageManifest, selection: Selection,
   const owner = await usingSession(
     { home: selection.home, product: description.product.appid, scope: selection.scope },
     async (session) => {
+      await operatorReady(session);
       const receipt = await readInstalled(session, description, selection, "standalone");
       signal?.throwIfAborted();
       return launch(receipt, selection, session, "prepare");

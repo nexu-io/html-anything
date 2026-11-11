@@ -285,11 +285,38 @@ it("continues installed MCP projects in the actual Web, retains history and reop
     mcp = undefined;
     expect((await f.command(["status"])).state).toBe("running");
     await page.goto("about:blank");
+    // A pending durable update must reject restart before touching the live owner.
+    const options = { home: f.home, product: "io.openmotion.app", scope: f.scope },
+      requestId = randomUUID();
+    let installation = await open(options);
+    try {
+      await installation.transitions.begin({ requestId, intent: { operator: "restart-test" }, data: null });
+    } finally {
+      await installation.close();
+    }
+    await expect(f.command(["restart"])).rejects.toMatchObject({
+      stdout: expect.stringContaining("unfinished installation transition"),
+    });
+    expect((await connectRoot(f.data, f.scope)).manager.incarnation).toBe(manager.incarnation);
+    installation = await open(options);
+    try {
+      await installation.transitions.advance({ requestId, expectedRevision: 0, data: null, complete: true });
+    } finally {
+      await installation.close();
+    }
+    expect(await f.command(["restart"])).toMatchObject({ state: "running", root: f.data });
+    const replacement = (await connectRoot(f.data, f.scope)).manager;
+    expect(replacement.incarnation).not.toBe(manager.incarnation);
+    mcp = await attach();
+    expect(await mcp.call("project_read", owner)).toEqual(continued);
+    if (film) expect(await mcp.call("export_read", { ...owner, id: film.id })).toEqual(film);
+    await mcp.close();
+    mcp = undefined;
     await f.command(["stop"]);
     expect((await readDirectory(f.data)).manager.phase).toBe("closed");
     expect(await observeProcesses(f.data)).toEqual([]);
     const restarted: { runtime: Status } = await f.command(["start"]);
-    expect((await connectRoot(f.data, f.scope)).manager.incarnation).not.toBe(manager.incarnation);
+    expect((await connectRoot(f.data, f.scope)).manager.incarnation).not.toBe(replacement.incarnation);
     mcp = await attach();
     expect(await mcp.call("project_read", owner)).toEqual(continued);
     expect((await mcp.call("session_get", { sessionId: session.id })).artifacts.map((a) => a.id)).toContain(

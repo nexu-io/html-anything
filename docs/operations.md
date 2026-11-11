@@ -136,12 +136,28 @@ Use the returned `npm.path` tarball with `npm exec --yes --ignore-scripts --pack
 
 ```text
 odsuite setup --carrier standalone|codexplugin --home INSTALLATION --data DATA_BASE
-odsuite start|stop|status|prepare --home INSTALLATION --data DATA_BASE --channel beta --namespace default
+odsuite start|restart|stop|status|prepare --home INSTALLATION --data DATA_BASE --channel beta --namespace default
 odsuite recover inspect --root EXACT_AUTHORITY_ROOT
 odsuite recover apply --root EXACT_AUTHORITY_ROOT --expected FINGERPRINT
 ```
 
+For the shortest clean setup/start path, use [the README](../README.md#try-a-local-installation). Pin a candidate tarball by its recorded source/version/SHA before testing; do not substitute a moving registry tag. Set an explicit npm `--cache` outside `--home`: a cache created inside an unclaimed installation home makes ownership ambiguous and setup refuses it. Keep installation, runtime data, host profile and Skills paths explicit. The returned `result.root` is the exact runtime authority root and `result.runtime.web` is the current URL; commands never open it automatically.
+
+Installed `restart` validates release admission and the selected receipt before stopping anything, rejects unfinished update/GC transactions, then drains only the observed stamped Manager and records the replacement's actual Use while holding installation authority. Stop failure preserves authority and prevents replacement. A later launch failure leaves a stopped root for an explicit retry; it does not roll back code or delete data. Existing MCP transports must reconnect. `start` is idempotent for an already matching runtime; it is not an update/transaction recovery operation. Codex attachments reuse standalone, while a self-hosted stdio runtime must retire by closing that connection before operator stop/restart or activation.
+
+| Observation                                        | Next action                                                                                                                                            |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `runtime_release_mismatch`                         | Use the matching kit, or drain through the actual owner's entry before explicitly activating another version. Do not take over.                        |
+| Unfinished update or collection                    | Resume the original request through `update` or `gc`; inspect its status and preserve the journal.                                                     |
+| Interrupted runtime authority                      | Inspect the exact `result.root` with installed `recover inspect --root`; apply only the returned fingerprint after actual dead-owner proof.            |
+| Interrupted installation authority                 | Inspect `<INSTALLATION>/authority/io.openmotion.app` separately, recover only proven dead ownership, then retry the identical intent.                  |
+| Self-hosted Codex runtime                          | Close its stdio session, wait for drain, then start a managed instance if desired.                                                                     |
+| `installation_conflict` / `installation_integrity` | Check the selected owned home and preserved diagnostics. Never empty a nonempty home or delete authority to bypass refusal.                            |
+| Codex write approval refused                       | Keep tool annotations and host policy intact; use the host's normal approval flow in the selected profile. Refusal before dispatch changes no project. |
+
 The package channel must match `--channel`; namespace defaults to its product metadata. Setup installs both carriers at one version. Codex setup also accepts explicit `--profile`, `--skills` and `--codex`. Profile selects `CODEX_HOME` (default existing environment selection or `~/.codex`); Skills must use supported home/workspace `.agents/skills` discovery. Their existing home/workspace parent is required. Use isolated profiles/workspaces for verification. No invented scan setting or daily-profile writes are part of acceptance.
+
+For isolated real-host validation, launch Codex with the same `CODEX_HOME` and workspace used during registration. Ensure the selected Skills parent exists and is discoverable through supported home/workspace `.agents/skills` paths. An unattended read-only host can allow discovery and refuse `project_save` before Daemon dispatch. Where supported, `codex exec --approve-for-me` uses the host's automatic approval review; it is not a promise that every request will be accepted. Preserve the user's policy, inspect actual tool results and keep real model-backed evidence distinct from SDK transport tests. Never copy an authentication file into delivery artifacts or modify the daily profile for acceptance.
 
 Installation defaults to `~/.local/share/open-motion`. Its authority is `authority/<product>`, immutable applications are `applications/<product>/<channel>/<namespace>/versions/<carrier>/<version>/<digest>`, and the default data base is `data`. Sidecar derives actual runtime root `<DATA_BASE>/<channel>/<namespace>`. The carrier is not another resource-factory dimension. Installer-granted SQLite intents/receipts and registration ownership manifests stay separate from runtime user data; do not copy/reset/delete them. Setup alone does not create runtime data. Preserve earlier committed steps after a later failure and retry the identical intent; interrupted authority requires explicit recovery first.
 

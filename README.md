@@ -9,7 +9,7 @@ apps/       Web and Daemon product applications
 packages/   shared product domains, theme and components
 ```
 
-`refactor/odsuite` is an independent construction line. The complete existing product remains on [`feature/motion`](https://github.com/nexu-io/html-anything/tree/feature/motion). This workspace does not yet replace its full editor, production Skills, media generation, templates or export capabilities. `main` and `legacy` retain their own history.
+`refactor/odsuite` is an independent construction line. The complete existing product remains on [`feature/motion`](https://github.com/nexu-io/openmotion/tree/feature/motion). This workspace does not yet replace its full editor, production Skills, media generation, templates or export capabilities. `main` and `legacy` retain their own history.
 
 ## Develop locally
 
@@ -37,6 +37,21 @@ pnpm exec odsuite dev stop --channel=dev --namespace=default
 `start` returns the actual Web URL. It watches source by default; use `restart` to activate rebuilt code. Codex uses the same entry point. Sidecar owns control state, process identity, ports, paths and lifecycle; no global bin or shortcut scripts are installed.
 
 The current product supports sessions/artifacts, native source editing, text/appearance/numeric animation, bounded key/clip timing, canvas movement, persistent history, external-file composition navigation/shared-source editing with numeric local clocks and bounded parent-host movement/right-edge trim, persistent PNG/PCM16 WAV import/insertion with native playback and independent fixed-rate audio source-in-point/rate/gain/mute controls, source-local aligned PNG/WAV link/unlink with linked timing and history, and isolated native previews. Unresolved composition clocks remain read-only; broader media/audio editing, additional codecs, layouts/preferences, production generation providers still need implementation and their own acceptance. Fixed-revision native MP4 export is available on the qualified platform. Both carriers build independent Node closures. A local npm kit installs both closures and optionally registers Codex MCP/Skills; see [installation](docs/operations.md#local-npm-installation). Registry publication and automatic updates remain separate delivery work.
+
+## Try a local installation
+
+Use the exact `application.tgz` from the owning candidate record; that record pins its source, version, digest and qualification. No registry publication or global bin is required. Keep the npm cache separate from the installation home: setup must claim an empty home itself.
+
+```sh
+OM_KIT=/absolute/path/to/application.tgz
+OM_REVIEW="$PWD/.artifacts/review"
+npm exec --yes --ignore-scripts --cache "$OM_REVIEW/npm-cache" --package "$OM_KIT" -- odsuite setup --carrier standalone --home "$OM_REVIEW/installation" --data "$OM_REVIEW/data" --channel beta --namespace review
+npm exec --yes --ignore-scripts --cache "$OM_REVIEW/npm-cache" --package "$OM_KIT" -- odsuite start --home "$OM_REVIEW/installation" --data "$OM_REVIEW/data" --channel beta --namespace review
+```
+
+Use the kit's actual channel. Open the returned `result.runtime.web` URL yourself; startup does not open a browser. Replace `start` with `status`, `restart` or `stop` to control this same installation and identity. `result.root` identifies its actual sidecar runtime root. Restart replaces the managed runtime and requires attached MCP clients to reconnect; committed projects, history and films persist. This directory contains user data: do not treat it as a disposable build cache.
+
+For Codex, run the same setup with `--carrier codexplugin` and explicit isolated `--profile` / `--skills` paths, then use that profile in the intended workspace. The registered transport uses the installed closure outside the npm cache and shares a matching standalone instance. A self-hosted Codex runtime closes with its stdio connection; operator stop/restart asks you to detach it first. See [installation and host approval](docs/operations.md#local-npm-installation) for discovery, native preparation, update and recovery boundaries. Development watchers remain the separate repository `pnpm exec odsuite dev` flow above.
 
 ## Read and contribute
 
