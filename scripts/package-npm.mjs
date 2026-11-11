@@ -47,7 +47,7 @@ export function checkReleaseLocks(pkg, lockfile, runtime) {
   assert.equal(runtime.chromium, PUPPETEER_REVISIONS['chrome-headless-shell'], 'Browser must match the locked Puppeteer release');
   assert(Object.keys(runtime.targets || {}).length, 'At least one native target is required');
   for (const target of Object.values(runtime.targets)) {
-    assert(target.platform && target.arch && target.minimumOS, 'Native runtime requires an OS/CPU and minimum system version');
+    assert(target.platform && target.arch && (target.platform === 'darwin' || target.minimumOS), 'Native runtime requires an OS/CPU and, outside macOS, a minimum system version');
     for (const key of ['node', ...nativeComponents(target)]) {
       assert.equal(new URL(target[key].url).protocol, 'https:', 'Native sources require HTTPS');
       assert.match(target[key].sha256, /^[a-f0-9]{64}$/, 'Pin native SHA256: ' + key);

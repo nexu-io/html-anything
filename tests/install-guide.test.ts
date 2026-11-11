@@ -12,7 +12,7 @@ import { runFile } from '../scripts/runtime-assets.mjs';
 const pkg = { name: '@openmotion/app', version: '0.6.4-test.1', private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } };
 const manifest = { schemaVersion: 1, version: pkg.version, templateEnvironment: 'dev', commit: 'a'.repeat(40),
   application: { sha256: 'b'.repeat(64) }, locks: { npm: 'c'.repeat(64), native: 'd'.repeat(64) },
-  runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64', minimumOS: '26.0' } } } };
+  runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64' }, windows: { platform: 'win32', arch: 'x64', minimumOS: 'Windows 11' } } } };
 const config = { endpoint: 'https://example.r2.cloudflarestorage.com', bucket: 'example-guides', publicOrigin: 'https://download.example.invalid' };
 test('installation URLs separate the moving channel entry from the exact immutable version', () => {
   assert.equal(storagePlan({ channel: 'test', version: pkg.version }, config).versionKey, `open-motion/dev/${pkg.version}/install.md`);
@@ -20,17 +20,32 @@ test('installation URLs separate the moving channel entry from the exact immutab
   assert.equal(storagePlan({ channel: 'stable', version: '0.6.4' }, config).versionKey, 'open-motion/0.6.4/install.md');
   assert.equal(storagePlan({ channel: 'stable', version: '0.6.4' }, config).fixedKey, 'open-motion/install.md');
 });
-async function fixture(t: any, candidate = false) {
+async function fixture(t: any, candidate = false, declaration = manifest) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'motion-guide-test-')); t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'package/payload'), { recursive: true });
   await writeFile(path.join(root, 'package/package.json'), JSON.stringify(pkg));
-  await writeFile(path.join(root, 'package/payload/release-npm.json'), JSON.stringify(manifest));
+  await writeFile(path.join(root, 'package/payload/release-npm.json'), JSON.stringify(declaration));
   const tgz = path.join(root, 'candidate.tgz');
   await runFile('tar', ['-czf', tgz, '-C', root, 'package']);
   const directory = path.join(root, 'guide'), record = await generateInstallGuide(tgz, directory, candidate);
   return { directory, record };
 }
 const previousGuide = '# Install OpenMotion 0.6.3-test.1\n';
+test('guides allow macOS without a version floor and retain declared minimums for other targets and older packages', async t => {
+  const { directory } = await fixture(t);
+  const text = await readFile(path.join(directory, 'install.md'), 'utf8');
+  assert(text.includes('darwin/arm64, win32/x64 (Windows 11+)'));
+  assert(!text.includes('26.0+') && !text.includes('undefined+'));
+  const missingWindowsMinimum = structuredClone(manifest);
+  missingWindowsMinimum.runtime.targets.windows.minimumOS = '';
+  assert.throws(() => validateGuideIdentity(pkg, missingWindowsMinimum), /native target/);
+  const missingCPU = structuredClone(manifest);
+  missingCPU.runtime.targets.mac.arch = '';
+  assert.throws(() => validateGuideIdentity(pkg, missingCPU), /native target/);
+  const legacy = { ...manifest, runtime: { targets: { ...manifest.runtime.targets, mac: { ...manifest.runtime.targets.mac, minimumOS: '26.0' } } } };
+  const older = await fixture(t, false, legacy);
+  assert((await readFile(path.join(older.directory, 'install.md'), 'utf8')).includes('darwin/arm64 (26.0+)'));
+});
 function storage(directory: string, record: any, previous = previousGuide) {
   const plan = storagePlan(record, config), objects = new Map<string, Buffer>(), writes: any[] = [];
   objects.set(plan.fixedKey, Buffer.from(previous));

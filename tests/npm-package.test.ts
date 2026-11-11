@@ -31,6 +31,11 @@ test('shared Agent instructions keep the release controls synchronized', async (
 test('release packaging rejects floating npm versions, lock drift, unpinned native assets and a mismatched browser', async () => {
   const pkg = await json('package.json'), lock = await json('package-lock.json'), runtime = await json('scripts/runtime-lock.json');
   checkReleaseLocks(pkg, lock, runtime);
+  assert.equal(runtime.targets['mac-arm64'].minimumOS, undefined);
+  const missingCPU = structuredClone(runtime); missingCPU.targets['mac-arm64'].arch = '';
+  assert.throws(() => checkReleaseLocks(pkg, lock, missingCPU), /OS\/CPU/);
+  const missingWindowsMinimum = structuredClone(runtime); missingWindowsMinimum.targets['win-x64'].minimumOS = '';
+  assert.throws(() => checkReleaseLocks(pkg, lock, missingWindowsMinimum), /minimum system version/);
   const floating = structuredClone(pkg); floating.dependencies.gsap = '^' + pkg.dependencies.gsap;
   const floatingLock = structuredClone(lock); floatingLock.packages[''].dependencies = floating.dependencies;
   assert.throws(() => checkReleaseLocks(floating, floatingLock, runtime), /exact npm/);
@@ -52,6 +57,8 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     const built = await packageNpm(output, version), release = await json(built.manifest);
     assert.equal(release.version, version); assert.equal(release.installer.version, version); assert.equal(release.format, 'npm');
     assert.equal(release.templateEnvironment, 'dev');
+    assert.equal(release.runtime.targets['mac-arm64'].minimumOS, undefined);
+    assert.equal(release.runtime.targets['win-x64'].minimumOS, 'Windows 11');
     assert.equal(release.mcp.profile, 'phase1'); assert.deepEqual(release.mcp.tools, mcpRegistry().tools.map(tool => tool.name));
     assert.deepEqual(release.skills, [...phase1Skills].sort());
     assert.equal(release.installer.sha256, await sha256(built.installer)); assert.equal(release.application.sha256, await sha256(built.application));

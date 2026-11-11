@@ -96,7 +96,6 @@ async function prepareComponent(native, component) {
       }
       if (await ready(native, component)) return;
       const asset = info[component];
-      if (process.platform === 'darwin') assert(Number(os.release().split('.')[0]) >= 25, 'Pinned native downloads require macOS 26 or later; supply compatible media and browser paths on older systems.');
       if (process.platform === 'win32') assert(Number(os.release().split('.')[2]) >= 22000, 'Pinned native runtime requires Windows 11 or later');
       console.error(`OpenMotion: preparing pinned ${component} in the background.`);
       const archive = path.join(config.cacheDirectory, 'downloads', asset.sha256 + (new URL(asset.url).pathname.endsWith('.zip') ? '.zip' : '.tar.gz'));

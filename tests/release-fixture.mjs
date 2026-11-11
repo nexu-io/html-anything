@@ -21,7 +21,7 @@ export async function candidateFixture(t, branch = 'main', options = {}) {
   const manifest = { schemaVersion: 1, version, format: 'npm', templateEnvironment, commit,
     application: { url: './' + path.basename(application), sha256: await sha256(application) },
     locks: { npm: await sha256(path.join(app, 'package-lock.json')), native: await sha256(path.join(app, 'scripts/runtime-lock.json')) },
-    runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64', minimumOS: '26.0' } } } };
+    runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64' } } } };
   await writeJSON(path.join(pkg, 'payload/release-npm.json'), manifest);
   await writeJSON(path.join(pkg, 'package.json'), { name: '@openmotion/app', version, private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } });
   const tgz = path.join(build, `openmotion-app-${version}.tgz`);

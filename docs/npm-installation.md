@@ -59,7 +59,7 @@ Set-Location "$motionTest\workspace"
 codex
 ```
 
-These are documented commands, not proof of Windows acceptance. Use a directly executable host or pass its JavaScript CLI through `--codex`. The native lock declares Mac arm64/macOS 26 and Windows x64/Windows 11; other platforms are not implied supported by npm installation.
+These are documented commands, not proof of Windows acceptance. Use a directly executable host or pass its JavaScript CLI through `--codex`. The native lock declares Mac arm64 and Windows x64/Windows 11. OpenMotion adds no macOS version gate: proceed with installation and the native executable checks, rather than treating the build/test machine's OS version as a minimum. Node.js and the pinned browser/media binaries must still run on the target machine; this is not acceptance of every macOS version. Other platforms are not implied supported by npm installation.
 
 ## Test template data (DEV)
 
