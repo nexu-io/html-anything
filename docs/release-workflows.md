@@ -18,13 +18,13 @@ The default `main` currently contains the legacy project. GitHub requires a `wor
 
 Register these files together:
 
-- `.github/workflows/motion-candidate.yml`, `motion-publish-test.yml` and `motion-publication-recovery.yml`.
-- `.github/scripts/motion-release.mjs`, `motion-scan.mjs`, `motion-registry-smoke.mjs`, `publish-install-guide.mjs` and `.github/gitleaks.toml`.
+- `.github/workflows/motion-candidate.yml`, `motion-publish-test.yml`, `motion-publication-recovery.yml` and `motion-install-check.yml` (read-only manual rechecks).
+- `.github/scripts/motion-release.mjs`, `motion-scan.mjs`, `motion-registry.mjs`, `motion-registry-smoke.mjs`, `publish-install-guide.mjs` and `.github/gitleaks.toml`.
 - `scripts/runtime-assets.mjs`, `release-version.mjs`, `install-guide.mjs`, `docs/install.md`, `docs/templates/release-record.md` and `docs/templates/candidate-install.md`.
 
 Protect changes to the trusted control files and `feature/motion`; keep default-branch registration aligned. There is no `motion-test-publish` GitHub Environment prerequisite or Review deployments step in this version.
 
-For `@openmotion/app`, open npm **Settings → Trusted publishing → Add trusted publisher → GitHub Actions**. Set owner **`nexu-io`**, repository **`html-anything`**, workflow filename **`motion-publish-test.yml`** (no directory), **leave Environment blank**, and allow **npm publish** plus **Allow npm dist-tag**. The latter is separately required to advance `test` after native acceptance; enabling publish alone is insufficient. If an older entry names an environment, it must be updated to match this workflow before publication. GitHub-hosted runners use Node 26.11.1; credentialed npm jobs explicitly install npm 11.21.2 for OIDC dist-tag support and `id-token: write`; no stored npm token is needed. The recovery caller never calls npm publish or dist-tag. npm does not support a dist-tag dry-run; do not test that command against the real registry without channel-write authorization. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
+For `@openmotion/app`, open npm **Settings → Trusted publishing → Add trusted publisher → GitHub Actions**. Set owner **`nexu-io`**, repository **`html-anything`**, workflow filename **`motion-publish-test.yml`** (no directory), **leave Environment blank**, and allow **npm publish** plus **Allow npm dist-tag**. The latter is separately required to advance `test` after registry propagation; enabling publish alone is insufficient. If an older entry names an environment, it must be updated to match this workflow before publication. GitHub-hosted runners use Node 26.11.1; credentialed npm jobs explicitly install npm 11.21.2 for OIDC dist-tag support and `id-token: write`; no stored npm token is needed. The recovery caller never calls npm publish or dist-tag. npm does not support a dist-tag dry-run; do not test that command against the real registry without channel-write authorization. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
 
 Reuse the existing R2 settings. Only the final snapshot step receives the storage credentials:
 
@@ -80,6 +80,16 @@ It then automatically:
 5. Shows publication status and guide links independently of the later installation checks.
 
 OIDC authenticates the publisher. Automatic npm provenance remains disabled because the trusted publication workflow SHA may differ from the selected prebuilt application source SHA. Candidate/manifest/lock/hash records provide traceability, not a signed build attestation.
+
+## Independent installation rechecks
+
+Use **Motion installation check** (`motion-install-check.yml`) to check an existing public test version without starting publication. After its manual entry is registered on the default branch, select `feature/motion`, enter the exact version, and run. This entry has only `contents: read` and `actions: read`; it has no npm OIDC or R2 credentials and cannot publish, move tags or write install.md. Only candidate resolution receives the read-only GitHub token; installed consumer processes receive an allowlisted environment and isolated application/data/Skills/host directories.
+
+The workflow verifies the original successful candidate's ZIP/file hashes and integrated source, then downloads the exact npm bytes on macOS ARM64 and Windows x64. It checks fresh/repeated setup, unrelated MCP-setting preservation, DEV configuration, Chromium/FFmpeg/ffprobe preparation, eleven Tools, five Skills and resources. Both platforms complete independently (`fail-fast: false`). Metadata/tarball requests retry 404/408/429/5xx and transient network errors for up to 15 minutes per request. Authorization errors, malformed metadata and hash mismatches fail immediately. A failed retry cannot retain an old successful download report.
+
+Read each platform's job summary and `installation-<platform>-<run>-<attempt>` artifacts. Failure stays visible in this independent run and cannot resume publishing. The existing post-publication jobs still run and remain non-blocking. Reports record the tested package source/SHA256 separately from the check-code SHA; registry download alone does not certify native installation. Real model creation, template service access, Windows 11 desktop behavior and human playback remain separate acceptance checks.
+
+A same-repository PR changing this workflow, registry helpers or their tests runs the fixed test.7 regression case without publication; fork PRs are skipped. This PR regression must be refreshed before its original candidate artifact expires. Production operation requires the separately reviewed default-branch entry registration; this change does not register or run anything on main.
 
 ## Versions and records
 
