@@ -1,5 +1,12 @@
 # 公开变更记录
 
+## 2026-11-11: Check historical media before offering MCP restoration
+
+- **Problem and audience:** Agents and creators could be told that a historical version was restorable after its media blobs had disappeared; restoration then exposed a low-level file-copy error.
+- **Implementation:** Public version metadata checks native and retained blob contents and hashes. Restoration repeats the check and verifies staged files before the existing transaction. Unavailable files are reported by project-relative path as `VERSION_NOT_RESTORABLE`, with `applied=false`.
+- **Validation:** `tests/phase1.test.ts` covers missing and corrupt audio, image and video blobs, unchanged current source hashes/version/asset index after rejection, successful complete-media restoration and identical-content restoration without a new version. It also covers native blob read failures and recovery from stale capture-time missing flags. Actual check results are recorded with the delivery.
+- **Scope:** This repairs the existing MCP history contract. It does not change personas, pricing, the Studio GUI history contract or distribution formats. Native host and other operating-system acceptance remain separate checks.
+
 
 ## REQ-20261109-004：README 资源闭环与 Agent 创作标语
 

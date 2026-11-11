@@ -118,7 +118,8 @@ export class Phase1Service {
         const index = await this.versions(args.projectId).index();
         const version = index.versions.find(item => item.requestId === args.requestId);
         if (version) {
-          const result = { projectId: args.projectId, version: this.versions(args.projectId).publicVersion(version), revision: version.revision, recovered: true };
+          const versions = this.versions(args.projectId);
+          const result = { projectId: args.projectId, version: await versions.withHistory(history => versions.publicVersion(version, history)), revision: version.revision, recovered: true };
           await atomicJson(file, { ...previous, state: 'completed', result }); return result;
         }
         for (const id of await readdir(path.join(this.store.directory, 'jobs')).catch(e => { if (e.code === 'ENOENT') return []; throw e; })) {
@@ -187,7 +188,7 @@ export class Phase1Service {
       if (args.exportJobId && !jobs.some(job => job.id === args.exportJobId)) throw new Error('EXPORT_NOT_FOUND: 任务不属于该项目');
       const exportJob = args.exportJobId ? await this.publicJob(args.exportJobId) : jobs[0] ? await this.publicJob(jobs[0].id) : null;
       if ((await scoped.get()).revision !== state.revision) throw new Error('VERSION_CONFLICT: 读取期间工程已变化');
-      return { projectId, sessionId: owner.id, project: state.project, revision: state.revision, version: versions.publicVersion(version),
+      return { projectId, sessionId: owner.id, project: state.project, revision: state.revision, version: await versions.publicVersion(version, history),
         currentVersionId: version.versionId, currentVersionNumber: version.versionNumber, dataDirectory: this.store.directory,
         hyperframesCli: path.join(this.runtimeRoot, 'node_modules/hyperframes/bin/hyperframes.mjs'), authoringGuide: path.join(this.runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'),
         requirements: meta.requirements ?? (await scoped.conversation(projectId)).messages.map(message => message.content).join('\n'),
@@ -260,7 +261,7 @@ export class Phase1Service {
         const all = [...index.versions].reverse().filter(item => !page || item.versionNumber < page.after[0]);
         const shown = all.slice(0, 5), current = index.versions.at(-1)!;
         return { projectId: args.projectId, currentVersionId: current.versionId, currentVersionNumber: current.versionNumber,
-          versions: shown.map(item => ({ ...versions.publicVersion(item), isCurrent: item.versionId === current.versionId })), pageSize: 5,
+          versions: await Promise.all(shown.map(async item => ({ ...await versions.publicVersion(item, history), isCurrent: item.versionId === current.versionId }))), pageSize: 5,
           hasMore: all.length > 5, nextCursor: all.length > 5 ? cursor({ kind: 'versions', scope: args.projectId, after: [shown.at(-1)!.versionNumber, shown.at(-1)!.versionId] }) : null };
       });
     }
