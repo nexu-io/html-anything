@@ -371,3 +371,107 @@ it("keeps project handoff and navigation explicit across workspace views", async
   report.handoff = { original, second, retrySameRequest: saveIds[0] === saveIds[1], restored: true };
   expect(driver.errors).toEqual([]);
 }, 90000);
+
+it("creates, edits, copies, renames and removes source files through persistent history and repairs broken references", async () => {
+  const page = driver.page;
+  await page.goto(url);
+  await ready();
+  await page.getByText("会话选项", { exact: true }).click();
+  await page.getByLabel("会话标题", { exact: true }).fill("Source file lifecycle");
+  await click("创建会话");
+  await page.getByRole("button", { name: "新建工程", exact: true }).click();
+  await page.getByLabel("工程标题", { exact: true }).fill("Editable files");
+  await click("创建工程");
+  await page.getByRole("tab", { name: "文件", exact: true }).click();
+  const path = page.getByLabel("源文件路径", { exact: true }),
+    select = page.getByLabel("管理源文件", { exact: true }),
+    panel = page.getByLabel("工程源文件", { exact: true });
+  const add = async (value: string) => {
+    await path.fill(value);
+    await click("新建源文件");
+  };
+  await add("scenes/card.html");
+  const content =
+    '<main data-composition-id="card" data-width="160" data-height="90" data-duration="1"><p>Editable child</p></main>';
+  await page.getByRole("textbox", { name: "scenes/card.html", exact: true }).fill(content);
+  await click("保存");
+  await expect.poll(() => select.inputValue()).toBe("scenes/card.html");
+  await path.fill("copy.html");
+  await click("复制源文件");
+  await expect.poll(() => page.getByRole("textbox", { name: "copy.html", exact: true }).inputValue()).toBe(content);
+  const ids: string[] = [];
+  let lose = true;
+  await page.route("**/api/project_save", async (route) => {
+    ids.push(route.request().postDataJSON().requestId);
+    if (!lose) return route.continue();
+    lose = false;
+    await route.fetch();
+    await route.abort("failed");
+  });
+  await path.fill("parts/renamed.html");
+  await page.getByRole("button", { name: "重命名源文件", exact: true }).click();
+  await expect.poll(() => page.getByRole("button", { name: "重试", exact: true }).isEnabled()).toBe(true);
+  await expect.poll(() => path.isEnabled()).toBe(false);
+  await click("重试");
+  await page.unrouteAll({ behavior: "wait" });
+  expect(ids).toHaveLength(2);
+  expect(ids[0]).toBe(ids[1]);
+  await expect.poll(() => select.inputValue()).toBe("parts/renamed.html");
+  await expect
+    .poll(() => page.getByRole("textbox", { name: "parts/renamed.html", exact: true }).inputValue())
+    .toBe(content);
+  await click("撤销");
+  await expect.poll(() => panel.getByRole("button", { name: "copy.html", exact: true }).count()).toBe(1);
+  await click("重做");
+  await expect.poll(() => panel.getByRole("button", { name: "copy.html", exact: true }).count()).toBe(0);
+  await click("index.html");
+  const root = page.getByRole("textbox", { name: "index.html", exact: true }),
+    original = await root.inputValue();
+  await root.fill(
+    original.replace(
+      "</main>",
+      '<div data-hf-id="file-card" data-composition-id="card" data-composition-src="parts/renamed.html" data-start="0" data-duration="1"></div></main>',
+    ),
+  );
+  await click("保存");
+  await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
+  await select.selectOption("parts/renamed.html");
+  await path.fill("parts/final.html");
+  await click("重命名源文件");
+  await expect.poll(() => page.getByLabel("预览状态", { exact: true }).textContent()).not.toBe("预览就绪");
+  await expect.poll(() => select.isEnabled()).toBe(true);
+  await expect.poll(() => panel.getByRole("button", { name: "index.html", exact: true }).isEnabled()).toBe(true);
+  await click("index.html");
+  await expect.poll(() => page.getByRole("button", { name: "删除源文件", exact: true }).isEnabled()).toBe(false);
+  expect(await root.inputValue()).toContain("parts/renamed.html");
+  await root.fill((await root.inputValue()).replace("parts/renamed.html", "parts/final.html"));
+  await click("保存");
+  await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
+  await select.selectOption("scenes/card.html");
+  await expect.poll(() => page.getByRole("button", { name: "删除源文件", exact: true }).isEnabled()).toBe(false);
+  await page.getByLabel("确认删除源文件", { exact: true }).check();
+  await click("删除源文件");
+  await expect.poll(() => panel.getByRole("button", { name: "scenes/card.html", exact: true }).count()).toBe(0);
+  await click("撤销");
+  await expect.poll(() => panel.getByRole("button", { name: "scenes/card.html", exact: true }).count()).toBe(1);
+  await click("重做");
+  await expect.poll(() => panel.getByRole("button", { name: "scenes/card.html", exact: true }).count()).toBe(0);
+  await page.reload();
+  await ready();
+  await page.getByRole("tab", { name: "文件", exact: true }).click();
+  await expect.poll(() => panel.getByRole("button", { name: "parts/final.html", exact: true }).count()).toBe(1);
+  await expect.poll(() => panel.getByRole("button", { name: "scenes/card.html", exact: true }).count()).toBe(0);
+  await click("parts/final.html");
+  await expect
+    .poll(() => page.getByRole("textbox", { name: "parts/final.html", exact: true }).inputValue())
+    .toBe(content);
+  expect(driver.errors).toEqual([]);
+  expect(await page.locator("style,[style]").count()).toBe(0);
+  await driver.capture("source-file-lifecycle");
+  report.sourceFiles = {
+    reference: "eabdaa06dd1f27ca96cd8c4450a4d984f06fc316",
+    retryIds: ids,
+    retained: "parts/final.html",
+    removed: "scenes/card.html",
+  };
+}, 60000);

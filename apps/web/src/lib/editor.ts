@@ -1,11 +1,13 @@
 import type { Input, Operation, Output } from "@open-motion/daemon/contract";
 import {
   type Artifact,
+  changeSources,
   Fault,
   initialFiles,
   type Project,
   type Selection,
   type SessionDetail,
+  type SourceChange,
   type State,
 } from "@open-motion/workspace/contract";
 import type { Client } from "../api.js";
@@ -110,6 +112,27 @@ export class Editor {
       expectedRevision: this.project.revision,
       files: this.project.files.map((file) => ({ ...file, content: this.source(file.path) })),
     });
+    this.fileDrafts.clear();
+    this.dirty = false;
+  }
+  async changeSource(change: SourceChange) {
+    const owner = this.project;
+    if (!owner) throw Error("先选择工程");
+    changeSources(owner.files, change);
+    await this.save();
+    const project = this.project;
+    if (!project || project.artifactId !== owner.artifactId || project.sessionId !== owner.sessionId)
+      throw Error("源文件操作的工程上下文已改变");
+    const files = changeSources(project.files, change);
+    const next = await this.mutate("project_save", {
+      sessionId: project.sessionId,
+      artifactId: project.artifactId,
+      expectedRevision: project.revision,
+      files,
+    });
+    if (this.project !== project) throw Error("源文件保存期间工程上下文已改变，请刷新确认");
+    this.project = next;
+    this.draft = next.files.find((file) => file.path === "index.html")?.content ?? "";
     this.fileDrafts.clear();
     this.dirty = false;
   }
