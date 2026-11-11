@@ -64,7 +64,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ### 复制到 Codex 安装并体验
 
-适用于 macOS / Linux。先克隆本公开仓库的 `main` 分支，并用 Codex 打开该目录。需要支持插件的 Codex CLI、Git 和 Node.js 22.18+（含 npm）。将下面这段发到 Codex 对话框：
+适用于 macOS / Linux。先克隆本公开仓库的 `feature/motion` 分支，并用 Codex 打开该目录。需要支持插件的 Codex CLI、Git 和 Node.js 22.18+（含 npm）。将下面这段发到 Codex 对话框：
 
 ```text
 请在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。

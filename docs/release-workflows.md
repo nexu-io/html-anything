@@ -1,6 +1,6 @@
 # Motion releases: build, test, publish
 
-Use two manual Actions entries: **Motion candidate build**, then **Motion npm publication**, in `nexu-io/openmotion` on `main`. The daily flow is **build → optional local testing → manual publish**. Neither entry runs on pushes, PR merges, tags or a schedule. Merging a workflow change does not publish a package or configure npm permissions.
+Use two manual Actions entries: **Motion candidate build**, then **Motion npm publication**, in `nexu-io/openmotion` on `main`. The daily flow is **build → optional local testing → manual publish**. Neither entry runs on pushes, PR merges, tags or a schedule. Merging a workflow change does not publish a package or configure npm permissions. Daily development branches from the latest `origin/main` and PRs target `main`.
 
 | Operator step | Automated work |
 | --- | --- |

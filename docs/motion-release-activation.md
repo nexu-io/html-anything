@@ -6,7 +6,7 @@ A push or merge runs validation; it does not publish a package, advance npm tags
 
 ## Repository and release identity
 
-New source-install commands, generated guide/package links and release guards use `nexu-io/openmotion`. New candidate builds and manual publication/recovery require `main`; application source must be integrated there. Frozen pre-rename candidate receipts keep their original repository/ref identity and remain verifiable against the same GitHub producer run and artifact hashes. They are not rewritten.
+The repository was renamed to `nexu-io/openmotion` on 2026-11-11, retaining repository ID `1235403234`, Git history and the `main` default branch. Repository guards, installation URLs and generated package links use the new address. Local clones should update their origin URL. Historical candidate receipts retain the former repository name and remain valid only through the current repository's authenticated artifact lookup and digest verification; new manual operations require `nexu-io/openmotion`. New candidate builds and manual publication/recovery require `main`; application source must be integrated there.
 
 Before the next npm publication, a package maintainer must verify or update the external trusted publisher for `@openmotion/app` in npm:
 
@@ -18,7 +18,9 @@ Before the next npm publication, a package maintainer must verify or update the 
 | Environment | Blank |
 | Permissions | npm publish and npm dist-tag |
 
-Source changes do not update npm trust. Keep the workflow filename because it is part of the trusted-publisher identity. Existing R2 secrets and variables stay with the same GitHub repository; never copy their values into source. Only authorized publication/storage jobs receive publication credentials.
+The repository rename does not update npm trusted-publisher configuration. A package maintainer must set the repository to `openmotion` in npm before the next publication and confirm both publish and dist-tag permissions. Existing published package bytes, versions and tags are unchanged by the rename. Keep the workflow filename because it is part of the trusted-publisher identity.
+
+Existing R2 secrets and variables stay with the same GitHub repository; never copy their values into source. Only authorized publication/storage jobs receive publication credentials.
 
 ## Installation and onboarding rollout
 
@@ -26,4 +28,4 @@ The canonical installation-success reply contract and few-shots are in [docs/ins
 
 To make those changes available through the website's existing short installation prompt, build and publish a new test candidate from `main`, then promote its matching DEV guide. The `/open-motion/dev/install.md` path and npm package name `@openmotion/app` stay the same; `dev` names the test channel, not the Git branch. Stable publication uses the stable guide separately. Never point a public guide at an unpublished version or claim that a source-only change has reached installed hosts.
 
-Use the [release workflow manual](release-workflows.md) for exact-byte publication, native installation checks and snapshot recovery. Keep candidate validation, target-machine installation, real host invitation/creation and human audiovisual acceptance separate. Repository migration and green CI do not authorize publication.
+Use the [release workflow manual](release-workflows.md) for exact-byte publication, native installation checks and snapshot recovery. Keep candidate validation, target-machine installation, real host invitation/creation and human audiovisual acceptance separate. Repository migration and green CI do not authorize publication. Historical registration began with [PR #222](https://github.com/nexu-io/openmotion/pull/222).
