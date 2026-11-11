@@ -7,17 +7,15 @@ import { resolveInstalled } from '../scripts/resolve-installed.mjs';
 
 test('installation onboarding routes only to existing Skills', async () => {
   const script = await readFile(new URL('../scripts/install-motion.command', import.meta.url), 'utf8');
-  const references = [...script.matchAll(/进入 ([a-z0-9-]+) 的/g)];
-  assert.ok(references.length > 0, 'Installation onboarding must reference a Skill');
-  for (const [, skill] of references) {
-    await access(new URL(`../skills/${skill}/SKILL.md`, import.meta.url));
-  }
+  assert.match(script, /scripts\/install-onboarding\.mjs/);
+  const contract = await readFile(new URL('../docs/install.md', import.meta.url), 'utf8');
+  assert.match(contract, /After acceptance, use motion-template-to-video/);
+  await access(new URL('../skills/motion-template-to-video/SKILL.md', import.meta.url));
   const guide = new URL('../docs/usage.md', import.meta.url);
   const guideText = await readFile(guide, 'utf8');
-  const onboarding = guideText.split('### 安装完成后的引导（Codex / Agent）')[1]?.split('### 首次体验默认规则')[0] ?? '';
+  assert.match(guideText, /install\.md#installation-success-reply/);
   const canonical = new URL('../skills/motion-template-to-video/SKILL.md', import.meta.url);
   for (const [url, body] of [
-    [guide, onboarding],
     ...await Promise.all(['../README.md', '../docs/README.zh-CN.md'].map(async file => {
       const url = new URL(file, import.meta.url);
       return [url, await readFile(url, 'utf8')] as const;

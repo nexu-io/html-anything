@@ -114,6 +114,8 @@ export async function setup(options) {
     const installed = await readJSON(path.join(appRoot, '.npm-install.json'));
     assert.equal(installed.applicationSHA256, manifest.application.sha256, 'Installed application identity mismatch');
     assert.equal(JSON.stringify(installed.runtime), JSON.stringify(manifest.runtime), 'Native manifest changed for the same application; rebuild the application release');
+    const { prepareInstallationOnboarding } = await import(pathToFileURL(path.join(appRoot, 'scripts/install-onboarding.mjs')).href);
+    const onboarding = await prepareInstallationOnboarding({ appRoot, dataDirectory, templateEnvironment });
     const targets = await skillTargets(plan, appRoot), directories = [];
     for (const target of targets) directories.push({ target, existed: await checkSkillOwner(target, home, plan.host, plan.layout), movedOld: false, movedNew: false });
     for (const target of await obsoleteSkills(plan, home, targets)) directories.push({ target, existed: true, removeOnly: true, movedOld: false, movedNew: false });
@@ -139,7 +141,7 @@ export async function setup(options) {
       await plan.register();
       for (const item of directories) await rm(item.backup, { recursive: true, force: true }).catch(error => console.error('Old instruction backup retained: ' + error.message));
       await startNativePreparation(appRoot).catch(error => console.error('OpenMotion: background preparation could not start; retry in Studio or run prepare. ' + error.message));
-      return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'background-preparation; status and retry available in Studio' };
+      return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'background-preparation; status and retry available in Studio', onboarding };
     } catch (error) {
       if (wroteLauncher && !previous) await rm(launcher, { force: true });
       if (wroteState) { if (previous) await writeJSON(stateFile, previous); else await rm(stateFile, { force: true }); }

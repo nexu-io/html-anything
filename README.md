@@ -550,6 +550,8 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 
 ### Quick start
 
+For any successful Agent-led installation, follow the [installation reply rules and examples](docs/install.md#installation-success-reply) in the current conversation; setup provides real template summaries. Invite before creation and preserve the accepted template.
+
 For a packaged install, give your agent the [test installation guide](https://releases.open-design.ai/open-motion/dev/install.md). It pins the package version and walks through isolated setup. To run from source, follow the steps below.
 
 If MCP tools are missing or fail to connect, use the installed [connection diagnosis and recovery guide](docs/npm-installation.md#missing-mcp-tools-or-a-failed-connection) to inspect the actual host configuration and verify the original workspace before continuing.
