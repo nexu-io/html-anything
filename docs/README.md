@@ -29,6 +29,7 @@
 - [motion-director.md](motion-director.md)
 - [motion-extension-scope.md](motion-extension-scope.md)
 - [npm-installation.md](npm-installation.md)
+- [Lightweight plugin installation proposal](lightweight-plugin-plan.md)
 - [Agent installation guide source template](install.md)
 - [test and stable acceptance](release-guide.md)
 - [Manual candidate build, test publication and immutable snapshots](release-workflows.md)

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { checkReleaseLocks, packageNpm } from '../scripts/package-npm.mjs';
@@ -11,7 +11,6 @@ import { mcpRegistry } from '../mcp.ts';
 
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
 async function verifyTrackingPolicy(application: string, mode: 'test' | 'stable') {
-  await symlink(path.resolve('node_modules'), path.join(application, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
   const result = JSON.parse(await runFile(process.execPath, ['--experimental-strip-types', path.resolve('tests/tracking-package.ts'), application, mode]));
   assert.equal(result.passed, true); assert.equal(result.external_requests, 0);
 }
@@ -42,7 +41,7 @@ test('release packaging rejects floating npm versions, lock drift, unpinned nati
   assert.throws(() => checkReleaseLocks(pkg, lock, browser), /Browser must match/);
 });
 
-test('test npm artifacts contain their application, locked manifest and no bundled native runtime', { timeout: 60_000 }, async () => {
+test('test npm artifacts contain locked production dependencies for both targets without video binaries', { timeout: 180_000 }, async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-npm-pack-'));
   const before = await readFile('package.json', 'utf8');
   const unapproved = ['docs/private-sentinel.md', 'scripts/private-sentinel.mjs', 'private-sentinel.ts'];
@@ -102,11 +101,25 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     }
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);
     assert.equal(await sha256(path.join(application, 'scripts/runtime-lock.json')), release.locks.native);
+    assert.deepEqual(release.application.dependencyTargets, ['darwin/arm64', 'win32/x64']);
+    for (const name of ['@esbuild/darwin-arm64', '@esbuild/win32-x64', '@img/sharp-darwin-arm64', '@img/sharp-win32-x64', '@img/sharp-libvips-darwin-arm64']) {
+      assert.equal((await json(path.join(application, 'node_modules', name, 'package.json'))).version,
+        (await json('package-lock.json')).packages['node_modules/' + name].version);
+    }
+    await assert.rejects(readFile(path.join(application, 'node_modules/typescript/package.json')), { code: 'ENOENT' });
+    await assert.rejects(readFile(path.join(application, 'node_modules/@phosphor-icons/react/package.json')), { code: 'ENOENT' });
+    assert.equal((await json(path.join(application, 'package.json'))).dependencies['@phosphor-icons/react'], undefined);
+    await assert.rejects(readFile(path.join(application, 'node_modules/.package-lock.json')), { code: 'ENOENT' });
+    await assert.rejects(readFile(path.join(application, 'node_modules/hyperframes/dist/skills/media-use/SKILL.md')), { code: 'ENOENT' });
+    assert((await readFile(path.join(application, 'node_modules/hyperframes/dist/chunk-BLBMPEBX.js'), 'utf8')).includes('var POSTHOG_API_KEY = "";'));
+    const upstreamReadme = await readFile(path.join(application, 'node_modules/adm-zip/README.md'), 'utf8');
+    assert(upstreamReadme.includes('OpenMotion distribution: normalized') && upstreamReadme.includes('/example/'));
+    assert((await readFile(path.join(application, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'), 'utf8')).length > 0, 'Keep the engine authoring guide');
     const entries = await runFile('tar', ['-tf', built.application]);
-    assert(!/\/(node_modules|runtime)\//.test(entries));
+    assert(!/\.\/runtime\//.test(entries));
     assert(entries.includes('skills/motion-production/SKILL.md'));
     for (const file of unapproved) assert(!entries.includes(file), 'Unapproved file shipped: ' + file);
-    assert(!/\/(tests|src)\//.test(entries), 'Development sources and fixtures must not ship');
+    assert(!entries.split('\n').filter(file => !file.startsWith('./node_modules/')).some(file => /\/(tests|src)\//.test(file)), 'Application development sources and fixtures must not ship');
     assert(entries.includes('skills/motion-recreate/scripts/measure_frame.mjs'));
     assert(entries.includes('skills/motion-recreate/references/verify.md'));
     assert(entries.includes('studio/build/index.html'));
@@ -126,7 +139,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
   }
 });
 
-test('DEV npm packages carry their catalog environment without changing the checkout', { timeout: 60_000 }, async () => {
+test('DEV npm packages carry their catalog environment without changing the checkout', { timeout: 180_000 }, async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-npm-dev-'));
   try {
     const before = await readFile('shared/template-config.json', 'utf8');
@@ -143,7 +156,7 @@ test('DEV npm packages carry their catalog environment without changing the chec
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
-test('stable artifacts stage publication instead of replacing latest and retain source publish guards', { timeout: 60_000 }, async () => {
+test('stable artifacts stage publication instead of replacing latest and retain source publish guards', { timeout: 360_000 }, async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-npm-stable-'));
   try {
     const built = await packageNpm(path.join(directory, 'build'), '0.6.4');
