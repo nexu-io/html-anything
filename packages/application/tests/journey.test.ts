@@ -16,6 +16,7 @@ import { bundle, resolve as release, releaseChannel } from "@odsuite/release";
 import { connectRoot, managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
 import type { Input, Operation, Output } from "@open-motion/daemon/contract";
 import { nativeTools } from "@open-motion/render/tools";
+import type { Status } from "@open-motion/standalone";
 import { expect, it } from "vitest";
 import { hash } from "@/contract.js";
 
@@ -89,6 +90,10 @@ async function fixture() {
     if (!response.ok) throw Error(result.stdout);
     return response.result;
   };
+  await writeFile(
+    join(evidence, "fixture.json"),
+    JSON.stringify({ root, home, data, scope, version, archive }, null, 2),
+  );
   return { root, evidence, archive, home, data, scope, version, command };
 }
 
@@ -145,8 +150,11 @@ it("continues installed MCP projects in the actual Web, retains history and reop
     await client.connect(transport);
     return {
       close: async () => {
-        await client.close();
-        await transport.close();
+        try {
+          await client.close();
+        } finally {
+          await transport.close();
+        }
       },
       call: async <K extends Operation>(name: K, args: Input<K>): Promise<Output<K>> => {
         const result = await client.callTool({ name, arguments: args });
@@ -155,11 +163,14 @@ it("continues installed MCP projects in the actual Web, retains history and reop
       },
     };
   };
-  let driver: Awaited<ReturnType<typeof browser>> | undefined, mcp: Awaited<ReturnType<typeof attach>> | undefined;
+  let driver: Awaited<ReturnType<typeof browser>> | undefined,
+    mcp: Awaited<ReturnType<typeof attach>> | undefined,
+    failure: unknown;
+  const cleanupErrors: unknown[] = [];
   try {
     const nativeManifest = process.env.OPEN_MOTION_NATIVE_MANIFEST;
     if (nativeManifest) await seedNative(f, resolve(nativeManifest));
-    const started = await f.command(["start"]),
+    const started: { runtime: Status } = await f.command(["start"]),
       manager = (await connectRoot(f.data, f.scope)).manager;
     mcp = await attach();
     const session = await mcp.call("session_create", {
@@ -212,7 +223,7 @@ it("continues installed MCP projects in the actual Web, retains history and reop
         )
         .toBeCloseTo(0.5, 2);
     };
-    await page.goto(started.runtime.url);
+    await page.goto(started.runtime.web);
     await ready();
     await preview();
     await expect
@@ -277,14 +288,14 @@ it("continues installed MCP projects in the actual Web, retains history and reop
     await f.command(["stop"]);
     expect((await readDirectory(f.data)).manager.phase).toBe("closed");
     expect(await observeProcesses(f.data)).toEqual([]);
-    const restarted = await f.command(["start"]);
+    const restarted: { runtime: Status } = await f.command(["start"]);
     expect((await connectRoot(f.data, f.scope)).manager.incarnation).not.toBe(manager.incarnation);
     mcp = await attach();
     expect(await mcp.call("project_read", owner)).toEqual(continued);
     expect((await mcp.call("session_get", { sessionId: session.id })).artifacts.map((a) => a.id)).toContain(
       artifact.id,
     );
-    await page.goto(restarted.runtime.url);
+    await page.goto(restarted.runtime.web);
     await ready();
     await preview();
     await driver.capture("installed-restored");
@@ -316,12 +327,16 @@ it("continues installed MCP projects in the actual Web, retains history and reop
     );
   } catch (error) {
     await driver?.capture("installed-failure").catch(() => undefined);
-    throw error;
+    failure = error;
   } finally {
-    await driver?.close();
-    await mcp?.close();
-    await f.command(["stop"]);
+    const disconnected = await Promise.allSettled([driver?.close(), mcp?.close()]);
+    const stopped = await Promise.allSettled([f.command(["stop"])]);
+    cleanupErrors.push(
+      ...[...disconnected, ...stopped].flatMap((result) => (result.status === "rejected" ? [result.reason] : [])),
+    );
   }
+  if (failure || cleanupErrors.length)
+    throw new AggregateError([...(failure ? [failure] : []), ...cleanupErrors], "installed journey or drain failed");
   const s = await open({ home: f.home, product: "io.openmotion.app", scope: f.scope });
   try {
     expect((await s.uses()).every((u) => u.state === "retired")).toBe(true);
@@ -329,4 +344,7 @@ it("continues installed MCP projects in the actual Web, retains history and reop
     await s.close();
   }
   expect(await observeProcesses(f.data)).toEqual([]);
+  const authority = join(f.home, "authority", "io.openmotion.app");
+  expect((await readDirectory(authority)).manager.phase).toBe("closed");
+  expect(await observeProcesses(authority)).toEqual([]);
 }, 180000);
