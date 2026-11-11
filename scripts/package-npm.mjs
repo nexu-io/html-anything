@@ -10,6 +10,10 @@ import { packageTemplateConfig } from '../shared/template-config.ts';
 import { checkReleaseVersion, releaseTemplateEnvironment } from './release-version.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+// Studio browser dependencies are already compiled into studio/build.
+const runtimeDependencies = ['@hyperframes/core', '@hyperframes/parsers', '@hyperframes/player', '@hyperframes/sdk',
+  '@hyperframes/shader-transitions', '@hyperframes/studio-server', '@tanstack/react-virtual', 'acorn', 'gsap',
+  'hyperframes', 'mediabunny', 'puppeteer-core', 'react', 'react-dom'];
 // GitHub serves the full showcase. npm ships the application and its technical documentation.
 function isShowcaseAsset(file) {
   return /^(?:examples|library)\//.test(file) || file.startsWith('docs/readme/');
@@ -55,6 +59,44 @@ export function checkReleaseLocks(pkg, lockfile, runtime) {
   }
 }
 
+async function bundleDependencies(application, temporary, runtime) {
+  const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
+  const targets = [];
+  for (const [name, target] of Object.entries(runtime.targets)) {
+    const stage = path.join(temporary, name);
+    await mkdir(stage);
+    for (const file of ['package.json', 'package-lock.json']) await cp(path.join(application, file), path.join(stage, file));
+    await runFile(process.execPath, [npm, 'ci', `--os=${target.platform}`, `--cpu=${target.arch}`, '--omit=dev', '--ignore-scripts', '--bin-links=false', '--no-audit', '--no-fund'], { cwd: stage });
+    // Merge common JavaScript once; keep each supported platform's optional native packages.
+    await cp(path.join(stage, 'node_modules'), path.join(application, 'node_modules'), { recursive: true });
+    await rm(stage, { recursive: true, force: true });
+    targets.push(`${target.platform}/${target.arch}`);
+  }
+  await rm(path.join(application, 'node_modules/.package-lock.json'), { force: true });
+  const dependencies = path.join(application, 'node_modules');
+  for (const name of ['hyperframes/dist/skills/media-use', 'zod/src/v3/tests', 'zod/src/v4/mini/tests', 'zod/src/v4/classic/tests']) {
+    await rm(path.join(dependencies, name), { recursive: true, force: true });
+  }
+  // Keep upstream documentation and licenses without distributing example machine paths.
+  const examples = [
+    ['@hyperframes/core/dist/telemetryRedaction.js', /\/Users\/kim\/My Drive\/x\.mp4/g],
+    ['adm-zip/README.md', /\/home\/me\//g],
+    ['escalade/readme.md', /\/Users\/lukeed\/oss\/?/g],
+    ...['mediabunny/dist/mediabunny.d.ts', 'mediabunny/dist/modules/src/misc.d.ts', 'mediabunny/src/misc.ts', 'modern-tar/dist/fs/index.d.ts'].map(file => [file, /\/home\/user\//g]),
+    ...['postcss/lib/input.d.ts', 'postcss/lib/node.d.ts'].map(file => [file, /\/home\/ai\//g]),
+  ];
+  for (const [name, pattern] of examples) {
+    const filename = path.join(dependencies, name), text = await readFile(filename, 'utf8');
+    const normalized = text.replace(pattern, '/example/');
+    if (normalized !== text) await writeAtomic(filename, (name.endsWith('.md') ? '> ' : '// ') + 'OpenMotion distribution: normalized documentation example paths.\n' + normalized);
+  }
+  const telemetry = path.join(dependencies, 'hyperframes/dist/chunk-BLBMPEBX.js');
+  const text = await readFile(telemetry, 'utf8'), disabled = text.replace(/var POSTHOG_API_KEY = "[^"]+";/, 'var POSTHOG_API_KEY = "";');
+  assert.notEqual(disabled, text, 'Review upstream telemetry before packaging a changed engine');
+  await writeAtomic(telemetry, '// OpenMotion distribution: removed upstream telemetry identifier.\n' + disabled);
+  return targets;
+}
+
 export async function packageNpm(output = path.join(root, 'dist/npm-local'), version, templateEnvironment) {
   output = path.resolve(output);
   const explicitVersion = version !== undefined;
@@ -64,6 +106,8 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
   const lockfile = JSON.parse(await readFile(path.join(root, 'package-lock.json'), 'utf8'));
   const runtime = JSON.parse(await readFile(path.join(root, 'scripts/runtime-lock.json'), 'utf8'));
   checkReleaseLocks(pkg, lockfile, runtime);
+  pkg.dependencies = Object.fromEntries(Object.entries(pkg.dependencies).filter(([name]) => runtimeDependencies.includes(name)));
+  lockfile.packages[''].dependencies = pkg.dependencies;
   version ??= pkg.version + '-local.1';
   const { mcpRegistry } = await import('../mcp.ts');
   const registry = mcpRegistry();
@@ -112,11 +156,12 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
     const plugin = JSON.parse(await readFile(path.join(application, '.codex-plugin/plugin.json'), 'utf8'));
     plugin.version = version;
     await writeJSON(path.join(application, '.codex-plugin/plugin.json'), plugin);
+    const dependencyTargets = await bundleDependencies(application, temporary, runtime);
     const archive = path.join(output, `openmotion-application-${pkg.version}${templateConfig.environment === 'dev' ? '-dev' : ''}.tar.gz`);
     await runFile(process.platform === 'win32' ? path.join(process.env.SystemRoot, 'System32/tar.exe') : 'tar', ['-czf', archive, '-C', application, '.'], { env: { ...process.env, COPYFILE_DISABLE: '1' } });
     const manifest = { schemaVersion: 1, version: pkg.version, format: 'npm', templateEnvironment: templateConfig.environment,
       commit, run: process.env.GITHUB_RUN_ID || null, attempt: process.env.GITHUB_RUN_ATTEMPT || '1',
-      application: { url: './' + path.basename(archive), sha256: await sha256(archive) },
+      application: { url: './' + path.basename(archive), sha256: await sha256(archive), dependencyTargets },
       locks: { npm: await sha256(path.join(application, 'package-lock.json')), native: await sha256(path.join(root, 'scripts/runtime-lock.json')) },
       mcp: { profile: registry.profile, tools: registry.tools.map(tool => tool.name) }, skills, runtime };
     // The embedded manifest omits the containing tgz's identity to avoid a self-hash cycle.

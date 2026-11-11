@@ -6,7 +6,7 @@ import os from 'node:os';
 import { realpathSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
-import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, relativePath, runFile, withLock, writeAtomic, writeJSON } from './runtime-assets.mjs';
+import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, relativePath, runFile, sha256, withLock, writeAtomic, writeJSON } from './runtime-assets.mjs';
 import { ensureNativeRuntime, startNativePreparation } from './npm-runtime.mjs';
 import { hosts, hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
 import { checkTransport, redact } from './check-installed-mcp.mjs';
@@ -56,6 +56,11 @@ export async function localManifest(filename) {
     return { ...asset, url: url.href };
   };
   manifest.application = resolveAsset(manifest.application);
+  if (manifest.application.dependencyTargets !== undefined) {
+    assert(Array.isArray(manifest.application.dependencyTargets) && manifest.application.dependencyTargets.length > 0
+      && manifest.application.dependencyTargets.every(target => typeof target === 'string' && /^[a-z0-9]+\/[a-z0-9]+$/.test(target)), 'Invalid bundled dependency targets');
+    assert(/^[a-f0-9]{64}$/.test(manifest.locks?.npm), 'Bundled dependencies require a pinned npm lock');
+  }
   for (const target of Object.values(manifest.runtime.targets)) {
     for (const component of nativeComponents(target)) {
       target[component] = resolveAsset(target[component]);
@@ -67,6 +72,7 @@ export async function localManifest(filename) {
 
 export async function setup(options) {
   const manifest = await localManifest(options.manifest || bundledManifest);
+  if (manifest.application.dependencyTargets) assert(manifest.application.dependencyTargets.includes(`${process.platform}/${process.arch}`), 'Bundled dependencies do not support this OS/CPU');
   if (!options.manifest) assert.equal(manifest.version, (await readJSON(new URL('../package.json', import.meta.url))).version, 'Bundled application must match the npm package version');
   const templateEnvironment = manifest.templateEnvironment ?? 'prod';
   assert(['dev', 'prod'].includes(templateEnvironment), 'Invalid template environment');
@@ -103,9 +109,17 @@ export async function setup(options) {
         if (manifest.templateEnvironment) assert.equal((await readJSON(path.join(temporary, 'shared/template-config.json')))?.environment, templateEnvironment, 'Application template environment does not match manifest');
         for (const file of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'skills/motion-production/SKILL.md']) await readFile(path.join(temporary, file));
         assert(!contains(temporary, process.execPath), 'Node must remain external to the lightweight application');
-        const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
-        console.error('OpenMotion: installing locked npm runtime (no native media/browser download).');
-        await runFile(process.execPath, [npm, 'ci', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund'], { cwd: temporary });
+        if (manifest.application.dependencyTargets) {
+          assert.equal(await sha256(path.join(temporary, 'package-lock.json')), manifest.locks.npm, 'Bundled npm lock mismatch');
+          for (const [name, version] of Object.entries(pkg.dependencies || {})) {
+            relativePath(temporary, 'node_modules/' + name + '/package.json');
+            assert.equal((await readJSON(path.join(temporary, 'node_modules', name, 'package.json')))?.version, version, 'Missing or mismatched bundled dependency: ' + name);
+          }
+        } else {
+          const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
+          console.error('OpenMotion: installing locked npm runtime (legacy application).');
+          await runFile(process.execPath, [npm, 'ci', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund'], { cwd: temporary });
+        }
         await writeJSON(path.join(temporary, '.npm-install.json'), { schemaVersion: 1, applicationSHA256: manifest.application.sha256,
           cacheDirectory: path.join(home, 'cache/native'), runtime: manifest.runtime, allowLocalAssets: true });
         await rename(temporary, appRoot);

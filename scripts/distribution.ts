@@ -436,7 +436,7 @@ export const distributionDocuments = [
   'tracking/README.md', 'tracking/INTEGRATION.md', 'tracking/posthog-geoip.hog',
   'docs/agent-adapters.md', 'docs/browser-runtime.md', 'docs/design-system.md', 'docs/editor-fork.md',
   'docs/hyperframes.md', 'docs/mcp-phase1-tools.md', 'docs/model-gateway.md', 'docs/motion-director.md',
-  'docs/motion-extension-scope.md', 'docs/npm-installation.md', 'docs/install.md', 'docs/release-guide.md', 'docs/release-workflows.md', 'docs/templates/release-record.md', 'docs/project-workspace.md',
+  'docs/motion-extension-scope.md', 'docs/npm-installation.md', 'docs/lightweight-plugin-plan.md', 'docs/install.md', 'docs/release-guide.md', 'docs/release-workflows.md', 'docs/templates/release-record.md', 'docs/project-workspace.md',
   'docs/repository-migration.md', 'docs/session-architecture.md', 'docs/shared-editor.md',
   'docs/README.zh-CN.md', 'docs/README.ja.md',
   'docs/usage.md', 'docs/motion-md.md', 'docs/motion-md.zh-CN.md',

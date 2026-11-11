@@ -58,3 +58,34 @@ test('the scanner opens the nested application, rejects hidden private content a
   await runFile('tar', ['-czf', linked, '-C', f.app, '.']);
   await assert.rejects(unpackChecked(linked, path.join(f.work, 'extracted')), /links and special/);
 });
+
+test('bundled dependencies must match the production lock and still pass private-content scanning', async t => {
+  const f = await candidateFixture(t), { binary } = await scanner(t);
+  const dependency = path.join(f.app, 'node_modules/fixture-dependency');
+  await mkdir(dependency, { recursive: true });
+  await writeJSON(path.join(dependency, 'package.json'), { version: '1.0.0' });
+  const lock = { packages: { 'node_modules/fixture-dependency': { version: '1.0.0' } } };
+  await writeJSON(path.join(f.app, 'package-lock.json'), lock);
+  await writeJSON(path.join(f.app, 'scripts/runtime-lock.json'), { targets: f.manifest.runtime.targets });
+  const appArchive = path.join(f.pkg, 'payload', f.manifest.application.url.slice(2)), tgz = path.join(f.work, 'bundled.tgz');
+  const repack = async () => {
+    await runFile('tar', ['-czf', appArchive, '-C', f.app, '.']);
+    await writeJSON(path.join(f.pkg, 'payload/release-npm.json'), { ...f.manifest,
+      application: { ...f.manifest.application, sha256: await sha256(appArchive), dependencyTargets: ['darwin/arm64'] },
+      locks: { npm: await sha256(path.join(f.app, 'package-lock.json')), native: await sha256(path.join(f.app, 'scripts/runtime-lock.json')) } });
+    await runFile('tar', ['-czf', tgz, '-C', f.work, 'package']);
+  };
+  await repack();
+  const result = await scanPackage(tgz, binary);
+  assert(result.reports.some(r => r.kind === 'dependencies'));
+  await writeJSON(path.join(dependency, 'package.json'), { version: '2.0.0' }); await repack();
+  await assert.rejects(scanPackage(tgz, binary), /production lock/);
+  await writeJSON(path.join(dependency, 'package.json'), { version: '1.0.0' });
+  lock.packages['node_modules/fixture-dependency'].dev = true;
+  await writeJSON(path.join(f.app, 'package-lock.json'), lock); await repack();
+  await assert.rejects(scanPackage(tgz, binary), /production lock/);
+  lock.packages['node_modules/fixture-dependency'].dev = false;
+  await writeJSON(path.join(f.app, 'package-lock.json'), lock);
+  await writeFile(path.join(dependency, '.npmrc'), 'registry=https://example.invalid'); await repack();
+  await assert.rejects(scanPackage(tgz, binary), /private-file/);
+});

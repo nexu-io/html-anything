@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { createGunzip } from 'node:zlib';
-import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, writeFile, chmod } from 'node:fs/promises';
+import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile, chmod } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -62,13 +62,30 @@ export function privacyFindings(name, text, kind = 'source') {
     };
     if (fixtures[name]) text = text.replace(fixtures[name], '/synthetic/redaction-fixture');
   }
-  if (/(?:^|\/)(?:outputs|research|node_modules|\.artifacts|\.motion-data(?:-dev)?)(?:\/|$)/.test(name)
+  if (/(?:^|\/)(?:outputs|research|\.artifacts|\.motion-data(?:-dev)?)(?:\/|$)/.test(name)
+    || kind !== 'dependencies' && /(?:^|\/)node_modules(?:\/|$)/.test(name)
     || /(?:^|\/)(?:\.npmrc|\.DS_Store|id_rsa|id_ed25519)$/.test(name)
     || /\.(?:log|pem|key|p12|pfx)$/.test(name)) add('private-file');
   if (/(?:^|\/)\.env(?:\.|$)/.test(name) && !(kind === 'source' && /(?:^|\/)\.env\.(?:example|development)$/.test(name))) add('environment-file');
   if (/https?:\/\/[^\s"'<>)]*(?:powerformer\.(?:net|com)|feishu\.(?:cn|com)|larksuite\.com)/i.test(text)) add('internal-link');
   if (/\/(?:Users|home)\/[a-zA-Z0-9_.-]+\/|[a-z]:\\Users\\[^\\\s]+\\|\/var\/folders\//i.test(text)) add('personal-path');
   return findings;
+}
+
+async function checkDependencyPackages(directory, packages, prefix = 'node_modules/') {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    if (entry.name.startsWith('@')) {
+      await checkDependencyPackages(path.join(directory, entry.name), packages, prefix + entry.name + '/');
+    } else {
+      assert(entry.isDirectory(), 'Unexpected bundled dependency entry: ' + prefix + entry.name);
+      const name = prefix + entry.name, declared = packages[name];
+      const pkg = JSON.parse(await readFile(path.join(directory, entry.name, 'package.json')));
+      assert(declared && !declared.dev && declared.version === pkg.version, 'Bundled dependency is not in the production lock: ' + name);
+      const nested = path.join(directory, entry.name, 'node_modules');
+      const exists = await lstat(nested).catch(error => { if (error.code !== 'ENOENT') throw error; });
+      if (exists) await checkDependencyPackages(nested, packages, name + '/node_modules/');
+    }
+  }
 }
 
 async function scanTree(directory, kind, binary) {
@@ -146,7 +163,17 @@ export async function scanPackage(tgz, binary) {
     const applicationPkg = JSON.parse(await readFile(path.join(work, 'application/package.json'))); assert.equal(applicationPkg.version, pkg.version);
     const templates = JSON.parse(await readFile(path.join(work, 'application/shared/template-config.json')));
     assert.equal(templates.environment, manifest.templateEnvironment, 'Application template defaults differ from the manifest');
-    const reports = await Promise.all([scanTree(path.join(work, 'outer'), 'package', binary), scanTree(path.join(work, 'application'), 'package', binary)]);
+    const reports = [];
+    if (manifest.application.dependencyTargets) {
+      const runtime = JSON.parse(await readFile(path.join(work, 'application/scripts/runtime-lock.json')));
+      assert.deepEqual(manifest.application.dependencyTargets, Object.values(runtime.targets).map(t => `${t.platform}/${t.arch}`), 'Bundled dependency targets differ from the native lock');
+      const lock = JSON.parse(await readFile(path.join(work, 'application/package-lock.json')));
+      const dependencies = path.join(work, 'application/node_modules');
+      await checkDependencyPackages(dependencies, lock.packages);
+      await rename(dependencies, path.join(work, 'dependencies'));
+      reports.push(await scanTree(path.join(work, 'dependencies'), 'dependencies', binary));
+    }
+    reports.push(...await Promise.all([scanTree(path.join(work, 'outer'), 'package', binary), scanTree(path.join(work, 'application'), 'package', binary)]));
     return { status: 'passed', version: pkg.version, tgzSHA256: await sha256(tgz), applicationSHA256: manifest.application.sha256, reports };
   } finally { await rm(work, { recursive: true, force: true }); }
 }

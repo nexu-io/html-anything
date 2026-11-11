@@ -25,7 +25,7 @@ PR / main 工作流执行清单、类型、Studio 构建与回归、安装/打�
 
 ## 固定运行时
 
-`scripts/runtime-lock.json` 锁定版本、来源和 SHA256：Node 26.11.1、Chromium 156.0.8078.47、FFmpeg 9.0.2、Hyperframes 0.9.7。校验后才解包。网页只编译一次；npm 直接依赖使用精确版本、package-lock.json 固定传递依赖，目标机用 npm ci --omit=dev --ignore-scripts；安装器没有外部 npm 依赖。浏览器必须与锁定的 Puppeteer 版本一致。完整 ZIP 的生产依赖仍按目标 OS/CPU 分目录装配预编译包，禁用跨平台安装脚本，不复用构建机的 node_modules。Mac 改用 [Martin Riedl 的公开 9.0.2 构建](https://ffmpeg.martin-riedl.de/)，FFmpeg/ffprobe 分别固定带构建日期/版本的 ZIP 和上游 SHA256；完整包自动合并到原 runtime/media/bin 布局，不再 checkout 私有冻结归档。它们是第三方预编译包。Windows 使用 Gyan 官网指向的 GitHub 镜像，固定 9.0.2 地址与原 SHA256；Gyan 站点直链在本次原生 CI 下载超时。重定向必须保持 HTTPS；所有原生来源公开，下载器不发送仓库凭据。
+`scripts/runtime-lock.json` 锁定版本、来源和 SHA256：Node 26.11.1、Chromium 156.0.8078.47、FFmpeg 9.0.2、Hyperframes 0.9.7。校验后才解包。网页只编译一次；npm 直接依赖使用精确版本、package-lock.json 固定传递依赖，npm 构建时按目标 OS/CPU 执行 npm ci --omit=dev --ignore-scripts --bin-links=false，合并公共 JS 与目标平台原生可选包；新包在目标机直接校验解压，不再执行 npm ci。旧 manifest 保留原安装方式；安装器没有外部 npm 依赖。浏览器必须与锁定的 Puppeteer 版本一致。完整 ZIP 的生产依赖仍按目标 OS/CPU 分目录装配预编译包，禁用跨平台安装脚本，不复用构建机的 node_modules。Mac 改用 [Martin Riedl 的公开 9.0.2 构建](https://ffmpeg.martin-riedl.de/)，FFmpeg/ffprobe 分别固定带构建日期/版本的 ZIP 和上游 SHA256；完整包自动合并到原 runtime/media/bin 布局，不再 checkout 私有冻结归档。它们是第三方预编译包。Windows 使用 Gyan 官网指向的 GitHub 镜像，固定 9.0.2 地址与原 SHA256；Gyan 站点直链在本次原生 CI 下载超时。重定向必须保持 HTTPS；所有原生来源公开，下载器不发送仓库凭据。
 
 | 测试包 | 最低系统要求 | 构建 / 运行验收 |
 |---|---|---|

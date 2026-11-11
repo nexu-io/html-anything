@@ -50,6 +50,41 @@ async function setupFixture(t: any) {
   return { directory, application, home, skillsDirectory, manifest, codex, config };
 }
 
+test('bundled production dependencies install and reconnect without invoking npm', { skip: process.platform === 'win32' }, async t => {
+  const options = await setupFixture(t);
+  const pkg = { name: 'motion-fixture', version: '1.2.3', dependencies: { 'fixture-dependency': '2.3.4' } };
+  await writeJSON(path.join(options.application, 'package.json'), pkg);
+  await mkdir(path.join(options.application, 'node_modules/fixture-dependency'), { recursive: true });
+  await writeJSON(path.join(options.application, 'node_modules/fixture-dependency/package.json'), { version: '2.3.4' });
+  const metadata = JSON.parse(await readFile(options.manifest, 'utf8'));
+  metadata.application = { ...await archive(options.directory, options.application, 'bundled-application'), dependencyTargets: [`${process.platform}/${process.arch}`] };
+  metadata.locks = { npm: await sha256(path.join(options.application, 'package-lock.json')) };
+  await writeJSON(options.manifest, metadata);
+  const previous = process.env.npm_execpath;
+  process.env.npm_execpath = path.join(options.directory, 'npm-must-not-run');
+  t.after(() => { if (previous === undefined) delete process.env.npm_execpath; else process.env.npm_execpath = previous; });
+  const installed = await setup(options);
+  assert.equal(JSON.parse(await readFile(path.join(installed.appRoot, 'node_modules/fixture-dependency/package.json'), 'utf8')).version, '2.3.4');
+  assert.equal(installed.onboarding.hostSessionVerified, false);
+  assert.equal((await setup(options)).appRoot, installed.appRoot);
+  const cleanConfig = JSON.parse(await readFile(options.config, 'utf8')); delete cleanConfig.openmotion;
+  await writeJSON(options.config, cleanConfig);
+  const config = await readFile(options.config, 'utf8');
+  const rejected = { ...options, home: path.join(options.directory, 'other-home'), skillsDirectory: path.join(options.directory, 'other-skills') };
+  for (const dependencyTargets of [[], ['../escape'], null]) {
+    await writeJSON(options.manifest, { ...metadata, application: { ...metadata.application, dependencyTargets } });
+    await assert.rejects(localManifest(options.manifest), /dependency targets/);
+  }
+  await writeJSON(options.manifest, { ...metadata, application: { ...metadata.application, dependencyTargets: ['unsupported/cpu'] } });
+  await assert.rejects(setup(options), /OS\/CPU/);
+  await writeJSON(options.manifest, { ...metadata, locks: { npm: 'f'.repeat(64) } });
+  await assert.rejects(setup(rejected), /lock mismatch/);
+  await rm(path.join(options.application, 'node_modules'), { recursive: true });
+  await writeJSON(options.manifest, { ...metadata, application: { ...metadata.application, ...await archive(options.directory, options.application, 'missing-dependency') } });
+  await assert.rejects(setup(rejected), /Missing or mismatched bundled dependency/);
+  assert.equal(await readFile(options.config, 'utf8'), config, 'Rejected payloads must not change host configuration');
+});
+
 test('successful setup hands the current Agent an invitation before any MCP use, without persisting an offer', async t => {
   const options = await setupFixture(t);
   const installed = await setup(options);
