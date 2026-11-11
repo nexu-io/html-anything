@@ -2,16 +2,12 @@ import { useLayoutEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { mountFeedbackLayer } from '../../../web/feedback-layer';
 
-/** The container may move between native dialogs; React retains portal ownership. */
+/** The container may move between native dialogs; React retains portal ownership.
+ * Its layout lives in `components.css` so the class the source claims is a real rule. */
 export function FeedbackLayer({ children }: { children: ReactNode }) {
   const [container] = useState(() => {
     const node = document.createElement('div');
     node.className = 'motion-feedback-layer';
-    Object.assign(node.style, {
-      position: 'fixed', inset: '0', margin: '0', padding: '0', border: '0',
-      width: '100%', height: '100%', maxWidth: 'none', maxHeight: 'none',
-      background: 'transparent', overflow: 'visible', pointerEvents: 'none', zIndex: '2147483647',
-    });
     return node;
   });
   useLayoutEffect(() => {

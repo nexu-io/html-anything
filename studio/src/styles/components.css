@@ -757,6 +757,24 @@
   }
 }
 
+/* Host for feedback portalled above native dialogs: full viewport, invisible and
+ * transparent to pointer input, so each notice keeps its own positioning. */
+.motion-feedback-layer {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  background: transparent;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 2147483647;
+}
+
 /* Overlay/backdrop entrance — the heaviest visual changes shouldn't pop in */
 @keyframes hf-backdrop-in {
   from {
