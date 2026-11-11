@@ -4,6 +4,7 @@ import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { TimelineMediaBar } from './TimelineMediaBar';
+import { TimelineEditPopoverOverlay } from '../player/components/TimelineOverlays';
 import { TimelineReadOnlyContext } from '../player/components/timelineReadOnly';
 import type { TimelineState } from '../player/components/TimelineProvider';
 import type { TimelineElement } from '../player/store/playerStore';
@@ -12,15 +13,15 @@ import { I18nProvider } from '../i18n/I18n';
 import { projectMediaPath, selectedMedia } from './timelineMediaSelection';
 import { ArtifactViewActive } from './ArtifactViewState';
 
-const hooks = vi.hoisted(() => ({ state: {} as TimelineState, open: vi.fn() }));
+const hooks = vi.hoisted(() => ({ state: {} as TimelineState, open: vi.fn(), connected: true }));
 vi.mock('../player/components/EditModal', () => ({ EditPopover: ({ initialPrompt, rangeStart, rangeEnd, selectedElementKey }: { initialPrompt: string; rangeStart: number; rangeEnd: number; selectedElementKey?: string }) => <div data-testid="agent-edit" data-selected-key={selectedElementKey}>{initialPrompt} {rangeStart}–{rangeEnd}</div> }));
 vi.mock('../player/components/TimelineProvider', () => ({ useTimelineContext: () => ({ state: hooks.state }) }));
-vi.mock('./MediaGatewayContext', () => ({ useMediaGateway: () => ({ openGenerator: hooks.open, generationOpen: false }) }));
+vi.mock('./MediaGatewayContext', () => ({ useMediaGateway: () => hooks.connected ? ({ openGenerator: hooks.open, generationOpen: false }) : null }));
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root; let viewport: HTMLDivElement;
 const clip = { id: 'image', key: 'main:image', tag: 'img', src: 'assets/original.png', label: 'Forest', start: 2, duration: 6, track: 1 } as TimelineElement;
 beforeEach(() => {
-  hooks.open.mockReset(); usePlayerStore.getState().reset();
+  hooks.open.mockReset(); hooks.connected = true; usePlayerStore.getState().reset();
   const host = document.createElement('div'); host.dataset.motionStudio = ''; document.body.append(host); root = createRoot(host);
   const timeline = document.createElement('div'); timeline.dataset.studioTimeline = ''; document.body.append(timeline);
   viewport = document.createElement('div'); timeline.append(viewport); viewport.scrollLeft = 40;
@@ -98,28 +99,26 @@ it('removes the portalled media actions while the owning Viewer is hidden and re
   expect(document.querySelector('.motion-timeline-media-bar')).not.toBeNull();
 });
 
-it('MVP keeps clip and range prompts for Agent without opening media generation', async () => {
-  const mountMvp = () => act(async () => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineMediaBar /></StudioHostContext.Provider>));
+it('MVP omits timeline Agent actions for clip, range and ruler selections', async () => {
+  const mountMvp = () => act(async () => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineMediaBar /><TimelineEditPopoverOverlay /></StudioHostContext.Provider>));
+  const expectHidden = () => {
+    expect(document.querySelector('aside')).toBeNull();
+    expect(document.querySelector('[data-testid="agent-edit"]')).toBeNull();
+    expect(hooks.open).not.toHaveBeenCalled();
+  };
   await mountMvp();
-  expect(button('Generate media')).toBeUndefined();
-  expect(button('Edit image')).toBeUndefined();
-  expect(button('Ask Agent')).toBeDefined();
-  const prompt = document.querySelector('input')!;
-  await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(prompt, 'Make this title larger');
-    prompt.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-  await act(async () => prompt.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
-  expect(document.querySelector('[data-testid="agent-edit"]')?.textContent).toBe('Make this title larger 2–8');
-  expect(document.querySelector('[data-testid="agent-edit"]')?.getAttribute('data-selected-key')).toBe('main:image');
-  expect(hooks.open).not.toHaveBeenCalled();
-  await act(async () => root.render(null));
+  expectHidden();
   hooks.state.overlays = { ...hooks.state.overlays, showPopover: true, rangeSelection: { start: 8, end: 5, anchorX: 0, anchorY: 0 } };
   await mountMvp();
-  await act(async () => button('Ask Agent').click());
-  expect(document.querySelector('[data-testid="agent-edit"]')?.textContent).toBe(' 5–8');
-  expect(document.querySelector('[data-testid="agent-edit"]')?.hasAttribute('data-selected-key')).toBe(false);
-  expect(hooks.open).not.toHaveBeenCalled();
+  expectHidden();
+  hooks.connected = false;
+  await mountMvp();
+  expectHidden();
+  hooks.state.overlays.showPopover = false;
+  hooks.state.selectedElementId = null;
+  await mountMvp();
+  await act(async () => viewport.dispatchEvent(new PointerEvent('pointerup', { button: 0, clientX: 440, clientY: 505 })));
+  expectHidden();
 });
 
 it('dismisses after leaving the opener and popover, but protects a focused draft', async () => {

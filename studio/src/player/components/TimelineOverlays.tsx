@@ -11,6 +11,7 @@ import { copyTextToClipboard } from "../../utils/clipboard";
 import { trackStudioSegmentEaseEdit } from "../../telemetry/events";
 import { useTimelineContext } from "./TimelineProvider";
 import { useMediaGateway } from '../../motion/MediaGatewayContext';
+import { useMvpEditor } from '../../motion/StudioHost';
 
 interface TimelineContextTargetInput {
   capturedElement: TimelineElement;
@@ -43,8 +44,9 @@ export function TimelineShortcutHintOverlay() {
 export function TimelineEditPopoverOverlay() {
   const { state } = useTimelineContext();
   const gateway = useMediaGateway();
+  const mvp = useMvpEditor();
   const { showPopover, rangeSelection, setShowPopover, setRangeSelection } = state.overlays;
-  if (gateway || !showPopover || !rangeSelection) return null;
+  if (mvp || gateway || !showPopover || !rangeSelection) return null;
   return (
     <EditPopover
       rangeStart={rangeSelection.start}
