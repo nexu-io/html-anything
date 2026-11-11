@@ -561,7 +561,7 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 准备 Git、npm 和 **Node.js 26.11.1**。从源码预览和导出还需要 Chrome/Chromium 和 FFmpeg/FFprobe。[运行环境配置](docs/usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
+git clone --branch main https://github.com/nexu-io/openmotion.git openmotion
 cd openmotion
 npm ci
 npm run build:studio

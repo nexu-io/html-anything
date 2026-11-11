@@ -19,6 +19,8 @@
 
 ## PR 流程
 
+Create branches from the latest `origin/main` and open PRs against `main`, following [the shared branch rules](AGENTS.md#development-branches-and-pull-requests). Recheck in-flight PRs after retargeting.
+
 从仓库根目录开发，先读 [AGENTS.md](AGENTS.md)、[产品架构](docs/product/architecture.md) 和相关专题。使用 CI 固定的 Node 版本；依赖变更需同步维护 `package-lock.json` 与 `scripts/runtime-lock.json`。
 
 提交 PR 前按[本地验证指引](AGENTS.md#local-validation)选择检查，并说明实际运行的检查。Studio 单测用 `npm run test:studio`。模型创作与人工视觉验收单独记录，不覆盖真实工程或日常宿主配置。
@@ -29,4 +31,4 @@ Agent 贡献也遵循同一路径：读取条目与来源，完成本次修改�
 
 不提交凭据、内部链接、私有计划、机器路径或用户工程。打包只使用 `scripts/distribution.ts` 的正向清单；新增分发文件需明确批准。保留上游许可与署名，不自行增加遥测或发布包。
 
-贡献遵循仓库 [Apache-2.0 许可](LICENSE)，上游组件保留各自条款。当前迁移分支仅供评审，不自动合并或发布。
+贡献遵循仓库 [Apache-2.0 许可](LICENSE)，上游组件保留各自条款。Merging a PR and publishing packages each require explicit authorization.

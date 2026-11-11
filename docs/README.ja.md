@@ -561,7 +561,7 @@ Brand Kit 欄にはロゴ、配色、書体、文体、確認済みの製品情�
 Git、npm、**Node.js 26.11.1** を用意してください。ソースからのプレビューと書き出しには Chrome または Chromium と、FFmpeg・FFprobe も必要です。[実行環境の設定](usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
+git clone --branch main https://github.com/nexu-io/openmotion.git openmotion
 cd openmotion
 npm ci
 npm run build:studio

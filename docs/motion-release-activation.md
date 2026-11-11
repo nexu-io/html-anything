@@ -1,6 +1,6 @@
 # OpenMotion repository and release activation
 
-OpenMotion is the application on `main` in `nexu-io/html-anything`. Daily integration and manual release operations continue on `feature/motion`; the default branch remains `main`. The former HTML Anything application remains available on [legacy](https://github.com/nexu-io/html-anything/tree/legacy).
+OpenMotion is the application on `main` in `nexu-io/openmotion`. Daily development branches from the latest `origin/main` and PRs target `main`. Existing manual release controls still require `feature/motion` as their execution ref; that restriction is separate from the development baseline. The former HTML Anything application remains available on [legacy](https://github.com/nexu-io/html-anything/tree/legacy).
 
 The default-branch cutover carries the integrated Motion workflows, helpers, templates and tests. It replaces the older registration-only copies on main. A push or merge runs validation; it does not publish a package, advance npm tags or write release storage.
 

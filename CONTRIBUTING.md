@@ -19,7 +19,7 @@ Use the [entry checklist](library/ENTRY_TEMPLATE.md), link the new entry from it
 
 ## PR workflow
 
-Work from the repository root; read [AGENTS.md](AGENTS.md) and the [architecture](docs/product/architecture.md). Use the pinned CI Node version. Keep `package-lock.json` and `scripts/runtime-lock.json` in sync with any intentional dependency change.
+Create your branch from the latest `origin/main` and open the PR against `main`, following [the shared branch rules](AGENTS.md#development-branches-and-pull-requests). Recheck in-flight PRs after retargeting. Work from the repository root; read [AGENTS.md](AGENTS.md) and the [architecture](docs/product/architecture.md). Use the pinned CI Node version. Keep `package-lock.json` and `scripts/runtime-lock.json` in sync with any intentional dependency change.
 
 Before opening a PR, follow the [local validation guidance](AGENTS.md#local-validation) and report the checks you actually ran. Studio unit tests use `npm run test:studio`. Model creation and visual acceptance require separate evidence. Do not overwrite real user data or host configuration to test an installer.
 
@@ -31,4 +31,4 @@ Use the PR Actions summary to review new duplicate fragments and unused code or 
 
 Only deliberately public documentation belongs here. Do not commit credentials, internal links, private plans, workstation paths or user projects. Distribution uses the positive list in `scripts/distribution.ts`; newly shipped files require an explicit decision. Preserve all upstream attribution and license notices. Do not add telemetry or publish a package without a separate decision.
 
-Contributions are licensed under the repository's [Apache-2.0 license](LICENSE); vendored components retain their own terms. This migration branch is for review only and must not be merged or published automatically.
+Contributions are licensed under the repository's [Apache-2.0 license](LICENSE); vendored components retain their own terms. Merging a PR and publishing packages each require explicit authorization.

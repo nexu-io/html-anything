@@ -18,7 +18,7 @@ The npm page uses the repository's product `README.md`. Packaging resolves its r
 
 ## Build and install a local test
 
-From a clean checkout based on `feature/motion`:
+From a clean checkout based on `main`:
 
 ```sh
 npm ci --no-audit --no-fund
