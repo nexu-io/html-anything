@@ -82,20 +82,24 @@ export const StudioOverlays = memo(function StudioOverlays({
           }}
         />
       )}
-      {/* One bottom-right stack so the feedback card and toasts queue instead
-          of covering each other. Empty when nothing is showing. */}
-      <div className="absolute bottom-6 right-6 z-91 flex flex-col items-end gap-2">
+      {/* Center notices above the editor; gaps remain transparent to pointer input. */}
+      <div className="pointer-events-none absolute top-16 left-1/2 z-91 flex w-[min(420px,calc(100%-48px))] -translate-x-1/2 flex-col items-center gap-2">
         {toasts.map((toast) => (
           <StudioToast
             key={toast.id}
             message={toast.message}
             tone={toast.tone}
+            presentation={toast.presentation}
             leaving={toast.leaving}
             onDismiss={() => dismissToast(toast.id)}
           />
         ))}
-        {host?.feedback !== false && <StudioFeedbackCard />}
       </div>
+      {host?.feedback !== false && (
+        <div className="absolute bottom-6 right-6 z-91">
+          <StudioFeedbackCard />
+        </div>
+      )}
     </>
   );
 });

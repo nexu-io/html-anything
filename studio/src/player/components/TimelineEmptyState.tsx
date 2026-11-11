@@ -1,7 +1,7 @@
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type { DragEventHandler } from "react";
-import { GUTTER, RULER_H } from "./timelineLayout";
+import { CLIP_Y, GUTTER, LABEL_COL_W, RULER_H, TRACK_H, TRACKS_TOP_PAD } from "./timelineLayout";
 import { useMediaGateway } from "../../motion/MediaGatewayContext";
 import { usePlayerStore } from "../store/playerStore";
 import { mediaPopoverAnchor } from "../../motion/mediaPopoverPosition";
@@ -14,6 +14,8 @@ function EmptyGenerationRange() {
 
 interface TimelineEmptyStateProps {
   isDragOver: boolean;
+  contentOrigin?: number;
+  trackTopPadding?: number;
   onFileDrop?: boolean;
   onDragOver: DragEventHandler<HTMLDivElement>;
   onDragLeave: DragEventHandler<HTMLDivElement>;
@@ -22,6 +24,8 @@ interface TimelineEmptyStateProps {
 
 export function TimelineEmptyState({
   isDragOver,
+  contentOrigin,
+  trackTopPadding = TRACKS_TOP_PAD,
   onFileDrop,
   onDragOver,
   onDragLeave,
@@ -30,6 +34,7 @@ export function TimelineEmptyState({
   const { t } = useI18n();
   const mvp = useMvpEditor();
   const gateway = useMediaGateway();
+  const emptyOrigin = mvp ? (contentOrigin ?? LABEL_COL_W + GUTTER) : GUTTER;
   const hideGuide = !!gateway?.generationOpen && !isDragOver;
   return (
     <div
@@ -43,13 +48,13 @@ export function TimelineEmptyState({
       {/* Ruler */}
       <div
         className="shrink-0 border-b border-neutral-800/40 flex items-end relative"
-        style={{ height: RULER_H, paddingLeft: GUTTER }}
+        style={{ height: RULER_H, paddingLeft: emptyOrigin }}
       >
         {[0, 10, 20, 30, 40, 50].map((s) => (
           <div
             key={s}
             className="flex flex-col items-center"
-            style={{ position: "absolute", left: GUTTER + s * 14 }}
+            style={{ position: "absolute", left: emptyOrigin + s * 14, transform: mvp ? "translateX(-50%)" : undefined }}
           >
             <span className="text-[9px] text-neutral-600 font-mono tabular-nums leading-none mb-0.5">
               {`${Math.floor(s / 60)
@@ -63,7 +68,14 @@ export function TimelineEmptyState({
       {/* Empty drop zone */}
       <div className="relative flex-1 flex items-center justify-center overflow-hidden">
         {onFileDrop && gateway?.generationOpen && <EmptyGenerationRange />}
-        <div
+        {mvp ? <div
+          className={`motion-empty-timeline ${isDragOver ? "is-drag-over" : ""}`}
+          style={{ top: trackTopPadding, height: TRACK_H }}
+          aria-hidden={!isDragOver}
+        >
+          <span className="motion-empty-timeline-label" style={{ width: LABEL_COL_W }}>A-roll</span>
+          <div className="motion-empty-timeline-lane" style={{ left: emptyOrigin, top: CLIP_Y, bottom: CLIP_Y }}>{isDragOver && <span>{t("Drop media files to import")}</span>}</div>
+        </div> : <div
           data-motion-empty-media
           style={hideGuide ? { visibility: 'hidden' } : undefined}
           aria-hidden={hideGuide || undefined}
@@ -93,23 +105,7 @@ export function TimelineEmptyState({
             </>
           ) : (
             <>
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-neutral-600 shrink-0"
-              >
-                <rect x="2" y="2" width="20" height="20" rx="2" />
-                <path d="M7 2v20" />
-                <path d="M17 2v20" />
-                <path d="M2 7h20" />
-                <path d="M2 17h20" />
-              </svg>
+
               <div className="motion-empty-media-copy">
                 <strong>{onFileDrop ? t("Drop video, audio or images here") : t("Describe your video to start creating")}</strong>
                 {onFileDrop && <span>{t(mvp ? "Import files or describe your video to your Agent." : "Import files, generate media, or describe your video to your Agent.")}</span>}
@@ -120,7 +116,7 @@ export function TimelineEmptyState({
               </div>}
             </>
           )}
-        </div>
+        </div>}
       </div>
     </div>
   );

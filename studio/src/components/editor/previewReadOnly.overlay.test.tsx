@@ -9,6 +9,7 @@ import { __resetForTests } from "../../utils/canvasNudgeGate";
 import { PreviewReadOnlyProvider } from "./previewReadOnlyContext";
 import "./domEditOverlayTestMocks";
 import { DomEditOverlay } from "./DomEditOverlay";
+import { StudioHostContext } from "../../motion/StudioHost";
 import { UNREADABLE_TRANSLATE } from "./plainTranslate";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -62,6 +63,7 @@ function textElement(id: string): HTMLElement {
 function fixture(
   overrides: Partial<React.ComponentProps<typeof DomEditOverlay>> = {},
   readOnly = false,
+  mvpEditor = false,
 ) {
   const spies = {
     onCanvasMouseDown: vi.fn(),
@@ -97,7 +99,7 @@ function fixture(
   act(() =>
     root.render(
       <PreviewReadOnlyProvider readOnly={readOnly}>
-        <DomEditOverlay {...props} />
+        <StudioHostContext.Provider value={{ mvpEditor }}><DomEditOverlay {...props} /></StudioHostContext.Provider>
       </PreviewReadOnlyProvider>,
     ),
   );
@@ -512,4 +514,13 @@ describe("DomEditOverlay on a layer whose translate Studio can't read", () => {
     expect(spies.onPathOffsetCommit).not.toHaveBeenCalled();
     expect(selection.element.style.getPropertyValue("translate")).toBe("abs(10% - 50px) 0px");
   });
+});
+
+
+it("hides unselected off-canvas markers in MVP while keeping the selected outline", () => {
+  layout.offCanvasElements.set("stray", textElement("stray"));
+  layout.offCanvas = [{ key: "stray", left: 820, top: 10, width: 120, height: 40 }];
+  const { overlay } = fixture({}, false, true);
+  expect(overlay.querySelector('[aria-label="Select off-canvas element stray"]')).toBeNull();
+  expect(overlay.querySelector(BOX)).not.toBeNull();
 });

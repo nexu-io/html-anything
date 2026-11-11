@@ -1,3 +1,4 @@
+import { LAYER_OPACITY_PROPERTY, layerOpacityStyles, layerOpacityValue } from "./layerOpacity";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 // fallow-ignore-file code-duplication
@@ -435,17 +436,22 @@ function FlatOverflowMaskRows({
 /*  Flat Opacity slider                                                */
 /* ------------------------------------------------------------------ */
 
-function FlatOpacitySlider({
+export function FlatOpacitySlider({
   styles,
+  inlineStyles = {},
+  preserveOpacityAnimation = false,
   disabled,
   onSetStyle,
 }: {
   styles: Record<string, string>;
+  inlineStyles?: Record<string, string>;
+  preserveOpacityAnimation?: boolean;
   disabled: boolean;
-  onSetStyle: (prop: string, value: string) => void | Promise<unknown>;
+  onSetStyle: (prop: string | Record<string, string>, value?: string) => void | Promise<unknown>;
 }) {
   const { t } = useI18n();
-  const opacityValue = Math.round((parseNumericValue(styles.opacity) ?? 1) * 100);
+  const independent = preserveOpacityAnimation || LAYER_OPACITY_PROPERTY in inlineStyles;
+  const opacityValue = Math.round((independent ? layerOpacityValue(inlineStyles) : parseNumericValue(styles.opacity) ?? 1) * 100);
 
   return (
     <FlatSlider
@@ -456,12 +462,16 @@ function FlatOpacitySlider({
       tier="explicitCustom"
       displayValue={`${opacityValue}%`}
       disabled={disabled}
-      onCommit={(next) => void onSetStyle("opacity", formatNumericValue(next / 100))}
+      onCommit={(next) => {
+        if (independent) void onSetStyle(layerOpacityStyles(next / 100, inlineStyles, styles));
+        else void onSetStyle("opacity", formatNumericValue(next / 100));
+      }}
     />
   );
 }
 
 export function FlatStyleSection({
+  preserveOpacityAnimation = false,
   projectId,
   element,
   styles,
@@ -472,6 +482,7 @@ export function FlatStyleSection({
   onImportAssets,
   gsapBorderRadius,
 }: {
+  preserveOpacityAnimation?: boolean;
   projectId: string;
   element: DomEditSelection;
   styles: Record<string, string>;
@@ -489,7 +500,7 @@ export function FlatStyleSection({
     <ColorField flat label={t("Fill color")} value={styles["background-color"] ?? "transparent"}
       disabled={styleEditingDisabled} onPreview={next => onPreviewStyle?.("background-color", next)}
       onCommit={next => onSetStyle({ "background-color": next, "background-image": "none" })} />
-    <FlatOpacitySlider styles={styles} disabled={styleEditingDisabled} onSetStyle={onSetStyle} />
+    <FlatOpacitySlider styles={styles} inlineStyles={element.inlineStyles} preserveOpacityAnimation={preserveOpacityAnimation} disabled={styleEditingDisabled} onSetStyle={onSetStyle} />
   </div>;
   return (
     <div className="space-y-1.5">

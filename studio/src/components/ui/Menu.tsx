@@ -45,15 +45,7 @@ const VIEWPORT_MARGIN = 8;
  * `data-starting-style`/`data-ending-style` are Base UI's transition attributes.
  */
 export function floatingMotion(openDuration: "duration-open" | "duration-tooltip") {
-  return cn(
-    "origin-[var(--transform-origin)] outline-hidden",
-    "transition-[opacity,transform] ease-out-quint",
-    openDuration,
-    "data-[ending-style]:duration-close data-[ending-style]:ease-in",
-    "data-[starting-style]:[opacity:var(--popup-enter-opacity)]",
-    "data-[starting-style]:[scale:var(--popup-enter-scale)]",
-    "data-[ending-style]:opacity-0",
-  );
+  return cn("hf-floating-motion outline-hidden", openDuration, openDuration === "duration-tooltip" && "hf-tooltip-motion");
 }
 
 /**

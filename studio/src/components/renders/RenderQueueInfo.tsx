@@ -1,10 +1,13 @@
 import { useI18n } from "../../i18n/I18n";
 import type { RenderJob } from "./useRenderQueue";
 
-function formatDuration(ms: number): string {
-  if (ms < 1000) return `${ms}ms`;
-  const s = Math.round(ms / 1000);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${s % 60}s`;
+function formatDuration(ms: number, locale: string): string {
+  const unit = (value: number, unit: string) => new Intl.NumberFormat(locale, {
+    style: 'unit', unit, unitDisplay: 'short', maximumFractionDigits: 0,
+  }).format(value);
+  if (ms < 1000) return unit(ms, 'millisecond');
+  const seconds = Math.round(ms / 1000);
+  return seconds < 60 ? unit(seconds, 'second') : `${unit(Math.floor(seconds / 60), 'minute')} ${unit(seconds % 60, 'second')}`;
 }
 
 function formatTimeAgo(timestamp: number, locale: string): string {
@@ -46,9 +49,6 @@ export function RenderQueueInfo({ job }: { job: RenderJob }) {
         </div>
       )}
 
-      {job.status === "failed" && job.error && (
-        <span className="text-step-9 text-danger-ink mt-0.5 block">{job.error}</span>
-      )}
       {job.status === "cancelled" && (
         <span className="text-step-9 text-text-4 mt-0.5 block">{t("Cancelled")}</span>
       )}
@@ -58,7 +58,7 @@ export function RenderQueueInfo({ job }: { job: RenderJob }) {
           <span>{formatTimeAgo(job.createdAt, locale)}</span>
           {job.status === "complete" && job.durationMs !== undefined && (
             <span className="whitespace-nowrap">
-              · {t("Took {value0}", { value0: formatDuration(job.durationMs) })}
+              · {t("Took {value0}", { value0: formatDuration(job.durationMs, locale) })}
             </span>
           )}
         </div>

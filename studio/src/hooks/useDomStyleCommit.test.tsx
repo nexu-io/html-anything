@@ -3,6 +3,7 @@ import { act, createElement, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { useDomStyleCommit, type UseDomStyleCommitOptions } from "../index";
+import { historyEntryLabel } from "../i18n/historyMessages";
 import { makeSelection } from "./domSelectionTestHarness";
 
 Reflect.set(globalThis, "IS_REACT_ACT_ENVIRONMENT", true);
@@ -91,7 +92,29 @@ describe("useDomStyleCommit, from the package entry", () => {
     expect(patches).toHaveLength(1);
     expect((patches[0] as { operations: unknown[] }).operations).toHaveLength(2);
     expect(recordEdit).toHaveBeenCalledTimes(1);
-    expect(recordEdit).toHaveBeenCalledWith(expect.objectContaining({ label: "Edit layer style" }));
+    expect(historyEntryLabel(recordEdit.mock.calls[0]![0].label, message => message)).toBe("Card · Color: blue / Font size: 40px");
+    unmount();
+  });
+
+  it.each([false, true])("updates every same-source instance and restores each on failure: %s", async (fail) => {
+    const patches = stubServer(fail ? [500] : []);
+    const { element, hook, recordEdit, unmount } = renderHost();
+    element.parentElement!.setAttribute("data-composition-file", "index.html");
+    const clone = element.cloneNode(true) as HTMLElement;
+    clone.style.color = "purple";
+    element.after(clone);
+    const otherHost = element.ownerDocument.createElement("section");
+    otherHost.setAttribute("data-composition-file", "other.html");
+    const unrelated = element.cloneNode(true) as HTMLElement;
+    otherHost.append(unrelated);
+    element.parentElement!.append(otherHost);
+    const outcome = await hook().commitStyle({...makeSelection("card", element), sourceFile: "index.html"}, {color: "blue"});
+    expect(outcome.ok).toBe(!fail);
+    expect(element.style.color).toBe(fail ? "red" : "blue");
+    expect(clone.style.color).toBe(fail ? "purple" : "blue");
+    expect(unrelated.style.color).toBe("red");
+    expect(patches).toHaveLength(1);
+    expect(recordEdit).toHaveBeenCalledTimes(fail ? 0 : 1);
     unmount();
   });
 

@@ -61,6 +61,7 @@ function syncedFields(doc: Document, element: TimelineElement, node: Element) {
     fadeIn: storedFade(fades.fadeIn),
     fadeOut: storedFade(fades.fadeOut),
     volume: elementVolume(node, resolveMediaElement(node) ?? node),
+    muted: node.hasAttribute("muted") || (resolveMediaElement(node)?.hasAttribute("muted") ?? false) || undefined,
     audioGroupAutomation: group?.automation,
     audioGroupFxChain: group?.fxChain,
   };
@@ -96,6 +97,7 @@ const STORED_FIELD: Record<string, (value: string | null) => Partial<TimelineEle
   [HF_AUDIO_FADE_OUT_ATTR]: (value) => ({ fadeOut: storedFade(readFadeSeconds(value)) }),
   // A quick volume save writes no other field the store keeps: without this, a clip read its last load's volume.
   "data-volume": (value) => ({ volume: parseStoredVolume(value) }),
+  muted: (value) => ({ muted: value !== null || undefined }),
 };
 
 /** Record a saved automation, FX-chain, fade or volume value on one element's stored copy. */

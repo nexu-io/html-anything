@@ -24,6 +24,8 @@ import type { TimelineTheme } from "./timelineTheme";
 import { trackDisplaySuffix } from "./timelineTrackDisplay";
 import { AutomationLaneHeaderRow, PropertyGroupHeaderRow } from "./trackHeaderLabelRows";
 import { useMemo } from "react";
+import { useMvpEditor } from "../../motion/StudioHost";
+import { TimelineTrackAudioControls } from "./TimelineTrackAudioControls";
 
 /** Accent rail + inset marking a row as a group MEMBER, matching the level-2
  *  nesting its `aria-level` already reports. */
@@ -108,6 +110,7 @@ export function TimelineTrackHeader({
   onSeek,
   rovingTargetId = null,
 }: TimelineTrackHeaderProps) {
+  const mvp = useMvpEditor();
   const clipPercentage = keyframeClip
     ? ((currentTime - keyframeClip.start) / keyframeClip.duration) * 100
     : 0;
@@ -205,6 +208,9 @@ export function TimelineTrackHeader({
   // moment an envelope appeared.
   const isKeyframeLayer = !!keyframeClip && disclosable && !isAudioTrack;
   const isAudioOnly = isAudioOnlyTrack(trackElements);
+  const audioControls = mvp ? <TimelineTrackAudioControls elements={trackElements} trackLabel={trackLabel}
+    isAudioOnly={isAudioOnly} hidden={isTrackHidden}
+    onUnhide={() => { void onToggleTrackHidden?.(trackNumber, false, trackDisplayNumber); }} /> : null;
   // What the lane disclosure calls this row. A row of several clips is named
   // for the TRACK, not for whichever is selected — the lanes are the track's,
   // shared per property, so "Narration 2 lanes" read as if they were that one
@@ -316,6 +322,8 @@ export function TimelineTrackHeader({
               isAudioTrack={isAudioTrack}
               isAudioOnly={isAudioOnly}
               onToggleTrackHidden={onToggleTrackHidden}
+              hideVisibility={mvp && isAudioOnly}
+              audioControls={audioControls}
               // On the control line rather than a third row of its own.
               trailing={
                 <>
@@ -382,13 +390,14 @@ export function TimelineTrackHeader({
                 (hover-gated, and only while expanded) left a keyframed track with
                 no way to be hidden at all by keyboard, and put the control on a
                 row it does not act on. */}
-            <VisibilityButton
+            {audioControls}
+            {!(mvp && isAudioOnly) && <VisibilityButton
               hidden={isTrackHidden}
               trackNumber={trackNumber}
               trackDisplayNumber={trackDisplayNumber}
               asMute={isAudioOnly}
               onToggle={onToggleTrackHidden}
-            />
+            />}
           </LayerDisclosureRow>
         </>
       )}

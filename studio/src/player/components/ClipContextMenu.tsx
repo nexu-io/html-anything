@@ -11,6 +11,7 @@ import { ClipMenuToolItems } from "./clipMenuToolItems";
 import { ClipMenuAudioItems } from "./clipMenuAudioItems";
 import { ClipMenuLinkItems } from "./clipMenuLinkItems";
 import { menuClasses } from "../../components/ui/menuStyle";
+import { popupSurface } from "../../components/ui/Menu";
 import { useTimelineEditContextOptional } from "../../contexts/TimelineEditContext";
 import { keyHint, useStudioKeys } from "./studioShortcuts";
 
@@ -139,7 +140,7 @@ export const ClipContextMenu = memo(function ClipContextMenu({
       ref={menuRef}
       role="menu"
       aria-label={t("Clip actions")}
-      className={`${menuClasses.panel} fixed z-200 min-w-[180px]`}
+      className={`${mvp ? `${popupSurface} motion-clip-context-menu p-1 shadow-menu` : menuClasses.panel} fixed z-200 min-w-[180px]`}
       style={{ left: adjustedX, top: adjustedY }}
     >
       {hostItems.length > 0 && (

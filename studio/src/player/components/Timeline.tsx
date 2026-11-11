@@ -56,7 +56,7 @@ function TimelineView() {
 const TimelineComposed = memo(function TimelineComposed(props: TimelineProps = {}) {
   const mvp = useMvpEditor();
   return (
-    <TimelineProvider {...props} showKeyframes={mvp ? false : props.showKeyframes}>
+    <TimelineProvider {...props} showAudioEffects={mvp ? false : props.showAudioEffects} showKeyframes={mvp ? false : props.showKeyframes}>
       <TimelineView />
       <TimelineMediaBar />
     </TimelineProvider>

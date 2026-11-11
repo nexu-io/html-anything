@@ -1,41 +1,28 @@
-import { RemixIcon } from "../icons/RemixIcons";
+import { ErrorNotice } from "./ui/ErrorNotice";
 import { useI18n } from "../i18n/I18n";
 import { systemMessage } from "../i18n/systemMessages";
 interface StudioToastProps {
   message: string;
   tone?: "error" | "info";
+  presentation?: "feedback";
   /** Plays the exit animation when true (owner removes the node after ~160ms). */
   leaving?: boolean;
   onDismiss?: () => void;
 }
 
-export function StudioToast({ message, tone, leaving, onDismiss }: StudioToastProps) {
+export function StudioToast({ message, tone, presentation, leaving, onDismiss }: StudioToastProps) {
   const { t } = useI18n();
   const isError = tone === "error";
   return (
     <div
-      role={isError ? "alert" : "status"}
-      className={`motion-reduce:animate-none ${leaving ? "hf-toast-exit" : "hf-toast-enter"}`}
+      role={isError ? (presentation === "feedback" ? "alert" : undefined) : "status"}
+      className={`pointer-events-auto max-w-full motion-reduce:animate-none ${leaving ? "hf-toast-exit" : "hf-toast-enter"}`}
     >
-      <div
-        className={`relative flex max-w-[min(420px,calc(100vw-48px))] items-center gap-3 overflow-hidden rounded-2xl py-3 pl-4 pr-2 text-[12px] ${toastSurface(isError)}`}
-      >
-        <span
-          className={`min-w-0 wrap-break-word leading-5 ${isError ? "text-danger-ink" : "text-text-0"}`}
-        >
-          {systemMessage(message, t)}
-        </span>
-        {onDismiss && (
-          <button
-            type="button"
-            onClick={onDismiss}
-            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-hover hover:text-neutral-300"
-            aria-label={t("Dismiss")}
-          >
-            <RemixIcon name="close-line" size={14} />
-          </button>
-        )}
-      </div>
+      {isError && presentation !== "feedback" ? <div className="max-w-[min(420px,calc(100vw-48px))] rounded-2xl border border-danger/40 bg-raised p-3 shadow-popover">
+        <ErrorNotice key={message} message={message} compact onDismiss={onDismiss} />
+      </div> : <div className={`max-w-[min(420px,calc(100vw-48px))] overflow-hidden rounded-2xl px-4 py-2 text-[12px] shadow-popover bg-toast-feedback text-toast-feedback-ink`}>
+        <span className="line-clamp-3 leading-5 [overflow-wrap:anywhere]" title={systemMessage(message, t)}>{systemMessage(message, t)}</span>
+      </div>}
     </div>
   );
 }

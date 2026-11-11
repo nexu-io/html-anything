@@ -15,6 +15,7 @@ import {
   buildDomEditTextPatchOperation,
 } from "./domEditingLayers";
 import { makeSelection } from "../../hooks/domSelectionTestHarness";
+import { planDomTextCommit } from "../../hooks/domEditTextCommitPlan";
 import { buildTextFieldChildOperations } from "../../hooks/domEditTextFieldCommitOps";
 
 const testDir = dirname(fileURLToPath(import.meta.url));
@@ -243,4 +244,22 @@ describe("persist seam source mutation", () => {
     expect(findElementInHtml(html, ".wrapper").textContent).toBe("Wrapper");
     expect(findElementInHtml(html, ".leaf-b").textContent).toBe("Second updated");
   });
+});
+
+it("preserves multiline headings when changing text color and editing their copy", () => {
+  const source = '<h1 id="title" data-hf-id="heading">Your next<br data-hf-id="break">great story.</h1>';
+  const holder = document.createElement("div");
+  holder.innerHTML = source;
+  const heading = holder.firstElementChild as HTMLElement;
+  const fields = collectDomEditTextFields(heading);
+  const colored = patchAndExpectChange(source, { hfId: "heading" }, [buildDomEditStylePatchOperation("color", "#ff0000")]);
+  expect(findElementInHtml(colored, "h1").innerHTML).toBe(heading.innerHTML);
+  const copy = 'Your next\n<great> & story.';
+  const plan = planDomTextCommit(fields, [{ ...fields[0], value: copy }], copy);
+  const saved = patchAndExpectChange(colored, { hfId: "heading" }, plan.operations);
+  const result = findElementInHtml(saved, "h1");
+  expect(result.querySelectorAll("br")).toHaveLength(1);
+  expect(result.querySelector("great")).toBeNull();
+  expect(result.textContent).toBe('Your next<great> & story.');
+  expect(collectDomEditTextFields(result as HTMLElement)[0].value).toBe(copy);
 });

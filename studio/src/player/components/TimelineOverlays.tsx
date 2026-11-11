@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { TimelineAudioGainOverlay } from "./AudioGainDialog";
 import { useEffect, useMemo } from "react";
 import type { TimelineElement } from "../store/playerStore";
@@ -11,7 +12,6 @@ import { copyTextToClipboard } from "../../utils/clipboard";
 import { trackStudioSegmentEaseEdit } from "../../telemetry/events";
 import { useTimelineContext } from "./TimelineProvider";
 import { useMediaGateway } from '../../motion/MediaGatewayContext';
-import { useMvpEditor } from '../../motion/StudioHost';
 
 interface TimelineContextTargetInput {
   capturedElement: TimelineElement;
@@ -42,9 +42,9 @@ export function TimelineShortcutHintOverlay() {
 }
 
 export function TimelineEditPopoverOverlay() {
+  const mvp = useMvpEditor();
   const { state } = useTimelineContext();
   const gateway = useMediaGateway();
-  const mvp = useMvpEditor();
   const { showPopover, rangeSelection, setShowPopover, setRangeSelection } = state.overlays;
   if (mvp || gateway || !showPopover || !rangeSelection) return null;
   return (

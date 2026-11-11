@@ -29,6 +29,29 @@ async function mount(wait: () => Promise<void>, projectId?: string, sessionId?: 
 }
 const writes = () => fetcher.mock.calls.filter(call => call[1]?.method === 'POST');
 
+it('reconnects with read requests only and clears a recovered polling failure', async () => {
+  const original = fetcher.getMockImplementation()!;
+  fetcher.mockRejectedValue(new TypeError('Failed to fetch'));
+  await mount(async () => {}, first);
+  expect(workspace.errorSource).toBe('connection');
+  expect(workspace.error).toBe('Failed to fetch');
+  fetcher.mockImplementation(original);
+  await act(async () => workspace.retryConnection());
+  expect(workspace.error).toBe('');
+  expect(workspace.checkingConnection).toBe(false);
+  expect(writes()).toHaveLength(0);
+  expect(navigate).not.toHaveBeenCalled();
+});
+
+it('does not erase a failed operation when a later connection check succeeds', async () => {
+  await mount(async () => { throw new Error('Unsaved edit'); }, first);
+  await act(() => workspace.create());
+  await act(async () => workspace.retryConnection());
+  expect(workspace.error).toBe('Unsaved edit');
+  expect(workspace.errorSource).toBe('operation');
+  expect(writes()).toHaveLength(0);
+});
+
 it('waits for saves, deduplicates rapid actions and opens the new project in a new document', async () => {
   let saved!: () => void;
   const pending = new Promise<void>(resolve => { saved = resolve; });

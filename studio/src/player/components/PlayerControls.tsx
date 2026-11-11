@@ -189,16 +189,16 @@ export const PlayerControls = memo(function PlayerControls({
   });
 
   return (
-    <div className="motion-player-controls relative z-20">
+    <div className={`motion-player-controls relative z-20 ${mvp ? "motion-player-responsive" : ""}`}>
       <PreviewSeekBar duration={duration} disabled={controlsDisabled} onSeek={onSeek} />
       <div
-        className="grid h-7 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-3"
+        className={mvp ? "motion-player-control-row px-3" : "grid h-7 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-3"}
         aria-disabled={disabled || undefined}
         style={{
           paddingBottom: "env(safe-area-inset-bottom)",
         }}
       >
-        {mvp ? <span className="min-w-0 justify-self-start whitespace-nowrap font-mono text-[11px] tabular-nums text-neutral-400">
+        {mvp ? <span className="motion-player-timecode min-w-0 justify-self-start whitespace-nowrap font-mono text-[11px] tabular-nums text-neutral-400">
           <span ref={timeDisplayRef}>{formatTime(0)}</span><span className="mx-0.5">/</span><span>{formatTime(duration)}</span>
         </span> : <Tooltip
           label={timeDisplayMode === "time" ? t("Switch to frame display") : t("Switch to time display")}
@@ -229,13 +229,13 @@ export const PlayerControls = memo(function PlayerControls({
               onTogglePlay();
             }}
             disabled={controlsDisabled}
-            className="flex h-7 w-8 items-center justify-center justify-self-center rounded-md text-neutral-100 transition-colors hover:text-white disabled:pointer-events-none disabled:opacity-30"
+            className="motion-player-play flex h-7 w-8 items-center justify-center justify-self-center rounded-md text-neutral-100 transition-colors hover:text-white disabled:pointer-events-none disabled:opacity-30"
           >
             {mvp ? <RemixIcon name={isPlaying ? "pause-fill" : "play-fill"} size={20} /> : <PlayPauseMorphIcon playing={isPlaying} />}
           </button>
         </Tooltip>
 
-        <div className="flex min-w-0 items-center justify-self-end">
+        <div className={`flex min-w-0 items-center justify-self-end ${mvp ? "motion-player-secondary" : ""}`}>
           <VolumeControl
             audioMuted={audioMuted}
             audioVolume={audioVolume}
@@ -243,6 +243,7 @@ export const PlayerControls = memo(function PlayerControls({
             setAudioMuted={setAudioMuted}
             setAudioVolume={setAudioVolume}
           />
+          <span className="motion-player-optional flex items-center gap-[inherit]">
           <SpeedMenu
             playbackRate={playbackRate}
             setPlaybackRate={setPlaybackRate}
@@ -253,7 +254,8 @@ export const PlayerControls = memo(function PlayerControls({
             disabled={disabled}
             setLoopEnabled={setLoopEnabled}
           />
-          {onToggleFullscreen && (
+          </span>
+          {!mvp && onToggleFullscreen && (
             <FullscreenButton isFullscreen={isFullscreen} onToggleFullscreen={onToggleFullscreen} />
           )}
           {!mvp && <ShortcutsButton disabled={disabled} onSeek={onSeek} sections={shortcutSections} />}

@@ -1,3 +1,5 @@
+import { PanelEmptyState } from "../ui/PanelEmptyState";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { useLivePreviewIframe } from "../../player/store/previewIframeStore";
@@ -112,6 +114,7 @@ function useLayersPanelHost(host: LayersPanelHost | undefined): LayersPanelHost 
 
 // fallow-ignore-next-line complexity
 export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPanelHost }) {
+  const mvp = useMvpEditor();
   const { t } = useI18n();
   const {
     previewIframeRef,
@@ -417,6 +420,7 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
   });
 
   if (layers.length === 0) {
+    if (mvp) return <PanelEmptyState icon="stack-line" message={t("No layers")} />;
     return (
       <div className="flex h-full flex-col items-center justify-center bg-panel-bg px-6 text-center">
         <Layers size={18} className="mb-3 text-panel-text-5" />
@@ -431,9 +435,9 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
       className="flex h-full min-h-0 flex-col overflow-hidden bg-panel-bg"
       onPointerLeave={() => handleLayerHover(null)}
     >
-      <div className="border-b border-panel-border px-3 py-2 text-[11px] text-panel-text-3">
+      {!mvp && <div className="border-b border-panel-border px-3 py-2 text-[11px] text-panel-text-3">
         {t("{count} layers", { count: layers.length })}
-      </div>
+      </div>}
       <div
         ref={scrollContainerRef}
         className="relative min-h-0 flex-1 select-none overflow-y-auto py-1"

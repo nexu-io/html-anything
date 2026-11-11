@@ -182,6 +182,10 @@ export function ColorField({
   });
   const opaqueColor = formatCssColor({ ...draftColor, alpha: 1 });
   const currentColor = formatCssColor(draftColor);
+  const currentHex = toHexColor(draftColor).toUpperCase();
+  const displayColor = open ? draftColor : parseCssColor(value);
+  const displayHex = displayColor ? toHexColor(displayColor).toUpperCase() : value;
+  const displayAlpha = displayColor ? Math.round(displayColor.alpha * 100) : 100;
   const saturationPercent = Math.round(hsv.saturation * 100);
   const brightnessPercent = Math.round(hsv.value * 100);
   const alphaPercent = Math.round(draftColor.alpha * 100);
@@ -396,7 +400,7 @@ export function ColorField({
               />
               <div className="min-w-0 flex-1">
                 <div className="truncate text-[11px] font-medium text-neutral-100">
-                  {currentColor}
+                  {currentHex}
                 </div>
                 <div className="mt-0.5 text-[9px] text-neutral-600">
                   S {saturationPercent}% · B {brightnessPercent}% · A {alphaPercent}%
@@ -465,7 +469,7 @@ export function ColorField({
 
   if (flat) {
     return (
-      <div className="flex min-h-[30px] items-center justify-between">
+      <div className="flex min-h-[30px] items-center justify-between gap-2">
         <span className="text-[11px] text-panel-text-2">{label}</span>
         <button
           type="button"
@@ -474,14 +478,20 @@ export function ColorField({
           aria-label={t("Pick {value0} color", { value0: label.toLowerCase() })}
           ref={buttonRef}
           onClick={openPicker}
-          className="flex items-center gap-2 disabled:cursor-not-allowed"
+          className="flex h-7 min-w-0 items-center rounded-md bg-panel-bg-soft px-1.5 text-[11px] text-panel-text-0 transition-colors hover:bg-panel-hover disabled:cursor-not-allowed"
         >
           <span
-            className="h-4 w-4 shrink-0 rounded-[4px]"
-            style={{ backgroundColor: open ? currentColor : value || "transparent" }}
-          />
-          <span className="font-mono text-[11px] text-panel-text-0">
-            {open ? currentColor : value}
+            className="relative h-3.5 w-3.5 shrink-0 overflow-hidden rounded-[3px] border border-panel-hairline"
+            style={{ backgroundImage: 'conic-gradient(var(--color-transparency-light) 25%, var(--color-transparency-dark) 0 50%, var(--color-transparency-light) 0 75%, var(--color-transparency-dark) 0)', backgroundSize: '6px 6px' }}
+          >
+            <span className="absolute inset-0" style={{ backgroundColor: open ? currentColor : value || "transparent" }} />
+          </span>
+          <span className="min-w-0 truncate pl-1.5 pr-3 text-left tabular-nums">
+            {displayHex.replace(/^#/, '')}
+          </span>
+          <span className="flex h-5 shrink-0 items-center gap-2 border-l border-panel-hairline pl-2 tabular-nums">
+            <span className="min-w-[20px] text-right">{displayAlpha}</span>
+            <span className="text-panel-text-4">%</span>
           </span>
           {mixed && (
             <span
@@ -523,7 +533,8 @@ export function ColorField({
           style={{ backgroundColor: value || "transparent" }}
         />
         <span className="min-w-0 flex-1 truncate text-[11px] font-medium text-neutral-100">
-          {value}
+          {displayHex}
+          {displayAlpha < 100 && <span className="ml-2 text-panel-text-4">{displayAlpha}%</span>}
         </span>
         {mixed && (
           <span
