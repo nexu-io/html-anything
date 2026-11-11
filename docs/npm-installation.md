@@ -6,6 +6,8 @@ The npm tgz contains the installer, a prebuilt Motion application archive and it
 
 Source `package.json` is the development baseline; the published artifact can have a different version. For example, source `0.6.3` can produce `0.6.4-test.6` without a stable `0.6.4` release. Packaging changes output identities only. Manual [candidate builds](release-workflows.md#1-build) accept an empty version and automatically generate the next patch plus a short `test.N` workflow counter (with an attempt suffix on reruns); publication keeps the exact accepted version.
 
+Test/prerelease/local packages never report usage data, even with a saved opt-in or an enable flag. Stable releases collect by default and support persistent opt-out and re-enable in Studio Privacy settings. See [tracking controls](../tracking/README.md#reporting-and-user-control).
+
 ## Requirements and package contents
 
 Users provide Node.js 22.18+ with npm and their Agent host. Builds use the Node version pinned in CI. npm installs locked production dependencies with `npm ci --omit=dev --ignore-scripts`. Setup starts FFmpeg, ffprobe and browser preparation in a detached background worker. MCP connection, source editing and ordinary preview do not wait; Studio displays readiness and retry. `prepare` remains an explicit wait/retry command. Node, native binaries, node_modules, user projects and credentials are not bundled in this npm format. It is not an offline package. Complete platform ZIPs remain a backup.

@@ -3,14 +3,17 @@ import { readFileSync, watch } from 'node:fs';
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { createTracker, uuid } from '../tracking/core.ts';
 import type { Entry } from '../tracking/core.ts';
-import { createNodeTracking, loadIdentity } from '../tracking/node.ts';
+import { createNodeTracking, loadIdentity, trackingReleaseEnabled } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
 import { VERSION } from '../preview.ts';
 
 export type OmTracking = ReturnType<typeof createTracker<typeof omEvents>>;
-export function trackingLocked() {
-  return ['0', 'false', 'off'].includes(process.env.OPENMOTION_TELEMETRY?.toLowerCase() ?? '') || process.env.DO_NOT_TRACK === '1';
+export function trackingLockReason() {
+  if (!trackingReleaseEnabled(VERSION)) return 'test_build' as const;
+  return ['0', 'false', 'off'].includes(process.env.OPENMOTION_TELEMETRY?.toLowerCase() ?? '') || process.env.DO_NOT_TRACK === '1'
+    ? 'environment' as const : null;
 }
+export function trackingLocked() { return trackingLockReason() !== null; }
 export function trackingPreference(directory: string): boolean {
   try { return JSON.parse(readFileSync(path.join(directory, 'tracking/preferences.json'), 'utf8')).enabled === true; }
   catch (error) { return (error as NodeJS.ErrnoException).code === 'ENOENT'; }
@@ -25,7 +28,7 @@ export async function saveTrackingPreference(directory: string, enabled: boolean
 }
 
 export async function createAppTracking(directory: string, entrypoint: Entry): Promise<OmTracking> {
-  const disabled = () => createTracker({ registry: omEvents, entrypoint, enabled: false, send: async () => 'drop' });
+  const disabled = () => createTracker({ registry: omEvents, entrypoint, enabled: false, isEnabled: () => false, send: async () => 'drop' });
   if (trackingLocked()) return disabled();
   try {
     const testing = Boolean(process.env.NODE_TEST_CONTEXT) || process.env.NODE_ENV === 'test';

@@ -24,7 +24,7 @@ test('manual entry and source selection reject untrusted callers, mutable refs a
   assert.equal(releaseInputs({ ...recovery, MOTION_RELEASE_ACTION: 'archive-only' }).action, 'archive-only');
   let called = false;
   await validateSource('.', 'a'.repeat(40), '0.6.4-test.7', async (_, args) => { called = true; assert(args.includes('refs/remotes/origin/feature/motion')); }); assert(called);
-  for (const [sha, version] of [['main', '0.6.4-test.7'], ['a'.repeat(40), '0.6.4'], ['a'.repeat(40), '0.6.4-test.0']]) await assert.rejects(validateSource('.', sha, version, async () => { throw Error('must not run'); }));
+  for (const [sha, version] of [['main', '0.6.4-test.7'], ['a'.repeat(40), '0.6.4-test.0']]) await assert.rejects(validateSource('.', sha, version, async () => { throw Error('must not run'); }));
   await assert.rejects(validateSource('.', 'a'.repeat(40), '0.6.4-test.7', async () => { throw Error('not integrated'); }), /not integrated/);
   const buildEnv = { ...valid, GITHUB_SHA: 'a'.repeat(40), GITHUB_WORKFLOW_REF: `${repository}/${candidateWorkflow}@refs/heads/feature/motion` };
   const resolved = await resolveCandidate('.', '', '0.6.4-test.7', buildEnv, async (_, args) => { assert.notEqual(args[0], 'rev-parse'); });
@@ -228,7 +228,7 @@ test('partial publication retries use the retained producer artifact IDs across 
     assert(jobs[id].includes('        id: artifact\n'));
   }
   for (const id of ['npm', 'registry-mac', 'registry-windows', 'promote-test', 'snapshot']) {
-    assert(jobs[id].includes('if: ${{ always() && !cancelled() && needs.verify.result'), 'Successful retained producers must still supply partial retry consumers: ' + id);
+    assert(jobs[id].includes('always() && !cancelled() && needs.verify.result'), 'Successful retained producers must still supply partial retry consumers: ' + id);
   }
   const downloads = id => [...jobs[id].matchAll(/artifact-ids: \$\{\{ needs\.([\w-]+)\.outputs\.artifact_id \}\}/g)].map(m => m[1]);
   assert.deepEqual(downloads('npm'), ['verify']);
@@ -239,8 +239,8 @@ test('partial publication retries use the retained producer artifact IDs across 
   assert(jobs.snapshot.includes('needs: [verify, npm, promote-test]'));
   assert(!jobs['promote-test'].includes('needs.registry-'));
   for (const id of ['registry-mac', 'registry-windows']) {
-    assert(jobs[id].includes('needs: [verify, snapshot]'));
-    assert(jobs[id].includes('continue-on-error: true'));
+    assert(jobs[id].includes('needs: [verify, npm, snapshot]'));
+    assert(jobs[id].includes("continue-on-error: ${{ inputs.channel != 'stable' }}"));
   }
   assert(jobs['promote-test'].includes('id-token: write') && !jobs.snapshot.includes('id-token: write'));
   assert(jobs['promote-test'].includes('npm@11.21.2'));
@@ -279,7 +279,8 @@ test('daily build and publication are separate manual entries without an indepen
     assert(guard.includes("exit 1"));
   }
   assert(recovery.includes('needs: select-ref'));
-  assert(build.includes('--template-env=dev') && !build.includes('--template-env=prod'));
+  assert(build.includes('--template-env="$MOTION_TEMPLATE_ENVIRONMENT"'));
+  assert(build.includes("inputs.channel == 'stable' && 'prod' || 'dev'"));
   assert(build.includes('tests/native-runtime.test.ts'), 'Candidate checks include the integrated native-preparation regression');
   assert(build.includes('HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome') && build.includes('\"$HYPERFRAMES_BROWSER_PATH\" --version'));
   assert(!/apt-get install[^\n]*\bchromium\b/.test(build), 'Candidate builds must not install Ubuntu desktop snaps');

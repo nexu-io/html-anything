@@ -7,7 +7,7 @@ Website URL `?utm_source=producthunt` â†’ copied guide URL with the same query â
 - No source: the original guide and setup command work unchanged; a new identity has an unknown source.
 - Untagged upgrade: keep the saved source and installation ID.
 - Explicit new source: update the source while retaining the installation ID.
-- Existing telemetry opt-outs apply. Reporting failure never fails installation.
+- The release policy applies: test/prerelease builds do not collect installation attribution or send events. Stable builds honor saved telemetry preferences and environment opt-outs. Reporting failure never fails installation.
 - Website current-visit attribution is separate from the existing first-touch cookie. Existing page/tab prompts do not change when another tab arrives from another campaign.
 
 ## Deployment order

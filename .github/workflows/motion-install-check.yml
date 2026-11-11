@@ -1,0 +1,114 @@
+name: Motion installation check
+run-name: Motion installation check · ${{ inputs.version || '0.6.4-test.7' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Existing public exact version to check; no publication or channel changes'
+        type: string
+        required: true
+        default: '0.6.4-test.7'
+  pull_request:
+    branches: [feature/motion]
+    paths:
+      - '.github/workflows/motion-install-check.yml'
+      - '.github/scripts/motion-registry*.mjs'
+      - 'tests/registry-download.test.mjs'
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  # shortcut: PR regression pins test.7; refresh it before its candidate artifact expires.
+  MOTION_VERSION: ${{ inputs.version || '0.6.4-test.7' }}
+
+jobs:
+  candidate:
+    if: github.repository == 'nexu-io/html-anything' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+      tgz_sha256: ${{ steps.download.outputs.tgz_sha256 }}
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - name: Resolve and verify the original immutable candidate
+        id: download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch origin feature/motion:refs/remotes/origin/feature/motion
+          node --input-type=module <<'JS'
+          import { appendFile } from 'node:fs/promises';
+          import { downloadCandidate, validateSource } from './.github/scripts/motion-release.mjs';
+          const c = await downloadCandidate(process.env.MOTION_VERSION, process.env.RUNNER_TEMP + '/candidate');
+          await validateSource(process.cwd(), c.sourceCommit, c.version);
+          await appendFile(process.env.GITHUB_OUTPUT, `tgz_sha256=${c.tgzSHA256}\n`);
+          JS
+      - uses: actions/upload-artifact@v7.0.2
+        id: artifact
+        with:
+          name: installation-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate/
+          retention-days: 7
+          if-no-files-found: error
+
+  install:
+    needs: candidate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-26
+            platform: darwin-arm64
+          - runner: windows-2025
+            platform: win32-x64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    env:
+      MOTION_EXPECTED_SHA256: ${{ needs.candidate.outputs.tgz_sha256 }}
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.candidate.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          path: ${{ runner.temp }}/candidate
+      - name: Install the public version and verify native preparation and MCP
+        shell: bash
+        run: node .github/scripts/motion-registry-smoke.mjs "$RUNNER_TEMP/candidate"
+      - name: Retain the platform result even on failure
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: installation-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/candidate/registry-${{ matrix.platform }}.json
+            ${{ runner.temp }}/candidate/registry-package.json
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Show the installation result
+        if: always()
+        shell: bash
+        run: |
+          node --input-type=module <<'JS'
+          import { appendFile, readFile } from 'node:fs/promises';
+          import os from 'node:os';
+          const file = process.env.RUNNER_TEMP + `/candidate/registry-${process.platform}-${process.arch}.json`;
+          const report = await readFile(file, 'utf8').catch(() => 'No installation report; inspect runner/artifact setup logs.');
+          await appendFile(process.env.GITHUB_STEP_SUMMARY, `## Read-only installation check\n\nOS: ${os.release()} / ${process.arch}\n\n\`\`\`json\n${report}\n\`\`\`\n\nNo npm publish, dist-tag, R2 or install.md writes. Real model creation, template service access and desktop playback are not covered.\n`);
+          JS

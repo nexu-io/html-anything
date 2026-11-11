@@ -27,6 +27,21 @@ it('shows the enabled default and persists a user opt-out while stopping browser
   expect(toggle.checked).toBe(false);
   expect(requests[1].method).toBe('PUT'); expect(JSON.parse(String(requests[1].body))).toEqual({ enabled: false });
   expect(hooks.enabled).toHaveBeenCalledWith(false);
+  for (let cycle = 0; cycle < 2; cycle++) {
+    await act(async () => toggle.click()); expect(toggle.checked).toBe(true);
+    expect(hooks.enabled).toHaveBeenLastCalledWith(true);
+    await act(async () => toggle.click()); expect(toggle.checked).toBe(false);
+    expect(hooks.enabled).toHaveBeenLastCalledWith(false);
+  }
+});
+
+it('locks collection in test builds without overwriting the saved production preference', async () => {
+  const fetcher = vi.fn(async () => Response.json({ enabled: false, preference: true, locked: true, reason: 'test_build' }));
+  vi.stubGlobal('fetch', fetcher);
+  const toggle = await open(); expect(toggle.checked).toBe(false); expect(toggle.disabled).toBe(true);
+  await act(async () => toggle.click());
+  expect(fetcher).toHaveBeenCalledTimes(1); expect(hooks.enabled).not.toHaveBeenCalled();
+  expect(document.querySelector('[role=status]')?.textContent).toContain('disabled in test builds');
 });
 
 it('shows an environment lock and never offers to override it', async () => {
