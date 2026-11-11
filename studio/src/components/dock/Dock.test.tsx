@@ -700,6 +700,41 @@ it("opens the compact MVP with both rails and a 30% timeline, without locking di
   expect(timeline.height).toBe(360);
 });
 
+it.each(["compositions", "design"] as const)("remembers the %s side width across reload with the opposite rail collapsed", (id) => {
+  const options = { panels: MVP_PANEL_IDS, fixedLayout: true, initialCompactLayout: true,
+    storageKey: "motion.mvp.dock.v1", dockWidth: () => 900 };
+  const openSide = (projectId: string) => {
+    mount(projectId, {}, options);
+    act(() => {
+      dockApi!.layout(900, 800);
+      vi.advanceTimersByTime(32);
+      useDockLayoutStore.getState().activatePanel(id);
+    });
+    return dockApi!.getPanel(id)!.group;
+  };
+  const side = openSide("p1");
+  act(() => {
+    side.api.setSize({ width: 400 });
+    vi.advanceTimersByTime(1000);
+  });
+  expect(side.width).toBe(400);
+  expect(dockApi!.getPanel(id === "design" ? "compositions" : "design")!.group.width).toBe(48);
+  act(() => root?.unmount());
+  root = null;
+
+  expect(openSide("p1").width).toBe(400);
+  act(() => {
+    useDockLayoutStore.getState().controller!.setGroupCollapsed!(id, true, true);
+    vi.advanceTimersByTime(1000);
+  });
+  act(() => root?.unmount());
+  root = null;
+  expect(openSide("p1").width).toBe(400);
+  act(() => root?.unmount());
+  root = null;
+  expect(openSide("p2").width).not.toBe(400);
+});
+
 
 it("collapses MVP sides when the host narrows, preserves content, and allows explicit reopening", () => {
   let width = 1400;

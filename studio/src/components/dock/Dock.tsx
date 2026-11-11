@@ -15,14 +15,14 @@ import {
   type DockviewReadyEvent,
   type IDockviewPanelProps,
 } from "dockview-react";
-import { readStudioUiPreferences, writeStudioUiPreferences } from "../../utils/studioUiPreferences";
+import { readStudioUiPreferences, writeStudioUiPreferences, type StudioUiPreferences } from "../../utils/studioUiPreferences";
 import { installDockAccessibility } from "./dockAccessibility";
 import { DockStripActions } from "./DockStripActions";
 import { DockHeaderSlotsProvider } from "./DockHeaderSlots";
 import { DockTab } from "./DockTab";
 import { installTabFill } from "./dockTabFill";
 import { createSidePanelMotion } from "./dockSidePanelMotion";
-import { addRegisteredPanel, applySideMinimums, buildEditLayout, defaultSideWidths, isSideCollapsed, sideMinimumWidth, previewMinimumWidth, COMPACT_DOCK_WIDTH, PREVIEW_ONLY_DOCK_WIDTH, MIN_PREVIEW_W, DOCK_GAPS, collapsedSideWidth } from "./dockLayout";
+import { addRegisteredPanel, applySideMinimums, buildEditLayout, defaultSideWidths, isSideCollapsed, sideMinimumWidth, previewMinimumWidth, COMPACT_DOCK_WIDTH, PREVIEW_ONLY_DOCK_WIDTH, MIN_PREVIEW_W, DOCK_GAPS, collapsedSideWidth, sideZone } from "./dockLayout";
 import { DOCK_PANEL_COMPONENT, parseDockLayout } from "./dockLayoutSchema";
 import { useDockLayoutStore, type DockController, type DockSnapshot } from "./dockLayoutStore";
 import {
@@ -99,11 +99,12 @@ interface DockOptions {
   storageKey?: string | undefined;
   dockWidth: () => number;
   fixedLayout?: boolean;
+  expandedWidths: WeakMap<object, number>;
 }
 
 function createController(api: DockviewApi, options: DockOptions): DockController & { dispose: () => void; finishTransitions: () => void } {
   const motion = createSidePanelMotion();
-  const expandedWidths = new WeakMap<object, number>();
+  const { expandedWidths } = options;
   const setGroupCollapsed = (id: PanelId, collapsed: boolean, animate = false) => {
     const group = api.getPanel(id)?.group;
     if (!options.fixedLayout || !group || PANEL_DEFINITIONS[id].zone === "center" || isSideCollapsed(group) === collapsed) return;
@@ -297,7 +298,8 @@ function Root({
   const onReady = useCallback(
     ({ api }: DockviewReadyEvent) => {
       disposeRef.current();
-      const options = { panels, storageKey, dockWidth, fixedLayout };
+      const expandedWidths = new WeakMap<object, number>();
+      const options = { panels, storageKey, dockWidth, fixedLayout, expandedWidths };
       restoreOrBuild(api, projectId, options);
       const controller = createController(api, options);
       if (fixedLayout) for (const id of panels) controller.open(id);
@@ -353,16 +355,38 @@ function Root({
         initializeTimelineSize();
       }
       store.sync(snapshot(api));
+      fitHostWidth();
+      // Restore preferences after initial collapse so rail widths cannot replace them.
+      const savedWidths = fixedLayout ? readStudioUiPreferences(undefined, projectId, storageKey).dockSideWidths : undefined;
+      if (savedWidths) {
+        for (const group of api.groups) {
+          const zone = sideZone(group);
+          const width = zone ? savedWidths[zone] : undefined;
+          if (width === undefined) continue;
+          expandedWidths.set(group, width);
+          if (!isSideCollapsed(group)) group.api.setSize({ width });
+        }
+        fitHostWidth();
+      }
       const pending = store.takePendingActivation();
       if (pending) store.activatePanel(pending);
-      fitHostWidth();
 
       let timer: ReturnType<typeof setTimeout> | undefined;
       const persist = () => {
         clearTimeout(timer);
         timer = setTimeout(() => {
-          if (fixedLayout && (api.hasMaximizedGroup() || api.groups.some(group => isSideCollapsed(group) || group.element.hasAttribute("data-side-motion")))) return;
-          writeStudioUiPreferences({ dockLayout: api.toJSON() }, undefined, projectId, storageKey);
+          if (fixedLayout && (api.hasMaximizedGroup() || api.groups.some(group => group.element.hasAttribute("data-side-motion")))) return;
+          const patch: StudioUiPreferences = {};
+          if (!fixedLayout || !api.groups.some(isSideCollapsed)) patch.dockLayout = api.toJSON();
+          if (fixedLayout) {
+            patch.dockSideWidths = {};
+            for (const group of api.groups) {
+              const zone = sideZone(group);
+              const width = isSideCollapsed(group) ? expandedWidths.get(group) : group.width;
+              if (zone && width !== undefined) patch.dockSideWidths[zone] = width;
+            }
+          }
+          writeStudioUiPreferences(patch, undefined, projectId, storageKey);
         }, PERSIST_DEBOUNCE_MS);
       };
       // dockview does not fire onDidLayoutChange for add/remove/activate,

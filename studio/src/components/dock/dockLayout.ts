@@ -52,7 +52,7 @@ function holdsPreview(group: DockviewApi["groups"][number]) {
 }
 
 /** The zone of a group whose every tab is a side panel, else null. */
-function sideZone(group: DockviewApi["groups"][number]): "left" | "right" | null {
+export function sideZone(group: DockviewApi["groups"][number]): "left" | "right" | null {
   const zones = group.panels.map((panel) =>
     isPanelId(panel.id) ? PANEL_DEFINITIONS[panel.id].zone : "center",
   );

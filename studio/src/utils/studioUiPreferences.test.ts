@@ -65,6 +65,17 @@ describe("studio UI preferences", () => {
     expect(readStudioUiPreferences(storage)).toEqual({});
   });
 
+  it("retains only positive finite side widths under the project's dock key", () => {
+    const storage = createStorage();
+    writeStudioUiPreferences({ dockSideWidths: { left: 400, right: 360 } }, storage, "p1", "motion.mvp.dock.v1");
+    expect(readStudioUiPreferences(storage, "p1", "motion.mvp.dock.v1").dockSideWidths).toEqual({ left: 400, right: 360 });
+    expect(readStudioUiPreferences(storage, "p2", "motion.mvp.dock.v1").dockSideWidths).toBeUndefined();
+    for (const width of [0, -1, "400", null, 1e400]) {
+      storage.setItem("motion.mvp.dock.v1:p1", JSON.stringify({ dockSideWidths: { left: width, right: 360, center: 400 } }));
+      expect(readStudioUiPreferences(storage, "p1", "motion.mvp.dock.v1").dockSideWidths).toEqual({ right: 360 });
+    }
+  });
+
   it("ignores malformed stored values", () => {
     const storage = createStorage();
     storage.setItem(
