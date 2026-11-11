@@ -2,7 +2,7 @@ import type { Direction, DockviewApi } from "dockview-react";
 import { DOCK_PANEL_COMPONENT } from "./dockLayoutSchema";
 import { PANEL_DEFINITIONS, PANEL_IDS, isPanelId, type PanelId } from "./panelRegistry";
 
-const MIN_PREVIEW_W = 360;
+export const MIN_PREVIEW_W = 360;
 const MIN_PREVIEW_H = 200;
 const MIN_TIMELINE_H = 100;
 const MIN_SIDE_W = 200;
@@ -11,6 +11,13 @@ const DEFAULT_TIMELINE_H = 360;
 const DEFAULT_LEFT = ["compositions", "assets", "code", "catalog"] as const;
 const DEFAULT_RIGHT = ["design", "layers", "renders", "variables", "motionBlur"] as const;
 export const COLLAPSED_SIDE_WIDTH = 48;
+const COMPACT_SIDE_WIDTH = 320;
+export const DOCK_GAPS = 12;
+// Breakpoints derive from usable panel sizes, not an independent viewport guess.
+export const COMPACT_DOCK_WIDTH = MIN_PREVIEW_W + 2 * COMPACT_SIDE_WIDTH + DOCK_GAPS;
+export const PREVIEW_ONLY_DOCK_WIDTH = MIN_PREVIEW_W + COMPACT_SIDE_WIDTH + COLLAPSED_SIDE_WIDTH + DOCK_GAPS;
+export const collapsedSideWidth = (width: number, fixedLayout = false) =>
+  fixedLayout && width < PREVIEW_ONLY_DOCK_WIDTH ? 0 : COLLAPSED_SIDE_WIDTH;
 export const isSideCollapsed = (group: DockviewApi["groups"][number]) =>
   group.element.classList.contains("hf-dock-side-collapsed");
 
@@ -26,12 +33,18 @@ export function defaultSideWidths(viewportWidth: number) {
 }
 
 /**
- * Side groups keep MIN_SIDE_W while both fit beside the preview's floor, then shrink down to
- * MIN_SIDE_W_FLOOR; below that the dock overflows and clips rather than squeezing the preview.
+ * Fixed MVP sides keep their readable control width; the controller collapses them
+ * when space runs out. Free-layout sides retain the native shrinking policy.
  */
-export function sideMinimumWidth(dockWidth: number): number {
+export function sideMinimumWidth(dockWidth: number, fixedLayout = false): number {
+  if (fixedLayout) return COMPACT_SIDE_WIDTH;
   const fair = Math.floor((dockWidth - MIN_PREVIEW_W) / 2);
   return Math.min(MIN_SIDE_W, Math.max(MIN_SIDE_W_FLOOR, fair));
+}
+
+export function previewMinimumWidth(dockWidth: number, fixedLayout: boolean): number {
+  if (!fixedLayout) return MIN_PREVIEW_W;
+  return Math.min(MIN_PREVIEW_W, Math.max(0, dockWidth - 2 * collapsedSideWidth(dockWidth, true) - DOCK_GAPS));
 }
 
 function holdsPreview(group: DockviewApi["groups"][number]) {
@@ -50,24 +63,26 @@ function sideZone(group: DockviewApi["groups"][number]): "left" | "right" | null
 
 /** Idempotent; rewrites every group's minimum, since dockview keeps a constraint once set. */
 export function applySideMinimums(api: DockviewApi, dockWidth = window.innerWidth, fixedLayout = false) {
-  const minimumWidth = sideMinimumWidth(dockWidth);
+  const minimumWidth = sideMinimumWidth(dockWidth, fixedLayout);
+  const compact = fixedLayout && dockWidth < COMPACT_DOCK_WIDTH;
   const cap = defaultSideWidths(dockWidth);
+  const railWidth = collapsedSideWidth(dockWidth, fixedLayout);
   for (const group of api.groups) {
+    group.element.classList.toggle("hf-dock-side-hidden", railWidth === 0 && !!sideZone(group));
     if (group.element.hasAttribute("data-side-motion")) continue;
     if (isSideCollapsed(group)) {
-      group.api.setConstraints({ minimumWidth: COLLAPSED_SIDE_WIDTH, maximumWidth: COLLAPSED_SIDE_WIDTH });
+      group.api.setConstraints({ minimumWidth: railWidth, maximumWidth: railWidth });
+      group.api.setSize({ width: railWidth });
       continue;
     }
     if (holdsPreview(group)) {
-      // Fixed MVP rails must still fit inside very narrow embedded hosts.
-      const previewMinimum = fixedLayout ? Math.min(MIN_PREVIEW_W, Math.max(120, dockWidth - 2 * minimumWidth - 12)) : MIN_PREVIEW_W;
-      group.api.setConstraints({ minimumWidth: previewMinimum });
+      group.api.setConstraints({ minimumWidth: previewMinimumWidth(dockWidth, fixedLayout) });
       continue;
     }
     group.api.setConstraints({ minimumWidth, maximumWidth: Number.POSITIVE_INFINITY });
     const zone = sideZone(group);
     const limit = zone === "right" ? cap.right : cap.left;
-    if (zone && minimumWidth < MIN_SIDE_W && group.width > limit) {
+    if (zone && !compact && minimumWidth < MIN_SIDE_W && group.width > limit) {
       group.api.setSize({ width: limit });
     }
   }

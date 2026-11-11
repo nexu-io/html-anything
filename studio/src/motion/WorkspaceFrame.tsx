@@ -7,6 +7,8 @@ import { useWorkspace } from './useWorkspace';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { Tooltip } from '../components/ui/Tooltip';
 import { Dialog } from '@base-ui/react/dialog';
+import { ErrorNotice } from '../components/ui/ErrorNotice';
+import { isConnectionFailure } from '../components/ui/errorNoticeMessage';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
 
@@ -16,7 +18,7 @@ type WorkspaceChrome = {
   workspace: ReturnType<typeof useWorkspace>;
   switchingDisabled: boolean;
   saveState: string;
-  openLibrary: () => void;
+  openLibrary: (trigger?: HTMLElement) => void;
   openConnections: () => void;
   openModelSettings: () => void;
   toggleSidebar: () => void;
@@ -50,12 +52,18 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
   }, [waitForSaves, t]);
   const workspace = useWorkspace(beforeViewChange, projectId, sessionId);
   const [connectionSection, setConnectionSection] = useState<'setup' | 'templates'>(() => 'templates');
+  const libraryTrigger = useRef<HTMLElement | null>(null);
   const [connectionsOpen, setConnectionsOpen] = useState(() => new URLSearchParams(location.search).get('templates') === '1');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const switchingDisabled = workspace.busy || blocked || Boolean(editorState?.blocked) || !workspace.status;
-  const notice = workspace.error || message || editorState?.message;
+  const notice = workspace.error || message || editorState?.message || "";
+  const [dismissedNotice, setDismissedNotice] = useState<string | null>(null);
+  const noticeKey = `${workspace.error ? workspace.errorSource : 'editor'}:${notice || ''}`;
+  // Hiding a notice never clears an editor's write guard. New errors reset the dismissal.
+  const visibleNotice = notice && dismissedNotice !== noticeKey;
+  if (!notice && dismissedNotice !== null) setDismissedNotice(null);
   const value: WorkspaceChrome = { workspace, switchingDisabled, saveState: workspace.busy ? t('Working…') : editorState?.saveState || saveState, registerEditor, beforeViewChange,
-    openLibrary: () => { workspace.clearError(); setConnectionSection('templates'); setConnectionsOpen(true); },
+    openLibrary: trigger => { libraryTrigger.current = trigger ?? null; workspace.clearError(); setConnectionSection('templates'); setConnectionsOpen(true); },
     openConnections: () => {},
     openModelSettings: () => {},
     toggleSidebar: () => setSidebarOpen(open => !open), sidebarOpen };
@@ -63,18 +71,21 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
     <Dialog.Root open={sidebarOpen} onOpenChange={setSidebarOpen}>
     <div className="motion-workspace" data-embedded={presentation.embedded}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="motion-sidebar-backdrop" />
+        <Dialog.Backdrop className="hf-overlay-backdrop motion-sidebar-backdrop" />
         <Dialog.Popup className="motion-sidebar-drawer" aria-label={t('Project list')} onKeyDown={event => event.stopPropagation()}>
           <WorkspaceSidebar currentId={projectId} close={() => setSidebarOpen(false)} />
         </Dialog.Popup>
       </Dialog.Portal>
       <div className="motion-workspace-content">
-        {notice && <div className="motion-workspace-notice" role="alert"><span>{t(notice)}</span>{workspace.error && <button className="motion-icon-button" aria-label={t('Dismiss')} onClick={workspace.clearError}><MotionIcon name="close" /></button>}</div>}
+        {visibleNotice && <ErrorNotice key={noticeKey} message={notice}
+          action={workspace.error && workspace.errorSource === 'connection' && isConnectionFailure(notice)
+            ? { label: 'Reconnect', run: workspace.retryConnection, busy: workspace.checkingConnection } : undefined}
+          onDismiss={() => { setDismissedNotice(noticeKey); if (workspace.error) workspace.clearError(); }} />}
         {children}
       </div>
     </div>
     </Dialog.Root>
-    {connectionsOpen && <ConnectionDialog open section={connectionSection} busy={switchingDisabled} error={workspace.error} onClose={() => setConnectionsOpen(false)} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
+    {connectionsOpen && <ConnectionDialog open returnFocus={libraryTrigger.current} section={connectionSection} busy={switchingDisabled} error={workspace.error} onClose={() => setConnectionsOpen(false)} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
   </WorkspaceChromeContext.Provider>;
 }
 

@@ -22,7 +22,7 @@ import { DockHeaderSlotsProvider } from "./DockHeaderSlots";
 import { DockTab } from "./DockTab";
 import { installTabFill } from "./dockTabFill";
 import { createSidePanelMotion } from "./dockSidePanelMotion";
-import { addRegisteredPanel, applySideMinimums, buildEditLayout, defaultSideWidths, isSideCollapsed, sideMinimumWidth, COLLAPSED_SIDE_WIDTH } from "./dockLayout";
+import { addRegisteredPanel, applySideMinimums, buildEditLayout, defaultSideWidths, isSideCollapsed, sideMinimumWidth, previewMinimumWidth, COMPACT_DOCK_WIDTH, PREVIEW_ONLY_DOCK_WIDTH, MIN_PREVIEW_W, DOCK_GAPS, collapsedSideWidth } from "./dockLayout";
 import { DOCK_PANEL_COMPONENT, parseDockLayout } from "./dockLayoutSchema";
 import { useDockLayoutStore, type DockController, type DockSnapshot } from "./dockLayoutStore";
 import {
@@ -37,7 +37,6 @@ import "./dock.css";
 import { menuClasses } from "../ui/menuStyle";
 
 const PERSIST_DEBOUNCE_MS = 250;
-const COMPACT_DOCK_WIDTH = 900;
 
 type Slots = Partial<Record<PanelId, HTMLElement>>;
 
@@ -102,35 +101,51 @@ interface DockOptions {
   fixedLayout?: boolean;
 }
 
-function createController(api: DockviewApi, options: DockOptions): DockController & { dispose: () => void } {
+function createController(api: DockviewApi, options: DockOptions): DockController & { dispose: () => void; finishTransitions: () => void } {
   const motion = createSidePanelMotion();
   const expandedWidths = new WeakMap<object, number>();
   const setGroupCollapsed = (id: PanelId, collapsed: boolean, animate = false) => {
     const group = api.getPanel(id)?.group;
     if (!options.fixedLayout || !group || PANEL_DEFINITIONS[id].zone === "center" || isSideCollapsed(group) === collapsed) return;
+    if (!collapsed && options.dockWidth() < PREVIEW_ONLY_DOCK_WIDTH) return;
+    const railWidth = collapsedSideWidth(options.dockWidth(), true);
+    const compact = options.dockWidth() < COMPACT_DOCK_WIDTH;
+    const zone = PANEL_DEFINITIONS[id].zone as "left" | "right";
+    const preferredWidth = Math.max(expandedWidths.get(group) ?? defaultSideWidths(options.dockWidth())[zone], sideMinimumWidth(options.dockWidth(), true));
+    const otherSideWidth = api.groups.filter(other => other !== group && other.panels.every(panel => isPanelId(panel.id) && PANEL_DEFINITIONS[panel.id].zone !== "center"))
+      .reduce((sum, other) => sum + other.width, 0);
+    if (!collapsed && (compact || preferredWidth + otherSideWidth + MIN_PREVIEW_W + DOCK_GAPS > options.dockWidth())) {
+      // The newly requested side wins, including rail shortcuts and programmatic
+      // activation. Keep the opposite group's tabs and content mounted.
+      for (const other of api.groups) {
+        const otherId = other.panels[0]?.id;
+        if (other !== group && isPanelId(otherId) && PANEL_DEFINITIONS[otherId].zone !== "center") {
+          setGroupCollapsed(otherId, true);
+        }
+      }
+    }
     // A reversal starts at the current width but retains the original expanded width.
     if (collapsed && !motion.has(group.element)) expandedWidths.set(group, group.width);
     const from = group.width;
-    const zone = PANEL_DEFINITIONS[id].zone as "left" | "right";
-    const preferredWidth = expandedWidths.get(group) ?? defaultSideWidths(options.dockWidth())[zone];
-    const target = collapsed ? COLLAPSED_SIDE_WIDTH : options.dockWidth() < COMPACT_DOCK_WIDTH
-      ? Math.min(preferredWidth, Math.max(120, options.dockWidth() - COLLAPSED_SIDE_WIDTH - 240))
-      : preferredWidth;
+    const remainingSides = api.groups.filter(other => other !== group && other.panels.every(panel => isPanelId(panel.id) && PANEL_DEFINITIONS[panel.id].zone !== "center"))
+      .reduce((sum, other) => sum + other.width, 0);
+    const target = collapsed ? railWidth : Math.min(preferredWidth, options.dockWidth() - remainingSides - MIN_PREVIEW_W - DOCK_GAPS);
     group.element.classList.toggle("hf-dock-side-collapsed", collapsed);
+    api.getPanel("preview")?.group.api.setConstraints({ minimumWidth: previewMinimumWidth(options.dockWidth(), true) });
     const resize = (width: number, finished: boolean) => {
       // Dockview owns both the card and its separately portaled content. Resize through
       // its API so borders, hit targets and the live preview stay aligned throughout.
       const otherSides = api.groups.filter(other => other !== group && other.panels.every(panel => isPanelId(panel.id) && PANEL_DEFINITIONS[panel.id].zone !== "center"));
       for (const other of otherSides) other.api.setConstraints({ minimumWidth: other.width, maximumWidth: other.width });
-      group.api.setConstraints({ minimumWidth: COLLAPSED_SIDE_WIDTH, maximumWidth: Number.POSITIVE_INFINITY });
+      group.api.setConstraints({ minimumWidth: railWidth, maximumWidth: Number.POSITIVE_INFINITY });
       group.api.setSize({ width });
       if (finished) group.api.setConstraints({
-        minimumWidth: collapsed ? COLLAPSED_SIDE_WIDTH : sideMinimumWidth(options.dockWidth()),
-        maximumWidth: collapsed ? COLLAPSED_SIDE_WIDTH : Number.POSITIVE_INFINITY,
+        minimumWidth: collapsed ? railWidth : sideMinimumWidth(options.dockWidth(), true),
+        maximumWidth: collapsed ? railWidth : Number.POSITIVE_INFINITY,
       });
       for (const other of otherSides) other.api.setConstraints({
-        minimumWidth: motion.has(other.element) || isSideCollapsed(other) ? COLLAPSED_SIDE_WIDTH : sideMinimumWidth(options.dockWidth()),
-        maximumWidth: isSideCollapsed(other) && !motion.has(other.element) ? COLLAPSED_SIDE_WIDTH : Number.POSITIVE_INFINITY,
+        minimumWidth: motion.has(other.element) || isSideCollapsed(other) ? railWidth : sideMinimumWidth(options.dockWidth(), true),
+        maximumWidth: isSideCollapsed(other) && !motion.has(other.element) ? railWidth : Number.POSITIVE_INFINITY,
       });
     };
     motion.run(group.element, from, target, animate, resize);
@@ -193,6 +208,7 @@ function createController(api: DockviewApi, options: DockOptions): DockControlle
   };
   return {
     dispose: motion.dispose,
+    finishTransitions: motion.finishAll,
     open,
     setGroupCollapsed,
     activate: (id) => {
@@ -218,6 +234,10 @@ function createController(api: DockviewApi, options: DockOptions): DockControlle
       buildEditLayout(api, options.dockWidth(), options.panels);
       const timeline = api.getPanel("timeline");
       if (options.fixedLayout && timeline) timeline.group.header.hidden = true;
+      if (options.fixedLayout && options.dockWidth() < COMPACT_DOCK_WIDTH) {
+        for (const id of options.panels) setGroupCollapsed(id, true);
+      }
+      applySideMinimums(api, options.dockWidth(), options.fixedLayout);
     },
   };
 }
@@ -303,19 +323,23 @@ function Root({
       };
       const store = useDockLayoutStore.getState();
       store.attach(controller, panels);
-      let previousWidth = Number.POSITIVE_INFINITY;
+      let previousWidth = dockWidth();
       const fitHostWidth = () => {
         const width = dockWidth();
         if (width <= 0) return;
-        // Only shrinking the host closes panels. Height changes and manual tab
-        // activation must not immediately undo a user's explicit expansion.
-        if (fixedLayout && width < COMPACT_DOCK_WIDTH && width < previousWidth) {
+        if (width !== previousWidth) controller.finishTransitions();
+        previousWidth = width;
+        const expandedSides = api.groups.filter(group => !isSideCollapsed(group) && group.panels.every(panel => isPanelId(panel.id) && PANEL_DEFINITIONS[panel.id].zone !== "center"));
+        const sidesWidth = api.groups.filter(group => group.panels.every(panel => isPanelId(panel.id) && PANEL_DEFINITIONS[panel.id].zone !== "center"))
+          .reduce((sum, group) => sum + (isSideCollapsed(group) ? collapsedSideWidth(width, true) : Math.max(group.width, sideMinimumWidth(width, true))), 0);
+        // Revalidate restored layouts, shrinking hosts and expanded widths alike.
+        // A height-only resize leaves an expansion intact whenever it still fits.
+        if (fixedLayout && (width < PREVIEW_ONLY_DOCK_WIDTH || (expandedSides.length > 0 && sidesWidth + MIN_PREVIEW_W + DOCK_GAPS > width))) {
           for (const zone of ["left", "right"] as const) {
             const id = panels.find(id => PANEL_DEFINITIONS[id].zone === zone);
             if (id) controller.setGroupCollapsed?.(id, true);
           }
         }
-        previousWidth = width;
         applySideMinimums(api, width, fixedLayout);
         initializeTimelineSize();
       };

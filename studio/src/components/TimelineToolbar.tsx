@@ -191,6 +191,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
   const selectedElementId = usePlayerStore((s) => s.selectedElementId);
   const selectedElementIds = usePlayerStore((s) => s.selectedElementIds);
   const elements = usePlayerStore((s) => s.elements);
+  const zoomDisabled = mvp && elements.length === 0;
   const canZoomSelection = canZoomToSelectedClips({
     elements,
     selectedElementId,
@@ -224,6 +225,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
     const store = usePlayerStore.getState();
     store.setThumbnailMode("adaptive");
     store.setRippleEditEnabled(false);
+    useAudioMetersVisible.getState().setVisible(false);
     useLinkedClipPreferences.getState().setLinkedSelection(false);
   }, [mvp]);
 
@@ -284,7 +286,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               <RippleEditIcon size={16} />
             </button>
           </Tooltip> </>}
-          {projectHasAudio && (
+          {!mvp && projectHasAudio && (
             <Tooltip label={audioMetersVisible ? t("Hide audio meters") : t("Show audio meters")}>
               <button
                 type="button"
@@ -533,9 +535,10 @@ export const TimelineToolbar = memo(function TimelineToolbar({
           >
             <button
               type="button"
-              onClick={() => setZoomMode("fit")}
+              disabled={zoomDisabled}
+              onClick={() => { if (!zoomDisabled) setZoomMode("fit"); }}
               aria-label={t("Fit timeline to width")}
-              className={flatIdle}
+              className={zoomDisabled ? flatDisabled : flatIdle}
             >
               <ArrowsOutLineHorizontal size={16} aria-hidden="true" />
             </button>
@@ -549,14 +552,16 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             <button
               type="button"
               aria-label={t("Zoom out")}
-              onClick={() => zoomTimelineStep("out")}
-              className={flatIdle}
+              disabled={zoomDisabled}
+              onClick={() => { if (!zoomDisabled) zoomTimelineStep("out"); }}
+              className={zoomDisabled ? flatDisabled : flatIdle}
             >
               <MagnifyingGlassMinus size={16} aria-hidden="true" />
             </button>
           </Tooltip>
           <input
             type="range"
+            disabled={zoomDisabled}
             min="0"
             max="100"
             value={timelineZoomPercentToSlider(displayedTimelineZoomPercent, timelineFitPps)}
@@ -564,7 +569,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             data-studio-control="timeline-zoom"
         aria-label={t("Timeline zoom")}
             onChange={(e) =>
-              setManualZoomPercent(
+              !zoomDisabled && setManualZoomPercent(
                 timelineSliderToZoomPercent(Number(e.target.value), timelineFitPps),
               )
             }
@@ -576,8 +581,9 @@ export const TimelineToolbar = memo(function TimelineToolbar({
             <button
               type="button"
               aria-label={t("Zoom in")}
-              onClick={() => zoomTimelineStep("in")}
-              className={flatIdle}
+              disabled={zoomDisabled}
+              onClick={() => { if (!zoomDisabled) zoomTimelineStep("in"); }}
+              className={zoomDisabled ? flatDisabled : flatIdle}
             >
               <MagnifyingGlassPlus size={16} aria-hidden="true" />
             </button>

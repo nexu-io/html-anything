@@ -33,6 +33,10 @@
    * colour-scheme decides: Studio is dark, `data-theme="paper"` makes it light, and the player
    * keeps a dark scheme in both. Text clears 4.5:1 and icons 3:1 on every surface below. */
 
+  /* Feedback floats above the editor with an inverse, slightly translucent surface. */
+  --color-toast-feedback: light-dark(rgb(24 24 24 / 97%), rgb(250 250 250 / 97%));
+  --color-toast-feedback-ink: light-dark(#fff, #181818);
+
   --color-media-preview-scrim: rgba(96, 96, 96, 0.65);
   --color-transparency-light: #fff;
   --color-transparency-dark: #ddd;
@@ -334,7 +338,7 @@
   --duration-hover: 150ms;
   --duration-expand: 160ms;
   /* Menus, popovers, and dropdowns. Open is ease-out; close is shorter and ease-in. */
-  --duration-open: 120ms;
+  --duration-open: 160ms;
   --duration-close: 90ms;
   /* Tooltips use the same enter shape on a shorter open. */
   --duration-tooltip: 100ms;

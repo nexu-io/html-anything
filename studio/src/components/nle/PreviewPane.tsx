@@ -3,6 +3,8 @@ import { PlayerControls } from "../../player";
 import { useMvpEditor } from "../../motion/StudioHost";
 import type { TimelineElement } from "../../player";
 import { useDockHeaderSlot } from "../dock/DockHeaderSlots";
+import { PreviewEmptyState } from "./PreviewEmptyState";
+import { useEmptyPreview } from "./useEmptyPreview";
 import { NLEPreview } from "./NLEPreview";
 import { CompositionBreadcrumb } from "./CompositionBreadcrumb";
 import { usePreviewBlockDrop } from "./usePreviewBlockDrop";
@@ -76,6 +78,7 @@ export function PreviewPane({
     handleNavigateComposition,
     setCompositionLoading,
     timelineDisabled,
+    compositionLoading,
     hasLoadedOnceRef,
     previewCompositionSize,
     setPreviewCompositionSize,
@@ -116,19 +119,20 @@ export function PreviewPane({
 
   const currentLevel = compositionStack[compositionStack.length - 1];
   const directUrl = compositionStack.length > 1 ? currentLevel.previewUrl : undefined;
+  const empty = useEmptyPreview(projectId, mvp && !compositionLoading && compositionStack.length === 1);
 
   return (
     <div
       ref={containerRef}
-      // MVP keeps the inset spacing without a second frame inside the dock panel.
+      // MVP insets only the canvas; the transport background reaches the panel edges.
       // Fullscreen removes the inset so the preview fills the screen.
-      className={`relative scheme-dark flex-1 min-h-0 flex flex-col overflow-hidden bg-[var(--studio-preview-bg,var(--color-neutral-950))] ${
-        isFullscreen ? "" : mvp ? "m-3" : "m-3 rounded-md border border-border"
+      className={`relative scheme-dark flex-1 min-h-0 flex flex-col overflow-hidden ${mvp ? "bg-transparent" : "bg-[var(--studio-preview-bg,var(--color-neutral-950))]"} ${
+        isFullscreen ? "" : mvp ? (empty ? "my-3" : "mt-3") : "m-3 rounded-md border border-border"
       }`}
       data-studio-fullscreen-target={mvp ? undefined : ""}
     >
       <div
-        className="flex-1 min-h-0 relative overflow-hidden"
+        className={`flex-1 min-h-0 relative overflow-hidden ${mvp && !isFullscreen ? "mx-3" : ""}`}
         data-preview-pan-surface="true"
         onPointerDown={(e) =>
           deselectIfPointerOutsideFrame(e, iframeRef.current, onSelectTimelineElement)
@@ -162,14 +166,14 @@ export function PreviewPane({
           )}
           {!mvp && <AssetPreviewOverlay />}
         </div>
-        <PreviewOverlayProvider>
+        {!empty && <PreviewOverlayProvider>
           <PreviewGuides />
           {!isFullscreen && previewOverlay}
-        </PreviewOverlayProvider>
+        </PreviewOverlayProvider>}
+        {empty && <PreviewEmptyState />}
       </div>
-      {/* Transport row: no own background or border — the controls sit flat on
-          the preview panel's surface (CapCut-style). */}
-      <div className="shrink-0">
+      {/* The MVP transport fills both side edges and the bottom inset. */}
+      {!empty && <div className={`shrink-0 ${mvp ? "bg-[var(--studio-preview-bg,var(--color-neutral-950))] py-1.5" : ""}`}>
         {!mvp && !isFullscreen && compositionStack.length > 1 && (
           <CompositionBreadcrumb stack={compositionStack} onNavigate={handleNavigateComposition} />
         )}
@@ -181,6 +185,7 @@ export function PreviewPane({
           onToggleFullscreen={mvp ? undefined : toggleFullscreen}
         />
       </div>
+      }
       {mvp && <AssetPreviewOverlay modal onOpen={pause} />}
     </div>
   );

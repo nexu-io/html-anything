@@ -107,7 +107,7 @@ describe("AssetPreviewOverlay playback dismissal", () => {
 
 
 describe("modal shared media preview", () => {
-  it("pauses the composition, replaces sources, and returns without moving its playhead", () => {
+  it("pauses the composition, replaces sources, and returns without moving its playhead", async () => {
     const host = document.createElement("div");
     document.body.append(host);
     root = createRoot(host);
@@ -123,6 +123,7 @@ describe("modal shared media preview", () => {
     expect(document.querySelector('[role="dialog"] video')).toBeNull();
     expect(document.querySelector('[role="dialog"] img')?.getAttribute("alt")).toBe("photo.png");
     act(() => document.querySelector<HTMLButtonElement>('[role="dialog"] button[aria-label="Close preview"]')!.click());
+    await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
     expect(useAssetPreviewStore.getState().previewAsset).toBeNull();
     expect(usePlayerStore.getState().currentTime).toBe(2);
   });

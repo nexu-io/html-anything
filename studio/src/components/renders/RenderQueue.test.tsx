@@ -40,6 +40,7 @@ function mountRenderQueue(
   compositionDimensions = { width: 1920, height: 1080 },
   mvpEditor = false,
   jobs: RenderJob[] = [],
+  emptyComposition = false,
 ) {
   const host = document.createElement("div");
   document.body.append(host);
@@ -48,6 +49,7 @@ function mountRenderQueue(
     root?.render(
       <StudioHostContext.Provider value={{ mvpEditor }}><RenderQueue
         jobs={jobs}
+        emptyComposition={emptyComposition}
         projectId="demo"
         onDelete={vi.fn()}
         onClearCompleted={vi.fn()}
@@ -364,9 +366,10 @@ it("MVP offers native GIF and a disabled WebP placeholder", async () => {
   const options = Array.from(document.querySelectorAll('[role="option"]'));
   const gif = options.find(option => option.textContent === "GIF");
   const webp = options.find(option => option.textContent?.startsWith("WebP"));
+  expect(webp?.textContent).toBe("WebP");
+  expect(options.some(option => option.textContent === "MOV")).toBe(true);
   expect(gif).toBeDefined();
   expect(gif?.getAttribute("aria-disabled")).not.toBe("true");
-  expect(webp?.textContent).toContain("not yet available");
   expect(webp?.getAttribute("aria-disabled")).toBe("true");
 });
 
@@ -400,4 +403,14 @@ describe("RenderQueue history", () => {
     expect(text).not.toContain("Last render");
     expect(jobs.map((job) => job.id)).toEqual(["older", "newest", "middle"]);
   });
+});
+
+ it("blocks an empty MVP export without starting a job", () => {
+  const start = vi.fn<StartRenderHandler>();
+  const host = mountRenderQueue(start, undefined, true, [], true);
+  const button = exportButtonIn(host);
+  expect(button.disabled).toBe(true);
+  expect(host.textContent).toContain("No content to export. Add media first.");
+  act(() => button.click());
+  expect(start).not.toHaveBeenCalled();
 });

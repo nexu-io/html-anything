@@ -13,9 +13,10 @@ export function AssetPreviewDialog({ url, kind, name, onClose }: {
   url: string; kind: "video" | "audio" | "image"; name: string; onClose: () => void;
 }) {
   const { t } = useI18n();
-  return <Dialog.Root open onOpenChange={open => { if (!open) onClose(); }}>
+  const [open, setOpen] = useState(true);
+  return <Dialog.Root open={open} onOpenChange={setOpen} onOpenChangeComplete={next => { if (!next) onClose(); }}>
     <Dialog.Portal>
-      <Dialog.Backdrop forceRender className="fixed inset-0 z-140 bg-media-preview-scrim" />
+      <Dialog.Backdrop forceRender className="hf-overlay-backdrop fixed inset-0 z-140 bg-media-preview-scrim" />
       <Dialog.Popup aria-label={t("Preview: {name}", { name })} aria-describedby={undefined}
         className="fixed top-1/2 left-1/2 z-150 flex h-[min(600px,85dvh)] w-[min(800px,90vw)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border border-border bg-surface text-text-1 shadow-menu outline-none"
         onKeyDown={event => event.stopPropagation()}>
@@ -66,16 +67,16 @@ function DialogMedia({ url, kind, name }: { url: string; kind: "video" | "audio"
         : kind === "video" ? <video ref={node => { media.current = node; }} src={url} autoPlay playsInline muted={muted} loop={loop} disablePictureInPicture aria-label={name} className="h-full w-full object-contain" {...events} />
         : <><RemixIcon name="music-2-line" size={48} /><audio ref={node => { media.current = node; }} src={url} autoPlay muted={muted} loop={loop} {...events} /></>}
     </div>
-    {kind !== "image" ? <div className="motion-player-controls shrink-0 px-3 pb-2">
+    {kind !== "image" ? <div className="motion-player-controls motion-player-responsive shrink-0 px-3 pb-2">
       <input type="range" min={0} max={duration} step="any" value={Math.min(time, duration)} disabled={!duration || failed}
         aria-label={t("Seek preview")} data-studio-control="seek-preview" className="w-full"
         style={{ "--preview-progress": `${duration ? time / duration * 100 : 0}%` } as CSSProperties}
         onChange={event => { if (media.current) { media.current.currentTime = event.currentTarget.valueAsNumber; setTime(media.current.currentTime); } }} />
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-        <span className="font-mono text-[11px] tabular-nums text-text-2">{formatTime(time)} / {formatTime(duration)}</span>
+      <div className="motion-player-control-row">
+        <span className="motion-player-timecode whitespace-nowrap font-mono text-[11px] tabular-nums text-text-2">{formatTime(time)} / {formatTime(duration)}</span>
         <Tooltip label={t(playing ? "Pause" : "Play")}><button type="button" aria-label={t(playing ? "Pause" : "Play")} onClick={toggle} disabled={failed}
-          className="flex h-7 w-8 items-center justify-center rounded-md hover:bg-hover disabled:opacity-30"><RemixIcon name={playing ? "pause-fill" : "play-fill"} size={20} /></button></Tooltip>
-        <div className="flex items-center justify-self-end gap-1.5">
+          className="motion-player-play flex h-7 w-8 items-center justify-center justify-self-center rounded-md hover:bg-hover disabled:opacity-30"><RemixIcon name={playing ? "pause-fill" : "play-fill"} size={20} /></button></Tooltip>
+        <div className="motion-player-secondary flex min-w-0 items-center justify-self-end">
           <VolumeControl audioVolume={volume} audioMuted={muted} setAudioVolume={setVolume} setAudioMuted={setMuted} disabled={failed} />
           <SpeedMenu playbackRate={rate} setPlaybackRate={setRate} disabled={failed} />
           <Tooltip label={t(loop ? "Disable loop playback" : "Enable loop playback")}><button type="button" aria-label={t(loop ? "Disable loop playback" : "Enable loop playback")} aria-pressed={loop} onClick={() => setLoop(!loop)} disabled={failed}

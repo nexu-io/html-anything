@@ -1,3 +1,4 @@
+import { ErrorNotice } from "../ui/ErrorNotice";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n, type Translate } from "../../i18n/I18n";
@@ -50,6 +51,7 @@ export interface RenderQueueProps {
   onClearCompleted: () => void;
   onStartRender: StartRenderHandler;
   isRendering: boolean;
+  emptyComposition?: boolean;
   /** History fetch failure (null when the last load succeeded). */
   loadError?: string | null;
   /** Retry a failed history load. */
@@ -229,7 +231,7 @@ function FormatInfoTooltip() {
             {(["mp4", "mov", "webm", "gif"] as const)
               .map((f) => (
                 <p key={f} className="text-text-3">
-                  <span className="text-text-1 font-semibold">{f === "webm" ? "WebM" : f.toUpperCase()}</span>
+                  <span className="text-text-1 font-semibold">{f === "webm" ? "WebM" : f === "mov" ? "MOV · ProRes" : f.toUpperCase()}</span>
                   {" · "}{t(FORMAT_INFO[f].desc)}
                 </p>
               ))}
@@ -256,6 +258,7 @@ const QUALITY_OPTIONS: SelectOption[] = [
 function FormatExportButton({
   onStartRender,
   isRendering,
+  emptyComposition = false,
   compositionDimensions,
   lastRenderDurationMs,
   ffmpeg,
@@ -264,6 +267,7 @@ function FormatExportButton({
 }: {
   onStartRender: StartRenderHandler;
   isRendering: boolean;
+  emptyComposition?: boolean;
   compositionDimensions?: CompositionDimensions | null;
   lastRenderDurationMs?: number;
   ffmpeg: FfmpegStatus | null;
@@ -288,7 +292,7 @@ function FormatExportButton({
   // setups that are perfectly fine. Holding the narrowed value rather than a
   // boolean keeps the notice from re-testing what this line already decided.
   const missingFfmpeg = ffmpeg && !ffmpeg.ok ? ffmpeg : null;
-  const exportBlocked = isRenderExportBlocked(isRendering, missingFfmpeg !== null, invalidGifLoop);
+  const exportBlocked = emptyComposition || isRenderExportBlocked(isRendering, missingFfmpeg !== null, invalidGifLoop);
 
   // MOV (ProRes) is a fixed-quality codec — quality selector has no effect.
   const showQuality = format !== "mov";
@@ -311,7 +315,7 @@ function FormatExportButton({
           <Select
             label={t("Format")}
             value={format}
-            options={mvp ? [...FORMAT_OPTIONS, { value: "webp", label: t("WebP (not yet available)"), disabled: true }] : FORMAT_OPTIONS}
+            options={mvp ? [...FORMAT_OPTIONS.map(option => option.value === "mov" ? { ...option, label: "MOV" } : option), { value: "webp", label: "WebP", disabled: true }] : FORMAT_OPTIONS}
             disabled={isRendering}
             onCommit={(next) => {
               const v = resolveRenderFormat(next);
@@ -412,6 +416,7 @@ function FormatExportButton({
       >
         {isRendering ? t("Rendering…") : t("Export")}
       </Button>
+      {emptyComposition && <p className="text-step-10 text-text-5 text-center">{t("No content to export. Add media first.")}</p>}
       {!mvp && <RenderDurationNote durationMs={lastRenderDurationMs} isRendering={isRendering} />}
     </div>
   );
@@ -425,6 +430,7 @@ export const RenderQueue = memo(function RenderQueue({
   onClearCompleted,
   onStartRender,
   isRendering,
+  emptyComposition = false,
   loadError,
   onRetryLoad,
   actionError,
@@ -457,6 +463,7 @@ export const RenderQueue = memo(function RenderQueue({
     <div className={mvp ? "flex min-h-0 flex-col" : "flex flex-col h-full"}>
       <div className={`px-3 pb-3 border-b border-border shrink-0 ${mvp ? "pt-1" : "pt-3"}`}>
         <FormatExportButton
+          emptyComposition={emptyComposition}
           onStartRender={onStartRender}
           isRendering={isRendering}
           compositionDimensions={compositionDimensions}
@@ -467,37 +474,14 @@ export const RenderQueue = memo(function RenderQueue({
         />
       </div>
 
-      {actionError && (
-        <div
-          role="alert"
-          className="flex items-start justify-between gap-2 px-3 py-2 border-b border-border bg-danger/10"
-        >
-          <span className="text-step-10 text-danger-ink">{t(actionError)}</span>
-          {onDismissActionError && (
-            <IconButton
-              size="sm"
-              onClick={onDismissActionError}
-              aria-label={t("Dismiss error")}
-              className="shrink-0"
-              icon={
-                <RemixIcon name="close-line" size={14} />
-              }
-            />
-          )}
-        </div>
-      )}
+      {actionError && <ErrorNotice key={actionError} message={actionError} onDismiss={onDismissActionError} />}
 
       {/* Job list */}
       {/* MVP history fits its content up to the count header and about 3.5 standard rows. */}
       <div ref={listRef} className={mvp ? "min-h-0 max-h-[259px] overflow-y-auto" : "flex-1 overflow-y-auto"}>
         {loadError && jobs.length === 0 ? (
-          <div className={`flex flex-col items-center justify-center px-4 gap-2 ${mvp ? "py-6" : "h-full"}`} role="alert">
-            <p className="text-step-10 text-danger-ink text-center">{loadError}</p>
-            {onRetryLoad && (
-              <Button size="sm" variant="secondary" onClick={onRetryLoad}>
-                {t("Retry")}</Button>
-            )}
-          </div>
+          <ErrorNotice key={loadError} message={loadError}
+            action={onRetryLoad ? { label: 'Retry', run: onRetryLoad } : undefined} />
         ) : jobs.length === 0 ? (
           <div className={`flex flex-col items-center justify-center px-4 gap-2 ${mvp ? "py-6" : "h-full"}`}>
             <RemixIcon name="film-line" size={24} className="text-text-5" />

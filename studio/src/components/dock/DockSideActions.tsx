@@ -27,7 +27,7 @@ export function DockSideActions({ group, panels }: Pick<IDockviewHeaderActionsPr
     ? collapsed ? "Expand left panel" : "Collapse left panel"
     : collapsed ? "Expand right panel" : "Collapse right panel");
   const toggle = (
-    <Tooltip label={t(collapsed ? "Expand panel" : "Collapse panel")} side={collapsed ? zone === "left" ? "right" : "left" : "bottom"}>
+    <Tooltip label={t(collapsed ? "Expand" : "Collapse")} side={collapsed ? zone === "left" ? "right" : "left" : "bottom"}>
       <IconButton ref={buttonRef} size={collapsed ? "lg" : "sm"} aria-label={label}
         aria-expanded={!collapsed} icon={<RemixIcon name="arrow-right-s-line" size={16} mirrored={zone === "left" ? !collapsed : collapsed} />}
         onClick={event => controller?.setGroupCollapsed?.(first, !collapsed, event.detail > 0)} />

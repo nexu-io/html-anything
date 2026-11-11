@@ -1,3 +1,4 @@
+import { PanelEmptyState } from "../ui/PanelEmptyState";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
@@ -419,6 +420,7 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
   });
 
   if (layers.length === 0) {
+    if (mvp) return <PanelEmptyState icon="stack-line" message={t("No layers")} />;
     return (
       <div className="flex h-full flex-col items-center justify-center bg-panel-bg px-6 text-center">
         <Layers size={18} className="mb-3 text-panel-text-5" />

@@ -1007,8 +1007,8 @@
   "View full page": "查看完整页面",
   "Change volume": "调整音量",
   "WebP (not yet available)": "WebP（待接入）",
-  "Expand panel": "展开",
-  "Collapse panel": "收起",
+  "Expand": "展开",
+  "Collapse": "收起",
   "Expand left panel": "展开左侧面板",
   "Collapse left panel": "收起左侧面板",
   "Expand right panel": "展开右侧面板",
@@ -1017,5 +1017,14 @@
   "Right panels": "右侧面板",
   "Align left": "左对齐",
   "Align center": "居中对齐",
-  "Align right": "右对齐"
+  "Align right": "右对齐",
+  "Show track {number}": "显示轨道 {number}",
+  "Hide track {number}": "隐藏轨道 {number}",
+  "Move timeline clips": "移动时间轴片段",
+  "Delete timeline clip": "删除时间轴片段",
+  "Edit x (whole animation)": "修改 X 坐标（整个动画）",
+  "Edit y (whole animation)": "修改 Y 坐标（整个动画）",
+  "No clips yet": "暂无片段",
+  "No editable content": "暂无可编辑内容",
+  "No content to export. Add media first.": "暂无可导出的内容，请先添加素材。"
 }

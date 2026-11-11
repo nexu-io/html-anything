@@ -13,7 +13,7 @@ import kimiLogo from './template-brands/kimi.png';
 import pondLogo from './template-brands/pond.svg';
 const brandLogos: Record<string, string> = {Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
 
-type Props = { open: boolean; busy: boolean; error: string; onClose: () => void; onOpen: (id: string) => void };
+type Props = { returnFocus?: HTMLElement | null; open: boolean; busy: boolean; error: string; onClose: () => void; onOpen: (id: string) => void };
 type Facet = 'brand' | 'uses' | 'styles' | 'industries' | 'creationModels' | 'colors' | 'ratio' | 'duration';
 const facets: [Facet, string][] = [
   ['brand', 'Reference brands'], ['uses', 'Use cases'], ['styles', 'Video types'],
@@ -82,9 +82,14 @@ export function TemplateLibraryDialog(props: Props) {
   const info = useRef<IntegrationInfo | null>(null);
   useEffect(() => {
     if (!props.open) return;
-    dialog.current?.showModal();
-    return () => { useDialog.current?.close(); detail.current?.close(); filter.current?.close(); dialog.current?.close(); setPreview(null); };
-  }, [props.open]);
+    const openedDialog = dialog.current;
+    const trigger = props.returnFocus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    openedDialog?.showModal();
+    return () => {
+      useDialog.current?.close(); detail.current?.close(); filter.current?.close(); openedDialog?.close(); setPreview(null);
+      if (trigger?.isConnected) trigger.focus({ preventScroll: true });
+    };
+  }, [props.open, props.returnFocus]);
   useEffect(() => {
     if (!props.open) return;
     const controller = new AbortController();

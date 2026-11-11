@@ -121,7 +121,7 @@ export function MotionHistoryPanel({ onRestored = reloadProject, compact = false
         {allowPinning && onlyPinned ? t("No pinned versions yet. Select an entry to pin it.") : t("No edits yet. Changes made in the canvas, code, or by an agent will appear here.")}
       </p> : shown.map(entry => <button type="button" key={entry.id} className="motion-history-entry"
         aria-pressed={selected?.id === entry.id} onClick={() => setSelectedId(entry.id)}>
-        <span className="motion-history-entry-heading"><strong>{entry.restoredTo ? t('Restored a previous version') : historyEntryLabel(entry.label, t)}</strong>
+        <span className="motion-history-entry-heading"><strong title={entry.restoredTo ? t('Restored a previous version') : historyEntryLabel(entry.label, t)}>{entry.restoredTo ? t('Restored a previous version') : historyEntryLabel(entry.label, t)}</strong>
           {allowPinning && entry.pinned && <span className="motion-history-badge">{t("Pinned")}</span>}
           {entry.id === entries.at(-1)?.id && <span className="motion-history-badge motion-history-badge-latest">{t("Latest")}</span>}
         </span>

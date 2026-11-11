@@ -247,3 +247,7 @@
   padding-top: 2px;
   gap: 6px;
 }
+
+/* Zero-width side groups remain mounted but cannot expose offscreen controls. */
+.hf-dock .hf-dock-side-hidden { visibility: hidden; border: 0; }
+.hf-dock .dv-view:has(> .hf-dock-side-hidden) { padding: 0; }

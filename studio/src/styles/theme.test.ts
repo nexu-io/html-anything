@@ -111,7 +111,7 @@ describe("studio theme", () => {
   });
 
   it("opens menus from a visible shape and closes them faster", () => {
-    expect(declaredValue("--duration-open")).toBe("120ms");
+    expect(declaredValue("--duration-open")).toBe("160ms");
     expect(declaredValue("--duration-close")).toBe("90ms");
     expect(declaredValue("--duration-tooltip")).toBe("100ms");
     expect(declaredValue("--popup-enter-opacity")).toBe("0.8");

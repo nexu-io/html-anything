@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { historyEntryLabel } from "../i18n/historyMessages";
 import { expect, it } from "vitest";
 import type { DomEditSelection } from "../components/editor/domEditing";
 import type { PatchOperation } from "../utils/sourcePatcher";
@@ -55,7 +56,7 @@ it("saves a map mixing both forms as one patch and one undo step, all under CSS 
     msTransform: "none",
   });
   expect(saves).toHaveLength(1);
-  expect(saves[0]!.label).toBe("Edit layer style");
+  expect(historyEntryLabel(saves[0]!.label!, message => message)).toBe("Target · Radius: 4px / border-color: red / -webkit-text-stroke: 1px black / -ms-transform: none");
   expect(written(saves[0]!.operations)).toEqual([
     ["border-radius", "4px"],
     ["border-color", "red"],

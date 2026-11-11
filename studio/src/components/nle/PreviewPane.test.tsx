@@ -9,8 +9,10 @@ import { StudioHostContext } from "../../motion/StudioHost";
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 vi.mock("../editor/PreviewGuides", () => ({ PreviewGuides: () => <i data-testid="guides" /> }));
-vi.mock("../../player", () => ({ PlayerControls: () => null }));
-vi.mock("./NLEPreview", () => ({ NLEPreview: () => null }));
+const emptyState = vi.hoisted(() => ({ empty: false }));
+vi.mock("./useEmptyPreview", () => ({ useEmptyPreview: () => emptyState.empty }));
+vi.mock("../../player", () => ({ PlayerControls: () => <i data-testid="transport" /> }));
+vi.mock("./NLEPreview", () => ({ NLEPreview: () => <i data-testid="preview" /> }));
 vi.mock("./CompositionBreadcrumb", () => ({ CompositionBreadcrumb: () => <nav data-testid="breadcrumb" /> }));
 vi.mock("./AssetPreviewOverlay", () => ({ AssetPreviewOverlay: () => null }));
 vi.mock("./usePreviewBlockDrop", () => ({
@@ -63,5 +65,22 @@ it("omits duplicate preview navigation only in the MVP", () => {
   expect(host.querySelector('[data-testid="breadcrumb"]')).toBeNull();
   expect(host.querySelector('[data-studio-fullscreen-target]')).toBeNull();
   expect(host.querySelector('[data-testid="guides"]')).not.toBeNull();
+  act(() => root.unmount());
+});
+
+it("hides placeholder transport while empty and restores controls when content arrives without unmounting preview", () => {
+  const host = document.createElement("div"); const root = createRoot(host);
+  const render = () => act(() => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><PreviewPane /></StudioHostContext.Provider>));
+  emptyState.empty = false; render();
+  const preview = host.querySelector('[data-testid="preview"]');
+  expect(host.querySelector('[data-testid="transport"]')).not.toBeNull();
+  emptyState.empty = true; render();
+  expect(host.querySelector('[data-preview-empty]')).not.toBeNull();
+  expect(host.querySelector('[data-testid="transport"]')).toBeNull();
+  expect(host.querySelector('[data-testid="preview"]')).toBe(preview);
+  emptyState.empty = false; render();
+  expect(host.querySelector('[data-preview-empty]')).toBeNull();
+  expect(host.querySelector('[data-testid="transport"]')).not.toBeNull();
+  expect(host.querySelector('[data-testid="preview"]')).toBe(preview);
   act(() => root.unmount());
 });

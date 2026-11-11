@@ -4,6 +4,8 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { usePlayerStore } from "../../player/store/playerStore";
+import { StudioHostContext } from "../../motion/StudioHost";
+import { usePreviewIframeStore } from "../../player/store/previewIframeStore";
 import { CompositionsPanel } from "./CompositionsPanel";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
@@ -21,7 +23,8 @@ afterEach(() => {
   root = null;
   preview.compositionStack = [{ id: "master" }];
   document.body.innerHTML = "";
-  usePlayerStore.setState({ thumbnailRevisions: {} });
+  usePlayerStore.getState().reset();
+  usePreviewIframeStore.getState().setIframe(null);
 });
 
 describe("CompositionsPanel root badge source", () => {
@@ -75,4 +78,33 @@ it("marks only the live preview target when switching between clips and the full
   preview.compositionStack = [{ id: "master" }];
   render();
   expect(selectedLabel()).toBe("Open composition index");
+});
+
+it("hides the empty root and restores its card when authored content arrives", async () => {
+  const iframe = document.createElement("iframe");
+  Object.defineProperty(iframe, "contentDocument", { value: new DOMParser().parseFromString('<body><div data-composition-id="main"></div></body>', "text/html") });
+  usePreviewIframeStore.getState().setIframe(iframe);
+  usePlayerStore.setState({ timelineReady: true, timelineProjectId: "demo", elements: [] });
+  const host = document.createElement("div"); document.body.append(host); root = createRoot(host);
+  await act(async () => root?.render(<StudioHostContext.Provider value={{ mvpEditor: true }}>
+    <CompositionsPanel projectId="demo" compositions={["index.html"]} onSelect={vi.fn()} />
+  </StudioHostContext.Provider>));
+  expect(host.textContent).toContain("No clips yet");
+  expect(host.querySelector('[draggable="true"]')).toBeNull();
+  await act(async () => { iframe.contentDocument!.querySelector("div")!.textContent = "Static title"; });
+  expect(host.textContent).not.toContain("No clips yet");
+  expect(host.querySelector('[aria-label="Open composition index"]')).not.toBeNull();
+});
+
+it("keeps other compositions available when the root is empty", async () => {
+  const iframe = document.createElement("iframe");
+  Object.defineProperty(iframe, "contentDocument", { value: new DOMParser().parseFromString('<body><div data-composition-id="main"></div></body>', "text/html") });
+  usePreviewIframeStore.getState().setIframe(iframe);
+  usePlayerStore.setState({ timelineReady: true, timelineProjectId: "demo", elements: [] });
+  const host = document.createElement("div"); document.body.append(host); root = createRoot(host);
+  await act(async () => root?.render(<StudioHostContext.Provider value={{ mvpEditor: true }}>
+    <CompositionsPanel projectId="demo" compositions={["index.html", "scene.html"]} onSelect={vi.fn()} />
+  </StudioHostContext.Provider>));
+  expect(host.querySelector('[aria-label="Open composition index"]')).toBeNull();
+  expect(host.querySelector('[aria-label="Open composition scene"]')).not.toBeNull();
 });

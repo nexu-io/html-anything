@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { dictionaries, languages, translate, mvpMessages, isKnownMessage } from './messages';
+import mvpUi from './mvp-ui.json';
+import { historyEntryLabel } from './historyMessages';
 
 describe('editor language resources', () => {
   it('offers the eleven requested languages and a complete vocabulary in each dictionary', () => {
@@ -44,18 +46,44 @@ describe('editor language resources', () => {
   });
 });
 
-// The audit adds Chinese/English messages without claiming new translations for
-// the other nine locales; their existing shared vocabulary must stay complete.
-it('keeps MVP additions separate, interpolated and safe to fall back to English', () => {
+it('keeps Chinese additions interpolated and preserves fallback for unexposed advanced controls', () => {
   for (const [source, translated] of Object.entries(mvpMessages['zh-CN']!)) {
-    expect(dictionaries['zh-CN'][source]).toBeUndefined();
     expect(isKnownMessage(source)).toBe(true);
     expect(typeof translated).toBe('string');
     const values = Object.fromEntries([...source.matchAll(/\{(\w+)\}/g)].map(match => [match[1], 'sample']));
     expect(translate('zh-CN', source, values)).not.toMatch(/\{\w+\}/);
-    expect(translate('zh-CN', source, values)).not.toBe(source);
     for (const { locale } of languages.filter(language => language.locale !== 'zh-CN')) {
-      expect(translate(locale, source, values)).toBe(translate('en', source, values));
+      if (!mvpMessages[locale]?.[source]) expect(translate(locale, source, values)).toBe(translate('en', source, values));
     }
+  }
+});
+
+it('covers phase-one additions in all nine other languages without losing placeholders', () => {
+  const keys = Object.keys(mvpUi.de).sort();
+  expect(Object.keys(mvpUi).sort()).toEqual(languages.map(l => l.locale).filter(l => l !== 'en' && l !== 'zh-CN').sort());
+  for (const [locale, messages] of Object.entries(mvpUi)) {
+    expect(Object.keys(messages).sort(), locale).toEqual(keys);
+    for (const [source, value] of Object.entries(messages)) {
+      expect(value.trim(), `${locale}: ${source}`).toBeTruthy();
+      const placeholders = (text: string) => [...text.matchAll(/\{\w+\}/g)].map(match => match[0]).sort();
+      expect(placeholders(value), `${locale}: ${source}`).toEqual(placeholders(source));
+    }
+  }
+});
+
+it('localizes audited controls and history without translating authored names', () => {
+  expect(translate('de', 'Undo')).toBe('Rückgängig');
+  expect(translate('ru', 'Align left')).toBe('По левому краю');
+  expect(translate('ja', 'Expand')).toBe('展開');
+  for (const { locale } of languages.filter(l => l.locale !== 'en')) {
+    const t = (message: string, values?: Record<string, string | number>) => translate(locale, message, values);
+    for (const key of ['Expand left panel', 'Split', 'Import files', 'Took {value0}', 'Edit layer style', 'Move timeline clips']) {
+      expect(t(key), `${locale}: ${key}`).not.toBe(key);
+    }
+    expect(historyEntryLabel('Hide track 2', t)).toContain('2');
+    expect(historyEntryLabel('Hide track 2', t)).not.toBe('Hide track 2');
+    expect(historyEntryLabel('Undid: Move timeline clips', t)).toContain(t('Move timeline clips'));
+    expect(historyEntryLabel('Add block: My Custom Title', t)).toContain('My Custom Title');
+    expect(historyEntryLabel('My authored version name', t)).toBe('My authored version name');
   }
 });

@@ -8,11 +8,12 @@ import { useMotionHistoryOperation } from './MotionHistoryState';
 
 const state = vi.hoisted(() => ({
   renderQueue: { isRendering: false, ffmpegMissing: false },
+  writeBlockedReason: null as string | null,
   open: vi.fn(), export: vi.fn(), setTab: vi.fn(), setCollapsed: vi.fn(),
   undo: vi.fn(), redo: vi.fn(), create: vi.fn(), home: vi.fn(), rename: vi.fn(),
 }));
 vi.mock('../contexts/StudioContext', () => ({ useStudioShellContext: () => ({
-  projectId: 'demo', renderQueue: state.renderQueue, waitForPendingDomEditSaves: async () => {},
+  projectId: 'demo', renderQueue: state.renderQueue, writeBlockedReason: state.writeBlockedReason, waitForPendingDomEditSaves: async () => {},
 }), useStudioShellContextOptional: () => ({
   editHistory: { canUndo: true, canRedo: true }, handleUndo: state.undo, handleRedo: state.redo,
 }) }));
@@ -39,6 +40,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
   state.renderQueue.isRendering = false;
+  state.writeBlockedReason = null;
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -188,4 +190,15 @@ it('saves a project name on blur and keeps empty or cancelled edits from replaci
   expect(state.rename).toHaveBeenCalledTimes(2);
   expect(document.activeElement).not.toBe(input);
   expect(container.querySelector('[aria-label="项目名称"]')).toBe(input);
+});
+
+it('dismissing a write-blocking notice does not enable project creation', () => {
+  state.writeBlockedReason = 'Auto-save is paused. Check your connection.';
+  render();
+  const close = container.querySelector<HTMLButtonElement>('.motion-error-notice-close')!;
+  expect(close).not.toBeNull();
+  act(() => close.click());
+  expect(container.querySelector('.motion-error-notice')).toBeNull();
+  openSidebar();
+  expect(document.querySelector<HTMLButtonElement>('.motion-session-heading button')?.disabled).toBe(true);
 });

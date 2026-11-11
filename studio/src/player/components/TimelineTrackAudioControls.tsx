@@ -1,5 +1,5 @@
 import { Popover } from '@base-ui/react/popover';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import { RemixIcon } from '../../icons/RemixIcons';
 import { useTimelineEditContextOptional } from '../../contexts/TimelineEditContext';
@@ -22,15 +22,16 @@ export function TimelineTrackAudioControls({ elements, trackLabel, isAudioOnly, 
   const clips = elements.filter(el => el.tag === 'audio' || (el.tag === 'video' && (el.hasAudio === true || el.muted === true)));
   const signature = clips.map(el => `${el.key ?? el.id}:${el.volume ?? 1}:${!!el.muted}`).join('|');
   const volume = Math.round((clips[0]?.volume ?? 1) * 100);
+  const sliderVolume = Math.min(100, Math.max(0, volume));
   const mixed = clips.some(el => Math.round((el.volume ?? 1) * 100) !== volume);
   const muted = clips.length > 0 && clips.every(el => el.muted === true);
   const silent = muted || (isAudioOnly && hidden);
   const [open, setOpen] = useState(false);
-  const [draft, setDraft] = useState(volume);
+  const [draft, setDraft] = useState(sliderVolume);
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState(false);
   const running = useRef(false);
-  useEffect(() => { setDraft(volume); setDirty(false); }, [signature, open]);
+  useEffect(() => { setDraft(sliderVolume); setDirty(false); }, [signature, open]);
   const disabled = busy || !onSetElementsAttributeQuiet || !!shell?.writeBlockedReason || !!shell?.renderQueue?.isRendering;
   if (!clips.length) return null;
 
@@ -45,11 +46,16 @@ export function TimelineTrackAudioControls({ elements, trackLabel, isAudioOnly, 
       return false;
     } finally { running.current = false; setBusy(false); }
   };
+  const shownVolume = silent && !dirty ? 0 : draft;
   const commitVolume = async () => {
     if (!dirty) return;
     const saved = await save('data-volume', String(draft / 100), 'Change volume');
-    if (saved) setDirty(false);
-    else { setDraft(volume); setDirty(false); }
+    if (saved && draft > 0 && silent) {
+      const unmuted = !muted || await save('muted', null, 'Unmute audio');
+      if (unmuted && isAudioOnly && hidden) onUnhide();
+    }
+    if (!saved) setDraft(sliderVolume);
+    setDirty(false);
   };
   const muteLabel = t(silent ? 'Unmute audio' : 'Mute audio');
   return <div className="ml-2 flex shrink-0 items-center" onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
@@ -67,11 +73,11 @@ export function TimelineTrackAudioControls({ elements, trackLabel, isAudioOnly, 
         })()}>
         <RemixIcon name={silent ? 'volume-mute-line' : 'volume-up-line'} size={16} />
       </Popover.Trigger>
-      <Popover.Portal><Popover.Positioner side="top" align="start" sideOffset={6} collisionPadding={12} className="z-150">
-        <Popover.Popup initialFocus={false} finalFocus={false} className="w-48 rounded-lg border border-border bg-surface p-3 text-text-1 shadow-menu outline-none">
-          <div className="mb-2 flex justify-between text-xs"><Popover.Title>{t('Volume')}</Popover.Title><span>{mixed && !dirty ? t('Mixed') : `${draft}%`}</span></div>
-          <input type="range" min={0} max={Math.max(200, volume)} step={1} value={draft} disabled={disabled}
-            aria-label={t('Volume')} aria-valuetext={`${draft}%`} className="w-full accent-current"
+      <Popover.Portal><Popover.Positioner side="top" align="center" sideOffset={6} collisionPadding={12} className="z-150">
+        <Popover.Popup initialFocus={false} finalFocus={false} aria-label={t('Volume')} className="hf-floating-motion flex flex-col items-center gap-2 rounded-lg bg-surface p-3 text-text-1 shadow-menu outline-none">
+          <span className="font-mono text-[11px] tabular-nums">{mixed && !dirty && !silent ? t('Mixed') : `${shownVolume}%`}</span>
+          <input type="range" min={0} max={100} step={1} value={shownVolume} disabled={disabled}
+            aria-label={t('Volume')} aria-orientation="vertical" aria-valuetext={`${shownVolume}%`} className="hf-volume-vertical-range" style={{ "--volume-progress": `${shownVolume}%` } as CSSProperties}
             onChange={e => { setDraft(Number(e.currentTarget.value)); setDirty(true); }}
             onPointerUp={() => void commitVolume()} onKeyUp={() => void commitVolume()} onBlur={() => void commitVolume()} />
         </Popover.Popup>

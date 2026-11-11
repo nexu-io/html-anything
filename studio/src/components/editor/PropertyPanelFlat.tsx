@@ -221,7 +221,7 @@ export function PropertyPanelFlat({
 
   const reveal = useAudioFxRevealSection({
     elementId: element?.id,
-    hasAudioFxSection: Boolean(sections.audioFx),
+    hasAudioFxSection: !mvp && Boolean(sections.audioFx),
   });
   if (reveal.revealNonce !== null) {
     reveal.consume(reveal.revealNonce);
@@ -321,6 +321,10 @@ export function PropertyPanelFlat({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- store replacement signals live group membership changed
   }, [element, storeElements]);
 
+  const preserveOpacityAnimation = mvp && gsapAnimations.some(animation =>
+    [animation.properties, animation.fromProperties, ...(animation.keyframes?.keyframes.map(frame => frame.properties) ?? [])]
+      .some(properties => properties && ("opacity" in properties || "autoAlpha" in properties)),
+  );
   const groups: FlatGroupDescriptor[] = [];
   if (isTextEditable) {
     groups.push({
@@ -344,6 +348,8 @@ export function PropertyPanelFlat({
             <div className="mt-1.5">
               <FlatOpacitySlider
                 styles={styles}
+                inlineStyles={element.inlineStyles}
+                preserveOpacityAnimation={preserveOpacityAnimation}
                 disabled={!element.capabilities.canEditStyles}
                 onSetStyle={onSetStyle}
               />
@@ -362,6 +368,7 @@ export function PropertyPanelFlat({
       summary: t("Fill: {fill} · {opacity}%", { fill: t(styles["background-image"] && styles["background-image"] !== "none" ? "Image/gradient" : styles["background-color"] ? "Solid" : "None"), opacity: opacityPct }),
       content: (
         <FlatStyleSection
+          preserveOpacityAnimation={preserveOpacityAnimation}
           projectId={projectId}
           element={element}
           styles={styles}
@@ -505,7 +512,7 @@ export function PropertyPanelFlat({
       });
     }
   }
-  if (sections.audioFx) {
+  if (!mvp && sections.audioFx) {
     groups.push({
       id: "audio-fx",
       title: "Audio FX",

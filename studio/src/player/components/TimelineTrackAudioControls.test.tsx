@@ -63,3 +63,28 @@ it('opens the slider on hover without muting, and keeps it open when mute is cli
   expect(write).toHaveBeenCalledOnce();
   expect(document.querySelector('input[aria-label="Volume"]')).not.toBeNull();
 });
+
+it('shows muted output at the bottom of a 0–100 slider without overwriting saved gain', async () => {
+  const host = render([{ ...video, muted: true }]);
+  await act(async () => host.querySelector<HTMLButtonElement>('button')!.focus());
+  const input = document.querySelector<HTMLInputElement>('input[aria-label="Volume"]')!;
+  expect(input.min).toBe('0');
+  expect(input.max).toBe('100');
+  expect(input.value).toBe('0');
+  expect(document.querySelector('[role="dialog"]')?.textContent).toBe('0%');
+  expect(write).not.toHaveBeenCalled();
+});
+
+it('raising the muted slider saves volume and unmutes the track', async () => {
+  const muted = { ...video, muted: true };
+  const host = render([muted]);
+  await act(async () => host.querySelector<HTMLButtonElement>('button')!.focus());
+  const input = document.querySelector<HTMLInputElement>('input[aria-label="Volume"]')!;
+  act(() => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, '45');
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await act(async () => input.dispatchEvent(new PointerEvent('pointerup', { bubbles: true })));
+  expect(write).toHaveBeenNthCalledWith(1, [{ element: muted, value: '0.45' }], 'data-volume', 'Change volume');
+  expect(write).toHaveBeenNthCalledWith(2, [{ element: muted, value: null }], 'muted', 'Unmute audio');
+});

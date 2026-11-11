@@ -716,22 +716,117 @@ it("collapses MVP sides when the host narrows, preserves content, and allows exp
       .forEach(({ callback }) => callback());
     api.layout(width, 800);
   });
-  resize(700);
+  resize(800);
   expect(left.width).toBe(48);
   expect(right.width).toBe(48);
   expect(left.activePanel?.id).toBe("catalog");
   expect(host.querySelector('[data-testid="content-preview"]')).toBe(content);
   act(() => useDockLayoutStore.getState().activatePanel("assets"));
-  resize(700); // A height-only resize must not close a manually opened side.
+  resize(800); // A height-only resize must not close a manually opened side.
   expect(left.width).toBeGreaterThan(48);
   expect(right.width).toBe(48);
-  resize(640);
-  expect(left.width).toBe(48);
+  resize(739);
+  expect(left.width).toBe(0);
   resize(1400);
   expect(left.width).toBe(48);
   expect(right.width).toBe(48);
   resize(320);
-  expect(api.getPanel("preview")!.group.width).toBeLessThanOrEqual(224);
+  expect(left.width).toBe(0);
+  expect(right.width).toBe(0);
+  expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(308);
+  resize(800);
+  expect(left.width).toBe(48);
+  expect(right.width).toBe(48);
   expect(api.getPanel("preview")!.group.width).toBeGreaterThan(0);
   expect(host.querySelector('[data-testid="content-preview"]')).toBe(content);
+});
+
+it.each([740, 800, 1000])("keeps compact sides exclusive and readable at %ipx across activation and animation reversal", (width) => {
+  const host = mount("exclusive", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, dockWidth: () => width });
+  const api = dockApi!;
+  act(() => api.layout(width, 800));
+  const left = api.getPanel("compositions")!.group;
+  const right = api.getPanel("design")!.group;
+  const content = host.querySelector('[data-testid="content-preview"]');
+  const controller = useDockLayoutStore.getState().controller!;
+  act(() => controller.setGroupCollapsed!("design", false, true));
+  act(() => vi.advanceTimersByTime(240));
+  expect(left.width).toBe(48);
+  expect(right.width).toBeGreaterThanOrEqual(320);
+  act(() => useDockLayoutStore.getState().activatePanel("assets"));
+  expect(right.width).toBe(48);
+  expect(left.width).toBeGreaterThanOrEqual(320);
+  expect(left.activePanel?.id).toBe("assets");
+  act(() => {
+    controller.setGroupCollapsed!("design", false, true);
+    vi.advanceTimersByTime(64);
+    controller.setGroupCollapsed!("compositions", false, true);
+    vi.advanceTimersByTime(240);
+    dockLayout.applySideMinimums(api, width, true);
+  });
+  expect(right.width).toBe(48);
+  expect(left.width).toBeGreaterThanOrEqual(320);
+  expect(useDockLayoutStore.getState().collapsedZones).toEqual(["right"]);
+  expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(360);
+  expect(left.width + right.width + api.getPanel("preview")!.group.width).toBeLessThanOrEqual(width);
+  expect(host.querySelector('[data-testid="content-preview"]')).toBe(content);
+});
+
+
+it.each([320, 480, 640, 739])("keeps both sides hidden at %ipx even when explicitly activated", (width) => {
+  const host = mount("preview-first", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, dockWidth: () => width });
+  const api = dockApi!;
+  act(() => api.layout(width, 800));
+  const content = host.querySelector('[data-testid="content-preview"]');
+  for (const id of ["design", "assets", "layers", "catalog"] as const) {
+    act(() => {
+      useDockLayoutStore.getState().controller!.setGroupCollapsed!(id, false, true);
+      useDockLayoutStore.getState().activatePanel(id);
+      vi.advanceTimersByTime(240);
+    });
+    expect(api.getPanel(id)!.group.width).toBe(0);
+    expect(api.getPanel(id)!.group.element.classList.contains("hf-dock-side-hidden")).toBe(true);
+    expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(width - 12);
+    expect(useDockLayoutStore.getState().collapsedZones).toEqual(expect.arrayContaining(["left", "right"]));
+  }
+  expect(host.querySelector('[data-testid="content-preview"]')).toBe(content);
+});
+
+it("collapses oversized remembered sides when reopening would crowd the preview on a wide host", () => {
+  mount("remembered-width", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, dockWidth: () => 1200 });
+  const api = dockApi!;
+  act(() => api.layout(1200, 800));
+  const left = api.getPanel("compositions")!.group;
+  const right = api.getPanel("design")!.group;
+  const controller = useDockLayoutStore.getState().controller!;
+  act(() => {
+    controller.setGroupCollapsed!("design", true);
+    left.api.setSize({ width: 650 });
+    controller.setGroupCollapsed!("compositions", true);
+    controller.setGroupCollapsed!("design", false);
+    controller.setGroupCollapsed!("compositions", false);
+  });
+  expect(right.width).toBe(48);
+  expect(left.width).toBeGreaterThanOrEqual(320);
+  expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(360);
+});
+
+
+it("finishes an in-flight opening before narrowing into preview-only mode", () => {
+  let width = 800;
+  mount("resize-motion", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, dockWidth: () => width });
+  const api = dockApi!;
+  act(() => {
+    api.layout(width, 800);
+    useDockLayoutStore.getState().controller!.setGroupCollapsed!("design", false, true);
+    vi.advanceTimersByTime(64);
+    width = 480;
+    [...liveObservers].filter(({ target }) => target?.classList.contains("hf-dock"))
+      .forEach(({ callback, target }) => (callback as (entries: unknown[]) => void)([{ target, contentRect: { width, height: 800 } }]));
+    api.layout(width, 800);
+    vi.advanceTimersByTime(240);
+  });
+  expect(api.getPanel("design")!.group.width).toBe(0);
+  expect(api.getPanel("compositions")!.group.width).toBe(0);
+  expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(468);
 });
