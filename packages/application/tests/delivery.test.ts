@@ -214,12 +214,13 @@ else if(args[1]==='add'){const at=args.indexOf('--'),env={};for(let i=3;i<at;i+=
   try {
     await client.connect(connection);
     expect(await uses(own)).toMatchObject([{ state: "alive", receipt: registered.result.receipts.codexplugin }]);
-    const manager = (await readDirectory(own.data)).manager;
+    const scope = { channel: channel(own.channel), namespace: namespace("installation") };
+    const manager = (await connectRoot(own.data, scope)).manager;
     for (const command of ["stop", "restart"]) {
       const failure = await own.invoke([command]).catch((error: unknown) => error);
       expect(failure).toMatchObject({ code: 2 });
       expect(JSON.parse((failure as { stdout: string }).stdout).error.message).toContain("self-hosted Codex stdio");
-      expect((await readDirectory(own.data)).manager).toEqual(manager);
+      expect((await connectRoot(own.data, scope)).manager).toEqual(manager);
     }
     expect((await client.listTools()).tools.some((tool) => tool.name === "session_create")).toBe(true);
     const created = await client.callTool({
