@@ -155,19 +155,22 @@ it("rejects an installed start before contacting the Daemon of a different relea
       lifecycle: { initialize: async () => {}, stop: async () => {} },
     });
     const original = manager.directory();
-    const failure = await own.invoke(["start"]).catch((error: unknown) => error);
-    expect(failure).toMatchObject({ code: 2 });
-    const { stdout } = failure as { stdout: string };
-    expect(JSON.parse(stdout)).toMatchObject({
-      ok: false,
-      error: {
-        code: "runtime_release_mismatch",
-        requested: { identity: { version: own.version } },
-        running,
-        owner: { ...scope, carrier: "codexplugin", manager: original.manager.incarnation, pid: original.manager.pid },
-      },
-    });
-    expect(calls).toEqual(["identity"]);
+    for (const command of ["start", "restart"]) {
+      calls.length = 0;
+      const failure = await own.invoke([command]).catch((error: unknown) => error);
+      expect(failure).toMatchObject({ code: 2 });
+      const { stdout } = failure as { stdout: string };
+      expect(JSON.parse(stdout)).toMatchObject({
+        ok: false,
+        error: {
+          code: "runtime_release_mismatch",
+          requested: { identity: { version: own.version } },
+          running,
+          owner: { ...scope, carrier: "codexplugin", manager: original.manager.incarnation, pid: original.manager.pid },
+        },
+      });
+      expect(calls).toEqual(["identity"]);
+    }
     expect(manager.directory()).toEqual(original);
     await expect(access(join(own.root, "installation"))).rejects.toThrow();
   } finally {
@@ -211,6 +214,14 @@ else if(args[1]==='add'){const at=args.indexOf('--'),env={};for(let i=3;i<at;i+=
   try {
     await client.connect(connection);
     expect(await uses(own)).toMatchObject([{ state: "alive", receipt: registered.result.receipts.codexplugin }]);
+    const scope = { channel: channel(own.channel), namespace: namespace("installation") };
+    const manager = (await connectRoot(own.data, scope)).manager;
+    for (const command of ["stop", "restart"]) {
+      const failure = await own.invoke([command]).catch((error: unknown) => error);
+      expect(failure).toMatchObject({ code: 2 });
+      expect(JSON.parse((failure as { stdout: string }).stdout).error.message).toContain("self-hosted Codex stdio");
+      expect((await connectRoot(own.data, scope)).manager).toEqual(manager);
+    }
     expect((await client.listTools()).tools.some((tool) => tool.name === "session_create")).toBe(true);
     const created = await client.callTool({
       name: "session_create",

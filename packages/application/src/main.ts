@@ -3,23 +3,25 @@ import { lstat, readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { InstallerFault } from "@odsuite/installer";
 import { factoryScope } from "@odsuite/protocol";
 import { inspectRecovery, recover, scopedManagerRoot } from "@odsuite/sidecar";
 import { RuntimeReleaseMismatch } from "@open-motion/standalone/admission";
 import { carriers, manifest, path, type Selection } from "./contract.js";
 import { setup } from "./install.js";
-import { native, start, status, stop } from "./runtime.js";
+import { native, restart, start, status, stop } from "./runtime.js";
 import { signals } from "./signals.js";
 import { collect } from "./update/gc.js";
 import { updates } from "./update/index.js";
 
 const help = `odsuite setup --carrier standalone|codexplugin [--home DIR] [--data DIR] [--profile DIR] [--skills DIR] [--codex FILE]
-odsuite start|stop|status|prepare [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite start|restart|stop|status|prepare [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite update check|prepare --endpoint URL --public-key FILE [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite update activate --request-id UUID --public-key FILE [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite update status [--request-id UUID] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite update discard [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
-odsuite gc plan|status [--request-id UUID] [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite gc plan [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite gc status [--request-id UUID] [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite gc apply --request-id UUID --expected FINGERPRINT [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite recover inspect --root DIR
 odsuite recover apply --root DIR --expected FINGERPRINT
@@ -38,8 +40,11 @@ async function main(args: string[]) {
     return;
   }
   const command = args.shift();
-  if (!command || !["setup", "start", "stop", "status", "prepare", "recover", "update", "gc"].includes(command))
-    throw Error("expected setup|start|stop|status|prepare|recover|update|gc");
+  if (
+    !command ||
+    !["setup", "start", "restart", "stop", "status", "prepare", "recover", "update", "gc"].includes(command)
+  )
+    throw Error("expected setup|start|restart|stop|status|prepare|recover|update|gc");
   const operation = command === "recover" || command === "update" || command === "gc" ? args.shift() : undefined;
   const allowed =
     command === "recover"
@@ -108,6 +113,7 @@ async function main(args: string[]) {
         fileURLToPath(new URL("./codex-worker.mjs", import.meta.url)),
       );
     else if (command === "start") result = await start(description, selection);
+    else if (command === "restart") result = await restart(description, selection);
     else if (command === "stop") result = await stop(description, selection);
     else if (command === "status") result = await status(description, selection);
     else if (command === "gc") {
@@ -162,7 +168,9 @@ void main(process.argv.slice(2)).catch((error) => {
       error:
         error instanceof RuntimeReleaseMismatch
           ? error.diagnostic()
-          : { message: error instanceof Error ? error.message : String(error) },
+          : error instanceof InstallerFault
+            ? { code: `installation_${error.code}`, message: error.message }
+            : { message: error instanceof Error ? error.message : String(error) },
     }) + "\n",
   );
   process.exitCode ??= 2;

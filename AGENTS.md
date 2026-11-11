@@ -133,6 +133,8 @@ After SIGKILL, explicitly recover the whole root before binding replay. Preserve
 
 Background validation must not focus the user's desktop or open a browser without instruction. Actual product editing/export, visual/audio acceptance, installation, network distribution and power-loss evidence remain separate.
 
+For local installed-kit operation, follow the README’s clean installation path and the [operator lifecycle and recovery guidance](docs/operations.md#local-npm-installation). Installed restart verifies identity and pending transactions before draining an exact Manager; existing MCP clients reconnect. Self-hosted Codex stdio retires through its connection owner. Keep versioned candidate manifests and acceptance evidence in delivery records, outside durable docs.
+
 ### Builds and delivery
 
 Suites own mechanisms; carriers wire hosts. Tools expose channel-independent version/build/package capabilities; workflows select channel and quality gates through short calls. Every deliverable carrier shares a product version; an empty skeleton is not publishable. See operations for platform/installer limitations.
