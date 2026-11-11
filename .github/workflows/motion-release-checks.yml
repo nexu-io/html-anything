@@ -1,0 +1,29 @@
+name: Motion release controls
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - name: Check standalone release scripts
+        run: |
+          for script in .github/scripts/*.mjs scripts/runtime-assets.mjs scripts/release-version.mjs scripts/install-guide.mjs; do
+            node --check "$script"
+          done
+      - name: Rehearse release controls without publication credentials or external writes
+        run: node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/install-guide.test.ts
