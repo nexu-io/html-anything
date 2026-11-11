@@ -250,6 +250,12 @@ Local asset import through phase-one MCP and internal legacy tools allows at mos
 - **并发边界：** macOS 同目录多个 MCP 连接共用后台，各自绑定工程；工作区使用一个原生 Studio 服务进程，按需保留多个工程的原生上下文；后台仍只有一个等待/运行的导出。导出固定工程与快照，重启将中断任务持久化为失败且不重放。文件锁和 revision 保护工具写入；人工与 Agent 同时编辑同一文件仍需协调，不能当作跨工具数据库事务。
 - **数据归属：** 产品文档描述数据类别与流程，不复制用户的私有工程、访问凭据或个人机器配置。
 
+### Local diagnostic export
+
+Test and stable distributions share `scripts/diagnostics.mjs`, its browser-safe redaction helper and the existing dependency-free ZIP writer. Studio Privacy settings and the crash screen download the same local diagnostic archive through a same-origin POST route; `openmotion diagnostics` and the standalone script can collect without a running editor/MCP or native executables. Collection does not launch probes, replay operations, change projects or upload data.
+
+The collector uses an explicit file/field allowlist, bounded log tails and job sampling, excludes links/non-files and records missing or truncated inputs. New local failure records cover installer, phase-one MCP, export and browser errors, with current/previous log rotation. Browser errors are redacted before best-effort local persistence and local-backend delivery; collection applies redaction again. Logging is independent of usage analytics. Existing engine/service log retention is unchanged. Full project/media/conversation/provider/host data is excluded, while arbitrary private text in old logs still requires user review. HTTP export has a single-collection guard and cooldown, never accepts source/output paths, and streams no persistent server-side ZIP. See [diagnostic export and limits](../npm-installation.md#export-a-local-diagnostic-zip).
+
 ## 成功标准与验证
 
 当前交付标准：连接可验证、模板可定位、工程可继续编辑、预览与源文件一致、导出存在真实文件、检查结果有证据。相关实现由 `tests/`、`npm run test:studio` 的原生单元/DOM 与宿主回归、类型检查、设计检查和按需浏览器验证覆盖；没有执行的检查不能记为通过。

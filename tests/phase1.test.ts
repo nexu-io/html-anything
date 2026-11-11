@@ -23,6 +23,14 @@ const edit = (service: Phase1Service, p: any, content: string) => service.call('
   expectedVersionId: p.version.versionId, files: [{ path: 'note.txt', content }],
 });
 
+test('MCP validation failures remain unchanged while local diagnostics record the failure', () => fixture(async store => {
+  const service = api(store);
+  await assert.rejects(service.call('motion_get_project', null), /INVALID_ARGUMENT: arguments must be an object/);
+  const event = JSON.parse((await readFile(path.join(store.directory, 'diagnostics/events.log'), 'utf8')).trim());
+  assert.equal(event.kind, 'mcp_failure'); assert.equal(event.tool, 'motion_get_project');
+  assert.match(event.message, /INVALID_ARGUMENT/);
+}, false));
+
 test('asset limits enforce decimal 500 MB without rounding', () => fixture(async store => {
   assert.equal(MAX_ASSET_BYTES, 500_000_000);
   const file = path.join(store.directory, 'sparse-media');

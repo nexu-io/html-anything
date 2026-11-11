@@ -62,7 +62,7 @@ test('successful setup hands the current Agent an invitation before any MCP use,
 test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and rejects a mixed-environment home', async t => {
   const options = await setupFixture(t), bundle = path.join(options.directory, 'bundle');
   await mkdir(path.join(bundle, 'scripts'), { recursive: true }); await mkdir(path.join(bundle, 'payload'));
-  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs']) {
+  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) {
     await cp(new URL('../scripts/' + file, import.meta.url), path.join(bundle, 'scripts', file));
   }
   await writeJSON(path.join(bundle, 'package.json'), { version: '1.2.3', type: 'module' });

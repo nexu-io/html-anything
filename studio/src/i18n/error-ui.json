@@ -21,7 +21,12 @@
     "Use updated version": "使用最新版本",
     "Keep my changes": "保留我的修改",
     "Use the updated version and discard your unsaved changes?": "使用最新版本，并放弃你尚未保存的修改？",
-    "Keep your changes and replace the version updated elsewhere?": "保留你的修改，并替换其他地方更新的版本？"
+    "Keep your changes and replace the version updated elsewhere?": "保留你的修改，并替换其他地方更新的版本？",
+    "Export diagnostic ZIP": "导出诊断 ZIP",
+    "Preparing diagnostics…": "正在整理诊断信息…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "日志会脱敏后保存到本机，不会上传。分享前请检查 ZIP 内容。",
+    "Please wait 30 seconds before exporting diagnostics again.": "请等待 30 秒后再次导出诊断信息。",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "无法导出诊断信息。工作室无法连接时可使用命令行。"
   },
   "ja": {
     "The project changed elsewhere. Resolve the changes before continuing.": "プロジェクトが別の場所で変更されました。競合を解決してから続行してください。",
@@ -45,7 +50,12 @@
     "Use updated version": "更新された版を使用",
     "Keep my changes": "自分の変更を保持",
     "Use the updated version and discard your unsaved changes?": "更新された版を使用し、未保存の変更を破棄しますか？",
-    "Keep your changes and replace the version updated elsewhere?": "自分の変更を保持し、別の場所で更新された版を置き換えますか？"
+    "Keep your changes and replace the version updated elsewhere?": "自分の変更を保持し、別の場所で更新された版を置き換えますか？",
+    "Export diagnostic ZIP": "診断 ZIP を書き出す",
+    "Preparing diagnostics…": "診断情報を準備中…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "機密情報を伏せたログを端末に保存します。アップロードは行いません。共有前に ZIP の内容をご確認ください。",
+    "Please wait 30 seconds before exporting diagnostics again.": "診断情報を再度書き出すには 30 秒お待ちください。",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "診断情報を書き出せませんでした。Studio に接続できない場合はコマンドラインをご利用ください。"
   },
   "ko": {
     "The project changed elsewhere. Resolve the changes before continuing.": "프로젝트가 다른 곳에서 변경되었습니다. 충돌을 해결한 후 계속하세요.",
@@ -69,7 +79,12 @@
     "Use updated version": "최신 버전 사용",
     "Keep my changes": "내 변경 사항 유지",
     "Use the updated version and discard your unsaved changes?": "최신 버전을 사용하고 저장하지 않은 변경 사항을 버릴까요?",
-    "Keep your changes and replace the version updated elsewhere?": "내 변경 사항을 유지하고 다른 곳에서 업데이트된 버전을 바꿀까요?"
+    "Keep your changes and replace the version updated elsewhere?": "내 변경 사항을 유지하고 다른 곳에서 업데이트된 버전을 바꿀까요?",
+    "Export diagnostic ZIP": "진단 ZIP 내보내기",
+    "Preparing diagnostics…": "진단 정보 준비 중…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "민감한 값을 가린 로그를 기기에 저장합니다. 업로드하지 않습니다. 공유 전에 ZIP 내용을 확인하세요.",
+    "Please wait 30 seconds before exporting diagnostics again.": "진단 정보를 다시 내보내려면 30초 기다려 주세요.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "진단 정보를 내보낼 수 없습니다. Studio에 연결할 수 없으면 명령줄을 사용하세요."
   },
   "de": {
     "The project changed elsewhere. Resolve the changes before continuing.": "Das Projekt wurde andernorts geändert. Lösen Sie den Konflikt, bevor Sie fortfahren.",
@@ -93,7 +108,12 @@
     "Use updated version": "Aktualisierte Version verwenden",
     "Keep my changes": "Meine Änderungen behalten",
     "Use the updated version and discard your unsaved changes?": "Aktualisierte Version verwenden und ungespeicherte Änderungen verwerfen?",
-    "Keep your changes and replace the version updated elsewhere?": "Eigene Änderungen behalten und die andernorts aktualisierte Version ersetzen?"
+    "Keep your changes and replace the version updated elsewhere?": "Eigene Änderungen behalten und die andernorts aktualisierte Version ersetzen?",
+    "Export diagnostic ZIP": "Diagnose-ZIP exportieren",
+    "Preparing diagnostics…": "Diagnosedaten werden vorbereitet…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Speichert Protokolle mit unkenntlich gemachten vertraulichen Werten auf Ihrem Gerät. Kein Upload. Prüfen Sie die ZIP vor dem Teilen.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Bitte warten Sie 30 Sekunden, bevor Sie erneut Diagnosedaten exportieren.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Diagnosedaten konnten nicht exportiert werden. Nutzen Sie die Befehlszeile, wenn Studio keine Verbindung herstellen kann."
   },
   "fr": {
     "The project changed elsewhere. Resolve the changes before continuing.": "Le projet a été modifié ailleurs. Résolvez le conflit avant de continuer.",
@@ -117,7 +137,12 @@
     "Use updated version": "Utiliser la version à jour",
     "Keep my changes": "Garder mes modifications",
     "Use the updated version and discard your unsaved changes?": "Utiliser la version à jour et abandonner vos modifications non enregistrées ?",
-    "Keep your changes and replace the version updated elsewhere?": "Garder vos modifications et remplacer la version mise à jour ailleurs ?"
+    "Keep your changes and replace the version updated elsewhere?": "Garder vos modifications et remplacer la version mise à jour ailleurs ?",
+    "Export diagnostic ZIP": "Exporter le ZIP de diagnostic",
+    "Preparing diagnostics…": "Préparation du diagnostic…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Enregistre les journaux sur votre appareil en masquant les valeurs sensibles. Aucun envoi. Vérifiez le ZIP avant de le partager.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Veuillez patienter 30 secondes avant de réexporter le diagnostic.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Impossible d’exporter le diagnostic. Utilisez la ligne de commande si Studio ne peut pas se connecter."
   },
   "es": {
     "The project changed elsewhere. Resolve the changes before continuing.": "El proyecto se modificó en otro lugar. Resuelve el conflicto antes de continuar.",
@@ -141,7 +166,12 @@
     "Use updated version": "Usar versión actualizada",
     "Keep my changes": "Conservar mis cambios",
     "Use the updated version and discard your unsaved changes?": "¿Usar la versión actualizada y descartar tus cambios sin guardar?",
-    "Keep your changes and replace the version updated elsewhere?": "¿Conservar tus cambios y reemplazar la versión actualizada en otro lugar?"
+    "Keep your changes and replace the version updated elsewhere?": "¿Conservar tus cambios y reemplazar la versión actualizada en otro lugar?",
+    "Export diagnostic ZIP": "Exportar ZIP de diagnóstico",
+    "Preparing diagnostics…": "Preparando diagnóstico…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Guarda los registros en tu dispositivo con los valores sensibles ocultos. No se suben. Revisa el ZIP antes de compartirlo.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Espera 30 segundos antes de volver a exportar el diagnóstico.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "No se pudo exportar el diagnóstico. Usa la línea de comandos si Studio no puede conectarse."
   },
   "pt-BR": {
     "The project changed elsewhere. Resolve the changes before continuing.": "O projeto foi alterado em outro local. Resolva o conflito antes de continuar.",
@@ -165,7 +195,12 @@
     "Use updated version": "Usar versão atualizada",
     "Keep my changes": "Manter minhas alterações",
     "Use the updated version and discard your unsaved changes?": "Usar a versão atualizada e descartar suas alterações não salvas?",
-    "Keep your changes and replace the version updated elsewhere?": "Manter suas alterações e substituir a versão atualizada em outro local?"
+    "Keep your changes and replace the version updated elsewhere?": "Manter suas alterações e substituir a versão atualizada em outro local?",
+    "Export diagnostic ZIP": "Exportar ZIP de diagnóstico",
+    "Preparing diagnostics…": "Preparando diagnóstico…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Salva os registros no seu dispositivo com valores sensíveis ocultos. Sem envio. Revise o ZIP antes de compartilhar.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Aguarde 30 segundos antes de exportar o diagnóstico novamente.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Não foi possível exportar o diagnóstico. Use a linha de comando se o Studio não conseguir se conectar."
   },
   "it": {
     "The project changed elsewhere. Resolve the changes before continuing.": "Il progetto è stato modificato altrove. Risolvi il conflitto prima di continuare.",
@@ -189,7 +224,12 @@
     "Use updated version": "Usa versione aggiornata",
     "Keep my changes": "Mantieni le mie modifiche",
     "Use the updated version and discard your unsaved changes?": "Usare la versione aggiornata e scartare le modifiche non salvate?",
-    "Keep your changes and replace the version updated elsewhere?": "Mantenere le tue modifiche e sostituire la versione aggiornata altrove?"
+    "Keep your changes and replace the version updated elsewhere?": "Mantenere le tue modifiche e sostituire la versione aggiornata altrove?",
+    "Export diagnostic ZIP": "Esporta ZIP diagnostico",
+    "Preparing diagnostics…": "Preparazione della diagnostica…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Salva i log sul dispositivo oscurando i valori sensibili. Nessun caricamento. Controlla lo ZIP prima di condividerlo.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Attendi 30 secondi prima di esportare nuovamente la diagnostica.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Impossibile esportare la diagnostica. Usa la riga di comando se Studio non riesce a connettersi."
   },
   "ru": {
     "The project changed elsewhere. Resolve the changes before continuing.": "Проект изменён в другом месте. Разрешите конфликт, прежде чем продолжить.",
@@ -213,7 +253,12 @@
     "Use updated version": "Использовать новую версию",
     "Keep my changes": "Сохранить мои изменения",
     "Use the updated version and discard your unsaved changes?": "Использовать новую версию и отменить ваши несохранённые изменения?",
-    "Keep your changes and replace the version updated elsewhere?": "Сохранить ваши изменения и заменить версию, обновлённую в другом месте?"
+    "Keep your changes and replace the version updated elsewhere?": "Сохранить ваши изменения и заменить версию, обновлённую в другом месте?",
+    "Export diagnostic ZIP": "Экспорт ZIP с диагностикой",
+    "Preparing diagnostics…": "Подготовка диагностики…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Журналы сохраняются на устройстве с маскировкой конфиденциальных данных. Отправки нет. Проверьте ZIP перед передачей.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Подождите 30 секунд перед повторным экспортом диагностики.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Не удалось экспортировать диагностику. Если Studio не подключается, используйте командную строку."
   },
   "tr": {
     "The project changed elsewhere. Resolve the changes before continuing.": "Proje başka bir yerde değiştirildi. Devam etmeden önce çakışmayı giderin.",
@@ -237,6 +282,11 @@
     "Use updated version": "Güncel sürümü kullan",
     "Keep my changes": "Değişikliklerimi koru",
     "Use the updated version and discard your unsaved changes?": "Güncel sürüm kullanılıp kaydedilmemiş değişiklikleriniz silinsin mi?",
-    "Keep your changes and replace the version updated elsewhere?": "Değişiklikleriniz korunup başka yerde güncellenen sürüm değiştirilsin mi?"
+    "Keep your changes and replace the version updated elsewhere?": "Değişiklikleriniz korunup başka yerde güncellenen sürüm değiştirilsin mi?",
+    "Export diagnostic ZIP": "Tanılama ZIP dosyasını dışa aktar",
+    "Preparing diagnostics…": "Tanılama hazırlanıyor…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Günlükleri hassas değerler gizlenmiş olarak cihazınıza kaydeder. Yükleme yapılmaz. Paylaşmadan önce ZIP içeriğini inceleyin.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Tanılamayı yeniden dışa aktarmadan önce 30 saniye bekleyin.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Tanılama dışa aktarılamadı. Studio bağlanamıyorsa komut satırını kullanın."
   }
 }

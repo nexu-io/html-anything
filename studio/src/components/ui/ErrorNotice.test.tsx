@@ -8,6 +8,8 @@ import { I18nProvider } from '../../i18n/I18n';
 import { languages, translate } from '../../i18n/messages';
 import errorUi from '../../i18n/error-ui.json';
 
+vi.mock('../../motion/diagnostics', () => ({ recordBrowserDiagnostic: vi.fn(), browserDiagnostics: () => [] }));
+
 let host: HTMLDivElement;
 let root: Root;
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;

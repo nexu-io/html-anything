@@ -94,8 +94,9 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
       }
     }
     await writeJSON(path.join(application, 'shared/template-config.json'), templateConfig);
+    await writeJSON(path.join(application, 'shared/build-info.json'), { commit });
     const skills = (await readdir(path.join(application, 'skills'))).sort();
-    for (const name of ['runtime-assets.mjs', 'npm-runtime.mjs', 'npm-hosts.mjs', 'npm-installer.mjs', 'check-installed-mcp.mjs']) await cp(path.join(root, 'scripts', name), path.join(installer, 'scripts', name));
+    for (const name of ['runtime-assets.mjs', 'npm-runtime.mjs', 'npm-hosts.mjs', 'npm-installer.mjs', 'check-installed-mcp.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) await cp(path.join(root, 'scripts', name), path.join(installer, 'scripts', name));
     await chmod(path.join(installer, 'scripts/npm-installer.mjs'), 0o755);
     const installerPkg = JSON.parse(await readFile(path.join(root, 'packages/npm/package.json'), 'utf8'));
     assert.equal(installerPkg.private, true, 'Keep the source package protected; publish only an explicitly versioned artifact');

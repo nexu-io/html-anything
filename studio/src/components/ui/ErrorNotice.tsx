@@ -1,4 +1,5 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
+import { recordBrowserDiagnostic } from '../../motion/diagnostics';
 import { useI18n } from '../../i18n/I18n';
 import { RemixIcon } from '../../icons/RemixIcons';
 import { errorNoticeMessage, type ErrorContext } from './errorNoticeMessage';
@@ -14,6 +15,7 @@ export function ErrorNotice({ message, context = 'operation', compact = false, a
   const { t } = useI18n();
   const id = useId();
   const [expanded, setExpanded] = useState(false);
+  useEffect(() => { recordBrowserDiagnostic('operation_error', message); }, [message]);
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
   const copy = async () => {
     try { await navigator.clipboard.writeText(message); setCopyState('copied'); }

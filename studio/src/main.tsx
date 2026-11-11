@@ -17,6 +17,7 @@ import "./motion/theme.css";
 import "./motion/workspace.css";
 import "../../web/design-system/material.css";
 import { MotionStudioHost } from "./motion/MotionStudioHost";
+import { recordBrowserDiagnostic } from './motion/diagnostics';
 
 const unbindThumbnailPageLifecycle = bindThumbnailPageLifecycle(window, document);
 import.meta.hot?.dispose(unbindThumbnailPageLifecycle);
@@ -54,6 +55,7 @@ window.addEventListener("error", (event) => {
     lineno: event.lineno,
     colno: event.colno,
   });
+  recordBrowserDiagnostic('unhandled_error', event.message, event.error?.stack);
 });
 
 let filteredAssetErrorCount = 0;
@@ -111,6 +113,7 @@ window.addEventListener("unhandledrejection", (event) => {
   }
 
   trackStudioEvent("unhandled_promise_rejection", props);
+  recordBrowserDiagnostic('unhandled_rejection', props.error_message, props.stack_trace ?? '');
 });
 
 createRoot(document.getElementById("root")!).render(

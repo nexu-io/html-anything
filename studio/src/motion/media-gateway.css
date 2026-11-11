@@ -5,9 +5,9 @@
 .motion-media-surface h3 { color: var(--motion-strong); font-size: 14px; font-weight: 600; margin: 0 0 12px; }
 .motion-media-surface small { display: block; font-size: 11px; }
 .motion-media-surface header small { letter-spacing: .12em; color: var(--motion-accent); }
-.motion-media-surface button, .motion-empty-media-actions button, .motion-timeline-media-actions button, .motion-asset-generate { min-height: 32px; padding: 6px 12px; border: 1px solid var(--motion-border); border-radius: 8px; background: var(--motion-panel); color: var(--motion-text); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
-.motion-media-surface button:hover, .motion-empty-media-actions button:hover, .motion-timeline-media-actions button:hover, .motion-asset-generate:hover { background: var(--motion-hover); }
-.motion-media-surface button:disabled, .motion-timeline-media-actions button:disabled { cursor: default; opacity: .5; }
+.motion-media-surface button, .motion-diagnostic-export button, .motion-empty-media-actions button, .motion-timeline-media-actions button, .motion-asset-generate { min-height: 32px; padding: 6px 12px; border: 1px solid var(--motion-border); border-radius: 8px; background: var(--motion-panel); color: var(--motion-text); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.motion-media-surface button:hover, .motion-diagnostic-export button:hover, .motion-empty-media-actions button:hover, .motion-timeline-media-actions button:hover, .motion-asset-generate:hover { background: var(--motion-hover); }
+.motion-media-surface button:disabled, .motion-diagnostic-export button:disabled, .motion-timeline-media-actions button:disabled { cursor: default; opacity: .5; }
 .motion-media-surface .motion-media-primary, .motion-empty-media-actions .motion-media-primary { color: var(--motion-on-action); background: var(--motion-action); border-color: var(--motion-action); }
 .motion-media-surface .motion-media-primary:hover, .motion-empty-media-actions .motion-media-primary:hover { background: var(--motion-action-hover); }
 .motion-media-surface .motion-media-close { border: 0; background: transparent; font-size: 22px; line-height: 1; padding: 4px; width: 32px; }
