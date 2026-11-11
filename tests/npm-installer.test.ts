@@ -39,6 +39,11 @@ async function setupFixture(t: any) {
   await writeFile(path.join(application, 'skills/motion-production/SKILL.md'), '---\nname: motion-production\ndescription: fixture\n---\nFixture');
   await writeJSON(path.join(application, 'shared/template-config.json'), { environment: 'prod' });
   await cp(new URL('../shared/mcp-profiles.json', import.meta.url), path.join(application, 'shared/mcp-profiles.json'));
+  await mkdir(path.join(application, 'tracking'));
+  for (const file of ['shared/install-attribution.ts', 'tracking/node.ts', 'tracking/core.ts']) {
+    await cp(new URL('../' + file, import.meta.url), path.join(application, file));
+  }
+  await writeFile(path.join(application, 'shared/tracking.ts'), 'export function trackingLocked(){return false} export function trackingPreference(){return true} export async function createAppTracking(){return {track(){}}} export async function closeTracking(){}');
   await writeJSON(path.join(application, 'package.json'), { name: 'motion-fixture', version: '1.2.3', private: true });
   await writeJSON(path.join(application, 'package-lock.json'), { name: 'motion-fixture', version: '1.2.3', lockfileVersion: 3, packages: { '': { name: 'motion-fixture', version: '1.2.3' } } });
   const manifest = path.join(directory, 'release.json');
@@ -468,4 +473,19 @@ test('registration failure restores obsolete flat Skills, and malformed install 
   const state = path.join(options.home, 'install.json'); await writeJSON(state, false);
   await assert.rejects(setup(options), /belongs to another/);
   assert.equal(JSON.parse(await readFile(state, 'utf8')), false);
+});
+
+
+test('setup passes optional attribution to the application and untagged upgrades retain it', async t => {
+  const options = await setupFixture(t);
+  await setup({...options, utmSource: 'producthunt'});
+  const read = async () => JSON.parse(await readFile(path.join(options.home, 'data/tracking/identity.json'), 'utf8'));
+  const first = await read();
+  assert.equal(first.utm_source, 'producthunt');
+  await setup(options);
+  assert.deepEqual(await read(), first);
+  await setup({...options, utmSource: 'partner'});
+  const updated = await read();
+  assert.equal(updated.utm_source, 'partner');
+  assert.equal(updated.installation_id, first.installation_id);
 });

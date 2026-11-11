@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
-import { generateInstallGuide, validateGuideSpec, validateGuideIdentity } from '../scripts/install-guide.mjs';
+import { generateInstallGuide, supportsInstallAttribution, validateGuideSpec, validateGuideIdentity } from '../scripts/install-guide.mjs';
 import { movingGuide, publishGuide, storagePlan } from '../.github/scripts/publish-install-guide.mjs';
 import { installationInstructions } from '../scripts/install-onboarding.mjs';
 import { fileURLToPath } from 'node:url';
@@ -20,9 +20,12 @@ test('installation URLs separate the moving channel entry from the exact immutab
   assert.equal(storagePlan({ channel: 'stable', version: '0.6.4' }, config).versionKey, 'open-motion/0.6.4/install.md');
   assert.equal(storagePlan({ channel: 'stable', version: '0.6.4' }, config).fixedKey, 'open-motion/install.md');
 });
-async function fixture(t: any, candidate = false) {
+async function fixture(t: any, candidate = false, installer?: string) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'motion-guide-test-')); t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'package/payload'), { recursive: true });
+  await mkdir(path.join(root, 'package/scripts'), { recursive: true });
+  await writeFile(path.join(root, 'package/scripts/npm-installer.mjs'),
+    installer ?? await readFile(new URL('../scripts/npm-installer.mjs', import.meta.url), 'utf8'));
   await writeFile(path.join(root, 'package/package.json'), JSON.stringify(pkg));
   await writeFile(path.join(root, 'package/payload/release-npm.json'), JSON.stringify(manifest));
   const tgz = path.join(root, 'candidate.tgz');
@@ -77,6 +80,20 @@ test('guide rendering pins the exact npm package, built source and hash while re
   const stable = { ...pkg, version: '0.6.4' };
   assert.equal(validateGuideIdentity(stable, { ...manifest, version: stable.version, templateEnvironment: 'prod' }), 'stable');
   assert.throws(() => validateGuideIdentity(stable, { ...manifest, version: stable.version }), /Template defaults/);
+});
+
+test('the support marker follows the sealed installer instead of the control checkout template', async t => {
+  assert(supportsInstallAttribution(await readFile(new URL('../scripts/npm-installer.mjs', import.meta.url), 'utf8')));
+  assert(!supportsInstallAttribution('parseArgs({ allowPositionals: true, options: { host: { type: "string" } } });'));
+  const supported = await fixture(t);
+  assert((await readFile(path.join(supported.directory, 'install.md'), 'utf8')).includes('<!-- openmotion-utm-source-supported -->'));
+  // An older integrated source ships an installer without --utm-source, so its guide must not declare support.
+  const legacy = await fixture(t, false, 'const { values } = parseArgs({ allowPositionals: true, options: { host: { type: "string" } } });\n');
+  const legacyGuide = await readFile(path.join(legacy.directory, 'install.md'), 'utf8');
+  assert(!legacyGuide.includes('openmotion-utm-source-supported'));
+  assert(!legacyGuide.includes('{{'));
+  assert(legacyGuide.includes("\n## Choose the selected host's setup command"));
+  assert(legacyGuide.includes('openmotion setup --host codex'));
 });
 
 test('publication verifies the immutable URL before conditional fixed promotion and retains the prior guide', async t => {

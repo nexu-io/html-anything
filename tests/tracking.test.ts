@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { tmpdir } from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { createTracker, deviceContext } from '../tracking/core.ts';
-import { createNodeTracking, createPosthogSender, loadIdentity } from '../tracking/node.ts';
+import { createNodeTracking, createPosthogSender, loadIdentity, saveInstallationSource } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
 import { closeTracking, createAppTracking, saveTrackingPreference, trackingError } from '../shared/tracking.ts';
 import { Phase1Service } from '../phase1.ts';
@@ -85,7 +86,7 @@ test('PostHog adapter uses public ingest only, privacy fields and real receipt s
   const data = seen[0].batch[0];
   assert.equal(data.uuid, event.event_id); assert.equal(data.timestamp, event.occurred_at);
   assert.equal(data.properties.distinct_id, identity.installation_id); assert.equal(data.properties.device_id, identity.installation_id);
-  assert.equal(data.properties.utm_source, 'alice'); assert.equal(data.properties.event_schema_version, 1);
+  assert.equal(data.properties.od_utm_source, 'alice'); assert.equal(data.properties.utm_source, 'alice'); assert.equal(data.properties.event_schema_version, 1);
   assert.equal(data.properties.$ip, '0.0.0.0'); assert.equal(data.properties.$geoip_disable, true);
   assert.equal(data.properties.$process_person_profile, false);
   response = new Response('{"status":"Ok"}'); assert.equal(await sender([event], new AbortController().signal), 'accepted');
@@ -229,3 +230,18 @@ test('worker reports a real terminal render failure once, separately from queue 
   assert.equal((await store.get()).revision, current.revision);
   assert.equal(events[0].properties.technical_check, 'unknown'); tracking.close();
 }));
+
+
+test('installation source is optional, survives untagged upgrades and changes only explicitly', async t => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-source-'));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+  const first = await saveInstallationSource(directory);
+  assert.equal(first.utm_source, null);
+  const ph = await saveInstallationSource(directory, 'producthunt');
+  assert.equal(ph.installation_id, first.installation_id);
+  assert.equal(ph.utm_source, 'producthunt');
+  assert.equal((await saveInstallationSource(directory)).utm_source, 'producthunt');
+  assert.equal((await loadIdentity(directory)).utm_source, 'producthunt');
+  assert.equal((await saveInstallationSource(directory, 'partner')).utm_source, 'partner');
+  await assert.rejects(saveInstallationSource(directory, '$(bad)'), /INVALID_SOURCE/);
+});

@@ -8,6 +8,7 @@ const tool = { tool_name: toolNames, call_id: 'uuid', operation_id: 'uuid', acce
 const business = { outcome, project_id: 'uuid', operation_id: 'uuid', replayed: 'boolean', error_code: 'code' } as const;
 
 export const omEvents = {
+  installation_result: { producers: ['installer'], fields: { outcome: ['success'], host_product: ['codex', 'claude', 'deepseek', 'workbuddy'] }, required: ['outcome', 'host_product'] },
   mcp_tool_started: { producers: ['mcp'], fields: tool, required: ['tool_name', 'call_id', 'accepted'] },
   mcp_tool_finished: { producers: ['mcp'], fields: { ...tool, outcome, duration_ms: 'integer', error_code: 'code', replayed: 'boolean' },
     required: ['tool_name', 'call_id', 'accepted', 'outcome', 'duration_ms'] },

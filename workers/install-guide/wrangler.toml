@@ -1,0 +1,14 @@
+name = "openmotion-install-guide"
+main = "index.ts"
+account_id = "64ad4569ffd912432d6b86d5656484c4"
+compatibility_date = "2026-11-11"
+workers_dev = true
+
+[[r2_buckets]]
+binding = "RELEASES"
+bucket_name = "open-design-releases"
+
+# Test entry only. Keep production activation separate until verified.
+[[routes]]
+pattern = "open-design.powerformer.net/motion/install.md*"
+zone_name = "powerformer.net"

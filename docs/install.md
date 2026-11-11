@@ -70,6 +70,8 @@ OpenMotion 开源免费，让你与熟悉的 Agent 协作，从模板、参考�
 Follow-up examples: for the three-candidate offer above, “2” means `nyt-graph`; create that project without asking for another template. “是” means ask “你想先体验 1、2 还是 3？” without creating anything. “暂不体验” means acknowledge and stop.
 <!-- installation-onboarding:end -->
 
+<!-- openmotion-utm-source-supported -->
+
 ## Choose the selected host's setup command
 
 The commands below show normal installations. For test candidates, apply the separate configuration/profile, home, data and Skills paths from the [platform recipes]({{DETAILS_URL}}) first. Run only the selected row.
