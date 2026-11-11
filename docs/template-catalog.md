@@ -28,7 +28,7 @@ DEV 的默认工作区另加 `-dev`，与线上后台进程、工程和缓存分
 ### 缓存
 
 - 可用 `MOTION_TEMPLATE_RESOURCE_ID`、`MOTION_TEMPLATE_LOCALE` 指定 Resource 和语言。缓存位于当前 Motion 数据目录的 `template-cache`，按来源和语言隔离，不能手工修改。
-- 按需用 ETag / If-None-Match 检查发布，304 复用已下载内容；DEV 最短间隔 2 秒，prod 60 秒。当前目录约 120 KB，直接缓存 main.json，不另加 manifest 下载链。
+- 按需用 ETag / If-None-Match 检查发布，304 复用已下载内容；DEV 最短间隔 2 秒，prod 60 秒。The full multilingual main.json is cached once; UI language changes reuse that publication rather than downloading one catalog per locale.
 - 发布成功的目录整体替换；网络或内容读取失败时保留上次有效缓存并返回 warning。首次读取无缓存时明确失败。
 - Template files download with at most four concurrent requests. Verified bytes are cached locally and rechecked against the manifest before reuse; each project gets independent files. A corrupt cache entry is downloaded again. Failed copies wait for pending writes before removing the incomplete project.
 - 打开的模板界面每 5 秒检查目录版本，变化后更新列表，保留搜索条件，不重启编辑器或改写已有工程。保存 CMS 草稿不触发变化，需发布 DEV。
@@ -43,7 +43,15 @@ DEV 的默认工作区另加 `-dev`，与线上后台进程、工程和缓存分
 
 ### 界面
 
-`GET /motion-api/template-catalog` 保留现有 query/category/offset/limit/grouped/covered 查询，用于界面搜索和分页，返回 catalogVersion。它和 MCP 索引从同一缓存生成。`kind=prism` 与 builtin 一样可打开独立编辑工程；复制指令仍沿用统一 templatePrompt 和参数化指引。后续公共落地页可读取相同发布数据，但公共安装链接与页面未在本次实现。
+`GET /motion-api/template-catalog` accepts an optional `locale` alongside query/category/offset/limit/grouped/covered，用于界面搜索和分页，返回 catalogVersion。它和 MCP 索引从同一缓存生成。`kind=prism` 与 builtin 一样可打开独立编辑工程；复制指令仍沿用统一 templatePrompt 和参数化指引。后续公共落地页可读取相同发布数据，但公共安装链接与页面未在本次实现。
+
+### Template languages and motion.md
+
+The website and editor support `en`, `zh`/`zh-CN`, `ja`, `ko`, `de`, `fr`, `ru`, `es`, `pt-br`/`pt-BR`, `it`, and `tr`. Prism keeps one shared Schema and a `templates` collection in each native locale slot. The editor requests its UI locale; missing locale content falls back to English, then the Resource default. The MCP index/detail defaults remain controlled by `MOTION_TEMPLATE_LOCALE`.
+
+Keep template IDs, project file manifests, ordering, provenance and media URLs identical across locales. Translate display names, summaries, use cases, video types and guide text. Template prompt text uses the selected UI language and the configured DEV/prod installation URL. Changing language does not translate the video or modify an existing project.
+
+Each locale can use its existing `motionDocumentUrl` and `motionGuideUrl` fields for a localized download or HTML guide. A motion.md download keeps the filename `motion.md` and the original ZIP bytes. Translate explanatory Markdown/HTML inside the archive; reuse executable examples and media unless a localized video is explicitly supplied. Never treat a translated catalog title as proof of a translated package. Missing package URLs keep download disabled; shared original-language packages need accurate language disclosure from the content publisher before publication. No package translation or new archive format is introduced here.
 
 ## 历史：随包参考快照
 

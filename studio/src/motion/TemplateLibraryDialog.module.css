@@ -57,7 +57,6 @@
 .detailInfo dl { display:grid; grid-template-columns:auto 1fr; gap:16px; font-size:14px; }
 .detailInfo dt { color:var(--color-template-label); }
 .detailInfo dd { text-align:right; margin:0; }
-.prompt { display:block; width:100%; margin-top:24px; resize:vertical; min-height:170px; border:1px solid var(--library-line); border-radius:12px; padding:16px; background:var(--color-template-prompt-bg); line-height:1.8; white-space:pre-wrap; overflow-wrap:anywhere; }
 .filters { width:600px; max-width:calc(100vw - 40px); }
 .filters header,.filters footer { display:flex; justify-content:space-between; align-items:center; gap:20px; }
 .filters fieldset { border:0; padding:20px 0; margin:0; border-bottom:1px solid var(--library-line); }
@@ -93,9 +92,13 @@
 .handoff { display:flex; gap:20px; align-items:center; margin-bottom:24px; }
 .handoff img { width:128px; aspect-ratio:16/9; border-radius:10px; object-fit:cover; }
 .handoff strong { font-size:18px; }.handoff p { color:var(--library-muted); overflow-wrap:anywhere; }
-.useDialog .prompt { margin:20px 0; }.useDialog .copyPrompt { padding:12px 24px; border-radius:24px; background:var(--color-template-action-bg); color:white; }
 @media(max-width:700px) { .guide { grid-template-columns:1fr; gap:20px; }.guide aside { display:flex; flex-wrap:wrap; gap:16px; }.guide aside h3 { width:100%; }.useDialog { padding:24px; }.handoff img { width:88px; }.handoff { gap:12px; } }
 
-.promptRow { display:flex; align-items:center; border:1px solid var(--library-line); border-radius:12px; background:var(--color-template-prompt-bg); padding-right:12px; }
-.promptRow .prompt { border:0; margin:0; min-width:0; resize:vertical; }
-.promptRow .copyPrompt { display:grid; place-items:center; width:44px; height:44px; flex:none; padding:0; border-radius:8px; color:var(--library-fg); background:transparent; }
+.promptLabel { margin:0 0 16px; font-size:12px; line-height:1.5; }
+.promptRow { display:flex; align-items:flex-start; gap:12px; padding:16px; border:1px solid var(--library-line); border-radius:12px; background:var(--color-template-prompt-bg); }
+.promptRow:focus-within { outline:2px solid var(--color-template-focus); outline-offset:3px; }
+.promptRow .prompt { display:block; flex:1; min-width:0; width:100%; height:280px; max-height:42dvh; margin:0; padding:0; border:0; border-radius:0; outline:none; resize:none; background:transparent; color:var(--library-fg); font:13px/1.6 ui-monospace,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.promptRow .copyPrompt { display:grid; place-items:center; flex:0 0 40px; width:40px; height:40px; padding:10px; border-radius:8px; background:var(--color-template-action-bg); color:var(--color-template-action-text); }
+.copyStatus { margin:8px 0 0; font-size:12px; color:var(--library-muted); }
+.copyStatus:empty { display:none; }
+@media(max-width:700px) { .promptRow { flex-direction:column-reverse; gap:8px; padding:12px; }.promptRow .copyPrompt { align-self:flex-end; }.promptRow .prompt { flex:none; } }

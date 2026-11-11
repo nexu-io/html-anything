@@ -92,6 +92,7 @@ export function TemplateLibraryDialog(props: Props) {
   }, [props.open, props.returnFocus]);
   useEffect(() => {
     if (!props.open) return;
+    setCatalog([]); setSelected({}); setQuery(''); setPreview(null); detail.current?.close(); useDialog.current?.close();
     const controller = new AbortController();
     let version: string | undefined, pending = false;
     async function load() {
@@ -99,7 +100,7 @@ export function TemplateLibraryDialog(props: Props) {
       try {
         const items: GalleryTemplate[] = []; let offset: number | null = 0;
         while (offset !== null) {
-          const page: TemplatePage = await motionApi(`/template-catalog?category=all&covered=true&limit=60&offset=${offset}`, { signal: controller.signal });
+          const page: TemplatePage = await motionApi(`/template-catalog?category=all&covered=true&limit=60&offset=${offset}&locale=${encodeURIComponent(locale)}`, { signal: controller.signal });
           items.push(...page.items); offset = page.next; version = page.catalogVersion; setWarning(page.warning ?? '');
         }
         if (!controller.signal.aborted) setCatalog(items);
@@ -111,7 +112,7 @@ export function TemplateLibraryDialog(props: Props) {
       if (pending || document.hidden) return;
       pending = true;
       try {
-        const page = await motionApi<TemplatePage>('/template-catalog?limit=1', { signal: controller.signal });
+        const page = await motionApi<TemplatePage>(`/template-catalog?limit=1&locale=${encodeURIComponent(locale)}`, { signal: controller.signal });
         if (controller.signal.aborted) return;
         setWarning(page.warning ?? '');
         if (page.catalogVersion !== version) await load();
@@ -119,7 +120,7 @@ export function TemplateLibraryDialog(props: Props) {
     }, 5000);
     void motionApi<IntegrationInfo>('/integration', { signal: controller.signal }).then(value => { info.current = value; }).catch(() => {});
     return () => { controller.abort(); clearInterval(timer); };
-  }, [props.open, attempt]);
+  }, [props.open, attempt, locale]);
   const available = useMemo(() => facets.map(([key, label]) => ({ key, label, values: [...new Set(catalog.flatMap(item => values(item, key)))] })).filter(facet => facet.values.length), [catalog]);
   const hasFilters = Boolean(query || Object.values(selected).some(items => items?.length));
   const visible = useMemo(() => catalog.filter(item => {
@@ -206,9 +207,9 @@ export function TemplateLibraryDialog(props: Props) {
     <dialog ref={useDialog} className={styles.useDialog} aria-label={t('Recreate template')}>
       <header><h2>{t('Recreate template')}</h2><button onClick={() => useDialog.current?.close()} aria-label={t('Close')}><MotionIcon name="close" size={24} /></button></header>
       {preview && <div className={styles.handoff}>{preview.posterUrl && <img src={preview.posterUrl} alt="" />}<div><strong>{preview.title}</strong><p>{preview.id}</p></div></div>}
-      <p>{t('Copy the instruction below and send it to your Agent.')}</p>
+      <p className={styles.promptLabel}>{t('Copy the instruction below and send it to your Agent.')}</p>
       <div className={styles.promptRow}><textarea className={styles.prompt} rows={8} readOnly value={prompt} aria-label={t('Content to copy')} />
-      <button className={styles.copyPrompt} disabled={!prompt} onClick={() => void copy()} aria-label={t('Copy')}><MotionIcon name="copy" size={22} /></button></div><p role="status">{feedback}</p>
+      <button className={styles.copyPrompt} disabled={!prompt} onClick={() => void copy()} aria-label={t('Copy')}><MotionIcon name="copy" size={22} /></button></div><p className={styles.copyStatus} role="status">{feedback}</p>
     </dialog>
   </dialog>;
 }

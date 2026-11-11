@@ -162,3 +162,23 @@ test('gallery carries Prism facets and ordering without leaking project files', 
   assert.deepEqual(items[0].creationModels, ['Model A']); assert.equal(items[0].hasHtmlProject, true);
   assert.equal('files' in items[0], false);
 });
+
+test('one cached publication serves concurrent locales and locale-specific downloads', async t => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-prism-locales-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const remote = mockPrism(), data = publication();
+  const localized = (title: string, document: string) => ({ templates: data.content['zh-CN'].templates.map(item => ({ ...item,
+    original: { ...item.original, templateName: title }, motionDocumentUrl: document,
+  })) });
+  Object.assign(data.content, { en: localized('English template', 'https://example.com/en.zip'), 'pt-br': localized('Modelo', 'https://example.com/pt.zip') });
+  remote.update(data);
+  const catalog = new TemplateCatalog(directory, { fetch: remote.request });
+  const [english, portuguese, chinese, fallback] = await Promise.all(['en', 'pt-BR', 'zh', 'ja'].map(locale => catalog.page({ locale })));
+  assert.equal(remote.requests.length, 1);
+  assert.equal(english.items[0].title, 'English template');
+  assert.equal(portuguese.items[0].title, 'Modelo');
+  assert.equal(portuguese.items[0].motionDocumentUrl, 'https://example.com/pt.zip');
+  assert.equal(chinese.items[0].title, '测试模板 1');
+  assert.equal(fallback.items[0].title, 'English template');
+  assert.equal((await catalog.get('test-motion-1')).files[0].url, data.content['zh-CN'].templates[0].files[0].url);
+});

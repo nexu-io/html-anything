@@ -27,10 +27,12 @@ it.each(['escape', 'close'])('restores focus after conditional unmount via %s, i
   try {
     await act(async () => root.render(<I18nProvider><Harness /></I18nProvider>));
     const trigger = host.querySelector('button')!;
+    const openedDialogs: HTMLDialogElement[] = [];
     for (let i = 0; i < 2; i++) {
       await act(async () => trigger.click());
       expect(document.activeElement).toBe(host.querySelector('dialog button'));
       const dialog = host.querySelector('dialog')!;
+      openedDialogs.push(dialog);
       await act(async () => {
         if (method === 'escape') dialog.dispatchEvent(new Event('cancel', { bubbles: false, cancelable: true }));
         else host.querySelector<HTMLButtonElement>('dialog header button')!.click();
@@ -38,6 +40,6 @@ it.each(['escape', 'close'])('restores focus after conditional unmount via %s, i
       expect(host.querySelector('dialog')).toBeNull();
       expect(document.activeElement).toBe(trigger);
     }
-    expect(close).toHaveBeenCalledTimes(2);
+    expect(close.mock.contexts.filter(dialog => openedDialogs.includes(dialog as HTMLDialogElement))).toHaveLength(2);
   } finally { act(() => root.unmount()); host.remove(); }
 });

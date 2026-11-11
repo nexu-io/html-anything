@@ -3,7 +3,7 @@ import { useI18n } from '../i18n/I18n';
 import { motionApi } from './useWorkspace';
 import { setMotionTrackingEnabled } from './tracking';
 
-type Status = { enabled: boolean; preference: boolean; locked: boolean };
+type Status = { enabled: boolean; preference: boolean; locked: boolean; reason?: 'test_build' | 'environment' | null };
 export function PrivacySettings({ onClose }: { onClose: () => void }) {
   const { t } = useI18n(), dialog = useRef<HTMLDialogElement>(null);
   const [status, setStatus] = useState<Status | null>(null), [busy, setBusy] = useState(false), [error, setError] = useState('');
@@ -28,7 +28,7 @@ export function PrivacySettings({ onClose }: { onClose: () => void }) {
     <section><label className="motion-media-toggle"><input type="checkbox" checked={status?.enabled ?? false} disabled={!status || busy || status.locked} onChange={event => void change(event.target.checked)} />{t('Share usage data')}</label>
       <p>{t('Send feature usage, error categories and approximate region to improve OpenMotion. Prompts and project contents are excluded.')}</p>
       <p className="motion-media-muted">{t('This setting applies to MCP and Studio on this installation and is kept after restart.')}</p>
-      {status?.locked && <p role="status">{t('Disabled by your environment settings.')}</p>}
+      {status?.locked && <p role="status">{t(status.reason === 'test_build' ? 'Usage data collection is disabled in test builds.' : 'Disabled by your environment settings.')}</p>}
       {error && <p role="alert">{error}</p>}
     </section>
   </dialog>;

@@ -56,7 +56,7 @@ export const SpeedMenu = memo(function SpeedMenu({
               <MenuRadioItem
                 key={rate}
                 value={rate}
-                className={`rounded-none px-3 py-1.5 font-mono text-[11px] tabular-nums [&>span:last-child]:hidden ${rate === playbackRate ? "bg-hover font-semibold" : ""}`}
+                className={`gap-2 rounded-none px-3 py-1.5 font-mono text-[11px] tabular-nums ${rate === playbackRate ? "bg-hover font-semibold text-text-0" : ""}`}
               >
                 {rate}x
               </MenuRadioItem>

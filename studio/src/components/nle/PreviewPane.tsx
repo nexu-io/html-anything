@@ -173,7 +173,7 @@ export function PreviewPane({
         {empty && <PreviewEmptyState />}
       </div>
       {/* The MVP transport fills both side edges and the bottom inset. */}
-      {!empty && <div className={`shrink-0 ${mvp ? "bg-[var(--studio-preview-bg,var(--color-neutral-950))] py-1.5" : ""}`}>
+      {!empty && <div data-preview-transport="" className={`shrink-0 ${mvp ? "bg-[var(--studio-preview-bg,var(--color-neutral-950))] py-1.5" : ""}`}>
         {!mvp && !isFullscreen && compositionStack.length > 1 && (
           <CompositionBreadcrumb stack={compositionStack} onNavigate={handleNavigateComposition} />
         )}

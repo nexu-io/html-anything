@@ -35,6 +35,8 @@ The current five-route, eleven-Tool contract, editor-first handoff, requested-ex
 
 专业入口可由宿主 Skill 自动匹配、用户指定或准确模板指引直接选中，只读取共享 context 后继续，不返回 production 重做选路。局部创作/声音重新设计/创作品质审片由 director 承接；按既定决定修改、替换已选音乐、技术检查和仅导出由 production 承接；仅脚本或审片停在当前范围；共享质量参考不会要求重启 director 的完整创作流程。Skills 是同一 Agent 的文档，不是相互递归执行的独立进程。
 
+Original motion-video requests on a user-supplied topic, including esports recaps and explainers, use motion-director. Its discovery description covers both creation and concept-only requests. Shared context directs the Agent to discover the host's Motion tools and promptly disclose missing or failed connections, including during planning. Planning can finish without a project mutation, and production continues through the host MCP connection. Reading guidance and an independent CLI probe each have their own evidence scope. Skill matching remains the host model's decision. See [the official Skill discovery guidance](https://developers.openai.com/plugins/build/skills#write-skillmd).
+
 ## 同源文档接口
 
 本地文件和 MCP 返回同一份全文。注册表在 `shared/workflow.ts`，一期分发以下五条路线。Skill 名称与目录统一；既有 workflow 短 ID 保持兼容，不增加同义 Skill 入口：

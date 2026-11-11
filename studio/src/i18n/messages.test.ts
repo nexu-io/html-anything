@@ -53,7 +53,7 @@ it('keeps Chinese additions interpolated and preserves fallback for unexposed ad
     const values = Object.fromEntries([...source.matchAll(/\{(\w+)\}/g)].map(match => [match[1], 'sample']));
     expect(translate('zh-CN', source, values)).not.toMatch(/\{\w+\}/);
     for (const { locale } of languages.filter(language => language.locale !== 'zh-CN')) {
-      if (!mvpMessages[locale]?.[source]) expect(translate(locale, source, values)).toBe(translate('en', source, values));
+      if (!mvpMessages[locale]?.[source] && (locale === 'en' || !dictionaries[locale]?.[source])) expect(translate(locale, source, values)).toBe(translate('en', source, values));
     }
   }
 });

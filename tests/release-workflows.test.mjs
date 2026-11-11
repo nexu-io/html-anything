@@ -24,7 +24,7 @@ test('manual entry and source selection reject untrusted callers, mutable refs a
   assert.equal(releaseInputs({ ...recovery, MOTION_RELEASE_ACTION: 'archive-only' }).action, 'archive-only');
   let called = false;
   await validateSource('.', 'a'.repeat(40), '0.6.4-test.7', async (_, args) => { called = true; assert(args.includes('refs/remotes/origin/feature/motion')); }); assert(called);
-  for (const [sha, version] of [['main', '0.6.4-test.7'], ['a'.repeat(40), '0.6.4'], ['a'.repeat(40), '0.6.4-test.0']]) await assert.rejects(validateSource('.', sha, version, async () => { throw Error('must not run'); }));
+  for (const [sha, version] of [['main', '0.6.4-test.7'], ['a'.repeat(40), '0.6.4-test.0']]) await assert.rejects(validateSource('.', sha, version, async () => { throw Error('must not run'); }));
   await assert.rejects(validateSource('.', 'a'.repeat(40), '0.6.4-test.7', async () => { throw Error('not integrated'); }), /not integrated/);
   const buildEnv = { ...valid, GITHUB_SHA: 'a'.repeat(40), GITHUB_WORKFLOW_REF: `${repository}/${candidateWorkflow}@refs/heads/feature/motion` };
   const resolved = await resolveCandidate('.', '', '0.6.4-test.7', buildEnv, async (_, args) => { assert.notEqual(args[0], 'rev-parse'); });
@@ -111,6 +111,11 @@ test('the sealed candidate detects tgz, guide, identity and provenance tampering
   const instructions = await readFile(path.join(directory, 'candidate-install.md'), 'utf8');
   assert(instructions.includes(candidate.tgz) && instructions.includes(candidate.tgzSHA256) && instructions.includes(candidate.sourceCommit));
   assert(instructions.includes('npx --yes --package "./' + candidate.tgz + '"'));
+  const [installation, acceptance] = instructions.split('\n## Video preparation and requested acceptance\n');
+  assert.deepEqual([...installation.matchAll(/^\s*npx[^\n]+/gm)].map(match => match[0].trim()),
+    [`npx --yes --package "./${candidate.tgz}" -- openmotion setup --host HOST`], 'Default installation must not block on prepare');
+  assert(acceptance?.includes(`npx --yes --package "./${candidate.tgz}" -- openmotion prepare`), 'Requested video acceptance retains the exact local prepare command');
+  assert(instructions.includes('Repeat the same explicit `--home` used for setup'));
   assert(!instructions.includes('{{'));
   assert(!checklist.includes('<!-- CANDIDATE_IDENTITY -->'));
   await assert.rejects(verifyDownloaded(directory, candidate.tgzSHA256, '0.6.4-test.100'), /version/);
@@ -223,7 +228,7 @@ test('partial publication retries use the retained producer artifact IDs across 
     assert(jobs[id].includes('        id: artifact\n'));
   }
   for (const id of ['npm', 'registry-mac', 'registry-windows', 'promote-test', 'snapshot']) {
-    assert(jobs[id].includes('if: ${{ always() && !cancelled() && needs.verify.result'), 'Successful retained producers must still supply partial retry consumers: ' + id);
+    assert(jobs[id].includes('always() && !cancelled() && needs.verify.result'), 'Successful retained producers must still supply partial retry consumers: ' + id);
   }
   const downloads = id => [...jobs[id].matchAll(/artifact-ids: \$\{\{ needs\.([\w-]+)\.outputs\.artifact_id \}\}/g)].map(m => m[1]);
   assert.deepEqual(downloads('npm'), ['verify']);
@@ -234,8 +239,8 @@ test('partial publication retries use the retained producer artifact IDs across 
   assert(jobs.snapshot.includes('needs: [verify, npm, promote-test]'));
   assert(!jobs['promote-test'].includes('needs.registry-'));
   for (const id of ['registry-mac', 'registry-windows']) {
-    assert(jobs[id].includes('needs: [verify, snapshot]'));
-    assert(jobs[id].includes('continue-on-error: true'));
+    assert(jobs[id].includes('needs: [verify, npm, snapshot]'));
+    assert(jobs[id].includes("continue-on-error: ${{ inputs.channel != 'stable' }}"));
   }
   assert(jobs['promote-test'].includes('id-token: write') && !jobs.snapshot.includes('id-token: write'));
   assert(jobs['promote-test'].includes('npm@11.21.2'));
@@ -274,13 +279,20 @@ test('daily build and publication are separate manual entries without an indepen
     assert(guard.includes("exit 1"));
   }
   assert(recovery.includes('needs: select-ref'));
-  assert(build.includes('--template-env=dev') && !build.includes('--template-env=prod'));
+  assert(build.includes('--template-env="$MOTION_TEMPLATE_ENVIRONMENT"'));
+  assert(build.includes("inputs.channel == 'stable' && 'prod' || 'dev'"));
   assert(build.includes('tests/native-runtime.test.ts'), 'Candidate checks include the integrated native-preparation regression');
   assert(build.includes('HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome') && build.includes('\"$HYPERFRAMES_BROWSER_PATH\" --version'));
   assert(!/apt-get install[^\n]*\bchromium\b/.test(build), 'Candidate builds must not install Ubuntu desktop snaps');
   assert.match(build, /version:\n(?:[^\n]*\n)*?        required: false\n        default: ''/);
   assert(build.includes('MOTION_VERSION: ${{ steps.source.outputs.version }}'));
   assert(build.includes('name: motion-candidate-${{ steps.source.outputs.version }}') && build.includes('candidate-install.md'));
+  for (const guide of [build, await readFile(new URL('../docs/release-workflows.md', import.meta.url), 'utf8')]) {
+    assert(guide.includes('without waiting for background video-component preparation'));
+    assert(guide.includes('Run prepare only when explicitly asked to wait or before requested media/capture/export acceptance checks'));
+    assert(!guide.includes('Complete prepare'), 'Copyable tester instructions must not restore a blocking installation prerequisite');
+    assert(guide.toLowerCase().includes('no acceptance checkbox'), 'Keep the current publication instructions when syncing the installation guide');
+  }
   assert(!build.includes('concurrency:') && !build.includes('secrets.') && !build.includes('id-token:'));
   assert(header.includes('version:') && !header.includes('accepted:'));
   assert.match(header, /version:\n(?:[^\n]*\n)*?        required: true/);

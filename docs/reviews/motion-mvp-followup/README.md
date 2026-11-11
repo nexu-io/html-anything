@@ -19,7 +19,7 @@ The goal is to make a blank project visibly empty, offer one central import entr
 - Properties and Layers use the shared empty state; the asset drop zone uses the same icon/text treatment.
 - Empty timeline zoom controls and new exports are disabled. Export history remains accessible. Real content restores export and zoom availability.
 
-Screenshots were captured from the working checkout at localhost:4173. The integration checkout retains its newer runtime and template-library implementation; focused tests and production compilation cover those differences.
+Screenshots were captured from the working checkout at localhost:4173. The integration checkout retains its newer runtime and template-library implementation; focused tests and production compilation cover those differences. After integration with `feature/motion` at `40153c5`, a temporary preview at localhost:4174 additionally confirmed empty export/zoom gating and real template-library focus restoration through Escape and the close button (`motion-integrated-empty-export.png`).
 
 | Check | Result / evidence |
 | --- | --- |

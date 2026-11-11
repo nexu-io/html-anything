@@ -1,5 +1,6 @@
 import { isKnownMessage } from './messages';
 import type { Translate } from './I18n';
+import { getStudioSaveStatusCode } from '../utils/studioSaveDiagnostics';
 
 export function historyFailureMessage(message: string, t: Translate): string {
   if (isKnownMessage(message)) return t(message);
@@ -17,4 +18,18 @@ export function splitFailureMessage(error: unknown): string {
   if (message === 'Clip is missing a patchable target.') return 'This clip cannot be split. Select a different clip.';
   if (isKnownMessage(message)) return message;
   return 'Could not split the clip. Check the current clip and retry.';
+}
+
+export function compositionInsertionFailureMessage(error: unknown): string {
+  const status = getStudioSaveStatusCode(error);
+  if (status === 409) return 'The project changed. Refresh the editor before trying again.';
+  if (status === 400 && error instanceof Error) {
+    if (error.message.includes('Composition insertion would create a cycle')) {
+      return 'Adding this composition would create a circular reference. Choose a different composition.';
+    }
+    if (error.message.includes('Composition source has no valid data-composition-duration')) {
+      return 'Set a valid duration on the composition before adding it to the timeline.';
+    }
+  }
+  return 'The operation could not be completed. Check the project and retry.';
 }

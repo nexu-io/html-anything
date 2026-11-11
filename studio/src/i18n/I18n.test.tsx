@@ -9,6 +9,7 @@ const zhCN = { ...baseZhCN, ...mvpZhCN };
 import { FlatSelectRow } from '../components/editor/propertyPanelFlatSelectRow';
 import { Section } from '../components/editor/propertyPanelPrimitives';
 import { StudioToast } from '../components/StudioToast';
+import { LintModal } from '../components/LintModal';
 import { systemMessage } from './systemMessages';
 import { HF_COLOR_GRADING_PRESETS, HF_COLOR_GRADING_PALETTES } from '@hyperframes/core/color-grading';
 import { FlatColorGradingAccessory } from '../components/editor/propertyPanelFlatColorGradingAccessory';
@@ -169,6 +170,47 @@ it('updates an already visible toast when the interface language changes', () =>
   expect(host.querySelector('[role="status"]')?.textContent).toContain('已撤销：编辑图层样式');
   act(() => host.querySelector('button')!.click());
   expect(host.querySelector('[role="status"]')?.textContent).toContain('Undid: Edit layer style');
+});
+
+it('localizes the complete lint success dialog and updates it when the language changes', () => {
+  function Results() {
+    const { setLocale } = useI18n();
+    return <><button onClick={() => setLocale('en')}>Switch</button><LintModal findings={[]} projectId="demo" onClose={vi.fn()} /></>;
+  }
+  act(() => root.render(<I18nProvider initialLocale="zh-CN"><Results /></I18nProvider>));
+  const dialog = host.querySelector('[role="dialog"]')!;
+  expect(dialog.getAttribute('aria-label')).toBe('项目检查结果');
+  expect(dialog.querySelector('h2')?.textContent).toBe('所有检查均通过');
+  expect(dialog.querySelector('p')?.textContent).toBe('项目检查结果');
+  expect(dialog.textContent).toContain('未发现错误或警告，合成检查通过。');
+  act(() => host.querySelector('button')!.click());
+  expect(host.querySelector('[role="dialog"]')).toBe(dialog);
+  expect(dialog.getAttribute('aria-label')).toBe('Project check results');
+  expect(dialog.querySelector('h2')?.textContent).toBe('All checks passed');
+  expect(dialog.querySelector('p')?.textContent).toBe('Project check results');
+  expect(dialog.textContent).toContain('No errors or warnings found. Your composition looks good!');
+  expect(dialog.textContent).not.toContain('HyperFrame');
+});
+
+it('uses OpenMotion in copied project-check instructions', async () => {
+  const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
+  act(() => root.render(<I18nProvider initialLocale="en">
+    <LintModal findings={[{ severity: 'error', message: 'Missing composition' }]} projectId="demo" onClose={vi.fn()} />
+  </I18nProvider>));
+  await act(async () => { [...host.querySelectorAll('button')].find(button => button.textContent === 'Copy to Agent')!.click(); });
+  expect(writeText).toHaveBeenCalledWith('Fix these OpenMotion project check issues for project "demo":\n\n[error] Missing composition');
+});
+
+it('preserves custom console-error titles and original diagnostics in the shared lint dialog', () => {
+  const message = 'ReferenceError: Preview is not defined';
+  act(() => root.render(<I18nProvider initialLocale="zh-CN">
+    <LintModal findings={[{ severity: 'error', message }]} projectId="demo" title="预览控制台错误" onClose={vi.fn()} />
+  </I18nProvider>));
+  const dialog = host.querySelector('[role="dialog"]')!;
+  expect(dialog.getAttribute('aria-label')).toBe('预览控制台错误');
+  expect(dialog.querySelector('p')?.textContent).toBe('预览控制台错误');
+  expect(dialog.textContent).toContain(message);
+  expect(dialog.textContent).not.toContain('HyperFrame');
 });
 
 it('updates runtime grading feedback without rebuilding the grading controls', () => {

@@ -25,7 +25,7 @@ import { Phase1Service } from './phase1.ts';
 import { phase1McpCapabilities } from './shared/phase1-tools.ts';
 import { recoverProjectTransactions } from './phase1-versions.ts';
 import { verifyExport } from './scripts/verify-export.ts';
-import { createAppTracking, closeTracking, saveTrackingPreference, trackingPreference, trackingLocked, type OmTracking } from './shared/tracking.ts';
+import { createAppTracking, closeTracking, saveTrackingPreference, trackingPreference, trackingLockReason, type OmTracking } from './shared/tracking.ts';
 import { studioEvents } from './tracking/events.ts';
 import { nativeRuntimeStatus, startNativePreparation, requireNativeRuntime } from './scripts/npm-runtime.mjs';
 import { nativeRouteCapability } from './shared/native-runtime.ts';
@@ -266,12 +266,14 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     if (motionRequest && url.pathname === '/api/tracking/preferences' && ['GET', 'PUT'].includes(req.method!)) {
       const directory = (store.workspaceStore ?? store).directory;
       if (req.method === 'PUT') {
-        if (trackingLocked()) return json(res, 403, { error: 'TRACKING_DISABLED_BY_ENVIRONMENT' });
+        const reason = trackingLockReason();
+        if (reason) return json(res, 403, { error: reason === 'test_build' ? 'TRACKING_DISABLED_IN_TEST_BUILD' : 'TRACKING_DISABLED_BY_ENVIRONMENT' });
         const data = await input(req, 1024);
         if (!data || Object.keys(data).length !== 1 || typeof data.enabled !== 'boolean') return json(res, 400, { error: 'INVALID_TRACKING_PREFERENCE' });
         await saveTrackingPreference(directory, data.enabled);
       }
-      return json(res, 200, { enabled: context.tracking?.enabled() ?? false, preference: trackingPreference(directory), locked: trackingLocked() });
+      const reason = trackingLockReason();
+      return json(res, 200, { enabled: context.tracking?.enabled() ?? false, preference: trackingPreference(directory), locked: reason !== null, reason });
     }
     if (motionRequest && url.pathname === '/api/tracking' && req.method === 'GET') return json(res, 200, { enabled: context.tracking?.enabled() ?? false });
     if (motionRequest && url.pathname === '/api/tracking' && req.method === 'POST') {
@@ -366,6 +368,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (url.pathname === '/api/templates' && req.method === 'GET') return json(res, 200, { templates });
     if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, await templateCatalogFor(store.directory).page({
+      locale: url.searchParams.get('locale') || undefined,
       category: url.searchParams.get('category') || 'featured', query: url.searchParams.get('query') || '',
       offset: Number(url.searchParams.get('offset') || 0), limit: Number(url.searchParams.get('limit') || 6), grouped: url.searchParams.get('grouped') === 'true',
       covered: url.searchParams.get('covered') === 'true',

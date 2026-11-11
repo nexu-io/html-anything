@@ -7,6 +7,8 @@ import { mountReactHarness } from "./domSelectionTestHarness";
 import { usePlayerStore } from "../player/store/playerStore";
 import type { TimelineElement } from "../player";
 import type { TimelineDropPlacement } from "../player/components/timelineCallbacks";
+import { useToast } from "./useToast";
+import { translate } from "../i18n/messages";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -38,12 +40,15 @@ function renderDropHook(
   let drop: DropFn | null = null;
   let fileDrop: FileDropFn | null = null;
   let compositionDrop: CompositionDropFn | null = null;
+  let toasts: ReturnType<typeof useToast>["toasts"] = [];
   function Harness() {
+    const feedback = useToast();
+    toasts = feedback.toasts;
     const handlers = useTimelineAssetDropOps({
       projectIdRef: { current: "project" },
       activeCompPath: "index.html",
       timelineElements,
-      showToast: vi.fn(),
+      showToast: feedback.showToast,
       writeProjectFile,
       recordEdit: vi.fn().mockResolvedValue(undefined),
       reloadPreview: vi.fn(),
@@ -59,6 +64,7 @@ function renderDropHook(
   return Object.assign(() => drop!, {
     file: () => fileDrop!,
     composition: () => compositionDrop!,
+    toasts: () => toasts,
   });
 }
 
@@ -317,6 +323,31 @@ describe("useTimelineAssetDropOps handleTimelineAssetDrop", () => {
 
     expect(uploadProjectFiles).not.toHaveBeenCalled();
     expect(fetchMock).not.toHaveBeenCalled();
+    expect(writeProjectFile).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [
+      "Composition insertion would create a cycle",
+      "添加这个合成会造成循环引用，请选择其他合成。",
+    ],
+    [
+      "Composition source has no valid data-composition-duration",
+      "请先为合成设置有效时长，再添加到时间轴。",
+    ],
+  ])("localizes and deduplicates the composition rejection: %s", async (reason, message) => {
+    const writeProjectFile = vi.fn();
+    const drop = renderDropHook("", writeProjectFile);
+    vi.mocked(fetch).mockImplementation(async (_url, options) => options?.method === "POST"
+      ? Response.json({ error: reason }, { status: 400 })
+      : Response.json({ version: "current" }));
+
+    await act(async () => {
+      await drop.composition()("scene.html", { start: 1, track: 0 });
+      await drop.composition()("scene.html", { start: 1, track: 0 });
+    });
+
+    expect(drop.toasts().map((toast) => translate("zh-CN", toast.message))).toEqual([message]);
     expect(writeProjectFile).not.toHaveBeenCalled();
   });
 });
