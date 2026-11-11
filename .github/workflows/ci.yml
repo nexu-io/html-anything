@@ -33,7 +33,7 @@ concurrency:
 jobs:
   maintainability:
     name: Maintainability report
-    if: github.event_name == 'pull_request' && github.base_ref == 'feature/motion'
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:

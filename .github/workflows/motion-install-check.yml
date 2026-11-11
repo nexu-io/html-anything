@@ -10,7 +10,7 @@ on:
         required: true
         default: '0.6.4-test.7'
   pull_request:
-    branches: [feature/motion]
+    branches: [main]
     paths:
       - '.github/workflows/motion-install-check.yml'
       - '.github/scripts/motion-registry*.mjs'
@@ -26,7 +26,7 @@ env:
 
 jobs:
   candidate:
-    if: github.repository == 'nexu-io/html-anything' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.repository == 'nexu-io/openmotion' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
@@ -45,7 +45,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git fetch origin feature/motion:refs/remotes/origin/feature/motion
+          git fetch origin main:refs/remotes/origin/main
           node --input-type=module <<'JS'
           import { appendFile } from 'node:fs/promises';
           import { downloadCandidate, validateSource } from './.github/scripts/motion-release.mjs';

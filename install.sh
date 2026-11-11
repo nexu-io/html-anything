@@ -3,8 +3,8 @@
 set -euo pipefail
 
 main() {
-  local motion_repo='https://github.com/nexu-io/html-anything.git'
-  local motion_ref="${OPENMOTION_REF:-feature/motion}"
+  local motion_repo='https://github.com/nexu-io/openmotion.git'
+  local motion_ref="${OPENMOTION_REF:-main}"
   local motion_destination="${OPENMOTION_INSTALL_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/open-motion}"
 
   for motion_command in git node npm codex; do
