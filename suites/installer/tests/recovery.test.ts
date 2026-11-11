@@ -130,3 +130,67 @@ it("drains accepted installation work before closing its owner and rejects new c
     await session.close();
   }
 }, 15000);
+
+it("retains a committed transition after actual SIGKILL and explicit authority recovery", async () => {
+  const f = await fixture(),
+    entry = pathToFileURL(fileURLToPath(new URL("../dist/index.mjs", import.meta.url))).href;
+  const intent = { target: "2.0.0", data: f.data },
+    id = randomUUID();
+  const script = `import {open}from ${JSON.stringify(entry)};const f=JSON.parse(process.argv[1]);const s=await open(f.options);await s.transitions.begin({requestId:f.id,intent:f.intent,data:{phase:'staging'}});console.log('TRANSITION-COMMITTED');await new Promise(()=>{});`;
+  const child = spawn(
+    process.execPath,
+    ["--input-type=module", "-e", script, JSON.stringify({ options: f.options, id, intent })],
+    { stdio: ["ignore", "pipe", "pipe"] },
+  );
+  let output = "",
+    errors = "";
+  child.stdout.on("data", (b) => {
+    output += b;
+  });
+  child.stderr.on("data", (b) => {
+    errors += b;
+  });
+  const exited = new Promise<void>((done, reject) => {
+    child.once("exit", () => done());
+    child.once("error", reject);
+  });
+  try {
+    await expect
+      .poll(
+        () => {
+          if (child.exitCode !== null) throw Error(errors);
+          return output.includes("TRANSITION-COMMITTED");
+        },
+        { timeout: 10000 },
+      )
+      .toBe(true);
+    expect(child.kill("SIGKILL")).toBe(true);
+    await exited;
+    await expect(open(f.options)).rejects.toThrow();
+    const root = join(f.options.home, "authority", f.options.product),
+      plan = await inspectRecovery(root);
+    expect(plan.phase).toBe("ready");
+    await recover(root, { expected: plan.fingerprint });
+    const s = await open(f.options);
+    try {
+      const record = await s.transitions.read(id);
+      expect(record).toMatchObject({ intent, data: { phase: "staging" }, complete: false });
+      await expect(
+        s.install({ data: f.data, requestId: f.requestId, source: { bytes: f.bytes, sha256: f.sha256 } }),
+      ).rejects.toThrow("resume first");
+      await s.transitions.advance({
+        requestId: id,
+        expectedRevision: record!.revision,
+        data: { phase: "done" },
+        complete: true,
+      });
+      expect(await s.transitions.read()).toBeUndefined();
+    } finally {
+      await s.close();
+    }
+    expect(await observeProcesses(root)).toEqual([]);
+  } finally {
+    if (child.exitCode === null && child.signalCode === null) child.kill("SIGKILL");
+    await exited;
+  }
+}, 30000);

@@ -9,9 +9,10 @@ import { channel, digest, namespace } from "@odsuite/protocol";
 import { bundle, resolve as release } from "@odsuite/release";
 import { managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
 import { expect, it } from "vitest";
-import { candidate } from "@/candidate.js";
 import { hash, type PackageManifest, type Selection } from "@/contract.js";
-import { updates } from "@/updates.js";
+import { candidate } from "@/update/candidate.js";
+import { type Operation, updates } from "@/update/index.js";
+import type { Options } from "@/update/plan.js";
 
 async function fixture() {
   const base = resolve("../../.artifacts/kit-application");
@@ -96,8 +97,14 @@ async function fixture() {
     contents = new Map<string, Uint8Array>();
   let origin = "",
     objects = 0,
-    hold = false;
+    hold = false,
+    offline = false;
   const server = createServer((req, res) => {
+    if (offline) {
+      res.writeHead(503);
+      res.end();
+      return;
+    }
     if (req.url?.includes("/objects/")) {
       objects++;
       if (hold) {
@@ -156,8 +163,8 @@ async function fixture() {
     skills: join(root, "skills"),
   };
   const options = { endpoint: origin, publickey, name: "fixture-app" };
-  const run = (op: "check" | "prepare" | "discard", signal?: AbortSignal) =>
-    updates(current.manifest, selection, op, options, signal);
+  const run = (op: Operation, signal?: AbortSignal, extra: Partial<Options> = {}) =>
+    updates(current.manifest, selection, op, { ...options, ...extra }, signal);
   const inspect = async () => {
     const session = await open({ home, product: "io.test.app", scope });
     try {
@@ -185,6 +192,22 @@ async function fixture() {
     inspect,
     get objects() {
       return objects;
+    },
+    offline: () => {
+      offline = true;
+    },
+    later: async () => {
+      const session = await open({ home, product: "io.test.app", scope });
+      try {
+        for (const c of ["standalone", "codexplugin"] as const)
+          await session.install({
+            data,
+            requestId: randomUUID(),
+            source: { bytes: bad.files[`payload/${c}.bundle`]!, sha256: bad.manifest.carriers[c].sha256 },
+          });
+      } finally {
+        await session.close();
+      }
     },
     hold: (v: boolean) => {
       hold = v;
@@ -242,6 +265,87 @@ it("aborts a real candidate transfer, leaves the installed selections intact and
     expect(cancelled.state.references).toEqual([]);
     f.hold(false);
     expect((await f.run("prepare")).state).toBe("prepared");
+  } finally {
+    await f.close();
+  }
+}, 30000);
+
+it("activates offline after a partial selection commit and replays completed intent without rewinding", async () => {
+  const f = await fixture(),
+    requestId = randomUUID();
+  try {
+    f.publish();
+    await f.run("prepare");
+    f.offline();
+    await expect(
+      f.run("activate", undefined, {
+        requestId,
+        onCheckpoint: async (phase) => {
+          if (phase === "selected") throw Error("checkpoint interrupted");
+        },
+      }),
+    ).rejects.toThrow("checkpoint interrupted");
+    expect((await f.inspect()).receipts.every((r) => r?.version === "2.0.0")).toBe(true);
+    await expect(f.run("discard")).rejects.toThrow("resume first");
+    await expect(f.run("activate", undefined, { requestId: randomUUID() })).rejects.toThrow("resume first");
+    expect(await f.run("status", undefined, { requestId })).toMatchObject({
+      state: "pending",
+      phase: "selected",
+      version: "2.0.0",
+    });
+    const done = await f.run("activate", undefined, { requestId });
+    expect(done).toMatchObject({ state: "activated", version: "2.0.0" });
+    expect((await f.inspect()).state.references).toEqual([]);
+    await expect(readFile(join(f.data, "manager.sqlite"))).rejects.toThrow();
+    await f.later();
+    expect(await f.run("activate", undefined, { requestId })).toEqual(done);
+    expect((await f.inspect()).receipts.every((r) => r?.version === "3.0.0")).toBe(true);
+  } finally {
+    await f.close();
+  }
+}, 30000);
+it("preserves the prior signed prepared candidate when a newer candidate fails validation", async () => {
+  const f = await fixture();
+  try {
+    f.publish();
+    await f.run("prepare");
+    f.publish(f.bad, 2);
+    await expect(f.run("prepare")).rejects.toThrow("identity");
+    f.offline();
+    expect(await f.run("activate", undefined, { requestId: randomUUID() })).toMatchObject({
+      state: "activated",
+      version: "2.0.0",
+    });
+    expect((await f.inspect()).receipts.every((r) => r?.version === "2.0.0")).toBe(true);
+  } finally {
+    await f.close();
+  }
+}, 30000);
+
+it("keeps both old selections after a staged interruption and resumes only the original intent", async () => {
+  const f = await fixture(),
+    requestId = randomUUID();
+  try {
+    f.publish();
+    await f.run("prepare");
+    await expect(
+      f.run("activate", undefined, {
+        requestId,
+        onCheckpoint: async (phase) => {
+          if (phase === "staged") throw Error("staged interruption");
+        },
+      }),
+    ).rejects.toThrow("staged interruption");
+    expect((await f.inspect()).receipts.every((r) => r?.version === "1.0.0")).toBe(true);
+    await expect(f.run("activate", undefined, { requestId, name: "foreign-app" })).rejects.toThrow("intent differs");
+    expect(await f.run("status")).toMatchObject({
+      state: "pending",
+      phase: "staged",
+      requestId,
+      callerVersion: "1.0.0",
+    });
+    expect(await f.run("activate", undefined, { requestId })).toMatchObject({ state: "activated", version: "2.0.0" });
+    expect(await f.run("status")).toEqual({ state: "idle" });
   } finally {
     await f.close();
   }

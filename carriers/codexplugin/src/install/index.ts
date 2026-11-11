@@ -97,7 +97,7 @@ function matches(value: unknown, expected: Transport) {
 }
 
 /** Explicit host adaptation; injected installation authority owns all resources. */
-export async function register(options: Options): Promise<Receipt> {
+async function registration(options: Options, verify = false): Promise<Receipt> {
   const scope = factoryScope(options.scope);
   if (
     !same(scope, options.factory.scope) ||
@@ -209,6 +209,17 @@ export async function register(options: Options): Promise<Receipt> {
     )
       throw Error("Previous Codex MCP configuration has changed during registration");
     await checkSkills(skills, installation);
+    if (verify) {
+      if (
+        !previous ||
+        previous.state !== "registered" ||
+        previous.id !== id ||
+        !actual ||
+        !matches(actual.transport, transport)
+      )
+        throw Error("Owned Codex registration is not the expected current transport");
+      return receipt;
+    }
     const intent: Intent =
       previous?.id === id
         ? previous
@@ -251,4 +262,49 @@ export async function register(options: Options): Promise<Receipt> {
     await save(record, { ...intent, state: "registered", configurationHash: digest(canonical(configuration)) });
     return receipt;
   });
+}
+
+export const register = (options: Options) => registration(options);
+export const verifyRegistration = (options: Options) => registration(options, true);
+export async function registrations(options: {
+  factory: Factory;
+  context: Context;
+  root: string;
+  scope: FactoryScope;
+  allowPendingVersion?: string;
+}) {
+  const { readdir } = await import("node:fs/promises");
+  const names = (await readdir(options.context.roots.data)).filter((name) => /^codex-[a-f0-9]{16}\.json$/.test(name));
+  if (names.length > 16) throw Error("Codex registration set exceeds limit");
+  const records: Receipt[] = [];
+  for (const name of names.sort()) {
+    const value = await json<Intent>(join(options.context.roots.data, name));
+    if (
+      !value ||
+      value.schema !== 1 ||
+      (value.state !== "registered" &&
+        !(
+          value.state === "intent" &&
+          options.allowPendingVersion !== undefined &&
+          value.receipt?.version === options.allowPendingVersion
+        )) ||
+      !value.receipt ||
+      value.receipt.server !== "open-motion" ||
+      value.receipt.state !== "registered" ||
+      value.receipt.root !== options.root ||
+      !same(value.receipt.scope, options.scope)
+    )
+      throw Error("Codex registration intent must reconcile before activation");
+    for (const field of ["application", "profile", "skills", "root"] as const)
+      if (
+        typeof value.receipt[field] !== "string" ||
+        !isAbsolute(value.receipt[field]) ||
+        resolve(value.receipt[field]) !== value.receipt[field]
+      )
+        throw Error("invalid owned Codex registration");
+    if (name !== `codex-${digest(value.receipt.profile).slice(7, 23)}.json`)
+      throw Error("Codex registration profile identity changed");
+    records.push(value.receipt);
+  }
+  return records;
 }

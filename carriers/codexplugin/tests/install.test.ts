@@ -4,7 +4,7 @@ import { dirname, join, parse, resolve } from "node:path";
 import { channel, digest, namespace } from "@odsuite/protocol";
 import { type Context, managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
 import { expect, it } from "vitest";
-import { register } from "@/install/index.js";
+import { register, registrations, verifyRegistration } from "@/install/index.js";
 
 async function fixture(fresh = false) {
   const root = resolve("../../.artifacts/codex-registration", randomUUID());
@@ -72,7 +72,10 @@ await writeFile(file,JSON.stringify({type:'stdio',command:args[split+1],args:arg
   try {
     await expect(register({ ...own.options, root: parse(own.root).root, codex })).rejects.toThrow("filesystem root");
     await expect(register({ ...own.options, codex })).rejects.toThrow("unknown");
+    await expect(registrations(own.options)).rejects.toThrow("reconcile");
+    expect(await registrations({ ...own.options, allowPendingVersion: own.options.version })).toHaveLength(1);
     const confirmed = await register({ ...own.options, codex });
+    expect(await verifyRegistration({ ...own.options, codex })).toEqual(confirmed);
     expect(confirmed.state).toBe("registered");
     expect(await readFile(join(own.options.profile, "adds"), "utf8")).toBe("add\n");
     expect(await register({ ...own.options, codex })).toEqual(confirmed);

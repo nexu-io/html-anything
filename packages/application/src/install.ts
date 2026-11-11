@@ -23,7 +23,7 @@ export async function usingSession<T>(options: Options, action: (session: Sessio
   return outcome.value;
 }
 
-function requestId(value: string): string {
+export function requestId(value: string): string {
   const h = hash(value).slice(0, 32);
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-8${h.slice(13, 16)}-8${h.slice(17, 20)}-${h.slice(20)}`;
 }

@@ -57,7 +57,23 @@ export class Transaction {
   private async checkpoint(value: Intent, phase: "intent" | "materialized" | "installed" | "selected") {
     await this.options.onCheckpoint?.({ phase, requestId: value.receipt.requestId });
   }
-  async install(input: Input) {
+  async select(input: import("./types.js").Select) {
+    const names = Object.keys(input.receipts).sort();
+    if (!names.length || names.length > 16 || names.join(":") !== Object.keys(input.expected).sort().join(":"))
+      throw new InstallerFault("invalid", "invalid activation carrier set");
+    const values = [];
+    for (const carrier of names) {
+      if (!/^[a-z][a-z0-9-]{0,31}$/.test(carrier)) throw new InstallerFault("invalid", "invalid activation carrier");
+      const value = await this.verified(this.store.receipt(input.receipts[carrier]!));
+      if (value.carrier !== carrier) throw new InstallerFault("invalid", "activation receipt carrier mismatch");
+      values.push(value);
+    }
+    if (new Set(values.map((v) => v.version)).size !== 1 || new Set(values.map((v) => v.data)).size !== 1)
+      throw new InstallerFault("invalid", "activation receipts must share version and data");
+    this.store.select(input.expected, input.receipts);
+    return values;
+  }
+  async install(input: Input, select = true) {
     if (
       !/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(input.requestId) ||
       !input.source ||
@@ -77,6 +93,7 @@ export class Transaction {
       sha256: input.source.sha256,
       product: this.options.product,
       ...this.options.scope,
+      ...(select ? {} : { stage: true as const }),
     });
     const prior = this.store.lookup(input.requestId, key);
     if (prior) {
@@ -164,8 +181,8 @@ export class Transaction {
     record.phase = "installed";
     this.store.save(record);
     await this.checkpoint(record, "installed");
-    const result = this.store.complete(record);
-    await this.checkpoint(record, "selected");
+    const result = this.store.complete(record, select);
+    if (select) await this.checkpoint(record, "selected");
     return result;
   }
 }

@@ -19,6 +19,7 @@ guard:
       - .github/workflows
       - .githooks
       - docs
+      - packages/application/src/update
       - packages/templates/src/native
       - packages/templates/src/prism
       - packages/render/src/jobs

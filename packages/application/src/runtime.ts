@@ -15,7 +15,7 @@ import { admitRuntime } from "@open-motion/standalone/admission";
 import type { PackageManifest, Selection } from "./contract.js";
 import { installed } from "./install.js";
 
-async function inspect(description: PackageManifest, selection: Selection) {
+export async function inspect(description: PackageManifest, selection: Selection) {
   const link = await connectRoot(selection.data, selection.scope).catch(() => undefined);
   if (link) {
     const peer = await admitRuntime(link.factory, description.release);
@@ -42,22 +42,7 @@ export async function start(description: PackageManifest, selection: Selection) 
   if (!["stopped", "uninitialized"].includes(current.state))
     throw Error("application authority requires explicit recovery");
   const receipt = await installed(description, selection, "standalone");
-  await startManager({
-    root: receipt.data,
-    scope: selection.scope,
-    command: process.execPath,
-    args: [
-      join(receipt.path, "main.mjs"),
-      "--root",
-      receipt.data,
-      "--channel",
-      selection.scope.channel,
-      "--namespace",
-      selection.scope.namespace,
-    ],
-    log: join(receipt.data, "manager.log"),
-    timeout: 30000,
-  });
+  await launch(receipt, selection);
   return status(description, selection);
 }
 export async function stop(description: PackageManifest, selection: Selection) {
@@ -132,4 +117,23 @@ export async function native(description: PackageManifest, selection: Selection,
   }
   if (!outcome.ok) throw outcome.error;
   return outcome.value;
+}
+
+export async function launch(receipt: import("@odsuite/installer").Receipt, selection: Selection) {
+  return startManager({
+    root: receipt.data,
+    scope: selection.scope,
+    command: process.execPath,
+    args: [
+      join(receipt.path, "main.mjs"),
+      "--root",
+      receipt.data,
+      "--channel",
+      selection.scope.channel,
+      "--namespace",
+      selection.scope.namespace,
+    ],
+    log: join(receipt.data, "manager.log"),
+    timeout: 30000,
+  });
 }

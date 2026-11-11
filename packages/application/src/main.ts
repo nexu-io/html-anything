@@ -10,11 +10,13 @@ import { carriers, manifest, path, type Selection } from "./contract.js";
 import { setup } from "./install.js";
 import { native, start, status, stop } from "./runtime.js";
 import { signals } from "./signals.js";
-import { updates } from "./updates.js";
+import { updates } from "./update/index.js";
 
 const help = `odsuite setup --carrier standalone|codexplugin [--home DIR] [--data DIR] [--profile DIR] [--skills DIR] [--codex FILE]
 odsuite start|stop|status|prepare [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite update check|prepare --endpoint URL --public-key FILE [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite update activate --request-id UUID --public-key FILE [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite update status [--request-id UUID] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite update discard [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite recover inspect --root DIR
 odsuite recover apply --root DIR --expected FINGERPRINT
@@ -45,7 +47,15 @@ async function main(args: string[]) {
           "channel",
           "namespace",
           ...(command === "setup" ? ["carrier", "profile", "skills", "codex"] : []),
-          ...(command === "update" && operation !== "discard" ? ["endpoint", "public-key"] : []),
+          ...(command === "update"
+            ? operation === "activate"
+              ? ["public-key", "request-id", "codex"]
+              : operation === "status"
+                ? ["request-id"]
+                : operation === "discard"
+                  ? []
+                  : ["endpoint", "public-key"]
+            : []),
         ];
   const options = new Map<string, string>();
   for (let i = 0; i < args.length; i++) {
@@ -97,12 +107,13 @@ async function main(args: string[]) {
     else if (command === "stop") result = await stop(description, selection);
     else if (command === "status") result = await status(description, selection);
     else if (command === "update") {
-      if (!["check", "prepare", "discard"].includes(operation ?? ""))
-        throw Error("update requires check|prepare|discard");
+      if (!["check", "prepare", "discard", "activate", "status"].includes(operation ?? ""))
+        throw Error("update requires check|prepare|discard|activate|status");
       let publickey = "";
-      if (operation !== "discard") {
+      if (!["discard", "status"].includes(operation!)) {
         const key = options.get("public-key");
-        if (!options.get("endpoint") || !key) throw Error("update requires --endpoint and --public-key");
+        if (!key) throw Error("update requires --public-key");
+        if (operation !== "activate" && !options.get("endpoint")) throw Error("update requires --endpoint");
         const file = await path(key),
           info = await lstat(file);
         if (!info.isFile() || info.size > 8192) throw Error("public key must be a bounded regular file");
@@ -113,8 +124,15 @@ async function main(args: string[]) {
         updates(
           description,
           selection,
-          operation as "check" | "prepare" | "discard",
-          { endpoint: options.get("endpoint") ?? "", publickey, name: self.name },
+          operation as import("./update/index.js").Operation,
+          {
+            endpoint: options.get("endpoint") ?? "",
+            publickey,
+            name: self.name,
+            requestId: options.get("request-id"),
+            codex: options.get("codex"),
+            worker: fileURLToPath(new URL("./codex-worker.mjs", import.meta.url)),
+          },
           signal,
         ),
       );

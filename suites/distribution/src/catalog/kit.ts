@@ -25,17 +25,12 @@ export class KitCatalog {
     this.state = new CatalogState(options.root, "kit-distribution.json", (head, body) => this.checked(head, body));
   }
   private checked(input: unknown, body: unknown) {
-    const head = trustHead(input, this.options.publickey, this.options),
-      metadata = kitMetadata(body);
-    if (
-      digest(canonical(metadata)) !== head.metadata ||
-      metadata.version !== head.version ||
-      metadata.revision !== head.revision ||
-      metadata.product !== head.product ||
-      metadata.channel !== head.channel
-    )
-      throw Error("kit metadata head mismatch");
-    return { head, metadata };
+    return verifyKit({ head: input, metadata: body }, this.options.publickey, this.options);
+  }
+  async snapshot() {
+    await this.state.load();
+    if (!this.state.value) throw Error("no verified kit selection");
+    return structuredClone(this.state.value);
   }
   refresh(signal?: AbortSignal): Promise<KitMetadata> {
     signal?.throwIfAborted();
@@ -73,4 +68,22 @@ export class KitCatalog {
     if (!verify(candidate.package.artifact, bytes)) throw Error("kit package integrity mismatch");
     return bytes;
   }
+}
+
+export function verifyKit(
+  input: { head: unknown; metadata: unknown },
+  publickey: string,
+  expected: { product: string; channel: string },
+) {
+  const head = trustHead(input.head, publickey, expected),
+    metadata = kitMetadata(input.metadata);
+  if (
+    digest(canonical(metadata)) !== head.metadata ||
+    metadata.version !== head.version ||
+    metadata.revision !== head.revision ||
+    metadata.product !== head.product ||
+    metadata.channel !== head.channel
+  )
+    throw Error("kit metadata head mismatch");
+  return { head, metadata };
 }
