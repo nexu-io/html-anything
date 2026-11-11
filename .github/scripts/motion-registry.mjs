@@ -64,10 +64,3 @@ export async function verifyRegistryDownload(directory, { destination, ...option
   } finally { if (!destination) await rm(temporary, { recursive: true, force: true }); }
 }
 
-export async function registryReport(directory, candidate) {
-  const report = JSON.parse(await readFile(path.join(directory, 'registry-package.json')));
-  assert.equal(report.schemaVersion, 1);
-  assert.equal(report.status, 'passed'); assert.equal(report.registryDownload, 'passed');
-  for (const key of ['version', 'sourceCommit', 'tgzSHA256', 'integrity']) assert.equal(report[key], candidate[key], 'Registry report mismatch: ' + key);
-  return report;
-}

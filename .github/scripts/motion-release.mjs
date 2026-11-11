@@ -11,7 +11,6 @@ import { checkReleaseVersion, compareReleaseVersions, testVersion } from '../../
 import { generateInstallGuide } from '../../scripts/install-guide.mjs';
 import { publishGuide, storagePlan } from './publish-install-guide.mjs';
 import { scanPackage, scanSource } from './motion-scan.mjs';
-import { registryReport, verifyRegistryDownload } from './motion-registry.mjs';
 
 export const repository = 'nexu-io/html-anything';
 export const candidateWorkflow = '.github/workflows/motion-candidate.yml';
@@ -36,9 +35,8 @@ export function releaseInputs(env = process.env) {
   const workflow = env.GITHUB_WORKFLOW_REF;
   if (workflow.includes(recoveryWorkflow)) assert.equal(env.MOTION_RELEASE_ACTION, 'archive-only', 'Recovery never publishes or moves a channel');
   if (env.MOTION_EXPECTED_SHA256) assert.match(env.MOTION_EXPECTED_SHA256, hashPattern);
-  assert.equal(env.MOTION_ACCEPTED, 'true', 'Explicit operator acceptance confirmation is required');
   checkReleaseVersion(env.MOTION_VERSION); assert(env.MOTION_VERSION.includes('-test.'), 'Only test versions may use this entry');
-  return { action: env.MOTION_RELEASE_ACTION, accepted: true, version: env.MOTION_VERSION, expectedSHA256: env.MOTION_EXPECTED_SHA256 };
+  return { action: env.MOTION_RELEASE_ACTION, version: env.MOTION_VERSION, expectedSHA256: env.MOTION_EXPECTED_SHA256 };
 }
 
 export async function resolveCandidate(control, requested, version, env = process.env, run = runFile) {
@@ -123,9 +121,9 @@ async function github(route, fetcher = fetch) {
 export function authorizationReceipt(candidate, run, action, observedAt = new Date().toISOString()) {
   const actor = run.triggering_actor?.login || run.actor?.login;
   assert(typeof actor === 'string' && actor.length > 0, 'Require the actual publication operator');
-  return { schemaVersion: 1, type: 'manual-workflow-dispatch', publicationRun: run.id, runAttempt: run.run_attempt,
+  return { schemaVersion: 2, type: 'manual-workflow-dispatch', publicationRun: run.id, runAttempt: run.run_attempt,
     action, version: candidate.version, tgzSHA256: candidate.tgzSHA256, candidateRun: candidate.workflow,
-    actor, acceptanceConfirmed: true, observedAt };
+    actor, observedAt };
 }
 
 export async function recordAuthorization(directory, inputs, fetcher = fetch, env = process.env) {
@@ -141,8 +139,8 @@ export async function recordAuthorization(directory, inputs, fetcher = fetch, en
 
 async function verifyAuthorization(directory, inputs, env = process.env) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version), authorization = await json(path.join(directory, 'authorization.json'));
-  assert.equal(inputs.accepted, true); assert.equal(authorization.schemaVersion, 1);
-  assert.equal(authorization.type, 'manual-workflow-dispatch'); assert.equal(authorization.acceptanceConfirmed, true);
+  assert.equal(authorization.schemaVersion, 2);
+  assert.equal(authorization.type, 'manual-workflow-dispatch');
   assert.equal(authorization.version, candidate.version); assert.equal(authorization.tgzSHA256, candidate.tgzSHA256);
   assert.equal(authorization.action, inputs.action); assert.deepEqual(authorization.candidateRun, candidate.workflow);
   assert.equal(String(authorization.publicationRun), env.GITHUB_RUN_ID, 'Authorization belongs to another publication run');
@@ -248,26 +246,34 @@ export async function publishNpm(directory, inputs, { fetcher = fetch, run = run
   return record;
 }
 
-export async function promoteTest(directory, inputs, { fetcher = fetch, run = runFile, env = process.env } = {}) {
+export async function waitForRegistry(candidate, ready, { fetcher = fetch, wait = ms => new Promise(resolve => setTimeout(resolve, ms)), attempts = 60 } = {}) {
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const state = await registryPackage(candidate, fetcher);
+    if (ready(state)) return state;
+    if (attempt + 1 < attempts) await wait(10_000);
+  }
+  throw new Error('npm registry propagation timed out; retry the failed publication steps');
+}
+
+export async function promoteTest(directory, inputs, { fetcher = fetch, run = runFile, env = process.env, wait, attempts } = {}) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
   await verifyAuthorization(directory, inputs, env);
-  const registryVerification = await registryReport(directory, candidate);
   const npm = await json(path.join(directory, 'npm-publication.json'));
   assert.equal(npm.tgzSHA256, candidate.tgzSHA256);
-  const before = await registryPackage(candidate, fetcher);
+  const before = await waitForRegistry(candidate, state => !!state.version, { fetcher, wait, attempts });
   assert(before.version, 'Exact npm version is not public');
   assert.equal(before.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly; stop before channel promotion');
   const superseded = before.tags.test && compareReleaseVersions(before.tags.test, candidate.version) > 0;
   let status = inputs.action === 'archive-only' ? 'archive-only' : superseded ? 'superseded' : 'already-promoted';
   if (inputs.action === 'publish-test' && !superseded && before.tags.test !== candidate.version) {
     await run('npm', ['dist-tag', 'add', `${candidate.packageName}@${candidate.version}`, 'test', '--registry=https://registry.npmjs.org/']);
-    const after = await registryPackage(candidate, fetcher);
+    const after = await waitForRegistry(candidate, state => state.tags.test === candidate.version, { fetcher, wait, attempts });
     assert(after.version); assert.equal(after.tags.test, candidate.version, 'npm test promotion readback failed');
     assert.equal(after.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly');
     status = 'promoted';
   }
   const record = { schemaVersion: 1, version: candidate.version, tgzSHA256: candidate.tgzSHA256, action: inputs.action,
-    publicationRun: env.GITHUB_RUN_ID, registryVerification, platformVerification: { status: 'independent-not-attached', workflow: '.github/workflows/motion-install-check.yml' }, previousTest: before.tags.test ?? null, status };
+    publicationRun: env.GITHUB_RUN_ID, previousTest: before.tags.test ?? null, status };
   await writeJSON(path.join(directory, 'test-promotion.json'), record);
   return record;
 }
@@ -276,11 +282,9 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
   await writeJSON(path.join(directory, 'release-attempt.json'), { action: inputs.action, tgzSHA256: inputs.expectedSHA256, stage: 'verifying-release', runId: env.GITHUB_RUN_ID });
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
   const authorization = await verifyAuthorization(directory, inputs, env);
-  const registryVerification = await registryReport(directory, candidate);
   const promotion = await json(path.join(directory, 'test-promotion.json'));
   assert.equal(promotion.version, candidate.version); assert.equal(promotion.tgzSHA256, candidate.tgzSHA256);
   assert.equal(promotion.action, inputs.action); assert.equal(promotion.publicationRun, env.GITHUB_RUN_ID);
-  assert.deepEqual(promotion.registryVerification, registryVerification);
   assert((inputs.action === 'archive-only' ? ['archive-only'] : ['promoted', 'already-promoted', 'superseded']).includes(promotion.status), 'Require a successful channel verification');
   const record = await json(path.join(directory, 'install-record.json')), plan = storagePlan(record, config);
   assert.equal(candidate.tgzSHA256, inputs.expectedSHA256);
@@ -300,18 +304,18 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
       catch (error) { if (/NoSuchKey|\(404\)|Not Found/.test(error.message)) return null; throw error; }
     };
     const prior = await get(`${prefix}/release-record.json`);
-    let release = { schemaVersion: 3, packageName: candidate.packageName, version: candidate.version, sourceCommit: candidate.sourceCommit,
+    let release = { schemaVersion: 2, packageName: candidate.packageName, version: candidate.version, sourceCommit: candidate.sourceCommit,
       tgzSHA256: candidate.tgzSHA256, integrity: candidate.integrity, candidateRun: candidate.workflow,
       authorization, publicationRun: env.GITHUB_RUN_ID,
-      registryVerification, platformVerification: { status: 'independent-not-attached', workflow: '.github/workflows/motion-install-check.yml' }, channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
-      status: 'registry-verified', publishedAt: new Date().toISOString() };
+      channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
+      nativeChecks: 'post-publication', status: 'registry-verified', publishedAt: new Date().toISOString() };
     if (prior) {
       const existing = JSON.parse(prior);
       for (const key of ['packageName', 'version', 'sourceCommit', 'tgzSHA256', 'integrity']) assert.equal(existing[key], release[key], 'Existing release record differs: ' + key);
       release = existing;
     }
     await writeJSON(path.join(directory, 'release-record.json'), release);
-    const names = [...Object.keys(candidate.files), 'candidate.json', 'registry-package.json', 'release-record.json'];
+    const names = [...Object.keys(candidate.files), 'candidate.json', 'release-record.json'];
     const objects = [];
     for (const name of names) {
       const file = path.join(directory, name), bytes = await readFile(file), key = `${prefix}/${name}`, existing = await get(key);
@@ -358,10 +362,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
         await writeJSON(path.join(directory, 'publication-package-scan.json'), await scanPackage(path.join(directory, c.tgz), final));
       } finally { await runFile('git', ['worktree', 'remove', '--force', work], { cwd: extra }).catch(() => {}); }
     } else if (command === 'verify') await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
-    else if (command === 'registry') {
-      await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
-      await verifyRegistryDownload(directory);
-    }
     else if (command === 'npm') await publishNpm(directory, inputs);
     else if (command === 'promote-test') await promoteTest(directory, inputs);
     else if (command === 'archive') {

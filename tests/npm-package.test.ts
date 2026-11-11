@@ -17,8 +17,7 @@ test('shared Agent instructions keep the release controls synchronized', async (
     return text.split('## Candidate and publication controls\n')[1].split('\n## ')[0].trim();
   };
   const shared = await section('AGENTS.md');
-  assert(shared.includes('DEV template defaults') && shared.includes('Publish under `candidate` first') && shared.includes('after the exact anonymous public download matches the accepted candidate hashes'));
-  assert(shared.includes('motion-install-check.yml') && shared.includes('not test-publication gates'));
+  assert(shared.includes('DEV template defaults') && shared.includes('Publish under `candidate` first') && shared.includes('cold installs run afterward as non-blocking checks'));
   assert.equal(await section('CLAUDE.md'), shared, 'CLAUDE.md must mirror the AGENTS.md release controls');
 });
 

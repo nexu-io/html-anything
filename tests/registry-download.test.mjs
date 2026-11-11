@@ -3,8 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { candidateFixture } from './release-fixture.mjs';
-import { registryRead, registryReport, verifyRegistryDownload } from '../.github/scripts/motion-registry.mjs';
-import { promoteTest } from '../.github/scripts/motion-release.mjs';
+import { registryRead, verifyRegistryDownload } from '../.github/scripts/motion-registry.mjs';
 
 function clock(fetcher) {
   let time = 0;
@@ -46,10 +45,10 @@ test('public download verifies both hashes against the frozen candidate without 
   });
   const { report } = await verifyRegistryDownload(f.directory, options);
   assert.equal(report.nativeInstallation, 'not-run');
-  assert.equal((await registryReport(f.directory, f.candidate)).tgzSHA256, f.candidate.tgzSHA256);
+  assert.equal(JSON.parse(await readFile(path.join(f.directory, 'registry-package.json'), 'utf8')).tgzSHA256, f.candidate.tgzSHA256);
   wrongBytes = true;
   await assert.rejects(verifyRegistryDownload(f.directory, options), /SHA256 mismatch/);
-  await assert.rejects(registryReport(f.directory, f.candidate), /ENOENT/, 'A failed download invalidates any stale success report');
+  await assert.rejects(readFile(path.join(f.directory, 'registry-package.json')), /ENOENT/, 'A failed download invalidates any stale success report');
   assert.equal(downloads, 2, 'Corrupt bytes must not be retried or passed');
   metadata.dist.integrity = 'different';
   await assert.rejects(verifyRegistryDownload(f.directory, options), /different bytes/);
@@ -58,16 +57,6 @@ test('public download verifies both hashes against the frozen candidate without 
   metadata.dist.tarball = 'https://private.invalid/app.tgz';
   await assert.rejects(verifyRegistryDownload(f.directory, options), /public npm tarball origin/);
   assert.equal(downloads, 2);
-});
-
-test('independent platform results do not gate test promotion or masquerade as platform acceptance', async t => {
-  const f = await candidateFixture(t);
-  await writeFile(path.join(f.directory, 'registry-win32-x64.json'), JSON.stringify({ status: 'failed' }));
-  const result = await promoteTest(f.directory, f.inputs, { env: f.env,
-    fetcher: async () => Response.json({ versions: { [f.candidate.version]: { dist: { integrity: f.candidate.integrity } } }, 'dist-tags': { test: f.candidate.version, latest: '0.5.0' } }),
-    run: async () => { throw Error('Already promoted: no write permitted'); } });
-  assert.equal(result.registryVerification.registryDownload, 'passed');
-  assert.equal(result.platformVerification.status, 'independent-not-attached');
 });
 
 test('standalone installation workflow is read-only and exercises both platforms against test.7 on PRs', async () => {
