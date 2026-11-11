@@ -181,22 +181,6 @@ export async function verifyDownloaded(directory, expectedSHA256, version) {
   return candidate;
 }
 
-export async function platformReports(directory, candidate) {
-  const reports = [];
-  for (const platform of ['darwin-arm64', 'win32-x64']) {
-    const name = `registry-${platform}.json`, report = await json(path.join(directory, name));
-    assert.equal(report.status, 'passed'); assert.equal(report.platform, platform);
-    assert.equal(report.version, candidate.version); assert.equal(report.tgzSHA256, candidate.tgzSHA256);
-    assert.equal(report.sourceCommit, candidate.sourceCommit);
-    assert.equal(report.templateEnvironment, 'dev');
-    assert.equal(report.registryColdInstall, 'passed'); assert.equal(report.nativePreparation, 'passed');
-    assert.equal(report.repeatSetup, 'passed'); assert.equal(report.resources, 'passed');
-    assert.equal(report.mcpTools, 11); assert.equal(report.skills, 5);
-    reports.push({ platform, reportSHA256: await sha256(path.join(directory, name)) });
-  }
-  return reports;
-}
-
 export async function findCandidate(version, fetcher = fetch) {
   checkReleaseVersion(version); assert(version.includes('-test.'));
   const name = `motion-candidate-${version}`;
@@ -262,26 +246,34 @@ export async function publishNpm(directory, inputs, { fetcher = fetch, run = run
   return record;
 }
 
-export async function promoteTest(directory, inputs, { fetcher = fetch, run = runFile, env = process.env } = {}) {
+export async function waitForRegistry(candidate, ready, { fetcher = fetch, wait = ms => new Promise(resolve => setTimeout(resolve, ms)), attempts = 60 } = {}) {
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const state = await registryPackage(candidate, fetcher);
+    if (ready(state)) return state;
+    if (attempt + 1 < attempts) await wait(10_000);
+  }
+  throw new Error('npm registry propagation timed out; retry the failed publication steps');
+}
+
+export async function promoteTest(directory, inputs, { fetcher = fetch, run = runFile, env = process.env, wait, attempts } = {}) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
   await verifyAuthorization(directory, inputs, env);
-  const platforms = await platformReports(directory, candidate);
   const npm = await json(path.join(directory, 'npm-publication.json'));
   assert.equal(npm.tgzSHA256, candidate.tgzSHA256);
-  const before = await registryPackage(candidate, fetcher);
+  const before = await waitForRegistry(candidate, state => !!state.version, { fetcher, wait, attempts });
   assert(before.version, 'Exact npm version is not public');
   assert.equal(before.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly; stop before channel promotion');
   const superseded = before.tags.test && compareReleaseVersions(before.tags.test, candidate.version) > 0;
   let status = inputs.action === 'archive-only' ? 'archive-only' : superseded ? 'superseded' : 'already-promoted';
   if (inputs.action === 'publish-test' && !superseded && before.tags.test !== candidate.version) {
     await run('npm', ['dist-tag', 'add', `${candidate.packageName}@${candidate.version}`, 'test', '--registry=https://registry.npmjs.org/']);
-    const after = await registryPackage(candidate, fetcher);
+    const after = await waitForRegistry(candidate, state => state.tags.test === candidate.version, { fetcher, wait, attempts });
     assert(after.version); assert.equal(after.tags.test, candidate.version, 'npm test promotion readback failed');
     assert.equal(after.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly');
     status = 'promoted';
   }
   const record = { schemaVersion: 1, version: candidate.version, tgzSHA256: candidate.tgzSHA256, action: inputs.action,
-    publicationRun: env.GITHUB_RUN_ID, platformVerification: platforms, previousTest: before.tags.test ?? null, status };
+    publicationRun: env.GITHUB_RUN_ID, previousTest: before.tags.test ?? null, status };
   await writeJSON(path.join(directory, 'test-promotion.json'), record);
   return record;
 }
@@ -290,11 +282,9 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
   await writeJSON(path.join(directory, 'release-attempt.json'), { action: inputs.action, tgzSHA256: inputs.expectedSHA256, stage: 'verifying-release', runId: env.GITHUB_RUN_ID });
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
   const authorization = await verifyAuthorization(directory, inputs, env);
-  const platforms = await platformReports(directory, candidate);
   const promotion = await json(path.join(directory, 'test-promotion.json'));
   assert.equal(promotion.version, candidate.version); assert.equal(promotion.tgzSHA256, candidate.tgzSHA256);
   assert.equal(promotion.action, inputs.action); assert.equal(promotion.publicationRun, env.GITHUB_RUN_ID);
-  assert.deepEqual(promotion.platformVerification, platforms);
   assert((inputs.action === 'archive-only' ? ['archive-only'] : ['promoted', 'already-promoted', 'superseded']).includes(promotion.status), 'Require a successful channel verification');
   const record = await json(path.join(directory, 'install-record.json')), plan = storagePlan(record, config);
   assert.equal(candidate.tgzSHA256, inputs.expectedSHA256);
@@ -317,15 +307,15 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
     let release = { schemaVersion: 2, packageName: candidate.packageName, version: candidate.version, sourceCommit: candidate.sourceCommit,
       tgzSHA256: candidate.tgzSHA256, integrity: candidate.integrity, candidateRun: candidate.workflow,
       authorization, publicationRun: env.GITHUB_RUN_ID,
-      platformVerification: platforms, channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
-      status: 'registry-verified', publishedAt: new Date().toISOString() };
+      channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
+      nativeChecks: 'post-publication', status: 'registry-verified', publishedAt: new Date().toISOString() };
     if (prior) {
       const existing = JSON.parse(prior);
       for (const key of ['packageName', 'version', 'sourceCommit', 'tgzSHA256', 'integrity']) assert.equal(existing[key], release[key], 'Existing release record differs: ' + key);
       release = existing;
     }
     await writeJSON(path.join(directory, 'release-record.json'), release);
-    const names = [...Object.keys(candidate.files), 'candidate.json', 'registry-darwin-arm64.json', 'registry-win32-x64.json', 'release-record.json'];
+    const names = [...Object.keys(candidate.files), 'candidate.json', 'release-record.json'];
     const objects = [];
     for (const name of names) {
       const file = path.join(directory, name), bytes = await readFile(file), key = `${prefix}/${name}`, existing = await get(key);
