@@ -1,11 +1,16 @@
 name: Motion candidate build
-run-name: Motion candidate · ${{ inputs.version || 'auto' }}
+run-name: Motion candidate · ${{ inputs.channel || 'test' }} · ${{ inputs.version || 'auto' }}
 
 on:
   workflow_dispatch:
     inputs:
+      channel:
+        description: 'test builds DEV prereleases; stable builds prod with an explicit stable version'
+        type: choice
+        options: [test, stable]
+        default: test
       version:
-        description: 'Optional override; empty uses short next Motion patch-test.N (reruns add .attempt); build only'
+        description: 'test: optional short version override; stable: required MAJOR.MINOR.PATCH; build only'
         type: string
         required: false
         default: ''
@@ -25,6 +30,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
+      MOTION_RELEASE_CHANNEL: ${{ inputs.channel || 'test' }}
+      MOTION_TEMPLATE_ENVIRONMENT: ${{ inputs.channel == 'stable' && 'prod' || 'dev' }}
       MOTION_SOURCE_SHA: ${{ inputs.source_sha }}
       MOTION_VERSION: ${{ inputs.version }}
       OPENMOTION_TELEMETRY: '0'
@@ -103,12 +110,12 @@ jobs:
           npm run package:phase1
           archive="$PWD/dist/motion-$(node -p "require('./package.json').version")-phase1.zip"
           node tests/phase1-package.mjs "$archive" "$RUNNER_TEMP/phase1-e2e"
-      - name: Build the final DEV application tgz once and scan both archives
+      - name: Build the final application tgz once and scan both archives
         env:
           MOTION_SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
           MOTION_VERSION: ${{ steps.source.outputs.version }}
         run: |
-          node source/scripts/package-npm.mjs "$RUNNER_TEMP/build" "$MOTION_VERSION" --template-env=dev
+          node source/scripts/package-npm.mjs "$RUNNER_TEMP/build" "$MOTION_VERSION" --template-env="$MOTION_TEMPLATE_ENVIRONMENT"
           cp "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/build/source-scan.json"
           node control/.github/scripts/motion-scan.mjs package "$RUNNER_TEMP/build/openmotion-app-$MOTION_VERSION.tgz" "$RUNNER_TEMP/build/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
           node control/.github/scripts/motion-release.mjs seal "$RUNNER_TEMP/build" "$RUNNER_TEMP/candidate" source
@@ -126,5 +133,5 @@ jobs:
           import { readFileSync, appendFileSync } from 'node:fs';
           const c = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/candidate.json'));
           const run = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Candidate ready for acceptance\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nTGZ SHA256: ${c.tgzSHA256}\n\n[Download motion-candidate-${c.version}](${run}#artifacts), extract it and give the folder to your Agent with this instruction:\n\n> Follow candidate-install.md in this folder to install this exact local candidate into an isolated test profile, application home, project data and Skills directory. Verify host loading without waiting for background video-component preparation. Run prepare only when explicitly asked to wait or before requested media/capture/export acceptance checks. Record actual results in a private copy of acceptance.md; mark unrun checks NOT RUN. Do not publish.\n\nUse candidate-install.md before publication, not the sibling registry install.md. To publish, manually open Motion test publication and enter ${c.version}; no acceptance checkbox is required. Nothing was published by this build.\n`);
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Candidate ready for acceptance\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nTGZ SHA256: ${c.tgzSHA256}\n\n[Download motion-candidate-${c.version}](${run}#artifacts), extract it and give the folder to your Agent with this instruction:\n\n> Follow candidate-install.md in this folder to install this exact local candidate into an isolated test profile, application home, project data and Skills directory. Verify host loading without waiting for background video-component preparation. Run prepare only when explicitly asked to wait or before requested media/capture/export acceptance checks. Record actual results in a private copy of acceptance.md; mark unrun checks NOT RUN. Do not publish.\n\nUse candidate-install.md before publication, not the sibling registry install.md. To publish, manually open Motion npm publication, select the same channel and enter ${c.version}; no acceptance checkbox is required. Nothing was published by this build.\n`);
           JS
