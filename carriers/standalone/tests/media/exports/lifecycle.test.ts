@@ -19,7 +19,7 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
   async () => {
     const manifestPath = resolve(process.env.OPEN_MOTION_NATIVE_MANIFEST!),
       manifest = JSON.parse(await readFile(manifestPath, "utf8")),
-      evidence = fileURLToPath(new URL(`../../../../.artifacts/export-browser/${randomUUID()}/`, import.meta.url)),
+      evidence = fileURLToPath(new URL(`../../../../../.artifacts/export-browser/${randomUUID()}/`, import.meta.url)),
       root = join(evidence, "sidecar"),
       scope = { channel: channel("dev"), namespace: namespace("export-browser") };
     await mkdir(evidence, { recursive: true });
