@@ -1,7 +1,7 @@
 {
   "name": "motion",
   "version": "0.6.3",
-  "description": "Create, animate, edit, preview, and export motion graphics and motion videos in OpenMotion, including template-based creation and reference video recreation. 用于制作动效视频、Motion 视频、动画和参考视频复刻。",
+  "description": "Plan, create, animate, edit, preview, and export motion graphics and motion videos in OpenMotion, including original videos on a user-supplied topic, template-based creation and reference video recreation. 用于构思和制作 motion 视频、动效视频、动画、赛事回顾、科普讲解和参考视频复刻。",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "requires_local_executor": true,

@@ -34,6 +34,8 @@ export async function exportAdapters(runtimePath: string, dataPath: string, outp
     try { await access(filename); return true; }
     catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false; throw error; }
   };
+  const manifestFile = path.join(runtime, '.codex-plugin/plugin.json');
+  const runtimeManifest = await exists(manifestFile) ? JSON.parse(await readFile(manifestFile, 'utf8')) : null;
   const profileFile = path.join(runtime, 'shared/mcp-release.json');
   const mcpProfile = await exists(profileFile) ? JSON.parse(await readFile(profileFile, 'utf8')).profile : 'legacy';
   assert(['legacy', 'phase1'].includes(mcpProfile), 'Invalid runtime MCP release profile.');
@@ -87,9 +89,11 @@ export async function exportAdapters(runtimePath: string, dataPath: string, outp
         text('icon.svg', `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#282828" stroke="none">${filmIcon}</svg>\n`);
       }
       else {
-        const manifest = { name: 'motion', version: pkg.version, description: 'OpenDesign Motion with the shared local MCP runtime.', author: { name: 'OpenDesign' }, skills: './skills/', mcpServers: './.mcp.json' };
+        const manifest = { name: 'motion', version: pkg.version,
+          description: runtimeManifest?.description ?? 'OpenDesign Motion with the shared local MCP runtime.',
+          author: { name: 'OpenDesign' }, skills: './skills/', mcpServers: './.mcp.json' };
         text(`.${host}-plugin/plugin.json`, host === 'codex' ? { ...manifest, requires_local_executor: true,
-          interface: { displayName: 'OpenDesign', shortDescription: 'Motion production with the shared local runtime.' } } : manifest);
+          interface: { displayName: 'OpenDesign', shortDescription: runtimeManifest?.interface?.shortDescription ?? 'Motion production with the shared local runtime.' } } : manifest);
         text('.mcp.json', host === 'codex' ? { mcpServers: { motion: info.transport } } : integrationConfig(info, 'mcp').text);
       }
       const directory = path.join(output, host, 'openmotion');

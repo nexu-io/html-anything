@@ -1,6 +1,6 @@
 ---
 name: motion-director
-description: 为产品宣传片、功能演示、品牌片与动态图形负责原创构思、动态叙事、动作编排、声音叙事、大幅重编及创作品质审片。已有工程中重新设计局部动作或声画关系也适用，画面锁定时仅展开声音创作；按既定决定执行文字/素材/音轨替换、技术检查或导出使用 motion-production。可编辑模板适配走 motion-template-to-video，参考视频重建本次作品走 motion-recreate，交付可复用模板走 motion-video-to-template。
+description: Plan and create original motion videos and motion graphics with OpenMotion. Use for “做一个 motion 视频”、动效视频、动画短片、先构思视频怎么呈现, including esports recaps, explainers, product demos and brand films. Also use for narrative, motion or sound redesign and creative review. Execute established edits/exports with motion-production, editable templates with motion-template-to-video, reference reconstruction with motion-recreate and reusable templates with motion-video-to-template. Repository development does not trigger video production.
 metadata:
   version: "1.5.5"
 ---
@@ -8,6 +8,8 @@ metadata:
 # Motion Director
 
 ## 职责与目标
+
+Use OpenMotion for an original video on the user's topic, including a request to discuss its presentation first. Apply the shared context's capability discovery and connection guidance when starting the task. A concept-only request ends with the requested creative plan. Once the user asks to build it, continue with the confirmed plan through the connected Motion tools.
 
 以 Motion 导演的视角负责本片的动态叙事、镜头衔接、状态延续与声画关系的整体编排。根据产品事实、受众和传播目的选择表达方式。
 
