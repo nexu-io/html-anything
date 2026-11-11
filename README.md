@@ -550,7 +550,7 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 
 ### Quick start
 
-For a packaged install, give your agent the [test installation guide](https://releases.open-design.ai/open-motion/dev/install.md). It pins the package version and walks through isolated setup. To run from source, follow the steps below.
+For a packaged install, give your agent the [test installation guide](https://releases.open-design.ai/open-motion/dev/install.md). It pins the package version and installs into the current Agent's existing profile and login. To run from source, follow the steps below.
 
 If MCP tools are missing or fail to connect, use the installed [connection diagnosis and recovery guide](docs/npm-installation.md#missing-mcp-tools-or-a-failed-connection) to inspect the actual host configuration and verify the original workspace before continuing.
 
@@ -600,7 +600,7 @@ Then make it yours:
 
 To start from a video instead, supply your reference and use the [recreation brief](#reverse-engineer-a-video). If your host cannot open Studio beside the conversation, use the returned local project link.
 
-New test npm builds embed **DEV** template defaults; stable packages embed **prod**. Existing published versions keep their original defaults. The environment is stored in the package, so Studio and MCP agree without setup-only environment variables. Use isolated test host, application and data directories. See [test installation and template configuration](docs/npm-installation.md#test-template-data-dev) and the [test publication manual](docs/release-workflows.md).
+New test npm builds embed **DEV** template defaults; stable packages embed **prod**. Existing published versions keep their original defaults. The environment is stored in the package, so Studio and MCP agree without setup-only environment variables. Keep test application and data directories separate from production while using the current Agent profile; use an isolated host only for an explicitly requested installation test. See [test installation and template configuration](docs/npm-installation.md#test-template-data-dev) and the [test publication manual](docs/release-workflows.md).
 
 ##### Skills, MCP and CLI
 
