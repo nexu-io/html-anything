@@ -752,10 +752,10 @@ it.each([740, 800, 1000])("keeps compact sides exclusive and readable at %ipx ac
   act(() => controller.setGroupCollapsed!("design", false, true));
   act(() => vi.advanceTimersByTime(240));
   expect(left.width).toBe(48);
-  expect(right.width).toBeGreaterThanOrEqual(320);
+  expect(right.width).toBeGreaterThanOrEqual(260);
   act(() => useDockLayoutStore.getState().activatePanel("assets"));
   expect(right.width).toBe(48);
-  expect(left.width).toBeGreaterThanOrEqual(320);
+  expect(left.width).toBeGreaterThanOrEqual(260);
   expect(left.activePanel?.id).toBe("assets");
   act(() => {
     controller.setGroupCollapsed!("design", false, true);
@@ -765,7 +765,7 @@ it.each([740, 800, 1000])("keeps compact sides exclusive and readable at %ipx ac
     dockLayout.applySideMinimums(api, width, true);
   });
   expect(right.width).toBe(48);
-  expect(left.width).toBeGreaterThanOrEqual(320);
+  expect(left.width).toBeGreaterThanOrEqual(260);
   expect(useDockLayoutStore.getState().collapsedZones).toEqual(["right"]);
   expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(360);
   expect(left.width + right.width + api.getPanel("preview")!.group.width).toBeLessThanOrEqual(width);
@@ -807,7 +807,7 @@ it("collapses oversized remembered sides when reopening would crowd the preview 
     controller.setGroupCollapsed!("compositions", false);
   });
   expect(right.width).toBe(48);
-  expect(left.width).toBeGreaterThanOrEqual(320);
+  expect(left.width).toBeGreaterThanOrEqual(260);
   expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(360);
 });
 
@@ -829,4 +829,44 @@ it("finishes an in-flight opening before narrowing into preview-only mode", () =
   expect(api.getPanel("design")!.group.width).toBe(0);
   expect(api.getPanel("compositions")!.group.width).toBe(0);
   expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(468);
+});
+
+
+it("retains both sides' 260px minimum through resizing and side-panel animations", () => {
+  mount("narrow-library", {}, { panels: MVP_PANEL_IDS, fixedLayout: true, dockWidth: () => 1400 });
+  const api = dockApi!;
+  act(() => api.layout(1400, 800));
+  const left = api.getPanel("compositions")!.group;
+  const right = api.getPanel("design")!.group;
+  const controller = useDockLayoutStore.getState().controller!;
+  act(() => {
+    controller.setGroupCollapsed!("compositions", false);
+    left.api.setSize({ width: 260 });
+  });
+  expect(left.width).toBe(260);
+  act(() => {
+    controller.setGroupCollapsed!("compositions", true, true);
+    vi.advanceTimersByTime(240);
+    controller.setGroupCollapsed!("compositions", false, true);
+    vi.advanceTimersByTime(240);
+    controller.setGroupCollapsed!("design", false, true);
+    vi.advanceTimersByTime(240);
+    dockLayout.applySideMinimums(api, 1400, true);
+    left.api.setSize({ width: 220 });
+    right.api.setSize({ width: 260 });
+  });
+  expect(left.width).toBe(260);
+  expect(left.minimumWidth).toBe(260);
+  expect(right.width).toBe(260);
+  expect(right.minimumWidth).toBe(260);
+  act(() => {
+    controller.setGroupCollapsed!("design", true, true);
+    vi.advanceTimersByTime(240);
+    controller.setGroupCollapsed!("design", false, true);
+    vi.advanceTimersByTime(240);
+    right.api.setSize({ width: 220 });
+  });
+  expect(right.width).toBe(260);
+  expect(right.minimumWidth).toBe(260);
+  expect(api.getPanel("preview")!.group.width).toBeGreaterThanOrEqual(360);
 });

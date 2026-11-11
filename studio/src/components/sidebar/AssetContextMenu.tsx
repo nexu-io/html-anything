@@ -4,6 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { filename } from "./assetHelpers";
 import { menuClasses } from "../ui/menuStyle";
+import { popupSurface } from "../ui/Menu";
 
 /** Reject names that would escape the asset directory or break paths. */
 function isValidAssetName(name: string): boolean {
@@ -122,7 +123,7 @@ export function ContextMenu({
         ref={menuRef}
         role="menu"
         aria-label={t("Actions for {value0}", { value0: filename(asset) })}
-        className={`${menuClasses.panel} absolute min-w-[160px] text-xs`}
+        className={`${mvp ? `${popupSurface} motion-context-menu p-1 shadow-menu min-w-[180px]` : `${menuClasses.panel} min-w-[160px]`} absolute text-xs`}
         style={{ left: pos.x, top: pos.y, maxWidth: "calc(100vw - 16px)", maxHeight: "calc(100vh - 16px)", overflow: "auto" }}
         onClick={(e) => e.stopPropagation()}
       >

@@ -1,5 +1,7 @@
 {
   "zh-CN": {
+    "Reconnecting…": "重连中…",
+    "Connection lost.": "连接已断开",
     "The project changed elsewhere. Resolve the changes before continuing.": "工程已在其他地方修改，请先处理版本冲突。",
     "Changes could not be saved. Check the connection and project before continuing.": "修改未能保存，请检查连接和工程后再继续。",
     "A required file is missing. Check or replace it, then try again.": "所需文件已丢失，请检查或替换文件后重试。",
@@ -24,6 +26,8 @@
     "Keep your changes and replace the version updated elsewhere?": "保留你的修改，并替换其他地方更新的版本？"
   },
   "ja": {
+    "Reconnecting…": "再接続中…",
+    "Connection lost.": "接続が切れました",
     "The project changed elsewhere. Resolve the changes before continuing.": "プロジェクトが別の場所で変更されました。競合を解決してから続行してください。",
     "Changes could not be saved. Check the connection and project before continuing.": "変更を保存できませんでした。接続とプロジェクトを確認してください。",
     "A required file is missing. Check or replace it, then try again.": "必要なファイルが見つかりません。確認または差し替えて再試行してください。",
@@ -48,6 +52,8 @@
     "Keep your changes and replace the version updated elsewhere?": "自分の変更を保持し、別の場所で更新された版を置き換えますか？"
   },
   "ko": {
+    "Reconnecting…": "다시 연결 중…",
+    "Connection lost.": "연결이 끊겼습니다",
     "The project changed elsewhere. Resolve the changes before continuing.": "프로젝트가 다른 곳에서 변경되었습니다. 충돌을 해결한 후 계속하세요.",
     "Changes could not be saved. Check the connection and project before continuing.": "변경 사항을 저장하지 못했습니다. 연결과 프로젝트를 확인하세요.",
     "A required file is missing. Check or replace it, then try again.": "필요한 파일이 없습니다. 파일을 확인하거나 교체한 후 다시 시도하세요.",
@@ -72,6 +78,8 @@
     "Keep your changes and replace the version updated elsewhere?": "내 변경 사항을 유지하고 다른 곳에서 업데이트된 버전을 바꿀까요?"
   },
   "de": {
+    "Reconnecting…": "Verbindung wird hergestellt…",
+    "Connection lost.": "Verbindung unterbrochen",
     "The project changed elsewhere. Resolve the changes before continuing.": "Das Projekt wurde andernorts geändert. Lösen Sie den Konflikt, bevor Sie fortfahren.",
     "Changes could not be saved. Check the connection and project before continuing.": "Änderungen konnten nicht gespeichert werden. Prüfen Sie Verbindung und Projekt.",
     "A required file is missing. Check or replace it, then try again.": "Eine benötigte Datei fehlt. Prüfen oder ersetzen Sie sie und versuchen Sie es erneut.",
@@ -96,6 +104,8 @@
     "Keep your changes and replace the version updated elsewhere?": "Eigene Änderungen behalten und die andernorts aktualisierte Version ersetzen?"
   },
   "fr": {
+    "Reconnecting…": "Reconnexion…",
+    "Connection lost.": "Connexion interrompue",
     "The project changed elsewhere. Resolve the changes before continuing.": "Le projet a été modifié ailleurs. Résolvez le conflit avant de continuer.",
     "Changes could not be saved. Check the connection and project before continuing.": "Les modifications n’ont pas pu être enregistrées. Vérifiez la connexion et le projet.",
     "A required file is missing. Check or replace it, then try again.": "Un fichier nécessaire est introuvable. Vérifiez-le ou remplacez-le, puis réessayez.",
@@ -120,6 +130,8 @@
     "Keep your changes and replace the version updated elsewhere?": "Garder vos modifications et remplacer la version mise à jour ailleurs ?"
   },
   "es": {
+    "Reconnecting…": "Reconectando…",
+    "Connection lost.": "Conexión perdida",
     "The project changed elsewhere. Resolve the changes before continuing.": "El proyecto se modificó en otro lugar. Resuelve el conflicto antes de continuar.",
     "Changes could not be saved. Check the connection and project before continuing.": "No se pudieron guardar los cambios. Revisa la conexión y el proyecto.",
     "A required file is missing. Check or replace it, then try again.": "Falta un archivo necesario. Revísalo o reemplázalo y vuelve a intentarlo.",
@@ -144,6 +156,8 @@
     "Keep your changes and replace the version updated elsewhere?": "¿Conservar tus cambios y reemplazar la versión actualizada en otro lugar?"
   },
   "pt-BR": {
+    "Reconnecting…": "Reconectando…",
+    "Connection lost.": "Conexão perdida",
     "The project changed elsewhere. Resolve the changes before continuing.": "O projeto foi alterado em outro local. Resolva o conflito antes de continuar.",
     "Changes could not be saved. Check the connection and project before continuing.": "Não foi possível salvar as alterações. Verifique a conexão e o projeto.",
     "A required file is missing. Check or replace it, then try again.": "Um arquivo necessário está ausente. Verifique ou substitua o arquivo e tente novamente.",
@@ -168,6 +182,8 @@
     "Keep your changes and replace the version updated elsewhere?": "Manter suas alterações e substituir a versão atualizada em outro local?"
   },
   "it": {
+    "Reconnecting…": "Riconnessione…",
+    "Connection lost.": "Connessione interrotta",
     "The project changed elsewhere. Resolve the changes before continuing.": "Il progetto è stato modificato altrove. Risolvi il conflitto prima di continuare.",
     "Changes could not be saved. Check the connection and project before continuing.": "Impossibile salvare le modifiche. Controlla la connessione e il progetto.",
     "A required file is missing. Check or replace it, then try again.": "Manca un file necessario. Controllalo o sostituiscilo e riprova.",
@@ -192,6 +208,8 @@
     "Keep your changes and replace the version updated elsewhere?": "Mantenere le tue modifiche e sostituire la versione aggiornata altrove?"
   },
   "ru": {
+    "Reconnecting…": "Переподключение…",
+    "Connection lost.": "Соединение потеряно",
     "The project changed elsewhere. Resolve the changes before continuing.": "Проект изменён в другом месте. Разрешите конфликт, прежде чем продолжить.",
     "Changes could not be saved. Check the connection and project before continuing.": "Не удалось сохранить изменения. Проверьте соединение и проект.",
     "A required file is missing. Check or replace it, then try again.": "Нужный файл отсутствует. Проверьте или замените его и повторите попытку.",
@@ -216,6 +234,8 @@
     "Keep your changes and replace the version updated elsewhere?": "Сохранить ваши изменения и заменить версию, обновлённую в другом месте?"
   },
   "tr": {
+    "Reconnecting…": "Yeniden bağlanılıyor…",
+    "Connection lost.": "Bağlantı kesildi",
     "The project changed elsewhere. Resolve the changes before continuing.": "Proje başka bir yerde değiştirildi. Devam etmeden önce çakışmayı giderin.",
     "Changes could not be saved. Check the connection and project before continuing.": "Değişiklikler kaydedilemedi. Bağlantıyı ve projeyi kontrol edin.",
     "A required file is missing. Check or replace it, then try again.": "Gerekli bir dosya eksik. Dosyayı kontrol edin veya değiştirip tekrar deneyin.",

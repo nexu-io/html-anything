@@ -493,7 +493,7 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
                 isDragged
                   ? "opacity-40"
                   : selected
-                    ? "bg-panel-accent/14 text-accent-ink"
+                    ? mvp ? "bg-panel-hover text-panel-text-1" : "bg-panel-accent/14 text-accent-ink"
                     : "text-panel-text-2 hover:bg-panel-hover/40 hover:text-panel-text-1"
               } ${dragKey ? "cursor-grabbing" : "cursor-pointer"}`}
               style={{ paddingLeft: 8 + layer.depth * CHILD_INDENT }}
@@ -514,7 +514,9 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
                 data-layer-kind={kind}
                 title={hint ? `${t(kindName)} · ${t(hint)}` : t(kindName)}
                 className={`flex h-5 w-5 shrink-0 items-center justify-center rounded ${
-                  selected
+                  mvp
+                    ? selected ? "bg-panel-hover text-panel-text-1" : "bg-panel-hover text-panel-text-4"
+                    : selected
                     ? "bg-panel-accent/18 text-accent-ink"
                     : isCompHost
                       ? "bg-on text-accent-ink"

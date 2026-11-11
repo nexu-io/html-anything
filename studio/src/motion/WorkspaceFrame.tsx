@@ -7,6 +7,7 @@ import { useWorkspace } from './useWorkspace';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { Tooltip } from '../components/ui/Tooltip';
 import { Dialog } from '@base-ui/react/dialog';
+import { StudioToast } from '../components/StudioToast';
 import { ErrorNotice } from '../components/ui/ErrorNotice';
 import { isConnectionFailure } from '../components/ui/errorNoticeMessage';
 import { useShownStudioTheme } from '../utils/studioTheme';
@@ -77,10 +78,13 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
         </Dialog.Popup>
       </Dialog.Portal>
       <div className="motion-workspace-content">
-        {visibleNotice && <ErrorNotice key={noticeKey} message={notice}
-          action={workspace.error && workspace.errorSource === 'connection' && isConnectionFailure(notice)
-            ? { label: 'Reconnect', run: workspace.retryConnection, busy: workspace.checkingConnection } : undefined}
-          onDismiss={() => { setDismissedNotice(noticeKey); if (workspace.error) workspace.clearError(); }} />}
+        {visibleNotice && (workspace.error && workspace.errorSource === 'connection' && isConnectionFailure(notice)
+          ? <div data-testid="motion-connection-toast" className="pointer-events-none absolute top-16 left-1/2 z-91 flex max-w-[calc(100%-32px)] -translate-x-1/2 justify-center">
+              <StudioToast message="Connection lost." tone="error" presentation="feedback" singleLine
+                status="Reconnecting…" />
+            </div>
+          : <ErrorNotice key={noticeKey} message={notice}
+              onDismiss={() => { setDismissedNotice(noticeKey); if (workspace.error) workspace.clearError(); }} />)}
         {children}
       </div>
     </div>

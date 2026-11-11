@@ -65,7 +65,6 @@ export function clipZoomKey(el: TimelineElement, pps: number, interacting: boole
 // fallow-ignore-next-line complexity
 export const TimelineClip = memo(function TimelineClip({
   el,
-  trackLabel,
   pps,
   passengerStyle,
   clipY,
@@ -97,8 +96,7 @@ export const TimelineClip = memo(function TimelineClip({
   const isAudioClip = isAudioTimelineElement(el);
   const ladder = clipWidthLadder(widthPx);
   const showHandles = handleOpacity > 0.01 && (widthPx >= HANDLES_MIN_PX || isSelected);
-  const duplicateLabel = mvp && trackLabel === displayLabel;
-  const showLabel = !duplicateLabel && (!isAudioClip || ladder === "labeled");
+  const showLabel = !mvp && (!isAudioClip || ladder === "labeled");
   const showDefaultText = !hasCustomContent && ladder === "labeled";
   const startLabel = el.start.toFixed(1);
   const endLabel = (el.start + el.duration).toFixed(1);
@@ -159,7 +157,7 @@ export const TimelineClip = memo(function TimelineClip({
       data-clip-start={el.start}
       data-clip-end={el.start + el.duration}
       data-clip-hidden={el.hidden ? "true" : undefined}
-      data-label-in-track={duplicateLabel ? "true" : undefined}
+      data-label-in-track={mvp ? "true" : undefined}
       data-link-color={linkColor ?? undefined}
       data-ladder={ladder}
       data-active={isActive ? "" : undefined}

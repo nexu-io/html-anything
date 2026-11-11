@@ -109,6 +109,7 @@ export function deriveUsedPaths(elements: Array<{ src?: string }>): Set<string> 
  *  instead of leaving the author clicking a control that looks idle. */
 function ImportButton({ importing, onClick }: { importing: boolean; onClick: () => void }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   return (
     <button
       onClick={onClick}
@@ -116,13 +117,13 @@ function ImportButton({ importing, onClick }: { importing: boolean; onClick: () 
       aria-busy={importing}
       aria-label={t("Import media")}
       title={t("Import media")}
-      className="flex shrink-0 items-center justify-center gap-1 rounded-md bg-panel-input px-2 py-[5px] text-[11px] font-medium text-panel-text-3 enabled:hover:text-panel-text-1 enabled:active:scale-[0.98] disabled:opacity-60 transition-colors"
+      className="motion-import-button flex shrink-0 items-center justify-center gap-1 rounded-md bg-panel-input px-2 py-[5px] text-[11px] font-medium text-panel-text-3 enabled:hover:text-panel-text-1 enabled:active:scale-[0.98] disabled:opacity-60 transition-colors"
     >
       {importing ? (
         <RemixIcon name="loader-4-line" size={14} className="animate-spin" />
-      ) : (
+      ) : !mvp ? (
         <RemixIcon name="add-line" size={14} />
-      )}
+      ) : null}
       {importing ? t("Importing…") : t("Import")}
     </button>
   );

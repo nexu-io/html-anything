@@ -1,5 +1,6 @@
 {
   "ja": {
+    "Join the OpenDesign community": "OpenDesign コミュニティに参加しませんか",
     "Expand": "展開",
     "Collapse": "折りたたむ",
     "Expand left panel": "左パネルを展開",
@@ -186,9 +187,11 @@
     "Edit y (whole animation)": "Y 座標を変更（アニメーション全体）",
     "No clips yet": "クリップはまだありません",
     "No editable content": "編集できる内容がありません",
-    "No content to export. Add media first.": "書き出す内容がありません。先に素材を追加してください。"
+    "No content to export. Add media first.": "書き出す内容がありません。先に素材を追加してください。",
+    "Select an element to edit its properties": "要素を選択してプロパティを編集"
   },
   "ko": {
+    "Join the OpenDesign community": "OpenDesign 커뮤니티에 참여하세요",
     "Expand": "펼치기",
     "Collapse": "접기",
     "Expand left panel": "왼쪽 패널 펼치기",
@@ -375,9 +378,11 @@
     "Edit y (whole animation)": "Y 좌표 편집(전체 애니메이션)",
     "No clips yet": "아직 클립이 없습니다",
     "No editable content": "편집할 콘텐츠가 없습니다",
-    "No content to export. Add media first.": "내보낼 콘텐츠가 없습니다. 먼저 미디어를 추가하세요."
+    "No content to export. Add media first.": "내보낼 콘텐츠가 없습니다. 먼저 미디어를 추가하세요.",
+    "Select an element to edit its properties": "요소를 선택해 속성 편집"
   },
   "de": {
+    "Join the OpenDesign community": "Tritt der OpenDesign-Community bei",
     "Expand": "Erweitern",
     "Collapse": "Einklappen",
     "Expand left panel": "Linken Bereich öffnen",
@@ -564,9 +569,11 @@
     "Edit y (whole animation)": "Y-Position ändern (gesamte Animation)",
     "No clips yet": "Noch keine Clips",
     "No editable content": "Keine bearbeitbaren Inhalte",
-    "No content to export. Add media first.": "Keine Inhalte zum Exportieren. Füge zuerst Medien hinzu."
+    "No content to export. Add media first.": "Keine Inhalte zum Exportieren. Füge zuerst Medien hinzu.",
+    "Select an element to edit its properties": "Element zum Bearbeiten wählen"
   },
   "fr": {
+    "Join the OpenDesign community": "Rejoignez la communauté OpenDesign",
     "Expand": "Développer",
     "Collapse": "Réduire",
     "Expand left panel": "Ouvrir le panneau gauche",
@@ -753,9 +760,11 @@
     "Edit y (whole animation)": "Modifier la position Y (animation entière)",
     "No clips yet": "Aucun clip pour le moment",
     "No editable content": "Aucun contenu à modifier",
-    "No content to export. Add media first.": "Aucun contenu à exporter. Ajoutez d’abord des médias."
+    "No content to export. Add media first.": "Aucun contenu à exporter. Ajoutez d’abord des médias.",
+    "Select an element to edit its properties": "Sélectionnez un élément à modifier"
   },
   "ru": {
+    "Join the OpenDesign community": "Присоединяйтесь к сообществу OpenDesign",
     "Expand": "Развернуть",
     "Collapse": "Свернуть",
     "Expand left panel": "Развернуть левую панель",
@@ -942,9 +951,11 @@
     "Edit y (whole animation)": "Изменить координату Y (вся анимация)",
     "No clips yet": "Пока нет клипов",
     "No editable content": "Нет содержимого для редактирования",
-    "No content to export. Add media first.": "Нет содержимого для экспорта. Сначала добавьте медиафайлы."
+    "No content to export. Add media first.": "Нет содержимого для экспорта. Сначала добавьте медиафайлы.",
+    "Select an element to edit its properties": "Выберите элемент для правки"
   },
   "es": {
+    "Join the OpenDesign community": "Únete a la comunidad de OpenDesign",
     "Expand": "Expandir",
     "Collapse": "Contraer",
     "Expand left panel": "Abrir panel izquierdo",
@@ -1131,9 +1142,11 @@
     "Edit y (whole animation)": "Editar posición Y (toda la animación)",
     "No clips yet": "Aún no hay clips",
     "No editable content": "No hay contenido editable",
-    "No content to export. Add media first.": "No hay contenido para exportar. Añade archivos multimedia primero."
+    "No content to export. Add media first.": "No hay contenido para exportar. Añade archivos multimedia primero.",
+    "Select an element to edit its properties": "Selecciona un elemento para editar"
   },
   "pt-BR": {
+    "Join the OpenDesign community": "Junte-se à comunidade OpenDesign",
     "Expand": "Expandir",
     "Collapse": "Recolher",
     "Expand left panel": "Abrir painel esquerdo",
@@ -1320,9 +1333,11 @@
     "Edit y (whole animation)": "Editar posição Y (animação inteira)",
     "No clips yet": "Nenhum clipe ainda",
     "No editable content": "Nenhum conteúdo editável",
-    "No content to export. Add media first.": "Não há conteúdo para exportar. Adicione mídia primeiro."
+    "No content to export. Add media first.": "Não há conteúdo para exportar. Adicione mídia primeiro.",
+    "Select an element to edit its properties": "Selecione um elemento para editar"
   },
   "it": {
+    "Join the OpenDesign community": "Unisciti alla community OpenDesign",
     "Expand": "Espandi",
     "Collapse": "Comprimi",
     "Expand left panel": "Apri pannello sinistro",
@@ -1509,9 +1524,11 @@
     "Edit y (whole animation)": "Modifica posizione Y (intera animazione)",
     "No clips yet": "Nessuna clip ancora",
     "No editable content": "Nessun contenuto modificabile",
-    "No content to export. Add media first.": "Nessun contenuto da esportare. Aggiungi prima dei media."
+    "No content to export. Add media first.": "Nessun contenuto da esportare. Aggiungi prima dei media.",
+    "Select an element to edit its properties": "Seleziona un elemento da modificare"
   },
   "tr": {
+    "Join the OpenDesign community": "OpenDesign topluluğuna katılın",
     "Expand": "Genişlet",
     "Collapse": "Daralt",
     "Expand left panel": "Sol paneli aç",
@@ -1698,6 +1715,7 @@
     "Edit y (whole animation)": "Y konumunu düzenle (tüm animasyon)",
     "No clips yet": "Henüz klip yok",
     "No editable content": "Düzenlenebilir içerik yok",
-    "No content to export. Add media first.": "Dışa aktarılacak içerik yok. Önce medya ekleyin."
+    "No content to export. Add media first.": "Dışa aktarılacak içerik yok. Önce medya ekleyin.",
+    "Select an element to edit its properties": "Düzenlemek için bir öğe seçin"
   }
 }

@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { memo, type MouseEvent } from "react";
 import type { TimelineElement } from "../store/playerStore";
@@ -38,7 +39,8 @@ export const ClipBadges = memo(function ClipBadges({
   const { t } = useI18n();
   const state = useClipToolState(el);
   const effects = readClipEffects(state);
-  const volume = clipVolumeBadge(state);
+  const mvp = useMvpEditor();
+  const volume = mvp ? null : clipVolumeBadge(state);
   const hasEffects = effects.length > 0;
   const openMenu = (event: MouseEvent) => {
     event.stopPropagation();

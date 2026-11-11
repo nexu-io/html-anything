@@ -1,3 +1,4 @@
+import { CommunityLink } from './CommunityLink';
 import { StudioErrorBoundary } from '../components/StudioErrorBoundary';
 import { I18nProvider, useI18n } from "../i18n/I18n";
 import { useEffect, useRef, useState, type ReactNode } from 'react';
@@ -138,6 +139,7 @@ const host: StudioHost = {
   brand: <WorkspaceBrand />,
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,
+  communityAction: <CommunityLink />,
   historyActions: <WorkspaceHistoryActions />,
   previewAction: <></>,
   windowMenu: <></>,

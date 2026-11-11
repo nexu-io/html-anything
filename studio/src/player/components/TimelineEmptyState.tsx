@@ -38,7 +38,7 @@ export function TimelineEmptyState({
   const hideGuide = !!gateway?.generationOpen && !isDragOver;
   return (
     <div
-      className={`h-full border-t bg-[var(--timeline-shell-bg)] flex flex-col select-none transition-colors duration-150 ${
+      className={`${mvp ? "motion-timeline-empty" : ""} h-full border-t bg-[var(--timeline-shell-bg)] flex flex-col select-none transition-colors duration-150 ${
         isDragOver ? "border-studio-accent/50 bg-studio-accent/3" : "border-neutral-800/50"
       }`}
       onDragOver={onDragOver}

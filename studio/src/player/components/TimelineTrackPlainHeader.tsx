@@ -1,3 +1,4 @@
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type React from "react";
 import { Music } from "../../icons/SystemIcons";
@@ -21,6 +22,7 @@ export function VisibilityButton({
   onToggle: TimelineEditCallbacks["onToggleTrackHidden"];
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   // Display number in the text, real key in the callback. The two must not be
   // conflated in either direction.
   const suffix = trackDisplaySuffix(trackDisplayNumber);
@@ -31,7 +33,7 @@ export function VisibilityButton({
       aria-label={label}
       title={label}
       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded border-0 bg-transparent p-0 transition-colors focus-visible:outline-solid focus-visible:outline-1 focus-visible:-outline-offset-1 focus-visible:outline-[var(--timeline-accent)] ${
-        hidden
+        hidden && !mvp
           ? "text-[var(--timeline-accent)] hover:text-[var(--timeline-text-solid)]"
           : "text-[var(--timeline-text-faint)] hover:text-[var(--timeline-text-soft)]"
       }`}

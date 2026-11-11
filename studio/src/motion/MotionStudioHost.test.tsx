@@ -3,10 +3,13 @@ import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { MotionEditorFrame, MotionStudioHost } from './MotionStudioHost';
+import feishuLogo from './community-feishu.svg';
+import discordLogo from './community-discord.svg';
 import { StudioHeader } from '../components/StudioHeader';
 import { useMotionHistoryOperation } from './MotionHistoryState';
 
 const state = vi.hoisted(() => ({
+  connectionError: '',
   renderQueue: { isRendering: false, ffmpegMissing: false },
   writeBlockedReason: null as string | null,
   open: vi.fn(), export: vi.fn(), setTab: vi.fn(), setCollapsed: vi.fn(),
@@ -28,7 +31,7 @@ vi.mock('../utils/studioTelemetry', () => ({ trackStudioEvent: vi.fn() }));
 vi.mock('./MotionHistoryPanel', () => ({ MotionHistoryPanel: () => <div>History versions</div> }));
 vi.mock('./useWorkspace', () => ({ useWorkspace: () => ({
   status: state.status, projects: [{ id: 'demo', title: 'Demo' }, { id: 'second', title: 'Second' }],
-  busy: false, error: '', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
+  busy: false, error: state.connectionError, errorSource: 'connection', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
 }) }));
 vi.mock('./ConnectionDialog', () => ({ ConnectionDialog: ({ open, section, busy, onOpen }: { open: boolean; section: string; busy: boolean; onOpen: (id: string) => void }) =>
   open ? <div role="dialog" aria-label="MCP connections" data-section={section}>
@@ -41,6 +44,7 @@ let container: HTMLDivElement;
 beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
+  state.connectionError = '';
   state.renderQueue.isRendering = false;
   state.writeBlockedReason = null;
   state.status = { projectId: 'demo', historyRestoreError: null };
@@ -220,4 +224,37 @@ it('dismissing a write-blocking notice does not enable project creation', () => 
   expect(container.querySelector('.motion-error-notice')).toBeNull();
   openSidebar();
   expect(document.querySelector<HTMLButtonElement>('.motion-session-heading button')?.disabled).toBe(true);
+});
+
+
+it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr'])('opens the language-appropriate community beside Export (%s)', locale => {
+  localStorage.setItem('motion.studio.locale', locale);
+  render();
+  const link = container.querySelector<HTMLAnchorElement>('.motion-community-link')!;
+  expect(link.href).toBe(locale === 'zh-CN'
+    ? 'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=a38j32fc-756c-4d02-846b-53356fee12a7'
+    : 'https://discord.gg/mHAjSMV6gz');
+  expect(link.target).toBe('_blank');
+  expect(link.rel).toContain('noopener');
+  expect(link.querySelector('img')?.getAttribute('src')).toBe(locale === 'zh-CN' ? feishuLogo : discordLogo);
+  expect(link.getAttribute('aria-label')).toBeTruthy();
+  const exportButton = container.querySelector('[data-testid="header-export"]')!;
+  expect(link.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});
+
+
+it('shows connection failure as a one-line reconnecting toast and removes it on recovery', () => {
+  state.connectionError = 'Failed to fetch /private/project';
+  render();
+  const toast = container.querySelector('[data-testid="motion-connection-toast"]')!;
+  expect(toast.textContent).toBe('连接已断开重连中…');
+  expect(toast.querySelector('.truncate')).not.toBeNull();
+  expect(container.querySelector('.motion-error-notice')).toBeNull();
+  expect(toast.textContent).not.toMatch(/private|details|详情/);
+  expect(toast.querySelector('button')).toBeNull();
+  render();
+  expect(container.querySelectorAll('[data-testid="motion-connection-toast"]')).toHaveLength(1);
+  state.connectionError = '';
+  render();
+  expect(container.querySelector('[data-testid="motion-connection-toast"]')).toBeNull();
 });

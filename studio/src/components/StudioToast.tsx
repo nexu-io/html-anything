@@ -8,9 +8,11 @@ interface StudioToastProps {
   /** Plays the exit animation when true (owner removes the node after ~160ms). */
   leaving?: boolean;
   onDismiss?: () => void;
+  singleLine?: boolean;
+  status?: string;
 }
 
-export function StudioToast({ message, tone, presentation, leaving, onDismiss }: StudioToastProps) {
+export function StudioToast({ message, tone, presentation, leaving, onDismiss, singleLine, status }: StudioToastProps) {
   const { t } = useI18n();
   const isError = tone === "error";
   return (
@@ -21,7 +23,10 @@ export function StudioToast({ message, tone, presentation, leaving, onDismiss }:
       {isError && presentation !== "feedback" ? <div className="max-w-[min(420px,calc(100vw-48px))] rounded-2xl border border-danger/40 bg-raised p-3 shadow-popover">
         <ErrorNotice key={message} message={message} compact onDismiss={onDismiss} />
       </div> : <div className={`max-w-[min(420px,calc(100vw-48px))] overflow-hidden rounded-2xl px-4 py-2 text-[12px] shadow-popover bg-toast-feedback text-toast-feedback-ink`}>
-        <span className="line-clamp-3 leading-5 [overflow-wrap:anywhere]" title={systemMessage(message, t)}>{systemMessage(message, t)}</span>
+        <div className={status ? "flex min-w-0 items-center gap-3" : undefined}>
+          <span className={singleLine ? "block min-w-0 truncate leading-5" : "line-clamp-3 leading-5 [overflow-wrap:anywhere]"} title={systemMessage(message, t)}>{systemMessage(message, t)}</span>
+          {status && <span className="shrink-0 leading-5 opacity-70">{t(status)}</span>}
+        </div>
       </div>}
     </div>
   );

@@ -150,6 +150,7 @@ export const StudioHeader = memo(function StudioHeader({
         {host?.languageMenu}
         {host?.windowMenu ?? <Dock.WindowMenu />}
         {host?.desktopLink !== false && <OpenInDesktopButton />}
+        {host?.communityAction}
         <Tooltip
           disabled={host?.mvpEditor}
           label={
