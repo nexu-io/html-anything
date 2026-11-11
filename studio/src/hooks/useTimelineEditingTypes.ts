@@ -37,7 +37,11 @@ export interface UseTimelineEditingOptions {
   reloadPreview: () => void;
   previewIframeRef: RefObject<HTMLIFrameElement | null>;
   pendingTimelineEditPathRef: MutableRefObject<Set<string>>;
-  uploadProjectFiles: (files: Iterable<File>, dir?: string) => Promise<string[]>;
+  uploadProjectFiles: (
+    files: Iterable<File>,
+    dir?: string,
+    entryPoint?: import("../motion/editorTracking").ImportEntryPoint,
+  ) => Promise<string[]>;
   isRecordingRef?: RefObject<boolean>;
   /** Stage 7 §3.2: SDK session for routing timing ops through setTiming. */
   sdkSession?: Composition | null;

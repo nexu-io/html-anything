@@ -5,7 +5,8 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createTracker, deviceContext } from '../tracking/core.ts';
 import { createNodeTracking, createPosthogSender, loadIdentity } from '../tracking/node.ts';
-import { omEvents } from '../tracking/events.ts';
+import { omEvents, studioEvents } from '../tracking/events.ts';
+import { validProperties } from '../tracking/core.ts';
 import { closeTracking, createAppTracking, saveTrackingPreference, trackingError } from '../shared/tracking.ts';
 import { Phase1Service } from '../phase1.ts';
 import { renderNext } from '../server.ts';
@@ -28,6 +29,100 @@ test('Studio event types reject Node-only events and invalid semantic fields', (
     '--noEmit', '--strict', '--allowImportingTsExtensions', '--module', 'ESNext', '--moduleResolution', 'Bundler',
     '--target', 'ES2022', '--lib', 'ES2023,DOM', '--skipLibCheck', path.join(pluginRoot, 'tests/tracking-types.ts')],
   { cwd: pluginRoot, stdio: 'pipe' });
+});
+
+test('Motion editor events admit only closed categories, UUID projects and bounded counts', () => {
+  const projectId = crypto.randomUUID(), exportId = crypto.randomUUID();
+  const settings = { origin: 'export_panel', format: 'mp4', quality: 'standard', resolution: '1080p', fps: '30' };
+  const valid: Array<[string, Record<string, unknown>]> = [
+    ['studio_load_result', { load_id: exportId, outcome: 'success', duration_ms: 10, embedded: false, project_scope: 'default' }],
+    ['ui_click', { page_name: 'studio', area: 'header', element: 'export', interaction_method: 'pointer', project_scope: 'managed', project_id: projectId }],
+    ['ui_click', { page_name: 'studio', area: 'project_drawer', element: 'language_change', option: 'pt-BR' }],
+    ['studio_export_request_result', { export_id: exportId, outcome: 'rejected', ...settings, error_code: 'FFMPEG_MISSING' }],
+    ['studio_export_result', { export_id: exportId, job_state: 'failed', duration_ms: 1200, ...settings, error_code: 'RENDER_FAILED', project_id: projectId }],
+    ['studio_notice_shown', { notice: 'ffmpeg_missing' }],
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'timeline_trim', surface: 'timeline', project_scope: 'managed', project_id: projectId }],
+    ['studio_edit_result', { outcome: 'failure', edit_kind: 'other', surface: 'other', error_code: 'CONFLICT' }],
+    ['studio_history_step_result', { action: 'redo', outcome: 'unavailable', interaction_method: 'keyboard' }],
+    ['studio_asset_import_result', { outcome: 'partial', entry_point: 'assets_drop', requested_count: 3, added_count: 2, failed_count: 1, error_category: 'too_large' }],
+  ];
+  for (const [event, properties] of valid) {
+    assert.equal(validProperties(studioEvents, event, properties), true, event);
+    // Every new event is Studio-produced and so admitted by the browser ingress registry.
+    assert.deepEqual((omEvents as Record<string, { producers: readonly string[] }>)[event].producers, ['studio'], event);
+  }
+  const invalid: Array<[string, Record<string, unknown>]> = [
+    // The built-in project id is the literal `project`: it is a scope, never a project_id.
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'move', surface: 'canvas', project_id: 'project' }],
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'move', surface: 'canvas', project_name: 'Launch film' }],
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'Edit layer style', surface: 'canvas' }],
+    ['studio_edit_result', { outcome: 'success', edit_kind: 'move' }],
+    ['studio_export_request_result', { export_id: exportId, outcome: 'accepted', ...settings, composition: 'scenes/intro.html' }],
+    ['studio_export_request_result', { export_id: 'demo_2026-11-10_10-00-00', outcome: 'accepted', ...settings }],
+    ['studio_export_request_result', { export_id: exportId, outcome: 'rejected', ...settings, error_code: 'ENOENT /srv/a/b' }],
+    ['studio_export_result', { export_id: exportId, job_state: 'completed', duration_ms: 1, ...settings, filename: 'out.mp4' }],
+    ['studio_export_result', { export_id: exportId, job_state: 'completed', duration_ms: 1, ...settings, fps: 30 }],
+    ['studio_asset_import_result', { outcome: 'failure', entry_point: 'assets_button', requested_count: 1, added_count: 0, failed_count: 1, error_category: 'clip.mov too large' }],
+    ['studio_asset_import_result', { outcome: 'success', entry_point: 'assets_button', requested_count: -1, added_count: 0, failed_count: 0 }],
+    ['studio_history_step_result', { action: 'undo', outcome: 'success', label: 'Undid: Move Title' }],
+    ['studio_notice_shown', { notice: 'ffmpeg_missing', command: 'brew install ffmpeg' }],
+    ['ui_click', { page_name: 'studio', area: 'header', element: 'export', option: 'My private folder' }],
+    ['ui_click', { page_name: 'studio', area: 'assets', element: 'asset_search', query: 'invoice' }],
+  ];
+  for (const [event, properties] of invalid) assert.equal(validProperties(studioEvents, event, properties), false, JSON.stringify(properties));
+  // The worker's terminal event stays worker-only; Studio cannot submit it.
+  assert.equal(Object.hasOwn(studioEvents, 'export_result'), false);
+});
+
+test('editor dimensions are closed buckets and a bounded template id, never raw values', () => {
+  const exportId = crypto.randomUUID();
+  const settings = { origin: 'export_panel', format: 'mp4', quality: 'standard', resolution: 'auto', fps: '30' };
+  const request = { export_id: exportId, outcome: 'accepted', ...settings };
+  const result = { export_id: exportId, job_state: 'completed', duration_ms: 900, ...settings };
+  const load = { load_id: exportId, outcome: 'success', duration_ms: 10, embedded: false };
+  const ok = (event: string, properties: Record<string, unknown>) => assert.equal(validProperties(studioEvents, event, properties), true, JSON.stringify(properties));
+  const no = (event: string, properties: Record<string, unknown>) => assert.equal(validProperties(studioEvents, event, properties), false, JSON.stringify(properties));
+
+  for (const bucket of ['lt_15s', '15_60s', '1_3min', '3_10min', 'gt_10min', 'unknown']) {
+    ok('studio_export_request_result', { ...request, video_duration_bucket: bucket });
+    ok('studio_export_result', { ...result, video_duration_bucket: bucket });
+  }
+  for (const raw of [42.5, '42.5', '42s', 'long']) no('studio_export_result', { ...result, video_duration_bucket: raw });
+  no('studio_export_result', { ...result, video_duration_seconds: 42 });
+
+  for (const bucket of ['0', '1_5', '6_20', '21_50', 'gt_50', 'unknown']) {
+    ok('studio_load_result', { ...load, clip_count_bucket: bucket, asset_count_bucket: bucket });
+    ok('studio_export_request_result', { ...request, clip_count_bucket: bucket, asset_count_bucket: bucket });
+  }
+  for (const bucket of ['1', '2_5', '6_20', 'gt_20', 'unknown']) ok('studio_load_result', { ...load, composition_count_bucket: bucket });
+  no('studio_load_result', { ...load, clip_count_bucket: 37 });
+  no('studio_load_result', { ...load, asset_count_bucket: '37' });
+  no('studio_load_result', { ...load, composition_count_bucket: '0' });
+  no('studio_load_result', { ...load, project_bytes: 1024 });
+  // The terminal event describes the render, not the project: scale stays on the request.
+  no('studio_export_result', { ...result, clip_count_bucket: '1_5' });
+  // The events are still valid when a dimension is simply absent.
+  ok('studio_load_result', load); ok('studio_export_request_result', request); ok('studio_export_result', result);
+
+  const click = { page_name: 'studio', area: 'templates', element: 'copy_template' };
+  const copied = { host_product: 'codex', copy_status: 'clipboard_written' };
+  for (const id of ['product-promo', 'hf-moment-M1147', 'hf-block-ai-chat-reveal', 'a', 'A1', 'x'.repeat(64)]) {
+    ok('ui_click', { ...click, template_id: id });
+    ok('template_instruction_copy_result', { ...copied, page_name: 'studio', template_id: id });
+    ok('studio_load_result', { ...load, template_id: id });
+    ok('studio_export_request_result', { ...request, template_id: id });
+    ok('studio_export_result', { ...result, template_id: id });
+  }
+  for (const id of ['', 'x'.repeat(65), 'Launch Film', 'launch_film', 'a.b', 'a/b', '../etc', 'https://x.test/t', 'a--b', '-a', 'a-', 'café', 'a\nb', 7]) {
+    no('ui_click', { ...click, template_id: id });
+    no('studio_export_result', { ...result, template_id: id });
+  }
+  no('ui_click', { ...click, template_title: 'Product Promo' });
+  no('template_instruction_copy_result', { ...copied, template_author: 'someone' });
+  no('ui_click', { ...click, element: 'template_category', option: 'my-private-category' });
+  ok('ui_click', { ...click, element: 'template_category', option: 'featured' });
+  // No host field was added to the load event: the Studio page does not know its host.
+  no('studio_load_result', { ...load, host_product: 'codex' });
 });
 
 test('bounded queue rejects private properties, preserves UUID/time on retries and serializes flushes', async () => {

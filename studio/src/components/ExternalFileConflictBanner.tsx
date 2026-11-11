@@ -1,6 +1,8 @@
 import { useMvpEditor } from "../motion/StudioHost";
 import { ConflictNotice } from "./ConflictNotice";
 import { useI18n } from "../i18n/I18n";
+import { reportNoticeShown } from "../motion/editorTracking";
+import { useNoticeShown } from "../motion/useNoticeShown";
 import { useRef, useState } from "react";
 import type {
   ExternalFileChangeBlockedState,
@@ -167,6 +169,7 @@ export function ExternalFileConflictBanner({
   const mvp = useMvpEditor();
   const [reviewing, setReviewing] = useState(false);
   const blocked = coordinator.blocked;
+  useNoticeShown(Boolean(blocked), () => reportNoticeShown("external_file_conflict"));
   if (!blocked) return null;
   if (mvp) return <ConflictNotice key={`${blocked.generation}:${blocked.status}:${blocked.status === "conflict" ? blocked.error.filePath : blocked.path}`} coordinator={coordinator} />;
 

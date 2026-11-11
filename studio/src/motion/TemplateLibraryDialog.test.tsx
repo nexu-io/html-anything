@@ -4,6 +4,9 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { I18nProvider, useI18n } from '../i18n/I18n';
 import { TemplateLibraryDialog } from './TemplateLibraryDialog';
+import { reportTemplateEvent } from './editorTracking';
+
+vi.mock('./editorTracking', async original => ({ ...await original<typeof import('./editorTracking')>(), reportTemplateEvent: vi.fn() }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root, host: HTMLDivElement;
@@ -71,4 +74,21 @@ it('reloads template data when the editor language changes and clears language-s
   expect(host.textContent).toContain('日本語テンプレート');
   expect(host.textContent).not.toContain('First');
   expect(host.querySelectorAll('[data-template-id]')).toHaveLength(3);
+});
+
+it('reports preview, facet, copy and open through the shared template reporter', async () => {
+  const reported = vi.mocked(reportTemplateEvent); reported.mockClear();
+  await mount();
+  await act(async () => [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Figma'))!.click());
+  await act(async () => button('First').click());
+  await act(async () => button('复刻模板').click());
+  await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=复制]')!.click());
+  await act(async () => button('打开并编辑 ↗').click());
+  expect(reported.mock.calls.map(([event]) => event)).toEqual([
+    { kind: 'category', category: 'brand' },
+    { kind: 'preview', templateId: 'one' },
+    { kind: 'copy_click', templateId: 'one' },
+    { kind: 'copy_result', templateId: 'one', host: 'codex', status: 'clipboard_written' },
+    { kind: 'use', templateId: 'one' },
+  ]);
 });

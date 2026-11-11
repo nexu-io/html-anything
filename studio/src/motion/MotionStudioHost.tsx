@@ -13,6 +13,10 @@ import { MediaGatewayProvider } from './MediaGatewayContext';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
 import { trackMotion } from './tracking';
+import { clickMethod, installEditorTracking, openTemplateFields, projectFields, projectScaleFields, reportEdit, setProjectTemplate, trackStudioClick } from './editorTracking';
+import { usePlayerStore } from '../player/store/playerStore';
+
+installEditorTracking(trackMotion);
 
 function WorkspaceBrand() {
   const theme = useShownStudioTheme();
@@ -30,11 +34,18 @@ export function MotionEditorFrame({ children }: { children: ReactNode }) {
   const register = chrome?.registerEditor;
   const [saving, setSaving] = useState(isStudioEditSaving);
   const load = useRef({ id: crypto.randomUUID(), sent: false });
+  // The workspace catalogue already says which template a project came from; exports are attributed to it.
+  const templateId = chrome?.workspace.projects.find(project => project.id === projectId)?.templateId;
+  useEffect(() => { setProjectTemplate(templateId); return () => setProjectTemplate(undefined); }, [templateId]);
   useEffect(() => {
     if (load.current.sent) return;
     load.current.sent = true;
+    setProjectTemplate(templateId);
+    // Whatever is in memory right now; the timeline and file tree are usually still loading, so `unknown`.
+    const player = usePlayerStore.getState();
     void trackMotion('studio_load_result', { load_id: load.current.id, outcome: 'success',
-      embedded: workspacePresentation(location.search).embedded, duration_ms: Math.min(86_400_000, Math.round(performance.now())) });
+      embedded: workspacePresentation(location.search).embedded, duration_ms: Math.min(86_400_000, Math.round(performance.now())), ...projectFields(projectId),
+      ...projectScaleFields(player.timelineReady ? player.elements.length : undefined), ...openTemplateFields() });
   }, []);
   useEffect(() => {
     const timer = window.setInterval(() => setSaving(isStudioEditSaving()), 250);
@@ -78,7 +89,12 @@ function WorkspaceProject() {
     const nextTitle = title.trim();
     if (!project || !nextTitle || nextTitle === project.title) { finishEditing(); return; }
     savingRef.current = true;
-    try { if (await workspace.rename(project.id, nextTitle)) finishEditing(); }
+    try {
+      // The committed rename, not each keystroke; the title itself is never reported.
+      const renamed = Boolean(await workspace.rename(project.id, nextTitle));
+      reportEdit('project_rename', 'header', renamed, project.id);
+      if (renamed) finishEditing();
+    }
     finally { savingRef.current = false; }
   };
   return <span className="motion-project-control">
@@ -127,9 +143,9 @@ function WorkspaceHistoryActions() {
 
 function WorkspaceActions() {
   const { t } = useI18n();
-  const { switchingDisabled, openLibrary } = useWorkspaceChrome();
+  const { switchingDisabled, openLibrary, workspace } = useWorkspaceChrome();
   return <div className="motion-workspace-actions">
-    <button className="motion-button motion-button-quiet" aria-label={t("Template library")} title={t("Template library")} aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => openLibrary(event.currentTarget)}><MotionIcon name="grid" /><span className="motion-template-label">{t("Template library")}</span></button>
+    <button className="motion-button motion-button-quiet" aria-label={t("Template library")} title={t("Template library")} aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => { trackStudioClick('header', 'template_library', workspace.status?.projectId, clickMethod(event)); openLibrary(event.currentTarget); }}><MotionIcon name="grid" /><span className="motion-template-label">{t("Template library")}</span></button>
   </div>;
 }
 

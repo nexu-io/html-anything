@@ -1,4 +1,6 @@
 import { useI18n } from "../i18n/I18n";
+import { reportNoticeShown } from "../motion/editorTracking";
+import { useNoticeShown } from "../motion/useNoticeShown";
 import { useEffect, useState } from "react";
 import { studioApiFetch } from "../utils/studioApiFetch";
 
@@ -31,6 +33,7 @@ interface ProjectUnreachableBannerProps {
 export function ProjectUnreachableBanner({ projectId }: ProjectUnreachableBannerProps) {
   const { t } = useI18n();
   const [served, setServed] = useState<ServedProject[] | null>(null);
+  useNoticeShown(served !== null, () => reportNoticeShown("project_unreachable"));
 
   useEffect(() => {
     let cancelled = false;

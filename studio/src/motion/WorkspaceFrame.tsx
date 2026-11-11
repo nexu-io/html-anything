@@ -11,6 +11,7 @@ import { ErrorNotice } from '../components/ui/ErrorNotice';
 import { isConnectionFailure } from '../components/ui/errorNoticeMessage';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
+import { clickMethod, clickOption, searchStarted, trackStudioClick } from './editorTracking';
 
 const PrivacySettings = lazy(() => import('./PrivacySettings').then(module => ({ default: module.PrivacySettings })));
 
@@ -85,13 +86,13 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
       </div>
     </div>
     </Dialog.Root>
-    {connectionsOpen && <ConnectionDialog open returnFocus={libraryTrigger.current} section={connectionSection} busy={switchingDisabled} error={workspace.error} onClose={() => setConnectionsOpen(false)} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
+    {connectionsOpen && <ConnectionDialog open projectId={projectId} returnFocus={libraryTrigger.current} section={connectionSection} busy={switchingDisabled} error={workspace.error} onClose={() => setConnectionsOpen(false)} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
   </WorkspaceChromeContext.Provider>;
 }
 
 function PrivacySettingsButton() {
   const { t } = useI18n(); const [open, setOpen] = useState(false);
-  return <><button className="motion-icon-button" aria-label={t('Privacy settings')} title={t('Privacy settings')} onClick={() => setOpen(true)}><MotionIcon name="eye" /></button>
+  return <><button className="motion-icon-button" aria-label={t('Privacy settings')} title={t('Privacy settings')} onClick={event => { trackStudioClick('project_drawer', 'privacy_settings', undefined, clickMethod(event)); setOpen(true); }}><MotionIcon name="eye" /></button>
     {open && <Suspense fallback={null}><PrivacySettings onClose={() => setOpen(false)} /></Suspense>}</>;
 }
 
@@ -112,28 +113,30 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
     <div className="motion-session-heading">
       <span>{t('Projects')}</span>
       <Tooltip label={t('New project')}>
-        <button type="button" className="motion-icon-button" aria-label={t('New project')} disabled={switchingDisabled} onClick={() => void workspace.create()}>
+        <button type="button" className="motion-icon-button" aria-label={t('New project')} disabled={switchingDisabled} onClick={event => { trackStudioClick('project_drawer', 'new_project', currentId, clickMethod(event)); void workspace.create(); }}>
           <MotionIcon name="plus" size={16} />
         </button>
       </Tooltip>
     </div>
-    <label className="motion-session-search"><MotionIcon name="search" /><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={t('Search projects…')} aria-label={t('Search projects')} /></label>
+    <label className="motion-session-search"><MotionIcon name="search" /><input type="search" value={query} onChange={event => { if (searchStarted(query, event.target.value)) trackStudioClick('project_drawer', 'project_search', currentId); setQuery(event.target.value); }} placeholder={t('Search projects…')} aria-label={t('Search projects')} /></label>
     <nav className="motion-session-list" aria-label={t('Project list')}>
       {!workspace.status && !workspace.error && <p className="motion-session-empty" role="status">{t('Loading projects…')}</p>}
       {workspace.status && !filtered.length && <p className="motion-session-empty">{t(query ? 'No matching projects' : 'Create a project with your Agent to start editing.')}</p>}
       {filtered.map(project => <button key={project.id} className="motion-session" aria-current={currentId === project.id ? 'page' : undefined}
-        title={project.title} disabled={switchingDisabled} onClick={() => { if (project.id === currentId) close(); else void workspace.open('projects', project.id); }}>
+        title={project.title} disabled={switchingDisabled} onClick={event => { if (project.id === currentId) close(); else { trackStudioClick('project_drawer', 'switch_project', currentId, clickMethod(event)); void workspace.open('projects', project.id); } }}>
         <span className="motion-session-dot" aria-hidden="true" /><span><strong>{project.title}</strong></span>
       </button>)}
     </nav>
     <footer className="motion-sidebar-footer">
-      <div className="motion-sidebar-settings"><PrivacySettingsButton /><ThemeToggle /><LanguageMenu /></div>
+      <div className="motion-sidebar-settings"><PrivacySettingsButton />
+        <span style={{ display: 'contents' }} onClickCapture={event => trackStudioClick('project_drawer', 'theme_toggle', currentId, clickMethod(event), theme === 'dark' ? 'light' : 'dark')}><ThemeToggle /></span>
+        <LanguageMenu onChange={locale => trackStudioClick('project_drawer', 'language_change', currentId, undefined, clickOption(locale))} /></div>
     </footer>
   </aside>;
 }
 
 export function WorkspaceMenuButton() {
   const { t } = useI18n();
-  const { toggleSidebar, sidebarOpen } = useWorkspaceChrome();
-  return <button className="motion-icon-button motion-workspace-menu" onClick={toggleSidebar} aria-expanded={sidebarOpen} title={t(sidebarOpen ? 'Collapse project list' : 'Open project list')} aria-label={t(sidebarOpen ? 'Collapse project list' : 'Open project list')}><MotionIcon name="sidebar" size={16} /></button>;
+  const { toggleSidebar, sidebarOpen, workspace } = useWorkspaceChrome();
+  return <button className="motion-icon-button motion-workspace-menu" onClick={event => { if (!sidebarOpen) trackStudioClick('header', 'open_project_drawer', workspace.status?.projectId, clickMethod(event)); toggleSidebar(); }} aria-expanded={sidebarOpen} title={t(sidebarOpen ? 'Collapse project list' : 'Open project list')} aria-label={t(sidebarOpen ? 'Collapse project list' : 'Open project list')}><MotionIcon name="sidebar" size={16} /></button>;
 }

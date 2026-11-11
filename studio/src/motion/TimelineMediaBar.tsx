@@ -13,6 +13,7 @@ import { EditPopover } from '../player/components/EditModal';
 import { useArtifactViewActive } from './ArtifactViewState';
 import { useMediaPopoverPosition } from './useMediaPopoverPosition';
 import type { MediaPopoverAnchor } from './mediaPopoverPosition';
+import { trackStudioClick } from './editorTracking';
 
 export function TimelineMediaBar() {
   const gateway = useMediaGateway();
@@ -115,6 +116,7 @@ function ConnectedTimelineMediaBar() {
     return () => { cancel(); document.removeEventListener('pointermove', move); document.removeEventListener('pointerdown', outside, true); };
   }, [hidden, ask, identity, anchor, popover.ref]);
   if (hidden) return null;
+  const askAgent = () => { trackStudioClick('timeline', range ? 'ask_agent_time_range' : clip ? 'ask_agent_clip' : 'ask_agent_playhead', shell?.projectId); setAsk(true); };
   const close = () => { setDismissed(identity); setAsk(false); };
   const open = (edit = false) => gateway.openGenerator({ prompt, placement: { start, duration: Math.max(.1, duration), track: clip?.track ?? 0 },
     anchor, modality: media?.modality, selection: media, ...(edit ? { intent: 'edit' as const } : {}) });
@@ -127,7 +129,7 @@ function ConnectedTimelineMediaBar() {
         <input aria-label={t('Timeline media prompt')} value={prompt} onChange={e => setPrompt(e.target.value)} placeholder={t(media?.modality === 'image' ? 'Describe a new image or how to change this one…' : 'Describe what goes here…')} />
         <button type="submit">{t('Generate media')}</button>
         {media?.modality === 'image' && <button type="button" className="motion-media-primary" onClick={() => open(true)}>{t('Edit image')}</button>}
-        <button type="button" onClick={() => setAsk(true)}>{t('Ask Agent')}</button>
+        <button type="button" onClick={askAgent}>{t('Ask Agent')}</button>
       </form>
     </aside>, host);
 }

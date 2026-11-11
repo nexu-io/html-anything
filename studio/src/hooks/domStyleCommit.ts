@@ -1,4 +1,5 @@
 import type { PatchOperation } from "../utils/sourcePatcher";
+import { styleEditKind, withEditKind } from "../motion/editorTracking";
 import { styleHistoryLabel } from "../i18n/styleHistory";
 import {
   cssPropertyName,
@@ -104,12 +105,18 @@ export async function commitDomStyles(
       }
     },
     persist: () =>
-      persistDomEditOperations(selection, operations, {
-        label: styleHistoryLabel(selection.textContent || selection.label || selection.id || selection.tagName, Object.fromEntries(entries.map(([property, value]) => [property, normalizeDomEditStyleValue(property, value)]))),
-        // Inline styles are already live, so a reload would only blank the preview.
-        skipRefresh: true,
-        importedFont: importedFont ?? undefined,
-      }),
+      {
+        const label = styleHistoryLabel(selection.textContent || selection.label || selection.id || selection.tagName, Object.fromEntries(entries.map(([property, value]) => [property, normalizeDomEditStyleValue(property, value)])));
+        // The label only pairs this commit with its history entry in memory; the reported value is the kind.
+        return withEditKind(label, styleEditKind(entries.map(([property]) => property)), () =>
+          persistDomEditOperations(selection, operations, {
+            label,
+            // Inline styles are already live, so a reload would only blank the preview.
+            skipRefresh: true,
+            importedFont: importedFont ?? undefined,
+          }),
+        );
+      },
     shouldRevert: ownsAny,
     revert: () => {
       // ponytail: background-image fit styles are not reverted here.

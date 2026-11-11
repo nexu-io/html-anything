@@ -9,6 +9,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FfmpegRequiredNotice } from "./FfmpegRequiredNotice";
 import type { FfmpegStatus } from "./useFfmpegStatus";
+import { installEditorTracking } from "../../motion/editorTracking";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
@@ -101,5 +102,25 @@ describe("FfmpegRequiredNotice", () => {
 
     expect(host.querySelector("code")).toBeNull();
     expect(host.textContent).toContain("See the download page.");
+  });
+});
+
+describe("FFmpeg notice exposure", () => {
+  it("is reported once while the card stays on screen, and again when it is shown again", () => {
+    const sent = vi.fn((_event: string, _properties: Record<string, unknown>) => "queued");
+    installEditorTracking(sent as never);
+    try {
+      const shown = () => sent.mock.calls.filter(([event]) => event === "studio_notice_shown");
+      render({ checking: false });
+      render({ checking: true });
+      render({ checking: false });
+      expect(shown()).toEqual([["studio_notice_shown", { notice: "ffmpeg_missing" }]]);
+      act(() => root?.unmount());
+      root = createRoot(host);
+      render({ checking: false });
+      expect(shown()).toHaveLength(2);
+    } finally {
+      installEditorTracking(undefined);
+    }
   });
 });

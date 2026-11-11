@@ -10,6 +10,7 @@ import {
   hasStudioPendingEdits,
   paintBackNewestStudioPendingEdit,
 } from "../utils/studioPendingEdits";
+import { reportHistoryStep, takeHistoryTrigger } from "../motion/editorTracking";
 
 interface HistoryResult {
   ok: boolean;
@@ -53,6 +54,7 @@ export interface UseEditHistoryActionsOptions {
   activeCompPath?: string | null;
   /** Reloads the SDK session after a revert of the active comp, past the self-write suppress window. */
   forceReloadSdkSession?: () => void;
+  projectId?: string | null;
 }
 
 /** Takes one step of the project's history: the single owner of undo/redo over project files. */
@@ -68,6 +70,7 @@ export function useEditHistoryActions({
   onAfterUndoRedo,
   activeCompPath,
   forceReloadSdkSession,
+  projectId,
 }: UseEditHistoryActionsOptions) {
   const historyRef = useRef(editHistory);
   historyRef.current = editHistory;
@@ -85,9 +88,13 @@ export function useEditHistoryActions({
   const apply = useCallback(
     async (direction: "undo" | "redo") => {
       const noun = direction === "undo" ? "Undo" : "Redo";
-      if (direction === "undo" && cancelNewestStudioWaitingPress()) return;
+      const method = takeHistoryTrigger();
+      // One result per step the person asked for; the step itself never waits on this.
+      const report = (outcome: "success" | "unavailable" | "failure") =>
+        reportHistoryStep(direction, outcome, projectId, method);
+      if (direction === "undo" && cancelNewestStudioWaitingPress()) return report("success");
       const available = direction === "undo" ? historyRef.current.canUndo : historyRef.current.canRedo;
-      if (!available && !(direction === "undo" && hasStudioPendingEdits())) return;
+      if (!available && !(direction === "undo" && hasStudioPendingEdits())) return report("unavailable");
       // An edit still saving is newer than any step this tab predicts, so it paints back first.
       const pendingEditShown = direction === "undo" ? paintBackNewestStudioPendingEdit() : null;
       const predicted = pendingEditShown ? null : (editHistory.predict?.(direction) ?? null);
@@ -103,7 +110,7 @@ export function useEditHistoryActions({
       try {
         await waitForPendingDomEditSaves();
         revertIsTheUndo = Boolean(pendingEditShown && !(await pendingEditShown.landed()));
-        if (revertIsTheUndo) return;
+        if (revertIsTheUndo) return report("success");
         result = await editHistory[direction]({
           readFile: readHistoryFile,
           serialize: serializeHistoryFiles,
@@ -116,10 +123,14 @@ export function useEditHistoryActions({
         serverSteppedShown = predictedShown
           ? stepped && result.undoes === predicted?.id
           : stepped && editClaimed;
+      } catch (error) {
+        report("failure");
+        throw error;
       } finally {
         if (putBack && !serverSteppedShown && !revertIsTheUndo) putBack();
         shownLanded?.();
       }
+      report(result.ok && result.label ? "success" : result.reason === "failed" ? "failure" : "unavailable");
       if (!result.ok && result.reason === "content-mismatch") {
         showToast(
           `Can't ${direction}: ${result.paths?.join(", ")} changed since that edit.`,
@@ -157,6 +168,7 @@ export function useEditHistoryActions({
       onAfterUndoRedo,
       activeCompPath,
       forceReloadSdkSession,
+      projectId,
     ],
   );
 

@@ -1,4 +1,5 @@
 import { trackPreviewFeatureUsed } from "../utils/previewFeatureUsage";
+import { styleEditKind, withEditKind } from "../motion/editorTracking";
 import { useCallback, useRef } from "react";
 import { refreshTimelineRowText } from "./refreshTimelineRowText";
 import { normalizeDomEditStyleValue } from "../utils/studioHelpers";
@@ -429,7 +430,9 @@ export function useDomEditTextCommits({
           : entry,
       );
 
-      await commitDomTextFields(domEditSelection, nextTextFields, { importedFont });
+      await withEditKind("Edit text", styleEditKind([property]), async () =>
+        commitDomTextFields(domEditSelection, nextTextFields, { importedFont }),
+      );
     },
     [
       commitDomTextFields,

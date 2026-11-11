@@ -5,10 +5,18 @@ import type { IntegrationHost, IntegrationInfo } from '../shared/integration';
 import { TemplatePlayback } from './template-playback';
 import type { FragmentI18n } from './i18n';
 
+/** What a person did in the gallery, for an embedding page that measures usage. Ids only, never titles. */
+export type TemplateGalleryEvent = (event:
+  | { kind: 'copy_click' | 'preview' | 'use'; templateId: string }
+  | { kind: 'copy_result'; templateId: string; host: IntegrationHost; status: 'clipboard_written' | 'manual_fallback_shown' | 'failed' }
+  | { kind: 'category'; category: string }
+  | { kind: 'search' }) => void;
+
 export function mountTemplates(root: HTMLElement, options: {
   info: () => IntegrationInfo | null; host: () => IntegrationHost;
-  copy: (value: string, label: string, button?: HTMLButtonElement) => Promise<void>;
+  copy: (value: string, label: string, button?: HTMLButtonElement) => Promise<'clipboard_written' | 'manual_fallback_shown' | void>;
   useTemplate: (id: string) => void;
+  onEvent?: TemplateGalleryEvent;
   language: FragmentI18n;
 }) {
   const { language } = options, { t } = language;
@@ -24,12 +32,21 @@ export function mountTemplates(root: HTMLElement, options: {
   let request: AbortController | undefined, sequence = 0, shown = 0, preview: GalleryTemplate | undefined;
   let previewCleanup = () => {}, rotation: ReturnType<typeof setInterval> | undefined, debounce: ReturnType<typeof setTimeout> | undefined;
   const canCopy = () => !!options.info() && options.host() !== 'chatgpt';
+  // Measuring must never break the gallery.
+  const report: TemplateGalleryEvent = event => { try { options.onEvent?.(event); } catch { /* ignore */ } };
+  let searching = false;
   const glyph = (name: string) => {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
     svg.setAttribute('class', 'ui-icon'); svg.setAttribute('aria-hidden', 'true'); use.setAttribute('href', '/web/design-system/icons.svg#icon-' + name); svg.append(use); return svg;
   };
   const copyTemplate = (template: GalleryTemplate, button: HTMLButtonElement) => {
-    const info = options.info(); if (info && canCopy()) void options.copy(templatePrompt(info, options.host(), template, language.locale), 'Template instruction', button);
+    const info = options.info(); if (!info || !canCopy()) return;
+    const host = options.host();
+    report({ kind: 'copy_click', templateId: template.id });
+    // The result is what the copy actually did: clipboard written, manual fallback shown, or neither.
+    void options.copy(templatePrompt(info, host, template, language.locale), 'Template instruction', button)
+      .then(status => report({ kind: 'copy_result', templateId: template.id, host, status: status ?? 'clipboard_written' }),
+        () => report({ kind: 'copy_result', templateId: template.id, host, status: 'failed' }));
   };
   function configurePlayback() {
     playback.configure(active && enabled && !dialog.open && !document.hidden, window.innerWidth < 680 ? 1 : 2);
@@ -171,19 +188,24 @@ export function mountTemplates(root: HTMLElement, options: {
     }).catch(() => {});
   }, 5_000);
   lifetime.signal.addEventListener('abort', () => clearInterval(catalogTimer), { once: true });
-  function chooseCategory(button: HTMLButtonElement) {
-    clearTimeout(debounce); category = button.dataset.category!;
+  function chooseCategory(button: HTMLButtonElement, chosen = false) {
+    clearTimeout(debounce);
+    if (chosen && button.dataset.category !== category) report({ kind: 'category', category: button.dataset.category! });
+    category = button.dataset.category!;
     root.querySelectorAll<HTMLButtonElement>('[data-category]').forEach(item => { const selected = item === button; item.setAttribute('aria-selected', String(selected)); item.tabIndex = selected ? 0 : -1; });
     element('template-panel').setAttribute('aria-labelledby', button.id); void load(true);
   }
-  root.querySelectorAll<HTMLButtonElement>('[data-category]').forEach(button => button.onclick = () => chooseCategory(button));
+  root.querySelectorAll<HTMLButtonElement>('[data-category]').forEach(button => button.onclick = () => chooseCategory(button, true));
   element('template-tabs').onkeydown = event => {
     const buttons = [...element('template-tabs').querySelectorAll<HTMLButtonElement>('button')], index = buttons.indexOf(document.activeElement as HTMLButtonElement);
     if (index < 0 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault(); const target = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + buttons.length) % buttons.length;
-    buttons[target].focus(); chooseCategory(buttons[target]);
+    buttons[target].focus(); chooseCategory(buttons[target], true);
   };
-  search.oninput = () => { clearTimeout(debounce); request?.abort(); debounce = setTimeout(() => { element('templates').scrollIntoView({ block: 'start' }); void load(true); }, 180); };
+  search.oninput = () => {
+    // One use per search: when the box goes from empty to holding text, not per keystroke.
+    const filled = Boolean(search.value.trim()); if (filled && !searching) report({ kind: 'search' }); searching = filled;
+    clearTimeout(debounce); request?.abort(); debounce = setTimeout(() => { element('templates').scrollIntoView({ block: 'start' }); void load(true); }, 180); };
   element('more-templates').onclick = () => { if (next !== null && !request) void load(false); };
   element('retry-catalog').onclick = () => void load(shown === 0);
   function renderPlayback() {
@@ -268,6 +290,7 @@ export function mountTemplates(root: HTMLElement, options: {
     language.text(label, '{collection} · Template content', () => ({ collection: t(collectionNames[template.collection]) })); title.textContent = template.title; text.textContent = template.description || template.subtitle; content.append(label, title, text); return content;
   }
   function showPreview(template: GalleryTemplate) {
+    report({ kind: 'preview', templateId: template.id });
     const variants = template.variants || [template], select = element<HTMLSelectElement>('preview-variants');
     element('preview-variants-field').hidden = variants.length < 2; language.text(element('preview-variants-label'), 'Related references · {count}', { count: variants.length });
     select.replaceChildren(...variants.map(item => { const option = document.createElement('option'); option.value = item.id; language.text(option, '{collection} · {title}', () => ({ collection: t(collectionNames[item.collection]), title: item.title })); return option; }));
@@ -277,13 +300,13 @@ export function mountTemplates(root: HTMLElement, options: {
   element('close-template-preview').onclick = () => dialog.close();
   dialog.addEventListener('close', () => { previewCleanup(); previewCleanup = () => {}; preview = undefined; configurePlayback(); }, { signal: lifetime.signal });
   element('copy-preview-template').onclick = event => { if (preview) copyTemplate(preview, event.currentTarget as HTMLButtonElement); };
-  element('use-preview-template').onclick = () => { if (preview && isEditableTemplate(preview)) { const id = preview.id; dialog.close(); options.useTemplate(id); } };
+  element('use-preview-template').onclick = () => { if (preview && isEditableTemplate(preview)) { const id = preview.id; dialog.close(); report({ kind: 'use', templateId: id }); options.useTemplate(id); } };
   document.addEventListener('visibilitychange', configurePlayback, { signal: lifetime.signal });
   function suspend() { active = false; if (request) { request.abort(); loaded = false; } clearTimeout(debounce); clearInterval(rotation); configurePlayback(); if (dialog.open) dialog.close(); previewCleanup(); }
   return {
     updateConnection,
     setLanguage() { if (dialog.open) dialog.close(); loaded = false; if (active) void load(true); },
-    showAll() { search.value = ''; chooseCategory(element<HTMLButtonElement>('template-tab-featured')); },
+    showAll() { search.value = ''; searching = false; chooseCategory(element<HTMLButtonElement>('template-tab-featured')); },
     resume() { active = true; if (!loaded) void load(true); clearInterval(rotation); rotation = setInterval(() => { if (active && enabled && !dialog.open && !document.hidden) playback.advance(); }, 4200); configurePlayback(); },
     suspend,
     destroy() { suspend(); lifetime.abort(); cleanups.splice(0).forEach(clean => clean()); element('template-grid').replaceChildren(); },

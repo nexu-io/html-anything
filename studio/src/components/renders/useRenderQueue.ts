@@ -11,6 +11,18 @@ import { readServerError } from "./serverError";
 import { ffmpegInstallMessage, useFfmpegStatus } from "./useFfmpegStatus";
 import { requestStudioFeedback, type FeedbackContext } from "../feedback/feedbackTrigger";
 import { studioApiFetch, studioProjectUrl } from "../../utils/studioApiFetch";
+import { usePlayerStore } from "../../player/store/playerStore";
+import {
+  durationBucket,
+  exportRejection,
+  exportSettings,
+  openTemplateFields,
+  projectScaleFields,
+  projectFields,
+  reportExportRequest,
+  reportExportResult,
+  type ExportOrigin,
+} from "../../motion/editorTracking";
 
 export interface RenderJob {
   id: string;
@@ -48,6 +60,8 @@ export interface StartRenderOptions {
    * `hyperframes render --variables` uses.
    */
   variables?: Record<string, unknown>;
+  /** Which control asked for this render. Reported as a category only; defaults to the header. */
+  origin?: ExportOrigin;
 }
 
 // "Hide" (formerly "Clear") is a view operation, not a delete: hidden ids are
@@ -110,6 +124,25 @@ export function useRenderQueue(
   // never trigger a feedback prompt — the user did not just watch them happen.
   const sessionJobs = useRef(new Map<string, FeedbackContext>());
   const promptedJobIds = useRef(new Set<string>());
+  // Accepted renders this tab started and has not yet reported a terminal state for.
+  // Cancels are optimistic: the row flips to "cancelled" before the server confirms, and a
+  // render that had already finished is reconciled afterwards. Hold the terminal report until then.
+  const cancelling = useRef(new Set<string>());
+  // What the cancel route said the render had already become, when it was not "cancelled".
+  const settledBeforeCancel = useRef(new Map<string, "completed" | "failed">());
+  // Cancels the server never confirmed: the render may still be running, so no outcome is reported.
+  const unconfirmedCancels = useRef(new Set<string>());
+  const [cancelSettled, setCancelSettled] = useState(0);
+  const trackedExports = useRef(
+    new Map<
+      string,
+      {
+        exportId: string;
+        settings: ReturnType<typeof exportSettings> & { video_duration_bucket: ReturnType<typeof durationBucket>; template_id?: string };
+        lost?: boolean;
+      }
+    >(),
+  );
 
   /**
    * The one way a render started here enters the list. Every start path — the
@@ -186,10 +219,38 @@ export function useRenderQueue(
         setActionError("No content to export. Add media first.");
         return;
       }
+      // One request result per start attempt. The id is minted here because the
+      // server's job id embeds the project id and a timestamp.
+      const exportId = generateId();
+      // Length and size of what is being rendered, from the player's memory at request time, bucketed.
+      // A composition other than the open one has no loaded timeline here, so it reports `unknown`.
+      const player = usePlayerStore.getState();
+      const openComposition = !opts.composition || opts.composition === activeCompPathRef.current;
+      const timeline = openComposition && player.timelineReady;
+      const tracked = {
+        ...exportSettings(opts.origin, opts),
+        video_duration_bucket: durationBucket(timeline ? player.duration : undefined),
+        ...openTemplateFields(),
+      };
+      const scale = projectScaleFields(timeline ? player.elements.length : undefined);
+      const requestResult = (
+        outcome: "accepted" | "rejected",
+        error_code?: Parameters<typeof reportExportRequest>[0]["error_code"],
+      ) =>
+        reportExportRequest({
+          export_id: exportId,
+          outcome,
+          ...tracked,
+          ...scale,
+          ...(error_code ? { error_code } : {}),
+          ...projectFields(projectId),
+        });
       // The server would answer this with a 503 anyway. Refusing here keeps
       // the reason and the fix in the message, and keeps a control that
       // forgot to disable itself from producing a mystery failure.
       if (ffmpegMissing) {
+        // Components still preparing are a different refusal from a machine without FFmpeg.
+        requestResult("rejected", ffmpeg?.runtime ? "RUNTIME_NOT_READY" : "FFMPEG_MISSING");
         if (ffmpeg?.runtime) return;
         addSessionJob(
           {
@@ -291,6 +352,7 @@ export function useRenderQueue(
         // report too, so field reports of a render that fails *every time*
         // still carried nothing to act on. Keep the CLI guidance, name the
         // cause after it.
+        requestResult("rejected", "SERVER_UNREACHABLE");
         const cause = err instanceof Error ? err.message : String(err);
         const failedJob: RenderJob = {
           id: generateId(),
@@ -305,10 +367,12 @@ export function useRenderQueue(
       }
       if (!res.ok) {
         if (res.status === 409 && (await res.clone().json().catch(() => null))?.code === 'NATIVE_RUNTIME_NOT_READY') {
+          requestResult("rejected", "RUNTIME_NOT_READY");
           setActionError('Video components are not ready. Check preparation status.');
           recheckFfmpeg(false);
           return;
         }
+        requestResult("rejected", exportRejection(res.status));
         const failedJob: RenderJob = {
           id: generateId(),
           status: "failed",
@@ -321,6 +385,10 @@ export function useRenderQueue(
         return;
       }
       const { jobId } = await res.json();
+      if (typeof jobId === "string" && jobId) {
+        requestResult("accepted");
+        trackedExports.current.set(jobId, { exportId, settings: tracked });
+      } else requestResult("rejected", "INVALID_RESPONSE");
 
       const FORMAT_EXT: Record<string, string> = {
         mp4: ".mp4",
@@ -372,6 +440,8 @@ export function useRenderQueue(
 
       es.onerror = () => {
         es.close();
+        const lost = trackedExports.current.get(jobId);
+        if (lost) lost.lost = true;
         setJobs((prev) =>
           prev.map((j) =>
             j.id === jobId && j.status === "rendering"
@@ -396,6 +466,7 @@ export function useRenderQueue(
   const cancelRender = useCallback(
     async (jobId: string) => {
       setActionError(null);
+      cancelling.current.add(jobId);
       closeActiveEventSource(jobId);
       setJobs((prev) =>
         prev.map((j) =>
@@ -405,6 +476,7 @@ export function useRenderQueue(
       try {
         const res = await studioApiFetch(`/api/render/${jobId}/cancel`, { method: "POST" });
         if (!res.ok && res.status !== 404) {
+          unconfirmedCancels.current.add(jobId);
           setActionError("Couldn't cancel on the server. The render may still be running.");
           return;
         }
@@ -415,11 +487,17 @@ export function useRenderQueue(
         if (res.ok) {
           const body = (await res.json().catch(() => null)) as { status?: string } | null;
           if (body?.status && body.status !== "cancelled") {
-            void loadRenders();
+            if (body.status === "complete") settledBeforeCancel.current.set(jobId, "completed");
+            else if (body.status === "failed") settledBeforeCancel.current.set(jobId, "failed");
+            await loadRenders();
           }
         }
       } catch {
+        unconfirmedCancels.current.add(jobId);
         setActionError("Couldn't reach the server to cancel. The render may still be running.");
+      } finally {
+        cancelling.current.delete(jobId);
+        setCancelSettled((n) => n + 1);
       }
     },
     [closeActiveEventSource, loadRenders],
@@ -466,6 +544,27 @@ export function useRenderQueue(
   // keeps one trigger for every path, including SSE drops and cancels-that-
   // finished-anyway. `requestStudioFeedback` decides whether to actually ask.
   useEffect(() => {
+    // The terminal state this tab observed, once per accepted render. Rows loaded
+    // from disk history and rows for refused starts were never tracked here.
+    for (const job of jobs) {
+      const started = job.status === "rendering" ? undefined : trackedExports.current.get(job.id);
+      if (!started) continue;
+      if (job.status === "cancelled" && cancelling.current.has(job.id)) continue;
+      trackedExports.current.delete(job.id);
+      if (unconfirmedCancels.current.delete(job.id)) continue;
+      const reconciled = settledBeforeCancel.current.get(job.id);
+      settledBeforeCancel.current.delete(job.id);
+      reportExportResult({
+        export_id: started.exportId,
+        job_state: reconciled ?? (job.status === "complete" ? "completed" : job.status === "cancelled" ? "cancelled" : "failed"),
+        duration_ms: Math.min(86_400_000, Math.max(0, Math.round(job.durationMs ?? Date.now() - job.createdAt))),
+        ...started.settings,
+        ...((reconciled ?? job.status) === "failed"
+          ? { error_code: started.lost ? ("CONNECTION_LOST" as const) : ("RENDER_FAILED" as const) }
+          : {}),
+        ...projectFields(projectId),
+      });
+    }
     for (const job of jobs) {
       if (job.status === "rendering" || job.status === "cancelled") continue;
       const settings = sessionJobs.current.get(job.id);
@@ -489,13 +588,14 @@ export function useRenderQueue(
         },
       });
     }
-  }, [jobs]);
+  }, [jobs, projectId, cancelSettled]);
 
   // Clean up EventSource on unmount or projectId change
   useEffect(() => {
     return () => {
       eventSourceRef.current?.close();
       eventSourceRef.current = null;
+      trackedExports.current.clear();
     };
   }, [projectId]);
 

@@ -13,6 +13,7 @@ import { OpenInDesktopButton } from "./OpenInDesktopButton";
 import { HyperframesLogo } from "./ui/HyperframesLogo";
 import { ShowThemeToggle, ThemeToggle } from "./ThemeToggle";
 import { useStudioHost } from "../motion/StudioHost";
+import { clickMethod, trackStudioClick } from "../motion/editorTracking";
 
 interface StudioHeaderProps {
   captureFrameHref: string;
@@ -167,9 +168,14 @@ export const StudioHeader = memo(function StudioHeader({
             ref={exportTriggerRef}
             aria-haspopup={host?.mvpEditor ? "dialog" : undefined}
             disabled={!host?.mvpEditor && isRendering}
-            onClick={() => {
-              if (host?.mvpEditor) { setExportOpen(true); return; }
+            onClick={(event) => {
+              if (host?.mvpEditor) {
+                trackStudioClick("header", "export", projectId, clickMethod(event));
+                setExportOpen(true);
+                return;
+              }
               if (isRendering) return;
+              trackStudioClick("header", "export", projectId, clickMethod(event));
               setRightPanelTab("renders");
               setRightCollapsed(false);
               // Without an encoder this render cannot finish, so the click

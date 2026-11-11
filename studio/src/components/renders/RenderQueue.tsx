@@ -28,6 +28,8 @@ import {
 import { GpuEncodingToggle } from "./GpuEncodingToggle";
 import { GifLoopInput, isInvalidGifLoop } from "./GifLoopInput";
 import { trackStudioEvent } from "../../utils/studioTelemetry";
+import { clickMethod, trackStudioClick } from "../../motion/editorTracking";
+import { useStudioShellContextOptional } from "../../contexts/StudioContext";
 
 export interface CompositionDimensions {
   width: number;
@@ -277,6 +279,7 @@ function FormatExportButton({
   const { t } = useI18n();
   const persisted = getPersistedRenderSettings();
   const mvp = useMvpEditor();
+  const projectId = useStudioShellContextOptional()?.projectId;
   const [format, setFormat] = useState<"mp4" | "webm" | "mov" | "gif">(persisted.format);
   const [quality, setQuality] = useState<"draft" | "standard" | "high">(persisted.quality);
   const [resolution, setResolution] = useState<RenderScale>("auto");
@@ -301,6 +304,7 @@ function FormatExportButton({
     <div className="flex flex-col gap-3">
       {missingFfmpeg && !missingFfmpeg.runtime && (
         <FfmpegRequiredNotice
+          projectId={projectId}
           status={missingFfmpeg}
           checking={ffmpegChecking}
           onRecheck={onRecheckFfmpeg}
@@ -394,10 +398,11 @@ function FormatExportButton({
         loading={isRendering}
         disabled={exportBlocked}
         title={missingFfmpeg ? t("Install FFmpeg to export. See the note above.") : undefined}
-        onClick={() => {
+        onClick={(event) => {
           // loading already disables the button; this guard also stops a
           // double-click in the same frame from enqueueing two renders.
           if (exportBlocked) return;
+          trackStudioClick("export_panel", "start_export", projectId, clickMethod(event));
           const outputResolution = resolveResolution(resolution, compositionDimensions);
           trackStudioEvent("render_start", { format, quality, resolution: outputResolution, fps });
           void startConfiguredRender(onStartRender, {

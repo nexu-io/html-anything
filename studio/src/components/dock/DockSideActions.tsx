@@ -4,7 +4,8 @@ import type { IDockviewHeaderActionsProps } from "dockview-react";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { IconButton, Tooltip } from "../ui";
-import { TAB_ICONS } from "./DockTab";
+import { TAB_CLICKS, TAB_ICONS } from "./DockTab";
+import { clickMethod, trackStudioClick } from "../../motion/editorTracking";
 import { useDockLayoutStore } from "./dockLayoutStore";
 import { isPanelId, PANEL_DEFINITIONS } from "./panelRegistry";
 
@@ -47,6 +48,9 @@ export function DockSideActions({ group, panels }: Pick<IDockviewHeaderActionsPr
           return <Tooltip key={id} label={title} side={zone === "left" ? "right" : "left"}>
             <IconButton size="lg" aria-label={title} aria-expanded={false}
               icon={<Icon size={16} />} onClick={event => {
+                // The rail opens a panel without going through its tab, so it reports the same tab click.
+                const click = TAB_CLICKS[id as keyof typeof TAB_CLICKS];
+                if (click) trackStudioClick(click[0], click[1], undefined, clickMethod(event));
                 controller?.setGroupCollapsed?.(id, false, event.detail > 0);
                 activatePanel(id);
               }} />

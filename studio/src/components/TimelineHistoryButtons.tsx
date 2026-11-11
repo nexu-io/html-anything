@@ -6,6 +6,7 @@ import { historyEntryLabel } from '../i18n/historyMessages';
 import { getHistoryShortcutLabel } from '../utils/studioHelpers';
 import { flatBtn, flatDisabled, flatIdle } from "./timelineToolbarStyles";
 import { Tooltip } from "./ui";
+import { clickMethod, noteHistoryTrigger } from "../motion/editorTracking";
 import { useMvpEditor } from "../motion/StudioHost";
 import { RemixIcon } from "../icons/RemixIcons";
 
@@ -30,8 +31,9 @@ function HistoryButton({ action, can, label, onClick }: HistoryButtonProps) {
         aria-label={action === "undo" ? t("Undo") : t("Redo")}
         disabled={!enabled}
         className={enabled ? (mvp ? `${flatBtn} text-text-0 hover:bg-hover active:bg-press active:scale-[0.98]` : flatIdle) : flatDisabled}
-        onClick={() => {
+        onClick={(event) => {
           trackStudioEvent("toolbar_action", { action });
+          noteHistoryTrigger(clickMethod(event));
           void onClick?.();
         }}
       >

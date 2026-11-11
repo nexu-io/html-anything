@@ -1,4 +1,5 @@
 import { trackStudioEvent } from "./studioTelemetry";
+import { reportSaveFailure } from "../motion/editorTracking";
 
 type StudioTelemetryValue = string | number | boolean | null | undefined;
 const STUDIO_SAVE_ATTEMPT_PROPERTY = "__studioSaveAttempt";
@@ -182,6 +183,8 @@ function gsapBlockDetail(error: unknown): string | undefined {
 
 export function trackStudioSaveFailure(input: StudioSaveFailureInput): void {
   trackStudioEvent("save_failure", buildStudioSaveFailureProperties(input));
+  // Category and status class only: never the message, path, selector or target.
+  reportSaveFailure(input.label ?? undefined, input.statusCode ?? getStudioSaveStatusCode(input.error));
 }
 
 export function trackStudioEditBlocked(input: StudioSaveFailureInput): void {

@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from "react";
+import { trackStudioClick } from "../../motion/editorTracking";
 import { matchesKey } from "./studioShortcuts";
 import {
   applyTimelineAutoScrollStep,
@@ -291,6 +292,8 @@ export function useTimelineRangeSelection({
   const beginScrub = useCallback(
     (clientX: number) => {
       isDragging.current = true;
+      // Once per press on the ruler; the positions a scrub passes through are not reported.
+      trackStudioClick("timeline", "ruler_seek", undefined, "pointer");
       setIsScrubbing(true);
       pendingClientXRef.current = clientX;
       seekFromX(clientX);

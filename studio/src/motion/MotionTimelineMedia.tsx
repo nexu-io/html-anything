@@ -11,6 +11,7 @@ import { resolveTimelineAssetSrc } from '../utils/timelineAssetDrop';
 import { encodeUrlPath } from '@hyperframes/parsers';
 import { selectedMedia, projectMediaPath } from './timelineMediaSelection';
 import { mediaPopoverAnchor } from './mediaPopoverPosition';
+import { noteImportEntry } from './editorTracking';
 
 export function MotionTimelineMedia({ projectId, compositionId, disabled, onFileDrop, onAssetDrop }: {
   projectId: string; compositionId: string; disabled: boolean;
@@ -30,7 +31,7 @@ export function MotionTimelineMedia({ projectId, compositionId, disabled, onFile
     const check = () => { const now = state.current; if (!bound || `${now.projectId}:${now.compositionId}` !== basis) throw new Error(t('The composition changed. Open Generate media again to choose a new placement.')); if (now.disabled || now.shell?.writeBlockedReason || now.shell?.renderQueue.isRendering) throw new Error(t('The timeline is currently unavailable for editing')); return now; };
     bind({ projectId, compositionId,
       currentPlacement: () => { const player = usePlayerStore.getState(); const range = player.rangeSelection; const selected = player.elements.find(el => (el.key ?? el.id) === player.selectedElementId); return { start: range?.t0 ?? selected?.start ?? player.currentTime, duration: range ? Math.max(0.1, range.t1 - range.t0) : selected?.duration ?? 3, track: selected?.track ?? 0 }; },
-      importFiles: async files => { const now = check(); await now.shell?.waitForPendingDomEditSaves(); check(); await now.onFileDrop?.(files, { start: usePlayerStore.getState().currentTime, track: 0 }); },
+      importFiles: async files => { const now = check(); await now.shell?.waitForPendingDomEditSaves(); check(); noteImportEntry('timeline_button'); await now.onFileDrop?.(files, { start: usePlayerStore.getState().currentTime, track: 0 }); },
       place: async (asset, placement) => { const now = check(); if (!now.onAssetDrop) throw new Error(t('Timeline insertion is unavailable')); await now.shell?.waitForPendingDomEditSaves(); check(); await now.onAssetDrop(asset, { start: placement.start, track: placement.track }, placement.duration, true); },
       replace: async (asset, captured) => {
         let now = check();

@@ -1,4 +1,4 @@
-export type Rule = 'uuid' | 'code' | 'boolean' | 'integer' | readonly string[];
+export type Rule = 'uuid' | 'code' | 'slug' | 'boolean' | 'integer' | readonly string[];
 export type Registry = Record<string, { fields: Record<string, Rule>; required: readonly string[] }>;
 export type Fields = Record<string, string | number | boolean>;
 type RuleValue<R> = R extends readonly string[] ? R[number] : R extends 'boolean' ? boolean : R extends 'integer' ? number : string;
@@ -13,6 +13,9 @@ export type PendingEvent = {
 export type Receipt = 'accepted' | 'retry' | 'drop';
 export const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const code = /^[A-Za-z0-9_.-]{1,128}$/;
+// A catalogue resource id: letters, digits and single hyphens between them, at most 64 characters.
+// No dots, slashes, spaces or underscores, so a path, URL, file name or title cannot pass.
+export const slug = /^(?=.{1,64}$)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
 export function deviceContext() {
   return { device_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
     utc_offset_minutes: -new Date().getTimezoneOffset() };
@@ -27,7 +30,7 @@ export function validProperties(registry: Registry, event: string, raw: unknown)
     if (Array.isArray(rule)) return typeof value === 'string' && rule.includes(value);
     if (rule === 'boolean') return typeof value === 'boolean';
     if (rule === 'integer') return Number.isSafeInteger(value) && Number(value) >= 0 && Number(value) <= 86_400_000;
-    return typeof value === 'string' && (rule === 'uuid' ? uuid : code).test(value);
+    return typeof value === 'string' && (rule === 'uuid' ? uuid : rule === 'slug' ? slug : code).test(value);
   });
 }
 export function validPending(registry: Registry, value: unknown): value is PendingEvent {

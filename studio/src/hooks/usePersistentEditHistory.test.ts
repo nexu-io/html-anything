@@ -19,6 +19,8 @@ import {
   paintBackNewestStudioPendingEdit,
 } from "../utils/studioPendingEdits";
 import { usePersistentEditHistory } from "./usePersistentEditHistory";
+import { installEditorTracking, resetEditorTrackingForTests } from "../motion/editorTracking";
+import { studioEditLifecycle } from "../webmcp/writeCoordinator";
 import { withAvailableHistorySteps } from "../../../shared/studio-history-availability";
 
 const cleanup: Array<() => unknown> = [];
@@ -741,4 +743,32 @@ it("stores DOM targets in existing history and retains them through undo and red
   await vi.waitFor(() => expect(hook().canRedo).toBe(true));
   await act(() => hook().redo({ readFile }));
   expect(history.list().at(-1)?.targets).toEqual(targets);
+});
+
+it("reports one manual edit per history entry it claims, and none for an Agent tool's write", async () => {
+  const sent = vi.fn((_event: string, _properties: Record<string, unknown>) => "queued");
+  resetEditorTrackingForTests();
+  installEditorTracking(sent as never);
+  cleanup.push(() => installEditorTracking(undefined));
+  const { hook, save } = await studio();
+  const edits = () => sent.mock.calls.filter(([event]) => event === "studio_edit_result").map(([, properties]) => properties);
+
+  save("B");
+  await act(() => hook().recordEdit({ label: "Move layer", coalesceKey: "drag", coalesceMs: Infinity, files: { "index.html": { before: "A", after: "B" } } }));
+  save("C");
+  await act(() => hook().recordEdit({ label: "Move layer", coalesceKey: "drag", coalesceMs: Infinity, files: { "index.html": { before: "B", after: "C" } } }));
+  // "demo" is not a UUID and not the built-in project, so only its scope is sent.
+  expect(edits(), "a held drag is one edit").toEqual([{ outcome: "success", edit_kind: "move", surface: "canvas", project_scope: "other" }]);
+
+  save("D");
+  await act(() => hook().recordEdit({ label: "Split 2 clips at 1.00s", files: { "index.html": { before: "C", after: "D" } } }));
+  expect(edits().map((edit) => edit.edit_kind)).toEqual(["move", "timeline_split"]);
+
+  const callId = studioEditLifecycle.begin("demo", { handle: "h", sourceFile: "index.html" }, "set-text");
+  cleanup.push(() => studioEditLifecycle.reset());
+  save("E");
+  await act(() => hook().recordEdit({ label: "Edit text", files: { "index.html": { before: "D", after: "E" } } }));
+  studioEditLifecycle.dismiss(callId);
+  expect(edits(), "an Agent write is not a manual edit").toHaveLength(2);
+  expect(hook().undoLabel, "the Agent write is still undoable").toBe("Edit text");
 });

@@ -20,6 +20,7 @@ import { usePlayerStore } from "../../player";
 import { formatTime } from "../../player/lib/time";
 import { useStudioShellContext } from "../../contexts/StudioContext";
 import { TIMELINE_BLOCK_MIME } from "../../utils/timelineAssetDrop";
+import { clickMethod, clickOption, searchStarted, trackStudioClick } from "../../motion/editorTracking";
 import blurInPosterUrl from "./blur-in-preview.svg?url";
 export interface BlockPreviewInfo {
   videoUrl?: string;
@@ -41,6 +42,10 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
   const { loading, error, search, setSearch, category, setCategory, filteredBlocks } =
     useBlockCatalog();
   const [promptModal, setPromptModal] = useState<{ title: string; prompt: string } | null>(null);
+  const chooseCategory = (next: typeof category) => {
+    if (next !== category) trackStudioClick("catalog", "catalog_filter", undefined, undefined, clickOption(next ?? "all"));
+    setCategory(next);
+  };
 
   if (loading) {
     return (
@@ -63,7 +68,10 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
       <div className="px-3 pt-2 pb-1 shrink-0">
         <SearchInput
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            if (searchStarted(search, e.target.value)) trackStudioClick("catalog", "catalog_search");
+            setSearch(e.target.value);
+          }}
           placeholder={t("Search by name, category, or tag…")}
           aria-label={t("Search blocks")}
         />
@@ -72,13 +80,13 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
       {/* Category pills */}
       <div className="px-3 pt-1 pb-2 shrink-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex gap-1.5">
-          <CategoryPill label={t("All")} active={category === null} onClick={() => setCategory(null)} />
+          <CategoryPill label={t("All")} active={category === null} onClick={() => chooseCategory(null)} />
           {BLOCK_CATEGORIES.map((cat) => (
             <CategoryPill
               key={cat.id}
               label={t(cat.label)}
               active={category === cat.id}
-              onClick={() => setCategory(category === cat.id ? null : cat.id)}
+              onClick={() => chooseCategory(category === cat.id ? null : cat.id)}
             />
           ))}
         </div>
@@ -342,11 +350,12 @@ function BlockCard({
     [onAdd, addState],
   );
 
-  const { activeCompPath, compositionDimensions } = useStudioShellContext();
+  const { activeCompPath, compositionDimensions, projectId } = useStudioShellContext();
 
   const handleShowPrompt = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
+      trackStudioClick("catalog", "ask_agent_catalog_item", projectId, clickMethod(e));
       const state = usePlayerStore.getState();
       const context: CompositionContext = {
         currentTime: state.currentTime,
@@ -373,6 +382,7 @@ function BlockCard({
       activeCompPath,
       compositionDimensions,
       onShowPrompt,
+      projectId,
     ],
   );
 

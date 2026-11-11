@@ -114,11 +114,52 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
   it is distinct from queue acceptance and does not assert human content acceptance.
 - Studio home/project page readiness, editor load outcome, new/recent-session and
   template-selection intent, plus actual instruction-copy/fallback results.
+- Motion editor exports started from the Studio UI: one `studio_export_request_result`
+  per start attempt (accepted or rejected with a safe code) and one
+  `studio_export_result` per accepted render when that tab observes its terminal
+  state, joined by a browser-minted `export_id`. These renders run in the editor's
+  own pipeline and never reach the worker `export_result`, which stays MCP-only.
+- Motion editor manual edits: one `studio_edit_result` per committed history entry,
+  emitted where Studio claims the entry, with a closed `edit_kind` and the `surface`
+  the gesture started on. Coalesced claims of one entry report once. Writes
+  dispatched by an in-page Agent tool are skipped; MCP edits never reach this path.
+  Project rename and asset rename/delete report from their own commit points, and
+  save failures report `outcome=failure` with a status class only.
+- Undo/redo outcomes, UI asset imports (counts, entry point, safe category),
+  notices actually shown (missing FFmpeg, external file conflict, unreachable
+  project) and editor intent clicks through `ui_click` with `page_name=studio`.
+  `ui_click.option` carries the chosen value of a control with a small fixed set.
+- UI export events carry `video_duration_bucket` for the composition being rendered;
+  the request event and `studio_load_result` carry `clip_count_bucket`,
+  `asset_count_bucket` and `composition_count_bucket`. They are read from what the
+  editor already holds in memory at that moment and report `unknown` otherwise:
+  at load the timeline and file tree have usually not arrived, so the load values
+  are mostly `unknown` and the export request is the reliable reading. No raw
+  duration, count or file size is sent.
+- The editor's template library (the shared gallery, not the home page list):
+  copy click and the actual copy result, preview open, use, category change and
+  one search per query, through `ui_click` area `templates` and
+  `template_instruction_copy_result`. `template_id` is the catalogue id and is
+  accepted only as a `slug`; a non-matching id is omitted and the event still
+  sent. Titles, authors and URLs are never fields. When the workspace catalogue
+  records the template a project was created from, the same id is added to
+  `studio_load_result` and both UI export events.
+- Editor events carry `project_scope`; `project_id` is sent only when the Studio
+  project id is a UUID. The built-in local project (id `project`) reports
+  `project_scope=default` and no id; names and titles are never sent.
 
 This first integration does not implement the entire tracking specification:
-installer/integration/resource-read events, WebMCP execution, every editor save,
-timeline/history/import gesture, review/adoption and optional media events remain
-outside this change. Worker origin is `worker`; request-to-worker operation context
+installer/integration/resource-read events, WebMCP execution, review/adoption and
+optional media events remain outside this change. Editor coverage has known gaps:
+a render whose tab reloads before it finishes, or whose cancel the server never
+confirmed, has a request result but no terminal result; a cancel that lands after
+the render finished reports the outcome the cancel route returned; caption and beat undo stacks, keyboard playback and frame stepping, and
+source-editor saves are not reported; `edit_kind` is derived from Studio's fixed
+history labels, so an unmapped label reports `other`; clip trim does not say which
+edge moved. The Studio page does not know which host product opened it, so
+`studio_load_result` has no host field; the copy result's `host_product` is the
+client selected in the template library, which defaults to Codex. Turning sharing off is itself not reported, because the preference
+applies before the event could be sent. Worker origin is `worker`; request-to-worker operation context
 is not yet persisted. Pending export cancellation has a cancel result but no worker
 completion because no worker claimed it.
 

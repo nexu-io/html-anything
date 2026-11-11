@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { trackStudioClick } from "../../motion/editorTracking";
 /**
  * The FX entry point from the timeline (C1) — a track or group header button
  * that opens the same preset shelf the property panel's rack uses, without
@@ -218,6 +219,7 @@ export function TimelineFxButton(props: TimelineFxButtonProps) {
           onPointerDown={(event) => event.stopPropagation()}
           onClick={(event) => {
             event.stopPropagation();
+            trackStudioClick("timeline", "fx_badge");
             openAt();
           }}
         >
@@ -262,6 +264,7 @@ export function TimelineFxButton(props: TimelineFxButtonProps) {
         onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => {
           event.stopPropagation();
+          trackStudioClick("timeline", "fx_badge");
           openAt();
         }}
       >
