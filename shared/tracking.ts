@@ -39,6 +39,10 @@ export async function createAppTracking(directory: string, entrypoint: Entry): P
     if (!config.host || !config.token) return disabled();
     const tracking = createNodeTracking({ registry: omEvents, entrypoint, enabled: true,
       identity: await loadIdentity(path.join(directory, 'tracking')), appVersion: VERSION,
+      source: () => {
+        try { return JSON.parse(readFileSync(path.join(directory, 'tracking/identity.json'), 'utf8')).utm_source; }
+        catch { return null; }
+      },
       host: config.host, token: config.token, geoip: config.geoip,
       isEnabled: () => !trackingLocked() && trackingPreference(directory),
       env: env as 'development' | 'test' | 'production', testRunId: process.env.OPENMOTION_TRACKING_TEST_RUN_ID });

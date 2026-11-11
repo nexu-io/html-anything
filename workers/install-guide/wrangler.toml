@@ -1,0 +1,12 @@
+name = "openmotion-install-guide"
+main = "index.ts"
+account_id = "64ad4569ffd912432d6b86d5656484c4"
+compatibility_date = "2026-11-11"
+workers_dev = true
+
+[[r2_buckets]]
+binding = "RELEASES"
+bucket_name = "open-design-releases"
+
+# Attach only the two moving install.md paths after testing a package that supports --utm-source.
+# Immutable versioned guides and other release resources continue to be served by R2.

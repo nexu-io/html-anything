@@ -1,4 +1,4 @@
-import { link, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { link, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import { createTracker, uuid } from './core.ts';
@@ -30,9 +30,22 @@ export async function loadIdentity(directory: string, source?: string): Promise<
   } finally { await rm(temporary, { force: true }); }
 }
 
+// Only an explicit installation updates attribution; ordinary startup retains it.
+export async function saveInstallationSource(directory: string, source?: string): Promise<Identity> {
+  const identity = await loadIdentity(directory, source);
+  if (source === undefined || source === identity.utm_source) return identity;
+  const updated = { ...identity, utm_source: source };
+  const temporary = path.join(directory, 'identity.' + crypto.randomUUID() + '.tmp');
+  try {
+    await writeFile(temporary, JSON.stringify(updated), { mode: 0o600, flag: 'wx' });
+    await rename(temporary, path.join(directory, 'identity.json'));
+  } finally { await rm(temporary, { force: true }); }
+  return updated;
+}
+
 export function createPosthogSender(options: {
   host: string; token: string; identity: Identity; appVersion: string;
-  env: 'development' | 'test' | 'production'; testRunId?: string; timeoutMs?: number; fetch?: typeof fetch; geoip?: boolean;
+  env: 'development' | 'test' | 'production'; testRunId?: string; timeoutMs?: number; fetch?: typeof fetch; geoip?: boolean; source?: () => string | null;
 }) {
   const url = new URL(options.host);
   if (url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('INVALID_INGEST_HOST');
@@ -40,13 +53,15 @@ export function createPosthogSender(options: {
   if (!/^phc_[A-Za-z0-9_]+$/.test(options.token)) throw new Error('PUBLIC_PROJECT_TOKEN_REQUIRED');
   if (options.testRunId && (!uuid.test(options.testRunId) || options.env !== 'test')) throw new Error('INVALID_TEST_RUN');
   return async (events: readonly PendingEvent[], signal: AbortSignal): Promise<Receipt> => {
+    const source = options.source?.() ?? options.identity.utm_source;
     const batch = events.map(event => ({ event: event.event, uuid: event.event_id, timestamp: event.occurred_at,
       properties: { ...event.properties, event_schema_version: 1, schema_version: 1, product: 'openmotion',
         app_version: options.appVersion, env: options.env, channel: 'standalone',
         ...(options.testRunId ? { test_run_id: options.testRunId } : {}),
         event_id: event.event_id, $insert_id: event.event_id, occurred_at: event.occurred_at,
         installation_id: options.identity.installation_id, device_id: options.identity.installation_id,
-        distinct_id: options.identity.installation_id, utm_source: options.identity.utm_source,
+        distinct_id: options.identity.installation_id, utm_source: source,
+        od_utm_source: source,
         entrypoint: event.entrypoint, runtime: event.entrypoint === 'studio' ? 'browser' : 'node',
         capture_source: 'explicit', client_type: event.entrypoint === 'studio' ? 'web' : 'local',
         platform: os.platform(), arch: os.arch(), $os: os.type(), $os_version: os.release(),
@@ -74,7 +89,7 @@ export function createPosthogSender(options: {
 export function createNodeTracking<const R extends Registry>(options: {
   registry: R; identity: Identity; host: string; token?: string; appVersion: string;
   env: 'development' | 'test' | 'production'; testRunId?: string; entrypoint: Entry;
-  enabled: boolean; timeoutMs?: number; flushIntervalMs?: number; maxQueue?: number; geoip?: boolean; isEnabled?: () => boolean;
+  enabled: boolean; timeoutMs?: number; flushIntervalMs?: number; maxQueue?: number; geoip?: boolean; source?: () => string | null; isEnabled?: () => boolean;
 }) {
   const enabled = options.enabled && !!options.token;
   const send = enabled ? createPosthogSender({ ...options, token: options.token! }) : async () => 'drop' as const;

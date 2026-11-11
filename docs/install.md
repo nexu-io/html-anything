@@ -12,6 +12,8 @@ If you are reading this file in the source repository and see `{{...}}`, it is a
 4. Choose exactly one setup command below, applying the test isolation paths first when required. Setup starts checked video-component downloads in the background. Do not wait for prepare to connect MCP, create/edit projects or open ordinary preview. Studio shows preparation status and retry; media import, automated capture and export require their respective components. Follow the selected host's discovery/reload mechanism. Compatible phase-one updates can keep existing connections; reconnect closed or incompatible transports. Confirm the application version, template environment, eleven public Tools and five Skills through that host, including an actual `motion_get_project` call. Registration alone does not prove loading.
 5. Report the result and any failed step. Introduce the available capabilities and wait for the user's next request. Installation does not authorize generating a video or calling a paid model.
 
+<!-- openmotion-utm-source-supported -->
+
 ## Choose the selected host's setup command
 
 The commands below show normal installations. For test candidates, apply the separate configuration/profile, home, data and Skills paths from the [platform recipes]({{DETAILS_URL}}) first. Run only the selected row.

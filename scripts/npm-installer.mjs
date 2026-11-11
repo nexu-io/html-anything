@@ -25,6 +25,7 @@ const usage = `Usage:
 Select the current Agent host explicitly; installed CLIs do not identify the current host.
 Setup options:
   --host HOST        Supported hosts: ${hosts.join(', ')} (default: codex)
+  --utm-source NAME  Optional installation source; omitted upgrades retain the existing source
   --home DIR         Managed application home; reuse for prepare and upgrades
   --data-dir DIR     Project data outside application/cache directories
   --skills-dir DIR   Skills root for Codex, Claude Code or WorkBuddy
@@ -66,6 +67,7 @@ export async function localManifest(filename) {
 }
 
 export async function setup(options) {
+  assert(options.utmSource === undefined || /^[A-Za-z0-9_.-]{1,64}$/.test(options.utmSource), 'Invalid --utm-source');
   const manifest = await localManifest(options.manifest || bundledManifest);
   if (!options.manifest) assert.equal(manifest.version, (await readJSON(new URL('../package.json', import.meta.url))).version, 'Bundled application must match the npm package version');
   const templateEnvironment = manifest.templateEnvironment ?? 'prod';
@@ -137,6 +139,10 @@ export async function setup(options) {
         ...(plan.host === 'codex' ? { skillsDirectory: targets[0] } : {}) };
       await writeJSON(stateFile, state); wroteState = true;
       await plan.register();
+      try {
+        const { recordInstallation } = await import(pathToFileURL(path.join(appRoot, 'shared/install-attribution.ts')).href);
+        await recordInstallation(dataDirectory, plan.host, options.utmSource);
+      } catch (error) { console.error('OpenMotion: installation attribution unavailable: ' + error.message); }
       for (const item of directories) await rm(item.backup, { recursive: true, force: true }).catch(error => console.error('Old instruction backup retained: ' + error.message));
       await startNativePreparation(appRoot).catch(error => console.error('OpenMotion: background preparation could not start; retry in Studio or run prepare. ' + error.message));
       return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'background-preparation; status and retry available in Studio' };
@@ -183,14 +189,14 @@ export async function diagnose(options) {
 async function main() {
   const { positionals, values } = parseArgs({ allowPositionals: true, options: {
     manifest: { type: 'string' }, home: { type: 'string' }, 'data-dir': { type: 'string' }, 'skills-dir': { type: 'string' }, host: { type: 'string' }, codex: { type: 'string' }, claude: { type: 'string' }, dsh: { type: 'string' }, profile: { type: 'string' },
-    help: { type: 'boolean', short: 'h' }, version: { type: 'boolean' },
+    'utm-source': { type: 'string' }, help: { type: 'boolean', short: 'h' }, version: { type: 'boolean' },
   } });
   if (values.help) { console.log(usage); return; }
   if (values.version) { console.log((await readJSON(new URL('../package.json', import.meta.url))).version); return; }
   const [command] = positionals;
   assert(positionals.length === 1, usage);
   if (command === 'setup') {
-    console.log(JSON.stringify(await setup({ manifest: values.manifest, home: values.home, dataDirectory: values['data-dir'], skillsDirectory: values['skills-dir'], host: values.host, codex: values.codex, claude: values.claude, dsh: values.dsh, profile: values.profile }), null, 2));
+    console.log(JSON.stringify(await setup({ utmSource: values['utm-source'], manifest: values.manifest, home: values.home, dataDirectory: values['data-dir'], skillsDirectory: values['skills-dir'], host: values.host, codex: values.codex, claude: values.claude, dsh: values.dsh, profile: values.profile }), null, 2));
   } else if (command === 'prepare') {
     const environment = (await readJSON(bundledManifest))?.templateEnvironment;
     const state = await readJSON(path.join(values.home || defaultHome(environment), 'install.json'));
