@@ -119,6 +119,18 @@ Before upgrading, back up projects/configuration, run setup with the new exact t
 
 ## Native tools and diagnostics
 
+### npm download failures
+
+Recover the failed stage rather than repeatedly changing registries or reporting an older working installation as the requested upgrade:
+
+1. Identify whether the failure happened while npx fetched `@openmotion/app`, during setup's production `npm ci`, or while preparing native video components. Record the failed hostname, error code, exact package version when known and redacted npm log. `ENOTFOUND`/`EAI_AGAIN` indicate name-resolution failures; a timeout can have several network causes. Neither proves that the requested package/version is missing. Curl or browser access does not establish that the actual Node/npm process has the same access.
+2. Check network access with the same Node/npm and execution environment used for installation. Use `npm ping --registry=https://registry.npmjs.org` to test the official registry, or the user's selected registry when applicable. A successful ping does not verify every package or tarball endpoint. If the host restricts command networking, use its supported approval flow where policy permits; do not disable the sandbox or bypass a denial. Use the user's approved proxy or registry only for this installation, ensuring the settings also reach setup's npm child process; do not change global npm configuration or expose proxy credentials.
+3. If the Agent cannot obtain permitted access, explain the blocker and offer a user-controlled terminal handoff where policy permits. Provide a copyable command for the selected shell with the same package identity, Node/npm, working directory, host/profile, host configuration environment, application home, data and Skills paths. Do not guess the host or replace an exact version with another version/channel. After the user completes setup, refresh/reconnect the actual host and verify its version and `motion_get_project` result before resuming. Keep native preparation readiness separate from host loading.
+
+If npm also fails in the user's terminal, resolve the DNS/proxy/network problem first. An official same-version tgz with its published checksum can replace the outer package download when available, using the existing local-tgz commands above, but setup still runs `npm ci` and native preparation still downloads separate assets. This is not an offline fallback. If neither a permitted network path nor a verified complete offline distribution is available, report installation as incomplete and retain the prior installation and user data.
+
+References: [npm ping](https://docs.npmjs.com/cli/v11/commands/npm-ping/) and [npm proxy configuration](https://docs.npmjs.com/cli/v11/using-npm/config/#https-proxy).
+
 ### Missing MCP tools or a failed connection
 
 Run the installed CLI with the same application home and selected host:

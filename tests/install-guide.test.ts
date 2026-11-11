@@ -58,6 +58,8 @@ test('guide rendering pins the exact npm package, built source and hash while re
     'A generated test guide must not claim test versions skip DEV templates');
   for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(text.includes(`openmotion setup --host ${host}`), host);
   assert(text.includes('--profile PROFILE') && text.includes('Do not infer the current host'));
+  assert(text.includes(`/blob/${manifest.commit}/docs/npm-installation.md#npm-download-failures`), 'Network recovery must link to this package source');
+  assert(text.includes('complete setup command and selected environment/paths') && text.includes('A local tgz still needs npm access'), 'Generated guides retain the terminal handoff and online dependency boundary');
   assert.equal(record.channel, 'test'); assert.equal(record.candidate, false);
   assert.equal(validateGuideSpec('openmotion', '0.6.4'), 'stable');
   for (const name of ['https://evil.invalid/a', 'x;echo bad', '--script', '@bad/no/extra']) assert.throws(() => validateGuideSpec(name, pkg.version));
