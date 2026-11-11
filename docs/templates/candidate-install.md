@@ -17,12 +17,23 @@ This is a **local candidate installation guide**. It installs the complete `{{TG
 
    ```sh
    npx --yes --package "./{{TGZ}}" -- openmotion setup --host HOST
+   ```
+
+   Replace `HOST` with `codex`, `claude`, `deepseek` or `workbuddy`. Carry the explicit `--home`, `--data-dir`, `--skills-dir` and host-specific options from the platform recipe. Setup starts checked video-component downloads in the background. Do not run or wait for prepare to connect MCP, create/edit projects or open ordinary preview. Keep using this local package; no sidecar application/manifest download or source build is required.
+4. Follow this host's discovery/reload action. Verify the actual application version, DEV template environment, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
+
+Report installation/host loading and video-component readiness separately. Installation alone does not authorize creating a video or exporting an MP4.
+
+## Video preparation and requested acceptance
+
+1. Run the blocking prepare command only when the tester explicitly asks to wait for all video components or before requested acceptance cases that need media import, automated capture or export:
+
+   ```sh
    npx --yes --package "./{{TGZ}}" -- openmotion prepare
    ```
 
-   Replace `HOST` with `codex`, `claude`, `deepseek` or `workbuddy`. Carry the explicit `--home`, `--data-dir`, `--skills-dir` and host-specific options from the platform recipe; repeat the same home for prepare. Wait for setup and prepare to finish before native use. Keep using this local package; no sidecar application/manifest download or source build is required.
-4. Follow this host's discovery/reload action. Verify the actual application version, DEV template environment, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
-5. Follow the tester's requested acceptance cases in `acceptance.md`: use an independent test project for template creation, editing, save/reopen and MP4 export. Do not modify an existing user project or start a paid provider call without its separate authorization. Retain technical export checks separately from real Agent creation and human audio/video playback.
-6. Fill a **private copy** of `acceptance.md` with actual PASS / FAIL / NOT RUN results and evidence. Report failures and retain the generated candidate identity. Do not edit/re-upload the frozen candidate artifact. Do not publish npm, upload a guide or change a tag as part of installation/testing.
+   Repeat the same explicit `--home` used for setup. Studio shows component preparation status and retry; successful checked components are reused. Preparing dependencies does not run an export or complete acceptance.
+2. Follow the tester's requested acceptance cases in `acceptance.md`: use an independent test project for template creation, editing, save/reopen and MP4 export. Do not modify an existing user project or start a paid provider call without its separate authorization. Retain technical export checks separately from real Agent creation and human audio/video playback.
+3. Fill a **private copy** of `acceptance.md` with actual PASS / FAIL / NOT RUN results and evidence. Report failures and retain the generated candidate identity. Do not edit/re-upload the frozen candidate artifact. Do not publish npm, upload a guide or change a tag as part of installation/testing.
 
 The sibling `install.md` is frozen for **after npm publication** and points at the exact registry version. Before publication, use this `candidate-install.md` and local tgz. Successful installation does not authorize release.

@@ -111,6 +111,11 @@ test('the sealed candidate detects tgz, guide, identity and provenance tampering
   const instructions = await readFile(path.join(directory, 'candidate-install.md'), 'utf8');
   assert(instructions.includes(candidate.tgz) && instructions.includes(candidate.tgzSHA256) && instructions.includes(candidate.sourceCommit));
   assert(instructions.includes('npx --yes --package "./' + candidate.tgz + '"'));
+  const [installation, acceptance] = instructions.split('\n## Video preparation and requested acceptance\n');
+  assert.deepEqual([...installation.matchAll(/^\s*npx[^\n]+/gm)].map(match => match[0].trim()),
+    [`npx --yes --package "./${candidate.tgz}" -- openmotion setup --host HOST`], 'Default installation must not block on prepare');
+  assert(acceptance?.includes(`npx --yes --package "./${candidate.tgz}" -- openmotion prepare`), 'Requested video acceptance retains the exact local prepare command');
+  assert(instructions.includes('Repeat the same explicit `--home` used for setup'));
   assert(!instructions.includes('{{'));
   assert(!checklist.includes('<!-- CANDIDATE_IDENTITY -->'));
   await assert.rejects(verifyDownloaded(directory, candidate.tgzSHA256, '0.6.4-test.100'), /version/);
@@ -281,6 +286,12 @@ test('daily build and publication are separate manual entries without an indepen
   assert.match(build, /version:\n(?:[^\n]*\n)*?        required: false\n        default: ''/);
   assert(build.includes('MOTION_VERSION: ${{ steps.source.outputs.version }}'));
   assert(build.includes('name: motion-candidate-${{ steps.source.outputs.version }}') && build.includes('candidate-install.md'));
+  for (const guide of [build, await readFile(new URL('../docs/release-workflows.md', import.meta.url), 'utf8')]) {
+    assert(guide.includes('without waiting for background video-component preparation'));
+    assert(guide.includes('Run prepare only when explicitly asked to wait or before requested media/capture/export acceptance checks'));
+    assert(!guide.includes('Complete prepare'), 'Copyable tester instructions must not restore a blocking installation prerequisite');
+    assert(guide.toLowerCase().includes('no acceptance checkbox'), 'Keep the current publication instructions when syncing the installation guide');
+  }
   assert(!build.includes('concurrency:') && !build.includes('secrets.') && !build.includes('id-token:'));
   assert(header.includes('version:') && !header.includes('accepted:'));
   assert.match(header, /version:\n(?:[^\n]*\n)*?        required: true/);
