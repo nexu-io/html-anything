@@ -4,6 +4,12 @@ The [English](brand-hero.jpg), [Chinese](brand-hero.zh-CN.jpg) and [Japanese](br
 
 The left panel uses 0.83–3.23 seconds from [Dan Martell’s original video](https://www.youtube.com/shorts/mk1zJd9Rm4c). The right panel uses the first 2.4 seconds of [@careerwithriya’s career-skills video](https://www.instagram.com/reel/Ddd57MBszhc/). OpenMotion rebuilt the three caption layers for Riya’s footage. The comparison plays Riya’s original audio. Both creators retain the rights to their footage.
 
+## Current integration cover
+
+The current cover uses the approved talking-head comparison composition with a continuous paper-and-turquoise background. It displays compact agent and media-model rows, including Antigravity and Kimi Code. The English, Simplified Chinese and Japanese covers keep the same layout and the approved English tagline; supporting labels are localized. Mobile image entries carry the same complete cover.
+
+Method: built-in ImageGen editing of the approved cover, followed by JPEG encoding. This is promotional artwork based on the reference/remake and editor imagery, not a newly recorded product session or additional compatibility-test evidence. The linked comparison video remains the actual recreation evidence.
+
 ## Earlier cover artwork
 
 | Field | Value |
