@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { realpathSync } from 'node:fs';
 import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -59,7 +60,7 @@ export async function prepareInstallationOnboarding({ appRoot, dataDirectory, te
   return { hostSessionVerified: false, instructions, catalog };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   const appRoot = path.resolve(process.argv[2] || fileURLToPath(new URL('../', import.meta.url)));
   const defaults = JSON.parse(await readFile(path.join(appRoot, 'shared/template-config.json'), 'utf8'));
   console.log(JSON.stringify(await prepareInstallationOnboarding({ appRoot,

@@ -1,4 +1,4 @@
-import path from 'node:path';
+import { realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { TemplateCatalog } from '../prism-templates.ts';
 import { bundledOnboardingTemplates } from './install-onboarding.mjs';
@@ -23,7 +23,7 @@ export async function onboardingCatalog(appRoot: string, dataDirectory: string, 
     truncated: page.total > templates.length, stale: Boolean(page.warning), warning: page.warning, templates };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   const appRoot = fileURLToPath(new URL('../', import.meta.url));
   const dataDirectory = process.argv[2] || (await import('../workspace.ts')).defaultDataDir;
   console.log(JSON.stringify(await onboardingCatalog(appRoot, dataDirectory)));
