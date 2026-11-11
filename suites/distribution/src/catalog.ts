@@ -1,6 +1,3 @@
-import { randomUUID } from "node:crypto";
-import { mkdir, open, readFile, rename, rm, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import {
   type Artifact,
   type Channel,
@@ -12,6 +9,7 @@ import {
 } from "@odsuite/protocol";
 import type { Release } from "@odsuite/publish";
 import { bundleFile, decode, unit } from "@odsuite/release";
+import { CatalogState } from "./catalog/state.js";
 import { endpoint, read, Unavailable } from "./http.js";
 import { type Metadata, metadata, negotiate, product, type Shell, shellPath } from "./metadata.js";
 import { type Head, trustHead } from "./signature.js";
@@ -28,11 +26,15 @@ export interface CatalogOptions {
   root: string;
 }
 export class Catalog {
-  private selected?: { head: Head; metadata: Metadata };
+  private state: CatalogState<{ head: Head; metadata: Metadata }>;
+  private get selected() {
+    return this.state.value;
+  }
   private pending?: Promise<Metadata>;
   readonly base: string;
   constructor(readonly options: CatalogOptions) {
     this.base = `${endpoint(options.endpoint)}/products/${product(options.product)}`;
+    this.state = new CatalogState(options.root, "distribution.json", (head, body) => this.checked(head, body));
   }
   private checked(head: unknown, body: unknown) {
     const h = trustHead(head, this.options.publickey, this.options),
@@ -54,14 +56,7 @@ export class Catalog {
     return this.pending;
   }
   private async refreshWithin(signal?: AbortSignal) {
-    if (!this.selected) {
-      try {
-        const saved = JSON.parse(await readFile(join(this.options.root, "distribution.json"), "utf8"));
-        this.selected = this.checked(saved.head, saved.metadata);
-      } catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-      }
-    }
+    await this.state.load();
     let bytes: Uint8Array;
     try {
       bytes = await read(`${this.base}/channels/${this.options.channel}/head.json`, 1024 * 1024, signal);
@@ -72,8 +67,7 @@ export class Catalog {
     }
     const head = trustHead(JSON.parse(Buffer.from(bytes).toString("utf8")), this.options.publickey, this.options);
     const old = this.selected?.head;
-    if (old && (head.revision < old.revision || (head.revision === old.revision && canonical(head) !== canonical(old))))
-      throw new Error("distribution revision regressed or conflicted");
+    this.state.assert(head);
     if (old && canonical(head) === canonical(old)) return this.selected!.metadata;
     const body = JSON.parse(
       Buffer.from(await read(`${this.base}/releases/v${head.version}/metadata.json`, 1024 * 1024, signal)).toString(
@@ -81,24 +75,7 @@ export class Catalog {
       ),
     );
     const next = this.checked(head, body);
-    await mkdir(this.options.root, { recursive: true, mode: 0o700 });
-    const path = join(this.options.root, "distribution.json"),
-      temporary = `${path}.${randomUUID()}.tmp`;
-    try {
-      await writeFile(temporary, canonical(next), { flag: "wx", mode: 0o600, flush: true });
-      await rename(temporary, path);
-      if (process.platform !== "win32") {
-        const dir = await open(this.options.root, "r");
-        try {
-          await dir.sync();
-        } finally {
-          await dir.close();
-        }
-      }
-    } finally {
-      await rm(temporary, { force: true });
-    }
-    this.selected = next;
+    await this.state.commit(next);
     return next.metadata;
   }
   async head(lane: Channel, signal?: AbortSignal): Promise<Distribution> {

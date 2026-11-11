@@ -1,7 +1,7 @@
 import { createPrivateKey, createPublicKey, sign, verify } from "node:crypto";
 import { canonical, type Digest, digest, valid } from "@odsuite/protocol";
 import { parseReleaseVersion, releaseChannel } from "@odsuite/release";
-import { fields, type Metadata, product } from "./metadata.js";
+import { fields, product } from "./metadata.js";
 
 export interface Head {
   schema: 1;
@@ -17,7 +17,10 @@ function message(head: Head) {
   const { signature: _, ...body } = head;
   return Buffer.from(canonical(body));
 }
-export function signHead(metadata: Metadata, privatekey: string): Head {
+export function signHead(
+  metadata: { product: string; channel: string; version: string; revision: number },
+  privatekey: string,
+): Head {
   const key = createPrivateKey(privatekey),
     publickey = createPublicKey(key);
   const head: Head = {

@@ -7,6 +7,7 @@ import { npm as packageNpm } from "@odsuite/pack/npm";
 import { afterEach, expect, it } from "vitest";
 import {
   build,
+  candidate,
   channelRoot,
   check,
   configuration,
@@ -107,6 +108,18 @@ it("builds both carrier closures with one version and rejects modified materiali
   expect((await check(root, "beta", "tests")).result).toBe("passed");
   const packed = await pack(root, "beta");
   expect(await pack(root, "beta")).toEqual(packed);
+  expect(await candidate(root, "beta", 7)).toMatchObject({
+    product: "io.openmotion.fixture",
+    version: packed.version,
+    revision: 7,
+    fingerprint: packed.fingerprint,
+    source: packed.source,
+    package: {
+      name: "fixture-application",
+      artifact: { digest: `sha256:${packed.npm.sha256}`, bytes: packed.npm.bytes },
+    },
+  });
+  await expect(candidate(root, "beta", 0)).rejects.toThrow();
   expect(Object.keys(packed.packages).sort()).toEqual(["codexplugin", "standalone"]);
   expect((await check(root, "beta", "artifacts")).result).toBe("passed");
   await writeFile(join(root, packed.packages.codexplugin!.path), "tampered");

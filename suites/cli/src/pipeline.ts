@@ -1,9 +1,10 @@
 import { resolve } from "node:path";
-import { build, check, type Gate, gates, pack, selectedVersion } from "@odsuite/pipeline";
+import { build, candidate, check, type Gate, gates, pack, selectedVersion } from "@odsuite/pipeline";
 import type { Output } from "./index.js";
 
 export const pipelineHelp = `odsuite version|build --channel <name> [--version <X.Y.Z[-channel.N]> | --number <N>] [--base <X.Y.Z>] [--root <repo>]
 odsuite pack --channel <name> [--root <repo>]
+odsuite candidate --channel <name> --revision <N> [--root <repo>]
 odsuite check --channel <name> --gate policy|tests|artifacts [--root <repo>]
 
 Both Node carriers share one version. Pack verifies local closures and emits the finite npm kit; publication is a separate lifecycle.`;
@@ -14,7 +15,13 @@ export async function pipeline(args: string[], cwd: string, output: Output): Pro
   }
   const command = args[0];
   const extra =
-    command === "version" || command === "build" ? ["version", "number", "base"] : command === "check" ? ["gate"] : [];
+    command === "version" || command === "build"
+      ? ["version", "number", "base"]
+      : command === "check"
+        ? ["gate"]
+        : command === "candidate"
+          ? ["revision"]
+          : [];
   const options = new Map<string, string>();
   for (let index = 1; index < args.length; index += 2) {
     const arg = args[index],
@@ -43,7 +50,13 @@ export async function pipeline(args: string[], cwd: string, output: Output): Pro
     const selection = { root, channel, version: options.get("version"), base: options.get("base"), number };
     result = command === "build" ? await build(selection) : await selectedVersion(selection);
   } else if (command === "pack") result = await pack(root, channel);
-  else if (command === "check") {
+  else if (command === "candidate") {
+    const raw = options.get("revision"),
+      revision = Number(raw);
+    if (!raw || !/^[1-9]\d*$/.test(raw) || !Number.isSafeInteger(revision))
+      throw Error("--revision must be a positive safe integer");
+    result = await candidate(root, channel, revision);
+  } else if (command === "check") {
     const gate = options.get("gate") as Gate;
     if (!gates.includes(gate)) throw new Error("--gate is required");
     result = await check(root, channel, gate);

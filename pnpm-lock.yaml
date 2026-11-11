@@ -273,6 +273,12 @@ importers:
 
   packages/application:
     dependencies:
+      '@odsuite/blob':
+        specifier: workspace:*
+        version: link:../../suites/blob
+      '@odsuite/distribution':
+        specifier: workspace:*
+        version: link:../../suites/distribution
       '@odsuite/installer':
         specifier: workspace:*
         version: link:../../suites/installer
@@ -298,9 +304,6 @@ importers:
       '@modelcontextprotocol/client':
         specifier: 2.4.0
         version: 2.4.0
-      '@odsuite/blob':
-        specifier: workspace:*
-        version: link:../../suites/blob
       '@open-motion/daemon':
         specifier: workspace:*
         version: link:../../apps/daemon
@@ -836,6 +839,9 @@ importers:
 
   suites/pipeline:
     dependencies:
+      '@odsuite/distribution':
+        specifier: workspace:*
+        version: link:../distribution
       '@odsuite/guard':
         specifier: workspace:*
         version: link:../guard

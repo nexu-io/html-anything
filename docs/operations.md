@@ -147,6 +147,24 @@ For interrupted setup, inspect the exact installation authority `<INSTALLATION>/
 
 The finite npm payload contains `dist/main.mjs`, transient `dist/codex-worker.mjs`, licenses/notices and `payload/manifest.json` plus both carrier archives. The registrar pins Node and the immutable installed main, never npm cache. Normal cache eviction therefore cannot remove the installed runtime or Skills. Modified/unowned destinations, conflicting versions and changed host ownership fail closed. These commands do not implement automatic Node updates or registry distribution.
 
+The repository can project candidate metadata from the exact verified package with `pnpm exec odsuite candidate --channel beta --revision 1`. The result contains the immutable npm artifact digest/size, shared product version and build provenance. A publisher signs it through distribution's shared `signHead` primitive. Serving a local test feed does not authorize production publication. The feed layout is:
+
+```text
+products/<product>/kits/channels/<channel>/head.json
+products/<product>/kits/releases/v<version>/metadata.json
+products/<product>/objects/sha256/<npm-digest>
+```
+
+The installed kit exposes candidate controls through the same npm entry:
+
+```text
+odsuite update check --endpoint HTTPS_OR_LOOPBACK --public-key PUBLIC_PEM --home INSTALLATION --data DATA_BASE --channel beta --namespace default
+odsuite update prepare --endpoint HTTPS_OR_LOOPBACK --public-key PUBLIC_PEM --home INSTALLATION --data DATA_BASE --channel beta --namespace default
+odsuite update discard --home INSTALLATION --data DATA_BASE --channel beta --namespace default
+```
+
+Check downloads signed metadata only. Prepare requires a newer version and verifies the entire inert npm package and both carrier closures through the installed validation contract. A prepared Blob reference persists across CLI-owner restarts until another verified candidate replaces it or discard releases it. Failed preparation preserves the previous reference; ordinary signals cancel downloads and drain the exact installer owner. Discard releases cache protection for normal GC rather than deleting files or discovery history. Unavailable feeds fail; persisted catalog history remains for regression checks. Endpoint redirects, credentials/query fragments, wrong signatures/product/channel, downgraded versions, same-version replacement and regressed/conflicting revisions reject. Use the exact installed invoking kit; these commands change no installation selection, host registration or running runtime. Activation remains a separate lifecycle.
+
 `prepare` verifies/materializes the pinned Chromium/FFmpeg/FFprobe through the real renderer Blob library. It reports each component; a successful attempt is warm-cache evidence, not an execution probe or permanent pin. An absent runtime uses a preparation-only sidecar composition with no Web/Daemon/export queue, so existing queued exports cannot resume. SIGINT/SIGTERM cancel its wait and drain only its own exact managed witness, including cancellation during manager bootstrap. An existing matching full runtime stays running. Blob retains normal GC/retention; actual export independently acquires worker Uses. The default native pin is macOS arm64; unsupported native platforms are not qualified.
 
 ## Codex closure

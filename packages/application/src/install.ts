@@ -3,7 +3,7 @@ import { canonical } from "@odsuite/protocol";
 import { register } from "@open-motion/codexplugin/install";
 import { carriers, hash, type PackageManifest, payload, type Selection } from "./contract.js";
 
-async function usingSession<T>(options: Options, action: (session: Session) => Promise<T>): Promise<T> {
+export async function usingSession<T>(options: Options, action: (session: Session) => Promise<T>): Promise<T> {
   const session = await open(options);
   const outcome = await action(session).then(
     (value) => ({ ok: true as const, value }),
@@ -80,18 +80,23 @@ export async function installed(
   selection: Selection,
   carrier: (typeof carriers)[number],
 ) {
-  return usingSession(
-    { home: selection.home, product: description.product.appid, scope: selection.scope },
-    async (session) => {
-      const receipt = await session.read(carrier);
-      if (!receipt) throw Error("application is not installed; run setup first");
-      if (
-        receipt.version !== description.release.identity.version ||
-        receipt.digest !== `sha256:${description.carriers[carrier].sha256}` ||
-        receipt.data !== selection.data
-      )
-        throw Error("selected application differs from this package or data scope");
-      return receipt;
-    },
+  return usingSession({ home: selection.home, product: description.product.appid, scope: selection.scope }, (session) =>
+    readInstalled(session, description, selection, carrier),
   );
+}
+export async function readInstalled(
+  session: Session,
+  description: PackageManifest,
+  selection: Selection,
+  carrier: (typeof carriers)[number],
+) {
+  const receipt = await session.read(carrier);
+  if (!receipt) throw Error("application is not installed; run setup first");
+  if (
+    receipt.version !== description.release.identity.version ||
+    receipt.digest !== `sha256:${description.carriers[carrier].sha256}` ||
+    receipt.data !== selection.data
+  )
+    throw Error("selected application differs from this package or data scope");
+  return receipt;
 }
