@@ -4,8 +4,9 @@ const marker = '<!-- openmotion-utm-source-supported -->';
 
 export function attributeGuide(text: string, source: string | null): string {
   if (!source || !/^[A-Za-z0-9_.-]{1,64}$/.test(source) || !text.includes(marker)) return text;
+  // Bind with `=` so an accepted value starting with a hyphen stays one option value.
   return text.replace(/openmotion setup --host (codex|claude|deepseek|workbuddy)\b/g,
-    command => `${command} --utm-source ${source}`);
+    command => `${command} --utm-source=${source}`);
 }
 
 export function guideKey(url: URL): string | null {

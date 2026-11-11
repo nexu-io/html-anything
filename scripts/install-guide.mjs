@@ -5,6 +5,19 @@ import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeAtomic, writeJSON } from './runtime-assets.mjs';
 import { checkReleaseVersion, releaseTemplateEnvironment } from './release-version.mjs';
 
+const attributionMarker = '<!-- openmotion-utm-source-supported -->';
+
+// The sealed archive may come from an older integrated source than this control checkout, so
+// declare support only for the installer that the guide actually pins.
+export function supportsInstallAttribution(installer) {
+  return /--utm-source\b/.test(installer) && /['"]utm-source['"]\s*:/.test(installer);
+}
+
+async function readPackagedInstaller(tgz) {
+  try { return await runFile('tar', ['-xOf', path.resolve(tgz), 'package/scripts/npm-installer.mjs']); }
+  catch { return ''; }
+}
+
 export function validateGuideSpec(name, version) {
   assert.match(name || '', /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/, 'Require an npm package name');
   assert(name.length <= 214, 'npm package name is too long');
@@ -31,16 +44,19 @@ export async function generateInstallGuide(tgz, output, candidate = false) {
   const pkg = await readEntry('package/package.json'), manifest = await readEntry('package/payload/release-npm.json');
   const channel = validateGuideIdentity(pkg, manifest);
   const digest = await sha256(tgz), packageSpec = `${pkg.name}@${pkg.version}`;
+  const attribution = supportsInstallAttribution(await readPackagedInstaller(tgz));
   const values = { VERSION: pkg.version, PACKAGE_SPEC: packageSpec, CHANNEL: channel, COMMIT: manifest.commit,
     TEMPLATE_ENVIRONMENT: manifest.templateEnvironment, TGZ_SHA256: digest,
     TARGETS: Object.values(manifest.runtime.targets).map(t => `${t.platform}/${t.arch} (${t.minimumOS}+)`).join(', '),
     DETAILS_URL: `https://github.com/nexu-io/html-anything/blob/${manifest.commit}/docs/npm-installation.md` };
   const template = await readFile(new URL('../docs/install.md', import.meta.url), 'utf8');
   // The repository warning is unnecessary after all release placeholders are resolved.
-  const text = (candidate ? '> Build preview only: this candidate is not an approved registry installation entry.\n\n' : '') + template.replace(/^If you are reading this file.*\n\n/m, '').replace(/\{\{([A-Z0-9_]+)\}\}/g, (_, key) => {
+  let text = (candidate ? '> Build preview only: this candidate is not an approved registry installation entry.\n\n' : '') + template.replace(/^If you are reading this file.*\n\n/m, '').replace(/\{\{([A-Z0-9_]+)\}\}/g, (_, key) => {
     assert(Object.hasOwn(values, key), 'Unknown installation placeholder: ' + key); return values[key];
   });
   assert(!text.includes('{{'), 'Installation guide has unresolved placeholders');
+  // An older packaged installer rejects --utm-source, so it must not be offered one.
+  if (!attribution) text = text.replace(`${attributionMarker}\n\n`, '');
   await mkdir(output, { recursive: true });
   await writeAtomic(path.join(output, 'install.md'), text);
   const record = { schemaVersion: 1, candidate, packageName: pkg.name, version: pkg.version, packageSpec, channel,

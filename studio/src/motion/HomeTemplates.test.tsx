@@ -43,7 +43,7 @@ it('only editable templates open a new engineering project; references copy thei
   await act(async () => button('一键复制').click());
   expect(clipboard).toHaveBeenCalledOnce();
   expect(clipboard.mock.calls[0][0]).toContain('指定模板：Reference（hf-moment-M953）');
-  expect(clipboard.mock.calls[0][0]).toContain('https://releases.open-design.ai/open-motion/dev/install.md');
+  expect(clipboard.mock.calls[0][0]).toContain('https://open-design.powerformer.net/motion/install.md');
   expect(clipboard.mock.calls[0][0]).not.toContain('localhost');
   expect(state.open).toHaveBeenCalledTimes(1);
   expect(container.textContent).toContain('已复制');

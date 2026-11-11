@@ -3,6 +3,7 @@ import { catalogLocale } from './template-locale.ts';
 import { workflowEntryGuide } from './workflow-entry.js';
 
 export const integrationHosts = ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'] as const;
+const TEST_INSTALL_HOST = 'open-design.powerformer.net';
 export type IntegrationHost = typeof integrationHosts[number];
 export const hostNames: Record<IntegrationHost, string> = { codex: 'Codex', claude: 'Claude Code', deepseek: 'DeepSeek Harness', chatgpt: 'ChatGPT', mcp: 'MCP / CLI' };
 export const hostDescriptions: Record<IntegrationHost, string> = {
@@ -75,7 +76,11 @@ export function setupPrompt(info: IntegrationInfo, host: IntegrationHost, locale
 }
 export function templatePrompt(info: IntegrationInfo, _host: IntegrationHost, template: { id: string; title: string }, locale = 'zh-CN') {
   const environment = info.templateEnvironment ?? info.transport.env?.MOTION_TEMPLATE_ENV ?? 'prod';
-  const installUrl = `https://${environment === 'dev' ? 'open-design.powerformer.net' : 'open-design.ai'}/motion/install.md`;
+  // The production website entry stays disabled until it is activated and verified, so prod keeps
+  // the existing R2 guide; only the enabled test entry moves to its environment host.
+  const installUrl = environment === 'dev'
+    ? `https://${TEST_INSTALL_HOST}/motion/install.md`
+    : 'https://releases.open-design.ai/open-motion/install.md';
   const message = templatePrompts[catalogLocale(Object.keys(templatePrompts), locale, 'en')];
   const values = { installUrl, name: template.title, id: template.id };
   return message.replace(/\{(installUrl|name|id)\}/g, (_, key: keyof typeof values) => values[key]);
