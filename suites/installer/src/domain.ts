@@ -4,6 +4,7 @@ import { digest, factoryScope } from "@odsuite/protocol";
 import { type Context, managerEndpoint, serve } from "@odsuite/sidecar";
 import { canonical, directory, exclusive, json } from "./files.js";
 import { Transaction } from "./transaction.js";
+import { Transitions } from "./transitions.js";
 import { InstallerFault, type Options, type Session } from "./types.js";
 
 /** Policy ownership marker is not a lock or liveness registry. Only sidecar claims authority. */
@@ -47,7 +48,7 @@ export async function open(options: Options): Promise<Session> {
   const authority = await directory(home, ["authority", options.product]);
   const service = await serve(managerEndpoint(authority), { root: authority });
   const factory = service.factory(scope);
-  let transaction: Transaction | undefined, context: Context | undefined;
+  let transaction: Transaction | undefined, context: Context | undefined, transitions: Transitions | undefined;
   let closing = false,
     closed: Promise<void> | undefined;
   const pending = new Set<Promise<unknown>>();
@@ -75,6 +76,7 @@ export async function open(options: Options): Promise<Session> {
           );
         },
         stop: async () => {
+          transitions?.close();
           transaction?.store.close();
         },
       },
@@ -91,12 +93,43 @@ export async function open(options: Options): Promise<Session> {
       );
       return task;
     };
+    const journal = async (create = false) => {
+      if (transitions) return transitions;
+      const old = (await factory.resources()).grants.some((g) => g.kind === "data" && g.name === "transitions");
+      if (!old && !create) return undefined;
+      const grant = await factory.grant({ kind: "data", name: "transitions", scope: "factory" });
+      await directory(grant.value);
+      transitions = new Transitions(grant.value, old);
+      return transitions;
+    };
+    const allowed = async (id?: string) => {
+      const pending = (await journal())?.read();
+      if (pending && pending.requestId !== id)
+        throw new InstallerFault("conflict", "unfinished installation transition must resume first");
+    };
     return {
       factory,
       context,
       install: (input) => {
         const accepted = { ...input, source: input?.source ? { ...input.source } : input?.source };
-        return run(() => active.install(accepted));
+        return run(async () => {
+          await allowed();
+          return active.install(accepted);
+        });
+      },
+      stage: (input) => {
+        const accepted = { ...input, source: input?.source ? { ...input.source } : input?.source };
+        return run(() => active.install(accepted, false));
+      },
+      select: (input) =>
+        run(async () => {
+          await allowed(input.transition);
+          return active.select(input);
+        }),
+      transitions: {
+        read: (id) => run(async () => (await journal())?.read(id)),
+        begin: (input) => run(async () => (await journal(true))!.begin(input)),
+        advance: (input) => run(async () => (await journal(true))!.advance(input)),
       },
       read: (carrier) => run(() => active.read(carrier)),
       close: () => {

@@ -2,7 +2,7 @@ import type { KitMetadata } from "@odsuite/distribution/kit";
 import { verifySource } from "@odsuite/installer";
 import { inspectNpm } from "@odsuite/pack/npm";
 import { canonical, verify } from "@odsuite/protocol";
-import { carriers, hash, type PackageManifest, parseManifest } from "./contract.js";
+import { carriers, hash, type PackageManifest, parseManifest } from "../contract.js";
 
 /** Validate inert bytes only. Never import or run a downloaded candidate. */
 export function candidate(bytes: Uint8Array, metadata: KitMetadata, current: PackageManifest) {
@@ -60,5 +60,5 @@ export function candidate(bytes: Uint8Array, metadata: KitMetadata, current: Pac
     if (identity.carrier !== carrier || identity.version !== metadata.version || identity.channel !== metadata.channel)
       throw Error("candidate carrier release mismatch");
   }
-  return description;
+  return { description, files: archive.files };
 }

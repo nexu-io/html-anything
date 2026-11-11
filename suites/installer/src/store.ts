@@ -55,6 +55,7 @@ export const fingerprint = (value: {
   product: string;
   channel: string;
   namespace: string;
+  stage?: true;
 }) => digest(canonical(value));
 /** Artifact intent/selection/receipt authority only. OS authority belongs exclusively to sidecar. */
 export class Store {
@@ -186,22 +187,46 @@ export class Store {
       throw new InstallerFault("integrity", "selected installation receipt identity changed");
     return result;
   }
-  complete(value: Intent) {
+  complete(value: Intent, select = true) {
     return this.transaction(() => {
       const prior = this.lookup(value.receipt.requestId, value.fingerprint);
       if (prior) return prior;
       const selected = this.db.prepare("SELECT request_id FROM selections WHERE carrier=?").get(value.receipt.carrier);
-      if ((selected ? String(selected.request_id) : null) !== value.previous)
+      if (select && (selected ? String(selected.request_id) : null) !== value.previous)
         throw new InstallerFault("conflict", "installation selection changed while the intent was interrupted");
       this.db
         .prepare("INSERT INTO receipts VALUES(?,?,?)")
         .run(value.receipt.requestId, value.fingerprint, JSON.stringify(value.receipt));
-      this.db
-        .prepare("INSERT INTO selections VALUES(?,?) ON CONFLICT(carrier) DO UPDATE SET request_id=excluded.request_id")
-        .run(value.receipt.carrier, value.receipt.requestId);
-      value.phase = "selected";
+      if (select)
+        this.db
+          .prepare(
+            "INSERT INTO selections VALUES(?,?) ON CONFLICT(carrier) DO UPDATE SET request_id=excluded.request_id",
+          )
+          .run(value.receipt.carrier, value.receipt.requestId);
+      value.phase = select ? "selected" : "installed";
       this.save(value);
       return value.receipt;
+    });
+  }
+  receipt(id: string) {
+    const row = this.db.prepare("SELECT result FROM receipts WHERE id=?").get(id);
+    if (!row) throw new InstallerFault("invalid", "staged receipt is unavailable");
+    const value = decode(receipt, row.result);
+    if (value.requestId !== id) throw new InstallerFault("integrity", "staged receipt identity changed");
+    return value;
+  }
+  select(expected: Record<string, string | null>, targets: Record<string, string>) {
+    this.transaction(() => {
+      const entries = Object.entries(targets);
+      if (entries.every(([carrier, id]) => this.read(carrier)?.requestId === id)) return;
+      if (entries.some(([carrier]) => (this.read(carrier)?.requestId ?? null) !== expected[carrier]))
+        throw new InstallerFault("conflict", "installation selection changed before activation");
+      for (const [carrier, id] of entries)
+        this.db
+          .prepare(
+            "INSERT INTO selections VALUES(?,?) ON CONFLICT(carrier) DO UPDATE SET request_id=excluded.request_id",
+          )
+          .run(carrier, id);
     });
   }
   close() {

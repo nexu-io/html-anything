@@ -31,10 +31,34 @@ export interface Receipt {
   path: string;
   data: string;
 }
+export interface Transition {
+  requestId: string;
+  intent: unknown;
+  data: unknown;
+  revision: number;
+  complete: boolean;
+}
+export interface Select {
+  expected: Record<string, string | null>;
+  receipts: Record<string, string>;
+  transition?: string;
+}
 export interface Session {
   readonly factory: Factory;
   readonly context: Context;
   install(input: Input): Promise<Receipt>;
+  stage(input: Input): Promise<Receipt>;
+  select(input: Select): Promise<Receipt[]>;
+  transitions: {
+    read(requestId?: string): Promise<Transition | undefined>;
+    begin(input: { requestId: string; intent: unknown; data: unknown }): Promise<Transition>;
+    advance(input: {
+      requestId: string;
+      expectedRevision: number;
+      data: unknown;
+      complete?: boolean;
+    }): Promise<Transition>;
+  };
   read(carrier: string): Promise<Receipt | undefined>;
   close(): Promise<void>;
 }
