@@ -185,12 +185,15 @@ export const TimelineRuler = memo(function TimelineRuler({
               style={{ left: t * pps - 0.5 }}
             >
               <span
+                data-timeline-ruler-label=""
                 className="absolute font-mono tabular-nums leading-none whitespace-nowrap"
                 style={{
                   color: theme.tickText,
-                  left: TICK_LABEL_INSET_PX,
+                  left: `calc(${TICK_LABEL_INSET_PX}px * var(--timeline-zoom-inverse, 1))`,
                   top: 5,
                   fontSize: 10,
+                  transform: "scaleX(var(--timeline-zoom-inverse, 1))",
+                  transformOrigin: "left top",
                 }}
               >
                 {rulerTickText(t, tickFrameRate, effectiveDuration, majorTickInterval)}

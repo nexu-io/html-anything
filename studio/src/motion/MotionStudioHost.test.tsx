@@ -177,7 +177,7 @@ it('starts with a closed drawer in embeds regardless of the former collapse pref
   history.replaceState(null, '', '/');
 });
 
-it('saves a project name on blur and keeps empty or cancelled edits from replacing it', async () => {
+it('saves empty project names as Untitled while Escape cancels edits', async () => {
   state.rename.mockResolvedValue(true);
   render();
   const edit = () => {
@@ -199,18 +199,25 @@ it('saves a project name on blur and keeps empty or cancelled edits from replaci
   input = edit();
   change(input, '   ');
   await act(async () => input.blur());
-  expect(state.rename).toHaveBeenCalledTimes(1);
+  expect(state.rename).toHaveBeenLastCalledWith('demo', '未命名');
+  expect(state.rename).toHaveBeenCalledTimes(2);
   input = edit();
   change(input, 'Discard this');
   act(() => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
-  expect(state.rename).toHaveBeenCalledTimes(1);
+  expect(state.rename).toHaveBeenCalledTimes(2);
   expect(container.querySelector('[aria-label="项目名称"]')).toBe(input);
   expect(input.value).toBe('Demo');
   input = edit();
   change(input, 'Enter saves');
   await act(async () => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
   expect(state.rename).toHaveBeenLastCalledWith('demo', 'Enter saves');
-  expect(state.rename).toHaveBeenCalledTimes(2);
+  expect(state.rename).toHaveBeenCalledTimes(3);
+  input = edit();
+  change(input, '');
+  expect(input.placeholder).toBe('未命名');
+  await act(async () => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
+  expect(state.rename).toHaveBeenLastCalledWith('demo', '未命名');
+  expect(state.rename).toHaveBeenCalledTimes(4);
   expect(document.activeElement).not.toBe(input);
   expect(container.querySelector('[aria-label="项目名称"]')).toBe(input);
 });

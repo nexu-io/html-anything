@@ -1,6 +1,8 @@
 import { createPortal } from "react-dom";
 import { useI18n } from "../../i18n/I18n";
 import { useCallback, useEffect, useRef, type RefObject } from "react";
+import { CaretDown } from "../../icons/RemixIcons";
+import { Menu, MenuRadioGroup, MenuRadioItem } from "../ui/Menu";
 import {
   isFitZoom,
   isPreviewAtFit,
@@ -10,6 +12,7 @@ import {
 } from "./previewZoom";
 
 const NAVIGATOR_PX = 112;
+const ZOOM_PRESETS = [50, 75, 100, 150, 200] as const;
 
 function navigatorFrameSize(stage: { width: number; height: number }) {
   const ratio = stage.width > 0 && stage.height > 0 ? stage.width / stage.height : 16 / 9;
@@ -63,8 +66,12 @@ export function PreviewZoomOverlay({
   onFit,
   navigatorRegionRef,
   controlsTarget,
+  onZoomPercent,
+  showNavigator = true,
 }: {
   controlsTarget?: HTMLElement | null;
+  onZoomPercent: (percent: number) => void;
+  showNavigator?: boolean;
   zoom: PreviewZoomState;
   stageSize: { width: number; height: number };
   onFit: () => void;
@@ -81,7 +88,25 @@ export function PreviewZoomOverlay({
       data-testid="preview-zoom-chip"
       onPointerDown={(event) => event.stopPropagation()}
     >
-      <span className={controlsTarget ? "tabular-nums text-[11px]" : "tabular-nums"}>{controlsTarget ? `${Math.round(zoom.zoomPercent)}%` : !atFit && isFitZoom(zoom.zoomPercent) ? t("Panned") : t("Zoomed {percent}%", { percent: Math.round(zoom.zoomPercent) })}</span>
+      {controlsTarget ? (
+        <Menu
+          align="end"
+          className="motion-preview-zoom-menu"
+          aria-label={t("Scale")}
+          trigger={<button
+            type="button"
+            aria-label={`${t("Scale")}: ${Math.round(zoom.zoomPercent)}%`}
+            className="flex items-center gap-1 rounded px-2 py-1 tabular-nums text-[11px] hover:bg-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-studio-accent"
+            data-testid="preview-zoom-menu"
+          >
+            {Math.round(zoom.zoomPercent)}%<CaretDown size={12} />
+          </button>}
+        >
+          <MenuRadioGroup value={zoom.zoomPercent} onValueChange={(value) => onZoomPercent(Number(value))}>
+            {ZOOM_PRESETS.map(percent => <MenuRadioItem key={percent} value={percent} closeOnClick>{percent}%</MenuRadioItem>)}
+          </MenuRadioGroup>
+        </Menu>
+      ) : <span className="tabular-nums">{!atFit && isFitZoom(zoom.zoomPercent) ? t("Panned") : t("Zoomed {percent}%", { percent: Math.round(zoom.zoomPercent) })}</span>}
       {!atFit && <button
         type="button"
         className={controlsTarget
@@ -98,7 +123,7 @@ export function PreviewZoomOverlay({
   return (
     <>
       {controlsTarget ? createPortal(controls, controlsTarget) : controls}
-      {!atFit && (
+      {showNavigator && !atFit && (
         <div
           aria-hidden="true"
           className="pointer-events-none absolute bottom-3 right-3 z-50 rounded-md p-1.5 bg-black/60 backdrop-blur-xs"

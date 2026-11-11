@@ -19,3 +19,7 @@ Additional browser checks confirmed neutral hidden-track icons, a stable editor 
 - Focused Studio validation covered 21 files and 320 tests. A test-only CSS marker initially failed the style gate; converting it to a data attribute fixed it, and both the gate and host suite passed on rerun (26 tests).
 - Coverage includes docking, media inspector, assets, shared menus, timeline clips and audio controls, locale routing, connection feedback and theme/token checks.
 - No full suite, installer validation, new export or external-service join was performed for this frontend-only change. Existing Happy DOM network diagnostics do not represent a failed test.
+
+## Additional interaction update
+
+See [the interaction follow-up and browser evidence](interaction-update.md) for zoom presets, cover placeholders, playback layout, media Fit, title defaults, color-save stability, ruler zoom and concise error feedback. This update retains the public Discord community change.

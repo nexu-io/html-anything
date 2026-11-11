@@ -31,7 +31,7 @@ export const SpeedMenu = memo(function SpeedMenu({
           align="end"
           container={typeof document !== "undefined" ? document.fullscreenElement as HTMLElement ?? undefined : undefined}
           aria-label={t("Playback speed options")}
-          className="motion-speed-menu min-w-[56px] overflow-hidden border-0 p-0"
+          className="motion-speed-menu min-w-[80px] overflow-hidden border-0 p-0"
           trigger={
             <button
               type="button"
@@ -56,7 +56,7 @@ export const SpeedMenu = memo(function SpeedMenu({
               <MenuRadioItem
                 key={rate}
                 value={rate}
-                className={`gap-2 rounded-none px-3 py-1.5 font-mono text-[11px] tabular-nums ${rate === playbackRate ? "bg-hover font-semibold text-text-0" : ""}`}
+                className={`gap-3 rounded-none px-3 py-1.5 font-mono text-[11px] tabular-nums ${rate === playbackRate ? "bg-hover font-semibold" : ""}`}
               >
                 {rate}x
               </MenuRadioItem>

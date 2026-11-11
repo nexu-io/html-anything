@@ -2,6 +2,7 @@ import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 import { RotateCcw } from "../../icons/SystemIcons";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
+import { Menu, MenuRadioGroup, MenuRadioItem } from "../ui/Menu";
 import {
   VALUE_TIER_LABEL_CLASS,
   VALUE_TIER_VALUE_CLASS,
@@ -9,7 +10,7 @@ import {
 } from "./propertyPanelValueTier";
 
 /* ------------------------------------------------------------------ */
-/*  FlatSelectRow — label/value row backed by a native <select>        */
+/*  FlatSelectRow — label/value row with native or shared menu UI      */
 /* ------------------------------------------------------------------ */
 
 export function FlatSelectRow({
@@ -21,6 +22,7 @@ export function FlatSelectRow({
   disabled,
   onChange,
   onReset,
+  presentation = "native",
 }: {
   label: string;
   /** Accessible name when a caller renders the visible label OUTSIDE this
@@ -34,6 +36,7 @@ export function FlatSelectRow({
   disabled?: boolean;
   onChange: (nextValue: string) => void;
   onReset?: () => void;
+  presentation?: "native" | "menu";
 }) {
   const { t } = useI18n();
   const track = useTrackDesignInput();
@@ -41,6 +44,7 @@ export function FlatSelectRow({
   const normalizedOptions = options.map((option) =>
     typeof option === "string" ? { value: option, label: option } : option,
   );
+  const selectedOption = normalizedOptions.find((option) => option.value === value);
   // A valid authored value outside the preset list (e.g. a `mix-blend-mode`
   // or `object-position` this row doesn't offer as a preset) must not be
   // silently misrepresented as the first option — the native <select> falls
@@ -56,7 +60,40 @@ export function FlatSelectRow({
     <div className="group flex min-h-[30px] items-center justify-between">
       <span className={`text-[11px] ${VALUE_TIER_LABEL_CLASS[tier]}`}>{t(label)}</span>
       <span className="flex items-center gap-2">
-        <label
+        {presentation === "menu" ? (
+          <Menu
+            align="end"
+            aria-label={t(ariaLabel || label)}
+            trigger={
+              <button
+                type="button"
+                disabled={disabled}
+                aria-label={t(ariaLabel || label)}
+                className="flex min-w-0 items-center gap-1.5 disabled:cursor-not-allowed"
+              >
+                <span className={`max-w-[200px] truncate font-mono text-[11px] ${VALUE_TIER_VALUE_CLASS[tier]}`}>
+                  {selectedOption ? t(selectedOption.label) : value}
+                </span>
+                <RemixIcon name="arrow-down-s-line" size={14} className="shrink-0 text-panel-text-5" />
+              </button>
+            }
+          >
+            <MenuRadioGroup
+              value={value}
+              onValueChange={(next) => {
+                if (next === value) return;
+                track("select", trackName);
+                onChange(next);
+              }}
+            >
+              {renderedOptions.map((option) => (
+                <MenuRadioItem key={option.value} value={option.value}>
+                  {normalizedOptions.includes(option) ? t(option.label) : option.label}
+                </MenuRadioItem>
+              ))}
+            </MenuRadioGroup>
+          </Menu>
+        ) : <label
           className={`flex items-center gap-1.5 border-b pb-px ${
             tier === "explicitCustom"
               ? "border-panel-accent/30 group-hover:border-panel-accent/70"
@@ -80,7 +117,7 @@ export function FlatSelectRow({
             ))}
           </select>
           <RemixIcon name="arrow-down-s-line" size={14} className="shrink-0 text-panel-text-5" />
-        </label>
+        </label>}
         {tier === "explicitCustom" && onReset && (
           <button
             type="button"

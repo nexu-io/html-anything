@@ -16,11 +16,7 @@
 
 @container motion-player (max-width: 420px) {
   .motion-player-secondary { gap: 2px; }
-}
-
-@container motion-player (max-width: 420px) {
   .motion-player-control-row {
-    grid-template-columns: minmax(0, 1fr) 32px 28px;
     column-gap: 8px;
   }
   .motion-player-optional { display: none; }

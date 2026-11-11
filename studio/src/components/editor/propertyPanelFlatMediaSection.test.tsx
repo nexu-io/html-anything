@@ -75,11 +75,11 @@ function renderSection(overrides: Partial<DomEditSelection> = {}, mvp = false) {
 describe("FlatMediaSection — MVP scope", () => {
   it.each(["video", "audio", "img"])("keeps basic %s controls without advanced or duplicate actions", (tagName) => {
     const { host, root } = renderSection({ tagName }, true);
-    expect(host.textContent).toContain("assets/intro-loop.mp4");
+    expect(host.textContent).not.toContain("assets/intro-loop.mp4");
     expect(host.querySelector("[data-flat-media-copy]")).toBeNull();
     expect(host.querySelector("[data-flat-media-remove-bg]")).toBeNull();
     expect(host.querySelector(".hf-volume-row")).toBeNull();
-    for (const label of ["Cutout", "Gain", "Quality", "BG plate", "Muted", "Has audio track", "Speed preset", "Fade in", "Fade out"]) {
+    for (const label of ["Position", "Cutout", "Gain", "Quality", "BG plate", "Muted", "Has audio track", "Speed preset", "Fade in", "Fade out"]) {
       expect(host.textContent).not.toContain(label);
     }
     expect(host.querySelector('[aria-label="Automate Speed"]')).toBeNull();
@@ -87,7 +87,7 @@ describe("FlatMediaSection — MVP scope", () => {
       for (const label of ["Speed", "Media start", "Loop"]) expect(host.textContent).toContain(label);
     }
     if (tagName !== "audio") {
-      for (const label of ["Fit", "Position"]) expect(host.textContent).toContain(label);
+      expect(host.textContent).toContain("Fit");
     }
     act(() => root.unmount());
   });

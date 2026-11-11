@@ -334,7 +334,8 @@ describe("a host's dock", () => {
     const menu = [...host.querySelectorAll("button")].find((b) => b.textContent === "Window");
     act(() => menu?.click());
     const items = [...host.querySelectorAll('[role="menuitemcheckbox"]')].map((i) => i.textContent);
-    expect(items).toEqual(["✓Preview", "✓Timeline", "✓Assets", "✓Renders"]);
+    expect(items).toEqual(["Preview", "Timeline", "Assets", "Renders"]);
+    expect(host.querySelectorAll('[role="menuitemcheckbox"] [data-remix-icon="check-line"]')).toHaveLength(4);
   });
 
   it("keeps its layout alone under its own key, never in Studio's preferences", () => {

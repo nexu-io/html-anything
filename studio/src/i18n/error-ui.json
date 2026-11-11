@@ -23,7 +23,15 @@
     "Use updated version": "使用最新版本",
     "Keep my changes": "保留我的修改",
     "Use the updated version and discard your unsaved changes?": "使用最新版本，并放弃你尚未保存的修改？",
-    "Keep your changes and replace the version updated elsewhere?": "保留你的修改，并替换其他地方更新的版本？"
+    "Keep your changes and replace the version updated elsewhere?": "保留你的修改，并替换其他地方更新的版本？",
+    "Required file not found.": "所需文件不存在",
+    "No permission to access this file.": "没有文件访问权限",
+    "Preview update timed out.": "预览更新超时",
+    "Preview could not be updated.": "预览未能更新",
+    "The project changed elsewhere.": "工程已在其他地方修改",
+    "Changes could not be saved.": "修改未能保存",
+    "Action not completed. Please try again.": "操作未完成，请重试",
+    "Historical files are unavailable. Version not restored.": "历史文件不可用，未恢复该版本"
   },
   "ja": {
     "Reconnecting…": "再接続中…",
@@ -49,7 +57,15 @@
     "Use updated version": "更新された版を使用",
     "Keep my changes": "自分の変更を保持",
     "Use the updated version and discard your unsaved changes?": "更新された版を使用し、未保存の変更を破棄しますか？",
-    "Keep your changes and replace the version updated elsewhere?": "自分の変更を保持し、別の場所で更新された版を置き換えますか？"
+    "Keep your changes and replace the version updated elsewhere?": "自分の変更を保持し、別の場所で更新された版を置き換えますか？",
+    "Required file not found.": "必要なファイルが見つかりません",
+    "No permission to access this file.": "ファイルへのアクセス権限がありません",
+    "Preview update timed out.": "プレビュー更新がタイムアウトしました",
+    "Preview could not be updated.": "プレビューを更新できませんでした",
+    "The project changed elsewhere.": "プロジェクトが別の場所で変更されました",
+    "Changes could not be saved.": "変更を保存できませんでした",
+    "Action not completed. Please try again.": "操作を完了できませんでした。再試行してください",
+    "Historical files are unavailable. Version not restored.": "履歴ファイルを利用できないため、復元されませんでした"
   },
   "ko": {
     "Reconnecting…": "다시 연결 중…",
@@ -75,7 +91,15 @@
     "Use updated version": "최신 버전 사용",
     "Keep my changes": "내 변경 사항 유지",
     "Use the updated version and discard your unsaved changes?": "최신 버전을 사용하고 저장하지 않은 변경 사항을 버릴까요?",
-    "Keep your changes and replace the version updated elsewhere?": "내 변경 사항을 유지하고 다른 곳에서 업데이트된 버전을 바꿀까요?"
+    "Keep your changes and replace the version updated elsewhere?": "내 변경 사항을 유지하고 다른 곳에서 업데이트된 버전을 바꿀까요?",
+    "Required file not found.": "필요한 파일을 찾을 수 없습니다",
+    "No permission to access this file.": "파일에 접근할 권한이 없습니다",
+    "Preview update timed out.": "미리보기 업데이트 시간이 초과되었습니다",
+    "Preview could not be updated.": "미리보기를 업데이트하지 못했습니다",
+    "The project changed elsewhere.": "프로젝트가 다른 곳에서 변경되었습니다",
+    "Changes could not be saved.": "변경 사항을 저장하지 못했습니다",
+    "Action not completed. Please try again.": "작업을 완료하지 못했습니다. 다시 시도하세요",
+    "Historical files are unavailable. Version not restored.": "이전 버전 파일을 사용할 수 없어 복원되지 않았습니다"
   },
   "de": {
     "Reconnecting…": "Verbindung wird hergestellt…",
@@ -101,7 +125,15 @@
     "Use updated version": "Aktualisierte Version verwenden",
     "Keep my changes": "Meine Änderungen behalten",
     "Use the updated version and discard your unsaved changes?": "Aktualisierte Version verwenden und ungespeicherte Änderungen verwerfen?",
-    "Keep your changes and replace the version updated elsewhere?": "Eigene Änderungen behalten und die andernorts aktualisierte Version ersetzen?"
+    "Keep your changes and replace the version updated elsewhere?": "Eigene Änderungen behalten und die andernorts aktualisierte Version ersetzen?",
+    "Required file not found.": "Benötigte Datei nicht gefunden.",
+    "No permission to access this file.": "Keine Zugriffsberechtigung für diese Datei.",
+    "Preview update timed out.": "Zeitüberschreitung beim Aktualisieren der Vorschau.",
+    "Preview could not be updated.": "Vorschau konnte nicht aktualisiert werden.",
+    "The project changed elsewhere.": "Projekt wurde andernorts geändert.",
+    "Changes could not be saved.": "Änderungen konnten nicht gespeichert werden.",
+    "Action not completed. Please try again.": "Vorgang nicht abgeschlossen. Bitte erneut versuchen.",
+    "Historical files are unavailable. Version not restored.": "Verlaufsdateien nicht verfügbar. Version nicht wiederhergestellt."
   },
   "fr": {
     "Reconnecting…": "Reconnexion…",
@@ -127,7 +159,15 @@
     "Use updated version": "Utiliser la version à jour",
     "Keep my changes": "Garder mes modifications",
     "Use the updated version and discard your unsaved changes?": "Utiliser la version à jour et abandonner vos modifications non enregistrées ?",
-    "Keep your changes and replace the version updated elsewhere?": "Garder vos modifications et remplacer la version mise à jour ailleurs ?"
+    "Keep your changes and replace the version updated elsewhere?": "Garder vos modifications et remplacer la version mise à jour ailleurs ?",
+    "Required file not found.": "Fichier requis introuvable.",
+    "No permission to access this file.": "Accès à ce fichier non autorisé.",
+    "Preview update timed out.": "Délai de mise à jour de l’aperçu dépassé.",
+    "Preview could not be updated.": "Impossible de mettre à jour l’aperçu.",
+    "The project changed elsewhere.": "Le projet a été modifié ailleurs.",
+    "Changes could not be saved.": "Impossible d’enregistrer les modifications.",
+    "Action not completed. Please try again.": "Opération non terminée. Réessayez.",
+    "Historical files are unavailable. Version not restored.": "Fichiers historiques indisponibles. Version non restaurée."
   },
   "es": {
     "Reconnecting…": "Reconectando…",
@@ -153,7 +193,15 @@
     "Use updated version": "Usar versión actualizada",
     "Keep my changes": "Conservar mis cambios",
     "Use the updated version and discard your unsaved changes?": "¿Usar la versión actualizada y descartar tus cambios sin guardar?",
-    "Keep your changes and replace the version updated elsewhere?": "¿Conservar tus cambios y reemplazar la versión actualizada en otro lugar?"
+    "Keep your changes and replace the version updated elsewhere?": "¿Conservar tus cambios y reemplazar la versión actualizada en otro lugar?",
+    "Required file not found.": "No se encontró el archivo necesario.",
+    "No permission to access this file.": "Sin permiso para acceder a este archivo.",
+    "Preview update timed out.": "La actualización de la vista previa agotó el tiempo.",
+    "Preview could not be updated.": "No se pudo actualizar la vista previa.",
+    "The project changed elsewhere.": "El proyecto se modificó en otro lugar.",
+    "Changes could not be saved.": "No se pudieron guardar los cambios.",
+    "Action not completed. Please try again.": "Operación incompleta. Inténtalo de nuevo.",
+    "Historical files are unavailable. Version not restored.": "Archivos históricos no disponibles. Versión no restaurada."
   },
   "pt-BR": {
     "Reconnecting…": "Reconectando…",
@@ -179,7 +227,15 @@
     "Use updated version": "Usar versão atualizada",
     "Keep my changes": "Manter minhas alterações",
     "Use the updated version and discard your unsaved changes?": "Usar a versão atualizada e descartar suas alterações não salvas?",
-    "Keep your changes and replace the version updated elsewhere?": "Manter suas alterações e substituir a versão atualizada em outro local?"
+    "Keep your changes and replace the version updated elsewhere?": "Manter suas alterações e substituir a versão atualizada em outro local?",
+    "Required file not found.": "Arquivo necessário não encontrado.",
+    "No permission to access this file.": "Sem permissão para acessar este arquivo.",
+    "Preview update timed out.": "A atualização da prévia excedeu o tempo limite.",
+    "Preview could not be updated.": "Não foi possível atualizar a prévia.",
+    "The project changed elsewhere.": "O projeto foi alterado em outro lugar.",
+    "Changes could not be saved.": "Não foi possível salvar as alterações.",
+    "Action not completed. Please try again.": "Operação não concluída. Tente novamente.",
+    "Historical files are unavailable. Version not restored.": "Arquivos históricos indisponíveis. Versão não restaurada."
   },
   "it": {
     "Reconnecting…": "Riconnessione…",
@@ -205,7 +261,15 @@
     "Use updated version": "Usa versione aggiornata",
     "Keep my changes": "Mantieni le mie modifiche",
     "Use the updated version and discard your unsaved changes?": "Usare la versione aggiornata e scartare le modifiche non salvate?",
-    "Keep your changes and replace the version updated elsewhere?": "Mantenere le tue modifiche e sostituire la versione aggiornata altrove?"
+    "Keep your changes and replace the version updated elsewhere?": "Mantenere le tue modifiche e sostituire la versione aggiornata altrove?",
+    "Required file not found.": "File necessario non trovato.",
+    "No permission to access this file.": "Accesso al file non consentito.",
+    "Preview update timed out.": "Tempo scaduto per l’aggiornamento dell’anteprima.",
+    "Preview could not be updated.": "Impossibile aggiornare l’anteprima.",
+    "The project changed elsewhere.": "Il progetto è stato modificato altrove.",
+    "Changes could not be saved.": "Impossibile salvare le modifiche.",
+    "Action not completed. Please try again.": "Operazione non completata. Riprova.",
+    "Historical files are unavailable. Version not restored.": "File storici non disponibili. Versione non ripristinata."
   },
   "ru": {
     "Reconnecting…": "Переподключение…",
@@ -231,7 +295,15 @@
     "Use updated version": "Использовать новую версию",
     "Keep my changes": "Сохранить мои изменения",
     "Use the updated version and discard your unsaved changes?": "Использовать новую версию и отменить ваши несохранённые изменения?",
-    "Keep your changes and replace the version updated elsewhere?": "Сохранить ваши изменения и заменить версию, обновлённую в другом месте?"
+    "Keep your changes and replace the version updated elsewhere?": "Сохранить ваши изменения и заменить версию, обновлённую в другом месте?",
+    "Required file not found.": "Нужный файл не найден.",
+    "No permission to access this file.": "Нет доступа к этому файлу.",
+    "Preview update timed out.": "Время обновления предпросмотра истекло.",
+    "Preview could not be updated.": "Не удалось обновить предпросмотр.",
+    "The project changed elsewhere.": "Проект изменён в другом месте.",
+    "Changes could not be saved.": "Не удалось сохранить изменения.",
+    "Action not completed. Please try again.": "Операция не завершена. Повторите попытку.",
+    "Historical files are unavailable. Version not restored.": "Файлы истории недоступны. Версия не восстановлена."
   },
   "tr": {
     "Reconnecting…": "Yeniden bağlanılıyor…",
@@ -257,6 +329,14 @@
     "Use updated version": "Güncel sürümü kullan",
     "Keep my changes": "Değişikliklerimi koru",
     "Use the updated version and discard your unsaved changes?": "Güncel sürüm kullanılıp kaydedilmemiş değişiklikleriniz silinsin mi?",
-    "Keep your changes and replace the version updated elsewhere?": "Değişiklikleriniz korunup başka yerde güncellenen sürüm değiştirilsin mi?"
+    "Keep your changes and replace the version updated elsewhere?": "Değişiklikleriniz korunup başka yerde güncellenen sürüm değiştirilsin mi?",
+    "Required file not found.": "Gerekli dosya bulunamadı.",
+    "No permission to access this file.": "Bu dosyaya erişim izni yok.",
+    "Preview update timed out.": "Önizleme güncellemesi zaman aşımına uğradı.",
+    "Preview could not be updated.": "Önizleme güncellenemedi.",
+    "The project changed elsewhere.": "Proje başka bir yerde değiştirildi.",
+    "Changes could not be saved.": "Değişiklikler kaydedilemedi.",
+    "Action not completed. Please try again.": "İşlem tamamlanamadı. Tekrar deneyin.",
+    "Historical files are unavailable. Version not restored.": "Geçmiş dosyaları kullanılamıyor. Sürüm geri yüklenmedi."
   }
 }

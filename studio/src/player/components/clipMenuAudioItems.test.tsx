@@ -91,7 +91,8 @@ describe("ClipMenuAudioItems", () => {
       const host = render(music, "duck");
       const item = duckLabel(host);
       expect(item?.getAttribute("aria-checked")).toBe("true");
-      expect(item?.textContent).toBe("Duck under voice✓");
+      expect(item?.textContent).toBe("Duck under voice");
+      expect(item?.querySelector('[data-remix-icon="check-line"]')).toBeTruthy();
     });
   });
 

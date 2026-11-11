@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { Check } from "../../icons/RemixIcons";
 import type { TimelineElement } from "../store/timelineElement";
 import { useTimelineEditContextOptional } from "../../contexts/TimelineEditContext";
 import { useStudioShellContextOptional } from "../../contexts/StudioContext";
@@ -91,7 +92,7 @@ export function ClipMenuAudioItems({
       onClick={() => void toggleDuck()}
     >
       <span>{t("Duck under voice")}</span>
-      <span aria-hidden="true">{ducked ? "✓" : ""}</span>
+      <span aria-hidden="true">{ducked && <Check size={12} />}</span>
     </button>
   );
 }

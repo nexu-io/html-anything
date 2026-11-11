@@ -83,6 +83,8 @@ describe("requestTimelineZoom", () => {
     expect(currentTimelineZoomPercent()).toBe(150);
     // 4 s stays at 100px: 32 + 4 * 15 - left = 100, left = -8 clamps to 0, translated by 0.
     expect(row.style.transform).toBe("translateX(0px) scaleX(1.5)");
+    // Ruler text cancels the parent's horizontal scale throughout the preview.
+    expect(Number(row.style.getPropertyValue("--timeline-zoom-inverse")) * 1.5).toBeCloseTo(1);
     vi.advanceTimersByTime(150);
     unsubscribe();
     expect(writes).toHaveBeenCalledTimes(1);
@@ -93,6 +95,7 @@ describe("requestTimelineZoom", () => {
       userZoomCount: 1,
     });
     expect(row.style.transform).toBe("");
+    expect(row.style.getPropertyValue("--timeline-zoom-inverse")).toBe("");
   });
 
   it("keeps the time under the pointer while previewing, then lays it out there", () => {
@@ -182,6 +185,7 @@ describe("requestTimelineZoom", () => {
     await Promise.resolve();
     expect(usePlayerStore.getState().timelinePps).toBe(10);
     expect(mountedRow.style.transform).toContain("scaleX(1.5)");
+    expect(Number(mountedRow.style.getPropertyValue("--timeline-zoom-inverse")) * 1.5).toBeCloseTo(1);
   });
 
   it("lays a pending zoom out at once when settled, as a press does", () => {
@@ -212,6 +216,7 @@ describe("requestTimelineZoom", () => {
     vi.advanceTimersByTime(300);
     expect(usePlayerStore.getState().timelinePps).toBe(10);
     expect(row.style.transform).toBe("");
+    expect(row.style.getPropertyValue("--timeline-zoom-inverse")).toBe("");
   });
 
   it("lays the zoom out before the timeline counts as at rest", () => {
@@ -390,6 +395,22 @@ describe("zoomTimelineStep", () => {
   const run = () => {
     for (let i = 0; i < 30; i++) vi.advanceTimersToNextFrame();
   };
+
+  it.each(["in", "out"] as const)("keeps the ruler text scale neutral through a zoom-%s animation", (direction) => {
+    usePlayerStore.setState({ currentTime: 110, duration: 1000, zoomMode: "manual", manualZoomPercent: 400, timelinePps: 40 });
+    const { row } = viewport(4000);
+    zoomTimelineStep(direction);
+    let previewFrames = 0;
+    for (let i = 0; i < 30; i++) {
+      vi.advanceTimersToNextFrame();
+      const scale = /scaleX\(([\d.]+)\)/.exec(row.style.transform);
+      if (!scale) continue;
+      previewFrames++;
+      expect(Number(scale[1]) * Number(row.style.getPropertyValue("--timeline-zoom-inverse"))).toBeCloseTo(1, 10);
+    }
+    expect(previewFrames).toBeGreaterThan(1);
+    expect(row.style.getPropertyValue("--timeline-zoom-inverse")).toBe("");
+  });
 
   it("counts as a person's zoom", () => {
     viewport();

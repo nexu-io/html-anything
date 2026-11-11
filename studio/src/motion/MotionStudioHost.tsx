@@ -76,8 +76,8 @@ function WorkspaceProject() {
   const finishEditing = () => { editingRef.current = false; setEditing(false); };
   const saveTitle = async () => {
     if (!editingRef.current || savingRef.current) return;
-    const nextTitle = title.trim();
-    if (!project || !nextTitle || nextTitle === project.title) { finishEditing(); return; }
+    const nextTitle = title.trim() || t('Untitled');
+    if (!project || nextTitle === project.title) { finishEditing(); return; }
     savingRef.current = true;
     try { if (await workspace.rename(project.id, nextTitle)) finishEditing(); }
     finally { savingRef.current = false; }
@@ -88,7 +88,7 @@ function WorkspaceProject() {
       maxLength={100}
       aria-label={t('Project name')}
       value={editing ? title : project?.title || ''}
-      placeholder={t('Connecting…')}
+      placeholder={t(project ? 'Untitled' : 'Connecting…')}
       disabled={workspace.busy || switchingDisabled || !project}
       onFocus={() => {
         if (editingRef.current) return;

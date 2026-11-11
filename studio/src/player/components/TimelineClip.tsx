@@ -264,7 +264,7 @@ export const TimelineClip = memo(function TimelineClip({
       {/* Fade handles for anything the mixer hears: audio clips and videos marked
           data-has-audio. They write data-fade-in/out, the timeline half of the
           inspector's Fade rows. */}
-      {hasFades && (
+      {hasFades && !mvp && (
         <TimelineClipFades
           el={el}
           pps={pps}

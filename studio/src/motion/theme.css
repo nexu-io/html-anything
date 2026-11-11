@@ -163,8 +163,8 @@ button, input, select, textarea { font-family: inherit; }
 .motion-asset-name-input[aria-invalid="true"] { border-color: var(--motion-danger); }
 
 /* Keep resize handles available without permanent lines between panel cards. */
-.hf-dock .dv-split-view-container > .dv-sash-container > .dv-sash,
-.hf-dock .dv-split-view-container > .dv-sash-container > .dv-sash:is(:hover, :active, :focus-visible) { background: transparent; }
+:root[data-motion-ui] .hf-dock .dv-split-view-container > .dv-sash-container > .dv-sash,
+:root[data-motion-ui] .hf-dock .dv-split-view-container > .dv-sash-container > .dv-sash:is(:hover, :active, :focus-visible) { background: transparent; }
 .hf-dock .dv-sash::after { content: ''; position: absolute; pointer-events: none; background: transparent; transition: background 120ms; }
 .hf-dock .dv-horizontal > .dv-sash-container > .dv-sash::after { width: 1px; height: 100%; top: 0; left: 2px; }
 .hf-dock .dv-vertical > .dv-sash-container > .dv-sash::after { height: 1px; width: 100%; left: 0; top: 2px; }
@@ -280,7 +280,7 @@ button, input, select, textarea { font-family: inherit; }
 
 .motion-language-button { flex-shrink: 1; min-width: 0; white-space: nowrap; }
 .motion-language-button span { min-width: 0; overflow: hidden; text-overflow: ellipsis; text-align: center; }
-.motion-language-menu { width: 220px; max-width: calc(100vw - 24px); }
+.motion-language-menu { width: 180px; max-width: calc(100vw - 24px); }
 :root[data-motion-ui] .hf-od-floating-surface.motion-language-menu {
   max-height: min(280px, calc(100dvh - 24px), var(--available-height, 280px));
   overflow-y: auto;
@@ -314,7 +314,27 @@ button, input, select, textarea { font-family: inherit; }
 :root[data-motion-ui] .motion-composition-card[aria-current="true"] { background: var(--motion-inset); }
 :root[data-motion-ui] .motion-composition-card[aria-current="true"] .motion-composition-name { color: var(--motion-strong); font-weight: 600; }
 
+.motion-composition-placeholder { background: var(--motion-inset); color: var(--motion-dim); }
+.motion-composition-placeholder-mark {
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  -webkit-mask: url('./od-loading-mark.svg') center / contain no-repeat;
+  mask: url('./od-loading-mark.svg') center / contain no-repeat;
+}
+
 :root[data-motion-ui] .hf-od-floating-surface.motion-speed-menu { background: var(--motion-raised); border: 0; outline: none; box-shadow: var(--motion-shadow-sm); }
+
+:root[data-motion-ui] .hf-od-floating-surface.motion-preview-zoom-menu {
+  width: 96px;
+  min-width: 96px;
+  background: var(--motion-raised);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 0;
+  outline: none;
+  box-shadow: var(--motion-shadow-sm);
+}
 
 /* Equal side columns center the title; narrow hosts preserve the controls before the title. */
 .motion-studio-header.motion-studio-header-centered { padding-block: 11.5px; display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 1fr) minmax(max-content, 1fr); gap: 12px; }

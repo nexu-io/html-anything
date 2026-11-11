@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { Check } from "../../icons/RemixIcons";
 import {
   createContext,
   useCallback,
@@ -481,7 +482,7 @@ function WindowMenu() {
               onClick={() => togglePanel(id)}
               className={`${menuClasses.row} ${menuClasses.rowEnabled} flex items-center gap-2`}
             >
-              <span className="w-3 text-accent-ink">{openPanels.has(id) ? "✓" : ""}</span>
+              <span className="w-3 text-accent-ink">{openPanels.has(id) && <Check size={12} />}</span>
               {t(PANEL_DEFINITIONS[id].title)}
             </button>
           ))}
