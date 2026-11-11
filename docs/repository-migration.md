@@ -1,12 +1,12 @@
 # OpenMotion standalone repository
 
-OpenMotion replaces the former HTML Anything application at the repository root on `main`. The repository was renamed from `nexu-io/html-anything` to `nexu-io/openmotion` on 2026-11-11; existing commits, issues and pull requests remain in the same repository. The cutover preserves Git history.
+OpenMotion replaces the former HTML Anything application at the repository root on `main`. The repository name remains `nexu-io/html-anything`; existing commits, issues and pull requests remain in the same repository. The cutover preserves Git history.
 
-Daily Motion changes branch from the latest `feature/motion` and open PRs with that base. The previous application is preserved at [`legacy`](https://github.com/nexu-io/openmotion/tree/legacy). The default branch remains `main`. Package publication remains a separate, explicitly authorized operation.
+Daily Motion changes branch from the latest `feature/motion` and open PRs with that base. The previous application is preserved at [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). The default branch remains `main`. Package publication remains a separate, explicitly authorized operation.
 
 ## Upstream synchronization checkpoint
 
-On 2026-11-08, the OpenMotion source `main` snapshot `21c3e5aaef1af34b0f126f7db90a86927e2ef325` was compared with public `feature/motion` at `c5f6975cfde71b3a55c6b21921ed64260937c246`. The latest source change, media-popover positioning and empty-timeline guidance, is already included through [PR #172](https://github.com/nexu-io/openmotion/pull/172). All 13 implementation and test files changed by that source update have identical Git blobs in the public branch.
+On 2026-11-08, the OpenMotion source `main` snapshot `21c3e5aaef1af34b0f126f7db90a86927e2ef325` was compared with public `feature/motion` at `c5f6975cfde71b3a55c6b21921ed64260937c246`. The latest source change, media-popover positioning and empty-timeline guidance, is already included through [PR #172](https://github.com/nexu-io/html-anything/pull/172). All 13 implementation and test files changed by that source update have identical Git blobs in the public branch.
 
 The complete tree comparison found 2,626 identical entries, three files differing only by a trailing blank line, and 72 remaining path differences. Those differences preserve the public migration contract described below:
 

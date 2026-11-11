@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   select-ref:
-    if: github.repository == 'nexu-io/openmotion'
+    if: github.repository == 'nexu-io/html-anything'
     runs-on: ubuntu-24.04
     steps:
       - name: Require Motion integration branch

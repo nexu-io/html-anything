@@ -40,7 +40,7 @@ env:
 
 jobs:
   verify:
-    if: github.repository == 'nexu-io/openmotion'
+    if: github.repository == 'nexu-io/html-anything'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:

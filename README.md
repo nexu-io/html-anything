@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/nexu-io/openmotion"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
+  <a href="https://github.com/nexu-io/html-anything"><img src="docs/readme/badges/stars.svg" alt="GitHub Stars · 9.5k (2026-11-09)"></a>
   <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
   <a href="LICENSE"><img src="docs/readme/badges/license.svg" alt="Apache 2.0 license"></a>
   <a href="https://github.com/nexu-io/open-design"><img src="docs/readme/badges/built-by-opendesign.svg" alt="Built by OpenDesign"></a>
@@ -561,7 +561,7 @@ If MCP tools are missing or fail to connect, use the installed [connection diagn
 Use Git, npm and **Node.js 26.11.1**. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/openmotion.git openmotion
+git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
 cd openmotion
 npm ci
 npm run build:studio
@@ -798,7 +798,7 @@ Dependency pins live in [package.json](package.json), [package-lock.json](packag
 | **Agents and developer tools** | Improve a host adapter, Skill, resource guide or project-tool workflow | [Agent adapters](docs/agent-adapters.md) · [MCP contract](docs/mcp-phase1-tools.md) |
 | **Motion and creative coding** | Share a component, native template or Motion.md package with an actual remix | [Components](library/components/README.md) · [Entry checklist](library/ENTRY_TEMPLATE.md) |
 | **Video and rendering** | Improve export reliability, media handling or reproducible validation | [Engine notes](docs/hyperframes.md) · [Export verifier](scripts/verify-export.ts) |
-| **Social publishing** | Help design the Coming connector layer: account access, release review, scheduling and version mapping | [Publishing direction](docs/product/studio-vision.md) · [Discuss a proposal](https://github.com/nexu-io/openmotion/issues) |
+| **Social publishing** | Help design the Coming connector layer: account access, release review, scheduling and version mapping | [Publishing direction](docs/product/studio-vision.md) · [Discuss a proposal](https://github.com/nexu-io/html-anything/issues) |
 
 Start with the [local setup](#quick-start), choose one layer, and follow [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md). Keep user projects and credentials outside the checkout and preserve dependency pins and upstream licenses.
 
@@ -849,15 +849,15 @@ Share a remake, a reusable template or a Motion.md that captures the rhythm of a
 | **Brand Kit content for Motion.md** | Identity, accurate product facts and approved assets within the creative specification |
 | **Agent support or editor improvements** | A focused change with reproducible validation |
 
-[Library entry checklist](library/ENTRY_TEMPLATE.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/nexu-io/openmotion/issues) · [Contributors](https://github.com/nexu-io/openmotion/graphs/contributors) · [Media kit](docs/media-kit.md)
+[Library entry checklist](library/ENTRY_TEMPLATE.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/nexu-io/html-anything/issues) · [Contributors](https://github.com/nexu-io/html-anything/graphs/contributors) · [Media kit](docs/media-kit.md)
 
 The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
 
 [Motion showcase](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
-[**Star OpenMotion on GitHub**](https://github.com/nexu-io/openmotion)
+[**Star OpenMotion on GitHub**](https://github.com/nexu-io/html-anything)
 
-[![Stay tuned with us · Star OpenMotion](docs/readme/community-star.svg)](https://github.com/nexu-io/openmotion)
+[![Stay tuned with us · Star OpenMotion](docs/readme/community-star.svg)](https://github.com/nexu-io/html-anything)
 
 <a id="acknowledgements"></a>
 
@@ -882,4 +882,4 @@ OpenMotion is licensed under [Apache-2.0](LICENSE). Third-party code, templates,
 
 [Asset sources](docs/readme/ASSETS.md) · [Additional showcase sources](docs/readme/brand-showcase/README.md) · [Font notices](web/design-system/fonts/NOTICES.txt) · [Studio license](studio/LICENSE)
 
-The former HTML Anything application is preserved on the [`legacy` branch](https://github.com/nexu-io/openmotion/tree/legacy). See the [repository migration guide](docs/repository-migration.md) for the active branch and distribution boundaries.
+The former HTML Anything application is preserved on the [`legacy` branch](https://github.com/nexu-io/html-anything/tree/legacy). See the [repository migration guide](docs/repository-migration.md) for the active branch and distribution boundaries.
