@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import {
   type Artifact,
   Fault,
@@ -97,6 +98,18 @@ export class Workspace {
   }
   private dispatch(operation: Operation, input: unknown): Output<Operation> {
     switch (operation) {
+      case "workspace_observe": {
+        const state = { sessions: this.sessions.list(), selection: this.selection.get() },
+          selected = state.selection,
+          session = selected.sessionId ? this.sessions.head(selected.sessionId) : null,
+          project =
+            selected.sessionId && selected.artifactId
+              ? this.projects.head({ sessionId: selected.sessionId, artifactId: selected.artifactId })
+              : null;
+        const token =
+          "sha256:" + createHash("sha256").update(JSON.stringify({ state, session, project })).digest("hex");
+        return { token, state, project };
+      }
       case "workspace_state":
         return { sessions: this.sessions.list(), selection: this.selection.get() };
       case "session_rename":

@@ -33,6 +33,7 @@ const selection = {
 };
 export const schemas = {
   workspace_state: z.strictObject({}),
+  workspace_observe: z.strictObject({}),
   session_create: z.strictObject({ ...request, title, mode: z.literal("motion"), instruction: text.optional() }),
   session_rename: z.strictObject({ ...request, sessionId: id, title }),
   session_get: z.strictObject({ sessionId: id }),
@@ -119,8 +120,26 @@ export interface State {
   sessions: Session[];
   selection: Selection;
 }
+export interface ProjectHead {
+  sessionId: string;
+  artifactId: string;
+  revision: string;
+  historyVersion: number;
+}
+/** Content equality token, not a process identity or durable event cursor. */
+export interface Observation {
+  token: string;
+  state: State;
+  project: ProjectHead | null;
+}
+export interface WorkspaceView {
+  state: State;
+  session: SessionDetail | null;
+  project: Project | null;
+}
 export interface Outputs {
   workspace_state: State;
+  workspace_observe: Observation;
   session_create: SessionDetail;
   session_get: SessionDetail;
   session_rename: SessionDetail;
@@ -150,6 +169,8 @@ export class Fault extends Error {
 }
 export const descriptions: Record<Operation, string> = {
   workspace_state: "List creative sessions and the current selection.",
+  workspace_observe:
+    "Read an atomic lightweight workspace token and selected project/history head; fetch owned bodies and fence with another observation before applying.",
   session_create: "Create an empty Motion session and optionally preserve the user's instruction.",
   session_rename: "Rename a session without renaming its artifacts or changing project content.",
   session_get: "Read a session, its messages and owned artifacts.",
@@ -246,4 +267,54 @@ export function changeSources(files: SourceFile[], change: SourceChange): Source
     next.push({ path: target, content });
   }
   return next.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
+}
+
+export type SourceChoice = "local" | "remote";
+export interface SourceConflict {
+  path: string;
+  base?: string;
+  local?: string;
+  remote?: string;
+}
+/** File-granularity three-way reconciliation; never persists or rewrites source. */
+export function mergeSources(
+  base: SourceFile[],
+  local: SourceFile[],
+  remote: SourceFile[],
+  choices: Record<string, SourceChoice> = {},
+) {
+  const maps = [base, local, remote].map((files) => new Map(files.map((file) => [file.path, file.content])));
+  const paths = [...new Set([...base, ...local, ...remote].map((file) => file.path))].sort();
+  const files: SourceFile[] = [],
+    conflicts: SourceConflict[] = [];
+  for (const path of paths) {
+    const before = maps[0]?.get(path),
+      mine = maps[1]?.get(path),
+      theirs = maps[2]?.get(path);
+    let content: string | undefined;
+    if (mine === before) content = theirs;
+    else if (theirs === before || mine === theirs) content = mine;
+    else if (choices[path] === "local") content = mine;
+    else if (choices[path] === "remote") content = theirs;
+    else {
+      conflicts.push({ path, base: before, local: mine, remote: theirs });
+      continue;
+    }
+    if (content !== undefined) files.push({ path, content });
+  }
+  if (files.length > 128) throw new Fault("invalid", "merged source count exceeds 128");
+  if (!conflicts.length) {
+    const names = new Set(files.map((file) => file.path));
+    if (!names.has("index.html")) throw new Fault("invalid", "merged sources require index.html");
+    let bytes = 0;
+    for (const file of files) {
+      validateSourcePath(file.path, true);
+      if (file.content.length > 1048576) throw new Fault("invalid", "merged file exceeds text bound");
+      bytes += new TextEncoder().encode(file.content).length;
+      for (let at = file.path.indexOf("/"); at >= 0; at = file.path.indexOf("/", at + 1))
+        if (names.has(file.path.slice(0, at))) throw new Fault("invalid", "merged source paths overlap");
+    }
+    if (bytes > 4 * 1024 * 1024) throw new Fault("invalid", "merged source exceeds 4 MiB");
+  }
+  return { files, conflicts };
 }

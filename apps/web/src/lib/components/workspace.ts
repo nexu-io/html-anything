@@ -14,12 +14,14 @@ import { setTheme, type Theme } from "@open-motion/theme";
 import type { Artifact } from "@open-motion/workspace/contract";
 import type { Client } from "../../api.js";
 import type { Editor } from "../editor.js";
+import { observeWorkspace } from "../observe.js";
 import { Exports } from "./exports.js";
 import { workspaceLayout } from "./layout.js";
 import { Studio } from "./studio.js";
 import { Templates } from "./templates.js";
 import { Conversation } from "./workspace/conversation.js";
 import { Navigation } from "./workspace/navigation.js";
+import { WorkspaceSync } from "./workspace/sync.js";
 export function workspace(root: HTMLElement, editor: Editor, client: Client) {
   const document = root.ownerDocument,
     shell = workspaceLayout(document),
@@ -44,6 +46,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     retry: (() => void) | undefined,
     file = "index.html",
     activity = 0,
+    operations = 0,
     navigationOpen = true,
     conversationOpen = true,
     flight = Promise.resolve();
@@ -51,6 +54,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     if (busy || disposed) return;
     const focused = document.activeElement,
       epoch = activity;
+    operations++;
     busy = true;
     retry = () => run(action, next);
     render("处理中");
@@ -81,6 +85,14 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
           focused.focus();
       });
   };
+  const synchronization = new WorkspaceSync(document, editor, run);
+  shell.editor.prepend(synchronization.element);
+  const observer = observeWorkspace(editor, {
+    available: () => !busy && !disposed,
+    generation: () => operations,
+    changed: () => render(message),
+    status: (value) => synchronization.status(value),
+  });
   const enterSession = (title: string) => {
     let id = "";
     run(
@@ -235,7 +247,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
   source.oninput = () => {
     editor.editFile(file, source.value);
     refreshHeader();
-    studio.sync(editor.project, busy || editor.unconfirmed);
+    studio.sync(editor.project, busy || editor.unconfirmed || !!editor.incoming);
   };
   const interacted = () => {
     activity++;
@@ -246,7 +258,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     if (!(event.metaKey || event.ctrlKey) || event.altKey || event.isComposing) return;
     if (event.key.toLowerCase() === "s") {
       event.preventDefault();
-      if (!busy && !editor.unconfirmed && editor.project) run(() => editor.save());
+      if (!busy && !editor.unconfirmed && !editor.incoming && editor.project) run(() => editor.save());
     }
     if (
       event.key.toLowerCase() === "z" &&
@@ -258,6 +270,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       if (
         !busy &&
         !editor.unconfirmed &&
+        !editor.incoming &&
         editor.project &&
         (direction === "project_undo"
           ? editor.project.history.canUndo || editor.dirty || editor.drafts?.dirty()
@@ -306,7 +319,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     shell.showConversation(conversationOpen);
   }
   function refreshHeader() {
-    const blocked = busy || editor.unconfirmed,
+    const blocked = busy || editor.unconfirmed || !!editor.incoming,
       artifact = editor.session?.artifacts.find((a) => a.id === editor.project?.artifactId);
     title.textContent = artifact?.title ?? editor.session?.title ?? "创作工作区";
     saved.value = editor.dirty || editor.drafts?.dirty() ? "未保存" : "本地已保存";
@@ -325,11 +338,12 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
   function render(next: string) {
     if (disposed) return;
     message = next;
-    const blocked = busy || editor.unconfirmed;
+    const blocked = busy || editor.unconfirmed || !!editor.incoming;
     setTheme(root, theme);
     updatePanels();
     root.setAttribute("data-session-id", editor.state.selection.sessionId ?? "");
     root.setAttribute("data-artifact-id", editor.state.selection.artifactId ?? "");
+    synchronization.update(busy || editor.unconfirmed);
     navigation.update(editor, blocked, theme === "dark");
     conversation.update(editor, blocked);
     templates.update(editor.session?.id, blocked);
@@ -339,7 +353,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       editor.project?.artifactId ?? "",
       blocked,
     );
-    if (!editor.project?.files.some((f) => f.path === file)) file = "index.html";
+    if (!editor.sources.some((f) => f.path === file)) file = "index.html";
     source.setAttribute("aria-label", file);
     if (sourceLabel.firstElementChild) sourceLabel.firstElementChild.textContent = file;
     if (source.value !== editor.source(file)) source.value = editor.source(file);
@@ -356,6 +370,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       if (disposal) return disposal;
       disposed = true;
       disposal = (async () => {
+        await observer.close();
         await flight;
         await exports.dispose();
         await templates.dispose();

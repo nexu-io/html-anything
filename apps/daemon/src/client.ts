@@ -87,15 +87,23 @@ export class Client {
   async health(): Promise<Health> {
     return (await this.send("/health")) as Health;
   }
-  execute<K extends WorkspaceOperation>(operation: K, input: WorkspaceInput<K>): Promise<WorkspaceOutput<K>>;
-  execute<K extends ExportOperation>(operation: K, input: ExportInput<K>): Promise<ExportOutput<K>>;
-  execute<K extends Operation>(operation: K, input: Input<K>): Promise<Output<K>>;
-  async execute(operation: Operation, input: unknown): Promise<Output<Operation>> {
-    return (await this.send(`/api/${operation}`, input)) as Output<Operation>;
+  execute<K extends WorkspaceOperation>(
+    operation: K,
+    input: WorkspaceInput<K>,
+    signal?: AbortSignal,
+  ): Promise<WorkspaceOutput<K>>;
+  execute<K extends ExportOperation>(
+    operation: K,
+    input: ExportInput<K>,
+    signal?: AbortSignal,
+  ): Promise<ExportOutput<K>>;
+  execute<K extends Operation>(operation: K, input: Input<K>, signal?: AbortSignal): Promise<Output<K>>;
+  async execute(operation: Operation, input: unknown, signal?: AbortSignal): Promise<Output<Operation>> {
+    return (await this.send(`/api/${operation}`, input, false, signal)) as Output<Operation>;
   }
-  private async send(path: string, input?: unknown, keepalive = false): Promise<unknown> {
+  private async send(path: string, input?: unknown, keepalive = false, signal?: AbortSignal): Promise<unknown> {
     const response = await this.transport(`${this.origin}${path}`, {
-      signal: AbortSignal.timeout(path === "/health" ? 3000 : 10000),
+      signal: AbortSignal.any([AbortSignal.timeout(path === "/health" ? 3000 : 10000), ...(signal ? [signal] : [])]),
       method: input === undefined ? "GET" : "POST",
       credentials: "omit",
       keepalive,

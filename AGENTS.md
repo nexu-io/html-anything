@@ -119,6 +119,8 @@ Generation fixes provider/version/model/prompt and the initiating project revisi
 
 User media is workspace-owned persistent data, outside blob GC. Bind reads to owned immutable revision manifests; removal never erases historical bytes. Preserve import request identities and applied insertion state across unknown transport outcomes; reject old database formats without migration/reset.
 
+Workspace owns observation metadata and its equality token; Web owns serial abortable polling and fenced publication. Preserve drafts on remote changes, require explicit conflict/context decisions and keep merges unsaved until the existing optimistic transaction. Confirm unknown write receipts first. Observation is neither an event journal nor OS-liveness authority; no watcher or parallel project store.
+
 Generic controls/anonymous layouts belong to components; panel registration, positions, drafts and context switching belong to Web. Preserve input DOM/focus and incomplete numeric drafts. `WebView.dispose` drains operations, revokes previews and removes listeners before reusing a root; it does not implicitly save drafts.
 
 Real browser tests live in `apps/web/tests/browser`; carrier composition tests live in the owning carrier. Drivers and PNG comparison belong to automation. Pin Chromium, viewport, theme, fonts and native readiness. A theme round-trip is not full product parity. Install Chromium in this worktree as documented; permanent tests must cover actual behavior, rather than relying exclusively on temporary scripts.

@@ -43,6 +43,8 @@ guard:
       - packages/motion/tests/media
       - packages/motion/src/project
       - apps/web/tests/browser
+      - apps/web/tests/workspace
+      - packages/workspace/tests/state
       - packages/theme/src/tokens
       - packages/theme/src/themes
       - packages/theme/src/fonts

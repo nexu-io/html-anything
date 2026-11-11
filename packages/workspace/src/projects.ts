@@ -1,5 +1,13 @@
 import { randomUUID } from "node:crypto";
-import { type Artifact, Fault, type Input, type Project, type Resource, type SourceFile } from "./contract.js";
+import {
+  type Artifact,
+  Fault,
+  type Input,
+  type Project,
+  type ProjectHead,
+  type Resource,
+  type SourceFile,
+} from "./contract.js";
 import type { Database } from "./database.js";
 import { digest, manifest, sources } from "./native.js";
 import type { Sessions } from "./sessions.js";
@@ -9,7 +17,7 @@ export class Projects {
     private sessions: Sessions,
   ) {}
   owner(sessionId: string, artifactId: string): Artifact {
-    this.sessions.get(sessionId);
+    this.sessions.require(sessionId);
     const artifact = this.db.one(
       "SELECT id,session_id AS sessionId,project_id AS projectId,'motion-project' AS kind,title,created_at AS createdAt FROM artifacts WHERE id=?",
       artifactId,
@@ -44,6 +52,17 @@ export class Projects {
       artifact.createdAt,
     );
     return artifact;
+  }
+  head(input: Input<"project_read">): ProjectHead {
+    const owner = this.owner(input.sessionId, input.artifactId);
+    const entry = this.db.one("SELECT current_revision,history_version FROM projects WHERE id=?", owner.projectId);
+    if (!entry) throw new Fault("integrity", "project head is missing");
+    return {
+      sessionId: owner.sessionId,
+      artifactId: owner.id,
+      revision: String(entry.current_revision),
+      historyVersion: Number(entry.history_version),
+    };
   }
   read(input: Input<"project_read">): Project {
     const owner = this.owner(input.sessionId, input.artifactId);
