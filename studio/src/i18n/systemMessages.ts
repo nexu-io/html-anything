@@ -72,6 +72,10 @@ const patterns = TEMPLATES.map(template => {
 });
 
 export function systemMessage(message: string, t: Translate): string {
+  const restore = /^VERSION_NOT_RESTORABLE: (Historical files are missing, unreadable or corrupt|Cannot stage historical file): (.+)$/s.exec(message);
+  if (restore) return t(restore[1] === 'Cannot stage historical file'
+    ? 'Could not prepare historical files for restoration: {files}. Your current project is unchanged.'
+    : 'Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.', { files: restore[2] });
   const plainHistory = /^(Undid|Redid) (.+)$/s.exec(message);
   if (plainHistory) return t(plainHistory[1] === 'Undid' ? 'Undid {label}' : 'Redid {label}', { label: historyEntryLabel(plainHistory[2], t) });
   const history = /^(Undid|Redid): (.+)$/s.exec(message);
