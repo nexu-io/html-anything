@@ -48,7 +48,7 @@ export function useWorkspace(waitForSaves: () => Promise<void>, projectId?: stri
         ]);
         if (controller.signal.aborted) return;
         if (projectId && data.projectId !== projectId && !acting.current) {
-          throw new Error('工程状态与当前页面不匹配，请重新打开对应工程。');
+          throw new Error('项目状态与当前页面不匹配，请重新打开对应项目。');
         }
         const session = !projectId && sessionId ? catalog.sessions?.find(item => item.id === sessionId) : undefined;
         const generated = session?.artifacts.find(item => item.id === session.activeArtifactId) ?? session?.artifacts.at(-1);
