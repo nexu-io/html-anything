@@ -307,6 +307,9 @@ importers:
       '@modelcontextprotocol/client':
         specifier: 2.4.0
         version: 2.4.0
+      '@odsuite/automation':
+        specifier: workspace:*
+        version: link:../../suites/automation
       '@open-motion/daemon':
         specifier: workspace:*
         version: link:../../apps/daemon

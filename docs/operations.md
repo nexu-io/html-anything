@@ -23,6 +23,8 @@ pnpm --filter @open-motion/web exec vitest run -c vitest.config.ts tests/browser
 pnpm --filter @open-motion/standalone test
 ```
 
+Installed-kit continuity is covered by `packages/application/tests/journey.test.ts`: actual npm installation, installed MCP creation, managed standalone Web edits/history, stale-revision refusal and cold reconnect. Run it through the application module's standard test command with Playwright installed as above. With `OPEN_MOTION_NATIVE_MANIFEST`, the same journey also verifies a Web-submitted native film and its unchanged bytes after restart. Without that manifest, native execution is explicitly unqualified. MCP SDK coverage is separate from a real model-backed Codex host session.
+
 Web browser fixtures use actual built Web, SQLite and Daemon HTTP hosted in the test process. Standalone tests exercise an independent sidecar-owned Daemon. Services/ports/data belong to sidecar; Chromium is test-driver infrastructure closed in finally. Check actual manager closure and zero workloads. Evidence goes to `.artifacts/browser/<uuid>` or `.artifacts/animation-browser/<uuid>`; failures preserve screenshots/diagnostics. Fixed reference tokens, pixel round-trips, actual editing, platform and full product acceptance are separate. Never upload capabilities or raw communication traces.
 
 ## Explicit Prism template configuration
