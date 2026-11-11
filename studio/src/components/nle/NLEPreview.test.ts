@@ -57,7 +57,6 @@ class MockResizeObserver {
   observe() {
     const fire = () => this.cb([], this as unknown as ResizeObserver);
     resizeCallbacks.push(fire);
-    fire();
   }
   disconnect() {}
 }
@@ -217,6 +216,25 @@ describe("NLEPreview", () => {
 
   afterEach(() => {
     globalThis.ResizeObserver = originalResizeObserver;
+  });
+
+  it("commits each divider resize before the player's observer measures the stage", () => {
+    const view = renderPreview();
+    const mounts = playerMounts.length;
+    try {
+      for (const width of [640, 920, 680, 800]) {
+        setRect(view.viewport, { width, height: 600 });
+        act(() => {
+          for (const fire of resizeCallbacks) fire();
+          // A nested ResizeObserver runs before React's next scheduled render.
+          expect(view.stage.style.width).toBe(`${width - 16}px`);
+          expect(view.stage.style.height).toBe(`${(width - 16) * 9 / 16}px`);
+        });
+      }
+      expect(playerMounts.length).toBe(mounts);
+    } finally {
+      view.cleanup();
+    }
   });
 
   it("draws the canvas boundary on the preview stage", () => {

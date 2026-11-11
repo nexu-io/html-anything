@@ -331,6 +331,14 @@ describe("PropertyPanel — STUDIO_FLAT_INSPECTOR_ENABLED off", () => {
   });
 });
 
+it.each([false, true])("omits the hide action for a selection without its own timeline row (flat: %s)", async (flat) => {
+  const { host, root } = await renderPanel(flat, baseElement(), { onToggleElementHidden: vi.fn() }, {
+    selectedElementId: "child.html#mono-label",
+  });
+  expect(host.querySelector('button[aria-label="Hide element"]')).toBeNull();
+  act(() => root.unmount());
+});
+
 describe("PropertyPanel — STUDIO_FLAT_INSPECTOR_ENABLED on", () => {
   it("renders the flat header, the Text group open by default, and the flat footer", async () => {
     const { host, root } = await renderPanel(true);
@@ -940,6 +948,9 @@ describe("PropertyPanel — Motion is for things that move", () => {
 
   it("offers a mute on an audible audio clip and toggles it through the timeline", async () => {
     const onToggleElementHidden = vi.fn();
+    usePlayerStore.setState({ elements: [
+      { id: "vo-1", tag: "audio", start: 0, duration: 2, track: 0 },
+    ] });
     const { host, root } = await renderPanel(
       true,
       audioClipElement(),

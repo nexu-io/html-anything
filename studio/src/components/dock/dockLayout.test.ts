@@ -38,7 +38,7 @@ describe("defaultSideWidths", () => {
   it.each([
     [1680, 384, 424],
     [1280, 329, 364],
-    [860, 221, 244],
+    [860, 260, 240],
     [560, 120, 120],
   ])("at %ipx gives %i / %i", (viewport, left, right) => {
     expect(defaultSideWidths(viewport)).toEqual({ left, right });

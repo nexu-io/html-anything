@@ -37,7 +37,7 @@ export async function verifyRegistryDownload(directory, { destination, ...option
   await rm(path.join(directory, 'registry-package.json'), { force: true });
   const c = JSON.parse(await readFile(path.join(directory, 'candidate.json')));
   assert.equal(c.packageName, '@openmotion/app');
-  checkReleaseVersion(c.version); assert(c.version.includes('-test.'));
+  checkReleaseVersion(c.version);
   assert.equal(c.tgz, `openmotion-app-${c.version}.tgz`);
   assert.match(c.tgzSHA256, /^[a-f0-9]{64}$/);
   const temporary = destination || await mkdtemp(path.join(os.tmpdir(), 'om-download-'));

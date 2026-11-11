@@ -69,7 +69,7 @@ describe("buildCompositionThumbnailUrl", () => {
         origin: "http://localhost:3000",
       }),
     ).toBe(
-      "http://localhost:3000/api/projects/demo/thumbnail/index.html?t=2.00&v=v3&revision=0&selector=.card&selectorIndex=2",
+      "http://localhost:3000/api/projects/demo/thumbnail/index.html?t=2.00&v=v4&revision=0&selector=.card&selectorIndex=2",
     );
   });
 
@@ -113,6 +113,23 @@ describe("CompositionThumbnail", () => {
     if (!probe) throw new Error("Expected an image probe");
     return probe;
   }
+
+  it("requests source-resolution captures for selected elements", async () => {
+    root = createRoot(host);
+    await act(async () => {
+      root!.render(React.createElement(CompositionThumbnail, {
+        previewUrl: "/api/projects/demo/preview",
+        label: "",
+        labelColor: "#fff",
+        selector: ".cursor",
+      }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      expect.stringMatching(/output=source.*selector=\.cursor/),
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    );
+  });
 
   it("renders visible tiles after the scheduled off-DOM probe loads", async () => {
     const probe = await renderThumbnail();

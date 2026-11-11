@@ -52,9 +52,10 @@ jobs:
             .github/maintainability/package-lock.json
       - name: Compare source against the PR base
         shell: bash
+        env:
+          PR_HEAD_REVISION: ${{ github.event.pull_request.head.sha }}
         run: |
-          # A regenerated merge result can contain a newer base than the event payload.
-          git rev-parse --verify HEAD^2 >/dev/null
+          test "$(git rev-parse HEAD^2)" = "$PR_HEAD_REVISION"
           BASE_REVISION=$(git rev-parse HEAD^1)
           base_dir=$(mktemp -d "$RUNNER_TEMP/motion-base.XXXXXX")
           git archive "$BASE_REVISION" | tar -x -C "$base_dir"
@@ -126,7 +127,7 @@ jobs:
         run: |
           node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node .github/scripts/motion-scan.mjs source . "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
-          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/registry-download.test.mjs
+          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/registry-download.test.mjs tests/stable-release.test.mjs
       - name: Install locked Motion dependencies
         run: npm ci --no-audit --no-fund
       - name: Check and build Studio
