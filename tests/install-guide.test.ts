@@ -59,7 +59,11 @@ test('guide rendering pins the exact npm package, built source and hash while re
   for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(text.includes(`openmotion setup --host ${host}`), host);
   assert(text.includes('--profile PROFILE') && text.includes('Do not infer the current host'));
   assert(text.includes(`/blob/${manifest.commit}/docs/npm-installation.md#npm-download-failures`), 'Network recovery must link to this package source');
-  assert(text.includes('complete setup command and selected environment/paths') && text.includes('A local tgz still needs npm access'), 'Generated guides retain the terminal handoff and online dependency boundary');
+  assert(text.includes('automatically try `https://registry.npmjs.org` then `https://registry.npmmirror.com`'), 'Network recovery must name the ordered automatic fallback');
+  assert(text.includes('at most once per registry, counting the initial failed attempt'), 'Recovery must not retry the same registry indefinitely');
+  assert(text.includes('`npm_config_registry` and `npm_config_fetch_retries=0` only for that attempt, including setup\'s npm child process'), 'Temporary registry settings must reach nested dependency installation');
+  assert(text.includes('verify any mirrored tgz against the matching immutable guide\'s SHA256 before executing it'), 'Mirror recovery must preserve an independently recorded package identity');
+  assert(text.includes('Permission or checksum failures stop immediately') && text.includes('terminal handoff') && text.includes('A local tgz still needs npm access'), 'Retain fail-closed recovery, terminal handoff and the online dependency boundary');
   assert.equal(record.channel, 'test'); assert.equal(record.candidate, false);
   assert.equal(validateGuideSpec('openmotion', '0.6.4'), 'stable');
   for (const name of ['https://evil.invalid/a', 'x;echo bad', '--script', '@bad/no/extra']) assert.throws(() => validateGuideSpec(name, pkg.version));
