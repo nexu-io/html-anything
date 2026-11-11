@@ -62,7 +62,11 @@ export async function setup(directory: string, description: PackageManifest, sel
               factory: session.factory,
               context: session.context,
               application: receipts.codexplugin.path,
-              installation: { home: selection.home, requestId: receipts.codexplugin.requestId },
+              installation: {
+                home: selection.home,
+                product: description.product.appid,
+                requestId: receipts.codexplugin.requestId,
+              },
               profile: selection.profile,
               skills: selection.skills,
               root: selection.data,

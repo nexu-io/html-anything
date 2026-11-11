@@ -196,6 +196,13 @@ else if(args[1]==='add'){const at=args.indexOf('--'),env={};for(let i=3;i<at;i+=
   expect((await own.command(args)).result).toEqual(registered.result);
   const transport = JSON.parse(await readFile(join(profile, "transport.json"), "utf8"));
   expect(transport.command).toBe(process.execPath);
+  expect(transport.env.OPEN_MOTION_INSTALLATION_PRODUCT).toBe("io.openmotion.app");
+  await expect(
+    run(transport.command, transport.args, {
+      env: { ...process.env, ...transport.env, OPEN_MOTION_INSTALLATION_PRODUCT: "" },
+      timeout: 10000,
+    }),
+  ).rejects.toThrow("installation home, base product and request binding are required");
   expect(transport.args[0]).toBe(join(registered.result.receipts.codexplugin.path, "main.mjs"));
   expect(dirname(transport.args[0])).not.toContain("npm-cache");
   await rename(join(own.root, "npm-cache"), join(own.root, "retained-npm-cache"));

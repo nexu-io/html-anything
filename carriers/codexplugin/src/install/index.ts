@@ -11,7 +11,7 @@ export interface Options {
   factory: Factory;
   context: Context;
   application: string;
-  installation?: { home: string; requestId: string };
+  installation?: { home: string; product: string; requestId: string };
   profile: string;
   skills: string;
   root: string;
@@ -22,7 +22,7 @@ export interface Options {
 }
 export interface Receipt {
   application: string;
-  installation?: { home: string; requestId: string };
+  installation?: { home: string; product: string; requestId: string };
   profile: string;
   skills: string;
   root: string;
@@ -150,6 +150,11 @@ async function registration(options: Options, verify = false): Promise<Receipt> 
   if (options.installation) {
     await path(options.installation.home);
     if (
+      !/^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$/.test(options.installation.product) ||
+      options.installation.product.length > 120
+    )
+      throw Error("invalid installation base product");
+    if (
       !/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(options.installation.requestId)
     )
       throw Error("invalid installation request binding");
@@ -165,6 +170,7 @@ async function registration(options: Options, verify = false): Promise<Receipt> 
       ...(options.installation
         ? {
             OPEN_MOTION_INSTALLATION_HOME: options.installation.home,
+            OPEN_MOTION_INSTALLATION_PRODUCT: options.installation.product,
             OPEN_MOTION_INSTALLATION_REQUEST: options.installation.requestId,
           }
         : {}),

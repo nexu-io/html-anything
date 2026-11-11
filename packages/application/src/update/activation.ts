@@ -104,7 +104,7 @@ export async function activate(
       factory: session.factory,
       context: session.context,
       application: target.path,
-      installation: { home: selection.home, requestId: target.requestId },
+      installation: { home: selection.home, product: description.product.appid, requestId: target.requestId },
       profile: r.profile,
       skills: r.skills,
       root: selection.data,
