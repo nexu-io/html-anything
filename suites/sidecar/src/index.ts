@@ -24,7 +24,7 @@ export {
   stopManager,
 } from "./process/manager.js";
 export type { ProcessInstance, ProcessObservation, Witness } from "./process/observe.js";
-export { observeProcesses } from "./process/observe.js";
+export { observeProcesses, observeWitnesses } from "./process/observe.js";
 export { readAuthority, readBinding, readDirectory } from "./runtime/catalog.js";
 export type { Service } from "./runtime/server.js";
 export { serve } from "./runtime/server.js";

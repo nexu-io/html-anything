@@ -11,6 +11,7 @@ export interface Options {
   factory: Factory;
   context: Context;
   application: string;
+  installation?: { home: string; requestId: string };
   profile: string;
   skills: string;
   root: string;
@@ -21,6 +22,7 @@ export interface Options {
 }
 export interface Receipt {
   application: string;
+  installation?: { home: string; requestId: string };
   profile: string;
   skills: string;
   root: string;
@@ -135,6 +137,7 @@ async function registration(options: Options, verify = false): Promise<Receipt> 
     manifestHash = digest(canonical(projected.map((entry) => entry.projection)));
   const receipt: Receipt = {
     application: application,
+    ...(options.installation ? { installation: structuredClone(options.installation) } : {}),
     profile: profile,
     skills: skills,
     root: root,
@@ -144,11 +147,28 @@ async function registration(options: Options, verify = false): Promise<Receipt> 
     state: "registered",
     manifestHash,
   };
+  if (options.installation) {
+    await path(options.installation.home);
+    if (
+      !/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(options.installation.requestId)
+    )
+      throw Error("invalid installation request binding");
+  }
   const transport: Transport = {
     type: "stdio",
     command: process.execPath,
     args: [join(application, "main.mjs")],
-    env: { OPEN_MOTION_ROOT: root, OPEN_MOTION_CHANNEL: scope.channel, OPEN_MOTION_NAMESPACE: scope.namespace },
+    env: {
+      OPEN_MOTION_ROOT: root,
+      OPEN_MOTION_CHANNEL: scope.channel,
+      OPEN_MOTION_NAMESPACE: scope.namespace,
+      ...(options.installation
+        ? {
+            OPEN_MOTION_INSTALLATION_HOME: options.installation.home,
+            OPEN_MOTION_INSTALLATION_REQUEST: options.installation.requestId,
+          }
+        : {}),
+    },
   };
   const installation = digest(canonical({ authority: options.context.roots.data, profile, skills, root, scope }));
   const id = digest(canonical({ receipt, transport }));

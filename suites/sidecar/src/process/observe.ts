@@ -176,3 +176,15 @@ export function selfWitness(): Promise<Witness> {
   });
   return localWitness;
 }
+
+/** Read-only controller identity facts; this neither adopts nor controls a process. */
+export async function observeWitnesses(values: readonly Witness[]) {
+  if (!Array.isArray(values) || values.length > 4096) throw Error("invalid process observation bound");
+  const witnesses = values.map(processWitness);
+  if (!witnesses.length) return [];
+  const all = await capture();
+  return witnesses.map((witness) => ({
+    witness,
+    state: all.some((p) => exact(p, witness)) ? ("alive" as const) : ("retired" as const),
+  }));
+}

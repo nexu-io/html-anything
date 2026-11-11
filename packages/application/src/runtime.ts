@@ -1,19 +1,12 @@
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import {
-  connectRoot,
-  type Factory,
-  type Manager,
-  observeOwner,
-  readAuthority,
-  startManager,
-  stopManager,
-} from "@odsuite/sidecar";
+import type { Receipt, Session } from "@odsuite/installer";
+import { connectRoot, type Factory, observeOwner, readAuthority, startManager, stopManager } from "@odsuite/sidecar";
 import type { NativePreparation, RenderMethods } from "@open-motion/render/contract";
 import type { Status } from "@open-motion/standalone";
 import { admitRuntime } from "@open-motion/standalone/admission";
 import type { PackageManifest, Selection } from "./contract.js";
-import { installed } from "./install.js";
+import { readInstalled, usingSession } from "./install.js";
 
 export async function inspect(description: PackageManifest, selection: Selection) {
   const link = await connectRoot(selection.data, selection.scope).catch(() => undefined);
@@ -41,8 +34,13 @@ export async function start(description: PackageManifest, selection: Selection) 
   if (current.state === "running") return current;
   if (!["stopped", "uninitialized"].includes(current.state))
     throw Error("application authority requires explicit recovery");
-  const receipt = await installed(description, selection, "standalone");
-  await launch(receipt, selection);
+  await usingSession(
+    { home: selection.home, product: description.product.appid, scope: selection.scope },
+    async (session) => {
+      const receipt = await readInstalled(session, description, selection, "standalone");
+      await launch(receipt, selection, session);
+    },
+  );
   return status(description, selection);
 }
 export async function stop(description: PackageManifest, selection: Selection) {
@@ -79,27 +77,15 @@ export async function native(description: PackageManifest, selection: Selection,
   if (prior.state === "running") return prepare(prior.link.factory, signal);
   if (!["stopped", "uninitialized"].includes(prior.state))
     throw Error("application authority requires explicit recovery");
-  const receipt = await installed(description, selection, "standalone");
-  signal?.throwIfAborted();
-  const owner: Manager = await startManager({
-    root: receipt.data,
-    scope: selection.scope,
-    command: process.execPath,
-    args: [
-      join(receipt.path, "main.mjs"),
-      "--root",
-      receipt.data,
-      "--channel",
-      selection.scope.channel,
-      "--namespace",
-      selection.scope.namespace,
-      "--mode",
-      "prepare",
-    ],
-    log: join(receipt.data, "manager.log"),
-    timeout: 30000,
-  });
-  const outcome = await connectRoot(receipt.data, selection.scope)
+  const owner = await usingSession(
+    { home: selection.home, product: description.product.appid, scope: selection.scope },
+    async (session) => {
+      const receipt = await readInstalled(session, description, selection, "standalone");
+      signal?.throwIfAborted();
+      return launch(receipt, selection, session, "prepare");
+    },
+  );
+  const outcome = await connectRoot(owner.root, selection.scope)
     .then((link) => prepare(link.factory, signal))
     .then(
       (value) => ({ ok: true as const, value }),
@@ -119,8 +105,8 @@ export async function native(description: PackageManifest, selection: Selection,
   return outcome.value;
 }
 
-export async function launch(receipt: import("@odsuite/installer").Receipt, selection: Selection) {
-  return startManager({
+export async function launch(receipt: Receipt, selection: Selection, session: Session, mode = "runtime") {
+  const owner = await startManager({
     root: receipt.data,
     scope: selection.scope,
     command: process.execPath,
@@ -132,8 +118,27 @@ export async function launch(receipt: import("@odsuite/installer").Receipt, sele
       selection.scope.channel,
       "--namespace",
       selection.scope.namespace,
+      "--mode",
+      mode,
     ],
     log: join(receipt.data, "manager.log"),
     timeout: 30000,
   });
+  try {
+    await session.use({
+      requestId: receipt.requestId,
+      application: receipt.path,
+      data: receipt.data,
+      carrier: receipt.carrier,
+      manager: owner,
+    });
+    return owner;
+  } catch (error) {
+    try {
+      await stopManager(owner);
+    } catch (cleanup) {
+      throw new AggregateError([error, cleanup], "installation use failed and runtime drain is uncertain");
+    }
+    throw error;
+  }
 }

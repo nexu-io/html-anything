@@ -160,6 +160,9 @@ importers:
       '@odsuite/dev':
         specifier: workspace:*
         version: link:../../suites/dev
+      '@odsuite/installer':
+        specifier: workspace:*
+        version: link:../../suites/installer
       '@odsuite/protocol':
         specifier: workspace:*
         version: link:../../suites/protocol

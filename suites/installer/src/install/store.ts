@@ -1,10 +1,12 @@
+import { randomUUID } from "node:crypto";
 import { lstatSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { canonical, digest } from "@odsuite/protocol";
+import type { Witness } from "@odsuite/sidecar";
 import { z } from "zod";
-import type { File } from "./archive.js";
-import { InstallerFault, type Receipt } from "./types.js";
+import type { File } from "../archive.js";
+import { InstallerFault, type Receipt, type Use } from "../types.js";
 
 const text = z.string().min(1).max(4096),
   sha = z.string().regex(/^[a-f0-9]{64}$/),
@@ -80,18 +82,18 @@ export class Store {
     try {
       this.db.exec("PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; PRAGMA synchronous=FULL;");
       const version = Number(this.db.prepare("PRAGMA user_version").get()?.user_version);
-      if (established && version !== 1)
+      if (established && version !== 2)
         throw new InstallerFault(
           "integrity",
-          "established installation journal schema changed; explicit reconciliation required",
+          "unsupported installation journal format; explicit reconciliation required without migration or reset",
         );
       if (version === 0) {
         if (this.db.prepare("SELECT name FROM sqlite_master WHERE type='table'").get())
           throw new InstallerFault("integrity", "unknown installation journal");
         this.db.exec(
-          "BEGIN IMMEDIATE; CREATE TABLE policy(id INTEGER PRIMARY KEY CHECK(id=1),data TEXT NOT NULL); CREATE TABLE versions(carrier TEXT NOT NULL,version TEXT NOT NULL,digest TEXT NOT NULL,files TEXT NOT NULL,PRIMARY KEY(carrier,version)); CREATE TABLE intents(id TEXT PRIMARY KEY,record TEXT NOT NULL); CREATE TABLE receipts(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,result TEXT NOT NULL); CREATE TABLE selections(carrier TEXT PRIMARY KEY,request_id TEXT NOT NULL REFERENCES receipts(id)); PRAGMA user_version=1; COMMIT;",
+          "BEGIN IMMEDIATE; CREATE TABLE policy(id INTEGER PRIMARY KEY CHECK(id=1),data TEXT NOT NULL); CREATE TABLE versions(carrier TEXT NOT NULL,version TEXT NOT NULL,digest TEXT NOT NULL,files TEXT NOT NULL,PRIMARY KEY(carrier,version)); CREATE TABLE intents(id TEXT PRIMARY KEY,record TEXT NOT NULL); CREATE TABLE receipts(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,result TEXT NOT NULL); CREATE TABLE selections(carrier TEXT PRIMARY KEY,request_id TEXT NOT NULL REFERENCES receipts(id)); CREATE TABLE uses(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL UNIQUE,record TEXT NOT NULL); PRAGMA user_version=2; COMMIT;",
         );
-      } else if (version !== 1) throw new InstallerFault("integrity", "unsupported installation journal");
+      } else if (version !== 2) throw new InstallerFault("integrity", "unsupported installation journal");
     } catch (error) {
       this.db.close();
       throw error;
@@ -227,6 +229,47 @@ export class Store {
             "INSERT INTO selections VALUES(?,?) ON CONFLICT(carrier) DO UPDATE SET request_id=excluded.request_id",
           )
           .run(carrier, id);
+    });
+  }
+  occupy(value: Receipt, controller: Witness): Use {
+    const fingerprint = digest(canonical({ receipt: value, controller }));
+    return this.transaction(() => {
+      const existing = this.db.prepare("SELECT id,record FROM uses WHERE fingerprint=?").get(fingerprint);
+      if (existing) {
+        const result = this.decodeUse(existing.record);
+        if (
+          result.id !== existing.id ||
+          digest(canonical({ receipt: result.receipt, controller: result.controller })) !== fingerprint
+        )
+          throw new InstallerFault("integrity", "installation use identity changed");
+        return result;
+      }
+      const result: Use = { id: randomUUID(), receipt: value, controller };
+      this.db.prepare("INSERT INTO uses VALUES(?,?,?)").run(result.id, fingerprint, canonical(result));
+      return result;
+    });
+  }
+  private decodeUse(input: unknown): Use {
+    return decode(
+      z.strictObject({
+        id: uuid,
+        receipt,
+        controller: z.strictObject({ pid: z.number().int().positive(), birth: text }),
+      }),
+      input,
+    );
+  }
+  uses(): Use[] {
+    const rows = this.db.prepare("SELECT id,fingerprint,record FROM uses ORDER BY id LIMIT 4097").all();
+    if (rows.length > 4096) throw new InstallerFault("conflict", "installation use history exceeds observation bound");
+    return rows.map((row) => {
+      const result = this.decodeUse(row.record);
+      if (
+        result.id !== row.id ||
+        digest(canonical({ receipt: result.receipt, controller: result.controller })) !== row.fingerprint
+      )
+        throw new InstallerFault("integrity", "installation use identity changed");
+      return result;
     });
   }
   close() {

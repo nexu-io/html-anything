@@ -100,15 +100,16 @@ export async function activate(
       values.map((r) => ({ profile: r.profile, skills: r.skills, root: r.root, scope: r.scope }));
     if (canonical(destinations(actual)) !== canonical(destinations(plan.registrations)))
       throw Error("owned Codex registration targets changed during activation");
-    const registration = (r: Plan["registrations"][number], application: string, version: string) => ({
+    const registration = (r: Plan["registrations"][number], target: import("@odsuite/installer").Receipt) => ({
       factory: session.factory,
       context: session.context,
-      application,
+      application: target.path,
+      installation: { home: selection.home, requestId: target.requestId },
       profile: r.profile,
       skills: r.skills,
       root: selection.data,
       scope: selection.scope,
-      version,
+      version: target.version,
       codex: plan.codex,
       worker: options.worker,
     });
@@ -127,8 +128,7 @@ export async function activate(
       await advance("staged", { targets });
     }
     if (data.phase === "staged") {
-      for (const r of plan.registrations)
-        await verifyRegistration(registration(r, plan.from.codexplugin!.path, description.release.identity.version));
+      for (const r of plan.registrations) await verifyRegistration(registration(r, plan.from.codexplugin!));
       const current = await inspect(description, selection);
       if (current.state === "running") {
         const owner = await observeOwner(selection.data, selection.scope);
@@ -169,7 +169,7 @@ export async function activate(
     const standalone = await selected("standalone"),
       plugin = await selected("codexplugin");
     if (data.phase === "selected") {
-      for (const r of plan.registrations) await register(registration(r, plugin.path, metadata.version));
+      for (const r of plan.registrations) await register(registration(r, plugin));
       await advance("registered");
     }
     if (data.phase === "registered") await advance("starting");
@@ -179,7 +179,7 @@ export async function activate(
         if (current.state !== "running") {
           if (!["stopped", "uninitialized"].includes(current.state))
             throw Error("target runtime requires explicit recovery");
-          await launch(standalone, selection);
+          await launch(standalone, selection, session);
           current = await inspect(next, selection);
         }
         if (current.state !== "running") throw Error("activated runtime is not ready");
