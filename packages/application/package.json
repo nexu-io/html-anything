@@ -25,6 +25,7 @@
     "vitest": "4.1.6",
     "@modelcontextprotocol/client": "2.4.0",
     "@open-motion/render": "workspace:*",
-    "@open-motion/daemon": "workspace:*"
+    "@open-motion/daemon": "workspace:*",
+    "@odsuite/automation": "workspace:*"
   }
 }
