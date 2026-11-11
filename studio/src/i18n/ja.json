@@ -1722,6 +1722,7 @@
   "Share usage data": "利用データを共有",
   "Send feature usage, error categories and approximate region to improve OpenMotion. Prompts and project contents are excluded.": "OpenMotion の改善のため、機能の利用状況、エラーの種類、おおよその地域を送信します。プロンプトやプロジェクト内容は送信しません。",
   "This setting applies to MCP and Studio on this installation and is kept after restart.": "この設定は同じインストールの MCP と Studio に適用され、再起動後も保持されます。",
+  "Usage data collection is disabled in test builds.": "テスト版では利用データの収集が無効になっています。",
   "Disabled by your environment settings.": "環境設定により無効になっています。",
   "Could not load privacy settings.": "プライバシー設定を読み込めませんでした。",
   "Could not save privacy settings.": "プライバシー設定を保存できませんでした。",

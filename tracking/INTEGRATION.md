@@ -168,8 +168,15 @@ Do not add client IP lookups or collect IP in callers.
 Device timezone is separate from GeoIP timezone; VPN/proxy egress may differ.
 See [configuration, privacy and limits](README.md) and [coarse GeoIP](posthog-geoip.hog).
 
-Tracking is on by default. Studio **Privacy settings → Share usage data** disables
-collection for the installation, including MCP and Studio across restarts.
+Tracking is on by default in stable releases. Studio **Privacy settings → Share
+usage data** disables collection for the installation, including MCP and Studio
+across restarts. Re-enabling resumes new reports without replaying discarded events.
+Test/prerelease/local application versions are always disabled at runtime, even
+with a saved opt-in, `OPENMOTION_TELEMETRY=1`, custom collector or test-run UUID.
+Their Privacy switch is locked and explains the test-build policy; opening a test
+build does not replace the saved stable-release preference.
+Test and stable MCP clients must use separate data directories; shared-backend
+discovery rejects cross-policy reuse without stopping or replacing the authority.
 `OPENMOTION_TELEMETRY=0` or `DO_NOT_TRACK=1` forces it off; browser Do Not Track also
 suppresses browser collection. An added event must respect those controls.
 
@@ -229,6 +236,8 @@ Extend the existing tests nearest the changed boundary:
   missing call site cannot pass on schema tests alone.
 - `tests/source-install.test.ts`, `tests/package.test.ts` and
   `tests/npm-package.test.ts`: public boundary and distributed content when affected.
+  The npm tests also execute extracted test and stable application archives with
+  fake senders, checking the version lock and repeated disable/re-enable cycles.
 
 Check a valid event and required/unknown-field rejection, real success and failure,
 and the relevant no-op/retry/replay or rerender case. Prove there is one event per
@@ -255,7 +264,9 @@ checks and applicable repository gates, not invented product events.
 
 ## Read back a marked live run
 
-Use an owned temporary data directory and fresh runtime processes. Apply the same
+Use a stable-version application, an owned temporary data directory and fresh
+runtime processes. A test/prerelease package never reports, even for this check;
+do not change its version to bypass the policy. Apply the same
 test environment to every participating MCP/local service process, including ones
 launched by a host. An already-running shared service will not inherit new variables.
 For a POSIX shell, prepare the environment before starting the normal test runner

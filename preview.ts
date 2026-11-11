@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { WorkspaceStore } from './workspace.ts';
 import { ensureEditor, editorRequest, readEditor, sharedEditorEnabled } from './editor-runtime.ts';
 import { supportsPhase1Tool } from './shared/phase1-tools.ts';
+import { trackingReleaseEnabled } from './tracking/node.ts';
 
 const pluginRoot = fileURLToPath(new URL('./', import.meta.url));
 export const VERSION: string = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version;
@@ -118,6 +119,7 @@ export async function openPreview(store = new WorkspaceStore(), environment: Pre
     const candidates = [...new Set([...(previous ? [previous] : []), ...Array.from({ length: 10 }, (_, i) => firstPort + i)])];
     let available: number | null = null;
     const matches = (result: Probe) => result.kind === 'motion' && result.health.service === 'motion-preview' && result.health.protocol === 2 && result.health.ready
+      && trackingReleaseEnabled(result.health.version) === trackingReleaseEnabled(VERSION)
       && (options.mcpTool ? supportsPhase1Tool(result.health, options.mcpTool) : result.health.version === VERSION) && path.resolve(result.health.dataDirectory) === store.directory;
     async function ready(port: number, health: Health, reused: boolean, pid?: number) {
       if (options.editor && !health.studioUrl) {

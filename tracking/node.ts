@@ -6,6 +6,7 @@ import type { Entry, Registry, PendingEvent, Receipt } from './core.ts';
 
 export type Identity = { installation_id: string; utm_source: string | null; created_at: string };
 const sourcePattern = /^[A-Za-z0-9_.-]{1,64}$/;
+export function trackingReleaseEnabled(version: string) { return /^\d+\.\d+\.\d+$/.test(version); }
 
 export async function loadIdentity(directory: string, source?: string): Promise<Identity> {
   if (source !== undefined && (typeof source !== 'string' || !sourcePattern.test(source))) throw new Error('INVALID_SOURCE');
@@ -40,6 +41,7 @@ export function createPosthogSender(options: {
   if (!/^phc_[A-Za-z0-9_]+$/.test(options.token)) throw new Error('PUBLIC_PROJECT_TOKEN_REQUIRED');
   if (options.testRunId && (!uuid.test(options.testRunId) || options.env !== 'test')) throw new Error('INVALID_TEST_RUN');
   return async (events: readonly PendingEvent[], signal: AbortSignal): Promise<Receipt> => {
+    if (!trackingReleaseEnabled(options.appVersion)) return 'drop';
     const batch = events.map(event => ({ event: event.event, uuid: event.event_id, timestamp: event.occurred_at,
       properties: { ...event.properties, event_schema_version: 1, schema_version: 1, product: 'openmotion',
         app_version: options.appVersion, env: options.env, channel: 'standalone',
@@ -76,7 +78,8 @@ export function createNodeTracking<const R extends Registry>(options: {
   env: 'development' | 'test' | 'production'; testRunId?: string; entrypoint: Entry;
   enabled: boolean; timeoutMs?: number; flushIntervalMs?: number; maxQueue?: number; geoip?: boolean; isEnabled?: () => boolean;
 }) {
-  const enabled = options.enabled && !!options.token;
+  const enabled = options.enabled && !!options.token && trackingReleaseEnabled(options.appVersion);
   const send = enabled ? createPosthogSender({ ...options, token: options.token! }) : async () => 'drop' as const;
-  return createTracker({ ...options, enabled, send });
+  return createTracker({ ...options, enabled, send,
+    isEnabled: () => trackingReleaseEnabled(options.appVersion) && (options.isEnabled?.() ?? true) });
 }

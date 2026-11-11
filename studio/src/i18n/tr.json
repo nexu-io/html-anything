@@ -1722,6 +1722,7 @@
   "Share usage data": "Kullanım verilerini paylaş",
   "Send feature usage, error categories and approximate region to improve OpenMotion. Prompts and project contents are excluded.": "OpenMotion’ı geliştirmek için özellik kullanımı, hata kategorileri ve yaklaşık bölgeyi gönderin. İstemler ve proje içerikleri dahil edilmez.",
   "This setting applies to MCP and Studio on this installation and is kept after restart.": "Bu ayar, bu kurulumdaki MCP ve Studio için geçerlidir ve yeniden başlatıldıktan sonra korunur.",
+  "Usage data collection is disabled in test builds.": "Test sürümlerinde kullanım verileri toplanmaz.",
   "Disabled by your environment settings.": "Ortam ayarlarınız tarafından devre dışı bırakıldı.",
   "Could not load privacy settings.": "Gizlilik ayarları yüklenemedi.",
   "Could not save privacy settings.": "Gizlilik ayarları kaydedilemedi.",
