@@ -7,7 +7,6 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 const metadata = JSON.parse(fs.readFileSync(path.join(root, 'release.json'), 'utf8'));
 const windows = process.platform === 'win32';
 if (metadata.target !== (windows ? 'win-x64' : 'mac-arm64') || process.arch !== (windows ? 'x64' : 'arm64')) throw new Error('此测试包与当前系统/CPU 不匹配');
-if (!windows && Number(os.release().split('.')[0]) < 25) throw new Error('当前固定 FFmpeg 测试运行时要求 macOS 26.0 或以上');
 if (windows && Number(os.release().split('.')[2]) < 22000) throw new Error('此测试包要求 Windows 11 或以上');
 const media = path.join(root, 'runtime/media/bin'), node = path.join(root, windows ? 'runtime/node' : 'runtime/node/bin');
 const suffix = windows ? '.exe' : '';
