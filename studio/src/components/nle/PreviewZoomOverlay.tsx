@@ -81,7 +81,7 @@ export function PreviewZoomOverlay({
       data-testid="preview-zoom-chip"
       onPointerDown={(event) => event.stopPropagation()}
     >
-      <span className="tabular-nums">{controlsTarget ? `${Math.round(zoom.zoomPercent)}%` : !atFit && isFitZoom(zoom.zoomPercent) ? t("Panned") : t("Zoomed {percent}%", { percent: Math.round(zoom.zoomPercent) })}</span>
+      <span className={controlsTarget ? "tabular-nums text-[11px]" : "tabular-nums"}>{controlsTarget ? `${Math.round(zoom.zoomPercent)}%` : !atFit && isFitZoom(zoom.zoomPercent) ? t("Panned") : t("Zoomed {percent}%", { percent: Math.round(zoom.zoomPercent) })}</span>
       {!atFit && <button
         type="button"
         className={controlsTarget

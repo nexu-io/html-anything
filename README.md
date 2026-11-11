@@ -344,6 +344,8 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 
 **Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#agent-setup) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
 
+If historical media are unavailable, an Agent restore is refused before changing the project. The editor shows a dismissible error with the affected file paths and confirms that the current project is unchanged.
+
 #### What you can change in Studio
 
 | In the Studio | What you can do today |
@@ -549,6 +551,8 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <a id="start-in-codex"></a>
 
 ### Quick start
+
+For any successful Agent-led installation, follow the [installation reply rules and examples](docs/install.md#installation-success-reply) in the current conversation; setup provides real template summaries. Invite before creation and preserve the accepted template.
 
 For a packaged install, give your agent the [test installation guide](https://releases.open-design.ai/open-motion/dev/install.md). It pins the package version and walks through isolated setup. To run from source, follow the steps below.
 

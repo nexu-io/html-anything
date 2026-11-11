@@ -3,13 +3,12 @@ import { I18nProvider, useI18n } from "../i18n/I18n";
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useStudioShellContext } from '../contexts/StudioContext';
 import { TimelineHistoryButtons } from '../components/TimelineHistoryButtons';
-import { Dock } from '../components/dock/Dock';
+import { MotionHistoryPopover } from './MotionHistoryPopover';
 import { isStudioEditSaving } from '../utils/studioPendingEdits';
 import { MotionIcon } from './icons';
 import { StudioHostContext, type StudioHost } from './StudioHost';
 import { WorkspaceFrame, WorkspaceMenuButton, useWorkspaceChrome, useOptionalWorkspaceChrome } from './WorkspaceFrame';
 import { MotionHistoryProvider, useMotionHistoryOperation } from './MotionHistoryState';
-import { MotionHistoryPanel } from './MotionHistoryPanel';
 import { MediaGatewayProvider } from './MediaGatewayContext';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
@@ -47,9 +46,22 @@ export function MotionEditorFrame({ children }: { children: ReactNode }) {
     register?.({ waitForSaves: waitForPendingDomEditSaves, blocked, saveState, message: writeBlockedReason || '' });
     return () => register?.(null);
   }, [register, waitForPendingDomEditSaves, blocked, saveState, writeBlockedReason]);
-  const editor = <MediaGatewayProvider>{children}</MediaGatewayProvider>;
+  const editor = <MediaGatewayProvider><HistoryRestoreFeedback />{children}</MediaGatewayProvider>;
   if (chrome) return editor;
   return <WorkspaceFrame projectId={projectId} waitForSaves={waitForPendingDomEditSaves} blocked={blocked} message={writeBlockedReason || ''} saveState={saveState}>{editor}</WorkspaceFrame>;
+}
+
+function HistoryRestoreFeedback() {
+  const { projectId, showToast } = useStudioShellContext();
+  const status = useOptionalWorkspaceChrome()?.workspace.status;
+  const shown = useRef(new Set<string>());
+  useEffect(() => {
+    const error = status?.historyRestoreError;
+    if (status?.projectId !== projectId || !error || shown.current.has(error.requestId)) return;
+    shown.current.add(error.requestId);
+    showToast(error.message, 'error');
+  }, [projectId, status, showToast]);
+  return null;
 }
 
 function WorkspaceProject() {
@@ -105,8 +117,11 @@ function WorkspaceProject() {
 
 function WorkspaceHistoryActions() {
   const operation = useMotionHistoryOperation();
-  return <div className="motion-history-actions">
-    <TimelineHistoryButtons canUndo={operation.busy ? false : undefined} canRedo={operation.busy ? false : undefined} />
+  return <div className="motion-history-actions motion-header-history-actions">
+    <div className="motion-history-actions">
+      <TimelineHistoryButtons canUndo={operation.busy ? false : undefined} canRedo={operation.busy ? false : undefined} />
+    </div>
+    <MotionHistoryPopover />
   </div>;
 }
 
@@ -114,7 +129,7 @@ function WorkspaceActions() {
   const { t } = useI18n();
   const { switchingDisabled, openLibrary } = useWorkspaceChrome();
   return <div className="motion-workspace-actions">
-    <button className="motion-button motion-button-quiet" aria-haspopup="dialog" disabled={switchingDisabled} onClick={openLibrary}><MotionIcon name="grid" />{t("Template library")}</button>
+    <button className="motion-button motion-button-quiet" aria-label={t("Template library")} title={t("Template library")} aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => openLibrary(event.currentTarget)}><MotionIcon name="grid" /><span className="motion-template-label">{t("Template library")}</span></button>
   </div>;
 }
 
@@ -124,7 +139,6 @@ const host: StudioHost = {
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,
   historyActions: <WorkspaceHistoryActions />,
-  panels: <Dock.Panel id="history"><MotionHistoryPanel /></Dock.Panel>,
   previewAction: <></>,
   windowMenu: <></>,
   themeToggle: false,

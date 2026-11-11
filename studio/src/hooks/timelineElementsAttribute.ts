@@ -77,7 +77,7 @@ export function useSetElementsAttribute({
             (before: string) =>
               patches.reduce(
                 (html, { target, value }) =>
-                  applyPatchByTarget(html, target, { type: "attribute", property: attr, value }),
+                  applyPatchByTarget(html, target, { type: attr === "muted" ? "html-attribute" : "attribute", property: attr, value }),
                 before,
               ),
           ]),

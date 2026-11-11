@@ -5,6 +5,7 @@ import { motionApi, type ProjectCatalog } from './useWorkspace';
 import { requestedProject, validWorkspaceProject } from './workspaceRouting';
 import type { SessionDetail, SessionArtifact } from '../../../shared/session';
 import { ArtifactViewer } from './ArtifactViewer';
+import { MotionLoading } from './MotionLoading';
 import { trackMotion } from './tracking';
 
 const noPendingSaves = async () => {};
@@ -57,6 +58,6 @@ export function MotionApp() {
     return () => controller.abort();
   }, [projectId, sessionId, attempt]);
   if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{t(error)}</p><div><WorkspaceMenuButton /><a className="motion-button" href="/">{t('Open active project')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
-  const loading = <div className="motion-route-state" role="status">{t('Opening project…')}</div>;
+  const loading = <MotionLoading />;
   return ready ? <WorkspaceFrame waitForSaves={noPendingSaves} projectId={ready.artifact?.projectId} sessionId={ready.sessionId}>{ready.artifact ? <ArtifactViewer artifact={ready.artifact} /> : <div className="motion-route-state"><WorkspaceMenuButton />{t('Create a project with your Agent to start editing.')}</div>}</WorkspaceFrame> : loading;
 }

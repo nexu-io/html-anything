@@ -11,6 +11,7 @@ import { readStudioUiPreferences } from "../utils/studioUiPreferences";
 import { dispatchPlainKey, type HotkeyCallbacks } from "../hooks/appHotkeysDispatch";
 import { AudioMeterStrip } from "./nle/AudioMeterStrip";
 import { TimelineToolbar } from "./TimelineToolbar";
+import { StudioHostContext } from "../motion/StudioHost";
 import { registerTimelineZoomViewport } from "../player/components/timelineZoomInput";
 
 vi.mock("../contexts/StudioContext", () => ({
@@ -654,4 +655,42 @@ describe("TimelineToolbar split hint", () => {
     expect(await splitTooltip({})).toBe("Split at playhead (S)");
     expect(await splitTooltip({ splitShortcut: "⌘B" })).toBe("Split at playhead (⌘B)");
   });
+});
+
+it("omits audio meters in the MVP even with audio and a previously enabled preference", () => {
+  usePlayerStore.setState({ elements: [{ id: "music", tag: "audio", start: 0, duration: 10, track: 1 }] });
+  useAudioMetersVisible.getState().setVisible(true);
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  try {
+    act(() => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineToolbar /><AudioMeterStrip /></StudioHostContext.Provider>));
+    expect(host.querySelector('[aria-label="Toggle audio meters"]')).toBeNull();
+    expect(host.querySelector('[data-testid="audio-meter-strip"]')).toBeNull();
+  } finally {
+    act(() => root.unmount());
+    host.remove();
+    useAudioMetersVisible.setState(useAudioMetersVisible.getInitialState());
+  }
+});
+
+it("disables empty MVP zoom and restores it when a clip arrives", () => {
+  usePlayerStore.setState({ elements: [], selectedElementIds: new Set(), selectedElementId: null });
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  try {
+    act(() => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineToolbar /></StudioHostContext.Provider>));
+    const controls = ["Fit timeline to width", "Zoom out", "Zoom in"].map(label => host.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!);
+    const slider = host.querySelector<HTMLInputElement>('input[aria-label="Timeline zoom"]')!;
+    expect(controls.every(control => control.disabled)).toBe(true);
+    expect(slider.disabled).toBe(true);
+    act(() => controls.forEach(control => control.click()));
+    act(() => usePlayerStore.setState({ elements: [{ id: "clip", tag: "video", start: 0, duration: 5, track: 0 }] }));
+    expect(controls.every(control => !control.disabled)).toBe(true);
+    expect(slider.disabled).toBe(false);
+  } finally {
+    act(() => root.unmount());
+    usePlayerStore.getState().reset();
+  }
 });

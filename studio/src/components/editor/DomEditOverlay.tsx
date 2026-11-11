@@ -550,7 +550,7 @@ export const DomEditOverlay = memo(function DomEditOverlay({
           editing session, which does. */}
       {inlineText.toolbar}
       <OffCanvasIndicators
-        rects={hostInput ? [] : offCanvasRects}
+        rects={hostInput || mvp ? [] : offCanvasRects}
         elements={offCanvasElementsRef}
         compRect={compRect}
         selection={selection}

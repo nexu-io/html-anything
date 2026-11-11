@@ -27,8 +27,8 @@ async function resolvable(candidates: string[]): Promise<Set<string>> {
     base: STYLES_DIR,
     loadStylesheet,
   });
-  // Include the host theme and the unified connection/gallery styles imported by the app.
-  const hostStyles = ["../motion/theme.css", "../motion/workspace.css", "../motion/media-gateway.css", "../../../web/design-system/controls.css", "../../../web/design-system/material.css", "../../../web/connect.css", "../../../web/template-gallery.css"];
+  // Include host and component styles imported by the app or linked by its HTML shell.
+  const hostStyles = ["../motion/theme.css", "../motion/loading.css", "../components/ui/errorNotice.css", "../motion/workspace.css", "../motion/media-gateway.css", "../../../web/design-system/controls.css", "../../../web/design-system/material.css", "../../../web/connect.css", "../../../web/template-gallery.css"];
   const css = compiled.build(candidates) + hostStyles.map(file => readFileSync(path.join(STYLES_DIR, file), "utf8")).join("\n");
   const selectors = new Set<string>();
   for (const [, selector] of css.matchAll(CLASS_SELECTOR)) {
@@ -90,7 +90,7 @@ describe("token gate", () => {
 
   it("accepts variants, static utilities and Studio's own CSS classes", async () => {
     // `timeline-clip` is a plain rule in `components.css`, not a utility.
-    const source = `<div className="hover:bg-surface/50 text-center border-dashed timeline-clip" />`;
+    const source = `<div className="hover:bg-surface/50 text-center border-dashed timeline-clip motion-loading motion-error-notice-summary" />`;
 
     expect(await unresolved(new Map([["a.tsx", source]]))).toEqual([]);
   });

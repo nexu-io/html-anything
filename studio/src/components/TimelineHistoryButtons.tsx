@@ -4,8 +4,10 @@ import { RotateCcw, RotateCw } from "../icons/SystemIcons";
 import { trackStudioEvent } from "../utils/studioTelemetry";
 import { historyEntryLabel } from '../i18n/historyMessages';
 import { getHistoryShortcutLabel } from '../utils/studioHelpers';
-import { flatDisabled, flatIdle } from "./timelineToolbarStyles";
+import { flatBtn, flatDisabled, flatIdle } from "./timelineToolbarStyles";
 import { Tooltip } from "./ui";
+import { useMvpEditor } from "../motion/StudioHost";
+import { RemixIcon } from "../icons/RemixIcons";
 
 interface HistoryButtonProps {
   action: "undo" | "redo";
@@ -16,23 +18,24 @@ interface HistoryButtonProps {
 
 function HistoryButton({ action, can, label, onClick }: HistoryButtonProps) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const Icon = action === "undo" ? RotateCcw : RotateCw;
   const enabled = Boolean(onClick) && can;
   const verb = t(action === 'undo' ? 'Undo' : 'Redo');
   const shortcut = getHistoryShortcutLabel(action);
   return (
-    <Tooltip label={label ? t('{action} {label} ({shortcut})', { action: verb, label: historyEntryLabel(label, t), shortcut }) : t('{action} ({shortcut})', { action: verb, shortcut })}>
+    <Tooltip label={!mvp && label ? t('{action} {label} ({shortcut})', { action: verb, label: historyEntryLabel(label, t), shortcut }) : t('{action} ({shortcut})', { action: verb, shortcut })}>
       <button
         type="button"
         aria-label={action === "undo" ? t("Undo") : t("Redo")}
         disabled={!enabled}
-        className={enabled ? flatIdle : flatDisabled}
+        className={enabled ? (mvp ? `${flatBtn} text-text-0 hover:bg-hover active:bg-press active:scale-[0.98]` : flatIdle) : flatDisabled}
         onClick={() => {
           trackStudioEvent("toolbar_action", { action });
           void onClick?.();
         }}
       >
-        <Icon size={16} />
+        {mvp ? <RemixIcon name={action === "undo" ? "arrow-go-back-line" : "arrow-go-forward-line"} size={16} /> : <Icon size={16} />}
       </button>
     </Tooltip>
   );

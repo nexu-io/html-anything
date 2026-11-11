@@ -550,6 +550,8 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 
 ### 快速开始
 
+任何 Agent 入口安装成功后，都应在当前对话按 [安装回复规则与示例](docs/install.md#installation-success-reply) 发出体验邀请。安装结果附带真实模板摘要；用户接受后才按所选模板创建工程。
+
 安装测试版时，把[安装指南](https://releases.open-design.ai/open-motion/dev/install.md)交给你的 Agent，按指南指定的版本在独立环境中安装。从源码运行可使用下面的步骤。
 
 #### 运行 OpenMotion

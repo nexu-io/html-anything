@@ -172,6 +172,20 @@ it('updates an already visible toast when the interface language changes', () =>
   expect(host.querySelector('[role="status"]')?.textContent).toContain('Undid: Edit layer style');
 });
 
+it('renders a dismissible restore error with a localized summary and unchanged diagnostic details', () => {
+  const dismiss = vi.fn();
+  const message = 'VERSION_NOT_RESTORABLE: Historical files are missing, unreadable or corrupt: assets/原始配乐.wav';
+  act(() => root.render(<I18nProvider initialLocale="zh-CN"><StudioToast message={message} tone="error" onDismiss={dismiss} /></I18nProvider>));
+  const alert = host.querySelector('[role="alert"]')!;
+  expect(alert.textContent).toBe('操作未能完成，可查看错误详情。');
+  expect(host.textContent).not.toContain('assets/原始配乐.wav');
+  expect(host.textContent).not.toContain('VERSION_NOT_RESTORABLE');
+  act(() => host.querySelector<HTMLButtonElement>('button[aria-expanded]')!.click());
+  expect(host.querySelector('pre')?.textContent).toBe(message);
+  act(() => host.querySelector<HTMLButtonElement>('.motion-error-notice-close')!.click());
+  expect(dismiss).toHaveBeenCalledOnce();
+});
+
 it('localizes the complete lint success dialog and updates it when the language changes', () => {
   function Results() {
     const { setLocale } = useI18n();

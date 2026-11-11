@@ -4,6 +4,7 @@ import {
   serializeDomEditTextFields,
   type DomEditTextField,
 } from "../components/editor/domEditing";
+import { serializeDomEditTextFieldValue } from "../components/editor/domEditingLayers";
 import type { PatchOperation } from "../utils/sourcePatcher";
 import { buildTextFieldChildOperations } from "./domEditTextFieldCommitOps";
 
@@ -27,9 +28,13 @@ export function planDomTextCommit(
   nextTextFields: DomEditTextField[],
   plainTextContent: string,
 ): DomTextCommitPlan {
+  const selfWithBreaks = nextTextFields.length === 1 && nextTextFields[0].source === "self" && nextTextFields[0].preserveLineBreaks;
   const usesSerializedTextFields =
+    selfWithBreaks ||
     nextTextFields.length > 1 || nextTextFields.some((field) => field.source === "child");
-  const nextContent = usesSerializedTextFields
+  const nextContent = selfWithBreaks
+    ? serializeDomEditTextFieldValue({ ...nextTextFields[0], value: plainTextContent })
+    : usesSerializedTextFields
     ? serializeDomEditTextFields(nextTextFields)
     : plainTextContent;
   const childOperations = usesSerializedTextFields

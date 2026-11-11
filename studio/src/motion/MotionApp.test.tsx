@@ -82,3 +82,23 @@ it.each(['deleted project', 'empty session'])('keeps the project drawer reachabl
     history.replaceState(null, '', '/');
   }
 });
+
+it('shows the brand while opening and exposes failures instead of leaving the splash stuck', async () => {
+  let fail!: (error: Error) => void;
+  vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>((_resolve, reject) => { fail = reject; })));
+  history.replaceState(null, '', '/?project=project');
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<I18nProvider><MotionApp /></I18nProvider>));
+    expect(container.querySelector('[role="status"] .motion-loading-mark')).not.toBeNull();
+    await act(async () => fail(new Error('Project unavailable')));
+    expect(container.querySelector('.motion-loading')).toBeNull();
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('Project unavailable');
+  } finally {
+    act(() => root.unmount());
+    container.remove();
+    history.replaceState(null, '', '/');
+  }
+});

@@ -7,6 +7,7 @@ import { MotionHistoryPanel } from './MotionHistoryPanel';
 
 const shell = vi.hoisted(() => ({
   projectId: 'project', waitForPendingDomEditSaves: vi.fn<() => Promise<void>>(),
+  showToast: vi.fn(),
   writeBlockedReason: null as string | null, renderQueue: { isRendering: false },
 }));
 vi.mock('../contexts/StudioContext', () => ({ useStudioShellContext: () => shell }));
@@ -58,23 +59,40 @@ it('restores the selected version with the native API and reloads only after suc
   expect(onRestored).toHaveBeenCalledOnce();
 });
 
+it('omits pinning controls in the MVP while keeping all versions restorable', async () => {
+  entries[0].pinned = true;
+  await act(async () => root.render(<I18nProvider initialLocale="zh-CN"><MotionHistoryPanel compact allowPinning={false} onRestored={onRestored} /></I18nProvider>));
+  expect(container.querySelector('.motion-history-toolbar')).toBeNull();
+  expect(container.querySelector('.motion-history-filters')).toBeNull();
+  expect(container.textContent).not.toContain('已保留');
+  expect(button('保留')).toBeUndefined();
+  expect(container.querySelector('.motion-history-detail-title')).toBeNull();
+  expect(container.querySelector('.motion-history-detail ul')).toBeNull();
+  expect(container.querySelector('.motion-history-detail')?.textContent).toBe('恢复此版本');
+  await click('first edit'); await click('恢复此版本');
+  expect(calls.filter(call => call.body)).toEqual([
+    { path: '/checkpoint', body: {} }, { path: '/restore', body: { point: 'first' } },
+  ]);
+  expect(onRestored).toHaveBeenCalledOnce();
+});
+
 it('does not replace the project when pending edits fail to save', async () => {
   shell.waitForPendingDomEditSaves.mockRejectedValue(new Error('Save conflict'));
   await render(); await click('first edit'); await click('恢复此版本');
   expect(calls.filter(call => call.body)).toEqual([]);
   expect(onRestored).not.toHaveBeenCalled();
-  expect(container.querySelector('[role="alert"]')?.textContent).toContain('Save conflict');
+  expect(shell.showToast).toHaveBeenCalledWith('Save conflict', 'error');
 });
 
 it('shows native restore refusals and keeps the current editor open', async () => {
   restoreError = true;
   await render(); await click('first edit'); await click('恢复此版本');
   expect(onRestored).not.toHaveBeenCalled();
-  expect(container.querySelector('[role="alert"]')?.textContent).toContain('Version is no longer kept');
+  expect(shell.showToast).toHaveBeenCalledWith('Version is no longer kept', 'error');
 });
 
 it('blocks restoring and pinning during a render', async () => {
   shell.renderQueue.isRendering = true;
   await render(); await click('first edit');
-  for (const text of ['恢复此版本', '保留此版本', '保留当前版本']) expect(button(text).disabled).toBe(true);
+  for (const text of ['恢复此版本', '保留选中版本', '保留当前版本']) expect(button(text).disabled).toBe(true);
 });

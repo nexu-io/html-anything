@@ -4,7 +4,7 @@ import { StudioHostContext } from "../../motion/StudioHost";
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { FlatStyleSection } from "./propertyPanelFlatStyleSections";
+import { FlatOpacitySlider, FlatStyleSection } from "./propertyPanelFlatStyleSections";
 import type { DomEditSelection } from "./domEditing";
 import { buildDefaultGradientModel, serializeGradient } from "./gradientValue";
 
@@ -668,4 +668,23 @@ describe("MVP solid fill", () => {
     expect(onSetStyle).not.toHaveBeenCalled();
     act(() => root.unmount());
   });
+});
+
+
+it("edits overall opacity separately from an animated opacity value", () => {
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  const onSetStyle = vi.fn();
+  act(() => root.render(<FlatOpacitySlider styles={{opacity: "0.99", filter: "blur(2px)"}}
+    inlineStyles={{filter: "blur(2px)"}} preserveOpacityAnimation disabled={false} onSetStyle={onSetStyle} />));
+  expect(host.textContent).toContain("100%");
+  const track = host.querySelector('[data-flat-slider-track="true"]')!;
+  Object.defineProperty(track, "getBoundingClientRect", {value: () => ({left: 0, width: 100})});
+  act(() => {
+    track.dispatchEvent(new MouseEvent("pointerdown", {bubbles: true, clientX: 47}));
+    track.dispatchEvent(new MouseEvent("pointerup", {bubbles: true, clientX: 47}));
+  });
+  expect(onSetStyle).toHaveBeenCalledWith({"--hf-layer-opacity": "0.47", filter: "blur(2px) opacity(var(--hf-layer-opacity))"});
+  act(() => root.unmount());
 });

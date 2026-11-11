@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import os, { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
@@ -34,6 +34,16 @@ async function fixture(t: any) {
   await writeJSON(configFile, config);
   return { directory, root, assets, config, configFile };
 }
+
+test('native preparation checks executable tools without rejecting macOS 15 by kernel version', { skip: process.platform === 'win32' }, async t => {
+  const descriptor = Object.getOwnPropertyDescriptor(process, 'platform')!;
+  Object.defineProperty(process, 'platform', { value: 'darwin' });
+  t.after(() => Object.defineProperty(process, 'platform', descriptor));
+  t.mock.method(os, 'release', () => '24.6.0');
+  const { root } = await fixture(t);
+  await ensureNativeRuntime(root);
+  assert.equal((await nativeRuntimeStatus(root)).capabilities.export, true);
+});
 
 test('cold status is readable without downloading, and runtime guards do not create export jobs', { skip: process.platform === 'win32' }, async t => {
   const { directory, root } = await fixture(t);

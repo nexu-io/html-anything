@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import { saveFailureFeedback } from "../utils/saveFailureFeedback";
 import { useMountEffect } from "./useMountEffect";
 import {
   installStudioManualEditSeekReapply,
@@ -43,7 +44,7 @@ interface RecordEditInput {
 }
 
 export interface UsePreviewPersistenceParams {
-  showToast: (message: string, tone?: "error" | "info") => void;
+  showToast: (message: string, tone?: "error" | "info", presentation?: "feedback") => void;
   readOptionalProjectFile: (path: string) => Promise<string>;
   writeProjectFile: (path: string, content: string) => Promise<void>;
   recordEdit: (entry: RecordEditInput) => Promise<void>;
@@ -131,12 +132,9 @@ export function usePreviewPersistence({
   if (!domEditSaveQueueRef.current) {
     domEditSaveQueueRef.current = createDomEditSaveQueue({
       onOpen: (event) => {
-        const message =
-          event.statusCode === 409
-            ? "Save paused: this file changed elsewhere. Reload and review the latest version before reapplying your edit."
-            : "Auto-save is paused. Check your connection.";
+        const message = saveFailureFeedback(event.statusCode, event.errorMessage);
         setDomEditSaveQueuePaused(message);
-        showToastRef.current(message, "error");
+        showToastRef.current(message, "error", "feedback");
         trackStudioEvent("save_queue_paused", {
           source: "dom_edit",
           error_message: event.errorMessage,

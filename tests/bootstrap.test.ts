@@ -17,9 +17,12 @@ async function fixture(run: (context: { directory: string; destination: string; 
     const destination = path.join(directory, 'new user', 'open-motion');
     const log = path.join(directory, 'commands.log');
     await mkdir(bin);
-    await mkdir(path.join(source, 'scripts'), { recursive: true });
-    await copyFile(path.join(root, 'scripts/install-motion.command'), path.join(source, 'scripts/install-motion.command'));
-    await copyFile(path.join(root, 'marketplace.example.json'), path.join(source, 'marketplace.example.json'));
+    for (const file of ['scripts/install-motion.command', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs',
+      'docs/install.md', 'shared/template-config.json', 'marketplace.example.json']) {
+      await mkdir(path.dirname(path.join(source, file)), { recursive: true });
+      await copyFile(path.join(root, file), path.join(source, file));
+    }
+    // No remote catalog or template assets in this isolated checkout: exercise the bundled fallback.
     const commands = {
       git: 'echo "git $*" >> "$MOTION_TEST_LOG"\n[ "${MOTION_TEST_DOWNLOAD_FAIL:-0}" = 0 ] || exit 8\n[ "$1" = clone ] || exit 0\nfor destination; do :; done\nmkdir -p "$destination"\ncp -R "$MOTION_TEST_SOURCE/." "$destination/"',
       npm: 'echo "npm $*" >> "$MOTION_TEST_LOG"\nif [ "$1" = ci ]; then [ "${MOTION_TEST_DEPENDENCY_FAIL:-0}" = 0 ] || exit 9; fi\nif [ "$*" = "run build:studio" ]; then [ "${MOTION_TEST_BUILD_FAIL:-0}" = 0 ] || exit 9; mkdir -p studio/build; touch studio/build/index.html; fi',
@@ -45,7 +48,11 @@ test('remote entry point builds a fresh checkout before registering and checking
     assert.ok(commands.indexOf('npm ci --include=dev') < commands.indexOf('npm run build:studio'));
     assert.ok(commands.indexOf('npm run build:studio') < commands.indexOf('codex plugin marketplace add'));
     assert.match(commands, /codex plugin add motion@motion-local\ncodex plugin list --marketplace motion-local\nMCP check/);
-    assert.match(result.stdout, /OpenDesign（Motion） 已安装/);
+    assert.match(result.stdout, /OpenMotion registration and independent MCP preflight succeeded/);
+    const onboarding = JSON.parse(result.stdout.slice(result.stdout.indexOf('\n{') + 1));
+    assert.equal(onboarding.hostSessionVerified, false);
+    assert.match(onboarding.instructions, /OpenMotion 开源免费/);
+    assert.equal(onboarding.catalog.source, 'bundled');
   });
 });
 
@@ -92,7 +99,7 @@ for (const [failure, expected] of [
       assert.notEqual(result.status, 0);
       if (expected) assert.match(result.stderr, expected);
       assert.doesNotMatch(await readFile(log, 'utf8'), /marketplace add|plugin add motion@/);
-      assert.doesNotMatch(result.stdout, /OpenDesign（Motion） 已安装/);
+      assert.doesNotMatch(result.stdout, /preflight succeeded|Installation-success reply/);
     });
   });
 }
@@ -102,6 +109,30 @@ test('MCP verification failure is reported even after plugin registration', asyn
     const result = spawnSync('bash', [path.join(root, 'install.sh')], { env: { ...env, MOTION_TEST_MCP_FAIL: '1' }, encoding: 'utf8' });
     assert.notEqual(result.status, 0);
     assert.match(await readFile(log, 'utf8'), /plugin add motion@motion-local/);
-    assert.doesNotMatch(result.stdout, /OpenDesign（Motion） 已安装/);
+    assert.doesNotMatch(result.stdout, /preflight succeeded|Installation-success reply/);
+  });
+});
+
+test('a missing onboarding contract stops before plugin registration', async () => {
+  await fixture(async ({ log, env }) => {
+    await rm(path.join(env.MOTION_TEST_SOURCE!, 'docs/install.md'));
+    const result = spawnSync('bash', [path.join(root, 'install.sh')], { env, encoding: 'utf8' });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /install\.md/);
+    assert.doesNotMatch(await readFile(log, 'utf8'), /marketplace add|plugin add motion@/);
+    assert.doesNotMatch(result.stdout, /preflight succeeded|Installation-success reply/);
+  });
+});
+
+test('the onboarding entry runs through a symlinked checkout path', async () => {
+  await fixture(async ({ directory, env }) => {
+    const linked = path.join(directory, 'linked source');
+    await symlink(env.MOTION_TEST_SOURCE!, linked, 'junction');
+    const result = spawnSync(process.execPath, [path.join(linked, 'scripts/install-onboarding.mjs'), linked], { env, encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+    const onboarding = JSON.parse(result.stdout);
+    assert.equal(onboarding.hostSessionVerified, false);
+    assert.match(onboarding.instructions, /OpenMotion 开源免费/);
+    assert.equal(onboarding.catalog.source, 'bundled');
   });
 });

@@ -744,7 +744,7 @@
   "Version history": "版本历史",
   "View version history": "查看版本历史",
   "Keep current version": "保留当前版本",
-  "Keep this version": "保留此版本",
+  "Keep this version": "保留选中版本",
   "Unpin version": "取消保留",
   "Pinned": "已保留",
   "Latest": "最新",
@@ -1767,5 +1767,7 @@
   "purple": "紫色",
   "red": "红色",
   "yellow": "黄色",
-  "{count} templates": "{count} 个模板"
+  "{count} templates": "{count} 个模板",
+  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "历史文件缺失、无法读取或已损坏：{files}。未恢复此版本，当前工程保持不变。",
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "无法准备恢复所需的历史文件：{files}。当前工程保持不变。"
 }

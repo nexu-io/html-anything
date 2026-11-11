@@ -177,8 +177,12 @@ function FlatTextFieldEditor({
         label={t("Align")}
         options={ALIGN_OPTIONS.filter(option => !mvp || option.key !== "justify").map((option) => ({
           key: option.key,
-          node: option.node,
-          label: option.label,
+          node: mvp ? (
+            <span className="flex h-4 w-4 items-center justify-center">
+              <RemixIcon name={`align-${option.key}`} size={14} />
+            </span>
+          ) : option.node,
+          label: mvp ? `Align ${option.key}` : option.label,
           active:
             align === option.key ||
             (option.key === "left" && align === "start") ||
@@ -261,6 +265,7 @@ export function FlatTextSection({
   | "onRemoveTextField"
 >) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const track = useTrackDesignInput();
   const [activeFieldKey, setActiveFieldKey] = useState<string | null>(
     element.textFields[0]?.key ?? null,
@@ -333,7 +338,7 @@ export function FlatTextSection({
         onSetTextFieldStyle={onSetTextFieldStyle}
         onPreviewTextFieldStyle={onPreviewTextFieldStyle}
       />
-      <button
+      {!mvp && <button
         type="button"
         onClick={() => {
           track("button", "Add text field");
@@ -346,7 +351,7 @@ export function FlatTextSection({
         className="mt-0.5 flex items-center gap-[5px] text-[10px] text-panel-text-4 hover:text-panel-text-2"
       >
         <Plus size={10} />
-        {t("Add text field")}</button>
+        {t("Add text field")}</button>}
     </div>
   );
 }
@@ -375,6 +380,7 @@ export function FlatTextLayerList({
   onRemove: (fieldKey: string) => void;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const track = useTrackDesignInput();
   return (
     <div className="mb-2 border-l-2 border-panel-border-input py-0.5 pl-[10px]">
@@ -422,7 +428,7 @@ export function FlatTextLayerList({
           );
         })}
       </div>
-      <button
+      {!mvp && <button
         type="button"
         data-flat-text-layer-add="true"
         onClick={() => {
@@ -432,7 +438,7 @@ export function FlatTextLayerList({
         className="mt-1 flex items-center gap-[5px] text-[10px] text-panel-text-4 hover:text-panel-text-2"
       >
         <Plus size={10} />
-        {t("Add text field")}</button>
+        {t("Add text field")}</button>}
     </div>
   );
 }

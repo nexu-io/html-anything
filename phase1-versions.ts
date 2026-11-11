@@ -126,9 +126,16 @@ export class ProjectVersions {
     await atomicJson(this.indexFile, index);
     return index;
   }
-  publicVersion(version: ContentVersion) {
+  async publicVersion(version: ContentVersion, history: NativeHistory) {
     const { files, nativePoint, ...value } = version;
-    return { ...value, restorable: files.every(file => !file.missing), unavailableFiles: files.filter(file => file.missing).map(file => file.path), filePaths: files.map(file => file.path) };
+    const unavailableFiles: string[] = [];
+    for (const file of files) {
+      try {
+        const hash = file.retained ? await fileHash(this.blob(file.hash)) : createHash('sha256').update(await history.readBlob(file.hash)).digest('hex');
+        if (hash !== file.hash) unavailableFiles.push(file.path);
+      } catch { unavailableFiles.push(file.path); }
+    }
+    return { ...value, restorable: unavailableFiles.length === 0, unavailableFiles, filePaths: files.map(file => file.path) };
   }
   async current(history: NativeHistory) {
     const index = await this.sync(history); const version = index.versions.at(-1)!;
@@ -179,7 +186,7 @@ export class ProjectVersions {
       await atomicJson(this.indexFile, index);
       journal.state = 'committed'; journal.versionId = version.versionId;
       await atomicJson(path.join(transaction, 'journal.json'), journal); committed = true;
-      return { version: this.publicVersion(version), revision: version.revision, changed: version.versionId !== current.versionId };
+      return { version: await this.publicVersion(version, history), revision: version.revision, changed: version.versionId !== current.versionId };
     } catch (error) {
       if (await exists(path.join(transaction, 'journal.json'))) await this.rollback(transaction, journal);
       throw error;
@@ -206,15 +213,19 @@ export class ProjectVersions {
     await rm(directory, { recursive: true, force: true });
   }
   async restore(history: NativeHistory, target: ContentVersion, expectedRevision: string, expectedVersionId: string, requestId: string) {
+    const { unavailableFiles } = await this.publicVersion(target, history);
+    if (unavailableFiles.length) throw new Error('VERSION_NOT_RESTORABLE: Historical files are missing, unreadable or corrupt: ' + unavailableFiles.join(', '));
     const directory = path.join(this.root, 'restore-' + crypto.randomUUID());
     try {
       const changes: { path: string; source?: string; remove?: boolean }[] = [];
       for (const file of target.files) {
         const staged = path.join(directory, file.path);
         await mkdir(path.dirname(staged), { recursive: true });
-        if (file.retained) await cloneFile(this.blob(file.hash), staged);
-        else await writeFile(staged, await history.readBlob(file.hash), { mode: 0o600 });
-        if (await fileHash(staged) !== file.hash) throw new Error('VERSION_NOT_RESTORABLE: 历史文件缺失或损坏');
+        try {
+          if (file.retained) await cloneFile(this.blob(file.hash), staged);
+          else await writeFile(staged, await history.readBlob(file.hash), { mode: 0o600 });
+          if (await fileHash(staged) !== file.hash) throw new Error('Historical file checksum mismatch');
+        } catch { throw new Error('VERSION_NOT_RESTORABLE: Cannot stage historical file: ' + file.path); }
         changes.push({ path: file.path, source: staged });
       }
       const wanted = new Set(target.files.map(file => file.path));

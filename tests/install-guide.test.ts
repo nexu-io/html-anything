@@ -5,12 +5,14 @@ import path from 'node:path';
 import os from 'node:os';
 import { generateInstallGuide, validateGuideSpec, validateGuideIdentity } from '../scripts/install-guide.mjs';
 import { movingGuide, publishGuide, storagePlan } from '../.github/scripts/publish-install-guide.mjs';
+import { installationInstructions } from '../scripts/install-onboarding.mjs';
+import { fileURLToPath } from 'node:url';
 import { runFile } from '../scripts/runtime-assets.mjs';
 
 const pkg = { name: '@openmotion/app', version: '0.6.4-test.1', private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } };
 const manifest = { schemaVersion: 1, version: pkg.version, templateEnvironment: 'dev', commit: 'a'.repeat(40),
   application: { sha256: 'b'.repeat(64) }, locks: { npm: 'c'.repeat(64), native: 'd'.repeat(64) },
-  runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64', minimumOS: '26.0' } } } };
+  runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64' }, windows: { platform: 'win32', arch: 'x64', minimumOS: 'Windows 11' } } } };
 const config = { endpoint: 'https://example.r2.cloudflarestorage.com', bucket: 'example-guides', publicOrigin: 'https://download.example.invalid' };
 test('installation URLs separate the moving channel entry from the exact immutable version', () => {
   assert.equal(storagePlan({ channel: 'test', version: pkg.version }, config).versionKey, `open-motion/dev/${pkg.version}/install.md`);
@@ -18,17 +20,32 @@ test('installation URLs separate the moving channel entry from the exact immutab
   assert.equal(storagePlan({ channel: 'stable', version: '0.6.4' }, config).versionKey, 'open-motion/0.6.4/install.md');
   assert.equal(storagePlan({ channel: 'stable', version: '0.6.4' }, config).fixedKey, 'open-motion/install.md');
 });
-async function fixture(t: any, candidate = false) {
+async function fixture(t: any, candidate = false, declaration = manifest) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'motion-guide-test-')); t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'package/payload'), { recursive: true });
   await writeFile(path.join(root, 'package/package.json'), JSON.stringify(pkg));
-  await writeFile(path.join(root, 'package/payload/release-npm.json'), JSON.stringify(manifest));
+  await writeFile(path.join(root, 'package/payload/release-npm.json'), JSON.stringify(declaration));
   const tgz = path.join(root, 'candidate.tgz');
   await runFile('tar', ['-czf', tgz, '-C', root, 'package']);
   const directory = path.join(root, 'guide'), record = await generateInstallGuide(tgz, directory, candidate);
   return { directory, record };
 }
 const previousGuide = '# Install OpenMotion 0.6.3-test.1\n';
+test('guides allow macOS without a version floor and retain declared minimums for other targets and older packages', async t => {
+  const { directory } = await fixture(t);
+  const text = await readFile(path.join(directory, 'install.md'), 'utf8');
+  assert(text.includes('darwin/arm64, win32/x64 (Windows 11+)'));
+  assert(!text.includes('26.0+') && !text.includes('undefined+'));
+  const missingWindowsMinimum = structuredClone(manifest);
+  missingWindowsMinimum.runtime.targets.windows.minimumOS = '';
+  assert.throws(() => validateGuideIdentity(pkg, missingWindowsMinimum), /native target/);
+  const missingCPU = structuredClone(manifest);
+  missingCPU.runtime.targets.mac.arch = '';
+  assert.throws(() => validateGuideIdentity(pkg, missingCPU), /native target/);
+  const legacy = { ...manifest, runtime: { targets: { ...manifest.runtime.targets, mac: { ...manifest.runtime.targets.mac, minimumOS: '26.0' } } } };
+  const older = await fixture(t, false, legacy);
+  assert((await readFile(path.join(older.directory, 'install.md'), 'utf8')).includes('darwin/arm64 (26.0+)'));
+});
 function storage(directory: string, record: any, previous = previousGuide) {
   const plan = storagePlan(record, config), objects = new Map<string, Buffer>(), writes: any[] = [];
   objects.set(plan.fixedKey, Buffer.from(previous));
@@ -58,6 +75,13 @@ test('guide rendering pins the exact npm package, built source and hash while re
     'A generated test guide must not claim test versions skip DEV templates');
   for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(text.includes(`openmotion setup --host ${host}`), host);
   assert(text.includes('--profile PROFILE') && text.includes('Do not infer the current host'));
+  assert(text.includes(`/blob/${manifest.commit}/docs/npm-installation.md#npm-download-failures`), 'Network recovery must link to this package source');
+  assert(text.includes('automatically try `https://registry.npmjs.org` then `https://registry.npmmirror.com`'), 'Network recovery must name the ordered automatic fallback');
+  assert(text.includes('at most once per registry, counting the initial failed attempt'), 'Recovery must not retry the same registry indefinitely');
+  assert(text.includes('`npm_config_registry` and `npm_config_fetch_retries=0` only for that attempt, including setup\'s npm child process'), 'Temporary registry settings must reach nested dependency installation');
+  assert(text.includes('verify any mirrored tgz against the matching immutable guide\'s SHA256 before executing it'), 'Mirror recovery must preserve an independently recorded package identity');
+  assert(text.includes('Permission or checksum failures stop immediately') && text.includes('terminal handoff') && text.includes('A local tgz still needs npm access'), 'Retain fail-closed recovery, terminal handoff and the online dependency boundary');
+  assert(text.includes(await installationInstructions(fileURLToPath(new URL('../', import.meta.url)))), 'Published guide must preserve the exact setup reply contract');
   assert.equal(record.channel, 'test'); assert.equal(record.candidate, false);
   assert.equal(validateGuideSpec('openmotion', '0.6.4'), 'stable');
   for (const name of ['https://evil.invalid/a', 'x;echo bad', '--script', '@bad/no/extra']) assert.throws(() => validateGuideSpec(name, pkg.version));
