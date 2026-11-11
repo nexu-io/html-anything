@@ -148,12 +148,10 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
       }
     },
     changed: () => refreshHeader(),
-    file: (path) =>
-      run(async () => {
-        await editor.save();
-        file = path;
-        studio.setMode("source");
-      }),
+    file: (path) => {
+      file = path;
+      studio.setMode("source");
+    },
     start: () => (editor.session ? enterArtifact(`工程 ${editor.session.artifacts.length + 1}`) : enterSession("")),
   });
   const exports = new Exports(document, editor, client, (action) => run(action));

@@ -1,18 +1,19 @@
 import { button, field, note, slot, tabs, tree } from "@open-motion/components";
 import type { Clip } from "@open-motion/motion/contract";
-import { type Input, type Resource, resourceLimit, type SourceFile } from "@open-motion/workspace/contract";
+import { type Input, type Resource, resourceLimit } from "@open-motion/workspace/contract";
 
 import type { Client } from "../../../../api.js";
 import type { Editor } from "../../../editor.js";
 import type { CompositionContext } from "../context.js";
 import { insertResource } from "../transactions.js";
+import { SourceFiles } from "./files.js";
 import { GenerationPanel } from "./generation.js";
 /** Stable layer/file controls; composition navigation and source transactions belong to Studio's context. */
 export class StudioLibrary {
   private layers: ReturnType<typeof tree>;
   private tabs: ReturnType<typeof tabs>;
-  private files: HTMLElement;
-  private controls = new Map<string, HTMLButtonElement>();
+  private files: SourceFiles;
+  private blocked = true;
   private expanded = new Set<string>();
   private ready = false;
   private media: HTMLElement;
@@ -21,7 +22,7 @@ export class StudioLibrary {
   private mediaKey = "";
   private generation: GenerationPanel;
   private mode = "layers";
-  private current?: { clips: Clip[]; selected: string; blocked: boolean; files: SourceFile[] };
+  private current?: { clips: Clip[]; selected: string; blocked: boolean };
   constructor(
     host: HTMLElement,
     actions: HTMLElement,
@@ -36,8 +37,7 @@ export class StudioLibrary {
   ) {
     const document = host.ownerDocument;
     const render = () => {
-      if (this.current)
-        this.update(this.current.clips, this.current.selected, this.current.blocked, this.current.files);
+      if (this.current) this.update(this.current.clips, this.current.selected, this.current.blocked);
     };
     this.layers = tree(document, {
       label: "工程图层",
@@ -52,10 +52,11 @@ export class StudioLibrary {
       label: "资源视图",
       select: (id) => {
         this.mode = id;
+        this.sync(this.blocked);
         render();
       },
     });
-    this.files = document.createElement("div");
+    this.files = new SourceFiles(document, editing, file);
     this.media = slot(document, "content");
     this.media.setAttribute("aria-label", "工程媒体");
     this.mediaList = slot(document, "content");
@@ -103,22 +104,32 @@ export class StudioLibrary {
       note(document, "PNG / PCM16 WAV · 单资源最多 6 MiB；素材随工程历史持久保存。"),
       this.mediaList,
     );
-    this.open = file;
     actions.append(this.tabs.element);
-    host.append(this.layers.element, this.files, this.media);
+    host.append(this.layers.element, this.files.element, this.media);
   }
   sync(blocked: boolean) {
+    this.blocked = blocked;
+    this.files.update(blocked || !!this.editing.editor.drafts?.dirty());
+    this.tabs.update(
+      [
+        { id: "media", label: "媒体" },
+        { id: "layers", label: "图层" },
+        { id: "files", label: "文件" },
+      ],
+      this.mode,
+      blocked,
+    );
     this.generation.update(this.editing.editor.project, blocked);
   }
   dispose() {
     return this.generation.dispose();
   }
-  private open: (path: string) => void;
   reset() {
     this.expanded.clear();
     this.ready = false;
   }
   disable(value: boolean) {
+    if (this.current) this.current.blocked = value;
     this.layers.disable(value);
     this.upload.disabled = value;
     for (const button of this.mediaList.querySelectorAll("button")) button.disabled = value;
@@ -184,21 +195,12 @@ export class StudioLibrary {
     this.upload.disabled = blocked;
     for (const button of this.mediaList.querySelectorAll("button")) button.disabled = blocked;
   }
-  update(clips: Clip[], selected: string, blocked: boolean, files: SourceFile[]) {
-    this.current = { clips, selected, blocked, files };
+  update(clips: Clip[], selected: string, blocked: boolean) {
+    this.current = { clips, selected, blocked };
     if (!this.ready) {
       for (const clip of clips.filter((clip) => clip.parent === null)) this.expanded.add(clip.id);
       this.ready = clips.length > 0;
     }
-    this.tabs.update(
-      [
-        { id: "media", label: "媒体" },
-        { id: "layers", label: "图层" },
-        { id: "files", label: "文件" },
-      ],
-      this.mode,
-      blocked,
-    );
     this.layers.update(
       clips.map((clip) => ({
         id: clip.id,
@@ -213,28 +215,8 @@ export class StudioLibrary {
       blocked,
     );
     this.layers.element.hidden = this.mode !== "layers";
-    this.files.hidden = this.mode !== "files";
+    this.files.element.hidden = this.mode !== "files";
     this.media.hidden = this.mode !== "media";
     this.resources(this.editing.editor.project?.resources ?? [], blocked);
-    for (const [path, control] of this.controls)
-      if (!files.some((file) => file.path === path)) {
-        control.remove();
-        this.controls.delete(path);
-      }
-    for (const file of files) {
-      let control = this.controls.get(file.path);
-      if (!control) {
-        control = button(this.files.ownerDocument, {
-          label: file.path,
-          icon: file.path.endsWith(".html") ? "code" : "file",
-          compact: true,
-          variant: "item",
-          onClick: () => this.open(file.path),
-        });
-        this.controls.set(file.path, control);
-        this.files.append(control);
-      }
-      control.disabled = blocked;
-    }
   }
 }

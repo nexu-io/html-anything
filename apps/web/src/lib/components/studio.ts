@@ -234,7 +234,7 @@ export class Studio {
       this.properties.clear();
       this.animations.update("", undefined, true);
 
-      this.layers.update([], "", true, []);
+      this.layers.update([], "", true);
       this.context.element.replaceChildren();
       this.timelineRoot.replaceChildren(note(this.root.ownerDocument, "创建或打开工程，开始编辑时间轴。"));
       this.toolbar.replaceChildren(note(this.root.ownerDocument, "本地 Studio"));
@@ -340,7 +340,7 @@ export class Studio {
     const selected = clips.find((c) => c.id === this.selected);
     const blocked = this.blocked || this.context.readonly;
     this.context.render(this.blocked);
-    this.layers.update(clips, this.selected, this.blocked, this.editor.project?.files ?? []);
+    this.layers.update(clips, this.selected, this.blocked);
     const clip = selected;
     this.properties.update({
       owner: this.context.owner,

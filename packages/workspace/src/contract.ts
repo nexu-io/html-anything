@@ -186,3 +186,64 @@ export function initialFiles(): SourceFile[] {
     },
   ];
 }
+
+/** Native source names are logical snapshot paths, never host paths. */
+const sourceExtensions = new Set([
+  "html",
+  "css",
+  "js",
+  "mjs",
+  "json",
+  "svg",
+  "txt",
+  "md",
+  "vtt",
+  "srt",
+  "glsl",
+  "vert",
+  "frag",
+]);
+const sourceIgnored = new Set(["node_modules", "dist", "renders", "output", "cache"]);
+const sourceManifests = new Set([".hyperframes/studio-manual-edits.json", ".hyperframes/studio-motion.json"]);
+export function validateSourcePath(path: string, managed = false) {
+  if (
+    !path ||
+    path.length > 240 ||
+    path.includes("\\") ||
+    path.includes(":") ||
+    Array.from(path).some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127) ||
+    (!(managed && sourceManifests.has(path)) &&
+      path.split("/").some((part) => !part || part.startsWith(".") || sourceIgnored.has(part))) ||
+    !sourceExtensions.has(path.match(/\.([a-z0-9]+)$/i)?.[1]?.toLowerCase() ?? "")
+  )
+    throw new Fault("invalid", "invalid or reserved native source path");
+}
+export type SourceChange =
+  | { kind: "create"; path: string }
+  | { kind: "duplicate" | "rename"; path: string; target: string }
+  | { kind: "remove"; path: string };
+/** One source membership change; persistence and retries remain project_save's responsibility. */
+export function changeSources(files: SourceFile[], change: SourceChange): SourceFile[] {
+  validateSourcePath(change.path);
+  const original = files.find((file) => file.path === change.path);
+  if (change.kind !== "create" && !original) throw new Fault("invalid", "source file is missing");
+  if ((change.kind === "rename" || change.kind === "remove") && change.path === "index.html")
+    throw new Fault("invalid", "index.html is the protected project entry");
+  const next = files.filter((file) => !(["rename", "remove"].includes(change.kind) && file.path === change.path));
+  if (change.kind !== "remove") {
+    const target = change.kind === "create" ? change.path : change.target;
+    validateSourcePath(target);
+    if (target === change.path && change.kind !== "create") throw new Fault("invalid", "destination matches source");
+    if (
+      next.some(
+        (file) => file.path === target || file.path.startsWith(target + "/") || target.startsWith(file.path + "/"),
+      )
+    )
+      throw new Fault("conflict", "source destination already exists or overlaps a file");
+    if (next.length >= 128) throw new Fault("invalid", "native source count exceeds 128");
+    const content = change.kind === "create" ? "" : original?.content;
+    if (content === undefined) throw new Fault("invalid", "source file is missing");
+    next.push({ path: target, content });
+  }
+  return next.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
+}
