@@ -10,9 +10,11 @@ const state = vi.hoisted(() => ({
   renderQueue: { isRendering: false, ffmpegMissing: false },
   open: vi.fn(), export: vi.fn(), setTab: vi.fn(), setCollapsed: vi.fn(),
   undo: vi.fn(), redo: vi.fn(), create: vi.fn(), home: vi.fn(), rename: vi.fn(),
+  showToast: vi.fn(), status: { projectId: 'demo', historyRestoreError: null as { requestId: string; message: string } | null },
 }));
 vi.mock('../contexts/StudioContext', () => ({ useStudioShellContext: () => ({
   projectId: 'demo', renderQueue: state.renderQueue, waitForPendingDomEditSaves: async () => {},
+  showToast: state.showToast,
 }), useStudioShellContextOptional: () => ({
   editHistory: { canUndo: true, canRedo: true }, handleUndo: state.undo, handleRedo: state.redo,
 }) }));
@@ -22,7 +24,7 @@ vi.mock('../contexts/PanelLayoutContext', () => ({ usePanelLayoutContext: () => 
 vi.mock('../components/dock/Dock', () => ({ Dock: { WindowMenu: () => <button>Window</button>, Panel: () => null } }));
 vi.mock('../utils/studioTelemetry', () => ({ trackStudioEvent: vi.fn() }));
 vi.mock('./useWorkspace', () => ({ useWorkspace: () => ({
-  status: { projectId: 'demo' }, projects: [{ id: 'demo', title: 'Demo' }, { id: 'second', title: 'Second' }],
+  status: state.status, projects: [{ id: 'demo', title: 'Demo' }, { id: 'second', title: 'Second' }],
   busy: false, error: '', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
 }) }));
 vi.mock('./ConnectionDialog', () => ({ ConnectionDialog: ({ open, section, busy, onOpen }: { open: boolean; section: string; busy: boolean; onOpen: (id: string) => void }) =>
@@ -37,6 +39,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
   state.renderQueue.isRendering = false;
+  state.status = { projectId: 'demo', historyRestoreError: null };
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -56,6 +59,22 @@ function openSidebar() {
   act(() => container.querySelector<HTMLButtonElement>('.motion-workspace-menu')!.click());
 }
 const button = (text: string) => [...container.querySelectorAll('button')].find(el => el.textContent === text)!;
+
+it('shows a restore failure once in its own project through the shared toast', () => {
+  const message = 'VERSION_NOT_RESTORABLE: Historical files are missing, unreadable or corrupt: assets/music.wav';
+  state.status = { projectId: 'second', historyRestoreError: { requestId: 'failed-restore', message } };
+  render();
+  expect(state.showToast).not.toHaveBeenCalled();
+  state.status = { ...state.status, projectId: 'demo' };
+  render(); render();
+  expect(state.showToast).toHaveBeenCalledExactlyOnceWith(message, 'error');
+  state.status = { projectId: 'demo', historyRestoreError: { requestId: 'new-attempt', message } };
+  render();
+  expect(state.showToast).toHaveBeenCalledTimes(2);
+  state.status = { projectId: 'demo', historyRestoreError: { requestId: 'failed-restore', message } };
+  render();
+  expect(state.showToast).toHaveBeenCalledTimes(2);
+});
 
 it('keeps project switching, templates, history actions and native export in the MVP', () => {
   render();

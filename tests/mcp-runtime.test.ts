@@ -11,7 +11,7 @@ import { rpc } from '../mcp.ts';
 import { copyRuntimeFixture } from './fixtures.ts';
 import { WorkspaceStore } from '../workspace.ts';
 
-async function incompatibleEditor(directory: string, changed: Record<string, unknown>) {
+async function incompatibleEditor(directory: string, changed: Record<string, unknown>, toolError?: string) {
   const { data, runtime } = await editorDirectory(directory);
   const requests: string[] = [];
   const registry = { service: 'opendesign-editor', protocol: 1, version: JSON.parse(await readFile(path.join(pluginRoot, 'package.json'), 'utf8')).version,
@@ -25,6 +25,7 @@ async function incompatibleEditor(directory: string, changed: Record<string, unk
     if (req.url === '/motion-api/phase1/call') {
       let body = ''; for await (const chunk of req) body += chunk;
       calls.push(JSON.parse(body));
+      if (toolError) { res.statusCode = 400; return res.end(JSON.stringify({ error: toolError, applied: false })); }
       return res.end(JSON.stringify({ projectId: 'project', sessionId: 'project', authority: 'compatible-backend', job: { id: 'existing-export' } }));
     }
     res.end(JSON.stringify(health));
@@ -40,6 +41,19 @@ async function incompatibleEditor(directory: string, changed: Record<string, unk
 const exportCall = { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'motion_export_request', arguments: {
   projectId: 'project', requestId: 'must-not-export', expectedRevision: '0'.repeat(64), versionId: 'unavailable', audio: 'silent',
 } } };
+
+test('MCP reports unavailable historical files as not applied', { skip: !sharedEditorEnabled }, async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-unavailable-version-'));
+  const message = 'VERSION_NOT_RESTORABLE: Historical files are missing, unreadable or corrupt: assets/audio.wav';
+  const editor = await incompatibleEditor(directory, { mcp: { protocol: 1, tools: ['motion_restore_version'] } }, message);
+  try {
+    const response: any = await rpc({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'motion_restore_version', arguments: {
+      projectId: 'project', requestId: 'missing-media', versionId: 'unavailable', expectedVersionId: 'current', expectedRevision: '0'.repeat(64),
+    } } }, new WorkspaceStore(directory));
+    assert.equal(response.result.isError, true);
+    assert.deepEqual(response.result.structuredContent.error, { code: 'VERSION_NOT_RESTORABLE', message, applied: false });
+  } finally { await editor.close(); await rm(directory, { recursive: true, force: true }); }
+});
 
 test('MCP reports incompatible editor identity fields without starting an export or exposing credentials', { skip: !sharedEditorEnabled }, async t => {
   for (const changed of [{ protocol: 999 }, { version: '0.0.0' }, { build: '0'.repeat(64) }]) await t.test(Object.keys(changed)[0], async () => {

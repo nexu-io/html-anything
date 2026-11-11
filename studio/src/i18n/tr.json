@@ -1767,5 +1767,7 @@
   "purple": "Mor",
   "red": "Kırmızı",
   "blue": "Mavi",
-  "monochrome": "Tek renkli"
+  "monochrome": "Tek renkli",
+  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Geçmiş dosyaları eksik, okunamıyor veya hasarlı: {files}. Bu sürüm geri yüklenmedi. Mevcut proje değişmedi.",
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Geçmiş dosyaları geri yükleme için hazırlanamadı: {files}. Mevcut proje değişmedi."
 }

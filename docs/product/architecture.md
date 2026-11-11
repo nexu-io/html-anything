@@ -162,6 +162,10 @@ README 参考 OpenDesign 的产品导览和 HTML Anything 的贡献、来源表�
 
 一期公开 MCP 已按[11 Tool 契约](../mcp-phase1-tools.md) 实现本地适配与构建过滤，默认 phase1。发布清单同时控制发现/调用、HTTP 接入元数据及各分发包，原28项内部兼容实现和 Studio 服务保留。phase1.ts 负责明确项目、请求去重、批量素材/保存、具名任务与审阅；phase1-versions.ts 复用原生 history、补稳定 vN 和原生未留存媒体及保存恢复日志。恢复历史创建新版本并保留后续历史，区别于内容哈希和单文件保存。导出继续委托原渲染器并自动完整技术验证；取消区分受理和进程退出。5个随包 Skill 与 MCP resources 指引同步新契约。此为本地实现，未据此宣布部署/平台/宿主业务验收。
 
+MCP version availability is derived from readable, hash-verified native or retained blobs at query time. Restore repeats this check and stages verified contents before entering the existing write transaction. Missing or corrupt historical resources report project-relative paths with `VERSION_NOT_RESTORABLE` and `applied=false`, preserving current project contents and version identity. Availability can change between calls; Studio's native GUI history retains its own restoration semantics.
+
+MCP restore refusals also reach the owning editor through its existing project-status polling and shared error toast. Notices retain file paths, localize the explanation and remain dismissible; repeated polls do not repeat a request's notice. The latest refusal is transient backend state, cleared on successful restoration or restart, and is separate from project source and history. Native history panel action failures reuse the same toast.
+
 Preview/export preflight and the bundled OpenMotion lint command use the pinned native linter's Studio policy in an isolated, cancellable process. A structurally invalid project is rejected before editor opening or rendering; non-blocking warnings remain warnings. The npm CLI's `diagnose` command reads the installed host configuration and probes initialization, tool discovery and the expected workspace through an independent MCP process. It does not mutate configuration, create projects or prove active-chat connectivity. Host reconnection and a subsequent real host read remain separate completion conditions; see [connection diagnosis](../npm-installation.md#missing-mcp-tools-or-a-failed-connection).
 
 | 能力 | 负责模块 | 当前边界 |

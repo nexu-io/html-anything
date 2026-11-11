@@ -47,9 +47,22 @@ export function MotionEditorFrame({ children }: { children: ReactNode }) {
     register?.({ waitForSaves: waitForPendingDomEditSaves, blocked, saveState, message: writeBlockedReason || '' });
     return () => register?.(null);
   }, [register, waitForPendingDomEditSaves, blocked, saveState, writeBlockedReason]);
-  const editor = <MediaGatewayProvider>{children}</MediaGatewayProvider>;
+  const editor = <MediaGatewayProvider><HistoryRestoreFeedback />{children}</MediaGatewayProvider>;
   if (chrome) return editor;
   return <WorkspaceFrame projectId={projectId} waitForSaves={waitForPendingDomEditSaves} blocked={blocked} message={writeBlockedReason || ''} saveState={saveState}>{editor}</WorkspaceFrame>;
+}
+
+function HistoryRestoreFeedback() {
+  const { projectId, showToast } = useStudioShellContext();
+  const status = useOptionalWorkspaceChrome()?.workspace.status;
+  const shown = useRef(new Set<string>());
+  useEffect(() => {
+    const error = status?.historyRestoreError;
+    if (status?.projectId !== projectId || !error || shown.current.has(error.requestId)) return;
+    shown.current.add(error.requestId);
+    showToast(error.message, 'error');
+  }, [projectId, status, showToast]);
+  return null;
 }
 
 function WorkspaceProject() {
