@@ -8,6 +8,7 @@ import { useAssetPreviewStore } from "../../utils/assetPreviewStore";
 import { AssetCard } from "./AssetCard";
 import { AudioRow } from "./AudioRow";
 import { InlineAssetRename } from "./InlineAssetRename";
+import { TIMELINE_ASSET_MIME } from "../../utils/timelineAssetDrop";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -130,6 +131,15 @@ describe("AudioRow click behavior", () => {
     onCopy: vi.fn(),
     copyFeedback: null,
   };
+
+  it("carries the known audio duration with its drag payload", () => {
+    const host = mount(<AudioRow {...rowProps} asset="assets/bgm.mp3" used={false} meta={{ duration: 42 }} />);
+    const setData = vi.fn();
+    const event = new Event("dragstart", { bubbles: true });
+    Object.defineProperty(event, "dataTransfer", { value: { setData, effectAllowed: "none" } });
+    act(() => host.querySelector("[draggable]")!.dispatchEvent(event));
+    expect(setData).toHaveBeenCalledWith(TIMELINE_ASSET_MIME, JSON.stringify({ path: "assets/bgm.mp3", duration: 42 }));
+  });
 
   it("clears an open preview overlay when clicking an already-added audio asset (reveal branch)", () => {
     usePlayerStore

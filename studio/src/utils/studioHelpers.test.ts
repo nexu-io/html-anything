@@ -215,6 +215,30 @@ describe("dropped asset probes", () => {
   const NAME = "assets/50% off #1?'s take.mp4";
   const URL = "/api/projects/demo/preview/assets/50%25%20off%20%231%3F%27s%20take.mp4";
 
+  it("shares an in-flight audio probe, reports timeout, and permits a fresh retry", async () => {
+    vi.useFakeTimers();
+    const createElement = document.createElement.bind(document);
+    const probes: HTMLAudioElement[] = [];
+    vi.spyOn(document, "createElement").mockImplementation((tag, options) => {
+      const element = createElement(tag, options);
+      if (tag === "audio") probes.push(element as HTMLAudioElement);
+      return element;
+    });
+    const first = resolveDroppedAssetDuration("demo", "music.mp3", "audio");
+    const second = resolveDroppedAssetDuration("demo", "music.mp3", "audio");
+    expect(second).toBe(first);
+    const failure = expect(first).rejects.toThrow("Could not read media duration");
+    await vi.advanceTimersByTimeAsync(3000);
+    await failure;
+    expect(probes).toHaveLength(1);
+    expect(probes[0].getAttribute("src")).toBe("");
+    const retried = resolveDroppedAssetDuration("demo", "music.mp3", "audio");
+    expect(probes).toHaveLength(2);
+    Object.defineProperty(probes[1], "duration", { value: 22.42 });
+    probes[1].dispatchEvent(new Event("loadedmetadata"));
+    await expect(retried).resolves.toBe(22.42);
+  });
+
   it("probe a dropped file's length and size at its own URL", async () => {
     vi.useFakeTimers();
     const probes: HTMLVideoElement[] = [];
@@ -226,10 +250,11 @@ describe("dropped asset probes", () => {
     });
 
     const duration = resolveDroppedAssetDuration("demo", NAME, "video");
+    const durationFailed = expect(duration).rejects.toThrow("Could not read media duration");
     const size = resolveDroppedAssetDimensions("demo", NAME, "video");
     expect(probes.map((probe) => probe.getAttribute("src"))).toEqual([URL, URL]);
     await vi.advanceTimersByTimeAsync(3000);
-    await Promise.all([duration, size]);
+    await Promise.all([durationFailed, size]);
   });
 });
 

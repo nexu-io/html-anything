@@ -2,6 +2,7 @@ import type { GsapAnimation } from "@hyperframes/core/gsap-parser";
 import type { KeyframeCacheEntry } from "./keyframeSlice";
 import { resetPlaybackReadinessState } from "./readinessSlice";
 import type { SubCompositionHostState } from "./timelineElement";
+import type { PendingAssetDrop } from "./pendingAssetDrops";
 
 export function createTimelineResetState() {
   return {
@@ -11,6 +12,7 @@ export function createTimelineResetState() {
     ...resetPlaybackReadinessState(),
     beatDragging: false,
     elements: [],
+    pendingAssetDrops: [] as PendingAssetDrop[],
     selectedElementId: null,
     zEditVersion: 0,
     inPoint: null,
