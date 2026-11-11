@@ -8,12 +8,23 @@ export function attributeGuide(text: string, source: string | null): string {
     command => `${command} --utm-source ${source}`);
 }
 
+export function guideKey(url: URL): string | null {
+  if (url.pathname === '/motion/install.md') {
+    if (url.hostname === 'open-design.powerformer.net') return 'open-motion/dev/install.md';
+    if (url.hostname === 'open-design.ai') return 'open-motion/install.md';
+    return null;
+  }
+  // Preserve the original release URLs and independent Worker preview paths.
+  return /^\/open-motion\/(?:dev\/)?install\.md$/.test(url.pathname) ? url.pathname.slice(1) : null;
+}
+
 export default {
   async fetch(request: Request, env: Environment): Promise<Response> {
     const url = new URL(request.url);
-    if (!/^\/open-motion\/(?:dev\/)?install\.md$/.test(url.pathname)) return new Response('Not found', { status: 404 });
+    const key = guideKey(url);
+    if (!key) return new Response('Not found', { status: 404 });
     if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
-    const object = await env.RELEASES.get(url.pathname.slice(1));
+    const object = await env.RELEASES.get(key);
     if (!object) return new Response('Not found', { status: 404 });
     const headers = new Headers();
     object.writeHttpMetadata(headers);

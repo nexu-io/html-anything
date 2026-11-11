@@ -75,7 +75,7 @@ export function setupPrompt(info: IntegrationInfo, host: IntegrationHost, locale
 }
 export function templatePrompt(info: IntegrationInfo, _host: IntegrationHost, template: { id: string; title: string }, locale = 'zh-CN') {
   const environment = info.templateEnvironment ?? info.transport.env?.MOTION_TEMPLATE_ENV ?? 'prod';
-  const installUrl = `https://releases.open-design.ai/open-motion/${environment === 'dev' ? 'dev/' : ''}install.md`;
+  const installUrl = `https://${environment === 'dev' ? 'open-design.powerformer.net' : 'open-design.ai'}/motion/install.md`;
   const message = templatePrompts[catalogLocale(Object.keys(templatePrompts), locale, 'en')];
   const values = { installUrl, name: template.title, id: template.id };
   return message.replace(/\{(installUrl|name|id)\}/g, (_, key: keyof typeof values) => values[key]);

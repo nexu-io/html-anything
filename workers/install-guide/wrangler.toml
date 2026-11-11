@@ -8,5 +8,7 @@ workers_dev = true
 binding = "RELEASES"
 bucket_name = "open-design-releases"
 
-# Attach only the two moving install.md paths after testing a package that supports --utm-source.
-# Immutable versioned guides and other release resources continue to be served by R2.
+# Test entry only. Keep production activation separate until verified.
+[[routes]]
+pattern = "open-design.powerformer.net/motion/install.md*"
+zone_name = "powerformer.net"
