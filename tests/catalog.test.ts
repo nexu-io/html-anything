@@ -176,7 +176,7 @@ test('template prompts cover all eleven locales and preserve literal template va
   assert.equal(new Set(prompts).size, 11);
   for (const prompt of prompts) {
     assert.ok(prompt.includes(template.title)); assert.ok(prompt.includes(template.id));
-    assert.ok(prompt.includes('https://open-design.powerformer.net/motion/install.md'));
+    assert.match(prompt, /https:\/\/open-design\.powerformer\.net\/motion\/install\.md/);
     assert.match(prompt, /HTML.*MP4/); assert.doesNotMatch(prompt, /\{installUrl\}|\{id\}/);
   }
   assert.equal(templatePrompt(info, 'codex', template, 'pt-BR'), templatePrompt(info, 'codex', template, 'pt-br'));

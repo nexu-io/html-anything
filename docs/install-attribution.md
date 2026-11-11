@@ -14,8 +14,8 @@ Website URL `?utm_source=producthunt` â†’ copied guide URL with the same query â
 
 1. Merge and publish the installer supporting `--utm-source`. The generated guide includes `<!-- openmotion-utm-source-supported -->` only with that source version.
 2. Deploy `wrangler deploy --config workers/install-guide/wrangler.toml` in the Powerformer account. The binding reads the existing `open-design-releases` bucket; it does not upload or modify release objects.
-3. Verify the test entry `https://open-design.powerformer.net/motion/install.md` against both attributed and direct requests. The Worker maps this host to `open-motion/dev/install.md`.
-4. After validation, enable `https://open-design.ai/motion/install.md` separately; it maps to `open-motion/install.md`. The checked-in route activates only the test host. Other website and R2 paths remain unchanged. Removing the added route rolls back the new entry; existing R2 links remain available.
+3. Verify the test entry `open-design.powerformer.net/motion/install.md` against both attributed and direct requests. The Worker maps this host to `open-motion/dev/install.md`.
+4. After validation, enable `open-design.ai/motion/install.md` separately; it maps to `open-motion/install.md`. The checked-in route activates only the test host. Other website and R2 paths remain unchanged. Removing the added route rolls back the new entry; existing R2 links remain available.
 
 Both entries may serve older guides without injecting a parameter; injection starts only after a supporting installer and marked guide are published. Website feature previews use the test installation entry, while their Pages deployment stays on the feature branch. R2 upload/readback origins are not installation entry URLs.
 
