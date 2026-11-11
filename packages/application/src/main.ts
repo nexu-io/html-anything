@@ -10,6 +10,7 @@ import { carriers, manifest, path, type Selection } from "./contract.js";
 import { setup } from "./install.js";
 import { native, start, status, stop } from "./runtime.js";
 import { signals } from "./signals.js";
+import { collect } from "./update/gc.js";
 import { updates } from "./update/index.js";
 
 const help = `odsuite setup --carrier standalone|codexplugin [--home DIR] [--data DIR] [--profile DIR] [--skills DIR] [--codex FILE]
@@ -18,6 +19,8 @@ odsuite update check|prepare --endpoint URL --public-key FILE [--home DIR] [--da
 odsuite update activate --request-id UUID --public-key FILE [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite update status [--request-id UUID] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite update discard [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite gc plan|status [--request-id UUID] [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
+odsuite gc apply --request-id UUID --expected FINGERPRINT [--codex FILE] [--home DIR] [--data DIR] [--channel NAME] [--namespace NAME]
 odsuite recover inspect --root DIR
 odsuite recover apply --root DIR --expected FINGERPRINT
 
@@ -35,9 +38,9 @@ async function main(args: string[]) {
     return;
   }
   const command = args.shift();
-  if (!command || !["setup", "start", "stop", "status", "prepare", "recover", "update"].includes(command))
-    throw Error("expected setup|start|stop|status|prepare|recover|update");
-  const operation = command === "recover" || command === "update" ? args.shift() : undefined;
+  if (!command || !["setup", "start", "stop", "status", "prepare", "recover", "update", "gc"].includes(command))
+    throw Error("expected setup|start|stop|status|prepare|recover|update|gc");
+  const operation = command === "recover" || command === "update" || command === "gc" ? args.shift() : undefined;
   const allowed =
     command === "recover"
       ? ["root", ...(operation === "apply" ? ["expected"] : [])]
@@ -47,6 +50,7 @@ async function main(args: string[]) {
           "channel",
           "namespace",
           ...(command === "setup" ? ["carrier", "profile", "skills", "codex"] : []),
+          ...(command === "gc" ? ["request-id", "expected", "codex"] : []),
           ...(command === "update"
             ? operation === "activate"
               ? ["public-key", "request-id", "codex"]
@@ -106,7 +110,17 @@ async function main(args: string[]) {
     else if (command === "start") result = await start(description, selection);
     else if (command === "stop") result = await stop(description, selection);
     else if (command === "status") result = await status(description, selection);
-    else if (command === "update") {
+    else if (command === "gc") {
+      if (!["plan", "apply", "status"].includes(operation ?? "")) throw Error("gc requires plan|apply|status");
+      if (operation !== "apply" && options.has("expected")) throw Error("only gc apply accepts --expected");
+      if (operation === "plan" && options.has("request-id")) throw Error("gc plan does not accept --request-id");
+      result = await collect(description, selection, operation as "plan" | "apply" | "status", {
+        requestId: options.get("request-id"),
+        expected: options.get("expected"),
+        codex: options.get("codex"),
+        worker: fileURLToPath(new URL("./codex-worker.mjs", import.meta.url)),
+      });
+    } else if (command === "update") {
       if (!["check", "prepare", "discard", "activate", "status"].includes(operation ?? ""))
         throw Error("update requires check|prepare|discard|activate|status");
       let publickey = "";

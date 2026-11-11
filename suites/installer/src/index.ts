@@ -1,6 +1,9 @@
 export { source as verifySource } from "./archive.js";
 export { open } from "./domain.js";
 export type {
+  CollectionEntry,
+  CollectionPlan,
+  CollectionRecord,
   Consumption,
   Input,
   Options,

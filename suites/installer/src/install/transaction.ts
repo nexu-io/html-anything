@@ -18,7 +18,7 @@ export class Transaction {
   ) {
     this.store = new Store(data, established);
   }
-  private check(value: Receipt) {
+  check(value: Receipt) {
     if (
       value.product !== this.options.product ||
       value.channel !== this.options.scope.channel ||
@@ -38,6 +38,8 @@ export class Transaction {
   }
   async verified(value: Receipt) {
     this.check(value);
+    if (this.store.collection.state(value.path))
+      throw new InstallerFault("retired", "installation version is retiring or retired");
     try {
       if ((await canonical(value.path)) !== value.path)
         throw new InstallerFault("integrity", "installed path escaped its grant");

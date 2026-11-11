@@ -6,6 +6,11 @@ export interface Options {
   product: string;
   scope: FactoryScope;
   /** In-process diagnostic only; no policy, serialization or control transport. */
+  onCollectionCheckpoint?: (event: {
+    requestId: string;
+    phase: "retiring" | "file" | "removed" | "complete";
+    path?: string;
+  }) => Promise<void>;
   onCheckpoint?: (event: {
     phase: "intent" | "materialized" | "installed" | "selected";
     requestId: string;
@@ -59,6 +64,22 @@ export interface Select {
   receipts: Record<string, string>;
   transition?: string;
 }
+export interface CollectionEntry {
+  receipt: Receipt;
+  requests: string[];
+  bytes: number;
+  reasons: string[];
+}
+export interface CollectionPlan {
+  fingerprint: `sha256:${string}`;
+  entries: CollectionEntry[];
+}
+export interface CollectionRecord {
+  requestId: string;
+  plan: CollectionPlan;
+  retired: string[];
+  complete: boolean;
+}
 export interface Session {
   readonly factory: Factory;
   readonly context: Context;
@@ -78,11 +99,16 @@ export interface Session {
   read(carrier: string): Promise<Receipt | undefined>;
   use(input: Consumption): Promise<Use>;
   uses(): Promise<UseObservation[]>;
+  gc: {
+    plan(protectedReceipts: string[]): Promise<CollectionPlan>;
+    apply(input: { requestId: string; expected: string; protectedReceipts: string[] }): Promise<CollectionRecord>;
+    read(requestId?: string): Promise<CollectionRecord | undefined>;
+  };
   close(): Promise<void>;
 }
 export class InstallerFault extends Error {
   constructor(
-    readonly code: "invalid" | "conflict" | "integrity" | "idempotency",
+    readonly code: "invalid" | "conflict" | "integrity" | "idempotency" | "retired",
     message: string,
   ) {
     super(message);
