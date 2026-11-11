@@ -27,7 +27,12 @@ export function StudioToast({ message, tone, presentation, leaving, onDismiss, s
       </div> : <div className={`max-w-[min(420px,calc(100vw-48px))] overflow-hidden rounded-2xl px-4 py-2 text-[12px] shadow-popover bg-toast-feedback text-toast-feedback-ink`}>
         <div className={status ? "flex min-w-0 items-center gap-3" : undefined}>
           <span className={singleLine ? "block min-w-0 truncate leading-5" : "line-clamp-3 leading-5 [overflow-wrap:anywhere]"} title={systemMessage(message, t)}>{systemMessage(message, t)}</span>
-          {status && <span className="shrink-0 leading-5 opacity-70">{t(status)}</span>}
+          {status && <span className="shrink-0 leading-5 opacity-70">
+            {status === 'Reconnecting…' ? <>
+              <span className="sr-only">{t(status)}</span>
+              <span aria-hidden="true">{t(status).replace(/(?:…|\.{3})$/, '')}<span className="hf-toast-progress-dots"><span>.</span><span>.</span><span>.</span></span></span>
+            </> : t(status)}
+          </span>}
         </div>
       </div>}
     </div>

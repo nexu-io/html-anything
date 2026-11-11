@@ -252,7 +252,10 @@ it('shows connection failure as a one-line reconnecting toast and removes it on 
   state.connectionError = 'Failed to fetch /private/project';
   render();
   const toast = container.querySelector('[data-testid="motion-connection-toast"]')!;
-  expect(toast.textContent).toBe('连接已断开重连中…');
+  expect(toast.textContent).toContain('连接已断开');
+  expect(toast.querySelector('.sr-only')?.textContent).toBe('重连中…');
+  expect(toast.querySelector('[aria-hidden="true"]')?.textContent).toBe('重连中...');
+  expect(toast.querySelectorAll('.hf-toast-progress-dots > span')).toHaveLength(3);
   expect(toast.querySelector('.truncate')).not.toBeNull();
   expect(container.querySelector('.motion-error-notice')).toBeNull();
   expect(toast.textContent).not.toMatch(/private|details|详情/);
