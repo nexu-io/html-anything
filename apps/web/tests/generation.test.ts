@@ -321,10 +321,22 @@ it("keeps provider uncertainty distinct from HTTP uncertainty and replays the ex
       createdAt: 1,
       updatedAt: 1,
     };
-    let lose = true;
+    let lose = true,
+      holdRead = false,
+      readEntered = false;
+    let release = () => {};
+    const gate = new Promise<void>((done) => {
+      release = done;
+    });
     intercept(async (operation) => {
       if (operation === "generation_status") return reply(status);
-      if (operation === "generation_list") return reply({ jobs: [job], next: null });
+      if (operation === "generation_list") {
+        if (holdRead) {
+          readEntered = true;
+          await gate;
+        }
+        return reply({ jobs: [job], next: null });
+      }
       if (operation === "generation_cancel") {
         if (lose) {
           lose = false;
@@ -352,9 +364,16 @@ it("keeps provider uncertainty distinct from HTTP uncertainty and replays the ex
       await vi.waitFor(() => expect(panel.element.textContent).toContain("供应商提交结果未知"));
       expect(control(panel, "生成新的 PNG 候选").disabled).toBe(true);
       expect(calls.filter((call) => call.operation === "generation_create")).toHaveLength(0);
+      holdRead = true;
       control(panel, "取消素材任务").click();
       await flight;
       expect(failures).toHaveLength(1);
+      // HTTP uncertainty exposes the exact retry before a server read can confirm task state.
+      expect(control(panel, "重试同一取消请求").disabled).toBe(false);
+      await vi.waitFor(() => expect(readEntered).toBe(true));
+      expect(panel.element.textContent).not.toContain("已取消 ·");
+      holdRead = false;
+      release();
       await vi.waitFor(() => expect(panel.element.textContent).toContain("取消确认中"));
       expect(panel.element.textContent).not.toContain("已取消 ·");
       control(panel, "重试同一取消请求").click();
@@ -364,6 +383,7 @@ it("keeps provider uncertainty distinct from HTTP uncertainty and replays the ex
       expect(commands[1]?.input).toEqual(commands[0]?.input);
       await vi.waitFor(() => expect(panel.element.textContent).toContain("已取消 ·"));
     } finally {
+      release();
       await panel.dispose();
     }
   }));

@@ -260,10 +260,14 @@ export class GenerationPanel {
     try {
       await this.editing.client.execute("generation_cancel", command);
       this.cancellations.delete(job.id);
-      this.refresh();
     } catch (error) {
       if (definite(error)) this.cancellations.delete(job.id);
       throw error;
+    } finally {
+      if (!this.disposed && this.key === keyOf(job)) {
+        this.tasks.update(this.key, this.jobs, this.editing.editor.project, this.blocked);
+        this.refresh();
+      }
     }
   }
   private async adopt(job: Job, candidate: Candidate) {
