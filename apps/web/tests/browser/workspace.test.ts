@@ -205,14 +205,17 @@ it("keeps project handoff and navigation explicit across workspace views", async
     (node as HTMLTextAreaElement).setSelectionRange(7, 19);
   });
   const writes: string[] = [];
+  let observations = 0;
   page.on("request", (request) => {
     const operation = new URL(request.url()).pathname.split("/api/")[1];
+    if (operation === "workspace_observe") observations++;
     if (
       operation &&
       !operation.endsWith("_read") &&
       !operation.endsWith("_get") &&
       !operation.endsWith("_list") &&
-      operation !== "workspace_state"
+      operation !== "workspace_state" &&
+      operation !== "workspace_observe"
     )
       writes.push(operation);
   });
@@ -234,6 +237,7 @@ it("keeps project handoff and navigation explicit across workspace views", async
   expect(await code.evaluate((node) => (node as HTMLTextAreaElement).selectionStart)).toBe(7);
   expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(original);
   expect(await page.getByLabel("保存状态", { exact: true }).textContent()).toBe("未保存");
+  await expect.poll(() => observations).toBeGreaterThan(0);
   expect(writes).toEqual([]);
   const focused = await page.getByRole("region", { name: "编辑工作区", exact: true }).boundingBox();
   if (!focused || !expanded) throw Error("workspace geometry is missing");
