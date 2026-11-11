@@ -2,7 +2,7 @@
 import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { I18nProvider } from '../i18n/I18n';
+import { I18nProvider, useI18n } from '../i18n/I18n';
 import { TemplateLibraryDialog } from './TemplateLibraryDialog';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -54,4 +54,21 @@ it('copies the requested remote DEV prompt and preserves editable opening', asyn
   expect(onOpen).toHaveBeenCalledWith('one');
   await act(async () => button('Second').click());
   expect(button('打开并编辑 ↗')).toBeUndefined();
+});
+
+it('reloads template data when the editor language changes and clears language-specific filters', async () => {
+  function App() {
+    const { setLocale } = useI18n();
+    return <><button onClick={() => setLocale('ja')}>Japanese</button><TemplateLibraryDialog open busy={false} error="" onClose={() => {}} onOpen={() => {}} /></>;
+  }
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => Response.json(url.endsWith('/integration') ? {
+    templateEnvironment: 'dev', transport: { env: {} },
+  } : { items: items.map(item => ({ ...item, title: url.includes('locale=ja') ? '日本語テンプレート' : item.title })), catalogVersion: 'v1', next: null, total: 2 })));
+  await act(async () => root.render(<I18nProvider initialLocale="en"><App /></I18nProvider>));
+  await act(async () => [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Figma'))!.click());
+  await act(async () => button('Japanese').click());
+  expect(fetch).toHaveBeenCalledWith(expect.stringContaining('locale=ja'), expect.anything());
+  expect(host.textContent).toContain('日本語テンプレート');
+  expect(host.textContent).not.toContain('First');
+  expect(host.querySelectorAll('[data-template-id]')).toHaveLength(3);
 });

@@ -141,7 +141,7 @@ export function mountTemplates(root: HTMLElement, options: {
     element<HTMLButtonElement>('more-templates').disabled = true; language.text(element('template-count'), "Loading templates…");
     const params = new URLSearchParams({ category, query: search.value, offset: String(reset ? 0 : next ?? 0), limit: '6', grouped: 'true', covered: 'true' });
     try {
-      const response = await fetch('/motion-api/template-catalog?' + params, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
+      const response = await fetch('/motion-api/template-catalog?' + params + '&locale=' + encodeURIComponent(language.locale), { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
       if (!response.ok) throw new Error("Template catalogue unavailable");
       const page = await response.json() as TemplatePage;
       if (!Array.isArray(page.items) || !Number.isSafeInteger(page.total)) throw new Error("Invalid template catalogue");
@@ -163,7 +163,7 @@ export function mountTemplates(root: HTMLElement, options: {
   const catalogTimer = setInterval(() => {
     if (!active || request || document.visibilityState === 'hidden' || !catalogVersion) return;
     const ticket = sequence;
-    void fetch('/motion-api/template-catalog?limit=1', { signal: lifetime.signal }).then(response => response.ok ? response.json() : null).then(page => {
+    void fetch('/motion-api/template-catalog?limit=1&locale=' + encodeURIComponent(language.locale), { signal: lifetime.signal }).then(response => response.ok ? response.json() : null).then(page => {
       if (!active || lifetime.signal.aborted || request || ticket !== sequence || !page?.catalogVersion) return;
       if (page.catalogVersion !== catalogVersion) void load(true);
       else if (page.warning !== catalogWarning) updateWarning(page.warning);
@@ -244,6 +244,7 @@ export function mountTemplates(root: HTMLElement, options: {
   function suspend() { active = false; if (request) { request.abort(); loaded = false; } clearTimeout(debounce); clearInterval(rotation); configurePlayback(); if (dialog.open) dialog.close(); previewCleanup(); }
   return {
     updateConnection,
+    setLanguage() { if (dialog.open) dialog.close(); loaded = false; if (active) void load(true); },
     showAll() { search.value = ''; chooseCategory(element<HTMLButtonElement>('template-tab-featured')); },
     resume() { active = true; if (!loaded) void load(true); clearInterval(rotation); rotation = setInterval(() => { if (active && enabled && !dialog.open && !document.hidden) playback.advance(); }, 4200); configurePlayback(); },
     suspend,

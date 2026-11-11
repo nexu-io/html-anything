@@ -37,7 +37,7 @@ it('polls cache warnings independently of publication changes and preserves gall
   expect(root.querySelector('[data-template-id]')).toBe(card);
 });
 
-it('updates live dialog labels while preserving the chosen client, search, preview and copied instructions', async () => {
+it('reloads localized catalog data while preserving the chosen client, search and setup instructions', async () => {
   vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
   vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
@@ -59,10 +59,10 @@ it('updates live dialog labels while preserving the chosen client, search, previ
   root.querySelector<HTMLButtonElement>('#host-claude')!.click();
   const search = root.querySelector<HTMLInputElement>('#template-search')!;
   search.value = 'keep this query';
-  const card = root.querySelector('[data-template-id]'), video = root.querySelector('video');
-  const instruction = root.querySelector('#setup-prompt')!.textContent;
+    const instruction = root.querySelector('#setup-prompt')!.textContent;
   for (const { locale } of languages) {
     controller.setLanguage(locale, t(locale));
+    await vi.waitFor(() => expect(root.querySelectorAll('[data-template-id]')).toHaveLength(1));
     const category = locale === 'en' ? 'A-roll Cuts' : dictionaries[locale]['A-roll Cuts'];
     expect(root.querySelector('.connect-template-category')?.textContent).toBe(category);
     expect(root.querySelector('.connect-template-category')?.getAttribute('title')).toBe(category);
@@ -75,8 +75,7 @@ it('updates live dialog labels while preserving the chosen client, search, previ
     expect(root.querySelector('#tool-list')?.textContent).toContain(translate(locale, 'Read the details and files for one template.'));
     expect(root.querySelector('#catalog-error-text')?.textContent).toBe(translate(locale, warning));
     expect(search.value).toBe('keep this query');
-    expect(root.querySelector('[data-template-id]')).toBe(card);
-    expect(root.querySelector('video')).toBe(video);
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('locale=' + encodeURIComponent(locale)), expect.anything());
     expect(root.querySelector('.connect-template-title')?.textContent).toBe('Preview');
     expect(root.querySelector('#setup-prompt')?.textContent).toBe(instruction);
   }
