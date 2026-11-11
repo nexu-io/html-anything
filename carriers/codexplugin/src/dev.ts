@@ -1,5 +1,5 @@
 import type { CarrierContext } from "@odsuite/dev";
-import type { Factory } from "@odsuite/sidecar";
+import { resolve } from "@odsuite/release";
 import { attach, prismConfiguration } from "@open-motion/standalone";
 import { attachment } from "./attachment.js";
 import { collect } from "./environment.js";
@@ -24,8 +24,8 @@ export async function open(context: CarrierContext) {
     },
   };
 }
-export async function connect({ factory }: { factory: Factory }) {
-  const runtime = await attachment(factory);
+export async function connect({ factory, scope, version }: Pick<CarrierContext, "factory" | "scope" | "version">) {
+  const runtime = await attachment(factory, resolve({}, { channel: scope.channel, version }));
   const transport = await listen(runtime, async () => {});
   await transport.closed;
 }

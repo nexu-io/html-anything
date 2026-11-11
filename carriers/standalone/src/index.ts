@@ -13,6 +13,7 @@ import { host } from "@open-motion/render/host";
 import { nativeTools } from "@open-motion/render/tools";
 import { host as hostTemplates } from "@open-motion/templates/host";
 import { configuration, type PrismConfig } from "@open-motion/templates/prism";
+import type { RuntimeIdentity } from "./admission.js";
 import { Daemon } from "./daemon.js";
 import { collect } from "./environment.js";
 
@@ -36,6 +37,7 @@ export interface Status {
   daemon: { ok: boolean; pid: number; environment: Environment };
 }
 export interface Methods {
+  runtime_identity: { input: null; output: RuntimeIdentity };
   status: { input: unknown; output: Status };
   connection: { input: null; output: { daemon: string; token: string } };
 }
@@ -91,7 +93,11 @@ export async function attach(manager: Service, options: Omit<Options, "root">) {
       service: "standalone",
       generation: digest(canonical({ manifest, environment, web, daemon: digest(await readFile(entry)) })),
     },
-    handlers: { status: () => status(), connection: () => daemon.bootstrap() },
+    handlers: {
+      runtime_identity: () => ({ manifest, carrier: environment.carrier }),
+      status: () => status(),
+      connection: () => daemon.bootstrap(),
+    },
     lifecycle: {
       initialize: (context) =>
         daemon.start(context, {

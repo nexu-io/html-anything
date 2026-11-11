@@ -1,6 +1,5 @@
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { canonical } from "@odsuite/protocol";
 import {
   connectRoot,
   type Factory,
@@ -11,39 +10,31 @@ import {
   stopManager,
 } from "@odsuite/sidecar";
 import type { NativePreparation, RenderMethods } from "@open-motion/render/contract";
-import type { Methods, Status } from "@open-motion/standalone";
+import type { Status } from "@open-motion/standalone";
+import { admitRuntime } from "@open-motion/standalone/admission";
 import type { PackageManifest, Selection } from "./contract.js";
 import { installed } from "./install.js";
 
-async function connection(description: PackageManifest, selection: Selection) {
-  const link = await connectRoot(selection.data, selection.scope),
-    directory = await link.factory.directory();
-  const target = directory.instances.find(
-    (i) => i.service === "standalone" && i.kind === "hosted" && i.phase === "ready",
-  );
-  if (!target) throw Error("managed application is not ready");
-  const peer = await link.factory.connect<Methods>(target),
-    status = await peer.call("status", null);
-  if (canonical(status.manifest) !== canonical(description.release))
-    throw Error("running application release differs from this package");
-  if (!status.daemon.ok) throw Error("running application Daemon is unhealthy");
-  return { factory: link.factory, manager: link.manager, status };
+async function inspect(description: PackageManifest, selection: Selection) {
+  const link = await connectRoot(selection.data, selection.scope).catch(() => undefined);
+  if (link) {
+    const peer = await admitRuntime(link.factory, description.release);
+    const runtime = await peer.call("status", null);
+    if (!runtime.daemon.ok) throw Error("running application Daemon is unhealthy");
+    return { state: "running", runtime, link } as const;
+  }
+  // Only offline authority can distinguish an unclaimed root from interruption.
+  const authority = await readAuthority(selection.data);
+  if (!authority) return { state: "uninitialized" } as const;
+  return { state: authority.manager.phase === "closed" ? "stopped" : "interrupted" } as const;
 }
+
 export async function status(
   description: PackageManifest,
   selection: Selection,
 ): Promise<{ state: string; runtime?: Status }> {
-  let connected = false;
-  try {
-    await connectRoot(selection.data, selection.scope);
-    connected = true;
-  } catch {
-    // Only offline authority can distinguish an unclaimed root from interruption.
-  }
-  if (connected) return { state: "running", runtime: (await connection(description, selection)).status };
-  const authority = await readAuthority(selection.data);
-  if (!authority) return { state: "uninitialized" };
-  return { state: authority.manager.phase === "closed" ? "stopped" : "interrupted" };
+  const current = await inspect(description, selection);
+  return current.state === "running" ? { state: current.state, runtime: current.runtime } : current;
 }
 export async function start(description: PackageManifest, selection: Selection) {
   const current = await status(description, selection);
@@ -70,12 +61,12 @@ export async function start(description: PackageManifest, selection: Selection) 
   return status(description, selection);
 }
 export async function stop(description: PackageManifest, selection: Selection) {
-  const current = await status(description, selection);
-  if (["stopped", "uninitialized"].includes(current.state)) return current;
+  const current = await inspect(description, selection);
+  if (current.state === "stopped" || current.state === "uninitialized") return current;
   if (current.state !== "running") throw Error("application authority requires explicit recovery");
-  const link = await connection(description, selection),
-    owner = await observeOwner(selection.data, selection.scope);
-  if (!owner || owner.incarnation !== link.manager.incarnation) throw Error("application manager changed before stop");
+  const owner = await observeOwner(selection.data, selection.scope);
+  if (!owner || owner.incarnation !== current.link.manager.incarnation)
+    throw Error("application manager changed before stop");
   await stopManager(owner);
   return status(description, selection);
 }
@@ -99,8 +90,8 @@ async function prepare(factory: Factory, signal?: AbortSignal): Promise<NativePr
 }
 export async function native(description: PackageManifest, selection: Selection, signal?: AbortSignal) {
   signal?.throwIfAborted();
-  const prior = await status(description, selection);
-  if (prior.state === "running") return prepare((await connection(description, selection)).factory, signal);
+  const prior = await inspect(description, selection);
+  if (prior.state === "running") return prepare(prior.link.factory, signal);
   if (!["stopped", "uninitialized"].includes(prior.state))
     throw Error("application authority requires explicit recovery");
   const receipt = await installed(description, selection, "standalone");

@@ -117,7 +117,7 @@ export async function connect(target: Target) {
   const adapter = (await import(pathToFileURL(current.plan.entry).href)) as Adapter;
   if (typeof adapter.connect !== "function") throw new Error("carrier has no development transport attachment");
   const { factory } = await connectRoot(current.root, target.scope);
-  await adapter.connect({ factory, repo: current.plan.repo });
+  await adapter.connect({ factory, repo: current.plan.repo, scope: current.plan.scope, version: current.plan.version });
 }
 export async function configure(target: Target & { watch?: boolean }) {
   if (!target.carrier) throw new Error("--carrier is required for start/restart");
