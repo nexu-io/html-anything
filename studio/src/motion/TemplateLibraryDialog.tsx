@@ -202,9 +202,9 @@ export function TemplateLibraryDialog(props: Props) {
     <dialog ref={useDialog} className={styles.useDialog} aria-label={t('Recreate template')}>
       <header><h2>{t('Recreate template')}</h2><button onClick={() => useDialog.current?.close()} aria-label={t('Close')}><MotionIcon name="close" size={24} /></button></header>
       {preview && <div className={styles.handoff}>{preview.posterUrl && <img src={preview.posterUrl} alt="" />}<div><strong>{preview.title}</strong><p>{preview.id}</p></div></div>}
-      <p>{t('Copy the instruction below and send it to your Agent.')}</p>
+      <p className={styles.promptLabel}>{t('Copy the instruction below and send it to your Agent.')}</p>
       <div className={styles.promptRow}><textarea className={styles.prompt} rows={8} readOnly value={prompt} aria-label={t('Content to copy')} />
-      <button className={styles.copyPrompt} disabled={!prompt} onClick={() => void copy()} aria-label={t('Copy')}><MotionIcon name="copy" size={22} /></button></div><p role="status">{feedback}</p>
+      <button className={styles.copyPrompt} disabled={!prompt} onClick={() => void copy()} aria-label={t('Copy')}><MotionIcon name="copy" size={22} /></button></div><p className={styles.copyStatus} role="status">{feedback}</p>
     </dialog>
   </dialog>;
 }
