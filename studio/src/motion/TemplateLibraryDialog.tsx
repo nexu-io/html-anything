@@ -87,6 +87,7 @@ export function TemplateLibraryDialog(props: Props) {
   }, [props.open]);
   useEffect(() => {
     if (!props.open) return;
+    setCatalog([]); setSelected({}); setQuery(''); setPreview(null); detail.current?.close(); useDialog.current?.close();
     const controller = new AbortController();
     let version: string | undefined, pending = false;
     async function load() {
@@ -94,7 +95,7 @@ export function TemplateLibraryDialog(props: Props) {
       try {
         const items: GalleryTemplate[] = []; let offset: number | null = 0;
         while (offset !== null) {
-          const page: TemplatePage = await motionApi(`/template-catalog?category=all&covered=true&limit=60&offset=${offset}`, { signal: controller.signal });
+          const page: TemplatePage = await motionApi(`/template-catalog?category=all&covered=true&limit=60&offset=${offset}&locale=${encodeURIComponent(locale)}`, { signal: controller.signal });
           items.push(...page.items); offset = page.next; version = page.catalogVersion; setWarning(page.warning ?? '');
         }
         if (!controller.signal.aborted) setCatalog(items);
@@ -106,7 +107,7 @@ export function TemplateLibraryDialog(props: Props) {
       if (pending || document.hidden) return;
       pending = true;
       try {
-        const page = await motionApi<TemplatePage>('/template-catalog?limit=1', { signal: controller.signal });
+        const page = await motionApi<TemplatePage>(`/template-catalog?limit=1&locale=${encodeURIComponent(locale)}`, { signal: controller.signal });
         if (controller.signal.aborted) return;
         setWarning(page.warning ?? '');
         if (page.catalogVersion !== version) await load();
@@ -114,7 +115,7 @@ export function TemplateLibraryDialog(props: Props) {
     }, 5000);
     void motionApi<IntegrationInfo>('/integration', { signal: controller.signal }).then(value => { info.current = value; }).catch(() => {});
     return () => { controller.abort(); clearInterval(timer); };
-  }, [props.open, attempt]);
+  }, [props.open, attempt, locale]);
   const available = useMemo(() => facets.map(([key, label]) => ({ key, label, values: [...new Set(catalog.flatMap(item => values(item, key)))] })).filter(facet => facet.values.length), [catalog]);
   const hasFilters = Boolean(query || Object.values(selected).some(items => items?.length));
   const visible = useMemo(() => catalog.filter(item => {

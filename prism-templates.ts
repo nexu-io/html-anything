@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { templatePage, type GalleryTemplate } from './shared/catalog.ts';
+import { catalogLocale } from './shared/template-locale.ts';
 import { templateConfig } from './shared/template-config.ts';
 import { libraryTemplates, templateRecipe } from './template-catalog.ts';
 import { copyTemplate } from './template-library.ts';
@@ -57,13 +58,14 @@ export class TemplateCatalog {
     this.request = options.fetch ?? fetch;
   }
 
-  private entries(publication: Publication): PrismTemplate[] {
+  private entries(publication: Publication, requested = this.locale): PrismTemplate[] {
     if (publication.resourceId !== this.resourceId || publication.environment !== this.environment || publication.channel !== 'default' || !publication.publicationId) {
       throw new Error('模板目录的发布身份不匹配');
     }
-    const entries = publication.content?.[this.locale]?.templates;
+    const locale = catalogLocale(Object.keys(publication.content ?? {}), requested, publication.defaultLocale);
+    const entries = publication.content?.[locale]?.templates;
     if (!Array.isArray(entries) || entries.some(item => !item.templateId || !item.original?.templateName || !Array.isArray(item.files))) {
-      throw new Error(`模板目录缺少 ${this.locale} 模板数据`);
+      throw new Error(`模板目录缺少 ${locale} 模板数据`);
     }
     return entries;
   }
@@ -109,8 +111,8 @@ export class TemplateCatalog {
     return this.snapshot!;
   }
 
-  private templates(snapshot: Snapshot): EditableTemplate[] {
-    const remote: EditableTemplate[] = [...this.entries(snapshot.publication)].sort((a, b) => a.sortOrder - b.sortOrder).map(item => ({
+  private templates(snapshot: Snapshot, requested = this.locale): EditableTemplate[] {
+    const remote: EditableTemplate[] = [...this.entries(snapshot.publication, requested)].sort((a, b) => a.sortOrder - b.sortOrder).map(item => ({
       id: item.templateId, title: item.original.templateName, subtitle: item.original.category || 'Motion',
       description: item.original.summary || '', kind: 'prism' as const, collection: 'example' as const,
       tags: [item.original.promotionalUseCases, item.original.visualPresentation, item.original.motionTags].filter(Boolean).flatMap(value => value.split(/[,，·]/).map(tag => tag.trim()).filter(Boolean)),
@@ -140,9 +142,9 @@ export class TemplateCatalog {
     return { indexPath, total: items.length, catalogVersion: snapshot.publication.publicationId, warning: this.warning };
   }
 
-  async page(options: Parameters<typeof templatePage>[1] & { covered?: boolean } = {}) {
+  async page(options: Parameters<typeof templatePage>[1] & { covered?: boolean; locale?: string } = {}) {
     const snapshot = await this.refresh();
-    const items = this.templates(snapshot).map(({ files: _files, ...item }) => item);
+    const items = this.templates(snapshot, options.locale).map(({ files: _files, ...item }) => item);
     const visible = options.covered ? items.filter(item => item.posterUrl) : items;
     return { ...templatePage(visible, options), catalogTotal: items.length, catalogVersion: snapshot.publication.publicationId, warning: this.warning };
   }

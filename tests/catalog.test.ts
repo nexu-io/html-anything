@@ -166,3 +166,18 @@ test('template prompts use public installation URLs for the effective package en
   assert.match(prompt, /open-motion\/install.md/); assert.doesNotMatch(prompt, /\/dev\/|127\.0\.0\.1|localhost/);
   assert.match(prompt, /Selected template \(exact-id\)/); assert.match(prompt, /HTML and MP4/);
 });
+
+test('template prompts cover all eleven locales and preserve literal template values', async () => {
+  const { templatePrompts } = await import('../shared/template-prompts.ts');
+  const info = { templateEnvironment: 'dev', transport: { env: {} } } as Parameters<typeof templatePrompt>[0];
+  const template = { id: 'same-id', title: 'Literal $& {name}' };
+  assert.equal(Object.keys(templatePrompts).length, 11);
+  const prompts = Object.keys(templatePrompts).map(locale => templatePrompt(info, 'codex', template, locale));
+  assert.equal(new Set(prompts).size, 11);
+  for (const prompt of prompts) {
+    assert.ok(prompt.includes(template.title)); assert.ok(prompt.includes(template.id));
+    assert.ok(prompt.includes('https://releases.open-design.ai/open-motion/dev/install.md'));
+    assert.match(prompt, /HTML.*MP4/); assert.doesNotMatch(prompt, /\{installUrl\}|\{id\}/);
+  }
+  assert.equal(templatePrompt(info, 'codex', template, 'pt-BR'), templatePrompt(info, 'codex', template, 'pt-br'));
+});

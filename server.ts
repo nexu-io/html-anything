@@ -366,6 +366,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (url.pathname === '/api/templates' && req.method === 'GET') return json(res, 200, { templates });
     if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, await templateCatalogFor(store.directory).page({
+      locale: url.searchParams.get('locale') || undefined,
       category: url.searchParams.get('category') || 'featured', query: url.searchParams.get('query') || '',
       offset: Number(url.searchParams.get('offset') || 0), limit: Number(url.searchParams.get('limit') || 6), grouped: url.searchParams.get('grouped') === 'true',
       covered: url.searchParams.get('covered') === 'true',
