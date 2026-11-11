@@ -126,7 +126,7 @@ jobs:
         run: |
           node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node .github/scripts/motion-scan.mjs source . "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
-          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/registry-download.test.mjs
+          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/registry-download.test.mjs tests/stable-release.test.mjs
       - name: Install locked Motion dependencies
         run: npm ci --no-audit --no-fund
       - name: Check and build Studio

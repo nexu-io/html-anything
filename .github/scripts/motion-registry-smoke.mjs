@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile, writeJSON } from '../../scripts/runtime-assets.mjs';
 import { verifyRegistryDownload } from './motion-registry.mjs';
+import { releaseTemplateEnvironment } from '../../scripts/release-version.mjs';
 import { verifyDownloaded } from './motion-release.mjs';
 
 export function consumerEnvironment(work, source = process.env) {
@@ -75,7 +76,7 @@ export async function registrySmoke(directory) {
   assert.equal(first.appRoot, second.appRoot); assert.equal((await readdir(path.join(home, 'apps'))).length, 1);
   assert.match(await readFile(path.join(env.CODEX_HOME, 'config.toml'), 'utf8'), /keep-this-server/);
   const manifest = JSON.parse(await readFile(path.join(directory, 'release-npm.json')));
-  assert.equal(manifest.templateEnvironment, 'dev');
+  assert.equal(manifest.templateEnvironment, releaseTemplateEnvironment(c.version));
   const state = JSON.parse(await readFile(path.join(home, 'install.json')));
   assert.equal(state.templateEnvironment, manifest.templateEnvironment);
   const templateConfig = JSON.parse(await readFile(path.join(first.appRoot, 'shared/template-config.json')));

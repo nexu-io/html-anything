@@ -17,7 +17,9 @@ test('shared Agent instructions keep the release controls synchronized', async (
     return text.split('## Candidate and publication controls\n')[1].split('\n## ')[0].trim();
   };
   const shared = await section('AGENTS.md');
-  assert(shared.includes('DEV template defaults') && shared.includes('Publish under `candidate` first') && shared.includes('cold installs run afterward as non-blocking checks'));
+  assert(shared.includes('test` (default, DEV templates)') && shared.includes('stable` (prod templates)'));
+  assert(shared.includes('Test publishes under `candidate`') && shared.includes('non-blocking Mac/Windows cold installs'));
+  assert(shared.includes('Stable publishes publicly under `stage`') && shared.includes('requires both exact prod cold installs to pass'));
   assert.equal(await section('CLAUDE.md'), shared, 'CLAUDE.md must mirror the AGENTS.md release controls');
 });
 
