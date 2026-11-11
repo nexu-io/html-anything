@@ -1,15 +1,16 @@
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { access, mkdir, mkdtemp, readFile, realpath, rename, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { Library, type Resource } from "@odsuite/blob";
 import { inspect, npm } from "@odsuite/pack";
-import { channel, digest, namespace } from "@odsuite/protocol";
+import { canonical, channel, digest, namespace } from "@odsuite/protocol";
 import { bundle, resolve as release, releaseChannel } from "@odsuite/release";
 import { connectRoot, managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
 import type { Input, Operation, Output } from "@open-motion/daemon/contract";
@@ -36,6 +37,7 @@ async function fixture() {
     if (version && identity.version !== version) throw Error("carrier versions differ");
     ({ version, channel } = identity);
     files[`payload/${carrier}.bundle`] = bytes;
+    await writeFile(join(evidence, `${carrier}.bundle`), bytes);
     descriptors[carrier] = { file: `${carrier}.bundle`, sha256: hash(bytes), bytes: bytes.length };
   }
   const product = { appid: "io.openmotion.app", name: "open-motion", scheme: "open-motion" };
@@ -60,7 +62,7 @@ async function fixture() {
   });
   await writeFile(join(evidence, "fixture.json"), JSON.stringify({ root, archive }, null, 2));
   const common = ["--home", join(root, "installation"), "--data", join(root, "data"), "--namespace", "installation"];
-  const invoke = (args: string[]) =>
+  const invoke = (args: string[], scoped = true) =>
     run(
       "npm",
       [
@@ -74,11 +76,11 @@ async function fixture() {
         "--",
         "odsuite",
         ...args,
-        ...common,
+        ...(scoped ? common : []),
       ],
       { cwd: root, timeout: 60000, maxBuffer: 1024 ** 2, env: { ...process.env, npm_config_update_notifier: "false" } },
     );
-  const command = async (args: string[]) => JSON.parse((await invoke(args)).stdout.trim());
+  const command = async (args: string[], scoped = true) => JSON.parse((await invoke(args, scoped)).stdout.trim());
   return { root, evidence, version, channel, command, invoke, data: join(root, "data", channel, "installation") };
 }
 
@@ -357,3 +359,97 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
   },
   180000,
 );
+
+for (const phase of ["intent", "materialized", "installed", "selected"] as const)
+  it(`replays installed npm setup after real SIGKILL at ${phase} only following explicit recovery`, async () => {
+    const own = await fixture(),
+      home = join(own.root, "installation"),
+      authority = join(home, "authority", "io.openmotion.app"),
+      archive = join(own.evidence, "standalone.bundle"),
+      sha256 = hash(await readFile(archive)),
+      scope = { channel: channel(own.channel), namespace: namespace("installation") };
+    // Bind the diagnostic checkpoint to the exact deterministic public setup intent.
+    const h = hash(
+        canonical({ product: "io.openmotion.app", scope, data: own.data, carrier: "standalone", sha256 }),
+      ).slice(0, 32),
+      requestId = `${h.slice(0, 8)}-${h.slice(8, 12)}-8${h.slice(13, 16)}-8${h.slice(17, 20)}-${h.slice(20)}`,
+      input = { home, product: "io.openmotion.app", scope, data: own.data, archive, sha256, requestId, phase },
+      installer = pathToFileURL(join(process.cwd(), "../../suites/installer/dist/index.mjs")).href;
+    const child = spawn(
+      process.execPath,
+      [
+        "--input-type=module",
+        "-e",
+        `import {readFile} from 'node:fs/promises';import {open} from ${JSON.stringify(installer)};
+const f=JSON.parse(process.argv[1]);
+const session=await open({...f,onCheckpoint:async event=>{if(event.phase===f.phase){console.log('CHECKPOINT');await new Promise(()=>{})}}});
+await session.install({data:f.data,requestId:f.requestId,source:{sha256:f.sha256,bytes:await readFile(f.archive)}});
+await session.close();`,
+        JSON.stringify(input),
+      ],
+      { stdio: ["ignore", "pipe", "pipe"] },
+    );
+    let stdout = "",
+      stderr = "",
+      running = false;
+    child.stdout.on("data", (bytes) => {
+      stdout += bytes;
+    });
+    child.stderr.on("data", (bytes) => {
+      stderr += bytes;
+    });
+    const exited = new Promise<void>((done, reject) => {
+      child.once("error", reject);
+      child.once("exit", () => done());
+    });
+    try {
+      await expect
+        .poll(
+          () => {
+            if (child.exitCode !== null || child.signalCode !== null)
+              throw Error(`installer exited before checkpoint: ${stderr.slice(-1000)}`);
+            return stdout.includes("CHECKPOINT");
+          },
+          { timeout: 15000 },
+        )
+        .toBe(true);
+      await expect(own.invoke(["setup", "--carrier", "standalone"])).rejects.toThrow();
+      await expect(own.invoke(["recover", "inspect", "--root", authority], false)).rejects.toThrow();
+      expect((await (await connectRoot(authority, scope)).factory.directory()).manager.phase).toBe("active");
+      expect(child.kill("SIGKILL")).toBe(true);
+      await exited;
+      expect(child.signalCode).toBe("SIGKILL");
+      await expect(own.invoke(["setup", "--carrier", "standalone"])).rejects.toThrow();
+      const plan = (await own.command(["recover", "inspect", "--root", authority], false)).result;
+      expect(plan.phase).toBe("ready");
+      await expect(
+        own.invoke(["recover", "apply", "--root", authority, "--expected", `sha256:${"0".repeat(64)}`], false),
+      ).rejects.toThrow();
+      expect((await own.command(["recover", "inspect", "--root", authority], false)).result.fingerprint).toBe(
+        plan.fingerprint,
+      );
+      await own.command(["recover", "apply", "--root", authority, "--expected", plan.fingerprint], false);
+      const first = (await own.command(["setup", "--carrier", "standalone"])).result,
+        again = (await own.command(["setup", "--carrier", "standalone"])).result;
+      expect(first.receipts.standalone.requestId).toBe(requestId);
+      expect(first.receipts.standalone.digest).toBe(`sha256:${sha256}`);
+      expect(first.receipts.codexplugin.version).toBe(own.version);
+      expect(again).toEqual(first);
+      const started = await own.command(["start"]);
+      running = true;
+      expect(started.result.runtime.manifest.identity.version).toBe(own.version);
+      expect(started.result.runtime.daemon.ok).toBe(true);
+      await own.command(["stop"]);
+      running = false;
+      expect((await readDirectory(own.data)).manager.phase).toBe("closed");
+      expect(await observeProcesses(own.data)).toEqual([]);
+      expect((await readDirectory(authority)).manager.phase).toBe("closed");
+      expect(await observeProcesses(authority)).toEqual([]);
+      await writeFile(join(own.evidence, "recovery.json"), JSON.stringify({ phase, requestId, plan, first }, null, 2));
+    } finally {
+      if (child.exitCode === null && child.signalCode === null) child.kill("SIGKILL");
+      await exited;
+      if (running) await own.command(["stop"]);
+      await writeFile(join(own.evidence, "checkpoint.log"), stdout + stderr);
+    }
+  }, 120000);
