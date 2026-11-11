@@ -14,6 +14,14 @@ The embedded application uses `scripts/distribution.ts`'s positive file list: MC
 
 The npm page uses the repository's product `README.md`. Packaging resolves its relative documentation and image links against the exact source commit, while the embedded application keeps the original local links. The installation manual remains in the application docs; it is not the npm landing page. Published test.6 contains the earlier installation-manual README; the correction takes effect with the next separately authorized npm version, not by editing GitHub alone.
 
+## Install into the current Agent
+
+Published test/DEV and stable versions both use the current Agent's existing profile, login and Skills root. Run the selected host's setup command in the [installation guide](install.md), preserving any existing host configuration environment variables. DEV and production application homes and project data remain separate; this does not require another Agent profile or login. Reuse compatible existing connections and the selected environment's installation paths.
+
+Verify loading in the current host/session when supported. If it cannot refresh MCP or Skills in the current conversation, report registration separately from loading and provide the minimum refresh or reopen step. A separately logged-in CLI session does not prove the current conversation is connected. If an existing connection belongs to another installation, report the conflict; do not delete it or create another profile as a silent workaround.
+
+The isolated recipes below are for explicitly requested installation testing, not the default way to use a published DEV version.
+
 ## Build and install a local test
 
 From a clean checkout based on `feature/motion`:
@@ -67,7 +75,7 @@ New explicitly versioned test npm packages default to **DEV**; stable packages d
 npm run package:npm -- dist/npm-dev 0.6.4-test.1 --template-env=dev
 ```
 
-Use that tgz in the installation commands above, with an **independent Codex profile, home, data and Skills directory**. Explicit test/DEV builds are publishable under the candidate channel. Unversioned builds and channel/environment mismatches remain `private:true`. Public packaging exposes DEV routing configuration, not credentials or cached catalog contents; network access/authentication remains a service prerequisite. DEV setup defaults to `openmotion-dev` instead of `openmotion`; `prepare` uses the same environment-specific default. Explicit `--home` must be identical for setup and prepare. An existing installation refuses an implicit data-directory change or a dev/prod switch: use a different home rather than altering the old projects.
+For an explicitly requested isolated installation test, use that tgz with the independent host profile, home, data and Skills directories shown above. For ordinary DEV use, keep the current Agent profile and Skills root. Explicit test/DEV builds are publishable under the candidate channel. Unversioned builds and channel/environment mismatches remain `private:true`. Public packaging exposes DEV routing configuration, not credentials or cached catalog contents; network access/authentication remains a service prerequisite. DEV setup defaults to `openmotion-dev` instead of `openmotion`; `prepare` uses the same environment-specific default. Explicit `--home` must be identical for setup and prepare. An existing installation refuses an implicit data-directory change or a dev/prod switch: use a different home rather than altering the old projects.
 
 The environment is embedded in `shared/template-config.json`; the resulting `install.json.templateEnvironment` identifies the installation. Studio and MCP read the same source. [Template configuration](template-catalog.md#environment-and-build) explains the current Resource and catalog behavior. Saving a CMS draft does not publish it. Refresh the catalog, find the template ID and record its catalog/publication version; existing projects are independent copies and do not change when a template is republished.
 
@@ -88,7 +96,7 @@ Select `--host codex|claude|deepseek|workbuddy`. `--skills-dir` selects the Code
 
 Use the same installation flow for every host: collect the platform and Node/npm facts once, select the current Agent, run its setup adapter, then verify actual host loading while video components prepare in the background. An explicit `--host` takes precedence over host context; do not choose a host merely because its CLI is installed. The CLI retains its Codex default for compatibility, so Agent-driven installs should always pass `--host`. Only ask for the missing host/profile when reliable context is unavailable. `openmotion --help`, `setup --help`, `prepare --help` and `--version` work without installing or modifying configuration.
 
-For a non-Codex test, keep the isolated application/data paths from the examples above and change only the host-specific configuration:
+For an explicitly requested isolated non-Codex test, keep the isolated application/data paths from the examples above and change only the host-specific configuration:
 
 | Selected host | Isolated host configuration | Setup adapter options |
 | --- | --- | --- |
