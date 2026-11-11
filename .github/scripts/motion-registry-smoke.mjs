@@ -67,7 +67,7 @@ export async function registrySmoke(directory) {
     await new Promise(resolve => setTimeout(resolve, 10_000));
   }
   assert(metadata, 'Registry version did not become visible'); assert.equal(metadata.dist.integrity, c.integrity);
-  const [packed] = JSON.parse(await cli(['pack', `${c.packageName}@${c.version}`, '--ignore-scripts', '--json', '--pack-destination', work]));
+  const [packed] = JSON.parse(await cli(['pack', metadata.dist.tarball, '--ignore-scripts', '--json', '--pack-destination', work]));
   assert.equal(path.basename(packed.filename), packed.filename);
   const tgz = path.join(work, packed.filename), bytes = await readFile(tgz);
   assert.equal(await sha256(tgz), c.tgzSHA256); assert.equal('sha512-' + createHash('sha512').update(bytes).digest('base64'), c.integrity);

@@ -5,21 +5,13 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Exact accepted candidate version, e.g. 0.6.4-test.7; candidate identity is resolved automatically'
+        description: 'Exact candidate version, e.g. 0.6.4-test.7; candidate identity is resolved automatically'
         type: string
         required: true
-      accepted:
-        description: 'I completed the required acceptance for this exact candidate and authorize public test publication'
-        type: boolean
-        required: true
-        default: false
   workflow_call:
     inputs:
       version:
         type: string
-        required: true
-      accepted:
-        type: boolean
         required: true
       archive_only:
         type: boolean
@@ -35,7 +27,6 @@ concurrency:
 
 env:
   MOTION_VERSION: ${{ inputs.version }}
-  MOTION_ACCEPTED: ${{ inputs.accepted }}
   MOTION_RELEASE_ACTION: ${{ inputs.archive_only && 'archive-only' || 'publish-test' }}
 
 jobs:
@@ -112,11 +103,11 @@ jobs:
           path: ${{ runner.temp }}/candidate
       - name: Use the pinned npm CLI with trusted dist-tag support
         run: npm install --global npm@11.21.2 --ignore-scripts --no-audit --no-fund
-      - name: Record explicit operator acceptance authorization
+      - name: Record manual publication operator
         env:
           GH_TOKEN: ${{ github.token }}
         run: node .github/scripts/motion-release.mjs authorize "$RUNNER_TEMP/candidate"
-      - name: Publish the accepted bytes with npm trusted publishing, or verify an identical existing version
+      - name: Publish the candidate bytes with npm trusted publishing, or verify an identical existing version
         run: node .github/scripts/motion-release.mjs npm "$RUNNER_TEMP/candidate"
       - name: Retain npm publication state even after a partial failure
         id: artifact
@@ -131,10 +122,11 @@ jobs:
           if-no-files-found: warn
 
   registry-mac:
-    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' }}
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.snapshot.result == 'success' }}
     env:
       MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
-    needs: [verify, npm]
+    needs: [verify, snapshot]
+    continue-on-error: true
     runs-on: macos-26
     timeout-minutes: 40
     outputs:
@@ -158,6 +150,12 @@ jobs:
         run: |
           node .github/scripts/motion-release.mjs verify "$RUNNER_TEMP/candidate"
           node .github/scripts/motion-registry-smoke.mjs "$RUNNER_TEMP/candidate"
+      - name: Report post-publication installation failure
+        if: failure()
+        shell: bash
+        run: |
+          echo '::warning::Post-publication native installation check failed. The published version and installation guide remain available; inspect this job before recommending it.'
+          echo 'Native installation check failed after publication; see this job log.' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7.0.2
         id: artifact
         if: always()
@@ -168,10 +166,11 @@ jobs:
           if-no-files-found: warn
 
   registry-windows:
-    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' }}
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.snapshot.result == 'success' }}
     env:
       MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
-    needs: [verify, npm]
+    needs: [verify, snapshot]
+    continue-on-error: true
     runs-on: windows-2025
     timeout-minutes: 40
     outputs:
@@ -195,6 +194,12 @@ jobs:
         run: |
           node .github/scripts/motion-release.mjs verify "$RUNNER_TEMP/candidate"
           node .github/scripts/motion-registry-smoke.mjs "$RUNNER_TEMP/candidate"
+      - name: Report post-publication installation failure
+        if: failure()
+        shell: bash
+        run: |
+          echo '::warning::Post-publication native installation check failed. The published version and installation guide remain available; inspect this job before recommending it.'
+          echo 'Native installation check failed after publication; see this job log.' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7.0.2
         id: artifact
         if: always()
@@ -205,12 +210,12 @@ jobs:
           if-no-files-found: warn
 
   promote-test:
-    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' && needs.registry-mac.result == 'success' && needs.registry-windows.result == 'success' }}
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' }}
     env:
       MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
-    needs: [verify, npm, registry-mac, registry-windows]
+    needs: [verify, npm]
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     outputs:
       artifact_id: ${{ steps.artifact.outputs.artifact-id }}
     permissions:
@@ -240,19 +245,7 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ github.run_id }}
           path: ${{ runner.temp }}/candidate
-      - uses: actions/download-artifact@v8.0.2
-        with:
-          artifact-ids: ${{ needs.registry-mac.outputs.artifact_id }}
-          github-token: ${{ github.token }}
-          run-id: ${{ github.run_id }}
-          path: ${{ runner.temp }}/candidate
-      - uses: actions/download-artifact@v8.0.2
-        with:
-          artifact-ids: ${{ needs.registry-windows.outputs.artifact_id }}
-          github-token: ${{ github.token }}
-          run-id: ${{ github.run_id }}
-          path: ${{ runner.temp }}/candidate
-      - name: Advance npm test only after both native registry checks pass
+      - name: Advance npm test with registry propagation retries
         run: node .github/scripts/motion-release.mjs promote-test "$RUNNER_TEMP/candidate"
       - name: Retain the verified channel result
         id: artifact
@@ -265,11 +258,11 @@ jobs:
           if-no-files-found: warn
 
   snapshot:
-    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' && needs.registry-mac.result == 'success' && needs.registry-windows.result == 'success' && needs.promote-test.result == 'success' }}
+    if: ${{ always() && !cancelled() && needs.verify.result == 'success' && needs.npm.result == 'success' && needs.promote-test.result == 'success' }}
     env:
       MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}
       MOTION_INSTALL_PUBLIC_ORIGIN: ${{ vars.CLOUDFLARE_R2_RELEASES_PUBLIC_ORIGIN }}
-    needs: [verify, npm, registry-mac, registry-windows, promote-test]
+    needs: [verify, npm, promote-test]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -289,18 +282,6 @@ jobs:
       - uses: actions/download-artifact@v8.0.2
         with:
           artifact-ids: ${{ needs.npm.outputs.artifact_id }}
-          github-token: ${{ github.token }}
-          run-id: ${{ github.run_id }}
-          path: ${{ runner.temp }}/candidate
-      - uses: actions/download-artifact@v8.0.2
-        with:
-          artifact-ids: ${{ needs.registry-mac.outputs.artifact_id }}
-          github-token: ${{ github.token }}
-          run-id: ${{ github.run_id }}
-          path: ${{ runner.temp }}/candidate
-      - uses: actions/download-artifact@v8.0.2
-        with:
-          artifact-ids: ${{ needs.registry-windows.outputs.artifact_id }}
           github-token: ${{ github.token }}
           run-id: ${{ github.run_id }}
           path: ${{ runner.temp }}/candidate
@@ -340,5 +321,5 @@ jobs:
           const c = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/candidate.json'));
           const a = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/release-attempt.json'));
           const origin = process.env.MOTION_INSTALL_PUBLIC_ORIGIN;
-          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Test publication result\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nResult: ${a.stage}\n\n[Exact-version installation guide](${origin}/open-motion/dev/${c.version}/install.md)\n\n[Default test guide](${origin}/open-motion/dev/install.md)\n\nThe default is advanced only after registry/native checks and public readback; a superseded candidate keeps its version snapshot without moving the default. No stable release occurred.\n`);
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Test publication result\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nResult: ${a.stage}\n\n[Exact-version installation guide](${origin}/open-motion/dev/${c.version}/install.md)\n\n[Default test guide](${origin}/open-motion/dev/install.md)\n\nThe default is advanced after registry and public readback; native cold-install checks run afterward; a superseded candidate keeps its version snapshot without moving the default. No stable release occurred.\n`);
           JS

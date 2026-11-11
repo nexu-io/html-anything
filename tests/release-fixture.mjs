@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeJSON } from '../scripts/runtime-assets.mjs';
-import { sealCandidate, repository, candidateWorkflow, publicationWorkflow, authorizationReceipt, platformReports } from '../.github/scripts/motion-release.mjs';
+import { sealCandidate, repository, candidateWorkflow, publicationWorkflow, authorizationReceipt } from '../.github/scripts/motion-release.mjs';
 
 export async function candidateFixture(t, branch = 'main') {
   const work = await mkdtemp(path.join(os.tmpdir(), 'motion-release-test-'));
@@ -32,10 +32,10 @@ export async function candidateFixture(t, branch = 'main') {
   const candidate = await sealCandidate(build, directory, root, env);
   const provenance = { head_branch: branch, head_sha: env.GITHUB_SHA, runId: 123, attempt: 1 };
   await writeJSON(path.join(directory, 'provenance.json'), provenance);
-  const inputs = { action: 'publish-test', version, accepted: true, expectedSHA256: candidate.tgzSHA256 };
+  const inputs = { action: 'publish-test', version, expectedSHA256: candidate.tgzSHA256 };
   const publicationEnv = { GITHUB_REPOSITORY: repository, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REF: 'refs/heads/feature/motion',
     GITHUB_RUN_ID: '800', GITHUB_SHA: env.GITHUB_SHA, GITHUB_WORKFLOW_REF: `${repository}/${publicationWorkflow}@refs/heads/feature/motion`,
-    MOTION_VERSION: version, MOTION_ACCEPTED: 'true', MOTION_RELEASE_ACTION: 'publish-test' };
+    MOTION_VERSION: version, MOTION_RELEASE_ACTION: 'publish-test' };
   const authorization = authorizationReceipt(candidate, { id: 800, run_attempt: 1, actor: { login: 'operator' } }, inputs.action);
   await writeJSON(path.join(directory, 'authorization.json'), authorization);
   for (const platform of ['darwin-arm64', 'win32-x64']) await writeJSON(path.join(directory, `registry-${platform}.json`), {
@@ -43,6 +43,6 @@ export async function candidateFixture(t, branch = 'main') {
     registryColdInstall: 'passed', nativePreparation: 'passed', repeatSetup: 'passed', resources: 'passed', mcpTools: 11, skills: 5,
   });
   await writeJSON(path.join(directory, 'npm-publication.json'), { tgzSHA256: candidate.tgzSHA256, previousLatest: '0.5.0' });
-  await writeJSON(path.join(directory, 'test-promotion.json'), { version, tgzSHA256: candidate.tgzSHA256, action: inputs.action, publicationRun: publicationEnv.GITHUB_RUN_ID, status: 'already-promoted', platformVerification: await platformReports(directory, candidate) });
+  await writeJSON(path.join(directory, 'test-promotion.json'), { version, tgzSHA256: candidate.tgzSHA256, action: inputs.action, publicationRun: publicationEnv.GITHUB_RUN_ID, status: 'already-promoted' });
   return { work, root, build, directory, candidate, inputs, provenance, app, pkg, manifest, authorization, env: publicationEnv };
 }
