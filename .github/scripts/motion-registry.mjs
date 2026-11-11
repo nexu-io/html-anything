@@ -63,4 +63,3 @@ export async function verifyRegistryDownload(directory, { destination, ...option
     return { tgz, report };
   } finally { if (!destination) await rm(temporary, { recursive: true, force: true }); }
 }
-
