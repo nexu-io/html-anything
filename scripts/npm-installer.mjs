@@ -39,7 +39,7 @@ Use prepare to wait explicitly for every video component or retry failed prepara
 Refresh the selected host's Tools/Skills; registration alone does not prove loading.
 Diagnose checks the installed host configuration and probes its MCP command without changing configuration.
 It does not reconnect the host; follow its recovery guidance and verify a read in the active Agent chat.
-Use separate host configuration, home, data and Skills paths for test candidates.
+Keep the current host configuration and Skills root; use a separate home and data directory only for an explicitly requested isolated test.
   -h, --help         Show this help without installing or changing configuration
   --version          Show this package's version`;
 
