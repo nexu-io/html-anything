@@ -146,20 +146,21 @@ for (const interrupted of [false, true])
     }
   }, 30000);
 
-it("rejects the discarded installation format without migrating or resetting history", async () => {
-  const f = await fixture(),
-    s = await open(f.options),
-    data = s.context.roots.data;
-  await s.close();
-  const db = new DatabaseSync(join(data, "installations.sqlite"));
-  db.exec("PRAGMA user_version=1");
-  db.close();
-  await expect(open(f.options)).rejects.toThrow("unsupported installation journal format");
-  const retained = new DatabaseSync(join(data, "installations.sqlite"), { readOnly: true });
-  try {
-    expect(retained.prepare("PRAGMA user_version").get()?.user_version).toBe(1);
-    expect(retained.prepare("SELECT count(*) AS n FROM receipts").get()?.n).toBe(1);
-  } finally {
-    retained.close();
-  }
-});
+for (const format of [1, 2])
+  it(`rejects discarded installation format ${format} without migrating or resetting history`, async () => {
+    const f = await fixture(),
+      s = await open(f.options),
+      data = s.context.roots.data;
+    await s.close();
+    const db = new DatabaseSync(join(data, "installations.sqlite"));
+    db.exec(`PRAGMA user_version=${format}`);
+    db.close();
+    await expect(open(f.options)).rejects.toThrow("unsupported installation journal format");
+    const retained = new DatabaseSync(join(data, "installations.sqlite"), { readOnly: true });
+    try {
+      expect(retained.prepare("PRAGMA user_version").get()?.user_version).toBe(format);
+      expect(retained.prepare("SELECT count(*) AS n FROM receipts").get()?.n).toBe(1);
+    } finally {
+      retained.close();
+    }
+  });

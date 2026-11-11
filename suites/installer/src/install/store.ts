@@ -7,6 +7,7 @@ import type { Witness } from "@odsuite/sidecar";
 import { z } from "zod";
 import type { File } from "../archive.js";
 import { InstallerFault, type Receipt, type Use } from "../types.js";
+import { CollectionJournal } from "./retirement.js";
 
 const text = z.string().min(1).max(4096),
   sha = z.string().regex(/^[a-f0-9]{64}$/),
@@ -63,6 +64,7 @@ export const fingerprint = (value: {
 export class Store {
   private db: DatabaseSync;
   private closed = false;
+  readonly collection: CollectionJournal;
   constructor(root: string, established: boolean) {
     const path = join(root, "installations.sqlite");
     let exists = false;
@@ -82,7 +84,7 @@ export class Store {
     try {
       this.db.exec("PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; PRAGMA synchronous=FULL;");
       const version = Number(this.db.prepare("PRAGMA user_version").get()?.user_version);
-      if (established && version !== 2)
+      if (established && version !== 3)
         throw new InstallerFault(
           "integrity",
           "unsupported installation journal format; explicit reconciliation required without migration or reset",
@@ -91,9 +93,10 @@ export class Store {
         if (this.db.prepare("SELECT name FROM sqlite_master WHERE type='table'").get())
           throw new InstallerFault("integrity", "unknown installation journal");
         this.db.exec(
-          "BEGIN IMMEDIATE; CREATE TABLE policy(id INTEGER PRIMARY KEY CHECK(id=1),data TEXT NOT NULL); CREATE TABLE versions(carrier TEXT NOT NULL,version TEXT NOT NULL,digest TEXT NOT NULL,files TEXT NOT NULL,PRIMARY KEY(carrier,version)); CREATE TABLE intents(id TEXT PRIMARY KEY,record TEXT NOT NULL); CREATE TABLE receipts(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,result TEXT NOT NULL); CREATE TABLE selections(carrier TEXT PRIMARY KEY,request_id TEXT NOT NULL REFERENCES receipts(id)); CREATE TABLE uses(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL UNIQUE,record TEXT NOT NULL); PRAGMA user_version=2; COMMIT;",
+          "BEGIN IMMEDIATE; CREATE TABLE policy(id INTEGER PRIMARY KEY CHECK(id=1),data TEXT NOT NULL); CREATE TABLE versions(carrier TEXT NOT NULL,version TEXT NOT NULL,digest TEXT NOT NULL,files TEXT NOT NULL,PRIMARY KEY(carrier,version)); CREATE TABLE intents(id TEXT PRIMARY KEY,record TEXT NOT NULL); CREATE TABLE receipts(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,result TEXT NOT NULL); CREATE TABLE selections(carrier TEXT PRIMARY KEY,request_id TEXT NOT NULL REFERENCES receipts(id)); CREATE TABLE uses(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL UNIQUE,record TEXT NOT NULL); CREATE TABLE collections(id TEXT PRIMARY KEY,record TEXT NOT NULL,hash TEXT NOT NULL); CREATE TABLE retirements(path TEXT PRIMARY KEY,request_id TEXT NOT NULL,state TEXT NOT NULL); PRAGMA user_version=3; COMMIT;",
         );
-      } else if (version !== 2) throw new InstallerFault("integrity", "unsupported installation journal");
+      } else if (version !== 3) throw new InstallerFault("integrity", "unsupported installation journal");
+      this.collection = new CollectionJournal(this.db);
     } catch (error) {
       this.db.close();
       throw error;
@@ -135,6 +138,8 @@ export class Store {
       const policy = this.db.prepare("SELECT data FROM policy WHERE id=1").get();
       if (policy && policy.data !== value.data)
         throw new InstallerFault("conflict", "installation runtime data path changed");
+      const retired = this.db.prepare("SELECT path FROM retirements WHERE path=?").get(value.path);
+      if (retired) throw new InstallerFault("retired", "installation version was retired; it cannot be reinstalled");
       const version = this.db
         .prepare("SELECT digest,files FROM versions WHERE carrier=? AND version=?")
         .get(value.carrier, value.version);
@@ -223,12 +228,30 @@ export class Store {
       if (entries.every(([carrier, id]) => this.read(carrier)?.requestId === id)) return;
       if (entries.some(([carrier]) => (this.read(carrier)?.requestId ?? null) !== expected[carrier]))
         throw new InstallerFault("conflict", "installation selection changed before activation");
-      for (const [carrier, id] of entries)
+      for (const [carrier, id] of entries) {
+        const row = this.db.prepare("SELECT record FROM intents WHERE id=?").get(id);
+        if (!row) throw new InstallerFault("integrity", "selected installation intent is missing");
+        const value = decode(intent, row.record);
+        value.phase = "selected";
+        this.save(value);
         this.db
           .prepare(
             "INSERT INTO selections VALUES(?,?) ON CONFLICT(carrier) DO UPDATE SET request_id=excluded.request_id",
           )
           .run(carrier, id);
+      }
+    });
+  }
+  inventory() {
+    const rows = this.db.prepare("SELECT id,record FROM intents ORDER BY id LIMIT 4097").all();
+    if (rows.length > 4096) throw new InstallerFault("conflict", "installation inventory exceeds collection bound");
+    return rows.map((row) => {
+      const value = decode(intent, row.record);
+      if (value.receipt.requestId !== row.id) throw new InstallerFault("integrity", "installation intent changed");
+      const completed = this.db.prepare("SELECT result FROM receipts WHERE id=?").get(row.id);
+      if (completed && canonical(decode(receipt, completed.result)) !== canonical(value.receipt))
+        throw new InstallerFault("integrity", "installation receipt differs from its intent");
+      return { ...value, complete: !!completed };
     });
   }
   occupy(value: Receipt, controller: Witness): Use {

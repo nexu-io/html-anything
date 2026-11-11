@@ -106,6 +106,7 @@ export async function native(description: PackageManifest, selection: Selection,
 }
 
 export async function launch(receipt: Receipt, selection: Selection, session: Session, mode = "runtime") {
+  if (await session.gc.read()) throw Error("unfinished collection must resume before runtime launch");
   const owner = await startManager({
     root: receipt.data,
     scope: selection.scope,

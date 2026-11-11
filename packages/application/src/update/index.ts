@@ -37,6 +37,7 @@ export async function updates(
           throw Error("activation intent differs from this scope");
         return summary(record);
       }
+      if (await session.gc.read()) throw Error("unfinished collection must resume before update");
       if (operation !== "activate") {
         if (await session.transitions.read()) throw Error("unfinished installation transition must resume first");
         for (const c of carriers) await readInstalled(session, description, selection, c);

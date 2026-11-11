@@ -52,7 +52,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | distribution | Signed product/application-kit catalogs, bounded retrieval and S3 IO; not installation or runtime commit authority.                                                       |
 | update       | Candidate discovery, verification and preparation; actual lifecycle owners activate.                                                                                      |
 | runtime      | Unconnected content-generation activation/recovery mechanism; its shell-oriented contract is not the current Node-carrier update lifecycle.                               |
-| installer    | Immutable Node staging/installation, atomic carrier selection, durable transitions and installed-code consumption facts; sidecar owns OS authority and explicit recovery. |
+| installer    | Immutable Node staging/installation, atomic carrier selection, durable transitions, consumption facts and explicit quiescent code retirement; sidecar owns OS authority and explicit recovery. |
 | pack         | Generic Node closure compilation, dependency notices and verified immutable local archives; carriers choose entries and resources.                                        |
 | pipeline     | Shared-version build/package/check/candidate metadata for both Node carriers; workflows choose quality requirements. Publication is not connected.                        |
 | dev          | Repository development configuration, managed builds/watchers and carrier orchestration; sidecar owns all control paths, liveness and lifecycle.                          |
@@ -129,7 +129,7 @@ Obtain resources through sidecar factories and hosted Context. Observe actual OS
 
 Update discovers/prepares; actual lifecycle owners activate/commit. Installer owns immutable Node applications and durable selections; application composes installation and carrier registration. Retained shell-oriented runtime/distribution contracts are not a current Node update path. Blob references and actual Uses protect content until processes/documents/streams/readers drain. Unknown or failed consumers remain protected. Use Library.session when already in a lifecycle lane.
 
-After SIGKILL, explicitly recover the whole root before binding replay. Preserve diagnostics and failed layouts; do not erase authority or infer death by elapsed time. Persistent user data and reclaimable content have separate owners.
+After SIGKILL, explicitly recover the whole root before binding replay. Preserve diagnostics and failed layouts; do not erase authority or infer death by elapsed time. Persistent user data and reclaimable content have separate owners. Installed-code GC requires a current fingerprinted plan, verified registration references and sidecar-proven runtime retirement. Preserve current/staged/incomplete code and live consumers. Resume an interrupted collection with its original request; never erase retirement history or implicitly reinstall a retired version.
 
 Background validation must not focus the user's desktop or open a browser without instruction. Actual product editing/export, visual/audio acceptance, installation, network distribution and power-loss evidence remain separate.
 

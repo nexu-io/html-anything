@@ -11,6 +11,7 @@ import { managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuit
 import { expect, it } from "vitest";
 import { hash, type PackageManifest, type Selection } from "@/contract.js";
 import { candidate } from "@/update/candidate.js";
+import { collect } from "@/update/gc.js";
 import { type Operation, updates } from "@/update/index.js";
 import type { Options } from "@/update/plan.js";
 
@@ -190,6 +191,11 @@ async function fixture() {
     publish,
     run,
     inspect,
+    collect: (
+      description: PackageManifest,
+      operation: "plan" | "apply" | "status",
+      extra: { requestId?: string; expected?: string } = {},
+    ) => collect(description, selection, operation, { worker: resolve("dist/codex-worker.mjs"), ...extra }),
     get objects() {
       return objects;
     },
@@ -346,6 +352,44 @@ it("keeps both old selections after a staged interruption and resumes only the o
     });
     expect(await f.run("activate", undefined, { requestId })).toMatchObject({ state: "activated", version: "2.0.0" });
     expect(await f.run("status")).toEqual({ state: "idle" });
+  } finally {
+    await f.close();
+  }
+}, 30000);
+
+it("collects superseded activated kit closures offline, preserves prepared cache and replays activation history", async () => {
+  const f = await fixture(),
+    requestId = randomUUID();
+  try {
+    const original = (await f.inspect()).receipts;
+    f.publish();
+    await f.run("prepare");
+    f.offline();
+    const activated = await f.run("activate", undefined, { requestId });
+    const plan = (await f.collect(f.next.manifest, "plan")) as import("@odsuite/installer").CollectionPlan;
+    expect(
+      plan.entries
+        .filter((e) => !e.reasons.length)
+        .map((e) => e.receipt.path)
+        .sort(),
+    ).toEqual(original.map((r) => r!.path).sort());
+    const id = randomUUID();
+    expect(await f.collect(f.next.manifest, "apply", { requestId: id, expected: plan.fingerprint })).toMatchObject({
+      complete: true,
+      retired: expect.any(Array),
+    });
+    expect(await f.collect(f.next.manifest, "status", { requestId: id })).toMatchObject({
+      state: "status",
+      collection: { complete: true },
+    });
+    expect(await f.run("activate", undefined, { requestId })).toEqual(activated);
+    expect((await f.inspect()).receipts.every((r) => r?.version === "2.0.0")).toBe(true);
+    await f.later();
+    const next = (await f.collect(f.bad.manifest, "plan")) as import("@odsuite/installer").CollectionPlan;
+    expect(next.entries.filter((e) => !e.reasons.length).map((e) => e.receipt.version)).toEqual(["2.0.0", "2.0.0"]);
+    await f.collect(f.bad.manifest, "apply", { requestId: randomUUID(), expected: next.fingerprint });
+    expect(await f.run("activate", undefined, { requestId })).toEqual(activated);
+    expect((await f.inspect()).receipts.every((r) => r?.version === "3.0.0")).toBe(true);
   } finally {
     await f.close();
   }

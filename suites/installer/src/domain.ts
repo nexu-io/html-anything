@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { digest, factoryScope } from "@odsuite/protocol";
 import { type Context, managerEndpoint, serve } from "@odsuite/sidecar";
 import { canonical, directory, exclusive, json } from "./files.js";
+import { Collector } from "./install/collection.js";
 import { Transaction } from "./install/transaction.js";
 import { Transitions } from "./transitions.js";
 import { InstallerFault, type Options, type Session } from "./types.js";
@@ -64,7 +65,7 @@ export async function open(options: Options): Promise<Session> {
       (await factory.resources()).grants.filter((grant) => grant.kind === "data").map((grant) => grant.value),
     );
     await factory.expose({
-      identity: { service: "installer", generation: digest("node-installation-v2") },
+      identity: { service: "installer", generation: digest("node-installation-v3") },
       handlers: {},
       lifecycle: {
         initialize: async (value) => {
@@ -84,9 +85,11 @@ export async function open(options: Options): Promise<Session> {
     });
     if (!context || !transaction) throw new InstallerFault("integrity", "installation context is unavailable");
     const active = transaction;
+    let queue: Promise<unknown> = Promise.resolve();
     const run = <T>(work: () => Promise<T>) => {
       if (closing) return Promise.reject(new InstallerFault("conflict", "installation session is closing"));
-      const task = factory.session(work);
+      const task = queue.then(() => factory.session(work));
+      queue = task.catch(() => undefined);
       pending.add(task);
       void task.then(
         () => pending.delete(task),
@@ -104,10 +107,13 @@ export async function open(options: Options): Promise<Session> {
       return transitions;
     };
     const allowed = async (id?: string) => {
+      if (active.store.collection.read())
+        throw new InstallerFault("conflict", "unfinished collection must resume first");
       const pending = (await journal())?.read();
       if (pending && pending.requestId !== id)
         throw new InstallerFault("conflict", "unfinished installation transition must resume first");
     };
+    const collector = new Collector(active, { ...options, home, scope }, async () => (await journal())?.read());
     return {
       factory,
       context,
@@ -120,7 +126,11 @@ export async function open(options: Options): Promise<Session> {
       },
       stage: (input) => {
         const accepted = { ...input, source: input?.source ? { ...input.source } : input?.source };
-        return run(() => active.install(accepted, false));
+        return run(async () => {
+          if (active.store.collection.read())
+            throw new InstallerFault("conflict", "unfinished collection must resume first");
+          return active.install(accepted, false);
+        });
       },
       select: (input) =>
         run(async () => {
@@ -129,15 +139,35 @@ export async function open(options: Options): Promise<Session> {
         }),
       transitions: {
         read: (id) => run(async () => (await journal())?.read(id)),
-        begin: (input) => run(async () => (await journal(true))!.begin(input)),
+        begin: (input) =>
+          run(async () => {
+            if (active.store.collection.read())
+              throw new InstallerFault("conflict", "unfinished collection must resume first");
+            return (await journal(true))!.begin(input);
+          }),
         advance: (input) => run(async () => (await journal(true))!.advance(input)),
       },
       read: (carrier) => run(() => active.read(carrier)),
       use: (input) => {
         const accepted = structuredClone(input);
-        return run(() => consume(active, factory, accepted));
+        return run(async () => {
+          if (active.store.collection.read())
+            throw new InstallerFault("conflict", "unfinished collection must resume first");
+          return consume(active, factory, accepted);
+        });
       },
       uses: () => run(() => observations(active)),
+      gc: {
+        plan: (protectedReceipts) => {
+          const accepted = structuredClone(protectedReceipts);
+          return run(() => collector.plan(accepted));
+        },
+        apply: (input) => {
+          const accepted = structuredClone(input);
+          return run(() => collector.apply(accepted));
+        },
+        read: (id) => run(async () => active.store.collection.read(id)),
+      },
       close: () => {
         closed ??= (async () => {
           closing = true;
