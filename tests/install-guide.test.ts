@@ -153,12 +153,12 @@ test('unrecognized or conflicting same-version defaults require inspection inste
   }
 });
 
-test('PR CI has no publication credentials; publication requires a separate manual accepted workflow', async () => {
+test('PR CI has no publication credentials; publication requires a separate manual workflow', async () => {
   const ci = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
   const workflow = await readFile(new URL('../.github/workflows/motion-publish-test.yml', import.meta.url), 'utf8');
   assert(!ci.includes('secrets.') && !ci.includes('publish-install-guide:'));
   assert(workflow.includes('workflow_dispatch:') && !workflow.includes('pull_request:') && !workflow.includes('push:'));
   assert(!workflow.includes('environment:'), 'No independent approval environment is enabled');
-  assert(workflow.includes('accepted:') && workflow.includes('default: false'));
+  assert(!workflow.includes('accepted:') && !workflow.includes('MOTION_ACCEPTED'));
   assert(!workflow.split('  snapshot:\n')[0].includes('secrets.'));
 });
