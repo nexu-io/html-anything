@@ -166,7 +166,7 @@ export function styleEditKind(properties: readonly string[]): EditKind {
   if (has(property => property === 'font-size')) return 'font_size';
   if (has(property => property === 'color')) return 'text_color';
   if (has(property => property === 'text-align')) return 'text_align';
-  if (has(property => property === 'opacity')) return 'opacity';
+  if (has(property => property === 'opacity' || property === '--hf-layer-opacity')) return 'opacity';
   if (has(property => property.startsWith('background'))) return 'fill';
   return 'style';
 }

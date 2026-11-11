@@ -4,6 +4,7 @@ import { templatePrompt, type IntegrationInfo } from '../../../shared/integratio
 import { useI18n } from '../i18n/I18n';
 import { motionApi } from './useWorkspace';
 import { MotionIcon } from './icons';
+import { reportTemplateEvent, searchStarted } from './editorTracking';
 import styles from './TemplateLibraryDialog.module.css';
 import figmaLogo from './template-brands/figma.png';
 import lovableLogo from './template-brands/lovable.svg';
@@ -13,7 +14,7 @@ import kimiLogo from './template-brands/kimi.png';
 import pondLogo from './template-brands/pond.svg';
 const brandLogos: Record<string, string> = {Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
 
-type Props = { returnFocus?: HTMLElement | null; open: boolean; busy: boolean; error: string; onClose: () => void; onOpen: (id: string) => void };
+type Props = { returnFocus?: HTMLElement | null; open: boolean; busy: boolean; error: string; onClose: () => void; onOpen: (id: string) => void; projectId?: string };
 type Facet = 'brand' | 'uses' | 'styles' | 'industries' | 'creationModels' | 'colors' | 'ratio' | 'duration';
 const facets: [Facet, string][] = [
   ['brand', 'Reference brands'], ['uses', 'Use cases'], ['styles', 'Video types'],
@@ -129,9 +130,14 @@ export function TemplateLibraryDialog(props: Props) {
   }).sort((a, b) => sort === 'recommended' ? (a.sortOrder ?? Infinity) - (b.sortOrder ?? Infinity) : a.title.localeCompare(b.title, locale) * (sort === 'reverse' ? -1 : 1)), [catalog, query, selected, sort, locale]);
   const featured = catalog.filter(item => item.featuredOrder != null).sort((a, b) => a.featuredOrder! - b.featuredOrder!);
   const reset = () => { setQuery(''); setSelected({}); };
-  const toggle = (key: Facet, value: string) => setSelected(previous => ({ ...previous, [key]: previous[key]?.includes(value) ? previous[key]!.filter(item => item !== value) : [...(previous[key] ?? []), value] }));
+  // Reports go through the shared template reporter; a failure there must never block the library.
+  const report = (event: Parameters<typeof reportTemplateEvent>[0]) => { try { reportTemplateEvent(event, props.projectId); } catch { /* ignore */ } };
+  const search = (next: string) => { if (searchStarted(query, next)) report({ kind: 'search' }); setQuery(next); };
+  const toggle = (key: Facet, value: string) => { if (!selected[key]?.includes(value)) report({ kind: 'category', category: key }); setFacet(key, value); };
+  const setFacet = (key: Facet, value: string) => setSelected(previous => ({ ...previous, [key]: previous[key]?.includes(value) ? previous[key]!.filter(item => item !== value) : [...(previous[key] ?? []), value] }));
   async function showPrompt() {
     if (!preview) return;
+    report({ kind: 'copy_click', templateId: preview.id });
     setFeedback('');
     useDialog.current?.showModal();
     try {
@@ -140,8 +146,12 @@ export function TemplateLibraryDialog(props: Props) {
     } catch (err) { setFeedback((err as Error).message); }
   }
   async function copy() {
+    const templateId = preview?.id;
+    let status: 'clipboard_written' | 'manual_fallback_shown' = 'clipboard_written';
     try { await navigator.clipboard.writeText(prompt); setFeedback(t('Copied')); }
-    catch { setFeedback(t('Copy the instruction below and send it to your Agent.')); }
+    catch { status = 'manual_fallback_shown'; setFeedback(t('Copy the instruction below and send it to your Agent.')); }
+    // The instruction this dialog builds is always the Codex one.
+    if (templateId) report({ kind: 'copy_result', templateId, host: 'codex', status });
   }
   async function downloadMotion() {
     if (!preview?.motionDocumentUrl) return;
@@ -155,7 +165,7 @@ export function TemplateLibraryDialog(props: Props) {
     } catch { setDownloadError(t('Download failed. Please try again.')); }
     finally { setDownloading(false); }
   }
-  const show = (item: GalleryTemplate) => { setPreview(item); setPrompt(''); setFeedback(''); setDownloadError(''); detail.current?.showModal(); };
+  const show = (item: GalleryTemplate) => { report({ kind: 'preview', templateId: item.id }); setPreview(item); setPrompt(''); setFeedback(''); setDownloadError(''); detail.current?.showModal(); };
   const cards = (items: GalleryTemplate[]) => <div className={styles.grid}>{items.map(item => <TemplateCard key={item.id} template={item} onSelect={() => show(item)} />)}</div>;
   return <dialog ref={dialog} className={styles.library} aria-label={t('Template library')} onKeyDown={event => event.stopPropagation()} onCancel={event => { if (event.target !== dialog.current) return; event.preventDefault(); if (!props.busy) props.onClose(); }}>
     <header className={styles.header}><h1>{t('Template library')}</h1><button disabled={props.busy} onClick={props.onClose} aria-label={t('Close template library')}><MotionIcon name="close" size={24} /></button></header>
@@ -179,7 +189,7 @@ export function TemplateLibraryDialog(props: Props) {
           <button onClick={() => filter.current?.showModal()}><MotionIcon name="sliders" />{t('Filters')}{Object.values(selected).flat().length > 0 && ` (${Object.values(selected).flat().length})`}</button>
           <select aria-label={t('Sort')} value={sort} onChange={event => setSort(event.target.value)}><option value="recommended">{t('Recommended order')}</option><option value="name">{t('Name A–Z')}</option><option value="reverse">{t('Name Z–A')}</option></select>
         </div></div>
-        {searchOpen && <input className={styles.search} autoFocus type="search" maxLength={200} value={query} onChange={event => setQuery(event.target.value)} placeholder={t('Search templates, creators, styles…')} aria-label={t('Search templates')} />}
+        {searchOpen && <input className={styles.search} autoFocus type="search" maxLength={200} value={query} onChange={event => search(event.target.value)} placeholder={t('Search templates, creators, styles…')} aria-label={t('Search templates')} />}
         {hasFilters && <div className={styles.chips}>{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)}>{t(value)} ×</button>))}<button onClick={reset}>{t('Clear filters')}</button></div>}
         {loading && !catalog.length ? <p role="status">{t('Loading templates…')}</p> : cards(visible)}
         {!loading && !visible.length && !error && <p className={styles.empty}>{t('No matching templates. Try another name, creator or style.')}</p>}
@@ -195,7 +205,7 @@ export function TemplateLibraryDialog(props: Props) {
         <div className={styles.detailInfo}><small>{preview.styles?.join(' · ') || preview.subtitle}</small><h2>{preview.title}</h2><p>{preview.description}</p>
           {preview.sourceUrl ? <a href={preview.sourceUrl} target="_blank" rel="noreferrer">{preview.authorName || preview.author} ↗</a> : <p>{preview.authorName || preview.author}</p>}
           <div className={styles.actions}><button disabled={!preview.motionDocumentUrl || downloading} onClick={() => void downloadMotion()}>{t(downloading ? 'Downloading…' : 'Download motion.md')}</button><button onClick={() => void showPrompt()}>{t('Recreate template')}</button></div>
-          <div className={styles.projectActions}>{isEditableTemplate(preview) && <button disabled={props.busy} onClick={() => { detail.current?.close(); props.onOpen(preview.id); }}>{t('Open and edit')} ↗</button>}{preview.projectFileUrl && <a href={preview.projectFileUrl} target="_blank" rel="noreferrer">{t('Download OpenMotion project')} ↗</a>}</div>
+          <div className={styles.projectActions}>{isEditableTemplate(preview) && <button disabled={props.busy} onClick={() => { report({ kind: 'use', templateId: preview.id }); detail.current?.close(); props.onOpen(preview.id); }}>{t('Open and edit')} ↗</button>}{preview.projectFileUrl && <a href={preview.projectFileUrl} target="_blank" rel="noreferrer">{t('Download OpenMotion project')} ↗</a>}</div>
           {downloadError && <p role="status">{downloadError}</p>}
           <dl><dt>{t('Video types')}</dt><dd>{preview.styles?.join(' · ') || '—'}</dd><dt>{t('Creation models')}</dt><dd>{preview.creationModels?.join(' · ') || '—'}</dd><dt>{t('Duration')}</dt><dd>{preview.duration ? t('{value}s', { value: preview.duration }) : '—'}</dd></dl>
         </div></div>

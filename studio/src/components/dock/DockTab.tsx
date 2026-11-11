@@ -22,7 +22,7 @@ import type { IDockviewPanelHeaderProps } from "dockview-react";
 import { isPanelId, PANEL_DEFINITIONS, type PanelId } from "./panelRegistry";
 import { trackStudioClick } from "../../motion/editorTracking";
 
-const TAB_CLICKS = {
+export const TAB_CLICKS = {
   compositions: ["left_panel", "tab_clips"],
   assets: ["left_panel", "tab_assets"],
   catalog: ["left_panel", "tab_catalog"],

@@ -70,6 +70,8 @@ it('reports one manual edit per history entry and none for an Agent write', () =
 it('gives each property-panel feature its own kind while its commit is saving', async () => {
   expect(['clip-path', 'font-family', 'font-size', 'color', 'text-align', 'opacity', 'background-color', 'border-radius'].map(p => styleEditKind([p])))
     .toEqual(['crop', 'font_family', 'font_size', 'text_color', 'text_align', 'opacity', 'fill', 'style']);
+  // An animated layer saves its opacity as a multiplier plus a filter, not as `opacity`.
+  expect(styleEditKind(['--hf-layer-opacity', 'filter'])).toBe('opacity');
   await withEditKind('Edit layer style', 'font_size', async () => {
     reportManualEdit({ projectId: PROJECT, label: 'Edit layer style', entryId: 'f1' });
     reportManualEdit({ projectId: PROJECT, label: 'Move layer', entryId: 'f2' });
