@@ -3,9 +3,10 @@ import { join } from "node:path";
 import { digest, factoryScope } from "@odsuite/protocol";
 import { type Context, managerEndpoint, serve } from "@odsuite/sidecar";
 import { canonical, directory, exclusive, json } from "./files.js";
-import { Transaction } from "./transaction.js";
+import { Transaction } from "./install/transaction.js";
 import { Transitions } from "./transitions.js";
 import { InstallerFault, type Options, type Session } from "./types.js";
+import { consume, observations } from "./usage.js";
 
 /** Policy ownership marker is not a lock or liveness registry. Only sidecar claims authority. */
 async function ownership(home: string, product: string) {
@@ -63,7 +64,7 @@ export async function open(options: Options): Promise<Session> {
       (await factory.resources()).grants.filter((grant) => grant.kind === "data").map((grant) => grant.value),
     );
     await factory.expose({
-      identity: { service: "installer", generation: digest("node-installation-v1") },
+      identity: { service: "installer", generation: digest("node-installation-v2") },
       handlers: {},
       lifecycle: {
         initialize: async (value) => {
@@ -132,6 +133,11 @@ export async function open(options: Options): Promise<Session> {
         advance: (input) => run(async () => (await journal(true))!.advance(input)),
       },
       read: (carrier) => run(() => active.read(carrier)),
+      use: (input) => {
+        const accepted = structuredClone(input);
+        return run(() => consume(active, factory, accepted));
+      },
+      uses: () => run(() => observations(active)),
       close: () => {
         closed ??= (async () => {
           closing = true;

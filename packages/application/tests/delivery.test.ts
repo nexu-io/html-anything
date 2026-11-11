@@ -9,6 +9,7 @@ import { promisify } from "node:util";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { Library, type Resource } from "@odsuite/blob";
+import { open as installation } from "@odsuite/installer";
 import { inspect, npm } from "@odsuite/pack";
 import { canonical, channel, digest, namespace } from "@odsuite/protocol";
 import { bundle, resolve as release, releaseChannel } from "@odsuite/release";
@@ -84,6 +85,19 @@ async function fixture() {
   return { root, evidence, version, channel, command, invoke, data: join(root, "data", channel, "installation") };
 }
 
+async function uses(own: Awaited<ReturnType<typeof fixture>>) {
+  const session = await installation({
+    home: join(own.root, "installation"),
+    product: "io.openmotion.app",
+    scope: { channel: channel(own.channel), namespace: namespace("installation") },
+  });
+  try {
+    return await session.uses();
+  } finally {
+    await session.close();
+  }
+}
+
 it("installs a real local npm kit idempotently and controls its stamped standalone runtime", async () => {
   const own = await fixture();
   const first = await own.command(["setup", "--carrier", "standalone"]);
@@ -97,12 +111,20 @@ it("installs a real local npm kit idempotently and controls its stamped standalo
     expect((await own.command(["start"])).result.state).toBe("running");
     expect((await own.command(["start"])).result.state).toBe("running");
     expect((await own.command(["status"])).result.runtime.manifest.identity.version).toBe(own.version);
+    const active = await uses(own);
+    expect(active).toHaveLength(1);
+    expect(active[0]).toMatchObject({ state: "alive", receipt: first.result.receipts.standalone });
+    expect(active[0]?.controller.pid).toBe(
+      (await connectRoot(own.data, { channel: channel(own.channel), namespace: namespace("installation") })).manager
+        .pid,
+    );
   } finally {
     await own.command(["stop"]);
   }
   expect((await own.command(["stop"])).result.state).toBe("stopped");
   expect((await readDirectory(own.data)).manager.phase).toBe("closed");
   expect(await observeProcesses(own.data)).toEqual([]);
+  expect((await uses(own)).every((use) => use.state === "retired")).toBe(true);
   await writeFile(join(own.evidence, "receipt.json"), JSON.stringify(first, null, 2));
 }, 120000);
 
@@ -174,6 +196,13 @@ else if(args[1]==='add'){const at=args.indexOf('--'),env={};for(let i=3;i<at;i+=
   expect((await own.command(args)).result).toEqual(registered.result);
   const transport = JSON.parse(await readFile(join(profile, "transport.json"), "utf8"));
   expect(transport.command).toBe(process.execPath);
+  expect(transport.env.OPEN_MOTION_INSTALLATION_PRODUCT).toBe("io.openmotion.app");
+  await expect(
+    run(transport.command, transport.args, {
+      env: { ...process.env, ...transport.env, OPEN_MOTION_INSTALLATION_PRODUCT: "" },
+      timeout: 10000,
+    }),
+  ).rejects.toThrow("installation home, base product and request binding are required");
   expect(transport.args[0]).toBe(join(registered.result.receipts.codexplugin.path, "main.mjs"));
   expect(dirname(transport.args[0])).not.toContain("npm-cache");
   await rename(join(own.root, "npm-cache"), join(own.root, "retained-npm-cache"));
@@ -181,6 +210,7 @@ else if(args[1]==='add'){const at=args.indexOf('--'),env={};for(let i=3;i<at;i+=
     connection = new StdioClientTransport({ ...transport, stderr: "pipe" });
   try {
     await client.connect(connection);
+    expect(await uses(own)).toMatchObject([{ state: "alive", receipt: registered.result.receipts.codexplugin }]);
     expect((await client.listTools()).tools.some((tool) => tool.name === "session_create")).toBe(true);
     const created = await client.callTool({
       name: "session_create",
@@ -194,6 +224,7 @@ else if(args[1]==='add'){const at=args.indexOf('--'),env={};for(let i=3;i<at;i+=
   }
   expect((await readDirectory(own.data)).manager.phase).toBe("closed");
   expect(await observeProcesses(own.data)).toEqual([]);
+  expect((await uses(own)).every((use) => use.state === "retired")).toBe(true);
   await writeFile(join(own.evidence, "receipt.json"), JSON.stringify(registered, null, 2));
 }, 120000);
 

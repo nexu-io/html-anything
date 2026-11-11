@@ -1,5 +1,5 @@
 import type { FactoryScope } from "@odsuite/protocol";
-import type { Context, Factory } from "@odsuite/sidecar";
+import type { Context, Factory, Manager, Witness } from "@odsuite/sidecar";
 
 export interface Options {
   home: string;
@@ -31,6 +31,22 @@ export interface Receipt {
   path: string;
   data: string;
 }
+/** Immutable consumption fact; only sidecar observations determine process liveness. */
+export interface Use {
+  id: string;
+  receipt: Receipt;
+  controller: Witness;
+}
+export interface Consumption {
+  requestId: string;
+  application: string;
+  data: string;
+  carrier: string;
+  manager?: Manager;
+}
+export interface UseObservation extends Use {
+  state: "alive" | "retired";
+}
 export interface Transition {
   requestId: string;
   intent: unknown;
@@ -60,6 +76,8 @@ export interface Session {
     }): Promise<Transition>;
   };
   read(carrier: string): Promise<Receipt | undefined>;
+  use(input: Consumption): Promise<Use>;
+  uses(): Promise<UseObservation[]>;
   close(): Promise<void>;
 }
 export class InstallerFault extends Error {

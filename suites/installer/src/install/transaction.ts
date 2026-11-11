@@ -3,10 +3,10 @@ import { chmod, lstat, rename } from "node:fs/promises";
 import { join } from "node:path";
 import { canonical as serialize } from "@odsuite/protocol";
 import { materialize, parseReleaseVersion } from "@odsuite/release";
-import { source, verify } from "./archive.js";
-import { canonical, directory, inside, sync } from "./files.js";
+import { source, verify } from "../archive.js";
+import { canonical, directory, inside, sync } from "../files.js";
+import { type Input, InstallerFault, type Options, type Receipt } from "../types.js";
 import { fingerprint, type Intent, Store } from "./store.js";
-import { type Input, InstallerFault, type Options, type Receipt } from "./types.js";
 
 export class Transaction {
   readonly store: Store;
@@ -36,7 +36,7 @@ export class Transaction {
     )
       throw new InstallerFault("integrity", "runtime data overlaps installation paths");
   }
-  private async verified(value: Receipt) {
+  async verified(value: Receipt) {
     this.check(value);
     try {
       if ((await canonical(value.path)) !== value.path)
@@ -57,7 +57,7 @@ export class Transaction {
   private async checkpoint(value: Intent, phase: "intent" | "materialized" | "installed" | "selected") {
     await this.options.onCheckpoint?.({ phase, requestId: value.receipt.requestId });
   }
-  async select(input: import("./types.js").Select) {
+  async select(input: import("../types.js").Select) {
     const names = Object.keys(input.receipts).sort();
     if (!names.length || names.length > 16 || names.join(":") !== Object.keys(input.expected).sort().join(":"))
       throw new InstallerFault("invalid", "invalid activation carrier set");

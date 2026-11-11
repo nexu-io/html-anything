@@ -29,7 +29,8 @@
     "@odsuite/release": "workspace:*",
     "@open-motion/workspace": "workspace:*",
     "@open-motion/daemon": "workspace:*",
-    "@odsuite/dev": "workspace:*"
+    "@odsuite/dev": "workspace:*",
+    "@odsuite/installer": "workspace:*"
   },
   "exports": {
     ".": {
