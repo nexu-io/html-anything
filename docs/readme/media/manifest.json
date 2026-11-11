@@ -1,0 +1,345 @@
+{
+  "scope": "Complete source videos used by the bilingual README, scenario briefs, curated collections and presenter comparisons. Viewing references retain their authorship and rights; they are not editable templates or reusable presenter/voice assets. The full 894-entry discovery catalog remains a separate index, not a mirror.",
+  "entries": [
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
+      "sha256": "3963db40ddc845fae9d212de25f78e19b810ec1ba7dc46e8941d54d9e32a77a4",
+      "author": "Ali Abdaal",
+      "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
+      "file": "library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4",
+      "bytes": 13880817
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/hundred-days-story-reference.mp4",
+      "sha256": "a1ff0527348c3c263a1cdafe58016354fc1e1d243057fe8f64505ca2fc24d8d4",
+      "author": "Hyperframes",
+      "catalogId": "hf-reference-aroll-hundred-days-story",
+      "sourceUrl": "https://www.instagram.com/reel/Dd6vHlQgpok/",
+      "file": "docs/readme/media/hundred-days-story-reference.mp4",
+      "bytes": 11780257
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4",
+      "sha256": "0001640d9ca7903b3cd4eae9b9d938e5e927e032f8f329b84f0a5b6063e8e2f8",
+      "author": "@figma",
+      "catalogId": "hf-reference-jake-figma-draw",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-figma-draw-reference.mp4",
+      "file": "docs/readme/media/jake-figma-draw-reference.mp4",
+      "bytes": 792120
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4",
+      "sha256": "25826e91aacf3dca8a614d0705c18f7b88cb878782c642e256b7e0d9bf73c031",
+      "author": "@lovable_dev",
+      "catalogId": "hf-reference-jake-lovable",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-lovable-reference.mp4",
+      "file": "docs/readme/media/jake-lovable-reference.mp4",
+      "bytes": 2770983
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4",
+      "sha256": "cb51a15c72609873799d9aa234c364c963878b2d4f579778962e0e4d2da8f484",
+      "author": "Hyperframes",
+      "catalogId": "hf-reference-remix-authorize-once",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-authorize-once-reference.mp4",
+      "file": "docs/readme/media/remix-authorize-once-reference.mp4",
+      "bytes": 1138437
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1128/clip.mp4",
+      "sha256": "8292acef41dc801d2910fe39d0d0bd3aab120d8d19afc0b6bf72d4b3e53512d5",
+      "author": "@Vintage_god",
+      "catalogId": "hf-moment-M1128",
+      "sourceUrl": "https://x.com/Vintage_god/status/2106817967967056165",
+      "file": "docs/readme/media/M1128-clip.mp4",
+      "bytes": 267122
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M1139/clip.mp4",
+      "sha256": "5f59af9d5b5552f10a74f9ea163932007637c4f0aa4c258f9df1203a526e09e0",
+      "author": "@GoogleAI",
+      "catalogId": "hf-moment-M1139",
+      "sourceUrl": "https://x.com/GoogleAI/status/2024154215182926027",
+      "file": "docs/readme/media/M1139-clip.mp4",
+      "bytes": 415894
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/app-showcase.mp4",
+      "sha256": "27d6d0ab395d21bde1556ad9afaecc3f16471d7491664863e85f02582e46f4a4",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-app-showcase",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json",
+      "file": "docs/readme/media/app-showcase.mp4",
+      "bytes": 1110468
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4",
+      "sha256": "7acb37b57d885e3266e04b5c72bfd8f176285fe3ca6a234e508f2cdd5db7a027",
+      "author": "@ericciarla",
+      "catalogId": "hf-reference-remix-firecrawl",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-firecrawl-reference.mp4",
+      "file": "docs/readme/media/remix-firecrawl-reference.mp4",
+      "bytes": 3009136
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ui-3d-reveal.mp4",
+      "sha256": "8e89ce026bd2ecfc6632c8ca646be33201e898dc2177ac564fc5d99864fe9a20",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-ui-3d-reveal",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json",
+      "file": "library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4",
+      "bytes": 2113289
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4",
+      "sha256": "8d0a7f3f3fe6d11211c9719d5d0a471be70708ac571ca2c5370a4a0e2436a632",
+      "author": "@bflycomputer",
+      "catalogId": "hf-reference-jake-pond",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/jake-pond-reference.mp4",
+      "file": "docs/readme/media/jake-pond-reference.mp4",
+      "bytes": 752463
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-kimi-k3-reference.mp4",
+      "sha256": "fc0601ded91cb03f46c013f812d62520233811767ca124e84c1ad9d50bcd0408",
+      "author": "@Kimi_Moonshot",
+      "catalogId": "hf-reference-remix-kimi-k3",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-kimi-k3-reference.mp4",
+      "file": "docs/readme/media/remix-kimi-k3-reference.mp4",
+      "bytes": 2471697
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-elevenlabs-reception-reference.mp4",
+      "sha256": "a53011008da9015050cad5e3896d2f222850053aebdc1ccd90f48052f4f7de85",
+      "author": "@ElevenLabs",
+      "catalogId": "hf-reference-remix-elevenlabs-reception",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-elevenlabs-reception-reference.mp4",
+      "file": "docs/readme/media/remix-elevenlabs-reception-reference.mp4",
+      "bytes": 3192474
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/glass-shard-title.mp4",
+      "sha256": "54b7fae3442d3e222c1c76ef4e151568ed5c0925e74f0a22ef5e6301d5f47f60",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-glass-shard-title",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json",
+      "file": "docs/readme/media/glass-shard-title.mp4",
+      "bytes": 371545
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/canopy-part-title.mp4",
+      "sha256": "10183cd740675a0d276516457fa3f5b8544a5c77eecec51359af2298a61bd179",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-canopy-part-title",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json",
+      "file": "library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4",
+      "bytes": 1117642
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/wireframe-portal-title.mp4",
+      "sha256": "01471804ea0c71d67b400181910031890e9a4bbf3cfd3119b3f125aeb62fa477",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-wireframe-portal-title",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json",
+      "file": "library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4",
+      "bytes": 1330116
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-iskra-light-reference.mp4",
+      "sha256": "cc6db2024953621a0e9522bd9b21b25a1f8a908728b64080efe7728dbfcf15c7",
+      "author": "@world_is_web",
+      "catalogId": "hf-reference-remix-iskra-light",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-iskra-light-reference.mp4",
+      "file": "docs/readme/media/remix-iskra-light-reference.mp4",
+      "bytes": 1544601
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/liquid-glass-widgets.mp4",
+      "sha256": "c283641ad4e60fc9e3bff8cdd30d03996932f8826ebd3414642545ace3ebe95c",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-liquid-glass-widgets",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json",
+      "file": "library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4",
+      "bytes": 6718816
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-cyera-reference.mp4",
+      "sha256": "697ba81ec9e546cd6ee5c7b00ef1f7ef8c2e84cbf012a807e5cc2aacb8c01dd4",
+      "author": "Cyera",
+      "catalogId": "hf-reference-remix-cyera",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-cyera-reference.mp4",
+      "file": "docs/readme/media/remix-cyera-reference.mp4",
+      "bytes": 2475002
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-3d-extrude.mp4",
+      "sha256": "1f5441e6fb83c3c51a0bce1362b8dd3dd18c53b630775c63f029fae5d4c8e337",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-code-3d-extrude",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json",
+      "file": "library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4",
+      "bytes": 4980218
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-glyph-reference.mp4",
+      "sha256": "12dcc01f69dc48cd4f873327749607eee8d12ff06a58cbbeedb24c8349f574bb",
+      "author": "@pmndrs",
+      "catalogId": "hf-reference-remix-glyph",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-glyph-reference.mp4",
+      "file": "docs/readme/media/remix-glyph-reference.mp4",
+      "bytes": 6762950
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/nyc-paris-flight.mp4",
+      "sha256": "99da404b830fc934cf810f602711293a979e403e5e62939677e331c4c4fc6226",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-nyc-paris-flight",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json",
+      "file": "docs/readme/media/nyc-paris-flight.mp4",
+      "bytes": 1914654
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/aurora.mp4",
+      "sha256": "c6b97d82e7be4ee8739905b961f1ee51724d33def002e1fb4bcb0ee94ee267fb",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-aurora",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json",
+      "file": "docs/readme/media/aurora.mp4",
+      "bytes": 42242
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-linear-loops-reference.mp4",
+      "sha256": "c419f12c6e2e339f8490ebf885db92282b2c7cdbd9e427fba4e00c0e51de0223",
+      "author": "@linear",
+      "catalogId": "hf-reference-remix-linear-loops",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/remix-linear-loops-reference.mp4",
+      "file": "docs/readme/media/remix-linear-loops-reference.mp4",
+      "bytes": 2998822
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-particle-assemble.mp4",
+      "sha256": "048f507018c870e3f556b697cef75eb7a084528f3675b5588dcc179026d117a1",
+      "author": "Hyperframes",
+      "catalogId": "hf-block-code-particle-assemble",
+      "sourceUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json",
+      "file": "library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4",
+      "bytes": 5812993
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-reference.mp4",
+      "sha256": "1ea2daf0de95b8146c1e6dce52eb88559571c5bfe37ff99d1ceefd5ed5880f95",
+      "author": "@careerwithriya",
+      "catalogId": "hf-reference-aroll-careerwithriya",
+      "sourceUrl": "https://www.instagram.com/reel/Ddd57MBszhc/",
+      "file": "library/skills/presenter-story/assets/careerwithriya-reference.mp4",
+      "bytes": 9070818
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/dan-martell-tools-reference.mp4",
+      "sha256": "fb5b2eea34bbf2e6fc92330b77c2743611dc4904a69eb5e9a3a5ac4b985c17e9",
+      "author": "Dan Martell",
+      "catalogId": "hf-reference-aroll-dan-martell-tools",
+      "sourceUrl": "https://www.youtube.com/shorts/mk1zJd9Rm4c",
+      "file": "docs/readme/media/dan-martell-tools-reference.mp4",
+      "bytes": 3673325
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/harpercarrollai-reference.mp4",
+      "sha256": "11a126b44792403bc69e854d6d451d7b9098e0e83dcaeb2e5905882c488411fc",
+      "author": "@harpercarrollai",
+      "catalogId": "hf-reference-aroll-harpercarrollai",
+      "sourceUrl": "https://www.instagram.com/reel/C4eNPF3PdpG/",
+      "file": "docs/readme/media/harpercarrollai-reference.mp4",
+      "bytes": 18730206
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-reference.mp4",
+      "sha256": "8ec55cb822578e896d986a98df51fd450cd9c586b1988724e93d25e7ce5a3d9a",
+      "author": "@john.tagudin",
+      "catalogId": "hf-reference-aroll-john-tagudin-capso",
+      "sourceUrl": "https://www.tiktok.com/@john.tagudin/video/7524883942328126728",
+      "file": "library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4",
+      "bytes": 17709474
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/aiwithsachi-reference.mp4",
+      "sha256": "9b44370e49d9621a4e430804464ba201a625fb2c5840e5f448429fda4bd440ec",
+      "author": "@aiwithsachi",
+      "catalogId": "hf-reference-aroll-aiwithsachi",
+      "sourceUrl": "https://www.instagram.com/reel/Dc7G9Pxu_1O/",
+      "file": "docs/readme/media/aiwithsachi-reference.mp4",
+      "bytes": 11976958
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/khris-sheer-founder-reference.mp4",
+      "sha256": "a4469c76e3863e7940b101656456134d88870807cbfc96d5b7bf5f93af123d2f",
+      "author": "@khris.sheer",
+      "catalogId": "hf-reference-aroll-khris-sheer-founder",
+      "sourceUrl": "https://www.tiktok.com/@khris.sheer/video/7491715587895430402",
+      "file": "docs/readme/media/khris-sheer-founder-reference.mp4",
+      "bytes": 4951654
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ugc-rachelll-reference.mp4",
+      "sha256": "d2a1bc75da0e6669e48319eff48b25ee467ba22c0b093604ec17c535e8ea6c38",
+      "author": "@ugc.rachelll",
+      "catalogId": "hf-reference-aroll-ugc-rachelll",
+      "sourceUrl": "https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246",
+      "file": "docs/readme/media/ugc-rachelll-reference.mp4",
+      "bytes": 12873153
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/kevinstratvert-reference.mp4",
+      "sha256": "00439541e4da62dbb60263f0b9c3172d4c61ad242df2ab8f68ec652642886056",
+      "author": "Kevin Stratvert",
+      "catalogId": "hf-reference-aroll-kevinstratvert",
+      "sourceUrl": "https://www.youtube.com/shorts/1fA5j5_5TRY",
+      "file": "docs/readme/media/kevinstratvert-reference.mp4",
+      "bytes": 7621898
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/reference/aroll/careerwithriya-result.mp4",
+      "sha256": "d682e864af5ee41b4fd70f711b2a938c46975bf932a6e360ec7185c8a80c073b",
+      "author": "@careerwithriya",
+      "catalogId": "hf-reference-aroll-careerwithriya",
+      "sourceUrl": "https://www.instagram.com/reel/Ddd57MBszhc/",
+      "file": "library/skills/presenter-story/assets/careerwithriya-result.mp4",
+      "bytes": 16418328
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-result.mp4",
+      "sha256": "773ab14af75d92790c9c38cdb860c8bb3fd88a7ed4f597a24e7f10856fbd2019",
+      "author": "Ali Abdaal",
+      "catalogId": "hf-reference-aroll-ali-abdaal-workflow",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/ali-abdaal-workflow-reference.mp4",
+      "file": "library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4",
+      "bytes": 21178490
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/viral-clone/john-tagudin-capso-result.mp4",
+      "sha256": "334703c3a0407b4f6a17c798ec7d1f85d70d13fdd552b715ac7d9a03267f266b",
+      "author": "@john.tagudin",
+      "catalogId": "hf-reference-aroll-john-tagudin-capso",
+      "sourceUrl": "https://www.tiktok.com/@john.tagudin/video/7524883942328126728",
+      "file": "library/skills/presenter-story/assets/john-tagudin-capso-result.mp4",
+      "bytes": 26677780
+    },
+    {
+      "url": "https://motiontemplates.github.io/385712/assets/demo.mp4",
+      "sha256": "f0c6292cdd60a5ecef003adbc353f3a4c54f96cf93d117ce71ade552b38a3197",
+      "author": null,
+      "catalogId": null,
+      "sourceUrl": "https://github.com/motiontemplates/385712",
+      "file": "library/templates/presenter-tech/preview.mp4",
+      "bytes": 4112668
+    },
+    {
+      "url": "https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4",
+      "sourceUrl": "https://static.heygen.ai/hyperframes-oss/desktop/moments/v5/M945/clip.mp4",
+      "file": "docs/readme/media/M945-clip.mp4",
+      "sha256": "a93f4399faed8577107da8bc7d2e6f5f1a8806da54e42d5388afd87be3049f92",
+      "bytes": 650765
+    }
+  ]
+}

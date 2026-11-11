@@ -1,0 +1,17 @@
+{
+  "entry": [
+    "server.ts",
+    "mcp.ts",
+    "studio/src/main.tsx",
+    "web/{connect,template-gallery}.ts",
+    "tracking/{browser,core,events,node}.ts",
+    "scripts/{resolve-installed,smoke-test-package,test-package}.mjs",
+    "packages/npm/bin/*.mjs"
+  ],
+  "project": [
+    "*.{ts,js,mjs}",
+    "{gateway,shared,web,studio/src,tracking,scripts,packages/npm}/**/*.{ts,tsx,js,jsx,mjs,cjs}",
+    "!**/{dist,fixtures,node_modules}/**",
+    "!**/*.{test,spec}.{ts,tsx,js,jsx,mjs,cjs}"
+  ]
+}

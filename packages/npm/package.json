@@ -1,0 +1,21 @@
+{
+  "name": "@openmotion/app",
+  "repository": { "type": "git", "url": "git+https://github.com/nexu-io/html-anything.git" },
+  "version": "0.6.3-local.1",
+  "private": true,
+  "description": "OpenMotion application, MCP and Skills installer for local Agent hosts",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "bin": {
+    "openmotion": "scripts/npm-installer.mjs"
+  },
+  "files": [
+    "scripts/",
+    "payload/",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "Apache-2.0"
+}

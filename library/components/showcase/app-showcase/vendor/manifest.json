@@ -1,0 +1,61 @@
+{
+  "scope": "Browser dependencies used by this composition, with their original licenses.",
+  "files": [
+    {
+      "file": "gsap-3.14.2/dist/gsap.min.js",
+      "url": "https://registry.npmjs.org/gsap/-/gsap-3.14.2.tgz#dist/gsap.min.js",
+      "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+      "bytes": 72779,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "gsap-3.14.2/README.md",
+      "url": "https://registry.npmjs.org/gsap/-/gsap-3.14.2.tgz#README.md",
+      "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0",
+      "bytes": 6199,
+      "license": "GSAP Standard No Charge License"
+    },
+    {
+      "file": "fonts/dm-sans-2a8e7f713ee7.ttf",
+      "url": "https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwARZthTg.ttf",
+      "sha256": "2a8e7f713ee79fbccdef3cef5c787aff47580299f7da60144961e7db2ec08211",
+      "bytes": 48200,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/dm-sans-376427b53221.ttf",
+      "url": "https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAkJxhTg.ttf",
+      "sha256": "376427b5322148d8de1e03f263bcca4935a2d60ba71d9f94f4947ab664c711ae",
+      "bytes": 48308,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/dm-sans-b0ae3e89a7d3.ttf",
+      "url": "https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAopxhTg.ttf",
+      "sha256": "b0ae3e89a7d3ef2b1838bb4b1ceb0b17cc3435af061eee809d76aa623ff116e9",
+      "bytes": 48280,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/dm-sans.css",
+      "url": "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=block",
+      "sha256": "737f88e9fc65d09cd9d696ce99acb99645acd1b2d9a10dc56e2a1f1e7f26a322",
+      "bytes": 489,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "fonts/dm-sans-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/dmsans/OFL.txt",
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1",
+      "bytes": 4482,
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "gsap-3.14.2/LICENSE.txt",
+      "url": "https://gsap.com/community/standard-license/",
+      "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b",
+      "bytes": 5494,
+      "license": "GSAP Standard No Charge License"
+    }
+  ]
+}

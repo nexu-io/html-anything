@@ -1,0 +1,168 @@
+{
+  "snapshotDate": "2026-11-09",
+  "repository": "nexu-io/html-anything",
+  "scope": "GitHub contributor API snapshot including repository history. Profile images retain their respective rights.",
+  "contributors": [
+    {
+      "login": "joeylee12629-star",
+      "profile": "https://github.com/joeylee12629-star",
+      "file": "joeylee12629-star.png",
+      "sha256": "1f24de913b627e2184378e240cd4f8407b6996bd2ddc10d09c45196caf8b4bb2",
+      "source": "https://avatars.githubusercontent.com/u/236967869?v=4&s=80"
+    },
+    {
+      "login": "pftom",
+      "profile": "https://github.com/pftom",
+      "file": "pftom.png",
+      "sha256": "66a79a94a19a03f69f4da53477742b39d5b9c0646b013b0cc7fad3aaa8c8d6cd",
+      "source": "https://avatars.githubusercontent.com/u/26423749?v=4&s=80"
+    },
+    {
+      "login": "wuwangzhang1216",
+      "profile": "https://github.com/wuwangzhang1216",
+      "file": "wuwangzhang1216.png",
+      "sha256": "888b3086216ba27cee6d215f401e6bd0bae4ff44809a355f316bae4c856d6c6f",
+      "source": "https://avatars.githubusercontent.com/u/60851473?v=4&s=80"
+    },
+    {
+      "login": "TuYv",
+      "profile": "https://github.com/TuYv",
+      "file": "TuYv.png",
+      "sha256": "5713864b383e8f135e5fd94bb7f57d17b301681714dfa5e3993f64081d9095fe",
+      "source": "https://avatars.githubusercontent.com/u/22782479?v=4&s=80"
+    },
+    {
+      "login": "chasel34",
+      "profile": "https://github.com/chasel34",
+      "file": "chasel34.png",
+      "sha256": "8c63a5c325d9bcbd6b02a90b42725277291649ed63335939f62b88e043639b4b",
+      "source": "https://avatars.githubusercontent.com/u/23191158?v=4&s=80"
+    },
+    {
+      "login": "C1-BA-B1-F3",
+      "profile": "https://github.com/C1-BA-B1-F3",
+      "file": "C1-BA-B1-F3.png",
+      "sha256": "0cdb2733eeab2b5ca38dfdd86c182326267777d34846310371d673cf6efe861e",
+      "source": "https://avatars.githubusercontent.com/u/29366093?v=4&s=80"
+    },
+    {
+      "login": "ttoyekk1a",
+      "profile": "https://github.com/ttoyekk1a",
+      "file": "ttoyekk1a.png",
+      "sha256": "dcd9ca4a141e5440b97346f0cfd2d78d48fcf9ca5c473e5f38d5067b67151588",
+      "source": "https://avatars.githubusercontent.com/u/160809620?v=4&s=80"
+    },
+    {
+      "login": "kokiainet",
+      "profile": "https://github.com/kokiainet",
+      "file": "kokiainet.png",
+      "sha256": "9b9d86a82aabd1cef06cd37aa6c6c614df623b6dfb209e5bd86e79fb8f977631",
+      "source": "https://avatars.githubusercontent.com/u/238133142?v=4&s=80"
+    },
+    {
+      "login": "fredkwok-it",
+      "profile": "https://github.com/fredkwok-it",
+      "file": "fredkwok-it.png",
+      "sha256": "881903b01d6febf0f73121f5bad4dda04f44f92dbb4fec1a8449c6edfd84bebe",
+      "source": "https://avatars.githubusercontent.com/u/126315124?v=4&s=80"
+    },
+    {
+      "login": "jhinzzz",
+      "profile": "https://github.com/jhinzzz",
+      "file": "jhinzzz.png",
+      "sha256": "5db7e89f8a18d544ad7df4277417b8565cd4499f6511e612a3dbd9f3836d69d9",
+      "source": "https://avatars.githubusercontent.com/u/63711960?v=4&s=80"
+    },
+    {
+      "login": "cszhouwei",
+      "profile": "https://github.com/cszhouwei",
+      "file": "cszhouwei.png",
+      "sha256": "5769ec92a981bdb69071b5689cb7c539ecd1b6980fbd4df3a82841c74800723e",
+      "source": "https://avatars.githubusercontent.com/u/1811726?v=4&s=80"
+    },
+    {
+      "login": "tackcrypto1031",
+      "profile": "https://github.com/tackcrypto1031",
+      "file": "tackcrypto1031.png",
+      "sha256": "528c2eb9b0cce4ca6e9020c5eb1d9545ce850ecd06bdf6184271b54a04c1f6bb",
+      "source": "https://avatars.githubusercontent.com/u/170688654?v=4&s=80"
+    },
+    {
+      "login": "fix2015",
+      "profile": "https://github.com/fix2015",
+      "file": "fix2015.png",
+      "sha256": "ce217409680055492d16533eb47b8b2aa1cddd597b874e57060ccd66f35f71ea",
+      "source": "https://avatars.githubusercontent.com/u/3988392?v=4&s=80"
+    },
+    {
+      "login": "ZhongXiandou",
+      "profile": "https://github.com/ZhongXiandou",
+      "file": "ZhongXiandou.png",
+      "sha256": "6bdfb634be918cfca4d6c0f035d085bf6813aa9d1ac830b473ae1d89b7de9e01",
+      "source": "https://avatars.githubusercontent.com/u/10594888?v=4&s=80"
+    },
+    {
+      "login": "PerishCode",
+      "profile": "https://github.com/PerishCode",
+      "file": "PerishCode.png",
+      "sha256": "4a5923b44e48ad48ea752c951352f31a6013d9818f16e3713a8a424ebcee0e42",
+      "source": "https://avatars.githubusercontent.com/u/39043006?v=4&s=80"
+    },
+    {
+      "login": "octo-patch",
+      "profile": "https://github.com/octo-patch",
+      "file": "octo-patch.png",
+      "sha256": "d108a31fd5b032fad1aaa1011cc290ebc0af720d7dca5a0b28992fe478207798",
+      "source": "https://avatars.githubusercontent.com/u/266937838?v=4&s=80"
+    },
+    {
+      "login": "mrcfps",
+      "profile": "https://github.com/mrcfps",
+      "file": "mrcfps.png",
+      "sha256": "ec8f7ebbc690ca76d135b2ba44eaf5fb3e6ad919fe07949a0c6b55a08ecf3e6c",
+      "source": "https://avatars.githubusercontent.com/u/23410977?v=4&s=80"
+    },
+    {
+      "login": "Link-990",
+      "profile": "https://github.com/Link-990",
+      "file": "Link-990.png",
+      "sha256": "8103207a980bc641073428277fb908a3985176f395d6e54e72a3f5b0fd159f32",
+      "source": "https://avatars.githubusercontent.com/u/207402464?v=4&s=80"
+    },
+    {
+      "login": "lxyAK",
+      "profile": "https://github.com/lxyAK",
+      "file": "lxyAK.png",
+      "sha256": "b70d5425ef18acec670782dc29b9486829359b802007463206abda262322d6f8",
+      "source": "https://avatars.githubusercontent.com/u/71996230?v=4&s=80"
+    },
+    {
+      "login": "GHX5T-SOL",
+      "profile": "https://github.com/GHX5T-SOL",
+      "file": "GHX5T-SOL.png",
+      "sha256": "577c0d5734502d32a72bdab34987a58635e53ce7787009cf7ba229f9eb38f3c9",
+      "source": "https://avatars.githubusercontent.com/u/200635707?v=4&s=80"
+    },
+    {
+      "login": "FaintFlower",
+      "profile": "https://github.com/FaintFlower",
+      "file": "FaintFlower.png",
+      "sha256": "d633336ad27fa8614cbf986f3714664bda9a5c6c681700536b4a615e09a55703",
+      "source": "https://avatars.githubusercontent.com/u/310248465?v=4&s=80"
+    },
+    {
+      "login": "chenmofei",
+      "profile": "https://github.com/chenmofei",
+      "file": "chenmofei.png",
+      "sha256": "8cfec1453fd3274c6097436f08cd0280930687321f34a2daffebbd70afb82361",
+      "source": "https://avatars.githubusercontent.com/u/8311888?v=4&s=80"
+    },
+    {
+      "login": "aaronjmars",
+      "profile": "https://github.com/aaronjmars",
+      "file": "aaronjmars.png",
+      "sha256": "d9dfe69dec505414799b02f13c5792e8706437562d9665d4152fa54a4dbbd5b7",
+      "source": "https://avatars.githubusercontent.com/u/61592645?v=4&s=80"
+    }
+  ]
+}

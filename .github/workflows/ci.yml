@@ -1,51 +1,183 @@
-name: CI
+name: Motion standalone checks
 
+# Motion has an independent npm lockfile and release contract; this workflow
+# validates that distribution without changing OD's application merge gate.
 on:
   pull_request:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      format:
+        description: 'Build self-contained npm application artifacts or complete ZIP backups'
+        type: choice
+        options: [npm, full]
+        default: npm
+      template_environment:
+        description: 'Template configuration platform used by the package'
+        type: choice
+        options: [dev, prod]
+        default: dev
+      publish:
+        description: 'Publication is disabled during migration; leave unchecked'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
-jobs:
-  public-checks:
-    name: Public checks
-    runs-on: ubuntu-24.04
+concurrency:
+  group: motion-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+jobs:
+  maintainability:
+    name: Maintainability report
+    if: github.event_name == 'pull_request' && github.base_ref == 'feature/motion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout PR merge result
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup pinned Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            .github/maintainability/package-lock.json
+      - name: Compare source against the PR base
+        shell: bash
+        env:
+          PR_HEAD_REVISION: ${{ github.event.pull_request.head.sha }}
+        run: |
+          test "$(git rev-parse HEAD^2)" = "$PR_HEAD_REVISION"
+          BASE_REVISION=$(git rev-parse HEAD^1)
+          base_dir=$(mktemp -d "$RUNNER_TEMP/motion-base.XXXXXX")
+          git archive "$BASE_REVISION" | tar -x -C "$base_dir"
+          npm ci --prefix "$base_dir" --ignore-scripts --no-audit --no-fund
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix .github/maintainability --ignore-scripts --no-audit --no-fund
+          node .github/maintainability/report.mjs "$base_dir" "$BASE_REVISION" >> "$GITHUB_STEP_SUMMARY"
+
+  standalone:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: bash
+    env:
+      OPENMOTION_TELEMETRY: '0'
+      HYPERFRAMES_BROWSER_PATH: /usr/bin/google-chrome
+      HYPERFRAMES_FFMPEG_PATH: /usr/bin/ffmpeg
+      HYPERFRAMES_FFPROBE_PATH: /usr/bin/ffprobe
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/checkout@v6.0.2
+      - name: Setup pinned Node
+        uses: actions/setup-node@v6
         with:
-          node-version: "24"
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Guard project shape
-        run: pnpm exec tsx scripts/guard.ts
-
-      - name: Typecheck app
-        run: pnpm -F @html-anything/next typecheck
-
-      - name: Typecheck e2e
-        run: pnpm -F @html-anything/e2e typecheck
-
-      - name: App unit tests
-        run: pnpm -F @html-anything/next test
-
-      - name: Build
-        run: pnpm -F @html-anything/next build
-
-      - name: Install Playwright browser
-        run: pnpm -F @html-anything/e2e exec playwright install --with-deps chromium
-
-      - name: E2E smoke
-        run: pnpm -F @html-anything/e2e test
+          node-version: '26.11.1'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Restore rendering package downloads
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/motion-rendering-apt/*.deb
+          # Cache entries are immutable, so save under a per-run key and restore the newest entry by prefix.
+          key: rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-
+      - name: Install rendering test tools
+        run: |
+          # The hosted Ubuntu image provides Chrome; Ubuntu's chromium package pulls a desktop snap.
+          "$HYPERFRAMES_BROWSER_PATH" --version
+          missing=()
+          for package in zip unzip ffmpeg fonts-noto-core; do
+            if [ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null)" != 'install ok installed' ]; then
+              missing+=("$package")
+            fi
+          done
+          if ((${#missing[@]})); then
+            mkdir -p "$RUNNER_TEMP/motion-rendering-apt/partial"
+            apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30
+              -o "Dir::Cache::archives=$RUNNER_TEMP/motion-rendering-apt" -o APT::Keep-Downloaded-Packages=true)
+            # Hosted runners already have package indexes. Refresh only if installation needs it.
+            if ! sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"; then
+              sudo apt-get "${apt_options[@]}" update
+              sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
+            fi
+            du -sh "$RUNNER_TEMP/motion-rendering-apt/"*.deb
+          fi
+      - name: Validate manual package selection
+        env:
+          PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
+          PUBLISH: ${{ inputs.publish || false }}
+        run: |
+          if [ "$PUBLISH" = true ]; then echo 'Motion publishing is disabled during migration.' >&2; exit 1; fi
+          case "$PACKAGE_FORMAT" in
+            npm|full) ;;
+            *) echo 'Unknown package format' >&2; exit 1 ;;
+          esac
+      - name: Scan tracked source and test release controls without publication credentials
+        run: |
+          node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
+          node .github/scripts/motion-scan.mjs source . "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
+          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/registry-download.test.mjs tests/stable-release.test.mjs
+      - name: Install locked Motion dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Check and build Studio
+        run: |
+          npm run check
+          npm run typecheck:studio
+          npm run build:studio
+          npm run build:tracking
+          node --experimental-strip-types --test tests/tracking.test.ts
+      - name: Validate standalone installation and packaging
+        run: node --experimental-strip-types --test tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
+      - name: Studio regression
+        run: npm run test:studio -- --maxWorkers=2
+      - name: Build phase-one ZIP and exercise all public tools
+        run: |
+          npm run package:phase1
+          archive="$PWD/dist/motion-$(node -p "require('./package.json').version")-phase1.zip"
+          node tests/phase1-package.mjs "$archive" "$PWD/.artifacts/phase1-package-e2e"
+      - name: Build immutable standalone artifacts
+        env:
+          PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
+          TEMPLATE_ENVIRONMENT: ${{ inputs.template_environment || 'dev' }}
+        run: |
+          version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
+          if [ "$PACKAGE_FORMAT" = npm ]; then
+            node scripts/package-npm.mjs "dist/$version" "$version" --template-env="$TEMPLATE_ENVIRONMENT"
+          else
+            for target in mac-arm64 win-x64; do
+              node scripts/test-package.mjs prepare "$target"
+              node scripts/test-package.mjs build "$target" "$version" --template-env="$TEMPLATE_ENVIRONMENT"
+            done
+          fi
+      - name: Generate candidate installation guide
+        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
+        run: |
+          version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
+          candidate=$(node --input-type=module -e 'import fs from "node:fs"; const m=JSON.parse(fs.readFileSync(process.argv[1]));process.stdout.write(m.installer.url.replace(/^\.\//,""));' "dist/$version/release-npm.json")
+          node --experimental-strip-types scripts/install-guide.mjs "dist/$version/$candidate" .artifacts/install-guide --candidate
+          node .github/scripts/motion-scan.mjs package "dist/$version/$candidate" "$RUNNER_TEMP/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
+      - name: Retain candidate installation guide for review
+        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: motion-install-guide-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .artifacts/install-guide/install.md
+            .artifacts/install-guide/install-record.json
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: error
+      - name: Record validation scope
+        run: |
+          echo 'Motion artifacts were built and checked; the candidate guide is a review artifact only. No npm, R2 or Release publication occurred.' >> "$GITHUB_STEP_SUMMARY"

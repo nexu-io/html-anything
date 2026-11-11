@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144" height="34" viewBox="0 0 144 34">
+  <title>Kimi CLI</title>
+  <rect x=".5" y=".5" width="143" height="33" rx="7" fill="#f6f8fa" stroke="#d1d9e0"/>
+  <image x="12" y="6" width="22" height="22" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzE3ODNmZiIgZD0iTTIxLjg0NiAwYTEuOTIzIDEuOTIzIDAgMSAxIDAgMy44NDZIMjAuMTVhLjIyNi4yMjYgMCAwIDEtLjIyNy0uMjI2VjEuOTIzQzE5LjkyMy44NjEgMjAuNzg0IDAgMjEuODQ2IDAiLz48cGF0aCBmaWxsPSIjNjY2NjY2IiBkPSJtMTEuMDY1IDExLjE5OSA3LjI1Ny03LjJjLjEzNy0uMTM2LjA2LS40MS0uMTE2LS40MUgxNC4zYS4xNi4xNiAwIDAgMC0uMTE3LjA1MWwtNy44MiA3Ljc1NmMtLjEyMi4xMi0uMzAyLjAxMy0uMzAyLS4xNzlWMy44MmMwLS4xMjctLjA4My0uMjMtLjE4NS0uMjNoLTIuNjljLS4xMDMgMC0uMTg2LjEwMy0uMTg2LjIzdjE1Ljk1YzAgLjEyOC4wODMuMjMuMTg2LjIzaDIuNjljLjEwMyAwIC4xODYtLjEwMi4xODYtLjIzdi0zLjI1YS4yNS4yNSAwIDAgMSAuMDY5LS4xNzhsMi40MjQtMi40MDZhLjE2LjE2IDAgMCAxIC4yMDUtLjAyM2w2LjQ4NCA0Ljc3MmE3LjcgNy43IDAgMCAwIDMuNDUzIDEuMjgzYy4xMDguMDEyLjItLjA5NS4yLS4yM3YtMy4wNmMwLS4xMTctLjA3LS4yMTItLjE2NC0uMjI3YTUgNSAwIDAgMS0yLjAyNy0uODA3bC01LjYxMy00LjA2NGMtLjExNy0uMDc4LS4xMzItLjI3OS0uMDI4LS4zODEiLz48L3N2Zz4K"/>
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <text x="40" y="22" font-weight="600" font-size="13" fill="#24292f">Kimi CLI</text>
+  </g>
+</svg>

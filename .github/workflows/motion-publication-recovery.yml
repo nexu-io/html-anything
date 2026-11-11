@@ -3,15 +3,15 @@ name: Motion snapshot recovery
 on:
   workflow_dispatch:
     inputs:
+      channel:
+        description: 'Channel of the existing version; snapshots only, no tag or default-guide changes'
+        type: choice
+        options: [test, stable]
+        default: test
       version:
         description: 'Exact existing candidate version; the identical package must already be public on npm'
         type: string
         required: true
-      accepted:
-        description: 'I verified this exact candidate and authorize snapshot-only recovery'
-        type: boolean
-        required: true
-        default: false
 
 permissions:
   contents: read
@@ -36,7 +36,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/motion-publish-test.yml
     with:
+      channel: ${{ inputs.channel || 'test' }}
       version: ${{ inputs.version }}
-      accepted: ${{ inputs.accepted }}
       archive_only: true
     secrets: inherit
