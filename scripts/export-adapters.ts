@@ -36,6 +36,16 @@ export async function exportAdapters(runtimePath: string, dataPath: string, outp
   };
   const manifestFile = path.join(runtime, '.codex-plugin/plugin.json');
   const runtimeManifest = await exists(manifestFile) ? JSON.parse(await readFile(manifestFile, 'utf8')) : null;
+  assert(runtimeManifest === null || (typeof runtimeManifest === 'object' && !Array.isArray(runtimeManifest)), 'Invalid runtime plugin manifest.');
+  const manifestText = (value: unknown, field: string) => {
+    if (value === undefined) return undefined;
+    assert(typeof value === 'string' && value.trim().length > 0, `Invalid runtime plugin manifest ${field}; host discovery requires a non-empty string.`);
+    return value;
+  };
+  const runtimeInterface = runtimeManifest?.interface;
+  assert(runtimeInterface === undefined || (typeof runtimeInterface === 'object' && runtimeInterface !== null && !Array.isArray(runtimeInterface)), 'Invalid runtime plugin manifest interface.');
+  const manifestDescription = manifestText(runtimeManifest?.description, 'description');
+  const manifestShortDescription = manifestText(runtimeInterface?.shortDescription, 'interface.shortDescription');
   const profileFile = path.join(runtime, 'shared/mcp-release.json');
   const mcpProfile = await exists(profileFile) ? JSON.parse(await readFile(profileFile, 'utf8')).profile : 'legacy';
   assert(['legacy', 'phase1'].includes(mcpProfile), 'Invalid runtime MCP release profile.');
@@ -90,10 +100,10 @@ export async function exportAdapters(runtimePath: string, dataPath: string, outp
       }
       else {
         const manifest = { name: 'motion', version: pkg.version,
-          description: runtimeManifest?.description ?? 'OpenDesign Motion with the shared local MCP runtime.',
+          description: manifestDescription ?? 'OpenDesign Motion with the shared local MCP runtime.',
           author: { name: 'OpenDesign' }, skills: './skills/', mcpServers: './.mcp.json' };
         text(`.${host}-plugin/plugin.json`, host === 'codex' ? { ...manifest, requires_local_executor: true,
-          interface: { displayName: 'OpenDesign', shortDescription: runtimeManifest?.interface?.shortDescription ?? 'Motion production with the shared local runtime.' } } : manifest);
+          interface: { displayName: 'OpenDesign', shortDescription: manifestShortDescription ?? 'Motion production with the shared local runtime.' } } : manifest);
         text('.mcp.json', host === 'codex' ? { mcpServers: { motion: info.transport } } : integrationConfig(info, 'mcp').text);
       }
       const directory = path.join(output, host, 'openmotion');

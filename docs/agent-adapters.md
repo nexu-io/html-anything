@@ -83,7 +83,7 @@ claude plugin list --json
 
 Codex 声明 `requires_local_executor`；两家原生插件均引用同一外置 Node、bootstrap、MCP 入口和数据目录。marketplace 位于各自插件 ZIP 外，原生安装使用生成的 `codex/` 或 `claude/` 目录。同名旧 `motion-local`、`openmotion-test` 或手动 MCP 已启用时，先核对、选择一个连接，避免重复加载。
 
-Generated Codex and Claude plugin descriptions reuse the selected runtime's `.codex-plugin/plugin.json` discovery description, and Codex also retains its short description. Older runtimes without that manifest retain the generic adapter description. The five Skills carry their own intent descriptions across plugin and npm installation paths. Regenerate adapters after updating this metadata and refresh the host's discovery as described in [installation and recovery](npm-installation.md#missing-mcp-tools-or-a-failed-connection).
+Generated Codex and Claude plugin descriptions reuse the selected runtime's `.codex-plugin/plugin.json` discovery description, and Codex also retains its short description. Older runtimes without that manifest retain the generic adapter description, while an invalid manifest (a non-object manifest or interface, or an empty/non-string `description` or `interface.shortDescription`) is rejected with a clear error before any adapter is written. The five Skills carry their own intent descriptions across plugin and npm installation paths. Regenerate adapters after updating this metadata and refresh the host's discovery as described in [installation and recovery](npm-installation.md#missing-mcp-tools-or-a-failed-connection).
 
 独立验证使用临时 `CODEX_HOME` / `CLAUDE_CONFIG_DIR`，安装后读取宿主实际解析的启动配置，检查工具和 `motion_get_project.dataDirectory`。卸载仅移除薄入口，保留外置运行时和用户数据。旧自带服务源码的 `check-installed-mcp.mjs` / `resolve-installed.mjs` 不用于新适配器缓存；本轮不改变旧安装器行为。
 

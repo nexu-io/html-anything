@@ -127,6 +127,34 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
+test('adapter export rejects invalid runtime discovery manifest fields', async () => {
+  const directory = await realpath(await mkdtemp(path.join(tmpdir(), 'motion-adapter-manifest-')));
+  try {
+    const data = path.join(directory, 'projects'), runtime = path.join(directory, 'runtime');
+    await mkdir(path.join(runtime, 'skills'), { recursive: true }); await mkdir(path.join(runtime, 'docs'));
+    for (const name of ['AGENTS.md', 'CLAUDE.md', 'mcp.ts']) await writeFile(path.join(runtime, name), '');
+    await mkdir(path.join(runtime, 'web/design-system'), { recursive: true });
+    for (const name of ['icons.svg', 'remix-icon-LICENSE.txt', 'remix-icon-NOTICE.txt']) await cp(path.join(source, 'web/design-system', name), path.join(runtime, 'web/design-system', name));
+    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ version: '0.6.3' }));
+    await mkdir(path.join(runtime, '.codex-plugin'));
+    const manifestFile = path.join(runtime, '.codex-plugin/plugin.json');
+    const cases: [unknown, RegExp][] = [
+      [[], /Invalid runtime plugin manifest\./],
+      [{ description: 42 }, /manifest description/],
+      [{ description: '' }, /manifest description/],
+      [{ description: 'Motion discovery', interface: 7 }, /manifest interface/],
+      [{ description: 'Motion discovery', interface: { shortDescription: 42 } }, /interface\.shortDescription/],
+      [{ description: 'Motion discovery', interface: { shortDescription: '   ' } }, /interface\.shortDescription/],
+    ];
+    for (const [index, [manifest, message]] of cases.entries()) {
+      await writeFile(manifestFile, JSON.stringify(manifest));
+      const output = path.join(directory, `adapters-${index}`);
+      await assert.rejects(exportAdapters(runtime, data, output), message);
+      assert.equal(existsSync(output), false, 'Invalid discovery metadata must be rejected before adapters are written');
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
 test('failed adapter writes remove only the new output and preserve runtime and user data', async () => {
   const directory = await realpath(await mkdtemp(path.join(tmpdir(), 'motion-adapter-failure-')));
   try {
