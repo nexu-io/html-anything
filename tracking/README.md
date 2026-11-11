@@ -105,6 +105,15 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
 
 ## Implemented signals and limits
 
+An optional count-aggregation pilot can replace `ui_click` with
+`ui_click_count` before Node delivery. It is **off by default** and selected per
+event through constructor options or `OPENMOTION_TRACKING_AGGREGATION` startup
+configuration. Existing business calls stay unchanged; other events remain raw.
+Summaries retain all semantic dimensions and trusted installation/source context.
+Report usage with `sum(count)`, including raw records during mixed rollouts.
+The pilot shares the process-local queue and has no crash-recovery guarantee.
+See [configuration, counting semantics and limits](INTEGRATION.md#opt-into-count-aggregation-at-the-reporting-boundary).
+
 - All eleven phase-one stdio tools: accepted start and observed finish, including
   early-return catalog tools, input rejection, partial import and idempotent replay.
 - Domain results: create/open/edit/import/restore and export request/cancel. Replayed

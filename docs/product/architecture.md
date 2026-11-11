@@ -246,6 +246,15 @@ flowchart LR
 
 The runtime includes an explicit-event tracking package shared by MCP and Studio. Stable releases collect by default; test/prerelease/local application versions are locked off regardless of the saved preference or launch overrides. The test-build Privacy switch explains the lock without overwriting the saved stable-release choice. Shared-backend discovery rejects test/stable cross-policy reuse rather than allowing a reporting authority to execute test actions. In stable releases, a persistent user preference can stop collection for the whole installation and resume new reports when enabled again; discarded events are not replayed. Environment force-off controls still take priority. Studio submits allowlisted events to the local service; Node adds a random installation identity before asynchronous ingestion into the existing OpenDesign PostHog project. OM events carry product=openmotion; queries must distinguish products. An OM-only transformation preserves coarse country/region/timezone and removes raw IP and precise location after the existing GeoIP transformation, without changing other OpenDesign events or global project settings. The implementation covers tool results, selected domain operations and selected Studio interactions; it does not establish a product analytics baseline or implement every proposed event. See [tracking configuration, privacy and coverage](../../tracking/README.md).
 
+Node reporting has a default-off, per-event count-aggregation pilot for `ui_click`.
+It replaces selected raw events with `ui_click_count` summaries while preserving
+all click dimensions, installation identity and source. Startup configuration
+cannot bypass collection controls; Studio still submits validated raw events to
+the local service. Queries must sum summary counts and retain raw events for
+unselected signals. The queue remains process-local and best-effort; crash-safe
+delivery and preservation of detailed paths/funnels are not claimed. See the
+[pilot contract](../../tracking/INTEGRATION.md#opt-into-count-aggregation-at-the-reporting-boundary).
+
 The following product measures still require agreed observation windows and validated evidence:
 
 | 指标 | 建议定义 | 用途 |
