@@ -121,6 +121,9 @@ export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelPro
   const clipboardTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const timelineElements = usePlayerStore((s) => s.elements);
   const selectedElementId = usePlayerStore((s) => s.selectedElementId);
+  const hasVisibilityTarget = selectedElementId !== null
+    && timelineElements.some((item) => (item.key ?? item.id) === selectedElementId);
+  const toggleTimelineVisibility = hasVisibilityTarget ? onToggleElementHidden : undefined;
   const selectedElementHidden = isSelectedElementHidden(timelineElements, selectedElementId);
   const visibilityToggleLabel = selectedElementHidden ? "Show element" : "Hide element";
   // Audio gets no visibility toggle in this classic panel; the timeline and the flat panel offer it as a mute.
@@ -261,6 +264,7 @@ export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelPro
     return (
       <PropertyPanelFlat
         {...props}
+        onToggleElementHidden={toggleTimelineVisibility}
         key={selectionIdentityKey(element)}
         element={element}
         styles={styles}
@@ -314,7 +318,7 @@ export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelPro
               selectedElementId={selectedElementId}
               selectedElementHidden={selectedElementHidden}
               visibilityLabel={visibilityToggleLabel}
-              onToggleHidden={audioSelection ? undefined : onToggleElementHidden}
+              onToggleHidden={audioSelection ? undefined : toggleTimelineVisibility}
             />
           </div>
         </div>

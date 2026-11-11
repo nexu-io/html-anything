@@ -194,9 +194,9 @@ export const SnapToolbar = memo(function SnapToolbar() {
         {gridPopoverOpen && (
           <div
             ref={popoverRef}
-            className="absolute right-0 top-full mt-1 rounded-lg bg-raised border border-border p-3 shadow-xl min-w-[180px]"
+            className="absolute right-0 top-full mt-1 min-w-[180px] rounded-lg border border-border bg-raised p-3 text-text-0 shadow-xl"
           >
-            <label className="flex items-center justify-between text-xs text-white/80 mb-2">
+            <label className="mb-2 flex items-center justify-between gap-2 text-xs">
               <span>{t("Grid spacing")}</span>
               <input
                 type="number"
@@ -222,10 +222,10 @@ export const SnapToolbar = memo(function SnapToolbar() {
                     updatePrefs({ gridSpacing: val });
                   }
                 }}
-                className="w-16 rounded-sm bg-neutral-900 border border-neutral-600 px-1.5 py-0.5 text-xs text-white text-right tabular-nums outline-hidden focus:border-studio-accent"
+                className="w-16 rounded-sm border border-border bg-bg-0 px-1.5 py-0.5 text-right text-xs text-text-0 tabular-nums outline-hidden focus:border-studio-accent"
               />
             </label>
-            <label className="flex items-center gap-2 text-xs text-white/80 cursor-pointer">
+            <label className="flex cursor-pointer items-center gap-2 text-xs">
               <input
                 type="checkbox"
                 checked={prefs.snapToGrid}

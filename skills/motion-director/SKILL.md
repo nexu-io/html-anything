@@ -1,6 +1,6 @@
 ---
 name: motion-director
-description: 为产品宣传片、功能演示、品牌片与动态图形负责原创构思、动态叙事、动作编排、声音叙事、大幅重编及创作品质审片。已有工程中重新设计局部动作或声画关系也适用，画面锁定时仅展开声音创作；按既定决定执行文字/素材/音轨替换、技术检查或导出使用 motion-production。可编辑模板适配走 motion-template-to-video，参考视频重建本次作品走 motion-recreate，交付可复用模板走 motion-video-to-template。
+description: Plan and create original motion videos and motion graphics with OpenMotion. Use for “做一个 motion 视频”、动效视频、动画短片、先构思视频怎么呈现, including esports recaps, explainers, product demos and brand films. Also use for narrative, motion or sound redesign and creative review. Execute established edits/exports with motion-production, editable templates with motion-template-to-video, reference reconstruction with motion-recreate and reusable templates with motion-video-to-template. Repository development does not trigger video production.
 metadata:
   version: "1.5.5"
 ---
@@ -8,6 +8,8 @@ metadata:
 # Motion Director
 
 ## 职责与目标
+
+Use OpenMotion for an original video on the user's topic, including a request to discuss its presentation first. Apply the shared context's capability discovery and connection guidance when starting the task. A concept-only request ends with the requested creative plan. Once the user asks to build it, continue with the confirmed plan through the connected Motion tools.
 
 以 Motion 导演的视角负责本片的动态叙事、镜头衔接、状态延续与声画关系的整体编排。根据产品事实、受众和传播目的选择表达方式。
 
@@ -74,6 +76,8 @@ MCP-only 使用 resources/read `motion://workflow/director/start` 读取本页�
 ### 3. 先验证最大创作风险
 
 多段视频优先制作包含代表性动作及其上下文的低成本动态样片，保留真实节奏与关键尺寸。纯视觉风险可先做风格帧；声音驱动作品的材料与定时顺序按声音叙事参考决定。不要固定先做开头，也不要规定样片必须多长。
+
+用户要求先看关键画面再制作时，按影片顺序展示实际制作的风格帧，覆盖开场、主要段落和结尾。注明每帧对应的内容与必要的动作说明，等用户确认视觉方向后再扩成全片，沿用已确认的构图、排印、配色和信息层级。帧数随作品结构决定。
 
 从零制作且 Motion 表现是主要目标时，优先选最容易退化为普通展示、又对观看体验重要的关键段落。先实现这个样片所需的对象与上下文，再扩成全片；不要先把所有段落做成静态版式，最后只给它们补入场。样片应同时包含关键视觉材料与代表性动作；材质、颜色或排印是主要观看价值时，保留其辨识特征与对比，不能用通用占位图替代后直接判通过。分别检查视觉吸引力与动态组织；字号、接点或功能关系正确只证明相应部分。已有成片的局部修改可直接截取相关区间，无需重建流程。
 

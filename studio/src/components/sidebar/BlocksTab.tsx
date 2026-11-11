@@ -17,9 +17,12 @@ import { usePlayerStore } from "../../player";
 import { formatTime } from "../../player/lib/time";
 import { useStudioShellContext } from "../../contexts/StudioContext";
 import { TIMELINE_BLOCK_MIME } from "../../utils/timelineAssetDrop";
+import blurInPosterUrl from "./blur-in-preview.svg?url";
 export interface BlockPreviewInfo {
   videoUrl?: string;
   posterUrl?: string;
+  onVideoError?: (url: string) => void;
+  onPosterError?: (url: string) => void;
   title: string;
 }
 
@@ -101,7 +104,7 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
                   duration={dur}
                   category={block.category}
                   tags={block.tags}
-                  posterUrl={block.preview?.poster}
+                  posterUrl={block.name === "blur-in" ? blurInPosterUrl : block.preview?.poster}
                   videoUrl={block.preview?.video}
                   onPreview={onPreviewBlock}
                   onShowPrompt={setPromptModal}
@@ -275,17 +278,30 @@ function BlockCard({
 }) {
   const { t } = useI18n();
   const [hovered, setHovered] = useState(false);
+  const [failedPoster, setFailedPoster] = useState<string>();
+  const [failedVideo, setFailedVideo] = useState<string>();
   const [addState, setAddState] = useState<"idle" | "adding" | "added" | "failed">("idle");
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const colors = getCategoryColors(category);
   const needsWebGL = tags?.includes("html-in-canvas") || tags?.includes("webgl");
+  const poster = posterUrl !== failedPoster ? posterUrl : undefined;
+  const video = videoUrl !== failedVideo ? videoUrl : undefined;
 
   const handleEnter = useCallback(() => {
-    hoverTimer.current = setTimeout(() => {
-      setHovered(true);
-      onPreview?.({ videoUrl, posterUrl, title });
-    }, 300);
-  }, [onPreview, videoUrl, posterUrl, title]);
+    hoverTimer.current = setTimeout(() => setHovered(true), 300);
+  }, []);
+
+  useEffect(() => {
+    if (!hovered || (!video && !poster) || !onPreview) return;
+    onPreview({
+      videoUrl: video,
+      posterUrl: poster,
+      onVideoError: setFailedVideo,
+      onPosterError: setFailedPoster,
+      title,
+    });
+    return () => onPreview(null);
+  }, [hovered, onPreview, video, poster, title]);
 
   const handleLeave = useCallback(() => {
     if (hoverTimer.current) {
@@ -293,8 +309,7 @@ function BlockCard({
       hoverTimer.current = null;
     }
     setHovered(false);
-    onPreview?.(null);
-  }, [onPreview]);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -367,29 +382,23 @@ function BlockCard({
       onPointerLeave={handleLeave}
     >
       <div className="aspect-video w-full overflow-hidden relative">
-        {hovered && videoUrl ? (
+        {video && (hovered || !poster) ? (
           <video
-            src={videoUrl}
-            autoPlay
+            src={video}
+            autoPlay={hovered}
+            preload="metadata"
+            onError={() => setFailedVideo(video)}
             muted
             loop
             playsInline
             className="w-full h-full object-cover"
           />
-        ) : posterUrl ? (
-          <img src={posterUrl} alt={title} loading="lazy" className="w-full h-full object-cover" />
-        ) : videoUrl ? (
-          <video
-            src={videoUrl}
-            muted
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-cover"
-          />
+        ) : poster ? (
+          <img src={poster} alt={title} loading="lazy" onError={() => setFailedPoster(poster)} className="w-full h-full object-cover" />
         ) : (
-          <div className={`w-full h-full flex items-center justify-center ${colors.bg}`}>
-            <span className={`text-[9px] font-medium ${colors.text}`}>
-              {t(BLOCK_CATEGORIES.find((c) => c.id === category)?.label ?? category)}
+          <div className="flex h-full w-full items-center justify-center bg-panel-bg">
+            <span className="text-[10px] text-panel-text-3">
+              {t("Preview unavailable")}
             </span>
           </div>
         )}

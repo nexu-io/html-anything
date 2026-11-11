@@ -85,7 +85,7 @@ function ConnectedTimelineMediaBar() {
     || state.canvas.isScrubbing || state.canvas.draggedElement || state.canvas.resizingClip || state.canvas.marqueeRect
     || state.overlays.clipContextMenu || state.overlays.kfContextMenu || state.overlays.gapContextMenu
     || dismissed === identity || (!range && !clip && caret === null);
-  const popover = useMediaPopoverPosition(anchor, 680, !hidden && !ask);
+  const popover = useMediaPopoverPosition(anchor, 680, !hidden && !ask, true);
   useEffect(() => {
     if (hidden || ask) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -105,6 +105,7 @@ function ConnectedTimelineMediaBar() {
       else schedule();
     };
     const outside = (event: PointerEvent) => {
+      if (event.target instanceof Element && event.target.closest('[data-preview-transport]')) return;
       if (popover.ref.current?.contains(event.target as Node)) return;
       cancel();
       setDismissed(identity);

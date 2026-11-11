@@ -71,6 +71,8 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
     assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
+    assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).description,
+      (await json('.codex-plugin/plugin.json')).description);
     assert.equal((await json(path.join(application, 'package-lock.json'))).packages[''].version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).private, false);
@@ -89,6 +91,9 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(help.includes(host), host);
     await readFile(path.join(installer, 'package/LICENSE'));
     assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...phase1Skills].sort());
+    for (const document of ['skills/motion-director/SKILL.md', 'skills/motion-production/references/context.md']) {
+      assert.equal(await readFile(path.join(application, document), 'utf8'), await readFile(document, 'utf8'));
+    }
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);
     assert.equal(await sha256(path.join(application, 'scripts/runtime-lock.json')), release.locks.native);
     const entries = await runFile('tar', ['-tf', built.application]);

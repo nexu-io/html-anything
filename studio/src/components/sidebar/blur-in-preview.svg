@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="title">
+  <title id="title">Blur In word reveal</title>
+  <!-- Representative reveal state of the Hyperframes Blur In text component. -->
+  <defs>
+    <filter id="soft"><feGaussianBlur stdDeviation="1.4"/></filter>
+    <filter id="blur"><feGaussianBlur stdDeviation="3.5"/></filter>
+  </defs>
+  <path fill="#0a0a0a" d="M0 0h320v180H0z"/>
+  <g fill="#f3f3f3" font-family="system-ui, sans-serif" font-size="25" font-weight="600">
+    <text x="24" y="98">Design</text>
+    <text x="111" y="98">systems</text>
+    <text x="213" y="99" opacity=".75" filter="url(#soft)">for</text>
+    <text x="252" y="102" opacity=".45" filter="url(#blur)">video</text>
+  </g>
+</svg>
