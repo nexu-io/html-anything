@@ -3,6 +3,20 @@ import { Fault, type Input, type Message, type Session, type SessionDetail } fro
 import type { Database } from "./database.js";
 export class Sessions {
   constructor(private db: Database) {}
+  require(id: string) {
+    if (!this.db.one("SELECT 1 FROM sessions WHERE id=?", id)) throw new Fault("missing", "session does not exist");
+  }
+  head(id: string) {
+    this.require(id);
+    return {
+      session: this.db.one("SELECT id,title,mode,created_at,last_artifact_id FROM sessions WHERE id=?", id),
+      artifacts: this.db.all(
+        "SELECT id,project_id,title,created_at FROM artifacts WHERE session_id=? ORDER BY created_at,rowid",
+        id,
+      ),
+      messages: this.db.one("SELECT COUNT(*) AS count,MAX(rowid) AS last FROM messages WHERE session_id=?", id),
+    };
+  }
   list(): Session[] {
     return this.db.all(
       "SELECT id,title,mode,created_at AS createdAt,last_artifact_id AS activeArtifactId FROM sessions ORDER BY created_at,id",

@@ -83,7 +83,7 @@ export class SourceFiles {
       this.confirm.checked = false;
       this.selected.value = "";
     }
-    const files = project?.files ?? [],
+    const files = this.editing.editor.sources,
       selected = this.selection || this.selected.value;
     if (
       JSON.stringify([...this.selected.options].map((option) => option.value)) !==

@@ -4,20 +4,29 @@ import {
   changeSources,
   Fault,
   initialFiles,
+  mergeSources,
   type Project,
   type Selection,
   type SessionDetail,
   type SourceChange,
+  type SourceChoice,
   type State,
+  type WorkspaceView,
 } from "@open-motion/workspace/contract";
 import type { Client } from "../api.js";
+import { observedView } from "./observe.js";
 export class Editor {
   state: State = { sessions: [], selection: { revision: 0, sessionId: null, artifactId: null } };
   session: SessionDetail | null = null;
   project: Project | null = null;
   draft = "";
   dirty = false;
-  private fileDrafts = new Map<string, string>();
+  private fileDrafts = new Map<string, string | null>();
+  initialized = false;
+  incoming?: WorkspaceView & { token: string };
+  private observedToken?: string;
+  private observation = 0;
+  private returnIntent?: { input: Omit<Input<"artifact_open">, "requestId">; state: State };
   drafts?: { flush(): Promise<void>; dirty(): boolean; discard(): void };
   private pending?: { signature: string; requestId: string };
   private refresh?: () => Promise<void>;
@@ -59,6 +68,9 @@ export class Editor {
     this.draft = project?.files.find((file) => file.path === "index.html")?.content ?? "";
     this.fileDrafts.clear();
     this.dirty = false;
+    this.incoming = undefined;
+    this.observedToken = undefined;
+    this.initialized = true;
   }
   async load() {
     if (this.dirty || this.drafts?.dirty()) throw new Error("请先保存当前源文件，或明确放弃本地修改");
@@ -84,33 +96,158 @@ export class Editor {
   source(path: string): string {
     return path === "index.html"
       ? this.draft
-      : (this.fileDrafts.get(path) ?? this.project?.files.find((f) => f.path === path)?.content ?? "");
+      : this.fileDrafts.has(path)
+        ? (this.fileDrafts.get(path) ?? "")
+        : (this.project?.files.find((f) => f.path === path)?.content ?? "");
   }
   editFile(path: string, content: string) {
     if (path === "index.html") return this.edit(content);
     const original = this.project?.files.find((f) => f.path === path);
-    if (!original) throw new Error("source file is missing");
-    if (original.content === content) this.fileDrafts.delete(path);
+    if (!original && !this.fileDrafts.has(path)) throw new Error("source file is missing");
+    if (original?.content === content) this.fileDrafts.delete(path);
     else this.fileDrafts.set(path, content);
     this.edit(this.draft);
   }
   get sources() {
-    return this.project?.files.map((file) => ({ ...file, content: this.source(file.path) })) ?? [];
+    const files = new Map(this.project?.files.map((file) => [file.path, this.source(file.path)]));
+    for (const [path, content] of this.fileDrafts) {
+      if (content === null) files.delete(path);
+      else files.set(path, content);
+    }
+    return [...files]
+      .map(([path, content]) => ({ path, content }))
+      .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
+  }
+  private writable() {
+    if (this.incoming) throw Error("请先处理外部修改，再继续写入");
+  }
+  private install(view: WorkspaceView) {
+    this.initialized = true;
+    this.state = view.state;
+    this.session = view.session;
+    this.project = view.project;
+    this.draft = view.project?.files.find((file) => file.path === "index.html")?.content ?? "";
+    this.fileDrafts.clear();
+    this.dirty = false;
+    this.incoming = undefined;
+  }
+  async observe(signal?: AbortSignal, accept = () => true) {
+    if (this.unconfirmed || !this.initialized) return false;
+    const observation = ++this.observation;
+    const before = { project: this.project, state: this.state, session: this.session };
+    const head = await this.client.execute("workspace_observe", {}, signal);
+    if (head.token === this.observedToken) return false;
+    const view = await observedView(this.client, head, signal);
+    if (
+      !view ||
+      observation !== this.observation ||
+      !accept() ||
+      this.unconfirmed ||
+      this.project !== before.project ||
+      this.state !== before.state ||
+      this.session !== before.session
+    )
+      return false;
+    this.observedToken = head.token;
+    const same = this.project?.artifactId === view.project?.artifactId && this.session?.id === view.session?.id;
+    const changed =
+      this.project?.revision !== view.project?.revision ||
+      this.project?.history.version !== view.project?.history.version;
+    if (same && !changed) {
+      this.state = view.state;
+      this.session = view.session;
+      this.incoming = undefined;
+    } else if (same && !this.dirty && !this.drafts?.dirty()) this.install(view);
+    else this.incoming = { ...view, token: head.token };
+    return true;
+  }
+  async prepareExternal() {
+    if (this.unconfirmed || !this.incoming) throw Error("先确认当前操作和外部修改");
+    const before = this.project,
+      incoming = this.incoming;
+    await this.drafts?.flush();
+    if (this.project !== before || this.incoming !== incoming) throw Error("合并上下文已变化，请重试");
+  }
+  reconcile(token: string, choices: Record<string, SourceChoice>) {
+    const incoming = this.incoming,
+      remote = incoming?.project;
+    if (
+      this.unconfirmed ||
+      incoming?.token !== token ||
+      !remote ||
+      !this.project ||
+      remote.artifactId !== this.project.artifactId ||
+      remote.sessionId !== this.project.sessionId
+    )
+      throw Error("外部修改上下文已变化");
+    if (this.drafts?.dirty()) throw Error("先准备本地属性草稿，再合并");
+    const local = mergeSources(this.project.files, this.sources, remote.files, choices);
+    if (local.conflicts.length) throw Error("请逐个选择冲突文件的内容");
+    this.install(incoming);
+    this.draft = local.files.find((file) => file.path === "index.html")?.content ?? "";
+    const values = new Map(local.files.map((file) => [file.path, file.content]));
+    for (const path of new Set([...remote.files, ...local.files].map((file) => file.path))) {
+      if (path === "index.html") continue;
+      if (remote.files.find((file) => file.path === path)?.content !== values.get(path))
+        this.fileDrafts.set(path, values.get(path) ?? null);
+    }
+    this.edit(this.draft);
+  }
+  async useExternal() {
+    if (this.unconfirmed) throw Error("先重试尚未确认的操作");
+    const head = await this.client.execute("workspace_observe", {}),
+      view = await observedView(this.client, head);
+    if (!view || this.unconfirmed) throw Error("工作区在读取期间变化，请重试");
+    this.drafts?.discard();
+    this.install(view);
+    this.observedToken = head.token;
+  }
+  async retainContext() {
+    const local = this.project;
+    if (!local || (!this.returnIntent && (this.unconfirmed || !this.incoming))) throw Error("先确认当前工程和操作");
+    if (!this.returnIntent) {
+      const head = await this.client.execute("workspace_observe", {}),
+        view = await observedView(this.client, head);
+      if (!view || this.project !== local) throw Error("工作区在读取期间变化，请重试");
+      this.returnIntent = {
+        state: view.state,
+        input: {
+          sessionId: local.sessionId,
+          artifactId: local.artifactId,
+          expectedSelection: view.state.selection.revision,
+          expectedCurrent: view.project
+            ? { artifactId: view.project.artifactId, revision: view.project.revision }
+            : null,
+        },
+      };
+    }
+    try {
+      const selected = await this.mutate("artifact_open", this.returnIntent.input);
+      this.state = { ...this.returnIntent.state, selection: selected };
+      this.incoming = undefined;
+      this.observedToken = undefined;
+      this.returnIntent = undefined;
+    } catch (error) {
+      if (!this.unconfirmed) this.returnIntent = undefined;
+      throw error;
+    }
   }
   async rename(title: string) {
+    this.writable();
     if (!this.session) throw new Error("先选择会话");
     const renamed = await this.mutate("session_rename", { sessionId: this.session.id, title });
     this.session = renamed;
     this.state.sessions = this.state.sessions.map((s) => (s.id === renamed.id ? renamed : s));
   }
   async save() {
+    this.writable();
     await this.drafts?.flush();
     if (!this.project || !this.dirty) return;
     this.project = await this.mutate("project_save", {
       sessionId: this.project.sessionId,
       artifactId: this.project.artifactId,
       expectedRevision: this.project.revision,
-      files: this.project.files.map((file) => ({ ...file, content: this.source(file.path) })),
+      files: this.sources,
     });
     this.fileDrafts.clear();
     this.dirty = false;
@@ -118,7 +255,7 @@ export class Editor {
   async changeSource(change: SourceChange) {
     const owner = this.project;
     if (!owner) throw Error("先选择工程");
-    changeSources(owner.files, change);
+    changeSources(this.sources, change);
     await this.save();
     const project = this.project;
     if (!project || project.artifactId !== owner.artifactId || project.sessionId !== owner.sessionId)
@@ -138,6 +275,7 @@ export class Editor {
   }
   /** Confirm an exact adoption receipt, then refresh authority without projecting its historical snapshot. */
   async adoptGeneration(input: Omit<Input<"generation_adopt">, "requestId">) {
+    this.writable();
     const before = this.project,
       signature = JSON.stringify(["generation_adopt", input]);
     const replay = this.pending?.signature === signature;
@@ -178,6 +316,7 @@ export class Editor {
     operation: K,
     input: Omit<Input<K>, "requestId">,
   ): Promise<Project> {
+    this.writable();
     const before = this.project;
     if (
       !before ||
@@ -193,6 +332,7 @@ export class Editor {
     return result;
   }
   async history(direction: "project_undo" | "project_redo") {
+    this.writable();
     if (direction === "project_redo" && (this.dirty || this.drafts?.dirty())) throw new Error("先保存或放弃当前修改");
     if (direction === "project_undo") await this.save();
     if (!this.project) throw new Error("先打开工程");
@@ -208,6 +348,7 @@ export class Editor {
     this.dirty = false;
   }
   async discard() {
+    if (this.unconfirmed) throw Error("先重试尚未确认的操作");
     this.drafts?.discard();
     this.fileDrafts.clear();
     this.dirty = false;
@@ -264,6 +405,7 @@ export class Editor {
     );
   }
   async append(content: string) {
+    this.writable();
     if (!this.session) throw new Error("先选择会话");
     const message = await this.mutate("message_append", { sessionId: this.session.id, role: "user", content });
     this.session = {
