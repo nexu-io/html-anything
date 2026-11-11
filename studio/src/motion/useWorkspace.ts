@@ -5,7 +5,8 @@ import { preservePresentation } from '../../../shared/workspace-url';
 
 export type SavedProject = { id: string; title: string; templateId?: string; createdAt?: number; openedAt?: number };
 type Job = { id: string; state: 'pending' | 'running' | 'completed' | 'failed'; error?: string };
-export type WorkspaceStatus = { revision: string; projectId: string; projectTitle: string; exportJob: Job | null; sessionId?: string };
+export type WorkspaceStatus = { revision: string; projectId: string; projectTitle: string; exportJob: Job | null; sessionId?: string;
+  historyRestoreError?: { requestId: string; message: string } | null };
 export type ProjectCatalog = { activeId: string; projects: SavedProject[]; sessions?: CreativeSession[]; activeSessionId?: string };
 export async function motionApi<T>(path: string, init?: RequestInit, projectId?: string): Promise<T> {
   const response = await fetch((path.startsWith('/sessions') || path.startsWith('/modes') ? '/design-api' : '/motion-api') + path

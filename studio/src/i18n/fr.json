@@ -1803,5 +1803,7 @@
   "green": "Vert",
   "blue": "Bleu",
   "purple": "Violet",
-  "multicolor": "Multicolore"
+  "multicolor": "Multicolore",
+  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Des fichiers de l’historique sont manquants, illisibles ou endommagés : {files}. Cette version n’a pas été restaurée. Le projet actuel reste inchangé.",
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Impossible de préparer les fichiers de l’historique pour la restauration : {files}. Le projet actuel reste inchangé."
 }

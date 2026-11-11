@@ -8,6 +8,7 @@ import { pluginRoot, execute } from '../hyperframes.ts';
 import { cancelExport } from '../server.ts';
 import { atomicJson, fileHash, recoverProjectTransactions } from '../phase1-versions.ts';
 import { validateInput, phase1Tools } from '../shared/phase1-tools.ts';
+import { transport } from './http.ts';
 
 function api(store: any) { return new Phase1Service(store, pluginRoot, {
   origin: () => 'http://127.0.0.1:4173', nativeUrl: () => undefined, openProject: async () => {},
@@ -65,7 +66,10 @@ test('v5 to v3 creates v6, retains v4/v5, rejects stale writes and recovers afte
   await assert.rejects(service.call('motion_get_project', { projectId: p.projectId, file: { path: 'note.txt', offset: 1 } }), /INVALID_UTF8_OFFSET/);
 }, false));
 
-test('imports probe media, return partial results, deduplicate and retain historical audio', () => fixture(async store => {
+test('imports retain historical media and reject missing or corrupt blobs without changing the project', t => fixture(async store => {
+  const previous = process.env.HYPERFRAMES_HISTORY_ROOT, historyRoot = path.join(store.directory, 'native-history');
+  process.env.HYPERFRAMES_HISTORY_ROOT = historyRoot;
+  t.after(() => { if (previous === undefined) delete process.env.HYPERFRAMES_HISTORY_ROOT; else process.env.HYPERFRAMES_HISTORY_ROOT = previous; });
   const service = api(store), p = await create(service);
   const png = path.join(store.directory, 'source.png');
   const pngResult = await execute('ffmpeg', ['-v', 'error', '-f', 'lavfi', '-i', 'color=c=red:size=16x16', '-frames:v', '1', png], store.directory);
@@ -85,8 +89,82 @@ test('imports probe media, return partial results, deduplicate and retain histor
   await rm(wav);
   const after = await service.call('motion_get_project', { projectId: p.projectId });
   const restored = await service.call('motion_restore_version', { projectId: p.projectId, requestId: 'before-media', versionId: p.version.versionId, expectedVersionId: after.version.versionId, expectedRevision: after.revision });
-  await service.call('motion_restore_version', { projectId: p.projectId, requestId: 'after-media', versionId: imported.version.versionId, expectedVersionId: restored.version.versionId, expectedRevision: restored.revision });
-  assert.equal(await fileHash(path.join(store.projectDirectoryFor(p.projectId), imported.items[0].path)), imported.items[0].sha256);
+  const complete = await service.call('motion_restore_version', { projectId: p.projectId, requestId: 'after-media', versionId: imported.version.versionId, expectedVersionId: restored.version.versionId, expectedRevision: restored.revision });
+  const media = imported.items.filter((item: any) => item.status !== 'failed');
+  for (const item of media) assert.equal(await fileHash(path.join(store.projectDirectoryFor(p.projectId), item.path)), item.sha256);
+  const noop = await service.call('motion_restore_version', { projectId: p.projectId, requestId: 'same-media', versionId: imported.version.versionId, expectedVersionId: complete.version.versionId, expectedRevision: complete.revision });
+  assert.equal(noop.changed, false); assert.equal(noop.version.versionId, complete.version.versionId);
+  await service.call('motion_restore_version', { projectId: p.projectId, requestId: 'remove-media', versionId: p.version.versionId, expectedVersionId: complete.version.versionId, expectedRevision: complete.revision });
+  const before = await service.call('motion_get_project', { projectId: p.projectId });
+  const scoped = store.forProject(p.projectId), beforeFiles = await scoped.files();
+  const beforeAssets = await readFile(path.join(scoped.projectDirectory, 'motion-assets.json'));
+  const versions = service.versions(p.projectId);
+  const target = (await versions.index()).versions.find(version => version.versionId === imported.version.versionId)!;
+  const historyId = (await readFile(path.join(scoped.projectDirectory, '.hyperframes/history-id'), 'utf8')).trim();
+  const request = transport(store, { runtimeRoot: pluginRoot, phase1: service });
+  for (const item of media) {
+    const file = target.files.find(file => file.path === item.path)!;
+    const blob = file.retained ? versions.blob(file.hash) : path.join(historyRoot, historyId, 'blobs', file.hash.slice(0, 2), file.hash);
+    const bytes = await readFile(blob);
+    for (const damage of ['missing', 'corrupt']) {
+      if (damage === 'missing') await rm(blob); else await writeFile(blob, Buffer.alloc(bytes.length));
+      const list = await service.call('motion_list_versions', { projectId: p.projectId });
+      const listed = list.versions.find((version: any) => version.versionId === target.versionId);
+      assert.equal(listed.restorable, false, item.mimeType + ': ' + damage);
+      assert.deepEqual(listed.unavailableFiles, [item.path]);
+      const requestId = crypto.randomUUID();
+      const response = await request('/motion-api/phase1/call', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'motion_restore_version', arguments: {
+        projectId: p.projectId, requestId, versionId: target.versionId,
+        expectedVersionId: before.currentVersionId, expectedRevision: before.revision,
+      } }) });
+      assert.equal(response.status, 400);
+      const error = await response.json();
+      assert.match(error.error, /^VERSION_NOT_RESTORABLE:/); assert.ok(error.error.includes(item.path));
+      assert.equal(error.applied, false);
+      const status = await request('/motion-api/project/status?projectId=' + p.projectId);
+      assert.deepEqual((await status.json()).historyRestoreError, { requestId, message: error.error });
+      const after = await service.call('motion_get_project', { projectId: p.projectId });
+      assert.equal(after.revision, before.revision); assert.equal(after.currentVersionId, before.currentVersionId);
+      assert.deepEqual(after.assets, before.assets); assert.deepEqual(await scoped.files(), beforeFiles);
+      assert.deepEqual(await readFile(path.join(scoped.projectDirectory, 'motion-assets.json')), beforeAssets);
+      await writeFile(blob, bytes);
+    }
+  }
+  const available = (await service.call('motion_list_versions', { projectId: p.projectId })).versions.find((version: any) => version.versionId === target.versionId);
+  assert.equal(available.restorable, true); assert.deepEqual(available.unavailableFiles, []);
+  const other = await create(service);
+  assert.equal((await (await request('/motion-api/project/status?projectId=' + other.projectId)).json()).historyRestoreError, null);
+  await service.call('motion_restore_version', { projectId: p.projectId, requestId: 'recovered-media', versionId: target.versionId,
+    expectedVersionId: before.currentVersionId, expectedRevision: before.revision });
+  assert.equal((await (await request('/motion-api/project/status?projectId=' + p.projectId)).json()).historyRestoreError, null);
+}, false));
+
+test('version availability rechecks native blobs and does not persist missing-file flags', () => fixture(async store => {
+  const service = api(store), p = await create(service), versions = service.versions(p.projectId);
+  const target = (await versions.index()).versions[0], file = target.files.find(file => file.path === 'index.html')!;
+  await versions.withHistory(async history => {
+    const bytes = await history.readBlob(file.hash);
+    for (const blob of [null, Buffer.alloc(bytes.length)]) {
+      const unavailable = { ...history, readBlob: async (hash: string) => {
+        if (hash !== file.hash) return history.readBlob(hash);
+        if (blob === null) throw new Error('ENOENT');
+        return blob;
+      } };
+      const listed = await versions.publicVersion(target, unavailable);
+      assert.equal(listed.restorable, false); assert.deepEqual(listed.unavailableFiles, [file.path]);
+      await assert.rejects(versions.restore(unavailable, target, p.revision, p.version.versionId, 'native-missing'), /VERSION_NOT_RESTORABLE:.*index\.html/);
+    }
+    const listed = await versions.publicVersion({ ...target, files: target.files.map(file => ({ ...file, missing: true })) }, history);
+    assert.equal(listed.restorable, true); assert.deepEqual(listed.unavailableFiles, []);
+    let reads = 0;
+    const disappears = { ...history, readBlob: async (hash: string) => {
+      if (hash === file.hash && ++reads > 1) throw new Error('ENOENT');
+      return history.readBlob(hash);
+    } };
+    await assert.rejects(versions.restore(disappears, target, p.revision, p.version.versionId, 'native-disappears'), /VERSION_NOT_RESTORABLE:.*index\.html/);
+  });
+  const after = await service.call('motion_get_project', { projectId: p.projectId });
+  assert.equal(after.currentVersionId, p.version.versionId); assert.equal(after.revision, p.revision);
 }, false));
 
 test('an interrupted partial save rolls back, but recovery never overwrites foreign writes', () => fixture(async store => {

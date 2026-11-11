@@ -1767,5 +1767,7 @@
   "purple": "紫",
   "red": "赤",
   "blue": "青",
-  "monochrome": "モノクロ"
+  "monochrome": "モノクロ",
+  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "履歴ファイルが見つからないか、読み取れないか、破損しています：{files}。このバージョンは復元されませんでした。現在のプロジェクトは変更されていません。",
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "復元に必要な履歴ファイルを準備できませんでした：{files}。現在のプロジェクトは変更されていません。"
 }

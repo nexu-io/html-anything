@@ -35,6 +35,7 @@ async function setupFixture(t: any) {
   const directory = await fixture(t), application = path.join(directory, 'source'), home = path.join(directory, 'install'), skillsDirectory = path.join(directory, 'skills');
   for (const name of ['scripts', 'shared', 'studio/build', 'skills/motion-production', 'docs']) await mkdir(path.join(application, name), { recursive: true });
   for (const name of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'README.md', 'AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(application, name), 'fixture');
+  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
   await writeFile(path.join(application, 'skills/motion-production/SKILL.md'), '---\nname: motion-production\ndescription: fixture\n---\nFixture');
   await writeJSON(path.join(application, 'shared/template-config.json'), { environment: 'prod' });
   await cp(new URL('../shared/mcp-profiles.json', import.meta.url), path.join(application, 'shared/mcp-profiles.json'));
@@ -48,6 +49,15 @@ async function setupFixture(t: any) {
   await chmod(codex, 0o755);
   return { directory, application, home, skillsDirectory, manifest, codex, config };
 }
+
+test('successful setup hands the current Agent an invitation before any MCP use, without persisting an offer', async t => {
+  const options = await setupFixture(t);
+  const installed = await setup(options);
+  assert.equal(installed.onboarding.hostSessionVerified, false);
+  assert.match(installed.onboarding.instructions, /OpenMotion 开源免费/);
+  assert(Array.isArray(installed.onboarding.catalog.templates));
+  assert.equal('onboarding' in JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')), false);
+});
 
 test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and rejects a mixed-environment home', async t => {
   const options = await setupFixture(t), bundle = path.join(options.directory, 'bundle');

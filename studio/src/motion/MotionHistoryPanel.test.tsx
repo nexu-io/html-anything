@@ -7,6 +7,7 @@ import { MotionHistoryPanel } from './MotionHistoryPanel';
 
 const shell = vi.hoisted(() => ({
   projectId: 'project', waitForPendingDomEditSaves: vi.fn<() => Promise<void>>(),
+  showToast: vi.fn(),
   writeBlockedReason: null as string | null, renderQueue: { isRendering: false },
 }));
 vi.mock('../contexts/StudioContext', () => ({ useStudioShellContext: () => shell }));
@@ -80,14 +81,14 @@ it('does not replace the project when pending edits fail to save', async () => {
   await render(); await click('first edit'); await click('恢复此版本');
   expect(calls.filter(call => call.body)).toEqual([]);
   expect(onRestored).not.toHaveBeenCalled();
-  expect(container.querySelector('[role="alert"]')?.textContent).toContain('Save conflict');
+  expect(shell.showToast).toHaveBeenCalledWith('Save conflict', 'error');
 });
 
 it('shows native restore refusals and keeps the current editor open', async () => {
   restoreError = true;
   await render(); await click('first edit'); await click('恢复此版本');
   expect(onRestored).not.toHaveBeenCalled();
-  expect(container.querySelector('[role="alert"]')?.textContent).toContain('Version is no longer kept');
+  expect(shell.showToast).toHaveBeenCalledWith('Version is no longer kept', 'error');
 });
 
 it('blocks restoring and pinning during a render', async () => {

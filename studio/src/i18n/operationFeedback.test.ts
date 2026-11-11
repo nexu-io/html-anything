@@ -2,6 +2,24 @@ import { expect, it } from 'vitest';
 import { translate } from './I18n';
 import { importValidationMessage } from './importMessages';
 import { splitFailureMessage } from './editorErrors';
+import { systemMessage } from './systemMessages';
+import { languages } from './messages';
+
+it('localizes rejected history restores while preserving project-relative paths', () => {
+  const files = 'assets/原始配乐.wav, assets/photo.png';
+  const messages = [
+    'VERSION_NOT_RESTORABLE: Historical files are missing, unreadable or corrupt: ' + files,
+    'VERSION_NOT_RESTORABLE: Cannot stage historical file: ' + files,
+  ];
+  for (const { locale } of languages) for (const message of messages) {
+    const localized = systemMessage(message, (key, values) => translate(locale, key, values));
+    expect(localized).toContain(files);
+    expect(localized).not.toContain('VERSION_NOT_RESTORABLE');
+    expect(localized).not.toMatch(/\{files\}/);
+    if (locale === 'zh-CN') expect(localized).toContain('当前工程保持不变');
+    if (locale === 'en') expect(localized).toContain('Your current project is unchanged');
+  }
+});
 
 it('distinguishes invalid media, missing tracks and unavailable validation in both languages', () => {
   const reasons = [

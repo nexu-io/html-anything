@@ -1767,5 +1767,7 @@
   "purple": "보라",
   "red": "빨강",
   "blue": "파랑",
-  "monochrome": "흑백"
+  "monochrome": "흑백",
+  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "이전 버전의 파일이 없거나 읽을 수 없거나 손상되었습니다: {files}. 이 버전은 복원되지 않았습니다. 현재 프로젝트는 변경되지 않았습니다.",
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "복원에 필요한 이전 버전의 파일을 준비하지 못했습니다: {files}. 현재 프로젝트는 변경되지 않았습니다."
 }
