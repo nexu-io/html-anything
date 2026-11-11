@@ -81,7 +81,7 @@ test('phase1 port discovery leaves unrelated services and other workspaces intac
   assert.deepEqual(mock.stops, []);
 }, false));
 test('phase1 port discovery refuses an incompatible same-workspace authority without launching another', async t => {
-  for (const change of [{ protocol: 999 }, { version: VERSION, mcp: { protocol: 2, tools: ['motion_export_request'] } }, { mcp: { protocol: 1, tools: ['motion_get_project'] } }, { mcp: undefined }]) await t.test(JSON.stringify(change), () => fixture(async store => {
+  for (const change of [{ protocol: 999 }, { version: '0.6.4-test.8', mcp: phase1McpCapabilities }, { version: VERSION, mcp: { protocol: 2, tools: ['motion_export_request'] } }, { mcp: { protocol: 1, tools: ['motion_get_project'] } }, { mcp: undefined }]) await t.test(JSON.stringify(change), () => fixture(async store => {
     const mock = runtime(store), port = Number(process.env.PORT || 4173);
     mock.occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: '0.6.4', dataDirectory: store.directory, ffmpeg: true, ready: true, ...change } });
     const before = await store.get();

@@ -9,10 +9,13 @@ const mount = (compositions: string[], masterCompositionPath: string | null) =>
 
 describe("CompositionsTab root badge", () => {
   it("marks the composition matching masterCompositionPath as root", () => {
-    const compositions = ["index.html", "compositions/headline.html"];
+    const compositions = ["compositions/headline.html", "compositions/outro.html", "index.html"];
     const host = mount(compositions, resolveMasterCompositionPath(compositions));
     const cards = host.querySelectorAll<HTMLElement>('[draggable="true"]');
-    expect(cards).toHaveLength(2);
+    expect(cards).toHaveLength(3);
+    expect(cards[1]?.textContent).toContain("headline");
+    expect(cards[2]?.textContent).toContain("outro");
+    expect(compositions[0]).toBe("compositions/headline.html");
     expect(cards[0]?.textContent).toContain("Root");
     expect(cards[1]?.textContent).not.toContain("Root");
   });

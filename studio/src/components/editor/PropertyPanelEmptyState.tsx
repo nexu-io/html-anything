@@ -1,3 +1,6 @@
+import { PanelEmptyState } from "../ui/PanelEmptyState";
+import { useEmptyPreview } from "../nle/useEmptyPreview";
+import { useStudioShellContextOptional } from "../../contexts/StudioContext";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
@@ -9,6 +12,11 @@ import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 function FlatEmptyState() {
   const { t } = useI18n();
   const mvp = useMvpEditor();
+  const projectId = useStudioShellContextOptional()?.projectId ?? "";
+  const empty = useEmptyPreview(projectId, mvp);
+  if (mvp) return <PanelEmptyState icon="cursor-line"
+    message={t(empty ? "No editable content" : "Nothing selected")}
+    description={empty ? undefined : t("Click any element on the canvas to edit it.")} />;
   return (
     <div className="flex h-full flex-col items-center justify-center gap-2.5 px-8 py-10 text-center">
       <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-panel-border-input bg-panel-input text-panel-text-3">
@@ -17,7 +25,7 @@ function FlatEmptyState() {
       <div className="text-[13px] font-semibold text-panel-text-0">{t("Nothing selected")}</div>
       <div className="max-w-[250px] text-[11px] leading-normal text-panel-text-3">
         {t(mvp ? "Click any element on the canvas to edit it." : "Click any element on the canvas to edit it, or drag to select several.")}</div>
-      <div className="mt-2 flex w-full flex-col gap-1.5">
+      {!mvp && <div className="mt-2 flex w-full flex-col gap-1.5">
         {!mvp && <>
         <span className="flex items-center justify-between rounded-lg border border-panel-border bg-panel-bg px-3 py-2">
           <span className="flex items-center gap-2 text-[11px] text-panel-text-2">
@@ -36,7 +44,7 @@ function FlatEmptyState() {
             ⌘K
           </span>
         </span>
-      </div>
+      </div>}
     </div>
   );
 }

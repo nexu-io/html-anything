@@ -53,9 +53,10 @@ jobs:
       - name: Compare source against the PR base
         shell: bash
         env:
-          BASE_REVISION: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_REVISION: ${{ github.event.pull_request.head.sha }}
         run: |
-          test "$(git rev-parse HEAD^1)" = "$BASE_REVISION"
+          test "$(git rev-parse HEAD^2)" = "$PR_HEAD_REVISION"
+          BASE_REVISION=$(git rev-parse HEAD^1)
           base_dir=$(mktemp -d "$RUNNER_TEMP/motion-base.XXXXXX")
           git archive "$BASE_REVISION" | tar -x -C "$base_dir"
           npm ci --prefix "$base_dir" --ignore-scripts --no-audit --no-fund
@@ -83,6 +84,14 @@ jobs:
           node-version: '26.11.1'
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Restore rendering package downloads
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/motion-rendering-apt/*.deb
+          # Cache entries are immutable, so save under a per-run key and restore the newest entry by prefix.
+          key: rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-
       - name: Install rendering test tools
         run: |
           # The hosted Ubuntu image provides Chrome; Ubuntu's chromium package pulls a desktop snap.
@@ -94,9 +103,15 @@ jobs:
             fi
           done
           if ((${#missing[@]})); then
-            apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
-            sudo apt-get "${apt_options[@]}" update
-            sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
+            mkdir -p "$RUNNER_TEMP/motion-rendering-apt/partial"
+            apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30
+              -o "Dir::Cache::archives=$RUNNER_TEMP/motion-rendering-apt" -o APT::Keep-Downloaded-Packages=true)
+            # Hosted runners already have package indexes. Refresh only if installation needs it.
+            if ! sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"; then
+              sudo apt-get "${apt_options[@]}" update
+              sudo apt-get "${apt_options[@]}" install -y --no-install-recommends "${missing[@]}"
+            fi
+            du -sh "$RUNNER_TEMP/motion-rendering-apt/"*.deb
           fi
       - name: Validate manual package selection
         env:
@@ -112,7 +127,7 @@ jobs:
         run: |
           node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node .github/scripts/motion-scan.mjs source . "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
-          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs
+          node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/registry-download.test.mjs tests/stable-release.test.mjs
       - name: Install locked Motion dependencies
         run: npm ci --no-audit --no-fund
       - name: Check and build Studio

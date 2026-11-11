@@ -1,4 +1,5 @@
 import { RemixIcon } from "../../icons/RemixIcons";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { classifyWebAudioMediaRoute } from "@hyperframes/core/runtime/web-audio-route";
@@ -37,6 +38,7 @@ export function AudioRow({
   onAddAssetToTimeline?: (path: string) => void;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
   const [renaming, setRenaming] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -66,11 +68,11 @@ export function AudioRow({
   const setPreviewAsset = useAssetPreviewStore((s) => s.setPreviewAsset);
   const clearPreviewAsset = useAssetPreviewStore((s) => s.clearPreviewAsset);
 
-  // Reveal the clip when the asset is already on the timeline, otherwise open
+  // Legacy: reveal an existing clip. MVP: always preview the source. Otherwise open
   // the preview overlay. Shared by pointer-up and keyboard activation so the
   // row does the same thing however it is operated.
   const activateRow = useCallback(() => {
-    if (used) {
+    if (used && !mvp) {
       const clip = findClipForAsset(elements, asset);
       if (clip) {
         // Dismiss any open preview overlay (from another asset) — the reveal
@@ -86,6 +88,7 @@ export function AudioRow({
     // Not added → preview overlay (audio player)
     setPreviewAsset(asset, projectId);
   }, [
+    mvp,
     used,
     elements,
     asset,
@@ -232,7 +235,7 @@ export function AudioRow({
           e.preventDefault();
           setContextMenu({ x: e.clientX, y: e.clientY });
         }}
-        className={`group w-full mb-1 rounded-md border border-panel-border text-left px-3 py-2 flex items-center gap-2.5 transition-colors cursor-pointer outline-hidden focus-visible:ring-1 focus-visible:ring-panel-border ${
+        className={`motion-audio-row group w-full mb-1 rounded-md border border-panel-border text-left px-3 py-2 flex items-center gap-2.5 transition-colors cursor-pointer outline-hidden focus-visible:ring-1 focus-visible:ring-panel-border ${
           isCopied
             ? "bg-panel-accent/10"
             : "bg-panel-surface hover:bg-panel-hover"

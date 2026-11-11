@@ -27,6 +27,8 @@ export function PropertyPanelFlatFooter({
     ? t("Stop recording {value0}s", { value0: (recordingDuration ?? 0).toFixed(1) })
     : t("Record gesture ({recordKey})", { recordKey: recordKey });
 
+  if (mvp) return null;
+
   return (
     // No border-t here: every possible element immediately above this footer
     // in the new fixed-headers + scrollable-open-section layout (a collapsed

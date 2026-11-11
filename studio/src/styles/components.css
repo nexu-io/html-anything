@@ -1,6 +1,85 @@
 /* Rules for Studio's components, for any page that renders them. Reads the tokens in
  * theme.css. The app shell (body, #root, preflight) stays in studio.css. */
 
+.motion-player-responsive {
+  container: motion-player / inline-size;
+}
+
+.motion-player-control-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr);
+  align-items: center;
+  min-height: 28px;
+}
+
+.motion-player-secondary { gap: 6px; }
+
+@container motion-player (max-width: 420px) {
+  .motion-player-secondary { gap: 2px; }
+}
+
+@container motion-player (max-width: 420px) {
+  .motion-player-control-row {
+    grid-template-columns: minmax(0, 1fr) 32px 28px;
+    column-gap: 8px;
+  }
+  .motion-player-optional { display: none; }
+}
+
+.hf-volume-vertical-range {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 24px;
+  height: 96px;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hf-volume-vertical-range:disabled { opacity: 0.3; }
+
+.hf-volume-vertical-range::-webkit-slider-runnable-track {
+  width: 2px;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(to top, var(--motion-brand, var(--color-accent)) 0 var(--volume-progress, 0%), var(--color-border-strong) var(--volume-progress, 0%) 100%);
+}
+
+.hf-volume-vertical-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: -3px;
+  border: 0;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: grab;
+}
+
+.hf-volume-vertical-range::-moz-range-track {
+  width: 2px;
+  height: 100%;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(to top, var(--motion-brand, var(--color-accent)) 0 var(--volume-progress, 0%), var(--color-border-strong) var(--volume-progress, 0%) 100%);
+}
+
+.hf-volume-vertical-range::-moz-range-thumb {
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 0;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: grab;
+}
+
+.hf-volume-vertical-range:active { cursor: grabbing; }
+.hf-volume-vertical-range:focus-visible {
+  outline: 2px solid var(--color-border-strong);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Assets and catalog tiles share column widths and spacing at every panel size. */
 .hf-media-card-grid {
   display: grid;
@@ -1202,4 +1281,76 @@
   .hf-guide-tick {
     animation: none;
   }
+}
+
+
+/* Shared overlay motion. Dock panel resizing/expansion has its own timing. */
+.hf-floating-motion {
+  --overlay-x: 0px;
+  --overlay-y: 3px;
+  opacity: 1;
+  scale: 1;
+  transform: translate(0, 0);
+  transform-origin: var(--transform-origin, center);
+  transition: opacity var(--duration-open, 160ms) cubic-bezier(.22, 1, .36, 1),
+    transform var(--duration-open, 160ms) cubic-bezier(.22, 1, .36, 1),
+    scale var(--duration-open, 160ms) cubic-bezier(.22, 1, .36, 1);
+}
+.hf-floating-motion[data-side="top"] { --overlay-y: -3px; }
+.hf-floating-motion[data-side="left"] { --overlay-x: -3px; --overlay-y: 0px; }
+.hf-floating-motion[data-side="right"] { --overlay-x: 3px; --overlay-y: 0px; }
+.hf-floating-motion[data-starting-style] {
+  opacity: 0;
+  scale: .98;
+  transform: translate(var(--overlay-x), var(--overlay-y));
+}
+.hf-floating-motion[data-ending-style] {
+  opacity: 0;
+  transition-duration: 100ms;
+}
+.hf-tooltip-motion { transition-duration: 100ms; }
+.hf-tooltip-motion[data-instant] { transition-duration: 0ms; }
+.hf-floating-motion[data-preview-state="open"] { opacity: 1; scale: 1; transform: none; }
+
+/* Native and custom dialogs share the same entrance without changing placement.
+ * Scale is separate from translate so centered dialogs keep their centering. */
+:root[data-motion-ui] :is(dialog, [role="dialog"], [role="alertdialog"]):not(.hf-floating-motion):not(.motion-sidebar-drawer) {
+  opacity: 1;
+  scale: 1;
+  transition: opacity 180ms cubic-bezier(.22, 1, .36, 1), scale 180ms cubic-bezier(.22, 1, .36, 1),
+    display 180ms allow-discrete, overlay 180ms allow-discrete;
+}
+:root[data-motion-ui] :is(dialog:not([open]), [role="dialog"][data-starting-style], [role="dialog"][data-ending-style]):not(.hf-floating-motion):not(.motion-sidebar-drawer) {
+  opacity: 0;
+  scale: .985;
+}
+:root[data-motion-ui] [role="dialog"][data-ending-style]:not(.hf-floating-motion) { transition-duration: 100ms; }
+.hf-overlay-backdrop, :root[data-motion-ui] dialog::backdrop {
+  opacity: 1;
+  transition: opacity 180ms cubic-bezier(.22, 1, .36, 1), display 180ms allow-discrete, overlay 180ms allow-discrete;
+}
+.hf-overlay-backdrop:is([data-starting-style], [data-ending-style]),
+:root[data-motion-ui] dialog:not([open])::backdrop { opacity: 0; }
+.motion-sidebar-drawer {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 180ms cubic-bezier(.22, 1, .36, 1), transform 180ms cubic-bezier(.22, 1, .36, 1);
+}
+.motion-sidebar-drawer:is([data-starting-style], [data-ending-style]) { opacity: 0; transform: translateX(-8px); }
+.motion-sidebar-drawer[data-ending-style], .hf-overlay-backdrop[data-ending-style] { transition-duration: 100ms; }
+
+/* Also covers popups that mount directly instead of using Base UI presence. */
+@starting-style {
+  .hf-floating-motion:not([data-preview-state="open"]) {
+    opacity: 0;
+    scale: .98;
+    transform: translate(var(--overlay-x), var(--overlay-y));
+  }
+  :root[data-motion-ui] :is(dialog[open], [role="dialog"], [role="alertdialog"]):not(.hf-floating-motion):not(.motion-sidebar-drawer) { opacity: 0; scale: .985; }
+  .hf-overlay-backdrop, :root[data-motion-ui] dialog[open]::backdrop { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hf-floating-motion, .hf-overlay-backdrop, .motion-sidebar-drawer,
+  :root[data-motion-ui] :is(dialog, [role="dialog"], [role="alertdialog"]),
+  :root[data-motion-ui] dialog::backdrop { transition: none !important; }
 }

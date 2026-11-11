@@ -1,9 +1,7 @@
 /**
- * Tiny Zustand slice that carries the "asset preview overlay" state.
- *
- * When a user clicks an asset card that has NOT yet been added to the
- * timeline the overlay fires up: a dark scrim + centered media element
- * (img / video / audio) + filename label rendered inside PreviewPane.
+ * Shared, mutually exclusive project-asset and catalog previews.
+ * The MVP displays either source in a modal preview; legacy asset previews
+ * retain their floating card. Preview state never changes project content.
  *
  * State lives here so AssetsTab (sidebar) and PreviewPane (preview column)
  * can communicate without prop-drilling through the multi-layer EditorShell
@@ -15,6 +13,8 @@
 import { create } from "zustand";
 
 interface AssetPreviewState {
+  catalogPreview: { videoUrl?: string; posterUrl?: string; title: string } | null;
+  setCatalogPreview: (preview: { videoUrl?: string; posterUrl?: string; title: string }) => void;
   /** Project-relative asset path currently being previewed, or null. */
   previewAsset: string | null;
   /** projectId for which the preview was opened (used to build the serve URL). */
@@ -26,8 +26,10 @@ interface AssetPreviewState {
 }
 
 export const useAssetPreviewStore = create<AssetPreviewState>((set) => ({
+  catalogPreview: null,
+  setCatalogPreview: (catalogPreview) => set({ catalogPreview, previewAsset: null, previewProjectId: null }),
   previewAsset: null,
   previewProjectId: null,
-  setPreviewAsset: (asset, projectId) => set({ previewAsset: asset, previewProjectId: projectId }),
-  clearPreviewAsset: () => set({ previewAsset: null, previewProjectId: null }),
+  setPreviewAsset: (asset, projectId) => set({ previewAsset: asset, previewProjectId: projectId, catalogPreview: null }),
+  clearPreviewAsset: () => set({ previewAsset: null, previewProjectId: null, catalogPreview: null }),
 }));

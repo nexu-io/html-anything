@@ -1,4 +1,5 @@
 import { DockHeaderSlot } from "./DockHeaderSlots";
+import { DockSideActions } from "./DockSideActions";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
@@ -15,6 +16,8 @@ export function DockStripActions({
   containerApi,
   panels,
   isGroupActive,
+  group,
+  activePanel,
 }: IDockviewHeaderActionsProps) {
   const { t } = useI18n();
   const mvp = useMvpEditor();
@@ -31,6 +34,32 @@ export function DockStripActions({
   const resetLayout = useDockLayoutStore((state) => state.resetLayout);
   const previewGroup = panels.some((panel) => panel.id === "preview");
   const expandButton = useRef<HTMLButtonElement>(null);
+  const previewMotion = useRef<Animation | null>(null);
+  useEffect(() => {
+    const preference = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    const stop = () => { previewMotion.current?.cancel(); previewMotion.current = null; };
+    const onChange = () => { if (preference?.matches) stop(); };
+    preference?.addEventListener("change", onChange);
+    return () => { stop(); preference?.removeEventListener("change", onChange); };
+  }, []);
+  const togglePreview = (animate: boolean) => {
+    const element = containerApi.getPanel("preview")?.view.content.element;
+    const previous = previewMotion.current && element ? getComputedStyle(element) : null;
+    const from = previous ? { opacity: previous.opacity, transform: previous.transform } : null;
+    previewMotion.current?.cancel();
+    previewMotion.current = null;
+    const restoring = api.isMaximized();
+    if (restoring) api.exitMaximized();
+    else api.maximize();
+    if (!animate || !element?.animate || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    // Animate the live content, not Dockview's measured overlay or a cloned player.
+    const animation = element.animate([
+      from ?? { opacity: 0.86, transform: restoring ? "scale(1.01)" : "scale(0.985)" },
+      { opacity: 1, transform: "scale(1)" },
+    ], { duration: 180, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+    previewMotion.current = animation;
+    animation.onfinish = () => { if (previewMotion.current === animation) previewMotion.current = null; };
+  };
   useEffect(() => {
     if (!mvp || !previewGroup || !maximized) return;
     const restore = (event: KeyboardEvent) => {
@@ -38,6 +67,8 @@ export function DockStripActions({
       if (document.querySelector('[role="dialog"], [role="menu"], [role="listbox"]')) return;
       event.preventDefault();
       event.stopImmediatePropagation();
+      previewMotion.current?.cancel();
+      previewMotion.current = null;
       api.exitMaximized();
       expandButton.current?.focus({ preventScroll: true });
     };
@@ -59,13 +90,12 @@ export function DockStripActions({
           icon={maximized ? <CornersIn size={16} /> : <CornersOut size={16} />}
           onClick={(event) => {
             trackStudioClick("preview", maximized ? "restore_preview" : "expand_preview", undefined, clickMethod(event));
-            if (maximized) return api.exitMaximized();
-            api.maximize();
+            togglePreview(event.detail > 0);
           }}
         />
       </Tooltip>
     </div>
-  ) : null;
+  ) : <DockSideActions group={group} panels={panels} activePanel={activePanel} />;
   if (!isGroupActive) return null;
 
   const first = panels.find((panel) => isPanelId(panel.id))?.id;

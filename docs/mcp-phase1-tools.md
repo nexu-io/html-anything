@@ -90,11 +90,17 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 
 必填 projectId，可选 cursor。返回 currentVersionId/currentVersionNumber、versions、pageSize=5、hasMore、nextCursor。每条有 versionId、versionNumber、createdAt、source、summary、revision、restorable/unavailableFiles；filePaths 是完整文件路径清单，不等同精确逐行 diff。首次读取建立现有工程基线；仅实际内容变化产生后续 vN。
 
+Availability is checked against the current native and retained blob contents, including SHA-256 verification. Missing, unreadable or corrupt files set `restorable=false` and appear in `unavailableFiles` by project-relative path. Restoring the original blob bytes makes the version available again; capture-time flags are not authoritative.
+
 ### motion_restore_version
 
 必填 projectId、requestId、versionId（目标）、expectedRevision、expectedVersionId（当前）。校验目标属于该项目及历史资源完整，再恢复原生源文件、样式、时间/效果数据及媒体为新内容版本。v5→v3 得到 v6；v4/v5 仍可查/恢复。目标本就等同当前内容时 changed=false。
 
 返回 version/revision、restoredFromVersionId、changed、previewSync。完整媒体恢复保证适用于本Tool，Studio自身GUI历史恢复仍沿用原生行为。不自动混合两个版本，不替换/删除已有导出成片；缺资源、并发改变或恢复冲突时明确报错。
+
+Restore repeats the availability check and verifies staged files before changing the project. Unavailable resources return `VERSION_NOT_RESTORABLE` with the affected paths and `applied=false`; current source files, revision/version identity and asset index remain unchanged. A successful list response cannot guarantee that files will remain available until a later restore.
+
+The open editor also shows these restore refusals through its shared dismissible error toast, including the affected paths and unchanged-project message. Existing project-status polling delivers the latest failure only to that project; each request is shown once per editor mount. This transient notice is cleared from server status after a successful restore or backend restart. Native history panel action errors use the same toast component; native restoration semantics are unchanged.
 
 ### motion_export_cancel
 
@@ -110,7 +116,7 @@ action=record_review 要求 projectId/requestId/jobId/review；只能对本项�
 
 ### Phase-one API compatibility
 
-`shared/phase1-tools.ts` defines API protocol 1 and the available Tool names. Both editor and preview health advertise these capabilities. A phase-one stdio adapter can forward to another version/build only when the backend explicitly supports the same API protocol and requested Tool; the backend validates the complete input again before execution. Service, workspace, instance and authority protocol checks still apply. Internal legacy calls retain exact version/build checks.
+`shared/phase1-tools.ts` defines API protocol 1 and the available Tool names. Both editor and preview health advertise these capabilities. A phase-one stdio adapter can forward to another version/build only when the backend explicitly supports the same API protocol and requested Tool and has the same stable/test tracking policy; the backend validates the complete input again before execution. Stable and test clients use separate data directories; cross-policy authority reuse is rejected without stopping the existing service. Service, workspace, instance and authority protocol checks still apply. Internal legacy calls retain exact version/build checks.
 
 Protocol 1 preserves existing request/response shapes and semantics. New Tools and optional fields are additive; incompatible required fields, removed fields or changed semantics must increment the protocol. A supported older connection keeps its project binding, stable request IDs and existing export queries through a compatible plugin or backend replacement without another MCP initialization. Running exports stay with the live authority; recovery does not terminate it or replay an uncertain mutation. An already-closed host transport and an incompatible protocol cannot be repaired by this negotiation.
 

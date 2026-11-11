@@ -1,3 +1,5 @@
+import { templatePrompts } from './template-prompts.ts';
+import { catalogLocale } from './template-locale.ts';
 import { workflowEntryGuide } from './workflow-entry.js';
 
 export const integrationHosts = ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'] as const;
@@ -11,6 +13,7 @@ export const hostDescriptions: Record<IntegrationHost, string> = {
   mcp: '连接你喜欢的 MCP 客户端，也可以从终端和脚本开始。',
 };
 export type IntegrationInfo = {
+  templateEnvironment?: 'dev' | 'prod';
   name: string; version: string; previewUrl: string; dataDirectory: string;
   transport: { type: 'stdio'; command: string; args: string[]; cwd: string; env: Record<string, string> };
   tools: { name: string; description: string }[];
@@ -70,8 +73,12 @@ export function setupPrompt(info: IntegrationInfo, host: IntegrationHost, locale
   if (host === 'chatgpt') return 'ChatGPT 云端需要公开 HTTPS MCP 服务。当前工作区使用本机 stdio，可先选择 Codex、Claude Code 或 DeepSeek Harness 开始创作。';
   return `请读取 ${guideUrl(info, host)}，将 OpenDesign 接入 ${hostNames[host]}，验证后带我开始创作。`;
 }
-export function templatePrompt(info: IntegrationInfo, host: IntegrationHost, template: { id: string; title: string }) {
-  return `请读取 ${guideUrl(info, host, template.id)} 并在 OpenDesign 复刻模板 ${template.id}，完成后打开可编辑工程。`;
+export function templatePrompt(info: IntegrationInfo, _host: IntegrationHost, template: { id: string; title: string }, locale = 'zh-CN') {
+  const environment = info.templateEnvironment ?? info.transport.env?.MOTION_TEMPLATE_ENV ?? 'prod';
+  const installUrl = `https://releases.open-design.ai/open-motion/${environment === 'dev' ? 'dev/' : ''}install.md`;
+  const message = templatePrompts[catalogLocale(Object.keys(templatePrompts), locale, 'en')];
+  const values = { installUrl, name: template.title, id: template.id };
+  return message.replace(/\{(installUrl|name|id)\}/g, (_, key: keyof typeof values) => values[key]);
 }
 
 export function agentGuide(info: IntegrationInfo, host: IntegrationHost) {

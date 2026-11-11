@@ -8,6 +8,7 @@ import { RenderPreview } from "./RenderPreview";
 import { Button } from "../ui/Button";
 import { IconButton } from "../ui/IconButton";
 import { Tooltip } from "../ui/Tooltip";
+import { ErrorNotice } from "../ui/ErrorNotice";
 import type { RenderJob } from "./useRenderQueue";
 
 interface RenderQueueItemProps {
@@ -174,6 +175,7 @@ export const RenderQueueItem = memo(function RenderQueueItem({
           )}
         </div>
       </div>
+      {job.status === "failed" && job.error && <div className="mt-2"><ErrorNotice key={job.error} message={job.error} context="export" compact /></div>}
     </div>
   );
 });

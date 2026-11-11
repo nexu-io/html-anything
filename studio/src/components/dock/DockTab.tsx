@@ -8,12 +8,12 @@ import {
   ClockCounterClockwise,
   Code,
   FilmSlate,
+  FilmStrip,
   Image,
-  Layout,
   Monitor,
   Presentation,
   SlidersHorizontal,
-  SquaresFour,
+  Sparkle,
   Stack,
   X,
   type Icon,
@@ -31,13 +31,13 @@ const TAB_CLICKS = {
   renders: ["right_panel", "tab_export"],
 } as const;
 
-const TAB_ICONS: Record<PanelId, Icon> = {
+export const TAB_ICONS: Record<PanelId, Icon> = {
   preview: Monitor,
   timeline: ChartBarHorizontal,
-  compositions: Layout,
+  compositions: FilmStrip,
   assets: Image,
   code: Code,
-  catalog: SquaresFour,
+  catalog: Sparkle,
   design: SlidersHorizontal,
   layers: Stack,
   renders: FilmSlate,

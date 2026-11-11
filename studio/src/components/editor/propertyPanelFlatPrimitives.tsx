@@ -142,13 +142,14 @@ export function FlatSegmentedRow({
               type="button"
               data-flat-segment="true"
               aria-label={t(option.label)}
+              title={typeof option.node === "string" ? undefined : t(option.label)}
               aria-pressed={option.active}
               disabled={disabled}
               onClick={() => {
                 if (!option.active) track("segmented", label);
                 onChange(option.key);
               }}
-              className={`px-1.5 py-1 text-[11px] transition-colors disabled:cursor-not-allowed ${
+              className={`${filled ? "inline-flex h-7 w-7 shrink-0 items-center justify-center" : "px-1.5 py-1"} text-[11px] transition-colors disabled:cursor-not-allowed ${
                 filled
                   ? `rounded-md ${option.active ? "bg-panel-bg-inset font-semibold text-panel-text-0" : "text-panel-text-4 hover:bg-panel-bg-inset hover:text-panel-text-2"}`
                   : option.active

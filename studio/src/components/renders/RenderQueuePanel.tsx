@@ -58,6 +58,7 @@ export const RenderQueuePanel = memo(function RenderQueuePanel() {
           }}
           compositionDimensions={compositionDimensions}
           isRendering={renderQueue.isRendering}
+          emptyComposition={renderQueue.emptyComposition}
         />
       </div>
     </div>

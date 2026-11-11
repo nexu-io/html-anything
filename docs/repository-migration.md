@@ -1,8 +1,8 @@
 # OpenMotion standalone repository
 
-The `feature/motion` branch replaces the former HTML Anything application with OpenMotion at the repository root. Existing repository commits remain in Git history; this is a normal branch change, not a history rewrite or a merge into main. The repository name is unchanged.
+OpenMotion replaces the former HTML Anything application at the repository root on `main`. The repository name remains `nexu-io/html-anything`; existing commits, issues and pull requests remain in the same repository. The cutover preserves Git history.
 
-Daily Motion changes branch from the latest `feature/motion` and open PRs with that base. The previous application is preserved at [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). Switching `main`, renaming the repository and publishing remain separate decisions.
+Daily Motion changes branch from the latest `feature/motion` and open PRs with that base. The previous application is preserved at [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). The default branch remains `main`. Package publication remains a separate, explicitly authorized operation.
 
 ## Upstream synchronization checkpoint
 

@@ -22,7 +22,7 @@ export function validateGuideIdentity(pkg, manifest) {
   assert.match(manifest.commit || '', /^[a-f0-9]{40}$/, 'Require the built source SHA');
   for (const hash of [manifest.application?.sha256, manifest.locks?.npm, manifest.locks?.native]) assert.match(hash || '', /^[a-f0-9]{64}$/, 'Require release checksums');
   const targets = Object.values(manifest.runtime?.targets || {});
-  assert(targets.length > 0 && targets.every(t => t.platform && t.arch && t.minimumOS), 'Require native target declarations');
+  assert(targets.length > 0 && targets.every(t => t.platform && t.arch && (t.platform === 'darwin' || t.minimumOS)), 'Require native target declarations (minimum system version required outside macOS)');
   return pkg.version.includes('-test.') ? 'test' : 'stable';
 }
 
@@ -33,7 +33,7 @@ export async function generateInstallGuide(tgz, output, candidate = false) {
   const digest = await sha256(tgz), packageSpec = `${pkg.name}@${pkg.version}`;
   const values = { VERSION: pkg.version, PACKAGE_SPEC: packageSpec, CHANNEL: channel, COMMIT: manifest.commit,
     TEMPLATE_ENVIRONMENT: manifest.templateEnvironment, TGZ_SHA256: digest,
-    TARGETS: Object.values(manifest.runtime.targets).map(t => `${t.platform}/${t.arch} (${t.minimumOS}+)`).join(', '),
+    TARGETS: Object.values(manifest.runtime.targets).map(t => `${t.platform}/${t.arch}${t.minimumOS ? ` (${t.minimumOS}+)` : ''}`).join(', '),
     DETAILS_URL: `https://github.com/nexu-io/html-anything/blob/${manifest.commit}/docs/npm-installation.md` };
   const template = await readFile(new URL('../docs/install.md', import.meta.url), 'utf8');
   // The repository warning is unnecessary after all release placeholders are resolved.

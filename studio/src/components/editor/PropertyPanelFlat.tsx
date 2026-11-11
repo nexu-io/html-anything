@@ -18,7 +18,7 @@ import { PropertyPanelFlatFooter } from "./PropertyPanelFlatFooter";
 import { closedGroupHeader, isSelectionHidden } from "./propertyPanelFlatClosedGroup";
 import { FlatGroupHeader } from "./propertyPanelFlatPrimitives";
 import { FlatTextSection } from "./propertyPanelFlatTextSection";
-import { FlatStyleSection } from "./propertyPanelFlatStyleSections";
+import { FlatOpacitySlider, FlatStyleSection } from "./propertyPanelFlatStyleSections";
 import { FlatLayoutSection } from "./propertyPanelFlatLayoutSection";
 import { FlatMotionSection, motionSectionLabel } from "./propertyPanelFlatMotionSection";
 import { AudioFxGroup } from "./propertyPanelAudioFxGroup.js";
@@ -221,7 +221,7 @@ export function PropertyPanelFlat({
 
   const reveal = useAudioFxRevealSection({
     elementId: element?.id,
-    hasAudioFxSection: Boolean(sections.audioFx),
+    hasAudioFxSection: !mvp && Boolean(sections.audioFx),
   });
   if (reveal.revealNonce !== null) {
     reveal.consume(reveal.revealNonce);
@@ -321,6 +321,10 @@ export function PropertyPanelFlat({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- store replacement signals live group membership changed
   }, [element, storeElements]);
 
+  const preserveOpacityAnimation = mvp && gsapAnimations.some(animation =>
+    [animation.properties, animation.fromProperties, ...(animation.keyframes?.keyframes.map(frame => frame.properties) ?? [])]
+      .some(properties => properties && ("opacity" in properties || "autoAlpha" in properties)),
+  );
   const groups: FlatGroupDescriptor[] = [];
   if (isTextEditable) {
     groups.push({
@@ -328,21 +332,34 @@ export function PropertyPanelFlat({
       title: "Text",
       summary: formatTextFieldPreview(element.textFields[0]?.value ?? ""),
       content: (
-        <FlatTextSection
-          element={element}
-          styles={styles}
-          fontAssets={fontAssets}
-          onImportFonts={onImportFonts}
-          onSetText={onSetText}
-          onSetTextFieldStyle={onSetTextFieldStyle}
-          onPreviewTextFieldStyle={onPreviewTextFieldStyle}
-          onAddTextField={onAddTextField}
-          onRemoveTextField={onRemoveTextField}
-        />
+        <>
+          <FlatTextSection
+            element={element}
+            styles={styles}
+            fontAssets={fontAssets}
+            onImportFonts={onImportFonts}
+            onSetText={onSetText}
+            onSetTextFieldStyle={onSetTextFieldStyle}
+            onPreviewTextFieldStyle={onPreviewTextFieldStyle}
+            onAddTextField={onAddTextField}
+            onRemoveTextField={onRemoveTextField}
+          />
+          {mvp && showEditableSections && (
+            <div className="mt-1.5">
+              <FlatOpacitySlider
+                styles={styles}
+                inlineStyles={element.inlineStyles}
+                preserveOpacityAnimation={preserveOpacityAnimation}
+                disabled={!element.capabilities.canEditStyles}
+                onSetStyle={onSetStyle}
+              />
+            </div>
+          )}
+        </>
       ),
     });
   }
-  if (showEditableSections) {
+  if (showEditableSections && !(mvp && isTextEditable)) {
     const opacityValue = parseFloat(styles.opacity ?? "1");
     const opacityPct = Math.round((Number.isFinite(opacityValue) ? opacityValue : 1) * 100);
     groups.push({
@@ -351,6 +368,7 @@ export function PropertyPanelFlat({
       summary: t("Fill: {fill} · {opacity}%", { fill: t(styles["background-image"] && styles["background-image"] !== "none" ? "Image/gradient" : styles["background-color"] ? "Solid" : "None"), opacity: opacityPct }),
       content: (
         <FlatStyleSection
+          preserveOpacityAnimation={preserveOpacityAnimation}
           projectId={projectId}
           element={element}
           styles={styles}
@@ -364,7 +382,7 @@ export function PropertyPanelFlat({
       ),
     });
   }
-  if (sections.layout) {
+  if (!mvp && sections.layout) {
     groups.push({
       id: "layout",
       title: "Layout",
@@ -494,7 +512,7 @@ export function PropertyPanelFlat({
       });
     }
   }
-  if (sections.audioFx) {
+  if (!mvp && sections.audioFx) {
     groups.push({
       id: "audio-fx",
       title: "Audio FX",
@@ -562,7 +580,7 @@ export function PropertyPanelFlat({
         >
           {mvp ? groups.map((group) => (
             <DesignPanelInputProvider key={group.id} section={slugifyDesignInput(group.title)}>
-              <section data-flat-group-open="true" className="shrink-0 border-b border-panel-hairline">
+              <section data-flat-group-open="true" className="shrink-0 border-b border-panel-hairline last:border-b-0">
                 <div className="flex items-center justify-between px-4 py-3">
                   <h3 className="text-[12px] font-semibold text-panel-text-0">{t(group.title)}</h3>
                   {group.accessory}

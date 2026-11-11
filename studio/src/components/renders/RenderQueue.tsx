@@ -1,3 +1,4 @@
+import { ErrorNotice } from "../ui/ErrorNotice";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n, type Translate } from "../../i18n/I18n";
@@ -52,6 +53,7 @@ export interface RenderQueueProps {
   onClearCompleted: () => void;
   onStartRender: StartRenderHandler;
   isRendering: boolean;
+  emptyComposition?: boolean;
   /** History fetch failure (null when the last load succeeded). */
   loadError?: string | null;
   /** Retry a failed history load. */
@@ -141,16 +143,13 @@ function scaleOptionLabel(
   scale: RenderScale,
   dims: CompositionDimensions | null | undefined,
   t: Translate,
+  mvp = false,
 ): string {
   const resolved = resolvedDimensions(scale, dims);
+  if (mvp && scale === "auto" && resolved) return `${resolved.width}×${resolved.height}`;
   const base = resolved
     ? `${t(SCALE_LABEL[scale])} · ${resolved.width}×${resolved.height}`
     : t(SCALE_LABEL[scale]);
-  // Explain *why* an option is disabled instead of greying it silently:
-  // the preset must be an exact integer upscale of the authored size.
-  if (dims && !scaleApplies(scale, dims)) {
-    return t("{base} (not an integer scale of {width}×{height})", { base, width: dims.width, height: dims.height });
-  }
   return base;
 }
 
@@ -164,7 +163,7 @@ const FORMAT_PANEL_SIZE = { width: 264, height: 176 };
 // for the one-line ui/Tooltip primitive, so this stays a local popover.
 // It renders in a portal because the right panel is overflow-hidden: an
 // in-flow absolute panel gets clipped at the panel edge.
-function FormatInfoTooltip({ mvp }: { mvp: boolean }) {
+function FormatInfoTooltip() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<FloatingPosition | null>(null);
@@ -232,10 +231,9 @@ function FormatInfoTooltip({ mvp }: { mvp: boolean }) {
             style={{ left: position?.left ?? -9999, top: position?.top ?? -9999 }}
           >
             {(["mp4", "mov", "webm", "gif"] as const)
-              .filter((f) => !mvp || f !== "gif")
               .map((f) => (
                 <p key={f} className="text-text-3">
-                  <span className="text-text-1 font-semibold">{f === "webm" ? "WebM" : f.toUpperCase()}</span>
+                  <span className="text-text-1 font-semibold">{f === "webm" ? "WebM" : f === "mov" ? "MOV · ProRes" : f.toUpperCase()}</span>
                   {" · "}{t(FORMAT_INFO[f].desc)}
                 </p>
               ))}
@@ -262,6 +260,7 @@ const QUALITY_OPTIONS: SelectOption[] = [
 function FormatExportButton({
   onStartRender,
   isRendering,
+  emptyComposition = false,
   compositionDimensions,
   lastRenderDurationMs,
   ffmpeg,
@@ -270,6 +269,7 @@ function FormatExportButton({
 }: {
   onStartRender: StartRenderHandler;
   isRendering: boolean;
+  emptyComposition?: boolean;
   compositionDimensions?: CompositionDimensions | null;
   lastRenderDurationMs?: number;
   ffmpeg: FfmpegStatus | null;
@@ -280,7 +280,7 @@ function FormatExportButton({
   const persisted = getPersistedRenderSettings();
   const mvp = useMvpEditor();
   const projectId = useStudioShellContextOptional()?.projectId;
-  const [format, setFormat] = useState<"mp4" | "webm" | "mov" | "gif">(mvp && persisted.format === "gif" ? "mp4" : persisted.format);
+  const [format, setFormat] = useState<"mp4" | "webm" | "mov" | "gif">(persisted.format);
   const [quality, setQuality] = useState<"draft" | "standard" | "high">(persisted.quality);
   const [resolution, setResolution] = useState<RenderScale>("auto");
   const [requestedFps, setFps] = useState<24 | 30 | 60>(persisted.fps);
@@ -295,7 +295,7 @@ function FormatExportButton({
   // setups that are perfectly fine. Holding the narrowed value rather than a
   // boolean keeps the notice from re-testing what this line already decided.
   const missingFfmpeg = ffmpeg && !ffmpeg.ok ? ffmpeg : null;
-  const exportBlocked = isRenderExportBlocked(isRendering, missingFfmpeg !== null, invalidGifLoop);
+  const exportBlocked = emptyComposition || isRenderExportBlocked(isRendering, missingFfmpeg !== null, invalidGifLoop);
 
   // MOV (ProRes) is a fixed-quality codec — quality selector has no effect.
   const showQuality = format !== "mov";
@@ -314,12 +314,12 @@ function FormatExportButton({
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1">
             <span className="text-step-10 text-text-4">{t("Format")}</span>
-            <FormatInfoTooltip mvp={mvp} />
+            <FormatInfoTooltip />
           </div>
           <Select
             label={t("Format")}
             value={format}
-            options={mvp ? FORMAT_OPTIONS.filter(option => option.value !== "gif") : FORMAT_OPTIONS}
+            options={mvp ? [...FORMAT_OPTIONS.map(option => option.value === "mov" ? { ...option, label: "MOV" } : option), { value: "webp", label: "WebP", disabled: true }] : FORMAT_OPTIONS}
             disabled={isRendering}
             onCommit={(next) => {
               const v = resolveRenderFormat(next);
@@ -335,7 +335,7 @@ function FormatExportButton({
             value={resolution}
             options={SCALE_OPTION_ORDER.map((value) => ({
               value,
-              label: scaleOptionLabel(value, compositionDimensions, t),
+              label: scaleOptionLabel(value, compositionDimensions, t, mvp),
               disabled: !scaleApplies(value, compositionDimensions),
             }))}
             disabled={isRendering}
@@ -421,6 +421,7 @@ function FormatExportButton({
       >
         {isRendering ? t("Rendering…") : t("Export")}
       </Button>
+      {emptyComposition && <p className="text-step-10 text-text-5 text-center">{t("No content to export. Add media first.")}</p>}
       {!mvp && <RenderDurationNote durationMs={lastRenderDurationMs} isRendering={isRendering} />}
     </div>
   );
@@ -434,6 +435,7 @@ export const RenderQueue = memo(function RenderQueue({
   onClearCompleted,
   onStartRender,
   isRendering,
+  emptyComposition = false,
   loadError,
   onRetryLoad,
   actionError,
@@ -463,9 +465,10 @@ export const RenderQueue = memo(function RenderQueue({
     .find((j) => j.status === "complete" && j.durationMs !== undefined)?.durationMs;
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="px-3 py-3 border-b border-border shrink-0">
+    <div className={mvp ? "flex min-h-0 flex-col" : "flex flex-col h-full"}>
+      <div className={`px-3 pb-3 border-b border-border shrink-0 ${mvp ? "pt-1" : "pt-3"}`}>
         <FormatExportButton
+          emptyComposition={emptyComposition}
           onStartRender={onStartRender}
           isRendering={isRendering}
           compositionDimensions={compositionDimensions}
@@ -476,38 +479,16 @@ export const RenderQueue = memo(function RenderQueue({
         />
       </div>
 
-      {actionError && (
-        <div
-          role="alert"
-          className="flex items-start justify-between gap-2 px-3 py-2 border-b border-border bg-danger/10"
-        >
-          <span className="text-step-10 text-danger-ink">{t(actionError)}</span>
-          {onDismissActionError && (
-            <IconButton
-              size="sm"
-              onClick={onDismissActionError}
-              aria-label={t("Dismiss error")}
-              className="shrink-0"
-              icon={
-                <RemixIcon name="close-line" size={14} />
-              }
-            />
-          )}
-        </div>
-      )}
+      {actionError && <ErrorNotice key={actionError} message={actionError} onDismiss={onDismissActionError} />}
 
       {/* Job list */}
-      <div ref={listRef} className="flex-1 overflow-y-auto">
+      {/* MVP history fits its content up to the count header and about 3.5 standard rows. */}
+      <div ref={listRef} className={mvp ? "min-h-0 max-h-[259px] overflow-y-auto" : "flex-1 overflow-y-auto"}>
         {loadError && jobs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full px-4 gap-2" role="alert">
-            <p className="text-step-10 text-danger-ink text-center">{loadError}</p>
-            {onRetryLoad && (
-              <Button size="sm" variant="secondary" onClick={onRetryLoad}>
-                {t("Retry")}</Button>
-            )}
-          </div>
+          <ErrorNotice key={loadError} message={loadError}
+            action={onRetryLoad ? { label: 'Retry', run: onRetryLoad } : undefined} />
         ) : jobs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full px-4 gap-2">
+          <div className={`flex flex-col items-center justify-center px-4 gap-2 ${mvp ? "py-6" : "h-full"}`}>
             <RemixIcon name="film-line" size={24} className="text-text-5" />
             <p className="text-step-10 text-text-5 text-center">{t("No renders yet")}</p>
           </div>
@@ -516,7 +497,7 @@ export const RenderQueue = memo(function RenderQueue({
             {completedCount > 0 && (
               <div className="flex items-center justify-between px-3 py-1.5">
                 <span className="text-step-10 text-text-4">
-                  {t("{count} renders", { count: jobs.length })}
+                  {mvp ? `${t("Export")} ${jobs.length}` : t("{count} renders", { count: jobs.length })}
                 </span>
                 {/* "Hide", not "Clear": files stay on disk (delete is per-row
                     and confirmed); hidden rows don't resurrect on reload. */}

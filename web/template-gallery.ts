@@ -44,7 +44,7 @@ export function mountTemplates(root: HTMLElement, options: {
     const host = options.host();
     report({ kind: 'copy_click', templateId: template.id });
     // The result is what the copy actually did: clipboard written, manual fallback shown, or neither.
-    void options.copy(templatePrompt(info, host, template), 'Template instruction', button)
+    void options.copy(templatePrompt(info, host, template, language.locale), 'Template instruction', button)
       .then(status => report({ kind: 'copy_result', templateId: template.id, host, status: status ?? 'clipboard_written' }),
         () => report({ kind: 'copy_result', templateId: template.id, host, status: 'failed' }));
   };
@@ -66,11 +66,12 @@ export function mountTemplates(root: HTMLElement, options: {
       // IntersectionObserver assigns src lazily; a hidden native-lazy image would never load.
       poster.alt = ''; poster.loading = 'eager'; poster.decoding = 'async';
       video.muted = true; video.playsInline = true; video.loop = true; video.preload = 'metadata'; video.setAttribute('aria-hidden', 'true');
-      let posterReady = false, frameReady = false, failed = false, playing = false, started = false;
+      let posterReady = false, frameReady = false, failed = false, playing = false, hasPlayed = false, started = false;
       let timer: ReturnType<typeof setTimeout> | undefined;
       const update = () => {
-        poster.hidden = !posterReady; video.hidden = !frameReady || (posterReady && !playing);
-        content.hidden = posterReady || frameReady; media.dataset.previewState = playing ? 'playing' : frameReady ? 'frame' : posterReady ? 'poster' : failed ? 'unavailable' : 'content';
+        const showFrame = frameReady && (hasPlayed || !posterReady);
+        poster.hidden = !posterReady || showFrame; video.hidden = !showFrame;
+        content.hidden = posterReady || frameReady; media.dataset.previewState = playing ? 'playing' : showFrame ? 'frame' : posterReady ? 'poster' : failed ? 'unavailable' : 'content';
         language.text(status, failed ? "Preview unavailable · You can still copy the recreation instruction" : !template.previewUrl && !template.posterUrl ? "View template content and source" : "Loading preview…");
       };
       const unregister = playback.register(template.id, {
@@ -81,7 +82,7 @@ export function mountTemplates(root: HTMLElement, options: {
       poster.onerror = () => { posterReady = false; if (!template.previewUrl || failed) failed = true; update(); };
       video.onloadedmetadata = () => { if (Number.isFinite(video.duration) && video.duration > .2) video.currentTime = Math.min(.6, video.duration / 4); };
       video.onloadeddata = () => { clearTimeout(timer); frameReady = true; failed = false; update(); playback.update(template.id, { ready: true }); };
-      video.onplaying = () => { playing = true; update(); };
+      video.onplaying = () => { playing = hasPlayed = true; update(); };
       video.onpause = () => { playing = false; update(); };
       video.onerror = () => { clearTimeout(timer); failed = true; playing = false; frameReady = false; playback.update(template.id, { ready: false }); update(); };
       const start = () => {
@@ -158,7 +159,7 @@ export function mountTemplates(root: HTMLElement, options: {
     element<HTMLButtonElement>('more-templates').disabled = true; language.text(element('template-count'), "Loading templates…");
     const params = new URLSearchParams({ category, query: search.value, offset: String(reset ? 0 : next ?? 0), limit: '6', grouped: 'true', covered: 'true' });
     try {
-      const response = await fetch('/motion-api/template-catalog?' + params, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
+      const response = await fetch('/motion-api/template-catalog?' + params + '&locale=' + encodeURIComponent(language.locale), { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
       if (!response.ok) throw new Error("Template catalogue unavailable");
       const page = await response.json() as TemplatePage;
       if (!Array.isArray(page.items) || !Number.isSafeInteger(page.total)) throw new Error("Invalid template catalogue");
@@ -180,7 +181,7 @@ export function mountTemplates(root: HTMLElement, options: {
   const catalogTimer = setInterval(() => {
     if (!active || request || document.visibilityState === 'hidden' || !catalogVersion) return;
     const ticket = sequence;
-    void fetch('/motion-api/template-catalog?limit=1', { signal: lifetime.signal }).then(response => response.ok ? response.json() : null).then(page => {
+    void fetch('/motion-api/template-catalog?limit=1&locale=' + encodeURIComponent(language.locale), { signal: lifetime.signal }).then(response => response.ok ? response.json() : null).then(page => {
       if (!active || lifetime.signal.aborted || request || ticket !== sequence || !page?.catalogVersion) return;
       if (page.catalogVersion !== catalogVersion) void load(true);
       else if (page.warning !== catalogWarning) updateWarning(page.warning);
@@ -223,7 +224,7 @@ export function mountTemplates(root: HTMLElement, options: {
   function updateConnection() {
     root.querySelectorAll<HTMLButtonElement>('[data-copy-template], #copy-preview-template').forEach(button => button.disabled = !canCopy());
     if (preview) {
-      const info = options.info(); language.text(element('preview-prompt'), info ? templatePrompt(info, options.host(), preview) : "Reconnect to copy the recreation instruction.");
+      const info = options.info(); language.text(element('preview-prompt'), info ? templatePrompt(info, options.host(), preview, language.locale) : "Reconnect to copy the recreation instruction.");
       language.text(element('preview-copy-hint'), options.host() === 'chatgpt' ? 'Choose an available local client to start recreating.' : 'Copy the instruction and send it to {host} to start recreating.', { host: hostNames[options.host()] });
     }
   }
@@ -237,10 +238,47 @@ export function mountTemplates(root: HTMLElement, options: {
     dialog.classList.toggle('connect-preview-dialog--portrait', template.ratio === '9:16' || template.kind === 'builtin');
     if (template.previewUrl) {
       const video = document.createElement('video'); video.controls = true; video.muted = true; video.playsInline = true; video.autoplay = !reducedMotion.matches; video.loop = true; video.preload = 'metadata'; language.attribute(video, 'aria-label', '{title} reference video', { title: template.title }); if (template.posterUrl) video.poster = template.posterUrl;
+      const mediaEvents = new AbortController();
+      let restoreTime: number | undefined;
+      let away = false;
       let timer: ReturnType<typeof setTimeout>;
       const failed = () => { clearTimeout(timer); language.text(element('preview-error'), "Preview could not load. View the template content and recreation instruction, or reopen the preview to try again."); element('preview-error').hidden = false; };
-      video.onerror = failed; video.onloadeddata = () => clearTimeout(timer); video.src = template.previewUrl; stage.append(video); timer = setTimeout(failed, 15000);
-      previewCleanup = () => { clearTimeout(timer); video.onerror = null; video.pause(); video.removeAttribute('src'); video.load(); };
+      video.onerror = failed;
+      video.onloadeddata = () => { clearTimeout(timer); element('preview-error').hidden = true; };
+      video.onloadedmetadata = () => {
+        if (away || restoreTime === undefined) return;
+        video.currentTime = Number.isFinite(video.duration) ? Math.min(restoreTime, video.duration) : restoreTime;
+        restoreTime = undefined;
+      };
+      const suspendPreview = () => {
+        if (away) return;
+        away = true;
+        restoreTime ??= video.currentTime;
+        clearTimeout(timer);
+        video.autoplay = false;
+        video.pause();
+      };
+      const restorePreview = () => {
+        if (!away || document.hidden) return;
+        away = false;
+        // A lost decoder frame can still report HAVE_CURRENT_DATA. Reload on return
+        // and restore the position while keeping the existing paused-return behavior.
+        video.autoplay = false;
+        clearTimeout(timer);
+        timer = setTimeout(failed, 15000);
+        video.load();
+      };
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) suspendPreview();
+        else restorePreview();
+      }, { signal: mediaEvents.signal });
+      window.addEventListener('pagehide', suspendPreview, { signal: mediaEvents.signal });
+      window.addEventListener('pageshow', restorePreview, { signal: mediaEvents.signal });
+      video.src = template.previewUrl; stage.append(video); timer = setTimeout(failed, 15000);
+      previewCleanup = () => {
+        clearTimeout(timer); mediaEvents.abort(); video.onerror = null; video.onloadeddata = null; video.onloadedmetadata = null;
+        video.pause(); video.removeAttribute('src'); video.load();
+      };
     } else if (template.posterUrl) {
       const poster = document.createElement('img'); language.attribute(poster, 'alt', '{title} template cover', { title: template.title }); poster.src = template.posterUrl; stage.append(poster);
       poster.onerror = () => { stage.replaceChildren(contentPreview(template)); }; previewCleanup = () => { poster.onerror = null; poster.removeAttribute('src'); };
@@ -263,10 +301,11 @@ export function mountTemplates(root: HTMLElement, options: {
   dialog.addEventListener('close', () => { previewCleanup(); previewCleanup = () => {}; preview = undefined; configurePlayback(); }, { signal: lifetime.signal });
   element('copy-preview-template').onclick = event => { if (preview) copyTemplate(preview, event.currentTarget as HTMLButtonElement); };
   element('use-preview-template').onclick = () => { if (preview && isEditableTemplate(preview)) { const id = preview.id; dialog.close(); report({ kind: 'use', templateId: id }); options.useTemplate(id); } };
-  document.addEventListener('visibilitychange', () => { configurePlayback(); if (document.hidden) element('template-preview-stage').querySelector('video')?.pause(); }, { signal: lifetime.signal });
+  document.addEventListener('visibilitychange', configurePlayback, { signal: lifetime.signal });
   function suspend() { active = false; if (request) { request.abort(); loaded = false; } clearTimeout(debounce); clearInterval(rotation); configurePlayback(); if (dialog.open) dialog.close(); previewCleanup(); }
   return {
     updateConnection,
+    setLanguage() { if (dialog.open) dialog.close(); loaded = false; if (active) void load(true); },
     showAll() { search.value = ''; searching = false; chooseCategory(element<HTMLButtonElement>('template-tab-featured')); },
     resume() { active = true; if (!loaded) void load(true); clearInterval(rotation); rotation = setInterval(() => { if (active && enabled && !dialog.open && !document.hidden) playback.advance(); }, 4200); configurePlayback(); },
     suspend,

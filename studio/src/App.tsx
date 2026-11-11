@@ -7,7 +7,6 @@ import { useDismissingTabSetter, useRightPanelIntent } from "./hooks/useRightPan
 import { useRenderQueue } from "./components/renders/useRenderQueue";
 import { usePlayerStore } from "./player";
 import { StudioOverlays } from "./components/StudioOverlays";
-import { SaveQueuePausedBanner } from "./components/SaveQueuePausedBanner";
 import { ExternalFileConflictBanner } from "./components/ExternalFileConflictBanner";
 import { ProjectUnreachableBanner } from "./components/ProjectUnreachableBanner";
 import { CompositionMissingBanner } from "./components/CompositionMissingBanner";
@@ -522,12 +521,6 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
                   inspectorPanelActive={inspectorPanelActive}
                   onExport={handleExport}
                 />
-                {previewPersistence.domEditSaveQueuePaused && !externalFileChanges.blocked && (
-                  <SaveQueuePausedBanner
-                    message={previewPersistence.domEditSaveQueuePaused}
-                    onRetry={previewPersistence.resetDomEditSaveQueueBreaker}
-                  />
-                )}
                 <ExternalFileConflictBanner coordinator={externalFileChanges} />
                 {sdkHandle.unreachableProject && (
                   <ProjectUnreachableBanner projectId={sdkHandle.unreachableProject} />

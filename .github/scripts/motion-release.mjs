@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile, sha256, writeJSON } from '../../scripts/runtime-assets.mjs';
-import { checkReleaseVersion, compareReleaseVersions, testVersion } from '../../scripts/release-version.mjs';
+import { checkReleaseVersion, compareReleaseVersions, releaseTemplateEnvironment, testVersion } from '../../scripts/release-version.mjs';
 import { generateInstallGuide } from '../../scripts/install-guide.mjs';
 import { publishGuide, storagePlan } from './publish-install-guide.mjs';
 import { scanPackage, scanSource } from './motion-scan.mjs';
@@ -29,19 +29,33 @@ function manualEntry(env, workflows) {
   assert(workflows.some(p => env.GITHUB_WORKFLOW_REF === `${repository}/${p}@refs/heads/feature/motion`), 'Require a trusted manual entry');
 }
 
+export function releaseChannel(version) {
+  checkReleaseVersion(version);
+  return version.includes('-test.') ? 'test' : 'stable';
+}
+
+function channelVersion(version, channel) {
+  assert(['test', 'stable'].includes(channel), 'Choose test or stable');
+  assert.equal(releaseChannel(version), channel, 'Version must match the selected release channel');
+}
+
 export function releaseInputs(env = process.env) {
   manualEntry(env, [publicationWorkflow, recoveryWorkflow]);
-  assert(['publish-test', 'archive-only'].includes(env.MOTION_RELEASE_ACTION), 'Unknown release action');
+  assert(['publish-test', 'publish-stable', 'archive-only'].includes(env.MOTION_RELEASE_ACTION), 'Unknown release action');
   const workflow = env.GITHUB_WORKFLOW_REF;
   if (workflow.includes(recoveryWorkflow)) assert.equal(env.MOTION_RELEASE_ACTION, 'archive-only', 'Recovery never publishes or moves a channel');
   if (env.MOTION_EXPECTED_SHA256) assert.match(env.MOTION_EXPECTED_SHA256, hashPattern);
-  assert.equal(env.MOTION_ACCEPTED, 'true', 'Explicit operator acceptance confirmation is required');
-  checkReleaseVersion(env.MOTION_VERSION); assert(env.MOTION_VERSION.includes('-test.'), 'Only test versions may use this entry');
-  return { action: env.MOTION_RELEASE_ACTION, accepted: true, version: env.MOTION_VERSION, expectedSHA256: env.MOTION_EXPECTED_SHA256 };
+  const channel = env.MOTION_RELEASE_CHANNEL || 'test';
+  channelVersion(env.MOTION_VERSION, channel);
+  if (env.MOTION_RELEASE_ACTION !== 'archive-only') assert.equal(env.MOTION_RELEASE_ACTION, 'publish-' + channel);
+  return { action: env.MOTION_RELEASE_ACTION, channel, version: env.MOTION_VERSION, expectedSHA256: env.MOTION_EXPECTED_SHA256 };
 }
 
 export async function resolveCandidate(control, requested, version, env = process.env, run = runFile) {
   manualEntry(env, [candidateWorkflow]);
+  const channel = env.MOTION_RELEASE_CHANNEL || 'test';
+  assert(['test', 'stable'].includes(channel), 'Choose test or stable');
+  assert(channel !== 'stable' || version, 'Enter an exact stable version; stable versions are never automatically assigned');
   const commit = requested || env.GITHUB_SHA;
   assert.match(commit, /^[a-f0-9]{40}$/, 'Use a full immutable source SHA');
   if (!version) {
@@ -51,13 +65,13 @@ export async function resolveCandidate(control, requested, version, env = proces
     version = testVersion(source.version, String(BigInt(env.GITHUB_RUN_NUMBER) + 5n), env.GITHUB_RUN_ATTEMPT);
     if (env.GITHUB_RUN_ATTEMPT === '1') version = version.slice(0, -2);
   }
-  await validateSource(control, commit, version, run);
+  await validateSource(control, commit, version, run, channel);
   return { commit, version };
 }
 
-export async function validateSource(control, commit, version, run = runFile) {
+export async function validateSource(control, commit, version, run = runFile, channel = releaseChannel(version)) {
   assert.match(commit || '', /^[a-f0-9]{40}$/, 'Use a full immutable source SHA');
-  checkReleaseVersion(version); assert(version.includes('-test.'), 'This workflow builds test versions only');
+  channelVersion(version, channel);
   await run('git', ['merge-base', '--is-ancestor', commit, 'refs/remotes/origin/feature/motion'], { cwd: control });
 }
 
@@ -65,7 +79,8 @@ export async function sealCandidate(build, output, source, env = process.env) {
   const manifest = await json(path.join(build, 'release-npm.json'));
   assert.equal(manifest.commit, (await runFile('git', ['rev-parse', 'HEAD'], { cwd: source })).trim());
   assert.equal(manifest.commit, env.MOTION_SOURCE_SHA); assert.equal(manifest.version, env.MOTION_VERSION);
-  assert(manifest.version.includes('-test.') && manifest.templateEnvironment === 'dev', 'Test candidates require DEV template defaults');
+  channelVersion(manifest.version, env.MOTION_RELEASE_CHANNEL || 'test');
+  assert.equal(manifest.templateEnvironment, releaseTemplateEnvironment(manifest.version), 'Template defaults must match the release channel');
   assert.match(env.GITHUB_SHA || '', /^[a-f0-9]{40}$/);
   const workflowRef = candidateRefs.find(ref => env.GITHUB_WORKFLOW_REF === `${repository}/${candidateWorkflow}@${ref}`);
   assert(workflowRef, 'Build candidates only from main or feature/motion');
@@ -86,6 +101,7 @@ export async function sealCandidate(build, output, source, env = process.env) {
   await writeFile(path.join(output, 'acceptance.md'), template.replace('<!-- CANDIDATE_IDENTITY -->', '```json\n' + JSON.stringify(identity, null, 2) + '\n```'));
   const installTemplate = await readFile(new URL('../../docs/templates/candidate-install.md', import.meta.url), 'utf8');
   const values = { VERSION: guide.version, TGZ: filename, SHA256: identity.tgzSHA256, SOURCE_SHA: guide.commit,
+    TEMPLATE_ENVIRONMENT: guide.templateEnvironment,
     DETAILS_URL: `https://github.com/${repository}/blob/${guide.commit}/docs/npm-installation.md` };
   const instructions = installTemplate.replace(/\{\{([A-Z0-9_]+)\}\}/g, (_, key) => { assert(Object.hasOwn(values, key)); return values[key]; });
   assert(!instructions.includes('{{'), 'Unresolved candidate instructions');
@@ -122,9 +138,9 @@ async function github(route, fetcher = fetch) {
 export function authorizationReceipt(candidate, run, action, observedAt = new Date().toISOString()) {
   const actor = run.triggering_actor?.login || run.actor?.login;
   assert(typeof actor === 'string' && actor.length > 0, 'Require the actual publication operator');
-  return { schemaVersion: 1, type: 'manual-workflow-dispatch', publicationRun: run.id, runAttempt: run.run_attempt,
+  return { schemaVersion: 2, type: 'manual-workflow-dispatch', publicationRun: run.id, runAttempt: run.run_attempt,
     action, version: candidate.version, tgzSHA256: candidate.tgzSHA256, candidateRun: candidate.workflow,
-    actor, acceptanceConfirmed: true, observedAt };
+    actor, observedAt };
 }
 
 export async function recordAuthorization(directory, inputs, fetcher = fetch, env = process.env) {
@@ -140,8 +156,8 @@ export async function recordAuthorization(directory, inputs, fetcher = fetch, en
 
 async function verifyAuthorization(directory, inputs, env = process.env) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version), authorization = await json(path.join(directory, 'authorization.json'));
-  assert.equal(inputs.accepted, true); assert.equal(authorization.schemaVersion, 1);
-  assert.equal(authorization.type, 'manual-workflow-dispatch'); assert.equal(authorization.acceptanceConfirmed, true);
+  assert.equal(authorization.schemaVersion, 2);
+  assert.equal(authorization.type, 'manual-workflow-dispatch');
   assert.equal(authorization.version, candidate.version); assert.equal(authorization.tgzSHA256, candidate.tgzSHA256);
   assert.equal(authorization.action, inputs.action); assert.deepEqual(authorization.candidateRun, candidate.workflow);
   assert.equal(String(authorization.publicationRun), env.GITHUB_RUN_ID, 'Authorization belongs to another publication run');
@@ -152,7 +168,7 @@ async function verifyAuthorization(directory, inputs, env = process.env) {
 export async function verifyCandidate(directory, expectedSHA256, run) {
   const candidate = await json(path.join(directory, 'candidate.json'));
   assert.equal(candidate.schemaVersion, 2); assert.equal(candidate.kind, 'motion-candidate'); assert.equal(candidate.packageName, '@openmotion/app');
-  checkReleaseVersion(candidate.version); assert(candidate.version.includes('-test.'));
+  checkReleaseVersion(candidate.version);
   assert.equal(candidate.tgz, `openmotion-app-${candidate.version}.tgz`); assert.equal(candidate.tgzSHA256, expectedSHA256);
   assert.match(expectedSHA256, hashPattern); assert.match(candidate.sourceCommit, /^[a-f0-9]{40}$/);
   const ref = `refs/heads/${run.head_branch || 'main'}`; // Older main-only receipts omitted the branch.
@@ -165,7 +181,7 @@ export async function verifyCandidate(directory, expectedSHA256, run) {
   assert.equal(integrity(await readFile(path.join(directory, candidate.tgz))), candidate.integrity);
   const guide = await json(path.join(directory, 'install-record.json'));
   assert.equal(guide.commit, candidate.sourceCommit); assert.equal(guide.version, candidate.version); assert.equal(guide.packageName, candidate.packageName);
-  assert.equal(guide.tgzSHA256, expectedSHA256); assert.equal(guide.channel, 'test'); assert.equal(guide.templateEnvironment, 'dev');
+  assert.equal(guide.tgzSHA256, expectedSHA256); assert.equal(guide.channel, releaseChannel(candidate.version)); assert.equal(guide.templateEnvironment, releaseTemplateEnvironment(candidate.version));
   assert.equal(guide.guideSHA256, candidate.files['install.md']); assert.equal(guide.candidate, false);
   const manifest = await json(path.join(directory, 'release-npm.json'));
   assert.equal(manifest.commit, candidate.sourceCommit); assert.equal(manifest.version, candidate.version);
@@ -182,24 +198,8 @@ export async function verifyDownloaded(directory, expectedSHA256, version) {
   return candidate;
 }
 
-export async function platformReports(directory, candidate) {
-  const reports = [];
-  for (const platform of ['darwin-arm64', 'win32-x64']) {
-    const name = `registry-${platform}.json`, report = await json(path.join(directory, name));
-    assert.equal(report.status, 'passed'); assert.equal(report.platform, platform);
-    assert.equal(report.version, candidate.version); assert.equal(report.tgzSHA256, candidate.tgzSHA256);
-    assert.equal(report.sourceCommit, candidate.sourceCommit);
-    assert.equal(report.templateEnvironment, 'dev');
-    assert.equal(report.registryColdInstall, 'passed'); assert.equal(report.nativePreparation, 'passed');
-    assert.equal(report.repeatSetup, 'passed'); assert.equal(report.resources, 'passed');
-    assert.equal(report.mcpTools, 11); assert.equal(report.skills, 5);
-    reports.push({ platform, reportSHA256: await sha256(path.join(directory, name)) });
-  }
-  return reports;
-}
-
 export async function findCandidate(version, fetcher = fetch) {
-  checkReleaseVersion(version); assert(version.includes('-test.'));
+  checkReleaseVersion(version);
   const name = `motion-candidate-${version}`;
   const result = await github(`/actions/artifacts?name=${encodeURIComponent(name)}&per_page=100`, fetcher);
   assert(result.total_count <= 100, 'Too many matching artifacts; refusing an incomplete lookup');
@@ -249,41 +249,92 @@ export async function registryPackage(candidate, fetcher = fetch) {
 export async function publishNpm(directory, inputs, { fetcher = fetch, run = runFile, env = process.env } = {}) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
   await verifyAuthorization(directory, inputs, env);
+  channelVersion(candidate.version, inputs.channel || 'test');
   const before = await registryPackage(candidate, fetcher);
+  if (inputs.action === 'publish-stable' && before.tags.latest) assert(compareReleaseVersions(candidate.version, before.tags.latest) >= 0, 'A newer stable version already exists; use snapshot recovery');
   if (inputs.action === 'archive-only') assert(before.version, 'Archive-only requires an existing identical npm version');
   if (inputs.action === 'publish-test' && before.tags.test) assert(compareReleaseVersions(candidate.version, before.tags.test) >= 0, 'A newer npm test version already exists; use snapshot recovery for an identical published version');
   const record = { schemaVersion: 1, version: candidate.version, tgzSHA256: candidate.tgzSHA256, action: inputs.action,
-    previousLatest: before.tags.latest ?? null, status: before.version ? 'already-published-identical' : 'publish-started' };
+    previousLatest: before.tags.latest ?? null, previousTest: before.tags.test ?? null, status: before.version ? 'already-published-identical' : 'publish-started' };
   await writeJSON(path.join(directory, 'npm-publication.json'), record);
   if (!before.version) {
     // OIDC authenticates this publisher; its workflow SHA may differ from the prebuilt application's source.
-    await run('npm', ['publish', path.join(directory, candidate.tgz), '--access', 'public', '--tag', 'candidate', '--ignore-scripts', '--provenance=false', '--registry=https://registry.npmjs.org/']);
+    await run('npm', ['publish', path.join(directory, candidate.tgz), '--access', 'public', '--tag', releaseChannel(candidate.version) === 'stable' ? 'stage' : 'candidate', '--ignore-scripts', '--provenance=false', '--registry=https://registry.npmjs.org/']);
     record.status = 'published-awaiting-registry'; await writeJSON(path.join(directory, 'npm-publication.json'), record);
   }
   return record;
 }
 
-export async function promoteTest(directory, inputs, { fetcher = fetch, run = runFile, env = process.env } = {}) {
+export async function waitForRegistry(candidate, ready, { fetcher = fetch, wait = ms => new Promise(resolve => setTimeout(resolve, ms)), attempts = 60 } = {}) {
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const state = await registryPackage(candidate, fetcher);
+    if (ready(state)) return state;
+    if (attempt + 1 < attempts) await wait(10_000);
+  }
+  throw new Error('npm registry propagation timed out; retry the failed publication steps');
+}
+
+export async function promoteTest(directory, inputs, { fetcher = fetch, run = runFile, env = process.env, wait, attempts } = {}) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
+  channelVersion(candidate.version, 'test');
   await verifyAuthorization(directory, inputs, env);
-  const platforms = await platformReports(directory, candidate);
   const npm = await json(path.join(directory, 'npm-publication.json'));
   assert.equal(npm.tgzSHA256, candidate.tgzSHA256);
-  const before = await registryPackage(candidate, fetcher);
+  const before = await waitForRegistry(candidate, state => !!state.version, { fetcher, wait, attempts });
   assert(before.version, 'Exact npm version is not public');
   assert.equal(before.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly; stop before channel promotion');
   const superseded = before.tags.test && compareReleaseVersions(before.tags.test, candidate.version) > 0;
   let status = inputs.action === 'archive-only' ? 'archive-only' : superseded ? 'superseded' : 'already-promoted';
   if (inputs.action === 'publish-test' && !superseded && before.tags.test !== candidate.version) {
     await run('npm', ['dist-tag', 'add', `${candidate.packageName}@${candidate.version}`, 'test', '--registry=https://registry.npmjs.org/']);
-    const after = await registryPackage(candidate, fetcher);
+    const after = await waitForRegistry(candidate, state => state.tags.test === candidate.version, { fetcher, wait, attempts });
     assert(after.version); assert.equal(after.tags.test, candidate.version, 'npm test promotion readback failed');
     assert.equal(after.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly');
     status = 'promoted';
   }
   const record = { schemaVersion: 1, version: candidate.version, tgzSHA256: candidate.tgzSHA256, action: inputs.action,
-    publicationRun: env.GITHUB_RUN_ID, platformVerification: platforms, previousTest: before.tags.test ?? null, status };
+    publicationRun: env.GITHUB_RUN_ID, previousTest: before.tags.test ?? null, status };
   await writeJSON(path.join(directory, 'test-promotion.json'), record);
+  return record;
+}
+
+export async function stableReports(directory, candidate) {
+  channelVersion(candidate.version, 'stable');
+  const reports = [];
+  for (const platform of ['darwin-arm64', 'win32-x64']) {
+    const file = path.join(directory, `registry-${platform}.json`), report = await json(file);
+    assert.equal(report.status, 'passed'); assert.equal(report.platform, platform);
+    for (const key of ['version', 'sourceCommit', 'tgzSHA256']) assert.equal(report[key], candidate[key], 'Native report mismatch: ' + key);
+    assert.equal(report.templateEnvironment, 'prod');
+    for (const key of ['registryColdInstall', 'nativePreparation', 'repeatSetup', 'resources']) assert.equal(report[key], 'passed', 'Native check failed: ' + key);
+    assert.equal(report.mcpTools, 11); assert.equal(report.skills, 5);
+    reports.push({ platform, reportSHA256: await sha256(file), report });
+  }
+  return reports;
+}
+
+export async function promoteStable(directory, inputs, { fetcher = fetch, run = runFile, env = process.env, wait, attempts } = {}) {
+  const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
+  channelVersion(candidate.version, 'stable'); assert.equal(inputs.channel, 'stable');
+  assert(['publish-stable', 'archive-only'].includes(inputs.action));
+  await verifyAuthorization(directory, inputs, env);
+  const platformVerification = await stableReports(directory, candidate);
+  const npm = await json(path.join(directory, 'npm-publication.json'));
+  assert.equal(npm.tgzSHA256, candidate.tgzSHA256);
+  const before = await waitForRegistry(candidate, state => !!state.version, { fetcher, wait, attempts });
+  assert.equal(before.tags.test ?? null, npm.previousTest, 'npm test changed during stable publication');
+  const superseded = before.tags.latest && compareReleaseVersions(before.tags.latest, candidate.version) > 0;
+  if (!superseded && before.tags.latest !== candidate.version) assert.equal(before.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly');
+  let status = inputs.action === 'archive-only' ? 'archive-only' : superseded ? 'superseded' : 'already-promoted';
+  if (inputs.action === 'publish-stable' && !superseded && before.tags.latest !== candidate.version) {
+    await run('npm', ['dist-tag', 'add', `${candidate.packageName}@${candidate.version}`, 'latest', '--registry=https://registry.npmjs.org/']);
+    const after = await waitForRegistry(candidate, state => state.tags.latest === candidate.version, { fetcher, wait, attempts });
+    assert(after.version); assert.equal(after.tags.test ?? null, npm.previousTest, 'Stable promotion changed npm test');
+    status = 'promoted';
+  }
+  const record = { schemaVersion: 1, version: candidate.version, tgzSHA256: candidate.tgzSHA256, action: inputs.action,
+    publicationRun: env.GITHUB_RUN_ID, platformVerification, previousLatest: before.tags.latest ?? null, status };
+  await writeJSON(path.join(directory, 'stable-promotion.json'), record);
   return record;
 }
 
@@ -291,18 +342,23 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
   await writeJSON(path.join(directory, 'release-attempt.json'), { action: inputs.action, tgzSHA256: inputs.expectedSHA256, stage: 'verifying-release', runId: env.GITHUB_RUN_ID });
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256);
   const authorization = await verifyAuthorization(directory, inputs, env);
-  const platforms = await platformReports(directory, candidate);
-  const promotion = await json(path.join(directory, 'test-promotion.json'));
+  const stable = releaseChannel(candidate.version) === 'stable';
+  channelVersion(candidate.version, inputs.channel || 'test');
+  const platforms = stable ? await stableReports(directory, candidate) : undefined;
+  const promotionName = stable ? 'stable-promotion.json' : 'test-promotion.json';
+  const promotion = await json(path.join(directory, promotionName));
+  if (stable) assert.deepEqual(promotion.platformVerification, platforms);
   assert.equal(promotion.version, candidate.version); assert.equal(promotion.tgzSHA256, candidate.tgzSHA256);
   assert.equal(promotion.action, inputs.action); assert.equal(promotion.publicationRun, env.GITHUB_RUN_ID);
-  assert.deepEqual(promotion.platformVerification, platforms);
   assert((inputs.action === 'archive-only' ? ['archive-only'] : ['promoted', 'already-promoted', 'superseded']).includes(promotion.status), 'Require a successful channel verification');
   const record = await json(path.join(directory, 'install-record.json')), plan = storagePlan(record, config);
   assert.equal(candidate.tgzSHA256, inputs.expectedSHA256);
   const registry = await registryPackage(candidate, fetcher); assert(registry.version, 'Exact npm version is not public');
   const npm = await json(path.join(directory, 'npm-publication.json'));
   assert.equal(npm.tgzSHA256, candidate.tgzSHA256);
-  assert.equal(registry.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly; stop and investigate before promoting a guide');
+  if (!stable || inputs.action === 'archive-only') assert.equal(registry.tags.latest ?? null, npm.previousLatest, 'npm latest changed unexpectedly; stop and investigate before promoting a guide');
+  if (stable) assert.equal(registry.tags.test ?? null, npm.previousTest, 'npm test changed during stable publication');
+  if (inputs.action === 'publish-stable' && registry.tags.latest !== candidate.version) assert(registry.tags.latest && compareReleaseVersions(registry.tags.latest, candidate.version) > 0, 'Unexpected stable channel; explicit recovery required');
   if (inputs.action === 'publish-test' && registry.tags.test !== candidate.version) {
     assert(registry.tags.test && compareReleaseVersions(registry.tags.test, candidate.version) > 0, 'npm test tag is missing or unexpectedly older; explicit channel recovery is required');
   }
@@ -318,15 +374,15 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
     let release = { schemaVersion: 2, packageName: candidate.packageName, version: candidate.version, sourceCommit: candidate.sourceCommit,
       tgzSHA256: candidate.tgzSHA256, integrity: candidate.integrity, candidateRun: candidate.workflow,
       authorization, publicationRun: env.GITHUB_RUN_ID,
-      platformVerification: platforms, channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
-      status: 'registry-verified', publishedAt: new Date().toISOString() };
+      channelPromotion: promotion, templateEnvironment: record.templateEnvironment,
+      nativeChecks: stable ? 'passed-before-latest' : 'post-publication', ...(stable ? { platformVerification: platforms } : {}), status: 'registry-verified', publishedAt: new Date().toISOString() };
     if (prior) {
       const existing = JSON.parse(prior);
       for (const key of ['packageName', 'version', 'sourceCommit', 'tgzSHA256', 'integrity']) assert.equal(existing[key], release[key], 'Existing release record differs: ' + key);
       release = existing;
     }
     await writeJSON(path.join(directory, 'release-record.json'), release);
-    const names = [...Object.keys(candidate.files), 'candidate.json', 'registry-darwin-arm64.json', 'registry-win32-x64.json', 'release-record.json'];
+    const names = [...Object.keys(candidate.files), 'candidate.json', 'release-record.json'];
     const objects = [];
     for (const name of names) {
       const file = path.join(directory, name), bytes = await readFile(file), key = `${prefix}/${name}`, existing = await get(key);
@@ -339,10 +395,10 @@ export async function archiveRelease(directory, inputs, config, { run = runFile,
       const response = await fetcher(new URL('/' + object.key, plan.publicOrigin), { redirect: 'error', signal: AbortSignal.timeout(30_000), headers: { 'cache-control': 'no-cache' } });
       assert(response.ok, 'Snapshot public readback failed'); assert(Buffer.from(await response.arrayBuffer()).equals(object.bytes), 'Snapshot public bytes differ');
     }
-    const promote = inputs.action === 'publish-test' && registry.tags.test === candidate.version;
+    const promote = inputs.action === 'publish-test' && registry.tags.test === candidate.version || inputs.action === 'publish-stable' && registry.tags.latest === candidate.version;
     const publication = await publishGuide(directory, config, { run, fetcher, promote });
     await writeJSON(path.join(directory, 'release-attempt.json'), { action: inputs.action, version: candidate.version,
-      stage: inputs.action === 'archive-only' ? 'archive-only-verified' : !promote || publication.phase === 'superseded' ? 'archived-superseded' : 'test-entry-verified', runId: env.GITHUB_RUN_ID });
+      stage: inputs.action === 'archive-only' ? 'archive-only-verified' : !promote || publication.phase === 'superseded' ? 'archived-superseded' : `${releaseChannel(candidate.version)}-entry-verified`, runId: env.GITHUB_RUN_ID });
     return release;
   } finally { await rm(work, { recursive: true, force: true }); }
 }
@@ -365,7 +421,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     else if (command === 'authorize') await recordAuthorization(directory, inputs);
     else if (command === 'rescan') {
       const c = await verifyDownloaded(directory, inputs.expectedSHA256);
-      await validateSource(extra, c.sourceCommit, c.version);
+      await validateSource(extra, c.sourceCommit, c.version, runFile, inputs.channel);
       const work = await mkdtemp(path.join(os.tmpdir(), 'motion-source-verify-'));
       try {
         await runFile('git', ['worktree', 'add', '--detach', work, c.sourceCommit], { cwd: extra });
@@ -375,6 +431,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     } else if (command === 'verify') await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
     else if (command === 'npm') await publishNpm(directory, inputs);
     else if (command === 'promote-test') await promoteTest(directory, inputs);
+    else if (command === 'promote-stable') await promoteStable(directory, inputs);
     else if (command === 'archive') {
       for (const name of ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']) assert(process.env[name], 'Missing R2 credential: ' + name);
       await archiveRelease(directory, inputs, { endpoint: process.env.MOTION_R2_ENDPOINT, bucket: process.env.MOTION_R2_BUCKET, publicOrigin: process.env.MOTION_INSTALL_PUBLIC_ORIGIN });

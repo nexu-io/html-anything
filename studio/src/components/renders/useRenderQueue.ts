@@ -1,3 +1,5 @@
+import { useEmptyPreview } from "../nle/useEmptyPreview";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { buildProjectApiPath } from "../../utils/projectRouting";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import type { CanvasResolution } from "@hyperframes/parsers";
@@ -88,6 +90,7 @@ function writeHiddenIds(projectId: string, ids: Set<string>): void {
   }
 }
 
+
 export function useRenderQueue(
   projectId: string | null,
   // A ref, not the value: the render target has to be read at click time, and
@@ -95,6 +98,8 @@ export function useRenderQueue(
   // composition switch.
   activeCompPathRef: { current: string | null },
 ) {
+  const mvp = useMvpEditor();
+  const emptyComposition = useEmptyPreview(projectId ?? "", mvp);
   const [jobs, setJobs] = useState<RenderJob[]>([]);
   // History fetch failure — distinguished from "no renders yet" so the panel
   // never shows a false empty state.
@@ -210,6 +215,10 @@ export function useRenderQueue(
     // fallow-ignore-next-line complexity
     async (opts: StartRenderOptions = {}) => {
       if (!projectId) return;
+      if (emptyComposition && (!opts.composition || opts.composition === activeCompPathRef.current)) {
+        setActionError("No content to export. Add media first.");
+        return;
+      }
       // One request result per start attempt. The id is minted here because the
       // server's job id embeds the project id and a timestamp.
       const exportId = generateId();
@@ -449,7 +458,7 @@ export function useRenderQueue(
 
       return jobId;
     },
-    [projectId, activeCompPathRef, closeActiveEventSource, addSessionJob, ffmpeg, ffmpegMissing, recheckFfmpeg],
+    [projectId, activeCompPathRef, closeActiveEventSource, addSessionJob, ffmpeg, ffmpegMissing, recheckFfmpeg, emptyComposition],
   );
 
   // Cancel an in-flight render. The job row stays (as "cancelled") so the
@@ -607,6 +616,7 @@ export function useRenderQueue(
       // itself whether this machine can encode.
       ffmpeg,
       ffmpegMissing,
+      emptyComposition,
       ffmpegChecking,
       recheckFfmpeg,
     }),
@@ -623,6 +633,7 @@ export function useRenderQueue(
       startRender,
       ffmpeg,
       ffmpegMissing,
+      emptyComposition,
       ffmpegChecking,
       recheckFfmpeg,
     ],

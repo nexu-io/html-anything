@@ -31,7 +31,7 @@ const DEFAULT_FAILURE_THRESHOLD = 5;
 
 export class DomEditSaveQueueOpenError extends Error {
   constructor() {
-    super("Auto-save is paused. Dismiss the warning to retry DOM edits.");
+    super("Auto-save is paused. Changes were not saved.");
     this.name = "DomEditSaveQueueOpenError";
   }
 }

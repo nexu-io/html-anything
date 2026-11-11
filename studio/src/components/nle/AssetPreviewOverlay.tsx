@@ -1,17 +1,11 @@
+import { AssetPreviewDialog } from "./AssetPreviewDialog";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 /**
- * CapCut-style asset preview overlay rendered inside PreviewPane.
- *
- * Shown when the user clicks an asset card that has NOT yet been added to the
- * timeline. Displays the media (image / video / audio) as a compact floating
- * card over the canvas — the canvas stays visible behind a barely-tinted
- * click-catcher — without modifying the composition (no undo entry, no file
- * mutation).
- *
- * Dismiss: X button, Escape key, click outside the card, or any playhead
- * activity (starting playback / seeking) — the canvas refocuses.
- * Switching to another not-added asset replaces the current preview.
+ * Shared asset/catalog preview in an independent MVP dialog.
+ * The composition remains mounted and pauses on entry; seeking its timeline
+ * returns to it. Legacy callers retain the floating-card presentation.
+ * Previewing never changes project source or adds a timeline clip.
  */
 import { useEffect, useCallback } from "react";
 import { VIDEO_EXT, IMAGE_EXT } from "../../utils/mediaTypes";
@@ -59,6 +53,7 @@ function AssetPreviewMedia({
         autoPlay
         muted
         playsInline
+        aria-label={name}
         className="max-w-full max-h-[40vh] rounded-sm"
       />
     );
@@ -71,11 +66,13 @@ function AssetPreviewMedia({
   );
 }
 
-export function AssetPreviewOverlay() {
+export function AssetPreviewOverlay({ modal = false, onOpen }: { modal?: boolean; onOpen?: () => void }) {
   const { t } = useI18n();
   const previewAsset = useAssetPreviewStore((s) => s.previewAsset);
   const previewProjectId = useAssetPreviewStore((s) => s.previewProjectId);
   const clearPreviewAsset = useAssetPreviewStore((s) => s.clearPreviewAsset);
+  const catalogPreview = useAssetPreviewStore((s) => s.catalogPreview);
+  const previewKey = previewAsset ?? (modal ? catalogPreview : null);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -85,17 +82,18 @@ export function AssetPreviewOverlay() {
   );
 
   useEffect(() => {
-    if (!previewAsset) return;
+    if (!previewKey || modal) return;
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [previewAsset, handleKeyDown]);
+  }, [previewKey, handleKeyDown, modal]);
 
   // The canvas refocuses on any playhead activity: starting playback or a
   // seek/scrub away from where the playhead sat when the preview opened
   // dismisses it. openedTime is captured per preview open (previewAsset dep),
   // so a stale render can never dismiss against the wrong reference time.
   useEffect(() => {
-    if (!previewAsset) return;
+    if (!previewKey) return;
+    if (modal) onOpen?.();
     const opened = usePlayerStore.getState();
     const openedTime = opened.currentTime;
     // Level-triggered, not edge-triggered: a preview opened while playback is
@@ -112,7 +110,16 @@ export function AssetPreviewOverlay() {
     return usePlayerStore.subscribe((state) => {
       if (shouldDismissAssetPreview(openedTime, state)) clearPreviewAsset();
     });
-  }, [previewAsset, clearPreviewAsset]);
+  }, [previewKey, clearPreviewAsset, modal, onOpen]);
+
+  if (modal && previewKey) {
+    const name = catalogPreview?.title ?? basename(previewAsset!);
+    const url = catalogPreview
+      ? catalogPreview.videoUrl ?? catalogPreview.posterUrl
+      : previewProjectId ? resolveMediaPreviewUrl(previewAsset!, previewProjectId) : undefined;
+    const kind = catalogPreview ? (catalogPreview.videoUrl ? "video" : "image") : resolveAssetKind(previewAsset!);
+    return url ? <AssetPreviewDialog url={url} kind={kind} name={name} onClose={clearPreviewAsset} /> : null;
+  }
 
   if (!previewAsset || !previewProjectId) return null;
 

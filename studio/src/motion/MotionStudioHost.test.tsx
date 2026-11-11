@@ -8,21 +8,26 @@ import { useMotionHistoryOperation } from './MotionHistoryState';
 
 const state = vi.hoisted(() => ({
   renderQueue: { isRendering: false, ffmpegMissing: false },
+  writeBlockedReason: null as string | null,
   open: vi.fn(), export: vi.fn(), setTab: vi.fn(), setCollapsed: vi.fn(),
   undo: vi.fn(), redo: vi.fn(), create: vi.fn(), home: vi.fn(), rename: vi.fn(),
+  showToast: vi.fn(), status: { projectId: 'demo', historyRestoreError: null as { requestId: string; message: string } | null },
 }));
 vi.mock('../contexts/StudioContext', () => ({ useStudioShellContext: () => ({
-  projectId: 'demo', renderQueue: state.renderQueue, waitForPendingDomEditSaves: async () => {},
+  projectId: 'demo', renderQueue: state.renderQueue, writeBlockedReason: state.writeBlockedReason, waitForPendingDomEditSaves: async () => {},
+  showToast: state.showToast,
 }), useStudioShellContextOptional: () => ({
   editHistory: { canUndo: true, canRedo: true }, handleUndo: state.undo, handleRedo: state.redo,
 }) }));
 vi.mock('../contexts/PanelLayoutContext', () => ({ usePanelLayoutContext: () => ({
   rightCollapsed: false, setRightCollapsed: state.setCollapsed, setRightPanelTab: state.setTab,
 }) }));
+vi.mock('../components/renders/RenderQueuePanel', () => ({ RenderQueuePanel: () => <div>Export settings and jobs</div> }));
 vi.mock('../components/dock/Dock', () => ({ Dock: { WindowMenu: () => <button>Window</button>, Panel: () => null } }));
 vi.mock('../utils/studioTelemetry', () => ({ trackStudioEvent: vi.fn() }));
+vi.mock('./MotionHistoryPanel', () => ({ MotionHistoryPanel: () => <div>History versions</div> }));
 vi.mock('./useWorkspace', () => ({ useWorkspace: () => ({
-  status: { projectId: 'demo' }, projects: [{ id: 'demo', title: 'Demo' }, { id: 'second', title: 'Second' }],
+  status: state.status, projects: [{ id: 'demo', title: 'Demo' }, { id: 'second', title: 'Second' }],
   busy: false, error: '', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
 }) }));
 vi.mock('./ConnectionDialog', () => ({ ConnectionDialog: ({ open, section, busy, onOpen }: { open: boolean; section: string; busy: boolean; onOpen: (id: string) => void }) =>
@@ -37,6 +42,8 @@ beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
   state.renderQueue.isRendering = false;
+  state.writeBlockedReason = null;
+  state.status = { projectId: 'demo', historyRestoreError: null };
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -56,6 +63,22 @@ function openSidebar() {
   act(() => container.querySelector<HTMLButtonElement>('.motion-workspace-menu')!.click());
 }
 const button = (text: string) => [...container.querySelectorAll('button')].find(el => el.textContent === text)!;
+
+it('shows a restore failure once in its own project through the shared toast', () => {
+  const message = 'VERSION_NOT_RESTORABLE: Historical files are missing, unreadable or corrupt: assets/music.wav';
+  state.status = { projectId: 'second', historyRestoreError: { requestId: 'failed-restore', message } };
+  render();
+  expect(state.showToast).not.toHaveBeenCalled();
+  state.status = { ...state.status, projectId: 'demo' };
+  render(); render();
+  expect(state.showToast).toHaveBeenCalledExactlyOnceWith(message, 'error');
+  state.status = { projectId: 'demo', historyRestoreError: { requestId: 'new-attempt', message } };
+  render();
+  expect(state.showToast).toHaveBeenCalledTimes(2);
+  state.status = { projectId: 'demo', historyRestoreError: { requestId: 'failed-restore', message } };
+  render();
+  expect(state.showToast).toHaveBeenCalledTimes(2);
+});
 
 it('keeps project switching, templates, history actions and native export in the MVP', () => {
   render();
@@ -78,10 +101,15 @@ it('keeps project switching, templates, history actions and native export in the
   act(() => container.querySelector<HTMLButtonElement>('[aria-label="重做"]')!.click());
   expect(state.undo).toHaveBeenCalledOnce();
   expect(state.redo).toHaveBeenCalledOnce();
+  act(() => container.querySelector<HTMLButtonElement>('[aria-label="版本历史"]')!.click());
+  expect(document.querySelector('[data-testid="history-popover"]')?.textContent).toContain('History versions');
+  act(() => document.querySelector<HTMLButtonElement>('[data-testid="history-popover"] [aria-label="关闭"]')!.click());
   act(() => button('导出').click());
-  expect(state.setTab).toHaveBeenCalledWith('renders');
-  expect(state.setCollapsed).toHaveBeenCalledWith(false);
-  expect(state.export).toHaveBeenCalledOnce();
+  expect(state.setTab).not.toHaveBeenCalled();
+  expect(state.setCollapsed).not.toHaveBeenCalled();
+  expect(state.export).not.toHaveBeenCalled();
+  expect(document.querySelector('[data-testid="export-dialog"]')?.textContent).toContain('Export settings and jobs');
+  act(() => document.querySelector<HTMLButtonElement>('[data-testid="export-dialog"] [aria-label="关闭"]')!.click());
   act(() => project.click());
   expect(state.open).toHaveBeenCalledWith('projects', 'second');
   act(() => button('模板库').click());
@@ -98,7 +126,10 @@ it('prevents project replacement during a native render', () => {
   expect(document.querySelector<HTMLButtonElement>('.motion-session')!.disabled).toBe(true);
   expect(document.querySelector<HTMLButtonElement>('[aria-label="新建项目"]')!.disabled).toBe(true);
   expect(button('模板库').disabled).toBe(true);
-  expect(container.querySelector<HTMLButtonElement>('[data-testid="header-export"]')!.disabled).toBe(true);
+  expect(container.querySelector<HTMLButtonElement>('[data-testid="header-export"]')!.disabled).toBe(false);
+  act(() => container.querySelector<HTMLButtonElement>('[data-testid="header-export"]')!.click());
+  expect(document.querySelector('[data-testid="export-dialog"]')?.textContent).toContain('Export settings and jobs');
+  expect(state.export).not.toHaveBeenCalled();
   expect(container.textContent).toContain('正在渲染…');
 });
 
@@ -178,4 +209,15 @@ it('saves a project name on blur and keeps empty or cancelled edits from replaci
   expect(state.rename).toHaveBeenCalledTimes(2);
   expect(document.activeElement).not.toBe(input);
   expect(container.querySelector('[aria-label="项目名称"]')).toBe(input);
+});
+
+it('dismissing a write-blocking notice does not enable project creation', () => {
+  state.writeBlockedReason = 'Auto-save is paused. Check your connection.';
+  render();
+  const close = container.querySelector<HTMLButtonElement>('.motion-error-notice-close')!;
+  expect(close).not.toBeNull();
+  act(() => close.click());
+  expect(container.querySelector('.motion-error-notice')).toBeNull();
+  openSidebar();
+  expect(document.querySelector<HTMLButtonElement>('.motion-session-heading button')?.disabled).toBe(true);
 });

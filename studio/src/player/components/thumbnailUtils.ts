@@ -40,6 +40,7 @@ export function probeImageAspect(
   imageSrc: string,
   signal: AbortSignal,
   tolerateSvgError = false,
+  onDimensions?: (width: number, height: number) => void,
 ): Promise<number> {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -60,6 +61,7 @@ export function probeImageAspect(
     }
 
     image.onload = () => {
+      onDimensions?.(image.naturalWidth, image.naturalHeight);
       cleanup();
       resolve(
         image.naturalWidth > 0 && image.naturalHeight > 0

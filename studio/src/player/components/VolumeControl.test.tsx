@@ -23,7 +23,7 @@ afterEach(() => {
   document.body.innerHTML = "";
 });
 
-function renderVolumeControl(overrides: Partial<React.ComponentProps<typeof VolumeControl>> = {}) {
+async function renderVolumeControl(overrides: Partial<React.ComponentProps<typeof VolumeControl>> = {}) {
   const props = {
     audioMuted: false,
     audioVolume: 1,
@@ -33,7 +33,8 @@ function renderVolumeControl(overrides: Partial<React.ComponentProps<typeof Volu
     ...overrides,
   };
   act(() => root.render(<VolumeControl {...props} />));
-  return { host, props };
+  await act(async () => host.querySelector<HTMLButtonElement>("button")?.focus());
+  return { host: document.body, props };
 }
 
 function setRangeValue(input: HTMLInputElement, value: string): void {
@@ -44,16 +45,49 @@ function setRangeValue(input: HTMLInputElement, value: string): void {
 }
 
 describe("VolumeControl", () => {
-  it("exposes the current preview volume as an accessible range", () => {
-    const { host } = renderVolumeControl({ audioVolume: 0.42 });
+  it("opens on hover without muting and leaves the slider open when mute is clicked", async () => {
+    const props = { audioMuted: false, audioVolume: 0.5, disabled: false, setAudioMuted: vi.fn(), setAudioVolume: vi.fn() };
+    act(() => root.render(<VolumeControl {...props} />));
+    const button = host.querySelector<HTMLButtonElement>('button[aria-label="Mute audio"]')!;
+    expect(document.querySelector('input[aria-label="Preview volume"]')).toBeNull();
+    await act(async () => {
+      button.dispatchEvent(new MouseEvent('mouseenter', { bubbles: false }));
+      button.dispatchEvent(new MouseEvent('mousemove', { bubbles: true }));
+      await new Promise(resolve => setTimeout(resolve, 200));
+    });
+    expect(document.querySelector('input[aria-label="Preview volume"]')).not.toBeNull();
+    expect(props.setAudioMuted).not.toHaveBeenCalled();
+    act(() => button.click());
+    expect(props.setAudioMuted).toHaveBeenCalledExactlyOnceWith(true);
+    expect(document.querySelector('input[aria-label="Preview volume"]')).not.toBeNull();
+  });
+
+  it("exposes the current preview volume as an accessible range", async () => {
+    const { host } = await renderVolumeControl({ audioVolume: 0.42 });
     const slider = host.querySelector<HTMLInputElement>('input[aria-label="Preview volume"]');
 
     expect(slider?.value).toBe("42");
+    expect(slider?.getAttribute("aria-orientation")).toBe("vertical");
     expect(slider?.getAttribute("aria-valuetext")).toBe("42%");
   });
 
-  it("updates the preview volume while dragging", () => {
-    const { host, props } = renderVolumeControl();
+  it("shows zero while muted and restores the saved level on unmute", async () => {
+    const { host, props } = await renderVolumeControl({ audioMuted: true, audioVolume: 0.21 });
+    const slider = host.querySelector<HTMLInputElement>('input[aria-label="Preview volume"]')!;
+    expect(slider.value).toBe("0");
+    expect(slider.getAttribute("aria-valuetext")).toBe("0%");
+    expect(host.querySelector('[role="dialog"]')?.textContent).toContain("0%");
+
+    act(() => host.querySelector<HTMLButtonElement>('button[aria-label="Unmute audio"]')!.click());
+    expect(props.setAudioMuted).toHaveBeenCalledWith(false);
+    expect(props.setAudioVolume).not.toHaveBeenCalled();
+    act(() => root.render(<VolumeControl {...props} audioMuted={false} />));
+    expect(slider.value).toBe("21");
+    expect(slider.getAttribute("aria-valuetext")).toBe("21%");
+  });
+
+  it("updates the preview volume while dragging", async () => {
+    const { host, props } = await renderVolumeControl();
     const slider = host.querySelector<HTMLInputElement>('input[aria-label="Preview volume"]');
     if (!slider) throw new Error("preview volume slider did not render");
 
@@ -62,8 +96,8 @@ describe("VolumeControl", () => {
     expect(props.setAudioVolume).toHaveBeenCalledWith(0.35);
   });
 
-  it("unmutes when a muted preview is given a positive volume", () => {
-    const { host, props } = renderVolumeControl({ audioMuted: true });
+  it("unmutes when a muted preview is given a positive volume", async () => {
+    const { host, props } = await renderVolumeControl({ audioMuted: true });
     const slider = host.querySelector<HTMLInputElement>('input[aria-label="Preview volume"]');
     if (!slider) throw new Error("preview volume slider did not render");
 
@@ -73,8 +107,8 @@ describe("VolumeControl", () => {
     expect(props.setAudioMuted).toHaveBeenCalledWith(false);
   });
 
-  it("restores an audible level when unmuting from zero", () => {
-    const { host, props } = renderVolumeControl({ audioVolume: 0 });
+  it("restores an audible level when unmuting from zero", async () => {
+    const { host, props } = await renderVolumeControl({ audioVolume: 0 });
     const button = host.querySelector<HTMLButtonElement>('button[aria-label="Unmute audio"]');
     if (!button) throw new Error("unmute button did not render");
 

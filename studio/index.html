@@ -17,9 +17,15 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/web/design-system/tokens.css" />
     <link rel="stylesheet" href="/web/design-system/fonts.css" />
+    <link rel="stylesheet" href="/src/motion/loading.css" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="motion-loading" role="status">
+        <span class="motion-loading-mark" aria-hidden="true"></span>
+        <span class="motion-loading-label">正在打开项目…</span>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

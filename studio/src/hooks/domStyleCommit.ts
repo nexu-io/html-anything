@@ -1,5 +1,6 @@
 import type { PatchOperation } from "../utils/sourcePatcher";
 import { styleEditKind, withEditKind } from "../motion/editorTracking";
+import { styleHistoryLabel } from "../i18n/styleHistory";
 import {
   cssPropertyName,
   isImageBackgroundValue,
@@ -9,7 +10,7 @@ import {
 import { injectPreviewGoogleFont, injectPreviewImportedFont } from "../utils/studioFontHelpers";
 import {
   buildDomEditStylePatchOperation,
-  findElementForSelection,
+  findElementsForSelection,
   getDomEditTargetKey,
   type DomEditSelection,
 } from "../components/editor/domEditing";
@@ -85,44 +86,47 @@ export async function commitDomStyles(
       }
     }
   }
-  let editedElement: HTMLElement | null = null;
-  const previousInline = new Map<string, string>();
+  const editedElements = new Map<HTMLElement, Map<string, string>>();
 
   return runReportedDomEditCommit({
     capture: () => {
-      const el = doc ? findElementForSelection(doc, selection, activeCompPath) : null;
-      if (!el) return;
-      editedElement = el;
-      for (const [property] of entries)
-        previousInline.set(property, el.style.getPropertyValue(property));
+      if (!doc) return;
+      for (const el of findElementsForSelection(doc, selection, activeCompPath)) {
+        editedElements.set(el, new Map(entries.map(([property]) => [property, el.style.getPropertyValue(property)])));
+      }
     },
     apply: () => {
-      if (!editedElement) return;
-      for (const [property, value] of liveStyles) editedElement.style.setProperty(property, value);
+      for (const el of editedElements.keys()) {
+        for (const [property, value] of liveStyles) el.style.setProperty(property, value);
+      }
       if (fontFamily !== undefined && doc) {
         injectPreviewGoogleFont(doc, fontFamily);
         if (importedFont) injectPreviewImportedFont(doc, importedFont);
       }
     },
     persist: () =>
-      withEditKind("Edit layer style", styleEditKind(entries.map(([property]) => property)), () =>
-        persistDomEditOperations(selection, operations, {
-          label: "Edit layer style",
-          // Inline styles are already live, so a reload would only blank the preview.
-          skipRefresh: true,
-          importedFont: importedFont ?? undefined,
-        }),
-      ),
+      {
+        const label = styleHistoryLabel(selection.textContent || selection.label || selection.id || selection.tagName, Object.fromEntries(entries.map(([property, value]) => [property, normalizeDomEditStyleValue(property, value)])));
+        // The label only pairs this commit with its history entry in memory; the reported value is the kind.
+        return withEditKind(label, styleEditKind(entries.map(([property]) => property)), () =>
+          persistDomEditOperations(selection, operations, {
+            label,
+            // Inline styles are already live, so a reload would only blank the preview.
+            skipRefresh: true,
+            importedFont: importedFont ?? undefined,
+          }),
+        );
+      },
     shouldRevert: ownsAny,
     revert: () => {
-      const el = editedElement;
-      if (!el) return;
       // ponytail: background-image fit styles are not reverted here.
-      for (const { property, isLatest } of owned) {
-        const previous = previousInline.get(property);
-        if (previous === undefined || !isLatest()) continue;
-        if (previous === "") el.style.removeProperty(property);
-        else el.style.setProperty(property, previous);
+      for (const [el, previousInline] of editedElements) {
+        for (const { property, isLatest } of owned) {
+          const previous = previousInline.get(property);
+          if (previous === undefined || !isLatest()) continue;
+          if (previous === "") el.style.removeProperty(property);
+          else el.style.setProperty(property, previous);
+        }
       }
     },
     onError: (error) => reportDomEditPersistFailure(selection, operations, error, showToast),

@@ -157,7 +157,7 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
   galleryController = mountTemplates(root, { language, info: () => info, host: () => host, copy, useTemplate: options.useTemplate, onEvent: options.onTemplateEvent });
   renderHost();
   return {
-    setLanguage(locale: Locale, translate: Translate) { resetCopied(); language.setLanguage(locale, translate); renderHost(); },
+    setLanguage(locale: Locale, translate: Translate) { resetCopied(); language.setLanguage(locale, translate); galleryController?.setLanguage(); renderHost(); },
     showTemplates() { galleryController!.showAll(); scrollTo('templates'); },
     resume() { void checkConnection(); galleryController!.resume(); },
     suspend() { galleryController!.suspend(); resetCopied(); root.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach(dialog => dialog.close()); },

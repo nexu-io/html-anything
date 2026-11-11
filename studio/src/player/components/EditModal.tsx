@@ -6,6 +6,7 @@ import { usePlayerStore } from "../store/playerStore";
 import { formatTime } from "../lib/time";
 import { buildPromptCopyText, buildTimelineAgentPrompt } from "./timelineEditing";
 import { copyTextToClipboard } from "../../utils/clipboard";
+import { useMediaPopoverPosition } from "../../motion/useMediaPopoverPosition";
 
 interface EditPopoverProps {
   rangeStart: number;
@@ -54,8 +55,11 @@ export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose, i
   const [copiedAgentPrompt, setCopiedAgentPrompt] = useState(false);
   const [copiedPromptOnly, setCopiedPromptOnly] = useState(false);
   const [copyError, setCopyError] = useState(false);
-  const popoverRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const anchor = useMemo(() => ({
+    getBoundingClientRect: () => ({ left: anchorX, right: anchorX, top: anchorY, bottom: anchorY }),
+  }), [anchorX, anchorY]);
+  const { ref: popoverRef, style: placement } = useMediaPopoverPosition<HTMLDivElement>(anchor, 320, true, true);
 
   const elementsInRange = useMemo(() => {
     // A single-clip request must not expand to overlapping clips, even if its
@@ -84,12 +88,17 @@ export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose, i
 
   useMountEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+      const target = e.target;
+      if (target instanceof Element && target.closest("[data-preview-transport]")) return;
+      if (target instanceof Node && popoverRef.current && !popoverRef.current.contains(target)) {
         onClose();
       }
     };
-    setTimeout(() => window.addEventListener("mousedown", handleClick), 100);
-    return () => window.removeEventListener("mousedown", handleClick);
+    const timer = setTimeout(() => window.addEventListener("mousedown", handleClick), 100);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("mousedown", handleClick);
+    };
   });
 
   const buildClipboardText = useCallback(() => {
@@ -133,14 +142,14 @@ export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose, i
 
   const style: React.CSSProperties = {
     position: "fixed",
-    left: Math.max(8, Math.min(anchorX - 160, window.innerWidth - 336)),
-    top: Math.max(8, anchorY - 280),
+    ...placement,
+    overflowY: "auto",
     zIndex: 200,
   };
 
   return createPortal(
     <div ref={popoverRef} style={style}>
-      <div className="w-80 bg-neutral-900 border border-neutral-700/60 rounded-xl shadow-2xl shadow-black/40 overflow-hidden">
+      <div className="w-80 max-w-[calc(100vw-24px)] bg-neutral-900 border border-neutral-700/60 rounded-xl shadow-2xl shadow-black/40 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-neutral-800/60">
           <div className="flex items-center gap-2">

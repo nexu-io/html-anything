@@ -535,11 +535,11 @@ it("MVP keeps text, font, size, color and three alignments without changing adva
     </StudioHostContext.Provider>,
   );
   for (const label of ["Font", "Size", "Color"]) expect(host.textContent).toContain(label);
-  for (const label of ["Weight", "Case · Style", "Tracking", "Leading"]) expect(host.textContent).not.toContain(label);
+  for (const label of ["Weight", "Case · Style", "Tracking", "Leading", "Add text field"]) expect(host.textContent).not.toContain(label);
   const align = segmentedRowButtons(host, "Align");
   expect(align).toHaveLength(3);
   expect(onSetTextFieldStyle).not.toHaveBeenCalled();
-  act(() => align.find(button => button.textContent === "C")!.click());
+  act(() => align.find(button => button.getAttribute("aria-label") === "Align center")!.click());
   expect(onSetTextFieldStyle).toHaveBeenCalledWith("a", "text-align", "center");
   expect(JSON.stringify(element.textFields)).toBe(before);
   act(() => root.unmount());

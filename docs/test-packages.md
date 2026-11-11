@@ -29,10 +29,10 @@ PR / main 工作流执行清单、类型、Studio 构建与回归、安装/打�
 
 | 测试包 | 最低系统要求 | 构建 / 运行验收 |
 |---|---|---|
-| mac-arm64 | macOS 26.0，本轮支持与验证基线，旧系统未验收 | Linux 装配 / Mac 本机验收 |
+| mac-arm64 | macOS / Apple Silicon; no additional installer version gate | Linux 装配 / Mac 本机验收；旧系统仍需独立验收 |
 | win-x64 | Windows 11，实际链路以 smoke 结果为准 | Linux 装配 / Windows 目标机独立验收 |
 
-没有 Linux、Intel Mac 或 Windows arm64 完整包，也没有旧 macOS 兼容承诺。本需求不重新选择编辑器方案。
+没有 Linux、Intel Mac 或 Windows arm64 完整包。macOS 安装不按系统版本提前拒绝；Node、浏览器和媒体工具仍须通过目标机的可执行检查，移除门槛不等于所有旧系统均已验收。本需求不重新选择编辑器方案。
 
 ## 完整 ZIP 备用试安装
 

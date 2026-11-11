@@ -40,6 +40,7 @@ export interface StudioShellValue {
     ffmpeg: FfmpegStatus | null;
     /** True only when the server positively reported no usable FFmpeg. */
     ffmpegMissing: boolean;
+    emptyComposition?: boolean;
     ffmpegChecking: boolean;
     recheckFfmpeg: () => void;
   };

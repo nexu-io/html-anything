@@ -3,16 +3,22 @@ import { useI18n } from '../i18n/I18n';
 import { useEffect, useRef } from 'react';
 import { mountConnection } from '../../../web/connect';
 import connectionPage from '../../../web/connect.html?raw';
+import { TemplateLibraryDialog } from './TemplateLibraryDialog';
 import { MotionIcon } from './icons';
 import { reportTemplateEvent } from './editorTracking';
 import '../../../web/design-system/controls.css';
 import '../../../web/connect.css';
 import '../../../web/template-gallery.css';
 
-type Props = { open: boolean; section?: 'setup' | 'templates'; busy: boolean; error: string; onClose: () => void; onOpen: (id: string) => void; projectId?: string };
+type Props = { open: boolean; section?: 'setup' | 'templates'; busy: boolean; error: string; returnFocus?: HTMLElement | null; onClose: () => void; onOpen: (id: string) => void; projectId?: string };
 
 /** The original integration page lives inside one modal; Studio stays mounted beneath it. */
 export function ConnectionDialog(props: Props) {
+  const mvp = useMvpEditor();
+  return mvp || props.section === 'templates' ? <TemplateLibraryDialog {...props} /> : <LegacyConnectionDialog {...props} />;
+}
+
+function LegacyConnectionDialog(props: Props) {
   const { t, locale } = useI18n();
   const mvp = useMvpEditor();
   const dialog = useRef<HTMLDialogElement>(null), root = useRef<HTMLDivElement>(null);
@@ -41,11 +47,19 @@ export function ConnectionDialog(props: Props) {
   }, [mvp]);
   useEffect(() => { controller.current?.setLanguage(locale, t); }, [locale, t, mvp]);
   useEffect(() => {
-    if (!props.open) { controller.current?.suspend(); dialog.current?.close(); return; }
-    dialog.current?.showModal(); controller.current?.resume();
+    // Capture the node: React clears the ref before passive unmount cleanup.
+    const node = dialog.current;
+    if (!props.open) { controller.current?.suspend(); node?.close(); return; }
+    const returnFocus = props.returnFocus ?? document.activeElement;
+    node?.showModal(); controller.current?.resume();
     if (props.section === 'templates') controller.current?.showTemplates();
-    return () => { controller.current?.suspend(); dialog.current?.close(); };
-  }, [props.open, props.section]);
+    return () => {
+      controller.current?.suspend(); node?.close();
+      if (returnFocus instanceof HTMLElement && returnFocus.isConnected && !returnFocus.matches(':disabled')) {
+        returnFocus.focus({ preventScroll: true });
+      }
+    };
+  }, [props.open, props.section, props.returnFocus]);
   return <dialog ref={dialog} className="connection-dialog" aria-labelledby="connection-dialog-title"
     onKeyDown={event => event.stopPropagation()}
     onCancel={event => { if (event.target !== dialog.current) return; event.preventDefault(); if (!props.busy) props.onClose(); }}>

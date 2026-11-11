@@ -18,12 +18,12 @@ import { trackStudioClick } from './editorTracking';
 export function TimelineMediaBar() {
   const gateway = useMediaGateway();
   const active = useArtifactViewActive();
-  return gateway && active ? <ConnectedTimelineMediaBar /> : null;
+  const mvp = useMvpEditor();
+  return gateway && active && !mvp ? <ConnectedTimelineMediaBar /> : null;
 }
 
 function ConnectedTimelineMediaBar() {
   const gateway = useMediaGateway()!; const { t } = useI18n();
-  const mvp = useMvpEditor();
   const { state } = useTimelineContext(); const shell = useStudioShellContextOptional();
   const readOnly = useTimelineReadOnlyPress();
   const playing = usePlayerStore(s => s.isPlaying);
@@ -86,7 +86,7 @@ function ConnectedTimelineMediaBar() {
     || state.canvas.isScrubbing || state.canvas.draggedElement || state.canvas.resizingClip || state.canvas.marqueeRect
     || state.overlays.clipContextMenu || state.overlays.kfContextMenu || state.overlays.gapContextMenu
     || dismissed === identity || (!range && !clip && caret === null);
-  const popover = useMediaPopoverPosition(anchor, 680, !hidden && !ask);
+  const popover = useMediaPopoverPosition(anchor, 680, !hidden && !ask, true);
   useEffect(() => {
     if (hidden || ask) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -106,6 +106,7 @@ function ConnectedTimelineMediaBar() {
       else schedule();
     };
     const outside = (event: PointerEvent) => {
+      if (event.target instanceof Element && event.target.closest('[data-preview-transport]')) return;
       if (popover.ref.current?.contains(event.target as Node)) return;
       cancel();
       setDismissed(identity);
@@ -124,10 +125,10 @@ function ConnectedTimelineMediaBar() {
   return createPortal(ask ? <EditPopover initialPrompt={prompt} selectedElementKey={clipKey} rangeStart={start} rangeEnd={start + duration} anchorX={(anchorRect.left + anchorRect.right) / 2} anchorY={anchorRect.top - 8} onClose={close} /> :
     <aside ref={popover.ref} className="motion-timeline-media-bar motion-media-surface" style={popover.style} aria-label={t('Timeline media actions')} onPointerDown={e => e.stopPropagation()} onKeyDown={e => { e.stopPropagation(); if (e.key === 'Escape') close(); }}>
       <div className="motion-media-context"><span>{start.toFixed(1)}–{(start + duration).toFixed(1)}s</span><span title={media?.label}>{media?.label ?? t(range ? 'Selected time range' : clip ? 'Selected clip' : 'At playhead')}</span><button className="motion-media-close" aria-label={t('Close timeline media actions')} onClick={close}>×</button></div>
-      <form onSubmit={e => { e.preventDefault(); if (mvp) askAgent(); else open(); }}>
-        <input aria-label={t('Timeline media prompt')} value={prompt} onChange={e => setPrompt(e.target.value)} placeholder={t(!mvp && media?.modality === 'image' ? 'Describe a new image or how to change this one…' : 'Describe what goes here…')} />
-        {!mvp && <button type="submit">{t('Generate media')}</button>}
-        {!mvp && media?.modality === 'image' && <button type="button" className="motion-media-primary" onClick={() => open(true)}>{t('Edit image')}</button>}
+      <form onSubmit={e => { e.preventDefault(); open(); }}>
+        <input aria-label={t('Timeline media prompt')} value={prompt} onChange={e => setPrompt(e.target.value)} placeholder={t(media?.modality === 'image' ? 'Describe a new image or how to change this one…' : 'Describe what goes here…')} />
+        <button type="submit">{t('Generate media')}</button>
+        {media?.modality === 'image' && <button type="button" className="motion-media-primary" onClick={() => open(true)}>{t('Edit image')}</button>}
         <button type="button" onClick={askAgent}>{t('Ask Agent')}</button>
       </form>
     </aside>, host);

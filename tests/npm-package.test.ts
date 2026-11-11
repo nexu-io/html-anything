@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { checkReleaseLocks, packageNpm } from '../scripts/package-npm.mjs';
@@ -10,6 +10,11 @@ import { phase1Skills } from '../shared/workflow.ts';
 import { mcpRegistry } from '../mcp.ts';
 
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
+async function verifyTrackingPolicy(application: string, mode: 'test' | 'stable') {
+  await symlink(path.resolve('node_modules'), path.join(application, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
+  const result = JSON.parse(await runFile(process.execPath, ['--experimental-strip-types', path.resolve('tests/tracking-package.ts'), application, mode]));
+  assert.equal(result.passed, true); assert.equal(result.external_requests, 0);
+}
 
 test('shared Agent instructions keep the release controls synchronized', async () => {
   const section = async file => {
@@ -17,13 +22,20 @@ test('shared Agent instructions keep the release controls synchronized', async (
     return text.split('## Candidate and publication controls\n')[1].split('\n## ')[0].trim();
   };
   const shared = await section('AGENTS.md');
-  assert(shared.includes('DEV template defaults') && shared.includes('Publish under `candidate` first') && shared.includes('after both matching DEV native reports pass'));
+  assert(shared.includes('test` (default, DEV templates)') && shared.includes('stable` (prod templates)'));
+  assert(shared.includes('Test publishes under `candidate`') && shared.includes('non-blocking Mac/Windows cold installs'));
+  assert(shared.includes('Stable publishes publicly under `stage`') && shared.includes('requires both exact prod cold installs to pass'));
   assert.equal(await section('CLAUDE.md'), shared, 'CLAUDE.md must mirror the AGENTS.md release controls');
 });
 
 test('release packaging rejects floating npm versions, lock drift, unpinned native assets and a mismatched browser', async () => {
   const pkg = await json('package.json'), lock = await json('package-lock.json'), runtime = await json('scripts/runtime-lock.json');
   checkReleaseLocks(pkg, lock, runtime);
+  assert.equal(runtime.targets['mac-arm64'].minimumOS, undefined);
+  const missingCPU = structuredClone(runtime); missingCPU.targets['mac-arm64'].arch = '';
+  assert.throws(() => checkReleaseLocks(pkg, lock, missingCPU), /OS\/CPU/);
+  const missingWindowsMinimum = structuredClone(runtime); missingWindowsMinimum.targets['win-x64'].minimumOS = '';
+  assert.throws(() => checkReleaseLocks(pkg, lock, missingWindowsMinimum), /minimum system version/);
   const floating = structuredClone(pkg); floating.dependencies.gsap = '^' + pkg.dependencies.gsap;
   const floatingLock = structuredClone(lock); floatingLock.packages[''].dependencies = floating.dependencies;
   assert.throws(() => checkReleaseLocks(floating, floatingLock, runtime), /exact npm/);
@@ -45,6 +57,8 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     const built = await packageNpm(output, version), release = await json(built.manifest);
     assert.equal(release.version, version); assert.equal(release.installer.version, version); assert.equal(release.format, 'npm');
     assert.equal(release.templateEnvironment, 'dev');
+    assert.equal(release.runtime.targets['mac-arm64'].minimumOS, undefined);
+    assert.equal(release.runtime.targets['win-x64'].minimumOS, 'Windows 11');
     assert.equal(release.mcp.profile, 'phase1'); assert.deepEqual(release.mcp.tools, mcpRegistry().tools.map(tool => tool.name));
     assert.deepEqual(release.skills, [...phase1Skills].sort());
     assert.equal(release.installer.sha256, await sha256(built.installer)); assert.equal(release.application.sha256, await sha256(built.application));
@@ -67,8 +81,11 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert(embeddedReadme.includes(`srcset="https://raw.githubusercontent.com/nexu-io/html-anything/${release.commit}/docs/readme/brand-hero.mobile.jpg"`));
     await assert.rejects(readdir(path.join(application, 'docs/readme/media')), { code: 'ENOENT' });
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
+    await verifyTrackingPolicy(application, 'test');
     assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
+    assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).description,
+      (await json('.codex-plugin/plugin.json')).description);
     assert.equal((await json(path.join(application, 'package-lock.json'))).packages[''].version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).private, false);
@@ -87,6 +104,9 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(help.includes(host), host);
     await readFile(path.join(installer, 'package/LICENSE'));
     assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...phase1Skills].sort());
+    for (const document of ['skills/motion-director/SKILL.md', 'skills/motion-production/references/context.md']) {
+      assert.equal(await readFile(path.join(application, document), 'utf8'), await readFile(document, 'utf8'));
+    }
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);
     assert.equal(await sha256(path.join(application, 'scripts/runtime-lock.json')), release.locks.native);
     const entries = await runFile('tar', ['-tf', built.application]);
@@ -98,7 +118,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert(entries.includes('skills/motion-recreate/references/verify.md'));
     assert(entries.includes('studio/build/index.html'));
     assert(entries.includes('shared/editor-launch.pl'), 'macOS shared editor launcher must ship');
-    for (const script of ['lint-project.mjs', 'npm-installer.mjs', 'npm-hosts.mjs', 'check-installed-mcp.mjs']) assert(entries.includes('scripts/' + script), 'Runtime diagnostic and lint entry must ship: ' + script);
+    for (const script of ['lint-project.mjs', 'npm-installer.mjs', 'npm-hosts.mjs', 'check-installed-mcp.mjs', 'install-onboarding.mjs', 'onboarding-catalog.ts']) assert(entries.includes('scripts/' + script), 'Runtime diagnostic and lint entry must ship: ' + script);
     await readFile(path.join(installer, 'package/scripts/check-installed-mcp.mjs'));
     assert(entries.includes('shared/workflow-entry.js'), 'Workflow discovery must ship with the five Skills');
     assert(!entries.split('\n').some(file => file.split('/').some(part => part.startsWith('._'))), 'Do not distribute macOS file metadata');
@@ -137,6 +157,8 @@ test('stable artifacts stage publication instead of replacing latest and retain 
     await extractArchive(built.installer, path.join(directory, 'npm'));
     const metadata = await json(path.join(directory, 'npm/package/package.json'));
     assert.equal((await json(built.manifest)).templateEnvironment, 'prod');
+    const application = path.join(directory, 'app'); await extractArchive(built.application, application);
+    await verifyTrackingPolicy(application, 'stable');
     assert.equal(metadata.version, '0.6.4'); assert.equal(metadata.private, false); assert.equal(metadata.publishConfig.tag, 'stage');
     assert.equal((await json('package.json')).private, true);
     assert.equal((await json('packages/npm/package.json')).private, true);

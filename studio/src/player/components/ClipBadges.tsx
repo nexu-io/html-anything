@@ -52,7 +52,7 @@ export const ClipBadges = memo(function ClipBadges({
       {volume && (
         <span
           className={`${BADGE_CLASS} min-w-0 overflow-hidden border-white/20 text-white/90`}
-          title={volume}
+          title={volume === "Muted" ? t("Muted") : volume}
           data-badge="volume"
         >
           <SpeakerGlyph muted={volume === "Muted"} />

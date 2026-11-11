@@ -1,3 +1,5 @@
+import { useMvpEditor } from "../motion/StudioHost";
+import { ConflictNotice } from "./ConflictNotice";
 import { useI18n } from "../i18n/I18n";
 import { reportNoticeShown } from "../motion/editorTracking";
 import { useNoticeShown } from "../motion/useNoticeShown";
@@ -164,10 +166,12 @@ export function ExternalFileConflictBanner({
   coordinator: ExternalFileChangeCoordinatorHandle;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const [reviewing, setReviewing] = useState(false);
   const blocked = coordinator.blocked;
   useNoticeShown(Boolean(blocked), () => reportNoticeShown("external_file_conflict"));
   if (!blocked) return null;
+  if (mvp) return <ConflictNotice key={`${blocked.generation}:${blocked.status}:${blocked.status === "conflict" ? blocked.error.filePath : blocked.path}`} coordinator={coordinator} />;
 
   const conflict = blocked.status === "conflict" ? blocked : null;
   const failure = blocked.status === "failed" ? blocked : null;

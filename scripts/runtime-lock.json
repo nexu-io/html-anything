@@ -7,7 +7,6 @@
     "mac-arm64": {
       "platform": "darwin",
       "arch": "arm64",
-      "minimumOS": "26.0",
       "node": {
         "url": "https://nodejs.org/dist/v26.11.1/node-v26.11.1-darwin-arm64.tar.gz",
         "sha256": "d916511b55965e91be7a88e17f88d895b6793ceaba3e6c9b194aefe51c2c65ac",

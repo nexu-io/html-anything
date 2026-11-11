@@ -14,6 +14,7 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
   const directory = await realpath(await mkdtemp(path.join(tmpdir(), "motion adapters ' $(literal) ")));
   try {
     const data = path.join(directory, 'user projects'), output = path.join(directory, 'export');
+    const sourceManifest = JSON.parse(await readFile(path.join(source, '.codex-plugin/plugin.json'), 'utf8'));
     const exported = await exportAdapters(source, data, output);
     assert.deepEqual(exported.hosts, ['codex', 'claude', 'workbuddy', 'deepseek']);
     for (const host of exported.hosts) {
@@ -22,7 +23,7 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
       assert.equal(await readFile(path.join(output, host, 'openmotion/remix-icon-LICENSE.txt'), 'utf8'), await readFile(path.join(source, 'web/design-system/remix-icon-LICENSE.txt'), 'utf8'));
       const { readdir } = await import('node:fs/promises');
       assert.deepEqual((await readdir(path.join(output, host, 'openmotion/skills'))).sort(), ['motion-director', 'motion-production', 'motion-recreate', 'motion-template-to-video', 'motion-video-to-template']);
-      for (const skill of ['motion-template-to-video', 'motion-video-to-template']) {
+      for (const skill of ['motion-director', 'motion-template-to-video', 'motion-video-to-template']) {
         assert.equal(await readFile(path.join(output, host, 'openmotion/skills', skill, 'SKILL.md'), 'utf8'), await readFile(path.join(source, 'skills', skill, 'SKILL.md'), 'utf8'));
       }
       for (const name of ['SKILL.md', 'references/rebuild.md', 'references/verify.md', 'scripts/measure_frame.mjs']) {
@@ -47,10 +48,12 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
         assert.equal(existsSync(path.join(plugin, '.workbuddy-plugin')), false);
       } else {
         assert.equal(manifest.mcpServers, './.mcp.json'); assert.equal(manifest.name, 'motion');
+        assert.equal(manifest.description, sourceManifest.description, 'Thin plugins must preserve the runtime discovery description');
       }
       if (host === 'codex') {
         assert.equal(manifest.requires_local_executor, true);
         assert.equal(manifest.interface.displayName, 'OpenDesign');
+        assert.equal(manifest.interface.shortDescription, sourceManifest.interface.shortDescription);
         assert.deepEqual(config, launch);
         const marketplace = JSON.parse(await readFile(path.join(output, host, '.agents/plugins/marketplace.json'), 'utf8'));
         assert.deepEqual(marketplace.plugins[0], { name: 'motion', source: { source: 'local', path: './openmotion' },
@@ -100,7 +103,7 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
     await cp(process.execPath, node);
     await mkdir(path.join(runtime, 'docs'));
     for (const name of ['AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(runtime, name), '# Fixture');
-    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'web/design-system/icons.svg', 'web/design-system/remix-icon-LICENSE.txt', 'web/design-system/remix-icon-NOTICE.txt']) {
+    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/template-locale.ts', 'shared/template-prompts.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'web/design-system/icons.svg', 'web/design-system/remix-icon-LICENSE.txt', 'web/design-system/remix-icon-NOTICE.txt']) {
       await mkdir(path.dirname(path.join(runtime, filename)), { recursive: true });
       await cp(path.join(source, filename), path.join(runtime, filename));
     }
@@ -111,12 +114,44 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
     const exported = spawnSync(node, ['--experimental-strip-types', path.join(runtime, 'scripts/export-adapters.ts'), runtime, data, output], { cwd: tmpdir(), encoding: 'utf8', timeout: 10_000 });
     assert.equal(exported.status, 0, exported.stderr);
     assert.equal(JSON.parse(exported.stdout).hosts.length, 4);
+    const legacyManifest = JSON.parse(await readFile(path.join(output, 'codex/openmotion/.codex-plugin/plugin.json'), 'utf8'));
+    assert.equal(legacyManifest.description, 'OpenDesign Motion with the shared local MCP runtime.');
+    assert.equal(legacyManifest.interface.shortDescription, 'Motion production with the shared local runtime.');
     for (const host of ['codex', 'claude', 'workbuddy']) {
       const config = JSON.parse(await readFile(path.join(output, host, 'openmotion', host === 'workbuddy' ? 'mcp.json' : '.mcp.json'), 'utf8')).mcpServers.motion;
       assert.equal(config.command, node);
       const child = spawnSync(config.command, config.args, { cwd: tmpdir(), env: { ...config.env, PATH: '/usr/bin:/bin' }, encoding: 'utf8', timeout: 5000 });
       assert.equal(child.status, 0, child.stderr);
       assert.deepEqual(JSON.parse(child.stdout), { preload: 'loaded', data });
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test('adapter export rejects invalid runtime discovery manifest fields', async () => {
+  const directory = await realpath(await mkdtemp(path.join(tmpdir(), 'motion-adapter-manifest-')));
+  try {
+    const data = path.join(directory, 'projects'), runtime = path.join(directory, 'runtime');
+    await mkdir(path.join(runtime, 'skills'), { recursive: true }); await mkdir(path.join(runtime, 'docs'));
+    for (const name of ['AGENTS.md', 'CLAUDE.md', 'mcp.ts']) await writeFile(path.join(runtime, name), '');
+    await mkdir(path.join(runtime, 'web/design-system'), { recursive: true });
+    for (const name of ['icons.svg', 'remix-icon-LICENSE.txt', 'remix-icon-NOTICE.txt']) await cp(path.join(source, 'web/design-system', name), path.join(runtime, 'web/design-system', name));
+    await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ version: '0.6.3' }));
+    await mkdir(path.join(runtime, '.codex-plugin'));
+    const manifestFile = path.join(runtime, '.codex-plugin/plugin.json');
+    const cases: [unknown, RegExp][] = [
+      [null, /Invalid runtime plugin manifest\./],
+      [[], /Invalid runtime plugin manifest\./],
+      [{ description: 42 }, /manifest description/],
+      [{ description: '' }, /manifest description/],
+      [{ description: 'Motion discovery', interface: 7 }, /manifest interface/],
+      [{ description: 'Motion discovery', interface: { shortDescription: 42 } }, /interface\.shortDescription/],
+      [{ description: 'Motion discovery', interface: { shortDescription: '   ' } }, /interface\.shortDescription/],
+    ];
+    for (const [index, [manifest, message]] of cases.entries()) {
+      await writeFile(manifestFile, JSON.stringify(manifest));
+      const output = path.join(directory, `adapters-${index}`);
+      await assert.rejects(exportAdapters(runtime, data, output), message);
+      assert.equal(existsSync(output), false, 'Invalid discovery metadata must be rejected before adapters are written');
     }
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

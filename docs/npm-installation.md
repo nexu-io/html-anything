@@ -6,6 +6,8 @@ The npm tgz contains the installer, a prebuilt Motion application archive and it
 
 Source `package.json` is the development baseline; the published artifact can have a different version. For example, source `0.6.3` can produce `0.6.4-test.6` without a stable `0.6.4` release. Packaging changes output identities only. Manual [candidate builds](release-workflows.md#1-build) accept an empty version and automatically generate the next patch plus a short `test.N` workflow counter (with an attempt suffix on reruns); publication keeps the exact accepted version.
 
+Test/prerelease/local packages never report usage data, even with a saved opt-in or an enable flag. Stable releases collect by default and support persistent opt-out and re-enable in Studio Privacy settings. See [tracking controls](../tracking/README.md#reporting-and-user-control).
+
 ## Requirements and package contents
 
 Users provide Node.js 22.18+ with npm and their Agent host. Builds use the Node version pinned in CI. npm installs locked production dependencies with `npm ci --omit=dev --ignore-scripts`. Setup starts FFmpeg, ffprobe and browser preparation in a detached background worker. MCP connection, source editing and ordinary preview do not wait; Studio displays readiness and retry. `prepare` remains an explicit wait/retry command. Node, native binaries, node_modules, user projects and credentials are not bundled in this npm format. It is not an offline package. Complete platform ZIPs remain a backup.
@@ -57,7 +59,7 @@ Set-Location "$motionTest\workspace"
 codex
 ```
 
-These are documented commands, not proof of Windows acceptance. Use a directly executable host or pass its JavaScript CLI through `--codex`. The native lock declares Mac arm64/macOS 26 and Windows x64/Windows 11; other platforms are not implied supported by npm installation.
+These are documented commands, not proof of Windows acceptance. Use a directly executable host or pass its JavaScript CLI through `--codex`. The native lock declares Mac arm64 and Windows x64/Windows 11. OpenMotion adds no macOS version gate: proceed with installation and the native executable checks, rather than treating the build/test machine's OS version as a minimum. Node.js and the pinned browser/media binaries must still run on the target machine; this is not acceptance of every macOS version. Other platforms are not implied supported by npm installation.
 
 ## Test template data (DEV)
 
@@ -116,6 +118,19 @@ After publication, the intended user entry is `npx --yes --package @openmotion/a
 Before upgrading, back up projects/configuration, run setup with the new exact tgz and the **same** home/data/Skills paths, then reconnect while preparation runs (or explicitly wait with prepare). Compatible phase-one connections and active exports can continue. Refresh host discovery for new Tools or Skills; reconnect a closed transport. For an incompatible protocol, finish active exports before updating only the owned connection and idle backend together. Do not terminate unrelated services. Older app directories may remain, but rollback requires a compatible old package and data; back up before an irreversible format change. There is no automatic update or arbitrary-version rollback promise.
 
 ## Native tools and diagnostics
+
+### npm download failures
+
+Recover npm network failures (`ENOTFOUND`, `EAI_AGAIN`, connection errors or timeouts) automatically before asking the user to troubleshoot:
+
+1. **Try official, then mirror.** Try `https://registry.npmjs.org` then `https://registry.npmmirror.com`, at most once per registry, counting the initial failed attempt and skipping registries already tried. An explicitly selected registry goes first; respect any user or host restriction on alternatives. Stop on authentication, permission or checksum failures rather than switching sources.
+2. **Keep settings temporary.** Set `npm_config_registry` and `npm_config_fetch_retries=0` for the attempt's process tree, covering both npx and setup's production `npm ci`. Do not change global npm configuration, project lockfiles or TLS verification. This fallback does not apply to separate browser/FFmpeg download hosts.
+3. **Keep the same artifact.** Pin the exact requested/resolved version before switching. For channel tags, use the matching immutable guide and checksum, not the mirror's potentially older tag. If the tag never resolved, use the version stated in the trusted guide. Download a mirrored tgz with lifecycle scripts disabled, verify its SHA256 against that guide before executing it, then use the local-tgz setup command with the same host/profile and isolated paths. A missing mirrored version is not permission to downgrade; a checksum mismatch stops recovery.
+4. **Both failed: diagnose, then hand off.** Compare `npm ping` in the actual installation environment and the user's terminal, using the same npm and registry; curl success alone is insufficient. Use the host's supported network-approval flow where permitted, without bypassing a denial. If Agent access remains unavailable, provide the complete setup command and selected environment/paths for the user's terminal: preserve Node/npm, working directory, host/profile, host configuration, application home, data and Skills paths. After setup, reconnect the host and verify its version and `motion_get_project` result.
+
+If the terminal also fails, resolve DNS/proxy/network access first and report installation as incomplete; preserve the previous installation and user data. A verified local tgz only replaces the outer download: production npm dependencies and native components still need network access. Native readiness and host loading remain separate results.
+
+References: [npmmirror](https://npmmirror.com/), [temporary npm configuration](https://docs.npmjs.com/cli/v11/using-npm/config/#environment-variables) and [npm ping](https://docs.npmjs.com/cli/v11/commands/npm-ping/).
 
 ### Missing MCP tools or a failed connection
 

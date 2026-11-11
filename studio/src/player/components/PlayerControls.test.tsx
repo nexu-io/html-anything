@@ -5,6 +5,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { liveTime, usePlayerStore } from "../store/playerStore";
 import { PlayerControls } from "./PlayerControls";
+import { StudioHostContext } from "../../motion/StudioHost";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
@@ -36,6 +37,14 @@ beforeEach(async () => {
 });
 
 describe("PlayerControls preview seeking", () => {
+  it("omits fullscreen in the MVP while keeping playback controls", async () => {
+    await act(async () => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}>
+      <PlayerControls onTogglePlay={() => {}} onSeek={onSeek} onToggleFullscreen={vi.fn()} />
+    </StudioHostContext.Provider>));
+    expect(host.querySelector('[aria-label="Enter fullscreen"]')).toBeNull();
+    expect(host.querySelector('[data-studio-control="playback"]')).not.toBeNull();
+    expect(seekBar().disabled).toBe(false);
+  });
   it("shows the current position and follows the playback clock", () => {
     const input = seekBar();
     expect(input.type).toBe("range");

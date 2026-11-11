@@ -15,6 +15,8 @@ export interface EditingFile {
 export interface AppToast {
   message: string;
   tone: "error" | "info";
+  /** Brief feedback without actions or diagnostics; expires after three seconds. */
+  presentation?: "feedback";
 }
 
 export type RightPanelTab =

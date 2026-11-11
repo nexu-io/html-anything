@@ -18,6 +18,7 @@ export type {
 // Element finders, visibility, visual scoring, raster detection
 export {
   findElementForSelection,
+  findElementsForSelection,
   findElementForTimelineElement,
   isLargeRasterDomEditSelection,
   resolveVisualDomEditSelectionTarget,

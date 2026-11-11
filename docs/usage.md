@@ -11,7 +11,7 @@ openmotion 0.6.2 是面向 Agent 的本地创作工作区与 Codex 插件，一�
 - 动画遵循 Hyperframes 的 composition 属性和可 seek 的 GSAP timeline。视频、音频、字幕、嵌套 composition 使用它的原生语法。
 - 导出执行 `hyperframes lint` 和 `hyperframes render`，由上游负责逐帧捕获、编码与混音。关闭页面或将窗口放到后台不会中止导出。
 
-顶栏「预览」可以重新打开关闭的预览面板；「布局」提供各面板的显示开关、代码创作/专注预览预设及默认布局恢复。原生撤销/重做保留在顶栏和时间轴；点击「历史」或项目旁的自动保存状态，可以查看修改文件、保留当前版本、取消保留及恢复历史版本。版本数据继续由 Hyperframes 原生历史服务管理，恢复不会删除后续记录。
+编辑器使用固定面板布局，分隔线大小按项目保存。原生撤销/重做保留在顶栏；右侧「版本历史」标签展示全部记录和保留版本，可以查看修改文件、保留当前版本、取消保留及恢复历史版本。已有项目会自动补上此标签，并保留原有分隔线大小。版本数据继续由 Hyperframes 原生历史服务管理，恢复前等待保存并建立检查点，恢复不会删除后续记录。
 
 首页提供新建创作、最近会话和分类模板；输入框一期只有 Motion 模式。选择模板后提交需求，创建一个会话和对应工程，通过「模板 + motion-production skill」继续制作。所有页面共享最左侧会话列表。会话与右侧浏览器顶格并列，完整 Motion 编辑器放在浏览器 Tab 内；关闭浏览器可继续完整会话，收起会话可沉浸编辑，新 Tab 可以打开另一个所属工程或网页。会话名与工程名独立保存。旧工程、需求与书签兼容，切换前等待原生保存，失败保留当前页。会话的 Agent 推理与工具编排仍由外部 MCP 客户端负责，网页不包含聊天 Agent 运行器；外部 Agent 可通过 `design_append_message` 写回真实回复。详细行为、网页浏览能力与单活动工程边界见 [会话与 Artifact 浏览器](project-workspace.md)。
 
@@ -68,35 +68,20 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ```text
 请在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。
-安装成功后，询问我是否体验一个无需准备素材的 20 秒视频。我确认后，请在右侧打开独立的可编辑工程。
+安装成功后，按安装指南中的回复要求介绍能力并邀请体验；我确认后再创建独立可编辑工程。
 ```
 
 安装脚本使用当前检出版本，安装依赖、构建编辑器、注册本地插件并预检 MCP 连接。它不会安装系统软件或重启 Codex。请保留仓库目录供插件继续使用。导出 MP4 还需要浏览器和媒体工具，详见下文。
 
 ### 安装完成后的引导（Codex / Agent）
 
-由 Codex 或其他 Agent 执行安装时，在插件安装与 MCP 连接预检均成功后，按以下顺序结束安装任务：
-
-1. 在当前对话简要介绍 openmotion 支持产品宣传视频、动态图表与流程动画、模板和可编辑预览、MP4 导出。
-2. 主动询问用户：**“要现在体验一个无需准备素材的 20 秒视频吗？我会在右侧打开一个可编辑工程。”**
-3. 停下来等待用户选择；用户回复“体验”或明确同意后，进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md) 并执行下方首次体验默认规则。用户明确只要安装或暂不体验时，尊重该选择。
-
-先在当前对话完成介绍与邀请。若新插件工具尚未加载，在用户同意体验后再提供新会话接续方式；安装时的 MCP 预检不代表当前对话已加载新工具。安装失败时先说明失败原因，修复成功后再邀请。
+所有 Agent 安装入口共用 [安装成功后的回复规则与示例](install.md#installation-success-reply)。安装器当轮输出规则和真实模板摘要，Agent 按上下文选择模板并组织邀请：默认单模板，用户明确要求挑选/比较且有三份合适模板时提供三候选。配置完成不代表当前会话已加载 MCP；如实说明后，仍在本轮邀请，不等首次调用工具。
 
 ### 首次体验默认规则
 
-接受上述邀请即确认使用内置 **Product Promo（`product-promo`）**：
+用户接受单模板邀请或明确选择候选后，进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md)，沿用本次邀请的准确模板 ID、原生时长和默认内容。三候选只回复“是”时先澄清；拒绝或暂不体验则停止。不固定为某个模板，不重复追问可选素材，也不静默替换失败模板。
 
-- 沿用模板的示例文字、图形和动画，保持原生 20 秒规格，不再询问素材、品牌、风格或模板选择。
-- 创建独立可编辑工程，保留原有工程；同一次体验已经创建工程时直接续用，避免重复创建。
-- 在 Codex 右侧打开 openmotion 可编辑工程，检查正确载入并可播放。
-- 右侧打开的工程就是这次体验的结果，不导出 MP4；用户要视频文件时再导出。
-- On success, the final reply contains **one completion sentence, then one contextual next-step invitation**, with the editable project kept open on the right. Use plain Markdown; screenshots and verification evidence stay in local records. MP4s, editor screenshots, ZIPs, duplicate project links, checklists and HTML wrappers are omitted unless requested.
-- The LLM writes the invitation naturally in the user's language: ask what video they want next and introduce existing templates, video-link recreation and creation from their requirements. Wording follows the conversation rather than a fixed script. Continue an already-known next request instead of asking again; otherwise wait for the user's choice. Invite only after the first successful experience delivery, not on follow-up edits, exports or a failed experience. The [first-run defaults](../skills/motion-production/references/templates.md#first-run-experience-defaults) define delivery exceptions.
-
-右侧页面打开依赖宿主的浏览器/面板能力。没有该能力时提供实际工程链接，明确说明页面未自动打开，不能声称完整的桌面体验已通过。工程创建或载入失败时说明具体原因，不发出完成语和邀请。
-
-此默认规则只适用于用户接受安装后的首次体验邀请；用户提出自己的视频需求时，按其明确范围执行。
+创建独立工程，保留原有工作；同一次体验已创建则续用。按 [首次体验交付规则](../skills/motion-production/references/templates.md#first-run-experience-defaults) 打开并检查真实可编辑工程，宿主不支持自动打开时给出实际链接和限制。用户要求视频文件时才导出。工具尚未加载时，在接受后按宿主支持的方式刷新或接续，保留已经选择的模板。
 
 ### 开始创作
 

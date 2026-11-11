@@ -4,6 +4,7 @@ import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it } from "vitest";
 import { Timeline } from "./Timeline";
+import { StudioHostContext } from "../../motion/StudioHost";
 import { installTimelineMountEnv } from "./timelineMountTestEnv";
 import { usePlayerStore, type TimelineElement } from "../store/playerStore";
 
@@ -34,12 +35,12 @@ const grouped: TimelineElement[] = ["vo-1", "vo-2"].map((id, track) => ({
   audioGroupLabel: "Voiceover",
 }));
 
-async function mount(elements: TimelineElement[], showAudioEffects?: boolean) {
+async function mount(elements: TimelineElement[], showAudioEffects?: boolean, mvp = false) {
   usePlayerStore.setState({ duration: 10, currentTime: 0, timelineReady: true, elements });
   const host = document.createElement("div");
   document.body.append(host);
   const root = createRoot(host);
-  await act(async () => root.render(<Timeline showAudioEffects={showAudioEffects} />));
+  await act(async () => root.render(<StudioHostContext.Provider value={mvp ? { mvpEditor: true } : null}><Timeline showAudioEffects={showAudioEffects} /></StudioHostContext.Provider>));
   const labels = Array.from(host.querySelectorAll("button")).map(
     (b) => b.getAttribute("aria-label") ?? "",
   );
@@ -77,4 +78,10 @@ describe("Timeline showAudioEffects", () => {
     expect(off).not.toContain("Open Voiceover effects");
     expect(off).toContain("Select Voiceover");
   });
+});
+
+it('omits audio effects in MVP tracks and groups even when explicitly enabled', async () => {
+  const labels = await mount([voice, ...grouped], true, true);
+  expect(effects(labels)).toEqual([]);
+  expect(labels).not.toContain('Open Voiceover effects');
 });

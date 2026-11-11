@@ -1,3 +1,5 @@
+import { MediaDurationBadge } from "./MediaDurationBadge";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { RemixIcon } from "../../icons/RemixIcons";
 import { useI18n } from "../../i18n/I18n";
 /**
@@ -15,7 +17,7 @@ import { usePlayerStore } from "../../player/store/playerStore";
 import { timelineClipFocusId } from "../../player/components/timelineNavigationIdentity";
 import { useAssetPreviewStore } from "../../utils/assetPreviewStore";
 import { findClipForAsset, isPointerClick } from "../../utils/assetClickBehavior";
-import { basename, ext, formatDuration, type CopyFeedback } from "./assetHelpers";
+import { basename, ext, type CopyFeedback } from "./assetHelpers";
 import { resolveMediaPreviewUrl } from "../../player/components/thumbnailUtils";
 
 /** Drag payload writer shared by the asset tile and the font row: copy effect
@@ -139,6 +141,7 @@ export function AssetCard({
   onRename,
   onAddAssetToTimeline,
 }: AssetCardProps) {
+  const mvp = useMvpEditor();
   const { t } = useI18n();
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
   const [hovered, setHovered] = useState(false);
@@ -153,7 +156,6 @@ export function AssetCard({
   const isImage = IMAGE_EXT.test(asset);
   const probedDuration = useProbedDuration(serveUrl, !isVideo || duration != null);
   const resolvedDuration = duration ?? probedDuration ?? undefined;
-  const durationLabel = formatDuration(resolvedDuration ?? 0);
 
   // Drag-threshold click gate: track pointer-down position so we can ignore
   // pointer-up events that followed a real drag gesture.
@@ -169,11 +171,11 @@ export function AssetCard({
     pointerDownRef.current = { x: e.clientX, y: e.clientY };
   }, []);
 
-  // Reveal the clip when the asset is already on the timeline, otherwise open
+  // Legacy: reveal an existing clip. MVP: always preview the source. Otherwise open
   // the preview overlay. Shared by pointer-up and keyboard activation so the
   // tile does the same thing however it is operated.
   const activateCard = useCallback(() => {
-    if (used) {
+    if (used && !mvp) {
       const clip = findClipForAsset(elements, asset);
       if (clip) {
         // Dismiss any open preview overlay (from another asset) — the reveal
@@ -189,6 +191,7 @@ export function AssetCard({
     // Not added (or no matching clip found) → preview overlay
     setPreviewAsset(asset, projectId);
   }, [
+    mvp,
     used,
     elements,
     asset,
@@ -235,7 +238,7 @@ export function AssetCard({
         }`}
       >
         {/* Thumbnail */}
-        <div className="w-full aspect-video overflow-hidden bg-neutral-900 relative">
+        <div className="motion-asset-thumbnail w-full aspect-video overflow-hidden bg-neutral-900 relative">
           {isImage && !imgError && (
             <img
               src={serveUrl}
@@ -273,11 +276,7 @@ export function AssetCard({
           )}
 
           {/* Duration badge — top-right, media only */}
-          {durationLabel && (
-            <span className="absolute top-1 right-1 text-[9px] font-medium leading-none px-1.5 py-[3px] rounded-sm bg-neutral-950/80 text-panel-text-2 tabular-nums">
-              {durationLabel}
-            </span>
-          )}
+          <MediaDurationBadge duration={resolvedDuration} className="absolute top-1 right-1" />
         </div>
 
         {/* Match catalog caption spacing and typography; keep actions beside the name. */}

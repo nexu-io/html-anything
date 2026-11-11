@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { catalogTemplates, featuredTemplateIds, groupTemplates, isCatalogMedia } from '../shared/catalog.ts';
 import { libraryTemplates, listTemplates, getTemplate, readTemplate } from '../template-catalog.ts';
-import { templatePrompt } from '../shared/integration.ts';
+import { templatePrompt, guideUrl } from '../shared/integration.ts';
 import { pluginRoot } from '../hyperframes.ts';
 import { callTool, rpc, mcpRegistry } from '../mcp.ts';
 import { WorkspaceStore } from '../workspace.ts';
@@ -86,10 +86,12 @@ test('HTTP catalog, local posters and copied guides resolve the exact selected t
       const template = getTemplate(id);
       for (const host of ['codex', 'claude', 'deepseek', 'mcp'] as const) {
         const prompt = templatePrompt(info, host, template);
-        assert.ok(prompt.includes(id)); assert.ok(prompt.length < 250); assert.equal(prompt.split('\n').length, 1);
+        assert.ok(prompt.includes(id)); assert.ok(prompt.includes(template.title));
+        assert.match(prompt, /https:\/\/releases.open-design.ai\/open-motion\/install.md/);
+        assert.match(prompt, /并交付 HTML 和 MP4/); assert.ok(prompt.endsWith('我的要求：\n'));
         assert.doesNotMatch(prompt, /dataDirectory|motion_write_files|expectedRevision/);
-        const guideUrl = prompt.match(/http:\/\/localhost:4173\/connect\/guide\?[^\s]+/)![0];
-        const response = await request(guideUrl); assert.equal(response.status, 200);
+        assert.doesNotMatch(prompt, /localhost|127\.0\.0\.1|connect\/guide/);
+        const response = await request(guideUrl(info, host, id)); assert.equal(response.status, 200);
         const guide = await response.text(); assert.ok(guide.includes(`模板 ID：${id}`));
         assert.ok(guide.includes(template.title));
         const expectedRoute = template.kind === 'reference' ? 'recreate' : 'template';
@@ -152,4 +154,30 @@ test('the visual gallery only includes verified local covers and keeps coverless
   assert.equal(listTemplates({ covered: true, query: 'hf-component-agent-cursor' }).total, 0);
   assert.equal(listTemplates({ query: 'hf-component-agent-cursor' }).total, 1);
   assert.ok(listTemplates({ covered: true, query: 'shapelayer' }).items.some(item => item.sourceUrl === 'https://x.com/shapelayer/status/2070884943199150467'));
+});
+
+test('template prompts use public installation URLs for the effective package environment', () => {
+  const info = { templateEnvironment: 'dev', previewUrl: 'http://127.0.0.1:1234', transport: { env: {} } } as Parameters<typeof templatePrompt>[0];
+  const template = { id: 'exact-id', title: 'Selected template' };
+  assert.match(templatePrompt(info, 'codex', template), /open-motion\/dev\/install.md/);
+  info.templateEnvironment = 'prod';
+  info.transport.env.MOTION_TEMPLATE_ENV = 'dev';
+  const prompt = templatePrompt(info, 'claude', template, 'en');
+  assert.match(prompt, /open-motion\/install.md/); assert.doesNotMatch(prompt, /\/dev\/|127\.0\.0\.1|localhost/);
+  assert.match(prompt, /Selected template \(exact-id\)/); assert.match(prompt, /HTML and MP4/);
+});
+
+test('template prompts cover all eleven locales and preserve literal template values', async () => {
+  const { templatePrompts } = await import('../shared/template-prompts.ts');
+  const info = { templateEnvironment: 'dev', transport: { env: {} } } as Parameters<typeof templatePrompt>[0];
+  const template = { id: 'same-id', title: 'Literal $& {name}' };
+  assert.equal(Object.keys(templatePrompts).length, 11);
+  const prompts = Object.keys(templatePrompts).map(locale => templatePrompt(info, 'codex', template, locale));
+  assert.equal(new Set(prompts).size, 11);
+  for (const prompt of prompts) {
+    assert.ok(prompt.includes(template.title)); assert.ok(prompt.includes(template.id));
+    assert.ok(prompt.includes('https://releases.open-design.ai/open-motion/dev/install.md'));
+    assert.match(prompt, /HTML.*MP4/); assert.doesNotMatch(prompt, /\{installUrl\}|\{id\}/);
+  }
+  assert.equal(templatePrompt(info, 'codex', template, 'pt-BR'), templatePrompt(info, 'codex', template, 'pt-br'));
 });
