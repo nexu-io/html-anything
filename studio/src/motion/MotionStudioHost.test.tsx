@@ -251,7 +251,7 @@ it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr']
 it('shows connection failure as a one-line reconnecting toast and removes it on recovery', () => {
   state.connectionError = 'Failed to fetch /private/project';
   render();
-  const toast = container.querySelector('[data-testid="motion-connection-toast"]')!;
+  const toast = document.querySelector('[data-testid="motion-connection-toast"]')!;
   expect(toast.textContent).toContain('连接已断开');
   expect(toast.querySelector('.sr-only')?.textContent).toBe('重连中…');
   expect(toast.querySelector('[aria-hidden="true"]')?.textContent).toBe('重连中...');
@@ -261,8 +261,8 @@ it('shows connection failure as a one-line reconnecting toast and removes it on 
   expect(toast.textContent).not.toMatch(/private|details|详情/);
   expect(toast.querySelector('button')).toBeNull();
   render();
-  expect(container.querySelectorAll('[data-testid="motion-connection-toast"]')).toHaveLength(1);
+  expect(document.querySelectorAll('[data-testid="motion-connection-toast"]')).toHaveLength(1);
   state.connectionError = '';
   render();
-  expect(container.querySelector('[data-testid="motion-connection-toast"]')).toBeNull();
+  expect(document.querySelector('[data-testid="motion-connection-toast"]')).toBeNull();
 });

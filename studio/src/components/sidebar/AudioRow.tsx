@@ -276,7 +276,7 @@ export function AudioRow({
             )}
             {used && (
               <span className="text-[9px] font-medium text-accent-ink bg-panel-accent/10 px-1.5 py-px rounded-sm shrink-0">
-                {t("in use")}</span>
+                {t("In use")}</span>
             )}
             {(isCopied || copyFailed) && (
               <span

@@ -1,3 +1,4 @@
+import { FeedbackLayer } from "../components/FeedbackLayer";
 import { createContext, useContext, useState, useRef, useCallback, lazy, Suspense, type ReactNode } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { LanguageMenu } from '../i18n/LanguageMenu';
@@ -79,10 +80,10 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
       </Dialog.Portal>
       <div className="motion-workspace-content">
         {visibleNotice && (workspace.error && workspace.errorSource === 'connection' && isConnectionFailure(notice)
-          ? <div data-testid="motion-connection-toast" className="pointer-events-none absolute top-16 left-1/2 z-91 flex max-w-[calc(100%-32px)] -translate-x-1/2 justify-center">
+          ? <FeedbackLayer><div data-testid="motion-connection-toast" className="pointer-events-none absolute top-16 left-1/2 z-91 flex max-w-[calc(100%-32px)] -translate-x-1/2 justify-center">
               <StudioToast message="Connection lost." tone="error" presentation="feedback" singleLine
                 status="Reconnecting…" />
-            </div>
+            </div></FeedbackLayer>
           : <ErrorNotice key={noticeKey} message={notice}
               onDismiss={() => { setDismissedNotice(noticeKey); if (workspace.error) workspace.clearError(); }} />)}
         {children}

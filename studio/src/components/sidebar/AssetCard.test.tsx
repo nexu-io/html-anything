@@ -8,6 +8,7 @@ import { useAssetPreviewStore } from "../../utils/assetPreviewStore";
 import { AssetCard } from "./AssetCard";
 import { AudioRow } from "./AudioRow";
 import { InlineAssetRename } from "./InlineAssetRename";
+import { I18nProvider } from "../../i18n/I18n";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -101,6 +102,20 @@ describe("AssetCard click behavior", () => {
     onCopy: vi.fn(),
     copyFeedback: null,
   };
+
+  it.each([['zh-CN', '已使用'], ['en', 'In use']] as const)("labels only referenced assets as in use in %s", (locale, label) => {
+    const host = mount(<I18nProvider initialLocale={locale}>
+      <AssetCard {...cardProps} asset="assets/used.png" used />
+      <AssetCard {...cardProps} asset="assets/unused.png" used={false} />
+      <AudioRow {...cardProps} asset="assets/music.mp3" used />
+    </I18nProvider>);
+    const rows = [...host.querySelectorAll('[draggable="true"]')];
+    expect(rows[0].textContent).toContain(label);
+    expect(rows[1].textContent).not.toContain(label);
+    expect(rows[2].textContent).toContain(label);
+    expect(host.textContent).not.toContain('Added');
+    expect(host.textContent).not.toContain('已添加');
+  });
 
   it("clears an open preview overlay when clicking an already-added asset (reveal branch)", () => {
     usePlayerStore.getState().setElements([clip({ id: "img1", src: "assets/logo.png" })]);

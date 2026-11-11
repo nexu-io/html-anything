@@ -44,6 +44,13 @@ export function ContextMenu({
   const [mode, setMode] = useState<"menu" | "confirm-delete" | "rename">("menu");
   const [renameDraft, setRenameDraft] = useState(() => filename(asset));
   const [renameError, setRenameError] = useState<string | null>(null);
+  const deleteRequestedRef = useRef(false);
+  const deleteAsset = () => {
+    if (deleteRequestedRef.current) return;
+    deleteRequestedRef.current = true;
+    onDelete?.(asset);
+    onClose();
+  };
 
   // Clamp the menu inside the viewport once it has a size.
   useLayoutEffect(() => {
@@ -158,7 +165,7 @@ export function ContextMenu({
             {onDelete && (
               <button
                 role="menuitem"
-                onClick={() => setMode("confirm-delete")}
+                onClick={() => mvp ? deleteAsset() : setMode("confirm-delete")}
                 className={`${menuClasses.row} ${menuClasses.rowDanger} active:bg-neutral-700/70 transition-colors`}
               >
                 {t("Delete")}</button>
@@ -168,10 +175,7 @@ export function ContextMenu({
         {mode === "confirm-delete" && (
           <DeleteConfirm
             name={filename(asset)}
-            onConfirm={() => {
-              onDelete?.(asset);
-              onClose();
-            }}
+            onConfirm={deleteAsset}
             onCancel={() => setMode("menu")}
           />
         )}

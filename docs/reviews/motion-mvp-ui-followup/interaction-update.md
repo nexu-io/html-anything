@@ -71,3 +71,25 @@ My assets now shows each uploaded audio file's full name, including its original
 | Remote WorkBuddy and six-codec playback | Unverified | Local rendering tests only; no claims of remote or codec acceptance. |
 
 Validation: 47 cases in five targeted files passed in the assembled PR checkout; `npm run check`, Studio typecheck, production build and scoped diff whitespace checks passed. The main checkout was also rebuilt and browser-checked. Existing uncommitted work and other contributors' commits remain preserved.
+
+
+## Asset actions, feedback layers and export readability (2026-11-12)
+
+My assets now labels current-composition references as **In use** (**已使用** in Chinese), replacing Added; unused assets have no badge. Delete invokes the existing file handler once and closes the MVP menu immediately. The full editor retains its confirmation, and official library assets are unchanged. No new undo or restore behavior is implied.
+
+Editor notices, connection feedback and legacy template-copy feedback share a browser top-layer host. Feedback moves under the active native modal so dismiss controls remain interactive, while its non-modal popover stays above modal backdrops. Later native dialogs and popovers refresh the ordering; cleanup restores the original node and releases observers. The copy toast retains its existing position and three-second timer. No template-layout redesign is included.
+
+Export records omit elapsed render duration. Titles change from 11px to 12px medium, dates from 9px to 11px, with 4px top spacing and 8px extra room before actions. Long titles truncate earlier and expose the full filename on hover. On the real editor, title-to-download-button spacing increased from 10px to 18px. Export controls and stored render metadata remain intact.
+
+| Check | Result | Evidence / boundary |
+| --- | --- | --- |
+| Export content, typography, long title and action clearance | Pass | Existing real export opened after rebuilding 4173; no new render or deletion. [Before](export-record-before.png), [after](export-record-after.png). |
+| Used/unused assets and Chinese/English labels | Pass | Deterministic component cases; real editor shows In use. Isolated audio component shows 已使用. |
+| MVP deletion, repeated input, full-editor cancel | Pass | Regression cases and isolated production menu: [menu](asset-delete-menu.png), [one callback without confirmation](asset-delete-after.png). Real project files were not deleted. Existing server failure handling is unchanged. |
+| Feedback above nested native dialogs, pointer access and focus | Pass | Production toast/portal harness: remains visible across nested modal open/close; dismiss works without closing the dialog; focus stays on modal controls. [Nested overlay](toast-above-nested-dialog.png). |
+| Template copy and expiry | Pass, isolated | Original mountConnection/template-gallery components with an existing catalog record and isolated integration response. Clipboard success puts the toast in the active preview's top layer; expiration removes the visible state and restores its node. Reopen/copy works. [Copy feedback](template-copy-toast-top.png). |
+| Live template catalog and remote WorkBuddy | Unverified | The main runtime catalog returned unavailable, including one retry. The isolated copy test does not prove live catalog recovery or remote-host acceptance. |
+| Empty/loading/import/encoding and agent workflows | Not applicable | No changes to their data or state transitions. No new assets, exports, or timeline/media/volume edits were performed. |
+| Older browser without Popover API | Unverified | The modal-parent fallback is source-inspected; browser verification used a host supporting native popovers. |
+
+The assembled PR checkout passed `npm run check`, Studio typecheck, production build, 63 targeted tests in five files and `git diff --check`. The main checkout passed its typecheck, build and 62 targeted tests; its broader design check still reports existing raw UI colors in `studio/src/motion/theme.css`, outside this change. Main-checkout uncommitted work is retained. The PR increment preserves its newer privacy settings, community links, catalog implementation, translations and tests instead of replacing whole files from the older main checkout.

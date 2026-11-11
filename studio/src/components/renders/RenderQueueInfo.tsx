@@ -1,15 +1,6 @@
 import { useI18n } from "../../i18n/I18n";
 import type { RenderJob } from "./useRenderQueue";
 
-function formatDuration(ms: number, locale: string): string {
-  const unit = (value: number, unit: string) => new Intl.NumberFormat(locale, {
-    style: 'unit', unit, unitDisplay: 'short', maximumFractionDigits: 0,
-  }).format(value);
-  if (ms < 1000) return unit(ms, 'millisecond');
-  const seconds = Math.round(ms / 1000);
-  return seconds < 60 ? unit(seconds, 'second') : `${unit(Math.floor(seconds / 60), 'minute')} ${unit(seconds % 60, 'second')}`;
-}
-
 function formatTimeAgo(timestamp: number, locale: string): string {
   const diff = Date.now() - timestamp;
   const formatter = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
@@ -22,9 +13,9 @@ export function RenderQueueInfo({ job }: { job: RenderJob }) {
   const { t, locale } = useI18n();
   const isRendering = job.status === "rendering";
   return (
-    <div className="flex-1 min-w-0">
+    <div className="flex-1 min-w-0 pr-2">
       <div className="flex items-center gap-1.5">
-        <span className="text-step-11 font-medium text-text-2 truncate">{job.filename}</span>
+        <span title={job.filename} className="text-step-12 font-medium text-text-2 truncate">{job.filename}</span>
       </div>
 
       {isRendering && (
@@ -54,13 +45,8 @@ export function RenderQueueInfo({ job }: { job: RenderJob }) {
       )}
 
       {!isRendering && (
-        <div className="flex flex-wrap items-center gap-x-1 text-step-9 text-text-5">
+        <div className="mt-1 text-step-11 text-text-5">
           <span>{formatTimeAgo(job.createdAt, locale)}</span>
-          {job.status === "complete" && job.durationMs !== undefined && (
-            <span className="whitespace-nowrap">
-              · {t("Took {value0}", { value0: formatDuration(job.durationMs, locale) })}
-            </span>
-          )}
         </div>
       )}
     </div>
