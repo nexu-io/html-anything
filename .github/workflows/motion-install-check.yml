@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Existing public test version to check; no publication or channel changes'
+        description: 'Existing public exact version to check; no publication or channel changes'
         type: string
         required: true
         default: '0.6.4-test.7'

@@ -3,6 +3,7 @@
 // Extracted verbatim from useTimelineEditing.ts to keep it under the studio
 // 600-line cap.
 import { useCallback, type MutableRefObject, type RefObject } from "react";
+import { compositionInsertionFailureMessage } from "../i18n/editorErrors";
 import type { TimelineElement } from "../player";
 import type { TimelineDropPlacement } from "../player/components/timelineCallbacks";
 import { resolveDropTrack } from "../utils/timelineDropTrackInsert";
@@ -307,10 +308,7 @@ export function useTimelineAssetDropOps({
         });
         showToast("Composition added to the timeline.", "info");
       } catch (error) {
-        showToast(
-          error instanceof Error ? error.message : "Failed to add composition to timeline",
-          "error",
-        );
+        showToast(compositionInsertionFailureMessage(error), "error");
       }
     },
     [

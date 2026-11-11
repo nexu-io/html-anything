@@ -1,6 +1,6 @@
 # Install the OpenMotion {{VERSION}} candidate
 
-This is a **local candidate installation guide**. It installs the complete `{{TGZ}}` next to this file, not an unpublished npm registry version. The application, MCP, built Studio and five Skills are embedded. Native browser/FFmpeg/ffprobe and locked npm dependencies still need network access when prepared. Public test software defaults to DEV templates. The source address is public configuration; access still requires the DEV service network/authentication. The package contains no private catalog snapshot or credentials.
+This is a **local candidate installation guide**. It installs the complete `{{TGZ}}` next to this file, not an unpublished npm registry version. The application, MCP, built Studio and five Skills are embedded. Native browser/FFmpeg/ffprobe and locked npm dependencies still need network access when prepared. This candidate defaults to **{{TEMPLATE_ENVIRONMENT}} templates** (test uses DEV; stable uses prod). The source address is public configuration; service access still requires the appropriate network/authentication. The package contains no private catalog snapshot or credentials.
 
 ## Frozen identity
 
@@ -20,7 +20,7 @@ This is a **local candidate installation guide**. It installs the complete `{{TG
    ```
 
    Replace `HOST` with `codex`, `claude`, `deepseek` or `workbuddy`. Carry the explicit `--home`, `--data-dir`, `--skills-dir` and host-specific options from the platform recipe. Setup starts checked video-component downloads in the background. Do not run or wait for prepare to connect MCP, create/edit projects or open ordinary preview. Keep using this local package; no sidecar application/manifest download or source build is required.
-4. Follow this host's discovery/reload action. Verify the actual application version, DEV template environment, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
+4. Follow this host's discovery/reload action. Verify the actual application version, **{{TEMPLATE_ENVIRONMENT}} template environment**, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
 
 Report installation/host loading and video-component readiness separately. Installation alone does not authorize creating a video or exporting an MP4.
 

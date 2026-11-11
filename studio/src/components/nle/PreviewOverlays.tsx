@@ -63,23 +63,26 @@ export function PreviewOverlays({
   const { domEditSelection } = useDomEditSelectionContext();
 
   if (blockPreview) {
+    const { videoUrl, posterUrl, onVideoError, onPosterError, title } = blockPreview;
     return (
       <>
         <TopologyLens iframeRef={previewIframeRef} activeCompositionPath={activeCompPath} />
         <div className="absolute inset-0 z-30 bg-black pointer-events-none">
-          {blockPreview.videoUrl ? (
+          {videoUrl ? (
             <video
-              src={blockPreview.videoUrl}
+              src={videoUrl}
+              onError={() => onVideoError?.(videoUrl)}
               autoPlay
               muted
               loop
               playsInline
               className="w-full h-full object-contain"
             />
-          ) : blockPreview.posterUrl ? (
+          ) : posterUrl ? (
             <img
-              src={blockPreview.posterUrl}
-              alt={blockPreview.title}
+              src={posterUrl}
+              alt={title}
+              onError={() => onPosterError?.(posterUrl)}
               className="w-full h-full object-contain"
             />
           ) : null}

@@ -45,6 +45,34 @@ describe("EditPopover", () => {
 
     act(() => root.unmount());
   });
+
+  it("places the clip prompt outside the playback controls and keeps it inside the viewport", () => {
+    const transport = document.createElement("div");
+    transport.setAttribute("data-preview-transport", "");
+    vi.spyOn(transport, "getBoundingClientRect").mockReturnValue(new DOMRect(200, 300, 400, 40));
+    const host = document.createElement("div");
+    document.body.append(transport, host);
+    const height = vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(200);
+    const root = createRoot(host);
+    const close = vi.fn();
+    try {
+      act(() => root.render(
+        <EditPopover rangeStart={1} rangeEnd={2} anchorX={400} anchorY={450} onClose={close} />,
+      ));
+      const surface = document.querySelector("textarea")!.closest<HTMLElement>('[style*="position: fixed"]')!;
+      const top = Number.parseFloat(surface.style.top);
+      expect(top >= 340 || top + 200 <= 300).toBe(true);
+      expect(top + Math.min(200, Number.parseFloat(surface.style.maxHeight))).toBeLessThan(window.innerHeight);
+      act(() => {
+        vi.advanceTimersByTime(100);
+        transport.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      });
+      expect(close).not.toHaveBeenCalled();
+    } finally {
+      act(() => root.unmount());
+      height.mockRestore();
+    }
+  });
 });
 
 const overlappingClips: TimelineElement[] = [

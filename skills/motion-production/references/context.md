@@ -15,7 +15,9 @@ Agent 结合当前目标、保持项与工程状态选择本轮入口；工程�
 
 通过 npm 安装的平铺 Skill 可读取入口旁的 `openmotion-install.json`：`runtimeRoot` 指向应用和共享 `docs/`，不要从当前工程猜测服务路径。完整包或薄插件仍按其 `scope.json.runtimeRoot` / 已注册启动配置定位；五个入口的相对参考保持同一技能目录布局。
 
-If Motion tools are unavailable, apply the [connection diagnosis and recovery rules](production.md#tool-transport-and-workspace-readiness) before creating or importing work. Use the installed host/home identity, retain the actual connection error and verify recovery through a real host MCP read; a separate CLI probe cannot confirm the current chat connection.
+For a video task, identify OpenMotion as the intended execution path in the first relevant response. Discover the host's connected Motion tools, using its tool search when discovery is lazy. Reading a Skill establishes workflow guidance. Report actual tool use only after a host MCP call. A concept-only request may finish with a plan without creating a project. When the user proceeds to production, reuse that plan and use the connected tools for the project and editable preview.
+
+If Motion tools are unavailable or fail, disclose the connection status and recovery action as soon as it is observed, including during planning. Apply the [connection diagnosis and recovery rules](production.md#tool-transport-and-workspace-readiness) before creating or importing work. Use the installed host/home identity, retain the actual connection error and verify recovery through a real host MCP read. A separate CLI probe cannot confirm the current chat connection. Continue independent planning within the requested scope while connection recovery is pending.
 
 ## 先补齐阅读缺口，再执行当前范围
 
