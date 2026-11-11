@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { candidateFixture } from './release-fixture.mjs';
-import { releaseInputs, resolveCandidate, validateSource, validateRun, verifyDownloaded, downloadCandidate, publishNpm, promoteTest, archiveRelease, repository, candidateWorkflow, recoveryWorkflow, publicationWorkflow, candidateJobName, findCandidate, authorizationReceipt, recordAuthorization } from '../.github/scripts/motion-release.mjs';
+import { waitForRegistry, releaseInputs, resolveCandidate, validateSource, validateRun, verifyDownloaded, downloadCandidate, publishNpm, promoteTest, archiveRelease, repository, candidateWorkflow, recoveryWorkflow, publicationWorkflow, candidateJobName, findCandidate, authorizationReceipt, recordAuthorization } from '../.github/scripts/motion-release.mjs';
 import { compareReleaseVersions } from '../scripts/release-version.mjs';
 import { consumerEnvironment } from '../.github/scripts/motion-registry-smoke.mjs';
 import { runFile } from '../scripts/runtime-assets.mjs';
@@ -180,21 +180,14 @@ test('a stale candidate or authorization from another run cannot publish or move
   assert.equal(calls, 0);
 });
 
-test('test promotion requires both matching DEV native reports and preserves the old channel on failure', async t => {
+test('test promotion does not wait for native reports and still protects the channel', async t => {
   const f = await candidateFixture(t); let writes = 0, tag = '0.6.4-test.1';
   const options = { env: f.env, fetcher: () => registry(f.candidate, true, tag)(), run: async (command, args) => {
     assert.equal(command, 'npm'); assert.deepEqual(args.slice(0, 4), ['dist-tag', 'add', '@openmotion/app@' + f.candidate.version, 'test']);
     writes++; tag = f.candidate.version;
   } };
-  const file = path.join(f.directory, 'registry-win32-x64.json'), original = await readFile(file, 'utf8');
-  for (const patch of [{ status: 'failed' }, { tgzSHA256: '0'.repeat(64) }, { templateEnvironment: 'prod' }, { nativePreparation: 'failed' }]) {
-    await writeFile(file, JSON.stringify({ ...JSON.parse(original), ...patch }));
-    await assert.rejects(promoteTest(f.directory, f.inputs, options));
-    assert.equal(writes, 0); assert.equal(tag, '0.6.4-test.1');
-  }
-  await rm(file); await assert.rejects(promoteTest(f.directory, f.inputs, options), /ENOENT/);
-  assert.equal(writes, 0); assert.equal(tag, '0.6.4-test.1');
-  await writeFile(file, original);
+  await rm(path.join(f.directory, 'registry-win32-x64.json'));
+  await rm(path.join(f.directory, 'registry-darwin-arm64.json'));
   await assert.rejects(promoteTest(f.directory, f.inputs, { ...options, fetcher: registry(f.candidate, true, tag, '0.6.4') }), /latest changed/);
   await assert.rejects(promoteTest(f.directory, f.inputs, { ...options, env: { GITHUB_RUN_ID: '801' } }), /another publication run/);
   assert.equal(writes, 0);
@@ -236,10 +229,14 @@ test('partial publication retries use the retained producer artifact IDs across 
   assert.deepEqual(downloads('npm'), ['verify']);
   assert.deepEqual(downloads('registry-mac'), ['verify']);
   assert.deepEqual(downloads('registry-windows'), ['verify']);
-  assert.deepEqual(downloads('promote-test'), producers.slice(0, -1));
-  assert.deepEqual(downloads('snapshot'), producers);
-  assert(jobs.snapshot.includes('needs: [verify, npm, registry-mac, registry-windows, promote-test]'));
-  assert(jobs['promote-test'].includes('needs.registry-mac.result') && jobs['promote-test'].includes('needs.registry-windows.result'));
+  assert.deepEqual(downloads('promote-test'), ['verify', 'npm']);
+  assert.deepEqual(downloads('snapshot'), ['verify', 'npm', 'promote-test']);
+  assert(jobs.snapshot.includes('needs: [verify, npm, promote-test]'));
+  assert(!jobs['promote-test'].includes('needs.registry-'));
+  for (const id of ['registry-mac', 'registry-windows']) {
+    assert(jobs[id].includes('needs: [verify, snapshot]'));
+    assert(jobs[id].includes('continue-on-error: true'));
+  }
   assert(jobs['promote-test'].includes('id-token: write') && !jobs.snapshot.includes('id-token: write'));
   assert(jobs['promote-test'].includes('npm@11.21.2'));
   assert(jobs.npm.includes('      actions: read\n'), 'The credentialed npm job needs only read access to input artifacts');
@@ -383,15 +380,13 @@ test('interrupted archive resumes identical snapshots, verifies the exact public
   await assert.rejects(archiveRelease(f.directory, f.inputs, config, store), /Immutable snapshot/);
 });
 
-test('archive-only never reads or writes the moving entry, and failed platform acceptance blocks all storage calls', async t => {
+test('archive-only never reads or writes the moving entry', async t => {
   const f = await candidateFixture(t), store = storage(f.candidate);
   await writeFile(path.join(f.directory, 'authorization.json'), JSON.stringify({ ...f.authorization, action: 'archive-only' }));
   await promoteTest(f.directory, { ...f.inputs, action: 'archive-only' }, { fetcher: registry(f.candidate), env: f.env, run: async () => { throw Error('Archive-only cannot write npm'); } });
   await archiveRelease(f.directory, { ...f.inputs, action: 'archive-only' }, config, store);
   assert(!store.reads.includes('open-motion/dev/install.md') && !store.writes.includes('open-motion/dev/install.md'));
-  await writeFile(path.join(f.directory, 'authorization.json'), JSON.stringify(f.authorization));
-  await writeFile(path.join(f.directory, 'registry-win32-x64.json'), JSON.stringify({ status: 'failed' }));
-  const before = store.reads.length; await assert.rejects(archiveRelease(f.directory, f.inputs, config, store)); assert.equal(store.reads.length, before);
+
 });
 
 test('a superseded npm candidate still keeps immutable snapshots and never advances the moving guide', async t => {
@@ -450,4 +445,13 @@ test('no-publication rehearsal carries one accepted candidate through npm and st
   await archiveRelease(f.directory, f.inputs, config, store);
   assert.equal(npmWrites, 1, 'Retry never repacks or republishes the accepted bytes');
   assert.equal(tagWrites, 1, 'Retry never moves an already verified tag again');
+});
+
+ test('registry propagation retries stale version and tag metadata without repeating writes', async t => {
+  const f = await candidateFixture(t); let reads = 0, waits = 0;
+  const fetcher = async () => registry(f.candidate, ++reads >= 3, reads >= 4 ? f.candidate.version : '0.6.4-test.1')();
+  const wait = async ms => { assert.equal(ms, 10000); waits++; };
+  const result = await waitForRegistry(f.candidate, state => state.tags.test === f.candidate.version, { fetcher, wait, attempts: 4 });
+  assert.equal(result.tags.test, f.candidate.version); assert.equal(waits, 3);
+  await assert.rejects(waitForRegistry(f.candidate, () => false, { fetcher, wait, attempts: 2 }), /timed out/);
 });

@@ -4,7 +4,7 @@ import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import { generateInstallGuide, validateGuideSpec, validateGuideIdentity } from '../scripts/install-guide.mjs';
-import { publishGuide, storagePlan } from '../.github/scripts/publish-install-guide.mjs';
+import { movingGuide, publishGuide, storagePlan } from '../.github/scripts/publish-install-guide.mjs';
 import { runFile } from '../scripts/runtime-assets.mjs';
 
 const pkg = { name: '@openmotion/app', version: '0.6.4-test.1', private: false, bin: { openmotion: 'scripts/npm-installer.mjs' } };
@@ -161,4 +161,20 @@ test('PR CI has no publication credentials; publication requires a separate manu
   assert(!workflow.includes('environment:'), 'No independent approval environment is enabled');
   assert(!workflow.includes('accepted:') && !workflow.includes('MOTION_ACCEPTED'));
   assert(!workflow.split('  snapshot:\n')[0].includes('secrets.'));
+});
+
+test('moving guides use channel tags while immutable guides and current version remain exact', async t => {
+  const { directory, record } = await fixture(t), store = storage(directory, record);
+  const exact = await readFile(path.join(directory, 'install.md'), 'utf8');
+  // Existing same-version pinned defaults may migrate once without changing the archive.
+  store.objects.set(store.plan.fixedKey, Buffer.from(exact));
+  await publishGuide(directory, config, store);
+  const current = store.objects.get(store.plan.fixedKey)!.toString();
+  assert(current.includes('@openmotion/app@test'));
+  assert(!current.includes('@openmotion/app@' + record.version));
+  assert(current.includes('Current test version: ' + record.version));
+  assert.equal(store.objects.get(store.plan.versionKey)!.toString(), exact);
+  assert(movingGuide(exact, { ...record, channel: 'stable' }).includes('@openmotion/app@latest'));
+  const count = store.writes.length;
+  await publishGuide(directory, config, store); assert.equal(store.writes.length, count);
 });
