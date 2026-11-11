@@ -52,10 +52,10 @@ jobs:
             .github/maintainability/package-lock.json
       - name: Compare source against the PR base
         shell: bash
-        env:
-          BASE_REVISION: ${{ github.event.pull_request.base.sha }}
         run: |
-          test "$(git rev-parse HEAD^1)" = "$BASE_REVISION"
+          # A regenerated merge result can contain a newer base than the event payload.
+          git rev-parse --verify HEAD^2 >/dev/null
+          BASE_REVISION=$(git rev-parse HEAD^1)
           base_dir=$(mktemp -d "$RUNNER_TEMP/motion-base.XXXXXX")
           git archive "$BASE_REVISION" | tar -x -C "$base_dir"
           npm ci --prefix "$base_dir" --ignore-scripts --no-audit --no-fund
