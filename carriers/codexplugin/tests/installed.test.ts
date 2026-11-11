@@ -22,11 +22,15 @@ function connection(root: string, lane: string) {
     },
     stderr: "pipe",
   });
-  transport.stderr?.on("data", () => {});
+  let diagnostics = "";
+  transport.stderr?.on("data", (data) => {
+    diagnostics += data.toString();
+  });
   const client = new Client({ name: "installed-host-test", version: "1.0.0" });
   return {
     client,
     transport,
+    diagnostics: () => diagnostics,
     close: async () => {
       await client.close();
       await transport.close();
@@ -128,9 +132,31 @@ it("refuses an existing composition from another release without stopping it", a
   });
   const client = connection(root, identity.channel);
   try {
+    const original = runtime.manager.directory();
+    const instance = original.instances.find((entry) => entry.service === "standalone");
     await expect(client.client.connect(client.transport)).rejects.toThrow();
-    expect((await runtime.status()).manifest.identity.version).toBe(version);
-    expect((await runtime.status()).daemon.ok).toBe(true);
+    await expect.poll(client.diagnostics).toContain("runtime_release_mismatch");
+    const line = client
+      .diagnostics()
+      .split("\n")
+      .find((value) => value.includes("runtime_release_mismatch"));
+    expect(JSON.parse(line ?? "{}")).toMatchObject({
+      code: "runtime_release_mismatch",
+      requested: { identity: { version: identity.version } },
+      running: { identity: { version } },
+      owner: {
+        carrier: "standalone",
+        channel: identity.channel,
+        namespace: "installed",
+        manager: original.manager.incarnation,
+        instance: instance?.incarnation,
+        pid: original.manager.pid,
+      },
+    });
+    expect(runtime.manager.directory()).toEqual(original);
+    const status = await runtime.status();
+    expect(status.daemon.ok).toBe(true);
+    expect((await fetch(status.web)).ok).toBe(true);
   } finally {
     await client.close();
     await runtime.close();

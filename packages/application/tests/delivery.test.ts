@@ -15,6 +15,7 @@ import { connectRoot, managerEndpoint, observeProcesses, readDirectory, serve } 
 import type { Input, Operation, Output } from "@open-motion/daemon/contract";
 import type { Job } from "@open-motion/render/contract";
 import { nativeTools } from "@open-motion/render/tools";
+import type { Methods } from "@open-motion/standalone";
 import { expect, it } from "vitest";
 import { hash } from "@/contract.js";
 
@@ -101,6 +102,55 @@ it("installs a real local npm kit idempotently and controls its stamped standalo
   expect((await readDirectory(own.data)).manager.phase).toBe("closed");
   expect(await observeProcesses(own.data)).toEqual([]);
   await writeFile(join(own.evidence, "receipt.json"), JSON.stringify(first, null, 2));
+}, 120000);
+
+it("rejects an installed start before contacting the Daemon of a different release", async () => {
+  const own = await fixture(),
+    scope = { channel: channel(own.channel), namespace: namespace("installation") },
+    version = own.channel === "stable" ? "99.0.0" : `99.0.0-${own.channel}.1`,
+    running = release({}, { version, channel: scope.channel }),
+    manager = await serve(managerEndpoint(own.data), { root: own.data });
+  const calls: string[] = [];
+  try {
+    await manager.factory(scope).expose<Methods>({
+      identity: { service: "standalone", generation: digest(version) },
+      handlers: {
+        runtime_identity: () => {
+          calls.push("identity");
+          return { manifest: running, carrier: "codexplugin" };
+        },
+        status: () => {
+          calls.push("status");
+          throw Error("Unexpected Daemon health probe");
+        },
+        connection: () => {
+          calls.push("connection");
+          throw Error("Unexpected Daemon delegation");
+        },
+      },
+      lifecycle: { initialize: async () => {}, stop: async () => {} },
+    });
+    const original = manager.directory();
+    const failure = await own.invoke(["start"]).catch((error: unknown) => error);
+    expect(failure).toMatchObject({ code: 2 });
+    const { stdout } = failure as { stdout: string };
+    expect(JSON.parse(stdout)).toMatchObject({
+      ok: false,
+      error: {
+        code: "runtime_release_mismatch",
+        requested: { identity: { version: own.version } },
+        running,
+        owner: { ...scope, carrier: "codexplugin", manager: original.manager.incarnation, pid: original.manager.pid },
+      },
+    });
+    expect(calls).toEqual(["identity"]);
+    expect(manager.directory()).toEqual(original);
+    await expect(access(join(own.root, "installation"))).rejects.toThrow();
+  } finally {
+    await manager.close();
+    expect((await readDirectory(own.data)).manager.phase).toBe("closed");
+    expect(await observeProcesses(own.data)).toEqual([]);
+  }
 }, 120000);
 
 it("registers an installed MCP transport that survives removal of its npx cache", async () => {

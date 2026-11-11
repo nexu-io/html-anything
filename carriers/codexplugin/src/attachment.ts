@@ -1,20 +1,14 @@
-import { canonical, type FactoryScope } from "@odsuite/protocol";
+import type { FactoryScope } from "@odsuite/protocol";
 import { type Manifest, resolve } from "@odsuite/release";
 import { connectRoot, type Factory, readAuthority } from "@odsuite/sidecar";
 import { Client } from "@open-motion/daemon/client";
-import type { Methods } from "@open-motion/standalone";
+import { admitRuntime } from "@open-motion/standalone/admission";
 
 /** A delegated business connection never owns the manager or its composition. */
-export async function attachment(factory: Factory, expected?: Manifest) {
-  const directory = await factory.directory();
-  const candidates = directory.instances.filter((i) => i.service === "standalone" && i.phase !== "retired");
-  if (candidates.length !== 1 || candidates[0]?.kind !== "hosted" || candidates[0].phase !== "ready")
-    throw new Error("Managed standalone composition is not ready; inspect its owner before reconnecting");
-  const peer = await factory.connect<Methods>(candidates[0]);
+export async function attachment(factory: Factory, expected: Manifest) {
+  const peer = await admitRuntime(factory, expected);
   const status = async () => {
     const value = await peer.call("status", null);
-    if (expected && canonical(value.manifest) !== canonical(expected))
-      throw new Error("Managed runtime release does not match the installed Codex release");
     if (!value.daemon.ok) throw new Error("Managed runtime Daemon is not healthy");
     return value;
   };

@@ -21,7 +21,7 @@ export interface CarrierRuntime {
 }
 export interface Adapter {
   open(context: CarrierContext): Promise<CarrierRuntime>;
-  connect?(context: { factory: Factory; repo: string }): Promise<void>;
+  connect?(context: Pick<CarrierContext, "factory" | "repo" | "scope" | "version">): Promise<void>;
 }
 export interface BuildState {
   phase: "idle" | "building" | "succeeded" | "failed";

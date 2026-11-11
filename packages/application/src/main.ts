@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { factoryScope } from "@odsuite/protocol";
 import { inspectRecovery, recover, scopedManagerRoot } from "@odsuite/sidecar";
+import { RuntimeReleaseMismatch } from "@open-motion/standalone/admission";
 import { carriers, manifest, path, type Selection } from "./contract.js";
 import { setup } from "./install.js";
 import { native, start, status, stop } from "./runtime.js";
@@ -114,7 +115,13 @@ async function main(args: string[]) {
 }
 void main(process.argv.slice(2)).catch((error) => {
   process.stdout.write(
-    JSON.stringify({ ok: false, error: { message: error instanceof Error ? error.message : String(error) } }) + "\n",
+    JSON.stringify({
+      ok: false,
+      error:
+        error instanceof RuntimeReleaseMismatch
+          ? error.diagnostic()
+          : { message: error instanceof Error ? error.message : String(error) },
+    }) + "\n",
   );
   process.exitCode ??= 2;
 });

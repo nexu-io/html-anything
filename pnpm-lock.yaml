@@ -291,6 +291,9 @@ importers:
       '@open-motion/codexplugin':
         specifier: workspace:*
         version: link:../../carriers/codexplugin
+      '@open-motion/standalone':
+        specifier: workspace:*
+        version: link:../../carriers/standalone
     devDependencies:
       '@modelcontextprotocol/client':
         specifier: 2.4.0
@@ -304,9 +307,6 @@ importers:
       '@open-motion/render':
         specifier: workspace:*
         version: link:../render
-      '@open-motion/standalone':
-        specifier: workspace:*
-        version: link:../../carriers/standalone
       '@types/node':
         specifier: 24.12.2
         version: 24.12.2

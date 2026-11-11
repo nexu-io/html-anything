@@ -21,6 +21,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.mjs"
     },
+    "./admission": {
+      "types": "./dist/admission.d.ts",
+      "default": "./dist/admission.mjs"
+    },
     "./main": "./dist/runtime/main.mjs",
     "./dev": {
       "types": "./dist/dev.d.ts",

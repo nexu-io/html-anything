@@ -15,7 +15,12 @@ const shared = {
   target: "node24",
   define: { OPEN_MOTION_VERSION: JSON.stringify(process.env.ODSUITE_BUILD ?? product.version) },
 };
-await Promise.all([build({ ...shared, entryPoints: ["src/index.ts"], outfile: "dist/index.mjs" })]);
+await build({
+  ...shared,
+  entryPoints: ["src/index.ts", "src/admission.ts"],
+  outdir: "dist",
+  outExtension: { ".js": ".mjs" },
+});
 
 await build({ ...shared, entryPoints: ["src/dev.ts"], outfile: "dist/dev.mjs" });
 
