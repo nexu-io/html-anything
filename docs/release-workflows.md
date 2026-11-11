@@ -1,6 +1,6 @@
 # Motion releases: build, test, publish
 
-Use two manual Actions entries: **Motion candidate build**, then **Motion npm publication**. The daily flow is **build → optional local testing → manual publish**. Neither entry runs on pushes, PR merges, tags or a schedule. The entries are registered on `main`; Motion application development branches from the latest `origin/main` and PRs target `main`. The existing manual release controls still require `feature/motion` as their execution ref until separately migrated. Merging a workflow change does not publish a package or configure npm permissions.
+Use two manual Actions entries: **Motion candidate build**, then **Motion npm publication**. The daily flow is **build → optional local testing → manual publish**. Neither entry runs on pushes, PR merges, tags or a schedule. The entries are registered on `main`; Motion application development stays on `feature/motion`. Merging a workflow change does not publish a package or configure npm permissions.
 
 | Operator step | Automated work |
 | --- | --- |
