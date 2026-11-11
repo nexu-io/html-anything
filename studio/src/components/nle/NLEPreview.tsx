@@ -1,4 +1,5 @@
 import { useMvpEditor } from "../../motion/StudioHost";
+import { flushSync } from "react-dom";
 import { useI18n } from "../../i18n/I18n";
 import {
   readPreviewCompositionSize,
@@ -167,7 +168,9 @@ export const NLEPreview = memo(function NLEPreview({
     };
 
     updateStageSize();
-    const observer = new ResizeObserver(updateStageSize);
+    // Commit before paint so the player's nested observer scales its iframe in
+    // the same frame as the stage, including when a divider reverses direction.
+    const observer = new ResizeObserver(() => flushSync(updateStageSize));
     observer.observe(viewport);
     return () => observer.disconnect();
   }, [compositionSize, hintWidth, hintHeight, portrait, gutterPx, insetPx]);
