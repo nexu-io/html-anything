@@ -131,6 +131,18 @@ describe("AudioRow click behavior", () => {
     copyFeedback: null,
   };
 
+  it("distinguishes matching audio names by their full filename without repeating Audio", () => {
+    const names = ["qa.mp3", "qa.wav", "qa.ogg", "qa (2).m4a", "qa.aac", "qa.flac"];
+    const host = mount(<>{names.map(name => <AudioRow key={name} {...rowProps} asset={`assets/${name}`} used={false} meta={{ duration: 2 }} />)}</>);
+    const rows = [...host.querySelectorAll('.motion-audio-row')];
+    expect(rows).toHaveLength(names.length);
+    rows.forEach((row, index) => {
+      expect(row.textContent).toBe(`${names[index]}2s`);
+      expect(row.getAttribute('aria-label')).toContain(names[index]);
+      expect(row.querySelector('button')?.getAttribute('aria-label')).toContain(names[index]);
+    });
+  });
+
   it("clears an open preview overlay when clicking an already-added audio asset (reveal branch)", () => {
     usePlayerStore
       .getState()

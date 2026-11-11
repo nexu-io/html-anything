@@ -52,3 +52,22 @@ The Reconnecting ellipsis now cycles the three dots without changing toast width
 Browser verification used the production toast and built styles in an isolated harness, without disconnecting the real project: 45 computed-style samples captured three distinct dot-opacity states and a constant 220.4766px toast width. Simulated recovery unmounted the indicator. See [animation samples](reconnecting-animation-samples.json) and [one visual frame](reconnecting-animated.png). The real 4173 editor was rebuilt. During refresh, its service was found stopped; after restoring it with the existing interaction-workspace data directory, the original project reopened with no connection notice and Undo still disabled. No project content was changed.
 
 `check`, Studio typecheck and both working/publish builds passed. Five targeted suites cover 89 tests: 88 initially passed, and the existing connection-feedback text assertion was updated for the static screen-reader text plus aria-hidden animated dots; all 20 host tests passed on rerun. The other four suites were unchanged.
+
+
+## Playhead boundary and uploaded audio filenames (2026-11-12)
+
+The reported recording showed the green playhead crossing the left track-name/audio-control column during horizontal scrolling. `TimelinePlayheadLayer` previously removed its clip while scrolling and restored it only after settling. It now keeps the same boundary throughout scrolling, updating only the layer style rather than rerendering the clip tree. The existing half-glow allowance at time zero is retained; playhead time and playback-follow logic are unchanged.
+
+My assets now shows each uploaded audio file's full name, including its original extension. Long Chinese/English names wrap within the row, keeping the file type and adjacent actions visible. The repeated generic Audio label is omitted; duration and specific BGM/SFX/Voice labels remain when available. Official library sources, components and styles are unchanged. Display fixtures use only the supported MP3, WAV, OGG, M4A, AAC and FLAC formats; no fixture was imported into a real project. These are filename/layout fixtures, not a six-codec playback acceptance test.
+
+| Check | Result | Evidence / boundary |
+| --- | --- | --- |
+| Active and settled scroll, repeated scroll, return to origin | Pass | Updated integration regression; 100 browser animation-frame samples kept the clip edge exactly fixed, with no intermediate React commits. [Samples](playhead-scroll-samples.json). |
+| Real editor zoom and horizontal scroll | Pass | Production build refreshed on 4173; an offscreen playhead whose geometric position was inside the header remained clipped. [Header remains clear](playhead-header-clipped.png), [playhead visible again](playhead-visible-after.png). |
+| Same-stem names, long Chinese/English names, narrow layout | Pass | Production AudioRow fixtures at 260px and 400px; all names and suffixes visible without row overflow. [Six supported formats](audio-full-filenames.png). |
+| Accessible file identity, preview/rename/filter behavior | Pass | Existing and updated deterministic cases retain the original asset path and distinguish extensions in accessible labels. |
+| Source edits, undo, playback preferences | Pass | Real project remained paused near 12.406s with its selection and disabled Undo; no source/media/volume changes, and no 4173 restart. Timeline scroll/zoom were exercised as view controls. |
+| Loading, empty, network failure, destructive operations, official library | Not applicable | No changes to data loading, mutation, import, or official-library behavior. |
+| Remote WorkBuddy and six-codec playback | Unverified | Local rendering tests only; no claims of remote or codec acceptance. |
+
+Validation: 47 cases in five targeted files passed in the assembled PR checkout; `npm run check`, Studio typecheck, production build and scoped diff whitespace checks passed. The main checkout was also rebuilt and browser-checked. Existing uncommitted work and other contributors' commits remain preserved.

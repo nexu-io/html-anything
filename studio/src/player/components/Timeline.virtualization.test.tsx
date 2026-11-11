@@ -431,21 +431,25 @@ describe("Timeline without row virtualization", { timeout: 30_000 }, () => {
     };
   }
 
-  it("clips a scrolled-off playhead at the track headers once the scroll settles", async () => {
+  it("keeps a scrolled-off playhead clipped throughout scrolling and after settling", async () => {
     const { host, dispose } = await renderUnvirtualizedTimeline();
     try {
       const scroller = host.querySelector<HTMLElement>("[data-timeline-scroll-viewport]")!;
       const layer = () => host.querySelector<HTMLElement>("[data-timeline-playhead-layer]");
       await scrollTimelineHorizontally(scroller, 166);
-      expect(layer()?.style.clipPath).toBe("");
-      await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, TIMELINE_SCROLL_SETTLE_MS + 20));
-      });
       // The ruler's corner is as wide as the track headers; the glow may overhang by 6.5px.
       const headerWidth = parseFloat(
         host.querySelector<HTMLElement>(".sticky.left-0")!.style.width,
       );
       expect(layer()?.style.clipPath).toContain(`${166 + headerWidth - 6.5}px)`);
+      await scrollTimelineHorizontally(scroller, 320);
+      expect(layer()?.style.clipPath).toContain(`${320 + headerWidth - 6.5}px)`);
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, TIMELINE_SCROLL_SETTLE_MS + 20));
+      });
+      expect(layer()?.style.clipPath).toContain(`${320 + headerWidth - 6.5}px)`);
+      await scrollTimelineHorizontally(scroller, 0);
+      expect(layer()?.style.clipPath).toContain(`${headerWidth - 6.5}px)`);
     } finally {
       dispose();
     }
