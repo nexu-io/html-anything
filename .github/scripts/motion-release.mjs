@@ -35,9 +35,8 @@ export function releaseInputs(env = process.env) {
   const workflow = env.GITHUB_WORKFLOW_REF;
   if (workflow.includes(recoveryWorkflow)) assert.equal(env.MOTION_RELEASE_ACTION, 'archive-only', 'Recovery never publishes or moves a channel');
   if (env.MOTION_EXPECTED_SHA256) assert.match(env.MOTION_EXPECTED_SHA256, hashPattern);
-  assert.equal(env.MOTION_ACCEPTED, 'true', 'Explicit operator acceptance confirmation is required');
   checkReleaseVersion(env.MOTION_VERSION); assert(env.MOTION_VERSION.includes('-test.'), 'Only test versions may use this entry');
-  return { action: env.MOTION_RELEASE_ACTION, accepted: true, version: env.MOTION_VERSION, expectedSHA256: env.MOTION_EXPECTED_SHA256 };
+  return { action: env.MOTION_RELEASE_ACTION, version: env.MOTION_VERSION, expectedSHA256: env.MOTION_EXPECTED_SHA256 };
 }
 
 export async function resolveCandidate(control, requested, version, env = process.env, run = runFile) {
@@ -122,9 +121,9 @@ async function github(route, fetcher = fetch) {
 export function authorizationReceipt(candidate, run, action, observedAt = new Date().toISOString()) {
   const actor = run.triggering_actor?.login || run.actor?.login;
   assert(typeof actor === 'string' && actor.length > 0, 'Require the actual publication operator');
-  return { schemaVersion: 1, type: 'manual-workflow-dispatch', publicationRun: run.id, runAttempt: run.run_attempt,
+  return { schemaVersion: 2, type: 'manual-workflow-dispatch', publicationRun: run.id, runAttempt: run.run_attempt,
     action, version: candidate.version, tgzSHA256: candidate.tgzSHA256, candidateRun: candidate.workflow,
-    actor, acceptanceConfirmed: true, observedAt };
+    actor, observedAt };
 }
 
 export async function recordAuthorization(directory, inputs, fetcher = fetch, env = process.env) {
@@ -140,8 +139,8 @@ export async function recordAuthorization(directory, inputs, fetcher = fetch, en
 
 async function verifyAuthorization(directory, inputs, env = process.env) {
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version), authorization = await json(path.join(directory, 'authorization.json'));
-  assert.equal(inputs.accepted, true); assert.equal(authorization.schemaVersion, 1);
-  assert.equal(authorization.type, 'manual-workflow-dispatch'); assert.equal(authorization.acceptanceConfirmed, true);
+  assert.equal(authorization.schemaVersion, 2);
+  assert.equal(authorization.type, 'manual-workflow-dispatch');
   assert.equal(authorization.version, candidate.version); assert.equal(authorization.tgzSHA256, candidate.tgzSHA256);
   assert.equal(authorization.action, inputs.action); assert.deepEqual(authorization.candidateRun, candidate.workflow);
   assert.equal(String(authorization.publicationRun), env.GITHUB_RUN_ID, 'Authorization belongs to another publication run');

@@ -5,21 +5,13 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Exact accepted candidate version, e.g. 0.6.4-test.7; candidate identity is resolved automatically'
+        description: 'Exact candidate version, e.g. 0.6.4-test.7; candidate identity is resolved automatically'
         type: string
         required: true
-      accepted:
-        description: 'I completed the required acceptance for this exact candidate and authorize public test publication'
-        type: boolean
-        required: true
-        default: false
   workflow_call:
     inputs:
       version:
         type: string
-        required: true
-      accepted:
-        type: boolean
         required: true
       archive_only:
         type: boolean
@@ -35,7 +27,6 @@ concurrency:
 
 env:
   MOTION_VERSION: ${{ inputs.version }}
-  MOTION_ACCEPTED: ${{ inputs.accepted }}
   MOTION_RELEASE_ACTION: ${{ inputs.archive_only && 'archive-only' || 'publish-test' }}
 
 jobs:
@@ -112,11 +103,11 @@ jobs:
           path: ${{ runner.temp }}/candidate
       - name: Use the pinned npm CLI with trusted dist-tag support
         run: npm install --global npm@11.21.2 --ignore-scripts --no-audit --no-fund
-      - name: Record explicit operator acceptance authorization
+      - name: Record manual publication operator
         env:
           GH_TOKEN: ${{ github.token }}
         run: node .github/scripts/motion-release.mjs authorize "$RUNNER_TEMP/candidate"
-      - name: Publish the accepted bytes with npm trusted publishing, or verify an identical existing version
+      - name: Publish the candidate bytes with npm trusted publishing, or verify an identical existing version
         run: node .github/scripts/motion-release.mjs npm "$RUNNER_TEMP/candidate"
       - name: Retain npm publication state even after a partial failure
         id: artifact
