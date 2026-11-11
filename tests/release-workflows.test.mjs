@@ -127,9 +127,13 @@ test('the sealed candidate detects tgz, guide, identity and provenance tampering
   await assert.rejects(verifyDownloaded(directory, candidate.tgzSHA256));
 });
 
-for (const branch of ['main', 'feature/motion']) test(`artifact download binds ${branch} provenance and does not forward credentials to signed URLs`, async t => {
+for (const [branch, receiptRepository] of [
+  ['main', repository], ['feature/motion', repository], ['feature/motion', 'nexu-io/html-anything'],
+]) test(`artifact download binds ${branch} / ${receiptRepository} provenance and does not forward credentials to signed URLs`, async t => {
   const f = await candidateFixture(t, branch), zip = path.join(f.work, 'candidate.zip');
   const producer = { ...origin, head_branch: branch };
+  f.candidate.workflow.repository = receiptRepository;
+  await writeFile(path.join(f.directory, 'candidate.json'), JSON.stringify(f.candidate));
   await runFile('zip', ['-j', zip, ...['candidate.json', ...Object.keys(f.candidate.files)].map(name => path.join(f.directory, name))]);
   const bytes = await readFile(zip), digest = 'sha256:' + createHash('sha256').update(bytes).digest('hex');
   const fetcher = async (url, options) => {
@@ -149,6 +153,18 @@ for (const branch of ['main', 'feature/motion']) test(`artifact download binds $
   const other = branch === 'main' ? 'feature/motion' : 'main';
   await assert.rejects(downloadCandidate(f.candidate.version, path.join(f.work, 'wrong-branch'), f.candidate.tgzSHA256,
     (url, options) => String(url).endsWith('/actions/runs/123') ? Response.json({ ...producer, head_branch: other }) : fetcher(url, options)));
+});
+
+test('repository rename accepts historical receipts but rejects old live callers and foreign receipts', async t => {
+  assert.equal(repository, 'nexu-io/openmotion');
+  const oldRepository = 'nexu-io/html-anything';
+  assert.throws(() => releaseInputs({ ...valid, GITHUB_REPOSITORY: oldRepository,
+    GITHUB_WORKFLOW_REF: `${oldRepository}/${publicationWorkflow}@refs/heads/feature/motion` }), /Wrong repository/);
+  assert.throws(() => validateRun({ ...origin, head_repository: { full_name: oldRepository } }, artifact, '0.6.4-test.99'));
+  const f = await candidateFixture(t);
+  f.candidate.workflow.repository = 'fork/repo';
+  await writeFile(path.join(f.directory, 'candidate.json'), JSON.stringify(f.candidate));
+  await assert.rejects(verifyDownloaded(f.directory, f.candidate.tgzSHA256), /Untrusted candidate repository/);
 });
 
 test('old main receipts remain readable but unregistered candidate branches cannot seal artifacts', async t => {
