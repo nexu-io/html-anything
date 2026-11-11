@@ -72,6 +72,8 @@ Apply the [production decisions](../motion-director/references/production-decisi
 
 Then follow [check and deliver](references/verify.md): export the inspected version, read the automatic technical verification, inspect the exported MP4, measure it against the reference with the bundled measurer and fix every failing row before delivery.
 
+Opening the editor is a preview handoff, not completion of these checks. Keep working after it opens; the shared starter draft default does not replace this recreation workflow. Check small objects whose shape carries meaning with close crops as described in rebuild and verify: numerical similarity does not establish the correct contour. If a required check remains blocked or fails after the bounded retries, identify the project as an incomplete draft and state the specific gap.
+
 ## 7. Deliver
 
 The project open in the editor is the deliverable. Do not copy, link or attach the exported MP4 or other files unless the user asks for them.

@@ -8,6 +8,10 @@ For a link, obtain a local decodable copy using the host's available capabilitie
 
 Read the reference as a whole before choosing an implementation. Inspect representative frames and consecutive frames around every cut, entrance, exit and transition. Explain what persists, enters, changes, holds and exits; keep an object's identity across cuts when it is the same object. Learn from observable behaviour rather than guessing the original author's code. A one-per-second overview is for navigation only and is never evidence of motion: it drops 1–3 frame differences, entry directions, blur and flashes at cuts.
 
+When an interaction changes the scene, identify both the actor and the affected content. Inspect the state before contact, the response during the action and the settled result. For a pointer dragging a module, reconstruct the module following the pointer, neighboring modules making room and the final ordering; animating the pointer alone or sliding one module over a stationary neighbor does not reproduce the interaction. Keep these coupled changes together in the editable timing model.
+
+If decoding, frame extraction or seeking fails, recover the media tools using the runtime paths in the Skill's project step, or use another available method that exposes the required frames. Confirm the actual timestamps and inspect the resulting images; a successful command or a screenshot of an unverified playback position does not establish coverage. Keep any unresolved interval or detail explicitly unverified, and continue work that does not depend on it. Report a concrete blocker if the missing evidence cannot be recovered; do not silently replace it with an approximation.
+
 ## Measure with the pinned CLI
 
 Run `node <hyperframesCli> measure …` with the `hyperframesCli` path from `motion_get_project`. These commands answer specific questions; running every one is not mandatory. Write images into a working directory outside the live project with `--out`, then read them.
@@ -32,6 +36,8 @@ Choose source and component boundaries through shared behaviour. Objects sharing
 Keep content the user will change easy to locate: wording, brand, images, named objects and their motion. Use meaningful source names and declare common edits as root variables so the Studio Variables panel shows them. Variables are shortcuts, not an editing whitelist.
 
 Use code for controlled text, geometry and motion; use supplied or cropped photos, logos, screenshots and textures as local assets. Choose 2D, perspective layers or real 3D according to the observed behaviour and the needed edits. Canvas/WebGL follows the pinned runtime's seek and readiness contract: derive the picture from input time and settings, including deterministic randomness, so the same time always renders the same frame.
+
+For small objects whose shape carries meaning, inspect a close crop before choosing the geometry. Match the silhouette, concavities, orientation, proportions, stroke and attachment to nearby labels, not just the colour and bounding box. For example, a mouse pointer with an inset is not a solid triangle; rotating the triangle cannot restore the missing contour. Use an editable vector path or the appropriate local asset when a CSS primitive cannot represent the observed shape. Check repeated instances and changed states against the reference.
 
 Do not pass off playback of the entire reference, a full-frame image sequence, editable content baked into a background, or an unadaptable per-frame contour transcription as a rebuild. Time-driven functions, loops, arrays, simulations and shape interpolation are valid when the content stays reasonably editable.
 
