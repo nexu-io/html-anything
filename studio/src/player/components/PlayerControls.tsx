@@ -198,7 +198,7 @@ export const PlayerControls = memo(function PlayerControls({
           paddingBottom: "env(safe-area-inset-bottom)",
         }}
       >
-        {mvp ? <span className="motion-player-timecode min-w-0 justify-self-start whitespace-nowrap font-mono text-[11px] tabular-nums text-neutral-400">
+        {mvp ? <span className="min-w-0 justify-self-start whitespace-nowrap font-mono text-[11px] tabular-nums text-neutral-400">
           <span ref={timeDisplayRef}>{formatTime(0)}</span><span className="mx-0.5">/</span><span>{formatTime(duration)}</span>
         </span> : <Tooltip
           label={timeDisplayMode === "time" ? t("Switch to frame display") : t("Switch to time display")}
@@ -229,7 +229,7 @@ export const PlayerControls = memo(function PlayerControls({
               onTogglePlay();
             }}
             disabled={controlsDisabled}
-            className="motion-player-play flex h-7 w-8 items-center justify-center justify-self-center rounded-md text-neutral-100 transition-colors hover:text-white disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-7 w-8 items-center justify-center justify-self-center rounded-md text-neutral-100 transition-colors hover:text-white disabled:pointer-events-none disabled:opacity-30"
           >
             {mvp ? <RemixIcon name={isPlaying ? "pause-fill" : "play-fill"} size={20} /> : <PlayPauseMorphIcon playing={isPlaying} />}
           </button>
