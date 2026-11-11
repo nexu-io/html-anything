@@ -1,6 +1,6 @@
 # Motion releases: build, test, publish
 
-Use two manual Actions entries: **Motion candidate build**, then **Motion npm publication**. The daily flow is **build → optional local testing → manual publish**. Neither entry runs on pushes, PR merges, tags or a schedule. The entries are registered on `main`; Motion application development stays on `feature/motion`. Merging a workflow change does not publish a package, configure npm permissions or switch the product main branch.
+Use two manual Actions entries: **Motion candidate build**, then **Motion npm publication**. The daily flow is **build → optional local testing → manual publish**. Neither entry runs on pushes, PR merges, tags or a schedule. The entries are registered on `main`; Motion application development stays on `feature/motion`. Merging a workflow change does not publish a package or configure npm permissions.
 
 | Operator step | Automated work |
 | --- | --- |
@@ -14,9 +14,9 @@ New public test packages use **DEV templates**; stable packages use prod. The `d
 
 ## First-time administrator setup
 
-The default `main` currently contains the legacy project. GitHub requires a `workflow_dispatch` workflow to exist on the **default branch** before its manual entry is available; it can otherwise run from another ref. For candidate build, npm publication and snapshot recovery, select **Use workflow from: feature/motion**. Selecting `main`, `legacy`, a tag or another feature/fix branch fails explicitly before checkout or release work. Older valid candidates built from `main` remain readable; new operations execute the reviewed controls on `feature/motion`. Application source always comes from a commit integrated into `feature/motion`. Register the reviewed control files through a separately authorized small PR. This does not copy the Motion application onto `main` or rewrite its history. See [GitHub's manual workflow requirements](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
+The default `main` contains OpenMotion; the former HTML Anything application remains on `legacy`. GitHub requires a `workflow_dispatch` workflow to exist on the **default branch** before its manual entry is available; it can otherwise run from another ref. For candidate build, npm publication and snapshot recovery, select **Use workflow from: feature/motion**. Selecting `main`, `legacy`, a tag or another feature/fix branch fails explicitly before checkout or release work. Older valid candidates built from `main` remain readable; new operations execute the reviewed controls on `feature/motion`. Application source always comes from a commit integrated into `feature/motion`. Keep the reviewed control files aligned between `main` and `feature/motion`. See [GitHub's manual workflow requirements](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
 
-Register these files together:
+Keep these control files together:
 
 - `.github/workflows/motion-candidate.yml`, `motion-publish-test.yml`, `motion-publication-recovery.yml` and `motion-install-check.yml` (read-only manual rechecks).
 - `.github/scripts/motion-release.mjs`, `motion-scan.mjs`, `motion-registry.mjs`, `motion-registry-smoke.mjs`, `publish-install-guide.mjs` and `.github/gitleaks.toml`.
@@ -37,7 +37,7 @@ Reuse the existing R2 settings. Only the final snapshot step receives the storag
 
 ## 1. Build
 
-Open **Actions → Motion candidate build → Run workflow**, select **`feature/motion`** and a **channel**. For `test`, normally leave **version** empty. For `stable`, enter an explicit new version such as `0.6.4` (no suffix); empty or mismatched versions fail before building. Use this same branch for publication and recovery; `main` only registers the manual Actions entries.
+Open **Actions → Motion candidate build → Run workflow**, select **`feature/motion`** and a **channel**. For `test`, normally leave **version** empty. For `stable`, enter an explicit new version such as `0.6.4` (no suffix); empty or mismatched versions fail before building. Use this same branch for publication and recovery; `main` registers the manual Actions entries; release operations still execute from `feature/motion`.
 
 An empty version uses the frozen Motion source's `package.json`, increments its patch and appends a short `-test.N`. `N` is the candidate workflow's `GITHUB_RUN_NUMBER` plus **5**: candidate run #1 used the retired long format, and run #2 continues after historical `test.6` as **`0.6.4-test.7`**, then run #3 produces **`0.6.4-test.8`**. Failed builds and explicit overrides still consume run numbers, so gaps are expected. A rerun adds its attempt only after the first attempt, for example `0.6.4-test.7.2`; start a new build if an older rerun is rejected by the no-regression check. Do not reset or move the workflow file without reviewing this numbering offset. Full run ID, attempt and source SHA remain in candidate.json and acceptance.md. See [GitHub run variables](https://docs.github.com/en/actions/reference/workflows-and-actions/variables).
 

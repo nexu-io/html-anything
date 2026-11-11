@@ -33,7 +33,7 @@ Model Gateway remains a shared media-generation backend for MCP, using local Cod
 
 ## 对外主张与 Motion.md 方向
 
-产品对外名称统一为 **OpenMotion**（O 和 M 大写），README 顶部居中展示 Logo，正文简介前使用纯文本一级标题 OpenMotion，首图和页尾横幅沿用同一标识；现有仓库路径、`motion` 插件标识与环境变量保留兼容。公开介绍以“参考 → 理解与重建 → 品牌改编 → 多模态生成 → 剪辑与渲染”为主线，强调 HTML 视频源码、BYOA / BYOK、真人故事、可编辑作品和 Motion.md 社区。英文、简体中文、日文 README 共用案例、媒体与稳定章节锚点；README 语言与 Studio 界面语言分别维护；Studio 当前支持十一种界面语言。
+The public product name is **OpenMotion**. README pages place the centered logo above the cover and retain a plain-text OpenMotion heading before the introduction. The cover and footer share the same identity. OpenMotion is on `main` in `nexu-io/html-anything`, with daily integration on `feature/motion`; the `motion` plugin identifier and environment variables remain compatible. The public workflow is reference → analysis and reconstruction → brand adaptation → multimodal generation → editing and rendering. It emphasizes editable HTML video, BYOA / BYOK, presenter stories, editable projects and the Motion.md community. English, Simplified Chinese and Japanese READMEs share examples, media and stable section anchors. README localization is maintained independently of the Studio interface, which currently supports eleven languages.
 
 “任何视频”是工作流的创作范围表述，不保证任意输入的获取、解析、还原度或传播结果。参考获取与媒体分析依赖宿主工具和用户材料，生成效果依赖模型配置，成片需按参考、简报与实际视听结果审阅。README 的发布部分明确区分当前 MP4 手动交接与规划中的平台连接、排期和反馈。外部产品来源和比较统一放在 README 最后的 Acknowledgements，技术依赖与具体出处仍保留在专题和源文件中。
 
@@ -174,7 +174,7 @@ Preview/export preflight and the bundled OpenMotion lint command use the pinned 
 | Editor interface language | `studio/src/i18n/`、`web/i18n.ts` | Eleven languages, Chinese by default; editor and embedded dialog labels update without remounting. Authored project content and existing instructions retain their source language; newly generated template-copy prompts use the current UI locale, and guide/download URLs come from that locale’s catalog; native-speaker review remains separate. |
 | 多 Agent 薄适配器 | `scripts/export-adapters.ts`、`shared/integration.ts` | Codex、Claude、DSH、WorkBuddy Connector 共用外置运行时；本机生成，WorkBuddy 桌面待验收，详见 [适配器](../agent-adapters.md) |
 | MCP 接入与指引 | `mcp.ts`、`mcp-tools.ts`、`shared/integration.ts`、`web/connect.*` | 本机 stdio；macOS 业务由共享后台执行，ChatGPT 云端远程 MCP 尚未提供 |
-| Codex 安装 | `install.sh`、`scripts/install-motion.command` | 远端源码下载、依赖安装与编辑器构建、本地插件注册和 MCP 握手；需预装 Git、Node/npm 与支持插件的 Codex CLI，保留安装目录，遇到已有目录停止；远端一行入口待发布到 main |
+| Codex 安装 | `install.sh`、`scripts/install-motion.command` | 远端源码下载、依赖安装与编辑器构建、本地插件注册和 MCP 握手；需预装 Git、Node/npm 与支持插件的 Codex CLI，保留安装目录，遇到已有目录停止；the source installation entry is available on main |
 | 模板发现与复刻入口 | `prism-templates.ts`、`shared/catalog.ts`、`web/template-gallery.*` | Prism 本地缓存同时供界面查询和 Agent JSONL 索引使用，精确 ID 保留 |
 | 空白工程与模板副本 | `workspace.ts`、`template-library.ts`、`template-library/` | 新建空白原生工程或创建模板独立副本，保留之前工程 |
 | 封面、来源与热度 | `web/catalog/`、`scripts/*template*.ts` | 本地资源/快照；热度不代表实时查询 |
