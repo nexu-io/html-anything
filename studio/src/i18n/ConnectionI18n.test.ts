@@ -43,14 +43,14 @@ it('keeps the current video frame visible when an animated gallery preview pause
   localStorage.removeItem('openmotion.template-previews');
 });
 
-it('recovers a preview whose media buffer was discarded in a background tab', async () => {
+it.each([0, 1, 2, 4])('restores a preview after returning from its source with readyState %s', async readyState => {
   vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
   vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
   const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(false);
   const load = vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {});
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
   const template = { id: 'prism', title: 'Published template', tags: [], collection: 'example',
-    kind: 'prism', previewUrl: '/preview.mp4' };
+    kind: 'prism', previewUrl: '/preview.mp4', sourceUrl: 'https://x.com/creator/status/123' };
   vi.stubGlobal('fetch', vi.fn(async (url: string) => url.endsWith('/integration')
     ? new Response(null, { status: 503 })
     : Response.json({ items: [template], total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null })));
@@ -62,26 +62,74 @@ it('recovers a preview whose media buffer was discarded in a background tab', as
   await vi.waitFor(() => expect(root.querySelector('.connect-template-cover')).not.toBeNull());
   root.querySelector<HTMLButtonElement>('.connect-template-cover')!.click();
   const video = root.querySelector<HTMLVideoElement>('#template-preview-stage video')!;
-  vi.stubGlobal('HTMLMediaElement', Object.assign(Object.create(HTMLMediaElement), { HAVE_CURRENT_DATA: 2 }));
-  const ready = vi.spyOn(video, 'readyState', 'get').mockReturnValue(2);
+  const ready = vi.spyOn(video, 'readyState', 'get').mockReturnValue(readyState);
+  const play = vi.spyOn(video, 'play');
   const setVisibility = (isHidden: boolean) => {
     hidden.mockReturnValue(isHidden);
     document.dispatchEvent(new Event('visibilitychange'));
   };
 
   video.currentTime = 3.5;
+  const source = root.querySelector<HTMLAnchorElement>('#preview-source a')!;
+  expect(source.href).toBe(template.sourceUrl);
+  expect(source.target).toBe('_blank');
   setVisibility(true);
-  setVisibility(false);
-  expect(load).not.toHaveBeenCalled();
-
-  setVisibility(true);
-  ready.mockReturnValue(0);
   setVisibility(false);
   expect(load).toHaveBeenCalledTimes(1);
   expect(video.autoplay).toBe(false);
   video.currentTime = 0;
   video.dispatchEvent(new Event('loadedmetadata'));
   expect(video.currentTime).toBe(3.5);
+  video.dispatchEvent(new Event('loadeddata'));
+  expect(root.querySelector<HTMLElement>('#preview-error')!.hidden).toBe(true);
+  expect(play).not.toHaveBeenCalled();
+
+  // A second return during recovery retains the original position and one restore handler.
+  video.currentTime = 6;
+  setVisibility(true);
+  setVisibility(false);
+  video.currentTime = 0;
+  ready.mockReturnValue(0);
+  setVisibility(true);
+  setVisibility(false);
+  expect(load).toHaveBeenCalledTimes(3);
+  video.dispatchEvent(new Event('loadedmetadata'));
+  expect(video.currentTime).toBe(6);
+  video.currentTime = 8;
+  video.dispatchEvent(new Event('loadedmetadata'));
+  expect(video.currentTime).toBe(8);
+
+  // Back/forward cache lifecycle events can also restore the same open dialog.
+  window.dispatchEvent(new Event('pagehide'));
+  window.dispatchEvent(new Event('pageshow'));
+  expect(load).toHaveBeenCalledTimes(4);
+  video.currentTime = 0;
+  video.dispatchEvent(new Event('loadedmetadata'));
+  expect(video.currentTime).toBe(8);
+
+  // Closing a recovering preview removes its listeners before reopening it.
+  setVisibility(true);
+  setVisibility(false);
+  const dialog = root.querySelector<HTMLDialogElement>('#template-preview-dialog')!;
+  dialog.close();
+  dialog.dispatchEvent(new Event('close'));
+  const loadsAfterClose = load.mock.calls.length;
+  video.currentTime = 0;
+  video.dispatchEvent(new Event('loadedmetadata'));
+  setVisibility(true);
+  setVisibility(false);
+  expect(video.currentTime).toBe(0);
+  expect(load).toHaveBeenCalledTimes(loadsAfterClose);
+  root.querySelector<HTMLButtonElement>('.connect-template-cover')!.click();
+  const reopened = root.querySelector<HTMLVideoElement>('#template-preview-stage video')!;
+  expect(reopened).not.toBe(video);
+  expect(reopened.getAttribute('src')).toBe(template.previewUrl);
+  reopened.currentTime = 2;
+  setVisibility(true);
+  setVisibility(false);
+  reopened.currentTime = 0;
+  reopened.dispatchEvent(new Event('loadedmetadata'));
+  expect(reopened.currentTime).toBe(2);
 });
 
 it('polls cache warnings independently of publication changes and preserves gallery cards', async () => {

@@ -217,32 +217,44 @@ export function mountTemplates(root: HTMLElement, options: {
     if (template.previewUrl) {
       const video = document.createElement('video'); video.controls = true; video.muted = true; video.playsInline = true; video.autoplay = !reducedMotion.matches; video.loop = true; video.preload = 'metadata'; language.attribute(video, 'aria-label', '{title} reference video', { title: template.title }); if (template.posterUrl) video.poster = template.posterUrl;
       const mediaEvents = new AbortController();
-      let hiddenTime: number | undefined;
+      let restoreTime: number | undefined;
+      let away = false;
       let timer: ReturnType<typeof setTimeout>;
       const failed = () => { clearTimeout(timer); language.text(element('preview-error'), "Preview could not load. View the template content and recreation instruction, or reopen the preview to try again."); element('preview-error').hidden = false; };
       video.onerror = failed;
       video.onloadeddata = () => { clearTimeout(timer); element('preview-error').hidden = true; };
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) hiddenTime = video.currentTime;
-          video.pause();
-          return;
-        }
-        const time = hiddenTime;
-        hiddenTime = undefined;
-        if (time === undefined || (!video.error && video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA)) return;
-        // A discarded media buffer needs a fresh decoder. Keep the viewer paused and restore its position.
+      video.onloadedmetadata = () => {
+        if (away || restoreTime === undefined) return;
+        video.currentTime = Number.isFinite(video.duration) ? Math.min(restoreTime, video.duration) : restoreTime;
+        restoreTime = undefined;
+      };
+      const suspendPreview = () => {
+        if (away) return;
+        away = true;
+        restoreTime ??= video.currentTime;
+        clearTimeout(timer);
         video.autoplay = false;
-        video.addEventListener('loadedmetadata', () => {
-          video.currentTime = Number.isFinite(video.duration) ? Math.min(time, video.duration) : time;
-        }, { once: true, signal: mediaEvents.signal });
+        video.pause();
+      };
+      const restorePreview = () => {
+        if (!away || document.hidden) return;
+        away = false;
+        // A lost decoder frame can still report HAVE_CURRENT_DATA. Reload on return
+        // and restore the position while keeping the existing paused-return behavior.
+        video.autoplay = false;
         clearTimeout(timer);
         timer = setTimeout(failed, 15000);
         video.load();
+      };
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) suspendPreview();
+        else restorePreview();
       }, { signal: mediaEvents.signal });
+      window.addEventListener('pagehide', suspendPreview, { signal: mediaEvents.signal });
+      window.addEventListener('pageshow', restorePreview, { signal: mediaEvents.signal });
       video.src = template.previewUrl; stage.append(video); timer = setTimeout(failed, 15000);
       previewCleanup = () => {
-        clearTimeout(timer); mediaEvents.abort(); video.onerror = null; video.onloadeddata = null;
+        clearTimeout(timer); mediaEvents.abort(); video.onerror = null; video.onloadeddata = null; video.onloadedmetadata = null;
         video.pause(); video.removeAttribute('src'); video.load();
       };
     } else if (template.posterUrl) {
