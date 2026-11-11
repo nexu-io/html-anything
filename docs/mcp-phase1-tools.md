@@ -29,7 +29,7 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 - versionId 是历史身份；versionNumber 显示 vN；revision 是内容哈希。恢复后哈希可与旧版相同，版本身份仍是新的。GUI 的已保存改动也进入原生历史。
 - 有副作用的保存使用稳定 requestId。同 ID 同输入找回原结果（导出/取消同时刷新同一任务状态）；异输入报 REQUEST_ID_CONFLICT。修正失败输入时使用新 ID。对进程中断但无法确认结果的请求返回 REQUEST_STATE_UNKNOWN，不自动重复写入。
 - 编辑/恢复以 Studio 原生独占窗口协调 GUI 写入，暂存文件和恢复日志保护整批写入。进程重启先恢复未完成写入；发现外部第三种内容报 RECOVERY_CONFLICT 并保留副本。普通文件系统的多文件提交不等于断电级数据库事务；macOS共享后台持有系统所有权锁后才回收旧私有锁；独立旧服务的workspace.lock仍明确阻塞，不能自动强删。
-- 素材成功项与索引作为一次项目保存；无效素材逐项失败并保留有效项。不覆盖已导入资源。小于2 GiB/项、最多100项；当前为本机绝对路径传输，不是云附件上传协议。
+- 素材成功项与索引作为一次项目保存；无效素材逐项失败并保留有效项。不覆盖已导入资源。At most 500 MB (500000000 bytes) per file and 100 items per call; local absolute paths only, not a cloud attachment upload protocol. Studio enforces the same decimal byte threshold for the entire multipart request, including form overhead, so a batch may need separate uploads. 500.5 MB (500500000 bytes) is rejected; sizes are never rounded down.
 - 源码最多100个文本文件、总计8 MiB；可仅更新 requirements；分段读取上限2 MiB/次，offset 是 UTF-8 字节边界。HTTP JSON 请求另受9 MiB传输体积限制。只允许项目内白名单路径，拒绝符号链接、越界及保留元数据路径。
 - 错误通过 MCP isError 和 error.code/message/applied 返回原因；来源读取/版本/路径/媒体/任务错误不返回空成功。无法确认写入或丢失回复时，先读取项目/历史/原任务，不盲目重试。服务错误的 applied=unknown 表示无法替调用方推断是否生效。
 - 技术验证、视觉/声音/播放审阅和用户采用分开。record_review 只保存所声明的真实依据，verifiedUserAdoption 固定为 false，不证明用户实际采用。

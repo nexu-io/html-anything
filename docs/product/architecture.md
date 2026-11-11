@@ -228,6 +228,8 @@ flowchart LR
 
 ## 数据与边界
 
+Local asset import through phase-one MCP and internal legacy tools allows at most 500 MB (500000000 bytes) per file, using a shared byte check before and after copying. The OpenMotion workspace host enforces the same decimal threshold before forwarding Studio uploads to the pinned engine, counting each complete multipart request including all files and form overhead; it rejects oversized requests before saving files, including streamed uploads without Content-Length. Existing project media and historical restoration are not re-imports.
+
 | 数据范围 | 当前内容 | 可移交 / 恢复语义 |
 | --- | --- | --- |
 | 原生工程 | HTML/CSS/JS、媒体、字体、Studio manifest | 是继续编辑与渲染的输入；按工程打包，不依赖生成供应商的临时输出 URL |

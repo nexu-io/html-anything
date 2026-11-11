@@ -1,4 +1,5 @@
 import { requireNativeRuntime } from './scripts/npm-runtime.mjs';
+import { MAX_ASSET_BYTES, isAssetFileWithinLimit } from './shared/asset-limits.ts';
 import { createHash } from 'node:crypto';
 import { constants } from 'node:fs';
 import { copyFile, lstat, mkdir, open, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
@@ -200,7 +201,7 @@ export class Phase1Service {
         projectType: meta.projectType ?? 'legacy', source: meta.source ?? null, assets, file, exportJob,
         previewDisplay: await this.previewDisplay(projectId, version),
         exports: jobs.map(({ token, workerPid, ...job }) => job), reviews: await jsonFile(path.join(this.store.directory, 'phase1', 'reviews', projectId + '.json'), []),
-        limits: { textBatchFiles: 100, textBatchBytes: 8388608, textReadBytes: 2097152, assetBytes: 2147483648, attachmentTransport: 'local_path' } };
+        limits: { textBatchFiles: 100, textBatchBytes: 8388608, textReadBytes: 2097152, assetBytes: MAX_ASSET_BYTES, attachmentTransport: 'local_path' } };
     });
   }
   async previewDisplay(projectId: string, version: ContentVersion) {
@@ -404,9 +405,9 @@ export class Phase1Service {
             }
             if (!path.isAbsolute(item.sourcePath)) throw new Error('ATTACHMENT_NOT_READABLE: 需要本机实际绝对路径');
             const info = await stat(item.sourcePath);
-            if (!info.isFile() || info.size >= 2147483648) throw new Error('ASSET_TOO_LARGE_OR_NOT_FILE');
+            if (!isAssetFileWithinLimit(info)) throw new Error('ASSET_TOO_LARGE_OR_NOT_FILE: max 500 MB (500000000 bytes)');
             const staged = path.join(staging, crypto.randomUUID()); await cloneFile(item.sourcePath, staged);
-            if ((await stat(staged)).size >= 2147483648) throw new Error('ASSET_TOO_LARGE_OR_NOT_FILE');
+            if (!isAssetFileWithinLimit(await stat(staged))) throw new Error('ASSET_TOO_LARGE_OR_NOT_FILE: max 500 MB (500000000 bytes)');
             const probe = await execute(verificationBinaries().ffprobe, ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', staged], staging, 60_000);
             if (probe.code) throw new Error('INVALID_MEDIA: 无法读取真实媒体');
             const media = JSON.parse(probe.stdout), stream = media.streams?.find((s: any) => s.codec_type === 'video' && !s.disposition?.attached_pic) ?? media.streams?.find((s: any) => s.codec_type === 'audio');
