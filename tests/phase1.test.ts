@@ -112,14 +112,17 @@ test('imports retain historical media and reject missing or corrupt blobs withou
       const listed = list.versions.find((version: any) => version.versionId === target.versionId);
       assert.equal(listed.restorable, false, item.mimeType + ': ' + damage);
       assert.deepEqual(listed.unavailableFiles, [item.path]);
+      const requestId = crypto.randomUUID();
       const response = await request('/motion-api/phase1/call', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'motion_restore_version', arguments: {
-        projectId: p.projectId, requestId: crypto.randomUUID(), versionId: target.versionId,
+        projectId: p.projectId, requestId, versionId: target.versionId,
         expectedVersionId: before.currentVersionId, expectedRevision: before.revision,
       } }) });
       assert.equal(response.status, 400);
       const error = await response.json();
       assert.match(error.error, /^VERSION_NOT_RESTORABLE:/); assert.ok(error.error.includes(item.path));
       assert.equal(error.applied, false);
+      const status = await request('/motion-api/project/status?projectId=' + p.projectId);
+      assert.deepEqual((await status.json()).historyRestoreError, { requestId, message: error.error });
       const after = await service.call('motion_get_project', { projectId: p.projectId });
       assert.equal(after.revision, before.revision); assert.equal(after.currentVersionId, before.currentVersionId);
       assert.deepEqual(after.assets, before.assets); assert.deepEqual(await scoped.files(), beforeFiles);
@@ -129,6 +132,11 @@ test('imports retain historical media and reject missing or corrupt blobs withou
   }
   const available = (await service.call('motion_list_versions', { projectId: p.projectId })).versions.find((version: any) => version.versionId === target.versionId);
   assert.equal(available.restorable, true); assert.deepEqual(available.unavailableFiles, []);
+  const other = await create(service);
+  assert.equal((await (await request('/motion-api/project/status?projectId=' + other.projectId)).json()).historyRestoreError, null);
+  await service.call('motion_restore_version', { projectId: p.projectId, requestId: 'recovered-media', versionId: target.versionId,
+    expectedVersionId: before.currentVersionId, expectedRevision: before.revision });
+  assert.equal((await (await request('/motion-api/project/status?projectId=' + p.projectId)).json()).historyRestoreError, null);
 }, false));
 
 test('version availability rechecks native blobs and does not persist missing-file flags', () => fixture(async store => {

@@ -4,6 +4,7 @@
 
 - **Problem and audience:** Agents and creators could be told that a historical version was restorable after its media blobs had disappeared; restoration then exposed a low-level file-copy error.
 - **Implementation:** Public version metadata checks native and retained blob contents and hashes. Restoration repeats the check and verifies staged files before the existing transaction. Unavailable files are reported by project-relative path as `VERSION_NOT_RESTORABLE`, with `applied=false`.
+- **Editor feedback:** The owning editor displays refused Agent restores using the existing persistent, dismissible error toast, with localized text and original file paths. Existing status polling carries the latest failure; repeated polls do not repeat the notice and other projects do not receive it. Native history panel action failures also use the shared toast.
 - **Validation:** `tests/phase1.test.ts` covers missing and corrupt audio, image and video blobs, unchanged current source hashes/version/asset index after rejection, successful complete-media restoration and identical-content restoration without a new version. It also covers native blob read failures and recovery from stale capture-time missing flags. Actual check results are recorded with the delivery.
 - **Scope:** This repairs the existing MCP history contract. It does not change personas, pricing, the Studio GUI history contract or distribution formats. Native host and other operating-system acceptance remain separate checks.
 

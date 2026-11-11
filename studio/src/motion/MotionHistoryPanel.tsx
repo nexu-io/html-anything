@@ -26,7 +26,7 @@ const reloadProject = () => window.location.reload();
 /** Reads and restores Studio's own history; no parallel snapshot store or undo stack. */
 export function MotionHistoryPanel({ onRestored = reloadProject }: { onRestored?: () => void }) {
   const { t, formatDate } = useI18n();
-  const { projectId, waitForPendingDomEditSaves, writeBlockedReason, renderQueue } = useStudioShellContext();
+  const { projectId, waitForPendingDomEditSaves, writeBlockedReason, renderQueue, showToast } = useStudioShellContext();
   const historyOperation = useMotionHistoryOperation();
   const [entries, setEntries] = useState<HistoryListItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -75,7 +75,7 @@ export function MotionHistoryPanel({ onRestored = reloadProject }: { onRestored?
     activeRead.current?.abort();
     setBusy(true); setError(''); setNotice('');
     try { await operation(); }
-    catch (cause) { if (mounted.current) setError(cause instanceof Error ? cause.message : 'Version operation failed'); }
+    catch (cause) { if (mounted.current) showToast(cause instanceof Error ? cause.message : 'Version operation failed', 'error'); }
     finally { running.current = false; historyOperation.setBusy(false); if (mounted.current) setBusy(false); }
   };
   const keepCurrent = () => run(async () => {

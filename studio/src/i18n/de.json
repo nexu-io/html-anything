@@ -1803,5 +1803,7 @@
   "green": "Grün",
   "blue": "Blau",
   "purple": "Violett",
-  "multicolor": "Mehrfarbig"
+  "multicolor": "Mehrfarbig",
+  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Verlaufsdateien fehlen, sind nicht lesbar oder beschädigt: {files}. Diese Version wurde nicht wiederhergestellt. Das aktuelle Projekt bleibt unverändert.",
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Verlaufsdateien konnten nicht für die Wiederherstellung vorbereitet werden: {files}. Das aktuelle Projekt bleibt unverändert."
 }

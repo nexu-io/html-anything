@@ -452,7 +452,9 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const data = await input(req); revision(data.expectedRevision);
       return json(res, 200, openTemplate ? await legacyCreation(store, context, { ...data, templateId: openTemplate[1] }) : await openProject(store, context, data.expectedRevision, { projectId: openSaved![1] }, data.expectedProjectId));
     }
-    if (url.pathname === '/api/project/status' && req.method === 'GET') return json(res, 200, await store.status());
+    if (url.pathname === '/api/project/status' && req.method === 'GET') return json(res, 200, {
+      ...await store.status(), historyRestoreError: context.phase1?.restoreErrors.get(store.projectId) ?? null,
+    });
     if (url.pathname === '/api/project' && req.method === 'GET') return json(res, 200, await store.get());
     if (url.pathname === '/api/project' && req.method === 'PUT') {
       const data = await input(req); revision(data.expectedRevision);

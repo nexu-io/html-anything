@@ -164,6 +164,8 @@ README 参考 OpenDesign 的产品导览和 HTML Anything 的贡献、来源表�
 
 MCP version availability is derived from readable, hash-verified native or retained blobs at query time. Restore repeats this check and stages verified contents before entering the existing write transaction. Missing or corrupt historical resources report project-relative paths with `VERSION_NOT_RESTORABLE` and `applied=false`, preserving current project contents and version identity. Availability can change between calls; Studio's native GUI history retains its own restoration semantics.
 
+MCP restore refusals also reach the owning editor through its existing project-status polling and shared error toast. Notices retain file paths, localize the explanation and remain dismissible; repeated polls do not repeat a request's notice. The latest refusal is transient backend state, cleared on successful restoration or restart, and is separate from project source and history. Native history panel action failures reuse the same toast.
+
 Preview/export preflight and the bundled OpenMotion lint command use the pinned native linter's Studio policy in an isolated, cancellable process. A structurally invalid project is rejected before editor opening or rendering; non-blocking warnings remain warnings. The npm CLI's `diagnose` command reads the installed host configuration and probes initialization, tool discovery and the expected workspace through an independent MCP process. It does not mutate configuration, create projects or prove active-chat connectivity. Host reconnection and a subsequent real host read remain separate completion conditions; see [connection diagnosis](../npm-installation.md#missing-mcp-tools-or-a-failed-connection).
 
 | 能力 | 负责模块 | 当前边界 |

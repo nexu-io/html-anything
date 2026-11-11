@@ -100,6 +100,8 @@ Availability is checked against the current native and retained blob contents, i
 
 Restore repeats the availability check and verifies staged files before changing the project. Unavailable resources return `VERSION_NOT_RESTORABLE` with the affected paths and `applied=false`; current source files, revision/version identity and asset index remain unchanged. A successful list response cannot guarantee that files will remain available until a later restore.
 
+The open editor also shows these restore refusals through its shared dismissible error toast, including the affected paths and unchanged-project message. Existing project-status polling delivers the latest failure only to that project; each request is shown once per editor mount. This transient notice is cleared from server status after a successful restore or backend restart. Native history panel action errors use the same toast component; native restoration semantics are unchanged.
+
 ### motion_export_cancel
 
 必填 projectId、requestId、jobId。只能操作项目自己的任务；返回 job 最新状态。pending 直接 cancelled；running 先 cancelling，发出停止信号并在执行进程退出后 cancelled。执行器被异常杀死/超时返回 failed，不谎报取消成功。completed 保持 completed，历史视频保留。宿主停止对话不自动调用本 Tool。

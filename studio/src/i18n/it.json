@@ -1803,5 +1803,7 @@
   "green": "Verde",
   "blue": "Blu",
   "purple": "Viola",
-  "multicolor": "Multicolore"
+  "multicolor": "Multicolore",
+  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Alcuni file della cronologia sono mancanti, illeggibili o danneggiati: {files}. Questa versione non è stata ripristinata. Il progetto attuale rimane invariato.",
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Impossibile preparare i file della cronologia per il ripristino: {files}. Il progetto attuale rimane invariato."
 }

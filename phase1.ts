@@ -70,6 +70,7 @@ export class Phase1Service {
   private tail: Promise<unknown> = Promise.resolve();
   private recovered = false;
   pending = 0;
+  readonly restoreErrors = new Map<string, { requestId: string; message: string }>();
   readonly store: WorkspaceStore;
   readonly runtimeRoot: string;
   readonly context: Phase1Context;
@@ -78,9 +79,13 @@ export class Phase1Service {
   async call(name: string, args: any) {
     try {
       const result = await this.invoke(name, args);
+      if (name === 'motion_restore_version') this.restoreErrors.delete(args.projectId);
       trackPhase1Result(this.context.tracking, name, args, result);
       return result;
     } catch (error) {
+      if (name === 'motion_restore_version' && errorText(error).startsWith('VERSION_NOT_RESTORABLE:')) {
+        this.restoreErrors.set(args.projectId, { requestId: args.requestId, message: errorText(error) });
+      }
       trackPhase1Result(this.context.tracking, name, args, undefined, error);
       throw error;
     }
