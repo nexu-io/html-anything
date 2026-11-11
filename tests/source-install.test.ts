@@ -53,7 +53,7 @@ if (args[0] === 'clone') {
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /nested-motion-installer/);
     const calls = (await readFile(log, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
-    assert.deepEqual(calls[0], ['clone', '--depth', '1', '--branch', 'migration-review', '--', 'https://github.com/nexu-io/html-anything.git', destination]);
+    assert.deepEqual(calls[0], ['clone', '--depth', '1', '--branch', 'migration-review', '--', 'https://github.com/nexu-io/openmotion.git', destination]);
     assert.equal(calls.length, 1);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

@@ -41,7 +41,7 @@ test('remote entry point builds a fresh checkout before registering and checking
     assert.equal(result.status, 0, result.stderr);
     await access(path.join(destination, 'studio/build/index.html'));
     const commands = await readFile(log, 'utf8');
-    assert.match(commands, /git clone --depth 1 --branch test-ref -- https:\/\/github\.com\/nexu-io\/html-anything\.git/);
+    assert.match(commands, /git clone --depth 1 --branch test-ref -- https:\/\/github\.com\/nexu-io\/openmotion\.git/);
     assert.ok(commands.indexOf('npm ci --include=dev') < commands.indexOf('npm run build:studio'));
     assert.ok(commands.indexOf('npm run build:studio') < commands.indexOf('codex plugin marketplace add'));
     assert.match(commands, /codex plugin add motion@motion-local\ncodex plugin list --marketplace motion-local\nMCP check/);

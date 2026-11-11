@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/nexu-io/html-anything"><img src="docs/readme/badges/stars.zh-CN.svg" alt="GitHub 星标 · 9.5k（2026-11-09）"></a>
+  <a href="https://github.com/nexu-io/openmotion"><img src="docs/readme/badges/stars.zh-CN.svg" alt="GitHub 星标 · 9.5k（2026-11-09）"></a>
   <a href="package.json"><img src="docs/readme/badges/node.svg" alt="Node.js 22.18+"></a>
   <a href="LICENSE"><img src="docs/readme/badges/license.zh-CN.svg" alt="Apache 2.0 许可证"></a>
   <a href="https://github.com/nexu-io/open-design"><img src="docs/readme/badges/built-by-opendesign.zh-CN.svg" alt="OpenDesign 出品"></a>
@@ -559,7 +559,7 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 准备 Git、npm 和 **Node.js 26.11.1**。从源码预览和导出还需要 Chrome/Chromium 和 FFmpeg/FFprobe。[运行环境配置](docs/usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
+git clone --branch feature/motion https://github.com/nexu-io/openmotion.git openmotion
 cd openmotion
 npm ci
 npm run build:studio
@@ -787,7 +787,7 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 | **Agent 与开发工具** | 改进宿主适配器、Skill、资源指引或工程工具流程 | [Agent 适配器](docs/agent-adapters.md) · [MCP 契约](docs/mcp-phase1-tools.md) |
 | **动效与创意编程** | 分享组件、原生模板或带真实改编的 Motion.md 包 | [组件](library/components/README.md) · [条目清单](library/ENTRY_TEMPLATE.md) |
 | **视频与渲染** | 改进导出可靠性、媒体处理或可复现验证 | [引擎说明](docs/hyperframes.md) · [导出校验器](scripts/verify-export.ts) |
-| **社交发布** | 设计规划中的连接器层：账号访问、发布审阅、排期和版本映射 | [发布方向](docs/product/studio-vision.md) · [讨论提案](https://github.com/nexu-io/html-anything/issues) |
+| **社交发布** | 设计规划中的连接器层：账号访问、发布审阅、排期和版本映射 | [发布方向](docs/product/studio-vision.md) · [讨论提案](https://github.com/nexu-io/openmotion/issues) |
 
 从[本地安装](#quick-start)开始，选择一层，遵循 [CONTRIBUTING.md](CONTRIBUTING.md) 和 [AGENTS.md](AGENTS.md)。工程与凭据放在 checkout 外，保留依赖锁定与上游许可。
 
@@ -840,15 +840,15 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 | **Brandkit** | 品牌身份、准确产品事实和可分享素材 |
 | **Agent 支持或编辑器改进** | 范围聚焦且可复现验证的变更 |
 
-[资源提交清单](library/ENTRY_TEMPLATE.md) · [参与贡献](CONTRIBUTING.md) · [反馈问题](https://github.com/nexu-io/html-anything/issues) · [贡献者](https://github.com/nexu-io/html-anything/graphs/contributors) · [媒体资料](docs/media-kit.md)
+[资源提交清单](library/ENTRY_TEMPLATE.md) · [参与贡献](CONTRIBUTING.md) · [反馈问题](https://github.com/nexu-io/openmotion/issues) · [贡献者](https://github.com/nexu-io/openmotion/graphs/contributors) · [媒体资料](docs/media-kit.md)
 
 OpenMotion 独立官网将上线于 `open-design.ai/openmotion`。
 
 [OpenDesign 动效展示](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
-[**在 GitHub 上给 OpenMotion 点个 Star**](https://github.com/nexu-io/html-anything)
+[**在 GitHub 上给 OpenMotion 点个 Star**](https://github.com/nexu-io/openmotion)
 
-[![关注 OpenMotion · 在 GitHub 上加星](docs/readme/community-star.zh-CN.svg)](https://github.com/nexu-io/html-anything)
+[![关注 OpenMotion · 在 GitHub 上加星](docs/readme/community-star.zh-CN.svg)](https://github.com/nexu-io/openmotion)
 
 <a id="acknowledgements"></a>
 
@@ -873,4 +873,4 @@ OpenMotion 采用 [Apache-2.0](LICENSE)许可。第三方代码、模板、媒�
 
 [素材来源](docs/readme/ASSETS.md) · [其他展示素材来源](docs/readme/brand-showcase/README.md) · [字体声明](web/design-system/fonts/NOTICES.txt) · [Studio 许可证](studio/LICENSE)
 
-原 HTML Anything 应用保留在 [`legacy` 分支](https://github.com/nexu-io/html-anything/tree/legacy)。当前分支与分发边界参见[仓库迁移指南](docs/repository-migration.md) 。
+原 HTML Anything 应用保留在 [`legacy` 分支](https://github.com/nexu-io/openmotion/tree/legacy)。当前分支与分发边界参见[仓库迁移指南](docs/repository-migration.md) 。
