@@ -7,11 +7,6 @@ on:
         description: 'Exact existing candidate version; the identical package must already be public on npm'
         type: string
         required: true
-      accepted:
-        description: 'I verified this exact candidate and authorize snapshot-only recovery'
-        type: boolean
-        required: true
-        default: false
 
 permissions:
   contents: read
@@ -37,6 +32,5 @@ jobs:
     uses: ./.github/workflows/motion-publish-test.yml
     with:
       version: ${{ inputs.version }}
-      accepted: ${{ inputs.accepted }}
       archive_only: true
     secrets: inherit

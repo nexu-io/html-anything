@@ -13,12 +13,12 @@ import { runFile } from '../scripts/runtime-assets.mjs';
 
 const config = { endpoint: 'https://example.r2.cloudflarestorage.com', bucket: 'example-releases', publicOrigin: 'https://download.example.invalid' };
 const valid = { GITHUB_REPOSITORY: repository, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REF: 'refs/heads/feature/motion',
-  GITHUB_WORKFLOW_REF: `${repository}/${publicationWorkflow}@refs/heads/feature/motion`, MOTION_VERSION: '0.6.4-test.99', MOTION_ACCEPTED: 'true', MOTION_RELEASE_ACTION: 'publish-test', MOTION_EXPECTED_SHA256: 'a'.repeat(64) };
+  GITHUB_WORKFLOW_REF: `${repository}/${publicationWorkflow}@refs/heads/feature/motion`, MOTION_VERSION: '0.6.4-test.99', MOTION_RELEASE_ACTION: 'publish-test', MOTION_EXPECTED_SHA256: 'a'.repeat(64) };
 const origin = { id: 123, run_attempt: 1, event: 'workflow_dispatch', head_branch: 'main', head_repository: { full_name: repository }, status: 'completed', conclusion: 'success', path: candidateWorkflow, head_sha: 'b'.repeat(40) };
 const artifact = { id: 456, name: 'motion-candidate-0.6.4-test.99', workflow_run: { id: 123 }, expired: false, size_in_bytes: 100, digest: 'sha256:' + 'a'.repeat(64) };
 test('manual entry and source selection reject untrusted callers, mutable refs and non-test versions', async () => {
   assert.equal(releaseInputs(valid).action, 'publish-test');
-  for (const [key, value] of Object.entries({ GITHUB_REPOSITORY: 'fork/repo', GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/main', GITHUB_WORKFLOW_REF: `${repository}/evil.yml@refs/heads/feature/motion`, MOTION_EXPECTED_SHA256: 'bad', MOTION_ACCEPTED: 'false', MOTION_VERSION: '0.6.4', MOTION_RELEASE_ACTION: 'stable' })) assert.throws(() => releaseInputs({ ...valid, [key]: value }));
+  for (const [key, value] of Object.entries({ GITHUB_REPOSITORY: 'fork/repo', GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/main', GITHUB_WORKFLOW_REF: `${repository}/evil.yml@refs/heads/feature/motion`, MOTION_EXPECTED_SHA256: 'bad', MOTION_VERSION: '0.6.4', MOTION_RELEASE_ACTION: 'stable' })) assert.throws(() => releaseInputs({ ...valid, [key]: value }));
   const recovery = { ...valid, GITHUB_WORKFLOW_REF: `${repository}/${recoveryWorkflow}@refs/heads/feature/motion` };
   assert.throws(() => releaseInputs(recovery), /Recovery/);
   assert.equal(releaseInputs({ ...recovery, MOTION_RELEASE_ACTION: 'archive-only' }).action, 'archive-only');
@@ -88,7 +88,7 @@ test('version lookup uses the exact artifact name and rejects missing, expired, 
   await assert.rejects(findCandidate('0.6.4-test.99', async () => Response.json({ total_count: 101, artifacts: [artifact] })), /incomplete/);
 });
 
-test('operator authorization requires explicit acceptance and records the actual manual caller without independent approval', async t => {
+test('operator authorization records the actual manual caller without independent approval', async t => {
   const f = await candidateFixture(t);
   const run = { ...origin, head_branch: 'feature/motion', id: 800, path: publicationWorkflow, actor: { login: 'operator' }, triggering_actor: { login: 'rerunner' } };
   assert.equal(authorizationReceipt(f.candidate, run, 'publish-test').actor, 'rerunner');
@@ -97,8 +97,7 @@ test('operator authorization requires explicit acceptance and records the actual
   await recordAuthorization(f.directory, f.inputs, fetcher, f.env);
   const record = JSON.parse(await readFile(path.join(f.directory, 'authorization.json')));
   assert.equal(record.publicationRun, 800); assert.equal(record.tgzSHA256, f.candidate.tgzSHA256);
-  assert.equal(record.actor, 'rerunner'); assert.equal(record.acceptanceConfirmed, true);
-  await assert.rejects(recordAuthorization(f.directory, f.inputs, fetcher, { ...f.env, MOTION_ACCEPTED: 'false' }), /acceptance/);
+  assert.equal(record.actor, 'rerunner'); assert.equal(record.schemaVersion, 2); assert(!Object.hasOwn(record, 'acceptanceConfirmed'));
   for (const patch of [{ id: 801 }, { event: 'push' }, { head_branch: 'main' }, { head_sha: 'f'.repeat(40) }, { path: candidateWorkflow }, { head_repository: { full_name: 'fork/repo' } }]) {
     await assert.rejects(recordAuthorization(f.directory, f.inputs, async () => Response.json({ ...run, ...patch }), f.env));
   }
@@ -286,14 +285,14 @@ test('daily build and publication are separate manual entries without an indepen
   assert(build.includes('MOTION_VERSION: ${{ steps.source.outputs.version }}'));
   assert(build.includes('name: motion-candidate-${{ steps.source.outputs.version }}') && build.includes('candidate-install.md'));
   assert(!build.includes('concurrency:') && !build.includes('secrets.') && !build.includes('id-token:'));
-  assert(header.includes('version:') && header.includes('accepted:') && header.includes('default: false'));
+  assert(header.includes('version:') && !header.includes('accepted:'));
   assert.match(header, /version:\n(?:[^\n]*\n)*?        required: true/);
   for (const manualField of ['candidate_run_id:', 'source_sha:', 'tgz_sha256:', 'acceptance_sha256:', 'approved:', 'action:']) assert(!header.includes(manualField));
   assert(!workflow.includes('  candidate:') && !workflow.includes('environment:'));
   assert(header.includes('group: motion-test-publication') && header.includes('cancel-in-progress: false'));
   assert(workflow.includes('motion-release.mjs authorize') && workflow.includes('authorization.json'));
   assert(workflow.includes('MOTION_EXPECTED_SHA256: ${{ needs.verify.outputs.tgz_sha256 }}'));
-  assert(recovery.includes('version:') && recovery.includes('accepted:') && recovery.includes('archive_only: true'));
+  assert(recovery.includes('version:') && !recovery.includes('accepted:') && recovery.includes('archive_only: true'));
   assert(recovery.includes('uses: ./.github/workflows/motion-publish-test.yml') && !recovery.includes('source_sha:'));
 });
 
@@ -443,7 +442,7 @@ test('no-publication rehearsal carries one accepted candidate through npm and st
   assert.equal(npmWrites, 1);
   const release = JSON.parse(store.objects.get(`open-motion/dev/${f.candidate.version}/release-record.json`));
   assert.equal(release.schemaVersion, 2); assert.equal(release.authorization.actor, 'operator');
-  assert.equal(release.authorization.acceptanceConfirmed, true);
+  assert.equal(release.authorization.schemaVersion, 2); assert(!Object.hasOwn(release.authorization, 'acceptanceConfirmed'));
   assert.equal(release.tgzSHA256, f.candidate.tgzSHA256);
   assert.equal(store.writes.at(-1), 'open-motion/dev/install.md');
   await publishNpm(f.directory, f.inputs, npm);

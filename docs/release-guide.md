@@ -18,7 +18,7 @@ Known limitations: the production Prism catalog returned HTTP 404. This candidat
 
 ## Test candidate acceptance
 
-Before any authorized publication to the npm `test` tag:
+Recommended local checks before a test publication (not a manual workflow gate; record FAIL and NOT RUN honestly):
 
 1. Freeze a reviewed `feature/motion` commit. Run the required check/typecheck/Studio build, affected deterministic tests and current-head CI. Verify final package contents, public-boundary/secret scans, dependencies, licenses and disabled upstream telemetry.
 2. Build the **final tgz once** into a new directory. Check all identities and hashes. Copy only that tgz to a clean consumer directory; no application sidecar or source checkout may be required by setup.
@@ -65,7 +65,7 @@ Each defect needs exact package/source/OS/host/environment/catalog identity, pro
 
 Ordinary npm/DEV CI builds generate a **candidate-only** guide and retain it as an Actions artifact for 14 days. The publisher rejects candidate previews. Public guides require test/DEV or stable/prod identity; private builds cannot produce them.
 
-Maintainers follow [build → download and accept → publish](release-workflows.md): first run Motion candidate build from `feature/motion` with version empty for automatic numbering (or an explicit new test version), download its frozen candidate and follow the included `candidate-install.md` to install the local tgz in an isolated host. Keep completed `acceptance.md` privately. After acceptance, run Motion test publication from `feature/motion` with that exact version and confirm acceptance. Candidate lookup and hashes are automatic; no independent approval environment is enabled. The same accepted bytes receive anonymous native registry checks and immutable snapshots before the moving test guide can advance. Snapshot-only recovery is a separate maintenance entry. The former CI guide-only upload route is removed so it cannot bypass these checks. Ordinary PR CI remains read-only.
+Maintainers follow [build → download and accept → publish](release-workflows.md): first run Motion candidate build from `feature/motion` with version empty for automatic numbering (or an explicit new test version), download its frozen candidate and follow the included `candidate-install.md` to install the local tgz in an isolated host. Keep completed `acceptance.md` privately. Run Motion test publication from `feature/motion` with that exact version. Starting the manual workflow authorizes publication; no acceptance checkbox is required. Candidate lookup and hashes are automatic; no independent approval environment is enabled. The same accepted bytes receive anonymous native registry checks and immutable snapshots before the moving test guide can advance. Snapshot-only recovery is a separate maintenance entry. The former CI guide-only upload route is removed so it cannot bypass these checks. Ordinary PR CI remains read-only.
 
 These manual entries support test versions only. Stable package construction and the stable URL contract exist, but stable candidate/publication, npm `latest` promotion and Skills platform/marketplace distribution still require separate implementation and authorization. Bundling five Skills and registering them locally does not publish them to a platform. Partial retries retain the actual successful producer artifact IDs; automatic npm provenance is disabled for prebuilt candidates while OIDC authentication remains enabled. See the workflow manual for the source/hash evidence and recovery limits.
 
