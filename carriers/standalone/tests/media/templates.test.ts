@@ -160,10 +160,12 @@ it("creates real templates through Web/Agent contracts, renders offline fonts an
         expectedCurrent: { artifactId: current.artifactId, revision: current.revision },
       });
       await page.getByLabel("外部修改", { exact: true }).waitFor();
-      await expect(page.getByRole("button", { name: "刷新", exact: true })).toBeDisabled();
-      await expect(page.locator("[data-artifact-id]")).toHaveAttribute("data-artifact-id", current.artifactId);
+      await expect.poll(() => page.getByRole("button", { name: "刷新", exact: true }).isDisabled()).toBe(true);
+      await expect
+        .poll(() => page.locator("[data-artifact-id]").getAttribute("data-artifact-id"))
+        .toBe(current.artifactId);
       await click("放弃本地草稿并同步");
-      await expect(page.locator("[data-artifact-id]")).toHaveAttribute("data-artifact-id", artifact.id);
+      await expect.poll(() => page.locator("[data-artifact-id]").getAttribute("data-artifact-id")).toBe(artifact.id);
       await shown();
       const font = template.id === "nyt-graph" ? '400 48px "Libre Baskerville"' : '400 48px "Inter"';
       await seek(2);
