@@ -311,3 +311,25 @@ it("does not replace a newer incoming view with an older delayed observation", (
     expect(reader.incoming?.project?.revision).toBe(latest);
     expect(reader.incoming?.project?.files).toContainEqual({ path: "card.html", content: "latest" });
   }));
+
+it("rejects a transient session title between equal metadata fences", () =>
+  fixture(async ({ db, transport, owner }) => {
+    let race = false;
+    const raced: Transport = async (url, init) => {
+      if (!race || !String(url).endsWith("/session_get")) return transport(url, init);
+      race = false;
+      db.execute("session_rename", { requestId: randomUUID(), sessionId: owner.sessionId, title: "Transient" });
+      const response = await transport(url, init);
+      db.execute("session_rename", { requestId: randomUUID(), sessionId: owner.sessionId, title: "Shared" });
+      return response;
+    };
+    const reader = new Editor(new Client("http://127.0.0.1:4100", "test", raced));
+    await reader.load();
+    const head = db.execute("workspace_observe", {});
+    race = true;
+    expect(await reader.observe()).toBe(false);
+    expect(db.execute("workspace_observe", {})).toEqual(head);
+    expect(reader.session?.title).toBe("Shared");
+    expect(await reader.observe()).toBe(true);
+    expect(reader.session?.title).toBe("Shared");
+  }));
