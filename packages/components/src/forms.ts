@@ -6,13 +6,18 @@ export function field(
   hiddenLabel = false,
 ): HTMLLabelElement {
   const element = document.createElement("label"),
-    caption = document.createElement("span");
+    caption = document.createElement("span"),
+    check = control.matches('input[type="checkbox"]');
   element.className = inline ? "om-field om-field--inline" : "om-field";
   if (hiddenLabel) element.classList.add("om-field--hidden-label");
+  if (check) {
+    element.classList.add("om-field--check");
+    control.classList.add("om-field__control--check");
+  }
   caption.className = hiddenLabel ? "om-field__label om-field__label--hidden" : "om-field__label";
   caption.textContent = label;
   if (control.matches("input,select,textarea")) control.classList.add("om-field__control");
-  element.append(caption, control);
+  element.append(...(check ? [control, caption] : [caption, control]));
   return element;
 }
 export function codeEditor(document: Document): HTMLTextAreaElement {
