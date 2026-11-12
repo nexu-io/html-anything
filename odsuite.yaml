@@ -5,6 +5,8 @@ guard:
       - carriers
       - carriers/*
       - carriers/standalone/tests/media
+      - carriers/standalone/tests/lifecycle
+      - carriers/standalone/tests/generation
       - carriers/standalone/tests/media/exports
       - carriers/codexplugin/src/install
       - apps

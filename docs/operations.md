@@ -292,3 +292,11 @@ Generation uses an explicitly injected Provider in standalone/Codex composition.
 Use a stable request UUID and complete fixed owner/revision/model/prompt intent for `generation_create`. After an unknown response retry only that intent; after a durable unknown submission do not issue an automatic replacement. Read/list report explicit submission certainty. Observe the known remote ID on restart without resubmitting it. Cancellation requires the observed task version and confirmation; an unconfirmed cancellation remains unresolved.
 
 Read the exact verified PNG with `generation_result`; explicitly adopt its hash/path/name through `generation_adopt` against the intended project revision. Reuse the adoption request after an unknown response before fetching a candidate or changing the payload. Then insert the adopted resource through existing native editing. Durable candidates and adopted workspace bytes are user data, not blob GC inputs. Normal quiesce drains adapters and actual reads before stop; interrupted authority still needs explicit sidecar recovery. Loopback-provider protocol evidence and real paid model execution are separate acceptance boundaries.
+
+Run the permanent Web/process continuity fixture after building and installing this worktree’s pinned Chromium:
+
+```sh
+pnpm --filter @open-motion/standalone exec vitest run -c vitest.config.ts tests/generation/continuity.test.ts
+```
+
+The fixture uses separate sidecar-owned product and HTTP-provider roots. It closes real pages, changes the selected project, restarts the Manager, kills only its exact owned Manager and explicitly recovers the interrupted root. It checks original request replay after lost create/adopt responses, known remote-ID observation, unknown acceptance without replacement, durable unconfirmed cancellation, offline candidate access and unchanged unrelated projects. Screenshots and sanitized counters remain under `.artifacts/generation-continuity`; both resource roots must close after drain. This validates the injected-provider lifecycle on the executing platform, independently of production provider execution or model quality.
