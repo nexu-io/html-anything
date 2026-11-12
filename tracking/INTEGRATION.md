@@ -180,6 +180,109 @@ discovery rejects cross-policy reuse without stopping or replacing the authority
 `OPENMOTION_TELEMETRY=0` or `DO_NOT_TRACK=1` forces it off; browser Do Not Track also
 suppresses browser collection. An added event must respect those controls.
 
+## Opt into count aggregation at the reporting boundary
+
+The local pilot supports **only `ui_click`**, and aggregation is off by default.
+This is separate from the user's collection preference: an aggregation setting
+cannot enable tracking, override a test-build lock or bypass opt-out. Studio
+continues sending its validated raw semantic events to the local service. The
+Node reporter decides whether to replace them with `ui_click_count` summaries
+before sending to PostHog. Browser-to-local traffic is not count-aggregated.
+
+Business integrations keep their existing `trackMotion()` / `track()` calls.
+Choose the reporting policy once when constructing a Node tracker:
+
+```ts
+// createNodeTracking({...existingOptions, aggregation: ...}) uses the same map.
+const tracking = await createAppTracking(dataDirectory, 'mcp', {
+  aggregation: { ui_click: { windowMs: 60_000 } },
+});
+// To keep individual events for this reporter:
+// aggregation: { ui_click: false }
+```
+
+For the installed application, set the policy in the environment of **every
+reporting MCP/service process**, then restart those processes:
+
+```sh
+export OPENMOTION_TRACKING_AGGREGATION='{"ui_click":{"windowMs":60000}}'
+# Disable count aggregation and keep raw ui_click events:
+export OPENMOTION_TRACKING_AGGREGATION='{"ui_click":false}'
+```
+
+An explicit constructor map takes precedence over that environment variable.
+Unset or `{}` means no aggregation. This is startup configuration, not a remote
+flag or user-facing UI. Invalid JSON, unsupported events or invalid windows
+disable application collection through the existing fail-closed initializer;
+the package constructor itself throws a safe configuration error. Restarting
+does not flush a process that was already killed: shut down normally first.
+Do not use this switch as a way to opt a prerelease into reporting.
+
+The registry's `countEvent` metadata approves which raw events can be aggregated.
+`ui_click_count` is collector-produced and cannot be submitted by Studio or
+directly through `track()`/`ingest()`. Counts are generated after raw-event
+validation; callers cannot supply `count`, identity, source or arbitrary fields.
+To approve another event later, review its business contract, add the explicit
+summary schema with the same semantic fields and required fields, and verify it
+with a raw-versus-summary replay. Do not add unique call/request IDs to a count
+event or drop dimensions merely to make more records combine. Constructor types
+and runtime validation reject events without approved `countEvent` metadata.
+
+The pilot's contract:
+
+- Group by **all original properties**, including whether optional properties
+  are present, plus entrypoint, device timezone, UTC offset and event-time window.
+  Property order does not create a new group. Every reporter owns one installation
+  identity/source; distinct reporters never share count state. Node adds the same
+  trusted installation/source/version fields as for raw events.
+- Fixed event-time windows are UTC aligned. `windowMs` must divide one minute
+  and be between 1,000 and 60,000 inclusive, so windows do not straddle minute/day
+  boundaries. The summary carries `count`, ISO UTC `window_start` / `window_end`,
+  and uses window start as its event timestamp. It preserves counts, not the exact
+  time or order of each interaction.
+- Selected raw events are replaced, never also sent by this reporter. Unselected
+  events keep their existing interval and meaning. Reports for a mixed rollout
+  must add raw event count and summary `sum(count)`; counting summary rows alone
+  undercounts usage. Distinct installations still require identity deduplication.
+- Automatic flushes wait until the window closes, plus the existing send interval
+  and any retry backoff. Explicit `flush()` and normal `closeTracking()` may emit
+  a partial window early. Later events in that same window use another summary
+  UUID; sum every part rather than assuming one row per window.
+- Freeze the summary UUID, timestamp and count before its first send. New events
+  never mutate an in-flight or retrying summary. Retries reuse the original UUID
+  and PostHog insert ID. Raw ingress uses the existing bounded UUID deduplication
+  cache; duplicate delivery is not guaranteed outside that cache's horizon.
+- The existing 64-record queue bounds raw events plus pending summary groups.
+  More occurrences of a pending group increment its count; a new group at capacity
+  returns `full` (HTTP 429 at local ingress), rather than silently merging unrelated
+  dimensions. Disabled collection aborts sends and erases pending count state.
+
+To query a mixed period with HogQL, use `product=openmotion` and the normal
+environment/test exclusions. For example:
+
+```sql
+SELECT properties.utm_source,
+       sum(if(event = 'ui_click_count', toInt64(properties.count), 1)) AS clicks
+FROM events
+WHERE properties.product = 'openmotion'
+  AND properties.env = 'production'
+  AND event IN ('ui_click', 'ui_click_count')
+GROUP BY properties.utm_source
+```
+
+This pilot deliberately retains the **process-local, best-effort** queue. It has
+no persistent aggregate/outbox, crash recovery or cross-process aggregation.
+Crashes, full queues, TTL expiry and permanent rejection can still lose data.
+There is no production savings claim, and it is not ready for a requirement of
+guaranteed delivery. Persisted outbox, health accounting and failure/restart tests
+are required before making that guarantee. Keep installation, activation, domain
+results and export completion raw; this pilot does not approximate their funnels.
+
+`tests/tracking-aggregation.test.ts` compares replay counts by dimension and checks
+default-off behavior, configuration rejection, temporal boundaries, retries,
+opt-out, queue limits, local admission and trusted installation/source enrichment.
+It uses fake senders and never sends test records to the public collector.
+
 ## Diagnose without logging event contents
 
 Normal component calls remain `void trackMotion(...)`. Tests or a local debugger
@@ -254,6 +357,7 @@ npm run typecheck:studio
 npm run build:studio
 npm run build:tracking
 node --experimental-strip-types --test tests/tracking.test.ts
+node --experimental-strip-types --test tests/tracking-aggregation.test.ts
 npm run test:studio -- studio/src/motion/tracking.test.ts
 ```
 

@@ -6,6 +6,7 @@ export const toolNames = ['motion_list_templates', 'motion_get_template', 'motio
 const outcome = ['success', 'failure', 'partial', 'cancelled', 'unknown'] as const;
 const tool = { tool_name: toolNames, call_id: 'uuid', operation_id: 'uuid', accepted: 'boolean' } as const;
 const business = { outcome, project_id: 'uuid', operation_id: 'uuid', replayed: 'boolean', error_code: 'code' } as const;
+const click = { page_name: ['home', 'studio'], area: ['workspace', 'templates'], element: ['new_creation', 'recent_session', 'select_template', 'copy_template'], interaction_method: ['pointer', 'keyboard'] } as const;
 
 export const omEvents = {
   mcp_tool_started: { producers: ['mcp'], fields: tool, required: ['tool_name', 'call_id', 'accepted'] },
@@ -21,12 +22,14 @@ export const omEvents = {
   export_result: { producers: ['worker'], fields: { job_id: 'uuid', job_state: ['completed', 'failed', 'cancelled'], duration_ms: 'integer', technical_check: ['passed', 'failed', 'unknown'] }, required: ['job_id', 'job_state', 'duration_ms', 'technical_check'] },
   page_view: { producers: ['studio'], fields: { page_name: ['home', 'studio'], view_id: 'uuid', embedded: 'boolean', has_project: 'boolean' }, required: ['page_name', 'view_id', 'embedded', 'has_project'] },
   studio_load_result: { producers: ['studio'], fields: { load_id: 'uuid', outcome, duration_ms: 'integer', embedded: 'boolean' }, required: ['load_id', 'outcome', 'duration_ms', 'embedded'] },
-  ui_click: { producers: ['studio'], fields: { page_name: ['home', 'studio'], area: ['workspace', 'templates'], element: ['new_creation', 'recent_session', 'select_template', 'copy_template'], interaction_method: ['pointer', 'keyboard'] }, required: ['page_name', 'area', 'element'] },
+  ui_click: { producers: ['studio'], countEvent: 'ui_click_count', fields: click, required: ['page_name', 'area', 'element'] },
+  ui_click_count: { producers: ['collector'], fields: { ...click, count: 'integer', window_start: 'timestamp', window_end: 'timestamp' },
+    required: ['page_name', 'area', 'element', 'count', 'window_start', 'window_end'] },
   template_instruction_copy_result: { producers: ['studio'], fields: { host_product: ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'], copy_status: ['clipboard_written', 'manual_fallback_shown', 'failed'] }, required: ['host_product', 'copy_status'] },
-} as const satisfies Registry & Record<string, { producers: readonly Entry[] }>;
+} as const satisfies Registry & Record<string, { producers: readonly (Entry | 'collector')[] }>;
 
 export type StudioEvent = { [E in keyof typeof omEvents]:
   'studio' extends typeof omEvents[E]['producers'][number] ? E : never
 }[keyof typeof omEvents];
 export const studioEvents = Object.fromEntries(Object.entries(omEvents)
-  .filter(([, spec]) => (spec.producers as readonly Entry[]).includes('studio'))) as Pick<typeof omEvents, StudioEvent>;
+  .filter(([, spec]) => (spec.producers as readonly string[]).includes('studio'))) as Pick<typeof omEvents, StudioEvent>;

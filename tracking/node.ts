@@ -2,7 +2,7 @@ import { link, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import { createTracker, uuid } from './core.ts';
-import type { Entry, Registry, PendingEvent, Receipt } from './core.ts';
+import type { CountAggregation, Entry, Registry, PendingEvent, Receipt } from './core.ts';
 
 export type Identity = { installation_id: string; utm_source: string | null; created_at: string };
 const sourcePattern = /^[A-Za-z0-9_.-]{1,64}$/;
@@ -77,6 +77,7 @@ export function createNodeTracking<const R extends Registry>(options: {
   registry: R; identity: Identity; host: string; token?: string; appVersion: string;
   env: 'development' | 'test' | 'production'; testRunId?: string; entrypoint: Entry;
   enabled: boolean; timeoutMs?: number; flushIntervalMs?: number; maxQueue?: number; geoip?: boolean; isEnabled?: () => boolean;
+  aggregation?: CountAggregation<R>;
 }) {
   const enabled = options.enabled && !!options.token && trackingReleaseEnabled(options.appVersion);
   const send = enabled ? createPosthogSender({ ...options, token: options.token! }) : async () => 'drop' as const;

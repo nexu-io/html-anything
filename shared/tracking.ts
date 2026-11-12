@@ -2,7 +2,7 @@ import path from 'node:path';
 import { readFileSync, watch } from 'node:fs';
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { createTracker, uuid } from '../tracking/core.ts';
-import type { Entry } from '../tracking/core.ts';
+import type { CountAggregation, Entry } from '../tracking/core.ts';
 import { createNodeTracking, loadIdentity, trackingReleaseEnabled } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
 import { VERSION } from '../preview.ts';
@@ -27,7 +27,8 @@ export async function saveTrackingPreference(directory: string, enabled: boolean
   } finally { await rm(temporary, { force: true }); }
 }
 
-export async function createAppTracking(directory: string, entrypoint: Entry): Promise<OmTracking> {
+export async function createAppTracking(directory: string, entrypoint: Entry,
+  options: { aggregation?: CountAggregation<typeof omEvents> } = {}): Promise<OmTracking> {
   const disabled = () => createTracker({ registry: omEvents, entrypoint, enabled: false, isEnabled: () => false, send: async () => 'drop' });
   if (trackingLocked()) return disabled();
   try {
@@ -41,6 +42,7 @@ export async function createAppTracking(directory: string, entrypoint: Entry): P
       geoip: process.env.OPENMOTION_GEOIP === '1' } : JSON.parse(readFileSync(new URL('./tracking-config.json', import.meta.url), 'utf8'));
     if (!config.host || !config.token) return disabled();
     const tracking = createNodeTracking({ registry: omEvents, entrypoint, enabled: true,
+      aggregation: options.aggregation ?? JSON.parse(process.env.OPENMOTION_TRACKING_AGGREGATION ?? '{}'),
       identity: await loadIdentity(path.join(directory, 'tracking')), appVersion: VERSION,
       host: config.host, token: config.token, geoip: config.geoip,
       isEnabled: () => !trackingLocked() && trackingPreference(directory),
