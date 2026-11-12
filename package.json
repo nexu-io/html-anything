@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "npm run build:studio && node --env-file=.env.development --experimental-strip-types server.ts",
     "mcp": "node --experimental-strip-types mcp.ts",
-    "start": "node --experimental-strip-types server.ts",
+    "start": "node --experimental-strip-types preview.ts",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "check": "node --experimental-strip-types scripts/check.ts",
     "package:plugin": "node --experimental-strip-types scripts/package.ts",

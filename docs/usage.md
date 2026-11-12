@@ -117,10 +117,11 @@ macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个
 
 ```sh
 npm ci
-npm run dev
+npm run build:studio
+npm start
 ```
 
-默认访问 `http://localhost:4173` 首页；`/?project=<id>` 或 `/#project/<id>` 打开对应项目。插件启动会校验服务版本与工程目录，避开已占用端口。Hyperframes 原生服务使用另一个回环端口；我们的服务转发原生 API、文件事件和预览请求，直接提供自有编辑器页面。视频作品仍在独立 composition iframe 中预览，以隔离 UI 样式和作品样式。
+Open the printed `studioUrl` or `previewUrl`; do not assume port 4173. `npm start` and MCP share the existing startup logic and reuse a compatible service for the same workspace. macOS selects a port dynamically; other platforms try `PORT` (default 4173) and the next nine ports, skipping occupied ones. The service remains in the background after the launcher exits. Project links use `/?project=<id>` or `/#project/<id>` at the returned origin. Hyperframes uses a separate loopback port; OpenMotion proxies its APIs, file events and preview requests while serving its own editor. Compositions remain in isolated preview iframes. `npm run dev` retains the direct foreground server entry for development.
 
 ## Agent 工具
 

@@ -415,7 +415,9 @@ npm run build:studio
 npm start
 ```
 
-Open the address printed by `npm start`, then open **Template library**. On macOS, use the returned `studioUrl` or `previewUrl`: the shared editor selects a local port dynamically. Other platforms default to `http://localhost:4173`. Select a template and choose **Recreate template** to copy the instruction for your agent. Keep projects and credentials outside the checkout; `MOTION_DATA_DIR` selects the workspace.
+Open the `studioUrl` or `previewUrl` printed by `npm start`, then open **Template library**. Startup reuses a compatible service for the same workspace or selects an available local port. The service keeps running in the background after the launcher exits.
+
+Select a template and choose **Recreate template** to copy the instruction for your agent. Keep projects and credentials outside the checkout; `MOTION_DATA_DIR` selects the workspace.
 
 Source checkouts load templates from `library/templates/catalog/`. The local Studio and MCP use the same files; `openmotion_list_templates` returns a searchable local index, and `openmotion_get_template` returns local guide content and absolute source paths. Larger images and videos use existing CMS links. Local edits appear on the next catalog read.
 
