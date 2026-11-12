@@ -1,6 +1,7 @@
 import { posix } from "node:path";
 import {
   type BundledHostCompositionIdentity,
+  deferScriptsUntilFonts,
   emitMountedModuleScripts,
   emitRootCompositionVariableStyles,
   emitVariablesByCompScript,
@@ -13,6 +14,8 @@ import {
   readDeclaredDefaults,
   styleElementsFor,
 } from "@hyperframes/core/compiler";
+import { type FontResource, resourceFontFamily } from "@open-motion/workspace/contract";
+import { parse as parseCss } from "postcss";
 import { type Instance, prepareProject, type Source } from "./graph.js";
 
 /** The canonical compiler clones source DOMs. Resolve those clones through SDK host-chain identity. */
@@ -44,7 +47,10 @@ class Identities extends Map<Element, BundledHostCompositionIdentity> {
   }
 }
 
-export type MediaFact = { path: string; type: "image/png" } | { path: string; type: "audio/wav"; duration: number };
+export type MediaFact =
+  | { path: string; type: "image/png" }
+  | { path: string; type: "audio/wav"; duration: number }
+  | Pick<FontResource, "path" | "type" | "digest" | "weight" | "slant">;
 
 /** Pure snapshot assembly: no filesystem, network, engine process or persisted derived source. */
 export function assembleProject(sources: readonly Source[], resources: readonly MediaFact[] = []) {
@@ -80,6 +86,49 @@ export function assembleProject(sources: readonly Source[], resources: readonly 
   }
   emitMountedModuleScripts(document, result.importMaps, result.moduleScripts);
   emitRootCompositionVariableStyles(document, result.variablesByComp);
+  const faces = new Map<string, string>();
+  for (const asset of resources) {
+    if (!asset.type.startsWith("font/")) continue;
+    if (
+      !("weight" in asset) ||
+      !/^assets\/[a-zA-Z0-9][a-zA-Z0-9._-]*\.(ttf|otf|woff|woff2)$/i.test(asset.path) ||
+      !["normal", "italic"].includes(asset.slant) ||
+      asset.weight.length !== 2 ||
+      asset.weight.some((weight) => !Number.isFinite(weight) || weight < 1 || weight > 1000) ||
+      asset.weight[0] > asset.weight[1] ||
+      `font/${asset.path.split(".").at(-1)?.toLowerCase()}` !== asset.type
+    )
+      throw Error("invalid project font fact");
+    const family = resourceFontFamily(asset.digest);
+    if (!faces.has(family))
+      faces.set(
+        family,
+        `@font-face{font-family:"${family}";src:url("${asset.path}");font-weight:${asset.weight.join(" ")};font-style:${asset.slant};font-display:block;}`,
+      );
+  }
+  const requiredFonts = new Set<string>();
+  const validateFonts = (sheet: string) => {
+    if (!sheet.includes("OpenMotionFont_")) return;
+    parseCss(sheet).walkDecls((declaration) => {
+      if (!["font", "font-family"].includes(declaration.prop.toLowerCase()) && !declaration.prop.startsWith("--"))
+        return;
+      for (const match of declaration.value.matchAll(/\bOpenMotionFont_[a-f0-9]{64}\b/g)) {
+        if (!faces.has(match[0])) throw Error(`missing project font: ${match[0]}`);
+        requiredFonts.add(match[0]);
+      }
+    });
+  };
+  for (const element of document.querySelectorAll("style")) validateFonts(element.textContent ?? "");
+  for (const element of document.querySelectorAll("[style]")) validateFonts(`a{${element.getAttribute("style")}}`);
+  for (const [path, css] of files) if (path.toLowerCase().endsWith(".css")) validateFonts(css);
+  for (const sheet of styleElementsFor(
+    document,
+    faces.size ? [{ css: [...faces.values()].join("\n"), media: null, title: null }] : [],
+    (sheets) => sheets.join("\n"),
+  ))
+    document.head.appendChild(sheet);
+  document.documentElement.setAttribute("data-open-motion-fonts", JSON.stringify([...requiredFonts]));
+  if (requiredFonts.size) deferScriptsUntilFonts(document);
   for (const element of document.querySelectorAll("img[src],audio[src],video[src],source[src]")) {
     const src = element.getAttribute("src") ?? "";
     if (src.startsWith("data:") && element.tagName.toLowerCase() === "img") continue;

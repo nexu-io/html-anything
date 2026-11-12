@@ -11,11 +11,13 @@ import {
 } from "@open-motion/components";
 import type { Clip } from "@open-motion/motion";
 import type { AudioValues, ClipEdit, NativeValues } from "@open-motion/motion/contract";
+import { type FontResource, resourceFontFamily } from "@open-motion/workspace/contract";
 import { AppearanceFields } from "./appearance.js";
 
 interface Options {
   owner: string;
   clips: Clip[];
+  fonts: FontResource[];
   selected: string;
   values?: NativeValues;
   blocked: boolean;
@@ -31,6 +33,7 @@ export class Properties {
   private start: ReturnType<typeof numberField>;
   private duration: ReturnType<typeof numberField>;
   private font: ReturnType<typeof numberField>;
+  private family: HTMLSelectElement;
   private type: HTMLOutputElement;
   private identity: HTMLOutputElement;
   private content: HTMLElement;
@@ -69,6 +72,7 @@ export class Properties {
       if (this.touched.has("start")) values.start = this.start.input.valueAsNumber;
       if (this.touched.has("duration")) values.duration = this.duration.input.valueAsNumber;
       if (this.touched.has("fontSize")) values.fontSize = this.font.input.valueAsNumber;
+      if (this.touched.has("fontFamily")) values.fontFamily = this.family.value || null;
       if (this.touched.has("appearance")) values.appearance = this.appearance.read();
       if (this.touched.has("audio")) {
         values.audio = {};
@@ -133,6 +137,9 @@ export class Properties {
       change: () => changed("fontSize"),
     });
     this.font.input.placeholder = "继承";
+    this.family = document.createElement("select");
+    this.family.setAttribute("aria-label", "字体");
+    this.family.onchange = () => changed("fontFamily");
     this.text.oninput = () => changed("text");
     this.select.onchange = () => {
       const id = this.select.value;
@@ -187,6 +194,7 @@ export class Properties {
       this.type,
       field(document, "文本内容", this.text),
       field(document, "字号", this.font.element),
+      field(document, "字体", this.family),
       timing,
       this.audio,
       this.links,
@@ -236,6 +244,7 @@ export class Properties {
     this.start.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
     this.duration.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
     this.font.readonly(value || !!clip?.link?.reason || !!clip?.host || !!clip?.media);
+    this.family.disabled = value || !!clip?.link?.reason || !!clip?.host || !!clip?.media;
     this.appearance.block(value || !!clip?.link?.reason || !!clip?.host || clip?.media?.kind === "audio");
     this.apply.disabled = value || !clip || !!clip.link?.reason;
     this.remove.disabled = value || !clip || !!clip.composition || !!clip.link?.reason;
@@ -330,6 +339,28 @@ export class Properties {
       this.start.value(values?.start ?? clip.start ?? 0, changed);
       this.duration.value(values?.duration ?? clip.duration ?? 1, changed);
       this.font.value(values?.fontSize ?? clip.fontSize ?? undefined, changed);
+      const family = values && Object.hasOwn(values, "fontFamily") ? values.fontFamily : clip.fontFamily,
+        fonts = new Map(
+          options.fonts.map((face) => [
+            resourceFontFamily(face.digest),
+            `${face.family} · ${face.weight.join("–")} · ${face.slant}`,
+          ]),
+        );
+      if (family && !fonts.has(family)) fonts.set(family, `源码定义 · ${family}`);
+      const entries = [["", "继承 / 源码定义"], ...fonts];
+      if (
+        JSON.stringify([...this.family.options].map((item) => [item.value, item.textContent])) !==
+        JSON.stringify(entries)
+      )
+        this.family.replaceChildren(
+          ...entries.map(([value, text]) => {
+            const option = document.createElement("option");
+            option.value = value!;
+            option.textContent = text!;
+            return option;
+          }),
+        );
+      this.family.value = family ?? "";
       this.appearance.update(clip.appearance, values?.appearance, changed);
       this.identity.value = clip.host?.reason ? `${clip.id} · ${clip.host.reason}` : clip.id;
       this.type.value = clip.host

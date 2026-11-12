@@ -86,6 +86,19 @@ export class Motion {
       fontSize: /^-?\d+(?:\.\d+)?px$/.test(e.inlineStyles.fontSize ?? "")
         ? Number.parseFloat(e.inlineStyles.fontSize ?? "")
         : null,
+      fontFamily: (() => {
+        const value = e.inlineStyles.fontFamily;
+        if (!value) return null;
+        try {
+          return value.startsWith('"')
+            ? (JSON.parse(value) as string)
+            : /^[\p{L}\p{N} _-]+$/u.test(value)
+              ? value
+              : null;
+        } catch {
+          return null;
+        }
+      })(),
     }));
     return describeLinks(
       clips,
@@ -109,7 +122,10 @@ export class Motion {
     const input = patchInput.parse({ html: "validation", id, ...request });
     const target = this.composition.getElement(id);
     if (!target) throw new Error("native element is missing");
-    if (["img", "audio"].includes(target.tag) && (input.text !== undefined || input.fontSize !== undefined))
+    if (
+      ["img", "audio"].includes(target.tag) &&
+      (input.text !== undefined || input.fontSize !== undefined || input.fontFamily !== undefined)
+    )
       throw new Error("媒体不是文本图层");
     if (target.tag === "audio" && input.appearance !== undefined) throw new Error("音频不具备视觉外观");
     const related = animations(this.composition),
@@ -176,6 +192,18 @@ export class Motion {
       ...(input.fontSize === undefined
         ? []
         : [{ type: "setStyle" as const, target: id, styles: { fontSize: `${input.fontSize}px` } }]),
+      ...(input.fontFamily === undefined
+        ? []
+        : [
+            {
+              type: "setStyle" as const,
+              target: id,
+              styles: {
+                fontFamily:
+                  input.fontFamily === null ? null : JSON.stringify(input.fontFamily).replaceAll("<", "\\3c "),
+              },
+            },
+          ]),
       ...(input.text === undefined ? [] : [{ type: "setText" as const, target: id, value: input.text }]),
       ...(input.audio?.inPoint === undefined
         ? []

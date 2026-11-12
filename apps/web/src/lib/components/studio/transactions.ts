@@ -78,6 +78,7 @@ export async function applyClip(
 
 /** Prepare/apply one insertion; the caller retains its applied state across persistence retries. */
 export async function insertResource(context: CompositionContext, client: Client, asset: Resource) {
+  if (asset.type !== "image/png" && asset.type !== "audio/wav") throw Error("字体通过文本图层的字体选项应用");
   const binding = await context.prepare(),
     parts = binding.file.split("/");
   parts.pop();

@@ -6,6 +6,7 @@ import {
 import { getHyperframeRuntimeScript } from "@hyperframes/core/runtime-script";
 import { captureBridge } from "./capture.js";
 import { editorBridge } from "./project/bridge.js";
+import { fontBridge } from "./project/fonts.js";
 
 declare const OPEN_MOTION_GSAP: string;
 export const gsap = OPEN_MOTION_GSAP;
@@ -14,7 +15,7 @@ export const runtime = getHyperframeRuntimeScript();
 export function preview(html: string, base: string): string {
   const clean = stripEmbeddedRuntimeScripts(html);
   const head = injectTagsAtHeadStart(clean, `<script src="${base}__gsap.js"></script>`);
-  const selection = `<script>(${editorBridge.toString()})()</script>`;
+  const selection = `<script>(${fontBridge.toString()})();(${editorBridge.toString()})()</script>`;
   return insertRuntimeTag(
     head + selection,
     `<script data-hyperframes-preview-runtime src="${base}__runtime.js"></script>`,
@@ -38,5 +39,5 @@ export function capture(html: string, base: string, fps: { num: number; den: num
       `<script>globalThis.__HF_RENDER_CAPTURE_MODE=true;globalThis.__HF_EXPORT_RENDER_SEEK_CONFIG=${JSON.stringify(config)};</script><script src="${base}__gsap.js"></script>`,
     );
   const runtime = insertRuntimeTag(head, `<script src="${base}__runtime.js"></script>`);
-  return `${runtime}<script>(${captureBridge.toString()})()</script>`;
+  return `${runtime}<script>(${fontBridge.toString()})();(${captureBridge.toString()})()</script>`;
 }

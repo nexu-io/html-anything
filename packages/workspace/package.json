@@ -9,11 +9,12 @@
     "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
   },
   "devDependencies": {
+    "@types/fontkit": "2.0.9",
     "@types/node": "24.12.2",
-    "typescript": "7.0.2",
-    "vitest": "4.1.6",
+    "@types/pngjs": "6.0.5",
     "esbuild": "0.28.0",
-    "@types/pngjs": "6.0.5"
+    "typescript": "7.0.2",
+    "vitest": "4.1.6"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,8 @@
     }
   },
   "dependencies": {
-    "zod": "4.6.7",
-    "pngjs": "7.0.0"
+    "fontkit": "2.0.4",
+    "pngjs": "7.0.0",
+    "zod": "4.6.7"
   }
 }

@@ -1,7 +1,7 @@
 import { badge, button, emptyState, note, readout, slot, type timeTracks } from "@open-motion/components";
 import type { Clip, NativeValues } from "@open-motion/motion/contract";
 import type { ContextModel } from "@open-motion/motion/project";
-import type { Project } from "@open-motion/workspace/contract";
+import { isFontResource, type Project } from "@open-motion/workspace/contract";
 import type { Client } from "../../api.js";
 import type { Editor } from "../editor.js";
 import { studioLayout } from "./layout.js";
@@ -352,6 +352,7 @@ export class Studio {
     this.properties.update({
       owner: this.context.owner,
       clips,
+      fonts: (this.editor.project?.resources ?? []).filter(isFontResource),
       selected: this.selected,
       values: this.pending?.id === clip?.id ? this.pending?.values : undefined,
       blocked: blocked || this.animations.dirty,

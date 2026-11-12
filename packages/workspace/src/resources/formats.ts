@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { PNG } from "pngjs";
 import { Fault } from "../contract.js";
 import { type Resource, resource, resourceLimit } from "./contract.js";
+import { identifyFont } from "./fonts.js";
 export function checksum(bytes: Uint8Array) {
   return `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
 }
@@ -60,7 +61,10 @@ function wave(bytes: Buffer) {
 export function identify(path: string, name: string, bytes: Buffer): Resource {
   try {
     if (!bytes.length || bytes.length > resourceLimit) throw Error("resource bytes outside supported bounds");
-    let metadata: ReturnType<typeof wave> | { type: "image/png"; width: number; height: number };
+    let metadata:
+      | ReturnType<typeof wave>
+      | ReturnType<typeof identifyFont>
+      | { type: "image/png"; width: number; height: number };
     if (path.toLowerCase().endsWith(".png")) {
       if (
         bytes.length < 33 ||
@@ -75,7 +79,8 @@ export function identify(path: string, name: string, bytes: Buffer): Resource {
       const parsed = PNG.sync.read(bytes, { checkCRC: true });
       if (parsed.width !== width || parsed.height !== height) throw Error("PNG header mismatch");
       metadata = { type: "image/png" as const, width, height };
-    } else metadata = wave(bytes);
+    } else if (path.toLowerCase().endsWith(".wav")) metadata = wave(bytes);
+    else metadata = identifyFont(path, bytes);
     return resource.parse({ path, name, digest: checksum(bytes), bytes: bytes.length, ...metadata });
   } catch (error) {
     throw new Fault("invalid", error instanceof Error ? error.message : "invalid resource format");
