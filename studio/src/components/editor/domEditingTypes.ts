@@ -95,6 +95,7 @@ export interface DomEditSelection extends PatchTarget {
   textFields: DomEditTextField[];
   capabilities: DomEditCapabilities;
   existsInSource?: boolean;
+  sourceProbeFailure?: import("./probeSourceElement").SourceProbeFailure;
   gsapAnimations?: GsapAnimation[];
 }
 

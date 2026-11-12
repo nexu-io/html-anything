@@ -98,6 +98,7 @@ function ChoiceSubmenu({
   onPick: (id: string | null) => void;
   preview?: HoverPreview;
 }) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState<{ top: number; left?: number; right?: number }>({ top: 0 });
   const rowRef = useRef<HTMLButtonElement | null>(null);
@@ -161,7 +162,7 @@ function ChoiceSubmenu({
         <span aria-hidden="true" className="w-3 text-center">
           {activeId === id && <Check size={12} />}
         </span>
-        {text}
+        {t(text)}
       </span>
     </button>
   );
@@ -201,7 +202,7 @@ function ChoiceSubmenu({
                 <>
                   <div className={menuClasses.divider} />
                   <div className="px-3 py-1 text-[9px] uppercase tracking-wide text-neutral-500">
-                    {section.heading}
+                    {t(section.heading)}
                   </div>
                 </>
               )}

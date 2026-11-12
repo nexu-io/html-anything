@@ -12,7 +12,7 @@ export function redact(message, environment) {
     .replace(/([\w-]*(?:token|secret|password|authorization|api.?key)[\w-]*["']?\s*[:=]\s*)("(?:\\.|[^"\\])*"|'[^']*'|[^\s,;}]+)/gi, '$1[redacted]').slice(-1500);
 }
 
-export function checkTransport(config, expectedVersion, { expectedTools, dataDirectory } = {}) {
+export function validateTransport(config) {
   if (!config) throw failure('MCP_NOT_REGISTERED', 'OpenMotion MCP is not registered in this host. Run setup for the selected host.');
   if (config.enabled === false) throw failure('MCP_DISABLED', 'OpenMotion MCP is disabled. Enable it in the selected host before reconnecting.');
   if (config.transport?.type !== 'stdio') throw failure('MCP_CONFIG_INVALID', 'OpenMotion requires a local stdio MCP connection.');
@@ -22,6 +22,11 @@ export function checkTransport(config, expectedVersion, { expectedTools, dataDir
   if (JSON.stringify([transport.command, transport.cwd, transport.args]).includes('${')) throw failure('MCP_CONFIG_INVALID', 'The resolved MCP command contains an unexpanded placeholder. Fix the host configuration.');
   if (typeof transport.command !== 'string' || !transport.command || !Array.isArray(transport.args) || transport.args.some(arg => typeof arg !== 'string')) throw failure('MCP_CONFIG_INVALID', 'MCP requires an executable command and string arguments.');
   if (transport.cwd && (!path.isAbsolute(transport.cwd) || !fs.existsSync(transport.cwd) || !fs.statSync(transport.cwd).isDirectory())) throw failure('MCP_CONFIG_INVALID', 'The resolved MCP working directory does not exist or is not absolute.');
+  return transport;
+}
+
+export function checkTransport(config, expectedVersion, { expectedTools, dataDirectory } = {}) {
+  const transport = validateTransport(config);
   const messages = [
     { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'openmotion-install-check', version: '1' } } },
     { jsonrpc: '2.0', method: 'notifications/initialized' },

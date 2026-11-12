@@ -31,6 +31,7 @@ export function I18nProvider({ children, initialLocale }: { children: ReactNode;
   }, []);
   useEffect(() => {
     document.documentElement.lang = locale;
+    document.title = translate(locale, 'OpenMotion Studio');
     const onStorage = (event: StorageEvent) => {
       if (event.storageArea && event.storageArea !== localStorage) return;
       if (event.key === LOCALE_STORAGE_KEY || event.key === null) updateLocale(isLocale(event.newValue) ? event.newValue : 'zh-CN');

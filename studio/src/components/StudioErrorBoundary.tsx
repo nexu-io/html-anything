@@ -3,6 +3,7 @@ import { useStudioHost } from '../motion/StudioHost';
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { trackStudioEvent } from "../utils/studioTelemetry";
 import { CrashFeedbackPrompt } from "./feedback/CrashFeedbackPrompt";
+import { ErrorNotice } from './ui/ErrorNotice';
 import { DiagnosticExport } from '../motion/DiagnosticExport';
 import { recordBrowserDiagnostic } from '../motion/diagnostics';
 
@@ -46,7 +47,7 @@ function CrashScreen({ error, retry }: { error: Error; retry: () => void }) {
       <div className="fixed inset-0 flex flex-col items-center justify-center gap-4 bg-neutral-950 font-sans text-neutral-200">
         <div className="text-lg font-semibold">{t('Something went wrong')}</div>
         <div className="max-w-[480px] text-center text-[13px] text-neutral-500">
-          {error.message}
+          <ErrorNotice message={error.message} />
         </div>
         <div className="mt-2 flex items-center gap-2">
           <button

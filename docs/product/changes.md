@@ -1,5 +1,11 @@
 # 公开变更记录
 
+## 2026-11-12: Save SVG styles and initialize the initial project on open
+
+- SVG inline-style edits use the existing source patcher, guarded file writer and edit history when the pinned engine cannot persist SVG targets. Missing element identities and concurrent source changes still reject the edit and keep navigation blocked.
+- Opening the initial project from the sidebar or a direct preview initializes the bundled six-second example if its sources are absent. Existing edits, partial-project refusal and legacy migration safeguards remain unchanged.
+- Validation: static checks, Studio typecheck/build, 79 targeted Studio tests, 14 project/session/legacy/cold-start tests and the phase-one creation regression passed locally. Installed-host, cross-platform and human visual acceptance remain separate.
+
 ## 2026-11-12: Complete visible editor delivery after video creation
 
 - **Problem:** A queued host acknowledgment with a hidden panel could send an Agent into waiting for the user to return without evidence that the calling chat was inactive. A separate hidden inspection tab or successful MP4 export could then end the turn without visible editor delivery.

@@ -150,6 +150,7 @@ async function openProject(store: WorkspaceStore, context: Service, origin: stri
       const entry = creating ? { id, title: template?.title ?? (target as { title: string }).title, templateId: template?.id, createdAt: Date.now() } : undefined;
       if (!entry && !store.projectCatalog().projects.some(item => item.id === id)) throw new Error('工程不存在');
       if (sessionTarget?.sessionId && !store.projectCatalog().sessions!.some(item => item.id === sessionTarget.sessionId)) throw new Error('会话不存在');
+      if (!entry && id === 'project') await store.forProject(id).initializeLocked(runtimeRoot);
       if (!entry && store.projectCatalog().activeId === id) {
         if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectoryFor(id), context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectoryFor(id), path.join(store.directory, 'studio.log'), context.studioPort || 4174);
         await context.studio.openProject?.(id);
@@ -547,6 +548,7 @@ export async function startServer(store = sharedStore, port = Number(process.env
   let opening: Promise<Studio> | undefined;
   context.ensureStudio = async (projectId = store.projectId) => {
     const scoped = store.forProject(projectId);
+    if (projectId === 'project') await scoped.initialize(runtimeRoot);
     if (context.studio?.alive()) { await context.studio.openProject?.(projectId); return context.studio; }
     if (!opening && context.switching) throw new Error('正在打开工程，请稍候');
     if (!opening) opening = (async () => {

@@ -1,3 +1,4 @@
+import { translate } from "../../i18n/messages";
 import { describe, expect, it } from "vitest";
 import { parseAudioFxChain, serializeAudioFxChain } from "@hyperframes/core/audio-fx";
 import { normalizeHfColorGrading } from "@hyperframes/core/color-grading";
@@ -116,8 +117,8 @@ const rampAutomation = JSON.stringify({
 
 describe("readClipEffects", () => {
   it("lists nothing for a plain clip, so the fx badge stays grey", () => {
-    expect(readClipEffects(baseState)).toEqual([]);
-    expect(readClipEffects({ ...baseState, automation: rampAutomation, volume: 1.8 })).toEqual([]);
+    expect(readClipEffects(baseState, (m, v) => translate("en", m, v))).toEqual([]);
+    expect(readClipEffects({ ...baseState, automation: rampAutomation, volume: 1.8 }, (m, v) => translate("en", m, v))).toEqual([]);
   });
 
   it("lists every applied effect in the tooltip's order", () => {
@@ -128,7 +129,7 @@ describe("readClipEffects", () => {
         colorGrading: lookAttrValue("warm-daylight"),
         clipPath: "inset(0px 20px)",
         carve: "{}",
-      }),
+      }, (m, v) => translate("en", m, v)),
     ).toEqual(["Look: Warm daylight", "Voice: Clean", "Crop", "Ducked"]);
   });
 
@@ -141,13 +142,13 @@ describe("readClipEffects", () => {
         { id: "c", type: "gain", enabled: true, fromCarve: true, params: {} },
       ],
     });
-    const effects = readClipEffects({ ...baseState, fxChain: chain });
+    const effects = readClipEffects({ ...baseState, fxChain: chain }, (m, v) => translate("en", m, v));
     expect(effects).toHaveLength(1);
     expect(effects[0]).not.toBe("highpass");
   });
 
   it("reads a hand-made grading without a menu preset as a Look", () => {
-    expect(readClipEffects({ ...baseState, colorGrading: '{"adjust":{"contrast":0.2}}' })).toEqual([
+    expect(readClipEffects({ ...baseState, colorGrading: '{"adjust":{"contrast":0.2}}' }, (m, v) => translate("en", m, v))).toEqual([
       "Look",
     ]);
   });
@@ -174,4 +175,11 @@ describe("clipSpeedSuffix", () => {
     expect(clipSpeedSuffix(2, rampAutomation)).toBe(" [ramp]");
     expect(clipSpeedSuffix(1, rampAutomation)).toBe(" [ramp]");
   });
+});
+
+it("localizes effect summaries while preserving authored effect labels", () => {
+  const t = (m: string, v?: Record<string, string | number>) => translate("zh-CN", m, v);
+  expect(readClipEffects({ ...baseState, colorGrading: lookAttrValue("warm-daylight"), fxChain: chainWithVoicePreset(null, "voice-clean"), clipPath: "circle(50%)", carve: "{}" }, t)).toEqual(["画面风格：暖日光", "人声：清晰", "裁剪", "已避让"]);
+  const fxChain = serializeAudioFxChain({ version: 1, nodes: [{ id: "custom", type: "gain", label: "Warm", enabled: true, params: {} }] });
+  expect(readClipEffects({ ...baseState, fxChain }, t)).toEqual(["Warm"]);
 });

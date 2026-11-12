@@ -105,8 +105,8 @@ describe("resolveDomEditSelection — source probe on re-resolve", () => {
   const probing = { activeCompositionPath: "index.html", isMasterView: true, projectId: "p" };
 
   it("asks the server once per node and target; re-resolving the same pair keeps the answer", async () => {
-    const fetchMock = vi.fn(() =>
-      Promise.resolve({ ok: true, json: () => Promise.resolve({ exists: [false] }) }),
+    const fetchMock = vi.fn((_url: unknown, init?: RequestInit) =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve(init?.method === "POST" ? { exists: [false] } : { content: '<div id="other"></div>' }) }),
     );
     vi.stubGlobal("fetch", fetchMock);
     const el = document.createElement("div");
@@ -127,7 +127,23 @@ describe("resolveDomEditSelection — source probe on re-resolve", () => {
     expect(first?.existsInSource).toBe(false);
     expect(again?.existsInSource).toBe(false);
     expect(again?.capabilities.canMove).toBe(false);
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(first?.capabilities.reasonIfDisabled).toContain("not found in the current source");
+    expect(fetchMock).toHaveBeenCalledTimes(6);
+  });
+
+  it("retries temporary failures for the same target and restores normal editing capabilities", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValueOnce(new TypeError("offline"))
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ exists: [true] }) }));
+    const el = document.createElement("div");
+    el.id = "retryable";
+    document.body.appendChild(el);
+    const first = await resolveDomEditSelection(el, probing);
+    expect(first?.capabilities.canEditStyles).toBe(false);
+    expect(first?.capabilities.reasonIfDisabled).toContain("Cannot connect");
+    const again = await resolveDomEditSelection(el, { ...probing, previous: first });
+    expect(again?.capabilities.canEditStyles).toBe(true);
+    expect(again?.sourceProbeFailure).toBeUndefined();
+    el.remove();
   });
 });
 

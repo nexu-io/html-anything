@@ -65,7 +65,7 @@ export function TimelineTrackAudioControls({ elements, trackLabel, isAudioOnly, 
       const result = await onSetElementsAttributeQuiet(clips.map(element => ({ element, value })), attr, label);
       return !result || result.status === 'saved';
     } catch (error) {
-      shell?.showToast(error instanceof Error ? error.message : t('Could not save changes'), 'error');
+      shell?.showToast(error instanceof Error ? error.message : 'Changes could not be saved.', 'error');
       return false;
     } finally { running.current = false; setBusy(false); }
   };
