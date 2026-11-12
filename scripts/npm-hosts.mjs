@@ -8,7 +8,7 @@ export const hosts = ['codex', 'claude', 'deepseek', 'workbuddy'];
 
 export function hostConnectionInstructions(host) {
   const recovery = host === 'codex'
-    ? 'Use a supported MCP-only reload control in the running Codex host if one is exposed. If Codex desktop has no such control, ask the user to restart the desktop app manually and return to this same chat. For CLI or IDE clients, use their supported session or extension reload and resume this task.'
+    ? 'Use onboarding.directAccess immediately when returned by npm setup: run its command with the tools arguments for schemas, then call TOOL --home HOME --input FILE.json for real operations. Read the selected Skill from the installed runtimeRoot if it is absent from the current skill catalog. Do not ask the user to check connectivity, restart Codex or open another chat. This uses the installed MCP transport through the CLI; it does not hot-reload native Codex tools. A supported MCP-only reload control may also be used if the running host exposes one. Source/plugin installations without directAccess still require the host\'s supported MCP refresh or a manual desktop restart; resume the same chat.'
     : host === 'claude'
       ? 'Open /mcp in the current Claude Code session and select Reconnect for openmotion. If a newly registered server is not listed, use the host\'s supported configuration reload first.'
       : `Use the supported MCP refresh or reconnect control in the current ${host} host, keeping the selected profile.`;

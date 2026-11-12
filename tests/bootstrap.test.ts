@@ -51,7 +51,7 @@ test('remote entry point builds a fresh checkout before registering and checking
     assert.match(result.stdout, /OpenMotion registration and independent MCP preflight succeeded/);
     const onboarding = JSON.parse(result.stdout.slice(result.stdout.indexOf('\n{') + 1));
     assert.equal(onboarding.hostSessionVerified, false);
-    assert.match(onboarding.nextAction, /restart the desktop app manually and return to this same chat/);
+    assert.match(onboarding.nextAction, /Use onboarding.directAccess immediately/);
     assert.match(onboarding.nextAction, /Do not reinstall OpenMotion or restart the host automatically/);
     assert.match(onboarding.instructions, /OpenMotion 开源免费/);
     assert.equal(onboarding.catalog.source, 'bundled');

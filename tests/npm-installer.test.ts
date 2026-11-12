@@ -35,7 +35,7 @@ async function setupFixture(t: any) {
   const directory = await fixture(t), application = path.join(directory, 'source'), home = path.join(directory, 'install'), skillsDirectory = path.join(directory, 'skills');
   for (const name of ['scripts', 'shared', 'studio/build', 'skills/motion-production', 'docs']) await mkdir(path.join(application, name), { recursive: true });
   for (const name of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'README.md', 'AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(application, name), 'fixture');
-  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/npm-hosts.mjs', 'scripts/runtime-assets.mjs']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
+  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/npm-hosts.mjs', 'scripts/runtime-assets.mjs', 'scripts/mcp-client.mjs']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
   await writeFile(path.join(application, 'skills/motion-production/SKILL.md'), '---\nname: motion-production\ndescription: fixture\n---\nFixture');
   await writeJSON(path.join(application, 'shared/template-config.json'), { environment: 'prod' });
   await cp(new URL('../shared/mcp-profiles.json', import.meta.url), path.join(application, 'shared/mcp-profiles.json'));
@@ -55,7 +55,10 @@ test('successful setup hands the current Agent an invitation before any MCP use,
   const installed = await setup(options);
   assert.equal(installed.onboarding.hostSessionVerified, false);
   assert.equal(installed.onboarding.nextAction, hostConnectionInstructions('codex'));
-  assert.match(installed.onboarding.nextAction, /restart the desktop app manually and return to this same chat/);
+  assert.match(installed.onboarding.nextAction, /Use onboarding.directAccess immediately/);
+  assert.deepEqual(installed.onboarding.directAccess.command, [process.execPath, path.join(installed.appRoot, 'scripts/npm-installer.mjs')]);
+  assert.equal(installed.onboarding.directAccess.home, installed.appRoot.split(path.sep + 'apps' + path.sep)[0]);
+  assert.equal(installed.onboarding.directAccess.status, 'failed', 'The incomplete fixture runtime must not be reported as usable');
   assert.match(installed.onboarding.nextAction, /Do not reinstall OpenMotion or restart the host automatically/);
   assert.match(installed.onboarding.instructions, /OpenMotion 开源免费/);
   assert(Array.isArray(installed.onboarding.catalog.templates));
@@ -65,7 +68,7 @@ test('successful setup hands the current Agent an invitation before any MCP use,
 test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and rejects a mixed-environment home', async t => {
   const options = await setupFixture(t), bundle = path.join(options.directory, 'bundle');
   await mkdir(path.join(bundle, 'scripts'), { recursive: true }); await mkdir(path.join(bundle, 'payload'));
-  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) {
+  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs', 'mcp-client.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) {
     await cp(new URL('../scripts/' + file, import.meta.url), path.join(bundle, 'scripts', file));
   }
   await writeJSON(path.join(bundle, 'package.json'), { version: '1.2.3', type: 'module' });
@@ -268,6 +271,13 @@ for await(const line of createInterface({input:process.stdin})){
   const cli = fileURLToPath(new URL('../scripts/npm-installer.mjs', import.meta.url));
   await assert.rejects(runFile(process.execPath, [cli, 'diagnose', '--host', 'codex', '--codex', options.codex, '--home', options.home]), /MCP_NOT_REGISTERED/);
   assert.equal(await readFile(project, 'utf8'), 'existing project');
+  const listed = JSON.parse(await runFile(process.execPath, [cli, 'tools', '--home', options.home]));
+  assert.deepEqual(listed.tools.map(item => item.name), expected);
+  const read = JSON.parse(await runFile(process.execPath, [cli, 'call', 'motion_get_project', '--home', options.home]));
+  assert.equal(read.structuredContent.dataDirectory, installed.dataDirectory);
+  const input = path.join(options.directory, 'arguments.json');
+  await writeJSON(input, []);
+  await assert.rejects(runFile(process.execPath, [cli, 'call', 'motion_get_project', '--input', input, '--home', options.home]), /JSON object/);
 });
 
 test('setup installs complete Skills and MCP without waiting for native downloads and preserves repeated-install data', { skip: process.platform === 'win32' }, async t => {
