@@ -37,7 +37,7 @@ git lfs pull --include="library/templates/presenter-tech/**" --exclude=""
 git lfs pull --include="docs/readme/**" --exclude=""
 
 # Everything needed for complete plugin/platform bundles and resource verification.
-git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude=""
+git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
 ```
 
 For a contributed catalog template, use the [template-specific pull command](template-repository.md#contribute-media-without-cms-access). LFS objects are fetched from the selected remote; reviewing a fork contribution requires the remote that holds its objects. A pointer is not playable video or an executable archive. Full bundles and Library Skill copying refuse unresolved pointers with a download command. Motion Design materialization checks its reference before creating an output project. Once fetched, those resources retain their existing offline behavior.

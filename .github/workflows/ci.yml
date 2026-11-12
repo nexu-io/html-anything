@@ -107,10 +107,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .git/lfs/objects
-          key: optional-lfs-${{ runner.os }}-${{ hashFiles('**/*.mp4', '**/*.motion') }}
+          key: optional-lfs-${{ runner.os }}-${{ hashFiles('**/*.mp4', '**/*.motion', '!library/templates/catalog/**') }}
           restore-keys: optional-lfs-${{ runner.os }}-
       - name: Download full-bundle media explicitly
-        run: git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude=""
+        run: git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
       - name: Setup pinned Node
         uses: actions/setup-node@v6
         with:

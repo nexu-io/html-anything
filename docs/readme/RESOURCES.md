@@ -32,7 +32,7 @@ Node, a WebGL-capable browser, FFmpeg and the Presenter Tech Python/Node executi
 Run from the repository root:
 
 ```sh
-git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude=""
+git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
 node scripts/check-readme-resources.mjs
 node --test tests/readme-resources.test.ts tests/motion-design-remix.test.ts
 ```
