@@ -152,6 +152,10 @@ export class Workspace {
         return this.projects.move(input as Input<"project_redo">, 1);
       case "project_save":
         return this.projects.save(input as Input<"project_save">);
+      case "project_entry":
+        return this.selection.entry(input as Input<"project_entry">);
+      case "artifact_enter":
+        return this.selection.enter(input as Input<"artifact_enter">);
       case "artifact_open":
         return this.selection.open(input as Input<"artifact_open">);
       case "session_open":

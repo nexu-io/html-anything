@@ -14,6 +14,7 @@ import {
   type WorkspaceView,
 } from "@open-motion/workspace/contract";
 import type { Client } from "../api.js";
+import { EntryLoader } from "./entry.js";
 import { observedView } from "./observe.js";
 export class Editor {
   state: State = { sessions: [], selection: { revision: 0, sessionId: null, artifactId: null } };
@@ -30,9 +31,10 @@ export class Editor {
   drafts?: { flush(): Promise<void>; dirty(): boolean; discard(): void };
   private archive?: { file: File; input: Input<"archive_import">; upload: Input<"archive_upload"> };
   private pending?: { signature: string; requestId: string };
+  private entry?: EntryLoader;
   private refresh?: () => Promise<void>;
   get unconfirmed() {
-    return !!this.pending || !!this.refresh || !!this.archive;
+    return !!this.pending || !!this.refresh || !!this.archive || !!this.entry?.pending;
   }
   get needsRefresh() {
     return !!this.refresh;
@@ -54,7 +56,7 @@ export class Editor {
       throw error;
     }
   }
-  private async hydrate(state: State) {
+  private async hydrate(state: State, target?: EntryLoader["target"]) {
     const selected = state.selection;
     const session = selected.sessionId
       ? await this.client.execute("session_get", { sessionId: selected.sessionId })
@@ -63,6 +65,15 @@ export class Editor {
       selected.sessionId && selected.artifactId
         ? await this.client.execute("project_read", { sessionId: selected.sessionId, artifactId: selected.artifactId })
         : null;
+    if (
+      target &&
+      (!project ||
+        project.sessionId !== target.sessionId ||
+        project.artifactId !== target.artifactId ||
+        project.revision !== target.revision ||
+        project.history.version !== target.historyVersion)
+    )
+      throw new Error("entry target changed before display; request a fresh explicit entry");
     this.state = state;
     this.session = session;
     this.project = project;
@@ -73,9 +84,16 @@ export class Editor {
     this.observedToken = undefined;
     this.initialized = true;
   }
-  async load() {
+  async load(fragment?: string) {
     if (this.dirty || this.drafts?.dirty()) throw new Error("请先保存当前源文件，或明确放弃本地修改");
-    await this.hydrate(await this.client.execute("workspace_state", {}));
+    if (fragment) {
+      if (this.entry?.pending && this.entry.fragment !== fragment) throw new Error("confirm the pending entry first");
+      if (this.entry?.fragment !== fragment) this.entry = new EntryLoader(fragment, this.client);
+      await this.hydrate(await this.entry.load(), this.entry.target);
+    } else {
+      if (this.entry?.pending) throw new Error("confirm the pending entry first");
+      await this.hydrate(await this.client.execute("workspace_state", {}));
+    }
   }
   private async selected(selection: Selection) {
     const state = { ...this.state, selection };

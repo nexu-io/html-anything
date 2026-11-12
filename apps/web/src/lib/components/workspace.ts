@@ -23,7 +23,7 @@ import { Archives } from "./workspace/archives.js";
 import { Conversation } from "./workspace/conversation.js";
 import { Navigation } from "./workspace/navigation.js";
 import { WorkspaceSync } from "./workspace/sync.js";
-export function workspace(root: HTMLElement, editor: Editor, client: Client) {
+export function workspace(root: HTMLElement, editor: Editor, client: Client, entry?: string) {
   const document = root.ownerDocument,
     shell = workspaceLayout(document),
     studioRoot = slot(document, "fill"),
@@ -367,7 +367,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     exports.update(editor.project, blocked);
   }
   render("加载中");
-  run(() => editor.load());
+  run(() => editor.load(entry || undefined));
   let disposal: Promise<void> | undefined;
   return {
     dispose(): Promise<void> {

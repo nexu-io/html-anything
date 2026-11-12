@@ -1,11 +1,11 @@
 import type { McpServer, StandardSchemaWithJSON } from "@modelcontextprotocol/server";
 import { listGuidance, readGuidance } from "./content/guidance.js";
-import { descriptions, Fault, type Input, type Operation, type Output, schemas } from "./contract.js";
+import { descriptions, entryFragment, Fault, type Input, type Operation, type Output, schemas } from "./contract.js";
 
 export { guidanceSkills, instructions, listGuidance, localGuidance, readGuidance } from "./content/guidance.js";
 export type Execute = <K extends Operation>(operation: K, input: Input<K>) => Promise<Output<K>>;
 /** Business tool descriptors and routing belong to the application; hosts only attach transports. */
-export function register(server: McpServer, execute: Execute): void {
+export function register(server: McpServer, execute: Execute, host?: { web(): Promise<string> }): void {
   for (const entry of listGuidance())
     server.registerResource(
       entry.name,
@@ -32,6 +32,17 @@ export function register(server: McpServer, execute: Execute): void {
       async (input: unknown) => {
         try {
           const result = await execute(operation, input as Input<typeof operation>);
+          if (operation === "project_entry") {
+            const target = result as Output<"project_entry">,
+              fragment = entryFragment(target),
+              handoff = {
+                target,
+                fragment,
+                display: "unverified",
+                ...(host ? { url: new URL(fragment, await host.web()).href } : {}),
+              };
+            return { content: [{ type: "text", text: JSON.stringify(handoff) }], structuredContent: handoff };
+          }
           if (operation === "export_download" || operation === "archive_export") {
             const download = result as Output<"export_download"> | Output<"archive_export">;
             return {
