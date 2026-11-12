@@ -91,40 +91,50 @@ async function loadImportedFontStylesheet(asset: ImportedFontAsset): Promise<voi
 
 type FontLists = {
   loaded: boolean;
+  error: boolean;
   installed: string[];
 };
 
 let fontLists: FontLists = {
   loaded: false,
+  error: false,
   installed: [],
 };
 let fontListsRequest: Promise<void> | null = null;
 const fontListListeners = new Set<() => void>();
 
 async function fetchFontList(url: string): Promise<string[]> {
-  const data = (await (await studioApiFetch(url)).json()) as { fonts?: unknown };
+  const response = await studioApiFetch(url);
+  if (!response.ok) throw new Error(`${url} returned ${response.status}`);
+  const data = (await response.json()) as { fonts?: unknown };
   if (!Array.isArray(data.fonts)) throw new Error(`${url} returned no font list`);
   return data.fonts as string[];
 }
 
-function loadFontLists(): void {
-  if (fontLists.loaded) return;
-  fontListsRequest ??= fetchFontList("/api/fonts")
+export function preloadFontLists(): void {
+  if (fontLists.loaded || fontListsRequest) return;
+  if (fontLists.error) {
+    fontLists = { ...fontLists, error: false };
+    for (const listener of fontListListeners) listener();
+  }
+  fontListsRequest = fetchFontList("/api/fonts")
     .then((installed) => {
       runWhenInputIdle(() => {
-        fontLists = { loaded: true, installed: uniqueFontFamilies(installed) };
+        fontLists = { loaded: true, error: false, installed: uniqueFontFamilies(installed) };
         for (const listener of fontListListeners) listener();
         return true;
       });
     })
     .catch(() => {
       fontListsRequest = null;
+      fontLists = { ...fontLists, error: true };
+      for (const listener of fontListListeners) listener();
     });
 }
 
 function subscribeFontLists(listener: () => void): () => void {
   fontListListeners.add(listener);
-  loadFontLists();
+  preloadFontLists();
   return () => fontListListeners.delete(listener);
 }
 
@@ -166,7 +176,7 @@ export function FontFamilyField({
   };
 
   useEffect(() => {
-    if (open) loadFontLists();
+    if (open) preloadFontLists();
   }, [open]);
 
   const handleImportFonts = async (files: FileList | File[] | null) => {
@@ -281,7 +291,7 @@ export function FontFamilyField({
   };
 
   const dropdown = open && (
-    <div className="flex max-h-[min(360px,var(--available-height))] min-h-0 flex-col">
+    <div className="flex h-[320px] max-h-[min(360px,var(--available-height))] min-h-0 flex-col">
       <div className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] gap-2 border-b border-neutral-800 p-2">
         <SearchInput
           ref={inputRef}
@@ -351,8 +361,8 @@ export function FontFamilyField({
           {fontNotice}
         </div>
       )}
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-1">
-        {filteredOptions.length === 0 ? (
+      <div aria-busy={!lists.loaded && !lists.error} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-1">
+        {filteredOptions.length === 0 && lists.loaded ? (
           <div className="px-2 py-3 text-[11px] text-neutral-500">{t("No fonts found.")}</div>
         ) : (
           filteredOptions.map((option, index) => (
@@ -381,6 +391,22 @@ export function FontFamilyField({
               </span>
             </button>
           ))
+        )}
+        {!lists.loaded && !lists.error && (
+          <div role="status" className="px-2 py-2 text-[11px] text-neutral-500">
+            {t("Loading fonts…")}
+            <div aria-hidden="true" className="mt-2 space-y-4 motion-safe:animate-pulse">
+              {[0, 1, 2, 3, 4].map(row => <div key={row} className="h-3 w-3/5 rounded bg-neutral-800" />)}
+            </div>
+          </div>
+        )}
+        {lists.error && (
+          <div role="alert" className="px-2 py-3 text-[11px] text-neutral-500">
+            <p>{t("Couldn't load local fonts.")}</p>
+            <button type="button" onClick={preloadFontLists} className="mt-2 rounded px-2 py-1 text-neutral-300 hover:bg-neutral-900">
+              {t("Retry")}
+            </button>
+          </div>
         )}
       </div>
     </div>
