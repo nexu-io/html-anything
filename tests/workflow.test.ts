@@ -106,6 +106,30 @@ test('every workflow document and linked reference is reachable over MCP with ca
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
+test('MCP template delivery exposes a paused zero-second handoff with user playback precedence', async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-workflow-opening-frame-'));
+  try {
+    const responses = stdio(directory, [
+      workflowCall(1, { workflow: 'template' }),
+      workflowCall(2, { workflow: 'production', section: 'native' }),
+    ]);
+    const template = responses.get(1).structuredContent;
+    const native = responses.get(2).structuredContent;
+    assert.ok(template.references.some((reference: { documentId: string }) =>
+      reference.documentId === native.documentId), 'Template delivery must expose the shared handoff to MCP-only clients');
+    assert.match(template.content, /After the playback check[\s\S]*?paused at 0 seconds[^.]*opening frame is blank/i, 'Template delivery must stay at zero even with a blank first frame');
+    assert.match(native.content, /pause the preview first[^.]*seek to 0 seconds/i, 'Playback must pause before seeking to zero');
+    assert.match(native.content, /paused at 0 seconds[^.]*opening frame is blank[^.]*do not advance/i, 'A blank opening must not move the playhead forward');
+    assert.match(native.content, /Before recording display confirmation[\s\S]*?default handoff[^.]*at 0 seconds[^.]*stable[^.]*paused/i, 'Stable paused playback at zero must be checked before confirmation');
+    assert.match(native.content, /authored blank opening frame is valid[^.]*unloaded preview is not/i, 'An authored blank frame must remain distinct from a preview that failed to load');
+    assert.match(native.content, /explicit user request[^.]*playback[^.]*takes precedence/i, 'Explicit playback requests must retain precedence');
+    assert.match(native.content, /explicit playback request[^.]*verify[^.]*requested position or playing state/i, 'Requested playing states must be verified without forcing a pause');
+    assert.match(native.content, /observed time[^.]*playback state[^.]*visible content[^.]*display evidence/i, 'Display evidence must identify the observed handoff state');
+    assert.match(native.content, /cannot be verified[^.]*confirmation pending/i, 'Unavailable controls or content must not produce a successful display receipt');
+    assert.deepEqual(await readdir(directory), [], 'Reading delivery guidance must not create a project');
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
 test('Markdown references resolve across workflows, deduplicate canonical paths, and reject missing internal instructions', () => {
   const documentId = 'skills/openmotion-director/SKILL.md';
   const refs = workflowReferences([
