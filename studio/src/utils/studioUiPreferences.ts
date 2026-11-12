@@ -47,6 +47,8 @@ export interface StudioUiPreferences {
   theme?: StudioTheme;
   /** The dock's serialized panel tree; parsed by `parseDockLayout` on read. */
   dockLayout?: SerializedDockview;
+  /** Expanded MVP side widths, retained even while a side is a collapsed rail. */
+  dockSideWidths?: Partial<Record<"left" | "right", number>>;
   linkedSelectionEnabled?: boolean;
   syncIndicatorsVisible?: boolean;
 }
@@ -161,6 +163,14 @@ function readStorage(storage: Storage | null, key: string): StudioUiPreferences 
     }
     const dockLayout = parseDockLayout(parsed.dockLayout);
     if (dockLayout) preferences.dockLayout = dockLayout;
+    if (isRecord(parsed.dockSideWidths)) {
+      for (const side of ["left", "right"] as const) {
+        const width = parsed.dockSideWidths[side];
+        if (typeof width === "number" && Number.isFinite(width) && width > 0) {
+          (preferences.dockSideWidths ??= {})[side] = width;
+        }
+      }
+    }
     return preferences;
   } catch {
     return {};

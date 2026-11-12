@@ -1,5 +1,12 @@
 # 公开变更记录
 
+## 2026-11-11: Remember expanded side widths while the opposite rail is collapsed
+
+- **Problem and audience:** Creators editing in compact hosts lost their chosen side-panel width after reload because a collapsed opposite side suppressed all layout writes.
+- **Implementation:** Save validated expanded side widths in the existing project-scoped MVP preferences. Restore them after startup collapse and apply the current preview-width constraints when reopening. Keep rail sizes, transition frames and maximized-preview geometry out of these preferences.
+- **Validation:** Dock DOM regressions first reproduce the 400px-to-320px reload failure on a 900px host, then cover left/right restoration, animated collapse and project isolation. Preference tests reject invalid width values. Actual local and CI results accompany the PR.
+- **Scope:** This repairs existing layout preferences for current creators, without changes to project source, personas, pricing or distribution formats. Browser and cross-platform verification remain separate from DOM regressions.
+
 ## 2026-11-11: Check historical media before offering MCP restoration
 
 - **Problem and audience:** Agents and creators could be told that a historical version was restorable after its media blobs had disappeared; restoration then exposed a low-level file-copy error.
