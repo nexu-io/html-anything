@@ -1807,5 +1807,7 @@
   "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Alcuni file della cronologia sono mancanti, illeggibili o danneggiati: {files}. Questa versione non è stata ripristinata. Il progetto attuale rimane invariato.",
   "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Impossibile preparare i file della cronologia per il ripristino: {files}. Il progetto attuale rimane invariato.",
   "Failed to add media": "Impossibile aggiungere il file multimediale",
-  "Could not read media duration. Try adding the file again.": "Impossibile leggere la durata del file multimediale. Prova ad aggiungere nuovamente il file."
+  "Could not read media duration. Try adding the file again.": "Impossibile leggere la durata del file multimediale. Prova ad aggiungere nuovamente il file.",
+  "Loading fonts…": "Caricamento dei caratteri…",
+  "Couldn't load local fonts.": "Impossibile caricare i caratteri locali."
 }

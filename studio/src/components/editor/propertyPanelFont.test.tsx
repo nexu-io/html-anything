@@ -90,7 +90,7 @@ describe("FontFamilyField font list", () => {
 describe("FontFamilyField session font lists", () => {
   const fresh = async () => {
     vi.resetModules();
-    const { FontFamilyField } = await import("./propertyPanelFont");
+    const { FontFamilyField, preloadFontLists } = await import("./propertyPanelFont");
     const { uniqueFontFamilies } = await import("./propertyPanelHelpers");
     const loop = await import("./overlayFrameLoop");
     vi.mocked(uniqueFontFamilies).mockClear();
@@ -106,8 +106,63 @@ describe("FontFamilyField session font lists", () => {
       host.remove();
       loop.resetOverlayFrameLoopForTests();
     };
-    return { uniqueFontFamilies, loop, host, render, toggle, done };
+    return { uniqueFontFamilies, loop, host, render, toggle, done, preloadFontLists };
   };
+
+  it("preloads once before the field mounts and shows an explicit pending state until the shared list arrives", async () => {
+    let complete!: (response: Response) => void;
+    vi.mocked(fetch).mockReturnValue(new Promise<Response>(resolve => { complete = resolve; }));
+    const t = await fresh();
+    try {
+      t.preloadFontLists();
+      t.preloadFontLists();
+      expect(fetch).toHaveBeenCalledTimes(1);
+      await act(async () => t.render("Georgia"));
+      await act(async () => t.toggle());
+      expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
+      expect(document.querySelector('[role="status"]')?.textContent).toContain("Loading fonts…");
+      expect(document.body.textContent).not.toContain("No fonts found.");
+      expect(document.querySelector('[role="status"] [aria-hidden="true"]')?.children).toHaveLength(5);
+      expect(document.querySelector('[role="combobox"]')).toBe(document.activeElement);
+
+      await act(async () => {
+        complete(new Response(JSON.stringify({ fonts: ["Arial", "Menlo"] })));
+        await new Promise(resolve => setTimeout(resolve, 10));
+      });
+      expect(document.querySelector('[aria-busy="true"]')).toBeNull();
+      expect(document.querySelector('[role="status"]')).toBeNull();
+      expect(document.body.textContent).toContain("Menlo");
+      await act(async () => t.toggle());
+      await act(async () => t.toggle());
+      expect(document.body.textContent).toContain("Menlo");
+      expect(document.querySelector('[role="status"]')).toBeNull();
+      expect(fetch).toHaveBeenCalledTimes(1);
+    } finally { t.done(); }
+  });
+
+  it("reports HTTP failures and retries in place without hiding the current font", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify({ fonts: ["Wrong response"] }), { status: 503 }));
+    const t = await fresh();
+    try {
+      await act(async () => t.render("Georgia"));
+      await act(async () => t.toggle());
+      expect(document.querySelector('[role="alert"]')?.textContent).toContain("Couldn't load local fonts.");
+      expect(document.body.textContent).not.toContain("No fonts found.");
+      expect(document.body.textContent).not.toContain("Wrong response");
+      expect(document.querySelector('[data-font-option-index="0"]')?.textContent).toContain("Georgia");
+      let complete!: (response: Response) => void;
+      vi.mocked(fetch).mockReturnValue(new Promise<Response>(resolve => { complete = resolve; }));
+      await act(async () => document.querySelector<HTMLButtonElement>('[role="alert"] button')?.click());
+      expect(document.querySelector('[role="alert"]')).toBeNull();
+      expect(document.querySelector('[role="status"]')?.textContent).toContain("Loading fonts…");
+      await act(async () => {
+        complete(new Response(JSON.stringify({ fonts: ["Menlo"] })));
+        await new Promise(resolve => setTimeout(resolve, 10));
+      });
+      expect(document.querySelector('[role="status"]')).toBeNull();
+      expect(document.body.textContent).toContain("Menlo");
+    } finally { t.done(); }
+  });
 
   it("does no list work in a drag's frames when the lists land mid-drag", async () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "performance", "Date"] });
@@ -160,6 +215,43 @@ describe("FontFamilyField session font lists", () => {
 });
 
 describe("FontFamilyField installed fonts", () => {
+  it.each([[true, true], [false, true], [true, false], [false, false]])("shows a small loading indicator through font import and save (flat: %s, saved: %s)", async (flat, saved) => {
+    vi.resetModules();
+    const { FontFamilyField } = await import("./propertyPanelFont");
+    let imported!: (fonts: Array<{ family: string; path: string; url: string }>) => void;
+    let finish!: () => void, fail!: (reason: Error) => void;
+    const onImportFonts = vi.fn(() => new Promise<Array<{ family: string; path: string; url: string }>>(resolve => { imported = resolve; }));
+    const onCommit = vi.fn(() => new Promise<void>((resolve, reject) => { finish = resolve; fail = reject; }));
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    try {
+      await act(async () => root.render(<FontFamilyField flat={flat} value="Arial" importedFonts={[]} onImportFonts={onImportFonts} onCommit={onCommit} />));
+      await act(async () => new Promise(resolve => setTimeout(resolve, 10)));
+      const trigger = host.querySelector<HTMLButtonElement>("button")!;
+      await act(async () => trigger.click());
+      const option = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-font-option-index]")).find(button => button.textContent?.includes("Menlo"))!;
+      await act(async () => option.click());
+      expect(trigger.disabled).toBe(true);
+      expect(trigger.getAttribute("aria-busy")).toBe("true");
+      expect(trigger.querySelector('[role="status"]')?.getAttribute("aria-label")).toBe("Loading");
+      expect(trigger.querySelector('[data-remix-icon="loader-4-line"]')).not.toBeNull();
+      expect(onCommit).not.toHaveBeenCalled();
+      await act(async () => imported([{ family: "Menlo", path: "font.ttf", url: "/font.ttf" }]));
+      expect(onCommit).toHaveBeenCalledOnce();
+      expect(trigger.querySelector('[role="status"]')).not.toBeNull();
+      await act(async () => saved ? finish() : fail(new Error("Save failed")));
+      expect(trigger.disabled).toBe(false);
+      expect(trigger.getAttribute("aria-busy")).toBe("false");
+      expect(trigger.querySelector('[role="status"]')).toBeNull();
+      if (!saved) {
+        expect(trigger.textContent).toContain("Arial");
+        expect(document.body.textContent).toContain('Couldn\'t import "Menlo"');
+      }
+    } finally { act(() => root.unmount()); log.mockRestore(); }
+  });
+
   it.each([true, false])("uses the server font file without browser font access (available: %s)", async (available) => {
     vi.resetModules();
     const { FontFamilyField } = await import("./propertyPanelFont");
