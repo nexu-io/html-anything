@@ -34,10 +34,12 @@ test('startup verifies the native Studio service and reuses the same workspace',
   const mock = runtime(store);
   const first = await openPreview(store, mock.environment);
   assert.equal(first.ready, true); assert.equal(first.reused, false); assert.equal(first.browserOpened, false); assert.ok(first.studioUrl);
+  assert.equal(new URL(first.studioUrl).origin, new URL(first.previewUrl).origin, 'a legacy backend must not hand off its internal Studio URL');
   assert.equal((await store.get()).project!.format, 'hyperframes');
   const before = await store.get();
   const second = await openPreview(new WorkspaceStore(store.directory), mock.environment);
   assert.equal(second.previewUrl, first.previewUrl); assert.equal(second.reused, true);
+  assert.equal(second.studioUrl, first.studioUrl);
   assert.equal(mock.launches.length, 1); assert.equal(mock.stops.length, 0);
   assert.equal((await store.get()).revision, before.revision); assert.equal(await previewUrl(store), first.previewUrl);
 }, false));
