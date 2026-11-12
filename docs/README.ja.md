@@ -683,7 +683,7 @@ OpenMotion の専用サイトは `open-design.ai/openmotion` に開設予定で�
 
 [**GitHub で OpenMotion にスターを付ける**](https://github.com/nexu-io/openmotion)
 
-[![OpenMotion の更新をフォローするには GitHub でスターを](readme/community-star.ja.svg)](https://github.com/nexu-io/openmotion)
+[![OpenMotion の更新をフォローするには GitHub でスターを](readme/community-star.gif)](https://github.com/nexu-io/openmotion)
 
 <a id="acknowledgements"></a>
 

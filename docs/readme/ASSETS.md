@@ -18,6 +18,7 @@ The local agent gallery and setup buttons use client marks from the [source icon
 
 | Asset | Source and use |
 | --- | --- |
+| [GitHub Star animation](community-star.gif) | User-supplied animation of the OpenMotion GitHub page, used for the closing Star invitation in all README languages. Copied without resizing or re-encoding at 426 × 240. SHA-256: `e1a7bde3786042faaa5a2fa35bcd306cedc4e9b077d92cc61fd57c35ea5b5924`. |
 | [README cover](brand-hero.jpg) · [简体中文](brand-hero.zh-CN.jpg) · [日本語](brand-hero.ja.jpg) | Dan Martell’s talking-head reference and the OpenMotion caption remake with @careerwithriya, with a capture of the editable Studio timeline. The desktop and mobile covers open the [2.4-second comparison](media/presenter-caption-remake.mp4). [Footage and edit credits](reverse-engineering-cover.md) |
 | [Earlier cover](cover.png) | Previous AI-editing positioning, preserved as artwork history; no longer the main README cover. |
 | [Animated cover](cover-motion.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |
