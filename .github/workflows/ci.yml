@@ -50,6 +50,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # GraphQL variables are passed through gh fields, not expanded by the shell.
+          # shellcheck disable=SC2016
           gh api graphql -f owner="$GITHUB_REPOSITORY_OWNER" -f repo="${GITHUB_REPOSITORY#*/}" \
             -f query='query($owner: String!, $repo: String!) { repository(owner: $owner, name: $repo) { squashMergeAllowed mergeCommitAllowed rebaseMergeAllowed } }' \
             --jq '.data.repository | if .squashMergeAllowed and (.mergeCommitAllowed | not) and (.rebaseMergeAllowed | not) then "Squash-only merge policy confirmed" else error("Enable Squash merge only before accepting cleaned media PRs") end'
