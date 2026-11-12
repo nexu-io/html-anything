@@ -315,7 +315,7 @@ function FormatExportButton({
           <Select
             label={t("Format")}
             value={format}
-            options={mvp ? [...FORMAT_OPTIONS.map(option => option.value === "mov" ? { ...option, label: "MOV" } : option), { value: "webp", label: "WebP", disabled: true }] : FORMAT_OPTIONS}
+            options={mvp ? FORMAT_OPTIONS.map(option => option.value === "mov" ? { ...option, label: "MOV" } : option) : FORMAT_OPTIONS}
             disabled={isRendering}
             onCommit={(next) => {
               const v = resolveRenderFormat(next);
