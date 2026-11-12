@@ -120,6 +120,7 @@ const localReadmeResourceFiles = [
   'docs/readme/live-product/remix.en.jpg',
   'docs/readme/live-product/remix.ja.jpg',
   'docs/readme/live-product/remix.zh-CN.jpg',
+  'docs/readme/live-product/studio-in-use.png',
   'docs/readme/live-templates/a-world-connected-by-computational-fragments.gif',
   'docs/readme/live-templates/a-world-connected-by-computational-fragments.jpg',
   'docs/readme/live-templates/an-agent-payment-with-human-approval.gif',

@@ -267,6 +267,12 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 
 **编写、观看、修改、渲染。** 让 Agent 替换产品、精简开头、加入真人、修改字幕或尝试新结尾。它修改工程源码，你在可视化编辑器中审阅。本地 MCP 客户端使用工程工具，具备 shell 的 Agent 还可遵循 Skills 和固定版本 CLI 工作流。[Agent 配置](#agent-setup) · [原生合成指南](../skills/motion-production/references/native.md) · [HTML 示例工程](../template-library/product-promo/index.html)
 
+<a id="studio-in-use"></a>
+
+<img src="readme/live-product/studio-in-use.png" width="100%" alt="Studio 实际使用界面：左侧为导入素材，中间为视频预览，下方为可编辑时间轴。">
+
+在同一个 Studio 工作区中预览视频、排列片段并导出成片。
+
 #### 在 Studio 里可以改什么
 
 | Studio 中 | 当前可以做什么 |

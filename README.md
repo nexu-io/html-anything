@@ -269,6 +269,12 @@ Product tutorial + live demonstration<br>
 
 If historical media are unavailable, an Agent restore is refused before changing the project. The editor shows a dismissible error with the affected file paths and confirms that the current project is unchanged.
 
+<a id="studio-in-use"></a>
+
+<img src="docs/readme/live-product/studio-in-use.png" width="100%" alt="Studio in use: imported media on the left, video preview in the center, and an editable timeline below.">
+
+Review your video, arrange clips and export from the same Studio workspace.
+
 #### What you can change in Studio
 
 | In the Studio | What you can do today |
