@@ -37,7 +37,13 @@ export function manifest(input: Resource[]): Resource[] {
   return entries;
 }
 export function digest(files: SourceFile[], resources: Resource[] = []): string {
+  const text = sources(files),
+    assets = manifest(resources),
+    paths = new Set([...text.map((entry) => entry.path), ...assets.map((entry) => entry.path)]);
+  for (const path of paths)
+    for (let at = path.indexOf("/"); at >= 0; at = path.indexOf("/", at + 1))
+      if (paths.has(path.slice(0, at))) throw new Fault("invalid", "source and resource paths overlap");
   return `sha256:${createHash("sha256")
-    .update(JSON.stringify([sources(files), manifest(resources)]))
+    .update(JSON.stringify([text, assets]))
     .digest("hex")}`;
 }

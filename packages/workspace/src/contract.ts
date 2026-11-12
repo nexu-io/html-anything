@@ -75,6 +75,11 @@ export const schemas = {
 export type Operation = keyof typeof schemas;
 export type Input<K extends Operation> = z.infer<(typeof schemas)[K]>;
 export type SourceFile = z.infer<typeof file>;
+/** Resolved immutable source bytes; the composer verifies the external source identity. */
+export interface SourcePayload {
+  files: SourceFile[];
+  resources: { path: string; name: string; bytes: Uint8Array }[];
+}
 export interface Session {
   id: string;
   title: string;

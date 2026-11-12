@@ -18,7 +18,7 @@ it("replays immutable source intent before resolution and atomically owns artifa
       source: { id: "prism-example", contentHash: `sha256:${"1".repeat(64)}` },
     };
     expect(workspace.sourceReceipt(input)).toBeUndefined();
-    const artifact = workspace.createSource(input, initialFiles()),
+    const artifact = workspace.createSource(input, { files: initialFiles(), resources: [] }),
       owner = { sessionId: session.id, artifactId: artifact.id },
       original = workspace.execute("project_read", owner);
     const saved = workspace.execute("project_save", {
@@ -40,7 +40,7 @@ it("replays immutable source intent before resolution and atomically owns artifa
         requestId: input.requestId,
       }),
     ).toEqual(artifact);
-    expect(workspace.createSource(input, [])).toEqual(artifact);
+    expect(workspace.createSource(input, { files: [], resources: [] })).toEqual(artifact);
     expect(workspace.execute("project_read", owner).revision).toBe(saved.revision);
     for (const change of [
       { title: "Other" },
@@ -50,7 +50,7 @@ it("replays immutable source intent before resolution and atomically owns artifa
       expect(() => workspace.sourceReceipt({ ...input, ...change })).toThrow("requestId");
     expect(() => workspace.sourceReceipt({ ...input, title: "" })).toThrow("invalid");
     const failed = { ...input, requestId: randomUUID() };
-    expect(() => workspace.createSource(failed, [])).toThrow();
+    expect(() => workspace.createSource(failed, { files: [], resources: [] })).toThrow();
     expect(workspace.sourceReceipt(failed)).toBeUndefined();
     expect(workspace.execute("workspace_state", {}).selection.artifactId).toBeNull();
     expect((await readFile(join(root, "workspace.sqlite"))).length).toBeGreaterThan(0);

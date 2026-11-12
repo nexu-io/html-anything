@@ -28,6 +28,6 @@ export class Templates {
     }
     const selected = read(input);
     if (operation === "template_read") return selected as TemplateOutput<K>;
-    return this.workspace.createSource(intent, selected.files) as TemplateOutput<K>;
+    return this.workspace.createSource(intent, { files: selected.files, resources: [] }) as TemplateOutput<K>;
   }
 }

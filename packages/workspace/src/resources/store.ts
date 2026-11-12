@@ -1,4 +1,4 @@
-import { Fault, type Input } from "../contract.js";
+import { Fault, type Input, type Resource } from "../contract.js";
 import type { Database } from "../database.js";
 import type { Projects } from "../projects.js";
 import { checksum, decode, identify } from "./formats.js";
@@ -15,12 +15,17 @@ export class Resources {
     const project = this.current(input);
     if (project.resources.some((entry) => entry.path === input.path))
       throw new Fault("conflict", "resource path already exists");
+    const resource = this.retain(input, bytes);
+    return this.projects.commit(project, project.files, [...project.resources, resource]);
+  }
+  /** Called only inside the workspace transaction owning the resulting manifest. */
+  retain(input: Pick<Resource, "path" | "name">, bytes: Buffer) {
     const resource = identify(input.path, input.name, bytes),
       prior = this.db.one("SELECT bytes FROM resources WHERE digest=?", resource.digest);
     if (prior && !Buffer.from(prior.bytes as Uint8Array).equals(bytes))
       throw new Fault("integrity", "persistent resource content mismatch");
     this.db.run("INSERT OR IGNORE INTO resources VALUES(?,?)", resource.digest, bytes);
-    return this.projects.commit(project, project.files, [...project.resources, resource]);
+    return resource;
   }
   remove(input: Input<"resource_remove">) {
     const project = this.current(input);

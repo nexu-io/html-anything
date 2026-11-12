@@ -10,6 +10,7 @@ import {
   resourceSourceIntent,
   type SourceFile,
   type SourceIntent,
+  type SourcePayload,
   schemas,
   sourceIntent,
 } from "./contract.js";
@@ -59,20 +60,27 @@ export class Workspace {
     return this.db.transaction(() => this.db.receipt<Artifact>("artifact_source_create", data), false);
   }
   /** Workspace atomically owns source-derived project, history and command receipt. */
-  createSource(input: SourceIntent, files: SourceFile[]): Artifact {
+  createSource(input: SourceIntent, payload: SourcePayload): Artifact {
     if (this.closed) throw new Fault("integrity", "workspace is closed");
     const parsed = sourceIntent.safeParse(input);
     if (!parsed.success) throw new Fault("invalid", "invalid immutable source intent");
     const data = parsed.data;
     return this.db.request("artifact_source_create", data, () => {
+      if (!payload || typeof payload !== "object") throw new Fault("invalid", "immutable source payload is required");
       const create = schemas.artifact_create.safeParse({
         requestId: data.requestId,
         sessionId: data.sessionId,
         title: data.title,
-        files,
+        files: payload.files,
       });
       if (!create.success) throw new Fault("invalid", "invalid immutable source files");
-      return this.projects.create({ ...create.data, files: sources(create.data.files) });
+      if (!Array.isArray(payload.resources) || payload.resources.length > 64)
+        throw new Fault("invalid", "immutable source resources exceed supported bounds");
+      const resources = payload.resources.map((entry) => {
+        if (!entry || !(entry.bytes instanceof Uint8Array)) throw new Fault("invalid", "resource bytes are required");
+        return this.resources.retain(entry, Buffer.from(entry.bytes));
+      });
+      return this.projects.create({ ...create.data, files: sources(create.data.files) }, resources);
     });
   }
   /** Check before resolving any external candidate, including after edits/offline restart. */
@@ -121,7 +129,7 @@ export class Workspace {
       case "message_append":
         return this.sessions.message(input as Input<"message_append">);
       case "artifact_create":
-        return this.projects.create(input as Input<"artifact_create">);
+        return this.projects.create(input as Input<"artifact_create">, []);
       case "resource_import":
         return this.resources.import(input as Input<"resource_import">);
       case "resource_remove":
