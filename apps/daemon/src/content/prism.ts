@@ -84,6 +84,6 @@ export class PrismTemplates {
     if (selected.template.id !== input.id || selected.template.contentHash !== input.contentHash)
       throw new Fault("integrity", "Prism projection identity mismatch");
     if (operation === "template_read") return selected as TemplateOutput<K>;
-    return this.workspace.createSource(intent, selected.files) as TemplateOutput<K>;
+    return this.workspace.createSource(intent, { files: selected.files, resources: [] }) as TemplateOutput<K>;
   }
 }

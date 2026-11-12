@@ -26,14 +26,21 @@ export class Projects {
       throw new Fault("ownership", "artifact does not belong to session");
     return artifact as unknown as Artifact;
   }
-  create(input: Input<"artifact_create">): Artifact {
+  create(input: Input<"artifact_create">, assets: Resource[]): Artifact {
     this.sessions.get(input.sessionId);
     const files = sources(input.files),
-      revision = digest(files),
+      resources = manifest(assets),
+      revision = digest(files, resources),
       projectId = randomUUID(),
       id = randomUUID();
     this.db.run("INSERT INTO projects VALUES(?,?,0,0)", projectId, revision);
-    this.db.run("INSERT INTO revisions VALUES(?,?,?,?)", projectId, revision, JSON.stringify(files), "[]");
+    this.db.run(
+      "INSERT INTO revisions VALUES(?,?,?,?)",
+      projectId,
+      revision,
+      JSON.stringify(files),
+      JSON.stringify(resources),
+    );
     this.db.run("INSERT INTO history VALUES(?,0,?)", projectId, revision);
     const artifact: Artifact = {
       id,
