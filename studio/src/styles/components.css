@@ -576,7 +576,7 @@
 }
 
 /*
- * HyperFrames brand loader. Shared by preview overlays that need a calm,
+ * OpenDesign brand loader. Shared by preview overlays that need a calm,
  * branded loading state instead of a generic spinner.
  */
 .hf-loader {
@@ -682,7 +682,7 @@
   transform: scaleX(0);
   transform-origin: left center;
   border-radius: inherit;
-  background: linear-gradient(90deg, #06e3fa, #4fdb5e);
+  background: var(--color-brand, #87ea5c);
   transition: transform 160ms ease;
 }
 
@@ -958,7 +958,7 @@
 }
 
 .hf-topology-seal {
-  filter: drop-shadow(0 0 6px rgba(60, 230, 172, 0.36));
+  color: var(--color-brand, #87ea5c);
 }
 
 @media (prefers-reduced-motion: no-preference) {
