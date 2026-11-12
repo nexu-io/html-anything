@@ -65,6 +65,9 @@ function mountEditor() {
   return {
     host, files, installs, installed, showToast, reloadPreview, recordEdit,
     drop: (start = 0) => handlers.handleTimelineBlockDrop("sparkle", { start, track: 0 }),
+    previewDrop: () => handlers.handlePreviewBlockDrop("sparkle", { left: 100, top: 120 }),
+    add: () => handlers.handleAddBlock("sparkle"),
+    overlay: () => handlers.handleAddMediaOverlay("sparkle", { start: 3, track: 1, duration: 4 }),
     switchComposition: () => act(() => root.render(<Editor path="other.html" />)),
     unmount: () => act(() => root.unmount()),
     placeholders: () => host.querySelectorAll('[data-testid="timeline-pending-asset"]'),
@@ -72,6 +75,21 @@ function mountEditor() {
 }
 
 describe("catalog block drop feedback", () => {
+  it.each(["previewDrop", "add", "overlay"] as const)("uses the same pending clip for the %s entry instead of a progress toast", async entry => {
+    const view = mountEditor();
+    act(() => { view[entry](); });
+    expect(view.placeholders()).toHaveLength(1);
+    await act(async () => {});
+    expect(view.installs).toHaveLength(1);
+    expect(view.showToast).not.toHaveBeenCalled();
+    await act(async () => view.installs[0].resolve(view.installed()));
+    const element = usePlayerStore.getState().pendingAssetDrops[0].element!;
+    expect(element.key).toBe("index.html#sparkle");
+    expect(view.placeholders()).toHaveLength(1);
+    act(() => usePlayerStore.setState({ elements: [element], timelineReady: true }));
+    expect(view.placeholders()).toHaveLength(0);
+  });
+
   it("keeps the actual block drag's placeholder after mouse release until the inserted clip is usable", async () => {
     const view = mountEditor();
     const target = view.host.querySelector(".h-full.border-t")!;

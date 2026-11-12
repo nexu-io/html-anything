@@ -10,7 +10,7 @@ import { selectAndRevealTimelineElement } from "../player/components/timelineDro
 import type { BlockParam } from "@hyperframes/core/registry";
 import type { RightPanelTab } from "../utils/studioHelpers";
 import type { MediaOverlayPlacement } from "../components/editor/propertyPanelTypes";
-import { beginPendingAssetDrop, updatePendingAssetDrop } from "../player/store/pendingAssetDrops";
+import { beginPendingAssetDrop, finishPendingAssetDrop } from "../player/store/pendingAssetDrops";
 
 interface BlockCtxDeps {
   activeCompPath: string | null;
@@ -95,39 +95,37 @@ export function useBlockHandlers({
     scopeRef.current = scope;
     return () => { scopeRef.current = null; };
   }, [scope]);
-  const { showToast, dismissToast } = blockCtxDeps;
+  const { showToast } = blockCtxDeps;
   const runBlockInstall = useCallback(
-    (blockName: string, install: () => ReturnType<typeof addBlockToProject>, pendingId?: string) => {
+    (blockName: string, install: () => ReturnType<typeof addBlockToProject>, placement: { start: number; track?: number; duration?: number } = {
+      start: usePlayerStore.getState().currentTime, track: 0,
+    }) => {
+      const pendingId = beginPendingAssetDrop(blockName, { start: placement.start, track: placement.track ?? 0 }, placement.duration);
       const work = installQueueRef.current.then(async () => {
         if (scopeRef.current !== scope) return null;
-        const progress = pendingId ? null : showToast(`Adding ${blockName}…`, "info");
         try {
           const result = await install();
           if (scopeRef.current !== scope) return null;
-          if (pendingId) updatePendingAssetDrop(pendingId, result
-            ? { element: result.element, duration: result.element.duration,
-                placement: { start: result.element.start, track: result.element.track } }
-            : { failed: "add" });
+          finishPendingAssetDrop(pendingId, result?.element);
           return result;
         } catch (error) {
           if (scopeRef.current === scope) {
-            if (pendingId) updatePendingAssetDrop(pendingId, { failed: "add" });
+            finishPendingAssetDrop(pendingId);
             showToast(error instanceof Error ? error.message : "Failed to add block", "error");
           }
           return null;
-        } finally {
-          if (progress !== null) dismissToast(progress);
         }
       });
       installQueueRef.current = work.then(() => undefined, () => undefined);
       return work;
     },
-    [showToast, dismissToast, scope],
+    [showToast, scope],
   );
 
   const handleAddBlock = useCallback(
     (blockName: string) => {
       if (!projectId) return;
+      const currentTime = usePlayerStore.getState().currentTime;
       // fallow-ignore-next-line complexity
       void (async () => {
         const result = await runBlockInstall(blockName, () =>
@@ -136,7 +134,7 @@ export function useBlockHandlers({
             blockName,
             ...blockCtx,
             previewIframe: previewIframeRef.current,
-            currentTime: usePlayerStore.getState().currentTime,
+            currentTime,
           }),
         );
         if (result === null) return;
@@ -159,7 +157,6 @@ export function useBlockHandlers({
   const handleTimelineBlockDrop = useCallback(
     async (blockName: string, placement: { start: number; track: number }) => {
       if (!projectId) return;
-      const pendingId = beginPendingAssetDrop(blockName, placement);
       const result = await runBlockInstall(blockName, () =>
         addBlockToProject({
           projectId,
@@ -168,7 +165,7 @@ export function useBlockHandlers({
           ...blockCtx,
           previewIframe: previewIframeRef.current,
           currentTime: usePlayerStore.getState().currentTime,
-        }), pendingId,
+        }), placement,
       );
       if (result) selectAndRevealTimelineElement(result.hostKey);
     },
@@ -188,7 +185,7 @@ export function useBlockHandlers({
           placement: timelinePlacement,
           previewIframe: previewIframeRef.current,
           currentTime: usePlayerStore.getState().currentTime,
-        }),
+        }), timelinePlacement,
       );
     },
     [projectId, blockCtx, previewIframeRef, runBlockInstall],
@@ -197,6 +194,7 @@ export function useBlockHandlers({
   const handlePreviewBlockDrop = useCallback(
     (blockName: string, position: { left: number; top: number }) => {
       if (!projectId) return;
+      const currentTime = usePlayerStore.getState().currentTime;
       void runBlockInstall(blockName, () =>
         addBlockToProject({
           projectId,
@@ -204,7 +202,7 @@ export function useBlockHandlers({
           visualPosition: position,
           ...blockCtx,
           previewIframe: previewIframeRef.current,
-          currentTime: usePlayerStore.getState().currentTime,
+          currentTime,
         }),
       ).then((result) => {
         if (result) selectAndRevealTimelineElement(result.hostKey);

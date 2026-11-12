@@ -111,7 +111,35 @@ try {
   await page.waitForSelector('[data-testid="timeline-pending-asset"][role="alert"][aria-busy="false"]');
   await page.screenshot({ path: path.join(output, 'failed.png') });
   assert.equal((await readFile(entry, 'utf8')).match(/data-composition-src=/g).length, 2);
-  const result = { status: 'PASS', scope: 'Production editor, native saves/history and preview; controlled catalog list and download response only', sampledFrames: samples.length, noEmptyFrames: true, repeatedClips: 2, failureVisible: true };
+  await page.click('[data-testid="timeline-pending-asset"][role="alert"] button');
+  const previewDrop = () => page.evaluate(() => {
+    const card = document.querySelector('[data-motion-catalog] [draggable]');
+    const target = document.querySelector('[data-preview-pan-surface]');
+    const transfer = new DataTransfer();
+    card.dispatchEvent(new DragEvent('dragstart', { bubbles: true, dataTransfer: transfer }));
+    const rect = target.getBoundingClientRect();
+    const options = { bubbles: true, cancelable: true, dataTransfer: transfer, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
+    target.dispatchEvent(new DragEvent('dragenter', options));
+    target.dispatchEvent(new DragEvent('dragover', options));
+    target.dispatchEvent(new DragEvent('drop', options));
+    card.dispatchEvent(new DragEvent('dragend', options));
+  });
+  await previewDrop();
+  await page.waitForSelector('[data-testid="timeline-pending-asset"][aria-busy="true"]');
+  await previewDrop();
+  await page.waitForFunction(() => document.querySelectorAll('[data-testid="timeline-pending-asset"]').length === 2);
+  assert.equal(await page.$$eval('.hf-toast-enter[role="status"]', nodes => nodes.length), 0);
+  await page.screenshot({ path: path.join(output, 'preview-drop-pending.png') });
+  for (let attempt = 0; attempt < 100 && requests.length < 4; attempt++) await new Promise(resolve => setTimeout(resolve, 50));
+  assert.equal(requests.length, 4);
+  await fulfill(requests[3], 4);
+  for (let attempt = 0; attempt < 100 && requests.length < 5; attempt++) await new Promise(resolve => setTimeout(resolve, 50));
+  assert.equal(requests.length, 5);
+  await fulfill(requests[4], 5);
+  await page.waitForFunction(() => !document.querySelector('[data-testid="timeline-pending-asset"]') && !!document.querySelector('[data-el-id="index.html#loading-test_4"]'), { timeout: 30000 });
+  assert.equal((await readFile(entry, 'utf8')).match(/data-composition-src=/g).length, 4);
+  await page.screenshot({ path: path.join(output, 'preview-drop-ready.png') });
+  const result = { status: 'PASS', scope: 'Production editor timeline and preview drops, native saves/history and preview; controlled catalog list and download response only', sampledFrames: samples.length, noEmptyFrames: true, repeatedClips: 2, failureVisible: true, previewDrops: 2 };
   await writeFile(path.join(output, 'browser-result.json'), JSON.stringify(result, null, 2));
   console.log(JSON.stringify(result));
 } catch (error) {
