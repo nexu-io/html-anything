@@ -106,7 +106,7 @@ README 参考 OpenDesign 的产品导览和 HTML Anything 的贡献、来源表�
 
 ### 两个 Agent 接入方向
 
-[README 产品演示](../../README.md#product-tour) 将这两种接入方向展示为 Codex 嵌入编辑器、独立 Studio、Claude Code / CLI 三种使用入口，并串起 Connect Agent 与单模板精确指令；它们共用现有工程与工具契约，未新增运行模式。截图及复现范围见[产品演示说明](../product-tour.md)。
+[README 产品演示](../../README.md#product-tour) 展示当前模板库、单模板详情和复刻指令，连接线上参考、Motion.md 与用户自己的 Agent。真实截图及使用步骤见[产品演示说明](../product-tour.md)。
 
 - **从应用连接 Agent：** 用户先在 OpenMotion 打开工程，再通过 Connect Agent 为当前工作区配置 Codex、Claude Code 等客户端，将工程上下文和要求交给客户端执行，回到 Studio 审阅并继续改稿。
 - **从 Agent 使用 OpenMotion：** 用户先在已有客户端安装 Skills、连接 MCP，按需使用 CLI；由 Agent 创建或读取工程、剪辑、预览与导出，随时打开同一 Studio。
@@ -307,3 +307,9 @@ Downstream publication jobs consume immutable producer artifact IDs retained acr
 ## 视频转模板与模板出片扩展边界
 
 本分支的两条 Skill 是按需使用的扩展，不覆盖上述团队通用流程、模板目录或编辑器。工程直接交付、直接读取；旧自定义本机入库接口退出默认服务。可选比较工具仅输出诊断证据，视觉由用户验收。Public plugin/server names use `openmotion`, Tools use `openmotion_*`, Skills use `openmotion-*`, and workflow/engine URIs use `openmotion://`. Old Tool/resource names and explicit Skill invocations remain compatibility aliases, outside default Tool/resource discovery. The dispatch boundary preserves internal request/telemetry identities and unchanged engine/data contracts; installation replaces managed old Skills with forwarding entries while preserving user-owned configurations. 安装、数据目录和端口沿用团队底座，详见 [扩展范围](../motion-extension-scope.md)。
+
+### README 与线上模板资源（2026-11-12）
+
+README 保持场景示例、四项产品能力、技术文档、社区的顺序。真人出镜参考保留本地预览，暂不提供线上模板入口；Motion 场景使用 `https://open-design.ai/templates/` 当前公开条目，每张卡片只有一个对应详情页链接。在线参考预览不表示 OpenMotion 已生成复刻结果，也不表示该参考包含可编辑源码。旧 Library 资源仍保留在仓库，但不作为当前线上目录数量或入口。
+
+模板库、详情和复刻指令截图使用已安装的 0.6.5 运行时、隔离演示工作区和生产模板目录，分别记录中、英、日三种语言。全栈工作流部分另保留用户提供的真实 Studio 使用截图，其来源单独记录，不据此推断运行时版本。截图与模板预览的来源和 SHA-256 记录在 `docs/readme/live-product/manifest.json` 与 `docs/readme/live-templates/manifest.json`，随文档分发并由资源校验脚本检查。

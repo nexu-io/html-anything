@@ -1,0 +1,62 @@
+{
+  "capturedAt": "2026-11-12",
+  "runtimeVersion": "0.6.5",
+  "source": "Installed OpenMotion Studio captures and a user-provided Studio screenshot",
+  "note": "Catalog, detail and recreation-dialog captures use an isolated demo workspace and the production template catalog. The additional Studio screenshot is retained exactly as supplied; its runtime version is unspecified.",
+  "files": [
+    {
+      "file": "docs/readme/live-product/catalog.en.jpg",
+      "bytes": 126600,
+      "sha256": "b54075cdc0f0e7a46da035afecd1c39afd9596ebbe6fe52d13f6f19c8df3c495"
+    },
+    {
+      "file": "docs/readme/live-product/catalog.ja.jpg",
+      "bytes": 129897,
+      "sha256": "70d396c18c6d2e8d6c9a6d47804a8d813eaa3bdde75df000e5cfca6de8f38e1a"
+    },
+    {
+      "file": "docs/readme/live-product/catalog.zh-CN.jpg",
+      "bytes": 124495,
+      "sha256": "01b43503d98d59a407d5cfb6baf9a31660670c195513601e501a781250d069ea"
+    },
+    {
+      "file": "docs/readme/live-product/detail.en.jpg",
+      "bytes": 92076,
+      "sha256": "802fd1990c6aa4d731a776dc6f0e3a70f87ac0f448895b2ff55a2baeffa60371"
+    },
+    {
+      "file": "docs/readme/live-product/detail.ja.jpg",
+      "bytes": 97298,
+      "sha256": "15816843027f0828e5c10f5ea238e850d4585ccb1de284a82e133df9232ad0d1"
+    },
+    {
+      "file": "docs/readme/live-product/detail.zh-CN.jpg",
+      "bytes": 82002,
+      "sha256": "390bceaccb868e4fd1324dd9d78d372e09e7dd95cb462a2fab6d94e2368f081a"
+    },
+    {
+      "file": "docs/readme/live-product/remix.en.jpg",
+      "bytes": 76061,
+      "sha256": "8cb70e57a3d2360a43a84b20b797e37a6bb0865dc90861901099ababf42cffda"
+    },
+    {
+      "file": "docs/readme/live-product/remix.ja.jpg",
+      "bytes": 74647,
+      "sha256": "5d4b93d6c403bc0316be1ef03c2e654a062ffeb300805a1cf4393ccb411ffe6a"
+    },
+    {
+      "file": "docs/readme/live-product/remix.zh-CN.jpg",
+      "bytes": 66694,
+      "sha256": "c55bb45a151ccd7855faf1507d4efce283a178097a1491e2b66b81110a44ce43"
+    },
+    {
+      "file": "docs/readme/live-product/studio-in-use.png",
+      "bytes": 2065288,
+      "sha256": "f20ae0f17f9db97f1950f8fd4624e296caf014eb5f774d6cb005afa344900073",
+      "source": "User-provided screenshot shared for inclusion in the README",
+      "runtimeVersion": null,
+      "uiLocale": "zh-CN",
+      "alterations": "None; original PNG retained"
+    }
+  ]
+}

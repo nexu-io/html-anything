@@ -1,0 +1,796 @@
+{
+  "catalog": "https://open-design.ai/templates/",
+  "capturedAt": "2026-11-12",
+  "note": "Public catalog reference previews, not OpenMotion-generated comparisons. GIF excerpts are from the listed video URLs.",
+  "templates": [
+    {
+      "title": "Descript — Create social clips",
+      "url": "https://open-design.ai/templates/descript-create-social-clips-motion-design/",
+      "meta": "Descript · 35.3 s",
+      "summary": "Frame one video-editing request as an explicit asset handoff: select a preset, supply video, confirm layout, supply brand guidelines, then show results in two ratios.",
+      "facets": {
+        "uses": [
+          "Product demo"
+        ],
+        "styles": [
+          "Interface animation"
+        ],
+        "brands": [
+          "Descript"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "blue"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "30to60"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/9b83ff2e3e6229cfb1654045949c4426fad55cca5690533dfeb36eed6ec4101d",
+      "video": "https://r.open-design.ai/files/6fb1680c2ed25d82d192a4fffe2d73d394a4ac094c62e6e3501523eae5e4b26e",
+      "id": "descript-create-social-clips",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/descript-create-social-clips.jpg",
+          "bytes": 36240,
+          "sha256": "9b83ff2e3e6229cfb1654045949c4426fad55cca5690533dfeb36eed6ec4101d"
+        },
+        {
+          "file": "docs/readme/live-templates/descript-create-social-clips.gif",
+          "bytes": 421905,
+          "sha256": "eff6d353cc8ae9ca0298d2ff3b241e760ee9b28996b504a6808f7e39ee4f68f5"
+        }
+      ]
+    },
+    {
+      "title": "Structured transcription features",
+      "url": "https://open-design.ai/templates/structured-transcription-features-motion-design/",
+      "meta": "ElevenLabs · 51.3 s",
+      "summary": "Introduce measurement dimensions first, then explain capabilities through specific text changes",
+      "facets": {
+        "uses": [
+          "Product demo"
+        ],
+        "styles": [
+          "Interface animation"
+        ],
+        "brands": [
+          "ElevenLabs"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "monochrome"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "30to60"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/785e09a7dd5e1d782536e6d4a4970b2f4d8533d658640fe1585c4c83de5751b6",
+      "video": "https://r.open-design.ai/files/4e34518ae7c18ab02981837b6350d74dfbbe38a7f0d80d08794ffc0f3f469a39",
+      "id": "structured-transcription-features",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/structured-transcription-features.jpg",
+          "bytes": 16785,
+          "sha256": "785e09a7dd5e1d782536e6d4a4970b2f4d8533d658640fe1585c4c83de5751b6"
+        },
+        {
+          "file": "docs/readme/live-templates/structured-transcription-features.gif",
+          "bytes": 899733,
+          "sha256": "3181f1208ab8c39e8eaeb1abe638f20be6400ff4a6fb98fdce62154d332e93ae"
+        }
+      ]
+    },
+    {
+      "title": "Notion — Custom Agents",
+      "url": "https://open-design.ai/templates/notion-custom-agents-motion-design/",
+      "meta": "Notion · 70.9 s",
+      "summary": "Tasks begin flowing neatly, then become crowded; agents take over and restore organized division of work, contrasting the problem with its solution.",
+      "facets": {
+        "uses": [
+          "Product launch"
+        ],
+        "styles": [
+          "Interface animation",
+          "Graphic animation"
+        ],
+        "brands": [
+          "Notion"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "blue"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "60plus"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/33625e362289ff12a3db7ff68e72a5098bc9b210afeb4331a7854e22dd50a102",
+      "video": "https://r.open-design.ai/files/c4db69c7dd0fb50904c05ce774c6d7693e71495dc77c7a12668ebfd521741973",
+      "id": "notion-custom-agents",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/notion-custom-agents.jpg",
+          "bytes": 42611,
+          "sha256": "33625e362289ff12a3db7ff68e72a5098bc9b210afeb4331a7854e22dd50a102"
+        },
+        {
+          "file": "docs/readme/live-templates/notion-custom-agents.gif",
+          "bytes": 685434,
+          "sha256": "b62ffb99195f35396b6ec0b5f8f0abb8552ffd2493a5e982e5e10fd640c44a0f"
+        }
+      ]
+    },
+    {
+      "title": "Demand becomes a desktop release",
+      "url": "https://open-design.ai/templates/demand-becomes-a-desktop-release-motion-design/",
+      "meta": "OpenAI · 9.2 s",
+      "summary": "Layer similar requests from different directions with slight tilts, building a sense of demand.",
+      "facets": {
+        "uses": [
+          "Product launch"
+        ],
+        "styles": [
+          "Interface animation",
+          "Text animation"
+        ],
+        "brands": [
+          "OpenAI"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "blue",
+          "green"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "under10"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/66bc3f14f916a58800562af5b2c8412b2f554f36a435da950faa39ef4b82da96",
+      "video": "https://r.open-design.ai/files/4994945e52e3d9cf100caad1974d4e6c4483fce5de8972968066adcff56a8699",
+      "id": "demand-becomes-a-desktop-release",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/demand-becomes-a-desktop-release.jpg",
+          "bytes": 147649,
+          "sha256": "66bc3f14f916a58800562af5b2c8412b2f554f36a435da950faa39ef4b82da96"
+        },
+        {
+          "file": "docs/readme/live-templates/demand-becomes-a-desktop-release.gif",
+          "bytes": 846809,
+          "sha256": "ecbb5b36bf9997451a02fbf6db8ef9083b93326eb81b5bd1c29b7ca988d008cd"
+        }
+      ]
+    },
+    {
+      "title": "A world connected by computational fragments",
+      "url": "https://open-design.ai/templates/a-world-connected-by-computational-fragments-motion-design/",
+      "meta": "Kimi · 24 s",
+      "summary": "Connect multiple themes through code strips and offset slices, expressing the relationship between the physical world and computation.",
+      "facets": {
+        "uses": [
+          "Brand promotion"
+        ],
+        "styles": [
+          "Text animation",
+          "Graphic animation",
+          "Live-action editing"
+        ],
+        "brands": [
+          "Kimi"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "blue"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "15to30"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/456f16e8389748eba9c6701049788c7e2cc54bd5fdc0fc5aa2f45c27e307261b",
+      "video": "https://r.open-design.ai/files/916196c337a97d1be0f1db89cdc85835a526d9b6edf36e44c08f7c2a3afc2cbe",
+      "id": "a-world-connected-by-computational-fragments",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/a-world-connected-by-computational-fragments.jpg",
+          "bytes": 96241,
+          "sha256": "456f16e8389748eba9c6701049788c7e2cc54bd5fdc0fc5aa2f45c27e307261b"
+        },
+        {
+          "file": "docs/readme/live-templates/a-world-connected-by-computational-fragments.gif",
+          "bytes": 3652746,
+          "sha256": "d94806d916b9b7d9325db6901cc36b890ee0e4ff7503bfbd888b2d258b985925"
+        }
+      ]
+    },
+    {
+      "title": "Slack — slack",
+      "url": "https://open-design.ai/templates/slack-slack-motion-design/",
+      "meta": "Slack · 8 s",
+      "summary": "Break the old graphic into its smallest units, then reassemble the mark and name using the same colors.",
+      "facets": {
+        "uses": [
+          "Brand promotion"
+        ],
+        "styles": [
+          "Text animation",
+          "Graphic animation"
+        ],
+        "brands": [
+          "Slack"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "monochrome"
+        ],
+        "ratio": [],
+        "duration": [
+          "under10"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/1f8e3c353f213a4e23496f4037d76bb39da21d7c0f8974a1a52920171f380fc4",
+      "video": "https://r.open-design.ai/files/8a3c76257e369383ab48a6c4a4b309c04f62dbcdcdb819539051ee7e7109a1d1",
+      "id": "slack-slack",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/slack-slack.jpg",
+          "bytes": 8004,
+          "sha256": "1f8e3c353f213a4e23496f4037d76bb39da21d7c0f8974a1a52920171f380fc4"
+        },
+        {
+          "file": "docs/readme/live-templates/slack-slack.gif",
+          "bytes": 272005,
+          "sha256": "e5f730483a177dad8cebd3f19728d04a590a075691ca2c48544c05c73490a505"
+        }
+      ]
+    },
+    {
+      "title": "Connected Tools Evidence Chain",
+      "url": "https://open-design.ai/templates/connected-tools-evidence-chain-motion-design/",
+      "meta": "Anthropic · 52.3 s",
+      "summary": "Carry a business question through multiple tool calls: data explains what happened, workflows explain why, and slides support sharing.",
+      "facets": {
+        "uses": [
+          "Product demo"
+        ],
+        "styles": [
+          "Interface animation"
+        ],
+        "brands": [
+          "Anthropic"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "monochrome"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "30to60"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/79e74122a92470f1cfe4ce39552b1eacad81bf316514605fef8d64f0c62eea4b",
+      "video": "https://r.open-design.ai/files/3467676fc6423d7bf47ba2b78a348c8178ac454e030a016e5d96a63ce80e500a",
+      "id": "connected-tools-evidence-chain",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/connected-tools-evidence-chain.jpg",
+          "bytes": 126037,
+          "sha256": "79e74122a92470f1cfe4ce39552b1eacad81bf316514605fef8d64f0c62eea4b"
+        },
+        {
+          "file": "docs/readme/live-templates/connected-tools-evidence-chain.gif",
+          "bytes": 475616,
+          "sha256": "f6372a94259356a96f71ab0be2414f2c793d4fc823a45bfba70ca53dba595f04"
+        }
+      ]
+    },
+    {
+      "title": "An agent payment with human approval",
+      "url": "https://open-design.ai/templates/an-agent-payment-with-human-approval-motion-design/",
+      "meta": "Stripe · 28 s",
+      "summary": "Install and connect the agent first, then request an itinerary change in chat, show the cost and move to phone confirmation. Repeat the cost and merchant name across interfaces to identify the same request.",
+      "facets": {
+        "uses": [
+          "Product demo"
+        ],
+        "styles": [
+          "Interface animation"
+        ],
+        "brands": [
+          "Stripe"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "monochrome"
+        ],
+        "ratio": [
+          "square"
+        ],
+        "duration": [
+          "15to30"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/bb5b1ef0ca569851365489e452a6598ab49af8677c99464bb844d8f2a60b62ab",
+      "video": "https://r.open-design.ai/files/cd60f06a2657e054e4ed9007ba12bf1f1d2a93eb419f4ae04599c028a6a3ea12",
+      "id": "an-agent-payment-with-human-approval",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/an-agent-payment-with-human-approval.jpg",
+          "bytes": 33086,
+          "sha256": "bb5b1ef0ca569851365489e452a6598ab49af8677c99464bb844d8f2a60b62ab"
+        },
+        {
+          "file": "docs/readme/live-templates/an-agent-payment-with-human-approval.gif",
+          "bytes": 2044886,
+          "sha256": "caf3c5ba8c42668634ed37bfb7bf70b08aff3897eef89cc5b62980c1402532e4"
+        }
+      ]
+    },
+    {
+      "title": "Mathematics as evolving geometry",
+      "url": "https://open-design.ai/templates/mathematics-as-evolving-geometry-motion-design/",
+      "meta": "OpenAI · 31.9 s",
+      "summary": "Establish each research topic with a geometric diagram, then reduce it to a few points that connect to the next diagram.",
+      "facets": {
+        "uses": [
+          "Milestones and results"
+        ],
+        "styles": [
+          "Graphic animation"
+        ],
+        "brands": [
+          "OpenAI"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "monochrome"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "30to60"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/c32d07c5b4a4d1ca5618cf32d3425f44081a72af3c0db4eac03882155242c29c",
+      "video": "https://r.open-design.ai/files/56a8ccd856a2d879496863e996b372d8d909a6b1e8b7f431694f17699642fd18",
+      "id": "mathematics-as-evolving-geometry",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/mathematics-as-evolving-geometry.jpg",
+          "bytes": 74169,
+          "sha256": "c32d07c5b4a4d1ca5618cf32d3425f44081a72af3c0db4eac03882155242c29c"
+        },
+        {
+          "file": "docs/readme/live-templates/mathematics-as-evolving-geometry.gif",
+          "bytes": 995439,
+          "sha256": "a1044ff2c0fadb69adc1eb9274e40665d7b4f87cd95e951d5dcb0e0d1cbedf1b"
+        }
+      ]
+    },
+    {
+      "title": "Scan to Suggested Fix",
+      "url": "https://open-design.ai/templates/scan-to-suggested-fix-motion-design/",
+      "meta": "Anthropic · 50 s",
+      "summary": "Preserve the full entry → scan → issues → fix → PR sequence, revealing deeper result levels as it progresses.",
+      "facets": {
+        "uses": [
+          "Product demo"
+        ],
+        "styles": [
+          "Interface animation"
+        ],
+        "brands": [
+          "Anthropic"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "monochrome"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "30to60"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/be5fc241ac81b90d7e7ded0bf1c90040d2823e6c659420d636722b5935c6e452",
+      "video": "https://r.open-design.ai/files/c9b1692187b2086125655c04f3a6f43a18bcfb11962a2698eb831c2704cfe05c",
+      "id": "scan-to-suggested-fix",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/scan-to-suggested-fix.jpg",
+          "bytes": 152021,
+          "sha256": "be5fc241ac81b90d7e7ded0bf1c90040d2823e6c659420d636722b5935c6e452"
+        },
+        {
+          "file": "docs/readme/live-templates/scan-to-suggested-fix.gif",
+          "bytes": 332846,
+          "sha256": "86184ef3b1da142db2dde7cfda80b69635e5adb9c2f6d0c0b87dc9c3e0bc7cb5"
+        }
+      ]
+    },
+    {
+      "title": "Controllable song composition",
+      "url": "https://open-design.ai/templates/controllable-song-composition-motion-design/",
+      "meta": "ElevenLabs · 59.1 s",
+      "summary": "Move from an open-ended request to controllable sections, tempo and key, ending with the waveform and finished piece",
+      "facets": {
+        "uses": [
+          "Product demo"
+        ],
+        "styles": [
+          "Interface animation"
+        ],
+        "brands": [
+          "ElevenLabs"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "monochrome"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "30to60"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/06de8fc355392b7666f31b8f4c252be63e666f450fca0f1e82fab324d3d7cdee",
+      "video": "https://r.open-design.ai/files/35810bdb3d66bd7c5c9b85e3e8a18eeb84a3078dc8e4442610ea777cf6b3802a",
+      "id": "controllable-song-composition",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/controllable-song-composition.jpg",
+          "bytes": 25670,
+          "sha256": "06de8fc355392b7666f31b8f4c252be63e666f450fca0f1e82fab324d3d7cdee"
+        },
+        {
+          "file": "docs/readme/live-templates/controllable-song-composition.gif",
+          "bytes": 935648,
+          "sha256": "5e5f90231e7f456d70f002694eae9f3b1605bc06240e98224f719c8e1dcbbfa0"
+        }
+      ]
+    },
+    {
+      "title": "Living waveform poster",
+      "url": "https://open-design.ai/templates/living-waveform-poster-motion-design/",
+      "meta": "Deezer · 10 s",
+      "summary": "Keep background waves breathing continuously while the central heading stays clearly fixed in one position.",
+      "facets": {
+        "uses": [
+          "Brand promotion"
+        ],
+        "styles": [
+          "Text animation",
+          "Graphic animation"
+        ],
+        "brands": [
+          "Deezer"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "blue",
+          "green"
+        ],
+        "ratio": [],
+        "duration": [
+          "10to15"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/ac0acd76883fd39ab28778047c72363f3e0a85cbca1554dff25b8cfd437b1d7c",
+      "video": "https://r.open-design.ai/files/385a9b521847c08833f75e737224e8d7f081e4e52e94f8b3ad8a7ebad541d100",
+      "id": "living-waveform-poster",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/living-waveform-poster.jpg",
+          "bytes": 37448,
+          "sha256": "ac0acd76883fd39ab28778047c72363f3e0a85cbca1554dff25b8cfd437b1d7c"
+        },
+        {
+          "file": "docs/readme/live-templates/living-waveform-poster.gif",
+          "bytes": 4892381,
+          "sha256": "1c892636aac9911c05b6aa44667d1e18c7b8813a47d55d408ba21595020cb121"
+        }
+      ]
+    },
+    {
+      "title": "Many possible futures",
+      "url": "https://open-design.ai/templates/many-possible-futures-motion-design/",
+      "meta": "OpenAI · 76.9 s",
+      "summary": "An individual's writing first triggers changes in the world, then the story moves from a single ideal to many people's different futures.",
+      "facets": {
+        "uses": [
+          "Brand promotion"
+        ],
+        "styles": [
+          "Live-action editing"
+        ],
+        "brands": [
+          "OpenAI"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "orange",
+          "red"
+        ],
+        "ratio": [
+          "landscape"
+        ],
+        "duration": [
+          "60plus"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/2620913ccdae23aee2ecea69f9cdddf735677e11950726dbec7b7602c1d1715c",
+      "video": "https://r.open-design.ai/files/b5d2fbbd66100bcd28ec2aacb0a3630a212abeefa842edc512bf020be7d943a4",
+      "id": "many-possible-futures",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/many-possible-futures.jpg",
+          "bytes": 56195,
+          "sha256": "2620913ccdae23aee2ecea69f9cdddf735677e11950726dbec7b7602c1d1715c"
+        },
+        {
+          "file": "docs/readme/live-templates/many-possible-futures.gif",
+          "bytes": 1510425,
+          "sha256": "f4a30a4a3b2dbc5c43df68837bebb284d204a1408394e248d7df339154914917"
+        }
+      ]
+    },
+    {
+      "title": "Making-of Window Collage",
+      "url": "https://open-design.ai/templates/making-of-window-collage-motion-design/",
+      "meta": "Anthropic · 9.2 s",
+      "summary": "Layer windows in sequence, with the central heading covering the top layer last; retain recognizable edges of surrounding content.",
+      "facets": {
+        "uses": [
+          "Brand promotion"
+        ],
+        "styles": [
+          "Interface animation"
+        ],
+        "brands": [
+          "Anthropic"
+        ],
+        "industries": [],
+        "models": [],
+        "colors": [
+          "yellow"
+        ],
+        "ratio": [],
+        "duration": [
+          "under10"
+        ],
+        "availability": [
+          "reference"
+        ]
+      },
+      "poster": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+      "video": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+      "id": "making-of-window-collage",
+      "assets": [
+        {
+          "file": "docs/readme/live-templates/making-of-window-collage.jpg",
+          "bytes": 90450,
+          "sha256": "a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7"
+        },
+        {
+          "file": "docs/readme/live-templates/making-of-window-collage.gif",
+          "bytes": 1215584,
+          "sha256": "dae76ee380e75eb257be035bda3697981c5cce42b53a0f61da34c46687b52e1d"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "docs/readme/live-templates/descript-create-social-clips.jpg",
+      "bytes": 36240,
+      "sha256": "9b83ff2e3e6229cfb1654045949c4426fad55cca5690533dfeb36eed6ec4101d"
+    },
+    {
+      "file": "docs/readme/live-templates/descript-create-social-clips.gif",
+      "bytes": 421905,
+      "sha256": "eff6d353cc8ae9ca0298d2ff3b241e760ee9b28996b504a6808f7e39ee4f68f5"
+    },
+    {
+      "file": "docs/readme/live-templates/structured-transcription-features.jpg",
+      "bytes": 16785,
+      "sha256": "785e09a7dd5e1d782536e6d4a4970b2f4d8533d658640fe1585c4c83de5751b6"
+    },
+    {
+      "file": "docs/readme/live-templates/structured-transcription-features.gif",
+      "bytes": 899733,
+      "sha256": "3181f1208ab8c39e8eaeb1abe638f20be6400ff4a6fb98fdce62154d332e93ae"
+    },
+    {
+      "file": "docs/readme/live-templates/notion-custom-agents.jpg",
+      "bytes": 42611,
+      "sha256": "33625e362289ff12a3db7ff68e72a5098bc9b210afeb4331a7854e22dd50a102"
+    },
+    {
+      "file": "docs/readme/live-templates/notion-custom-agents.gif",
+      "bytes": 685434,
+      "sha256": "b62ffb99195f35396b6ec0b5f8f0abb8552ffd2493a5e982e5e10fd640c44a0f"
+    },
+    {
+      "file": "docs/readme/live-templates/demand-becomes-a-desktop-release.jpg",
+      "bytes": 147649,
+      "sha256": "66bc3f14f916a58800562af5b2c8412b2f554f36a435da950faa39ef4b82da96"
+    },
+    {
+      "file": "docs/readme/live-templates/demand-becomes-a-desktop-release.gif",
+      "bytes": 846809,
+      "sha256": "ecbb5b36bf9997451a02fbf6db8ef9083b93326eb81b5bd1c29b7ca988d008cd"
+    },
+    {
+      "file": "docs/readme/live-templates/a-world-connected-by-computational-fragments.jpg",
+      "bytes": 96241,
+      "sha256": "456f16e8389748eba9c6701049788c7e2cc54bd5fdc0fc5aa2f45c27e307261b"
+    },
+    {
+      "file": "docs/readme/live-templates/a-world-connected-by-computational-fragments.gif",
+      "bytes": 3652746,
+      "sha256": "d94806d916b9b7d9325db6901cc36b890ee0e4ff7503bfbd888b2d258b985925"
+    },
+    {
+      "file": "docs/readme/live-templates/slack-slack.jpg",
+      "bytes": 8004,
+      "sha256": "1f8e3c353f213a4e23496f4037d76bb39da21d7c0f8974a1a52920171f380fc4"
+    },
+    {
+      "file": "docs/readme/live-templates/slack-slack.gif",
+      "bytes": 272005,
+      "sha256": "e5f730483a177dad8cebd3f19728d04a590a075691ca2c48544c05c73490a505"
+    },
+    {
+      "file": "docs/readme/live-templates/connected-tools-evidence-chain.jpg",
+      "bytes": 126037,
+      "sha256": "79e74122a92470f1cfe4ce39552b1eacad81bf316514605fef8d64f0c62eea4b"
+    },
+    {
+      "file": "docs/readme/live-templates/connected-tools-evidence-chain.gif",
+      "bytes": 475616,
+      "sha256": "f6372a94259356a96f71ab0be2414f2c793d4fc823a45bfba70ca53dba595f04"
+    },
+    {
+      "file": "docs/readme/live-templates/an-agent-payment-with-human-approval.jpg",
+      "bytes": 33086,
+      "sha256": "bb5b1ef0ca569851365489e452a6598ab49af8677c99464bb844d8f2a60b62ab"
+    },
+    {
+      "file": "docs/readme/live-templates/an-agent-payment-with-human-approval.gif",
+      "bytes": 2044886,
+      "sha256": "caf3c5ba8c42668634ed37bfb7bf70b08aff3897eef89cc5b62980c1402532e4"
+    },
+    {
+      "file": "docs/readme/live-templates/mathematics-as-evolving-geometry.jpg",
+      "bytes": 74169,
+      "sha256": "c32d07c5b4a4d1ca5618cf32d3425f44081a72af3c0db4eac03882155242c29c"
+    },
+    {
+      "file": "docs/readme/live-templates/mathematics-as-evolving-geometry.gif",
+      "bytes": 995439,
+      "sha256": "a1044ff2c0fadb69adc1eb9274e40665d7b4f87cd95e951d5dcb0e0d1cbedf1b"
+    },
+    {
+      "file": "docs/readme/live-templates/scan-to-suggested-fix.jpg",
+      "bytes": 152021,
+      "sha256": "be5fc241ac81b90d7e7ded0bf1c90040d2823e6c659420d636722b5935c6e452"
+    },
+    {
+      "file": "docs/readme/live-templates/scan-to-suggested-fix.gif",
+      "bytes": 332846,
+      "sha256": "86184ef3b1da142db2dde7cfda80b69635e5adb9c2f6d0c0b87dc9c3e0bc7cb5"
+    },
+    {
+      "file": "docs/readme/live-templates/controllable-song-composition.jpg",
+      "bytes": 25670,
+      "sha256": "06de8fc355392b7666f31b8f4c252be63e666f450fca0f1e82fab324d3d7cdee"
+    },
+    {
+      "file": "docs/readme/live-templates/controllable-song-composition.gif",
+      "bytes": 935648,
+      "sha256": "5e5f90231e7f456d70f002694eae9f3b1605bc06240e98224f719c8e1dcbbfa0"
+    },
+    {
+      "file": "docs/readme/live-templates/living-waveform-poster.jpg",
+      "bytes": 37448,
+      "sha256": "ac0acd76883fd39ab28778047c72363f3e0a85cbca1554dff25b8cfd437b1d7c"
+    },
+    {
+      "file": "docs/readme/live-templates/living-waveform-poster.gif",
+      "bytes": 4892381,
+      "sha256": "1c892636aac9911c05b6aa44667d1e18c7b8813a47d55d408ba21595020cb121"
+    },
+    {
+      "file": "docs/readme/live-templates/many-possible-futures.jpg",
+      "bytes": 56195,
+      "sha256": "2620913ccdae23aee2ecea69f9cdddf735677e11950726dbec7b7602c1d1715c"
+    },
+    {
+      "file": "docs/readme/live-templates/many-possible-futures.gif",
+      "bytes": 1510425,
+      "sha256": "f4a30a4a3b2dbc5c43df68837bebb284d204a1408394e248d7df339154914917"
+    },
+    {
+      "file": "docs/readme/live-templates/making-of-window-collage.jpg",
+      "bytes": 90450,
+      "sha256": "a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7"
+    },
+    {
+      "file": "docs/readme/live-templates/making-of-window-collage.gif",
+      "bytes": 1215584,
+      "sha256": "dae76ee380e75eb257be035bda3697981c5cce42b53a0f61da34c46687b52e1d"
+    }
+  ]
+}

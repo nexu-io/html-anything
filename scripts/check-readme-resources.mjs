@@ -33,6 +33,8 @@ export async function verifyResources(root = fileURLToPath(new URL('../', import
   let links = 0, hashes = 0;
   for (const doc of resourceDocuments) links += await checkDocument(path.join(root, doc));
   const manifests = [
+    ['docs/readme/live-product/manifest.json', '', 'files'],
+    ['docs/readme/live-templates/manifest.json', '', 'files'],
     ['docs/readme/media/manifest.json', '', 'entries'],
     ['docs/readme/contributors/manifest.json', 'docs/readme/contributors', 'contributors'],
     ['library/skills/openmotion-design-remix/vendor/manifest.json', 'library/skills/openmotion-design-remix/vendor', 'files'],
