@@ -146,7 +146,7 @@ jobs:
       - name: Build phase-one ZIP and exercise all public tools
         run: |
           npm run package:phase1
-          archive="$PWD/dist/motion-$(node -p "require('./package.json').version")-phase1.zip"
+          archive="$PWD/dist/openmotion-$(node -p "require('./package.json').version")-phase1.zip"
           node tests/phase1-package.mjs "$archive" "$PWD/.artifacts/phase1-package-e2e"
       - name: Build immutable standalone artifacts
         env:

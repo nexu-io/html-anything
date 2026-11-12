@@ -11,10 +11,19 @@ const archive=process.argv[2];assert.ok(path.isAbsolute(archive));
 const work=await realpath(await mkdtemp(path.join(tmpdir(),'om-phase1-package-')));
 const evidence=process.argv[3]?path.resolve(process.argv[3]):path.join(work,'evidence');await mkdir(evidence,{recursive:true});
 const extracted=path.join(work,'extracted');await mkdir(extracted);
-assert.equal(spawnSync('unzip',['-q',archive,'-d',extracted]).status,0);
-const root=path.join(extracted,'motion'),data=path.join(work,'user-data');
+const extraction=spawnSync('unzip',['-q',archive,'-d',extracted],{encoding:'utf8'});
+assert.equal(extraction.status,0,extraction.error?.message??extraction.stderr);
+const root=path.join(extracted,'openmotion'),data=path.join(work,'user-data');
 const expected=['openmotion_list_templates','openmotion_get_template','openmotion_create_project','openmotion_open_preview','openmotion_import_assets','openmotion_get_project','openmotion_edit_project','openmotion_export_request','openmotion_list_versions','openmotion_restore_version','openmotion_export_cancel'];
-assert.deepEqual((await readdir(path.join(root,'skills'))).sort(),['openmotion-director','openmotion-production','openmotion-recreate','openmotion-template-to-video','openmotion-video-to-template']);
+const canonicalSkills=['openmotion-director','openmotion-production','openmotion-recreate','openmotion-template-to-video','openmotion-video-to-template'];
+const legacySkills=canonicalSkills.map(name=>name.replace(/^openmotion-/,'motion-'));
+assert.deepEqual((await readdir(path.join(root,'skills'))).sort(),[...canonicalSkills,...legacySkills].sort());
+for(const [index,name] of legacySkills.entries()){
+ const alias=await readFile(path.join(root,'skills',name,'SKILL.md'),'utf8');
+ assert.match(alias,/disable-model-invocation: true/);
+ assert.ok(alias.includes('../'+canonicalSkills[index]+'/SKILL.md'));
+ assert.match(await readFile(path.join(root,'skills',name,'agents/openai.yaml'),'utf8'),/allow_implicit_invocation: false/);
+}
 assert.equal(JSON.parse(await readFile(path.join(root,'shared/mcp-release.json'))).profile,'phase1');
 await assert.rejects(stat(path.join(root,'node_modules')),{code:'ENOENT'});
 const version=JSON.parse(await readFile(path.join(root,'package.json'))).version;

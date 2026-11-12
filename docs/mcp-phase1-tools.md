@@ -109,7 +109,7 @@ The open editor also shows these restore refusals through its shared dismissible
 ## 注册、构建与兼容
 
 - shared/mcp-profiles.json 是11项唯一公开清单，shared/mcp-release.json 默认 phase1；mcpRegistry 同时控制发现与调用，禁止运行时环境变量扩大列表。新增/缺失实现由构建完整性检查拦截。
-- npm run package:phase1 构建 Studio 并生成 dist/motion-0.6.2-phase1.zip；npm run package:plugin 默认也沿用 phase1。该插件 ZIP 不带原生 Node/浏览器/FFmpeg：使用支持的本机 Node、首次安装锁定依赖，FFmpeg/ffprobe 需本机可用。
+- npm run package:phase1 构建 Studio 并生成 dist/openmotion-0.6.3-phase1.zip；npm run package:plugin 默认也沿用 phase1。该插件 ZIP 不带原生 Node/浏览器/FFmpeg：使用支持的本机 Node、首次安装锁定依赖，FFmpeg/ffprobe 需本机可用。
 - 四宿主薄适配器从同一运行时导出，scope.json 记录 profile，复制上述5个 Skill；不另维护 allowlist。数据目录放在 runtime/插件缓存之外。资源指导通过本地文件或 resources/list、resources/read 取得，不另增加 workflow Tool。
 - 完整原生测试包的 build <target> <beta-version> [phase1|legacy] 使用同表检查并写 release.json；本次不声称重新制作/验收各平台原生安装包。
 - Internal compatibility handlers and explicit legacy development builds remain separate; hidden calls return MCP_TOOL_NOT_EXPOSED in phase-one packages. Existing supported phase-one calls continue across compatible updates. Newly added Tools, changed discovery metadata and Skills require host refresh before use.
@@ -156,7 +156,7 @@ Protocol 1 preserves existing request/response shapes and semantics. New Tools a
 | openmotion_restore_version | v5恢复v3产生v6并保留v4/v5；历史音视频；中断恢复及外部第三种内容保护 | tests/phase1.test.ts |
 | openmotion_export_cancel | 排队取消、运行中确认停止、跨项目拒绝、已完成不改状态、旧结果保留 | tests/phase1.test.ts、tests/phase1-runtime.test.ts、tests/phase1-package.mjs |
 
-复测命令：后端 `node --experimental-strip-types --test --test-concurrency=1 tests/*.test.ts`；实际包 `node tests/phase1-package.mjs /absolute/path/motion-0.6.2-phase1.zip /absolute/path/evidence`。完整测试包和四宿主真实模型任务另行验收。
+复测命令：后端 `node --experimental-strip-types --test --test-concurrency=1 tests/*.test.ts`；实际包 `node tests/phase1-package.mjs /absolute/path/openmotion-0.6.3-phase1.zip /absolute/path/evidence`。完整测试包和四宿主真实模型任务另行验收。
 
 
 ### 测试代码与CI范围
