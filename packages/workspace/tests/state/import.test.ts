@@ -256,3 +256,23 @@ it("rolls back source, media, artifact and history when the final receipt write 
     f.workspace.close();
   }
 });
+
+it("rejects an oversized batch before decoding any claimed media bytes", () => {
+  const f = fixture(),
+    bytes = Buffer.alloc(6 * 1024 ** 2),
+    source = payload();
+  try {
+    const before = inventory(f.root);
+    source.resources = Array.from({ length: 11 }, (_, n) => ({
+      path: `assets/untrusted${n}.png`,
+      name: "Untrusted PNG",
+      bytes,
+    }));
+    // Every body is also malformed: the byte budget must reject before image decoding.
+    expect(() => f.workspace.createSource(f.intent, source)).toThrow("resource snapshot exceeds 64 MiB");
+    expect(inventory(f.root)).toEqual(before);
+    expect(f.workspace.sourceReceipt(f.intent)).toBeUndefined();
+  } finally {
+    f.workspace.close();
+  }
+});

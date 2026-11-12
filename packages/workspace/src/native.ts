@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { Fault, type Resource, type SourceFile, validateSourcePath } from "./contract.js";
-import { resource } from "./resources/contract.js";
+import { resource, resourceBytesLimit, resourceCountLimit } from "./resources/contract.js";
 
 export function sources(input: SourceFile[]): SourceFile[] {
   let bytes = 0;
@@ -25,13 +25,13 @@ export function sources(input: SourceFile[]): SourceFile[] {
   return output;
 }
 export function manifest(input: Resource[]): Resource[] {
-  if (input.length > 64) throw new Fault("invalid", "resource count exceeds 64");
+  if (input.length > resourceCountLimit) throw new Fault("invalid", "resource count exceeds 64");
   const entries = input
     .map((entry) => resource.parse(entry))
     .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
   if (
     new Set(entries.map((entry) => entry.path)).size !== entries.length ||
-    entries.reduce((n, entry) => n + entry.bytes, 0) > 64 * 1024 * 1024
+    entries.reduce((n, entry) => n + entry.bytes, 0) > resourceBytesLimit
   )
     throw new Fault("invalid", "duplicate or oversized resource manifest");
   return entries;

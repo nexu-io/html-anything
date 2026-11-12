@@ -17,6 +17,7 @@ import {
 import { Database } from "./database.js";
 import { sources } from "./native.js";
 import { Projects } from "./projects.js";
+import { resourceBytesLimit, resourceCountLimit, resourceLimit } from "./resources/contract.js";
 import { Resources } from "./resources/store.js";
 import { Selections } from "./selection.js";
 import { Sessions } from "./sessions.js";
@@ -74,12 +75,17 @@ export class Workspace {
         files: payload.files,
       });
       if (!create.success) throw new Fault("invalid", "invalid immutable source files");
-      if (!Array.isArray(payload.resources) || payload.resources.length > 64)
+      if (!Array.isArray(payload.resources) || payload.resources.length > resourceCountLimit)
         throw new Fault("invalid", "immutable source resources exceed supported bounds");
-      const resources = payload.resources.map((entry) => {
+      let bytes = 0;
+      for (const entry of payload.resources) {
         if (!entry || !(entry.bytes instanceof Uint8Array)) throw new Fault("invalid", "resource bytes are required");
-        return this.resources.retain(entry, Buffer.from(entry.bytes));
-      });
+        if (!entry.bytes.byteLength || entry.bytes.byteLength > resourceLimit)
+          throw new Fault("invalid", "resource bytes outside supported bounds");
+        bytes += entry.bytes.byteLength;
+        if (bytes > resourceBytesLimit) throw new Fault("invalid", "resource snapshot exceeds 64 MiB");
+      }
+      const resources = payload.resources.map((entry) => this.resources.retain(entry, Buffer.from(entry.bytes)));
       return this.projects.create({ ...create.data, files: sources(create.data.files) }, resources);
     });
   }

@@ -1,5 +1,7 @@
 import { z } from "zod";
 export const resourceLimit = 6 * 1024 * 1024;
+export const resourceCountLimit = 64;
+export const resourceBytesLimit = 64 * 1024 * 1024;
 export const resourcePath = z
   .string()
   .max(240)
