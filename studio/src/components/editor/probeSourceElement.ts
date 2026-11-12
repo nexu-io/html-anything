@@ -52,12 +52,22 @@ function requestFailure(error: unknown): SourceProbeFailure {
   return error instanceof TypeError || (error as { name?: string })?.name === "TimeoutError" ? "connection-failed" : "check-failed";
 }
 
+function sourceMatches(root: ParentNode, selector: string): Element[] {
+  const matches = Array.from(root.querySelectorAll(selector));
+  if (matches.length) return matches;
+  for (const template of root.querySelectorAll<HTMLTemplateElement>("template")) {
+    const nested = sourceMatches(template.content, selector);
+    if (nested.length) return nested;
+  }
+  return [];
+}
+
 function findSourceElement(doc: Document, target: ProbeTarget): Element | null {
   const attrValue = (value: string) => value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-  const byHfId = target.hfId && doc.querySelector(`[data-hf-id="${attrValue(target.hfId)}"]`);
-  const byId = target.id && doc.getElementById(target.id);
+  const byHfId = target.hfId && sourceMatches(doc, `[data-hf-id="${attrValue(target.hfId)}"]`)[0];
+  const byId = target.id && sourceMatches(doc, `[id="${attrValue(target.id)}"]`)[0];
   if (byHfId || byId) return byHfId || byId || null;
-  return target.selector ? doc.querySelectorAll(target.selector)[target.selectorIndex ?? 0] ?? null : null;
+  return target.selector ? sourceMatches(doc, target.selector)[target.selectorIndex ?? 0] ?? null : null;
 }
 
 async function diagnoseMissingTargets(projectId: string, sourceFile: string, targets: ProbeTarget[]): Promise<SourceProbeFailure[]> {

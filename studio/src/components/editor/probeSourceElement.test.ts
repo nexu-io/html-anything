@@ -31,6 +31,19 @@ describe("probeSourceElement", () => {
     expect(fetchMock.mock.calls.every(call => call[1]?.method === "POST")).toBe(true);
   });
 
+  it("finds rejected SVG targets inside nested native composition templates", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (_url: unknown, init?: RequestInit) => init?.method === "POST"
+      ? answer({ exists: [false, false] })
+      : answer({ content: '<template id="scene"><div><template><svg id="chart" data-hf-id="hf-chart"><rect class="bar"/></svg></template></div></template>' })));
+    expect(await Promise.all([
+      probeSourceElement("p", "compositions/chart.html", { id: "chart", hfId: "hf-chart" }),
+      probeSourceElement("p", "compositions/chart.html", { selector: ".bar", selectorIndex: 0 }),
+    ])).toEqual([
+      { exists: false, failure: "unsupported-element" },
+      { exists: false, failure: "unsupported-element" },
+    ]);
+  });
+
   it.each([404, 403, 503])("reports source read status %s without attributing it to generated content", async status => {
     vi.stubGlobal("fetch", vi.fn(async (_url: unknown, init?: RequestInit) => init?.method === "POST"
       ? answer({ exists: [false] }) : answer({}, status)));
