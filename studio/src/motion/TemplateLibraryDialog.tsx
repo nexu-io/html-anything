@@ -166,7 +166,7 @@ export function TemplateLibraryDialog(props: Props) {
   // and never mid-composition or before the catalogue has loaded. Each new keyword gets a new search id.
   const settleSearch = () => {
     const keyword = query.trim();
-    if (!keyword || keyword === reportedQuery.current || composing.current || loading || !catalog.length) return;
+    if (!keyword || keyword === reportedQuery.current || composing.current || loading || !shown.current) return;
     const id = tracking.newTrackingId(); reportedQuery.current = keyword; searchId.current = id;
     tracking.reportSearchResult(id, query, visible.length, { sort, filterCount }, props.projectId);
   };
