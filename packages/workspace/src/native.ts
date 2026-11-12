@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { Fault, type Resource, type SourceFile, validateSourcePath } from "./contract.js";
+import { Fault, type Resource, type SourceFile, sourceLimits, validateSourcePath } from "./contract.js";
 import { resource, resourceBytesLimit, resourceCountLimit } from "./resources/contract.js";
 
 export function sources(input: SourceFile[]): SourceFile[] {
@@ -13,7 +13,7 @@ export function sources(input: SourceFile[]): SourceFile[] {
         throw new Fault("invalid", "native source must be valid UTF-8 text");
       paths.add(entry.path);
       bytes += Buffer.byteLength(entry.content);
-      if (bytes > 4 * 1024 * 1024) throw new Fault("invalid", "native source snapshot exceeds 4 MiB");
+      if (bytes > sourceLimits.bytes) throw new Fault("invalid", "native source snapshot exceeds 4 MiB");
       return { path: entry.path, content: entry.content };
     })
     .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));

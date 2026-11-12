@@ -1,0 +1,35 @@
+{
+  "name": "@open-motion/portable",
+  "private": true,
+  "type": "module",
+  "description": "Bounded native-content ZIP identity and streaming codec; no runtime or project authority",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run -c vitest.config.ts",
+    "build": "node esbuild.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly && tsc -p tsconfig.tests.json"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./contract": {
+      "types": "./dist/contract.d.ts",
+      "default": "./dist/contract.mjs"
+    }
+  },
+  "dependencies": {
+    "@open-motion/workspace": "workspace:*",
+    "yauzl": "3.4.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "@types/yauzl": "3.4.0",
+    "esbuild": "0.28.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.6",
+    "@odsuite/sidecar": "workspace:*",
+    "@odsuite/protocol": "workspace:*"
+  }
+}
