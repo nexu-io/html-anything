@@ -6,6 +6,8 @@ import { StudioHostContext, useStudioHost } from "../motion/StudioHost";
 import { createRoot } from "react-dom/client";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
+vi.mock('../motion/diagnostics', () => ({ recordBrowserDiagnostic: vi.fn(), browserDiagnostics: () => [], nextDiagnosticRequest: () => 'fixture-request', diagnosticsActive: () => false }));
+
 vi.mock("../utils/studioTelemetry", () => ({ trackStudioEvent: vi.fn() }));
 vi.mock("../telemetry/policy", () => ({ browserTelemetryAllowed: () => true }));
 vi.mock("../telemetry/events", () => ({

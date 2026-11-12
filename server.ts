@@ -30,9 +30,10 @@ import { studioEvents } from './tracking/events.ts';
 import { nativeRuntimeStatus, startNativePreparation, requireNativeRuntime } from './scripts/npm-runtime.mjs';
 import { nativeRouteCapability } from './shared/native-runtime.ts';
 import { validPending } from './tracking/core.ts';
+import { collectDiagnostics, diagnosticLimits, recordDiagnostic } from './scripts/diagnostics.mjs';
 
 const sharedStore = new WorkspaceStore();
-export type Service = { studio?: Studio; runtimeRoot?: string; nativeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
+export type Service = { diagnostics?: { running: boolean; lastExport: number; events: number; window: number }; studio?: Studio; runtimeRoot?: string; nativeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
 const service: Service = {};
 const working = new Set<string>();
 const runningExports = new Map<string, AbortController>();
@@ -96,6 +97,8 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tra
     if (finished.state === 'cancelled') await rm(output, { force: true });
   } catch (error) {
     if (!job) throw error;
+    await recordDiagnostic(store.directory, { kind: 'export_failed', jobId: job.id, projectId: job.projectId,
+      message: error instanceof Error ? error.message : 'Render failed' });
     await rm(path.join(store.directory, 'exports', job.id + '.mp4'), { force: true });
     const current = await store.job(job.id);
     if (current && ['running', 'cancelling'].includes(current.state)) await store.finishExport(job.id, job.token!, error instanceof Error ? error.message : '渲染失败');
@@ -254,6 +257,35 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     }
     if (motionRequest) url.pathname = url.pathname.replace(/^\/(?:motion|design)-api\//, '/api/');
     const editorUrl = `http://${host || 'localhost'}/#project/${store.projectId}`;
+    if (motionRequest && ['/api/diagnostics', '/api/diagnostics/events'].includes(url.pathname)) {
+      // Downloads are POST-only: cross-origin links must not trigger a collection.
+      if (req.method !== 'POST') return json(res, 405, { error: 'POST_REQUIRED' });
+      if (req.headers['sec-fetch-site'] === 'cross-site' || url.search) return json(res, 403, { error: 'DIAGNOSTIC_SCOPE_REJECTED' });
+      const data = await input(req, 32 * 1024);
+      if (!data || Object.keys(data).some(key => key !== 'errors') || !Array.isArray(data.errors) || data.errors.length > (url.pathname.endsWith('/events') ? 20 : 60)
+        || !data.errors.every((entry: any) => entry && typeof entry === 'object' && !Array.isArray(entry) && Object.keys(entry).every(key => ['time', 'kind', 'message', 'stack'].includes(key))
+          && Object.values(entry).every(value => typeof value === 'string' && value.length <= 4096))) return json(res, 400, { error: 'INVALID_DIAGNOSTIC_INPUT' });
+      const state = context.diagnostics ??= { running: false, lastExport: 0, events: 0, window: Date.now() };
+      const directory = (store.workspaceStore ?? store).directory;
+      if (url.pathname.endsWith('/events')) {
+        if (Date.now() - state.window > 60_000) { state.events = 0; state.window = Date.now(); }
+        if (state.events + data.errors.length > 60) return json(res, 429, { error: 'DIAGNOSTIC_RATE_LIMITED' });
+        state.events += data.errors.length;
+        await recordDiagnostic(directory, data.errors);
+        return json(res, 200, { accepted: data.errors.length });
+      }
+      if (state.running || Date.now() - state.lastExport < diagnosticLimits.cooldownMs) {
+        res.setHeader('Retry-After', '30');
+        return json(res, 429, { error: 'DIAGNOSTIC_RATE_LIMITED' });
+      }
+      state.running = true; state.lastExport = Date.now();
+      try {
+        const result = await collectDiagnostics({ appRoot: context.nativeRoot ?? pluginRoot, dataDirectory: directory, browserErrors: data.errors });
+        res.writeHead(200, { 'Content-Type': 'application/zip', 'Content-Disposition': `attachment; filename="${result.filename}"`,
+          'Content-Length': result.data.length, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+        res.end(result.data); return;
+      } finally { state.running = false; }
+    }
     if (motionRequest && url.pathname === '/api/runtime' && ['GET', 'POST'].includes(req.method!)) {
       const root = context.nativeRoot ?? pluginRoot;
       if (req.method === 'POST') {

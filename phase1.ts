@@ -1,4 +1,5 @@
 import { requireNativeRuntime } from './scripts/npm-runtime.mjs';
+import { recordDiagnostic } from './scripts/diagnostics.mjs';
 import { MAX_ASSET_BYTES, isAssetFileWithinLimit } from './shared/asset-limits.ts';
 import { createHash } from 'node:crypto';
 import { constants } from 'node:fs';
@@ -88,6 +89,8 @@ export class Phase1Service {
         this.restoreErrors.set(args.projectId, { requestId: args.requestId, message: errorText(error) });
       }
       trackPhase1Result(this.context.tracking, name, args, undefined, error);
+      await recordDiagnostic(this.store.directory, { kind: 'mcp_failure', tool: name, requestId: args?.requestId,
+        projectId: args?.projectId, message: errorText(error), stack: error instanceof Error ? error.stack : undefined });
       throw error;
     }
   }

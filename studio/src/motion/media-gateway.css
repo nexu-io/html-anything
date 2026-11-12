@@ -5,9 +5,9 @@
 .motion-media-surface h3 { color: var(--motion-strong); font-size: 14px; font-weight: 600; margin: 0 0 12px; }
 .motion-media-surface small { display: block; font-size: 11px; }
 .motion-media-surface header small { letter-spacing: .12em; color: var(--motion-accent); }
-.motion-media-surface button, .motion-empty-media-actions button, .motion-timeline-media-actions button, .motion-asset-generate { min-height: 32px; padding: 6px 12px; border: 1px solid var(--motion-border); border-radius: 8px; background: var(--motion-panel); color: var(--motion-text); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
-.motion-media-surface button:hover, .motion-empty-media-actions button:hover, .motion-timeline-media-actions button:hover, .motion-asset-generate:hover { background: var(--motion-hover); }
-.motion-media-surface button:disabled, .motion-timeline-media-actions button:disabled { cursor: default; opacity: .5; }
+.motion-media-surface button, .motion-diagnostic-export button, .motion-empty-media-actions button, .motion-timeline-media-actions button, .motion-asset-generate { min-height: 32px; padding: 6px 12px; border: 1px solid var(--motion-border); border-radius: 8px; background: var(--motion-panel); color: var(--motion-text); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.motion-media-surface button:hover, .motion-diagnostic-export button:hover, .motion-empty-media-actions button:hover, .motion-timeline-media-actions button:hover, .motion-asset-generate:hover { background: var(--motion-hover); }
+.motion-media-surface button:disabled, .motion-diagnostic-export button:disabled, .motion-timeline-media-actions button:disabled { cursor: default; opacity: .5; }
 .motion-media-surface .motion-media-primary, .motion-empty-media-actions .motion-media-primary { color: var(--motion-on-action); background: var(--motion-action); border-color: var(--motion-action); }
 .motion-media-surface .motion-media-primary:hover, .motion-empty-media-actions .motion-media-primary:hover { background: var(--motion-action-hover); }
 .motion-media-surface .motion-media-close { border: 0; background: transparent; font-size: 22px; line-height: 1; padding: 4px; width: 32px; }
@@ -24,6 +24,15 @@
 .motion-media-surface details[open] summary { margin-bottom: 8px; }
 .motion-model-dialog { position: fixed; inset: 0; margin: auto; width: min(960px, calc(100vw - 40px)); max-height: calc(100dvh - 48px); padding: 24px; overflow: auto; }
 .motion-privacy-dialog { width: min(520px, calc(100vw - 40px)); }
+.motion-privacy-dialog header { margin-bottom: 24px; }
+.motion-privacy-dialog section, .motion-privacy-dialog .motion-diagnostic-export { display: grid; gap: 12px; min-width: 0; }
+.motion-privacy-dialog p { margin: 0; line-height: 1.65; }
+.motion-privacy-dialog section > .motion-media-toggle { gap: 8px; font-size: 13px; font-weight: 600; color: var(--motion-strong); }
+.motion-privacy-dialog .motion-diagnostic-export > button { justify-self: start; }
+.motion-privacy-dialog .motion-diagnostic-export [role=status] { padding: 12px; border-radius: 8px; background: var(--motion-inset); font-size: 12px; }
+.motion-diagnostic-filename { display: block; overflow-wrap: anywhere; }
+.motion-privacy-dialog .motion-diagnostic-filename { margin-top: 6px; color: var(--motion-muted); }
+.motion-privacy-dialog [role=alert] { color: var(--motion-danger); overflow-wrap: anywhere; }
 .motion-model-dialog::backdrop { background: var(--motion-overlay); backdrop-filter: blur(3px); }
 .motion-model-dialog section + section { border-top: 1px solid var(--motion-border); margin-top: 24px; padding-top: 20px; }
 .motion-model-routes select { min-height: 36px; }

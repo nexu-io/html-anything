@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { motionApi } from './useWorkspace';
 import { setMotionTrackingEnabled } from './tracking';
+import { DiagnosticExport } from './DiagnosticExport';
 
 type Status = { enabled: boolean; preference: boolean; locked: boolean; reason?: 'test_build' | 'environment' | null };
 export function PrivacySettings({ onClose }: { onClose: () => void }) {
@@ -31,5 +32,6 @@ export function PrivacySettings({ onClose }: { onClose: () => void }) {
       {status?.locked && <p role="status">{t(status.reason === 'test_build' ? 'Usage data collection is disabled in test builds.' : 'Disabled by your environment settings.')}</p>}
       {error && <p role="alert">{error}</p>}
     </section>
+    <section><DiagnosticExport /></section>
   </dialog>;
 }

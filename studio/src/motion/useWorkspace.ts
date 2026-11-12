@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { projectHref, sessionHref } from './workspaceRouting';
 import type { CreativeSession, CreationMode } from '../../../shared/session';
 import { preservePresentation } from '../../../shared/workspace-url';
+import { diagnosticFetch } from './diagnosticRequests';
 
 export type SavedProject = { id: string; title: string; templateId?: string; createdAt?: number; openedAt?: number };
 type Job = { id: string; state: 'pending' | 'running' | 'completed' | 'failed'; error?: string };
@@ -9,7 +10,7 @@ export type WorkspaceStatus = { revision: string; projectId: string; projectTitl
   historyRestoreError?: { requestId: string; message: string } | null };
 export type ProjectCatalog = { activeId: string; projects: SavedProject[]; sessions?: CreativeSession[]; activeSessionId?: string };
 export async function motionApi<T>(path: string, init?: RequestInit, projectId?: string): Promise<T> {
-  const response = await fetch((path.startsWith('/sessions') || path.startsWith('/modes') ? '/design-api' : '/motion-api') + path
+  const response = await diagnosticFetch((path.startsWith('/sessions') || path.startsWith('/modes') ? '/design-api' : '/motion-api') + path
     + (projectId ? (path.includes('?') ? '&' : '?') + 'projectId=' + encodeURIComponent(projectId) : ''), init);
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || '本地工作室连接失败');

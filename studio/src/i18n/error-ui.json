@@ -31,7 +31,13 @@
     "The project changed elsewhere.": "工程已在其他地方修改",
     "Changes could not be saved.": "修改未能保存",
     "Action not completed. Please try again.": "操作未完成，请重试",
-    "Historical files are unavailable. Version not restored.": "历史文件不可用，未恢复该版本"
+    "Historical files are unavailable. Version not restored.": "历史文件不可用，未恢复该版本",
+    "Export diagnostic ZIP": "导出诊断 ZIP",
+    "Preparing diagnostics…": "正在整理诊断信息…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "日志会脱敏后保存到本机，不会上传。分享前请检查 ZIP 内容。",
+    "Please wait 30 seconds before exporting diagnostics again.": "请等待 30 秒后再次导出诊断信息。",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "无法导出诊断信息。工作室无法连接时可使用命令行。",
+    "Download started. Check your browser downloads.": "已发起下载，请查看浏览器下载列表。"
   },
   "ja": {
     "Reconnecting…": "再接続中…",
@@ -65,7 +71,13 @@
     "The project changed elsewhere.": "プロジェクトが別の場所で変更されました",
     "Changes could not be saved.": "変更を保存できませんでした",
     "Action not completed. Please try again.": "操作を完了できませんでした。再試行してください",
-    "Historical files are unavailable. Version not restored.": "履歴ファイルを利用できないため、復元されませんでした"
+    "Historical files are unavailable. Version not restored.": "履歴ファイルを利用できないため、復元されませんでした",
+    "Export diagnostic ZIP": "診断 ZIP を書き出す",
+    "Preparing diagnostics…": "診断情報を準備中…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "機密情報を伏せたログを端末に保存します。アップロードは行いません。共有前に ZIP の内容をご確認ください。",
+    "Please wait 30 seconds before exporting diagnostics again.": "診断情報を再度書き出すには 30 秒お待ちください。",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "診断情報を書き出せませんでした。Studio に接続できない場合はコマンドラインをご利用ください。",
+    "Download started. Check your browser downloads.": "ダウンロードを開始しました。ブラウザーのダウンロード一覧をご確認ください。"
   },
   "ko": {
     "Reconnecting…": "다시 연결 중…",
@@ -99,7 +111,13 @@
     "The project changed elsewhere.": "프로젝트가 다른 곳에서 변경되었습니다",
     "Changes could not be saved.": "변경 사항을 저장하지 못했습니다",
     "Action not completed. Please try again.": "작업을 완료하지 못했습니다. 다시 시도하세요",
-    "Historical files are unavailable. Version not restored.": "이전 버전 파일을 사용할 수 없어 복원되지 않았습니다"
+    "Historical files are unavailable. Version not restored.": "이전 버전 파일을 사용할 수 없어 복원되지 않았습니다",
+    "Export diagnostic ZIP": "진단 ZIP 내보내기",
+    "Preparing diagnostics…": "진단 정보 준비 중…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "민감한 값을 가린 로그를 기기에 저장합니다. 업로드하지 않습니다. 공유 전에 ZIP 내용을 확인하세요.",
+    "Please wait 30 seconds before exporting diagnostics again.": "진단 정보를 다시 내보내려면 30초 기다려 주세요.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "진단 정보를 내보낼 수 없습니다. Studio에 연결할 수 없으면 명령줄을 사용하세요.",
+    "Download started. Check your browser downloads.": "다운로드를 시작했습니다. 브라우저의 다운로드 목록을 확인하세요."
   },
   "de": {
     "Reconnecting…": "Verbindung wird hergestellt…",
@@ -133,7 +151,13 @@
     "The project changed elsewhere.": "Projekt wurde andernorts geändert.",
     "Changes could not be saved.": "Änderungen konnten nicht gespeichert werden.",
     "Action not completed. Please try again.": "Vorgang nicht abgeschlossen. Bitte erneut versuchen.",
-    "Historical files are unavailable. Version not restored.": "Verlaufsdateien nicht verfügbar. Version nicht wiederhergestellt."
+    "Historical files are unavailable. Version not restored.": "Verlaufsdateien nicht verfügbar. Version nicht wiederhergestellt.",
+    "Export diagnostic ZIP": "Diagnose-ZIP exportieren",
+    "Preparing diagnostics…": "Diagnosedaten werden vorbereitet…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Speichert Protokolle mit unkenntlich gemachten vertraulichen Werten auf Ihrem Gerät. Kein Upload. Prüfen Sie die ZIP vor dem Teilen.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Bitte warten Sie 30 Sekunden, bevor Sie erneut Diagnosedaten exportieren.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Diagnosedaten konnten nicht exportiert werden. Nutzen Sie die Befehlszeile, wenn Studio keine Verbindung herstellen kann.",
+    "Download started. Check your browser downloads.": "Download gestartet. Prüfe die Downloadliste deines Browsers."
   },
   "fr": {
     "Reconnecting…": "Reconnexion…",
@@ -167,7 +191,13 @@
     "The project changed elsewhere.": "Le projet a été modifié ailleurs.",
     "Changes could not be saved.": "Impossible d’enregistrer les modifications.",
     "Action not completed. Please try again.": "Opération non terminée. Réessayez.",
-    "Historical files are unavailable. Version not restored.": "Fichiers historiques indisponibles. Version non restaurée."
+    "Historical files are unavailable. Version not restored.": "Fichiers historiques indisponibles. Version non restaurée.",
+    "Export diagnostic ZIP": "Exporter le ZIP de diagnostic",
+    "Preparing diagnostics…": "Préparation du diagnostic…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Enregistre les journaux sur votre appareil en masquant les valeurs sensibles. Aucun envoi. Vérifiez le ZIP avant de le partager.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Veuillez patienter 30 secondes avant de réexporter le diagnostic.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Impossible d’exporter le diagnostic. Utilisez la ligne de commande si Studio ne peut pas se connecter.",
+    "Download started. Check your browser downloads.": "Téléchargement lancé. Consultez les téléchargements de votre navigateur."
   },
   "es": {
     "Reconnecting…": "Reconectando…",
@@ -201,7 +231,13 @@
     "The project changed elsewhere.": "El proyecto se modificó en otro lugar.",
     "Changes could not be saved.": "No se pudieron guardar los cambios.",
     "Action not completed. Please try again.": "Operación incompleta. Inténtalo de nuevo.",
-    "Historical files are unavailable. Version not restored.": "Archivos históricos no disponibles. Versión no restaurada."
+    "Historical files are unavailable. Version not restored.": "Archivos históricos no disponibles. Versión no restaurada.",
+    "Export diagnostic ZIP": "Exportar ZIP de diagnóstico",
+    "Preparing diagnostics…": "Preparando diagnóstico…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Guarda los registros en tu dispositivo con los valores sensibles ocultos. No se suben. Revisa el ZIP antes de compartirlo.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Espera 30 segundos antes de volver a exportar el diagnóstico.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "No se pudo exportar el diagnóstico. Usa la línea de comandos si Studio no puede conectarse.",
+    "Download started. Check your browser downloads.": "Descarga iniciada. Revisa las descargas de tu navegador."
   },
   "pt-BR": {
     "Reconnecting…": "Reconectando…",
@@ -235,7 +271,13 @@
     "The project changed elsewhere.": "O projeto foi alterado em outro lugar.",
     "Changes could not be saved.": "Não foi possível salvar as alterações.",
     "Action not completed. Please try again.": "Operação não concluída. Tente novamente.",
-    "Historical files are unavailable. Version not restored.": "Arquivos históricos indisponíveis. Versão não restaurada."
+    "Historical files are unavailable. Version not restored.": "Arquivos históricos indisponíveis. Versão não restaurada.",
+    "Export diagnostic ZIP": "Exportar ZIP de diagnóstico",
+    "Preparing diagnostics…": "Preparando diagnóstico…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Salva os registros no seu dispositivo com valores sensíveis ocultos. Sem envio. Revise o ZIP antes de compartilhar.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Aguarde 30 segundos antes de exportar o diagnóstico novamente.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Não foi possível exportar o diagnóstico. Use a linha de comando se o Studio não conseguir se conectar.",
+    "Download started. Check your browser downloads.": "Download iniciado. Confira os downloads do navegador."
   },
   "it": {
     "Reconnecting…": "Riconnessione…",
@@ -269,7 +311,13 @@
     "The project changed elsewhere.": "Il progetto è stato modificato altrove.",
     "Changes could not be saved.": "Impossibile salvare le modifiche.",
     "Action not completed. Please try again.": "Operazione non completata. Riprova.",
-    "Historical files are unavailable. Version not restored.": "File storici non disponibili. Versione non ripristinata."
+    "Historical files are unavailable. Version not restored.": "File storici non disponibili. Versione non ripristinata.",
+    "Export diagnostic ZIP": "Esporta ZIP diagnostico",
+    "Preparing diagnostics…": "Preparazione della diagnostica…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Salva i log sul dispositivo oscurando i valori sensibili. Nessun caricamento. Controlla lo ZIP prima di condividerlo.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Attendi 30 secondi prima di esportare nuovamente la diagnostica.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Impossibile esportare la diagnostica. Usa la riga di comando se Studio non riesce a connettersi.",
+    "Download started. Check your browser downloads.": "Download avviato. Controlla i download del browser."
   },
   "ru": {
     "Reconnecting…": "Переподключение…",
@@ -303,7 +351,13 @@
     "The project changed elsewhere.": "Проект изменён в другом месте.",
     "Changes could not be saved.": "Не удалось сохранить изменения.",
     "Action not completed. Please try again.": "Операция не завершена. Повторите попытку.",
-    "Historical files are unavailable. Version not restored.": "Файлы истории недоступны. Версия не восстановлена."
+    "Historical files are unavailable. Version not restored.": "Файлы истории недоступны. Версия не восстановлена.",
+    "Export diagnostic ZIP": "Экспорт ZIP с диагностикой",
+    "Preparing diagnostics…": "Подготовка диагностики…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Журналы сохраняются на устройстве с маскировкой конфиденциальных данных. Отправки нет. Проверьте ZIP перед передачей.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Подождите 30 секунд перед повторным экспортом диагностики.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Не удалось экспортировать диагностику. Если Studio не подключается, используйте командную строку.",
+    "Download started. Check your browser downloads.": "Загрузка началась. Проверьте список загрузок браузера."
   },
   "tr": {
     "Reconnecting…": "Yeniden bağlanılıyor…",
@@ -337,6 +391,12 @@
     "The project changed elsewhere.": "Proje başka bir yerde değiştirildi.",
     "Changes could not be saved.": "Değişiklikler kaydedilemedi.",
     "Action not completed. Please try again.": "İşlem tamamlanamadı. Tekrar deneyin.",
-    "Historical files are unavailable. Version not restored.": "Geçmiş dosyaları kullanılamıyor. Sürüm geri yüklenmedi."
+    "Historical files are unavailable. Version not restored.": "Geçmiş dosyaları kullanılamıyor. Sürüm geri yüklenmedi.",
+    "Export diagnostic ZIP": "Tanılama ZIP dosyasını dışa aktar",
+    "Preparing diagnostics…": "Tanılama hazırlanıyor…",
+    "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Günlükleri hassas değerler gizlenmiş olarak cihazınıza kaydeder. Yükleme yapılmaz. Paylaşmadan önce ZIP içeriğini inceleyin.",
+    "Please wait 30 seconds before exporting diagnostics again.": "Tanılamayı yeniden dışa aktarmadan önce 30 saniye bekleyin.",
+    "Could not export diagnostics. Use the command line if Studio cannot connect.": "Tanılama dışa aktarılamadı. Studio bağlanamıyorsa komut satırını kullanın.",
+    "Download started. Check your browser downloads.": "İndirme başlatıldı. Tarayıcınızın indirme listesini kontrol edin."
   }
 }

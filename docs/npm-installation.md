@@ -132,6 +132,34 @@ If the terminal also fails, resolve DNS/proxy/network access first and report in
 
 References: [npmmirror](https://npmmirror.com/), [temporary npm configuration](https://docs.npmjs.com/cli/v11/using-npm/config/#environment-variables) and [npm ping](https://docs.npmjs.com/cli/v11/commands/npm-ping/).
 
+### Export a local diagnostic ZIP
+
+Test and stable packages share the same collector. Open **Privacy settings → Export diagnostic ZIP** in Studio; the crash screen also offers the export. It saves a local download and does not upload it. The action works while native downloads or the renderer are unavailable, provided the local backend is running.
+
+If Studio or MCP cannot connect, run the CLI from the same exact package and installation home used for setup:
+
+```sh
+openmotion diagnostics --home /absolute/installation-home --output /absolute/support.zip
+```
+
+The installed application also exposes `node /absolute/application/scripts/npm-installer.mjs diagnostics --home /absolute/installation-home --output /absolute/support.zip`. For a plugin, complete ZIP or source installation, use its actual data directory:
+
+```sh
+node /absolute/application/scripts/diagnostics.mjs --data-dir /absolute/project-data --output /absolute/support.zip
+```
+
+`--output` is optional; the default is a uniquely named ZIP in the current directory. Existing files are never overwritten. `diagnostics` collects local files without starting MCP, Studio, native downloads, a renderer or a recovery action. It can produce a partial report even when setup has not completed. The separate `diagnose` command below actively probes MCP and is not run by ZIP collection.
+
+The archive includes version/build identity, OS/CPU/Node and registered host names when available, native preparation status, a bounded sample of export-job metadata, existing service/render logs and local failure records. `files.json` identifies collected, missing, excluded and truncated files. Missing information is not a successful host-session check. Existing host application logs are not scanned; use that host's own log viewer for failures before OpenMotion starts. The collector does not inspect arbitrary files or include projects, media, conversations, full host/provider configuration or an environment dump.
+
+Local records cover installation failures after the home exists, phase-one MCP failures, export failures, displayed operation errors and browser/React crashes. They are independent of usage telemetry and work in test builds and with telemetry disabled. Studio also records page/browser identity, selected workspace and native edit/import/render HTTP requests, and diagnostic-download stages. Requests have page-local correlation IDs, fixed route categories, response status and time to response headers; no request/response bodies, headers, project IDs, file names or query values are recorded. Healthy reads under two seconds, playback/selection updates, asset traffic and cancelled reads are omitted. ZIP export records archive receipt and browser download dispatch separately; dispatch is not proof that the browser saved a file. These completion records appear in a subsequent ZIP or persisted CLI log, not in the ZIP already being downloaded.
+
+Browser records stay in memory first, with separate error (20 entries / 16 KiB) and activity (39 entries / 7 KiB) rings. Including the loss summary, UI export remains below 60 records / 24 KiB. At most 20 errors and 40 activity records are admitted per minute per page; repeated errors or failing/slow read routes are coalesced for 30 seconds. The UI archive separates `browser-errors.json` and `browser-activity.json`, including counters for omitted records and failed delivery. One timer batches local storage and backend delivery every five seconds while records are pending; there is no idle heartbeat. Page hide also attempts a flush. Delivery uses at most one request at a time, 20 records per batch and a three-second deadline, without retries. Logging is never awaited by the user operation. Backend ingestion appends a batch together and preserves event timestamps. A browser crash can lose the pending tail; offline CLI cannot recover records that never reached the backend. The backend retains the current and previous diagnostic log, each at most 128 KiB. Existing engine/service logs keep their current retention behavior; the ZIP only reads bounded tails. A crash before a record reaches disk, a failed outer npm download or a failure before the collector can run may leave no log; include reproduction steps and the host's own logs in those cases.
+
+Known secret values from the current process environment, common credential formats, authorization/cookie values, URL details, email addresses and local paths are redacted before export. New local diagnostic records are also redacted before storage. Arbitrary private text embedded in an existing error log cannot be classified perfectly: **review the ZIP before sharing**. There is no automatic cloud upload.
+
+The HTTP route accepts same-origin POST requests only, with a fixed collection scope, bounded input, one collection at a time and a 30-second cooldown. It returns the ZIP directly without saving server-side archives. Reads skip symlinks and non-regular files; log tails are limited to 128 KiB each, log/archive inputs are bounded, directory scans stop at 100 entries and at most five sampled jobs are included. Local browser-event ingestion is limited to 60 records per minute across pages; excess delivery can be dropped without affecting editing. These controls contain accidental repeated clicks and remote requests; a user with local shell access can still run the CLI repeatedly and consume their own disk space. Export does not grant access beyond the local account's existing permissions.
+
 ### Missing MCP tools or a failed connection
 
 Run the installed CLI with the same application home and selected host:

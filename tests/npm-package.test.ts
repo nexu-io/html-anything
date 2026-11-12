@@ -118,8 +118,12 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert(entries.includes('skills/motion-recreate/references/verify.md'));
     assert(entries.includes('studio/build/index.html'));
     assert(entries.includes('shared/editor-launch.pl'), 'macOS shared editor launcher must ship');
-    for (const script of ['lint-project.mjs', 'npm-installer.mjs', 'npm-hosts.mjs', 'check-installed-mcp.mjs', 'install-onboarding.mjs', 'onboarding-catalog.ts']) assert(entries.includes('scripts/' + script), 'Runtime diagnostic and lint entry must ship: ' + script);
+    for (const script of ['lint-project.mjs', 'npm-installer.mjs', 'npm-hosts.mjs', 'check-installed-mcp.mjs', 'diagnostics.mjs', 'zip.mjs', 'diagnostic-redaction.mjs', 'install-onboarding.mjs', 'onboarding-catalog.ts']) assert(entries.includes('scripts/' + script), 'Runtime diagnostic and lint entry must ship: ' + script);
     await readFile(path.join(installer, 'package/scripts/check-installed-mcp.mjs'));
+    const diagnosticFile = path.join(directory, 'packaged-diagnostics.zip');
+    await runFile(process.execPath, [cli, 'diagnostics', '--home', path.join(directory, 'not-installed'), '--output', diagnosticFile]);
+    assert.match(await runFile('unzip', ['-p', diagnosticFile, 'metadata.json']), new RegExp(version.replaceAll('.', '\\.')));
+    assert.equal((await json(path.join(application, 'shared/build-info.json'))).commit, release.commit);
     assert(entries.includes('shared/workflow-entry.js'), 'Workflow discovery must ship with the five Skills');
     assert(!entries.split('\n').some(file => file.split('/').some(part => part.startsWith('._'))), 'Do not distribute macOS file metadata');
     assert(entries.includes('template-library/NOTICE.md'));
@@ -158,6 +162,9 @@ test('stable artifacts stage publication instead of replacing latest and retain 
     const metadata = await json(path.join(directory, 'npm/package/package.json'));
     assert.equal((await json(built.manifest)).templateEnvironment, 'prod');
     const application = path.join(directory, 'app'); await extractArchive(built.application, application);
+    const diagnosticFile = path.join(directory, 'stable-diagnostics.zip');
+    await runFile(process.execPath, [path.join(application, 'scripts/diagnostics.mjs'), '--data-dir', path.join(directory, 'missing-data'), '--output', diagnosticFile]);
+    assert.match(await runFile('unzip', ['-p', diagnosticFile, 'metadata.json']), /"version": "0\.6\.4"/);
     await verifyTrackingPolicy(application, 'stable');
     assert.equal(metadata.version, '0.6.4'); assert.equal(metadata.private, false); assert.equal(metadata.publishConfig.tag, 'stage');
     assert.equal((await json('package.json')).private, true);

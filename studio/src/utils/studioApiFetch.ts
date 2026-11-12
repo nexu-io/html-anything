@@ -1,5 +1,6 @@
 import { STUDIO_API_SAME_ORIGIN_CREDENTIALS } from "../components/editor/manualEditingAvailability";
 import { parseProjectIdFromHash } from './projectRouting';
+import { diagnosticFetch } from '../motion/diagnosticRequests';
 
 const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
 
@@ -10,7 +11,7 @@ function studioApiCredentials(): RequestCredentials {
 }
 
 export function studioApiFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-  return globalThis.fetch(typeof input === 'string' ? studioProjectUrl(input) : input, { ...init, credentials: studioApiCredentials() });
+  return diagnosticFetch(typeof input === 'string' ? studioProjectUrl(input) : input, { ...init, credentials: studioApiCredentials() });
 }
 
 export function studioProjectUrl(input: string, projectId?: string | null): string {

@@ -81,3 +81,7 @@ node scripts/smoke-test-package.mjs <最终ZIP路径> .tools/codex-cli/node_modu
 ```
 
 同一 Linux 构建机将 target 改为 win-x64 即可装配 Windows 包。目标机只执行 smoke，不重新打包。验证从含空格与中文的新路径展开最终 ZIP，使用系统临时目录中的独立 Codex 配置和工程目录，检查原生安装、最小 PATH 下 MCP 握手、模板、工作流、Studio HTTP，以及有声音、有运动的 1 秒 MP4 和成片技术检查；验收使用显式 `PORT` 配置，否则由系统分配临时空闲端口；不固定占用 54900，避免共享 Windows runner 的其他服务冲突。验收在首次启动时保存进程归属，避免后续预览复用覆盖登记后遗留服务；结束时按版本和工程目录校验后，只清理测试自身创建的进程。模型回合、独立播放器、旧系统及跨版本回退不由此代替。
+
+## Local diagnostic handoff
+
+Test and stable packages both include the local diagnostic ZIP collector. In Studio use Privacy settings → Export diagnostic ZIP; without a working Studio/MCP connection use `openmotion diagnostics --home /absolute/installation-home --output /absolute/support.zip` from the exact installed package. Plugin/complete-ZIP users can run the shipped `scripts/diagnostics.mjs` with `--data-dir`. Collection is local, bounded and redacted, and does not publish/upload data or run an MCP probe. Review the ZIP before sharing, include reproduction steps, and keep its exact version/build identity with the defect. See [scope, commands and limits](npm-installation.md#export-a-local-diagnostic-zip).
