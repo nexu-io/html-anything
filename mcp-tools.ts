@@ -58,7 +58,7 @@ export const tools = [
     inputSchema: { type: 'object', properties: { expectedRevision: revision, files: { type: 'array', minItems: 1, maxItems: 100, items: {
       type: 'object', properties: { path: { type: 'string' }, content: { type: 'string' } }, required: ['path', 'content'], additionalProperties: false,
     } } }, required: ['expectedRevision', 'files'], additionalProperties: false }, annotations: writes },
-  { name: 'motion_import_asset', description: 'Copy a local media, font or reference file into the native project assets directory. Use its relative path in Hyperframes HTML. Supports video, audio and images; no base64 media in tool responses.',
+  { name: 'motion_import_asset', description: 'Copy a local media, font or reference file, at most 500 MB (500000000 bytes), into the native project assets directory. Use its relative path in Hyperframes HTML. Supports video, audio and images; no base64 media in tool responses.',
     inputSchema: { type: 'object', properties: { expectedRevision: revision, sourcePath: { type: 'string', description: 'Absolute local source path' }, targetPath: { type: 'string', description: 'Project-relative destination under assets/' } }, required: ['expectedRevision', 'sourcePath', 'targetPath'], additionalProperties: false }, annotations: writes },
   { name: 'motion_inspect_project', description: 'Delegate project inspection to the pinned Hyperframes CLI. info returns composition metadata, timeline returns native clips and timing, lint returns official syntax/runtime-contract diagnostics. Fix lint errors before rendering.',
     inputSchema: { type: 'object', properties: { view: { enum: ['info', 'timeline', 'lint'] } }, required: ['view'], additionalProperties: false }, annotations: reads },

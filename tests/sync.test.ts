@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, symlink, truncate, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { WorkspaceStore, Conflict } from '../workspace.ts';
 import { callTool } from '../mcp.ts';
@@ -49,6 +49,10 @@ test('asset imports are local files and their content participates in revisions'
   assert.notEqual(next.revision, first.revision);
   assert.deepEqual(await readFile(path.join(store.projectDirectory, 'assets/audio.wav')), Buffer.from([1, 2, 3, 4]));
   await assert.rejects(store.importAsset(next.revision, source, '../outside.wav'));
+  await truncate(source, 500_000_001);
+  await assert.rejects(store.importAsset(next.revision, source, 'assets/audio.wav'), /500 MB/);
+  assert.equal((await store.get()).revision, next.revision);
+  assert.deepEqual(await readFile(path.join(store.projectDirectory, 'assets/audio.wav')), Buffer.from([1, 2, 3, 4]));
   await writeFile(path.join(store.projectDirectory, 'assets/audio.wav'), Buffer.from([4, 3, 2, 1]));
   assert.notEqual((await store.get()).revision, next.revision);
 }));

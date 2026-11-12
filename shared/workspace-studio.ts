@@ -7,6 +7,7 @@ import { WorkspaceStore } from '../workspace.ts';
 import { HYPERFRAMES_VERSION, repairGeneratedRegistry } from '../hyperframes.ts';
 import { isMain } from './entry.ts';
 import { withAvailableHistorySteps } from './studio-history-availability.ts';
+import { MAX_ASSET_BYTES } from './asset-limits.ts';
 
 export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: string, initialDirectory: string, port: number) {
   const require = createRequire(path.join(runtimeRoot, 'package.json'));
@@ -19,6 +20,8 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
   const { createStudioServer } = await import(pathToFileURL(path.join(cli, 'dist', bundles[0])).href);
   if (typeof createStudioServer !== 'function') throw new Error('Hyperframes workspace host factory is unavailable');
   const { getRequestListener } = await import(pathToFileURL(require.resolve('@hono/node-server')).href);
+  const { Hono } = await import(pathToFileURL(require.resolve('hono')).href);
+  const { bodyLimit } = await import(pathToFileURL(require.resolve('hono/body-limit')).href);
   const historyModule = path.join(path.dirname(require.resolve('@hyperframes/studio-server/package.json')), 'dist/history/index.js');
   const { DEFAULT_HISTORY_ROOT } = await import(pathToFileURL(historyModule).href);
   const historyRoot = process.env.HYPERFRAMES_HISTORY_ROOT ?? DEFAULT_HISTORY_ROOT;
@@ -36,6 +39,11 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
         if (closing) throw new Error('Studio is stopping');
         const host = createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
           origin: () => origin, historyRoot });
+        const nativeApp = host.app;
+        host.app = new Hono().post('/api/projects/:id/upload', bodyLimit({
+          maxSize: MAX_ASSET_BYTES,
+          onError: c => c.json({ error: 'Upload exceeds 500 MB (500000000 bytes)', maxBytes: MAX_ASSET_BYTES }, 413),
+        }), c => nativeApp.fetch(c.req.raw)).all('*', c => nativeApp.fetch(c.req.raw));
         const openHistory = host.adapter.history;
         const histories = new WeakMap();
         host.adapter.history = async () => {

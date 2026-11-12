@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { isAssetFileWithinLimit } from './shared/asset-limits.ts';
 import { createReadStream, existsSync, readFileSync } from 'node:fs';
 import os from 'node:os';
 import { copyFile, cp, lstat, mkdir, open, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises';
@@ -315,7 +316,7 @@ export class WorkspaceStore {
     projectPath(targetPath);
     if (!targetPath.startsWith('assets/')) throw new Error('素材目标必须位于 assets/');
     const source = await stat(sourcePath);
-    if (!source.isFile() || source.size > 2 * 1024 ** 3) throw new Error('素材必须是小于 2 GB 的文件');
+    if (!isAssetFileWithinLimit(source)) throw new Error('素材必须是不超过 500 MB（500000000 字节）的文件');
     return this.lock(async () => {
       if ((await this.get()).revision !== expectedRevision) throw new Conflict();
       const target = await this.safePath(targetPath);
@@ -323,6 +324,7 @@ export class WorkspaceStore {
       const temporary = path.join(path.dirname(target), '.motion-import-' + crypto.randomUUID());
       try {
         await copyFile(sourcePath, temporary);
+        if (!isAssetFileWithinLimit(await stat(temporary))) throw new Error('素材必须是不超过 500 MB（500000000 字节）的文件');
         if ((await this.get()).revision !== expectedRevision) throw new Conflict();
         await rename(temporary, target);
       } finally { await rm(temporary, { force: true }); }

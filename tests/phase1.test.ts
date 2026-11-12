@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, writeFile, rm, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, rm, mkdir, stat, truncate } from 'node:fs/promises';
 import path from 'node:path';
 import { fixture } from './fixtures.ts';
 import { Phase1Service } from '../phase1.ts';
@@ -9,6 +9,7 @@ import { cancelExport } from '../server.ts';
 import { atomicJson, fileHash, recoverProjectTransactions } from '../phase1-versions.ts';
 import { validateInput, phase1Tools } from '../shared/phase1-tools.ts';
 import { transport } from './http.ts';
+import { MAX_ASSET_BYTES, isAssetFileWithinLimit } from '../shared/asset-limits.ts';
 
 function api(store: any) { return new Phase1Service(store, pluginRoot, {
   origin: () => 'http://127.0.0.1:4173', nativeUrl: () => undefined, openProject: async () => {},
@@ -22,9 +23,21 @@ const edit = (service: Phase1Service, p: any, content: string) => service.call('
   expectedVersionId: p.version.versionId, files: [{ path: 'note.txt', content }],
 });
 
+test('asset limits enforce decimal 500 MB without rounding', () => fixture(async store => {
+  assert.equal(MAX_ASSET_BYTES, 500_000_000);
+  const file = path.join(store.directory, 'sparse-media');
+  await writeFile(file, '');
+  for (const [size, accepted] of [[499_999_999, true], [500_000_000, true], [500_000_001, false], [500_500_000, false], [524_288_000, false]] as const) {
+    await truncate(file, size);
+    assert.equal(isAssetFileWithinLimit(await stat(file)), accepted, String(size));
+  }
+  assert.equal(isAssetFileWithinLimit(await stat(store.directory)), false);
+}, false));
+
 test('phase1 validates real inputs before effects, creates idempotently and pages without switching', () => fixture(async store => {
   const service = api(store), p = await create(service, 'first');
   assert.equal(p.version.versionNumber, 1); assert.equal(p.filmComplete, false);
+  assert.equal(p.limits.assetBytes, MAX_ASSET_BYTES);
   await assert.rejects(service.call('motion_create_project', { requestId: 'mixed-sources', projectType: 'natural_language', title: 'x', requirements: 'x', templateId: 'nyt-graph' }), /INVALID_ARGUMENT/);
   await assert.rejects(service.call('motion_get_project', { projectId: p.projectId, sessionId: crypto.randomUUID() }), /PROJECT_SESSION_MISMATCH/);
   assert.equal((await create(service, 'first')).projectId, p.projectId);
@@ -80,9 +93,13 @@ test('imports retain historical media and reject missing or corrupt blobs withou
   const wav = path.join(store.directory, 'source.wav'), fake = path.join(store.directory, 'fake.png');
   const made = await execute('ffmpeg', ['-v', 'error', '-f', 'lavfi', '-i', 'sine=duration=0.2', wav], store.directory);
   assert.equal(made.code, 0, made.stderr); await writeFile(fake, 'not an image');
-  const args = { projectId: p.projectId, requestId: 'import', items: [{ itemId: 'audio', sourcePath: wav }, { itemId: 'fake', sourcePath: fake }, { itemId: 'image', sourcePath: png }, { itemId: 'video', sourcePath: video }] };
+  const oversized = path.join(store.directory, 'oversized.mp4');
+  await writeFile(oversized, ''); await truncate(oversized, MAX_ASSET_BYTES + 1);
+  const args = { projectId: p.projectId, requestId: 'import', items: [{ itemId: 'audio', sourcePath: wav }, { itemId: 'fake', sourcePath: fake }, { itemId: 'image', sourcePath: png }, { itemId: 'video', sourcePath: video }, { itemId: 'oversized', sourcePath: oversized }] };
   const imported = await service.call('motion_import_assets', args);
   assert.equal(imported.status, 'partial'); assert.equal(imported.items[0].mimeType, 'audio/wav'); assert.equal(imported.items[1].status, 'failed'); assert.equal(imported.items[2].mimeType, 'image/png'); assert.equal(imported.items[3].mimeType, 'video/mp4');
+  assert.equal(imported.items[4].status, 'failed');
+  assert.match(imported.items[4].error, /^ASSET_TOO_LARGE_OR_NOT_FILE: max 500 MB/);
   assert.equal((await service.call('motion_import_assets', args)).items[0].assetId, imported.items[0].assetId);
   const deduped = await service.call('motion_import_assets', { ...args, requestId: 'new-import', items: [args.items[0]] });
   assert.equal(deduped.items[0].reused, true);

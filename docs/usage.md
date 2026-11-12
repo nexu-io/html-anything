@@ -146,7 +146,7 @@ npm run dev
 
 模板从 Studio 画廊或已有指引选择，当前3个 builtin 可由创建工具复制；没有单独公开目录查询 Tool。其他外部源码/视频由宿主实际检查并重建。
 
-编辑须同时传 expectedRevision 与 expectedVersionId；文本批量/需求保存和版本恢复使用原生独占历史窗口、暂存与恢复日志。旧 `motion_write_files` 的逐文件行为仅留内部兼容。8 MiB/100文件与2 MiB分段读取是传输限制；媒体小于2 GiB/项并实际探测。恢复旧版本创建新 vN，保留后续历史。
+编辑须同时传 expectedRevision 与 expectedVersionId；文本批量/需求保存和版本恢复使用原生独占历史窗口、暂存与恢复日志。旧 `motion_write_files` 的逐文件行为仅留内部兼容。8 MiB/100文件与2 MiB分段读取是传输限制；Media imports allow at most 500 MB (500000000 bytes) per file and probe actual media. Studio limits each complete multipart request to the same decimal 500 MB, including form overhead; split larger batches into separate uploads. 500.5 MB is rejected without rounding. 恢复旧版本创建新 vN，保留后续历史。
 
 
 ## 本地文件与升级

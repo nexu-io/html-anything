@@ -1,6 +1,6 @@
 {
   "name": "@openmotion/app",
-  "repository": { "type": "git", "url": "git+https://github.com/nexu-io/html-anything.git" },
+  "repository": { "type": "git", "url": "git+https://github.com/nexu-io/openmotion.git" },
   "version": "0.6.3-local.1",
   "private": true,
   "description": "OpenMotion application, MCP and Skills installer for local Agent hosts",

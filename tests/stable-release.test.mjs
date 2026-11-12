@@ -33,7 +33,7 @@ function services(f) {
 }
 
 test('stable selection is explicit and rejects prerelease/prod or stable/DEV channel mismatches', async t => {
-  const f = await candidateFixture(t, 'feature/motion', { version: '0.6.4' });
+  const f = await candidateFixture(t, 'main', { version: '0.6.4' });
   assert.equal(releaseInputs(f.env).channel, 'stable');
   for (const patch of [{ MOTION_RELEASE_CHANNEL: 'test' }, { MOTION_VERSION: '0.6.4-test.9' }, { MOTION_RELEASE_ACTION: 'publish-test' }]) assert.throws(() => releaseInputs({ ...f.env, ...patch }));
   await assert.rejects(resolveCandidate('.', '', '', { ...f.env, GITHUB_WORKFLOW_REF: f.env.GITHUB_WORKFLOW_REF.replace('motion-publish-test', 'motion-candidate') }, async () => {}), /exact stable version/);
@@ -49,7 +49,7 @@ test('stable selection is explicit and rejects prerelease/prod or stable/DEV cha
 });
 
 test('stable stage, native acceptance, latest and exact/prod guides use the same immutable bytes', async t => {
-  const f = await candidateFixture(t, 'feature/motion', { version: '0.6.4' }), store = services(f);
+  const f = await candidateFixture(t, 'main', { version: '0.6.4' }), store = services(f);
   await publishNpm(f.directory, f.inputs, store);
   assert.equal(store.getLatest(), '0.5.0');
   const native = path.join(f.directory, 'registry-win32-x64.json'), original = await readFile(native, 'utf8');
@@ -73,7 +73,7 @@ test('stable stage, native acceptance, latest and exact/prod guides use the same
 });
 
 test('stable recovery never publishes, changes tags or touches the moving guide; newer latest is preserved', async t => {
-  const f = await candidateFixture(t, 'feature/motion', { version: '0.6.4' }), store = services(f);
+  const f = await candidateFixture(t, 'main', { version: '0.6.4' }), store = services(f);
   await publishNpm(f.directory, f.inputs, store);
   store.setLatest('0.7.0');
   assert.equal((await promoteStable(f.directory, f.inputs, store)).status, 'superseded');
