@@ -1,11 +1,15 @@
 import { button, codeEditor, disclosure, field, note, slot } from "@open-motion/components";
 import { mergeSources, type SourceChoice } from "@open-motion/workspace/contract";
 import type { Editor } from "../../editor.js";
+import type { ConnectionState } from "../../observe.js";
 
 /** Explicit decisions only; a successful merge remains a local draft until Save. */
 export class WorkspaceSync {
   readonly element: HTMLElement;
   private connection: HTMLElement;
+  private reconnect: HTMLButtonElement;
+  private connectionState: ConnectionState = "connecting";
+  private blocked = true;
   private body: HTMLElement;
   private summary: HTMLElement;
   private conflicts: HTMLElement;
@@ -21,10 +25,14 @@ export class WorkspaceSync {
     document: Document,
     private editor: Editor,
     private run: (action: () => Promise<void>) => void,
+    retryConnection: () => void,
   ) {
     this.element = slot(document, "content");
     this.connection = note(document, "正在观察工作区");
     this.connection.setAttribute("aria-label", "协作连接状态");
+    this.connection.setAttribute("role", "status");
+    this.reconnect = button(document, { label: "重试工作区连接", compact: true, onClick: retryConnection });
+    this.reconnect.hidden = true;
     this.body = slot(document, "stack");
     this.body.setAttribute("aria-label", "外部修改");
     this.body.hidden = true;
@@ -62,12 +70,20 @@ export class WorkspaceSync {
       actions,
       note(document, "合并不会自动保存。未冲突的文件保留双方修改；冲突文件请显式选择，保存时仍会校验版本。"),
     );
-    this.element.append(this.connection, this.body);
+    this.element.append(this.connection, this.reconnect, this.body);
   }
-  status(value: string) {
+  status(value: string, state: ConnectionState) {
     this.connection.textContent = value;
+    this.connectionState = state;
+    this.connectionControls();
+  }
+  private connectionControls() {
+    this.reconnect.hidden = this.connectionState !== "disconnected";
+    this.reconnect.disabled = this.blocked;
   }
   update(blocked: boolean) {
+    this.blocked = blocked;
+    this.connectionControls();
     const incoming = this.editor.incoming,
       local = this.editor.project,
       remote = incoming?.project;

@@ -99,13 +99,13 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     }
   };
   if (entry !== undefined) document.defaultView?.addEventListener("hashchange", onEntry);
-  const synchronization = new WorkspaceSync(document, editor, run);
+  const synchronization = new WorkspaceSync(document, editor, run, () => void observer.retry());
   shell.editor.prepend(synchronization.element);
   const observer = observeWorkspace(editor, {
     available: () => !busy && !disposed && !creation.pending,
     generation: () => operations,
     changed: () => render(message),
-    status: (value) => synchronization.status(value),
+    status: (value, state) => synchronization.status(value, state),
   });
   const creation = new Creation(document, editor, client, run);
   const navigation = new Navigation(document, client, {

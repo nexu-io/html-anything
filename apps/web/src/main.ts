@@ -1,11 +1,16 @@
-import { bootstrap } from "./lib/bootstrap.js";
-import { mount } from "./view.js";
+import { start } from "./lib/start.js";
+import type { WebView } from "./view.js";
 
 const root = document.querySelector<HTMLElement>("#app");
 if (!root) throw new Error("web root is required");
-export const view = mount(root, {
-  ...(await bootstrap(globalThis.openMotion, new URL("./bootstrap.json", import.meta.url))),
+export let view: WebView | undefined;
+export const startup = start(root, {
+  url: new URL("./bootstrap.json", import.meta.url),
+  injected: globalThis.openMotion,
   entry: globalThis.location.hash,
+  mounted: (mounted) => {
+    view = mounted;
+  },
 });
 
-export { mount };
+export { mount } from "./view.js";
