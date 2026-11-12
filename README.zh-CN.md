@@ -57,84 +57,14 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 
 <p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="docs/readme/agents/local-agents.mobile.png"><img src="docs/readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 
-<a id="showcase"></a> <a id="brand-before-after"></a> <a id="creator-video-gallery"></a> <a id="presenter-motion"></a> <a id="用-openmotion-可以做什么"></a>
+<a id="showcase"></a> <a id="brand-before-after"></a> <a id="用-openmotion-可以做什么"></a>
 <a id="使用场景与复刻效果示例"></a>
 
 ## 🎞️ 使用场景与复刻效果示例
 
-从真人口播、产品演示、品牌宣传片等场景寻找创作参考。下方预览展示参考视频。
+从产品演示、品牌宣传片、真人口播等场景寻找创作参考。下方预览展示参考视频。
 
 **[浏览完整模板库 →](https://open-design.ai/templates/)** — 查找更多模板，获取完整视频、Motion.md 和复刻指令。
-
-### AI 口播剪辑
-
-以真人讲述为主线，用字幕、画面插入和关键词动画突出重点，为自己的录制内容找到合适的表达方式。
-
-<table width="100%">
-<tr><th colspan="3" align="left">🎓 教学与讲解</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="真人视频参考：改变职业生涯的 6 项关键技能"></picture><br>
-<strong>改变职业生涯的 6 项关键技能</strong><br>
-编号要点 + 动态关键词<br>
-<sub>参考 · @careerwithriya</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="docs/readme/people/dan-martell-tools.gif" width="216" alt="真人视频参考：现在最好的 AI 工具是什么？"></picture><br>
-<strong>现在最好的 AI 工具是什么？</strong><br>
-出镜讲解 + 悬浮工具卡片<br>
-<sub>参考 · Dan Martell</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="docs/readme/people/harpercarrollai.gif" width="216" alt="真人视频参考：10 天 AI 基础，第 1 天"></picture><br>
-<strong>10 天 AI 基础，第 1 天</strong><br>
-个人讲解 + 清晰字幕<br>
-<sub>参考 · @harpercarrollai</sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">🖥️ 展示工作流</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="真人视频参考：我每天使用的 5 个工具"></picture><br>
-<strong>我每天使用的 5 个工具</strong><br>
-桌边讲述 + 工作流插画面<br>
-<sub>参考 · Ali Abdaal</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="真人视频参考：带重点标注的工具演示"></picture><br>
-<strong>带重点标注的工具演示</strong><br>
-真人 + 屏幕 + 标注<br>
-<sub>参考 · @john.tagudin</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="docs/readme/people/aiwithsachi.gif" width="216" alt="真人视频参考：值得安装的 5 个 Claude 插件"></picture><br>
-<strong>值得安装的 5 个 Claude 插件</strong><br>
-口述清单 + 说明截图<br>
-<sub>参考 · @aiwithsachi</sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">🎬 讲故事，展示产品</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="docs/readme/people/khris-sheer-founder.gif" width="216" alt="真人视频参考：创始人实验，第 1 集"></picture><br>
-<strong>创始人实验，第 1 集</strong><br>
-创始人日记 + 日常补充镜头<br>
-<sub>参考 · @khris.sheer</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="docs/readme/people/ugc-rachelll.gif" width="216" alt="真人视频参考：AI 创作者与产品"></picture><br>
-<strong>AI 创作者与产品</strong><br>
-产品故事 + 证据 + 画中画<br>
-<sub>参考 · @ugc.rachelll</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="docs/readme/people/kevinstratvert.gif" width="216" alt="真人视频参考：别再为 5 个 AI 工具付费"></picture><br>
-<strong>别再为 5 个 AI 工具付费</strong><br>
-产品教程 + 实际演示<br>
-<sub>参考 · Kevin Stratvert</sub>
-</td>
-</tr>
-</table>
 
 ### AI 重剪与改稿
 
@@ -246,6 +176,78 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <strong>Deezer · 让音乐海报动起来</strong><br>
 让标题保持稳定，用周围流动的波形表达节奏。<br>
 <a href="https://open-design.ai/templates/living-waveform-poster-motion-design/">查看模板</a>
+</td>
+</tr>
+</table>
+
+<a id="creator-video-gallery"></a> <a id="presenter-motion"></a>
+
+### AI 口播剪辑
+
+以真人讲述为主线，用字幕、画面插入和关键词动画突出重点，为自己的录制内容找到合适的表达方式。
+
+<table width="100%">
+<tr><th colspan="3" align="left">🎓 教学与讲解</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="真人视频参考：改变职业生涯的 6 项关键技能"></picture><br>
+<strong>改变职业生涯的 6 项关键技能</strong><br>
+编号要点 + 动态关键词<br>
+<sub>参考 · @careerwithriya</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="docs/readme/people/dan-martell-tools.gif" width="216" alt="真人视频参考：现在最好的 AI 工具是什么？"></picture><br>
+<strong>现在最好的 AI 工具是什么？</strong><br>
+出镜讲解 + 悬浮工具卡片<br>
+<sub>参考 · Dan Martell</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="docs/readme/people/harpercarrollai.gif" width="216" alt="真人视频参考：10 天 AI 基础，第 1 天"></picture><br>
+<strong>10 天 AI 基础，第 1 天</strong><br>
+个人讲解 + 清晰字幕<br>
+<sub>参考 · @harpercarrollai</sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🖥️ 展示工作流</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="真人视频参考：我每天使用的 5 个工具"></picture><br>
+<strong>我每天使用的 5 个工具</strong><br>
+桌边讲述 + 工作流插画面<br>
+<sub>参考 · Ali Abdaal</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="真人视频参考：带重点标注的工具演示"></picture><br>
+<strong>带重点标注的工具演示</strong><br>
+真人 + 屏幕 + 标注<br>
+<sub>参考 · @john.tagudin</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="docs/readme/people/aiwithsachi.gif" width="216" alt="真人视频参考：值得安装的 5 个 Claude 插件"></picture><br>
+<strong>值得安装的 5 个 Claude 插件</strong><br>
+口述清单 + 说明截图<br>
+<sub>参考 · @aiwithsachi</sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🎬 讲故事，展示产品</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="docs/readme/people/khris-sheer-founder.gif" width="216" alt="真人视频参考：创始人实验，第 1 集"></picture><br>
+<strong>创始人实验，第 1 集</strong><br>
+创始人日记 + 日常补充镜头<br>
+<sub>参考 · @khris.sheer</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="docs/readme/people/ugc-rachelll.gif" width="216" alt="真人视频参考：AI 创作者与产品"></picture><br>
+<strong>AI 创作者与产品</strong><br>
+产品故事 + 证据 + 画中画<br>
+<sub>参考 · @ugc.rachelll</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="docs/readme/people/kevinstratvert.gif" width="216" alt="真人视频参考：别再为 5 个 AI 工具付费"></picture><br>
+<strong>别再为 5 个 AI 工具付费</strong><br>
+产品教程 + 实际演示<br>
+<sub>参考 · Kevin Stratvert</sub>
 </td>
 </tr>
 </table>

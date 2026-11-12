@@ -57,84 +57,14 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 
 <p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="readme/agents/local-agents.mobile.png"><img src="readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 
-<a id="showcase"></a> <a id="brand-before-after"></a> <a id="creator-video-gallery"></a> <a id="presenter-motion"></a> <a id="用-openmotion-可以做什么"></a>
+<a id="showcase"></a> <a id="brand-before-after"></a> <a id="用-openmotion-可以做什么"></a>
 <a id="使用场景与复刻效果示例"></a>
 
 ## 🎞️ 用途と再現例
 
-トーク動画、製品デモ、ブランド動画などから制作の参考を探せます。以下のプレビューは参考動画です。
+製品デモ、ブランド動画、トーク動画などから制作の参考を探せます。以下のプレビューは参考動画です。
 
 **[テンプレートライブラリをすべて見る →](https://open-design.ai/templates/)** — さらに多くのテンプレート、動画全編、Motion.md、再現用の指示を確認できます。
-
-### AI でトーク動画を編集
-
-話し手を中心に、読みやすい字幕、画面の挿入、キーワードのアニメーションで要点を伝えます。自分の収録動画に合う表現を見つけてください。
-
-<table width="100%">
-<tr><th colspan="3" align="left">🎓 教える・解説する</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="話し手の動画参考：キャリアを変える 6 つの必須スキル"></picture><br>
-<strong>キャリアを変える 6 つの必須スキル</strong><br>
-番号付きの要点 + 動くキーワード<br>
-<sub>参考動画 · @careerwithriya</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/dan-martell-tools.jpg"><img src="readme/people/dan-martell-tools.gif" width="216" alt="話し手の動画参考：今、最も優れた AI ツールは？"></picture><br>
-<strong>今、最も優れた AI ツールは？</strong><br>
-話し手 + 浮かぶツールカード<br>
-<sub>参考動画 · Dan Martell</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/harpercarrollai.jpg"><img src="readme/people/harpercarrollai.gif" width="216" alt="話し手の動画参考：10 日間の AI 基礎・1 日目"></picture><br>
-<strong>10 日間の AI 基礎・1 日目</strong><br>
-個人のレッスン + 読みやすい字幕<br>
-<sub>参考動画 · @harpercarrollai</sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">🖥️ ワークフローを見せる</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="話し手の動画参考：毎日使う 5 つのツール"></picture><br>
-<strong>毎日使う 5 つのツール</strong><br>
-デスクでの語り + 作業画面<br>
-<sub>参考動画 · Ali Abdaal</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="話し手の動画参考：注釈付きのツールデモ"></picture><br>
-<strong>注釈付きのツールデモ</strong><br>
-話し手 + 画面 + 注釈<br>
-<sub>参考動画 · @john.tagudin</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/aiwithsachi.jpg"><img src="readme/people/aiwithsachi.gif" width="216" alt="話し手の動画参考：Claude に入れたい 5 つのプラグイン"></picture><br>
-<strong>Claude に入れたい 5 つのプラグイン</strong><br>
-口頭でのリスト + 補足スクリーンショット<br>
-<sub>参考動画 · @aiwithsachi</sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">🎬 物語と製品を伝える</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/khris-sheer-founder.jpg"><img src="readme/people/khris-sheer-founder.gif" width="216" alt="話し手の動画参考：創業者の実験・第 1 話"></picture><br>
-<strong>創業者の実験・第 1 話</strong><br>
-創業者の日記 + 日常の B ロール<br>
-<sub>参考動画 · @khris.sheer</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ugc-rachelll.jpg"><img src="readme/people/ugc-rachelll.gif" width="216" alt="話し手の動画参考：AI クリエイターと製品"></picture><br>
-<strong>AI クリエイターと製品</strong><br>
-製品の物語 + 根拠 + ピクチャーインピクチャー<br>
-<sub>参考動画 · @ugc.rachelll</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/kevinstratvert.jpg"><img src="readme/people/kevinstratvert.gif" width="216" alt="話し手の動画参考：5 つの AI ツールへの支払いをやめよう"></picture><br>
-<strong>5 つの AI ツールへの支払いをやめよう</strong><br>
-製品チュートリアル + 実演<br>
-<sub>参考動画 · Kevin Stratvert</sub>
-</td>
-</tr>
-</table>
 
 ### AI で再編集・構成を変更
 
@@ -246,6 +176,78 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <strong>Deezer · 音楽ポスターに動きを</strong><br>
 タイトルを固定し、周囲の流れる波形でリズムを表現する。<br>
 <a href="https://open-design.ai/templates/living-waveform-poster-motion-design/">テンプレートを見る</a>
+</td>
+</tr>
+</table>
+
+<a id="creator-video-gallery"></a> <a id="presenter-motion"></a>
+
+### AI でトーク動画を編集
+
+話し手を中心に、読みやすい字幕、画面の挿入、キーワードのアニメーションで要点を伝えます。自分の収録動画に合う表現を見つけてください。
+
+<table width="100%">
+<tr><th colspan="3" align="left">🎓 教える・解説する</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="話し手の動画参考：キャリアを変える 6 つの必須スキル"></picture><br>
+<strong>キャリアを変える 6 つの必須スキル</strong><br>
+番号付きの要点 + 動くキーワード<br>
+<sub>参考動画 · @careerwithriya</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/dan-martell-tools.jpg"><img src="readme/people/dan-martell-tools.gif" width="216" alt="話し手の動画参考：今、最も優れた AI ツールは？"></picture><br>
+<strong>今、最も優れた AI ツールは？</strong><br>
+話し手 + 浮かぶツールカード<br>
+<sub>参考動画 · Dan Martell</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/harpercarrollai.jpg"><img src="readme/people/harpercarrollai.gif" width="216" alt="話し手の動画参考：10 日間の AI 基礎・1 日目"></picture><br>
+<strong>10 日間の AI 基礎・1 日目</strong><br>
+個人のレッスン + 読みやすい字幕<br>
+<sub>参考動画 · @harpercarrollai</sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🖥️ ワークフローを見せる</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="話し手の動画参考：毎日使う 5 つのツール"></picture><br>
+<strong>毎日使う 5 つのツール</strong><br>
+デスクでの語り + 作業画面<br>
+<sub>参考動画 · Ali Abdaal</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="話し手の動画参考：注釈付きのツールデモ"></picture><br>
+<strong>注釈付きのツールデモ</strong><br>
+話し手 + 画面 + 注釈<br>
+<sub>参考動画 · @john.tagudin</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/aiwithsachi.jpg"><img src="readme/people/aiwithsachi.gif" width="216" alt="話し手の動画参考：Claude に入れたい 5 つのプラグイン"></picture><br>
+<strong>Claude に入れたい 5 つのプラグイン</strong><br>
+口頭でのリスト + 補足スクリーンショット<br>
+<sub>参考動画 · @aiwithsachi</sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🎬 物語と製品を伝える</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/khris-sheer-founder.jpg"><img src="readme/people/khris-sheer-founder.gif" width="216" alt="話し手の動画参考：創業者の実験・第 1 話"></picture><br>
+<strong>創業者の実験・第 1 話</strong><br>
+創業者の日記 + 日常の B ロール<br>
+<sub>参考動画 · @khris.sheer</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ugc-rachelll.jpg"><img src="readme/people/ugc-rachelll.gif" width="216" alt="話し手の動画参考：AI クリエイターと製品"></picture><br>
+<strong>AI クリエイターと製品</strong><br>
+製品の物語 + 根拠 + ピクチャーインピクチャー<br>
+<sub>参考動画 · @ugc.rachelll</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/kevinstratvert.jpg"><img src="readme/people/kevinstratvert.gif" width="216" alt="話し手の動画参考：5 つの AI ツールへの支払いをやめよう"></picture><br>
+<strong>5 つの AI ツールへの支払いをやめよう</strong><br>
+製品チュートリアル + 実演<br>
+<sub>参考動画 · Kevin Stratvert</sub>
 </td>
 </tr>
 </table>
