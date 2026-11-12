@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
@@ -10,6 +10,7 @@ import { pluginRoot } from '../hyperframes.ts';
 import { rpc } from '../mcp.ts';
 import { copyRuntimeFixture } from './fixtures.ts';
 import { WorkspaceStore } from '../workspace.ts';
+import { openPreview } from '../preview.ts';
 
 async function incompatibleEditor(directory: string, changed: Record<string, unknown>, toolError?: string) {
   const { data, runtime } = await editorDirectory(directory);
@@ -21,7 +22,7 @@ async function incompatibleEditor(directory: string, changed: Record<string, unk
   const server = createServer(async (req, res) => {
     requests.push(req.url!);
     res.setHeader('Content-Type', 'application/json');
-    if (req.url === '/editor-api/preview') return res.end(JSON.stringify({ previewUrl: registry.endpoint, ready: true, dataDirectory: data }));
+    if (req.url === '/editor-api/preview') return res.end(JSON.stringify({ previewUrl: registry.endpoint, studioUrl: 'http://127.0.0.1:59999/', editorReady: true, ready: true, dataDirectory: data }));
     if (req.url === '/motion-api/phase1/call') {
       let body = ''; for await (const chunk of req) body += chunk;
       calls.push(JSON.parse(body));
@@ -41,6 +42,16 @@ async function incompatibleEditor(directory: string, changed: Record<string, unk
 const exportCall = { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'motion_export_request', arguments: {
   projectId: 'project', requestId: 'must-not-export', expectedRevision: '0'.repeat(64), versionId: 'unavailable', audio: 'silent',
 } } };
+
+test('a compatible older shared backend cannot hand off its internal Studio URL', { skip: !sharedEditorEnabled }, async () => {
+  const directory = await realpath(await mkdtemp(path.join(tmpdir(), 'motion-old-preview-url-')));
+  const editor = await incompatibleEditor(directory, { build: 'older-build', mcp: { protocol: 1, tools: ['motion_open_preview'] } });
+  try {
+    const opened = await openPreview(new WorkspaceStore(directory), undefined, { editor: true, mcpTool: 'motion_open_preview' });
+    assert.equal(new URL(opened.studioUrl!).origin, new URL(editor.registry.endpoint).origin);
+    assert.equal(new URL(opened.studioUrl!).hash, '#project/project');
+  } finally { await editor.close(); await rm(directory, { recursive: true, force: true }); }
+});
 
 test('MCP reports unavailable historical files as not applied', { skip: !sharedEditorEnabled }, async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-unavailable-version-'));

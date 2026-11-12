@@ -132,7 +132,7 @@ function revision(value: unknown): asserts value is string {
   if (typeof value !== 'string' || !/^[a-f0-9]{64}$/.test(value)) throw new Error('需要 motion_get_project 返回的 expectedRevision');
 }
 
-async function openProject(store: WorkspaceStore, context: Service, expectedRevision: string, target: { templateId: string } | { projectId: string } | { title: string; instruction?: string }, expectedProjectId?: string, sessionTarget?: { sessionId?: string; title?: string; templateId?: string; instruction?: string }) {
+async function openProject(store: WorkspaceStore, context: Service, origin: string, expectedRevision: string, target: { templateId: string } | { projectId: string } | { title: string; instruction?: string }, expectedProjectId?: string, sessionTarget?: { sessionId?: string; title?: string; templateId?: string; instruction?: string }) {
   if (!context.runtimeRoot) throw new Error('Hyperframes 服务尚未就绪');
   if (context.switching) throw new Error('正在打开工程，请稍候');
   context.switching = true;
@@ -151,7 +151,7 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
         if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectoryFor(id), context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectoryFor(id), path.join(store.directory, 'studio.log'), context.studioPort || 4174);
         await context.studio.openProject?.(id);
         await store.selectProject(id);
-        return { ...(await store.status()), studioUrl: context.studio.url };
+        return { ...(await store.status()), studioUrl: `${origin}/#project/${id}` };
       }
       const directory = store.projectDirectoryFor(id);
       let candidate: Studio | undefined;
@@ -170,7 +170,7 @@ async function openProject(store: WorkspaceStore, context: Service, expectedRevi
         context.studio = candidate; committed = true;
         await candidate.openProject?.(id);
         if (oldStudio !== candidate) await oldStudio?.close();
-        return { ...(await store.status()), studioUrl: candidate.url };
+        return { ...(await store.status()), studioUrl: `${origin}/#project/${id}` };
       } finally {
         if (!committed) {
           if (candidate !== context.studio) await candidate?.close();
@@ -204,23 +204,23 @@ async function createSession(store: WorkspaceStore, data: Record<string, any>) {
 }
 
 // The HTTP, MCP and embedded clients share this mode factory; viewers do not create sessions.
-const artifactFactories: Record<CreationMode, (store: WorkspaceStore, context: Service, session: CreativeSession, data: Record<string, any>) => Promise<unknown>> = {
-  motion: async (store, context, session, data) => {
+const artifactFactories: Record<CreationMode, (store: WorkspaceStore, context: Service, origin: string, session: CreativeSession, data: Record<string, any>) => Promise<unknown>> = {
+  motion: async (store, context, origin, session, data) => {
     const templateId = data.templateId ?? (session.artifacts.length === 0 ? session.templateId : undefined);
     const template = templateId ? await templateCatalogFor(store.directory).get(templateId) : undefined;
     const title = validateProjectTitle(data.title ?? (session.artifacts.length ? `Motion ${session.artifacts.length + 1}` : session.title));
-    return openProject(store, context, data.expectedRevision, template && isEditableTemplate(template) ? { templateId: template.id } : { title }, data.expectedProjectId, { sessionId: session.id, templateId: template?.id });
+    return openProject(store, context, origin, data.expectedRevision, template && isEditableTemplate(template) ? { templateId: template.id } : { title }, data.expectedProjectId, { sessionId: session.id, templateId: template?.id });
   },
 };
-async function createArtifact(store: WorkspaceStore, context: Service, session: CreativeSession, data: Record<string, any>) {
+async function createArtifact(store: WorkspaceStore, context: Service, origin: string, session: CreativeSession, data: Record<string, any>) {
   revision(data.expectedRevision);
-  return artifactFactories[creationMode(session.mode).id](store, context, session, data);
+  return artifactFactories[creationMode(session.mode).id](store, context, origin, session, data);
 }
-async function legacyCreation(store: WorkspaceStore, context: Service, data: Record<string, any>) {
+async function legacyCreation(store: WorkspaceStore, context: Service, origin: string, data: Record<string, any>) {
   revision(data.expectedRevision);
   if ((await store.get()).revision !== data.expectedRevision || (data.expectedProjectId && store.projectCatalog().activeId !== data.expectedProjectId)) throw new Conflict();
   const session = await createSession(store, data);
-  return createArtifact(store, context, session, data);
+  return createArtifact(store, context, origin, session, data);
 }
 
 export async function handler(req: IncomingMessage, res: ServerResponse, store = sharedStore, context = service) {
@@ -290,7 +290,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       context.phase1 ??= new Phase1Service(authority, context.runtimeRoot, {
         origin: () => new URL(editorUrl).origin,
         nativeUrl: () => context.studio?.alive() ? context.studio.url : undefined,
-        openProject: async projectId => { await openProject(authority, context, (await authority.get()).revision, { projectId }, authority.projectId); },
+        openProject: async projectId => { await openProject(authority, context, new URL(editorUrl).origin, (await authority.get()).revision, { projectId }, authority.projectId); },
         mutation: async task => {
           let release!: () => void;
           context.phase1Mutation = new Promise<void>(resolve => { release = resolve; });
@@ -418,16 +418,16 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
           if (!session.artifacts.length && !data.projectId) return json(res, 200, await store.selectSession(id));
           const artifact = data.projectId ? session.artifacts.find(item => item.projectId === data.projectId) : session.artifacts.find(item => item.id === session.activeArtifactId) ?? session.artifacts[0];
           if (!artifact) throw new Error('该产物不属于此会话');
-          return json(res, 200, await openProject(store, context, data.expectedRevision, { projectId: artifact.projectId }, data.expectedProjectId));
+          return json(res, 200, await openProject(store, context, new URL(editorUrl).origin, data.expectedRevision, { projectId: artifact.projectId }, data.expectedProjectId));
         }
-        return json(res, 201, await createArtifact(store, context, session, data));
+        return json(res, 201, await createArtifact(store, context, new URL(editorUrl).origin, session, data));
       }
     }
     if (motionRequest && url.pathname === '/api/projects' && req.method === 'POST') {
       const data = await input(req); revision(data.expectedRevision);
       const title = validateProjectTitle(data.title ?? `未命名项目 ${store.projectCatalog().projects.length + 1}`);
       const instruction = data.instruction === undefined ? undefined : validateInstruction(data.instruction);
-      return json(res, 201, await legacyCreation(store, context, { ...data, title, instruction }));
+      return json(res, 201, await legacyCreation(store, context, new URL(editorUrl).origin, { ...data, title, instruction }));
     }
     const conversation = motionRequest ? url.pathname.match(/^\/api\/projects\/([a-z0-9-]+)\/conversation$/) : null;
     if (conversation && req.method === 'GET') return json(res, 200, await store.conversation(conversation[1]));
@@ -450,7 +450,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     const openSaved = motionRequest ? url.pathname.match(/^\/api\/projects\/([a-z0-9-]+)\/open$/) : null;
     if ((openTemplate || openSaved) && req.method === 'POST') {
       const data = await input(req); revision(data.expectedRevision);
-      return json(res, 200, openTemplate ? await legacyCreation(store, context, { ...data, templateId: openTemplate[1] }) : await openProject(store, context, data.expectedRevision, { projectId: openSaved![1] }, data.expectedProjectId));
+      return json(res, 200, openTemplate ? await legacyCreation(store, context, new URL(editorUrl).origin, { ...data, templateId: openTemplate[1] }) : await openProject(store, context, new URL(editorUrl).origin, data.expectedRevision, { projectId: openSaved![1] }, data.expectedProjectId));
     }
     if (url.pathname === '/api/project/status' && req.method === 'GET') return json(res, 200, {
       ...await store.status(), historyRestoreError: context.phase1?.restoreErrors.get(store.projectId) ?? null,
@@ -533,14 +533,15 @@ export async function startServer(store = sharedStore, port = Number(process.env
   try {
     await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
   } catch (error) { context.tracking?.close(); await context.studio?.close(); throw error; }
+  const origin = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
   const gateway = gatewayFor(store);
   const tick = () => {
     void renderNext(store, runtimeRoot, context.tracking).catch(error => console.error(error.message));
     void gateway.tick().catch(() => console.error('Model gateway queue could not be processed'));
   };
   const timer = setInterval(tick, 500); tick();
-  return { server, get activeToolCalls() { return context.phase1?.pending ?? 0; }, openProject: async (projectId: string) => openProject(store, context, (await store.get()).revision, { projectId }, store.projectId), get studio() { return context.studio!; }, ensureStudio: context.ensureStudio,
-    info: async () => ({ previewUrl: `http://127.0.0.1:${(server.address() as any).port}`, studioUrl: context.studio?.url, engine: 'hyperframes', ready: true, editorReady: Boolean(context.studio?.alive()), ffmpeg, revision: (await store.get()).revision, dataDirectory: store.directory, browserOpened: false, nativeRuntime: await nativeRuntimeStatus(pluginRoot), authoringGuide: path.join(runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'), hyperframesCli: cliPath(runtimeRoot) }),
+  return { server, get activeToolCalls() { return context.phase1?.pending ?? 0; }, openProject: async (projectId: string) => openProject(store, context, origin, (await store.get()).revision, { projectId }, store.projectId), get studio() { return context.studio!; }, ensureStudio: context.ensureStudio,
+    info: async () => ({ previewUrl: origin, studioUrl: context.studio?.alive() ? `${origin}/#project/${store.projectId}` : undefined, engine: 'hyperframes', ready: true, editorReady: Boolean(context.studio?.alive()), ffmpeg, revision: (await store.get()).revision, dataDirectory: store.directory, browserOpened: false, nativeRuntime: await nativeRuntimeStatus(pluginRoot), authoringGuide: path.join(runtimeRoot, 'node_modules/hyperframes/dist/skills/hyperframes/SKILL.md'), hyperframesCli: cliPath(runtimeRoot) }),
     close: async () => { clearInterval(timer); await context.browser?.close(); await gateway.close(); server.closeAllConnections(); server.close(); await context.studio?.close(); await closeTracking(context.tracking); } };
 }
 if (isMain(import.meta.url)) {
