@@ -7,6 +7,8 @@ import { createThumbnailKey, type ThumbnailPriority } from "../lib/thumbnailSche
 import { decimatePeaks, loudnessToOpacity } from "./audioWaveformPeaks";
 import { ClipFadesContext, type ClipFadeShape } from "./TimelineClipFades";
 import { studioApiFetch } from "../../utils/studioApiFetch";
+import { Tooltip } from "../../components/ui/Tooltip";
+import { WarningIcon } from "../../icons/RemixIcons";
 
 export interface AudioWaveformProps {
   audioUrl: string;
@@ -24,6 +26,7 @@ export interface AudioWaveformProps {
 }
 
 const BAR_STEP = 3;
+class UnavailableAudioError extends Error {}
 
 export const rendersWaveform = (el: { tag: string }) => el.tag === "audio";
 const FADE_GHOST_OPACITY = 0.27;
@@ -129,6 +132,7 @@ async function loadWaveform(
 
 async function fetchWaveformPeaks(url: string, signal: AbortSignal): Promise<number[]> {
   const response = await studioApiFetch(url, { signal });
+  if (response.status === 404 || response.status === 410) throw new UnavailableAudioError(`Waveform request failed (${response.status})`);
   if (!response.ok) throw new Error(`Waveform request failed (${response.status})`);
   const data: unknown = await response.json();
   if (
@@ -145,6 +149,7 @@ async function fetchWaveformPeaks(url: string, signal: AbortSignal): Promise<num
 
 async function decodeWaveformPeaks(url: string, signal: AbortSignal): Promise<number[]> {
   const response = await studioApiFetch(url, { signal });
+  if (response.status === 404 || response.status === 410) throw new UnavailableAudioError(`Audio request failed (${response.status})`);
   if (!response.ok) throw new Error(`Audio request failed (${response.status})`);
   const buffer = await response.arrayBuffer();
   if (signal.aborted) throw new DOMException("Aborted", "AbortError");
@@ -221,6 +226,11 @@ export const AudioWaveform = memo(function AudioWaveform({
     [audioUrl, cacheKey, priority, projectId, sessionEpoch, waveformUrl],
   );
   const snapshot = useThumbnailLease(cacheKey ? request : null);
+  const errorLabel = t(
+    snapshot.status === "error" && snapshot.error instanceof UnavailableAudioError
+      ? "Media unavailable"
+      : "waveform unavailable",
+  );
   const peaks =
     snapshot.status === "ready" && snapshot.value.kind === "waveform" ? snapshot.value.peaks : null;
 
@@ -310,23 +320,21 @@ export const AudioWaveform = memo(function AudioWaveform({
             }}
           />
         )}
-        {/* Degraded state — the decode failed; say so rather than paint a
-          waveform the author could edit against. */}
         {snapshot.status === "error" && (
           <div
-            className="absolute inset-x-0 flex items-center justify-center gap-1.5"
-            style={{ top: labelInset, bottom: 0 }}
+            className="absolute inset-x-2 flex items-center justify-center overflow-hidden"
+            style={{ top: label ? labelInset : 0, bottom: 0 }}
           >
-            <div
-              className="absolute inset-x-0"
-              style={{
-                bottom: "20%",
-                height: 2,
-                background: "var(--timeline-waveform-error)",
-              }}
-            />
-            <span className="relative rounded-sm bg-black/50 px-1 text-[8px] text-neutral-500">
-              {t("waveform unavailable")}</span>
+            <Tooltip label={errorLabel}>
+              <span
+                role="img"
+                aria-label={errorLabel}
+                className="pointer-events-auto flex min-w-0 max-w-full items-center gap-1 rounded-sm bg-black/60 px-1 py-0.5 text-[11px] leading-tight text-white"
+              >
+                <WarningIcon size={12} className="shrink-0" />
+                <span className="truncate">{errorLabel}</span>
+              </span>
+            </Tooltip>
           </div>
         )}
         {label && (
