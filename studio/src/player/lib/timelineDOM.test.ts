@@ -10,6 +10,7 @@ import { isTimelineIgnoredElement } from "./timelineElementHelpers";
 import { clipTimingStart, resolveClipTimingBasis } from "../../hooks/gsapShared";
 import { toAuthoredStart } from "../store/timelineElement";
 import { computeResizePreview } from "../components/timelineClipDragPreview";
+import { buildTimelineResizeTimingPatch } from "../../hooks/timelineEditingHelpers";
 import type { TimelineElement } from "../store/playerStore";
 import {
   MAX_PLAYBACK_RATE,
@@ -119,6 +120,38 @@ describe("parseTimelineFromDOM — nested rows' keyframe basis", () => {
 });
 
 describe("parseTimelineFromDOM — media in-point", () => {
+  it.each(["media-start", "playback-start"])(
+    "extends an image left despite data-%s and preserves its end after saving",
+    (attribute) => {
+      const source = `<div data-composition-id="root" data-duration="10"><img id="image" class="clip" src="image.png" data-start="5" data-duration="3" data-${attribute}="0"></div>`;
+      const element = parseTimelineFromDOM(makeDoc(source), 10)[0]!;
+      const preview = computeResizePreview(
+        {
+          element, edge: "start", originClientX: 0,
+          previewStart: 5, previewDuration: 3, started: true,
+        },
+        -200,
+        { scroll: null, pps: 100, buildSnapTargets: () => [{ time: 2.95, type: "playhead" }] },
+      );
+      expect(preview).toMatchObject({
+        previewStart: 2.95, previewDuration: 5.05, previewPlaybackStart: undefined,
+      });
+      const patched = buildTimelineResizeTimingPatch(source, { id: "image" }, element, {
+        start: preview.previewStart,
+        duration: preview.previewDuration,
+        playbackStart: preview.previewPlaybackStart,
+      });
+      const saved = parseTimelineFromDOM(makeDoc(patched), 10)[0]!;
+      expect(saved.start).toBe(2.95);
+      expect(saved.start + saved.duration).toBe(8);
+      expect(patched).toContain(`data-${attribute}="0"`);
+      const shortened = buildTimelineResizeTimingPatch(patched, { id: "image" }, saved, {
+        start: 3.95, duration: 4.05,
+      });
+      expect(shortened).toContain(`data-${attribute}="0"`);
+    },
+  );
+
   it("reads a negative in-point as 0, as the runtime does, so a head trim keeps the clip", () => {
     const doc = makeDoc(`
       <div data-composition-id="root">
