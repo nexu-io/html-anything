@@ -57,6 +57,9 @@ test('successful setup hands the current Agent an invitation before any MCP use,
   assert.equal(installed.onboarding.nextAction, hostConnectionInstructions('codex'));
   assert.match(installed.onboarding.nextAction, /restart the desktop app manually and return to this same chat/);
   assert.match(installed.onboarding.nextAction, /Do not reinstall OpenMotion or restart the host automatically/);
+  assert.match(installed.onboarding.nextAction, /The Agent must automatically call motion_get_project/);
+  assert.match(installed.onboarding.nextAction, /Do not ask the user to check connectivity or copy a verification prompt/);
+  assert.equal('directAccess' in installed.onboarding, false);
   assert.match(installed.onboarding.instructions, /OpenMotion 开源免费/);
   assert(Array.isArray(installed.onboarding.catalog.templates));
   assert.equal('onboarding' in JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')), false);

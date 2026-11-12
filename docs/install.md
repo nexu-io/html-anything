@@ -29,7 +29,7 @@ Select the invitation mode in this order:
 - Fewer than three confirmed candidates: use one. Never randomly select a few-shot or mode.
 
 Reply structure, in the user's language:
-1. Brief actual installation result. Distinguish registered configuration, independent probe and current-chat verification. Never claim the current chat is connected just because setup succeeded. If tools are missing, state the concrete host handoff below in this reply, even if the user defers the template experience.
+1. Brief actual installation result. Distinguish registered configuration, independent probe and current-chat verification. Never claim the current chat is connected just because setup succeeded. The Agent performs verification automatically; do not ask the user to check connectivity or copy a verification prompt. If tools are missing, state the concrete host handoff below in this reply, even if the user defers the template experience.
 2. One concise capability/selling sentence. Chinese: “OpenMotion 开源免费，让你与熟悉的 Agent 协作，从模板、参考视频或一个灵感出发，打造惊艳的动效视频。” Adapt naturally for other languages.
 3. One selected template with its appeal, or three numbered candidates with concise differences and confirmed durations where available. Keep each ID mapped to its displayed number/name in this conversation.
 4. A yes/no question for one template, or a number/name choice for three, with an option to defer. Then stop and wait.
@@ -40,18 +40,18 @@ After acceptance, use motion-template-to-video with the exact offered template I
 
 Setup never reloads or restarts the host, and `onboarding.hostSessionVerified: false` is not an installation failure. If Motion tools already work in this chat, make the read below and continue without requesting a restart. Otherwise follow `onboarding.nextAction`:
 
-- **Codex:** use an exposed, supported MCP-only reload control in the running host when available. The App Server `config/mcpServer/reload` API requires a connection to that same running host; it is not a shell command. Do not invent `codex mcp reload`, launch another App Server as a substitute, or use private IPC. If Codex desktop exposes no such control, ask the user to restart the desktop app manually and return to this same chat. For CLI or IDE clients, use their supported session or extension reload and resume the original task. See the official [MCP setup](https://developers.openai.com/codex/mcp/) and [App Server protocol](https://developers.openai.com/codex/app-server/).
+- **Codex:** follow the official MCP setup flow. If newly registered tools are absent in Codex desktop, ask the user to restart the desktop app manually and return to this same chat. In the Codex IDE extension, restart the extension; in the CLI, restart the client and resume the original task. Do not invent `codex mcp reload`, launch another App Server, change Codex startup settings, or use private IPC. The App Server `config/mcpServer/reload` API is not a shell command or an installer handoff; it requires access to the same running host. See the official [MCP setup](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).
 - **Claude Code:** open `/mcp` in the current session and select Reconnect for `openmotion`. If a newly registered server is absent, use the host's supported configuration reload first.
 - **DeepSeek Harness / WorkBuddy:** use the selected host's supported MCP refresh or reconnect control, keeping its profile.
 
-Keep the same installation home, host configuration/profile, project data and Skills paths. Do not reinstall OpenMotion, switch workspaces, create a new chat or restart the host automatically to resolve missing tools. A reload acknowledgment, a tool-list refresh or an independent diagnostic probe does not verify the current chat. After the handoff, make an actual `motion_get_project` call through this chat, check `dataDirectory` against setup, and verify the original project/version when resuming existing work. Only then report this chat as connected and continue the selected template or original task.
+Keep the same installation home, host configuration/profile, project data and Skills paths. Do not reinstall OpenMotion, switch workspaces, create a new chat or restart the host automatically to resolve missing tools. A reload acknowledgment, a tool-list refresh or an independent diagnostic probe does not verify the current chat. When the user resumes this task after the host handoff, the Agent automatically makes an actual `motion_get_project` call through this chat, checks `dataDirectory` against setup, and verifies the original project/version when resuming existing work. No separate user verification command or prompt is required. Only then report this chat as connected and continue the selected template or original task. If verification fails, report the actual failure and stop project mutations; do not claim that registration or a diagnostic probe established connectivity.
 
 ### Few-shot: single template — preference without comparison
 
-Example context: setup succeeded in Codex desktop, current-chat MCP not yet loaded and no supported MCP-only reload control is exposed; the user mentioned data/metrics; `nyt-graph` is a confirmed candidate.
+Example context: setup succeeded in Codex desktop, current-chat MCP not yet loaded; the user mentioned data/metrics; `nyt-graph` is a confirmed candidate.
 
 ```text
-OpenMotion 已安装，当前聊天尚未加载工具。请手动重启 Codex 后回到这段聊天，我会先确认连接，再继续你的选择，无需重新安装。
+OpenMotion 已安装，当前聊天尚未加载工具。请手动重启 Codex 后回到这段聊天继续，我会自动确认连接，并保留你的模板选择，无需重新安装。
 
 OpenMotion 开源免费，让你与熟悉的 Agent 协作，从模板、参考视频或一个灵感出发，打造惊艳的动效视频。
 
