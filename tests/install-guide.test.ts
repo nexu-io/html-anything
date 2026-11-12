@@ -85,6 +85,10 @@ test('guide rendering pins the exact npm package, built source and hash while re
   assert(text.includes('verify any mirrored tgz against the matching immutable guide\'s SHA256 before executing it'), 'Mirror recovery must preserve an independently recorded package identity');
   assert(text.includes('Permission or checksum failures stop immediately') && text.includes('terminal handoff') && text.includes('A local tgz still needs npm access'), 'Retain fail-closed recovery, terminal handoff and the online dependency boundary');
   assert(text.includes(await installationInstructions(fileURLToPath(new URL('../', import.meta.url)))), 'Published guide must preserve the exact setup reply contract');
+  assert(text.includes('onboarding.nextAction') && text.includes('checking `dataDirectory` against setup'), 'The rendered guide must verify the active chat against this installation');
+  assert(text.includes('restart the desktop app manually and return to this same chat'), 'Codex desktop needs a concrete fallback when MCP-only reload is unavailable');
+  assert(text.includes('carry the chosen ID and original task through it without asking the user to choose or consent again'), 'Host handoff must preserve the accepted experience');
+  assert(text.includes('not a shell command') && text.includes('or use private IPC'), 'Do not substitute unsupported commands or private transports for a host reload');
   assert.equal(record.channel, 'test'); assert.equal(record.candidate, false);
   assert.equal(validateGuideSpec('openmotion', '0.6.4'), 'stable');
   for (const name of ['https://evil.invalid/a', 'x;echo bad', '--script', '@bad/no/extra']) assert.throws(() => validateGuideSpec(name, pkg.version));

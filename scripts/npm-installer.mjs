@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, relativePath, runFile, withLock, writeAtomic, writeJSON } from './runtime-assets.mjs';
 import { ensureNativeRuntime, startNativePreparation } from './npm-runtime.mjs';
-import { hosts, hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
+import { hosts, hostPlan, hostConnectionInstructions, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
 import { checkTransport, redact } from './check-installed-mcp.mjs';
 import { exportDiagnostics, recordDiagnostic } from './diagnostics.mjs';
 
@@ -38,7 +38,7 @@ Setup options:
 
 Setup starts native preparation in the background; editing does not wait for it.
 Use prepare to wait explicitly for every video component or retry failed preparation.
-Refresh the selected host's Tools/Skills; registration alone does not prove loading.
+Setup does not reload or restart the host. Follow onboarding.nextAction and verify the active chat.
 Diagnose checks the installed host configuration and probes its MCP command without changing configuration.
 It does not reconnect the host; follow its recovery guidance and verify a read in the active Agent chat.
 Diagnostics saves a redacted local ZIP without contacting hosts or uploading anything.
@@ -119,7 +119,7 @@ export async function setup(options) {
     assert.equal(installed.applicationSHA256, manifest.application.sha256, 'Installed application identity mismatch');
     assert.equal(JSON.stringify(installed.runtime), JSON.stringify(manifest.runtime), 'Native manifest changed for the same application; rebuild the application release');
     const { prepareInstallationOnboarding } = await import(pathToFileURL(path.join(appRoot, 'scripts/install-onboarding.mjs')).href);
-    const onboarding = await prepareInstallationOnboarding({ appRoot, dataDirectory, templateEnvironment });
+    const onboarding = await prepareInstallationOnboarding({ appRoot, dataDirectory, templateEnvironment, host: plan.host });
     const targets = await skillTargets(plan, appRoot), directories = [];
     for (const target of targets) directories.push({ target, existed: await checkSkillOwner(target, home, plan.host, plan.layout), movedOld: false, movedNew: false });
     for (const target of await obsoleteSkills(plan, home, targets)) directories.push({ target, existed: true, removeOnly: true, movedOld: false, movedNew: false });
@@ -162,9 +162,7 @@ export async function setup(options) {
 export async function diagnose(options) {
   let stage = 'installation';
   const host = options.host || 'codex';
-  const recovery = host === 'claude'
-    ? 'After correcting the reported cause, open /mcp in the current Claude Code session and select Reconnect for openmotion.'
-    : `After correcting the reported cause, refresh or reconnect openmotion in the current ${host} host${options.profile ? ' profile ' + options.profile : ''}.`;
+  const recovery = hostConnectionInstructions(host);
   try {
     const environment = (await readJSON(bundledManifest))?.templateEnvironment;
     const home = await canonical(options.home || defaultHome(environment));
@@ -179,10 +177,10 @@ export async function diagnose(options) {
     const expectedTools = (await readJSON(path.join(state.appRoot, 'shared/mcp-profiles.json'))).phase1.tools;
     const checked = checkTransport(connection, state.version, { expectedTools, dataDirectory: state.dataDirectory });
     return { status: 'passed', host, ...checked, hostSessionVerified: false,
-      nextAction: 'Call motion_get_project through the active host connection and verify the original project and version. This independent probe does not verify the active chat connection. If that chat still lacks Motion tools: ' + recovery };
+      nextAction: recovery };
   } catch (error) {
     return { status: 'failed', host, stage, code: error.code || 'MCP_DIAGNOSIS_FAILED', message: redact(error.message, process.env),
-      hostSessionVerified: false, nextAction: recovery + ' Keep existing projects and exports; do not create replacement work or blindly replay a mutation.' };
+      hostSessionVerified: false, nextAction: 'After correcting the reported cause: ' + recovery + ' Keep existing projects and exports; do not create replacement work or blindly replay a mutation.' };
   }
 }
 

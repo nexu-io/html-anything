@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 import { checkReleaseLocks, packageNpm } from '../scripts/package-npm.mjs';
+import { installationInstructions } from '../scripts/install-onboarding.mjs';
 import { extractArchive, runFile, sha256 } from '../scripts/runtime-assets.mjs';
 import { protocolClient } from '../scripts/smoke-test-package.mjs';
 import { phase1Skills } from '../shared/workflow.ts';
@@ -65,6 +67,11 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.match(release.commit, /^[a-f0-9]{40}$/);
     const application = path.join(directory, 'app'), installer = path.join(directory, 'installer');
     await extractArchive(built.application, application); await extractArchive(built.installer, installer);
+    const packagedOnboarding = await import(pathToFileURL(path.join(application, 'scripts/install-onboarding.mjs')).href);
+    assert.equal(await packagedOnboarding.installationInstructions(application), await installationInstructions(process.cwd()),
+      'The installed application must retain the canonical host handoff and its module dependencies');
+    const packagedHosts = await import(pathToFileURL(path.join(installer, 'package/scripts/npm-hosts.mjs')).href);
+    assert.match(packagedHosts.hostConnectionInstructions('codex'), /restart the desktop app manually and return to this same chat/);
     const readme = await readFile(path.join(installer, 'package/README.md'), 'utf8');
     assert(readme.includes("Reverse engineering for any video"));
     assert(readme.includes(`https://raw.githubusercontent.com/nexu-io/openmotion/${release.commit}/docs/readme/brand-hero.jpg`));

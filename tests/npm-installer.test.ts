@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { fileURLToPath } from 'node:url';
 import { diagnose, localManifest, setup } from '../scripts/npm-installer.mjs';
-import { hosts } from '../scripts/npm-hosts.mjs';
+import { hosts, hostConnectionInstructions } from '../scripts/npm-hosts.mjs';
 import { configureNativeEnvironment, ensureNativeRuntime, nativeConfiguration } from '../scripts/npm-runtime.mjs';
 import { canonical, obtainAsset, relativePath, runFile, sha256, withLock, writeJSON } from '../scripts/runtime-assets.mjs';
 
@@ -35,7 +35,7 @@ async function setupFixture(t: any) {
   const directory = await fixture(t), application = path.join(directory, 'source'), home = path.join(directory, 'install'), skillsDirectory = path.join(directory, 'skills');
   for (const name of ['scripts', 'shared', 'studio/build', 'skills/motion-production', 'docs']) await mkdir(path.join(application, name), { recursive: true });
   for (const name of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'README.md', 'AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(application, name), 'fixture');
-  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
+  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/npm-hosts.mjs', 'scripts/runtime-assets.mjs']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
   await writeFile(path.join(application, 'skills/motion-production/SKILL.md'), '---\nname: motion-production\ndescription: fixture\n---\nFixture');
   await writeJSON(path.join(application, 'shared/template-config.json'), { environment: 'prod' });
   await cp(new URL('../shared/mcp-profiles.json', import.meta.url), path.join(application, 'shared/mcp-profiles.json'));
@@ -54,6 +54,9 @@ test('successful setup hands the current Agent an invitation before any MCP use,
   const options = await setupFixture(t);
   const installed = await setup(options);
   assert.equal(installed.onboarding.hostSessionVerified, false);
+  assert.equal(installed.onboarding.nextAction, hostConnectionInstructions('codex'));
+  assert.match(installed.onboarding.nextAction, /restart the desktop app manually and return to this same chat/);
+  assert.match(installed.onboarding.nextAction, /Do not reinstall OpenMotion or restart the host automatically/);
   assert.match(installed.onboarding.instructions, /OpenMotion 开源免费/);
   assert(Array.isArray(installed.onboarding.catalog.templates));
   assert.equal('onboarding' in JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')), false);
@@ -78,6 +81,9 @@ test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and
   const cli = path.join(bundle, 'scripts/npm-installer.mjs');
   const command = [cli, 'setup', '--host', 'workbuddy', '--skills-dir', options.skillsDirectory];
   const first = JSON.parse(await runFile(process.execPath, command, { env }));
+  assert.equal(first.onboarding.hostSessionVerified, false);
+  assert.equal(first.onboarding.nextAction, hostConnectionInstructions('workbuddy'));
+  assert.doesNotMatch(first.onboarding.nextAction, /Codex|Claude Code/);
   assert.equal(path.basename(path.dirname(first.launcher)), 'openmotion-dev');
   assert.equal(first.templateEnvironment, 'dev');
   assert.equal((await runFile(process.execPath, command, { env })).includes(first.appRoot), true);
@@ -246,6 +252,7 @@ for await(const line of createInterface({input:process.stdin})){
     const result = await diagnose({ home: options.home, host, codex: options.codex });
     assert.equal(result.status, 'passed', JSON.stringify(result));
     assert.equal(result.hostSessionVerified, false, 'an independent process cannot confirm the active chat');
+    assert.equal(result.nextAction, hostConnectionInstructions(host));
     assert.equal(result.dataDirectory, installed.dataDirectory);
     assert.deepEqual(result.tools, expected);
     assert.match(result.nextAction, /motion_get_project/);

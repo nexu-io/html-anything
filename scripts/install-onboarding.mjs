@@ -4,6 +4,7 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile } from './runtime-assets.mjs';
+import { hostConnectionInstructions } from './npm-hosts.mjs';
 
 export async function installationInstructions(appRoot) {
   const guide = await readFile(path.join(appRoot, 'docs/install.md'), 'utf8');
@@ -40,7 +41,7 @@ export async function bundledOnboardingTemplates(appRoot) {
   return templates.sort((a, b) => a.templateId.localeCompare(b.templateId));
 }
 
-export async function prepareInstallationOnboarding({ appRoot, dataDirectory, templateEnvironment }) {
+export async function prepareInstallationOnboarding({ appRoot, dataDirectory, templateEnvironment, host = 'codex' }) {
   // A missing canonical contract fails before host registration.
   const instructions = await installationInstructions(appRoot);
   const bundled = await bundledOnboardingTemplates(appRoot);
@@ -57,7 +58,7 @@ export async function prepareInstallationOnboarding({ appRoot, dataDirectory, te
       catalogTotal: null, included: bundled.length, truncated: false, stale: false,
       warning: 'Remote catalog unavailable; using verified bundled examples only.', templates: bundled };
   }
-  return { hostSessionVerified: false, instructions, catalog };
+  return { hostSessionVerified: false, nextAction: hostConnectionInstructions(host), instructions, catalog };
 }
 
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
