@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18n';
 import { WorkspaceFrame, WorkspaceMenuButton, useWorkspaceChrome } from './WorkspaceFrame';
-import { motionApi, type ProjectCatalog } from './useWorkspace';
+import { motionApi, navigateWorkspace, type ProjectCatalog } from './useWorkspace';
 import { requestedProject, validWorkspaceProject } from './workspaceRouting';
 import type { SessionDetail, SessionArtifact } from '../../../shared/session';
 import { ArtifactViewer } from './ArtifactViewer';
@@ -59,7 +59,7 @@ export function MotionApp() {
     void resolve().catch(err => { if (!controller.signal.aborted) setError((err as Error).message); });
     return () => controller.abort();
   }, [projectId, sessionId, attempt, libraryOnly]);
-  if (libraryOnly) return <WorkspaceFrame waitForSaves={noPendingSaves}><TemplateLibraryLanding /></WorkspaceFrame>;
+  if (libraryOnly) return <WorkspaceFrame waitForSaves={noPendingSaves} onLibraryClose={() => navigateWorkspace('/', true)}><TemplateLibraryLanding /></WorkspaceFrame>;
   if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{t(error)}</p><div><WorkspaceMenuButton /><a className="motion-button" href="/">{t('Open active project')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
   const loading = <MotionLoading />;
   return ready ? <WorkspaceFrame waitForSaves={noPendingSaves} projectId={ready.artifact?.projectId} sessionId={ready.sessionId}>{ready.artifact ? <ArtifactViewer artifact={ready.artifact} /> : <div className="motion-route-state"><WorkspaceMenuButton />{t('Create a project with your Agent to start editing.')}</div>}</WorkspaceFrame> : loading;
