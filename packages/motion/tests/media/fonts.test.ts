@@ -49,3 +49,21 @@ it("derives one face per byte identity and rejects missing stylesheet/custom-pro
     ]),
   ).not.toThrow();
 });
+
+it("reads literal quoted font families from authored Agent source without changing other styles", async () => {
+  const source = html.replace(
+      'data-hf-id="title"',
+      `data-hf-id="title" style="font-size:36px;font-family:'${family}'"`,
+    ),
+    model = await Motion.open(source);
+  try {
+    expect(model.clips.find((clip) => clip.id === "title")?.fontFamily).toBe(family);
+    const changed = model.patch("title", { fontSize: 37 });
+    expect(changed).toMatch(new RegExp(`font-family:\\s*'${family}'`));
+    expect(model.clips.find((clip) => clip.id === "title")?.fontFamily).toBe(family);
+    const compiled = assembleProject([{ path: "index.html", content: changed }], [face]);
+    expect(compiled.html).toContain(family);
+  } finally {
+    model.dispose();
+  }
+});

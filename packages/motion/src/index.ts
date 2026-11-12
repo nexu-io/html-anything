@@ -87,7 +87,9 @@ export class Motion {
         ? Number.parseFloat(e.inlineStyles.fontSize ?? "")
         : null,
       fontFamily: (() => {
-        const value = e.inlineStyles.fontFamily;
+        const authored = e.inlineStyles.fontFamily,
+          single = authored?.match(/^'([\p{L}\p{N} _-]+)'$/u),
+          value = single ? single[1] : authored;
         if (!value) return null;
         try {
           return value.startsWith('"')
