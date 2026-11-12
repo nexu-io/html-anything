@@ -106,7 +106,7 @@ test('every workflow document and linked reference is reachable over MCP with ca
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
-test('MCP template delivery exposes a paused, visible opening-frame handoff with user playback precedence', async () => {
+test('MCP template delivery exposes a paused zero-second handoff with user playback precedence', async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-workflow-opening-frame-'));
   try {
     const responses = stdio(directory, [
@@ -117,9 +117,11 @@ test('MCP template delivery exposes a paused, visible opening-frame handoff with
     const native = responses.get(2).structuredContent;
     assert.ok(template.references.some((reference: { documentId: string }) =>
       reference.documentId === native.documentId), 'Template delivery must expose the shared handoff to MCP-only clients');
-    assert.match(template.content, /After the playback check[\s\S]*?paused at the beginning/i, 'The template route must apply the handoff after playback');
-    assert.match(native.content, /opening frame[^.]*blank[\s\S]*?earliest opening frame[^.]*authored content/i, 'A blank first frame needs an early authored-content fallback');
-    assert.match(native.content, /Before recording display confirmation[\s\S]*?default handoff[^.]*authored content[^.]*stable[^.]*paused/i, 'Visible content and stable paused playback must be checked before confirmation');
+    assert.match(template.content, /After the playback check[\s\S]*?paused at 0 seconds[^.]*opening frame is blank/i, 'Template delivery must stay at zero even with a blank first frame');
+    assert.match(native.content, /pause the preview first[^.]*seek to 0 seconds/i, 'Playback must pause before seeking to zero');
+    assert.match(native.content, /paused at 0 seconds[^.]*opening frame is blank[^.]*do not advance/i, 'A blank opening must not move the playhead forward');
+    assert.match(native.content, /Before recording display confirmation[\s\S]*?default handoff[^.]*at 0 seconds[^.]*stable[^.]*paused/i, 'Stable paused playback at zero must be checked before confirmation');
+    assert.match(native.content, /authored blank opening frame is valid[^.]*unloaded preview is not/i, 'An authored blank frame must remain distinct from a preview that failed to load');
     assert.match(native.content, /explicit user request[^.]*playback[^.]*takes precedence/i, 'Explicit playback requests must retain precedence');
     assert.match(native.content, /explicit playback request[^.]*verify[^.]*requested position or playing state/i, 'Requested playing states must be verified without forcing a pause');
     assert.match(native.content, /observed time[^.]*playback state[^.]*visible content[^.]*display evidence/i, 'Display evidence must identify the observed handoff state');
