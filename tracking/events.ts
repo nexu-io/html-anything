@@ -64,9 +64,10 @@ export const omEvents = {
     filter_group: ['brand', 'uses', 'styles', 'industries', 'creationModels', 'colors', 'ratio', 'duration'], filter_value: 'slug',
     selected: 'boolean', expanded: 'boolean', previous_sort: sortOrder, changed: 'boolean', ...templateDetail, ...templateList },
     required: ['page_name', 'area', 'element'] },
-  // A surface that became visible: the library, one template's detail, or the instruction to copy.
-  surface_view: { producers: ['studio'], fields: { page_name: ['home', 'studio'], area: ['template_library', 'template_detail', 'template_instruction'],
-    element: ['library', 'detail', 'instruction'], result_count: 'integer', ...templateDetail, ...project, ...template },
+  // A surface that became visible: the library, a template card, one template's detail, or the instruction to copy.
+  // A card counts once it is at least half visible for a second, once per result set and placement.
+  surface_view: { producers: ['studio'], fields: { page_name: ['home', 'studio'], area: ['template_library', 'template_card', 'template_detail', 'template_instruction'],
+    element: ['library', 'card', 'detail', 'instruction'], placement: ['popular', 'catalog'], position: 'integer', ...templateList, ...templateDetail, ...project, ...template },
     required: ['page_name', 'area', 'element'] },
   // One per settled query, never per keystroke. `search_keyword` is the only free-text field in this registry.
   template_search_result: { producers: ['studio'], fields: { page_name: ['home', 'studio'], area: ['template_discovery'],

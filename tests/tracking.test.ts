@@ -339,6 +339,7 @@ test('template library events: the search keyword is the only free text and stay
   no('ui_click', { page_name: 'studio', area: 'template_discovery', element: 'category_select', search_keyword: 'x' });
   ok('ui_click', { page_name: 'studio', area: 'template_card', element: 'open_detail', template_id: 'hf-moment-M1147', placement: 'popular', position: 1 });
   ok('surface_view', { page_name: 'studio', area: 'template_detail', element: 'detail', detail_view_id: id, detail_mode: 'modal' });
+  ok('surface_view', { page_name: 'studio', area: 'template_card', element: 'card', template_id: 'hf-moment-M1147', placement: 'catalog', position: 12, sort: 'recommended', applied_filter_count: 0 });
   ok('template_filter_result', { action: 'sort_change', result_count: 0, outcome: 'success', sort: 'reverse' });
   ok('resource_download_result', { resource_kind: 'motion_guide', download_attempt_id: id, delivery_status: 'fetch_failed', error_code: 'HTTP_404' });
   no('resource_download_result', { resource_kind: 'motion_guide', download_attempt_id: id, delivery_status: 'saved_to_disk' });

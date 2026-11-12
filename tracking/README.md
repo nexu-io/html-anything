@@ -155,8 +155,11 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
   slug of the catalogue value and omitted when it cannot be reduced to one.
   `template_search_result.search_keyword` is the one free-text field in the
   registry: the settled search-box value, trimmed and capped at 100 characters,
-  sent once per keyword 500 ms after typing stops and never per keystroke. Card
-  impressions, hover, scroll depth and video progress are not reported.
+  sent once per keyword 500 ms after typing stops and never per keystroke. A card
+  impression (`template_card` / `card`) is reported once the card has been at
+  least half visible for one second and is not covered by a dialog, once per
+  placement and per search, filter and sort combination, so click-through per
+  card can be read. Hover, scroll depth and video progress are not reported.
 - Editor events carry `project_scope`; `project_id` is sent only when the Studio
   project id is a UUID. The built-in local project (id `project`) reports
   `project_scope=default` and no id; names and titles are never sent.

@@ -41,8 +41,24 @@ function values(template: GalleryTemplate, key: Facet): string[] {
   return template[key] ?? [];
 }
 
-function TemplateCard({ template, onSelect }: { template: GalleryTemplate; onSelect: () => void }) {
+/** `exposureKey` names the result set the card is shown in; `onSeen` returns false when the card is covered and should be retried. */
+function TemplateCard({ template, onSelect, exposureKey, onSeen }: { template: GalleryTemplate; onSelect: () => void; exposureKey: string; onSeen: () => boolean }) {
   const { t } = useI18n();
+  const card = useRef<HTMLElement>(null), seen = useRef(onSeen); seen.current = onSeen;
+  // Seen means at least half the card stayed on screen for one second; it is reported once per result set.
+  useEffect(() => {
+    const element = card.current;
+    if (!element) return;
+    let timer: ReturnType<typeof setTimeout> | undefined, done = false;
+    const arm = () => { timer = setTimeout(() => { timer = undefined; if (seen.current()) { done = true; observer.disconnect(); } else arm(); }, 1000); };
+    const observer = new IntersectionObserver(([entry]) => {
+      if (done) return;
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) { if (timer === undefined) arm(); }
+      else { clearTimeout(timer); timer = undefined; }
+    }, { threshold: 0.5 });
+    observer.observe(element);
+    return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [exposureKey]);
   const video = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const stop = () => { video.current?.pause(); setPlaying(false); };
@@ -58,7 +74,7 @@ function TemplateCard({ template, onSelect }: { template: GalleryTemplate; onSel
     if (!video.current.src) video.current.src = template.previewUrl!;
     void video.current.play().then(() => setPlaying(true)).catch(() => {});
   };
-  return <article className={styles.card} data-template-id={template.id}>
+  return <article ref={card} className={styles.card} data-template-id={template.id}>
     <button className={styles.cover} onClick={onSelect} onMouseEnter={play} onMouseLeave={stop} onFocus={play} onBlur={stop} aria-label={t('Preview template {title}', { title: template.title })}>
       {template.posterUrl ? <img src={template.posterUrl} alt="" loading="lazy" /> : <span>{template.title}</span>}
       {template.previewUrl && <video ref={video} muted playsInline loop preload="none" aria-hidden="true" style={{ opacity: playing ? 1 : 0 }} />}
@@ -99,7 +115,7 @@ export function TemplateLibraryDialog(props: Props) {
   useEffect(() => {
     if (!props.open) return;
     setCatalog([]); setSelected({}); setQuery(''); setPreview(null); detail.current?.close(); useDialog.current?.close();
-    shown.current = false; searchId.current = undefined; reportedQuery.current = ''; pendingResult.current = undefined;
+    shown.current = false; searchId.current = undefined; reportedQuery.current = ''; pendingResult.current = undefined; shownCards.current.clear();
     const controller = new AbortController();
     let version: string | undefined, pending = false;
     async function load() {
@@ -219,7 +235,20 @@ export function TemplateLibraryDialog(props: Props) {
     const view = tracking.newTrackingId(); detailViewId.current = view;
     tracking.reportDetailShown(item, view, props.projectId);
   };
-  const cards = (items: GalleryTemplate[], placement: Placement) => <div className={styles.grid}>{items.map((item, index) => <TemplateCard key={item.id} template={item} onSelect={() => show(item, placement, index + 1)} />)}</div>;
+  // One result set per search, filter and sort combination: a card is reported again only when that combination changes.
+  const resultSet = JSON.stringify([query.trim(), sort, selected]);
+  const shownCards = useRef(new Set<string>());
+  const cardSeen = (item: GalleryTemplate, placement: Placement, position: number) => {
+    if (document.hidden || detail.current?.open || filter.current?.open || useDialog.current?.open) return false;
+    const key = `${resultSet}|${placement}|${item.id}`;
+    if (shownCards.current.has(key)) return true;
+    shownCards.current.add(key);
+    settleSearch();
+    tracking.reportCardShown(item, placement, position, listContext(), props.projectId);
+    return true;
+  };
+  const cards = (items: GalleryTemplate[], placement: Placement) => <div className={styles.grid}>{items.map((item, index) => <TemplateCard key={item.id} template={item} exposureKey={resultSet}
+    onSelect={() => show(item, placement, index + 1)} onSeen={() => cardSeen(item, placement, index + 1)} />)}</div>;
   return <dialog ref={dialog} className={styles.library} aria-label={t('Template library')} onKeyDown={event => event.stopPropagation()} onCancel={event => { if (event.target !== dialog.current) return; event.preventDefault(); if (!props.busy) props.onClose(); }}>
     <header className={styles.header}><h1>{t('Template library')}</h1><button disabled={props.busy} onClick={props.onClose} aria-label={t('Close template library')}><MotionIcon name="close" size={24} /></button></header>
     {(props.error || error) && <div className={styles.status} role="alert">{t(props.error || error)}{error && <button onClick={() => retry(value => value + 1)}>{t('Retry')}</button>}</div>}

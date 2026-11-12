@@ -164,3 +164,46 @@ it('reports one search per settled keyword with the keyword and result count, pl
     for (const { event, ...properties } of reported()) expect(validProperties(studioEvents, event, properties), JSON.stringify({ event, ...properties })).toBe(true);
   } finally { vi.useRealTimers(); }
 });
+
+it('reports a card as seen once it stays half visible for a second, once per result set and never while a dialog covers it', async () => {
+  const observers: { callback: IntersectionObserverCallback; element?: Element }[] = [];
+  vi.stubGlobal('IntersectionObserver', class { constructor(public callback: IntersectionObserverCallback) { observers.push(this); }
+    element?: Element; observe(element: Element) { this.element = element; } disconnect() { this.element = undefined; } });
+  const cross = (id: string, ratio: number) => observers.filter(item => item.element?.getAttribute('data-template-id') === id)
+    .forEach(item => item.callback([{ isIntersecting: ratio > 0, intersectionRatio: ratio } as IntersectionObserverEntry], item as never));
+  const seen = () => reported().filter(item => item.element === 'card');
+  vi.useFakeTimers();
+  try {
+    vi.mocked(trackMotion).mockClear();
+    await mount();
+    await act(async () => cross('two', 0.6));
+    await act(async () => { vi.advanceTimersByTime(900); });
+    await act(async () => cross('two', 0.2));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen()).toHaveLength(0);
+    await act(async () => cross('two', 0.6));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen()).toHaveLength(1);
+    expect(seen()[0]).toMatchObject({ event: 'surface_view', area: 'template_card', template_id: 'two', placement: 'catalog', position: 1, sort: 'recommended', applied_filter_count: 0 });
+    await act(async () => cross('two', 0)); await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(2000); });
+    expect(seen()).toHaveLength(1);
+
+    // The same template in the popular row and in the list are two placements.
+    await act(async () => cross('one', 1));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen().slice(1).map(item => [item.template_id, item.placement, item.position])).toEqual([['one', 'popular', 1], ['one', 'catalog', 2]]);
+
+    // A new result set reports the card again; a card under an open detail dialog waits until it is uncovered.
+    const sort = host.querySelector<HTMLSelectElement>('select')!;
+    await act(async () => { sort.value = 'name'; sort.dispatchEvent(new Event('change', { bubbles: true })); });
+    await act(async () => button('First').click());
+    await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    expect(seen().filter(item => item.sort === 'name')).toHaveLength(0);
+    await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=关闭模板预览]')!.click());
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen().filter(item => item.sort === 'name').map(item => item.template_id)).toEqual(['two']);
+    for (const { event, ...properties } of reported()) expect(validProperties(studioEvents, event, properties), JSON.stringify({ event, ...properties })).toBe(true);
+  } finally { vi.useRealTimers(); }
+});

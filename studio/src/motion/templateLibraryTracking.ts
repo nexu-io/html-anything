@@ -39,6 +39,10 @@ export const searchKeyword = (query: string) => query.replace(/[\u0000-\u001f\u0
 export function reportLibraryShown(resultCount: number, projectId?: string | null) {
   send('surface_view', { ...studio(projectId), area: 'template_library', element: 'library', result_count: resultCount });
 }
+/** The denominator for a card's click-through rate. The caller decides when a card was really seen and reports it once per result set. */
+export function reportCardShown(template: Template, placement: Placement, position: number, context: ListContext, projectId?: string | null) {
+  send('surface_view', { ...studio(projectId), area: 'template_card', element: 'card', ...templateFields(template.id), ...resource(template), placement, position, ...list(context) });
+}
 export function reportCardOpened(template: Template, placement: Placement, position: number, context: ListContext, projectId?: string | null) {
   send('ui_click', { ...studio(projectId), area: 'template_card', element: 'open_detail', ...templateFields(template.id), ...resource(template), placement, position, ...list(context) });
 }
