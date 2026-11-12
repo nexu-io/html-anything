@@ -16,6 +16,7 @@ describe("script dependencies when deleting elements", () => {
   it.each([
     'document.querySelector("#mk-ch-box").style.color = "red";',
     'document["getElementById"](`mk-ch-box`).remove();',
+    'document[`getElementById`]("mk-ch-box").style.color = "red";',
     'document.querySelectorAll(".word").forEach(el => el.remove());',
     'document.getElementsByClassName("word")[0].style.color = "red";',
     'document.getElementsByTagName("div")[0].remove();',
@@ -49,8 +50,24 @@ describe("script dependencies when deleting elements", () => {
     expect(() => assertSafeElementDeletion(source, [{ selector: ".item", selectorIndex: 1 }])).toThrow();
   });
 
+  it.each(["hf-box", "hf-host/hf-box"])("refuses ambiguous or scoped handles before SDK and server resolution can disagree: %s", (hfId) => {
+    const source = composition('document.getElementById("box").style.color = "red";',
+      '<div data-hf-id="hf-host" data-composition-file="nested.html"><div data-hf-id="hf-box" id="nested-box"></div></div><div data-hf-id="hf-box" id="box"></div>');
+    expect(() => assertSafeElementDeletion(source, [{ hfId }])).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
   it("ignores data scripts and refuses unparseable executable scripts before deletion", () => {
     expect(() => assertSafeElementDeletion('<div id="box"></div><script type="application/json">{"id":"box"}</script>', [{ id: "box" }])).not.toThrow();
     expect(() => assertSafeElementDeletion('<div id="box"></div><script>const = invalid</script>', [{ id: "box" }])).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
+  it.each(["application/x-javascript", "text/javascript1.5", "text/jscript", "text/x-ecmascript"])("checks executable legacy script types: %s", (type) => {
+    const source = `<div data-hf-id="hf-box" id="box"></div><script type="${type}">document.getElementById("box").style.color = "red";</script>`;
+    expect(() => assertSafeElementDeletion(source, [{ hfId: "hf-box" }])).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
+  it("does not block ambiguous handles when the file contains only data scripts", () => {
+    const source = '<div data-hf-id="hf-box"></div><div data-hf-id="hf-box"></div><script type="application/json">{"id":"hf-box"}</script>';
+    expect(() => assertSafeElementDeletion(source, [{ hfId: "hf-box" }])).not.toThrow();
   });
 });

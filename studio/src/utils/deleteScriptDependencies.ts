@@ -16,8 +16,10 @@ function descendants(root: Document | Element): Element[] {
 }
 
 function findTarget(elements: Element[], target: PatchTarget): Element | undefined {
-  const hf = target.hfId && elements.find((el) => el.getAttribute("data-hf-id") === target.hfId);
-  if (hf) return hf;
+  const matches = target.hfId ? elements.filter((el) => el.getAttribute("data-hf-id") === target.hfId) : [];
+  // SDK scope resolution and REST document order can select different nodes.
+  if (target.hfId?.includes("/") || matches.length > 1) throw new Error(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  if (matches[0]) return matches[0];
   const id = target.id && elements.find((el) => el.id === target.id);
   if (id) return id;
   return target.selector
@@ -28,6 +30,7 @@ function findTarget(elements: Element[], target: PatchTarget): Element | undefin
 function propertyName(member: MemberExpression): string | undefined {
   if (!member.computed && member.property.type === "Identifier") return member.property.name;
   if (member.property.type === "Literal" && typeof member.property.value === "string") return member.property.value;
+  if (member.property.type === "TemplateLiteral" && member.property.expressions.length === 0) return member.property.quasis[0]?.value.cooked ?? undefined;
   return undefined;
 }
 
@@ -65,6 +68,12 @@ export function assertSafeElementDeletion(source: string, targets: PatchTarget[]
   // shortcut: inspect direct inline DOM lookups; extend for external scripts or indirect DOM access when supported by the editor.
   if (!/<script\b/i.test(source)) return;
   const elements = descendants(new DOMParser().parseFromString(source, "text/html"));
+  const scripts = elements.filter((el) => {
+    if (el.localName !== "script" || el.hasAttribute("src")) return false;
+    const type = el.getAttribute("type")?.trim() ?? "";
+    return !type || /^(?:module|(?:text|application)\/(?:x-)?(?:java|ecma)script|text\/(?:javascript1\.[0-5]|jscript|livescript))$/i.test(type);
+  });
+  if (scripts.length === 0) return;
   const removed = new Set<Element>();
   for (const target of targets) {
     const element = findTarget(elements, target);
@@ -74,12 +83,10 @@ export function assertSafeElementDeletion(source: string, targets: PatchTarget[]
     }
   }
   if (removed.size === 0) return;
-  for (const script of elements) {
-    if (script.localName !== "script" || removed.has(script) || script.hasAttribute("src")) continue;
-    const type = script.getAttribute("type")?.trim() ?? "";
-    if (type && !/^(?:module|(?:text|application)\/(?:java|ecma)script)$/i.test(type)) continue;
+  for (const script of scripts) {
+    if (removed.has(script)) continue;
     try {
-      if (!hasDependency(parse(script.textContent ?? "", { ecmaVersion: "latest", sourceType: type === "module" ? "module" : "script" }), removed)) continue;
+      if (!hasDependency(parse(script.textContent ?? "", { ecmaVersion: "latest", sourceType: script.getAttribute("type")?.trim().toLowerCase() === "module" ? "module" : "script" }), removed)) continue;
     } catch {
       // An unparseable executable script cannot be proven independent of the removed subtree.
     }

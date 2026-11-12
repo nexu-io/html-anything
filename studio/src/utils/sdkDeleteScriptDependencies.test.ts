@@ -33,3 +33,32 @@ it.each([false, true])("checks script dependencies in the latest SDK candidate (
     expect(live.serialize()).toBe(before);
   } finally { live.dispose(); }
 });
+
+it.each([
+  ["hf-box", "box"],
+  ["hf-host/hf-box", "nested-box"],
+])("preserves the SDK's actual target when its handle is ambiguous or scoped: %s", async (hfId, domId) => {
+  const source = `<html><body><div data-hf-root data-hf-id="hf-stage">
+    <div data-hf-id="hf-host" data-composition-file="nested.html"><div data-hf-id="hf-box" id="nested-box"></div></div>
+    <div data-hf-id="hf-box" id="box"></div></div>
+    <script>document.getElementById("${domId}").style.color = "red";</script></body></html>`;
+  const live = await openComposition(source, { history: false });
+  const before = live.serialize();
+  const deps = {
+    readProjectFile: vi.fn().mockResolvedValue(source),
+    writeProjectFile: vi.fn(),
+    editHistory: { recordEdit: vi.fn() },
+    publishSession: vi.fn(),
+    reloadPreview: vi.fn(),
+  };
+  try {
+    expect(live.getElement(hfId)?.attributes.id).toBe(domId);
+    const result = await sdkDeletePersist(hfId, source, "index.html", live, deps);
+    expect(result).toMatchObject({ status: "failed", error: new Error(SCRIPT_DEPENDENCY_DELETE_MESSAGE) });
+    expect(deps.writeProjectFile).not.toHaveBeenCalled();
+    expect(deps.editHistory.recordEdit).not.toHaveBeenCalled();
+    expect(deps.publishSession).not.toHaveBeenCalled();
+    expect(deps.reloadPreview).not.toHaveBeenCalled();
+    expect(live.serialize()).toBe(before);
+  } finally { live.dispose(); }
+});
