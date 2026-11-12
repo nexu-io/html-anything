@@ -1,13 +1,23 @@
 import { z } from "zod";
 import { type Resource, resourceData, resourcePath } from "./resources/contract.js";
 
-export { type Resource, resourceLimit } from "./resources/contract.js";
+export {
+  type Resource,
+  resource,
+  resourceBytesLimit,
+  resourceCountLimit,
+  resourceLimit,
+} from "./resources/contract.js";
 export const id = z.uuid();
 export const revision = z.string().regex(/^sha256:[a-f0-9]{64}$/);
 const title = z.string().trim().min(1).max(120);
 const text = z.string().trim().min(1).max(8000);
 const request = { requestId: id };
-export const file = z.strictObject({ path: z.string().min(1).max(240), content: z.string().max(1048576) });
+export const sourceLimits = Object.freeze({ files: 128, bytes: 4 * 1024 * 1024, fileCharacters: 1048576 });
+export const file = z.strictObject({
+  path: z.string().min(1).max(240),
+  content: z.string().max(sourceLimits.fileCharacters),
+});
 /** Immutable source intent; resolved files remain outside its retry identity. */
 export const sourceIntent = z.strictObject({
   ...request,
@@ -38,7 +48,12 @@ export const schemas = {
   session_rename: z.strictObject({ ...request, sessionId: id, title }),
   session_get: z.strictObject({ sessionId: id }),
   message_append: z.strictObject({ ...request, sessionId: id, role: z.enum(["user", "assistant"]), content: text }),
-  artifact_create: z.strictObject({ ...request, sessionId: id, title, files: z.array(file).min(1).max(128) }),
+  artifact_create: z.strictObject({
+    ...request,
+    sessionId: id,
+    title,
+    files: z.array(file).min(1).max(sourceLimits.files),
+  }),
   artifact_open: z.strictObject({ ...request, ...owner, ...selection }),
   session_open: z.strictObject({ ...request, sessionId: id, ...selection }),
   project_read: z.strictObject(owner),
@@ -69,7 +84,7 @@ export const schemas = {
     ...request,
     ...owner,
     expectedRevision: revision,
-    files: z.array(file).min(1).max(128),
+    files: z.array(file).min(1).max(sourceLimits.files),
   }),
 } as const;
 export type Operation = keyof typeof schemas;
@@ -307,19 +322,20 @@ export function mergeSources(
     }
     if (content !== undefined) files.push({ path, content });
   }
-  if (files.length > 128) throw new Fault("invalid", "merged source count exceeds 128");
+  if (files.length > sourceLimits.files) throw new Fault("invalid", "merged source count exceeds 128");
   if (!conflicts.length) {
     const names = new Set(files.map((file) => file.path));
     if (!names.has("index.html")) throw new Fault("invalid", "merged sources require index.html");
     let bytes = 0;
     for (const file of files) {
       validateSourcePath(file.path, true);
-      if (file.content.length > 1048576) throw new Fault("invalid", "merged file exceeds text bound");
+      if (file.content.length > sourceLimits.fileCharacters)
+        throw new Fault("invalid", "merged file exceeds text bound");
       bytes += new TextEncoder().encode(file.content).length;
       for (let at = file.path.indexOf("/"); at >= 0; at = file.path.indexOf("/", at + 1))
         if (names.has(file.path.slice(0, at))) throw new Fault("invalid", "merged source paths overlap");
     }
-    if (bytes > 4 * 1024 * 1024) throw new Fault("invalid", "merged source exceeds 4 MiB");
+    if (bytes > sourceLimits.bytes) throw new Fault("invalid", "merged source exceeds 4 MiB");
   }
   return { files, conflicts };
 }
