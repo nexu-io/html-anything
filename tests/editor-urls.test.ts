@@ -49,9 +49,9 @@ test('macOS source launchers and both MCP profiles hand off OpenMotion URLs', { 
   const clients = [new Client(store.directory), new Client(store.directory, { legacy: true })];
   try {
     await Promise.all(clients.map(client => client.initialize()));
-    const created = await clients[0].call('motion_create_project', { requestId: 'editor-urls', projectType: 'natural_language',
+    const created = await clients[0].call('openmotion_create_project', { requestId: 'editor-urls', projectType: 'natural_language',
       title: 'Editor URLs', requirements: 'Verify editor URL handoffs without generating media or exporting.' });
-    const opened = await clients[0].call('motion_open_preview', { projectId: created.projectId });
+    const opened = await clients[0].call('openmotion_open_preview', { projectId: created.projectId });
     const origin = new URL(opened.previewUrl).origin;
     const assertUrls = (value: Record<string, any>) => {
       for (const field of ['previewUrl', 'studioUrl', 'sessionUrl', 'embeddedPreviewUrl', 'serverUrl']) {
@@ -60,7 +60,7 @@ test('macOS source launchers and both MCP profiles hand off OpenMotion URLs', { 
       if (value.previewHandoff) assert.equal(new URL(value.previewHandoff.previewUrl).origin, origin);
     };
     assertUrls(opened);
-    assertUrls(await clients[1].call('motion_open_preview', { projectId: created.projectId }));
+    assertUrls(await clients[1].call('openmotion_open_preview', { projectId: created.projectId }));
     for (const entry of ['server.ts', 'preview.ts']) {
       const { stdout } = await promisify(execFile)(process.execPath, ['--experimental-strip-types', path.join(pluginRoot, entry)], {
         cwd: pluginRoot, env: { ...process.env, MOTION_DATA_DIR: store.directory }, timeout: 20_000 });

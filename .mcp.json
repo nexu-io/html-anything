@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "motion": {
+    "openmotion": {
       "type": "stdio",
       "command": "node",
       "args": [

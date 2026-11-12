@@ -20,7 +20,7 @@
 2. 复制接入指令，由客户端读取当前工作区的指引。按[适配器说明](agent-adapters.md)安装 Skills / MCP；已有连接先核对数据目录。
 3. 在模板库搜索 **Product Promo**，打开大预览，展开“查看复制指令”。确认 ID 为 `product-promo`，指引 URL 同时包含所选 `host` 和 `template=product-promo`。
 4. 点击“一键复制 / 一键复刻”，粘贴到目标 Agent，再附上自己的文案、图片和保持项。按钮负责交接指令，实际制作由 Agent 执行。
-5. Agent 读取具体模板的指引，沿用 `motion-template-to-video`，创建独立模板工程；修改已有工程前读取当前 revision。外部视频参考走 `motion-recreate`，不能用本地示例替代未知参考。
+5. Agent 读取具体模板的指引，沿用 `openmotion-template-to-video`，创建独立模板工程；修改已有工程前读取当前 revision。外部视频参考走 `openmotion-recreate`，不能用本地示例替代未知参考。
 6. 打开可编辑预览并检查；需要导出时另外提出要求，固定版本导出与成片验收继续按[制作流程](skills.md)执行。
 
 可直接补充给 Agent 的需求：
@@ -33,15 +33,15 @@
 
 开发者使用 CI 固定的 Node，先安装锁定依赖并构建 Studio，给演示设置独立的 `MOTION_DATA_DIR`；工程、账号、终端日志与浏览器 profile 都留在 checkout 外。不要复用日常工作区来拍公开演示。
 
-- 用 `motion_create_project` 创建 `projectType=template`、`templateId=product-promo` 的示例，保留返回的工程与会话 ID。它是模板副本，不是模型新创作的影片。
-- 对明确的 `projectId` 调用 `motion_open_preview`。分别打开 `sessionUrl` 与 `embeddedPreviewUrl`，使用源码/图层面板，并把预览停在约 6.2 秒；两个 URL 的工程与会话 ID 应一致。
+- 用 `openmotion_create_project` 创建 `projectType=template`、`templateId=product-promo` 的示例，保留返回的工程与会话 ID。它是模板副本，不是模型新创作的影片。
+- 对明确的 `projectId` 调用 `openmotion_open_preview`。分别打开 `sessionUrl` 与 `embeddedPreviewUrl`，使用源码/图层面板，并把预览停在约 6.2 秒；两个 URL 的工程与会话 ID 应一致。
 - 打开 Connect Agent，保留接入指令可见；搜索并打开单个模板，展开复制指令后截取第二张图。核对 `host`、模板 ID 和原始来源。
 - 从已安装运行时导出本机适配器，在单独演示目录启动 `claude --plugin-dir "$motionAdapters/claude/openmotion"`，使用 `/skills` 查看五个入口。仅查看列表不需要模型完成创作。
-- 用 `motion_get_project` 返回的 `hyperframesCli` 和工程 `directory` 设置以下变量；CLI 是固定引擎入口，不能从薄插件目录猜测路径。
+- 用 `openmotion_get_project` 返回的 `hyperframesCli` 和工程 `directory` 设置以下变量；CLI 是固定引擎入口，不能从薄插件目录猜测路径。
 
 ```sh
-HYPERFRAMES_CLI=/absolute/path/returned/by/motion_get_project
-motionProject=/absolute/project/directory/returned/by/motion_get_project
+HYPERFRAMES_CLI=/absolute/path/returned/by/openmotion_get_project
+motionProject=/absolute/project/directory/returned/by/openmotion_get_project
 node "$HYPERFRAMES_CLI" info "$motionProject"
 node "$HYPERFRAMES_CLI" lint "$motionProject"
 node "$HYPERFRAMES_CLI" timeline "$motionProject"

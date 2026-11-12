@@ -132,7 +132,7 @@ async function input(req: IncomingMessage, maxBytes = 9 * 1024 * 1024) {
   return JSON.parse(Buffer.concat(chunks).toString());
 }
 function revision(value: unknown): asserts value is string {
-  if (typeof value !== 'string' || !/^[a-f0-9]{64}$/.test(value)) throw new Error('需要 motion_get_project 返回的 expectedRevision');
+  if (typeof value !== 'string' || !/^[a-f0-9]{64}$/.test(value)) throw new Error('需要 openmotion_get_project 返回的 expectedRevision');
 }
 
 async function openProject(store: WorkspaceStore, context: Service, origin: string, expectedRevision: string, target: { templateId: string } | { projectId: string } | { title: string; instruction?: string }, expectedProjectId?: string, sessionTarget?: { sessionId?: string; title?: string; templateId?: string; instruction?: string }) {
@@ -342,7 +342,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const address = new URL(editorUrl);
       const info: IntegrationInfo = {
         templateEnvironment: templateCatalogFor(store.directory).environment as 'dev' | 'prod',
-        name: 'OpenDesign', version: VERSION, previewUrl: address.origin, dataDirectory: store.directory,
+        name: 'OpenMotion', version: VERSION, previewUrl: address.origin, dataDirectory: store.directory,
         transport: { type: 'stdio', command: process.execPath, args: ['--experimental-strip-types', path.join(pluginRoot, 'mcp.ts')], cwd: pluginRoot,
           env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', ...Object.fromEntries(['MOTION_TEMPLATE_ENV', 'MOTION_TEMPLATE_RESOURCE_ID', 'MOTION_TEMPLATE_LOCALE', 'MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
         tools: mcpTools.map(({ name, description }) => ({ name, description })),

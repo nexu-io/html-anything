@@ -57,7 +57,7 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
   function renderHost() {
     const primary = host === 'chatgpt' ? 'mcp' : host;
     element('command-host').textContent = hostNames[host];
-    language.text(element('connect-title'), 'Create videos with OpenDesign, right in {host}.', { host: hostNames[host] });
+    language.text(element('connect-title'), 'Create videos with OpenMotion, right in {host}.', { host: hostNames[host] });
     language.text(element('setup-step-description'), 'Start a new conversation in {host}.', { host: hostNames[host] });
     language.text(element('host-description'), hostDescriptions[host]);
     language.text(element('setup-action'), blocked() ? "Connection requirements · " : "Copy this instruction and send it to ");
@@ -83,7 +83,7 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
     language.text(element('manual-config'), info ? manualConnection(info, host) : "Reconnect to the workspace to view the configuration.");
     language.text(element('config-description'), host === 'deepseek' ? "Add this plugin entry to your Harness configuration, keeping your existing plugins." : host === 'chatgpt' ? "This workspace uses local stdio. A remote MCP service is not available yet." : "Use this configuration to connect, keeping your existing services.");
     language.text(element('connection-help'), host === 'deepseek'
-      ? "Start the native service through @deepseek-ai/dsh-mcp-client. After reloading, call mcp__motion__motion_get_project to verify the workspace; DeepSeek model credentials are configured separately in Harness."
+      ? "Start the native service through @deepseek-ai/dsh-mcp-client. After reloading, call mcp__openmotion__openmotion_get_project to verify the workspace; DeepSeek model credentials are configured separately in Harness."
       : host === 'chatgpt' ? "The local preview URL cannot connect ChatGPT cloud. Choose a local client to continue."
       : "This configuration belongs to the current workspace. If a motion service already exists, check its data directory. Reopen the client session if needed to load the tools.");
     element('api-section').hidden = host !== 'mcp';
@@ -115,17 +115,17 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
   element<HTMLButtonElement>('copy-guide').onclick = event => { if (info) void copy(agentGuide(info, host), "Connection guide", event.currentTarget as HTMLButtonElement); };
 
   const toolDescriptions: Record<string, string> = {
-    motion_create_project: 'Create an editable project from a template or from scratch.',
-    motion_list_templates: 'Get the template catalogue and local index.',
-    motion_get_template: 'Read the details and files for one template.',
-    motion_open_preview: 'Open the editor and preview the project.',
-    motion_import_assets: 'Import media into the project.',
-    motion_get_project: 'Read project context, files, assets and revision.',
-    motion_edit_project: 'Edit project files and assets with revision checks.',
-    motion_export_request: 'Export the project as a video in the background.',
-    motion_list_versions: 'List saved project versions.',
-    motion_restore_version: 'Restore a saved version while keeping later history.',
-    motion_export_cancel: 'Cancel a running or queued export.',
+    openmotion_create_project: 'Create an editable project from a template or from scratch.',
+    openmotion_list_templates: 'Get the template catalogue and local index.',
+    openmotion_get_template: 'Read the details and files for one template.',
+    openmotion_open_preview: 'Open the editor and preview the project.',
+    openmotion_import_assets: 'Import media into the project.',
+    openmotion_get_project: 'Read project context, files, assets and revision.',
+    openmotion_edit_project: 'Edit project files and assets with revision checks.',
+    openmotion_export_request: 'Export the project as a video in the background.',
+    openmotion_list_versions: 'List saved project versions.',
+    openmotion_restore_version: 'Restore a saved version while keeping later history.',
+    openmotion_export_cancel: 'Cancel a running or queued export.',
   };
   async function checkConnection() {
     if (checking) return; checking = true;
@@ -133,10 +133,10 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
     language.text(element('service-status'), "Checking workspace"); element('service-dot').dataset.ready = 'false';
     try {
       const response = await fetch('/motion-api/integration', { signal: AbortSignal.any([lifetime.signal, AbortSignal.timeout(8000)]) });
-      if (!response.ok) throw new Error("Workspace unavailable. Check that the OpenDesign service is running.");
+      if (!response.ok) throw new Error("Workspace unavailable. Check that the OpenMotion service is running.");
       const value = await response.json() as IntegrationInfo;
       if (lifetime.signal.aborted) return;
-      if (!['OpenDesign', 'OpenMotion', 'OpenDesign Motion'].includes(value.name) || value.transport?.type !== 'stdio' || !value.transport.command || !Array.isArray(value.transport.args) || !value.transport.env?.MOTION_DATA_DIR || !Array.isArray(value.tools)) throw new Error("Invalid connection configuration. Update or restart the OpenDesign service.");
+      if (!['OpenDesign', 'OpenMotion', 'OpenDesign Motion'].includes(value.name) || value.transport?.type !== 'stdio' || !value.transport.command || !Array.isArray(value.transport.args) || !value.transport.env?.MOTION_DATA_DIR || !Array.isArray(value.tools)) throw new Error("Invalid connection configuration. Update or restart the OpenMotion service.");
       info = value; language.text(element('service-status'), 'Workspace reachable · v{version}', { version: info.version });
       element('service-dot').dataset.ready = 'true'; element('workspace-url').textContent = info.previewUrl;
       element('workspace-directory').textContent = info.dataDirectory; element('connection-error').hidden = true;

@@ -189,13 +189,13 @@ test('HTTP and MCP share settings, routes and job state without exposing keys or
   const request = transport(store), gateway = gatewayFor(store); gateway.options.detect = agents;
   const response = await request('/motion-api/models/providers/fal', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ apiKey: 'http-secret' }) });
   assert.equal(response.status, 200); assert.doesNotMatch(await response.text(), /http-secret/);
-  const capabilities = await callTool('motion_get_capabilities', {}, store) as Awaited<ReturnType<ModelGateway['status']>>;
+  const capabilities = await callTool('openmotion_get_capabilities', {}, store) as Awaited<ReturnType<ModelGateway['status']>>;
   assert.equal(capabilities.providers.find(p => p.id === 'fal')!.configured, true);
-  await callTool('motion_set_model_route', { modality: 'image', model: 'codex:image-generation' }, store);
+  await callTool('openmotion_set_model_route', { modality: 'image', model: 'codex:image-generation' }, store);
   const status = await (await request('/motion-api/models/capabilities')).json();
   assert.equal(status.routes.image, 'codex:image-generation');
   const job = await gateway.submit({ modality: 'image', prompt: 'asset' });
-  const read = await callTool('motion_get_generation', { jobId: job.id }, store) as { job: typeof job };
+  const read = await callTool('openmotion_get_generation', { jobId: job.id }, store) as { job: typeof job };
   assert.equal(read.job.id, job.id);
   const cancelled = await request(`/motion-api/generations/${job.id}/cancel`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
   assert.equal((await cancelled.json()).job.state, 'cancelled');

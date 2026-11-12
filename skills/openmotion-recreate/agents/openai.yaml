@@ -1,0 +1,3 @@
+interface:
+  display_name: "OpenMotion Recreate"
+  short_description: "在 OpenMotion 中将参考视频重建为可编辑作品"

@@ -8,7 +8,7 @@
 
 **Motion.md 是完整的创作设计规范，Brand Kit 是它内部的品牌章节**，与叙事、动效、声音和审阅规则一起构成同一份设计上下文。Logo、配色、字体、语气、产品事实和已确认素材都归入该章节；已有品牌文件可以作为引用材料，不要求另写一份与 Motion.md 并列的 `BRANDKIT.md`。
 
-[六组 reference / remix 动态对比](motion-design-examples.zh-CN.md) · [可运行的 Skill 包](../library/skills/motion-design-remix/SKILL.md) · [Ink & Water 设计体系](../library/design-systems/ink-water/MOTION_DESIGN.md) · [Brandkit](../library/brandkits/openmotion/BRANDKIT.md)
+[六组 reference / remix 动态对比](motion-design-examples.zh-CN.md) · [可运行的 Skill 包](../library/skills/openmotion-design-remix/SKILL.md) · [Ink & Water 设计体系](../library/design-systems/ink-water/MOTION_DESIGN.md) · [Brandkit](../library/brandkits/openmotion/BRANDKIT.md)
 
 **当前状态：** Motion.md 是 v0.1 写作提案，由用户显式交给 Agent 阅读；尚无自动导入、解析、注册或跨引擎执行保证。示例 Skill 的脚本只复制六种指定源码并执行已记录的内容替换，不会解释 Markdown，也不会自动重建任意视频。
 
@@ -54,14 +54,14 @@ REFERENCE VIDEO                                 你的需求与素材
 | 验证证据 | 对照预览、版本与哈希 | 哪份源码、哪些修改、哪个区间被检查过 | 原版和改编版按相同时间点渲染。 |
 | 分发与协作 | 文件夹、Git revision、可选压缩包 | 稳定身份、完整文件、来源和许可 | 一个确认过的源码版本，加上具名内容配置。 |
 
-现有 `motion-video-to-template` 仍以 **`TEMPLATE.md` 作为单份模板交接文档**。可按需链接 Motion Design 说明，不要求所有现有模板增加第二份 manifest。便携工程、Agent Skill 和 `.motion` 压缩包有联系，也有各自不同的契约。
+现有 `openmotion-video-to-template` 仍以 **`TEMPLATE.md` 作为单份模板交接文档**。可按需链接 Motion Design 说明，不要求所有现有模板增加第二份 manifest。便携工程、Agent Skill 和 `.motion` 压缩包有联系，也有各自不同的契约。
 
 ## 3. 可以直接检查的包结构
 
-[Motion Design Remix Skill](../library/skills/motion-design-remix/SKILL.md) 提供六种 profile，源码来自 OpenMotion 资源目录已有的 registry 条目：
+[Motion Design Remix Skill](../library/skills/openmotion-design-remix/SKILL.md) 提供六种 profile，源码来自 OpenMotion 资源目录已有的 registry 条目：
 
 ```text
-motion-design-remix/
+openmotion-design-remix/
 ├── SKILL.md                         Agent 入口：选择 → 改编 → 对比
 ├── references/<profile>/
 │   └── MOTION_DESIGN.md              这一类动效的创作规则
@@ -133,7 +133,7 @@ Version: 0.1.0
 保存源码/preset 哈希和真实产物，记录剩余问题。
 ```
 
-[完整 portal profile](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) 适合复用局部动效。需要整支影片的叙事简报时，可参考既有的[产品发布 Motion.md](examples/product-launch.MOTION.zh-CN.md)。
+[完整 portal profile](../library/skills/openmotion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) 适合复用局部动效。需要整支影片的叙事简报时，可参考既有的[产品发布 Motion.md](examples/product-launch.MOTION.zh-CN.md)。
 
 ## 5. 复刻怎样沉淀为社区资产
 
@@ -149,13 +149,13 @@ Version: 0.1.0
   → Fork、改进、评审下一个版本
 ```
 
-当前 `motion-recreate` 负责参考作品重建，`motion-template-to-video` 负责已有模板改编，`motion-video-to-template` 在用户需要可复用模板时负责模板交付。Library Skill 可以携带特定风格和改编方法。这些都是用户 Agent 读取的指导，不是另起一个后台编排 Agent。
+当前 `openmotion-recreate` 负责参考作品重建，`openmotion-template-to-video` 负责已有模板改编，`openmotion-video-to-template` 在用户需要可复用模板时负责模板交付。Library Skill 可以携带特定风格和改编方法。这些都是用户 Agent 读取的指导，不是另起一个后台编排 Agent。
 
 可发布案例应回答：**保留了什么、修改了什么、实际渲染出了什么。** 优先使用同一时钟的左右对比，记录截取区间、裁切和速度变化。用户工程和凭据放在源码包外。Git 分支保存 preset 或实现修改，PR 同时审阅源码差异和成片差异。文件分享、社区评审和人工沉淀方法现在即可进行；自动 marketplace 入库、传播数据学习和 RAG 检索仍是产品方向。
 
 ## 真人剪辑：同一个故事，两套时钟
 
-Motion Design 也要描述人物、语言与辅助画面之间的关系。[Presenter Story Skill](../library/skills/presenter-story/SKILL.md) 提供三份设计配方与[有出处的上游对比](motion-design-examples.zh-CN.md#presenter-motion)。这些媒体说明设计模式，不是新配方已完成成片的证明。
+Motion Design 也要描述人物、语言与辅助画面之间的关系。[Presenter Story Skill](../library/skills/openmotion-presenter-story/SKILL.md) 提供三份设计配方与[有出处的上游对比](motion-design-examples.zh-CN.md#presenter-motion)。这些媒体说明设计模式，不是新配方已完成成片的证明。
 
 ```text
 你的口播录制 + 屏幕录制 + 实际语音时间码

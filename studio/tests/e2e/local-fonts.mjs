@@ -21,7 +21,7 @@ const store = new WorkspaceStore(await mkdtemp(path.join(output, 'workspace-')))
 await store.initialize(root);
 const assets = path.join(store.projectDirectory, 'assets/fonts');
 await mkdir(assets, { recursive: true });
-const ownedFonts = path.join(root, 'library/skills/motion-design-remix/assets/wireframe-portal-title/assets/fonts');
+const ownedFonts = path.join(root, 'library/skills/openmotion-design-remix/assets/wireframe-portal-title/assets/fonts');
 await writeFile(path.join(assets, 'material.ttf'), await readFile(path.join(ownedFonts, 'Geist-Regular.ttf')));
 const entry = path.join(store.projectDirectory, 'index.html');
 await writeFile(entry, `<!doctype html><html><head><script src="assets/gsap.min.js"></script><style>

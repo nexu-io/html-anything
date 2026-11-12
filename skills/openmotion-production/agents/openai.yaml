@@ -1,0 +1,3 @@
+interface:
+  display_name: "OpenMotion Production"
+  short_description: "在 OpenMotion 中修改工程、预览、检查和导出"

@@ -1,3 +1,4 @@
+import { publicToolName, legacyToolName } from './shared/public-names.mjs';
 import { spawn } from 'node:child_process';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { fstatSync, readFileSync, readdirSync, statSync } from 'node:fs';
@@ -17,7 +18,7 @@ const runtimeFiles = ['package-lock.json', 'scripts/npm-runtime.mjs', 'scripts/r
   ...['shared', 'gateway'].flatMap(folder => readdirSync(path.join(root, folder)).filter(file => /\.(ts|mjs|pl|json)$/.test(file)).map(file => folder + '/' + file))].sort();
 export const editorBuild = createHash('sha256').update(runtimeFiles.map(file => file + '\n' + readFileSync(path.join(root, file))).join('\n')).update(JSON.stringify(templateConfig())).digest('hex');
 const service = 'opendesign-editor', protocol = 1;
-export type EditorRegistry = { service: string; protocol: number; version: string; build: string; instanceId: string; pid: number; dataDirectory: string; endpoint: string; token: string };
+export type EditorRegistry = { service: string; protocol: number; version: string; build: string; instanceId: string; pid: number; dataDirectory: string; endpoint: string; token: string; mcp?: { protocol: number; tools: string[] } };
 export type Selection = { projectId?: string | null; sessionId?: string };
 const pause = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -59,13 +60,13 @@ export async function ensureEditor(directory: string, mcpTool?: string): Promise
         const sameReleasePolicy = trackingReleaseEnabled(health.version) === trackingReleaseEnabled(version);
         const compatible = sameReleasePolicy && (mcpTool ? supportsPhase1Tool(health, mcpTool) : health.version === version && health.build === editorBuild);
         if (health.protocol !== protocol || !compatible) throw Object.assign(
-          new Error('Editor runtime incompatible. Reconnect the Motion MCP connection to the installed runtime and compare the expected and actual versions/builds. Stop an older editor only after confirming it is idle; do not bypass MCP or switch workspaces to continue.'),
+          new Error('Editor runtime incompatible. Reconnect the OpenMotion MCP connection to the installed runtime and compare the expected and actual versions/builds. Stop an older editor only after confirming it is idle; do not bypass MCP or switch workspaces to continue.'),
           { terminal: true, code: 'EDITOR_RUNTIME_INCOMPATIBLE', details: {
             dataDirectory: data, expected: { protocol, version, build: editorBuild },
             actual: { protocol: health.protocol, version: health.version, build: health.build },
           } },
         );
-        return { ...registry, version: health.version, build: health.build };
+        return { ...registry, version: health.version, build: health.build, mcp: health.mcp };
       } catch (error) { if ((error as any).terminal || (error as any).status) throw error; }
     }
     if (!launcher || launcher.exitCode !== null || launcher.signalCode !== null) {
@@ -145,7 +146,8 @@ export async function serveEditor(directory: string) {
       }
       active++;
       const work = queue.catch(() => {}).then(async () => {
-        const tool = tools.find(item => item.name === body.name);
+        body.name = legacyToolName(body.name);
+        const tool = tools.find(item => item.name === publicToolName(body.name));
         if (!tool || !body.arguments || typeof body.arguments !== 'object' || Array.isArray(body.arguments) || Object.keys(body.arguments).some(key => !Object.hasOwn(tool.inputSchema.properties, key))) throw new Error('工具或参数无效');
         if (body.arguments.projectId !== undefined && typeof body.arguments.projectId !== 'string') throw new Error('工程编号无效');
         if (body.selection !== undefined && (!body.selection || typeof body.selection !== 'object' || Array.isArray(body.selection) || Object.keys(body.selection).some(key => !['projectId', 'sessionId'].includes(key)))) throw new Error('连接上下文无效');
