@@ -173,3 +173,23 @@ test('exhausted log budgets still produce valid metadata and native status uses 
   assert(Object.entries(files).filter(([name]) => name.startsWith('logs/')).reduce((size, [, data]) => size + Buffer.byteLength(data), 0) <= diagnosticLimits.logBytes);
   assert.equal(JSON.parse(files['metadata.json']).version, '0.7.0');
 });
+
+test('browser batches preserve event time, redact values and separate bounded activity from errors in ZIPs', async t => {
+  const options = await fixture(t), store = new WorkspaceStore(options.dataDirectory), request = transport(store, { nativeRoot: options.appRoot });
+  const time = '2026-11-12T01:02:03.000Z';
+  const events = Array.from({ length: 20 }, (_, i) => ({ time, kind: i ? 'activity_request' : 'request_failed', message: `request=page:${i} api_key=fixture-secret`, stack: '' }));
+  const init = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ errors: events }) };
+  assert.equal((await request('/motion-api/diagnostics/events', init)).status, 200);
+  const saved = (await readFile(path.join(options.dataDirectory, 'diagnostics/events.log'), 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+  assert.equal(saved.length, 20); assert(saved.every(event => event.time === time));
+  assert(!JSON.stringify(saved).includes('fixture-secret'));
+  const archiveEvents = [...events, ...events, ...events];
+  const response = await request('/motion-api/diagnostics', { ...init, body: JSON.stringify({ errors: archiveEvents }) });
+  assert.equal(response.status, 200);
+  const files = contents(Buffer.from(await response.arrayBuffer()));
+  assert.equal(JSON.parse(files['browser-errors.json']).length, 3);
+  assert.equal(JSON.parse(files['browser-activity.json']).length, 57);
+  assert(!JSON.stringify(files).includes('fixture-secret'));
+  assert.equal((await request('/motion-api/diagnostics/events', { ...init, body: JSON.stringify({ errors: [{} , []] }) })).status, 400);
+  assert.equal((await request('/motion-api/diagnostics', { ...init, body: JSON.stringify({ errors: [...archiveEvents, {}] }) })).status, 400);
+});

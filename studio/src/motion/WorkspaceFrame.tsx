@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/I18n';
 import { LanguageMenu } from '../i18n/LanguageMenu';
 import { ConnectionDialog } from './ConnectionDialog';
 import { MotionIcon } from './icons';
+import { RemixIcon } from '../icons/RemixIcons';
 import { useWorkspace } from './useWorkspace';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { Tooltip } from '../components/ui/Tooltip';
@@ -91,7 +92,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
 
 function PrivacySettingsButton() {
   const { t } = useI18n(); const [open, setOpen] = useState(false);
-  return <><button className="motion-icon-button" aria-label={t('Privacy settings')} title={t('Privacy settings')} onClick={() => setOpen(true)}><MotionIcon name="eye" /></button>
+  return <><button className="motion-icon-button" aria-label={t('Privacy settings')} title={t('Privacy settings')} onClick={() => setOpen(true)}><RemixIcon name="settings-3-line" size={16} /></button>
     {open && <Suspense fallback={null}><PrivacySettings onClose={() => setOpen(false)} /></Suspense>}</>;
 }
 

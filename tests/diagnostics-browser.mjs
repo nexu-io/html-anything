@@ -35,9 +35,12 @@ try {
   await page.evaluate(() => window.dispatchEvent(new ErrorEvent('error', { message: 'api_key=fixture-browser-secret', error: new Error('api_key=fixture-browser-secret') })));
   await page.waitForFunction(() => localStorage.getItem('motion.local-diagnostics.v1')?.includes('redacted'));
   await page.screenshot({ path: path.join(output, 'privacy-diagnostic-export.png') });
+  const persistedDownload = page.waitForResponse(response => response.url() === origin + '/motion-api/diagnostics/events'
+    && response.request().postData()?.includes('download_triggered'), { timeout: 15000 });
   const response = page.waitForResponse(response => response.url() === origin + '/motion-api/diagnostics' && response.request().method() === 'POST');
   await page.click('dialog[open] .motion-diagnostic-export button');
   assert.equal((await response).status(), 200);
+  await page.waitForFunction(() => document.querySelector('.motion-diagnostic-export [role=status]')?.textContent.includes('Download started. Check your browser downloads.'));
   let archive;
   for (let attempt = 0; attempt < 40; attempt++) {
     archive = (await readdir(downloads)).find(file => file.endsWith('.zip'));
@@ -50,18 +53,27 @@ try {
   assert(!(await readFile(zipFile)).includes(Buffer.from('fixture-browser-secret')));
   const metadata = JSON.parse(await runFile('unzip', ['-p', zipFile, 'metadata.json']));
   assert.equal(metadata.platform, process.platform);
+  const activity = JSON.parse(await runFile('unzip', ['-p', zipFile, 'browser-activity.json']));
+  assert(activity.some(event => event.kind === 'activity_session' && event.message.includes('browser=Chrome/')));
+  assert(activity.some(event => event.kind === 'activity_diagnostic_export' && event.message.includes('outcome=started')));
+  assert(activity.some(event => event.kind === 'activity_summary'));
+  await page.setViewport({ width: 360, height: 800 });
+  assert(await page.evaluate(() => { const dialog = document.querySelector('dialog[open]'); const bounds = dialog.getBoundingClientRect(); return bounds.left >= 0 && bounds.right <= innerWidth && dialog.scrollWidth <= dialog.clientWidth; }), 'Download feedback and filename must fit a narrow dialog');
+  await page.screenshot({ path: path.join(output, 'diagnostic-success-narrow.png') });
   await page.click('dialog[open] .motion-diagnostic-export button');
   await page.waitForFunction(() => document.querySelector('.motion-diagnostic-export [role=alert]')?.textContent.includes('30 seconds'));
   await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }]);
   await page.setViewport({ width: 540, height: 800 });
   assert(await page.evaluate(() => { const bounds = document.querySelector('dialog[open]').getBoundingClientRect(); return bounds.left >= 0 && bounds.right <= innerWidth; }));
   await page.screenshot({ path: path.join(output, 'diagnostic-rate-limit-narrow.png') });
+  assert.equal((await persistedDownload).status(), 200);
   await browser.close(); browser = undefined;
   server.closeAllConnections(); await new Promise(resolve => server.close(resolve));
   const offline = path.join(output, 'offline-cli.zip');
   await runFile(process.execPath, ['scripts/diagnostics.mjs', '--data-dir', data, '--output', offline]);
   const log = await runFile('unzip', ['-p', offline, 'logs/diagnostics/events.log']);
   assert(log.includes('unhandled_error') && !log.includes('fixture-browser-secret'));
+  assert(log.includes('archive_received') && log.includes('download_triggered') && log.includes('diagnostic_export_failed'));
   await writeFile(path.join(output, 'result.json'), JSON.stringify({ status: 'passed', scope: 'real Chrome + workspace HTTP handler + offline CLI; no native renderer or real host installation',
     checks: ['privacy download', 'actual ZIP integrity', 'default redaction', 'repeat-click limit', 'narrow dialog', 'offline CLI retains browser error'], archive, metadata }, null, 2));
   console.log('PASS real Chrome download, redaction, throttling, narrow layout and offline CLI');

@@ -63,15 +63,29 @@ export async function recordDiagnostic(directory, event) {
       const info = await lstat(target).catch(error => { if (error.code !== 'ENOENT') throw error; });
       if (info && !info.isFile()) throw new Error('NOT_A_REGULAR_FILE');
     }
-    const fields = {};
-    for (const key of ['kind', 'tool', 'requestId', 'projectId', 'versionId', 'jobId', 'message', 'stack']) {
-      if (typeof event[key] === 'string') fields[key] = redactDiagnostic(event[key].slice(0, 64 * 1024), process.env, [os.homedir(), root]).slice(0, ['message', 'stack'].includes(key) ? 8192 : 256);
+    const lines = (Array.isArray(event) ? event.slice(0, 20) : [event]).map(event => {
+      const fields = {};
+      for (const key of ['kind', 'tool', 'requestId', 'projectId', 'versionId', 'jobId', 'message', 'stack']) {
+        if (typeof event[key] === 'string') fields[key] = redactDiagnostic(event[key].slice(0, 64 * 1024), process.env, [os.homedir(), root]).slice(0, ['message', 'stack'].includes(key) ? 8192 : 256);
+      }
+      const time = typeof event.time === 'string' && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(event.time) ? event.time : new Date().toISOString();
+      return JSON.stringify({ time, ...fields }) + '\n';
+    });
+    // One append per browser batch, splitting only at the existing rotation bound.
+    let batch = '';
+    const append = async () => {
+      if (!batch) return;
+      const size = (await lstat(file).catch(() => null))?.size ?? 0;
+      if (size + Buffer.byteLength(batch) > diagnosticLimits.fileBytes) await rename(file, backup);
+      const handle = await open(file, constants.O_WRONLY | constants.O_CREAT | constants.O_APPEND | constants.O_NOFOLLOW | constants.O_NONBLOCK, 0o600);
+      try { await handle.writeFile(batch); } finally { await handle.close(); }
+      batch = '';
+    };
+    for (const line of lines) {
+      if (Buffer.byteLength(batch) + Buffer.byteLength(line) > diagnosticLimits.fileBytes) await append();
+      batch += line;
     }
-    const line = JSON.stringify({ time: new Date().toISOString(), ...fields }) + '\n';
-    const size = (await lstat(file).catch(() => null))?.size ?? 0;
-    if (size + Buffer.byteLength(line) > diagnosticLimits.fileBytes) await rename(file, backup);
-    const handle = await open(file, constants.O_WRONLY | constants.O_CREAT | constants.O_APPEND | constants.O_NOFOLLOW | constants.O_NONBLOCK, 0o600);
-    try { await handle.writeFile(line); } finally { await handle.close(); }
+    await append();
   }).catch(() => {});
   writers.set(directory, task);
   try { await task; } finally { if (writers.get(directory) === task) writers.delete(directory); }
@@ -168,11 +182,12 @@ export async function collectDiagnostics({ appRoot = appDirectory, dataDirectory
   )));
   for (const [index, job] of selected.entries()) await log(dataDirectory, `jobs/${job.id}/render.log`, `job-${index + 1}/render.log`);
   const browser = [];
-  for (const entry of Array.isArray(browserErrors) ? browserErrors.slice(-20) : []) {
+  for (const entry of Array.isArray(browserErrors) ? browserErrors.slice(-60) : []) {
     browser.push(Object.fromEntries(['time', 'kind', 'message', 'stack'].filter(key => typeof entry?.[key] === 'string').map(key => [key, entry[key].slice(0, 4096)])));
     while (Buffer.byteLength(JSON.stringify(browser)) > 24 * 1024) browser.shift();
   }
-  addJson('browser-errors.json', browser);
+  addJson('browser-errors.json', browser.filter(event => !event.kind?.startsWith('activity_')));
+  addJson('browser-activity.json', browser.filter(event => event.kind?.startsWith('activity_')));
   addJson('metadata.json', metadata);
   addJson('files.json', files);
   add('README.txt', 'OpenMotion local diagnostics\nReview before sharing. Known credentials, URL details, email addresses and local paths are redacted; arbitrary text in existing logs can still contain private information.\nProjects, media, conversations, provider/host configuration and environment dumps are excluded.\nfiles.json lists missing, excluded and truncated logs. Only a bounded sample of jobs is included. A successful collection does not verify the active host chat. No cloud upload or automatic repair was performed.\n');

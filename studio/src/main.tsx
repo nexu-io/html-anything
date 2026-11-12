@@ -17,7 +17,10 @@ import "./motion/theme.css";
 import "./motion/workspace.css";
 import "../../web/design-system/material.css";
 import { MotionStudioHost } from "./motion/MotionStudioHost";
-import { recordBrowserDiagnostic } from './motion/diagnostics';
+import { initializeDiagnostics, recordBrowserDiagnostic } from './motion/diagnostics';
+
+const stopDiagnostics = initializeDiagnostics();
+import.meta.hot?.dispose(stopDiagnostics);
 
 const unbindThumbnailPageLifecycle = bindThumbnailPageLifecycle(window, document);
 import.meta.hot?.dispose(unbindThumbnailPageLifecycle);

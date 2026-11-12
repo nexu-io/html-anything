@@ -262,8 +262,8 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       if (req.method !== 'POST') return json(res, 405, { error: 'POST_REQUIRED' });
       if (req.headers['sec-fetch-site'] === 'cross-site' || url.search) return json(res, 403, { error: 'DIAGNOSTIC_SCOPE_REJECTED' });
       const data = await input(req, 32 * 1024);
-      if (!data || Object.keys(data).some(key => key !== 'errors') || !Array.isArray(data.errors) || data.errors.length > 20
-        || !data.errors.every((entry: any) => entry && Object.keys(entry).every(key => ['time', 'kind', 'message', 'stack'].includes(key))
+      if (!data || Object.keys(data).some(key => key !== 'errors') || !Array.isArray(data.errors) || data.errors.length > (url.pathname.endsWith('/events') ? 20 : 60)
+        || !data.errors.every((entry: any) => entry && typeof entry === 'object' && !Array.isArray(entry) && Object.keys(entry).every(key => ['time', 'kind', 'message', 'stack'].includes(key))
           && Object.values(entry).every(value => typeof value === 'string' && value.length <= 4096))) return json(res, 400, { error: 'INVALID_DIAGNOSTIC_INPUT' });
       const state = context.diagnostics ??= { running: false, lastExport: 0, events: 0, window: Date.now() };
       const directory = (store.workspaceStore ?? store).directory;
@@ -271,7 +271,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
         if (Date.now() - state.window > 60_000) { state.events = 0; state.window = Date.now(); }
         if (state.events + data.errors.length > 60) return json(res, 429, { error: 'DIAGNOSTIC_RATE_LIMITED' });
         state.events += data.errors.length;
-        for (const event of data.errors) await recordDiagnostic(directory, event);
+        await recordDiagnostic(directory, data.errors);
         return json(res, 200, { accepted: data.errors.length });
       }
       if (state.running || Date.now() - state.lastExport < diagnosticLimits.cooldownMs) {

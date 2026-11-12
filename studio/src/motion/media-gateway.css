@@ -24,6 +24,15 @@
 .motion-media-surface details[open] summary { margin-bottom: 8px; }
 .motion-model-dialog { position: fixed; inset: 0; margin: auto; width: min(960px, calc(100vw - 40px)); max-height: calc(100dvh - 48px); padding: 24px; overflow: auto; }
 .motion-privacy-dialog { width: min(520px, calc(100vw - 40px)); }
+.motion-privacy-dialog header { margin-bottom: 24px; }
+.motion-privacy-dialog section, .motion-privacy-dialog .motion-diagnostic-export { display: grid; gap: 12px; min-width: 0; }
+.motion-privacy-dialog p { margin: 0; line-height: 1.65; }
+.motion-privacy-dialog section > .motion-media-toggle { gap: 8px; font-size: 13px; font-weight: 600; color: var(--motion-strong); }
+.motion-privacy-dialog .motion-diagnostic-export > button { justify-self: start; }
+.motion-privacy-dialog .motion-diagnostic-export [role=status] { padding: 12px; border-radius: 8px; background: var(--motion-inset); font-size: 12px; }
+.motion-diagnostic-filename { display: block; overflow-wrap: anywhere; }
+.motion-privacy-dialog .motion-diagnostic-filename { margin-top: 6px; color: var(--motion-muted); }
+.motion-privacy-dialog [role=alert] { color: var(--motion-danger); overflow-wrap: anywhere; }
 .motion-model-dialog::backdrop { background: var(--motion-overlay); backdrop-filter: blur(3px); }
 .motion-model-dialog section + section { border-top: 1px solid var(--motion-border); margin-top: 24px; padding-top: 20px; }
 .motion-model-routes select { min-height: 36px; }

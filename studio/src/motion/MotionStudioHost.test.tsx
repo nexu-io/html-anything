@@ -24,7 +24,7 @@ vi.mock('../contexts/PanelLayoutContext', () => ({ usePanelLayoutContext: () => 
 }) }));
 vi.mock('../components/renders/RenderQueuePanel', () => ({ RenderQueuePanel: () => <div>Export settings and jobs</div> }));
 vi.mock('../components/dock/Dock', () => ({ Dock: { WindowMenu: () => <button>Window</button>, Panel: () => null } }));
-vi.mock('./diagnostics', () => ({ recordBrowserDiagnostic: vi.fn(), browserDiagnostics: () => [] }));
+vi.mock('./diagnostics', () => ({ recordBrowserDiagnostic: vi.fn(), browserDiagnostics: () => [], nextDiagnosticRequest: () => 'fixture-request', diagnosticsActive: () => false }));
 vi.mock('../utils/studioTelemetry', () => ({ trackStudioEvent: vi.fn() }));
 vi.mock('./MotionHistoryPanel', () => ({ MotionHistoryPanel: () => <div>History versions</div> }));
 vi.mock('./useWorkspace', () => ({ useWorkspace: () => ({
