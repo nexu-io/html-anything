@@ -12,6 +12,8 @@ import { checkReleaseVersion, releaseTemplateEnvironment } from './release-versi
 const root = fileURLToPath(new URL('../', import.meta.url));
 // GitHub serves the full showcase. npm ships the application and its technical documentation.
 function isShowcaseAsset(file) {
+  // Plugin and MCP branding reads these symbols from the installed application.
+  if (/^docs\/readme\/opendesign-symbol(?:-dark|-auto)?\.svg$/.test(file)) return false;
   return /^(?:examples|library)\//.test(file) || file.startsWith('docs/readme/');
 }
 
