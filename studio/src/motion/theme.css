@@ -1,3 +1,5 @@
+@import './controlStates.css';
+
 /* OpenDesign Motion adapter. The shared token JSON owns all UI colors. */
 :root[data-motion-ui] :is(input, textarea)::placeholder { color: var(--motion-placeholder); opacity: 1; }
 :root[data-motion-ui] .motion-audio-row { padding-inline: 6px; gap: 6px; }
@@ -102,7 +104,6 @@ button, input, select, textarea { font-family: inherit; }
 :root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-header-history-actions) button:disabled { color: color-mix(in srgb, var(--motion-strong) 30%, var(--motion-panel)); opacity: 1; cursor: not-allowed; }
 :root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button:enabled:hover { color: var(--motion-strong); }
 :root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button[aria-pressed="true"]:not([data-studio-control="mute"]):enabled { color: var(--motion-strong); background: var(--motion-inset); }
-:root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button[aria-pressed="true"]:not([data-studio-control="mute"]):enabled:hover { background: var(--motion-border); }
 .hf-dock .dv-tab { border-radius: 0; height: 34px; padding: 0 8px; }
 .hf-dock .dv-scrollable { height: 34px; }
 .hf-dock-tab-fill { height: 34px; border-radius: 0; background: transparent; }
@@ -206,7 +207,8 @@ button, input, select, textarea { font-family: inherit; }
 .motion-studio-header .motion-button { height: 28px; padding: 0 9px; font-size: 11px; }
 .motion-studio-header [data-testid="header-export"] { background: var(--motion-action); color: var(--motion-on-action); }
 .motion-studio-header [data-testid="header-export"]:enabled:hover { background: var(--motion-action-hover); }
-:root[data-motion-studio] button[data-studio-control="playback"] svg { fill: var(--motion-strong); }
+:root[data-motion-studio] .motion-player-controls .motion-player-play:enabled { color: var(--motion-action); }
+:root[data-motion-studio] .motion-player-play svg { fill: currentColor; }
 @media(max-width: 1100px) {
   .motion-studio-header { gap: 12px; padding-inline: 12px; }
   .motion-studio-header > div:first-child { gap: 10px; }
@@ -346,7 +348,9 @@ button, input, select, textarea { font-family: inherit; }
 .motion-studio-header-centered .motion-header-history-actions::after { content: ""; position: absolute; top: 50%; right: -8px; width: 1px; height: 16px; transform: translateY(-50%); background: var(--motion-border); pointer-events: none; }
 .motion-studio-header-centered .motion-workspace-actions { padding-right: 0; margin-right: 0; border-right: 0; }
 .motion-community-link { flex-shrink: 0; }
+.motion-studio-header-centered .motion-community-link { margin-inline-end: -4px; }
 .motion-community-link img { display: block; }
+.motion-workspace-actions .motion-icon { color: var(--motion-strong); }
 .motion-header-brand { display: inline-flex; align-items: center; gap: 10px; }
 .motion-header-brand img { display: block; width: 104px; height: auto; }
 .motion-header-project .motion-project-control { justify-content: center; }
@@ -443,7 +447,7 @@ button, input, select, textarea { font-family: inherit; }
 /* Passive empty hints share the disabled-control tone in both themes. */
 .motion-panel-empty-content { color: color-mix(in srgb, var(--motion-strong) 30%, var(--motion-panel)); font-size: 12px; line-height: 1.5; }
 .motion-panel-empty-content :is(svg, p) { color: inherit; font-size: inherit; }
-:root[data-motion-ui] .motion-timeline-zoom input:disabled { opacity: .3; cursor: not-allowed; }
+:root[data-motion-ui] .motion-timeline-zoom input:disabled { cursor: not-allowed; }
 :root[data-motion-ui] .motion-timeline-zoom input:disabled::-webkit-slider-thumb { cursor: not-allowed; }
 
 /* The outlined Import button needs spacing, not another divider. */

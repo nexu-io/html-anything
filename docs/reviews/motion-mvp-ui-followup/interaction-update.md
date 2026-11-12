@@ -136,3 +136,24 @@ The user accepted the existing spacing and requested a small divider after versi
 | Remote WorkBuddy and dark-theme walkthrough | Unverified | Local light-theme browser only; dark colors follow the shared border token by source inspection. |
 
 The working production build and assembled PR check, Studio typecheck/build, 20 MotionStudioHost cases and scoped whitespace checks passed. The editor remains open, paused at zero. No project source/media/timing/volume changes or service restart were performed. Only this divider and its documentation/evidence were transferred to the publish checkout.
+
+
+## Unified control states and compact header labels (2026-11-12)
+
+Ordinary and selected editor controls now use the **same** neutral hover background, as explicitly confirmed by the user. Visible keyboard focus and highlighted menu items use that same surface; primary actions retain their semantic action hover. A shared editor state stylesheet replaces scattered opacity differences with one disabled foreground token and opacity 1. Disabled controls do not gain hover feedback. The scope includes header, panel, player, timeline-toolbar and menu controls; preview iframe content, timeline clip bodies and official catalog/template surfaces are excluded. A catalog-root marker only establishes that exclusion and does not restyle the library.
+
+Volume, speed and loop now have visible hover feedback. The enabled play/pause control, including its SVG/use color, matches Export's action background. The header entry reads **Template** in English, retains **模板库** in Chinese and leaves other translations and the modal title unchanged. Its grid icon uses the stronger shared foreground.
+
+The visible community-icon-to-Export gap is now **18px**, replacing 22px (button-box gap 12px instead of 16px). Only community and Undo/Redo/history move right by 4px. Logo, Template, project title and Export positions remain fixed; history internal gaps stay 4px and history-to-community stays 16px. The existing short divider remains. This supersedes the equal outer gaps described in the earlier grouping entry.
+
+| Check | Result | Evidence / boundary |
+| --- | --- | --- |
+| Actual editor hover and disabled states | Pass | Nine measured samples cover Template, history, play, volume, speed, loop, selected Select, Split and disabled Undo. Enabled neutral hover is rgb(237, 237, 237); disabled Undo remains transparent with the shared foreground and opacity 1. [Samples](real-editor-state-samples.json), [player hover](unified-player-hover.png). |
+| Light/dark shared state cascade | Pass, isolated | Fifteen production-CSS fixture samples per theme cover ordinary/selected/highlighted hover, legacy opacity classes, native/ARIA/data-disabled controls, primary actions, disabled input and protected catalog/template/clip probes. [Light](control-state-matrix.json), [dark](control-state-matrix-dark.json). This is style coverage, not full workflow acceptance. |
+| Header geometry and color | Pass | Same-viewport before/after measurements show only the four intended icons moving +4px; icon-to-Export gap is exactly 18px. Play and Export both compute to rgb(32, 32, 32). [Spacing](header-18px-after.png), [final editor](editor-unified-states-final.png). |
+| English and Chinese | Pass | Switched the real interface to Chinese and verified 模板库; restored English and verified Template and the stronger icon. No translation changes to other locales. |
+| Responsive layout and restoration | Pass | Real production editor inspected at 1054px and 680px. History and its divider hide at the existing breakpoint, community/Export remain visible. [Narrow](editor-unified-states-narrow.png). Viewport override removed; both panels restored to Compositions / Layers. |
+| Project safety and workflow transitions | Unchanged | Editor remains open, paused at zero, with original 0.5x speed and audio/loop settings. No real media, timing, volume, source, export or history mutation; no restart of 4173. Loading, error, empty-state, save and request-race behavior are unchanged. |
+| Complete workflow, accessibility and remote acceptance | Unverified | Not every property/menu workflow was manually exercised. No assistive-technology walkthrough or WorkBuddy verification. Dark-theme visual coverage used an isolated production-CSS fixture rather than changing the user's preference. |
+
+Validation: 65 tests across eight affected files passed in the assembled PR checkout. Repository check, Studio typecheck/build and scoped whitespace checks passed there; main-checkout Studio typecheck/build also passed. The real editor was refreshed after rebuilding. Only the incremental source changes, architecture clarification and this evidence were transferred; existing working changes and publish-checkout differences were retained.

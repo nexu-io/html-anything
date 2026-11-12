@@ -1,0 +1,74 @@
+[
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "disabled": false,
+    "hover": true,
+    "label": "Template",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "disabled": false,
+    "hover": true,
+    "label": "Version history",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "disabled": false,
+    "hover": true,
+    "label": "Play",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "disabled": false,
+    "hover": true,
+    "label": "Mute audio",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "disabled": false,
+    "hover": true,
+    "label": "Playback speed",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "disabled": false,
+    "hover": true,
+    "label": "Enable loop playback",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "disabled": false,
+    "hover": true,
+    "label": "Select",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "disabled": false,
+    "hover": true,
+    "label": "Split",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "disabled": true,
+    "hover": true,
+    "label": "Undo",
+    "opacity": "1"
+  }
+]

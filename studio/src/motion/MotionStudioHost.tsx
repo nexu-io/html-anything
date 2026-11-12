@@ -127,10 +127,11 @@ function WorkspaceHistoryActions() {
 }
 
 function WorkspaceActions() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const label = locale === 'en' ? 'Template' : t('Template library');
   const { switchingDisabled, openLibrary } = useWorkspaceChrome();
   return <div className="motion-workspace-actions">
-    <button className="motion-button motion-button-quiet" aria-label={t("Template library")} title={t("Template library")} aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => openLibrary(event.currentTarget)}><MotionIcon name="grid" /><span className="motion-template-label">{t("Template library")}</span></button>
+    <button className="motion-button motion-button-quiet" aria-label={label} title={label} aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => openLibrary(event.currentTarget)}><MotionIcon name="grid" /><span className="motion-template-label">{label}</span></button>
   </div>;
 }
 
