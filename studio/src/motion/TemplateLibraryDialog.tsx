@@ -136,7 +136,8 @@ export function TemplateLibraryDialog(props: Props) {
   }).sort((a, b) => sort === 'recommended' ? (a.sortOrder ?? Infinity) - (b.sortOrder ?? Infinity) : a.title.localeCompare(b.title, locale) * (sort === 'reverse' ? -1 : 1)), [catalog, query, selected, sort, locale]);
   const featured = catalog.filter(item => item.featuredOrder != null).sort((a, b) => a.featuredOrder! - b.featuredOrder!);
   const filterCount = Object.values(selected).flat().length;
-  const listContext = () => ({ searchId: query.trim() ? searchId.current : undefined, sort, filterCount });
+  // A search id belongs to exactly one keyword: once the box holds something else, events stop carrying it.
+  const listContext = () => ({ searchId: query.trim() && query.trim() === reportedQuery.current ? searchId.current : undefined, sort, filterCount });
   // The list state is read when a timer or effect fires, not when it was scheduled.
   const latest = useRef({ count: 0, context: listContext() }); latest.current = { count: visible.length, context: listContext() };
   const reset = () => {
@@ -145,11 +146,13 @@ export function TemplateLibraryDialog(props: Props) {
   };
   // `control` is where the option was picked: the sidebar reports a category choice, the filter dialog and chips a filter option.
   const toggle = (key: Facet, value: string, control: 'category_select' | 'filter_option') => {
+    settleSearch();
     tracking.reportDiscoveryClick(control, listContext(), { filter_group: key, option: value, selected: !selected[key]?.includes(value) }, props.projectId);
     pendingResult.current = control === 'category_select' ? 'category_select' : 'filter_apply';
     setSelected(previous => ({ ...previous, [key]: previous[key]?.includes(value) ? previous[key]!.filter(item => item !== value) : [...(previous[key] ?? []), value] }));
   };
   const changeSort = (next: Sort) => {
+    settleSearch();
     tracking.reportDiscoveryClick('sort_option', { ...listContext(), sort: next }, { previous_sort: sort, changed: next !== sort }, props.projectId);
     if (next !== sort) pendingResult.current = 'sort_change';
     setSort(next);
@@ -159,18 +162,20 @@ export function TemplateLibraryDialog(props: Props) {
     const action = pendingResult.current; pendingResult.current = undefined;
     if (action) tracking.reportFilterResult(action, latest.current.count, latest.current.context, props.projectId);
   }, [selected, sort, query]);
-  // One search report per settled query: 500 ms after typing stops and never mid-composition. Each new keyword gets a new search id.
+  // One search report per settled query: 500 ms after typing stops, or right before the user acts on the results,
+  // and never mid-composition or before the catalogue has loaded. Each new keyword gets a new search id.
+  const settleSearch = () => {
+    const keyword = query.trim();
+    if (!keyword || keyword === reportedQuery.current || composing.current || loading || !catalog.length) return;
+    const id = tracking.newTrackingId(); reportedQuery.current = keyword; searchId.current = id;
+    tracking.reportSearchResult(id, query, visible.length, { sort, filterCount }, props.projectId);
+  };
+  const settleLatest = useRef(settleSearch); settleLatest.current = settleSearch;
   useEffect(() => {
-    const keyword = tracking.searchKeyword(query);
-    if (!keyword) { reportedQuery.current = ''; searchId.current = undefined; return; }
-    if (composing.current || keyword === reportedQuery.current) return;
-    const timer = setTimeout(() => {
-      const id = tracking.newTrackingId(); reportedQuery.current = keyword; searchId.current = id;
-      const { count, context } = latest.current;
-      tracking.reportSearchResult(id, query, count, { sort: context.sort, filterCount: context.filterCount }, props.projectId);
-    }, 500);
+    if (!query.trim()) { reportedQuery.current = ''; searchId.current = undefined; return; }
+    const timer = setTimeout(() => settleLatest.current(), 500);
     return () => clearTimeout(timer);
-  }, [query, settle]);
+  }, [query, settle, loading, catalog.length]);
   async function showPrompt() {
     if (!preview) return;
     tracking.reportUseClicked(preview, 'recreate', detailViewId.current, props.projectId);
@@ -208,6 +213,7 @@ export function TemplateLibraryDialog(props: Props) {
     finally { setDownloading(false); }
   }
   const show = (item: GalleryTemplate, placement: Placement, position: number) => {
+    settleSearch();
     tracking.reportCardOpened(item, placement, position, listContext(), props.projectId);
     setPreview(item); setPrompt(''); setFeedback(''); setDownloadError(''); detail.current?.showModal();
     const view = tracking.newTrackingId(); detailViewId.current = view;

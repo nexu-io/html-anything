@@ -137,6 +137,21 @@ it('reports one search per settled keyword with the keyword and result count, pl
     expect(searches()[1]).toMatchObject({ query_length: 150, result_count: 0 });
     expect(String(searches()[1].search_keyword)).toHaveLength(100);
     expect(searches()[1].search_id).not.toBe(searches()[0].search_id);
+    // Text beyond the reported 100 characters still makes a different search.
+    await act(async () => input('x'.repeat(150) + 'y'));
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(searches()).toHaveLength(3);
+    // Acting on results before typing settles reports the search first, so the click carries the current search id, not the previous one.
+    await act(async () => input('first'));
+    await act(async () => button('First').click());
+    expect(searches()).toHaveLength(4);
+    expect(searches()[3]).toMatchObject({ search_keyword: 'first', result_count: 1 });
+    expect(named('open_detail')[0].search_id).toBe(searches()[3].search_id);
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(searches()).toHaveLength(4);
+    await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=关闭模板预览]')?.click());
+    await act(async () => input('fir'));
+    expect(named('sort_option')).toHaveLength(0);
     await act(async () => input(''));
 
     const sort = host.querySelector<HTMLSelectElement>('select')!;
