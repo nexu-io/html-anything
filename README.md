@@ -57,86 +57,16 @@ Read https://releases.open-design.ai/open-motion/install.md and follow the instr
 
 <p align="center"><a href="#choose-agent"><picture><source media="(max-width: 600px)" srcset="docs/readme/agents/local-agents.mobile.png"><img src="docs/readme/agents/local-agents.png" width="100%" alt="WorkBuddy, Codex CLI, Claude Code, OpenCode, Hermes, Antigravity, Gemini CLI, Grok Build, Kimi CLI, Cursor Agent, Qwen Code, Qoder CLI, GitHub Copilot, Pi, Kiro CLI, Kilo, Mistral Vibe, DeepSeek TUI, Reasonix, Aider, Devin, Trae CLI"></picture></a></p>
 
-<a id="showcase"></a> <a id="brand-before-after"></a> <a id="creator-video-gallery"></a> <a id="presenter-motion"></a> <a id="what-can-you-make"></a>
+<a id="showcase"></a> <a id="brand-before-after"></a> <a id="what-can-you-make"></a>
 <a id="use-cases-and-remake-examples"></a>
 
 The plugin and MCP server are named `openmotion`; Tools, Skills and resources use `openmotion_*`, `openmotion-*` and `openmotion://`. Existing names remain explicit compatibility aliases. See [naming and installation compatibility](docs/npm-installation.md#public-names-and-compatibility).
 
 ## 🎞️ Use cases and remake examples
 
-Explore talking-head videos, product demos, brand films and more. The previews below show reference videos.
+Explore product demos, brand films, talking-head videos and more. The previews below show reference videos.
 
 **[Browse the full template library →](https://open-design.ai/templates/)** — Find more templates, full videos, Motion.md and recreation instructions.
-
-### AI talking-head edits
-
-Build a clear story around a speaker, with readable captions, screen inserts and animated keywords. Use these references to find a style for your own recording.
-
-<table width="100%">
-<tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture><br>
-<strong>6 essential skills to transform your career</strong><br>
-Numbered points + kinetic keywords<br>
-<sub>Reference · @careerwithriya</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="docs/readme/people/dan-martell-tools.gif" width="216" alt="Presenter video reference: What's the best AI tool right now?"></picture><br>
-<strong>What's the best AI tool right now?</strong><br>
-Presenter + floating tool cards<br>
-<sub>Reference · Dan Martell</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="docs/readme/people/harpercarrollai.gif" width="216" alt="Presenter video reference: 10 Days of AI Basics, Day 1"></picture><br>
-<strong>10 Days of AI Basics, Day 1</strong><br>
-A personal lesson + readable captions<br>
-<sub>Reference · @harpercarrollai</sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">🖥️ Show the workflow</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture><br>
-<strong>5 tools I use every day</strong><br>
-Desk-side story + workflow inserts<br>
-<sub>Reference · Ali Abdaal</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture><br>
-<strong>Tool demo with callouts</strong><br>
-Presenter + screens + callouts<br>
-<sub>Reference · @john.tagudin</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="docs/readme/people/aiwithsachi.gif" width="216" alt="Presenter video reference: Top 5 plugins to install in Claude"></picture><br>
-<strong>Top 5 plugins to install in Claude</strong><br>
-A spoken list + supporting screenshots<br>
-<sub>Reference · @aiwithsachi</sub>
-</td>
-</tr>
-<tr><th colspan="3" align="left">🎬 Tell a story, show a product</th></tr>
-<tr>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="docs/readme/people/khris-sheer-founder.gif" width="216" alt="Presenter video reference: The Founder Experiments, Ep. 1"></picture><br>
-<strong>The Founder Experiments, Ep. 1</strong><br>
-Founder diary + everyday B-roll<br>
-<sub>Reference · @khris.sheer</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="docs/readme/people/ugc-rachelll.gif" width="216" alt="Presenter video reference: AI creator with product"></picture><br>
-<strong>AI creator with product</strong><br>
-Product story + proof + picture-in-picture<br>
-<sub>Reference · @ugc.rachelll</sub>
-</td>
-<td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="docs/readme/people/kevinstratvert.gif" width="216" alt="Presenter video reference: Stop Paying for 5 AI Tools"></picture><br>
-<strong>Stop Paying for 5 AI Tools</strong><br>
-Product tutorial + live demonstration<br>
-<sub>Reference · Kevin Stratvert</sub>
-</td>
-</tr>
-</table>
 
 ### AI recuts & revisions
 
@@ -248,6 +178,78 @@ Connect the prompt, sections and tempo to a waveform and the finished piece.<br>
 <strong>Deezer · Animate a music poster</strong><br>
 Keep the headline steady while flowing waves add rhythm around it.<br>
 <a href="https://open-design.ai/templates/living-waveform-poster-motion-design/">View template</a>
+</td>
+</tr>
+</table>
+
+<a id="creator-video-gallery"></a> <a id="presenter-motion"></a>
+
+### AI talking-head edits
+
+Build a clear story around a speaker, with readable captions, screen inserts and animated keywords. Use these references to find a style for your own recording.
+
+<table width="100%">
+<tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture><br>
+<strong>6 essential skills to transform your career</strong><br>
+Numbered points + kinetic keywords<br>
+<sub>Reference · @careerwithriya</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="docs/readme/people/dan-martell-tools.gif" width="216" alt="Presenter video reference: What's the best AI tool right now?"></picture><br>
+<strong>What's the best AI tool right now?</strong><br>
+Presenter + floating tool cards<br>
+<sub>Reference · Dan Martell</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="docs/readme/people/harpercarrollai.gif" width="216" alt="Presenter video reference: 10 Days of AI Basics, Day 1"></picture><br>
+<strong>10 Days of AI Basics, Day 1</strong><br>
+A personal lesson + readable captions<br>
+<sub>Reference · @harpercarrollai</sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🖥️ Show the workflow</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture><br>
+<strong>5 tools I use every day</strong><br>
+Desk-side story + workflow inserts<br>
+<sub>Reference · Ali Abdaal</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture><br>
+<strong>Tool demo with callouts</strong><br>
+Presenter + screens + callouts<br>
+<sub>Reference · @john.tagudin</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="docs/readme/people/aiwithsachi.gif" width="216" alt="Presenter video reference: Top 5 plugins to install in Claude"></picture><br>
+<strong>Top 5 plugins to install in Claude</strong><br>
+A spoken list + supporting screenshots<br>
+<sub>Reference · @aiwithsachi</sub>
+</td>
+</tr>
+<tr><th colspan="3" align="left">🎬 Tell a story, show a product</th></tr>
+<tr>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="docs/readme/people/khris-sheer-founder.gif" width="216" alt="Presenter video reference: The Founder Experiments, Ep. 1"></picture><br>
+<strong>The Founder Experiments, Ep. 1</strong><br>
+Founder diary + everyday B-roll<br>
+<sub>Reference · @khris.sheer</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="docs/readme/people/ugc-rachelll.gif" width="216" alt="Presenter video reference: AI creator with product"></picture><br>
+<strong>AI creator with product</strong><br>
+Product story + proof + picture-in-picture<br>
+<sub>Reference · @ugc.rachelll</sub>
+</td>
+<td width="33%" valign="top" align="center">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="docs/readme/people/kevinstratvert.gif" width="216" alt="Presenter video reference: Stop Paying for 5 AI Tools"></picture><br>
+<strong>Stop Paying for 5 AI Tools</strong><br>
+Product tutorial + live demonstration<br>
+<sub>Reference · Kevin Stratvert</sub>
 </td>
 </tr>
 </table>
