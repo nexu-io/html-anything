@@ -5,6 +5,17 @@ import os from 'node:os';
 import { canonical, readJSON, runFile, withLock, writeJSON } from './runtime-assets.mjs';
 
 export const hosts = ['codex', 'claude', 'deepseek', 'workbuddy'];
+
+export function hostConnectionInstructions(host) {
+  const recovery = host === 'codex'
+    ? 'Follow the official Codex MCP setup flow: in Codex desktop, ask the user to restart the desktop app manually and return to this same chat. In the Codex IDE extension, restart the extension; in the CLI, restart the client and resume this task. Do not change Codex startup settings or start another App Server.'
+    : host === 'claude'
+      ? 'Open /mcp in the current Claude Code session and select Reconnect for openmotion. If a newly registered server is not listed, use the host\'s supported configuration reload first.'
+      : `Use the supported MCP refresh or reconnect control in the current ${host} host, keeping the selected profile.`;
+  return 'The Agent must automatically call motion_get_project through the active chat and confirm the installation data directory and original project/version before continuing existing work. Do not ask the user to check connectivity or copy a verification prompt. Registration and an independent probe do not verify this chat. If this chat lacks Motion tools: '
+    + recovery + ' Keep the chosen template and task in this conversation; do not ask the user to choose again. Do not reinstall OpenMotion or restart the host automatically.';
+}
+
 // Keep ownership stable so earlier local installations remain upgradable.
 const owner = '@openmotion/installer';
 const bundleName = 'dsh-plugin-openmotion-local';

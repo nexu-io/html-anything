@@ -17,7 +17,7 @@ async function fixture(run: (context: { directory: string; destination: string; 
     const destination = path.join(directory, 'new user', 'open-motion');
     const log = path.join(directory, 'commands.log');
     await mkdir(bin);
-    for (const file of ['scripts/install-motion.command', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs',
+    for (const file of ['scripts/install-motion.command', 'scripts/install-onboarding.mjs', 'scripts/npm-hosts.mjs', 'scripts/runtime-assets.mjs',
       'docs/install.md', 'shared/template-config.json', 'marketplace.example.json']) {
       await mkdir(path.dirname(path.join(source, file)), { recursive: true });
       await copyFile(path.join(root, file), path.join(source, file));
@@ -51,6 +51,8 @@ test('remote entry point builds a fresh checkout before registering and checking
     assert.match(result.stdout, /OpenMotion registration and independent MCP preflight succeeded/);
     const onboarding = JSON.parse(result.stdout.slice(result.stdout.indexOf('\n{') + 1));
     assert.equal(onboarding.hostSessionVerified, false);
+    assert.match(onboarding.nextAction, /restart the desktop app manually and return to this same chat/);
+    assert.match(onboarding.nextAction, /Do not reinstall OpenMotion or restart the host automatically/);
     assert.match(onboarding.instructions, /OpenMotion 开源免费/);
     assert.equal(onboarding.catalog.source, 'bundled');
   });
