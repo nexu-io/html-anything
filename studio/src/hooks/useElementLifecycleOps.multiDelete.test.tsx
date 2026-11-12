@@ -167,6 +167,27 @@ describe("useElementLifecycleOps — deleting a canvas multi-selection", () => {
     expect(showToast).toHaveBeenLastCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
   });
 
+  it("refuses a batch whose shifted selector would delete a script dependency", async () => {
+    sourceContent = '<div class="item">A</div><div class="item">B</div><div class="item" id="c">C</div><script>document.getElementById("c").style.color="red";</script>';
+    const recordEdit = vi.fn();
+    const writeProjectFile = vi.fn();
+    const reloadPreview = vi.fn();
+    const showToast = vi.fn();
+    const ops = mountDeleteOps({ projectIdRef: { current: "p1" }, showToast, writeProjectFile,
+      reloadPreview, editHistory: { recordEdit } });
+    const selections = [0, 1].map((selectorIndex) => ({
+      ...selectionFor(String(selectorIndex)), id: undefined, selector: ".item", selectorIndex,
+    }));
+    await act(async () => {
+      expect(await ops.handleDomEditElementsDelete(selections)).toEqual({ ok: false, reason: "persist-failed" });
+    });
+    expect(requests.some((url) => url.includes("remove-elements"))).toBe(false);
+    expect(writeProjectFile).not.toHaveBeenCalled();
+    expect(recordEdit).not.toHaveBeenCalled();
+    expect(reloadPreview).not.toHaveBeenCalled();
+    expect(showToast).toHaveBeenLastCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
   it("reports an HTTP write failure instead of only toasting", async () => {
     removeOk = false;
     const ops = mountDeleteOps({ projectIdRef: { current: "p1" } });

@@ -127,6 +127,25 @@ describe("useTimelineDeleteOps: ripple undo label", () => {
     expect(showToast).toHaveBeenCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
   });
 
+  it("preserves a selector batch before shifted indices delete a script dependency", async () => {
+    const source = '<div class="item">A</div><div class="item">B</div><div class="item" id="c">C</div><script>document.getElementById("c").style.color="red";</script>';
+    stubRemoveElementsFetch(source, "<html></html>");
+    const showToast = vi.fn();
+    const recordEdit = vi.fn();
+    const handleTimelineGroupMove = vi.fn();
+    const { elements, getHook } = mountDeleteHarness({ showToast, recordEdit, handleTimelineGroupMove });
+    const selected = elements.slice(0, 2).map((element, selectorIndex) => ({
+      ...element, domId: undefined, selector: ".item", selectorIndex,
+    }));
+    usePlayerStore.getState().setElements(elements);
+    await act(async () => { await getHook().handleTimelineElementsDelete(selected); });
+    expect(vi.mocked(fetch).mock.calls.some(([url]) => String(url).includes("remove-elements"))).toBe(false);
+    expect(recordEdit).not.toHaveBeenCalled();
+    expect(handleTimelineGroupMove).not.toHaveBeenCalled();
+    expect(usePlayerStore.getState().elements).toEqual(elements);
+    expect(showToast).toHaveBeenCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
   // editHistory.ts's coalescing keeps the LAST recordEdit call's label, so the
   // folded ripple move must carry the delete's label, not its own.
   it("passes the delete's own label to the folded ripple move, not 'Move timeline clips'", async () => {

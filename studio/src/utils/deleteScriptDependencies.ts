@@ -67,20 +67,26 @@ function hasDependency(node: Node, removed: Set<Element>, parent?: Node): boolea
 export function assertSafeElementDeletion(source: string, targets: PatchTarget[]): void {
   // shortcut: inspect direct inline DOM lookups; extend for external scripts or indirect DOM access when supported by the editor.
   if (!/<script\b/i.test(source)) return;
-  const elements = descendants(new DOMParser().parseFromString(source, "text/html"));
+  const document = new DOMParser().parseFromString(source, "text/html");
+  const elements = descendants(document);
   const scripts = elements.filter((el) => {
     if (el.localName !== "script" || el.hasAttribute("src")) return false;
     const type = el.getAttribute("type")?.trim() ?? "";
     return !type || /^(?:module|(?:text|application)\/(?:x-)?(?:java|ecma)script|text\/(?:javascript1\.[0-5]|jscript|livescript))$/i.test(type);
   });
   if (scripts.length === 0) return;
+  // REST resolves each target after prior removals; retain original nodes for script selector matching.
+  const pendingDocument = document.cloneNode(true) as Document;
+  const originals = new Map(descendants(pendingDocument).map((element, index) => [element, elements[index]]));
   const removed = new Set<Element>();
   for (const target of targets) {
-    const element = findTarget(elements, target);
+    const pending = findTarget(descendants(pendingDocument), target);
+    const element = pending && originals.get(pending);
     if (element) {
       removed.add(element);
       for (const child of descendants(element)) removed.add(child);
     }
+    pending?.remove();
   }
   if (removed.size === 0) return;
   for (const script of scripts) {

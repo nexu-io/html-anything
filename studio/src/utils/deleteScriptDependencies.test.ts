@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
+import { removeElementsFromHtml } from "@hyperframes/studio-server/source-mutation";
 import { assertSafeElementDeletion, SCRIPT_DEPENDENCY_DELETE_MESSAGE } from "./deleteScriptDependencies";
 
 function composition(script: string, markup = '<div id="mk-ch-center" data-hf-id="hf-center"><div id="mk-ch-box" class="word"></div></div>') {
@@ -48,6 +49,25 @@ describe("script dependencies when deleting elements", () => {
     const source = composition('document.getElementById("mk-ch-box").remove();', '<div data-hf-id="hf-other" class="item"></div><div id="mk-ch-box" class="item"></div>');
     expect(() => assertSafeElementDeletion(source, [{ hfId: "hf-other", id: "mk-ch-box" }])).not.toThrow();
     expect(() => assertSafeElementDeletion(source, [{ selector: ".item", selectorIndex: 1 }])).toThrow();
+  });
+
+  it.each(["c", "b"])("checks the backend's sequential batch targets when a script uses %s", (id) => {
+    const source = composition(`document.getElementById("${id}").style.color = "red";`,
+      '<div class="item">A</div><div class="item" id="b">B</div><div class="item" id="c">C</div>');
+    const targets = [{ selector: ".item", selectorIndex: 0 }, { selector: ".item", selectorIndex: 1 }];
+    const after = new DOMParser().parseFromString(removeElementsFromHtml(source, targets), "text/html");
+    expect(after.querySelectorAll(".item")).toHaveLength(1);
+    expect(after.getElementById("b")).not.toBeNull();
+    expect(after.getElementById("c")).toBeNull();
+    const check = () => assertSafeElementDeletion(source, targets);
+    if (id === "c") expect(check).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+    else expect(check).not.toThrow();
+  });
+
+  it("retains original ancestor context when matching script selectors against removed nodes", () => {
+    const source = composition('document.querySelector(".group > .item").style.color = "red";',
+      '<div class="group" id="group"><div class="item"></div></div>');
+    expect(() => assertSafeElementDeletion(source, [{ id: "group" }])).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
   });
 
   it.each(["hf-box", "hf-host/hf-box"])("refuses ambiguous or scoped handles before SDK and server resolution can disagree: %s", (hfId) => {
