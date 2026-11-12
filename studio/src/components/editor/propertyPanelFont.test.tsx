@@ -215,6 +215,43 @@ describe("FontFamilyField session font lists", () => {
 });
 
 describe("FontFamilyField installed fonts", () => {
+  it.each([[true, true], [false, true], [true, false], [false, false]])("shows a small loading indicator through font import and save (flat: %s, saved: %s)", async (flat, saved) => {
+    vi.resetModules();
+    const { FontFamilyField } = await import("./propertyPanelFont");
+    let imported!: (fonts: Array<{ family: string; path: string; url: string }>) => void;
+    let finish!: () => void, fail!: (reason: Error) => void;
+    const onImportFonts = vi.fn(() => new Promise<Array<{ family: string; path: string; url: string }>>(resolve => { imported = resolve; }));
+    const onCommit = vi.fn(() => new Promise<void>((resolve, reject) => { finish = resolve; fail = reject; }));
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    try {
+      await act(async () => root.render(<FontFamilyField flat={flat} value="Arial" importedFonts={[]} onImportFonts={onImportFonts} onCommit={onCommit} />));
+      await act(async () => new Promise(resolve => setTimeout(resolve, 10)));
+      const trigger = host.querySelector<HTMLButtonElement>("button")!;
+      await act(async () => trigger.click());
+      const option = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-font-option-index]")).find(button => button.textContent?.includes("Menlo"))!;
+      await act(async () => option.click());
+      expect(trigger.disabled).toBe(true);
+      expect(trigger.getAttribute("aria-busy")).toBe("true");
+      expect(trigger.querySelector('[role="status"]')?.getAttribute("aria-label")).toBe("Loading");
+      expect(trigger.querySelector('[data-remix-icon="loader-4-line"]')).not.toBeNull();
+      expect(onCommit).not.toHaveBeenCalled();
+      await act(async () => imported([{ family: "Menlo", path: "font.ttf", url: "/font.ttf" }]));
+      expect(onCommit).toHaveBeenCalledOnce();
+      expect(trigger.querySelector('[role="status"]')).not.toBeNull();
+      await act(async () => saved ? finish() : fail(new Error("Save failed")));
+      expect(trigger.disabled).toBe(false);
+      expect(trigger.getAttribute("aria-busy")).toBe("false");
+      expect(trigger.querySelector('[role="status"]')).toBeNull();
+      if (!saved) {
+        expect(trigger.textContent).toContain("Arial");
+        expect(document.body.textContent).toContain('Couldn\'t import "Menlo"');
+      }
+    } finally { act(() => root.unmount()); log.mockRestore(); }
+  });
+
   it.each([true, false])("uses the server font file without browser font access (available: %s)", async (available) => {
     vi.resetModules();
     const { FontFamilyField } = await import("./propertyPanelFont");

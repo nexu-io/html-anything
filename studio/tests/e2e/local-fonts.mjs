@@ -157,6 +157,22 @@ try {
   results.pickerHeight = pickerHeight;
   page.off('request', holdCatalog);
   await page.setRequestInterception(false);
+  await page.setRequestInterception(true);
+  const holdImport = request => {
+    if (!new URL(request.url()).pathname.endsWith('/fonts/import')) void request.continue();
+  };
+  page.on('request', holdImport);
+  const firstImport = page.waitForRequest(request => new URL(request.url()).pathname.endsWith('/fonts/import'));
+  await choose(results.fonts[0].family);
+  const importing = await firstImport;
+  await page.waitForSelector('[data-flat-font-trigger][aria-busy="true"] [role="status"]');
+  await capture('font-applying.png');
+  await importing.continue();
+  page.off('request', holdImport);
+  await page.setRequestInterception(false);
+  await applied(results.fonts[0].family);
+  assert.equal(await page.$('[data-flat-font-trigger] [role="status"]'), null);
+  results.fontApplyingIndicator = true;
   for (const font of results.fonts) {
     await choose(font.family); await applied(font.family);
     await page.waitForFunction(family => document.querySelector('hyperframes-player').shadowRoot.querySelector('iframe').contentDocument.querySelector('#title').style.fontFamily.includes(family), {}, font.family);
