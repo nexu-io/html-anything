@@ -7,6 +7,7 @@ import { templateConfig } from './shared/template-config.ts';
 import { libraryTemplates, templateRecipe } from './template-catalog.ts';
 import { copyTemplate } from './template-library.ts';
 import { loadRepositoryCatalog, lfsPointer, maxLfsAssetBytes, readRepositoryFile, repositoryCatalogRoot, repositoryMediaFile } from './shared/repository-template-catalog.ts';
+import { downloadMedia, validateMediaLock } from './shared/repository-media.ts';
 
 type TemplateFile = { path: string; url: string; bytes: number; sha256: string };
 type PrismTemplate = {
@@ -128,8 +129,13 @@ export class TemplateCatalog {
       ...(snapshot.publication.content[locale]?.brands ?? []),
     ].map(brand => [brand.name, brand.logoUrl]));
     const remote: EditableTemplate[] = [...this.entries(snapshot.publication, requested)].sort((a, b) => a.sortOrder - b.sortOrder).map(item => {
-      const localMedia = snapshot.repository?.records.get(item.templateId)?.localMedia;
-      const localUrl = (name: string) => `/api/template-source/${item.templateId}/${name.split('/').map(encodeURIComponent).join('/')}`;
+      const record = snapshot.repository?.records.get(item.templateId);
+      const localMedia = record?.localMedia;
+      const localUrl = (name: string) => {
+        const remote = record.remoteAssets?.find((asset: { source: { path: string } }) => asset.source.path === name);
+        if (remote) { validateMediaLock({ path: name, ...remote }); return remote.url; }
+        return `/api/template-source/${item.templateId}/${name.split('/').map(encodeURIComponent).join('/')}`;
+      };
       return {
         id: item.templateId, title: item.original.templateName, subtitle: item.original.category || 'Motion',
         description: item.original.summary || '', kind: 'prism' as const, collection: 'example' as const,
@@ -200,6 +206,14 @@ export class TemplateCatalog {
     if (!/^[a-z][a-z0-9-]+$/.test(id) || !catalog.templateIds.includes(id)) throw new Error('Repository template not found');
     const manifest = JSON.parse((await readRepositoryFile(this.repositoryRoot, id + '/source/manifest.json')).toString());
     if (name !== 'manifest.json' && !manifest.files.some((file: { path: string }) => file.path === name)) throw new Error('Repository template source file not found');
+    const record = JSON.parse((await readRepositoryFile(this.repositoryRoot, id + '/template.json')).toString());
+    const remote = record.remoteAssets?.find((asset: { source: { path: string } }) => asset.source.path === name);
+    if (remote) {
+      const lock = { path: name, ...remote };
+      const expected = manifest.files.find((file: { path: string }) => file.path === name);
+      if (expected.bytes !== lock.bytes || expected.sha256 !== lock.sha256) throw new Error('Transferred media does not match its source manifest');
+      return downloadMedia(lock, this.request);
+    }
     const media = name.startsWith('assets/') && repositoryMediaFile.test(name);
     const bytes = await readRepositoryFile(this.repositoryRoot, id + '/source/' + name, media ? maxLfsAssetBytes : 1024 * 1024);
     if (lfsPointer(bytes)) throw Object.assign(new Error(`Template media is not downloaded. Run git lfs pull --include="library/templates/catalog/${id}/source/assets/lfs/**" --exclude="" from the checkout.`), { code: 'TEMPLATE_LFS_NOT_FETCHED' });

@@ -72,7 +72,9 @@ jobs:
           restore-keys: optional-lfs-${{ runner.os }}-
       - name: Download full-bundle media explicitly
         working-directory: source
-        run: git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
+        run: |
+          git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
+          node scripts/repository-media.ts
       - name: Scan tracked source before dependency installation
         run: |
           node control/.github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"

@@ -12,7 +12,7 @@ export const resourceDocuments = [
 ];
 const remote = /^(?:https?:)?\/\//i;
 
-export async function checkDocument(file) {
+export async function checkDocument(file, mediaURLs = new Set()) {
   const text = await readFile(file, 'utf8');
   const refs = [...text.matchAll(/(?:src|srcset)="([^"]+)"|!\[[^\]]*\]\(([^)]+)\)|\]\(([^)]+)\)|href="([^"]+)"/g)];
   let checked = 0;
@@ -20,7 +20,7 @@ export async function checkDocument(file) {
     const url = match.slice(1).find(Boolean);
     const embedded = Boolean(match[1] || match[2]);
     const media = /\.(?:mp4|webm|mov|gif|png|jpe?g|svg|woff2?|ttf|mp3|wav)(?:[?#]|$)/i.test(url);
-    assert(!(remote.test(url) && (embedded || media)), `${file}: external display/media dependency: ${url}`);
+    assert(!(remote.test(url) && (embedded || media) && !mediaURLs.has(url)), `${file}: external display/media dependency: ${url}`);
     if (/^(?:https?:|mailto:|#|data:)/i.test(url)) continue;
     const target = path.resolve(path.dirname(file), decodeURIComponent(url.split('#')[0].split('?')[0]));
     await stat(target).catch(() => { throw new Error(`${file}: missing local reference: ${url}`); });
@@ -31,7 +31,9 @@ export async function checkDocument(file) {
 
 export async function verifyResources(root = fileURLToPath(new URL('../', import.meta.url))) {
   let links = 0, hashes = 0;
-  for (const doc of resourceDocuments) links += await checkDocument(path.join(root, doc));
+  const { validateMediaManifest } = await import('../shared/repository-media.ts');
+  const optional = validateMediaManifest(JSON.parse(await readFile(path.join(root, 'repository-media.json'), 'utf8')));
+  for (const doc of resourceDocuments) links += await checkDocument(path.join(root, doc), new Set(optional.files.map(file => file.url)));
   const manifests = [
     ['docs/readme/live-product/manifest.json', '', 'files'],
     ['docs/readme/live-templates/manifest.json', '', 'files'],

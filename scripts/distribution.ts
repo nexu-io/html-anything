@@ -474,7 +474,7 @@ export const distributionDocuments = [
   ...['brandkit', 'presenter-story', 'motion-design-remix'].flatMap(name => ['library/skills/' + name + '/SKILL.md', 'library/skills/' + name + '/agents/openai.yaml']),
   ...['openmotion-brandkit', 'openmotion-presenter-story', 'openmotion-design-remix'].map(name => 'library/skills/' + name + '/agents/openai.yaml'),
   ...localReadmeResourceFiles,
-  'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md',
+  'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md', 'repository-media.json',
   'docs/product/architecture.md', 'docs/product/changes.md', 'docs/product/media-generation-design.md', 'docs/product/studio-vision.md',
   'tracking/README.md', 'tracking/INTEGRATION.md', 'tracking/posthog-geoip.hog',
   'docs/agent-adapters.md', 'docs/browser-runtime.md', 'docs/design-system.md', 'docs/editor-fork.md',
@@ -541,6 +541,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'scripts/install-onboarding.mjs', 'scripts/onboarding-catalog.ts', 'scripts/install-library-skill.mjs',
     'scripts/diagnostics.mjs', 'scripts/diagnostic-redaction.mjs', 'scripts/zip.mjs',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
+    'scripts/repository-media.ts',
     'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
     'tracking/core.ts', 'tracking/node.ts', 'tracking/browser.ts', 'tracking/events.ts',
   ];
@@ -559,7 +560,13 @@ export async function distributionFiles(profile: string): Promise<string[]> {
   for (const skill of packagedSkills) await walk('skills/' + skill, /\.(?:md|mjs|ts|py|json|ya?ml)$/);
   await walk('studio/build', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
   await walk('studio/public', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
-  for (const file of files) if (!(await lstat(path.join(root, file))).isFile()) throw new Error('Distribution requires a regular file: ' + file);
+  for (const file of files) {
+    const info = await lstat(path.join(root, file)).catch(error => {
+      if (error.code === 'ENOENT' && /\.(?:mp4|motion)$/.test(file)) throw new Error(`Optional media is missing: ${file}. Run npm run media:pull for transferred files, or the scoped LFS pull in docs/repository-storage.md.`);
+      throw error;
+    });
+    if (!info.isFile()) throw new Error('Distribution requires a regular file: ' + file);
+  }
   return [...new Set(files)].sort();
 }
 

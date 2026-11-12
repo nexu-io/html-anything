@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { isMain } from '../shared/entry.ts';
 import { lfsPointer, maxLfsAssetBytes, repositoryMediaFile } from '../shared/repository-template-catalog.ts';
+import { validateMediaManifest } from '../shared/repository-media.ts';
 
 const maxGitFileBytes = 1024 * 1024;
 const maxCheckoutBytes = 320 * 1024 * 1024;
@@ -12,7 +13,8 @@ function git(cwd: string, args: string[], input?: string) {
 }
 
 /** Inspect the index and newly introduced history, without downloading LFS media. */
-export function checkRepositoryStorage(cwd: string, base?: string) {
+export function checkRepositoryStorage(cwd: string, base?: string, options: { finalTreeOnly?: boolean } = {}) {
+  if (base) assert(/^[a-f0-9]{40}$/.test(base), 'Use a full base commit SHA');
   const errors: string[] = [];
   const entries = git(cwd, ['ls-files', '--stage', '-z']).toString().split('\0').filter(Boolean).map(line => {
     const match = /^(\d+) ([a-f0-9]+) 0\t([\s\S]+)$/.exec(line);
@@ -38,12 +40,12 @@ export function checkRepositoryStorage(cwd: string, base?: string) {
     contents.set(oid, output.subarray(end + 1, end + 1 + size));
     offset = end + size + 2;
   }
-  const changed = new Set(git(cwd, ['diff', '--cached', '--name-only', '-z', '--diff-filter=AM']).toString().split('\0'));
+  const changed = new Set(git(cwd, ['diff', '--cached', '--name-only', '-z', '--diff-filter=AM', ...(base ? [base] : [])]).toString().split('\0'));
   let gitBytes = 0, lfsBytes = 0, lfsFiles = 0;
   for (const entry of entries) {
     const size = sizes.get(entry.oid)!;
     gitBytes += size;
-    if (size > maxGitFileBytes && changed.has(entry.name)) errors.push(`${entry.name}: staged ordinary Git file exceeds 1 MiB; use Git LFS for media`);
+    if (size > maxGitFileBytes && changed.has(entry.name)) errors.push(`${entry.name}: staged ordinary Git file exceeds 1 MiB; use LFS or Prepare PR media`);
     const bytes = contents.get(entry.oid), pointer = bytes && lfsPointer(bytes);
     if (filters.get(entry.name) !== 'lfs' && !pointer && !bytes?.toString().startsWith('version https://git-lfs.github.com/spec/v1')) continue;
     if (!pointer || filters.get(entry.name) !== 'lfs' || !['100644', '100755'].includes(entry.mode)) {
@@ -56,8 +58,7 @@ export function checkRepositoryStorage(cwd: string, base?: string) {
     lfsFiles++;
   }
   if (gitBytes > maxCheckoutBytes) errors.push('Ordinary Git checkout exceeds 320 MiB; move optional media to LFS or review the budget');
-  if (base) {
-    assert(/^[a-f0-9]{40}$/.test(base), 'Use a full base commit SHA');
+  if (base && !options.finalTreeOnly) {
     const objects = git(cwd, ['rev-list', '--objects', 'HEAD', '--not', base]).toString().trim().split('\n').filter(Boolean);
     if (objects.length) {
       const metadata = git(cwd, ['cat-file', '--batch-check=%(objectname) %(objecttype) %(objectsize)'], objects.map(line => line.split(' ')[0]).join('\n') + '\n').toString().trim().split('\n');
@@ -67,11 +68,22 @@ export function checkRepositoryStorage(cwd: string, base?: string) {
       }
     }
   }
+  const manifest = entries.find(entry => entry.name === 'repository-media.json');
+  if (manifest) {
+    try {
+      const media = validateMediaManifest(JSON.parse(git(cwd, ['cat-file', 'blob', manifest.oid]).toString()));
+      for (const file of media.files)
+        if (entries.some(entry => entry.name === file.path)) errors.push(`${file.path}: transferred media must not also be stored in Git`);
+    } catch (error) { errors.push((error as Error).message); }
+  }
   return { errors, gitBytes, lfsBytes, lfsFiles };
 }
 
 if (isMain(import.meta.url)) {
-  const result = checkRepositoryStorage(process.cwd(), process.argv[2] || process.env.BASE_SHA);
+  const args = process.argv.slice(2), finalTreeOnly = args.includes('--final-tree');
+  const base = args.filter(arg => arg !== '--final-tree');
+  assert(base.length <= 1, 'Usage: check-repository-storage.ts [base-sha] [--final-tree]');
+  const result = checkRepositoryStorage(process.cwd(), base[0] || process.env.BASE_SHA, { finalTreeOnly });
   console.log(JSON.stringify(result, null, 2));
   if (result.errors.length) process.exitCode = 1;
 }

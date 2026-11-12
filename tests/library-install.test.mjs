@@ -4,6 +4,7 @@ import { cp, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { installLibrarySkill } from '../scripts/install-library-skill.mjs';
 
 const pairs = { brandkit: 'openmotion-brandkit', 'presenter-story': 'openmotion-presenter-story', 'motion-design-remix': 'openmotion-design-remix' };
@@ -64,7 +65,7 @@ test('installation preserves customized dependencies and does not leave a partia
 });
 
 // Legacy single-folder recovery intentionally retains its original raw-media snapshot.
-// Compare hydrated content trees so moving the same bytes to LFS does not change the pin.
+// Compare hydrated content trees so changing media storage does not change the pin.
 function hydratedSkillTree(relative) {
   const run = (args, input) => {
     const result = spawnSync('git', args, { encoding: 'utf8', input });
@@ -72,6 +73,12 @@ function hydratedSkillTree(relative) {
     return result.stdout.trim();
   };
   const entries = run(['ls-tree', '-r', '-z', `HEAD:${relative}`]).split('\0').filter(Boolean);
+  for (const file of JSON.parse(readFileSync(new URL('../repository-media.json', import.meta.url), 'utf8')).files) {
+    if (!file.path.startsWith(relative + '/')) continue;
+    const name = file.path.slice(relative.length + 1);
+    if (!entries.some(entry => entry.split('\t')[1] === name))
+      entries.push(`100644 blob ${run(['hash-object', '--no-filters', file.path])}\t${name}`);
+  }
   const directories = new Map([['', []]]);
   for (const entry of entries) {
     const [metadata, name] = entry.split('\t');

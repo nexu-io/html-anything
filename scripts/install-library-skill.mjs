@@ -3,6 +3,7 @@ import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rename, rm } from 'node:f
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { validateMediaManifest } from '../shared/repository-media.ts';
 
 const source = fileURLToPath(new URL('../library/skills/', import.meta.url));
 const aliases = { brandkit: 'openmotion-brandkit', 'presenter-story': 'openmotion-presenter-story', 'motion-design-remix': 'openmotion-design-remix' };
@@ -29,6 +30,13 @@ export async function installLibrarySkill(name, destination) {
   const canonical = aliases[name] ?? name;
   assert(Object.values(aliases).includes(canonical), 'Unknown Library Skill: ' + name);
   assert(destination, 'An explicit destination skills directory is required');
+  const media = validateMediaManifest(JSON.parse(await readFile(new URL('../repository-media.json', import.meta.url), 'utf8')));
+  for (const file of media.files.filter(file => file.path.startsWith('library/skills/' + canonical + '/'))) {
+    const bytes = await readFile(new URL('../' + file.path, import.meta.url)).catch(() => {
+      throw new Error('Optional Skill media is missing. Run npm run media:pull -- library/skills/' + canonical);
+    });
+    assert(bytes.length === file.bytes && createHash('sha256').update(bytes).digest('hex') === file.sha256, 'Optional Skill media does not match repository-media.json');
+  }
   const directory = path.resolve(destination), names = canonical === name ? [canonical] : [canonical, name];
   await mkdir(directory, { recursive: true });
   const missing = [];

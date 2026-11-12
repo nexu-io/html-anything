@@ -50,6 +50,9 @@ test('new raw large blobs fail both before commit and after deletion from new hi
   git(f.root, ['commit', '-qm', 'Add raw media']); rmSync(path.join(f.root, 'demo.mp4'));
   f.stage(); git(f.root, ['commit', '-qm', 'Delete raw media']);
   assert.match(checkRepositoryStorage(f.root, f.base).errors.join('\n'), /even if later deleted/);
+  assert.deepEqual(checkRepositoryStorage(f.root, f.base, { finalTreeOnly: true }).errors, [], 'Squash accepts a sanitized final tree');
+  f.write('still-large.mp4', Buffer.alloc(1024 * 1024 + 1)); f.stage(); git(f.root, ['commit', '-qm', 'Unclean final tree']);
+  assert.match(checkRepositoryStorage(f.root, f.base, { finalTreeOnly: true }).errors.join('\n'), /ordinary Git file exceeds/, 'Committed large files in the final tree must still fail');
 });
 
 test('bundle construction refuses a pointer instead of silently shipping it as a video', async t => {

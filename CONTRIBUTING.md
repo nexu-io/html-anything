@@ -17,7 +17,7 @@ Designers, creators, prompt authors and engineers are all welcome. The [OpenMoti
 
 Use the [entry checklist](library/ENTRY_TEMPLATE.md), link the new entry from its collection, and preserve sources and licenses. Label references, recipes and editable examples accurately. Adding a folder does not register it in Studio, the MCP workflow registry or the default five-Skill installation. Packaging uses an explicit file list.
 
-For published motion guidance source and locale metadata, use the [catalog contribution loop](https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog#change-a-template). Keep videos at CMS URLs; stage changes before running the scoped storage-policy check.
+For published motion guidance source and locale metadata, use the [catalog contribution loop](https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog#change-a-template). Stage changes before running the storage-policy check. New media needs no CMS account; maintainers prepare final media on the original PR before Squash merge.
 
 ## PR workflow
 
@@ -37,4 +37,4 @@ Contributions are licensed under the repository's [Apache-2.0 license](LICENSE);
 
 ## Repository media and size
 
-Keep embedded README previews directly readable. Full videos and optional template archives use Git LFS with downloads excluded by default. Follow [storage, scoped downloads and contribution checks](docs/repository-storage.md); run `npm run storage:check -- <full-base-commit-sha>` after staging.
+Keep embedded README previews directly readable. Full videos and optional template archives use Git LFS with downloads excluded by default. Follow [storage, scoped downloads and contribution checks](docs/repository-storage.md); run `npm run storage:check` after staging. For contributed media, use the documented **Prepare PR media** Action after final review; contributors do not need upload credentials.

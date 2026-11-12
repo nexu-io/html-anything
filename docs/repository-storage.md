@@ -42,17 +42,48 @@ git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="librar
 
 For a contributed catalog template, use the [template-specific pull command](template-repository.md#contribute-media-without-cms-access). LFS objects are fetched from the selected remote; reviewing a fork contribution requires the remote that holds its objects. A pointer is not playable video or an executable archive. Full bundles and Library Skill copying refuse unresolved pointers with a download command. Fetch the selected Motion Design profile before materializing it. Once fetched, those resources retain their existing offline behavior.
 
-## Contribute and check storage
+## Prepare final PR media before merging
 
-Existing attributes automatically track full videos and `.motion` archives under `docs/readme/`, `library/` and `examples/`. For another media path, run `git lfs track --filename <path>` and stage `.gitattributes` with the media. Commit the actual media through Git LFS; do not hand-write pointers. A normal push uploads the objects through the pre-push hook. Keep embedded README previews in ordinary Git; optimize them before expanding the budget.
+Contributors edit their original PR normally. A new catalog video, audio file or large image/font can be committed under `<id>/source/assets/` (at most 50 MiB per file). Git LFS remains a supported input, not a required account or separate upload step. Keep small imported assets and existing README previews in ordinary Git. Raw media can make the policy check red until final preparation; do not repeatedly transfer every draft update.
+
+After the content review, a maintainer opens **Actions → Prepare PR media → Run workflow**, selects `main` and enters the original PR number. This performs one final preparation:
+
+1. Lock the current PR commit and check maintainer identity, fork edit permission and Squash-only repository settings.
+2. Build and validate a cleanup commit without running PR code, hooks, dependencies or `.lfsconfig`.
+3. Upload only changed media to immutable `open-motion/media/sha256/` keys in the public R2 bucket. Read the public objects back and verify their SHA-256 and sizes.
+4. Push one cleanup commit to the original PR. Catalog media becomes `template.json.remoteAssets`; relative guide references become public URLs. Other optional media is registered in `repository-media.json`, with its local path ignored by Git.
+5. Wait for the new commit's CI and any renewed review required by branch rules, then use **Squash and merge**. The workflow does not merge or approve the PR.
+
+The PR author stays unchanged. On a personal-account fork, the contributor must enable **Allow edits from maintainers**. Missing permission, a changed PR head, failed upload, wrong public bytes or a rejected push stops preparation. Failed attempts can leave harmless immutable objects in storage; they do not merge anything. Reruns reuse already verified objects. If the contributor edits media after preparation, process that new revision before merging.
+
+### One-time maintainer setup
+
+- Merge this workflow into `main` to register its manual Actions entry.
+- Configure **Squash merge only**: enable Squash merging and disable merge commits and rebase merging. CI verifies these settings before accepting sanitized PR trees. Existing history is unchanged.
+- Add Actions secret `OPENMOTION_MEDIA_MAINTAINER_TOKEN` for a maintainer user identity with upstream write access and access to allowed fork edits. A classic PAT with `public_repo` access is suitable for public repositories; organization SSO and token policies still apply. A base-repository installation token or default `GITHUB_TOKEN` cannot edit an arbitrary fork. Do not store a token in a checked-in file.
+- The workflow reuses the existing `CLOUDFLARE_R2_RELEASES_AK` / `CLOUDFLARE_R2_RELEASES_SK` secrets and bucket/endpoint variables. It writes only under the media prefix and never publishes an application or changes installation guides. No contributor receives these credentials.
+
+Only a maintainer starts the Action after review. There is no upload on PR open, push or approval, no contribution label, replacement PR or contributor-applied patch. Ordinary PR CI has no storage or maintainer token. The workflow checks out only its trusted main commit and reads PR blobs as data.
+
+For a read-only local preview of the plan, use `npm run media:prepare -- <PR-number>` with GitHub CLI authentication. `--apply` performs the same transfer/write operation using the maintainer identity and configured AWS CLI credentials; use the Action to reuse the repository's R2 credentials.
+
+### Read and package transferred media
+
+Catalog search and MCP detail read local source and return the public preview/poster URL. They do not download media in the background. HTML and Markdown use public asset URLs. Reading the logical source asset through the local API downloads and verifies its bounded body.
+
+Other optional media retains its local logical path in `repository-media.json`. Fetch one scope or the complete legacy set:
 
 ```sh
-git add .gitattributes <changed-paths>
-npm run storage:check -- <full-base-commit-sha>
+npm run media:pull -- library/skills/openmotion-design-remix
+npm run media:pull
 ```
 
-The check reads the index, including staged attributes. Ordinary Git checkout contents are limited to 320 MiB. New ordinary Git blobs over 1 MiB fail, including blobs committed and later deleted on the branch. Existing unchanged large source/vendor files and old history remain outside that per-file migration. LFS media/archive files require canonical pointers, matching attributes and a size at most 50 MiB. Catalog contributions additionally retain their stricter path, manifest and per-template budgets.
+Only those registered files are downloaded, with size/hash verification and atomic replacement. These commands do not fetch all catalog media. Legacy files still in LFS need the scoped pulls above. Full bundles and resource verification explicitly fetch both stores; npm application packages exclude showcase and optional Library payloads.
 
-CI performs the storage check without media downloads. Full runtime/resource and complete-bundle checks explicitly hydrate the legacy media and cache LFS objects; catalog contribution media is downloaded separately only when that template is selected. npm application artifacts continue to exclude showcase media and optional Library content. Complete ZIP builds require downloaded bytes and cannot silently ship pointers.
+### Checks and history
 
-This change reduces ordinary Git content by approximately 291 MB. Downloading all optional media deliberately restores that storage locally; existing clones also retain any old Git objects until separately maintained. LFS storage/bandwidth usage is separate from Git history. No historical force-push, release publication or branch-protection change is part of this migration.
+Stage changes, then run `npm run templates:check` and `npm run storage:check` to validate the final tree. Ordinary Git checkout contents are limited to 320 MiB; newly staged ordinary files above 1 MiB fail. Catalog small assets are limited to 100 KB, media files to 50 MiB and total assets per template to 150 MiB. Metadata, source manifests, canonical URLs, identities and duplicate local/remote storage are checked without downloading media.
+
+PR CI uses `--final-tree` with the PR base to check the final merge tree after verifying Squash-only settings. Passing a base SHA to the local checkers additionally checks every intermediate branch commit; that stricter history audit intentionally rejects raw files added and later removed. It is not the merge gate for this final-preparation flow. Squash commits the sanitized final tree; merge/rebase would retain the intermediate media, so they must stay disabled.
+
+The existing LFS migration reduces ordinary Git content by approximately 291 MB. Optional downloads restore that size locally; full clones retain old binary history. Preparation only transfers media changed in the selected PR. This implementation does not claim the existing 71 LFS resources have already been transferred to R2, nor does it rewrite history or configure branch protection. Actual public R2 and an independent contributor-fork write remain activation checks after workflow registration and token setup.

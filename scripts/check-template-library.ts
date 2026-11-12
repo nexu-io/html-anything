@@ -42,7 +42,7 @@ function blobs(cwd: string, oids: string[]): Map<string, Buffer> {
 }
 
 /** Read Git's index, not smudged files or unstaged changes. No media downloads or npm dependencies. */
-export function checkTemplateLibrary(cwd: string, base?: string): string[] {
+export function checkTemplateLibrary(cwd: string, base?: string, options: { finalTreeOnly?: boolean } = {}): string[] {
   const errors: string[] = [];
   const staged = git(['ls-files', '--stage', '-z', '--', scope], cwd)
     .toString()
@@ -172,12 +172,14 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
         const sourceManifest = parse(id + '/source/manifest.json');
         const sourcePrefix = scope + id + '/source/';
         const remoteAssets = new Map((record.remoteAssets ?? []).map((asset) => [asset.source.path, asset]));
+        if (remoteAssets.size && (assetTotals.get(id) ?? 0) + [...remoteAssets.values()].reduce((sum, asset) => sum + asset.source.bytes, 0) > maxTemplateAssetBytes)
+          errors.push(`${id}: template assets exceed 150 MiB including remote media`);
         const sourcePaths = [...files.keys()]
           .filter((name) => name.startsWith(sourcePrefix) && name !== sourcePrefix + 'manifest.json')
           .map((name) => name.slice(sourcePrefix.length))
           .sort();
         for (const name of Object.values(record.localMedia ?? {}))
-          assert(sourcePaths.includes(name), 'Local media must be registered in the source manifest: ' + name);
+          assert(sourcePaths.includes(name) || remoteAssets.has(name), 'Media must be registered in the source manifest: ' + name);
         assert.deepEqual(
           sourceManifest.files.map((file: { path: string }) => file.path).sort(),
           [...sourcePaths, ...remoteAssets.keys()].sort(),
@@ -209,7 +211,7 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
   } catch (error) {
     errors.push((error as Error).message);
   }
-  if (base) {
+  if (base && !options.finalTreeOnly) {
     assert(/^[a-f0-9]{40}$/.test(base), 'Base must be a full commit SHA');
     git(['rev-parse', '--verify', `${base}^{commit}`], cwd);
     const objects = git(['rev-list', '--objects', `${base}..HEAD`, '--', scope], cwd)
@@ -254,7 +256,10 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
   return errors;
 }
 if (isMain(import.meta.url)) {
-  const errors = checkTemplateLibrary(process.cwd(), process.argv[2] || process.env.BASE_SHA || undefined);
+  const args = process.argv.slice(2), finalTreeOnly = args.includes('--final-tree');
+  const base = args.filter(arg => arg !== '--final-tree');
+  assert(base.length <= 1, 'Usage: check-template-library.ts [base-sha] [--final-tree]');
+  const errors = checkTemplateLibrary(process.cwd(), base[0] || process.env.BASE_SHA || undefined, { finalTreeOnly });
   if (errors.length) {
     console.error(errors.join('\n'));
     process.exitCode = 1;
