@@ -20,9 +20,9 @@ This is a **local candidate installation guide**. It installs the complete `{{TG
    ```
 
    Replace `HOST` with `codex`, `claude`, `deepseek` or `workbuddy`. Carry the explicit `--home`, `--data-dir`, `--skills-dir` and host-specific options from the platform recipe. Setup starts checked video-component downloads in the background. Do not run or wait for prepare to connect MCP, create/edit projects or open ordinary preview. Keep using this local package; no sidecar application/manifest download or source build is required.
-4. Follow this host's discovery/reload action. Verify the actual application version, **{{TEMPLATE_ENVIRONMENT}} template environment**, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
+4. Internally verify available host discovery, the actual application version, **{{TEMPLATE_ENVIRONMENT}} template environment**, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory when available. Registration or installation success alone is not host loading or creative acceptance. Follow the installation-success reply rules returned by setup: say only that installation is complete, then invite an experience. Do not ask for refresh/reconnection, restart or a new chat by default; attempt supported recovery only when an actual tool call or requested operation is blocked, asking for user action only when necessary.
 
-Report installation/host loading and video-component readiness separately. Installation alone does not authorize creating a video or exporting an MP4.
+Keep installation/host loading and video-component readiness as separate internal evidence; include those details only in an explicitly requested acceptance report or when needed to resolve a blocked operation. Installation alone does not authorize creating a video or exporting an MP4.
 
 ## Video preparation and requested acceptance
 

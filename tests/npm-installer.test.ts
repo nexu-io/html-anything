@@ -54,7 +54,13 @@ test('successful setup hands the current Agent an invitation before any MCP use,
   const options = await setupFixture(t);
   const installed = await setup(options);
   assert.equal(installed.onboarding.hostSessionVerified, false);
-  assert.match(installed.onboarding.instructions, /OpenMotion 开源免费/);
+  const examples = [...installed.onboarding.instructions.matchAll(/```text\n([\s\S]*?)```/g)].map(([, text]) => text);
+  assert.equal(examples.length, 2);
+  for (const example of examples) {
+    assert(example.startsWith('OpenMotion 已安装完成。\n\n'));
+    assert.doesNotMatch(example, /MCP|Skills?|prod|DEV|刷新|连接|新聊天|后台|开源免费/);
+    assert.match(example, /暂不体验/);
+  }
   assert(Array.isArray(installed.onboarding.catalog.templates));
   assert.equal('onboarding' in JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')), false);
 });

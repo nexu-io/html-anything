@@ -75,7 +75,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ### 安装完成后的引导（Codex / Agent）
 
-所有 Agent 安装入口共用 [安装成功后的回复规则与示例](install.md#installation-success-reply)。安装器当轮输出规则和真实模板摘要，Agent 按上下文选择模板并组织邀请：默认单模板，用户明确要求挑选/比较且有三份合适模板时提供三候选。配置完成不代表当前会话已加载 MCP；如实说明后，仍在本轮邀请，不等首次调用工具。
+All Agent installation entries share the [installation-success reply rules and examples](install.md#installation-success-reply). After successful setup, say only that installation is complete, then invite the user to try a real template: one by default, or three confirmed candidates for an explicit comparison request. Keep technical verification internal. Do not ask for refresh/reconnection, restart or a new chat unless an actual tool call or requested operation is blocked and user action is necessary.
 
 ### 首次体验默认规则
 
