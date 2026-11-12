@@ -109,7 +109,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(help.includes(host), host);
     await readFile(path.join(installer, 'package/LICENSE'));
     assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...phase1Skills].sort());
-    for (const document of ['skills/motion-director/SKILL.md', 'skills/motion-production/references/context.md']) {
+    for (const document of ['skills/motion-director/SKILL.md', 'skills/motion-production/references/context.md', 'skills/motion-production/references/native.md', 'skills/motion-production/references/verification.md', 'skills/motion-recreate/SKILL.md', 'phase1.ts', 'shared/phase1-tools.ts', 'shared/mcp-profiles.json']) {
       assert.equal(await readFile(path.join(application, document), 'utf8'), await readFile(document, 'utf8'));
     }
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);

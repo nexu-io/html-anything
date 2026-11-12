@@ -106,4 +106,6 @@ Overall: passed only when all required checks passed and no blocking defect rema
 
 Distinguish “preview prepared,” “export pending,” “MP4 exported” and “verified final.” Link only to files that exist. Do not claim guaranteed playback on every device; report which player and checks were actually exercised.
 
+Creation/edit delivery also completes the [editable preview handoff](native.md#editable-preview-handoff). Recheck any outstanding display failure before the final reply and report it separately from export success; hidden-tab playback and `markDeliverable()` do not establish visible editor delivery. Export-only requests do not require opening the editor.
+
 Workflow sources: [rari](https://x.com/0xwhrrari/status/2105643919119696297), [Movez](https://x.com/0xMovez/status/2104216919033192746), [jmori](https://x.com/0xjmori/status/2111793914206171234). Their production principles are adapted to this repository's capabilities; their example tools, code and performance claims are not assumed to be installed or verified here.

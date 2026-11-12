@@ -23,13 +23,13 @@ function display(saved: any, visibility = 'visible', contentVerified = true) {
     visibility, contentVerified, evidence: 'Host panel visibility read back; inspected the edited text in the live preview at 1s.' } };
 }
 
-test('default deferred preview preserves the current chat and resolves the latest version on return', () => fixture(async store => {
+test('confirmed inactive-chat deferral preserves the current chat and resolves the latest version on return', () => fixture(async store => {
   const service = api(store, async () => {}), p = await create(service), first = await edit(service, p, 'first');
   const opened = await service.call('motion_open_preview', first.previewHandoff.nextAction.arguments);
   assert.equal(opened.previewHandoff.focusPolicy, 'preserve_current_chat');
   assert.equal(opened.previewHandoff.nextAction.codex.recovery.tool, undefined);
-  const queued = display(first, 'hidden', false);
-  queued.display = { ...queued.display, hostStatus: 'queued' } as any;
+  const queued = display(first, 'queued', false);
+  queued.display = { ...queued.display, hostStatus: 'queued', evidence: 'Host confirms the calling chat is inactive; preview is queued for its return.' } as any;
   const pending = await service.call('motion_open_preview', queued);
   assert.equal(pending.previewHandoff.state, 'pending');
   assert.equal(pending.previewHandoff.nextAction.operation, 'wait_for_calling_chat');
@@ -40,6 +40,23 @@ test('default deferred preview preserves the current chat and resolves the lates
   assert.equal(latest.previewHandoff.focusPolicy, 'preserve_current_chat');
   await assert.rejects(service.call('motion_open_preview', display(first)), /VERSION_CONFLICT/);
   assert.equal((await service.call('motion_open_preview', display({ ...second, previewHandoff: latest.previewHandoff }))).previewHandoff.state, 'confirmed');
+}, false));
+
+test('a queued acknowledgment with a hidden or unavailable panel retains presentation recovery', () => fixture(async store => {
+  const service = api(store, async () => {}), p = await create(service), saved = await edit(service, p, 'complete film');
+  const nativeTabId = crypto.randomUUID();
+  for (const visibility of ['hidden', 'unavailable']) {
+    const receipt = display(saved, visibility, true);
+    receipt.display = { ...receipt.display, hostStatus: 'queued', hostTabId: nativeTabId } as any;
+    const result = await service.call('motion_open_preview', receipt);
+    assert.equal(result.previewHandoff.state, 'pending');
+    assert.equal(result.previewHandoff.openedByHost, false);
+    assert.equal(result.previewHandoff.nextAction.operation, 'present_preview');
+    assert.equal(result.previewHandoff.nextAction.codex.arguments.target.url, saved.previewHandoff.previewUrl);
+    assert.equal(result.previewHandoff.nextAction.codex.arguments.target.tabId, nativeTabId);
+    assert.equal(result.previewHandoff.nextAction.codex.recovery.when, 'calling_chat_confirmed_inactive');
+    assert.equal(result.previewHandoff.nextAction.codex.recovery.tool, undefined, 'ordinary display recovery must not navigate chats');
+  }
 }, false));
 
 test('every edit returns a version-bound foreground handoff without claiming the host opened', () => fixture(async store => {

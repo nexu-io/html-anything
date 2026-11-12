@@ -78,7 +78,7 @@ Opening the editor is a preview handoff, not completion of these checks. Keep wo
 
 The project open in the editor is the deliverable. Do not copy, link or attach the exported MP4 or other files unless the user asks for them.
 
-Reply briefly in the user's language. Give the `previewUrl` returned by `motion_open_preview` and say the project is open there for review and further edits. Say in one or two sentences what changed, which assumptions you made from the workspace material, and any limitation the user would notice. When the reference, analysis or tools fall short, name the specific gap and its effect; never claim a faithful result that was not achieved.
+Reply briefly in the user's language. Give the `previewUrl` returned by `motion_open_preview` and say the editor is open only after confirming visible latest content through the shared handoff; otherwise state the display failure or confirmed inactive-chat deferral, even if the MP4 exported successfully. Say in one or two sentences what changed, which assumptions you made from the workspace material, and any limitation the user would notice. When the reference, analysis or tools fall short, name the specific gap and its effect; never claim a faithful result that was not achieved.
 
 ## 8. Follow-up requests
 

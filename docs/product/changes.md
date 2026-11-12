@@ -1,5 +1,12 @@
 # 公开变更记录
 
+## 2026-11-12: Complete visible editor delivery after video creation
+
+- **Problem:** A queued host acknowledgment with a hidden panel could send an Agent into waiting for the user to return without evidence that the calling chat was inactive. A separate hidden inspection tab or successful MP4 export could then end the turn without visible editor delivery.
+- **Implementation:** Hidden/unavailable display receipts retain native-panel presentation recovery and its tab reuse hint. Only explicit host-confirmed inactive-chat deferral returns the wait action. First delivery follows the same visibility and latest-content checks as continued edits, and unresolved display failures remain visible in the final handoff.
+- **Validation:** 47 targeted contract, workflow, adapter and packaging tests passed, alongside static checks, Studio type checking and the Studio build. Regression coverage separates queued acknowledgments from observed visibility, preserves inactive-chat deferral and verifies that the updated Skill and Tool sources ship together.
+- **Limits:** Original-machine host reproduction and a new model-driven video creation/handoff acceptance run remain unverified. The service records host-reported evidence; it does not independently measure the outer host panel. This change does not publish a package.
+
 ## 2026-11-11: Check historical media before offering MCP restoration
 
 - **Problem and audience:** Agents and creators could be told that a historical version was restorable after its media blobs had disappeared; restoration then exposed a low-level file-copy error.
