@@ -33,6 +33,7 @@ export interface UseDomEditCommitsParams {
   writeProjectFile: (path: string, content: string, expectedContent?: string) => Promise<void>;
   editHistory: { recordEdit: (entry: RecordEditInput) => Promise<void> };
   fileTree: string[];
+  fontAssets?: ImportedFontAsset[];
   importedFontAssetsRef: React.MutableRefObject<ImportedFontAsset[]>;
   projectId: string | null;
   projectIdRef: React.MutableRefObject<string | null>;
@@ -81,6 +82,7 @@ export function useDomEditCommits({
   writeProjectFile,
   editHistory,
   fileTree,
+  fontAssets = [],
   importedFontAssetsRef,
   projectId,
   projectIdRef,
@@ -104,6 +106,11 @@ export function useDomEditCommits({
         (font) => font.family.toLowerCase() === family.toLowerCase(),
       );
       if (imported) return imported;
+      // An authored face already owns its source and weight; do not replace it with a filename guess.
+      const doc = previewIframeRef.current?.contentDocument;
+      if (doc?.fonts && Array.from(doc.fonts).some(face => face.family.replace(/^["']|["']$/g, "").toLowerCase() === family.toLowerCase())) return null;
+      const known = fontAssets.find(font => font.family.toLowerCase() === family.toLowerCase());
+      if (known) return known;
       const asset = fileTree.find(
         (path) =>
           FONT_EXT.test(path) &&
@@ -116,7 +123,7 @@ export function useDomEditCommits({
         url: buildProjectApiPath(projectId, `/preview/${encodeUrlPath(asset)}`),
       };
     },
-    [fileTree, projectId, importedFontAssetsRef],
+    [fileTree, fontAssets, projectId, importedFontAssetsRef, previewIframeRef],
   );
 
   const persistDomEditOperations = useDomEditPersist({

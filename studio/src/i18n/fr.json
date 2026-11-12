@@ -1805,5 +1805,7 @@
   "purple": "Violet",
   "multicolor": "Multicolore",
   "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Des fichiers de l’historique sont manquants, illisibles ou endommagés : {files}. Cette version n’a pas été restaurée. Le projet actuel reste inchangé.",
-  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Impossible de préparer les fichiers de l’historique pour la restauration : {files}. Le projet actuel reste inchangé."
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Impossible de préparer les fichiers de l’historique pour la restauration : {files}. Le projet actuel reste inchangé.",
+  "Failed to add media": "Échec de l’ajout du média",
+  "Could not read media duration. Try adding the file again.": "Impossible de lire la durée du média. Essayez d’ajouter à nouveau le fichier."
 }

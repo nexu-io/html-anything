@@ -1769,5 +1769,7 @@
   "yellow": "黄色",
   "{count} templates": "{count} 个模板",
   "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "历史文件缺失、无法读取或已损坏：{files}。未恢复此版本，当前工程保持不变。",
-  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "无法准备恢复所需的历史文件：{files}。当前工程保持不变。"
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "无法准备恢复所需的历史文件：{files}。当前工程保持不变。",
+  "Failed to add media": "添加素材失败",
+  "Could not read media duration. Try adding the file again.": "无法读取素材时长，请重新添加文件。"
 }

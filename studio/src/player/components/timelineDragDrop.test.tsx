@@ -110,6 +110,17 @@ afterEach(() => {
 });
 
 describe("useTimelineAssetDrop", () => {
+  it("forwards a known duration so dropping does not need another probe", () => {
+    const onAssetDrop = vi.fn();
+    const view = renderHarness(onAssetDrop);
+    const event = dragEvent(assetTransfer('{"path":"music.mp3","duration":12.5}'), 80, ROW0_MID_Y);
+    act(() => {
+      view.api.handleAssetDragOver(event);
+      view.api.handleAssetDrop(event);
+    });
+    expect(onAssetDrop).toHaveBeenCalledWith("music.mp3", { start: 2, track: 0 }, 12.5);
+    act(() => view.root.unmount());
+  });
   it("edge-autoscrolls the sole timeline viewport while a supported asset is held", () => {
     let frame: FrameRequestCallback | null = null;
     vi.spyOn(globalThis, "requestAnimationFrame").mockImplementation((callback) => {

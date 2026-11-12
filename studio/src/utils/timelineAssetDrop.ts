@@ -11,6 +11,18 @@ const FALLBACK_TIMELINE_FILE_DROP_DURATION = 5;
 
 export type TimelineAssetKind = "image" | "video" | "audio";
 
+export function parseTimelineAssetPayload(raw: string): { path: string; duration?: number } | null {
+  try {
+    const value = JSON.parse(raw) as { path?: unknown; duration?: unknown } | null;
+    if (!value || typeof value.path !== "string" || !value.path) return null;
+    const duration = typeof value.duration === "number" && Number.isFinite(value.duration) && value.duration > 0
+      ? value.duration : undefined;
+    return { path: value.path, duration };
+  } catch {
+    return null;
+  }
+}
+
 export function getTimelineAssetKind(assetPath: string): TimelineAssetKind | null {
   if (IMAGE_EXT.test(assetPath)) return "image";
   if (VIDEO_EXT.test(assetPath)) return "video";

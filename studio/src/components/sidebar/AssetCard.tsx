@@ -22,9 +22,9 @@ import { resolveMediaPreviewUrl } from "../../player/components/thumbnailUtils";
 
 /** Drag payload writer shared by the asset tile and the font row: copy effect
  *  plus the timeline-asset MIME and a plain-text path fallback. */
-function writeAssetDragData(e: React.DragEvent, asset: string): void {
+function writeAssetDragData(e: React.DragEvent, asset: string, duration?: number): void {
   e.dataTransfer.effectAllowed = "copy";
-  e.dataTransfer.setData(TIMELINE_ASSET_MIME, JSON.stringify({ path: asset }));
+  e.dataTransfer.setData(TIMELINE_ASSET_MIME, JSON.stringify({ path: asset, duration }));
   e.dataTransfer.setData("text/plain", asset);
 }
 
@@ -229,7 +229,7 @@ export function AssetCard({
             activateCard();
           }
         }}
-        onDragStart={(e) => writeAssetDragData(e, asset)}
+        onDragStart={(e) => writeAssetDragData(e, asset, resolvedDuration)}
         onContextMenu={(e) => openAssetContextMenu(e, setContextMenu)}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}

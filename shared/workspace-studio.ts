@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
-import { readFile, readdir } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { WorkspaceStore } from '../workspace.ts';
@@ -8,6 +9,8 @@ import { HYPERFRAMES_VERSION, repairGeneratedRegistry } from '../hyperframes.ts'
 import { isMain } from './entry.ts';
 import { withAvailableHistorySteps } from './studio-history-availability.ts';
 import { MAX_ASSET_BYTES } from './asset-limits.ts';
+
+import { createFontCatalog, prepareFont, preparedFontResponse } from './studio-fonts.ts';
 
 export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: string, initialDirectory: string, port: number) {
   const require = createRequire(path.join(runtimeRoot, 'package.json'));
@@ -22,6 +25,11 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
   const { getRequestListener } = await import(pathToFileURL(require.resolve('@hono/node-server')).href);
   const { Hono } = await import(pathToFileURL(require.resolve('hono')).href);
   const { bodyLimit } = await import(pathToFileURL(require.resolve('hono/body-limit')).href);
+  const coreRoot = path.dirname(require.resolve('@hyperframes/core/package.json'));
+  const core = JSON.parse(await readFile(path.join(coreRoot, 'package.json'), 'utf8'));
+  const { collectFontFileEntries, fontDirectories } = await import(pathToFileURL(path.join(coreRoot, core.exports['./fonts/system-locator'].import)).href);
+  const { create: parseFont } = require('fontkit');
+  const fonts = createFontCatalog(fontDirectories().flatMap(directory => collectFontFileEntries(directory).map(entry => entry.path)), parseFont);
   const historyModule = path.join(path.dirname(require.resolve('@hyperframes/studio-server/package.json')), 'dist/history/index.js');
   const { DEFAULT_HISTORY_ROOT } = await import(pathToFileURL(historyModule).href);
   const historyRoot = process.env.HYPERFRAMES_HISTORY_ROOT ?? DEFAULT_HISTORY_ROOT;
@@ -40,7 +48,41 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
         const host = createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
           origin: () => origin, historyRoot });
         const nativeApp = host.app;
-        host.app = new Hono().post('/api/projects/:id/upload', bodyLimit({
+        host.app = new Hono().get('/api/fonts', async c => c.json({ fonts: await fonts.families() }))
+          .get('/api/fonts/file', async c => {
+            const family = c.req.query('family');
+            if (!family) return c.json({ error: 'family parameter required' }, 400);
+            const font = await fonts.file(family);
+            return font ? preparedFontResponse(font) : c.json({ error: 'font not found' }, 404);
+          }).post('/api/fonts/prepare', bodyLimit({ maxSize: MAX_ASSET_BYTES }), async c => {
+            try { return preparedFontResponse(prepareFont(Buffer.from(await c.req.arrayBuffer()), parseFont)); }
+            catch { return c.json({ error: 'Unsupported or invalid font file' }, 400); }
+          }).post('/api/projects/:id/fonts/import', bodyLimit({ maxSize: 4096 }), async c => {
+            const input = await c.req.json().catch(() => null);
+            if (!input || typeof input.family !== 'string' || !input.family.trim()) return c.json({ error: 'Font family required' }, 400);
+            const font = await fonts.file(input.family);
+            if (!font) return c.json({ error: 'Font not found' }, 404);
+            const name = font.postscriptName.replace(/[^a-zA-Z0-9_-]/g, '_') + '-' + randomUUID().slice(0, 8);
+            const asset = `assets/fonts/${name}.${font.format}`;
+            await mkdir(await scoped.safePath('assets/fonts'), { recursive: true });
+            await writeFile(await scoped.safePath(asset), font.data, { flag: 'wx' });
+            return c.json({ family: font.family, weight: font.weight, style: font.style, path: asset }, 201);
+          }).get('/api/projects/:id', async c => {
+            const response = await nativeApp.fetch(c.req.raw);
+            if (!response.ok) return response;
+            const data = await response.json();
+            const projectFonts = [];
+            for (const file of data.files ?? []) {
+              if (!/\.(?:ttf|otf|ttc|woff2?)$/i.test(file)) continue;
+              try {
+                const faces = await fonts.inspect(await scoped.safePath(file));
+                // Existing collections retain their actual first face until explicitly re-imported.
+                const { index: _index, ...face } = faces[0];
+                projectFonts.push({ ...face, path: file });
+              } catch { /* Invalid historical files remain on disk but are not offered as fonts. */ }
+            }
+            return c.json({ ...data, fonts: projectFonts });
+          }).post('/api/projects/:id/upload', bodyLimit({
           maxSize: MAX_ASSET_BYTES,
           onError: c => c.json({ error: 'Upload exceeds 500 MB (500000000 bytes)', maxBytes: MAX_ASSET_BYTES }, 413),
         }), c => nativeApp.fetch(c.req.raw)).all('*', c => nativeApp.fetch(c.req.raw));

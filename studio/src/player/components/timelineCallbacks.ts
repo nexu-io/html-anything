@@ -30,7 +30,7 @@ export type TimelineDropPlacement = { start: number; track: number } & (
  */
 export interface TimelineDropCallbacks {
   onFileDrop?: (files: File[], placement?: TimelineDropPlacement) => Promise<void> | void;
-  onAssetDrop?: (assetPath: string, placement: TimelineDropPlacement) => Promise<void> | void;
+  onAssetDrop?: (assetPath: string, placement: TimelineDropPlacement, duration?: number) => Promise<void> | void;
   onBlockDrop?: (
     blockName: string,
     placement: { start: number; track: number },

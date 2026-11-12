@@ -5,6 +5,7 @@ import { CLIP_Y, GUTTER, MVP_LABEL_COL_W, RULER_H, TRACK_H, TRACKS_TOP_PAD } fro
 import { useMediaGateway } from "../../motion/MediaGatewayContext";
 import { usePlayerStore } from "../store/playerStore";
 import { mediaPopoverAnchor } from "../../motion/mediaPopoverPosition";
+import { TimelinePendingAssetDrops } from "./TimelinePendingAssetDrops";
 
 function EmptyGenerationRange() {
   const range = usePlayerStore(s => s.rangeSelection);
@@ -38,13 +39,19 @@ export function TimelineEmptyState({
   const hideGuide = !!gateway?.generationOpen && !isDragOver;
   return (
     <div
-      className={`${mvp ? "motion-timeline-empty" : ""} h-full border-t bg-[var(--timeline-shell-bg)] flex flex-col select-none transition-colors duration-150 ${
+      className={`${mvp ? "motion-timeline-empty" : ""} relative h-full border-t bg-[var(--timeline-shell-bg)] flex flex-col select-none transition-colors duration-150 ${
         isDragOver ? "border-studio-accent/50 bg-studio-accent/3" : "border-neutral-800/50"
       }`}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
     >
+      <TimelinePendingAssetDrops
+        contentOrigin={emptyOrigin}
+        pixelsPerSecond={14}
+        trackOrder={[]}
+        rowTop={() => RULER_H + trackTopPadding}
+      />
       {/* Ruler */}
       <div
         className="shrink-0 border-b border-neutral-800/40 flex items-end relative"

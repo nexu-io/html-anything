@@ -370,13 +370,16 @@ describe.each(["classic", "flat"] as const)("shared %s input telemetry", (ui) =>
     });
   });
 
-  it("tracks FontFamilyField exactly once for a real selection", () => {
+  it("tracks FontFamilyField exactly once for a real selection", async () => {
+    vi.stubGlobal("FontFace", class { async load() { return this; } });
+    const originalFonts = Object.getOwnPropertyDescriptor(document, "fonts");
+    Object.defineProperty(document, "fonts", { configurable: true, value: { add: vi.fn() } });
     const host = render(
       section(
         <FontFamilyField
           flat={ui === "flat"}
           value="Arial"
-          importedFonts={[]}
+          importedFonts={[{ family: "Fixture Font", path: "fixture.ttf", url: "/fixture.ttf" }]}
           onCommit={vi.fn()}
         />,
       ),
@@ -386,10 +389,10 @@ describe.each(["classic", "flat"] as const)("shared %s input telemetry", (ui) =>
     );
     act(() => trigger?.dispatchEvent(new MouseEvent("click", { bubbles: true })));
     const option = Array.from(document.body.querySelectorAll<HTMLButtonElement>("button")).find((button) =>
-      button.textContent?.includes("sans-serif"),
+      button.textContent?.includes("Fixture Font"),
     );
-    if (!option) throw new Error("expected sans-serif font option");
-    act(() => option.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+    if (!option) throw new Error("expected imported font option");
+    await act(async () => option.dispatchEvent(new MouseEvent("click", { bubbles: true })));
 
     expect(trackStudioEvent).toHaveBeenCalledTimes(1);
     expect(trackStudioEvent).toHaveBeenLastCalledWith("design_input", {
@@ -398,6 +401,8 @@ describe.each(["classic", "flat"] as const)("shared %s input telemetry", (ui) =>
       control: "select",
       name: "font-family",
     });
+    if (originalFonts) Object.defineProperty(document, "fonts", originalFonts);
+    else delete (document as unknown as { fonts?: unknown }).fonts;
   });
 
   it("tracks TextAreaField exactly once across scheduled commit and blur", () => {
