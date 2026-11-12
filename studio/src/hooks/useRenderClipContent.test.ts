@@ -20,6 +20,7 @@ import { buildCompositionThumbnailUrl } from "../player/components/CompositionTh
 import { compositionCardThumbnailUrl } from "../components/sidebar/CompositionsTab";
 import { normalizeCompositionSrc } from "./useRenderClipContent";
 import { useRenderClipContent } from "./useRenderClipContent";
+import { StudioHostContext } from "../motion/StudioHost";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -81,6 +82,7 @@ describe("useRenderClipContent", () => {
     el: TimelineElement,
     activePreviewUrl: string | null = "/api/projects/my-project/preview",
     context?: TimelineClipRenderContext,
+    mvpEditor = false,
   ): ReactNode {
     const host = document.createElement("div");
     document.body.append(host);
@@ -99,7 +101,13 @@ describe("useRenderClipContent", () => {
     }
 
     act(() => {
-      root.render(React.createElement(Harness));
+      root.render(
+        React.createElement(
+          StudioHostContext.Provider,
+          { value: { mvpEditor } },
+          React.createElement(Harness),
+        ),
+      );
     });
     act(() => root.unmount());
     return unwrapPeakMarks(content);
@@ -281,6 +289,32 @@ describe("useRenderClipContent", () => {
       "/api/projects/my-project/waveform/talk.mp4",
     );
     expect(isValidElement<{ labelInset?: number }>(waveform) && waveform.props.labelInset).toBe(0);
+  });
+
+  it("shows only video frames in MVP while retaining independent audio waveforms", () => {
+    const video: TimelineElement = {
+      id: "talk",
+      tag: "video",
+      start: 0,
+      duration: 4,
+      track: 0,
+      src: "talk.mp4",
+      hasAudio: true,
+    };
+    usePlayerStore.setState({ thumbnailMode: "adaptive" });
+    const content = renderClipContent(video, null, undefined, true);
+    expect(isValidElement(content) && content.type).toBe(VideoThumbnail);
+    for (const thumbnailMode of ["adaptive", "hidden"] as const) {
+      usePlayerStore.setState({ thumbnailMode });
+      const audio = renderClipContent(
+        { ...video, id: "audio", tag: "audio", track: 1 },
+        null,
+        undefined,
+        true,
+      );
+      expect(isValidElement(audio) && audio.type).toBe(AudioWaveform);
+    }
+    expect(renderClipContent(video, null, undefined, true)).toBeNull();
   });
 
   it("keeps a muted or silent video to thumbnails only", () => {

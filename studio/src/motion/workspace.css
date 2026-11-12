@@ -1,6 +1,7 @@
 /* Workspace navigation, project conversation and native editing are separate surfaces. */
 .motion-workspace { display: flex; height: 100%; min-height: 0; width: 100%; overflow: hidden; color: var(--motion-text); background: var(--motion-bg); }
-.motion-workspace-content { position: relative; display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; container-type: inline-size; background: var(--motion-panel); overflow: hidden; }
+/* The workspace is fixed; focusing portaled dock controls must not scroll it. */
+.motion-workspace-content { position: relative; display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; container-type: inline-size; background: var(--motion-panel); overflow: clip; }
 .motion-workspace-content > .h-full { flex: 1; min-height: 0; height: auto; }
 .motion-sidebar { display: flex; flex-direction: column; flex: 0 0 224px; width: 224px; min-height: 0; padding: 12px 12px 12px; border-right: 1px solid var(--motion-border); background: var(--motion-bg); }
 .motion-sidebar-brand { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px; padding-inline: 4px; gap: 10px; }

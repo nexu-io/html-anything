@@ -1,0 +1,122 @@
+[
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "cursor": "pointer",
+    "hover": true,
+    "id": "normal",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "cursor": "pointer",
+    "hover": true,
+    "id": "selected",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "cursor": "not-allowed",
+    "hover": true,
+    "id": "disabled30",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "cursor": "not-allowed",
+    "hover": true,
+    "id": "disabled40",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "cursor": "not-allowed",
+    "hover": true,
+    "id": "disabled45",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "cursor": "not-allowed",
+    "hover": true,
+    "id": "disabled60",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "cursor": "not-allowed",
+    "hover": true,
+    "id": "disabledAria",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(53, 53, 53)",
+    "color": "rgb(250, 250, 250)",
+    "cursor": "pointer",
+    "hover": true,
+    "id": "primary",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "cursor": "not-allowed",
+    "hover": true,
+    "id": "primaryDisabled",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "cursor": "not-allowed",
+    "hover": true,
+    "id": "inputDisabled",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "color(srgb 0.723922 0.723922 0.723922)",
+    "cursor": "not-allowed",
+    "hover": true,
+    "id": "menuDisabled",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(237, 237, 237)",
+    "color": "rgb(32, 32, 32)",
+    "cursor": "auto",
+    "hover": true,
+    "id": "menuHighlighted",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(0, 0, 255)",
+    "color": "rgb(255, 255, 255)",
+    "cursor": "pointer",
+    "hover": true,
+    "id": "catalog",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(0, 0, 255)",
+    "color": "rgb(255, 255, 255)",
+    "cursor": "pointer",
+    "hover": true,
+    "id": "template",
+    "opacity": "1"
+  },
+  {
+    "bg": "rgb(0, 0, 255)",
+    "color": "rgb(255, 255, 255)",
+    "cursor": "pointer",
+    "hover": true,
+    "id": "clip",
+    "opacity": "1"
+  }
+]

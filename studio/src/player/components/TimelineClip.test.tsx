@@ -74,10 +74,10 @@ function renderClip({
 }
 
 describe("TimelineClip", () => {
-  it("removes only duplicate MVP titles while retaining clip identity, content and badges", () => {
+  it.each(["First Bg", "Other track", undefined])("hides MVP clip titles for track %s while retaining identity, content and badges", (trackLabel) => {
     const { host, root, onClick } = renderClip({
       element: { id: "bg", label: "First Bg", tag: "div", start: 0, duration: 3, track: 0 },
-      trackLabel: "First Bg", mvp: true,
+      trackLabel, mvp: true,
     });
     expect(host.querySelector(".timeline-clip__label")).toBeNull();
     expect(host.querySelector('[data-label-in-track="true"]')).not.toBeNull();
@@ -91,9 +91,9 @@ describe("TimelineClip", () => {
   });
 
   it.each([
-    { trackLabel: "Other track", mvp: true },
+    { trackLabel: "Other track", mvp: false },
     { trackLabel: "First Bg", mvp: false },
-  ])("keeps titles when they add information or outside the MVP: %j", (options) => {
+  ])("keeps titles outside the MVP: %j", (options) => {
     const { host, root } = renderClip({
       element: { id: "bg", label: "First Bg", tag: "div", start: 0, duration: 3, track: 0 },
       ...options,

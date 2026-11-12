@@ -1,0 +1,605 @@
+{
+  "samples": [
+    {
+      "scroll": 731.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 989px)"
+    },
+    {
+      "scroll": 762.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1020px)"
+    },
+    {
+      "scroll": 793.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1051px)"
+    },
+    {
+      "scroll": 824.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1082px)"
+    },
+    {
+      "scroll": 854.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1112px)"
+    },
+    {
+      "scroll": 884,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1141.5px)"
+    },
+    {
+      "scroll": 913,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1170.5px)"
+    },
+    {
+      "scroll": 941,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1198.5px)"
+    },
+    {
+      "scroll": 968,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1225.5px)"
+    },
+    {
+      "scroll": 994,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1251.5px)"
+    },
+    {
+      "scroll": 1018.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1276px)"
+    },
+    {
+      "scroll": 1042.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1300px)"
+    },
+    {
+      "scroll": 1064.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1322px)"
+    },
+    {
+      "scroll": 1085.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1343px)"
+    },
+    {
+      "scroll": 1104.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1362px)"
+    },
+    {
+      "scroll": 1122,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1379.5px)"
+    },
+    {
+      "scroll": 1138,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1395.5px)"
+    },
+    {
+      "scroll": 1152.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1410px)"
+    },
+    {
+      "scroll": 1165,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1422.5px)"
+    },
+    {
+      "scroll": 1175.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1433px)"
+    },
+    {
+      "scroll": 1184.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1442px)"
+    },
+    {
+      "scroll": 1191,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1448.5px)"
+    },
+    {
+      "scroll": 1196,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1453.5px)"
+    },
+    {
+      "scroll": 1199,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1456.5px)"
+    },
+    {
+      "scroll": 1200,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1457.5px)"
+    },
+    {
+      "scroll": 1199,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1456.5px)"
+    },
+    {
+      "scroll": 1196,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1453.5px)"
+    },
+    {
+      "scroll": 1191,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1448.5px)"
+    },
+    {
+      "scroll": 1184.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1442px)"
+    },
+    {
+      "scroll": 1175.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1433px)"
+    },
+    {
+      "scroll": 1165,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1422.5px)"
+    },
+    {
+      "scroll": 1152.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1410px)"
+    },
+    {
+      "scroll": 1138,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1395.5px)"
+    },
+    {
+      "scroll": 1122,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1379.5px)"
+    },
+    {
+      "scroll": 1104.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1362px)"
+    },
+    {
+      "scroll": 1085.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1343px)"
+    },
+    {
+      "scroll": 1064.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1322px)"
+    },
+    {
+      "scroll": 1042.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1300px)"
+    },
+    {
+      "scroll": 1018.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1276px)"
+    },
+    {
+      "scroll": 994,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1251.5px)"
+    },
+    {
+      "scroll": 968,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1225.5px)"
+    },
+    {
+      "scroll": 941,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1198.5px)"
+    },
+    {
+      "scroll": 913,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1170.5px)"
+    },
+    {
+      "scroll": 884,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1141.5px)"
+    },
+    {
+      "scroll": 854.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1112px)"
+    },
+    {
+      "scroll": 824.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1082px)"
+    },
+    {
+      "scroll": 793.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1051px)"
+    },
+    {
+      "scroll": 762.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 1020px)"
+    },
+    {
+      "scroll": 731.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 989px)"
+    },
+    {
+      "scroll": 700,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 957.5px)"
+    },
+    {
+      "scroll": 668.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 926px)"
+    },
+    {
+      "scroll": 637.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 895px)"
+    },
+    {
+      "scroll": 606.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 864px)"
+    },
+    {
+      "scroll": 575.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 833px)"
+    },
+    {
+      "scroll": 545.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 803px)"
+    },
+    {
+      "scroll": 516,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 773.5px)"
+    },
+    {
+      "scroll": 487,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 744.5px)"
+    },
+    {
+      "scroll": 459,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 716.5px)"
+    },
+    {
+      "scroll": 432,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 689.5px)"
+    },
+    {
+      "scroll": 406,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 663.5px)"
+    },
+    {
+      "scroll": 381.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 639px)"
+    },
+    {
+      "scroll": 357.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 615px)"
+    },
+    {
+      "scroll": 335.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 593px)"
+    },
+    {
+      "scroll": 314.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 572px)"
+    },
+    {
+      "scroll": 295.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 553px)"
+    },
+    {
+      "scroll": 278,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 535.5px)"
+    },
+    {
+      "scroll": 262,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 519.5px)"
+    },
+    {
+      "scroll": 247.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 505px)"
+    },
+    {
+      "scroll": 235,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 492.5px)"
+    },
+    {
+      "scroll": 224.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 482px)"
+    },
+    {
+      "scroll": 215.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 473px)"
+    },
+    {
+      "scroll": 209,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 466.5px)"
+    },
+    {
+      "scroll": 204,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 461.5px)"
+    },
+    {
+      "scroll": 201,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 458.5px)"
+    },
+    {
+      "scroll": 200,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 457.5px)"
+    },
+    {
+      "scroll": 201,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 458.5px)"
+    },
+    {
+      "scroll": 204,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 461.5px)"
+    },
+    {
+      "scroll": 209,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 466.5px)"
+    },
+    {
+      "scroll": 215.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 473px)"
+    },
+    {
+      "scroll": 224.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 482px)"
+    },
+    {
+      "scroll": 235,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 492.5px)"
+    },
+    {
+      "scroll": 247.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 505px)"
+    },
+    {
+      "scroll": 262,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 519.5px)"
+    },
+    {
+      "scroll": 278,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 535.5px)"
+    },
+    {
+      "scroll": 295.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 553px)"
+    },
+    {
+      "scroll": 314.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 572px)"
+    },
+    {
+      "scroll": 335.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 593px)"
+    },
+    {
+      "scroll": 357.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 615px)"
+    },
+    {
+      "scroll": 381.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 639px)"
+    },
+    {
+      "scroll": 406,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 663.5px)"
+    },
+    {
+      "scroll": 432,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 689.5px)"
+    },
+    {
+      "scroll": 459,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 716.5px)"
+    },
+    {
+      "scroll": 487,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 744.5px)"
+    },
+    {
+      "scroll": 516,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 773.5px)"
+    },
+    {
+      "scroll": 545.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 803px)"
+    },
+    {
+      "scroll": 575.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 833px)"
+    },
+    {
+      "scroll": 606.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 864px)"
+    },
+    {
+      "scroll": 637.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 895px)"
+    },
+    {
+      "scroll": 668.5,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 926px)"
+    },
+    {
+      "scroll": 700,
+      "clipLeft": 281.5,
+      "expected": 281.5,
+      "css": "inset(0px 0px 0px 957.5px)"
+    }
+  ],
+  "commits": 2
+}

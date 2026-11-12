@@ -1,4 +1,6 @@
 {
+  "Untitled": "未命名",
+  "Join the OpenDesign community": "欢迎加入 OpenDesign 社群",
   "System": "系统",
   "Imported": "已导入",
   "Document": "文档",
@@ -987,5 +989,6 @@
   "Align left": "左对齐",
   "No content to export. Add media first.": "暂无可导出的内容，请先添加素材。",
   "Expand": "展开",
-  "No editable content": "暂无可编辑内容"
+  "No editable content": "暂无可编辑内容",
+  "Select an element to edit its properties": "选择元素后可编辑属性"
 }

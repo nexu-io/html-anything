@@ -269,10 +269,10 @@ export function AssetCard({
             </div>
           )}
 
-          {/* "Added" badge — top-left */}
+          {/* Current-composition usage badge — top-left */}
           {used && (
             <span className="absolute top-1 left-1 text-[9px] font-semibold leading-none px-1.5 py-[3px] rounded-sm bg-neutral-950/80 text-panel-text-1">
-              {t("Added")}</span>
+              {t("In use")}</span>
           )}
 
           {/* Duration badge — top-right, media only */}
@@ -374,7 +374,7 @@ export function FontRow({
             <span className="text-[10px] text-neutral-600 truncate">{extension}</span>
             {used && (
               <span className="text-[9px] font-medium text-accent-ink bg-panel-accent/10 px-1.5 py-px rounded-sm">
-                {t("in use")}</span>
+                {t("In use")}</span>
             )}
             <CopyChip feedback={copyFeedback} asset={asset} />
           </div>

@@ -163,7 +163,7 @@ export function ColorField({
   flat?: boolean;
   mixed?: boolean;
   onPreview?: (nextValue: string) => void;
-  onCommit: (nextValue: string) => void;
+  onCommit: (nextValue: string) => void | Promise<unknown>;
 }) {
   const { t } = useI18n();
   const track = useTrackDesignInput();
@@ -215,7 +215,7 @@ export function ColorField({
   const persistColorValue = useCallback(
     (nextValue: string) => {
       if (nextValue !== value) track("color", label);
-      onCommit(nextValue);
+      return onCommit(nextValue);
     },
     [label, onCommit, track, value],
   );
@@ -234,7 +234,7 @@ export function ColorField({
     },
     onCommit: (nextValue) => {
       const resolved = resolveColorGestureValue(nextValue);
-      if (resolved) persistColorValue(resolved.value);
+      if (resolved) return persistColorValue(resolved.value);
     },
   });
 

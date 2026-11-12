@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useEffect, useState } from "react";
 import { isVideoAudible } from "../../player/lib/timelineElementHelpers";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
@@ -83,6 +84,7 @@ export function FlatMediaSection({
   ) => Promise<BackgroundRemovalResult>;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const track = useTrackDesignInput();
   const isVideo = element.tagName === "video";
   const isAudio = element.tagName === "audio";
@@ -165,14 +167,14 @@ export function FlatMediaSection({
 
   return (
     <div className="space-y-1.5">
-      <div className="flex min-h-8 items-center justify-between gap-2">
+      {!mvp && <div className="flex min-h-8 items-center justify-between gap-2">
         <span className="flex min-w-0 items-center gap-2">
           <span className="h-5 w-8 shrink-0 rounded-[3px] bg-panel-surface" />
           <span className="min-w-0 truncate font-mono text-[11px] text-panel-text-0">
             {srcAttr}
           </span>
         </span>
-        <button
+        {!mvp && <button
           type="button"
           data-flat-media-copy="true"
           onClick={() => {
@@ -186,9 +188,9 @@ export function FlatMediaSection({
         >
           {copied ? <Check size={11} /> : <ClipboardList size={11} />}
           {copied ? t("Copied") : t("Copy")}
-        </button>
-      </div>
-      {isVisualMedia && (
+        </button>}
+      </div>}
+      {!mvp && isVisualMedia && (
         <div className="ml-px border-l-2 border-panel-border-input py-1 pl-[10px]">
           <div className="flex min-h-6 items-center justify-between">
             <span className="flex items-baseline gap-[7px]">
@@ -244,6 +246,7 @@ export function FlatMediaSection({
       )}
       {(isVideo || isAudio) && (
         <>
+          {!mvp && <>
           <FlatSlider
             label={t("Gain")}
             value={audioGainToFaderPosition(gain)}
@@ -295,6 +298,7 @@ export function FlatMediaSection({
               }
             />
           </div>
+          </>}
           <div className="flex items-center gap-1">
             <div className="min-w-0 flex-1">
               <FlatSlider
@@ -321,18 +325,18 @@ export function FlatMediaSection({
                 }}
               />
             </div>
-            <AutomationToggle
+            {!mvp && <AutomationToggle
               paramKey="rate"
               label={t("Speed")}
               automated={Boolean(rate?.automated)}
               onAutomate={rate ? () => rate.onAutomate() : undefined}
               onRemoveAutomation={rate ? () => rate.onRemoveAutomation() : undefined}
-            />
+            />}
           </div>
           {/* Speed presets are picture-driven ramps (slow-mo reveals, whip
               speed-ups); on a bare audio clip they only warp pitch, so the
               row is video-only. */}
-          {rate?.canApplyPreset && !isAudio && (
+          {!mvp && rate?.canApplyPreset && !isAudio && (
             <FlatSelectRow
               label={t("Speed preset")}
               value=""
@@ -356,7 +360,7 @@ export function FlatMediaSection({
               return true;
             }}
           />
-          {(isAudio || hasAudio) && (
+          {!mvp && (isAudio || hasAudio) && (
             <MediaFadeSliders
               fadeIn={fadeIn}
               fadeOut={fadeOut}
@@ -369,12 +373,12 @@ export function FlatMediaSection({
             checked={hasLoop}
             onChange={(next) => void onSetHtmlAttribute("loop", next ? "true" : null)}
           />
-          <FlatToggle
+          {!mvp && <FlatToggle
             label={t("Muted")}
             checked={hasMuted}
             onChange={(next) => void commitMutedToggle(mediaEdit, next)}
-          />
-          {isVideo && (
+          />}
+          {!mvp && isVideo && (
             <FlatToggle
               label={t("Has audio track")}
               checked={hasAudio}
@@ -387,12 +391,13 @@ export function FlatMediaSection({
         <>
           <FlatSelectRow
             label={t("Fit")}
+            presentation={mvp ? "menu" : "native"}
             value={objectFit}
             options={["contain", "cover", "fill", "none", "scale-down"]}
             tier={objectFit === "contain" ? "default" : "explicitCustom"}
             onChange={(next) => void onSetStyle("object-fit", next)}
           />
-          <FlatSelectRow
+          {!mvp && <FlatSelectRow
             label={t("Position")}
             value={objectPosition}
             options={[
@@ -408,7 +413,7 @@ export function FlatMediaSection({
             ]}
             tier={objectPosition === "center" ? "default" : "explicitCustom"}
             onChange={(next) => void onSetStyle("object-position", next)}
-          />
+          />}
         </>
       )}
     </div>

@@ -1,3 +1,4 @@
+import { mountFeedbackLayer } from './feedback-layer';
 import { integrationHost, hostNames, hostDescriptions, setupPrompt, manualConnection, agentGuide, apiDiscoveryCommand } from '../shared/integration';
 import type { IntegrationInfo } from '../shared/integration';
 import { mountTemplates } from './template-gallery';
@@ -10,6 +11,8 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
   let host = integrationHost(options.initialHost ?? null), info: IntegrationInfo | null = null;
   let checking = false;
   let feedbackTimer: ReturnType<typeof setTimeout>;
+  const feedback = element('connect-feedback');
+  let releaseFeedback: (() => void) | undefined;
   const copiedButtons = new Map<HTMLButtonElement, Node[]>();
   let galleryController: ReturnType<typeof mountTemplates> | undefined;
   const lifetime = new AbortController();
@@ -26,14 +29,15 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
   }
   function resetCopied() {
     copiedButtons.forEach((nodes, button) => button.replaceChildren(...nodes)); copiedButtons.clear();
-    clearTimeout(feedbackTimer); element('connect-feedback').classList.remove('is-visible');
+    clearTimeout(feedbackTimer); feedback.classList.remove('is-visible');
+    releaseFeedback?.(); releaseFeedback = undefined;
   }
   async function copy(value: string, label: string, button?: HTMLButtonElement) {
     try {
       await navigator.clipboard.writeText(value); resetCopied();
       if (button) { copiedButtons.set(button, [...button.childNodes]); buttonLabel(button, 'Copied', 'check'); }
-      language.text(element('connect-feedback'), '{label} copied. Paste it into {host}.', () => ({ label: t(label), host: hostNames[host] }));
-      element('connect-feedback').classList.add('is-visible'); feedbackTimer = setTimeout(resetCopied, 3000);
+      language.text(feedback, '{label} copied. Paste it into {host}.', () => ({ label: t(label), host: hostNames[host] }));
+      feedback.classList.add('is-visible'); releaseFeedback = mountFeedbackLayer(feedback); feedbackTimer = setTimeout(resetCopied, 3000);
     } catch {
       element<HTMLTextAreaElement>('copy-fallback').value = value;
       element<HTMLDialogElement>('copy-dialog').showModal();
