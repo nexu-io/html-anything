@@ -17,6 +17,7 @@ import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 import { runWhenInputIdle } from "./overlayFrameLoop";
 import { studioApiFetch } from "../../utils/studioApiFetch";
 import { useStudioShellContextOptional } from "../../contexts/StudioContext";
+import { RemixIcon } from "../../icons/RemixIcons";
 
 /* ------------------------------------------------------------------ */
 /*  Font helper functions                                              */
@@ -426,6 +427,12 @@ export function FontFamilyField({
     </Popover>
   );
 
+  const fontLoadingIndicator = importingFonts ? (
+    <span role="status" aria-label={t("Loading")} className="flex shrink-0 text-panel-text-5">
+      <RemixIcon name="loader-4-line" size={10} className="animate-spin motion-reduce:animate-none" />
+    </span>
+  ) : null;
+
   if (flat) {
     return (
       <div className="relative flex min-h-[30px] items-center justify-between">
@@ -434,6 +441,7 @@ export function FontFamilyField({
           type="button"
           data-flat-font-trigger="true"
           disabled={disabled || importingFonts}
+          aria-busy={importingFonts}
           className="flex items-center gap-1.5 disabled:cursor-not-allowed"
         >
           <span
@@ -442,7 +450,7 @@ export function FontFamilyField({
           >
             {currentFamily}
           </span>
-          <svg
+          {fontLoadingIndicator ?? <svg
             width="10"
             height="10"
             viewBox="0 0 10 10"
@@ -450,7 +458,7 @@ export function FontFamilyField({
             className="shrink-0 text-panel-text-5"
           >
             <path d="M2 3l3 4 3-4z" />
-          </svg>
+          </svg>}
         </button>)}
       </div>
     );
@@ -462,6 +470,7 @@ export function FontFamilyField({
       {renderPicker(<button
         type="button"
         disabled={disabled || importingFonts}
+        aria-busy={importingFonts}
         className={`${FIELD} flex h-10 items-center justify-between gap-3 text-left hover:border-neutral-700 disabled:cursor-not-allowed`}
       >
         <span
@@ -470,8 +479,8 @@ export function FontFamilyField({
         >
           {currentFamily}
         </span>
-        <span className="shrink-0 text-[10px] uppercase tracking-[0.14em] text-neutral-600">
-          {t("Font")}</span>
+        {fontLoadingIndicator ?? <span className="shrink-0 text-[10px] uppercase tracking-[0.14em] text-neutral-600">
+          {t("Font")}</span>}
       </button>)}
     </div>
   );
