@@ -11,7 +11,7 @@ These briefs turn the seven README scenarios into concrete requests. The stills 
 3. Have the agent inspect the reference before proposing a shot list and cut. Retrieval, transcription and audio analysis depend on host tools; missing media or timecodes must be supplied, not inferred from a description.
 4. Review the actual project in Studio at normal speed, including text and sound, before exporting MP4. Keep the editable source for the next revision.
 
-These are reference-led creative inputs, not new runtime tools, automatic platform adaptation or one-click generation guarantees. Existing editable templates use the [template reuse route](../skills/motion-template-to-video/SKILL.md); video reconstruction uses [motion-recreate](../skills/motion-recreate/SKILL.md). GIF previews are silent; voice, music and sound synchronization must be reviewed in the actual project.
+These are reference-led creative inputs, not new runtime tools, automatic platform adaptation or one-click generation guarantees. Existing editable templates use the [template reuse route](../skills/openmotion-template-to-video/SKILL.md); video reconstruction uses [openmotion-recreate](../skills/openmotion-recreate/SKILL.md). GIF previews are silent; voice, music and sound synchronization must be reviewed in the actual project.
 
 <a id="talking-head"></a>
 
@@ -19,7 +19,7 @@ These are reference-led creative inputs, not new runtime tools, automatic platfo
 
 **Three minutes of footage. One sharp story.**
 
-[Watch reference: Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
+[Watch reference: Ali Abdaal · 5 tools I use every day](../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4)
 
 ![AI talking-head edits](readme/examples/talking-head.jpg)
 
@@ -29,7 +29,7 @@ These are reference-led creative inputs, not new runtime tools, automatic platfo
 
 ```text
 Use OpenMotion. Creative reference: hf-reference-aroll-ali-abdaal-workflow
-../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4
+../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4
 
 Make a 30-second, 9:16 cut from my three-minute recording and timed
 transcript. Lead with the strongest complete statement. Remove only the

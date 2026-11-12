@@ -56,7 +56,7 @@ The gallery uses the same spacing, typography and two-column card structure for 
 
 | Scenario / preview | Catalog ID | Reference attribution | Excerpt (seconds) |
 | --- | --- | --- | --- |
-| [talking-head](examples/talking-head.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](../../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) | 10–17 |
+| [talking-head](examples/talking-head.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](../../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4) | 10–17 |
 | [story-recut](examples/story-recut.gif) · [still](examples/story-recut.jpg) | `hf-reference-aroll-hundred-days-story` | [Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) | 1–8 |
 | [product-launch](examples/product-launch.gif) · [still](examples/product-launch.jpg) | `hf-reference-jake-figma-draw` | [@figma](media/jake-figma-draw-reference.mp4) | 5.5–12 |
 | [viral-remix](examples/viral-remix.gif) · [still](examples/viral-remix.jpg) | `hf-reference-jake-lovable` | [@lovable_dev](media/jake-lovable-reference.mp4) | 3–10 |
@@ -302,7 +302,7 @@ Prompt: “Replace the large centered line 'Cut with AI.' with 'Edit with AI.' K
 
 [Six paired examples](../motion-design-examples.md) now render actual source-backed content adaptations. They are separate from the external seven-scenario and eighteen-item viewing galleries. Each comparison uses one source composition twice, with original content on the left and an explicit replacement preset on the right. These are silent, normal-speed excerpts, sampled at matching GSAP timestamps and shown on a shared playback clock; they are not blind reconstruction or a claim of native Studio export acceptance.
 
-The [Skill package](../../library/skills/motion-design-remix/SKILL.md) includes source from Hyperframes commit `070b964d7b8cd844a893f0abbe8e0b7f1ac6d879`, six Motion Design profiles, presets, capture/encoding helpers and [evidence](../../library/skills/motion-design-remix/evidence.json). [Source identities](../../library/skills/motion-design-remix/sources.json), [file hashes and encoding](../../library/skills/motion-design-remix/previews/encoding.json), [licenses and execution requirements](../../library/skills/motion-design-remix/NOTICE.md) remain with the package.
+The [Skill package](../../library/skills/openmotion-design-remix/SKILL.md) includes source from Hyperframes commit `070b964d7b8cd844a893f0abbe8e0b7f1ac6d879`, six Motion Design profiles, presets, capture/encoding helpers and [evidence](../../library/skills/openmotion-design-remix/evidence.json). [Source identities](../../library/skills/openmotion-design-remix/sources.json), [file hashes and encoding](../../library/skills/openmotion-design-remix/previews/encoding.json), [licenses and execution requirements](../../library/skills/openmotion-design-remix/NOTICE.md) remain with the package.
 
 - Per-side stage: 1920 × 1080; capture: 960 × 540. MP4 pair: 1280 × 360, H.264, 12 fps, no audio. GIF pair: 960 × 270, 12 fps, 128 colors, infinite loop. JPEG fallback is the middle of each excerpt.
 - Environment: Node 26.11.1, Puppeteer Core 25.16.0, Chrome 156.0.8078.80, FFmpeg 8.1.1. These are the actual documentation-capture versions, distinct from the application’s native runtime lock.
@@ -313,8 +313,8 @@ The [Skill package](../../library/skills/motion-design-remix/SKILL.md) includes 
 To reproduce, materialize both variants for each profile under a new directory, using the package instructions. From a checkout with installed OpenMotion dependencies, invoke the capture script through the available browser-lock lane, with `MOTION_BROWSER_PATH` pointing to the chosen browser:
 
 ```sh
-node library/skills/motion-design-remix/scripts/render-previews.mjs /absolute/projects /absolute/new-capture
-node library/skills/motion-design-remix/scripts/encode-previews.mjs /absolute/new-capture /absolute/new-previews
+node library/skills/openmotion-design-remix/scripts/render-previews.mjs /absolute/projects /absolute/new-capture
+node library/skills/openmotion-design-remix/scripts/encode-previews.mjs /absolute/new-capture /absolute/new-previews
 ```
 
 The first command requires `puppeteer-core`, a browser with WebGL. The materializer supplies local browser scripts/fonts; the capture helper blocks non-loopback requests. The second requires FFmpeg on PATH. All temporary projects, frame sequences, profiles and logs stay outside the repository; only the selected source package and final previews ship.
@@ -324,7 +324,7 @@ The first command requires `puppeteer-core`, a browser with WebGL. The materiali
 
 ## Presenter videos and motion — 2026-11-09
 
-The [people manifest](people/manifest.json) records **nine catalog-reference GIFs, three original/upstream-remix comparison GIFs and one Presenter Tech template demo GIF credited to MotionGit**, each with a reduced-motion JPEG fallback. Original MP4s remain outside the checkout; links open the full published videos. No presenter footage or voice is packaged into the new [Presenter Story Skill](../../library/skills/presenter-story/SKILL.md).
+The [people manifest](people/manifest.json) records **nine catalog-reference GIFs, three original/upstream-remix comparison GIFs and one Presenter Tech template demo GIF credited to MotionGit**, each with a reduced-motion JPEG fallback. Original MP4s remain outside the checkout; links open the full published videos. No presenter footage or voice is packaged into the new [Presenter Story Skill](../../library/skills/openmotion-presenter-story/SKILL.md).
 
 The catalog already contains all nine `hf-reference-aroll-*` entries and the three `resultVideo` URLs. Paired media are **Hyperframes-published demonstrations**, not OpenMotion-generated results or evidence that the new recipes reproduce them. Both sides retain source pixels and speed, but their excerpt starts are selected separately; this is not a synchronized reconstruction benchmark. Authors are credited from catalog metadata. Original media and likenesses retain their own rights; the repository's Apache license does not relicense them.
 
@@ -333,7 +333,7 @@ The catalog already contains all nine `hf-reference-aroll-*` entries and the thr
 | careerwithriya | [@careerwithriya](https://www.instagram.com/reel/Ddd57MBszhc/) · `hf-reference-aroll-careerwithriya` | 0 → 6 s |
 | dan-martell-tools | [Dan Martell](https://www.youtube.com/shorts/mk1zJd9Rm4c) · `hf-reference-aroll-dan-martell-tools` | 2 → 6 s |
 | harpercarrollai | [@harpercarrollai](https://www.instagram.com/reel/C4eNPF3PdpG/) · `hf-reference-aroll-harpercarrollai` | 10 → 6 s |
-| ali-abdaal-workflow | [Ali Abdaal](../../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · `hf-reference-aroll-ali-abdaal-workflow` | 10 → 7 s |
+| ali-abdaal-workflow | [Ali Abdaal](../../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4) · `hf-reference-aroll-ali-abdaal-workflow` | 10 → 7 s |
 | john-tagudin-capso | [@john.tagudin](https://www.tiktok.com/@john.tagudin/video/7524883942328126728) · `hf-reference-aroll-john-tagudin-capso` | 11 → 7 s |
 | aiwithsachi | [@aiwithsachi](https://www.instagram.com/reel/Dc7G9Pxu_1O/) · `hf-reference-aroll-aiwithsachi` | 3 → 6 s |
 | khris-sheer-founder | [@khris.sheer](https://www.tiktok.com/@khris.sheer/video/7491715587895430402) · `hf-reference-aroll-khris-sheer-founder` | 0 → 7 s |

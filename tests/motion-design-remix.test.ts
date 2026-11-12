@@ -5,9 +5,9 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
-const root = path.resolve('library/skills/motion-design-remix');
+const root = path.resolve('library/skills/openmotion-design-remix');
 const script = path.join(root, 'scripts/materialize.mjs');
-const { localize } = await import('../library/skills/motion-design-remix/scripts/localize.mjs');
+const { localize } = await import('../library/skills/openmotion-design-remix/scripts/localize.mjs');
 const invoke = (...args: string[]) => spawnSync(process.execPath, [script, ...args], { encoding: 'utf8' });
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
 

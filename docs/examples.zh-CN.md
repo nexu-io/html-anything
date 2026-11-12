@@ -11,7 +11,7 @@
 3. Agent 实际读取参考，再提出分镜与剪辑方案。网络获取、字幕和音轨分析依赖宿主工具；缺少素材或时间码时先补齐，不把描述当作已经完成的分析。
 4. 制作后在 Studio 正常速度观看，检查画面、文字与声音，再导出 MP4。保留工程继续修改。
 
-这里只记录参考驱动的创作输入；没有新增运行时工具、自动平台适配或一键生成保证。已有可编辑模板仍使用 [模板复用路线](../skills/motion-template-to-video/SKILL.md)；视频重建参考使用 [motion-recreate](../skills/motion-recreate/SKILL.md)。GIF 无声；所有配音、配乐和声音同步都需在实际工程中检查。
+这里只记录参考驱动的创作输入；没有新增运行时工具、自动平台适配或一键生成保证。已有可编辑模板仍使用 [模板复用路线](../skills/openmotion-template-to-video/SKILL.md)；视频重建参考使用 [openmotion-recreate](../skills/openmotion-recreate/SKILL.md)。GIF 无声；所有配音、配乐和声音同步都需在实际工程中检查。
 
 <a id="talking-head"></a>
 
@@ -19,7 +19,7 @@
 
 **3 分钟口播，剪出 30 秒重点。**
 
-[观看参考片：Ali Abdaal · 5 tools I use every day](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4)
+[观看参考片：Ali Abdaal · 5 tools I use every day](../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4)
 
 ![AI 口播精剪](readme/examples/talking-head.jpg)
 
@@ -29,7 +29,7 @@
 
 ```text
 使用 OpenMotion。创作参考: hf-reference-aroll-ali-abdaal-workflow
-../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4
+../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4
 
 把我提供的 3 分钟口播和带时间码字幕，剪成 30 秒、9:16 的版本。
 用最有力的完整结论开场，只删去字幕中确认的重复与停顿，保留我的意思和口吻。

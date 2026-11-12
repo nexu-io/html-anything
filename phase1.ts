@@ -1,3 +1,4 @@
+import { publicToolName, legacyToolName, publicToolResult } from './shared/public-names.mjs';
 import { requireNativeRuntime } from './scripts/npm-runtime.mjs';
 import { recordDiagnostic } from './scripts/diagnostics.mjs';
 import { MAX_ASSET_BYTES, isAssetFileWithinLimit } from './shared/asset-limits.ts';
@@ -29,7 +30,7 @@ function previewHandoff(origin: string, target: { projectId: string; sessionId: 
   const confirmed = display?.visibility === 'visible' && display.contentVerified === true;
   const background = presentation === 'background';
   const now = presentation === 'now';
-  const onReturn = { tool: 'motion_open_preview', arguments: { projectId: target.projectId } };
+  const onReturn = { tool: 'openmotion_open_preview', arguments: { projectId: target.projectId } };
   const deferred = !now && display?.visibility !== 'visible' && (display?.hostStatus === 'queued' || display?.visibility === 'queued');
   const recovery = now ? { when: 'hidden_after_queued_ack', tool: 'navigate_to_codex_page', scope: 'calling_chat_only',
     threadIdFrom: 'open_in_codex.response.threadId', then: 'present_same_tab_and_recheck_visibility' } :
@@ -45,12 +46,12 @@ function previewHandoff(origin: string, target: { projectId: string; sessionId: 
         visibilitySync: { capability: 'visibility', method: 'set', value: true,
           when: 'after_binding_native_tab', scope: 'calling_chat_only', navigation: false },
         observation: { visibility: 'get', settleTimeoutMs: 6000, content: 'latest_live_preview', recheckVisibilityAfterContent: true },
-        recovery } } : { kind: 'motion', tool: 'motion_open_preview', arguments: {
+        recovery } } : { kind: 'motion', tool: 'openmotion_open_preview', arguments: {
       projectId: target.projectId, expectedRevision: target.revision, expectedVersionId: target.versionId, presentation } },
     instructions: background ? 'Keep this edit in the background as explicitly requested by the user.' :
       (now ? 'The user explicitly requested immediate display for this turn; current-chat recovery may navigate to the calling chat. ' :
         'Preserve the current chat. Queue the preview for its calling chat without navigating; if queued or hidden, wait for the user to return. On return, prepare the latest project version rather than replaying an old version-bound action. ') +
-      'Bind the native project tab and request Codex IAB visibility for the calling chat without navigation; inactive chats queue this request. Observe settled visibility and changed live content/time, recheck visibility, then record_display for the currently observed revision/version. A queued acknowledgment alone is not display confirmation. Follow motion://workflow/production/native#continuing-edits.' };
+      'Bind the native project tab and request Codex IAB visibility for the calling chat without navigation; inactive chats queue this request. Observe settled visibility and changed live content/time, recheck visibility, then record_display for the currently observed revision/version. A queued acknowledgment alone is not display confirmation. Follow openmotion://workflow/production/native#continuing-edits.' };
 }
 function cursor(value: any) { return Buffer.from(JSON.stringify(value)).toString('base64url'); }
 function parseCursor(value: string | undefined, kind: string, scope: string) {
@@ -79,11 +80,12 @@ export class Phase1Service {
   constructor(store: WorkspaceStore, runtimeRoot: string, context: Phase1Context) { this.store = store; this.runtimeRoot = runtimeRoot; this.context = context; }
   versions(projectId: string) { return new ProjectVersions(this.store.forProject(projectId), this.runtimeRoot, this.context.nativeUrl(projectId)); }
   async call(name: string, args: any) {
+    name = legacyToolName(name);
     try {
       const result = await this.invoke(name, args);
       if (name === 'motion_restore_version') this.restoreErrors.delete(args.projectId);
       trackPhase1Result(this.context.tracking, name, args, result);
-      return result;
+      return publicToolResult(result);
     } catch (error) {
       if (name === 'motion_restore_version' && errorText(error).startsWith('VERSION_NOT_RESTORABLE:')) {
         this.restoreErrors.set(args.projectId, { requestId: args.requestId, message: errorText(error) });
@@ -95,7 +97,7 @@ export class Phase1Service {
     }
   }
   private async invoke(name: string, args: any) {
-    const definition = phase1Tools.find(tool => tool.name === name);
+    const definition = phase1Tools.find(tool => tool.name === publicToolName(name));
     if (!definition) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + name);
     validateInput(definition.inputSchema, args);
     if (name === 'motion_list_templates') return templateCatalogFor(this.store.directory).index();

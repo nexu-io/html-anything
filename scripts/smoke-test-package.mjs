@@ -55,8 +55,8 @@ export async function smoke(archive, codexJS, preparedBundle) {
   };
   cli(['--version']);
   cli(['plugin', 'marketplace', 'add', bundle]);
-  cli(['plugin', 'add', 'motion@openmotion-test'], 600_000);
-  const installed = JSON.parse(cli(['mcp', 'get', 'motion', '--json']));
+  cli(['plugin', 'add', 'openmotion@openmotion-test'], 600_000);
+  const installed = JSON.parse(cli(['mcp', 'get', 'openmotion', '--json']));
   assert(installed.enabled && installed.transport.type === 'stdio');
   const transport = installed.transport;
   assert.equal(path.resolve(transport.cwd), path.resolve(bundle));
@@ -94,10 +94,10 @@ export function protocolClient(transport, env) {
 export async function acceptTransport({ transport, env, data, metadata, archive, ffmpeg, reportFile, timings = {}, deferredNativeDirectory, installation = {} }) {
   const { child, rpc, getStderr } = protocolClient(transport, env);
   const tool = async (name, args = {}) => {
-    if (name !== 'motion_get_project') console.error(`MCP ${name}: starting`);
+    if (name !== 'openmotion_get_project') console.error(`MCP ${name}: starting`);
     const result = await rpc('tools/call', { name, arguments: args });
     assert(!result.isError, JSON.stringify(result));
-    if (name !== 'motion_get_project') console.error(`MCP ${name}: passed`);
+    if (name !== 'openmotion_get_project') console.error(`MCP ${name}: passed`);
     return result.structuredContent;
   };
   let preview, registration;
@@ -106,13 +106,13 @@ export async function acceptTransport({ transport, env, data, metadata, archive,
     assert.equal(hello.serverInfo.version, metadata.version);
     child.stdin.write(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }) + '\n');
     const tools = await rpc('tools/list', {}); assert.equal(tools.tools.length, 11); assert.deepEqual(tools.tools.map(item => item.name), metadata.mcp.tools);
-    await rpc('resources/read', { uri: 'motion://workflow/production/start' });
-    await rpc('resources/read', { uri: 'motion://engine/SKILL.md' });
-    const hidden = await rpc('tools/call', { name: 'motion_write_files', arguments: {} });
+    await rpc('resources/read', { uri: 'openmotion://workflow/production/start' });
+    await rpc('resources/read', { uri: 'openmotion://engine/SKILL.md' });
+    const hidden = await rpc('tools/call', { name: 'openmotion_write_files', arguments: {} });
     assert.equal(hidden.structuredContent.error.code, 'MCP_TOOL_NOT_EXPOSED');
     if (deferredNativeDirectory) await assert.rejects(access(deferredNativeDirectory), { code: 'ENOENT' });
-    const created = await tool('motion_create_project', { requestId: 'smoke-create', projectType: 'natural_language', title: 'Packaged smoke', requirements: '真实音视频原生导出检查' });
-    preview = await tool('motion_open_preview', { projectId: created.projectId });
+    const created = await tool('openmotion_create_project', { requestId: 'smoke-create', projectType: 'natural_language', title: 'Packaged smoke', requirements: '真实音视频原生导出检查' });
+    preview = await tool('openmotion_open_preview', { projectId: created.projectId });
     registration = JSON.parse(await readFile(path.join(data, 'preview.json'), 'utf8'));
     assert(Number.isInteger(registration.pid) && registration.pid > 0, 'Capture ownership before later preview reuse rewrites the registration');
     assert.equal(path.resolve(preview.dataDirectory), path.resolve(data));
@@ -120,15 +120,15 @@ export async function acceptTransport({ transport, env, data, metadata, archive,
     const page = await fetch(preview.previewUrl, { signal: AbortSignal.timeout(10_000) }).catch(error => { throw new Error('Studio GET failed: ' + preview.studioUrl, { cause: error }); });
     assert.equal(page.status, 200);
     console.error('Studio GET: passed');
-    const project = await tool('motion_get_project', { projectId: preview.projectId });
+    const project = await tool('openmotion_get_project', { projectId: preview.projectId });
     await run(ffmpeg, ['-hide_banner', '-loglevel', 'error', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=1', '-y', path.join(project.project.directory, 'assets/tone.wav')]);
-    const current = await tool('motion_get_project', { projectId: preview.projectId });
+    const current = await tool('openmotion_get_project', { projectId: preview.projectId });
     const html = '<!doctype html><html><head><meta charset="utf-8"><script src="assets/gsap.min.js"></script><style>body{margin:0}#main{position:relative;width:320px;height:180px;overflow:hidden;background:#d3e7ae}#box{position:absolute;top:60px;left:20px;width:40px;height:40px;background:#203021}</style></head><body><div id="main" data-composition-id="main" data-start="0" data-duration="1" data-width="320" data-height="180" data-fps="24"><div id="box"></div><audio id="tone" class="clip" src="assets/tone.wav" data-start="0" data-duration="1" data-track-index="1" data-volume="0.3"></audio></div><script>const tl=gsap.timeline({paused:true});tl.fromTo("#box",{x:0},{x:200,duration:1,ease:"none"},0);window.__timelines={main:tl};</script></body></html>';
-    const saved = await tool('motion_edit_project', { projectId: current.projectId, requestId: 'smoke-edit', expectedRevision: current.revision, expectedVersionId: current.currentVersionId, files: [{ path: 'index.html', content: html }] });
-    const requested = await tool('motion_export_request', { projectId: current.projectId, requestId: 'smoke-export', expectedRevision: saved.revision, versionId: saved.version.versionId, audio: 'required' });
+    const saved = await tool('openmotion_edit_project', { projectId: current.projectId, requestId: 'smoke-edit', expectedRevision: current.revision, expectedVersionId: current.currentVersionId, files: [{ path: 'index.html', content: html }] });
+    const requested = await tool('openmotion_export_request', { projectId: current.projectId, requestId: 'smoke-export', expectedRevision: saved.revision, versionId: saved.version.versionId, audio: 'required' });
     const deadline = Date.now() + 180_000; let exported;
     do {
-      exported = (await tool('motion_get_project', { projectId: current.projectId, exportJobId: requested.job.id })).exportJob;
+      exported = (await tool('openmotion_get_project', { projectId: current.projectId, exportJobId: requested.job.id })).exportJob;
       assert.notEqual(exported?.state, 'failed', JSON.stringify(exported));
       if (exported?.state === 'completed') break;
       await new Promise(resolve => setTimeout(resolve, 500));

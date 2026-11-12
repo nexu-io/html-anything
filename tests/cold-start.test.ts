@@ -14,12 +14,12 @@ test('a cold background service applies the selected template using the original
   try {
     assert.equal(running.studio, undefined);
     assert.deepEqual(await store.get(), before, 'service startup must not initialize the active project');
-    const applied = await callTool('motion_apply_template', { templateId: 'product-promo', expectedRevision: before.revision }, store);
+    const applied = await callTool('openmotion_apply_template', { templateId: 'product-promo', expectedRevision: before.revision }, store);
     assert.match(applied.project!.html!, /Product Promo/);
     assert.equal(store.projectCatalog().projects.filter(p => p.templateId === 'product-promo').length, 1);
     assert.ok(running.studio?.alive());
     const active = store.projectDirectory;
-    await assert.rejects(callTool('motion_apply_template', { templateId: 'product-promo', expectedRevision: before.revision }, store), /重新读取 revision/);
+    await assert.rejects(callTool('openmotion_apply_template', { templateId: 'product-promo', expectedRevision: before.revision }, store), /重新读取 revision/);
     assert.equal(store.projectDirectory, active);
     assert.equal(store.projectCatalog().projects.length, 2, 'a rejected stale request cannot create another project');
   } finally { await running.close(); }

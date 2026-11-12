@@ -13,7 +13,7 @@ test('corrupt videos preserve native execution errors through MCP', () => fixtur
   await writeFile(file, 'not a video');
   await assert.rejects(compareVideos(pluginRoot, store.directory, file, file), /ffprobe|decode/i);
   const response = await rpc({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: {
-    name: 'motion_compare_video', arguments: { reference: file, candidate: file },
+    name: 'openmotion_compare_video', arguments: { reference: file, candidate: file },
   } }, store, mcpRegistry('legacy'));
   assert.equal(response.result.isError, true);
   assert.match(JSON.stringify(response.result.content), /ffprobe|decode/i);
@@ -23,7 +23,7 @@ test('project candidates request an exported video before invoking the CLI', () 
   const file = path.join(store.directory, 'reference.mp4');
   await writeFile(file, 'unused');
   for (const candidate of ['project', store.projectDirectory]) {
-    await assert.rejects(callTool('motion_compare_video', { reference: file, candidate }, store), /先导出工程/);
+    await assert.rejects(callTool('openmotion_compare_video', { reference: file, candidate }, store), /先导出工程/);
   }
 }));
 

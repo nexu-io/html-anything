@@ -32,7 +32,7 @@ test('official templates open in native Studio, preserve edits and switch the pr
       const openedProject = await response.json();
       assert.notEqual(openedProject.projectId, 'project'); assert.equal(previousStudio.alive(), true);
       assert.equal(running.studio.url, previousStudio.url);
-      const agent = await callTool('motion_get_project', {}, new WorkspaceStore(store.directory));
+      const agent = await callTool('openmotion_get_project', {}, new WorkspaceStore(store.directory));
       assert.equal(agent.project!.directory, store.projectDirectory); assert.match(agent.project!.html!, new RegExp(template.title));
       assert.equal(agent.project!.files.some(file => file.path === 'assets/gsap.min.js'), true);
       const lint = await inspectProject(pluginRoot, store.projectDirectory, 'lint'); assert.equal(lint.exitCode, 0, JSON.stringify(lint.result));
@@ -43,7 +43,7 @@ test('official templates open in native Studio, preserve edits and switch the pr
       assert.equal(typeof file.content, 'string');
       const edited = await fetch(fileUrl, { method: 'PUT', headers: { 'Content-Type': 'text/html', 'If-Match': file.version, Origin: nativeBase }, body: file.content.replace('<title>', '<title>Edited ') });
       assert.equal(edited.status, 200, await edited.text());
-      assert.match((await callTool('motion_get_project', {}, new WorkspaceStore(store.directory))).project!.html!, /<title>Edited /);
+      assert.match((await callTool('openmotion_get_project', {}, new WorkspaceStore(store.directory))).project!.html!, /<title>Edited /);
       opened.push({ id: openedProject.projectId, directory: store.projectDirectory });
       assert.equal((await post(`/api/templates/${template.id}/open`, before.revision)).status, 409);
     }
@@ -60,10 +60,10 @@ test('official templates open in native Studio, preserve edits and switch the pr
     assert.equal(store.projectDirectory, opened[0].directory);
     assert.match((await store.get()).project!.html!, /<title>Edited Product Promo/);
     const beforeAgentTemplate = await store.get();
-    const applied = await callTool('motion_apply_template', { expectedRevision: beforeAgentTemplate.revision, templateId: 'nyt-graph' }, new WorkspaceStore(store.directory));
+    const applied = await callTool('openmotion_apply_template', { expectedRevision: beforeAgentTemplate.revision, templateId: 'nyt-graph' }, new WorkspaceStore(store.directory));
     assert.match(applied.project!.html!, /NYT Graph/);
     assert.notEqual(applied.project!.directory, opened[0].directory);
     assert.match(await readFile(path.join(opened[0].directory, 'index.html'), 'utf8'), /<title>Edited Product Promo/);
-    await assert.rejects(() => callTool('motion_apply_template', { expectedRevision: beforeAgentTemplate.revision, templateId: 'nyt-graph' }, store));
+    await assert.rejects(() => callTool('openmotion_apply_template', { expectedRevision: beforeAgentTemplate.revision, templateId: 'nyt-graph' }, store));
   } finally { await running.close(); }
 }));

@@ -1,0 +1,3 @@
+interface:
+  display_name: "OpenMotion Video to Template"
+  short_description: "在 OpenMotion 中将参考视频重建为可复用模板"

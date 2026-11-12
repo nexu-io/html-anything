@@ -95,7 +95,7 @@
       "gif": "ui-3d-reveal.gif",
       "gifBytes": 279016,
       "gifSha256": "4579e5c66d1b23cc7d4de1ccc6f287f7baa2266da0e6184e9cb2274b31ec9e85",
-      "localVideo": "../../../library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"
+      "localVideo": "../../../library/skills/openmotion-design-remix/assets/ui-3d-reveal/reference.mp4"
     },
     {
       "slug": "pond",
@@ -185,7 +185,7 @@
       "gif": "canopy-title.gif",
       "gifBytes": 727463,
       "gifSha256": "bd8d924d8bae36d74cf03538462518777b0cad79a78c957b2731acc0c733d2dc",
-      "localVideo": "../../../library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"
+      "localVideo": "../../../library/skills/openmotion-design-remix/assets/canopy-part-title/reference.mp4"
     },
     {
       "slug": "wireframe-title",
@@ -203,7 +203,7 @@
       "gif": "wireframe-title.gif",
       "gifBytes": 1023993,
       "gifSha256": "a04da6165a9c08a06246347fb331c7f9aadd930afd32af843dbf1cf16af7c2ca",
-      "localVideo": "../../../library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"
+      "localVideo": "../../../library/skills/openmotion-design-remix/assets/wireframe-portal-title/reference.mp4"
     },
     {
       "slug": "iskra-light",
@@ -239,7 +239,7 @@
       "gif": "liquid-glass-widgets.gif",
       "gifBytes": 534316,
       "gifSha256": "8262f097c84e4fb26ab860f5e8ba3d3585ca5f4fe4c3104a6e7f22fdc3e287b5",
-      "localVideo": "../../../library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"
+      "localVideo": "../../../library/skills/openmotion-design-remix/assets/liquid-glass-widgets/reference.mp4"
     },
     {
       "slug": "cyera",
@@ -275,7 +275,7 @@
       "gif": "code-3d.gif",
       "gifBytes": 263720,
       "gifSha256": "4275833af108dabeae6629518ca089036d12e97e73f2b19f39b04de11866ccc5",
-      "localVideo": "../../../library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"
+      "localVideo": "../../../library/skills/openmotion-design-remix/assets/code-3d-extrude/reference.mp4"
     },
     {
       "slug": "glyph",
@@ -365,7 +365,7 @@
       "gif": "code-particles.gif",
       "gifBytes": 760776,
       "gifSha256": "55437de0144c117932e1d817798b6894b533fba26885d9e10304e77d2f51a458",
-      "localVideo": "../../../library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"
+      "localVideo": "../../../library/skills/openmotion-design-remix/assets/code-particle-assemble/reference.mp4"
     }
   ]
 }

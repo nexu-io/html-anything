@@ -62,7 +62,7 @@ OpenMotion は、**エージェントが動画制作の全工程を担う初の�
 <tr><th colspan="3" align="left">🎓 教える・解説する</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="../library/skills/presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="話し手の動画参考：キャリアを変える 6 つの必須スキル"></picture></a><br>
+<a href="../library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="話し手の動画参考：キャリアを変える 6 つの必須スキル"></picture></a><br>
 <strong>キャリアを変える 6 つの必須スキル</strong><br>
 番号付きの要点 + 動くキーワード<br>
 <sub>参考動画 · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
@@ -83,13 +83,13 @@ OpenMotion は、**エージェントが動画制作の全工程を担う初の�
 <tr><th colspan="3" align="left">🖥️ ワークフローを見せる</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="話し手の動画参考：毎日使う 5 つのツール"></picture></a><br>
+<a href="../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="話し手の動画参考：毎日使う 5 つのツール"></picture></a><br>
 <strong>毎日使う 5 つのツール</strong><br>
 デスクでの語り + 作業画面<br>
 <sub>参考動画 · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="話し手の動画参考：注釈付きのツールデモ"></picture></a><br>
+<a href="../library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="話し手の動画参考：注釈付きのツールデモ"></picture></a><br>
 <strong>注釈付きのツールデモ</strong><br>
 話し手 + 画面 + 注釈<br>
 <sub>参考動画 · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
@@ -125,22 +125,22 @@ OpenMotion は、**エージェントが動画制作の全工程を担う初の�
 <tr><th colspan="3" align="left">元動画 → 外部クリエイターによるアレンジ</th></tr>
 <tr>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="../library/skills/presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
+<a href="../library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
 <strong>キャリアのアドバイス → 動画制作の解説</strong><br>
 出演者を替え、番号付きの要点と具体例を示すカードで、新しい解説を組み立てます。<br>
-<sub><a href="../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/presenter-story/assets/careerwithriya-reference.mp4">元動画</a> · <a href="../library/skills/presenter-story/assets/careerwithriya-result.mp4">アレンジの全編</a></sub>
+<sub><a href="../library/skills/openmotion-presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4">元動画</a> · <a href="../library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4">アレンジの全編</a></sub>
 </td>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
+<a href="../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
 <strong>日常のツール → デザインの仕事場</strong><br>
 話し手と画面を交互に映すリズムを生かして、別の作業手順を紹介します。<br>
-<sub><a href="../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">元動画</a> · <a href="../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4">アレンジの全編</a></sub>
+<sub><a href="../library/skills/openmotion-presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4">元動画</a> · <a href="../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4">アレンジの全編</a></sub>
 </td>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="readme/people/john-tagudin-capso-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
+<a href="../library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="readme/people/john-tagudin-capso-comparison.gif" width="576" alt="出演者と内容を変えたアレンジを元のトーク動画と比較"></picture></a><br>
 <strong>ツールのデモ → 動画エディターの使い方</strong><br>
 ワイプと注釈を生かし、ツールのデモを動画編集のチュートリアルに作り替えます。<br>
-<sub><a href="../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4">元動画</a> · <a href="../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4">アレンジの全編</a></sub>
+<sub><a href="../library/skills/openmotion-presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4">元動画</a> · <a href="../library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4">アレンジの全編</a></sub>
 </td>
 </tr>
 </table>
@@ -237,44 +237,44 @@ Stripe のカードが裏返るタイミングに合わせ、着地する絵を�
 <tr><th colspan="2" align="left">編集可能なモーション · 同じプロジェクトの原版とアレンジ</th></tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="ワイヤーフレームのポータル。左の原版と右のアレンジを同期再生"></picture></a><br>
+<a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="ワイヤーフレームのポータル。左の原版と右のアレンジを同期再生"></picture></a><br>
 <strong>ワイヤーフレームのポータル · BREAKTHROUGH → OPENMOTION</strong><br>
 ポータルが開くタイミング、立体文字、カメラの寄りを残し、見出し、副題、立体文字のフレーズを替えました。<br>
-<sub><a href="../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/wireframe-portal-title.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
+<sub><a href="../library/skills/openmotion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-design-remix/presets/wireframe-portal-title.json">コンテンツのプリセット</a> · <a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="../library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="木の葉と文字。左の原版と右のアレンジを同期再生"></picture></a><br>
+<a href="../library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/openmotion-design-remix/previews/canopy-part-title.gif" width="100%" alt="木の葉と文字。左の原版と右のアレンジを同期再生"></picture></a><br>
 <strong>木の葉と文字 · Understory → OpenMotion</strong><br>
 葉が横切る動きと奥行き、文字が隠れてから読めるようになるまでの間を残し、二つの見出しを替えました。<br>
-<sub><a href="../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/canopy-part-title.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
+<sub><a href="../library/skills/openmotion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-design-remix/presets/canopy-part-title.json">コンテンツのプリセット</a> · <a href="../library/skills/openmotion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
 </td>
 </tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="UI の登場シーン。左の原版と右のアレンジを同期再生"></picture></a><br>
+<a href="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="UI の登場シーン。左の原版と右のアレンジを同期再生"></picture></a><br>
 <strong>UI の登場シーン · 製品ツアー → AI 編集の紹介</strong><br>
 傾いたキャンバス、重なりの奥行き、連続したカメラ移動を生かし、見出しとドキュメント、コミュニティの紹介文を替えました。<br>
-<sub><a href="../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/ui-3d-reveal.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
+<sub><a href="../library/skills/openmotion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-design-remix/presets/ui-3d-reveal.json">コンテンツのプリセット</a> · <a href="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="../library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体コード。左の原版と右のアレンジを同期再生"></picture></a><br>
+<a href="../library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/openmotion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体コード。左の原版と右のアレンジを同期再生"></picture></a><br>
 <strong>立体コード · loadConfig() → cutVideo()</strong><br>
 押し出したコードの層、構文の配色、カメラの動きはそのままに、関数、変数、呼び出し例を替えました。<br>
-<sub><a href="../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/code-3d-extrude.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
+<sub><a href="../library/skills/openmotion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-design-remix/presets/code-3d-extrude.json">コンテンツのプリセット</a> · <a href="../library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
 </td>
 </tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="../library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子の組み立て。左の原版と右のアレンジを同期再生"></picture></a><br>
+<a href="../library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/openmotion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子の組み立て。左の原版と右のアレンジを同期再生"></picture></a><br>
 <strong>粒子の組み立て · parse / optimize / emit → select / trim / render</strong><br>
 同じ乱数シードによる粒子の軌道と集まるタイミングを生かし、工程名と手順を替えました。<br>
-<sub><a href="../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/code-particle-assemble.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
+<sub><a href="../library/skills/openmotion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-design-remix/presets/code-particle-assemble.json">コンテンツのプリセット</a> · <a href="../library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="ガラス調の情報カード。左の原版と右のアレンジを同期再生"></picture></a><br>
+<a href="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="ガラス調の情報カード。左の原版と右のアレンジを同期再生"></picture></a><br>
 <strong>ガラス調の情報カード · デバイス部品 → クリエイターの仕事場</strong><br>
 ガラスの質感、カードの重なり、順番に現れる動きとメーターを残し、ラベル、単位、紹介する機能を替えました。<br>
-<sub><a href="../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/motion-design-remix/presets/liquid-glass-widgets.json">コンテンツのプリセット</a> · <a href="../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
+<sub><a href="../library/skills/openmotion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="../library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="../library/skills/openmotion-design-remix/presets/liquid-glass-widgets.json">コンテンツのプリセット</a> · <a href="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
 </td>
 </tr>
 </table>
@@ -342,7 +342,7 @@ Stripe のカードが裏返るタイミングに合わせ、着地する絵を�
 
 ![ローカルエージェント、任意のメディアモデル、制作リソースで、参考分析、シーン記述、不足素材生成、編集、MP4 出力とソース保存を行います。](readme/diagrams/creation-stack.ja.svg)
 
-**書いて、観て、直して、書き出す。** 製品を差し替える、冒頭を詰める、出演者を加える、字幕や結末を変える。エージェントがソースを編集し、結果をエディターで確認できます。ローカルの MCP クライアントはプロジェクト用ツールを使用します。シェルを使えるエージェントでは Skills と指定バージョンの CLI も利用できます。[接続設定](#agent-setup) · [ネイティブ合成ガイド](../skills/motion-production/references/native.md) · [HTML の作例](../template-library/product-promo/index.html)
+**書いて、観て、直して、書き出す。** 製品を差し替える、冒頭を詰める、出演者を加える、字幕や結末を変える。エージェントがソースを編集し、結果をエディターで確認できます。ローカルの MCP クライアントはプロジェクト用ツールを使用します。シェルを使えるエージェントでは Skills と指定バージョンの CLI も利用できます。[接続設定](#agent-setup) · [ネイティブ合成ガイド](../skills/openmotion-production/references/native.md) · [HTML の作例](../template-library/product-promo/index.html)
 
 #### Studio で編集できるもの
 
@@ -430,9 +430,9 @@ Brand Kit 欄にはロゴ、配色、書体、文体、確認済みの製品情�
 
 | 作りたいもの | 利用できる資料 |
 | --- | --- |
-| エージェントに制作手順を渡す | [5 つの制作 Skills](skills.md)は演出、再現、テンプレートの応用・作成、編集と書き出しを扱います。[モーションのアレンジ用 Skill](../library/skills/motion-design-remix/SKILL.md)には編集可能な 6 例が、[トーク動画用 Skill](../library/skills/presenter-story/SKILL.md)には 3 種類の構成例があります。 |
+| エージェントに制作手順を渡す | [5 つの制作 Skills](skills.md)は演出、再現、テンプレートの応用・作成、編集と書き出しを扱います。[モーションのアレンジ用 Skill](../library/skills/openmotion-design-remix/SKILL.md)には編集可能な 6 例が、[トーク動画用 Skill](../library/skills/openmotion-presenter-story/SKILL.md)には 3 種類の構成例があります。 |
 | タイトル、トランジション、UI の登場演出を再利用する | [モーションコンポーネント](../library/components/README.md)には個別に使えるソースとタイミングの説明があります。[タイトルの登場例](../library/components/title-reveal/README.md)でコピーと表示開始時刻の変更を試せます。 |
-| ブランドと動きのルールを渡す | [Brandkit Skill](../library/skills/brandkit/SKILL.md)で資料を整理し、[ロゴ、文体、製品情報](../library/brandkits/openmotion/BRANDKIT.md)を Motion.md の Brand Kit 欄にまとめます。[Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md)は、再利用できるビジュアルと動きのルールの作例です。 |
+| ブランドと動きのルールを渡す | [Brandkit Skill](../library/skills/openmotion-brandkit/SKILL.md)で資料を整理し、[ロゴ、文体、製品情報](../library/brandkits/openmotion/BRANDKIT.md)を Motion.md の Brand Kit 欄にまとめます。[Ink & Water](../library/design-systems/ink-water/MOTION_DESIGN.md)は、再利用できるビジュアルと動きのルールの作例です。 |
 
 ##### すぐに編集できる Studio テンプレート
 
@@ -614,22 +614,22 @@ bash scripts/install-motion.command
 
 ```sh
 npx skills add ./skills --list
-npx skills add ./skills --skill motion-director motion-production motion-template-to-video motion-recreate motion-video-to-template
+npx skills add ./skills --skill openmotion-director openmotion-production openmotion-template-to-video openmotion-recreate openmotion-video-to-template
 ```
 
 これは指示書をコピーするだけで、ランタイムのインストールや MCP 登録はしません。共有文書を使える状態にしてアプリを別途接続するか、上記の統合インストーラーを使ってください。
 
 | Skill | 用途 |
 | --- | --- |
-| [motion-recreate](../skills/motion-recreate/SKILL.md) | 参考動画の再構築と結果の比較 |
-| [motion-template-to-video](../skills/motion-template-to-video/SKILL.md) | 既存の編集可能なテンプレートの改編 |
-| [motion-director](../skills/motion-director/SKILL.md) | オリジナル動画、物語、動き、音、創作レビュー |
-| [motion-video-to-template](../skills/motion-video-to-template/SKILL.md) | 持ち運べる再利用テンプレートの制作 |
-| [motion-production](../skills/motion-production/SKILL.md) | 範囲を定めた編集、プレビュー、検査、問題解決、出力 |
+| [openmotion-recreate](../skills/openmotion-recreate/SKILL.md) | 参考動画の再構築と結果の比較 |
+| [openmotion-template-to-video](../skills/openmotion-template-to-video/SKILL.md) | 既存の編集可能なテンプレートの改編 |
+| [openmotion-director](../skills/openmotion-director/SKILL.md) | オリジナル動画、物語、動き、音、創作レビュー |
+| [openmotion-video-to-template](../skills/openmotion-video-to-template/SKILL.md) | 持ち運べる再利用テンプレートの制作 |
+| [openmotion-production](../skills/openmotion-production/SKILL.md) | 範囲を定めた編集、プレビュー、検査、問題解決、出力 |
 
 <a id="local-agent-connection"></a>
 
-**そのほかのローカルエージェントを接続する** · Studio の **Connect Agent** からワークスペースの起動コマンドをコピーします。stdio MCP 対応のクライアントには下記の設定を使えます。ターミナルを使うエージェントでは、プロジェクトのディレクトリを開き、[ローカルエンジンの CLI](../skills/motion-production/references/native.md) で HTML シーンをプレビュー・レンダリングできます。
+**そのほかのローカルエージェントを接続する** · Studio の **Connect Agent** からワークスペースの起動コマンドをコピーします。stdio MCP 対応のクライアントには下記の設定を使えます。ターミナルを使うエージェントでは、プロジェクトのディレクトリを開き、[ローカルエンジンの CLI](../skills/openmotion-production/references/native.md) で HTML シーンをプレビュー・レンダリングできます。
 
 <a id="manual-mcp"></a>
 
@@ -647,9 +647,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 **公開 MCP ツール 11 個**で、テンプレート検索・詳細取得、作成、読み取り、編集、プレビュー、素材の読み込み、出力、版の復元、キャンセルを扱います。共通の手順とエンジンガイドは MCP resources から取得できます。[ツール契約](mcp-phase1-tools.md)
 
-`motion_list_templates` でテンプレートを探し、`motion_get_template` で詳細を確認します。`motion_create_project` で編集用のコピーを作成できます。[テンプレート一覧](template-catalog.md)
+`openmotion_list_templates` でテンプレートを探し、`openmotion_get_template` で詳細を確認します。`openmotion_create_project` で編集用のコピーを作成できます。[テンプレート一覧](template-catalog.md)
 
-アプリには `npm start` 、stdio には `npm run mcp` を使用します。シェル対応エージェントは実行環境が返す固定版エンジン CLI で検査・レンダリング可能。管理対象の編集には revision 検査を適用します。[ネイティブ制作](../skills/motion-production/references/native.md)
+アプリには `npm start` 、stdio には `npm run mcp` を使用します。シェル対応エージェントは実行環境が返す固定版エンジン CLI で検査・レンダリング可能。管理対象の編集には revision 検査を適用します。[ネイティブ制作](../skills/openmotion-production/references/native.md)
 
 <a id="product-tour"></a> <a id="产品界面"></a> <a id="connect-your-agent"></a> <a id="use-from-your-agent"></a> <a id="从-agent-接入"></a> <a id="your-agent-your-studio"></a>
 
@@ -665,7 +665,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | **文字とブランド** — 文字階層、色、構図 | 自分の書体、配色、原稿、Brandkit |
 | **音とリズム** — 発話のタイミング、音楽の合図、強調 | 自分の声、用意した音楽、音の演出 |
 
-エージェントが SNS のリンクを開けない場合は、ローカルの動画ファイルとタイムコードを渡してください。元動画だけがある場合は[参考動画の再現手順](../skills/motion-recreate/SKILL.md)、編集可能なソースがある場合は[テンプレートの手順](../skills/motion-template-to-video/SKILL.md)を使います。
+エージェントが SNS のリンクを開けない場合は、ローカルの動画ファイルとタイムコードを渡してください。元動画だけがある場合は[参考動画の再現手順](../skills/openmotion-recreate/SKILL.md)、編集可能なソースがある場合は[テンプレートの手順](../skills/openmotion-template-to-video/SKILL.md)を使います。
 
 ```text
 OpenMotion で添付の参考動画を自社ブランド向けに再構築してください。
