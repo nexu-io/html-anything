@@ -63,6 +63,38 @@ test('installation preserves customized dependencies and does not leave a partia
   await assert.rejects(installLibrarySkill('../foreign', root), /Unknown Library Skill/);
 });
 
+// Legacy single-folder recovery intentionally retains its original raw-media snapshot.
+// Compare hydrated content trees so moving the same bytes to LFS does not change the pin.
+function hydratedSkillTree(relative) {
+  const run = (args, input) => {
+    const result = spawnSync('git', args, { encoding: 'utf8', input });
+    assert.equal(result.status, 0, result.stderr);
+    return result.stdout.trim();
+  };
+  const entries = run(['ls-tree', '-r', '-z', `HEAD:${relative}`]).split('\0').filter(Boolean);
+  const directories = new Map([['', []]]);
+  for (const entry of entries) {
+    const [metadata, name] = entry.split('\t');
+    let [mode, type, oid] = metadata.split(' ');
+    if (name.endsWith('.mp4')) oid = run(['hash-object', '--no-filters', relative + '/' + name]);
+    let directory = path.posix.dirname(name);
+    if (directory === '.') directory = '';
+    let ancestor = directory;
+    while (ancestor) {
+      if (!directories.has(ancestor)) directories.set(ancestor, []);
+      ancestor = path.posix.dirname(ancestor);
+      if (ancestor === '.') ancestor = '';
+    }
+    directories.get(directory).push(`${mode} ${type} ${oid}\t${path.posix.basename(name)}\0`);
+  }
+  for (const directory of [...directories.keys()].sort((a, b) => b.split('/').length - a.split('/').length || b.length - a.length)) {
+    const tree = run(['mktree', '--missing', '-z'], directories.get(directory).join(''));
+    if (!directory) return tree;
+    const parent = path.posix.dirname(directory);
+    directories.get(parent === '.' ? '' : parent).push(`040000 tree ${tree}\t${path.posix.basename(directory)}\0`);
+  }
+}
+
 test('a generic single-folder alias installation includes matching pinned dependency recovery', async t => {
   const root = await isolated(t);
   for (const [old, canonical] of Object.entries(pairs)) {
@@ -79,8 +111,6 @@ test('a generic single-folder alias installation includes matching pinned depend
       'openmotion-design-remix': '18dc7b5af383fac1eacd1dfdab87bf31af76efa3',
     };
     assert.equal(match[2], 'af755bcdd7f8af257186ff8723aedf78b176577a');
-    const tree = spawnSync('git', ['rev-parse', `HEAD:library/skills/${canonical}`], { encoding: 'utf8' });
-    assert.equal(tree.status, 0, tree.stderr);
-    assert.equal(tree.stdout.trim(), trees[canonical], 'Pinned fallback workflow and all resources must match this version');
+    assert.equal(hydratedSkillTree(`library/skills/${canonical}`), trees[canonical], 'Pinned fallback workflow and all hydrated resources must match this version');
   }
 });
