@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n/I18n";
 import { memo } from "react";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { TimelineMediaBar } from '../../motion/TimelineMediaBar';
@@ -37,13 +38,14 @@ export {
 } from "./timelineViewportGeometry";
 
 function TimelineView() {
+  const { t } = useI18n();
   const { state, meta } = useTimelineContext();
   const { timelineReady, elements } = state;
   if (!timelineReady || elements.length === 0) {
     return <TimelineEmptyStatePart />;
   }
   return (
-    <div {...meta.containerProps}>
+    <div {...meta.containerProps} aria-label={t(meta.containerProps["aria-label"])}>
       <div {...meta.viewportProps}>
         <TimelineFrame />
         <TimelineRazorGuide />
