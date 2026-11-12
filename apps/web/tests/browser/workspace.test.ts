@@ -205,10 +205,8 @@ it("keeps project handoff and navigation explicit across workspace views", async
     (node as HTMLTextAreaElement).setSelectionRange(7, 19);
   });
   const writes: string[] = [];
-  let observations = 0;
   page.on("request", (request) => {
     const operation = new URL(request.url()).pathname.split("/api/")[1];
-    if (operation === "workspace_observe") observations++;
     if (
       operation &&
       !operation.endsWith("_read") &&
@@ -230,6 +228,16 @@ it("keeps project handoff and navigation explicit across workspace views", async
       .getByRole("button", { name: "显示会话", exact: true })
       .evaluate((node) => document.activeElement === node),
   ).toBe(true);
+  // Navigation does not schedule polling; synchronize with the observer's actual response.
+  const observation = await page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === "/api/workspace_observe" && response.request().method() === "POST",
+  );
+  expect(observation.status()).toBe(200);
+  expect(await observation.json()).toMatchObject({
+    state: { selection: { artifactId: original } },
+    project: { artifactId: original },
+  });
   expect(await note.inputValue()).toBe("Preserve this creative note");
   expect(await note.getAttribute("data-retained")).toBe("note");
   expect(await code.inputValue()).toBe(edited);
@@ -237,7 +245,6 @@ it("keeps project handoff and navigation explicit across workspace views", async
   expect(await code.evaluate((node) => (node as HTMLTextAreaElement).selectionStart)).toBe(7);
   expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(original);
   expect(await page.getByLabel("保存状态", { exact: true }).textContent()).toBe("未保存");
-  await expect.poll(() => observations).toBeGreaterThan(0);
   expect(writes).toEqual([]);
   const focused = await page.getByRole("region", { name: "编辑工作区", exact: true }).boundingBox();
   if (!focused || !expanded) throw Error("workspace geometry is missing");
