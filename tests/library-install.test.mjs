@@ -72,12 +72,15 @@ test('a generic single-folder alias installation includes matching pinned depend
     const match = text.match(/npx skills add (https:\/\/github.com\/nexu-io\/openmotion\/tree\/([a-f0-9]{40})\/library\/skills) --skill (openmotion-[a-z-]+)/);
     assert(match, 'A single copied folder must explain how to recover its dependency');
     assert.equal(match[3], canonical);
-    // The immutable fallback must contain exactly the same canonical entry as this version.
-    const pinned = spawnSync('git', ['show', `${match[2]}:library/skills/${canonical}/SKILL.md`], { encoding: 'utf8' });
-    assert.equal(pinned.status, 0, pinned.stderr);
-    assert.equal(pinned.stdout, await readFile(`library/skills/${canonical}/SKILL.md`, 'utf8'));
-    const unchanged = spawnSync('git', ['diff', '--exit-code', match[2], '--', `library/skills/${canonical}`], { encoding: 'utf8' });
-    assert.equal(unchanged.status, 0, 'Pinned fallback resources must match this version: ' + unchanged.stdout);
-
+    // Verify the entire pinned dependency tree without fetching historical objects in shallow CI.
+    const trees = {
+      'openmotion-brandkit': '69ccb4e1b92c9a2a75edc1a84d1b98322c549e29',
+      'openmotion-presenter-story': '85619c143a5eebc9f613af0fd0190a6e78a7f215',
+      'openmotion-design-remix': '18dc7b5af383fac1eacd1dfdab87bf31af76efa3',
+    };
+    assert.equal(match[2], 'af755bcdd7f8af257186ff8723aedf78b176577a');
+    const tree = spawnSync('git', ['rev-parse', `HEAD:library/skills/${canonical}`], { encoding: 'utf8' });
+    assert.equal(tree.status, 0, tree.stderr);
+    assert.equal(tree.stdout.trim(), trees[canonical], 'Pinned fallback workflow and all resources must match this version');
   }
 });
