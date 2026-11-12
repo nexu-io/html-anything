@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenMotion · motion-design-remix compatibility alias"
+policy:
+  allow_implicit_invocation: false

@@ -91,8 +91,8 @@ test('gallery, public template tools and project creation use the same published
     origin: () => 'http://127.0.0.1:4173', nativeUrl: () => undefined, openProject: async () => {},
     mutation: task => task(), cancel: async () => {},
   });
-  const index = await service.call('motion_list_templates', {});
-  const detail = await service.call('motion_get_template', { templateId: 'test-motion-1' });
+  const index = await service.call('openmotion_list_templates', {});
+  const detail = await service.call('openmotion_get_template', { templateId: 'test-motion-1' });
   assert.equal(detail.instructions, contents['TEMPLATE.md']);
   assert.equal(detail.catalogVersion, index.catalogVersion);
   const response = await transport(store)('/motion-api/template-catalog?category=builtin');
@@ -100,21 +100,21 @@ test('gallery, public template tools and project creation use the same published
   const page = await response.json();
   assert.equal(page.total, index.total); assert.equal(page.items[0].id, detail.id);
   const args = { requestId: 'prism-create', projectType: 'template', title: 'Prism project', requirements: '使用默认内容', templateId: detail.id };
-  const created = await service.call('motion_create_project', args);
+  const created = await service.call('openmotion_create_project', args);
   assert.equal(created.source.catalogVersion, index.catalogVersion);
   assert.equal(await readFile(path.join(created.project.directory, 'index.html'), 'utf8'), contents['index.html']);
   assert.equal(await readFile(path.join(created.project.directory, 'animation.js'), 'utf8'), contents['animation.js']);
-  assert.equal((await service.call('motion_create_project', args)).projectId, created.projectId);
+  assert.equal((await service.call('openmotion_create_project', args)).projectId, created.projectId);
   const before = await readdir(path.dirname(created.project.directory));
   remote.current.content['zh-CN'].templates[0].files[1].sha256 = '0'.repeat(64);
   // A new catalog instance reads the modified manifest from the mock publication.
   const otherStore = new WorkspaceStore(path.join(directory, 'broken'));
   const other = new Phase1Service(otherStore, pluginRoot, service.context);
-  await assert.rejects(other.call('motion_create_project', { ...args, requestId: 'broken' }), /校验失败/);
+  await assert.rejects(other.call('openmotion_create_project', { ...args, requestId: 'broken' }), /校验失败/);
   assert.equal(otherStore.projectCatalog().projects.some(project => project.title === args.title), false);
   assert.deepEqual(await readdir(path.dirname(created.project.directory)), before);
-  assert.equal(phase1Tools.filter(tool => tool.name === 'motion_list_templates').length, 1);
-  assert.throws(() => validateInput(phase1Tools.find(tool => tool.name === 'motion_list_templates')!.inputSchema, { query: 'x' }), /INVALID_ARGUMENT/);
+  assert.equal(phase1Tools.filter(tool => tool.name === 'openmotion_list_templates').length, 1);
+  assert.throws(() => validateInput(phase1Tools.find(tool => tool.name === 'openmotion_list_templates')!.inputSchema, { query: 'x' }), /INVALID_ARGUMENT/);
 });
 
 test('template files cannot escape the destination; known built-ins work without the network', async t => {

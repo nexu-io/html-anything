@@ -37,9 +37,9 @@ export async function check() {
   assert.equal(lock.packages['node_modules/hyperframes'].version, pkg.dependencies.hyperframes);
   assert.equal(manifest.mcpServers, './.mcp.json');
   const mcp = JSON.parse(await readFile(path.join(root, '.mcp.json'), 'utf8'));
-  assert.equal(mcp.mcpServers.motion.type, 'stdio');
-  assert.deepEqual(mcp.mcpServers.motion.args, ['--experimental-strip-types', 'mcp.ts']);
-  assert.equal(mcp.mcpServers.motion.cwd, '.');
+  assert.equal(mcp.mcpServers.openmotion.type, 'stdio');
+  assert.deepEqual(mcp.mcpServers.openmotion.args, ['--experimental-strip-types', 'mcp.ts']);
+  assert.equal(mcp.mcpServers.openmotion.cwd, '.');
   assert.ok(!JSON.stringify(mcp).includes('${'), 'MCP launch paths cannot depend on placeholder expansion');
   assert.equal(marketplace.plugins[0].source.path, './');
   for (const folder of ['web', 'shared', 'scripts', 'tests', 'gateway', 'tracking']) {

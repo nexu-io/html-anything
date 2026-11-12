@@ -1833,5 +1833,9 @@
   "Failed to add media": "Не удалось добавить медиафайл",
   "Could not read media duration. Try adding the file again.": "Не удалось определить длительность медиафайла. Попробуйте добавить файл ещё раз.",
   "Loading fonts…": "Загрузка шрифтов…",
-  "Couldn't load local fonts.": "Не удалось загрузить локальные шрифты."
+  "Couldn't load local fonts.": "Не удалось загрузить локальные шрифты.",
+  "Create videos with OpenMotion, right in {host}.": "Создавайте видео с помощью OpenMotion прямо в {host}.",
+  "Back to the OpenMotion editor": "Вернуться в редактор OpenMotion.",
+  "Workspace unavailable. Check that the OpenMotion service is running.": "Рабочая область недоступна. Убедитесь, что служба OpenMotion запущена.",
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "Неверная конфигурация подключения. Обновите или перезапустите службу OpenMotion."
 }

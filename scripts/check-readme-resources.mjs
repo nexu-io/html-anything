@@ -35,7 +35,7 @@ export async function verifyResources(root = fileURLToPath(new URL('../', import
   const manifests = [
     ['docs/readme/media/manifest.json', '', 'entries'],
     ['docs/readme/contributors/manifest.json', 'docs/readme/contributors', 'contributors'],
-    ['library/skills/motion-design-remix/vendor/manifest.json', 'library/skills/motion-design-remix/vendor', 'files'],
+    ['library/skills/openmotion-design-remix/vendor/manifest.json', 'library/skills/openmotion-design-remix/vendor', 'files'],
     ['library/components/showcase/manifest.json', 'library/components/showcase', 'files'],
     ...['product-promo', 'nyt-graph', 'decision-tree'].map(id => [`template-library/${id}/vendor/manifest.json`, `template-library/${id}/vendor`, 'files']),
   ];

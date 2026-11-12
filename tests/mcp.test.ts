@@ -8,12 +8,14 @@ test('actual MCP stdio exposes exactly phase-one tools and rejects hidden writes
   const before = await store.get();
   const messages = [
     { id: 1, method: 'initialize' }, { id: 2, method: 'tools/list' },
-    { id: 3, method: 'tools/call', params: { name: 'motion_write_files', arguments: { expectedRevision: before.revision, files: [{ path: 'notes.md', content: 'hidden' }] } } },
-    { id: 4, method: 'tools/call', params: { name: 'motion_edit_project', arguments: {} } },
+    { id: 3, method: 'tools/call', params: { name: 'openmotion_write_files', arguments: { expectedRevision: before.revision, files: [{ path: 'notes.md', content: 'hidden' }] } } },
+    { id: 4, method: 'tools/call', params: { name: 'openmotion_edit_project', arguments: {} } },
   ];
   const child = spawnSync(process.execPath, ['--experimental-strip-types', 'mcp.ts'], { input: messages.map(m => JSON.stringify({ jsonrpc: '2.0', ...m })).join('\n') + '\n', encoding: 'utf8', env: { ...process.env, MOTION_DATA_DIR: store.directory }, timeout: 10_000 });
   assert.equal(child.status, 0, child.stderr);
   const responses = child.stdout.trim().split('\n').map(line => JSON.parse(line));
+  assert.equal(responses[0].result.serverInfo.name, 'openmotion');
+  assert.equal(responses[0].result.serverInfo.title, 'OpenMotion');
   const icons = responses[0].result.serverInfo.icons;
   assert.deepEqual(icons.map((icon: any) => icon.theme), ['light', 'dark']);
   for (const icon of icons) {
@@ -23,7 +25,8 @@ test('actual MCP stdio exposes exactly phase-one tools and rejects hidden writes
     assert.equal(icon.src, 'data:image/svg+xml;base64,' + readFileSync(new URL(filename, import.meta.url)).toString('base64'));
   }
   assert.equal(responses[1].result.tools.length, 11);
-  assert.ok(responses[1].result.tools.every((tool: any) => tool.name.startsWith('motion_')));
+  assert.ok(responses[1].result.tools.every((tool: any) => tool.title.startsWith('OpenMotion · ')));
+  assert.ok(responses[1].result.tools.every((tool: any) => tool.name.startsWith('openmotion_')));
   assert.match(responses[2].result.content[0].text, /MCP_TOOL_NOT_EXPOSED/);
   assert.match(responses[3].result.content[0].text, /INVALID_ARGUMENT/);
   assert.deepEqual(await store.get(), before);
@@ -42,9 +45,9 @@ test('workflow sections are read-only and expose native production instructions'
   const { callTool } = await import('../mcp.ts');
   const before = await store.get();
   for (const section of ['start', 'intake', 'templates', 'production', 'verification']) {
-    const result = await callTool('motion_get_workflow', { section }, store) as any;
+    const result = await callTool('openmotion_get_workflow', { section }, store) as any;
     assert.equal(result.section, section); assert.ok(result.content.length > 100);
   }
-  await assert.rejects(callTool('motion_get_workflow', { section: '../secrets' }, store), /Unknown workflow section/);
+  await assert.rejects(callTool('openmotion_get_workflow', { section: '../secrets' }, store), /Unknown workflow section/);
   assert.deepEqual(await store.get(), before);
 }));

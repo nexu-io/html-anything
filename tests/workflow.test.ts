@@ -28,7 +28,7 @@ function stdio(directory: string, messages: Record<string, unknown>[], entry = p
 
 function workflowCall(id: number, args?: any) {
   const valid = args === undefined || args && !Array.isArray(args) && typeof args === 'object' && Object.keys(args).every(key => ['workflow', 'section'].includes(key)) && (args.workflow === undefined || typeof args.workflow === 'string') && (args.section === undefined || typeof args.section === 'string');
-  return { id, method: 'resources/read', params: { uri: valid ? `motion://workflow/${args?.workflow ?? 'production'}/${args?.section ?? 'start'}` : 'invalid' } };
+  return { id, method: 'resources/read', params: { uri: valid ? `openmotion://workflow/${args?.workflow ?? 'production'}/${args?.section ?? 'start'}` : 'invalid' } };
 }
 
 test('MCP-only client discovers and reads the packaged workflow without starting a preview', async () => {
@@ -41,8 +41,8 @@ test('MCP-only client discovers and reads the packaged workflow without starting
       ...sections.map((section, index) => workflowCall(index + 4, { section })),
     ]);
     assert.match(responses.get(1).instructions, /resources\/read/);
-    assert.ok(!responses.get(2).tools.some((tool: any) => tool.name === 'motion_get_workflow'));
-    assert.equal(responses.get(3).structuredContent.documentId, 'skills/motion-production/SKILL.md');
+    assert.ok(!responses.get(2).tools.some((tool: any) => tool.name === 'openmotion_get_workflow'));
+    assert.equal(responses.get(3).structuredContent.documentId, 'skills/openmotion-production/SKILL.md');
     for (const [index, section] of sections.entries()) {
       const result = responses.get(index + 4).structuredContent;
       assert.equal(result.workflow, 'production');
@@ -92,14 +92,14 @@ test('every workflow document and linked reference is reachable over MCP with ca
         assert.equal(target.section, reference.section);
       }
     }
-    assert.equal(returned.get('skills/motion-template-to-video/SKILL.md').status, 'ready');
-    assert.equal(returned.get('skills/motion-template-to-video/SKILL.md').workflow, 'template');
-    assert.equal(returned.get('skills/motion-recreate/SKILL.md').status, 'ready');
-    assert.equal(returned.get('skills/motion-video-to-template/SKILL.md').status, 'ready');
-    assert.equal(returned.get('skills/motion-video-to-template/SKILL.md').workflow, 'video-to-template');
+    assert.equal(returned.get('skills/openmotion-template-to-video/SKILL.md').status, 'ready');
+    assert.equal(returned.get('skills/openmotion-template-to-video/SKILL.md').workflow, 'template');
+    assert.equal(returned.get('skills/openmotion-recreate/SKILL.md').status, 'ready');
+    assert.equal(returned.get('skills/openmotion-video-to-template/SKILL.md').status, 'ready');
+    assert.equal(returned.get('skills/openmotion-video-to-template/SKILL.md').workflow, 'video-to-template');
     for (const route of workflows) {
       assert.ok(returned.get(workflowRegistry[route as keyof typeof workflowRegistry].sections.start).references.some((reference: { documentId: string }) =>
-        reference.documentId === 'skills/motion-production/references/edit.md'), `${route} must expose the shared edit workflow`);
+        reference.documentId === 'skills/openmotion-production/references/edit.md'), `${route} must expose the shared edit workflow`);
     }
     assert.deepEqual(await store.get(), before);
     assert.deepEqual(await readdir(directory, { recursive: true }), filesBefore);
@@ -107,19 +107,19 @@ test('every workflow document and linked reference is reachable over MCP with ca
 });
 
 test('Markdown references resolve across workflows, deduplicate canonical paths, and reject missing internal instructions', () => {
-  const documentId = 'skills/motion-director/SKILL.md';
+  const documentId = 'skills/openmotion-director/SKILL.md';
   const refs = workflowReferences([
     '[sound](references/sound-narrative.md#anchors)',
     '[sound again](./references/sound-narrative.md?version=1)',
-    '[shared context](<../motion-production/references/context.md> "Common context")',
+    '[shared context](<../openmotion-production/references/context.md> "Common context")',
     '[actions][script]', '[script]: references/action-script.md',
     '[external](https://example.com/other.md)', '[protocol-relative](//example.com/other.md)', '[anchor](#local)',
     '`[example](not-a-document.md)`', '```markdown', '[example](also-not-a-document.md)', '```',
   ].join('\n'), documentId);
   assert.deepEqual(refs, [
-    { workflow: 'director', section: 'sound', documentId: 'skills/motion-director/references/sound-narrative.md' },
-    { workflow: 'production', section: 'context', documentId: 'skills/motion-production/references/context.md' },
-    { workflow: 'director', section: 'actions', documentId: 'skills/motion-director/references/action-script.md' },
+    { workflow: 'director', section: 'sound', documentId: 'skills/openmotion-director/references/sound-narrative.md' },
+    { workflow: 'production', section: 'context', documentId: 'skills/openmotion-production/references/context.md' },
+    { workflow: 'director', section: 'actions', documentId: 'skills/openmotion-director/references/action-script.md' },
   ]);
   for (const target of ['missing.md', '../../../outside.md', '/absolute.md', '..%2F..%2Foutside.md']) {
     assert.throws(() => workflowReferences(`[missing](${target})`, documentId), /Unregistered workflow Markdown link/);
@@ -133,7 +133,7 @@ test('MCP rejects unknown routes, invalid route-section pairs and arbitrary path
       { workflow: 'unknown' }, { workflow: '__proto__' }, { workflow: '../director' }, { workflow: null }, { workflow: [] },
       { section: '../.env' }, { section: 'constructor' }, { section: null }, { section: 1 }, { section: {} },
       { workflow: 'director', section: 'intake' }, { workflow: 'template', section: 'production' }, { workflow: 'recreate', section: 'native' },
-      { workflow: 'production', section: 'sound' }, { path: 'skills/motion-director/SKILL.md' }, [], 'director',
+      { workflow: 'production', section: 'sound' }, { path: 'skills/openmotion-director/SKILL.md' }, [], 'director',
       { workflow: 'video-to-template', section: 'intake' }, { workflow: 'video--to-template' }, { workflow: 'video-to-template-' }, { workflow: 'template-to-video' }, { workflow: 'motion-template' },
     ];
     const responses = stdio(directory, invalid.map((args, index) => workflowCall(index + 1, args)));
@@ -166,9 +166,9 @@ test('phase1 resource discovery exposes all five routes and their supporting doc
   try {
     const result = stdio(directory, [{ id: 1, method: 'resources/list' }]).get(1);
     const uris = result.resources.map((resource: { uri: string }) => resource.uri);
-    const expected = entries.map(({ workflow, section }) => `motion://workflow/${workflow}/${section}`);
-    assert.deepEqual(uris, [...expected, 'motion://engine/SKILL.md']);
-    assert.ok(uris.includes('motion://workflow/video-to-template/verification'));
+    const expected = entries.map(({ workflow, section }) => `openmotion://workflow/${workflow}/${section}`);
+    assert.deepEqual(uris, [...expected, 'openmotion://engine/SKILL.md']);
+    assert.ok(uris.includes('openmotion://workflow/video-to-template/verification'));
     const reads = stdio(directory, expected.map((uri, i) => ({ id: i, method: 'resources/read', params: { uri } })));
     for (const [i, entry] of entries.entries()) assert.equal(reads.get(i).structuredContent.documentId, entry.documentId);
     assert.deepEqual(await readdir(directory), []);

@@ -1,11 +1,11 @@
 {
-  "name": "motion-local",
+  "name": "openmotion-local",
   "interface": {
     "displayName": "OpenMotion Local Development"
   },
   "plugins": [
     {
-      "name": "motion",
+      "name": "openmotion",
       "source": { "source": "local", "path": "./" },
       "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
       "category": "Productivity"

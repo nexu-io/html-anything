@@ -168,7 +168,7 @@ it('reloads localized catalog data while preserving the chosen client, search an
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
   vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {});
   vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
-  const info = { name: 'OpenMotion', version: '0.6.2', previewUrl: 'http://localhost:4173', dataDirectory: '/test/workspace', transport: { type: 'stdio', command: 'node', args: ['mcp.ts'], env: { MOTION_DATA_DIR: '/test/workspace' } }, tools: [{ name: 'motion_import_assets', description: 'Import assets' }, { name: 'motion_list_templates', description: 'List templates' }, { name: 'motion_get_template', description: 'Template details' }] };
+  const info = { name: 'OpenMotion', version: '0.6.2', previewUrl: 'http://localhost:4173', dataDirectory: '/test/workspace', transport: { type: 'stdio', command: 'node', args: ['mcp.ts'], env: { MOTION_DATA_DIR: '/test/workspace' } }, tools: [{ name: 'openmotion_import_assets', description: 'Import assets' }, { name: 'openmotion_list_templates', description: 'List templates' }, { name: 'openmotion_get_template', description: 'Template details' }] };
   const template = { id: 'reference', title: 'Preview', author: 'Creator', description: 'Original template description', tags: [], role: 'a-roll', collection: 'moment', kind: 'reference' };
   const warning = '模板更新失败，使用已缓存目录：HTTP 503';
   vi.stubGlobal('fetch', vi.fn(async (url: string) => new Response(JSON.stringify(url.endsWith('/integration') ? info : { items: [template], total: 1, entryTotal: 1, catalogTotal: 1, offset: 0, next: null, warning }))));

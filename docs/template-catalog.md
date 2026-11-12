@@ -35,11 +35,11 @@ DEV 的默认工作区另加 `-dev`，与线上后台进程、工程和缓存分
 
 ### MCP
 
-`motion_list_templates({})` 只返回 indexPath、total、catalogVersion 和可选 warning。indexPath 是本机 JSONL 文件，每行包含 templateId、name、summary、category、tags、durationSeconds、kind。Agent 自行用 grep/jq/脚本检索，不支持 query、分类或分页参数，不把整份目录发送到模型上下文。索引文件按发布版本命名，已经拿到的路径仍对应原版本。
+`openmotion_list_templates({})` 只返回 indexPath、total、catalogVersion 和可选 warning。indexPath 是本机 JSONL 文件，每行包含 templateId、name、summary、category、tags、durationSeconds、kind。Agent 自行用 grep/jq/脚本检索，不支持 query、分类或分页参数，不把整份目录发送到模型上下文。索引文件按发布版本命名，已经拿到的路径仍对应原版本。
 
-`motion_get_template({templateId})` 返回单个模板的展示信息、发布版本、文件清单和 TEMPLATE.md 正文。已知 ID 可以直接调用，不强制先 list。文件路径只供能访问同一文件系统的宿主使用。
+`openmotion_get_template({templateId})` 返回单个模板的展示信息、发布版本、文件清单和 TEMPLATE.md 正文。已知 ID 可以直接调用，不强制先 list。文件路径只供能访问同一文件系统的宿主使用。
 
-`motion_create_project({projectType:'template', templateId, requestId, title, requirements})` 复制内置示例或下载 Prism 模板的真实文件，保留相对目录和校验文件哈希，创建独立工程。源码及素材不放进 list 回复。下载失败清理未注册工程；已创建工程不会随 CMS 更新自动变化。模板标注的 ready_for_review 等状态不代表用户视觉验收。
+`openmotion_create_project({projectType:'template', templateId, requestId, title, requirements})` 复制内置示例或下载 Prism 模板的真实文件，保留相对目录和校验文件哈希，创建独立工程。源码及素材不放进 list 回复。下载失败清理未注册工程；已创建工程不会随 CMS 更新自动变化。模板标注的 ready_for_review 等状态不代表用户视觉验收。
 
 ### 界面
 
@@ -85,9 +85,9 @@ MCP 接入与模板库使用同一弹框中的一张滚动页面。整体接入�
 ## Agent 复刻
 
 1. 卡片只复制一句提示、一个链接和精确模板 ID，链接为 `/connect/guide?host=...&template=...`。详细步骤放在链接中，未知 ID 返回错误，不回退到其他示例。
-2. Agent 读取指引 URL 中的实际来源、准确 ID、kind 和路线。`builtin` / 可编辑 `registry` 进入 motion-template-to-video；视频 `reference` 进入已实现的 motion-recreate；明确要求可复用模板时进入 motion-video-to-template。通过本地 Skill 或对应 MCP Resources 读取正文和共享 context，不回总入口重新选模板。旧版本未开放模板详情 Tool；当前版本使用 motion_get_template。
-3. 外部参考由宿主 Agent 实际分析视频或源码，导入支持的素材，并通过 `motion_edit_project` 携带 projectId、requestId、expectedRevision 和 expectedVersionId 写原生 Hyperframes HTML compositions 与可 seek 的 GSAP 动画。Tool 不替 Agent 分析视频或自动执行远程源码。
-4. `kind=builtin` 的三个本地模板使用 `motion_create_project`，传 projectType=template、templateId、requestId、title 与 requirements 创建独立工程。外部 ID 不会被映射成任意本地示例。
+2. Agent 读取指引 URL 中的实际来源、准确 ID、kind 和路线。`builtin` / 可编辑 `registry` 进入 openmotion-template-to-video；视频 `reference` 进入已实现的 openmotion-recreate；明确要求可复用模板时进入 openmotion-video-to-template。通过本地 Skill 或对应 MCP Resources 读取正文和共享 context，不回总入口重新选模板。旧版本未开放模板详情 Tool；当前版本使用 openmotion_get_template。
+3. 外部参考由宿主 Agent 实际分析视频或源码，导入支持的素材，并通过 `openmotion_edit_project` 携带 projectId、requestId、expectedRevision 和 expectedVersionId 写原生 Hyperframes HTML compositions 与可 seek 的 GSAP 动画。Tool 不替 Agent 分析视频或自动执行远程源码。
+4. `kind=builtin` 的三个本地模板使用 `openmotion_create_project`，传 projectType=template、templateId、requestId、title 与 requirements 创建独立工程。外部 ID 不会被映射成任意本地示例。
 5. 检查 lint/timeline/info 与实际预览，保留可继续编辑的工程。不将原视频整段放入时间轴就宣称复刻完成；只有用户要求时才导出并验证成片。
 
 ## 从源工程更新

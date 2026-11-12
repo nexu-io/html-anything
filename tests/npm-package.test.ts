@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 import { checkReleaseLocks, packageNpm } from '../scripts/package-npm.mjs';
 import { extractArchive, runFile, sha256 } from '../scripts/runtime-assets.mjs';
 import { protocolClient } from '../scripts/smoke-test-package.mjs';
-import { phase1Skills } from '../shared/workflow.ts';
+import { packagedSkills } from '../shared/workflow.ts';
 import { mcpRegistry } from '../mcp.ts';
 
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
@@ -14,6 +15,20 @@ async function verifyTrackingPolicy(application: string, mode: 'test' | 'stable'
   await symlink(path.resolve('node_modules'), path.join(application, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
   const result = JSON.parse(await runFile(process.execPath, ['--experimental-strip-types', path.resolve('tests/tracking-package.ts'), application, mode]));
   assert.equal(result.passed, true); assert.equal(result.external_requests, 0);
+}
+
+async function verifyBundledTemplates(application: string) {
+  const { copyTemplate, templates } = await import(pathToFileURL(path.join(application, 'template-library.ts')).href);
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-bundled-templates-'));
+  try {
+    for (const template of templates) {
+      const project = path.join(directory, template.id);
+      await copyTemplate(template.id, project, application);
+      // Match MCP preview preflight before Studio can rewrite the copied source.
+      const checked = JSON.parse(await runFile(process.execPath, [path.join(application, 'scripts/lint-project.mjs'), application, project]));
+      assert.equal(checked.errorCount, 0, `${template.id}: ${JSON.stringify(checked.findings)}`);
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
 }
 
 test('shared Agent instructions keep the release controls synchronized', async () => {
@@ -60,7 +75,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal(release.runtime.targets['mac-arm64'].minimumOS, undefined);
     assert.equal(release.runtime.targets['win-x64'].minimumOS, 'Windows 11');
     assert.equal(release.mcp.profile, 'phase1'); assert.deepEqual(release.mcp.tools, mcpRegistry().tools.map(tool => tool.name));
-    assert.deepEqual(release.skills, [...phase1Skills].sort());
+    assert.deepEqual(release.skills, [...packagedSkills].sort());
     assert.equal(release.installer.sha256, await sha256(built.installer)); assert.equal(release.application.sha256, await sha256(built.application));
     assert.match(release.commit, /^[a-f0-9]{40}$/);
     const application = path.join(directory, 'app'), installer = path.join(directory, 'installer');
@@ -80,8 +95,10 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert(embeddedReadme.includes('](docs/motion-md.md)'), 'Installed documentation keeps local links to shipped guides');
     assert(embeddedReadme.includes(`srcset="https://raw.githubusercontent.com/nexu-io/openmotion/${release.commit}/docs/readme/brand-hero.mobile.jpg"`));
     await assert.rejects(readdir(path.join(application, 'docs/readme/media')), { code: 'ENOENT' });
+    await assert.rejects(readFile(path.join(application, 'scripts/install-library-skill.mjs')), { code: 'ENOENT' });
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
     await verifyTrackingPolicy(application, 'test');
+    await verifyBundledTemplates(application);
     assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).description,
@@ -108,19 +125,22 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     const help = await runFile(process.execPath, [cli, 'setup', '--help']);
     for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(help.includes(host), host);
     await readFile(path.join(installer, 'package/LICENSE'));
-    assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...phase1Skills].sort());
-    for (const document of ['skills/motion-director/SKILL.md', 'skills/motion-production/references/context.md']) {
+    assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...packagedSkills].sort());
+    assert.match(await readFile(path.join(application, 'skills/motion-production/agents/openai.yaml'), 'utf8'), /allow_implicit_invocation: false/);
+    assert.match(await readFile(path.join(application, 'skills/motion-production/SKILL.md'), 'utf8'), /disable-model-invocation: true/);
+    assert.match(await readFile(path.join(application, 'skills/openmotion-production/agents/openai.yaml'), 'utf8'), /OpenMotion Production/);
+    for (const document of ['skills/openmotion-director/SKILL.md', 'skills/openmotion-production/references/context.md']) {
       assert.equal(await readFile(path.join(application, document), 'utf8'), await readFile(document, 'utf8'));
     }
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);
     assert.equal(await sha256(path.join(application, 'scripts/runtime-lock.json')), release.locks.native);
     const entries = await runFile('tar', ['-tf', built.application]);
     assert(!/\/(node_modules|runtime)\//.test(entries));
-    assert(entries.includes('skills/motion-production/SKILL.md'));
+    assert(entries.includes('skills/openmotion-production/SKILL.md'));
     for (const file of unapproved) assert(!entries.includes(file), 'Unapproved file shipped: ' + file);
     assert(!/\/(tests|src)\//.test(entries), 'Development sources and fixtures must not ship');
-    assert(entries.includes('skills/motion-recreate/scripts/measure_frame.mjs'));
-    assert(entries.includes('skills/motion-recreate/references/verify.md'));
+    assert(entries.includes('skills/openmotion-recreate/scripts/measure_frame.mjs'));
+    assert(entries.includes('skills/openmotion-recreate/references/verify.md'));
     assert(entries.includes('studio/build/index.html'));
     assert(entries.includes('shared/editor-launch.pl'), 'macOS shared editor launcher must ship');
     for (const script of ['lint-project.mjs', 'npm-installer.mjs', 'npm-hosts.mjs', 'check-installed-mcp.mjs', 'diagnostics.mjs', 'zip.mjs', 'diagnostic-redaction.mjs', 'install-onboarding.mjs', 'onboarding-catalog.ts']) assert(entries.includes('scripts/' + script), 'Runtime diagnostic and lint entry must ship: ' + script);
@@ -171,6 +191,7 @@ test('stable artifacts stage publication instead of replacing latest and retain 
     await runFile(process.execPath, [path.join(application, 'scripts/diagnostics.mjs'), '--data-dir', path.join(directory, 'missing-data'), '--output', diagnosticFile]);
     assert.match(await runFile('unzip', ['-p', diagnosticFile, 'metadata.json']), /"version": "0\.6\.4"/);
     await verifyTrackingPolicy(application, 'stable');
+    await verifyBundledTemplates(application);
     assert.equal(metadata.version, '0.6.4'); assert.equal(metadata.private, false); assert.equal(metadata.publishConfig.tag, 'stage');
     assert.equal((await json('package.json')).private, true);
     assert.equal((await json('packages/npm/package.json')).private, true);

@@ -1,0 +1,3 @@
+interface:
+  display_name: "OpenMotion Native Authoring"
+  short_description: "OpenMotion 原生 Hyperframes 编写的兼容入口"
