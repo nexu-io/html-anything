@@ -93,6 +93,7 @@ export function useTimelineAssetDropOps({
 }: UseTimelineAssetDropOpsOptions) {
   const projectId = projectIdRef.current;
   const timelineReady = usePlayerStore((state) => state.timelineReady);
+  const pendingDrops = usePlayerStore((state) => state.pendingAssetDrops);
   const elementsRef = useRef(timelineElements);
   const dropScopeRef = useRef(0);
   elementsRef.current = timelineElements;
@@ -109,7 +110,7 @@ export function useTimelineAssetDropOps({
       );
       return pendingAssetDrops.length === state.pendingAssetDrops.length ? state : { pendingAssetDrops };
     });
-  }, [timelineElements, timelineReady]);
+  }, [timelineElements, timelineReady, pendingDrops]);
   // fallow-ignore-next-line complexity
   const dropAssetAt = useCallback(
     // fallow-ignore-next-line complexity

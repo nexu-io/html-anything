@@ -2,7 +2,7 @@
  * Block drop/add handlers for the Studio.
  * Extracted from App.tsx to keep file sizes under the 600-line limit.
  */
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { TimelineElement } from "../player";
 import { usePlayerStore } from "../player";
 import { addBlockToProject } from "../utils/blockInstaller";
@@ -10,6 +10,7 @@ import { selectAndRevealTimelineElement } from "../player/components/timelineDro
 import type { BlockParam } from "@hyperframes/core/registry";
 import type { RightPanelTab } from "../utils/studioHelpers";
 import type { MediaOverlayPlacement } from "../components/editor/propertyPanelTypes";
+import { beginPendingAssetDrop, updatePendingAssetDrop } from "../player/store/pendingAssetDrops";
 
 interface BlockCtxDeps {
   activeCompPath: string | null;
@@ -46,7 +47,7 @@ export interface UseBlockHandlersResult {
     React.SetStateAction<UseBlockHandlersResult["activeBlockParams"]>
   >;
   handleAddBlock: (blockName: string) => void;
-  handleTimelineBlockDrop: (blockName: string, placement: { start: number; track: number }) => void;
+  handleTimelineBlockDrop: (blockName: string, placement: { start: number; track: number }) => Promise<void>;
   handleAddMediaOverlay: (blockName: string, placement: MediaOverlayPlacement) => Promise<void>;
   handlePreviewBlockDrop: (blockName: string, position: { left: number; top: number }) => void;
 }
@@ -85,26 +86,43 @@ export function useBlockHandlers({
     ],
   );
 
-  // Block installs hit the server and end in a full preview reload; without a
-  // guard, repeat drops while one is in flight stack duplicate installs.
-  const installingBlockRef = useRef(false);
+  // Serialize registry writes while keeping every accepted drop as its own operation.
+  const installQueueRef = useRef(Promise.resolve());
+  const scope = useMemo(() => ({}), [projectId, blockCtx.activeCompPath]);
+  const scopeRef = useRef<object | null>(scope);
+  scopeRef.current = scope;
+  useEffect(() => {
+    scopeRef.current = scope;
+    return () => { scopeRef.current = null; };
+  }, [scope]);
   const { showToast, dismissToast } = blockCtxDeps;
   const runBlockInstall = useCallback(
-    async <T>(blockName: string, install: () => Promise<T>): Promise<T | null> => {
-      if (installingBlockRef.current) {
-        showToast("A block is already installing. One moment…", "info");
-        return null;
-      }
-      installingBlockRef.current = true;
-      const progress = showToast(`Adding ${blockName}…`, "info");
-      try {
-        return await install();
-      } finally {
-        installingBlockRef.current = false;
-        dismissToast(progress);
-      }
+    (blockName: string, install: () => ReturnType<typeof addBlockToProject>, pendingId?: string) => {
+      const work = installQueueRef.current.then(async () => {
+        if (scopeRef.current !== scope) return null;
+        const progress = pendingId ? null : showToast(`Adding ${blockName}…`, "info");
+        try {
+          const result = await install();
+          if (scopeRef.current !== scope) return null;
+          if (pendingId) updatePendingAssetDrop(pendingId, result
+            ? { element: result.element, duration: result.element.duration,
+                placement: { start: result.element.start, track: result.element.track } }
+            : { failed: "add" });
+          return result;
+        } catch (error) {
+          if (scopeRef.current === scope) {
+            if (pendingId) updatePendingAssetDrop(pendingId, { failed: "add" });
+            showToast(error instanceof Error ? error.message : "Failed to add block", "error");
+          }
+          return null;
+        } finally {
+          if (progress !== null) dismissToast(progress);
+        }
+      });
+      installQueueRef.current = work.then(() => undefined, () => undefined);
+      return work;
     },
-    [showToast, dismissToast],
+    [showToast, dismissToast, scope],
   );
 
   const handleAddBlock = useCallback(
@@ -139,9 +157,10 @@ export function useBlockHandlers({
   );
 
   const handleTimelineBlockDrop = useCallback(
-    (blockName: string, placement: { start: number; track: number }) => {
+    async (blockName: string, placement: { start: number; track: number }) => {
       if (!projectId) return;
-      void runBlockInstall(blockName, () =>
+      const pendingId = beginPendingAssetDrop(blockName, placement);
+      const result = await runBlockInstall(blockName, () =>
         addBlockToProject({
           projectId,
           blockName,
@@ -149,10 +168,9 @@ export function useBlockHandlers({
           ...blockCtx,
           previewIframe: previewIframeRef.current,
           currentTime: usePlayerStore.getState().currentTime,
-        }),
-      ).then((result) => {
-        if (result) selectAndRevealTimelineElement(result.hostKey);
-      });
+        }), pendingId,
+      );
+      if (result) selectAndRevealTimelineElement(result.hostKey);
     },
     [projectId, blockCtx, previewIframeRef, runBlockInstall],
   );

@@ -177,7 +177,7 @@ function buildSubCompositionHtml({
 
 export async function addBlockToProject(
   opts: AddBlockOptions,
-): Promise<{ block: RegistryItem; compositionPath: string; hostKey: string } | null> {
+): Promise<{ block: RegistryItem; compositionPath: string; hostKey: string; element: TimelineElement } | null> {
   const {
     projectId,
     blockName,
@@ -247,10 +247,13 @@ export async function addBlockToProject(
     await refreshFileTree();
     reloadPreview();
 
+    const hostKey = deriveTimelineStoreKeyForDomId(hostId, targetPath);
     return {
       block,
       compositionPath: compositionFile,
-      hostKey: deriveTimelineStoreKeyForDomId(hostId, targetPath),
+      hostKey,
+      element: { id: hostKey, key: hostKey, domId: hostId, sourceFile: targetPath,
+        tag: "div", start, duration, track, authoredTrack: track, compositionSrc: compositionFile },
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to add block";
