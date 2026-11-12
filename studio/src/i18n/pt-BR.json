@@ -1805,5 +1805,7 @@
   "blue": "Azul",
   "monochrome": "Monocromático",
   "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Arquivos do histórico estão ausentes, ilegíveis ou danificados: {files}. Esta versão não foi restaurada. O projeto atual permanece inalterado.",
-  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Não foi possível preparar os arquivos do histórico para restauração: {files}. O projeto atual permanece inalterado."
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Não foi possível preparar os arquivos do histórico para restauração: {files}. O projeto atual permanece inalterado.",
+  "Failed to add media": "Não foi possível adicionar a mídia",
+  "Could not read media duration. Try adding the file again.": "Não foi possível ler a duração da mídia. Tente adicionar o arquivo novamente."
 }

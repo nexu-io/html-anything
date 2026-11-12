@@ -1769,5 +1769,7 @@
   "blue": "Mavi",
   "monochrome": "Tek renkli",
   "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Geçmiş dosyaları eksik, okunamıyor veya hasarlı: {files}. Bu sürüm geri yüklenmedi. Mevcut proje değişmedi.",
-  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Geçmiş dosyaları geri yükleme için hazırlanamadı: {files}. Mevcut proje değişmedi."
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Geçmiş dosyaları geri yükleme için hazırlanamadı: {files}. Mevcut proje değişmedi.",
+  "Failed to add media": "Medya eklenemedi",
+  "Could not read media duration. Try adding the file again.": "Medya süresi okunamadı. Dosyayı tekrar eklemeyi deneyin."
 }

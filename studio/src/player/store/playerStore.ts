@@ -26,18 +26,16 @@ import { patchElements, queueElementPatch } from "./elementPatchQueue";
 export type { KeyframeCacheEntry } from "./keyframeSlice";
 export { liveTime } from "./liveTime";
 import { liveTime } from "./liveTime";
+import type { PendingAssetDrop } from "./pendingAssetDrops";
 export { createTimelineResetState };
-
 import type {
   TimelineElement,
   TimelineElementPatch,
   SubCompositionHostState,
 } from "./timelineElement";
-
 export type { TimelineElement, SubCompositionHostState };
 export type ZoomMode = "fit" | "manual";
 type TimelineTool = "select" | "razor";
-
 export interface SelectElementOptions {
   preserveSet?: boolean;
 }
@@ -77,6 +75,7 @@ interface PlayerState extends PlayerStoreSlices {
   /** True while a beat dot is being dragged — hides the playhead guideline. */
   beatDragging: boolean;
   elements: TimelineElement[];
+  pendingAssetDrops: PendingAssetDrop[];
   selectedElementId: string | null;
   playbackRate: number;
   audioMuted: boolean;
@@ -274,6 +273,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   timelineProjectId: null,
   beatDragging: false,
   elements: [],
+  pendingAssetDrops: [],
   selectedElementId: null,
   playbackRate: readStudioUiPreferences().playbackRate ?? 1,
   audioMuted: readStudioUiPreferences().audioMuted ?? false,

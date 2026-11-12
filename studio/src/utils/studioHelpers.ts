@@ -341,50 +341,61 @@ export function collectHtmlIds(source: string): string[] {
   return Array.from(source.matchAll(/\bid="([^"]+)"/g), (match) => match[1] ?? "");
 }
 
-const DEFAULT_TIMELINE_ASSET_DURATION: Record<TimelineAssetKind, number> = {
-  image: 3,
-  video: 5,
-  audio: 5,
-};
+const pendingDurationProbes = new Map<string, Promise<number>>();
 
-export async function resolveDroppedAssetDuration(
+export function resolveDroppedAssetDuration(
   projectId: string,
   assetPath: string,
   kind: TimelineAssetKind,
 ): Promise<number> {
-  if (kind === "image") return DEFAULT_TIMELINE_ASSET_DURATION.image;
+  const key = JSON.stringify([projectId, assetPath, kind]);
+  const pending = pendingDurationProbes.get(key);
+  if (pending) return pending;
+  const probe = probeDroppedAssetDuration(projectId, assetPath, kind).finally(() => {
+    pendingDurationProbes.delete(key);
+  });
+  pendingDurationProbes.set(key, probe);
+  return probe;
+}
+
+async function probeDroppedAssetDuration(
+  projectId: string,
+  assetPath: string,
+  kind: TimelineAssetKind,
+): Promise<number> {
+  if (kind === "image") return 3;
 
   const media = document.createElement(kind === "video" ? "video" : "audio");
   media.preload = "metadata";
-  media.src = buildProjectApiPath(projectId, `/preview/${encodeUrlPath(assetPath)}`);
 
-  const duration = await new Promise<number>((resolve) => {
-    const timeout = window.setTimeout(() => resolve(DEFAULT_TIMELINE_ASSET_DURATION[kind]), 3000);
-    const finalize = (value: number) => {
-      window.clearTimeout(timeout);
-      resolve(value);
-    };
+  try {
+    return await new Promise<number>((resolve, reject) => {
+      const fail = () => {
+        window.clearTimeout(timeout);
+        reject(new Error("Could not read media duration. Try adding the file again."));
+      };
+      const timeout = window.setTimeout(fail, 3000);
+      const finalize = (value: number) => {
+        window.clearTimeout(timeout);
+        resolve(value);
+      };
 
-    media.addEventListener(
-      "loadedmetadata",
-      () => {
-        const raw = Number(media.duration);
-        finalize(
-          Number.isFinite(raw) && raw > 0
-            ? roundToCenti(raw)
-            : DEFAULT_TIMELINE_ASSET_DURATION[kind],
-        );
-      },
-      { once: true },
-    );
-    media.addEventListener("error", () => finalize(DEFAULT_TIMELINE_ASSET_DURATION[kind]), {
-      once: true,
+      media.addEventListener(
+        "loadedmetadata",
+        () => {
+          const raw = Number(media.duration);
+          if (Number.isFinite(raw) && raw > 0) finalize(roundToCenti(raw));
+          else fail();
+        },
+        { once: true },
+      );
+      media.addEventListener("error", fail, { once: true });
+      media.src = buildProjectApiPath(projectId, `/preview/${encodeUrlPath(assetPath)}`);
     });
-  });
-
-  media.src = "";
-  media.load();
-  return duration;
+  } finally {
+    media.src = "";
+    media.load();
+  }
 }
 
 export function mediaMetadataUrl(projectId: string, assetPath: string): string {

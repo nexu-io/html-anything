@@ -15,6 +15,7 @@ import { translate } from "../i18n/messages";
 afterEach(() => {
   document.body.innerHTML = "";
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
   usePlayerStore.getState().reset();
 });
 
@@ -272,12 +273,21 @@ describe("useTimelineAssetDropOps handleTimelineAssetDrop", () => {
   });
 
   it("keeps two audio files dropped on a visual row together, as a single one would go", async () => {
+    const createElement = document.createElement.bind(document);
+    vi.spyOn(document, "createElement").mockImplementation((tag, options) => {
+      const element = createElement(tag, options);
+      if (tag === "audio") {
+        Object.defineProperty(element, "duration", { value: 5 });
+        queueMicrotask(() => element.dispatchEvent(new Event("loadedmetadata")));
+      }
+      return element;
+    });
     const clips = [
       rowClip("title", 0, 10, { track: 1 }),
       rowClip("music", 2, 3, { tag: "audio", row: 1, track: 0 }),
     ];
     const landed = await twoFileDrop(clips, { start: 12, track: 0 }, [["a.mp3", "b.mp3"], "audio"]);
-    // Audio length probing times out in this harness, so each file gets the 5 s default.
+    // Each readable audio file reports a 5 s duration.
     expect(landed).toEqual([
       ["12", "0"],
       ["17", "0"],

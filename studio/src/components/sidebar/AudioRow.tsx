@@ -228,7 +228,7 @@ export function AudioRow({
         }}
         onDragStart={(e) => {
           e.dataTransfer.effectAllowed = "copy";
-          e.dataTransfer.setData(TIMELINE_ASSET_MIME, JSON.stringify({ path: asset }));
+          e.dataTransfer.setData(TIMELINE_ASSET_MIME, JSON.stringify({ path: asset, duration: meta?.duration }));
           e.dataTransfer.setData("text/plain", asset);
         }}
         onContextMenu={(e) => {

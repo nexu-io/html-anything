@@ -2,7 +2,7 @@
 // placement, or upload dragged-in OS files and place them sequentially.
 // Extracted verbatim from useTimelineEditing.ts to keep it under the studio
 // 600-line cap.
-import { useCallback, type MutableRefObject, type RefObject } from "react";
+import { useCallback, useEffect, useRef, type MutableRefObject, type RefObject } from "react";
 import { compositionInsertionFailureMessage } from "../i18n/editorErrors";
 import type { TimelineElement } from "../player";
 import type { TimelineDropPlacement } from "../player/components/timelineCallbacks";
@@ -10,7 +10,6 @@ import { resolveDropTrack } from "../utils/timelineDropTrackInsert";
 import {
   buildTimelineAssetId,
   buildTimelineAssetInsertHtml,
-  buildTimelineFileDropPlacements,
   fitTimelineAssetGeometry,
   getTimelineAssetKind,
   insertTimelineAssetIntoSource,
@@ -30,6 +29,8 @@ import { commitTimelineCompositionInsertion } from "../utils/timelineComposition
 import { extendRootDurationInSource } from "../utils/rootDuration";
 import { deriveTimelineStoreKeyForDomId } from "../player/lib/timelineElementHelpers";
 import { selectAndRevealTimelineElement } from "../player/components/timelineDropReveal";
+import { usePlayerStore } from "../player/store/playerStore";
+import { beginPendingAssetDrop, updatePendingAssetDrop } from "../player/store/pendingAssetDrops";
 
 /** The first uploaded file opens the new track (if asked); each next one aims right after the previous. */
 function fileDropPlacement(
@@ -90,6 +91,25 @@ export function useTimelineAssetDropOps({
   observeProjectFileVersion,
   checkEditable,
 }: UseTimelineAssetDropOpsOptions) {
+  const projectId = projectIdRef.current;
+  const timelineReady = usePlayerStore((state) => state.timelineReady);
+  const elementsRef = useRef(timelineElements);
+  const dropScopeRef = useRef(0);
+  elementsRef.current = timelineElements;
+  useEffect(() => () => {
+    dropScopeRef.current++;
+    usePlayerStore.setState({ pendingAssetDrops: [] });
+  }, [projectId, activeCompPath]);
+  useEffect(() => {
+    if (!timelineReady) return;
+    usePlayerStore.setState((state) => {
+      const pendingAssetDrops = state.pendingAssetDrops.filter((drop) =>
+        !drop.element || !timelineElements.some((element) =>
+          (element.key ?? element.id) === drop.element!.key),
+      );
+      return pendingAssetDrops.length === state.pendingAssetDrops.length ? state : { pendingAssetDrops };
+    });
+  }, [timelineElements, timelineReady]);
   // fallow-ignore-next-line complexity
   const dropAssetAt = useCallback(
     // fallow-ignore-next-line complexity
@@ -116,6 +136,8 @@ export function useTimelineAssetDropOps({
         return undefined;
       }
 
+      const pendingId = beginPendingAssetDrop(assetPath, placement, durationOverride);
+      const stillActive = () => usePlayerStore.getState().pendingAssetDrops.some((drop) => drop.id === pendingId);
       try {
         const normalizedStart = Number(formatTimelineAttributeNumber(placement.start));
         const duration =
@@ -123,28 +145,36 @@ export function useTimelineAssetDropOps({
             ? durationOverride
             : await resolveDroppedAssetDuration(pid, assetPath, kind);
         const normalizedDuration = Number(formatTimelineAttributeNumber(duration));
+        updatePendingAssetDrop(pendingId, { duration: normalizedDuration });
         // A video with an audio stream lands audible; the mixer only hears a
         // <video> marked data-has-audio, and a muted drop was losing the sound.
         const hasAudio = await resolveDroppedAssetHasAudio(pid, assetPath, kind);
+        if (!stillActive()) return undefined;
         const resolvedAssetSrc = resolveTimelineAssetSrc(targetPath, assetPath);
 
-        const resolvedTargetPath = targetPath || "index.html";
-        const fileElements = timelineElements
-          .filter((te) => (te.sourceFile || activeCompPath || "index.html") === resolvedTargetPath)
-          .map((te) => ({ ...te, sourceFile: resolvedTargetPath }));
-        const newElementZIndex = Math.max(1, fileElements.length + gesture.placed.length + 1);
         const tag = kind === "image" ? "img" : kind;
 
         let newId = "";
         let track = 0;
         let start = normalizedStart;
         const insertAsset = (originalContent: string) => {
-          newId = buildTimelineAssetId(assetPath, collectHtmlIds(originalContent));
+          if (!stillActive()) throw new Error("The timeline drop is no longer active.");
+          const fileElements = elementsRef.current
+            .filter((te) => (te.sourceFile || activeCompPath || "index.html") === targetPath)
+            .map((te) => ({ ...te, sourceFile: targetPath }));
+          const newElementZIndex = Math.max(1, fileElements.length + gesture.placed.length + 1);
+          const ids = collectHtmlIds(originalContent);
+          newId = buildTimelineAssetId(assetPath, ids);
+          // Include drops saved while this preview was still reloading.
+          const awaitingPreview = usePlayerStore.getState().pendingAssetDrops.flatMap((drop) =>
+            drop.element && ids.includes(drop.element.domId ?? "")
+              ? [drop.element] : [],
+          );
           const resolved = resolveDropTrack({
             source: originalContent,
             // Rows and insertRow count the rows the timeline shows; a track this drop opened has no others.
             elements: gesture.onNewTrack ? [] : fileElements,
-            placed: gesture.placed,
+            placed: [...gesture.placed, ...awaitingPreview],
             placement,
             dropped: {
               id: newId,
@@ -155,6 +185,9 @@ export function useTimelineAssetDropOps({
           });
           track = resolved.track;
           start = resolved.start;
+          updatePendingAssetDrop(pendingId, {
+            placement: { ...placement, start },
+          });
           return extendRootDurationInSource(
             insertTimelineAssetIntoSource(
               resolved.source,
@@ -187,19 +220,21 @@ export function useTimelineAssetDropOps({
           recordEdit,
         });
 
-        selectAndRevealTimelineElement(deriveTimelineStoreKeyForDomId(newId, targetPath));
+        const key = deriveTimelineStoreKeyForDomId(newId, targetPath);
+        const lane = placement.insertRow == null ? placement.track : track;
+        const element = {
+          id: newId, key, domId: newId, sourceFile: targetPath,
+          tag, start, duration: normalizedDuration, track: lane, authoredTrack: track,
+        };
+        updatePendingAssetDrop(pendingId, { element });
+        if (!stillActive()) return element;
+        selectAndRevealTimelineElement(key);
         forceReloadSdkSession?.();
         reloadPreview();
-        const lane = placement.insertRow == null ? placement.track : track;
-        return {
-          id: newId,
-          tag,
-          start,
-          duration: normalizedDuration,
-          track: lane,
-          authoredTrack: track,
-        };
+        return element;
       } catch (error) {
+        if (!stillActive()) return undefined;
+        updatePendingAssetDrop(pendingId, { failed: "add" });
         const message =
           error instanceof Error ? error.message : "Failed to drop asset onto timeline";
         showToast(message);
@@ -243,25 +278,16 @@ export function useTimelineAssetDropOps({
       }
       const pid = projectIdRef.current;
       if (!pid) return;
+      const scope = dropScopeRef.current;
       const uploaded = await uploadProjectFiles(files);
+      if (scope !== dropScopeRef.current) return;
       if (uploaded.length === 0) return;
-      const durations: number[] = [];
-      for (const assetPath of uploaded) {
-        const kind = getTimelineAssetKind(assetPath);
-        const duration = kind ? await resolveDroppedAssetDuration(pid, assetPath, kind) : 0;
-        durations.push(Number(formatTimelineAttributeNumber(duration)));
-      }
-      const placements = buildTimelineFileDropPlacements(
-        placement ?? { start: 0, track: 0 },
-        durations,
-      );
       const gesture: DropGesture = { placed: [], onNewTrack: false };
       for (const [index, assetPath] of uploaded.entries()) {
-        const next = placements[index] ?? placements[0];
         const clip = await dropAssetAt(
           assetPath,
-          fileDropPlacement(index, next, placement, gesture.placed.at(-1)),
-          durations[index],
+          fileDropPlacement(index, initialPlacement, placement, gesture.placed.at(-1)),
+          undefined,
           gesture,
         );
         if (!clip) continue;
