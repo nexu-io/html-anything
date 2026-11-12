@@ -1,7 +1,5 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { zip } from '../scripts/package.ts';
 import { distributionFiles } from '../scripts/distribution.ts';
 import { getWorkflow, workflowRegistry } from '../shared/workflow.ts';
@@ -34,17 +32,16 @@ test('ZIP stores UTF-8 names and file sizes in local and central headers', () =>
   assert.equal(archive.readUInt32LE(archive.readUInt32LE(end + 16)), 0x02014b50);
 });
 
-test('standalone Library compatibility entries retain the canonical workflow and its local files', async () => {
-  const pairs = { brandkit: 'openmotion-brandkit', 'presenter-story': 'openmotion-presenter-story', 'motion-design-remix': 'openmotion-design-remix' };
+test('Library compatibility folders contain only forwarding entries and no duplicated payload', async () => {
   const { readdir, readFile } = await import('node:fs/promises');
-  for (const [old, current] of Object.entries(pairs)) {
-    const from = new URL('../library/skills/' + current + '/', import.meta.url);
-    const to = new URL('../library/skills/' + old + '/', import.meta.url);
-    assert.deepEqual(await readFile(new URL('WORKFLOW.md', to)), await readFile(new URL('SKILL.md', from)));
-    for (const entry of await readdir(from, { recursive: true, withFileTypes: true })) {
-      if (!entry.isFile() || entry.name === 'SKILL.md' || entry.parentPath.endsWith('/agents')) continue;
-      const relative = path.relative(fileURLToPath(from), path.join(entry.parentPath, entry.name));
-      assert.deepEqual(await readFile(new URL(relative, to)), await readFile(new URL(relative, from)), relative);
-    }
+  for (const [old, current] of Object.entries({ brandkit: 'openmotion-brandkit', 'presenter-story': 'openmotion-presenter-story', 'motion-design-remix': 'openmotion-design-remix' })) {
+    const folder = new URL('../library/skills/' + old + '/', import.meta.url);
+    assert.deepEqual((await readdir(folder)).sort(), ['SKILL.md', 'agents']);
+    assert.deepEqual(await readdir(new URL('agents/', folder)), ['openai.yaml']);
+    assert.match(await readFile(new URL('SKILL.md', folder), 'utf8'), new RegExp('../' + current + '/SKILL.md'));
+    const files = await distributionFiles('phase1');
+    assert.deepEqual(files.filter(file => file.startsWith('library/skills/' + old + '/')).sort(), [
+      'library/skills/' + old + '/SKILL.md', 'library/skills/' + old + '/agents/openai.yaml',
+    ]);
   }
 });

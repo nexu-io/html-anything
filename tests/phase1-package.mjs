@@ -24,6 +24,15 @@ for(const [index,name] of legacySkills.entries()){
  assert.ok(alias.includes('../'+canonicalSkills[index]+'/SKILL.md'));
  assert.match(await readFile(path.join(root,'skills',name,'agents/openai.yaml'),'utf8'),/allow_implicit_invocation: false/);
 }
+const standaloneLibrary=path.join(work,'standalone-library');
+for(const [old,canonical] of Object.entries({brandkit:'openmotion-brandkit','presenter-story':'openmotion-presenter-story','motion-design-remix':'openmotion-design-remix'})){
+ assert.deepEqual((await readdir(path.join(root,'library/skills',old))).sort(),['SKILL.md','agents']);
+ const installed=spawnSync(process.execPath,[path.join(root,'scripts/install-library-skill.mjs'),old,standaloneLibrary],{encoding:'utf8',cwd:tmpdir()});
+ assert.equal(installed.status,0,installed.stderr);
+ assert.equal(await readFile(path.join(standaloneLibrary,canonical,'SKILL.md'),'utf8'),await readFile(path.join(root,'library/skills',canonical,'SKILL.md'),'utf8'));
+}
+const remix=spawnSync(process.execPath,[path.join(standaloneLibrary,'openmotion-design-remix/scripts/materialize.mjs'),'wireframe-portal-title','remix',path.join(work,'library-remix')],{encoding:'utf8',cwd:tmpdir()});
+assert.equal(remix.status,0,remix.stderr);
 assert.equal(JSON.parse(await readFile(path.join(root,'shared/mcp-release.json'))).profile,'phase1');
 await assert.rejects(stat(path.join(root,'node_modules')),{code:'ENOENT'});
 const version=JSON.parse(await readFile(path.join(root,'package.json'))).version;

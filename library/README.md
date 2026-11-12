@@ -47,6 +47,14 @@ npx skills add ./library/skills --skill openmotion-design-remix
 npx skills add ./library/skills --skill openmotion-presenter-story
 ```
 
+For standalone installation with legacy-name compatibility, use an explicit skills directory:
+
+```sh
+node scripts/install-library-skill.mjs motion-design-remix /absolute/path/to/host/skills
+```
+
+The same command accepts any of the three canonical or legacy Library names. A legacy selection installs its canonical dependency beside a small forwarding entry; assets, scripts, references and licenses are stored once. Existing identical content is reused, and customized content is preserved. This installer is available in the checkout and complete plugin ZIP, alongside the Library. If another installer copies only a legacy folder, its entry explains how to install the pinned canonical dependency before continuing the first invocation. That recovery needs network access; installing both entries with the local helper does not.
+
 This library is browsable source today. It is not automatically imported into Studio or registered as MCP resources. The five core production Skills remain in [`skills/`](../skills/); the optional library Skills supply brand context, presenter-story design recipes or a specific source-remix method and do not add core production routes. The [Studio catalog](../docs/template-catalog.md) and [viewing references](../docs/collections/README.md) retain their existing sources and behavior.
 
 <a id="contribute-one-useful-thing"></a>

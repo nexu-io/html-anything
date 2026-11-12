@@ -429,13 +429,7 @@ const localReadmeResourceFiles = [
   'library/templates/presenter-tech/preview.mp4',
 ];
 
-const standaloneCompatibilityFiles = [...motionDesignRemixFiles, ...presenterStoryFiles].map(file => file
-  .replace('library/skills/openmotion-design-remix/', 'library/skills/motion-design-remix/')
-  .replace('library/skills/openmotion-presenter-story/', 'library/skills/presenter-story/'));
-
 export const distributionDocuments = [
-  ...standaloneCompatibilityFiles,
-  ...['brandkit', 'presenter-story', 'motion-design-remix'].map(name => 'library/skills/' + name + '/WORKFLOW.md'),
   ...['brandkit', 'presenter-story', 'motion-design-remix'].flatMap(name => ['library/skills/' + name + '/SKILL.md', 'library/skills/' + name + '/agents/openai.yaml']),
   ...['openmotion-brandkit', 'openmotion-presenter-story', 'openmotion-design-remix'].map(name => 'library/skills/' + name + '/agents/openai.yaml'),
   ...localReadmeResourceFiles,
@@ -503,7 +497,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'template-catalog.ts', 'prism-templates.ts', 'editor-server.ts',
     'scripts/runtime-assets.mjs', 'scripts/npm-runtime.mjs', 'scripts/runtime-lock.json', 'scripts/lint-project.mjs',
     'scripts/npm-installer.mjs', 'scripts/npm-hosts.mjs', 'scripts/check-installed-mcp.mjs',
-    'scripts/install-onboarding.mjs', 'scripts/onboarding-catalog.ts',
+    'scripts/install-onboarding.mjs', 'scripts/onboarding-catalog.ts', 'scripts/install-library-skill.mjs',
     'scripts/diagnostics.mjs', 'scripts/diagnostic-redaction.mjs', 'scripts/zip.mjs',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
     'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
