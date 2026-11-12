@@ -68,20 +68,22 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ```text
 请在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。
-安装成功后，按安装指南中的回复要求介绍能力并邀请体验；我确认后再创建独立可编辑工程。
+安装成功后直接打开编辑器的模板库，先不创建项目；我选好模板并点击“打开并编辑”或明确告诉你模板后，再创建独立可编辑工程。
 ```
 
 安装脚本使用当前检出版本，安装依赖、构建编辑器、注册本地插件并预检 MCP 连接。它不会安装系统软件或重启 Codex。请保留仓库目录供插件继续使用。导出 MP4 还需要浏览器和媒体工具，详见下文。
 
 ### 安装完成后的引导（Codex / Agent）
 
-所有 Agent 安装入口共用 [安装成功后的回复规则与示例](install.md#installation-success-reply)。安装器当轮输出规则和真实模板摘要，Agent 按上下文选择模板并组织邀请：默认单模板，用户明确要求挑选/比较且有三份合适模板时提供三候选。配置完成不代表当前会话已加载 MCP；如实说明后，仍在本轮邀请，不等首次调用工具。
+所有 Agent 安装入口共用[安装成功后的回复规则](install.md#installation-success-reply)。安装完成后，Agent 用 `motion_open_preview({target:"templates"})` 打开模板库；当前聊天尚未加载 MCP 时，直接打开安装结果中的 `onboarding.preview.previewUrl`。宿主没有浏览器时提供实际链接，不声称已自动打开。模板库启动失败时说明具体原因，不创建占位工程。
 
 ### 首次体验默认规则
 
-用户接受单模板邀请或明确选择候选后，进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md)，沿用本次邀请的准确模板 ID、原生时长和默认内容。三候选只回复“是”时先澄清；拒绝或暂不体验则停止。不固定为某个模板，不重复追问可选素材，也不静默替换失败模板。
+浏览、筛选、查看模板详情和播放预览均不创建工程。用户选择可编辑模板的“打开并编辑”后，Studio 才创建独立副本；Agent 后续继续该工程，不再重复创建。仅有参考视频的条目仍需用户明确要求复刻。
 
-创建独立工程，保留原有工作；同一次体验已创建则续用。按 [首次体验交付规则](../skills/motion-production/references/templates.md#first-run-experience-defaults) 打开并检查真实可编辑工程，宿主不支持自动打开时给出实际链接和限制。用户要求视频文件时才导出。工具尚未加载时，在接受后按宿主支持的方式刷新或接续，保留已经选择的模板。
+用户明确要求 Agent 使用某个模板时，进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md)，沿用准确模板 ID、原生时长和默认内容。未选模板只回复“体验”时先问具体模板；拒绝或暂不体验则停止。不固定推荐模板，不重复追问可选素材，也不静默替换失败模板。
+
+创建后保留原有工作；同一次体验已创建则续用。按[首次体验交付规则](../skills/motion-production/references/templates.md#first-run-experience-defaults)打开并检查真实可编辑工程，用户要求视频文件时才导出。
 
 ### 开始创作
 

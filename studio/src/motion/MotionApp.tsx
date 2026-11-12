@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18n';
-import { WorkspaceFrame, WorkspaceMenuButton } from './WorkspaceFrame';
-import { motionApi, type ProjectCatalog } from './useWorkspace';
+import { WorkspaceFrame, WorkspaceMenuButton, useWorkspaceChrome } from './WorkspaceFrame';
+import { motionApi, navigateWorkspace, type ProjectCatalog } from './useWorkspace';
 import { requestedProject, validWorkspaceProject } from './workspaceRouting';
 import type { SessionDetail, SessionArtifact } from '../../../shared/session';
 import { ArtifactViewer } from './ArtifactViewer';
@@ -23,19 +23,21 @@ export function MotionApp() {
   const { t } = useI18n();
   const [projectId] = useState(() => requestedProject(location.search, location.hash));
   const [sessionId] = useState(() => new URLSearchParams(location.search).get('session'));
+  const libraryOnly = new URLSearchParams(location.search).get('templates') === '1' && projectId === null && !sessionId;
   const [ready, setReady] = useState<{ sessionId: string; artifact?: SessionArtifact } | null>(null);
   const [error, setError] = useState('');
   const [attempt, retry] = useState(0);
   const view = useRef({ id: crypto.randomUUID(), started: performance.now(), sent: false });
   useEffect(() => {
-    if (view.current.sent || (!ready && !error)) return;
+    if (view.current.sent || (!ready && !error && !libraryOnly)) return;
     view.current.sent = true;
     const embedded = new URLSearchParams(location.search).get('embed') === '1';
-    if (ready) void trackMotion('page_view', { page_name: 'studio', view_id: view.current.id, embedded, has_project: Boolean(ready.artifact) });
+    if (ready || libraryOnly) void trackMotion('page_view', { page_name: 'studio', view_id: view.current.id, embedded, has_project: Boolean(ready?.artifact) });
     if (error) void trackMotion('studio_load_result', { load_id: view.current.id, outcome: 'failure', embedded,
       duration_ms: Math.min(86_400_000, Math.round(performance.now() - view.current.started)) });
-  }, [projectId, sessionId, ready, error]);
+  }, [projectId, sessionId, ready, error, libraryOnly]);
   useEffect(() => {
+    if (libraryOnly) return;
     const controller = new AbortController();
     setError('');
     async function resolve() {
@@ -56,8 +58,17 @@ export function MotionApp() {
     }
     void resolve().catch(err => { if (!controller.signal.aborted) setError((err as Error).message); });
     return () => controller.abort();
-  }, [projectId, sessionId, attempt]);
+  }, [projectId, sessionId, attempt, libraryOnly]);
+  if (libraryOnly) return <WorkspaceFrame waitForSaves={noPendingSaves} onLibraryClose={() => navigateWorkspace('/', true)}><TemplateLibraryLanding /></WorkspaceFrame>;
   if (error) return <WorkspaceFrame waitForSaves={noPendingSaves}><div className="motion-route-state" role="alert"><h1>{t('Could not open project')}</h1><p>{t(error)}</p><div><WorkspaceMenuButton /><a className="motion-button" href="/">{t('Open active project')}</a><button className="motion-button" onClick={() => retry(value => value + 1)}>{t('Retry')}</button></div></div></WorkspaceFrame>;
   const loading = <MotionLoading />;
   return ready ? <WorkspaceFrame waitForSaves={noPendingSaves} projectId={ready.artifact?.projectId} sessionId={ready.sessionId}>{ready.artifact ? <ArtifactViewer artifact={ready.artifact} /> : <div className="motion-route-state"><WorkspaceMenuButton />{t('Create a project with your Agent to start editing.')}</div>}</WorkspaceFrame> : loading;
+}
+
+function TemplateLibraryLanding() {
+  const { t } = useI18n();
+  const { openLibrary } = useWorkspaceChrome();
+  return <div className="motion-route-state"><WorkspaceMenuButton /><h1>{t('Template library')}</h1>
+    <button className="motion-button" onClick={event => openLibrary(event.currentTarget)}>{t('View all templates')}</button>
+  </div>;
 }

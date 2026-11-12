@@ -35,8 +35,8 @@ export function useWorkspaceChrome() {
   return value;
 }
 
-export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, blocked = false, message = '', saveState = '' }: {
-  children: ReactNode; waitForSaves: () => Promise<void>; projectId?: string; sessionId?: string; blocked?: boolean; message?: string; saveState?: string;
+export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, blocked = false, message = '', saveState = '', onLibraryClose }: {
+  children: ReactNode; waitForSaves: () => Promise<void>; projectId?: string; sessionId?: string; blocked?: boolean; message?: string; saveState?: string; onLibraryClose?: () => void;
 }) {
   const { t } = useI18n();
   const presentation = workspacePresentation(location.search);
@@ -55,7 +55,8 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
   const libraryTrigger = useRef<HTMLElement | null>(null);
   const [connectionsOpen, setConnectionsOpen] = useState(() => new URLSearchParams(location.search).get('templates') === '1');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const switchingDisabled = workspace.busy || blocked || Boolean(editorState?.blocked) || !workspace.status;
+  const libraryBusy = workspace.busy || blocked || Boolean(editorState?.blocked);
+  const switchingDisabled = libraryBusy || !workspace.status;
   const notice = workspace.error || message || editorState?.message || "";
   const [dismissedNotice, setDismissedNotice] = useState<string | null>(null);
   const noticeKey = `${workspace.error ? workspace.errorSource : 'editor'}:${notice || ''}`;
@@ -85,7 +86,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
       </div>
     </div>
     </Dialog.Root>
-    {connectionsOpen && <ConnectionDialog open returnFocus={libraryTrigger.current} section={connectionSection} busy={switchingDisabled} error={workspace.error} onClose={() => setConnectionsOpen(false)} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
+    {connectionsOpen && <ConnectionDialog open returnFocus={libraryTrigger.current} section={connectionSection} busy={libraryBusy} openingDisabled={switchingDisabled} error={workspace.error} onClose={() => { setConnectionsOpen(false); onLibraryClose?.(); }} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
   </WorkspaceChromeContext.Provider>;
 }
 

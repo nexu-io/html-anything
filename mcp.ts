@@ -76,7 +76,7 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
         const args = { ...(message.params.arguments ?? {}) };
         const definition = phase1Tools.find(tool => tool.name === name)!;
         validateInput(definition.inputSchema, args);
-        if (name === 'motion_open_preview' && !args.projectId && !args.sessionId && args.action !== 'record_review') args.sessionId = selections.get(store)?.sessionId;
+        if (name === 'motion_open_preview' && args.target !== 'templates' && !args.projectId && !args.sessionId && args.action !== 'record_review') args.sessionId = selections.get(store)?.sessionId;
         if (args.sessionId === undefined) delete args.sessionId;
         const service = await ensureService(store, undefined, name), origin = new URL(service.previewUrl).origin;
         const response = await fetch(origin + '/motion-api/phase1/call', { method: 'POST', headers: await editorHeaders(store, origin),
