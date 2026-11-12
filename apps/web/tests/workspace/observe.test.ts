@@ -221,6 +221,63 @@ it("aborts a blocked background read and retires the observer before teardown", 
   }
 });
 
+it("coalesces manual reconnect with polling, preserves drafts and skips pending write receipts", () =>
+  fixture(async ({ editor, db, owner }) => {
+    vi.useFakeTimers();
+    const before = db.execute("project_read", owner);
+    editor.edit(editor.draft + "local reconnect draft");
+    let release = () => {},
+      blocked = false;
+    const statuses: string[] = [],
+      read = vi.spyOn(editor, "observe").mockRejectedValueOnce(Error("offline")),
+      observer = observeWorkspace(editor, {
+        available: () => !blocked,
+        generation: () => 0,
+        changed: () => {},
+        status: (_value, state) => statuses.push(state),
+      });
+    try {
+      await observer.retry();
+      expect(statuses.at(-1)).toBe("disconnected");
+      blocked = true;
+      await observer.retry();
+      expect(read).toHaveBeenCalledTimes(1);
+      blocked = false;
+      const pending = vi.spyOn(editor, "unconfirmed", "get").mockReturnValue(true);
+      try {
+        await observer.retry();
+        expect(read).toHaveBeenCalledTimes(1);
+      } finally {
+        pending.mockRestore();
+      }
+      read.mockImplementationOnce(
+        () =>
+          new Promise<boolean>((done) => {
+            release = () => done(false);
+          }),
+      );
+      const first = observer.retry(),
+        second = observer.retry();
+      expect(first).toBe(second);
+      await vi.advanceTimersByTimeAsync(3000);
+      expect(read).toHaveBeenCalledTimes(2);
+      release();
+      await first;
+      expect(statuses.at(-1)).toBe("connected");
+      const announcements = statuses.length;
+      read.mockResolvedValue(false);
+      await vi.advanceTimersByTimeAsync(1500);
+      expect(statuses).toHaveLength(announcements);
+      expect(editor.draft).toContain("local reconnect draft");
+      expect(db.execute("project_read", owner)).toEqual(before);
+    } finally {
+      release();
+      await observer.close();
+      read.mockRestore();
+      vi.useRealTimers();
+    }
+  }));
+
 it("adopts remote media membership while preserving a local text draft", () =>
   fixture(async ({ db, editor, owner }) => {
     const png =

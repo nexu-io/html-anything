@@ -9,6 +9,7 @@ import { source } from "@odsuite/serve";
 import { managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
 import { serve as daemonServe } from "@open-motion/daemon";
 import { Client } from "@open-motion/daemon/client";
+import { entryFragment } from "@open-motion/daemon/contract";
 import { initialFiles, type Project } from "@open-motion/workspace/contract";
 import { afterAll, beforeAll, expect, it } from "vitest";
 import type { Config } from "@";
@@ -136,8 +137,26 @@ it("coordinates two actual Web views and an external writer across clean refresh
     });
   };
   try {
-    await page.goto(url);
+    const project = await client.execute("project_read", owner),
+      entry = entryFragment({ ...owner, revision: project.revision, historyVersion: project.history.version }),
+      before = await client.execute("workspace_state", {});
+    let bootstrapCalls = 0;
+    await page.route("**/bootstrap.json", async (route) => {
+      bootstrapCalls++;
+      if (bootstrapCalls === 1) await route.fulfill({ status: 503, body: "private startup diagnostics" });
+      else await route.continue();
+    });
+    await page.goto(url + entry);
+    await page.getByRole("alert").filter({ hasText: "无法连接本地运行实例" }).waitFor();
+    expect(await page.getByLabel("启动状态", { exact: true }).textContent()).not.toContain("private startup");
+    expect(new URL(page.url()).hash).toBe(entry);
+    expect(await client.execute("workspace_state", {})).toEqual(before);
+    await driver.capture("bootstrap-failure");
+    await page.getByRole("button", { name: "重试连接", exact: true }).click();
     await ready();
+    expect(bootstrapCalls).toBe(2);
+    expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(artifact.id);
+    await page.unroute("**/bootstrap.json");
     await click("源码");
     await second.goto(url);
     await ready(second);
@@ -197,6 +216,7 @@ it("coordinates two actual Web views and an external writer across clean refresh
     });
     await click("index.html");
     await code.fill((await code.inputValue()) + "\n<!-- OFFLINE DRAFT -->");
+    const draftInput = await code.elementHandle();
     await page.route("**/api/workspace_observe", (route) => route.abort("failed"));
     await expect
       .poll(() => page.getByLabel("协作连接状态", { exact: true }).textContent(), { timeout: 10000 })
@@ -204,7 +224,10 @@ it("coordinates two actual Web views and an external writer across clean refresh
     await remote("card.html", "AFTER RECONNECT");
     expect(await code.inputValue()).toContain("OFFLINE DRAFT");
     await page.unroute("**/api/workspace_observe");
+    await page.getByRole("button", { name: "重试工作区连接", exact: true }).click();
     await page.getByLabel("外部修改", { exact: true }).waitFor();
+    expect(await code.evaluate((current, previous) => current === previous, draftInput)).toBe(true);
+    expect(await code.inputValue()).toContain("OFFLINE DRAFT");
     await click("合并到本地草稿");
     await click("保存");
     const other = await client.execute("session_create", {
@@ -229,6 +252,7 @@ it("coordinates two actual Web views and an external writer across clean refresh
     report.project = await client.execute("project_read", owner);
     report.cases = [
       "two-web-views",
+      "bootstrap-failure-safe-explicit-retry-original-target",
       "clean-refresh",
       "independent-file-merge",
       "same-file-choice",

@@ -34,35 +34,57 @@ export async function observedView(
   return { state: head.state, session, project };
 }
 
-/** Per-view reader only. It neither writes nor establishes OS liveness. */
+export type ConnectionState = "connecting" | "connected" | "disconnected";
+/** Per-view serial reader only. Retry neither writes nor establishes OS liveness. */
 export function observeWorkspace(
   editor: Editor,
-  options: { available(): boolean; generation(): number; changed(): void; status(value: string): void },
+  options: {
+    available(): boolean;
+    generation(): number;
+    changed(): void;
+    status(value: string, state: ConnectionState): void;
+  },
 ) {
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined, flight: Promise<void> | undefined;
-  const poll = () => {
-    if (controller.signal.aborted) return;
+  let state: ConnectionState | undefined;
+  const status = (value: string, next: ConnectionState) => {
+    if (state === next) return;
+    state = next;
+    options.status(value, next);
+  };
+  const poll = (manual = false) => {
+    if (controller.signal.aborted) return Promise.resolve();
+    if (flight) return flight;
+    clearTimeout(timer);
     flight = (async () => {
       if (!options.available() || !editor.initialized || editor.unconfirmed) return;
       try {
+        if (manual || state === undefined) status("正在连接工作区，当前内容与草稿仍保留", "connecting");
         const generation = options.generation();
         const changed = await editor.observe(
           controller.signal,
           () => options.available() && options.generation() === generation,
         );
         if (controller.signal.aborted) return;
-        options.status("已连接");
+        status("已连接", "connected");
         if (changed) options.changed();
       } catch {
-        if (!controller.signal.aborted) options.status("工作区同步暂不可用，当前内容与草稿仍保留");
+        if (!controller.signal.aborted)
+          status(
+            "工作区同步暂不可用，当前内容与草稿仍保留。请确认实例已启动；若实例已重启，请通过 odsuite status 获取当前入口。",
+            "disconnected",
+          );
       }
     })().finally(() => {
+      flight = undefined;
       if (!controller.signal.aborted) timer = setTimeout(poll, 1500);
     });
+    return flight;
   };
   timer = setTimeout(poll, 1500);
   return {
+    retry: () => poll(true),
     async close() {
       controller.abort();
       clearTimeout(timer);
