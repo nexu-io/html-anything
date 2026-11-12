@@ -60,9 +60,31 @@ export async function prepareInstallationOnboarding({ appRoot, dataDirectory, te
   return { hostSessionVerified: false, instructions, catalog };
 }
 
+export async function prepareInstallationPreview({ appRoot, dataDirectory }) {
+  try {
+    const preview = JSON.parse(await runFile(process.execPath, ['--experimental-strip-types', path.join(appRoot, 'scripts/open-template-library.ts')], {
+      cwd: appRoot, timeout: 30_000, killSignal: 'SIGKILL',
+      env: { ...process.env, ...(dataDirectory ? { MOTION_DATA_DIR: dataDirectory } : {}) },
+    }));
+    assert.equal(preview.target, 'templates');
+    assert.equal(preview.projectCreated, false);
+    assert.equal(new URL(preview.previewUrl).searchParams.get('templates'), '1');
+    return { status: 'ready', ...preview };
+  } catch (error) {
+    return { status: 'unavailable', openedByHost: false, projectCreated: false,
+      warning: 'Template library could not be prepared: ' + error.message,
+      nextAction: 'Installation succeeded; report the preview failure and retry openmotion_open_preview with target=templates after connecting MCP. Do not create a placeholder project.' };
+  }
+}
+
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   const appRoot = path.resolve(process.argv[2] || fileURLToPath(new URL('../', import.meta.url)));
-  const defaults = JSON.parse(await readFile(path.join(appRoot, 'shared/template-config.json'), 'utf8'));
-  console.log(JSON.stringify(await prepareInstallationOnboarding({ appRoot,
-    dataDirectory: process.env.MOTION_DATA_DIR, templateEnvironment: process.env.MOTION_TEMPLATE_ENV || defaults.environment }), null, 2));
+  if (process.argv[3] === '--check-contract') {
+    await installationInstructions(appRoot);
+  } else {
+    const defaults = JSON.parse(await readFile(path.join(appRoot, 'shared/template-config.json'), 'utf8'));
+    const options = { appRoot, dataDirectory: process.env.MOTION_DATA_DIR, templateEnvironment: process.env.MOTION_TEMPLATE_ENV || defaults.environment };
+    const onboarding = await prepareInstallationOnboarding(options);
+    console.log(JSON.stringify({ ...onboarding, preview: await prepareInstallationPreview(options) }, null, 2));
+  }
 }

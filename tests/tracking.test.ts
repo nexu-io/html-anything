@@ -144,6 +144,7 @@ test('domain events follow real commits, skip replay and retain safe failure wit
   const events: PendingEvent[] = [], tracking = core(async batch => { events.push(...batch); return 'accepted'; });
   const service = new Phase1Service(store, pluginRoot, { tracking, origin: () => 'http://127.0.0.1:4173',
     nativeUrl: () => undefined, openProject: async () => {}, mutation: async task => task(), cancel: async () => {} });
+  await service.call('openmotion_open_preview', { target: 'templates' });
   const args = { requestId: crypto.randomUUID(), projectType: 'natural_language', title: 'PRIVATE_TITLE', requirements: 'PRIVATE_PROMPT' };
   const created = await service.call('motion_create_project', args);
   assert.equal((await service.call('motion_create_project', args)).replayed, true);

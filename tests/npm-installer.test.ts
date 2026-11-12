@@ -35,7 +35,9 @@ async function setupFixture(t: any) {
   const directory = await fixture(t), application = path.join(directory, 'source'), home = path.join(directory, 'install'), skillsDirectory = path.join(directory, 'skills');
   for (const name of ['scripts', 'shared', 'studio/build', 'skills/openmotion-production', 'docs']) await mkdir(path.join(application, name), { recursive: true });
   for (const name of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'README.md', 'AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(application, name), 'fixture');
-  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
+  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs', 'scripts/open-template-library.ts', 'shared/workspace-url.ts']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
+  await writeFile(path.join(application, 'workspace.ts'), 'export class WorkspaceStore { constructor(directory = process.env.MOTION_DATA_DIR) { this.directory = directory; } }');
+  await writeFile(path.join(application, 'preview.ts'), `export async function ensureService(store) { if (store.directory !== process.env.MOTION_DATA_DIR) throw new Error('Wrong workspace'); return { previewUrl: 'http://127.0.0.1:4173' }; }`);
   await writeFile(path.join(application, 'skills/openmotion-production/SKILL.md'), '---\nname: openmotion-production\ndescription: fixture\n---\nFixture');
   await writeJSON(path.join(application, 'shared/template-config.json'), { environment: 'prod' });
   await cp(new URL('../shared/mcp-profiles.json', import.meta.url), path.join(application, 'shared/mcp-profiles.json'));
@@ -50,12 +52,16 @@ async function setupFixture(t: any) {
   return { directory, application, home, skillsDirectory, manifest, codex, config };
 }
 
-test('successful setup hands the current Agent an invitation before any MCP use, without persisting an offer', async t => {
+test('successful setup hands the current Agent a project-free template library before any MCP use', async t => {
   const options = await setupFixture(t);
   const installed = await setup(options);
   assert.equal(installed.onboarding.hostSessionVerified, false);
   assert.match(installed.onboarding.instructions, /OpenMotion 开源免费/);
   assert(Array.isArray(installed.onboarding.catalog.templates));
+  assert.equal(installed.onboarding.preview.status, 'ready', installed.onboarding.preview.warning);
+  assert.equal(installed.onboarding.preview.projectCreated, false);
+  assert.equal(new URL(installed.onboarding.preview.previewUrl).searchParams.get('templates'), '1');
+  assert.equal(installed.onboarding.preview.previewHandoff.nextAction.kind, 'host');
   assert.equal('onboarding' in JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')), false);
 });
 
@@ -118,6 +124,20 @@ test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and
   }), /template environment does not match manifest/);
   await writeJSON(path.join(bundle, 'package.json'), { version: '9.9.9', type: 'module' });
   await assert.rejects(runFile(process.execPath, command, { env }), /match the npm package version/);
+});
+
+test('a library startup failure reports the limitation without undoing successful host registration', async t => {
+  const options = await setupFixture(t);
+  await writeFile(path.join(options.application, 'scripts/open-template-library.ts'), 'throw new Error("Preview unavailable");');
+  const manifest = JSON.parse(await readFile(options.manifest, 'utf8'));
+  manifest.application = await archive(options.directory, options.application, 'failed-preview');
+  await writeJSON(options.manifest, manifest);
+  const installed = await setup(options);
+  assert.equal(installed.onboarding.preview.status, 'unavailable');
+  assert.equal(installed.onboarding.preview.projectCreated, false);
+  assert.match(installed.onboarding.preview.warning, /Preview unavailable/);
+  assert.equal(JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')).appRoot, installed.appRoot);
+  assert.ok(JSON.parse(await readFile(options.config, 'utf8')).openmotion);
 });
 
 test('local assets require pinned checksums and preserve earlier cache after corruption', async t => {

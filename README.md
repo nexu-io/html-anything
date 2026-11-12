@@ -554,7 +554,7 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 
 ### Quick start
 
-For any successful Agent-led installation, follow the [installation reply rules and examples](docs/install.md#installation-success-reply) in the current conversation; setup provides real template summaries. Invite before creation and preserve the accepted template.
+After a successful Agent-led installation, open the editor's template library in the current conversation, without creating a project. Browse and preview first; choose **Open and edit** to create an independent editable copy. Setup provides a direct library link even before the chat reloads MCP. See the [installation reply rules](docs/install.md#installation-success-reply).
 
 For a packaged install, give your agent the [test installation guide](https://releases.open-design.ai/open-motion/dev/install.md). It pins the package version and walks through isolated setup. To run from source, follow the steps below.
 

@@ -68,20 +68,22 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ```text
 请在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。
-安装成功后，按安装指南中的回复要求介绍能力并邀请体验；我确认后再创建独立可编辑工程。
+安装成功后直接打开编辑器的模板库，先不创建项目；我选好模板并点击“打开并编辑”或明确告诉你模板后，再创建独立可编辑工程。
 ```
 
 安装脚本使用当前检出版本，安装依赖、构建编辑器、注册本地插件并预检 MCP 连接。它不会安装系统软件或重启 Codex。请保留仓库目录供插件继续使用。导出 MP4 还需要浏览器和媒体工具，详见下文。
 
 ### 安装完成后的引导（Codex / Agent）
 
-所有 Agent 安装入口共用 [安装成功后的回复规则与示例](install.md#installation-success-reply)。安装器当轮输出规则和真实模板摘要，Agent 按上下文选择模板并组织邀请：默认单模板，用户明确要求挑选/比较且有三份合适模板时提供三候选。配置完成不代表当前会话已加载 MCP；如实说明后，仍在本轮邀请，不等首次调用工具。
+所有 Agent 安装入口共用[安装成功后的回复规则](install.md#installation-success-reply)。安装完成后，Agent 用 `openmotion_open_preview({target:"templates"})` 打开模板库；当前聊天尚未加载 MCP 时，直接打开安装结果中的 `onboarding.preview.previewUrl`。宿主没有浏览器时提供实际链接，不声称已自动打开。模板库启动失败时说明具体原因，不创建占位工程。
 
 ### 首次体验默认规则
 
-用户接受单模板邀请或明确选择候选后，进入 [openmotion-template-to-video](../skills/openmotion-template-to-video/SKILL.md)，沿用本次邀请的准确模板 ID、原生时长和默认内容。三候选只回复“是”时先澄清；拒绝或暂不体验则停止。不固定为某个模板，不重复追问可选素材，也不静默替换失败模板。
+浏览、筛选、查看模板详情和播放预览均不创建工程。用户选择可编辑模板的“打开并编辑”后，Studio 才创建独立副本；Agent 后续继续该工程，不再重复创建。仅有参考视频的条目仍需用户明确要求复刻。
 
-创建独立工程，保留原有工作；同一次体验已创建则续用。按 [首次体验交付规则](../skills/openmotion-production/references/templates.md#first-run-experience-defaults) 打开并检查真实可编辑工程，宿主不支持自动打开时给出实际链接和限制。用户要求视频文件时才导出。工具尚未加载时，在接受后按宿主支持的方式刷新或接续，保留已经选择的模板。
+用户明确要求 Agent 使用某个模板时，进入 [openmotion-template-to-video](../skills/openmotion-template-to-video/SKILL.md)，沿用准确模板 ID、原生时长和默认内容。未选模板只回复“体验”时先问具体模板；拒绝或暂不体验则停止。不固定推荐模板，不重复追问可选素材，也不静默替换失败模板。
+
+创建后保留原有工作；同一次体验已创建则续用。按[首次体验交付规则](../skills/openmotion-production/references/templates.md#first-run-experience-defaults)打开并检查真实可编辑工程，用户要求视频文件时才导出。
 
 ### 开始创作
 
@@ -126,7 +128,7 @@ npm run dev
 
 仓库 Agent 从 [AGENTS.md](../AGENTS.md) 进入，Claude Code 同时读取 [CLAUDE.md](../CLAUDE.md)。按本轮意图直达专业入口：原创/大幅重编进入 [openmotion-director v1.4.5](../skills/openmotion-director/SKILL.md)，已有模板出片或适配进入 [openmotion-template-to-video](../skills/openmotion-template-to-video/SKILL.md)，参考视频复刻进入 [openmotion-recreate](../skills/openmotion-recreate/SKILL.md)（先读用户资料、最多问一次，用现有九个 Tool 在可编辑工程中重建，导出片对照原片测量后，交付在编辑器中打开的工程；规则与测量脚本随该 Skill 分发）。明确要求视频转可复用模板或 ZIP 时，单独进入 [openmotion-video-to-template](../skills/openmotion-video-to-template/SKILL.md)。[openmotion-production](../skills/openmotion-production/SKILL.md) 承接既定决定下的工程修改、预览、技术检查、排错与导出；重新设计局部动作或声音仍可直达 director。已有内容的修改统一复用 [edit 流程](../skills/openmotion-production/references/edit.md)，核对保持项及后续延续；首次补读的结果须先返回模型，再执行依赖操作。
 
-仅有 MCP 时通过 resources/list 与 resources/read 读取 `openmotion://workflow/production/start`；已选专业入口直接读对应路线，无需重新选路。固定引擎指南为 `openmotion://engine/SKILL.md`。详见 [Skill 路由](skills.md)。一期包含 openmotion-production、openmotion-director、openmotion-template-to-video、openmotion-recreate、openmotion-video-to-template 五个入口及参考。MCP workflow 短 ID 依次为 production/director/template/recreate/video-to-template；reference-video 仅留源码兼容入口。
+仅有 MCP 时通过 resources/list 与 resources/read 读取 `openopenmotion://workflow/production/start`；已选专业入口直接读对应路线，无需重新选路。固定引擎指南为 `openopenmotion://engine/SKILL.md`。详见 [Skill 路由](skills.md)。一期包含 openmotion-production、openmotion-director、openmotion-template-to-video、openmotion-recreate、openmotion-video-to-template 五个入口及参考。MCP workflow 短 ID 依次为 production/director/template/recreate/video-to-template；reference-video 仅留源码兼容入口。
 
 共享上下文列出各范围的必读依赖，Agent 只补齐尚未读取的正文，并复用同一份已读记录。这个约定不等于工具强制执行；七份 Motion 质量参考保持原有内容与风格边界。
 

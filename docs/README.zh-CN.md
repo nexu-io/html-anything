@@ -550,6 +550,8 @@ OpenMotion 另附三个可编辑工程。在 Studio 的 **Templates → Ready to
 
 ### 快速开始
 
+Agent 安装成功后会直接打开编辑器的模板库，暂不创建项目。先浏览和预览，选好后点击“打开并编辑”，再创建独立工程。当前聊天尚未加载 MCP 时，可使用安装结果中的模板库直达链接；宿主不支持自动展示时会提供链接。
+
 安装测试版时，把[安装指南](https://releases.open-design.ai/open-motion/dev/install.md)交给你的 Agent，按指南指定的版本在独立环境中安装。从源码运行可使用下面的步骤。
 
 #### 运行 OpenMotion
