@@ -50,7 +50,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api "repos/$GITHUB_REPOSITORY" --jq 'if .allow_squash_merge and (.allow_merge_commit | not) and (.allow_rebase_merge | not) then "Squash-only merge policy confirmed" else error("Enable Squash merge only before accepting cleaned media PRs") end'
+          gh api graphql -f owner="$GITHUB_REPOSITORY_OWNER" -f repo="${GITHUB_REPOSITORY#*/}" \
+            -f query='query($owner: String!, $repo: String!) { repository(owner: $owner, name: $repo) { squashMergeAllowed mergeCommitAllowed rebaseMergeAllowed } }' \
+            --jq '.data.repository | if .squashMergeAllowed and (.mergeCommitAllowed | not) and (.rebaseMergeAllowed | not) then "Squash-only merge policy confirmed" else error("Enable Squash merge only before accepting cleaned media PRs") end'
       - name: Check the final merge tree and media policy
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
