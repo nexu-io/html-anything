@@ -30,7 +30,7 @@ import { extendRootDurationInSource } from "../utils/rootDuration";
 import { deriveTimelineStoreKeyForDomId } from "../player/lib/timelineElementHelpers";
 import { selectAndRevealTimelineElement } from "../player/components/timelineDropReveal";
 import { usePlayerStore } from "../player/store/playerStore";
-import { beginPendingAssetDrop, updatePendingAssetDrop } from "../player/store/pendingAssetDrops";
+import { beginPendingAssetDrop, dismissPendingAssetDrop, finishPendingAssetDrop, isPendingAssetDropActive, updatePendingAssetDrop } from "../player/store/pendingAssetDrops";
 
 /** The first uploaded file opens the new track (if asked); each next one aims right after the previous. */
 function fileDropPlacement(
@@ -93,6 +93,7 @@ export function useTimelineAssetDropOps({
 }: UseTimelineAssetDropOpsOptions) {
   const projectId = projectIdRef.current;
   const timelineReady = usePlayerStore((state) => state.timelineReady);
+  const pendingDrops = usePlayerStore((state) => state.pendingAssetDrops);
   const elementsRef = useRef(timelineElements);
   const dropScopeRef = useRef(0);
   elementsRef.current = timelineElements;
@@ -109,7 +110,7 @@ export function useTimelineAssetDropOps({
       );
       return pendingAssetDrops.length === state.pendingAssetDrops.length ? state : { pendingAssetDrops };
     });
-  }, [timelineElements, timelineReady]);
+  }, [timelineElements, timelineReady, pendingDrops]);
   // fallow-ignore-next-line complexity
   const dropAssetAt = useCallback(
     // fallow-ignore-next-line complexity
@@ -118,13 +119,16 @@ export function useTimelineAssetDropOps({
       placement: TimelineDropPlacement,
       durationOverride?: number,
       gesture: DropGesture = { placed: [], onNewTrack: false },
+      existingPendingId?: string,
     ): Promise<TimelineElement | undefined> => {
       if (isRecordingRef?.current) {
+        if (existingPendingId) finishPendingAssetDrop(existingPendingId);
         showToast("Cannot edit timeline while recording", "error");
         return undefined;
       }
       const targetPath = activeCompPath || "index.html";
       if (checkEditable && !checkEditable([timelineDropTarget(targetPath, placement)])) {
+        if (existingPendingId) finishPendingAssetDrop(existingPendingId);
         return undefined;
       }
       const pid = projectIdRef.current;
@@ -132,12 +136,13 @@ export function useTimelineAssetDropOps({
 
       const kind = getTimelineAssetKind(assetPath);
       if (!kind) {
+        if (existingPendingId) finishPendingAssetDrop(existingPendingId);
         showToast("Only image, video, and audio assets can be dropped onto the timeline.");
         return undefined;
       }
 
-      const pendingId = beginPendingAssetDrop(assetPath, placement, durationOverride);
-      const stillActive = () => usePlayerStore.getState().pendingAssetDrops.some((drop) => drop.id === pendingId);
+      const pendingId = existingPendingId ?? beginPendingAssetDrop(assetPath, placement, durationOverride);
+      const stillActive = () => isPendingAssetDropActive(pendingId);
       try {
         const normalizedStart = Number(formatTimelineAttributeNumber(placement.start));
         const duration =
@@ -226,7 +231,7 @@ export function useTimelineAssetDropOps({
           id: newId, key, domId: newId, sourceFile: targetPath,
           tag, start, duration: normalizedDuration, track: lane, authoredTrack: track,
         };
-        updatePendingAssetDrop(pendingId, { element });
+        finishPendingAssetDrop(pendingId, element);
         if (!stillActive()) return element;
         selectAndRevealTimelineElement(key);
         forceReloadSdkSession?.();
@@ -234,7 +239,7 @@ export function useTimelineAssetDropOps({
         return element;
       } catch (error) {
         if (!stillActive()) return undefined;
-        updatePendingAssetDrop(pendingId, { failed: "add" });
+        finishPendingAssetDrop(pendingId);
         const message =
           error instanceof Error ? error.message : "Failed to drop asset onto timeline";
         showToast(message);
@@ -267,6 +272,7 @@ export function useTimelineAssetDropOps({
   const handleTimelineFileDrop = useCallback(
     // fallow-ignore-next-line complexity
     async (files: File[], placement?: TimelineDropPlacement) => {
+      if (!files.length) return;
       if (isRecordingRef?.current) {
         showToast("Cannot edit timeline while recording", "error");
         return;
@@ -279,16 +285,31 @@ export function useTimelineAssetDropOps({
       const pid = projectIdRef.current;
       if (!pid) return;
       const scope = dropScopeRef.current;
-      const uploaded = await uploadProjectFiles(files);
+      const uploadingId = beginPendingAssetDrop(files.map(file => file.name).join(" · "), initialPlacement);
+      let uploaded: string[];
+      try { uploaded = await uploadProjectFiles(files); }
+      catch (error) {
+        if (!isPendingAssetDropActive(uploadingId)) return;
+        finishPendingAssetDrop(uploadingId);
+        showToast(error instanceof Error ? error.message : "Upload failed: network error", "error");
+        return;
+      }
       if (scope !== dropScopeRef.current) return;
-      if (uploaded.length === 0) return;
+      if (uploaded.length === 0) { finishPendingAssetDrop(uploadingId); return; }
+      // The upload returns accepted paths only; do not guess which rejected filename they replace.
+      dismissPendingAssetDrop(uploadingId);
+      const pendingIds = uploaded.map(path => beginPendingAssetDrop(path, initialPlacement));
       const gesture: DropGesture = { placed: [], onNewTrack: false };
       for (const [index, assetPath] of uploaded.entries()) {
+        if (scope !== dropScopeRef.current) return;
+        const nextPlacement = fileDropPlacement(index, initialPlacement, placement, gesture.placed.at(-1));
+        updatePendingAssetDrop(pendingIds[index], { placement: nextPlacement });
         const clip = await dropAssetAt(
           assetPath,
-          fileDropPlacement(index, initialPlacement, placement, gesture.placed.at(-1)),
+          nextPlacement,
           undefined,
           gesture,
+          pendingIds[index],
         );
         if (!clip) continue;
         gesture.placed.push(clip);
@@ -318,8 +339,10 @@ export function useTimelineAssetDropOps({
       }
       const pid = projectIdRef.current;
       if (!pid) throw new Error("No active project");
+      const pendingId = beginPendingAssetDrop(sourcePath, placement);
+      const isActive = () => isPendingAssetDropActive(pendingId);
       try {
-        await commitTimelineCompositionInsertion({
+        const element = await commitTimelineCompositionInsertion({
           projectId: pid,
           targetPath,
           sourcePath,
@@ -331,9 +354,12 @@ export function useTimelineAssetDropOps({
           selectHost: selectAndRevealTimelineElement,
           resync: forceReloadSdkSession,
           refresh: reloadPreview,
+          isActive,
         });
-        showToast("Composition added to the timeline.", "info");
+        if (element && isActive()) finishPendingAssetDrop(pendingId, element);
       } catch (error) {
+        if (!isActive()) return;
+        finishPendingAssetDrop(pendingId);
         showToast(compositionInsertionFailureMessage(error), "error");
       }
     },

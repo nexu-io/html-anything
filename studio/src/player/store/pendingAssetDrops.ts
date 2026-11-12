@@ -22,14 +22,13 @@ export function beginPendingAssetDrop(
   const id = generateId();
   usePlayerStore.setState((state) => {
     const kind = getTimelineAssetKind(assetPath);
-    const pending = state.pendingAssetDrops.filter((drop) =>
+    // Show feedback at the drop time; the save resolves collisions once metadata is known.
+    const busy = state.pendingAssetDrops.filter((drop) =>
       (!drop.failed || drop.element) && drop.placement.insertRow === placement.insertRow,
     ).map((drop) => drop.element ?? {
       id: drop.id, tag: getTimelineAssetKind(drop.assetPath) ?? "div",
       ...drop.placement, duration: drop.duration ?? 5,
-    });
-    const busy = [...(placement.insertRow == null ? state.elements : []), ...pending]
-      .filter((element) => (element.tag === "audio") === (kind === "audio"));
+    }).filter((element) => (element.tag === "audio") === (kind === "audio"));
     const start = resolveNearestFreeStart(busy, placement.track, placement.start, duration ?? 5, null);
     return { pendingAssetDrops: [...state.pendingAssetDrops, {
       id, assetPath, placement: { ...placement, start }, duration,
@@ -42,6 +41,17 @@ export function updatePendingAssetDrop(id: string, patch: Partial<PendingAssetDr
   usePlayerStore.setState((state) => ({
     pendingAssetDrops: state.pendingAssetDrops.map((drop) => drop.id === id ? { ...drop, ...patch } : drop),
   }));
+}
+
+export function isPendingAssetDropActive(id: string): boolean {
+  return usePlayerStore.getState().pendingAssetDrops.some((drop) => drop.id === id);
+}
+
+export function finishPendingAssetDrop(id: string, element?: TimelineElement): void {
+  updatePendingAssetDrop(id, element ? {
+    element, duration: element.duration,
+    placement: { start: element.start, track: element.track },
+  } : { failed: "add" });
 }
 
 export function dismissPendingAssetDrop(id: string): void {

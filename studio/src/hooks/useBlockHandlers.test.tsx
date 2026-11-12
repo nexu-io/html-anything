@@ -4,6 +4,7 @@ import React, { act } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { mountReactHarness } from "./domSelectionTestHarness";
 import { useBlockHandlers, type UseBlockHandlersResult } from "./useBlockHandlers";
+import { usePlayerStore } from "../player/store/playerStore";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -16,6 +17,7 @@ vi.mock("../utils/blockInstaller", () => ({
 
 afterEach(() => {
   document.body.innerHTML = "";
+  usePlayerStore.getState().reset();
 });
 
 describe("useBlockHandlers", () => {
@@ -56,10 +58,9 @@ describe("useBlockHandlers", () => {
     });
 
     expect(events).toEqual([
-      "show Adding x-post…",
       "show Installing catalog items needs hyperframes preview",
-      "dismiss 1",
     ]);
+    expect(usePlayerStore.getState().pendingAssetDrops[0].failed).toBe("add");
     act(() => root.unmount());
   });
 });
