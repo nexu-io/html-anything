@@ -7,6 +7,10 @@
   "requires_local_executor": true,
   "interface": {
     "displayName": "OpenMotion",
-    "shortDescription": "用 OpenMotion 制作、复刻和编辑视频"
+    "shortDescription": "用 OpenMotion 制作、复刻和编辑视频",
+    "composerIcon": "./docs/readme/opendesign-symbol-auto.svg",
+    "composerIconDark": "./docs/readme/opendesign-symbol-dark.svg",
+    "logo": "./docs/readme/opendesign-symbol-auto.svg",
+    "logoDark": "./docs/readme/opendesign-symbol-dark.svg"
   }
 }

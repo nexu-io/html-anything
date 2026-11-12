@@ -450,7 +450,7 @@ export const distributionDocuments = [
   'docs/usage.md', 'docs/motion-md.md', 'docs/motion-md.zh-CN.md',
   'docs/collections/README.md', 'docs/collections/README.zh-CN.md',
   'docs/examples/product-launch.MOTION.md', 'docs/examples/product-launch.MOTION.zh-CN.md',
-  'docs/readme/ASSETS.md', 'docs/readme/opendesign-symbol.svg',
+  'docs/readme/ASSETS.md', 'docs/readme/opendesign-symbol.svg', 'docs/readme/opendesign-symbol-dark.svg', 'docs/readme/opendesign-symbol-auto.svg',
   'docs/readme/reverse-engineering-cover.md',
   'docs/readme/cover-reverse-engineering.png', 'docs/readme/cover-reverse-engineering-v2.png',
   'docs/readme/collaboration-concept-v2.png',

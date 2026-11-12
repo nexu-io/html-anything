@@ -86,6 +86,11 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).description,
       (await json('.codex-plugin/plugin.json')).description);
+    const pluginInterface = (await json(path.join(application, '.codex-plugin/plugin.json'))).interface;
+    for (const field of ['logo', 'logoDark', 'composerIcon', 'composerIconDark']) {
+      const filename = pluginInterface[field];
+      assert.equal(await readFile(path.join(application, filename), 'utf8'), await readFile(filename, 'utf8'));
+    }
     assert.equal((await json(path.join(application, 'package-lock.json'))).packages[''].version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).version, version);
     assert.equal((await json(path.join(installer, 'package/package.json'))).private, false);

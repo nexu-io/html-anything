@@ -105,7 +105,7 @@ export async function exportAdapters(runtimePath: string, dataPath: string, outp
           description: manifestDescription ?? 'OpenMotion with the shared local MCP runtime.',
           author: { name: 'OpenDesign' }, skills: './skills/', mcpServers: './.mcp.json' };
         text(`.${host}-plugin/plugin.json`, host === 'codex' ? { ...manifest, requires_local_executor: true,
-          interface: { displayName: 'OpenMotion', shortDescription: manifestShortDescription ?? 'OpenMotion production with the shared local runtime.' } } : manifest);
+          interface: { ...runtimeInterface, displayName: 'OpenMotion', shortDescription: manifestShortDescription ?? 'OpenMotion production with the shared local runtime.' } } : manifest);
         text('.mcp.json', host === 'codex' ? { mcpServers: { openmotion: info.transport } } : integrationConfig(info, 'mcp').text);
       }
       const directory = path.join(output, host, 'openmotion');

@@ -55,6 +55,15 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
         assert.equal(manifest.requires_local_executor, true);
         assert.equal(manifest.interface.displayName, 'OpenMotion');
         assert.equal(manifest.interface.shortDescription, sourceManifest.interface.shortDescription);
+        for (const field of ['logo', 'logoDark', 'composerIcon', 'composerIconDark']) {
+          const filename = manifest.interface[field];
+          assert.equal(filename, sourceManifest.interface[field]);
+          const icon = await readFile(path.join(plugin, filename), 'utf8');
+          assert.equal(icon, await readFile(path.join(source, filename), 'utf8'));
+          assert.match(icon, /viewBox="0 0 291 291"/);
+          assert.match(icon, field.endsWith('Dark') ? /fill="#ffffff"/ : /fill="#202020"/);
+          if (!field.endsWith('Dark')) assert.match(icon, /@media \(prefers-color-scheme: dark\)/);
+        }
         assert.deepEqual(config, launch);
         const marketplace = JSON.parse(await readFile(path.join(output, host, '.agents/plugins/marketplace.json'), 'utf8'));
         assert.deepEqual(marketplace.plugins[0], { name: 'openmotion', source: { source: 'local', path: './openmotion' },

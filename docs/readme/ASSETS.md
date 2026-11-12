@@ -39,6 +39,8 @@ The local agent gallery and setup buttons use client marks from the [source icon
 | Bundled template frames | Product Promo, NYT Graph and Decision Tree remain available through the [editable-template index](../../library/templates/README.md); their original projects, posters and [notices](../../template-library/NOTICE.md) are unchanged. |
 | Contributor wall | Local 23-avatar [snapshot](contributors/manifest.json), captured from the GitHub contributors API on 2026-11-09. Includes repository history; profile links remain external, image bytes are local. |
 | [OpenDesign symbol](opendesign-symbol.svg) | Unmodified upstream [CDN asset](https://r.open-design.ai/files/1257306170d14488e993cb1f97b86aad8840a3f866f1978e0fd24b9a3c7832d8); retained for provenance, not used as a newly designed OpenMotion mark. SHA-256: `1257306170d14488e993cb1f97b86aad8840a3f866f1978e0fd24b9a3c7832d8`. |
+| [Dark-background symbol](opendesign-symbol-dark.svg) | The same upstream symbol with fill changed to `#ffffff` for dark backgrounds; geometry unchanged. The Codex plugin and MCP metadata use these square light/dark symbols, matching the symbol in the OpenMotion wordmark. |
+| [Automatic-theme symbol](opendesign-symbol-auto.svg) | The same symbol with an embedded `prefers-color-scheme` rule: dark gray by default and pure white on dark backgrounds. Used by the plugin's default logo/composer icon so host surfaces that omit the separate dark logo still adapt. Geometry unchanged. |
 
 All README images have descriptive alternative text. Artwork, product evidence and reference works are labeled separately. Preserve reference previews and authors rather than repainting their content for brand consistency.
 
