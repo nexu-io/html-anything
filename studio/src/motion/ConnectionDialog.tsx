@@ -9,7 +9,7 @@ import '../../../web/design-system/controls.css';
 import '../../../web/connect.css';
 import '../../../web/template-gallery.css';
 
-type Props = { open: boolean; section?: 'setup' | 'templates'; busy: boolean; error: string; returnFocus?: HTMLElement | null; onClose: () => void; onOpen: (id: string) => void };
+type Props = { open: boolean; section?: 'setup' | 'templates'; busy: boolean; openingDisabled?: boolean; error: string; returnFocus?: HTMLElement | null; onClose: () => void; onOpen: (id: string) => void };
 
 /** The original integration page lives inside one modal; Studio stays mounted beneath it. */
 export function ConnectionDialog(props: Props) {
@@ -30,7 +30,7 @@ function LegacyConnectionDialog(props: Props) {
       t, locale,
       initialHost: new URLSearchParams(location.search).get('host'),
       close: () => { if (!callbacks.current.busy) callbacks.current.onClose(); },
-      useTemplate: id => { if (!callbacks.current.busy) callbacks.current.onOpen(id); },
+      useTemplate: id => { if (!callbacks.current.busy && !callbacks.current.openingDisabled) callbacks.current.onOpen(id); },
     });
     if (mvp) {
       // Keep the shared gallery controller, previews and attribution links.
