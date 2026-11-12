@@ -51,6 +51,8 @@ Copy this instruction into your local agent to install OpenMotion:
 Read https://releases.open-design.ai/open-motion/install.md and follow the instructions to install and connect OpenMotion in the current agent.
 ```
 
+After installation, the agent offers a template to try. Confirm the choice before creating a project. [Installation and first-run guide](docs/install.md#installation-success-reply)
+
 <a id="agent-wall"></a>
 
 **22 local agents** · [Choose your agent](#choose-agent)
@@ -59,8 +61,6 @@ Read https://releases.open-design.ai/open-motion/install.md and follow the instr
 
 <a id="showcase"></a> <a id="brand-before-after"></a> <a id="what-can-you-make"></a>
 <a id="use-cases-and-remake-examples"></a>
-
-The plugin and MCP server are named `openmotion`; Tools, Skills and resources use `openmotion_*`, `openmotion-*` and `openmotion://`. Existing names remain explicit compatibility aliases. See [naming and installation compatibility](docs/npm-installation.md#public-names-and-compatibility).
 
 ## 🎞️ Use cases and remake examples
 
@@ -448,6 +448,8 @@ Try an online template:
 To start from a video instead, supply your reference and use the [recreation brief](#reverse-engineer-a-video). If your host cannot open Studio beside the conversation, use the returned local project link.
 
 ##### Skills, MCP and CLI
+
+The plugin and MCP server are named `openmotion`; Tools, Skills and resources use `openmotion_*`, `openmotion-*` and `openmotion://`. Existing names remain explicit compatibility aliases. See [naming and installation compatibility](docs/npm-installation.md#public-names-and-compatibility).
 
 From the checkout, discover and install the five core workflows with the [Skills CLI](https://github.com/vercel-labs/skills):
 

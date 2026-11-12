@@ -312,4 +312,4 @@ Downstream publication jobs consume immutable producer artifact IDs retained acr
 
 README 保持场景示例、四项产品能力、技术文档、社区的顺序。真人出镜参考保留本地预览，暂不提供线上模板入口；Motion 场景使用 `https://open-design.ai/templates/` 当前公开条目，每张卡片只有一个对应详情页链接。在线参考预览不表示 OpenMotion 已生成复刻结果，也不表示该参考包含可编辑源码。旧 Library 资源仍保留在仓库，但不作为当前线上目录数量或入口。
 
-产品界面使用已安装的 0.6.5 运行时、隔离演示工作区和生产模板目录，分别记录中、英、日三种语言的模板库、详情和复刻指令。截图与模板预览的来源和 SHA-256 记录在 `docs/readme/live-product/manifest.json` 与 `docs/readme/live-templates/manifest.json`，随文档分发并由资源校验脚本检查。
+模板库、详情和复刻指令截图使用已安装的 0.6.5 运行时、隔离演示工作区和生产模板目录，分别记录中、英、日三种语言。全栈工作流部分另保留用户提供的真实 Studio 使用截图，其来源单独记录，不据此推断运行时版本。截图与模板预览的来源和 SHA-256 记录在 `docs/readme/live-product/manifest.json` 与 `docs/readme/live-templates/manifest.json`，随文档分发并由资源校验脚本检查。

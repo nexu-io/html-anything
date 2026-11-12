@@ -51,6 +51,8 @@ OpenMotion は、**エージェントが動画制作の全工程を担う初の�
 https://releases.open-design.ai/open-motion/install.md を読み、手順に従って現在のエージェントに OpenMotion をインストールして接続してください。
 ```
 
+インストール後、エージェントが試せるテンプレートを提案します。選択を確認してからプロジェクトを作成します。[インストールと初回利用ガイド](install.md#installation-success-reply)
+
 <a id="agent-wall"></a>
 
 **22 種類のローカルエージェントに対応** · [エージェントを選ぶ](#choose-agent)
@@ -448,6 +450,8 @@ bash scripts/install-motion.command
 動画から始める場合は、参考と[再構築ブリーフ](#reverse-engineer-a-video)を渡してください。ホストが会話の横に Studio を開けない場合は、返されたローカルプロジェクトのリンクを使います。
 
 ##### Skills、MCP、CLI
+
+プラグインと MCP サーバーの名前は `openmotion` です。Tools、Skills、リソースはそれぞれ `openmotion_*`、`openmotion-*`、`openmotion://` を使います。旧名称は互換エイリアスとして残ります。[名称とインストールの互換性](npm-installation.md#public-names-and-compatibility)
 
 チェックアウトから [Skills CLI](https://github.com/vercel-labs/skills) を使い、5 つの基本ワークフローを確認・インストールできます：
 

@@ -51,6 +51,8 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 阅读 https://releases.open-design.ai/open-motion/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
 ```
 
+安装完成后，Agent 会推荐一个模板供你体验，确认选择后再创建工程。[安装与首次使用指南](install.md#installation-success-reply)
+
 <a id="agent-wall"></a>
 
 **22 个本地 Agent** · [选择你的 Agent](#choose-agent)
@@ -446,6 +448,8 @@ bash scripts/install-motion.command
 要从视频开始，请提供参考并使用[复刻简报](#reverse-engineer-a-video)。宿主无法在对话旁打开 Studio 时，可使用返回的本地工程链接。
 
 ##### Skills、MCP 与 CLI
+
+插件与 MCP 服务名称为 `openmotion`；Tools、Skills 与资源分别使用 `openmotion_*`、`openmotion-*` 和 `openmotion://`。旧名称仍作为兼容别名保留。[命名与安装兼容说明](npm-installation.md#public-names-and-compatibility)
 
 在 checkout 中发现并安装五个核心工作流，使用 [Skills CLI](https://github.com/vercel-labs/skills):
 
