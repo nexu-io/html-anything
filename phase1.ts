@@ -31,10 +31,10 @@ function previewHandoff(origin: string, target: { projectId: string; sessionId: 
   const background = presentation === 'background';
   const now = presentation === 'now';
   const onReturn = { tool: 'openmotion_open_preview', arguments: { projectId: target.projectId } };
-  const deferred = !now && display?.visibility !== 'visible' && (display?.hostStatus === 'queued' || display?.visibility === 'queued');
+  const deferred = !now && display?.visibility === 'queued';
   const recovery = now ? { when: 'hidden_after_queued_ack', tool: 'navigate_to_codex_page', scope: 'calling_chat_only',
     threadIdFrom: 'open_in_codex.response.threadId', then: 'present_same_tab_and_recheck_visibility' } :
-    { when: 'calling_chat_not_visible', operation: 'wait_for_calling_chat', onReturn };
+    { when: 'calling_chat_confirmed_inactive', operation: 'wait_for_calling_chat', onReturn };
   return { ...target, previewUrl, placement: 'right', reuseExistingTab: true, presentation,
     focusPolicy: background ? 'background' : now ? 'switch_to_calling_chat' : 'preserve_current_chat',
     state: background ? 'background' : confirmed ? 'confirmed' : 'pending', openedByHost: confirmed,
@@ -42,7 +42,7 @@ function previewHandoff(origin: string, target: { projectId: string; sessionId: 
     nextAction: background || confirmed ? null : deferred ? { kind: 'host', operation: 'wait_for_calling_chat', onReturn } : prepared ? { kind: 'host', operation: 'present_preview',
       previewUrl, placement: 'right', reuseExistingTab: true, codex: { tool: 'open_in_codex', arguments: {
         placement: 'right', target: { type: 'browser', url: previewUrl, ...(hostTabId ? { tabId: hostTabId } : {}) } },
-        tabIdentity: 'Validate any stored Tab ID against the current host inventory; reuse the actual native host Tab ID (providerTabId), never a CUA wrapper id. After presenting, rebind the matching native panel tab before observing visibility; a hidden browser-use tab is separate.',
+        tabIdentity: 'Validate any stored Tab ID against the current host inventory; reuse the actual native host Tab ID (providerTabId), never a CUA wrapper id. After presenting, rebind the matching native panel tab before observing visibility. A separate visible:false or browser-use: automation tab and markDeliverable do not satisfy presentation; if the native project tab is missing, retry the same host presentation once, then report the gap.',
         visibilitySync: { capability: 'visibility', method: 'set', value: true,
           when: 'after_binding_native_tab', scope: 'calling_chat_only', navigation: false },
         observation: { visibility: 'get', settleTimeoutMs: 6000, content: 'latest_live_preview', recheckVisibilityAfterContent: true },
@@ -50,8 +50,8 @@ function previewHandoff(origin: string, target: { projectId: string; sessionId: 
       projectId: target.projectId, expectedRevision: target.revision, expectedVersionId: target.versionId, presentation } },
     instructions: background ? 'Keep this edit in the background as explicitly requested by the user.' :
       (now ? 'The user explicitly requested immediate display for this turn; current-chat recovery may navigate to the calling chat. ' :
-        'Preserve the current chat. Queue the preview for its calling chat without navigating; if queued or hidden, wait for the user to return. On return, prepare the latest project version rather than replaying an old version-bound action. ') +
-      'Bind the native project tab and request Codex IAB visibility for the calling chat without navigation; inactive chats queue this request. Observe settled visibility and changed live content/time, recheck visibility, then record_display for the currently observed revision/version. A queued acknowledgment alone is not display confirmation. Follow openmotion://workflow/production/native#continuing-edits.' };
+        'Preserve the current chat. Wait for return only when the host confirms the calling chat is inactive; queued acknowledgment or hidden panel alone does not establish inactivity. On return, prepare the latest project version rather than replaying an old version-bound action. ') +
+      'For first delivery and continued edits, bind the native project tab and request Codex IAB visibility for the calling chat without navigation. Observe settled visibility and changed live content/time, recheck visibility, then record_display for the currently observed revision/version. Use visibility=queued only for confirmed inactive-chat deferral; otherwise record hidden or unavailable and report the display failure. Hidden-tab playback, markDeliverable and completed MP4 export do not complete editor delivery. Follow openmotion://workflow/production/native#continuing-edits.' };
 }
 function cursor(value: any) { return Buffer.from(JSON.stringify(value)).toString('base64url'); }
 function parseCursor(value: string | undefined, kind: string, scope: string) {
@@ -227,7 +227,7 @@ export class Phase1Service {
     const current = await this.detail(detail.projectId);
     if (current.revision !== detail.revision || current.currentVersionId !== detail.currentVersionId) throw new Error('VERSION_CONFLICT: content changed during display confirmation');
     return { projectId: detail.projectId, changed: false, previewHandoff: previewHandoff(this.context.origin(), {
-      projectId: detail.projectId, sessionId: detail.sessionId, revision: detail.revision, versionId: detail.currentVersionId }, args.presentation, record, true, display.previewUrl), display: record };
+      projectId: detail.projectId, sessionId: detail.sessionId, revision: detail.revision, versionId: detail.currentVersionId }, args.presentation, record, true, display.previewUrl, record.hostTabId), display: record };
   }
   async review(args: any, objectId?: string) {
     if (!args.review) throw new Error('INVALID_ARGUMENT: review is required');

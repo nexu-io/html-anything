@@ -129,7 +129,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.match(await readFile(path.join(application, 'skills/motion-production/agents/openai.yaml'), 'utf8'), /allow_implicit_invocation: false/);
     assert.match(await readFile(path.join(application, 'skills/motion-production/SKILL.md'), 'utf8'), /disable-model-invocation: true/);
     assert.match(await readFile(path.join(application, 'skills/openmotion-production/agents/openai.yaml'), 'utf8'), /OpenMotion Production/);
-    for (const document of ['skills/openmotion-director/SKILL.md', 'skills/openmotion-production/references/context.md']) {
+    for (const document of ['skills/openmotion-director/SKILL.md', 'skills/openmotion-production/references/context.md', 'skills/openmotion-production/references/native.md', 'skills/openmotion-production/references/verification.md', 'skills/openmotion-recreate/SKILL.md', 'phase1.ts', 'shared/phase1-tools.ts', 'shared/mcp-profiles.json']) {
       assert.equal(await readFile(path.join(application, document), 'utf8'), await readFile(document, 'utf8'));
     }
     assert.equal(await sha256(path.join(application, 'package-lock.json')), release.locks.npm);
