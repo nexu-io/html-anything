@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { constants, createReadStream, createWriteStream } from "node:fs";
+import { constants, createReadStream, createWriteStream, readFileSync } from "node:fs";
 import { copyFile, mkdir, mkdtemp, realpath, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -183,3 +183,35 @@ it("moves a real granted ZIP across namespaces, imports one complete independent
   expect(report.phase).toBe("closed");
   expect(report.workloads).toEqual([]);
 }, 30000);
+
+it("relocates original font bytes and verified metadata through the existing atomic source receipt", async () => {
+  const font = JSON.parse(readFileSync(new URL("../../templates/src/native/fonts.json", import.meta.url), "utf8"))
+    .faces[0] as { data: string };
+  const root = await mkdtemp(join(tmpdir(), "portable-font-")),
+    db = new Workspace(root);
+  try {
+    const bytes = Buffer.from(font.data, "base64"),
+      archive = prepare({
+        files: initialFiles(),
+        resources: [{ path: "assets/inter.woff2", name: "Original font", bytes }],
+      }),
+      payload = await read(archive.chunks(), archive.digest),
+      session = db.execute("session_create", { requestId: randomUUID(), title: "Imported", mode: "motion" }),
+      intent = {
+        requestId: randomUUID(),
+        sessionId: session.id,
+        title: "Font",
+        source: { id: "font-fixture", contentHash: archive.digest },
+      },
+      artifact = db.createSource(intent, payload),
+      owner = { sessionId: session.id, artifactId: artifact.id },
+      project = db.execute("project_read", owner),
+      restored = db.execute("resource_read", { ...owner, revision: project.revision, path: "assets/inter.woff2" });
+    expect(restored.resource.type).toBe("font/woff2");
+    expect(Buffer.from(restored.data, "base64")).toEqual(bytes);
+    expect(db.createSource(intent, { files: [], resources: [] })).toEqual(artifact);
+    expect(db.execute("project_read", owner)).toEqual(project);
+  } finally {
+    db.close();
+  }
+});

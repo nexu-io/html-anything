@@ -34,6 +34,14 @@ export const patchInput = inspectInput.extend({
   start: z.number().finite().nonnegative().optional(),
   duration: z.number().finite().positive().optional(),
   fontSize: z.number().finite().positive().max(4096).optional(),
+  fontFamily: z
+    .string()
+    .trim()
+    .min(1)
+    .max(120)
+    .regex(/^[^\p{Cc}]+$/u)
+    .nullable()
+    .optional(),
   appearance: appearanceInput.optional(),
   audio: audioInput.optional(),
 });
@@ -158,6 +166,7 @@ export interface Clip {
   duration: number | null;
   composition: boolean;
   fontSize: number | null;
+  fontFamily: string | null;
   appearance: Appearance;
   animations: Animation[];
   animationReason: string | null;

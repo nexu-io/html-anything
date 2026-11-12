@@ -1,6 +1,6 @@
 import { previewFrame, previewViewport } from "@open-motion/components";
 import { inspectRuntimeProtocol, runtimeProtocolMetadata } from "@open-motion/motion/protocol";
-import type { Project } from "@open-motion/workspace/contract";
+import { isFontResource, type Project } from "@open-motion/workspace/contract";
 import type { Client } from "../../api.js";
 /** The only Web owner for candidate frames, runtime messages and ephemeral view retirement. */
 export class NativePreview {
@@ -143,12 +143,28 @@ export class NativePreview {
     viewport.content.append(frame);
     try {
       const fps = await new Promise<number>((done, reject) => {
+        let nativeFps: number | undefined,
+          fontsReady = !project.resources.some(isFontResource);
         const cleanup = () => {
           clearTimeout(timer);
           window.removeEventListener("message", message);
           this.candidate = undefined;
         };
         const message = (event: MessageEvent) => {
+          if (event.source !== frame.contentWindow || event.origin !== "null") return;
+          if (event.data?.source === "open-motion-fonts" && event.data.protocolVersion === 1) {
+            if (event.data.ready === false) {
+              cleanup();
+              reject(new Error("工程字体加载失败"));
+              return;
+            }
+            if (event.data.ready === true) fontsReady = true;
+            if (nativeFps && fontsReady) {
+              cleanup();
+              done(nativeFps);
+            }
+            return;
+          }
           if (
             event.source !== frame.contentWindow ||
             event.origin !== "null" ||
@@ -172,8 +188,11 @@ export class NativePreview {
             Number.isFinite(event.data.durationSeconds) &&
             event.data.durationSeconds > 0
           ) {
-            cleanup();
-            done(protocol.fps);
+            nativeFps = protocol.fps;
+            if (fontsReady) {
+              cleanup();
+              done(nativeFps);
+            }
           }
         };
         const timer = setTimeout(() => {

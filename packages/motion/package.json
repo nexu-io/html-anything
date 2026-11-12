@@ -45,7 +45,9 @@
     "@hyperframes/core": "0.9.7",
     "@hyperframes/parsers": "0.9.7",
     "@hyperframes/sdk": "0.9.7",
+    "@open-motion/workspace": "workspace:*",
     "gsap": "3.15.0",
+    "postcss": "8.5.32",
     "zod": "4.6.7"
   }
 }

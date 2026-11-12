@@ -1,6 +1,6 @@
 import { button, field, note, slot, tabs, tree } from "@open-motion/components";
 import type { Clip } from "@open-motion/motion/contract";
-import { type Input, type Resource, resourceLimit } from "@open-motion/workspace/contract";
+import { type Input, isFontResource, type Resource, resourceLimit } from "@open-motion/workspace/contract";
 
 import type { Client } from "../../../../api.js";
 import type { Editor } from "../../../editor.js";
@@ -62,7 +62,7 @@ export class StudioLibrary {
     this.mediaList = slot(document, "content");
     this.upload = document.createElement("input");
     this.upload.type = "file";
-    this.upload.accept = ".png,.wav";
+    this.upload.accept = ".png,.wav,.ttf,.otf,.woff,.woff2";
     this.upload.setAttribute("aria-label", "导入媒体");
     this.upload.addEventListener("change", () => {
       const file = this.upload.files?.item(0),
@@ -72,8 +72,8 @@ export class StudioLibrary {
       let input: Omit<Input<"resource_import">, "requestId"> | undefined;
       this.editing.run(async () => {
         if (!input) {
-          if (!file.size || file.size > resourceLimit || !/\.(png|wav)$/i.test(file.name))
-            throw Error("请选择不超过 6 MiB 的 PNG 或 PCM16 WAV");
+          if (!file.size || file.size > resourceLimit || !/\.(png|wav|ttf|otf|woff|woff2)$/i.test(file.name))
+            throw Error("请选择不超过 6 MiB 的 PNG、PCM16 WAV 或单字体 TTF/OTF/WOFF/WOFF2");
           await this.editing.editor.save();
           const project = this.editing.editor.project;
           if (!project || project.artifactId !== owner.artifactId) throw Error("媒体导入的工程上下文已改变");
@@ -101,7 +101,10 @@ export class StudioLibrary {
     this.media.append(
       this.generation.element,
       field(document, "导入媒体", this.upload),
-      note(document, "PNG / PCM16 WAV · 单资源最多 6 MiB；素材随工程历史持久保存。"),
+      note(
+        document,
+        "PNG / PCM16 WAV / TTF / OTF / WOFF / WOFF2 · 单资源最多 6 MiB；素材随工程历史持久保存。导入字体后可在文本图层的字体选项中选择。",
+      ),
       this.mediaList,
     );
     actions.append(this.tabs.element);
@@ -188,6 +191,10 @@ export class StudioLibrary {
               },
             }),
           );
+          if (isFontResource(asset)) {
+            row.querySelector("button")!.hidden = true;
+            row.append(note(document, `${asset.family} · ${asset.weight.join("–")} · ${asset.slant}`));
+          }
           return row;
         }),
       );

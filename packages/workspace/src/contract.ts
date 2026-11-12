@@ -2,10 +2,13 @@ import { z } from "zod";
 import { type Resource, resourceData, resourcePath } from "./resources/contract.js";
 
 export {
+  type FontResource,
+  isFontResource,
   type Resource,
   resource,
   resourceBytesLimit,
   resourceCountLimit,
+  resourceFontFamily,
   resourceLimit,
 } from "./resources/contract.js";
 export const id = z.uuid();
@@ -222,7 +225,8 @@ export const descriptions: Record<Operation, string> = {
     "List five project metadata entries per page, newest creation first, with a query-bound stable cursor; never reads source or changes selection.",
   project_read: "Read native source, resource manifest, content revision and authoritative history state.",
   project_snapshot: "Reopen an explicitly owned immutable source revision without changing current content or history.",
-  resource_import: "Import a bounded, verified PNG or PCM16 WAV into the owned project revision idempotently.",
+  resource_import:
+    "Import bounded verified PNG, PCM16 WAV or a single-face TTF/OTF/WOFF/WOFF2 font into the owned revision idempotently; font metadata comes from bytes, not caller claims.",
   resource_remove:
     "Remove one resource from the current revision while preserving historical bytes for undo and existing views.",
   resource_read: "Read bytes only through the resource manifest of an explicitly owned immutable project revision.",
