@@ -4,6 +4,17 @@ import { importValidationMessage } from './importMessages';
 import { splitFailureMessage } from './editorErrors';
 import { systemMessage } from './systemMessages';
 import { languages } from './messages';
+import { SCRIPT_DEPENDENCY_DELETE_MESSAGE } from '../utils/deleteScriptDependencies';
+import { toastErrorMessage } from '../components/ui/toastErrorMessage';
+
+it('localizes script dependency deletion refusals in every editor language', () => {
+  expect(toastErrorMessage(SCRIPT_DEPENDENCY_DELETE_MESSAGE)).toBe(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  for (const { locale } of languages) {
+    const message = systemMessage(SCRIPT_DEPENDENCY_DELETE_MESSAGE, (key, values) => translate(locale, key, values));
+    if (locale === 'en') expect(message).toBe(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+    else expect(message).not.toBe(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  }
+});
 
 it('localizes rejected history restores while preserving project-relative paths', () => {
   const files = 'assets/原始配乐.wav, assets/photo.png';

@@ -1,6 +1,7 @@
 import type { Composition, GsapTweenSpec } from "@hyperframes/sdk";
 import type { DomEditSelection } from "../components/editor/domEditing";
 import type { PatchOperation } from "./sourcePatcher";
+import { assertSafeElementDeletion } from "./deleteScriptDependencies";
 import * as studioAvailability from "../components/editor/manualEditingAvailability";
 import { trackStudioEvent } from "./studioTelemetry";
 import { patchOpsToSdkEditOps } from "./sdkOpMapping";
@@ -592,7 +593,10 @@ export async function sdkDeletePersist(
     targetPath,
     originalContent,
     deps,
-    (session) => session.removeElement(hfId),
+    (session) => {
+      assertSafeElementDeletion(session.serialize(), [{ hfId }]);
+      session.removeElement(hfId);
+    },
     { label: "Delete element" },
   );
   trackCutoverResult(result, "lifecycle", { hfId, opCount: 1 });
