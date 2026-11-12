@@ -125,10 +125,11 @@ export function setPreviewMediaMuted(iframe: HTMLIFrameElement | null, muted: bo
   if (!iframe) return;
   try {
     const host = resolvePreviewPlayerHost(iframe);
-    if (host && typeof host.muted === "boolean") {
+    if (host && typeof host.muted === "boolean" && host.muted !== muted) {
       host.muted = muted;
       return;
     }
+    // An unchanged host preference may still need to apply newly edited clip mutes.
     postPreviewControl(iframe, "set-muted", { muted });
   } catch {}
 }
