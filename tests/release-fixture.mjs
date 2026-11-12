@@ -19,6 +19,8 @@ export async function candidateFixture(t, branch = 'main', options = {}) {
   const application = path.join(pkg, 'payload', `openmotion-application-${version}-${templateEnvironment}.tar.gz`);
   await runFile('tar', ['-czf', application, '-C', app, '.']);
   const manifest = { schemaVersion: 1, version, format: 'npm', templateEnvironment, commit,
+    mcp: { tools: Array.from({ length: 11 }, (_, index) => `openmotion_tool_${index}`) },
+    skills: options.skills || ['production', 'director', 'template-to-video', 'recreate', 'video-to-template'].flatMap(name => ['openmotion-' + name, 'motion-' + name]),
     application: { url: './' + path.basename(application), sha256: await sha256(application) },
     locks: { npm: await sha256(path.join(app, 'package-lock.json')), native: await sha256(path.join(app, 'scripts/runtime-lock.json')) },
     runtime: { targets: { mac: { platform: 'darwin', arch: 'arm64' } } } };
@@ -41,7 +43,7 @@ export async function candidateFixture(t, branch = 'main', options = {}) {
   await writeJSON(path.join(directory, 'authorization.json'), authorization);
   for (const platform of ['darwin-arm64', 'win32-x64']) await writeJSON(path.join(directory, `registry-${platform}.json`), {
     status: 'passed', templateEnvironment, platform, version, sourceCommit: commit, tgzSHA256: candidate.tgzSHA256,
-    registryColdInstall: 'passed', nativePreparation: 'passed', repeatSetup: 'passed', resources: 'passed', mcpTools: 11, skills: 5,
+    registryColdInstall: 'passed', nativePreparation: 'passed', repeatSetup: 'passed', resources: 'passed', mcpTools: manifest.mcp.tools.length, skills: manifest.skills.length,
   });
   await writeJSON(path.join(directory, 'npm-publication.json'), { tgzSHA256: candidate.tgzSHA256, previousLatest: '0.5.0' });
   await writeJSON(path.join(directory, 'test-promotion.json'), { version, tgzSHA256: candidate.tgzSHA256, action: inputs.action, publicationRun: publicationEnv.GITHUB_RUN_ID, status: 'already-promoted' });

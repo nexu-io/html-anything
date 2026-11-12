@@ -304,6 +304,7 @@ export async function promoteTest(directory, inputs, { fetcher = fetch, run = ru
 
 export async function stableReports(directory, candidate) {
   channelVersion(candidate.version, 'stable');
+  const manifest = await json(path.join(directory, 'release-npm.json'));
   const reports = [];
   for (const platform of ['darwin-arm64', 'win32-x64']) {
     const file = path.join(directory, `registry-${platform}.json`), report = await json(file);
@@ -311,7 +312,8 @@ export async function stableReports(directory, candidate) {
     for (const key of ['version', 'sourceCommit', 'tgzSHA256']) assert.equal(report[key], candidate[key], 'Native report mismatch: ' + key);
     assert.equal(report.templateEnvironment, 'prod');
     for (const key of ['registryColdInstall', 'nativePreparation', 'repeatSetup', 'resources']) assert.equal(report[key], 'passed', 'Native check failed: ' + key);
-    assert.equal(report.mcpTools, 11); assert.equal(report.skills, 5);
+    assert.equal(report.mcpTools, manifest.mcp.tools.length, 'Native report mismatch: mcpTools');
+    assert.equal(report.skills, manifest.skills.length, 'Native report mismatch: skills');
     reports.push({ platform, reportSHA256: await sha256(file), report });
   }
   return reports;

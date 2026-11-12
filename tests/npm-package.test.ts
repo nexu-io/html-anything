@@ -9,6 +9,7 @@ import { extractArchive, runFile, sha256 } from '../scripts/runtime-assets.mjs';
 import { protocolClient } from '../scripts/smoke-test-package.mjs';
 import { packagedSkills } from '../shared/workflow.ts';
 import { mcpRegistry } from '../mcp.ts';
+import { stableReports } from '../.github/scripts/motion-release.mjs';
 
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
 async function verifyTrackingPolicy(application: string, mode: 'test' | 'stable') {
@@ -185,7 +186,15 @@ test('stable artifacts stage publication instead of replacing latest and retain 
     const built = await packageNpm(path.join(directory, 'build'), '0.6.4');
     await extractArchive(built.installer, path.join(directory, 'npm'));
     const metadata = await json(path.join(directory, 'npm/package/package.json'));
-    assert.equal((await json(built.manifest)).templateEnvironment, 'prod');
+    const release = await json(built.manifest);
+    assert.equal(release.templateEnvironment, 'prod');
+    const identity = { version: release.version, sourceCommit: release.commit, tgzSHA256: release.installer.sha256 };
+    for (const platform of ['darwin-arm64', 'win32-x64']) await writeFile(path.join(path.dirname(built.manifest), `registry-${platform}.json`), JSON.stringify({
+      ...identity, platform, status: 'passed', templateEnvironment: release.templateEnvironment,
+      registryColdInstall: 'passed', nativePreparation: 'passed', repeatSetup: 'passed', resources: 'passed',
+      mcpTools: release.mcp.tools.length, skills: release.skills.length,
+    }));
+    assert.equal((await stableReports(path.dirname(built.manifest), identity)).length, 2);
     const application = path.join(directory, 'app'); await extractArchive(built.application, application);
     const diagnosticFile = path.join(directory, 'stable-diagnostics.zip');
     await runFile(process.execPath, [path.join(application, 'scripts/diagnostics.mjs'), '--data-dir', path.join(directory, 'missing-data'), '--output', diagnosticFile]);
