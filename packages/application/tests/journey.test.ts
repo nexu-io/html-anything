@@ -149,6 +149,22 @@ it("continues installed MCP projects in the actual Web, retains history and reop
       });
     await client.connect(transport);
     return {
+      handoff: async (project: Output<"project_read">) => {
+        const result = await client.callTool({
+          name: "project_entry",
+          arguments: {
+            sessionId: project.sessionId,
+            artifactId: project.artifactId,
+            expectedRevision: project.revision,
+            expectedHistory: project.history.version,
+          },
+        });
+        if (result.isError) throw Error(JSON.stringify(result.content));
+        const handoff = result.structuredContent as { url: string; display: string; target: { artifactId: string } };
+        expect(handoff.display).toBe("unverified");
+        expect(handoff.target.artifactId).toBe(project.artifactId);
+        return handoff;
+      },
       close: async () => {
         try {
           await client.close();
@@ -192,13 +208,22 @@ it("continues installed MCP projects in the actual Web, retains history and reop
       }),
       owner = { sessionId: session.id, artifactId: artifact.id },
       initial = await mcp.call("project_read", owner),
-      state = await mcp.call("workspace_state", {});
+      state = await mcp.call("workspace_state", {}),
+      newest = await mcp.call("artifact_create", {
+        requestId: randomUUID(),
+        sessionId: session.id,
+        title: "Newer unrelated project",
+        files: initial.files,
+      });
     await mcp.call("artifact_open", {
       requestId: randomUUID(),
-      ...owner,
+      sessionId: session.id,
+      artifactId: newest.id,
       expectedSelection: state.selection.revision,
       expectedCurrent: null,
     });
+    const handoff = await mcp.handoff(initial);
+    expect((await mcp.call("workspace_state", {})).selection.artifactId).toBe(newest.id);
     driver = await browser({ evidence: f.evidence, viewport: { width: 1440, height: 1000 } });
     const page = driver.page;
     const ready = () =>
@@ -223,7 +248,8 @@ it("continues installed MCP projects in the actual Web, retains history and reop
         )
         .toBeCloseTo(0.5, 2);
     };
-    await page.goto(started.runtime.web);
+    expect(new URL(handoff.url).origin).toBe(new URL(started.runtime.web).origin);
+    await page.goto(handoff.url);
     await ready();
     await preview();
     await expect
@@ -258,6 +284,9 @@ it("continues installed MCP projects in the actual Web, retains history and reop
       files: [{ path: "index.html", content: edited + "\n<!-- MCP continuation -->" }],
     });
     await page.reload();
+    await page.locator("[aria-live]").filter({ hasText: "entry target revision or history version changed" }).waitFor();
+    expect(await page.locator("[data-artifact-id]").first().getAttribute("data-artifact-id")).toBe("");
+    await page.goto((await mcp.handoff(continued)).url);
     await ready();
     await click("源码");
     expect(await source.inputValue()).toContain("MCP continuation");
@@ -322,7 +351,9 @@ it("continues installed MCP projects in the actual Web, retains history and reop
     expect((await mcp.call("session_get", { sessionId: session.id })).artifacts.map((a) => a.id)).toContain(
       artifact.id,
     );
-    await page.goto(restarted.runtime.web);
+    const restoredHandoff = await mcp.handoff(continued);
+    expect(new URL(restoredHandoff.url).origin).toBe(new URL(restarted.runtime.web).origin);
+    await page.goto(restoredHandoff.url);
     await ready();
     await preview();
     await driver.capture("installed-restored");
@@ -343,6 +374,13 @@ it("continues installed MCP projects in the actual Web, retains history and reop
           saved: saved.revision,
           continued: continued.revision,
           history: continued.history,
+          entry: {
+            exactTarget: true,
+            newerProjectNotSubstituted: newest.id,
+            display: handoff.display,
+            staleReloadRefused: true,
+            coldRestart: true,
+          },
           native: film
             ? { job: film.id, digest: filmDigest, frames: film.result?.verification.frames }
             : "not-qualified",

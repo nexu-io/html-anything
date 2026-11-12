@@ -54,7 +54,9 @@ export async function listen(runtime: Pick<Standalone, "status" | "execute">, on
           return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: { ...result } };
         },
       );
-      register(server, (operation, input) => runtime.execute(operation, input));
+      register(server, (operation, input) => runtime.execute(operation, input), {
+        web: async () => (await runtime.status()).web,
+      });
       server.server.onclose = stop;
       return server;
     },

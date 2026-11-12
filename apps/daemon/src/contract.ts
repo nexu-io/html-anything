@@ -20,6 +20,7 @@ import {
   templateSchemas,
 } from "@open-motion/templates/contract";
 import {
+  projectEntry,
   type Operation as W,
   type Input as WI,
   type Output as WO,
@@ -72,3 +73,12 @@ export const descriptions: Record<Operation, string> = {
   export_retry: "Retry a failed, cancelled or interrupted job with its original immutable input.",
   export_download: "Issue a temporary read-only link to the verified film of a successful owned export.",
 };
+
+/** A product entry binds content identity; it carries no capability, host path or display receipt. */
+export function entryFragment(target: import("@open-motion/workspace/contract").ProjectEntry): string {
+  return `#project=${encodeURIComponent(JSON.stringify(projectEntry.parse(target)))}`;
+}
+export function parseEntry(fragment: string) {
+  if (!fragment.startsWith("#project=") || fragment.length > 1024) throw new Error("invalid project entry");
+  return projectEntry.parse(JSON.parse(decodeURIComponent(fragment.slice(9))));
+}

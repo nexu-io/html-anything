@@ -37,6 +37,9 @@ export const resourceSourceIntent = z.strictObject({
   source: z.strictObject({ id, contentHash: revision }),
 });
 export type ResourceSourceIntent = z.infer<typeof resourceSourceIntent>;
+export const projectEntry = z.strictObject({ ...owner, revision, historyVersion: z.number().int().nonnegative() });
+export type ProjectEntry = z.infer<typeof projectEntry>;
+const entry = { ...owner, expectedRevision: revision, expectedHistory: z.number().int().nonnegative() };
 const selection = {
   expectedSelection: z.number().int().nonnegative(),
   expectedCurrent: z.strictObject({ artifactId: id, revision }).nullable(),
@@ -57,6 +60,8 @@ export const schemas = {
   artifact_open: z.strictObject({ ...request, ...owner, ...selection }),
   session_open: z.strictObject({ ...request, sessionId: id, ...selection }),
   project_read: z.strictObject(owner),
+  project_entry: z.strictObject(entry),
+  artifact_enter: z.strictObject({ ...request, ...entry, ...selection }),
   project_snapshot: z.strictObject({ ...owner, revision }),
   resource_import: z.strictObject({
     ...request,
@@ -168,6 +173,8 @@ export interface Outputs {
   artifact_open: Selection;
   session_open: Selection;
   project_read: Project;
+  project_entry: ProjectEntry;
+  artifact_enter: Selection;
   project_snapshot: ProjectSnapshot;
   resource_import: Project;
   resource_remove: Project;
@@ -200,6 +207,10 @@ export const descriptions: Record<Operation, string> = {
   artifact_open: "Switch to an owned artifact only after checking the current context and revision.",
   session_open:
     "Select a session and restore its last artifact after checking current context; an empty session has none.",
+  project_entry:
+    "Validate an explicit project revision and history version without switching or claiming host display.",
+  artifact_enter:
+    "Enter the exact owned revision/history version atomically with current selection preconditions; retry the same request after unknown outcomes.",
   project_read: "Read native source, resource manifest, content revision and authoritative history state.",
   project_snapshot: "Reopen an explicitly owned immutable source revision without changing current content or history.",
   resource_import: "Import a bounded, verified PNG or PCM16 WAV into the owned project revision idempotently.",

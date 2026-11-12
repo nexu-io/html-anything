@@ -29,6 +29,21 @@ export class Selections {
     } else if (input.expectedCurrent !== null) throw new Fault("conflict", "workspace has no current artifact");
     return current;
   }
+  entry(input: Input<"project_entry">) {
+    const project = this.projects.read(input);
+    if (project.revision !== input.expectedRevision || project.history.version !== input.expectedHistory)
+      throw new Fault("conflict", "entry target revision or history version changed");
+    return {
+      sessionId: project.sessionId,
+      artifactId: project.artifactId,
+      revision: project.revision,
+      historyVersion: project.history.version,
+    };
+  }
+  enter(input: Input<"artifact_enter">): Selection {
+    this.entry(input);
+    return this.open(input);
+  }
   open(input: Input<"artifact_open">): Selection {
     this.projects.owner(input.sessionId, input.artifactId);
     const current = this.check(input);
