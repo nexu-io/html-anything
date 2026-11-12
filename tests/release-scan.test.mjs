@@ -36,6 +36,22 @@ test('tracked source is scanned without ignore-file bypasses; secret errors expo
   await assert.rejects(scanSource(source, binary), /Tracked links/);
 });
 
+test('standalone Library packages are scanned in separate bounded batches without omitting aliases', async t => {
+  const { work, binary } = await scanner(t), log = path.join(work, 'batches.jsonl');
+  await writeFile(binary, `#!/usr/bin/env node\nimport{appendFileSync,writeFileSync}from'node:fs';const args=process.argv.slice(2);appendFileSync(${JSON.stringify(log)},JSON.stringify(args[1])+'\\n');writeFileSync(args[args.indexOf('--report-path')+1],'[]');\n`);
+  const source = path.join(work, 'source'); await mkdir(source);
+  await runFile('git', ['init', '-q', source]);
+  const files = ['README.md', 'docs/readme/cover.txt', 'library/skills/motion-design-remix/NOTICE.md', 'library/skills/openmotion-design-remix/NOTICE.md'];
+  for (const file of files) { await mkdir(path.dirname(path.join(source, file)), { recursive: true }); await writeFile(path.join(source, file), 'public fixture'); }
+  await runFile('git', ['add', '.'], { cwd: source });
+  const report = await scanSource(source, binary);
+  assert.equal(report.files, files.length);
+  assert.equal(report.bytes, files.length * Buffer.byteLength('public fixture'));
+  assert.equal(new Set((await readFile(log, 'utf8')).trim().split('\n')).size, 4);
+  await writeFile(path.join(source, files[3]), 'https://' + 'private.' + 'feishu.cn/document');
+  await assert.rejects(scanSource(source, binary), error => error.message.includes(files[3]) && error.message.includes('internal-link'));
+});
+
 test('the scanner opens the nested application, rejects hidden private content and rejects linked archive entries', async t => {
   const f = await candidateFixture(t), { binary } = await scanner(t);
   assert.equal((await scanPackage(path.join(f.directory, f.candidate.tgz), binary)).status, 'passed');
