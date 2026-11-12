@@ -197,13 +197,25 @@ it('reports a card as seen once it stays half visible for a second, once per res
     // A new result set reports the card again; a card under an open detail dialog waits until it is uncovered.
     const sort = host.querySelector<HTMLSelectElement>('select')!;
     await act(async () => { sort.value = 'name'; sort.dispatchEvent(new Event('change', { bubbles: true })); });
+    await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(100); });
     await act(async () => button('First').click());
     await act(async () => cross('two', 1));
     await act(async () => { vi.advanceTimersByTime(3000); });
     expect(seen().filter(item => item.sort === 'name')).toHaveLength(0);
+    // Uncovering starts a fresh second: the 100 ms before the dialog opened do not count.
     await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=关闭模板预览]')!.click());
-    await act(async () => { vi.advanceTimersByTime(1000); });
+    await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(950); });
+    expect(seen().filter(item => item.sort === 'name')).toHaveLength(0);
+    await act(async () => { vi.advanceTimersByTime(50); });
     expect(seen().filter(item => item.sort === 'name').map(item => item.template_id)).toEqual(['two']);
+    // Choosing and clearing a filter returns to the same result set, so nothing is reported twice.
+    await act(async () => [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Other'))!.click());
+    await act(async () => [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Other'))!.click());
+    await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen().filter(item => item.sort === 'name' && item.applied_filter_count === 0).map(item => item.template_id)).toEqual(['two']);
     for (const { event, ...properties } of reported()) expect(validProperties(studioEvents, event, properties), JSON.stringify({ event, ...properties })).toBe(true);
   } finally { vi.useRealTimers(); }
 });

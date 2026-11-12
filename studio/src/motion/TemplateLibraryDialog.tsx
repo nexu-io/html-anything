@@ -41,24 +41,27 @@ function values(template: GalleryTemplate, key: Facet): string[] {
   return template[key] ?? [];
 }
 
-/** `exposureKey` names the result set the card is shown in; `onSeen` returns false when the card is covered and should be retried. */
-function TemplateCard({ template, onSelect, exposureKey, onSeen }: { template: GalleryTemplate; onSelect: () => void; exposureKey: string; onSeen: () => boolean }) {
+/** `exposureKey` names the result set the card is shown in; `covered` is true while a dialog sits on top of the list. */
+function TemplateCard({ template, onSelect, exposureKey, covered, onSeen }: { template: GalleryTemplate; onSelect: () => void; exposureKey: string; covered: boolean; onSeen: () => boolean }) {
   const { t } = useI18n();
   const card = useRef<HTMLElement>(null), seen = useRef(onSeen); seen.current = onSeen;
-  // Seen means at least half the card stayed on screen for one second; it is reported once per result set.
+  // Seen means at least half the card stayed on screen, uncovered and in a visible tab, for one unbroken second.
+  // It is reported once per result set; being covered or hidden restarts the second.
   useEffect(() => {
     const element = card.current;
-    if (!element) return;
-    let timer: ReturnType<typeof setTimeout> | undefined, done = false;
-    const arm = () => { timer = setTimeout(() => { timer = undefined; if (seen.current()) { done = true; observer.disconnect(); } else arm(); }, 1000); };
-    const observer = new IntersectionObserver(([entry]) => {
-      if (done) return;
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) { if (timer === undefined) arm(); }
-      else { clearTimeout(timer); timer = undefined; }
-    }, { threshold: 0.5 });
+    if (!element || covered) return;
+    let timer: ReturnType<typeof setTimeout> | undefined, done = false, inView = false;
+    const stop = () => { clearTimeout(timer); timer = undefined; };
+    const start = () => {
+      if (done || !inView || document.hidden || timer !== undefined) return;
+      timer = setTimeout(() => { timer = undefined; if (seen.current()) { done = true; observer.disconnect(); } else start(); }, 1000);
+    };
+    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting && entry.intersectionRatio >= 0.5; if (inView) start(); else stop(); }, { threshold: 0.5 });
+    const visibility = () => { if (document.hidden) stop(); else start(); };
     observer.observe(element);
-    return () => { clearTimeout(timer); observer.disconnect(); };
-  }, [exposureKey]);
+    document.addEventListener('visibilitychange', visibility);
+    return () => { stop(); observer.disconnect(); document.removeEventListener('visibilitychange', visibility); };
+  }, [exposureKey, covered]);
   const video = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const stop = () => { video.current?.pause(); setPlaying(false); };
@@ -95,7 +98,7 @@ export function TemplateLibraryDialog(props: Props) {
   const [warning, setWarning] = useState(''), [error, setError] = useState(''), [loading, setLoading] = useState(false);
   const [attempt, retry] = useState(0), [query, setQuery] = useState(''), [sort, setSort] = useState<Sort>('recommended');
   const [selected, setSelected] = useState<Partial<Record<Facet, string[]>>>({});
-  const [moreBrands, setMoreBrands] = useState(false), [searchOpen, setSearchOpen] = useState(false);
+  const [moreBrands, setMoreBrands] = useState(false), [searchOpen, setSearchOpen] = useState(false), [filterOpen, setFilterOpen] = useState(false);
   const [preview, setPreview] = useState<GalleryTemplate | null>(null), [prompt, setPrompt] = useState(''), [feedback, setFeedback] = useState('');
   const info = useRef<IntegrationInfo | null>(null);
   // Tracking state. Ids tie one detail view, one copy and one search to the events that follow from them.
@@ -236,10 +239,12 @@ export function TemplateLibraryDialog(props: Props) {
     tracking.reportDetailShown(item, view, props.projectId);
   };
   // One result set per search, filter and sort combination: a card is reported again only when that combination changes.
-  const resultSet = JSON.stringify([query.trim(), sort, selected]);
+  // Empty groups are dropped and groups and values sorted, so the same choices always make the same key.
+  const resultSet = JSON.stringify([query.trim(), sort, Object.entries(selected).filter(([, items]) => items?.length).map(([key, items]) => [key, [...items!].sort()]).sort(([a], [b]) => String(a).localeCompare(String(b)))]);
+  const covered = Boolean(preview) || filterOpen;
   const shownCards = useRef(new Set<string>());
   const cardSeen = (item: GalleryTemplate, placement: Placement, position: number) => {
-    if (document.hidden || detail.current?.open || filter.current?.open || useDialog.current?.open) return false;
+    if (document.hidden || covered) return false;
     const key = `${resultSet}|${placement}|${item.id}`;
     if (shownCards.current.has(key)) return true;
     shownCards.current.add(key);
@@ -247,7 +252,7 @@ export function TemplateLibraryDialog(props: Props) {
     tracking.reportCardShown(item, placement, position, listContext(), props.projectId);
     return true;
   };
-  const cards = (items: GalleryTemplate[], placement: Placement) => <div className={styles.grid}>{items.map((item, index) => <TemplateCard key={item.id} template={item} exposureKey={resultSet}
+  const cards = (items: GalleryTemplate[], placement: Placement) => <div className={styles.grid}>{items.map((item, index) => <TemplateCard key={item.id} template={item} exposureKey={resultSet} covered={covered}
     onSelect={() => show(item, placement, index + 1)} onSeen={() => cardSeen(item, placement, index + 1)} />)}</div>;
   return <dialog ref={dialog} className={styles.library} aria-label={t('Template library')} onKeyDown={event => event.stopPropagation()} onCancel={event => { if (event.target !== dialog.current) return; event.preventDefault(); if (!props.busy) props.onClose(); }}>
     <header className={styles.header}><h1>{t('Template library')}</h1><button disabled={props.busy} onClick={props.onClose} aria-label={t('Close template library')}><MotionIcon name="close" size={24} /></button></header>
@@ -268,7 +273,7 @@ export function TemplateLibraryDialog(props: Props) {
         {!hasFilters && featured.length > 0 && <section className={styles.featured}><h2>{t('Popular templates')}</h2>{cards(featured, 'popular')}</section>}
         <div className={styles.toolbar}><h2>{t('All templates')} <small>{t('{count} templates', { count: visible.length })}</small></h2><div className={styles.controls}>
           <button aria-label={t('Search templates')} aria-expanded={searchOpen} onClick={() => setSearchOpen(!searchOpen)}><MotionIcon name="search" size={21} /></button>
-          <button onClick={() => { tracking.reportDiscoveryClick('filter_open', listContext(), {}, props.projectId); filter.current?.showModal(); }}><MotionIcon name="sliders" />{t('Filters')}{Object.values(selected).flat().length > 0 && ` (${Object.values(selected).flat().length})`}</button>
+          <button onClick={() => { tracking.reportDiscoveryClick('filter_open', listContext(), {}, props.projectId); filter.current?.showModal(); setFilterOpen(true); }}><MotionIcon name="sliders" />{t('Filters')}{Object.values(selected).flat().length > 0 && ` (${Object.values(selected).flat().length})`}</button>
           <select aria-label={t('Sort')} value={sort} onChange={event => changeSort(event.target.value as Sort)}><option value="recommended">{t('Recommended order')}</option><option value="name">{t('Name A–Z')}</option><option value="reverse">{t('Name Z–A')}</option></select>
         </div></div>
         {searchOpen && <input className={styles.search} autoFocus type="search" maxLength={200} value={query} onChange={event => setQuery(event.target.value)} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; setSettle(value => value + 1); }} placeholder={t('Search templates, creators, styles…')} aria-label={t('Search templates')} />}
@@ -277,7 +282,7 @@ export function TemplateLibraryDialog(props: Props) {
         {!loading && !visible.length && !error && <p className={styles.empty}>{t('No matching templates. Try another name, creator or style.')}</p>}
       </main>
     </div>
-    <dialog ref={filter} className={styles.filters} aria-label={t('Filters')}><header><h2>{t('Filters')}</h2><button onClick={() => filter.current?.close()} aria-label={t('Close')}><MotionIcon name="close" /></button></header>
+    <dialog ref={filter} className={styles.filters} aria-label={t('Filters')} onClose={() => setFilterOpen(false)}><header><h2>{t('Filters')}</h2><button onClick={() => filter.current?.close()} aria-label={t('Close')}><MotionIcon name="close" /></button></header>
       {available.map(facet => <fieldset key={facet.key}><legend>{t(facet.label)}</legend>{facet.values.map(value => <label key={value}><input type="checkbox" checked={selected[facet.key]?.includes(value) ?? false} onChange={() => toggle(facet.key, value, 'filter_option')} />{t(value)}</label>)}</fieldset>)}
       <footer><button onClick={reset}>{t('Clear filters')}</button><button onClick={() => { tracking.reportDiscoveryClick('filter_apply', listContext(), {}, props.projectId); filter.current?.close(); }}>{t('Done')}</button></footer>
     </dialog>
