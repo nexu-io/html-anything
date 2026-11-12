@@ -1829,5 +1829,7 @@
   "blue": "Синий",
   "monochrome": "Монохромный",
   "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Файлы истории отсутствуют, недоступны для чтения или повреждены: {files}. Эта версия не восстановлена. Текущий проект не изменён.",
-  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Не удалось подготовить файлы истории для восстановления: {files}. Текущий проект не изменён."
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "Не удалось подготовить файлы истории для восстановления: {files}. Текущий проект не изменён.",
+  "Failed to add media": "Не удалось добавить медиафайл",
+  "Could not read media duration. Try adding the file again.": "Не удалось определить длительность медиафайла. Попробуйте добавить файл ещё раз."
 }

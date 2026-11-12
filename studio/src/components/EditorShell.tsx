@@ -1,4 +1,5 @@
 import { MVP_PANEL_IDS } from "./dock/panelRegistry";
+import { failPendingAssetPreviews } from "../player/store/pendingAssetDrops";
 import { useI18n } from "../i18n/I18n";
 import { memo, useCallback, type ReactNode } from "react";
 import { matchesKey } from "../player/components/studioShortcuts";
@@ -189,7 +190,7 @@ export const EditorShell = memo(function EditorShell({
             activeCompositionPath={activeCompPath}
             onIframeRef={handlePreviewIframeRef}
             onCompIdToSrcChange={setCompIdToSrc}
-            onPreviewReloadFailed={(message) => showToast(message, "error")}
+            onPreviewReloadFailed={(message) => { failPendingAssetPreviews(); showToast(message, "error"); }}
             onCompositionLoadingChange={setCompositionLoading}
             onCompositionChange={(compPath) => {
               // Sync activeCompPath when the user drills down via the timeline or

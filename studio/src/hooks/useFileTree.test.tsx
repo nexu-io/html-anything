@@ -25,18 +25,31 @@ afterEach(() => {
 
 interface Handle {
   compositions: string[];
+  fonts: ReturnType<typeof useFileTree>["fontAssets"];
   refresh: () => Promise<void>;
 }
 
 const Harness = forwardRef<Handle, { projectId: string }>(function Harness({ projectId }, ref) {
   const projectIdRef = useRef(projectId);
   projectIdRef.current = projectId;
-  const { compositions, refreshFileTree } = useFileTree({ projectId, projectIdRef });
-  useImperativeHandle(ref, () => ({ compositions, refresh: refreshFileTree }), [
+  const { compositions, refreshFileTree, fontAssets } = useFileTree({ projectId, projectIdRef });
+  useImperativeHandle(ref, () => ({ compositions, fonts: fontAssets, refresh: refreshFileTree }), [
     compositions,
+    fontAssets,
     refreshFileTree,
   ]);
   return null;
+});
+
+it("keeps the server's real family and weight instead of deriving them from the asset filename", async () => {
+  const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({
+    files: ["assets/fonts/misleading.ttf"], compositions: [],
+    fonts: [{ family: "Arial Black", weight: "900", style: "normal", path: "assets/fonts/misleading.ttf" }],
+  })));
+  try {
+    const handle = await renderHarness("project-a");
+    expect(handle.current?.fonts).toEqual([{ family: "Arial Black", weight: "900", style: "normal", path: "assets/fonts/misleading.ttf", url: "/api/projects/project-a/preview/assets/fonts/misleading.ttf" }]);
+  } finally { fetchSpy.mockRestore(); vi.mocked(captureProjectProvenance).mockClear(); }
 });
 
 async function renderHarness(projectId: string): Promise<{ current: Handle | null }> {

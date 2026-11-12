@@ -305,6 +305,7 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
     editHistory: { recordEdit: editHistory.recordEdit },
     fileTree: fileManager.fileTree,
     importedFontAssetsRef: fileManager.importedFontAssetsRef,
+    fontAssets: fileManager.fontAssets,
     projectDir: fileManager.projectDir,
     projectIdRef: fileManager.projectIdRef,
     previewIframe,

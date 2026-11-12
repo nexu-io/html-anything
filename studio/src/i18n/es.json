@@ -1805,5 +1805,7 @@
   "purple": "Morado",
   "multicolor": "Multicolor",
   "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "Faltan archivos del historial, no se pueden leer o están dañados: {files}. Esta versión no se ha restaurado. El proyecto actual no ha cambiado.",
-  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "No se pudieron preparar los archivos del historial para la restauración: {files}. El proyecto actual no ha cambiado."
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "No se pudieron preparar los archivos del historial para la restauración: {files}. El proyecto actual no ha cambiado.",
+  "Failed to add media": "No se pudo añadir el archivo multimedia",
+  "Could not read media duration. Try adding the file again.": "No se pudo leer la duración del archivo multimedia. Intenta añadirlo de nuevo."
 }

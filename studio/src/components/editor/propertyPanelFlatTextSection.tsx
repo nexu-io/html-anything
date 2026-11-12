@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useTrackDesignInput } from "../../contexts/DesignPanelInputContext";
 import { Plus, X } from "../../icons/SystemIcons";
 import { isTextEditableSelection, type DomEditSelection } from "./domEditing";
-import type { ImportedFontAsset } from "./fontAssets";
+import type { ImportedFontAsset, FontImportInput } from "./fontAssets";
 import { normalizeTextMetricValue } from "./propertyPanelHelpers";
 import { ColorField } from "./propertyPanelColor";
 import { FontFamilyField } from "./propertyPanelFont";
@@ -57,7 +57,7 @@ function FlatTextFieldEditor({
   field: DomEditSelection["textFields"][number];
   styles: Record<string, string>;
   fontAssets: ImportedFontAsset[];
-  onImportFonts?: (files: FileList | File[]) => Promise<ImportedFontAsset[]>;
+  onImportFonts?: (files: FontImportInput) => Promise<ImportedFontAsset[]>;
   onSetText: (value: string, fieldKey?: string) => void;
   onSetTextFieldStyle: (fieldKey: string, property: string, value: string) => void;
   onPreviewTextFieldStyle?: (fieldKey: string, property: string, value: string) => void;

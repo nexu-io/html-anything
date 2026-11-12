@@ -8,6 +8,7 @@ import { getTimelinePlayheadTransform } from "./timelinePlayheadTransform";
 import { TimelineLanes } from "./TimelineLanes";
 import { TimelineGestureOverlay } from "./TimelineGestureOverlay";
 import { useTimelineContext } from "./TimelineProvider";
+import { TimelinePendingAssetDrops } from "./TimelinePendingAssetDrops";
 
 // A dropped clip's length is unknown until it lands; the preview shows a default.
 const DROP_PREVIEW_SECONDS = 3;
@@ -49,6 +50,12 @@ export const TimelineCanvas = memo(function TimelineCanvas() {
       style={{ height: props.totalH, width: props.contentOrigin + props.trackContentWidth }}
     >
       <TimelineRulerPart />
+      <TimelinePendingAssetDrops
+        contentOrigin={props.contentOrigin}
+        pixelsPerSecond={props.pps}
+        trackOrder={displayTrackOrder}
+        rowTop={props.rowGeometry.getRowTop}
+      />
 
       {/* Breathing room between the sticky ruler and the first track lane — the
           top half of the CapCut-style padding (see TimelineRowGeometry.padding). */}
