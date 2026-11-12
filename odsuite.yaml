@@ -42,6 +42,7 @@ guard:
       - apps/web/src/lib/components/workspace
       - packages/components/src/studio
       - packages/components/src/controls
+      - packages/components/src/surfaces
       - packages/workspace/src/resources
       - packages/motion/src/editing
       - packages/motion/tests/media

@@ -8,6 +8,8 @@ import { channel, digest, namespace } from "@odsuite/protocol";
 import { source } from "@odsuite/serve";
 import { serve as manage, managerEndpoint, observeProcesses, readDirectory } from "@odsuite/sidecar";
 import { serve as daemonServe } from "@open-motion/daemon";
+import { Client } from "@open-motion/daemon/client";
+import { initialFiles } from "@open-motion/workspace/contract";
 import { chromium } from "playwright";
 import { afterAll, afterEach, beforeAll, expect, it } from "vitest";
 import type { Config } from "@";
@@ -169,36 +171,49 @@ afterEach(async (context) => {
   }
 });
 
-it("keeps project handoff and navigation explicit across workspace views", async () => {
+it("creates through an empty MVP, retries exact template/save receipts and preserves project data through drawer navigation and cold reopen", async () => {
   const page = driver.page;
-  await stage("open workspace");
   await page.goto(url);
   await ready();
-  await page.getByText("会话选项", { exact: true }).click();
-  await page.getByLabel("会话标题", { exact: true }).fill("Brand launch");
-  await click("创建会话");
-  await page.getByLabel("工程标题", { exact: true }).fill("Separate empty-project idea");
+  const config = (await (await fetch(new URL("/bootstrap.json", url))).json()) as Config,
+    client = new Client(config.daemon, config.token);
+  expect((await client.execute("workspace_state", {})).sessions).toEqual([]);
+  expect(await page.getByText("创建空白或模板项目，或让 Agent 创建项目后继续编辑。", { exact: true }).isVisible()).toBe(
+    true,
+  );
+  expect(await page.getByRole("complementary", { name: "会话", exact: true }).count()).toBe(0);
+  await driver.capture("empty-project-workspace");
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await page.getByText("从模板创建", { exact: true }).click();
   await page.getByLabel("模板", { exact: true }).selectOption("product-promo");
-  await page.getByLabel("模板工程标题", { exact: true }).fill("Product Promo");
-  await click("创建模板工程");
+  await page.getByLabel("模板项目标题", { exact: true }).fill("Product Promo");
+  const templateIds: string[] = [];
+  let loseTemplate = true;
+  await page.route("**/api/template_create", async (route) => {
+    templateIds.push(route.request().postDataJSON().requestId);
+    if (loseTemplate) {
+      loseTemplate = false;
+      await route.fetch();
+      await route.abort("failed");
+    } else await route.continue();
+  });
+  await page.getByRole("button", { name: "创建模板项目", exact: true }).click();
+  await page.getByRole("button", { name: "继续创建", exact: true }).waitFor();
+  await expect.poll(() => page.getByRole("button", { name: "继续创建", exact: true }).isEnabled()).toBe(true);
+  expect((await client.execute("workspace_state", {})).selection.artifactId).toBeNull();
+  expect((await client.execute("project_list", {})).projects).toHaveLength(1);
+  await click("继续创建");
+  expect(templateIds).toHaveLength(2);
+  expect(templateIds[0]).toBe(templateIds[1]);
+  await page.unroute("**/api/template_create");
+  const original = await page.locator("#app").getAttribute("data-artifact-id");
+  expect(original).toBeTruthy();
   await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
   await seek(6);
-  await stage("capture workspace-expanded");
-  await driver.capture("workspace-expanded");
-  await stage("captured workspace-expanded");
-  report.selection = await page.locator("[data-artifact-id]").first().getAttribute("data-artifact-id");
-  expect(report.selection).toBeTruthy();
-  const expanded = await page.getByRole("region", { name: "编辑工作区", exact: true }).boundingBox();
-  const original = String(report.selection);
-  const note = page.getByLabel("消息", { exact: true });
-  await note.fill("Preserve this creative note");
-  await note.evaluate((node) => node.setAttribute("data-retained", "note"));
+  await driver.capture("project-editor");
   await click("源码");
-  const code = page.getByRole("textbox", { name: "index.html", exact: true });
-  expect(await code.isVisible()).toBe(true);
-  expect(await page.locator("iframe").isVisible()).toBe(false);
-  const edited = `${await code.inputValue()}\n<!-- Workspace handoff confirmed -->`;
+  const code = page.getByRole("textbox", { name: "index.html", exact: true }),
+    edited = `${await code.inputValue()}\n<!-- Workspace handoff confirmed -->`;
   await code.fill(edited);
   await code.evaluate((node) => {
     node.setAttribute("data-retained", "source");
@@ -206,180 +221,124 @@ it("keeps project handoff and navigation explicit across workspace views", async
   });
   const writes: string[] = [];
   page.on("request", (request) => {
-    const operation = new URL(request.url()).pathname.split("/api/")[1];
+    const op = new URL(request.url()).pathname.split("/api/")[1];
     if (
-      operation &&
-      !operation.endsWith("_read") &&
-      !operation.endsWith("_get") &&
-      !operation.endsWith("_list") &&
-      operation !== "workspace_state" &&
-      operation !== "workspace_observe"
+      op &&
+      !op.endsWith("_list") &&
+      !op.endsWith("_read") &&
+      !op.endsWith("_get") &&
+      !["workspace_state", "workspace_observe"].includes(op)
     )
-      writes.push(operation);
+      writes.push(op);
   });
-  await page.getByRole("button", { name: "隐藏工作区导航", exact: true }).click();
-  await page.getByRole("button", { name: "隐藏会话", exact: true }).click();
-  expect(await page.getByRole("button", { name: "显示工作区导航", exact: true }).getAttribute("aria-expanded")).toBe(
-    "false",
-  );
-  expect(await page.getByRole("button", { name: "显示会话", exact: true }).getAttribute("aria-expanded")).toBe("false");
-  expect(
-    await page
-      .getByRole("button", { name: "显示会话", exact: true })
-      .evaluate((node) => document.activeElement === node),
-  ).toBe(true);
-  // Navigation does not schedule polling; synchronize with the observer's actual response.
-  const observation = await page.waitForResponse(
-    (response) =>
-      new URL(response.url()).pathname === "/api/workspace_observe" && response.request().method() === "POST",
-  );
-  expect(observation.status()).toBe(200);
-  expect(await observation.json()).toMatchObject({
-    state: { selection: { artifactId: original } },
-    project: { artifactId: original },
-  });
-  expect(await note.inputValue()).toBe("Preserve this creative note");
-  expect(await note.getAttribute("data-retained")).toBe("note");
+  await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
+  await page
+    .getByRole("dialog", { name: "项目列表", exact: true })
+    .getByRole("button", { name: "Product Promo", exact: true })
+    .waitFor();
+  await driver.capture("project-drawer");
+  await page.keyboard.press("Escape");
   expect(await code.inputValue()).toBe(edited);
   expect(await code.getAttribute("data-retained")).toBe("source");
   expect(await code.evaluate((node) => (node as HTMLTextAreaElement).selectionStart)).toBe(7);
-  expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(original);
-  expect(await page.getByLabel("保存状态", { exact: true }).textContent()).toBe("未保存");
   expect(writes).toEqual([]);
-  const focused = await page.getByRole("region", { name: "编辑工作区", exact: true }).boundingBox();
-  if (!focused || !expanded) throw Error("workspace geometry is missing");
-  expect(focused.width - expanded.width).toBeGreaterThan(500);
-  await click("预览");
-  expect(await code.isVisible()).toBe(false);
-  expect(await page.locator("iframe").isVisible()).toBe(true);
-  expect(await page.getByRole("button", { name: "预览", exact: true }).getAttribute("aria-pressed")).toBe("true");
-  expect(await page.getByRole("button", { name: "源码", exact: true }).getAttribute("aria-pressed")).toBe("false");
-  await stage("capture workspace-focused");
-  await driver.capture("workspace-focused");
-  await stage("captured workspace-focused");
-  report.widths = { expanded: expanded?.width, focused: focused?.width };
-  await page.getByRole("button", { name: "显示工作区导航", exact: true }).click();
-  await page.getByRole("button", { name: "新建工程", exact: true }).click();
-  expect(await page.getByRole("button", { name: "隐藏会话", exact: true }).getAttribute("aria-expanded")).toBe("true");
-  expect(await page.getByLabel("工程标题", { exact: true }).evaluate((node) => document.activeElement === node)).toBe(
-    true,
-  );
-  expect(await note.inputValue()).toBe("Preserve this creative note");
-  expect(await page.getByLabel("工程标题", { exact: true }).inputValue()).toBe("Separate empty-project idea");
-  await page.getByLabel("工程标题", { exact: true }).fill("Second project");
-  let lose = true;
+  expect(
+    await page
+      .getByRole("region", { name: "编辑工作区", exact: true })
+      .evaluate((node) => node.getBoundingClientRect().width),
+  ).toBe(1600);
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await page.getByLabel("项目标题", { exact: true }).fill("Second project");
   const saveIds: string[] = [];
-  let accepted = false,
-    saveFailure: string | undefined;
+  let loseSave = true;
   await page.route("**/api/project_save", async (route) => {
     saveIds.push(route.request().postDataJSON().requestId);
-    if (!lose) return route.continue();
-    lose = false;
-    try {
-      const response = await route.fetch();
-      report.saveStatus = response.status();
-      if (!response.ok()) throw Error("save response was unsuccessful");
-      accepted = true;
+    if (loseSave) {
+      loseSave = false;
+      await route.fetch();
       await route.abort("failed");
-    } catch (error) {
-      saveFailure = error instanceof Error ? error.name : "unknown";
-      report.saveFailure = saveFailure;
-      await route.abort("failed").catch(() => undefined);
-    }
+    } else await route.continue();
   });
-  await stage("unknown save receipt");
-  await page.getByRole("button", { name: "创建工程", exact: true }).click();
-  const retry = page.getByRole("button", { name: "重试", exact: true });
-  await expect.poll(() => accepted || Boolean(saveFailure)).toBe(true);
-  expect(saveFailure).toBeUndefined();
-  expect(accepted).toBe(true);
-  await expect.poll(() => retry.isEnabled()).toBe(true);
+  await page.getByRole("button", { name: "创建空白项目", exact: true }).click();
+  await expect.poll(() => page.getByRole("button", { name: "继续创建", exact: true }).isEnabled()).toBe(true);
+  expect((await client.execute("workspace_state", {})).sessions).toHaveLength(1);
   expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(original);
-  const acceptedWrites = writes.length;
-  await page.getByRole("button", { name: "隐藏会话", exact: true }).click();
-  await page.getByRole("button", { name: "显示会话", exact: true }).click();
-  expect(writes).toHaveLength(acceptedWrites);
-  expect(await note.getAttribute("data-retained")).toBe("note");
-  await stage("retry same save receipt");
-  await click("重试");
-  await stage("save receipt replayed");
+  await click("继续创建");
+  await page.unroute("**/api/project_save");
   expect(saveIds).toHaveLength(2);
   expect(saveIds[0]).toBe(saveIds[1]);
-  await page.unroute("**/api/project_save");
   const second = await page.locator("#app").getAttribute("data-artifact-id");
   expect(second).not.toBe(original);
-  const card = (name: string) =>
-    page.getByRole("complementary", { name: "会话", exact: true }).getByRole("button", { name, exact: true });
-  expect(await card("Second project").getAttribute("aria-current")).toBe("true");
-  expect(await card("Product Promo").getAttribute("aria-current")).toBeNull();
-  await card("Product Promo").click();
-  await ready();
-  expect(await card("Product Promo").getAttribute("aria-current")).toBe("true");
-  await click("源码");
-  expect(await code.inputValue()).toBe(edited);
-  await page.getByLabel("会话标题", { exact: true }).fill("Another session");
-  await click("创建会话");
-  const sessions = page.getByRole("navigation", { name: "会话", exact: true });
-  const another = sessions.getByRole("button", { name: "Another session", exact: true });
-  await another.focus();
-  await page.keyboard.press("End");
-  expect(
-    await sessions
-      .getByRole("button")
-      .last()
-      .evaluate((node) => document.activeElement === node),
-  ).toBe(true);
-  expect(await another.getAttribute("aria-current")).toBe("true");
-  await sessions.getByRole("button", { name: "Brand launch", exact: true }).focus();
-  await page.keyboard.press("Enter");
+  expect((await client.execute("project_list", {})).projects).toHaveLength(2);
+  await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
+  const drawer = page.getByRole("dialog", { name: "项目列表", exact: true });
+  await drawer.getByRole("button", { name: "Product Promo", exact: true }).click();
   await ready();
   expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(original);
-  expect(await note.inputValue()).toBe("Preserve this creative note");
-  await page.getByLabel("搜索会话", { exact: true }).fill("Missing session");
-  expect(await sessions.textContent()).toContain("没有匹配的会话");
-  await page.getByLabel("搜索会话", { exact: true }).fill("");
-  expect(await sessions.getByRole("button").count()).toBe(2);
+  await click("源码");
+  expect(await code.inputValue()).toBe(edited);
+  for (let index = 0; index < 6; index++) {
+    const session = await client.execute("session_create", {
+      requestId: randomUUID(),
+      title: `Metadata ${index}`,
+      mode: "motion",
+    });
+    await client.execute("artifact_create", {
+      requestId: randomUUID(),
+      sessionId: session.id,
+      title: `Metadata ${index}`,
+      files: initialFiles(),
+    });
+  }
+  const selected = (await client.execute("workspace_state", {})).selection;
+  await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
+  const projects = drawer.getByRole("navigation", { name: "项目", exact: true });
+  await expect.poll(() => projects.getByRole("button").count()).toBe(5);
+  await drawer.getByRole("button", { name: "下一页项目", exact: true }).click();
+  await expect.poll(() => projects.getByRole("button").count()).toBe(3);
+  await page.getByLabel("搜索项目", { exact: true }).fill("Missing project");
+  await expect.poll(() => drawer.textContent()).toContain("没有匹配的项目");
+  await page.getByLabel("搜索项目", { exact: true }).fill("Product Promo");
+  await projects.getByRole("button", { name: "Product Promo", exact: true }).waitFor();
+  expect(await projects.getByRole("button", { name: "Product Promo", exact: true }).getAttribute("aria-current")).toBe(
+    "page",
+  );
+  expect((await client.execute("workspace_state", {})).selection).toEqual(selected);
+  await page.keyboard.press("Escape");
   await click("预览");
   await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
   await seek(6);
-  await stage("capture workspace-handoff");
-  await driver.capture("workspace-handoff");
-  await stage("captured workspace-handoff");
   await page.setViewportSize({ width: 960, height: 900 });
-  await page.getByRole("button", { name: "隐藏工作区导航", exact: true }).click();
-  await page.getByRole("button", { name: "隐藏会话", exact: true }).click();
+  await driver.capture("project-narrow");
   expect(
     await page
       .getByRole("region", { name: "编辑工作区", exact: true })
       .evaluate((node) => node.getBoundingClientRect().width),
   ).toBe(960);
-  await stage("capture workspace-narrow");
-  await driver.capture("workspace-narrow");
-  await stage("captured workspace-narrow");
-  await stage("close before cold reopen");
   await manager.close();
-  await stage("closed before cold reopen");
   expect((await readDirectory(root)).manager.phase).toBe("closed");
   expect(await observeProcesses(root)).toEqual([]);
-  await stage("start cold reopen");
   await start();
-  await stage("started cold reopen");
   await page.setViewportSize({ width: 1600, height: 1000 });
   await page.goto(url);
   await ready();
   expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(original);
-  expect(await card("Product Promo").getAttribute("aria-current")).toBe("true");
   await click("源码");
   expect(await code.inputValue()).toBe(edited);
   await click("预览");
   await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
   await seek(6);
-  await page.getByRole("button", { name: "隐藏工作区导航", exact: true }).click();
-  await page.getByRole("button", { name: "隐藏会话", exact: true }).click();
-  await stage("capture workspace-restored");
-  await driver.capture("workspace-restored");
-  await stage("captured workspace-restored");
-  report.handoff = { original, second, retrySameRequest: saveIds[0] === saveIds[1], restored: true };
+  await driver.capture("project-restored");
+  report.projectEntry = {
+    original,
+    second,
+    templateRetrySameRequest: templateIds[0] === templateIds[1],
+    saveRetrySameRequest: saveIds[0] === saveIds[1],
+    restored: true,
+    metadataPaging: true,
+    sourceReference: "e0f021be6ba58cb1bed4091254acb424fb862012",
+    evidenceKind: "Actual refactor UI; pinned main source inspection, not new main screenshots",
+  };
   expect(driver.errors).toEqual([]);
 }, 90000);
 
@@ -387,12 +346,9 @@ it("creates, edits, copies, renames and removes source files through persistent 
   const page = driver.page;
   await page.goto(url);
   await ready();
-  await page.getByText("会话选项", { exact: true }).click();
-  await page.getByLabel("会话标题", { exact: true }).fill("Source file lifecycle");
-  await click("创建会话");
-  await page.getByRole("button", { name: "新建工程", exact: true }).click();
-  await page.getByLabel("工程标题", { exact: true }).fill("Editable files");
-  await click("创建工程");
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await page.getByLabel("项目标题", { exact: true }).fill("Editable files");
+  await click("创建空白项目");
   await page.getByRole("tab", { name: "文件", exact: true }).click();
   const path = page.getByLabel("源文件路径", { exact: true }),
     select = page.getByLabel("管理源文件", { exact: true }),

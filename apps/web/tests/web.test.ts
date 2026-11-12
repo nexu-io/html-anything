@@ -53,11 +53,17 @@ it("requires a loopback origin and sends only explicit capabilities", async () =
 it("renders real sessions/artifacts as business composition and preserves theme/no-style isolation", () =>
   fixture(async (db, transport) => {
     const session = db.execute("session_create", { requestId: randomUUID(), title: "actual session", mode: "motion" });
+    const artifact = db.execute("artifact_create", {
+      requestId: randomUUID(),
+      sessionId: session.id,
+      title: "actual project",
+      files: initialFiles(),
+    });
     const { editor } = mountedView(document.body, { daemon: "http://127.0.0.1:4100", token: "test" }, transport);
     await vi.waitFor(() => expect(document.querySelector("[aria-live]")?.textContent).toBe("就绪"));
-    document
-      .querySelector<HTMLButtonElement>(`nav[aria-label="会话"] button[data-session-id="${session.id}"]`)
-      ?.click();
+    document.querySelector<HTMLButtonElement>('[aria-label="打开项目列表"]')?.click();
+    await vi.waitFor(() => expect(document.querySelector(`[data-project-id="${artifact.id}"]`)).not.toBeNull());
+    document.querySelector<HTMLButtonElement>(`[data-project-id="${artifact.id}"]`)?.click();
     await vi.waitFor(() => expect(editor.session?.id).toBe(session.id));
     expect(document.body.getAttribute("data-session-id")).toBe(session.id);
     const theme = Array.from(document.querySelectorAll("button")).find((b) => b.textContent === "切换主题");
@@ -146,7 +152,7 @@ it("retries only hydration after a committed switch loses its read response", ()
 
 it("enters newly created objects and retries only a lost selection response without duplicate creation", () =>
   fixture(async (db, transport) => {
-    let lose: "session_open" | "artifact_open" | undefined = "session_open";
+    let lose: "session_create" | "artifact_open" | undefined = "session_create";
     const unreliable: Transport = async (input, init) => {
       const response = await transport(input, init);
       if (lose && String(input).endsWith(`/${lose}`)) {
@@ -162,27 +168,26 @@ it("enters newly created objects and retries only a lost selection response with
       [...root.querySelectorAll("button")].find((button) => button.textContent === label)?.click();
     const retry = () => [...root.querySelectorAll("button")].find((button) => button.textContent === "重试");
     await vi.waitFor(() => expect(root.querySelector("[aria-live]")?.textContent).toBe("就绪"));
-    const title = root.querySelector<HTMLInputElement>('[aria-label="会话标题"]');
+    click("新建项目");
+    const title = root.querySelector<HTMLInputElement>('[aria-label="项目标题"]');
     if (!title) throw Error("missing title field");
     title.value = "one creation";
-    click("创建会话");
+    click("创建空白项目");
     await vi.waitFor(() => expect(retry()?.disabled).toBe(false));
     expect(db.execute("workspace_state", {}).sessions).toHaveLength(1);
     expect(editor.session).toBeNull();
-    click("重试");
-    await vi.waitFor(() => expect(editor.session?.title).toBe("one creation"));
-    expect(db.execute("workspace_state", {}).sessions).toHaveLength(1);
-    const artifact = root.querySelector<HTMLInputElement>('[aria-label="工程标题"]');
-    if (!artifact) throw Error("missing artifact field");
-    artifact.value = "one artifact";
     lose = "artifact_open";
-    click("创建工程");
-    await vi.waitFor(() => expect(retry()?.disabled).toBe(false));
-    expect(db.execute("session_get", { sessionId: editor.session?.id ?? "" }).artifacts).toHaveLength(1);
-    click("重试");
+    click("继续创建");
+    await vi.waitFor(() => expect(editor.unconfirmed).toBe(true));
+    const session = db.execute("workspace_state", {}).sessions[0]!;
+    await vi.waitFor(() => expect(db.execute("session_get", { sessionId: session.id }).artifacts).toHaveLength(1));
+    click("继续创建");
     await vi.waitFor(() => expect(editor.project).not.toBeNull());
+    expect(editor.session?.title).toBe("one creation");
     expect(editor.session?.artifacts).toHaveLength(1);
-    expect(root.querySelector('[role="tab"][aria-selected="true"]')?.textContent).toBe("one artifact");
+    expect(db.execute("workspace_state", {}).sessions).toHaveLength(1);
+    expect(editor.unconfirmed).toBe(false);
+    expect(root.querySelector("dialog[aria-labelledby]")?.getAttribute("open")).toBeNull();
   }));
 
 it("holds root ownership while draining an in-flight load and permits remount only after disposal", () =>
@@ -209,3 +214,20 @@ it("holds root ownership while draining an in-flight load and permits remount on
     await vi.waitFor(() => expect(root.querySelector("[aria-live]")?.textContent).toBe("就绪"));
     expect(second.editor.state.sessions).toEqual([]);
   }));
+
+// JSDOM covers modal state only; native focus, Escape and inertness are verified in Chromium.
+Object.defineProperties(HTMLDialogElement.prototype, {
+  showModal: {
+    configurable: true,
+    value(this: HTMLDialogElement) {
+      this.open = true;
+    },
+  },
+  close: {
+    configurable: true,
+    value(this: HTMLDialogElement) {
+      this.open = false;
+      this.dispatchEvent(new Event("close"));
+    },
+  },
+});

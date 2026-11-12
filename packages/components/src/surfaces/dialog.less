@@ -1,0 +1,13 @@
+.om-dialog {
+  box-sizing: border-box; width: var(--om-chat-width); max-width: var(--om-size-full);
+  max-height: var(--om-screen-height); padding: var(--om-panel-padding);
+  border: var(--om-focus-width) solid var(--om-border); border-radius: var(--om-card-radius);
+  background: var(--om-raised); color: var(--om-text); box-shadow: var(--om-shadow);
+  font-family: var(--om-font-body); font-size: var(--om-font-size);
+  &[open] { display: flex; flex-direction: column; gap: var(--om-panel-padding); }
+  &::backdrop { background: var(--om-backdrop); }
+  &--drawer { inset: 0 auto 0 0; margin: 0; height: var(--om-screen-height); max-height: var(--om-screen-height); border-radius: 0; }
+  &__header { display: flex; align-items: center; justify-content: space-between; gap: var(--om-control-padding-y); }
+  &__title { margin: 0; font-size: var(--om-section-size); color: var(--om-strong); }
+  &__body { display: flex; flex-direction: column; min-height: 0; gap: var(--om-control-padding-x); overflow: auto; }
+}

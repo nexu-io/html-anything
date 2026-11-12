@@ -51,12 +51,17 @@ export function components(css: string, prefix: string, tokens: ReadonlySet<stri
   });
   root.walkRules((rule) => {
     for (const selector of rule.selector.split(",")) {
+      if (
+        /\[open\]|::backdrop/.test(selector) &&
+        !new RegExp(`^\\.${prefix}-dialog(?:\\[open\\]|::backdrop)$`).test(selector.trim())
+      )
+        throw new Error("native modal states belong to the dialog component");
       const classes = selector.match(/\.[a-zA-Z_][\w-]*/g) ?? [];
       const blocks = classes.map((name) => name.slice(1).split(/__|--/)[0]);
       const rest = selector
         .replace(/\.[a-zA-Z_][\w-]*/g, "")
-        .replace(/\[hidden\]/g, "")
-        .replace(/::(?:placeholder|-webkit-outer-spin-button|-webkit-inner-spin-button)\b/g, "")
+        .replace(/\[(?:hidden|open)\]/g, "")
+        .replace(/::(?:placeholder|backdrop|-webkit-outer-spin-button|-webkit-inner-spin-button)\b/g, "")
         .replace(/:(?:hover|active|focus-within|focus-visible|focus|disabled|checked|first-child|last-child)\b/g, "");
       if (
         !classes.length ||

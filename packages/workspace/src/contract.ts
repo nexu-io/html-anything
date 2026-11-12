@@ -44,6 +44,11 @@ const selection = {
   expectedSelection: z.number().int().nonnegative(),
   expectedCurrent: z.strictObject({ artifactId: id, revision }).nullable(),
 };
+export const projectCursor = z.strictObject({
+  createdAt: z.number().int().nonnegative(),
+  id,
+  query: z.string().max(120),
+});
 export const schemas = {
   workspace_state: z.strictObject({}),
   workspace_observe: z.strictObject({}),
@@ -60,6 +65,7 @@ export const schemas = {
   artifact_open: z.strictObject({ ...request, ...owner, ...selection }),
   session_open: z.strictObject({ ...request, sessionId: id, ...selection }),
   project_read: z.strictObject(owner),
+  project_list: z.strictObject({ query: z.string().trim().max(120).optional(), cursor: projectCursor.optional() }),
   project_entry: z.strictObject(entry),
   artifact_enter: z.strictObject({ ...request, ...entry, ...selection }),
   project_snapshot: z.strictObject({ ...owner, revision }),
@@ -173,6 +179,7 @@ export interface Outputs {
   artifact_open: Selection;
   session_open: Selection;
   project_read: Project;
+  project_list: { projects: Artifact[]; nextCursor: z.infer<typeof projectCursor> | null };
   project_entry: ProjectEntry;
   artifact_enter: Selection;
   project_snapshot: ProjectSnapshot;
@@ -211,6 +218,8 @@ export const descriptions: Record<Operation, string> = {
     "Validate an explicit project revision and history version without switching or claiming host display.",
   artifact_enter:
     "Enter the exact owned revision/history version atomically with current selection preconditions; retry the same request after unknown outcomes.",
+  project_list:
+    "List five project metadata entries per page, newest creation first, with a query-bound stable cursor; never reads source or changes selection.",
   project_read: "Read native source, resource manifest, content revision and authoritative history state.",
   project_snapshot: "Reopen an explicitly owned immutable source revision without changing current content or history.",
   resource_import: "Import a bounded, verified PNG or PCM16 WAV into the owned project revision idempotently.",

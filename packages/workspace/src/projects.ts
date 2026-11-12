@@ -15,7 +15,29 @@ export class Projects {
   constructor(
     private db: Database,
     private sessions: Sessions,
-  ) {}
+  ) {
+    db.sql.function("project_search", { deterministic: true }, (title, query) =>
+      Number(String(title).toLowerCase().includes(String(query).toLowerCase())),
+    );
+  }
+  list(input: Input<"project_list">) {
+    const query = input.query ?? "",
+      cursor = input.cursor;
+    if (cursor && cursor.query !== query) throw new Fault("invalid", "project cursor belongs to another query");
+    const rows = this.db.all(
+      `SELECT id,session_id AS sessionId,project_id AS projectId,'motion-project' AS kind,title,created_at AS createdAt
+       FROM artifacts WHERE project_search(title,?) AND (? IS NULL OR created_at<? OR (created_at=? AND id<?))
+       ORDER BY created_at DESC,id DESC LIMIT 6`,
+      query,
+      cursor?.createdAt ?? null,
+      cursor?.createdAt ?? 0,
+      cursor?.createdAt ?? 0,
+      cursor?.id ?? "",
+    ) as unknown as Artifact[];
+    const projects = rows.slice(0, 5),
+      last = projects.at(-1);
+    return { projects, nextCursor: rows.length > 5 && last ? { createdAt: last.createdAt, id: last.id, query } : null };
+  }
   owner(sessionId: string, artifactId: string): Artifact {
     this.sessions.require(sessionId);
     const artifact = this.db.one(

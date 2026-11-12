@@ -1,27 +1,14 @@
-import { pane, panelGrid, railLayout, slot, splitLayout } from "@open-motion/components";
+import { pane, panelGrid, railLayout, slot } from "@open-motion/components";
 export function workspaceLayout(document: Document) {
   const shell = railLayout(document),
-    split = splitLayout(document),
     header = slot(document, "header");
-  const label = (element: HTMLElement, role: string, name: string) => {
-    element.setAttribute("role", role);
-    element.setAttribute("aria-label", name);
-  };
-  label(shell.rail, "complementary", "工作区导航");
-  label(split.start, "complementary", "会话");
-  label(split.end, "region", "编辑工作区");
-  label(header, "toolbar", "工程工具栏");
-  split.end.append(header);
-  shell.body.append(split.element);
-  return {
-    element: shell.element,
-    navigation: shell.rail,
-    conversation: split.start,
-    editor: split.end,
-    header,
-    showNavigation: (visible: boolean) => shell.showRail(visible),
-    showConversation: (visible: boolean) => split.showStart(visible),
-  };
+  shell.showRail(false);
+  shell.body.setAttribute("role", "region");
+  shell.body.setAttribute("aria-label", "编辑工作区");
+  header.setAttribute("role", "toolbar");
+  header.setAttribute("aria-label", "项目工具栏");
+  shell.body.append(header);
+  return { element: shell.element, editor: shell.body, header };
 }
 /** Product registration and placement. Atoms own only anonymous grid cells and panel surfaces. */
 export function studioLayout(document: Document) {

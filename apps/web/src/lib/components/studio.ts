@@ -192,6 +192,13 @@ export class Studio {
       this.selected = "";
       this.layers.reset();
       this.context.reset();
+      this.retire();
+      this.toolbar.replaceChildren(note(this.root.ownerDocument, "正在打开项目"));
+      this.timelineRoot.replaceChildren(note(this.root.ownerDocument, "正在读取项目时间轴"));
+      this.context.element.replaceChildren();
+      this.layers.update([], "", true);
+      this.properties.clear();
+      this.animations.update("", undefined, true);
       this.globalTime = 0;
 
       this.currentTime = 0;
@@ -240,7 +247,7 @@ export class Studio {
       this.toolbar.replaceChildren(note(this.root.ownerDocument, "本地 Studio"));
       const empty = emptyState(this.root.ownerDocument, {
         title: "让想法成为画面",
-        detail: "创建影片工程，从画布与时间轴开始。",
+        detail: "创建空白或模板项目，或让 Agent 创建项目后继续编辑。",
         icon: "film",
       });
       empty.actions.append(

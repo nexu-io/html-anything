@@ -144,6 +144,8 @@ export class Workspace {
         return this.resources.read(input as Input<"resource_read">);
       case "project_snapshot":
         return this.projects.snapshot(input as Input<"project_snapshot">);
+      case "project_list":
+        return this.projects.list(input as Input<"project_list">);
       case "project_read":
         return this.projects.read(input as Input<"project_read">);
       case "project_undo":

@@ -93,3 +93,12 @@ it("scopes native anchors to the popup block without permitting arbitrary compon
   ])
     expect(() => components(css, "om", tokens)).toThrow();
 });
+
+it("allows only native dialog open/backdrop selectors under the dialog BEM block", () => {
+  const tokens = new Set(["--om-raised"]);
+  expect(() =>
+    components(".om-dialog[open]{display:flex}.om-dialog::backdrop{background:var(--om-raised)}", "om", tokens),
+  ).not.toThrow();
+  for (const selector of [".om-button[open]", ".om-other::backdrop", ".om-dialog[data-open]", ".om-dialog__body[open]"])
+    expect(() => components(`${selector}{display:flex}`, "om", tokens)).toThrow();
+});
