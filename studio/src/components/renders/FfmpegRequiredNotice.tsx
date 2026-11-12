@@ -99,7 +99,7 @@ export const FfmpegRequiredNotice = memo(function FfmpegRequiredNotice({
       ) : (
         status.hint && (
           <span className="text-[10px] leading-snug text-pretty text-panel-text-2">
-            {status.hint}
+            {t(status.hint)}
           </span>
         )
       )}

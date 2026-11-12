@@ -86,7 +86,7 @@ export function PropertyRow({
       <div className="flex items-center gap-1">
         <div className="min-w-0 flex-1 flex items-center gap-2 px-2 py-1 rounded-lg bg-neutral-900 border border-neutral-800">
           <span className="flex-1 text-[11px] font-medium text-neutral-500">
-            {PROP_LABELS[prop] ?? prop}
+            {t(PROP_LABELS[prop] ?? prop)}
           </span>
           <button
             type="button"
@@ -120,7 +120,7 @@ export function PropertyRow({
         <div className="flex items-center gap-1">
           <div className="min-w-0 flex-1 flex items-center gap-2 px-2 py-1 rounded-lg bg-neutral-900 border border-neutral-800">
             <span className="shrink-0 text-[11px] font-medium text-neutral-500">
-              {PROP_LABELS[prop] ?? prop}
+              {t(PROP_LABELS[prop] ?? prop)}
             </span>
             <input
               type="text"
@@ -143,7 +143,7 @@ export function PropertyRow({
                 onClick={() => onCommit(p.value)}
                 className="px-1.5 py-0.5 rounded-sm text-[9px] font-medium text-neutral-500 bg-neutral-800/50 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
               >
-                {p.label}
+                {t(p.label)}
               </button>
             ))}
           </div>
@@ -155,7 +155,7 @@ export function PropertyRow({
     <div className="flex items-center gap-1">
       <div className="min-w-0 flex-1">
         <MetricField
-          label={PROP_LABELS[prop] ?? prop}
+          label={t(PROP_LABELS[prop] ?? prop)}
           value={displayValue(prop, val)}
           suffix={PROP_UNITS[prop]}
           tooltip={PROP_TOOLTIPS[prop]}

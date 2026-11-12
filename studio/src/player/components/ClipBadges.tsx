@@ -38,7 +38,7 @@ export const ClipBadges = memo(function ClipBadges({
 }) {
   const { t } = useI18n();
   const state = useClipToolState(el);
-  const effects = readClipEffects(state);
+  const effects = readClipEffects(state, t);
   const mvp = useMvpEditor();
   const volume = mvp ? null : clipVolumeBadge(state);
   const hasEffects = effects.length > 0;
