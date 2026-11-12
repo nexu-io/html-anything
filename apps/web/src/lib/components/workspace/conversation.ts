@@ -118,6 +118,9 @@ export class Conversation {
     this.settings.element.open = true;
     this.rename.focus();
   }
+  addTransfer(element: HTMLElement) {
+    this.scroll.prepend(element);
+  }
   addCreator(element: HTMLElement) {
     this.creation.body.append(element);
   }

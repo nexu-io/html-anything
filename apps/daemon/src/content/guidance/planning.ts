@@ -39,7 +39,7 @@ Skills are documents guiding the same Agent. Reading another route does not laun
 
 Motion quality applies to templates and recreation as well as originals; it does not force them through original intake. Apply methods to this turn's affected interval and adjacent joins, and the whole current film for full delivery. Inspect actual sound for sound claims. Guidance, source saves, technical decoding, motion review, normal playback and listening are separate evidence.
 
-Current MCP is an editing/template/export interface. It does not download or analyze arbitrary reference video, execute provider generation, measure arbitrary movies or create portable ZIPs. Discover available product tools and host capabilities; continue supported work and report concrete affected gaps. Do not convert a method into an imaginary Tool, assume a legacy endpoint, install another runtime, use direct disk writes to bypass managed transactions or claim a perception capability the host lacks.
+Current MCP is an editing/template/export interface. It does not download or analyze arbitrary reference video, execute provider generation, measure arbitrary movies or qualify complete portable-template dependency closure. Discover available product tools and host capabilities; continue supported work and report concrete affected gaps. Do not convert a method into an imaginary Tool, assume a legacy endpoint, install another runtime, use direct disk writes to bypass managed transactions or claim a perception capability the host lacks.
 `,
   edit: `# Change existing work while preserving its decisions
 

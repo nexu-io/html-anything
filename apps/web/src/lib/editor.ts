@@ -1,4 +1,4 @@
-import type { Input, Operation, Output } from "@open-motion/daemon/contract";
+import { archiveLimits, type Input, type Operation, type Output } from "@open-motion/daemon/contract";
 import {
   type Artifact,
   changeSources,
@@ -28,10 +28,11 @@ export class Editor {
   private observation = 0;
   private returnIntent?: { input: Omit<Input<"artifact_open">, "requestId">; state: State };
   drafts?: { flush(): Promise<void>; dirty(): boolean; discard(): void };
+  private archive?: { file: File; input: Input<"archive_import">; upload: Input<"archive_upload"> };
   private pending?: { signature: string; requestId: string };
   private refresh?: () => Promise<void>;
   get unconfirmed() {
-    return !!this.pending || !!this.refresh;
+    return !!this.pending || !!this.refresh || !!this.archive;
   }
   get needsRefresh() {
     return !!this.refresh;
@@ -382,6 +383,44 @@ export class Editor {
       artifacts: [...this.session.artifacts.filter((item) => item.id !== artifact.id), artifact],
     };
     return artifact;
+  }
+  async createArchive(file: File, title: string) {
+    if (!this.session) throw new Error("先选择会话");
+    if (!this.archive) {
+      await this.save();
+      if (file.size < 22 || file.size > archiveLimits.bytes) throw Error("ZIP 大小超出支持范围");
+      const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", await file.arrayBuffer())),
+        digest = `sha256:${Array.from(hash, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+      this.archive = {
+        file,
+        input: { requestId: crypto.randomUUID(), sessionId: this.session.id, title, digest },
+        upload: { requestId: crypto.randomUUID(), digest, bytes: file.size },
+      };
+    }
+    const intent = this.archive;
+    if (intent.file !== file || intent.input.title !== title) throw Error("先重试尚未确认的 ZIP 导入");
+    try {
+      let result = await this.client.execute("archive_import", intent.input);
+      if (!result.artifact) {
+        const upload = await this.client.execute("archive_upload", intent.upload);
+        await this.client.uploadArchive(upload, intent.file);
+        result = await this.client.execute("archive_import", { ...intent.input, uploadId: upload.id });
+      }
+      if (!result.artifact) throw Error("ZIP 导入结果尚未确认");
+      const artifact = result.artifact;
+      this.session = {
+        ...this.session,
+        artifacts: [...this.session.artifacts.filter((item) => item.id !== artifact.id), artifact],
+      };
+      this.archive = undefined;
+      return artifact;
+    } catch (error) {
+      if (error instanceof Fault && error.code !== "integrity") {
+        this.archive = undefined;
+        await this.client.execute("archive_release", { id: intent.upload.requestId }).catch(() => {});
+      }
+      throw error;
+    }
   }
   async openSession(sessionId: string) {
     await this.save();

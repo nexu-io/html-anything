@@ -9,7 +9,15 @@ import type {
   Operation as WorkspaceOperation,
   Output as WorkspaceOutput,
 } from "@open-motion/workspace/contract";
-import { Fault, type Input, type Operation, type Output } from "./contract.js";
+import {
+  type ArchiveDownload,
+  type ArchiveUpload,
+  archiveLimits,
+  Fault,
+  type Input,
+  type Operation,
+  type Output,
+} from "./contract.js";
 export type Transport = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 export interface Health {
   ok: boolean;
@@ -100,6 +108,66 @@ export class Client {
   execute<K extends Operation>(operation: K, input: Input<K>, signal?: AbortSignal): Promise<Output<K>>;
   async execute(operation: Operation, input: unknown, signal?: AbortSignal): Promise<Output<Operation>> {
     return (await this.send(`/api/${operation}`, input, false, signal)) as Output<Operation>;
+  }
+  private archiveUrl(value: string, kind: "upload" | "download") {
+    const url = new URL(value);
+    if (
+      url.origin !== this.origin ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash ||
+      !new RegExp(`^/archives/${kind}/[a-f0-9]{64}$`).test(url.pathname)
+    )
+      throw new Error("archive transfer must use this daemon's business grant");
+    return url.href;
+  }
+  async uploadArchive(ticket: ArchiveUpload, file: Blob, signal?: AbortSignal): Promise<void> {
+    if (file.size !== ticket.bytes || file.size > archiveLimits.bytes) throw new Error("archive size changed");
+    const response = await this.transport(this.archiveUrl(ticket.url, "upload"), {
+      method: "POST",
+      body: file,
+      credentials: "omit",
+      cache: "no-store",
+      mode: "cors",
+      headers: { "content-type": "application/zip" },
+      signal: AbortSignal.any([AbortSignal.timeout(archiveLimits.transfer), ...(signal ? [signal] : [])]),
+    });
+    const result = await response.json();
+    if (!response.ok)
+      throw new Fault(result.error?.code ?? "integrity", result.error?.message ?? "archive upload failed");
+    if (result.id !== ticket.id || result.ready !== true) throw new Error("archive upload receipt changed");
+  }
+  async downloadArchive(ticket: ArchiveDownload, signal?: AbortSignal): Promise<Blob> {
+    if (!Number.isSafeInteger(ticket.bytes) || ticket.bytes < 22 || ticket.bytes > archiveLimits.bytes)
+      throw new Error("archive size outside supported bounds");
+    const response = await this.transport(this.archiveUrl(ticket.url, "download"), {
+      credentials: "omit",
+      cache: "no-store",
+      mode: "cors",
+      signal: AbortSignal.any([AbortSignal.timeout(archiveLimits.transfer), ...(signal ? [signal] : [])]),
+    });
+    if (!response.ok || !response.body) throw new Error("archive download unavailable");
+    const bytes = new Uint8Array(ticket.bytes),
+      reader = response.body.getReader();
+    let length = 0;
+    try {
+      for (;;) {
+        const next = await reader.read();
+        if (next.done) break;
+        if (length + next.value.length > bytes.length) throw new Error("archive download exceeds fixed size");
+        bytes.set(next.value, length);
+        length += next.value.length;
+      }
+      if (length !== bytes.length) throw new Error("archive download is incomplete");
+      const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
+        digest = `sha256:${Array.from(hash, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+      if (digest !== ticket.digest) throw new Error("archive download digest changed");
+      return new Blob([bytes], { type: "application/zip" });
+    } finally {
+      await reader.cancel();
+      reader.releaseLock();
+    }
   }
   private async send(path: string, input?: unknown, keepalive = false, signal?: AbortSignal): Promise<unknown> {
     const response = await this.transport(`${this.origin}${path}`, {

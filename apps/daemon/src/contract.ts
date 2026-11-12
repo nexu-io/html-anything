@@ -1,3 +1,11 @@
+import { type ArchiveInput, type ArchiveOperation, type ArchiveOutput, archiveSchemas } from "./content/archive.js";
+
+export {
+  archiveLimits,
+  type Download as ArchiveDownload,
+  type Upload as ArchiveUpload,
+} from "./content/archive.js";
+
 import {
   type GenerationInput,
   type GenerationOperation,
@@ -20,18 +28,26 @@ import {
 } from "@open-motion/workspace/contract";
 
 export { Fault } from "@open-motion/workspace/contract";
-export const schemas = { ...workspace, ...exportSchemas, ...templateSchemas, ...generationSchemas };
-export type Operation = W | ExportOperation | TemplateOperation | GenerationOperation;
+export const schemas = { ...workspace, ...exportSchemas, ...templateSchemas, ...generationSchemas, ...archiveSchemas };
+export type Operation = W | ExportOperation | TemplateOperation | GenerationOperation | ArchiveOperation;
 type Inputs = { [K in W]: WI<K> } & { [K in ExportOperation]: ExportInput<K> } & {
   [K in TemplateOperation]: TemplateInput<K>;
-} & { [K in GenerationOperation]: GenerationInput<K> };
+} & { [K in GenerationOperation]: GenerationInput<K> } & { [K in ArchiveOperation]: ArchiveInput<K> };
 export type Input<K extends Operation> = Inputs[K];
 type Outputs = { [K in W]: WO<K> } & { [K in ExportOperation]: ExportOutput<K> } & {
   [K in TemplateOperation]: TemplateOutput<K>;
-} & { [K in GenerationOperation]: GenerationOutput<K> };
+} & { [K in GenerationOperation]: GenerationOutput<K> } & { [K in ArchiveOperation]: ArchiveOutput<K> };
 export type Output<K extends Operation> = Outputs[K];
 export const descriptions: Record<Operation, string> = {
   ...workspaceDescriptions,
+  archive_export:
+    "Freeze an explicitly owned revision as a bounded source/media ZIP and issue a temporary read-only resource link. Release its ticket after download.",
+  archive_upload:
+    "Reserve bounded temporary upload capacity for exact ZIP bytes/digest; POST application/zip to the returned business URL outside the control wire. Release unused tickets.",
+  archive_import:
+    "Confirm the original independent creation receipt first; absent uploadId returns artifact:null if no receipt exists. A verified upload creates one independent artifact without changing selection. Retry the same request after unknown outcomes, including after restart.",
+  archive_release:
+    "Revoke future access to a temporary archive ticket; accepted transfers retain capacity until actual drain.",
   generation_status: "Read explicitly configured PNG model identities; configuration is not model execution evidence.",
   generation_create:
     "Persist a fixed-revision PNG material task; replay the same request after an unknown response, never automatically resubmit uncertain provider calls.",
