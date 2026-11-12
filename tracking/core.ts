@@ -1,4 +1,4 @@
-export type Rule = 'uuid' | 'code' | 'slug' | 'boolean' | 'integer' | readonly string[];
+export type Rule = 'uuid' | 'code' | 'slug' | 'text' | 'boolean' | 'integer' | readonly string[];
 export type Registry = Record<string, { fields: Record<string, Rule>; required: readonly string[] }>;
 export type Fields = Record<string, string | number | boolean>;
 type RuleValue<R> = R extends readonly string[] ? R[number] : R extends 'boolean' ? boolean : R extends 'integer' ? number : string;
@@ -16,6 +16,9 @@ const code = /^[A-Za-z0-9_.-]{1,128}$/;
 // A catalogue resource id: letters, digits and single hyphens between them, at most 64 characters.
 // No dots, slashes, spaces or underscores, so a path, URL, file name or title cannot pass.
 export const slug = /^(?=.{1,64}$)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
+// The only free-text rule: a settled search-box value, trimmed, 1–100 characters, no control characters.
+// Register it on a field only when the product decision to collect that text is explicit.
+export const text = (value: string) => value.length >= 1 && value.length <= 100 && value === value.trim() && !/[\u0000-\u001f\u007f]/.test(value);
 export function deviceContext() {
   return { device_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
     utc_offset_minutes: -new Date().getTimezoneOffset() };
@@ -30,6 +33,7 @@ export function validProperties(registry: Registry, event: string, raw: unknown)
     if (Array.isArray(rule)) return typeof value === 'string' && rule.includes(value);
     if (rule === 'boolean') return typeof value === 'boolean';
     if (rule === 'integer') return Number.isSafeInteger(value) && Number(value) >= 0 && Number(value) <= 86_400_000;
+    if (rule === 'text') return typeof value === 'string' && text(value);
     return typeof value === 'string' && (rule === 'uuid' ? uuid : rule === 'slug' ? slug : code).test(value);
   });
 }

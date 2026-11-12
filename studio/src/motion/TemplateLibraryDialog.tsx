@@ -4,7 +4,8 @@ import { templatePrompt, type IntegrationInfo } from '../../../shared/integratio
 import { useI18n } from '../i18n/I18n';
 import { motionApi } from './useWorkspace';
 import { MotionIcon } from './icons';
-import { reportTemplateEvent, searchStarted } from './editorTracking';
+import * as tracking from './templateLibraryTracking';
+import type { FilterGroup, Placement, Sort } from './templateLibraryTracking';
 import styles from './TemplateLibraryDialog.module.css';
 import figmaLogo from './template-brands/figma.png';
 import lovableLogo from './template-brands/lovable.svg';
@@ -15,7 +16,7 @@ import pondLogo from './template-brands/pond.svg';
 const brandLogos: Record<string, string> = {Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
 
 type Props = { returnFocus?: HTMLElement | null; open: boolean; busy: boolean; error: string; onClose: () => void; onOpen: (id: string) => void; projectId?: string };
-type Facet = 'brand' | 'uses' | 'styles' | 'industries' | 'creationModels' | 'colors' | 'ratio' | 'duration';
+type Facet = FilterGroup;
 const facets: [Facet, string][] = [
   ['brand', 'Reference brands'], ['uses', 'Use cases'], ['styles', 'Video types'],
   ['industries', 'Industries'], ['creationModels', 'Creation models'], ['colors', 'Colors'],
@@ -76,11 +77,15 @@ export function TemplateLibraryDialog(props: Props) {
   const [downloading, setDownloading] = useState(false), [downloadError, setDownloadError] = useState('');
   const [catalog, setCatalog] = useState<GalleryTemplate[]>([]);
   const [warning, setWarning] = useState(''), [error, setError] = useState(''), [loading, setLoading] = useState(false);
-  const [attempt, retry] = useState(0), [query, setQuery] = useState(''), [sort, setSort] = useState('recommended');
+  const [attempt, retry] = useState(0), [query, setQuery] = useState(''), [sort, setSort] = useState<Sort>('recommended');
   const [selected, setSelected] = useState<Partial<Record<Facet, string[]>>>({});
   const [moreBrands, setMoreBrands] = useState(false), [searchOpen, setSearchOpen] = useState(false);
   const [preview, setPreview] = useState<GalleryTemplate | null>(null), [prompt, setPrompt] = useState(''), [feedback, setFeedback] = useState('');
   const info = useRef<IntegrationInfo | null>(null);
+  // Tracking state. Ids tie one detail view, one copy and one search to the events that follow from them.
+  const detailViewId = useRef<string | undefined>(undefined), searchId = useRef<string | undefined>(undefined), reportedQuery = useRef(''), shown = useRef(false);
+  const pendingResult = useRef<'category_select' | 'filter_apply' | 'filter_clear' | 'sort_change' | undefined>(undefined), composing = useRef(false);
+  const [settle, setSettle] = useState(0);
   useEffect(() => {
     if (!props.open) return;
     const openedDialog = dialog.current;
@@ -94,6 +99,7 @@ export function TemplateLibraryDialog(props: Props) {
   useEffect(() => {
     if (!props.open) return;
     setCatalog([]); setSelected({}); setQuery(''); setPreview(null); detail.current?.close(); useDialog.current?.close();
+    shown.current = false; searchId.current = undefined; reportedQuery.current = ''; pendingResult.current = undefined;
     const controller = new AbortController();
     let version: string | undefined, pending = false;
     async function load() {
@@ -104,7 +110,7 @@ export function TemplateLibraryDialog(props: Props) {
           const page: TemplatePage = await motionApi(`/template-catalog?category=all&covered=true&limit=60&offset=${offset}&locale=${encodeURIComponent(locale)}`, { signal: controller.signal });
           items.push(...page.items); offset = page.next; version = page.catalogVersion; setWarning(page.warning ?? '');
         }
-        if (!controller.signal.aborted) setCatalog(items);
+        if (!controller.signal.aborted) { setCatalog(items); if (!shown.current) { shown.current = true; tracking.reportLibraryShown(items.length, props.projectId); } }
       } catch (err) { if (!controller.signal.aborted) setError((err as Error).message); }
       finally { pending = false; if (!controller.signal.aborted) setLoading(false); }
     }
@@ -129,44 +135,85 @@ export function TemplateLibraryDialog(props: Props) {
     return text.includes(query.trim().toLocaleLowerCase()) && facets.every(([key]) => !selected[key]?.length || selected[key]!.some(value => values(item, key).includes(value)));
   }).sort((a, b) => sort === 'recommended' ? (a.sortOrder ?? Infinity) - (b.sortOrder ?? Infinity) : a.title.localeCompare(b.title, locale) * (sort === 'reverse' ? -1 : 1)), [catalog, query, selected, sort, locale]);
   const featured = catalog.filter(item => item.featuredOrder != null).sort((a, b) => a.featuredOrder! - b.featuredOrder!);
-  const reset = () => { setQuery(''); setSelected({}); };
-  // Reports go through the shared template reporter; a failure there must never block the library.
-  const report = (event: Parameters<typeof reportTemplateEvent>[0]) => { try { reportTemplateEvent(event, props.projectId); } catch { /* ignore */ } };
-  const search = (next: string) => { if (searchStarted(query, next)) report({ kind: 'search' }); setQuery(next); };
-  const toggle = (key: Facet, value: string) => { if (!selected[key]?.includes(value)) report({ kind: 'category', category: key }); setFacet(key, value); };
-  const setFacet = (key: Facet, value: string) => setSelected(previous => ({ ...previous, [key]: previous[key]?.includes(value) ? previous[key]!.filter(item => item !== value) : [...(previous[key] ?? []), value] }));
+  const filterCount = Object.values(selected).flat().length;
+  const listContext = () => ({ searchId: query.trim() ? searchId.current : undefined, sort, filterCount });
+  // The list state is read when a timer or effect fires, not when it was scheduled.
+  const latest = useRef({ count: 0, context: listContext() }); latest.current = { count: visible.length, context: listContext() };
+  const reset = () => {
+    if (hasFilters) { tracking.reportDiscoveryClick('filter_clear', listContext(), {}, props.projectId); pendingResult.current = 'filter_clear'; }
+    setQuery(''); setSelected({});
+  };
+  // `control` is where the option was picked: the sidebar reports a category choice, the filter dialog and chips a filter option.
+  const toggle = (key: Facet, value: string, control: 'category_select' | 'filter_option') => {
+    tracking.reportDiscoveryClick(control, listContext(), { filter_group: key, option: value, selected: !selected[key]?.includes(value) }, props.projectId);
+    pendingResult.current = control === 'category_select' ? 'category_select' : 'filter_apply';
+    setSelected(previous => ({ ...previous, [key]: previous[key]?.includes(value) ? previous[key]!.filter(item => item !== value) : [...(previous[key] ?? []), value] }));
+  };
+  const changeSort = (next: Sort) => {
+    tracking.reportDiscoveryClick('sort_option', { ...listContext(), sort: next }, { previous_sort: sort, changed: next !== sort }, props.projectId);
+    if (next !== sort) pendingResult.current = 'sort_change';
+    setSort(next);
+  };
+  // A filter, category or sort result is reported after the changed list has rendered, with the count the user now sees.
+  useEffect(() => {
+    const action = pendingResult.current; pendingResult.current = undefined;
+    if (action) tracking.reportFilterResult(action, latest.current.count, latest.current.context, props.projectId);
+  }, [selected, sort, query]);
+  // One search report per settled query: 500 ms after typing stops and never mid-composition. Each new keyword gets a new search id.
+  useEffect(() => {
+    const keyword = tracking.searchKeyword(query);
+    if (!keyword) { reportedQuery.current = ''; searchId.current = undefined; return; }
+    if (composing.current || keyword === reportedQuery.current) return;
+    const timer = setTimeout(() => {
+      const id = tracking.newTrackingId(); reportedQuery.current = keyword; searchId.current = id;
+      const { count, context } = latest.current;
+      tracking.reportSearchResult(id, query, count, { sort: context.sort, filterCount: context.filterCount }, props.projectId);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [query, settle]);
   async function showPrompt() {
     if (!preview) return;
-    report({ kind: 'copy_click', templateId: preview.id });
+    tracking.reportUseClicked(preview, 'recreate', detailViewId.current, props.projectId);
     setFeedback('');
     useDialog.current?.showModal();
+    tracking.reportInstructionShown(preview, detailViewId.current, props.projectId);
     try {
       const connection = info.current ?? await motionApi<IntegrationInfo>('/integration'); info.current = connection;
       setPrompt(templatePrompt(connection, 'codex', preview, locale));
     } catch (err) { setFeedback((err as Error).message); }
   }
   async function copy() {
-    const templateId = preview?.id;
+    const template = preview, view = detailViewId.current, attemptId = tracking.newTrackingId();
+    if (template) tracking.reportCopyClicked(template, attemptId, view, props.projectId);
     let status: 'clipboard_written' | 'manual_fallback_shown' = 'clipboard_written';
     try { await navigator.clipboard.writeText(prompt); setFeedback(t('Copied')); }
     catch { status = 'manual_fallback_shown'; setFeedback(t('Copy the instruction below and send it to your Agent.')); }
     // The instruction this dialog builds is always the Codex one.
-    if (templateId) report({ kind: 'copy_result', templateId, host: 'codex', status });
+    if (template) tracking.reportCopyResult(template, status, attemptId, view, props.projectId);
   }
   async function downloadMotion() {
     if (!preview?.motionDocumentUrl) return;
+    const template = preview, view = detailViewId.current, attemptId = tracking.newTrackingId();
+    tracking.reportDownloadClicked(template, 'download_guide', attemptId, view, props.projectId);
     setDownloading(true); setDownloadError('');
+    let errorCode = 'FETCH_ERROR';
     try {
       const response = await fetch(preview.motionDocumentUrl, { credentials: 'omit' });
-      if (!response.ok) throw new Error(`Download HTTP ${response.status}`);
+      if (!response.ok) { errorCode = `HTTP_${response.status}`; throw new Error(`Download HTTP ${response.status}`); }
       const url = URL.createObjectURL(await response.blob());
       const link = document.createElement('a'); link.href = url; link.download = 'motion.md'; link.click();
       setTimeout(() => URL.revokeObjectURL(url), 60_000);
-    } catch { setDownloadError(t('Download failed. Please try again.')); }
+      tracking.reportDownloadResult(template, attemptId, 'browser_save_requested', undefined, view, props.projectId);
+    } catch { setDownloadError(t('Download failed. Please try again.')); tracking.reportDownloadResult(template, attemptId, 'fetch_failed', errorCode, view, props.projectId); }
     finally { setDownloading(false); }
   }
-  const show = (item: GalleryTemplate) => { report({ kind: 'preview', templateId: item.id }); setPreview(item); setPrompt(''); setFeedback(''); setDownloadError(''); detail.current?.showModal(); };
-  const cards = (items: GalleryTemplate[]) => <div className={styles.grid}>{items.map(item => <TemplateCard key={item.id} template={item} onSelect={() => show(item)} />)}</div>;
+  const show = (item: GalleryTemplate, placement: Placement, position: number) => {
+    tracking.reportCardOpened(item, placement, position, listContext(), props.projectId);
+    setPreview(item); setPrompt(''); setFeedback(''); setDownloadError(''); detail.current?.showModal();
+    const view = tracking.newTrackingId(); detailViewId.current = view;
+    tracking.reportDetailShown(item, view, props.projectId);
+  };
+  const cards = (items: GalleryTemplate[], placement: Placement) => <div className={styles.grid}>{items.map((item, index) => <TemplateCard key={item.id} template={item} onSelect={() => show(item, placement, index + 1)} />)}</div>;
   return <dialog ref={dialog} className={styles.library} aria-label={t('Template library')} onKeyDown={event => event.stopPropagation()} onCancel={event => { if (event.target !== dialog.current) return; event.preventDefault(); if (!props.busy) props.onClose(); }}>
     <header className={styles.header}><h1>{t('Template library')}</h1><button disabled={props.busy} onClick={props.onClose} aria-label={t('Close template library')}><MotionIcon name="close" size={24} /></button></header>
     {(props.error || error) && <div className={styles.status} role="alert">{t(props.error || error)}{error && <button onClick={() => retry(value => value + 1)}>{t('Retry')}</button>}</div>}
@@ -176,42 +223,42 @@ export function TemplateLibraryDialog(props: Props) {
       <aside className={styles.sidebar} aria-label={t('Filters')}>
         <button className={styles.all} aria-current={!hasFilters ? 'page' : undefined} onClick={reset}>{t('All templates')}<span>{catalog.length}</span></button>
         {available.filter(facet => ['brand', 'uses', 'styles', 'industries', 'creationModels'].includes(facet.key)).map(facet => <details key={facet.key} open={facet.key === 'brand'}><summary>{t(facet.label)}</summary>
-          {facet.values.slice(0, facet.key === 'brand' && !moreBrands ? 5 : undefined).map(value => <button key={value} aria-pressed={selected[facet.key]?.includes(value) ?? false} onClick={() => toggle(facet.key, value)}>
+          {facet.values.slice(0, facet.key === 'brand' && !moreBrands ? 5 : undefined).map(value => <button key={value} aria-pressed={selected[facet.key]?.includes(value) ?? false} onClick={() => toggle(facet.key, value, 'category_select')}>
             {facet.key === 'brand' && <span className={styles.brandIcon} aria-hidden="true">{brandLogos[value] ? <img src={brandLogos[value]} alt="" /> : value.slice(0, 1)}</span>}<span>{value}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
           </button>)}
-          {facet.key === 'brand' && facet.values.length > 5 && <button onClick={() => setMoreBrands(!moreBrands)}>{t(moreBrands ? 'Show less' : 'Show more')}</button>}
+          {facet.key === 'brand' && facet.values.length > 5 && <button onClick={() => { tracking.reportDiscoveryClick('category_more', listContext(), { filter_group: 'brand', expanded: !moreBrands }, props.projectId); setMoreBrands(!moreBrands); }}>{t(moreBrands ? 'Show less' : 'Show more')}</button>}
         </details>)}
       </aside>
       <main className={styles.results} aria-busy={loading}>
-        {!hasFilters && featured.length > 0 && <section className={styles.featured}><h2>{t('Popular templates')}</h2>{cards(featured)}</section>}
+        {!hasFilters && featured.length > 0 && <section className={styles.featured}><h2>{t('Popular templates')}</h2>{cards(featured, 'popular')}</section>}
         <div className={styles.toolbar}><h2>{t('All templates')} <small>{t('{count} templates', { count: visible.length })}</small></h2><div className={styles.controls}>
           <button aria-label={t('Search templates')} aria-expanded={searchOpen} onClick={() => setSearchOpen(!searchOpen)}><MotionIcon name="search" size={21} /></button>
-          <button onClick={() => filter.current?.showModal()}><MotionIcon name="sliders" />{t('Filters')}{Object.values(selected).flat().length > 0 && ` (${Object.values(selected).flat().length})`}</button>
-          <select aria-label={t('Sort')} value={sort} onChange={event => setSort(event.target.value)}><option value="recommended">{t('Recommended order')}</option><option value="name">{t('Name A–Z')}</option><option value="reverse">{t('Name Z–A')}</option></select>
+          <button onClick={() => { tracking.reportDiscoveryClick('filter_open', listContext(), {}, props.projectId); filter.current?.showModal(); }}><MotionIcon name="sliders" />{t('Filters')}{Object.values(selected).flat().length > 0 && ` (${Object.values(selected).flat().length})`}</button>
+          <select aria-label={t('Sort')} value={sort} onChange={event => changeSort(event.target.value as Sort)}><option value="recommended">{t('Recommended order')}</option><option value="name">{t('Name A–Z')}</option><option value="reverse">{t('Name Z–A')}</option></select>
         </div></div>
-        {searchOpen && <input className={styles.search} autoFocus type="search" maxLength={200} value={query} onChange={event => search(event.target.value)} placeholder={t('Search templates, creators, styles…')} aria-label={t('Search templates')} />}
-        {hasFilters && <div className={styles.chips}>{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)}>{t(value)} ×</button>))}<button onClick={reset}>{t('Clear filters')}</button></div>}
-        {loading && !catalog.length ? <p role="status">{t('Loading templates…')}</p> : cards(visible)}
+        {searchOpen && <input className={styles.search} autoFocus type="search" maxLength={200} value={query} onChange={event => setQuery(event.target.value)} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; setSettle(value => value + 1); }} placeholder={t('Search templates, creators, styles…')} aria-label={t('Search templates')} />}
+        {hasFilters && <div className={styles.chips}>{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value, 'filter_option')}>{t(value)} ×</button>))}<button onClick={reset}>{t('Clear filters')}</button></div>}
+        {loading && !catalog.length ? <p role="status">{t('Loading templates…')}</p> : cards(visible, 'catalog')}
         {!loading && !visible.length && !error && <p className={styles.empty}>{t('No matching templates. Try another name, creator or style.')}</p>}
       </main>
     </div>
     <dialog ref={filter} className={styles.filters} aria-label={t('Filters')}><header><h2>{t('Filters')}</h2><button onClick={() => filter.current?.close()} aria-label={t('Close')}><MotionIcon name="close" /></button></header>
-      {available.map(facet => <fieldset key={facet.key}><legend>{t(facet.label)}</legend>{facet.values.map(value => <label key={value}><input type="checkbox" checked={selected[facet.key]?.includes(value) ?? false} onChange={() => toggle(facet.key, value)} />{t(value)}</label>)}</fieldset>)}
-      <footer><button onClick={reset}>{t('Clear filters')}</button><button onClick={() => filter.current?.close()}>{t('Done')}</button></footer>
+      {available.map(facet => <fieldset key={facet.key}><legend>{t(facet.label)}</legend>{facet.values.map(value => <label key={value}><input type="checkbox" checked={selected[facet.key]?.includes(value) ?? false} onChange={() => toggle(facet.key, value, 'filter_option')} />{t(value)}</label>)}</fieldset>)}
+      <footer><button onClick={reset}>{t('Clear filters')}</button><button onClick={() => { tracking.reportDiscoveryClick('filter_apply', listContext(), {}, props.projectId); filter.current?.close(); }}>{t('Done')}</button></footer>
     </dialog>
-    <dialog ref={detail} className={styles.detail} aria-label={t('Template preview')} onClose={() => { setPreview(null); setPrompt(''); }}>
+    <dialog ref={detail} className={styles.detail} aria-label={t('Template preview')} onClose={() => { setPreview(null); setPrompt(''); detailViewId.current = undefined; }}>
       {preview && <><button className={styles.close} onClick={() => detail.current?.close()} aria-label={t('Close template preview')}><MotionIcon name="close" size={24} /></button><div className={styles.detailGrid}>
         <div className={styles.stage}>{preview.previewUrl ? <video key={preview.id} src={preview.previewUrl} poster={preview.posterUrl} controls playsInline /> : preview.posterUrl ? <img src={preview.posterUrl} alt={preview.title} /> : <p>{preview.title}</p>}</div>
         <div className={styles.detailInfo}><small>{preview.styles?.join(' · ') || preview.subtitle}</small><h2>{preview.title}</h2><p>{preview.description}</p>
           {preview.sourceUrl ? <a href={preview.sourceUrl} target="_blank" rel="noreferrer">{preview.authorName || preview.author} ↗</a> : <p>{preview.authorName || preview.author}</p>}
           <div className={styles.actions}><button disabled={!preview.motionDocumentUrl || downloading} onClick={() => void downloadMotion()}>{t(downloading ? 'Downloading…' : 'Download motion.md')}</button><button onClick={() => void showPrompt()}>{t('Recreate template')}</button></div>
-          <div className={styles.projectActions}>{isEditableTemplate(preview) && <button disabled={props.busy} onClick={() => { report({ kind: 'use', templateId: preview.id }); detail.current?.close(); props.onOpen(preview.id); }}>{t('Open and edit')} ↗</button>}{preview.projectFileUrl && <a href={preview.projectFileUrl} target="_blank" rel="noreferrer">{t('Download OpenMotion project')} ↗</a>}</div>
+          <div className={styles.projectActions}>{isEditableTemplate(preview) && <button disabled={props.busy} onClick={() => { tracking.reportUseClicked(preview, 'open_edit', detailViewId.current, props.projectId); detail.current?.close(); props.onOpen(preview.id); }}>{t('Open and edit')} ↗</button>}{preview.projectFileUrl && <a href={preview.projectFileUrl} target="_blank" rel="noreferrer" onClick={() => tracking.reportDownloadClicked(preview, 'download_project', undefined, detailViewId.current, props.projectId)}>{t('Download OpenMotion project')} ↗</a>}</div>
           {downloadError && <p role="status">{downloadError}</p>}
           <dl><dt>{t('Video types')}</dt><dd>{preview.styles?.join(' · ') || '—'}</dd><dt>{t('Creation models')}</dt><dd>{preview.creationModels?.join(' · ') || '—'}</dd><dt>{t('Duration')}</dt><dd>{preview.duration ? t('{value}s', { value: preview.duration }) : '—'}</dd></dl>
         </div></div>
         {(preview.styleDescription || preview.reviewFocus || preview.motionGuideUrl) && <section className={styles.guide} aria-label={t('Motion guide')}>
           <aside><h3>{t('On this page')}</h3>{preview.styleDescription && <a href="#template-style">{t('Visual style')}</a>}{preview.reviewFocus && <a href="#template-notes">{t('Production notes')}</a>}{preview.motionGuideUrl && <a href="#template-guide">{t('Motion guide')}</a>}</aside>
-          <div>{preview.styleDescription && <section id="template-style"><h3>{t('Visual style')}</h3><p>{preview.styleDescription}</p></section>}{preview.reviewFocus && <section id="template-notes"><h3>{t('Production notes')}</h3><p>{preview.reviewFocus}</p></section>}{preview.motionGuideUrl && <section id="template-guide"><h3>{t('Motion guide')}</h3><iframe src={preview.motionGuideUrl} title={t('Motion guide')} sandbox="allow-scripts" loading="lazy" referrerPolicy="no-referrer" /><a href={preview.motionGuideUrl} target="_blank" rel="noreferrer">{t('View full page')} ↗</a></section>}</div>
+          <div>{preview.styleDescription && <section id="template-style"><h3>{t('Visual style')}</h3><p>{preview.styleDescription}</p></section>}{preview.reviewFocus && <section id="template-notes"><h3>{t('Production notes')}</h3><p>{preview.reviewFocus}</p></section>}{preview.motionGuideUrl && <section id="template-guide"><h3>{t('Motion guide')}</h3><iframe src={preview.motionGuideUrl} title={t('Motion guide')} sandbox="allow-scripts" loading="lazy" referrerPolicy="no-referrer" /><a href={preview.motionGuideUrl} target="_blank" rel="noreferrer" onClick={() => tracking.reportFullPageClicked(preview, detailViewId.current, props.projectId)}>{t('View full page')} ↗</a></section>}</div>
         </section>}</>}
     </dialog>
     <dialog ref={useDialog} className={styles.useDialog} aria-label={t('Recreate template')}>
