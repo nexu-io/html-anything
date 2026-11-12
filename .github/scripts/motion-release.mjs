@@ -12,7 +12,7 @@ import { generateInstallGuide } from '../../scripts/install-guide.mjs';
 import { publishGuide, storagePlan } from './publish-install-guide.mjs';
 import { scanPackage, scanSource } from './motion-scan.mjs';
 
-export const repository = 'nexu-io/html-anything';
+export const repository = 'nexu-io/openmotion';
 export const candidateWorkflow = '.github/workflows/motion-candidate.yml';
 export const publicationWorkflow = '.github/workflows/motion-publish-test.yml';
 export const recoveryWorkflow = '.github/workflows/motion-publication-recovery.yml';
@@ -173,7 +173,11 @@ export async function verifyCandidate(directory, expectedSHA256, run) {
   assert.match(expectedSHA256, hashPattern); assert.match(candidate.sourceCommit, /^[a-f0-9]{40}$/);
   const ref = `refs/heads/${run.head_branch || 'main'}`; // Older main-only receipts omitted the branch.
   assert(candidateRefs.includes(ref), 'Untrusted candidate branch');
-  assert.deepEqual(candidate.workflow, { repository, path: candidateWorkflow, ref, sha: run.head_sha, runId: run.id, attempt: run.run_attempt });
+  // Immutable receipts predating the rename keep their original name. Artifact lookup
+  // and live run validation still use only the current repository; never follow an alias.
+  const receiptRepository = candidate.workflow?.repository;
+  assert([repository, 'nexu-io/html-anything'].includes(receiptRepository), 'Untrusted candidate repository');
+  assert.deepEqual(candidate.workflow, { repository: receiptRepository, path: candidateWorkflow, ref, sha: run.head_sha, runId: run.id, attempt: run.run_attempt });
   const names = [candidate.tgz, 'release-npm.json', 'source-scan.json', 'package-scan.json', 'install.md', 'install-record.json', 'acceptance.md', 'candidate-install.md'];
   assert.deepEqual(Object.keys(candidate.files).sort(), names.sort());
   for (const name of names) assert.equal(await sha256(path.join(directory, name)), candidate.files[name], 'Candidate file changed: ' + name);

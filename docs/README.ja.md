@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/nexu-io/html-anything"><img src="readme/badges/stars.ja.svg" alt="GitHub スター · 9.5k（2026-11-09）"></a>
+  <a href="https://github.com/nexu-io/openmotion"><img src="readme/badges/stars.ja.svg" alt="GitHub スター · 9.5k（2026-11-09）"></a>
   <a href="../package.json"><img src="readme/badges/node.svg" alt="Node.js 22.18+"></a>
   <a href="../LICENSE"><img src="readme/badges/license.ja.svg" alt="Apache 2.0 ライセンス"></a>
   <a href="https://github.com/nexu-io/open-design"><img src="readme/badges/built-by-opendesign.ja.svg" alt="開発元 OpenDesign"></a>
@@ -561,7 +561,7 @@ Brand Kit 欄にはロゴ、配色、書体、文体、確認済みの製品情�
 Git、npm、**Node.js 26.11.1** を用意してください。ソースからのプレビューと書き出しには Chrome または Chromium と、FFmpeg・FFprobe も必要です。[実行環境の設定](usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
+git clone --branch feature/motion https://github.com/nexu-io/openmotion.git openmotion
 cd openmotion
 npm ci
 npm run build:studio
@@ -789,7 +789,7 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 | **エージェントと開発ツール** | ホストアダプター、Skill、リソースガイド、プロジェクト操作の改善 | [エージェントアダプター](agent-adapters.md) · [MCP 契約](mcp-phase1-tools.md) |
 | **動きとクリエイティブコード** | 実際の改編を添えた部品、ネイティブテンプレート、Motion.md パッケージ | [部品](../library/components/README.md) · [登録チェックリスト](../library/ENTRY_TEMPLATE.md) |
 | **動画とレンダリング** | 出力の信頼性、メディア処理、再現可能な検証の改善 | [エンジンの説明](hyperframes.md) · [出力検証器](../scripts/verify-export.ts) |
-| **SNS 公開** | 計画中の接続層を設計：アカウント利用、公開確認、予約、版の対応付け | [公開の方向性](product/studio-vision.md) · [提案を議論する](https://github.com/nexu-io/html-anything/issues) |
+| **SNS 公開** | 計画中の接続層を設計：アカウント利用、公開確認、予約、版の対応付け | [公開の方向性](product/studio-vision.md) · [提案を議論する](https://github.com/nexu-io/openmotion/issues) |
 
 [ローカル設定](#quick-start)から始め、担当する層を選び、[CONTRIBUTING.md](../CONTRIBUTING.md) と [AGENTS.md](../AGENTS.md)に従ってください。プロジェクトと認証情報はチェックアウト外に置き、固定バージョンと上流ライセンスを維持します。
 
@@ -842,15 +842,15 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 | **Brandkit** | ブランド、正確な製品情報、共有できる素材 |
 | **エージェント対応や編集機能の改善** | 焦点を絞った変更と再現可能な検証 |
 
-[リソース提出時のチェックリスト](../library/ENTRY_TEMPLATE.md) · [貢献ガイド](../CONTRIBUTING.md) · [問題を報告](https://github.com/nexu-io/html-anything/issues) · [コントリビューター](https://github.com/nexu-io/html-anything/graphs/contributors) · [メディア向け資料](media-kit.md)
+[リソース提出時のチェックリスト](../library/ENTRY_TEMPLATE.md) · [貢献ガイド](../CONTRIBUTING.md) · [問題を報告](https://github.com/nexu-io/openmotion/issues) · [コントリビューター](https://github.com/nexu-io/openmotion/graphs/contributors) · [メディア向け資料](media-kit.md)
 
 OpenMotion の専用サイトは `open-design.ai/openmotion` に開設予定です。
 
 [OpenDesign の動画ギャラリー](https://open-design.ai/motion/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_ja) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_ja) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
-[**GitHub で OpenMotion にスターを付ける**](https://github.com/nexu-io/html-anything)
+[**GitHub で OpenMotion にスターを付ける**](https://github.com/nexu-io/openmotion)
 
-[![OpenMotion の更新をフォローするには GitHub でスターを](readme/community-star.ja.svg)](https://github.com/nexu-io/html-anything)
+[![OpenMotion の更新をフォローするには GitHub でスターを](readme/community-star.ja.svg)](https://github.com/nexu-io/openmotion)
 
 <a id="acknowledgements"></a>
 
@@ -875,4 +875,4 @@ OpenMotion のライセンスは [Apache-2.0](../LICENSE)です。第三者の�
 
 [素材の出典](readme/ASSETS.md) · [その他の展示素材の出典](readme/brand-showcase/README.md) · [フォントのライセンス](../web/design-system/fonts/NOTICES.txt) · [Studio のライセンス](../studio/LICENSE)
 
-旧 HTML Anything アプリは [`legacy` ブランチ](https://github.com/nexu-io/html-anything/tree/legacy)に保存されています。現在のブランチと配布範囲は[リポジトリ移行ガイド](repository-migration.md) を参照してください。
+旧 HTML Anything アプリは [`legacy` ブランチ](https://github.com/nexu-io/openmotion/tree/legacy)に保存されています。現在のブランチと配布範囲は[リポジトリ移行ガイド](repository-migration.md) を参照してください。
