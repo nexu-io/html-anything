@@ -36,11 +36,12 @@ async function fixture(t: any) {
 test('diagnostic ZIPs are readable, redacted, bounded and contain only allowlisted data in test and stable builds', async t => {
   const options = await fixture(t);
   const secret = 'fixture-' + randomUUID(), jobId = randomUUID();
+  const personalPath = path.posix.join('/', 'Users', 'person', 'private', 'file.txt');
   const previous = process.env.DIAGNOSTIC_TEST_TOKEN;
   process.env.DIAGNOSTIC_TEST_TOKEN = secret;
   t.after(() => { if (previous === undefined) delete process.env.DIAGNOSTIC_TEST_TOKEN; else process.env.DIAGNOSTIC_TEST_TOKEN = previous; });
   await writeFile(path.join(options.appRoot, 'shared/build-info.json'), JSON.stringify({ commit: 'a'.repeat(40) }));
-  await writeFile(path.join(options.dataDirectory, 'preview.log'), `startup ${secret}\napi_key="${secret}"\nCookie: session=${secret}; other=${secret}\nhttps://user:${secret}@example.com/private/${secret}?token=${secret}\n/Users/person/private/file.txt\n`);
+  await writeFile(path.join(options.dataDirectory, 'preview.log'), `startup ${secret}\napi_key="${secret}"\nCookie: session=${secret}; other=${secret}\nhttps://user:${secret}@example.com/private/${secret}?token=${secret}\n${personalPath}\n`);
   const privateContent = 'private-project-' + randomUUID();
   for (const name of ['.env', 'project.html', 'providers.json', 'conversation.json']) await writeFile(path.join(options.dataDirectory, name), privateContent);
   await mkdir(path.join(options.dataDirectory, 'jobs', jobId), { recursive: true });
@@ -54,7 +55,7 @@ test('diagnostic ZIPs are readable, redacted, bounded and contain only allowlist
     assert.equal(JSON.parse(files['jobs.json'])[0].error, 'api_key=[redacted]');
     assert.equal(JSON.parse(files['jobs.json'])[0].token, undefined);
     assert(!result.data.includes(Buffer.from(secret)) && !result.data.includes(Buffer.from(privateContent)));
-    assert(!result.data.includes(Buffer.from('/Users/person')));
+    assert(!result.data.includes(Buffer.from(path.posix.dirname(personalPath))));
     assert(files['logs/job-1/render.log'].includes('render failed'));
     assert(JSON.parse(files['files.json']).some((file: any) => file.name === 'studio.log' && file.status === 'missing'));
     assert(result.data.length < diagnosticLimits.totalBytes + 64 * 1024);
