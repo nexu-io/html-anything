@@ -78,8 +78,8 @@ try {
   await page.screenshot({ path: path.join(evidence, 'save-refresh-undo.png') });
 
   for (const [label, id, reason, text] of [
-    ['Static Svg', 'static-svg', 'cannot be edited visually yet', '暂不支持直接编辑此类元素'],
-    ['Dynamic', 'dynamic', 'not found in the current source', '在当前源码中找不到此元素'],
+    ['Static Svg', 'static-svg', 'cannot be edited visually yet', '此类元素暂不支持直接编辑'],
+    ['Dynamic', 'dynamic', 'not found in the current source', '未能在源文件中定位到它'],
   ]) {
     const current = await handle(label);
     const inspected = await call('studio_inspect', { handle: current });
