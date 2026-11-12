@@ -99,7 +99,7 @@ export async function openPreview(store = new WorkspaceStore(), environment: Pre
     const file = path.join(store.directory, 'preview.json'), temporary = file + '.' + crypto.randomUUID() + '.tmp';
     try { await writeFile(temporary, JSON.stringify({ port: Number(new URL(editor.endpoint).port), pid: editor.pid, version: editor.version }), { mode: 0o600 }); await rename(temporary, file); }
     finally { await rm(temporary, { force: true }); }
-    return { ...opened, previewUrl: new URL(editor.endpoint).origin,
+    return { ...opened, mcp: editor.mcp, previewUrl: new URL(editor.endpoint).origin,
       studioUrl: opened.editorReady ? new URL(`/#project/${store.projectId}`, editor.endpoint).href : undefined,
       revision: (await store.get()).revision, reused: before?.instanceId === editor.instanceId,
       previewTarget: 'host-built-in-browser', nextAction: 'Open the exact previewUrl in the host built-in browser when available; otherwise return the URL and mark visual/player checks as not_run. Do not start another editor or ask the user to run a terminal server.' };
@@ -134,7 +134,7 @@ export async function openPreview(store = new WorkspaceStore(), environment: Pre
       try { await writeFile(temporary, JSON.stringify({ port, pid, version: health.version }), { mode: 0o600 }); await rename(temporary, file); }
       finally { await rm(temporary, { force: true }); }
       return { previewUrl: `http://localhost:${port}`, studioUrl: health.studioUrl ? `http://localhost:${port}/#project/${store.projectId}` : undefined, hyperframesCli: health.hyperframesCli, authoringGuide: health.authoringGuide, engine: 'hyperframes', ready: true, reused, ffmpeg: health.ffmpeg, revision: (await store.get()).revision,
-        dataDirectory: store.directory, editorReady: Boolean(health.studioUrl), browserOpened: false, previewTarget: 'host-built-in-browser',
+        mcp: health.mcp, dataDirectory: store.directory, editorReady: Boolean(health.studioUrl), browserOpened: false, previewTarget: 'host-built-in-browser',
         nextAction: options.editor ? 'Use the host built-in browser to open previewUrl in this conversation. Do not ask the user to run a server or launch an external browser. If the host has no built-in browser, return the URL and state that the embedded preview is unavailable.' : 'Background service ready. Opening the editor is not required for template application or export.' };
     }
     // Public MCP negotiates its API; other callers retain exact-version reuse.

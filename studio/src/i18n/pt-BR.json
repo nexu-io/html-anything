@@ -1809,5 +1809,9 @@
   "Failed to add media": "Não foi possível adicionar a mídia",
   "Could not read media duration. Try adding the file again.": "Não foi possível ler a duração da mídia. Tente adicionar o arquivo novamente.",
   "Loading fonts…": "Carregando fontes…",
-  "Couldn't load local fonts.": "Não foi possível carregar as fontes locais."
+  "Couldn't load local fonts.": "Não foi possível carregar as fontes locais.",
+  "Create videos with OpenMotion, right in {host}.": "Crie vídeos com OpenMotion, direto no {host}.",
+  "Back to the OpenMotion editor": "Retornar ao editor OpenMotion",
+  "Workspace unavailable. Check that the OpenMotion service is running.": "Espaço de trabalho indisponível. Verifique se o serviço OpenMotion está em execução.",
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "Configuração de conexão inválida. Atualize ou reinicie o serviço OpenMotion."
 }

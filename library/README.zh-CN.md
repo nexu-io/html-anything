@@ -6,7 +6,7 @@
 
 | 分类 | 从这里开始 | 收录内容 |
 | --- | --- | --- |
-| **🧠 Skills** | [Presenter Story](skills/presenter-story/SKILL.md) · [Motion Design Remix](skills/motion-design-remix/SKILL.md) · [Brandkit 整理](skills/brandkit/SKILL.md) | 用 `SKILL.md` 描述可重复使用的方法，按需附示例与参考。 |
+| **🧠 Skills** | [Presenter Story](skills/presenter-story/SKILL.md) · [Motion Design Remix](skills/openmotion-design-remix/SKILL.md) · [Brandkit 整理](skills/brandkit/SKILL.md) | 用 `SKILL.md` 描述可重复使用的方法，按需附示例与参考。 |
 | **🎞️ 模板** | [Studio 可编辑起点](templates/README.md) · [Presenter Tech](templates/presenter-tech/README.md) | 完整工程、预览、替换与改编说明。 |
 | **🧩 Motion 组件** | [标题揭示配方](components/title-reveal/README.md) | 标题、转场、图表或场景，说明时序、可修改项与接入方式。 |
 | **🎨 动效设计体系** | [Ink & Water](design-systems/ink-water/MOTION_DESIGN.md) | 用 `MOTION_DESIGN.md` 记录字体、构图、节奏、运动和声音规则。 |
@@ -15,7 +15,7 @@
 ```text
 library/
 ├── skills/presenter-story/              → three presenter / motion recipes
-├── skills/motion-design-remix/           → six source / remix profiles
+├── skills/openmotion-design-remix/           → six source / remix profiles
 ├── skills/brandkit/SKILL.md
 ├── templates/presenter-tech/            → local presenter / motion package
 ├── templates/README.md                  → 现有可编辑工程源码
@@ -42,10 +42,18 @@ library/
 可选 Library Skills 可以从本地仓库分别安装：
 
 ```sh
-npx skills add ./library/skills --skill brandkit
-npx skills add ./library/skills --skill motion-design-remix
-npx skills add ./library/skills --skill presenter-story
+npx skills add ./library/skills --skill openmotion-brandkit
+npx skills add ./library/skills --skill openmotion-design-remix
+npx skills add ./library/skills --skill openmotion-presenter-story
 ```
+
+需要保留旧名调用时，可从源码或完整插件 ZIP 安装到明确的宿主 Skill 目录：
+
+```sh
+node scripts/install-library-skill.mjs motion-design-remix /absolute/path/to/host/skills
+```
+
+安装器接受三个 Library Skill 的新名和旧名。选择旧名时会同时安装规范 Skill 和轻量兼容入口，资源只存一份；相同内容可复用，自定义内容不会被覆盖。如果第三方安装器只复制旧入口，首次调用须按入口说明联网安装固定版本的规范 Skill，再继续当前任务。通过本地安装器带齐两个入口后，调用无需联网补齐依赖。
 
 资源库当前是可浏览的源码目录，不会自动导入 Studio 或注册为 MCP 资源。五个核心制作入口仍在 [`skills/`](../skills/)；可选 Library Skills 提供品牌上下文、真人叙事设计配方或特定源码改编方法，不增加核心制作路线。[Studio 目录](../docs/template-catalog.md)与[可观看参考](../docs/collections/README.zh-CN.md)继续使用原有来源和行为。
 

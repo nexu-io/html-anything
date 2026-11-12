@@ -1768,10 +1768,14 @@
   "red": "红色",
   "yellow": "黄色",
   "{count} templates": "{count} 个模板",
-  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "历史文件缺失、无法读取或已损坏：{files}。未恢复此版本，当前工程保持不变。",
-  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "无法准备恢复所需的历史文件：{files}。当前工程保持不变。",
+  "Historical files are missing, unreadable or damaged: {files}. This version was not restored. Your current project is unchanged.": "历史文件缺失、无法读取或已损坏：{files}。未恢复此版本，当前项目保持不变。",
+  "Could not prepare historical files for restoration: {files}. Your current project is unchanged.": "无法准备恢复所需的历史文件：{files}。当前项目保持不变。",
   "Failed to add media": "添加素材失败",
   "Could not read media duration. Try adding the file again.": "无法读取素材时长，请重新添加文件。",
   "Loading fonts…": "正在加载字体…",
-  "Couldn't load local fonts.": "本地字体加载失败。"
+  "Couldn't load local fonts.": "本地字体加载失败。",
+  "Create videos with OpenMotion, right in {host}.": "用 OpenMotion 创作视频，就在你的 {host}。",
+  "Back to the OpenMotion editor": "返回 OpenMotion 编辑器",
+  "Workspace unavailable. Check that the OpenMotion service is running.": "工作区暂不可达，请确认 OpenMotion 服务正在运行。",
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "接入配置无效，请更新或重启当前 OpenMotion 服务。"
 }

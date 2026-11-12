@@ -70,8 +70,8 @@ test('one native service keeps both projects editable, scoped and recoverable af
       const closed = await postHistory(id, `window/${windowId}/close`);
       assert.equal(closed.status, 200, await closed.clone().text());
       assert.ok((await closed.json()).entry, 'a history window must survive separate requests for its own project');
-      const project = await call('motion_get_project', { projectId: id });
-      const edit = await call('motion_edit_project', {
+      const project = await call('openmotion_get_project', { projectId: id });
+      const edit = await call('openmotion_edit_project', {
         projectId: id, requestId: crypto.randomUUID(), expectedRevision: project.revision,
         expectedVersionId: project.currentVersionId, presentation: 'background',
         files: [{ path: 'agent-notes.txt', content: `Edited in ${id}` }],

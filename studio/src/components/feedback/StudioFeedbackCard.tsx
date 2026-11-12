@@ -1,5 +1,6 @@
 import { useI18n } from "../../i18n/I18n";
 import { memo, useState, useCallback, useRef, useEffect } from "react";
+import { ErrorNotice } from "../ui/ErrorNotice";
 import { toastSurface } from "../StudioToast";
 import {
   trackStudioFeedback,
@@ -221,7 +222,7 @@ export const StudioFeedbackCard = memo(function StudioFeedbackCard() {
           <p
             className={`min-w-0 flex-1 text-[12px] leading-5 ${failed ? "text-danger-ink" : "text-text-0"}`}
           >
-            {step === "thanks" ? t("Thanks, that helps.") : title}
+            {step === "thanks" ? t("Thanks, that helps.") : t(title)}
           </p>
           {step === "thanks" && (
             <a
@@ -259,7 +260,7 @@ export const StudioFeedbackCard = memo(function StudioFeedbackCard() {
         {/* The failure text the user already saw, quoted back so the report
             carries it without asking them to retype the error. */}
         {failed && request.detail && step !== "thanks" && (
-          <p className="line-clamp-2 text-[11px] leading-4 text-danger-ink">{request.detail}</p>
+          <ErrorNotice message={request.detail} context={request.reason === "render_failed" ? "export" : "operation"} compact />
         )}
 
         {step === "rating" && (
@@ -301,7 +302,7 @@ export const StudioFeedbackCard = memo(function StudioFeedbackCard() {
             <div className="flex flex-wrap gap-1.5">
               {followUp.presets.map((preset) => (
                 <button
-                  key={preset.label}
+                  key={t(preset.label)}
                   type="button"
                   onClick={() => submit(preset.label)}
                   onPointerEnter={() => setHint(preset.hint)}
@@ -310,7 +311,7 @@ export const StudioFeedbackCard = memo(function StudioFeedbackCard() {
                   onBlur={() => setHint(null)}
                   // The hint reaches a screen reader through the label, since
                   // it never gets the hover that reveals it visually.
-                  aria-label={`${preset.label}. ${preset.hint}`}
+                  aria-label={`${t(preset.label)}. ${t(preset.hint)}`}
                   // Hover has to be unmistakable, not a shade brighter: the
                   // chip under the pointer is the one the hint line is talking
                   // about, so if you cannot tell which is hovered, the hint is
@@ -321,7 +322,7 @@ export const StudioFeedbackCard = memo(function StudioFeedbackCard() {
                       : "border-border bg-hover text-neutral-300 hover:border-text-muted hover:bg-press hover:text-text-0"
                   }`}
                 >
-                  {preset.label}
+                  {t(preset.label)}
                 </button>
               ))}
             </div>
@@ -330,7 +331,7 @@ export const StudioFeedbackCard = memo(function StudioFeedbackCard() {
                 bubble below lands on the input. One reserved line occludes
                 nothing and needs no hover delay to be readable. */}
             <p className="h-3.5 truncate text-[10.5px] leading-[14px] text-neutral-500">
-              {hint ?? "Tap one, or write your own."}
+              {t(hint ?? "Tap one, or write your own.")}
             </p>
             <div className="flex items-center gap-2">
               <input
@@ -341,8 +342,8 @@ export const StudioFeedbackCard = memo(function StudioFeedbackCard() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") submit();
                 }}
-                placeholder={followUp.placeholder}
-                aria-label={followUp.prompt}
+                placeholder={t(followUp.placeholder)}
+                aria-label={t(followUp.prompt)}
                 maxLength={500}
                 className="h-7 min-w-0 flex-1 rounded-md border border-border bg-input px-2 text-[11px] text-neutral-100 outline-hidden transition-colors duration-150 placeholder:text-neutral-500 focus:border-ring"
               />

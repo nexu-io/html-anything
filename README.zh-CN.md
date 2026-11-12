@@ -48,6 +48,8 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <a id="showcase"></a> <a id="用-openmotion-可以做什么"></a>
 <a id="使用场景与复刻效果示例"></a>
 
+The plugin and MCP server are named `openmotion`; Tools, Skills and resources use `openmotion_*`, `openmotion-*` and `openmotion://`. Existing names remain explicit compatibility aliases. See [naming and installation compatibility](docs/npm-installation.md#public-names-and-compatibility).
+
 ## 🎞️ 使用场景与复刻效果示例
 
 <a id="可以用它做什么"></a> <a id="what-can-you-make"></a>
@@ -62,7 +64,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <tr><th colspan="3" align="left">🎓 教学与讲解</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="真人视频参考：改变职业生涯的 6 项关键技能"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="真人视频参考：改变职业生涯的 6 项关键技能"></picture></a><br>
 <strong>改变职业生涯的 6 项关键技能</strong><br>
 编号要点 + 动态关键词<br>
 <sub>参考 · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
@@ -83,13 +85,13 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <tr><th colspan="3" align="left">🖥️ 展示工作流</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="真人视频参考：我每天使用的 5 个工具"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="真人视频参考：我每天使用的 5 个工具"></picture></a><br>
 <strong>我每天使用的 5 个工具</strong><br>
 桌边讲述 + 工作流插画面<br>
 <sub>参考 · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="真人视频参考：带重点标注的工具演示"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="真人视频参考：带重点标注的工具演示"></picture></a><br>
 <strong>带重点标注的工具演示</strong><br>
 真人 + 屏幕 + 标注<br>
 <sub>参考 · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
@@ -125,22 +127,22 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <tr><th colspan="3" align="left">原片 → 外部改编</th></tr>
 <tr>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></a><br>
 <strong>职业建议 → 视频制作讲解</strong><br>
 换一位出镜人，用编号和例证卡串起新的讲解内容。<br>
-<sub><a href="library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/careerwithriya-reference.mp4">原片</a> · <a href="library/skills/presenter-story/assets/careerwithriya-result.mp4">完整改编</a></sub>
+<sub><a href="library/skills/openmotion-presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4">原片</a> · <a href="library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4">完整改编</a></sub>
 </td>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></a><br>
 <strong>日常工具 → 设计工作空间的故事</strong><br>
 沿用真人与屏幕交替的节奏，演示另一套工作流。<br>
-<sub><a href="library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">原片</a> · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4">完整改编</a></sub>
+<sub><a href="library/skills/openmotion-presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4">原片</a> · <a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4">完整改编</a></sub>
 </td>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="原始真人视频与更换人物和内容的外部改编"></picture></a><br>
 <strong>工具演示 → 视频编辑器导览</strong><br>
 沿用画中画和标注，把工具演示改成视频剪辑教程。<br>
-<sub><a href="library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4">原片</a> · <a href="library/skills/presenter-story/assets/john-tagudin-capso-result.mp4">完整改编</a></sub>
+<sub><a href="library/skills/openmotion-presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4">原片</a> · <a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4">完整改编</a></sub>
 </td>
 </tr>
 </table>
@@ -237,44 +239,44 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <tr><th colspan="2" align="left">可编辑动效 · 同一工程的原版与改编</th></tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="线框传送门：左侧原内容、右侧改编，同步播放"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/openmotion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="线框传送门：左侧原内容、右侧改编，同步播放"></picture></a><br>
 <strong>线框传送门 · BREAKTHROUGH → OPENMOTION</strong><br>
 保留：传送门时序、立体字和镜头推进。 替换：标题、副标题和三维短语。<br>
-<sub><a href="library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/wireframe-portal-title.json">内容预设</a> · <a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/wireframe-portal-title.json">内容预设</a> · <a href="library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="树冠字体：左侧原内容、右侧改编，同步播放"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/openmotion-design-remix/previews/canopy-part-title.gif" width="100%" alt="树冠字体：左侧原内容、右侧改编，同步播放"></picture></a><br>
 <strong>树冠字体 · Understory → OpenMotion</strong><br>
 保留：叶片扫过、纵深、遮挡和阅读停留。 替换：两条品牌标题。<br>
-<sub><a href="library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/canopy-part-title.json">内容预设</a> · <a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/canopy-part-title.json">内容预设</a> · <a href="library/skills/openmotion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
 </td>
 </tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="界面揭示：左侧原内容、右侧改编，同步播放"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/openmotion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="界面揭示：左侧原内容、右侧改编，同步播放"></picture></a><br>
 <strong>界面揭示 · 产品导览 → AI 剪辑故事</strong><br>
 保留：倾斜画布、纵深层级和连续镜头。 替换：主标题、文档和社区文案。<br>
-<sub><a href="library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/ui-3d-reveal.json">内容预设</a> · <a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/ui-3d-reveal.json">内容预设</a> · <a href="library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体代码：左侧原内容、右侧改编，同步播放"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/openmotion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体代码：左侧原内容、右侧改编，同步播放"></picture></a><br>
 <strong>立体代码 · loadConfig() → cutVideo()</strong><br>
 保留：挤出板层、语法配色和镜头运动。 替换：函数、变量和展示的调用。<br>
-<sub><a href="library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/code-3d-extrude.json">内容预设</a> · <a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/code-3d-extrude.json">内容预设</a> · <a href="library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
 </td>
 </tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子组装：左侧原内容、右侧改编，同步播放"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/openmotion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子组装：左侧原内容、右侧改编，同步播放"></picture></a><br>
 <strong>粒子组装 · parse / optimize / emit → select / trim / render</strong><br>
 保留：固定种子的粒子运动和组装节奏。 替换：流程名称与步骤。<br>
-<sub><a href="library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/code-particle-assemble.json">内容预设</a> · <a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/code-particle-assemble.json">内容预设</a> · <a href="library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="玻璃信息卡：左侧原内容、右侧改编，同步播放"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="玻璃信息卡：左侧原内容、右侧改编，同步播放"></picture></a><br>
 <strong>玻璃信息卡 · 设备组件 → 创作者工作区</strong><br>
 保留：玻璃质感、卡片层级、错峰入场与仪表。 替换：标签、单位和功能叙事。<br>
-<sub><a href="library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/liquid-glass-widgets.json">内容预设</a> · <a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/liquid-glass-widgets.json">内容预设</a> · <a href="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
 </td>
 </tr>
 </table>
@@ -342,7 +344,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 
 ![本地 Agent、可选媒体模型账号和创作资源共同支持参考理解、场景编码、素材生成、剪辑及 MP4 渲染，并保留可复用源码。](docs/readme/diagrams/creation-stack.zh-CN.svg)
 
-**编写、观看、修改、渲染。** 让 Agent 替换产品、精简开头、加入真人、修改字幕或尝试新结尾。它修改工程源码，你在可视化编辑器中审阅。本地 MCP 客户端使用工程工具，具备 shell 的 Agent 还可遵循 Skills 和固定版本 CLI 工作流。[Agent 配置](#agent-setup) · [原生合成指南](skills/motion-production/references/native.md) · [HTML 示例工程](template-library/product-promo/index.html)
+**编写、观看、修改、渲染。** 让 Agent 替换产品、精简开头、加入真人、修改字幕或尝试新结尾。它修改工程源码，你在可视化编辑器中审阅。本地 MCP 客户端使用工程工具，具备 shell 的 Agent 还可遵循 Skills 和固定版本 CLI 工作流。[Agent 配置](#agent-setup) · [原生合成指南](skills/openmotion-production/references/native.md) · [HTML 示例工程](template-library/product-promo/index.html)
 
 #### 在 Studio 里可以改什么
 
@@ -430,9 +432,9 @@ Brand Kit 章节收录 Logo、配色、字体、语气和已确认的产品信�
 
 | 创作时需要什么 | 可用资源 |
 | --- | --- |
-| 让 Agent 按一套方法制作视频 | [五个核心制作 Skills](docs/skills.md)涵盖导演、复刻、模板改编、模板制作和剪辑导出。[动效改编 Skill](library/skills/motion-design-remix/SKILL.md) 附六个可编辑示例，[真人讲述 Skill](library/skills/presenter-story/SKILL.md) 提供三种口播编排方式。 |
+| 让 Agent 按一套方法制作视频 | [五个核心制作 Skills](docs/skills.md)涵盖导演、复刻、模板改编、模板制作和剪辑导出。[动效改编 Skill](library/skills/openmotion-design-remix/SKILL.md) 附六个可编辑示例，[真人讲述 Skill](library/skills/openmotion-presenter-story/SKILL.md) 提供三种口播编排方式。 |
 | 复用一个标题、转场或界面揭示 | [动效组件](library/components/README.md)包含可单独取用的源码与时序说明。[标题入场示例](library/components/title-reveal/README.md)展示如何替换文案和调整入场时间。 |
-| 把品牌和动效规则交给 Agent | 用 [Brandkit Skill](library/skills/brandkit/SKILL.md) 整理品牌资料，把 [Logo、语气和产品信息](library/brandkits/openmotion/BRANDKIT.md)写进 Motion.md 的 Brand Kit 章节。[Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) 展示了一套可复用的视觉与动效规则。 |
+| 把品牌和动效规则交给 Agent | 用 [Brandkit Skill](library/skills/openmotion-brandkit/SKILL.md) 整理品牌资料，把 [Logo、语气和产品信息](library/brandkits/openmotion/BRANDKIT.md)写进 Motion.md 的 Brand Kit 章节。[Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) 展示了一套可复用的视觉与动效规则。 |
 
 ##### 可直接编辑的 Studio 模板
 
@@ -614,22 +616,22 @@ bash scripts/install-motion.command
 
 ```sh
 npx skills add ./skills --list
-npx skills add ./skills --skill motion-director motion-production motion-template-to-video motion-recreate motion-video-to-template
+npx skills add ./skills --skill openmotion-director openmotion-production openmotion-template-to-video openmotion-recreate openmotion-video-to-template
 ```
 
 这只复制指引，不安装运行时或注册 MCP。保持共享文档可用并单独连接应用，或使用上面的一体化本地安装器。
 
 | Skill | 用途 |
 | --- | --- |
-| [motion-recreate](skills/motion-recreate/SKILL.md) | 重建参考视频并对比结果 |
-| [motion-template-to-video](skills/motion-template-to-video/SKILL.md) | 改编已有可编辑模板 |
-| [motion-director](skills/motion-director/SKILL.md) | 原创影片、叙事、动作、声音与创作审片 |
-| [motion-video-to-template](skills/motion-video-to-template/SKILL.md) | 制作便携的可复用模板 |
-| [motion-production](skills/motion-production/SKILL.md) | 范围明确的修改、预览、检查、排错和导出 |
+| [openmotion-recreate](skills/openmotion-recreate/SKILL.md) | 重建参考视频并对比结果 |
+| [openmotion-template-to-video](skills/openmotion-template-to-video/SKILL.md) | 改编已有可编辑模板 |
+| [openmotion-director](skills/openmotion-director/SKILL.md) | 原创影片、叙事、动作、声音与创作审片 |
+| [openmotion-video-to-template](skills/openmotion-video-to-template/SKILL.md) | 制作便携的可复用模板 |
+| [openmotion-production](skills/openmotion-production/SKILL.md) | 范围明确的修改、预览、检查、排错和导出 |
 
 <a id="local-agent-connection"></a>
 
-**连接其他本地 Agent** · 在 Studio 中打开 **Connect Agent**，复制当前工作区的启动命令。支持 stdio MCP 的客户端可以使用下方配置。对于通过终端工作的 Agent，打开工程目录，用[本机引擎 CLI](skills/motion-production/references/native.md) 预览和渲染 HTML 场景。
+**连接其他本地 Agent** · 在 Studio 中打开 **Connect Agent**，复制当前工作区的启动命令。支持 stdio MCP 的客户端可以使用下方配置。对于通过终端工作的 Agent，打开工程目录，用[本机引擎 CLI](skills/openmotion-production/references/native.md) 预览和渲染 HTML 场景。
 
 <a id="manual-mcp"></a>
 
@@ -647,9 +649,9 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 
 **十一个公开 MCP 工具**覆盖模板发现与详情、工程创建、读取、编辑、预览、媒体导入、导出、版本恢复与取消。共享工作流和引擎指引通过 MCP resources 提供。[工具契约](docs/mcp-phase1-tools.md)
 
-用 `motion_list_templates` 查找模板，`motion_get_template` 查看详情，再用 `motion_create_project` 创建可编辑副本。[模板目录](docs/template-catalog.md)
+用 `openmotion_list_templates` 查找模板，`openmotion_get_template` 查看详情，再用 `openmotion_create_project` 创建可编辑副本。[模板目录](docs/template-catalog.md)
 
-使用 `npm start` 启动应用，使用 `npm run mcp` 启动 stdio。具备 shell 的 Agent 可使用运行时返回的固定版本引擎 CLI 检查和渲染；托管修改仍遵守工程 revision 校验。[原生创作](skills/motion-production/references/native.md)
+使用 `npm start` 启动应用，使用 `npm run mcp` 启动 stdio。具备 shell 的 Agent 可使用运行时返回的固定版本引擎 CLI 检查和渲染；托管修改仍遵守工程 revision 校验。[原生创作](skills/openmotion-production/references/native.md)
 
 <a id="product-tour"></a> <a id="产品界面"></a> <a id="connect-your-agent"></a> <a id="use-from-your-agent"></a> <a id="从-agent-接入"></a> <a id="your-agent-your-studio"></a>
 
@@ -665,7 +667,7 @@ npx skills add ./skills --skill motion-director motion-production motion-templat
 | **字体与身份** — 字体层级、配色与构图 | 你的字体、色板、文案和 Brandkit |
 | **声音与节拍** — 语音时序、配乐提示与重音 | 你的声音、音乐素材与声音方向 |
 
-如果 Agent 无法打开社媒链接，可以提供本地视频和时间码。只有原片时使用[参考片复刻流程](skills/motion-recreate/SKILL.md)，手里已有可编辑源码时使用[模板流程](skills/motion-template-to-video/SKILL.md)。
+如果 Agent 无法打开社媒链接，可以提供本地视频和时间码。只有原片时使用[参考片复刻流程](skills/openmotion-recreate/SKILL.md)，手里已有可编辑源码时使用[模板流程](skills/openmotion-template-to-video/SKILL.md)。
 
 ```text
 用 OpenMotion 为我们的品牌重建附件参考视频。

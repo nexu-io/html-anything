@@ -105,7 +105,7 @@ export async function setup(options) {
         const pkg = await readJSON(path.join(temporary, 'package.json'));
         assert.equal(pkg?.version, manifest.version, 'Application version does not match manifest');
         if (manifest.templateEnvironment) assert.equal((await readJSON(path.join(temporary, 'shared/template-config.json')))?.environment, templateEnvironment, 'Application template environment does not match manifest');
-        for (const file of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'skills/motion-production/SKILL.md']) await readFile(path.join(temporary, file));
+        for (const file of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'skills/openmotion-production/SKILL.md']) await readFile(path.join(temporary, file));
         assert(!contains(temporary, process.execPath), 'Node must remain external to the lightweight application');
         const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
         console.error('OpenMotion: installing locked npm runtime (no native media/browser download).');
@@ -179,7 +179,7 @@ export async function diagnose(options) {
     const expectedTools = (await readJSON(path.join(state.appRoot, 'shared/mcp-profiles.json'))).phase1.tools;
     const checked = checkTransport(connection, state.version, { expectedTools, dataDirectory: state.dataDirectory });
     return { status: 'passed', host, ...checked, hostSessionVerified: false,
-      nextAction: 'Call motion_get_project through the active host connection and verify the original project and version. This independent probe does not verify the active chat connection. If that chat still lacks Motion tools: ' + recovery };
+      nextAction: 'Call openmotion_get_project through the active host connection and verify the original project and version. This independent probe does not verify the active chat connection. If that chat still lacks OpenMotion tools: ' + recovery };
   } catch (error) {
     return { status: 'failed', host, stage, code: error.code || 'MCP_DIAGNOSIS_FAILED', message: redact(error.message, process.env),
       hostSessionVerified: false, nextAction: recovery + ' Keep existing projects and exports; do not create replacement work or blindly replay a mutation.' };
