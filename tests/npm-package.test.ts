@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 import { checkReleaseLocks, packageNpm } from '../scripts/package-npm.mjs';
 import { extractArchive, runFile, sha256 } from '../scripts/runtime-assets.mjs';
 import { protocolClient } from '../scripts/smoke-test-package.mjs';
@@ -14,6 +15,20 @@ async function verifyTrackingPolicy(application: string, mode: 'test' | 'stable'
   await symlink(path.resolve('node_modules'), path.join(application, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
   const result = JSON.parse(await runFile(process.execPath, ['--experimental-strip-types', path.resolve('tests/tracking-package.ts'), application, mode]));
   assert.equal(result.passed, true); assert.equal(result.external_requests, 0);
+}
+
+async function verifyBundledTemplates(application: string) {
+  const { copyTemplate, templates } = await import(pathToFileURL(path.join(application, 'template-library.ts')).href);
+  const directory = await mkdtemp(path.join(tmpdir(), 'motion-bundled-templates-'));
+  try {
+    for (const template of templates) {
+      const project = path.join(directory, template.id);
+      await copyTemplate(template.id, project, application);
+      // Match MCP preview preflight before Studio can rewrite the copied source.
+      const checked = JSON.parse(await runFile(process.execPath, [path.join(application, 'scripts/lint-project.mjs'), application, project]));
+      assert.equal(checked.errorCount, 0, `${template.id}: ${JSON.stringify(checked.findings)}`);
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
 }
 
 test('shared Agent instructions keep the release controls synchronized', async () => {
@@ -83,6 +98,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     await assert.rejects(readFile(path.join(application, 'scripts/install-library-skill.mjs')), { code: 'ENOENT' });
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
     await verifyTrackingPolicy(application, 'test');
+    await verifyBundledTemplates(application);
     assert.equal((await json(path.join(application, 'shared/template-config.json'))).environment, 'dev');
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).version, version);
     assert.equal((await json(path.join(application, '.codex-plugin/plugin.json'))).description,
@@ -175,6 +191,7 @@ test('stable artifacts stage publication instead of replacing latest and retain 
     await runFile(process.execPath, [path.join(application, 'scripts/diagnostics.mjs'), '--data-dir', path.join(directory, 'missing-data'), '--output', diagnosticFile]);
     assert.match(await runFile('unzip', ['-p', diagnosticFile, 'metadata.json']), /"version": "0\.6\.4"/);
     await verifyTrackingPolicy(application, 'stable');
+    await verifyBundledTemplates(application);
     assert.equal(metadata.version, '0.6.4'); assert.equal(metadata.private, false); assert.equal(metadata.publishConfig.tag, 'stage');
     assert.equal((await json('package.json')).private, true);
     assert.equal((await json('packages/npm/package.json')).private, true);
