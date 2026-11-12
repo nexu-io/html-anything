@@ -194,6 +194,8 @@ function CompCard({
   const [hovered, setHovered] = useState(false);
   const [stageSize, setStageSize] = useState(DEFAULT_PREVIEW_STAGE);
   const [livePreviewLoaded, setLivePreviewLoaded] = useState(false);
+  const [loadedFrameUrl, setLoadedFrameUrl] = useState<string | null>(null);
+  const [failedFrameUrl, setFailedFrameUrl] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -247,6 +249,8 @@ function CompCard({
   const thumbnail = useThumbnailLease(thumbnailRequest);
   const frameUrl = useLastFrame(thumbnailRequest, thumbnail);
   const thumbnailFailed = thumbnail.status === "error";
+  const posterUrl = !thumbnailFailed && frameUrl !== failedFrameUrl ? frameUrl : null;
+  const posterLoaded = !!posterUrl && loadedFrameUrl === posterUrl;
   const previewScale = resolveCompositionPreviewScale({
     cardWidth: CARD_W,
     cardHeight: CARD_H,
@@ -325,17 +329,22 @@ function CompCard({
         ref={thumbnailBox}
         className="w-20 h-[45px] rounded-sm overflow-hidden bg-neutral-900 shrink-0 relative"
       >
-        {thumbnailFailed ? (
-          <div className="absolute inset-0 flex items-center justify-center px-1 text-center text-[8px] leading-tight text-neutral-600">
-            {t("Preview unavailable")}</div>
-        ) : !frameUrl ? null : (
+        {!posterLoaded && !livePreviewLoaded && (
+          <div className="motion-composition-placeholder absolute inset-0 flex items-center justify-center" data-testid="composition-cover-placeholder" aria-hidden="true">
+            <span className="motion-composition-placeholder-mark" />
+          </div>
+        )}
+        {posterUrl && (
           <img
-            src={frameUrl}
+            key={posterUrl}
+            src={posterUrl}
             alt=""
             draggable={false}
             decoding="async"
+            onLoad={() => setLoadedFrameUrl(posterUrl)}
+            onError={() => setFailedFrameUrl(posterUrl)}
             className={`absolute inset-0 h-full w-full object-contain transition-opacity ${
-              livePreviewLoaded ? "opacity-0" : "opacity-100"
+              livePreviewLoaded || !posterLoaded ? "opacity-0" : "opacity-100"
             }`}
           />
         )}

@@ -19,7 +19,7 @@ import { elementFxChain, groupAutomationLanes, isCarveLane } from "./automationL
 import { AUTOMATION_LANE_H } from "./automationLaneHeight";
 import { clipTimingStart } from "../../hooks/gsapShared";
 import { LaneToggleButton, LayerDisclosureRow } from "./LayerDisclosureRow";
-import { LABEL_COL_W, TRACK_H, getTimelineLaneTop } from "./timelineLayout";
+import { LABEL_COL_W, MVP_LABEL_COL_W, TRACK_H, getTimelineLaneTop } from "./timelineLayout";
 import type { TimelineTheme } from "./timelineTheme";
 import { trackDisplaySuffix } from "./timelineTrackDisplay";
 import { AutomationLaneHeaderRow, PropertyGroupHeaderRow } from "./trackHeaderLabelRows";
@@ -111,6 +111,7 @@ export function TimelineTrackHeader({
   rovingTargetId = null,
 }: TimelineTrackHeaderProps) {
   const mvp = useMvpEditor();
+  const labelColumnWidth = mvp ? MVP_LABEL_COL_W : LABEL_COL_W;
   const clipPercentage = keyframeClip
     ? ((currentTime - keyframeClip.start) / keyframeClip.duration) * 100
     : 0;
@@ -119,9 +120,9 @@ export function TimelineTrackHeader({
       // host-absolute while its tweens are local to its own file.
       getTimelinePropertyLanes(animations, clipTimingStart(keyframeClip), keyframeClip.duration)
     : [];
-  // Label mode = keyframe view; the label column stays LABEL_COL_W (Timeline.tsx
-  // owns the gutter past it, so a 0% diamond isn't clipped by this panel).
-  const showTrackLabel = contentOrigin >= LABEL_COL_W;
+  // Reserve the same label width as the ruler origin; keep its trailing gutter
+  // clear so a 0% diamond is not clipped by this panel.
+  const showTrackLabel = contentOrigin >= labelColumnWidth;
   // One row per automated property across the whole track, in the order the
   // canvas draws them — a name beside the wrong envelope is worse than an awkward
   // order. `target` is the ACTIVE clip's lane in that row, which is the only one
@@ -280,7 +281,7 @@ export function TimelineTrackHeader({
       aria-colindex={1}
       className="sticky left-0 z-12 shrink-0"
       style={{
-        width: showTrackLabel ? LABEL_COL_W : contentOrigin,
+        width: showTrackLabel ? labelColumnWidth : contentOrigin,
         background: gutterFill(theme.gutterBackground, isGroupMember),
         borderRight: `1px solid ${theme.gutterBorder}`,
         // A group's member rows are `aria-level="2"`, and until this they read
@@ -381,7 +382,7 @@ export function TimelineTrackHeader({
             clipCount={clipCount}
             isExpanded={isExpanded}
             gutterBackground={gutterFill(theme.gutterBackground, isGroupMember)}
-            columnWidth={showTrackLabel ? LABEL_COL_W : contentOrigin}
+            columnWidth={showTrackLabel ? labelColumnWidth : contentOrigin}
             lanesId={lanesId}
             onToggleClipExpanded={onToggleClipExpanded}
           >
@@ -422,7 +423,7 @@ export function TimelineTrackHeader({
             currentTime={currentTime}
             clipPercentage={clipPercentage}
             gutterBackground={gutterFill(theme.gutterBackground, isGroupMember)}
-            columnWidth={showTrackLabel ? LABEL_COL_W : contentOrigin}
+            columnWidth={showTrackLabel ? labelColumnWidth : contentOrigin}
             onTogglePropertyGroupKeyframe={onTogglePropertyGroupKeyframe}
             onSeek={onSeek}
             rovingTargetId={rovingTargetId}
@@ -449,7 +450,7 @@ export function TimelineTrackHeader({
               top={getTimelineLaneTop(lanes.length) + index * AUTOMATION_LANE_H}
               isLastLane={index === automationRows.length - 1}
               gutterBackground={gutterFill(theme.gutterBackground, isGroupMember)}
-              columnWidth={showTrackLabel ? LABEL_COL_W : contentOrigin}
+              columnWidth={showTrackLabel ? labelColumnWidth : contentOrigin}
               onRemove={onRemoveAutomationLane}
               isCarve={row.isCarve}
               // Only for a lane the ACTIVE clip actually draws: the rack shows one

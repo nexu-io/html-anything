@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { Check } from "../../icons/RemixIcons";
 import {
   createContext,
   useCallback,
@@ -334,7 +335,7 @@ function Root({
           .reduce((sum, group) => sum + (isSideCollapsed(group) ? collapsedSideWidth(width, true) : Math.max(group.width, sideMinimumWidth(width, true))), 0);
         // Revalidate restored layouts, shrinking hosts and expanded widths alike.
         // A height-only resize leaves an expansion intact whenever it still fits.
-        if (fixedLayout && (width < PREVIEW_ONLY_DOCK_WIDTH || (expandedSides.length > 0 && sidesWidth + MIN_PREVIEW_W + DOCK_GAPS > width))) {
+        if (fixedLayout && (width < PREVIEW_ONLY_DOCK_WIDTH || (width < COMPACT_DOCK_WIDTH && expandedSides.length > 1) || (expandedSides.length > 0 && sidesWidth + MIN_PREVIEW_W + DOCK_GAPS > width))) {
           for (const zone of ["left", "right"] as const) {
             const id = panels.find(id => PANEL_DEFINITIONS[id].zone === zone);
             if (id) controller.setGroupCollapsed?.(id, true);
@@ -481,7 +482,7 @@ function WindowMenu() {
               onClick={() => togglePanel(id)}
               className={`${menuClasses.row} ${menuClasses.rowEnabled} flex items-center gap-2`}
             >
-              <span className="w-3 text-accent-ink">{openPanels.has(id) ? "✓" : ""}</span>
+              <span className="w-3 text-accent-ink">{openPanels.has(id) && <Check size={12} />}</span>
               {t(PANEL_DEFINITIONS[id].title)}
             </button>
           ))}

@@ -562,6 +562,8 @@ export const NLEPreview = memo(function NLEPreview({
         )}
         <PreviewZoomOverlay
           controlsTarget={zoomControlsTarget}
+          showNavigator={!mvp}
+          onZoomPercent={(zoomPercent) => applyZoom({ ...DEFAULT_PREVIEW_ZOOM, zoomPercent })}
           zoom={settledZoom}
           stageSize={stageSize}
           onFit={() => {

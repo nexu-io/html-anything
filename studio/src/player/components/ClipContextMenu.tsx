@@ -140,7 +140,7 @@ export const ClipContextMenu = memo(function ClipContextMenu({
       ref={menuRef}
       role="menu"
       aria-label={t("Clip actions")}
-      className={`${mvp ? `${popupSurface} motion-clip-context-menu p-1 shadow-menu` : menuClasses.panel} fixed z-200 min-w-[180px]`}
+      className={`${mvp ? `${popupSurface} motion-context-menu p-1 shadow-menu` : menuClasses.panel} fixed z-200 min-w-[180px]`}
       style={{ left: adjustedX, top: adjustedY }}
     >
       {hostItems.length > 0 && (

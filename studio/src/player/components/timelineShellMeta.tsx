@@ -9,7 +9,7 @@ import {
   shouldIgnoreTimelinePointerDown,
 } from "./timelineProviderStateBuilders";
 import { TimelineRazorGuideOverlay } from "./TimelineRazorInteraction";
-import { LABEL_COL_W } from "./timelineLayout";
+import { GUTTER } from "./timelineLayout";
 import type { TimelineTheme } from "./timelineTheme";
 
 type ViewportHandlers = Pick<
@@ -90,7 +90,7 @@ export function buildTimelineShellMeta(input: TimelineShellMetaInputs): Timeline
       onLostPointerCapture: pointer.onPointerCancel,
     },
     elementCount: input.elementCount,
-    labelColumnWidth: LABEL_COL_W,
+    labelColumnWidth: input.labelMode ? input.contentOrigin - GUTTER : 0,
     razorGuide:
       activeTool === "razor" && razor.razorGuideX !== null ? (
         <TimelineRazorGuideOverlay x={razor.razorGuideX} />

@@ -144,6 +144,7 @@ function clearScaled(scroll: HTMLElement) {
     el.style.transform = "";
     el.style.transformOrigin = "";
     el.style.willChange = "";
+    el.style.removeProperty("--timeline-zoom-inverse");
   });
 }
 
@@ -166,11 +167,14 @@ function drawnRange(scroll: HTMLDivElement, pps: number, contentOrigin: number):
 function scalePreview(scroll: HTMLElement) {
   if (!preview) return;
   const transform = `translateX(${preview.shift}px) scaleX(${preview.pps / preview.basePps})`;
+  const inverseScale = String(preview.basePps / preview.pps);
   scroll.querySelectorAll<HTMLElement>(SCALED).forEach((el) => {
     // The attribute's value is where time zero sits in the element, when not at its left edge.
     el.style.transformOrigin = `${el.dataset.timelineZoomScale || 0}px 0`;
     el.style.willChange = "transform";
     el.style.transform = transform;
+    // Keep ruler glyphs at their natural width while their tick positions scale.
+    el.style.setProperty("--timeline-zoom-inverse", inverseScale);
   });
 }
 

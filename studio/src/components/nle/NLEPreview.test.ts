@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useTimelinePlayer } from "../../player/hooks/useTimelinePlayer";
 import { NLEPreview, getPreviewPlayerKey } from "./NLEPreview";
+import { StudioHostContext } from "../../motion/StudioHost";
 import { resolvePreviewStageSize } from "./previewStage";
 import { readPreviewComplexity } from "../../player/hooks/usePreviewFirstFrameTelemetry";
 
@@ -89,10 +90,12 @@ function renderPreview(
     fillBox,
     compositionSizeHint,
     zoomControlsTarget,
+    mvp = false,
   }: {
     box?: { width: number; height: number };
     fillBox?: boolean;
     zoomControlsTarget?: HTMLElement;
+    mvp?: boolean;
     compositionSizeHint?: { width: number; height: number };
   } = {},
 ) {
@@ -104,7 +107,7 @@ function renderPreview(
   const render = (directUrl?: string, projectId = "timeline-edit-playground") =>
     act(() => {
       root.render(
-        React.createElement(NLEPreview, {
+        React.createElement(StudioHostContext.Provider, { value: { mvpEditor: mvp } }, React.createElement(NLEPreview, {
           projectId,
           directUrl,
           iframeRef,
@@ -118,7 +121,7 @@ function renderPreview(
           fillBox,
           zoomControlsTarget,
           compositionSizeHint,
-        }),
+        })),
       );
     });
   render();
@@ -364,21 +367,36 @@ describe("NLEPreview", () => {
       view.cleanup();
     });
 
-    it("keeps zoom and Fit in the panel header without a canvas readout", () => {
+    it("offers header zoom presets while preserving pinch and Fit, without an MVP navigator", async () => {
       const header = document.createElement("div");
       document.body.append(header);
-      const view = renderPreview(undefined, { zoomControlsTarget: header });
+      const view = renderPreview(undefined, { zoomControlsTarget: header, mvp: true });
       const fit = () => header.querySelector<HTMLButtonElement>('[data-testid="preview-zoom-fit"]')!;
       expect(header.textContent).toBe("100%");
       expect(fit()).toBeNull();
       expect(chip(view)).toBeNull();
       expect(view.host.querySelector('[aria-live="polite"]')).toBeNull();
 
+      const mounts = playerMounts.length;
+      for (const percent of [50, 150, 100]) {
+        await act(async () => header.querySelector<HTMLButtonElement>('[data-testid="preview-zoom-menu"]')!.click());
+        const option = Array.from(document.querySelectorAll<HTMLElement>('[role="menuitemradio"]'))
+          .find(item => item.textContent === `${percent}%`);
+        expect(option).toBeTruthy();
+        await act(async () => option!.click());
+        act(() => vi.advanceTimersByTime(300));
+        expect(view.stage.style.transform).toContain(`scale(${percent / 100})`);
+        expect(header.querySelector('[data-testid="preview-zoom-menu"]')!.getAttribute("aria-expanded")).toBe("false");
+        expect(navigator(view)).toBeNull();
+      }
+      expect(playerMounts.length).toBe(mounts);
+
       pinchIn(view, 10);
       act(() => vi.advanceTimersByTime(3000));
       expect(header.textContent).toMatch(/^2\d\d%Fit$/);
       expect(fit().disabled).toBe(false);
       expect(chip(view)).toBeNull();
+      expect(navigator(view)).toBeNull();
       act(() => fit().click());
       act(() => vi.advanceTimersByTime(300));
       expect(view.stage.style.transform).toContain("scale(1)");

@@ -18,7 +18,6 @@ let nextToastId = 1;
  * Stacked toasts (max 3). Info toasts auto-dismiss after 3s; error toasts
  * persist until explicitly dismissed, unless explicitly marked brief feedback.
  * Feedback dismissal never changes the underlying operation or save guards.
- * Identical active errors share one toast.
  */
 export function useToast() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -55,10 +54,13 @@ export function useToast() {
     (message: string, tone: AppToast["tone"] = "error", presentation?: AppToast["presentation"]): number => {
       const id = nextToastId++;
       setToasts((prev) => {
-        if (tone === "error" && prev.some((toast) => toast.tone === tone && toast.message === message && toast.presentation === presentation && !toast.leaving)) {
-          return prev;
-        }
-        const next = [...prev, { id, message, tone, presentation }];
+        // Refresh an identical notice instead of stacking the same failure.
+        const retained = prev.filter((toast) => {
+          if (toast.message !== message || toast.tone !== tone || toast.presentation !== presentation) return true;
+          clearTimer(toast.id);
+          return false;
+        });
+        const next = [...retained, { id, message, tone, presentation }];
         // Cap the stack; drop the oldest (and its pending timer).
         while (next.length > MAX_TOASTS) {
           const dropped = next.shift();

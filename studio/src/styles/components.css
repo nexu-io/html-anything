@@ -16,11 +16,7 @@
 
 @container motion-player (max-width: 420px) {
   .motion-player-secondary { gap: 2px; }
-}
-
-@container motion-player (max-width: 420px) {
   .motion-player-control-row {
-    grid-template-columns: minmax(0, 1fr) 32px 28px;
     column-gap: 8px;
   }
   .motion-player-optional { display: none; }
@@ -708,6 +704,19 @@
 }
 
 /* Toast enter/exit (StudioToast) */
+/* Fixed-width dots make reconnect activity visible without moving the toast. */
+.hf-toast-progress-dots { display: inline-flex; }
+.hf-toast-progress-dots > span { animation: hf-toast-progress-dot 1.2s steps(1, end) infinite; }
+.hf-toast-progress-dots > span:nth-child(2) { animation-delay: 0.2s; }
+.hf-toast-progress-dots > span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes hf-toast-progress-dot {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hf-toast-progress-dots > span { animation: none; opacity: 1; }
+}
+
 @keyframes hf-toast-in {
   from {
     opacity: 0;
@@ -746,6 +755,24 @@
   .hf-toast-exit {
     opacity: 0;
   }
+}
+
+/* Host for feedback portalled above native dialogs: full viewport, invisible and
+ * transparent to pointer input, so each notice keeps its own positioning. */
+.motion-feedback-layer {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  background: transparent;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 2147483647;
 }
 
 /* Overlay/backdrop entrance — the heaviest visual changes shouldn't pop in */

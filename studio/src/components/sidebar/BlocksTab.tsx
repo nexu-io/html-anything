@@ -58,7 +58,7 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <div data-motion-catalog className="flex flex-col flex-1 min-h-0">
       {/* Search */}
       <div className="px-3 pt-2 pb-1 shrink-0">
         <SearchInput
