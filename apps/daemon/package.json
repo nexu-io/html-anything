@@ -46,6 +46,7 @@
     "@odsuite/protocol": "workspace:*",
     "zod": "4.6.7",
     "@open-motion/templates": "workspace:*",
-    "@open-motion/gateway": "workspace:*"
+    "@open-motion/gateway": "workspace:*",
+    "@open-motion/portable": "workspace:*"
   }
 }

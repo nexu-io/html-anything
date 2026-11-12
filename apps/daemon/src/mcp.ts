@@ -23,7 +23,7 @@ export function register(server: McpServer, execute: Execute): void {
         description: descriptions[operation],
         inputSchema: schema,
         annotations: {
-          readOnlyHint: !("requestId" in schemas[operation].shape),
+          readOnlyHint: operation !== "archive_release" && !("requestId" in schemas[operation].shape),
           destructiveHint: ["project_save", "project_undo", "project_redo", "resource_remove"].includes(operation),
           idempotentHint: true,
           openWorldHint: ["generation_create", "generation_cancel"].includes(operation),
@@ -32,15 +32,15 @@ export function register(server: McpServer, execute: Execute): void {
       async (input: unknown) => {
         try {
           const result = await execute(operation, input as Input<typeof operation>);
-          if (operation === "export_download") {
-            const download = result as Output<"export_download">;
+          if (operation === "export_download" || operation === "archive_export") {
+            const download = result as Output<"export_download"> | Output<"archive_export">;
             return {
               content: [
                 {
                   type: "resource_link",
                   uri: download.url,
                   name: download.filename,
-                  mimeType: "video/mp4",
+                  mimeType: operation === "archive_export" ? "application/zip" : "video/mp4",
                   size: download.bytes,
                 },
               ],

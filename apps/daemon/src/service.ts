@@ -9,6 +9,8 @@ import { type ExportOperation, exportSchemas } from "@open-motion/render/contrac
 import { type TemplateOperation, templateSchemas } from "@open-motion/templates/contract";
 import type { Binding as PrismBinding } from "@open-motion/templates/host";
 import { Fault, type Input, type Operation, Workspace } from "@open-motion/workspace";
+import { type ArchiveOperation, archiveSchemas } from "./content/archive.js";
+import { Archives } from "./content/archives.js";
 import { Generations } from "./content/generation.js";
 import { listGuidance, readGuidance } from "./content/guidance.js";
 import { Previews } from "./content/preview.js";
@@ -72,6 +74,7 @@ export async function serve(options: Options): Promise<Service> {
     : new Templates(workspace);
   const exports = new Exports(workspace, options.renderer, options.endpoint);
   const generations = new Generations(workspace, options.gateway);
+  const archives = new Archives(workspace, options.endpoint);
   const requests = new Set<Promise<unknown>>();
   let draining: Promise<void> | undefined, closing: Promise<void> | undefined;
   const server = createServer((request, response) => {
@@ -85,6 +88,10 @@ export async function serve(options: Options): Promise<Service> {
       response.once("close", done);
     });
     const handle = async () => {
+      if (request.method !== "OPTIONS" && request.url?.startsWith("/archives/")) {
+        await archives.transfer(request, response, origin);
+        return;
+      }
       if (["GET", "HEAD"].includes(request.method ?? "") && request.url?.startsWith("/exports/files/")) {
         await exports.downloads.serve(request.url, response, request.method === "HEAD");
         return;
@@ -177,13 +184,15 @@ export async function serve(options: Options): Promise<Service> {
       if (request.method !== "POST" || !Object.hasOwn(schemas, operation))
         return reply(response, 404, { error: { code: "invalid", message: "unknown operation" } }, origin);
       const input = await body(request);
-      const result = Object.hasOwn(generationSchemas, operation)
-        ? await generations.execute(operation as GenerationOperation, input)
-        : Object.hasOwn(templateSchemas, operation)
-          ? await templates.execute(operation as TemplateOperation, input)
-          : Object.hasOwn(exportSchemas, operation)
-            ? await exports.execute(operation as ExportOperation, input)
-            : workspace.execute(operation as Operation, input as Input<Operation>);
+      const result = Object.hasOwn(archiveSchemas, operation)
+        ? archives.execute(operation as ArchiveOperation, input)
+        : Object.hasOwn(generationSchemas, operation)
+          ? await generations.execute(operation as GenerationOperation, input)
+          : Object.hasOwn(templateSchemas, operation)
+            ? await templates.execute(operation as TemplateOperation, input)
+            : Object.hasOwn(exportSchemas, operation)
+              ? await exports.execute(operation as ExportOperation, input)
+              : workspace.execute(operation as Operation, input as Input<Operation>);
       reply(response, 200, result, origin);
     };
     const handled = handle().catch((error) => {
@@ -218,6 +227,8 @@ export async function serve(options: Options): Promise<Service> {
       const closed = new Promise<void>((done, reject) => {
         server.close((error) => (error ? reject(error) : done()));
       });
+      // Reversible archive byte streams abort; project commits remain workspace-owned.
+      archives.quiesce();
       // Accepted work and buffered/streamed responses must finish before unused connections retire.
       await Promise.allSettled([...requests]);
       server.closeAllConnections();
@@ -229,6 +240,7 @@ export async function serve(options: Options): Promise<Service> {
     close: () =>
       (closing ??= (async () => {
         await quiesce();
+        archives.close();
         exports.close();
         previews.close();
         workspace.close();

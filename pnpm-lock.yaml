@@ -53,6 +53,9 @@ importers:
       '@open-motion/motion':
         specifier: workspace:*
         version: link:../../packages/motion
+      '@open-motion/portable':
+        specifier: workspace:*
+        version: link:../../packages/portable
       '@open-motion/render':
         specifier: workspace:*
         version: link:../../packages/render

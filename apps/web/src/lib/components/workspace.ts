@@ -19,6 +19,7 @@ import { Exports } from "./exports.js";
 import { workspaceLayout } from "./layout.js";
 import { Studio } from "./studio.js";
 import { Templates } from "./templates.js";
+import { Archives } from "./workspace/archives.js";
 import { Conversation } from "./workspace/conversation.js";
 import { Navigation } from "./workspace/navigation.js";
 import { WorkspaceSync } from "./workspace/sync.js";
@@ -150,6 +151,8 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     );
   });
   conversation.addCreator(templates.element);
+  const archives = new Archives(document, editor, client, run);
+  conversation.addTransfer(archives.element);
   const studio = new Studio(studioRoot, editor, client, run, {
     source: sourceView,
     sourceInput: () => source,
@@ -347,6 +350,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
     navigation.update(editor, blocked, theme === "dark");
     conversation.update(editor, blocked);
     templates.update(editor.session?.id, blocked);
+    archives.update(editor, blocked);
     addProject.disabled = blocked || !editor.session;
     projectTabs.update(
       (editor.session?.artifacts ?? []).map((a) => ({ id: a.id, label: a.title, icon: "film" as const })),
@@ -375,6 +379,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client) {
         await exports.dispose();
         await templates.dispose();
         await studio.dispose();
+        archives.dispose();
         conversation.dispose();
         for (const hint of hints) hint.dispose();
         shell.element.remove();
