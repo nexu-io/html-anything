@@ -8,7 +8,7 @@ Updated: 2026-11-09. 实现基线：0.6.2；状态：下文标记为“当前”
 
 **对外主张是 Reverse engineering for any video：让用户的本地 Agent 成为全栈视频创作者。** 以参考视频和用户品牌为起点，研究叙事、镜头、动效与声音，用 HTML/CSS/JavaScript 重建可编辑工程，补齐素材并在同一 Studio 继续剪辑、预览和渲染。产品形态仍为 **All-in-One AI-native Studio for AI editing & Motion**；真人口播、原创制作、模板改编和局部改稿继续使用各自入口，参考重建不替代其他创作流程。
 
-The MVP opens directly into the Motion editor with a searchable project sidebar, including `embed=1`. Home, conversation, browser tabs and integration/model settings are not exposed in this editor. Users can create a blank project from the sidebar, create through the external Agent workflow, or use the editor's template library. The underlying session, mode and Artifact model is retained, with Motion as the only executable mode and Hyperframes owning editing and export.
+The MVP opens directly into the Motion editor with a searchable project sidebar, including `embed=1`. Home, conversation, browser tabs and integration/model settings are not exposed in this editor. Users can create a blank project from the sidebar, create through the external Agent workflow, or use the editor's template library. The initial project remains in the sidebar; first opening initializes the bundled default example when its sources are absent, including after Agent-first creation. Existing sources and legacy migration safeguards are retained. The underlying session, mode and Artifact model is retained, with Motion as the only executable mode and Hyperframes owning editing and export.
 
 会话的 Agent 推理与工具编排由用户已有的 MCP 客户端执行；本地网页保存需求、接收调用方写回的真实回复、管理产物与继续编辑，不包含内置聊天 Agent 运行器。自有 Agent、Codex 和其他 MCP 客户端共用先创建会话、后生成产物的生命周期。
 

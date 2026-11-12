@@ -333,26 +333,29 @@ export class WorkspaceStore {
   }
 
   async initialize(runtimeRoot: string) {
-    return this.lock(async () => {
-      if ((await this.get()).project) return;
-      if ((await this.files()).length) throw new Error('工程目录已有文件但缺少 index.html，请先修复入口');
-      const staging = path.join(this.directory, 'initialize-' + crypto.randomUUID());
-      await mkdir(path.join(staging, 'assets'), { recursive: true });
+    return this.lock(() => this.initializeLocked(runtimeRoot));
+  }
+
+  // The caller must hold the workspace lock, as project switching already does.
+  async initializeLocked(runtimeRoot: string) {
+    if ((await this.get()).project) return;
+    if ((await this.files()).length) throw new Error('工程目录已有文件但缺少 index.html，请先修复入口');
+    const staging = path.join(this.directory, 'initialize-' + crypto.randomUUID());
+    await mkdir(path.join(staging, 'assets'), { recursive: true });
+    try {
+      let legacy: LegacyProject | null = null;
       try {
-        let legacy: LegacyProject | null = null;
-        try {
-          const old = JSON.parse(await readFile(path.join(this.directory, 'workspace.json'), 'utf8'));
-          if (old.project) legacy = validateProject(old.project);
-        } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
-        if (legacy) await migrateLegacy(legacy, staging);
-        else await cp(path.join(pluginRoot, 'templates'), staging, { recursive: true });
-        await copyFile(path.join(runtimeRoot, 'node_modules/gsap/dist/gsap.min.js'), path.join(staging, 'assets/gsap.min.js'));
-        await writeFile(path.join(staging, 'hyperframes.json'), JSON.stringify(nativeProjectConfig, null, 2));
-        // The legacy workspace.json remains untouched. Never replace an existing native entry.
-        try { await rename(staging, this.projectDirectory); }
-        catch (error) { throw new Error('无法创建 Hyperframes 工程，已有目录保持不变', { cause: error }); }
-      } finally { await rm(staging, { recursive: true, force: true }); }
-    });
+        const old = JSON.parse(await readFile(path.join(this.directory, 'workspace.json'), 'utf8'));
+        if (old.project) legacy = validateProject(old.project);
+      } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+      if (legacy) await migrateLegacy(legacy, staging);
+      else await cp(path.join(pluginRoot, 'templates'), staging, { recursive: true });
+      await copyFile(path.join(runtimeRoot, 'node_modules/gsap/dist/gsap.min.js'), path.join(staging, 'assets/gsap.min.js'));
+      await writeFile(path.join(staging, 'hyperframes.json'), JSON.stringify(nativeProjectConfig, null, 2));
+      // The legacy workspace.json remains untouched. Never replace an existing native entry.
+      try { await rename(staging, this.projectDirectory); }
+      catch (error) { throw new Error('无法创建 Hyperframes 工程，已有目录保持不变', { cause: error }); }
+    } finally { await rm(staging, { recursive: true, force: true }); }
   }
 
   async job(id?: string): Promise<ExportJob | null> {

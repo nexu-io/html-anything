@@ -1,5 +1,11 @@
 # 公开变更记录
 
+## 2026-11-12: Save SVG styles and initialize the initial project on open
+
+- SVG inline-style edits use the existing source patcher, guarded file writer and edit history when the pinned engine cannot persist SVG targets. Missing element identities and concurrent source changes still reject the edit and keep navigation blocked.
+- Opening the initial project from the sidebar or a direct preview initializes the bundled six-second example if its sources are absent. Existing edits, partial-project refusal and legacy migration safeguards remain unchanged.
+- Validation: static checks, Studio typecheck/build, 79 targeted Studio tests, 14 project/session/legacy/cold-start tests and the phase-one creation regression passed locally. Installed-host, cross-platform and human visual acceptance remain separate.
+
 ## 2026-11-11: Check historical media before offering MCP restoration
 
 - **Problem and audience:** Agents and creators could be told that a historical version was restorable after its media blobs had disappeared; restoration then exposed a low-level file-copy error.
