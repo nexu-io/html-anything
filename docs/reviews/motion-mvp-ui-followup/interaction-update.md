@@ -120,3 +120,19 @@ Undo, redo and version history now form one visual group with equal 4px internal
 The real 4173 editor was rebuilt and refreshed. DOM measurements confirmed 4px / 4px / 16px / 16px gaps, and screenshots were inspected at normal width and 680px. The existing narrow-header behavior hides the history group below 700px; community and Export remain separated without overlap. Both editor side panels were restored, with Compositions / Layers selected and playback paused at zero. No project content, timing, volume or history actions were changed for verification. [Before](header-action-spacing-before.png), [wide](header-action-spacing-wide.png), [narrow](header-action-spacing-narrow.png).
 
 Validation: 20 existing MotionStudioHost cases passed, along with the publish-checkout repository check, Studio typecheck and production build. The working editor production build and scoped whitespace checks passed. Remote WorkBuddy verification was not performed.
+
+
+## Header history divider (2026-11-12)
+
+The user accepted the existing spacing and requested a small divider after version history, superseding the earlier no-divider choice. It matches the timeline separators: 1px wide, 16px high, using the shared border color. It occupies the existing history-to-community gap, preserving 4px / 4px / 16px / 16px button gaps and 28px icon targets. The decorative line ignores pointer input and hides with the history group below 700px.
+
+| Check | Result | Evidence / boundary |
+| --- | --- | --- |
+| Ordinary header and same-page consistency | Pass | Rebuilt real 4173 editor at 1035px; measured 1px by 16px and rgb(219, 219, 219), matching the toolbar separator. All button positions and gaps unchanged. [Before](header-divider-before.png), [after](header-divider-after.png). |
+| Narrow layout and re-entry | Pass | At 680px the history group and divider hide; community and Export remain visible. [Narrow](header-divider-narrow.png). Viewport override reset afterward. |
+| Adjacent history overlay | Pass | Opened history and closed with Escape. Its existing no-history/unavailable message was observed; no restore or retry was attempted. |
+| Accessibility | Unverified | Source inspection confirms an empty pseudo-element with no focus stop or label and pointer-events none; no assistive-technology walkthrough. |
+| Data and workflow checks | Not applicable | CSS decoration only: no new content, loading/empty/error states, input, saving, navigation, destructive actions, request races, media, network or Agent behavior. |
+| Remote WorkBuddy and dark-theme walkthrough | Unverified | Local light-theme browser only; dark colors follow the shared border token by source inspection. |
+
+The working production build and assembled PR check, Studio typecheck/build, 20 MotionStudioHost cases and scoped whitespace checks passed. The editor remains open, paused at zero. No project source/media/timing/volume changes or service restart were performed. Only this divider and its documentation/evidence were transferred to the publish checkout.
