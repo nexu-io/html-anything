@@ -1,0 +1,106 @@
+{
+  "background": {
+    "color": "#111111",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：They are",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：good",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中心圆环簇",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "等宽短句",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "上下文关键词",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "两侧点阵",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#111111",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e7e4de",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c86147",
+      "status": "inferred"
+    },
+    {
+      "hex": "#555653",
+      "status": "inferred"
+    },
+    {
+      "hex": "#222222",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "等宽小字号、宽字距；中心单行短句，关键词用暖橙色",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用极少的文字和细圆环，把注意力从代理引向它依赖的上下文。",
+      "status": "inferred"
+    },
+    {
+      "rule": "细圆环在中心聚成一个簇，Agents 位于其下。环簇退出后再出现完整判断句，边缘稀疏符号保持低对比。",
+      "status": "inferred"
+    },
+    {
+      "rule": "短句沿同一基线逐步展开，context 最后出现并被细圆圈包围。黑底、浅灰等宽字和少量暖橙色即可形成层级，圈线不覆盖文字。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        43.866667
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        43.866667
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        43.866667
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0.0,
+      "label": "更新标题",
+      "end": 3.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3.0,
+      "label": "订阅任务说明",
+      "end": 7.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 7.0,
+      "label": "线程订阅",
+      "end": 12.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 12.0,
+      "label": "自定义模式说明",
+      "end": 15.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 15.0,
+      "label": "模式输入",
+      "end": 19.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 19.0,
+      "label": "隔离子代理说明",
+      "end": 24.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 24.0,
+      "label": "并行任务",
+      "end": 27.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 27.0,
+      "label": "跨轮目标说明",
+      "end": 31.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 31.0,
+      "label": "目标命令",
+      "end": 34.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 34.0,
+      "label": "不中断引导说明",
+      "end": 38.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 38.0,
+      "label": "功能汇总",
+      "end": 41.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 41.0,
+      "label": "品牌",
+      "end": 43.866667,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 43.866667
+  }
+}

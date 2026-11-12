@@ -1,0 +1,71 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        9.217542
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        9.217542
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        9.217542
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "第一条需求",
+      "end": 0.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 0.5,
+      "label": "帖子逐个叠入",
+      "end": 3,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3,
+      "label": "需求密度增加",
+      "end": 6.2,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6.2,
+      "label": "旧式系统弹框",
+      "end": 7.6,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 7.6,
+      "label": "产品图标落版",
+      "end": 9.217542,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 9.217542
+  }
+}

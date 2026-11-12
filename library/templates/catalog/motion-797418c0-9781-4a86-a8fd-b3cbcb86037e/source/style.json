@@ -1,0 +1,141 @@
+{
+  "background": {
+    "color": "#f9faf8",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：258 to win",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：227 DEM",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：212 current",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "州形状",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "概率百分比",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "席位条",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "选举分类",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "新闻流",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "时间标签",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f9faf8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#17202b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#3d69eb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#dd5664",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d8dfe5",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面文字与清晰大小层级",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "零散州形先分散再拼成地图，表示从噪声到结构化信息",
+      "status": "inferred"
+    },
+    {
+      "rule": "总览推近局部州，再回到席位和概率分布，尺度变化保持地理关联",
+      "status": "inferred"
+    },
+    {
+      "rule": "新闻变化与对应概率更新相邻出现",
+      "status": "inferred"
+    }
+  ]
+}

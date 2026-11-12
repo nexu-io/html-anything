@@ -1,0 +1,65 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        7.541667
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        7.541667
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "分行标题",
+      "end": 2.6,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 2.6,
+      "label": "伙伴图标进入",
+      "end": 3.4,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3.4,
+      "label": "横向图标列",
+      "end": 5.6,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 5.6,
+      "label": "聚焦 Figma",
+      "end": 6.4,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6.4,
+      "label": "品牌",
+      "end": 7.541667,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 7.541667
+  }
+}

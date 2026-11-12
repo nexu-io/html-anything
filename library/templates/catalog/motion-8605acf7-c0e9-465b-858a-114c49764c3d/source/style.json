@@ -1,0 +1,115 @@
+{
+  "background": {
+    "color": "#bce8fb",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色柔焦场",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模型菜单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "提示框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "商店页面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "作品集页面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发布按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "作品拼图",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#bce8fb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#122331",
+      "status": "inferred"
+    },
+    {
+      "hex": "#279de5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#154be6",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线短句搭配产品字标；结果网页保留各自标题风格",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用浅蓝光晕承托白色输入框和浏览器，背景慢速漂移。产品字标与界面文字保持简洁无衬线，商店与作品集可拥有不同配色。",
+      "status": "inferred"
+    },
+    {
+      "rule": "先选择模式，输入具体网站需求，再推近提交按钮。结果页从整体进入，随后沿纵向滚动展示更多内容，发布按钮形成这一轮的完成信号。",
+      "status": "inferred"
+    },
+    {
+      "rule": "第二轮复用相同的输入节奏但切换内容类型。结尾把多个网页缩小到同一空间，扩大产能印象，再留白收回产品名。",
+      "status": "inferred"
+    },
+    {
+      "rule": "准备两个差异明显的案例，如商店与作品集。输入文案、结果标题、商品或项目内容必须相互对应，不只换左上角标志。",
+      "status": "inferred"
+    }
+  ]
+}

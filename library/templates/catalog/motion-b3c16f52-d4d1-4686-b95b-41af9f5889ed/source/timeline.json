@@ -1,0 +1,80 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        76.1
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "品牌与版本",
+      "end": 4,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 4,
+      "label": "工作流",
+      "end": 18,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 18,
+      "label": "团队聊天",
+      "end": 29,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 29,
+      "label": "日历与会议",
+      "end": 38,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 38,
+      "label": "会议摘要",
+      "end": 43,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 43,
+      "label": "手机语音",
+      "end": 59,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 59,
+      "label": "浏览器助手",
+      "end": 74,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 74,
+      "label": "版本收尾",
+      "end": 76.1,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 76.1
+  }
+}

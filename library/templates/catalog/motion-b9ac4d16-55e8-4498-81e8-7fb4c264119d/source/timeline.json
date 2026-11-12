@@ -1,0 +1,71 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        6.133333
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        6.133333
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        6.133333
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "排队状态",
+      "end": 1.3,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 1.3,
+      "label": "指针悬停",
+      "end": 1.7,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 1.7,
+      "label": "提示出现",
+      "end": 4.2,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 4.2,
+      "label": "指针离开",
+      "end": 4.7,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 4.7,
+      "label": "提示消失",
+      "end": 6.133333,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 6.133333
+  }
+}

@@ -12,6 +12,10 @@ These are editable examples with source and posters. Open **Studio → Templates
 
 To contribute another template, use the [entry checklist](../ENTRY_TEMPLATE.md), supply the editable source, preview and `TEMPLATE.md` instructions, and record the version and changes you actually tested. Follow the existing [template-production workflow](../../skills/motion-video-to-template/SKILL.md) when producing a reusable template from a video. Adding a folder here alone does not register a Studio template.
 
+## Published motion guidance source
+
+Browse the [repository catalog](https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog) for unpacked text source, localized metadata and small local images. Larger images load from existing CMS links. Videos stay remote; source edits can be reviewed in PRs. These guidance examples remain separate from the three directly editable Studio projects.
+
 ## Presenter Tech · local template package
 
 [**Get Presenter Tech**](presenter-tech/README.md) for a landscape presenter-led film with metallic typography, motion cards and visual explanations. The local package includes editable source, parameters, fonts, sound recipes and its runner. [Download package](presenter-tech/presenter-tech.motion) · [Adaptation guide](presenter-tech/TEMPLATE.md) · [Motion Design](presenter-tech/MOTION_DESIGN.md).

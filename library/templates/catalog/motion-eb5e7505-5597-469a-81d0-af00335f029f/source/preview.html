@@ -1,0 +1,280 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cloud Computer：部署与使用云电脑 · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f7f8f6;--brand-ink:#222522;--accent:#538cbe;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Manus <span>/</span> V048</div><div class="intro-line"><h1>Cloud Computer：部署与使用云电脑</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>围绕一台持续存在的云电脑安排演示：建立环境，查看资源，再把它用于部署和运行服务。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 47.966667, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 11.2, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Cloud Computer&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#538cbe&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Cloud Computer&quot;, &quot;accent&quot;: &quot;#538cbe&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="47.966667" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 47.97 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Manus — general AI agent that bridges minds and… · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f8f6}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Manus</div><div class="type-sample">Cloud Computer</div><p>无衬线界面文字与清晰大小层级</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f7f8f6" style="--swatch:#f7f8f6" aria-label="复制色值 #f7f8f6"><span></span><code>#F7F8F6</code></button><button class="swatch" data-color="#222522" style="--swatch:#222522" aria-label="复制色值 #222522"><span></span><code>#222522</code></button><button class="swatch" data-color="#538cbe" style="--swatch:#538cbe" aria-label="复制色值 #538cbe"><span></span><code>#538CBE</code></button><button class="swatch" data-color="#b6cbb9" style="--swatch:#b6cbb9" aria-label="复制色值 #b6cbb9"><span></span><code>#B6CBB9</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>云容器</span><span>输入框</span><span>资源面板</span><span>任务过程</span><span>部署结果</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>先给电脑一个明确的状态</h2></div><div class="rule-copy">
+<p>入口页交代这是可工作的云端环境，随后出现资源面板。CPU、内存、文件与连接信息用整齐的数值和图表排布；系统名称和运行状态始终可见。</p>
+<p>画面以浅色工作区为主，蓝色用于当前控制与图表；标题略粗，资源数字与单位分层排列。不要给每个读数都加夸张跳动。</p>
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>资源面板之后，展示一件真实工作</h2></div><div class="rule-copy">
+<p>选择部署机器人、运行采集任务或搭建数据服务中的具体任务。按输入请求、执行反馈、打开成果推进，让服务页面成为云电脑工作的结果。</p>
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>服务之间有变化，工作环境保持稳定</h2></div><div class="rule-copy">
+<p>切换案例时沿用同一个应用外框或入口位置，只改变内部任务与成果。关键配置可以推近，完成后回到全局窗口，避免连续大幅推拉让人失去位置。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>迁移为另一类云工作台</h2></div><div class="rule-copy">
+<p>保留环境、资源、任务、在线结果四层信息。更换部署目标时补齐对应的输入、执行状态和结果页面，不沿用与新服务无关的资源文案。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>云电脑介绍</b></button><button class="beat" data-time="6.0"><span>6.00<small>s</small></span><b>创建入口</b></button><button class="beat" data-time="10.0"><span>10.00<small>s</small></span><b>资源与连接</b></button><button class="beat" data-time="15.0"><span>15.00<small>s</small></span><b>机器人请求</b></button><button class="beat" data-time="20.0"><span>20.00<small>s</small></span><b>部署结果</b></button><button class="beat" data-time="23.0"><span>23.00<small>s</small></span><b>持续任务</b></button><button class="beat" data-time="27.0"><span>27.00<small>s</small></span><b>资讯抓取</b></button><button class="beat" data-time="32.0"><span>32.00<small>s</small></span><b>开源工具生态</b></button><button class="beat" data-time="36.0"><span>36.00<small>s</small></span><b>部署数据应用</b></button><button class="beat" data-time="43.0"><span>43.00<small>s</small></span><b>运行成果</b></button><button class="beat" data-time="45.0"><span>45.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="https://r.open-design.ai/files/d0755239ef44c456f2ed95c2ea36c86bf0b300905942945d990c1288135b4ebe" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="10.01 秒的构图参考" loading="lazy"><figcaption>10.01s</figcaption></figure><figure><img src="https://r.open-design.ai/files/0e0ca3b8992224bdf3813c30e8fe52532c7ad95c2ea99946142c0bfb1c7eb4be" alt="20.01 秒的构图参考" loading="lazy"><figcaption>20.01s</figcaption></figure><figure><img src="https://r.open-design.ai/files/0512ee42bf13589d204a3e5ec7ee061607d4bd477427b7822d64ac47cab020b9" alt="27.02 秒的构图参考" loading="lazy"><figcaption>27.02s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="36.03 秒的构图参考" loading="lazy"><figcaption>36.03s</figcaption></figure><figure><img src="assets/reference-6.jpg" alt="45.03 秒的构图参考" loading="lazy"><figcaption>45.03s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>换主题保留环境→任务→持久结果的逻辑</li><li>替换服务名与输出内容，保持不同任务的成果形态</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>云容器 / 输入框 / 资源面板 / 任务过程 / 部署结果</p>
+<ul><li>先解释持久执行环境，再用机器人、抓取、部署三个实例证明</li><li>每例从请求切到执行证据，再给可访问成果</li><li>工具图标环绕后汇聚为输入资源</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Manus / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Cloud Computer：部署与使用云电脑
+
+围绕一台持续存在的云电脑安排演示：建立环境，查看资源，再把它用于部署和运行服务。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 47.966667,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 11.2,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Cloud Computer&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#538cbe&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Cloud Computer&quot;,
+        &quot;accent&quot;: &quot;#538cbe&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 先给电脑一个明确的状态
+
+入口页交代这是可工作的云端环境，随后出现资源面板。CPU、内存、文件与连接信息用整齐的数值和图表排布；系统名称和运行状态始终可见。
+
+画面以浅色工作区为主，蓝色用于当前控制与图表；标题略粗，资源数字与单位分层排列。不要给每个读数都加夸张跳动。
+
+## 资源面板之后，展示一件真实工作
+
+选择部署机器人、运行采集任务或搭建数据服务中的具体任务。按输入请求、执行反馈、打开成果推进，让服务页面成为云电脑工作的结果。
+
+## 服务之间有变化，工作环境保持稳定
+
+切换案例时沿用同一个应用外框或入口位置，只改变内部任务与成果。关键配置可以推近，完成后回到全局窗口，避免连续大幅推拉让人失去位置。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–6.00s | 云电脑介绍 |
+| 6.00–10.00s | 创建入口 |
+| 10.00–15.00s | 资源与连接 |
+| 15.00–20.00s | 机器人请求 |
+| 20.00–23.00s | 部署结果 |
+| 23.00–27.00s | 持续任务 |
+| 27.00–32.00s | 资讯抓取 |
+| 32.00–36.00s | 开源工具生态 |
+| 36.00–43.00s | 部署数据应用 |
+| 43.00–45.00s | 运行成果 |
+| 45.00–47.97s | 品牌 |
+
+## 迁移为另一类云工作台
+
+保留环境、资源、任务、在线结果四层信息。更换部署目标时补齐对应的输入、执行状态和结果页面，不沿用与新服务无关的资源文案。
+
+## 配色与字形
+
+无衬线界面文字与清晰大小层级。
+
+#f7f8f6 · #222522 · #538cbe · #b6cbb9 · #ffffff
+
+## 元素与制作规则
+
+云容器 / 输入框 / 资源面板 / 任务过程 / 部署结果
+
+- 先解释持久执行环境，再用机器人、抓取、部署三个实例证明
+- 每例从请求切到执行证据，再给可访问成果
+- 工具图标环绕后汇聚为输入资源
+
+## 内容替换
+
+- 换主题保留环境→任务→持久结果的逻辑
+- 替换服务名与输出内容，保持不同任务的成果形态
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Manus&quot;,
+  &quot;id&quot;: &quot;V048&quot;,
+  &quot;palette&quot;: [
+    &quot;#f7f8f6&quot;,
+    &quot;#222522&quot;,
+    &quot;#538cbe&quot;,
+    &quot;#b6cbb9&quot;,
+    &quot;#ffffff&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线界面文字与清晰大小层级&quot;,
+  &quot;sample&quot;: &quot;Cloud Computer&quot;,
+  &quot;objects&quot;: [
+    &quot;云容器&quot;,
+    &quot;输入框&quot;,
+    &quot;资源面板&quot;,
+    &quot;任务过程&quot;,
+    &quot;部署结果&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/d0755239ef44c456f2ed95c2ea36c86bf0b300905942945d990c1288135b4ebe&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 10.006954102920723,
+      &quot;frameId&quot;: &quot;K0021&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/0e0ca3b8992224bdf3813c30e8fe52532c7ad95c2ea99946142c0bfb1c7eb4be&quot;,
+      &quot;timeSeconds&quot;: 20.013908205841446,
+      &quot;frameId&quot;: &quot;K0051&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/0512ee42bf13589d204a3e5ec7ee061607d4bd477427b7822d64ac47cab020b9&quot;,
+      &quot;timeSeconds&quot;: 27.018776077885953,
+      &quot;frameId&quot;: &quot;K0072&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 36.02503477051461,
+      &quot;frameId&quot;: &quot;K0101&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.jpg&quot;,
+      &quot;timeSeconds&quot;: 45.03129346314326,
+      &quot;frameId&quot;: &quot;K0124&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0.0,
+      &quot;label&quot;: &quot;云电脑介绍&quot;,
+      &quot;end&quot;: 6.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 6.0,
+      &quot;label&quot;: &quot;创建入口&quot;,
+      &quot;end&quot;: 10.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 10.0,
+      &quot;label&quot;: &quot;资源与连接&quot;,
+      &quot;end&quot;: 15.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15.0,
+      &quot;label&quot;: &quot;机器人请求&quot;,
+      &quot;end&quot;: 20.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 20.0,
+      &quot;label&quot;: &quot;部署结果&quot;,
+      &quot;end&quot;: 23.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 23.0,
+      &quot;label&quot;: &quot;持续任务&quot;,
+      &quot;end&quot;: 27.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 27.0,
+      &quot;label&quot;: &quot;资讯抓取&quot;,
+      &quot;end&quot;: 32.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 32.0,
+      &quot;label&quot;: &quot;开源工具生态&quot;,
+      &quot;end&quot;: 36.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 36.0,
+      &quot;label&quot;: &quot;部署数据应用&quot;,
+      &quot;end&quot;: 43.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 43.0,
+      &quot;label&quot;: &quot;运行成果&quot;,
+      &quot;end&quot;: 45.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 45.0,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 47.966667,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 47.966667,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

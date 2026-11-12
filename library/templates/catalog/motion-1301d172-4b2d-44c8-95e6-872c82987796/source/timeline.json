@@ -1,0 +1,78 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        8.633333
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        8.633333
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        8.633333
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "手机窄屏",
+      "end": 0.7,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 0.7,
+      "label": "设备展开",
+      "end": 1.8,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 1.8,
+      "label": "双栏内容",
+      "end": 3,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3,
+      "label": "滚动正文",
+      "end": 6,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6,
+      "label": "定位文本",
+      "end": 7.8,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 7.8,
+      "label": "键盘出现",
+      "end": 8.633333,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 8.633333
+  }
+}

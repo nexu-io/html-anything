@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#f7f8f6",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Here's the 30-second teaser with burned-in captions. I tightened the pacing around the product",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：reveal and closed on the logo snap - both files are attached below.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Branch",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "原会话",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "分支节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "副本会话",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "继续输入",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f7f8f6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#222522",
+      "status": "inferred"
+    },
+    {
+      "hex": "#538cbe",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b6cbb9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面文字与清晰大小层级",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先显示可分支的历史位置，再复制共享上下文",
+      "status": "inferred"
+    },
+    {
+      "rule": "两份会话并排短暂比较，选中一份后推近继续",
+      "status": "inferred"
+    },
+    {
+      "rule": "标题重复呼应内容分叉，不用无关装饰",
+      "status": "inferred"
+    }
+  ]
+}

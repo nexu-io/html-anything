@@ -1,0 +1,64 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        6.5
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        6.5
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        6.5
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "蓝色模板居中",
+      "end": 1.3,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 1.3,
+      "label": "横移到黑色模板",
+      "end": 3.4,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3.4,
+      "label": "横移到白色模板",
+      "end": 5.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 5.5,
+      "label": "循环回蓝色模板",
+      "end": 6.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 6.5
+  }
+}

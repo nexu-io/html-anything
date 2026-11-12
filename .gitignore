@@ -18,3 +18,7 @@ node_modules/
 .motion-data-dev/
 .artifacts/
 studio/build/
+
+# Reference videos and duplicate archives stay at CMS URLs.
+library/templates/catalog/**/*.mp4
+library/templates/catalog/**/*.zip

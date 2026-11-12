@@ -1,0 +1,145 @@
+{
+  "background": {
+    "color": "#efefeb",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Harvey",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：H",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Project Titan",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "纸面几何",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "立方体",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中心孔洞",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "任务卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "项目界面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "信息字母",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "H 标志",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#efefeb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#242129",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8e879d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a3b7b0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c0b3b2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#424e48",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "纸张底纹与炭笔几何，灰紫、灰绿低饱和色，法律界面以白面板出现。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "以纸面拼贴建立材质，方块、圆和孔洞不断重组；产品卡片围绕中心对象出现，让抽象图形与项目、任务和资源关系接在一起。",
+      "status": "inferred"
+    },
+    {
+      "rule": "几何段可快速移动、转向和缩放，进入产品界面时减速并保持平直。每次界面出现只强调当前任务，不把所有纹理叠在正文上。",
+      "status": "inferred"
+    },
+    {
+      "rule": "圆形空间缩小为方孔，周边弧线和块面让出白区，再将文档卡带到中心。保留黑点位置能让大幅重构仍有连续性。",
+      "status": "inferred"
+    }
+  ]
+}

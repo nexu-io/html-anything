@@ -1,0 +1,124 @@
+{
+  "background": {
+    "color": "#6d16f5",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Create at scale",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Visual Suite 2.0",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "多格式缩略图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "固定编辑器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "彩色光标",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "表格",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "提示框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "生成结果",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#6d16f5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#21bfca",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f04cc7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ef8f20",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4589ef",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "高饱和青紫渐变作为品牌底，套件内部用白色编辑器承托彩色设计。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "网站、白板、竖版内容和演示稿在相同工具栏内切换，底部缩略图负责导航。先证明格式共存，再进入具体新能力。",
+      "status": "inferred"
+    },
+    {
+      "rule": "从提示框到计算器、从人物素材到团队海报，完成后继续在编辑器中修改。光标和选择框让“可编辑”成为可见动作。",
+      "status": "inferred"
+    },
+    {
+      "rule": "开场、章节衔接和结尾使用青紫渐变；实际内容允许蓝、绿、橙等不同主色。白色编辑器框架保持统一，避免所有画面被同一渐变盖住。",
+      "status": "inferred"
+    }
+  ]
+}

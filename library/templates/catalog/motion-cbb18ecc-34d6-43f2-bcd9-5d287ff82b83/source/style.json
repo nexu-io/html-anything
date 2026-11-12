@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#b8cec6",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Edit",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：1.00",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Opus 4.6",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "主工作区",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "侧边会话栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "预览面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码差异",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "终端",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "指针",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#b8cec6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#131413",
+      "status": "inferred"
+    },
+    {
+      "hex": "#cd8066",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8973b8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e7e5db",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "薄荷底、黑色工作区、等宽代码、衬线收尾",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "主窗口先展开，随后从单列长成预览与代码并列；面板是同一工作区子层。",
+      "status": "inferred"
+    },
+    {
+      "rule": "切换 Preview、Diff、Terminal 展示不同信息，窗口位置保持连续。",
+      "status": "inferred"
+    },
+    {
+      "rule": "最后拉远显示多会话，再切黑色落版。",
+      "status": "inferred"
+    }
+  ]
+}

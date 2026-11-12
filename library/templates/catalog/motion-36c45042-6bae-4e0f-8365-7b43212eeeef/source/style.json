@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#101310",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Claude",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Sonnet 5.5",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "微距镜头组",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "重复弧形／刻度",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "画面运动方向",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "产品标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "舷窗首尾锚点",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#101310",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ded2bc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bd8042",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4d86b5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a68971",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "低照度实拍微距；金属、纸张与暖色仪表；少量居中衬线字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "通过弧线、圆环、指针等相似几何跨镜头匹配；它们是不同素材，不建立同一物体轨迹。",
+      "status": "inferred"
+    },
+    {
+      "rule": "前中段短镜头密集切换，末段舷窗显著延长，给产品名阅读空间。",
+      "status": "inferred"
+    },
+    {
+      "rule": "镜头动作由素材内部运动与取景共同形成，不能仅靠位置缩放重现光照和材质。",
+      "status": "inferred"
+    }
+  ]
+}

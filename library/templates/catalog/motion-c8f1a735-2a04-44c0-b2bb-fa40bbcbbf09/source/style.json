@@ -1,0 +1,85 @@
+{
+  "background": {
+    "color": "#2b1a37",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：21 New Voices on Grok",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "固定标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "冷色流体",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "暖色光带",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#2b1a37",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d4a37b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#80589c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bd8c92",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "紫褐与橙光的柔软流体背景、固定白字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "标题保持位置与大小，运动主要来自背景连续流动。",
+      "status": "inferred"
+    },
+    {
+      "rule": "背景低对比细节不能抢占文字可读性。",
+      "status": "inferred"
+    },
+    {
+      "rule": "一行功能公告作为全片中心，保持极简信息量。",
+      "status": "inferred"
+    }
+  ]
+}

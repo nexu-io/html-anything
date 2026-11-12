@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#f8f7f1",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Hey Claude, we need a family vacation.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：We're thinking a week in Rome this spring.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：How are our finances looking??",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "愿望场景",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "聊天请求",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "账户连接",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "收支图卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "预算日历",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "目的地结果",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f8f7f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#252824",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d17754",
+      "status": "inferred"
+    },
+    {
+      "hex": "#35a97b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#88acba",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "生活旅行画面穿插暖白财务图卡，衬线说明配聊天气泡",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先建立具体生活愿望，再用数据判断可行性，最后回到生活结果。",
+      "status": "inferred"
+    },
+    {
+      "rule": "图表按问题逐项出现；数字与说明有层级，不能同时堆满。",
+      "status": "inferred"
+    },
+    {
+      "rule": "实拍镜头作为愿望与回报，界面作为论证。",
+      "status": "inferred"
+    }
+  ]
+}

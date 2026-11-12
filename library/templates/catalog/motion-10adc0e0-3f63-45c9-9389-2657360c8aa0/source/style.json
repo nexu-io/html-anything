@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#111419",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：PROBLEM",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：NUMBER",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：FIELD",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网格",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "圆点集合",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "粉笔线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手写注释",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "编号栏",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#111419",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f1f1eb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#33ca69",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d99ab5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#97a4ca",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "粉笔黑板、点阵与细线几何、角落等宽编号",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "每一研究主题用一种几何图建立，再归约为少量点以接入下个图。",
+      "status": "inferred"
+    },
+    {
+      "rule": "标题、编号和学科在边角维持稳定索引，主体变化在中心。",
+      "status": "inferred"
+    },
+    {
+      "rule": "点、边和填充依次构建，避免整个数学图一帧出现。",
+      "status": "inferred"
+    }
+  ]
+}

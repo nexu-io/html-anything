@@ -1,0 +1,99 @@
+{
+  "background": {
+    "color": "#eaf2f5",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：UNIQODE",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "固定细网格",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝白符号单元",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "几何纹样",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "城市剪影",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌字标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#eaf2f5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#101213",
+      "status": "inferred"
+    },
+    {
+      "hex": "#0c3dea",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9fc5e0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "轻型无衬线字标；蓝白双色小单元网格，几何形态、城市剪影和纯色落版",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "不移动整张网格，通过每个单元的亮暗和形态重排轮廓；多种画面共用同一采样密度。",
+      "status": "inferred"
+    },
+    {
+      "rule": "从几何纹样进入城市时保留点阵媒介；最后才切到纯蓝背景，让品牌脱离网格清楚落定。",
+      "status": "inferred"
+    },
+    {
+      "rule": "城市段用平移和轮廓替换形成行进感，避免每个点独立无方向乱跑。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -17,6 +17,8 @@ Designers, creators, prompt authors and engineers are all welcome. The [OpenMoti
 
 Use the [entry checklist](library/ENTRY_TEMPLATE.md), link the new entry from its collection, and preserve sources and licenses. Label references, recipes and editable examples accurately. Adding a folder does not register it in Studio, the MCP workflow registry or the default five-Skill installation. Packaging uses an explicit file list.
 
+For published motion guidance source and locale metadata, use the [catalog contribution loop](https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog#change-a-template). Keep videos at CMS URLs; stage changes before running the scoped storage-policy check.
+
 ## PR workflow
 
 Work from the repository root; read [AGENTS.md](AGENTS.md) and the [architecture](docs/product/architecture.md). Use the pinned CI Node version. Keep `package-lock.json` and `scripts/runtime-lock.json` in sync with any intentional dependency change.

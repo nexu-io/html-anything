@@ -1,0 +1,141 @@
+{
+  "background": {
+    "color": "#f5f5f1",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Seat Map",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Publish",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Maya Gao",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "请求框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "检查步骤",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "应用预览",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "座位图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发布权限框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "链接",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "线上应用",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f5f5f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202122",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9966cc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f1ba8a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9ab8ad",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面文字与清晰大小层级",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "构建基础设施步骤先逐项完成，之后出现应用预览",
+      "status": "inferred"
+    },
+    {
+      "rule": "发布对话框明确地址与可访问范围，确认后才出现可打开链接",
+      "status": "inferred"
+    },
+    {
+      "rule": "同一座位图从预览进入线上应用，内容身份保持",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#151515",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：88 Tools",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：sizes every 2 seconds, while keeping all the balls bouncing inside.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：The polygons must slowly oscillate in size, constantly transitioning between larger and smaller",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "提示词",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "思考段落",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "说明",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "九宫格多边形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "彩色小球",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#151515",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f0f0ee",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ec5e29",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6ac69e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a384d9",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "深色聊天录屏、密集等宽代码、九宫格物理示例",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先展示具体约束，再显示解释和代码，最后并排运行结果。",
+      "status": "inferred"
+    },
+    {
+      "rule": "多边形边数逐格增加，小球在边界内运动，形成可见验证。",
+      "status": "inferred"
+    },
+    {
+      "rule": "镜头从输入近景拉远到聊天，再推近最终双栏。",
+      "status": "inferred"
+    }
+  ]
+}

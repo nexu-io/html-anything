@@ -1,0 +1,106 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        92.125367
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        92.125367
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        92.125367
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "标题",
+      "end": 6,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6,
+      "label": "设置事件条件",
+      "end": 19,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 19,
+      "label": "创建自动化",
+      "end": 25,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 25,
+      "label": "通知触发",
+      "end": 31,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 31,
+      "label": "任务链执行",
+      "end": 40,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 40,
+      "label": "定时任务主张",
+      "end": 48,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 48,
+      "label": "创建周期任务",
+      "end": 64,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 64,
+      "label": "时间触发",
+      "end": 72,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 72,
+      "label": "输出结果",
+      "end": 81,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 81,
+      "label": "标题与品牌",
+      "end": 92.125367,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 92.125367
+  }
+}

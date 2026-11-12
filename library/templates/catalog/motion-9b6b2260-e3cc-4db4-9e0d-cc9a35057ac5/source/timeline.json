@@ -1,0 +1,92 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        17.366667
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        17.366667
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        17.366667
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "字体名称",
+      "end": 0.9,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 0.9,
+      "label": "逐行主张",
+      "end": 3.7,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3.7,
+      "label": "灵感来源主张",
+      "end": 5.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 5.5,
+      "label": "各地文字取样",
+      "end": 9.2,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 9.2,
+      "label": "字形局部特写",
+      "end": 11.4,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 11.4,
+      "label": "完整字母表",
+      "end": 13.7,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 13.7,
+      "label": "货币缩写快切",
+      "end": 17,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 17,
+      "label": "回到字体名称",
+      "end": 17.366667,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 17.366667
+  }
+}

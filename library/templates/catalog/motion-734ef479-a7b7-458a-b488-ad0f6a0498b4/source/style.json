@@ -1,0 +1,142 @@
+{
+  "background": {
+    "color": "#151515",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：CHORUS",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：SUNO Studio",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Extract Stems",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "录音按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "延长波形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "声部分轨列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "彩色时间轨",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "播放头",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌页",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#151515",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ff6630",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d51e8c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#26c461",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1b9fdf",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d5c20d",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "深色音频编辑器，多轨道用饱和橙绿粉蓝黄分组。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "红色录音按钮启动后，波形从左到右增长；切入声音列表，继续展开为多条彩色轨道。录制进度和播放头同向运动。",
+      "status": "inferred"
+    },
+    {
+      "rule": "每条声部保持自己的颜色，片段的起止位置形成节奏。时间轴横向移动时，标签与播放头有稳定参照。",
+      "status": "inferred"
+    },
+    {
+      "rule": "多轨快速浏览后切到红粉渐变背景和小型 SUNO Studio 字标。换工具时仍保留录音、分轨、编辑这条路径。",
+      "status": "inferred"
+    }
+  ]
+}

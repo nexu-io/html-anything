@@ -1,4 +1,4 @@
-import { templatePrompts } from './template-prompts.ts';
+import { templatePrompts, repositoryTemplatePrompts } from './template-prompts.ts';
 import { catalogLocale } from './template-locale.ts';
 import { workflowEntryGuide } from './workflow-entry.js';
 
@@ -13,6 +13,7 @@ export const hostDescriptions: Record<IntegrationHost, string> = {
   mcp: '连接你喜欢的 MCP 客户端，也可以从终端和脚本开始。',
 };
 export type IntegrationInfo = {
+  templateSource?: 'repository' | 'cms';
   templateEnvironment?: 'dev' | 'prod';
   name: string; version: string; previewUrl: string; dataDirectory: string;
   transport: { type: 'stdio'; command: string; args: string[]; cwd: string; env: Record<string, string> };
@@ -74,6 +75,10 @@ export function setupPrompt(info: IntegrationInfo, host: IntegrationHost, locale
   return `请读取 ${guideUrl(info, host)}，将 OpenMotion 接入 ${hostNames[host]}，验证后带我开始创作。`;
 }
 export function templatePrompt(info: IntegrationInfo, _host: IntegrationHost, template: { id: string; title: string }, locale = 'zh-CN') {
+  if (info.templateSource === 'repository') {
+    const message = repositoryTemplatePrompts[catalogLocale(Object.keys(repositoryTemplatePrompts), locale, 'en')];
+    return message.replace(/\{(name|id)\}/g, (_, key: 'name' | 'id') => template[key === 'name' ? 'title' : 'id']);
+  }
   const environment = info.templateEnvironment ?? info.transport.env?.MOTION_TEMPLATE_ENV ?? 'prod';
   const installUrl = `https://releases.open-design.ai/open-motion/${environment === 'dev' ? 'dev/' : ''}install.md`;
   const message = templatePrompts[catalogLocale(Object.keys(templatePrompts), locale, 'en')];

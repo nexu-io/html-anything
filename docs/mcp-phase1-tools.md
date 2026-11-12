@@ -11,8 +11,8 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 
 | 公开 Tool | 复用来源 | 本次实现到的边界 |
 | --- | --- | --- |
-| openmotion_list_templates | Prism 发布目录与本地缓存 | 无查询参数；返回本地 JSONL 索引路径、总数和目录版本，宿主自行检索 |
-| openmotion_get_template | 同一目录缓存与文件服务 | 按 ID 读取模板元数据、文件清单和 TEMPLATE.md |
+| openmotion_list_templates | Local repository or configured CMS catalog | No query arguments; returns source, a local JSONL index, count and catalog version for local search |
+| openmotion_get_template | Same local/CMS reader | Exact ID; repository entries return local instructions, motionDocument content and absolute localSource paths |
 | openmotion_create_project | 项目目录、空白工程、模板复制、会话归属 | 新建独立载体、保存需求/来源、返回初始内容版本；宿主 Agent 制作影片 |
 | openmotion_open_preview | 原预览、项目选择、原生 lint | 打开指定已有工程；仅明确绑定的 OpenMotion 会话可省 projectId；返回真实 URL |
 | openmotion_import_assets | 素材目录、FFprobe/FFmpeg | 实际本机媒体批量持久化、逐项结果、稳定素材 ID、去重；不自动排入时间线 |
@@ -38,7 +38,7 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 
 ### openmotion_list_templates / openmotion_get_template
 
-list 无参数，返回 indexPath、total、catalogVersion 和可选 warning，不返回查询结果。Agent 在本机检索 JSONL 索引；每行是模板摘要。get 必填 templateId，返回单个模板、files 与 instructions（TEMPLATE.md）。已知 ID 无需先 list。目录和文件缓存配置、失败行为见 [模板目录](template-catalog.md)。
+List has no arguments and returns source, indexPath, total and catalogVersion. Search the local JSONL index; repository rows include localSource paths. Get requires templateId and reads the selected template's instructions. Repository mode also returns motionDocument={path,content} and localSource paths for metadata, guide, manifest and examples, without requiring an editor/backend or CMS request. Source checkouts default to repository; distributions without catalog files default to CMS. See [startup and source selection](template-repository.md#run-from-a-local-clone). Guidance-only examples require authoring a new project; direct projectType=template copying still requires actual editable project files.
 
 ### openmotion_create_project
 

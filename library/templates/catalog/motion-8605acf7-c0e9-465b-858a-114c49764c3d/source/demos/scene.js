@@ -1,0 +1,11 @@
+
+function paper(x,y,w,h,title,color='#fff'){rect(x,y,w,h,color,12);text(title,x+18,y+24,18,(/^#[0-9a-f]{6}$/i.test(color)&&[1,3,5].reduce((v,j)=>v+parseInt(color.slice(j,j+2),16),0)<350)?'#fff':'#25262b','left','Arial',600,w-35);}
+function rows(x,y,w,n=4,c='#b8bdc2',gap=22){for(let j=0;j<n;j++)rect(x,y+j*gap,w*(.64+rand(j)*.32),5,c,2)}
+function ring(x,y,r,c,width=3){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.strokeStyle=c;ctx.lineWidth=width;ctx.stroke()}
+function pill(x,y,w,txt,c='#fff',ink='#222'){rect(x-w/2,y-22,w,44,c,22);text(txt,x,y,18,ink,'center','Arial',500,w-26)}
+function arrow(x,y,xx,yy,c){line(x,y,xx,yy,c,2);let a=Math.atan2(yy-y,xx-x);poly([[xx,yy],[xx-10*cos(a-.5),yy-10*sin(a-.5)],[xx-10*cos(a+.5),yy-10*sin(a+.5)]],c)}
+function header(t,color=CONFIG.palette[1]){fittedText(P.title,500,55,30,color,870,'Arial',600)}
+function foot(t,color=CONFIG.palette[1]){text(CONFIG.stages[stageAt(t)].label,500,557,16,color)}
+function orbitNode(x,y,r,c,labelText){ellipse(x,y,r,r,c);text(labelText,x,y,16,'#25262b','center','Arial',500,r*1.65)}
+function wave(x,y,w,h,c,t,phaseOffset=0){ctx.beginPath();for(let j=0;j<=80;j++){let xx=x+j*w/80,yy=y+sin(j*.15+t+phaseOffset)*h*(.4+.6*sin(j/80*Math.PI));j?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)}ctx.strokeStyle=c;ctx.lineWidth=3;ctx.stroke()}
+function drawScene(t){gradient('#d8f3fd','#6ec8f3');glow(700+sin(t)*80,250,400,'#165ee977');let n=stageAt(t),u=stageProgress(t);if(n===3||n===6||n===8){paper(190,235,620,135,'');let str=n===3?'Build a neighborhood coffee storefront.':n===6?'Create a bold designer portfolio.':'Show me what else we can build.';text(progressText(useTitle(str),phase(u,0,.7)),220,282,25,'#34414b','left','Arial',400,550);pill(745,335,60,'↑',P.accent,'#fff')}else if(n===4||n===5||n===7){ui(120,100,760,420,P.accent,n===7?'Designer portfolio':'Coffee Roaster');rect(315,172,520,180,n===7?'#141517':'#5c3826');text(n===7?'Selected works':'Coffee with a sense of place',575,250,32,'#fff','center','Arial',600,480);for(let j=0;j<3;j++)rect(325+j*170,370-u*20,150,100,['#cab18d','#8a715d','#e6ddd0'][j],4);cursor(835,125)}else if(n===9){for(let j=0;j<7;j++){let a=j*TAU/7;at(500+cos(a)*270,310+sin(a)*160,.32,0,()=>ui(-210,-150,420,300,P.accent,'Site '+(j+1)))}}else{fittedText(P.title,500,300,70,'#10222d');if(n===1)text('Up to 50× the usage',500,390,30,P.accent)}foot(t,'#17415a')}

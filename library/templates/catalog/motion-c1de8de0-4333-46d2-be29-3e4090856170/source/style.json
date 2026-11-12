@@ -1,0 +1,148 @@
+{
+  "background": {
+    "color": "#f7f6f0",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Flows Agent •",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Rodrigo - Calm, Friendly &...",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Built for speed and endurance. From first stride to final",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入条",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "任务列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "图像节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "视频节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "音频节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "依赖连线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "变体组",
+      "status": "inferred"
+    },
+    {
+      "id": "role-7",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "成品",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f7f6f0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#161616",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d9763b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7fb7ae",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d9d6c9",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面文字与清晰大小层级",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "自然语言先转为节点依赖，输出节点应等待上游素材完成",
+      "status": "inferred"
+    },
+    {
+      "rule": "后续修改替换局部节点并保留其余连线，表现可编辑性",
+      "status": "inferred"
+    },
+    {
+      "rule": "画幅与声音选择在成品之前，结尾拉远展示整体工作流",
+      "status": "inferred"
+    }
+  ]
+}

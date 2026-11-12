@@ -40,6 +40,7 @@
 - [shared-editor.md](shared-editor.md)
 - [skills.md](skills.md)
 - [template-catalog.md](template-catalog.md)
+- [Repository template source, storage checks and CMS publication](template-repository.md)
 - [templates/requirement.md](templates/requirement.md)
 - [test-packages.md](test-packages.md)
 - [Tracking integration and agent task template](../tracking/INTEGRATION.md)

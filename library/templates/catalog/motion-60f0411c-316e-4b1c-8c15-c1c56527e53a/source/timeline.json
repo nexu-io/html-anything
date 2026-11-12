@@ -1,0 +1,99 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        63.333333
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        63.333333
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        63.333333
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "功能与扩展定位",
+      "end": 6,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6,
+      "label": "命令输入",
+      "end": 13,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 13,
+      "label": "浏览多个网站",
+      "end": 23,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 23,
+      "label": "写入表格",
+      "end": 30,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 30,
+      "label": "生成调查问卷",
+      "end": 40,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 40,
+      "label": "复刻网页任务",
+      "end": 45,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 45,
+      "label": "读取与重建",
+      "end": 51,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 51,
+      "label": "验证报告",
+      "end": 58,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 58,
+      "label": "品牌",
+      "end": 63.333333,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 63.333333
+  }
+}

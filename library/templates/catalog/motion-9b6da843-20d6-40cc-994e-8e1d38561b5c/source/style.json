@@ -1,0 +1,82 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "大字局部",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "水平细线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "三行标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "动词列表",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#777777",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "紧凑无衬线粗体；沿水平基准线排列，左右对齐交替",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "开头放大 Made 的局部，缩小后分为 Made / to / move 三行。细横线标明行高，短词在行内左右错开，行距紧但不重叠。",
+      "status": "inferred"
+    },
+    {
+      "rule": "结尾以 Design、Generate、Collaborate、Animate、Explore、Remix 六行替换大标题，各行横向滑到不同对齐点。黑底白字，次要词允许灰色；新文案应保持短词和近似字长。",
+      "status": "inferred"
+    }
+  ]
+}

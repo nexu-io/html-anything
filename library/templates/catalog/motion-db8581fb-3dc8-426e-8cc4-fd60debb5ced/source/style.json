@@ -1,0 +1,141 @@
+{
+  "background": {
+    "color": "#fffbed",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Tools",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Eng Candidates",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Get help with",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "像素标志",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "研究卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "项目分组",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机语音",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "生活场景",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "商品结果",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "图像编辑卡",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fffbed",
+      "status": "inferred"
+    },
+    {
+      "hex": "#222222",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ee5a25",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffc800",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a50000",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "米白与黑底切换、红橙黄像素符号、产品卡与生活镜头",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "每章用像素符号和短句开场，再用一个产品动作举例。",
+      "status": "inferred"
+    },
+    {
+      "rule": "研究→项目整理后切到语音与生活应用，明暗主题帮助分组。",
+      "status": "inferred"
+    },
+    {
+      "rule": "图片修改必须延续同一主体，结果作为证据出现。",
+      "status": "inferred"
+    }
+  ]
+}

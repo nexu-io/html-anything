@@ -1,0 +1,291 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kimi Web Bridge - Kimi&#x27;s browser extension. · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#62a4d5;--brand-ink:#ffffff;--accent:#c3e4f1;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Kimi <span>/</span> V246</div><div class="intro-line"><h1>Kimi Web Bridge - Kimi&#x27;s browser extension.</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>把浏览器操作和代理反馈并排展示，让输入、执行与结果始终能互相对上。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 63.333333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 13.3, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Kimi WebBridge&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#c3e4f1&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Kimi WebBridge&quot;, &quot;accent&quot;: &quot;#c3e4f1&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="63.333333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 63.33 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Kimi Web Bridge - Kimi&#x27;s browser extension. · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#62a4d5}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Kimi</div><div class="type-sample">Kimi WebBridge</div><p>深浅蓝渐变、左浏览器右终端、章节大字</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#62a4d5" style="--swatch:#62a4d5" aria-label="复制色值 #62a4d5"><span></span><code>#62A4D5</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button><button class="swatch" data-color="#c3e4f1" style="--swatch:#c3e4f1" aria-label="复制色值 #c3e4f1"><span></span><code>#C3E4F1</code></button><button class="swatch" data-color="#263557" style="--swatch:#263557" aria-label="复制色值 #263557"><span></span><code>#263557</code></button><button class="swatch" data-color="#e6eff8" style="--swatch:#e6eff8" aria-label="复制色值 #e6eff8"><span></span><code>#E6EFF8</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>浏览器</span><span>终端</span><span>命令</span><span>网页高亮</span><span>表格</span><span>调查表单</span><span>验证报告</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>固定双视图，减少来回找位置</h2></div><div class="rule-copy">
+<p>深浅蓝渐变作为外层，左边浏览器更宽，右边终端保持连续。页面使用无衬线，终端使用等宽字；章节标题只在任务之间短暂占满画面。</p>
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>从检索结果走到表格</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;从检索结果走到表格&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 24, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;6–30 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>从检索结果走到表格</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="从检索结果走到表格" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="24" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 24.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>6–30 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Kimi Web Bridge - Kimi&#x27;s browser extension. · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#62a4d5}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;6&quot; data-end=&quot;30&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>命令先进入终端，再打开多个来源页面。重点内容用局部高亮表示，收集完成后切到表格，表格条目承接刚才的来源。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>表单任务用字段增长说明过程</h2></div><div class="rule-copy">
+<p>第二个任务从短请求开始，页面依次出现标题、问题和选项。终端给当前状态，浏览器展示新增内容，两边保持同一任务名。</p>
+</div></section><section class="rule has-reference" id="section-4"><div class="rule-label"><span>04</span><h2>网页任务要展示成品与浏览</h2></div><img class="reference" loading="eager" alt="45.00s · 构图参考" src="assets/reference-5.jpg"><div class="rule-copy">
+<p>输入目标后先浏览页面，再出现生成后的页面。末段滚动查看主要区块，终端用对应条目总结结果，让观众知道任务落在哪里。</p>
+
+</div></section><section class="rule text-only" id="section-5"><div class="rule-label"><span>05</span><h2>三组任务，各自有开头和结束</h2></div><div class="rule-copy">
+<p>用章节短句切开检索、表单和网页三个案例。每组先看请求，再看动作和产物，完成一组后再换下一组。</p>
+
+</div></section><section class="rule text-only" id="section-6"><div class="rule-label"><span>06</span><h2>替换工具与站点</h2></div><div class="rule-copy">
+<p>可换浏览器助手、目标网站和任务。保持双视图分工，结果类型随任务改变，避免所有案例都以命令滚动结束。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>功能与扩展定位</b></button><button class="beat" data-time="6.0"><span>6.00<small>s</small></span><b>命令输入</b></button><button class="beat" data-time="13.0"><span>13.00<small>s</small></span><b>浏览多个网站</b></button><button class="beat" data-time="23.0"><span>23.00<small>s</small></span><b>写入表格</b></button><button class="beat" data-time="30.0"><span>30.00<small>s</small></span><b>生成调查问卷</b></button><button class="beat" data-time="40.0"><span>40.00<small>s</small></span><b>复刻网页任务</b></button><button class="beat" data-time="45.0"><span>45.00<small>s</small></span><b>读取与重建</b></button><button class="beat" data-time="51.0"><span>51.00<small>s</small></span><b>验证报告</b></button><button class="beat" data-time="58.0"><span>58.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.jpg" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="13.00 秒的构图参考" loading="lazy"><figcaption>13.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/4c47c092ccf5fe6a58a3951ef69d662a38ccdb1d9e65ce52808bcd4e6873fc9b" alt="23.00 秒的构图参考" loading="lazy"><figcaption>23.00s</figcaption></figure><figure><img src="assets/reference-4.jpg" alt="40.00 秒的构图参考" loading="lazy"><figcaption>40.00s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="45.00 秒的构图参考" loading="lazy"><figcaption>45.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/4938c8c4c8e6ae9bc1dd0cbc50208e3ba34aa3c9a17111beed4a5fcea488ba1b" alt="58.00 秒的构图参考" loading="lazy"><figcaption>58.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>适用于浏览器自动化展示；替换任务站点和结果，保留双视图因果。</li><li>真实联网执行与复刻准确率不由示例证明。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>浏览器 / 终端 / 命令 / 网页高亮 / 表格 / 调查表单 / 验证报告</p>
+<ul><li>浏览器操作和终端反馈并排，体现代理计划与页面结果的对应。</li><li>三组任务各有输入、执行、结果，章节标题短暂打断录屏。</li><li>最后报告对应网页检查，不能只有滚动命令。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Kimi / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Kimi Web Bridge - Kimi&#x27;s browser extension.
+
+把浏览器操作和代理反馈并排展示，让输入、执行与结果始终能互相对上。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 63.333333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 13.3,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Kimi WebBridge&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#c3e4f1&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Kimi WebBridge&quot;,
+        &quot;accent&quot;: &quot;#c3e4f1&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 固定双视图，减少来回找位置
+
+深浅蓝渐变作为外层，左边浏览器更宽，右边终端保持连续。页面使用无衬线，终端使用等宽字；章节标题只在任务之间短暂占满画面。
+
+## 从检索结果走到表格
+
+命令先进入终端，再打开多个来源页面。重点内容用局部高亮表示，收集完成后切到表格，表格条目承接刚才的来源。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;从检索结果走到表格&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 24,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;6–30 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 表单任务用字段增长说明过程
+
+第二个任务从短请求开始，页面依次出现标题、问题和选项。终端给当前状态，浏览器展示新增内容，两边保持同一任务名。
+
+## 网页任务要展示成品与浏览
+
+输入目标后先浏览页面，再出现生成后的页面。末段滚动查看主要区块，终端用对应条目总结结果，让观众知道任务落在哪里。
+
+![45.00s · 构图参考](assets/reference-5.jpg)
+
+## 三组任务，各自有开头和结束
+
+用章节短句切开检索、表单和网页三个案例。每组先看请求，再看动作和产物，完成一组后再换下一组。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–6.00s | 功能与扩展定位 |
+| 6.00–13.00s | 命令输入 |
+| 13.00–23.00s | 浏览多个网站 |
+| 23.00–30.00s | 写入表格 |
+| 30.00–40.00s | 生成调查问卷 |
+| 40.00–45.00s | 复刻网页任务 |
+| 45.00–51.00s | 读取与重建 |
+| 51.00–58.00s | 验证报告 |
+| 58.00–63.33s | 品牌 |
+
+## 替换工具与站点
+
+可换浏览器助手、目标网站和任务。保持双视图分工，结果类型随任务改变，避免所有案例都以命令滚动结束。
+
+## 配色与字形
+
+深浅蓝渐变、左浏览器右终端、章节大字。
+
+#62a4d5 · #ffffff · #c3e4f1 · #263557 · #e6eff8
+
+## 元素与制作规则
+
+浏览器 / 终端 / 命令 / 网页高亮 / 表格 / 调查表单 / 验证报告
+
+- 浏览器操作和终端反馈并排，体现代理计划与页面结果的对应。
+- 三组任务各有输入、执行、结果，章节标题短暂打断录屏。
+- 最后报告对应网页检查，不能只有滚动命令。
+
+## 内容替换
+
+- 适用于浏览器自动化展示；替换任务站点和结果，保留双视图因果。
+- 真实联网执行与复刻准确率不由示例证明。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Kimi&quot;,
+  &quot;id&quot;: &quot;V246&quot;,
+  &quot;palette&quot;: [
+    &quot;#62a4d5&quot;,
+    &quot;#ffffff&quot;,
+    &quot;#c3e4f1&quot;,
+    &quot;#263557&quot;,
+    &quot;#e6eff8&quot;
+  ],
+  &quot;typography&quot;: &quot;深浅蓝渐变、左浏览器右终端、章节大字&quot;,
+  &quot;sample&quot;: &quot;Kimi WebBridge&quot;,
+  &quot;objects&quot;: [
+    &quot;浏览器&quot;,
+    &quot;终端&quot;,
+    &quot;命令&quot;,
+    &quot;网页高亮&quot;,
+    &quot;表格&quot;,
+    &quot;调查表单&quot;,
+    &quot;验证报告&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 13.0,
+      &quot;frameId&quot;: &quot;K0032&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/4c47c092ccf5fe6a58a3951ef69d662a38ccdb1d9e65ce52808bcd4e6873fc9b&quot;,
+      &quot;timeSeconds&quot;: 23.0,
+      &quot;frameId&quot;: &quot;K0069&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.jpg&quot;,
+      &quot;timeSeconds&quot;: 40.0,
+      &quot;frameId&quot;: &quot;K0113&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 45.0,
+      &quot;frameId&quot;: &quot;K0130&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/4938c8c4c8e6ae9bc1dd0cbc50208e3ba34aa3c9a17111beed4a5fcea488ba1b&quot;,
+      &quot;timeSeconds&quot;: 58.0,
+      &quot;frameId&quot;: &quot;K0186&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;功能与扩展定位&quot;,
+      &quot;end&quot;: 6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 6,
+      &quot;label&quot;: &quot;命令输入&quot;,
+      &quot;end&quot;: 13,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 13,
+      &quot;label&quot;: &quot;浏览多个网站&quot;,
+      &quot;end&quot;: 23,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 23,
+      &quot;label&quot;: &quot;写入表格&quot;,
+      &quot;end&quot;: 30,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 30,
+      &quot;label&quot;: &quot;生成调查问卷&quot;,
+      &quot;end&quot;: 40,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 40,
+      &quot;label&quot;: &quot;复刻网页任务&quot;,
+      &quot;end&quot;: 45,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 45,
+      &quot;label&quot;: &quot;读取与重建&quot;,
+      &quot;end&quot;: 51,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 51,
+      &quot;label&quot;: &quot;验证报告&quot;,
+      &quot;end&quot;: 58,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 58,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 63.333333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 63.333333,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

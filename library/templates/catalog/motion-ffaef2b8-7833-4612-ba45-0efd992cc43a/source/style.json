@@ -1,0 +1,148 @@
+{
+  "background": {
+    "color": "#0b171b",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Build a cognitive fitness app featuring puzzles and",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：*Run Rate",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：First, let me use the QA tool to look for the",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌立体形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "收入数字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "增长曲线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "电脑",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "部署状态",
+      "status": "inferred"
+    },
+    {
+      "id": "role-7",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "应用墙",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#0b171b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#67f0b1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#82abdf",
+      "status": "inferred"
+    },
+    {
+      "hex": "#fafbfa",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面文字与清晰大小层级",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先用增长建立背景，再把构建入口从电脑移到手机",
+      "status": "inferred"
+    },
+    {
+      "rule": "手机中的输入、构建、上线依次发生，完成反馈后才显示多应用墙",
+      "status": "inferred"
+    },
+    {
+      "rule": "深色数据段与明亮移动端段形成分界",
+      "status": "inferred"
+    }
+  ]
+}

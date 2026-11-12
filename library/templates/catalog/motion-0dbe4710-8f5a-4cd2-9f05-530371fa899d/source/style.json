@@ -1,0 +1,88 @@
+{
+  "background": {
+    "color": "#575757",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：H",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "立方体六面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "白色裂缝",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中央字母",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地面投影",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#575757",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f2f2ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#242424",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a7a7a3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d1d1cd",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "灰黑石膏立方体、白色裂缝与黑色字母，最终回到浅纸底。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先旋转立方体并拉远，白色细缝沿边缘出现后，各面向外散开。H 留在原中心，分离距离逐渐加大到面板离开画幅。",
+      "status": "inferred"
+    },
+    {
+      "rule": "开始用深灰石膏和侧面明暗区分体积；裂缝变宽时背景同时变浅，结尾只留黑字与轻微地面影。替换字母需先检查外壳能完整遮住它。",
+      "status": "inferred"
+    }
+  ]
+}

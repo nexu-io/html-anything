@@ -1,0 +1,120 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        59.1
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        59.1
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        59.1
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0.0,
+      "label": "品牌",
+      "end": 3.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3.0,
+      "label": "歌曲请求",
+      "end": 7.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 7.0,
+      "label": "封面素材",
+      "end": 10.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 10.0,
+      "label": "上传参考",
+      "end": 13.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 13.0,
+      "label": "歌曲段落",
+      "end": 18.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 18.0,
+      "label": "歌词与副歌",
+      "end": 22.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 22.0,
+      "label": "节奏调节",
+      "end": 27.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 27.0,
+      "label": "调性选择",
+      "end": 32.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 32.0,
+      "label": "音频波形",
+      "end": 38.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 38.0,
+      "label": "多作品展开",
+      "end": 52.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 52.0,
+      "label": "名称",
+      "end": 57.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 57.0,
+      "label": "品牌",
+      "end": 59.1,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 59.1
+  }
+}

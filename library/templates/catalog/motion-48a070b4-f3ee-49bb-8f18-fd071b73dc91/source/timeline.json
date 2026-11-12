@@ -1,0 +1,99 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        19.283333
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        19.283333
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        19.283333
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0.0,
+      "label": "网页变应用主张",
+      "end": 1.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 1.5,
+      "label": "多站点",
+      "end": 3.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3.5,
+      "label": "安装按钮",
+      "end": 5.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 5.5,
+      "label": "独立应用",
+      "end": 7.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 7.5,
+      "label": "系统搜索启动",
+      "end": 9.5,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 9.5,
+      "label": "快捷键切换",
+      "end": 12.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 12.0,
+      "label": "并排窗口",
+      "end": 15.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 15.0,
+      "label": "应用队列",
+      "end": 17.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 17.0,
+      "label": "品牌",
+      "end": 19.283333,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 19.283333
+  }
+}

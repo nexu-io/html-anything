@@ -1,0 +1,85 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        40.733333
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        40.733333
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        40.733333
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "两台手机建立",
+      "end": 4,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 4,
+      "label": "开始点名",
+      "end": 10,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 10,
+      "label": "横移寻找下一对",
+      "end": 16,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 16,
+      "label": "更多声音回应",
+      "end": 23,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 23,
+      "label": "发现缺席者",
+      "end": 30,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 30,
+      "label": "单台手机回应",
+      "end": 35,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 35,
+      "label": "功能与品牌落版",
+      "end": 40.733333,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 40.733333
+  }
+}

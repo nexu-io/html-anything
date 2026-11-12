@@ -408,7 +408,7 @@ If MCP tools are missing or fail to connect, use the installed [connection diagn
 Use Git, npm and **Node.js 26.11.1**. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/openmotion.git openmotion
+git clone https://github.com/nexu-io/openmotion.git
 cd openmotion
 npm ci
 npm run build:studio
@@ -416,6 +416,10 @@ npm start
 ```
 
 Open **http://localhost:4173**, then open **Template library**. Select a template and choose **Recreate template** to copy the instruction for your agent. Keep projects and credentials outside the checkout; `MOTION_DATA_DIR` selects the workspace.
+
+Source checkouts load templates from `library/templates/catalog/`. The local Studio and MCP use the same files; `openmotion_list_templates` returns a searchable local index, and `openmotion_get_template` returns local guide content and absolute source paths. Larger images and videos use existing CMS links. Local edits appear on the next catalog read.
+
+The plugin root is this checkout: `.codex-plugin/plugin.json` loads its `skills/` and `.mcp.json`, which launches the root `mcp.ts`. Start stdio with `npm run mcp` or use an absolute path in [manual MCP configuration](#manual-mcp). [Local template workflow](docs/template-repository.md#run-from-a-local-clone).
 
 <a id="agent-setup"></a>
 

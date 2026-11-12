@@ -1,0 +1,217 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Apple｜Spotlight 界面动效 · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#1478c5;--brand-ink:#f7fbf9;--accent:#62c4d7;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Apple <span>/</span> V287</div><div class="intro-line"><h1>Apple｜Spotlight 界面动效</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>一条搜索胶囊从查找命令变成填写命令。动作选择前后，输入区域承担不同职责。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 5.5, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 1, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Send a message&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#62c4d7&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Send a message&quot;, &quot;accent&quot;: &quot;#62c4d7&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="5.5" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 5.50 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Apple｜Spotlight 界面动效 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1478c5}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Apple</div><div class="type-sample">Send a message</div><p>无衬线中粗主标题；细边框界面与小号功能文字</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#1478c5" style="--swatch:#1478c5" aria-label="复制色值 #1478c5"><span></span><code>#1478C5</code></button><button class="swatch" data-color="#f7fbf9" style="--swatch:#f7fbf9" aria-label="复制色值 #f7fbf9"><span></span><code>#F7FBF9</code></button><button class="swatch" data-color="#62c4d7" style="--swatch:#62c4d7" aria-label="复制色值 #62c4d7"><span></span><code>#62C4D7</code></button><button class="swatch" data-color="#a4d9e3" style="--swatch:#a4d9e3" aria-label="复制色值 #a4d9e3"><span></span><code>#A4D9E3</code></button><button class="swatch" data-color="#214be0" style="--swatch:#214be0" aria-label="复制色值 #214be0"><span></span><code>#214BE0</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>搜索胶囊</span><span>联想列表</span><span>动作标签</span><span>参数占位符</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>搜索、建议、参数连续切换</h2></div><div class="rule-copy">
+<p>关键词出现后展开建议列表，选中动作后收起列表，并把胶囊改成参数化输入。新内容只写入消息槽位，收件人等占位符保留清晰边界。</p>
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>把状态变化限制在胶囊附近</h2></div><div class="rule-copy">
+<p>圆角容器位置稳定，列表从其下方出现；收起后回到同一个输入基线。指针与选中高亮说明当前操作，文本不随背景运动。</p>
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>半透明浅面板浮在蓝色背景上</h2></div><div class="rule-copy">
+<p>用蓝与青色渐层衬托浅色胶囊，输入与列表文字用清楚的无衬线。动作标签、占位符和已输入内容要有对比层级，标签宽度随文本适配。</p>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>可迁移为任意命令面板</h2></div><div class="rule-copy">
+<p>替换查询词、建议项和参数名称。保留“查找→确定动作→补全参数”的语法，确保每个占位符能在最终输入中找到对应内容。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>搜索胶囊</b></button><button class="beat" data-time="0.5"><span>0.50<small>s</small></span><b>输入关键词</b></button><button class="beat" data-time="1.0"><span>1.00<small>s</small></span><b>建议列表展开</b></button><button class="beat" data-time="2.3"><span>2.30<small>s</small></span><b>选择动作</b></button><button class="beat" data-time="2.6"><span>2.60<small>s</small></span><b>消息字段</b></button><button class="beat" data-time="3.3"><span>3.30<small>s</small></span><b>继续输入内容</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.jpg" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="0.87 秒的构图参考" loading="lazy"><figcaption>0.87s</figcaption></figure><figure><img src="assets/reference-3.jpg" alt="1.00 秒的构图参考" loading="lazy"><figcaption>1.00s</figcaption></figure><figure><img src="assets/reference-4.jpg" alt="2.27 秒的构图参考" loading="lazy"><figcaption>2.27s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="3.00 秒的构图参考" loading="lazy"><figcaption>3.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可换任意命令面板操作；保留搜索→选择→填参数。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>搜索胶囊 / 联想列表 / 动作标签 / 参数占位符</p>
+<ul><li>搜索词触发建议列表，选中操作后列表收起、胶囊转为参数化命令。</li><li>新输入只改变消息槽位，收件人占位符持续可辨。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Apple / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Apple｜Spotlight 界面动效
+
+一条搜索胶囊从查找命令变成填写命令。动作选择前后，输入区域承担不同职责。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 5.5,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 1,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Send a message&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#62c4d7&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Send a message&quot;,
+        &quot;accent&quot;: &quot;#62c4d7&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 搜索、建议、参数连续切换
+
+关键词出现后展开建议列表，选中动作后收起列表，并把胶囊改成参数化输入。新内容只写入消息槽位，收件人等占位符保留清晰边界。
+
+## 把状态变化限制在胶囊附近
+
+圆角容器位置稳定，列表从其下方出现；收起后回到同一个输入基线。指针与选中高亮说明当前操作，文本不随背景运动。
+
+## 半透明浅面板浮在蓝色背景上
+
+用蓝与青色渐层衬托浅色胶囊，输入与列表文字用清楚的无衬线。动作标签、占位符和已输入内容要有对比层级，标签宽度随文本适配。
+
+## 可迁移为任意命令面板
+
+替换查询词、建议项和参数名称。保留“查找→确定动作→补全参数”的语法，确保每个占位符能在最终输入中找到对应内容。
+
+## 配色与字形
+
+无衬线中粗主标题；细边框界面与小号功能文字。
+
+#1478c5 · #f7fbf9 · #62c4d7 · #a4d9e3 · #214be0
+
+## 元素与制作规则
+
+搜索胶囊 / 联想列表 / 动作标签 / 参数占位符
+
+- 搜索词触发建议列表，选中操作后列表收起、胶囊转为参数化命令。
+- 新输入只改变消息槽位，收件人占位符持续可辨。
+
+## 内容替换
+
+- 可换任意命令面板操作；保留搜索→选择→填参数。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Apple&quot;,
+  &quot;id&quot;: &quot;V287&quot;,
+  &quot;palette&quot;: [
+    &quot;#1478c5&quot;,
+    &quot;#f7fbf9&quot;,
+    &quot;#62c4d7&quot;,
+    &quot;#a4d9e3&quot;,
+    &quot;#214be0&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线中粗主标题；细边框界面与小号功能文字&quot;,
+  &quot;sample&quot;: &quot;Send a message&quot;,
+  &quot;objects&quot;: [
+    &quot;搜索胶囊&quot;,
+    &quot;联想列表&quot;,
+    &quot;动作标签&quot;,
+    &quot;参数占位符&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.8666666666666667,
+      &quot;frameId&quot;: &quot;K0002&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.jpg&quot;,
+      &quot;timeSeconds&quot;: 1.0,
+      &quot;frameId&quot;: &quot;K0003&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.jpg&quot;,
+      &quot;timeSeconds&quot;: 2.2666666666666666,
+      &quot;frameId&quot;: &quot;K0006&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 3.0,
+      &quot;frameId&quot;: &quot;K0007&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;搜索胶囊&quot;,
+      &quot;end&quot;: 0.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 0.5,
+      &quot;label&quot;: &quot;输入关键词&quot;,
+      &quot;end&quot;: 1,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 1,
+      &quot;label&quot;: &quot;建议列表展开&quot;,
+      &quot;end&quot;: 2.3,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 2.3,
+      &quot;label&quot;: &quot;选择动作&quot;,
+      &quot;end&quot;: 2.6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 2.6,
+      &quot;label&quot;: &quot;消息字段&quot;,
+      &quot;end&quot;: 3.3,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3.3,
+      &quot;label&quot;: &quot;继续输入内容&quot;,
+      &quot;end&quot;: 5.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 5.5,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

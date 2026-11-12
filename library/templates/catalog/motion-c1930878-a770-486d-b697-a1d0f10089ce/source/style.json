@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#080807",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：...:",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：In [1]: auth, api = await asyncio.gather(",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：auth-flow",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "颗粒地形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "终端面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "子任务状态",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网格游戏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "结果分数",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "曲线图",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#080807",
+      "status": "inferred"
+    },
+    {
+      "hex": "#eee9df",
+      "status": "inferred"
+    },
+    {
+      "hex": "#438bc3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b09d7d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d98442",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "等宽大写标题、命令与代码；数字结果明显放大",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "让产品机制先通过代码与状态出现，再用任务结果和汇总数字收束。",
+      "status": "inferred"
+    },
+    {
+      "rule": "深色粒子地形提供空间感，终端使用近黑不透明底。标题、代码与日志使用等宽字，蓝橙语法色限于代码，背景亮度低于正文。",
+      "status": "inferred"
+    },
+    {
+      "rule": "工具调用、记忆改进和代理通信按顺序切换。上方代码与下方状态结构对应，同一子任务名称跨位置保持一致。",
+      "status": "inferred"
+    }
+  ]
+}

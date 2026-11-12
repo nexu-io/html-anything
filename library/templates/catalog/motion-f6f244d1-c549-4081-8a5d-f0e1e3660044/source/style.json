@@ -1,0 +1,115 @@
+{
+  "background": {
+    "color": "#f3f1e6",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "几何标",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代理任务卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "部门标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "提示栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "工作流节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "回答卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "治理锁",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f3f1e6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#252323",
+      "status": "inferred"
+    },
+    {
+      "hex": "#3a2ee9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#dbff59",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f3b59d",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "紧凑无衬线标题；功能描述保留短句，流程卡使用界面正文",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "米白底上让蓝色球与荧光几何围绕短标题。目录界面出现后，把代理任务以小卡片分布到画面四周，中心仍保留主张或输入栏。",
+      "status": "inferred"
+    },
+    {
+      "rule": "提示框输入后切到纵向流程：触发器在上，搜索与信息汇总依次向下。卡片之间用箭头接通，下一步的入场晚于上一节点。",
+      "status": "inferred"
+    },
+    {
+      "rule": "人物与部门分组用于说明谁在用，数据源连线用于说明从哪里获得信息；不要把两套网络挤在同一张图中。最后再汇成代理矩阵与品牌。",
+      "status": "inferred"
+    },
+    {
+      "rule": "至少准备一条真实需求、三步处理和结果示例；部门与工具图标可换，但触发条件、执行顺序和结果格式要一致。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#090b0b",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：2025-04-15 08:09:56",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：keep the SQL",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：my-project",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "倾斜界面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "用户增长图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "SQL 编辑器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "结果表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "自然语言输入",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "本地命令",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#090b0b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e9edea",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4ac796",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1d2420",
+      "status": "inferred"
+    },
+    {
+      "hex": "#777f7b",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线功能短句与等宽 SQL；黑底界面用弱分隔线，绿色图表突出数据",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先用增长图打开产品，再逐项证明查询、保存、自然语言和本地工作流，短句始终与正在演示的功能并置。",
+      "status": "inferred"
+    },
+    {
+      "rule": "产品名揭示后固定左侧短句区，右侧暗色界面展示对应操作。界面可略倾斜并缓慢前移，但 SQL 与结果的主要区域不能超出阅读范围。",
+      "status": "inferred"
+    },
+    {
+      "rule": "查询语句先出现，运行后填入表格，再切到绿色图形。保存段保留笔记标题，说明查询、数据和图表属于同一工作单元。",
+      "status": "inferred"
+    }
+  ]
+}

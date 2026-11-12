@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#ffffff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：9:30",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：I'm thinking about trying pottery.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：is wheel throwing or hand building",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "搜索胶囊",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌光晕",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入文字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模式标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发送钮",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#333938",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4a80e2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d95e5d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6bb79a",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白色大留白、细阴影胶囊、四彩边缘光",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "从短搜索栏扩大为多行问题框，体现由关键词到完整意图。",
+      "status": "inferred"
+    },
+    {
+      "rule": "光晕沿边缘强调激活，正文保持高对比。",
+      "status": "inferred"
+    },
+    {
+      "rule": "输入增多时容器增高而非缩小文字。",
+      "status": "inferred"
+    }
+  ]
+}

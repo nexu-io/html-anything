@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#ffffff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Grok Bot",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：krea.ai",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "草图附件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "用户消息",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "加载占位",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "人物设定图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "视频结果",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#111111",
+      "status": "inferred"
+    },
+    {
+      "hex": "#28a6d6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#eaf2f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f3eed7",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白色聊天界面、蓝色用户气泡、米色插画预览。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "第一条请求把草图变成人物设定图，第二条再把该结果变为动画。聊天视图向上滚动，新结果从底部进入，保留上一条消息的联系。",
+      "status": "inferred"
+    },
+    {
+      "rule": "草图、彩色人物表与动画预览应能认出同一组角色。蓝色气泡只表示用户输入，结果放浅色卡片，不混淆两种角色。",
+      "status": "inferred"
+    },
+    {
+      "rule": "动画短暂播放后切到标志，再留网址。替换题材时先准备同一对象的草图、设定图和动作三个版本。",
+      "status": "inferred"
+    }
+  ]
+}

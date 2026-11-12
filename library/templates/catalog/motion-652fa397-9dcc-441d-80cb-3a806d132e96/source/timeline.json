@@ -1,0 +1,78 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        17.875
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        17.875
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        17.875
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0.0,
+      "label": "四手机同时出现",
+      "end": 3.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3.0,
+      "label": "各应用概览",
+      "end": 6.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6.0,
+      "label": "独立滚动",
+      "end": 9.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 9.0,
+      "label": "筛选与切页",
+      "end": 12.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 12.0,
+      "label": "图表与设置",
+      "end": 15.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 15.0,
+      "label": "输入与主题",
+      "end": 17.875,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 17.875
+  }
+}

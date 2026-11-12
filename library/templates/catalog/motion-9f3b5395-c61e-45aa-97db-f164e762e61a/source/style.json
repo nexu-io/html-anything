@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#f4f2eb",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Comment",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Tweaks",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Export",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "工作区容器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "对话面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "成果画布",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "控件工具栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "参数面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "指针",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f4f2eb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#20201d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c4755c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d8d8cd",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "大标题衬线与界面无衬线分工；暖白工作区、浅灰工具栏、陶土色操作按钮",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先让用户输入意图，再展示成果，最后演示局部修改与导出；成果出现必须晚于提交动作。",
+      "status": "inferred"
+    },
+    {
+      "rule": "缩放镜头跟随当前操作区域：全局布局→工具按钮→结果细节；指针与镜头不同时大幅移动。",
+      "status": "inferred"
+    },
+    {
+      "rule": "参数面板附着在成果画布一侧，修改参数影响同一对象；成果墙只用于段落交接，不把不同工程关联为同一对象。",
+      "status": "inferred"
+    }
+  ]
+}

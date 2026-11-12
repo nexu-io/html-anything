@@ -1,0 +1,117 @@
+{
+  "background": {
+    "color": "#eeeeef",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Superagents",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模板作品",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "提示框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "圆点组",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "时间轨道",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "效果菜单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "多尺寸画板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "导出标签",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#eeeeef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#141416",
+      "status": "inferred"
+    },
+    {
+      "hex": "#30aceb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d7ff00",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8250b7",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "紧凑粗体标题；画布作品字形随模板，工具提示采用小字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "模板重混前后保持内容结构；圆点排列由散乱转圆环，后续动作继续作用于这组点。指令框靠近画布，避免孤立的聊天截图。",
+      "status": "inferred"
+    },
+    {
+      "rule": "轨道偏移需要同时看到条带与时间游标；尺寸适配需要保留同一标题和主图，在横、竖、方画板里重新排布。",
+      "status": "inferred"
+    },
+    {
+      "rule": "单个画板操作讲清后，再拉远为多尺寸、多语言矩阵。黑白底承托彩色作品，蓝色只标记代理反馈与操作入口，批量导出标签盖在矩阵前。",
+      "status": "inferred"
+    },
+    {
+      "rule": "准备可拆开的标题、图像和图形层，以及每个尺寸的重排规则。将批量变体做成同一内容家族，不用随机不同作品填数。",
+      "status": "inferred"
+    }
+  ]
+}

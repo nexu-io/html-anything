@@ -1,0 +1,228 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>紫框中的五个组件 · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#000000;--brand-ink:#ffffff;--board-label-ink:#ffffff;--accent:#6554b5;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Framer <span>/</span> V339</div><div class="intro-line"><h1>紫框中的五个组件</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>固定紫色描边与组件名称，使五段快速演示看起来属于同一套工具。每次切换只更换内部对象，不移动展示舞台。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 3.9, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 1.5, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Component playground&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#6554b5&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Component playground&quot;, &quot;accent&quot;: &quot;#6554b5&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="3.9" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 3.90 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;紫框中的五个组件 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000000}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Framer</div><div class="type-sample">Component playground</div><p>黑色展示区配细紫框；组件名称使用极小的紫色字。</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#000000" style="--swatch:#000000" aria-label="复制色值 #000000"><span></span><code>#000000</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button><button class="swatch" data-color="#6554b5" style="--swatch:#6554b5" aria-label="复制色值 #6554b5"><span></span><code>#6554B5</code></button><button class="swatch" data-color="#2d79b0" style="--swatch:#2d79b0" aria-label="复制色值 #2d79b0"><span></span><code>#2D79B0</code></button><button class="swatch" data-color="#d067ae" style="--swatch:#d067ae" aria-label="复制色值 #d067ae"><span></span><code>#D067AE</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>固定紫色画布边界</span><span>粒子球</span><span>图片拖尾</span><span>文字滚筒</span><span>磁吸网格</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>外框不动，连续换五种运动</h2></div><div class="rule-copy">
+<p>固定紫色描边与组件名称，使五段快速演示看起来属于同一套工具。每次切换只更换内部对象，不移动展示舞台。</p>
+
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>拖尾与滚筒用不同的运动规则</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;拖尾与滚筒用不同的运动规则&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 1.9, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;1–2.9 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>拖尾与滚筒用不同的运动规则</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="拖尾与滚筒用不同的运动规则" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="1.9" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 1.90 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>1–2.9 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;紫框中的五个组件 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000000}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;1&quot; data-end=&quot;2.9&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>图片沿弧线依次追随并叠压；文字则围绕水平轴纵向滚动，中央清楚，上下逐渐模糊变小。两者不要共享同一种平移。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>用规整网格结束</h2></div><div class="rule-copy">
+<p>最后把图片组织成连续上下滑动的圆角网格，较前面的散开状态更整齐。迁移时替换图片组与词库，保留五种机制的对比。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>照片轮盘</b></button><button class="beat" data-time="0.27"><span>0.27<small>s</small></span><b>旋转粒子球</b></button><button class="beat" data-time="1.0"><span>1.00<small>s</small></span><b>图片跟随拖尾</b></button><button class="beat" data-time="2.0"><span>2.00<small>s</small></span><b>纵向字词滚筒</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>图片磁吸网格</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.jpg" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="0.27 秒的构图参考" loading="lazy"><figcaption>0.27s</figcaption></figure><figure><img src="assets/reference-3.jpg" alt="1.00 秒的构图参考" loading="lazy"><figcaption>1.00s</figcaption></figure><figure><img src="assets/reference-4.jpg" alt="2.00 秒的构图参考" loading="lazy"><figcaption>2.00s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="3.00 秒的构图参考" loading="lazy"><figcaption>3.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可以替换图片与词组，但轮盘、球面、拖尾、滚筒、网格应保持不同拓扑。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>固定紫色画布边界 / 粒子球 / 图片拖尾 / 文字滚筒 / 磁吸网格</p>
+<ul><li>固定紫色描边与组件名称，使五段快速演示看起来属于同一套工具。每次切换只更换内部对象，不移动展示舞台。</li><li>图片沿弧线依次追随并叠压；文字则围绕水平轴纵向滚动，中央清楚，上下逐渐模糊变小。两者不要共享同一种平移。</li><li>最后把图片组织成连续上下滑动的圆角网格，较前面的散开状态更整齐。迁移时替换图片组与词库，保留五种机制的对比。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Framer / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># 紫框中的五个组件
+
+固定紫色描边与组件名称，使五段快速演示看起来属于同一套工具。每次切换只更换内部对象，不移动展示舞台。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 3.9,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 1.5,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Component playground&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#6554b5&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Component playground&quot;,
+        &quot;accent&quot;: &quot;#6554b5&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 外框不动，连续换五种运动
+
+固定紫色描边与组件名称，使五段快速演示看起来属于同一套工具。每次切换只更换内部对象，不移动展示舞台。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–0.27s | 照片轮盘 |
+| 0.27–1.00s | 旋转粒子球 |
+| 1.00–2.00s | 图片跟随拖尾 |
+| 2.00–3.00s | 纵向字词滚筒 |
+| 3.00–3.90s | 图片磁吸网格 |
+
+## 拖尾与滚筒用不同的运动规则
+
+图片沿弧线依次追随并叠压；文字则围绕水平轴纵向滚动，中央清楚，上下逐渐模糊变小。两者不要共享同一种平移。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;拖尾与滚筒用不同的运动规则&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 1.9,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;1–2.9 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 用规整网格结束
+
+最后把图片组织成连续上下滑动的圆角网格，较前面的散开状态更整齐。迁移时替换图片组与词库，保留五种机制的对比。
+
+## 配色与字形
+
+黑色展示区配细紫框；组件名称使用极小的紫色字。。
+
+#000000 · #ffffff · #6554b5 · #2d79b0 · #d067ae
+
+## 元素与制作规则
+
+固定紫色画布边界 / 粒子球 / 图片拖尾 / 文字滚筒 / 磁吸网格
+
+- 固定紫色描边与组件名称，使五段快速演示看起来属于同一套工具。每次切换只更换内部对象，不移动展示舞台。
+- 图片沿弧线依次追随并叠压；文字则围绕水平轴纵向滚动，中央清楚，上下逐渐模糊变小。两者不要共享同一种平移。
+- 最后把图片组织成连续上下滑动的圆角网格，较前面的散开状态更整齐。迁移时替换图片组与词库，保留五种机制的对比。
+
+## 内容替换
+
+- 可以替换图片与词组，但轮盘、球面、拖尾、滚筒、网格应保持不同拓扑。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Framer&quot;,
+  &quot;id&quot;: &quot;V339&quot;,
+  &quot;palette&quot;: [
+    &quot;#000000&quot;,
+    &quot;#ffffff&quot;,
+    &quot;#6554b5&quot;,
+    &quot;#2d79b0&quot;,
+    &quot;#d067ae&quot;
+  ],
+  &quot;typography&quot;: &quot;黑色展示区配细紫框；组件名称使用极小的紫色字。&quot;,
+  &quot;sample&quot;: &quot;Component playground&quot;,
+  &quot;objects&quot;: [
+    &quot;固定紫色画布边界&quot;,
+    &quot;粒子球&quot;,
+    &quot;图片拖尾&quot;,
+    &quot;文字滚筒&quot;,
+    &quot;磁吸网格&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.26666666666666666,
+      &quot;frameId&quot;: &quot;K0002&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.jpg&quot;,
+      &quot;timeSeconds&quot;: 1.0,
+      &quot;frameId&quot;: &quot;K0004&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.jpg&quot;,
+      &quot;timeSeconds&quot;: 2.0,
+      &quot;frameId&quot;: &quot;K0010&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 3.0,
+      &quot;frameId&quot;: &quot;K0015&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;照片轮盘&quot;,
+      &quot;end&quot;: 0.27,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 0.27,
+      &quot;label&quot;: &quot;旋转粒子球&quot;,
+      &quot;end&quot;: 1,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 1,
+      &quot;label&quot;: &quot;图片跟随拖尾&quot;,
+      &quot;end&quot;: 2,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 2,
+      &quot;label&quot;: &quot;纵向字词滚筒&quot;,
+      &quot;end&quot;: 3,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3,
+      &quot;label&quot;: &quot;图片磁吸网格&quot;,
+      &quot;end&quot;: 3.9,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 3.9,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

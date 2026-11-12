@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#001c11",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Approve",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Summary of changes",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Connect an agent",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "命令行",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "授权说明卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "费用汇总",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机通知",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "支付确认",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "回执",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#001c11",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#00d96f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#124a31",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b3d5c8",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "深绿终端背景配等宽字；授权页换成白底黑色无衬线。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先安装并连接 agent，随后用聊天提出行程调整，显示费用，再转到手机确认。费用和商户名称跨界面重复，帮助理解是同一笔请求。",
+      "status": "inferred"
+    },
+    {
+      "rule": "命令和对话停留在细网点深绿底；需要用户操作时切换为白色窄卡片。绿色只用于链接、通知标记和最终成功反馈。",
+      "status": "inferred"
+    },
+    {
+      "rule": "手机从背景中浮出，通知在下半部弹入；点击后展成付款授权，再用识别图标和勾表示完成。不要省略确认就直接展示成功。",
+      "status": "inferred"
+    }
+  ]
+}

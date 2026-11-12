@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#fbf8ef",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：450 Tools",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Connect with over",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "胶囊动词",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "加号",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "计数",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "工具轨道",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "滚动用途",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "图标环",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fbf8ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#151515",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ed2d08",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1656f6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f3b3a4",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "米白底，大黑字与橙色胶囊词，蓝色中心加号和多色集成图标。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "橙色胶囊把 connect、with 等词接起来，最终落到一个可点击加号。点击后图标沿多条弧线涌入，数字增长到 450。",
+      "status": "inferred"
+    },
+    {
+      "rule": "用途列表纵向滚动，当前行变黑并连接右侧橙色工具标签，其他行渐淡。观众一次只读一种用途。",
+      "status": "inferred"
+    },
+    {
+      "rule": "图标从队列组成环，配 More，再用一句问题引向品牌。替换产品生态时，数量、工具图标和用途说明要同步更新。",
+      "status": "inferred"
+    }
+  ]
+}

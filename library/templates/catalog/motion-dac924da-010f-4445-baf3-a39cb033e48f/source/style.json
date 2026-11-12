@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#f8f8f2",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Think out loud with Claude",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Morning, Devi.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "语音圆钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "同心圆遮罩",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "背景影像",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "逐词字幕",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "口号",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f8f8f2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#141511",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d58a76",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8c8d76",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "暖白留白、黑色语音圆钮、生活照片与白色衬线字幕",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "同一中心圆从按钮扩张为影像窗口，再收回按钮；保持空间身份连续。",
+      "status": "inferred"
+    },
+    {
+      "rule": "影像进入后虚化并叠暖色光晕，字幕随后出现；背景降低细节以支持阅读。",
+      "status": "inferred"
+    },
+    {
+      "rule": "字幕是词组增量显示，退场后留口号，最后回到初始按钮。",
+      "status": "inferred"
+    }
+  ]
+}
