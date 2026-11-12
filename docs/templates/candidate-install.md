@@ -20,7 +20,7 @@ This is a **local candidate installation guide**. It installs the complete `{{TG
    ```
 
    Replace `HOST` with `codex`, `claude`, `deepseek` or `workbuddy`. Carry the explicit `--home`, `--data-dir`, `--skills-dir` and host-specific options from the platform recipe. Setup starts checked video-component downloads in the background. Do not run or wait for prepare to connect MCP, create/edit projects or open ordinary preview. Keep using this local package; no sidecar application/manifest download or source build is required.
-4. Follow this host's discovery/reload action. Verify the actual application version, **{{TEMPLATE_ENVIRONMENT}} template environment**, eleven MCP Tools, resources and five Skills, including a `motion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
+4. Follow this host's discovery/reload action. Verify the actual application version, **{{TEMPLATE_ENVIRONMENT}} template environment**, eleven MCP Tools, resources and five Skills, including a `openmotion_get_project` call against the isolated data directory. Registration or installation success alone is not host loading or creative acceptance.
 
 Report installation/host loading and video-component readiness separately. Installation alone does not authorize creating a video or exporting an MP4.
 

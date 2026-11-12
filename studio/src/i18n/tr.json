@@ -1773,5 +1773,9 @@
   "Failed to add media": "Medya eklenemedi",
   "Could not read media duration. Try adding the file again.": "Medya süresi okunamadı. Dosyayı tekrar eklemeyi deneyin.",
   "Loading fonts…": "Yazı tipleri yükleniyor…",
-  "Couldn't load local fonts.": "Yerel yazı tipleri yüklenemedi."
+  "Couldn't load local fonts.": "Yerel yazı tipleri yüklenemedi.",
+  "Create videos with OpenMotion, right in {host}.": "OpenMotion ile doğrudan {host}'de videolar oluşturun.",
+  "Back to the OpenMotion editor": "OpenMotion düzenleyicisine dön",
+  "Workspace unavailable. Check that the OpenMotion service is running.": "Çalışma alanı kullanılamıyor. OpenMotion hizmetinin çalıştığını kontrol edin.",
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "Geçersiz bağlantı yapılandırması. OpenMotion hizmetini güncelleyin veya yeniden başlatın."
 }

@@ -96,7 +96,7 @@ export async function build(target, version, profile = releaseProfile, templateE
   await mkdir(path.join(stage, 'scripts'), { recursive: true });
   for (const file of ['run-mcp.sh', 'run-mcp.cmd', 'install.command', 'install.ps1', 'configure-plugin.mjs']) await cp(path.join(root, 'scripts/bundle', file), path.join(stage, 'scripts', file));
   const mcp = JSON.parse(await readFile(path.join(root, '.mcp.json'), 'utf8'));
-  Object.assign(mcp.mcpServers.motion, info.platform === 'win32' ? { command: 'cmd.exe', args: ['/d', '/s', '/c', 'scripts\\run-mcp.cmd'] } : { command: '/bin/sh', args: ['scripts/run-mcp.sh'] });
+  Object.assign(mcp.mcpServers.openmotion, info.platform === 'win32' ? { command: 'cmd.exe', args: ['/d', '/s', '/c', 'scripts\\run-mcp.cmd'] } : { command: '/bin/sh', args: ['scripts/run-mcp.sh'] });
   await writeFile(path.join(stage, '.mcp.json'), JSON.stringify(mcp, null, 2) + '\n');
   const catalog = JSON.parse(await readFile(path.join(root, 'marketplace.example.json'), 'utf8'));
   catalog.name = 'openmotion-test'; catalog.interface.displayName = 'OpenMotion test packages';

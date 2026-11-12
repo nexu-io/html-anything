@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { assertSkillFrontmatterYaml } from '../scripts/check.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const measurer = path.join(root, 'skills/motion-recreate/scripts/measure_frame.mjs');
+const measurer = path.join(root, 'skills/openmotion-recreate/scripts/measure_frame.mjs');
 const ffmpeg = process.env.HYPERFRAMES_FFMPEG_PATH || process.env.FFMPEG_PATH || 'ffmpeg';
 const hasFfmpeg = spawnSync(ffmpeg, ['-version']).status === 0 && spawnSync('ffprobe', ['-version']).status === 0;
 
@@ -17,8 +17,8 @@ test('skill frontmatter check rejects plain values that YAML cannot parse', asyn
   assert.throws(() => assertSkillFrontmatterYaml('name: x\ndescription: keep #1 and # this', 'x'), /folded block/);
   assertSkillFrontmatterYaml('name: x\ndescription: >-\n  Use it, even with no other words: a bare link\nmetadata:\n  status: ready', 'x');
   assertSkillFrontmatterYaml('name: x\ndescription: "quoted: value"', 'x');
-  const recreate = await readFile(path.join(root, 'skills/motion-recreate/SKILL.md'), 'utf8');
-  assertSkillFrontmatterYaml(recreate.match(/^---\n([\s\S]*?)\n---/)![1], 'motion-recreate');
+  const recreate = await readFile(path.join(root, 'skills/openmotion-recreate/SKILL.md'), 'utf8');
+  assertSkillFrontmatterYaml(recreate.match(/^---\n([\s\S]*?)\n---/)![1], 'openmotion-recreate');
 });
 
 test('measure_frame never reports a missing element as measured', { skip: !hasFfmpeg && 'ffmpeg/ffprobe unavailable' }, async () => {

@@ -1,3 +1,4 @@
+import { skillAliases } from './public-names.mjs';
 import { createHash } from 'node:crypto';
 import { readFile, realpath } from 'node:fs/promises';
 import path from 'node:path';
@@ -8,48 +9,48 @@ export const workflowRegistry = {
   production: {
     status: 'ready',
     sections: {
-      start: 'skills/motion-production/SKILL.md',
-      intake: 'skills/motion-production/references/intake.md',
-      templates: 'skills/motion-production/references/templates.md',
-      production: 'skills/motion-production/references/production.md',
-      verification: 'skills/motion-production/references/verification.md',
-      context: 'skills/motion-production/references/context.md',
-      native: 'skills/motion-production/references/native.md',
-      edit: 'skills/motion-production/references/edit.md',
-      portable: 'skills/motion-production/references/portable-project.md',
+      start: 'skills/openmotion-production/SKILL.md',
+      intake: 'skills/openmotion-production/references/intake.md',
+      templates: 'skills/openmotion-production/references/templates.md',
+      production: 'skills/openmotion-production/references/production.md',
+      verification: 'skills/openmotion-production/references/verification.md',
+      context: 'skills/openmotion-production/references/context.md',
+      native: 'skills/openmotion-production/references/native.md',
+      edit: 'skills/openmotion-production/references/edit.md',
+      portable: 'skills/openmotion-production/references/portable-project.md',
     },
   },
   director: {
     status: 'ready',
     sections: {
-      start: 'skills/motion-director/SKILL.md',
-      actions: 'skills/motion-director/references/action-script.md',
-      craft: 'skills/motion-director/references/motion-craft.md',
-      phrases: 'skills/motion-director/references/motion-phrases.md',
-      decisions: 'skills/motion-director/references/production-decisions.md',
-      sound: 'skills/motion-director/references/sound-narrative.md',
-      review: 'skills/motion-director/references/motion-review.md',
-      examples: 'skills/motion-director/references/examples.md',
+      start: 'skills/openmotion-director/SKILL.md',
+      actions: 'skills/openmotion-director/references/action-script.md',
+      craft: 'skills/openmotion-director/references/motion-craft.md',
+      phrases: 'skills/openmotion-director/references/motion-phrases.md',
+      decisions: 'skills/openmotion-director/references/production-decisions.md',
+      sound: 'skills/openmotion-director/references/sound-narrative.md',
+      review: 'skills/openmotion-director/references/motion-review.md',
+      examples: 'skills/openmotion-director/references/examples.md',
     },
   },
-  template: { status: 'ready', sections: { start: 'skills/motion-template-to-video/SKILL.md' } },
+  template: { status: 'ready', sections: { start: 'skills/openmotion-template-to-video/SKILL.md' } },
   recreate: {
     status: 'ready',
     sections: {
-      start: 'skills/motion-recreate/SKILL.md',
-      rebuild: 'skills/motion-recreate/references/rebuild.md',
-      verification: 'skills/motion-recreate/references/verify.md',
+      start: 'skills/openmotion-recreate/SKILL.md',
+      rebuild: 'skills/openmotion-recreate/references/rebuild.md',
+      verification: 'skills/openmotion-recreate/references/verify.md',
     },
   },
   'video-to-template': {
     status: 'ready',
     sections: {
-      start: 'skills/motion-video-to-template/SKILL.md',
-      measure: 'skills/motion-video-to-template/references/measure.md',
-      rebuild: 'skills/motion-video-to-template/references/rebuild.md',
-      project: 'skills/motion-production/references/portable-project.md',
-      verification: 'skills/motion-video-to-template/references/verify.md',
-      sources: 'skills/motion-video-to-template/references/rule-sources.md',
+      start: 'skills/openmotion-video-to-template/SKILL.md',
+      measure: 'skills/openmotion-video-to-template/references/measure.md',
+      rebuild: 'skills/openmotion-video-to-template/references/rebuild.md',
+      project: 'skills/openmotion-production/references/portable-project.md',
+      verification: 'skills/openmotion-video-to-template/references/verify.md',
+      sources: 'skills/openmotion-video-to-template/references/rule-sources.md',
     },
   },
 } as const;
@@ -59,17 +60,19 @@ export const workflowFiles = workflowRegistry.production.sections;
 export const workflowNames = Object.keys(workflowRegistry);
 export const workflowSections = [...new Set(Object.values(workflowRegistry).flatMap(workflow => Object.keys(workflow.sections)))];
 export const phase1WorkflowNames = ['production', 'director', 'template', 'recreate', 'video-to-template'];
-export const phase1Skills = ['motion-production', 'motion-director', 'motion-template-to-video', 'motion-recreate', 'motion-video-to-template'];
+export const phase1Skills = ['openmotion-production', 'openmotion-director', 'openmotion-template-to-video', 'openmotion-recreate', 'openmotion-video-to-template'];
+export const compatibilitySkills = Object.keys(skillAliases).filter(name => phase1Skills.includes(skillAliases[name as keyof typeof skillAliases]));
+export const packagedSkills = [...phase1Skills, ...compatibilitySkills];
 export function workflowResources() {
   return Object.entries(workflowRegistry).filter(([name]) => phase1WorkflowNames.includes(name)).flatMap(([workflow, definition]) => Object.keys(definition.sections).map(section => ({
-    uri: `motion://workflow/${workflow}/${section}`, name: `${workflow}/${section}`, mimeType: 'application/json',
-  }))).concat([{ uri: 'motion://engine/SKILL.md', name: 'Hyperframes pinned authoring guide', mimeType: 'text/markdown' }]);
+    uri: `openmotion://workflow/${workflow}/${section}`, name: `${workflow}/${section}`, title: `OpenMotion · ${workflow}/${section}`, mimeType: 'application/json',
+  }))).concat([{ uri: 'openmotion://engine/SKILL.md', name: 'Hyperframes pinned authoring guide', title: 'OpenMotion · Hyperframes authoring guide', mimeType: 'text/markdown' }]);
 }
 export async function readWorkflowResource(uri: unknown, dataDirectory: string) {
   if (typeof uri !== 'string') throw new Error('INVALID_RESOURCE_URI');
-  const match = /^motion:\/\/workflow\/([a-z]+(?:-[a-z]+)*)\/([a-z]+)$/.exec(uri);
+  const match = /^(?:openmotion|motion):\/\/workflow\/([a-z]+(?:-[a-z]+)*)\/([a-z]+)$/.exec(uri);
   if (match && phase1WorkflowNames.includes(match[1])) return { uri, mimeType: 'application/json', text: JSON.stringify({ ...await getWorkflow(match[2], match[1]), workflows: phase1WorkflowNames }) };
-  const engine = /^motion:\/\/engine\/([a-zA-Z0-9_/-]+\.md)$/.exec(uri);
+  const engine = /^(?:openmotion|motion):\/\/engine\/([a-zA-Z0-9_/-]+\.md)$/.exec(uri);
   if (!engine) throw new Error('INVALID_RESOURCE_URI');
   const { ensureRuntime } = await import('../hyperframes.ts');
   const root = await realpath(path.join(await ensureRuntime(dataDirectory, false), 'node_modules/hyperframes/dist/skills/hyperframes'));

@@ -66,7 +66,8 @@ it('submits a selected Motion template with the request instead of opening it du
   const template = { id: 'product-promo', title: 'Product Promo' } as any;
   await act(async () => root.render(<I18nProvider initialLocale="en"><HomeComposer template={template} onClear={vi.fn()} /></I18nProvider>));
   expect(state.create).not.toHaveBeenCalled();
-  expect(container.querySelector('select')!.textContent).toBe('Motion');
+  expect(container.querySelector('select')!.textContent).toBe('OpenMotion');
+  expect(container.querySelector('select')!.value).toBe('motion');
   expect(container.querySelector('.motion-selected-template')!.textContent).toContain('Product Promo');
   type('A 12 second launch'); await submit();
   expect(state.create).toHaveBeenCalledWith('A 12 second launch', 'product-promo');

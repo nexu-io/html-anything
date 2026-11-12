@@ -6,7 +6,7 @@ import path from 'node:path';
 import { create } from 'fontkit';
 import { createFontCatalog, extractCollectionFace, fontFaces, prepareFont } from '../shared/studio-fonts.ts';
 
-const fontRoot = new URL('../library/skills/motion-design-remix/assets/wireframe-portal-title/assets/fonts/', import.meta.url);
+const fontRoot = new URL('../library/skills/openmotion-design-remix/assets/wireframe-portal-title/assets/fonts/', import.meta.url);
 const regular = await readFile(new URL('Geist-Regular.ttf', fontRoot));
 const bold = await readFile(new URL('Geist-Bold.ttf', fontRoot));
 

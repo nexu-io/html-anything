@@ -26,7 +26,7 @@
 - [hyperframes.md](hyperframes.md)
 - [mcp-phase1-tools.md](mcp-phase1-tools.md)
 - [model-gateway.md](model-gateway.md)
-- [motion-director.md](motion-director.md)
+- [openmotion-director.md](openmotion-director.md)
 - [motion-extension-scope.md](motion-extension-scope.md)
 - [npm-installation.md](npm-installation.md)
 - [Agent installation guide source template](install.md)
