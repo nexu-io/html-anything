@@ -230,6 +230,8 @@ flowchart LR
 
 Local asset import through phase-one MCP and internal legacy tools allows at most 500 MB (500000000 bytes) per file, using a shared byte check before and after copying. The OpenMotion workspace host enforces the same decimal threshold before forwarding Studio uploads to the pinned engine, counting each complete multipart request including all files and form overhead; it rejects oversized requests before saving files, including streamed uploads without Content-Length. Existing project media and historical restoration are not re-imports.
 
+The font picker offers detected local fonts, imported project fonts and fonts declared by the current composition, retaining the selected family even when it is unavailable. It does not suggest remote catalogs or uninstalled presets. Installed-font discovery reads actual family/weight metadata from the engine's system font directories; selecting a family copies its nearest upright regular face into project assets. TTC faces are extracted with their original glyph and shaping tables. Imports use the same metadata and collection preparation, then require successful browser decoding before upload and application. Project listings retain font metadata across reopening, and composition fonts are discovered from the preview document rather than Studio chrome. Reads and preparation retain the shared 500 MB cap and no-follow file guard; original imported collections and authored declarations are not rewritten automatically.
+
 | 数据范围 | 当前内容 | 可移交 / 恢复语义 |
 | --- | --- | --- |
 | 原生工程 | HTML/CSS/JS、媒体、字体、Studio manifest | 是继续编辑与渲染的输入；按工程打包，不依赖生成供应商的临时输出 URL |

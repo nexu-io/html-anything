@@ -19,13 +19,14 @@ interface FetchedFileTree {
   fileTree: string[];
   compositionPaths: string[];
   projectDir: string | null;
+  fonts?: Array<Omit<ImportedFontAsset, "url">>;
 }
 
 // Stable references so a mismatched projectId doesn't create a new array every render
 // and defeat useMemo/useCallback deps downstream (e.g. the `assets` memo below).
 const EMPTY_FILE_LIST: string[] = [];
 
-type TreeListing = { files?: string[]; compositions?: string[] };
+type TreeListing = { files?: string[]; compositions?: string[]; fonts?: Array<Omit<ImportedFontAsset, "url">> };
 
 async function readTreeListing(projectId: string, signal: AbortSignal): Promise<TreeListing> {
   const res = await studioApiFetch(buildProjectApiPath(projectId), { signal });
@@ -64,7 +65,7 @@ export function useFileTree({ projectId, projectIdRef }: UseFileTreeOptions) {
         if (!r.ok) throw new Error(`tree fetch failed: ${r.status}`);
         return r.json();
       })
-      .then((data: { files?: string[]; dir?: string; compositions?: string[] }) => {
+      .then((data: TreeListing & { dir?: string }) => {
         if (cancelled) return;
         setFetched({
           projectId,
@@ -72,6 +73,7 @@ export function useFileTree({ projectId, projectIdRef }: UseFileTreeOptions) {
           fileTree: data.files ?? [],
           compositionPaths: data.compositions ?? [],
           projectDir: typeof data.dir === "string" ? data.dir : null,
+          fonts: data.fonts,
         });
         // Snapshot how this project was made, while the listing is in hand and
         // the app is still alive. A crash later has no other way to learn it.
@@ -119,6 +121,7 @@ export function useFileTree({ projectId, projectIdRef }: UseFileTreeOptions) {
               // A response that omits `compositions` must not wipe out a
               // known-good list — only replace it when the field is present.
               compositionPaths: data.compositions ?? prev.compositionPaths,
+              fonts: data.fonts ?? prev.fonts,
             }
           : prev,
       );
@@ -133,14 +136,14 @@ export function useFileTree({ projectId, projectIdRef }: UseFileTreeOptions) {
 
   const fontAssets = useMemo<ImportedFontAsset[]>(
     () =>
-      (projectId ? assets : [])
+      current?.fonts?.map(font => ({ ...font, url: buildProjectApiPath(projectId!, `/preview/${encodeUrlPath(font.path)}`) })) ?? (projectId ? assets : [])
         .filter((asset) => FONT_EXT.test(asset))
         .map((asset) => ({
           family: fontFamilyFromAssetPath(asset),
           path: asset,
           url: projectId ? buildProjectApiPath(projectId, `/preview/${encodeUrlPath(asset)}`) : "",
         })),
-    [assets, projectId],
+    [assets, projectId, current?.fonts],
   );
 
   return {
