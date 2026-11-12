@@ -31,6 +31,7 @@ import { serializeStudioFileMutations } from "../utils/studioFileMutationCoordin
 import type { TimelineZIndexReorderCommit } from "./useTimelineEditingTypes";
 import { setCompositionDurationToContent } from "../utils/timelineAssetDrop";
 import { rootCompositionDurationOf } from "../utils/rootDuration";
+import { isStillImageTimelineElement } from "../utils/timelineInspector";
 import { readFileContent } from "./timelineTimingSync";
 import {
   findElementForSelection,
@@ -205,6 +206,7 @@ function resolveResizePlaybackStart(
   element: TimelineElement,
   updates: Pick<TimelineElement, "start" | "playbackStart">,
 ): { attrName: string; value: number } | null {
+  if (isStillImageTimelineElement(element)) return null;
   if (updates.playbackStart != null) {
     const attrName = playbackStartAttributeForElement(element).slice("data-".length);
     return { attrName, value: updates.playbackStart };
