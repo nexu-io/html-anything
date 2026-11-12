@@ -12,7 +12,7 @@ import { templates } from './template-library.ts';
 import { templateRecipe } from './template-catalog.ts';
 import { templateCatalogFor } from './prism-templates.ts';
 import { isEditableTemplate } from './shared/catalog.ts';
-import { proxyStudio, serveEditorFile } from './editor-server.ts';
+import { proxyStudio, renderDownloadDisposition, serveEditorFile } from './editor-server.ts';
 import { publicTools as mcpTools } from './mcp.ts';
 import { startOwnedStudio } from './shared/owned-studio.mjs';
 import { sharedEditorEnabled, ensureEditor, editorRequest } from './editor-runtime.ts';
@@ -520,7 +520,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const job = await store.job(download[1]);
       if (!job || job.id !== download[1] || job.state !== 'completed') return json(res, 404, { error: '视频尚未完成或任务不存在' });
       const filename = path.join(store.directory, 'exports', job.id + '.mp4');
-      res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': (await stat(filename)).size, 'Content-Disposition': 'attachment; filename="motion.mp4"' });
+      res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': (await stat(filename)).size, 'Content-Disposition': renderDownloadDisposition(store.projectCatalog().projects.find(p => p.id === (job.projectId ?? store.projectId))?.title, '.mp4') });
       await new Promise<void>((resolve, reject) => {
         const stream = createReadStream(filename);
         stream.on('error', reject); res.on('finish', resolve); res.on('close', () => { stream.destroy(); resolve(); }); stream.pipe(res);
@@ -534,7 +534,12 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       if (!context.studio?.alive()) return json(res, 503, { error: '编辑服务尚未就绪' });
       const capability = nativeRouteCapability(req.method!, url.pathname);
       if (capability) await requireNativeRuntime(context.nativeRoot ?? pluginRoot, capability);
-      return await proxyStudio(req, res, url, context.studio.url);
+      const renderFile = url.searchParams.get('download') === '1'
+        && url.pathname.match(/^\/api\/projects\/([^/]+)\/renders\/file\/[^/]+(\.(?:mp4|mov|webm|gif))$/i);
+      const disposition = renderFile ? renderDownloadDisposition(
+        store.projectCatalog().projects.find(p => p.id === decodeURIComponent(renderFile[1]))?.title, renderFile[2],
+      ) : undefined;
+      return await proxyStudio(req, res, url, context.studio.url, disposition);
     }
     if (req.method !== 'GET') return json(res, 405, { error: '不支持此操作' });
     if (await serveEditorFile(url, res)) return;
