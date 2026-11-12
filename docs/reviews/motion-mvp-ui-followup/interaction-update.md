@@ -111,3 +111,12 @@ The MVP track-label column is now 200px instead of 232px, reclaiming 32px for th
 Real-editor browser measurements confirmed a 200px header, 232px content origin and 200px auto-scroll inset. Both 24px buttons fit inside the header; the current filename remains fully visible. The viewport kept the paused 12.406s position and original source/media values, with Undo disabled. Fit zoom naturally recomputed for the extra timeline space. [Before](timeline-label-before.png), [after](timeline-label-after.png). No clips, timings, audio levels or asset names were edited for verification.
 
 Validation: 61 cases across the timeline scrolling, track-header, group-row, viewport metadata and preview empty-state suites passed in both working and publish checkouts. The scroll regression now covers both editor modes, verifies MVP header/ruler/auto-scroll alignment, and checks playhead clipping during repeated horizontal scroll and after settling. Studio typecheck/build and the publish-checkout repository check passed. Long-name truncation is retained by source inspection; no real asset was renamed. Remote WorkBuddy and actual file-drop mutations were not exercised.
+
+
+## Header action grouping (2026-11-12)
+
+Undo, redo and version history now form one visual group with equal 4px internal gaps (previously 2px then 16px). The group, community link and Export retain equal 16px gaps, without dividers. Icon buttons retain their 28px targets. This implements the spacing proposal explicitly approved by the user; action behavior and template-library styling are unchanged.
+
+The real 4173 editor was rebuilt and refreshed. DOM measurements confirmed 4px / 4px / 16px / 16px gaps, and screenshots were inspected at normal width and 680px. The existing narrow-header behavior hides the history group below 700px; community and Export remain separated without overlap. Both editor side panels were restored, with Compositions / Layers selected and playback paused at zero. No project content, timing, volume or history actions were changed for verification. [Before](header-action-spacing-before.png), [wide](header-action-spacing-wide.png), [narrow](header-action-spacing-narrow.png).
+
+Validation: 20 existing MotionStudioHost cases passed, along with the publish-checkout repository check, Studio typecheck and production build. The working editor production build and scoped whitespace checks passed. Remote WorkBuddy verification was not performed.

@@ -340,7 +340,8 @@ button, input, select, textarea { font-family: inherit; }
 .motion-studio-header.motion-studio-header-centered { padding-block: 11.5px; display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 1fr) minmax(max-content, 1fr); gap: 12px; }
 .motion-studio-header.motion-studio-header-centered > div { min-width: 0; width: auto; }
 .motion-studio-header.motion-studio-header-centered > div:last-child { justify-self: end; flex-wrap: nowrap; gap: 16px; }
-.motion-studio-header-centered .motion-header-history-actions { gap: 16px; }
+.motion-studio-header-centered .motion-header-history-actions,
+.motion-studio-header-centered .motion-header-history-actions > .motion-history-actions { gap: 4px; }
 .motion-studio-header-centered .motion-workspace-actions { padding-right: 0; margin-right: 0; border-right: 0; }
 .motion-community-link { flex-shrink: 0; }
 .motion-community-link img { display: block; }
