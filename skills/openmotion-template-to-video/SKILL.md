@@ -13,6 +13,8 @@ Changes to existing content use the [shared edit workflow](../openmotion-product
 
 The accepted installation experience follows [first-run defaults](../openmotion-production/references/templates.md#first-run-experience-defaults): use the exact template ID and unchanged sample content offered and accepted in this conversation, with that template's own duration. A single-template yes accepts it; a three-candidate yes needs clarification. Resume an existing experience project or create one independent copy once. Open its editable preview; export only if requested. Do not restart the template/assets questionnaire or substitute a fixed default. Initial installation reply rules and few-shots come from `docs/install.md`, section “Installation-success reply”; this Skill resumes creation after consent.
 
+When selecting, obtaining or replacing assets, read the [shared material policy](../openmotion-production/references/materials.md), preserving the template's agreed structure, motion and content constraints. An unchanged preview handoff does not trigger asset acquisition.
+
 ## Open the supplied project
 
 A template is a complete native HyperFrames project, not necessarily a catalog entry. For a supplied folder or ZIP, inspect/unpack it and make a working copy when editing or rendering is needed; resume that copy on later turns. Read `index.html`, native configuration and `TEMPLATE.md` (older templates may have `EDITING.md`/`REPLICA.md` instead) for changes or a fresh render. An unchanged request needs only the editable preview handoff below. Preserve source, assets and hidden Studio manifests. Do not require `template.json`, a local template ID or catalog registration.

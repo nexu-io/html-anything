@@ -399,6 +399,8 @@ Reference-only entries start a reconstruction workflow. When editable source is 
 
 ## 🛠️ Setup and technical documentation
 
+When choosing or replacing media, creation workflows share a [material sourcing policy](skills/openmotion-production/references/materials.md): reuse suitable supplied assets, prefer original sources for established subjects, and create original/supporting visuals as needed. Explicit user constraints and each workflow’s supported scope still apply.
+
 ### Install from source
 
 For agent-led installation, use the [installation instruction above](#quick-start). To run from source, follow the steps below.

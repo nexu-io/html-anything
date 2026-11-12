@@ -8,7 +8,7 @@ A copied gallery prompt deliberately contains only a guide link and template ID.
 
 Only when a template choice remains unresolved, offer two or three relevant options, preferably with the user's actual material. Do not present all options when only one fits. Show ID/name, the concrete opening, shot sequence, duration, asset needs, visual difference and tradeoff. The recommendation is advisory until the user selects it or explicitly delegates the choice.
 
-For a requested starter draft, selected template defaults and graphics are usable without optional media. For an actual product film, adapt copy, sample brands and data to verified facts and use real assets wherever a scene makes a product-specific claim. Native HTML/SVG/CSS graphics are legitimate content when approved for the brief.
+For a requested starter draft, selected template defaults and graphics are usable without optional media. For an actual product film, adapt copy, sample brands and data to verified facts; apply the [shared material policy](materials.md) when selecting, obtaining or replacing assets.
 
 ## First-run experience defaults
 
