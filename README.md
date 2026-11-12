@@ -9,7 +9,7 @@ apps/       Web and Daemon product applications
 packages/   shared product domains, theme and components
 ```
 
-`refactor/odsuite` is an independent construction line. The complete existing product remains on [`feature/motion`](https://github.com/nexu-io/openmotion/tree/feature/motion). This workspace does not yet replace its full editor, production Skills, media generation, templates or export capabilities. `main` and `legacy` retain their own history.
+`refactor/odsuite` is an independent construction line. The current product reference is [`main`](https://github.com/nexu-io/openmotion/tree/main). This workspace does not yet replace its full editor, production Skills, media generation, templates or export capabilities. Product comparisons pin an exact main commit and distinguish visible MVP behavior from retained or unpublished code.
 
 ## Develop locally
 
@@ -55,7 +55,7 @@ For Codex, run the same setup with `--carrier codexplugin` and explicit isolated
 
 ## Read and contribute
 
-Start with [AGENTS.md](AGENTS.md), [the documentation index](docs/README.md) and [contribution guidance](CONTRIBUTING.md). Use independent topic worktrees and squash PRs into `refactor/odsuite`; the complete result requires acceptance before integration into `feature/motion`. All repository collaboration is in English.
+Start with [AGENTS.md](AGENTS.md), [the documentation index](docs/README.md) and [contribution guidance](CONTRIBUTING.md). Use independent topic worktrees and squash PRs into `refactor/odsuite`; integration into `main` requires separate acceptance and authorization. All repository collaboration is in English.
 
 Docs hold durable architecture, operations and conventions. Plans, business-coverage gaps, progress and evidence belong in PRs/issues/delivery records. No package, storage or release publication is enabled. Preserve disabled telemetry, finite artifact manifests, user-data separation and [third-party notices](NOTICE).
 
