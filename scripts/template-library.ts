@@ -4,14 +4,14 @@ import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { inflateRawSync } from 'node:zlib';
-import { loadRepositoryCatalog } from '../shared/repository-template-catalog.ts';
+import { loadRepositoryCatalog, lfsPointer, repositoryAssetFile, repositoryMediaFile } from '../shared/repository-template-catalog.ts';
 import { isMain } from '../shared/entry.ts';
 
 export const catalogRoot = fileURLToPath(new URL('../library/templates/catalog/', import.meta.url));
 export const textFile = /\.(?:md|json|html?|css|[cm]?[jt]sx?|txt|ya?ml|toml|xml)$/i;
 export const maxFileBytes = 1024 * 1024;
 export const maxLocalAssetBytes = 100_000;
-export const assetFile = /\.(?:png|jpe?g|webp|avif|gif|ico|woff2?|ttf|otf|psd|blend)$/i;
+export const assetFile = repositoryAssetFile;
 const maxArchiveBytes = 50 * 1024 * 1024;
 const maxUnpackedBytes = 150 * 1024 * 1024;
 export const digest = (bytes: Buffer | string) => createHash('sha256').update(bytes).digest('hex');
@@ -30,6 +30,7 @@ export type TemplateRecord = {
   locales: Record<string, Partial<Entry>>;
   sourceArchive?: ArchiveLock;
   remoteAssets?: RemoteAsset[];
+  localMedia?: { preview?: string; poster?: string };
 };
 export type CatalogManifest = {
   schemaVersion: number;
@@ -75,6 +76,12 @@ export function validateRecord(record: TemplateRecord, id: string, locales: stri
     'Template locale set must match catalog',
   );
   const remoteAssets = record.remoteAssets ?? [];
+  for (const [kind, name] of Object.entries(record.localMedia ?? {})) {
+    safePath(name);
+    assert(name.startsWith('assets/') && repositoryMediaFile.test(name), 'Local media must be in source/assets/');
+    assert(kind === 'preview' || kind === 'poster', 'Unknown local media role');
+    if (kind === 'poster') assert(assetFile.test(name), 'Local poster must be an image');
+  }
   assert(Array.isArray(remoteAssets), 'Invalid remote assets');
   const remotePaths = new Set<string>();
   for (const asset of remoteAssets) {
@@ -341,11 +348,9 @@ export async function refreshManifest(id: string, root = catalogRoot): Promise<v
   for (const name of await sourceFiles(source)) {
     if (name === 'manifest.json') continue;
     const bytes = await readFile(path.join(source, safePath(name)));
-    assert(
-      !bytes.toString().startsWith('version https://git-lfs.github.com/spec/v1'),
-      'Use CMS links for large assets instead of LFS',
-    );
-    files.push({ path: name, bytes: bytes.length, sha256: digest(bytes) });
+    const pointer = lfsPointer(bytes);
+    assert(!bytes.toString().startsWith('version https://git-lfs.github.com/spec/v1') || pointer, 'Malformed Git LFS pointer');
+    files.push({ path: name, ...(pointer ?? { bytes: bytes.length, sha256: digest(bytes) }) });
   }
   assert.equal(
     new Set(files.map((file) => file.path)).size,

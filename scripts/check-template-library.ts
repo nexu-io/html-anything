@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { isUtf8 } from 'node:buffer';
 import { spawnSync } from 'node:child_process';
 import { isMain } from '../shared/entry.ts';
+import { lfsPointer, maxLfsAssetBytes, maxTemplateAssetBytes, repositoryMediaFile } from '../shared/repository-template-catalog.ts';
 import {
   digest,
   assetFile,
@@ -16,9 +17,8 @@ import {
 } from './template-library.ts';
 
 export const scope = 'library/templates/catalog/';
-const videoOrArchive = /\.(?:mp4|mov|webm|m4v|avi|mp3|wav|ogg|m4a|aac|flac|zip|gz|tgz|tar|7z|motion)$/i;
-const pointerPattern =
-  /^version https:\/\/git-lfs.github.com\/spec\/v1\noid sha256:([a-f0-9]{64})\nsize ([1-9][0-9]*)\n$/;
+const archiveFile = /\.(?:zip|gz|tgz|tar|7z|motion)$/i;
+const lfsPath = /^[^/]+\/source\/assets\/lfs\//;
 
 type IndexedFile = { name: string; mode: string; oid: string; bytes: Buffer };
 export function git(args: string[], cwd: string, input?: Buffer | string): Buffer {
@@ -70,6 +70,7 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
     oids.filter((oid) => sizes.get(oid)! <= maxFileBytes),
   );
   const files = new Map<string, IndexedFile>();
+  const assetTotals = new Map<string, number>();
   let total = 0;
   const attributeOutput = git(
     ['check-attr', '--cached', '-z', '--stdin', 'filter'],
@@ -101,22 +102,34 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
       errors.push(`${label}: invalid path`);
     }
     if (
-      videoOrArchive.test(label) ||
+      archiveFile.test(label) ||
       /(?:^|\/)(?:node_modules|renders|dist|build|\.cache)(?:\/|$)/.test(label)
     )
-      errors.push(`${label}: keep videos, audio, archives and generated outputs in CMS/outside Git`);
-    const pointer = pointerPattern.exec(bytes.toString());
+      errors.push(`${label}: archives and generated outputs do not belong in template source`);
+    const pointer = lfsPointer(bytes);
     const filter = filters.get(file.name);
-    if (pointer || filter === 'lfs') errors.push(`${label}: use CMS links for large assets instead of LFS`);
+    const media = repositoryMediaFile.test(label);
+    if (media) {
+      const id = label.split('/')[0];
+      assetTotals.set(id, (assetTotals.get(id) ?? 0) + (pointer?.bytes ?? size));
+    }
+    if (pointer || filter === 'lfs' || bytes.toString().startsWith('version https://git-lfs.github.com/spec/v1')) {
+      if (!pointer || filter !== 'lfs' || !lfsPath.test(label) || !media)
+        errors.push(`${label}: require a valid LFS pointer and staged LFS attributes in source/assets/lfs/`);
+      if (pointer && pointer.bytes > maxLfsAssetBytes) errors.push(`${label}: LFS asset exceeds 50 MiB`);
+    }
     else if (assetFile.test(label)) {
-      if (size > maxLocalAssetBytes) errors.push(`${label}: asset exceeds 100 KB; use a CMS link`);
+      if (size > maxLocalAssetBytes) errors.push(`${label}: asset exceeds 100 KB; move it to source/assets/lfs/`);
       if (!/^[^/]+\/source\/assets\//.test(label))
         errors.push(`${label}: images/fonts belong in <id>/source/assets/`);
-    } else if (!isUtf8(bytes) || bytes.includes(0) || !textFile.test(label))
+    } else if (media) errors.push(`${label}: video/audio must use Git LFS in source/assets/lfs/`);
+    else if (!isUtf8(bytes) || bytes.includes(0) || !textFile.test(label))
       errors.push(`${label}: unsupported source or disguised binary content`);
   }
   if (total > 128 * 1024 * 1024)
     errors.push('Catalog Git contents exceed 128 MiB; review the catalog budget before expanding');
+  for (const [id, bytes] of assetTotals)
+    if (bytes > maxTemplateAssetBytes) errors.push(`${id}: template assets exceed 150 MiB`);
   const parse = (name: string) => {
     const file = files.get(scope + name);
     assert(file, 'Missing ' + name);
@@ -145,13 +158,10 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
         safePath(id);
         const record: TemplateRecord = parse(id + '/template.json');
         validateRecord(record, id, manifest.publication.locales);
-        assert(record.sourceArchive, 'Missing imported package identity');
-        validateArchive(record.sourceArchive);
-        assert.equal(
-          record.sourceArchive.url,
-          record.entry.motionDocumentUrl,
-          'Archive must match primary package URL',
-        );
+        if (record.sourceArchive) {
+          validateArchive(record.sourceArchive);
+          assert.equal(record.sourceArchive.url, record.entry.motionDocumentUrl, 'Archive must match primary package URL');
+        } else assert(!record.entry.motionDocumentUrl, 'Imported package URL requires sourceArchive identity');
         for (const required of [
           'TEMPLATE.md',
           'source/motion.md',
@@ -166,6 +176,8 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
           .filter((name) => name.startsWith(sourcePrefix) && name !== sourcePrefix + 'manifest.json')
           .map((name) => name.slice(sourcePrefix.length))
           .sort();
+        for (const name of Object.values(record.localMedia ?? {}))
+          assert(sourcePaths.includes(name), 'Local media must be registered in the source manifest: ' + name);
         assert.deepEqual(
           sourceManifest.files.map((file: { path: string }) => file.path).sort(),
           [...sourcePaths, ...remoteAssets.keys()].sort(),
@@ -184,8 +196,9 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
             continue;
           }
           assert(source, 'Missing source/asset: ' + file.path);
+          const pointer = lfsPointer(source.bytes);
           assert(
-            source.bytes.length === file.bytes && digest(source.bytes) === file.sha256,
+            (pointer?.bytes ?? source.bytes.length) === file.bytes && (pointer?.sha256 ?? digest(source.bytes)) === file.sha256,
             'Source manifest mismatch: ' + file.path + '; run templates:manifest, then stage',
           );
         }
@@ -220,17 +233,22 @@ export function checkTemplateLibrary(cwd: string, base?: string): string[] {
         if (type !== 'blob') continue;
         if (Number(size) > maxFileBytes)
           errors.push(`History blob ${oid}: exceeds 1 MiB, even if deleted later`);
-        else if (videoOrArchive.test(names.get(oid) ?? ''))
-          errors.push(`History blob ${oid}: video/audio/archive must remain in CMS, even if deleted later`);
-        else if (assetFile.test(names.get(oid) ?? '') && Number(size) > maxLocalAssetBytes)
-          errors.push(
-            `History blob ${oid}: asset exceeds 100 KB; remove it from new history and use a CMS link`,
-          );
-        else if (!assetFile.test(names.get(oid) ?? '')) small.push(oid);
+        else small.push(oid);
       }
-      for (const [oid, bytes] of blobs(cwd, small))
-        if (!isUtf8(bytes) || bytes.includes(0))
+      for (const [oid, bytes] of blobs(cwd, small)) {
+        const name = (names.get(oid) ?? '').slice(scope.length), pointer = lfsPointer(bytes);
+        if (archiveFile.test(name)) errors.push(`History blob ${oid}: archives must stay outside source, even if deleted later`);
+        else if (pointer) {
+          if (!lfsPath.test(name) || !repositoryMediaFile.test(name) || pointer.bytes > maxLfsAssetBytes)
+            errors.push(`History blob ${oid}: invalid LFS media path or size`);
+        } else if (repositoryMediaFile.test(name) && !assetFile.test(name))
+          errors.push(`History blob ${oid}: video/audio must use LFS, even if deleted later`);
+        else if (assetFile.test(name)) {
+          if (bytes.length > maxLocalAssetBytes || lfsPath.test(name))
+            errors.push(`History blob ${oid}: asset exceeds 100 KB or bypasses LFS; remove it from new history`);
+        } else if (!isUtf8(bytes) || bytes.includes(0))
           errors.push(`History blob ${oid}: raw binary media must be removed from new commits`);
+      }
     }
   }
   return errors;
@@ -242,6 +260,6 @@ if (isMain(import.meta.url)) {
     process.exitCode = 1;
   } else
     console.log(
-      'PASS: template metadata, localized identities, source, small local assets, CMS links and requested Git history',
+      'PASS: template metadata, source, small assets, LFS pointers/budgets, existing CMS links and requested Git history',
     );
 }

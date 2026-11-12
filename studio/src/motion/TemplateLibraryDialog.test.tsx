@@ -39,6 +39,18 @@ it('shows featured/order and combines website facets without site chrome', async
   await act(async () => button('清除筛选').click());
   expect(host.querySelectorAll('[data-template-id]')).toHaveLength(3);
 });
+it('uses published brand logos and falls back to initials when a logo fails', async () => {
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => Response.json(url.endsWith('/integration') ? {} : {
+    items: [{ ...items[0], brand: 'Notion', brandLogoUrl: 'https://example.com/notion.svg' }], catalogVersion: 'logos', next: null, total: 1,
+  })));
+  await mount();
+  const brand = [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Notion'))!;
+  const image = brand.querySelector('img')!;
+  expect(image?.getAttribute('src')).toBe('https://example.com/notion.svg');
+  await act(async () => image.dispatchEvent(new Event('error')));
+  expect(brand.querySelector('img')).toBeNull();
+  expect(brand.textContent).toContain('NNotion');
+});
 it('copies the requested remote DEV prompt and preserves editable opening', async () => {
   const onOpen = await mount();
   await act(async () => button('First').click());

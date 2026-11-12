@@ -6,7 +6,7 @@ import { catalogLocale } from './shared/template-locale.ts';
 import { templateConfig } from './shared/template-config.ts';
 import { libraryTemplates, templateRecipe } from './template-catalog.ts';
 import { copyTemplate } from './template-library.ts';
-import { loadRepositoryCatalog, readRepositoryFile, repositoryCatalogRoot } from './shared/repository-template-catalog.ts';
+import { loadRepositoryCatalog, lfsPointer, maxLfsAssetBytes, readRepositoryFile, repositoryCatalogRoot, repositoryMediaFile } from './shared/repository-template-catalog.ts';
 
 type TemplateFile = { path: string; url: string; bytes: number; sha256: string };
 type PrismTemplate = {
@@ -19,7 +19,7 @@ type PrismTemplate = {
 };
 type Publication = {
   resourceId: string; environment: string; channel: string; publicationId: string;
-  defaultLocale: string; content: Record<string, { templates: PrismTemplate[] }>;
+  defaultLocale: string; content: Record<string, { templates: PrismTemplate[]; brands?: { name: string; logoUrl: string }[] }>;
 };
 type Snapshot = { etag: string | null; publication: Publication; repository?: Awaited<ReturnType<typeof loadRepositoryCatalog>> };
 export type EditableTemplate = GalleryTemplate & { files?: TemplateFile[]; catalogVersion?: string; conversionStatus?: string; conversionNotes?: string };
@@ -122,25 +122,35 @@ export class TemplateCatalog {
   }
 
   private templates(snapshot: Snapshot, requested = this.locale): EditableTemplate[] {
-    const remote: EditableTemplate[] = [...this.entries(snapshot.publication, requested)].sort((a, b) => a.sortOrder - b.sortOrder).map(item => ({
-      id: item.templateId, title: item.original.templateName, subtitle: item.original.category || 'Motion',
-      description: item.original.summary || '', kind: 'prism' as const, collection: 'example' as const,
-      tags: [item.original.promotionalUseCases, item.original.visualPresentation, item.original.motionTags].filter(Boolean).flatMap(value => value.split(/[,，·]/).map(tag => tag.trim()).filter(Boolean)),
-      duration: Number(item.original.durationSeconds) || undefined,
-      author: item.original.author || item.original.attributionNickname || '',
-      sourceUrl: item.original.sourceUrl, previewUrl: item.previewUrl, posterUrl: item.coverUrl,
-      files: item.files, catalogVersion: snapshot.repository?.version ?? snapshot.publication.publicationId,
-      conversionStatus: item.conversionStatus, conversionNotes: item.conversionNotes,
-      motionDocumentUrl: snapshot.repository ? `/api/template-source/${item.templateId}/motion.md` : item.motionDocumentUrl,
-      motionGuideUrl: snapshot.repository ? `/api/template-source/${item.templateId}/preview.html` : item.motionGuideUrl,
-      ...(snapshot.repository ? { localSource: snapshot.repository.sources.get(item.templateId) } : {}),
-      projectFileUrl: item.projectFileUrl, authorAvatarUrl: item.authorAvatarUrl,
-      styleDescription: item.original.styleDescription, reviewFocus: item.original.reviewFocus,
-      brand: item.brand, uses: splitTags(item.original.promotionalUseCases), styles: splitTags(item.original.visualPresentation),
-      industries: item.industries ?? [], creationModels: item.creationModels ?? [], colors: item.colors ?? [],
-      width: item.width, height: item.height, sortOrder: item.sortOrder, featuredOrder: item.featuredOrder ?? null,
-      hasHtmlProject: item.files.some(file => file.path === 'index.html'),
-    }));
+    const locale = catalogLocale(Object.keys(snapshot.publication.content), requested, snapshot.publication.defaultLocale);
+    const brands = new Map([
+      ...(snapshot.publication.content.en?.brands ?? []),
+      ...(snapshot.publication.content[locale]?.brands ?? []),
+    ].map(brand => [brand.name, brand.logoUrl]));
+    const remote: EditableTemplate[] = [...this.entries(snapshot.publication, requested)].sort((a, b) => a.sortOrder - b.sortOrder).map(item => {
+      const localMedia = snapshot.repository?.records.get(item.templateId)?.localMedia;
+      const localUrl = (name: string) => `/api/template-source/${item.templateId}/${name.split('/').map(encodeURIComponent).join('/')}`;
+      return {
+        id: item.templateId, title: item.original.templateName, subtitle: item.original.category || 'Motion',
+        description: item.original.summary || '', kind: 'prism' as const, collection: 'example' as const,
+        tags: [item.original.promotionalUseCases, item.original.visualPresentation, item.original.motionTags].filter(Boolean).flatMap(value => value.split(/[,，·]/).map(tag => tag.trim()).filter(Boolean)),
+        duration: Number(item.original.durationSeconds) || undefined,
+        author: item.original.author || item.original.attributionNickname || '',
+        sourceUrl: item.original.sourceUrl, previewUrl: localMedia?.preview ? localUrl(localMedia.preview) : item.previewUrl,
+        posterUrl: localMedia?.poster ? localUrl(localMedia.poster) : item.coverUrl,
+        files: item.files, catalogVersion: snapshot.repository?.version ?? snapshot.publication.publicationId,
+        conversionStatus: item.conversionStatus, conversionNotes: item.conversionNotes,
+        motionDocumentUrl: snapshot.repository ? `/api/template-source/${item.templateId}/motion.md` : item.motionDocumentUrl,
+        motionGuideUrl: snapshot.repository ? `/api/template-source/${item.templateId}/preview.html` : item.motionGuideUrl,
+        ...(snapshot.repository ? { localSource: snapshot.repository.sources.get(item.templateId) } : {}),
+        projectFileUrl: item.projectFileUrl, authorAvatarUrl: item.authorAvatarUrl,
+        styleDescription: item.original.styleDescription, reviewFocus: item.original.reviewFocus,
+        brand: item.brand, brandLogoUrl: brands.get(item.brand ?? ''), uses: splitTags(item.original.promotionalUseCases), styles: splitTags(item.original.visualPresentation),
+        industries: item.industries ?? [], creationModels: item.creationModels ?? [], colors: item.colors ?? [],
+        width: item.width, height: item.height, sortOrder: item.sortOrder, featuredOrder: item.featuredOrder ?? null,
+        hasHtmlProject: item.files.some(file => file.path === 'index.html'),
+      };
+    });
     return [...remote, ...builtinTemplates];
   }
 
@@ -190,7 +200,14 @@ export class TemplateCatalog {
     if (!/^[a-z][a-z0-9-]+$/.test(id) || !catalog.templateIds.includes(id)) throw new Error('Repository template not found');
     const manifest = JSON.parse((await readRepositoryFile(this.repositoryRoot, id + '/source/manifest.json')).toString());
     if (name !== 'manifest.json' && !manifest.files.some((file: { path: string }) => file.path === name)) throw new Error('Repository template source file not found');
-    return readRepositoryFile(this.repositoryRoot, id + '/source/' + name);
+    const media = name.startsWith('assets/') && repositoryMediaFile.test(name);
+    const bytes = await readRepositoryFile(this.repositoryRoot, id + '/source/' + name, media ? maxLfsAssetBytes : 1024 * 1024);
+    if (lfsPointer(bytes)) throw Object.assign(new Error(`Template media is not downloaded. Run git lfs pull --include="library/templates/catalog/${id}/source/assets/lfs/**" --exclude="" from the checkout.`), { code: 'TEMPLATE_LFS_NOT_FETCHED' });
+    if (media) {
+      const expected = manifest.files.find((file: { path: string }) => file.path === name);
+      if (expected.bytes !== bytes.length || expected.sha256 !== hash(bytes)) throw new Error('Template media does not match its source manifest');
+    }
+    return bytes;
   }
 
   private async downloadFile(file: TemplateFile): Promise<Buffer> {

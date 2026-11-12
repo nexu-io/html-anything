@@ -3,3 +3,5 @@
 # Integrity manifests describe exact third-party bytes, including license newlines.
 library/**/vendor/** -text
 template-library/**/vendor/** -text
+# Optional contribution media; existing imported small images keep their original Git bytes.
+library/templates/catalog/*/source/assets/lfs/** filter=lfs diff=lfs merge=lfs -text

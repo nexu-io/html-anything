@@ -19,6 +19,5 @@ node_modules/
 .artifacts/
 studio/build/
 
-# Reference videos and duplicate archives stay at CMS URLs.
-library/templates/catalog/**/*.mp4
+# Duplicate download archives are not contribution source.
 library/templates/catalog/**/*.zip

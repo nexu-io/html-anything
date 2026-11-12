@@ -5,6 +5,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const repositoryCatalogRoot = fileURLToPath(new URL('../library/templates/catalog/', import.meta.url));
+export const maxLfsAssetBytes = 50 * 1024 * 1024;
+export const maxTemplateAssetBytes = 150 * 1024 * 1024;
+export const repositoryAssetFile = /\.(?:png|jpe?g|webp|avif|gif|ico|svg|woff2?|ttf|otf|psd|blend)$/i;
+export const repositoryMediaFile = /\.(?:png|jpe?g|webp|avif|gif|ico|svg|woff2?|ttf|otf|psd|blend|mp4|mov|webm|m4v|avi|mp3|wav|ogg|m4a|aac|flac)$/i;
+export function lfsPointer(bytes: Buffer): { sha256: string; bytes: number } | null {
+  if (bytes.length > 1024) return null;
+  const match = /^version https:\/\/git-lfs.github.com\/spec\/v1\noid sha256:([a-f0-9]{64})\nsize ([1-9][0-9]*)\n$/.exec(bytes.toString());
+  if (!match || !Number.isSafeInteger(Number(match[2]))) return null;
+  return { sha256: match[1], bytes: Number(match[2]) };
+}
 export type PublishedTemplate = {
   templateId: string;
   original: Record<string, string>;
@@ -30,7 +40,7 @@ export type LocalTemplateSource = {
   manifestPath: string;
 };
 
-export async function readRepositoryFile(root: string, relative: string): Promise<Buffer> {
+export async function readRepositoryFile(root: string, relative: string, limit = 1024 * 1024): Promise<Buffer> {
   assert(
     relative &&
       !/[\\\x00-\x1f:]/.test(relative) &&
@@ -43,8 +53,8 @@ export async function readRepositoryFile(root: string, relative: string): Promis
   assert.equal(await realpath(filename), filename, 'Repository templates must not follow symlinks');
   const info = await lstat(filename);
   assert(
-    info.isFile() && info.size <= 1024 * 1024,
-    'Repository template file must be a regular file at most 1 MiB',
+    info.isFile() && info.size <= limit,
+    'Repository template file must be a regular file within its size limit',
   );
   return readFile(filename);
 }

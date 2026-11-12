@@ -4,6 +4,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { spawnSync } from 'node:child_process';
 import { zip } from '../scripts/package.ts';
 import { checkTemplateLibrary, git, scope } from '../scripts/check-template-library.ts';
 import { catalogRoot, cmsUrl, digest, exportCatalog, importCatalog, refreshManifest, safePath, unzip, validateRecord } from '../scripts/template-library.ts';
@@ -88,20 +89,79 @@ test('edited source must refresh its manifest before staging a valid contributio
   assert.match(checkTemplateLibrary(f.root).join('\n'), /coverage mismatch/);
   await refreshManifest(f.id, f.catalog); f.stage(); assert.deepEqual(checkTemplateLibrary(f.root), []);
 });
-test('video files, even LFS video pointers, and disguised binary text are rejected', t => {
+test('raw videos, malformed pointers and disguised binary source are rejected', t => {
   const f = fixture(t);
   writeFileSync(path.join(f.directory, 'source/binary.txt'), Buffer.from([0, 1, 255]));
-  writeFileSync(path.join(f.directory, 'source/assets/video.mp4'), `version https://git-lfs.github.com/spec/v1\noid sha256:${'a'.repeat(64)}\nsize 2000\n`);
-  f.stage(); const errors = checkTemplateLibrary(f.root).join('\n'); assert.match(errors, /disguised binary/); assert.match(errors, /keep videos/);
+  writeFileSync(path.join(f.directory, 'source/assets/video.mp4'), Buffer.from([0, 1, 255]));
+  f.stage(); const errors = checkTemplateLibrary(f.root).join('\n');
+  assert.match(errors, /disguised binary/); assert.match(errors, /video\/audio must use Git LFS/);
 });
-test('large local images and LFS pointers are rejected in favor of CMS links', t => {
+test('large ordinary images are rejected; valid LFS assets pass without downloading or CMS uploads', async t => {
   const large = fixture(t, 100001); large.stage();
   assert.match(checkTemplateLibrary(large.root).join('\n'), /asset exceeds 100 KB/);
   const f = fixture(t);
-  writeFileSync(path.join(f.root, '.gitattributes'), `${scope}**/assets/*.jpg filter=lfs diff=lfs merge=lfs -text\n`);
-  writeFileSync(path.join(f.directory, 'source/assets/frame.jpg'), `version https://git-lfs.github.com/spec/v1\noid sha256:${'a'.repeat(64)}\nsize 2000\n`);
-  f.sourceManifest.files[0].bytes = 2000; f.sourceManifest.files[0].sha256 = 'a'.repeat(64); f.json('source/manifest.json', f.sourceManifest);
-  f.stage(); assert.match(checkTemplateLibrary(f.root).join('\n'), /CMS links for large assets instead of LFS/);
+  mkdirSync(path.join(f.directory, 'source/assets/lfs'), { recursive: true });
+  writeFileSync(path.join(f.root, '.gitattributes'), `${scope}*/source/assets/lfs/** filter=lfs diff=lfs merge=lfs -text\n`);
+  const name = 'source/assets/lfs/video.mp4';
+  writeFileSync(path.join(f.directory, name), `version https://git-lfs.github.com/spec/v1\noid sha256:${'a'.repeat(64)}\nsize 2000000\n`);
+  delete (f.record as any).sourceArchive; delete (f.record.entry as any).motionDocumentUrl; delete (f.record.entry as any).previewUrl;
+  Object.assign(f.record, { localMedia: { preview: 'assets/lfs/video.mp4' } });
+  f.json('template.json', f.record);
+  await refreshManifest(f.id, f.catalog); f.stage();
+  const manifest = JSON.parse(await readFile(path.join(f.directory, 'source/manifest.json'), 'utf8'));
+  assert.deepEqual(manifest.files.find(file => file.path === 'assets/lfs/video.mp4'), { path: 'assets/lfs/video.mp4', bytes: 2000000, sha256: 'a'.repeat(64) });
+  assert.deepEqual(checkTemplateLibrary(f.root), []);
+  git(['commit', '-qm', 'Initial source'], f.root); const base = git(['rev-parse', 'HEAD'], f.root).toString().trim();
+  writeFileSync(path.join(f.directory, name), `version https://git-lfs.github.com/spec/v1\noid sha256:${'b'.repeat(64)}\nsize 2000001\n`);
+  await refreshManifest(f.id, f.catalog); f.stage(); git(['commit', '-qm', 'Update LFS media'], f.root);
+  assert.deepEqual(checkTemplateLibrary(f.root, base), []);
+  writeFileSync(path.join(f.root, '.gitattributes'), ''); f.stage();
+  assert.match(checkTemplateLibrary(f.root).join('\n'), /staged LFS attributes/);
+});
+test('LFS budgets, pointer hashes and required filtering cannot be bypassed by checkout contents', async t => {
+  const f = fixture(t);
+  mkdirSync(path.join(f.directory, 'source/assets/lfs'), { recursive: true });
+  writeFileSync(path.join(f.root, '.gitattributes'), `${scope}*/source/assets/lfs/** filter=lfs diff=lfs merge=lfs -text\n`);
+  const save = (name: string, size: number) => writeFileSync(path.join(f.directory, 'source/assets/lfs', name), `version https://git-lfs.github.com/spec/v1\noid sha256:${'a'.repeat(64)}\nsize ${size}\n`);
+  save('video.mp4', 50 * 1024 * 1024 + 1); await refreshManifest(f.id, f.catalog); f.stage();
+  assert.match(checkTemplateLibrary(f.root).join('\n'), /LFS asset exceeds 50 MiB/);
+  for (let i = 0; i < 4; i++) save(`clip-${i}.mp4`, 40 * 1024 * 1024);
+  await refreshManifest(f.id, f.catalog); f.stage();
+  assert.match(checkTemplateLibrary(f.root).join('\n'), /template assets exceed 150 MiB/);
+  save('video.mp4', 1234); f.stage();
+  assert.match(checkTemplateLibrary(f.root).join('\n'), /Source manifest mismatch/);
+  writeFileSync(path.join(f.directory, 'source/assets/lfs/video.mp4'), 'raw video with no clean filter'); f.stage();
+  assert.match(checkTemplateLibrary(f.root).join('\n'), /valid LFS pointer/);
+});
+test('real Git LFS pushes media and supports a pointer-only clone followed by a scoped pull', {
+  skip: spawnSync('git', ['lfs', 'version']).status !== 0,
+}, async t => {
+  const f = fixture(t);
+  git(['config', 'core.hooksPath', '.git/hooks'], f.root);
+  git(['lfs', 'install', '--local', '--skip-smudge'], f.root);
+  writeFileSync(path.join(f.root, '.gitattributes'), `${scope}*/source/assets/lfs/** filter=lfs diff=lfs merge=lfs -text\n`);
+  mkdirSync(path.join(f.directory, 'source/assets/lfs'), { recursive: true });
+  const name = scope + f.id + '/source/assets/lfs/video.mp4';
+  const bytes = Buffer.alloc(2 * 1024 * 1024, 42);
+  writeFileSync(path.join(f.root, name), bytes);
+  await refreshManifest(f.id, f.catalog);
+  git(['add', '.'], f.root);
+  assert.deepEqual(checkTemplateLibrary(f.root), []);
+  assert.match(git(['show', ':' + name], f.root).toString(), /oid sha256:/);
+  git(['commit', '-qm', 'Contribute local LFS media'], f.root);
+  const remote = f.root + '-remote.git', clone = f.root + '-clone';
+  t.after(() => { rmSync(remote, { recursive: true, force: true }); rmSync(clone, { recursive: true, force: true }); });
+  git(['init', '--bare', remote], f.root);
+  git(['remote', 'add', 'origin', remote], f.root);
+  git(['push', '-u', 'origin', 'main'], f.root);
+  git(['symbolic-ref', 'HEAD', 'refs/heads/main'], remote);
+  git(['-c', 'filter.lfs.smudge=git-lfs smudge --skip -- %f', '-c', 'filter.lfs.process=git-lfs filter-process --skip', 'clone', remote, clone], f.root);
+  assert.match((await readFile(path.join(clone, name), 'utf8')), /version https:\/\/git-lfs/);
+  git(['lfs', 'install', '--local', '--skip-smudge'], clone);
+  git(['lfs', 'pull', '--include=' + scope + f.id + '/source/assets/lfs/**', '--exclude='], clone);
+  const downloaded = await readFile(path.join(clone, name));
+  assert.equal(downloaded.length, bytes.length); assert.equal(digest(downloaded), digest(bytes));
+  assert.deepEqual(checkTemplateLibrary(clone), []);
 });
 test('verified remote renditions replace large original files, preserve provenance and survive source edits', async t => {
   const f = fixture(t, 100001);
@@ -137,8 +197,8 @@ test('adding then deleting large blobs and videos cannot hide new Git history gr
   rmSync(path.join(f.directory, 'source/assets/large.jpg'));
   f.stage(); git(['commit', '-qm', 'Remove unwanted data'], f.root);
   assert.deepEqual(checkTemplateLibrary(f.root), []);
-  const errors = checkTemplateLibrary(f.root, base).join('\n'); assert.match(errors, /exceeds 1 MiB, even if deleted/); assert.match(errors, /video\/audio\/archive must remain in CMS/);
-  assert.match(errors, /asset exceeds 100 KB; remove it from new history/);
+  const errors = checkTemplateLibrary(f.root, base).join('\n'); assert.match(errors, /exceeds 1 MiB, even if deleted/); assert.match(errors, /video\/audio must use LFS/);
+  assert.match(errors, /asset exceeds 100 KB or bypasses LFS; remove it from new history/);
 });
 test('metadata and unregistered directories cannot bypass template validation', t => {
   const f = fixture(t); f.record.templateId = 'wrong'; f.json('template.json', f.record);

@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { TemplateCatalog } from '../prism-templates.ts';
 import { repositoryCatalogRoot, readRepositoryFile } from '../shared/repository-template-catalog.ts';
 import { WorkspaceStore } from '../workspace.ts';
@@ -72,6 +73,22 @@ test('local source reads reject traversal, unlisted files and symlink escape', a
   await rm(path.join(f.folder, 'source/motion.md'));
   await symlink(path.join(f.work, 'outside.md'), path.join(f.folder, 'source/motion.md'));
   await assert.rejects(f.catalog.sourceFile(f.id, 'motion.md'), /symlinks/);
+});
+
+test('repository media works without CMS, refuses missing LFS bytes and verifies downloaded contents', async t => {
+  const f = await fixture(t), bytes = Buffer.alloc(1024 * 1024 + 1, 42);
+  const sha256 = createHash('sha256').update(bytes).digest('hex');
+  await mkdir(path.join(f.folder, 'source/assets/lfs'), { recursive: true });
+  const relative = 'assets/lfs/reference.mp4', filename = path.join(f.folder, 'source', relative);
+  await f.save(f.id + '/source/manifest.json', { files: [{ path: 'motion.md' }, { path: 'preview.html' }, { path: relative, bytes: bytes.length, sha256 }] });
+  Object.assign(f.record, { localMedia: { preview: relative } }); await f.save(f.id + '/template.json', f.record);
+  await writeFile(filename, `version https://git-lfs.github.com/spec/v1\noid sha256:${sha256}\nsize ${bytes.length}\n`);
+  assert.equal((await f.catalog.page()).items[0].previewUrl, `/api/template-source/${f.id}/${relative}`);
+  await assert.rejects(f.catalog.sourceFile(f.id, relative), { code: 'TEMPLATE_LFS_NOT_FETCHED' });
+  await writeFile(filename, bytes);
+  assert.deepEqual(await f.catalog.sourceFile(f.id, relative), bytes);
+  await writeFile(filename, Buffer.alloc(bytes.length, 0));
+  await assert.rejects(f.catalog.sourceFile(f.id, relative), /does not match/);
 });
 
 test('HTTP gallery and guide routes use the same repository source; copied prompts use the connected plugin', async t => {

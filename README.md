@@ -419,7 +419,7 @@ Open the `studioUrl` or `previewUrl` printed by `npm start`, then open **Templat
 
 Select a template and choose **Recreate template** to copy the instruction for your agent. Keep projects and credentials outside the checkout; `MOTION_DATA_DIR` selects the workspace.
 
-Source checkouts load templates from `library/templates/catalog/`. The local Studio and MCP use the same files; `openmotion_list_templates` returns a searchable local index, and `openmotion_get_template` returns local guide content and absolute source paths. Larger images and videos use existing CMS links. Local edits appear on the next catalog read.
+Source checkouts load templates from `library/templates/catalog/`. The local Studio and MCP use the same files; `openmotion_list_templates` returns a searchable local index, and `openmotion_get_template` returns local guide content and absolute source paths. Imported large images and videos retain existing CMS links; new contribution media can use Git LFS. Local edits appear on the next catalog read.
 
 The plugin root is this checkout: `.codex-plugin/plugin.json` loads its `skills/` and `.mcp.json`, which launches the root `mcp.ts`. Start stdio with `npm run mcp` or use an absolute path in [manual MCP configuration](#manual-mcp). [Local template workflow](docs/template-repository.md#run-from-a-local-clone).
 

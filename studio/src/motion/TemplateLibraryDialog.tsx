@@ -13,6 +13,13 @@ import kimiLogo from './template-brands/kimi.png';
 import pondLogo from './template-brands/pond.svg';
 const brandLogos: Record<string, string> = {Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
 
+function BrandIcon({ name, url }: { name: string; url?: string }) {
+  const [failedUrl, setFailedUrl] = useState<string>();
+  return <span className={styles.brandIcon} aria-hidden="true">{url && url !== failedUrl
+    ? <img src={url} alt="" loading="lazy" onError={() => setFailedUrl(url)} />
+    : name.slice(0, 1)}</span>;
+}
+
 type Props = { returnFocus?: HTMLElement | null; open: boolean; busy: boolean; error: string; onClose: () => void; onOpen: (id: string) => void };
 type Facet = 'brand' | 'uses' | 'styles' | 'industries' | 'creationModels' | 'colors' | 'ratio' | 'duration';
 const facets: [Facet, string][] = [
@@ -122,6 +129,7 @@ export function TemplateLibraryDialog(props: Props) {
     return () => { controller.abort(); clearInterval(timer); };
   }, [props.open, attempt, locale]);
   const available = useMemo(() => facets.map(([key, label]) => ({ key, label, values: [...new Set(catalog.flatMap(item => values(item, key)))] })).filter(facet => facet.values.length), [catalog]);
+  const logos = useMemo(() => new Map(catalog.flatMap(item => item.brand && item.brandLogoUrl ? [[item.brand, item.brandLogoUrl]] : [])), [catalog]);
   const hasFilters = Boolean(query || Object.values(selected).some(items => items?.length));
   const visible = useMemo(() => catalog.filter(item => {
     const text = [item.id, item.title, item.description, item.author, ...item.tags, ...facets.flatMap(([key]) => values(item, key))].join(' ').toLocaleLowerCase();
@@ -167,7 +175,7 @@ export function TemplateLibraryDialog(props: Props) {
         <button className={styles.all} aria-current={!hasFilters ? 'page' : undefined} onClick={reset}>{t('All templates')}<span>{catalog.length}</span></button>
         {available.filter(facet => ['brand', 'uses', 'styles', 'industries', 'creationModels'].includes(facet.key)).map(facet => <details key={facet.key} open={facet.key === 'brand'}><summary>{t(facet.label)}</summary>
           {facet.values.slice(0, facet.key === 'brand' && !moreBrands ? 5 : undefined).map(value => <button key={value} aria-pressed={selected[facet.key]?.includes(value) ?? false} onClick={() => toggle(facet.key, value)}>
-            {facet.key === 'brand' && <span className={styles.brandIcon} aria-hidden="true">{brandLogos[value] ? <img src={brandLogos[value]} alt="" /> : value.slice(0, 1)}</span>}<span>{facet.key === 'brand' ? value : t(value)}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
+            {facet.key === 'brand' && <BrandIcon name={value} url={logos.get(value) ?? brandLogos[value]} />}<span>{facet.key === 'brand' ? value : t(value)}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
           </button>)}
           {facet.key === 'brand' && facet.values.length > 5 && <button onClick={() => setMoreBrands(!moreBrands)}>{t(moreBrands ? 'Show less' : 'Show more')}</button>}
         </details>)}

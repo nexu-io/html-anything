@@ -407,13 +407,17 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     const templateSource = url.pathname.match(/^\/api\/template-source\/([a-z][a-z0-9-]+)\/(.+)$/);
     if (templateSource && req.method === 'GET') {
       const name = decodeURIComponent(templateSource[2]);
-      const mime: Record<string, string> = { '.html': 'text/html', '.md': 'text/plain', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf' };
+      const mime: Record<string, string> = { '.html': 'text/html', '.md': 'text/plain', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf', '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm', '.m4v': 'video/mp4', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.ogg': 'audio/ogg', '.m4a': 'audio/mp4', '.aac': 'audio/aac', '.flac': 'audio/flac' };
       const type = mime[path.extname(name).toLowerCase()];
       if (!type) return json(res, 404, { error: 'Unknown template source file' });
       try {
         const bytes = await templateCatalogFor(store.directory).sourceFile(templateSource[1], name);
         res.writeHead(200, { 'Content-Type': type, 'Content-Length': bytes.length }); res.end(bytes); return;
-      } catch { return json(res, 404, { error: 'Template source file not found' }); }
+      } catch (error) {
+        if ((error as { code?: string }).code === 'TEMPLATE_LFS_NOT_FETCHED')
+          return json(res, 409, { code: 'TEMPLATE_LFS_NOT_FETCHED', error: (error as Error).message });
+        return json(res, 404, { error: 'Template source file not found' });
+      }
     }
     if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, await templateCatalogFor(store.directory).page({
       locale: url.searchParams.get('locale') || undefined,
