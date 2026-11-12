@@ -102,3 +102,12 @@ GIF export in the MVP now always uses infinite looping (`gifLoop: 0`) and hides 
 The real 4173 production build was refreshed with GIF already selected. [Before](gif-loop-before.png) and [after](gif-loop-hidden.png) show that the loop field is gone and the remaining export controls are present. The editor remains open with both side panels restored. No export was initiated and no project media, timing or volume was changed.
 
 Validation: 33 export-control and request-forwarding cases passed, including the updated MVP regression asserting no loop input and a zero loop count at submission, plus retained full-editor finite-count and invalid-input cases. Studio typecheck/build passed in both checkouts; repository check passed in the publish checkout. Codec playback and remote WorkBuddy verification were not performed; this is a settings/parameter change. Loading/error/empty-state behavior is unchanged.
+
+
+## Narrower MVP timeline labels (2026-11-12)
+
+The MVP track-label column is now 200px instead of 232px, reclaiming 32px for the timeline while retaining its 32px gutter. Populated rows, group headers, empty-state geometry and drag-scroll bounds use the same width. Ruler/clip origins and playhead clipping follow that shared geometry. The full editor retains its existing 232px label column. Names retain truncation/full-value hover behavior and audio/visibility buttons retain their 24px target width.
+
+Real-editor browser measurements confirmed a 200px header, 232px content origin and 200px auto-scroll inset. Both 24px buttons fit inside the header; the current filename remains fully visible. The viewport kept the paused 12.406s position and original source/media values, with Undo disabled. Fit zoom naturally recomputed for the extra timeline space. [Before](timeline-label-before.png), [after](timeline-label-after.png). No clips, timings, audio levels or asset names were edited for verification.
+
+Validation: 61 cases across the timeline scrolling, track-header, group-row, viewport metadata and preview empty-state suites passed in both working and publish checkouts. The scroll regression now covers both editor modes, verifies MVP header/ruler/auto-scroll alignment, and checks playhead clipping during repeated horizontal scroll and after settling. Studio typecheck/build and the publish-checkout repository check passed. Long-name truncation is retained by source inspection; no real asset was renamed. Remote WorkBuddy and actual file-drop mutations were not exercised.
