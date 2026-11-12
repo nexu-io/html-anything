@@ -141,7 +141,7 @@ jobs:
         run: node --experimental-strip-types --test tests/diagnostics.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/public-names.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/editor-urls.test.ts tests/workspace-studio.test.ts tests/sync.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/library-install.test.mjs tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
       - name: Studio regression
         run: npm run test:studio -- --maxWorkers=2
-      - name: Built-in template playback regression
+      - name: Built-in template playback and export regression
         run: node --experimental-strip-types --test tests/decision-tree.test.ts
       - name: Build phase-one ZIP and exercise all public tools
         run: |
