@@ -19,9 +19,11 @@ let manager: Awaited<ReturnType<typeof manage>>,
   url = "";
 const report: Record<string, unknown> = {
   reference: "21c3e5aaef1af34b0f126f7db90a86927e2ef325",
+  productReference: "e0f021be6ba58cb1bed4091254acb424fb862012",
+  referenceKind: "Prior token provenance retained; current main source inspection, no new main runtime or screenshots",
   evidence,
   cases: [],
-  mode: "Real sidecar-hosted Daemon/SQLite and built Web; separate standalone/Electron carrier qualification remains independent",
+  mode: "Real sidecar-hosted Daemon/SQLite and built Web; separate installed standalone/Codex carrier qualification remains independent",
 };
 const ready = async () => {
   await driver.page
@@ -37,11 +39,9 @@ async function scene(name: string) {
   const page = driver.page;
   await page.goto(url);
   await ready();
-  await page.getByText("会话选项", { exact: true }).click();
-  await page.getByLabel("会话标题", { exact: true }).fill(name);
-  await click("创建会话");
-  await page.getByLabel("工程标题", { exact: true }).fill(name);
-  await click("创建工程");
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await page.getByLabel("项目标题", { exact: true }).fill(name);
+  await click("创建空白项目");
   await click("添加文本");
   await page.getByLabel("文本内容", { exact: true }).fill("Motion baseline");
   await click("应用更改");
@@ -136,30 +136,29 @@ afterEach(async (context) => {
 });
 
 describe.sequential("persistent Studio view and native browser controls", () => {
-  it("retains message draft, selection, input identity and scroll across theme and a save", async () => {
+  it("retains creation drafts, source selection and input identity across theme and save", async () => {
     await scene("Draft state");
     const page = driver.page,
-      message = page.getByLabel("消息", { exact: true });
-    await message.fill("Keep this unsent note");
-    await message.evaluate((element) => {
-      element.setAttribute("data-probe", "stable-note");
-      (element as HTMLTextAreaElement).setSelectionRange(4, 9);
-    });
-    const seek = page.getByLabel("定位秒", { exact: true });
+      seek = page.getByLabel("定位秒", { exact: true });
+    await page.getByRole("button", { name: "新建项目", exact: true }).click();
+    await page.getByLabel("项目标题", { exact: true }).fill("Keep this project draft");
+    await page.keyboard.press("Escape");
     await seek.fill("1.25");
     await seek.evaluate((e) => e.setAttribute("data-probe", "stable-seek"));
+    await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
     await click("切换主题");
+    await page.keyboard.press("Escape");
     expect(await seek.inputValue()).toBe("1.25");
     expect(await seek.getAttribute("data-probe")).toBe("stable-seek");
-    expect(await message.inputValue()).toBe("Keep this unsent note");
-    expect(await message.getAttribute("data-probe")).toBe("stable-note");
+    await page.getByRole("button", { name: "新建项目", exact: true }).click();
+    expect(await page.getByLabel("项目标题", { exact: true }).inputValue()).toBe("Keep this project draft");
+    await page.keyboard.press("Escape");
     await selected();
     const text = page.getByLabel("文本内容", { exact: true });
     await text.evaluate((element) => element.setAttribute("data-probe", "stable-text"));
     await text.fill("Edited baseline");
     await click("保存");
     expect(await text.getAttribute("data-probe")).toBe("stable-text");
-    expect(await message.inputValue()).toBe("Keep this unsent note");
     await page.getByRole("tab", { name: "文件", exact: true }).click();
     await click("index.html");
     const code = page.getByRole("textbox", { name: "index.html", exact: true });
@@ -172,36 +171,42 @@ describe.sequential("persistent Studio view and native browser controls", () => 
     await ready();
     expect(await code.getAttribute("data-probe")).toBe("stable-code");
     expect(await code.evaluate((e) => (e as HTMLTextAreaElement).selectionStart)).toBe(12);
-    expect(await message.inputValue()).toBe("Keep this unsent note");
-    (report.cases as string[]).push("stable-input-and-drafts");
+    (report.cases as string[]).push("stable-input-and-creation-drafts");
   }, 30000);
-  it("keeps drafts per session and operates the menu with keyboard and Escape", async () => {
-    await scene("Session draft");
-    const page = driver.page;
-    await page.getByLabel("消息", { exact: true }).fill("Draft owned by this session");
-    await page.getByRole("button", { name: "会话操作", exact: true }).click();
-    await page.getByRole("menuitem", { name: "编辑会话名称", exact: true }).waitFor();
-    await page.waitForFunction(() => document.activeElement?.getAttribute("aria-label") === "编辑会话名称");
-    await page.keyboard.press("ArrowDown");
-    expect(await page.evaluate(() => document.activeElement?.getAttribute("aria-label"))).toBe("新建影片工程");
+  it("uses a native modal project drawer with focus containment, search and Escape return", async () => {
+    await scene("Project navigation");
+    const page = driver.page,
+      original = await page.locator("#app").getAttribute("data-artifact-id");
+    await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
+    const drawer = page.getByRole("dialog", { name: "项目列表", exact: true });
+    await expect
+      .poll(() => page.getByLabel("搜索项目", { exact: true }).evaluate((node) => document.activeElement === node))
+      .toBe(true);
+    await page.getByLabel("搜索项目", { exact: true }).fill("Draft state");
+    const project = drawer.getByRole("button", { name: "Draft state", exact: true });
+    await project.waitFor();
+    for (let index = 0; index < 12; index++) {
+      await page.keyboard.press("Tab");
+      expect(await drawer.evaluate((node) => node.contains(document.activeElement))).toBe(true);
+    }
+    expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(original);
     await page.keyboard.press("Escape");
-    expect(await page.getByRole("menu").count()).toBe(0);
     expect(
-      await page.getByRole("button", { name: "会话操作", exact: true }).evaluate((e) => document.activeElement === e),
+      await page
+        .getByRole("button", { name: "打开项目列表", exact: true })
+        .evaluate((node) => document.activeElement === node),
     ).toBe(true);
-    await page
-      .getByRole("navigation", { name: "会话", exact: true })
-      .getByRole("button", { name: "Draft state", exact: true })
-      .click();
+    await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
+    expect(await page.getByLabel("搜索项目", { exact: true }).inputValue()).toBe("Draft state");
+    await project.waitFor();
+    await project.focus();
+    await page.keyboard.press("End");
+    expect(await project.evaluate((node) => document.activeElement === node)).toBe(true);
+    await project.click();
     await ready();
-    expect(await page.getByLabel("消息", { exact: true }).inputValue()).toBe("");
-    await page
-      .getByRole("navigation", { name: "会话", exact: true })
-      .getByRole("button", { name: "Session draft", exact: true })
-      .click();
-    await ready();
-    expect(await page.getByLabel("消息", { exact: true }).inputValue()).toBe("Draft owned by this session");
-    (report.cases as string[]).push("session-draft-owner-and-menu");
+    expect(await page.locator("#app").getAttribute("data-artifact-id")).not.toBe(original);
+    expect(await drawer.count()).toBe(0);
+    (report.cases as string[]).push("project-drawer-native-focus-search-escape");
   }, 30000);
   it("uses actual tree navigation, semantic tabs and validates incomplete numeric drafts", async () => {
     await scene("Controls");
@@ -234,7 +239,7 @@ describe.sequential("persistent Studio view and native browser controls", () => 
     expect(await page.getByRole("textbox", { name: "hyperframes.json", exact: true }).isVisible()).toBe(true);
     (report.cases as string[]).push("tree-tabs-numeric-draft");
   }, 30000);
-  it("enforces pinned main design values and restores pixels when switching a theme round-trip", async () => {
+  it("retains recorded design tokens and restores same-source pixels across a theme round-trip", async () => {
     await scene("Visual contract");
     const page = driver.page;
     await page.mouse.move(0, 0);
@@ -252,10 +257,14 @@ describe.sequential("persistent Studio view and native browser controls", () => 
     }, Object.keys(contract.tokens));
     expect(actual).toEqual(contract.tokens);
     const before = await driver.capture("light");
+    await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
     await click("切换主题");
+    await page.keyboard.press("Escape");
     await page.mouse.move(0, 0);
     await driver.capture("dark");
+    await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
     await click("切换主题");
+    await page.keyboard.press("Escape");
     await page.mouse.move(0, 0);
     const restored = await driver.capture("light-restored");
     const difference = imageDifference(before, restored);
@@ -276,7 +285,7 @@ describe.sequential("persistent Studio view and native browser controls", () => 
     }
     await page.setViewportSize({ width: 1600, height: 1000 });
     expect(driver.errors).toEqual([]);
-    (report.cases as string[]).push("pinned-main-contract-pixel-restoration-responsive");
+    (report.cases as string[]).push("recorded-token-contract-pixel-restoration-responsive");
   }, 30000);
   it("drains a mounted view, revokes its URLs and remounts through the same public owner", async () => {
     await scene("Dispose owner");

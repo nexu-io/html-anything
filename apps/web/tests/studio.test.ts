@@ -88,9 +88,9 @@ async function fixture(fail: boolean) {
         "CREATE TRIGGER fail_native_save BEFORE UPDATE ON projects BEGIN SELECT RAISE(ABORT,'storage failure');END",
       );
     }
-    required(
-      document.querySelector<HTMLButtonElement>(`[role="tablist"][aria-label="产物"] [role="tab"][data-tab="${b.id}"]`),
-    ).click();
+    document.querySelector<HTMLButtonElement>('[aria-label="打开项目列表"]')?.click();
+    await vi.waitFor(() => expect(document.querySelector(`[data-project-id="${b.id}"]`)).not.toBeNull());
+    required(document.querySelector<HTMLButtonElement>(`[data-project-id="${b.id}"]`)).click();
     if (fail) {
       await vi.waitFor(() => expect(document.querySelector("[aria-live]")?.textContent).toBe("storage failure"));
       expect(db.execute("workspace_state", {}).selection.artifactId).toBe(a.id);
@@ -114,3 +114,20 @@ async function fixture(fail: boolean) {
 }
 it("drains real native SDK fields into the shared save before a project switch", () => fixture(false));
 it("keeps transformed native draft and original selection when the actual transaction aborts", () => fixture(true));
+
+// JSDOM covers modal state only; native focus, Escape and inertness are verified in Chromium.
+Object.defineProperties(HTMLDialogElement.prototype, {
+  showModal: {
+    configurable: true,
+    value(this: HTMLDialogElement) {
+      this.open = true;
+    },
+  },
+  close: {
+    configurable: true,
+    value(this: HTMLDialogElement) {
+      this.open = false;
+      this.dispatchEvent(new Event("close"));
+    },
+  },
+});

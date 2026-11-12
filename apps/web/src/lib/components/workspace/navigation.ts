@@ -1,135 +1,204 @@
-import { badge, brand, button, disclosure, field, note, setButton, slot } from "@open-motion/components";
+import { badge, button, dialog, field, note, setButton, slot } from "@open-motion/components";
+import type { Artifact, Input, Output } from "@open-motion/workspace/contract";
+import type { Client } from "../../../api.js";
 import type { Editor } from "../../editor.js";
+/** One bounded metadata page; workspace remains the project catalogue and selection authority. */
 export class Navigation {
-  private title: HTMLInputElement;
+  readonly view;
   private search: HTMLInputElement;
-  private sessions: HTMLElement;
-  private count: HTMLOutputElement;
+  private list: HTMLElement;
+  private status: HTMLElement;
+  private previous: HTMLButtonElement;
+  private next: HTMLButtonElement;
+  private refresh: HTMLButtonElement;
   private create: HTMLButtonElement;
   private theme: HTMLButtonElement;
+  private page?: Output<"project_list">;
+  private cursor?: Input<"project_list">["cursor"];
+  private history: Input<"project_list">["cursor"][] = [];
+  private epoch = 0;
+  private flight?: Promise<void>;
+  private controller?: AbortController;
+  private flights = new Set<Promise<void>>();
+  private disposed = false;
+  private blocked = true;
+  private selected = "";
+  private opening?: Artifact;
+  private busy = false;
   private items = new Map<string, HTMLButtonElement>();
-  private editor?: Editor;
-  private blocked = false;
   constructor(
-    private root: HTMLElement,
-    private actions: { create(title: string): void; open(id: string): void; theme(): void },
+    document: Document,
+    private client: Client,
+    private actions: { open(artifact: Artifact): Promise<void>; create(): void; theme(): void },
   ) {
-    const document = root.ownerDocument,
-      options = disclosure(document, "会话选项"),
-      heading = slot(document, "spread"),
-      scroll = slot(document, "fill"),
-      footer = slot(document, "footer");
-    this.title = document.createElement("input");
-    this.title.setAttribute("aria-label", "会话标题");
-    this.title.placeholder = "新会话名称";
+    this.view = dialog(document, "项目列表", true);
     this.search = document.createElement("input");
     this.search.type = "search";
-    this.search.setAttribute("aria-label", "搜索会话");
-    this.search.placeholder = "搜索会话…";
+    this.search.maxLength = 120;
+    this.search.setAttribute("aria-label", "搜索项目");
+    this.search.autofocus = true;
+    this.status = note(document, "打开项目列表以读取项目");
+    this.status.setAttribute("role", "status");
+    this.list = document.createElement("nav");
+    this.list.setAttribute("aria-label", "项目");
     this.create = button(document, {
-      label: "创建会话",
+      label: "新建空白或模板项目",
       icon: "plus",
       primary: true,
-      fullWidth: true,
-      onClick: () => actions.create(this.title.value),
+      onClick: () => {
+        this.view.close();
+        actions.create();
+      },
     });
-    this.theme = button(document, {
-      label: "切换主题",
-      icon: "moon",
-      compact: true,
-      variant: "ghost",
-      onClick: actions.theme,
+    this.previous = button(document, {
+      label: "上一页项目",
+      onClick: () => {
+        this.cursor = this.history.pop();
+        this.load();
+      },
     });
-    this.sessions = document.createElement("nav");
-    this.sessions.setAttribute("aria-label", "会话");
-    this.count = badge(document, "会话数量", "0");
-    heading.append(note(document, "会话"), this.count);
-    options.body.append(field(document, "会话标题", this.title));
-    scroll.append(this.sessions);
-    footer.append(note(document, "我的工作区"), badge(document, "存储位置", "数据保存在本机"), this.theme);
-    root.append(
-      brand(document, "Open Motion"),
-      this.create,
-      options.element,
-      heading,
-      field(document, "搜索会话", this.search, false, true),
-      scroll,
-      footer,
-    );
-    this.search.oninput = () => this.list();
-    this.sessions.onkeydown = (event) => {
-      const items = [...this.sessions.querySelectorAll<HTMLButtonElement>("button:not(:disabled)")],
+    this.next = button(document, {
+      label: "下一页项目",
+      onClick: () => {
+        if (this.page?.nextCursor) {
+          this.history.push(this.cursor);
+          this.cursor = this.page.nextCursor;
+          this.load();
+        }
+      },
+    });
+    this.refresh = button(document, { label: "刷新项目", onClick: () => this.reset() });
+    this.theme = button(document, { label: "切换主题", icon: "moon", onClick: actions.theme });
+    const pages = slot(document, "toolbar"),
+      footer = slot(document, "footer");
+    pages.append(this.previous, this.next, this.refresh);
+    footer.append(badge(document, "存储位置", "数据保存在本机"), this.theme);
+    this.view.body.append(this.create, field(document, "搜索项目", this.search), this.status, this.list, pages, footer);
+    this.search.oninput = () => this.reset();
+    this.list.onkeydown = (event) => {
+      if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+      const items = [...this.list.querySelectorAll<HTMLButtonElement>("button:not(:disabled)")],
         at = items.indexOf(document.activeElement as HTMLButtonElement);
-      if (at < 0 || !["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+      if (!items.length) return;
       event.preventDefault();
       const next =
         event.key === "Home"
           ? 0
           : event.key === "End"
             ? items.length - 1
-            : (at + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
-      items.forEach((item, index) => {
-        item.tabIndex = index === next ? 0 : -1;
-      });
+            : (at + (event.key === "ArrowUp" ? -1 : 1) + items.length) % items.length;
       items[next]?.focus();
     };
   }
-  created(value: string) {
-    if (this.title.value === value) this.title.value = "";
+  open(trigger: HTMLElement) {
+    this.view.open(trigger);
+    this.reset();
   }
-  update(editor: Editor, blocked: boolean, dark: boolean) {
-    this.editor = editor;
+  private reset() {
+    this.cursor = undefined;
+    this.history = [];
+    this.load();
+  }
+  private load() {
+    this.controller?.abort();
+    this.controller = new AbortController();
+    const epoch = ++this.epoch,
+      input = { query: this.search.value.trim(), cursor: this.cursor };
+    this.status.textContent = "读取项目中";
+    this.page = undefined;
+    this.list.replaceChildren();
+    this.flight = this.client
+      .execute("project_list", input, this.controller.signal)
+      .then(
+        (page) => {
+          if (this.disposed || epoch !== this.epoch) return;
+          this.page = page;
+          this.status.textContent = page.projects.length
+            ? `本页 ${page.projects.length} 个项目`
+            : input.query
+              ? "没有匹配的项目"
+              : "尚无项目，请创建项目或通过 Agent 开始创作";
+          this.render();
+        },
+        (error) => {
+          if (!this.disposed && epoch === this.epoch)
+            this.status.textContent = `项目读取失败：${(error as Error).message}`;
+        },
+      )
+      .finally(() => {
+        if (epoch === this.epoch) {
+          this.flight = undefined;
+          if (!this.disposed) this.controls();
+        }
+      });
+    const current = this.flight;
+    this.flights.add(current);
+    void current.then(() => this.flights.delete(current));
+    this.controls();
+  }
+  update(editor: Editor, blocked: boolean, dark: boolean, busy: boolean) {
+    this.busy = busy;
     this.blocked = blocked;
-    this.title.readOnly = blocked;
-    this.create.disabled = blocked;
-    this.count.value = String(editor.state.sessions.length);
-    setButton(this.theme, {
-      label: "切换主题",
-      icon: dark ? "sun" : "moon",
-      compact: true,
-      variant: "ghost",
-      onClick: this.actions.theme,
-    });
-    this.list();
+    this.selected = editor.project?.artifactId ?? "";
+    setButton(this.theme, { label: "切换主题", icon: dark ? "sun" : "moon", onClick: this.actions.theme });
+    this.controls();
+    this.render();
   }
-  private list() {
-    if (!this.editor) return;
-    const sessions = this.editor.state.sessions.filter((s) =>
-      s.title.toLowerCase().includes(this.search.value.toLowerCase()),
-    );
-    for (const [id, item] of this.items)
-      if (!sessions.some((s) => s.id === id)) {
-        item.remove();
+  private controls() {
+    this.previous.disabled = !!this.flight || !this.history.length;
+    this.next.disabled = !!this.flight || !this.page?.nextCursor;
+    this.refresh.disabled = !!this.flight;
+    this.create.disabled = this.blocked;
+    this.list.querySelectorAll<HTMLButtonElement>("button").forEach((control) => {
+      control.disabled = this.busy || (this.blocked && control.dataset.projectId !== this.opening?.id);
+    });
+  }
+  private render() {
+    if (!this.page) return;
+    const document = this.list.ownerDocument;
+    const projects = this.page.projects;
+    for (const [id, control] of this.items)
+      if (!projects.some((project) => project.id === id)) {
+        control.remove();
         this.items.delete(id);
       }
-    const active =
-      sessions.find((session) => session.id === this.editor?.state.selection.sessionId)?.id ?? sessions[0]?.id;
-    sessions.forEach((session, index) => {
-      let item = this.items.get(session.id);
-      if (!item) {
-        item = button(this.root.ownerDocument, { label: session.title });
-        this.items.set(session.id, item);
-        item.setAttribute("data-session-id", session.id);
+    for (const [index, artifact] of projects.entries()) {
+      let control = this.items.get(artifact.id);
+      if (!control) {
+        control = button(document, { label: artifact.title });
+        this.items.set(artifact.id, control);
       }
-      setButton(item, {
-        label: session.title,
-        detail: "本地工程",
-        icon: "message",
+      setButton(control, {
+        label: artifact.title,
+        icon: "film",
         variant: "item",
-        selected: session.id === this.editor?.state.selection.sessionId,
-        disabled: this.blocked,
-        onClick: () => this.actions.open(session.id),
+        selected: artifact.id === this.selected,
+        disabled: this.busy || (this.blocked && this.opening?.id !== artifact.id),
+        onClick: () => {
+          this.opening = artifact;
+          void this.actions.open(artifact).then(
+            () => {
+              this.opening = undefined;
+              this.view.close();
+            },
+            (error) => {
+              this.status.textContent = `${(error as Error).message} · 点击同一项目重试，或关闭列表处理当前内容。`;
+            },
+          );
+        },
       });
-      item.tabIndex = session.id === active ? 0 : -1;
-      if (session.id === this.editor?.state.selection.sessionId) item.setAttribute("aria-current", "true");
-      else item.removeAttribute("aria-current");
-      if (this.sessions.children[index] !== item)
-        this.sessions.insertBefore(item, this.sessions.children[index] ?? null);
-    });
-    this.sessions.querySelector("p")?.remove();
-    if (!sessions.length)
-      this.sessions.append(
-        note(this.root.ownerDocument, this.search.value ? "没有匹配的会话" : "从一个新会话开始创作"),
-      );
+      control.setAttribute("data-project-id", artifact.id);
+      if (artifact.id === this.selected) control.setAttribute("aria-current", "page");
+      else control.removeAttribute("aria-current");
+      if (this.list.children[index] !== control) this.list.insertBefore(control, this.list.children[index] ?? null);
+    }
+  }
+
+  async dispose() {
+    this.disposed = true;
+    this.epoch++;
+    this.controller?.abort();
+    this.view.dispose();
+    await Promise.all(this.flights);
   }
 }

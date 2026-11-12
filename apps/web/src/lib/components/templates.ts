@@ -33,20 +33,20 @@ export class Templates {
     this.select = document.createElement("select");
     this.select.setAttribute("aria-label", "模板");
     this.title = document.createElement("input");
-    this.title.setAttribute("aria-label", "模板工程标题");
+    this.title.setAttribute("aria-label", "模板项目标题");
     this.title.maxLength = 120;
-    this.description = note(document, "选择模板并创建独立的可编辑工程");
+    this.description = note(document, "选择模板并创建独立的可编辑项目");
     this.status = note(document, "");
     this.status.setAttribute("aria-label", "模板目录状态");
     this.status.setAttribute("role", "status");
     this.create = button(document, {
-      label: "创建模板工程",
+      label: "创建模板项目",
       icon: "plus",
       compact: true,
       disabled: true,
       onClick: () => {
         const template = this.selection();
-        if (template && this.session && !this.blocked && this.supported(template))
+        if (template && !this.blocked && this.supported(template))
           create(template, this.title.value.trim() || template.title);
       },
     });
@@ -56,7 +56,7 @@ export class Templates {
     view.body.append(
       this.status,
       field(document, "模板", this.select),
-      field(document, "工程标题", this.title),
+      field(document, "模板项目标题", this.title),
       this.description,
       actions,
     );
@@ -96,9 +96,9 @@ export class Templates {
   private render() {
     const template = this.selection();
     this.select.value = template?.id ?? "";
-    this.select.disabled = this.blocked || !this.session || !this.catalog || !!this.flight;
-    this.title.disabled = this.blocked || !this.session;
-    this.create.disabled = this.blocked || !this.session || !template || !this.supported(template) || !!this.flight;
+    this.select.disabled = this.blocked || !this.catalog || !!this.flight;
+    this.title.disabled = this.blocked;
+    this.create.disabled = this.blocked || !template || !this.supported(template) || !!this.flight;
     this.refresh.disabled = this.blocked || !!this.flight;
     this.description.textContent = template
       ? "availability" in template
@@ -106,7 +106,7 @@ export class Templates {
         : `${template.description} · ${template.duration} 秒 · ${template.width} × ${template.height}`
       : this.selected
         ? "所选模板版本已变化或不可用，请重新选择"
-        : "选择模板并创建独立的可编辑工程";
+        : "选择模板并创建独立的可编辑项目";
   }
   private load() {
     if (this.flight || this.disposed) return;

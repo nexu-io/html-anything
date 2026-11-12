@@ -383,24 +383,26 @@ export class Editor {
     };
     return session.id;
   }
-  async createArtifact(title: string) {
-    if (!this.session) throw new Error("先选择会话");
+  async createArtifact(title: string, sessionId = this.session?.id) {
+    if (!sessionId) throw new Error("先选择会话");
     await this.save();
-    const artifact = await this.mutate("artifact_create", { sessionId: this.session.id, title, files: initialFiles() });
-    this.session = {
-      ...this.session,
-      artifacts: [...this.session.artifacts.filter((item) => item.id !== artifact.id), artifact],
-    };
+    const artifact = await this.mutate("artifact_create", { sessionId, title, files: initialFiles() });
+    if (this.session?.id === sessionId)
+      this.session = {
+        ...this.session,
+        artifacts: [...this.session.artifacts.filter((item) => item.id !== artifact.id), artifact],
+      };
     return artifact;
   }
-  async createTemplate(title: string, id: string, contentHash: string) {
-    if (!this.session) throw new Error("先选择会话");
+  async createTemplate(title: string, id: string, contentHash: string, sessionId = this.session?.id) {
+    if (!sessionId) throw new Error("先选择会话");
     await this.save();
-    const artifact = await this.mutate("template_create", { sessionId: this.session.id, title, id, contentHash });
-    this.session = {
-      ...this.session,
-      artifacts: [...this.session.artifacts.filter((item) => item.id !== artifact.id), artifact],
-    };
+    const artifact = await this.mutate("template_create", { sessionId, title, id, contentHash });
+    if (this.session?.id === sessionId)
+      this.session = {
+        ...this.session,
+        artifacts: [...this.session.artifacts.filter((item) => item.id !== artifact.id), artifact],
+      };
     return artifact;
   }
   async createArchive(file: File, title: string) {

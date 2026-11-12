@@ -90,11 +90,11 @@ it("creates real templates through Web/Agent contracts, renders offline fonts an
       };
     await page.goto((await runtime.status()).web);
     await ready();
-    await page.getByRole("button", { name: "新建工程", exact: true }).click();
+    await page.getByRole("button", { name: "新建项目", exact: true }).click();
     const panel = page.getByLabel("原生模板", { exact: true });
     await panel.locator("summary").click();
     await expect.poll(() => panel.getByLabel("模板", { exact: true }).locator("option").count()).toBe(3);
-    await panel.getByLabel("模板工程标题", { exact: true }).fill("Product starter");
+    await panel.getByLabel("模板项目标题", { exact: true }).fill("Product starter");
     let drop = true;
     await page.route("**/api/template_create", async (route) => {
       const response = await route.fetch();
@@ -104,12 +104,15 @@ it("creates real templates through Web/Agent contracts, renders offline fonts an
         await route.abort("failed");
       } else await route.fulfill({ response });
     });
-    await panel.getByRole("button", { name: "创建模板工程", exact: true }).click();
-    await click("重试");
+    await panel.getByRole("button", { name: "创建模板项目", exact: true }).click();
+    await click("继续创建");
     await shown();
-    expect((await runtime.execute("session_get", { sessionId: session.id })).artifacts).toHaveLength(1);
+    expect((await runtime.execute("session_get", { sessionId: session.id })).artifacts).toHaveLength(0);
     const state = await runtime.execute("workspace_state", {}),
-      first = { sessionId: session.id, artifactId: state.selection.artifactId! };
+      productionSession = state.selection.sessionId!,
+      first = { sessionId: productionSession, artifactId: state.selection.artifactId! };
+    expect(productionSession).not.toBe(session.id);
+    expect((await runtime.execute("session_get", { sessionId: productionSession })).artifacts).toHaveLength(1);
     expect(
       (await runtime.execute("project_read", first)).files.some((file) => file.path === "compositions/captions.html"),
     ).toBe(true);
@@ -144,13 +147,16 @@ it("creates real templates through Web/Agent contracts, renders offline fonts an
           id: template.id,
           contentHash: template.contentHash,
           requestId: randomUUID(),
-          sessionId: session.id,
+          sessionId: productionSession,
           title: template.title,
         },
         artifact = await runtime.execute("template_create", input),
         selection = (await runtime.execute("workspace_state", {})).selection,
-        current = await runtime.execute("project_read", { sessionId: session.id, artifactId: selection.artifactId! }),
-        owner = { sessionId: session.id, artifactId: artifact.id };
+        current = await runtime.execute("project_read", {
+          sessionId: productionSession,
+          artifactId: selection.artifactId!,
+        }),
+        owner = { sessionId: productionSession, artifactId: artifact.id };
       expect(await runtime.execute("template_create", input)).toEqual(artifact);
       expect((await runtime.execute("workspace_state", {})).selection).toEqual(selection);
       await runtime.execute("artifact_open", {
@@ -285,7 +291,10 @@ it("creates real templates through Web/Agent contracts, renders offline fonts an
       await runtime.execute("project_read", { sessionId: edited.sessionId, artifactId: edited.artifactId }),
     ).toEqual(edited);
     const selection = (await runtime.execute("workspace_state", {})).selection,
-      current = await runtime.execute("project_read", { sessionId: session.id, artifactId: selection.artifactId! });
+      current = await runtime.execute("project_read", {
+        sessionId: productionSession,
+        artifactId: selection.artifactId!,
+      });
     await runtime.execute("artifact_open", {
       sessionId: edited.sessionId,
       artifactId: edited.artifactId,

@@ -1,33 +1,20 @@
-import {
-  badge,
-  button,
-  codeEditor,
-  field,
-  note,
-  readout,
-  setButton,
-  slot,
-  tabs,
-  tooltip,
-} from "@open-motion/components";
+import { badge, button, codeEditor, field, note, readout, slot, tooltip } from "@open-motion/components";
+import { entryFragment } from "@open-motion/daemon/contract";
 import { setTheme, type Theme } from "@open-motion/theme";
-import type { Artifact } from "@open-motion/workspace/contract";
 import type { Client } from "../../api.js";
 import type { Editor } from "../editor.js";
 import { observeWorkspace } from "../observe.js";
 import { Exports } from "./exports.js";
 import { workspaceLayout } from "./layout.js";
 import { Studio } from "./studio.js";
-import { Templates } from "./templates.js";
 import { Archives } from "./workspace/archives.js";
-import { Conversation } from "./workspace/conversation.js";
+import { Creation } from "./workspace/create.js";
 import { Navigation } from "./workspace/navigation.js";
 import { WorkspaceSync } from "./workspace/sync.js";
 export function workspace(root: HTMLElement, editor: Editor, client: Client, entry?: string) {
   const document = root.ownerDocument,
     shell = workspaceLayout(document),
     studioRoot = slot(document, "fill"),
-    artifactTabs = slot(document, "header"),
     sourceView = document.createElement("section"),
     source = codeEditor(document),
     sourceLabel = field(document, "index.html", source),
@@ -38,7 +25,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
   sourceView.setAttribute("aria-label", "工程源码");
   body.append(caption, sourceLabel, revision, sourceActions);
   sourceView.append(body);
-  shell.editor.append(artifactTabs, studioRoot);
+  shell.editor.append(studioRoot);
   root.replaceChildren(shell.element);
   let theme: Theme = "light",
     busy = false,
@@ -48,21 +35,31 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     file = "index.html",
     activity = 0,
     operations = 0,
-    navigationOpen = true,
-    conversationOpen = true,
     requestedEntry: string | undefined,
     flight = Promise.resolve();
-  const run = (action: () => Promise<void>, next?: () => Promise<void>) => {
+  const run = (action: () => Promise<void>, next?: () => Promise<void>, recordAddress = true) => {
     if (busy || disposed) return;
     const focused = document.activeElement,
       epoch = activity;
     operations++;
     busy = true;
-    retry = () => run(action, next);
+    retry = () => run(action, next, recordAddress);
     render("处理中");
     flight = action()
       .then(
         () => {
+          const project = editor.project,
+            window = document.defaultView;
+          if (recordAddress && entry !== undefined && requestedEntry === undefined && project && window) {
+            const address = new URL(window.location.href);
+            address.hash = entryFragment({
+              sessionId: project.sessionId,
+              artifactId: project.artifactId,
+              revision: project.revision,
+              historyVersion: project.history.version,
+            });
+            window.history.replaceState(null, "", address);
+          }
           retry = undefined;
           busy = false;
           if (!disposed) {
@@ -72,7 +69,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
         },
         (error) => {
           busy = false;
-          if (editor.needsRefresh) retry = () => run(() => editor.retryRefresh());
+          if (editor.needsRefresh && !creation.pending) retry = () => run(() => editor.retryRefresh());
           if (!disposed) render((error as Error).message);
         },
       )
@@ -85,89 +82,49 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
           focused.isConnected
         )
           focused.focus();
-        if (!disposed && requestedEntry !== undefined && !editor.unconfirmed) {
+        if (!disposed && requestedEntry !== undefined && !editor.unconfirmed && !creation.pending) {
           const target = requestedEntry;
           requestedEntry = undefined;
-          run(() => editor.load(target || undefined));
+          run(() => editor.load(target || undefined), undefined, false);
         }
       });
+    return flight;
   };
   const onEntry = () => {
     requestedEntry = document.defaultView?.location.hash ?? "";
-    if (!busy && !editor.unconfirmed) {
+    if (!busy && !editor.unconfirmed && !creation.pending) {
       const target = requestedEntry;
       requestedEntry = undefined;
-      run(() => editor.load(target || undefined));
+      run(() => editor.load(target || undefined), undefined, false);
     }
   };
   if (entry !== undefined) document.defaultView?.addEventListener("hashchange", onEntry);
   const synchronization = new WorkspaceSync(document, editor, run);
   shell.editor.prepend(synchronization.element);
   const observer = observeWorkspace(editor, {
-    available: () => !busy && !disposed,
+    available: () => !busy && !disposed && !creation.pending,
     generation: () => operations,
     changed: () => render(message),
     status: (value) => synchronization.status(value),
   });
-  const enterSession = (title: string) => {
-    let id = "";
-    run(
-      async () => {
-        id = await editor.createSession(title || `新会话 ${editor.state.sessions.length + 1}`);
-        navigation.created(title);
-      },
-      async () => {
-        await editor.openSession(id);
-        conversationOpen = true;
-      },
-    );
-  };
-  const enterArtifact = (title: string) => {
-    let artifact: Artifact;
-    run(
-      async () => {
-        artifact = await editor.createArtifact(title);
-        conversation.created(title);
-      },
-      () => editor.openArtifact(artifact),
-    );
-  };
-  const navigation = new Navigation(shell.navigation, {
-    create: enterSession,
-    open: (id) => run(() => editor.openSession(id)),
+  const creation = new Creation(document, editor, client, run);
+  const navigation = new Navigation(document, client, {
+    open: async (artifact) => {
+      let opened = false;
+      await run(async () => {
+        await editor.openArtifact(artifact);
+        opened = true;
+      });
+      if (!opened) throw new Error(message);
+    },
+    create: () => creation.open(newProject),
     theme: () => {
       theme = theme === "light" ? "dark" : "light";
       render(message);
     },
   });
-  const conversation = new Conversation(shell.conversation, {
-    append: (text) =>
-      run(async () => {
-        await editor.append(text);
-        conversation.appended(text);
-      }),
-    create: enterArtifact,
-    rename: (title) =>
-      run(async () => {
-        await editor.rename(title);
-        conversation.renamed();
-      }),
-    open: (artifact) => run(() => editor.openArtifact(artifact)),
-  });
-  const templates = new Templates(document, client, (template, title) => {
-    let artifact: Artifact;
-    run(
-      async () => {
-        artifact = await editor.createTemplate(title, template.id, template.contentHash);
-        templates.created();
-        conversation.created();
-      },
-      () => editor.openArtifact(artifact),
-    );
-  });
-  conversation.addCreator(templates.element);
   const archives = new Archives(document, editor, client, run);
-  conversation.addTransfer(archives.element);
+  shell.element.append(navigation.view.element, creation.view.element);
   const studio = new Studio(studioRoot, editor, client, run, {
     source: sourceView,
     sourceInput: () => source,
@@ -182,43 +139,33 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
       file = path;
       studio.setMode("source");
     },
-    start: () => (editor.session ? enterArtifact(`工程 ${editor.session.artifacts.length + 1}`) : enterSession("")),
+    start: () => creation.open(newProject),
   });
   const exports = new Exports(document, editor, client, (action) => run(action));
-  shell.editor.append(exports.element);
-  const projectTabs = tabs(document, {
-    label: "产物",
-    appearance: "pill",
-    select: (id) => {
-      const artifact = editor.session?.artifacts.find((a) => a.id === id);
-      if (artifact) run(() => editor.openArtifact(artifact));
-    },
-  });
-  const addProject = button(document, {
-    label: "新建工程",
+  shell.editor.append(exports.element, archives.element);
+  const newProject = button(document, {
+    label: "新建项目",
     icon: "plus",
-    iconOnly: true,
-    variant: "ghost",
-    onClick: () => {
-      conversationOpen = true;
-      updatePanels();
-      conversation.newProject();
-    },
+    compact: true,
+    onClick: () => creation.open(newProject),
   });
-  artifactTabs.append(projectTabs.element, addProject, badge(document, "产物类型", "Motion"));
   const title = slot(document, "title"),
     saved = badge(document, "保存状态", ""),
     state = badge(document, "操作状态", message),
     left = slot(document, "toolbar"),
     actions = slot(document, "toolbar");
   state.setAttribute("aria-live", "polite");
-  shell.navigation.id = `navigation-${crypto.randomUUID()}`;
-  shell.conversation.id = `conversation-${crypto.randomUUID()}`;
-  const navigationToggle = button(document, { label: "隐藏工作区导航" }),
-    conversationToggle = button(document, { label: "隐藏会话" });
-  navigationToggle.setAttribute("aria-controls", shell.navigation.id);
-  conversationToggle.setAttribute("aria-controls", shell.conversation.id);
-  left.append(navigationToggle, conversationToggle, title, saved);
+  const navigationToggle = button(document, {
+    label: "打开项目列表",
+    icon: "sidebar",
+    iconOnly: true,
+    variant: "ghost",
+    onClick: () => navigation.open(navigationToggle),
+  });
+  navigationToggle.setAttribute("aria-haspopup", "dialog");
+  navigationToggle.setAttribute("aria-expanded", "false");
+  left.append(navigationToggle, title, saved);
+  actions.append(newProject);
   shell.header.append(left, actions);
   const undo = button(document, {
       label: "撤销",
@@ -265,7 +212,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
   source.oninput = () => {
     editor.editFile(file, source.value);
     refreshHeader();
-    studio.sync(editor.project, busy || editor.unconfirmed || !!editor.incoming);
+    studio.sync(editor.project, busy || editor.unconfirmed || creation.pending || !!editor.incoming);
   };
   const interacted = () => {
     activity++;
@@ -276,7 +223,8 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     if (!(event.metaKey || event.ctrlKey) || event.altKey || event.isComposing) return;
     if (event.key.toLowerCase() === "s") {
       event.preventDefault();
-      if (!busy && !editor.unconfirmed && !editor.incoming && editor.project) run(() => editor.save());
+      if (!busy && !editor.unconfirmed && !creation.pending && !editor.incoming && editor.project)
+        run(() => editor.save());
     }
     if (
       event.key.toLowerCase() === "z" &&
@@ -288,6 +236,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
       if (
         !busy &&
         !editor.unconfirmed &&
+        !creation.pending &&
         !editor.incoming &&
         editor.project &&
         (direction === "project_undo"
@@ -297,50 +246,11 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
         run(() => editor.history(direction));
     }
   });
-  function updatePanels() {
-    for (const [control, pane, open, label, icon, change] of [
-      [
-        navigationToggle,
-        shell.navigation,
-        navigationOpen,
-        "工作区导航",
-        "sidebar",
-        () => {
-          navigationOpen = !navigationOpen;
-        },
-      ],
-      [
-        conversationToggle,
-        shell.conversation,
-        conversationOpen,
-        "会话",
-        "conversation",
-        () => {
-          conversationOpen = !conversationOpen;
-        },
-      ],
-    ] as const) {
-      if (!open && pane.contains(document.activeElement)) control.focus();
-      setButton(control, {
-        label: `${open ? "隐藏" : "显示"}${label}`,
-        icon,
-        iconOnly: true,
-        variant: "ghost",
-        onClick: () => {
-          change();
-          updatePanels();
-        },
-      });
-      control.setAttribute("aria-expanded", String(open));
-    }
-    shell.showNavigation(navigationOpen);
-    shell.showConversation(conversationOpen);
-  }
   function refreshHeader() {
-    const blocked = busy || editor.unconfirmed || !!editor.incoming,
+    const blocked = busy || editor.unconfirmed || creation.pending || !!editor.incoming,
       artifact = editor.session?.artifacts.find((a) => a.id === editor.project?.artifactId);
-    title.textContent = artifact?.title ?? editor.session?.title ?? "创作工作区";
-    saved.value = editor.dirty || editor.drafts?.dirty() ? "未保存" : "本地已保存";
+    title.textContent = artifact?.title ?? editor.session?.title ?? "Open Motion";
+    saved.value = !editor.project ? "尚无项目" : editor.dirty || editor.drafts?.dirty() ? "未保存" : "本地已保存";
     state.value = message;
     undo.disabled =
       blocked || !editor.project || !(editor.project.history.canUndo || editor.dirty || editor.drafts?.dirty());
@@ -356,22 +266,15 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
   function render(next: string) {
     if (disposed) return;
     message = next;
-    const blocked = busy || editor.unconfirmed || !!editor.incoming;
+    const blocked = busy || editor.unconfirmed || creation.pending || !!editor.incoming;
     setTheme(root, theme);
-    updatePanels();
     root.setAttribute("data-session-id", editor.state.selection.sessionId ?? "");
     root.setAttribute("data-artifact-id", editor.state.selection.artifactId ?? "");
-    synchronization.update(busy || editor.unconfirmed);
-    navigation.update(editor, blocked, theme === "dark");
-    conversation.update(editor, blocked);
-    templates.update(editor.session?.id, blocked);
+    synchronization.update(busy || editor.unconfirmed || creation.pending);
+    navigation.update(editor, blocked, theme === "dark", busy);
+    creation.update(busy, blocked, message);
     archives.update(editor, blocked);
-    addProject.disabled = blocked || !editor.session;
-    projectTabs.update(
-      (editor.session?.artifacts ?? []).map((a) => ({ id: a.id, label: a.title, icon: "film" as const })),
-      editor.project?.artifactId ?? "",
-      blocked,
-    );
+    newProject.disabled = busy || (blocked && !creation.pending);
     if (!editor.sources.some((f) => f.path === file)) file = "index.html";
     source.setAttribute("aria-label", file);
     if (sourceLabel.firstElementChild) sourceLabel.firstElementChild.textContent = file;
@@ -382,7 +285,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     exports.update(editor.project, blocked);
   }
   render("加载中");
-  run(() => editor.load(entry || undefined));
+  run(() => editor.load(entry || undefined), undefined, false);
   let disposal: Promise<void> | undefined;
   return {
     dispose(): Promise<void> {
@@ -393,10 +296,10 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
         await observer.close();
         await flight;
         await exports.dispose();
-        await templates.dispose();
+        await creation.dispose();
+        await navigation.dispose();
         await studio.dispose();
         archives.dispose();
-        conversation.dispose();
         for (const hint of hints) hint.dispose();
         shell.element.remove();
       })().catch((error) => {

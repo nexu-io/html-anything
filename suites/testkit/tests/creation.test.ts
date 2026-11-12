@@ -132,6 +132,12 @@ it("hands a verified remote template from guidance and Web creation to manual ed
       title: "Shared creation acceptance",
       mode: "motion",
     });
+    const firstContext = await runtime.execute("artifact_create", {
+      requestId: randomUUID(),
+      sessionId: session.id,
+      title: session.title,
+      files: initialFiles(),
+    });
     await runtime.execute("session_open", {
       requestId: randomUUID(),
       sessionId: session.id,
@@ -178,49 +184,57 @@ it("hands a verified remote template from guidance and Web creation to manual ed
     const shown = () => page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
     await page.goto(web);
     await ready();
-    await page.getByRole("button", { name: "新建工程", exact: true }).click();
+    await page.getByRole("button", { name: "新建项目", exact: true }).click();
     const panel = page.getByLabel("原生模板", { exact: true });
     await panel.locator("summary").click();
     await expect.poll(() => panel.getByLabel("模板", { exact: true }).locator("option").count()).toBe(5);
     if (!unsupported) throw Error("unsupported resources were not classified");
     await panel.getByLabel("模板", { exact: true }).selectOption(unsupported.id);
-    await expect.poll(() => panel.getByRole("button", { name: "创建模板工程", exact: true }).isDisabled()).toBe(true);
+    await expect.poll(() => panel.getByRole("button", { name: "创建模板项目", exact: true }).isDisabled()).toBe(true);
     await panel.getByLabel("模板", { exact: true }).selectOption(remote.id);
-    await panel.getByLabel("模板工程标题", { exact: true }).fill("Prism handoff");
+    await panel.getByLabel("模板项目标题", { exact: true }).fill("Prism handoff");
     const second = await runtime.execute("session_create", {
       requestId: randomUUID(),
       title: "Other template draft",
       mode: "motion",
     });
-    await page.getByRole("button", { name: "刷新", exact: true }).click();
-    await ready();
-    const navigation = page.getByRole("navigation", { name: "会话", exact: true });
+    const secondContext = await runtime.execute("artifact_create", {
+      requestId: randomUUID(),
+      sessionId: second.id,
+      title: second.title,
+      files: initialFiles(),
+    });
     const chooseSession = async (title: string) => {
-      await navigation.getByRole("button", { name: title, exact: true }).click();
+      await page.keyboard.press("Escape");
+      await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
+      await page
+        .getByRole("navigation", { name: "项目", exact: true })
+        .getByRole("button", { name: title, exact: true })
+        .click();
       await ready();
-      await page.getByRole("button", { name: "新建工程", exact: true }).click();
+      await page.getByRole("button", { name: "新建项目", exact: true }).click();
     };
     await chooseSession(second.title);
     await panel.getByLabel("模板", { exact: true }).selectOption("nyt-graph");
-    await panel.getByLabel("模板工程标题", { exact: true }).fill("Session B draft");
+    await panel.getByLabel("模板项目标题", { exact: true }).fill("Session B draft");
     await chooseSession(session.title);
     await expect.poll(() => panel.getByLabel("模板", { exact: true }).inputValue()).toBe(remote.id);
-    await expect.poll(() => panel.getByLabel("模板工程标题", { exact: true }).inputValue()).toBe("Prism handoff");
+    await expect.poll(() => panel.getByLabel("模板项目标题", { exact: true }).inputValue()).toBe("Prism handoff");
     const priorHash = remote.contentHash;
     publicationVersion = 2;
     await panel.getByRole("button", { name: "刷新模板", exact: true }).click();
     await expect.poll(() => panel.getByLabel("模板目录状态").textContent()).toContain("creation-acceptance-2");
-    await expect.poll(() => panel.getByRole("button", { name: "创建模板工程", exact: true }).isDisabled()).toBe(true);
+    await expect.poll(() => panel.getByRole("button", { name: "创建模板项目", exact: true }).isDisabled()).toBe(true);
     await expect
       .poll(() => panel.getByText("所选模板版本已变化或不可用，请重新选择", { exact: true }).isVisible())
       .toBe(true);
-    await expect.poll(() => panel.getByLabel("模板工程标题", { exact: true }).inputValue()).toBe("Prism handoff");
+    await expect.poll(() => panel.getByLabel("模板项目标题", { exact: true }).inputValue()).toBe("Prism handoff");
     await chooseSession(second.title);
     await expect.poll(() => panel.getByLabel("模板", { exact: true }).inputValue()).toBe("nyt-graph");
-    await expect.poll(() => panel.getByLabel("模板工程标题", { exact: true }).inputValue()).toBe("Session B draft");
+    await expect.poll(() => panel.getByLabel("模板项目标题", { exact: true }).inputValue()).toBe("Session B draft");
     await chooseSession(session.title);
-    await expect.poll(() => panel.getByRole("button", { name: "创建模板工程", exact: true }).isDisabled()).toBe(true);
-    await expect.poll(() => panel.getByLabel("模板工程标题", { exact: true }).inputValue()).toBe("Prism handoff");
+    await expect.poll(() => panel.getByRole("button", { name: "创建模板项目", exact: true }).isDisabled()).toBe(true);
+    await expect.poll(() => panel.getByLabel("模板项目标题", { exact: true }).inputValue()).toBe("Prism handoff");
     const refreshed = await runtime.execute("template_list", {});
     remote = refreshed.catalog?.entries.find((entry) => entry.id === remote!.id);
     if (!remote) throw Error("updated publication lost its stable template identity");
@@ -246,21 +260,30 @@ it("hands a verified remote template from guidance and Web creation to manual ed
         await route.abort("failed").catch(() => {});
       }
     });
-    await panel.getByRole("button", { name: "创建模板工程", exact: true }).click();
+    await panel.getByRole("button", { name: "创建模板项目", exact: true }).click();
     await expect.poll(() => report.creationResponse, { timeout: 15000 }).toBeDefined();
     expect(lost, JSON.stringify(report.creationResponse)).toBe(true);
-    await expect.poll(() => page.getByRole("button", { name: "重试", exact: true }).isEnabled()).toBe(true);
-    expect((await runtime.execute("session_get", { sessionId: session.id })).artifacts).toHaveLength(1);
+    await expect.poll(() => page.getByRole("button", { name: "继续创建", exact: true }).isEnabled()).toBe(true);
+    const createdProjects = (await runtime.execute("project_list", { query: "Prism handoff" })).projects;
+    expect(createdProjects).toHaveLength(1);
+    const creationSession = createdProjects[0]!.sessionId;
+    expect(creationSession).not.toBe(session.id);
+    expect((await runtime.execute("session_get", { sessionId: session.id })).artifacts.map((item) => item.id)).toEqual([
+      firstContext.id,
+    ]);
+    expect((await runtime.execute("session_get", { sessionId: second.id })).artifacts.map((item) => item.id)).toEqual([
+      secondContext.id,
+    ]);
     await fixture.close();
     fixtureClosed = true;
     const downloads = filesRead;
-    await page.getByRole("button", { name: "重试", exact: true }).click();
+    await page.getByRole("button", { name: "继续创建", exact: true }).click();
     await ready();
     await shown();
     expect(filesRead).toBe(downloads);
-    const detail = await runtime.execute("session_get", { sessionId: session.id });
+    const detail = await runtime.execute("session_get", { sessionId: creationSession });
     expect(detail.artifacts).toHaveLength(1);
-    const owner = { sessionId: session.id, artifactId: detail.artifacts[0]!.id },
+    const owner = { sessionId: creationSession, artifactId: detail.artifacts[0]!.id },
       project = await runtime.execute("project_read", owner),
       entry = project.files.find((file) => file.path === "index.html")!;
     await page.getByRole("tab", { name: "文件", exact: true }).click();
