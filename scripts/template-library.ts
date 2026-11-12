@@ -362,8 +362,12 @@ export async function refreshManifest(id: string, root = catalogRoot): Promise<v
   const source = path.join(root, id, 'source');
   const manifest = await json(path.join(source, 'manifest.json'));
   const record: TemplateRecord = await json(path.join(root, id, 'template.json'));
-  const files: FileLock[] = (record.remoteAssets ?? []).map((asset) => asset.source);
-  for (const name of await sourceFiles(source)) {
+  const names = await sourceFiles(source);
+  // Reintroduced R2 media is a draft revision; final preparation replaces its old remote identity.
+  const files: FileLock[] = (record.remoteAssets ?? [])
+    .filter(asset => !(asset.url.startsWith(mediaOrigin + '/') && names.includes(asset.source.path)))
+    .map(asset => asset.source);
+  for (const name of names) {
     if (name === 'manifest.json') continue;
     const bytes = await readFile(path.join(source, safePath(name)));
     const pointer = lfsPointer(bytes);

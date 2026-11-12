@@ -8,6 +8,7 @@ import test from 'node:test';
 import { commitCleanup, finalizeMediaCleanup, prepareMediaCleanup, preparePullRequest, publishMedia, type TreeFile } from '../scripts/prepare-pr-media.ts';
 import { pullMedia } from '../scripts/repository-media.ts';
 import { downloadMedia, mediaDigest, mediaKey, mediaOrigin, validateMediaManifest, type MediaLock } from '../shared/repository-media.ts';
+import { refreshManifest } from '../scripts/template-library.ts';
 
 const sourceSHA = 'a'.repeat(40), prefix = 'library/templates/catalog/motion-demo/';
 function fixture() {
@@ -64,6 +65,29 @@ test('cleanup accepts LFS as an input and records legacy paths for verified opti
   const manifest = validateMediaManifest(JSON.parse(Buffer.from(plan.changes.find(change => change.path === 'repository-media.json')!.content!, 'base64').toString()));
   assert.equal(manifest.files[0].path, name); assert.equal(manifest.files[0].sha256, mediaDigest(f.bytes));
   assert(Buffer.from(plan.changes.find(change => change.path === '.gitignore')!.content!, 'base64').toString().includes('/' + name));
+});
+
+test('encoded filenames and a later revision of prepared media retain working references', async t => {
+  const f = fixture(), name = prefix + 'source/assets/ref one.mp4';
+  f.contents.set(name, f.bytes);
+  f.contents.set(prefix + 'source/preview.html', Buffer.from('<video src="assets/ref%20one.mp4"></video>'));
+  const first = await prepareMediaCleanup(f.inputs(), f.read);
+  for (const change of first.changes) {
+    if (change.content === null) f.contents.delete(change.path);
+    else f.contents.set(change.path, Buffer.from(change.content, 'base64'));
+  }
+  const before = f.tree(), oldURL = first.media.find(file => file.path === name)!.url;
+  assert(f.contents.get(prefix + 'source/preview.html')!.toString().includes(oldURL));
+  const revised = Buffer.alloc(129, 43); f.contents.set(name, revised);
+  const directory = await isolated(t);
+  for (const [file, bytes] of f.contents) { await mkdir(path.dirname(path.join(directory, file)), { recursive: true }); await writeFile(path.join(directory, file), bytes); }
+  await refreshManifest('motion-demo', path.join(directory, 'library/templates/catalog'));
+  const manifest = JSON.parse(await readFile(path.join(directory, prefix + 'source/manifest.json'), 'utf8'));
+  assert.equal(manifest.files.filter((file: any) => file.path === 'assets/ref one.mp4').length, 1);
+  assert.equal(manifest.files.find((file: any) => file.path === 'assets/ref one.mp4').sha256, mediaDigest(revised));
+  const next = await prepareMediaCleanup({ ...f.inputs(), base: before }, f.read);
+  const guide = Buffer.from(next.changes.find(change => change.path === prefix + 'source/preview.html')!.content!, 'base64').toString();
+  assert(!guide.includes(oldURL)); assert(guide.includes(next.media[0].url));
 });
 
 test('invalid input and a failed transfer cannot publish cleanup or mutate the input', async () => {

@@ -30,8 +30,12 @@ export async function finalizeMediaCleanup(plan: CleanupPlan, upload: () => Prom
 }
 
 function replaceReference(text: string, relative: string, url: string) {
-  const escaped = relative.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return text.replace(new RegExp(`(^|[\\s"'(=])(?:\\./)?${escaped}(?=[\\s"')?#]|$)`, 'gm'), (_, prefix: string) => prefix + url);
+  const spellings = new Set([relative, relative.split('/').map(encodeURIComponent).join('/')]);
+  for (const spelling of spellings) {
+    const escaped = spelling.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    text = text.replace(new RegExp(`(^|[\\s"'(=])(?:\\./)?${escaped}(?=[\\s"')?#]|$)`, 'gm'), (_, prefix: string) => prefix + url);
+  }
+  return text;
 }
 
 /** Prepare only source/media edits; no PR code, hooks, dependencies or configuration is executed. */
@@ -70,6 +74,7 @@ export async function prepareMediaCleanup(inputs: Inputs, read: (file: TreeFile)
   const manifestName = 'repository-media.json';
   const manifest = files.has(manifestName) ? validateMediaManifest(JSON.parse((await load(manifestName)).toString())) : { schemaVersion: 1 as const, files: [] as MediaLock[] };
   const templates = new Map<string, MediaLock[]>();
+  const previousURLs = new Map<string, string>();
   for (const lock of locks) {
     edits.set(lock.path, null);
     const match = catalogAsset.exec(lock.path);
@@ -85,6 +90,8 @@ export async function prepareMediaCleanup(inputs: Inputs, read: (file: TreeFile)
     const remote = new Map((record.remoteAssets ?? []).map((asset: { source: { path: string } }) => [asset.source.path, asset]));
     for (const lock of media) {
       const sourcePath = lock.path.slice((prefix + 'source/').length);
+      const previous: any = remote.get(sourcePath);
+      if (previous) previousURLs.set(previous.url, lock.url);
       remote.set(sourcePath, { url: lock.url, bytes: lock.bytes, sha256: lock.sha256, source: { path: sourcePath, bytes: lock.bytes, sha256: lock.sha256 } });
     }
     record.remoteAssets = [...remote.values()];
@@ -96,6 +103,7 @@ export async function prepareMediaCleanup(inputs: Inputs, read: (file: TreeFile)
     const original = await load(file.path);
     let text = original.toString();
     for (const lock of locks) text = replaceReference(text, path.posix.relative(path.posix.dirname(file.path), lock.path), lock.url);
+    for (const [previous, current] of previousURLs) text = replaceReference(text, previous, current);
     if (text !== original.toString()) edits.set(file.path, Buffer.from(text));
   }
   for (const [id, media] of templates) {
