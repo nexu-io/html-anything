@@ -379,7 +379,8 @@ it("MVP restores GIF preferences with the native frame-rate cap and ignores hidd
   const host = mountRenderQueue(start, undefined, true);
   expect(triggerFor(host, "Format").textContent).toContain("GIF");
   expect(triggerFor(host, "Frame rate").textContent).toContain("30 fps");
-  expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe("0");
+  expect(host.querySelector('input[type="number"]')).toBeNull();
+  expect(host.textContent).not.toContain("GIF loop count");
   expect(host.textContent).not.toContain("GPU");
   fire(exportButtonIn(host), "click");
   await settle();

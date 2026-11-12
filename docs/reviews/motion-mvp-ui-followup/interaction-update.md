@@ -93,3 +93,12 @@ Export records omit elapsed render duration. Titles change from 11px to 12px med
 | Older browser without Popover API | Unverified | The modal-parent fallback is source-inspected; browser verification used a host supporting native popovers. |
 
 The assembled PR checkout passed `npm run check`, Studio typecheck, production build, 63 targeted tests in five files and `git diff --check`. The main checkout passed its typecheck, build and 62 targeted tests; its broader design check still reports existing raw UI colors in `studio/src/motion/theme.css`, outside this change. Main-checkout uncommitted work is retained. The PR increment preserves its newer privacy settings, community links, catalog implementation, translations and tests instead of replacing whole files from the older main checkout.
+
+
+## MVP GIF looping (2026-11-12)
+
+GIF export in the MVP now always uses infinite looping (`gifLoop: 0`) and hides the numeric loop-count setting. The full editor retains custom counts and validation; frame-rate, format, quality and export history are unchanged. This removes a technical setting the user explicitly chose to omit.
+
+The real 4173 production build was refreshed with GIF already selected. [Before](gif-loop-before.png) and [after](gif-loop-hidden.png) show that the loop field is gone and the remaining export controls are present. The editor remains open with both side panels restored. No export was initiated and no project media, timing or volume was changed.
+
+Validation: 33 export-control and request-forwarding cases passed, including the updated MVP regression asserting no loop input and a zero loop count at submission, plus retained full-editor finite-count and invalid-input cases. Studio typecheck/build passed in both checkouts; repository check passed in the publish checkout. Codec playback and remote WorkBuddy verification were not performed; this is a settings/parameter change. Loading/error/empty-state behavior is unchanged.
