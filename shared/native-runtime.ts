@@ -1,5 +1,16 @@
 export type NativeStage = 'idle' | 'waiting' | 'downloading' | 'verifying' | 'extracting' | 'checking' | 'ready' | 'failed';
-export type NativeComponent = { id: 'browser' | 'media' | 'ffmpeg' | 'ffprobe'; stage: NativeStage; receivedBytes?: number; totalBytes?: number; errorCode?: string; error?: string };
+export type NativeComponent = {
+  id: 'browser' | 'media' | 'ffmpeg' | 'ffprobe';
+  stage: NativeStage;
+  receivedBytes?: number;
+  totalBytes?: number;
+  downloadStartedAt?: number;
+  updatedAt?: number;
+  attempt?: number;
+  maxAttempts?: number;
+  errorCode?: string;
+  error?: string;
+};
 export type NativeRuntimeStatus = { managed: boolean; components: NativeComponent[]; capabilities: { capture: boolean; media: boolean; export: boolean } };
 
 export function parseNativeRuntimeStatus(value: unknown): NativeRuntimeStatus | null {
@@ -8,7 +19,7 @@ export function parseNativeRuntimeStatus(value: unknown): NativeRuntimeStatus | 
     || !['capture', 'media', 'export'].every(key => typeof (status.capabilities as any)[key] === 'boolean')
     || !status.components.every(component => component && ['browser', 'media', 'ffmpeg', 'ffprobe'].includes(component.id)
       && ['idle', 'waiting', 'downloading', 'verifying', 'extracting', 'checking', 'ready', 'failed'].includes(component.stage)
-      && [component.receivedBytes, component.totalBytes].every(bytes => bytes === undefined || Number.isFinite(bytes) && bytes >= 0)
+      && [component.receivedBytes, component.totalBytes, component.downloadStartedAt, component.updatedAt, component.attempt, component.maxAttempts].every(bytes => bytes === undefined || Number.isFinite(bytes) && bytes >= 0)
       && (component.error === undefined || typeof component.error === 'string'))) return null;
   return status;
 }

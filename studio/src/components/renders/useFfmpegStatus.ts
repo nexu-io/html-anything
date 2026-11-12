@@ -63,7 +63,7 @@ function parseStatus(body: unknown): ProbeResult {
 
 async function probe(): Promise<ProbeResult> {
   try {
-    const native = await fetch('/motion-api/runtime', { cache: 'no-store' });
+    const native = await fetch('/motion-api/runtime', { cache: 'no-store', signal: AbortSignal.timeout(15_000) });
     const runtime = native.ok ? parseNativeRuntimeStatus(await native.json()) : null;
     if (runtime?.managed) return { ok: runtime.capabilities.export, runtime };
     if (cached?.runtime) return { ...cached, ok: false, runtimeUnavailable: true };
@@ -86,6 +86,7 @@ export function useFfmpegStatus(): {
   const [status, setStatus] = useState<ProbeResult>(cached);
   const [checking, setChecking] = useState(cached === null);
   const mounted = useRef(true);
+  const latestProbe = useRef(0);
 
   useEffect(() => {
     mounted.current = true;
@@ -95,17 +96,19 @@ export function useFfmpegStatus(): {
   }, []);
 
   const run = useCallback(async (retry = false) => {
+    const request = ++latestProbe.current;
     setChecking(true);
     if (retry && cached?.runtime) {
       try {
-        const response = await fetch('/motion-api/runtime', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ retry: true }) });
+        const response = await fetch('/motion-api/runtime', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ retry: true }), signal: AbortSignal.timeout(15_000) });
         if (!response.ok) throw new Error('Preparation retry was refused');
       } catch {
-        if (mounted.current) { setStatus({ ...cached, ok: false, runtimeUnavailable: true }); setChecking(false); }
+        if (mounted.current && request === latestProbe.current) { setStatus({ ...cached, ok: false, runtimeUnavailable: true }); setChecking(false); }
         return;
       }
     }
     const next = await probe();
+    if (request !== latestProbe.current) return;
     cached = next;
     if (!mounted.current) return;
     setStatus(next);
