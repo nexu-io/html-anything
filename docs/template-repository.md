@@ -12,7 +12,7 @@ npm run build:studio
 npm start
 ```
 
-Open `http://localhost:4173`. Keep user projects and credentials outside the checkout; `MOTION_DATA_DIR` can select a separate workspace. The plugin root is the cloned `openmotion/` directory: `.codex-plugin/plugin.json` points to `skills/` and `.mcp.json`; that file launches the root `mcp.ts`. For a manual MCP client, launch `node --experimental-strip-types /absolute/openmotion/mcp.ts`, or use `npm run mcp` from the checkout. The repository path is resolved from the loaded plugin, not the caller's working directory.
+Open the address printed by `npm start`. On macOS, the shared editor selects a local port dynamically and returns `studioUrl` and `previewUrl`; use those URLs instead of assuming port 4173. Other platforms default to `http://localhost:4173`. Keep user projects and credentials outside the checkout; `MOTION_DATA_DIR` can select a separate workspace. The plugin root is the cloned `openmotion/` directory: `.codex-plugin/plugin.json` points to `skills/` and `.mcp.json`; that file launches the root `mcp.ts`. For a manual MCP client, launch `node --experimental-strip-types /absolute/openmotion/mcp.ts`, or use `npm run mcp` from the checkout. The repository path is resolved from the loaded plugin, not the caller's working directory.
 
 - Source checkouts default to `MOTION_TEMPLATE_SOURCE=repository`. Studio search and MCP read `library/templates/catalog/` directly, without downloading the CMS catalog. A malformed local catalog fails explicitly.
 - `openmotion_list_templates` returns `source=repository`, an absolute JSONL `indexPath`, total and a hash-based `catalogVersion`. Search that file locally; each repository entry includes `localSource` paths.
