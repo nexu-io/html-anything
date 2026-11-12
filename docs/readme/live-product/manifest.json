@@ -1,8 +1,8 @@
 {
   "capturedAt": "2026-11-12",
   "runtimeVersion": "0.6.5",
-  "source": "Installed OpenMotion Studio, isolated demo workspace, production template catalog",
-  "note": "Real UI screenshots. No generated interface or private project content.",
+  "source": "Installed OpenMotion Studio captures and a user-provided Studio screenshot",
+  "note": "Catalog, detail and recreation-dialog captures use an isolated demo workspace and the production template catalog. The additional Studio screenshot is retained exactly as supplied; its runtime version is unspecified.",
   "files": [
     {
       "file": "docs/readme/live-product/catalog.en.jpg",
@@ -48,6 +48,15 @@
       "file": "docs/readme/live-product/remix.zh-CN.jpg",
       "bytes": 66694,
       "sha256": "c55bb45a151ccd7855faf1507d4efce283a178097a1491e2b66b81110a44ce43"
+    },
+    {
+      "file": "docs/readme/live-product/studio-in-use.png",
+      "bytes": 2065288,
+      "sha256": "f20ae0f17f9db97f1950f8fd4624e296caf014eb5f774d6cb005afa344900073",
+      "source": "User-provided screenshot shared for inclusion in the README",
+      "runtimeVersion": null,
+      "uiLocale": "zh-CN",
+      "alterations": "None; original PNG retained"
     }
   ]
 }

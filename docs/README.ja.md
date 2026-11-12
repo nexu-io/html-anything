@@ -267,6 +267,12 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 
 **書いて、観て、直して、書き出す。** 製品を差し替える、冒頭を詰める、出演者を加える、字幕や結末を変える。エージェントがソースを編集し、結果をエディターで確認できます。ローカルの MCP クライアントはプロジェクト用ツールを使用します。シェルを使えるエージェントでは Skills と指定バージョンの CLI も利用できます。[接続設定](#agent-setup) · [ネイティブ合成ガイド](../skills/openmotion-production/references/native.md) · [HTML の作例](../template-library/product-promo/index.html)
 
+<a id="studio-in-use"></a>
+
+<img src="readme/live-product/studio-in-use.png" width="100%" alt="Studio の実際の利用画面。左に読み込んだ素材、中央に動画プレビュー、下に編集可能なタイムライン。">
+
+同じ Studio ワークスペースで動画を確認し、クリップを配置して書き出せます。
+
 #### Studio で編集できるもの
 
 | Studio の機能 | 今できること |

@@ -372,3 +372,5 @@ All 38 full films used by the README, scenarios, comparisons and curated collect
 The README uses locally stored excerpts from the public template catalog. Each card links once to its online detail page. Source URLs and file hashes are recorded in [the template manifest](live-templates/manifest.json). Presenter references remain local and have no online-template link.
 
 The English, Simplified Chinese and Japanese screenshots show the installed OpenMotion 0.6.5 template library, template detail and recreation dialog, captured in an isolated demo workspace using the production catalog. [Capture manifest](live-product/manifest.json). These are real UI captures, without generated or composited interface elements.
+
+The full-stack workflow section also includes [a user-provided Studio screenshot](live-product/studio-in-use.png), retained as the original PNG with its Chinese interface. It shows imported media, playback and the editing timeline. Its runtime version is unspecified; the file hash and provenance are recorded separately in the capture manifest.
