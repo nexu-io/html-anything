@@ -14,7 +14,10 @@ async function snapshot(directory, relative = '') {
     if (item.isDirectory()) Object.assign(files, await snapshot(directory, name));
     else {
       assert(item.isFile(), 'Unsupported Skill entry: ' + name);
-      files[name] = createHash('sha256').update(await readFile(path.join(directory, name))).digest('hex');
+      const bytes = await readFile(path.join(directory, name));
+      assert(!bytes.subarray(0, 128).toString().startsWith('version https://git-lfs.github.com/spec/v1'),
+        'Skill media is not downloaded. Run git lfs pull --include="library/skills/**" --exclude="" before installing a Library Skill.');
+      files[name] = createHash('sha256').update(bytes).digest('hex');
     }
   }
   return files;

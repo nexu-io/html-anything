@@ -52,6 +52,8 @@ jobs:
         run: |
           if [[ "$BASE_SHA" =~ ^0+$ ]]; then unset BASE_SHA; fi
           npm run templates:check
+          npm run storage:check
+          node --test tests/repository-storage.test.ts
           node --test tests/template-library.test.ts
 
   maintainability:
@@ -101,6 +103,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.2
+      - name: Cache optional LFS media
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs/objects
+          key: optional-lfs-${{ runner.os }}-${{ hashFiles('**/*.mp4', '**/*.motion') }}
+          restore-keys: optional-lfs-${{ runner.os }}-
+      - name: Download full-bundle media explicitly
+        run: git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude=""
       - name: Setup pinned Node
         uses: actions/setup-node@v6
         with:

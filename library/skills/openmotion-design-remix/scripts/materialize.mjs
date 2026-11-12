@@ -29,6 +29,9 @@ if (variant === 'remix') {
   }
 }
 html = localize(html);
+const reference = await readFile(path.join(root, 'assets', id, 'reference.mp4'));
+assert(!reference.subarray(0, 128).toString().startsWith('version https://git-lfs.github.com/spec/v1'),
+  `Reference media is not downloaded. Run git lfs pull --include="library/skills/openmotion-design-remix/assets/${id}/**" --exclude="" from the source checkout before materializing.`);
 // Refuse existing files, directories and symlinks. Never overwrite a previous project.
 await assert.rejects(lstat(output), { code: 'ENOENT' }, 'Output already exists; choose a new directory');
 await mkdir(path.dirname(output), { recursive: true });

@@ -5,12 +5,14 @@ The source of 286 published motion guidance templates lives in [the repository c
 ## Run from a local clone
 
 ```sh
-GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/nexu-io/openmotion.git
+GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/nexu-io/openmotion.git
 cd openmotion
 npm ci
 npm run build:studio
 npm start
 ```
+
+The repository also skips optional LFS media by default; see [repository storage and scoped downloads](repository-storage.md). Shallow clones omit old history; run `git fetch --unshallow` before checks that need an unavailable base commit.
 
 Open the `studioUrl` or `previewUrl` printed by `npm start`. Startup reuses a compatible service for the same workspace. On macOS, the shared editor selects a local port dynamically; other platforms try `PORT` (default 4173) and the next nine ports, skipping occupied ones. If all ten are occupied and no compatible service is found, startup reports an error. The launcher exits after reporting the URL; the service keeps running in the background. MCP uses the same startup logic and actual service address when configured for the same `MOTION_DATA_DIR`.
 

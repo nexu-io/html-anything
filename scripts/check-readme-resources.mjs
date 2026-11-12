@@ -47,6 +47,8 @@ export async function verifyResources(root = fileURLToPath(new URL('../', import
       const file = path.resolve(root, base, entry.file);
       assert(file.startsWith(path.resolve(root) + path.sep), 'Resource escapes checkout');
       const bytes = await readFile(file);
+      assert(!bytes.subarray(0, 128).toString().startsWith('version https://git-lfs.github.com/spec/v1'),
+        `${entry.file}: media is not downloaded. Run git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="" before verifying full resource hashes.`);
       assert.equal(createHash('sha256').update(bytes).digest('hex'), entry.sha256, `Changed resource: ${entry.file}`);
       if (entry.bytes !== undefined) assert.equal(bytes.length, entry.bytes, `Changed size: ${entry.file}`);
       hashes++;

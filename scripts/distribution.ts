@@ -1,4 +1,4 @@
-import { lstat, readdir } from 'node:fs/promises';
+import { lstat, open, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { packagedSkills } from '../shared/workflow.ts';
@@ -525,7 +525,7 @@ export const distributionDocuments = [
   'library/components/README.md', 'library/components/title-reveal/README.md',
   'library/design-systems/ink-water/MOTION_DESIGN.md', 'library/brandkits/openmotion/BRANDKIT.md',
   'docs/motion-design-examples.md', 'docs/motion-design-examples.zh-CN.md', ...motionDesignRemixFiles, ...presenterStoryFiles, ...presenterTechFiles,
-  'docs/skills.md', 'docs/template-catalog.md', 'docs/template-repository.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
+  'docs/skills.md', 'docs/template-catalog.md', 'docs/template-repository.md', 'docs/repository-storage.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
 ];
 
 export async function distributionFiles(profile: string): Promise<string[]> {
@@ -561,4 +561,18 @@ export async function distributionFiles(profile: string): Promise<string[]> {
   await walk('studio/public', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
   for (const file of files) if (!(await lstat(path.join(root, file))).isFile()) throw new Error('Distribution requires a regular file: ' + file);
   return [...new Set(files)].sort();
+}
+
+// Complete bundles must never turn unresolved LFS pointers into installed media.
+export async function requireDownloadedMedia(files: string[], directory = root): Promise<void> {
+  for (const name of files) {
+    if (!/\.(?:mp4|mov|webm|m4v|avi|mp3|wav|ogg|m4a|aac|flac|motion)$/i.test(name)) continue;
+    const file = await open(path.join(directory, name), 'r');
+    try {
+      const header = Buffer.alloc(128);
+      await file.read(header, 0, header.length, 0);
+      if (header.toString().startsWith('version https://git-lfs.github.com/spec/v1'))
+        throw new Error(`Media not downloaded: ${name}. Run git lfs pull --include="${name}" --exclude="" from the source checkout before packaging or copying it.`);
+    } finally { await file.close(); }
+  }
 }

@@ -408,12 +408,14 @@ If MCP tools are missing or fail to connect, use the installed [connection diagn
 Use Git, npm and **Node.js 26.11.1**. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
 
 ```sh
-git clone https://github.com/nexu-io/openmotion.git
+git clone --depth 1 https://github.com/nexu-io/openmotion.git
 cd openmotion
 npm ci
 npm run build:studio
 npm start
 ```
+
+Full reference videos and optional template archives download through Git LFS only when requested. README images/GIFs and built-in templates remain available directly. See [clone size and optional media downloads](docs/repository-storage.md).
 
 Open the `studioUrl` or `previewUrl` printed by `npm start`, then open **Template library**. Startup reuses a compatible service for the same workspace or selects an available local port. The service keeps running in the background after the launcher exits.
 

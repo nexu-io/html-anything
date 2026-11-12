@@ -3,6 +3,8 @@ name: openmotion-design-remix
 description: OpenMotion — Adapt one of six bundled motion compositions using its MOTION_DESIGN.md, preserving timing and movement while replacing the user's copy. Use for these source-backed examples or as a concrete pattern for a reusable motion design package.
 ---
 
+
+For source checkouts, fetch this optional Skill's reference films before materializing a profile: `git lfs pull --include="library/skills/openmotion-design-remix/**" --exclude=""` from the repository root. Complete bundles already contain the downloaded media.
 # OpenMotion · Motion Design Remix
 
 Make a new story from a motion language that already works. Choose the matching profile in `sources.json`, read its `references/<id>/MOTION_DESIGN.md`, then use the supplied source and preset. Keep the user's requested scope; the six examples are not a general video-analysis tool.
