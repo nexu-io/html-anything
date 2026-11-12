@@ -24,6 +24,8 @@ Studio 前端从上游 0.9.7 的固定 commit 迁入 `studio/src/` 并在本仓�
 
 工具所需的后台服务与编辑器启动分离：`ensureService` 以后台模式启动服务和渲染队列，不运行 `store.initialize` 或启动当前工程的 Studio。一期使用 `motion_create_project(projectType=template)` 创建选中模板工程；`motion_export_request` 携带明确 projectId、versionId、expectedRevision 和 requestId 固定快照，不启动 Studio。`motion_open_preview` 会通过同源的 `/motion-api/preview/open` 在同一个服务中启动编辑器。健康响应中 `ready` 表示服务可用，`editorReady` / `studioUrl` 表示编辑器已就绪；导出下载无需编辑器。正常直接启动开发服务器仍打开编辑器。
 
+Editor URL contract: application launch output, preview responses and project/template/session handoffs use the OpenMotion origin for `previewUrl` and `studioUrl`; project-specific URLs retain the requested project ID. An unstarted editor has no `studioUrl`. `/api/health` exposes the internal engine address only as `nativeStudioUrl` for diagnostics. The private Hyperframes child-process readiness protocol retains its upstream `studioUrl` field, which is consumed internally and must not become an application handoff. Preview discovery rebuilds application links from the verified OpenMotion endpoint even when a compatible older backend reports its native address as `studioUrl`. Existing running backends retain their installed HTTP behavior until they are separately updated and replaced while idle.
+
 这消除了服务自己初始化/补写 `data-hf-id` 造成的陈旧版本冲突，没有规范化或忽略 revision，也不自动重试为最新 revision。快照、切换工程和源文件写入原有的外部并发保护保留。
 
 写入链是 Agent 原生源文件 → 同一工程目录 → Studio 文件监听；人工编辑反向落在同一目录。旧 `shots[]` 仅保留在迁移读取代码中。内容 revision 覆盖源文件、媒体与上游的两份 Studio manifest，排除预览/缩略图缓存。进程间锁约束插件工具，不能把外部编辑器视为同一事务；版本拒绝可以保护读写间已经发生的改动，不能承诺与正在写盘的 Studio 完全串行。
