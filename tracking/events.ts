@@ -11,6 +11,12 @@ const exportSettings = { origin: ['header', 'export_panel', 'composition_card'],
   quality: ['draft', 'standard', 'high'], resolution: ['auto', '1080p', '4k'], fps: ['24', '30', '60', 'other'] } as const;
 // A template is identified by its catalogue id only; titles, authors and URLs are never fields.
 const template = { template_id: 'slug' } as const;
+// Template library browsing. Names follow the shared OpenMotion tracking sheet so website and editor funnels line up.
+const hosts = ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'] as const;
+const sortOrder = ['recommended', 'name', 'reverse'] as const;
+const templateDetail = { detail_view_id: 'uuid', detail_mode: ['modal'], resource_kind: ['reference', 'editable_project', 'motion_guide'],
+  instruction_kind: ['template_use', 'reference_recreate'] } as const;
+const templateList = { result_count: 'integer', search_id: 'uuid', sort: sortOrder, applied_filter_count: 'integer' } as const;
 const countBucket = ['0', '1_5', '6_20', '21_50', 'gt_50', 'unknown'] as const;
 const projectScale = { clip_count_bucket: countBucket, asset_count_bucket: countBucket,
   composition_count_bucket: ['1', '2_5', '6_20', 'gt_20', 'unknown'] } as const;
@@ -33,7 +39,8 @@ export const omEvents = {
   studio_load_result: { producers: ['studio'], fields: { load_id: 'uuid', outcome, duration_ms: 'integer', embedded: 'boolean', ...project, ...projectScale, ...template }, required: ['load_id', 'outcome', 'duration_ms', 'embedded'] },
   ui_click: { producers: ['studio'], fields: { page_name: ['home', 'studio'],
     area: ['workspace', 'templates', 'header', 'project_drawer', 'left_panel', 'right_panel', 'clips', 'assets', 'catalog',
-      'preview', 'properties', 'layers', 'timeline', 'export_panel'],
+      'preview', 'properties', 'layers', 'timeline', 'export_panel',
+      'template_card', 'template_detail', 'template_instruction', 'template_discovery'],
     element: ['new_creation', 'recent_session', 'select_template', 'copy_template',
       'export', 'template_library', 'open_project_drawer', 'new_project', 'switch_project', 'project_search', 'theme_toggle',
       'language_change', 'privacy_settings', 'usage_data_toggle',
@@ -43,15 +50,38 @@ export const omEvents = {
       'tool_select', 'tool_split', 'copy', 'snap_toggle', 'zoom_in', 'zoom_out', 'zoom_fit', 'zoom_selection', 'ruler_seek', 'fx_badge',
       'start_export', 'cancel_render', 'download_render', 'delete_render', 'ffmpeg_recheck', 'copy_install_command',
       'ask_agent_element', 'ask_agent_clip', 'ask_agent_time_range', 'ask_agent_playhead', 'ask_agent_catalog_item',
-      'preview_template', 'use_template', 'template_category', 'template_search'],
+      'preview_template', 'use_template', 'template_category', 'template_search',
+      'open_detail', 'start_use', 'copy_instruction', 'category_select', 'category_more', 'filter_open', 'filter_apply', 'filter_clear',
+      'filter_option', 'sort_option', 'download_guide', 'download_project', 'view_full_page'],
     // The chosen value of a control with a small fixed set of choices; never free text.
     option: ['on', 'off', 'light', 'dark', 'en', 'zh-CN', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr',
       'all', 'images', 'video', 'audio', 'fonts',
       'captions', 'code-animation', 'vfx', 'transitions', 'effects', 'text-effects', 'social', 'data', 'scenes',
       '0.25', '0.5', '1', '1.5', '2', 'featured', 'ads', 'clone', 'motion', 'script', 'other'],
-    interaction_method: ['pointer', 'keyboard'], ...project, ...template }, required: ['page_name', 'area', 'element'] },
-  template_instruction_copy_result: { producers: ['studio'], fields: { host_product: ['codex', 'claude', 'deepseek', 'chatgpt', 'mcp'], copy_status: ['clipboard_written', 'manual_fallback_shown', 'failed'],
-    page_name: ['home', 'studio'], ...project, ...template }, required: ['host_product', 'copy_status'] },
+    interaction_method: ['pointer', 'keyboard'], ...project, ...template,
+    placement: ['popular', 'catalog'], position: 'integer', template_action: ['recreate', 'open_edit'], target_agent: hosts,
+    copy_attempt_id: 'uuid', download_attempt_id: 'uuid',
+    filter_group: ['brand', 'uses', 'styles', 'industries', 'creationModels', 'colors', 'ratio', 'duration'], filter_value: 'slug',
+    selected: 'boolean', expanded: 'boolean', previous_sort: sortOrder, changed: 'boolean', ...templateDetail, ...templateList },
+    required: ['page_name', 'area', 'element'] },
+  // A surface that became visible: the library, a template card, one template's detail, or the instruction to copy.
+  // A card counts once it is at least half visible for a second, once per result set and placement.
+  surface_view: { producers: ['studio'], fields: { page_name: ['home', 'studio'], area: ['template_library', 'template_card', 'template_detail', 'template_instruction'],
+    element: ['library', 'card', 'detail', 'instruction'], placement: ['popular', 'catalog'], position: 'integer', ...templateList, ...templateDetail, ...project, ...template },
+    required: ['page_name', 'area', 'element'] },
+  // One per settled query, never per keystroke. `search_keyword` is the only free-text field in this registry.
+  template_search_result: { producers: ['studio'], fields: { page_name: ['home', 'studio'], area: ['template_discovery'],
+    search_keyword: 'text', query_length: 'integer', outcome: ['success', 'failure'], ...templateList, ...project },
+    required: ['search_id', 'query_length', 'result_count', 'outcome'] },
+  template_filter_result: { producers: ['studio'], fields: { page_name: ['home', 'studio'], area: ['template_discovery'],
+    action: ['category_select', 'filter_apply', 'filter_clear', 'sort_change'], outcome: ['success', 'failure'], ...templateList, ...project },
+    required: ['action', 'result_count', 'outcome'] },
+  // `browser_save_requested` means the save was handed to the browser; nothing confirms the file reached disk.
+  resource_download_result: { producers: ['studio'], fields: { page_name: ['home', 'studio'], resource_kind: ['motion_guide'], download_attempt_id: 'uuid',
+    delivery_status: ['browser_save_requested', 'fetch_failed', 'unknown'], error_code: 'code', detail_view_id: 'uuid', detail_mode: ['modal'], ...project, ...template },
+    required: ['resource_kind', 'download_attempt_id', 'delivery_status'] },
+  template_instruction_copy_result: { producers: ['studio'], fields: { host_product: hosts, copy_status: ['clipboard_written', 'manual_fallback_shown', 'failed'],
+    page_name: ['home', 'studio'], copy_attempt_id: 'uuid', ...templateDetail, ...project, ...template }, required: ['host_product', 'copy_status'] },
   // Studio UI exports run in the editor's own render pipeline, not the worker that owns export_result.
   studio_export_request_result: { producers: ['studio'], fields: { export_id: 'uuid', outcome: ['accepted', 'rejected'], ...exportSettings,
     error_code: ['FFMPEG_MISSING', 'SERVER_UNREACHABLE', 'SERVICE_UNAVAILABLE', 'REQUEST_REJECTED', 'SERVER_ERROR', 'INVALID_RESPONSE', 'RUNTIME_NOT_READY'], ...videoDuration, ...projectScale, ...project, ...template },

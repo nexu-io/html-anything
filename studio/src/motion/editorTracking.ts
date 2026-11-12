@@ -34,6 +34,9 @@ export function projectFields(projectId: string | null | undefined) {
   return { project_scope: projectId === 'project' ? 'default' : 'other' } as const;
 }
 
+/** Project context for reporters outside this module, falling back to the project the editor has open. */
+export const currentProjectFields = (projectId?: string | null) => projectFields(projectId ?? activeProjectId);
+
 export function trackStudioClick(area: Click['area'], element: Click['element'], projectId?: string | null, method?: InteractionMethod, option?: ClickOption, templateId?: string) {
   void trackMotion('ui_click', { page_name: 'studio', area, element, ...templateFields(templateId), ...(option ? { option } : {}), ...(method ? { interaction_method: method } : {}), ...projectFields(projectId ?? activeProjectId) });
 }

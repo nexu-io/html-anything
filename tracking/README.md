@@ -144,6 +144,22 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
   sent. Titles, authors and URLs are never fields. When the workspace catalogue
   records the template a project was created from, the same id is added to
   `studio_load_result` and both UI export events.
+- The editor's template library dialog (header **Template library**) reports with
+  the names of the shared OpenMotion tracking sheet, so its funnel lines up with
+  the website's: `surface_view` for the library, a template's detail and the
+  instruction to copy; `ui_click` areas `template_card`, `template_detail`,
+  `template_instruction` and `template_discovery`; `template_search_result`,
+  `template_filter_result` and `resource_download_result`. `detail_view_id`,
+  `copy_attempt_id`, `download_attempt_id` and `search_id` are random UUIDs that
+  tie a click to its result. A filter or category option is sent as a lowercase
+  slug of the catalogue value and omitted when it cannot be reduced to one.
+  `template_search_result.search_keyword` is the one free-text field in the
+  registry: the settled search-box value, trimmed and capped at 100 characters,
+  sent once per keyword 500 ms after typing stops and never per keystroke. A card
+  impression (`template_card` / `card`) is reported once the card has been at
+  least half visible for one second and is not covered by a dialog, once per
+  placement and per search, filter and sort combination, so click-through per
+  card can be read. Hover, scroll depth and video progress are not reported.
 - Editor events carry `project_scope`; `project_id` is sent only when the Studio
   project id is a UUID. The built-in local project (id `project`) reports
   `project_scope=default` and no id; names and titles are never sent.

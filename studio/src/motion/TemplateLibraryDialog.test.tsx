@@ -4,9 +4,11 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { I18nProvider, useI18n } from '../i18n/I18n';
 import { TemplateLibraryDialog } from './TemplateLibraryDialog';
-import { reportTemplateEvent } from './editorTracking';
+import { trackMotion } from './tracking';
+import { validProperties } from '../../../tracking/core.ts';
+import { studioEvents } from '../../../tracking/events.ts';
 
-vi.mock('./editorTracking', async original => ({ ...await original<typeof import('./editorTracking')>(), reportTemplateEvent: vi.fn() }));
+vi.mock('./tracking', () => ({ trackMotion: vi.fn(async () => 'queued') }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root, host: HTMLDivElement;
@@ -76,19 +78,144 @@ it('reloads template data when the editor language changes and clears language-s
   expect(host.querySelectorAll('[data-template-id]')).toHaveLength(3);
 });
 
-it('reports preview, facet, copy and open through the shared template reporter', async () => {
-  const reported = vi.mocked(reportTemplateEvent); reported.mockClear();
+const reported = () => vi.mocked(trackMotion).mock.calls.map(([event, properties]) => ({ event, ...(properties as Record<string, unknown>) }));
+const named = (element: string) => reported().filter(item => item.element === element);
+const input = (value: string) => { const box = host.querySelector<HTMLInputElement>('input[type=search]')!;
+  Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(box, value); box.dispatchEvent(new Event('input', { bubbles: true })); };
+
+it('reports the browse, use, copy and download funnel with the shared sheet names, and every event passes the registry', async () => {
+  vi.mocked(trackMotion).mockClear();
   await mount();
+  expect(reported()[0]).toMatchObject({ event: 'surface_view', area: 'template_library', element: 'library', result_count: 2, page_name: 'studio' });
+
   await act(async () => [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Figma'))!.click());
+  expect(named('category_select')[0]).toMatchObject({ event: 'ui_click', area: 'template_discovery', filter_group: 'brand', filter_value: 'figma', selected: true });
+  expect(reported().at(-1)).toMatchObject({ event: 'template_filter_result', action: 'category_select', result_count: 1, applied_filter_count: 1 });
+
   await act(async () => button('First').click());
+  const opened = named('open_detail')[0], shown = reported().find(item => item.element === 'detail')!;
+  expect(opened).toMatchObject({ area: 'template_card', template_id: 'one', placement: 'catalog', position: 1, resource_kind: 'editable_project' });
+  expect(shown).toMatchObject({ event: 'surface_view', area: 'template_detail', template_id: 'one', detail_mode: 'modal' });
+
   await act(async () => button('复刻模板').click());
+  expect(named('start_use')[0]).toMatchObject({ area: 'template_detail', template_action: 'recreate', detail_view_id: shown.detail_view_id });
+  expect(named('instruction')[0]).toMatchObject({ event: 'surface_view', area: 'template_instruction', instruction_kind: 'template_use' });
   await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=复制]')!.click());
+  const click = named('copy_instruction')[0], result = reported().find(item => item.event === 'template_instruction_copy_result')!;
+  expect(click).toMatchObject({ area: 'template_instruction', target_agent: 'codex', template_id: 'one' });
+  expect(result).toMatchObject({ copy_status: 'clipboard_written', host_product: 'codex', copy_attempt_id: click.copy_attempt_id, detail_view_id: shown.detail_view_id });
+
+  vi.stubGlobal('fetch', vi.fn(async () => new Response('', { status: 404 })));
+  await act(async () => button('下载 motion.md').click());
+  const download = named('download_guide')[0];
+  expect(reported().at(-1)).toMatchObject({ event: 'resource_download_result', delivery_status: 'fetch_failed', error_code: 'HTTP_404', download_attempt_id: download.download_attempt_id });
+
   await act(async () => button('打开并编辑 ↗').click());
-  expect(reported.mock.calls.map(([event]) => event)).toEqual([
-    { kind: 'category', category: 'brand' },
-    { kind: 'preview', templateId: 'one' },
-    { kind: 'copy_click', templateId: 'one' },
-    { kind: 'copy_result', templateId: 'one', host: 'codex', status: 'clipboard_written' },
-    { kind: 'use', templateId: 'one' },
-  ]);
+  expect(named('start_use')[1]).toMatchObject({ template_action: 'open_edit', resource_kind: 'editable_project' });
+  for (const { event, ...properties } of reported()) expect(validProperties(studioEvents, event, properties), JSON.stringify({ event, ...properties })).toBe(true);
+  // Titles, authors and brand display text never leave the browser; an option is reported as a lowercase id.
+  expect(JSON.stringify(reported())).not.toMatch(/First|Author|Figma/);
+});
+
+it('reports one search per settled keyword with the keyword and result count, plus sort and filter options', async () => {
+  vi.useFakeTimers();
+  try {
+    vi.mocked(trackMotion).mockClear();
+    await mount();
+    await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=搜索模板]')!.click());
+    for (const value of ['s', 'se', ' second ']) await act(async () => input(value));
+    expect(reported().some(item => item.event === 'template_search_result')).toBe(false);
+    await act(async () => { vi.advanceTimersByTime(500); });
+    const searches = () => reported().filter(item => item.event === 'template_search_result');
+    expect(searches()).toHaveLength(1);
+    expect(searches()[0]).toMatchObject({ search_keyword: 'second', query_length: 6, result_count: 1, outcome: 'success', area: 'template_discovery' });
+    await act(async () => input(' second'));
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(searches()).toHaveLength(1);
+    await act(async () => input('x'.repeat(150)));
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(searches()[1]).toMatchObject({ query_length: 150, result_count: 0 });
+    expect(String(searches()[1].search_keyword)).toHaveLength(100);
+    expect(searches()[1].search_id).not.toBe(searches()[0].search_id);
+    // Text beyond the reported 100 characters still makes a different search.
+    await act(async () => input('x'.repeat(150) + 'y'));
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(searches()).toHaveLength(3);
+    // Acting on results before typing settles reports the search first, so the click carries the current search id, not the previous one.
+    await act(async () => input('first'));
+    await act(async () => button('First').click());
+    expect(searches()).toHaveLength(4);
+    expect(searches()[3]).toMatchObject({ search_keyword: 'first', result_count: 1 });
+    expect(named('open_detail')[0].search_id).toBe(searches()[3].search_id);
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(searches()).toHaveLength(4);
+    await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=关闭模板预览]')?.click());
+    await act(async () => input('fir'));
+    expect(named('sort_option')).toHaveLength(0);
+    await act(async () => input(''));
+
+    const sort = host.querySelector<HTMLSelectElement>('select')!;
+    await act(async () => { sort.value = 'name'; sort.dispatchEvent(new Event('change', { bubbles: true })); });
+    expect(named('sort_option')[0]).toMatchObject({ sort: 'name', previous_sort: 'recommended', changed: true });
+    expect(reported().at(-1)).toMatchObject({ event: 'template_filter_result', action: 'sort_change', sort: 'name', result_count: 2 });
+    await act(async () => host.querySelector<HTMLInputElement>('fieldset input[type=checkbox]')!.click());
+    expect(named('filter_option')[0]).toMatchObject({ filter_group: 'brand', selected: true });
+    expect(reported().at(-1)).toMatchObject({ event: 'template_filter_result', action: 'filter_apply', applied_filter_count: 1 });
+    for (const { event, ...properties } of reported()) expect(validProperties(studioEvents, event, properties), JSON.stringify({ event, ...properties })).toBe(true);
+  } finally { vi.useRealTimers(); }
+});
+
+it('reports a card as seen once it stays half visible for a second, once per result set and never while a dialog covers it', async () => {
+  const observers: { callback: IntersectionObserverCallback; element?: Element }[] = [];
+  vi.stubGlobal('IntersectionObserver', class { constructor(public callback: IntersectionObserverCallback) { observers.push(this); }
+    element?: Element; observe(element: Element) { this.element = element; } disconnect() { this.element = undefined; } });
+  const cross = (id: string, ratio: number) => observers.filter(item => item.element?.getAttribute('data-template-id') === id)
+    .forEach(item => item.callback([{ isIntersecting: ratio > 0, intersectionRatio: ratio } as IntersectionObserverEntry], item as never));
+  const seen = () => reported().filter(item => item.element === 'card');
+  vi.useFakeTimers();
+  try {
+    vi.mocked(trackMotion).mockClear();
+    await mount();
+    await act(async () => cross('two', 0.6));
+    await act(async () => { vi.advanceTimersByTime(900); });
+    await act(async () => cross('two', 0.2));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen()).toHaveLength(0);
+    await act(async () => cross('two', 0.6));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen()).toHaveLength(1);
+    expect(seen()[0]).toMatchObject({ event: 'surface_view', area: 'template_card', template_id: 'two', placement: 'catalog', position: 1, sort: 'recommended', applied_filter_count: 0 });
+    await act(async () => cross('two', 0)); await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(2000); });
+    expect(seen()).toHaveLength(1);
+
+    // The same template in the popular row and in the list are two placements.
+    await act(async () => cross('one', 1));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen().slice(1).map(item => [item.template_id, item.placement, item.position])).toEqual([['one', 'popular', 1], ['one', 'catalog', 2]]);
+
+    // A new result set reports the card again; a card under an open detail dialog waits until it is uncovered.
+    const sort = host.querySelector<HTMLSelectElement>('select')!;
+    await act(async () => { sort.value = 'name'; sort.dispatchEvent(new Event('change', { bubbles: true })); });
+    await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(100); });
+    await act(async () => button('First').click());
+    await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    expect(seen().filter(item => item.sort === 'name')).toHaveLength(0);
+    // Uncovering starts a fresh second: the 100 ms before the dialog opened do not count.
+    await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=关闭模板预览]')!.click());
+    await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(950); });
+    expect(seen().filter(item => item.sort === 'name')).toHaveLength(0);
+    await act(async () => { vi.advanceTimersByTime(50); });
+    expect(seen().filter(item => item.sort === 'name').map(item => item.template_id)).toEqual(['two']);
+    // Choosing and clearing a filter returns to the same result set, so nothing is reported twice.
+    await act(async () => [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Other'))!.click());
+    await act(async () => [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Other'))!.click());
+    await act(async () => cross('two', 1));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen().filter(item => item.sort === 'name' && item.applied_filter_count === 0).map(item => item.template_id)).toEqual(['two']);
+    for (const { event, ...properties } of reported()) expect(validProperties(studioEvents, event, properties), JSON.stringify({ event, ...properties })).toBe(true);
+  } finally { vi.useRealTimers(); }
 });
