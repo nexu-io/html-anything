@@ -50,6 +50,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     operations = 0,
     navigationOpen = true,
     conversationOpen = true,
+    requestedEntry: string | undefined,
     flight = Promise.resolve();
   const run = (action: () => Promise<void>, next?: () => Promise<void>) => {
     if (busy || disposed) return;
@@ -84,8 +85,22 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
           focused.isConnected
         )
           focused.focus();
+        if (!disposed && requestedEntry !== undefined && !editor.unconfirmed) {
+          const target = requestedEntry;
+          requestedEntry = undefined;
+          run(() => editor.load(target || undefined));
+        }
       });
   };
+  const onEntry = () => {
+    requestedEntry = document.defaultView?.location.hash ?? "";
+    if (!busy && !editor.unconfirmed) {
+      const target = requestedEntry;
+      requestedEntry = undefined;
+      run(() => editor.load(target || undefined));
+    }
+  };
+  if (entry !== undefined) document.defaultView?.addEventListener("hashchange", onEntry);
   const synchronization = new WorkspaceSync(document, editor, run);
   shell.editor.prepend(synchronization.element);
   const observer = observeWorkspace(editor, {
@@ -373,6 +388,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     dispose(): Promise<void> {
       if (disposal) return disposal;
       disposed = true;
+      document.defaultView?.removeEventListener("hashchange", onEntry);
       disposal = (async () => {
         await observer.close();
         await flight;

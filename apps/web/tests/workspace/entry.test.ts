@@ -4,8 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { entryFragment, parseEntry } from "@open-motion/daemon/contract";
 import { Fault, type Input, initialFiles, type Operation, Workspace } from "@open-motion/workspace";
-import { expect, it } from "vitest";
-import { Client, Editor, type Transport } from "@";
+import { expect, it, vi } from "vitest";
+import { Client, Editor, mount, type Transport } from "@";
 
 it("enters only the exact owned revision/history, preserves drafts and confirms a lost entry without rewinding selection", async () => {
   const root = mkdtempSync(join(tmpdir(), "project-entry-")),
@@ -105,6 +105,90 @@ it("enters only the exact owned revision/history, preserves drafts and confirms 
     expect(db.execute("workspace_state", {}).selection.artifactId).toBe(newest.id);
     expect(entries.length).toBe(count + 1); // Only the structurally valid wrong-owner entry reached the server.
   } finally {
+    db.close();
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+it("handles same-page links after the original unknown entry settles and preserves dirty content", async () => {
+  const root = mkdtempSync(join(tmpdir(), "entry-navigation-")),
+    db = new Workspace(root),
+    original = location.href;
+  let lose = true;
+  const requests: Input<"artifact_enter">[] = [];
+  const transport: Transport = async (url, init) => {
+    if (String(url).endsWith("/preview/close")) return new Response("{}");
+    const op = String(url).split("/api/")[1] as Operation,
+      input = JSON.parse(String(init?.body));
+    let result: unknown;
+    try {
+      result = db.execute(op, input);
+    } catch (error) {
+      return new Response(
+        JSON.stringify({ error: { code: error instanceof Fault ? error.code : "invalid", message: String(error) } }),
+        { status: 409 },
+      );
+    }
+    if (op === "artifact_enter") {
+      requests.push(input);
+      if (lose) {
+        lose = false;
+        throw Error("lost entry response");
+      }
+    }
+    return new Response(JSON.stringify(result));
+  };
+  const session = db.execute("session_create", { requestId: randomUUID(), title: "Navigation", mode: "motion" });
+  const make = (title: string) => {
+    const artifact = db.execute("artifact_create", {
+      requestId: randomUUID(),
+      sessionId: session.id,
+      title,
+      files: initialFiles(),
+    });
+    const project = db.execute("project_read", { sessionId: session.id, artifactId: artifact.id });
+    return {
+      artifact,
+      fragment: entryFragment({
+        sessionId: session.id,
+        artifactId: artifact.id,
+        revision: project.revision,
+        historyVersion: project.history.version,
+      }),
+    };
+  };
+  const one = make("One"),
+    two = make("Two"),
+    view = mount(document.body, { daemon: "http://127.0.0.1:4100", token: "fixture", entry: "" }, transport);
+  const navigate = (fragment: string) => {
+    history.replaceState({}, "", fragment);
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  };
+  try {
+    await vi.waitFor(() => expect(view.editor.initialized).toBe(true));
+    navigate(one.fragment);
+    await vi.waitFor(() => expect(view.editor.unconfirmed).toBe(true));
+    navigate(two.fragment);
+    expect(requests).toHaveLength(1);
+    const retry = [...document.querySelectorAll("button")].find((button) => button.textContent === "重试");
+    expect(retry).toBeDefined();
+    retry?.click();
+    await vi.waitFor(() => expect(view.editor.project?.artifactId).toBe(two.artifact.id));
+    expect(requests).toHaveLength(3);
+    expect(requests[0]).toEqual(requests[1]);
+    expect(requests[2]?.artifactId).toBe(two.artifact.id);
+    view.editor.edit(view.editor.draft + "\n<!-- local draft -->");
+    navigate(one.fragment);
+    await vi.waitFor(() => expect(document.querySelector("[aria-live]")?.textContent).toContain("保存"));
+    expect(view.editor.project?.artifactId).toBe(two.artifact.id);
+    expect(view.editor.draft).toContain("local draft");
+    expect(requests).toHaveLength(3);
+    await view.dispose();
+    navigate(one.fragment);
+    expect(requests).toHaveLength(3);
+  } finally {
+    await view.dispose();
+    history.replaceState({}, "", original);
     db.close();
     rmSync(root, { recursive: true, force: true });
   }

@@ -85,6 +85,7 @@ export class Editor {
     this.initialized = true;
   }
   async load(fragment?: string) {
+    if (this.pending || this.refresh || this.archive) throw new Error("先确认尚未完成的操作，再进入工程");
     if (this.dirty || this.drafts?.dirty()) throw new Error("请先保存当前源文件，或明确放弃本地修改");
     if (fragment) {
       if (this.entry?.pending && this.entry.fragment !== fragment) throw new Error("confirm the pending entry first");
