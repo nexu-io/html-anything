@@ -92,9 +92,9 @@ sequenceDiagram
   E-->>S: 保存、历史、预览更新
 ```
 
-MCP 路径复用图中的 Gateway、任务和素材阶段。调用方通过 `motion_get_generation` 轮询，取得 `completed` 且文件可用的结果后，重新读取工程 revision，再通过原生源文件工具完成编排。两者的生成规则相同；MCP 源文件写入与 Studio 内的撤销栈属于不同入口，不能据此承诺所有外部写入都成为一条 Studio 撤销记录。
+MCP 路径复用图中的 Gateway、任务和素材阶段。调用方通过 `openmotion_get_generation` 轮询，取得 `completed` 且文件可用的结果后，重新读取工程 revision，再通过原生源文件工具完成编排。两者的生成规则相同；MCP 源文件写入与 Studio 内的撤销栈属于不同入口，不能据此承诺所有外部写入都成为一条 Studio 撤销记录。
 
-`motion_generate_asset` 会确保工作区服务启动，由 `server.ts` 的 worker 处理队列。HTTP 生成入口要求 Studio 服务已就绪。关闭生成面板本身不取消任务；关闭本地服务会影响执行。持久化让任务结果可被重新查询，但当前没有自动断点续传远端生成的语义。
+`openmotion_generate_asset` 会确保工作区服务启动，由 `server.ts` 的 worker 处理队列。HTTP 生成入口要求 Studio 服务已就绪。关闭生成面板本身不取消任务；关闭本地服务会影响执行。持久化让任务结果可被重新查询，但当前没有自动断点续传远端生成的语义。
 
 ### 两种“固定”保护不同问题
 

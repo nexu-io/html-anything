@@ -1,3 +1,4 @@
+import { packagedSkills } from '../shared/workflow.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -22,19 +23,19 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
       assert.equal(scope.mcpProfile, 'phase1');
       assert.equal(await readFile(path.join(output, host, 'openmotion/remix-icon-LICENSE.txt'), 'utf8'), await readFile(path.join(source, 'web/design-system/remix-icon-LICENSE.txt'), 'utf8'));
       const { readdir } = await import('node:fs/promises');
-      assert.deepEqual((await readdir(path.join(output, host, 'openmotion/skills'))).sort(), ['motion-director', 'motion-production', 'motion-recreate', 'motion-template-to-video', 'motion-video-to-template']);
-      for (const skill of ['motion-director', 'motion-template-to-video', 'motion-video-to-template']) {
+      assert.deepEqual((await readdir(path.join(output, host, 'openmotion/skills'))).sort(), [...packagedSkills].sort());
+      for (const skill of ['openmotion-director', 'openmotion-template-to-video', 'openmotion-video-to-template']) {
         assert.equal(await readFile(path.join(output, host, 'openmotion/skills', skill, 'SKILL.md'), 'utf8'), await readFile(path.join(source, 'skills', skill, 'SKILL.md'), 'utf8'));
       }
       for (const name of ['SKILL.md', 'references/rebuild.md', 'references/verify.md', 'scripts/measure_frame.mjs']) {
-        assert.equal(await readFile(path.join(output, host, 'openmotion/skills/motion-recreate', name), 'utf8'), await readFile(path.join(source, 'skills/motion-recreate', name), 'utf8'));
+        assert.equal(await readFile(path.join(output, host, 'openmotion/skills/openmotion-recreate', name), 'utf8'), await readFile(path.join(source, 'skills/openmotion-recreate', name), 'utf8'));
       }
     }
     for (const host of exported.hosts) assert.ok(existsSync(path.join(output, `openmotion-${host}-${exported.version}-local.zip`)));
     const launch = JSON.parse(await readFile(path.join(output, 'launch-spec.json'), 'utf8'));
     for (const host of ['codex', 'claude', 'workbuddy']) {
       const plugin = path.join(output, host, 'openmotion');
-      const config = JSON.parse(await readFile(path.join(plugin, host === 'workbuddy' ? 'mcp.json' : '.mcp.json'), 'utf8')).mcpServers.motion;
+      const config = JSON.parse(await readFile(path.join(plugin, host === 'workbuddy' ? 'mcp.json' : '.mcp.json'), 'utf8')).mcpServers.openmotion;
       assert.equal(config.command, launch.command); assert.deepEqual(config.args, launch.args);
       assert.equal(config.env.MOTION_DATA_DIR, data);
       const manifest = JSON.parse(await readFile(path.join(plugin, host === 'workbuddy' ? 'connector-meta.json' : `.${host}-plugin/plugin.json`), 'utf8'));
@@ -47,12 +48,12 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
         assert.deepEqual(config, launch);
         assert.equal(existsSync(path.join(plugin, '.workbuddy-plugin')), false);
       } else {
-        assert.equal(manifest.mcpServers, './.mcp.json'); assert.equal(manifest.name, 'motion');
+        assert.equal(manifest.mcpServers, './.mcp.json'); assert.equal(manifest.name, 'openmotion');
         assert.equal(manifest.description, sourceManifest.description, 'Thin plugins must preserve the runtime discovery description');
       }
       if (host === 'codex') {
         assert.equal(manifest.requires_local_executor, true);
-        assert.equal(manifest.interface.displayName, 'OpenDesign');
+        assert.equal(manifest.interface.displayName, 'OpenMotion');
         assert.equal(manifest.interface.shortDescription, sourceManifest.interface.shortDescription);
         for (const field of ['logo', 'logoDark', 'composerIcon', 'composerIconDark']) {
           const filename = manifest.interface[field];
@@ -65,10 +66,10 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
         }
         assert.deepEqual(config, launch);
         const marketplace = JSON.parse(await readFile(path.join(output, host, '.agents/plugins/marketplace.json'), 'utf8'));
-        assert.deepEqual(marketplace.plugins[0], { name: 'motion', source: { source: 'local', path: './openmotion' },
+        assert.deepEqual(marketplace.plugins[0], { name: 'openmotion', source: { source: 'local', path: './openmotion' },
           policy: { installation: 'AVAILABLE', authentication: 'ON_INSTALL' }, category: 'Productivity' });
       }
-      assert.equal(await readFile(path.join(plugin, 'skills/motion-production/SKILL.md'), 'utf8'), await readFile(path.join(source, 'skills/motion-production/SKILL.md'), 'utf8'));
+      assert.equal(await readFile(path.join(plugin, 'skills/openmotion-production/SKILL.md'), 'utf8'), await readFile(path.join(source, 'skills/openmotion-production/SKILL.md'), 'utf8'));
       for (const filename of ['AGENTS.md', 'CLAUDE.md', 'docs/README.md', 'docs/product/architecture.md']) {
         assert.equal(await readFile(path.join(plugin, filename), 'utf8'), await readFile(path.join(source, filename), 'utf8'));
       }
@@ -76,9 +77,9 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
       const child = spawnSync(config.command, config.args, { cwd: tmpdir(), env: { ...process.env, ...config.env }, encoding: 'utf8', timeout: 10_000,
         input: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' }) + '\n' });
       assert.equal(child.status, 0, child.stderr);
-      assert.ok(JSON.parse(child.stdout).result.tools.some(tool => tool.name === 'motion_export_request'));
+      assert.ok(JSON.parse(child.stdout).result.tools.some(tool => tool.name === 'openmotion_export_request'));
       assert.equal(JSON.parse(child.stdout).result.tools.length, 11);
-      assert.deepEqual((await (await import('node:fs/promises')).readdir(path.join(plugin, 'skills'))).sort(), ['motion-director', 'motion-production', 'motion-recreate', 'motion-template-to-video', 'motion-video-to-template']);
+      assert.deepEqual((await (await import('node:fs/promises')).readdir(path.join(plugin, 'skills'))).sort(), [...packagedSkills].sort());
     }
     assert.equal(existsSync(data), false, 'Export must not initialize a video project');
     const patch = await readFile(path.join(output, 'deepseek/openmotion/cordis.patch.yml'), 'utf8');
@@ -112,7 +113,7 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
     await cp(process.execPath, node);
     await mkdir(path.join(runtime, 'docs'));
     for (const name of ['AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(runtime, name), '# Fixture');
-    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/zip.mjs', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/template-locale.ts', 'shared/template-prompts.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'web/design-system/icons.svg', 'web/design-system/remix-icon-LICENSE.txt', 'web/design-system/remix-icon-NOTICE.txt']) {
+    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/zip.mjs', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/template-locale.ts', 'shared/template-prompts.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'shared/public-names.mjs', 'web/design-system/icons.svg', 'web/design-system/remix-icon-LICENSE.txt', 'web/design-system/remix-icon-NOTICE.txt']) {
       await mkdir(path.dirname(path.join(runtime, filename)), { recursive: true });
       await cp(path.join(source, filename), path.join(runtime, filename));
     }
@@ -124,10 +125,10 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
     assert.equal(exported.status, 0, exported.stderr);
     assert.equal(JSON.parse(exported.stdout).hosts.length, 4);
     const legacyManifest = JSON.parse(await readFile(path.join(output, 'codex/openmotion/.codex-plugin/plugin.json'), 'utf8'));
-    assert.equal(legacyManifest.description, 'OpenDesign Motion with the shared local MCP runtime.');
-    assert.equal(legacyManifest.interface.shortDescription, 'Motion production with the shared local runtime.');
+    assert.equal(legacyManifest.description, 'OpenMotion with the shared local MCP runtime.');
+    assert.equal(legacyManifest.interface.shortDescription, 'OpenMotion production with the shared local runtime.');
     for (const host of ['codex', 'claude', 'workbuddy']) {
-      const config = JSON.parse(await readFile(path.join(output, host, 'openmotion', host === 'workbuddy' ? 'mcp.json' : '.mcp.json'), 'utf8')).mcpServers.motion;
+      const config = JSON.parse(await readFile(path.join(output, host, 'openmotion', host === 'workbuddy' ? 'mcp.json' : '.mcp.json'), 'utf8')).mcpServers.openmotion;
       assert.equal(config.command, node);
       const child = spawnSync(config.command, config.args, { cwd: tmpdir(), env: { ...config.env, PATH: '/usr/bin:/bin' }, encoding: 'utf8', timeout: 5000 });
       assert.equal(child.status, 0, child.stderr);

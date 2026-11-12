@@ -2,7 +2,7 @@
 
 This page distinguishes three presenter-story design recipes with upstream reference/remix demos from six executable source remixes. The presenter recipes still need production with your material.
 
-Each of the six source pairs reuses pinned upstream source and changes its content while preserving the motion implementation. Left: original content. Right: the actual adaptation. These are editable-source remixes; upstream videos are not presented as OpenMotion-generated work. Excerpts are silent; timing and provenance are in [evidence.json](../library/skills/motion-design-remix/evidence.json).
+Each of the six source pairs reuses pinned upstream source and changes its content while preserving the motion implementation. Left: original content. Right: the actual adaptation. These are editable-source remixes; upstream videos are not presented as OpenMotion-generated work. Excerpts are silent; timing and provenance are in [evidence.json](../library/skills/openmotion-design-remix/evidence.json).
 
 
 <a id="presenter-motion"></a>
@@ -24,7 +24,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 **Reuse:** Numbered ideas, presenter-led delivery and proof cards. **Make it yours:** Creator, spoken topic, keywords and supporting examples.
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [Original](../library/skills/presenter-story/assets/careerwithriya-reference.mp4) · [Full upstream remix](../library/skills/presenter-story/assets/careerwithriya-result.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-presenter-story/references/presenter-listicle/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-presenter-story/SKILL.md) · [Original](../library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4) · [Full upstream remix](../library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4)
 
 #### Show the workflow while you tell the story
 
@@ -37,7 +37,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 **Reuse:** Presenter / screen rhythm, quiet captions and readable inserts. **Make it yours:** Your recording, your workflow and your screen captures.
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [Original](../library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [Full upstream remix](../library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-presenter-story/references/workflow-demo/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-presenter-story/SKILL.md) · [Original](../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4) · [Full upstream remix](../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4)
 
 #### Put the presenter and the product in one story
 
@@ -50,7 +50,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 **Reuse:** Hook, picture-in-picture, callouts and a visible result. **Make it yours:** Product, presenter, demonstration and closing message.
 
-[MOTION_DESIGN.md](../library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/presenter-story/SKILL.md) · [Original](../library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4) · [Full upstream remix](../library/skills/presenter-story/assets/john-tagudin-capso-result.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-presenter-story/references/product-walkthrough/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-presenter-story/SKILL.md) · [Original](../library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4) · [Full upstream remix](../library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4)
 
 > Use my camera and screen recordings with this structure. Keep my voice, edit around the actual speech and align captions. Use screenshots, picture-in-picture and motion to explain each point. Show a preview with sound, then deliver the editable project and MP4.
 
@@ -59,78 +59,78 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Portal timing, dimensional lettering and camera push.** **Replace: Title, subtitle and the 3D phrase.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [Content preset](../library/skills/motion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/motion-design-remix/previews/wireframe-portal-title.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-design-remix/SKILL.md) · [Content preset](../library/skills/openmotion-design-remix/presets/wireframe-portal-title.json) · [MP4](../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4)
 
 ### Canopy typography · Understory → OpenMotion
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/openmotion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Leaf sweeps, depth, occlusion and reading holds.** **Replace: Two brand headlines.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [Content preset](../library/skills/motion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/motion-design-remix/previews/canopy-part-title.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-design-remix/references/canopy-part-title/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-design-remix/SKILL.md) · [Content preset](../library/skills/openmotion-design-remix/presets/canopy-part-title.json) · [MP4](../library/skills/openmotion-design-remix/previews/canopy-part-title.mp4)
 
 ### Interface reveal · Product tour → AI editing story
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Tilted canvas, depth hierarchy and continuous camera.** **Replace: Hero headline, document and community copy.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [Content preset](../library/skills/motion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/motion-design-remix/previews/ui-3d-reveal.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-design-remix/SKILL.md) · [Content preset](../library/skills/openmotion-design-remix/presets/ui-3d-reveal.json) · [MP4](../library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4)
 
 ### Dimensional code · loadConfig() → cutVideo()
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/openmotion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Extruded slab, syntax colors and the camera move.** **Replace: Function, variables and displayed calls.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [Content preset](../library/skills/motion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/motion-design-remix/previews/code-3d-extrude.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-design-remix/SKILL.md) · [Content preset](../library/skills/openmotion-design-remix/presets/code-3d-extrude.json) · [MP4](../library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4)
 
 ### Particle assembly · parse / optimize / emit → select / trim / render
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/openmotion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Seeded particle motion and assembly rhythm.** **Replace: Pipeline name and steps.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [Content preset](../library/skills/motion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/motion-design-remix/previews/code-particle-assemble.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-design-remix/SKILL.md) · [Content preset](../library/skills/openmotion-design-remix/presets/code-particle-assemble.json) · [MP4](../library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4)
 
 ### Glass information cards · Device widgets → creator workspace
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Glass treatment, card hierarchy, stagger and meters.** **Replace: Labels, units and feature story.**
 
-[MOTION_DESIGN.md](../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/motion-design-remix/SKILL.md) · [Content preset](../library/skills/motion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4)
+[MOTION_DESIGN.md](../library/skills/openmotion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md) · [Skill](../library/skills/openmotion-design-remix/SKILL.md) · [Content preset](../library/skills/openmotion-design-remix/presets/liquid-glass-widgets.json) · [MP4](../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4)
 
 ## Reuse the package
 
-Read the [Skill](../library/skills/motion-design-remix/SKILL.md), select a profile, copy its preset outside the package and change the values for your brief. Materialize a new project. Each profile’s Motion MD records its invariants, material requirements and review points.
+Read the [Skill](../library/skills/openmotion-design-remix/SKILL.md), select a profile, copy its preset outside the package and change the values for your brief. Materialize a new project. Each profile’s Motion MD records its invariants, material requirements and review points.
 
 ```sh
-cd library/skills/motion-design-remix
+cd library/skills/openmotion-design-remix
 node scripts/materialize.mjs wireframe-portal-title remix /tmp/my-portal
 ```
 
-The interface examples retain some upstream brand artwork and are not current OpenMotion screenshots. Code and counters are illustrative, not product APIs or business metrics. See [NOTICE](../library/skills/motion-design-remix/NOTICE.md) for runtime dependencies and licensing.
+The interface examples retain some upstream brand artwork and are not current OpenMotion screenshots. Code and counters are illustrative, not product APIs or business metrics. See [NOTICE](../library/skills/openmotion-design-remix/NOTICE.md) for runtime dependencies and licensing.
 
 ## Relationship to existing repository examples
 

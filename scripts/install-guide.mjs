@@ -18,7 +18,7 @@ export function validateGuideIdentity(pkg, manifest) {
   assert.equal(pkg.version, manifest.version, 'Package and embedded manifest versions differ');
   assert.equal(manifest.schemaVersion, 1, 'Unsupported release manifest');
   assert.equal(manifest.templateEnvironment, releaseTemplateEnvironment(pkg.version), 'Template defaults must match the release channel');
-  assert.equal(pkg.bin?.openmotion, 'scripts/npm-installer.mjs', 'Missing Motion entry point');
+  assert.equal(pkg.bin?.openmotion, 'scripts/npm-installer.mjs', 'Missing OpenMotion entry point');
   assert.match(manifest.commit || '', /^[a-f0-9]{40}$/, 'Require the built source SHA');
   for (const hash of [manifest.application?.sha256, manifest.locks?.npm, manifest.locks?.native]) assert.match(hash || '', /^[a-f0-9]{64}$/, 'Require release checksums');
   const targets = Object.values(manifest.runtime?.targets || {});

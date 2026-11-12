@@ -81,7 +81,7 @@ test('legacy MCP preserves shipped source statistics for the selected ID', async
   try {
     const store = new WorkspaceStore(directory), request = transport(store);
     const snapshot = JSON.parse(await readFile(new URL('../web/catalog/metadata.json', import.meta.url), 'utf8'));
-    const detail = await callTool('motion_get_template', { templateId: 'hf-moment-M953' }, store) as ReturnType<typeof getTemplate>;
+    const detail = await callTool('openmotion_get_template', { templateId: 'hf-moment-M953' }, store) as ReturnType<typeof getTemplate>;
     assert.equal(detail.social!.views, snapshot.entries.find(entry => entry.id === 'hf-moment-M953').views);
     assert.equal(detail.authorName, 'Leon Fucak'); assert.equal(detail.role, 'hook');
   } finally { await rm(directory, { recursive: true, force: true }); }

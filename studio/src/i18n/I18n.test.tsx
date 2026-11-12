@@ -94,6 +94,7 @@ it('restores and synchronizes every supported preference without replacing edito
     act(() => host.querySelector<HTMLButtonElement>(`[data-locale="${locale}"]`)!.click());
     expect(readLocale()).toBe(locale);
     expect(document.documentElement.lang).toBe(locale);
+    expect(document.title).toBe(translate(locale, 'OpenMotion Studio'));
     expect(host.querySelector('h1')?.textContent).toBe(translate(locale, 'Preview'));
     expect(host.querySelector('input')).toBe(input);
     expect(host.querySelector('iframe')).toBe(preview);

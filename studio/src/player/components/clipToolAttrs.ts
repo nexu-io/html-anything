@@ -3,6 +3,7 @@
  * Pure over strings so the menu, the badges and an agent's hand edits all agree.
  */
 
+import type { Translate } from "../../i18n/messages";
 import {
   getAudioFxDef,
   parseAudioFxChain,
@@ -158,33 +159,33 @@ export function clipVolumeBadge(state: ClipToolState): string | null {
   return `${Math.round(volume * 100)}%`;
 }
 
-function lookEffect(rawGrading: string | null): string | null {
+function lookEffect(rawGrading: string | null, t: Translate): string | null {
   const grading = normalizeHfColorGrading(parseJson(rawGrading));
   if (!grading) return null;
   const label = lookLabel(grading.preset ?? null);
-  return label ? `Look: ${label}` : "Look";
+  return label ? t("Look: {name}", { name: t(label) }) : t("Look");
 }
 
-function presetEffect(presetId: string): string {
+function presetEffect(presetId: string, t: Translate): string {
   const voice = voicePresetLabel(presetId);
-  return voice ? `Voice: ${voice}` : (getAudioFxPreset(presetId)?.label ?? presetId);
+  return voice ? t("Voice: {name}", { name: t(voice) }) : t(getAudioFxPreset(presetId)?.label ?? presetId);
 }
 
-function chainNodeEffect(node: HfAudioFxNode): string | null {
+function chainNodeEffect(node: HfAudioFxNode, t: Translate): string | null {
   if (node.enabled === false || node.fromCarve) return null;
-  if (node.fromPreset) return presetEffect(node.fromPreset);
+  if (node.fromPreset) return presetEffect(node.fromPreset, t);
   if (node.fromEq) return "EQ";
-  if (node.fromLeveller) return "Leveller";
-  return node.label ?? getAudioFxDef(node.type)?.label ?? node.type;
+  if (node.fromLeveller) return t("Leveller");
+  return node.label ?? t(getAudioFxDef(node.type)?.label ?? node.type);
 }
 
 /** Every effect on the clip, in the fx badge tooltip's order; empty means a grey badge. */
-export function readClipEffects(state: ClipToolState): string[] {
+export function readClipEffects(state: ClipToolState, t: Translate): string[] {
   const effects: Array<string | null> = [
-    lookEffect(state.colorGrading),
-    ...parseChainOrEmpty(state.fxChain).nodes.map(chainNodeEffect),
-    hasCrop(state.clipPath) ? "Crop" : null,
-    isDucked(state.carve) ? "Ducked" : null,
+    lookEffect(state.colorGrading, t),
+    ...parseChainOrEmpty(state.fxChain).nodes.map((node) => chainNodeEffect(node, t)),
+    hasCrop(state.clipPath) ? t("Crop") : null,
+    isDucked(state.carve) ? t("Ducked") : null,
   ];
   return [...new Set(effects.filter((effect): effect is string => effect !== null))];
 }

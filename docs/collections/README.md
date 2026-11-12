@@ -44,9 +44,9 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <sub>Editable template · <a href="../../template-library/product-promo/index.html">HTML</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="../../library/skills/motion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="../readme/gallery/ui-3d-reveal.gif" width="300" alt="Animated catalog preview: 3D UI Reveal"></picture></a><br>
+<a href="../../library/skills/openmotion-design-remix/assets/ui-3d-reveal/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/c13d0082838675f088ecadcd.jpg"><img src="../readme/gallery/ui-3d-reveal.gif" width="300" alt="Animated catalog preview: 3D UI Reveal"></picture></a><br>
 <strong>3D UI Reveal</strong><br>
-<sub>Component · <a href="../../library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">View component</a></sub>
+<sub>Component · <a href="../../library/skills/openmotion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">View component</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">🚀 Brand & launch films</th></tr>
@@ -75,14 +75,14 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <sub>Component · <a href="../../library/components/showcase/README.md">View component</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="../../library/skills/motion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="../readme/gallery/canopy-title.gif" width="300" alt="Animated catalog preview: Canopy Part Title"></picture></a><br>
+<a href="../../library/skills/openmotion-design-remix/assets/canopy-part-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/998dd6bb8358592c15f727d6.jpg"><img src="../readme/gallery/canopy-title.gif" width="300" alt="Animated catalog preview: Canopy Part Title"></picture></a><br>
 <strong>Canopy Part Title</strong><br>
-<sub>Component · <a href="../../library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">View component</a></sub>
+<sub>Component · <a href="../../library/skills/openmotion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">View component</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="../../library/skills/motion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="../readme/gallery/wireframe-title.gif" width="300" alt="Animated catalog preview: Wireframe Portal Title"></picture></a><br>
+<a href="../../library/skills/openmotion-design-remix/assets/wireframe-portal-title/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/4d03231a69d147a38f993578.jpg"><img src="../readme/gallery/wireframe-title.gif" width="300" alt="Animated catalog preview: Wireframe Portal Title"></picture></a><br>
 <strong>Wireframe Portal Title</strong><br>
-<sub>Component · <a href="../../library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">View component</a></sub>
+<sub>Component · <a href="../../library/skills/openmotion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">View component</a></sub>
 </td>
 </tr>
 <tr><th colspan="3" align="left">💎 Light, glass & 3D worlds</th></tr>
@@ -93,9 +93,9 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <sub>Reference · @world_is_web</sub>
 </td>
 <td width="33%" valign="top">
-<a href="../../library/skills/motion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="../readme/gallery/liquid-glass-widgets.gif" width="300" alt="Animated catalog preview: Liquid Glass Widgets"></picture></a><br>
+<a href="../../library/skills/openmotion-design-remix/assets/liquid-glass-widgets/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/553a1464d8037293b7debca8.jpg"><img src="../readme/gallery/liquid-glass-widgets.gif" width="300" alt="Animated catalog preview: Liquid Glass Widgets"></picture></a><br>
 <strong>Liquid Glass Widgets</strong><br>
-<sub>Component · <a href="../../library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">View component</a></sub>
+<sub>Component · <a href="../../library/skills/openmotion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">View component</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="../readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="../readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
@@ -106,9 +106,9 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <tr><th colspan="3" align="left">🧭 Depth & camera motion</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="../../library/skills/motion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="../readme/gallery/code-3d.gif" width="300" alt="Animated catalog preview: Code 3D Extrude"></picture></a><br>
+<a href="../../library/skills/openmotion-design-remix/assets/code-3d-extrude/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/0a5c7158bbecd6e47055bef9.jpg"><img src="../readme/gallery/code-3d.gif" width="300" alt="Animated catalog preview: Code 3D Extrude"></picture></a><br>
 <strong>Code 3D Extrude</strong><br>
-<sub>Component · <a href="../../library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">View component</a></sub>
+<sub>Component · <a href="../../library/skills/openmotion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">View component</a></sub>
 </td>
 <td width="33%" valign="top">
 <a href="../readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="../readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
@@ -134,9 +134,9 @@ Open these examples from **Studio → Templates → Ready to edit**. Their nativ
 <sub>Reference · @linear</sub>
 </td>
 <td width="33%" valign="top">
-<a href="../../library/skills/motion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="../readme/gallery/code-particles.gif" width="300" alt="Animated catalog preview: Code Particle Assemble"></picture></a><br>
+<a href="../../library/skills/openmotion-design-remix/assets/code-particle-assemble/reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../../web/catalog/covers/8ff121deb9403f7a99ac52b3.jpg"><img src="../readme/gallery/code-particles.gif" width="300" alt="Animated catalog preview: Code Particle Assemble"></picture></a><br>
 <strong>Code Particle Assemble</strong><br>
-<sub>Component · <a href="../../library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">View component</a></sub>
+<sub>Component · <a href="../../library/skills/openmotion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">View component</a></sub>
 </td>
 </tr>
 </table>

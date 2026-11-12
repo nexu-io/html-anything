@@ -1157,7 +1157,7 @@
   "{count} effects": "효과 {count}개",
   "{count} elements": "요소 {count}개",
   "{start} to {end}": "{start}~{end}",
-  "OpenMotion Studio": "오픈모션 스튜디오",
+  "OpenMotion Studio": "OpenMotion 스튜디오",
   "MCP connection · Templates": "MCP 액세스 · 템플릿",
   "Search templates, creators, styles…": "템플릿, 작성자, 스타일 검색…",
   "View all templates": "모든 템플릿 보기",
@@ -1773,5 +1773,9 @@
   "Failed to add media": "미디어를 추가하지 못했습니다",
   "Could not read media duration. Try adding the file again.": "미디어 길이를 읽을 수 없습니다. 파일을 다시 추가해 주세요.",
   "Loading fonts…": "글꼴 로딩 중…",
-  "Couldn't load local fonts.": "로컬 글꼴을 불러오지 못했습니다."
+  "Couldn't load local fonts.": "로컬 글꼴을 불러오지 못했습니다.",
+  "Create videos with OpenMotion, right in {host}.": "{host}에서 바로 OpenMotion을 사용하여 비디오를 제작하세요.",
+  "Back to the OpenMotion editor": "OpenMotion 편집기로 돌아가기",
+  "Workspace unavailable. Check that the OpenMotion service is running.": "작업 공간을 사용할 수 없습니다. OpenMotion 서비스가 실행 중인지 확인하세요.",
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "연결 구성이 잘못되었습니다. OpenMotion 서비스를 업데이트하거나 다시 시작하십시오."
 }

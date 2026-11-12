@@ -60,7 +60,7 @@ Edit around the speaker’s voice, with captions and screen inserts that follow 
 <tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture></a><br>
 <strong>6 essential skills to transform your career</strong><br>
 Numbered points + kinetic keywords<br>
 <sub>Reference · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
@@ -81,13 +81,13 @@ A personal lesson + readable captions<br>
 <tr><th colspan="3" align="left">🖥️ Show the workflow</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
 <strong>5 tools I use every day</strong><br>
 Desk-side story + workflow inserts<br>
 <sub>Reference · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
 <strong>Tool demo with callouts</strong><br>
 Presenter + screens + callouts<br>
 <sub>Reference · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
@@ -123,22 +123,22 @@ Product tutorial + live demonstration<br>
 <tr><th colspan="3" align="left">Original → external adaptation</th></tr>
 <tr>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
 <strong>Career advice → video-production explainer</strong><br>
 Numbered ideas and proof cards follow the new presenter’s explanation.<br>
-<sub><a href="library/skills/presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/careerwithriya-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/careerwithriya-result.mp4">Full adaptation</a></sub>
+<sub><a href="library/skills/openmotion-presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4">Original</a> · <a href="library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4">Full adaptation</a></sub>
 </td>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
 <strong>Everyday tools → a design-workspace story</strong><br>
 Screen inserts follow the speaker through a different workflow.<br>
-<sub><a href="library/skills/presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/ali-abdaal-workflow-result.mp4">Full adaptation</a></sub>
+<sub><a href="library/skills/openmotion-presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4">Original</a> · <a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4">Full adaptation</a></sub>
 </td>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
 <strong>Tool demo → video-editor walkthrough</strong><br>
 Picture-in-picture and callouts turn a tool demo into an editing walkthrough.<br>
-<sub><a href="library/skills/presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/presenter-story/SKILL.md">Skill</a> · <a href="library/skills/presenter-story/assets/john-tagudin-capso-reference.mp4">Original</a> · <a href="library/skills/presenter-story/assets/john-tagudin-capso-result.mp4">Full adaptation</a></sub>
+<sub><a href="library/skills/openmotion-presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4">Original</a> · <a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4">Full adaptation</a></sub>
 </td>
 </tr>
 </table>
@@ -235,44 +235,44 @@ The cursor types on a film slate. A warm flash carries the last keystroke into t
 <tr><th colspan="2" align="left">Editable studies · original and adaptation from the same project</th></tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/motion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/openmotion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Wireframe portal · BREAKTHROUGH → OPENMOTION</strong><br>
 Keep: Portal timing, dimensional lettering and camera push. Replace: Title, subtitle and the 3D phrase.<br>
-<sub><a href="library/skills/motion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/wireframe-portal-title.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/wireframe-portal-title.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/motion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/openmotion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Canopy typography · Understory → OpenMotion</strong><br>
 Keep: Leaf sweeps, depth, occlusion and reading holds. Replace: Two brand headlines.<br>
-<sub><a href="library/skills/motion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/canopy-part-title.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/canopy-part-title.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
 </td>
 </tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/motion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/openmotion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Interface reveal · Product tour → AI editing story</strong><br>
 Keep: Tilted canvas, depth hierarchy and continuous camera. Replace: Hero headline, document and community copy.<br>
-<sub><a href="library/skills/motion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/ui-3d-reveal.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/ui-3d-reveal.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/motion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/openmotion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Dimensional code · loadConfig() → cutVideo()</strong><br>
 Keep: Extruded slab, syntax colors and the camera move. Replace: Function, variables and displayed calls.<br>
-<sub><a href="library/skills/motion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/code-3d-extrude.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/code-3d-extrude.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
 </td>
 </tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/motion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/openmotion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Particle assembly · parse / optimize / emit → select / trim / render</strong><br>
 Keep: Seeded particle motion and assembly rhythm. Replace: Pipeline name and steps.<br>
-<sub><a href="library/skills/motion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/code-particle-assemble.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/code-particle-assemble.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/motion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/motion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Glass information cards · Device widgets → creator workspace</strong><br>
 Keep: Glass treatment, card hierarchy, stagger and meters. Replace: Labels, units and feature story.<br>
-<sub><a href="library/skills/motion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/motion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/motion-design-remix/presets/liquid-glass-widgets.json">Content preset</a> · <a href="library/skills/motion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
+<sub><a href="library/skills/openmotion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/liquid-glass-widgets.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
 </td>
 </tr>
 </table>
@@ -340,7 +340,7 @@ The rotating field becomes a vinyl record; the title lands on its sleeve.<br>
 
 ![Your local agent, optional media-model accounts and creative resources feed a workflow of understanding the reference, coding scenes, generating missing media, editing and rendering MP4 with reusable source.](docs/readme/diagrams/creation-stack.svg)
 
-**Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#agent-setup) · [Native composition guide](skills/motion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
+**Write it. Watch it. Change it. Render it.** Ask your agent to replace the product, tighten the hook, add a presenter, change the captions or try another ending. It edits the project source; you review the result in the visual editor. Local MCP clients use the project tools, while agents with shell access can follow the Skills and pinned CLI workflow. [Agent setup](#agent-setup) · [Native composition guide](skills/openmotion-production/references/native.md) · [Example HTML project](template-library/product-promo/index.html)
 
 #### What you can change in Studio
 
@@ -428,9 +428,9 @@ Explore **42 full-length reference films and 393 motion clips** for shot timing 
 
 | What you want to do | Where to start |
 | --- | --- |
-| Give your agent a production workflow | [Five core Skills](docs/skills.md) cover direction, recreation, template adaptation, template creation and editing through export. [Motion Design Remix](library/skills/motion-design-remix/SKILL.md) includes six editable studies. [Presenter Story](library/skills/presenter-story/SKILL.md) has three recipes for speech-led videos. |
+| Give your agent a production workflow | [Five core Skills](docs/skills.md) cover direction, recreation, template adaptation, template creation and editing through export. [Motion Design Remix](library/skills/openmotion-design-remix/SKILL.md) includes six editable studies. [Presenter Story](library/skills/openmotion-presenter-story/SKILL.md) has three recipes for speech-led videos. |
 | Reuse a title, transition or interface reveal | [Motion components](library/components/README.md) include source and timing notes. Try the [title reveal](library/components/title-reveal/README.md) with your own copy and entrance timing. |
-| Give your agent brand and motion rules | Use the [Brandkit Skill](library/skills/brandkit/SKILL.md) to collect [logos, voice and product facts](library/brandkits/openmotion/BRANDKIT.md) for the Brand Kit section of Motion.md. [Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) shows how to write a reusable visual and motion style. |
+| Give your agent brand and motion rules | Use the [Brandkit Skill](library/skills/openmotion-brandkit/SKILL.md) to collect [logos, voice and product facts](library/brandkits/openmotion/BRANDKIT.md) for the Brand Kit section of Motion.md. [Ink & Water](library/design-systems/ink-water/MOTION_DESIGN.md) shows how to write a reusable visual and motion style. |
 
 ##### Editable Studio templates
 
@@ -602,22 +602,22 @@ From the checkout, discover and install the five core workflows with the [Skills
 
 ```sh
 npx skills add ./skills --list
-npx skills add ./skills --skill motion-director motion-production motion-template-to-video motion-recreate motion-video-to-template
+npx skills add ./skills --skill openmotion-director openmotion-production openmotion-template-to-video openmotion-recreate openmotion-video-to-template
 ```
 
 This copies instructions; it does not install the runtime or register MCP. Keep the shared documentation available and connect the app separately, or use the integrated local installer above.
 
 | Skill | Use it for |
 | --- | --- |
-| [motion-recreate](skills/motion-recreate/SKILL.md) | Reconstructing a reference video and comparing the result |
-| [motion-template-to-video](skills/motion-template-to-video/SKILL.md) | Adapting an existing editable template |
-| [motion-director](skills/motion-director/SKILL.md) | Original films, narrative, movement, sound and creative review |
-| [motion-video-to-template](skills/motion-video-to-template/SKILL.md) | Producing a portable reusable template |
-| [motion-production](skills/motion-production/SKILL.md) | Scoped edits, preview, checks, troubleshooting and export |
+| [openmotion-recreate](skills/openmotion-recreate/SKILL.md) | Reconstructing a reference video and comparing the result |
+| [openmotion-template-to-video](skills/openmotion-template-to-video/SKILL.md) | Adapting an existing editable template |
+| [openmotion-director](skills/openmotion-director/SKILL.md) | Original films, narrative, movement, sound and creative review |
+| [openmotion-video-to-template](skills/openmotion-video-to-template/SKILL.md) | Producing a portable reusable template |
+| [openmotion-production](skills/openmotion-production/SKILL.md) | Scoped edits, preview, checks, troubleshooting and export |
 
 <a id="local-agent-connection"></a>
 
-**Connect a local agent** · Open **Connect Agent** in Studio to copy the launch command for your workspace. Use the configuration below in clients with local stdio MCP support. In a shell-based agent, open the project directory and use the [local engine CLI](skills/motion-production/references/native.md) to preview and render the HTML scenes.
+**Connect a local agent** · Open **Connect Agent** in Studio to copy the launch command for your workspace. Use the configuration below in clients with local stdio MCP support. In a shell-based agent, open the project directory and use the [local engine CLI](skills/openmotion-production/references/native.md) to preview and render the HTML scenes.
 
 <a id="manual-mcp"></a>
 
@@ -635,9 +635,9 @@ This copies instructions; it does not install the runtime or register MCP. Keep 
 
 The **eleven public MCP tools** cover template discovery and details, project creation and reading, editing, preview, media import, export, version restoration and cancellation. Shared workflow and engine guides are available through MCP resources. [Tool contract](docs/mcp-phase1-tools.md)
 
-Find a template with `motion_list_templates`, inspect it with `motion_get_template`, then create an editable copy with `motion_create_project`. [Template catalog](docs/template-catalog.md)
+Find a template with `openmotion_list_templates`, inspect it with `openmotion_get_template`, then create an editable copy with `openmotion_create_project`. [Template catalog](docs/template-catalog.md)
 
-Use `npm start` for the app and `npm run mcp` for stdio. Shell-capable agents can inspect and render with the pinned engine CLI returned by the runtime; managed edits retain project revision checks. [Native authoring](skills/motion-production/references/native.md)
+Use `npm start` for the app and `npm run mcp` for stdio. Shell-capable agents can inspect and render with the pinned engine CLI returned by the runtime; managed edits retain project revision checks. [Native authoring](skills/openmotion-production/references/native.md)
 
 <a id="your-agent-your-studio"></a>
 
@@ -653,7 +653,7 @@ Use `npm start` for the app and `npm run mcp` for stdio. Shell-capable agents ca
 | **Typography and identity** — type hierarchy, color and composition | Your fonts, palette and words, recorded in Motion.md’s Brand Kit section |
 | **Sound and rhythm** — speech timing, music cues and emphasis | Your voice, supplied music and sound direction |
 
-Supply the clip and timecodes if your agent cannot open the social link. Start from the reference with the [recreation workflow](skills/motion-recreate/SKILL.md), or use the [template workflow](skills/motion-template-to-video/SKILL.md) when you already have editable source.
+Supply the clip and timecodes if your agent cannot open the social link. Start from the reference with the [recreation workflow](skills/openmotion-recreate/SKILL.md), or use the [template workflow](skills/openmotion-template-to-video/SKILL.md) when you already have editable source.
 
 ```text
 Use OpenMotion to reverse-engineer the attached reference for our brand.

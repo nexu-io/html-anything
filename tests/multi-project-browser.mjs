@@ -20,9 +20,9 @@ try {
   await Promise.all(clients.map(client => client.initialize()));
   const projects = [];
   for (const [i, label] of ['PROJECT A', 'PROJECT B'].entries()) {
-    const created = await clients[i].call('motion_create_project', { requestId: 'create-' + i, projectType: 'natural_language', title: label, requirements: label });
-    await clients[i].call('motion_edit_project', { projectId: created.projectId, requestId: 'write-' + i, expectedRevision: created.revision, expectedVersionId: created.currentVersionId, files: [{ path: 'index.html', content: film(label, i + 1) }] });
-    projects.push(await clients[i].call('motion_open_preview', { projectId: created.projectId }));
+    const created = await clients[i].call('openmotion_create_project', { requestId: 'create-' + i, projectType: 'natural_language', title: label, requirements: label });
+    await clients[i].call('openmotion_edit_project', { projectId: created.projectId, requestId: 'write-' + i, expectedRevision: created.revision, expectedVersionId: created.currentVersionId, files: [{ path: 'index.html', content: film(label, i + 1) }] });
+    projects.push(await clients[i].call('openmotion_open_preview', { projectId: created.projectId }));
   }
   const identities = await Promise.all(projects.map(async project => (await fetch(new URL('/__hyperframes_config?projectId=' + project.projectId, project.previewUrl))).json()));
   assert.equal(identities[0].pid, identities[1].pid);
@@ -61,11 +61,11 @@ try {
   await new Promise(resolve => setTimeout(resolve, 2400));
   for (const [i, page] of pages.entries()) assert.equal(new URL(page.url()).searchParams.get('project'), projects[i].projectId);
   check('two live previews and timelines retain their own project after global selection and status polling');
-  const currentA = await clients[0].call('motion_get_project', { projectId: projects[0].projectId });
-  await clients[0].call('motion_edit_project', { projectId: projects[0].projectId, requestId: 'update-a', expectedRevision: currentA.revision, expectedVersionId: currentA.currentVersionId, files: [{ path: 'index.html', content: film('PROJECT A UPDATED', 1) }] });
+  const currentA = await clients[0].call('openmotion_get_project', { projectId: projects[0].projectId });
+  await clients[0].call('openmotion_edit_project', { projectId: projects[0].projectId, requestId: 'update-a', expectedRevision: currentA.revision, expectedVersionId: currentA.currentVersionId, files: [{ path: 'index.html', content: film('PROJECT A UPDATED', 1) }] });
   await waitForFilm(pages[0], projects[0].projectId, 'PROJECT A UPDATED');
   await waitForFilm(pages[1], projects[1].projectId, 'PROJECT B');
-  await clients[0].call('motion_open_preview', { projectId: projects[0].projectId });
+  await clients[0].call('openmotion_open_preview', { projectId: projects[0].projectId });
   await new Promise(resolve => setTimeout(resolve, 2200));
   assert.equal(new URL(pages[1].url()).searchParams.get('project'), projects[1].projectId);
   assert.deepEqual(foreignRequests, []);

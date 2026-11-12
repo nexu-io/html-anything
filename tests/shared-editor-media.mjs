@@ -19,14 +19,14 @@ function checked(name, details) { result.checks.push({ name, status: 'passed', .
 let registry;
 try {
   await Promise.all(clients.map(client => client.initialize()));
-  await clients[0].call('motion_open_preview');
+  await clients[0].call('openmotion_open_preview');
   registry = await readRegistry(root);
-  const identities = await Promise.all(clients.map(async client => { await client.call('motion_get_project'); return request(registry, '/health'); }));
+  const identities = await Promise.all(clients.map(async client => { await client.call('openmotion_get_project'); return request(registry, '/health'); }));
   assert.equal(identities[0].instanceId, identities[1].instanceId);
-  const project = await clients[0].call('motion_get_project');
+  const project = await clients[0].call('openmotion_get_project');
   const html = `<!doctype html><html><head><meta charset="utf-8"><title>Shared editor acceptance</title><script src="assets/gsap.min.js"></script><style>body{margin:0}#main{position:relative;width:320px;height:180px;overflow:hidden;background:#1a1a3a;color:#f4ead3;font:700 28px Arial}#label{position:absolute;left:20px;top:65px}</style></head><body><div id="main" data-composition-id="main" data-start="0" data-duration="1" data-width="320" data-height="180" data-fps="10"><div id="label">ONE EDITOR</div></div><script>window.__timelines={main:gsap.timeline({paused:true}).fromTo('#label',{x:0},{x:40,duration:1,ease:'none'})};</script></body></html>`;
-  const edited = await clients[0].call('motion_write_files', { projectId: project.projectId, expectedRevision: project.revision, files: [{ path: 'index.html', content: html }] });
-  const previews = await Promise.all(clients.map(client => client.call('motion_open_preview', { projectId: project.projectId })));
+  const edited = await clients[0].call('openmotion_write_files', { projectId: project.projectId, expectedRevision: project.revision, files: [{ path: 'index.html', content: html }] });
+  const previews = await Promise.all(clients.map(client => client.call('openmotion_open_preview', { projectId: project.projectId })));
   assert.equal(previews[0].previewUrl, previews[1].previewUrl);
   const nativeIdentity = await (await fetch(new URL('/__hyperframes_config', previews[0].previewUrl))).json();
   assert.equal(nativeIdentity.isHyperframes, true); assert.equal(nativeIdentity.projectDir, edited.project.directory);
@@ -39,10 +39,10 @@ try {
   process.kill(oldStudio.pid, 'SIGTERM');
   for (let attempt = 0; attempt < 60 && processes().some(p => p.pid === oldOwner.pid); attempt++) await pause(50);
   assert.ok(!processes().some(p => p.pid === oldOwner.pid), 'Owner must notice Studio exit');
-  const reopened = await clients[0].call('motion_open_preview', { projectId: project.projectId });
+  const reopened = await clients[0].call('openmotion_open_preview', { projectId: project.projectId });
   const newStudio = processes().find(p => p.command.includes('shared/workspace-studio.ts ') && p.command.includes(root));
   assert.ok(newStudio); assert.notEqual(newStudio.pid, oldStudio.pid);
-  assert.equal((await clients[1].call('motion_open_preview', { projectId: project.projectId })).previewUrl, reopened.previewUrl);
+  assert.equal((await clients[1].call('openmotion_open_preview', { projectId: project.projectId })).previewUrl, reopened.previewUrl);
   const reopenedIdentity = await (await fetch(new URL('/__hyperframes_config', reopened.previewUrl))).json();
   assert.equal(reopenedIdentity.projectDir, edited.project.directory);
   assert.equal((await request(registry, '/health')).instanceId, identities[0].instanceId);
@@ -51,20 +51,20 @@ try {
   const catalogStore = new WorkspaceStore(root), otherId = randomUUID();
   await cp(catalogStore.projectDirectory, catalogStore.projectDirectoryFor(otherId), { recursive: true });
   await catalogStore.lock(async () => { await catalogStore.selectProject(otherId, { id: otherId, title: 'Other project' }); await catalogStore.selectProject(project.projectId); });
-  await clients[1].call('motion_open_preview', { projectId: otherId });
+  await clients[1].call('openmotion_open_preview', { projectId: otherId });
   const otherIdentity = await (await fetch(new URL('/__hyperframes_config?projectId=' + otherId, reopened.previewUrl))).json();
   assert.equal(otherIdentity.projectDir, catalogStore.projectDirectoryFor(otherId));
   assert.equal(otherIdentity.pid, reopenedIdentity.pid, 'both projects must use the same native process');
   assert.equal((await fetch(new URL('/api/projects/' + project.projectId + '/files/index.html', reopened.previewUrl))).status, 200);
-  await clients[0].call('motion_open_preview');
+  await clients[0].call('openmotion_open_preview');
   assert.equal((await (await fetch(new URL('/__hyperframes_config', reopened.previewUrl))).json()).projectDir, edited.project.directory);
-  assert.equal((await clients[1].call('motion_get_project')).projectId, otherId);
+  assert.equal((await clients[1].call('openmotion_get_project')).projectId, otherId);
   checked('preview selects the connection project while another MCP keeps its own binding', { firstProject: project.projectId, secondProject: otherId });
 
-  const current = await clients[0].call('motion_get_project', { projectId: project.projectId });
-  const submitted = await clients[0].call('motion_request_export', { projectId: project.projectId, expectedRevision: current.revision });
+  const current = await clients[0].call('openmotion_get_project', { projectId: project.projectId });
+  const submitted = await clients[0].call('openmotion_request_export', { projectId: project.projectId, expectedRevision: current.revision });
   assert.equal(submitted.job.state, 'pending');
-  const during = await clients[1].call('motion_get_export', { projectId: project.projectId, jobId: submitted.job.id });
+  const during = await clients[1].call('openmotion_get_export', { projectId: project.projectId, jobId: submitted.job.id });
   assert.ok(['pending', 'running'].includes(during.job.state));
   await assert.rejects(request(registry, '/shutdown', {}), /active work/);
   checked('explicit shutdown is refused while the real export is active', { state: during.job.state });
@@ -73,7 +73,7 @@ try {
   assert.equal((await request(await readRegistry(root), '/health')).instanceId, identities[0].instanceId);
   let exported;
   for (let attempt = 0; attempt < 180; attempt++) {
-    exported = await next.call('motion_get_export', { projectId: project.projectId, jobId: submitted.job.id });
+    exported = await next.call('openmotion_get_export', { projectId: project.projectId, jobId: submitted.job.id });
     if (['completed', 'failed'].includes(exported.job.state)) break;
     await pause(500);
   }

@@ -39,6 +39,7 @@ export const EasePresetGrid = function EasePresetGrid({
   currentEase: string;
   onSelect: (ease: string) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="mb-2 grid max-h-56 grid-cols-4 gap-1 overflow-y-auto pr-0.5">
       {EASE_PRESETS.filter((preset) => preset.kind === kind).map((preset) => {
@@ -55,7 +56,7 @@ export const EasePresetGrid = function EasePresetGrid({
             className={`flex flex-col items-center gap-0.5 rounded-md p-1 transition-colors ${
               isActive ? "bg-panel-accent/10 ring-1 ring-panel-accent/30" : "hover:bg-neutral-800"
             }`}
-            title={preset.label}
+            title={t(preset.label)}
           >
             <MiniCurveSvg ease={preset.ease} active={isActive} />
             <span
@@ -63,7 +64,7 @@ export const EasePresetGrid = function EasePresetGrid({
                 isActive ? "text-accent-ink" : "text-neutral-500"
               }`}
             >
-              {preset.label}
+              {t(preset.label)}
             </span>
           </button>
         );
@@ -103,7 +104,7 @@ export function EaseModeToggle({
               active ? "bg-neutral-700 text-neutral-100" : "text-neutral-500 hover:text-neutral-300"
             }`}
           >
-            {MODE_LABELS[candidateMode]}
+            {t(MODE_LABELS[candidateMode])}
           </button>
         );
       })}

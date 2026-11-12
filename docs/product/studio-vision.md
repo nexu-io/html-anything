@@ -140,24 +140,24 @@ RAG 指按需检索已有知识，不等同于训练模型。Skill 沉淀先形�
 01  创作者 → Agent
     提供目标、素材、脚本 / 时间码与保持项
 
-02  Agent → motion_get_project
+02  Agent → openmotion_get_project
     读取 projectId 对应的源码、上下文、revision 与 versionId
 
-03  Agent → motion_edit_project
+03  Agent → openmotion_edit_project
     提交 files + requestId + expectedRevision + expectedVersionId
     ├─ 版本冲突：拒绝过时写入 → 重新读取 → 协调修改
     └─ 写入成功：保留新版本 → 通知编辑器文件监听
 
-04  Agent → motion_open_preview → Studio
+04  Agent → openmotion_open_preview → Studio
     人工检查预览、继续细调；需要修改时回到步骤 02
 
-05  Agent → motion_export_request
+05  Agent → openmotion_export_request
     指定 projectId / revision / versionId → 固定工程与本地素材快照
 
 06  渲染服务 → MP4 + 技术检查
     lint → render → 规格检查 → 完整解码 → 代表时间点 seek
 
-07  Agent → motion_get_project（exportJobId）
+07  Agent → openmotion_get_project（exportJobId）
     等待实际产物 → 返回文件 → 正常速度审听 / 用户验收
 ```
 
