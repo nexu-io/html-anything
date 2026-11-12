@@ -24,19 +24,19 @@ test('cold export preserves source revision without starting Studio, then previe
   await writeFile(path.join(store.directory, 'preview.json'), JSON.stringify({ port: address.port }));
   try {
     assert.deepEqual(await store.get(), before);
-    const requested = await callTool('motion_request_export', { expectedRevision: before.revision }, store);
+    const requested = await callTool('openmotion_request_export', { expectedRevision: before.revision }, store);
     const deadline = Date.now() + 120_000;
-    let result = await callTool('motion_get_export', {}, store);
-    while (result.job && ['pending', 'running'].includes(result.job.state) && Date.now() < deadline) { await delay(300); result = await callTool('motion_get_export', {}, store); }
+    let result = await callTool('openmotion_get_export', {}, store);
+    while (result.job && ['pending', 'running'].includes(result.job.state) && Date.now() < deadline) { await delay(300); result = await callTool('openmotion_get_export', {}, store); }
     assert.equal(result.job!.state, 'completed', result.job!.error);
     assert.equal(result.job!.id, requested.job!.id); assert.equal(result.job!.revision, before.revision);
     assert.deepEqual(await store.get(), before, 'rendering must not stamp or normalize the active source');
     assert.equal(running.studio, undefined);
-    assert.equal((await callTool('motion_verify_export', { jobId: result.job!.id, expectedRevision: before.revision, audio: 'silent' }, store)).status, 'passed');
+    assert.equal((await callTool('openmotion_verify_export', { jobId: result.job!.id, expectedRevision: before.revision, audio: 'silent' }, store)).status, 'passed');
     await store.writeFiles(before.revision, [{ path: 'notes.md', content: 'real concurrent user edit' }]);
-    await assert.rejects(callTool('motion_request_export', { expectedRevision: before.revision }, store), /重新读取 revision/);
+    await assert.rejects(callTool('openmotion_request_export', { expectedRevision: before.revision }, store), /重新读取 revision/);
     assert.equal((await store.job())!.id, requested.job!.id);
-    const opened = await callTool('motion_open_preview', {}, store);
+    const opened = await callTool('openmotion_open_preview', {}, store);
     assert.equal(new URL(opened.previewUrl!).port, String(address.port)); assert.ok(running.studio?.alive());
     assert.equal((await store.readFile('notes.md')).content, 'real concurrent user edit');
     assert.equal((await (await fetch(base + '/api/health')).json()).editorReady, true);
@@ -96,21 +96,21 @@ test('real Studio API and MCP share edits; background export contains video, aud
     const before = await store.get();
     const edited = await fetch(fileUrl, { method: 'PUT', headers: { 'Content-Type': 'text/html', 'If-Match': nativeFile.version, Origin: nativeBase }, body: nativeFile.content.replace('Native integration', 'Studio edit') });
     assert.equal(edited.status, 200, await edited.text());
-    const agentRead = await callTool('motion_get_project', {}, store); assert.notEqual(agentRead.revision, before.revision); assert.match(agentRead.project!.html!, /Studio edit/);
-    await callTool('motion_write_files', { expectedRevision: agentRead.revision, files: [{ path: 'index.html', content: agentRead.project!.html!.replace('Studio edit', 'Agent edit') }] }, store);
+    const agentRead = await callTool('openmotion_get_project', {}, store); assert.notEqual(agentRead.revision, before.revision); assert.match(agentRead.project!.html!, /Studio edit/);
+    await callTool('openmotion_write_files', { expectedRevision: agentRead.revision, files: [{ path: 'index.html', content: agentRead.project!.html!.replace('Studio edit', 'Agent edit') }] }, store);
     assert.match((await (await fetch(fileUrl)).json()).content, /Agent edit/);
     const revision = (await store.get()).revision;
-    const requested = await callTool('motion_request_export', { expectedRevision: revision }, store);
+    const requested = await callTool('openmotion_request_export', { expectedRevision: revision }, store);
     assert.equal(requested.job!.state, 'pending');
     // No browser is involved. Editing after queuing must not alter the rendered snapshot.
     const oldSource = (await store.get()).project!.html!;
     await store.writeFiles((await store.get()).revision, [{ path: 'index.html', content: oldSource.replace('data-width="320"', 'data-width="640"') }]);
     const deadline = Date.now() + 120_000;
-    let result = await callTool('motion_get_export', {}, store);
-    while (result.job && ['pending', 'running'].includes(result.job.state) && Date.now() < deadline) { await delay(300); result = await callTool('motion_get_export', {}, store); }
+    let result = await callTool('openmotion_get_export', {}, store);
+    while (result.job && ['pending', 'running'].includes(result.job.state) && Date.now() < deadline) { await delay(300); result = await callTool('openmotion_get_export', {}, store); }
     assert.equal(result.job!.state, 'completed', result.job!.error); assert.equal(result.job!.revision, revision);
     assert.deepEqual(result.job!.expected, { width: 320, height: 180, fps: 24, duration: 1, audio: 'optional' });
-    const verified = await callTool('motion_verify_export', { jobId: result.job!.id, expectedRevision: revision, audio: 'required' }, store);
+    const verified = await callTool('openmotion_verify_export', { jobId: result.job!.id, expectedRevision: revision, audio: 'required' }, store);
     assert.equal(verified.status, 'passed', JSON.stringify(verified));
     assert.match(verified.sha256!, /^[a-f0-9]{64}$/);
     const output = await readFile(result.path!); assert.equal(output.subarray(4, 8).toString(), 'ftyp');
@@ -134,11 +134,11 @@ test('production stdio cold export keeps the revision and does not open Studio',
   const before = await store.get(), client = new Client(store.directory);
   try {
     await client.initialize();
-    const project = await client.call('motion_get_project', { projectId: 'project' });
-    const requested = await client.call('motion_export_request', { projectId: 'project', requestId: 'cold-export', versionId: project.currentVersionId, expectedRevision: before.revision, audio: 'silent' });
+    const project = await client.call('openmotion_get_project', { projectId: 'project' });
+    const requested = await client.call('openmotion_export_request', { projectId: 'project', requestId: 'cold-export', versionId: project.currentVersionId, expectedRevision: before.revision, audio: 'silent' });
     let result;
     const deadline = Date.now() + 120_000;
-    do { await delay(200); result = { job: (await client.call('motion_get_project', { projectId: 'project', exportJobId: requested.job.id })).exportJob }; }
+    do { await delay(200); result = { job: (await client.call('openmotion_get_project', { projectId: 'project', exportJobId: requested.job.id })).exportJob }; }
     while (['pending', 'running'].includes(result.job.state) && Date.now() < deadline);
     assert.equal(result.job.state, 'completed', result.job.error);
     assert.deepEqual(await store.get(), before);

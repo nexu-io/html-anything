@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { legacyToolName } from '../shared/public-names.mjs';
 import assert from 'node:assert/strict';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -139,7 +140,7 @@ test('browser ingress rejects forged identity, worker events and oversized batch
 }, false));
 
 test('domain events follow real commits, skip replay and retain safe failure without source contents', () => fixture(async store => {
-  assert.deepEqual([...toolNames].sort(), phase1Tools.map(tool => tool.name).sort());
+  assert.deepEqual([...toolNames].sort(), phase1Tools.map(tool => legacyToolName(tool.name)).sort());
   const events: PendingEvent[] = [], tracking = core(async batch => { events.push(...batch); return 'accepted'; });
   const service = new Phase1Service(store, pluginRoot, { tracking, origin: () => 'http://127.0.0.1:4173',
     nativeUrl: () => undefined, openProject: async () => {}, mutation: async task => task(), cancel: async () => {} });

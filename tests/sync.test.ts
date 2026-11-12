@@ -12,11 +12,11 @@ test('Studio source changes are visible to MCP; MCP source writes reach the same
   const first = await store.get();
   const source = (await store.readFile('compositions/first.html')).content;
   await writeFile(path.join(store.projectDirectory, 'compositions/first.html'), source.replace('Make it', 'Studio edit'));
-  const read = await callTool('motion_get_project', {}, new WorkspaceStore(store.directory));
+  const read = await callTool('openmotion_get_project', {}, new WorkspaceStore(store.directory));
   assert.notEqual(read.revision, first.revision); assert.equal(read.project!.format, 'hyperframes');
   assert.ok(!JSON.stringify(read).includes('base64'));
   await assert.rejects(store.writeFiles(first.revision, [{ path: 'index.html', content: 'stale' }]), Conflict);
-  const next = await callTool('motion_write_files', { expectedRevision: read.revision, files: [{ path: 'compositions/first.html', content: source.replace('Make it', 'Agent edit') }] }, store);
+  const next = await callTool('openmotion_write_files', { expectedRevision: read.revision, files: [{ path: 'compositions/first.html', content: source.replace('Make it', 'Agent edit') }] }, store);
   assert.match((await store.readFile('compositions/first.html')).content, /Agent edit/);
   assert.equal((await new WorkspaceStore(store.directory).get()).revision, next.revision);
   const browser = await (await transport(store)('/api/project')).json(); assert.equal(browser.revision, next.revision);
@@ -89,7 +89,7 @@ test('stale export requests, dead workers, missing output and expiry are reporte
   await store.saveJob({ ...claimed!, workerPid: 2147483647 });
   assert.equal((await store.status()).exportJob!.state, 'failed');
   await store.saveJob({ ...retry, state: 'completed', file: `exports/${retry.id}.mp4` });
-  const read = await callTool('motion_get_export', {}, store);
+  const read = await callTool('openmotion_get_export', {}, store);
   assert.equal(read.job!.state, 'failed'); assert.equal(read.path, undefined);
 }));
 test('new project and migrated legacy projects pass the actual Hyperframes linter', () => fixture(async store => {

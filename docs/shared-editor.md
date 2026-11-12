@@ -77,7 +77,7 @@ MCP 调用在共享后台内串行执行，HTTP 页面继续走原有保存与�
 
 ## 导出与后台强杀后的恢复
 
-导出创建时固定 `projectId`、revision、快照与预期规格；网页后来切换工程不会改变任务归属。工作区仍只有一个等待/运行中的导出，第二个任务会明确拒绝。新增 `jobs/<jobId>/job.json` 保留任务状态历史；`export.json` 继续作为兼容的最新任务记录。一期 `motion_get_project` 传 projectId 和 exportJobId 查询旧任务；完成文件的下载、校验也按稳定任务 ID 查找。
+导出创建时固定 `projectId`、revision、快照与预期规格；网页后来切换工程不会改变任务归属。工作区仍只有一个等待/运行中的导出，第二个任务会明确拒绝。新增 `jobs/<jobId>/job.json` 保留任务状态历史；`export.json` 继续作为兼容的最新任务记录。一期 `openmotion_get_project` 传 projectId 和 exportJobId 查询旧任务；完成文件的下载、校验也按稳定任务 ID 查找。
 
 ```mermaid
 sequenceDiagram

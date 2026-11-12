@@ -1773,5 +1773,9 @@
   "Failed to add media": "メディアを追加できませんでした",
   "Could not read media duration. Try adding the file again.": "メディアの長さを読み取れませんでした。ファイルをもう一度追加してください。",
   "Loading fonts…": "フォントを読み込み中…",
-  "Couldn't load local fonts.": "ローカルフォントを読み込めませんでした。"
+  "Couldn't load local fonts.": "ローカルフォントを読み込めませんでした。",
+  "Create videos with OpenMotion, right in {host}.": "{host} で OpenMotion を使用してビデオを作成します。",
+  "Back to the OpenMotion editor": "OpenMotionエディタに戻る",
+  "Workspace unavailable. Check that the OpenMotion service is running.": "ワークスペースが利用できません。 OpenMotion サービスが実行されていることを確認します。",
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "接続構成が無効です。 OpenMotion サービスを更新または再起動します。"
 }

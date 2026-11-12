@@ -85,29 +85,29 @@ flowchart LR
 
 所有 HTTP 写请求沿用本机 Host / 同源校验。
 
-Studio 与 MCP 复用 `ModelGateway` 业务层及工作区文件，但不要求处于同一进程。`motion_generate_asset` 先确保工作区服务启动；HTTP 提交要求原生 Studio 服务就绪。持久化任务由 `server.ts` 的 worker 领取执行，关闭生成面板不会取消任务，本地服务停止则影响执行。
+Studio 与 MCP 复用 `ModelGateway` 业务层及工作区文件，但不要求处于同一进程。`openmotion_generate_asset` 先确保工作区服务启动；HTTP 提交要求原生 Studio 服务就绪。持久化任务由 `server.ts` 的 worker 领取执行，关闭生成面板不会取消任务，本地服务停止则影响执行。
 
 | HTTP | MCP |
 | --- | --- |
-| `GET /motion-api/models/capabilities` | `motion_get_capabilities` |
-| `GET /motion-api/models` | `motion_list_models` |
-| `PUT /motion-api/models/providers/:provider` | `motion_configure_provider` |
-| `PUT /motion-api/models/routes/:modality` | `motion_set_model_route` |
-| `POST /motion-api/models/custom` | `motion_register_model` |
-| `POST /motion-api/generations` | `motion_generate_asset` |
-| `GET /motion-api/generations/:id` | `motion_get_generation` |
-| `GET /motion-api/generations?projectId=…` | `motion_list_generations` |
-| `POST /motion-api/generations/:id/cancel` | `motion_cancel_generation` |
+| `GET /motion-api/models/capabilities` | `openmotion_get_capabilities` |
+| `GET /motion-api/models` | `openmotion_list_models` |
+| `PUT /motion-api/models/providers/:provider` | `openmotion_configure_provider` |
+| `PUT /motion-api/models/routes/:modality` | `openmotion_set_model_route` |
+| `POST /motion-api/models/custom` | `openmotion_register_model` |
+| `POST /motion-api/generations` | `openmotion_generate_asset` |
+| `GET /motion-api/generations/:id` | `openmotion_get_generation` |
+| `GET /motion-api/generations?projectId=…` | `openmotion_list_generations` |
+| `POST /motion-api/generations/:id/cancel` | `openmotion_cancel_generation` |
 
 典型 Agent 流程：
 
-1. `motion_get_capabilities` 检查状态；`motion_list_models` 取得模型键及生成模式。
-2. 发起 `motion_generate_asset({modality:"image", prompt:"…", model:"codex:image-generation", idempotencyKey:"scene-1-image-v1"})`。
-3. 轮询 `motion_get_generation({jobId})`。只使用 `completed` 且 `assets[].available !== false` 的素材。不要将任务 ID 当作文件。
+1. `openmotion_get_capabilities` 检查状态；`openmotion_list_models` 取得模型键及生成模式。
+2. 发起 `openmotion_generate_asset({modality:"image", prompt:"…", model:"codex:image-generation", idempotencyKey:"scene-1-image-v1"})`。
+3. 轮询 `openmotion_get_generation({jobId})`。只使用 `completed` 且 `assets[].available !== false` 的素材。不要将任务 ID 当作文件。
 4. 核对 job 的 `projectId`，读取该工程的新 revision，再将 `assets[].path` 写入 HTML 的原生 image/video/audio 元素。
 5. 使用现有 lint、预览、导出和验证工具完成影片。
 
-参考图修改使用同一 `motion_generate_asset`，增加 `referenceAsset:"assets/original.png"` 并选择 `supportsImageReference:true` 的图片模型。输入只接受发起工程内不超过 20 MB 的 PNG/JPEG/WebP 文件。提交时创建不可变副本并记录路径、SHA-256、字节数；原文件在排队后变动不会改变该任务输入。任务仍只生成新文件，MCP 调用方另行决定是否写入合成。
+参考图修改使用同一 `openmotion_generate_asset`，增加 `referenceAsset:"assets/original.png"` 并选择 `supportsImageReference:true` 的图片模型。输入只接受发起工程内不超过 20 MB 的 PNG/JPEG/WebP 文件。提交时创建不可变副本并记录路径、SHA-256、字节数；原文件在排队后变动不会改变该任务输入。任务仍只生成新文件，MCP 调用方另行决定是否写入合成。
 
 ## 数据、并发与限制
 

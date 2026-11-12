@@ -47,7 +47,7 @@ test('remote entry point builds a fresh checkout before registering and checking
     assert.match(commands, /git clone --depth 1 --branch test-ref -- https:\/\/github\.com\/nexu-io\/openmotion\.git/);
     assert.ok(commands.indexOf('npm ci --include=dev') < commands.indexOf('npm run build:studio'));
     assert.ok(commands.indexOf('npm run build:studio') < commands.indexOf('codex plugin marketplace add'));
-    assert.match(commands, /codex plugin add motion@motion-local\ncodex plugin list --marketplace motion-local\nMCP check/);
+    assert.match(commands, /codex plugin add openmotion@openmotion-local\ncodex plugin list --marketplace openmotion-local\nMCP check/);
     assert.match(result.stdout, /OpenMotion registration and independent MCP preflight succeeded/);
     const onboarding = JSON.parse(result.stdout.slice(result.stdout.indexOf('\n{') + 1));
     assert.equal(onboarding.hostSessionVerified, false);
@@ -98,7 +98,7 @@ for (const [failure, expected] of [
       const result = spawnSync('bash', [path.join(root, 'install.sh')], { env: { ...env, [failure]: '1' }, encoding: 'utf8' });
       assert.notEqual(result.status, 0);
       if (expected) assert.match(result.stderr, expected);
-      assert.doesNotMatch(await readFile(log, 'utf8'), /marketplace add|plugin add motion@/);
+      assert.doesNotMatch(await readFile(log, 'utf8'), /marketplace add|plugin add openmotion@/);
       assert.doesNotMatch(result.stdout, /preflight succeeded|Installation-success reply/);
     });
   });
@@ -108,7 +108,7 @@ test('MCP verification failure is reported even after plugin registration', asyn
   await fixture(async ({ log, env }) => {
     const result = spawnSync('bash', [path.join(root, 'install.sh')], { env: { ...env, MOTION_TEST_MCP_FAIL: '1' }, encoding: 'utf8' });
     assert.notEqual(result.status, 0);
-    assert.match(await readFile(log, 'utf8'), /plugin add motion@motion-local/);
+    assert.match(await readFile(log, 'utf8'), /plugin add openmotion@openmotion-local/);
     assert.doesNotMatch(result.stdout, /preflight succeeded|Installation-success reply/);
   });
 });
@@ -119,7 +119,7 @@ test('a missing onboarding contract stops before plugin registration', async () 
     const result = spawnSync('bash', [path.join(root, 'install.sh')], { env, encoding: 'utf8' });
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, /install\.md/);
-    assert.doesNotMatch(await readFile(log, 'utf8'), /marketplace add|plugin add motion@/);
+    assert.doesNotMatch(await readFile(log, 'utf8'), /marketplace add|plugin add openmotion@/);
     assert.doesNotMatch(result.stdout, /preflight succeeded|Installation-success reply/);
   });
 });

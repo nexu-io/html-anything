@@ -9,6 +9,6 @@ assert.equal(metadata.target, process.platform === 'win32' && process.arch === '
 const node = path.join(root, 'runtime/node', process.platform === 'win32' ? 'node.exe' : 'bin/node');
 await access(node);
 const config = JSON.parse(await readFile(path.join(root, '.mcp.json'), 'utf8'));
-Object.assign(config.mcpServers.motion, { command: node, args: ['--experimental-strip-types', '--import', './bootstrap.mjs', 'mcp.ts'], cwd: root });
+Object.assign(config.mcpServers.openmotion, { command: node, args: ['--experimental-strip-types', '--import', './bootstrap.mjs', 'mcp.ts'], cwd: root });
 await writeFile(path.join(root, 'plugin/.mcp.json'), JSON.stringify(config, null, 2) + '\n');
 console.log('Thin plugin configured for: ' + root);

@@ -8,6 +8,16 @@ Source `package.json` is the development baseline; the published artifact can ha
 
 Test/prerelease/local packages never report usage data, even with a saved opt-in or an enable flag. Stable releases collect by default and support persistent opt-out and re-enable in Studio Privacy settings. See [tracking controls](../tracking/README.md#reporting-and-user-control).
 
+## Public names and compatibility
+
+Source builds after the OpenMotion naming change register the plugin/MCP server as `openmotion` and advertise eleven `openmotion_*` Tools, five canonical `openmotion-*` production Skills, and `openmotion://` resources. The optional Library Skills are also prefixed with `openmotion-`. Previously published packages keep their original names until separately updated; a source change is not a release.
+
+- Old `motion_*` Tools, legacy session Tool names and `motion://` resources call the same handlers. Aliases are accepted but omitted from MCP discovery. API protocol 1 remains compatible with old and new backend Tool lists.
+- Old Skill names ship only as explicit forwarding entries. Canonical Skills contain the full instructions; aliases disable implicit invocation in supported hosts. Packaging includes their YAML metadata. Flat-host upgrades replace this installation's managed old Skill bodies with these aliases and preserve foreign/unowned folders. Registration failure restores previous Skills and install state.
+- New adapter/plugin packages and generated connection commands use `openmotion`. Existing `motion` MCP entries can still launch the runtime and use aliases; refresh/reconnect to load the canonical discovery list, or install the new `openmotion` plugin through the host. Do not overwrite an unrelated registration or create a second workspace to rename a connection.
+- Project/session IDs, content revisions, request-ID deduplication, history, active exports, media/native caches, environment variable names and engine versions keep their existing contracts. New and old names use the same request identity, avoiding duplicate edits/renders during retry.
+
+
 ## Requirements and package contents
 
 Users provide Node.js 22.18+ with npm and their Agent host. Builds use the Node version pinned in CI. npm installs locked production dependencies with `npm ci --omit=dev --ignore-scripts`. Setup starts FFmpeg, ffprobe and browser preparation in a detached background worker. MCP connection, source editing and ordinary preview do not wait; Studio displays readiness and retry. `prepare` remains an explicit wait/retry command. Node, native binaries, node_modules, user projects and credentials are not bundled in this npm format. It is not an offline package. Complete platform ZIPs remain a backup.
@@ -30,15 +40,15 @@ The version is an example. Use a new empty output directory for every candidate.
 An isolated macOS Codex installation:
 
 ```sh
-motion_tgz="/absolute/path/openmotion-app-0.6.4-test.1.tgz"
-motion_test="$HOME/Library/Application Support/OpenMotion-test/0.6.4-test.1"
-mkdir -p "$motion_test/profile" "$motion_test/workspace"
-export CODEX_HOME="$motion_test/profile"
-npx --yes --package "$motion_tgz" -- openmotion setup --host codex \
-  --home "$motion_test/app" --data-dir "$motion_test/data" \
-  --skills-dir "$motion_test/workspace/.agents/skills" &&
-npx --yes --package "$motion_tgz" -- openmotion prepare --home "$motion_test/app" &&
-cd "$motion_test/workspace" &&
+openmotion_tgz="/absolute/path/openmotion-app-0.6.4-test.1.tgz"
+openmotion_test="$HOME/Library/Application Support/OpenMotion-test/0.6.4-test.1"
+mkdir -p "$openmotion_test/profile" "$openmotion_test/workspace"
+export CODEX_HOME="$openmotion_test/profile"
+npx --yes --package "$openmotion_tgz" -- openmotion setup --host codex \
+  --home "$openmotion_test/app" --data-dir "$openmotion_test/data" \
+  --skills-dir "$openmotion_test/workspace/.agents/skills" &&
+npx --yes --package "$openmotion_tgz" -- openmotion prepare --home "$openmotion_test/app" &&
+cd "$openmotion_test/workspace" &&
 codex
 ```
 
@@ -101,7 +111,7 @@ For a non-Codex test, keep the isolated application/data paths from the examples
 
 Harness callers should pass the actual current profile from their host context, such as `DSH_PROFILE`, rather than assuming `web` or `desktop`. On macOS, setup already detects the standard Desktop CLI at `/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh`; it need not be on PATH. Keep that host-specific lookup in the Harness adapter. Other executable locations use `--dsh`; do not unpack the host or invent a wrapper for ordinary installation.
 
-After setup, use each host's supported discovery/reload action to load the Tools and Skills. Confirm all eleven public Tools and five Skills, and call `motion_get_project` to verify the expected data directory. Do not impose another host's restart or refresh procedure, or substitute an on-disk registration for host loading evidence.
+After setup, use each host's supported discovery/reload action to load the Tools and Skills. Confirm all eleven public Tools and five Skills, and call `openmotion_get_project` to verify the expected data directory. Do not impose another host's restart or refresh procedure, or substitute an on-disk registration for host loading evidence.
 
 The internal ownership marker remains stable across the npm package rename so earlier local installations can be upgraded in place. An installation can serve multiple hosts using the same home/data. `install.json.hosts` retains each host. Skill documentation links are rewritten for flat layouts; Codex/Harness retain bundle-relative links. Re-run setup for each installed host when upgrading Skills. Unowned same-name MCP/Skills are refused. Unrelated settings/Skills and existing projects are retained. Registration failure restores the prior install state and Skills; checked application caches remain available for retry.
 
@@ -126,7 +136,7 @@ Recover npm network failures (`ENOTFOUND`, `EAI_AGAIN`, connection errors or tim
 1. **Try official, then mirror.** Try `https://registry.npmjs.org` then `https://registry.npmmirror.com`, at most once per registry, counting the initial failed attempt and skipping registries already tried. An explicitly selected registry goes first; respect any user or host restriction on alternatives. Stop on authentication, permission or checksum failures rather than switching sources.
 2. **Keep settings temporary.** Set `npm_config_registry` and `npm_config_fetch_retries=0` for the attempt's process tree, covering both npx and setup's production `npm ci`. Do not change global npm configuration, project lockfiles or TLS verification. This fallback does not apply to separate browser/FFmpeg download hosts.
 3. **Keep the same artifact.** Pin the exact requested/resolved version before switching. For channel tags, use the matching immutable guide and checksum, not the mirror's potentially older tag. If the tag never resolved, use the version stated in the trusted guide. Download a mirrored tgz with lifecycle scripts disabled, verify its SHA256 against that guide before executing it, then use the local-tgz setup command with the same host/profile and isolated paths. A missing mirrored version is not permission to downgrade; a checksum mismatch stops recovery.
-4. **Both failed: diagnose, then hand off.** Compare `npm ping` in the actual installation environment and the user's terminal, using the same npm and registry; curl success alone is insufficient. Use the host's supported network-approval flow where permitted, without bypassing a denial. If Agent access remains unavailable, provide the complete setup command and selected environment/paths for the user's terminal: preserve Node/npm, working directory, host/profile, host configuration, application home, data and Skills paths. After setup, reconnect the host and verify its version and `motion_get_project` result.
+4. **Both failed: diagnose, then hand off.** Compare `npm ping` in the actual installation environment and the user's terminal, using the same npm and registry; curl success alone is insufficient. Use the host's supported network-approval flow where permitted, without bypassing a denial. If Agent access remains unavailable, provide the complete setup command and selected environment/paths for the user's terminal: preserve Node/npm, working directory, host/profile, host configuration, application home, data and Skills paths. After setup, reconnect the host and verify its version and `openmotion_get_project` result.
 
 If the terminal also fails, resolve DNS/proxy/network access first and report installation as incomplete; preserve the previous installation and user data. A verified local tgz only replaces the outer download: production npm dependencies and native components still need network access. Native readiness and host loading remain separate results.
 
@@ -170,9 +180,9 @@ node /absolute/application/scripts/npm-installer.mjs diagnose --host codex --hom
 
 The installed Skill's `scope.json` or `openmotion-install.json` supplies `runtimeRoot` (the application directory), `installHome` and `host`; do not guess them from the video project. The packaged npm CLI also exposes `openmotion diagnose` through the same exact package used for setup. Select `codex`, `claude`, `deepseek` or `workbuddy`; preserve any custom `--codex` executable or Harness `--profile`. The saved Harness profile is used by default.
 
-Diagnosis reads the selected host's owned configuration and starts an independent, bounded MCP probe using its command, arguments, registered environment overrides and working directory. It otherwise inherits the diagnostic process environment, which can differ from a GUI host. It verifies initialization, the installed tool list and a `motion_get_project` read of the expected data directory. It never registers/replaces configuration, creates a project, restarts another process or replays an export. A probe can start or reuse this installation's backend; it does not wait for native media/browser downloads. Credential-like environment values are redacted from reported startup output.
+Diagnosis reads the selected host's owned configuration and starts an independent, bounded MCP probe using its command, arguments, registered environment overrides and working directory. It otherwise inherits the diagnostic process environment, which can differ from a GUI host. It verifies initialization, the installed tool list and a `openmotion_get_project` read of the expected data directory. It never registers/replaces configuration, creates a project, restarts another process or replays an export. A probe can start or reuse this installation's backend; it does not wait for native media/browser downloads. Credential-like environment values are redacted from reported startup output.
 
-The JSON result includes `status`, `hostSessionVerified:false` and `nextAction`; failures also include the stage, code and message. A successful probe does not establish that the current host chat loaded those tools, and Claude/WorkBuddy/Harness configuration reads cannot observe every session-specific enablement or tool-selection setting. Inspect the host's status/output and correct the reported configuration, runtime or version problem. In an interactive Claude Code session use the server's Reconnect action in `/mcp`; in other hosts use their supported MCP refresh/reconnect control. Then call `motion_get_project` through the active host connection, check the directory and original project/version, and resume the task. An empty tool search alone is not a diagnosis.
+The JSON result includes `status`, `hostSessionVerified:false` and `nextAction`; failures also include the stage, code and message. A successful probe does not establish that the current host chat loaded those tools, and Claude/WorkBuddy/Harness configuration reads cannot observe every session-specific enablement or tool-selection setting. Inspect the host's status/output and correct the reported configuration, runtime or version problem. In an interactive Claude Code session use the server's Reconnect action in `/mcp`; in other hosts use their supported MCP refresh/reconnect control. Then call `openmotion_get_project` through the active host connection, check the directory and original project/version, and resume the task. An empty tool search alone is not a diagnosis.
 
 For source/plugin installations without an npm `installHome`, use the host's actual registered launch command and logs. The source Codex bootstrap retains `scripts/check-installed-mcp.mjs`; do not point it at a guessed plugin cache or substitute a different workspace. A closed host transport must be reconnected by the host. Keep running exports and original request IDs while recovering.
 

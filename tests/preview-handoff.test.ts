@@ -11,10 +11,10 @@ function api(store: any, openProject = async () => { throw new Error('The host m
   mutation: async task => task(), cancel: async () => {},
 }); }
 async function create(service: Phase1Service) {
-  return service.call('motion_create_project', { requestId: crypto.randomUUID(), projectType: 'natural_language', title: 'Preview handoff', requirements: 'An editable film' });
+  return service.call('openmotion_create_project', { requestId: crypto.randomUUID(), projectType: 'natural_language', title: 'Preview handoff', requirements: 'An editable film' });
 }
 async function edit(service: Phase1Service, p: any, text: string, presentation?: string) {
-  return service.call('motion_edit_project', { projectId: p.projectId, expectedRevision: p.revision, expectedVersionId: p.version.versionId,
+  return service.call('openmotion_edit_project', { projectId: p.projectId, expectedRevision: p.revision, expectedVersionId: p.version.versionId,
     requestId: crypto.randomUUID(), files: [{ path: 'note.txt', content: text }], ...(presentation ? { presentation } : {}) });
 }
 function display(saved: any, visibility = 'visible', contentVerified = true) {
@@ -25,12 +25,12 @@ function display(saved: any, visibility = 'visible', contentVerified = true) {
 
 test('confirmed inactive-chat deferral preserves the current chat and resolves the latest version on return', () => fixture(async store => {
   const service = api(store, async () => {}), p = await create(service), first = await edit(service, p, 'first');
-  const opened = await service.call('motion_open_preview', first.previewHandoff.nextAction.arguments);
+  const opened = await service.call('openmotion_open_preview', first.previewHandoff.nextAction.arguments);
   assert.equal(opened.previewHandoff.focusPolicy, 'preserve_current_chat');
   assert.equal(opened.previewHandoff.nextAction.codex.recovery.tool, undefined);
   const queued = display(first, 'queued', false);
   queued.display = { ...queued.display, hostStatus: 'queued', evidence: 'Host confirms the calling chat is inactive; preview is queued for its return.' } as any;
-  const pending = await service.call('motion_open_preview', queued);
+  const pending = await service.call('openmotion_open_preview', queued);
   assert.equal(pending.previewHandoff.state, 'pending');
   assert.equal(pending.previewHandoff.nextAction.operation, 'wait_for_calling_chat');
   const second = await edit(service, first, 'second');
@@ -38,8 +38,8 @@ test('confirmed inactive-chat deferral preserves the current chat and resolves t
   const latest = await service.call(resume.tool, resume.arguments);
   assert.equal(latest.currentVersionId, second.version.versionId);
   assert.equal(latest.previewHandoff.focusPolicy, 'preserve_current_chat');
-  await assert.rejects(service.call('motion_open_preview', display(first)), /VERSION_CONFLICT/);
-  assert.equal((await service.call('motion_open_preview', display({ ...second, previewHandoff: latest.previewHandoff }))).previewHandoff.state, 'confirmed');
+  await assert.rejects(service.call('openmotion_open_preview', display(first)), /VERSION_CONFLICT/);
+  assert.equal((await service.call('openmotion_open_preview', display({ ...second, previewHandoff: latest.previewHandoff }))).previewHandoff.state, 'confirmed');
 }, false));
 
 test('a queued acknowledgment with a hidden or unavailable panel retains presentation recovery', () => fixture(async store => {
@@ -48,7 +48,7 @@ test('a queued acknowledgment with a hidden or unavailable panel retains present
   for (const visibility of ['hidden', 'unavailable']) {
     const receipt = display(saved, visibility, true);
     receipt.display = { ...receipt.display, hostStatus: 'queued', hostTabId: nativeTabId } as any;
-    const result = await service.call('motion_open_preview', receipt);
+    const result = await service.call('openmotion_open_preview', receipt);
     assert.equal(result.previewHandoff.state, 'pending');
     assert.equal(result.previewHandoff.openedByHost, false);
     assert.equal(result.previewHandoff.nextAction.operation, 'present_preview');
@@ -70,17 +70,17 @@ test('every edit returns a version-bound foreground handoff without claiming the
   assert.equal(first.previewHandoff.openedByHost, false);
   assert.equal(new URL(first.previewHandoff.previewUrl).searchParams.get('project'), p.projectId);
   const args = display(first);
-  const confirmed = await service.call('motion_open_preview', args);
+  const confirmed = await service.call('openmotion_open_preview', args);
   assert.equal(confirmed.previewHandoff.state, 'confirmed');
   assert.equal(confirmed.previewHandoff.confirmationSource, 'host_reported');
-  assert.equal((await service.call('motion_open_preview', args)).replayed, true);
+  assert.equal((await service.call('openmotion_open_preview', args)).replayed, true);
   const second = await edit(service, first, 'second');
   assert.equal(second.previewHandoff.state, 'pending');
   assert.notEqual(second.previewHandoff.versionId, first.previewHandoff.versionId);
-  await assert.rejects(service.call('motion_open_preview', display(first)), /VERSION_CONFLICT/);
-  await assert.rejects(service.call('motion_open_preview', args), /VERSION_CONFLICT/, 'replaying an old confirmation must not confirm the new version');
-  await assert.rejects(service.call('motion_open_preview', { projectId: p.projectId, expectedRevision: first.revision, expectedVersionId: first.version.versionId }), /VERSION_CONFLICT/);
-  const detail = await service.call('motion_get_project', { projectId: p.projectId });
+  await assert.rejects(service.call('openmotion_open_preview', display(first)), /VERSION_CONFLICT/);
+  await assert.rejects(service.call('openmotion_open_preview', args), /VERSION_CONFLICT/, 'replaying an old confirmation must not confirm the new version');
+  await assert.rejects(service.call('openmotion_open_preview', { projectId: p.projectId, expectedRevision: first.revision, expectedVersionId: first.version.versionId }), /VERSION_CONFLICT/);
+  const detail = await service.call('openmotion_get_project', { projectId: p.projectId });
   assert.equal(detail.previewDisplay.isCurrentVersion, false);
   assert.equal(detail.previewDisplay.liveVisibilityVerified, false);
 }, false));
@@ -88,14 +88,14 @@ test('every edit returns a version-bound foreground handoff without claiming the
 test('queued, hidden, unavailable and unverified content remain pending; background is explicit', () => fixture(async store => {
   const service = api(store), p = await create(service), saved = await edit(service, p, 'first');
   for (const visibility of ['queued', 'hidden', 'unavailable']) {
-    const result = await service.call('motion_open_preview', display(saved, visibility));
+    const result = await service.call('openmotion_open_preview', display(saved, visibility));
     assert.equal(result.previewHandoff.state, 'pending');
     assert.equal(result.previewHandoff.openedByHost, false);
     assert.equal(result.previewHandoff.nextAction.kind, 'host');
   }
-  assert.equal((await service.call('motion_open_preview', display(saved, 'visible', false))).previewHandoff.state, 'pending');
+  assert.equal((await service.call('openmotion_open_preview', display(saved, 'visible', false))).previewHandoff.state, 'pending');
   const bad = display(saved); bad.display.previewUrl = origin + '/?project=' + crypto.randomUUID();
-  await assert.rejects(service.call('motion_open_preview', bad), /PREVIEW_TARGET_MISMATCH/);
+  await assert.rejects(service.call('openmotion_open_preview', bad), /PREVIEW_TARGET_MISMATCH/);
   const background = await edit(service, saved, 'background', 'background');
   assert.equal(background.previewHandoff.state, 'background');
   assert.equal(background.previewHandoff.hostActionRequired, false);
@@ -107,23 +107,23 @@ test('queued, hidden, unavailable and unverified content remain pending; backgro
 
 test('restoring identical content still requires a new display confirmation', () => fixture(async store => {
   const service = api(store), p = await create(service), first = await edit(service, p, 'first');
-  await service.call('motion_open_preview', display(first));
+  await service.call('openmotion_open_preview', display(first));
   const second = await edit(service, first, 'second');
-  const restored = await service.call('motion_restore_version', { projectId: p.projectId, requestId: crypto.randomUUID(),
+  const restored = await service.call('openmotion_restore_version', { projectId: p.projectId, requestId: crypto.randomUUID(),
     versionId: first.version.versionId, expectedRevision: second.revision, expectedVersionId: second.version.versionId });
   assert.equal(restored.previewHandoff.state, 'pending');
   assert.equal(restored.previewHandoff.versionId, restored.version.versionId);
   assert.equal(restored.revision, first.revision);
   assert.notEqual(restored.version.versionId, first.version.versionId);
-  await assert.rejects(service.call('motion_open_preview', display(first)), /VERSION_CONFLICT/);
-  assert.equal((await service.call('motion_get_project', { projectId: p.projectId })).previewDisplay.isCurrentVersion, false);
+  await assert.rejects(service.call('openmotion_open_preview', display(first)), /VERSION_CONFLICT/);
+  assert.equal((await service.call('openmotion_get_project', { projectId: p.projectId })).previewDisplay.isCurrentVersion, false);
 }, false));
 
 test('opening prepares the host action without recursively reopening and preserves full-workspace links', () => fixture(async store => {
   let opened = 0;
   const service = api(store, async () => { opened++; }), p = await create(service);
   const saved = await edit(service, p, 'first');
-  const result = await service.call('motion_open_preview', { ...saved.previewHandoff.nextAction.arguments, embedded: false });
+  const result = await service.call('openmotion_open_preview', { ...saved.previewHandoff.nextAction.arguments, embedded: false });
   assert.equal(opened, 1);
   assert.equal(result.previewHandoff.nextAction.kind, 'host');
   assert.equal(result.previewHandoff.nextAction.codex.arguments.placement, 'right');
@@ -143,42 +143,42 @@ test('opening prepares the host action without recursively reopening and preserv
   assert.equal(new URL(result.previewUrl).searchParams.has('embed'), false);
   assert.equal(result.openedByHost, false);
   const receipt = display({ ...saved, previewHandoff: result.previewHandoff });
-  assert.equal((await service.call('motion_open_preview', receipt)).previewHandoff.state, 'confirmed');
+  assert.equal((await service.call('openmotion_open_preview', receipt)).previewHandoff.state, 'confirmed');
 }, false));
 
 test('only an explicit now request permits switching and it does not persist into the next turn', () => fixture(async store => {
   const service = api(store, async () => {}), p = await create(service), saved = await edit(service, p, 'show now', 'now');
   assert.equal(saved.previewHandoff.focusPolicy, 'switch_to_calling_chat');
   assert.equal(saved.previewHandoff.nextAction.arguments.presentation, 'now');
-  const opened = await service.call('motion_open_preview', saved.previewHandoff.nextAction.arguments);
+  const opened = await service.call('openmotion_open_preview', saved.previewHandoff.nextAction.arguments);
   assert.equal(opened.previewHandoff.nextAction.codex.recovery.tool, 'navigate_to_codex_page');
   assert.equal(opened.previewHandoff.nextAction.codex.recovery.scope, 'calling_chat_only');
-  const pending = await service.call('motion_open_preview', { ...display(saved, 'hidden', false), presentation: 'now' });
+  const pending = await service.call('openmotion_open_preview', { ...display(saved, 'hidden', false), presentation: 'now' });
   assert.equal(pending.previewHandoff.focusPolicy, 'switch_to_calling_chat');
   assert.equal(pending.previewHandoff.nextAction.codex.recovery.tool, 'navigate_to_codex_page');
   const next = await edit(service, saved, 'next ordinary edit');
   assert.equal(next.previewHandoff.focusPolicy, 'preserve_current_chat');
-  const restored = await service.call('motion_restore_version', { projectId: p.projectId, requestId: crypto.randomUUID(),
+  const restored = await service.call('openmotion_restore_version', { projectId: p.projectId, requestId: crypto.randomUUID(),
     versionId: saved.version.versionId, expectedRevision: next.revision, expectedVersionId: next.version.versionId, presentation: 'now' });
   assert.equal(restored.previewHandoff.nextAction.arguments.presentation, 'now');
-  assert.equal((await service.call('motion_open_preview', { projectId: p.projectId })).previewHandoff.focusPolicy, 'preserve_current_chat');
+  assert.equal((await service.call('openmotion_open_preview', { projectId: p.projectId })).previewHandoff.focusPolicy, 'preserve_current_chat');
 }, false));
 
 test('a queued host acknowledgment can confirm an actually visible current preview', () => fixture(async store => {
   const service = api(store, async () => {}), p = await create(service), saved = await edit(service, p, 'latest');
   const nativeTabId = crypto.randomUUID();
   const visible = { ...display(saved), display: { ...display(saved).display, hostStatus: 'queued', hostTabId: nativeTabId } };
-  const confirmed = await service.call('motion_open_preview', visible);
+  const confirmed = await service.call('openmotion_open_preview', visible);
   assert.equal(confirmed.previewHandoff.state, 'confirmed');
   assert.equal(confirmed.display.hostStatus, 'queued');
   const second = await edit(service, saved, 'second');
   assert.equal(second.previewHandoff.state, 'pending');
-  const reopened = await service.call('motion_open_preview', second.previewHandoff.nextAction.arguments);
+  const reopened = await service.call('openmotion_open_preview', second.previewHandoff.nextAction.arguments);
   assert.equal(reopened.previewHandoff.nextAction.codex.arguments.target.tabId, nativeTabId);
   assert.equal(reopened.previewHandoff.nextAction.codex.arguments.target.url, reopened.previewUrl);
   assert.equal(reopened.previewHandoff.state, 'pending', 'reusing a native tab must not reuse its old content confirmation');
   const hidden = { ...display(second, 'hidden'), display: { ...display(second, 'hidden').display, hostStatus: 'queued' } };
-  const pending = await service.call('motion_open_preview', hidden);
+  const pending = await service.call('openmotion_open_preview', hidden);
   assert.equal(pending.previewHandoff.state, 'pending');
   assert.equal(pending.previewHandoff.openedByHost, false);
 }, false));
@@ -196,20 +196,20 @@ test('public MCP round trips expose the handoff and reject a stale host receipt'
     return response.result;
   };
   try {
-    const created = await call('motion_create_project', { requestId: crypto.randomUUID(), projectType: 'natural_language', title: 'RPC preview', requirements: 'Check a two-turn editing handoff' });
+    const created = await call('openmotion_create_project', { requestId: crypto.randomUUID(), projectType: 'natural_language', title: 'RPC preview', requirements: 'Check a two-turn editing handoff' });
     assert.equal(created.isError, undefined);
     const p = created.structuredContent;
-    const save = async (current: any, content: string) => call('motion_edit_project', { projectId: p.projectId, requestId: crypto.randomUUID(),
+    const save = async (current: any, content: string) => call('openmotion_edit_project', { projectId: p.projectId, requestId: crypto.randomUUID(),
       expectedRevision: current.revision, expectedVersionId: current.version.versionId, files: [{ path: 'note.txt', content }] });
     const first = await save(p, 'first'); assert.equal(first.isError, undefined);
     assert.equal(first.structuredContent.previewHandoff.state, 'pending');
-    const receipt = await call('motion_open_preview', display(first.structuredContent, 'queued', false));
+    const receipt = await call('openmotion_open_preview', display(first.structuredContent, 'queued', false));
     assert.equal(receipt.isError, undefined); assert.equal(receipt.structuredContent.previewHandoff.state, 'pending');
     const second = await save(first.structuredContent, 'second'); assert.equal(second.isError, undefined);
     assert.equal(second.structuredContent.previewHandoff.state, 'pending');
-    const stale = await call('motion_open_preview', display(first.structuredContent));
+    const stale = await call('openmotion_open_preview', display(first.structuredContent));
     assert.equal(stale.isError, true); assert.match(JSON.stringify(stale), /VERSION_CONFLICT/);
-    const unchanged = await call('motion_get_project', { projectId: p.projectId });
+    const unchanged = await call('openmotion_get_project', { projectId: p.projectId });
     assert.equal(unchanged.structuredContent.currentVersionId, second.structuredContent.version.versionId);
   } finally { await running.close(); }
 }, false));
@@ -224,12 +224,12 @@ test('content changes during opening require rereading before a new preview hand
   });
   const p = await create(service); projectId = p.projectId;
   const saved = await edit(service, p, 'first');
-  await assert.rejects(service.call('motion_open_preview', saved.previewHandoff.nextAction.arguments), /VERSION_CONFLICT/);
-  const current = await service.call('motion_get_project', { projectId });
+  await assert.rejects(service.call('openmotion_open_preview', saved.previewHandoff.nextAction.arguments), /VERSION_CONFLICT/);
+  const current = await service.call('openmotion_get_project', { projectId });
   assert.notEqual(current.currentVersionId, saved.version.versionId);
-  const opened = await service.call('motion_open_preview', { projectId, expectedRevision: current.revision, expectedVersionId: current.currentVersionId });
+  const opened = await service.call('openmotion_open_preview', { projectId, expectedRevision: current.revision, expectedVersionId: current.currentVersionId });
   assert.equal(opened.previewHandoff.versionId, current.currentVersionId);
-  await assert.rejects(service.call('motion_open_preview', display(saved)), /VERSION_CONFLICT/);
-  const receipt = await service.call('motion_open_preview', display({ ...current, previewHandoff: opened.previewHandoff }));
+  await assert.rejects(service.call('openmotion_open_preview', display(saved)), /VERSION_CONFLICT/);
+  const receipt = await service.call('openmotion_open_preview', display({ ...current, previewHandoff: opened.previewHandoff }));
   assert.equal(receipt.previewHandoff.state, 'confirmed');
 }, false));
