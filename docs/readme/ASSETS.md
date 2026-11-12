@@ -363,3 +363,12 @@ Change only the bold slogan "Edit with AI." into the exact text "Edit videos wit
 ```
 
 All 38 full films used by the README, scenarios, comparisons and curated collections are now local; see the [media manifest](media/manifest.json) and [resource contract](RESOURCES.md). GIF source hashes continue to identify those same complete files. The six editable profiles include reference films and local dependencies; Presenter Story carries its three pairs. The original template demo is [local](../../library/templates/presenter-tech/preview.mp4). This supersedes earlier descriptions of temporary-only source videos and CDN-dependent rendering.
+
+
+## Current online catalog and Studio captures — 2026-11-12
+
+The README uses locally stored excerpts from the public template catalog. Each card links once to its online detail page. Source URLs and file hashes are recorded in [the template manifest](live-templates/manifest.json). Presenter references remain local and have no online-template link.
+
+The English, Simplified Chinese and Japanese screenshots show the installed OpenMotion 0.6.5 template library, template detail and recreation dialog, captured in an isolated demo workspace using the production catalog. [Capture manifest](live-product/manifest.json). These are real UI captures, without generated or composited interface elements.
+
+The full-stack workflow section also includes [a user-provided Studio screenshot](live-product/studio-in-use.png), retained as the original PNG with its Chinese interface. It shows imported media, playback and the editing timeline. Its runtime version is unspecified; the file hash and provenance are recorded separately in the capture manifest.
