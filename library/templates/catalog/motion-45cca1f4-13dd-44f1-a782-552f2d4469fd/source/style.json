@@ -1,0 +1,131 @@
+{
+  "background": {
+    "color": "#09004b",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：X-height",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Baseline",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：bluevine",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "构造线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "几何字标",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "半圆模块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "叶片模块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "应用图标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#09004b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2548db",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e9cbd7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9ce0d3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f7e98c",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线几何字标；构造辅助线极细，圆弧与直线组成字形",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先展示字标的几何构造，再把圆弧模块变成独立符号和应用图标。",
+      "status": "inferred"
+    },
+    {
+      "rule": "深蓝底上先画基线、字高与圆弧线稿，蓝色填充依次进入。构造线比字形更轻，横移时让正在完成的字母留在中心。",
+      "status": "inferred"
+    },
+    {
+      "rule": "半圆、拱门、圆角方形与圆依次占据正方形中心，背景与图形成对换色。每屏只放一个形状，边界清楚，快切后留短暂停顿。",
+      "status": "inferred"
+    }
+  ]
+}

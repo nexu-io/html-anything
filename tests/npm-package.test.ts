@@ -81,6 +81,10 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.match(release.commit, /^[a-f0-9]{40}$/);
     const application = path.join(directory, 'app'), installer = path.join(directory, 'installer');
     await extractArchive(built.application, application); await extractArchive(built.installer, installer);
+    const sourceEnv = { ...process.env }; delete sourceEnv.MOTION_TEMPLATE_SOURCE;
+    const sourceMode = await runFile(process.execPath, ['--input-type=module', '-e', `import {templateConfig} from ${JSON.stringify(pathToFileURL(path.join(application, 'shared/template-config.ts')).href)}; process.stdout.write(templateConfig().source);`], { env: sourceEnv });
+    assert.equal(sourceMode, 'cms', 'An npm application without repository templates must retain its CMS source');
+    await assert.rejects(readFile(path.join(application, 'library/templates/catalog/catalog.json')), { code: 'ENOENT' });
     const readme = await readFile(path.join(installer, 'package/README.md'), 'utf8');
     assert(readme.includes("Reverse engineering for any video"));
     assert(readme.includes(`https://raw.githubusercontent.com/nexu-io/openmotion/${release.commit}/docs/readme/brand-hero.jpg`));

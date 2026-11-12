@@ -1,0 +1,97 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发光云",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "下方设备",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码片段",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中央徽章",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "消散粒子",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e5e5e5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#aab8aa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#354f3d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#555555",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "黑白高反差 CRT 拼贴，少量绿色终端字，中央徽章锐利。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "云在上方，设备在下方，发光竖线连接两层。周围终端信息降低对比，主体保持纵向中央构图。",
+      "status": "inferred"
+    },
+    {
+      "rule": "徽章先以条带错位闪入，随后稳定在中心；云和设备变为粒子向外消散，徽章自身保持完整。",
+      "status": "inferred"
+    },
+    {
+      "rule": "去掉背景后保留一段黑底徽章，再整体淡出。换主题时更换中央标志和上下对象，但保留复杂环境退场、品牌留下的逻辑。",
+      "status": "inferred"
+    }
+  ]
+}

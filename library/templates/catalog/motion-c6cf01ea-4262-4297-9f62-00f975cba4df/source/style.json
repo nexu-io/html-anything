@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#fcfcfc",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Wabi",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Mexico City",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Donkey",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "渐变球",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机聊天",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "小应用卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "参与者头像",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "个人首页",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "弧形应用列",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fcfcfc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#151515",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a58bc9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#efb9a4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7598d7",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线简短主张与聊天正文；白底大留白，气泡和小应用保持轻边界",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "聊天中的信息逐渐长成可用的小应用，再让这些应用组成个人首页。",
+      "status": "inferred"
+    },
+    {
+      "rule": "旅行确认先成为行程和倒计时，群聊继续加入地点推荐，生活事务引出执行结果。输入与结果保持同一语境，小应用出现后仍能回到聊天。",
+      "status": "inferred"
+    },
+    {
+      "rule": "共享宠物请求先出现在气泡，再生成应用卡，进入完整宠物页后回到群聊。手机框始终是稳定参照，应用与气泡用同一名称关联。",
+      "status": "inferred"
+    }
+  ]
+}

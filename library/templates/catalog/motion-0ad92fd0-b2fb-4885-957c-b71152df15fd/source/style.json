@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#08132a",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Dia",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Welcome to Dia",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "放射光",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "Dia 图形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "引用标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "回答条带",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "欢迎窗",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#08132a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f3a264",
+      "status": "inferred"
+    },
+    {
+      "hex": "#3169a5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c8cad9",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "蓝橙放射光背景，磨砂白色输入栏，品牌名用细衬线。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "发光图形从底部升起并缩小，随后变为发送箭头；输入框沿水平方向展开，让品牌介绍自然进入操作。",
+      "status": "inferred"
+    },
+    {
+      "rule": "橙色光束从上方汇聚点向下放射，蓝色承担暗部；半透明白面板固定在下半部。正文黑字，品牌小字可用细衬线。",
+      "status": "inferred"
+    },
+    {
+      "rule": "视频、商品和邮件分别作为引用标签进入输入框，提交后回答在上方展开。替换主题时更换引用内容与任务，维持输入区位置和结果方向。",
+      "status": "inferred"
+    }
+  ]
+}

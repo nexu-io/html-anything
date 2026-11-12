@@ -1,0 +1,272 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cursor Builds — cloud agents start 3x faster · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f5f5f1;--brand-ink:#202122;--accent:#9966cc;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Cursor <span>/</span> V257</div><div class="intro-line"><h1>Cursor Builds — cloud agents start 3x faster</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>先用同时开始的前后对照说明速度，再用一次局部失败说明恢复方式。把“更快”和“容易处理问题”分开讲清楚。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 19.9, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 3.8, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Cloud agents start faster&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#9966cc&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Cloud agents start faster&quot;, &quot;accent&quot;: &quot;#9966cc&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="19.9" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 19.90 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Cursor Builds — cloud agents start 3x faster · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f1}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Cursor</div><div class="type-sample">Cloud agents start faster</div><p>无衬线界面文字与清晰大小层级</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f5f5f1" style="--swatch:#f5f5f1" aria-label="复制色值 #f5f5f1"><span></span><code>#F5F5F1</code></button><button class="swatch" data-color="#202122" style="--swatch:#202122" aria-label="复制色值 #202122"><span></span><code>#202122</code></button><button class="swatch" data-color="#9966cc" style="--swatch:#9966cc" aria-label="复制色值 #9966cc"><span></span><code>#9966CC</code></button><button class="swatch" data-color="#f1ba8a" style="--swatch:#f1ba8a" aria-label="复制色值 #f1ba8a"><span></span><code>#F1BA8A</code></button><button class="swatch" data-color="#9ab8ad" style="--swatch:#9ab8ad" aria-label="复制色值 #9ab8ad"><span></span><code>#9AB8AD</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>前后双窗口</span><span>独立计时条</span><span>构建步骤</span><span>成功框</span><span>错误提示</span><span>调试按钮</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>两组从同一时点开始</h2></div><div class="rule-copy">
+<p>Before 与 After 窗口尺寸一致、基线一致，计时同时启动。进度变化可以不同，但必须比较同一类工作，不能让两边暗中采用不同起点。</p>
+<p>浅背景承托两组界面，前后使用可区分的暖色与绿色。标签、秒数和完成状态采用清晰无衬线字与对齐数字；完成文字在浅底上使用深色。</p>
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>新流程完成后，旧流程仍可见</h2></div><div class="rule-copy">
+<p>右侧先出现可用界面或完成标记，左侧继续显示自己的进度。保留一小段并置时间，让差异可以直接看见，然后再切到下一项能力。</p>
+</div></section><section class="rule has-demo" id="section-3"><div class="rule-label"><span>03</span><h2>遇到失败时给出下一步</h2></div><figure class="demo" id="demo-clip-3" data-demo="{&quot;id&quot;: &quot;clip-3&quot;, &quot;title&quot;: &quot;遇到失败时给出下一步&quot;, &quot;src&quot;: &quot;demos/clip-3.html&quot;, &quot;duration&quot;: 6, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;9–15 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>遇到失败时给出下一步</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="遇到失败时给出下一步" data-src="demos/clip-3.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="6" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 6.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>9–15 秒 · 动作示意 <a href="demos/clip-3.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Cursor Builds — cloud agents start 3x faster · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f1}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;9&quot; data-end=&quot;15&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>局部构建项出现失败提示，其余完成项保留。推近 Debug with Agent 或对应修复入口，点击后显示继续处理的方向，不用抹掉错误来制造全程成功。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>换案例时重做比较条件</h2></div><div class="rule-copy">
+<p>用新任务的实际起点、结束条件和时长替换对照。可以沿用双窗口和进度条，但速度主张须与显示内容一致；恢复段保留明确的错误和可执行入口。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>前后对比</b></button><button class="beat" data-time="2.0"><span>2.00<small>s</small></span><b>速度主张</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>同时启动</b></button><button class="beat" data-time="5.0"><span>5.00<small>s</small></span><b>新流程先完成</b></button><button class="beat" data-time="7.0"><span>7.00<small>s</small></span><b>韧性主张</b></button><button class="beat" data-time="9.0"><span>9.00<small>s</small></span><b>构建步骤</b></button><button class="beat" data-time="11.0"><span>11.00<small>s</small></span><b>错误提示</b></button><button class="beat" data-time="13.0"><span>13.00<small>s</small></span><b>调试入口</b></button><button class="beat" data-time="15.0"><span>15.00<small>s</small></span><b>总结</b></button><button class="beat" data-time="18.0"><span>18.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.jpg" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="3.00 秒的构图参考" loading="lazy"><figcaption>3.00s</figcaption></figure><figure><img src="assets/reference-3.jpg" alt="7.00 秒的构图参考" loading="lazy"><figcaption>7.00s</figcaption></figure><figure><img src="assets/reference-4.jpg" alt="9.00 秒的构图参考" loading="lazy"><figcaption>9.00s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="13.00 秒的构图参考" loading="lazy"><figcaption>13.00s</figcaption></figure><figure><img src="assets/reference-6.jpg" alt="18.00 秒的构图参考" loading="lazy"><figcaption>18.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可迁移为性能对比演示，必须固定起点与同一工作量</li><li>对比数值须来自测量；示例倍速仅复述原片主张</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>前后双窗口 / 独立计时条 / 构建步骤 / 成功框 / 错误提示 / 调试按钮</p>
+<ul><li>两组同时开始但进度速度不同，新流程先显示成果</li><li>随后承认一个局部失败，提供调试按钮而不是宣称所有任务成功</li><li>速度与可恢复性分段说明，二者不混成单一数字</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Cursor / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Cursor Builds — cloud agents start 3x faster
+
+先用同时开始的前后对照说明速度，再用一次局部失败说明恢复方式。把“更快”和“容易处理问题”分开讲清楚。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 19.9,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 3.8,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Cloud agents start faster&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#9966cc&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Cloud agents start faster&quot;,
+        &quot;accent&quot;: &quot;#9966cc&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 两组从同一时点开始
+
+Before 与 After 窗口尺寸一致、基线一致，计时同时启动。进度变化可以不同，但必须比较同一类工作，不能让两边暗中采用不同起点。
+
+浅背景承托两组界面，前后使用可区分的暖色与绿色。标签、秒数和完成状态采用清晰无衬线字与对齐数字；完成文字在浅底上使用深色。
+
+## 新流程完成后，旧流程仍可见
+
+右侧先出现可用界面或完成标记，左侧继续显示自己的进度。保留一小段并置时间，让差异可以直接看见，然后再切到下一项能力。
+
+## 遇到失败时给出下一步
+
+局部构建项出现失败提示，其余完成项保留。推近 Debug with Agent 或对应修复入口，点击后显示继续处理的方向，不用抹掉错误来制造全程成功。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-3&quot;,
+  &quot;title&quot;: &quot;遇到失败时给出下一步&quot;,
+  &quot;src&quot;: &quot;demos/clip-3.html&quot;,
+  &quot;duration&quot;: 6,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;9–15 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 换案例时重做比较条件
+
+用新任务的实际起点、结束条件和时长替换对照。可以沿用双窗口和进度条，但速度主张须与显示内容一致；恢复段保留明确的错误和可执行入口。
+
+## 配色与字形
+
+无衬线界面文字与清晰大小层级。
+
+#f5f5f1 · #202122 · #9966cc · #f1ba8a · #9ab8ad
+
+## 元素与制作规则
+
+前后双窗口 / 独立计时条 / 构建步骤 / 成功框 / 错误提示 / 调试按钮
+
+- 两组同时开始但进度速度不同，新流程先显示成果
+- 随后承认一个局部失败，提供调试按钮而不是宣称所有任务成功
+- 速度与可恢复性分段说明，二者不混成单一数字
+
+## 内容替换
+
+- 可迁移为性能对比演示，必须固定起点与同一工作量
+- 对比数值须来自测量；示例倍速仅复述原片主张
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Cursor&quot;,
+  &quot;id&quot;: &quot;V257&quot;,
+  &quot;palette&quot;: [
+    &quot;#f5f5f1&quot;,
+    &quot;#202122&quot;,
+    &quot;#9966cc&quot;,
+    &quot;#f1ba8a&quot;,
+    &quot;#9ab8ad&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线界面文字与清晰大小层级&quot;,
+  &quot;sample&quot;: &quot;Cloud agents start faster&quot;,
+  &quot;objects&quot;: [
+    &quot;前后双窗口&quot;,
+    &quot;独立计时条&quot;,
+    &quot;构建步骤&quot;,
+    &quot;成功框&quot;,
+    &quot;错误提示&quot;,
+    &quot;调试按钮&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 3.0,
+      &quot;frameId&quot;: &quot;K0006&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.jpg&quot;,
+      &quot;timeSeconds&quot;: 7.0,
+      &quot;frameId&quot;: &quot;K0016&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.jpg&quot;,
+      &quot;timeSeconds&quot;: 9.0,
+      &quot;frameId&quot;: &quot;K0020&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 13.0,
+      &quot;frameId&quot;: &quot;K0030&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.jpg&quot;,
+      &quot;timeSeconds&quot;: 18.0,
+      &quot;frameId&quot;: &quot;K0040&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0.0,
+      &quot;label&quot;: &quot;前后对比&quot;,
+      &quot;end&quot;: 2.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 2.0,
+      &quot;label&quot;: &quot;速度主张&quot;,
+      &quot;end&quot;: 3.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3.0,
+      &quot;label&quot;: &quot;同时启动&quot;,
+      &quot;end&quot;: 5.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 5.0,
+      &quot;label&quot;: &quot;新流程先完成&quot;,
+      &quot;end&quot;: 7.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 7.0,
+      &quot;label&quot;: &quot;韧性主张&quot;,
+      &quot;end&quot;: 9.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 9.0,
+      &quot;label&quot;: &quot;构建步骤&quot;,
+      &quot;end&quot;: 11.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 11.0,
+      &quot;label&quot;: &quot;错误提示&quot;,
+      &quot;end&quot;: 13.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 13.0,
+      &quot;label&quot;: &quot;调试入口&quot;,
+      &quot;end&quot;: 15.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15.0,
+      &quot;label&quot;: &quot;总结&quot;,
+      &quot;end&quot;: 18.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 18.0,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 19.9,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 19.9,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

@@ -1,0 +1,282 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stripe Treasury · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f8f8fa;--brand-ink:#242331;--board-label-ink:#000000;--accent:#6533ef;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Stripe <span>/</span> V298</div><div class="intro-line"><h1>Stripe Treasury</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>从通知进入余额，再发送付款、创建卡片、对话操作，最后回到总览。每次只让一张操作面板居中，确认后再移交给下一个场景。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 40.64, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 25.7, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Stripe Treasury&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#6533ef&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Stripe Treasury&quot;, &quot;accent&quot;: &quot;#6533ef&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="40.64" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 40.64 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Stripe Treasury — the new Stripe Treasury: • Hold… · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f8f8fa}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Stripe</div><div class="type-sample">Stripe Treasury</div><p>浅色产品底、紫色行动按钮；数字比说明文字更突出。</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f8f8fa" style="--swatch:#f8f8fa" aria-label="复制色值 #f8f8fa"><span></span><code>#F8F8FA</code></button><button class="swatch" data-color="#242331" style="--swatch:#242331" aria-label="复制色值 #242331"><span></span><code>#242331</code></button><button class="swatch" data-color="#6533ef" style="--swatch:#6533ef" aria-label="复制色值 #6533ef"><span></span><code>#6533EF</code></button><button class="swatch" data-color="#dceafa" style="--swatch:#dceafa" aria-label="复制色值 #dceafa"><span></span><code>#DCEAFA</code></button><button class="swatch" data-color="#ded3f5" style="--swatch:#ded3f5" aria-label="复制色值 #ded3f5"><span></span><code>#DED3F5</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>手机</span><span>收款通知</span><span>转账面板</span><span>支付卡</span><span>收益数字</span><span>账目表格</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>按资金流串起产品能力</h2></div><div class="rule-copy">
+<p>从通知进入余额，再发送付款、创建卡片、对话操作，最后回到总览。每次只让一张操作面板居中，确认后再移交给下一个场景。</p>
+
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>用浅紫环境维持轻盈感</h2></div><div class="rule-copy">
+<p>白色面板浮在低对比蓝紫渐变上，按钮和焦点描边使用鲜紫色。近景显示字段和点击，远景交代手机与仪表盘。</p>
+</div></section><section class="rule has-demo" id="section-3"><div class="rule-label"><span>03</span><h2>创建动作接到可见成果</h2></div><figure class="demo" id="demo-clip-3" data-demo="{&quot;id&quot;: &quot;clip-3&quot;, &quot;title&quot;: &quot;创建动作接到可见成果&quot;, &quot;src&quot;: &quot;demos/clip-3.html&quot;, &quot;duration&quot;: 2.6999999999999993, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;24.3–27 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>创建动作接到可见成果</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="创建动作接到可见成果" data-src="demos/clip-3.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="2.6999999999999993" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 2.70 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>24.3–27 秒 · 动作示意 <a href="demos/clip-3.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Stripe Treasury — the new Stripe Treasury: • Hold… · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f8f8fa}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;24.3&quot; data-end=&quot;27&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>创建卡片后立即展示带高光的紫色实体卡，并让 2% 数字占据另一半画面。卡片转动幅度小，数字稳定。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>主题迁移要替换整条交易链</h2></div><div class="rule-copy">
+<p>换品牌时把通知、余额、收款方、卡片及报表一起更新。财务数字以说明关系为主，保留按钮与结果的明确承接。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>收款通知</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>余额</b></button><button class="beat" data-time="5.8"><span>5.80<small>s</small></span><b>发送入口</b></button><button class="beat" data-time="9.0"><span>9.00<small>s</small></span><b>选择收款人</b></button><button class="beat" data-time="15.0"><span>15.00<small>s</small></span><b>转账结果</b></button><button class="beat" data-time="21.0"><span>21.00<small>s</small></span><b>创建卡片</b></button><button class="beat" data-time="25.0"><span>25.00<small>s</small></span><b>卡片收益</b></button><button class="beat" data-time="28.0"><span>28.00<small>s</small></span><b>对话付款</b></button><button class="beat" data-time="34.0"><span>34.00<small>s</small></span><b>账目总览</b></button><button class="beat" data-time="39.0"><span>39.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.jpg" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="5.78 秒的构图参考" loading="lazy"><figcaption>5.78s</figcaption></figure><figure><img src="assets/reference-3.jpg" alt="15.00 秒的构图参考" loading="lazy"><figcaption>15.00s</figcaption></figure><figure><img src="assets/reference-4.jpg" alt="21.00 秒的构图参考" loading="lazy"><figcaption>21.00s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="28.00 秒的构图参考" loading="lazy"><figcaption>28.00s</figcaption></figure><figure><img src="assets/reference-6.jpg" alt="39.00 秒的构图参考" loading="lazy"><figcaption>39.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>替换财务产品和字段，保持入口、确认与结果之间的对应。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>手机 / 收款通知 / 转账面板 / 支付卡 / 收益数字 / 账目表格</p>
+<ul><li>从通知进入余额，再发送付款、创建卡片、对话操作，最后回到总览。每次只让一张操作面板居中，确认后再移交给下一个场景。</li><li>白色面板浮在低对比蓝紫渐变上，按钮和焦点描边使用鲜紫色。近景显示字段和点击，远景交代手机与仪表盘。</li><li>创建卡片后立即展示带高光的紫色实体卡，并让 2% 数字占据另一半画面。卡片转动幅度小，数字稳定。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Stripe / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Stripe Treasury
+
+从通知进入余额，再发送付款、创建卡片、对话操作，最后回到总览。每次只让一张操作面板居中，确认后再移交给下一个场景。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 40.64,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 25.7,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Stripe Treasury&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#6533ef&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Stripe Treasury&quot;,
+        &quot;accent&quot;: &quot;#6533ef&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 按资金流串起产品能力
+
+从通知进入余额，再发送付款、创建卡片、对话操作，最后回到总览。每次只让一张操作面板居中，确认后再移交给下一个场景。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–3.00s | 收款通知 |
+| 3.00–5.80s | 余额 |
+| 5.80–9.00s | 发送入口 |
+| 9.00–15.00s | 选择收款人 |
+| 15.00–21.00s | 转账结果 |
+| 21.00–25.00s | 创建卡片 |
+| 25.00–28.00s | 卡片收益 |
+| 28.00–34.00s | 对话付款 |
+| 34.00–39.00s | 账目总览 |
+| 39.00–40.64s | 品牌 |
+
+## 用浅紫环境维持轻盈感
+
+白色面板浮在低对比蓝紫渐变上，按钮和焦点描边使用鲜紫色。近景显示字段和点击，远景交代手机与仪表盘。
+
+## 创建动作接到可见成果
+
+创建卡片后立即展示带高光的紫色实体卡，并让 2% 数字占据另一半画面。卡片转动幅度小，数字稳定。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-3&quot;,
+  &quot;title&quot;: &quot;创建动作接到可见成果&quot;,
+  &quot;src&quot;: &quot;demos/clip-3.html&quot;,
+  &quot;duration&quot;: 2.6999999999999993,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;24.3–27 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 主题迁移要替换整条交易链
+
+换品牌时把通知、余额、收款方、卡片及报表一起更新。财务数字以说明关系为主，保留按钮与结果的明确承接。
+
+## 配色与字形
+
+浅色产品底、紫色行动按钮；数字比说明文字更突出。。
+
+#f8f8fa · #242331 · #6533ef · #dceafa · #ded3f5
+
+## 元素与制作规则
+
+手机 / 收款通知 / 转账面板 / 支付卡 / 收益数字 / 账目表格
+
+- 从通知进入余额，再发送付款、创建卡片、对话操作，最后回到总览。每次只让一张操作面板居中，确认后再移交给下一个场景。
+- 白色面板浮在低对比蓝紫渐变上，按钮和焦点描边使用鲜紫色。近景显示字段和点击，远景交代手机与仪表盘。
+- 创建卡片后立即展示带高光的紫色实体卡，并让 2% 数字占据另一半画面。卡片转动幅度小，数字稳定。
+
+## 内容替换
+
+- 替换财务产品和字段，保持入口、确认与结果之间的对应。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Stripe&quot;,
+  &quot;id&quot;: &quot;V298&quot;,
+  &quot;palette&quot;: [
+    &quot;#f8f8fa&quot;,
+    &quot;#242331&quot;,
+    &quot;#6533ef&quot;,
+    &quot;#dceafa&quot;,
+    &quot;#ded3f5&quot;
+  ],
+  &quot;typography&quot;: &quot;浅色产品底、紫色行动按钮；数字比说明文字更突出。&quot;,
+  &quot;sample&quot;: &quot;Stripe Treasury&quot;,
+  &quot;objects&quot;: [
+    &quot;手机&quot;,
+    &quot;收款通知&quot;,
+    &quot;转账面板&quot;,
+    &quot;支付卡&quot;,
+    &quot;收益数字&quot;,
+    &quot;账目表格&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 5.78,
+      &quot;frameId&quot;: &quot;K0023&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.jpg&quot;,
+      &quot;timeSeconds&quot;: 15.0,
+      &quot;frameId&quot;: &quot;K0043&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.jpg&quot;,
+      &quot;timeSeconds&quot;: 21.0,
+      &quot;frameId&quot;: &quot;K0059&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 28.0,
+      &quot;frameId&quot;: &quot;K0083&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.jpg&quot;,
+      &quot;timeSeconds&quot;: 39.0,
+      &quot;frameId&quot;: &quot;K0123&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;收款通知&quot;,
+      &quot;end&quot;: 3,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3,
+      &quot;label&quot;: &quot;余额&quot;,
+      &quot;end&quot;: 5.8,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 5.8,
+      &quot;label&quot;: &quot;发送入口&quot;,
+      &quot;end&quot;: 9,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 9,
+      &quot;label&quot;: &quot;选择收款人&quot;,
+      &quot;end&quot;: 15,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15,
+      &quot;label&quot;: &quot;转账结果&quot;,
+      &quot;end&quot;: 21,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 21,
+      &quot;label&quot;: &quot;创建卡片&quot;,
+      &quot;end&quot;: 25,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 25,
+      &quot;label&quot;: &quot;卡片收益&quot;,
+      &quot;end&quot;: 28,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 28,
+      &quot;label&quot;: &quot;对话付款&quot;,
+      &quot;end&quot;: 34,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 34,
+      &quot;label&quot;: &quot;账目总览&quot;,
+      &quot;end&quot;: 39,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 39,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 40.64,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 40.64,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

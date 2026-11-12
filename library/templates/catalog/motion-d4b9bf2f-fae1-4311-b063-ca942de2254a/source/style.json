@@ -1,0 +1,90 @@
+{
+  "background": {
+    "color": "#080808",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "多页横向画廊",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色选中画布",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "命令标签",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#080808",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f7f7f7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#168fe0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202020",
+      "status": "inferred"
+    },
+    {
+      "hex": "#727272",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "暗色编辑器配白色无衬线；命令片段用亮蓝底或蓝色辉光。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "开场在输入框中接连输入字体和引号规则；接着展示已完成页面，使观众知道这些规则影响的是整套页面。",
+      "status": "inferred"
+    },
+    {
+      "rule": "横向排列多个暗色网页，中央页面较大且带细蓝边。镜头沿内容上下移动；调用 /design-system 后，新页面沿用同一边框和文字层级。",
+      "status": "inferred"
+    },
+    {
+      "rule": "结尾放大 /skills 标签，以蓝色圆角描边和短促发光取代复杂界面。正文用中等字重，页面小字保持克制。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "background": {
+    "color": "#f5f5f1",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：• Lumen",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Get started",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Light that follows your day",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "浏览器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "原页面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "选框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "编号批注",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "属性面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "草图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "生成区域",
+      "status": "inferred"
+    },
+    {
+      "id": "role-7",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "尺寸选择",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f5f5f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202122",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9966cc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f1ba8a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9ab8ad",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面文字与清晰大小层级",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "标注附着在目标元素上，编号和批注保持一一对应",
+      "status": "inferred"
+    },
+    {
+      "rule": "样式修改可直接预览，草图新增需先提交再出现真实组件",
+      "status": "inferred"
+    },
+    {
+      "rule": "响应式检查发生在修改完成后，保持同一页面内容",
+      "status": "inferred"
+    }
+  ]
+}

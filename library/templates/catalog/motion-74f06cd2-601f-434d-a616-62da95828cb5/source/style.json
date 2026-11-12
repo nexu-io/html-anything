@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#e1d9ca",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Canva",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Amplitude",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Open in Figma",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机对话容器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "外部通知",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "分析图表卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "设计流程卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "幻灯片结果卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "用户追问",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#e1d9ca",
+      "status": "inferred"
+    },
+    {
+      "hex": "#25251f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#be6d57",
+      "status": "inferred"
+    },
+    {
+      "hex": "#779b83",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "暖灰米色背景、轻边框手机、数据图与流程卡片、衬线说明",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "以业务问题贯穿多工具调用：数据说明发生什么，流程说明为何，幻灯片负责分享。",
+      "status": "inferred"
+    },
+    {
+      "rule": "工具结果先以内嵌卡出现，再放大查看细节，关闭后回到同一对话。",
+      "status": "inferred"
+    },
+    {
+      "rule": "卡片视觉类型随信息任务变化：曲线→流程→页面，不能全换成同类结果卡。",
+      "status": "inferred"
+    }
+  ]
+}

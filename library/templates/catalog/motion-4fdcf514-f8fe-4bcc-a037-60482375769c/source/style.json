@@ -1,0 +1,90 @@
+{
+  "background": {
+    "color": "#10295a",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手与加油枪",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "弯曲枪口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色钱包",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "金币与纸币",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#10295a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f5f3e9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4d77e6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d7a647",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e6b99c",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无正文插画；可增小号无衬线说明，主体用平面色块",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "把“加油”动作借给钱包：枪口对准、金币流入、钱包充盈，动作本身解释充值含义。",
+      "status": "inferred"
+    },
+    {
+      "rule": "手臂与枪体作为一组移动，喷口指向钱包开口后才出现金币。金币沿短弧线落下，纸币后出现；钱包位置稳定，充盈只改变内部内容。",
+      "status": "inferred"
+    },
+    {
+      "rule": "深蓝底与亮蓝钱包、金黄色钱币形成对比。钱币先在钱包后方升起，再被前袋遮住底部；手的肤色只占小面积，白色枪口引导方向。",
+      "status": "inferred"
+    }
+  ]
+}

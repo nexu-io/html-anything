@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#e1d9ca",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Dispatch",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Ask Claude anything",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Claude",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机请求端",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "桌面执行端",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "连接线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "请求气泡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "操作窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "回传卡片",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#e1d9ca",
+      "status": "inferred"
+    },
+    {
+      "hex": "#20211d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ba5d44",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c5d5cb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "砂色底、白色手机与桌面设备、砖红请求气泡、细线连接",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "每个任务按手机请求→桌面执行→手机确认闭环，三次重复同一语法但内容递进。",
+      "status": "inferred"
+    },
+    {
+      "rule": "设备并置时手机在左、执行环境在右；细连接线强调因果而非装饰轨迹。",
+      "status": "inferred"
+    },
+    {
+      "rule": "镜头先聚焦输入，再拉开显示两个端点，最后推近回传结果。",
+      "status": "inferred"
+    }
+  ]
+}

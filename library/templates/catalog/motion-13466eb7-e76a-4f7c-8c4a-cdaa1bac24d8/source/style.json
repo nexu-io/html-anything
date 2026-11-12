@@ -1,0 +1,115 @@
+{
+  "background": {
+    "color": "#080808",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "人物剪影",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "紫色块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "服务菜单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代理列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "详情卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "履约状态",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#080808",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f1f0ee",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9e79f5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4a405c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#888888",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "等宽短句与粗无衬线口号交替；流程状态用清楚的小标签",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "灰度人物与植物画面承托简短主张，单个人复制成列后切到代理网格。紫色矩形作为重音遮片与词块，黑白图像保持低饱和。",
+      "status": "inferred"
+    },
+    {
+      "rule": "类别列表只突出一项，再进入代理列表和详情。名称、评分、价格与操作按钮要放在同一信息区，焦点由紫色高亮传递。",
+      "status": "inferred"
+    },
+    {
+      "rule": "打开、接受、提交、审查和完成依次点亮，当前状态向右推进。最后给一句结算主张再落品牌，不混入新的任务或代理。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可迁移到创作、研发或业务服务市场。演示价格、评分和状态使用清楚的示例内容，保持目录→详情→执行→完成的结构。",
+      "status": "inferred"
+    }
+  ]
+}

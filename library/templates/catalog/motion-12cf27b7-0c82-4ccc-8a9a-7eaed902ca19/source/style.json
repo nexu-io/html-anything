@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#e9e9e1",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Coming soon",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Your Notes",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "折叠设备",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "列表与详情",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手绘箭头",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "边缘拼贴",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "衬线短句",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#e9e9e1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1a1b17",
+      "status": "inferred"
+    },
+    {
+      "hex": "#afce39",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d4c5cf",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7c8a78",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "浅纸色、手绘箭头与小块拼贴；手机屏幕保留黑框和淡色界面。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "竖屏手机居中进入，转向并展开为横向双栏；列表留在一侧，详情进入另一侧。保持同一条笔记内容贯穿两个画幅。",
+      "status": "inferred"
+    },
+    {
+      "rule": "奶灰背景用小块彩色纸片与手绘箭头点缀四周，黑色设备边框突出屏幕。宣传短句用细衬线，与 UI 小字区分。",
+      "status": "inferred"
+    },
+    {
+      "rule": "完整笔记后展示折叠设备的录音波形，随后切到绿色品牌页。迁移到其他设备时，把折叠几何和屏幕响应一起设计。",
+      "status": "inferred"
+    }
+  ]
+}

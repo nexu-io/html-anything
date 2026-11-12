@@ -1,0 +1,97 @@
+{
+  "tracks": [
+    {
+      "id": "composition.center",
+      "target": "composition",
+      "property": "center",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          9.933333
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          [
+            200.0,
+            200.0
+          ]
+        ],
+        [
+          9.933333,
+          [
+            200.0,
+            200.0
+          ]
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    },
+    {
+      "id": "composition.height",
+      "target": "composition",
+      "property": "height",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          9.933333
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          200
+        ],
+        [
+          9.933333,
+          200
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    },
+    {
+      "id": "composition.width",
+      "target": "composition",
+      "property": "width",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          9.933333
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          200
+        ],
+        [
+          9.933333,
+          200
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    }
+  ]
+}

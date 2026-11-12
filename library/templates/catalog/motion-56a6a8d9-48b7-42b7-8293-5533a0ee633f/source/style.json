@@ -1,0 +1,145 @@
+{
+  "background": {
+    "color": "#f8f9fa",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：dub",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：• Visits",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：• Starts",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "软盘发布卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "头像网络",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中心伙伴",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "收入事件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "转化漏斗",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "明细表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "功能落版",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f8f9fa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#151819",
+      "status": "inferred"
+    },
+    {
+      "hex": "#3469f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9c40ee",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e964bb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#21d4b6",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面和主张；软盘标签有复古标题感，统计数字层级明显",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "从发布物件进入一个伙伴的收益，再扩大到整个招募漏斗和明细分析，用个人结果承接产品数据。",
+      "status": "inferred"
+    },
+    {
+      "rule": "两张软盘在暗网格舞台出现，第二张标注新功能。噪声切换后进入浅色产品段，软盘与老电视质感退出，让界面保持清洁。",
+      "status": "inferred"
+    },
+    {
+      "rule": "头像围绕中心展开，品牌接管中心后再留下一个伙伴；收益数字与销售事件向下延伸。头像、姓名和事件归属保持一致，之后才扩大到整体转化。",
+      "status": "inferred"
+    }
+  ]
+}

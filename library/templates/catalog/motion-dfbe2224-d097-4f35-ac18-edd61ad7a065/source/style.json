@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#ffffff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Grok Bot, now on more plans",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：• Grok Bot",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：\" Grok Bot",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "底部黑角色",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "彩色角色组",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "堆叠轴",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发布说明",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#161616",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ee9856",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7fbe6b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e75d5d",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "纯白底彩色卡通脸、层叠平衡与整体缩放",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "角色逐个落在上一角色上，接触后整体轻微摆动。",
+      "status": "inferred"
+    },
+    {
+      "rule": "数量增加时镜头拉远保持全体可见，而非裁掉上端。",
+      "status": "inferred"
+    },
+    {
+      "rule": "堆叠完成后撤去角色，只保留适用范围说明。",
+      "status": "inferred"
+    }
+  ]
+}

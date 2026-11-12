@@ -1,0 +1,71 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        10.076733
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        10.076733
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        10.076733
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0,
+      "label": "新章节短句",
+      "end": 3.8,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 3.8,
+      "label": "黑底 Today",
+      "end": 5.2,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 5.2,
+      "label": "文字散成粒子",
+      "end": 6.2,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6.2,
+      "label": "粒子凝成新字标",
+      "end": 8.2,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 8.2,
+      "label": "进入产品界面",
+      "end": 10.076733,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 10.076733
+  }
+}

@@ -15,6 +15,8 @@ import type { Selection } from './editor-runtime.ts';
 import { createAppTracking, closeTracking, trackingError, type OmTracking } from './shared/tracking.ts';
 import { uuid } from './tracking/core.ts';
 import { toolNames } from './tracking/events.ts';
+import { templateCatalogFor } from './prism-templates.ts';
+import { templateConfig } from './shared/template-config.ts';
 
 export function mcpRegistry(profile = releaseProfile) { return createToolRegistry(profile === 'phase1' ? phase1Tools : tools, profile); }
 export const releaseRegistry = mcpRegistry();
@@ -87,6 +89,11 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
         validateInput(definition.inputSchema, args);
         if (internalName === 'motion_open_preview' && !args.projectId && !args.sessionId && args.action !== 'record_review') args.sessionId = selections.get(store)?.sessionId;
         if (args.sessionId === undefined) delete args.sessionId;
+        if (templateConfig().source === 'repository' && ['motion_list_templates', 'motion_get_template'].includes(internalName)) {
+          const catalog = templateCatalogFor(store.directory);
+          const value = internalName === 'motion_list_templates' ? await catalog.index() : await catalog.detail(args.templateId);
+          return result({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value });
+        }
         const service = await ensureService(store, undefined, name), origin = new URL(service.previewUrl).origin;
         const response = await fetch(origin + '/motion-api/phase1/call', { method: 'POST', headers: await editorHeaders(store, origin),
           body: JSON.stringify({ name: phase1TransportTool(service, name) ?? name, arguments: args }), signal: AbortSignal.timeout(600_000) });

@@ -1,0 +1,88 @@
+{
+  "background": {
+    "color": "#eeeee9",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Intelligence.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "大字母碎片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "几何纸片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "Information 条带",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "Intelligence 单词",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#eeeee9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#222224",
+      "status": "inferred"
+    },
+    {
+      "hex": "#655158",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b5bdb8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a69cae",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "纸白背景，黑色字母碎片与少量灰紫几何，最终统一成清楚单词。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "前半段用不同大小的字母、条带和几何铺满画面，整体缩小后，碎片向中央单词的基线靠拢。元素退出与新字母出现错开进行。",
+      "status": "inferred"
+    },
+    {
+      "rule": "黑色单词居中，字号明显小于开头碎片；纸片和线条退到极低对比，只留下阅读所需的笔画。更换关键词时重新分配字母宽度，不保持原碎片机械平移。",
+      "status": "inferred"
+    }
+  ]
+}

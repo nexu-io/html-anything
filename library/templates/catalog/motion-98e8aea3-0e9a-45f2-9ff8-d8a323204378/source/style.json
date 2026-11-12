@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#67a3e6",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：please codex app for windows",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Codex on windov",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Codex",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "桌面背景",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "用户需求帖",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "系统对话框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "产品图标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#67a3e6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1a1a1a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7e74e9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#91b844",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "蓝天草地桌面意象、白社交帖叠层、复古系统对话框",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "多条相似请求从不同方向叠入并微倾，累积需求压力。",
+      "status": "inferred"
+    },
+    {
+      "rule": "密集帖子骤然撤去，留下复古确认框作回应。",
+      "status": "inferred"
+    },
+    {
+      "rule": "最后缩减为单图标，密度变化制造笑点。",
+      "status": "inferred"
+    }
+  ]
+}

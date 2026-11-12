@@ -1,0 +1,8 @@
+function card(x,y,w,h,title,c='#ffffff'){saved(()=>{ctx.shadowColor='#0002';ctx.shadowBlur=18;rect(x,y,w,h,c,14)});text(title,x+20,y+27,18,c==='#ffffff'?'#222':'#fff','left','Arial',500,w-40)}
+function chart(x,y,w,h,t,c=P.accent){line(x,y+h,x+w,y+h,'#999',1);for(let i=0;i<8;i++){let v=(.2+rand(i)*.6)*h*ease(t);rect(x+i*w/8,y+h-v,w/10,v,c,3)}}
+function phone(x,y,w,h,t){rect(x,y,w,h,'#232323',27);rect(x+5,y+5,w-10,h-10,'#fcfcfa',23);rect(x+w*.38,y+12,w*.24,8,'#222',5);for(let i=0;i<3;i++){let yy=y+60+i*80-25*ease(t);card(x+16,yy,w-32,57,CONFIG.objects[i%CONFIG.objects.length],'#ffffff');rect(x+28,yy+40,(w-60)*ease(t+.2),3,P.accent,2)}}
+function wires(x1,y1,x2,y2,c=P.accent){ctx.strokeStyle=c;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x1,y1);ctx.bezierCurveTo((x1+x2)/2,y1,(x1+x2)/2,y2,x2,y2);ctx.stroke()}
+function dots(x,y,n,c,t){for(let i=0;i<n;i++)ellipse(x+i*18,y,4,4,i/n<clamp(t)?c:'#cccccc')}
+function drawScene(t){const u=stageProgress(t),n=stageAt(t),v=t/CONFIG.duration,b=CONFIG.palette[0],fg=CONFIG.palette[1];bg();fittedText(P.title,500,55,32,fg,900,'Arial',600);
+let count=3+Math.floor(clamp(v*1.7)*9);for(let i=0;i<count;i++){let depth=i===0?0:Math.floor((i-1)/3)+1,x=110+depth*170,y=160+(i%3)*120;let parent=Math.max(0,i-3);if(i)wires(110+Math.max(0,depth-1)*170+85,160+(parent%3)*120,x,y,'#b5b9b7');rect(x,y-18,145,36,i%3===1?'#d9efcd':P.accent,5);text(i===0?'Planner':i%3===1?'Verifier':i%3===2?'Worker':'Subplanner',x+72,y,16,i%3===1?'#2d5f25':'#fff');if(i%3===1&&u>.6)text('✓',x+160,y,22,'#4c8a39')};
+text(CONFIG.stages[n].label,500,548,21,fg,'center','Arial',500,900);rect(50,581,900,3,fg+'22');rect(50,581,900*v,3,P.accent);}

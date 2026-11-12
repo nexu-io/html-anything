@@ -1,0 +1,90 @@
+{
+  "background": {
+    "color": "#fbdc20",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "折角条带",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "错位块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "波浪边界",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "圆点",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fbdc20",
+      "status": "inferred"
+    },
+    {
+      "hex": "#15113d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#424ad6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ee477a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f5aab7",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无文字的满幅图形；锋利折角与软波浪对比",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "同类形状用固定间距重复，折点上下移动时相邻条带保持对应。图案超出画幅边缘，避免出现外框。",
+      "status": "inferred"
+    },
+    {
+      "rule": "黄蓝、黄红、深浅粉、深浅蓝分别成组。切换时同时更换形状族与色组，组内则只做形变和位移，保持整体性。",
+      "status": "inferred"
+    },
+    {
+      "rule": "折块使用短促错位；波浪用连续起伏；圆点以不同半径穿过画面。新品牌可替换色板，但保留每组形状的动作特性和满幅密度。",
+      "status": "inferred"
+    }
+  ]
+}

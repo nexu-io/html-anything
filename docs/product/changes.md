@@ -1,5 +1,14 @@
 # 公开变更记录
 
+## 2026-11-12: Version motion guidance source in the product repository
+
+- Import 286 public guidance templates with stable IDs, existing eleven-locale metadata and authored text examples; preserve pending conversion state and original source attribution.
+- Include unpacked text source and 1,419 images at most 100 KB in Git (about 104 MB with metadata); link 236 larger originals through verified existing CMS WebP renditions. Keep reference videos and duplicate ZIP downloads at existing CMS URLs.
+- Add staged/index and new-history storage checks, source manifest refresh, 100 KB local asset limits and verified CMS rendition identities and a CI policy job. No publishing credentials or media downloads are needed for the policy check.
+- Source Studio and MCP read repository templates directly. Local tools return a searchable index, Motion document content and absolute source paths; local edits appear on the next read. CMS mode remains available for published catalog testing.
+- Export the existing CMS catalog shape for review, including collection facets; CMS publication remains separate. Source-only catalog files are excluded from npm/plugin distribution.
+
+
 ## 2026-11-12: Match stable installation reports to the candidate manifest
 
 - Stable promotion and archive recovery compare native MCP Tool and Skill counts with the verified candidate manifest. Packages with compatibility Skill aliases no longer fail the obsolete five-Skill assertion, while mismatched reports still block promotion.

@@ -525,7 +525,7 @@ export const distributionDocuments = [
   'library/components/README.md', 'library/components/title-reveal/README.md',
   'library/design-systems/ink-water/MOTION_DESIGN.md', 'library/brandkits/openmotion/BRANDKIT.md',
   'docs/motion-design-examples.md', 'docs/motion-design-examples.zh-CN.md', ...motionDesignRemixFiles, ...presenterStoryFiles, ...presenterTechFiles,
-  'docs/skills.md', 'docs/template-catalog.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
+  'docs/skills.md', 'docs/template-catalog.md', 'docs/template-repository.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
 ];
 
 export async function distributionFiles(profile: string): Promise<string[]> {

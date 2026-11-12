@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#eeeeE7",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：We're building better ways to use the",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：internet with Dia and Arc.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "浏览器窗",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中央纹章",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "衬线短句",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色光标尾迹",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "主题切换",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#eeeeE7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#252525",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4c6be2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b2adae",
+      "status": "inferred"
+    },
+    {
+      "hex": "#47434f",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "奶白网页、细衬线斜体主句、蓝色光标拖尾，外侧柔焦桌面。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "纹章、短句和链接保持居中，页面四角保留少量导航。蓝色光标划弧经过留白，再回到中心文字，形成单一的动态焦点。",
+      "status": "inferred"
+    },
+    {
+      "rule": "从一条弧线增加到多个短尾迹，随后切换深色主题。只翻转底色与文字对比，不重新排版，让读者认出是同一张页面。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可以替换公司纹章、两行理念与导航。细衬线主句和较小等宽导航区分语气，光标路径避免长时间遮住标题。",
+      "status": "inferred"
+    }
+  ]
+}

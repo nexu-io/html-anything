@@ -111,12 +111,14 @@ export async function scanSource(source, binary) {
   const names = (await runFile('git', ['ls-files', '-z'], { cwd: source })).split('\0').filter(Boolean);
   const work = await mkdtemp(path.join(os.tmpdir(), 'motion-source-scan-'));
   try {
-    // Scan the public gallery separately so neither batch exceeds the archive scan budget.
+    // Scan the gallery and source catalog separately within the unchanged per-batch budget.
     const batches = new Set();
     for (const name of names) {
       assert(!name.split('/').includes('..') && !path.isAbsolute(name), 'Unsafe tracked path');
       const file = path.join(source, name); assert((await lstat(file)).isFile(), 'Tracked links are forbidden');
-      const batch = name.startsWith('docs/readme/') ? 'gallery' : 'source';
+      let batch = 'source';
+      if (name.startsWith('docs/readme/')) batch = 'gallery';
+      if (name.startsWith('library/templates/catalog/')) batch = 'catalog';
       batches.add(batch);
       const destination = path.join(work, batch, name);
       await mkdir(path.dirname(destination), { recursive: true }); await cp(file, destination);

@@ -1,0 +1,101 @@
+{
+  "background": {
+    "color": "#090510",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中心品牌圆",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "球体",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "花瓣",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "几何条",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "径向光线",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#090510",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4df64e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7754ea",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ef5ebc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#62d7ff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "主角为品牌标与几何群；不额外加入长文字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "黑底中先描出中心标志的局部亮边，尺寸保持小。临界点直接扩大空间，亮度与物体数量一起提升，形成明确反差。",
+      "status": "inferred"
+    },
+    {
+      "rule": "球、花瓣、环和长条沿径向展开，近处物体更大并允许裁出画幅。绿、紫、粉、青分配给不同形状，中心标志保持辨认空间。",
+      "status": "inferred"
+    },
+    {
+      "rule": "外围图形缩向中心并褪去色彩，最后只剩白色标志。替换时选择一个中心标志和少量重复几何，不让字句打断六秒的收放动作。",
+      "status": "inferred"
+    }
+  ]
+}

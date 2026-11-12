@@ -1,0 +1,102 @@
+{
+  "background": {
+    "color": "#435b58",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：PLAID",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：,PLAID",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "主品牌",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "分隔线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "PLAID 名称",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "流体光影",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#435b58",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#71a3a3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e5baa3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#162f33",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "青灰与暖桃流体、固定白色双品牌",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "双品牌静止，流体与光影变化构成唯一主体运动。",
+      "status": "inferred"
+    },
+    {
+      "rule": "只用合作双方的身份表达连接关系，重点留给标识。",
+      "status": "inferred"
+    }
+  ]
+}

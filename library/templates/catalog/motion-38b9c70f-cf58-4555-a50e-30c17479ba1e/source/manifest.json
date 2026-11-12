@@ -1,0 +1,215 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "fps": 30.0,
+  "durationSeconds": 4.033333,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "f5b921cad56d5942172c1ad9b3e02363593b5909fc07c1c69eef0199778b1511"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.jpg",
+      "timeSeconds": 0.0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.jpg",
+      "timeSeconds": 1.6333333333333333,
+      "frameId": "K0007",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.jpg",
+      "timeSeconds": 3.0,
+      "frameId": "K0014",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.jpg",
+      "timeSeconds": 3.2666666666666666,
+      "frameId": "K0015",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 2.489882083998964,
+    "measurementSeconds": 0.4545700829985435,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "演示为重新编写的机制示例，时间与构图为制作参考，不是完整原样复刻。",
+    "具体字体文件、原始缓动及音画同步点未从源工程取得。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V174",
+      "sha256": "f5b921cad56d5942172c1ad9b3e02363593b5909fc07c1c69eef0199778b1511",
+      "sourceUrl": "https://qwen.ai/"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.jpg",
+      "bytes": 23686,
+      "sha256": "87fbd2653be4aa31d5f9ed33631d8d5637837c4a179dde6499d64fdd9292e70f"
+    },
+    {
+      "path": "assets/reference-2.jpg",
+      "bytes": 19665,
+      "sha256": "353972b0f2ba55fbb504894a986003fccebf6ef4ad3f39f74f5714810abe95f3"
+    },
+    {
+      "path": "assets/reference-3.jpg",
+      "bytes": 40586,
+      "sha256": "63da89817bbf2e79b97666617d872378c207316e293fa7838264493e5533c18b"
+    },
+    {
+      "path": "assets/reference-4.jpg",
+      "bytes": 77358,
+      "sha256": "7d1a7b004ea54dce61be2876576eafe95ece5924c51c43c43b169ca9526065db"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/clip-1.html",
+      "bytes": 579,
+      "sha256": "985bf1d83acfadc7a54336ae6b247f9c890a34cab42a19f669a0f61db381c1fc"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 5359,
+      "sha256": "ec677cec77caa6cd14d428e85b666fd210b67dac7edf2add8947d05804432c8f"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 1883,
+      "sha256": "c756d67b82ea430314527347f0e853289e622f05a7d62652fac522310aa002b8"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 553,
+      "sha256": "30e24635a0279403a1a2376862dca8cc46c4f60c092bff59ad80b43cd991624e"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 4696,
+      "sha256": "4825182963b5fbce57425026eacdb7a759b78bd4ca8672f8ce9650ec75756741"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 17795,
+      "sha256": "7ed10eac805ade4213cc324a2278068158bcb4089a653e8a1c6080b8731ba3a4"
+    },
+    {
+      "path": "style.json",
+      "bytes": 2506,
+      "sha256": "775e1ee44801a4496e61c7da19acf4ddc9678c379613be5ff46f32fccddc65dd"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 1217,
+      "sha256": "7cdc350b491526c8db3c842af7a3b9b67fe0129407a771fa0ff109ac81856112"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 3079,
+      "sha256": "9856e858ce8b637f01158d7d00aaac8a8a1e576297aafbbff9de1f1bf8e23e03"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12581,
+      "sha256": "9c6ebea34a3b5f4803cb6dcbb619530e44acffabb201361fdb35a833c137a182"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4904,
+      "sha256": "0614c48b41d6aa4b565565018d8816d8a3da0ce24070bdf937c23c604a748e8a"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Qwen3.8-Max"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#1a2eff"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/clip-1.html",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 2
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 4.033333,
+      "status": "authored"
+    },
+    {
+      "id": "clip-1",
+      "src": "demos/clip-1.html",
+      "duration": 2.8,
+      "status": "authored"
+    }
+  ]
+}

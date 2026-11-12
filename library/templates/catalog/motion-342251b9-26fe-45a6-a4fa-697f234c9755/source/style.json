@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#fafafa",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Nest and organize sessions",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Merge straight from the PR view",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "会话树",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "终端",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "设备画面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "规则编辑",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "PR diff",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "功能字幕",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fafafa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202022",
+      "status": "inferred"
+    },
+    {
+      "hex": "#65a58e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#dedee2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8c8c93",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白色产品窗口为主，黑字功能字幕在下方，成功反馈使用浅绿色。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "每段先显示完整窗口，再推近当前区域：会话树、终端、设备测试、规则设置与 PR。字幕固定在画面下方说明这一段的操作。",
+      "status": "inferred"
+    },
+    {
+      "rule": "拖动会话后看层级变化，运行命令后看终端文本，点击合并后看成功反馈。其他区域降低对比，操作与结果不要分散到不同窗口。",
+      "status": "inferred"
+    },
+    {
+      "rule": "白面板与浅灰分隔承担主要层级，浅绿只用于成功行或状态。换工具时替换具体面板与操作，仍保留每段一个动作与一个结果。",
+      "status": "inferred"
+    }
+  ]
+}

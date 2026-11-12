@@ -1,0 +1,301 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Flows Agent — describe it, the agent wires the workflow · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f7f6f0;--brand-ink:#161616;--accent:#d9763b;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">ElevenLabs <span>/</span> V300</div><div class="intro-line"><h1>Flows Agent — describe it, the agent wires the workflow</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>让自然语言长成一张可编辑的媒体工作流。节点代表真实产物，连线代表依赖，后续修改只替换相关部分。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 48.666667, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 10.2, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Flows Agent&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#d9763b&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Flows Agent&quot;, &quot;accent&quot;: &quot;#d9763b&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="48.666667" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 48.67 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Flows Agent — describe it, the agent wires the workflow · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f6f0}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">ElevenLabs</div><div class="type-sample">Flows Agent</div><p>无衬线界面文字与清晰大小层级</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f7f6f0" style="--swatch:#f7f6f0" aria-label="复制色值 #f7f6f0"><span></span><code>#F7F6F0</code></button><button class="swatch" data-color="#161616" style="--swatch:#161616" aria-label="复制色值 #161616"><span></span><code>#161616</code></button><button class="swatch" data-color="#d9763b" style="--swatch:#d9763b" aria-label="复制色值 #d9763b"><span></span><code>#D9763B</code></button><button class="swatch" data-color="#7fb7ae" style="--swatch:#7fb7ae" aria-label="复制色值 #7fb7ae"><span></span><code>#7FB7AE</code></button><button class="swatch" data-color="#d9d6c9" style="--swatch:#d9d6c9" aria-label="复制色值 #d9d6c9"><span></span><code>#D9D6C9</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>输入条</span><span>任务列表</span><span>图像节点</span><span>视频节点</span><span>音频节点</span><span>依赖连线</span><span>变体组</span><span>成品</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>输入先形成任务，再形成节点</h2></div><div class="rule-copy">
+<p>简短提示框出现后，先列出图像、视频、配音或编辑任务，再按依赖顺序放入画布。节点标题与状态保持清楚，尚未完成的结果不要提前显示为成品。</p>
+<p>浅色节点与细线保持可读，橙色流体或柔光留在工作区外围。标题用清晰无衬线字，媒体类型、状态和参数以较小层级排列。</p>
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>连线表达素材怎么流动</h2></div><div class="rule-copy">
+<p>图像可以成为运动节点的输入，配音进入编辑，编辑输出成片。节点完成后才点亮下游，复杂图需要沿内容方向布置，尽量减少穿过文字的交叉线。</p>
+<div class="table-wrap"><table><thead><tr><th>节点关系</th><th>制作约束</th></tr></thead><tbody>
+<tr><td>参考→图像</td><td>主体身份要延续</td></tr>
+<tr><td>图像→视频</td><td>运动围绕已有主体展开</td></tr>
+<tr><td>声音→编辑</td><td>时长与画面段落对应</td></tr>
+<tr><td>编辑→成片</td><td>等待所需媒体就绪</td></tr>
+</tbody></table></div>
+</div></section><section class="rule has-demo" id="section-3"><div class="rule-label"><span>03</span><h2>局部修改保留其余工作</h2></div><figure class="demo" id="demo-clip-3" data-demo="{&quot;id&quot;: &quot;clip-3&quot;, &quot;title&quot;: &quot;局部修改保留其余工作&quot;, &quot;src&quot;: &quot;demos/clip-3.html&quot;, &quot;duration&quot;: 15, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;20–35 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>局部修改保留其余工作</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="局部修改保留其余工作" data-src="demos/clip-3.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="15" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 15.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>20–35 秒 · 动作示意 <a href="demos/clip-3.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Flows Agent — describe it, the agent wires the workflow · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f6f0}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;20&quot; data-end=&quot;35&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>更换产品、改变画幅或挑选配音时，突出相关节点，保留不受影响的节点和连线。随后呈现对应变体，观众能看出改动影响了哪里。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>最后看作品，也看工作流</h2></div><div class="rule-copy">
+<p>先展示一段完整广告成果，再拉远到节点全景。换主题时一起替换产品、提示、媒体与声音；保留计划到依赖，再到局部修改和最终输出的结构。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>橙色入口</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>自然语言输入</b></button><button class="beat" data-time="9.0"><span>9.00<small>s</small></span><b>任务分解</b></button><button class="beat" data-time="13.0"><span>13.00<small>s</small></span><b>节点生成</b></button><button class="beat" data-time="17.0"><span>17.00<small>s</small></span><b>结果与连线</b></button><button class="beat" data-time="20.0"><span>20.00<small>s</small></span><b>修改创意</b></button><button class="beat" data-time="24.0"><span>24.00<small>s</small></span><b>替换产品</b></button><button class="beat" data-time="28.0"><span>28.00<small>s</small></span><b>画幅选择</b></button><button class="beat" data-time="31.0"><span>31.00<small>s</small></span><b>配音选择</b></button><button class="beat" data-time="35.0"><span>35.00<small>s</small></span><b>广告成果</b></button><button class="beat" data-time="39.0"><span>39.00<small>s</small></span><b>工作流全景</b></button><button class="beat" data-time="44.0"><span>44.00<small>s</small></span><b>入口与品牌</b></button></div><div class="filmstrip"><figure><img src="https://r.open-design.ai/files/dc5821c64d9b98f750f4df8a82e17ddb24d9addd87311ca3091953ae08686a5e" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="9.00 秒的构图参考" loading="lazy"><figcaption>9.00s</figcaption></figure><figure><img src="assets/reference-3.jpg" alt="17.00 秒的构图参考" loading="lazy"><figcaption>17.00s</figcaption></figure><figure><img src="assets/reference-4.jpg" alt="28.00 秒的构图参考" loading="lazy"><figcaption>28.00s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="35.00 秒的构图参考" loading="lazy"><figcaption>35.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/d9568cba387cb4bf90ab6ef972f4a6bc52e83af9c0adebe0a28e0c572eaa5740" alt="44.00 秒的构图参考" loading="lazy"><figcaption>44.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可替换产品广告主题，保留计划→依赖→局部修改→成品结构</li><li>节点种类应与真正媒体依赖一致，不能仅画装饰连线</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>输入条 / 任务列表 / 图像节点 / 视频节点 / 音频节点 / 依赖连线 / 变体组 / 成品</p>
+<ul><li>自然语言先转为节点依赖，输出节点应等待上游素材完成</li><li>后续修改替换局部节点并保留其余连线，表现可编辑性</li><li>画幅与声音选择在成品之前，结尾拉远展示整体工作流</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>ElevenLabs / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Flows Agent — describe it, the agent wires the workflow
+
+让自然语言长成一张可编辑的媒体工作流。节点代表真实产物，连线代表依赖，后续修改只替换相关部分。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 48.666667,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 10.2,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Flows Agent&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#d9763b&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Flows Agent&quot;,
+        &quot;accent&quot;: &quot;#d9763b&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 输入先形成任务，再形成节点
+
+简短提示框出现后，先列出图像、视频、配音或编辑任务，再按依赖顺序放入画布。节点标题与状态保持清楚，尚未完成的结果不要提前显示为成品。
+
+浅色节点与细线保持可读，橙色流体或柔光留在工作区外围。标题用清晰无衬线字，媒体类型、状态和参数以较小层级排列。
+
+## 连线表达素材怎么流动
+
+图像可以成为运动节点的输入，配音进入编辑，编辑输出成片。节点完成后才点亮下游，复杂图需要沿内容方向布置，尽量减少穿过文字的交叉线。
+
+| 节点关系 | 制作约束 |
+| --- | --- |
+| 参考→图像 | 主体身份要延续 |
+| 图像→视频 | 运动围绕已有主体展开 |
+| 声音→编辑 | 时长与画面段落对应 |
+| 编辑→成片 | 等待所需媒体就绪 |
+
+## 局部修改保留其余工作
+
+更换产品、改变画幅或挑选配音时，突出相关节点，保留不受影响的节点和连线。随后呈现对应变体，观众能看出改动影响了哪里。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-3&quot;,
+  &quot;title&quot;: &quot;局部修改保留其余工作&quot;,
+  &quot;src&quot;: &quot;demos/clip-3.html&quot;,
+  &quot;duration&quot;: 15,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;20–35 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 最后看作品，也看工作流
+
+先展示一段完整广告成果，再拉远到节点全景。换主题时一起替换产品、提示、媒体与声音；保留计划到依赖，再到局部修改和最终输出的结构。
+
+## 配色与字形
+
+无衬线界面文字与清晰大小层级。
+
+#f7f6f0 · #161616 · #d9763b · #7fb7ae · #d9d6c9
+
+## 元素与制作规则
+
+输入条 / 任务列表 / 图像节点 / 视频节点 / 音频节点 / 依赖连线 / 变体组 / 成品
+
+- 自然语言先转为节点依赖，输出节点应等待上游素材完成
+- 后续修改替换局部节点并保留其余连线，表现可编辑性
+- 画幅与声音选择在成品之前，结尾拉远展示整体工作流
+
+## 内容替换
+
+- 可替换产品广告主题，保留计划→依赖→局部修改→成品结构
+- 节点种类应与真正媒体依赖一致，不能仅画装饰连线
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;ElevenLabs&quot;,
+  &quot;id&quot;: &quot;V300&quot;,
+  &quot;palette&quot;: [
+    &quot;#f7f6f0&quot;,
+    &quot;#161616&quot;,
+    &quot;#d9763b&quot;,
+    &quot;#7fb7ae&quot;,
+    &quot;#d9d6c9&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线界面文字与清晰大小层级&quot;,
+  &quot;sample&quot;: &quot;Flows Agent&quot;,
+  &quot;objects&quot;: [
+    &quot;输入条&quot;,
+    &quot;任务列表&quot;,
+    &quot;图像节点&quot;,
+    &quot;视频节点&quot;,
+    &quot;音频节点&quot;,
+    &quot;依赖连线&quot;,
+    &quot;变体组&quot;,
+    &quot;成品&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/dc5821c64d9b98f750f4df8a82e17ddb24d9addd87311ca3091953ae08686a5e&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 9.0,
+      &quot;frameId&quot;: &quot;K0035&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.jpg&quot;,
+      &quot;timeSeconds&quot;: 17.0,
+      &quot;frameId&quot;: &quot;K0063&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.jpg&quot;,
+      &quot;timeSeconds&quot;: 28.0,
+      &quot;frameId&quot;: &quot;K0105&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 35.0,
+      &quot;frameId&quot;: &quot;K0128&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/d9568cba387cb4bf90ab6ef972f4a6bc52e83af9c0adebe0a28e0c572eaa5740&quot;,
+      &quot;timeSeconds&quot;: 44.0,
+      &quot;frameId&quot;: &quot;K0167&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0.0,
+      &quot;label&quot;: &quot;橙色入口&quot;,
+      &quot;end&quot;: 3.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3.0,
+      &quot;label&quot;: &quot;自然语言输入&quot;,
+      &quot;end&quot;: 9.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 9.0,
+      &quot;label&quot;: &quot;任务分解&quot;,
+      &quot;end&quot;: 13.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 13.0,
+      &quot;label&quot;: &quot;节点生成&quot;,
+      &quot;end&quot;: 17.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 17.0,
+      &quot;label&quot;: &quot;结果与连线&quot;,
+      &quot;end&quot;: 20.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 20.0,
+      &quot;label&quot;: &quot;修改创意&quot;,
+      &quot;end&quot;: 24.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 24.0,
+      &quot;label&quot;: &quot;替换产品&quot;,
+      &quot;end&quot;: 28.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 28.0,
+      &quot;label&quot;: &quot;画幅选择&quot;,
+      &quot;end&quot;: 31.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 31.0,
+      &quot;label&quot;: &quot;配音选择&quot;,
+      &quot;end&quot;: 35.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 35.0,
+      &quot;label&quot;: &quot;广告成果&quot;,
+      &quot;end&quot;: 39.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 39.0,
+      &quot;label&quot;: &quot;工作流全景&quot;,
+      &quot;end&quot;: 44.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 44.0,
+      &quot;label&quot;: &quot;入口与品牌&quot;,
+      &quot;end&quot;: 48.666667,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 48.666667,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

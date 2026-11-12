@@ -1,0 +1,110 @@
+{
+  "background": {
+    "color": "#061325",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：/skills",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "嵌套菜单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "技能表单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "仓库输入",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "文件标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网站结果",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#061325",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#228eff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1c2028",
+      "status": "inferred"
+    },
+    {
+      "hex": "#777f91",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线口语短句；表单正文按输入层级排列",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "深色输入框上展开两级菜单，Skills 项高亮后再出现技能列表。游标路径跟随菜单层级，选中项回到输入框成为标签。",
+      "status": "inferred"
+    },
+    {
+      "rule": "先示意技能名称、说明与规则正文，再分别展示仓库地址和文件上传。每个入口留一个清楚的完成状态，随后才进入调用。",
+      "status": "inferred"
+    },
+    {
+      "rule": "调用前后保持页面布局与内容不变，只改变技能负责的配色。蓝黑背景和白字承担产品框架，网站保留自己的内容风格。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可替换为排版、品牌色或组件规范；准备规则文本与对应的前后页面，避免仅展示文件导入成功。",
+      "status": "inferred"
+    }
+  ]
+}

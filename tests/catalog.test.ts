@@ -1,3 +1,5 @@
+// These fixtures exercise the published CMS contract independently of repository source.
+process.env.MOTION_TEMPLATE_SOURCE = 'cms';
 import test from 'node:test';
 import { closeFixtureEditor } from './fixtures.ts';
 import assert from 'node:assert/strict';

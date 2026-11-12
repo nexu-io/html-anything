@@ -1,0 +1,115 @@
+{
+  "background": {
+    "color": "#f4f3ef",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "工序标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "机械拼贴",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "大字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "斜线花标",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "流程列",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "折线图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "游标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f4f3ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#141414",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f07438",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9ebc9b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#929592",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "粗无衬线口号配等宽流程标签；数字与图表标签紧凑对齐",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "输入与输出固定在两端，计划、分诊、编写、测试、审查和交付置于中间。机械与颗粒纹理在标签下面快切，标签方向保持一致。",
+      "status": "inferred"
+    },
+    {
+      "rule": "黑白底交替，橙色只点亮关键词或标志。错码只发生在字词入场的短瞬间，落定后必须读清，不让噪点持续覆盖正文。",
+      "status": "inferred"
+    },
+    {
+      "rule": "工作台按阶段分列，先展示完整宽表，再推近两三个折线指标。游标出现时显示对应数值，结束拉回总览，保持各列顺序不变。",
+      "status": "inferred"
+    },
+    {
+      "rule": "准备可对应的阶段名称、指标与结果。图表保留相同数据方向和单位，不把工序标签当作随机装饰；大片白底与深色控制台继续形成反差。",
+      "status": "inferred"
+    }
+  ]
+}

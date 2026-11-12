@@ -1,0 +1,126 @@
+{
+  "background": {
+    "color": "#eceeff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "显示器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "平板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "文档",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "协作者头像",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "图表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "共享窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-7",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "纸飞机",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#eceeff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#302d57",
+      "status": "inferred"
+    },
+    {
+      "hex": "#5d6de8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#efb9d8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#82cde1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#efa653",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "界面使用简洁无衬线；头像与窗口标题比正文更醒目",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "显示器转向平板时保留项目名称、列表和头像。设备可转动，界面区域跟随设备平面；浅蓝空间承托白色屏幕，粉色只用于设备或局部材质。",
+      "status": "inferred"
+    },
+    {
+      "rule": "长文档展开，图片、工具、图表和头像从同一页面分出。层间留距离，头像沿编辑目标移动，手势或游标只在需要指明操作时出现。",
+      "status": "inferred"
+    },
+    {
+      "rule": "图表编辑与视频窗口叠合成群，最后回到项目表格。让同一头像在不同视图继续出现，避免把协作写成陌生窗口的连续堆积。",
+      "status": "inferred"
+    },
+    {
+      "rule": "窗口与文档逐渐减少，几何纸片合成飞机，飞到品牌位置。新主题可换协作内容和设备，但结束符号应从前面用过的形状产生。",
+      "status": "inferred"
+    }
+  ]
+}

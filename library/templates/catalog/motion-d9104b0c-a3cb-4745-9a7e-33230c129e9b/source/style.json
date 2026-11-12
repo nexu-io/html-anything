@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#fffaff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：9:41",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：GM! Can I get your approval for the board",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：deck review at 2pm?",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机聊天",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "麦克风",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "语音浮层",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "波形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "工作中状态",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "文档卡",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fffaff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#25202b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b187d4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#67b984",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e9a37c",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白手机、紫绿语音波、外围暖色光晕",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "语音浮层附着于手机，回应后落到具体任务和文档。",
+      "status": "inferred"
+    },
+    {
+      "rule": "波形、处理中、结果是不同状态，不能持续显示同一个波形。",
+      "status": "inferred"
+    },
+    {
+      "rule": "生成的文档名与请求主题对应。",
+      "status": "inferred"
+    }
+  ]
+}

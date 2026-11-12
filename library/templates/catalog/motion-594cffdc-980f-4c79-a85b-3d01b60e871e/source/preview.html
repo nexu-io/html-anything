@@ -1,0 +1,292 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rive CLI — build Rive files with your agent · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#070909;--brand-ink:#eaf1ee;--board-label-ink:#ffffff;--accent:#55efba;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Rive <span>/</span> V384</div><div class="intro-line"><h1>Rive CLI — build Rive files with your agent</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>用一连串真正发生状态变化的作品说明交互能力：游戏、控件、设计系统和音序器各演示一个清楚动作。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 31.266667, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 27, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Interactive motion&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#55efba&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Interactive motion&quot;, &quot;accent&quot;: &quot;#55efba&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="31.266667" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 31.27 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Rive CLI — build Rive files with your agent · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070909}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Rive</div><div class="type-sample">Interactive motion</div><p>无衬线紧凑游戏标题与等宽状态数字；不同作品保留自身字体，外部舞台纯黑</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#070909" style="--swatch:#070909" aria-label="复制色值 #070909"><span></span><code>#070909</code></button><button class="swatch" data-color="#eaf1ee" style="--swatch:#eaf1ee" aria-label="复制色值 #eaf1ee"><span></span><code>#EAF1EE</code></button><button class="swatch" data-color="#55efba" style="--swatch:#55efba" aria-label="复制色值 #55efba"><span></span><code>#55EFBA</code></button><button class="swatch" data-color="#d553a2" style="--swatch:#d553a2" aria-label="复制色值 #d553a2"><span></span><code>#D553A2</code></button><button class="swatch" data-color="#eac34f" style="--swatch:#eac34f" aria-label="复制色值 #eac34f"><span></span><code>#EAC34F</code></button><button class="swatch" data-color="#8b68f5" style="--swatch:#8b68f5" aria-label="复制色值 #8b68f5"><span></span><code>#8B68F5</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>竞速轨道</span><span>节奏箭头</span><span>纸牌列</span><span>玻璃控件</span><span>旋钮</span><span>编辑器</span><span>步进格子</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>先让观众看见动作，再换作品</h2></div><div class="rule-copy">
+<p>竞速轨道有前进速度，节奏游戏有击中反馈，纸牌有位置变化。每个作品独占一屏，不把所有案例缩成同时播放的小格。</p>
+
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>黑色外部舞台统一不同视觉语言</h2></div><div class="rule-copy">
+<p>作品之间可有不同配色和字体，但四周保留黑色边距。状态数字、选中颜色与动作结果足够亮；控件的暗色基底不应吞掉边缘。</p>
+</div></section><section class="rule has-demo" id="section-3"><div class="rule-label"><span>03</span><h2>音序器用扫描线串起格子反馈</h2></div><figure class="demo" id="demo-clip-3" data-demo="{&quot;id&quot;: &quot;clip-3&quot;, &quot;title&quot;: &quot;音序器用扫描线串起格子反馈&quot;, &quot;src&quot;: &quot;demos/clip-3.html&quot;, &quot;duration&quot;: 3.1999999999999993, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;25.6–28.8 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>音序器用扫描线串起格子反馈</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="音序器用扫描线串起格子反馈" data-src="demos/clip-3.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="3.1999999999999993" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 3.20 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>25.6–28.8 秒 · 动作示意 <a href="demos/clip-3.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Rive CLI — build Rive files with your agent · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070909}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;25.6&quot; data-end=&quot;28.8&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>固定列宽与行距，亮格表示已编排步骤，播放头匀速横移。扫描到亮格时短促加强亮度，跨越空格时不改变其状态。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>换案例时保留可见的交互因果</h2></div><div class="rule-copy">
+<p>新主题可替换成不同应用，但每屏都要有输入、状态与反馈。多个作品可以共用外部框架，内部不必强行统一成同一风格。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>竞速菜单</b></button><button class="beat" data-time="2.0"><span>2.00<small>s</small></span><b>轨道加速</b></button><button class="beat" data-time="6.0"><span>6.00<small>s</small></span><b>节奏游戏</b></button><button class="beat" data-time="8.2"><span>8.20<small>s</small></span><b>纸牌</b></button><button class="beat" data-time="13.0"><span>13.00<small>s</small></span><b>玻璃控件</b></button><button class="beat" data-time="15.0"><span>15.00<small>s</small></span><b>旋钮面板</b></button><button class="beat" data-time="17.0"><span>17.00<small>s</small></span><b>设计系统</b></button><button class="beat" data-time="21.0"><span>21.00<small>s</small></span><b>编辑器与旗帜</b></button><button class="beat" data-time="25.6"><span>25.60<small>s</small></span><b>步进音序器</b></button><button class="beat" data-time="29.5"><span>29.50<small>s</small></span><b>卡牌游戏</b></button><button class="beat" data-time="31.0"><span>31.00<small>s</small></span><b>黑场</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.jpg" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="6.00 秒的构图参考" loading="lazy"><figcaption>6.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/54a9f61627d6c2f659939a6c2341ab6f0f12aa8474dc6448b1e55c331fa3bf5e" alt="13.00 秒的构图参考" loading="lazy"><figcaption>13.00s</figcaption></figure><figure><img src="assets/reference-4.jpg" alt="17.00 秒的构图参考" loading="lazy"><figcaption>17.00s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="25.57 秒的构图参考" loading="lazy"><figcaption>25.57s</figcaption></figure><figure><img src="assets/reference-6.jpg" alt="31.00 秒的构图参考" loading="lazy"><figcaption>31.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>新主题可替换成不同应用，但每屏都要有输入、状态与反馈。多个作品可以共用外部框架，内部不必强行统一成同一风格。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>竞速轨道 / 节奏箭头 / 纸牌列 / 玻璃控件 / 旋钮 / 编辑器 / 步进格子</p>
+<ul><li>用一连串真正发生状态变化的作品说明交互能力：游戏、控件、设计系统和音序器各演示一个清楚动作。</li><li>竞速轨道有前进速度，节奏游戏有击中反馈，纸牌有位置变化。每个作品独占一屏，不把所有案例缩成同时播放的小格。</li><li>作品之间可有不同配色和字体，但四周保留黑色边距。状态数字、选中颜色与动作结果足够亮；控件的暗色基底不应吞掉边缘。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Rive / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Rive CLI — build Rive files with your agent
+
+用一连串真正发生状态变化的作品说明交互能力：游戏、控件、设计系统和音序器各演示一个清楚动作。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 31.266667,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 27,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Interactive motion&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#55efba&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Interactive motion&quot;,
+        &quot;accent&quot;: &quot;#55efba&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 先让观众看见动作，再换作品
+
+竞速轨道有前进速度，节奏游戏有击中反馈，纸牌有位置变化。每个作品独占一屏，不把所有案例缩成同时播放的小格。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–2.00s | 竞速菜单 |
+| 2.00–6.00s | 轨道加速 |
+| 6.00–8.20s | 节奏游戏 |
+| 8.20–13.00s | 纸牌 |
+| 13.00–15.00s | 玻璃控件 |
+| 15.00–17.00s | 旋钮面板 |
+| 17.00–21.00s | 设计系统 |
+| 21.00–25.60s | 编辑器与旗帜 |
+| 25.60–29.50s | 步进音序器 |
+| 29.50–31.00s | 卡牌游戏 |
+| 31.00–31.27s | 黑场 |
+
+## 黑色外部舞台统一不同视觉语言
+
+作品之间可有不同配色和字体，但四周保留黑色边距。状态数字、选中颜色与动作结果足够亮；控件的暗色基底不应吞掉边缘。
+
+## 音序器用扫描线串起格子反馈
+
+固定列宽与行距，亮格表示已编排步骤，播放头匀速横移。扫描到亮格时短促加强亮度，跨越空格时不改变其状态。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-3&quot;,
+  &quot;title&quot;: &quot;音序器用扫描线串起格子反馈&quot;,
+  &quot;src&quot;: &quot;demos/clip-3.html&quot;,
+  &quot;duration&quot;: 3.1999999999999993,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;25.6–28.8 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 换案例时保留可见的交互因果
+
+新主题可替换成不同应用，但每屏都要有输入、状态与反馈。多个作品可以共用外部框架，内部不必强行统一成同一风格。
+
+## 配色与字形
+
+无衬线紧凑游戏标题与等宽状态数字；不同作品保留自身字体，外部舞台纯黑。
+
+#070909 · #eaf1ee · #55efba · #d553a2 · #eac34f · #8b68f5
+
+## 元素与制作规则
+
+竞速轨道 / 节奏箭头 / 纸牌列 / 玻璃控件 / 旋钮 / 编辑器 / 步进格子
+
+- 用一连串真正发生状态变化的作品说明交互能力：游戏、控件、设计系统和音序器各演示一个清楚动作。
+- 竞速轨道有前进速度，节奏游戏有击中反馈，纸牌有位置变化。每个作品独占一屏，不把所有案例缩成同时播放的小格。
+- 作品之间可有不同配色和字体，但四周保留黑色边距。状态数字、选中颜色与动作结果足够亮；控件的暗色基底不应吞掉边缘。
+
+## 内容替换
+
+- 新主题可替换成不同应用，但每屏都要有输入、状态与反馈。多个作品可以共用外部框架，内部不必强行统一成同一风格。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Rive&quot;,
+  &quot;id&quot;: &quot;V384&quot;,
+  &quot;palette&quot;: [
+    &quot;#070909&quot;,
+    &quot;#eaf1ee&quot;,
+    &quot;#55efba&quot;,
+    &quot;#d553a2&quot;,
+    &quot;#eac34f&quot;,
+    &quot;#8b68f5&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线紧凑游戏标题与等宽状态数字；不同作品保留自身字体，外部舞台纯黑&quot;,
+  &quot;sample&quot;: &quot;Interactive motion&quot;,
+  &quot;objects&quot;: [
+    &quot;竞速轨道&quot;,
+    &quot;节奏箭头&quot;,
+    &quot;纸牌列&quot;,
+    &quot;玻璃控件&quot;,
+    &quot;旋钮&quot;,
+    &quot;编辑器&quot;,
+    &quot;步进格子&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 6.0,
+      &quot;frameId&quot;: &quot;K0033&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/54a9f61627d6c2f659939a6c2341ab6f0f12aa8474dc6448b1e55c331fa3bf5e&quot;,
+      &quot;timeSeconds&quot;: 13.0,
+      &quot;frameId&quot;: &quot;K0061&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.jpg&quot;,
+      &quot;timeSeconds&quot;: 17.0,
+      &quot;frameId&quot;: &quot;K0071&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 25.566666666666666,
+      &quot;frameId&quot;: &quot;K0103&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.jpg&quot;,
+      &quot;timeSeconds&quot;: 31.0,
+      &quot;frameId&quot;: &quot;K0125&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;竞速菜单&quot;,
+      &quot;end&quot;: 2,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 2,
+      &quot;label&quot;: &quot;轨道加速&quot;,
+      &quot;end&quot;: 6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 6,
+      &quot;label&quot;: &quot;节奏游戏&quot;,
+      &quot;end&quot;: 8.2,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 8.2,
+      &quot;label&quot;: &quot;纸牌&quot;,
+      &quot;end&quot;: 13,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 13,
+      &quot;label&quot;: &quot;玻璃控件&quot;,
+      &quot;end&quot;: 15,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15,
+      &quot;label&quot;: &quot;旋钮面板&quot;,
+      &quot;end&quot;: 17,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 17,
+      &quot;label&quot;: &quot;设计系统&quot;,
+      &quot;end&quot;: 21,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 21,
+      &quot;label&quot;: &quot;编辑器与旗帜&quot;,
+      &quot;end&quot;: 25.6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 25.6,
+      &quot;label&quot;: &quot;步进音序器&quot;,
+      &quot;end&quot;: 29.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 29.5,
+      &quot;label&quot;: &quot;卡牌游戏&quot;,
+      &quot;end&quot;: 31,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 31,
+      &quot;label&quot;: &quot;黑场&quot;,
+      &quot;end&quot;: 31.266667,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 31.266667,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

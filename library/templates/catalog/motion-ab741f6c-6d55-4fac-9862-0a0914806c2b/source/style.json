@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Free",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：mike bennet",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Agent",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中央模板缩略图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "左右预览卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模板名称",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "Agent 徽标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2137f0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d9d9d4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#858585",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "黑色画廊底；卡片各有独立字体，名称与 Agent 标签在卡片下方。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "三张模板横排，中央卡完整显示，两侧只露一部分并压暗。切换时整条轨道横向滑动，到位后才恢复中央卡的亮度。",
+      "status": "inferred"
+    },
+    {
+      "rule": "卡片使用同一圆角和相同尺寸，内部保留蓝白大字、黑底作品集和衬线白页三种风格。名称与徽标固定在相同基线上。",
+      "status": "inferred"
+    },
+    {
+      "rule": "替换缩略图、名称和作者即可；每张留读时间应明显长于滑动时间，首尾排列能自然回到第一张。",
+      "status": "inferred"
+    }
+  ]
+}

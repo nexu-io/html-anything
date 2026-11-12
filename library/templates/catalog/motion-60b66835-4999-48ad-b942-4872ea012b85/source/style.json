@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#fbfbff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Android",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Drop",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：San Veron",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地图卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "通知标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "共享清单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "聊天气泡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "照片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "辅助标点",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fbfbff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#24252c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#62b8f3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bc76df",
+      "status": "inferred"
+    },
+    {
+      "hex": "#89e0bc",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白底大留白、粉蓝光晕、三组功能卡",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "每个功能由一个主体卡和一个依附的小反馈组成。",
+      "status": "inferred"
+    },
+    {
+      "rule": "三组内容从同一视觉中心接续，光晕颜色随章节改变。",
+      "status": "inferred"
+    },
+    {
+      "rule": "只展示功能瞬间，省去导航和登录，把篇幅留给主体与反馈。",
+      "status": "inferred"
+    }
+  ]
+}

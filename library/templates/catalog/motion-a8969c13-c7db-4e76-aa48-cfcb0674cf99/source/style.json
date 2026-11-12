@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#61a6bd",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：• Searching web",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：• Searching the web...",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Leader",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入侧栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "应用窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "骨架图表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "数据表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "附件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "成果列",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#61a6bd",
+      "status": "inferred"
+    },
+    {
+      "hex": "#172327",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ca4e25",
+      "status": "inferred"
+    },
+    {
+      "hex": "#174e3e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e9e9cf",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线工具界面；请求气泡和数据表使用常规字重，结果标题加重",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用请求与结果并排的方式展示应用生成，再把附件更新和其他业务案例接进同一语法。",
+      "status": "inferred"
+    },
+    {
+      "rule": "请求发送后右侧先出现布局骨架，再填图表与字段。两侧共享同一任务名称；生成过程改变右侧内容，输入侧栏保持作为起因。",
+      "status": "inferred"
+    },
+    {
+      "rule": "地图、营销仪表盘、临床反馈表与竞品数据各有自己的布局。每个案例用一套背景色区分，浅色工作面与无衬线文字保持一致。",
+      "status": "inferred"
+    }
+  ]
+}

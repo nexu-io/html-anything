@@ -1,0 +1,83 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝绿球体",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色圆片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "渐变方片",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#21e88a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#134bd9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8bd6ed",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无正文；球面、圆片与方片靠形状和光泽区分",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "球体保持大体居中，圆片靠着球面移动，方片同时改变位置与角度。近侧盖在球前，远侧退后；不要把三个物体锁成一张整图旋转。",
+      "status": "inferred"
+    },
+    {
+      "rule": "黑底承托蓝、绿、青高光。球体用圆滑明暗，方片用方向性渐变，圆片保留较平的蓝面。循环末段缩小整组，为再次出现留黑场。",
+      "status": "inferred"
+    },
+    {
+      "rule": "适合短片过渡或品牌纹理。更换几何或材质时仍保留一个体积主体与两种平面，避免添加解释文字遮住遮挡关系。",
+      "status": "inferred"
+    }
+  ]
+}

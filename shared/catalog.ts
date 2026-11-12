@@ -1,3 +1,5 @@
+import type { LocalTemplateSource } from './repository-template-catalog.ts';
+
 export const templateCategories = [
   { id: 'featured', label: '精选模板' }, { id: 'clone', label: '视频复刻' },
   { id: 'ads', label: '产品宣传' }, { id: 'motion', label: '动态设计' }, { id: 'script', label: '口播内容' },
@@ -16,9 +18,10 @@ export type GalleryTemplate = {
   variants?: GalleryTemplate[];
   motionDocumentUrl?: string; motionGuideUrl?: string; projectFileUrl?: string; authorAvatarUrl?: string;
   styleDescription?: string; reviewFocus?: string;
-  brand?: string; uses?: string[]; styles?: string[]; industries?: string[];
+  brand?: string; brandLogoUrl?: string; uses?: string[]; styles?: string[]; industries?: string[];
   creationModels?: string[]; colors?: string[]; width?: number; height?: number;
   sortOrder?: number; featuredOrder?: number | null; hasHtmlProject?: boolean;
+  localSource?: LocalTemplateSource;
 };
 export type SocialPlatform = 'X' | 'Instagram' | 'YouTube' | 'TikTok';
 export type TemplateSocial = { platform: SocialPlatform; views: number; sourceUrl: string; syncedAt: string; metadataUrl: string };

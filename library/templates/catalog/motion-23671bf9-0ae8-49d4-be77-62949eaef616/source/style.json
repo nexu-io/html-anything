@@ -1,0 +1,116 @@
+{
+  "background": {
+    "color": "#160100",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：SUNO",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：v6",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：v6 wild",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "巨大 V 与 6",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中心品牌名",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "版本胶囊",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "双选项切换器",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#160100",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ff5b14",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e8118e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6d1613",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "暗红黑底，橙粉发光的巨大立体版本字，切换器很小。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "V 在上，6 在下，橙色边缘与粉色内部形成多层光泽。中间品牌名保持小而稳定，版本字向上下离开后才露出控件。",
+      "status": "inferred"
+    },
+    {
+      "rule": "小胶囊先显示一个版本，再横向伸长露出第二个选项。浅色选中块留在左侧，背景从黑转为暗红，底部补一句两种模式说明。",
+      "status": "inferred"
+    }
+  ]
+}

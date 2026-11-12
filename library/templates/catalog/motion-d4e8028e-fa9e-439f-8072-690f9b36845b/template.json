@@ -1,0 +1,401 @@
+{
+  "templateId": "motion-d4e8028e-fa9e-439f-8072-690f9b36845b",
+  "entry": {
+    "templateId": "motion-d4e8028e-fa9e-439f-8072-690f9b36845b",
+    "sortOrder": 254,
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "previewUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+    "coverUrl": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+    "motionDocumentUrl": "https://r.open-design.ai/files/fcd5f1f244b1da124d8db762575e16b14a762856ecb36738a60f8f33cf1332fe",
+    "motionGuideUrl": "https://r.open-design.ai/files/1a71ae4e25f8c543a07f9e0bad7ca65d7e12a0c3375bb21695791bdd581c637f",
+    "projectFileUrl": null,
+    "files": [],
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "not_run"
+    },
+    "featuredOrder": null,
+    "original": {
+      "templateName": "Evergreen｜视觉系统总览",
+      "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+      "summary": "稳定的多格网格容纳不同小循环，只有右侧窄栏轮换主张，让丰富素材仍有阅读顺序。",
+      "styleDescription": "无衬线粗短句置于网格窄栏；产品物件以轮廓和颜色建立识别",
+      "promotionalUseCases": "品牌宣传",
+      "visualPresentation": "界面动效, 图形动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+      "reviewFocus": "稳定的多格网格容纳不同小循环，只有右侧窄栏轮换主张，让丰富素材仍有阅读顺序。；各格保留黑色间隙和圆角，耳机、球体、卡片等物件在自己的裁切区域内运动。运动幅度保持克制，不能同时穿出格子破坏整体秩序。；主张、储蓄、优惠与费用依次在右栏替换，其他格子作为持续背景。荧光绿主色由紫、灰、白辅助，粗无衬线短句始终有足够对比。",
+      "category": "",
+      "durationSeconds": "7.966667",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+      "exampleVideo": "",
+      "templateId": "V359",
+      "sourceVideoTitle": "254_CashApp.mp4"
+    },
+    "brand": "Cash App",
+    "colors": [
+      "green",
+      "purple"
+    ],
+    "width": 1280,
+    "height": 720,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。"
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Evergreen｜Überblick über das visuelle System",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "Ein festes Raster enthält verschiedene kleine Schleifen. Nur die schmale rechte Spalte wechselt Aussagen und ordnet so die vielen Materialien.",
+        "styleDescription": "Kurze fette serifenlose Aussagen in schmaler Rasterspalte; Produktobjekte durch Kontur und Farbe erkennbar",
+        "promotionalUseCases": "Markenwerbung",
+        "visualPresentation": "Oberflächenanimation, Grafikanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "Ein festes Raster enthält verschiedene kleine Schleifen. Nur die schmale rechte Spalte wechselt Aussagen und ordnet so die vielen Materialien. Schwarze Zwischenräume und gerundete Ecken bleiben; Kopfhörer, Kugeln und Karten bewegen sich nur im eigenen Ausschnitt. Kleine Bewegungen, nicht gleichzeitig aus Zellen herausbrechen. Aussage, Sparen, Vorteile und Gebühren wechseln rechts; andere Felder bleiben Hintergrund. Fluoreszierendes Grün mit Violett, Grau und Weiß, kurze fette Sätze immer kontrastreich.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "motionDocumentUrl": "https://r.open-design.ai/files/3db714bcd05657574766cb42f342c66bb701aa93f6070bc7031ef008945a4f28",
+      "motionGuideUrl": "https://r.open-design.ai/files/11e8028a1a5b4a3e8a3c24c6207ae4fb62519ee18138d6d68bbe776495cd97cc",
+      "original": {
+        "templateName": "Cash App — Make Money Moves",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "Use a stable multi-cell grid for varied small loops, rotating messages only in the narrow right column to give rich assets a reading order.",
+        "styleDescription": "Short bold sans-serif phrases in the narrow grid column; product objects identified by contour and color",
+        "promotionalUseCases": "Brand promotion",
+        "visualPresentation": "Interface animation, Graphic animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "Use a stable multi-cell grid for varied small loops, rotating messages only in the narrow right column to give rich assets a reading order. Retain black gutters and rounded corners, moving headphones, spheres, cards and other objects within their own clipped cells. Keep motion restrained instead of letting all objects break out simultaneously. Replace messages, savings, offers and fees in the right column while other cells remain a continuous background. Support fluorescent green with purple, gray and white, keeping short bold sans-serif phrases sufficiently contrasted.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Evergreen｜Resumen del sistema visual",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "Una cuadrícula estable contiene pequeños bucles distintos; solo la columna estrecha derecha alterna propuestas, dando orden de lectura a la variedad de materiales.",
+        "styleDescription": "Frases breves sin serifa en negrita en una columna estrecha; objetos reconocibles por silueta y color",
+        "promotionalUseCases": "Promoción de marca",
+        "visualPresentation": "Animación de interfaz, Animación gráfica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "Una cuadrícula estable contiene pequeños bucles distintos; solo la columna estrecha derecha alterna propuestas, dando orden de lectura a la variedad de materiales.; Conservar espacios negros y esquinas redondeadas entre celdas; auriculares, esferas y tarjetas se mueven dentro de sus recortes. Limitar la amplitud y evitar que salgan todas a la vez y rompan el orden.; Alternar propuesta, ahorro, descuentos y comisiones a la derecha mientras las demás celdas siguen como fondo. Verde fluorescente principal con violeta, gris y blanco auxiliares; mantener contraste suficiente en frases gruesas.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Evergreen｜Vue d’ensemble du système visuel",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "Une grille stable contient de petites boucles ; seule la colonne étroite droite renouvelle les affirmations pour ordonner les ressources.",
+        "styleDescription": "Courtes phrases grasses dans la colonne étroite ; objets identifiés par contours et couleurs",
+        "promotionalUseCases": "Promotion de marque",
+        "visualPresentation": "Animation d’interface, Animation graphique",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "Une grille stable contient de petites boucles ; seule la colonne étroite droite renouvelle les affirmations pour ordonner les ressources. Espaces noirs et coins ronds constants ; casque, sphère et cartes bougent dans leur recadrage. Amplitude réduite, sans sortir ensemble des cases. Affirmation, épargne, avantages et frais alternent à droite, autres cases continues. Vert fluorescent aidé de violet, gris et blanc ; texte court toujours contrasté.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Evergreen｜Panoramica del sistema visivo",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "Griglia stabile con piccoli cicli diversi; solo la colonna stretta destra cambia messaggi, ordinando la varietà.",
+        "styleDescription": "Brevi frasi sans serif pesanti nella colonna; oggetti riconoscibili da forma e colore",
+        "promotionalUseCases": "Promozione del marchio",
+        "visualPresentation": "Animazione dell’interfaccia, Animazione grafica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "Griglia stabile con piccoli cicli diversi; solo la colonna stretta destra cambia messaggi, ordinando la varietà. Spazi neri e angoli tondi, cuffie, sfere e carte si muovono nei propri ritagli. Ampiezza contenuta, senza uscire tutti dalle celle. Messaggi, risparmi, offerte e costi alternano a destra; resto continuo. Verde fluorescente con viola, grigio e bianco, testo sempre contrastato.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "Evergreen｜ビジュアルシステムの概要",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "固定した複数マスのグリッドに異なる短いループを入れ、右の細い列だけで訴求文を切り替え、豊富な素材にも読む順序を持たせる。",
+        "styleDescription": "グリッドの細い列に太いサンセリフの短文を置き、製品の物体は輪郭と色で識別させる",
+        "promotionalUseCases": "ブランドプロモーション",
+        "visualPresentation": "UIアニメーション, グラフィックアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "固定した複数マスのグリッドに異なる短いループを入れ、右の細い列だけで訴求文を切り替え、豊富な素材にも読む順序を持たせる。；マスの間に黒い隙間と角丸を保ち、ヘッドホン、球、カードなどを自分の切り取り領域内で動かす。動きを抑え、同時にマスを飛び出して全体の秩序を崩さない。；右列で訴求、貯蓄、特典、料金を順に替え、ほかのマスは継続した背景にする。蛍光グリーンを紫、グレー、白で補い、太いサンセリフの短文には十分なコントラストを保つ。",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "Evergreen｜시각 시스템 개요",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "고정된 여러 칸 그리드에 작은 루프들을 담고 오른쪽 좁은 열의 메시지만 교체해 풍부한 소재에도 읽기 순서를 유지한다.",
+        "styleDescription": "좁은 그리드 열에 굵은 산세리프 짧은 문구를 둔다；제품 물체는 윤곽과 색상으로 식별한다",
+        "promotionalUseCases": "브랜드 홍보",
+        "visualPresentation": "인터페이스 애니메이션, 그래픽 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "고정된 여러 칸 그리드에 작은 루프들을 담고 오른쪽 좁은 열의 메시지만 교체해 풍부한 소재에도 읽기 순서를 유지한다.；각 칸의 검은 간격과 둥근 모서리를 유지하고 헤드폰, 구체, 카드 등이 자기 크롭 영역 안에서 움직이게 한다. 움직임을 절제하며 동시에 칸 밖으로 나와 질서를 깨지 않게 한다.；메시지, 저축, 혜택, 비용을 오른쪽 열에서 차례로 바꾸고 다른 칸은 계속 배경으로 둔다. 형광 초록 주색을 보라·회색·흰색으로 보조하고 굵은 산세리프 문구는 충분한 대비를 유지한다.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Evergreen｜Visão geral do sistema visual",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "Uma grade estável contém pequenos loops distintos; apenas a coluna estreita à direita alterna propostas, dando ordem de leitura à variedade de materiais.",
+        "styleDescription": "Frases curtas sem serifa em negrito em uma coluna estreita; objetos reconhecíveis por silhueta e cor",
+        "promotionalUseCases": "Divulgação de marca",
+        "visualPresentation": "Animação de interface, Animação gráfica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "Uma grade estável contém pequenos loops distintos; apenas a coluna estreita à direita alterna propostas, dando ordem de leitura à variedade de materiais.; Preservar espaços pretos e cantos arredondados entre células; fones, esferas e cartões se movem dentro de seus recortes. Limitar a amplitude e evitar que todos saiam juntos e quebrem a organização.; Alternar proposta, economia, descontos e taxas à direita enquanto as outras células seguem como fundo. Verde fluorescente principal com roxo, cinza e branco auxiliares; manter contraste suficiente nas frases grossas.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Evergreen｜Обзор визуальной системы",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "Устойчивая сетка вмещает разные короткие циклы; только узкая правая колонка меняет ключевые сообщения, сохраняя порядок чтения при разнообразии материалов.",
+        "styleDescription": "Короткие жирные фразы гротеском в узкой колонке сетки; предметы продукта узнаются по силуэтам и цветам",
+        "promotionalUseCases": "Продвижение бренда",
+        "visualPresentation": "Анимация интерфейса, Графическая анимация",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "Устойчивая сетка вмещает разные короткие циклы; только узкая правая колонка меняет ключевые сообщения, сохраняя порядок чтения при разнообразии материалов. Между ячейками остаются чёрные промежутки, края скруглены; наушники, сферы, карточки и другие предметы движутся внутри собственных обрезанных областей. Амплитуда движения сдержанная: объекты не должны одновременно выходить за границы ячеек и нарушать общую структуру. Основные сообщения, сбережения, предложения и комиссии последовательно сменяются справа, остальные ячейки служат непрерывным фоном. Флуоресцентно-зелёный дополнен фиолетовым, серым и белым; жирные короткие фразы гротеском всегда достаточно контрастны.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Evergreen｜Görsel sisteme genel bakış",
+        "videoPreview": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "summary": "Sabit çok hücreli ızgarada küçük döngüler vardır; yalnız sağ dar sütun mesaj değiştirerek okuma sırası verir.",
+        "styleDescription": "Dar sütunda kalın kısa sans serif; nesne kontur ve renkle tanınır",
+        "promotionalUseCases": "Marka tanıtımı",
+        "visualPresentation": "Arayüz animasyonu, Grafik animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/2198c10604ff1b5bfc5f07a74f84bccb43212d1e21f8a932b24741394c1cf215",
+        "reviewFocus": "Sabit çok hücreli ızgarada küçük döngüler vardır; yalnız sağ dar sütun mesaj değiştirerek okuma sırası verir. Siyah aralık ve yuvarlak köşe korunur; kulaklık, küre ve kart kendi kırpma alanındadır. Hareket ölçülü, hepsi hücreden taşmaz. Mesaj, tasarruf, avantaj ve ücret sağda değişir, diğer hücreler sürer. Floresan yeşile mor-gri-beyaz eşlik eder, yazı kontrastlıdır.",
+        "category": "",
+        "durationSeconds": "7.966667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/14d01d9d0ba76bb630ed6f328c2d696904ca7ff38665c5a4f35d2a6e728ad5a0",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://buck.co/work/cash-app-visual-identity",
+        "exampleVideo": "",
+        "templateId": "V359",
+        "sourceVideoTitle": "254_CashApp.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/fcd5f1f244b1da124d8db762575e16b14a762856ecb36738a60f8f33cf1332fe",
+    "bytes": 1049211,
+    "sha256": "fcd5f1f244b1da124d8db762575e16b14a762856ecb36738a60f8f33cf1332fe"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 167545,
+        "sha256": "14416ca63d08a61a2489eb9e4e24795740733d44efa3f00443ff9706e2f67ee9"
+      },
+      "url": "https://r.open-design.ai/files/b70bb4ba1e02dfc6e6d5b241e0493e4061072288cb2067053a1dc809b1fbe518",
+      "bytes": 67090,
+      "sha256": "b70bb4ba1e02dfc6e6d5b241e0493e4061072288cb2067053a1dc809b1fbe518"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 178446,
+        "sha256": "0c17e846fd2e5efd27a13272c18b37a2d63605c90086b8ef73495f86db5d6035"
+      },
+      "url": "https://r.open-design.ai/files/ca2de7520b5d2620ddc5bd8e318268fbf605c963c53d15fdb5a1eed7fcf5563b",
+      "bytes": 72116,
+      "sha256": "ca2de7520b5d2620ddc5bd8e318268fbf605c963c53d15fdb5a1eed7fcf5563b"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 176080,
+        "sha256": "3de5f9de391ef24b25e2b9796fa476e54a256c1601c1479533cdbfadb89c468e"
+      },
+      "url": "https://r.open-design.ai/files/2d67e56bc42b089066a672dc9d95cc1719e5cd323b6d1f1d53486908a19351b4",
+      "bytes": 71064,
+      "sha256": "2d67e56bc42b089066a672dc9d95cc1719e5cd323b6d1f1d53486908a19351b4"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 176585,
+        "sha256": "b0d6c81561bd0d542af80d2e61a575ce79ab86fb92b6fe62dcc13a46e3e92681"
+      },
+      "url": "https://r.open-design.ai/files/45153b6ab286dbcd749c7e4fd031c83dfbf2fe0343f33f7742696b112b1e186a",
+      "bytes": 71354,
+      "sha256": "45153b6ab286dbcd749c7e4fd031c83dfbf2fe0343f33f7742696b112b1e186a"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 172810,
+        "sha256": "fb6c7f0fe71f3bfb3a6c78905d58d4ef661bcb9d14816968edbe7ee77d5265b4"
+      },
+      "url": "https://r.open-design.ai/files/3899aa05f5114bd86eab93dbc8d5d8cdb869a86fa7fc5db3818d316c2a26e9e5",
+      "bytes": 69550,
+      "sha256": "3899aa05f5114bd86eab93dbc8d5d8cdb869a86fa7fc5db3818d316c2a26e9e5"
+    },
+    {
+      "source": {
+        "path": "assets/reference-6.jpg",
+        "bytes": 173829,
+        "sha256": "9d5c5bbbec43122e3d8aeb913d65cd1e3664ca9cb3ed4e51ac44e3421760eb68"
+      },
+      "url": "https://r.open-design.ai/files/9ab7e3ba67a475e71544b88fcd250be09c3819f9490bb1bbd65991c855fce64e",
+      "bytes": 70698,
+      "sha256": "9ab7e3ba67a475e71544b88fcd250be09c3819f9490bb1bbd65991c855fce64e"
+    }
+  ]
+}
