@@ -34,7 +34,7 @@ function renderColorField({
 }: {
   value?: string;
   onPreview?: (value: string) => void;
-  onCommit?: (value: string) => void;
+  onCommit?: (value: string) => void | Promise<unknown>;
 } = {}): HTMLElement {
   const host = document.createElement("div");
   document.body.append(host);
@@ -99,6 +99,52 @@ describe("ColorField flat trigger", () => {
     });
 
     expect(onCommit).toHaveBeenCalledOnce();
+  });
+
+  it("keeps the selected color visible while an asynchronous save completes", async () => {
+    let finishSave!: () => void;
+    const onCommit = vi.fn(() => new Promise<void>((resolve) => {
+      finishSave = resolve;
+    }));
+    const onPreview = vi.fn();
+    const input = openHexInput(renderColorField({ value: "#224466", onPreview, onCommit }));
+    const dialog = document.querySelector('[role="dialog"]');
+    const hue = document.querySelector<HTMLElement>('[role="slider"][aria-label="Hue"]')!;
+
+    for (let repeat = 0; repeat < 3; repeat += 1) {
+      act(() => hue.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" })));
+    }
+    const selectedHex = input.value;
+    const selectedColor = onPreview.mock.lastCall![0];
+    act(() => hue.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "ArrowRight" })));
+
+    expect(onCommit).toHaveBeenCalledOnce();
+    expect(onCommit).toHaveBeenCalledWith(selectedColor);
+    expect(input.value).toBe(selectedHex);
+    expect(onPreview).toHaveBeenLastCalledWith(selectedColor);
+    expect(document.querySelector('[role="dialog"]')).toBe(dialog);
+
+    await act(async () => finishSave());
+    expect(input.value).toBe(selectedHex);
+    expect(onPreview).toHaveBeenLastCalledWith(selectedColor);
+  });
+
+  it("restores the previous color when an asynchronous save fails", async () => {
+    let rejectSave!: (error: Error) => void;
+    const onCommit = vi.fn(() => new Promise<void>((_resolve, reject) => {
+      rejectSave = reject;
+    }));
+    const onPreview = vi.fn();
+    const input = openHexInput(renderColorField({ value: "#224466", onPreview, onCommit }));
+    const hue = document.querySelector<HTMLElement>('[role="slider"][aria-label="Hue"]')!;
+    act(() => hue.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" })));
+    const selectedHex = input.value;
+    act(() => hue.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "ArrowRight" })));
+    expect(input.value).toBe(selectedHex);
+
+    await act(async () => rejectSave(new Error("save failed")));
+    expect(input.value).toBe("#224466");
+    expect(onPreview).toHaveBeenLastCalledWith("rgb(34, 68, 102)");
   });
 });
 
