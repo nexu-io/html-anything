@@ -28,7 +28,8 @@ export function beginPendingAssetDrop(
       id: drop.id, tag: getTimelineAssetKind(drop.assetPath) ?? "div",
       ...drop.placement, duration: drop.duration ?? 5,
     });
-    const busy = [...(placement.insertRow == null ? state.elements : []), ...pending]
+    // Native composition insertion chooses a free track at the requested time.
+    const busy = [...(kind && placement.insertRow == null ? state.elements : []), ...pending]
       .filter((element) => (element.tag === "audio") === (kind === "audio"));
     const start = resolveNearestFreeStart(busy, placement.track, placement.start, duration ?? 5, null);
     return { pendingAssetDrops: [...state.pendingAssetDrops, {

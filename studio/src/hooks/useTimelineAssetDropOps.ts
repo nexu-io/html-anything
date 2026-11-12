@@ -319,8 +319,10 @@ export function useTimelineAssetDropOps({
       }
       const pid = projectIdRef.current;
       if (!pid) throw new Error("No active project");
+      const pendingId = beginPendingAssetDrop(sourcePath, placement);
+      const isActive = () => usePlayerStore.getState().pendingAssetDrops.some((drop) => drop.id === pendingId);
       try {
-        await commitTimelineCompositionInsertion({
+        const element = await commitTimelineCompositionInsertion({
           projectId: pid,
           targetPath,
           sourcePath,
@@ -332,9 +334,15 @@ export function useTimelineAssetDropOps({
           selectHost: selectAndRevealTimelineElement,
           resync: forceReloadSdkSession,
           refresh: reloadPreview,
+          isActive,
         });
-        showToast("Composition added to the timeline.", "info");
+        if (element && isActive()) updatePendingAssetDrop(pendingId, {
+          element, duration: element.duration,
+          placement: { start: element.start, track: element.track },
+        });
       } catch (error) {
+        if (!isActive()) return;
+        updatePendingAssetDrop(pendingId, { failed: "add" });
         showToast(compositionInsertionFailureMessage(error), "error");
       }
     },

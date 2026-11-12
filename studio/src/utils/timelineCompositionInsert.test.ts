@@ -19,6 +19,8 @@ describe("commitTimelineCompositionInsertion", () => {
         response({
           path: "index.html",
           hostId: "headline",
+          track: 3,
+          duration: 8,
           before: "before",
           after: "after",
           version: "v2",
@@ -32,7 +34,7 @@ describe("commitTimelineCompositionInsertion", () => {
     const resync = vi.fn();
     const refresh = vi.fn();
 
-    await commitTimelineCompositionInsertion({
+    const element = await commitTimelineCompositionInsertion({
       projectId: "launch#demo",
       targetPath: "index.html",
       sourcePath: "headline.html",
@@ -57,6 +59,7 @@ describe("commitTimelineCompositionInsertion", () => {
     expect(selectHost).toHaveBeenCalledWith("index.html#headline");
     expect(resync).toHaveBeenCalledOnce();
     expect(refresh).toHaveBeenCalledOnce();
+    expect(element).toMatchObject({ key: "index.html#headline", start: 4, track: 3, duration: 8 });
   });
 
   it("CAS-restores the server write when history registration fails", async () => {
@@ -69,6 +72,8 @@ describe("commitTimelineCompositionInsertion", () => {
           response({
             path: "index.html",
             hostId: "headline",
+            track: 2,
+            duration: 8,
             before: "before",
             after: "after",
             version: "v2",
@@ -106,6 +111,8 @@ describe("commitTimelineCompositionInsertion", () => {
           response({
             path: "index.html",
             hostId: "headline",
+            track: 2,
+            duration: 8,
             before: "before",
             after: "after",
             version: "v2",
@@ -130,7 +137,7 @@ describe("commitTimelineCompositionInsertion", () => {
         },
         refresh,
       }),
-    ).resolves.toBeUndefined();
+    ).resolves.toMatchObject({ key: "index.html#headline", duration: 8 });
 
     expect(refresh).toHaveBeenCalledOnce();
     expect(consoleError).toHaveBeenCalledWith(
