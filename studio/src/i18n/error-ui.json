@@ -37,7 +37,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "日志会脱敏后保存到本机，不会上传。分享前请检查 ZIP 内容。",
     "Please wait 30 seconds before exporting diagnostics again.": "请等待 30 秒后再次导出诊断信息。",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "无法导出诊断信息。工作室无法连接时可使用命令行。",
-    "Download started. Check your browser downloads.": "已发起下载，请查看浏览器下载列表。"
+    "Download started. Check your browser downloads.": "已发起下载，请查看浏览器下载列表。",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "在当前源码中找不到此元素。请刷新预览；仍无法编辑时，可让 Agent 修改源码。",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "预览元素与当前源码不匹配。请刷新预览后重新选择。",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "暂不支持直接编辑此类元素。请选择外层容器，或让 Agent 修改源码。",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "找不到源文件。请刷新预览，或让 Agent 恢复源文件。",
+    "Access to the source file was denied. Check file permissions and select the element again.": "没有源文件访问权限。请检查文件权限后重新选择元素。",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "无法读取源文件。请重试，或让 Agent 检查源文件。",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "无法连接编辑器以检查此元素。请检查连接后重新选择。",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "暂时无法确认此元素能否编辑。请重新选择，或刷新预览。"
   },
   "ja": {
     "Reconnecting…": "再接続中…",
@@ -77,7 +85,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "機密情報を伏せたログを端末に保存します。アップロードは行いません。共有前に ZIP の内容をご確認ください。",
     "Please wait 30 seconds before exporting diagnostics again.": "診断情報を再度書き出すには 30 秒お待ちください。",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "診断情報を書き出せませんでした。Studio に接続できない場合はコマンドラインをご利用ください。",
-    "Download started. Check your browser downloads.": "ダウンロードを開始しました。ブラウザーのダウンロード一覧をご確認ください。"
+    "Download started. Check your browser downloads.": "ダウンロードを開始しました。ブラウザーのダウンロード一覧をご確認ください。",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "現在のソースにこの要素が見つかりません。プレビューを更新し、解決しない場合はエージェントにソースの編集を依頼してください。",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "プレビューの要素と現在のソースが一致しません。プレビューを更新して選択し直してください。",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "この種類の要素はまだ直接編集できません。外側のコンテナを選択するか、エージェントにソースの編集を依頼してください。",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "ソースファイルが見つかりません。プレビューを更新するか、エージェントに復元を依頼してください。",
+    "Access to the source file was denied. Check file permissions and select the element again.": "ソースファイルへのアクセスが拒否されました。権限を確認して要素を選択し直してください。",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "ソースファイルを読み込めません。再試行するか、エージェントに確認を依頼してください。",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "要素を確認するためにエディターに接続できません。接続を確認して選択し直してください。",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "この要素を編集できるか確認できませんでした。選択し直すか、プレビューを更新してください。"
   },
   "ko": {
     "Reconnecting…": "다시 연결 중…",
@@ -117,7 +133,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "민감한 값을 가린 로그를 기기에 저장합니다. 업로드하지 않습니다. 공유 전에 ZIP 내용을 확인하세요.",
     "Please wait 30 seconds before exporting diagnostics again.": "진단 정보를 다시 내보내려면 30초 기다려 주세요.",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "진단 정보를 내보낼 수 없습니다. Studio에 연결할 수 없으면 명령줄을 사용하세요.",
-    "Download started. Check your browser downloads.": "다운로드를 시작했습니다. 브라우저의 다운로드 목록을 확인하세요."
+    "Download started. Check your browser downloads.": "다운로드를 시작했습니다. 브라우저의 다운로드 목록을 확인하세요.",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "현재 소스에서 이 요소를 찾을 수 없습니다. 미리보기를 새로고침하고, 문제가 지속되면 에이전트에게 소스 수정을 요청하세요.",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "미리보기 요소가 현재 소스와 일치하지 않습니다. 미리보기를 새로고침한 후 다시 선택하세요.",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "이 유형의 요소는 아직 직접 편집할 수 없습니다. 바깥 컨테이너를 선택하거나 에이전트에게 소스 수정을 요청하세요.",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "소스 파일을 찾을 수 없습니다. 미리보기를 새로고침하거나 에이전트에게 파일 복원을 요청하세요.",
+    "Access to the source file was denied. Check file permissions and select the element again.": "소스 파일에 대한 접근이 거부되었습니다. 파일 권한을 확인한 후 요소를 다시 선택하세요.",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "소스 파일을 읽을 수 없습니다. 다시 시도하거나 에이전트에게 파일 확인을 요청하세요.",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "요소를 확인하기 위해 편집기에 연결할 수 없습니다. 연결을 확인한 후 다시 선택하세요.",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "이 요소의 편집 가능 여부를 확인할 수 없습니다. 다시 선택하거나 미리보기를 새로고침하세요."
   },
   "de": {
     "Reconnecting…": "Verbindung wird hergestellt…",
@@ -157,7 +181,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Speichert Protokolle mit unkenntlich gemachten vertraulichen Werten auf Ihrem Gerät. Kein Upload. Prüfen Sie die ZIP vor dem Teilen.",
     "Please wait 30 seconds before exporting diagnostics again.": "Bitte warten Sie 30 Sekunden, bevor Sie erneut Diagnosedaten exportieren.",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "Diagnosedaten konnten nicht exportiert werden. Nutzen Sie die Befehlszeile, wenn Studio keine Verbindung herstellen kann.",
-    "Download started. Check your browser downloads.": "Download gestartet. Prüfe die Downloadliste deines Browsers."
+    "Download started. Check your browser downloads.": "Download gestartet. Prüfe die Downloadliste deines Browsers.",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "Dieses Element wurde im aktuellen Quelltext nicht gefunden. Aktualisiere die Vorschau. Falls das Problem bleibt, bitte einen Agenten, den Quelltext zu bearbeiten.",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "Das Vorschauelement stimmt nicht mit dem aktuellen Quelltext überein. Aktualisiere die Vorschau und wähle es erneut aus.",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "Dieser Elementtyp kann noch nicht visuell bearbeitet werden. Wähle den äußeren Container oder bitte einen Agenten, den Quelltext zu bearbeiten.",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "Die Quelldatei wurde nicht gefunden. Aktualisiere die Vorschau oder bitte einen Agenten, die Datei wiederherzustellen.",
+    "Access to the source file was denied. Check file permissions and select the element again.": "Der Zugriff auf die Quelldatei wurde verweigert. Prüfe die Dateiberechtigungen und wähle das Element erneut aus.",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "Die Quelldatei konnte nicht gelesen werden. Versuche es erneut oder bitte einen Agenten, die Datei zu prüfen.",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "Keine Verbindung zum Editor, um dieses Element zu prüfen. Prüfe die Verbindung und wähle es erneut aus.",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "Es konnte nicht geprüft werden, ob dieses Element bearbeitbar ist. Wähle es erneut aus oder aktualisiere die Vorschau."
   },
   "fr": {
     "Reconnecting…": "Reconnexion…",
@@ -197,7 +229,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Enregistre les journaux sur votre appareil en masquant les valeurs sensibles. Aucun envoi. Vérifiez le ZIP avant de le partager.",
     "Please wait 30 seconds before exporting diagnostics again.": "Veuillez patienter 30 secondes avant de réexporter le diagnostic.",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "Impossible d’exporter le diagnostic. Utilisez la ligne de commande si Studio ne peut pas se connecter.",
-    "Download started. Check your browser downloads.": "Téléchargement lancé. Consultez les téléchargements de votre navigateur."
+    "Download started. Check your browser downloads.": "Téléchargement lancé. Consultez les téléchargements de votre navigateur.",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "Cet élément est introuvable dans le code source actuel. Actualisez l’aperçu puis, si le problème persiste, demandez à un agent de modifier le code source.",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "L’élément de l’aperçu ne correspond pas au code source actuel. Actualisez l’aperçu et sélectionnez-le à nouveau.",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "Ce type d’élément ne peut pas encore être modifié visuellement. Sélectionnez son conteneur parent ou demandez à un agent de modifier le code source.",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "Le fichier source est introuvable. Actualisez l’aperçu ou demandez à un agent de restaurer le fichier.",
+    "Access to the source file was denied. Check file permissions and select the element again.": "L’accès au fichier source a été refusé. Vérifiez les autorisations et sélectionnez à nouveau l’élément.",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "Impossible de lire le fichier source. Réessayez ou demandez à un agent de vérifier le fichier.",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "Impossible de se connecter à l’éditeur pour vérifier cet élément. Vérifiez la connexion et sélectionnez-le à nouveau.",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "Impossible de vérifier si cet élément est modifiable. Sélectionnez-le à nouveau ou actualisez l’aperçu."
   },
   "es": {
     "Reconnecting…": "Reconectando…",
@@ -237,7 +277,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Guarda los registros en tu dispositivo con los valores sensibles ocultos. No se suben. Revisa el ZIP antes de compartirlo.",
     "Please wait 30 seconds before exporting diagnostics again.": "Espera 30 segundos antes de volver a exportar el diagnóstico.",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "No se pudo exportar el diagnóstico. Usa la línea de comandos si Studio no puede conectarse.",
-    "Download started. Check your browser downloads.": "Descarga iniciada. Revisa las descargas de tu navegador."
+    "Download started. Check your browser downloads.": "Descarga iniciada. Revisa las descargas de tu navegador.",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "No se encontró este elemento en el código fuente actual. Actualiza la vista previa y, si el problema persiste, pide a un agente que edite el código fuente.",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "El elemento de la vista previa no coincide con el código fuente actual. Actualiza la vista previa y vuelve a seleccionarlo.",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "Este tipo de elemento aún no se puede editar visualmente. Selecciona su contenedor exterior o pide a un agente que edite el código fuente.",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "No se encontró el archivo fuente. Actualiza la vista previa o pide a un agente que restaure el archivo.",
+    "Access to the source file was denied. Check file permissions and select the element again.": "Se denegó el acceso al archivo fuente. Revisa sus permisos y vuelve a seleccionar el elemento.",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "No se pudo leer el archivo fuente. Inténtalo de nuevo o pide a un agente que revise el archivo.",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "No se puede conectar con el editor para comprobar este elemento. Revisa la conexión y vuelve a seleccionarlo.",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "No se pudo comprobar si este elemento se puede editar. Vuelve a seleccionarlo o actualiza la vista previa."
   },
   "pt-BR": {
     "Reconnecting…": "Reconectando…",
@@ -277,7 +325,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Salva os registros no seu dispositivo com valores sensíveis ocultos. Sem envio. Revise o ZIP antes de compartilhar.",
     "Please wait 30 seconds before exporting diagnostics again.": "Aguarde 30 segundos antes de exportar o diagnóstico novamente.",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "Não foi possível exportar o diagnóstico. Use a linha de comando se o Studio não conseguir se conectar.",
-    "Download started. Check your browser downloads.": "Download iniciado. Confira os downloads do navegador."
+    "Download started. Check your browser downloads.": "Download iniciado. Confira os downloads do navegador.",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "Este elemento não foi encontrado no código-fonte atual. Atualize a prévia e, se o problema persistir, peça a um agente para editar o código-fonte.",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "O elemento da prévia não corresponde ao código-fonte atual. Atualize a prévia e selecione-o novamente.",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "Este tipo de elemento ainda não pode ser editado visualmente. Selecione o contêiner externo ou peça a um agente para editar o código-fonte.",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "O arquivo-fonte não foi encontrado. Atualize a prévia ou peça a um agente para restaurar o arquivo.",
+    "Access to the source file was denied. Check file permissions and select the element again.": "O acesso ao arquivo-fonte foi negado. Verifique suas permissões e selecione o elemento novamente.",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "Não foi possível ler o arquivo-fonte. Tente novamente ou peça a um agente para verificar o arquivo.",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "Não foi possível conectar ao editor para verificar este elemento. Verifique a conexão e selecione-o novamente.",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "Não foi possível verificar se este elemento pode ser editado. Selecione-o novamente ou atualize a prévia."
   },
   "it": {
     "Reconnecting…": "Riconnessione…",
@@ -317,7 +373,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Salva i log sul dispositivo oscurando i valori sensibili. Nessun caricamento. Controlla lo ZIP prima di condividerlo.",
     "Please wait 30 seconds before exporting diagnostics again.": "Attendi 30 secondi prima di esportare nuovamente la diagnostica.",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "Impossibile esportare la diagnostica. Usa la riga di comando se Studio non riesce a connettersi.",
-    "Download started. Check your browser downloads.": "Download avviato. Controlla i download del browser."
+    "Download started. Check your browser downloads.": "Download avviato. Controlla i download del browser.",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "Questo elemento non è stato trovato nel codice sorgente attuale. Aggiorna l’anteprima e, se il problema persiste, chiedi a un agente di modificare il codice sorgente.",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "L’elemento dell’anteprima non corrisponde al codice sorgente attuale. Aggiorna l’anteprima e selezionalo di nuovo.",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "Questo tipo di elemento non è ancora modificabile visivamente. Seleziona il contenitore esterno o chiedi a un agente di modificare il codice sorgente.",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "Il file sorgente non è stato trovato. Aggiorna l’anteprima o chiedi a un agente di ripristinare il file.",
+    "Access to the source file was denied. Check file permissions and select the element again.": "L’accesso al file sorgente è stato negato. Controlla i permessi e seleziona di nuovo l’elemento.",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "Impossibile leggere il file sorgente. Riprova o chiedi a un agente di controllare il file.",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "Impossibile connettersi all’editor per verificare questo elemento. Controlla la connessione e selezionalo di nuovo.",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "Impossibile verificare se questo elemento è modificabile. Selezionalo di nuovo o aggiorna l’anteprima."
   },
   "ru": {
     "Reconnecting…": "Переподключение…",
@@ -357,7 +421,15 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Журналы сохраняются на устройстве с маскировкой конфиденциальных данных. Отправки нет. Проверьте ZIP перед передачей.",
     "Please wait 30 seconds before exporting diagnostics again.": "Подождите 30 секунд перед повторным экспортом диагностики.",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "Не удалось экспортировать диагностику. Если Studio не подключается, используйте командную строку.",
-    "Download started. Check your browser downloads.": "Загрузка началась. Проверьте список загрузок браузера."
+    "Download started. Check your browser downloads.": "Загрузка началась. Проверьте список загрузок браузера.",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "Элемент не найден в текущем исходном коде. Обновите предпросмотр. Если проблема сохранится, попросите агента изменить исходный код.",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "Элемент предпросмотра не соответствует текущему исходному коду. Обновите предпросмотр и выберите элемент снова.",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "Этот тип элемента пока нельзя редактировать визуально. Выберите внешний контейнер или попросите агента изменить исходный код.",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "Исходный файл не найден. Обновите предпросмотр или попросите агента восстановить файл.",
+    "Access to the source file was denied. Check file permissions and select the element again.": "Доступ к исходному файлу запрещён. Проверьте права доступа и выберите элемент снова.",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "Не удалось прочитать исходный файл. Повторите попытку или попросите агента проверить файл.",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "Не удалось подключиться к редактору для проверки элемента. Проверьте соединение и выберите элемент снова.",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "Не удалось проверить, можно ли редактировать элемент. Выберите его снова или обновите предпросмотр."
   },
   "tr": {
     "Reconnecting…": "Yeniden bağlanılıyor…",
@@ -397,6 +469,14 @@
     "Saves logs on your device with sensitive values redacted. No upload. Review the ZIP before sharing.": "Günlükleri hassas değerler gizlenmiş olarak cihazınıza kaydeder. Yükleme yapılmaz. Paylaşmadan önce ZIP içeriğini inceleyin.",
     "Please wait 30 seconds before exporting diagnostics again.": "Tanılamayı yeniden dışa aktarmadan önce 30 saniye bekleyin.",
     "Could not export diagnostics. Use the command line if Studio cannot connect.": "Tanılama dışa aktarılamadı. Studio bağlanamıyorsa komut satırını kullanın.",
-    "Download started. Check your browser downloads.": "İndirme başlatıldı. Tarayıcınızın indirme listesini kontrol edin."
+    "Download started. Check your browser downloads.": "İndirme başlatıldı. Tarayıcınızın indirme listesini kontrol edin.",
+    "This element was not found in the current source. Refresh the preview, then ask an agent to edit the source if it is still unavailable.": "Bu öğe geçerli kaynakta bulunamadı. Önizlemeyi yenileyin; sorun sürerse bir ajandan kaynağı düzenlemesini isteyin.",
+    "The preview element does not match the current source. Refresh the preview and select it again.": "Önizleme öğesi geçerli kaynakla eşleşmiyor. Önizlemeyi yenileyip öğeyi yeniden seçin.",
+    "This element type cannot be edited visually yet. Select its outer container or ask an agent to edit the source.": "Bu öğe türü henüz görsel olarak düzenlenemiyor. Dış kapsayıcıyı seçin veya bir ajandan kaynağı düzenlemesini isteyin.",
+    "The source file could not be found. Refresh the preview or ask an agent to restore the source file.": "Kaynak dosya bulunamadı. Önizlemeyi yenileyin veya bir ajandan dosyayı geri yüklemesini isteyin.",
+    "Access to the source file was denied. Check file permissions and select the element again.": "Kaynak dosyaya erişim reddedildi. Dosya izinlerini kontrol edip öğeyi yeniden seçin.",
+    "The source file could not be read. Try again or ask an agent to check the source file.": "Kaynak dosya okunamadı. Yeniden deneyin veya bir ajandan dosyayı kontrol etmesini isteyin.",
+    "Cannot connect to the editor to check this element. Check the connection and select it again.": "Bu öğeyi kontrol etmek için düzenleyiciye bağlanılamıyor. Bağlantıyı kontrol edip öğeyi yeniden seçin.",
+    "Could not check whether this element can be edited. Select it again or refresh the preview.": "Bu öğenin düzenlenip düzenlenemeyeceği kontrol edilemedi. Öğeyi yeniden seçin veya önizlemeyi yenileyin."
   }
 }

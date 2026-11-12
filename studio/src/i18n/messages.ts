@@ -47,7 +47,7 @@ const singular: Record<string, string> = {
 };
 const pluralRules = Object.fromEntries(languages.map(({ locale }) => [locale, new Intl.PluralRules(locale)]));
 
-export const isKnownMessage = (message: string): boolean => Object.hasOwn(zhCN, message) || Object.hasOwn(mvpZhCN, message);
+export const isKnownMessage = (message: string): boolean => Object.hasOwn(zhCN, message) || Object.hasOwn(mvpZhCN, message) || Object.hasOwn(errorUi['zh-CN'], message);
 
 /** Accept legacy Chinese labels and already-localized built-in labels. */
 export function sourceMessage(message: string, locale: Locale = 'zh-CN'): string {

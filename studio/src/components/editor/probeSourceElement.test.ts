@@ -1,45 +1,66 @@
+// @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { probeSourceElement } from "./probeSourceElement";
+import { probeSourceElement, sourceProbeMessages } from "./probeSourceElement";
+import { languages, translate } from "../../i18n/messages";
+import { toastErrorMessage } from "../ui/toastErrorMessage";
 
 afterEach(() => vi.unstubAllGlobals());
-
-const answer = (body: unknown, ok = true) =>
-  vi.fn(() => Promise.resolve({ ok, json: () => Promise.resolve(body) }));
+const answer = (body: unknown, status = 200) => ({ ok: status === 200, status, json: async () => body });
 
 describe("probeSourceElement", () => {
-  it("sends the asks for one file in one tick as a single request", async () => {
-    const fetchMock = answer({ exists: [true, false, true] });
+  it("batches probes and reads a rejected file only once to diagnose its missing targets", async () => {
+    const fetchMock = vi.fn(async (_url: unknown, init?: RequestInit) => init?.method === "POST"
+      ? answer({ exists: [true, false, false] })
+      : answer({ content: '<div id="a"></div><svg id="b"></svg><script>const html = `<div id="c"></div>`;</script>' }));
     vi.stubGlobal("fetch", fetchMock);
-
-    const results = await Promise.all([
-      probeSourceElement("p", "index.html", { id: "a" }),
-      probeSourceElement("p", "index.html", { id: "b" }),
-      probeSourceElement("p", "index.html", { id: "c" }),
+    expect(await Promise.all(["a", "b", "c"].map(id => probeSourceElement("p", "index.html", { id })))).toEqual([
+      { exists: true }, { exists: false, failure: "unsupported-element" }, { exists: false, failure: "element-not-found" },
     ]);
-
-    expect(results).toEqual([true, false, true]);
-    expect(fetchMock).toHaveBeenCalledOnce();
-    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
-    expect(JSON.parse(String(init.body)).targets).toEqual([{ id: "a" }, { id: "b" }, { id: "c" }]);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body)).targets).toEqual([{ id: "a" }, { id: "b" }, { id: "c" }]);
   });
 
-  it("keeps one request per file", async () => {
-    const fetchMock = answer({ exists: [true] });
+  it("keeps successful requests per file and never reads their source", async () => {
+    const fetchMock = vi.fn(async (_url: unknown, _init?: RequestInit) => answer({ exists: [true] }));
     vi.stubGlobal("fetch", fetchMock);
     await Promise.all([
       probeSourceElement("p", "index.html", { id: "a" }),
       probeSourceElement("p", "compositions/x.html", { id: "a" }),
     ]);
     expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls.every(call => call[1]?.method === "POST")).toBe(true);
   });
 
-  it("reads a failed or malformed answer as existing", async () => {
-    vi.stubGlobal("fetch", answer({}, false));
-    expect(await probeSourceElement("p", "index.html", { id: "a" })).toBe(true);
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(() => Promise.reject(new Error("offline"))),
-    );
-    expect(await probeSourceElement("p", "index.html", { id: "a" })).toBe(true);
+  it.each([404, 403, 503])("reports source read status %s without attributing it to generated content", async status => {
+    vi.stubGlobal("fetch", vi.fn(async (_url: unknown, init?: RequestInit) => init?.method === "POST"
+      ? answer({ exists: [false] }) : answer({}, status)));
+    expect(await probeSourceElement("p", "index.html", { id: "a" })).toEqual({
+      exists: false, failure: status === 404 ? "source-missing" : status === 403 ? "source-denied" : "source-unreadable",
+    });
+  });
+
+  it("identifies a source/preview mismatch when an HTML target exists but native probing refused it", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (_url: unknown, init?: RequestInit) => init?.method === "POST"
+      ? answer({ exists: [false] }) : answer({ content: '<div id="a" data-hf-id="new-id"></div>' })));
+    expect(await probeSourceElement("p", "index.html", { id: "a", hfId: "stale-id" })).toEqual({ exists: false, failure: "source-mismatch" });
+  });
+
+  it("blocks an unverified target on network and malformed responses, then recovers on retry", async () => {
+    const fetchMock = vi.fn().mockRejectedValueOnce(new TypeError("offline"))
+      .mockResolvedValueOnce(answer({ exists: [] })).mockResolvedValueOnce(answer({ exists: [true] }));
+    vi.stubGlobal("fetch", fetchMock);
+    expect(await probeSourceElement("p", "index.html", { id: "a" })).toEqual({ exists: false, failure: "connection-failed" });
+    expect(await probeSourceElement("p", "index.html", { id: "a" })).toEqual({ exists: false, failure: "check-failed" });
+    expect(await probeSourceElement("p", "index.html", { id: "a" })).toEqual({ exists: true });
+  });
+
+  it("gives every reason a localized next step without claiming script generation", () => {
+    for (const message of Object.values(sourceProbeMessages)) {
+      expect(message).not.toContain("generated by a script");
+      expect(toastErrorMessage(message)).toBe(message);
+      for (const { locale } of languages) {
+        if (locale !== "en") expect(translate(locale, message), locale).not.toBe(message);
+      }
+    }
   });
 });
