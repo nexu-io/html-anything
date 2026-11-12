@@ -88,12 +88,15 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert(readme.includes('](#choose-agent)'));
     assert(readme.includes('href="https://open-design.ai/motion/'));
     assert(readme.includes(`srcset="https://raw.githubusercontent.com/nexu-io/openmotion/${release.commit}/docs/readme/brand-hero.mobile.jpg"`));
-    assert(readme.includes(`href="https://github.com/nexu-io/openmotion/blob/${release.commit}/docs/readme/media/presenter-caption-remake.mp4"`));
+    assert(readme.includes(`href="https://github.com/nexu-io/openmotion/blob/${release.commit}/LICENSE"`));
+    assert(readme.includes(`src="https://raw.githubusercontent.com/nexu-io/openmotion/${release.commit}/docs/readme/live-product/studio-in-use.png"`));
+    assert(readme.includes('href="https://open-design.ai/templates/notion-custom-agents-motion-design/"'));
     assert(!readme.includes('](docs/') && !readme.includes('](template-library/'));
     assert(!readme.startsWith('# Motion application npm package'));
     const embeddedReadme = await readFile(path.join(application, 'README.md'), 'utf8');
     assert(embeddedReadme.includes('](docs/motion-md.md)'), 'Installed documentation keeps local links to shipped guides');
     assert(embeddedReadme.includes(`srcset="https://raw.githubusercontent.com/nexu-io/openmotion/${release.commit}/docs/readme/brand-hero.mobile.jpg"`));
+    assert(embeddedReadme.includes(`src="https://raw.githubusercontent.com/nexu-io/openmotion/${release.commit}/docs/readme/live-product/studio-in-use.png"`));
     await assert.rejects(readdir(path.join(application, 'docs/readme/media')), { code: 'ENOENT' });
     await assert.rejects(readFile(path.join(application, 'scripts/install-library-skill.mjs')), { code: 'ENOENT' });
     assert.equal((await json(path.join(application, 'package.json'))).version, version);
