@@ -71,11 +71,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal(await packagedOnboarding.installationInstructions(application), await installationInstructions(process.cwd()),
       'The installed application must retain the canonical host handoff and its module dependencies');
     const packagedHosts = await import(pathToFileURL(path.join(installer, 'package/scripts/npm-hosts.mjs')).href);
-    assert.match(packagedHosts.hostConnectionInstructions('codex'), /Use onboarding.directAccess immediately/);
-    for (const root of [application, path.join(installer, 'package')]) {
-      const help = await runFile(process.execPath, [path.join(root, 'scripts/npm-installer.mjs'), '--help']);
-      assert(help.includes('openmotion call TOOL'), 'Both archive layers must include the direct-access client dependency');
-    }
+    assert.match(packagedHosts.hostConnectionInstructions('codex'), /restart the desktop app manually and return to this same chat/);
     const readme = await readFile(path.join(installer, 'package/README.md'), 'utf8');
     assert(readme.includes("Reverse engineering for any video"));
     assert(readme.includes(`https://raw.githubusercontent.com/nexu-io/openmotion/${release.commit}/docs/readme/brand-hero.jpg`));

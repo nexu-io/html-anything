@@ -1,10 +1,9 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { access, mkdir, mkdtemp, readFile, realpath, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { protocolClient } from './mcp-client.mjs';
-export { protocolClient } from './mcp-client.mjs';
+import { createInterface } from 'node:readline';
 import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
 import { run, sha256, tar } from './test-package.mjs';
@@ -66,6 +65,30 @@ export async function smoke(archive, codexJS, preparedBundle) {
   return acceptTransport({ transport, env: processEnv, data, metadata, archive, timings,
     ffmpeg: path.join(bundle, 'runtime/media/bin', process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'),
     reportFile: path.join(path.dirname(archive), `smoke-${metadata.target}.json`) });
+}
+
+export function protocolClient(transport, env) {
+  const child = spawn(transport.command, transport.args, { cwd: transport.cwd, env, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true });
+  let seq = 0, stderr = ''; const pending = new Map();
+  child.stderr.on('data', chunk => { stderr = (stderr + chunk).slice(-4000); });
+  const listeners = new Map();
+  const failPending = error => {
+    for (const { reject, timer } of pending.values()) { clearTimeout(timer); reject(error); }
+    pending.clear(); listeners.clear();
+  };
+  child.on('error', failPending);
+  child.on('exit', code => failPending(new Error(`MCP exited ${code}: ${stderr}`)));
+  createInterface({ input: child.stdout }).on('line', line => {
+    try { const value = JSON.parse(line); listeners.get(value.id)?.(value); }
+    catch (error) { failPending(error); }
+  });
+  const rpc = (method, params) => new Promise((resolve, reject) => {
+    const id = ++seq, timer = setTimeout(() => { listeners.delete(id); pending.delete(id); reject(new Error(`${method} timed out: ${stderr}`)); }, 240_000);
+    pending.set(id, { reject, timer });
+    listeners.set(id, reply => { clearTimeout(timer); listeners.delete(id); pending.delete(id); reply.error ? reject(new Error(JSON.stringify(reply.error))) : resolve(reply.result); });
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id, method, params }) + '\n');
+  });
+  return { child, rpc, getStderr: () => stderr };
 }
 
 export async function acceptTransport({ transport, env, data, metadata, archive, ffmpeg, reportFile, timings = {}, deferredNativeDirectory, installation = {} }) {
