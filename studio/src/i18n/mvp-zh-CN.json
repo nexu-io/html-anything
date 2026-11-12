@@ -1172,5 +1172,8 @@
   "The thing that slowed you down": "影响你工作效率的问题",
   "What went wrong?": "遇到了什么问题？",
   "The thing that made that a low score": "让你给出低分的原因",
-  "How likely are you to recommend HyperFrames?": "你有多大可能推荐 HyperFrames？"
+  "How likely are you to recommend HyperFrames?": "你有多大可能推荐 HyperFrames？",
+  "About {seconds}s remaining": "预计剩余 {seconds} 秒",
+  "Download attempt {attempt}/{total}": "第 {attempt}/{total} 次下载尝试",
+  "Download timed out after automatic retries. Check your connection and retry.": "下载超时，自动重试后仍未完成。请检查网络并重试。"
 }
