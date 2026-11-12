@@ -90,7 +90,7 @@ describe("FontFamilyField font list", () => {
 describe("FontFamilyField session font lists", () => {
   const fresh = async () => {
     vi.resetModules();
-    const { FontFamilyField } = await import("./propertyPanelFont");
+    const { FontFamilyField, preloadFontLists } = await import("./propertyPanelFont");
     const { uniqueFontFamilies } = await import("./propertyPanelHelpers");
     const loop = await import("./overlayFrameLoop");
     vi.mocked(uniqueFontFamilies).mockClear();
@@ -106,8 +106,63 @@ describe("FontFamilyField session font lists", () => {
       host.remove();
       loop.resetOverlayFrameLoopForTests();
     };
-    return { uniqueFontFamilies, loop, host, render, toggle, done };
+    return { uniqueFontFamilies, loop, host, render, toggle, done, preloadFontLists };
   };
+
+  it("preloads once before the field mounts and shows an explicit pending state until the shared list arrives", async () => {
+    let complete!: (response: Response) => void;
+    vi.mocked(fetch).mockReturnValue(new Promise<Response>(resolve => { complete = resolve; }));
+    const t = await fresh();
+    try {
+      t.preloadFontLists();
+      t.preloadFontLists();
+      expect(fetch).toHaveBeenCalledTimes(1);
+      await act(async () => t.render("Georgia"));
+      await act(async () => t.toggle());
+      expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
+      expect(document.querySelector('[role="status"]')?.textContent).toContain("Loading fonts…");
+      expect(document.body.textContent).not.toContain("No fonts found.");
+      expect(document.querySelector('[role="status"] [aria-hidden="true"]')?.children).toHaveLength(5);
+      expect(document.querySelector('[role="combobox"]')).toBe(document.activeElement);
+
+      await act(async () => {
+        complete(new Response(JSON.stringify({ fonts: ["Arial", "Menlo"] })));
+        await new Promise(resolve => setTimeout(resolve, 10));
+      });
+      expect(document.querySelector('[aria-busy="true"]')).toBeNull();
+      expect(document.querySelector('[role="status"]')).toBeNull();
+      expect(document.body.textContent).toContain("Menlo");
+      await act(async () => t.toggle());
+      await act(async () => t.toggle());
+      expect(document.body.textContent).toContain("Menlo");
+      expect(document.querySelector('[role="status"]')).toBeNull();
+      expect(fetch).toHaveBeenCalledTimes(1);
+    } finally { t.done(); }
+  });
+
+  it("reports HTTP failures and retries in place without hiding the current font", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify({ fonts: ["Wrong response"] }), { status: 503 }));
+    const t = await fresh();
+    try {
+      await act(async () => t.render("Georgia"));
+      await act(async () => t.toggle());
+      expect(document.querySelector('[role="alert"]')?.textContent).toContain("Couldn't load local fonts.");
+      expect(document.body.textContent).not.toContain("No fonts found.");
+      expect(document.body.textContent).not.toContain("Wrong response");
+      expect(document.querySelector('[data-font-option-index="0"]')?.textContent).toContain("Georgia");
+      let complete!: (response: Response) => void;
+      vi.mocked(fetch).mockReturnValue(new Promise<Response>(resolve => { complete = resolve; }));
+      await act(async () => document.querySelector<HTMLButtonElement>('[role="alert"] button')?.click());
+      expect(document.querySelector('[role="alert"]')).toBeNull();
+      expect(document.querySelector('[role="status"]')?.textContent).toContain("Loading fonts…");
+      await act(async () => {
+        complete(new Response(JSON.stringify({ fonts: ["Menlo"] })));
+        await new Promise(resolve => setTimeout(resolve, 10));
+      });
+      expect(document.querySelector('[role="status"]')).toBeNull();
+      expect(document.body.textContent).toContain("Menlo");
+    } finally { t.done(); }
+  });
 
   it("does no list work in a drag's frames when the lists land mid-drag", async () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "performance", "Date"] });
