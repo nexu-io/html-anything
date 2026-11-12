@@ -1,5 +1,5 @@
 import { isClipHiddenByRuntime, PREVIEW_ONLY_ATTRS } from "@hyperframes/core/studio-preview-mark";
-import { knownSourceAnswer, probeSourceElement, type ProbeTarget } from "./probeSourceElement";
+import { knownSourceAnswer, probeSourceElement, sourceProbeMessages, type ProbeTarget } from "./probeSourceElement";
 import { isAudibleVideoNode } from "../../player/lib/timelineElementHelpers";
 import type { PatchOperation } from "../../utils/sourcePatcher";
 import {
@@ -347,11 +347,12 @@ export async function resolveDomEditSelection(
     if (hfId) probeTarget.hfId = hfId;
     if (selector) probeTarget.selector = selector;
     if (selectorIndex != null) probeTarget.selectorIndex = selectorIndex;
-    let existsInSource = knownSourceAnswer(options.previous, current, sourceFile, probeTarget);
-    const probe = existsInSource === undefined && !options.skipSourceProbe;
+    let sourceProbe = knownSourceAnswer(options.previous, current, sourceFile, probeTarget);
+    const probe = sourceProbe === undefined && !options.skipSourceProbe;
     if (probe && options.projectId && (current.id || selector || hfId)) {
-      existsInSource = await probeSourceElement(options.projectId, sourceFile, probeTarget);
+      sourceProbe = await probeSourceElement(options.projectId, sourceFile, probeTarget);
     }
+    const existsInSource = sourceProbe?.exists;
     const capabilities = resolveEditingAffordances(
       capabilityFacts({
         hasStableTarget: Boolean(selector || hfId),
@@ -365,6 +366,9 @@ export async function resolveDomEditSelection(
         existsInSource: existsInSource ?? true,
       }),
     ).capabilities;
+    if (sourceProbe?.failure && !isInsideLocked) {
+      capabilities.reasonIfDisabled = sourceProbeMessages[sourceProbe.failure];
+    }
     const rect = current.getBoundingClientRect();
 
     return {
@@ -393,6 +397,7 @@ export async function resolveDomEditSelection(
       textFields,
       capabilities,
       existsInSource,
+      sourceProbeFailure: sourceProbe?.failure,
     };
   }
 
