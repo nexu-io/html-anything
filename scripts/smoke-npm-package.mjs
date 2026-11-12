@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { acceptTransport, protocolClient, testPort } from './smoke-test-package.mjs';
 import { canonical, relativePath, runFile, sha256 } from './runtime-assets.mjs';
-import { nativeConfiguration, nativeRuntimeStatus } from './npm-runtime.mjs';
+import { nativeConfiguration } from './npm-runtime.mjs';
 
 export async function smokeNpm(filename, codexJS) {
   filename = path.resolve(filename); codexJS = path.resolve(codexJS);
@@ -47,7 +47,10 @@ export async function smokeNpm(filename, codexJS) {
   assert.equal(installed.transport.command, process.execPath); assert.deepEqual(installed.transport.args, [first.launcher]);
   const native = await nativeConfiguration(first.appRoot);
   // Setup already starts background preparation, so the cache can be present or ready.
-  const nativeStatusAfterSetup = await nativeRuntimeStatus(first.appRoot);
+  const nativeStatusAfterSetup = JSON.parse(await runFile(process.execPath, ['--input-type=module', '-e', `
+    import { nativeRuntimeStatus } from './scripts/npm-runtime.mjs';
+    console.log(JSON.stringify(await nativeRuntimeStatus(process.cwd())));
+  `], { cwd: first.appRoot, env }));
   assert.equal(nativeStatusAfterSetup.managed, true);
   assert.deepEqual(nativeStatusAfterSetup.components.map(component => component.id), native.components);
   // Native downloads have a five-minute bound; allow lock waiting and extraction as well.
