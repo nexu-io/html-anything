@@ -54,7 +54,14 @@ test('successful setup hands the current Agent an invitation before any MCP use,
   const options = await setupFixture(t);
   const installed = await setup(options);
   assert.equal(installed.onboarding.hostSessionVerified, false);
-  assert.match(installed.onboarding.instructions, /OpenMotion 开源免费/);
+  assert.deepEqual(installed.onboarding.directAccess.toolsArgs, [path.join(installed.appRoot, 'scripts/npm-installer.mjs'), 'tools', '--home', installed.launcher.replace(/[/\\]run-mcp.mjs$/, ''), '--host', 'codex', '--codex', options.codex]);
+  const examples = [...installed.onboarding.instructions.matchAll(/```text\n([\s\S]*?)```/g)].map(([, text]) => text);
+  assert.equal(examples.length, 2);
+  for (const example of examples) {
+    assert(example.startsWith('OpenMotion 已安装完成。\n\n'));
+    assert.doesNotMatch(example, /MCP|Skills?|prod|DEV|刷新|连接|新聊天|后台|开源免费/);
+    assert.match(example, /暂不体验/);
+  }
   assert(Array.isArray(installed.onboarding.catalog.templates));
   assert.equal('onboarding' in JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')), false);
 });
@@ -89,7 +96,7 @@ test('a flat-host upgrade replaces an owned legacy Skill with an explicit alias 
 test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and rejects a mixed-environment home', async t => {
   const options = await setupFixture(t), bundle = path.join(options.directory, 'bundle');
   await mkdir(path.join(bundle, 'scripts'), { recursive: true }); await mkdir(path.join(bundle, 'payload'));
-  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) {
+  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs', 'mcp-client.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) {
     await cp(new URL('../scripts/' + file, import.meta.url), path.join(bundle, 'scripts', file));
   }
   await writeJSON(path.join(bundle, 'package.json'), { version: '1.2.3', type: 'module' });
@@ -495,4 +502,27 @@ test('registration failure restores obsolete flat Skills, and malformed install 
   const state = path.join(options.home, 'install.json'); await writeJSON(state, false);
   await assert.rejects(setup(options), /belongs to another/);
   assert.equal(JSON.parse(await readFile(state, 'utf8')), false);
+});
+
+
+test('installed CLI uses the selected host transport and keeps failed tool results nonzero', async t => {
+  const options = await setupFixture(t), installed = await setup(options);
+  const tools = (JSON.parse(await readFile(path.join(installed.appRoot, 'shared/mcp-profiles.json'), 'utf8'))).phase1.tools;
+  await writeFile(installed.launcher, `import { createInterface } from 'node:readline';
+    for await (const line of createInterface({ input: process.stdin })) {
+      const q=JSON.parse(line); if(q.id===undefined) continue;
+      const result=q.method==='initialize'?{serverInfo:{version:'1.2.3'}}:q.method==='tools/list'?{tools:${JSON.stringify(tools.map(name => ({name,inputSchema:{type:'object'}})))}}:q.params.name==='openmotion_get_project'?{structuredContent:{dataDirectory:${JSON.stringify(installed.dataDirectory)}}}:{isError:true,structuredContent:{error:{code:'VERSION_CONFLICT',applied:false}}};
+      console.log(JSON.stringify({jsonrpc:'2.0',id:q.id,result}));
+    }`);
+  const cli = fileURLToPath(new URL('../scripts/npm-installer.mjs', import.meta.url));
+  const flags = ['--home', options.home, '--host', 'codex', '--codex', options.codex];
+  const listed = JSON.parse(await runFile(process.execPath, [cli, 'tools', ...flags]));
+  assert.equal(listed.dataDirectory, installed.dataDirectory);
+  assert.equal(listed.tools.length, tools.length);
+  const argsFile=path.join(options.directory, 'arguments 中文.json'); await writeJSON(argsFile, {requestId:'stable-request'});
+  await assert.rejects(runFile(process.execPath, [cli, 'call', 'openmotion_edit_project', '--args-file', argsFile, ...flags]), /VERSION_CONFLICT/);
+  await writeFile(argsFile, '[]');
+  await assert.rejects(runFile(process.execPath, [cli, 'call', 'openmotion_edit_project', '--args-file', argsFile, ...flags]), /JSON object/);
+  const config=JSON.parse(await readFile(options.config,'utf8')); config.openmotion.enabled=false; await writeJSON(options.config,config);
+  await assert.rejects(runFile(process.execPath, [cli, 'tools', ...flags]), /disabled/);
 });

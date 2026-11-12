@@ -9,7 +9,7 @@ If you are reading this file in the source repository and see `{{...}}`, it is a
 1. Collect OS/CPU, Node.js/npm versions and the current Agent identity together, using the host's supplied context where available. Node.js 22.18+ with npm and the Agent must already be installed. Supported native targets: {{TARGETS}}. If a macOS target has no declared minimum version, proceed with setup and native executable checks; do not infer a minimum from the build/test machine's OS version. Do not claim support for another target from package-download success.
 2. Select the current host explicitly: `codex` (Codex), `claude` (Claude Code), `deepseek` (DeepSeek Harness) or `workbuddy` (WorkBuddy). An explicit user selection takes precedence. Do not infer the current host from which CLIs happen to be installed. Ask only when the current host or required profile cannot be established. Configure only that host; preserve projects, credentials and unrelated MCP/Skills settings.
 3. For a test candidate, use a separate host profile, application home, project data and Skills directory. Keep those paths and reuse them for prepare and future reconnects. The [platform installation recipes]({{DETAILS_URL}}) describe the actual supported options. Do not run a test candidate into the user's daily profile by default.
-4. Choose exactly one setup command below, applying the test isolation paths first when required. Setup starts checked video-component downloads in the background. Do not wait for prepare to connect MCP, create/edit projects or open ordinary preview. Studio shows preparation status and retry; media import, automated capture and export require their respective components. Compatible phase-one updates can keep existing connections; reconnect closed or incompatible transports. When the current host can discover the eleven public Tools and five Skills, verify the version/environment and make an actual `openmotion_get_project` call. If the current chat has not loaded them, report that limitation; registration alone does not prove loading. Do not postpone the installation reply or invitation until a new chat or the first MCP call.
+4. Choose exactly one setup command below, applying the test isolation paths first when required. Setup starts checked video-component downloads in the background. Do not wait for prepare to connect MCP, create/edit projects or open ordinary preview. Studio shows preparation status and retry; media import, automated capture and export require their respective components. Compatible phase-one updates can keep existing connections; reconnect closed or incompatible transports. When the current host can discover the eleven public Tools and five Skills, verify the version/environment and make an actual `openmotion_get_project` call. If this chat has not loaded them or still points at another installation, use `onboarding.directAccess` below; registration alone does not prove native loading. Do not postpone the installation reply or invitation until a new chat or the first MCP call.
 5. On successful setup, follow the installation-success reply below in this same conversation, using the returned `onboarding.catalog` summaries. Installation does not authorize creating a project, downloading template assets, rendering or calling a paid model. Report a failed installation honestly; do not issue a success invitation until it is fixed.
 
 For npm network failures, automatically try `https://registry.npmjs.org` then `https://registry.npmmirror.com`, at most once per registry, counting the initial failed attempt. Respect an explicitly selected registry and host policy. Set `npm_config_registry` and `npm_config_fetch_retries=0` only for that attempt, including setup's npm child process. Keep the exact version; verify any mirrored tgz against the matching immutable guide's SHA256 before executing it. If both fail, follow [npm download recovery]({{DETAILS_URL}}#npm-download-failures) for network checks and a terminal handoff. Permission or checksum failures stop immediately. A local tgz still needs npm access for setup's production dependencies.
@@ -29,21 +29,20 @@ Select the invitation mode in this order:
 - Fewer than three confirmed candidates: use one. Never randomly select a few-shot or mode.
 
 Reply structure, in the user's language:
-1. Brief actual installation result. Distinguish registered configuration, independent probe and current-chat verification. Never claim the current chat is connected just because setup succeeded.
-2. One concise capability/selling sentence. Chinese: “OpenMotion 开源免费，让你与熟悉的 Agent 协作，从模板、参考视频或一个灵感出发，打造惊艳的动效视频。” Adapt naturally for other languages.
-3. One selected template with its appeal, or three numbered candidates with concise differences and confirmed durations where available. Keep each ID mapped to its displayed number/name in this conversation.
-4. A yes/no question for one template, or a number/name choice for three, with an option to defer. Then stop and wait.
+1. Say only that installation is complete. Chinese: “OpenMotion 已安装完成。” Adapt naturally for other languages. Omit version/environment, configuration paths, MCP/Skill/tool counts, probe or connection results and background video-component preparation. Do not add a separate capability/selling paragraph or claim that the current chat is connected just because setup succeeded.
+2. Directly invite the user to try one selected template with its appeal, or three numbered candidates with concise differences and confirmed durations where available. Keep each ID mapped to its displayed number/name in this conversation.
+3. A yes/no question for one template, or a number/name choice for three, with an option to defer. Then stop and wait.
 
-After acceptance, use openmotion-template-to-video with the exact offered template ID and unchanged sample content. A single-template “yes/体验” accepts that template; a three-candidate “yes” is ambiguous, so ask which one. Do not reshuffle, re-query just to change the offer, or silently substitute a failed template. Create one independent project, preserving existing work; reuse the same experience project on continuation. Do not repeat optional material/brand/style questions. Open the actual editable project and check loading/playback when the host supports it; otherwise give its real link and state the limitation. Export only on request. A refusal/deferment stops the experience. If tools are not yet loaded, first deliver this invitation; after consent carry the chosen ID into the host's supported refresh/reconnect/continuation path. No invitation-state service or “invitation sent/seen” telemetry is implied; only the host controls its actual reply.
+Do not ask the user to refresh/reconnect, restart the host or open a new chat by default. When native tools are missing or stale, use setup’s `onboarding.directAccess`: run its `command` with `toolsArgs`, read the public input schemas, then run `callArgs` with the selected Tool and a JSON arguments file. It uses this installation’s actual registered MCP transport, version and data directory, so the current chat can continue without restarting or opening another chat. It does not refresh native discovery. Keep these technical details internal. Never bypass disabled tools, permission denials or host policy. Attempt supported host recovery only if direct access is unavailable or fails. If user action is still necessary, briefly explain the specific blocker and the minimum supported next step. Mention video-component preparation only when it blocks the requested operation. Preserve the accepted template choice and existing work across recovery.
+
+After acceptance, use openmotion-template-to-video with the exact offered template ID and unchanged sample content. A single-template “yes/体验” accepts that template; a three-candidate “yes” is ambiguous, so ask which one. Do not reshuffle, re-query just to change the offer, or silently substitute a failed template. Create one independent project, preserving existing work; reuse the same experience project on continuation. Do not repeat optional material/brand/style questions. Open the actual editable project and check loading/playback when the host supports it; otherwise give its real link and state the limitation. Export only on request. A refusal/deferment stops the experience. If creation is blocked by unavailable tools, follow the recovery rule above. No invitation-state service or “invitation sent/seen” telemetry is implied; only the host controls its actual reply.
 
 ### Few-shot: single template — preference without comparison
 
 Example context: setup succeeded, current-chat MCP not yet loaded, the user mentioned data/metrics; `nyt-graph` is a confirmed candidate.
 
 ```text
-OpenMotion 已安装并完成配置，当前会话还需要刷新工具连接。
-
-OpenMotion 开源免费，让你与熟悉的 Agent 协作，从模板、参考视频或一个灵感出发，打造惊艳的动效视频。
+OpenMotion 已安装完成。
 
 你刚提到数据展示，可以先试试 NYT Graph：15 秒报刊风动态图表，用数据、标注和图形节奏讲清重点，无需准备素材。
 
@@ -55,9 +54,7 @@ OpenMotion 开源免费，让你与熟悉的 Agent 协作，从模板、参考�
 Example context: the user explicitly asked to see options; setup and a real current-chat read succeeded; all three named candidates are confirmed.
 
 ```text
-OpenMotion 已安装，当前会话已验证连接可用。
-
-OpenMotion 开源免费，让你与熟悉的 Agent 协作，从模板、参考视频或一个灵感出发，打造惊艳的动效视频。
+OpenMotion 已安装完成。
 
 可以从这三个无需准备素材的模板里选一个：
 1. Product Promo｜20 秒，多场景动效与字幕，适合感受产品宣传片的节奏。
