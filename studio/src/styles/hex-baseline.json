@@ -1,5 +1,5 @@
 {
-  "total": 221,
+  "total": 220,
   "files": {
     "studio/src/captions/components/CaptionOverlay.tsx": 5,
     "studio/src/captions/components/CaptionTimeline.tsx": 11,
@@ -43,7 +43,7 @@
     "studio/src/player/components/BeatStrip.tsx": 6,
     "studio/src/player/components/CompositionThumbnail.tsx": 2,
     "studio/src/player/components/PlayerControls.tsx": 1,
-    "studio/src/styles/components.css": 48,
+    "studio/src/styles/components.css": 47,
     "studio/src/webmcp/webmcpTestUtils.ts": 1
   }
 }
