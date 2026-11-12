@@ -1,5 +1,10 @@
 # 公开变更记录
 
+## 2026-11-12: Match stable installation reports to the candidate manifest
+
+- Stable promotion and archive recovery compare native MCP Tool and Skill counts with the verified candidate manifest. Packages with compatibility Skill aliases no longer fail the obsolete five-Skill assertion, while mismatched reports still block promotion.
+- Regression coverage includes ten-Skill promotion and archiving, older five-Skill candidates, and missing or extra Tools/Skills on either platform. Registry and storage writes are mocked; publication remains a separate authorized operation.
+
 ## 2026-11-12: Save SVG styles and initialize the initial project on open
 
 - SVG inline-style edits use the existing source patcher, guarded file writer and edit history when the pinned engine cannot persist SVG targets. Missing element identities and concurrent source changes still reject the edit and keep navigation blocked.
