@@ -1,4 +1,5 @@
 import { badge, button, codeEditor, field, note, readout, slot, tooltip } from "@open-motion/components";
+import { entryFragment } from "@open-motion/daemon/contract";
 import { setTheme, type Theme } from "@open-motion/theme";
 import type { Client } from "../../api.js";
 import type { Editor } from "../editor.js";
@@ -36,17 +37,29 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     operations = 0,
     requestedEntry: string | undefined,
     flight = Promise.resolve();
-  const run = (action: () => Promise<void>, next?: () => Promise<void>) => {
+  const run = (action: () => Promise<void>, next?: () => Promise<void>, recordAddress = true) => {
     if (busy || disposed) return;
     const focused = document.activeElement,
       epoch = activity;
     operations++;
     busy = true;
-    retry = () => run(action, next);
+    retry = () => run(action, next, recordAddress);
     render("处理中");
     flight = action()
       .then(
         () => {
+          const project = editor.project,
+            window = document.defaultView;
+          if (recordAddress && entry !== undefined && requestedEntry === undefined && project && window) {
+            const address = new URL(window.location.href);
+            address.hash = entryFragment({
+              sessionId: project.sessionId,
+              artifactId: project.artifactId,
+              revision: project.revision,
+              historyVersion: project.history.version,
+            });
+            window.history.replaceState(null, "", address);
+          }
           retry = undefined;
           busy = false;
           if (!disposed) {
@@ -72,7 +85,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
         if (!disposed && requestedEntry !== undefined && !editor.unconfirmed && !creation.pending) {
           const target = requestedEntry;
           requestedEntry = undefined;
-          run(() => editor.load(target || undefined));
+          run(() => editor.load(target || undefined), undefined, false);
         }
       });
     return flight;
@@ -82,7 +95,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     if (!busy && !editor.unconfirmed && !creation.pending) {
       const target = requestedEntry;
       requestedEntry = undefined;
-      run(() => editor.load(target || undefined));
+      run(() => editor.load(target || undefined), undefined, false);
     }
   };
   if (entry !== undefined) document.defaultView?.addEventListener("hashchange", onEntry);
@@ -272,7 +285,7 @@ export function workspace(root: HTMLElement, editor: Editor, client: Client, ent
     exports.update(editor.project, blocked);
   }
   render("加载中");
-  run(() => editor.load(entry || undefined));
+  run(() => editor.load(entry || undefined), undefined, false);
   let disposal: Promise<void> | undefined;
   return {
     dispose(): Promise<void> {

@@ -9,6 +9,7 @@ import { source } from "@odsuite/serve";
 import { serve as manage, managerEndpoint, observeProcesses, readDirectory } from "@odsuite/sidecar";
 import { serve as daemonServe } from "@open-motion/daemon";
 import { Client } from "@open-motion/daemon/client";
+import { parseEntry } from "@open-motion/daemon/contract";
 import { initialFiles } from "@open-motion/workspace/contract";
 import { chromium } from "playwright";
 import { afterAll, afterEach, beforeAll, expect, it } from "vitest";
@@ -269,6 +270,7 @@ it("creates through an empty MVP, retries exact template/save receipts and prese
   expect(saveIds[0]).toBe(saveIds[1]);
   const second = await page.locator("#app").getAttribute("data-artifact-id");
   expect(second).not.toBe(original);
+  expect(parseEntry(new URL(page.url()).hash).artifactId).toBe(second);
   expect((await client.execute("project_list", {})).projects).toHaveLength(2);
   await page.getByRole("button", { name: "打开项目列表", exact: true }).click();
   const drawer = page.getByRole("dialog", { name: "项目列表", exact: true });
@@ -423,8 +425,11 @@ it("creates, edits, copies, renames and removes source files through persistent 
   await expect.poll(() => panel.getByRole("button", { name: "scenes/card.html", exact: true }).count()).toBe(1);
   await click("重做");
   await expect.poll(() => panel.getByRole("button", { name: "scenes/card.html", exact: true }).count()).toBe(0);
+  const acknowledged = parseEntry(new URL(page.url()).hash);
+  expect(acknowledged.artifactId).toBe(await page.locator("#app").getAttribute("data-artifact-id"));
   await page.reload();
   await ready();
+  expect(await page.locator("#app").getAttribute("data-artifact-id")).toBe(acknowledged.artifactId);
   await page.getByRole("tab", { name: "文件", exact: true }).click();
   await expect.poll(() => panel.getByRole("button", { name: "parts/final.html", exact: true }).count()).toBe(1);
   await expect.poll(() => panel.getByRole("button", { name: "scenes/card.html", exact: true }).count()).toBe(0);
