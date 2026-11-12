@@ -378,7 +378,6 @@
 
         // 14. Highlighted text deletes and "Python" types in (fast)
         // Squiggle disappears when last char lands
-        const typingStart = tl.labels["hold5"];
         const words = ["P", "Py", "Pyt", "Pyth", "Pytho", "Python"];
         words.forEach((word, i) => {
           tl.add(
@@ -386,20 +385,20 @@
               const el = document.querySelector("#python-text");
               if (el) el.innerHTML = `Start with <span class="text-highlight">${word}</span>`;
             },
-            typingStart + i * 0.05,
+            `hold5+=${i * 0.05}`,
           );
         });
 
         // Remove highlight and squiggle at the end of typing
-        const typingEnd = typingStart + words.length * 0.05;
+        const typingDuration = words.length * 0.05;
         tl.add(() => {
           const pyEl = document.querySelector("#python-text");
           if (pyEl) pyEl.innerHTML = "Start with Python";
           gsap.set(".squiggle-container", { opacity: 0 });
-        }, typingEnd);
+        }, `hold5+=${typingDuration}`);
 
         // 15. Hold 0.5s
-        tl.addLabel("hold6", typingEnd + 0.5);
+        tl.addLabel("hold6", `hold5+=${typingDuration + 0.5}`);
 
         // 16. Cursor moves slightly and clicks away to deselect
         tl.to("#cursor", { x: -1420, y: -500, duration: 0.3, overwrite: "auto" }, "hold6");
