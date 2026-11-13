@@ -18,42 +18,42 @@
   ],
   "assets": [
     {
-      "path": "assets/reference-1.jpg",
-      "timeSeconds": 0.0,
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 1.0010000000000001,
       "frameId": "K0005",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 5.005,
       "frameId": "K0021",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 9.009,
       "frameId": "K0037",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 20.02,
       "frameId": "K0080",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 23.023,
       "frameId": "K0089",
       "role": "reference-evidence",
@@ -82,38 +82,39 @@
     "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
     "originalProductionModel": "unknown",
     "extraction": "Codex visual reasoning + local algorithms",
-    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged."
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
   },
   "files": [
     {
-      "path": "assets/reference-1.jpg",
-      "bytes": 49194,
-      "sha256": "654d81ee3eef7bfa87a72b61cf66eaefd0fac5b8ed3f6790b34ac539428efe45"
+      "path": "assets/reference-1.webp",
+      "bytes": 13238,
+      "sha256": "98399421f9c0a6c72b75123770cd9af55e665cb5ce9de9a074f208591ca41edc"
     },
     {
-      "path": "assets/reference-2.jpg",
-      "bytes": 22933,
-      "sha256": "035e696d782931126605438e98d01fc3b90de062c15900a2b2a4cc532e0ae8eb"
+      "path": "assets/reference-2.webp",
+      "bytes": 5078,
+      "sha256": "24e68290b4fb161664fbdeb3c0fbb24a3a1f9f480b76968bf8cc1ae8f80d0f3b"
     },
     {
-      "path": "assets/reference-3.jpg",
-      "bytes": 29271,
-      "sha256": "659469be95f2d2793a9f4d5ee3795edec3f68e618c46944182606266f59cc803"
+      "path": "assets/reference-3.webp",
+      "bytes": 6620,
+      "sha256": "f4a7e4892de41eace5ba75bb8b64cc31dd3a3d5c99996145d92787c91bdb2ee5"
     },
     {
-      "path": "assets/reference-4.jpg",
-      "bytes": 31480,
-      "sha256": "95a55c367b9ac379b3d9d66e0aa639c36bfea375af0b845a989851f7c613be49"
+      "path": "assets/reference-4.webp",
+      "bytes": 9368,
+      "sha256": "f5655096c7c69545a0ef59a66096fa3fb42cdddf9fb320300e396a6d1e82ea69"
     },
     {
-      "path": "assets/reference-5.jpg",
-      "bytes": 57291,
-      "sha256": "2a7cd2d78244e770b60e4c7e08a56ea7db9482e4cc566ee92fcbba5e1fbadfd5"
+      "path": "assets/reference-5.webp",
+      "bytes": 13962,
+      "sha256": "cb213790eea1435ef3deaf485a2f2f49e178be4cddbeadca24c71dcbb309910d"
     },
     {
-      "path": "assets/reference-6.jpg",
-      "bytes": 18004,
-      "sha256": "5f328ebdff3df0052fa1beb1af9d4cfb2b6267d33c330db2aeb1c35917ad3ac5"
+      "path": "assets/reference-6.webp",
+      "bytes": 3270,
+      "sha256": "c7218faa73a51cd1a25747ceabc54061e1990a37101ea120f9fcca50f579d37e"
     },
     {
       "path": "demos/bridge.js",
@@ -147,13 +148,13 @@
     },
     {
       "path": "motion.md",
-      "bytes": 6052,
-      "sha256": "9d378032016de4d50f3cdc6ec9648f1f42673cd6bf0d09f57f0ae1b6a16767bd"
+      "bytes": 6058,
+      "sha256": "b9bfd287e0035915c91e5a273b3b151d070faa9be4a91d74d7052db2c8e8240c"
     },
     {
       "path": "preview.html",
-      "bytes": 20293,
-      "sha256": "0d04e533af31e9af185e3e8881ae8b7afa2175ad9c81dc701937a767744547a1"
+      "bytes": 20305,
+      "sha256": "f547345b33d8df9bca1a2709683b1b5fdb506ca8fa013a6ad7618a99caad71dc"
     },
     {
       "path": "style.json",

@@ -139,7 +139,7 @@ Illustrations、Icons、Technical Drawings 等词沿垂直轴切换，当前类�
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
@@ -153,7 +153,7 @@ Illustrations、Icons、Technical Drawings 等词沿垂直轴切换，当前类�
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 15.76,
       "frameId": "K0049",
       "role": "reference-evidence",
@@ -167,14 +167,14 @@ Illustrations、Icons、Technical Drawings 等词沿垂直轴切换，当前类�
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 32.0,
       "frameId": "K0111",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 43.0,
       "frameId": "K0137",
       "role": "reference-evidence",

@@ -69,7 +69,7 @@
 
 浏览器找到资料后，转到本地文件和幻灯片。保留文件名和主题，选中相关页后再写入新内容，沿用原文档的排版。
 
-![20.00s · 构图参考](assets/reference-4.jpg)
+![20.00s · 构图参考](assets/reference-4.webp)
 
 ## 邮件里能找到刚才的成果
 
@@ -141,14 +141,14 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 8.0,
       "frameId": "K0018",
       "role": "reference-evidence",
@@ -162,7 +162,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 20.0,
       "frameId": "K0059",
       "role": "reference-evidence",
@@ -176,7 +176,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 35.0,
       "frameId": "K0098",
       "role": "reference-evidence",

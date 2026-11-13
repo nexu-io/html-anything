@@ -49,7 +49,7 @@
 
 白底、大黑字和几枚彩色角色围绕奖品提问。随后用奖励现场的镜头承接期待；无衬线标题保持简短，现场画面让位给主体。
 
-![5.00s · 构图参考](assets/reference-2.jpg)
+![5.00s · 构图参考](assets/reference-2.webp)
 
 ## 角色数量跟着参与关系变化
 
@@ -124,14 +124,14 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 5.0,
       "frameId": "K0018",
       "role": "reference-evidence",
@@ -145,21 +145,21 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 15.0,
       "frameId": "K0061",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 18.0,
       "frameId": "K0073",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 23.0,
       "frameId": "K0094",
       "role": "reference-evidence",

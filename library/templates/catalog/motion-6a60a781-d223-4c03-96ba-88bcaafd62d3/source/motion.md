@@ -49,7 +49,7 @@
 
 人物、桌面和纸张构成开场的小空间。采用柔和的黏土感体积、低对比粉彩和简洁字形，保留手部动作与视线方向。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 让书写触发空间变化
 
@@ -138,7 +138,7 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
@@ -152,14 +152,14 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 18.0,
       "frameId": "K0076",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 42.0,
       "frameId": "K0171",
       "role": "reference-evidence",

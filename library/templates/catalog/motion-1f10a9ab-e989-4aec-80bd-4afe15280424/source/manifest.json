@@ -5,8 +5,8 @@
     "width": 1370,
     "height": 720
   },
-  "fps": 60.0,
-  "durationSeconds": 20.0,
+  "fps": 60,
+  "durationSeconds": 20,
   "timebase": "seconds",
   "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
   "sources": [
@@ -18,29 +18,29 @@
   ],
   "assets": [
     {
-      "path": "assets/reference-1.jpg",
-      "timeSeconds": 0.0,
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
-      "timeSeconds": 6.0,
+      "path": "assets/reference-2.webp",
+      "timeSeconds": 6,
       "frameId": "K0015",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
-      "timeSeconds": 13.0,
+      "path": "assets/reference-3.webp",
+      "timeSeconds": 13,
       "frameId": "K0035",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
-      "timeSeconds": 18.0,
+      "path": "assets/reference-4.webp",
+      "timeSeconds": 18,
       "frameId": "K0053",
       "role": "reference-evidence",
       "status": "measured"
@@ -69,28 +69,29 @@
     "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
     "originalProductionModel": "unknown",
     "extraction": "Codex visual reasoning + local algorithms",
-    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged."
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
   },
   "files": [
     {
-      "path": "assets/reference-1.jpg",
-      "bytes": 52581,
-      "sha256": "ba544266191adc29dd355d792d3e0c9918465e9e931fbbfd478f28f1a9f75941"
+      "path": "assets/reference-1.webp",
+      "bytes": 11492,
+      "sha256": "e6404910670b43407e31828b519c1dda39421134b15b25b7fa57275fa2db25ec"
     },
     {
-      "path": "assets/reference-2.jpg",
-      "bytes": 56514,
-      "sha256": "fb7d31099dee19a90b480836d225fefceb2ae81729ebb00a77c11637428f7c41"
+      "path": "assets/reference-2.webp",
+      "bytes": 14710,
+      "sha256": "363dd9ebd8d9a7f2d729468cdde6260ac19ec46e16f09457e6be5b446b6ca0c7"
     },
     {
-      "path": "assets/reference-3.jpg",
-      "bytes": 52538,
-      "sha256": "7037f0e2b11627568eca632688a6891b7a2c902c9fff848499b6d7b33afa0fcf"
+      "path": "assets/reference-3.webp",
+      "bytes": 11568,
+      "sha256": "3550f10eee2652cc2e9d0f57490095f9080bda96d2b99fd6d863cf0be1aaff63"
     },
     {
-      "path": "assets/reference-4.jpg",
-      "bytes": 44177,
-      "sha256": "2ce30420837bc2136715a3ea163243a39e9fe389f22e5e32c6acbce35ff17048"
+      "path": "assets/reference-4.webp",
+      "bytes": 10376,
+      "sha256": "ce7562a6c9433899fdd92f07367efa724aab46638933ae4f670abf5574518f22"
     },
     {
       "path": "demos/bridge.js",
@@ -119,13 +120,13 @@
     },
     {
       "path": "motion.md",
-      "bytes": 4048,
-      "sha256": "047e63919929daf9619fd895fb01cd56b8150f0a51b3e0302fec7bebee19f5cc"
+      "bytes": 4052,
+      "sha256": "29b89e6231627e02e1ae5b581e225a6ed00286dbd7b679cab05f30649a3b5e03"
     },
     {
       "path": "preview.html",
-      "bytes": 14339,
-      "sha256": "3e59de8f965c01fb2eb12be9d2de867b955deedd79b31521e00bfc1c1874bbf7"
+      "bytes": 14347,
+      "sha256": "ddd69bc5ea0fa144006d9bff97b200ec6c7a23cb7fdda2081ede8e8cb5c260ae"
     },
     {
       "path": "style.json",
@@ -197,7 +198,7 @@
     {
       "id": "sequence",
       "src": "demos/sequence.html",
-      "duration": 20.0,
+      "duration": 20,
       "status": "authored"
     }
   ]

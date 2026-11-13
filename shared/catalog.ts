@@ -75,7 +75,7 @@ export function catalogTemplates(entries: CatalogEntry[], frames: { id: string; 
     const source = new URL(entry.sourceUrl);
     if (source.protocol !== 'https:' || source.username || source.password) throw new Error('模板来源无效');
     const frame = posters.get(entry.id);
-    const poster = frame && frame.video === entry.video && /^\/web\/catalog\/template-frames\/[a-f0-9]{24}\.jpg$/.test(frame.poster) ? frame.poster : entry.posterAvailable === false ? undefined : entry.poster;
+    const poster = frame && frame.video === entry.video && /^\/web\/catalog\/template-frames\/[a-f0-9]{24}\.(?:jpg|webp)$/.test(frame.poster) ? frame.poster : entry.posterAvailable === false ? undefined : entry.poster;
     return {
       id: entry.id, title: entry.title, description: entry.description || '', tags: entry.tags, role: entry.role,
       collection: entry.collection, kind: ['reference', 'moment'].includes(entry.collection) ? 'reference' : 'registry',

@@ -51,7 +51,7 @@
 
 以主动提醒→用户授权→任务结果建立代理能力，而不是只展示聊天滚动。
 
-![7.54s · 构图参考](assets/reference-2.jpg)
+![7.54s · 构图参考](assets/reference-2.webp)
 
 ## 让结果接在授权之后
 
@@ -146,42 +146,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 7.537016982737361,
       "frameId": "K0022",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 22.98581974845869,
       "frameId": "K0063",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 34.97842135635018,
       "frameId": "K0098",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 48.969789898890255,
       "frameId": "K0136",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 57.96424110480888,
       "frameId": "K0168",
       "role": "reference-evidence",

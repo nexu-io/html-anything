@@ -69,7 +69,7 @@
 
 舞鞋、手和琴键提供短而密的动作，整个人物提供清楚的舞姿。双人段让动作相互回应，群舞段增加人数和横向空间。
 
-![25.00s · 构图参考](assets/reference-4.jpg)
+![25.00s · 构图参考](assets/reference-4.webp)
 
 ## 把场面逐次扩大
 
@@ -141,42 +141,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 11.0,
       "frameId": "K0056",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 21.0,
       "frameId": "K0104",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 25.0,
       "frameId": "K0128",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 37.0,
       "frameId": "K0196",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 46.0,
       "frameId": "K0239",
       "role": "reference-evidence",

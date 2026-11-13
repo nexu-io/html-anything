@@ -69,7 +69,7 @@
 
 起草时先呈现需要说明的事项和相关材料，再出现完整邮件。回复时保留来信，让建议文本贴近对话，发送动作放在内容可读之后。
 
-![43.00s · 构图参考](assets/reference-4.jpg)
+![43.00s · 构图参考](assets/reference-4.webp)
 
 ## 查找章节改用问题带路
 
@@ -145,42 +145,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 10.0,
       "frameId": "K0020",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 18.0,
       "frameId": "K0051",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 43.0,
       "frameId": "K0099",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 52.0,
       "frameId": "K0118",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 67.0,
       "frameId": "K0155",
       "role": "reference-evidence",

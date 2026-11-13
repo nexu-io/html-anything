@@ -51,7 +51,7 @@
 
 低照度实拍微距；金属、纸张与暖色仪表；少量居中衬线字。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 短切推进，长停落版
 
@@ -92,7 +92,7 @@
 
 换主题需要重新选择含相似弧形、刻度或周期动作的素材；不只替换最后标题。
 
-![10.84s · 构图参考](assets/reference-6.jpg)
+![10.84s · 构图参考](assets/reference-6.webp)
 
 ## 配色与字形
 
@@ -142,42 +142,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 1.6,
       "frameId": "K0009",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 3.04,
       "frameId": "K0021",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 4.0,
       "frameId": "K0028",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 6.56,
       "frameId": "K0044",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 10.84,
       "frameId": "K0061",
       "role": "reference-evidence",

@@ -49,7 +49,7 @@
 
 黑色背景衬托照片马赛克，图块色彩可以多样，但整体边缘要清楚。数字采用厚实、留白充足的字形；控制框和锚点用细白线。
 
-![0.90s · 构图参考](assets/reference-2.jpg)
+![0.90s · 构图参考](assets/reference-2.webp)
 
 ## 宽高变化时，内部也一起变化
 
@@ -108,14 +108,14 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 0.9,
       "frameId": "K0003",
       "role": "reference-evidence",
@@ -129,21 +129,21 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 6.533333333333333,
       "frameId": "K0022",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 8.6,
       "frameId": "K0030",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 9.6,
       "frameId": "K0034",
       "role": "reference-evidence",

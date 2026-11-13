@@ -172,7 +172,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 56.0,
       "frameId": "K0234",
       "role": "reference-evidence",

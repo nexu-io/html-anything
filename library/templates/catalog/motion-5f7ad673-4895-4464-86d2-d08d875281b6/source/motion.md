@@ -49,7 +49,7 @@
 
 设备标题后进入本地选择与任务输入。浅暖画布中保持设备或本地标记，主张使用衬线字，界面字段用无衬线；青绿用于执行焦点，灰色工具节点作为辅助。
 
-![17.00s · 构图参考](assets/reference-2.jpg)
+![17.00s · 构图参考](assets/reference-2.webp)
 
 ## 本地工具围绕设备排布
 
@@ -153,42 +153,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 17.0,
       "frameId": "K0048",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 34.0,
       "frameId": "K0075",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 59.0,
       "frameId": "K0130",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 77.0,
       "frameId": "K0170",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 93.0,
       "frameId": "K0192",
       "role": "reference-evidence",

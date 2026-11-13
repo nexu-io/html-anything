@@ -18,35 +18,35 @@
   ],
   "assets": [
     {
-      "path": "assets/reference-1.jpg",
-      "timeSeconds": 0.0,
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 3.7037,
       "frameId": "K0007",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 5.271933333333333,
       "frameId": "K0012",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 6.2729333333333335,
       "frameId": "K0016",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 8.274933333333333,
       "frameId": "K0024",
       "role": "reference-evidence",
@@ -76,33 +76,34 @@
     "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
     "originalProductionModel": "unknown",
     "extraction": "Codex visual reasoning + local algorithms",
-    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged."
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
   },
   "files": [
     {
-      "path": "assets/reference-1.jpg",
-      "bytes": 9387,
-      "sha256": "075f03b50138cf48d10c557f26a4209afeb045b9e2a0f7231c2eae4a633e4233"
+      "path": "assets/reference-1.webp",
+      "bytes": 1584,
+      "sha256": "87cb33fe9bdaefb2c18af2e10e470e57b2ec072df986aab10f573a1bf7c12e5f"
     },
     {
-      "path": "assets/reference-2.jpg",
-      "bytes": 26133,
-      "sha256": "28ccf039523a9591db02ee0a36de03bff00932a2f905dd75031c1cafefca9da2"
+      "path": "assets/reference-2.webp",
+      "bytes": 5678,
+      "sha256": "a750ff61a620d8fc2fa1280ca3f4a46f0a87826ccff6ce10a5a7a035cd5e10e2"
     },
     {
-      "path": "assets/reference-3.jpg",
-      "bytes": 30302,
-      "sha256": "08bdf81c44dd7226bdf6c99d95da2280c07e86759bce57e219546f09653eab7d"
+      "path": "assets/reference-3.webp",
+      "bytes": 7470,
+      "sha256": "3bf7b215ad3f7d6adf6d578f9cc585006ee6e4301bf202bdfe206388636222d2"
     },
     {
-      "path": "assets/reference-4.jpg",
-      "bytes": 53529,
-      "sha256": "945e8cc424cbacf1027871d7a474c5ee45f8721f8311c96c5647a1a9247a7d68"
+      "path": "assets/reference-4.webp",
+      "bytes": 15448,
+      "sha256": "d2065008e3acec63a4962144b47f3bddd398ffefd3df1697fb9e8cab6bce397f"
     },
     {
-      "path": "assets/reference-5.jpg",
-      "bytes": 21486,
-      "sha256": "5b709cdfb25419c3fc6931f9119b4707fcc05cdc147c71d9faf1c8f626e8fe4e"
+      "path": "assets/reference-5.webp",
+      "bytes": 4234,
+      "sha256": "a3b3891789d389b3d9e616f9721897af594adc987d859fa2066d8f68575c51e2"
     },
     {
       "path": "demos/bridge.js",
@@ -131,13 +132,13 @@
     },
     {
       "path": "motion.md",
-      "bytes": 4656,
-      "sha256": "a219b2de8c032d0db128f7db01301fd811b711ee5e89ea0c78e2bc1e0ae204d6"
+      "bytes": 4661,
+      "sha256": "44558ae404776eeb8c0bbc31bd5520757e57af0e897cf7e49cd158c499eb7739"
     },
     {
       "path": "preview.html",
-      "bytes": 15566,
-      "sha256": "f385deed1391217ab5de19373b86ac1fdc9b26b1d3fde05e544a774ed6e485d2"
+      "bytes": 15576,
+      "sha256": "0e202fca58f6f239e4285878a237007f772a9f95234922c58d80d54b90aad3f2"
     },
     {
       "path": "style.json",

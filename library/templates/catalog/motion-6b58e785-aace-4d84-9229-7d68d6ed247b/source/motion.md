@@ -49,7 +49,7 @@
 
 背景文字作为纹理铺满画面，前景窗口保留边界和清楚内容。窗口之间串联时沿用相近的观看尺度，不让背景巨字抢过操作区域。
 
-![5.00s · 构图参考](assets/reference-2.jpg)
+![5.00s · 构图参考](assets/reference-2.webp)
 
 ## 先看做了什么，再看取得什么结果
 
@@ -124,14 +124,14 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 5.0,
       "frameId": "K0013",
       "role": "reference-evidence",
@@ -152,7 +152,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 36.0,
       "frameId": "K0133",
       "role": "reference-evidence",

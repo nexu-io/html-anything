@@ -132,7 +132,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 10.006954102920723,
       "frameId": "K0021",
       "role": "reference-evidence",
@@ -153,14 +153,14 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 36.02503477051461,
       "frameId": "K0101",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 45.03129346314326,
       "frameId": "K0124",
       "role": "reference-evidence",

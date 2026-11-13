@@ -139,14 +139,14 @@ Sketch、Reference、动态网页与图像音乐各有独立段落。黑底细�
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 14.0,
       "frameId": "K0025",
       "role": "reference-evidence",
@@ -174,7 +174,7 @@ Sketch、Reference、动态网页与图像音乐各有独立段落。黑底细�
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 76.0,
       "frameId": "K0191",
       "role": "reference-evidence",

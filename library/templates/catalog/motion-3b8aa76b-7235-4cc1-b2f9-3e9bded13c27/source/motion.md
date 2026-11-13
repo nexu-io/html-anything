@@ -68,7 +68,7 @@
 
 报告用局部放大展示结构，图表用较宽画面保留坐标，视频用清楚的播放区域，后续追问留在同一任务上下文中。不要让不同产物套用同一张空白卡片。
 
-![57.00s · 构图参考](assets/reference-4.jpg)
+![57.00s · 构图参考](assets/reference-4.webp)
 
 ## 从单个成果扩展到成果墙
 
@@ -141,42 +141,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 18.0,
       "frameId": "K0037",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 33.0,
       "frameId": "K0074",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 57.0,
       "frameId": "K0124",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 73.0,
       "frameId": "K0150",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 89.0,
       "frameId": "K0194",
       "role": "reference-evidence",

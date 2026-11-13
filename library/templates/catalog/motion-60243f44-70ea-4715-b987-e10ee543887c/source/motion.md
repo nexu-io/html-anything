@@ -51,7 +51,7 @@
 
 前段先展示助手的交流方式，再发送一张具体参考图。不要同时把语音、日程、视频能力都塞进首屏。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 从一条结果卡，展开到完整作品
 
@@ -128,7 +128,7 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
@@ -142,7 +142,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 13.0,
       "frameId": "K0039",
       "role": "reference-evidence",
@@ -163,7 +163,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 35.0,
       "frameId": "K0116",
       "role": "reference-evidence",

@@ -15,7 +15,7 @@ export async function serveEditorFile(url: URL, res: ServerResponse): Promise<bo
   else if (url.pathname === '/favicon.svg') relative = 'studio/public/favicon.svg';
   else if (/^\/editor-assets\/[a-zA-Z0-9_.-]+$/.test(url.pathname)) relative = 'studio/build' + url.pathname;
   else if (/^\/web\/design-system\/(?:fonts\/)?[a-zA-Z0-9_.-]+$/.test(url.pathname)) relative = url.pathname.slice(1);
-  else if (/^\/web\/catalog\/(?:hyperframes|template-frames|provenance|covers)\.json$/.test(url.pathname) || /^\/web\/catalog\/(?:template-frames|covers)\/[a-f0-9]{24}\.jpg$/.test(url.pathname)) relative = url.pathname.slice(1);
+  else if (/^\/web\/catalog\/(?:hyperframes|template-frames|provenance|covers)\.json$/.test(url.pathname) || /^\/web\/catalog\/(?:template-frames|covers)\/[a-f0-9]{24}\.(?:jpg|webp)$/.test(url.pathname)) relative = url.pathname.slice(1);
   else return false;
   const type = mime[path.extname(relative)];
   if (!type) return false;

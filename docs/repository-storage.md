@@ -1,6 +1,8 @@
 # Repository size and optional media
 
-Source, template guides, small assets and browser dependencies remain in ordinary Git. README artwork and optional Library previews above 100 KB are served from immutable public R2 URLs and recorded in `repository-media.json`. Full reference/demo videos and the optional Presenter Tech `.motion` archive still use Git LFS. Original media bytes, source credits and integrity manifests are unchanged.
+Source, template guides, small assets and browser dependencies remain in ordinary Git. README artwork and optional Library previews above 100 KB are served from immutable public R2 URLs and recorded in `repository-media.json`. Full reference/demo videos and the optional Presenter Tech `.motion` archive still use Git LFS. Registered optional media bytes, source credits and their integrity manifests are unchanged.
+
+Local catalog reference images and gallery covers use WebP at their original dimensions. The conversion uses `cwebp -q 85 -m 6 -sharp_yuv`; source links, paths and manifest hashes describe the checked-in WebP files. Each affected template records the encoding in its provenance. Original CMS archives, source-video identities and remote-media locks remain unchanged. For new reference screenshots, prefer WebP and check small text at its intended display size before refreshing the source manifest.
 
 Embedded documentation images must fit GitHub's 5 MB image-proxy limit. Three larger GIFs use smaller display versions while their unchanged originals remain publicly downloadable; see [display encoding and original links](readme/RESOURCES.md#retained-local-collection).
 
@@ -18,7 +20,7 @@ npm start
 
 The checked-in `.lfsconfig` excludes LFS downloads by default. Normal clones with Git LFS installed keep pointers until you request the media. Without Git LFS installed, pointers remain ordinary text files. GitHub and local Markdown viewers load registered public README images/GIFs directly, without CMS authentication or an LFS download. Those previews require internet access. Built-in Studio templates and repository catalog source retain their local dependencies. Linked CMS references are not made available offline.
 
-The preview migration removes 134,065,890 bytes from the default working tree. It preserves all catalog entries and their local source assets. The Git checkout budget is 180 MiB; it includes every tracked path even when identical files share a Git blob. Installed dependencies, optional downloads and old history are separate from this budget.
+The preview migration removes 134,065,890 bytes from the default working tree. It preserves all catalog entries and their local source assets. The WebP conversion reduces 2,008 local images from 74.2 MB to 23.0 MB without an additional download step. The Git checkout budget is 128 MiB; it includes every tracked path even when identical files share a Git blob. Installed dependencies, optional downloads and old history are separate from this budget.
 
 ## Download only what you need
 
@@ -91,7 +93,7 @@ Only those registered files are downloaded, with size/hash verification and atom
 
 ### Checks and history
 
-Stage changes, then run `npm run templates:check` and `npm run storage:check` to validate the final tree. Ordinary Git checkout contents are limited to 180 MiB; newly staged ordinary files above 1 MiB fail. Catalog small assets are limited to 100 KB, media files to 50 MiB and total assets per template to 150 MiB. Metadata, source manifests, canonical URLs, identities and duplicate local/remote storage are checked without downloading media.
+Stage changes, then run `npm run templates:check` and `npm run storage:check` to validate the final tree. Ordinary Git checkout contents are limited to 128 MiB; newly staged ordinary files above 1 MiB fail. Catalog small assets are limited to 100 KB, media files to 50 MiB and total assets per template to 150 MiB. Metadata, source manifests, canonical URLs, identities and duplicate local/remote storage are checked without downloading media.
 
 PR CI uses `--final-tree` with the PR base to check the final merge tree after verifying Squash-only settings. Passing a base SHA to the local checkers additionally checks every intermediate branch commit; that stricter history audit intentionally rejects raw files added and later removed. It is not the merge gate for this final-preparation flow. Squash commits the sanitized final tree; merge/rebase would retain the intermediate media, so they must stay disabled.
 
