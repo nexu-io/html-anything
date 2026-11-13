@@ -79,13 +79,17 @@ jobs:
         run: |
           node control/.github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node control/.github/scripts/motion-scan.mjs source source "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
+      - name: Select rendering package cache version
+        id: rendering-cache
+        run: echo "version=${ImageVersion:-$(date -u +%G-W%V)}" >> "$GITHUB_OUTPUT"
       - name: Restore rendering package downloads
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/motion-rendering-apt/*.deb
-          # Cache entries are immutable, so save under a per-run key and restore the newest entry by prefix.
-          key: rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-${{ github.run_id }}-${{ github.run_attempt }}
+          # Reuse packages across runs of the same runner image; refresh when the image changes.
+          key: rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-v2-${{ steps.rendering-cache.outputs.version }}
           restore-keys: |
+            rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-v2-
             rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-
       - name: Install rendering test tools
         run: |
