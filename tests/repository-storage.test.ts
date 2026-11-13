@@ -62,6 +62,18 @@ test('bundle construction refuses a pointer instead of silently shipping it as a
   await requireDownloadedMedia(['demo.mp4'], f.root);
 });
 
+test('checkout budget counts every path even when Git deduplicates their blobs', t => {
+  const f = fixture(t);
+  f.write('shared.bin', Buffer.alloc(1024 * 1024, 42)); f.stage();
+  const oid = git(f.root, ['rev-parse', ':shared.bin']);
+  // Reuse one blob in the index without allocating a large working directory.
+  for (let index = 0; index < 180; index++)
+    git(f.root, ['update-index', '--add', '--cacheinfo', '100644', oid, `copy-${index}.bin`]);
+  const result = checkRepositoryStorage(f.root);
+  assert(result.gitBytes > 180 * 1024 * 1024);
+  assert.match(result.errors.join('\n'), /checkout exceeds 180 MiB/);
+});
+
 test('repository LFS defaults keep a normal clone small and a scoped pull restores exact media', {
   skip: spawnSync('git', ['lfs', 'version']).status !== 0,
 }, t => {

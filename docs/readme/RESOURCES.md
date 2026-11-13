@@ -1,8 +1,8 @@
-# Local README resources
+# README resources and optional local copies
 
-Embedded README images and previews are local files shared by the English, Simplified Chinese and Japanese editions. Current Motion template cards link to their public detail pages. Presenter references have no online template link. The repository also retains earlier films and editable resources for reuse and attribution.
+English, Simplified Chinese and Japanese READMEs share the same media. Artwork and previews above 100 KB load directly from immutable public R2 URLs registered in `repository-media.json`; small artwork stays local. Current Motion template cards link to their public detail pages. Presenter references have no online template link. Earlier films and editable resources retain their logical paths for reuse and attribution.
 
-Full reference videos and the optional template archive use Git LFS at the same paths. Embedded README images and GIFs remain in ordinary Git and display without LFS downloads. Fetch the desired media before watching complete videos, materializing an optional Library profile, or verifying full resource hashes; see [scoped download commands](../repository-storage.md#download-only-what-you-need).
+Full reference videos and the optional template archive use Git LFS at the same paths. Public README previews need internet access, with no CMS login or LFS download. `npm run media:pull -- docs/readme` restores their exact original bytes at the paths recorded below for reproduction. It does not rewrite README URLs for offline viewing. Fetch the desired media before watching complete videos, materializing an optional Library profile, or verifying full resource hashes; see [scoped download commands](../repository-storage.md#download-only-what-you-need).
 
 ## Retained local collection
 
@@ -33,17 +33,18 @@ Run from the repository root:
 
 ```sh
 git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
+npm run media:pull
 node scripts/check-readme-resources.mjs
 node --test tests/readme-resources.test.ts tests/motion-design-remix.test.ts
 ```
 
-The deterministic checks reject embedded remote images, remote video links, missing local references and changed resource hashes. The Motion Design capture helper blocks external requests while rendering. New documentation/resource files also need an explicit entry in `scripts/distribution.ts`. Preserve source credits and third-party licenses; update the relevant manifest when intentionally changing a file. A source URL in a manifest is provenance, not a runtime fallback.
+The deterministic checks allow only registered public media URLs and reject other embedded remote images/video, missing local references and changed resource hashes. Full hash verification requires the optional local copies; viewing the README does not. The Motion Design capture helper blocks external requests while rendering. New documentation/resource files also need an explicit entry in `scripts/distribution.ts`. Preserve source credits and third-party licenses; update the relevant manifest when intentionally changing a file. A source URL in a manifest is provenance, not a runtime fallback.
 
 For a standalone Skill handoff, include the entire selected Skill folder. Presenter Story includes its six reference/result films under `assets/`; Motion Design Remix includes its six source videos, fonts and browser dependencies. Reference videos remain viewing material, not replacement footage for new creations.
 
 
 ## Current public README catalog
 
-The current README uses the [live template catalog](https://open-design.ai/templates/) for Motion examples, with one detail-page link per template. Local GIF and poster excerpts are recorded in the [current template manifest](live-templates/manifest.json). Presenter reference previews remain available locally; no online template page is linked for them. The legacy collection above remains available in the repository and is separate from the current online catalog.
+The current README uses the [live template catalog](https://open-design.ai/templates/) for Motion examples, with one detail-page link per template. GIF and poster identities are recorded in the [current template manifest](live-templates/manifest.json); large previews use registered public URLs with optional local copies. Presenter references have no online template page. The legacy collection above remains separate from the current online catalog.
 
-The current [Studio screenshots](live-product/manifest.json) cover the template library, template detail and recreation instruction in English, Simplified Chinese and Japanese. All embedded README media remain local; online detail pages provide the current reference and instructions.
+The current [Studio screenshots](live-product/manifest.json) cover the template library, template detail and recreation instruction in English, Simplified Chinese and Japanese. Online detail pages provide the current reference and instructions; the manifests retain the original capture identities regardless of media storage.

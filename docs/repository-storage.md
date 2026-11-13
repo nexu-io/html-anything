@@ -1,6 +1,6 @@
 # Repository size and optional media
 
-Source, template guides, small assets, browser dependencies and the images/GIFs embedded in the README remain in ordinary Git. Full reference/demo videos and the optional Presenter Tech `.motion` archive use Git LFS at their existing paths. Their bytes, source credits and integrity manifests are unchanged.
+Source, template guides, small assets and browser dependencies remain in ordinary Git. README artwork and optional Library previews above 100 KB are served from immutable public R2 URLs and recorded in `repository-media.json`. Full reference/demo videos and the optional Presenter Tech `.motion` archive still use Git LFS. Original media bytes, source credits and integrity manifests are unchanged.
 
 ## Clone and run
 
@@ -14,7 +14,9 @@ npm start
 
 `--depth 1` avoids downloading old history. Omit it when you need the history, or run `git fetch --unshallow` later. This migration does not rewrite shared history: a full clone still downloads the large ordinary Git objects in old commits.
 
-The checked-in `.lfsconfig` excludes LFS downloads by default. Normal clones with Git LFS installed keep pointers until you request the media. Without Git LFS installed, pointers remain ordinary text files. GitHub README images and GIFs, local README previews, built-in Studio templates and repository catalog source do not need these optional downloads. This does not make linked CMS references available offline.
+The checked-in `.lfsconfig` excludes LFS downloads by default. Normal clones with Git LFS installed keep pointers until you request the media. Without Git LFS installed, pointers remain ordinary text files. GitHub and local Markdown viewers load registered public README images/GIFs directly, without CMS authentication or an LFS download. Those previews require internet access. Built-in Studio templates and repository catalog source retain their local dependencies. Linked CMS references are not made available offline.
+
+The preview migration removes 134,065,890 bytes from the default working tree. It preserves all catalog entries and their local source assets. The Git checkout budget is 180 MiB; it includes every tracked path even when identical files share a Git blob. Installed dependencies, optional downloads and old history are separate from this budget.
 
 ## Download only what you need
 
@@ -33,7 +35,7 @@ git lfs pull --include="library/skills/openmotion-design-remix/**" --exclude=""
 # Presenter Tech archive and its full preview video.
 git lfs pull --include="library/templates/presenter-tech/**" --exclude=""
 
-# Full README reference films; embedded images/GIFs already work without this.
+# Full README reference films; public images/GIFs do not need this.
 git lfs pull --include="docs/readme/**" --exclude=""
 
 # Everything needed for complete plugin/platform bundles and resource verification.
@@ -44,7 +46,7 @@ For a contributed catalog template, use the [template-specific pull command](tem
 
 ## Prepare final PR media before merging
 
-Contributors edit their original PR normally. A new catalog video, audio file or large image/font can be committed under `<id>/source/assets/` (at most 50 MiB per file). Git LFS remains a supported input, not a required account or separate upload step. Keep small imported assets and existing README previews in ordinary Git. Raw media can make the policy check red until final preparation; do not repeatedly transfer every draft update.
+Contributors edit their original PR normally. A new catalog video, audio file or large image/font can be committed under `<id>/source/assets/` (at most 50 MiB per file). Git LFS remains a supported input, not a required account or separate upload step. Keep small imported assets and small README artwork in ordinary Git. Raw media can make the policy check red until final preparation; do not repeatedly transfer every draft update.
 
 After the content review, a maintainer opens **Actions → Prepare PR media → Run workflow**, selects `main` and enters the original PR number. This performs one final preparation:
 
@@ -75,6 +77,11 @@ Other optional media retains its local logical path in `repository-media.json`. 
 
 ```sh
 npm run media:pull -- library/skills/openmotion-design-remix
+
+# Recover original README artwork at its recorded local paths.
+npm run media:pull -- docs/readme
+
+# Restore every registered optional file for full bundles/resource verification.
 npm run media:pull
 ```
 
@@ -82,8 +89,8 @@ Only those registered files are downloaded, with size/hash verification and atom
 
 ### Checks and history
 
-Stage changes, then run `npm run templates:check` and `npm run storage:check` to validate the final tree. Ordinary Git checkout contents are limited to 320 MiB; newly staged ordinary files above 1 MiB fail. Catalog small assets are limited to 100 KB, media files to 50 MiB and total assets per template to 150 MiB. Metadata, source manifests, canonical URLs, identities and duplicate local/remote storage are checked without downloading media.
+Stage changes, then run `npm run templates:check` and `npm run storage:check` to validate the final tree. Ordinary Git checkout contents are limited to 180 MiB; newly staged ordinary files above 1 MiB fail. Catalog small assets are limited to 100 KB, media files to 50 MiB and total assets per template to 150 MiB. Metadata, source manifests, canonical URLs, identities and duplicate local/remote storage are checked without downloading media.
 
 PR CI uses `--final-tree` with the PR base to check the final merge tree after verifying Squash-only settings. Passing a base SHA to the local checkers additionally checks every intermediate branch commit; that stricter history audit intentionally rejects raw files added and later removed. It is not the merge gate for this final-preparation flow. Squash commits the sanitized final tree; merge/rebase would retain the intermediate media, so they must stay disabled.
 
-The existing LFS migration reduces ordinary Git content by approximately 291 MB. Optional downloads restore that size locally; full clones retain old binary history. Preparation only transfers media changed in the selected PR. This implementation does not claim the existing 71 LFS resources have already been transferred to R2, nor does it rewrite history or configure branch protection. Actual public R2 and an independent contributor-fork write remain activation checks after workflow registration and token setup.
+The existing LFS migration removes approximately 291 MB from ordinary Git, and the preview migration removes another 134 MB. Optional downloads restore those bytes locally; full clones retain old binary history. Routine PR preparation only transfers media changed in the selected PR. The existing 71 LFS resources remain in LFS. The preview migration verifies each public R2 object's size and SHA-256 before removing its local Git copy. It does not rewrite history or configure branch protection. An independent contributor-fork write remains unverified.

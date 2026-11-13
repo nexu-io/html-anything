@@ -562,7 +562,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
   await walk('studio/public', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
   for (const file of files) {
     const info = await lstat(path.join(root, file)).catch(error => {
-      if (error.code === 'ENOENT' && /\.(?:mp4|motion)$/.test(file)) throw new Error(`Optional media is missing: ${file}. Run npm run media:pull for transferred files, or the scoped LFS pull in docs/repository-storage.md.`);
+      if (error.code === 'ENOENT' && /\.(?:mp4|motion|gif|png|jpe?g|webp)$/i.test(file)) throw new Error(`Optional media is missing: ${file}. Run npm run media:pull for transferred files, or the scoped LFS pull in docs/repository-storage.md.`);
       throw error;
     });
     if (!info.isFile()) throw new Error('Distribution requires a regular file: ' + file);

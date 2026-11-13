@@ -6,7 +6,7 @@ OpenMotion 的模板库把视频参考、Motion.md 和复刻指令放在同一�
 
 打开 **模板库**，按参考品牌、使用场景或视频类型筛选，也可以搜索模板名称。线上目录见 [模板库](https://open-design.ai/templates/)。
 
-![模板库](readme/live-product/catalog.zh-CN.jpg)
+![模板库](https://releases.open-design.ai/open-motion/media/sha256/01b43503d98d59a407d5cfb6baf9a31660670c195513601e501a781250d069ea.jpg)
 
 ## 2. 查看参考与 Motion.md
 

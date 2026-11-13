@@ -42,9 +42,9 @@ These are artwork guidance, not replacements for the application's [UI tokens](.
 
 ## Assets
 
-- [Cover](../../../docs/readme/cover.png), [animated cover](../../../docs/readme/cover-motion.gif) and [social preview](../../../docs/readme/social-preview.jpg): generated brand artwork.
-- [Library artwork](../../../docs/readme/library.png): the same painterly family.
-- [Workspace](../../../docs/readme/workspace.jpg) and [editor](../../../docs/readme/editor.jpg): real Studio snapshots at commit `7aee372`; preserve original labels and capture-commit context.
+- [Cover](https://releases.open-design.ai/open-motion/media/sha256/cfeb12861412bd36d34000ee1fe6d7f4e7b124ac9cad680d595c3cb44708eead.png), [animated cover](https://releases.open-design.ai/open-motion/media/sha256/6f6379825bac5cc67ee2d8fdc328ec25a16eea64fdac420f358092ddae95ad47.gif) and [social preview](https://releases.open-design.ai/open-motion/media/sha256/9683e195639f5f6a54524f33fe4c7c3f4ec47efebb97fc93e4ec38895dd08412.jpg): generated brand artwork.
+- [Library artwork](https://releases.open-design.ai/open-motion/media/sha256/e84a6ce63123aac0c1e48e78a2faf261638f9cfa75bf3e92b9c35192802f85bd.png): the same painterly family.
+- [Workspace](https://releases.open-design.ai/open-motion/media/sha256/98f02a127ec68acb7cde4d5278acc66ef53c0e91625aebccd1274fe1d74da0d7.jpg) and [editor](https://releases.open-design.ai/open-motion/media/sha256/c98d8eeff73abaa8af85d01028f3953c95cfd5b0e4821148e887b008276469e5.jpg): real Studio snapshots at commit `7aee372`; preserve original labels and capture-commit context.
 - [OpenDesign symbol](../../../docs/readme/opendesign-symbol.svg): upstream mark, retained unmodified and credited; do not present it as a newly designed OpenMotion logo.
 - [Sources and generation prompts](../../../docs/readme/ASSETS.md).
 

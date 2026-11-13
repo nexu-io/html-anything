@@ -5,7 +5,7 @@ import { lfsPointer, maxLfsAssetBytes, repositoryMediaFile } from '../shared/rep
 import { validateMediaManifest } from '../shared/repository-media.ts';
 
 const maxGitFileBytes = 1024 * 1024;
-const maxCheckoutBytes = 320 * 1024 * 1024;
+const maxCheckoutBytes = 180 * 1024 * 1024;
 function git(cwd: string, args: string[], input?: string) {
   const result = spawnSync('git', args, { cwd, input, maxBuffer: 32 * 1024 * 1024 });
   assert.equal(result.status, 0, result.stderr?.toString() || result.error?.message);
@@ -57,7 +57,7 @@ export function checkRepositoryStorage(cwd: string, base?: string, options: { fi
     lfsBytes += pointer.bytes;
     lfsFiles++;
   }
-  if (gitBytes > maxCheckoutBytes) errors.push('Ordinary Git checkout exceeds 320 MiB; move optional media to LFS or review the budget');
+  if (gitBytes > maxCheckoutBytes) errors.push('Ordinary Git checkout exceeds 180 MiB; move optional media to public storage or review the budget');
   if (base && !options.finalTreeOnly) {
     const objects = git(cwd, ['rev-list', '--objects', 'HEAD', '--not', base]).toString().trim().split('\n').filter(Boolean);
     if (objects.length) {
