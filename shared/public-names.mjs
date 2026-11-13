@@ -24,12 +24,3 @@ export function publicToolResult(result) {
         ? child.replace(/\bmotion:\/\//g, 'openmotion://') : handoff(child)])) : value;
   return { ...result, previewHandoff: handoff(result.previewHandoff) };
 }
-
-export const skillAliases = {
-  'motion-director': 'openmotion-director',
-  'motion-production': 'openmotion-production',
-  'motion-recreate': 'openmotion-recreate',
-  'motion-template-to-video': 'openmotion-template-to-video',
-  'motion-video-to-template': 'openmotion-video-to-template',
-  'reference-video': 'openmotion-reference-video',
-};

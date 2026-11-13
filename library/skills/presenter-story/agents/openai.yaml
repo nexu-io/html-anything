@@ -1,4 +1,0 @@
-interface:
-  display_name: "OpenMotion · presenter-story compatibility alias"
-policy:
-  allow_implicit_invocation: false
