@@ -22,7 +22,6 @@ import { useDomEditContext } from "../../contexts/DomEditContext";
 import { usePlayerStore, liveTime } from "../../player";
 import {
   findMatchingTimelineElementId,
-  resolveTimelineSelectionSeekTime,
 } from "../../utils/studioHelpers";
 import {
   Film,
@@ -125,7 +124,6 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
     timelineElements,
     isPlaying,
   } = useLayersPanelHost(host);
-  const currentTime = usePlayerStore((s) => s.currentTime);
   // Flashless z commits (canvas menu, timeline lane-drag z-sync) mutate iframe
   // z-indexes with no reload and no refreshKey bump — while paused, nothing
   // else re-collects, so the panel's z-sorted order would go stale.
@@ -229,52 +227,36 @@ export const LayersPanel = memo(function LayersPanel({ host }: { host?: LayersPa
     [activeCompPath, isMasterView, previewIframeRef, activeGroupElement],
   );
 
-  const seekToLayer = useCallback(
-    async (layer: DomEditLayerItem) => {
-      const selection = await resolveSelection(layer);
-      if (!selection) return;
-
-      let matchedId = findMatchingTimelineElementId(selection, timelineElements);
-
-      if (!matchedId) {
-        const sourceFile = selection.sourceFile ?? "index.html";
-        let ancestor = layer.element.parentElement;
-        while (ancestor && !matchedId) {
-          const elId = ancestor.id;
-          if (elId) {
-            const found = timelineElements.find(
-              (e) => e.domId === elId && (e.sourceFile ?? "index.html") === sourceFile,
-            );
-            if (found) matchedId = found.key ?? found.id;
-          }
-          ancestor = ancestor.parentElement;
-        }
-      }
-
-      if (matchedId) {
-        const el = timelineElements.find((e) => (e.key ?? e.id) === matchedId);
-        if (el) {
-          const nextTime = resolveTimelineSelectionSeekTime(currentTime, el);
-          if (nextTime != null) usePlayerStore.getState().requestSeek(nextTime);
-        }
-      }
-    },
-    [currentTime, resolveSelection, timelineElements],
-  );
-
   const handleSelectLayer = useCallback(
     async (layer: DomEditLayerItem) => {
       const selection = await resolveSelection(layer);
       if (!selection) return;
-      applyDomSelection(selection);
-      await seekToLayer(layer);
+      const matchedId = findMatchingTimelineElementId(selection, timelineElements);
+      let clip = timelineElements.find((item) => (item.key ?? item.id) === matchedId);
+      const sourceFile = selection.sourceFile ?? "index.html";
+      let ancestor = selection.element.parentElement;
+      while (!clip && ancestor) {
+        const id = ancestor.id;
+        if (id) {
+          clip = timelineElements.find((item) => item.domId === id &&
+            ((item.sourceFile ?? "index.html") === sourceFile || item.compositionSrc === sourceFile));
+        }
+        ancestor = ancestor.parentElement;
+      }
+      if (clip) {
+        const time = liveTime.latest();
+        if (time < clip.start || time >= clip.start + clip.duration) {
+          usePlayerStore.getState().requestSeek(clip.start);
+        }
+      }
+      applyDomSelection(selection, { revealPanel: false });
       // Force-reveal AFTER the seek's runtime visibility sync has had a beat:
       // a clip made active by the seek shows naturally and needs no override,
       // so the reveal only touches nodes that REMAIN hidden (animation-parked
       // opacity, non-clip display/visibility hides, hidden ancestors).
       scheduleReveal(selection.element, 150);
     },
-    [resolveSelection, applyDomSelection, seekToLayer, scheduleReveal],
+    [resolveSelection, applyDomSelection, timelineElements, scheduleReveal],
   );
 
   // Double-click a group row → drill into it; any other row → select it.

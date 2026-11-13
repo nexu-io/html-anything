@@ -1,0 +1,240 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 24,
+  "durationSeconds": 36.916667,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "5790f4d9a9d8a23f21d03c24b50aa219c9332ae98b4c385d9248ade6dd804cc4"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "timeSeconds": 9,
+      "frameId": "K0022",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "timeSeconds": 15,
+      "frameId": "K0045",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "timeSeconds": 22,
+      "frameId": "K0077",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "timeSeconds": 28,
+      "frameId": "K0101",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "timeSeconds": 35,
+      "frameId": "K0114",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 7.187898124999947,
+    "measurementSeconds": 0.48185554100018635,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "地图几何和概率未逐帧测量，源片竞选预测仅作内容观察。",
+    "HTML 为 authored 机制示例，不是完整原样复刻。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V069",
+      "sha256": "5790f4d9a9d8a23f21d03c24b50aa219c9332ae98b4c385d9248ade6dd804cc4",
+      "sourceUrl": "https://x.com/polymarket/status/2100964806446526634"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.webp",
+      "bytes": 990,
+      "sha256": "0419db1469d0d01def0c6f153f84e2d27fb4482631eacf9ede2b9eb5eb7520eb"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "bytes": 5268,
+      "sha256": "4fd7c3f4de35794f6531608a69d546a79cb332675baec6102a0b32f16f8157e9"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "bytes": 26962,
+      "sha256": "9e51041147236ddbc1e213f47e415abd667760155ce399b3b7f5bc18a0d63cb0"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "bytes": 18914,
+      "sha256": "35dfa0698dd76b5ce13aa553313f8f95cc832574696e2119941dba8bc1961391"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "bytes": 3422,
+      "sha256": "6ebab6f0632872ae176c2e9ffe170c6c3ed5f6c6e567a7aa0008ad89f5efe41e"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "bytes": 2878,
+      "sha256": "f152fcb80735ea9138830d9b5b3a83b4679688d9c77126c1b2e54e9a78f0b4c9"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/clip-2.html",
+      "bytes": 665,
+      "sha256": "dc05db9a8a2b219982a745e2dd5ed7c6ec332ec76b882853b91ecbd8738f86cc"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 11802,
+      "sha256": "7d76a26ae05000d07fcd958b23015e85a78b88c0cb771054dc85c592afd0b025"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 1716,
+      "sha256": "5ac4cad2d4a9803992fc32df21defb29455110b030a22c91620519a00fa0524a"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 639,
+      "sha256": "16e3fbd25e42911a29d5e1884400a824c5f7908ef594c753dd7dff342d8b52b0"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 7124,
+      "sha256": "bddf8709262f4b256c80cb03ed4a00da6f3d22ae28819dd2af3bc777ca9cf4ff"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 22711,
+      "sha256": "a2a6079760df32769e2cfb8e0edcb28b4a1faa73dfc47ee5d9d0a123526e4ed2"
+    },
+    {
+      "path": "style.json",
+      "bytes": 3215,
+      "sha256": "6835620f78b86c9d9caef0f534c27741e67a6898d6f2e4ca371b87896e13c1c5"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 2620,
+      "sha256": "acc598b10170d7ad995b3ffe9150b8d7c177f0b2cbe324a29517bbf4c5029404"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 12189,
+      "sha256": "307b80a4b1ff708d900cd6531e6b3df4d76e61961f3b3636cab6cf4e88303ec7"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12500,
+      "sha256": "dbafb8d810e47ec5e6cad17f29f0d1f2912f5a802013f70431656b01109db576"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4965,
+      "sha256": "0dbd862b0d39894ce3149f39a094e991b9a401784cf1b392b8bfa0f5273e968d"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Midterms Hub"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#3d69eb"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/clip-2.html",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 2
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 36.916667,
+      "status": "authored"
+    },
+    {
+      "id": "clip-2",
+      "src": "demos/clip-2.html",
+      "duration": 13,
+      "status": "authored"
+    }
+  ]
+}

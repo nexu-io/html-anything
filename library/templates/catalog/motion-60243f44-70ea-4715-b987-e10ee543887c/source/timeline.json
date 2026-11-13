@@ -1,0 +1,106 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        37.066667
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        37.066667
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        37.066667
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0.0,
+      "label": "聊天联系人",
+      "end": 4.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 4.0,
+      "label": "个性化对话",
+      "end": 8.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 8.0,
+      "label": "发送参考图",
+      "end": 11.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 11.0,
+      "label": "生成结果",
+      "end": 13.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 13.0,
+      "label": "结果独立播放",
+      "end": 20.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 20.0,
+      "label": "语音入口",
+      "end": 23.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 23.0,
+      "label": "重复任务",
+      "end": 27.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 27.0,
+      "label": "工具结果",
+      "end": 32.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 32.0,
+      "label": "聊天平台集合",
+      "end": 35.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 35.0,
+      "label": "品牌",
+      "end": 37.066667,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 37.066667
+  }
+}

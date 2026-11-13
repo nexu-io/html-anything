@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#f9fbff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Available on Friday, October 2nd",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：small, urgent household fixes and furniture",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：assembly.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "问题文本",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "搜索状态",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "服务商列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "可预约时间",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "联系按钮",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f9fbff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#22262a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#478be3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#81bd82",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f4ce6a",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白色手机、淡彩斜向背景、服务结果列表",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "问题包含任务和时间限制，结果逐项回应这些限制。",
+      "status": "inferred"
+    },
+    {
+      "rule": "滚动改变可见内容，列表顺序和对象身份保持不变。",
+      "status": "inferred"
+    },
+    {
+      "rule": "以联系方式和可预约时间作为结果落点。",
+      "status": "inferred"
+    }
+  ]
+}

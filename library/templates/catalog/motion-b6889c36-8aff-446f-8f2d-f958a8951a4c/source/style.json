@@ -1,0 +1,117 @@
+{
+  "background": {
+    "color": "#f7f8f8",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Muse",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "助手头像",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "聊天气泡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "邮件卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "订单确认",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "报名表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "航班卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "日程格",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f7f8f8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#101112",
+      "status": "inferred"
+    },
+    {
+      "hex": "#0872c9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#cce7fb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e7e8e9",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "圆润无衬线正文；短标题居中，消息文字小一档",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "浅灰白背景搭配浅蓝对话气泡。头像与状态标签靠近当前任务，输入栏、邮件和表单轮流居中，不同时堆满画面。",
+      "status": "inferred"
+    },
+    {
+      "rule": "清单转成订单后再出现允许与拒绝按钮；用户回应之后，状态才推进。按钮与总价同处一张卡，黑字、蓝色主按钮保持清晰层级。",
+      "status": "inferred"
+    },
+    {
+      "rule": "购物、报名、航班分别用清单、表单、行程卡承接。各段之间穿插简短能力句，结束用日程完成与勾选回收，避免每次换任务重新介绍角色。",
+      "status": "inferred"
+    },
+    {
+      "rule": "保留消息→信息整理→确认→完成的因果链。更换头像、业务卡和短句时，把付款、报名等决定节点替换为新服务真正需要的用户选择。",
+      "status": "inferred"
+    }
+  ]
+}

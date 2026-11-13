@@ -1,0 +1,106 @@
+{
+  "background": {
+    "color": "#9ef4e4",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Music",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Live the",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中列波形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "两侧波形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "固定双行标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "薄荷背景",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#9ef4e4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#080909",
+      "status": "inferred"
+    },
+    {
+      "hex": "#080909",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4ebfa9",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "粗重无衬线双行标题；薄荷底、重复黑色横向椭圆与白色反白文字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "椭圆的中心沿竖向排列，通过宽度变化形成向上和向下流动的轮廓。",
+      "status": "inferred"
+    },
+    {
+      "rule": "中央黑色区域始终覆盖标题四周，保证反白文字可读；周边变化更大。",
+      "status": "inferred"
+    },
+    {
+      "rule": "侧列与中列错开相位，让背景持续变化而不拖动标题。",
+      "status": "inferred"
+    }
+  ]
+}

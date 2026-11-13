@@ -357,7 +357,7 @@ export const AssetsTab = memo(function AssetsTab({
       </div>
 
       <div
-        className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-1 [scrollbar-gutter:stable]"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-1 motion-sidebar-scroll"
         role="region"
         aria-label={t("Project assets")}
         tabIndex={0}

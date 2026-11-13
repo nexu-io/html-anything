@@ -1,0 +1,97 @@
+{
+  "background": {
+    "color": "#ffffff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "标志弧线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "材质层",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "外围装饰",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "局部光泽",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "编辑线框",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#171717",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ed20b8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffc20c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#57c2d9",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "以标志轮廓与材质为主；文字只是拼贴或编辑辅助",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "色条、选框和控制点围绕弧形逐步组装，网格与工具标签在外围。标志稳定后再让材质与装饰接管画面。",
+      "status": "inferred"
+    },
+    {
+      "rule": "涂鸦、摄影、立体景观可以完全换风格，但主轮廓的大小与重心保持接近。外围素材错开进入，换段时优先沿弧线擦除或接续。",
+      "status": "inferred"
+    },
+    {
+      "rule": "景观轨道收缩、拆段、退出，让中心回到白场。换品牌时先设计一个在各种媒介中都能认出的基础剪影，再准备一组配套风格。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -18,6 +18,7 @@ export const workflowRegistry = {
       native: 'skills/openmotion-production/references/native.md',
       edit: 'skills/openmotion-production/references/edit.md',
       portable: 'skills/openmotion-production/references/portable-project.md',
+      materials: 'skills/openmotion-production/references/materials.md',
     },
   },
   director: {

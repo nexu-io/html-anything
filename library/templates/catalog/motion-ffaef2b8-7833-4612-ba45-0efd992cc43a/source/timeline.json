@@ -1,0 +1,120 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        59.366667
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        59.366667
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        59.366667
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0.0,
+      "label": "品牌光形",
+      "end": 6.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6.0,
+      "label": "收入里程碑",
+      "end": 11.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 11.0,
+      "label": "增长曲线",
+      "end": 18.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 18.0,
+      "label": "发布主张",
+      "end": 25.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 25.0,
+      "label": "笔记本",
+      "end": 28.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 28.0,
+      "label": "切换手机",
+      "end": 31.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 31.0,
+      "label": "手机输入",
+      "end": 38.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 38.0,
+      "label": "构建状态",
+      "end": 41.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 41.0,
+      "label": "双平台",
+      "end": 44.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 44.0,
+      "label": "部署成功",
+      "end": 48.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 48.0,
+      "label": "应用合集",
+      "end": 52.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 52.0,
+      "label": "时间与品牌",
+      "end": 59.366667,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 59.366667
+  }
+}

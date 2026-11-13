@@ -1,0 +1,148 @@
+{
+  "background": {
+    "color": "#f5f5f1",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Sign up",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Recents",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Q Search",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "平板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "侧栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "任务计数",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "PR卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "预览画面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手写批注",
+      "status": "inferred"
+    },
+    {
+      "id": "role-7",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "合并按钮",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f5f5f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202122",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9966cc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f1ba8a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9ab8ad",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面文字与清晰大小层级",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "相同成果先跨设备展示，之后聚焦平板中的整理与审查能力",
+      "status": "inferred"
+    },
+    {
+      "rule": "任务计数变化引出审查卡，预览上的批注必须锚定被评价内容",
+      "status": "inferred"
+    },
+    {
+      "rule": "结尾用创建、审查、合并概括前段实际动作",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#ffffe1",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Suki",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Clinicians",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Suki is building",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "竖向基线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "左对齐主张",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "黄蓝线束",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "人物画面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌字标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffe1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1b1b1b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e9e65e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b9dae5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d9d7bc",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线短句左对齐；细竖线像正文起笔，品牌字标粗而紧凑",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "把临床人员与工具的协作用两组细线表达，线束交汇后变成贯穿真实照护场景的视觉线索。",
+      "status": "inferred"
+    },
+    {
+      "rule": "一根细竖线靠近左侧，短粗段标出正文起点。文本左对齐，最多三四行；浅米底深字与深底浅字切换时保持起始轴不变。",
+      "status": "inferred"
+    },
+    {
+      "rule": "浅蓝代表 Clinicians，黄色代表 Suki。细竖条沿曲线路径排列，先上下分离，再交错重叠并横向展开；标签在关系建立后退出，让线本身接管运动。",
+      "status": "inferred"
+    }
+  ]
+}

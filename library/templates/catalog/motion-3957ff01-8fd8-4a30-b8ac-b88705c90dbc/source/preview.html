@@ -1,0 +1,285 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Linear Diffs — code review inside Linear · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#090a0c;--brand-ink:#e9e9e8;--accent:#6970c6;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Linear <span>/</span> V249</div><div class="intro-line"><h1>Linear Diffs — code review inside Linear</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>把评审演成四个有因果的动作：选择变更、比较差异、留下评论、提交评审。代码归属和评论位置必须清楚。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 51.883333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 10, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Experience the diff&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#6970c6&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Experience the diff&quot;, &quot;accent&quot;: &quot;#6970c6&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="51.883333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 51.88 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Linear Diffs — code review inside Linear · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090a0c}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Linear</div><div class="type-sample">Experience the diff</div><p>无衬线中粗主标题；细边框界面与小号功能文字</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#090a0c" style="--swatch:#090a0c" aria-label="复制色值 #090a0c"><span></span><code>#090A0C</code></button><button class="swatch" data-color="#e9e9e8" style="--swatch:#e9e9e8" aria-label="复制色值 #e9e9e8"><span></span><code>#E9E9E8</code></button><button class="swatch" data-color="#6970c6" style="--swatch:#6970c6" aria-label="复制色值 #6970c6"><span></span><code>#6970C6</code></button><button class="swatch" data-color="#30333c" style="--swatch:#30333c" aria-label="复制色值 #30333c"><span></span><code>#30333C</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>评审列表</span><span>代码差异</span><span>说明文档</span><span>评论</span><span>提交按钮</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule has-demo" id="section-1"><div class="rule-label"><span>01</span><h2>先选变更，再进入差异</h2></div><figure class="demo" id="demo-clip-1" data-demo="{&quot;id&quot;: &quot;clip-1&quot;, &quot;title&quot;: &quot;先选变更，再进入差异&quot;, &quot;src&quot;: &quot;demos/clip-1.html&quot;, &quot;duration&quot;: 14, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;5–19 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>先选变更，再进入差异</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="先选变更，再进入差异" data-src="demos/clip-1.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="14" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 14.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>5–19 秒 · 动作示意 <a href="demos/clip-1.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Linear Diffs — code review inside Linear · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090a0c}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;5&quot; data-end=&quot;19&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>变更列表建立文件范围，点击后进入对应代码。文件名与选中状态持续可见，差异近景突出关键行，不同时滚动多个无关区域。</p>
+
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>说明与代码并排，评论贴着目标行</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;说明与代码并排，评论贴着目标行&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 21, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;19–40 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>说明与代码并排，评论贴着目标行</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="说明与代码并排，评论贴着目标行" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="21" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 21.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>19–40 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Linear Diffs — code review inside Linear · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090a0c}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;19&quot; data-end=&quot;40&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>说明文档位于代码旁边，解释当前变化。评论入口与相关代码行对齐，输入时保留被评论行；完成评论后再提交整次评审。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>红绿颜色承担明确语义</h2></div><div class="rule-copy">
+<p>红色表示删除，绿色表示新增，其余界面维持黑灰与冷紫层级。代码采用等宽字，说明和按钮使用无衬线；斜视镜头与缩放不改变文件和行的对应关系。</p>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>提交之后再给产品主张</h2></div><div class="rule-copy">
+<p>提交按钮与完成状态是评审链条的终点。动作完成后收掉细节，让主张和品牌获得单独停留；不要在尾段又打开新文件。</p>
+</div></section><section class="rule text-only" id="section-5"><div class="rule-label"><span>05</span><h2>也可以迁移到文稿或设计评审</h2></div><div class="rule-copy">
+<p>保留对象选择、前后比较、定点评论和明确提交。替换差异内容时同步更换文件名、说明、评论和完成状态；不同颜色继续表达稳定的比较含义。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>评审入口</b></button><button class="beat" data-time="5.0"><span>5.00<small>s</small></span><b>变更列表</b></button><button class="beat" data-time="10.0"><span>10.00<small>s</small></span><b>代码差异</b></button><button class="beat" data-time="15.0"><span>15.00<small>s</small></span><b>指南标签</b></button><button class="beat" data-time="19.0"><span>19.00<small>s</small></span><b>说明与代码并置</b></button><button class="beat" data-time="28.0"><span>28.00<small>s</small></span><b>变更近景</b></button><button class="beat" data-time="32.0"><span>32.00<small>s</small></span><b>评论输入</b></button><button class="beat" data-time="40.0"><span>40.00<small>s</small></span><b>提交评审</b></button><button class="beat" data-time="45.0"><span>45.00<small>s</small></span><b>主张</b></button><button class="beat" data-time="50.0"><span>50.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/a02f05ef54478b95e71a76ab095cdd56611176cce444b60a9df7db08a00cd9c5" alt="10.00 秒的构图参考" loading="lazy"><figcaption>10.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="19.00 秒的构图参考" loading="lazy"><figcaption>19.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="28.00 秒的构图参考" loading="lazy"><figcaption>28.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="40.00 秒的构图参考" loading="lazy"><figcaption>40.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="50.00 秒的构图参考" loading="lazy"><figcaption>50.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可迁移审稿、设计差异或配置评审；保留选择→比较→评论→提交。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>评审列表 / 代码差异 / 说明文档 / 评论 / 提交按钮</p>
+<ul><li>先选变更再看差异，评论定位到代码行，最后明确提交评审。</li><li>红绿差异色保留添加与删除语义，斜镜头不改变代码归属。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Linear / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Linear Diffs — code review inside Linear
+
+把评审演成四个有因果的动作：选择变更、比较差异、留下评论、提交评审。代码归属和评论位置必须清楚。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 51.883333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 10,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Experience the diff&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#6970c6&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Experience the diff&quot;,
+        &quot;accent&quot;: &quot;#6970c6&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 先选变更，再进入差异
+
+变更列表建立文件范围，点击后进入对应代码。文件名与选中状态持续可见，差异近景突出关键行，不同时滚动多个无关区域。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-1&quot;,
+  &quot;title&quot;: &quot;先选变更，再进入差异&quot;,
+  &quot;src&quot;: &quot;demos/clip-1.html&quot;,
+  &quot;duration&quot;: 14,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;5–19 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 说明与代码并排，评论贴着目标行
+
+说明文档位于代码旁边，解释当前变化。评论入口与相关代码行对齐，输入时保留被评论行；完成评论后再提交整次评审。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;说明与代码并排，评论贴着目标行&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 21,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;19–40 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 红绿颜色承担明确语义
+
+红色表示删除，绿色表示新增，其余界面维持黑灰与冷紫层级。代码采用等宽字，说明和按钮使用无衬线；斜视镜头与缩放不改变文件和行的对应关系。
+
+## 提交之后再给产品主张
+
+提交按钮与完成状态是评审链条的终点。动作完成后收掉细节，让主张和品牌获得单独停留；不要在尾段又打开新文件。
+
+## 也可以迁移到文稿或设计评审
+
+保留对象选择、前后比较、定点评论和明确提交。替换差异内容时同步更换文件名、说明、评论和完成状态；不同颜色继续表达稳定的比较含义。
+
+## 配色与字形
+
+无衬线中粗主标题；细边框界面与小号功能文字。
+
+#090a0c · #e9e9e8 · #6970c6 · #30333c · #ffffff
+
+## 元素与制作规则
+
+评审列表 / 代码差异 / 说明文档 / 评论 / 提交按钮
+
+- 先选变更再看差异，评论定位到代码行，最后明确提交评审。
+- 红绿差异色保留添加与删除语义，斜镜头不改变代码归属。
+
+## 内容替换
+
+- 可迁移审稿、设计差异或配置评审；保留选择→比较→评论→提交。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Linear&quot;,
+  &quot;id&quot;: &quot;V249&quot;,
+  &quot;palette&quot;: [
+    &quot;#090a0c&quot;,
+    &quot;#e9e9e8&quot;,
+    &quot;#6970c6&quot;,
+    &quot;#30333c&quot;,
+    &quot;#ffffff&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线中粗主标题；细边框界面与小号功能文字&quot;,
+  &quot;sample&quot;: &quot;Experience the diff&quot;,
+  &quot;objects&quot;: [
+    &quot;评审列表&quot;,
+    &quot;代码差异&quot;,
+    &quot;说明文档&quot;,
+    &quot;评论&quot;,
+    &quot;提交按钮&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/a02f05ef54478b95e71a76ab095cdd56611176cce444b60a9df7db08a00cd9c5&quot;,
+      &quot;timeSeconds&quot;: 10.0,
+      &quot;frameId&quot;: &quot;K0031&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 19.0,
+      &quot;frameId&quot;: &quot;K0067&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 28.0,
+      &quot;frameId&quot;: &quot;K0103&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 40.0,
+      &quot;frameId&quot;: &quot;K0128&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 50.0,
+      &quot;frameId&quot;: &quot;K0149&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;评审入口&quot;,
+      &quot;end&quot;: 5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 5,
+      &quot;label&quot;: &quot;变更列表&quot;,
+      &quot;end&quot;: 10,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 10,
+      &quot;label&quot;: &quot;代码差异&quot;,
+      &quot;end&quot;: 15,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15,
+      &quot;label&quot;: &quot;指南标签&quot;,
+      &quot;end&quot;: 19,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 19,
+      &quot;label&quot;: &quot;说明与代码并置&quot;,
+      &quot;end&quot;: 28,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 28,
+      &quot;label&quot;: &quot;变更近景&quot;,
+      &quot;end&quot;: 32,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 32,
+      &quot;label&quot;: &quot;评论输入&quot;,
+      &quot;end&quot;: 40,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 40,
+      &quot;label&quot;: &quot;提交评审&quot;,
+      &quot;end&quot;: 45,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 45,
+      &quot;label&quot;: &quot;主张&quot;,
+      &quot;end&quot;: 50,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 50,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 51.883333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 51.883333,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

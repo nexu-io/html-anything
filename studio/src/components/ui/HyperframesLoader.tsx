@@ -1,4 +1,4 @@
-import { HyperframesMark } from "./HyperframesMark";
+import { OpenDesignLoadingMark } from "./OpenDesignLoadingMark";
 
 export interface HyperframesLoaderProps {
   /** Status text shown below the mark. */
@@ -24,16 +24,16 @@ export function HyperframesLoader({
     typeof progress === "number" && Number.isFinite(progress)
       ? Math.min(1, Math.max(0, progress))
       : undefined;
-  const markFrameSize = Math.round(size * 1.16);
+  const markHeight = Math.round(size * 0.625);
 
   return (
     <div className="hf-loader" role="status" draggable={false}>
       <div
         className="hf-loader-mark-frame"
-        style={{ width: markFrameSize, height: markFrameSize }}
+        style={{ width: "100%", height: Math.round(size * 1.16) }}
         draggable={false}
       >
-        <HyperframesMark className="hf-loader-mark" width={size} height={size} />
+        <OpenDesignLoadingMark height={markHeight} />
       </div>
       <div className="hf-loader-title">{title}</div>
       {detail && <div className="hf-loader-detail">{detail}</div>}

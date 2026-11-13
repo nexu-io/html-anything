@@ -1,0 +1,86 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "不规则描边按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "效果名",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "折角",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "方向箭头",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#777777",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "微型无衬线标签；细白描边与倒角缺口轮廓",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "每个按钮都有局部凹口与斜边，堆叠时保持相近宽度和小间距。标签贴近轮廓平直的区域，方向箭头留在另一端。",
+      "status": "inferred"
+    },
+    {
+      "rule": "三个按钮短促滑出后，Gradient Fill 先返回，再加入 Fractal Noise 与 Halftone。黑底与白色细轮廓保持极简，移动时标签和箭头跟随容器。",
+      "status": "inferred"
+    },
+    {
+      "rule": "适合短效果名或工具名；内容变长时优先加宽模块，不让标签碰到凹口。循环开始与结束使用同一排列。",
+      "status": "inferred"
+    }
+  ]
+}

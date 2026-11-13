@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#fafafa",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Publish",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Open",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Details",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模式菜单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "赛车预览",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "车型选择",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "桌面应用",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发布钮",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fafafa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#16191b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ef875e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#51575b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d9dce0",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白底超大留白、手机与桌面产品录屏、黑色短句",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先展示生成后能实际操作，再切到桌面展示另一类可发布应用。",
+      "status": "inferred"
+    },
+    {
+      "rule": "车型切换必须反映到同一赛车对象，预览与编辑有连续性。",
+      "status": "inferred"
+    },
+    {
+      "rule": "最后点击发布作为交付终点，不能只留下生成中的界面。",
+      "status": "inferred"
+    }
+  ]
+}

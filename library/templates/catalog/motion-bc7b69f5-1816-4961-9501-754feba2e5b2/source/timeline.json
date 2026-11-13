@@ -1,0 +1,120 @@
+{
+  "states": [],
+  "events": [],
+  "visibilityProvenance": "inferred object-plan intervals, not measured alpha",
+  "objectIntervals": {
+    "text-0": [
+      [
+        0,
+        46.166667
+      ]
+    ],
+    "text-1": [
+      [
+        0,
+        46.166667
+      ]
+    ],
+    "text-2": [
+      [
+        0,
+        46.166667
+      ]
+    ]
+  },
+  "narrativeStages": [
+    {
+      "start": 0.0,
+      "label": "连接器图标围绕",
+      "end": 4.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 4.0,
+      "label": "数据请求",
+      "end": 6.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 6.0,
+      "label": "仪表盘",
+      "end": 10.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 10.0,
+      "label": "选鞋应用",
+      "end": 15.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 15.0,
+      "label": "预约请求",
+      "end": 18.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 18.0,
+      "label": "日历选择",
+      "end": 22.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 22.0,
+      "label": "邮件任务",
+      "end": 27.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 27.0,
+      "label": "发送回复",
+      "end": 31.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 31.0,
+      "label": "地图请求",
+      "end": 34.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 34.0,
+      "label": "门店选择",
+      "end": 39.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 39.0,
+      "label": "成果墙",
+      "end": 45.0,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    },
+    {
+      "start": 45.0,
+      "label": "品牌",
+      "end": 46.166667,
+      "status": "inferred",
+      "basis": "Representative-frame review; approximate boundaries"
+    }
+  ],
+  "referenceImplementation": {
+    "status": "authored",
+    "canvas": [
+      1000,
+      600
+    ],
+    "note": "Wide-format mechanism diagrams. Source video aspect ratio remains unchanged in the separate preview.",
+    "durationSeconds": 46.166667
+  }
+}

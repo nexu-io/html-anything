@@ -1,0 +1,412 @@
+{
+  "templateId": "motion-90713ad1-ac50-4d2d-ba9e-ddf718959fe2",
+  "entry": {
+    "templateId": "motion-90713ad1-ac50-4d2d-ba9e-ddf718959fe2",
+    "sortOrder": 44,
+    "original": {
+      "templateName": "Higgsfield — Cursor for motion designers",
+      "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+      "summary": "画布始终与下方时间线、指令区域同时可见，展示制作关系",
+      "styleDescription": "无衬线界面文字与清晰大小层级",
+      "promotionalUseCases": "产品演示",
+      "visualPresentation": "界面动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+      "reviewFocus": "画布始终与下方时间线、指令区域同时可见，展示制作关系；果实从小主体展开为不同剖面，再变成细节纹理；荧光绿、洋红、米白按镜头切换，主体位置与字形保持高对比",
+      "category": "",
+      "durationSeconds": "20.1",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+      "exampleVideo": "",
+      "templateId": "V052",
+      "sourceVideoTitle": "x2098824969124004135.mp4"
+    },
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "files": [],
+    "previewUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+    "coverUrl": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+    "motionDocumentUrl": "https://r.open-design.ai/files/732eb14735c6998e3bfaa9c3415c6d05bff1ad14d4767918484dd354219b1e3e",
+    "motionGuideUrl": "https://r.open-design.ai/files/d71b9e848932de0bc88f2748f9974eacfad1692cad22ac6a87a55d380671fe22",
+    "projectFileUrl": null,
+    "brand": "Higgsfield",
+    "colors": [
+      "green"
+    ],
+    "width": 1080,
+    "height": 1080,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。",
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "passed"
+    },
+    "featuredOrder": null
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Higgsfield — Cursor für Motion-Designer",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "Die Zeichenfläche bleibt zusammen mit der darunterliegenden Zeitleiste und dem Befehlsbereich sichtbar, um den Herstellungsprozess zu zeigen",
+        "styleDescription": "Serifenlose Oberflächentexte mit klarer Größenhierarchie",
+        "promotionalUseCases": "Produktdemo",
+        "visualPresentation": "Oberflächenanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "Die Zeichenfläche bleibt zusammen mit der darunterliegenden Zeitleiste und dem Befehlsbereich sichtbar, um den Herstellungsprozess zu zeigen. Die Frucht wächst vom kleinen Motiv zu verschiedenen Schnittansichten und dann zur Detailtextur. Neongrün, Magenta und Creme wechseln je Einstellung; Motivposition und Schrift bleiben kontrastreich.",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/0c1f54f096e505ed7bb08b81691af80dea2f5726508cdd554fe24d891a20754f",
+      "motionGuideUrl": "https://r.open-design.ai/files/8881267ab982416dfd0e14cbe5789da0380939c03aad879ded06775b5cbf17df",
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "original": {
+        "templateName": "Motion design workspace",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "Keep the canvas visible alongside the timeline and instruction area below it throughout, showing how production elements relate",
+        "styleDescription": "Sans-serif interface text with a clear size hierarchy",
+        "promotionalUseCases": "Product demo",
+        "visualPresentation": "Interface animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "Keep the canvas visible alongside the timeline and instruction area below it throughout, showing how production elements relate; the fruit expands from a small subject into different cross-sections, then becomes detailed texture; fluorescent green, magenta and off-white change by shot, while the subject position and letterforms retain high contrast",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/d3fc10e3e28c855035f2a78da93ab615682ff69735de62516641d10b1dba2f09",
+      "motionGuideUrl": "https://r.open-design.ai/files/a10c551f65de5f83aefc7b7b0fcbe2c8d17d0cbec05c9e84cf73786e56b2ca7d",
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Higgsfield — Cursor para diseñadores de movimiento",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "Mantener visibles simultáneamente el lienzo, la línea de tiempo inferior y el área de instrucciones para mostrar su relación en la creación",
+        "styleDescription": "Texto de interfaz sin serifa con una jerarquía clara de tamaños",
+        "promotionalUseCases": "Demostración de producto",
+        "visualPresentation": "Animación de interfaz",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "Mantener visibles simultáneamente el lienzo, la línea de tiempo inferior y el área de instrucciones para mostrar su relación en la creación; la fruta pasa de sujeto pequeño a distintas secciones transversales y luego a textura detallada; alternar verde fluorescente, magenta y blanco roto por plano, manteniendo alto contraste en la posición del sujeto y las letras",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/5264ad634b85ddf1efea4b2f1766881aa0cff7f125bd4342165e2427d809ab3f",
+      "motionGuideUrl": "https://r.open-design.ai/files/1cfeb47d7f1e7b6ca22bbea889682e7205e3f79a4cbb0af0e91fb9fbf4015ecc",
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Higgsfield — Cursor pour les motion designers",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "Le canevas reste visible avec la chronologie et la zone de commandes en dessous, pour montrer les relations de création",
+        "styleDescription": "Textes d’interface sans empattement avec une hiérarchie de tailles claire",
+        "promotionalUseCases": "Démonstration produit",
+        "visualPresentation": "Animation d’interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "Le canevas reste visible avec la chronologie et la zone de commandes en dessous, pour montrer les relations de création. Le fruit passe d’un petit sujet à différentes coupes, puis à une texture détaillée. Vert fluorescent, magenta et blanc cassé changent selon le plan, tandis que la position du sujet et la typographie gardent un contraste marqué.",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Higgsfield — Cursor per motion designer",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "La tela rimane visibile insieme alla timeline e all’area dei comandi sottostanti, mostrando le relazioni del processo creativo",
+        "styleDescription": "Testi dell’interfaccia senza grazie con una chiara gerarchia delle dimensioni",
+        "promotionalUseCases": "Demo di prodotto",
+        "visualPresentation": "Animazione dell’interfaccia",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "La tela rimane visibile insieme alla timeline e all’area dei comandi sottostanti, mostrando le relazioni del processo creativo. Il frutto passa da piccolo soggetto a diverse sezioni, poi a una texture dettagliata. Verde fluorescente, magenta e bianco crema cambiano con le inquadrature, mentre posizione del soggetto e tipografia mantengono un contrasto elevato.",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "Higgsfield — モーションデザイナーのためのCursor",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "キャンバスとその下のタイムライン、指示エリアを常に同時に表示し、制作上の関係を示す",
+        "styleDescription": "サンセリフの UI テキストと明確な文字サイズの階層",
+        "promotionalUseCases": "製品デモ",
+        "visualPresentation": "UIアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "キャンバスとその下のタイムライン、指示エリアを常に同時に表示し、制作上の関係を示す；小さな果実がさまざまな断面へと展開し、さらに細部のテクスチャへ変化する；ショットごとに蛍光グリーン、マゼンタ、生成り色を切り替え、被写体の位置と文字の形を高コントラストに保つ",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/147ab551391876546df2ade9733201cda9515ca76a92aa1dc4e5a0b1bfdafb97",
+      "motionGuideUrl": "https://r.open-design.ai/files/9c444d418a6ba1a0cb2c7650cb96cddfe6bba58a2a848598f80bcf08b3f27206",
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "Higgsfield — 모션 디자이너를 위한 Cursor",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "캔버스와 하단 타임라인, 명령 영역을 항상 함께 표시해 제작 관계를 보여 준다",
+        "styleDescription": "산세리프 인터페이스 글자와 명확한 크기 계층",
+        "promotionalUseCases": "제품 시연",
+        "visualPresentation": "인터페이스 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "캔버스와 하단 타임라인, 명령 영역을 항상 함께 표시해 제작 관계를 보여 준다；작은 과일이 여러 단면으로 펼쳐진 뒤 세부 텍스처로 바뀐다；장면마다 형광 초록, 마젠타, 아이보리를 전환하며 대상의 위치와 글자 형태에서 높은 대비를 유지한다",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/e43c61c6627264e9b2278b32a8d3484f538527d44424898a09be9c0e61dcf5c5",
+      "motionGuideUrl": "https://r.open-design.ai/files/01262a4cfc6dfb443bddcee8fe81c1f5766a6ee0b76bd30db0e4ab4a2e9f42e8",
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Higgsfield — Cursor para designers de movimento",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "Manter canvas, linha do tempo inferior e área de instruções visíveis juntos para mostrar sua relação na criação",
+        "styleDescription": "Texto de interface sem serifa, com hierarquia clara de tamanhos",
+        "promotionalUseCases": "Demonstração de produto",
+        "visualPresentation": "Animação de interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "Manter canvas, linha do tempo inferior e área de instruções visíveis juntos para mostrar sua relação na criação; a fruta passa de pequeno sujeito a diferentes cortes e depois a textura detalhada; alternar verde fluorescente, magenta e branco suave por plano, mantendo alto contraste na posição do sujeito e nas letras",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/41d6bb1c16805aaf9bfb6b3b613ca1bceb2de14ee2cd96810afc9896e69dba1f",
+      "motionGuideUrl": "https://r.open-design.ai/files/bd9b92ccda78a76b8e265a18828667db1a35f00d138b60b1375a4c988880d1ad",
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Higgsfield — Cursor для моушн-дизайнеров",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "Холст всегда виден вместе с расположенными ниже таймлайном и областью команд, показывая процесс создания",
+        "styleDescription": "Текст интерфейса без засечек с чёткой иерархией размеров",
+        "promotionalUseCases": "Демонстрация продукта",
+        "visualPresentation": "Анимация интерфейса",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "Холст всегда виден вместе с расположенными ниже таймлайном и областью команд, показывая процесс создания；Небольшой плод раскрывается в разные сечения, затем превращается в детальную текстуру；Флуоресцентный зелёный, маджента и кремовый сменяются по кадрам; расположение объекта и типографика сохраняют высокий контраст",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/35b3dcff1d8fff190912d5202d7f65f4d96cac6dc1a828dd9127ecd2b764dc6a",
+      "motionGuideUrl": "https://r.open-design.ai/files/cd92adf2026160cdb0cbb75d32a3031bbaf9704077b3074135f445d95ae6d8e7",
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Higgsfield — hareket tasarımcıları için Cursor",
+        "videoPreview": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "summary": "Tuval, altındaki zaman çizelgesi ve komut alanıyla birlikte daima görünür kalarak üretim ilişkilerini gösterir",
+        "styleDescription": "Net boyut hiyerarşisine sahip sans serif arayüz metinleri",
+        "promotionalUseCases": "Ürün demosu",
+        "visualPresentation": "Arayüz animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/418b35bbe01798d8ce9b5c4538fcf3cb794174b955ab83f6d6a08b6814f9d230",
+        "reviewFocus": "Tuval, altındaki zaman çizelgesi ve komut alanıyla birlikte daima görünür kalarak üretim ilişkilerini gösterir. Meyve küçük bir konudan farklı kesitlere, ardından ayrıntı dokusuna dönüşür. Floresan yeşil, macenta ve kırık beyaz planlara göre değişir; konu konumu ve harfler yüksek kontrastı korur.",
+        "category": "",
+        "durationSeconds": "20.1",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/f2d41fa817e76f59b0b3250e3624fa79b3758e40ccbca8eb429b0d843a77514c",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/higgsfield_ai/status/2098824969124004135",
+        "exampleVideo": "",
+        "templateId": "V052",
+        "sourceVideoTitle": "x2098824969124004135.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/732eb14735c6998e3bfaa9c3415c6d05bff1ad14d4767918484dd354219b1e3e",
+    "bytes": 932330,
+    "sha256": "732eb14735c6998e3bfaa9c3415c6d05bff1ad14d4767918484dd354219b1e3e"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 133900,
+        "sha256": "74419711468395e393fa15ba51aef9f2ed7a6d8cf430d2ed1647ce8130525c04"
+      },
+      "url": "https://r.open-design.ai/files/497d37a7c40ad3415ef3e479281d52a35fdaa92755aac1a8008e8be45185f425",
+      "bytes": 40612,
+      "sha256": "497d37a7c40ad3415ef3e479281d52a35fdaa92755aac1a8008e8be45185f425"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 135670,
+        "sha256": "a5d4254328a72b26dafdf765f84989b47656c5cb97e96a4980cf97b961a8d59b"
+      },
+      "url": "https://r.open-design.ai/files/955504a123de8cb40977b8b941a6ff72781c4b549d36ef92fdb075f372acd83b",
+      "bytes": 43788,
+      "sha256": "955504a123de8cb40977b8b941a6ff72781c4b549d36ef92fdb075f372acd83b"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 179729,
+        "sha256": "f14e668de77715bfbe909669075c8cc876223652ed04dc9cc5b603190ee84b43"
+      },
+      "url": "https://r.open-design.ai/files/df48a8cf2b683d2efddb133e7c7c106b15673f8becd00678c49aa5109d336d51",
+      "bytes": 57684,
+      "sha256": "df48a8cf2b683d2efddb133e7c7c106b15673f8becd00678c49aa5109d336d51"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 154971,
+        "sha256": "734bf486329c26c6ad16a9930a50f52e0858e457f0f09d20b007bff6880527fe"
+      },
+      "url": "https://r.open-design.ai/files/d59c1ef69b0a760089f676f583041594db54bac5fffcb9ca44adf2f3eac61b1c",
+      "bytes": 51706,
+      "sha256": "d59c1ef69b0a760089f676f583041594db54bac5fffcb9ca44adf2f3eac61b1c"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 173277,
+        "sha256": "345f5598bef317cdccb85695d81637e5547d75bb8a301ab2fcd86e5104b47bb9"
+      },
+      "url": "https://r.open-design.ai/files/db4838a77ef91e015fadffc235f7ddc053ae3d6ab188e30214bed5579ed8bdb0",
+      "bytes": 58654,
+      "sha256": "db4838a77ef91e015fadffc235f7ddc053ae3d6ab188e30214bed5579ed8bdb0"
+    },
+    {
+      "source": {
+        "path": "assets/reference-6.jpg",
+        "bytes": 240651,
+        "sha256": "f03d3d1724f48053556d8cf7197bc55485ee11310a08458b5a89a2006fe50bce"
+      },
+      "url": "https://r.open-design.ai/files/f439d8de60a84019882f07562a266105b7ff2ee4c61d893df982b4732093fd15",
+      "bytes": 95802,
+      "sha256": "f439d8de60a84019882f07562a266105b7ff2ee4c61d893df982b4732093fd15"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "background": {
+    "color": "#e9e8d9",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Persimmon",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "柿子海报",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "颜色采样点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "海报矩阵",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "粒子",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "实物果实",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌字标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#e9e8d9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#303a30",
+      "status": "inferred"
+    },
+    {
+      "hex": "#dc793e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#82937b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f4ecd9",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "轻衬线叙事句；小字标签与最后品牌名对齐",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "暖白墙面上放一张竖海报，标题在上，柿子在中央，色点在底部。自然光与影子缓慢移动，果实由不同疏密的彩点组成。",
+      "status": "inferred"
+    },
+    {
+      "rule": "拉远后整齐排列不同海报，保持相同版式而改变果实内部纹理。第二句主张出现时，彩点离开自己的海报向邻近区域流动。",
+      "status": "inferred"
+    },
+    {
+      "rule": "实物与海报同框后，切到奶油色底上的点状果实和产品名。新主题可换象征物，但一人、多样本、互动三步要由同一视觉元素贯穿。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -46,7 +46,11 @@ const curve = (v: number): HfAutomation => ({
   lanes: [{ target: "volume", points: [{ t: 0, v }] }],
 });
 
+const roots: ReturnType<typeof createRoot>[] = [];
 afterEach(() => {
+  act(() => {
+    for (const root of roots.splice(0)) root.unmount();
+  });
   document.body.innerHTML = "";
   usePlayerStore.getState().reset();
   vi.unstubAllGlobals();
@@ -89,7 +93,7 @@ function mountLanes(target: TimelineElement, canEdit?: CanEdit, recording = fals
   const iframe = document.createElement("iframe");
   document.body.append(iframe);
   iframe.contentDocument!.body.innerHTML = SOURCE;
-  usePlayerStore.getState().setElements([{ ...music, audioGroup: "hf-group" }]);
+  act(() => usePlayerStore.getState().setElements([{ ...music, audioGroup: "hf-group" }]));
   const writeProjectFile = vi.fn(async (path: string, content: string) => put(path, content));
   const refresh = vi.fn(async () => {});
   const selection = { id: target.id };
@@ -180,6 +184,7 @@ function mountLanes(target: TimelineElement, canEdit?: CanEdit, recording = fals
   const host = document.createElement("div");
   document.body.append(host);
   const root = createRoot(host);
+  roots.push(root);
   act(() => root.render(<Host />));
   const commit = async (next: HfAutomation = NEXT) => {
     let outcome: unknown;
@@ -208,7 +213,7 @@ function mountLanes(target: TimelineElement, canEdit?: CanEdit, recording = fals
       projectId = next;
       file = files.get(`${next}/${composition}`) ?? content;
       iframe.contentDocument!.body.innerHTML = SOURCE;
-      usePlayerStore.getState().setElements([{ ...music, audioGroup: "hf-group" }]);
+      act(() => usePlayerStore.getState().setElements([{ ...music, audioGroup: "hf-group" }]));
       act(() => root.render(<Host />));
     },
     // Another composition of the same project, loaded into the preview with `stored` in the store.
@@ -217,7 +222,7 @@ function mountLanes(target: TimelineElement, canEdit?: CanEdit, recording = fals
       composition = next;
       file = files.get(`${projectId}/${next}`) ?? content;
       iframe.contentDocument!.body.innerHTML = file;
-      usePlayerStore.getState().setElements([stored]);
+      act(() => usePlayerStore.getState().setElements([stored]));
       act(() => root.render(<Host />));
     },
     fileAt: (path: string) => (path === composition ? file : files.get(`${projectId}/${path}`)),
@@ -745,7 +750,7 @@ describe("useAutomationLanes saves report what happened", () => {
       // Undo: file, preview and store go back to the clip without automation.
       setFile(SOURCE);
       iframe.contentDocument!.body.innerHTML = SOURCE;
-      usePlayerStore.getState().setElements([{ ...music, audioGroup: "hf-group" }]);
+      act(() => usePlayerStore.getState().setElements([{ ...music, audioGroup: "hf-group" }]));
       if (later === "fails") {
         writeProjectFile.mockImplementationOnce(async () => {
           failRead(reads() + 1);
@@ -1360,7 +1365,7 @@ describe("useAutomationLanes saves report what happened", () => {
       h.setFile(doc.body.innerHTML);
       h.iframe.contentDocument!.getElementById(target.id)!.setAttribute("data-automation", panel);
       const [clip] = usePlayerStore.getState().elements;
-      usePlayerStore.getState().setElements([{ ...clip!, [field]: panel }]);
+      act(() => usePlayerStore.getState().setElements([{ ...clip!, [field]: panel }]));
       lastFailing(h, "is refused");
       await act(async () => {
         await h.startCommit(curve(0.9));

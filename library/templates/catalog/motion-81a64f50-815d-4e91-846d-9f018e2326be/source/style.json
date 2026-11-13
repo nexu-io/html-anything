@@ -1,0 +1,106 @@
+{
+  "background": {
+    "color": "#f6f5f3",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Ramp",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "实体卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发票",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "上传区",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "账单列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "报表曲线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "交易详情",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f6f5f3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#171917",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d8f646",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a5c2f2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e9e9e7",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "产品界面无衬线；小标签与金额采用稳定对齐",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "暖白底上先放黑色卡片，周围单据从不同方向加入。卡片保留前景位置，白色界面层以轻阴影与细边界区分。",
+      "status": "inferred"
+    },
+    {
+      "rule": "文件标签靠近光标，被送进上传区后转成发票详情；详情再接到账单列表。不要把上传与结果当作无关切镜。",
+      "status": "inferred"
+    },
+    {
+      "rule": "报表占大区域，账单侧栏与卡片继续留在周边。图表用低饱和多色，荧光黄只点亮主要操作。换主题时同时更新金额、列表行、报表与凭证。",
+      "status": "inferred"
+    }
+  ]
+}

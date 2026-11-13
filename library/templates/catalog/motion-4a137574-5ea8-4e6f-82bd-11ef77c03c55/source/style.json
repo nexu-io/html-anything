@@ -1,0 +1,115 @@
+{
+  "background": {
+    "color": "#0c0e12",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "催审消息",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "请求列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "选中行",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "分诊看板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "排序条件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "风险标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码块",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#0c0e12",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f5f4f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f07946",
+      "status": "inferred"
+    },
+    {
+      "hex": "#91db83",
+      "status": "inferred"
+    },
+    {
+      "hex": "#424751",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "粗无衬线短主张；界面文字紧凑，风险与优先级用小标签",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "黑底消息卡短促叠入，随后切到较小的请求列表。镜头拉近时只放大一行，其余内容退暗，给“先处理哪一个”建立焦点。",
+      "status": "inferred"
+    },
+    {
+      "rule": "紧急程度、近期变化与推进情况用三组绿色标签围绕看板出现。条件出现后，卡片重新排位；高风险项以橙色标签保持可见。",
+      "status": "inferred"
+    },
+    {
+      "rule": "选中请求展开摘要、变更类型和风险提示，光标落到开始审查。文案宜短，代码块只是上下文，避免抢占主控件的阅读空间。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可用于工单、内容审核或任务分诊；同步替换排序条件、卡片摘要与操作按钮。优先级变化应有业务依据，不做随机洗牌。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#fcfcfb",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Bot can now buy anything",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：on the internet.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：• Grok Bot",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "黑色圆脸",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "绿色卡片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "眼睛",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "功能短句",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fcfcfb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#181918",
+      "status": "inferred"
+    },
+    {
+      "hex": "#87bda8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c7ddd2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e3e7e2",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白底黑色圆脸与绿色银行卡、简短声明",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "角色目光朝向卡片，卡片绕垂直轴连续翻转。",
+      "status": "inferred"
+    },
+    {
+      "rule": "卡片变窄到近线状后再展开，表达透视旋转。",
+      "status": "inferred"
+    },
+    {
+      "rule": "卡片承担能力象征，短句说明能力，流程保持简洁。",
+      "status": "inferred"
+    }
+  ]
+}

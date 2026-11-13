@@ -1,0 +1,85 @@
+{
+  "background": {
+    "color": "#010714",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Welcome to a whole new Framer",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "水平玻璃条",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "逐词标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "移动高光",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#010714",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2788ff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#3ee0ed",
+      "status": "inferred"
+    },
+    {
+      "hex": "#223bc2",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "一行白色无衬线置于水平蓝色玻璃光带前方。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "标题固定在画面中轴，按词逐步出现；狭长玻璃条从左向右延伸，最亮的光点稍后越过标题。",
+      "status": "inferred"
+    },
+    {
+      "rule": "玻璃条只占很窄的高度，黑底留白远大于主体。蓝色为主，青色和彩虹折边只作细线；文字不要随光带扭曲。",
+      "status": "inferred"
+    },
+    {
+      "rule": "保留由左到右的阅读方向和最后的整句停留。中文可按短语分组出现，避免逐字挤满高光区域。",
+      "status": "inferred"
+    }
+  ]
+}

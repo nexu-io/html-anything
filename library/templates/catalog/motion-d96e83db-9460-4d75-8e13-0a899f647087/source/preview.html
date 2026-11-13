@@ -1,0 +1,279 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lovable · 从 Slack 发起制作 · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#101013;--brand-ink:#ffffff;--accent:#ed3b99;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Lovable <span>/</span> V041</div><div class="intro-line"><h1>Lovable · 从 Slack 发起制作</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>在同一个聊天线程里呈现多人补充需求、助手交付结果、用户确认下一步。通过消息前后层次引导阅读，不把协作拆成互不相关的屏幕。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 30.033333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 5.8, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Build together.&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#ed3b99&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Build together.&quot;, &quot;accent&quot;: &quot;#ed3b99&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="30.033333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 30.03 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;You can now tag @Lovable in Slack.
+
+In a thread or DM, ask Lovable to build a new app, ship a change, or get quick answe · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101013}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Lovable</div><div class="type-sample">Build together.</div><p>无衬线界面文字与清晰大小层级</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#101013" style="--swatch:#101013" aria-label="复制色值 #101013"><span></span><code>#101013</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button><button class="swatch" data-color="#ed3b99" style="--swatch:#ed3b99" aria-label="复制色值 #ed3b99"><span></span><code>#ED3B99</code></button><button class="swatch" data-color="#778df2" style="--swatch:#778df2" aria-label="复制色值 #778df2"><span></span><code>#778DF2</code></button><button class="swatch" data-color="#fb6740" style="--swatch:#fb6740" aria-label="复制色值 #fb6740"><span></span><code>#FB6740</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>聊天容器</span><span>多方消息</span><span>助手身份</span><span>仪表盘</span><span>确认回复</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>消息是主角，窗口是容器</h2></div><div class="rule-copy">
+<p>用温暖到冷色的渐变作为背景，白色消息卡始终保持高对比。发言者、头像和助手标记固定对应，不随卡片换位而改变身份。</p>
+<p>消息正文用常规无衬线字，姓名略粗；长消息按自然语意分行。输入与结果卡要比旁侧装饰更醒目。</p>
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>用深度表现会话焦点</h2></div><div class="rule-copy">
+<p>新消息进入前景后，旧消息轻微后退、缩小并降低对比。每次只突出正在阅读的一条或一组补充消息，保留足够上下文让观众知道助手在回答谁。</p>
+<p>多人意见齐全后再让助手回应。结果先出现，追问随后进入；涉及后续行动时，把用户确认保留为单独一拍。</p>
+<div class="table-wrap"><table><thead><tr><th>会话节点</th><th>需要交代的信息</th></tr></thead><tbody>
+<tr><td>发起请求</td><td>要做什么</td></tr>
+<tr><td>多人补充</td><td>补充哪些数据或条件</td></tr>
+<tr><td>助手交付</td><td>已经产生什么成果</td></tr>
+<tr><td>追问与确认</td><td>下一步由谁同意</td></tr>
+<tr><td>行动反馈</td><td>确认后发生了什么</td></tr>
+</tbody></table></div>
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>成果可以换，线程关系要留</h2></div><div class="rule-copy">
+<p>可以把反馈仪表盘换成设计方案、活动页面或项目计划，但对应的请求与多人补充也要一起改。结果名称、后续问题与确认动作须互相衔接。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>双方品牌</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>聊天窗口</b></button><button class="beat" data-time="5.0"><span>5.00<small>s</small></span><b>发起建站</b></button><button class="beat" data-time="7.0"><span>7.00<small>s</small></span><b>多人补充</b></button><button class="beat" data-time="10.0"><span>10.00<small>s</small></span><b>助手接收</b></button><button class="beat" data-time="12.0"><span>12.00<small>s</small></span><b>成果面板</b></button><button class="beat" data-time="14.0"><span>14.00<small>s</small></span><b>追问</b></button><button class="beat" data-time="17.0"><span>17.00<small>s</small></span><b>名单回复</b></button><button class="beat" data-time="20.0"><span>20.00<small>s</small></span><b>授权执行</b></button><button class="beat" data-time="24.0"><span>24.00<small>s</small></span><b>行动确认</b></button><button class="beat" data-time="26.0"><span>26.00<small>s</small></span><b>口号收尾</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="5.00 秒的构图参考" loading="lazy"><figcaption>5.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="10.00 秒的构图参考" loading="lazy"><figcaption>10.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="14.00 秒的构图参考" loading="lazy"><figcaption>14.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="20.00 秒的构图参考" loading="lazy"><figcaption>20.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="26.00 秒的构图参考" loading="lazy"><figcaption>26.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>迁移保留多方补充→助手合并→成果→确认关系</li><li>人物头像、业务数据和成果类型可替换，发言者身份须稳定</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>聊天容器 / 多方消息 / 助手身份 / 仪表盘 / 确认回复</p>
+<ul><li>消息从不同发言者进入同一线程，助手回应在请求之后</li><li>旧消息后退并虚化，新消息保持清晰前景，深度表达焦点</li><li>先展示可用成果，再展示追问与授权，强调协作连续性</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Lovable / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Lovable · 从 Slack 发起制作
+
+在同一个聊天线程里呈现多人补充需求、助手交付结果、用户确认下一步。通过消息前后层次引导阅读，不把协作拆成互不相关的屏幕。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 30.033333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 5.8,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Build together.&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#ed3b99&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Build together.&quot;,
+        &quot;accent&quot;: &quot;#ed3b99&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 消息是主角，窗口是容器
+
+用温暖到冷色的渐变作为背景，白色消息卡始终保持高对比。发言者、头像和助手标记固定对应，不随卡片换位而改变身份。
+
+消息正文用常规无衬线字，姓名略粗；长消息按自然语意分行。输入与结果卡要比旁侧装饰更醒目。
+
+## 用深度表现会话焦点
+
+新消息进入前景后，旧消息轻微后退、缩小并降低对比。每次只突出正在阅读的一条或一组补充消息，保留足够上下文让观众知道助手在回答谁。
+
+多人意见齐全后再让助手回应。结果先出现，追问随后进入；涉及后续行动时，把用户确认保留为单独一拍。
+
+| 会话节点 | 需要交代的信息 |
+| --- | --- |
+| 发起请求 | 要做什么 |
+| 多人补充 | 补充哪些数据或条件 |
+| 助手交付 | 已经产生什么成果 |
+| 追问与确认 | 下一步由谁同意 |
+| 行动反馈 | 确认后发生了什么 |
+
+## 成果可以换，线程关系要留
+
+可以把反馈仪表盘换成设计方案、活动页面或项目计划，但对应的请求与多人补充也要一起改。结果名称、后续问题与确认动作须互相衔接。
+
+## 配色与字形
+
+无衬线界面文字与清晰大小层级。
+
+#101013 · #ffffff · #ed3b99 · #778df2 · #fb6740
+
+## 元素与制作规则
+
+聊天容器 / 多方消息 / 助手身份 / 仪表盘 / 确认回复
+
+- 消息从不同发言者进入同一线程，助手回应在请求之后
+- 旧消息后退并虚化，新消息保持清晰前景，深度表达焦点
+- 先展示可用成果，再展示追问与授权，强调协作连续性
+
+## 内容替换
+
+- 迁移保留多方补充→助手合并→成果→确认关系
+- 人物头像、业务数据和成果类型可替换，发言者身份须稳定
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Lovable&quot;,
+  &quot;id&quot;: &quot;V041&quot;,
+  &quot;palette&quot;: [
+    &quot;#101013&quot;,
+    &quot;#ffffff&quot;,
+    &quot;#ed3b99&quot;,
+    &quot;#778df2&quot;,
+    &quot;#fb6740&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线界面文字与清晰大小层级&quot;,
+  &quot;sample&quot;: &quot;Build together.&quot;,
+  &quot;objects&quot;: [
+    &quot;聊天容器&quot;,
+    &quot;多方消息&quot;,
+    &quot;助手身份&quot;,
+    &quot;仪表盘&quot;,
+    &quot;确认回复&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 5.0,
+      &quot;frameId&quot;: &quot;K0020&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 10.0,
+      &quot;frameId&quot;: &quot;K0037&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 14.0,
+      &quot;frameId&quot;: &quot;K0054&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 20.0,
+      &quot;frameId&quot;: &quot;K0069&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 26.0,
+      &quot;frameId&quot;: &quot;K0088&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0.0,
+      &quot;label&quot;: &quot;双方品牌&quot;,
+      &quot;end&quot;: 3.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3.0,
+      &quot;label&quot;: &quot;聊天窗口&quot;,
+      &quot;end&quot;: 5.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 5.0,
+      &quot;label&quot;: &quot;发起建站&quot;,
+      &quot;end&quot;: 7.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 7.0,
+      &quot;label&quot;: &quot;多人补充&quot;,
+      &quot;end&quot;: 10.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 10.0,
+      &quot;label&quot;: &quot;助手接收&quot;,
+      &quot;end&quot;: 12.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 12.0,
+      &quot;label&quot;: &quot;成果面板&quot;,
+      &quot;end&quot;: 14.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 14.0,
+      &quot;label&quot;: &quot;追问&quot;,
+      &quot;end&quot;: 17.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 17.0,
+      &quot;label&quot;: &quot;名单回复&quot;,
+      &quot;end&quot;: 20.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 20.0,
+      &quot;label&quot;: &quot;授权执行&quot;,
+      &quot;end&quot;: 24.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 24.0,
+      &quot;label&quot;: &quot;行动确认&quot;,
+      &quot;end&quot;: 26.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 26.0,
+      &quot;label&quot;: &quot;口号收尾&quot;,
+      &quot;end&quot;: 30.033333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 30.033333,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

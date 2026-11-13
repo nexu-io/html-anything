@@ -19,7 +19,7 @@
 
 <table>
 <tr><th width="50%">参考原片 · @careerwithriya</th><th width="50%">上游改编 · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/68fae88f1bd057ca91fd02b0de88c8112d675bf0d140bed14481cac14af9521e.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
 </table>
 
 **复用：** 编号观点、真人表达与辅助证据卡片。 **换成你的：** 创作者、口播主题、关键词与佐证素材。
@@ -32,7 +32,7 @@
 
 <table>
 <tr><th width="50%">参考原片 · Ali Abdaal</th><th width="50%">上游改编 · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e6c2078a7595d03b644129697a6c26b12b32d7f0014ea74d7d2ec58c3f4cc07f.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
 </table>
 
 **复用：** 真人与屏幕交替、简洁字幕和可读的插入画面。 **换成你的：** 你的录制、工作方法和屏幕素材。
@@ -45,7 +45,7 @@
 
 <table>
 <tr><th width="50%">参考原片 · @john.tagudin</th><th width="50%">上游改编 · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="readme/people/john-tagudin-capso-comparison.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/b4690ff3537552b1237c2b16bdb83c439447e5ca9f288ff27a775c525e9b5c23.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
 </table>
 
 **复用：** 开场、画中画、重点标注与结果展示。 **换成你的：** 产品、人物、实际操作与结尾表达。
@@ -59,7 +59,7 @@
 
 <table>
 <tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="线框空间标题: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4.gif" width="100%" alt="线框空间标题: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **保留：portal 节奏、立体字与镜头推进.** **替换：标题、副标题和立体短句.**
@@ -70,7 +70,7 @@
 
 <table>
 <tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/openmotion-design-remix/previews/canopy-part-title.gif" width="100%" alt="树叶遮罩标题: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/600a3791258b1b9873bc5626254f6a024a6dfc5df88dded9b468400853c0ccb0.gif" width="100%" alt="树叶遮罩标题: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **保留：树叶扫过、景深、遮挡和阅读停留.** **替换：两段品牌文案.**
@@ -81,7 +81,7 @@
 
 <table>
 <tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="界面空间揭示: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/bb31f3558e38bde6ee01b3dbf23c8bed8b7d458ae7af851b3a3c198aee382d40.gif" width="100%" alt="界面空间揭示: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **保留：倾斜画布、空间层级和连续镜头.** **替换：主标题、文档名称与社区文案.**
@@ -92,7 +92,7 @@
 
 <table>
 <tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/openmotion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="立体代码卡片: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/ad7adbd831a97e3af69ce46d332396cec0b633f04de9f8c5c2cf070d9df7b076.gif" width="100%" alt="立体代码卡片: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **保留：挤出厚度、语法配色与镜头运动.** **替换：函数、变量与展示代码.**
@@ -103,7 +103,7 @@
 
 <table>
 <tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/openmotion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="粒子聚合文字: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/6866faabec5d5cf7d1a7b609166915e22c2e0ec44202999344491abe5e6df516.gif" width="100%" alt="粒子聚合文字: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **保留：固定种子的粒子运动与聚合节奏.** **替换：流程名称与步骤.**
@@ -114,7 +114,7 @@
 
 <table>
 <tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="玻璃信息卡片: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/39d97875c565d4673f5aa74df2a0f0a46244c12d3466b059b5b8de7d09b2ed9f.gif" width="100%" alt="玻璃信息卡片: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **保留：玻璃材质、卡片层级、错峰入场与进度动效.** **替换：标签、单位与功能叙事.**

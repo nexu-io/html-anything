@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#63734b",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：DECODE YOUR",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：DECISION MAKING",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：BRING THE FUTURE",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "连续渐变背景",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "横向细纹",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "双行主张",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "文字条带遮罩",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#63734b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#63734b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ce6c19",
+      "status": "inferred"
+    },
+    {
+      "hex": "#474c72",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "细到中等无衬线双行全大写；绿、橙、蓝紫渐变和细横向扫描纹理",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "背景缓慢明暗流动，文字保持中轴与相近字宽；每组主张对应一个色域。",
+      "status": "inferred"
+    },
+    {
+      "rule": "切换时文字短暂分条错位，然后重新拼成完整句子；断裂只发生在交接处。",
+      "status": "inferred"
+    },
+    {
+      "rule": "阅读停留明显长于切换过程，不用持续抖字破坏品牌表达。",
+      "status": "inferred"
+    }
+  ]
+}

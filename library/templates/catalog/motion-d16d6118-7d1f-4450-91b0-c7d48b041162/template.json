@@ -1,0 +1,391 @@
+{
+  "templateId": "motion-d16d6118-7d1f-4450-91b0-c7d48b041162",
+  "entry": {
+    "templateId": "motion-d16d6118-7d1f-4450-91b0-c7d48b041162",
+    "sortOrder": 258,
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "previewUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+    "coverUrl": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+    "motionDocumentUrl": "https://r.open-design.ai/files/a54e0ba6eb61727911ef2275b2f7d3fd6933f0e70d5d25f3342261fe10feea81",
+    "motionGuideUrl": "https://r.open-design.ai/files/f30281baeee6bcdb1eb498c9ea416643b05da7911982eefadfaeb4632c6128aa",
+    "projectFileUrl": null,
+    "files": [],
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "not_run"
+    },
+    "featuredOrder": null,
+    "original": {
+      "templateName": "Uber Go Get It｜品牌图形动效片段",
+      "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+      "summary": "重复行李箱围绕固定短句滑动与翻转，让旅行主张在连续图案中保持可读。",
+      "styleDescription": "无衬线大写两行短句；固定中心，产品重复成倾斜图案",
+      "promotionalUseCases": "品牌宣传",
+      "visualPresentation": "图形动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+      "reviewFocus": "重复行李箱围绕固定短句滑动与翻转，让旅行主张在连续图案中保持可读。；各箱保持相同透视，斜向平移时使用一致间距。拉杆先伸出，再整体翻转；画面边缘的箱体允许裁切，中心短句保留主要阅读区。；浅青背景、深蓝箱体和橙红大写短句形成三层。标题用粗无衬线分两行，箱体可短暂遮挡局部字，但不能长时间盖住整句。",
+      "category": "",
+      "durationSeconds": "4.8",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://www.greywoods.tv/uber",
+      "exampleVideo": "",
+      "templateId": "V219",
+      "sourceVideoTitle": "258_Uber.mp4"
+    },
+    "brand": "Uber",
+    "colors": [
+      "blue",
+      "red"
+    ],
+    "width": 1080,
+    "height": 1080,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。"
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Uber Go Get It｜Animierter Markengrafik-Ausschnitt",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "Wiederholte Koffer gleiten und kippen um eine feste kurze Aussage, die im fortlaufenden Muster lesbar bleibt.",
+        "styleDescription": "Zweizeilige serifenlose Großbuchstabenaussage fest mittig; Produkte als schräges Wiederholmuster",
+        "promotionalUseCases": "Markenwerbung",
+        "visualPresentation": "Grafikanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "Wiederholte Koffer gleiten und kippen um eine feste kurze Aussage, die im fortlaufenden Muster lesbar bleibt. Alle Koffer gleiche Perspektive und Abstände bei diagonaler Bewegung. Erst Griffe ausfahren, dann ganz kippen. Randkoffer dürfen angeschnitten sein; die Mitte bleibt Leseraum. Hellcyan, dunkelblaue Koffer und orange-rote Großbuchstaben bilden drei Ebenen. Fetter zweizeiliger Titel; Koffer dürfen kurz einzelne Buchstaben überdecken, nicht lange den ganzen Satz.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "motionDocumentUrl": "https://r.open-design.ai/files/7fabe0030ac97ddd97feb64a1c9dd4c078839fb847e8d2ae019c705eef75e5ae",
+      "motionGuideUrl": "https://r.open-design.ai/files/f01211b85cbdda448de3abc0124a2788848cb2fed0821bcc60f97e018680ad9e",
+      "original": {
+        "templateName": "Uber — PLAN ON A GOOD TIME",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "Slide and flip repeated suitcases around a fixed short phrase, keeping the travel message readable within a continuous pattern.",
+        "styleDescription": "Two-line uppercase sans-serif phrase fixed centrally, with products repeated in a tilted pattern",
+        "promotionalUseCases": "Brand promotion",
+        "visualPresentation": "Graphic animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "Slide and flip repeated suitcases around a fixed short phrase, keeping the travel message readable within a continuous pattern. Give cases the same perspective and consistent spacing during diagonal translation. Extend handles before flipping the whole case; edge cases may be cropped, while the central phrase retains its primary reading area. Pale cyan, dark blue cases and orange-red capitals create three layers. Use bold sans-serif in two lines; cases may briefly obscure parts of letters but must not cover the whole sentence for long.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Uber Go Get It｜Fragmento de gráficos de marca",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "Deslizar y voltear maletas repetidas alrededor de una frase fija, conservando legible la propuesta de viaje dentro del patrón continuo.",
+        "styleDescription": "Frase de dos líneas en mayúsculas sin serifa, fija en el centro; productos repetidos en patrón diagonal",
+        "promotionalUseCases": "Promoción de marca",
+        "visualPresentation": "Animación gráfica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "Deslizar y voltear maletas repetidas alrededor de una frase fija, conservando legible la propuesta de viaje dentro del patrón continuo.; Mantener perspectiva e intervalos uniformes durante el desplazamiento diagonal. Extender primero las asas y después voltear el conjunto; permitir recortes en los bordes, conservando el área de lectura central.; Fondo cian claro, maletas azul oscuro y frase naranja rojizo forman tres niveles. Título grueso de dos líneas; las maletas pueden tapar letras brevemente, pero no toda la frase durante mucho tiempo.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Uber Go Get It｜Extrait d’animation graphique de marque",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "Des valises répétées glissent et basculent autour d’une phrase fixe, lisible dans le motif continu.",
+        "styleDescription": "Deux lignes en capitales sans empattements fixes au centre ; produits en motif oblique",
+        "promotionalUseCases": "Promotion de marque",
+        "visualPresentation": "Animation graphique",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "Des valises répétées glissent et basculent autour d’une phrase fixe, lisible dans le motif continu. Même perspective et espacement en translation diagonale. Poignées d’abord, puis bascule complète. Valises recadrables aux bords, centre réservé à la lecture. Cyan pâle, valises bleu foncé, phrase rouge-orangé en trois niveaux. Deux lignes grasses ; occultation partielle brève possible, jamais la phrase entière longtemps.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Uber Go Get It｜Estratto di animazione grafica del marchio",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "Valigie ripetute scorrono e ruotano attorno alla frase fissa, sempre leggibile.",
+        "styleDescription": "Due righe maiuscole sans serif centrali; prodotti in motivo inclinato",
+        "promotionalUseCases": "Promozione del marchio",
+        "visualPresentation": "Animazione grafica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "Valigie ripetute scorrono e ruotano attorno alla frase fissa, sempre leggibile. Valigie con stessa prospettiva e intervalli nel moto diagonale. Maniglie prima, poi rotazione completa. Bordi ritagliabili, centro per il testo. Ciano chiaro, valigie blu scuro e frase rosso-arancio. Titolo pesante in due righe; brevi occultamenti parziali, mai tutta la frase a lungo.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "Uber Go Get It｜ブランドグラフィックのモーション断片",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "繰り返すスーツケースを固定した短文の周囲で滑らせて回転し、連続した模様の中でも旅行の訴求を読めるようにする。",
+        "styleDescription": "サンセリフの大文字の2行の短文を中央に固定し、製品を繰り返して斜めの模様にする",
+        "promotionalUseCases": "ブランドプロモーション",
+        "visualPresentation": "グラフィックアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "繰り返すスーツケースを固定した短文の周囲で滑らせて回転し、連続した模様の中でも旅行の訴求を読めるようにする。；各ケースの透視を揃え、斜めの移動では等間隔を保つ。ハンドルを先に伸ばしてから全体を回転する。画面端のケースは切れてよいが、中央の短文には主な閲覧領域を残す。；淡いシアンの背景、深青のケース、オレンジレッドの大文字で3層を作る。見出しは太いサンセリフの2行にし、ケースは一時的に一部を覆っても文全体を長く隠さない。",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "Uber Go Get It｜브랜드 그래픽 모션 클립",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "반복된 여행 가방을 고정 문구 주위에서 이동·회전시켜 연속 패턴에서도 여행 메시지가 읽히게 한다.",
+        "styleDescription": "두 줄의 짧은 산세리프 대문자 문구；중앙은 고정하고 제품을 반복해 기울어진 패턴을 만든다",
+        "promotionalUseCases": "브랜드 홍보",
+        "visualPresentation": "그래픽 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "반복된 여행 가방을 고정 문구 주위에서 이동·회전시켜 연속 패턴에서도 여행 메시지가 읽히게 한다.；가방의 원근을 통일하고 대각선 이동 시 일정한 간격을 유지한다. 손잡이를 먼저 뻗은 뒤 전체를 뒤집는다；가장자리 가방은 잘라도 되지만 중앙 문구의 주요 읽기 영역은 남긴다.；연청록 배경, 짙은 파랑 가방, 주홍 대문자 문구로 세 계층을 만든다. 제목은 굵은 산세리프 두 줄로 하고 가방이 일부 글자를 잠깐 가려도 문장 전체를 오래 가리지 않게 한다.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Uber Go Get It｜Trecho de gráficos da marca",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "Deslizar e virar malas repetidas ao redor de uma frase fixa, mantendo legível a proposta de viagem no padrão contínuo.",
+        "styleDescription": "Frase de duas linhas em maiúsculas sem serifa, fixa no centro; produtos repetidos em padrão diagonal",
+        "promotionalUseCases": "Divulgação de marca",
+        "visualPresentation": "Animação gráfica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "Deslizar e virar malas repetidas ao redor de uma frase fixa, mantendo legível a proposta de viagem no padrão contínuo.; Manter perspectiva e intervalos uniformes no deslocamento diagonal. Primeiro estender as alças e depois virar o conjunto; permitir recortes nas bordas, preservando a área central de leitura.; Fundo ciano-claro, malas azul-escuras e frase vermelho-alaranjada formam três níveis. Título grosso de duas linhas; malas podem cobrir letras brevemente, mas não a frase inteira por muito tempo.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Uber Go Get It｜Фрагмент фирменной графической анимации",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "Повторяющиеся чемоданы скользят и переворачиваются вокруг неподвижной короткой фразы, сохраняя читаемость сообщения о путешествиях внутри непрерывного узора.",
+        "styleDescription": "Короткая двухстрочная фраза гротеском в верхнем регистре; фиксированный центр и повторяющиеся предметы в наклонном узоре",
+        "promotionalUseCases": "Продвижение бренда",
+        "visualPresentation": "Графическая анимация",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "Повторяющиеся чемоданы скользят и переворачиваются вокруг неподвижной короткой фразы, сохраняя читаемость сообщения о путешествиях внутри непрерывного узора. Все чемоданы имеют одинаковую перспективу и равные интервалы при диагональном перемещении. Сначала выдвигаются ручки, затем чемоданы переворачиваются целиком. У краёв кадра допустима обрезка, но центральная фраза сохраняет основную область чтения. Светло-голубой фон, тёмно-синие чемоданы и оранжево-красная фраза прописными буквами образуют три слоя. Заголовок набран жирным гротеском в две строки; чемоданы могут ненадолго перекрывать части букв, но не всю фразу надолго.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Uber Go Get It｜Marka grafik animasyonu kesiti",
+        "videoPreview": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "summary": "Tekrarlı valizler sabit kısa cümle çevresinde kayıp döner; seyahat mesajı okunur kalır.",
+        "styleDescription": "İki satır büyük harf sans serif ortada; ürün eğik desen olarak tekrarlı",
+        "promotionalUseCases": "Marka tanıtımı",
+        "visualPresentation": "Grafik animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e59c60edad9a59a7cf15375fc50ca40a643693485b2cfa8378b26aba51156ccc",
+        "reviewFocus": "Tekrarlı valizler sabit kısa cümle çevresinde kayıp döner; seyahat mesajı okunur kalır. Valiz perspektifi ve çapraz aralığı aynı. Önce sap çıkar, sonra bütün döner. Kenar valiz kırpılabilir, merkez okunur kalır. Açık camgöbeği, lacivert valiz, turuncu-kırmızı yazı üç katman. Kalın iki satır başlık kısmen kısa örtülebilir ama tümü uzun örtülmez.",
+        "category": "",
+        "durationSeconds": "4.8",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/4db55494048fc05cc73a350d27d1e90f0d31b613c2373744b2d8ce71f1387ed1",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.greywoods.tv/uber",
+        "exampleVideo": "",
+        "templateId": "V219",
+        "sourceVideoTitle": "258_Uber.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/a54e0ba6eb61727911ef2275b2f7d3fd6933f0e70d5d25f3342261fe10feea81",
+    "bytes": 648984,
+    "sha256": "a54e0ba6eb61727911ef2275b2f7d3fd6933f0e70d5d25f3342261fe10feea81"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 126504,
+        "sha256": "928d852c5e2a0bf2372a61cf3eeecb6cafe24a17131d3237e5ec0d54b1192b99"
+      },
+      "url": "https://r.open-design.ai/files/ef6ea37dfa600a8d944b92528a161a43685cce7d33e5e84e5d6338d961920f92",
+      "bytes": 36410,
+      "sha256": "ef6ea37dfa600a8d944b92528a161a43685cce7d33e5e84e5d6338d961920f92"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 132786,
+        "sha256": "b4b077c09c7aa1ac5a6eb65831e84fd427e2008aae4d608c19815acf0e97a975"
+      },
+      "url": "https://r.open-design.ai/files/c588ec4b3b51346abada7f4c1d14f57f24b0adeb573ba59071ed0574ee47510e",
+      "bytes": 38850,
+      "sha256": "c588ec4b3b51346abada7f4c1d14f57f24b0adeb573ba59071ed0574ee47510e"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 131978,
+        "sha256": "96f332b1c20cb3b41951b9340ec97e42a342f79047c3c81f54d127fb60b424fb"
+      },
+      "url": "https://r.open-design.ai/files/0590fa98ea17ff9bea4847024be5d0ba97a6977b36ef481539f53c178dd1d6e8",
+      "bytes": 38650,
+      "sha256": "0590fa98ea17ff9bea4847024be5d0ba97a6977b36ef481539f53c178dd1d6e8"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 120743,
+        "sha256": "bceb602928baa7c916aeee573ed41dadbb53f492658c00c69484d41bbdc76efb"
+      },
+      "url": "https://r.open-design.ai/files/0603b2036b0fa9e07fcac61744f53fc1c92b5bfe749f6808dc70c8c13d61f27c",
+      "bytes": 38478,
+      "sha256": "0603b2036b0fa9e07fcac61744f53fc1c92b5bfe749f6808dc70c8c13d61f27c"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 141609,
+        "sha256": "7a64552a7d31cb71a09293875c8f8f428298a6b3c132bb43760889ee77364b83"
+      },
+      "url": "https://r.open-design.ai/files/112a97431da447645e575258d36b7b850d3d8f97dc66cb20c41bdf20ec1b5966",
+      "bytes": 40110,
+      "sha256": "112a97431da447645e575258d36b7b850d3d8f97dc66cb20c41bdf20ec1b5966"
+    }
+  ]
+}

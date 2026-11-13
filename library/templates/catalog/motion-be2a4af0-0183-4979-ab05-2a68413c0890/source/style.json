@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#f8f5ef",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Lovable",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Skill issue?",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Skitlisoue?",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "居中标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "角落渐变图形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "划线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "小品牌",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f8f5ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#151616",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ff6b4c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#df38d0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7498fc",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面文字与清晰大小层级",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "标题基本固定，四周不同尺度的柔软图形旋转漂浮",
+      "status": "inferred"
+    },
+    {
+      "rule": "一个图形穿过标题触发短暂划线，动作与语义同步",
+      "status": "inferred"
+    },
+    {
+      "rule": "大图形局部出界，小图形留在画内，形成景深层次",
+      "status": "inferred"
+    }
+  ]
+}

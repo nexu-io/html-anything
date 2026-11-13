@@ -95,6 +95,7 @@ it("lists, selects and reorders the host's preview layers through the host's ses
   await act(async () => rows[0]!.click());
   expect(session.applyDomSelection).toHaveBeenCalledWith(
     expect.objectContaining({ element: doc.getElementById("title") }),
+    { revealPanel: false },
   );
 
   await dragBackRowToFront();

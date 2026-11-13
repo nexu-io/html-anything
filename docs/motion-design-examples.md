@@ -19,7 +19,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · @careerwithriya</th><th width="50%">Upstream remix · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/68fae88f1bd057ca91fd02b0de88c8112d675bf0d140bed14481cac14af9521e.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
 </table>
 
 **Reuse:** Numbered ideas, presenter-led delivery and proof cards. **Make it yours:** Creator, spoken topic, keywords and supporting examples.
@@ -32,7 +32,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · Ali Abdaal</th><th width="50%">Upstream remix · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e6c2078a7595d03b644129697a6c26b12b32d7f0014ea74d7d2ec58c3f4cc07f.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
 </table>
 
 **Reuse:** Presenter / screen rhythm, quiet captions and readable inserts. **Make it yours:** Your recording, your workflow and your screen captures.
@@ -45,7 +45,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · @john.tagudin</th><th width="50%">Upstream remix · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/b4690ff3537552b1237c2b16bdb83c439447e5ca9f288ff27a775c525e9b5c23.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
 </table>
 
 **Reuse:** Hook, picture-in-picture, callouts and a visible result. **Make it yours:** Product, presenter, demonstration and closing message.
@@ -59,7 +59,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Portal timing, dimensional lettering and camera push.** **Replace: Title, subtitle and the 3D phrase.**
@@ -70,7 +70,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="../library/skills/openmotion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/600a3791258b1b9873bc5626254f6a024a6dfc5df88dded9b468400853c0ccb0.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Leaf sweeps, depth, occlusion and reading holds.** **Replace: Two brand headlines.**
@@ -81,7 +81,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/bb31f3558e38bde6ee01b3dbf23c8bed8b7d458ae7af851b3a3c198aee382d40.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Tilted canvas, depth hierarchy and continuous camera.** **Replace: Hero headline, document and community copy.**
@@ -92,7 +92,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="../library/skills/openmotion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/ad7adbd831a97e3af69ce46d332396cec0b633f04de9f8c5c2cf070d9df7b076.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Extruded slab, syntax colors and the camera move.** **Replace: Function, variables and displayed calls.**
@@ -103,7 +103,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="../library/skills/openmotion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/6866faabec5d5cf7d1a7b609166915e22c2e0ec44202999344491abe5e6df516.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Seeded particle motion and assembly rhythm.** **Replace: Pipeline name and steps.**
@@ -114,7 +114,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/39d97875c565d4673f5aa74df2a0f0a46244c12d3466b059b5b8de7d09b2ed9f.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Glass treatment, card hierarchy, stagger and meters.** **Replace: Labels, units and feature story.**

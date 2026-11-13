@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#222222",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Revolut Stablecoin",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：EURR",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Don't invest unless you're prepared to lose all the money you invest. This is a high-risk",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "椭圆托盘",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "深色币",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "浅色币",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "顶部标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "底部说明",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#222222",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f4f4f2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bcbcbc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#101010",
+      "status": "inferred"
+    },
+    {
+      "hex": "#777777",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线品牌主标题与细副标题；底部独立小字区",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "双币沿同一个托盘交换前后位置，文字固定，让动感集中在两枚主体之间。",
+      "status": "inferred"
+    },
+    {
+      "rule": "托盘以斜视椭圆为稳定参照，两枚币沿同一环形路径运动。经过后方时视觉尺寸略小，前方略大；按深度排序绘制，避免远处对象压到近处。",
+      "status": "inferred"
+    },
+    {
+      "rule": "深色币与浅色币形成辨识，托盘靠边缘高光与阴影分层。无衬线标题固定在上方，底部说明独立留白，不随旋转缩放。",
+      "status": "inferred"
+    }
+  ]
+}

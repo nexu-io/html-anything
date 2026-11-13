@@ -3,6 +3,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   applyPreviewAudioFlags,
+  setPreviewMediaMuted,
   buildMissingCompositionElements,
   scrubPreviewAudio,
   setPreviewMediaVolume,
@@ -192,6 +193,37 @@ describe("buildMissingCompositionElements — nested master time", () => {
     const win = { __timelines: { s1: { duration: () => 6 } } } as unknown as IframeWindow;
     const { missing } = buildMissingCompositionElements(doc, win, [], 20);
     expect(missing.find((e) => e.domId === "s2")?.start).toBe(9);
+  });
+});
+
+describe("setPreviewMediaMuted", () => {
+  it.each([false, true])("reapplies mute when the shadow host already has muted=%s", (muted) => {
+    const host = Object.assign(document.createElement("div"), { muted });
+    const iframe = document.createElement("iframe");
+    host.attachShadow({ mode: "open" }).append(iframe);
+    document.body.append(host);
+    const postMessage = vi.spyOn(iframe.contentWindow!, "postMessage");
+
+    setPreviewMediaMuted(iframe, muted);
+
+    expect(host.muted).toBe(muted);
+    expect(postMessage).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ action: "set-muted", muted }),
+      "*",
+    );
+  });
+
+  it("updates the shadow host when its mute preference changes", () => {
+    const host = Object.assign(document.createElement("div"), { muted: false });
+    const iframe = document.createElement("iframe");
+    host.attachShadow({ mode: "open" }).append(iframe);
+    document.body.append(host);
+    const postMessage = vi.spyOn(iframe.contentWindow!, "postMessage");
+
+    setPreviewMediaMuted(iframe, true);
+
+    expect(host.muted).toBe(true);
+    expect(postMessage).not.toHaveBeenCalled();
   });
 });
 

@@ -19,6 +19,7 @@ test('each README language opens the full guide and ships its localized cover', 
     ['docs/README.ja.md', '日本語', '.ja'],
   ];
   const shipped = new Set(await distributionFiles('phase1'));
+  const media = JSON.parse(await readFile('repository-media.json', 'utf8'));
   assert(shipped.has('docs/readme/openmotion-logo.svg'));
   for (const [file, language, suffix] of [...pages, ['README.zh-CN.md', '简体中文', '.zh-CN']]) {
     const text = await readFile(file, 'utf8');
@@ -32,7 +33,8 @@ test('each README language opens the full guide and ships its localized cover', 
       assert(text.includes(`id="${section}"`), `${file}: missing ${section}`);
     }
     for (const asset of [`brand-hero${suffix}.jpg`, `brand-hero.mobile${suffix}.jpg`]) {
-      assert(text.includes(`readme/${asset}"`), `${file}: missing ${asset}`);
+      const transferred = media.files.find((entry: { path: string }) => entry.path === `docs/readme/${asset}`);
+      assert(text.includes(transferred ? transferred.url + '"' : `readme/${asset}"`), `${file}: missing ${asset}`);
       assert(shipped.has(`docs/readme/${asset}`), `Missing from distribution: ${asset}`);
     }
   }
@@ -59,4 +61,35 @@ test('resource checks reject hotlinked media and missing files while allowing so
     await writeFile(file, '[Watch](demo.mp4) · [Original author](https://example.org/author)');
     assert.equal(await checkDocument(file), 1);
   } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
+test('README displays registered public media without requiring its optional local copy', async t => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'motion-public-readme-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, 'README.md');
+  const url = `https://releases.open-design.ai/open-motion/media/sha256/${'a'.repeat(64)}.gif`;
+  await writeFile(file, `<img src="${url}">`);
+  assert.equal(await checkDocument(file, new Set([url])), 0);
+  await assert.rejects(checkDocument(file), /external display/);
+  await writeFile(file, `<img src="${url.replace('a'.repeat(64), 'b'.repeat(64))}">`);
+  await assert.rejects(checkDocument(file, new Set([url])), /external display/);
+});
+
+test('README rejects oversized embedded images but keeps original download links valid', async t => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'motion-readme-proxy-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, 'README.md');
+  const url = `https://releases.open-design.ai/open-motion/media/sha256/${'a'.repeat(64)}.gif`;
+  const registered = new Set([url]);
+  const sizes = new Map([[url, 5_000_001]]);
+  for (const embedded of [`<img src="${url}">`, `![Preview](${url})`]) {
+    await writeFile(file, embedded);
+    await assert.rejects(checkDocument(file, registered, sizes), /5 MB proxy limit/);
+    assert.equal(await checkDocument(file, registered, new Map([[url, 4_000_000]])), 0);
+  }
+  await writeFile(file, `[Download original](${url})`);
+  assert.equal(await checkDocument(file, registered, sizes), 0);
+  await writeFile(path.join(dir, 'large.gif'), Buffer.alloc(5_000_001));
+  await writeFile(file, '![Preview](large.gif)');
+  await assert.rejects(checkDocument(file), /5 MB proxy limit/);
 });

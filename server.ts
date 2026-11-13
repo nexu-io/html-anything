@@ -12,7 +12,7 @@ import { templates } from './template-library.ts';
 import { templateRecipe } from './template-catalog.ts';
 import { templateCatalogFor } from './prism-templates.ts';
 import { isEditableTemplate } from './shared/catalog.ts';
-import { proxyStudio, serveEditorFile } from './editor-server.ts';
+import { proxyStudio, renderDownloadDisposition, serveEditorFile } from './editor-server.ts';
 import { publicTools as mcpTools } from './mcp.ts';
 import { startOwnedStudio } from './shared/owned-studio.mjs';
 import { sharedEditorEnabled, ensureEditor, editorRequest } from './editor-runtime.ts';
@@ -73,7 +73,7 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tra
     await stage('checking');
     const lint = await inspectProject(runtimeRoot, directory, 'lint', control.signal);
     if (lint.exitCode) throw new Error('Hyperframes lint 失败：' + JSON.stringify(lint.result));
-    const output = path.join(store.directory, 'exports', job.id + '.mp4');
+    const output = store.exportPath(job);
     await mkdir(path.dirname(output), { recursive: true });
     // The service owns this job; a short-lived Agent client must not cancel it.
     await stage('rendering');
@@ -99,7 +99,7 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tra
     if (!job) throw error;
     await recordDiagnostic(store.directory, { kind: 'export_failed', jobId: job.id, projectId: job.projectId,
       message: error instanceof Error ? error.message : 'Render failed' });
-    await rm(path.join(store.directory, 'exports', job.id + '.mp4'), { force: true });
+    await rm(store.exportPath(job), { force: true });
     const current = await store.job(job.id);
     if (current && ['running', 'cancelling'].includes(current.state)) await store.finishExport(job.id, job.token!, error instanceof Error ? error.message : '渲染失败');
   } finally {
@@ -300,7 +300,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const directory = (store.workspaceStore ?? store).directory;
       if (req.method === 'PUT') {
         const reason = trackingLockReason();
-        if (reason) return json(res, 403, { error: reason === 'test_build' ? 'TRACKING_DISABLED_IN_TEST_BUILD' : 'TRACKING_DISABLED_BY_ENVIRONMENT' });
+        if (reason) return json(res, 403, { error: 'TRACKING_DISABLED_BY_ENVIRONMENT' });
         const data = await input(req, 1024);
         if (!data || Object.keys(data).length !== 1 || typeof data.enabled !== 'boolean') return json(res, 400, { error: 'INVALID_TRACKING_PREFERENCE' });
         await saveTrackingPreference(directory, data.enabled);
@@ -342,10 +342,11 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     if (req.method === 'GET' && ['/api/integration', '/connect/guide', '/connect/config'].includes(url.pathname)) {
       const address = new URL(editorUrl);
       const info: IntegrationInfo = {
+        templateSource: templateCatalogFor(store.directory).source,
         templateEnvironment: templateCatalogFor(store.directory).environment as 'dev' | 'prod',
         name: 'OpenMotion', version: VERSION, previewUrl: address.origin, dataDirectory: store.directory,
         transport: { type: 'stdio', command: process.execPath, args: ['--experimental-strip-types', path.join(pluginRoot, 'mcp.ts')], cwd: pluginRoot,
-          env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', ...Object.fromEntries(['MOTION_TEMPLATE_ENV', 'MOTION_TEMPLATE_RESOURCE_ID', 'MOTION_TEMPLATE_LOCALE', 'MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
+          env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', MOTION_TEMPLATE_SOURCE: templateCatalogFor(store.directory).source, ...Object.fromEntries(['MOTION_TEMPLATE_ENV', 'MOTION_TEMPLATE_RESOURCE_ID', 'MOTION_TEMPLATE_LOCALE', 'MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
         tools: mcpTools.map(({ name, description }) => ({ name, description })),
       };
       if (url.pathname === '/api/integration') return json(res, 200, info);
@@ -403,6 +404,21 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       return json(res, 404, { error: 'Unknown model gateway operation' });
     }
     if (url.pathname === '/api/templates' && req.method === 'GET') return json(res, 200, { templates });
+    const templateSource = url.pathname.match(/^\/api\/template-source\/([a-z][a-z0-9-]+)\/(.+)$/);
+    if (templateSource && req.method === 'GET') {
+      const name = decodeURIComponent(templateSource[2]);
+      const mime: Record<string, string> = { '.html': 'text/html', '.md': 'text/plain', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf', '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm', '.m4v': 'video/mp4', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.ogg': 'audio/ogg', '.m4a': 'audio/mp4', '.aac': 'audio/aac', '.flac': 'audio/flac' };
+      const type = mime[path.extname(name).toLowerCase()];
+      if (!type) return json(res, 404, { error: 'Unknown template source file' });
+      try {
+        const bytes = await templateCatalogFor(store.directory).sourceFile(templateSource[1], name);
+        res.writeHead(200, { 'Content-Type': type, 'Content-Length': bytes.length }); res.end(bytes); return;
+      } catch (error) {
+        if ((error as { code?: string }).code === 'TEMPLATE_LFS_NOT_FETCHED')
+          return json(res, 409, { code: 'TEMPLATE_LFS_NOT_FETCHED', error: (error as Error).message });
+        return json(res, 404, { error: 'Template source file not found' });
+      }
+    }
     if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, await templateCatalogFor(store.directory).page({
       locale: url.searchParams.get('locale') || undefined,
       category: url.searchParams.get('category') || 'featured', query: url.searchParams.get('query') || '',
@@ -503,8 +519,8 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     if (download && req.method === 'GET') {
       const job = await store.job(download[1]);
       if (!job || job.id !== download[1] || job.state !== 'completed') return json(res, 404, { error: '视频尚未完成或任务不存在' });
-      const filename = path.join(store.directory, 'exports', job.id + '.mp4');
-      res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': (await stat(filename)).size, 'Content-Disposition': 'attachment; filename="motion.mp4"' });
+      const filename = store.exportPath(job);
+      res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': (await stat(filename)).size, 'Content-Disposition': renderDownloadDisposition(store.projectCatalog().projects.find(p => p.id === (job.projectId ?? store.projectId))?.title, '.mp4') });
       await new Promise<void>((resolve, reject) => {
         const stream = createReadStream(filename);
         stream.on('error', reject); res.on('finish', resolve); res.on('close', () => { stream.destroy(); resolve(); }); stream.pipe(res);
@@ -518,7 +534,12 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       if (!context.studio?.alive()) return json(res, 503, { error: '编辑服务尚未就绪' });
       const capability = nativeRouteCapability(req.method!, url.pathname);
       if (capability) await requireNativeRuntime(context.nativeRoot ?? pluginRoot, capability);
-      return await proxyStudio(req, res, url, context.studio.url);
+      const renderFile = url.searchParams.get('download') === '1'
+        && url.pathname.match(/^\/api\/projects\/([^/]+)\/renders\/file\/[^/]+(\.(?:mp4|mov|webm|gif))$/i);
+      const disposition = renderFile ? renderDownloadDisposition(
+        store.projectCatalog().projects.find(p => p.id === decodeURIComponent(renderFile[1]))?.title, renderFile[2],
+      ) : undefined;
+      return await proxyStudio(req, res, url, context.studio.url, disposition);
     }
     if (req.method !== 'GET') return json(res, 405, { error: '不支持此操作' });
     if (await serveEditorFile(url, res)) return;
@@ -529,7 +550,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
   }
 }
 
-export async function startServer(store = sharedStore, port = Number(process.env.PORT || 4173), options: { editor?: boolean; editorToken?: string; privateHandler?: (req: IncomingMessage, res: ServerResponse) => Promise<boolean> } = { editor: process.env.MOTION_HEADLESS !== '1' }) {
+export async function startServer(store = sharedStore, port = Number(process.env.PORT || 4173), options: { editor?: boolean; fallbackIfPortBusy?: boolean; editorToken?: string; privateHandler?: (req: IncomingMessage, res: ServerResponse) => Promise<boolean> } = { editor: process.env.MOTION_HEADLESS !== '1' }) {
   await access(path.join(pluginRoot, 'studio/build/index.html')).catch(() => { throw new Error('编辑器尚未构建，请先运行 npm run build:studio。'); });
   const runtimeRoot = await ensureRuntime(store.directory, false);
   void startNativePreparation(pluginRoot).catch(error => console.error('Native preparation could not start: ' + error.message));
@@ -565,7 +586,15 @@ export async function startServer(store = sharedStore, port = Number(process.env
   if (options.editor !== false) await context.ensureStudio();
   const server = createServer((req, res) => { void (async () => { if (!options.privateHandler || !await options.privateHandler(req, res)) await handler(req, res, store, context); })().catch(error => { if (!res.headersSent) json(res, 500, { error: (error as Error).message }); else res.destroy(); }); });
   try {
-    await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
+    const listen = (target: number) => new Promise<void>((resolve, reject) => {
+      server.once('error', reject);
+      server.listen(target, '127.0.0.1', () => { server.off('error', reject); resolve(); });
+    });
+    try { await listen(port); }
+    catch (error) {
+      if (!options.fallbackIfPortBusy || !port || (error as NodeJS.ErrnoException).code !== 'EADDRINUSE') throw error;
+      await listen(0);
+    }
   } catch (error) { context.tracking?.close(); await context.studio?.close(); throw error; }
   const origin = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
   const gateway = gatewayFor(store);

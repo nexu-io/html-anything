@@ -3,7 +3,7 @@
 <p align="center"><strong>拆解并复刻任何视频</strong></p>
 
 <p align="center">
-  <picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.zh-CN.jpg"><img src="docs/readme/brand-hero.zh-CN.jpg" width="100%" alt="Dan Martell 原片与 OpenMotion 复刻并排展示：Riya 出镜，荧光黄手写关键词叠在两行白色粗体字幕之间。下方是 Studio 字幕时间轴。"></picture>
+  <picture><source media="(max-width: 600px)" srcset="https://releases.open-design.ai/open-motion/media/sha256/45ee17734fb1315decef29c116fdd6794ee275fe83239328526b982a8ebe17ac.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/45ee17734fb1315decef29c116fdd6794ee275fe83239328526b982a8ebe17ac.jpg" width="100%" alt="Dan Martell 原片与 OpenMotion 复刻并排展示：Riya 出镜，荧光黄手写关键词叠在两行白色粗体字幕之间。下方是 Studio 字幕时间轴。"></picture>
 </p>
 
 <p align="center">
@@ -46,10 +46,36 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 
 ### 在 Agent 中安装
 
+复制下面的指令，发给你的本地 Agent，即可从源码安装 OpenMotion：
+
+```text
+阅读 https://github.com/nexu-io/openmotion/blob/main/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
+```
+
+安装完成后，Agent 会打开本地模板库并推荐一个模板，确认选择后再创建工程。[源码安装指南](install.md)
+
+### 克隆仓库并在本地启动
+
+需要 Git、npm 和 Node.js 26.11.1：
+
+```sh
+git clone --depth 1 https://github.com/nexu-io/openmotion.git
+cd openmotion
+npm ci
+npm run build:studio
+npm start
+```
+
+打开启动时打印的实际 `studioUrl` 或 `previewUrl`，进入 **模板库**。Studio 和 MCP 读取此仓库中的模板。要让 Agent 连接同一份源码，请参阅 [源码接入与 MCP 配置](#agent-setup)。[仓库大小与可选素材](docs/repository-storage.md)
+
+### 在 Agent 中安装已发布版
+
+此方式安装已发布的 npm 应用，使用其配置的在线模板目录。使用或贡献仓库模板，请选择上面的源码启动方式。
+
 复制下面的指令，发给你的本地 Agent，即可开始安装：
 
 ```text
-阅读 https://releases.open-design.ai/open-motion/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
+阅读 https://github.com/nexu-io/openmotion/blob/main/docs/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
 ```
 
 安装完成后，Agent 会推荐一个模板供你体验，确认选择后再创建工程。[安装与首次使用指南](docs/install.md#installation-success-reply)
@@ -74,13 +100,13 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/many-possible-futures.jpg"><img src="docs/readme/live-templates/many-possible-futures.gif" width="480" alt="把多段画面串成故事"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/many-possible-futures.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/f4a30a4a3b2dbc5c43df68837bebb284d204a1408394e248d7df339154914917.gif" width="480" alt="把多段画面串成故事"></picture><br>
 <strong>OpenAI · 把多段画面串成故事</strong><br>
 围绕同一条叙事主线连接不同画面，再展开为多场景蒙太奇。<br>
 <a href="https://open-design.ai/templates/many-possible-futures-motion-design/">查看模板</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/making-of-window-collage.jpg"><img src="docs/readme/live-templates/making-of-window-collage.gif" width="480" alt="重剪创作过程拼贴"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/making-of-window-collage.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/dae76ee380e75eb257be035bda3697981c5cce42b53a0f61da34c46687b52e1d.gif" width="480" alt="重剪创作过程拼贴"></picture><br>
 <strong>Anthropic · 重剪创作过程拼贴</strong><br>
 按顺序叠放片段与截图，让主标题始终清楚可读。<br>
 <a href="https://open-design.ai/templates/making-of-window-collage-motion-design/">查看模板</a>
@@ -93,13 +119,13 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/notion-custom-agents.jpg"><img src="docs/readme/live-templates/notion-custom-agents.gif" width="480" alt="先展示问题，再呈现解决方案"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/notion-custom-agents.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/b62ffb99195f35396b6ec0b5f8f0abb8552ffd2493a5e982e5e10fd640c44a0f.gif" width="480" alt="先展示问题，再呈现解决方案"></picture><br>
 <strong>Notion · 先展示问题，再呈现解决方案</strong><br>
 从任务堆积过渡到有序协作，把前后变化换成自己的产品能力。<br>
 <a href="https://open-design.ai/templates/notion-custom-agents-motion-design/">查看模板</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/demand-becomes-a-desktop-release.jpg"><img src="docs/readme/live-templates/demand-becomes-a-desktop-release.gif" width="480" alt="从用户需求引出产品发布"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="https://releases.open-design.ai/open-motion/media/sha256/66bc3f14f916a58800562af5b2c8412b2f554f36a435da950faa39ef4b82da96.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/ecbb5b36bf9997451a02fbf6db8ef9083b93326eb81b5bd1c29b7ca988d008cd.gif" width="480" alt="从用户需求引出产品发布"></picture><br>
 <strong>OpenAI · 从用户需求引出产品发布</strong><br>
 用层叠的需求积累节奏，再用一次清晰的揭示呈现产品。<br>
 <a href="https://open-design.ai/templates/demand-becomes-a-desktop-release-motion-design/">查看模板</a>
@@ -112,13 +138,13 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/a-world-connected-by-computational-fragments.jpg"><img src="docs/readme/live-templates/a-world-connected-by-computational-fragments.gif" width="480" alt="用动效连接不同世界"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/a-world-connected-by-computational-fragments.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/d94806d916b9b7d9325db6901cc36b890ee0e4ff7503bfbd888b2d258b985925.gif" width="480" alt="用动效连接不同世界"></picture><br>
 <strong>Kimi · 用动效连接不同世界</strong><br>
 用代码条带、错位切片和转场串起一组品牌画面。<br>
 <a href="https://open-design.ai/templates/a-world-connected-by-computational-fragments-motion-design/">查看模板</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/slack-slack.jpg"><img src="docs/readme/live-templates/slack-slack.gif" width="480" alt="拆解并重组品牌标识"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/slack-slack.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e5f730483a177dad8cebd3f19728d04a590a075691ca2c48544c05c73490a505.gif" width="480" alt="拆解并重组品牌标识"></picture><br>
 <strong>Slack · 拆解并重组品牌标识</strong><br>
 将标识拆成基础形状，用自己的配色与名称重新组合。<br>
 <a href="https://open-design.ai/templates/slack-slack-motion-design/">查看模板</a>
@@ -131,13 +157,13 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/connected-tools-evidence-chain.jpg"><img src="docs/readme/live-templates/connected-tools-evidence-chain.gif" width="480" alt="讲清跨工具工作流"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="https://releases.open-design.ai/open-motion/media/sha256/79e74122a92470f1cfe4ce39552b1eacad81bf316514605fef8d64f0c62eea4b.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/f6372a94259356a96f71ab0be2414f2c793d4fc823a45bfba70ca53dba595f04.gif" width="480" alt="讲清跨工具工作流"></picture><br>
 <strong>Anthropic · 讲清跨工具工作流</strong><br>
 沿着一个问题展示数据、操作与结果，让上下文始终连贯。<br>
 <a href="https://open-design.ai/templates/connected-tools-evidence-chain-motion-design/">查看模板</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/an-agent-payment-with-human-approval.jpg"><img src="docs/readme/live-templates/an-agent-payment-with-human-approval.gif" width="480" alt="逐步展示审批过程"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/an-agent-payment-with-human-approval.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/caf3c5ba8c42668634ed37bfb7bf70b08aff3897eef89cc5b62980c1402532e4.gif" width="480" alt="逐步展示审批过程"></picture><br>
 <strong>Stripe · 逐步展示审批过程</strong><br>
 把同一个请求从对话延续到手机确认，保持视觉线索一致。<br>
 <a href="https://open-design.ai/templates/an-agent-payment-with-human-approval-motion-design/">查看模板</a>
@@ -150,13 +176,13 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/mathematics-as-evolving-geometry.jpg"><img src="docs/readme/live-templates/mathematics-as-evolving-geometry.gif" width="480" alt="用图形讲解复杂概念"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/mathematics-as-evolving-geometry.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/a1044ff2c0fadb69adc1eb9274e40665d7b4f87cd95e951d5dcb0e0d1cbedf1b.gif" width="480" alt="用图形讲解复杂概念"></picture><br>
 <strong>OpenAI · 用图形讲解复杂概念</strong><br>
 通过共用的点与连线，让一个几何图形自然变成下一个。<br>
 <a href="https://open-design.ai/templates/mathematics-as-evolving-geometry-motion-design/">查看模板</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/scan-to-suggested-fix.jpg"><img src="docs/readme/live-templates/scan-to-suggested-fix.gif" width="480" alt="逐层呈现结果"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="https://releases.open-design.ai/open-motion/media/sha256/be5fc241ac81b90d7e7ded0bf1c90040d2823e6c659420d636722b5935c6e452.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/86184ef3b1da142db2dde7cfda80b69635e5adb9c2f6d0c0b87dc9c3e0bc7cb5.gif" width="480" alt="逐层呈现结果"></picture><br>
 <strong>Anthropic · 逐层呈现结果</strong><br>
 先给出总览，再展开单项发现，最后呈现每项结果对应的操作。<br>
 <a href="https://open-design.ai/templates/scan-to-suggested-fix-motion-design/">查看模板</a>
@@ -169,13 +195,13 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/controllable-song-composition.jpg"><img src="docs/readme/live-templates/controllable-song-composition.gif" width="480" alt="展示音乐逐步成形"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/controllable-song-composition.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/5e5f90231e7f456d70f002694eae9f3b1605bc06240e98224f719c8e1dcbbfa0.gif" width="480" alt="展示音乐逐步成形"></picture><br>
 <strong>ElevenLabs · 展示音乐逐步成形</strong><br>
 把提示词、段落与节奏连接到波形和最终音乐。<br>
 <a href="https://open-design.ai/templates/controllable-song-composition-motion-design/">查看模板</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/living-waveform-poster.jpg"><img src="docs/readme/live-templates/living-waveform-poster.gif" width="480" alt="让音乐海报动起来"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/live-templates/living-waveform-poster.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/1c892636aac9911c05b6aa44667d1e18c7b8813a47d55d408ba21595020cb121.gif" width="480" alt="让音乐海报动起来"></picture><br>
 <strong>Deezer · 让音乐海报动起来</strong><br>
 让标题保持稳定，用周围流动的波形表达节奏。<br>
 <a href="https://open-design.ai/templates/living-waveform-poster-motion-design/">查看模板</a>
@@ -193,19 +219,19 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <tr><th colspan="3" align="left">🎓 教学与讲解</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="真人视频参考：改变职业生涯的 6 项关键技能"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/7716c7166bf9f098f67845d55872e08f5765eaeb1439eb5760db785fa6d2d41e.gif" width="216" alt="真人视频参考：改变职业生涯的 6 项关键技能"></picture><br>
 <strong>改变职业生涯的 6 项关键技能</strong><br>
 编号要点 + 动态关键词<br>
 <sub>参考 · @careerwithriya</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="docs/readme/people/dan-martell-tools.gif" width="216" alt="真人视频参考：现在最好的 AI 工具是什么？"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0d7e7316322a28b6ce9013beaee4208c84b12bbb5565f04fcbc175c72e6aeadc.gif" width="216" alt="真人视频参考：现在最好的 AI 工具是什么？"></picture><br>
 <strong>现在最好的 AI 工具是什么？</strong><br>
 出镜讲解 + 悬浮工具卡片<br>
 <sub>参考 · Dan Martell</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="docs/readme/people/harpercarrollai.gif" width="216" alt="真人视频参考：10 天 AI 基础，第 1 天"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/9b4a957dc004efc4f1ddfdfed546ca3ccc6b1a1978c15d0887d0175b84caa39f.gif" width="216" alt="真人视频参考：10 天 AI 基础，第 1 天"></picture><br>
 <strong>10 天 AI 基础，第 1 天</strong><br>
 个人讲解 + 清晰字幕<br>
 <sub>参考 · @harpercarrollai</sub>
@@ -214,19 +240,19 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <tr><th colspan="3" align="left">🖥️ 展示工作流</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="真人视频参考：我每天使用的 5 个工具"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/03b9096a894f0572289ec31f9476854e660113852a97b4898c5b88158030b9a8.gif" width="216" alt="真人视频参考：我每天使用的 5 个工具"></picture><br>
 <strong>我每天使用的 5 个工具</strong><br>
 桌边讲述 + 工作流插画面<br>
 <sub>参考 · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="真人视频参考：带重点标注的工具演示"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/a8a09b0b4837125c948bcdeff964ae7a9ff971ea0275927d045bc72f81141d72.gif" width="216" alt="真人视频参考：带重点标注的工具演示"></picture><br>
 <strong>带重点标注的工具演示</strong><br>
 真人 + 屏幕 + 标注<br>
 <sub>参考 · @john.tagudin</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="docs/readme/people/aiwithsachi.gif" width="216" alt="真人视频参考：值得安装的 5 个 Claude 插件"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e04f9c2fdfb1bce2a2f83bbf28bde8765af58c589bb52b904694ff8113d61a7e.gif" width="216" alt="真人视频参考：值得安装的 5 个 Claude 插件"></picture><br>
 <strong>值得安装的 5 个 Claude 插件</strong><br>
 口述清单 + 说明截图<br>
 <sub>参考 · @aiwithsachi</sub>
@@ -235,19 +261,19 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 <tr><th colspan="3" align="left">🎬 讲故事，展示产品</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="docs/readme/people/khris-sheer-founder.gif" width="216" alt="真人视频参考：创始人实验，第 1 集"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0359b48294cb978df976f9ae2ab6ca4644854bee438dca09accc1144c30259bc.gif" width="216" alt="真人视频参考：创始人实验，第 1 集"></picture><br>
 <strong>创始人实验，第 1 集</strong><br>
 创始人日记 + 日常补充镜头<br>
 <sub>参考 · @khris.sheer</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="docs/readme/people/ugc-rachelll.gif" width="216" alt="真人视频参考：AI 创作者与产品"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0b779052281e89a3efc44e5a4b4492e245a12a14c0c5118813e59876419ad5c5.gif" width="216" alt="真人视频参考：AI 创作者与产品"></picture><br>
 <strong>AI 创作者与产品</strong><br>
 产品故事 + 证据 + 画中画<br>
 <sub>参考 · @ugc.rachelll</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="docs/readme/people/kevinstratvert.gif" width="216" alt="真人视频参考：别再为 5 个 AI 工具付费"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/31655004df5561a835eacd093fdd7e2a247b3c5fec0a9074ce59c6d9c9c56291.gif" width="216" alt="真人视频参考：别再为 5 个 AI 工具付费"></picture><br>
 <strong>别再为 5 个 AI 工具付费</strong><br>
 产品教程 + 实际演示<br>
 <sub>参考 · Kevin Stratvert</sub>
@@ -272,7 +298,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 
 <a id="studio-in-use"></a>
 
-<img src="docs/readme/live-product/studio-in-use.png" width="100%" alt="Studio 实际使用界面：左侧为导入素材，中间为视频预览，下方为可编辑时间轴。">
+<img src="https://releases.open-design.ai/open-motion/media/sha256/f20ae0f17f9db97f1950f8fd4624e296caf014eb5f774d6cb005afa344900073.png" width="100%" alt="Studio 实际使用界面：左侧为导入素材，中间为视频预览，下方为可编辑时间轴。">
 
 在同一个 Studio 工作区中预览视频、排列片段并导出成片。
 
@@ -362,7 +388,7 @@ Brand Kit 章节记录自己的 Logo、配色、字体、语气和已确认的�
 
 仅有参考视频的条目会进入复刻流程；提供可编辑源码的条目可以直接交给 Agent 改编。
 
-![选好模板，再换成自己的内容](docs/readme/live-product/catalog.zh-CN.jpg)
+![选好模板，再换成自己的内容](https://releases.open-design.ai/open-motion/media/sha256/01b43503d98d59a407d5cfb6baf9a31660670c195513601e501a781250d069ea.jpg)
 
 [浏览全部线上模板](https://open-design.ai/templates/)
 
@@ -411,7 +437,7 @@ Brand Kit 章节记录自己的 Logo、配色、字体、语气和已确认的�
 准备 Git、npm 和 **Node.js 26.11.1**。从源码预览和导出还需要 Chrome/Chromium 和 FFmpeg/FFprobe。[运行环境配置](docs/usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/openmotion.git openmotion
+git clone --branch main https://github.com/nexu-io/openmotion.git openmotion
 cd openmotion
 npm ci
 npm run build:studio
@@ -656,7 +682,7 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 | **多平台发布 — 规划中** | 手动编排不同画幅，交付 MP4 | 平台连接器、发布审阅、排期、自动画幅重构与社交预设 |
 | **反馈** | 人工审阅和保存工程版本 | 版本关联表现数据与周期制作任务 |
 
-![人与 Agent 在共享时间轴审阅的生成式概念图；协作体验仍在规划。](docs/readme/collaboration-concept-v2.png)
+![人与 Agent 在共享时间轴审阅的生成式概念图；协作体验仍在规划。](https://releases.open-design.ai/open-motion/media/sha256/a5efa5be51936f33ecc7ef4241ce2602ebf4e7efcc8ce30e0dac5a8bd2b34957.png)
 
 *协作概念图：在时间轴上标注“这个镜头多留一拍”，Agent 据此调整节奏。此功能仍在规划中。* [Studio 蓝图](docs/product/studio-vision.md) · [知识与反馈](docs/product/studio-vision.md#knowledge-and-feedback)
 

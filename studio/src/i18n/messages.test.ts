@@ -100,6 +100,8 @@ it('covers preparation and import feedback in every supported language', () => {
     'Cannot write the preparation cache. Check folder permissions.',
     'This platform needs compatible video components.',
     'Download failed. Check your connection and retry.',
+    'About {seconds}s remaining', 'Download attempt {attempt}/{total}',
+    'Download timed out after automatic retries. Check your connection and retry.',
     'The component could not be prepared. Retry or inspect the details.',
     'Name cannot contain slashes or two consecutive dots.',
   ];

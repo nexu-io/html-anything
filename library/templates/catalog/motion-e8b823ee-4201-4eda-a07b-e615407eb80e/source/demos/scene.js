@@ -1,0 +1,11 @@
+
+function paper(x,y,w,h,title,color='#fff'){rect(x,y,w,h,color,12);text(title,x+18,y+24,18,(/^#[0-9a-f]{6}$/i.test(color)&&[1,3,5].reduce((v,j)=>v+parseInt(color.slice(j,j+2),16),0)<350)?'#fff':'#25262b','left','Arial',600,w-35);}
+function rows(x,y,w,n=4,c='#b8bdc2',gap=22){for(let j=0;j<n;j++)rect(x,y+j*gap,w*(.64+rand(j)*.32),5,c,2)}
+function ring(x,y,r,c,width=3){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.strokeStyle=c;ctx.lineWidth=width;ctx.stroke()}
+function pill(x,y,w,txt,c='#fff',ink='#222'){rect(x-w/2,y-22,w,44,c,22);text(txt,x,y,18,ink,'center','Arial',500,w-26)}
+function arrow(x,y,xx,yy,c){line(x,y,xx,yy,c,2);let a=Math.atan2(yy-y,xx-x);poly([[xx,yy],[xx-10*cos(a-.5),yy-10*sin(a-.5)],[xx-10*cos(a+.5),yy-10*sin(a+.5)]],c)}
+function header(t,color=CONFIG.palette[1]){fittedText(P.title,500,55,30,color,870,'Arial',600)}
+function foot(t,color=CONFIG.palette[1]){text(CONFIG.stages[stageAt(t)].label,500,557,16,color)}
+function orbitNode(x,y,r,c,labelText){ellipse(x,y,r,r,c);text(labelText,x,y,16,'#25262b','center','Arial',500,r*1.65)}
+function wave(x,y,w,h,c,t,phaseOffset=0){ctx.beginPath();for(let j=0;j<=80;j++){let xx=x+j*w/80,yy=y+sin(j*.15+t+phaseOffset)*h*(.4+.6*sin(j/80*Math.PI));j?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)}ctx.strokeStyle=c;ctx.lineWidth=3;ctx.stroke()}
+function drawScene(t){gradient('#ebc3ed','#fff5dc');header(t,'#6821aa');let n=stageAt(t),u=stageProgress(t);if(n>=5&&n<=6||n>=9){let scale=n===5?1:.7;at(500,320,scale,0,()=>{for(let j=0;j<7;j++){let a=j*TAU/7,x=cos(a)*310,y=sin(a)*210;line(0,0,x,y,'#9c8ecb',2);orbitNode(x,y,42,j%2?'#efddf3':'#dbeaaf',['People','Tasks','Data','Projects','Tools','Sales','Support'][j]);if(n>5)for(let k=0;k<3;k++){let b=a+(k-1)*.3,xx=x+cos(b)*100,yy=y+sin(b)*70;line(x,y,xx,yy,'#bcb3d2');ellipse(xx,yy,12,12,P.accent)}}orbitNode(0,0,70,'#fff',n===5?'You':'Enterprise')})}else if(n<2){for(let j=0;j<5;j++)ellipse(500,80+j*100,300,25+sin(t+j)*10,'#b6a0de55');fittedText(P.title,500,300,55,P.accent)}else{let result=n===3||n===4||n===8;paper(result?230:190,result?140:250,result?540:620,result?365:110,result?'Your plan':'Prepare a plan for the team');rows(result?260:220,result?205:305,result?460:530,result?12:2);if(result)rect(260,440,300*ease(u),8,P.accent,4)}foot(t,'#6821aa')}

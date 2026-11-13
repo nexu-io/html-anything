@@ -36,6 +36,24 @@ test('tracked source is scanned without ignore-file bypasses; secret errors expo
   await assert.rejects(scanSource(source, binary), /Tracked links/);
 });
 
+test('catalog source is scanned alongside gallery and product source without skipping its privacy checks', async t => {
+  const { work, binary } = await scanner(t);
+  const source = path.join(work, 'source');
+  const catalog = path.join(source, 'library/templates/catalog/demo/guide.md');
+  await mkdir(path.dirname(catalog), { recursive: true });
+  await mkdir(path.join(source, 'docs/readme'), { recursive: true });
+  await writeFile(path.join(source, 'README.md'), 'Public product');
+  await writeFile(path.join(source, 'docs/readme/gallery.md'), 'Public gallery');
+  await writeFile(catalog, 'https://' + 'workspace.' + 'feishu.cn/wiki/private');
+  await runFile('git', ['init', '-q', source]);
+  await runFile('git', ['add', '.'], { cwd: source });
+  await assert.rejects(scanSource(source, binary), /catalog\/demo\/guide.md.*internal-link/);
+  await writeFile(catalog, 'Public catalog');
+  const report = await scanSource(source, binary);
+  assert.equal(report.status, 'passed');
+  assert.equal(report.files, 3);
+});
+
 test('the scanner opens the nested application, rejects hidden private content and rejects linked archive entries', async t => {
   const f = await candidateFixture(t), { binary } = await scanner(t);
   assert.equal((await scanPackage(path.join(f.directory, f.candidate.tgz), binary)).status, 'passed');

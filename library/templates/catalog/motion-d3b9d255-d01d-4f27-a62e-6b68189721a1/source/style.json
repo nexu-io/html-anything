@@ -1,0 +1,110 @@
+{
+  "background": {
+    "color": "#fafafa",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：slack",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：are",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "四色点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "圆端条",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌名称",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "组合标志",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fafafa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#050505",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2eb6d3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2ca77a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#eab52c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#db1655",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线粗字标；彩色圆端模块与黑色名称并排",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "把旧图形拆成最小单元，再用同一组颜色重新组装标志与名称。",
+      "status": "inferred"
+    },
+    {
+      "rule": "井号拆开后先成为分散圆点，再各自长出圆端条。位置和朝向按象限对应，颜色不在中途交换；完整图形出现后才展开名称。",
+      "status": "inferred"
+    },
+    {
+      "rule": "名称碎片从图形右侧接入，完成后形成稳定横向锁定。白底、黑色粗无衬线与四色模块形成对比，名称字高与图形视觉高度接近。",
+      "status": "inferred"
+    }
+  ]
+}

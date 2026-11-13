@@ -1,0 +1,106 @@
+{
+  "background": {
+    "color": "#ffcd36",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Google",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "唱片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "乐器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "花瓣",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "舞者",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "键盘",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "人群",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffcd36",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1b1010",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ff476c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#268de3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#fff5dd",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "高饱和扁平插画、几何花瓣、人物舞蹈与乐器特写",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用圆形唱片、喇叭口、花瓣把音乐演奏与舞步串联。",
+      "status": "inferred"
+    },
+    {
+      "rule": "局部特写和整个人物交替，色块跨镜头接续；对称旋转建立重复节奏。",
+      "status": "inferred"
+    },
+    {
+      "rule": "后段从单人、双人到群体，扩大场面。",
+      "status": "inferred"
+    }
+  ]
+}

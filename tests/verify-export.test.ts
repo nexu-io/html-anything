@@ -103,8 +103,8 @@ test('MCP verification binds job ID/revision and preserves snapshot specificatio
   const expected = await snapshotExportExpectation(pluginRoot, store.snapshotDirectory(requested.id));
   assert.deepEqual(expected, { ...spec, audio: 'optional' });
   assert.deepEqual((await store.job())!.expected, expected);
-  await mkdir(path.join(directory, 'exports'));
-  clip(path.join(directory, 'exports', requested.id + '.mp4'));
+  await mkdir(path.dirname(store.exportPath(requested)), { recursive: true });
+  clip(store.exportPath(requested));
   await store.finishExport(requested.id, claimed.token!);
   await rm(store.snapshotDirectory(requested.id), { recursive: true });
   const report = await callTool('openmotion_verify_export', { jobId: requested.id, expectedRevision: saved.revision, audio: 'silent' }, store) as any;

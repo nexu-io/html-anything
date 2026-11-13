@@ -1,0 +1,130 @@
+{
+  "background": {
+    "color": "#fbfbfb",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Create hello_chatgpt.cpp",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：No chats",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Recents",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "会话侧栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码差异",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "回复",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "文档链接",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "文档窗口",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fbfbfb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#20241f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#5575db",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ecf1e5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#829bce",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白色工作区、蓝紫桌面边缘、等宽代码与文档",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先展示代码任务，再要求将代码整理成文档；打开结果验证跨应用交付。",
+      "status": "inferred"
+    },
+    {
+      "rule": "镜头在会话、代码和文档三个区域切换，始终维持同一任务上下文。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：vmc/coding-agent",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Create Virtual Model",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Virtual Models",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发布文案",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "任务模型对应表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "命令行",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "配置表单",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c1c1c1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#737373",
+      "status": "inferred"
+    },
+    {
+      "hex": "#252525",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "黑白极简；说明用无衬线，模型路由和命令用等宽字。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "一句话先说明能力，再给任务和模型的对应表或命令。避免连续堆叠说明句，每个概念后紧跟一个具体用法。",
+      "status": "inferred"
+    },
+    {
+      "rule": "主句亮白，解释句灰色；稳定路径、CLI 和数值用等宽字体。列表共享列宽，正在变化的一行提高亮度，其余行减弱。",
+      "status": "inferred"
+    },
+    {
+      "rule": "调用入口不变，只替换表格中的模型字段；命令逐字输入完成后，再看到映射更新。固定左侧名称能帮助理解稳定入口。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "background": {
+    "color": "#cda992",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Market stand",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：• Vector",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Opacity",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "插画父容器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "独立蔬果",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "图层树",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "颜色面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "动画时间线",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#cda992",
+      "status": "inferred"
+    },
+    {
+      "hex": "#31302c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a65e4f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7e9d69",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ece3cb",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线中粗主标题；细边框界面与小号功能文字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "新生成素材仍可选中、编辑颜色和编排动画；三阶段证明可编辑性。",
+      "status": "inferred"
+    },
+    {
+      "rule": "蔬果作为子对象，容器不随每次编辑整体移动。",
+      "status": "inferred"
+    }
+  ]
+}

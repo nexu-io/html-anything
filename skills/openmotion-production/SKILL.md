@@ -21,7 +21,7 @@ Agent 根据本轮意图选择入口，专业任务可直接进入对应 Skill�
 
 1. 修改已有内容时读取 [共享修改流程](references/edit.md)，确定变化、保持项及连带影响；仅查询、预览、审查或导出按本轮范围执行。
 2. Existing-project content edits apply the [continuing-edit preview rules](references/native.md#continuing-edits) before writing and after saving, including scoped engineering work. Preserve the current chat by default; queue its latest preview while inactive and inspect it on return. Only an explicit show-now request permits switching back for this turn. 操作工程前读取 [运行规范](references/production.md)；编写原生内容前另读 [Native authoring](references/native.md) 及工具返回的固定版本引擎指南。确认 projectId、最新 revision 与 currentVersionId，复用已完成操作。
-3. 按共享上下文的依赖清单补齐受影响的质量规范。换现成音乐、调音量也需核对声画锚点与原有 SFX；画面锁定时保持视觉内容。补读结果先返回模型，后续调用再执行依赖操作。
+3. 需要选择、获取或替换素材时读取 [共享素材规范](references/materials.md)；按共享上下文补齐其他受影响的质量规范。换现成音乐、调音量也需核对声画锚点与原有 SFX；画面锁定时保持视觉内容。补读结果先返回模型，后续调用再执行依赖操作。
 4. 检查受影响区间、接点和保持项。需要新渲染的导出或成片交付读取 [验证](references/verification.md)，针对已审查 revision/versionId 导出，已有适用任务先查询并复用；模板出片按专业入口在编辑器中核验，需要导出时检查实际 MP4。技术通过与创作品质、正常播放及试听分别记录。
 5. 停在用户要求的方案、预览、工程或成片阶段。交付实际结果、检查与必要限制。编辑器中打开的工程就是交付物，只有用户明确要 MP4、视频文件、下载或导出时才附 MP4。
 

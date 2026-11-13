@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#060708",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Let's get some work done",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：G Google Search",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中心标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "连接器菜单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "开关",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发送按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "双品牌标识",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#060708",
+      "status": "inferred"
+    },
+    {
+      "hex": "#edf3ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#49d599",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6c8ee5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202321",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线中心短句与输入文字；连接器名称小号，双品牌标识尺寸接近",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "一次启用动作把数据源接入对话：打开菜单、开启连接器、输入针对该数据源的问题，再以双品牌组合结束。",
+      "status": "inferred"
+    },
+    {
+      "rule": "现有搜索项先出现，Supabase 项从下方加入并对齐。开关从灰变绿后菜单收起，输入框回到全景；指针只在操作时出现，不持续遮挡名称。",
+      "status": "inferred"
+    },
+    {
+      "rule": "输入框逐步填入表名和问题，发送按钮最后触发。深色界面、低亮蓝光和绿色启用状态相互区分，文本保留足够字号。",
+      "status": "inferred"
+    }
+  ]
+}

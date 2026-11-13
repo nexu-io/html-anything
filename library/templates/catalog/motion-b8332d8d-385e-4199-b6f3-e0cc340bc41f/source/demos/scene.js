@@ -1,0 +1,11 @@
+
+function paper(x,y,w,h,title,color='#fff'){rect(x,y,w,h,color,12);text(title,x+18,y+24,18,(/^#[0-9a-f]{6}$/i.test(color)&&[1,3,5].reduce((v,j)=>v+parseInt(color.slice(j,j+2),16),0)<350)?'#fff':'#25262b','left','Arial',600,w-35);}
+function rows(x,y,w,n=4,c='#b8bdc2',gap=22){for(let j=0;j<n;j++)rect(x,y+j*gap,w*(.64+rand(j)*.32),5,c,2)}
+function ring(x,y,r,c,width=3){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.strokeStyle=c;ctx.lineWidth=width;ctx.stroke()}
+function pill(x,y,w,txt,c='#fff',ink='#222'){rect(x-w/2,y-22,w,44,c,22);text(txt,x,y,18,ink,'center','Arial',500,w-26)}
+function arrow(x,y,xx,yy,c){line(x,y,xx,yy,c,2);let a=Math.atan2(yy-y,xx-x);poly([[xx,yy],[xx-10*cos(a-.5),yy-10*sin(a-.5)],[xx-10*cos(a+.5),yy-10*sin(a+.5)]],c)}
+function header(t,color=CONFIG.palette[1]){fittedText(P.title,500,55,30,color,870,'Arial',600)}
+function foot(t,color=CONFIG.palette[1]){text(CONFIG.stages[stageAt(t)].label,500,557,16,color)}
+function orbitNode(x,y,r,c,labelText){ellipse(x,y,r,r,c);text(labelText,x,y,16,'#25262b','center','Arial',500,r*1.65)}
+function wave(x,y,w,h,c,t,phaseOffset=0){ctx.beginPath();for(let j=0;j<=80;j++){let xx=x+j*w/80,yy=y+sin(j*.15+t+phaseOffset)*h*(.4+.6*sin(j/80*Math.PI));j?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)}ctx.strokeStyle=c;ctx.lineWidth=3;ctx.stroke()}
+function drawScene(t){let n=stageAt(t),u=stageProgress(t);bg(CONFIG.palette[n%CONFIG.palette.length===1?0:n%CONFIG.palette.length]);if(n<2){let ww=n===0?mix(70,850,ease(u)):850;rect(500-ww/2,270,ww,60,'#edb6c8',30);text(useTitle('theheadfirstagency.com'),500,300,35,'#111','center','Arial',500,ww-20);if(n===1)ellipse(590,300,15+u*130,15+u*130,P.accent)}else if(n===2||n===6){for(let j=7;j>=0;j--)ellipse(500,300,40+j*38+sin(t*2)*9,40+j*38+sin(t*2)*9,CONFIG.palette[(j+2)%6]);ellipse(500,300,22,22,P.accent)}else if(n===5){let labels=['.photos','.solar','.games','.travel','.media','.studio'];let idx=Math.min(5,Math.floor(u*6));for(let j=0;j<18;j++)at(500,300,1,j*TAU/18+t*.25,()=>poly([[0,0],[-100,-600],[100,-600]],CONFIG.palette[(j+idx)%6]));ellipse(500,300,140,140,'#f0d84e');text(useTitle(labels[idx]),500,300,48,'#111')}else{fittedText(useTitle(n===3?'headfirst.agency':n===4?'pointandshoot.photos':'Get Your Dot.'),500,300,58,'#111',850);for(let j=0;j<5;j++)ellipse(120+j*190,130+sin(t+j)*30,12,12,CONFIG.palette[(j+2)%6]);}}

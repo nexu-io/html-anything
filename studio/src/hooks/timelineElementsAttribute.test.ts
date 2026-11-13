@@ -1,10 +1,12 @@
 // @vitest-environment happy-dom
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 Object.defineProperty(globalThis, "IS_REACT_ACT_ENVIRONMENT", { configurable: true, value: true });
 import type { TimelineElement } from "../player";
+import { usePlayerStore } from "../player/store/playerStore";
+import { saveProjectFilesWithHistory } from "../utils/studioFileHistory";
 
 const saved = vi.hoisted(() => ({ inputs: [] as Array<Record<string, unknown>> }));
 vi.mock("../utils/studioFileHistory", () => ({
@@ -26,8 +28,90 @@ const clip = (id: string, sourceFile?: string): TimelineElement => ({
   sourceFile,
 });
 
+afterEach(() => {
+  document.body.innerHTML = "";
+  usePlayerStore.getState().reset();
+  vi.restoreAllMocks();
+});
+
 describe("useSetElementsAttribute", () => {
+  it.each([false, true])("syncs saved track mute and unmute with monitor mute=%s", async (audioMuted) => {
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    const doc = iframe.contentDocument!;
+    doc.body.innerHTML = '<audio id="a" data-volume="0.5"></audio><video id="b"></video>';
+    const audio = doc.getElementById("a")!;
+    const video = doc.getElementById("b")!;
+    const elements = [clip("a"), { ...clip("b"), tag: "video" }];
+    usePlayerStore.setState({ audioMuted, elements });
+    const pushedAttributes: boolean[][] = [];
+    const postMessage = vi.spyOn(iframe.contentWindow!, "postMessage").mockImplementation(() => {
+      pushedAttributes.push([audio.hasAttribute("muted"), video.hasAttribute("muted")]);
+    });
+    let write: ReturnType<typeof useSetElementsAttribute> | null = null;
+    function Probe() {
+      write = useSetElementsAttribute({
+        projectIdRef: { current: "p1" },
+        activeCompPath: "index.html",
+        showToast: vi.fn(),
+        writeProjectFile: vi.fn(async () => {}),
+        recordEdit: vi.fn(async () => {}),
+        previewIframeRef: { current: iframe },
+        pendingTimelineEditPathRef: { current: new Set<string>() },
+      });
+      return null;
+    }
+    const root = createRoot(document.createElement("div"));
+    act(() => root.render(createElement(Probe)));
+    await act(async () => {
+      await write?.(elements.map(element => ({ element, value: "true" })), "muted", "Mute audio");
+    });
+    expect(usePlayerStore.getState().elements.every(element => element.muted)).toBe(true);
+    await act(async () => {
+      await write?.(elements.map(element => ({ element, value: null })), "muted", "Unmute audio");
+    });
+    expect(usePlayerStore.getState().elements.every(element => !element.muted)).toBe(true);
+    expect(pushedAttributes).toEqual([[true, true], [false, false]]);
+    expect(postMessage).toHaveBeenCalledTimes(2);
+    for (const [message] of postMessage.mock.calls) {
+      expect(message).toMatchObject({ action: "set-muted", muted: audioMuted });
+    }
+    expect(audio.getAttribute("data-volume")).toBe("0.5");
+    expect(usePlayerStore.getState().audioMuted).toBe(audioMuted);
+    act(() => root.unmount());
+  });
+
+  it("leaves live media unchanged when the mute save fails", async () => {
+    vi.mocked(saveProjectFilesWithHistory).mockRejectedValueOnce(new Error("Save failed"));
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    iframe.contentDocument!.body.innerHTML = '<audio id="a"></audio>';
+    const postMessage = vi.spyOn(iframe.contentWindow!, "postMessage");
+    const showToast = vi.fn();
+    let write: ReturnType<typeof useSetElementsAttribute> | null = null;
+    function Probe() {
+      write = useSetElementsAttribute({
+        projectIdRef: { current: "p1" },
+        activeCompPath: "index.html",
+        showToast,
+        writeProjectFile: vi.fn(async () => {}),
+        recordEdit: vi.fn(async () => {}),
+        previewIframeRef: { current: iframe },
+        pendingTimelineEditPathRef: { current: new Set<string>() },
+      });
+      return null;
+    }
+    const root = createRoot(document.createElement("div"));
+    act(() => root.render(createElement(Probe)));
+    await write?.([{ element: clip("a"), value: "true" }], "muted", "Mute audio");
+    expect(iframe.contentDocument!.getElementById("a")!.hasAttribute("muted")).toBe(false);
+    expect(postMessage).not.toHaveBeenCalled();
+    expect(showToast).toHaveBeenCalledWith("Save failed", "error");
+    act(() => root.unmount());
+  });
+
   it("writes every clip's attribute in one history entry, one builder per file", async () => {
+    saved.inputs.length = 0;
     const showToast = vi.fn();
     let write: ReturnType<typeof useSetElementsAttribute> | null = null;
     function Probe() {

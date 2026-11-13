@@ -1,0 +1,312 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Claude Code Security — vulnerability scans and patches · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#e1d9ca;--brand-ink:#1e211d;--accent:#c27b64;--sample-font:Georgia, serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Anthropic <span>/</span> V237</div><div class="intro-line"><h1>Claude Code Security — vulnerability scans and patches</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>沿着扫描、发现、详情、修复和提交推进。每次深入都靠近相关内容，让问题与解决方案保持可追溯的对应。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 50.0, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 21.27, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Claude Code Security&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#c27b64&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Claude Code Security&quot;, &quot;accent&quot;: &quot;#c27b64&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="50.0" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 50.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Claude Code Security — vulnerability scans and patches · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#e1d9ca}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Anthropic</div><div class="type-sample">Claude Code Security</div><p>砂色底、手绘黑线图标、白色扫描卡片与衬线功能短句</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#e1d9ca" style="--swatch:#e1d9ca" aria-label="复制色值 #e1d9ca"><span></span><code>#E1D9CA</code></button><button class="swatch" data-color="#1e211d" style="--swatch:#1e211d" aria-label="复制色值 #1e211d"><span></span><code>#1E211D</code></button><button class="swatch" data-color="#c27b64" style="--swatch:#c27b64" aria-label="复制色值 #c27b64"><span></span><code>#C27B64</code></button><button class="swatch" data-color="#76915e" style="--swatch:#76915e" aria-label="复制色值 #76915e"><span></span><code>#76915E</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>扫描容器</span><span>仓库行</span><span>结果列表</span><span>问题详情</span><span>修复按钮</span><span>补丁卡片</span><span>指针</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule has-reference" id="section-1"><div class="rule-label"><span>01</span><h2>按信息层级展开卡片</h2></div><img class="reference" loading="eager" alt="35.00s · 构图参考" src="assets/reference-5.webp"><div class="rule-copy">
+<p>砂色底、手绘黑线图标、白色扫描卡片与衬线功能短句。</p>
+<p>入口→扫描→问题→修复→PR 顺序必须完整，结果层级随深入而展开。</p>
+
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>详情展开后，再触发修复</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;详情展开后，再触发修复&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 12, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;19–31 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>详情展开后，再触发修复</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="详情展开后，再触发修复" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="12" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 12.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>19–31 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Claude Code Security — vulnerability scans and patches · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#e1d9ca}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;19&quot; data-end=&quot;31&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>长代码用局部推近展示关键行，不能把列表与详情都当作整体静态截图。</p>
+<p>红色标签表示问题等级，绿色差异表示修复结果；状态色有语义。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>操作与结果交替出现</h2></div><div class="rule-copy">
+<p>扫描先给总览，展开后看问题细节，修复再给补丁。每一层都等待当前信息读完，再进入下一层。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>替换检查任务</h2></div><div class="rule-copy">
+<p>可换成设计检查：项目→扫描→问题→建议→修改稿；保留检查与解决的对应关系。</p>
+<p>风险等级、代码内容和结果数字可替换，但状态色语义不得对调。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>手绘安全图标</b></button><button class="beat" data-time="6.0"><span>6.00<small>s</small></span><b>扫描入口</b></button><button class="beat" data-time="10.0"><span>10.00<small>s</small></span><b>开始扫描</b></button><button class="beat" data-time="12.0"><span>12.00<small>s</small></span><b>发现列表</b></button><button class="beat" data-time="15.5"><span>15.50<small>s</small></span><b>能力短句</b></button><button class="beat" data-time="19.0"><span>19.00<small>s</small></span><b>展开单项问题</b></button><button class="beat" data-time="24.0"><span>24.00<small>s</small></span><b>建议修复</b></button><button class="beat" data-time="27.0"><span>27.00<small>s</small></span><b>查看修复主张</b></button><button class="beat" data-time="30.0"><span>30.00<small>s</small></span><b>生成补丁</b></button><button class="beat" data-time="35.0"><span>35.00<small>s</small></span><b>补丁说明</b></button><button class="beat" data-time="39.0"><span>39.00<small>s</small></span><b>创建 PR</b></button><button class="beat" data-time="41.0"><span>41.00<small>s</small></span><b>研究预览与品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="10.00 秒的构图参考" loading="lazy"><figcaption>10.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="15.27 秒的构图参考" loading="lazy"><figcaption>15.27s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="27.00 秒的构图参考" loading="lazy"><figcaption>27.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="35.00 秒的构图参考" loading="lazy"><figcaption>35.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="41.00 秒的构图参考" loading="lazy"><figcaption>41.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可换成设计检查：项目→扫描→问题→建议→修改稿；保留检查与解决的对应关系。</li><li>风险等级、代码内容和结果数字可替换，但状态色语义不得对调。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>扫描容器 / 仓库行 / 结果列表 / 问题详情 / 修复按钮 / 补丁卡片 / 指针</p>
+<ul><li>入口→扫描→问题→修复→PR 顺序必须完整，结果层级随深入而展开。</li><li>长代码用局部推近展示关键行，不能把列表与详情都当作整体静态截图。</li><li>红色标签表示问题等级，绿色差异表示修复结果；状态色有语义。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Anthropic / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Claude Code Security — vulnerability scans and patches
+
+沿着扫描、发现、详情、修复和提交推进。每次深入都靠近相关内容，让问题与解决方案保持可追溯的对应。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 50.0,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 21.27,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Claude Code Security&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#c27b64&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Claude Code Security&quot;,
+        &quot;accent&quot;: &quot;#c27b64&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 按信息层级展开卡片
+
+砂色底、手绘黑线图标、白色扫描卡片与衬线功能短句。
+
+入口→扫描→问题→修复→PR 顺序必须完整，结果层级随深入而展开。
+
+![35.00s · 构图参考](assets/reference-5.webp)
+
+## 详情展开后，再触发修复
+
+长代码用局部推近展示关键行，不能把列表与详情都当作整体静态截图。
+
+红色标签表示问题等级，绿色差异表示修复结果；状态色有语义。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;详情展开后，再触发修复&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 12,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;19–31 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 操作与结果交替出现
+
+扫描先给总览，展开后看问题细节，修复再给补丁。每一层都等待当前信息读完，再进入下一层。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–6.00s | 手绘安全图标 |
+| 6.00–10.00s | 扫描入口 |
+| 10.00–12.00s | 开始扫描 |
+| 12.00–15.50s | 发现列表 |
+| 15.50–19.00s | 能力短句 |
+| 19.00–24.00s | 展开单项问题 |
+| 24.00–27.00s | 建议修复 |
+| 27.00–30.00s | 查看修复主张 |
+| 30.00–35.00s | 生成补丁 |
+| 35.00–39.00s | 补丁说明 |
+| 39.00–41.00s | 创建 PR |
+| 41.00–50.00s | 研究预览与品牌 |
+
+## 替换检查任务
+
+可换成设计检查：项目→扫描→问题→建议→修改稿；保留检查与解决的对应关系。
+
+风险等级、代码内容和结果数字可替换，但状态色语义不得对调。
+
+## 配色与字形
+
+砂色底、手绘黑线图标、白色扫描卡片与衬线功能短句。
+
+#e1d9ca · #1e211d · #c27b64 · #76915e · #ffffff
+
+## 元素与制作规则
+
+扫描容器 / 仓库行 / 结果列表 / 问题详情 / 修复按钮 / 补丁卡片 / 指针
+
+- 入口→扫描→问题→修复→PR 顺序必须完整，结果层级随深入而展开。
+- 长代码用局部推近展示关键行，不能把列表与详情都当作整体静态截图。
+- 红色标签表示问题等级，绿色差异表示修复结果；状态色有语义。
+
+## 内容替换
+
+- 可换成设计检查：项目→扫描→问题→建议→修改稿；保留检查与解决的对应关系。
+- 风险等级、代码内容和结果数字可替换，但状态色语义不得对调。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Anthropic&quot;,
+  &quot;id&quot;: &quot;V237&quot;,
+  &quot;palette&quot;: [
+    &quot;#e1d9ca&quot;,
+    &quot;#1e211d&quot;,
+    &quot;#c27b64&quot;,
+    &quot;#76915e&quot;,
+    &quot;#ffffff&quot;
+  ],
+  &quot;typography&quot;: &quot;砂色底、手绘黑线图标、白色扫描卡片与衬线功能短句&quot;,
+  &quot;sample&quot;: &quot;Claude Code Security&quot;,
+  &quot;objects&quot;: [
+    &quot;扫描容器&quot;,
+    &quot;仓库行&quot;,
+    &quot;结果列表&quot;,
+    &quot;问题详情&quot;,
+    &quot;修复按钮&quot;,
+    &quot;补丁卡片&quot;,
+    &quot;指针&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 10.0,
+      &quot;frameId&quot;: &quot;K0024&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 15.266666666666667,
+      &quot;frameId&quot;: &quot;K0039&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 27.0,
+      &quot;frameId&quot;: &quot;K0068&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 35.0,
+      &quot;frameId&quot;: &quot;K0083&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 41.0,
+      &quot;frameId&quot;: &quot;K0102&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;手绘安全图标&quot;,
+      &quot;end&quot;: 6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 6,
+      &quot;label&quot;: &quot;扫描入口&quot;,
+      &quot;end&quot;: 10,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 10,
+      &quot;label&quot;: &quot;开始扫描&quot;,
+      &quot;end&quot;: 12,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 12,
+      &quot;label&quot;: &quot;发现列表&quot;,
+      &quot;end&quot;: 15.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15.5,
+      &quot;label&quot;: &quot;能力短句&quot;,
+      &quot;end&quot;: 19,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 19,
+      &quot;label&quot;: &quot;展开单项问题&quot;,
+      &quot;end&quot;: 24,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 24,
+      &quot;label&quot;: &quot;建议修复&quot;,
+      &quot;end&quot;: 27,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 27,
+      &quot;label&quot;: &quot;查看修复主张&quot;,
+      &quot;end&quot;: 30,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 30,
+      &quot;label&quot;: &quot;生成补丁&quot;,
+      &quot;end&quot;: 35,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 35,
+      &quot;label&quot;: &quot;补丁说明&quot;,
+      &quot;end&quot;: 39,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 39,
+      &quot;label&quot;: &quot;创建 PR&quot;,
+      &quot;end&quot;: 41,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 41,
+      &quot;label&quot;: &quot;研究预览与品牌&quot;,
+      &quot;end&quot;: 50.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 50.0,
+  &quot;fontFamily&quot;: &quot;Georgia, serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

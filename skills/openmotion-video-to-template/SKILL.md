@@ -13,6 +13,8 @@ Closely match the reference's pictures, composition, motion and pacing while pre
 
 A reference plus change requests is not a phase-one workflow of this Skill. Deliver the faithful template first and report that requested changes belong to `openmotion-template-to-video` applied to the delivered template; do not mix changes into the rebuild.
 
+When selecting, obtaining or replacing source assets, read the [shared material policy](../openmotion-production/references/materials.md) within this workflow's supported media scope. Preserve the reference's identity and fidelity requirements; this does not authorize content substitutions or new generation services.
+
 ## Understand the requested result
 
 Read the reference as a whole before choosing implementation. Inspect representative frames and continuous frames around important changes. Explain what persists, enters, changes, holds and exits; keep an object's identity across cuts when it is the same object. Learn from observable behavior rather than guessing the original author's code.

@@ -31,6 +31,40 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  template-library:
+    name: Template library policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout source and contribution history without LFS media
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+          lfs: false
+          persist-credentials: false
+      - name: Setup pinned Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - name: Require Squash merges for sanitized media history
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # GraphQL variables are passed through gh fields, not expanded by the shell.
+          # shellcheck disable=SC2016
+          gh api graphql -f owner="$GITHUB_REPOSITORY_OWNER" -f repo="${GITHUB_REPOSITORY#*/}" \
+            -f query='query($owner: String!, $repo: String!) { repository(owner: $owner, name: $repo) { squashMergeAllowed mergeCommitAllowed rebaseMergeAllowed } }' \
+            --jq '.data.repository | if .squashMergeAllowed and (.mergeCommitAllowed | not) and (.rebaseMergeAllowed | not) then "Squash-only merge policy confirmed" else error("Enable Squash merge only before accepting cleaned media PRs") end'
+      - name: Check the final merge tree and media policy
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ "$BASE_SHA" =~ ^0+$ ]]; then unset BASE_SHA; fi
+          npm run templates:check -- --final-tree
+          npm run storage:check -- --final-tree
+          node --test tests/repository-storage.test.ts tests/media-transfer.test.ts
+          node --test tests/template-library.test.ts tests/ci-scope.test.mjs
+
   maintainability:
     name: Maintainability report
     if: github.event_name == 'pull_request' && github.base_ref == 'main'
@@ -50,7 +84,13 @@ jobs:
           cache-dependency-path: |
             package-lock.json
             .github/maintainability/package-lock.json
+      - name: Select checks for the changed boundary
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node .github/scripts/ci-scope.mjs
       - name: Compare source against the PR base
+        if: steps.scope.outputs.maintainability == 'true'
         shell: bash
         env:
           PR_HEAD_REVISION: ${{ github.event.pull_request.head.sha }}
@@ -78,13 +118,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 2
       - name: Setup pinned Node
         uses: actions/setup-node@v6
         with:
           node-version: '26.11.1'
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Select checks for the changed boundary
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node .github/scripts/ci-scope.mjs
+      - name: Cache optional LFS media
+        if: steps.scope.outputs.full == 'true'
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs/objects
+          key: optional-lfs-${{ runner.os }}-${{ hashFiles('**/*.mp4', '**/*.motion', '!library/templates/catalog/**') }}
+          restore-keys: optional-lfs-${{ runner.os }}-
+      - name: Download full-bundle media explicitly
+        if: steps.scope.outputs.full == 'true'
+        run: |
+          git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
+          npm run media:pull
       - name: Restore rendering package downloads
+        if: steps.scope.outputs.full == 'true'
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/motion-rendering-apt/*.deb
@@ -93,6 +153,7 @@ jobs:
           restore-keys: |
             rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-
       - name: Install rendering test tools
+        if: steps.scope.outputs.full == 'true'
         run: |
           # The hosted Ubuntu image provides Chrome; Ubuntu's chromium package pulls a desktop snap.
           "$HYPERFRAMES_BROWSER_PATH" --version
@@ -129,8 +190,10 @@ jobs:
           node .github/scripts/motion-scan.mjs source . "$RUNNER_TEMP/source-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
           node --test tests/release-workflows.test.mjs tests/release-scan.test.mjs tests/registry-download.test.mjs tests/stable-release.test.mjs
       - name: Install locked Motion dependencies
+        if: steps.scope.outputs.full == 'true'
         run: npm ci --no-audit --no-fund
       - name: Check and build Studio
+        if: steps.scope.outputs.full == 'true'
         run: |
           npm run check
           npm run typecheck:studio
@@ -138,17 +201,26 @@ jobs:
           npm run build:tracking
           node --experimental-strip-types --test tests/tracking.test.ts
       - name: Validate standalone installation and packaging
+        if: steps.scope.outputs.full == 'true'
         run: node --experimental-strip-types --test tests/diagnostics.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/public-names.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/editor-urls.test.ts tests/workspace-studio.test.ts tests/sync.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/library-install.test.mjs tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
       - name: Studio regression
+        if: steps.scope.outputs.full == 'true'
         run: npm run test:studio -- --maxWorkers=2
+      - name: Repository template runtime regression
+        if: steps.scope.outputs.full == 'true'
+        run: node --test tests/repository-template-runtime.test.ts
       - name: Built-in template playback and export regression
+        if: steps.scope.outputs.full == 'true'
         run: node --experimental-strip-types --test tests/decision-tree.test.ts
       - name: Build phase-one ZIP and exercise all public tools
+        if: steps.scope.outputs.full == 'true'
         run: |
-          npm run package:phase1
+          # Studio was built above from this same checkout; keep the public package command self-contained.
+          node --experimental-strip-types scripts/package.ts --mcp-profile=phase1
           archive="$PWD/dist/openmotion-$(node -p "require('./package.json').version")-phase1.zip"
           node tests/phase1-package.mjs "$archive" "$PWD/.artifacts/phase1-package-e2e"
       - name: Build immutable standalone artifacts
+        if: steps.scope.outputs.full == 'true'
         env:
           PACKAGE_FORMAT: ${{ inputs.format || 'npm' }}
           TEMPLATE_ENVIRONMENT: ${{ inputs.template_environment || 'dev' }}
@@ -163,14 +235,14 @@ jobs:
             done
           fi
       - name: Generate candidate installation guide
-        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
+        if: steps.scope.outputs.full == 'true' && (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
         run: |
           version=$(node scripts/test-package.mjs version "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}")
           candidate=$(node --input-type=module -e 'import fs from "node:fs"; const m=JSON.parse(fs.readFileSync(process.argv[1]));process.stdout.write(m.installer.url.replace(/^\.\//,""));' "dist/$version/release-npm.json")
           node --experimental-strip-types scripts/install-guide.mjs "dist/$version/$candidate" .artifacts/install-guide --candidate
           node .github/scripts/motion-scan.mjs package "dist/$version/$candidate" "$RUNNER_TEMP/package-scan.json" "$RUNNER_TEMP/scanner/gitleaks"
       - name: Retain candidate installation guide for review
-        if: (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
+        if: steps.scope.outputs.full == 'true' && (inputs.format || 'npm') == 'npm' && (inputs.template_environment || 'dev') == 'dev'
         uses: actions/upload-artifact@v7.0.2
         with:
           name: motion-install-guide-preview-${{ github.run_id }}-${{ github.run_attempt }}
@@ -181,5 +253,13 @@ jobs:
           retention-days: 14
           if-no-files-found: error
       - name: Record validation scope
+        if: steps.scope.outputs.full == 'true'
         run: |
           echo 'Motion artifacts were built and checked; the candidate guide is a review artifact only. No npm, R2 or Release publication occurred.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Check presentation documentation
+        if: steps.scope.outputs.full != 'true'
+        env:
+          CHANGED_DOCS: ${{ steps.scope.outputs.documents }}
+        run: |
+          node .github/scripts/ci-scope.mjs --check-docs
+          echo 'Presentation documentation checked; Studio, rendering and package checks were not needed. Source scanning and repository policy checks still ran.' >> "$GITHUB_STEP_SUMMARY"

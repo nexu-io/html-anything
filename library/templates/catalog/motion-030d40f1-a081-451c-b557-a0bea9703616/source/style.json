@@ -1,0 +1,92 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Belaem",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "照片矩阵",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "数字轮廓",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "包围盒",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "控制锚点",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#5d9cb8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b39153",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7d8879",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "黑底照片马赛克数字、变换边框与锚点",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "照片块共同组成数字，整体非均匀缩放改变宽高比，内部图块随父变换。",
+      "status": "inferred"
+    },
+    {
+      "rule": "控制边框与锚点随轮廓变化，强调可编辑性。",
+      "status": "inferred"
+    },
+    {
+      "rule": "恢复原形后缩小退出，形成一轮展示。",
+      "status": "inferred"
+    }
+  ]
+}

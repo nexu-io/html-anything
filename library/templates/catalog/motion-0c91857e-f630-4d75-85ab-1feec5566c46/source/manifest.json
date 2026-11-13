@@ -1,0 +1,228 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 960,
+    "height": 540
+  },
+  "fps": 24,
+  "durationSeconds": 48.416667,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "cffa4025c7cc71da6597b66e85668cc82f0c651e2c45025f293435d592804442"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "timeSeconds": 9,
+      "frameId": "K0032",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "timeSeconds": 14,
+      "frameId": "K0052",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.jpg",
+      "timeSeconds": 25,
+      "frameId": "K0093",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "timeSeconds": 32,
+      "frameId": "K0121",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "timeSeconds": 44,
+      "frameId": "K0176",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 10.079841124999803,
+    "measurementSeconds": 0.284388583000009,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "原广告价格未核实；影片素材和三维镜头未恢复。",
+    "HTML 为 authored 机制示例，不是完整原样复刻。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V319",
+      "sha256": "cffa4025c7cc71da6597b66e85668cc82f0c651e2c45025f293435d592804442",
+      "sourceUrl": "https://x.com/higgsfield/status/2100305266688610746"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged. Large reference images use existing CMS WebP renditions; original image identities are retained in template.json and originals remain in the CMS archive.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.webp",
+      "bytes": 7410,
+      "sha256": "2b0a094e95b9d1cb5721f59d2bdc291002cafa786dc3dc25ec514f5195ac061a"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "bytes": 10806,
+      "sha256": "538fad5cd11013c82a83d389c9a6a00ed085a66d6a7e5b6f380c25f420e5b52e"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "bytes": 9846,
+      "sha256": "5744fdea2649c1397a07b2eb68244b638ce576cbbd92df5186a87b0a9ac1b3c3"
+    },
+    {
+      "path": "assets/reference-4.jpg",
+      "bytes": 113496,
+      "sha256": "2e97699e8c42e6d05b2bead955e5275d3f3a51dee025df81ff5e935aa5df7034"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "bytes": 14702,
+      "sha256": "d5696dc0e3d0ef9cf17fb76c2544b8c1c469ad7c13a7a97fc067bc42d296312b"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "bytes": 23204,
+      "sha256": "d7f8b1c9e07792796c47eed26f299852cdd39f1829af7cf0b0175da998ff9689"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 12239,
+      "sha256": "ef65697db18b66331e03511f6f6fca3e7ca359ab603040218c94fecba2b69d33"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 1592,
+      "sha256": "6fc45de1ab25a8f86200e2457926fc1071e4582a2ddc1bdc7a40b52feebb85d6"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 551,
+      "sha256": "2628ffebe9900698d1f2544685adaf8730a089e8a182eae55488034cc5db1ee4"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 6429,
+      "sha256": "5ebdb2c06b7ddb8c4ce4bb65cd41c3bfaf2c2b781354905afe1254137417af27"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 19063,
+      "sha256": "ceefc310e4c2b75e374b5b16d0e7ef743c3bd86a55706b7ff91691fd035608d8"
+    },
+    {
+      "path": "style.json",
+      "bytes": 3054,
+      "sha256": "b018c14205a179ad4876139fa4cf7d79ae63fb2f5c1c79e8a28abe5e6f4f36ac"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 2258,
+      "sha256": "bdc8cf13e1f3aa389ac3e8fb62973bdcc0fdc0b29114af842c389843ea656aa6"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 14013,
+      "sha256": "4ded01d535dd4fe9dce512662e8d1043f0d84f2210edbb365690da5382d96d18"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12500,
+      "sha256": "dbafb8d810e47ec5e6cad17f29f0d1f2912f5a802013f70431656b01109db576"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4965,
+      "sha256": "0dbd862b0d39894ce3149f39a094e991b9a401784cf1b392b8bfa0f5273e968d"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Higgsfield API"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#c7ff2a"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 1
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 48.416667,
+      "status": "authored"
+    }
+  ]
+}

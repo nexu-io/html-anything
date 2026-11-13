@@ -1,0 +1,124 @@
+{
+  "background": {
+    "color": "#f1f1ed",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：98 resources",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Select a matter",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "椭圆分区",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中心黑点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "白色任务卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "方孔",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "资源列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "周边几何",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f1f1ed",
+      "status": "inferred"
+    },
+    {
+      "hex": "#25242c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9b92aa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b4c4bc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c9b7b9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#387b69",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "纸面低饱和拼贴，中央黑点、白卡和细线维持信息秩序。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "大椭圆由多个灰紫灰绿块面组成，任务卡靠近中心黑点。整体逐渐缩小，外侧出现白色圆洞，黑点保持在画面中心。",
+      "status": "inferred"
+    },
+    {
+      "rule": "椭圆收起后留下方孔，资源列表从旁边进入并以细线关联。周边几何降低密度，为卡片的文字留出白区。",
+      "status": "inferred"
+    },
+    {
+      "rule": "替换文档、资源数量和任务短句，保留从较大信息场收成核心，再展开上下文的过程。",
+      "status": "inferred"
+    }
+  ]
+}

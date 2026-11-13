@@ -3,13 +3,12 @@ import { readFileSync, watch } from 'node:fs';
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { createTracker, uuid } from '../tracking/core.ts';
 import type { Entry } from '../tracking/core.ts';
-import { createNodeTracking, loadIdentity, trackingReleaseEnabled } from '../tracking/node.ts';
+import { createNodeTracking, loadIdentity } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
 import { VERSION } from '../preview.ts';
 
 export type OmTracking = ReturnType<typeof createTracker<typeof omEvents>>;
 export function trackingLockReason() {
-  if (!trackingReleaseEnabled(VERSION)) return 'test_build' as const;
   return ['0', 'false', 'off'].includes(process.env.OPENMOTION_TELEMETRY?.toLowerCase() ?? '') || process.env.DO_NOT_TRACK === '1'
     ? 'environment' as const : null;
 }
@@ -80,7 +79,7 @@ export function trackPhase1Result(tracking: OmTracking | undefined, name: string
   const fields = { outcome, ...(uuid.test(result?.projectId) ? { project_id: result.projectId } : {}),
     ...(uuid.test(args?.requestId) ? { operation_id: args.requestId } : {}), ...(error ? { error_code: trackingError(error) } : {}) } as const;
   if (name === 'motion_create_project') tracking.track('project_create_result', { ...fields, effect_status: error ? 'unknown' : 'applied' });
-  if (name === 'motion_open_preview') tracking.track('project_open_result', { ...fields, opened_by_host_status: 'unknown' });
+  if (name === 'motion_open_preview' && args?.target !== 'templates') tracking.track('project_open_result', { ...fields, opened_by_host_status: 'unknown' });
   if (name === 'motion_edit_project') tracking.track('project_edit_result', { ...fields,
     ...(!error && Array.isArray(result?.changedFiles) ? { changed_file_count: result.changedFiles.length } : {}) });
   if (name === 'motion_restore_version') tracking.track('version_restore_result', fields);

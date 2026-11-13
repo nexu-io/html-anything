@@ -1,0 +1,138 @@
+{
+  "background": {
+    "color": "#eeebe7",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Your journey to",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：CLOUDERA",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Learn more at",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "绿色道路",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "彩色圆头角色",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "云与山",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "星空问题页",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "电脑火箭",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "橙色主角",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#eeebe7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#121212",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d5ff26",
+      "status": "inferred"
+    },
+    {
+      "hex": "#49aeec",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e174df",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f16a09",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线两行短句；手绘黑轮廓、轻微不规则边缘与大块亮色",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "把企业数据的疑问放进一段有起点、障碍和汇流的旅程，最终用同一队角色走向共同目的地。",
+      "status": "inferred"
+    },
+    {
+      "rule": "开场地图与角色建立旅行语境，随后切黑色星空，一次只出现一个问题。白色无衬线短句居中，细箭头带向下一句，角色和地图暂时让出阅读空间。",
+      "status": "inferred"
+    },
+    {
+      "rule": "多条支路汇入主干，人物沿道路前进；云层和山脉先作前景遮挡再移开，视角从近地拉到远景后再次推进。亮绿路面、蓝粉侧带与细黑轮廓保持一致。",
+      "status": "inferred"
+    }
+  ]
+}

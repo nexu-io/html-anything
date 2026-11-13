@@ -11,8 +11,8 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 
 | 公开 Tool | 复用来源 | 本次实现到的边界 |
 | --- | --- | --- |
-| openmotion_list_templates | Prism 发布目录与本地缓存 | 无查询参数；返回本地 JSONL 索引路径、总数和目录版本，宿主自行检索 |
-| openmotion_get_template | 同一目录缓存与文件服务 | 按 ID 读取模板元数据、文件清单和 TEMPLATE.md |
+| openmotion_list_templates | Local repository or configured CMS catalog | No query arguments; returns source, a local JSONL index, count and catalog version for local search |
+| openmotion_get_template | Same local/CMS reader | Exact ID; repository entries return local instructions, motionDocument content and absolute localSource paths |
 | openmotion_create_project | 项目目录、空白工程、模板复制、会话归属 | 新建独立载体、保存需求/来源、返回初始内容版本；宿主 Agent 制作影片 |
 | openmotion_open_preview | 原预览、项目选择、原生 lint | 打开指定已有工程；仅明确绑定的 OpenMotion 会话可省 projectId；返回真实 URL |
 | openmotion_import_assets | 素材目录、FFprobe/FFmpeg | 实际本机媒体批量持久化、逐项结果、稳定素材 ID、去重；不自动排入时间线 |
@@ -38,7 +38,7 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 
 ### openmotion_list_templates / openmotion_get_template
 
-list 无参数，返回 indexPath、total、catalogVersion 和可选 warning，不返回查询结果。Agent 在本机检索 JSONL 索引；每行是模板摘要。get 必填 templateId，返回单个模板、files 与 instructions（TEMPLATE.md）。已知 ID 无需先 list。目录和文件缓存配置、失败行为见 [模板目录](template-catalog.md)。
+List has no arguments and returns source, indexPath, total and catalogVersion. Search the local JSONL index; repository rows include localSource paths. Get requires templateId and reads the selected template's instructions. Repository mode also returns motionDocument={path,content} and localSource paths for metadata, guide, manifest and examples, without requiring an editor/backend or CMS request. Source checkouts default to repository; distributions without catalog files default to CMS. See [startup and source selection](template-repository.md#run-from-a-local-clone). Guidance-only examples require authoring a new project; direct projectType=template copying still requires actual editable project files.
 
 ### openmotion_create_project
 
@@ -47,6 +47,8 @@ list 无参数，返回 indexPath、total、catalogVersion 和可选 warning，�
 返回 projectId、sessionId、project（directory、html、files）、revision、version、currentVersionId/currentVersionNumber、需求/来源、previewUrl，以及 creationComplete=true、filmComplete=false。参考只记录来源，不在创建时假装看片或生成成片；外部 URL 可达性/内容由宿主实际检查。输入不符、模板不可复制或 ID 不存在时明确失败，保留旧项目。
 
 ### openmotion_open_preview
+
+`target=templates` opens the editor template library without a project/session binding, native project initialization, lint, template-source download or active-project switch. It accepts only action=open (or omitted), embedded and presentation; project, session, revision and review/display fields are rejected. The result contains target, previewUrl, projectCreated=false and a page previewHandoff without revision/version. The host presents and observes this page; project record_display receipts do not apply. Studio creates an independent project only after the user selects an editable template's Open and edit action. Template details and playback alone do not create projects.
 
 Default action=open accepts an explicit projectId or bound sessionId, optional embedded, presentation, expectedRevision and expectedVersionId. When supplied, both identities are checked before and after lint/open. The result includes previewHandoff, previewUrl, preflight, selectionSource and openedByHost=false; the host must present the existing project. No project is created implicitly.
 
@@ -116,7 +118,7 @@ The open editor also shows these restore refusals through its shared dismissible
 
 ### Phase-one API compatibility
 
-`shared/phase1-tools.ts` defines API protocol 1 and the available Tool names. Both editor and preview health advertise these capabilities. A phase-one stdio adapter can forward to another version/build only when the backend explicitly supports the same API protocol and requested Tool and has the same stable/test tracking policy; the backend validates the complete input again before execution. Stable and test clients use separate data directories; cross-policy authority reuse is rejected without stopping the existing service. Service, workspace, instance and authority protocol checks still apply. Internal legacy calls retain exact version/build checks.
+`shared/phase1-tools.ts` defines API protocol 1 and the available Tool names. Both editor and preview health advertise these capabilities. A phase-one stdio adapter can forward to another version/build only when the backend explicitly supports the same API protocol and requested Tool; the backend validates the complete input again before execution. Release channels do not impose an additional tracking-policy compatibility gate. DEV packages retain their separate data directories and template routing. Service, workspace, instance and authority protocol checks still apply. Internal legacy calls retain exact version/build checks.
 
 Protocol 1 preserves existing request/response shapes and semantics. New Tools and optional fields are additive; incompatible required fields, removed fields or changed semantics must increment the protocol. A supported older connection keeps its project binding, stable request IDs and existing export queries through a compatible plugin or backend replacement without another MCP initialization. Running exports stay with the live authority; recovery does not terminate it or replay an uncertain mutation. An already-closed host transport and an incompatible protocol cannot be repaired by this negotiation.
 

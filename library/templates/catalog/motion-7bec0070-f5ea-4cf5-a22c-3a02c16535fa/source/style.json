@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#fafafa",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：AI AGENT",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网格",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "橙色方块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网页堆栈",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "页面矩阵",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "结构数据",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "检索结果",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fafafa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202020",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ee4b0a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d9d9d9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f0d0c4",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "浅色网格、橙色几何模块、黑白网页与代码对照。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "网页堆叠代表输入复杂度，橙色模块把流程接向结构化内容。网页和代码用相邻或连续镜头对应，形成可读的输入输出关系。",
+      "status": "inferred"
+    },
+    {
+      "rule": "淡灰网格固定全片空间；橙色点、线、方块和面板连接不同界面，黑色卡片用于突出阻碍或信息密度。",
+      "status": "inferred"
+    },
+    {
+      "rule": "大量网页形成网格时，让中央页面保持清楚，周围缩小或降低对比。数据整理阶段把杂乱信息变成规律的行和方块。",
+      "status": "inferred"
+    }
+  ]
+}

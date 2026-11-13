@@ -1,0 +1,247 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Claude Code｜Agent View · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#b5ccc3;--brand-ink:#161815;--accent:#c87b60;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Anthropic <span>/</span> V245</div><div class="intro-line"><h1>Claude Code｜Agent View</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>用角色把散落的终端收拢成任务列表，让“管理多个代理”成为一个看得懂的动作。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 38.791667, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 4.3, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Agent view&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#c87b60&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Agent view&quot;, &quot;accent&quot;: &quot;#c87b60&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="38.791667" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 38.79 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Claude Code｜Agent View · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#b5ccc3}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Anthropic</div><div class="type-sample">Agent view</div><p>薄荷底、黑色终端、珊瑚像素角色与金色套索</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#b5ccc3" style="--swatch:#b5ccc3" aria-label="复制色值 #b5ccc3"><span></span><code>#B5CCC3</code></button><button class="swatch" data-color="#161815" style="--swatch:#161815" aria-label="复制色值 #161815"><span></span><code>#161815</code></button><button class="swatch" data-color="#c87b60" style="--swatch:#c87b60" aria-label="复制色值 #c87b60"><span></span><code>#C87B60</code></button><button class="swatch" data-color="#b99052" style="--swatch:#b99052" aria-label="复制色值 #b99052"><span></span><code>#B99052</code></button><button class="swatch" data-color="#ecece4" style="--swatch:#ecece4" aria-label="复制色值 #ecece4"><span></span><code>#ECECE4</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>终端窗口群</span><span>像素角色</span><span>套索路径</span><span>聚合列表</span><span>任务状态</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>散开的终端先形成问题</h2></div><div class="rule-copy">
+<p>黑色终端分散在薄荷背景上，留出角色和套索的活动空间。角色用珊瑚像素色，套索用金色细线；任务文字保持等宽、短行。</p>
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>套索牵动哪一个窗口，哪个窗口才移动</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;套索牵动哪一个窗口，哪个窗口才移动&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 13, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;6–19 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>套索牵动哪一个窗口，哪个窗口才移动</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="套索牵动哪一个窗口，哪个窗口才移动" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="13" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 13.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>6–19 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Claude Code｜Agent View · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#b5ccc3}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;6&quot; data-end=&quot;19&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>绳线端点跟随窗口，窗口朝统一集合点收拢。角色先做牵引，窗口随后响应，聚拢后再切换成列表。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>从状态分组进入具体任务</h2></div><div class="rule-copy">
+<p>列表先按 Needs input、Working、Completed 建立顺序，再进入一条需要回复的任务。处理完回到列表，让局部操作保留全局位置。</p>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>替换任务与角色</h2></div><div class="rule-copy">
+<p>可更换任务名称、角色造型和状态配色。保留散落、聚合、分组、处理这四种关系；列表文案变长时增高行距，不压缩状态标签。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>单会话终端</b></button><button class="beat" data-time="2.0"><span>2.00<small>s</small></span><b>多个终端散开</b></button><button class="beat" data-time="4.0"><span>4.00<small>s</small></span><b>角色与标题</b></button><button class="beat" data-time="6.0"><span>6.00<small>s</small></span><b>角色用套索聚合</b></button><button class="beat" data-time="15.0"><span>15.00<small>s</small></span><b>统一任务列表</b></button><button class="beat" data-time="19.0"><span>19.00<small>s</small></span><b>进入任务与回复</b></button><button class="beat" data-time="31.0"><span>31.00<small>s</small></span><b>发布落版</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="2.00 秒的构图参考" loading="lazy"><figcaption>2.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="4.00 秒的构图参考" loading="lazy"><figcaption>4.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="15.00 秒的构图参考" loading="lazy"><figcaption>15.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="19.00 秒的构图参考" loading="lazy"><figcaption>19.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="31.00 秒的构图参考" loading="lazy"><figcaption>31.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>保留散落→聚合→分组→局部处理的结构。</li><li>替换任务名与角色，套索连接目标必须对应被收拢窗口。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>终端窗口群 / 像素角色 / 套索路径 / 聚合列表 / 任务状态</p>
+<ul><li>角色牵引散落终端收拢，表达多任务进入同一视图。</li><li>聚合后按 Needs input、Working、Completed 分类，状态先于详情。</li><li>列表进入局部回复后返回全局，保持上下文。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Anthropic / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Claude Code｜Agent View
+
+用角色把散落的终端收拢成任务列表，让“管理多个代理”成为一个看得懂的动作。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 38.791667,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 4.3,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Agent view&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#c87b60&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Agent view&quot;,
+        &quot;accent&quot;: &quot;#c87b60&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 散开的终端先形成问题
+
+黑色终端分散在薄荷背景上，留出角色和套索的活动空间。角色用珊瑚像素色，套索用金色细线；任务文字保持等宽、短行。
+
+## 套索牵动哪一个窗口，哪个窗口才移动
+
+绳线端点跟随窗口，窗口朝统一集合点收拢。角色先做牵引，窗口随后响应，聚拢后再切换成列表。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;套索牵动哪一个窗口，哪个窗口才移动&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 13,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;6–19 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 从状态分组进入具体任务
+
+列表先按 Needs input、Working、Completed 建立顺序，再进入一条需要回复的任务。处理完回到列表，让局部操作保留全局位置。
+
+## 替换任务与角色
+
+可更换任务名称、角色造型和状态配色。保留散落、聚合、分组、处理这四种关系；列表文案变长时增高行距，不压缩状态标签。
+
+## 配色与字形
+
+薄荷底、黑色终端、珊瑚像素角色与金色套索。
+
+#b5ccc3 · #161815 · #c87b60 · #b99052 · #ecece4
+
+## 元素与制作规则
+
+终端窗口群 / 像素角色 / 套索路径 / 聚合列表 / 任务状态
+
+- 角色牵引散落终端收拢，表达多任务进入同一视图。
+- 聚合后按 Needs input、Working、Completed 分类，状态先于详情。
+- 列表进入局部回复后返回全局，保持上下文。
+
+## 内容替换
+
+- 保留散落→聚合→分组→局部处理的结构。
+- 替换任务名与角色，套索连接目标必须对应被收拢窗口。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Anthropic&quot;,
+  &quot;id&quot;: &quot;V245&quot;,
+  &quot;palette&quot;: [
+    &quot;#b5ccc3&quot;,
+    &quot;#161815&quot;,
+    &quot;#c87b60&quot;,
+    &quot;#b99052&quot;,
+    &quot;#ecece4&quot;
+  ],
+  &quot;typography&quot;: &quot;薄荷底、黑色终端、珊瑚像素角色与金色套索&quot;,
+  &quot;sample&quot;: &quot;Agent view&quot;,
+  &quot;objects&quot;: [
+    &quot;终端窗口群&quot;,
+    &quot;像素角色&quot;,
+    &quot;套索路径&quot;,
+    &quot;聚合列表&quot;,
+    &quot;任务状态&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 2.0,
+      &quot;frameId&quot;: &quot;K0007&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 4.0,
+      &quot;frameId&quot;: &quot;K0014&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 15.0,
+      &quot;frameId&quot;: &quot;K0053&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 19.0,
+      &quot;frameId&quot;: &quot;K0066&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 31.0,
+      &quot;frameId&quot;: &quot;K0083&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;单会话终端&quot;,
+      &quot;end&quot;: 2,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 2,
+      &quot;label&quot;: &quot;多个终端散开&quot;,
+      &quot;end&quot;: 4,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 4,
+      &quot;label&quot;: &quot;角色与标题&quot;,
+      &quot;end&quot;: 6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 6,
+      &quot;label&quot;: &quot;角色用套索聚合&quot;,
+      &quot;end&quot;: 15,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15,
+      &quot;label&quot;: &quot;统一任务列表&quot;,
+      &quot;end&quot;: 19,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 19,
+      &quot;label&quot;: &quot;进入任务与回复&quot;,
+      &quot;end&quot;: 31,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 31,
+      &quot;label&quot;: &quot;发布落版&quot;,
+      &quot;end&quot;: 38.791667,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 38.791667,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

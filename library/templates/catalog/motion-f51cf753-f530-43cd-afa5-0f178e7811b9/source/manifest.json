@@ -1,0 +1,239 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 720,
+    "height": 900
+  },
+  "fps": 60,
+  "durationSeconds": 9.216667,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.jpg",
+      "timeSeconds": 0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.jpg",
+      "timeSeconds": 0.4666666666666667,
+      "frameId": "K0002",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.jpg",
+      "timeSeconds": 1.25,
+      "frameId": "K0005",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.jpg",
+      "timeSeconds": 3,
+      "frameId": "K0012",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-5.jpg",
+      "timeSeconds": 8.133333333333333,
+      "frameId": "K0024",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-6.jpg",
+      "timeSeconds": 8.75,
+      "frameId": "K0028",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 5.222158500022488,
+    "measurementSeconds": 0.1657257499999787,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "访谈人物视频与声音不随包提供。",
+    "像素字体文件未恢复；示例使用等宽替代。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V004",
+      "sha256": "b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+      "sourceUrl": "https://x.com/claudeai/status/2074244664199115201"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged. Large reference images use existing CMS WebP renditions; original image identities are retained in template.json and originals remain in the CMS archive."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.jpg",
+      "bytes": 174162,
+      "sha256": "627cadc60d03095019c96f66aed0d7ce9e686978ec836f7a5df5b19b8c4fd9f0"
+    },
+    {
+      "path": "assets/reference-2.jpg",
+      "bytes": 171010,
+      "sha256": "0746c356b0b6b3b648ea8fd38bd19b456aa5a6b614158dc38a9cefa9a320eb06"
+    },
+    {
+      "path": "assets/reference-3.jpg",
+      "bytes": 139606,
+      "sha256": "d7109259d566ea7944ed4be1186f4138004d8be934536fcd59dc00b7ec078ad6"
+    },
+    {
+      "path": "assets/reference-4.jpg",
+      "bytes": 137665,
+      "sha256": "af889aafe5551938faa1e84de9d7c09d7a83eed2488cd095bfc8abc617e0b25c"
+    },
+    {
+      "path": "assets/reference-5.jpg",
+      "bytes": 135033,
+      "sha256": "3989b63be7246f2bc61a44c056699b357c899dd45749b83008ad1b4f808bcf6c"
+    },
+    {
+      "path": "assets/reference-6.jpg",
+      "bytes": 178008,
+      "sha256": "f61f50152df2ef5f8e0adaecf62559408780ce0f6e4569fabadd34e51d84789e"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/clip-2.html",
+      "bytes": 593,
+      "sha256": "a0df7e72cab64f0e5d9ee12a08914acbfbf5ee5fae8375a706ff939055c5d088"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 9508,
+      "sha256": "4818845a453fed61c0026feaf658b70cfad29062a8698f4f7ff515cb8bf29249"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 1046,
+      "sha256": "6d3ad183d86ef49e409f3764c2fcaf34bd7fb85dc79ef78236b38c6b989a2605"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 565,
+      "sha256": "7d545a456f4a7a98e4f14d8b9610ea347c592510067dc5b27605b6302f7fc15c"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 6818,
+      "sha256": "0e051e9780c4a2b7901bb747b373219c36626b568ac2914634218088af162bdd"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 22006,
+      "sha256": "dfecdfd20d82245752a79e8e4c75f5249ed4277e22e19f9c00876e6b07f846af"
+    },
+    {
+      "path": "style.json",
+      "bytes": 3050,
+      "sha256": "aad125ae8cf4fb352f05dbb4c23cd1e455500b8369e73c3dd962b2c0ae2d231f"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 1937,
+      "sha256": "51175f7aafba6c4f38995a3d44c080ce238ca0dd3022ac817a9617bd7144311e"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 9315,
+      "sha256": "812d6094326a0a76c157eaf349d742363140a76ecfdde9cc8f171a4851056e40"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12500,
+      "sha256": "dbafb8d810e47ec5e6cad17f29f0d1f2912f5a802013f70431656b01109db576"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4965,
+      "sha256": "0dbd862b0d39894ce3149f39a094e991b9a401784cf1b392b8bfa0f5273e968d"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "THE MAKING\nOF CLAUDE CODE"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#cc7863"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/clip-2.html",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 2
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 9.216667,
+      "status": "authored"
+    },
+    {
+      "id": "clip-2",
+      "src": "demos/clip-2.html",
+      "duration": 3.2,
+      "status": "authored"
+    }
+  ]
+}

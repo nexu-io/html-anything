@@ -1,0 +1,404 @@
+{
+  "templateId": "motion-f51cf753-f530-43cd-afa5-0f178e7811b9",
+  "entry": {
+    "templateId": "motion-f51cf753-f530-43cd-afa5-0f178e7811b9",
+    "sortOrder": 72,
+    "original": {
+      "templateName": "幕后内容上线｜The making of Claude Code",
+      "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+      "summary": "窗口按先后层叠，中央标题最后覆盖上层；外围内容维持可辨认边缘。",
+      "styleDescription": "等宽档案文字、像素标题、深色窗口；竖屏中心堆叠",
+      "promotionalUseCases": "品牌宣传",
+      "visualPresentation": "界面动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+      "reviewFocus": "窗口按先后层叠，中央标题最后覆盖上层；外围内容维持可辨认边缘。；主标题停留期间，角色与访谈等内部内容继续变化；窗口外框与内容动画分开描述。；退出时撤去上层窗口，露出起始文档，让片段闭环。",
+      "category": "",
+      "durationSeconds": "9.216667",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+      "exampleVideo": "",
+      "templateId": "V004",
+      "sourceVideoTitle": "post-90.mp4"
+    },
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "files": [],
+    "previewUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+    "coverUrl": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+    "motionDocumentUrl": "https://r.open-design.ai/files/c79404e457e914295dc5f19fd13681f24e03a0c1e474eba410738c435d55ca52",
+    "motionGuideUrl": "https://r.open-design.ai/files/6f5ea3ae503dd918706d17f8b67747efe23533caa71ae01af828b81771c7c451",
+    "projectFileUrl": null,
+    "brand": "Anthropic",
+    "colors": [
+      "yellow"
+    ],
+    "width": 720,
+    "height": 900,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。",
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "passed"
+    },
+    "featuredOrder": null
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Blick hinter die Kulissen｜Die Entstehung von Claude Code",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "Fenster stapeln sich nacheinander; zuletzt liegt die zentrale Überschrift oben. Die äußeren Inhalte behalten erkennbare Ränder.",
+        "styleDescription": "Monospace-Archivtexte, Pixeltitel, dunkle Fenster; zentraler Stapel im Hochformat",
+        "promotionalUseCases": "Markenwerbung",
+        "visualPresentation": "Oberflächenanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "Fenster stapeln sich nacheinander; zuletzt liegt die zentrale Überschrift oben. Die äußeren Inhalte behalten erkennbare Ränder. Während der Haupttitel verweilt, verändern sich Figuren, Interviews und andere innere Inhalte weiter; Fensterrahmen und Inhaltsanimation getrennt beschreiben. Beim Ausblenden obere Fenster entfernen, bis das Ausgangsdokument erscheint und den Clip zur Schleife schließt.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "original": {
+        "templateName": "Making-of Window Collage",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "Layer windows in sequence, with the central heading covering the top layer last; retain recognizable edges of surrounding content.",
+        "styleDescription": "Monospace archival text, pixel heading and dark windows; central stacking in portrait format",
+        "promotionalUseCases": "Brand promotion",
+        "visualPresentation": "Interface animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "Layer windows in sequence, with the central heading covering the top layer last; retain recognizable edges of surrounding content. While the main heading holds, internal content such as characters and interviews keeps changing; describe window frames separately from content animation. On exit, remove upper windows to reveal the initial document and close the loop.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/d7027e1c13c6436e39f4b25eb1517b15557d4bc793366230a78fc14af017321e",
+      "motionGuideUrl": "https://r.open-design.ai/files/c259d27bb61ad47fdfe22750fd91d6db6a6023a2b7f04719b9f03591cf5c6953",
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Contenido entre bastidores | The making of Claude Code",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "Superponer ventanas en secuencia y colocar el título central encima al final; conservar bordes reconocibles del contenido periférico.",
+        "styleDescription": "Texto de archivo monoespaciado, título de píxeles y ventanas oscuras; apilado central vertical",
+        "promotionalUseCases": "Promoción de marca",
+        "visualPresentation": "Animación de interfaz",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "Superponer ventanas en secuencia y colocar el título central encima al final; conservar bordes reconocibles del contenido periférico. Mientras el título permanece, personajes, entrevistas y otros contenidos internos siguen cambiando; describir los marcos y la animación interna por separado. Retirar las ventanas superiores al salir para revelar el documento inicial y cerrar el ciclo.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/87c62812f73db41d071bbf7335230b969607a2e80dc9ff31c61b8ebaa11bcf34",
+      "motionGuideUrl": "https://r.open-design.ai/files/dc40762b5ec12d122fec777c39c5454a5e0dc0dd571ebf1702bd225c76a4d7f9",
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Dans les coulisses｜La création de Claude Code",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "Les fenêtres s’empilent successivement ; le titre central recouvre la couche supérieure en dernier, tandis que les contenus périphériques gardent des bords reconnaissables.",
+        "styleDescription": "Texte d’archives à chasse fixe, titre pixelisé, fenêtres sombres ; empilement central en portrait",
+        "promotionalUseCases": "Promotion de marque",
+        "visualPresentation": "Animation d’interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "Les fenêtres s’empilent successivement ; le titre central recouvre la couche supérieure en dernier, tandis que les contenus périphériques gardent des bords reconnaissables. Pendant la pause du titre principal, personnages, interviews et autres contenus internes continuent d’évoluer ; décrire séparément le cadre et l’animation intérieure. À la sortie, retirer les fenêtres supérieures pour révéler le document initial et fermer la boucle.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Dietro le quinte｜La creazione di Claude Code",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "Le finestre si sovrappongono in sequenza; il titolo centrale copre per ultimo il livello superiore, mentre i contenuti periferici mantengono bordi riconoscibili.",
+        "styleDescription": "Testi d’archivio monospaziati, titolo pixel, finestre scure; pila centrale in verticale",
+        "promotionalUseCases": "Promozione del marchio",
+        "visualPresentation": "Animazione dell’interfaccia",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "Le finestre si sovrappongono in sequenza; il titolo centrale copre per ultimo il livello superiore, mentre i contenuti periferici mantengono bordi riconoscibili. Mentre il titolo principale resta, personaggi, interviste e altri contenuti interni continuano a cambiare; descrivere separatamente cornici e animazioni interne. In uscita rimuovere le finestre superiori, rivelando il documento iniziale per chiudere il ciclo.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "舞台裏を公開｜The making of Claude Code",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "ウィンドウを順に重ね、中央のタイトルを最後に最前面へ載せる；周辺の内容は縁が見える状態を保つ。",
+        "styleDescription": "等幅の資料テキスト、ピクセル風の見出し、暗いウィンドウ；縦画面の中央に重ねる",
+        "promotionalUseCases": "ブランドプロモーション",
+        "visualPresentation": "UIアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "ウィンドウを順に重ね、中央のタイトルを最後に最前面へ載せる；周辺の内容は縁が見える状態を保つ。；メインタイトルの表示中も、キャラクターやインタビューなどの内部コンテンツは変化し続ける；ウィンドウの枠と内容のアニメーションは分けて記述する。；退出時に上層のウィンドウを取り除いて最初の文書を見せ、映像を循環させる。",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "비하인드 공개｜Claude Code 제작 이야기",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "창을 순서대로 쌓고 중앙 제목을 마지막에 맨 위로 덮는다；주변 콘텐츠는 가장자리가 식별 가능하도록 유지한다.",
+        "styleDescription": "고정폭 기록 글자, 픽셀 제목, 어두운 창；세로 화면 중앙에 겹쳐 쌓기",
+        "promotionalUseCases": "브랜드 홍보",
+        "visualPresentation": "인터페이스 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "창을 순서대로 쌓고 중앙 제목을 마지막에 맨 위로 덮는다；주변 콘텐츠는 가장자리가 식별 가능하도록 유지한다.；주 제목이 머무는 동안 캐릭터와 인터뷰 등 내부 콘텐츠는 계속 변화한다；창 프레임과 내부 콘텐츠 애니메이션을 따로 기술한다.；퇴장할 때 위쪽 창을 제거해 처음 문서를 드러내며 구간을 순환으로 완성한다.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Bastidores disponíveis | The making of Claude Code",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "Sobrepor janelas em sequência e colocar o título central por cima ao final; preservar bordas reconhecíveis do conteúdo periférico.",
+        "styleDescription": "Texto de arquivo monoespaçado, título de pixels e janelas escuras; empilhamento central vertical",
+        "promotionalUseCases": "Divulgação de marca",
+        "visualPresentation": "Animação de interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "Sobrepor janelas em sequência e colocar o título central por cima ao final; preservar bordas reconhecíveis do conteúdo periférico. Enquanto o título permanece, personagens, entrevistas e outros conteúdos internos continuam mudando; descrever molduras e animação interna separadamente. Retirar as janelas superiores na saída para revelar o documento inicial e fechar o ciclo.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/ac9ae87dd8a3a608990fa943a3f930627f44a6e68a84d5df54ed163088666ae3",
+      "motionGuideUrl": "https://r.open-design.ai/files/bf943713f72226f3a4bd53d5ccc2a65792072b191479750c5cd4b0915aa9d3fc",
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Закулисье｜как создавался Claude Code",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "Окна накладываются по порядку; центральный заголовок последним перекрывает верхний слой；Края окружающего содержимого остаются узнаваемыми.",
+        "styleDescription": "Моноширинный архивный текст, пиксельный заголовок и тёмные окна；Стопка по центру вертикального экрана",
+        "promotionalUseCases": "Продвижение бренда",
+        "visualPresentation": "Анимация интерфейса",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "Окна накладываются по порядку; центральный заголовок последним перекрывает верхний слой；Края окружающего содержимого остаются узнаваемыми.；Пока главный заголовок остаётся, персонажи, интервью и другое внутреннее содержимое продолжают меняться；Рамка окна и анимация содержимого описываются отдельно.；При выходе верхние окна убираются, открывая исходный документ и замыкая фрагмент.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Kamera arkası yayında｜Claude Code’un yapımı",
+        "videoPreview": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "summary": "Pencereler sırayla üst üste gelir; merkezi başlık en son üste yerleşir. Çevredeki içeriklerin kenarları tanınabilir kalır.",
+        "styleDescription": "Eş aralıklı arşiv metinleri, piksel başlık, koyu pencereler; dikey ekranda merkezi yığın",
+        "promotionalUseCases": "Marka tanıtımı",
+        "visualPresentation": "Arayüz animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/b19679ae652ff02a2a24f07687a1307f21b05c5016c3281fecbcc11057c3e6e7",
+        "reviewFocus": "Pencereler sırayla üst üste gelir; merkezi başlık en son üste yerleşir. Çevredeki içeriklerin kenarları tanınabilir kalır. Ana başlık beklerken karakter, röportaj ve diğer iç içerikler değişmeye devam eder; pencere çerçevesi ile içerik animasyonu ayrı açıklanır. Çıkışta üst pencereler kaldırılır, ilk belge görünür ve klip döngüye bağlanır.",
+        "category": "",
+        "durationSeconds": "9.216667",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/a56948cfdab2dcc493bca22ec22d6a78745ecf5acdfb07a4954928b2b7301fa7",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/claudeai/status/2074244664199115201",
+        "exampleVideo": "",
+        "templateId": "V004",
+        "sourceVideoTitle": "post-90.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/c79404e457e914295dc5f19fd13681f24e03a0c1e474eba410738c435d55ca52",
+    "bytes": 916135,
+    "sha256": "c79404e457e914295dc5f19fd13681f24e03a0c1e474eba410738c435d55ca52"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 174162,
+        "sha256": "627cadc60d03095019c96f66aed0d7ce9e686978ec836f7a5df5b19b8c4fd9f0"
+      },
+      "url": "https://r.open-design.ai/files/57561e8bf42248951800d35aefa18ca8a8f44f584da8da61b0780f3301394803",
+      "bytes": 66204,
+      "sha256": "57561e8bf42248951800d35aefa18ca8a8f44f584da8da61b0780f3301394803"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 171010,
+        "sha256": "0746c356b0b6b3b648ea8fd38bd19b456aa5a6b614158dc38a9cefa9a320eb06"
+      },
+      "url": "https://r.open-design.ai/files/f6e759e77ccd3a240de858600919326ca510c25f8d0bd4e30ba598534267a454",
+      "bytes": 64188,
+      "sha256": "f6e759e77ccd3a240de858600919326ca510c25f8d0bd4e30ba598534267a454"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 139606,
+        "sha256": "d7109259d566ea7944ed4be1186f4138004d8be934536fcd59dc00b7ec078ad6"
+      },
+      "url": "https://r.open-design.ai/files/c8ddbf8bdbc7d3c3b030dfe8bdf98ef4cf5f712615cc2970144746310756f46b",
+      "bytes": 51900,
+      "sha256": "c8ddbf8bdbc7d3c3b030dfe8bdf98ef4cf5f712615cc2970144746310756f46b"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 137665,
+        "sha256": "af889aafe5551938faa1e84de9d7c09d7a83eed2488cd095bfc8abc617e0b25c"
+      },
+      "url": "https://r.open-design.ai/files/e2d09732499dfd0fc3df91710cae3c0c16776ce5a36dea37de95953b5ee5c39b",
+      "bytes": 45696,
+      "sha256": "e2d09732499dfd0fc3df91710cae3c0c16776ce5a36dea37de95953b5ee5c39b"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 135033,
+        "sha256": "3989b63be7246f2bc61a44c056699b357c899dd45749b83008ad1b4f808bcf6c"
+      },
+      "url": "https://r.open-design.ai/files/5307de95b4b61e7659436510d7a73e61e9113a0a0d2f403c632db92aeb1e2686",
+      "bytes": 44514,
+      "sha256": "5307de95b4b61e7659436510d7a73e61e9113a0a0d2f403c632db92aeb1e2686"
+    },
+    {
+      "source": {
+        "path": "assets/reference-6.jpg",
+        "bytes": 178008,
+        "sha256": "f61f50152df2ef5f8e0adaecf62559408780ce0f6e4569fabadd34e51d84789e"
+      },
+      "url": "https://r.open-design.ai/files/ae3ef2c286dd00d87708baf6631a4bb160401b080a7ef748bd0c0683c3c06296",
+      "bytes": 70918,
+      "sha256": "ae3ef2c286dd00d87708baf6631a4bb160401b080a7ef748bd0c0683c3c06296"
+    }
+  ]
+}

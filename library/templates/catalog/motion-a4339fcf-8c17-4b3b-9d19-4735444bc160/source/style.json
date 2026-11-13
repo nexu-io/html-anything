@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#ffffff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Cybersecurity Data",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Security review complete",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "点阵信号",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "数字计数",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "扫描列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "风险表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "来源标签",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202020",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ff5e12",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e3e3e3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f3f3f3",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白底黑字，橙色能力名与满屏数字冲击，细灰点阵作辅助。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "标题左对齐，Cybersecurity Data 使用橙色；下方点阵从局部亮起。随后整屏转橙色，白色大数字快速增长，再出现 vulnerabilities。",
+      "status": "inferred"
+    },
+    {
+      "rule": "输入请求后列出扫描步骤，完成时换成风险表。使用浅色面板与清晰状态点，风险等级通过标签区分。",
+      "status": "inferred"
+    },
+    {
+      "rule": "来源标签由少变多铺开，再聚焦当前来源，收回品牌。换数据集时同时替换规模数字、任务与结果字段。",
+      "status": "inferred"
+    }
+  ]
+}

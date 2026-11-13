@@ -2,11 +2,13 @@
 
 The npm tgz contains the installer, a prebuilt Motion application archive and its pinned release manifest. One `setup` installs the application, eleven public MCP Tools and five Skills for the selected host. No adjacent application archive or `--manifest` is needed. The application runs from a managed, writable directory, never from the npx cache; projects remain outside application/cache directories.
 
+After successful host registration, setup starts/reuses the headless local service and returns `onboarding.preview` with a project-free template-library URL and host presentation handoff. The Agent opens that page immediately, using `openmotion_open_preview({target:"templates"})` when loaded or the returned URL before current-chat MCP discovery. Setup itself does not launch an OS browser. Preparing or browsing the library never initializes/selects a native project; Open and edit creates a copy only after user selection. A page-start failure is reported as `onboarding.preview.status=unavailable` without rolling back a successful installation or creating a fallback project. Browser-less hosts receive the actual link. Published packages keep the behavior embedded in their own source version.
+
 `@openmotion/app@0.6.4-test.6` is available from npm through the `test` channel. It was published separately after authorization; ordinary CI still does not publish packages. Its anonymous registry download, isolated macOS Codex setup, repeat setup, eleven MCP Tools and five Skills have been verified. Use the exact version for reproduction. See the [delivery record and known limitations](release-guide.md#published-test-candidate-064-test6), including the production template catalog and the registry's unexpected `latest` tag.
 
 Source `package.json` is the development baseline; the published artifact can have a different version. For example, source `0.6.3` can produce `0.6.4-test.6` without a stable `0.6.4` release. Packaging changes output identities only. Manual [candidate builds](release-workflows.md#1-build) accept an empty version and automatically generate the next patch plus a short `test.N` workflow counter (with an attempt suffix on reruns); publication keeps the exact accepted version.
 
-Test/prerelease/local packages never report usage data, even with a saved opt-in or an enable flag. Stable releases collect by default and support persistent opt-out and re-enable in Studio Privacy settings. See [tracking controls](../tracking/README.md#reporting-and-user-control).
+All application environments and versions, including test/prerelease/local packages, collect usage data by default and support persistent opt-out and re-enable in Studio Privacy settings. Environment force-off and Do Not Track controls still apply. See [tracking controls](../tracking/README.md#reporting-and-user-control).
 
 ## Public names and compatibility
 
@@ -28,7 +30,7 @@ The npm page uses the repository's product `README.md`. Packaging resolves its r
 
 ## Build and install a local test
 
-From a clean checkout based on `feature/motion`:
+From a clean checkout based on `main`:
 
 ```sh
 npm ci --no-audit --no-fund
@@ -83,7 +85,7 @@ Use that tgz in the installation commands above, with an **independent Codex pro
 
 The environment is embedded in `shared/template-config.json`; the resulting `install.json.templateEnvironment` identifies the installation. Studio and MCP read the same source. [Template configuration](template-catalog.md#environment-and-build) explains the current Resource and catalog behavior. Saving a CMS draft does not publish it. Refresh the catalog, find the template ID and record its catalog/publication version; existing projects are independent copies and do not change when a template is republished.
 
-For **source development**, `npm run dev` already selects DEV. An independently launched MCP can use `MOTION_TEMPLATE_ENV=dev MOTION_DATA_DIR=/absolute/isolated-dev-data npm run mcp`. For an installed package, advanced overrides must be supplied to the actual MCP/Agent process and inherited by the backend. Setting a shell variable only while running setup does not persist it into a later GUI host. Stop the owned old backend and reconnect after changing configuration. Prefer the embedded DEV package over editing installed files or sharing production data.
+For **source development**, Studio and MCP now default to repository templates when `library/templates/catalog/` exists. Use `MOTION_TEMPLATE_SOURCE=cms MOTION_TEMPLATE_ENV=dev MOTION_DATA_DIR=/absolute/isolated-dev-data npm run mcp` only when testing the DEV CMS publication. The local template startup and plugin paths are documented in [the repository workflow](template-repository.md#run-from-a-local-clone). For an installed package, advanced overrides must be supplied to the actual MCP/Agent process and inherited by the backend. Setting a shell variable only while running setup does not persist it into a later GUI host. Stop the owned old backend and reconnect after changing configuration. Prefer the embedded DEV package over editing installed files or sharing production data.
 
 There is no automatic fallback from prod to DEV and no `switch-env` CLI. This selects the template catalog, not model keys, accounts or every remote service.
 

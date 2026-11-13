@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#c9e6cc",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Benji Taylor • 3m",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Hey, do we have a recap from this",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：morning's design standup?",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机锁屏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "时间",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "请求通知",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "结果通知",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发布短句",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#c9e6cc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#232a25",
+      "status": "inferred"
+    },
+    {
+      "hex": "#76ad79",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e0e5df",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "浅绿背景、手机锁屏、白色通知",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先出现人类请求，再出现助手准备好的结果，时间顺序表达回应。",
+      "status": "inferred"
+    },
+    {
+      "rule": "推近通知后拉远手机，强调系统级触达。",
+      "status": "inferred"
+    },
+    {
+      "rule": "把工作过程压缩为两条通知，直接对照请求和结果。",
+      "status": "inferred"
+    }
+  ]
+}

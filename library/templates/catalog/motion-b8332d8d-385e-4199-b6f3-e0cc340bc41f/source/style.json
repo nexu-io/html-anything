@@ -1,0 +1,107 @@
+{
+  "background": {
+    "color": "#4618dc",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Get Your Dot.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地址胶囊",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "红色句点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "同心圆",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "行业后缀",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "图形纹样",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#4618dc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#10151d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e43e36",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f0d84e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ec9cf0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#54c763",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "圆润无衬线；域名字号随长度收放，后缀独立强调",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先把完整长网址放入渐变胶囊，随后推近句点。红点离开文字后仍保留颜色与中心，成为下一组圆形图案的起点。",
+      "status": "inferred"
+    },
+    {
+      "rule": "摄影可用光圈，游戏可用像素格，旅行可用地平线，媒体可用色条。后缀固定在中心留白，图案在其周围运动，避免图案盖住短词。",
+      "status": "inferred"
+    },
+    {
+      "rule": "紫、黄、红、粉、绿按段落切换，黑字或白字要与底色对比。地址胶囊可横向伸长，但最终后缀保持大字号与充足留白。",
+      "status": "inferred"
+    },
+    {
+      "rule": "选择新业务真正适用的后缀或关键词，并为它安排一个可理解的几何隐喻。结尾收回点和品牌，结束图形例举。",
+      "status": "inferred"
+    }
+  ]
+}
