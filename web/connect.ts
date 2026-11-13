@@ -1,3 +1,4 @@
+import { iconSprite } from "../packages/design-system/index.js";
 import { mountFeedbackLayer } from './feedback-layer';
 import { integrationHost, hostNames, hostDescriptions, setupPrompt, manualConnection, agentGuide, apiDiscoveryCommand } from '../shared/integration';
 import type { IntegrationInfo } from '../shared/integration';
@@ -22,7 +23,7 @@ export function mountConnection(root: HTMLElement, options: { close: () => void;
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'ui-icon'); svg.setAttribute('aria-hidden', 'true');
     const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    use.setAttribute('href', '/web/design-system/icons.svg#icon-' + name); svg.append(use); return svg;
+    use.setAttribute('href', iconSprite + '#icon-' + name); svg.append(use); return svg;
   }
   function buttonLabel(button: HTMLButtonElement, text: string, icon: string) {
     const label = document.createElement('span'); language.text(label, text); button.replaceChildren(glyph(icon), label);

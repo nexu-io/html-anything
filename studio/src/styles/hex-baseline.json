@@ -1,5 +1,5 @@
 {
-  "total": 220,
+  "total": 160,
   "files": {
     "studio/src/captions/components/CaptionOverlay.tsx": 5,
     "studio/src/captions/components/CaptionTimeline.tsx": 11,
@@ -7,10 +7,8 @@
     "studio/src/captions/parser.ts": 1,
     "studio/src/captions/types.ts": 4,
     "studio/src/components/TimelineToolbar.tsx": 1,
-    "studio/src/components/editor/ArcPathControls.tsx": 1,
     "studio/src/components/editor/BorderRadiusEditor.tsx": 2,
     "studio/src/components/editor/DomEditCropHandles.tsx": 1,
-    "studio/src/components/editor/FileTreeIcons.tsx": 7,
     "studio/src/components/editor/GestureTrailOverlay.tsx": 1,
     "studio/src/components/editor/GridOverlay.tsx": 4,
     "studio/src/components/editor/InlineTextToolbar.tsx": 1,
@@ -20,7 +18,6 @@
     "studio/src/components/editor/colorValue.ts": 3,
     "studio/src/components/editor/domEditingElement.ts": 1,
     "studio/src/components/editor/gradientValue.ts": 6,
-    "studio/src/components/editor/panelTokens.ts": 4,
     "studio/src/components/editor/propertyPanelColor.tsx": 7,
     "studio/src/components/editor/propertyPanelColorCurveGraph.tsx": 16,
     "studio/src/components/editor/propertyPanelColorScopes.tsx": 8,
@@ -42,8 +39,6 @@
     "studio/src/player/components/AudioWaveform.tsx": 2,
     "studio/src/player/components/BeatStrip.tsx": 6,
     "studio/src/player/components/CompositionThumbnail.tsx": 2,
-    "studio/src/player/components/PlayerControls.tsx": 1,
-    "studio/src/styles/components.css": 47,
     "studio/src/webmcp/webmcpTestUtils.ts": 1
   }
 }

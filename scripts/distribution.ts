@@ -2,6 +2,7 @@ import { lstat, open, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { packagedSkills } from '../shared/workflow.ts';
+import { designSystemDocuments, designSystemRuntimeFiles } from '../packages/design-system/index.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 
@@ -472,6 +473,7 @@ const localReadmeResourceFiles = [
 ];
 
 export const distributionDocuments = [
+  ...designSystemDocuments, 'cloud.md',
   ...['openmotion-brandkit', 'openmotion-presenter-story', 'openmotion-design-remix'].map(name => 'library/skills/' + name + '/agents/openai.yaml'),
   ...localReadmeResourceFiles,
   'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md', 'repository-media.json',
@@ -531,6 +533,7 @@ export const distributionDocuments = [
 export async function distributionFiles(profile: string): Promise<string[]> {
   if (!['phase1', 'legacy'].includes(profile)) throw new Error('Unknown distribution profile: ' + profile);
   const files = [
+    ...designSystemRuntimeFiles.map(file => 'packages/design-system/' + file),
     ...distributionDocuments, 'LICENSE', '.codex-plugin/plugin.json', '.mcp.json', 'marketplace.example.json',
     'package.json', 'package-lock.json',
     'server.ts', 'browser.ts', 'workspace.ts', 'mcp.ts', 'mcp-tools.ts', 'editor-runtime.ts',

@@ -37,7 +37,7 @@
 .hf-volume-vertical-range::-webkit-slider-runnable-track {
   width: 2px;
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--motion-radius-full);
   background: linear-gradient(to top, var(--motion-brand, var(--color-accent)) 0 var(--volume-progress, 0%), var(--color-border-strong) var(--volume-progress, 0%) 100%);
 }
 
@@ -56,7 +56,7 @@
   width: 2px;
   height: 100%;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--motion-radius-full);
   background: linear-gradient(to top, var(--motion-brand, var(--color-accent)) 0 var(--volume-progress, 0%), var(--color-border-strong) var(--volume-progress, 0%) 100%);
 }
 
@@ -73,7 +73,7 @@
 .hf-volume-vertical-range:focus-visible {
   outline: 2px solid var(--color-border-strong);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--motion-radius-sm);
 }
 
 /* Assets and catalog tiles share column widths and spacing at every panel size. */
@@ -127,13 +127,13 @@
   height: 1rem;
   margin-top: 0.125rem;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--motion-radius-full);
   -webkit-appearance: none;
   appearance: none;
-  background: #ffffff;
+  background: var(--motion-strong);
   box-shadow:
-    0 0 0 2px #0c0c0e,
-    0 1px 4px rgba(0, 0, 0, 0.55);
+    0 0 0 2px var(--motion-panel),
+    0 1px 4px color-mix(in srgb, var(--motion-panel) 55%, transparent);
   cursor: default;
 }
 
@@ -147,11 +147,11 @@
   width: 0.625rem;
   height: 1rem;
   border: 0;
-  border-radius: 999px;
-  background: #ffffff;
+  border-radius: var(--motion-radius-full);
+  background: var(--motion-strong);
   box-shadow:
-    0 0 0 2px #0c0c0e,
-    0 1px 4px rgba(0, 0, 0, 0.55);
+    0 0 0 2px var(--motion-panel),
+    0 1px 4px color-mix(in srgb, var(--motion-panel) 55%, transparent);
   cursor: default;
 }
 
@@ -161,16 +161,16 @@
 
 .hf-color-grading-range:focus-visible::-webkit-slider-thumb {
   box-shadow:
-    0 0 0 2px #0c0c0e,
-    0 0 0 4px rgba(60, 230, 172, 0.22),
-    0 1px 4px rgba(0, 0, 0, 0.55);
+    0 0 0 2px var(--motion-panel),
+    0 0 0 4px color-mix(in srgb, var(--motion-accent) 22%, transparent),
+    0 1px 4px color-mix(in srgb, var(--motion-panel) 55%, transparent);
 }
 
 .hf-color-grading-range:focus-visible::-moz-range-thumb {
   box-shadow:
-    0 0 0 2px #0c0c0e,
-    0 0 0 4px rgba(60, 230, 172, 0.22),
-    0 1px 4px rgba(0, 0, 0, 0.55);
+    0 0 0 2px var(--motion-panel),
+    0 0 0 4px color-mix(in srgb, var(--motion-accent) 22%, transparent),
+    0 1px 4px color-mix(in srgb, var(--motion-panel) 55%, transparent);
 }
 
 .hf-preview-volume-range {
@@ -194,12 +194,12 @@
   height: 0.5rem;
   margin-top: -3px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--motion-radius-full);
   appearance: none;
-  background: #ffffff;
+  background: var(--motion-strong);
   box-shadow:
-    0 0 0 2px #0a0a0a,
-    0 1px 3px rgba(0, 0, 0, 0.5);
+    0 0 0 2px var(--motion-panel),
+    0 1px 3px color-mix(in srgb, var(--motion-panel) 50%, transparent);
   cursor: grab;
 }
 
@@ -218,11 +218,11 @@
   width: 0.5rem;
   height: 0.5rem;
   border: 0;
-  border-radius: 999px;
-  background: #ffffff;
+  border-radius: var(--motion-radius-full);
+  background: var(--motion-strong);
   box-shadow:
-    0 0 0 2px #0a0a0a,
-    0 1px 3px rgba(0, 0, 0, 0.5);
+    0 0 0 2px var(--motion-panel),
+    0 1px 3px color-mix(in srgb, var(--motion-panel) 50%, transparent);
   cursor: grab;
 }
 
@@ -237,9 +237,9 @@
 .hf-preview-volume-range:focus-visible::-webkit-slider-thumb,
 .hf-preview-volume-range:focus-visible::-moz-range-thumb {
   box-shadow:
-    0 0 0 2px #0a0a0a,
-    0 0 0 4px rgba(60, 230, 172, 0.4),
-    0 1px 3px rgba(0, 0, 0, 0.5);
+    0 0 0 2px var(--motion-panel),
+    0 0 0 4px color-mix(in srgb, var(--motion-accent) 40%, transparent),
+    0 1px 3px color-mix(in srgb, var(--motion-panel) 50%, transparent);
 }
 
 .timeline-clip {
@@ -301,7 +301,7 @@
   top: -21px;
   width: var(--timeline-transition-zone-width);
   height: 42px;
-  border-radius: 8px;
+  border-radius: var(--motion-radius-md);
   overflow: hidden;
   background: var(--timeline-transition-zone);
   filter: blur(2.5px);
@@ -332,7 +332,7 @@
   height: 28px;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--timeline-transition-badge-ink) 22%, transparent);
-  border-radius: 999px;
+  border-radius: var(--motion-radius-full);
   background: var(--timeline-transition-badge);
   box-shadow: 0 2px 5px var(--timeline-playhead-shadow);
 }
@@ -382,7 +382,7 @@
 
 .timeline-fade-tab {
   position: absolute;
-  border-radius: 2px;
+  border-radius: var(--motion-radius-xs);
   background: var(--timeline-fade-dot);
   box-shadow:
     0 0 0 1px var(--timeline-fade-dot-ring),
@@ -422,7 +422,7 @@
   right: var(--timeline-clip-radius);
   translate: 0 -50%;
   padding: 1px 3px;
-  border-radius: 3px;
+  border-radius: var(--motion-radius-step-3);
   background: var(--timeline-clip-chip-audio-bg);
 }
 
@@ -472,11 +472,11 @@
   max-width: calc(100% - 22px);
   overflow: hidden;
   padding: 1px 5px;
-  border-radius: 4px;
+  border-radius: var(--motion-radius-sm);
   background: var(--timeline-clip-chip-bg);
   color: var(--timeline-clip-chip-text);
-  font-size: 10px;
-  font-weight: 500;
+  font-size: var(--motion-text-step-10);
+  font-weight: var(--motion-weight-medium);
   line-height: 16px;
   pointer-events: none;
   text-overflow: ellipsis;
@@ -497,7 +497,7 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background: var(--timeline-clip-band-bg);
-  font-weight: 600;
+  font-weight: var(--motion-weight-semibold);
   line-height: var(--timeline-clip-band-height);
 }
 
@@ -540,7 +540,7 @@
   overflow: hidden;
   color: var(--timeline-tick-text);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--motion-text-step-9);
   font-variant-numeric: tabular-nums;
   line-height: 1;
   text-overflow: ellipsis;
@@ -564,7 +564,7 @@
 /* CodeMirror overrides */
 .cm-editor {
   height: 100%;
-  font-size: 13px;
+  font-size: var(--motion-text-md);
 }
 
 .cm-editor .cm-scroller {
@@ -601,8 +601,8 @@
   width: 100%;
   height: 100%;
   min-height: 12rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.52);
+  border: 1px solid color-mix(in srgb, var(--motion-strong) 8%, transparent);
+  background: color-mix(in srgb, var(--motion-panel) 52%, transparent);
 }
 
 .hf-loader-mark-frame {
@@ -618,7 +618,7 @@
 .hf-loader-mark {
   display: block;
   overflow: visible;
-  filter: drop-shadow(0 0 7px rgba(79, 219, 94, 0.2));
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--motion-accent) 20%, transparent));
   user-select: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
@@ -627,9 +627,9 @@
 .hf-loader-title {
   font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: var(--motion-weight-semibold);
   letter-spacing: 0;
-  color: var(--hf-heading, #f4f4f5);
+  color: var(--color-text-0);
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -640,7 +640,7 @@
   max-width: 32rem;
   min-height: 2.5rem;
   overflow: hidden;
-  color: var(--hf-text-secondary, rgba(244, 244, 245, 0.68));
+  color: var(--color-text-2);
   font-family: var(--font-sans);
   font-size: 0.82rem;
   line-height: 1.6;
@@ -652,7 +652,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--hf-text-tertiary, rgba(244, 244, 245, 0.46));
+  color: var(--color-text-muted);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0;
@@ -663,8 +663,8 @@
   width: min(18rem, 72vw);
   height: 0.375rem;
   overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--motion-radius-full);
+  background: color-mix(in srgb, var(--motion-strong) 10%, transparent);
 }
 
 @keyframes hf-thumb-fade {
@@ -682,7 +682,7 @@
   transform: scaleX(0);
   transform-origin: left center;
   border-radius: inherit;
-  background: var(--color-brand, #87ea5c);
+  background: var(--motion-brand);
   transition: transform 160ms ease;
 }
 
@@ -786,7 +786,7 @@
 }
 
 .hf-backdrop-in {
-  animation: hf-backdrop-in 150ms ease-out;
+  animation: hf-backdrop-in var(--motion-duration-fast) ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -840,7 +840,7 @@
 .hf-fx-preset-item:focus-visible {
   /* The accent at low alpha rather than a grey: the row is lit by the thing that
      is playing, and it should read as the same event as the bars. */
-  background-color: rgba(60, 230, 172, 0.12);
+  background-color: color-mix(in srgb, var(--motion-accent) 12%, transparent);
 }
 
 .hf-fx-preset-wave {
@@ -865,8 +865,8 @@
 .hf-fx-preset-wave span {
   width: 2px;
   height: 100%;
-  border-radius: 1px;
-  background: #3ce6ac;
+  border-radius: var(--motion-radius-step-1);
+  background: var(--motion-accent);
   transform: scaleY(0.25);
   transform-origin: center;
 }
@@ -878,7 +878,7 @@
   /* Staggered so it reads as a waveform travelling rather than four bars
      pumping in unison, which reads as a loading spinner. */
   .hf-fx-preset-wave span:nth-child(2) {
-    animation-delay: 150ms;
+    animation-delay: var(--motion-duration-fast);
   }
   .hf-fx-preset-wave span:nth-child(3) {
     animation-delay: 300ms;
@@ -899,10 +899,10 @@
 /* Receipt-driven WebMCP Topology Lens. Every animation is one-shot Studio
    chrome; none of these nodes enter the composition iframe or rendered output. */
 .hf-topology-contour {
-  border: 1px solid rgba(60, 230, 172, 0.62);
+  border: 1px solid color-mix(in srgb, var(--motion-accent) 62%, transparent);
   box-shadow:
-    0 0 0 1px rgba(6, 227, 250, 0.08),
-    inset 0 0 18px rgba(60, 230, 172, 0.035);
+    0 0 0 1px color-mix(in srgb, var(--motion-accent) 8%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--motion-accent) 3.5%, transparent);
 }
 
 .hf-topology-field::before,
@@ -914,51 +914,46 @@
   left: 3px;
   z-index: 2;
   padding: 1px 3px;
-  border-radius: 2px;
-  background: rgba(5, 15, 12, 0.86);
-  color: rgb(90, 247, 193);
+  border-radius: var(--motion-radius-xs);
+  background: color-mix(in srgb, var(--motion-panel) 86%, transparent);
+  color: color-mix(in srgb, var(--motion-accent) 100%, transparent);
   font:
-    600 7px/1.3 ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    monospace;
+    600 7px/1.3 var(--motion-font-mono);
   letter-spacing: 0.04em;
   text-transform: lowercase;
 }
 
 .hf-topology-field {
   z-index: 0;
-  border: 1px solid rgba(60, 230, 172, 0.28);
+  border: 1px solid color-mix(in srgb, var(--motion-accent) 28%, transparent);
   background: linear-gradient(
     90deg,
-    rgba(60, 230, 172, 0.025),
-    rgba(60, 230, 172, 0.1) 68%,
-    rgba(6, 227, 250, 0.06)
+    color-mix(in srgb, var(--motion-accent) 2.5%, transparent),
+    color-mix(in srgb, var(--motion-accent) 10%, transparent) 68%,
+    color-mix(in srgb, var(--motion-accent) 6%, transparent)
   );
-  box-shadow: inset 0 0 28px rgba(60, 230, 172, 0.05);
+  box-shadow: inset 0 0 28px color-mix(in srgb, var(--motion-accent) 5%, transparent);
 }
 
 .hf-topology-target {
-  border: 1px solid rgba(60, 230, 172, 0.82);
+  border: 1px solid color-mix(in srgb, var(--motion-accent) 82%, transparent);
   box-shadow:
-    0 0 0 1px rgba(60, 230, 172, 0.14),
-    0 0 18px rgba(6, 227, 250, 0.09);
+    0 0 0 1px color-mix(in srgb, var(--motion-accent) 14%, transparent),
+    0 0 18px color-mix(in srgb, var(--motion-accent) 9%, transparent);
 }
 
 .hf-topology-scan {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(60, 230, 172, 0.16) 55%,
-    rgba(230, 255, 247, 0.9)
+    color-mix(in srgb, var(--motion-accent) 16%, transparent) 55%,
+    color-mix(in srgb, var(--motion-strong) 90%, transparent)
   );
   clip-path: polygon(0 0, 100% 0, 72% 100%, 0 100%);
 }
 
 .hf-topology-seal {
-  color: var(--color-brand, #87ea5c);
+  color: var(--motion-brand);
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -214,7 +214,7 @@ npm run package:plugin
 
 打包产物为 `dist/openmotion-0.6.3-phase1.zip`，包含编辑器构建产物、设计系统与字体许可、原生模板、完整目录与已校验封面、技能、lockfile、AGENTS.md、CLAUDE.md 和产品文档，排除个人媒体、草稿、node_modules 和原生程序。`bash scripts/install-motion.command` 可注册并安装本地插件，并按 Codex 实际解析的启动配置验证 MCP 握手；它不会重启 Codex。代码改动和打包不会自动替换用户已安装的插件版本。
 
-主要实现：`hyperframes.ts` 管理锁定的上游 CLI 与 Studio 进程；`workspace.ts` 管理原生文件、迁移和快照；`server.ts` 提供薄壳与后台任务；`mcp.ts` 向 Agent 暴露工具；`template-library.ts` 创建官方模板的可编辑副本，`template-catalog.ts` 提供完整参考目录及热度；`editor-server.ts` 提供自有编辑器资源并流式转发原生 API；`studio/src/motion/` 是我们的界面入口，`web/design-system/` 是共享设计规范。`shared/legacy.ts` 仅用于读取旧版工程。
+主要实现：`hyperframes.ts` 管理锁定的上游 CLI 与 Studio 进程；`workspace.ts` 管理原生文件、迁移和快照；`server.ts` 提供薄壳与后台任务；`mcp.ts` 向 Agent 暴露工具；`template-library.ts` 创建官方模板的可编辑副本，`template-catalog.ts` 提供完整参考目录及热度；`editor-server.ts` 提供自有编辑器资源并流式转发原生 API；`studio/src/motion/` 是我们的界面入口，`packages/design-system/` 是共享设计规范。`shared/legacy.ts` 仅用于读取旧版工程。
 
 Hyperframes 使用 Apache-2.0 许可证，依赖从 npm 官方包安装；其源码和许可证见[上游仓库](https://github.com/heygen-com/hyperframes)。Motion 运行的上游进程默认关闭匿名遥测。
 

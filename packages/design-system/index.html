@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN" data-motion-ui data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="design-system-editable" content="false" />
+  <title>OpenMotion · Design System</title>
+  <link rel="icon" href="/design-system/brand/favicon.svg" />
+  <link rel="stylesheet" href="/design-system/ui.css" />
+  <link rel="stylesheet" href="/design-system/catalog.css" />
+</head>
+<body>
+  <a class="skip-link ui-button" href="#content">跳转到内容</a>
+  <aside class="sidebar" aria-label="设计系统导航">
+    <a class="wordmark" href="#/brand"><img src="/design-system/brand/favicon.svg" alt="" width="30" height="30" /><span>OpenMotion<small>DESIGN SYSTEM</small></span></a>
+    <label class="search-box"><svg class="ui-icon" aria-hidden="true"><use href="/design-system/icons.svg#icon-search" /></svg><input id="search" type="search" placeholder="搜索变量与组件" aria-label="搜索变量与组件" /><kbd>/</kbd></label>
+    <span class="nav-caption">设计语言</span>
+    <nav id="navigation"></nav>
+    <div class="sidebar-footer"><div class="theme-switch" role="group" aria-label="主题"><button data-theme="light" aria-label="浅色主题">☀ 浅色</button><button data-theme="dark" aria-label="深色主题">☾ 深色</button></div><div class="version"><span>OpenMotion UI</span><span>v1.0</span></div></div>
+  </aside>
+  <div class="workspace">
+    <header class="toolbar"><span class="breadcrumb">设计系统 <span>/</span> <b id="breadcrumb-page">颜色</b></span><div class="toolbar-actions"><span id="save-state" role="status" aria-live="polite">正在读取源码…</span><button class="ui-button ui-button--sm" id="review" disabled>查看修改 <span id="change-count">0</span></button><button class="ui-button ui-button--primary ui-button--sm" id="save" disabled>保存到源码</button></div></header>
+    <div id="notice" class="notice" role="status" hidden></div>
+    <div id="conflict-banner" class="conflict-banner" hidden><div><strong>源码已更新</strong><p>Agent 或其他编辑者修改了源码。先同步，再继续保存；你的草稿会被保留。</p></div><button class="ui-button" id="sync">同步并检查冲突</button></div>
+    <div class="workbench-grid"><main id="content" tabindex="-1"><p class="loading-message">正在加载设计系统…</p></main><aside class="inspector" aria-label="样式检查器"><div id="inspector"></div><div class="source-card"><span class="eyebrow">ONE SOURCE OF TRUTH</span><strong>一份源码，统一风格</strong><p>在此编辑，或让 Agent 修改。所有引用设计系统的界面共享这些定义。</p><code>packages/design-system/<br />tokens.json</code><button class="ui-button" id="agent-prompt">复制 Agent 修改说明</button><button class="text-button" id="export">Tokens JSON ↓</button><button class="text-button" id="export-css">CSS 变量 ↓</button></div></aside></div>
+  </div>
+  <dialog id="review-dialog" aria-labelledby="review-title"><div class="dialog-heading"><div><span class="eyebrow">SOURCE CHANGES</span><h2 id="review-title">检查你的修改</h2></div><button class="ui-button ui-button--icon" data-close aria-label="关闭">×</button></div><p class="muted">保存后会更新共享源码，并重新生成设计系统样式。</p><div id="changes-list"></div><div class="dialog-footer"><button class="ui-button" id="discard">放弃全部修改</button><button class="ui-button ui-button--primary" id="confirm-save">保存到源码</button></div></dialog>
+  <dialog id="conflict-dialog" aria-labelledby="conflict-title"><div class="dialog-heading"><h2 id="conflict-title">选择要保留的值</h2><button class="ui-button ui-button--icon" data-close aria-label="关闭">×</button></div><p class="muted">以下变量在源码和草稿中都被修改。其他修改会自动合并。</p><div id="conflicts-list"></div><div class="dialog-footer"><button class="ui-button ui-button--primary" id="resolve">应用选择</button></div></dialog>
+  <noscript>请启用 JavaScript 以查看和编辑设计系统。</noscript>
+  <script type="module" src="/design-system/catalog.js"></script>
+</body>
+</html>

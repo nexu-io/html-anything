@@ -130,7 +130,10 @@ test('parallel CI preserves common gates and builds distribution inputs in the s
   const sourceStep = stepBody(checks, 'Check source and Studio types');
   assert(sourceStep.includes("steps.scope.outputs.full == 'true'"));
   assert(sourceStep.includes('npm run check'));
+  assert(sourceStep.includes('npm run design:test'));
   assert(sourceStep.includes('npm run typecheck:studio'));
+  assert(!distribution.includes('npm run design:test'));
+  assert(stepBody(distribution, 'Build Studio and validate tracking').includes('node --test tests/design-system.test.ts'));
   assert(studio.includes('shard: [1, 2]'));
   assert(studio.includes('fail-fast: false'));
   const studioStep = stepBody(studio, 'Studio regression');
