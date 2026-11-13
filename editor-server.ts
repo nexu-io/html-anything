@@ -1,3 +1,4 @@
+import { renderFilenameStem } from './shared/render-name.ts';
 import { request } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -31,15 +32,7 @@ export async function serveEditorFile(url: URL, res: ServerResponse): Promise<bo
 
 /** Suggest a portable name without changing the immutable render's storage path. */
 export function renderDownloadDisposition(title: string | undefined, extension: string): string {
-  const cleaned = (title ?? '').toWellFormed().normalize('NFC')
-    .replace(/[<>:"/\\|?*\u0000-\u001f\u007f]/gu, '_').trim();
-  let stem = '';
-  for (const char of cleaned) {
-    if (Buffer.byteLength(stem + char, 'utf8') > 200) break;
-    stem += char;
-  }
-  stem = stem.replace(/[. ]+$/u, '') || 'OpenMotion';
-  if (/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(stem)) stem = '_' + stem;
+  const stem = renderFilenameStem(title);
   const encoded = encodeURIComponent(stem + extension).replace(/['()*]/g, char =>
     '%' + char.charCodeAt(0).toString(16).toUpperCase());
   return `attachment; filename="OpenMotion${extension}"; filename*=UTF-8''${encoded}`;

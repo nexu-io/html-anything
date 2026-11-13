@@ -73,7 +73,7 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tra
     await stage('checking');
     const lint = await inspectProject(runtimeRoot, directory, 'lint', control.signal);
     if (lint.exitCode) throw new Error('Hyperframes lint 失败：' + JSON.stringify(lint.result));
-    const output = path.join(store.directory, 'exports', job.id + '.mp4');
+    const output = store.exportPath(job);
     await mkdir(path.dirname(output), { recursive: true });
     // The service owns this job; a short-lived Agent client must not cancel it.
     await stage('rendering');
@@ -99,7 +99,7 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tra
     if (!job) throw error;
     await recordDiagnostic(store.directory, { kind: 'export_failed', jobId: job.id, projectId: job.projectId,
       message: error instanceof Error ? error.message : 'Render failed' });
-    await rm(path.join(store.directory, 'exports', job.id + '.mp4'), { force: true });
+    await rm(store.exportPath(job), { force: true });
     const current = await store.job(job.id);
     if (current && ['running', 'cancelling'].includes(current.state)) await store.finishExport(job.id, job.token!, error instanceof Error ? error.message : '渲染失败');
   } finally {
@@ -519,7 +519,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     if (download && req.method === 'GET') {
       const job = await store.job(download[1]);
       if (!job || job.id !== download[1] || job.state !== 'completed') return json(res, 404, { error: '视频尚未完成或任务不存在' });
-      const filename = path.join(store.directory, 'exports', job.id + '.mp4');
+      const filename = store.exportPath(job);
       res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': (await stat(filename)).size, 'Content-Disposition': renderDownloadDisposition(store.projectCatalog().projects.find(p => p.id === (job.projectId ?? store.projectId))?.title, '.mp4') });
       await new Promise<void>((resolve, reject) => {
         const stream = createReadStream(filename);

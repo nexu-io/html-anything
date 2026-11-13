@@ -57,7 +57,7 @@ test('real phase1 MCP, active Studio history, confirmed running cancellation and
     assert.ok(['cancelling', 'cancelled'].includes(cancelled.job.state));
     const stopped = await waitFor(p.projectId, long.job.id, job => job.state === 'cancelled');
     assert.equal(stopped.state, 'cancelled');
-    await assert.rejects(access(path.join(store.directory, 'exports', long.job.id + '.mp4')));
+    await assert.rejects(access(store.exportPath(long.job)));
     saved = await call('openmotion_edit_project', { projectId: p.projectId, requestId: 'short', expectedRevision: p.revision, expectedVersionId: p.version.versionId, files: [{ path: 'index.html', content: film() }] });
     const exportArgs = { projectId: p.projectId, requestId: 'short-export', expectedRevision: saved.revision, versionId: saved.version.versionId, audio: 'silent' };
     const requested = await call('openmotion_export_request', exportArgs);
