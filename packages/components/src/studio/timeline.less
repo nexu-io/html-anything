@@ -14,7 +14,7 @@
   &__kind { fill: var(--om-clip-heading-text); font-family: var(--om-font-body); font-size: var(--om-time-font); pointer-events: none; }
   &__caption { fill: var(--om-clip-text); font-family: var(--om-font-body); font-size: var(--om-time-font); pointer-events: none; }
   &__grid { stroke: var(--om-border); stroke-width: var(--om-focus-width); stroke-dasharray: var(--om-ruler-dash); pointer-events: none; }
-  &__handle { fill: var(--om-action); opacity: var(--om-disabled-opacity); cursor: ew-resize; }
+  &__handle { fill: var(--om-action); opacity: var(--om-disabled-opacity); cursor: ew-resize; &:focus-visible { outline: var(--om-focus-width) solid var(--om-focus); } }
   &__track { cursor: grab; touch-action: none; &--selected { .om-time__bar { stroke: var(--om-focus); stroke-width: var(--om-time-stroke); } } &:focus-visible { outline: var(--om-focus-width) solid var(--om-focus); } }
   &__playhead { stroke: var(--om-focus); stroke-width: var(--om-time-stroke); pointer-events: none; }
 }

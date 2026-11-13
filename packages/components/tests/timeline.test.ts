@@ -149,3 +149,46 @@ it("keeps readonly hosts selectable and bounds editable windows to a sub-tenth c
   short.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", altKey: true, bubbles: true }));
   expect(commit).toHaveBeenLastCalledWith("short", 1, 0.05);
 });
+
+it("keeps a declared start-edge end fixed, bounds its span and refuses blocked or ungranted edits", () => {
+  const commit = vi.fn(),
+    axis = timeTracks(document, {
+      duration: 8,
+      tracks: [
+        { id: "image", label: "Image", start: 3, duration: 2, minimumStart: 0, selected: true },
+        { id: "audio", label: "Audio", start: 3, duration: 2, selected: false },
+      ],
+      disabled: false,
+      select: vi.fn(),
+      seek: vi.fn(),
+      commit,
+    });
+  document.body.replaceChildren(axis.element);
+  const start = axis.element.querySelector<SVGElement>("[data-start-edge]");
+  if (!start) throw Error("missing start edge");
+  expect(axis.element.querySelector('[data-clip-id="audio"] [data-start-edge]')).toBeNull();
+  start.focus();
+  start.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", shiftKey: true, bubbles: true }));
+  expect(commit).toHaveBeenLastCalledWith("image", 2, 3);
+  start.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", shiftKey: true, bubbles: true }));
+  expect(commit).toHaveBeenLastCalledWith("image", 4, 1);
+  axis.disable(true);
+  start.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+  expect(commit).toHaveBeenCalledTimes(2);
+  expect(start.getAttribute("tabindex")).toBe("-1");
+  expect(document.activeElement).toBe(start);
+  axis.disable(false);
+  expect(start.getAttribute("tabindex")).toBe("0");
+  const tiny = timeTracks(document, {
+    duration: 8,
+    tracks: [{ id: "short", label: "Short", start: 4.95, duration: 0.05, minimumStart: 0, selected: true }],
+    disabled: false,
+    select: vi.fn(),
+    seek: vi.fn(),
+    commit,
+  });
+  tiny.element
+    .querySelector("[data-start-edge]")
+    ?.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", shiftKey: true, bubbles: true }));
+  expect(commit).toHaveBeenCalledTimes(2);
+});
