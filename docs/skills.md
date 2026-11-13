@@ -22,6 +22,10 @@ Director and its existing quality references now cover concrete visual events, j
 
 The current five-route, eleven-Tool contract, editor-first handoff, requested-export behavior and distribution layout remain unchanged. This guidance does not establish cross-task creative reliability or native audiovisual model-review capability. See [the director guide](openmotion-director.md). Version-specific statements below describe their historical snapshots.
 
+## Reference reconstruction guidance
+
+The recreate route carries a shot/action-unit process with concrete worker briefs, source ownership, time/coordinate mapping and inspected-source handoffs. Reference observations become timed controls consumed by the renderer, with conditional methods for camera transforms, relative part motion, changing shapes, mark-based materials, text and exposure. Local iteration compares observed and intermediate states, repairs the responsible mechanism, and rechecks shared assets, overlap and the complete layer stack after integration. One Agent can execute the same units sequentially. Observation density and implementation remain scene-dependent. The guidance is based on segment-production retrospectives that include reused implementations and directed corrections. Reliability across fresh sessions and different references still requires evaluation. See [the reconstruction reference](../skills/openmotion-recreate/references/rebuild.md#establish-a-difficult-visual-system).
+
 ## 职责与入口
 
 当前采用“通用工程入口＋可直达专业 Skill＋同源共享规范”。Agent 根据本轮目标、保持项与工程状态直接选择入口，专业任务无需先读 production。production 承接既定创作决定下的工程执行，为已有 production/start 调用保留简短导航。此选择融合了“核查仓库中的 Skill 结构”中已评审并本地实施的职责收窄，取代此前“泛化请求先经薄路由”的描述；不删除兼容资源，不复制共享规则。

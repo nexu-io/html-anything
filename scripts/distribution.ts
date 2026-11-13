@@ -539,7 +539,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     ...distributionDocuments, 'LICENSE', '.codex-plugin/plugin.json', '.mcp.json', 'marketplace.example.json',
     'package.json', 'package-lock.json',
     'server.ts', 'browser.ts', 'workspace.ts', 'mcp.ts', 'mcp-tools.ts', 'editor-runtime.ts',
-    'phase1.ts', 'phase1-versions.ts', 'preview.ts', 'hyperframes.ts', 'template-library.ts',
+    'phase1.ts', 'phase1-versions.ts', 'inline-video.ts', 'preview.ts', 'hyperframes.ts', 'template-library.ts',
     'template-catalog.ts', 'prism-templates.ts', 'editor-server.ts',
     'scripts/runtime-assets.mjs', 'scripts/npm-runtime.mjs', 'scripts/runtime-lock.json', 'scripts/lint-project.mjs',
     'scripts/npm-installer.mjs', 'scripts/npm-hosts.mjs', 'scripts/check-installed-mcp.mjs', 'scripts/mcp-client.mjs',
