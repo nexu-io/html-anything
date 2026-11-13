@@ -61,8 +61,13 @@ function viewport(scrollLeft = 0, scrollWidth = 20_000) {
   });
   const row = scroll.appendChild(document.createElement("div"));
   row.setAttribute("data-timeline-zoom-scale", "");
+  const ruler = scroll.appendChild(document.createElement("div"));
+  ruler.setAttribute("data-timeline-ruler", "");
+  const tick = ruler.appendChild(document.createElement("div"));
+  tick.dataset.timelineRulerTime = "20";
+  tick.appendChild(document.createElement("span")).textContent = "00:20";
   unregisterViewport = registerTimelineZoomViewport({ scroll, contentOrigin: 32, publishScroll });
-  return { scroll, row };
+  return { scroll, row, ruler, tick };
 }
 
 /** Where `time` lands on screen once the committed zoom is laid out. */
@@ -73,7 +78,7 @@ const laidOutX = (time: number) => {
 
 describe("requestTimelineZoom", () => {
   it("scales the drawn rows during a gesture and lays the zoom out once it rests", () => {
-    const { row } = viewport();
+    const { row, ruler, tick } = viewport();
     const writes = vi.fn();
     const unsubscribe = usePlayerStore.subscribe(writes);
     requestTimelineZoom(120, { time: 4, x: 100 });
@@ -83,8 +88,9 @@ describe("requestTimelineZoom", () => {
     expect(currentTimelineZoomPercent()).toBe(150);
     // 4 s stays at 100px: 32 + 4 * 15 - left = 100, left = -8 clamps to 0, translated by 0.
     expect(row.style.transform).toBe("translateX(0px) scaleX(1.5)");
-    // Ruler text cancels the parent's horizontal scale throughout the preview.
-    expect(Number(row.style.getPropertyValue("--timeline-zoom-inverse")) * 1.5).toBeCloseTo(1);
+    expect(ruler.style.transform).toBe("");
+    expect(tick.style.transform).toBe("translateX(100px)");
+    expect(tick.querySelector("span")!.style.transform).toBe("");
     vi.advanceTimersByTime(150);
     unsubscribe();
     expect(writes).toHaveBeenCalledTimes(1);
@@ -95,7 +101,7 @@ describe("requestTimelineZoom", () => {
       userZoomCount: 1,
     });
     expect(row.style.transform).toBe("");
-    expect(row.style.getPropertyValue("--timeline-zoom-inverse")).toBe("");
+
   });
 
   it("keeps the time under the pointer while previewing, then lays it out there", () => {
@@ -185,7 +191,11 @@ describe("requestTimelineZoom", () => {
     await Promise.resolve();
     expect(usePlayerStore.getState().timelinePps).toBe(10);
     expect(mountedRow.style.transform).toContain("scaleX(1.5)");
-    expect(Number(mountedRow.style.getPropertyValue("--timeline-zoom-inverse")) * 1.5).toBeCloseTo(1);
+    const mountedTick = document.createElement("div");
+    mountedTick.dataset.timelineRulerTime = "30";
+    scroll.appendChild(mountedTick);
+    await Promise.resolve();
+    expect(mountedTick.style.transform).toBe("translateX(150px)");
   });
 
   it("lays a pending zoom out at once when settled, as a press does", () => {
@@ -216,7 +226,7 @@ describe("requestTimelineZoom", () => {
     vi.advanceTimersByTime(300);
     expect(usePlayerStore.getState().timelinePps).toBe(10);
     expect(row.style.transform).toBe("");
-    expect(row.style.getPropertyValue("--timeline-zoom-inverse")).toBe("");
+
   });
 
   it("lays the zoom out before the timeline counts as at rest", () => {
@@ -396,15 +406,18 @@ describe("zoomTimelineStep", () => {
     for (let i = 0; i < 30; i++) vi.advanceTimersToNextFrame();
   };
 
-  it.each(["in", "out"] as const)("lays out a zoom-%s directly without stretching the rows", (direction) => {
+  it.each(["in", "out"] as const)("lays out a zoom-%s without stretching rows or ruler text", (direction) => {
     usePlayerStore.setState({ currentTime: 110, duration: 1000, zoomMode: "manual", manualZoomPercent: 400, timelinePps: 40 });
-    const { row } = viewport(4000);
+    const { row, ruler, tick } = viewport(4000);
     zoomTimelineStep(direction);
     expect(usePlayerStore.getState().timelinePps).toBe(direction === "in" ? 80 : 20);
     expect(laidOutX(110)).toBeCloseTo(432);
     for (let i = 0; i < 30; i++) {
       vi.advanceTimersToNextFrame();
       expect(row.style.transform).toBe("");
+      expect(ruler.style.transform).toBe("");
+      expect(tick.style.transform).toBe("");
+      expect(tick.querySelector("span")!.style.transform).toBe("");
     }
   });
 
