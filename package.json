@@ -1,6 +1,6 @@
 {
   "name": "openmotion",
-  "version": "0.6.3",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "engines": {
