@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -62,11 +62,11 @@ it("commits typed binary manifests into source revisions and preserves bytes/his
         name: "Red image",
         data: png,
       },
-      imported = f.workspace.execute("resource_import", request);
+      imported = ingest(f.workspace, request);
     expect(imported.revision).not.toBe(before.revision);
     expect(imported.files).toEqual(before.files);
     expect(imported.resources[0]).toMatchObject({ type: "image/png", width: 32, height: 24, path: "assets/red.png" });
-    const audio = f.workspace.execute("resource_import", {
+    const audio = ingest(f.workspace, {
       requestId: randomUUID(),
       ...f.owner,
       expectedRevision: imported.revision,
@@ -79,7 +79,7 @@ it("commits typed binary manifests into source revisions and preserves bytes/his
       channels: 1,
       sampleRate: 8000,
     });
-    expect(f.workspace.execute("resource_import", request)).toEqual(imported);
+    expect(ingest(f.workspace, request)).toEqual(imported);
     expect(f.workspace.execute("project_read", f.owner)).toEqual(audio);
     expect(
       f.workspace.execute("resource_read", { ...f.owner, revision: audio.revision, path: "assets/red.png" }).data,
@@ -141,14 +141,12 @@ it("rejects foreign ownership, stale writes, reused receipts, duplicate paths an
         name: "Red",
         data: png,
       },
-      imported = f.workspace.execute("resource_import", request),
+      imported = ingest(f.workspace, request),
       foreign = f.workspace.execute("session_create", { requestId: randomUUID(), title: "Foreign", mode: "motion" });
-    expect(() => f.workspace.execute("resource_import", { ...request, requestId: randomUUID() })).toThrow(
-      "revision changed",
-    );
-    expect(() => f.workspace.execute("resource_import", { ...request, name: "Different" })).toThrow("already used");
+    expect(() => ingest(f.workspace, { ...request, requestId: randomUUID() })).toThrow("revision changed");
+    expect(() => ingest(f.workspace, { ...request, name: "Different" })).toThrow("already used");
     expect(() =>
-      f.workspace.execute("resource_import", {
+      ingest(f.workspace, {
         ...request,
         requestId: randomUUID(),
         expectedRevision: imported.revision,
@@ -170,7 +168,7 @@ it("rejects foreign ownership, stale writes, reused receipts, duplicate paths an
     f.finish();
   }
 });
-it("rejects malformed, mislabeled, oversized or noncanonical bytes atomically", () => {
+it("rejects malformed, mislabeled or oversized bytes atomically", () => {
   const f = fixture();
   try {
     const before = f.workspace.execute("project_read", f.owner),
@@ -181,13 +179,12 @@ it("rejects malformed, mislabeled, oversized or noncanonical bytes atomically", 
       { path: "assets/red.png", data: wave() },
       { path: "assets/red.wav", data: png },
       { path: "assets/red.png", data: corrupt.toString("base64") },
-      { path: "assets/red.png", data: `${png}\n` },
-      { path: "assets/red.png", data: Buffer.alloc(6 * 1024 * 1024 + 1).toString("base64") },
+      { path: "assets/red.png", data: Buffer.alloc(16 * 1024 * 1024 + 1).toString("base64") },
       { path: "assets/red.wav", data: Buffer.from("RIFF").toString("base64") },
     ];
     for (const entry of cases)
       expect(() =>
-        f.workspace.execute("resource_import", {
+        ingest(f.workspace, {
           requestId: randomUUID(),
           ...f.owner,
           expectedRevision: before.revision,
@@ -207,7 +204,7 @@ it("detects corruption of persistent bytes instead of serving a different payloa
   const f = fixture();
   try {
     const before = f.workspace.execute("project_read", f.owner),
-      imported = f.workspace.execute("resource_import", {
+      imported = ingest(f.workspace, {
         requestId: randomUUID(),
         ...f.owner,
         expectedRevision: before.revision,
@@ -230,7 +227,7 @@ it("deduplicates persistent bytes without granting reads to another artifact and
   try {
     let current = f.workspace.execute("project_read", f.owner);
     for (let i = 0; i < 64; i++)
-      current = f.workspace.execute("resource_import", {
+      current = ingest(f.workspace, {
         requestId: randomUUID(),
         ...f.owner,
         expectedRevision: current.revision,
@@ -239,7 +236,7 @@ it("deduplicates persistent bytes without granting reads to another artifact and
         data: png,
       });
     expect(() =>
-      f.workspace.execute("resource_import", {
+      ingest(f.workspace, {
         requestId: randomUUID(),
         ...f.owner,
         expectedRevision: current.revision,
@@ -267,3 +264,16 @@ it("deduplicates persistent bytes without granting reads to another artifact and
     f.finish();
   }
 });
+
+/** Test fixture construction; production transports accept raw bytes and digest metadata. */
+function ingest(
+  db: Workspace,
+  input: Omit<Parameters<Workspace["importResource"]>[0], "digest" | "bytes"> & { data: string },
+) {
+  const { data, ...intent } = input,
+    bytes = Buffer.from(data, "base64");
+  return db.importResource(
+    { ...intent, digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.length },
+    bytes,
+  );
+}

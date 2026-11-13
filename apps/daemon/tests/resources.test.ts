@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import type { ServerResponse } from "node:http";
 import { tmpdir } from "node:os";
@@ -44,7 +44,7 @@ it("serves only captured revision bytes with exact binary MIME, bounded ranges a
       }),
       owner = { sessionId: session.id, artifactId: artifact.id },
       before = workspace.execute("project_read", owner),
-      project = workspace.execute("resource_import", {
+      project = ingest(workspace, {
         requestId: randomUUID(),
         ...owner,
         expectedRevision: before.revision,
@@ -117,7 +117,7 @@ it("refuses a new candidate that references removed media while keeping the conf
       }),
       owner = { sessionId: session.id, artifactId: artifact.id },
       before = workspace.execute("project_read", owner),
-      project = workspace.execute("resource_import", {
+      project = ingest(workspace, {
         requestId: randomUUID(),
         ...owner,
         expectedRevision: before.revision,
@@ -142,3 +142,16 @@ it("refuses a new candidate that references removed media while keeping the conf
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+/** Test fixture construction; production transports accept raw bytes and digest metadata. */
+function ingest(
+  db: Workspace,
+  input: Omit<Parameters<Workspace["importResource"]>[0], "digest" | "bytes"> & { data: string },
+) {
+  const { data, ...intent } = input,
+    bytes = Buffer.from(data, "base64");
+  return db.importResource(
+    { ...intent, digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.length },
+    bytes,
+  );
+}

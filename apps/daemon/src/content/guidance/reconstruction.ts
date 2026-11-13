@@ -15,7 +15,7 @@ Full reference playback, full-frame sequences, baking requested editable content
 
 ## Material and type
 
-Use the actual resource_import contract: verified PNG or PCM16 WAV, stable operation identity, no automatic placement. Do not relabel unsupported JPEG/WebP/video/compressed audio/font bytes as a supported format. An authorized capable host can prepare and verify a permitted derivative, recording conversion and losses; this does not extend native support. Inline SVG can remain native text. Keep material provenance, usable source range and permission.
+Use the actual resource_import/resource_upload contract: fixed digest/size metadata and a raw binary business upload, verified PNG or PCM16 WAV, stable operation identity, no automatic placement. Do not relabel unsupported JPEG/WebP/video/compressed audio/font bytes as a supported format. An authorized capable host can prepare and verify a permitted derivative, recording conversion and losses; this does not extend native support. Inline SVG can remain native text. Keep material provenance, usable source range and permission.
 
 Choose type by shape/contrast/x-height/terminals and the reference's character. Use genuinely available licensed font data, preserving notices and exact bytes. Template Latin faces do not prove international glyph coverage. A distinctive pixel/stencil/wide word must be resettable for replacement copy, not only a traced original word that leaves later edits generic. Keep requested wording as addressable text/string content; a logo/artwork can instead be a replaceable vector/image with a stated limitation.
 

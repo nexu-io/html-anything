@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { Client } from "@/client.js";
+import { Client } from "@/transport/client.js";
 
 it("retries a lost preview response with the same read-view identity and retires it explicitly", async () => {
   let lose = true;

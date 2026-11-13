@@ -48,6 +48,7 @@ it("imports an actual font through unknown receipts, paints its exact face, pres
             origin: web.endpoint.url,
             socket: socket.value,
             token: capability.token,
+            endpoint: port.value,
           });
           await context.forward(port.value, socket.value);
           config = {
@@ -111,6 +112,10 @@ it("imports an actual font through unknown receipts, paints its exact face, pres
     let lose = true;
     await page.route("**/api/resource_import", async (route) => {
       ids.push(route.request().postDataJSON().requestId);
+      if (!route.request().postDataJSON().uploadId) {
+        await route.continue();
+        return;
+      }
       if (lose) {
         lose = false;
         const response = await route.fetch();
@@ -133,7 +138,8 @@ it("imports an actual font through unknown receipts, paints its exact face, pres
     expect(committed.files[0]!.content).not.toContain("OpenMotionFont_");
     await click("重试");
     await page.unroute("**/api/resource_import");
-    expect(ids).toHaveLength(2);
+    expect(ids).toHaveLength(3);
+    expect(new Set(ids).size).toBe(1);
     expect(ids[0]).toBe(ids[1]);
     const face = committed.resources[0]!,
       family = resourceFontFamily(face.digest);
@@ -197,9 +203,8 @@ it("imports an actual font through unknown receipts, paints its exact face, pres
     await click("移除资源 Inter.woff2");
     await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "missing project font" }).waitFor();
     expect(await page.locator("iframe:not([hidden])").isVisible()).toBe(true);
-    expect(
-      (await client.execute("resource_read", { ...owner, revision: selected.revision, path: face.path })).data,
-    ).toBe(data.data);
+    const retained = await client.readResource({ ...owner, revision: selected.revision, path: face.path });
+    expect(Buffer.from(await retained.data.arrayBuffer()).toString("base64")).toBe(data.data);
     await driver.capture("missing-font-retains-confirmed-frame");
     await click("撤销");
     report.restored = await loaded();

@@ -1,22 +1,31 @@
-import { Fault, type Input, type Resource } from "../contract.js";
+import { Fault, type Input, type Resource, resourceBytesLimit, resourceCountLimit } from "../contract.js";
 import type { Database } from "../database.js";
 import type { Projects } from "../projects.js";
-import { checksum, decode, identify } from "./formats.js";
+import { checksum, identify } from "./formats.js";
 /** Persistent user bytes. Only owned immutable revision manifests grant reads; no cache/GC authority. */
 export class Resources {
   constructor(
     private db: Database,
     private projects: Projects,
   ) {}
-  import(input: Input<"resource_import">) {
-    return this.importBytes(input, decode(input.data));
+  importBytes(
+    input: Pick<Input<"resource_import">, "sessionId" | "artifactId" | "expectedRevision" | "path" | "name">,
+    bytes: Buffer,
+  ) {
+    const project = this.prepare({ ...input, bytes: bytes.length });
+    const resource = this.retain(input, bytes);
+    return this.projects.commit(project, project.files, [...project.resources, resource]);
   }
-  importBytes(input: Omit<Input<"resource_import">, "data">, bytes: Buffer) {
+  prepare(input: Pick<Input<"resource_import">, "sessionId" | "artifactId" | "expectedRevision" | "path" | "bytes">) {
     const project = this.current(input);
     if (project.resources.some((entry) => entry.path === input.path))
       throw new Fault("conflict", "resource path already exists");
-    const resource = this.retain(input, bytes);
-    return this.projects.commit(project, project.files, [...project.resources, resource]);
+    if (
+      project.resources.length >= resourceCountLimit ||
+      project.resources.reduce((size, entry) => size + entry.bytes, input.bytes) > resourceBytesLimit
+    )
+      throw new Fault("invalid", "resource snapshot exceeds 64 resources / 64 MiB");
+    return project;
   }
   /** Called only inside the workspace transaction owning the resulting manifest. */
   retain(input: Pick<Resource, "path" | "name">, bytes: Buffer) {
@@ -47,7 +56,7 @@ export class Resources {
       throw new Fault("integrity", "persistent resource bytes are corrupt");
     return { resource, data: bytes.toString("base64") };
   }
-  private current(input: Omit<Input<"resource_import">, "data"> | Input<"resource_remove">) {
+  private current(input: Pick<Input<"resource_import">, "sessionId" | "artifactId" | "expectedRevision">) {
     const project = this.projects.read(input);
     if (project.revision !== input.expectedRevision)
       throw new Fault("conflict", "project revision changed; read before changing resources");

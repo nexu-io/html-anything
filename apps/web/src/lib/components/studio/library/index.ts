@@ -1,6 +1,7 @@
 import { button, field, note, slot, tabs, tree } from "@open-motion/components";
+import type { Input } from "@open-motion/daemon/contract";
 import type { Clip } from "@open-motion/motion/contract";
-import { type Input, isFontResource, type Resource, resourceLimit } from "@open-motion/workspace/contract";
+import { isFontResource, type Resource, resourceLimit } from "@open-motion/workspace/contract";
 
 import type { Client } from "../../../../api.js";
 import type { Editor } from "../../../editor.js";
@@ -69,21 +70,16 @@ export class StudioLibrary {
         owner = this.editing.editor.project;
       this.upload.value = "";
       if (!file || !owner) return;
-      let input: Omit<Input<"resource_import">, "requestId"> | undefined;
+      let input: Omit<Input<"resource_import">, "requestId" | "uploadId"> | undefined;
       this.editing.run(async () => {
         if (!input) {
           if (!file.size || file.size > resourceLimit || !/\.(png|wav|ttf|otf|woff|woff2)$/i.test(file.name))
-            throw Error("请选择不超过 6 MiB 的 PNG、PCM16 WAV 或单字体 TTF/OTF/WOFF/WOFF2");
+            throw Error("请选择不超过 16 MiB 的 PNG、PCM16 WAV 或单字体 TTF/OTF/WOFF/WOFF2");
           await this.editing.editor.save();
           const project = this.editing.editor.project;
           if (!project || project.artifactId !== owner.artifactId) throw Error("媒体导入的工程上下文已改变");
-          const data = await new Promise<string>((done, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => done(String(reader.result).split(",")[1] ?? "");
-            reader.onerror = () => reject(Error("媒体文件读取失败"));
-            reader.onabort = () => reject(Error("媒体文件读取已取消"));
-            reader.readAsDataURL(file);
-          });
+          const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", await file.arrayBuffer())),
+            digest = `sha256:${Array.from(hash, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
           if (this.editing.editor.project !== project) throw Error("媒体读取期间工程版本已改变");
           input = {
             sessionId: project.sessionId,
@@ -91,10 +87,11 @@ export class StudioLibrary {
             expectedRevision: project.revision,
             path: `assets/${crypto.randomUUID()}.${file.name.split(".").at(-1)?.toLowerCase()}`,
             name: file.name.slice(0, 120),
-            data,
+            digest,
+            bytes: file.size,
           };
         }
-        await this.editing.editor.importResource(input);
+        await this.editing.editor.importResource(input, file);
       });
     });
     this.generation = new GenerationPanel(document, editing);
@@ -103,7 +100,7 @@ export class StudioLibrary {
       field(document, "导入媒体", this.upload),
       note(
         document,
-        "PNG / PCM16 WAV / TTF / OTF / WOFF / WOFF2 · 单资源最多 6 MiB；素材随工程历史持久保存。导入字体后可在文本图层的字体选项中选择。",
+        "PNG / PCM16 WAV / TTF / OTF / WOFF / WOFF2 · 单资源最多 16 MiB；素材随工程历史持久保存。导入字体后可在文本图层的字体选项中选择。",
       ),
       this.mediaList,
     );

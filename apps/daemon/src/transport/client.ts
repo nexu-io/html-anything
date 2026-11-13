@@ -9,6 +9,7 @@ import type {
   Operation as WorkspaceOperation,
   Output as WorkspaceOutput,
 } from "@open-motion/workspace/contract";
+import { resourceLimit } from "@open-motion/workspace/contract";
 import {
   type ArchiveDownload,
   type ArchiveUpload,
@@ -17,7 +18,10 @@ import {
   type Input,
   type Operation,
   type Output,
-} from "./contract.js";
+  type ResourceDownload,
+  type ResourceUpload,
+  resourceTransferLimits,
+} from "../contract.js";
 export type Transport = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 export interface Health {
   ok: boolean;
@@ -95,7 +99,7 @@ export class Client {
   async health(): Promise<Health> {
     return (await this.send("/health")) as Health;
   }
-  execute<K extends WorkspaceOperation>(
+  execute<K extends Exclude<WorkspaceOperation, "resource_import" | "resource_read">>(
     operation: K,
     input: WorkspaceInput<K>,
     signal?: AbortSignal,
@@ -108,6 +112,103 @@ export class Client {
   execute<K extends Operation>(operation: K, input: Input<K>, signal?: AbortSignal): Promise<Output<K>>;
   async execute(operation: Operation, input: unknown, signal?: AbortSignal): Promise<Output<Operation>> {
     return (await this.send(`/api/${operation}`, input, false, signal)) as Output<Operation>;
+  }
+  async importResource(
+    input: Omit<Input<"resource_import">, "uploadId">,
+    file: Blob,
+  ): Promise<Output<"resource_import">> {
+    const prior = await this.execute("resource_import", input);
+    if (prior.project) return prior;
+    if (file.size !== input.bytes) throw new Fault("invalid", "resource size changed");
+    const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", await file.arrayBuffer())),
+      digest = `sha256:${Array.from(hash, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+    if (digest !== input.digest) throw new Fault("invalid", "resource digest changed");
+    const ticket = await this.execute("resource_upload", { requestId: input.requestId, digest, bytes: file.size });
+    try {
+      await this.uploadResource(ticket, file);
+      const result = await this.execute("resource_import", { ...input, uploadId: ticket.id });
+      if (!result.project) throw new Error("resource import receipt missing");
+      return result;
+    } finally {
+      await this.execute("resource_release", { id: ticket.id }).catch(() => {});
+    }
+  }
+  async uploadResource(ticket: ResourceUpload, file: Blob, signal?: AbortSignal): Promise<void> {
+    const url = new URL(ticket.url);
+    if (!Number.isSafeInteger(ticket.bytes) || ticket.bytes < 1 || ticket.bytes > resourceLimit)
+      throw new Error("resource size outside supported bounds");
+    if (
+      url.origin !== this.origin ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash ||
+      !/^\/resources\/upload\/[a-f0-9]{64}$/.test(url.pathname)
+    )
+      throw new Error("resource upload must use this daemon's business grant");
+    if (file.size !== ticket.bytes) throw new Fault("invalid", "resource size changed");
+    const response = await this.transport(url.href, {
+        method: "POST",
+        body: file,
+        credentials: "omit",
+        cache: "no-store",
+        mode: "cors",
+        headers: { "content-type": "application/octet-stream" },
+        signal: AbortSignal.any([AbortSignal.timeout(resourceTransferLimits.transfer), ...(signal ? [signal] : [])]),
+      }),
+      result = await response.json();
+    if (!response.ok)
+      throw new Fault(result.error?.code ?? "integrity", result.error?.message ?? "resource upload failed");
+    if (result.id !== ticket.id || result.ready !== true) throw new Error("resource upload receipt changed");
+  }
+  async readResource(input: Input<"resource_read">): Promise<{ resource: ResourceDownload["resource"]; data: Blob }> {
+    const ticket = await this.execute("resource_read", input);
+    try {
+      return { resource: ticket.resource, data: await this.downloadResource(ticket) };
+    } finally {
+      await this.execute("resource_release", { id: ticket.id }).catch(() => {});
+    }
+  }
+  async downloadResource(ticket: ResourceDownload, signal?: AbortSignal): Promise<Blob> {
+    const url = new URL(ticket.url);
+    if (!Number.isSafeInteger(ticket.bytes) || ticket.bytes < 1 || ticket.bytes > resourceLimit)
+      throw new Error("resource size outside supported bounds");
+    if (
+      url.origin !== this.origin ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash ||
+      !/^\/resources\/download\/[a-f0-9]{64}$/.test(url.pathname)
+    )
+      throw new Error("resource download must use this daemon's business grant");
+    const response = await this.transport(url.href, {
+      credentials: "omit",
+      cache: "no-store",
+      mode: "cors",
+      signal: AbortSignal.any([AbortSignal.timeout(resourceTransferLimits.transfer), ...(signal ? [signal] : [])]),
+    });
+    if (!response.ok || !response.body) throw new Error("resource download unavailable");
+    const bytes = new Uint8Array(ticket.bytes),
+      reader = response.body.getReader();
+    let size = 0;
+    try {
+      for (;;) {
+        const next = await reader.read();
+        if (next.done) break;
+        if (size + next.value.length > bytes.length) throw new Error("resource download exceeds fixed size");
+        bytes.set(next.value, size);
+        size += next.value.length;
+      }
+      const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
+        digest = `sha256:${Array.from(hash, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+      if (size !== ticket.bytes || digest !== ticket.digest)
+        throw new Error("resource download differs from fixed bytes/digest");
+      return new Blob([bytes], { type: ticket.resource.type });
+    } finally {
+      await reader.cancel();
+      reader.releaseLock();
+    }
   }
   private archiveUrl(value: string, kind: "upload" | "download") {
     const url = new URL(value);

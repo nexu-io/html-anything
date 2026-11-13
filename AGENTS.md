@@ -77,6 +77,7 @@ These are starting boundaries for architectural discussion, not a reason to dupl
 | apps/web, apps/daemon                             | Product workspace UI, HTTP/MCP adaptation and protected native previews                                                              |
 | packages/theme, packages/components               | Primitive/semantic/light-dark tokens, licensed local fonts, atoms and anonymous layouts                                              |
 | apps/web/src/lib/components                       | Web business components; no style definitions                                                                                        |
+| apps/daemon/src/transport                         | HTTP/MCP client/adapters and bounded temporary binary grants; workspace owns persistent resource transactions                        |
 | packages/portable                                 | Bounded native-content ZIP inventory and byte streams; no project store, OS allocation or public transfer endpoint                   |
 | packages/motion                                   | Native editing, composition graph/assembly, preview and canvas bridge; no persistence or OS allocation                               |
 | packages/gateway                                  | Fixed-intent PNG tasks, explicit provider adapters and durable verified candidates; workspace owns explicit adoption transactions    |

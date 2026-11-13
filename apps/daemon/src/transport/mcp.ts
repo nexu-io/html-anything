@@ -1,8 +1,8 @@
 import type { McpServer, StandardSchemaWithJSON } from "@modelcontextprotocol/server";
-import { listGuidance, readGuidance } from "./content/guidance.js";
-import { descriptions, entryFragment, Fault, type Input, type Operation, type Output, schemas } from "./contract.js";
+import { listGuidance, readGuidance } from "../content/guidance.js";
+import { descriptions, entryFragment, Fault, type Input, type Operation, type Output, schemas } from "../contract.js";
 
-export { guidanceSkills, instructions, listGuidance, localGuidance, readGuidance } from "./content/guidance.js";
+export { guidanceSkills, instructions, listGuidance, localGuidance, readGuidance } from "../content/guidance.js";
 export type Execute = <K extends Operation>(operation: K, input: Input<K>) => Promise<Output<K>>;
 /** Business tool descriptors and routing belong to the application; hosts only attach transports. */
 export function register(server: McpServer, execute: Execute, host?: { web(): Promise<string> }): void {
@@ -23,7 +23,8 @@ export function register(server: McpServer, execute: Execute, host?: { web(): Pr
         description: descriptions[operation],
         inputSchema: schema,
         annotations: {
-          readOnlyHint: operation !== "archive_release" && !("requestId" in schemas[operation].shape),
+          readOnlyHint:
+            !["archive_release", "resource_release"].includes(operation) && !("requestId" in schemas[operation].shape),
           destructiveHint: ["project_save", "project_undo", "project_redo", "resource_remove"].includes(operation),
           idempotentHint: true,
           openWorldHint: ["generation_create", "generation_cancel"].includes(operation),
@@ -43,15 +44,20 @@ export function register(server: McpServer, execute: Execute, host?: { web(): Pr
               };
             return { content: [{ type: "text", text: JSON.stringify(handoff) }], structuredContent: handoff };
           }
-          if (operation === "export_download" || operation === "archive_export") {
-            const download = result as Output<"export_download"> | Output<"archive_export">;
+          if (operation === "export_download" || operation === "archive_export" || operation === "resource_read") {
+            const download = result as Output<"export_download"> | Output<"archive_export"> | Output<"resource_read">;
             return {
               content: [
                 {
                   type: "resource_link",
                   uri: download.url,
                   name: download.filename,
-                  mimeType: operation === "archive_export" ? "application/zip" : "video/mp4",
+                  mimeType:
+                    operation === "resource_read"
+                      ? (result as Output<"resource_read">).resource.type
+                      : operation === "archive_export"
+                        ? "application/zip"
+                        : "video/mp4",
                   size: download.bytes,
                 },
               ],
@@ -60,11 +66,9 @@ export function register(server: McpServer, execute: Execute, host?: { web(): Pr
           }
           // Binary data is present once in structured output, keeping the stock stdio envelope bounded.
           const text =
-            operation === "resource_read"
-              ? { resource: (result as Output<"resource_read">).resource }
-              : operation === "generation_result"
-                ? { candidate: (result as Output<"generation_result">).candidate }
-                : result;
+            operation === "generation_result"
+              ? { candidate: (result as Output<"generation_result">).candidate }
+              : result;
           return { content: [{ type: "text", text: JSON.stringify(text) }], structuredContent: { ...result } };
         } catch (error) {
           return {

@@ -1,5 +1,5 @@
 import { z } from "zod";
-export const resourceLimit = 6 * 1024 * 1024;
+export const resourceLimit = 16 * 1024 * 1024;
 export const resourceCountLimit = 64;
 export const resourceBytesLimit = 64 * 1024 * 1024;
 export const resourcePath = z
@@ -57,7 +57,3 @@ export function resourceFontFamily(digest: string): string {
   if (!/^sha256:[a-f0-9]{64}$/.test(digest)) throw Error("invalid font identity");
   return `OpenMotionFont_${digest.slice(7)}`;
 }
-export const resourceData = z
-  .string()
-  .min(4)
-  .max(Math.ceil(resourceLimit / 3) * 4);

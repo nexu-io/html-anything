@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -67,10 +67,10 @@ it("keeps font bytes in revision history, confirms original receipts before repl
         name: "Inter",
         data: faces[0]!.data,
       },
-      imported = db.execute("resource_import", input),
+      imported = ingest(db, input),
       font = imported.resources[0]!;
     expect(imported.history.version).toBe(1);
-    expect(db.execute("resource_import", input)).toEqual(imported);
+    expect(ingest(db, input)).toEqual(imported);
     expect(db.execute("resource_read", { ...owner, revision: imported.revision, path: font.path }).data).toBe(
       input.data,
     );
@@ -81,7 +81,7 @@ it("keeps font bytes in revision history, confirms original receipts before repl
       path: font.path,
     });
     expect(removed.resources).toEqual([]);
-    expect(db.execute("resource_import", input)).toEqual(imported);
+    expect(ingest(db, input)).toEqual(imported);
     expect(db.execute("project_read", owner)).toEqual(removed);
     db.close();
     db = new Workspace(root);
@@ -102,10 +102,23 @@ it("keeps font bytes in revision history, confirms original receipts before repl
       path: "assets/bad.woff2",
       data: Buffer.from("not a font").toString("base64"),
     };
-    expect(() => db.execute("resource_import", invalid)).toThrow();
+    expect(() => ingest(db, invalid)).toThrow();
     expect(db.execute("project_read", owner)).toEqual(restored);
   } finally {
     db.close();
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+/** Test fixture construction; production transports accept raw bytes and digest metadata. */
+function ingest(
+  db: Workspace,
+  input: Omit<Parameters<Workspace["importResource"]>[0], "digest" | "bytes"> & { data: string },
+) {
+  const { data, ...intent } = input,
+    bytes = Buffer.from(data, "base64");
+  return db.importResource(
+    { ...intent, digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.length },
+    bytes,
+  );
+}

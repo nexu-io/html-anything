@@ -226,7 +226,7 @@ it("edits native audio source/gain/mute atomically through lost responses, histo
     const asset = saved.resources[0];
     if (!asset) throw Error("missing audio resource");
     expect(
-      (await runtime.execute("resource_read", { ...owner, revision: saved.revision, path: asset.path })).data ===
+      (await readResource(runtime, { ...owner, revision: saved.revision, path: asset.path })).data ===
         wave().toString("base64"),
     ).toBe(true);
     await page.reload();
@@ -285,3 +285,17 @@ it("edits native audio source/gain/mute atomically through lost responses, histo
     await writeFile(join(evidence, "report.json"), JSON.stringify(report, null, 2));
   }
 }, 60000);
+
+async function readResource(
+  runtime: Pick<Awaited<ReturnType<typeof open>>, "execute">,
+  input: { sessionId: string; artifactId: string; revision: string; path: string },
+) {
+  const ticket = await runtime.execute("resource_read", input);
+  try {
+    const response = await fetch(ticket.url);
+    expect(response.status).toBe(200);
+    return { resource: ticket.resource, data: Buffer.from(await response.arrayBuffer()).toString("base64") };
+  } finally {
+    await runtime.execute("resource_release", { id: ticket.id });
+  }
+}

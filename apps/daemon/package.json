@@ -10,11 +10,11 @@
     },
     "./main": "./dist/main.mjs",
     "./client": {
-      "types": "./dist/client.d.ts",
+      "types": "./dist/transport/client.d.ts",
       "default": "./dist/client.mjs"
     },
     "./mcp": {
-      "types": "./dist/mcp.d.ts",
+      "types": "./dist/transport/mcp.d.ts",
       "default": "./dist/mcp.mjs"
     },
     "./contract": {

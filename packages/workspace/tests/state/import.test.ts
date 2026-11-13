@@ -193,9 +193,9 @@ const invalid: { name: string; change: (value: SourcePayload) => void }[] = [
     },
   },
   {
-    name: "an individual resource beyond 6 MiB",
+    name: "an individual resource beyond 16 MiB",
     change: (value) => {
-      value.resources[1]!.bytes = wave(6 * 1024 ** 2 + 2);
+      value.resources[1]!.bytes = wave(16 * 1024 ** 2 + 2);
     },
   },
   {

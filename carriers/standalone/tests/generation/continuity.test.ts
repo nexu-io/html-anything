@@ -385,12 +385,12 @@ it("keeps accepted/unknown generation and explicit adoption consistent across re
     expect(adoptions).toHaveLength(2);
     expect(adoptions[0]).toBe(adoptions[1]);
     expect(await f.api.execute("project_read", owner)).toEqual(newer);
-    const bytes = await f.api.execute("resource_read", {
+    const bytes = await f.api.readResource({
       ...owner,
       revision: newer.revision,
       path: newer.resources[0]!.path,
     });
-    expect(Buffer.from(bytes.data, "base64")).toEqual(png);
+    expect(Buffer.from(await bytes.data.arrayBuffer())).toEqual(png);
     await page.screenshot({ path: join(f.evidence, "adoption-after-context-and-restart.png") });
     await page.close();
     const base = {
