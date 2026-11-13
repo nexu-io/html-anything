@@ -1159,6 +1159,7 @@
   "{start} to {end}": "{start} ～ {end}",
   "OpenMotion Studio": "OpenMotionスタジオ",
   "MCP connection · Templates": "MCPアクセス・テンプレート",
+  "Search name, style or template ID": "名前、スタイル、テンプレート ID で検索",
   "Search templates, creators, styles…": "テンプレート、作成者、スタイルを検索…",
   "View all templates": "すべてのテンプレートを表示する",
   "Preparing editable project…": "編集可能なプロジェクトを準備中...",

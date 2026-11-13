@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { isEditableTemplate, type GalleryTemplate, type TemplatePage } from '../../../shared/catalog';
 import { templatePrompt, type IntegrationInfo } from '../../../shared/integration';
 import { useI18n } from '../i18n/I18n';
 import { motionApi } from './useWorkspace';
 import { MotionIcon } from './icons';
+import { Menu, MenuRadioGroup, MenuRadioItem } from '../components/ui/Menu';
 import styles from './TemplateLibraryDialog.module.css';
+import { TemplateMotionGuide } from './TemplateMotionGuide';
 import figmaLogo from './template-brands/figma.png';
 import lovableLogo from './template-brands/lovable.svg';
 import linearLogo from './template-brands/linear.svg';
@@ -20,6 +22,21 @@ const facets: [Facet, string][] = [
   ['industries', 'Industries'], ['creationModels', 'Creation models'], ['colors', 'Colors'],
   ['ratio', 'Aspect ratio'], ['duration', 'Duration'],
 ];
+const sortOptions = [
+  { value: 'recommended', label: 'Recommended order' },
+  { value: 'name', label: 'Name A–Z' },
+  { value: 'reverse', label: 'Name Z–A' },
+];
+// Match the template toolbar at https://open-design.ai/zh/templates/figma/.
+function TemplateToolbarIcon({ name }: { name: 'search' | 'filter' | 'sort' }) {
+  const paths = {
+    search: 'M21 21l-5-5 M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',
+    filter: 'M12 7h9 M3 17h9 M10 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0 M21 17a3 3 0 1 1-6 0 3 3 0 0 1 6 0',
+    sort: 'M3 6h18 M6 12h12 M10 18h4',
+  };
+  const size = name === 'search' ? 20 : 18;
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]} /></svg>;
+}
 function values(template: GalleryTemplate, key: Facet): string[] {
   if (key === 'brand') return template.brand ? [template.brand] : [];
   if (key === 'ratio') {
@@ -72,6 +89,9 @@ export function TemplateLibraryDialog(props: Props) {
   const { t, locale } = useI18n();
   const dialog = useRef<HTMLDialogElement>(null), detail = useRef<HTMLDialogElement>(null), filter = useRef<HTMLDialogElement>(null);
   const useDialog = useRef<HTMLDialogElement>(null);
+  const searchInput = useRef<HTMLInputElement>(null), searchButton = useRef<HTMLButtonElement>(null);
+  const results = useRef<HTMLElement>(null), toolbar = useRef<HTMLDivElement>(null);
+  const searchId = useId();
   const [downloading, setDownloading] = useState(false), [downloadError, setDownloadError] = useState('');
   const [catalog, setCatalog] = useState<GalleryTemplate[]>([]);
   const [warning, setWarning] = useState(''), [error, setError] = useState(''), [loading, setLoading] = useState(false);
@@ -123,11 +143,17 @@ export function TemplateLibraryDialog(props: Props) {
   }, [props.open, attempt, locale]);
   const available = useMemo(() => facets.map(([key, label]) => ({ key, label, values: [...new Set(catalog.flatMap(item => values(item, key)))] })).filter(facet => facet.values.length), [catalog]);
   const hasFilters = Boolean(query || Object.values(selected).some(items => items?.length));
+  useLayoutEffect(() => {
+    // Filtering adds/removes the featured section above the toolbar. Keep the active search in view.
+    if (!props.open || !results.current || !toolbar.current || (!searchOpen && document.activeElement !== searchButton.current)) return;
+    results.current.scrollTop += toolbar.current.getBoundingClientRect().top - results.current.getBoundingClientRect().top;
+  }, [props.open, searchOpen, query, selected, catalog]);
   const visible = useMemo(() => catalog.filter(item => {
     const text = [item.id, item.title, item.description, item.author, ...item.tags, ...facets.flatMap(([key]) => values(item, key))].join(' ').toLocaleLowerCase();
     return text.includes(query.trim().toLocaleLowerCase()) && facets.every(([key]) => !selected[key]?.length || selected[key]!.some(value => values(item, key).includes(value)));
   }).sort((a, b) => sort === 'recommended' ? (a.sortOrder ?? Infinity) - (b.sortOrder ?? Infinity) : a.title.localeCompare(b.title, locale) * (sort === 'reverse' ? -1 : 1)), [catalog, query, selected, sort, locale]);
   const featured = catalog.filter(item => item.featuredOrder != null).sort((a, b) => a.featuredOrder! - b.featuredOrder!);
+  const initialLoading = loading && catalog.length === 0;
   const reset = () => { setQuery(''); setSelected({}); };
   const toggle = (key: Facet, value: string) => setSelected(previous => ({ ...previous, [key]: previous[key]?.includes(value) ? previous[key]!.filter(item => item !== value) : [...(previous[key] ?? []), value] }));
   async function showPrompt() {
@@ -164,7 +190,12 @@ export function TemplateLibraryDialog(props: Props) {
     {props.busy && <p className={styles.status} role="status">{t('Preparing editable project…')}</p>}
     <div className={styles.browser}>
       <aside className={styles.sidebar} aria-label={t('Filters')}>
-        <button className={styles.all} aria-current={!hasFilters ? 'page' : undefined} onClick={reset}>{t('All templates')}<span>{catalog.length}</span></button>
+        <button className={styles.all} disabled={initialLoading} aria-current={!hasFilters ? 'page' : undefined} onClick={reset}>{t('All templates')}{initialLoading ? <span className={`${styles.skeleton} ${styles.skeletonCount}`} aria-hidden="true" /> : <span>{catalog.length}</span>}</button>
+        {initialLoading && <div className={styles.skeletonSidebar} aria-hidden="true">
+          <div className={`${styles.skeleton} ${styles.skeletonTitle}`} />
+          {Array.from({ length: 5 }, (_, index) => <div className={styles.skeletonFacet} key={index}><span className={`${styles.skeleton} ${styles.skeletonIcon}`} /><span className={`${styles.skeleton} ${styles.skeletonLabel}`} /></div>)}
+          {Array.from({ length: 3 }, (_, index) => <div className={`${styles.skeleton} ${styles.skeletonCategory}`} key={index} />)}
+        </div>}
         {available.filter(facet => ['brand', 'uses', 'styles', 'industries', 'creationModels'].includes(facet.key)).map(facet => <details key={facet.key} open={facet.key === 'brand'}><summary>{t(facet.label)}</summary>
           {facet.values.slice(0, facet.key === 'brand' && !moreBrands ? 5 : undefined).map(value => <button key={value} aria-pressed={selected[facet.key]?.includes(value) ?? false} onClick={() => toggle(facet.key, value)}>
             {facet.key === 'brand' && <span className={styles.brandIcon} aria-hidden="true">{brandLogos[value] ? <img src={brandLogos[value]} alt="" /> : value.slice(0, 1)}</span>}<span>{facet.key === 'brand' ? value : t(value)}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
@@ -172,22 +203,49 @@ export function TemplateLibraryDialog(props: Props) {
           {facet.key === 'brand' && facet.values.length > 5 && <button onClick={() => setMoreBrands(!moreBrands)}>{t(moreBrands ? 'Show less' : 'Show more')}</button>}
         </details>)}
       </aside>
-      <main className={styles.results} aria-busy={loading}>
+      <main ref={results} className={styles.results} aria-busy={loading}>
         {!hasFilters && featured.length > 0 && <section className={styles.featured}><h2>{t('Popular templates')}</h2>{cards(featured)}</section>}
-        <div className={styles.toolbar}><h2>{t('All templates')} <small>{t('{count} templates', { count: visible.length })}</small></h2><div className={styles.controls}>
-          <button aria-label={t('Search templates')} aria-expanded={searchOpen} onClick={() => setSearchOpen(!searchOpen)}><MotionIcon name="search" size={21} /></button>
-          <button onClick={() => filter.current?.showModal()}><MotionIcon name="sliders" />{t('Filters')}{Object.values(selected).flat().length > 0 && ` (${Object.values(selected).flat().length})`}</button>
-          <select aria-label={t('Sort')} value={sort} onChange={event => setSort(event.target.value)}><option value="recommended">{t('Recommended order')}</option><option value="name">{t('Name A–Z')}</option><option value="reverse">{t('Name Z–A')}</option></select>
+        <div ref={toolbar} className={styles.toolbar}><h2>{t('All templates')} {initialLoading ? <span className={`${styles.skeleton} ${styles.skeletonCount}`} aria-hidden="true" /> : <small>{t('{count} templates', { count: visible.length })}</small>}</h2><div className={styles.controls}>
+          <div className={`${styles.searchControl} ${searchOpen ? styles.searchExpanded : ''}`}>
+            <button ref={searchButton} disabled={initialLoading} className={styles.searchToggle} aria-label={t('Search templates')} aria-expanded={searchOpen} aria-controls={searchOpen ? searchId : undefined} onClick={() => {
+              if (searchOpen && !query) setSearchOpen(false);
+              else { setSearchOpen(true); searchInput.current?.focus(); }
+            }}><TemplateToolbarIcon name="search" /></button>
+            {searchOpen && <input ref={searchInput} disabled={initialLoading} id={searchId} className={styles.search} autoFocus type="search" maxLength={200} value={query} onChange={event => setQuery(event.target.value)} placeholder={t('Search name, style or template ID')} aria-label={t('Search templates')} onKeyDown={event => {
+              if (event.key !== 'Escape') return;
+              event.preventDefault(); event.stopPropagation(); setQuery(''); setSearchOpen(false); searchButton.current?.focus({ preventScroll: true });
+            }} />}
+          </div>
+          <div className={styles.filterSort}>
+            <button disabled={initialLoading} className={styles.filterToggle} onClick={() => filter.current?.showModal()}><TemplateToolbarIcon name="filter" /><span>{t('Filters')}{Object.values(selected).flat().length > 0 && ` (${Object.values(selected).flat().length})`}</span></button>
+            <Menu container={dialog} modal={false} align="end" aria-label={t('Sort')} className={styles.sortMenu} trigger={
+              <button disabled={initialLoading} className={styles.sortToggle} aria-label={`${t('Sort')}: ${t(sortOptions.find(option => option.value === sort)!.label)}`}>
+                <TemplateToolbarIcon name="sort" />
+                <span>{t(sortOptions.find(option => option.value === sort)!.label)}</span><span className={styles.sortChevron} aria-hidden="true">⌄</span>
+              </button>
+            }>
+              <MenuRadioGroup className={styles.sortOptions} value={sort} onValueChange={setSort}>
+                {sortOptions.map(option => <MenuRadioItem key={option.value} value={option.value} closeOnClick className={styles.sortItem}>{t(option.label)}</MenuRadioItem>)}
+              </MenuRadioGroup>
+            </Menu>
+          </div>
         </div></div>
-        {searchOpen && <input className={styles.search} autoFocus type="search" maxLength={200} value={query} onChange={event => setQuery(event.target.value)} placeholder={t('Search templates, creators, styles…')} aria-label={t('Search templates')} />}
         {hasFilters && <div className={styles.chips}>{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)}>{key === 'brand' ? value : t(value)} ×</button>))}<button onClick={reset}>{t('Clear filters')}</button></div>}
-        {loading && !catalog.length ? <p role="status">{t('Loading templates…')}</p> : cards(visible)}
+        {initialLoading ? <div role="status" aria-label={t('Loading templates…')}>
+          <div className={styles.grid} aria-hidden="true">
+            {Array.from({ length: 6 }, (_, index) => <div key={index}>
+              <div className={`${styles.skeleton} ${styles.skeletonCover}`} />
+              <div className={`${styles.skeleton} ${styles.skeletonTitle}`} />
+              <div className={`${styles.skeleton} ${styles.skeletonMeta}`} />
+            </div>)}
+          </div>
+        </div> : cards(visible)}
         {!loading && !visible.length && !error && <p className={styles.empty}>{t('No matching templates. Try another name, creator or style.')}</p>}
       </main>
     </div>
     <dialog ref={filter} className={styles.filters} aria-label={t('Filters')}><header><h2>{t('Filters')}</h2><button onClick={() => filter.current?.close()} aria-label={t('Close')}><MotionIcon name="close" /></button></header>
       {available.map(facet => <fieldset key={facet.key}><legend>{t(facet.label)}</legend>{facet.values.map(value => <label key={value}><input type="checkbox" checked={selected[facet.key]?.includes(value) ?? false} onChange={() => toggle(facet.key, value)} />{facet.key === 'brand' ? value : t(value)}</label>)}</fieldset>)}
-      <footer><button onClick={reset}>{t('Clear filters')}</button><button onClick={() => filter.current?.close()}>{t('Done')}</button></footer>
+      <footer><button onClick={reset}>{t('Clear filters')}</button><button className={styles.filterDone} onClick={() => filter.current?.close()}>{t('Done')}</button></footer>
     </dialog>
     <dialog ref={detail} className={styles.detail} aria-label={t('Template preview')} onClose={() => { setPreview(null); setPrompt(''); }}>
       {preview && <><button className={styles.close} onClick={() => detail.current?.close()} aria-label={t('Close template preview')}><MotionIcon name="close" size={24} /></button><div className={styles.detailGrid}>
@@ -201,7 +259,7 @@ export function TemplateLibraryDialog(props: Props) {
         </div></div>
         {(preview.styleDescription || preview.reviewFocus || preview.motionGuideUrl) && <section className={styles.guide} aria-label={t('Motion guide')}>
           <aside><h3>{t('On this page')}</h3>{preview.styleDescription && <a href="#template-style">{t('Visual style')}</a>}{preview.reviewFocus && <a href="#template-notes">{t('Production notes')}</a>}{preview.motionGuideUrl && <a href="#template-guide">{t('Motion guide')}</a>}</aside>
-          <div>{preview.styleDescription && <section id="template-style"><h3>{t('Visual style')}</h3><p>{preview.styleDescription}</p></section>}{preview.reviewFocus && <section id="template-notes"><h3>{t('Production notes')}</h3><p>{preview.reviewFocus}</p></section>}{preview.motionGuideUrl && <section id="template-guide"><h3>{t('Motion guide')}</h3><iframe src={preview.motionGuideUrl} title={t('Motion guide')} sandbox="allow-scripts" loading="lazy" referrerPolicy="no-referrer" /><a href={preview.motionGuideUrl} target="_blank" rel="noreferrer">{t('View full page')} ↗</a></section>}</div>
+          <div>{preview.styleDescription && <section id="template-style"><h3>{t('Visual style')}</h3><p>{preview.styleDescription}</p></section>}{preview.reviewFocus && <section id="template-notes"><h3>{t('Production notes')}</h3><p>{preview.reviewFocus}</p></section>}{preview.motionGuideUrl && <section id="template-guide"><h3>{t('Motion guide')}</h3><TemplateMotionGuide url={preview.motionGuideUrl} title={t('Motion guide')} /><a href={preview.motionGuideUrl} target="_blank" rel="noreferrer">{t('View full page')} ↗</a></section>}</div>
         </section>}</>}
     </dialog>
     <dialog ref={useDialog} className={styles.useDialog} aria-label={t('Recreate template')}>

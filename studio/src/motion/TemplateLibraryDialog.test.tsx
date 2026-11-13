@@ -39,6 +39,40 @@ it('shows featured/order and combines website facets without site chrome', async
   await act(async () => button('清除筛选').click());
   expect(host.querySelectorAll('[data-template-id]')).toHaveLength(3);
 });
+it('shows loading placeholders without zero counts, then restores the loaded catalog', async () => {
+  let resolveCatalog!: (response: Response) => void;
+  vi.stubGlobal('fetch', vi.fn((url: string) => url.endsWith('/integration')
+    ? Promise.resolve(Response.json({}))
+    : new Promise<Response>(resolve => { resolveCatalog = resolve; })));
+  await mount();
+  expect(host.querySelector('main')?.getAttribute('aria-busy')).toBe('true');
+  expect(host.querySelector('[role=status][aria-label="正在读取模板…"]')).not.toBeNull();
+  expect(host.textContent).not.toContain('0 个模板');
+  expect(host.querySelector('aside button')?.textContent).toBe('全部模板');
+  expect(host.querySelector<HTMLButtonElement>('button[aria-label=搜索模板]')?.disabled).toBe(true);
+  expect(host.querySelector<HTMLButtonElement>('button[aria-label=关闭模板库]')?.disabled).toBe(false);
+  await act(async () => resolveCatalog(Response.json({ items, catalogVersion: 'v1', next: null, total: 2 })));
+  expect(host.querySelector('[role=status][aria-label="正在读取模板…"]')).toBeNull();
+  expect(host.querySelector('main')?.getAttribute('aria-busy')).toBe('false');
+  expect(host.querySelectorAll('[data-template-id]')).toHaveLength(3);
+  expect(host.querySelector<HTMLButtonElement>('button[aria-label=搜索模板]')?.disabled).toBe(false);
+});
+
+it('replaces loading placeholders with an actionable error and preserves the empty state', async () => {
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+    if (url.endsWith('/integration')) return Response.json({});
+    throw new Error('Catalog unavailable');
+  }));
+  await mount();
+  expect(host.querySelector('[role=alert]')?.textContent).toContain('Catalog unavailable');
+  expect(host.querySelector('main')?.getAttribute('aria-busy')).toBe('false');
+  expect(host.querySelector('[role=status][aria-label="正在读取模板…"]')).toBeNull();
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => Response.json(url.endsWith('/integration') ? {} : { items: [], catalogVersion: 'v1', next: null, total: 0 })));
+  await act(async () => button('重试').click());
+  expect(host.querySelector('[role=alert]')).toBeNull();
+  expect(host.textContent).toContain(translate('zh-CN', 'No matching templates. Try another name, creator or style.'));
+  expect(host.textContent).toContain('0 个模板');
+});
 it('copies the requested remote DEV prompt and preserves editable opening', async () => {
   const onOpen = await mount();
   await act(async () => button('First').click());
