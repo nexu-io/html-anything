@@ -507,12 +507,16 @@ npx skills add ./skills --skill openmotion-director openmotion-production openmo
   "mcpServers": {
     "openmotion": {
       "command": "/absolute/path/to/node",
-      "args": ["--experimental-strip-types", "/absolute/openmotion/mcp.ts"],
-      "env": { "MOTION_DATA_DIR": "/absolute/openmotion-data" }
+      "args": ["/absolute/openmotion-home/run-mcp.mjs"]
     }
   }
 }
 ```
+
+npm 安装时，向 setup 传入当前 Agent 名称，例如 `--host opencode`、`--host cursor` 或 `--host cline`。没有自动适配器的宿主会收到 `manualConnection.transport`，其中包含准确的 Node 和启动器路径；按客户端格式合并配置，保留其他服务，无需先安装 Claude。启动器从 `install.json` 读取应用和数据目录，并配置 FFmpeg、ffprobe 和浏览器路径，不要改成直接运行 `mcp.ts`。只有确认客户端的 Skills 目录时才传 `--skills-dir`；否则安装器不会写入其配置和 Skills 目录。[手动接入及 OpenCode 示例](docs/npm-installation.md#manual-stdio-hosts)
+
+**源码 checkout** 则使用该 checkout 的 Node，设置 `args: ["--experimental-strip-types", "/absolute/checkout/mcp.ts"]` 和 `env: {"MOTION_DATA_DIR": "/absolute/openmotion-data"}`，并按[源码指南](install.md)准备本地浏览器和媒体工具。
+
 
 **十一个公开 MCP 工具**覆盖模板发现与详情、工程创建、读取、编辑、预览、媒体导入、导出、版本恢复与取消。共享工作流和引擎指引通过 MCP resources 提供。[工具契约](docs/mcp-phase1-tools.md)
 

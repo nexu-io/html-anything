@@ -519,12 +519,16 @@ This copies instructions; it does not install the runtime or register MCP. Keep 
   "mcpServers": {
     "openmotion": {
       "command": "/absolute/path/to/node",
-      "args": ["--experimental-strip-types", "/absolute/openmotion/mcp.ts"],
-      "env": { "MOTION_DATA_DIR": "/absolute/openmotion-data" }
+      "args": ["/absolute/openmotion-home/run-mcp.mjs"]
     }
   }
 }
 ```
+
+For npm installations, run setup with the current Agent name (for example, `--host opencode`, `--host cursor` or `--host cline`). Hosts without an automatic adapter receive `manualConnection.transport` with the exact Node executable and launcher path; merge these into that client's configuration without replacing other servers. No Claude installation is required. The launcher reads `install.json`, selects the managed app/data directories and configures FFmpeg, ffprobe and the browser. Do not replace it with a direct `mcp.ts` command. Use `--skills-dir` only with the client's actual Skills root; otherwise setup leaves its configuration and Skills directories untouched. [Manual setup and OpenCode example](docs/npm-installation.md#manual-stdio-hosts)
+
+For a **source checkout**, use that checkout's Node executable with `args: ["--experimental-strip-types", "/absolute/checkout/mcp.ts"]` and `env: {"MOTION_DATA_DIR": "/absolute/openmotion-data"}` instead. Source installations require the local browser/media tools described in the [source guide](install.md).
+
 
 The **twelve public MCP tools** cover template discovery and details, project creation and reading, editing, preview, media import and BYOK generation, export, version restoration and cancellation. Shared workflow and engine guides are available through MCP resources. [Tool contract](docs/mcp-phase1-tools.md)
 

@@ -19,7 +19,7 @@ const bundledManifest = fileURLToPath(new URL('../payload/release-npm.json', imp
 const defaultHome = (environment = 'prod') => path.join(process.platform === 'win32' ? process.env.LOCALAPPDATA || os.homedir() : path.join(os.homedir(), '.local/share'), environment === 'dev' ? 'openmotion-dev' : 'openmotion');
 const contains = (parent, child) => { const rel = path.relative(parent, child); return rel === '' || (!rel.startsWith('..' + path.sep) && rel !== '..' && !path.isAbsolute(rel)); };
 const usage = `Usage:
-  openmotion setup --host <${hosts.join('|')}> [options]
+  openmotion setup --host HOST [options]
   openmotion prepare [--home DIR]
   openmotion diagnose --host <${hosts.join('|')}> [--home DIR] [host options]
   openmotion tools --host HOST [--home DIR]
@@ -29,12 +29,13 @@ const usage = `Usage:
 
 Select the current Agent host explicitly; installed CLIs do not identify the current host.
 Setup options:
-  --host HOST        Supported hosts: ${hosts.join(', ')} (default: codex)
+  --host HOST        Agent name; automatic configuration: ${hosts.join(', ')} (default: codex)
+                     Other names return manual stdio MCP configuration
   --home DIR         Managed application home; reuse for prepare and upgrades
   --data-dir DIR     Project data outside application/cache directories
-  --skills-dir DIR   Skills root for Codex, Claude Code or WorkBuddy
+  --skills-dir DIR   Skills root; optional for manually connected hosts
   --codex FILE       Codex executable or JavaScript CLI entry
-  --claude FILE      Claude Code executable
+  --claude FILE      Claude Code executable, npm shim or JavaScript CLI entry
   --dsh FILE         Harness executable (macOS Desktop CLI is detected automatically)
   --profile NAME     Harness profile (default: web); use the selected host profile
   --manifest FILE    Explicit release manifest for controlled local installations
@@ -95,7 +96,7 @@ export async function setup(options) {
     const plan = await hostPlan(options, home, launcher, previous);
     assert(!plan.metadata.configFile || !contains(dataDirectory, plan.metadata.configFile), 'Keep host configuration outside user data');
     assert(!plan.metadata.configFile || !['apps', 'cache', 'hosts'].some(name => contains(path.join(home, name), plan.metadata.configFile)), 'Keep host configuration outside managed application/cache/host directories');
-    if (plan.layout !== 'deepseek') assert(!contains(dataDirectory, plan.skillsDirectory) && !contains(plan.skillsDirectory, dataDirectory)
+    if (plan.layout !== 'deepseek' && plan.skillsDirectory) assert(!contains(dataDirectory, plan.skillsDirectory) && !contains(plan.skillsDirectory, dataDirectory)
       && !contains(plan.skillsDirectory, home) && !contains(home, plan.skillsDirectory), 'Keep user data, installed Skills and application/cache directories separate');
     if (plan.layout === 'bundle') await checkSkillOwner(path.join(plan.skillsDirectory, 'openmotion'), home, plan.host, plan.layout);
     const appRoot = path.join(home, 'apps', manifest.version + '-' + manifest.application.sha256.slice(0, 16));
@@ -151,7 +152,12 @@ export async function setup(options) {
       for (const item of directories) await rm(item.backup, { recursive: true, force: true }).catch(error => console.error('Old instruction backup retained: ' + error.message));
       await startNativePreparation(appRoot).catch(error => console.error('OpenMotion: background preparation could not start; retry in Studio or run prepare. ' + error.message));
       onboarding.preview = await prepareInstallationPreview({ appRoot, dataDirectory });
-      return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'background-preparation; status and retry available in Studio', onboarding: { ...onboarding, directAccess: directAccess(home, plan.host, appRoot, options) } };
+      const manual = plan.metadata.registration === 'manual';
+      return { ...state, host: plan.host, hostInstallation: plan.metadata,
+        ...(manual ? { manualConnection: { transport: plan.connection.transport, skillsSource: path.join(appRoot, 'skills'),
+          instructions: 'Application installation is complete; host registration is pending. Add this command and args using your client\'s local stdio MCP format. Do not launch mcp.ts directly. Verify openmotion_get_project in the host. Skills are available at skillsSource; use --skills-dir with this client\'s actual Skills root to install them. This installer cannot inspect manual host permissions or prove host loading.' } } : {}),
+        nativeDependencies: 'background-preparation; status and retry available in Studio',
+        onboarding: { ...onboarding, ...(manual ? {} : { directAccess: directAccess(home, plan.host, appRoot, options) }) } };
     } catch (error) {
       if (wroteLauncher && !previous) await rm(launcher, { force: true });
       if (wroteState) { if (previous) await writeJSON(stateFile, previous); else await rm(stateFile, { force: true }); }
@@ -182,6 +188,7 @@ async function installedConnection(options) {
   assert(state?.managedBy === managedBy, 'Run setup for the selected host and installation home first.');
   assert(state.hosts?.[host] || host === 'codex' && state.skillsDirectory, 'This installation is not registered for the selected host.');
   const saved = state.hosts?.[host];
+  assert(saved?.registration !== 'manual', 'MANUAL_HOST_CONFIGURATION: Connect the returned stdio transport in your host and use its native tools. This CLI cannot inspect manual host permissions or registration.');
   try {
     const plan = await hostPlan({ ...options, skillsDirectory: saved?.skillsDirectory, profile: options.profile || saved?.profile }, home, state.launcher, state);
     const connection = plan.readConnection ? await plan.readConnection() : plan.connection;

@@ -98,7 +98,7 @@ There is no automatic fallback from prod to DEV and no `switch-env` CLI. This se
 | DeepSeek Harness | `dsh plugin --profile web add <managed bundle> --ignore-scripts` | Its dedicated bundle/provider Skill root |
 | WorkBuddy | Merge `mcpServers.openmotion` into its `mcp.json` | Flat entries under its configuration root |
 
-Select `--host codex|claude|deepseek|workbuddy`. `--skills-dir` selects the Codex/Claude/WorkBuddy root; Harness uses its own provider. Executable overrides are `--codex`, `--claude`, `--dsh`; Harness also accepts `--profile`. Isolate host configuration with `CODEX_HOME`, `CLAUDE_CONFIG_DIR`, `DSH_HOME` or `WORKBUDDY_CONFIG_DIR`; `--home` controls the application installation, not the host profile.
+Pass the current lowercase Agent name with `--host HOST`. Codex, Claude Code, DeepSeek Harness and WorkBuddy retain automatic adapters; other names use [manual stdio registration](#manual-stdio-hosts). `--skills-dir` selects the Codex/Claude/WorkBuddy root; Harness uses its own provider. On Windows, Codex and Claude registration resolve native `.exe` programs and npm `.cmd`/`.ps1` shims, then execute their underlying JavaScript/native entry without a shell. Paths with spaces and JSON arguments remain separate arguments. Custom shell wrappers must be replaced with their actual executable or JavaScript entry. Executable overrides are `--codex`, `--claude`, `--dsh`; Harness also accepts `--profile`. Isolate host configuration with `CODEX_HOME`, `CLAUDE_CONFIG_DIR`, `DSH_HOME` or `WORKBUDDY_CONFIG_DIR`; `--home` controls the application installation, not the host profile.
 
 Use the same installation flow for every host: collect the platform and Node/npm facts once, select the current Agent, run its setup adapter, then verify actual host loading while video components prepare in the background. An explicit `--host` takes precedence over host context; do not choose a host merely because its CLI is installed. The CLI retains its Codex default for compatibility, so Agent-driven installs should always pass `--host`. Only ask for the missing host/profile when reliable context is unavailable. `openmotion --help`, `setup --help`, `prepare --help` and `--version` work without installing or modifying configuration.
 
@@ -118,6 +118,44 @@ After setup, use working native tools or the direct commands below to continue i
 The internal ownership marker remains stable across the npm package rename so earlier local installations can be upgraded in place. An installation can serve multiple hosts using the same home/data. `install.json.hosts` retains each host. Skill documentation links are rewritten for flat layouts; Codex/Harness retain bundle-relative links. Re-run setup for each installed host when upgrading Skills. Unowned same-name MCP/Skills are refused. Unrelated settings/Skills and existing projects are retained. Registration failure restores the prior install state and Skills; checked application caches remain available for retry.
 
 Compatible phase-one updates do not require closing existing MCP connections or stopping the same workspace's backend. Connections negotiate the API protocol and requested Tool, retaining running exports and completed results; see [shared editor recovery](shared-editor.md). The installer does not terminate existing processes. Incompatible protocols or internal legacy ABIs still require updating the connection and idle backend together. Refresh the host to discover new Tools or reload changed Skills; an already-closed transport needs host reconnection.
+
+## Manual stdio hosts
+
+For OpenCode, Cursor, Cline or another local stdio MCP client, run the exact package's normal setup with its lowercase name, such as `--host opencode`, keeping any selected `--home` and `--data-dir`. No Codex or Claude CLI is required. Setup installs the same managed application/native runtime and returns `manualConnection.transport`; it does not edit the client's configuration or claim it has connected. Reuse that transport's exact Node executable and `run-mcp.mjs` path when merging into the client's settings, preserving other servers and permissions.
+
+With no `--skills-dir`, setup leaves host Skills untouched and returns `manualConnection.skillsSource`. To install the shipped Skills, rerun the same host/home setup with `--skills-dir` pointing to that client's actual supported Skills root; owned flat entries retain upgrade/rollback protections. Refresh Skills through the client's supported discovery. Do not guess another host's directory.
+
+For example, [OpenCode V2's local MCP format](https://opencode.ai/docs/mcp-servers/) uses `mcp.servers` and a command array in `opencode.jsonc`. Replace both example paths with setup's returned values; Windows JSON can use forward slashes:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "openmotion": {
+        "type": "local",
+        "command": ["D:/Node/node.exe", "D:/OpenMotion/run-mcp.mjs"]
+      }
+    }
+  }
+}
+```
+
+For OpenCode V1, server names are directly under `mcp` and `enabled: true` enables a server; V2 uses `disabled` instead. Check the installed client's version before merging. Clients using `mcpServers` instead use a command string plus args:
+
+```json
+{
+  "mcpServers": {
+    "openmotion": {
+      "command": "/absolute/path/to/node",
+      "args": ["/absolute/openmotion-home/run-mcp.mjs"]
+    }
+  }
+}
+```
+
+The launcher reads the current `install.json` to select `appRoot` and `dataDirectory`, and calls `configureNativeEnvironment()` for the managed FFmpeg, ffprobe and browser paths. Do not use the repository's source `.mcp.json` or a bare `node --experimental-strip-types mcp.ts` for this npm installation. Preserve the launcher/home when upgrading. A source checkout has no npm launcher; use the separate [source installation guide](../install.md) and its local runtime requirements.
+
+Verify tool discovery and `openmotion_get_project` through the real client and confirm the workspace before editing. Manual registration does not provide installed-CLI `tools`, `call` or `diagnose` access: the installer cannot read that client's configured permissions or prove host loading. Use that host's supported recovery, never another adapter or an independent transport to bypass disabled tools.
 
 ## Continue in the current Agent chat
 
