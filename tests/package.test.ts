@@ -11,6 +11,7 @@ test('every distribution preserves public workflow dependencies and licenses whi
     for (const file of ['AGENTS.md', 'CLAUDE.md', 'cloud.md', ...designSystemDocuments, ...designSystemRuntimeFiles.map(file => 'packages/design-system/' + file)]) {
       assert(files.has(file), 'Missing shared design system dependency: ' + file);
     }
+    assert(![...files].some(file => file.startsWith('packages/design-system/workbench/')), 'Source-write server and workbench tests stay out of runtime distribution');
     assert(!files.has('packages/design-system/loading.ts'), 'Loading source is compiled into Studio');
     assert(![...files].some(file => file.startsWith('packages/design-system/react/')), 'React source is compiled into Studio');
     assert(files.has('docs/release-guide.md'), 'The public test/stable manual must ship');

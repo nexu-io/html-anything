@@ -2,7 +2,7 @@
 
 This package is the maintained source for OpenMotion's interface appearance and brand resources. A shared theme decision flows from this package into the editor, startup screen, workspace, connection UI, template browser and component catalog.
 
-It is a private source package in the standalone root application. Install and build from the repository root; no workspace installation, separate lockfile or package publication is required.
+It is a private source package in the standalone root application. The visual workbench runs independently with Node built-ins and needs no installation or Studio build. Application installation and builds remain at the repository root; no workspace dependency, separate lockfile or package publication is required.
 
 ## Sources and entry points
 
@@ -17,7 +17,22 @@ It is a private source package in the standalone root application. Install and b
 | `index.js` | Shared brand identity, asset URLs, icon sprite and positive public-asset list. |
 | `react/RemixIcons.tsx`, `loading.ts` | Shared React icons and loading artwork behavior. |
 | `brand/` | [Brandkit](brand/BRANDKIT.md), [motion art direction](brand/MOTION_DESIGN.md), logos and loading artwork. |
-| `index.html`, `catalog.*` | Interactive catalog served at `/design-system`. |
+| `index.html`, `catalog.*`, `token-model.js` | Standalone visual workbench and browser-safe token metadata. |
+| `generate.js`, `workbench/` | Package-owned token generation, local source-save server and deterministic tests. |
+
+## Visual editing and Agent editing
+
+From the repository root, run `npm run design:dev` and open `http://127.0.0.1:4187`. Alternatively, copy this entire package directory and run `npm run dev` inside it. Neither route starts or imports Studio, the application server, project data, MCP, React or any business module. Use `npm run dev -- --port=4188` inside the package to select another port.
+
+The workbench presents brand resources, colors, radii, typography, spacing, components, icons, materials and motion. Select a token or a component's **Edit styles** action to edit its shared variables in the inspector. Changes preview immediately in the page; **Save to source** opens a before/after review, then writes `tokens.json` and regenerates `tokens.css` and `studio/tokens.css`. Component fields change existing shared roles, so every consumer of those roles inherits the decision. The UI edits existing token values; new roles, component structure, fonts and artwork are maintained by an Agent in the package sources. JSON and CSS export include the current draft. No private reference-site assets are needed.
+
+An Agent edits the same source and runs `npm run design:tokens` from the repository root. While the standalone page is visible, it polls the package source every two seconds, refreshes clean previews and regenerates stale token outputs. With a browser draft, external updates require synchronization: disjoint token changes merge automatically, and overlapping changes require an explicit source/draft choice. Drafts remain in memory until saved or discarded; leaving with unsaved work triggers the browser's standard warning. They are not a persistent history store.
+
+The source-save API is confined to this loopback server and accepts only existing shared/light/dark token IDs. It validates values, checks the source hash, serializes writes and stages outputs before replacing them; symlink targets and arbitrary paths are rejected. Its advisory lock coordinates workbench processes. Arbitrary file editors do not participate in that lock, so the final revision recheck is not a cross-tool, multi-file transaction; avoid simultaneous writes during a save. After a process crash, stop all workbench instances before removing a leftover `.workbench.lock`. No save commits, pushes or publishes Git content.
+
+Application-hosted `/design-system` remains a read-only static presentation of the same package, with draft preview/export but no source-write API. Saved styles reach downstream source consumers through their normal refresh, hot reload or rebuild; the workbench does not control those applications. Prebuilt installations require a new application build to incorporate source changes.
+
+Run `npm run design:test` at the repository root, or `npm test` inside this package, for source-save, conflict, HTTP boundary and standalone-copy checks. Also run `npm run design:check` and the applicable repository validation before submitting changes; contrast acceptance and browser inspection remain separate from source-save validation.
 
 ## Consume the system
 

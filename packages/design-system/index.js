@@ -15,7 +15,7 @@ export const iconSprite = designSystemAsset('icons.svg');
 export const publicDesignFiles = Object.freeze([
   'tokens.json', 'tokens.css', 'ui.css', 'fonts.css', 'base.css', 'controls.css', 'material.css',
   'loading.css', 'studio.css', 'studio/adapter.css', 'studio/control-states.css', 'studio/feedback.css',
-  'index.html', 'theme.js', 'catalog.js', 'catalog.css', 'icons.svg',
+  'index.html', 'theme.js', 'catalog.js', 'catalog-view.js', 'catalog.css', 'token-model.js', 'generate.js', 'icons.svg',
   'opendesign-dark.svg', 'opendesign-light.svg', 'brand/openmotion-logo.svg',
   'brand/loading-mark.svg', 'brand/loading-wordmark.svg', 'brand/favicon.svg',
   'fonts/AlbertSans-VariableFont_wght.ttf', 'fonts/IBMPlexMono-Regular.ttf',

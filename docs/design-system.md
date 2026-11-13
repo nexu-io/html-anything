@@ -2,7 +2,7 @@
 
 The maintained system lives in [`packages/design-system`](../packages/design-system/README.md). `tokens.json` generates both browser `tokens.css` and Studio `studio/tokens.css`; Studio semantic aliases, fonts, controls, materials, loading states, icon rendering and brand assets belong to this package. Application modules consume its entry points and retain their layout and interaction logic. The template browser now uses shared theme roles instead of a separate fixed palette.
 
-The server exposes the positive public-asset list at `/design-system/`, with `/design-system` as the interactive catalog and `/web/design-system/` as a compatibility URL alias. Stable README logos and font-license paths are generated mirrors. No npm workspace dependency or separate publication is introduced.
+The server exposes the positive public-asset list at `/design-system/`, with `/design-system` as the read-only catalog and `/web/design-system/` as a compatibility URL alias. Stable README logos and font-license paths are generated mirrors. No npm workspace dependency or separate publication is introduced.
 
 Brand materials are maintained in [the package Brandkit](../packages/design-system/brand/BRANDKIT.md) and [art direction](../packages/design-system/brand/MOTION_DESIGN.md); Library entries forward to those sources. They remain explicit creative context and do not automatically style authored videos. All Agents follow the [shared styling rules](../AGENTS.md#shared-design-system--required-for-every-agent).
 
@@ -117,6 +117,8 @@ UI 主题不修改 Hyperframes 工程的 HTML、CSS 或 GSAP 动画。影片由�
 时间轴的素材操作栏是随选择出现的上下文入口，侧栏模型设置管理工作区能力（嵌入视图保留编辑器内入口），二者职责不同。操作栏复用 `--motion-*` 变量和原生时间轴状态；生成面板承载常用参数、候选与采用动作。完整的触发、隐藏、关闭/重开、时间参数和「交给 Agent」语义见 [时间轴交互设计](product/media-generation-design.md#时间轴交互规则及原因)。参考产品的价格或模型卡片不能直接成为本产品的收费与可用性说明。
 
 ```sh
+npm run design:dev      # Independent visual workbench
+npm run design:test     # Source-save, conflict and standalone checks
 npm run design:tokens   # 修改 tokens.json 后生成 CSS
 npm run design:check    # 检查生成同步、主题完整性、变量和文字对比度
 npm run check          # 已包含设计检查
@@ -127,7 +129,7 @@ npm run build:studio
 npm run package:plugin
 ```
 
-本地服务的 `/design-system` 为组件目录，可切换主题、查看真实色值、操作控件并下载 JSON / CSS 变量。
+The independent visual workbench starts with `npm run design:dev` at `http://127.0.0.1:4187`; it can also run from a standalone copy of the package with `npm run dev`. Its inspector edits existing shared colors, fonts, radii, spacing, motion and component roles, reviews changes and saves the package token source plus generated styles. Agent edits use the same source, with refresh and conflict handling in the workbench. The application-hosted `/design-system` route is a read-only presentation with preview and JSON/CSS export. The workbench has no Studio, application-service or business-module dependency. See the [workbench guide](../packages/design-system/README.md#visual-editing-and-agent-editing) for scope and concurrency limits.
 
 插件打包包含编辑器源码、构建产物、设计系统和字体许可。编辑器依赖本地 Hyperframes 服务，不再提供旧 Canvas 预览的单文件离线构建。
 

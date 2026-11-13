@@ -177,6 +177,7 @@ jobs:
       - name: Check and build Studio
         run: |
           npm run check
+          npm run design:test
           npm run typecheck:studio
           npm run build:studio
           node --test tests/design-system.test.ts

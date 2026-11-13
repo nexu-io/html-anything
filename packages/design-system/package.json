@@ -12,5 +12,9 @@
     "./loading.css": "./loading.css",
     "./tokens.json": "./tokens.json"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "node workbench/server.js",
+    "test": "node --test workbench/*.test.js"
+  }
 }

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { Script } from 'node:vm';
+import { execFileSync } from 'node:child_process';
 import { designTokens } from './design-tokens.ts';
 
 const root = new URL('../', import.meta.url);
@@ -43,7 +43,7 @@ export async function checkDesign() {
       assert.ok((Math.max(a, b) + .05) / (Math.min(a, b) + .05) >= 4.5, `${theme}: ${ink} on ${surface} needs 4.5:1 contrast.`);
     }
   }
-  for (const file of ['theme.js', 'catalog.js']) new Script(await readFile(new URL('packages/design-system/' + file, root), 'utf8'), { filename: file });
+  for (const file of ['theme.js', 'catalog.js', 'catalog-view.js', 'token-model.js', 'generate.js']) execFileSync(process.execPath, ['--check', fileURLToPath(new URL('packages/design-system/' + file, root))]);
   console.log('Design token freshness, theme parity, UI color references, contrast and browser scripts passed.');
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await checkDesign();
