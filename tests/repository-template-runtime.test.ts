@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+import { mediaKey, mediaOrigin } from '../shared/repository-media.ts';
 import { TemplateCatalog } from '../prism-templates.ts';
 import { repositoryCatalogRoot, readRepositoryFile } from '../shared/repository-template-catalog.ts';
 import { WorkspaceStore } from '../workspace.ts';
@@ -89,6 +90,24 @@ test('repository media works without CMS, refuses missing LFS bytes and verifies
   assert.deepEqual(await f.catalog.sourceFile(f.id, relative), bytes);
   await writeFile(filename, Buffer.alloc(bytes.length, 0));
   await assert.rejects(f.catalog.sourceFile(f.id, relative), /does not match/);
+});
+
+test('transferred PR media appears in Studio and detail without downloading and verifies bytes on source access', async t => {
+  const f = await fixture(t), bytes = Buffer.alloc(128, 42), sha256 = createHash('sha256').update(bytes).digest('hex');
+  const relative = 'assets/reference.mp4', url = mediaOrigin + '/' + mediaKey(sha256, relative);
+  Object.assign(f.record, { localMedia: { preview: relative }, remoteAssets: [{ url, bytes: bytes.length, sha256, source: { path: relative, bytes: bytes.length, sha256 } }] });
+  await f.save(f.id + '/template.json', f.record);
+  await f.save(f.id + '/source/manifest.json', { files: [{ path: 'motion.md' }, { path: 'preview.html' }, { path: relative, bytes: bytes.length, sha256 }] });
+  let calls = 0, corrupt = false;
+  const catalog = new TemplateCatalog(f.work, { source: 'repository', repositoryRoot: f.root, fetch: async requested => {
+    calls++; assert.equal(requested, url); return new Response(new Uint8Array(corrupt ? Buffer.alloc(bytes.length) : bytes));
+  } });
+  assert.equal((await catalog.page()).items[0].previewUrl, url);
+  assert.equal((await catalog.detail(f.id)).previewUrl, url);
+  assert.equal(calls, 0, 'Search and MCP detail must not fetch remote media');
+  assert.deepEqual(await catalog.sourceFile(f.id, relative), bytes);
+  corrupt = true;
+  await assert.rejects(catalog.sourceFile(f.id, relative), /SHA-256 mismatch/);
 });
 
 test('HTTP gallery and guide routes use the same repository source; copied prompts use the connected plugin', async t => {

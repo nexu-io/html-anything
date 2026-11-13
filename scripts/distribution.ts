@@ -1,4 +1,4 @@
-import { lstat, readdir } from 'node:fs/promises';
+import { lstat, open, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { packagedSkills } from '../shared/workflow.ts';
@@ -474,7 +474,7 @@ export const distributionDocuments = [
   ...['brandkit', 'presenter-story', 'motion-design-remix'].flatMap(name => ['library/skills/' + name + '/SKILL.md', 'library/skills/' + name + '/agents/openai.yaml']),
   ...['openmotion-brandkit', 'openmotion-presenter-story', 'openmotion-design-remix'].map(name => 'library/skills/' + name + '/agents/openai.yaml'),
   ...localReadmeResourceFiles,
-  'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md',
+  'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md', 'repository-media.json',
   'docs/product/architecture.md', 'docs/product/changes.md', 'docs/product/media-generation-design.md', 'docs/product/studio-vision.md',
   'tracking/README.md', 'tracking/INTEGRATION.md', 'tracking/posthog-geoip.hog',
   'docs/agent-adapters.md', 'docs/browser-runtime.md', 'docs/design-system.md', 'docs/editor-fork.md',
@@ -525,7 +525,7 @@ export const distributionDocuments = [
   'library/components/README.md', 'library/components/title-reveal/README.md',
   'library/design-systems/ink-water/MOTION_DESIGN.md', 'library/brandkits/openmotion/BRANDKIT.md',
   'docs/motion-design-examples.md', 'docs/motion-design-examples.zh-CN.md', ...motionDesignRemixFiles, ...presenterStoryFiles, ...presenterTechFiles,
-  'docs/skills.md', 'docs/template-catalog.md', 'docs/template-repository.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
+  'docs/skills.md', 'docs/template-catalog.md', 'docs/template-repository.md', 'docs/repository-storage.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
 ];
 
 export async function distributionFiles(profile: string): Promise<string[]> {
@@ -541,6 +541,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'scripts/install-onboarding.mjs', 'scripts/onboarding-catalog.ts', 'scripts/install-library-skill.mjs',
     'scripts/diagnostics.mjs', 'scripts/diagnostic-redaction.mjs', 'scripts/zip.mjs',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
+    'scripts/repository-media.ts',
     'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
     'tracking/core.ts', 'tracking/node.ts', 'tracking/browser.ts', 'tracking/events.ts',
   ];
@@ -559,6 +560,26 @@ export async function distributionFiles(profile: string): Promise<string[]> {
   for (const skill of packagedSkills) await walk('skills/' + skill, /\.(?:md|mjs|ts|py|json|ya?ml)$/);
   await walk('studio/build', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
   await walk('studio/public', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
-  for (const file of files) if (!(await lstat(path.join(root, file))).isFile()) throw new Error('Distribution requires a regular file: ' + file);
+  for (const file of files) {
+    const info = await lstat(path.join(root, file)).catch(error => {
+      if (error.code === 'ENOENT' && /\.(?:mp4|motion)$/.test(file)) throw new Error(`Optional media is missing: ${file}. Run npm run media:pull for transferred files, or the scoped LFS pull in docs/repository-storage.md.`);
+      throw error;
+    });
+    if (!info.isFile()) throw new Error('Distribution requires a regular file: ' + file);
+  }
   return [...new Set(files)].sort();
+}
+
+// Complete bundles must never turn unresolved LFS pointers into installed media.
+export async function requireDownloadedMedia(files: string[], directory = root): Promise<void> {
+  for (const name of files) {
+    if (!/\.(?:mp4|mov|webm|m4v|avi|mp3|wav|ogg|m4a|aac|flac|motion)$/i.test(name)) continue;
+    const file = await open(path.join(directory, name), 'r');
+    try {
+      const header = Buffer.alloc(128);
+      await file.read(header, 0, header.length, 0);
+      if (header.toString().startsWith('version https://git-lfs.github.com/spec/v1'))
+        throw new Error(`Media not downloaded: ${name}. Run git lfs pull --include="${name}" --exclude="" from the source checkout before packaging or copying it.`);
+    } finally { await file.close(); }
+  }
 }

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { inflateRawSync } from 'node:zlib';
 import { loadRepositoryCatalog, lfsPointer, repositoryAssetFile, repositoryMediaFile } from '../shared/repository-template-catalog.ts';
 import { isMain } from '../shared/entry.ts';
+import { mediaOrigin, validateMediaLock } from '../shared/repository-media.ts';
 
 export const catalogRoot = fileURLToPath(new URL('../library/templates/catalog/', import.meta.url));
 export const textFile = /\.(?:md|json|html?|css|[cm]?[jt]sx?|txt|ya?ml|toml|xml)$/i;
@@ -65,6 +66,16 @@ export function cmsUrl(value: unknown): string {
   );
   return value;
 }
+export function publicAssetUrl(value: unknown): string {
+  assert(typeof value === 'string', 'Missing public asset URL');
+  if (value.startsWith(mediaOrigin + '/')) {
+    const match = /\/([a-f0-9]{64})\.([a-z0-9]+)$/.exec(value);
+    assert(match, 'Invalid public media URL');
+    validateMediaLock({ path: 'asset.' + match[2], url: value, sha256: match[1], bytes: 1 });
+    return value;
+  }
+  return cmsUrl(value);
+}
 export function validateRecord(record: TemplateRecord, id: string, locales: string[]): void {
   assert(
     /^[a-z][a-z0-9-]+$/.test(id) && record.templateId === id && record.entry.templateId === id,
@@ -85,19 +96,26 @@ export function validateRecord(record: TemplateRecord, id: string, locales: stri
   assert(Array.isArray(remoteAssets), 'Invalid remote assets');
   const remotePaths = new Set<string>();
   for (const asset of remoteAssets) {
-    validateArchive(asset);
+    publicAssetUrl(asset.url);
     const source = asset.source;
     safePath(source.path);
     assert(
-      source.path.startsWith('assets/') && assetFile.test(source.path),
-      'Remote assets must be images/fonts in source/assets/',
+      source.path.startsWith('assets/') && repositoryMediaFile.test(source.path),
+      'Remote assets must be media in source/assets/',
     );
     assert(
       Number.isSafeInteger(source.bytes) &&
-        source.bytes > maxLocalAssetBytes &&
+        source.bytes > 0 && source.bytes <= maxArchiveBytes &&
         /^[a-f0-9]{64}$/.test(source.sha256),
       'Invalid original remote asset identity',
     );
+    if (asset.url.startsWith(mediaOrigin + '/')) {
+      validateMediaLock({ path: source.path, ...asset });
+      assert(asset.bytes === source.bytes && asset.sha256 === source.sha256, 'Transferred media must retain its original identity');
+    } else {
+      validateArchive(asset);
+      assert(assetFile.test(source.path) && source.bytes > maxLocalAssetBytes, 'CMS renditions represent large original images/fonts');
+    }
     assert(!remotePaths.has(source.path), 'Duplicate remote asset path');
     remotePaths.add(source.path);
   }
@@ -109,12 +127,12 @@ export function validateRecord(record: TemplateRecord, id: string, locales: stri
     );
     assert(Array.isArray(item.files), 'Missing project file manifest');
     for (const key of ['previewUrl', 'coverUrl', 'motionDocumentUrl', 'motionGuideUrl', 'projectFileUrl']) {
-      if (item[key]) cmsUrl(item[key]);
+      if (item[key]) publicAssetUrl(item[key]);
     }
     assert.equal(item.previewUrl, record.entry.previewUrl, 'Reference video must be shared across locales');
     for (const file of item.files) {
       safePath(file.path);
-      cmsUrl(file.url);
+      publicAssetUrl(file.url);
       assert(
         Number.isSafeInteger(file.bytes) && file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256),
         'Invalid project file lock',
@@ -344,8 +362,12 @@ export async function refreshManifest(id: string, root = catalogRoot): Promise<v
   const source = path.join(root, id, 'source');
   const manifest = await json(path.join(source, 'manifest.json'));
   const record: TemplateRecord = await json(path.join(root, id, 'template.json'));
-  const files: FileLock[] = (record.remoteAssets ?? []).map((asset) => asset.source);
-  for (const name of await sourceFiles(source)) {
+  const names = await sourceFiles(source);
+  // Reintroduced R2 media is a draft revision; final preparation replaces its old remote identity.
+  const files: FileLock[] = (record.remoteAssets ?? [])
+    .filter(asset => !(asset.url.startsWith(mediaOrigin + '/') && names.includes(asset.source.path)))
+    .map(asset => asset.source);
+  for (const name of names) {
     if (name === 'manifest.json') continue;
     const bytes = await readFile(path.join(source, safePath(name)));
     const pointer = lfsPointer(bytes);

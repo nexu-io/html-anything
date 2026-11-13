@@ -1,16 +1,18 @@
 # Repository-managed motion templates
 
-The source of 286 published motion guidance templates lives in [the repository catalog](https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog): guides, HTML examples, code, measurements and small images. Larger images use existing public CMS rendition links. Reference videos and duplicate ZIP downloads keep their public CMS URLs. These existing links are migration inputs, not a requirement to upload new contributions to CMS. Contributors can add their own media through Git LFS without CMS access. Viewing existing linked images requires internet access.
+The source of 286 published motion guidance templates lives in [the repository catalog](https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog): guides, HTML examples, code, measurements and small images. Larger images use existing public CMS rendition links. Reference videos and duplicate ZIP downloads keep their public CMS URLs. These existing links are migration inputs, not a requirement to upload new contributions to CMS. Contributors can add their own media without CMS access; maintainers transfer final media to public storage once before Squash merge. Git LFS is also accepted as an input. Viewing existing linked images requires internet access.
 
 ## Run from a local clone
 
 ```sh
-GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/nexu-io/openmotion.git
+GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/nexu-io/openmotion.git
 cd openmotion
 npm ci
 npm run build:studio
 npm start
 ```
+
+The repository also skips optional LFS media by default; see [repository storage and scoped downloads](repository-storage.md). Shallow clones omit old history; run `git fetch --unshallow` before checks that need an unavailable base commit.
 
 Open the `studioUrl` or `previewUrl` printed by `npm start`. Startup reuses a compatible service for the same workspace. On macOS, the shared editor selects a local port dynamically; other platforms try `PORT` (default 4173) and the next nine ports, skipping occupied ones. If all ten are occupied and no compatible service is found, startup reports an error. The launcher exits after reporting the URL; the service keeps running in the background. MCP uses the same startup logic and actual service address when configured for the same `MOTION_DATA_DIR`.
 
@@ -28,7 +30,7 @@ These imported guidance packages are not verified complete Studio projects. Read
 
 - `catalog.json` records the imported publication URL/hash, ordered stable IDs, eleven locale slots and collection facets.
 - Each `<id>/template.json` holds shared metadata, exact per-locale differences, optional `sourceArchive` (required only when retaining an imported CMS package URL) and optional `remoteAssets` (original file identity plus CMS rendition URL, byte length and SHA-256).
-- `<id>/TEMPLATE.md` explains usage, status and attribution. `<id>/source/` contains unpacked text source, small ordinary-Git assets and optional LFS media under `assets/lfs/`. `source/manifest.json` records source paths, sizes and hashes, including the original identities of remotely linked images. `template.json.remoteAssets` maps those omitted originals to existing CMS renditions; HTML and Markdown references use the CMS URLs directly.
+- `<id>/TEMPLATE.md` explains usage, status and attribution. `<id>/source/` contains unpacked text source, small ordinary-Git assets and optional contribution media under `assets/`. `source/manifest.json` records source paths, sizes and hashes, including the original identities of remotely linked images. `template.json.remoteAssets` maps omitted originals to existing CMS renditions or exact public R2 objects; HTML and Markdown references use the public URLs directly.
 - Images/fonts at most 100 KB use ordinary Git under `source/assets/`. The import keeps 1,419 images totaling 65.2 MB; 236 larger originals (32.5 MB) remain in CMS packages and use existing CMS WebP rendition links in the guides. Those renditions total 12.6 MB and are fetched by the browser when viewed. Source, metadata and local images total about 104 MB. Reference videos total 1.34 GB and remain remote. Keeping ZIP downloads remote avoids another 97.7 MB of duplicate files.
 
 All sizes above use decimal MB/GB. The initial import preserves published IDs, ordering, eleven locales, pending conversion state and empty project-file manifests. Guidance and authored examples remain distinct from verified editable Studio projects. Original-language source is accompanied by localized catalog metadata and existing translated download links; the source is not claimed to be translated into every locale.
@@ -38,44 +40,34 @@ All sizes above use decimal MB/GB. The initial import preserves published IDs, o
 1. Select a stable ID in the catalog. Open its `source/preview.html` in a browser; demo files and small images are local; larger reference images load from CMS links. `TEMPLATE.md` links the separate reference video.
 2. Edit source and/or `template.json`. Preserve attribution and actual media permission notes; do not assign a blanket license to third-party references.
 3. After source edits, run `npm run templates:manifest -- <id>` to update local file hashes. Preview the affected examples.
-4. Stage changes, run `npm run templates:check -- <full-base-sha>` and `node --test tests/template-library.test.ts`. The checker reads the Git index, so unstaged files cannot conceal a staged violation.
+4. Stage changes, run `npm run templates:check` and `node --test tests/template-library.test.ts`. The checker reads the Git index, so unstaged files cannot conceal a staged violation.
 5. Open a PR against `main` with the exact ID, purpose, rights and actual preview/adaptation checks. Technical checks do not establish human visual acceptance.
 
 For a new entry, no CMS URL or `sourceArchive` is required. Create `template.json`, `TEMPLATE.md`, `source/motion.md`, `source/manifest.json` and `source/preview.html`; register its stable ID in `catalog.json` and provide every locale slot. Keep guide-only entries' project file lists empty until actual executable project files are supplied and verified through the existing contract.
 
 ## Contribute media without CMS access
 
-Install [Git LFS](https://git-lfs.com/) and run `git lfs install --local` in your checkout. Put video, audio, large images and fonts under `<id>/source/assets/lfs/`. The repository's `.gitattributes` already tracks that directory; do not hand-write pointer files. Small images/fonts at most 100 KB may remain in ordinary Git under `source/assets/`, preserving the initial import's storage choice. Use LFS for new media when practical.
-
-Reference contributed media with relative paths from HTML/Markdown. Optional `template.json.localMedia` selects locally served catalog previews and posters, for example:
+Add media under `<id>/source/assets/` and reference it by a relative path from the template's HTML/Markdown. No CMS or S3 account is required. Keep small images/fonts at most 100 KB in ordinary Git. For a larger file, commit the actual file (at most 50 MiB), or use the existing LFS path under `assets/lfs/`. Refresh the source manifest and open the original PR normally. Optional `template.json.localMedia` selects a logical preview/poster path:
 
 ```json
-"localMedia": {
-  "preview": "assets/lfs/reference.mp4",
-  "poster": "assets/lfs/poster.webp"
-}
+"localMedia": { "preview": "assets/reference.mp4", "poster": "assets/poster.webp" }
 ```
 
-Refresh the source manifest before staging, then push to your fork and open a PR. A normal `git push` uploads LFS objects through its pre-push hook; no CMS account or maintainer upload is required. The manifest records the real media's SHA-256 and size, whether the checkout contains downloaded bytes or only a canonical pointer.
+When the final content is reviewed, a maintainer runs **Actions → Prepare PR media** once for that PR. It uploads changed media, verifies public downloads, replaces the files with links/identities and adds a cleanup commit to the same PR. The original author is retained. Personal forks must enable **Allow edits from maintainers**. There is no upload on every draft push, no replacement PR and no patch for the contributor to apply.
 
-Clone with `GIT_LFS_SKIP_SMUDGE=1` as above to avoid downloading every template. Before previewing one template, download only its media:
+Raw large files can fail CI before preparation. After cleanup, wait for the new commit's CI and required review, then Squash merge. If the contributor later revises media, prepare that revision again. See [the maintainer entry, one-time setup and failure behavior](repository-storage.md#prepare-final-pr-media-before-merging).
+
+Transferred media is publicly linked in HTML/Markdown, catalog previews and MCP detail. The original path, bytes and SHA-256 remain in `remoteAssets` and `source/manifest.json`. Public R2 bytes retain the original hash; existing CMS rendition/original pairs retain their separate identities. Network access is required to view linked media. Existing LFS-only contributions remain readable after their scoped pull:
 
 ```sh
-git lfs install --local --skip-smudge
 git lfs pull --include="library/templates/catalog/<id>/source/assets/lfs/**" --exclude=""
 ```
 
-Replace `<id>` with the selected template ID. If the clone came from a fork, pull from the remote containing that contribution's LFS objects. A missing LFS file is not usable media: the local source API returns `TEMPLATE_LFS_NOT_FETCHED` with the scoped pull command. Downloaded media must match its source manifest. No implicit CMS upload, automatic format conversion or background LFS download is performed.
-
 ## Checks and budgets
 
-- Ordinary Git: text at most 1 MiB per file; small images/fonts at most 100 KB (100,000 bytes); catalog Git contents at most 128 MiB, including pointer bytes.
-- LFS: at most 50 MiB per media file and 150 MiB total locally stored media per template, counting the sizes declared by pointers rather than their tiny Git blobs.
-- LFS media must live in `source/assets/lfs/`, have a canonical pointer and matching staged LFS attributes, and match the real media identity recorded in `source/manifest.json`.
-- Raw video/audio in Git, oversized ordinary images, archives, generated output, symlinks, disguised binary source and unregistered files fail validation. New Git history is checked even when a large/raw file was subsequently deleted. Existing product assets and old history are outside this policy.
-- Existing verified CMS links remain supported. Their original identities stay in `remoteAssets` and the source manifest; they must not duplicate a local file. New contributions need no CMS package URL.
+The final tree permits source text at most 1 MiB, ordinary images/fonts at most 100 KB, catalog Git content at most 128 MiB, media at most 50 MiB per file and 150 MiB total assets per template. Metadata, manifests, small assets, LFS pointers/attributes and remote identities must agree. Archives, generated output, symlinks, disguised binary source and unregistered files fail validation. A transferred asset must not also remain in Git.
 
-CI's **Template library policy** job checks metadata, staged content, pointers, manifest identities, budgets and new Git history without downloading media or using publication credentials. It does not establish remote LFS object availability. Reviewers must fetch the contribution's LFS media and preview it before acceptance; hosting quotas and a full independent external-account fork/push/review check remain operational acceptance tasks. Making this CI check required is a separate branch-protection setting; this change does not configure it.
+CI validates the final merge tree without media downloads or upload credentials, and requires Squash-only repository settings. Local checks with an explicit base SHA still provide a stricter intermediate-history audit. Technical checks do not replace rights review, actual media playback or visual acceptance. Configuring branch protection remains a separate repository decision.
 
 ## Source to publication
 

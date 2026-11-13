@@ -2,6 +2,8 @@
 
 Embedded README images and previews are local files shared by the English, Simplified Chinese and Japanese editions. Current Motion template cards link to their public detail pages. Presenter references have no online template link. The repository also retains earlier films and editable resources for reuse and attribution.
 
+Full reference videos and the optional template archive use Git LFS at the same paths. Embedded README images and GIFs remain in ordinary Git and display without LFS downloads. Fetch the desired media before watching complete videos, materializing an optional Library profile, or verifying full resource hashes; see [scoped download commands](../repository-storage.md#download-only-what-you-need).
+
 ## Retained local collection
 
 | Resource | Local entry | Integrity and reuse |
@@ -30,8 +32,9 @@ Node, a WebGL-capable browser, FFmpeg and the Presenter Tech Python/Node executi
 Run from the repository root:
 
 ```sh
+git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
 node scripts/check-readme-resources.mjs
-node --test tests/readme-resources.test.ts tests/openmotion-design-remix.test.ts
+node --test tests/readme-resources.test.ts tests/motion-design-remix.test.ts
 ```
 
 The deterministic checks reject embedded remote images, remote video links, missing local references and changed resource hashes. The Motion Design capture helper blocks external requests while rendering. New documentation/resource files also need an explicit entry in `scripts/distribution.ts`. Preserve source credits and third-party licenses; update the relevant manifest when intentionally changing a file. A source URL in a manifest is provenance, not a runtime fallback.

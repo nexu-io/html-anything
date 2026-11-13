@@ -29,9 +29,12 @@
     "catalog:covers": "node --experimental-strip-types scripts/cache-template-covers.ts",
     "catalog:metadata": "node --experimental-strip-types scripts/sync-template-metadata.ts",
     "export:adapters": "node --experimental-strip-types scripts/export-adapters.ts",
+    "storage:check": "node --experimental-strip-types scripts/check-repository-storage.ts",
     "templates:check": "node --experimental-strip-types scripts/check-template-library.ts",
     "templates:export": "node --experimental-strip-types scripts/template-library.ts export",
-    "templates:manifest": "node --experimental-strip-types scripts/template-library.ts manifest"
+    "templates:manifest": "node --experimental-strip-types scripts/template-library.ts manifest",
+    "media:prepare": "node --experimental-strip-types scripts/prepare-pr-media.ts",
+    "media:pull": "node --experimental-strip-types scripts/repository-media.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",
