@@ -315,6 +315,7 @@ button, input, select, textarea { font-family: inherit; }
 }
 
 @container (max-width: 420px) {
+  :root[data-motion-ui] .motion-timeline-zoom input[type="range"] { width: var(--motion-space-32); }
   .motion-studio-header.motion-studio-header-centered { grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--motion-space-6); }
   .motion-studio-header.motion-studio-header-centered > div:last-child { gap: var(--motion-space-8); }
   .motion-header-brand img { width: 72px; }

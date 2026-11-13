@@ -1180,5 +1180,9 @@
   "No editable properties": "暂无可编辑属性",
   "Select a layer inside this composition to edit its properties.": "请选择此合成内的图层，以编辑其属性。",
   "Select another layer or ask the agent to edit this element.": "请选择其他图层，或让智能体修改此元素。",
-  "Use": "使用"
+  "Use": "使用",
+  "Blade tool": "刀片工具",
+  "Split the selected clip at the playhead.": "在播放头所在位置，将选中的片段分成两段。",
+  "Split at playhead": "在播放头处分割",
+  "Split at playhead ({value0})": "在播放头处分割（{value0}）"
 }

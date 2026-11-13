@@ -250,6 +250,40 @@ export const TimelineToolbar = memo(function TimelineToolbar({
           <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} />
           {/* Divider: tool-mode | editing-actions */}
           <div aria-hidden="true" className="mx-1 h-4 w-px bg-neutral-800" />
+          {onSplitElement &&
+            (() => {
+              // Render the button unconditionally (disabled when unusable):
+              // mounting/unmounting mid-task shifts the neighboring controls.
+              // Mirrors the S-key gate: selected clip + playhead strictly inside it.
+              const el = selectedElementId
+                ? elements.find((e) => (e.key ?? e.id) === selectedElementId)
+                : null;
+              const splittable = el != null && canSplitElement(el);
+              const canSplit =
+                splittable && currentTime > el.start && currentTime < el.start + el.duration;
+              return (
+                <Tooltip
+                  label={t("Split at playhead ({value0})", { value0: splitShortcut ?? keyHint("split", keys) })}
+                  description={canSplit
+                    ? t("Split the selected clip at the playhead.")
+                    : splittable
+                      ? t("Move the playhead inside the clip to split")
+                      : t("Select a clip to split")}
+                >
+                  <button
+                    type="button"
+                    disabled={!canSplit}
+                    aria-label={t("Split at playhead")}
+                    onClick={() => {
+                      if (canSplit && el) onSplitElement(el, currentTime);
+                    }}
+                    className={canSplit ? flatIdle : flatDisabled}
+                  >
+                    <RemixIcon name="scissors-cut-line" size={16} />
+                  </button>
+                </Tooltip>
+              );
+            })()}
           {!mvp && <LinkedSelectionToggle />}
           <Tooltip
             side="bottom"
@@ -404,42 +438,6 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               </Tooltip>
             </>
           )}
-          {!mvp && onSplitElement &&
-            (() => {
-              // Render the button unconditionally (disabled when unusable):
-              // mounting/unmounting mid-task shifts the neighboring controls.
-              // Mirrors the S-key gate: selected clip + playhead strictly inside it.
-              const el = selectedElementId
-                ? elements.find((e) => (e.key ?? e.id) === selectedElementId)
-                : null;
-              const splittable = el != null && canSplitElement(el);
-              const canSplit =
-                splittable && currentTime > el.start && currentTime < el.start + el.duration;
-              return (
-                <Tooltip
-                  label={
-                    canSplit
-                      ? t("Split at playhead ({value0})", { value0: splitShortcut ?? keyHint("split", keys) })
-                      : splittable
-                        ? t("Move the playhead inside the clip to split")
-                        : t("Select a clip to split")
-                  }
-                >
-                  <button
-                    type="button"
-                    disabled={!canSplit}
-                    aria-label={t("Split at playhead")}
-                    onClick={() => {
-                      if (canSplit && el) onSplitElement(el, currentTime);
-                    }}
-                    className={canSplit ? flatIdle : flatDisabled}
-                  >
-                    {/* "][" split glyph: two outward-facing brackets with a center gap */}
-                    <RemixIcon name="scissors-cut-line" size={16} />
-                  </button>
-                </Tooltip>
-              );
-            })()}
           {(() => {
             if (!showAddBeat) return null;
             // Rendered whenever shown (CapCut-style): before beat analysis loads (or when

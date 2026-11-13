@@ -23,7 +23,7 @@ it.each(["zh-CN", "en"] as const)("exposes both tools and keeps selection in syn
   );
   const buttons = [...host.querySelectorAll("button")];
   expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual(
-    locale === "zh-CN" ? ["选择", "分割"] : ["Select", "Split"],
+    locale === "zh-CN" ? ["选择", "刀片工具"] : ["Select", "Blade tool"],
   );
   expect(host.querySelector('[aria-haspopup="menu"]')).toBeNull();
   act(() => buttons[1].click());
@@ -31,4 +31,15 @@ it.each(["zh-CN", "en"] as const)("exposes both tools and keeps selection in syn
   expect(buttons.map((button) => button.getAttribute("aria-pressed"))).toEqual(["false", "true"]);
   act(() => usePlayerStore.getState().setActiveTool("select"));
   expect(buttons.map((button) => button.getAttribute("aria-pressed"))).toEqual(["true", "false"]);
+});
+
+
+it("explains blade clicks and displays both blade and selection shortcuts", async () => {
+  const host = mountHost(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineToolPicker /></StudioHostContext.Provider>);
+  act(() => host.querySelector<HTMLButtonElement>('[aria-label="Blade tool"]')!.focus());
+  await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
+  const text = document.querySelector('[role="tooltip"]')?.textContent;
+  expect(text).toContain("Blade tool (B)");
+  expect(text).toContain("Click a clip where you want to split it.");
+  expect(text).toContain("(V)");
 });
