@@ -1,3 +1,4 @@
+import { renderFilenameStem } from './shared/render-name.ts';
 import { createHash } from 'node:crypto';
 import { isAssetFileWithinLimit } from './shared/asset-limits.ts';
 import { createReadStream, existsSync, readFileSync } from 'node:fs';
@@ -28,7 +29,7 @@ export type FileEdit = { path: string; content: string };
 export type SavedProject = { id: string; title: string; templateId?: string; createdAt?: number; openedAt?: number };
 export type ProjectCatalog = { activeId: string; projects: SavedProject[]; sessions?: CreativeSession[]; activeSessionId?: string };
 export type ExportJob = { id: string; projectId?: string; versionId?: string; requestId?: string; phase1?: boolean; stage?: string; verification?: unknown; revision: string; state: 'pending' | 'running' | 'cancelling' | 'cancelled' | 'completed' | 'failed';
-  createdAt: number; expiresAt: number; token?: string; workerPid?: number; file?: string; error?: string; expected?: ExportExpectation };
+  createdAt: number; expiresAt: number; token?: string; workerPid?: number; file?: string; outputName?: string; error?: string; expected?: ExportExpectation };
 export class Conflict extends Error { constructor() { super('工程已经被 Studio 或 Agent 更新，请重新读取 revision 后再修改。'); } }
 
 export function projectPath(name: string): string {
@@ -358,6 +359,9 @@ export class WorkspaceStore {
     } finally { await rm(staging, { recursive: true, force: true }); }
   }
 
+  exportPath(job: ExportJob) {
+    return job.outputName ? path.join(this.directory, 'exports', job.id, job.outputName) : path.join(this.directory, 'exports', job.id + '.mp4');
+  }
   async job(id?: string): Promise<ExportJob | null> {
     if (id && !/^[a-f0-9-]{36}$/.test(id)) throw new Error('无效的导出任务编号');
     try {
@@ -381,7 +385,7 @@ export class WorkspaceStore {
       await this.saveJob(job);
     }
     if (job?.state === 'completed') {
-      try { if (!(await stat(path.join(this.directory, 'exports', job.id + '.mp4'))).size) throw new Error('empty'); }
+      try { if (!(await stat(this.exportPath(job))).size) throw new Error('empty'); }
       catch { job.state = 'failed'; job.error = '导出文件已不存在，请重新导出'; delete job.file; await this.saveJob(job); }
     }
     if (job) { delete job.token; delete job.workerPid; }
@@ -400,6 +404,7 @@ export class WorkspaceStore {
       if (previous && ['pending', 'running', 'cancelling'].includes(previous.state) && previous.expiresAt > Date.now() && (previous.state === 'pending' || alive(previous.workerPid))) throw new Error('EXPORT_BUSY: 已有导出任务正在等待或运行');
       const { audio, ...identity } = options;
       const job: ExportJob = { ...identity, id: crypto.randomUUID(), projectId: this.projectId, revision: expectedRevision, state: 'pending', stage: 'queued', createdAt: Date.now(), expiresAt: Date.now() + 30 * 60_000 };
+      job.outputName = renderFilenameStem(this.projectCatalog().projects.find(project => project.id === this.projectId)?.title) + '.mp4';
       const snapshot = this.snapshotDirectory(job.id);
       try {
         for (const file of current.project.files) {
@@ -432,9 +437,9 @@ export class WorkspaceStore {
         job.state = 'cancelled'; job.stage = 'cancelled'; delete job.token; delete job.workerPid;
         await this.saveJob(job); return job;
       }
-      if (!error && !(await stat(path.join(this.directory, 'exports', id + '.mp4'))).size) throw new Error('Hyperframes 未生成视频');
+      if (!error && !(await stat(this.exportPath(job))).size) throw new Error('Hyperframes 未生成视频');
       job.state = error ? 'failed' : 'completed'; job.stage = job.state;
-      if (error) job.error = error.slice(-2000); else job.file = 'exports/' + id + '.mp4';
+      if (error) job.error = error.slice(-2000); else job.file = path.relative(this.directory, this.exportPath(job)).split(path.sep).join('/');
       delete job.token; delete job.workerPid;
       await this.saveJob(job); return job;
     });

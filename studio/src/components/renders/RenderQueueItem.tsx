@@ -31,7 +31,7 @@ export const RenderQueueItem = memo(function RenderQueueItem({
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   // Direct file URL — serves from disk, survives server restarts
-  const fileSrc = buildProjectApiPath(projectId, `/renders/file/${job.filename}`);
+  const fileSrc = buildProjectApiPath(projectId, `/renders/file/${encodeURIComponent(job.filename)}`);
 
   const handleOpen = useCallback(() => {
     window.open(fileSrc, "_blank");

@@ -215,7 +215,7 @@ export async function callTool(name: string, args: Record<string, unknown> = {},
     }
     if (!job.expected) throw new Error('旧导出任务没有快照规格记录，请重新导出已检查的工程版本后再校验。');
     const expected = { ...job.expected, audio: (args.audio ?? job.expected.audio) as ExportExpectation['audio'] };
-    return { jobId: job.id, revision: job.revision, ...await verifyExport(path.join(store.directory, 'exports', job.id + '.mp4'), expected) };
+    return { jobId: job.id, revision: job.revision, ...await verifyExport(store.exportPath(job), expected) };
   }
   if (name === 'motion_apply_template') {
     if (typeof args.templateId !== 'string') throw new Error('需要 templateId');

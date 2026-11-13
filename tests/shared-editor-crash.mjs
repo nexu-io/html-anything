@@ -88,7 +88,7 @@ async function run(stage) {
     jobId = submitted.job.id;
     const jobFile = path.join(root, 'export.json');
     const archive = path.join(root, 'jobs', jobId, 'job.json');
-    const output = path.join(root, 'exports', jobId + '.mp4');
+    const output = path.join(root, 'exports', jobId, submitted.job.outputName);
     const deadline = Date.now() + 90_000;
     let before;
     while (Date.now() < deadline) {
