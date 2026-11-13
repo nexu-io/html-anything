@@ -314,6 +314,12 @@ button, input, select, textarea { font-family: inherit; }
   .motion-header-project .motion-project-name-input { padding-inline: 0; text-align: left; }
 }
 
+@container (max-width: 420px) {
+  .motion-studio-header.motion-studio-header-centered { grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--motion-space-6); }
+  .motion-studio-header.motion-studio-header-centered > div:last-child { gap: var(--motion-space-8); }
+  .motion-header-brand img { width: 72px; }
+}
+
 /* Timeline menus use the shared floating surface and the same menu typography. */
 :root[data-motion-ui] .hf-od-floating-surface.motion-context-menu {
   font-family: var(--motion-font-sans);

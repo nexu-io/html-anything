@@ -259,10 +259,12 @@ it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr']
   expect(link.href).toBe(COMMUNITY_URL);
   expect(link.target).toBe('_blank');
   expect(link.rel).toContain('noopener');
-  expect(container.querySelector<HTMLAnchorElement>(`a[href="${GITHUB_REPOSITORY}"]`)?.target).toBe('_blank');
+  const github = container.querySelector<HTMLAnchorElement>(`a[href="${GITHUB_REPOSITORY}"]`)!;
+  expect(github.target).toBe('_blank');
   expect(link.querySelector('img')?.getAttribute('src')).toBe(discordLogo);
   expect(link.getAttribute('aria-label')).toBeTruthy();
   const exportButton = container.querySelector('[data-testid="header-export"]')!;
+  expect(github.nextElementSibling?.contains(exportButton)).toBe(true);
   expect(link.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 });
 
