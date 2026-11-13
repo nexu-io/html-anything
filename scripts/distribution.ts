@@ -168,8 +168,6 @@ const localReadmeResourceFiles = [
   'docs/readme/badges/built-by-opendesign.svg',
   'docs/readme/badges/built-by-opendesign.zh-CN.svg',
   'docs/readme/badges/discord.svg',
-  'docs/readme/badges/feishu.svg',
-  'docs/readme/badges/feishu.zh-CN.svg',
   'docs/readme/badges/license.ja.svg',
   'docs/readme/badges/license.svg',
   'docs/readme/badges/license.zh-CN.svg',
