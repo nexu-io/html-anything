@@ -111,6 +111,29 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
   it is distinct from queue acceptance and does not assert human content acceptance.
 - Studio home/project page readiness, editor load outcome, new/recent-session and
   template-selection intent, plus actual instruction-copy/fallback results.
+- The editor's template library reports with the names of the shared OpenMotion
+  tracking sheet, so its funnel lines up with the website's: `surface_view` for
+  the library, a gallery card, a template's detail and the instruction to copy;
+  `ui_click` areas `template_card`, `template_detail`, `template_instruction` and
+  `template_discovery`; `template_search_result`, `template_filter_result` and
+  `resource_download_result`. A template is identified by `template_id` only
+  (a bounded slug); titles, authors and URLs are never fields. `placement` says
+  how a detail was reached: `catalog`, `related`, `random` (Surprise me) or
+  `navigation` (previous/next). `detail_view_id`, `copy_attempt_id`,
+  `download_attempt_id` and `search_id` are random UUIDs that tie a click to its
+  result. Recreate and Recreate-and-submit report `start_use` with
+  `template_action`; the instruction panel's Copy reports `copy_instruction`;
+  every copy reports `template_instruction_copy_result`, and only
+  `clipboard_written` is a successful copy. A category or filter option is sent
+  as a lowercase slug of the stable catalogue value and omitted when it cannot be
+  reduced to one. `template_search_result.search_keyword` is the one free-text
+  field in the registry: the settled search-box value, trimmed and capped at 100
+  characters, sent once per keyword 500 ms after typing stops and never per
+  keystroke. A card impression (`template_card` / `card`) is reported once the
+  card has been at least half visible for one unbroken second and is not covered
+  by the detail, once per search, filter and sort combination, so click-through
+  per card can be read. Hover, scroll depth, autoplay and video progress are not
+  reported. These events carry no project fields yet.
 
 This first integration does not implement the entire tracking specification:
 installer/integration/resource-read events, WebMCP execution, every editor save,
