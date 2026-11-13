@@ -1,7 +1,7 @@
 import type { Model, Modality, ProviderId } from '../shared/gateway.ts';
 import { apiJson, type Fetcher } from './network.ts';
 
-export const providerLabels: Record<ProviderId, string> = { codex: 'Codex', atlascloud: 'Atlas Cloud', fal: 'fal.ai' };
+export const providerLabels: Record<ProviderId, string> = { codex: 'Codex', atlascloud: 'Atlas Cloud', fal: 'fal.ai', opendesign: 'OpenDesign Cloud' };
 export const providerIds = Object.keys(providerLabels) as ProviderId[];
 export function modelKey(provider: ProviderId, modelId: string) { return `${provider}:${modelId}`; }
 export function validModelId(id: unknown): asserts id is string {
@@ -19,6 +19,8 @@ export const builtinModels: Model[] = [
   builtin('fal', 'fal-ai/flux/schnell', 'FLUX Schnell', 'image', 'text-to-image'),
   builtin('fal', 'fal-ai/wan/v2.2-a14b/text-to-video', 'Wan 2.2', 'video', 'text-to-video'),
   builtin('fal', 'fal-ai/kokoro/american-english', 'Kokoro', 'audio', 'text-to-speech'),
+  builtin('opendesign', 'elevenlabs-v3', 'ElevenLabs Voice', 'audio', 'text-to-speech'),
+  builtin('opendesign', 'byteplus-tts-2', 'BytePlus Voice', 'audio', 'text-to-speech'),
 ];
 /** Prefer explicit output/task metadata; never infer image output from image input. */
 export function classifyModel(category: string, output?: string): { modality: Modality; mode: string } | null {

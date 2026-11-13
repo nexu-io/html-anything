@@ -1795,5 +1795,15 @@
   "Render cancelled": "렌더링 취소됨",
   "Queued": "대기 중",
   "Export blocked": "내보내기 차단됨",
-  "Export failed": "내보내기 실패"
+  "Export failed": "내보내기 실패",
+  "Media providers": "미디어 공급자",
+  "Save a key to enable a provider.": "API 키를 저장하면 공급자가 활성화됩니다.",
+  "Loading providers…": "공급자 불러오는 중…",
+  "Configured": "설정됨",
+  "Not configured": "설정되지 않음",
+  "Get API key": "API 키 받기",
+  "Usage guide": "사용 안내",
+  "API origin": "API 주소",
+  "Use the gateway address shown on your Cloud API key page.": "Cloud API 키 페이지에 표시된 게이트웨이 주소를 입력하세요.",
+  "Save settings": "설정 저장"
 }

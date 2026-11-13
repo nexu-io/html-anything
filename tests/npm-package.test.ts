@@ -150,6 +150,7 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     const entries = await runFile('tar', ['-tf', built.application]);
     assert(!/\/(node_modules|runtime)\//.test(entries));
     assert(entries.includes('skills/openmotion-production/SKILL.md'));
+    for (const file of ['gateway/media-use.ts', 'gateway/opendesign.ts', 'skills/openmotion-debug-media/SKILL.md', 'skills/openmotion-debug-media/references/fal.md', 'skills/openmotion-debug-media/references/opendesign.md']) assert(entries.includes(file), 'BYOK runtime and guidance must ship: ' + file);
     for (const file of unapproved) assert(!entries.includes(file), 'Unapproved file shipped: ' + file);
     assert(!/\/(tests|src)\//.test(entries), 'Development sources and fixtures must not ship');
     assert(entries.includes('skills/openmotion-recreate/scripts/measure_frame.mjs'));

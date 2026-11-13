@@ -73,7 +73,7 @@ test('guide rendering pins the exact npm package, built source and hash while re
     'Generated guides must use the renamed repository and immutable source SHA');
   assert(!text.includes('nexu-io/html-anything'), 'Do not republish retired repository links');
   assert(!text.includes('{{') && !text.includes('see `{{...}}`'));
-  assert(text.includes('eleven public Tools') && text.includes('five Skills'));
+  assert(text.includes('twelve public Tools') && text.includes('five production Skills'));
   assert(text.includes('new test versions embed DEV defaults') && !text.includes('does not select DEV templates'),
     'A generated test guide must not claim test versions skip DEV templates');
   for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(text.includes(`openmotion setup --host ${host}`), host);

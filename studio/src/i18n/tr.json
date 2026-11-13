@@ -1795,5 +1795,15 @@
   "Render cancelled": "İşleme iptal edildi",
   "Queued": "Sırada",
   "Export blocked": "Dışa aktarma engellendi",
-  "Export failed": "Dışa aktarma başarısız"
+  "Export failed": "Dışa aktarma başarısız",
+  "Media providers": "Medya sağlayıcıları",
+  "Save a key to enable a provider.": "Bir sağlayıcıyı etkinleştirmek için API anahtarını kaydedin.",
+  "Loading providers…": "Sağlayıcılar yükleniyor…",
+  "Configured": "Yapılandırıldı",
+  "Not configured": "Yapılandırılmadı",
+  "Get API key": "API anahtarı al",
+  "Usage guide": "Kullanım kılavuzu",
+  "API origin": "API adresi",
+  "Use the gateway address shown on your Cloud API key page.": "Cloud API anahtarı sayfanızda gösterilen ağ geçidi adresini kullanın.",
+  "Save settings": "Ayarları kaydet"
 }

@@ -1795,5 +1795,15 @@
   "Render cancelled": "渲染已取消",
   "Queued": "排队中",
   "Export blocked": "导出受阻",
-  "Export failed": "导出失败"
+  "Export failed": "导出失败",
+  "Media providers": "多模态供应商",
+  "Save a key to enable a provider.": "保存 API Key 即可启用供应商。",
+  "Loading providers…": "正在加载供应商…",
+  "Configured": "已配置",
+  "Not configured": "未配置",
+  "Get API key": "获取 API Key",
+  "Usage guide": "使用说明",
+  "API origin": "API 地址",
+  "Use the gateway address shown on your Cloud API key page.": "请填写 Cloud 控制台 API 密钥页显示的网关地址。",
+  "Save settings": "保存配置"
 }

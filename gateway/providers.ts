@@ -1,10 +1,12 @@
 import { setTimeout as delay } from 'node:timers/promises';
 import type { GenerationJob } from '../shared/gateway.ts';
 import { apiJson, ProviderError, type Fetcher } from './network.ts';
+import { opendesign } from './opendesign.ts';
 
 export type ProviderContext = { key: string; fetcher: Fetcher; signal: AbortSignal;
+  baseUrl?: string;
   progress: (phase: string, remoteId?: string) => Promise<void>; pollMs?: number };
-export interface ProviderAdapter { generate(job: GenerationJob, context: ProviderContext): Promise<string[]> }
+export interface ProviderAdapter { generate(job: GenerationJob, context: ProviderContext): Promise<(string | Buffer)[]> }
 function outputs(body: any, modality: string): string[] {
   const raw = body?.outputs ?? (modality === 'image' ? body?.images ?? body?.image : modality === 'video' ? body?.video ?? body?.videos : body?.audio ?? body?.audio_file ?? body?.audios);
   return (Array.isArray(raw) ? raw : [raw]).flatMap(item => typeof item === 'string' ? [item] : typeof item?.url === 'string' ? [item.url] : []).slice(0, 8);
@@ -74,4 +76,4 @@ const fal: ProviderAdapter = {
   },
 };
 /** Add providers here without changing Studio, job persistence or the MCP contract. */
-export const providerAdapters: Record<'atlascloud' | 'fal', ProviderAdapter> = { atlascloud: atlas, fal };
+export const providerAdapters: Record<'atlascloud' | 'fal' | 'opendesign', ProviderAdapter> = { atlascloud: atlas, fal, opendesign };

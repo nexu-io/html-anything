@@ -10,7 +10,7 @@ import { WorkspaceStore } from '../workspace.ts';
 import { getWorkflow, workflowReferences, workflowRegistry, workflowSections } from '../shared/workflow.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const workflows = ['production', 'director', 'template', 'recreate', 'video-to-template'];
+const workflows = ['debug-media', 'production', 'director', 'template', 'recreate', 'video-to-template'];
 const productionSections = ['start', 'intake', 'templates', 'production', 'verification', 'context', 'native', 'edit', 'portable', 'materials'];
 const entries = Object.entries(workflowRegistry).filter(([name]) => workflows.includes(name)).flatMap(([workflow, definition]) =>
   Object.entries(definition.sections).map(([section, documentId]) => ({ workflow, section, documentId, status: definition.status })));
@@ -102,7 +102,7 @@ test('every workflow document and linked reference is reachable over MCP with ca
     assert.equal(returned.get('skills/openmotion-recreate/SKILL.md').status, 'ready');
     assert.equal(returned.get('skills/openmotion-video-to-template/SKILL.md').status, 'ready');
     assert.equal(returned.get('skills/openmotion-video-to-template/SKILL.md').workflow, 'video-to-template');
-    for (const route of workflows) {
+    for (const route of workflows.filter(route => route !== 'debug-media')) {
       assert.ok(returned.get(workflowRegistry[route as keyof typeof workflowRegistry].sections.start).references.some((reference: { documentId: string }) =>
         reference.documentId === 'skills/openmotion-production/references/edit.md'), `${route} must expose the shared edit workflow`);
       assert.ok(returned.get(workflowRegistry[route as keyof typeof workflowRegistry].sections.start).references.some((reference: { documentId: string }) =>

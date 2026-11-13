@@ -14,7 +14,7 @@ test('packaged relative cwd launches exactly as the Codex host resolves it, with
   const resolved = { enabled: true, transport: { ...config, cwd: path.resolve(root, config.cwd) } };
   const checked = checkTransport(resolved, VERSION);
   for (const name of ['openmotion_create_project', 'openmotion_open_preview', 'openmotion_edit_project', 'openmotion_import_assets', 'openmotion_list_versions', 'openmotion_restore_version', 'openmotion_export_request', 'openmotion_export_cancel']) assert.ok(checked.tools.includes(name));
-  assert.equal(checked.tools.length, 11);
+  assert.equal(checked.tools.length, 12);
 });
 test('installation check catches the exact installed placeholder bug before reporting success', () => {
   assert.throws(() => checkTransport({ enabled: true, transport: { type: 'stdio', command: 'node',

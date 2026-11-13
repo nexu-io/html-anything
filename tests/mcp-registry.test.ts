@@ -9,7 +9,7 @@ import { fixture } from './fixtures.ts';
 import { workflowEntryGuide, phase1Skills } from '../shared/workflow.ts';
 
 const phase1 = JSON.parse(readFileSync(new URL('../shared/mcp-profiles.json', import.meta.url), 'utf8')).phase1;
-const target = ['openmotion_list_templates', 'openmotion_get_template', 'openmotion_create_project', 'openmotion_open_preview', 'openmotion_import_assets', 'openmotion_get_project',
+const target = ['openmotion_media_use', 'openmotion_list_templates', 'openmotion_get_template', 'openmotion_create_project', 'openmotion_open_preview', 'openmotion_import_assets', 'openmotion_get_project',
   'openmotion_edit_project', 'openmotion_export_request', 'openmotion_list_versions', 'openmotion_restore_version', 'openmotion_export_cancel'];
 
 test('phase-one target is explicit, unique, and distinct from the legacy implementation list', () => {

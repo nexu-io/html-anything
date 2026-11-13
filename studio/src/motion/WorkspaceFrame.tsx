@@ -15,6 +15,7 @@ import { isConnectionFailure } from '../components/ui/errorNoticeMessage';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
 
+const ModelSettings = lazy(() => import('./ModelSettings').then(module => ({ default: module.ModelSettings })));
 const PrivacySettings = lazy(() => import('./PrivacySettings').then(module => ({ default: module.PrivacySettings })));
 
 type WorkspaceChrome = {
@@ -58,6 +59,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
   const libraryTrigger = useRef<HTMLElement | null>(null);
   const [connectionsOpen, setConnectionsOpen] = useState(() => new URLSearchParams(location.search).get('templates') === '1');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [modelSettingsOpen, setModelSettingsOpen] = useState(false);
   const libraryBusy = workspace.busy || blocked || Boolean(editorState?.blocked);
   const switchingDisabled = libraryBusy || !workspace.status;
   const notice = workspace.error || message || editorState?.message || "";
@@ -69,7 +71,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
   const value: WorkspaceChrome = { workspace, switchingDisabled, saveState: workspace.busy ? t('Working…') : editorState?.saveState || saveState, registerEditor, beforeViewChange,
     openLibrary: trigger => { libraryTrigger.current = trigger ?? null; workspace.clearError(); setConnectionSection('templates'); setConnectionsOpen(true); },
     openConnections: () => {},
-    openModelSettings: () => {},
+    openModelSettings: () => { setSidebarOpen(false); setModelSettingsOpen(true); },
     toggleSidebar: () => setSidebarOpen(open => !open), sidebarOpen };
   return <WorkspaceChromeContext.Provider value={value}>
     <Dialog.Root open={sidebarOpen} onOpenChange={setSidebarOpen}>
@@ -92,6 +94,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
       </div>
     </div>
     </Dialog.Root>
+    {modelSettingsOpen && <Suspense fallback={null}><ModelSettings onClose={() => setModelSettingsOpen(false)} /></Suspense>}
     {connectionsOpen && <ConnectionDialog open returnFocus={libraryTrigger.current} section={connectionSection} busy={libraryBusy} openingDisabled={switchingDisabled} error={workspace.error} onClose={() => { setConnectionsOpen(false); onLibraryClose?.(); }} onOpen={id => { if (!switchingDisabled) void (sessionId ? workspace.createArtifact(sessionId, id) : workspace.startSession(undefined, id)); }} />}
   </WorkspaceChromeContext.Provider>;
 }
@@ -105,7 +108,7 @@ function PrivacySettingsButton() {
 function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () => void }) {
   const { t } = useI18n();
   const theme = useShownStudioTheme();
-  const { workspace, switchingDisabled } = useWorkspaceChrome();
+  const { workspace, switchingDisabled, openModelSettings } = useWorkspaceChrome();
   const [query, setQuery] = useState('');
   const projects = workspace.projects;
   const filtered = projects.filter(project => project.title.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
@@ -134,6 +137,7 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
       </button>)}
     </nav>
     <footer className="motion-sidebar-footer">
+      <button type="button" className="motion-byok-entry motion-button motion-button-quiet" onClick={openModelSettings}><RemixIcon name="key-2-line" size={16} />{t('Media providers')}</button>
       <div className="motion-sidebar-settings"><PrivacySettingsButton /><ThemeToggle /><LanguageMenu /></div>
     </footer>
   </aside>;

@@ -31,7 +31,7 @@ test('MCP connection configs launch the native tools in the exact workspace and 
       input: messages.map(message => JSON.stringify({ jsonrpc: '2.0', ...message })).join('\n') + '\n' });
     assert.equal(child.status, 0, child.stderr);
     const replies = child.stdout.trim().split('\n').map(line => JSON.parse(line));
-    assert.equal(replies[1].result.tools.length, 11);
+    assert.equal(replies[1].result.tools.length, 12);
     assert.ok(replies[1].result.tools.some((tool: any) => tool.name === 'openmotion_edit_project'));
     assert.ok(replies[2].result.resources.some((item: any) => item.uri === 'openmotion://workflow/production/start'));
     assert.equal(replies[3].result.isError, true);

@@ -13,6 +13,13 @@ const display = object({ revision, versionId: id, previewUrl: { type: 'string', 
 const read = { readOnlyHint: true, openWorldHint: false };
 const write = { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 export const phase1Tools = [
+  { name: 'openmotion_media_use', title: 'OpenMotion · Media Use', description: 'Inspect enabled BYOK providers (fal.ai and OpenDesign Cloud), read their bundled references, list models, generate media, query or cancel a job. The local service injects the saved key; never pass credentials. Saving a key in editor Media providers enables it. Read action=reference before generation. Generate requires explicit projectId, requestId, provider, provider-native model ID, modality and prompt; returns queued, not media. Poll action=status with the same jobId. Only completed assets are imported; composition editing is separate. No automatic paid fallback or resubmission.',
+    inputSchema: object({ action: { enum: ['inspect', 'reference', 'models', 'generate', 'status', 'cancel'] }, provider: { enum: ['fal', 'opendesign'] },
+      projectId, requestId: id, jobId: id, model: { type: 'string', minLength: 1, maxLength: 180 }, modality: { enum: ['image', 'video', 'audio'] },
+      mode: { enum: ['text-to-image', 'text-to-video', 'text-to-audio', 'text-to-speech'] }, prompt: { type: 'string', minLength: 1, maxLength: 20000 },
+      parameters: { type: 'object', additionalProperties: true }, refresh: { type: 'boolean' }, query: { type: 'string', maxLength: 200 },
+      offset: { type: 'integer', minimum: 0 }, limit: { type: 'integer', minimum: 1, maximum: 100 } }, ['action']),
+    annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true } },
   { name: 'openmotion_list_templates', title: 'OpenMotion · List Templates', description: 'Index templates from the loaded local repository; installations without a repository catalog use the configured CMS. Returns source, indexPath (local JSONL, one summary per template), total and catalogVersion, not search results. Read or grep/jq the file to select a template, then call openmotion_get_template. Repository summaries include localSource paths. No query or pagination arguments.', inputSchema: object({}), annotations: { ...read, openWorldHint: true } },
   { name: 'openmotion_get_template', title: 'OpenMotion · Get Template', description: 'Read one exact template ID and its TEMPLATE.md guidance. Repository entries include localSource absolute paths and the local motionDocument content. Guidance-only examples remain distinct from editable Studio projects. Use openmotion_create_project with projectType=template only when hasHtmlProject is true; otherwise apply the guidance while authoring a new project. Known IDs do not require listing first.', inputSchema: object({ templateId: id }, ['templateId']), annotations: { ...read, openWorldHint: true } },
   { name: 'openmotion_create_project', title: 'OpenMotion · Create Project', description: 'Create an independent editable native OpenMotion project from a prompt, an editable template ID or reference-video ID. The host Agent authors the film; creation does not generate a finished video. Persist requirements and source, return project/session IDs and the initial content version. A requestId is required for safe retries.',
@@ -58,6 +65,7 @@ export function validateInput(schema: any, value: any, field = 'arguments'): voi
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('INVALID_ARGUMENT: ' + field + ' must be an object');
     for (const key of schema.required ?? []) if (!Object.hasOwn(value, key)) throw new Error('INVALID_ARGUMENT: ' + field + '.' + key + ' is required');
     for (const [key, child] of Object.entries(value)) {
+      if (schema.additionalProperties === true && !Object.hasOwn(schema.properties ?? {}, key)) continue;
       if (!Object.hasOwn(schema.properties, key)) throw new Error('INVALID_ARGUMENT: unknown ' + field + '.' + key);
       validateInput(schema.properties[key], child, field + '.' + key);
     }

@@ -97,3 +97,14 @@
 .motion-asset-menu-button:hover, .motion-audio-menu-button:hover { background: var(--motion-hover); color: var(--motion-strong); }
 .motion-media-notice { position: fixed; right: 20px; bottom: 24px; z-index: 210; padding: 12px; border-radius: 8px; color: var(--motion-danger); background: var(--motion-danger-soft); }
 @media (max-width: 780px) { .motion-provider-grid { grid-template-columns: 1fr; } .motion-empty-media-actions { margin-left: 0; flex-direction: column; } .motion-timeline-media-actions button:last-child { display: none; } .motion-model-dialog { padding: 16px; } }
+
+.motion-byok-dialog { width: min(840px, calc(100vw - 32px)); }
+.motion-byok-dialog .motion-provider-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.motion-byok-dialog .motion-provider-card { min-width: 0; }
+.motion-byok-dialog .motion-capability-badge { margin-top: 0; }
+.motion-byok-dialog form { display: grid; gap: 12px; margin: 18px 0 12px; }
+.motion-byok-dialog .motion-byok-links { display: flex; gap: 16px; font-size: 12px; }
+.motion-byok-dialog a { color: var(--motion-accent); text-decoration: underline; text-underline-offset: 3px; }
+.motion-byok-dialog .motion-model-list > div > span:last-child { flex-shrink: 1; }
+.motion-byok-entry { display: flex; align-items: center; gap: 8px; width: 100%; margin-bottom: 8px; }
+@media (max-width: 620px) { .motion-byok-dialog .motion-provider-grid { grid-template-columns: 1fr; } }
