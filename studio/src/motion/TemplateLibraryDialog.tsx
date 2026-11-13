@@ -219,7 +219,7 @@ export function TemplateLibraryDialog(props: Props) {
     finally { setDownloading(false); }
   }
   const filterBy = (key: Facet, value: string) => { setSelected({ [key]: [value] }); setQuery(''); setEditableOnly(false); detail.current?.close(); };
-  return <dialog ref={dialog} className={styles.library} aria-label={t('Template library')} onKeyDown={event => {
+  return <dialog ref={dialog} className={styles.library} data-motion-template-library="" aria-label={t('Template library')} onKeyDown={event => {
     event.stopPropagation();
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k' && !preview && !filtersOpen) { event.preventDefault(); search.current?.focus(); }
   }} onCancel={event => { if (event.target !== dialog.current) return; event.preventDefault(); if (!props.busy) props.onClose(); }}>

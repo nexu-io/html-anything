@@ -1,10 +1,7 @@
-// ── Design Panel Tokens (for inline style={{}} usage) ──────────────────
-// Tailwind classes use `panel-*` from tailwind.config.js theme.extend.colors.
-// This file provides the same values for inline styles where Tailwind can't reach.
-
+// Inline styles consume the same semantic roles as package CSS and utilities.
 export const P = {
-  accent: "#3CE6AC",
-  borderInput: "#27272A",
-  textMuted: "#52525B",
-  white: "#FAFAFA",
+  accent: "var(--color-accent)",
+  borderInput: "var(--color-border-input)",
+  textMuted: "var(--color-text-muted)",
+  white: "var(--color-on-accent)",
 } as const;

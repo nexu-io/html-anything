@@ -94,7 +94,7 @@ function verdict(counts: ReadonlyMap<string, number>, baseline: Baseline | undef
   const { risen, fallen } = compare(counts, baseline);
   if (risen.length > 0) {
     return [
-      "Colour literals belong in src/styles/theme.css.",
+      "Interface colour literals belong in packages/design-system/tokens.json.",
       ...risen,
       `If these are unavoidable, lower is the only direction: ${LOWER_COMMAND}`,
     ];

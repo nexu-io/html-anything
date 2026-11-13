@@ -11,7 +11,7 @@ import {
   type RefObject,
 } from "react";
 import { studioEditLifecycle } from "../../webmcp/writeCoordinator";
-import openDesignMark from "../../motion/od-loading-mark.svg";
+import openDesignMark from "../../../../packages/design-system/brand/loading-mark.svg";
 import { measureTopologyLensGeometry, type TopologyLensGeometry } from "./topologyLensGeometry";
 import { reduceTopologyLens, type TopologyLensState } from "./topologyLensState";
 

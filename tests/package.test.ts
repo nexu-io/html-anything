@@ -3,15 +3,22 @@ import assert from 'node:assert/strict';
 import { zip } from '../scripts/package.ts';
 import { distributionFiles } from '../scripts/distribution.ts';
 import { getWorkflow, workflowRegistry } from '../shared/workflow.ts';
+import { designSystemDocuments, designSystemRuntimeFiles } from '../packages/design-system/index.js';
 
 test('every distribution preserves public workflow dependencies and licenses while excluding development material', async () => {
   for (const profile of ['phase1', 'legacy']) {
     const files = new Set(await distributionFiles(profile));
+    for (const file of ['AGENTS.md', 'CLAUDE.md', 'cloud.md', ...designSystemDocuments, ...designSystemRuntimeFiles.map(file => 'packages/design-system/' + file)]) {
+      assert(files.has(file), 'Missing shared design system dependency: ' + file);
+    }
+    assert(![...files].some(file => file.startsWith('packages/design-system/workbench/')), 'Source-write server and workbench tests stay out of runtime distribution');
+    assert(!files.has('packages/design-system/loading.ts'), 'Loading source is compiled into Studio');
+    assert(![...files].some(file => file.startsWith('packages/design-system/react/')), 'React source is compiled into Studio');
     assert(files.has('docs/release-guide.md'), 'The public test/stable manual must ship');
     assert(files.has('docs/template-repository.md'), 'Repository guidance must ship');
     assert(![...files].some(file => file.startsWith('library/templates/catalog/') || /scripts\/(?:template-library|check-template-library)\.ts$/.test(file)), 'The source catalog and contribution tools must not inflate application packages');
     assert(files.has('shared/asset-limits.ts'), 'The shared asset import limit must ship');
-    for (const file of ['studio/build/index.html', 'studio/LICENSE', 'template-library/LICENSE', 'template-library/NOTICE.md', 'web/design-system/fonts/Albert-Sans-OFL.txt', 'scripts/distribution.ts', 'scripts/diagnostics.mjs', 'scripts/zip.mjs', 'scripts/diagnostic-redaction.mjs', 'shared/build-info.json', 'shared/editor-launch.pl', 'shared/workspace-studio.ts', 'shared/owned-studio.mjs', 'shared/workflow-entry.js', 'skills/openmotion-recreate/scripts/measure_frame.mjs']) assert(files.has(file), 'Missing runtime or license: ' + file);
+    for (const file of ['studio/build/index.html', 'studio/LICENSE', 'template-library/LICENSE', 'template-library/NOTICE.md', 'packages/design-system/fonts/Albert-Sans-OFL.txt', 'scripts/distribution.ts', 'scripts/diagnostics.mjs', 'scripts/zip.mjs', 'scripts/diagnostic-redaction.mjs', 'shared/build-info.json', 'shared/editor-launch.pl', 'shared/workspace-studio.ts', 'shared/owned-studio.mjs', 'shared/workflow-entry.js', 'skills/openmotion-recreate/scripts/measure_frame.mjs']) assert(files.has(file), 'Missing runtime or license: ' + file);
     assert(![...files].some(file => /^(?:tests\/|studio\/(?:src|tests)\/)|\.map$|publish-test-package|acceptance\.md$/.test(file)));
     for (const [workflow, definition] of Object.entries(workflowRegistry)) {
       for (const section of Object.keys(definition.sections)) {

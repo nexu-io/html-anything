@@ -47,7 +47,7 @@ beforeAll(async () => {
     loadStylesheet,
   });
   // The app imports the Motion adapter after Studio; semantic hooks live there.
-  const hostCss = readFileSync(path.join(STYLES_DIR, "../motion/theme.css"), "utf8");
+  const hostCss = readFileSync(path.join(STYLES_DIR, "../../../packages/design-system/studio/adapter.css"), "utf8") + readFileSync(path.join(STYLES_DIR, "../motion/theme.css"), "utf8");
   compileStudioCss = (candidates) => compiled.build(candidates) + hostCss;
 });
 

@@ -57,7 +57,7 @@ Model configuration and media generation are hidden in the MVP editor. `MediaGat
 | 模板画廊、视频预览、出处与热度 | `web/template-gallery.ts`、`web/template-gallery.css`、`template-catalog.ts` |
 | 内置原生模板与工程副本 | `template-library.ts`、`template-library/` |
 | MCP 与模板统一弹框、配置下载与 Agent 指引 | `studio/src/motion/ConnectionDialog.tsx`、`web/connect.*`、`shared/integration.ts` |
-| 设计变量 | `web/design-system/tokens.json`，执行 `npm run design:tokens` |
+| 设计变量 | `packages/design-system/tokens.json`，执行 `npm run design:tokens` |
 | 编辑器主题 | `studio/src/motion/theme.css` |
 | Dock 与面板注册 | `studio/src/components/dock/` |
 | Legacy preview/layout presets (hidden in MVP) | `studio/src/motion/MotionLayoutControls.tsx` |

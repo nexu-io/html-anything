@@ -1,0 +1,14 @@
+.motion-error-notice { flex-shrink: 0; min-width: 0; max-width: 100%; padding: 10px 16px; color: var(--color-danger-ink); background: var(--motion-danger-soft, var(--color-bg-2)); border-bottom: 1px solid var(--color-border); font-size: 12px; line-height: 1.6; }
+.motion-error-notice-row { display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
+.motion-error-notice-summary { flex: 1; min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.motion-error-notice button { font: inherit; color: inherit; cursor: pointer; }
+.motion-error-notice-close { display: grid; place-items: center; flex: 0 0 24px; width: 24px; height: 24px; margin-top: -2px; padding: 0; border: 0; border-radius: 4px; background: transparent; }
+.motion-error-notice-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin-top: 4px; }
+.motion-error-notice-actions button, .motion-error-notice-details button { min-width: 0; padding: 2px 0; border: 0; background: transparent; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; text-align: left; }
+.motion-error-notice-actions .motion-error-notice-action { padding: 3px 9px; border: 1px solid currentColor; border-radius: 5px; text-decoration: none; }
+.motion-error-notice button:disabled { opacity: .5; cursor: wait; }
+.motion-error-notice-close:hover { background: var(--color-hover); }
+.motion-error-notice-details { min-width: 0; margin-top: 8px; }
+.motion-error-notice-details pre { box-sizing: border-box; width: 100%; max-height: min(160px, 30dvh); overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 6px; padding: 8px; background: var(--color-bg-2); color: var(--color-text-2); border-radius: 5px; font: 11px/1.6 var(--font-mono); user-select: text; }
+.motion-error-notice-details [role=status] { display: block; font-size: 11px; overflow-wrap: anywhere; }
+.motion-error-notice-compact { padding: 0; border: 0; background: transparent; font-size: 11px; }
