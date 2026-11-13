@@ -1,0 +1,214 @@
+{
+  "templateId": "motion-orbit-launch",
+  "entry": {
+    "templateId": "motion-orbit-launch",
+    "sortOrder": 287,
+    "original": {
+      "templateName": "Orbit Launch",
+      "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+      "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+      "promotionalUseCases": "Product launches",
+      "visualPresentation": "Text animation, Graphic animation",
+      "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+      "durationSeconds": "6",
+      "motionTags": "orbit, launch, title, original, kinetic typography",
+      "author": "OpenMotion contributors",
+      "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+    },
+    "files": [],
+    "previewUrl": null,
+    "coverUrl": null,
+    "motionDocumentUrl": null,
+    "motionGuideUrl": null,
+    "projectFileUrl": null,
+    "brand": "OpenMotion",
+    "colors": [
+      "green",
+      "black"
+    ],
+    "width": 960,
+    "height": 540,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "Original motion guidance and interactive HTML example; not registered as a directly copyable Studio project.",
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "not_run"
+    },
+    "featuredOrder": null
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Orbit Launch – Produkttitel",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "en": {
+      "original": {
+        "templateName": "Orbit Launch",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "es": {
+      "original": {
+        "templateName": "Orbit Launch – lanzamiento",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "fr": {
+      "original": {
+        "templateName": "Orbit Launch – lancement",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "it": {
+      "original": {
+        "templateName": "Orbit Launch – lancio",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "ja": {
+      "original": {
+        "templateName": "Orbit Launch · 軌道ローンチ",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "ko": {
+      "original": {
+        "templateName": "Orbit Launch · 궤도 출시",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Orbit Launch – lançamento",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "ru": {
+      "original": {
+        "templateName": "Orbit Launch — запуск",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "tr": {
+      "original": {
+        "templateName": "Orbit Launch – lansman",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    },
+    "zh-CN": {
+      "original": {
+        "templateName": "Orbit Launch · 轨道发布",
+        "summary": "A six-second original launch title: an orbiting signal settles, reveals a two-line headline and holds the final message.",
+        "styleDescription": "Deep blue-black canvas, lime signal, concentric orbit lines and a clear two-line headline.",
+        "promotionalUseCases": "Product launches",
+        "visualPresentation": "Text animation, Graphic animation",
+        "reviewFocus": "Keep the marker, headline and support line in reveal order. Hold the complete message after 2.6 seconds.",
+        "durationSeconds": "6",
+        "motionTags": "orbit, launch, title, original, kinetic typography",
+        "author": "OpenMotion contributors",
+        "sourceUrl": "https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog/motion-orbit-launch"
+      }
+    }
+  },
+  "localMedia": {
+    "preview": "assets/lfs/preview.mp4",
+    "poster": "assets/poster.jpg"
+  },
+  "remoteAssets": [
+    {
+      "url": "https://releases.open-design.ai/open-motion/media/sha256/a9a1423f00ece6880e542125b98f7d3d6b214f2f02e31666d6361d19e3c0d737.mp4",
+      "bytes": 62916,
+      "sha256": "a9a1423f00ece6880e542125b98f7d3d6b214f2f02e31666d6361d19e3c0d737",
+      "source": {
+        "path": "assets/lfs/preview.mp4",
+        "bytes": 62916,
+        "sha256": "a9a1423f00ece6880e542125b98f7d3d6b214f2f02e31666d6361d19e3c0d737"
+      }
+    }
+  ]
+}
