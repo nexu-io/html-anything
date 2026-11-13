@@ -1,0 +1,4 @@
+.skeleton { display: block; position: relative; overflow: hidden; border-radius: var(--motion-radius-md); background: linear-gradient(110deg, var(--motion-skeleton-base), var(--motion-skeleton-highlight) 48%, var(--motion-skeleton-base)); }
+.skeleton[data-animated] { animation: breathe 1.8s ease-in-out infinite; }
+@keyframes breathe { 50% { opacity: .5; } }
+@media (prefers-reduced-motion: reduce) { .skeleton[data-animated] { animation: none; } }

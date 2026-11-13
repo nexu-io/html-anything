@@ -62,6 +62,7 @@
   --motion-ease-standard: cubic-bezier(0.33, 0, 0.67, 1);
   --motion-glass-backdrop: blur(28px) saturate(1.8);
   --motion-scrim-backdrop: blur(50px);
+  --motion-on-brand: #202020;
 }
 :where([data-motion-ui]) {
   color-scheme: light;
@@ -109,6 +110,12 @@
   --motion-glass: rgba(250, 250, 250, 0.66);
   --motion-scrim: rgba(255, 255, 255, 0.6);
   --motion-scrim-solid: #ffffff;
+  --motion-gallery-surface: #ffffff;
+  --motion-gallery-control: #f5f5f5;
+  --motion-gallery-border: #e5e5e5;
+  --motion-gallery-stage-wash: rgba(255, 255, 255, 0.22);
+  --motion-skeleton-base: #eceeed;
+  --motion-skeleton-highlight: #f6f7f6;
 }
 :where([data-motion-ui][data-theme="dark"], [data-motion-ui][data-motion-studio]:not([data-theme="paper"])) {
   color-scheme: dark;
@@ -156,6 +163,12 @@
   --motion-glass: rgba(53, 53, 53, 0.66);
   --motion-scrim: rgba(255, 255, 255, 0.6);
   --motion-scrim-solid: #202020;
+  --motion-gallery-surface: #181818;
+  --motion-gallery-control: #262626;
+  --motion-gallery-border: #383838;
+  --motion-gallery-stage-wash: rgba(0, 0, 0, 0.44);
+  --motion-skeleton-base: #252725;
+  --motion-skeleton-highlight: #333733;
 }
 @media (prefers-color-scheme: dark) {
   :where([data-motion-ui]:not([data-theme]):not([data-motion-studio])) {
@@ -204,5 +217,11 @@
     --motion-glass: rgba(53, 53, 53, 0.66);
     --motion-scrim: rgba(255, 255, 255, 0.6);
     --motion-scrim-solid: #202020;
+    --motion-gallery-surface: #181818;
+    --motion-gallery-control: #262626;
+    --motion-gallery-border: #383838;
+    --motion-gallery-stage-wash: rgba(0, 0, 0, 0.44);
+    --motion-skeleton-base: #252725;
+    --motion-skeleton-highlight: #333733;
   }
 }

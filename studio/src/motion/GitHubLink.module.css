@@ -1,0 +1,4 @@
+.link { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; gap: 6px; min-height: 32px; padding: 6px 10px; border: 1px solid var(--color-border-input); border-radius: 8px; color: var(--color-text-1); background: transparent; font-size: 12px; font-weight: 500; text-decoration: none; white-space: nowrap; }
+.link:hover { background: var(--color-hover); text-decoration: none; }
+.link:focus-visible { outline: 2px solid var(--color-text-1); outline-offset: 2px; }
+.link svg { flex: none; }
