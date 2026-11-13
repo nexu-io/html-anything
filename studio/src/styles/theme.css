@@ -26,6 +26,24 @@
   --color-template-prompt-bg: #f4f5f0;
   --color-template-checkbox: #246824;
   --color-template-guide-link: #376637;
+  /* Library chrome the website palette above does not cover: its white surfaces and the shared
+   * sort menu. The dark adapter remaps them to Motion tokens inside the dialog. */
+  --color-template-library-surface: #fff;
+  --color-template-library-controls-bg: #f5f5f5;
+  --color-template-menu-bg: #fafafa;
+  --color-template-menu-text: #494949;
+  --color-template-menu-line: rgb(73 73 73 / 18%);
+  --color-template-menu-hover: #efefef;
+  /* Neutral steps of the design system's scale (n0–n11) shared by the library's category list,
+   * filter chips and filter footer. They stay `light-dark()` pairs because they follow the color
+   * scheme rather than one palette. */
+  --color-template-neutral-0: light-dark(#fff, #121212);
+  --color-template-neutral-1: light-dark(#fafafa, #353535);
+  --color-template-neutral-2: light-dark(#f7f7f7, #494949);
+  --color-template-neutral-3: light-dark(#ededed, #5c5c5c);
+  --color-template-neutral-9: light-dark(#494949, #f7f7f7);
+  --color-template-neutral-10: light-dark(#353535, #fafafa);
+  --color-template-neutral-11: light-dark(#121212, #fff);
 
   /* ---------------------------------------------------------------- colour */
 
@@ -313,6 +331,9 @@
    * contact shadow, a soft ambient one, and an inner top highlight. */
   --shadow-btn-primary:
     0 1px 2px rgb(0 0 0 / 0.6), 0 2px 6px rgb(0 0 0 / 0.35), inset 0 1px 0 rgb(255 255 255 / 0.65);
+
+  /* The template library's sort menu, which the dark adapter swaps for Motion's own level. */
+  --shadow-template-menu: 0 6px 24px rgb(28 27 26 / 7%), 0 2px 6px rgb(28 27 26 / 4%);
 
   /* ---------------------------------------------------------------- motion */
 
