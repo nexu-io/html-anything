@@ -19,6 +19,31 @@ test('privacy rules reject internal URLs, employee paths and private files witho
   for (const name of ['../escape', '/absolute', 'C:/drive', 'safe/../../outside', 'bad\\file', 'bad\tname']) assert.throws(() => archivePaths(name));
 });
 
+test('only the approved public community invitation is permitted in product READMEs', async () => {
+  const text = await readFile(new URL('../README.md', import.meta.url), 'utf8');
+  const invite = text.match(/href="([^"\n]+add_by_link[^"\n]+)"/)[1];
+  const internal = 'https://' + 'workspace.' + 'feishu.cn/wiki/private';
+  for (const kind of ['source', 'package']) {
+    for (const name of ['README.md', 'README.zh-CN.md', 'docs/README.zh-CN.md', 'docs/README.ja.md']) {
+      assert.deepEqual(privacyFindings(name, `<a href="${invite}">Community</a>`, kind), []);
+      for (const value of [invite + 'x', invite + '&extra=1', invite.replace('https:', 'http:'), invite + ' ' + internal]) {
+        assert(privacyFindings(name, value, kind).some(hit => hit.rule === 'internal-link'));
+      }
+    }
+    for (const name of ['notes.md', 'nested/README.md', 'docs/install.md', 'nested/package/README.md', 'package/nested/README.md', 'package/package/README.md']) {
+      assert(privacyFindings(name, invite, kind).some(hit => hit.rule === 'internal-link'));
+    }
+  }
+  // The npm installer archive keeps the same product READMEs under its single `package/` root.
+  for (const name of ['package/README.md', 'package/README.zh-CN.md', 'package/docs/README.zh-CN.md', 'package/docs/README.ja.md']) {
+    assert.deepEqual(privacyFindings(name, `<a href="${invite}">Community</a>`, 'package'), []);
+    for (const value of [invite + 'x', invite + '&extra=1', invite.replace('https:', 'http:'), invite + ' ' + internal]) {
+      assert(privacyFindings(name, value, 'package').some(hit => hit.rule === 'internal-link'));
+    }
+    assert(privacyFindings(name, invite, 'source').some(hit => hit.rule === 'internal-link'));
+  }
+});
+
 async function scanner(t, findings = []) {
   const work = await mkdtemp(path.join(os.tmpdir(), 'motion-scanner-test-')); t.after(() => rm(work, { recursive: true, force: true }));
   const binary = path.join(work, 'scanner');
