@@ -14,6 +14,7 @@ import { useToast } from '../hooks/useToast';
 import { purposeOrder } from './templateDiscoveryTaxonomy';
 import { templateContributionUrl, templateSubmissionPrompt } from './templateContribution';
 import styles from './TemplateLibraryDialog.module.css';
+import { TemplateMotionGuide } from './TemplateMotionGuide';
 import figmaLogo from './template-brands/figma.png';
 import lovableLogo from './template-brands/lovable.svg';
 import linearLogo from './template-brands/linear.svg';
@@ -422,7 +423,7 @@ export function TemplateLibraryDialog(props: Props) {
             {(preview.styleDescription || preview.reviewFocus || preview.motionGuideUrl) && <section className={styles.guide} aria-label={t('Motion guide')}>
               {preview.styleDescription && <details><summary>{t('Visual style')}</summary><p>{preview.styleDescription}</p></details>}
               {preview.reviewFocus && <details><summary>{t('Production notes')}</summary><p>{preview.reviewFocus}</p></details>}
-              {preview.motionGuideUrl && <details key={preview.id} onToggle={event => setGuideOpen(event.currentTarget.open)}><summary>{t('Motion guide')}</summary>{guideOpen && <iframe src={preview.motionGuideUrl} title={t('Motion guide')} sandbox="allow-scripts" loading="lazy" referrerPolicy="no-referrer" />}<a href={preview.motionGuideUrl} target="_blank" rel="noreferrer" onClick={() => tracking.reportDetailLink(preview, 'view_full_page', detailView.current)}>{t('View full page')}<MotionIcon name="arrow-up-right" size={14} /></a></details>}
+              {preview.motionGuideUrl && <details key={preview.id} onToggle={event => setGuideOpen(event.currentTarget.open)}><summary>{t('Motion guide')}</summary>{guideOpen && <TemplateMotionGuide url={preview.motionGuideUrl} title={t('Motion guide')} />}<a href={preview.motionGuideUrl} target="_blank" rel="noreferrer" onClick={() => tracking.reportDetailLink(preview, 'view_full_page', detailView.current)}>{t('View full page')}<MotionIcon name="arrow-up-right" size={14} /></a></details>}
             </section>}
             {related.length > 0 && <section className={styles.related}><h3>{t('Related templates')}</h3><div>{related.map((item, index) => <button key={item.id} onClick={() => openRelated(item, index + 1)} aria-label={t('Preview template {title}', { title: item.title })}><TemplatePoster template={item} /><span className={styles.relatedCaption}>{item.title}</span></button>)}</div></section>}
           </div>
