@@ -157,7 +157,14 @@ it("extends and trims a static image while keeping its end, source attributes, r
         });
     const drag = async (delta: number, cancel = false) => {
       await handle().waitFor();
-      const box = await handle().boundingBox();
+      await handle().hover();
+      let box = await handle().boundingBox();
+      await expect
+        .poll(async () => {
+          box = await handle().boundingBox();
+          return box !== null;
+        })
+        .toBe(true);
       if (!box) throw Error("missing handle");
       const pps = await page.getByLabel("原生时间轴轨道", { exact: true }).evaluate((node) => {
         const svg = node as SVGSVGElement;
