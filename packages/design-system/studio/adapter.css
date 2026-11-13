@@ -1,6 +1,14 @@
 /* Native Studio uses paper for light and no attribute for dark. */
 :root[data-motion-ui][data-motion-studio]:not([data-theme="paper"]) { --color-on-accent: var(--motion-inset); }
 
+:root[data-motion-ui] [data-motion-template-library] {
+  --motion-floating-surface: var(--motion-gallery-surface);
+  --color-text-0: var(--motion-strong);
+  --color-text-1: var(--motion-strong);
+  --color-hover: var(--motion-hover);
+  --color-border-input: var(--motion-gallery-border);
+}
+
 /* OD control recipes, scoped to visual hooks; existing sizes and state handling stay native. */
 :root[data-motion-ui] .hf-od-primary {
   --color-accent: var(--motion-action);

@@ -90,7 +90,7 @@ shared/integration.ts                  客户端配置与 Agent 指引
 
 `tokens.json` 以 `motion.ui-tokens@1` 标识版本。`shared` 定义跨主题变量，`themes` 定义同名的亮暗变量，统一生成 `--motion-*`。原参考项目的 `--mc-*` 改为独立命名空间；保留编辑器与接入内容需要的变量。小字号辅助文字、错误/警告与时间轴领域色保留 Motion 的可读性适配，未机械复制 OD 的较浅文字色；正文及状态文字对比度通过 4.5:1 检查。视频预览仍用独立深色遮罩，作品 iframe 不加载宿主样式。
 
-MCP 与模板入口使用同一个原生 `dialog`，保留编辑器上下文。完整指南和视频预览在弹框内展开，Escape 优先关闭当前子弹框；作者出处可跳转外部原帖，配置可直接下载。模板卡片突出真实视频，在下方显示作者、分类、有来源的热度和“一键复刻”；悬停热度可查看精确值与同步日期。切换 Agent 不改变 URL。旧 `/connect` 地址重定向到编辑器的 `?panel=connections` 深链接，`?templates=1` 直接定位画廊。详细数据规则见 [模板目录](template-catalog.md)。
+Connection setup keeps its native dialog. Template discovery has a separate full-viewport gallery and detail dialog; Escape closes the active menu or detail before returning to the gallery. Cards use immersive media and hover metadata, while author/source links, downloads and repository links remain in detail. Recreate copies the Agent instruction directly and reports success through the floating Toast layer. The right-aligned filter trigger shows only its icon, with an accessible name and a small active indicator; its menu aligns to the trigger's end and remains within viewport bounds. The legacy `/connect` address redirects to `?panel=connections`, while `?templates=1` opens discovery. See [template catalog data rules](template-catalog.md).
 
 ## 复用
 
@@ -134,3 +134,46 @@ The independent visual workbench starts with `npm run design:dev` at `http://127
 插件打包包含编辑器源码、构建产物、设计系统和字体许可。编辑器依赖本地 Hyperframes 服务，不再提供旧 Canvas 预览的单文件离线构建。
 
 面板由原版 Dock 管理；1040px 以下顶栏允许换行，650px 以下模板库为单列。MCP、模板库、撤销/重做、历史、预览与布局入口均在顶栏对齐。预览关闭后可一键恢复；布局菜单提供面板显示、预设和重置，版本历史也是可拖动面板。面板边界使用连续 1px 分隔线，滑条使用 2px 轨道与 6px 滑块。验收覆盖深浅主题、键盘焦点、窄屏、原生编辑保存与撤销、版本恢复、布局恢复、模板切换、MCP 配置和真实 MP4 导出。
+
+
+## Immersive template discovery
+
+The Studio template library uses the editor's active light or dark theme. The
+shared token source defines `gallery-surface`, `gallery-control`, `gallery-border`
+and `gallery-stage-wash` in both themes. Studio's template aliases consume these
+values alongside existing text, focus, selection, overlay and shadow tokens.
+Video-overlay text retains its media-specific contrast independently of the theme.
+The highlighted Submit video action uses `brand` and `on-brand`; secondary actions
+use the same neutral control and menu surfaces as the editor.
+
+Sorting and industry pickers reuse Studio's Base UI `Menu` and radio items, with
+an inline portal inside the native dialog, keyboard navigation and consistent
+chevron spacing. The gallery has no separate playback toolbar button. Purpose
+categories describe intended videos; style, industry and other facets remain
+independently selectable. The full-window detail provides direct copy actions and
+repository links without a second recreation modal.
+
+The shared `Skeleton` primitive uses `skeleton-base` and `skeleton-highlight` tokens in both themes, with reduced-motion support. Catalog placeholders reserve the final card geometry; lazy poster placeholders stay static to avoid animating offscreen cards. Detail preview buffering and retry states stay inside the media frame. Discovery filter menus are non-modal, keep checkbox selection open, and expose removable condition chips. Search uses a single outer focus treatment; detail action rows and guide summaries share inset padding and rounded hover surfaces. Recreate and submit uses the bundled Remix git-branch icon.
+
+
+## Interaction and feedback contract
+
+This contract applies to new and changed product UI, including the editor, template discovery and native dialogs. The repository-wide entry is [AGENTS.md](../AGENTS.md#ui-design-system-and-interaction-feedback).
+
+| Situation | Required presentation |
+| --- | --- |
+| Copy, save, download or other short action result | Floating Toast, outside document flow; no paragraph beneath the triggering button |
+| Routine filtering or sorting | Anchored, non-modal shared Menu; immediate results, removable conditions and clear-all |
+| Resource loading | Shared Skeleton in the resource's reserved geometry; retain a usable poster during video loading |
+| Resource failure | Recoverable state within that same reserved region, with retry or meaningful fallback |
+| Persistent input validation | Associated with the field and its reserved error space; distinct from an operation-result Toast |
+
+Use `useToast` with `StudioToastViewport`. The viewport uses `FeedbackLayer`, which follows the active native dialog and uses the browser top layer where supported. Notifications remain visible and interactive above modal content while the surrounding overlay is transparent to pointer input. Do not create an ad hoc toast store or render `StudioToast` as an ordinary content row. Info feedback expires after three seconds; actionable failures remain dismissible. Repeated messages coalesce. A copy failure may expose selectable instruction content for recovery, but its notification still floats.
+
+Menus, popovers and Toasts must open in the intended floating layer, stay inside viewport bounds and preserve the user's working context. Multi-select filter items keep their menu open. Escape dismisses the active menu first, returning focus to its trigger. Clicking a condition's remove action clears only that condition. Routine copy sends the complete brief to the clipboard in one action, without a second instruction modal.
+
+Use semantic surface, text, border, selected, focus and overlay tokens in both themes. Hover backgrounds stay inside a rounded item with breathing room: standard discovery menus use 6px outer padding and 8px by 10px item padding; detail action rows use 10px by 12px padding and 8px corners. Keep chevrons in a fixed trailing slot. Composite search fields have one outer focus treatment, never a second inset input outline; keyboard focus remains visible.
+
+Shared Skeletons reserve the final proportions, use subtle theme-aware contrast, and stop animation for reduced motion. Lazy offscreen poster placeholders remain static. Real images fade in after decoding, failed images retain a meaningful title fallback, buffering stays inside the video frame, and known failures end loading and expose retry. Keep transient notifications separate from these resource states. Do not add decorative status badges that duplicate adjacent metadata.
+
+Browser acceptance includes actual open dropdowns, copy success/failure Toasts above a native dialog, stable content coordinates before/after feedback, keyboard dismissal, loading-to-content/error transitions, both themes and a narrow viewport. Source inspection and a component screenshot alone do not establish these behaviors.

@@ -14,7 +14,7 @@ const luminance = (hex: string) => {
 export async function checkDesign() {
   const tokens = await designTokens(true);
   assert.deepEqual(Object.keys(tokens.themes.light).sort(), Object.keys(tokens.themes.dark).sort(), 'Both themes need the same semantic colors.');
-  const coreAliases = { 'color-surface': 'panel', 'color-text-body': 'text', 'font-sans': 'font-sans', 'radius-button': 'radius-sm', 'color-template-controls-bg': 'panel', 'color-template-text': 'strong' };
+  const coreAliases = { 'color-surface': 'panel', 'color-text-body': 'text', 'font-sans': 'font-sans', 'radius-button': 'radius-sm', 'color-template-controls-bg': 'gallery-control', 'color-template-text': 'strong' };
   for (const [alias, role] of Object.entries(coreAliases)) assert.equal(tokens.studio[alias], `var(--motion-${role})`, `${alias} must inherit the shared theme`);
   const material = await readFile(new URL('packages/design-system/material.css', root), 'utf8');
   const materialNames = [...material.matchAll(/(--motion-[\w-]+)\s*:/g)].map(match => match[1]);

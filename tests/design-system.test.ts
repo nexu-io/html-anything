@@ -16,6 +16,8 @@ test('one token change reaches portable controls and compiled Studio/catalog uti
   const tokens = structuredClone(await designTokens(true));
   tokens.themes.light.panel = '#efe5ff';
   tokens.themes.dark.panel = '#312042';
+  tokens.themes.light['gallery-control'] = '#f0eaff';
+  tokens.themes.dark['gallery-control'] = '#282142';
   tokens.shared['font-sans'] = 'DesignSystemProbe, sans-serif';
   tokens.shared['radius-sm'] = '9px';
   const generated = renderDesignTokens(tokens);
@@ -33,7 +35,9 @@ test('one token change reaches portable controls and compiled Studio/catalog uti
   assert.match(css, /--motion-panel: #efe5ff/);
   assert.match(css, /--motion-panel: #312042/);
   assert.match(css, /--color-surface: var\(--motion-panel\)/);
-  assert.match(css, /--color-template-controls-bg: var\(--motion-panel\)/);
+  assert.match(css, /--color-template-controls-bg: var\(--motion-gallery-control\)/);
+  assert.match(css, /--motion-gallery-control: #f0eaff/);
+  assert.match(css, /--motion-gallery-control: #282142/);
   assert.match(css, /\.bg-surface\s*\{\s*background-color: var\(--color-surface\)/);
   assert.match(css, /--font-sans: var\(--motion-font-sans\)/);
   assert.match(css, /--motion-font-sans: DesignSystemProbe, sans-serif/);

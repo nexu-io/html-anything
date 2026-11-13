@@ -91,8 +91,11 @@ it.each(['failed', 'pending'] as const)('allows installation-library dismissal w
       replace.mockClear(); history.replaceState(null, '', '/?templates=1&embed=1');
       await act(async () => root.render(<I18nProvider initialLocale="en"><MotionApp key={method} /></I18nProvider>));
       expect(container.querySelector<HTMLButtonElement>('button[aria-label="Close template library"]')!.disabled).toBe(false);
-      expect(container.textContent).not.toContain('Preparing editable project…');
-      if (status === 'failed') expect(container.textContent).toContain('Status unavailable');
+      expect(document.querySelector('[data-feedback-layer]')?.textContent ?? '').not.toContain('Preparing editable project…');
+      if (status === 'failed') {
+        expect(document.querySelector('[data-feedback-layer] [role=alert]')).not.toBeNull();
+        expect(container.querySelector('dialog[aria-label="Template library"]')?.textContent).not.toContain('Status unavailable');
+      }
       await act(async () => container.querySelector<HTMLButtonElement>('[data-template-id="product-promo"] button')!.click());
       const open = [...container.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent?.includes('Open and edit'))!;
       expect(open.disabled).toBe(true);
@@ -117,7 +120,8 @@ it('still blocks dismissal while project creation is in flight and allows it aft
     await act(async () => root.render(<I18nProvider initialLocale="en"><MotionApp /></I18nProvider>));
     await act(async () => container.querySelector<HTMLButtonElement>('[data-template-id="product-promo"] button')!.click());
     await act(async () => [...container.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent?.includes('Open and edit'))!.click());
-    expect(container.textContent).toContain('Preparing editable project…');
+    expect(document.querySelector('[data-feedback-layer]')?.textContent).toContain('Preparing editable project…');
+    expect(container.querySelector('main')?.textContent).not.toContain('Preparing editable project…');
     expect(container.querySelector<HTMLButtonElement>('button[aria-label="Close template library"]')!.disabled).toBe(true);
     await closeLibrary(container, 'escape');
     expect(container.querySelector('dialog[aria-label="Template library"]')).not.toBeNull();

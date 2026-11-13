@@ -1,4 +1,5 @@
 import { brand, designSystemAsset } from "../../../packages/design-system/index.js";
+import { GitHubLink } from './GitHubLink';
 import { CommunityLink } from './CommunityLink';
 import { StudioErrorBoundary } from '../components/StudioErrorBoundary';
 import { I18nProvider, useI18n } from "../i18n/I18n";
@@ -141,7 +142,7 @@ const host: StudioHost = {
   brand: <WorkspaceBrand />,
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,
-  communityAction: <CommunityLink />,
+  communityAction: <><CommunityLink /><GitHubLink /></>,
   historyActions: <WorkspaceHistoryActions />,
   previewAction: <></>,
   windowMenu: <></>,
