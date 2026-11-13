@@ -320,6 +320,7 @@ jobs:
             ${{ runner.temp }}/candidate/release-attempt.json
             ${{ runner.temp }}/candidate/publication.json
             ${{ runner.temp }}/candidate/previous-install.md
+            ${{ runner.temp }}/candidate/default-install.md
           retention-days: 30
           if-no-files-found: warn
       - name: Show the exact-version result and default guide status
@@ -439,7 +440,7 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ github.run_id }}
           path: ${{ runner.temp }}/candidate
-      - name: Archive exact-version snapshots, verify canonical public bytes, then promote the default guide last
+      - name: Archive exact-version npm snapshots, verify public bytes, then publish the source-install guide last
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_RELEASES_AK }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_RELEASES_SK }}
@@ -459,6 +460,7 @@ jobs:
             ${{ runner.temp }}/candidate/release-attempt.json
             ${{ runner.temp }}/candidate/publication.json
             ${{ runner.temp }}/candidate/previous-install.md
+            ${{ runner.temp }}/candidate/default-install.md
           retention-days: 30
           if-no-files-found: warn
       - name: Show the exact-version result and default guide status
@@ -469,5 +471,5 @@ jobs:
           const c = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/candidate.json'));
           const a = JSON.parse(readFileSync(process.env.RUNNER_TEMP + '/candidate/release-attempt.json'));
           const origin = process.env.MOTION_INSTALL_PUBLIC_ORIGIN;
-          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Stable publication result\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nResult: ${a.stage}\n\n[Exact-version installation guide](${origin}/open-motion/${c.version}/install.md)\n\n[Default stable guide](${origin}/open-motion/install.md)\n\nThe stable default follows verified latest and both prod native checks; a superseded candidate keeps its version snapshot without moving the default. The test channel is not changed by stable publication.\n`);
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Stable publication result\n\nVersion: ${c.version}\n\nSource: ${c.sourceCommit}\n\nResult: ${a.stage}\n\n[Exact-version installation guide](${origin}/open-motion/${c.version}/install.md)\n\n[Default source-install guide](${origin}/open-motion/install.md)\n\nThe default guide installs source from GitHub main; the exact-version guide retains the accepted npm package. The source entry is updated only after verified latest and both prod native checks; superseded candidates keep their version snapshots. The test channel is unchanged.\n`);
           JS

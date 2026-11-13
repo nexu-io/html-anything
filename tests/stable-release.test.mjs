@@ -48,7 +48,7 @@ test('stable selection is explicit and rejects prerelease/prod or stable/DEV cha
   }), /Template defaults must match/);
 });
 
-test('stable stage, native acceptance, latest and exact/prod guides use the same immutable bytes', async t => {
+test('stable publication retains exact npm bytes and publishes the source-install entry only after native acceptance', async t => {
   const f = await candidateFixture(t, 'main', { version: '0.6.4' }), store = services(f);
 
   await publishNpm(f.directory, f.inputs, store);
@@ -65,7 +65,10 @@ test('stable stage, native acceptance, latest and exact/prod guides use the same
   await archiveRelease(f.directory, f.inputs, config, store);
   const exact = store.objects.get('open-motion/0.6.4/install.md').toString();
   const moving = store.objects.get('open-motion/install.md').toString();
-  assert(exact.includes('@openmotion/app@0.6.4')); assert(moving.includes('@openmotion/app@latest'));
+  assert(exact.includes('@openmotion/app@0.6.4'));
+  assert(moving.startsWith(await readFile(new URL('../install.md', import.meta.url), 'utf8')));
+  assert(moving.includes('<!-- Stable npm publication: 0.6.4 -->'));
+  assert.equal(await readFile(path.join(f.directory, 'default-install.md'), 'utf8'), moving);
   assert(![...store.objects.keys()].some(key => key.startsWith('open-motion/dev/')));
   const record = JSON.parse(store.objects.get('open-motion/0.6.4/release-record.json'));
   assert.equal(record.nativeChecks, 'passed-before-latest'); assert.equal(record.platformVerification.length, 2);
