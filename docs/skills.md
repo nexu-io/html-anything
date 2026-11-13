@@ -24,7 +24,7 @@ The current five-route, eleven-Tool contract, editor-first handoff, requested-ex
 
 ## Reference reconstruction guidance
 
-The recreate route links to a focused method for unfamiliar or visibly inaccurate scenes. It identifies defining visual features, chooses an editable representation from observed behavior, checks rendered movement and transient visibility boundaries, and repairs the most consequential visible discrepancy. Observation density and implementation remain scene-dependent. Targeted preview checks support local iterations before final export verification. Reliability across fresh sessions and different references still requires evaluation. See [the reconstruction reference](../skills/openmotion-recreate/references/rebuild.md#establish-a-difficult-visual-system).
+The recreate route links to a focused method for unfamiliar or visibly inaccurate scenes. It identifies defining visual features, chooses an editable representation from observed behavior, measures movement amplitude and timing, checks rendered trajectories, shutter effects and transient visibility boundaries, and repairs the most consequential visible discrepancy. Parallel work shares timing and source ownership, with integration review across joins. Observation density and implementation remain scene-dependent. Targeted preview checks support local iterations before final export verification. Reliability across fresh sessions and different references still requires evaluation. See [the reconstruction reference](../skills/openmotion-recreate/references/rebuild.md#establish-a-difficult-visual-system).
 
 ## 职责与入口
 

@@ -16,6 +16,8 @@ Compare close crops of objects whose shape carries meaning, including any detail
 
 For a reconstructed visual system, inspect its defining features during holds and between observed states. Verify the visibility and action boundaries of transient elements. Use the [focused reconstruction guidance](rebuild.md#establish-a-difficult-visual-system) to locate the source of visible differences in structure, appearance or motion and judge repairs at the same moments.
 
+Review moving passages using timed sequences that include their fastest displacement, extreme poses and settling where present. Compare feature travel relative to the frame, scale and angle changes, acceleration or pauses, and directional streak extent against the reference. Inspect the output at normal playback speed as well as in consecutive frames. Record motion differences with the responsible interval and feature. Brightness, detail and element-bound measurements below provide appearance evidence. Assess trajectory and timing through this sequence review.
+
 Verify the consequence of each meaningful interaction, not only the moving actor. Compare the affected content before, during and after the action in both videos. A drag-to-reorder check must show the dragged module following contact, the displaced module yielding and the expected final ordering persisting after release. Record a missing or incorrect state change as failed even when pointer geometry, trajectory and whole-frame metrics pass.
 
 ## 3. Measure with numbers
