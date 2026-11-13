@@ -18,6 +18,10 @@ import "./motion/workspace.css";
 import "../../web/design-system/material.css";
 import { MotionStudioHost } from "./motion/MotionStudioHost";
 import { initializeDiagnostics, recordBrowserDiagnostic } from './motion/diagnostics';
+import { bindEmbeddedStudioTheme } from './utils/studioTheme';
+
+const unbindHostTheme = bindEmbeddedStudioTheme();
+import.meta.hot?.dispose(unbindHostTheme);
 
 const stopDiagnostics = initializeDiagnostics();
 import.meta.hot?.dispose(stopDiagnostics);
