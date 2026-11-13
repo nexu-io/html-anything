@@ -11,12 +11,15 @@ import linearLogo from './template-brands/linear.svg';
 import firecrawlLogo from './template-brands/firecrawl.png';
 import kimiLogo from './template-brands/kimi.png';
 import pondLogo from './template-brands/pond.svg';
-const brandLogos: Record<string, string> = {Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
+import notionLogo from './template-brands/notion.png';
+import higgsfieldLogo from './template-brands/higgsfield.png';
+const brandLogos: Record<string, string> = {Notion: notionLogo, Higgsfield: higgsfieldLogo, Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
 
 function BrandIcon({ name, url }: { name: string; url?: string }) {
-  const [failedUrl, setFailedUrl] = useState<string>();
-  return <span className={styles.brandIcon} aria-hidden="true">{url && url !== failedUrl
-    ? <img src={url} alt="" loading="lazy" onError={() => setFailedUrl(url)} />
+  const [failedUrls, setFailedUrls] = useState<string[]>([]);
+  const src = [url, brandLogos[name]].find(candidate => candidate && !failedUrls.includes(candidate));
+  return <span className={styles.brandIcon} aria-hidden="true">{src
+    ? <img src={src} alt="" loading="lazy" onError={() => setFailedUrls(previous => [...previous, src])} />
     : name.slice(0, 1)}</span>;
 }
 
@@ -175,7 +178,7 @@ export function TemplateLibraryDialog(props: Props) {
         <button className={styles.all} aria-current={!hasFilters ? 'page' : undefined} onClick={reset}>{t('All templates')}<span>{catalog.length}</span></button>
         {available.filter(facet => ['brand', 'uses', 'styles', 'industries', 'creationModels'].includes(facet.key)).map(facet => <details key={facet.key} open={facet.key === 'brand'}><summary>{t(facet.label)}</summary>
           {facet.values.slice(0, facet.key === 'brand' && !moreBrands ? 5 : undefined).map(value => <button key={value} aria-pressed={selected[facet.key]?.includes(value) ?? false} onClick={() => toggle(facet.key, value)}>
-            {facet.key === 'brand' && <BrandIcon name={value} url={logos.get(value) ?? brandLogos[value]} />}<span>{facet.key === 'brand' ? value : t(value)}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
+            {facet.key === 'brand' && <BrandIcon name={value} url={logos.get(value)} />}<span>{facet.key === 'brand' ? value : t(value)}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
           </button>)}
           {facet.key === 'brand' && facet.values.length > 5 && <button onClick={() => setMoreBrands(!moreBrands)}>{t(moreBrands ? 'Show less' : 'Show more')}</button>}
         </details>)}

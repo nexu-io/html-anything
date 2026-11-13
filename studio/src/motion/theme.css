@@ -454,3 +454,9 @@ button, input, select, textarea { font-family: inherit; }
 :root[data-motion-ui] .motion-timeline-media-actions { border-left: 0; padding-left: 0; }
 :root[data-motion-ui] .motion-timeline-zoom { margin-right: 0; }
 :root[data-motion-ui] .motion-timeline-zoom::after { display: none; }
+
+.motion-sidebar-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--motion-border-strong) transparent;
+}

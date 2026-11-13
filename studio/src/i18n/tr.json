@@ -1778,5 +1778,22 @@
   "Create videos with OpenMotion, right in {host}.": "OpenMotion ile doğrudan {host}'de videolar oluşturun.",
   "Back to the OpenMotion editor": "OpenMotion düzenleyicisine dön",
   "Workspace unavailable. Check that the OpenMotion service is running.": "Çalışma alanı kullanılamıyor. OpenMotion hizmetinin çalıştığını kontrol edin.",
-  "Invalid connection configuration. Update or restart the OpenMotion service.": "Geçersiz bağlantı yapılandırması. OpenMotion hizmetini güncelleyin veya yeniden başlatın."
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "Geçersiz bağlantı yapılandırması. OpenMotion hizmetini güncelleyin veya yeniden başlatın.",
+  "Compiling composition": "Kompozisyon derleniyor",
+  "Extracting video frames": "Video kareleri çıkarılıyor",
+  "Processing audio tracks": "Ses parçaları işleniyor",
+  "Starting frame capture": "Kare yakalama başlatılıyor",
+  "Checking browser GPU": "Tarayıcı GPU’su denetleniyor",
+  "Measuring capture speed": "Yakalama hızı ölçülüyor",
+  "Starting browsers": "Tarayıcılar başlatılıyor",
+  "Encoding frame": "Kare kodlanıyor",
+  "Encoding video": "Video kodlanıyor",
+  "Writing PNG sequence": "PNG dizisi yazılıyor",
+  "Encoding GIF": "GIF kodlanıyor",
+  "Assembling final video": "Son video birleştiriliyor",
+  "Render complete": "İşleme tamamlandı",
+  "Render cancelled": "İşleme iptal edildi",
+  "Queued": "Sırada",
+  "Export blocked": "Dışa aktarma engellendi",
+  "Export failed": "Dışa aktarma başarısız"
 }

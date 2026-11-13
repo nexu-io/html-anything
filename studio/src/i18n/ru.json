@@ -1838,5 +1838,22 @@
   "Create videos with OpenMotion, right in {host}.": "Создавайте видео с помощью OpenMotion прямо в {host}.",
   "Back to the OpenMotion editor": "Вернуться в редактор OpenMotion.",
   "Workspace unavailable. Check that the OpenMotion service is running.": "Рабочая область недоступна. Убедитесь, что служба OpenMotion запущена.",
-  "Invalid connection configuration. Update or restart the OpenMotion service.": "Неверная конфигурация подключения. Обновите или перезапустите службу OpenMotion."
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "Неверная конфигурация подключения. Обновите или перезапустите службу OpenMotion.",
+  "Compiling composition": "Компиляция композиции",
+  "Extracting video frames": "Извлечение кадров",
+  "Processing audio tracks": "Обработка звуковых дорожек",
+  "Starting frame capture": "Запуск захвата кадров",
+  "Checking browser GPU": "Проверка GPU браузера",
+  "Measuring capture speed": "Измерение скорости захвата",
+  "Starting browsers": "Запуск браузеров",
+  "Encoding frame": "Кодирование кадра",
+  "Encoding video": "Кодирование видео",
+  "Writing PNG sequence": "Запись последовательности PNG",
+  "Encoding GIF": "Кодирование GIF",
+  "Assembling final video": "Сборка итогового видео",
+  "Render complete": "Рендеринг завершён",
+  "Render cancelled": "Рендеринг отменён",
+  "Queued": "В очереди",
+  "Export blocked": "Экспорт заблокирован",
+  "Export failed": "Ошибка экспорта"
 }
