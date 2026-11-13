@@ -477,7 +477,7 @@ bash scripts/install-motion.command
 
 ##### Skills、MCP 与 CLI
 
-插件与 MCP 服务名称为 `openmotion`；Tools、Skills 与资源分别使用 `openmotion_*`、`openmotion-*` 和 `openmotion://`。旧名称仍作为兼容别名保留。[命名与安装兼容说明](docs/npm-installation.md#public-names-and-compatibility)
+插件与 MCP 服务名称为 `openmotion`；Tools、Skills 与资源分别使用 `openmotion_*`、`openmotion-*` 和 `openmotion://`。旧 Tool 和资源名称保留兼容；旧 Skill 入口已移除，请使用 `openmotion-*`，升级后刷新宿主 Skill 列表。[命名与安装兼容说明](docs/npm-installation.md#public-names-and-compatibility)
 
 在 checkout 中发现并安装五个核心工作流，使用 [Skills CLI](https://github.com/vercel-labs/skills):
 

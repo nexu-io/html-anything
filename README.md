@@ -487,7 +487,7 @@ To start from a video instead, supply your reference and use the [recreation bri
 
 ##### Skills, MCP and CLI
 
-The plugin and MCP server are named `openmotion`; Tools, Skills and resources use `openmotion_*`, `openmotion-*` and `openmotion://`. Existing names remain explicit compatibility aliases. See [naming and installation compatibility](docs/npm-installation.md#public-names-and-compatibility).
+The plugin and MCP server are named `openmotion`; Tools, Skills and resources use `openmotion_*`, `openmotion-*` and `openmotion://`. Old Tool/resource names remain compatibility aliases; retired Skill entries are removed. Use `openmotion-*` Skill names and refresh host discovery after upgrading. See [naming and installation compatibility](docs/npm-installation.md#public-names-and-compatibility).
 
 From the checkout, discover and install the five core workflows with the [Skills CLI](https://github.com/vercel-labs/skills):
 

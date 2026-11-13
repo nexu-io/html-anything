@@ -1,5 +1,0 @@
-interface:
-  display_name: "OpenMotion · motion-production compatibility alias"
-  short_description: "Compatibility entry; use openmotion-production"
-policy:
-  allow_implicit_invocation: false

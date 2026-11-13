@@ -1,5 +1,0 @@
-interface:
-  display_name: "OpenMotion · motion-director compatibility alias"
-  short_description: "Compatibility entry; use openmotion-director"
-policy:
-  allow_implicit_invocation: false
