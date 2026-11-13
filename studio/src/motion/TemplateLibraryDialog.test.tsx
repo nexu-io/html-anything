@@ -92,6 +92,52 @@ it('shows author avatars and falls back to initials for unavailable images', asy
   expect(card.querySelector('img[src="/ada.jpg"]')).toBeNull();
   expect(card.textContent).toContain('AFirst');
 });
+it('filters brand templates directly and preserves category, search and reset behavior', async () => {
+  fetchItems([
+    ...items,
+    { ...items[0], id: 'unbranded', brand: '', sortOrder: 4 },
+    { ...items[0], id: 'blank-brand', brand: '  ', sortOrder: 5 },
+  ]);
+  await mount();
+  const categories = host.querySelector('[role=group][aria-label="Video purpose"]')!;
+  expect(categories.children[1]).toBe(button('TOP 100 brands'));
+  expect(cards()).toHaveLength(5);
+
+  await act(async () => button('TOP 100 brands').click());
+  expect(cards()).toEqual(['two', 'one', 'three']);
+  expect(button('TOP 100 brands').getAttribute('aria-pressed')).toBe('true');
+  expect(button('All').getAttribute('aria-pressed')).toBe('false');
+  expect(host.querySelector('[role=menu]')).toBeNull();
+  expect(events('ui_click', { element: 'category_select', filter_value: 'top-100-brands' })).toEqual([
+    expect.objectContaining({ filter_group: 'brand', selected: true, applied_filter_count: 0 }),
+  ]);
+  expect(events('template_filter_result').at(-1)).toMatchObject({ action: 'category_select', result_count: 3, applied_filter_count: 1 });
+
+  await act(async () => button('Product launch films').click());
+  expect(cards()).toEqual(['two', 'one', 'unbranded', 'blank-brand']);
+  expect(button('TOP 100 brands').getAttribute('aria-pressed')).toBe('false');
+  await act(async () => button('TOP 100 brands').click());
+  expect(cards()).toEqual(['two', 'one', 'three']);
+  expect(button('Product launch films').getAttribute('aria-pressed')).toBe('false');
+
+  await search('Ada');
+  expect(cards()).toEqual(['one']);
+  await act(async () => button('Remove filter TOP 100 brands').click());
+  expect(cards()).toEqual(['one', 'unbranded', 'blank-brand']);
+  expect(events('ui_click', { element: 'filter_option', filter_value: 'top-100-brands' }).at(-1)).toMatchObject({ selected: false, applied_filter_count: 1 });
+  expect(events('template_filter_result').at(-1)).toMatchObject({ action: 'filter_apply', result_count: 3, applied_filter_count: 0 });
+  await act(async () => button('TOP 100 brands').click());
+  await act(async () => button('Clear filters').click());
+  expect(cards()).toHaveLength(5);
+  expect(button('All').getAttribute('aria-pressed')).toBe('true');
+
+  await act(async () => button('TOP 100 brands').click());
+  await act(async () => button('All').click());
+  expect(cards()).toHaveLength(5);
+  expect(button('Remove filter TOP 100 brands')).toBeUndefined();
+  expect(events('template_filter_result').at(-1)).toMatchObject({ action: 'category_select', result_count: 5, applied_filter_count: 0 });
+  for (const item of tracked) expect(validProperties(studioEvents, item.event, item.properties), JSON.stringify(item)).toBe(true);
+});
 it('tries the bundled brand logo after a published logo fails, then falls back to initials', async () => {
   fetchItems([{ ...items[0], brand: 'Notion', brandLogoUrl: 'https://example.com/notion.svg' } as typeof items[0]]);
   await mount();
@@ -337,6 +383,26 @@ it('keeps discovery available while project status prevents editable opening', a
 const events = (event: string, match: Record<string, unknown> = {}) => tracked.filter(item => item.event === event && Object.entries(match).every(([key, value]) => item.properties[key] === value)).map(item => item.properties);
 const impressions = () => Observer.instances.filter(item => !item.disconnected && item.options?.threshold === 0.5).at(-1)!;
 const uuid = /^[0-9a-f-]{36}$/;
+it('distinguishes brand-filtered impressions even when all templates have a brand', async () => {
+  vi.useFakeTimers();
+  try {
+    await mount();
+    const card = [host.querySelector('[data-template-id="two"]')!];
+    await act(async () => impressions().emit(1, card));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(events('surface_view', { area: 'template_card' })).toHaveLength(1);
+
+    await act(async () => button('TOP 100 brands').click());
+    expect(cards()).toEqual(['two', 'one', 'three']);
+    await act(async () => impressions().emit(1, card));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(events('surface_view', { area: 'template_card' })).toEqual([
+      expect.objectContaining({ template_id: 'two', applied_filter_count: 0 }),
+      expect.objectContaining({ template_id: 'two', applied_filter_count: 1 }),
+    ]);
+    for (const item of tracked) expect(validProperties(studioEvents, item.event, item.properties), JSON.stringify(item)).toBe(true);
+  } finally { vi.useRealTimers(); }
+});
 it('reports the library funnel with registered fields: library, card open, detail, instruction, copy and download', async () => {
   await mount();
   expect(events('surface_view', { area: 'template_library' })).toEqual([{ page_name: 'studio', area: 'template_library', element: 'library', result_count: 3 }]);

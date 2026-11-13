@@ -42,7 +42,9 @@
     "Loading preview…": "正在加载预览…",
     "Preview unavailable. Try again.": "预览暂时不可用，请重试。",
     "Loading instruction…": "正在加载指令…",
-    "Could not load the instruction.": "指令加载失败。"
+    "Could not load the instruction.": "指令加载失败。",
+    "TOP 100 brands": "TOP 100 品牌",
+    "Brands": "品牌"
   },
   "ja": {
     "Made to move.": "動き出すアイデア",
@@ -87,7 +89,9 @@
     "Loading preview…": "プレビューを読み込み中…",
     "Preview unavailable. Try again.": "プレビューを読み込めません。再試行してください。",
     "Loading instruction…": "指示を読み込み中…",
-    "Could not load the instruction.": "指示を読み込めませんでした。"
+    "Could not load the instruction.": "指示を読み込めませんでした。",
+    "TOP 100 brands": "TOP 100 ブランド",
+    "Brands": "ブランド"
   },
   "ko": {
     "Made to move.": "움직이는 아이디어",
@@ -132,7 +136,9 @@
     "Loading preview…": "미리보기 불러오는 중…",
     "Preview unavailable. Try again.": "미리보기를 불러올 수 없습니다. 다시 시도하세요.",
     "Loading instruction…": "지침 불러오는 중…",
-    "Could not load the instruction.": "지침을 불러오지 못했습니다."
+    "Could not load the instruction.": "지침을 불러오지 못했습니다.",
+    "TOP 100 brands": "TOP 100 브랜드",
+    "Brands": "브랜드"
   },
   "de": {
     "Made to move.": "Für Bewegung gemacht",
@@ -177,7 +183,9 @@
     "Loading preview…": "Vorschau wird geladen…",
     "Preview unavailable. Try again.": "Vorschau nicht verfügbar. Erneut versuchen.",
     "Loading instruction…": "Anweisung wird geladen…",
-    "Could not load the instruction.": "Anweisung konnte nicht geladen werden."
+    "Could not load the instruction.": "Anweisung konnte nicht geladen werden.",
+    "TOP 100 brands": "TOP 100 Marken",
+    "Brands": "Marken"
   },
   "fr": {
     "Made to move.": "Place au mouvement",
@@ -222,7 +230,9 @@
     "Loading preview…": "Chargement de l’aperçu…",
     "Preview unavailable. Try again.": "Aperçu indisponible. Réessayez.",
     "Loading instruction…": "Chargement des instructions…",
-    "Could not load the instruction.": "Impossible de charger les instructions."
+    "Could not load the instruction.": "Impossible de charger les instructions.",
+    "TOP 100 brands": "TOP 100 marques",
+    "Brands": "Marques"
   },
   "ru": {
     "Made to move.": "Создано для движения",
@@ -267,7 +277,9 @@
     "Loading preview…": "Загрузка предпросмотра…",
     "Preview unavailable. Try again.": "Предпросмотр недоступен. Повторите попытку.",
     "Loading instruction…": "Загрузка инструкции…",
-    "Could not load the instruction.": "Не удалось загрузить инструкцию."
+    "Could not load the instruction.": "Не удалось загрузить инструкцию.",
+    "TOP 100 brands": "ТОП-100 брендов",
+    "Brands": "Бренды"
   },
   "es": {
     "Made to move.": "Ideas en movimiento",
@@ -312,7 +324,9 @@
     "Loading preview…": "Cargando vista previa…",
     "Preview unavailable. Try again.": "Vista previa no disponible. Inténtalo de nuevo.",
     "Loading instruction…": "Cargando instrucciones…",
-    "Could not load the instruction.": "No se pudieron cargar las instrucciones."
+    "Could not load the instruction.": "No se pudieron cargar las instrucciones.",
+    "TOP 100 brands": "TOP 100 marcas",
+    "Brands": "Marcas"
   },
   "pt-BR": {
     "Made to move.": "Feito para se mover",
@@ -357,7 +371,9 @@
     "Loading preview…": "Carregando prévia…",
     "Preview unavailable. Try again.": "Prévia indisponível. Tente novamente.",
     "Loading instruction…": "Carregando instruções…",
-    "Could not load the instruction.": "Não foi possível carregar as instruções."
+    "Could not load the instruction.": "Não foi possível carregar as instruções.",
+    "TOP 100 brands": "TOP 100 marcas",
+    "Brands": "Marcas"
   },
   "it": {
     "Made to move.": "Idee in movimento",
@@ -402,7 +418,9 @@
     "Loading preview…": "Caricamento anteprima…",
     "Preview unavailable. Try again.": "Anteprima non disponibile. Riprova.",
     "Loading instruction…": "Caricamento istruzioni…",
-    "Could not load the instruction.": "Impossibile caricare le istruzioni."
+    "Could not load the instruction.": "Impossibile caricare le istruzioni.",
+    "TOP 100 brands": "TOP 100 brand",
+    "Brands": "Brand"
   },
   "tr": {
     "Made to move.": "Hareket için tasarlandı",
@@ -447,6 +465,8 @@
     "Loading preview…": "Önizleme yükleniyor…",
     "Preview unavailable. Try again.": "Önizleme kullanılamıyor. Tekrar deneyin.",
     "Loading instruction…": "Talimat yükleniyor…",
-    "Could not load the instruction.": "Talimat yüklenemedi."
+    "Could not load the instruction.": "Talimat yüklenemedi.",
+    "TOP 100 brands": "TOP 100 marka",
+    "Brands": "Markalar"
   }
 }

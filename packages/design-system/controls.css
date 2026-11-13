@@ -41,6 +41,25 @@
 :where([data-motion-ui]) .ui-badge--success { color: var(--motion-success); }
 :where([data-motion-ui]) .ui-badge--warning { color: var(--motion-warning); background: var(--motion-warning-soft); border-color: transparent; }
 :where([data-motion-ui]) .ui-badge--danger { color: var(--motion-danger); background: var(--motion-danger-soft); border-color: transparent; }
+/* Editorial collection labels keep their identity inside ordinary filter pills. */
+:where([data-motion-ui]) .ui-collection-label {
+  display: inline-flex; align-items: baseline; gap: var(--motion-space-4);
+  color: var(--motion-strong); font-weight: var(--motion-weight-semibold); font-style: italic;
+}
+:where([data-motion-ui]) .ui-collection-label__title {
+  font-family: var(--motion-font-editorial); font-size: var(--motion-text-step-18);
+  font-weight: var(--motion-weight-bold); line-height: 1;
+  color: var(--motion-strong);
+}
+@supports (background-clip: text) {
+  :where([data-motion-ui]) .ui-collection-label__title {
+    background: var(--motion-collection-title-gradient);
+    background-clip: text; color: transparent;
+  }
+}
+@media (forced-colors: active) {
+  :where([data-motion-ui]) .ui-collection-label__title { background: none; color: ButtonText; }
+}
 :where([data-motion-ui]) .ui-dot { display: inline-block; width: 5px; height: 5px; flex: none; border-radius: var(--motion-radius-full); background: currentColor; }
 :where([data-motion-ui]) .ui-divider { height: 1px; background: var(--motion-border); margin: var(--motion-space-24) 0; }
 :where([data-motion-ui]) .ui-kbd { padding: var(--motion-space-2) var(--motion-space-6); border: 1px solid var(--motion-border); border-radius: var(--motion-radius-xs); font-size: var(--motion-text-xs); color: var(--motion-dim); }

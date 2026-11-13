@@ -108,6 +108,7 @@ export function TemplateLibraryDialog(props: Props) {
   const [promptError, setPromptError] = useState(false), [promptAttempt, retryPrompt] = useState(0);
   const [priority, setPriority] = useState<string | null>(null), [filtersOpen, setFiltersOpen] = useState(false);
   const [editableOnly, setEditableOnly] = useState(false);
+  const [brandsOnly, setBrandsOnly] = useState(false);
   const [promptExpanded, setPromptExpanded] = useState(false), [guideOpen, setGuideOpen] = useState(false);
   const lastRandom = useRef<string>(undefined);
   const info = useRef<IntegrationInfo | null>(null);
@@ -136,7 +137,7 @@ export function TemplateLibraryDialog(props: Props) {
   }, [props.open, props.returnFocus]);
   useEffect(() => {
     if (!props.open) return;
-    setCatalog([]); setSelected({}); setQuery(''); setPreview(null); detail.current?.close();
+    setCatalog([]); setSelected({}); setBrandsOnly(false); setQuery(''); setPreview(null); detail.current?.close();
     shown.current = false; searchId.current = undefined; reportedQuery.current = ''; pendingResult.current = undefined; shownCards.current.clear();
     const controller = new AbortController();
     let version: string | undefined, pending = false;
@@ -174,16 +175,16 @@ export function TemplateLibraryDialog(props: Props) {
   const industries = available.find(facet => facet.key === 'industries')?.values ?? [];
   const sortOptions = [['recommended', 'Recommended order'], ['name', 'Name A–Z'], ['reverse', 'Name Z–A'], ['duration', 'Duration']] as const;
   const filterLabel = (key: Facet, label: string) => t(key === 'uses' ? 'By video purpose' : key === 'industries' ? 'By industry' : label);
-  const hasFilters = Boolean(query || editableOnly || Object.values(selected).some(items => items?.length));
+  const hasFilters = Boolean(query || editableOnly || brandsOnly || Object.values(selected).some(items => items?.length));
   const visible = useMemo(() => {
     const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
     return catalog.filter(item => {
       const text = [item.id, item.title, item.description, item.authorName, item.author, ...item.tags, ...facets.flatMap(([key]) => values(item, key).flatMap(value => [value, t(value)]))].join(' ').toLocaleLowerCase();
-      return (!editableOnly || isEditableTemplate(item)) && terms.every(term => text.includes(term)) && facets.every(([key]) => !selected[key]?.length || selected[key]!.some(value => values(item, key).includes(value)));
+      return (!brandsOnly || Boolean(item.brand?.trim())) && (!editableOnly || isEditableTemplate(item)) && terms.every(term => text.includes(term)) && facets.every(([key]) => !selected[key]?.length || selected[key]!.some(value => values(item, key).includes(value)));
     }).sort((a, b) => sort === 'recommended' ? (a.sortOrder ?? Infinity) - (b.sortOrder ?? Infinity) : sort === 'duration' ? (a.duration ?? Infinity) - (b.duration ?? Infinity) : a.title.localeCompare(b.title, locale) * (sort === 'reverse' ? -1 : 1));
-  }, [catalog, query, selected, sort, locale, editableOnly]);
-  useEffect(() => { if (dialog.current) dialog.current.scrollTop = 0; }, [query, selected, sort, editableOnly]);
-  const filterCount = Object.values(selected).flat().length + Number(editableOnly);
+  }, [catalog, query, selected, sort, locale, editableOnly, brandsOnly]);
+  useEffect(() => { if (dialog.current) dialog.current.scrollTop = 0; }, [query, selected, sort, editableOnly, brandsOnly]);
+  const filterCount = Object.values(selected).flat().length + Number(editableOnly) + Number(brandsOnly);
   // A search id belongs to exactly one keyword: once the box holds something else, events stop carrying it.
   // The list state is read when a handler, timer or effect fires, not when it was scheduled.
   const latest = useRef({ items: visible, query, sort, filterCount, covered: false }); latest.current = { items: visible, query, sort, filterCount, covered: Boolean(preview) };
@@ -209,10 +210,10 @@ export function TemplateLibraryDialog(props: Props) {
   useEffect(() => {
     const action = pendingResult.current; pendingResult.current = undefined;
     if (action) tracking.reportFilterResult(action, latest.current.items.length, listContext());
-  }, [selected, sort, query, editableOnly]);
+  }, [selected, sort, query, editableOnly, brandsOnly]);
   // One result set per search, filter and sort combination: a card is reported again only when that combination changes.
   // Empty groups are dropped and groups and values sorted, so the same choices always make the same key.
-  const resultSet = JSON.stringify([query.trim(), sort, editableOnly, Object.entries(selected).filter(([, items]) => items?.length).map(([key, items]) => [key, [...items!].sort()]).sort(([a], [b]) => String(a).localeCompare(String(b)))]);
+  const resultSet = JSON.stringify([query.trim(), sort, editableOnly, brandsOnly, Object.entries(selected).filter(([, items]) => items?.length).map(([key, items]) => [key, [...items!].sort()]).sort(([a], [b]) => String(a).localeCompare(String(b)))]);
   const resultSetLatest = useRef(resultSet); resultSetLatest.current = resultSet;
   const cardSeen = useCallback((id: string) => {
     const { items, covered } = latest.current;
@@ -228,7 +229,7 @@ export function TemplateLibraryDialog(props: Props) {
   const active = useTemplatePlayback(dialog, visible.map(item => item.id).join(','), props.open && !preview, true, priority);
   const related = useMemo(() => preview ? relatedTemplates(preview, catalog) : [], [preview, catalog]);
   const previewIndex = visible.findIndex(item => item.id === preview?.id);
-  const clear = () => { setQuery(''); setSelected({}); setEditableOnly(false); };
+  const clear = () => { setQuery(''); setSelected({}); setEditableOnly(false); setBrandsOnly(false); };
   const reset = () => {
     if (hasFilters) { tracking.reportDiscoveryClick('filter_clear', listContext()); pendingResult.current = 'filter_clear'; }
     clear();
@@ -246,7 +247,13 @@ export function TemplateLibraryDialog(props: Props) {
   const chooseCategory = (key: 'uses' | 'industries', value: string | undefined) => {
     const next = value === undefined || (key === 'uses' && selected.uses?.includes(value)) ? [] : [value];
     picked('category_select', key, value, next.length > 0);
+    if (key === 'uses') setBrandsOnly(false);
     setSelected(previous => ({ ...previous, [key]: next }));
+  };
+  const chooseBrands = (next: boolean) => {
+    picked(next ? 'category_select' : 'filter_option', 'brand', 'top-100-brands', next);
+    setBrandsOnly(next);
+    if (next) setSelected(previous => ({ ...previous, uses: [] }));
   };
   const toggleEditable = (next: boolean) => { picked('filter_option', 'editable', undefined, next); setEditableOnly(next); };
   const changeSort = (value: string) => {
@@ -331,7 +338,7 @@ export function TemplateLibraryDialog(props: Props) {
     } catch { showToast('Download failed. Please try again.', 'error', 'feedback'); tracking.reportDownloadResult(template, attemptId, 'fetch_failed', errorCode, view); }
     finally { setDownloading(false); }
   }
-  const filterBy = (key: Facet, value: string) => { picked('filter_option', key, value, true); setSelected({ [key]: [value] }); setQuery(''); setEditableOnly(false); detail.current?.close(); };
+  const filterBy = (key: Facet, value: string) => { picked('filter_option', key, value, true); setSelected({ [key]: [value] }); setQuery(''); setEditableOnly(false); setBrandsOnly(false); detail.current?.close(); };
   return <dialog ref={dialog} className={styles.library} data-motion-template-library="" aria-label={t('Template library')} onKeyDown={event => {
     event.stopPropagation();
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k' && !preview && !filtersOpen) { event.preventDefault(); search.current?.focus(); }
@@ -345,7 +352,8 @@ export function TemplateLibraryDialog(props: Props) {
       </header>
       <div className={styles.toolbar}>
         <div className={styles.categories} role="group" aria-label={t('Video purpose')}>
-          <button aria-pressed={!selected.uses?.length} onClick={() => chooseCategory('uses', undefined)}>{t('All')}</button>
+          <button aria-pressed={!brandsOnly && !selected.uses?.length} onClick={() => chooseCategory('uses', undefined)}>{t('All')}</button>
+          <button aria-label={t('TOP 100 brands')} aria-pressed={brandsOnly} onClick={() => chooseBrands(true)}><span className="ui-collection-label" aria-hidden="true"><span className="ui-collection-label__title">TOP 100</span><span>{t('Brands')}</span></span></button>
           {categories.map(value => <button key={value} aria-pressed={selected.uses?.includes(value) ?? false} onClick={() => chooseCategory('uses', value)}>{t(value)}</button>)}
         </div>
         <div className={styles.controls}>
@@ -373,7 +381,7 @@ export function TemplateLibraryDialog(props: Props) {
           </Menu></div>
         </div>
       </div>
-      {hasFilters && <div className={styles.chips}>{query && <button onClick={() => setQuery('')} aria-label={t('Remove filter {value}', { value: query })}><MotionIcon name="search" size={12} />{query}<MotionIcon name="close" size={12} /></button>}{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)} aria-label={t('Remove filter {value}', { value: t(value) })}>{key === 'brand' ? value : t(value)}<MotionIcon name="close" size={12} /></button>))}{editableOnly && <button onClick={() => toggleEditable(false)}>{t('Ready to edit')}<MotionIcon name="close" size={12} /></button>}<button onClick={reset}>{t('Clear filters')}</button><span>{t('{count} templates', { count: visible.length })}</span></div>}
+      {hasFilters && <div className={styles.chips}>{brandsOnly && <button onClick={() => chooseBrands(false)} aria-label={t('Remove filter {value}', { value: t('TOP 100 brands') })}>{t('TOP 100 brands')}<MotionIcon name="close" size={12} /></button>}{query && <button onClick={() => setQuery('')} aria-label={t('Remove filter {value}', { value: query })}><MotionIcon name="search" size={12} />{query}<MotionIcon name="close" size={12} /></button>}{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)} aria-label={t('Remove filter {value}', { value: t(value) })}>{key === 'brand' ? value : t(value)}<MotionIcon name="close" size={12} /></button>))}{editableOnly && <button onClick={() => toggleEditable(false)}>{t('Ready to edit')}<MotionIcon name="close" size={12} /></button>}<button onClick={reset}>{t('Clear filters')}</button><span>{t('{count} templates', { count: visible.length })}</span></div>}
     </div>
     <main className={styles.results} aria-busy={loading}>
       <div className={styles.grid}>
