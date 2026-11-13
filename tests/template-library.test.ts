@@ -44,7 +44,7 @@ test('imported templates preserve IDs, eleven locales, filtering data and refere
   let images = 0, remoteImages = 0;
   for (const id of manifest.templateIds) {
     const files = await readdir(path.join(catalogRoot, id, 'source'), { recursive: true });
-    assert(!files.some(file => /\.(?:mp4|zip)$/i.test(file)));
+    assert(!files.some(file => /\.zip$/i.test(file)), 'Duplicate archives do not belong in template source');
     images += files.filter(file => file.endsWith('.jpg')).length;
     const record = JSON.parse(await readFile(path.join(catalogRoot, id, 'template.json'), 'utf8'));
     remoteImages += (record.remoteAssets ?? []).length;

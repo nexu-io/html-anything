@@ -1,5 +1,12 @@
 # 公开变更记录
 
+## 2026-11-13: Add an original repository template contribution
+
+- Add Orbit Launch, a six-second original motion recipe with an offline interactive HTML example, motion specification, small poster, preview media and all eleven catalog locale slots. It remains guidance rather than a directly copyable Studio project.
+- Validate MCP index identities against the registered repository and built-in templates, so a valid new contribution does not fail an obsolete fixed template-count assertion.
+- Let catalog inspection accept contribution videos; the existing staged policy continues to validate their LFS attributes, identities and size limits, while duplicate archives remain forbidden.
+- Preserve the existing source, publication and distribution boundaries. Technical checks and original-source rights notes do not establish human visual acceptance.
+
 ## 2026-11-12: Version motion guidance source in the product repository
 
 - Import 286 public guidance templates with stable IDs, existing eleven-locale metadata and authored text examples; preserve pending conversion state and original source attribution.

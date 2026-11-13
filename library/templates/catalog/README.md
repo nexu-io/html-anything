@@ -1,12 +1,14 @@
 # Motion template catalog
 
-Browse and edit 286 published motion guidance templates. Guides, HTML examples and small images are here. Images over 100 KB load from existing public CMS links. Imported reference videos and original ZIP downloads stay at their existing CMS URLs. New contribution media can use Git LFS without a CMS account; see [media contribution and download instructions](../../../docs/template-repository.md#contribute-media-without-cms-access).
+Browse imported motion guidance and original community examples. Guides, HTML examples and small images are here. Images over 100 KB load from existing public CMS links. Imported reference videos and original ZIP downloads stay at their existing CMS URLs. New contribution media can use Git LFS without a CMS account; see [media contribution and download instructions](../../../docs/template-repository.md#contribute-media-without-cms-access).
 
 ## Try one template
 
 Open [the first template's guide](motion-f4b325fd-64ba-42da-9f7e-6a6b77cfafd2/source/preview.html) in a browser and play its authored examples. No build step is needed. Templates with large reference images need an internet connection to load their CMS renditions; small images stay local. Read its [motion.md](motion-f4b325fd-64ba-42da-9f7e-6a6b77cfafd2/source/motion.md) for the motion specification; `TEMPLATE.md` links the separate reference video.
 
 These are **reference guidance with authored HTML examples**, not verified complete Studio projects. Their existing `pending` status and empty project-file manifests are preserved. The three editable Studio examples remain in `template-library/`.
+
+For an original contribution example, open [Orbit Launch](motion-orbit-launch/TEMPLATE.md): a six-second launch-title recipe with offline HTML playback, motion rules, a small local poster and a separately stored preview video. Its metadata includes all eleven locale slots; the motion guide and example use English.
 
 ## Change a template
 

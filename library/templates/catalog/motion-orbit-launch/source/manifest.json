@@ -1,0 +1,36 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 960,
+    "height": 540
+  },
+  "fps": 30,
+  "durationSeconds": 6,
+  "provenance": {
+    "source": "Original repository contribution",
+    "license": "Apache-2.0"
+  },
+  "files": [
+    {
+      "path": "assets/lfs/preview.mp4",
+      "bytes": 62916,
+      "sha256": "a9a1423f00ece6880e542125b98f7d3d6b214f2f02e31666d6361d19e3c0d737"
+    },
+    {
+      "path": "assets/poster.jpg",
+      "bytes": 33122,
+      "sha256": "b2b2e129abb48fb2765ca5b2fa75a2eb96f9ba524d895230b2dc81d5f0d9d14f"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 3085,
+      "sha256": "58551e1e775e17d11e5a9d234394e6a69db4b2a4d9064de76cde02250c3720d1"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 8014,
+      "sha256": "385755f910a69290d4bf2a7654fe1e48ea0f939152c1fba3a8b6c4abcddf7289"
+    }
+  ]
+}

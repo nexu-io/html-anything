@@ -13,6 +13,7 @@ import { WorkspaceStore } from '../workspace.ts';
 import { transport } from './http.ts';
 import { templatePrompt } from '../shared/integration.ts';
 import { repositoryTemplatePrompts } from '../shared/template-prompts.ts';
+import { templates as builtinTemplates } from '../template-library.ts';
 
 process.env.MOTION_TEMPLATE_SOURCE = 'repository';
 const appRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -143,7 +144,12 @@ test('the real stdio MCP resolves the loaded checkout from a different cwd witho
   const output = execFileSync(process.execPath, ['--import', hook, path.join(appRoot, 'mcp.ts')], { cwd: work, env, input: messages.map(x => JSON.stringify(x)).join('\n') + '\n', encoding: 'utf8', timeout: 20_000 });
   const responses = output.trim().split('\n').map(line => JSON.parse(line));
   assert.equal(responses[0].result.isError, undefined); assert.equal(responses[0].result.structuredContent.source, 'repository');
-  assert.equal(responses[0].result.structuredContent.total, 289);
+  const manifest = JSON.parse(await readFile(path.join(repositoryCatalogRoot, 'catalog.json'), 'utf8'));
+  const index = responses[0].result.structuredContent;
+  const rows = (await readFile(index.indexPath, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+  const expectedIds = [...manifest.templateIds, ...builtinTemplates.map(template => template.id)];
+  assert.equal(index.total, expectedIds.length);
+  assert.deepEqual(rows.map(row => row.templateId).sort(), expectedIds.sort());
   assert.equal(responses[1].result.isError, undefined);
   const detail = responses[1].result.structuredContent;
   assert.equal(detail.localSource.directory, path.join(repositoryCatalogRoot, firstId));
