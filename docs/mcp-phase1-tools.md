@@ -14,6 +14,7 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 | openmotion_media_use | Shared Model Gateway | Enabled-provider discovery, bundled references, model list, generate/status/cancel for fal.ai, OpenDesign Cloud, Atlas Cloud and WaveSpeedAI; service-owned keys, explicit project, stable request ID, imported media results; does not edit the composition |
 | openmotion_list_templates | Local repository or configured CMS catalog | No query arguments; returns source, a local JSONL index, count and catalog version for local search |
 | openmotion_get_template | Same local/CMS reader | Exact ID; repository entries return local instructions, motionDocument content and absolute localSource paths |
+| openmotion_media_use | Fixture-based provider references, discovery, authenticated requests, job ownership, output validation and import, and rejection without paid retries | tests/byok.test.ts |
 | openmotion_create_project | 项目目录、空白工程、模板复制、会话归属 | 新建独立载体、保存需求/来源、返回初始内容版本；宿主 Agent 制作影片 |
 | openmotion_open_preview | 原预览、项目选择、原生 lint | 打开指定已有工程；仅明确绑定的 OpenMotion 会话可省 projectId；返回真实 URL |
 | openmotion_import_assets | 素材目录、FFprobe/FFmpeg | 实际本机媒体批量持久化、逐项结果、稳定素材 ID、去重；不自动排入时间线 |
@@ -143,7 +144,7 @@ Protocol 1 preserves existing request/response shapes and semantics. New Tools a
 
 公开 schema 在 shared/phase1-tools.ts，注册在 shared/mcp-registry.ts；业务适配在 phase1.ts，原生历史及文件保护在 phase1-versions.ts，导出状态在 workspace.ts/server.ts。核心回归为 tests/phase1.test.ts、tests/phase1-runtime.test.ts、tests/mcp-registry.test.ts、tests/workflow.test.ts、tests/adapters.test.ts。旧逻辑通过内部兼容回归继续保护。
 
-## 11个Tool自测对照
+## Public Tool verification
 
 以下是已执行的本地主流程与异常检查，不等于覆盖所有输入组合、平台或人工验收。自动检查调用真实实现及临时隔离项目；示例命名不是新增需求编号。
 
