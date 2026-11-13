@@ -258,6 +258,7 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
     handleLinkEdit: timelineEditing.handleLinkEdit,
     handleTimelineElementDeleteOnly: timelineEditing.handleTimelineElementDeleteOnly,
     handleTimelineElementSplit: timelineEditing.handleTimelineElementSplit,
+    handleSplitAtPlayhead: timelineEditing.handleSplitAtPlayhead,
     handleDomEditElementDelete: domEditDeleteBridge,
     domEditSelectionRef: domEditSelectionBridgeRef,
     clearDomSelectionRef,
@@ -458,9 +459,10 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
       <TimelineToolbar
         domEditSession={toolbarSession}
         onSplitElement={timelineEditing.handleTimelineElementSplit}
+        onSplitAtPlayhead={timelineEditing.handleSplitAtPlayhead}
       />
     ),
-    [toolbarSession, timelineEditing.handleTimelineElementSplit],
+    [toolbarSession, timelineEditing.handleTimelineElementSplit, timelineEditing.handleSplitAtPlayhead],
   );
   const handleExport = useCallback(() => {
     void previewPersistence

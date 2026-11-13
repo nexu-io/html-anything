@@ -28,6 +28,7 @@ function handleUndoRedoKey(event: KeyboardEvent, onUndo: () => void, onRedo: () 
 
 export interface HotkeyCallbacks extends LinkShortcutCallbacks {
   handleTimelineElementsDelete: (elements: TimelineElement[]) => Promise<void>;
+  handleSplitAtPlayhead?: (splitTime: number) => Promise<void>;
   handleTimelineElementSplit: (element: TimelineElement, splitTime: number) => Promise<void>;
   handleDomEditElementDelete: (
     selection: DomEditSelection,
@@ -167,7 +168,11 @@ export function dispatchPlainKey(event: KeyboardEvent, _key: string, cb: HotkeyC
     // Reserve bare `s` for Split even when the current selection cannot split,
     // so secondary listeners do not reinterpret the same key as Snap toggle.
     event.preventDefault();
-    if (cb.readOnlyPreview) return;
+    if (cb.readOnlyPreview || event.repeat) return;
+    if (cb.handleSplitAtPlayhead) {
+      void cb.handleSplitAtPlayhead(usePlayerStore.getState().currentTime);
+      return;
+    }
     const { selectedElementId, elements, currentTime } = usePlayerStore.getState();
     if (selectedElementId) {
       const el = elements.find((e) => (e.key ?? e.id) === selectedElementId);

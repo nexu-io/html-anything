@@ -12,7 +12,7 @@ afterEach(() => {
   usePlayerStore.setState({ activeTool: "select" });
 });
 
-it.each(["zh-CN", "en"] as const)("exposes both tools and keeps selection in sync in %s", (locale) => {
+it.each(["zh-CN", "en"] as const)("keeps blade in the secondary menu with shortcuts in %s", async (locale) => {
   usePlayerStore.setState({ activeTool: "select" });
   const host = mountHost(
     <I18nProvider initialLocale={locale}>
@@ -21,26 +21,18 @@ it.each(["zh-CN", "en"] as const)("exposes both tools and keeps selection in syn
       </StudioHostContext.Provider>
     </I18nProvider>,
   );
-  const buttons = [...host.querySelectorAll("button")];
-  expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual(
-    locale === "zh-CN" ? ["选择", "刀片工具"] : ["Select", "Blade tool"],
-  );
-  expect(host.querySelector('[aria-haspopup="menu"]')).toBeNull();
-  act(() => buttons[1].click());
+  expect(host.querySelectorAll("button")).toHaveLength(1);
+  const trigger = host.querySelector<HTMLButtonElement>('[aria-haspopup="menu"]')!;
+  expect(trigger).not.toBeNull();
+  await act(async () => { trigger.click(); });
+  const items = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')];
+  expect(items).toHaveLength(2);
+  expect(items[0].textContent).toContain("V");
+  expect(items[1].textContent).toContain("B");
+  expect(items[1].textContent).toContain(locale === "zh-CN" ? "刀片工具" : "Blade tool");
+  await act(async () => { items[1].click(); });
   expect(usePlayerStore.getState().activeTool).toBe("razor");
-  expect(buttons.map((button) => button.getAttribute("aria-pressed"))).toEqual(["false", "true"]);
+  expect(trigger.getAttribute("aria-label")).toContain(locale === "zh-CN" ? "刀片工具" : "Blade tool");
   act(() => usePlayerStore.getState().setActiveTool("select"));
-  expect(buttons.map((button) => button.getAttribute("aria-pressed"))).toEqual(["true", "false"]);
-});
-
-
-it("explains blade clicks and displays both blade and selection shortcuts", async () => {
-  const host = mountHost(<StudioHostContext.Provider value={{ mvpEditor: true }}><TimelineToolPicker /></StudioHostContext.Provider>);
-  act(() => host.querySelector<HTMLButtonElement>('[aria-label="Blade tool"]')!.focus());
-  await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
-  const text = document.querySelector('[role="tooltip"]')?.textContent;
-  expect(text).toContain("Blade tool (B)");
-  expect(text).toContain("Blade (B): click a clip to cut at the pointer.");
-  expect(text).toContain("Split (S): cut the selected clip at the playhead immediately.");
-  expect(text).toContain("(V)");
+  expect(trigger.getAttribute("aria-label")).toContain(locale === "zh-CN" ? "选择" : "Select");
 });

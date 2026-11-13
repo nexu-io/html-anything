@@ -1565,7 +1565,7 @@ describe("useTimelineEditing: canEdit gate", () => {
     hook.unmount();
   });
 
-  it("refuses razor-split-all when it would split a blocked clip, writing nothing", async () => {
+  it.each(["handleRazorSplitAll", "handleSplitAtPlayhead"] as const)("refuses %s when it would split a blocked clip, writing nothing", async (command) => {
     const iframe = createPreviewIframe([{ id: "clip", track: 0 }]);
     const clip = timelineElement({ id: "clip", track: 0, zIndex: 0, start: 0, duration: 2 });
     usePlayerStore.getState().setElements([clip]);
@@ -1595,7 +1595,7 @@ describe("useTimelineEditing: canEdit gate", () => {
     if (!hook) throw new Error("Expected hook to mount");
 
     await act(async () => {
-      await hook!.handleRazorSplitAll(1);
+      await hook![command](1);
       await flushAsyncWork();
     });
 

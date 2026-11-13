@@ -5,6 +5,7 @@ import {
   canSplitElementAt,
   isSplitTimeWithinBounds,
   selectSplittableElements,
+  selectPlayheadSplitElements,
 } from "./timelineElementSplit";
 
 function element(overrides: Partial<TimelineElement> = {}): TimelineElement {
@@ -117,5 +118,30 @@ describe("selectSplittableElements", () => {
   it("accepts an element at the exact lower clamp boundary", () => {
     const el = element({ start: 2, duration: 4 });
     expect(selectSplittableElements([el], 2 + SPLIT_BOUNDARY_EPSILON_S)).toEqual([el]);
+  });
+});
+
+describe("selectPlayheadSplitElements", () => {
+  const a = element({ id: "a", domId: "a" });
+  const b = element({ id: "b", key: "scene.html#b", domId: "b", track: 1 });
+  const locked = element({ id: "locked", timelineLocked: true });
+  const state = { elements: [a, b, locked], selectedElementId: null, selectedElementIds: new Set<string>() };
+
+  it("cuts all eligible intersecting tracks only when selection is empty", () => {
+    expect(selectPlayheadSplitElements(state, 3)).toEqual([a, b]);
+    expect(selectPlayheadSplitElements(state, 1)).toEqual([]);
+    expect(selectPlayheadSplitElements(state, 5)).toEqual([]);
+    expect(selectPlayheadSplitElements(state, NaN)).toEqual([]);
+  });
+  it("honors single and qualified multi-selections", () => {
+    expect(selectPlayheadSplitElements({ ...state, selectedElementId: "a" }, 3)).toEqual([a]);
+    expect(selectPlayheadSplitElements({ ...state, selectedElementIds: new Set(["scene.html#b"]) }, 3)).toEqual([b]);
+    expect(selectPlayheadSplitElements({ ...state, selectedElementId: "a", selectedElementIds: new Set(["a", "scene.html#b"]) }, 3)).toEqual([a, b]);
+  });
+  it("never widens an ineligible or stale selection into a cut on unrelated tracks", () => {
+    for (const selectedElementId of ["missing", "locked"]) {
+      expect(selectPlayheadSplitElements({ ...state, selectedElementId }, 3)).toEqual([]);
+    }
+    expect(selectPlayheadSplitElements({ ...state, elements: [a, { ...b, start: 6 }], selectedElementId: b.key! }, 3)).toEqual([]);
   });
 });

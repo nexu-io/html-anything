@@ -37,7 +37,7 @@ import { TimelineHistoryButtons, type TimelineHistoryButtonsProps } from "./Time
 import { TimelineToolPicker } from "./TimelineToolPicker";
 import type { GsapAnimation } from "@hyperframes/core/gsap-parser";
 import type { DomEditSelection } from "./editor/domEditingTypes";
-import { canSplitElement } from "../utils/timelineElementSplit";
+import { canSplitElementAt, selectPlayheadSplitElements } from "../utils/timelineElementSplit";
 import { useAudioMetersVisible } from "../utils/audioMeterVisibility";
 import { LinkedSelectionToggle } from "./LinkedSelectionToggle";
 import { useLinkedClipPreferences } from "../utils/linkedClipPreferences";
@@ -54,6 +54,7 @@ interface DomEditSessionSlice extends EnableKeyframesSession {
 
 export interface TimelineToolbarProps {
   domEditSession?: DomEditSessionSlice;
+  onSplitAtPlayhead?: (splitTime: number) => void;
   onSplitElement?: (element: TimelineElement, splitTime: number) => void;
   splitShortcut?: TimelineProps["splitShortcut"];
   history?: TimelineHistoryButtonsProps;
@@ -156,6 +157,7 @@ function useKeyframeToggle(session?: DomEditSessionSlice) {
 export const TimelineToolbar = memo(function TimelineToolbar({
   domEditSession,
   onSplitElement,
+  onSplitAtPlayhead,
   splitShortcut,
   history,
   showHistory = true,
@@ -250,23 +252,21 @@ export const TimelineToolbar = memo(function TimelineToolbar({
           <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} splitShortcut={splitShortcut} />
           {/* Divider: tool-mode | editing-actions */}
           <div aria-hidden="true" className="mx-1 h-4 w-px bg-neutral-800" />
-          {onSplitElement &&
+          {(onSplitAtPlayhead || onSplitElement) &&
             (() => {
-              // Render the button unconditionally (disabled when unusable):
-              // mounting/unmounting mid-task shifts the neighboring controls.
-              // Mirrors the S-key gate: selected clip + playhead strictly inside it.
-              const el = selectedElementId
-                ? elements.find((e) => (e.key ?? e.id) === selectedElementId)
-                : null;
-              const splittable = el != null && canSplitElement(el);
-              const canSplit =
-                splittable && currentTime > el.start && currentTime < el.start + el.duration;
+              const el = elements.find((element) => (element.key ?? element.id) === selectedElementId);
+              const targets = onSplitAtPlayhead
+                ? selectPlayheadSplitElements({ elements, selectedElementId, selectedElementIds }, currentTime)
+                : el && canSplitElementAt(el, currentTime) ? [el] : [];
+              const canSplit = targets.length > 0;
               return (
                 <Tooltip
                   label={t("Split at playhead ({value0})", { value0: splitShortcut ?? keyHint("split", keys) })}
                   description={[
-                    !canSplit && (splittable ? t("Move the playhead inside the clip to split") : t("Select a clip to split")),
-                    t("Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.", { blade: keyHint("razorTool", keys), split: splitShortcut ?? keyHint("split", keys), select: keyHint("selectTool", keys) }),
+                    !canSplit && t("No eligible clips at the playhead. Move it inside a clip; selected clips limit the cut."),
+                    onSplitAtPlayhead
+                      ? t("Cut selected clips at the playhead. With no selection, cut all editable clips under it.")
+                      : t("Move the playhead inside the clip to split"),
                   ].filter(Boolean).join(" ")}
                 >
                   <button
@@ -274,7 +274,9 @@ export const TimelineToolbar = memo(function TimelineToolbar({
                     disabled={!canSplit}
                     aria-label={t("Split at playhead")}
                     onClick={() => {
-                      if (canSplit && el) onSplitElement(el, currentTime);
+                      if (!canSplit) return;
+                      if (onSplitAtPlayhead) onSplitAtPlayhead(currentTime);
+                      else if (el) onSplitElement?.(el, currentTime);
                     }}
                     className={canSplit ? flatIdle : flatDisabled}
                   >

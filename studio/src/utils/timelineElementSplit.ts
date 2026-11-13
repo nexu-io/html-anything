@@ -50,3 +50,20 @@ export function selectSplittableElements(
 ): TimelineElement[] {
   return elements.filter((el) => canSplitElementAt(el, splitTime));
 }
+
+/** A nonempty selection limits the cut, even if its IDs are stale or ineligible. */
+export function selectPlayheadSplitElements(
+  state: {
+    elements: TimelineElement[];
+    selectedElementId: string | null;
+    selectedElementIds: ReadonlySet<string>;
+  },
+  splitTime: number,
+): TimelineElement[] {
+  const ids = new Set(state.selectedElementIds);
+  if (state.selectedElementId) ids.add(state.selectedElementId);
+  const candidates = ids.size > 0
+    ? state.elements.filter((element) => ids.has(element.key ?? element.id))
+    : state.elements;
+  return selectSplittableElements(candidates, splitTime);
+}

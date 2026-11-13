@@ -7,7 +7,7 @@ import { usePlayerStore } from "../player";
 import { Scissors } from "../icons/SystemIcons";
 import { Menu, MenuItem, Tooltip } from "./ui";
 import { cn } from "./ui/cn";
-import { flatActive, flatIdle } from "./timelineToolbarStyles";
+import { flatIdle } from "./timelineToolbarStyles";
 import { keyHint, useStudioKeys } from "../player/components/studioShortcuts";
 
 function SelectIcon() {
@@ -24,7 +24,7 @@ interface ToolRow {
   run: () => void;
 }
 
-/** The MVP exposes its two tools directly; the full editor retains the tool menu. */
+/** Keep pointer modes in one menu, separate from the immediate Split action. */
 export function TimelineToolPicker({ showSelectAroundPlayhead = true, splitShortcut }: { showSelectAroundPlayhead?: boolean; splitShortcut?: string }) {
   const { t } = useI18n();
   const mvp = useMvpEditor();
@@ -47,33 +47,7 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true, splitShort
       run: () => store().setActiveTool("razor"),
     },
   ];
-  if (mvp) {
-    return (
-      <div role="group" aria-label={t("Timeline tools")} className="flex items-center gap-0.5">
-        {rows.map((row) => (
-          <Tooltip
-            key={row.label}
-            side="bottom"
-            label={`${t(row.label)} (${row.shortcut})`}
-            description={row.label === "Blade tool"
-              ? t("Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.", { blade: row.shortcut, split: splitShortcut ?? keyHint("split", keys), select: keyHint("selectTool", keys) })
-              : undefined}
-          >
-            <button
-              type="button"
-              aria-label={t(row.label)}
-              aria-pressed={row.active}
-              className={row.active ? flatActive : flatIdle}
-              onClick={row.run}
-            >
-              {row.icon}
-            </button>
-          </Tooltip>
-        ))}
-      </div>
-    );
-  }
-  if (showSelectAroundPlayhead) {
+  if (showSelectAroundPlayhead && !mvp) {
     rows.push(
       {
         label: "Select leftward",
@@ -93,6 +67,10 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true, splitShort
   }
   const current = rows.find((row) => row.active) ?? rows[0];
   return (
+    <Tooltip
+      label={t("Timeline tool: {value0}", { value0: t(current.label) })}
+      description={t("Select ({select}): select and move clips. Blade ({blade}): click a clip to cut at the pointer. Split ({split}) cuts at the playhead.", { select: keyHint("selectTool", keys), blade: keyHint("razorTool", keys), split: splitShortcut ?? keyHint("split", keys) })}
+    >
     <Menu
       aria-label={t("Timeline tools")}
       trigger={
@@ -121,5 +99,6 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true, splitShort
         </MenuItem>
       ))}
     </Menu>
+    </Tooltip>
   );
 }
