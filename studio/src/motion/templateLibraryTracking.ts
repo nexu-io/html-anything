@@ -43,8 +43,8 @@ export function optionId(value: string) {
 /** The settled search-box value as it is reported: trimmed, control characters removed, at most 100 characters. */
 export const searchKeyword = (query: string) => query.replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 100).trim();
 
-export function reportLibraryShown(resultCount: number) {
-  send('surface_view', { ...studio, area: 'template_library', element: 'library', result_count: resultCount });
+export function reportLibraryShown() {
+  send('surface_view', { ...studio, area: 'template_library', element: 'library' });
 }
 /** The denominator for a card's click-through rate. The caller decides when a card was really seen and reports it once per result set. */
 export function reportCardShown(template: Template, position: number, context: ListContext) {
@@ -66,8 +66,9 @@ export function reportDetailShown(template: Template, view: DetailView, position
     placement: view.placement, ...(position ? { position } : {}) });
 }
 /** Open-and-edit or a recreate button. A click is intent only; the copy result and the project result say what happened. */
-export function reportUseClicked(template: Template, action: TemplateAction, view: DetailView | undefined) {
-  send('ui_click', { ...studio, area: 'template_detail', element: 'start_use', ...templateId(template), ...resource(template), template_action: action, ...detail(view) });
+export function reportUseClicked(template: Template, action: TemplateAction, view: DetailView | undefined, copyAttemptId?: string) {
+  send('ui_click', { ...studio, area: 'template_detail', element: 'start_use', ...templateId(template), ...resource(template), template_action: action,
+    ...(copyAttemptId ? { copy_attempt_id: copyAttemptId } : {}), ...detail(view) });
 }
 export function reportInstructionShown(template: Template, view: DetailView | undefined) {
   send('surface_view', { ...studio, area: 'template_instruction', element: 'instruction', ...templateId(template), ...resource(template), ...instruction(template), ...detail(view) });

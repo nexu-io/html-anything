@@ -99,6 +99,7 @@ export function TemplateLibraryDialog(props: Props) {
   const dialog = useRef<HTMLDialogElement>(null), detail = useRef<HTMLDialogElement>(null);
   const libraryClose = useRef<HTMLButtonElement>(null);
   const detailInfo = useRef<HTMLDivElement>(null), search = useRef<HTMLInputElement>(null);
+  const instructionText = useRef<HTMLElement>(null), libraryShown = useRef(false);
   const [downloading, setDownloading] = useState(false);
   const [catalog, setCatalog] = useState<GalleryTemplate[]>([]);
   const [warning, setWarning] = useState(''), [error, setError] = useState(''), [loading, setLoading] = useState(false);
@@ -125,10 +126,11 @@ export function TemplateLibraryDialog(props: Props) {
     return () => dismissToast(id);
   }, [props.open, props.busy, showToast, dismissToast]);
   useEffect(() => {
-    if (!props.open) return;
+    if (!props.open) { libraryShown.current = false; return; }
     const openedDialog = dialog.current;
     const trigger = props.returnFocus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     openedDialog?.showModal();
+    if (openedDialog?.open && !libraryShown.current) { libraryShown.current = true; tracking.reportLibraryShown(); }
     libraryClose.current?.focus({ preventScroll: true });
     return () => {
       detail.current?.close(); openedDialog?.close(); setPreview(null);
@@ -150,7 +152,7 @@ export function TemplateLibraryDialog(props: Props) {
           const page: TemplatePage = await motionApi(`/template-catalog?category=all&covered=true&limit=60&offset=${offset}&locale=${encodeURIComponent(locale)}`, { signal: controller.signal });
           items.push(...page.items); offset = page.next; version = page.catalogVersion; setWarning(page.warning ?? '');
         }
-        if (!controller.signal.aborted) { setCatalog(items); if (!shown.current) { shown.current = true; tracking.reportLibraryShown(items.length); } }
+        if (!controller.signal.aborted) { setCatalog(items); shown.current = true; }
       } catch (err) { if (!controller.signal.aborted) setError((err as Error).message); }
       finally { pending = false; if (!controller.signal.aborted) setLoading(false); }
     }
@@ -292,9 +294,22 @@ export function TemplateLibraryDialog(props: Props) {
   // The instruction counts as shown once its text is on screen, once per detail view.
   useEffect(() => {
     const view = detailView.current;
-    if (!preview || !prompt || !view || instructionShown.current === view.id) return;
-    instructionShown.current = view.id; tracking.reportInstructionShown(preview, view);
-  }, [preview, prompt]);
+    const target = instructionText.current?.querySelector('p, textarea');
+    if (!props.open || !preview || !prompt || !view || !target || instructionShown.current === view.id
+      || typeof IntersectionObserver === 'undefined') return;
+    const threshold = 0.01; // A positive threshold notifies again after zero-area edge contact.
+    let visible = false;
+    const report = () => {
+      if (!visible || document.hidden || !detail.current?.open || detailView.current?.id !== view.id || instructionShown.current === view.id) return;
+      instructionShown.current = view.id; tracking.reportInstructionShown(preview, view); observer.disconnect();
+    };
+    const observer = new IntersectionObserver(entries => {
+      visible = entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= threshold); report();
+    }, { root: detail.current, threshold });
+    observer.observe(target);
+    document.addEventListener('visibilitychange', report);
+    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', report); };
+  }, [props.open, preview, prompt, manualCopy]);
   useEffect(() => {
     if (!preview) return;
     setPromptError(false);
@@ -313,7 +328,7 @@ export function TemplateLibraryDialog(props: Props) {
     if (!prompt) return;
     const text = submit ? templateSubmissionPrompt(prompt) : prompt;
     const template = preview, view = detailView.current, attemptId = tracking.newTrackingId();
-    if (template && origin === 'recreate') tracking.reportUseClicked(template, submit ? 'recreate_submit' : 'recreate', view);
+    if (template && origin === 'recreate') tracking.reportUseClicked(template, submit ? 'recreate_submit' : 'recreate', view, attemptId);
     else if (template) tracking.reportCopyClicked(template, attemptId, view);
     try {
       await navigator.clipboard.writeText(text); setManualCopy(''); setFeedback('Copied. Paste into your Agent.'); showToast('Copied. Paste into your Agent.', 'info');
@@ -412,7 +427,7 @@ export function TemplateLibraryDialog(props: Props) {
             <div className={styles.creator}><Identity template={preview} /><div><strong>{preview.authorName || preview.author || preview.brand || 'OpenMotion'}</strong>{preview.brand && preview.brand.trim().toLocaleLowerCase() !== (preview.authorName || preview.author || preview.brand).trim().toLocaleLowerCase() && <small>{preview.brand}</small>}</div>{preview.sourceUrl && <a href={preview.sourceUrl} target="_blank" rel="noreferrer" onClick={() => tracking.reportDetailLink(preview, 'view_source', detailView.current)} aria-label={t('Source')} title={t('Source')}><MotionIcon name="arrow-up-right" size={18} /></a>}</div>
             {preview.description && <p className={styles.description}>{preview.description}</p>}
             <div className={styles.actions}>{isEditableTemplate(preview) && <button className={styles.primary} disabled={props.busy || props.openingDisabled} onClick={() => { tracking.reportUseClicked(preview, 'open_edit', detailView.current); detail.current?.close(); props.onOpen(preview.id); }}>{t('Open and edit')}<MotionIcon name="arrow-up-right" size={16} /></button>}<div className={styles.recreateActions}><button disabled={!prompt} onClick={() => void copy()}>{t('Recreate template')}<MotionIcon name="sparkles" size={16} /></button><button className={styles.submitTemplate} disabled={!prompt} onClick={() => void copy(true)} aria-label={t('Recreate and submit')} title={t('Recreate and submit')}><MotionIcon name="git-branch" size={17} /></button></div></div>
-            <section className={styles.instruction} aria-label={t('Template instruction')}><header><h3>{t('Template instruction')}</h3><button disabled={!prompt} onClick={() => void copy(false, 'instruction')}><MotionIcon name="copy" size={14} />{t(feedback === 'Copied. Paste into your Agent.' ? 'Copied' : 'Copy')}</button></header>{manualCopy ? <textarea className={styles.manualCopy} readOnly rows={8} value={manualCopy} aria-label={t('Content to copy')} onFocus={event => event.currentTarget.select()} /> : prompt ? <p className={promptExpanded ? styles.fullInstruction : styles.shortInstruction}>{prompt}</p> : promptError ? <div className={styles.promptFailure} role="status">{t('Could not load the instruction.')}<button onClick={() => retryPrompt(value => value + 1)}>{t('Retry')}</button></div> : <div className={styles.promptSkeleton} role="status" aria-label={t('Loading instruction…')}>{[100, 94, 100, 86, 62].map((width, index) => <Skeleton key={index} style={{ width: `${width}%`, height: 10 }} />)}</div>}<button disabled={!prompt} className={styles.expandInstruction} aria-expanded={promptExpanded} onClick={() => { tracking.reportInstructionExpanded(preview, !promptExpanded, detailView.current); setPromptExpanded(!promptExpanded); }}>{t(promptExpanded ? 'Show less' : 'Show instruction')}<MotionIcon name="chevron-down" size={14} /></button></section>
+            <section ref={instructionText} className={styles.instruction} aria-label={t('Template instruction')}><header><h3>{t('Template instruction')}</h3><button disabled={!prompt} onClick={() => void copy(false, 'instruction')}><MotionIcon name="copy" size={14} />{t(feedback === 'Copied. Paste into your Agent.' ? 'Copied' : 'Copy')}</button></header>{manualCopy ? <textarea className={styles.manualCopy} readOnly rows={8} value={manualCopy} aria-label={t('Content to copy')} onFocus={event => event.currentTarget.select()} /> : prompt ? <p className={promptExpanded ? styles.fullInstruction : styles.shortInstruction}>{prompt}</p> : promptError ? <div className={styles.promptFailure} role="status">{t('Could not load the instruction.')}<button onClick={() => retryPrompt(value => value + 1)}>{t('Retry')}</button></div> : <div className={styles.promptSkeleton} role="status" aria-label={t('Loading instruction…')}>{[100, 94, 100, 86, 62].map((width, index) => <Skeleton key={index} style={{ width: `${width}%`, height: 10 }} />)}</div>}<button disabled={!prompt} className={styles.expandInstruction} aria-expanded={promptExpanded} onClick={() => { tracking.reportInstructionExpanded(preview, !promptExpanded, detailView.current); setPromptExpanded(!promptExpanded); }}>{t(promptExpanded ? 'Show less' : 'Show instruction')}<MotionIcon name="chevron-down" size={14} /></button></section>
             <dl className={styles.metadata}>
               {preview.duration != null && <div><dt>{t('Duration')}</dt><dd>{t('{value}s', { value: Number(preview.duration.toFixed(1)) })}</dd></div>}
               {(preview.width || preview.ratio) && <div><dt>{t('Aspect ratio')}</dt><dd>{templateRatio(preview)}</dd></div>}
