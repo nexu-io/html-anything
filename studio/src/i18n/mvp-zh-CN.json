@@ -1188,5 +1188,13 @@
   "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "刀片（{blade}）：切换工具后，点击片段上的位置进行切割。分割（{split}）：立即在播放头位置切开选中的片段。选择（{select}）：返回选择和移动片段。",
   "Select ({select}): select and move clips. Blade ({blade}): click a clip to cut at the pointer. Split ({split}) cuts at the playhead.": "选择（{select}）：选择和移动片段。刀片（{blade}）：点击片段上的位置切割。分割（{split}）：在播放头处切割。",
   "No eligible clips at the playhead. Move it inside a clip; selected clips limit the cut.": "播放头处没有可分割的片段。请移到片段内部；有选中项时只分割选中片段。",
-  "Cut selected clips at the playhead. With no selection, cut all editable clips under it.": "在播放头处切开选中的片段；没有选中项时，切开播放头穿过的所有可编辑片段。"
+  "Cut selected clips at the playhead. With no selection, cut all editable clips under it.": "在播放头处切开选中的片段；没有选中项时，切开播放头穿过的所有可编辑片段。",
+  "Drop video, audio or images here": "可直接拖入视频、音频或图片",
+  "Immersive preview": "沉浸预览",
+  "Exit immersive preview": "退出沉浸预览",
+  "Focus on a larger preview. Press Esc to return to editing.": "放大预览区域，按 Esc 返回编辑。",
+  "Split ({value0})": "分割（{value0}）",
+  "Snapping": "吸附",
+  "Snapping ({value0})": "吸附（{value0}）",
+  "AI service settings": "AI 服务设置"
 }

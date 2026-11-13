@@ -78,13 +78,13 @@ export function DockStripActions({
     <div className="flex items-center h-full gap-1 pr-1">
       <DockHeaderSlot id="preview" />
       <Tooltip
-        label={t(maximized ? "Restore preview" : "Expand preview")}
-        description={t(maximized ? "Return to the editor layout. You can also press Esc." : "Enlarge the preview within this workspace, keeping your chat visible.")}
+        label={t(maximized ? "Exit immersive preview" : "Immersive preview")}
+        description={t(maximized ? "Return to the editor layout. You can also press Esc." : "Focus on a larger preview. Press Esc to return to editing.")}
       >
         <IconButton
           ref={expandButton}
           size="sm"
-          aria-label={t(maximized ? "Restore preview" : "Expand preview")}
+          aria-label={t(maximized ? "Exit immersive preview" : "Immersive preview")}
           aria-expanded={maximized}
           icon={maximized ? <CornersIn size={16} /> : <CornersOut size={16} />}
           onClick={event => togglePreview(event.detail > 0)}

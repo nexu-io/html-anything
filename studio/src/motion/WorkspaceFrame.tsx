@@ -148,7 +148,7 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
       </button>)}
     </nav>
     <footer className="motion-sidebar-footer">
-      <button type="button" className="motion-byok-entry motion-button motion-button-quiet" onClick={openModelSettings}><RemixIcon name="key-2-line" size={16} />{t('Media providers')}</button>
+      <button type="button" className="motion-byok-entry motion-button motion-button-quiet" onClick={openModelSettings}><RemixIcon name="plug-line" size={16} />{t('AI service settings')}</button>
       <div className="motion-sidebar-settings"><PrivacySettingsButton /><ThemeToggle /><LanguageMenu /></div>
     </footer>
   </aside>;

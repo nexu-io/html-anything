@@ -28,6 +28,7 @@ function handleUndoRedoKey(event: KeyboardEvent, onUndo: () => void, onRedo: () 
 
 export interface HotkeyCallbacks extends LinkShortcutCallbacks {
   handleTimelineElementsDelete: (elements: TimelineElement[]) => Promise<void>;
+  disableRazorTool?: boolean;
   handleSplitAtPlayhead?: (splitTime: number) => Promise<void>;
   handleTimelineElementSplit: (element: TimelineElement, splitTime: number) => Promise<void>;
   handleDomEditElementDelete: (
@@ -207,6 +208,7 @@ export function dispatchPlainKey(event: KeyboardEvent, _key: string, cb: HotkeyC
   }
 
   if (matchesKey(event, "razorTool")) {
+    if (cb.disableRazorTool) return;
     event.preventDefault();
     const { activeTool, setActiveTool } = usePlayerStore.getState();
     setActiveTool(activeTool === "razor" ? "select" : "razor");

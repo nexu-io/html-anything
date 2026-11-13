@@ -594,7 +594,7 @@ describe("TimelineToolbar Linked Selection", () => {
     const { host } = renderToolbar();
     const button = host.querySelector<HTMLButtonElement>('button[aria-label="Linked Selection"]');
     expect(button?.getAttribute("aria-pressed")).toBe("true");
-    const snapping = host.querySelector('button[aria-label="Toggle timeline snapping"]');
+    const snapping = host.querySelector('button[aria-label="Snapping"]');
     expect(snapping && button?.compareDocumentPosition(snapping)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
@@ -641,7 +641,7 @@ describe("TimelineToolbar split hint", () => {
       currentTime: 2,
     });
     const { host, root } = renderToolbar(undefined, { onSplitAtPlayhead: vi.fn(), ...props });
-    const button = host.querySelector<HTMLButtonElement>('button[aria-label="Split at playhead"]');
+    const button = host.querySelector<HTMLButtonElement>('button[aria-label="Split"]');
     act(() => button?.focus());
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -653,9 +653,9 @@ describe("TimelineToolbar split hint", () => {
   }
 
   it("names S unless the host binds Split to another key", async () => {
-    expect(await splitTooltip({})).toContain("Split at playhead (S)");
-    expect(await splitTooltip({})).toContain("With no selection, cut all editable clips under it.");
-    expect(await splitTooltip({ splitShortcut: "⌘B" })).toContain("Split at playhead (⌘B)");
+    expect(await splitTooltip({})).toContain("Split (S)");
+    expect(await splitTooltip({})).toBe("Split (S)");
+    expect(await splitTooltip({ splitShortcut: "⌘B" })).toContain("Split (⌘B)");
   });
 });
 
@@ -701,19 +701,19 @@ it("disables empty MVP zoom and restores it when a clip arrives", () => {
 describe("MVP split actions", () => {
   afterEach(() => usePlayerStore.setState({ elements: [], selectedElementId: null, selectedElementIds: new Set(), currentTime: 0, activeTool: "select" }));
 
-  it("uses the same immediate command for button and S, keeping blade in the menu", () => {
+  it("uses the same immediate command for button and S, without exposing blade mode", () => {
     const clip = { id: "clip", domId: "clip", tag: "div", start: 1, duration: 4, track: 0 };
     usePlayerStore.setState({ elements: [clip], selectedElementId: null, selectedElementIds: new Set(), currentTime: 3, activeTool: "select" });
     const split = vi.fn();
     const { host, root } = renderToolbar(undefined, { onSplitAtPlayhead: split }, true);
     try {
-      const button = host.querySelector<HTMLButtonElement>('[aria-label="Split at playhead"]')!;
+      const button = host.querySelector<HTMLButtonElement>('[aria-label="Split"]')!;
       expect(button.disabled).toBe(false);
       expect(host.querySelector('[aria-label="Blade tool"]')).toBeNull();
-      expect(host.querySelector('[aria-haspopup="menu"]')).not.toBeNull();
+      expect(host.querySelector('[aria-label="Timeline tools"]')).toBeNull();
       act(() => button.click());
       expect(split).toHaveBeenCalledExactlyOnceWith(3);
-      const cb = { readOnlyPreview: false, handleSplitAtPlayhead: split } as unknown as HotkeyCallbacks;
+      const cb = { readOnlyPreview: false, disableRazorTool: true, handleSplitAtPlayhead: split } as unknown as HotkeyCallbacks;
       act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "s" }), "s", cb));
       expect(split).toHaveBeenCalledTimes(2);
       expect(split).toHaveBeenLastCalledWith(3);
@@ -721,7 +721,7 @@ describe("MVP split actions", () => {
       act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "s" }), "s", { ...cb, readOnlyPreview: true }));
       expect(split).toHaveBeenCalledTimes(2);
       act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "b" }), "b", cb));
-      expect(usePlayerStore.getState().activeTool).toBe("razor");
+      expect(usePlayerStore.getState().activeTool).toBe("select");
       act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "v" }), "v", cb));
       expect(usePlayerStore.getState().activeTool).toBe("select");
     } finally { act(() => root.unmount()); }
@@ -734,7 +734,7 @@ describe("MVP split actions", () => {
     const split = vi.fn();
     const { host, root } = renderToolbar(undefined, { onSplitAtPlayhead: split }, true);
     try {
-      const button = host.querySelector<HTMLButtonElement>('[aria-label="Split at playhead"]')!;
+      const button = host.querySelector<HTMLButtonElement>('[aria-label="Split"]')!;
       for (const currentTime of [0, 1, 5, 6]) {
         act(() => usePlayerStore.setState({ currentTime }));
         expect(button.disabled).toBe(true);

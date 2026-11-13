@@ -76,6 +76,7 @@ interface UseAppHotkeysParams {
   handleTimelineElementsDelete: (elements: TimelineElement[]) => Promise<void>;
   handleLinkEdit?: LinkShortcutCallbacks["handleLinkEdit"];
   handleTimelineElementDeleteOnly?: LinkShortcutCallbacks["handleTimelineElementDeleteOnly"];
+  disableRazorTool?: boolean;
   handleSplitAtPlayhead?: (splitTime: number) => Promise<void>;
   handleTimelineElementSplit: (element: TimelineElement, splitTime: number) => Promise<void>;
   handleDomEditElementDelete: (
@@ -125,6 +126,7 @@ export function useAppHotkeys({
   handleTimelineElementDeleteOnly,
   handleTimelineElementSplit,
   handleSplitAtPlayhead,
+  disableRazorTool,
   handleDomEditElementDelete,
   domEditSelectionRef,
   editHistory,
@@ -206,6 +208,7 @@ export function useAppHotkeys({
     handleTimelineElementDeleteOnly,
     handleTimelineElementSplit,
     handleSplitAtPlayhead,
+    disableRazorTool,
     handleDomEditElementDelete,
     handleUndo,
     handleRedo,

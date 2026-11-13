@@ -261,18 +261,12 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               const canSplit = targets.length > 0;
               return (
                 <Tooltip
-                  label={t("Split at playhead ({value0})", { value0: splitShortcut ?? keyHint("split", keys) })}
-                  description={[
-                    !canSplit && t("No eligible clips at the playhead. Move it inside a clip; selected clips limit the cut."),
-                    onSplitAtPlayhead
-                      ? t("Cut selected clips at the playhead. With no selection, cut all editable clips under it.")
-                      : t("Move the playhead inside the clip to split"),
-                  ].filter(Boolean).join(" ")}
+                  label={t("Split ({value0})", { value0: splitShortcut ?? keyHint("split", keys) })}
                 >
                   <button
                     type="button"
                     disabled={!canSplit}
-                    aria-label={t("Split at playhead")}
+                    aria-label={t("Split")}
                     onClick={() => {
                       if (!canSplit) return;
                       if (onSplitAtPlayhead) onSplitAtPlayhead(currentTime);
@@ -288,17 +282,12 @@ export const TimelineToolbar = memo(function TimelineToolbar({
           {!mvp && <LinkedSelectionToggle />}
           <Tooltip
             side="bottom"
-            label={
-              timelineSnapEnabled
-                ? t("Snapping on ({value0})", { value0: keyHint("timelineSnap", keys) })
-                : t("Snapping off ({value0})", { value0: keyHint("timelineSnap", keys) })
-            }
-            description={t("When enabled, dragged clips snap to nearby clip edges and the playhead for easier alignment.")}
+            label={t("Snapping ({value0})", { value0: keyHint("timelineSnap", keys) })}
           >
             <button
               type="button"
               onClick={() => setTimelineSnapEnabled(!timelineSnapEnabled)}
-              aria-label={t("Toggle timeline snapping")}
+              aria-label={t("Snapping")}
               aria-pressed={timelineSnapEnabled}
               className={timelineSnapEnabled ? flatActive : flatIdle}
             >

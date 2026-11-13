@@ -262,7 +262,7 @@ button, input, select, textarea { font-family: inherit; }
 .motion-studio-header-centered .motion-header-history-actions,
 .motion-studio-header-centered .motion-header-history-actions > .motion-history-actions { gap: 4px; }
 .motion-studio-header-centered .motion-header-history-actions { position: relative; }
-.motion-studio-header-centered .motion-header-history-actions::after { content: ""; position: absolute; top: 50%; right: -8px; width: 1px; height: 16px; transform: translateY(-50%); background: var(--motion-border); pointer-events: none; }
+.motion-studio-header-centered .motion-header-history-actions::before { content: ""; position: absolute; top: 50%; left: -8px; width: 1px; height: 16px; transform: translateY(-50%); background: var(--motion-border); pointer-events: none; }
 .motion-studio-header-centered .motion-workspace-actions { padding-right: 0; margin-right: 0; border-right: 0; }
 .motion-community-link { flex-shrink: 0; }
 .motion-studio-header-centered .motion-community-link { margin-inline-end: -4px; }

@@ -12,8 +12,8 @@ afterEach(() => {
   usePlayerStore.setState({ activeTool: "select" });
 });
 
-it.each(["zh-CN", "en"] as const)("keeps blade in the secondary menu with shortcuts in %s", async (locale) => {
-  usePlayerStore.setState({ activeTool: "select" });
+it.each(["zh-CN", "en"] as const)("offers only selection and clears a stale blade mode in %s", async (locale) => {
+  usePlayerStore.setState({ activeTool: "razor" });
   const host = mountHost(
     <I18nProvider initialLocale={locale}>
       <StudioHostContext.Provider value={{ mvpEditor: true }}>
@@ -22,17 +22,11 @@ it.each(["zh-CN", "en"] as const)("keeps blade in the secondary menu with shortc
     </I18nProvider>,
   );
   expect(host.querySelectorAll("button")).toHaveLength(1);
-  const trigger = host.querySelector<HTMLButtonElement>('[aria-haspopup="menu"]')!;
-  expect(trigger).not.toBeNull();
-  await act(async () => { trigger.click(); });
-  const items = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')];
-  expect(items).toHaveLength(2);
-  expect(items[0].textContent).toContain("V");
-  expect(items[1].textContent).toContain("B");
-  expect(items[1].textContent).toContain(locale === "zh-CN" ? "刀片工具" : "Blade tool");
-  await act(async () => { items[1].click(); });
-  expect(usePlayerStore.getState().activeTool).toBe("razor");
-  expect(trigger.getAttribute("aria-label")).toContain(locale === "zh-CN" ? "刀片工具" : "Blade tool");
-  act(() => usePlayerStore.getState().setActiveTool("select"));
-  expect(trigger.getAttribute("aria-label")).toContain(locale === "zh-CN" ? "选择" : "Select");
+  expect(host.querySelector('[aria-haspopup="menu"]')).toBeNull();
+  const select = host.querySelector<HTMLButtonElement>("button")!;
+  expect(select.getAttribute("aria-label")).toBe(locale === "zh-CN" ? "选择" : "Select");
+  expect(usePlayerStore.getState().activeTool).toBe("select");
+  await act(async () => { select.click(); });
+  expect(document.querySelector('[role="menuitem"]')).toBeNull();
+  expect(usePlayerStore.getState().activeTool).toBe("select");
 });

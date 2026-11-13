@@ -612,6 +612,15 @@ describe("editor keys the host can remap", () => {
     expect(left).toHaveBeenCalledTimes(1);
   });
 
+  it("does not activate the hidden blade tool when the MVP disables it", () => {
+    const cb = callbacks({ disableRazorTool: true });
+    dispatchPlainKey(press("b"), "b", cb);
+    expect(tool()).toBe("select");
+    setStudioKeys({ razorTool: "y" });
+    dispatchPlainKey(press("y"), "y", cb);
+    expect(tool()).toBe("select");
+  });
+
   it("a remapped key answers and the old one does not", () => {
     setStudioKeys({ razorTool: "y", selectTool: "u", exitRazor: "q" });
     dispatch("b");

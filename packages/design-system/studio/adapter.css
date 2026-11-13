@@ -24,3 +24,8 @@
   border-color: var(--motion-border-strong);
   background: var(--motion-inset);
 }
+
+/* Header actions share one softly rounded rectangle, including neutral links. */
+:root[data-motion-ui][data-motion-studio] .motion-studio-header-centered :is(button, a) {
+  border-radius: var(--motion-radius-md);
+}

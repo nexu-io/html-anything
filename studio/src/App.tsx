@@ -75,6 +75,7 @@ export interface StudioAppProps {
 
 // fallow-ignore-next-line complexity
 export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: StudioAppProps = {}) {
+  const mvpEditor = useStudioHost()?.mvpEditor ?? false;
   const AppFrame = useStudioHost()?.AppFrame ?? Fragment;
   const EditorFrame = useStudioHost()?.EditorFrame ?? Fragment;
   const { projectId, resolving, waitingForServer } = useServerConnection();
@@ -253,6 +254,7 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
     waitForPendingDomEditSaves: previewPersistence.waitForPendingDomEditSaves,
   });
   const appHotkeys = useAppHotkeys({
+    disableRazorTool: mvpEditor,
     projectId,
     handleTimelineElementsDelete: timelineEditing.handleTimelineElementsDelete,
     handleLinkEdit: timelineEditing.handleLinkEdit,

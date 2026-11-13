@@ -78,6 +78,7 @@ export const StudioHeader = memo(function StudioHeader({
       {/* Right: toolbar buttons */}
       <div className="flex items-center gap-3">
         {!host?.mvpEditor && host?.headerActions}
+        {host?.mvpEditor && host.communityAction}
         {host?.historyActions}
         {host?.previewAction}
         {!host?.mvpEditor && <div className="flex h-ctl items-center divide-x divide-border-strong overflow-hidden rounded-md border border-border-strong bg-bg-2">
@@ -150,7 +151,7 @@ export const StudioHeader = memo(function StudioHeader({
         {host?.languageMenu}
         {host?.windowMenu ?? <Dock.WindowMenu />}
         {host?.desktopLink !== false && <OpenInDesktopButton />}
-        {host?.communityAction}
+        {!host?.mvpEditor && host?.communityAction}
         <Tooltip
           disabled={host?.mvpEditor}
           label={

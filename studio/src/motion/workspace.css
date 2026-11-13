@@ -221,3 +221,5 @@
 @media(max-width: 1100px) {
   .motion-sidebar-brand { padding-inline: 0; }
 }
+
+.motion-sidebar-footer .motion-byok-entry { justify-content: flex-start; margin-bottom: 0; }
