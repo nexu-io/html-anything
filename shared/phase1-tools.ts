@@ -67,7 +67,10 @@ export function validateInput(schema: any, value: any, field = 'arguments'): voi
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('INVALID_ARGUMENT: ' + field + ' must be an object');
     for (const key of schema.required ?? []) if (!Object.hasOwn(value, key)) throw new Error('INVALID_ARGUMENT: ' + field + '.' + key + ' is required');
     for (const [key, child] of Object.entries(value)) {
-      if (!Object.hasOwn(schema.properties, key)) throw new Error('INVALID_ARGUMENT: unknown ' + field + '.' + key);
+      if (!Object.hasOwn(schema.properties ?? {}, key)) {
+        if (schema.additionalProperties === true) continue;
+        throw new Error('INVALID_ARGUMENT: unknown ' + field + '.' + key);
+      }
       validateInput(schema.properties[key], child, field + '.' + key);
     }
   } else if (schema.type === 'array') {
