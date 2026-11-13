@@ -7,10 +7,27 @@ import { createToolRegistry } from '../shared/mcp-registry.ts';
 import { tools, publicTools, rpc, mcpRegistry } from '../mcp.ts';
 import { fixture } from './fixtures.ts';
 import { workflowEntryGuide, phase1Skills } from '../shared/workflow.ts';
+import { templateDiscoveryGuide } from '../shared/workflow-entry.js';
 
 const phase1 = JSON.parse(readFileSync(new URL('../shared/mcp-profiles.json', import.meta.url), 'utf8')).phase1;
 const target = ['openmotion_list_templates', 'openmotion_get_template', 'openmotion_create_project', 'openmotion_open_preview', 'openmotion_import_assets', 'openmotion_get_project',
   'openmotion_edit_project', 'openmotion_export_request', 'openmotion_list_versions', 'openmotion_restore_version', 'openmotion_export_cancel'];
+
+test('MCP-only discovery connects template recommendations to a project-free host presentation', () => fixture(async store => {
+  const before = await store.get();
+  const initialized: any = await rpc({ jsonrpc: '2.0', id: 1, method: 'initialize' }, store);
+  const listed: any = await rpc({ jsonrpc: '2.0', id: 2, method: 'tools/list' }, store);
+  // This policy must be discoverable before any optional Skill/resource is read.
+  for (const guidance of [initialized.result.instructions,
+    listed.result.tools.find((tool: any) => tool.name === 'openmotion_list_templates').description]) {
+    assert.match(guidance, /browse, compare or recommend/);
+    assert.match(guidance, /target=templates/);
+    assert.match(guidance, /same turn/);
+    assert.match(guidance, /text-only/);
+    assert.match(guidance, /does not authorize project creation/);
+  }
+  assert.deepEqual(await store.get(), before);
+}));
 
 test('phase-one target is explicit, unique, and distinct from the legacy implementation list', () => {
   assert.deepEqual(phase1.tools, target);
@@ -36,7 +53,7 @@ test('one registry governs discovery and rejects hidden calls before the existin
   assert.deepEqual(await store.get(), initial);
   assert.equal(existsSync(path.join(store.projectDirectory, 'notes.md')), false);
   const initialized: any = await rpc({ jsonrpc: '2.0', id: 3, method: 'initialize' }, store, registry);
-  assert.equal(initialized.result.instructions, workflowEntryGuide + ' ' + phase1.instructions);
+  assert.equal(initialized.result.instructions, workflowEntryGuide + ' ' + templateDiscoveryGuide + ' ' + phase1.instructions);
   assert.ok(!initialized.result.instructions.includes('openmotion_get_workflow'));
 }));
 

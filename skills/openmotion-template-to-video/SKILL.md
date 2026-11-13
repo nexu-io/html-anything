@@ -1,6 +1,6 @@
 ---
 name: openmotion-template-to-video
-description: 使用 OpenMotion 基于已有可编辑动效模板、工程文件夹、ZIP 或已选画廊源码出片，原样交付或替换文案、品牌与素材，保留约定结构和动效。包含已接受的首次体验；续作沿用当前工程。只有参考成片而无可编辑模板时走 openmotion-recreate，视频转可复用模板走 openmotion-video-to-template，原创走 openmotion-director。
+description: Browse, compare and recommend OpenMotion catalog templates with a visible library preview, or make a video from an existing editable template, project folder, ZIP or selected gallery source. Preserve agreed motion and content; resume existing work. Video-only references use openmotion-recreate; reusable template production uses openmotion-video-to-template.
 ---
 
 # OpenMotion Template to Video
@@ -14,6 +14,10 @@ Changes to existing content use the [shared edit workflow](../openmotion-product
 The accepted installation experience follows [first-run defaults](../openmotion-production/references/templates.md#first-run-experience-defaults): use the exact template ID and unchanged sample content offered and accepted in this conversation, with that template's own duration. A single-template yes accepts it; a three-candidate yes needs clarification. Resume an existing experience project or create one independent copy once. Open its editable preview; export only if requested. Do not restart the template/assets questionnaire or substitute a fixed default. Initial installation reply rules and few-shots come from `docs/install.md`, section “Installation-success reply”; this Skill resumes creation after consent.
 
 When selecting, obtaining or replacing assets, read the [shared material policy](../openmotion-production/references/materials.md), preserving the template's agreed structure, motion and content constraints. An unchanged preview handoff does not trigger asset acquisition.
+
+## Browse or recommend catalog templates
+
+For library discovery rather than creation, follow [browsing and recommendations](../openmotion-production/references/templates.md#browsing-and-recommendations). Open the library in this turn and complete its host handoff unless the user requested text-only/no opening. Give grounded candidates without creating a project, acquiring production assets or restarting creative intake. An already selected template plus an explicit creation request continues below directly.
 
 ## Open the supplied project
 
