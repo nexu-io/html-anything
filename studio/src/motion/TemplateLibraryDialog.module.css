@@ -127,7 +127,7 @@
 .detailBody h3 { font-size: 14px; font-weight: 600; margin: 0; }
 .instruction header button { display: flex; align-items: center; gap: 5px; padding: 5px 8px; border: 1px solid var(--library-line); border-radius: 6px; font-size: 11px; }
 .instruction .shortInstruction, .instruction .fullInstruction { background: var(--color-template-prompt-bg); border-radius: 10px; padding: 14px; margin: 0; font-size: 12px; line-height: 1.7; }
-.shortInstruction { max-height: 140px; overflow: hidden; mask-image: linear-gradient(#000 55%, #0000); }
+.shortInstruction { max-height: 140px; overflow: hidden; mask-image: linear-gradient(var(--color-text-0) 55%, transparent); }
 .expandInstruction { border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 7px 8px; font-size: 11px !important; }
 .expandInstruction[aria-expanded=true] svg { transform: rotate(180deg); }
 .instruction summary, .guide summary { cursor: pointer; font-size: 12px; line-height: 1.6; }
