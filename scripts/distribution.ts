@@ -472,7 +472,6 @@ const localReadmeResourceFiles = [
 ];
 
 export const distributionDocuments = [
-  ...['brandkit', 'presenter-story', 'motion-design-remix'].flatMap(name => ['library/skills/' + name + '/SKILL.md', 'library/skills/' + name + '/agents/openai.yaml']),
   ...['openmotion-brandkit', 'openmotion-presenter-story', 'openmotion-design-remix'].map(name => 'library/skills/' + name + '/agents/openai.yaml'),
   ...localReadmeResourceFiles,
   'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md', 'repository-media.json',

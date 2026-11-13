@@ -1,4 +1,3 @@
-import { skillAliases } from './public-names.mjs';
 import { createHash } from 'node:crypto';
 import { readFile, realpath } from 'node:fs/promises';
 import path from 'node:path';
@@ -66,8 +65,7 @@ export const workflowNames = Object.keys(workflowRegistry);
 export const workflowSections = [...new Set(Object.values(workflowRegistry).flatMap(workflow => Object.keys(workflow.sections)))];
 export const phase1WorkflowNames = ['production', 'director', 'template', 'recreate', 'video-to-template'];
 export const phase1Skills = ['openmotion-production', 'openmotion-director', 'openmotion-template-to-video', 'openmotion-recreate', 'openmotion-video-to-template'];
-export const compatibilitySkills = Object.keys(skillAliases).filter(name => phase1Skills.includes(skillAliases[name as keyof typeof skillAliases]));
-export const packagedSkills = [...phase1Skills, ...compatibilitySkills];
+export const packagedSkills = phase1Skills;
 export function workflowResources() {
   return Object.entries(workflowRegistry).filter(([name]) => phase1WorkflowNames.includes(name)).flatMap(([workflow, definition]) => Object.keys(definition.sections).map(section => ({
     uri: `openmotion://workflow/${workflow}/${section}`, name: `${workflow}/${section}`, title: `OpenMotion · ${workflow}/${section}`, mimeType: 'application/json',

@@ -1,5 +1,0 @@
-interface:
-  display_name: "OpenMotion · motion-video-to-template compatibility alias"
-  short_description: "Compatibility entry; use openmotion-video-to-template"
-policy:
-  allow_implicit_invocation: false
