@@ -104,7 +104,38 @@ jobs:
           npm ci --prefix .github/maintainability --ignore-scripts --no-audit --no-fund
           node .github/maintainability/report.mjs "$base_dir" "$BASE_REVISION" >> "$GITHUB_STEP_SUMMARY"
 
-  standalone:
+  studio:
+    name: Studio regression
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      OPENMOTION_TELEMETRY: '0'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup pinned Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Select checks for the changed boundary
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node .github/scripts/ci-scope.mjs
+      - name: Install locked Motion dependencies
+        if: steps.scope.outputs.full == 'true'
+        run: npm ci --no-audit --no-fund
+      - name: Studio regression
+        if: steps.scope.outputs.full == 'true'
+        run: npm run test:studio -- --maxWorkers=2
+
+  runtime:
+    name: Runtime and packaging
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     defaults:
@@ -143,14 +174,19 @@ jobs:
         run: |
           git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
           npm run media:pull
+      - name: Select rendering package cache version
+        if: steps.scope.outputs.full == 'true'
+        id: rendering-cache
+        run: echo "version=${ImageVersion:-$(date -u +%G-W%V)}" >> "$GITHUB_OUTPUT"
       - name: Restore rendering package downloads
         if: steps.scope.outputs.full == 'true'
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/motion-rendering-apt/*.deb
-          # Cache entries are immutable, so save under a per-run key and restore the newest entry by prefix.
-          key: rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-${{ github.run_id }}-${{ github.run_attempt }}
+          # Reuse packages across runs of the same runner image; refresh when the image changes.
+          key: rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-v2-${{ steps.rendering-cache.outputs.version }}
           restore-keys: |
+            rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-v2-
             rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-
       - name: Install rendering test tools
         if: steps.scope.outputs.full == 'true'
@@ -203,9 +239,6 @@ jobs:
       - name: Validate standalone installation and packaging
         if: steps.scope.outputs.full == 'true'
         run: node --experimental-strip-types --test tests/diagnostics.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/public-names.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/editor-urls.test.ts tests/workspace-studio.test.ts tests/sync.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/library-install.test.mjs tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
-      - name: Studio regression
-        if: steps.scope.outputs.full == 'true'
-        run: npm run test:studio -- --maxWorkers=2
       - name: Repository template runtime regression
         if: steps.scope.outputs.full == 'true'
         run: node --test tests/repository-template-runtime.test.ts
@@ -263,3 +296,16 @@ jobs:
         run: |
           node .github/scripts/ci-scope.mjs --check-docs
           echo 'Presentation documentation checked; Studio, rendering and package checks were not needed. Source scanning and repository policy checks still ran.' >> "$GITHUB_STEP_SUMMARY"
+
+  standalone:
+    needs: [runtime, studio]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require runtime and Studio checks
+        env:
+          RUNTIME_RESULT: ${{ needs.runtime.result }}
+          STUDIO_RESULT: ${{ needs.studio.result }}
+        run: |
+          test "$RUNTIME_RESULT" = success && test "$STUDIO_RESULT" = success
