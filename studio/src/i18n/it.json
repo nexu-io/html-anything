@@ -1831,5 +1831,15 @@
   "Render cancelled": "Rendering annullato",
   "Queued": "In coda",
   "Export blocked": "Esportazione bloccata",
-  "Export failed": "Esportazione non riuscita"
+  "Export failed": "Esportazione non riuscita",
+  "Media providers": "Fornitori multimediali",
+  "Save a key to enable a provider.": "Salva una chiave API per abilitare un fornitore.",
+  "Loading providers…": "Caricamento fornitori…",
+  "Configured": "Configurato",
+  "Not configured": "Non configurato",
+  "Get API key": "Ottieni chiave API",
+  "Usage guide": "Guida all’uso",
+  "API origin": "Origine API",
+  "Use the gateway address shown on your Cloud API key page.": "Usa l’indirizzo del gateway mostrato nella pagina delle chiavi API Cloud.",
+  "Save settings": "Salva impostazioni"
 }

@@ -21,6 +21,10 @@ Keep persistent user instructions for repository work in this file, and keep `CL
 3. Before committing or submitting repository content, verify that it follows these English-language requirements.
 4. Branch new work from the latest `main` and target all pull requests at `main`. Merge reviewed changes directly into `main` when authorized; do not use `feature/motion` as an intermediate integration branch.
 
+## Repository contribution Skills
+
+Source-checkout contributor Skills live under `.agents/skills/`. When adding or maintaining a built-in BYOK media provider, read `.agents/skills/add-byok-provider/SKILL.md` in this checkout. It covers provider research, implementation, references and verification. These repository-local Skills are excluded from application/plugin distribution and host installation; root `skills/` continues to hold product workflows. Installed product copies may not contain `.agents/skills/`. Other Agents following `CLAUDE.md` use this same source-checkout guidance.
+
 ## Shared design system — required for every Agent
 
 All Agents must use [packages/design-system](packages/design-system/README.md) for interface styling. Read that package's integration and change rules before creating or changing CSS, component appearance, themes, icons, fonts, loading states or brand assets. [docs/design-system.md](docs/design-system.md) describes the product integration; [brand guidance](packages/design-system/brand/BRANDKIT.md) governs public brand material.
@@ -70,7 +74,7 @@ Choose the entry for the current intent directly. Original creation, narrative/m
 
 A directly selected specialist reads shared context and continues; do not bounce back to the production start. Small edits, audio-only changes, review-only and export-only requests resume their affected scope. Keep existing decisions and locked content. Repository development and documentation do not trigger video production.
 
-Phase one exposes eleven openmotion_ Tools (nine project tools plus catalog fetch and template detail), defined in [the contract](docs/mcp-phase1-tools.md). MCP-only clients read the same guidance through resources/list and resources/read, beginning at openmotion://workflow/production/start or the already-selected specialist. The pinned engine guide is openmotion://engine/SKILL.md. The workflow-reading Tool is internal compatibility only. Follow conditional references and reuse complete document bodies. Native authoring belongs to the shared production/native guide. Technical export verification, visual quality and actual playback remain separate. See [Skill routing](docs/skills.md).
+Phase one exposes twelve openmotion_ Tools (nine project tools, catalog fetch/template detail and media-use), defined in [the contract](docs/mcp-phase1-tools.md). MCP-only clients read the same guidance through resources/list and resources/read, beginning at openmotion://workflow/production/start or the already-selected specialist. The pinned engine guide is openmotion://engine/SKILL.md. The workflow-reading Tool is internal compatibility only. Provider references in the existing production workflow describe the BYOK media-use tool; the five creative routes remain unchanged. Follow conditional references and reuse complete document bodies. Native authoring belongs to the shared production/native guide. Technical export verification, visual quality and actual playback remain separate. See [Skill routing](docs/skills.md).
 
 
 ## Template production and reuse

@@ -1,7 +1,7 @@
 import type { Entry, Registry } from './core.ts';
 import { studioUsageEvents } from './studio-events.ts';
 
-export const toolNames = ['motion_list_templates', 'motion_get_template', 'motion_create_project', 'motion_open_preview',
+export const toolNames = ['motion_media_use', 'motion_list_templates', 'motion_get_template', 'motion_create_project', 'motion_open_preview',
   'motion_import_assets', 'motion_get_project', 'motion_edit_project', 'motion_export_request', 'motion_list_versions',
   'motion_restore_version', 'motion_export_cancel'] as const;
 const outcome = ['success', 'failure', 'partial', 'cancelled', 'unknown'] as const;

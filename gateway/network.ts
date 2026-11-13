@@ -25,6 +25,38 @@ function publicAddress(address: string) {
   // Global unicast only; disallow IPv4-mapped, loopback and link-local addresses.
   return isIP(address) === 6 && /^[23][0-9a-f]{3}:/i.test(address);
 }
+export function providerOrigin(raw: unknown): string {
+  if (typeof raw !== 'string' || raw.length > 2048) throw new Error('A public HTTPS API origin is required');
+  const url = new URL(raw);
+  if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash || !['', '/', '/v1', '/v1/'].includes(url.pathname)
+    || url.port && url.port !== '443' || url.hostname === 'localhost' || url.hostname.endsWith('.localhost')
+    || isIP(url.hostname.replace(/^\[|\]$/g, '')) && !publicAddress(url.hostname.replace(/^\[|\]$/g, ''))) throw new Error('Use the public HTTPS gateway origin from the API key page');
+  return url.origin;
+}
+/** Custom Cloud origins use pinned public DNS and never forward credentials on redirects. */
+export const publicProviderFetch: Fetcher = async (raw, init: RequestInit = {}) => {
+  const url = new URL(String(raw)); providerOrigin(url.origin);
+  const addresses = await lookup(url.hostname, { all: true });
+  if (!addresses.length || addresses.some(item => !publicAddress(item.address))) throw new Error('Provider points to a non-public address');
+  return new Promise<Response>((resolve, reject) => {
+    const req = https.request(url, { method: init.method ?? 'GET', headers: Object.fromEntries(new Headers(init.headers)), signal: init.signal ?? undefined,
+      lookup: (_host, options, done) => {
+        if ((options as { all?: boolean }).all) (done as Function)(null, addresses);
+        else done(null, addresses[0].address, addresses[0].family);
+      } }, res => {
+      const chunks: Buffer[] = []; let size = 0;
+      res.on('data', (chunk: Buffer) => { size += chunk.length; if (size > MAX_MEDIA_BYTES) res.destroy(new Error('Provider response exceeds 256 MB')); else chunks.push(chunk); });
+      res.on('error', reject);
+      res.on('end', () => {
+        const status = res.statusCode ?? 502;
+        resolve(new Response([204, 205, 304].includes(status) ? null : Buffer.concat(chunks), { status,
+          headers: Object.fromEntries(Object.entries(res.headers).filter((entry): entry is [string, string] => typeof entry[1] === 'string')) }));
+      });
+    });
+    req.setTimeout(60_000, () => req.destroy(new Error('Provider request timed out'))); req.on('error', reject);
+    if (init.body) req.write(init.body); req.end();
+  });
+};
 export const MAX_MEDIA_BYTES = 256 * 1024 * 1024;
 /** Download without credentials; pin validated DNS answers to prevent rebinding. */
 export async function downloadMedia(raw: string, signal: AbortSignal, redirects = 0): Promise<Buffer> {

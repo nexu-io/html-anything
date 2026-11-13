@@ -31,10 +31,10 @@
 - Export the existing CMS catalog shape for review, including collection facets; CMS publication remains separate. Source-only catalog files are excluded from npm/plugin distribution.
 
 
-## 2026-11-12: Match stable installation reports to the candidate manifest
+## 2026-11-13: Remove Tool and Skill count gates
 
-- Stable promotion and archive recovery compare native MCP Tool and Skill counts with the verified candidate manifest. Packages with compatibility Skill aliases no longer fail the obsolete five-Skill assertion, while mismatched reports still block promotion.
-- Regression coverage includes ten-Skill promotion and archiving, older five-Skill candidates, and missing or extra Tools/Skills on either platform. The existing stable npm packaging test also passes its real generated manifest through the promotion report gate, catching contract drift during both PR checks and candidate builds. Native reports and external writes are simulated; publication remains a separate authorized operation.
+- Stable promotion and archive recovery verify native installation results and immutable candidate identity. MCP Tool and Skill counts are informational and do not block promotion; registration and packaged file lists are checked against their actual manifests.
+- Regression coverage accepts native reports without Tool/Skill counts and verifies promotion and archiving. Registry and package tests compare actual names and files with their configured manifests, without an independently hard-coded quantity. Native reports and external writes are simulated; publication remains a separate authorized operation.
 
 ## 2026-11-12: Save SVG styles and initialize the initial project on open
 

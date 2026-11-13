@@ -2,13 +2,14 @@ import { createHash, randomUUID } from 'node:crypto';
 import { chmod, link, lstat, mkdir, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { WorkspaceStore } from '../workspace.ts';
-import { modalities, type Agent, type GenerateInput, type GenerationJob, type GatewayStatus, type Model, type Modality, type ProviderId, type ProviderState } from '../shared/gateway.ts';
+import { mediaProviders, modalities, type Agent, type GenerateInput, type GenerationJob, type GatewayStatus, type Model, type Modality, type ProviderId, type ProviderState } from '../shared/gateway.ts';
 import { builtinModels, discoverModels, modelKey, providerIds, providerLabels, validModelId } from './catalog.ts';
 import { detectAgents, generateCodexImage } from './agents.ts';
-import { downloadMedia, mediaType, ProviderError, type Fetcher } from './network.ts';
-import { providerAdapters } from './providers.ts';
+import { downloadMedia, mediaType, providerOrigin, publicProviderFetch, ProviderError, type Fetcher } from './network.ts';
+import { providerAdapters, waveSpeedModels } from './providers.ts';
+import { cloudModels } from './opendesign.ts';
 
-type Config = { version: 1; providers: Partial<Record<ProviderId, { enabled?: boolean; verification?: 'verified' | 'rejected'; keyHash?: string; checkedAt?: number }>>;
+type Config = { version: 1; providers: Partial<Record<ProviderId, { enabled?: boolean; baseUrl?: string; verification?: 'verified' | 'rejected'; keyHash?: string; checkedAt?: number }>>;
   routes: Partial<Record<Modality, string>>; customModels: Model[] };
 type Options = { fetcher?: Fetcher; detect?: () => Promise<Agent[]>; codex?: typeof generateCodexImage; download?: typeof downloadMedia; pollMs?: number };
 const hash = (value: string | Buffer) => createHash('sha256').update(value).digest('hex');
@@ -53,17 +54,20 @@ export class ModelGateway {
   private async credentials() { return readJson<Partial<Record<ProviderId, string>>>(path.join(this.root, 'secrets.json'), {}); }
   private async credential(id: ProviderId) {
     const saved = (await this.credentials())[id];
-    const env = id === 'atlascloud' ? process.env.ATLASCLOUD_API_KEY : id === 'fal' ? process.env.FAL_KEY : undefined;
+    const env = id === 'atlascloud' ? process.env.ATLASCLOUD_API_KEY : id === 'fal' ? process.env.FAL_KEY : id === 'opendesign' ? process.env.OPENDESIGN_API_KEY : id === 'wavespeed' ? process.env.WAVESPEED_API_KEY : undefined;
     return { key: saved || env || '', source: saved ? 'stored' as const : env ? 'environment' as const : 'none' as const };
   }
-  async configureProvider(id: unknown, input: { apiKey?: unknown; enabled?: unknown }) {
+  async configureProvider(id: unknown, input: { apiKey?: unknown; enabled?: unknown; baseUrl?: unknown }) {
     providerId(id);
     if (!input || typeof input !== 'object') throw new Error('Provider settings required');
     if (input.enabled !== undefined && typeof input.enabled !== 'boolean') throw new Error('enabled must be boolean');
     if (input.apiKey !== undefined && input.apiKey !== null && (typeof input.apiKey !== 'string' || !input.apiKey.trim() || input.apiKey.length > 4096 || /[\x00-\x1f]/.test(input.apiKey))) throw new Error('Invalid API key');
     if (id === 'codex' && input.apiKey !== undefined) throw new Error('Codex uses its own local login; no API key is stored here');
+    const baseUrl = input.baseUrl === undefined ? undefined : providerOrigin(input.baseUrl);
+    if (baseUrl && id !== 'opendesign') throw new Error('This provider uses its built-in API origin');
     await this.store.lock(async () => {
       const config = await this.config(); const state = config.providers[id] ?? {};
+      if (baseUrl) { state.baseUrl = baseUrl; delete state.verification; delete state.keyHash; delete state.checkedAt; }
       if (input.apiKey !== undefined) {
         const keys = await this.credentials();
         if (input.apiKey === null) delete keys[id]; else keys[id] = (input.apiKey as string).trim();
@@ -71,11 +75,16 @@ export class ModelGateway {
         await chmod(this.root, 0o700);
         delete state.verification; delete state.keyHash; delete state.checkedAt;
       }
+      if (input.apiKey && mediaProviders.some(provider => provider === id)) state.enabled = true;
       if (input.enabled !== undefined) state.enabled = input.enabled as boolean;
       config.providers[id] = state;
       await atomic(path.join(this.root, 'config.json'), config);
     });
     return this.status();
+  }
+  private async cloudOrigin() {
+    const value = (await this.config()).providers.opendesign?.baseUrl || process.env.OPENDESIGN_MEDIA_ORIGIN;
+    return value ? providerOrigin(value) : undefined;
   }
   async agents(refresh = false) {
     if (!refresh && this.agentCache && Date.now() - this.agentCache.time < 30_000) return this.agentCache.agents;
@@ -93,9 +102,20 @@ export class ModelGateway {
     if (input.refresh !== undefined && typeof input.refresh !== 'boolean') throw new Error('refresh must be boolean');
     const warnings: string[] = [];
     if (input.refresh) {
-      const selected = (['atlascloud', 'fal'] as const).filter(id => !input.provider || input.provider === id);
+      const selected = mediaProviders.filter(id => !input.provider || input.provider === id);
       const discovered = await Promise.all(selected.map(async id => {
-        try { return await discoverModels(id, String(input.query ?? ''), this.options.fetcher ?? fetch); }
+        try {
+          if (id === 'opendesign') {
+            const key = (await this.credential(id)).key, baseUrl = await this.cloudOrigin();
+            if (!key || !baseUrl) return [];
+            return await cloudModels(baseUrl, key, this.options.fetcher ?? publicProviderFetch);
+          }
+          if (id === 'wavespeed') {
+            const key = (await this.credential(id)).key;
+            return key ? await waveSpeedModels(key, this.options.fetcher ?? fetch) : [];
+          }
+          return await discoverModels(id, String(input.query ?? ''), this.options.fetcher ?? fetch);
+        }
         catch { warnings.push(`${providerLabels[id]} catalogue unavailable; showing cached and built-in models`); return []; }
       }));
       await this.store.lock(async () => {
@@ -131,17 +151,21 @@ export class ModelGateway {
   async status(refreshAgents = false): Promise<GatewayStatus> {
     const [config, agents, models] = await Promise.all([this.config(), this.agents(refreshAgents), this.models()]);
     const providers: ProviderState[] = await Promise.all(providerIds.map(async id => {
-      const saved = config.providers[id] ?? {}, enabled = saved.enabled !== false;
+      const saved = config.providers[id] ?? {};
+      const enabled = saved.enabled !== false;
       if (id === 'codex') {
         const agent = agents.find(a => a.id === id);
         return { id, label: providerLabels[id], enabled, configured: !!agent?.authenticated, available: enabled && !!agent?.available,
           credentialSource: 'local-agent', verification: 'unverified', reason: !enabled ? 'Disabled' : agent?.reason ?? 'Not detected' };
       }
       const credentials = await this.credential(id);
+      const baseUrl = id === 'opendesign' ? await this.cloudOrigin() : undefined;
+      const active = !!credentials.key;
       const verification = credentials.key && saved.keyHash === hash(credentials.key) ? saved.verification ?? 'unverified' : 'unverified';
-      return { id, label: providerLabels[id], enabled, configured: !!credentials.key, available: enabled && !!credentials.key && verification !== 'rejected',
+      return { id, label: providerLabels[id], enabled: active, configured: !!credentials.key, available: active && !!credentials.key && (id !== 'opendesign' || !!baseUrl) && verification !== 'rejected',
+        ...(id === 'opendesign' ? { baseUrl: baseUrl ?? '' } : {}),
         credentialSource: credentials.source, verification, checkedAt: saved.checkedAt,
-        reason: !enabled ? 'Disabled' : !credentials.key ? 'API key required' : verification === 'rejected' ? 'Credentials or permissions rejected; update the key' : verification === 'verified' ? 'A generation request succeeded with this key' : 'Configured; availability and quota are checked when generating' };
+        reason: !active ? 'API key required' : id === 'opendesign' && !baseUrl ? 'OpenDesign Cloud API origin required' : !credentials.key ? 'API key required' : verification === 'rejected' ? 'Credentials or permissions rejected; update the key' : verification === 'verified' ? 'A generation request succeeded with this key' : 'Configured; availability and quota are checked when generating' };
     }));
     const capabilities = modalities.map(kind => {
       const available = models.filter(model => model.modality === kind && providers.find(p => p.id === model.provider)?.available);
@@ -177,9 +201,20 @@ export class ModelGateway {
     if (input.usage && (typeof input.usage !== 'object' || Object.entries(input.usage).some(([key, value]) => !['compositionId', 'elementId', 'property'].includes(key) || typeof value !== 'string' || value.length > 240))) throw new Error('Invalid editor usage context');
     const status = await this.status();
     const selected = input.model ?? status.routes[input.modality] ?? status.capabilities.find(c => c.modality === input.modality)?.selectedModelId;
-    const model = (await this.models()).find(m => m.id === selected && m.modality === input.modality);
+    let model = (await this.models()).find(m => m.id === selected && m.modality === input.modality);
+    if (!model && typeof selected === 'string') {
+      const colon = selected.indexOf(':'), provider = mediaProviders.find(id => id === selected.slice(0, colon)), modelId = selected.slice(colon + 1);
+      if (provider) {
+        validModelId(modelId);
+        model = { id: selected, provider, modelId, label: modelId, modality: input.modality, mode: input.mode ?? `text-to-${input.modality}`, source: 'custom' };
+      }
+    }
+    if (input.mode !== undefined && !['text-to-image', 'text-to-video', 'text-to-audio', 'text-to-speech'].includes(input.mode)) throw new Error('Unsupported generation mode');
+    if (input.mode && input.mode !== `text-to-${input.modality}` && !(input.modality === 'audio' && input.mode === 'text-to-speech')) throw new Error('Generation mode does not match modality');
+    if (model && input.mode) model = { ...model, mode: input.mode };
+    if (model?.provider === 'opendesign' && input.modality === 'audio' && model.mode !== 'text-to-speech') throw new Error('OpenDesign Cloud currently supports speech audio only');
     const projectId = input.projectId ?? this.store.projectCatalog().activeId;
-    const requestHash = hash(JSON.stringify({ projectId, model: input.model ?? null, modality: input.modality, prompt: input.prompt, parameters: params, usage: input.usage, ...(input.referenceAsset ? { referenceAsset: input.referenceAsset } : {}) }));
+    const requestHash = hash(JSON.stringify({ projectId, model: input.model ?? null, modality: input.modality, prompt: input.prompt, parameters: params, mode: input.mode, usage: input.usage, ...(input.referenceAsset ? { referenceAsset: input.referenceAsset } : {}) }));
     return this.store.lock(async () => {
       if (!this.store.projectCatalog().projects.some(p => p.id === projectId)) throw new Error('Project not found');
       const entry = await this.store.safePath('index.html', this.store.projectDirectoryFor(projectId));
@@ -191,6 +226,7 @@ export class ModelGateway {
       if (input.referenceAsset && (model.provider !== 'codex' || !model.supportsImageReference || input.modality !== 'image')) throw new Error('Selected model does not support reference image editing');
       if (jobs.filter(j => j.state === 'queued' || j.state === 'running').length >= 20) throw new Error('Generation queue is full (20 jobs)');
       const job: GenerationJob = { id: randomUUID(), projectId, state: 'queued', modality: input.modality, prompt: input.prompt.trim(), model,
+        ...(model.provider === 'opendesign' ? { providerOrigin: await this.cloudOrigin() } : {}),
         parameters: params, usage: input.usage, idempotencyKey: input.idempotencyKey, requestHash,
         createdAt: Date.now(), updatedAt: Date.now(), phase: 'queued', assets: [] };
       const work = path.join(this.root, 'work', job.id);
@@ -220,10 +256,10 @@ export class ModelGateway {
     if (job.state === 'cancelled' && !job.startedAt) await rm(path.join(this.root, 'work', job.id), { recursive: true, force: true });
     return job;
   }
-  private async verifyKey(id: ProviderId, key: string, verification: 'verified' | 'rejected') {
+  private async verifyKey(id: ProviderId, key: string, verification: 'verified' | 'rejected', origin?: string) {
     if (id === 'codex' || !key) return;
     await this.store.lock(async () => {
-      if ((await this.credential(id)).key !== key) return;
+      if ((await this.credential(id)).key !== key || id === 'opendesign' && origin !== await this.cloudOrigin()) return;
       const config = await this.config(); config.providers[id] = { ...config.providers[id], verification, keyHash: hash(key), checkedAt: Date.now() };
       await atomic(path.join(this.root, 'config.json'), config);
     });
@@ -270,6 +306,7 @@ export class ModelGateway {
       key = (await this.credential(job.model.provider)).key;
       const provider = (await this.status()).providers.find(p => p.id === job.model.provider);
       if (!provider?.available) throw new Error('Provider is no longer available');
+      if (job.model.provider === 'opendesign' && job.providerOrigin !== await this.cloudOrigin()) throw new Error('Provider API origin changed; the queued task was not submitted');
       await mkdir(dir, { recursive: true, mode: 0o700 });
       let buffers: Buffer[];
       if (job.model.provider === 'codex') {
@@ -277,11 +314,11 @@ export class ModelGateway {
         const reference = job.reference ? path.join(dir, 'reference.' + (job.reference.mimeType === 'image/jpeg' ? 'jpg' : job.reference.mimeType.split('/')[1])) : undefined;
         buffers = [await (this.options.codex ?? generateCodexImage)(job.prompt + (Object.keys(job.parameters).length ? '\nImage options: ' + JSON.stringify(job.parameters) : ''), dir, controller.signal, reference)];
       } else {
-        const urls = await providerAdapters[job.model.provider].generate(job, { key, fetcher: this.options.fetcher ?? fetch, signal: controller.signal, progress, pollMs: this.options.pollMs });
-        await this.verifyKey(job.model.provider, key, 'verified');
+        const urls = await providerAdapters[job.model.provider].generate(job, { key, baseUrl: job.providerOrigin, fetcher: this.options.fetcher ?? fetch, signal: controller.signal, progress, pollMs: this.options.pollMs });
+        await this.verifyKey(job.model.provider, key, 'verified', job.providerOrigin);
         await progress('downloading');
         buffers = [];
-        for (const url of urls) buffers.push(await (this.options.download ?? downloadMedia)(url, controller.signal));
+        for (const url of urls) buffers.push(Buffer.isBuffer(url) ? url : await (this.options.download ?? downloadMedia)(url, controller.signal));
       }
       const files = buffers.map((bytes, i) => { const media = mediaType(bytes, job.modality); return { bytes, mimeType: media.mimeType, path: `assets/generated/${job.id}-${i + 1}.${media.extension}` }; });
       controller.signal.throwIfAborted();
@@ -305,7 +342,7 @@ export class ModelGateway {
         } catch (error) { await Promise.all(targets.map(target => rm(target, { force: true }))); throw error; }
       });
     } catch (error) {
-      if (error instanceof ProviderError && (error.status === 401 || error.status === 403)) await this.verifyKey(job.model.provider, key, 'rejected');
+      if (error instanceof ProviderError && (error.status === 401 || error.status === 403)) await this.verifyKey(job.model.provider, key, 'rejected', job.providerOrigin);
       await this.store.lock(async () => {
         const current = await this.getJob(job.id); if (current.state !== 'running') return;
         current.state = 'failed'; current.phase = 'failed'; current.updatedAt = Date.now();

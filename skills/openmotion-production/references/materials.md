@@ -23,3 +23,14 @@
 在实际最大取景下检查主体轮廓、细节、结构与文字、光影材质、身份一致性，以及裁切、背景能否支撑构图和所需动作。不合格就更换或修正，再扩建影片。声音素材核对内容、可用时段和用途；实际听感另行试听，未审听如实记录。生成成功、标称分辨率高或文件已导入，都不能替代可用性检查。
 
 复用现有简报、动作脚本或素材记录，保留实际采用文件、来源、用途及重要限制，无需另建必填表。材料与具体动作、占时和跨段状态的配合，按需应用[制作决策与状态延续](../../openmotion-director/references/production-decisions.md)。
+
+## BYOK provider references
+
+For configured BYOK generation, call openmotion_media_use with action=inspect, then action=reference for the selected provider. The service injects saved credentials; never read key files or put a key in a prompt. Query action=models with refresh=true and check the selected model's current schema before generating. Use an explicit projectId and stable requestId; poll the original local job with action=status rather than resubmitting. Only completed assets are usable; composition edits require the latest revision/version. Missing provider detail is unknown, not proof of an invalid key. Inspect the original task/history before another paid submission.
+
+Read only the selected provider's document for model queries, request templates, polling and error interpretation:
+
+- [fal.ai](media-providers/fal.md)
+- [Atlas Cloud](media-providers/atlascloud.md)
+- [WaveSpeedAI](media-providers/wavespeed.md)
+- [OpenDesign Cloud](media-providers/opendesign.md) (setup is temporarily hidden in the editor; existing service configuration is retained)

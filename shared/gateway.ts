@@ -1,7 +1,8 @@
 /** Public contract shared by the model gateway, MCP and Studio. Never contains credentials. */
 export const modalities = ['image', 'video', 'audio'] as const;
 export type Modality = typeof modalities[number];
-export type ProviderId = 'codex' | 'atlascloud' | 'fal';
+export const mediaProviders = ['fal', 'opendesign', 'atlascloud', 'wavespeed'] as const;
+export type ProviderId = 'codex' | typeof mediaProviders[number];
 export type Model = {
   id: string; provider: ProviderId; modelId: string; label: string; modality: Modality;
   source: 'builtin' | 'live' | 'custom'; mode: string;
@@ -12,11 +13,12 @@ export type Agent = { id: string; label: string; installed: boolean; authenticat
   imageGeneration: boolean; available: boolean; reason: string };
 export type ProviderState = { id: ProviderId; label: string; enabled: boolean; configured: boolean;
   available: boolean; credentialSource: 'stored' | 'environment' | 'local-agent' | 'none';
-  verification: 'unverified' | 'verified' | 'rejected'; reason: string; checkedAt?: number };
+  verification: 'unverified' | 'verified' | 'rejected'; reason: string; checkedAt?: number; baseUrl?: string };
 export type GatewayStatus = { providers: ProviderState[]; agents: Agent[];
   routes: Partial<Record<Modality, string>>;
   capabilities: { modality: Modality; available: boolean; modelIds: string[]; selectedModelId?: string }[] };
 export type GenerateInput = { modality: Modality; prompt: string; model?: string;
+  mode?: string;
   projectId?: string; parameters?: Record<string, unknown>; idempotencyKey?: string;
   /** Project-relative input image. Supported only by explicitly capable adapters. */
   referenceAsset?: string;
@@ -24,6 +26,7 @@ export type GenerateInput = { modality: Modality; prompt: string; model?: string
   usage?: { compositionId?: string; elementId?: string; property?: string } };
 export type GeneratedAsset = { path: string; mimeType: string; bytes: number; available?: boolean };
 export type GenerationJob = { id: string; projectId: string; state: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+  providerOrigin?: string;
   modality: Modality; prompt: string; model: Model; parameters: Record<string, unknown>;
   usage?: GenerateInput['usage']; idempotencyKey?: string; requestHash: string;
   reference?: { path: string; sha256: string; mimeType: string; bytes: number };

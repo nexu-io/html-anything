@@ -1,6 +1,7 @@
 import { publicToolName, legacyToolName, publicToolResult } from './shared/public-names.mjs';
 import { requireNativeRuntime } from './scripts/npm-runtime.mjs';
 import { recordDiagnostic } from './scripts/diagnostics.mjs';
+import { mediaUse } from './gateway/media-use.ts';
 import { MAX_ASSET_BYTES, isAssetFileWithinLimit } from './shared/asset-limits.ts';
 import { createHash } from 'node:crypto';
 import { constants } from 'node:fs';
@@ -257,6 +258,7 @@ export class Phase1Service {
     reviews.push(record); await atomicJson(file, reviews); return { projectId: args.projectId, review: record, changed: false };
   }
   async dispatch(name: string, args: any, host?: HostContext): Promise<any> {
+    if (name === 'motion_media_use') return mediaUse(this.store, args);
     if (name === 'motion_get_project' && !args.projectId) {
       if (args.file || args.exportJobId || args.expectedRevision || args.workId || args.includeVideo) throw new Error('INVALID_ARGUMENT: projectId is required for details');
       const scope = args.sessionId ?? 'workspace';
